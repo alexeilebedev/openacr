@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 // Copyright (C) 2023 Astra
 // Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
 //
@@ -23,7 +23,7 @@
 //
 
 #include "include/acr_ed.h"
-
+#include "include/algo.h"
 // -----------------------------------------------------------------------------
 
 // Determine name of pkey for the newly created ctype
@@ -101,6 +101,32 @@ void acr_ed::CreateCrossProduct(dmmeta::Ctype &ctype, dmmeta::Field &field_pkey)
     acr_ed::_db.out_ssim<<eol;
 }
 
+// Looking for max(msgtypes value) where msgtypes first field is Base and arg is the target subset
+// and return max+1 assuming that msgtypes value is integer.
+// ignore:bigret
+cstring acr_ed::getNextMsgTypeValue(strptr target_subset) {
+    u32 next_msg_type_value = 0;
+    ind_beg(acr_ed::_db_msgtype_curs, msgtype,_db) {
+        auto *base_type = ind_ctype_Find(msgtype.ctype);
+        if (base_type && base_type->c_field_n > 0) {
+            auto msgtype_ctype_w_base = dmmeta::Field_Concat_ctype_name(msgtype.ctype, "base");
+            // If the first field of this msgtype is Base and the arg is the target subset
+            if (msgtype_ctype_w_base == base_type->c_field_elems[0]->field
+                && target_subset == base_type->c_field_elems[0]->arg) {
+                algo::StringIter iter(msgtype.type.value);
+                u32 msgtype_value;
+                if (algo::TryParseU32(iter, msgtype_value)
+                    && msgtype_value > next_msg_type_value) {
+                    next_msg_type_value = msgtype_value;
+                }
+            }
+        }
+    }ind_end;
+    tempstr ret;
+    ret << next_msg_type_value+1;
+    return ret;
+}
+
 // -----------------------------------------------------------------------------
 
 // Create a new ctype
@@ -155,16 +181,21 @@ void acr_ed::edaction_Create_Ctype() {
     }
 
     // if new ctype is a subset of one other relational ctype, use that type's name.
-    if (ch_N(acr_ed::_db.cmdline.subset2) == 0 && relational) {
+    if (ch_N(acr_ed::_db.cmdline.subset2) == 0) {
         acr_ed::FCtype &subset = acr_ed::ind_ctype_FindX(acr_ed::_db.cmdline.subset);
         // if creating a subset of a relational type, borrow the name of the first field
-        if (c_field_N(subset) > 0 && subset.c_ssimfile) {
-            pkey_name = name_Get(*c_field_Find(subset,0));
-        }
-        if (subset.p_ns->nstype == dmmeta_Nstype_nstype_ssimdb) {
-            pkey.reftype = dmmeta_Reftype_reftype_Pkey;
-        } else {
-            pkey.reftype = dmmeta_Reftype_reftype_Val;
+        if (relational) {
+            if (c_field_N(subset) > 0 && subset.c_ssimfile) {
+                pkey_name = name_Get(*c_field_Find(subset,0));
+            }
+            if (subset.p_ns->nstype == dmmeta_Nstype_nstype_ssimdb) {
+                pkey.reftype = dmmeta_Reftype_reftype_Pkey;
+            } else {
+                pkey.reftype = dmmeta_Reftype_reftype_Val;
+            }
+        } else if (subset.c_typefld && algo::ch_N(subset.c_typefld->field)) {
+            // If subset has typefld entry this is proto Msg type thus using Base reftype
+            pkey.reftype = dmmeta_Reftype_reftype_Base;
         }
     }
 
@@ -195,7 +226,10 @@ void acr_ed::edaction_Create_Ctype() {
             if (base_type->c_typefld) {
                 dmmeta::Msgtype msgtype;
                 msgtype.ctype = ctype.ctype;
-                algo::CppExpr_ReadStrptrMaybe(msgtype.type,acr_ed::_db.cmdline.msgtype);
+                cstring msgtype_str_arg = acr_ed::_db.cmdline.msgtype.ch_n
+                    ? cstring(acr_ed::_db.cmdline.msgtype)
+                    : getNextMsgTypeValue(acr_ed::_db.cmdline.subset);
+                algo::CppExpr_ReadStrptrMaybe(msgtype.type,msgtype_str_arg);
                 acr_ed::_db.out_ssim << msgtype << eol;
             }
             if (base_type->c_cpptype) {

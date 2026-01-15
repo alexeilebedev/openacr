@@ -108,25 +108,23 @@ bool amcdb::Bltin_ReadFieldMaybe(amcdb::Bltin& parent, algo::strptr field, algo:
     switch(field_id) {
         case amcdb_FieldId_ctype: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.ctype, strval);
-            break;
-        }
+        } break;
         case amcdb_FieldId_likeu64: {
             retval = bool_ReadStrptrMaybe(parent.likeu64, strval);
-            break;
-        }
+        } break;
         case amcdb_FieldId_bigendok: {
             retval = bool_ReadStrptrMaybe(parent.bigendok, strval);
-            break;
-        }
+        } break;
         case amcdb_FieldId_issigned: {
             retval = bool_ReadStrptrMaybe(parent.issigned, strval);
-            break;
-        }
+        } break;
         case amcdb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -177,13 +175,14 @@ bool amcdb::Curstype_ReadFieldMaybe(amcdb::Curstype& parent, algo::strptr field,
     switch(field_id) {
         case amcdb_FieldId_curstype: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.curstype, strval);
-            break;
-        }
+        } break;
         case amcdb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -406,17 +405,17 @@ bool amcdb::Gen_ReadFieldMaybe(amcdb::Gen& parent, algo::strptr field, algo::str
     switch(field_id) {
         case amcdb_FieldId_gen: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.gen, strval);
-            break;
-        }
+        } break;
         case amcdb_FieldId_perns: {
             retval = bool_ReadStrptrMaybe(parent.perns, strval);
-            break;
-        }
+        } break;
         case amcdb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -461,13 +460,14 @@ bool amcdb::Regxtype_ReadFieldMaybe(amcdb::Regxtype& parent, algo::strptr field,
     switch(field_id) {
         case amcdb_FieldId_regxtype: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.regxtype, strval);
-            break;
-        }
+        } break;
         case amcdb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -509,13 +509,14 @@ bool amcdb::Tclass_ReadFieldMaybe(amcdb::Tclass& parent, algo::strptr field, alg
     switch(field_id) {
         case amcdb_FieldId_tclass: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.tclass, strval);
-            break;
-        }
+        } break;
         case amcdb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -569,21 +570,20 @@ bool amcdb::Tcurs_ReadFieldMaybe(amcdb::Tcurs& parent, algo::strptr field, algo:
     switch(field_id) {
         case amcdb_FieldId_tfunc: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.tfunc, strval);
-            break;
-        }
+        } break;
         case amcdb_FieldId_dflt: {
             retval = bool_ReadStrptrMaybe(parent.dflt, strval);
-            break;
-        }
+        } break;
         case amcdb_FieldId_curstype: {
             retval = false;
-            break;
-        }
+        } break;
         case amcdb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -657,49 +657,41 @@ bool amcdb::Tfunc_ReadFieldMaybe(amcdb::Tfunc& parent, algo::strptr field, algo:
     switch(field_id) {
         case amcdb_FieldId_tfunc: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.tfunc, strval);
-            break;
-        }
+        } break;
         case amcdb_FieldId_tclass: {
             retval = false;
-            break;
-        }
+        } break;
         case amcdb_FieldId_name: {
             retval = false;
-            break;
-        }
+        } break;
         case amcdb_FieldId_hasthrow: {
             retval = bool_ReadStrptrMaybe(parent.hasthrow, strval);
-            break;
-        }
+        } break;
         case amcdb_FieldId_leaf: {
             retval = bool_ReadStrptrMaybe(parent.leaf, strval);
-            break;
-        }
+        } break;
         case amcdb_FieldId_poolfunc: {
             retval = bool_ReadStrptrMaybe(parent.poolfunc, strval);
-            break;
-        }
+        } break;
         case amcdb_FieldId_inl: {
             retval = bool_ReadStrptrMaybe(parent.inl, strval);
-            break;
-        }
+        } break;
         case amcdb_FieldId_wur: {
             retval = bool_ReadStrptrMaybe(parent.wur, strval);
-            break;
-        }
+        } break;
         case amcdb_FieldId_pure: {
             retval = bool_ReadStrptrMaybe(parent.pure, strval);
-            break;
-        }
+        } break;
         case amcdb_FieldId_ismacro: {
             retval = bool_ReadStrptrMaybe(parent.ismacro, strval);
-            break;
-        }
+        } break;
         case amcdb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);

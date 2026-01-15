@@ -27,12 +27,15 @@
 #include "include/gen/samp_regx_gen.inl.h"
 #include "include/gen/command_gen.h"
 #include "include/gen/command_gen.inl.h"
+#include "include/gen/lib_json_gen.h"
+#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
+lib_json::FDb    lib_json::_db;     // dependency found via dev.targdep
 algo_lib::FDb    algo_lib::_db;     // dependency found via dev.targdep
 samp_regx::FDb   samp_regx::_db;    // dependency found via dev.targdep
 
@@ -43,16 +46,15 @@ const char *samp_regx_help =
 "    OPTION      TYPE    DFLT    COMMENT\n"
 "    -in         string  \"data\"  Input directory or filename, - for stdin\n"
 "    [expr]      string          Expression\n"
-"    -style      int     acr     Regx style (acr|shell|classic|literal)\n"
-"                                    acr  ACR-style regx\n"
-"                                    shell  Shell-style regx\n"
-"                                    classic  Classic regx\n"
-"                                    literal  Literal string\n"
-"    -match                      Match a string\n"
+"    -style      enum    acr     Regx style (default|sql|acr|shell|literal)\n"
+"    -trace                      Trace regx innards\n"
+"    -capture                    Use capture groups\n"
+"    -full               Y       Match full string\n"
+"    -f                          <string> is a filename, grep the lines\n"
+"    -match                      Match a string, exit code represnts success\n"
 "    [string]    string  \"\"      String to match\n"
-"    -show                       Show regx innards\n"
-"    -verbose    int             Verbosity level (0..255); alias -v; cumulative\n"
-"    -debug      int             Debug level (0..255); alias -d; cumulative\n"
+"    -verbose    flag            Verbosity level (0..255); alias -v; cumulative\n"
+"    -debug      flag            Debug level (0..255); alias -d; cumulative\n"
 "    -help                       Print help and exit; alias -h\n"
 "    -version                    Print version and exit\n"
 "    -signature                  Show signatures and exit; alias -sig\n"
@@ -170,9 +172,8 @@ void samp_regx::ReadArgv() {
         }
         if (ch_N(attrname) == 0) {
             err << "samp_regx: too many arguments. error at "<<algo::strptr_ToSsim(arg)<<eol;
-        }
-        // read value into currently selected arg
-        if (haveval) {
+        } else if (haveval) {
+            // read value into currently selected arg
             bool ret=false;
             // it's already known which namespace is consuming the args,
             // so directly go there
@@ -216,6 +217,9 @@ void samp_regx::ReadArgv() {
         }ind_end
         doexit = true;
     }
+    algo_lib_logcat_debug.enabled = algo_lib::_db.cmdline.debug;
+    algo_lib_logcat_verbose.enabled = algo_lib::_db.cmdline.verbose > 0;
+    algo_lib_logcat_verbose2.enabled = algo_lib::_db.cmdline.verbose > 1;
     if (!dohelp) {
         if (!expr_present) {
             err << "samp_regx: Missing value for required argument -expr (see -help)" << eol;
@@ -231,7 +235,7 @@ void samp_regx::ReadArgv() {
     }
     if (err != "") {
         algo_lib::_db.exit_code=1;
-        prerr(err);
+        prerr_(err); // already has eol
         doexit=true;
     }
     if (dohelp) {
@@ -298,8 +302,8 @@ bool samp_regx::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     } else if (DirectoryQ(root)) {
         retval = retval && samp_regx::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
     } else {
-        algo_lib::SaveBadTag("path", root);
-        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        algo_lib::AppendErrtext("path", root);
+        algo_lib::AppendErrtext("comment", "Wrong working directory?");
         retval = false;
     }
     return retval;
@@ -473,11 +477,13 @@ void samp_regx::StaticCheck() {
 // --- samp_regx...main
 int main(int argc, char **argv) {
     try {
+        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         samp_regx::FDb_Init();
         algo_lib::_db.argc = argc;
         algo_lib::_db.argv = argv;
         algo_lib::IohookInit();
+        algo_lib::_db.clock = algo::CurrSchedTime(); // initialize clock
         samp_regx::ReadArgv(); // dmmeta.main:samp_regx
         samp_regx::Main(); // user-defined main
     } catch(algo_lib::ErrorX &x) {
@@ -490,6 +496,7 @@ int main(int argc, char **argv) {
     try {
         samp_regx::FDb_Uninit();
         algo_lib::FDb_Uninit();
+        lib_json::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;

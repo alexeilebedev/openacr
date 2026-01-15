@@ -202,6 +202,9 @@ void                 ind_sandbox_Remove(sandbox::FSandbox& row) __attribute__((n
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:sandbox.FDb.ind_sandbox.Reserve
 void                 ind_sandbox_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:sandbox.FDb.ind_sandbox.AbsReserve
+void                 ind_sandbox_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -278,11 +281,12 @@ void                 FDb_Uninit() __attribute__((nothrow));
 // global access: sandbox (Lary, by rowid)
 // global access: ind_sandbox (Thash, hash field sandbox)
 struct FSandbox { // sandbox.FSandbox
-    sandbox::FSandbox*   ind_sandbox_next;   // hash next
-    algo::Smallstr50     sandbox;            //
-    algo::Comment        comment;            //
-    algo::cstring        dir;                //
-    bool                 select;             //   false
+    sandbox::FSandbox*   ind_sandbox_next;      // hash next
+    u32                  ind_sandbox_hashval;   // hash value
+    algo::Smallstr50     sandbox;               //
+    algo::Comment        comment;               //
+    algo::cstring        dir;                   //
+    bool                 select;                //   false
     // func:sandbox.FSandbox..AssignOp
     inline sandbox::FSandbox& operator =(const sandbox::FSandbox &rhs) = delete;
     // func:sandbox.FSandbox..CopyCtor

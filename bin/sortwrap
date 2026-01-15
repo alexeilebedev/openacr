@@ -1,0 +1,74 @@
+#!/usr/bin/env bash
+# Copyright (C) 2025-2026 AlgoRND
+#
+# License: GPL
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#
+
+set -o pipefail
+
+usage() {
+    cat <<'EOF'
+Usage:
+  sortwrap [SORT_OPTS ...] -- COMMAND [ARGS...]
+  sortwrap [SORT_OPTS ...] COMMAND [ARGS...]
+
+Description:
+  Runs COMMAND and sorts its stdout with 'sort'. Any arguments before the first
+  non-option or explicit -- are passed directly to sort (e.g. -n, -r, -u, -k2,2).
+
+Notes:
+  • stderr from COMMAND is not sorted and is passed through unchanged.
+  • Exit status is COMMAND's if it failed, otherwise sort's.
+  • On macOS/BSD, use '-r' instead of '--reverse'.
+
+Examples:
+  sortwrap -- ls -1
+  sortwrap -n -r -- seq 1 10
+  sortwrap -k2,2 awk '{print $2, $1}' file.txt
+EOF
+}
+
+SORT_OPTS=()
+if (( $# == 0 )); then usage >&2; exit 2; fi
+
+# Collect sort options up to '--' or first non-option
+while (( $# )); do
+    case "$1" in
+        -h|--help) usage; exit 0 ;;
+        --) shift; break ;;
+        -*) SORT_OPTS+=("$1"); shift ;;
+        *)  break ;;
+    esac
+done
+
+if (( $# == 0 )); then
+    echo "Error: missing COMMAND. Put -- before the command if you used sort options." >&2
+    usage >&2
+    exit 2
+fi
+
+# Run COMMAND | sort with selected options
+"$@" | sort "${SORT_OPTS[@]}"
+# Capture both statuses safely (default to 0 if missing)
+ps=( "${PIPESTATUS[@]}" )
+cmd_status=${ps[0]:-0}
+sort_status=${ps[1]:-0}
+
+# Prefer the command's failure code, otherwise sort's
+if (( cmd_status != 0 )); then
+    exit "$cmd_status"
+else
+    exit "$sort_status"
+fi

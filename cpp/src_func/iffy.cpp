@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
 //
@@ -142,7 +142,7 @@ void src_func::ComputeIffy(src_func::FFunc &func) {
         strptr arg=Pathcomp(proto,",LL");
         CheckArg(func,arg);
     }
-    strptr ns = GetFuncNs(func.func);
+    strptr ns = GetFuncNs(func);
     tempstr need_ns(target_Get(*func.p_targsrc));
     if (ns != "" && ns != need_ns && ind_target_Find(ns)) {
         MarkIffy(func, 0, func.func, "funcns"

@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
 //
@@ -44,18 +44,13 @@ typedef unsigned int       u32;
 typedef          float     f32;
 typedef          double    f64;
 typedef     long double    f80;
-#if defined(WIN32)
+#ifdef WIN32
 typedef __int64            i64;
 typedef i64                ssize_t;
 typedef unsigned __int64   u64;
 #else
-#if defined(__LP64__) || defined(_LP64) || defined(__x86_64__)
 typedef unsigned long      u64;
 typedef   signed long      i64;
-#else
-typedef unsigned long long u64;
-typedef   signed long long i64;
-#endif
 #endif
 typedef i64                int_ptr;
 typedef u64                uint_ptr;
@@ -79,7 +74,6 @@ namespace algo {
     struct ImrowPtr;
     struct Tuple;
     struct SchedTime;
-    typedef void (*TuplecmdFcn)(Tuple&);
     typedef void(*InitFcn)(void* str);
     typedef bool(*SetnumFcn)(void* str, i64 num);
     typedef i64(*Geti64Fcn)(void* str, bool &out_ok);
@@ -92,18 +86,27 @@ namespace algo {
     typedef void (*ImrowXrefXFcn)(algo::ImrowPtr);
     typedef int (*ImrowNItemsFcn)();
     typedef void (*ImrowPrintFcn)(algo::ImrowPtr data, algo::cstring &lhs);
-    typedef algo::ImrowPtr (*ImrowGetElemFcn)(algo::memptr pkey);
     typedef algo::ImrowPtr (*ImrowRowidFindFcn)(int i);
 
     template<class T> struct  aryptr {
-        typedef          T               ValueType;
+        typedef T ValueType;
         T    *elems;
         i32 n_elems;
 
         aryptr(const T *e, i32 in_n);
-        aryptr(const char *e);
         aryptr();
-        T              &operator [](u32 idx) const;
+        T &operator [](u32 idx) const;
+    };
+    // specialization for char
+    template<> struct aryptr<char> {
+        typedef char ValueType;
+        char *elems;
+        i32 n_elems;
+
+        aryptr() : elems(NULL), n_elems(0) {}
+        aryptr(const char *e) { elems=(char*)e; n_elems=e ? strlen(e) : 0; }
+        aryptr(const char *e, i32 n) : elems((char*)e), n_elems(n) {}
+        char &operator [](u32 idx) const { return elems[idx]; }
     };
 }
 using algo::strptr;

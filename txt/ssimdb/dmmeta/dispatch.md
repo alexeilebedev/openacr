@@ -21,6 +21,8 @@ italicised fields: *ns, name* are [**fldfunc**](/txt/ssim.md#fldfunc) fields
 |haslen|bool|[Val](/txt/exe/amc/reftypes.md#val)||Include length in dispatch function|
 |call|bool|[Val](/txt/exe/amc/reftypes.md#val)||Generate call to user-defined function|
 |strict|bool|[Val](/txt/exe/amc/reftypes.md#val)||Only dispatch if length matches exactly|
+|dyn|bool|[Val](/txt/exe/amc/reftypes.md#val)||Use dynamic memory allocation: new, delete instead of  ByteAry|
+|kafka|bool|[Val](/txt/exe/amc/reftypes.md#val)||generate kafka codec|
 |comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Attributes -->
@@ -49,8 +51,8 @@ These ssimfiles reference dmmeta.dispatch
 <a href="#used-in-executables"></a>
 <!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:ImdbUses -->
 
+* [abt_md](/txt/exe/abt_md/internals.md) as [abt_md.FDispatch](/txt/exe/abt_md/internals.md#abt_md-fdispatch)
 * [amc](/txt/exe/amc/internals.md) as [amc.FDispatch](/txt/exe/amc/internals.md#amc-fdispatch)
-* [src_func](/txt/exe/src_func/internals.md) as [src_func.FDispatch](/txt/exe/src_func/internals.md#src_func-fdispatch)
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:ImdbUses -->
 

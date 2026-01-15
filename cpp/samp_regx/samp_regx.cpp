@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -24,34 +24,40 @@
 
 void samp_regx::Main() {
     algo_lib::Regx regx;
-    switch (_db.cmdline.style) {
-    case command_samp_regx_style_acr: Regx_ReadAcr(regx,_db.cmdline.expr,true); break;
-    case command_samp_regx_style_shell: Regx_ReadShell(regx,_db.cmdline.expr,true); break;
-    case command_samp_regx_style_classic: Regx_ReadDflt(regx,_db.cmdline.expr); break;
-    case command_samp_regx_style_literal: Regx_ReadLiteral(regx,_db.cmdline.expr); break;
+    trace_Set(regx.flags,_db.cmdline.trace);
+    capture_Set(regx.flags,_db.cmdline.capture);
+    if (_db.cmdline.f) {
+        vrfy(!_db.cmdline.trace, "-show only works with a single string");
     }
-    if (_db.cmdline.show) {
+    algo_lib::Regx_ReadStyle(regx,_db.cmdline.expr,_db.cmdline.style,_db.cmdline.full);
+    if (_db.cmdline.trace) {
         prlog("expr: "<<regx.expr);
-        prlog("states: "<<regx.state_n);
-        prlog("accept state: "<<regx.accept);
-        prlog("parseerror: "<<regx.parseerror);
-        prlog("accepts_all: "<<regx.accepts_all);
-        prlog("literal: "<<regx.literal);
-        ind_beg(algo_lib::regx_state_curs,state,regx) {
-            prlog("state #"<<ind_curs(state).index);
-            ind_beg(algo_lib::RegxState_ch_class_curs,ch_class,state) {
-                prlog("  "<<ch_class.beg<<".."<<ch_class.end);
-            }ind_end;
-            tempstr out;
-            algo::ListSep ls;
-            ind_beg(algo_lib::Bitset_ary_bitcurs,outstate,state.out) {
-                out<<ls<<outstate;
-            }ind_end;
-            prlog("  accept_all:"<<state.accept_all);
-            prlog("  out:"<<out);
+        prlog("style: "<<regx.style);
+        prlog("flags: "<<regx.flags);
+    }
+    int nmatch=0;
+    if (_db.cmdline.f) {
+        ind_beg(algo::FileLine_curs,line,_db.cmdline.string) {
+            if (Regx_Match(regx,line)) {
+                prlog(line);
+                nmatch++;
+            }
         }ind_end;
+    } else {
+        nmatch += Regx_Match(regx,_db.cmdline.string);
+        if (_db.cmdline.trace) {
+            prlog("match: "<<bool(nmatch>0));
+        }
+        if (_db.cmdline.capture) {
+            algo::ListSep ls(", ");
+            cstring out("match range: ");
+            ind_beg(algo::I32RangeAry_ary_curs,range,algo_lib::_db.regxm.matchrange) {
+                out<<ls<<range;
+            }ind_end;
+            prlog(out);
+        }
     }
     if (_db.cmdline.match) {
-        algo_lib::_db.exit_code=Regx_Match(regx,_db.cmdline.string) ? 0:1;
+        algo_lib::_db.exit_code=nmatch>0 ? 0:1;
     }
 }

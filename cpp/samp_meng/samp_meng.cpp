@@ -1,4 +1,4 @@
-// Copyright (C) 2024 AlgoRND
+// Copyright (C) 2024,2026 AlgoRND
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -14,9 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
-// Target: samp_meng (exe)
+// Target: samp_meng (exe) -- Sample matching engine
 // Exceptions: yes
-// Source: cpp/samp_meng/samp_meng.cpp
+// Source: cpp/samp_meng/samp_meng.cpp -- Main source
 //
 
 #include "include/algo.h"

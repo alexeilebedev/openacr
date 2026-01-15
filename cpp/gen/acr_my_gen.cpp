@@ -33,10 +33,13 @@
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/dmmeta_gen.h"
 #include "include/gen/dmmeta_gen.inl.h"
+#include "include/gen/lib_json_gen.h"
+#include "include/gen/lib_json_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
+lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 acr_my::FDb     acr_my::_db;      // dependency found via dev.targdep
 
@@ -56,8 +59,8 @@ const char *acr_my_help =
 "    -abort                      Abort local mysql server, losing data\n"
 "    -shell                      Connect to local mysql server\n"
 "    -serv                       Start mysql with TCP/IP service enabled\n"
-"    -verbose    int             Verbosity level (0..255); alias -v; cumulative\n"
-"    -debug      int             Debug level (0..255); alias -d; cumulative\n"
+"    -verbose    flag            Verbosity level (0..255); alias -v; cumulative\n"
+"    -debug      flag            Debug level (0..255); alias -d; cumulative\n"
 "    -help                       Print help and exit; alias -h\n"
 "    -version                    Print version and exit\n"
 "    -signature                  Show signatures and exit; alias -sig\n"
@@ -154,6 +157,25 @@ algo::aryptr<algo::cstring> acr_my::ary_ns_AllocN(int n_elems) {
     return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
 }
 
+// --- acr_my.FDb.ary_ns.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<algo::cstring> acr_my::ary_ns_AllocNAt(int n_elems, int at) {
+    ary_ns_Reserve(n_elems);
+    int n  = _db.ary_ns_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("acr_my.bad_alloc_n_at  field:acr_my.FDb.ary_ns  comment:'index out of range'");
+    }
+    algo::cstring *elems = _db.ary_ns_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(algo::cstring));
+    for (int i = 0; i < n_elems; i++) {
+        new (elems + at + i) algo::cstring(); // construct new element, default initialize
+    }
+    _db.ary_ns_n = n+n_elems;
+    return algo::aryptr<algo::cstring>(elems+at,n_elems);
+}
+
 // --- acr_my.FDb.ary_ns.Remove
 // Remove item by index. If index outside of range, do nothing.
 void acr_my::ary_ns_Remove(u32 i) {
@@ -228,6 +250,30 @@ bool acr_my::ary_ns_ReadStrptrMaybe(algo::strptr in_str) {
         ary_ns_RemoveLast();
     }
     return retval;
+}
+
+// --- acr_my.FDb.ary_ns.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void acr_my::ary_ns_Insary(algo::aryptr<algo::cstring> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= _db.ary_ns_elems && rhs.elems < _db.ary_ns_elems + _db.ary_ns_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("acr_my.tary_alias  field:acr_my.FDb.ary_ns  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(_db.ary_ns_elems+1))) {
+        FatalErrorExit("acr_my.bad_insary  field:acr_my.FDb.ary_ns  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = _db.ary_ns_n - at;
+    ary_ns_Reserve(nnew); // reserve space
+    for (int i = nmove-1; i >=0 ; --i) {
+        new (_db.ary_ns_elems + at + nnew + i) algo::cstring(_db.ary_ns_elems[at + i]);
+        _db.ary_ns_elems[at + i].~cstring(); // destroy element
+    }
+    for (int i = 0; i < nnew; ++i) {
+        new (_db.ary_ns_elems + at + i) algo::cstring(rhs[i]);
+    }
+    _db.ary_ns_n += nnew;
 }
 
 // --- acr_my.FDb._db.ReadArgv
@@ -316,9 +362,8 @@ void acr_my::ReadArgv() {
         }
         if (ch_N(attrname) == 0) {
             err << "acr_my: too many arguments. error at "<<algo::strptr_ToSsim(arg)<<eol;
-        }
-        // read value into currently selected arg
-        if (haveval) {
+        } else if (haveval) {
+            // read value into currently selected arg
             bool ret=false;
             // it's already known which namespace is consuming the args,
             // so directly go there
@@ -361,6 +406,9 @@ void acr_my::ReadArgv() {
         }ind_end
         doexit = true;
     }
+    algo_lib_logcat_debug.enabled = algo_lib::_db.cmdline.debug;
+    algo_lib_logcat_verbose.enabled = algo_lib::_db.cmdline.verbose > 0;
+    algo_lib_logcat_verbose2.enabled = algo_lib::_db.cmdline.verbose > 1;
     if (!dohelp) {
     }
     // dmmeta.floadtuples:acr_my.FDb.cmdline
@@ -372,7 +420,7 @@ void acr_my::ReadArgv() {
     }
     if (err != "") {
         algo_lib::_db.exit_code=1;
-        prerr(err);
+        prerr_(err); // already has eol
         doexit=true;
     }
     if (dohelp) {
@@ -462,8 +510,8 @@ bool acr_my::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && acr_my::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ssimfile"),recursive);
         retval = retval && acr_my::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
     } else {
-        algo_lib::SaveBadTag("path", root);
-        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        algo_lib::AppendErrtext("path", root);
+        algo_lib::AppendErrtext("comment", "Wrong working directory?");
         retval = false;
     }
     return retval;
@@ -998,11 +1046,13 @@ void acr_my::StaticCheck() {
 // --- acr_my...main
 int main(int argc, char **argv) {
     try {
+        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         acr_my::FDb_Init();
         algo_lib::_db.argc = argc;
         algo_lib::_db.argv = argv;
         algo_lib::IohookInit();
+        algo_lib::_db.clock = algo::CurrSchedTime(); // initialize clock
         acr_my::ReadArgv(); // dmmeta.main:acr_my
         acr_my::Main(); // user-defined main
     } catch(algo_lib::ErrorX &x) {
@@ -1015,6 +1065,7 @@ int main(int argc, char **argv) {
     try {
         acr_my::FDb_Uninit();
         algo_lib::FDb_Uninit();
+        lib_json::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;

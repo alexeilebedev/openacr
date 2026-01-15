@@ -1,0 +1,8 @@
+httpdb.method  method:GET  id:1  comment:"Transfer a current representation of the target resource"
+httpdb.method  method:HEAD  id:2  comment:"Same as GET, but do not transfer the response content"
+httpdb.method  method:POST  id:3  comment:"Perform resource-specific processing on the request content"
+httpdb.method  method:PUT  id:4  comment:"Replace all current representations of the target resource with the request content"
+httpdb.method  method:DELETE  id:5  comment:"Remove all current representations of the target resource"
+httpdb.method  method:CONNECT  id:6  comment:"Establish a tunnel to the server identified by the target resource"
+httpdb.method  method:OPTIONS  id:7  comment:"Describe the communication options for the target resource"
+httpdb.method  method:TRACE  id:8  comment:"Perform a message loop-back test along the path to the target resource"

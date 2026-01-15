@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
 //
@@ -18,7 +18,7 @@
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: atf_amc (exe) -- Unit tests for amc (see amctest table)
-// Exceptions: NO
+// Exceptions: yes
 // Source: cpp/atf_amc/readstr.cpp
 //
 
@@ -51,13 +51,13 @@ void atf_amc::amctest_ReadTuple2() {
     vrfyeq_(out, "atf_amc.Ctype2Attr  attr1:33  attr2:44");
     // Check that ReadStrptr works
     atf_amc::Ctype2Attr in_ctype;
-    Ctype2Attr_ReadStrptrMaybe(in_ctype, out);
+    vrfy_(Ctype2Attr_ReadStrptrMaybe(in_ctype, out));
     vrfyeq_(in_ctype, out_ctype);
     // Check that ReadTuple works the same
     algo::Tuple tuple;
     algo::Refurbish(in_ctype);
-    Tuple_ReadStrptr(tuple, out, true /*attrs only*/);
-    Ctype2Attr_ReadTupleMaybe(in_ctype, tuple);
+    Tuple_ReadStrptr(tuple, out, false);
+    vrfy_(Ctype2Attr_ReadTupleMaybe(in_ctype, tuple));
     vrfyeq_(in_ctype, out_ctype);
 }
 

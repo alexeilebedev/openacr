@@ -435,6 +435,9 @@ void                 ind_unittest_Remove(atf_unit::FUnittest& row) __attribute__
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:atf_unit.FDb.ind_unittest.Reserve
 void                 ind_unittest_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:atf_unit.FDb.ind_unittest.AbsReserve
+void                 ind_unittest_AbsReserve(int n) __attribute__((nothrow));
 
 // cursor points to valid item
 // func:atf_unit.FDb.tr_number_curs.Reset
@@ -533,6 +536,11 @@ atf_unit::Dbl&       orig_AllocAt(atf_unit::FPerfSort& parent, int at) __attribu
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:atf_unit.FPerfSort.orig.AllocN
 algo::aryptr<atf_unit::Dbl> orig_AllocN(atf_unit::FPerfSort& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:atf_unit.FPerfSort.orig.AllocNAt
+algo::aryptr<atf_unit::Dbl> orig_AllocNAt(atf_unit::FPerfSort& parent, int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:atf_unit.FPerfSort.orig.EmptyQ
 inline bool          orig_EmptyQ(atf_unit::FPerfSort& parent) __attribute__((nothrow));
@@ -589,6 +597,10 @@ algo::aryptr<atf_unit::Dbl> orig_AllocNVal(atf_unit::FPerfSort& parent, int n_el
 // Function returns success value.
 // func:atf_unit.FPerfSort.orig.ReadStrptrMaybe
 bool                 orig_ReadStrptrMaybe(atf_unit::FPerfSort& parent, algo::strptr in_str) __attribute__((nothrow));
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:atf_unit.FPerfSort.orig.Insary
+void                 orig_Insary(atf_unit::FPerfSort& parent, algo::aryptr<atf_unit::Dbl> rhs, int at) __attribute__((nothrow));
 
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
@@ -606,6 +618,11 @@ atf_unit::Dbl&       sorted_AllocAt(atf_unit::FPerfSort& parent, int at) __attri
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:atf_unit.FPerfSort.sorted.AllocN
 algo::aryptr<atf_unit::Dbl> sorted_AllocN(atf_unit::FPerfSort& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:atf_unit.FPerfSort.sorted.AllocNAt
+algo::aryptr<atf_unit::Dbl> sorted_AllocNAt(atf_unit::FPerfSort& parent, int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:atf_unit.FPerfSort.sorted.EmptyQ
 inline bool          sorted_EmptyQ(atf_unit::FPerfSort& parent) __attribute__((nothrow));
@@ -662,6 +679,10 @@ algo::aryptr<atf_unit::Dbl> sorted_AllocNVal(atf_unit::FPerfSort& parent, int n_
 // Function returns success value.
 // func:atf_unit.FPerfSort.sorted.ReadStrptrMaybe
 bool                 sorted_ReadStrptrMaybe(atf_unit::FPerfSort& parent, algo::strptr in_str) __attribute__((nothrow));
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:atf_unit.FPerfSort.sorted.Insary
+void                 sorted_Insary(atf_unit::FPerfSort& parent, algo::aryptr<atf_unit::Dbl> rhs, int at) __attribute__((nothrow));
 // Verify whether array is sorted
 // func:atf_unit.FPerfSort.sorted.SortedQ
 bool                 sorted_SortedQ(atf_unit::FPerfSort& parent) __attribute__((nothrow));
@@ -691,6 +712,11 @@ i32&                 index_AllocAt(atf_unit::FPerfSort& parent, int at) __attrib
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:atf_unit.FPerfSort.index.AllocN
 algo::aryptr<i32>    index_AllocN(atf_unit::FPerfSort& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:atf_unit.FPerfSort.index.AllocNAt
+algo::aryptr<i32>    index_AllocNAt(atf_unit::FPerfSort& parent, int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:atf_unit.FPerfSort.index.EmptyQ
 inline bool          index_EmptyQ(atf_unit::FPerfSort& parent) __attribute__((nothrow));
@@ -747,6 +773,10 @@ algo::aryptr<i32>    index_AllocNVal(atf_unit::FPerfSort& parent, int n_elems, c
 // Function returns success value.
 // func:atf_unit.FPerfSort.index.ReadStrptrMaybe
 bool                 index_ReadStrptrMaybe(atf_unit::FPerfSort& parent, algo::strptr in_str) __attribute__((nothrow));
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:atf_unit.FPerfSort.index.Insary
+void                 index_Insary(atf_unit::FPerfSort& parent, algo::aryptr<i32> rhs, int at) __attribute__((nothrow));
 
 // proceed to next item
 // func:atf_unit.FPerfSort.orig_curs.Next
@@ -793,14 +823,15 @@ void                 FPerfSort_Uninit(atf_unit::FPerfSort& parent) __attribute__
 // global access: ind_unittest (Thash, hash field unittest)
 // global access: c_curtest (Ptr)
 struct FUnittest { // atf_unit.FUnittest: Test function
-    atf_unit::FUnittest*           ind_unittest_next;   // hash next
-    algo::Smallstr50               unittest;            //
-    algo::Comment                  comment;             //
-    bool                           select;              //   false  Select test for running?
-    atf_unit::unittest_step_hook   step;                //   NULL  Pointer to a function
-    bool                           success;             //   false
-    algo::cstring                  error;               //
-    lib_exec::FSyscmd*             c_syscmd;            // optional pointer
+    atf_unit::FUnittest*           ind_unittest_next;      // hash next
+    u32                            ind_unittest_hashval;   // hash value
+    algo::Smallstr50               unittest;               //
+    algo::Comment                  comment;                //
+    bool                           select;                 //   false  Select test for running?
+    atf_unit::unittest_step_hook   step;                   //   NULL  Pointer to a function
+    bool                           success;                //   false
+    algo::cstring                  error;                  //
+    lib_exec::FSyscmd*             c_syscmd;               // optional pointer
     // reftype Hook of atf_unit.FUnittest.step prohibits copy
     // func:atf_unit.FUnittest..AssignOp
     atf_unit::FUnittest& operator =(const atf_unit::FUnittest &rhs) = delete;
@@ -825,8 +856,8 @@ void                 unittest_CopyOut(atf_unit::FUnittest &row, atfdb::Unittest 
 // func:atf_unit.FUnittest.base.CopyIn
 void                 unittest_CopyIn(atf_unit::FUnittest &row, atfdb::Unittest &in) __attribute__((nothrow));
 
-// func:atf_unit.FUnittest.target.Get
-algo::Smallstr16     target_Get(atf_unit::FUnittest& unittest) __attribute__((__warn_unused_result__, nothrow));
+// func:atf_unit.FUnittest.ns.Get
+algo::Smallstr16     ns_Get(atf_unit::FUnittest& unittest) __attribute__((__warn_unused_result__, nothrow));
 
 // func:atf_unit.FUnittest.testname.Get
 algo::Smallstr50     testname_Get(atf_unit::FUnittest& unittest) __attribute__((__warn_unused_result__, nothrow));
@@ -1242,6 +1273,10 @@ void                 unittest_algo_lib_ExitCode();
 // this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_FTruncate();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_FileAppend
+// this function is 'extrn' and implemented by user
+void                 unittest_algo_lib_FileAppend();
+// User-implemented function from gstatic:atf_unit.FDb.unittest
 // func:atf_unit...unittest_algo_lib_FileLine_curs
 // this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_FileLine_curs();
@@ -1406,6 +1441,10 @@ void                 unittest_algo_lib_PrintSsim();
 // this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_PrintUnTime();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_PrintUuid
+// this function is 'extrn' and implemented by user
+void                 unittest_algo_lib_PrintUuid();
+// User-implemented function from gstatic:atf_unit.FDb.unittest
 // func:atf_unit...unittest_algo_lib_PrintWithCommas
 // this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_PrintWithCommas();
@@ -1417,6 +1456,10 @@ void                 unittest_algo_lib_ReadLine();
 // func:atf_unit...unittest_algo_lib_ReadModuleId
 // this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_ReadModuleId();
+// User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_ReadUuid
+// this function is 'extrn' and implemented by user
+void                 unittest_algo_lib_ReadUuid();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
 // func:atf_unit...unittest_algo_lib_Regx
 // this function is 'extrn' and implemented by user
@@ -1441,6 +1484,10 @@ void                 unittest_algo_lib_RemDirRecurse();
 // func:atf_unit...unittest_algo_lib_Replscope
 // this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_Replscope();
+// User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_ReplscopeSharedPrefix
+// this function is 'extrn' and implemented by user
+void                 unittest_algo_lib_ReplscopeSharedPrefix();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
 // func:atf_unit...unittest_algo_lib_ReverseBits
 // this function is 'extrn' and implemented by user
@@ -1566,6 +1613,14 @@ void                 unittest_algo_lib_U128PrintHex();
 // this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_UnescapeC();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_Url
+// this function is 'extrn' and implemented by user
+void                 unittest_algo_lib_Url();
+// User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_algo_lib_Zigzag
+// this function is 'extrn' and implemented by user
+void                 unittest_algo_lib_Zigzag();
+// User-implemented function from gstatic:atf_unit.FDb.unittest
 // func:atf_unit...unittest_algo_lib_flock
 // this function is 'extrn' and implemented by user
 void                 unittest_algo_lib_flock();
@@ -1605,6 +1660,22 @@ void                 unittest_fm();
 // func:atf_unit...unittest_lib_ams_Test1
 // this function is 'extrn' and implemented by user
 void                 unittest_lib_ams_Test1();
+// User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_curl_GET_Echo
+// this function is 'extrn' and implemented by user
+void                 unittest_lib_curl_GET_Echo();
+// User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_curl_POST_JSON
+// this function is 'extrn' and implemented by user
+void                 unittest_lib_curl_POST_JSON();
+// User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_curl_PUT_PLAINTEXT
+// this function is 'extrn' and implemented by user
+void                 unittest_lib_curl_PUT_PLAINTEXT();
+// User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_curl_STATUS_200
+// this function is 'extrn' and implemented by user
+void                 unittest_lib_curl_STATUS_200();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
 // func:atf_unit...unittest_lib_exec_Dependency
 // this function is 'extrn' and implemented by user
@@ -2045,6 +2116,10 @@ void                 unittest_lib_json_TokenTrue();
 // func:atf_unit...unittest_lib_json_Typical
 // this function is 'extrn' and implemented by user
 void                 unittest_lib_json_Typical();
+// User-implemented function from gstatic:atf_unit.FDb.unittest
+// func:atf_unit...unittest_lib_netio_GetHostAddr
+// this function is 'extrn' and implemented by user
+void                 unittest_lib_netio_GetHostAddr();
 // User-implemented function from gstatic:atf_unit.FDb.unittest
 // func:atf_unit...unittest_lib_sql_Main
 // this function is 'extrn' and implemented by user

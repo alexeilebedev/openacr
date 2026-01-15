@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2012 AlgoEngineering LLC
 //
@@ -37,7 +37,7 @@
 // because some_exe.FTable has an Opt field
 static bool NeedAllocExtraQ(amc::FField &field) {
     amc::FCtype &ctype = *field.p_arg;
-    return ctype.c_lenfld && (ctype.c_optfld || ctype.c_varlenfld);
+    return ctype.c_lenfld && (ctype.c_optfld || !zd_varlenfld_EmptyQ(ctype));
 }
 
 // -----------------------------------------------------------------------------
@@ -47,9 +47,15 @@ void amc::tclass_Pool() {
     amc::FField         &field    = *amc::_db.genctx.p_field;
 
     amc::FCtype& fldtype = *field.p_arg;
-    if (fldtype.c_varlenfld) {
-        Set(R, "$vartype", fldtype.c_varlenfld->cpp_type);
-        Set(R, "$varfld", name_Get(*fldtype.c_varlenfld));
+    // TODO remove this restricion
+    vrfy(zd_varlenfld_N(fldtype)<=1, tempstr()
+         <<Keyval("field",field.field)
+         <<Keyval("arg",field.arg)
+         <<Keyval("comment","Pool arg having more than one varlen field is currently unsupported"));
+
+    if (zd_varlenfld_First(fldtype)) {
+        Set(R, "$vartype", zd_varlenfld_First(fldtype)->cpp_type);
+        Set(R, "$varfld", name_Get(*zd_varlenfld_First(fldtype)));
     }
     if (NeedAllocExtraQ(field) && !field.p_reftype->varlen) {
         prerr("amc.one_size_doesnt_fit_all"
@@ -65,7 +71,7 @@ void amc::tclass_Pool() {
 static void GenAllocFunc(algo_lib::Replscope &R, amc::FFunc &func, amc::FField &field) {
     bool poolvarlen = PoolVarlenQ(field);
     amc::AddRetval(func, Subst(R,"$Cpptype*"), "row", Subst(R,"($Cpptype*)$name_AllocMem($pararg)"));
-    amc::AddArg(func.body, Subst(R,"$totlenexpr"), poolvarlen);
+    amc::AddArg(func.body, Subst(R,"$poolvarlen"), poolvarlen);
     Ins(&R, func.body , "if (row) {");
     Ins(&R, func.body , "    new (row) $Cpptype; // call constructor");
     // initialize rowid
@@ -77,7 +83,7 @@ static void GenAllocFunc(algo_lib::Replscope &R, amc::FFunc &func, amc::FField &
     amc::FLenfld *lenfld = (*field.p_arg).c_lenfld;
     if (lenfld) {
         Set(R, "$extra", tempstr() << field.p_arg->c_lenfld->extra);
-        Set(R, "$setlen", AssignExpr(*lenfld->p_field, "*row", "$totlenexpr - $extra", true));
+        Set(R, "$setlen", AssignExpr(*lenfld->p_field, "*row", "$poolvarlen - $extra", true));
         Ins(&R, func.body, "    $setlen;");
     }
     // initialize type field
@@ -107,13 +113,13 @@ void amc::tfunc_Pool_AllocMaybe() {
     if (!field.p_arg->c_optfld) {
         amc::FCtype& fldtype = *field.p_arg;
         amc::FFunc& func = amc::CreateCurFunc(true);
-        AddProtoArg(func,"i32","n_varfld",fldtype.c_varlenfld);
+        AddProtoArg(func,"i32","n_varfld",zd_varlenfld_First(fldtype));
         if (NeedAllocExtraQ(field)) {
             // this is a varlen struct -- no opt
             func.inl = true;
             AddRetval(func, Subst(R,"$Cpptype*"), "row", Subst(R,"$name_AllocExtraMaybe($pararg, NULL, sizeof($vartype) * n_varfld)"));
         } else {
-            Set(R, "$totlenexpr", "sizeof($Cpptype)");
+            Set(R, "$poolvarlen", "sizeof($Cpptype)");
             GenAllocFunc(R,func,field);
         }
     }
@@ -127,11 +133,11 @@ void amc::tfunc_Pool_Alloc() {
     if (!field.p_arg->c_optfld) {
         amc::FCtype& fldtype = *field.p_arg;
         amc::FFunc& func = amc::CreateCurFunc(true);
-        AddProtoArg(func, "i32", "n_varfld", fldtype.c_varlenfld);
+        AddProtoArg(func, "i32", "n_varfld", zd_varlenfld_First(fldtype));
         AddRetval(func, Subst(R,"$Cpptype&"), "", "");
         Ins(&R, func.body , "$Cpptype* row = $name_AllocMaybe($pararg);");
-        AddArg(func.body, "n_varfld", fldtype.c_varlenfld);
-        if (fldtype.c_varlenfld) {
+        AddArg(func.body, "n_varfld", zd_varlenfld_First(fldtype));
+        if (zd_varlenfld_First(fldtype)) {
             Ins(&R, func.comment, "Allocate memory for a new row with N_VARFLD var-len elements");
         } else {
             Ins(&R, func.comment, "Allocate memory for new default row.");
@@ -156,7 +162,7 @@ void amc::tfunc_Pool_AllocExtraMaybe() {
         amc::FFunc& func = amc::CreateCurFunc(true);
         AddProtoArg(func, "void *", "extra");
         AddProtoArg(func, "i32", "nbyte_extra");
-        Set(R, "$totlenexpr", "sizeof($Cpptype) + nbyte_extra");
+        Set(R, "$poolvarlen", "sizeof($Cpptype) + nbyte_extra");
         GenAllocFunc(R,func,field);
     }
 }
@@ -188,7 +194,7 @@ void amc::tfunc_Pool_AllocVarlenMaybe() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;
     amc::FCtype& fldtype = *field.p_arg;
-    if (fldtype.c_varlenfld) {
+    if (zd_varlenfld_First(fldtype)) {
         amc::FFunc& func = amc::CreateCurFunc();
         func.inl=true;
         Ins(&R, func.comment, "Allocate memory for a new row; Copy var-len portion from $varfld.");
@@ -206,7 +212,7 @@ void amc::tfunc_Pool_AllocVarlen() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;
     amc::FCtype& fldtype = *field.p_arg;
-    if (fldtype.c_varlenfld) {
+    if (zd_varlenfld_First(fldtype)) {
         amc::FFunc& func = amc::CreateCurFunc();
         func.inl=true;
         Ins(&R, func.ret  , "$Cpptype&", false);
@@ -352,8 +358,8 @@ static tempstr TotlenExpr(algo_lib::Replscope &R, amc::FCtype *ctype, strptr nam
     tempstr ret;
     if (ctype->c_lenfld) {
         ret << amc::LengthExpr(*ctype, name);
-    } else if (ctype->c_varlenfld) {
-        Set(R, "$vartype", ctype->c_varlenfld->cpp_type);
+    } else if (zd_varlenfld_First(*ctype)) {
+        Set(R, "$vartype", zd_varlenfld_First(*ctype)->cpp_type);
         ret << "sizeof($Cpptype) + $varfld_N("<<name<<") * sizeof($vartype);";
     } else {
         ret << "sizeof($Cpptype)";

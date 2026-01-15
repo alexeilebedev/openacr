@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2014-2019 NYSE | Intercontinental Exchange
 //
@@ -59,11 +59,19 @@ namespace lib_json { // update-hdr
     // TYPE      node type
     // VALUE     node value where applicable (only for field, string, number)
     lib_json::FNode &NewNode(lib_json::FNode *parent, lib_json_FNode_type_Enum type);
+
+    // PARENT    parent node or NULL
+    // TYPE      node type
+    // VALUE     node value where applicable (only for field, string, number)
+    // Construct 2 nodes, a "field" node which has the name FIELD, and its value
+    // of type TYPE. Return the VALUE
+    lib_json::FNode &NewFieldVal(lib_json::FNode *parent, lib_json_FNode_type_Enum type, strptr field);
     lib_json::FNode &NewFieldNode(lib_json::FNode *parent, strptr field);
     lib_json::FNode &NewObjectNode(lib_json::FNode *parent, strptr field = strptr());
     lib_json::FNode &NewArrayNode(lib_json::FNode *parent, strptr field = strptr());
     lib_json::FNode &NewStringNode(lib_json::FNode *parent, strptr field = strptr(), strptr value = strptr());
     lib_json::FNode &NewNumberNode(lib_json::FNode *parent, strptr field = strptr(), strptr value = strptr("0"));
+    lib_json::FNode &NewBoolNode(lib_json::FNode *parent, strptr field = strptr(), bool value = true);
 
     // Parses JSON text into tree structure according to ECMA-404
     // can be invoked repeadetly with new data portions (can be used directly as read hook)
@@ -80,7 +88,8 @@ namespace lib_json { // update-hdr
     bool JsonParse(lib_json::FParser &parser, strptr buf);
 
     // AMC cleanup function - automatically delete parsed JSON tree
-    void root_node_Cleanup(lib_json::FParser& parent);
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void root_node_Cleanup(lib_json::FParser& parent); // fcleanup:lib_json.FParser.root_node
 
     // encode json string
     // "The representation of strings is similar to conventions used in the C
@@ -90,17 +99,18 @@ namespace lib_json { // update-hdr
     // quotation mark, reverse solidus, and the control characters (U+0000
     // through U+001F)."
     // -- this says that solidus need not be escaped when printing -- only when parsing!
-    void JsonSerializeString(algo::strptr str, algo::cstring &lhs);
+    void JsonSerializeString(algo::strptr str, algo::cstring &out);
 
     // Serialize to string
     // Serialize to JSON tree to text
     // NODE      root node to start from
-    // LHS       target string
-    // PRETTY    whether or not pretty-format
+    // OUT       target string
+    // PRETTY    pretty printer setting:
+    // 0 = no pretty printer (compact output)
+    // 1 = algo style pretty printer
+    // 2 = standard (jq) style) pretty printer
     // INDENT    level of indenting (for pretty-formatting)
-    void JsonSerialize(lib_json::FNode* node, cstring &lhs, bool pretty, u32 indent);
-    void JsonSerialize(lib_json::FNode* node, cstring &lhs, bool pretty);
-    void JsonSerialize(lib_json::FNode* node, cstring &lhs);
+    void JsonSerialize(lib_json::FNode* node, cstring &out, u32 pretty = 0, u32 indent = 0);
 
     // Find node in object chain
     // PARENT    node to start from
@@ -130,7 +140,25 @@ namespace lib_json { // update-hdr
     // PARENT    node to start from
     // PATH      dot-separated list of field keys
     u32 u32_Get(lib_json::FNode* parent, strptr path, int dflt = 0);
-    lib_json::FldKey fldkey_Get(lib_json::FNode &node);
+
+    // Get node value as u32
+    // If the path is not found, or the value is malformatted, DFLT is returned.
+    // true/false is converted to 0/1
+    //
+    // PARENT    node to start from
+    // PATH      dot-separated list of field keys
+    u32 i32_Get(lib_json::FNode* parent, strptr path, int dflt = 0);
+
+    // Get node value as bool
+    // number is converted: zero - false, nonzero true
+    // empty string - false, non-empty string true
+    // On any error, DFLT is returned.
+    //
+    // PARENT    node to start from
+    // PATH      dot-separated list of field keys
+    u32 bool_Get(lib_json::FNode* parent, strptr path, int dflt = false);
+    //     (user-implemented function, prototype is in amc-generated header)
+    // lib_json::FldKey fldkey_Get(lib_json::FNode &node);
 
     // -------------------------------------------------------------------
     // include/lib_json.inl.h

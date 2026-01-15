@@ -86,9 +86,9 @@ inline atf_comp::FTmsg* atf_comp::zd_tmsg_First(atf_comp::FComptest& comptest) {
 
 // --- atf_comp.FComptest.zd_tmsg.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool atf_comp::zd_tmsg_InLlistQ(atf_comp::FTmsg& row) {
+inline bool atf_comp::comptest_zd_tmsg_InLlistQ(atf_comp::FTmsg& row) {
     bool result = false;
-    result = !(row.zd_tmsg_next == (atf_comp::FTmsg*)-1);
+    result = !(row.comptest_zd_tmsg_next == (atf_comp::FTmsg*)-1);
     return result;
 }
 
@@ -108,14 +108,14 @@ inline i32 atf_comp::zd_tmsg_N(const atf_comp::FComptest& comptest) {
 
 // --- atf_comp.FComptest.zd_tmsg.Next
 // Return pointer to next element in the list
-inline atf_comp::FTmsg* atf_comp::zd_tmsg_Next(atf_comp::FTmsg &row) {
-    return row.zd_tmsg_next;
+inline atf_comp::FTmsg* atf_comp::comptest_zd_tmsg_Next(atf_comp::FTmsg &row) {
+    return row.comptest_zd_tmsg_next;
 }
 
 // --- atf_comp.FComptest.zd_tmsg.Prev
 // Return pointer to previous element in the list
-inline atf_comp::FTmsg* atf_comp::zd_tmsg_Prev(atf_comp::FTmsg &row) {
-    return row.zd_tmsg_prev;
+inline atf_comp::FTmsg* atf_comp::comptest_zd_tmsg_Prev(atf_comp::FTmsg &row) {
+    return row.comptest_zd_tmsg_prev;
 }
 
 // --- atf_comp.FComptest.zd_tmsg.qLast
@@ -141,7 +141,7 @@ inline bool atf_comp::comptest_zd_tmsg_curs_ValidQ(comptest_zd_tmsg_curs &curs) 
 // --- atf_comp.FComptest.zd_tmsg_curs.Next
 // proceed to next item
 inline void atf_comp::comptest_zd_tmsg_curs_Next(comptest_zd_tmsg_curs &curs) {
-    atf_comp::FTmsg *next = (*curs.row).zd_tmsg_next;
+    atf_comp::FTmsg *next = (*curs.row).comptest_zd_tmsg_next;
     curs.row = next;
 }
 
@@ -159,6 +159,23 @@ inline  atf_comp::FComptest::FComptest() {
 // --- atf_comp.FComptest..Dtor
 inline  atf_comp::FComptest::~FComptest() {
     atf_comp::FComptest_Uninit(*this);
+}
+
+// --- atf_comp.FCovdir..Init
+// Set all fields to initial values.
+inline void atf_comp::FCovdir_Init(atf_comp::FCovdir& covdir) {
+    covdir.zd_covdir_free_next = (atf_comp::FCovdir*)-1; // (atf_comp.FDb.zd_covdir_free) not-in-list
+    covdir.zd_covdir_free_prev = NULL; // (atf_comp.FDb.zd_covdir_free)
+}
+
+// --- atf_comp.FCovdir..Ctor
+inline  atf_comp::FCovdir::FCovdir() {
+    atf_comp::FCovdir_Init(*this);
+}
+
+// --- atf_comp.FCovdir..Dtor
+inline  atf_comp::FCovdir::~FCovdir() {
+    atf_comp::FCovdir_Uninit(*this);
 }
 
 // --- atf_comp.trace..Ctor
@@ -555,6 +572,116 @@ inline atf_comp::FTargs& atf_comp::zd_out_targs_qLast() {
     return *row;
 }
 
+// --- atf_comp.FDb.covdir.EmptyQ
+// Return true if index is empty
+inline bool atf_comp::covdir_EmptyQ() {
+    return _db.covdir_n == 0;
+}
+
+// --- atf_comp.FDb.covdir.Find
+// Look up row by row id. Return NULL if out of range
+inline atf_comp::FCovdir* atf_comp::covdir_Find(u64 t) {
+    atf_comp::FCovdir *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.covdir_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.covdir_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- atf_comp.FDb.covdir.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline atf_comp::FCovdir* atf_comp::covdir_Last() {
+    return covdir_Find(u64(_db.covdir_n-1));
+}
+
+// --- atf_comp.FDb.covdir.N
+// Return number of items in the pool
+inline i32 atf_comp::covdir_N() {
+    return _db.covdir_n;
+}
+
+// --- atf_comp.FDb.covdir.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline atf_comp::FCovdir& atf_comp::covdir_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.covdir_lary[bsr][index];
+}
+
+// --- atf_comp.FDb.zd_covdir_free.EmptyQ
+// Return true if index is empty
+inline bool atf_comp::zd_covdir_free_EmptyQ() {
+    return _db.zd_covdir_free_head == NULL;
+}
+
+// --- atf_comp.FDb.zd_covdir_free.First
+// If index empty, return NULL. Otherwise return pointer to first element in index
+inline atf_comp::FCovdir* atf_comp::zd_covdir_free_First() {
+    atf_comp::FCovdir *row = NULL;
+    row = _db.zd_covdir_free_head;
+    return row;
+}
+
+// --- atf_comp.FDb.zd_covdir_free.InLlistQ
+// Return true if row is in the linked list, false otherwise
+inline bool atf_comp::zd_covdir_free_InLlistQ(atf_comp::FCovdir& row) {
+    bool result = false;
+    result = !(row.zd_covdir_free_next == (atf_comp::FCovdir*)-1);
+    return result;
+}
+
+// --- atf_comp.FDb.zd_covdir_free.Last
+// If index empty, return NULL. Otherwise return pointer to last element in index
+inline atf_comp::FCovdir* atf_comp::zd_covdir_free_Last() {
+    atf_comp::FCovdir *row = NULL;
+    row = _db.zd_covdir_free_tail;
+    return row;
+}
+
+// --- atf_comp.FDb.zd_covdir_free.N
+// Return number of items in the linked list
+inline i32 atf_comp::zd_covdir_free_N() {
+    return _db.zd_covdir_free_n;
+}
+
+// --- atf_comp.FDb.zd_covdir_free.Next
+// Return pointer to next element in the list
+inline atf_comp::FCovdir* atf_comp::zd_covdir_free_Next(atf_comp::FCovdir &row) {
+    return row.zd_covdir_free_next;
+}
+
+// --- atf_comp.FDb.zd_covdir_free.Prev
+// Return pointer to previous element in the list
+inline atf_comp::FCovdir* atf_comp::zd_covdir_free_Prev(atf_comp::FCovdir &row) {
+    return row.zd_covdir_free_prev;
+}
+
+// --- atf_comp.FDb.zd_covdir_free.qLast
+// Return reference to last element in the index. No bounds checking.
+inline atf_comp::FCovdir& atf_comp::zd_covdir_free_qLast() {
+    atf_comp::FCovdir *row = NULL;
+    row = _db.zd_covdir_free_tail;
+    return *row;
+}
+
+// --- atf_comp.FDb.ind_tfilt.EmptyQ
+// Return true if hash is empty
+inline bool atf_comp::ind_tfilt_EmptyQ() {
+    return _db.ind_tfilt_n == 0;
+}
+
+// --- atf_comp.FDb.ind_tfilt.N
+// Return number of items in the hash
+inline i32 atf_comp::ind_tfilt_N() {
+    return _db.ind_tfilt_n;
+}
+
 // --- atf_comp.FDb.comptest_curs.Reset
 // cursor points to valid item
 inline void atf_comp::_db_comptest_curs_Reset(_db_comptest_curs &curs, atf_comp::FDb &parent) {
@@ -730,6 +857,56 @@ inline atf_comp::FTargs& atf_comp::_db_zd_out_targs_curs_Access(_db_zd_out_targs
     return *curs.row;
 }
 
+// --- atf_comp.FDb.covdir_curs.Reset
+// cursor points to valid item
+inline void atf_comp::_db_covdir_curs_Reset(_db_covdir_curs &curs, atf_comp::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- atf_comp.FDb.covdir_curs.ValidQ
+// cursor points to valid item
+inline bool atf_comp::_db_covdir_curs_ValidQ(_db_covdir_curs &curs) {
+    return curs.index < _db.covdir_n;
+}
+
+// --- atf_comp.FDb.covdir_curs.Next
+// proceed to next item
+inline void atf_comp::_db_covdir_curs_Next(_db_covdir_curs &curs) {
+    curs.index++;
+}
+
+// --- atf_comp.FDb.covdir_curs.Access
+// item access
+inline atf_comp::FCovdir& atf_comp::_db_covdir_curs_Access(_db_covdir_curs &curs) {
+    return covdir_qFind(u64(curs.index));
+}
+
+// --- atf_comp.FDb.zd_covdir_free_curs.Reset
+// cursor points to valid item
+inline void atf_comp::_db_zd_covdir_free_curs_Reset(_db_zd_covdir_free_curs &curs, atf_comp::FDb &parent) {
+    curs.row = parent.zd_covdir_free_head;
+}
+
+// --- atf_comp.FDb.zd_covdir_free_curs.ValidQ
+// cursor points to valid item
+inline bool atf_comp::_db_zd_covdir_free_curs_ValidQ(_db_zd_covdir_free_curs &curs) {
+    return curs.row != NULL;
+}
+
+// --- atf_comp.FDb.zd_covdir_free_curs.Next
+// proceed to next item
+inline void atf_comp::_db_zd_covdir_free_curs_Next(_db_zd_covdir_free_curs &curs) {
+    atf_comp::FCovdir *next = (*curs.row).zd_covdir_free_next;
+    curs.row = next;
+}
+
+// --- atf_comp.FDb.zd_covdir_free_curs.Access
+// item access
+inline atf_comp::FCovdir& atf_comp::_db_zd_covdir_free_curs_Access(_db_zd_covdir_free_curs &curs) {
+    return *curs.row;
+}
+
 // --- atf_comp.FTargs..Init
 // Set all fields to initial values.
 inline void atf_comp::FTargs_Init(atf_comp::FTargs& targs) {
@@ -754,6 +931,8 @@ inline void atf_comp::FTfilt_Init(atf_comp::FTfilt& tfilt) {
     tfilt.tfilt_next = (atf_comp::FTfilt*)-1; // (atf_comp.FDb.tfilt) not-in-tpool's freelist
     tfilt.zd_out_tfilt_next = (atf_comp::FTfilt*)-1; // (atf_comp.FDb.zd_out_tfilt) not-in-list
     tfilt.zd_out_tfilt_prev = NULL; // (atf_comp.FDb.zd_out_tfilt)
+    tfilt.ind_tfilt_next = (atf_comp::FTfilt*)-1; // (atf_comp.FDb.ind_tfilt) not-in-hash
+    tfilt.ind_tfilt_hashval = 0; // stored hash value
 }
 
 // --- atf_comp.FTfilt..Ctor
@@ -770,8 +949,8 @@ inline  atf_comp::FTfilt::~FTfilt() {
 // Set all fields to initial values.
 inline void atf_comp::FTmsg_Init(atf_comp::FTmsg& tmsg) {
     tmsg.istuple = bool(false);
-    tmsg.zd_tmsg_next = (atf_comp::FTmsg*)-1; // (atf_comp.FComptest.zd_tmsg) not-in-list
-    tmsg.zd_tmsg_prev = NULL; // (atf_comp.FComptest.zd_tmsg)
+    tmsg.comptest_zd_tmsg_next = (atf_comp::FTmsg*)-1; // (atf_comp.FComptest.zd_tmsg) not-in-list
+    tmsg.comptest_zd_tmsg_prev = NULL; // (atf_comp.FComptest.zd_tmsg)
     tmsg.tmsg_next = (atf_comp::FTmsg*)-1; // (atf_comp.FDb.tmsg) not-in-tpool's freelist
     tmsg.zd_out_tmsg_next = (atf_comp::FTmsg*)-1; // (atf_comp.FDb.zd_out_tmsg) not-in-list
     tmsg.zd_out_tmsg_prev = NULL; // (atf_comp.FDb.zd_out_tmsg)

@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2013 AlgoEngineering LLC
 //
@@ -178,7 +178,7 @@ bool acr_compl::Main_SplitLineToArgv() {
             vrfy_(0);
         }
     }
-    dbglog("atf_compl.parse_word" << Keyval("need_arg",need_arg) << Keyval("state",state));
+    prcat(debug,"atf_compl.parse_word" << Keyval("need_arg",need_arg) << Keyval("state",state));
     bool ok = !need_arg && state !=redir;
     if (ok) {
         word_Alloc() = RestFrom(FirstN(buf,ind),word_start);

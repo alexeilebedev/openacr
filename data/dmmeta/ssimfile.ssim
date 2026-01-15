@@ -5,8 +5,8 @@ dmmeta.ssimfile  ssimfile:amcdb.regxtype  ctype:amcdb.Regxtype
 dmmeta.ssimfile  ssimfile:amcdb.tclass  ctype:amcdb.Tclass
 dmmeta.ssimfile  ssimfile:amcdb.tcurs  ctype:amcdb.Tcurs
 dmmeta.ssimfile  ssimfile:amcdb.tfunc  ctype:amcdb.Tfunc
-dmmeta.ssimfile  ssimfile:amsdb.proctype  ctype:amsdb.ProcType
-dmmeta.ssimfile  ssimfile:amsdb.streamtype  ctype:amsdb.StreamType
+dmmeta.ssimfile  ssimfile:amsdb.proctype  ctype:amsdb.Proctype
+dmmeta.ssimfile  ssimfile:amsdb.shmtype  ctype:amsdb.Shmtype
 dmmeta.ssimfile  ssimfile:atfdb.amctest  ctype:atfdb.Amctest
 dmmeta.ssimfile  ssimfile:atfdb.cijob  ctype:atfdb.Cijob
 dmmeta.ssimfile  ssimfile:atfdb.cipackage  ctype:atfdb.Cipackage
@@ -21,6 +21,7 @@ dmmeta.ssimfile  ssimfile:atfdb.test_gsymbol_strptr  ctype:atfdb.TestGsymbolStrp
 dmmeta.ssimfile  ssimfile:atfdb.tfilt  ctype:atfdb.Tfilt
 dmmeta.ssimfile  ssimfile:atfdb.tmsg  ctype:atfdb.Tmsg
 dmmeta.ssimfile  ssimfile:atfdb.unittest  ctype:atfdb.Unittest
+dmmeta.ssimfile  ssimfile:atfdb.var  ctype:atfdb.Var
 dmmeta.ssimfile  ssimfile:dev.arch  ctype:dev.Arch
 dmmeta.ssimfile  ssimfile:dev.badline  ctype:dev.Badline
 dmmeta.ssimfile  ssimfile:dev.builddir  ctype:dev.Builddir
@@ -42,13 +43,16 @@ dmmeta.ssimfile  ssimfile:dev.linelim  ctype:dev.Linelim
 dmmeta.ssimfile  ssimfile:dev.mdmark  ctype:dev.Mdmark
 dmmeta.ssimfile  ssimfile:dev.mdsection  ctype:dev.Mdsection
 dmmeta.ssimfile  ssimfile:dev.msgfile  ctype:dev.Msgfile
+dmmeta.ssimfile  ssimfile:dev.netproto  ctype:dev.Netproto
 dmmeta.ssimfile  ssimfile:dev.noindent  ctype:dev.Noindent
 dmmeta.ssimfile  ssimfile:dev.opt_type  ctype:dev.OptType
 dmmeta.ssimfile  ssimfile:dev.package  ctype:dev.Package
 dmmeta.ssimfile  ssimfile:dev.pkgdep  ctype:dev.Pkgdep
 dmmeta.ssimfile  ssimfile:dev.pkgkey  ctype:dev.Pkgkey
-dmmeta.ssimfile  ssimfile:dev.readme  ctype:dev.Readme
+dmmeta.ssimfile  ssimfile:dev.prototransport  ctype:dev.Prototransport
+dmmeta.ssimfile  ssimfile:dev.readmefile  ctype:dev.Readmefile
 dmmeta.ssimfile  ssimfile:dev.readmesort  ctype:dev.Readmesort
+dmmeta.ssimfile  ssimfile:dev.rpm  ctype:dev.Rpm
 dmmeta.ssimfile  ssimfile:dev.sandbox  ctype:dev.Sandbox
 dmmeta.ssimfile  ssimfile:dev.sbpath  ctype:dev.Sbpath
 dmmeta.ssimfile  ssimfile:dev.scriptfile  ctype:dev.Scriptfile
@@ -63,6 +67,7 @@ dmmeta.ssimfile  ssimfile:dev.targsyslib  ctype:dev.Targsyslib
 dmmeta.ssimfile  ssimfile:dev.tgtcov  ctype:dev.Tgtcov
 dmmeta.ssimfile  ssimfile:dev.timefmt  ctype:dev.Timefmt
 dmmeta.ssimfile  ssimfile:dev.tool_opt  ctype:dev.ToolOpt
+dmmeta.ssimfile  ssimfile:dev.transport  ctype:dev.Transport
 dmmeta.ssimfile  ssimfile:dev.uname  ctype:dev.Uname
 dmmeta.ssimfile  ssimfile:dev.unstablefld  ctype:dev.Unstablefld
 dmmeta.ssimfile  ssimfile:dmmeta.anonfld  ctype:dmmeta.Anonfld
@@ -79,6 +84,7 @@ dmmeta.ssimfile  ssimfile:dmmeta.cfmt  ctype:dmmeta.Cfmt
 dmmeta.ssimfile  ssimfile:dmmeta.cget  ctype:dmmeta.Cget
 dmmeta.ssimfile  ssimfile:dmmeta.charset  ctype:dmmeta.Charset
 dmmeta.ssimfile  ssimfile:dmmeta.chash  ctype:dmmeta.Chash
+dmmeta.ssimfile  ssimfile:dmmeta.ckafka  ctype:dmmeta.Ckafka
 dmmeta.ssimfile  ssimfile:dmmeta.cppfunc  ctype:dmmeta.Cppfunc
 dmmeta.ssimfile  ssimfile:dmmeta.cppkeyword  ctype:dmmeta.Cppkeyword
 dmmeta.ssimfile  ssimfile:dmmeta.cpptype  ctype:dmmeta.Cpptype
@@ -102,6 +108,7 @@ dmmeta.ssimfile  ssimfile:dmmeta.fbigend  ctype:dmmeta.Fbigend
 dmmeta.ssimfile  ssimfile:dmmeta.fbitset  ctype:dmmeta.Fbitset
 dmmeta.ssimfile  ssimfile:dmmeta.fbuf  ctype:dmmeta.Fbuf
 dmmeta.ssimfile  ssimfile:dmmeta.fbufdir  ctype:dmmeta.Fbufdir
+dmmeta.ssimfile  ssimfile:dmmeta.fbufiotype  ctype:dmmeta.Fbufiotype
 dmmeta.ssimfile  ssimfile:dmmeta.fbuftype  ctype:dmmeta.Fbuftype
 dmmeta.ssimfile  ssimfile:dmmeta.fcast  ctype:dmmeta.Fcast
 dmmeta.ssimfile  ssimfile:dmmeta.fcleanup  ctype:dmmeta.Fcleanup
@@ -118,6 +125,7 @@ dmmeta.ssimfile  ssimfile:dmmeta.fflag  ctype:dmmeta.Fflag
 dmmeta.ssimfile  ssimfile:dmmeta.field  ctype:dmmeta.Field
 dmmeta.ssimfile  ssimfile:dmmeta.findrem  ctype:dmmeta.Findrem
 dmmeta.ssimfile  ssimfile:dmmeta.finput  ctype:dmmeta.Finput
+dmmeta.ssimfile  ssimfile:dmmeta.fkafka  ctype:dmmeta.Fkafka
 dmmeta.ssimfile  ssimfile:dmmeta.fldoffset  ctype:dmmeta.Fldoffset
 dmmeta.ssimfile  ssimfile:dmmeta.floadtuples  ctype:dmmeta.Floadtuples
 dmmeta.ssimfile  ssimfile:dmmeta.fnoremove  ctype:dmmeta.Fnoremove
@@ -138,6 +146,8 @@ dmmeta.ssimfile  ssimfile:dmmeta.gsymbol  ctype:dmmeta.Gsymbol
 dmmeta.ssimfile  ssimfile:dmmeta.hashtype  ctype:dmmeta.Hashtype
 dmmeta.ssimfile  ssimfile:dmmeta.hook  ctype:dmmeta.Hook
 dmmeta.ssimfile  ssimfile:dmmeta.inlary  ctype:dmmeta.Inlary
+dmmeta.ssimfile  ssimfile:dmmeta.jstype  ctype:dmmeta.Jstype
+dmmeta.ssimfile  ssimfile:dmmeta.kafka_type_kind  ctype:dmmeta.KafkaTypeKind
 dmmeta.ssimfile  ssimfile:dmmeta.lenfld  ctype:dmmeta.Lenfld
 dmmeta.ssimfile  ssimfile:dmmeta.listtype  ctype:dmmeta.Listtype
 dmmeta.ssimfile  ssimfile:dmmeta.llist  ctype:dmmeta.Llist
@@ -152,6 +162,7 @@ dmmeta.ssimfile  ssimfile:dmmeta.nscpp  ctype:dmmeta.Nscpp
 dmmeta.ssimfile  ssimfile:dmmeta.nsdb  ctype:dmmeta.Nsdb
 dmmeta.ssimfile  ssimfile:dmmeta.nsfast  ctype:dmmeta.Nsfast
 dmmeta.ssimfile  ssimfile:dmmeta.nsinclude  ctype:dmmeta.Nsinclude
+dmmeta.ssimfile  ssimfile:dmmeta.nsjs  ctype:dmmeta.Nsjs
 dmmeta.ssimfile  ssimfile:dmmeta.nsproto  ctype:dmmeta.Nsproto
 dmmeta.ssimfile  ssimfile:dmmeta.nstype  ctype:dmmeta.Nstype
 dmmeta.ssimfile  ssimfile:dmmeta.nsversion  ctype:dmmeta.Nsversion
@@ -184,6 +195,7 @@ dmmeta.ssimfile  ssimfile:dmmeta.thash  ctype:dmmeta.Thash
 dmmeta.ssimfile  ssimfile:dmmeta.tracefld  ctype:dmmeta.Tracefld
 dmmeta.ssimfile  ssimfile:dmmeta.tracerec  ctype:dmmeta.Tracerec
 dmmeta.ssimfile  ssimfile:dmmeta.typefld  ctype:dmmeta.Typefld
+dmmeta.ssimfile  ssimfile:dmmeta.userfunc  ctype:dmmeta.Userfunc
 dmmeta.ssimfile  ssimfile:dmmeta.usertracefld  ctype:dmmeta.Usertracefld
 dmmeta.ssimfile  ssimfile:dmmeta.xref  ctype:dmmeta.Xref
 dmmeta.ssimfile  ssimfile:fmdb.alarm  ctype:fmdb.Alarm
@@ -202,8 +214,6 @@ dmmeta.ssimfile  ssimfile:gclidb.gfld  ctype:gclidb.Gfld
 dmmeta.ssimfile  ssimfile:gclidb.githost  ctype:gclidb.Githost
 dmmeta.ssimfile  ssimfile:gclidb.gmethod  ctype:gclidb.Gmethod
 dmmeta.ssimfile  ssimfile:gclidb.grepo  ctype:gclidb.Grepo
-dmmeta.ssimfile  ssimfile:gclidb.grepogitport  ctype:gclidb.Grepogitport
-dmmeta.ssimfile  ssimfile:gclidb.grepossh  ctype:gclidb.Grepossh
 dmmeta.ssimfile  ssimfile:gclidb.gstate  ctype:gclidb.Gstate
 dmmeta.ssimfile  ssimfile:gclidb.gstatet  ctype:gclidb.Gstatet
 dmmeta.ssimfile  ssimfile:gclidb.gtbl  ctype:gclidb.Gtbl
@@ -224,3 +234,14 @@ dmmeta.ssimfile  ssimfile:gclidb.mrjob  ctype:gclidb.Mrjob
 dmmeta.ssimfile  ssimfile:gclidb.mrnote  ctype:gclidb.Mrnote
 dmmeta.ssimfile  ssimfile:gclidb.project  ctype:gclidb.Project
 dmmeta.ssimfile  ssimfile:gclidb.user  ctype:gclidb.User
+dmmeta.ssimfile  ssimfile:httpdb.content  ctype:httpdb.Content
+dmmeta.ssimfile  ssimfile:httpdb.header  ctype:httpdb.Header
+dmmeta.ssimfile  ssimfile:httpdb.method  ctype:httpdb.Method
+dmmeta.ssimfile  ssimfile:httpdb.status  ctype:httpdb.Status
+dmmeta.ssimfile  ssimfile:httpdb.version  ctype:httpdb.Version
+dmmeta.ssimfile  ssimfile:sampdb.gitfile  ctype:sampdb.Gitfile
+dmmeta.ssimfile  ssimfile:sampdb.targdep  ctype:sampdb.Targdep
+dmmeta.ssimfile  ssimfile:sampdb.target  ctype:sampdb.Target
+dmmeta.ssimfile  ssimfile:sampdb.targrec  ctype:sampdb.Targrec
+dmmeta.ssimfile  ssimfile:sampdb.targsrc  ctype:sampdb.Targsrc
+dmmeta.ssimfile  ssimfile:wsdb.status  ctype:wsdb.Status

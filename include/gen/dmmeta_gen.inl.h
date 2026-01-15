@@ -216,6 +216,10 @@ inline  dmmeta::Chash::Chash(const algo::strptr& in_ctype, const algo::strptr& i
  {
 }
 
+// --- dmmeta.Ckafka..Ctor
+inline  dmmeta::Ckafka::Ckafka() {
+}
+
 // --- dmmeta.Cppfunc..Init
 // Set all fields to initial values.
 inline void dmmeta::Cppfunc_Init(dmmeta::Cppfunc& parent) {
@@ -333,7 +337,7 @@ inline  dmmeta::Dispatch::Dispatch() {
 }
 
 // --- dmmeta.Dispatch..FieldwiseCtor
-inline  dmmeta::Dispatch::Dispatch(const algo::strptr& in_dispatch, bool in_unk, bool in_read, bool in_print, bool in_haslen, bool in_call, bool in_strict, const algo::Comment& in_comment)
+inline  dmmeta::Dispatch::Dispatch(const algo::strptr& in_dispatch, bool in_unk, bool in_read, bool in_print, bool in_haslen, bool in_call, bool in_strict, bool in_dyn, bool in_kafka, const algo::Comment& in_comment)
     : dispatch(in_dispatch)
     , unk(in_unk)
     , read(in_read)
@@ -341,6 +345,8 @@ inline  dmmeta::Dispatch::Dispatch(const algo::strptr& in_dispatch, bool in_unk,
     , haslen(in_haslen)
     , call(in_call)
     , strict(in_strict)
+    , dyn(in_dyn)
+    , kafka(in_kafka)
     , comment(in_comment)
  {
 }
@@ -560,6 +566,7 @@ inline  dmmeta::Fbitset::Fbitset(const algo::strptr& in_field, const algo::Comme
 // Set all fields to initial values.
 inline void dmmeta::Fbuf_Init(dmmeta::Fbuf& parent) {
     parent.max = u32(0);
+    parent.iotype = algo::strptr("standard");
 }
 
 // --- dmmeta.Fbuf..Ctor
@@ -576,6 +583,10 @@ inline void dmmeta::Fbufdir_Init(dmmeta::Fbufdir& parent) {
 // --- dmmeta.Fbufdir..Ctor
 inline  dmmeta::Fbufdir::Fbufdir() {
     dmmeta::Fbufdir_Init(*this);
+}
+
+// --- dmmeta.Fbufiotype..Ctor
+inline  dmmeta::Fbufiotype::Fbufiotype() {
 }
 
 // --- dmmeta.Fbuftype..Init
@@ -802,6 +813,17 @@ inline  dmmeta::Finput::Finput(const algo::strptr& in_field, bool in_extrn, bool
  {
 }
 
+// --- dmmeta.Fkafka..Init
+// Set all fields to initial values.
+inline void dmmeta::Fkafka_Init(dmmeta::Fkafka& parent) {
+    parent.tag = u64(0);
+}
+
+// --- dmmeta.Fkafka..Ctor
+inline  dmmeta::Fkafka::Fkafka() {
+    dmmeta::Fkafka_Init(*this);
+}
+
 // --- dmmeta.Fldoffset..Init
 // Set all fields to initial values.
 inline void dmmeta::Fldoffset_Init(dmmeta::Fldoffset& parent) {
@@ -957,6 +979,14 @@ inline  dmmeta::Inlary::Inlary(const algo::strptr& in_field, i32 in_min, i32 in_
  {
 }
 
+// --- dmmeta.Jstype..Ctor
+inline  dmmeta::Jstype::Jstype() {
+}
+
+// --- dmmeta.KafkaTypeKind..Ctor
+inline  dmmeta::KafkaTypeKind::KafkaTypeKind() {
+}
+
 // --- dmmeta.Lenfld..Init
 // Set all fields to initial values.
 inline void dmmeta::Lenfld_Init(dmmeta::Lenfld& parent) {
@@ -1014,6 +1044,9 @@ inline  dmmeta::Llist::Llist(const algo::strptr& in_field, bool in_havetail, boo
 inline void dmmeta::Logcat_Init(dmmeta::Logcat& parent) {
     parent.enabled = bool(false);
     parent.builtin = bool(false);
+    parent.stdout = bool(false);
+    parent.maxmsg = i32(0);
+    parent.window = i32(0);
 }
 
 // --- dmmeta.Logcat..Ctor
@@ -1103,6 +1136,18 @@ inline void dmmeta::Nsinclude_Init(dmmeta::Nsinclude& parent) {
 // --- dmmeta.Nsinclude..Ctor
 inline  dmmeta::Nsinclude::Nsinclude() {
     dmmeta::Nsinclude_Init(*this);
+}
+
+// --- dmmeta.Nsjs..Init
+// Set all fields to initial values.
+inline void dmmeta::Nsjs_Init(dmmeta::Nsjs& parent) {
+    parent.typescript = bool(false);
+    parent.gensel = bool(false);
+}
+
+// --- dmmeta.Nsjs..Ctor
+inline  dmmeta::Nsjs::Nsjs() {
+    dmmeta::Nsjs_Init(*this);
 }
 
 // --- dmmeta.Nsproto..Ctor
@@ -1231,6 +1276,7 @@ inline  dmmeta::Printfmt::Printfmt() {
 // Set all fields to initial values.
 inline void dmmeta::Ptrary_Init(dmmeta::Ptrary& parent) {
     parent.unique = bool(false);
+    parent.heaplike = bool(false);
 }
 
 // --- dmmeta.Ptrary..Ctor
@@ -1239,9 +1285,10 @@ inline  dmmeta::Ptrary::Ptrary() {
 }
 
 // --- dmmeta.Ptrary..FieldwiseCtor
-inline  dmmeta::Ptrary::Ptrary(const algo::strptr& in_field, bool in_unique)
+inline  dmmeta::Ptrary::Ptrary(const algo::strptr& in_field, bool in_unique, bool in_heaplike)
     : field(in_field)
     , unique(in_unique)
+    , heaplike(in_heaplike)
  {
 }
 
@@ -1470,6 +1517,10 @@ inline  dmmeta::Typefld::Typefld(const algo::strptr& in_field, const algo::Comme
  {
 }
 
+// --- dmmeta.Userfunc..Ctor
+inline  dmmeta::Userfunc::Userfunc() {
+}
+
 // --- dmmeta.Usertracefld..Ctor
 inline  dmmeta::Usertracefld::Usertracefld() {
 }
@@ -1565,6 +1616,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Charse
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Chash &row) {// cfmt:dmmeta.Chash.String
     dmmeta::Chash_Print(const_cast<dmmeta::Chash&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Ckafka &row) {// cfmt:dmmeta.Ckafka.String
+    dmmeta::Ckafka_Print(const_cast<dmmeta::Ckafka&>(row), str);
     return str;
 }
 
@@ -1683,6 +1739,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Fbufdi
     return str;
 }
 
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Fbufiotype &row) {// cfmt:dmmeta.Fbufiotype.String
+    dmmeta::Fbufiotype_Print(const_cast<dmmeta::Fbufiotype&>(row), str);
+    return str;
+}
+
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Fbuftype &row) {// cfmt:dmmeta.Fbuftype.String
     dmmeta::Fbuftype_Print(const_cast<dmmeta::Fbuftype&>(row), str);
     return str;
@@ -1765,6 +1826,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Findre
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Finput &row) {// cfmt:dmmeta.Finput.String
     dmmeta::Finput_Print(const_cast<dmmeta::Finput&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Fkafka &row) {// cfmt:dmmeta.Fkafka.String
+    dmmeta::Fkafka_Print(const_cast<dmmeta::Fkafka&>(row), str);
     return str;
 }
 
@@ -1868,6 +1934,16 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Inlary
     return str;
 }
 
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Jstype &row) {// cfmt:dmmeta.Jstype.String
+    dmmeta::Jstype_Print(const_cast<dmmeta::Jstype&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::KafkaTypeKind &row) {// cfmt:dmmeta.KafkaTypeKind.String
+    dmmeta::KafkaTypeKind_Print(const_cast<dmmeta::KafkaTypeKind&>(row), str);
+    return str;
+}
+
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Lenfld &row) {// cfmt:dmmeta.Lenfld.String
     dmmeta::Lenfld_Print(const_cast<dmmeta::Lenfld&>(row), str);
     return str;
@@ -1935,6 +2011,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Nsfast
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Nsinclude &row) {// cfmt:dmmeta.Nsinclude.String
     dmmeta::Nsinclude_Print(const_cast<dmmeta::Nsinclude&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Nsjs &row) {// cfmt:dmmeta.Nsjs.String
+    dmmeta::Nsjs_Print(const_cast<dmmeta::Nsjs&>(row), str);
     return str;
 }
 
@@ -2085,6 +2166,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Tracer
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Typefld &row) {// cfmt:dmmeta.Typefld.String
     dmmeta::Typefld_Print(const_cast<dmmeta::Typefld&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dmmeta::Userfunc &row) {// cfmt:dmmeta.Userfunc.String
+    dmmeta::Userfunc_Print(const_cast<dmmeta::Userfunc&>(row), str);
     return str;
 }
 

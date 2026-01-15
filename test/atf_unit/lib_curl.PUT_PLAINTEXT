@@ -1,0 +1,14 @@
+# code:0
+# reason:""
+# content:""
+# body:""
+# status_line:""
+#---curlrc---
+url = "http://127.0.0.1:8080/echo"
+user-agent = "lib_curl/1.0"
+connect-timeout = "5"
+max-time = "120"
+keepalive-time = "1"
+request = PUT
+data = "plain text payload"
+

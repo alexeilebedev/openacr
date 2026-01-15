@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 // Copyright (C) 2023 Astra
 //
 // License: GPL
@@ -37,8 +37,9 @@ void atf_comp::Main_Read(algo::Fildes fd) {
     atf_comp::FComptest *comptest=NULL;// current test
     int rank=0;
     ind_beg(algo::FileLine_curs,line,fd) if (!StartsWithQ(line,"#")) {
+        strptr word=Trimmed(Pathcomp(line," LL"));
         strptr rest=Trimmed(Pathcomp(line," LR"));
-        if (StartsWithQ(line,"comptest")) {
+        if (word == "comptest") {
             line=rest;
             strptr name=Pathcomp(line," LL");
             rest=Trimmed(Pathcomp(line," LR"));
@@ -61,11 +62,21 @@ void atf_comp::Main_Read(algo::Fildes fd) {
             _db.nchange++;
             rank=0;
             _db.report.ninsert++;
-        } else if (comptest && StartsWithQ(line,"comment")) {
+        } else if (comptest && word == "comment") {
             comptest->comment.value = rest;
-        } else if (comptest && StartsWithQ(line,"exit_code")) {
+        } else if (comptest && word == "exit_code") {
             u8_ReadStrptrMaybe(comptest->exit_code,rest);
-        } else if (comptest && StartsWithQ(line,"filter")) {
+        } else if (comptest && word == "ncore") {
+            i32_ReadStrptrMaybe(comptest->ncore,rest);
+        } else if (comptest && word == "repeat") {
+            i32_ReadStrptrMaybe(comptest->repeat,rest);
+        } else if (comptest && word == "timeout") {
+            i32_ReadStrptrMaybe(comptest->timeout,rest);
+        } else if (comptest && word == "memcheck") {
+            bool_ReadStrptrMaybe(comptest->memcheck,rest);
+        } else if (comptest && word == "coverage") {
+            bool_ReadStrptrMaybe(comptest->coverage,rest);
+        } else if (comptest && word == "filter") {
             if (!comptest->c_tfilt) {
                 atf_comp::FTfilt &tfilt=tfilt_Alloc();
                 tfilt.comptest=comptest->comptest;

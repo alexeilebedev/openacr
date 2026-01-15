@@ -34,6 +34,7 @@
 inline void src_hdr::FCopyline_Init(src_hdr::FCopyline& fcopyline) {
     fcopyline.fcopyline_next = (src_hdr::FCopyline*)-1; // (src_hdr.FDb.fcopyline) not-in-tpool's freelist
     fcopyline.ind_fcopyline_next = (src_hdr::FCopyline*)-1; // (src_hdr.FDb.ind_fcopyline) not-in-hash
+    fcopyline.ind_fcopyline_hashval = 0; // stored hash value
 }
 
 // --- src_hdr.FCopyline..Ctor
@@ -52,6 +53,7 @@ inline void src_hdr::FCopyright_Init(src_hdr::FCopyright& copyright) {
     copyright.dflt = bool(false);
     copyright.sortkey = i32(0);
     copyright.ind_copyright_next = (src_hdr::FCopyright*)-1; // (src_hdr.FDb.ind_copyright) not-in-hash
+    copyright.ind_copyright_hashval = 0; // stored hash value
     copyright.bh_copyright_idx = -1; // (src_hdr.FDb.bh_copyright) not-in-heap
 }
 
@@ -664,6 +666,7 @@ inline bool src_hdr::_db_bh_copyright_curs_ValidQ(_db_bh_copyright_curs &curs) {
 // Set all fields to initial values.
 inline void src_hdr::FLicense_Init(src_hdr::FLicense& license) {
     license.ind_license_next = (src_hdr::FLicense*)-1; // (src_hdr.FDb.ind_license) not-in-hash
+    license.ind_license_hashval = 0; // stored hash value
 }
 
 // --- src_hdr.FLicense..Ctor
@@ -702,6 +705,7 @@ inline void src_hdr::FNs_Init(src_hdr::FNs& ns) {
     ns.c_nsx = NULL;
     ns.p_license = NULL;
     ns.ind_ns_next = (src_hdr::FNs*)-1; // (src_hdr.FDb.ind_ns) not-in-hash
+    ns.ind_ns_hashval = 0; // stored hash value
 }
 
 // --- src_hdr.FNs..Ctor
@@ -815,6 +819,7 @@ inline void src_hdr::FTarget_Init(src_hdr::FTarget& target) {
     target.c_targsrc_max = 0; // (src_hdr.FTarget.c_targsrc)
     target.p_ns = NULL;
     target.ind_target_next = (src_hdr::FTarget*)-1; // (src_hdr.FDb.ind_target) not-in-hash
+    target.ind_target_hashval = 0; // stored hash value
 }
 
 // --- src_hdr.FTarget.c_targsrc_curs.Reset

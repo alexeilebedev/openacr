@@ -95,9 +95,10 @@ namespace src_hdr { // gen:ns_print_struct
 // create: src_hdr.FDb.fcopyline (Tpool)
 // global access: ind_fcopyline (Thash, hash field fcopyline)
 struct FCopyline { // src_hdr.FCopyline
-    algo::cstring         fcopyline;            //
-    src_hdr::FCopyline*   fcopyline_next;       // Pointer to next free element int tpool
-    src_hdr::FCopyline*   ind_fcopyline_next;   // hash next
+    algo::cstring         fcopyline;               //
+    src_hdr::FCopyline*   fcopyline_next;          // Pointer to next free element int tpool
+    src_hdr::FCopyline*   ind_fcopyline_next;      // hash next
+    u32                   ind_fcopyline_hashval;   // hash value
     // func:src_hdr.FCopyline..AssignOp
     inline src_hdr::FCopyline& operator =(const src_hdr::FCopyline &rhs) = delete;
     // func:src_hdr.FCopyline..CopyCtor
@@ -125,13 +126,14 @@ void                 FCopyline_Uninit(src_hdr::FCopyline& fcopyline) __attribute
 // global access: ind_copyright (Thash, hash field copyright)
 // global access: bh_copyright (Bheap, sort field sortkey)
 struct FCopyright { // src_hdr.FCopyright
-    algo::Smallstr50       copyright;            //
-    bool                   dflt;                 //   false
-    algo::Comment          comment;              //
-    algo::cstring          years;                //
-    i32                    sortkey;              //   0
-    src_hdr::FCopyright*   ind_copyright_next;   // hash next
-    i32                    bh_copyright_idx;     // index in heap; -1 means not-in-heap
+    algo::Smallstr50       copyright;               //
+    bool                   dflt;                    //   false
+    algo::Comment          comment;                 //
+    algo::cstring          years;                   //
+    i32                    sortkey;                 //   0
+    src_hdr::FCopyright*   ind_copyright_next;      // hash next
+    u32                    ind_copyright_hashval;   // hash value
+    i32                    bh_copyright_idx;        // index in heap; -1 means not-in-heap
     // func:src_hdr.FCopyright..AssignOp
     inline src_hdr::FCopyright& operator =(const src_hdr::FCopyright &rhs) = delete;
     // func:src_hdr.FCopyright..CopyCtor
@@ -355,6 +357,9 @@ void                 ind_ns_Remove(src_hdr::FNs& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:src_hdr.FDb.ind_ns.Reserve
 void                 ind_ns_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:src_hdr.FDb.ind_ns.AbsReserve
+void                 ind_ns_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -457,6 +462,9 @@ void                 ind_license_Remove(src_hdr::FLicense& row) __attribute__((n
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:src_hdr.FDb.ind_license.Reserve
 void                 ind_license_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:src_hdr.FDb.ind_license.AbsReserve
+void                 ind_license_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -519,6 +527,9 @@ void                 ind_target_Remove(src_hdr::FTarget& row) __attribute__((not
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:src_hdr.FDb.ind_target.Reserve
 void                 ind_target_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:src_hdr.FDb.ind_target.AbsReserve
+void                 ind_target_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -614,6 +625,9 @@ void                 ind_fcopyline_Remove(src_hdr::FCopyline& row) __attribute__
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:src_hdr.FDb.ind_fcopyline.Reserve
 void                 ind_fcopyline_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:src_hdr.FDb.ind_fcopyline.AbsReserve
+void                 ind_fcopyline_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -683,6 +697,9 @@ void                 ind_copyright_Remove(src_hdr::FCopyright& row) __attribute_
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:src_hdr.FDb.ind_copyright.Reserve
 void                 ind_copyright_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:src_hdr.FDb.ind_copyright.AbsReserve
+void                 ind_copyright_AbsReserve(int n) __attribute__((nothrow));
 
 // Remove all elements from heap and free memory used by the array.
 // func:src_hdr.FDb.bh_copyright.Dealloc
@@ -838,10 +855,11 @@ void                 FDb_Uninit() __attribute__((nothrow));
 // access: src_hdr.FScriptfile.p_license (Upptr)
 // access: src_hdr.FSrc.p_license (Upptr)
 struct FLicense { // src_hdr.FLicense
-    src_hdr::FLicense*   ind_license_next;   // hash next
-    algo::Smallstr50     license;            //
-    algo::Comment        comment;            //
-    algo::cstring        text;               //
+    src_hdr::FLicense*   ind_license_next;      // hash next
+    u32                  ind_license_hashval;   // hash value
+    algo::Smallstr50     license;               //
+    algo::Comment        comment;               //
+    algo::cstring        text;                  //
     // func:src_hdr.FLicense..AssignOp
     inline src_hdr::FLicense& operator =(const src_hdr::FLicense &rhs) = delete;
     // func:src_hdr.FLicense..CopyCtor
@@ -876,13 +894,14 @@ void                 FLicense_Uninit(src_hdr::FLicense& license) __attribute__((
 // global access: ind_ns (Thash, hash field ns)
 // access: src_hdr.FTarget.p_ns (Upptr)
 struct FNs { // src_hdr.FNs
-    src_hdr::FNs*        ind_ns_next;   // hash next
-    algo::Smallstr16     ns;            // Namespace name (primary key)
-    algo::Smallstr50     nstype;        // Namespace type
-    algo::Smallstr50     license;       // Associated license
-    algo::Comment        comment;       //
-    src_hdr::FNsx*       c_nsx;         // optional pointer
-    src_hdr::FLicense*   p_license;     // reference to parent row
+    src_hdr::FNs*        ind_ns_next;      // hash next
+    u32                  ind_ns_hashval;   // hash value
+    algo::Smallstr16     ns;               // Namespace name (primary key)
+    algo::Smallstr50     nstype;           // Namespace type
+    algo::Smallstr50     license;          // Associated license
+    algo::Comment        comment;          //
+    src_hdr::FNsx*       c_nsx;            // optional pointer
+    src_hdr::FLicense*   p_license;        // reference to parent row
     // x-reference on src_hdr.FNs.c_nsx prevents copy
     // x-reference on src_hdr.FNs.p_license prevents copy
     // func:src_hdr.FNs..AssignOp
@@ -1018,12 +1037,13 @@ void                 FSrc_Init(src_hdr::FSrc& parent);
 // global access: ind_target (Thash, hash field target)
 // access: src_hdr.FTargsrc.p_target (Upptr)
 struct FTarget { // src_hdr.FTarget
-    src_hdr::FTarget*     ind_target_next;   // hash next
-    algo::Smallstr16      target;            // Primary key - name of target
-    src_hdr::FTargsrc**   c_targsrc_elems;   // array of pointers
-    u32                   c_targsrc_n;       // array of pointers
-    u32                   c_targsrc_max;     // capacity of allocated array
-    src_hdr::FNs*         p_ns;              // reference to parent row
+    src_hdr::FTarget*     ind_target_next;      // hash next
+    u32                   ind_target_hashval;   // hash value
+    algo::Smallstr16      target;               // Primary key - name of target
+    src_hdr::FTargsrc**   c_targsrc_elems;      // array of pointers
+    u32                   c_targsrc_n;          // array of pointers
+    u32                   c_targsrc_max;        // capacity of allocated array
+    src_hdr::FNs*         p_ns;                 // reference to parent row
     // reftype Ptrary of src_hdr.FTarget.c_targsrc prohibits copy
     // x-reference on src_hdr.FTarget.p_ns prevents copy
     // func:src_hdr.FTarget..AssignOp

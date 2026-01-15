@@ -188,6 +188,9 @@ void                 ind_running_Remove(atf_nrun::FEntry& row) __attribute__((no
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:atf_nrun.FDb.ind_running.Reserve
 void                 ind_running_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:atf_nrun.FDb.ind_running.AbsReserve
+void                 ind_running_AbsReserve(int n) __attribute__((nothrow));
 // func:atf_nrun.FDb.ind_running.Step
 // this function is 'extrn' and implemented by user
 void                 ind_running_Step() __attribute__((nothrow));
@@ -280,19 +283,20 @@ void                 FDb_Uninit() __attribute__((nothrow));
 // global access: ind_running (Thash, hash field pid)
 // global access: zd_todo (Llist)
 struct FEntry { // atf_nrun.FEntry
-    atf_nrun::FEntry*   ind_running_next;   // hash next
-    atf_nrun::FEntry*   zd_todo_next;       // zslist link; -1 means not-in-list
-    atf_nrun::FEntry*   zd_todo_prev;       // previous element
-    algo::cstring       command;            // Command to execute
-    i32                 pid;                //   0  Pid of running bash job
-    algo::cstring       job_path;           //   "bin/bash"  path for executable
-    command::bash       job_cmd;            // command line for child process
-    algo::cstring       job_fstdin;         // redirect for stdin
-    algo::cstring       job_fstdout;        // redirect for stdout
-    algo::cstring       job_fstderr;        // redirect for stderr
-    pid_t               job_pid;            //   0  pid of running child process
-    i32                 job_timeout;        //   0  optional timeout for child process
-    i32                 job_status;         //   0  last exit status of child process
+    atf_nrun::FEntry*   ind_running_next;      // hash next
+    u32                 ind_running_hashval;   // hash value
+    atf_nrun::FEntry*   zd_todo_next;          // zslist link; -1 means not-in-list
+    atf_nrun::FEntry*   zd_todo_prev;          // previous element
+    algo::cstring       command;               // Command to execute
+    i32                 pid;                   //   0  Pid of running bash job
+    algo::cstring       job_path;              //   "bin/bash"  path for executable
+    command::bash       job_cmd;               // command line for child process
+    algo::cstring       job_fstdin;            // redirect for stdin
+    algo::cstring       job_fstdout;           // redirect for stdout
+    algo::cstring       job_fstderr;           // redirect for stderr
+    pid_t               job_pid;               //   0  pid of running child process
+    i32                 job_timeout;           //   0  optional timeout for child process
+    i32                 job_status;            //   0  last exit status of child process
     // reftype Exec of atf_nrun.FEntry.job prohibits copy
     // func:atf_nrun.FEntry..AssignOp
     atf_nrun::FEntry&    operator =(const atf_nrun::FEntry &rhs) = delete;

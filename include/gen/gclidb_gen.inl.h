@@ -143,14 +143,6 @@ inline  gclidb::Grepo::Grepo() {
     gclidb::Grepo_Init(*this);
 }
 
-// --- gclidb.Grepogitport..Ctor
-inline  gclidb::Grepogitport::Grepogitport() {
-}
-
-// --- gclidb.Grepossh..Ctor
-inline  gclidb::Grepossh::Grepossh() {
-}
-
 // --- gclidb.Gstate..Ctor
 inline  gclidb::Gstate::Gstate() {
 }
@@ -320,16 +312,6 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const gclidb::Gmetho
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const gclidb::Grepo &row) {// cfmt:gclidb.Grepo.String
     gclidb::Grepo_Print(const_cast<gclidb::Grepo&>(row), str);
-    return str;
-}
-
-inline algo::cstring &algo::operator <<(algo::cstring &str, const gclidb::Grepogitport &row) {// cfmt:gclidb.Grepogitport.String
-    gclidb::Grepogitport_Print(const_cast<gclidb::Grepogitport&>(row), str);
-    return str;
-}
-
-inline algo::cstring &algo::operator <<(algo::cstring &str, const gclidb::Grepossh &row) {// cfmt:gclidb.Grepossh.String
-    gclidb::Grepossh_Print(const_cast<gclidb::Grepossh&>(row), str);
     return str;
 }
 

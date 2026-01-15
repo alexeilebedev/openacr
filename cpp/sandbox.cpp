@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -36,15 +36,18 @@ void sandbox::ResetSandbox(sandbox::FSandbox &sandbox) {
         SysCmd(tempstr()<<"git clone "<<(shallow ? "" : "--local")<<" . "<<sandbox.dir<<" 2>/dev/null");
     }
     tempstr curdir=algo::GetCurDir();
+    tempstr main_ref(algo::Trimmed(algo::SysEval(tempstr()<<"git rev-parse "<<_db.cmdline.ref,FailokQ(true),1024*1024)));// ref to fetch
+    tempstr addl_refs(algo::Trimmed(algo::SysEval(tempstr()<<"git rev-parse "<<_db.cmdline.refs,FailokQ(true),1024*1024)));// additional refs
+    Replace(addl_refs,"\n"," ");
     int rc=SysCmd(tempstr()
-                  <<"git -C "<<sandbox.dir<<" fetch -q "<<curdir<<" "<<_db.cmdline.refs
+                  <<"git -C "<<sandbox.dir<<" fetch -q "<<curdir<<" "<<main_ref<<" "<<addl_refs
                   // checkout -B may fail if directory non-clean
                   <<" && "
-                  <<"git -C "<<sandbox.dir<<" reset --hard -q"
+                  <<"git -C "<<sandbox.dir<<" reset --hard -q "
                   <<" && "
                   <<"git -C "<<sandbox.dir<<" clean --exclude=build --exclude=.gcache -fxq ."
                   <<" && "
-                  <<"git -C "<<sandbox.dir<<" checkout -B baseline $(git-current-ref) -q");
+                  <<"git -C "<<sandbox.dir<<" checkout -B baseline "<<main_ref<<" -q");
     if (rc!=0) {
         prlog("reset failed, sandbox looks unrelated to current git dir. re-initializing");
         algo::RemDirRecurse(sandbox.dir,true);

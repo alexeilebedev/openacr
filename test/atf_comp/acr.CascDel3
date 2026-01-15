@@ -1,0 +1,4 @@
+acr.delete  dmmeta.field  field:acr.FBltin.base  arg:amcdb.Bltin  reftype:Base  dflt:""  comment:""
+
+acr.delete  dmmeta.fbase  field:acr.FBltin.base  stripcomment:Y  comment:""
+report.acr  n_select:2  n_insert:0  n_delete:2  n_ignore:0  n_update:0  n_file_mod:0

@@ -27,8 +27,6 @@
 #include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/algo_gen.h"
 #include "include/gen/algo_gen.inl.h"
-#include "include/gen/algo_lib_gen.h"
-#include "include/gen/algo_lib_gen.inl.h"
 //#pragma endinclude
 namespace lib_json { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
@@ -217,10 +215,9 @@ bool lib_json::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     } else if (root == "-") {
         retval = lib_json::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
     } else if (DirectoryQ(root)) {
-        retval = retval && lib_json::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
     } else {
-        algo_lib::SaveBadTag("path", root);
-        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        algo_lib::AppendErrtext("path", root);
+        algo_lib::AppendErrtext("comment", "Wrong working directory?");
         retval = false;
     }
     return retval;
@@ -250,7 +247,6 @@ bool lib_json::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive)
     bool retval = true;
     ind_beg(algo::FileLine_curs,line,fd) {
         if (recursive) {
-            retval = retval && algo_lib::InsertStrptrMaybe(line);
         }
         if (!retval) {
             algo_lib::_db.errtext << eol
@@ -276,7 +272,6 @@ bool lib_json::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
 // --- lib_json.FDb._db.Steps
 // Calls Step function of dependencies
 void lib_json::Steps() {
-    algo_lib::Step(); // dependent namespace specified via (dev.targdep)
 }
 
 // --- lib_json.FDb._db.XrefMaybe
@@ -382,7 +377,7 @@ bool lib_json::node_XrefMaybe(lib_json::FNode &row) {
     bool retval = true;
     (void)row;
     // insert node into index ind_objfld
-    if ((NULL!=fldkey_Get(row).object)) { // user-defined insert condition
+    if (fldkey_Get(row).p_object) { // user-defined insert condition
         bool success = ind_objfld_InsertMaybe(row);
         if (UNLIKELY(!success)) {
             ch_RemoveAll(algo_lib::_db.errtext);
@@ -406,24 +401,20 @@ bool lib_json::node_XrefMaybe(lib_json::FNode &row) {
 // Find row by key. Return NULL if not found.
 lib_json::FNode* lib_json::ind_objfld_Find(const lib_json::FldKey& key) {
     u32 index = lib_json::FldKey_Hash(0, key) & (_db.ind_objfld_buckets_n - 1);
-    lib_json::FNode* *e = &_db.ind_objfld_buckets_elems[index];
-    lib_json::FNode* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || fldkey_Get((*ret)) == key;
-        if (done) break;
-        e         = &ret->ind_objfld_next;
-    } while (true);
+    lib_json::FNode *ret = _db.ind_objfld_buckets_elems[index];
+    for (; ret && !(fldkey_Get((*ret)) == key); ret = ret->ind_objfld_next) {
+    }
     return ret;
 }
 
 // --- lib_json.FDb.ind_objfld.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool lib_json::ind_objfld_InsertMaybe(lib_json::FNode& row) {
-    ind_objfld_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_objfld_next == (lib_json::FNode*)-1)) {// check if in hash already
-        u32 index = lib_json::FldKey_Hash(0, fldkey_Get(row)) & (_db.ind_objfld_buckets_n - 1);
+        row.ind_objfld_hashval = lib_json::FldKey_Hash(0, fldkey_Get(row));
+        ind_objfld_Reserve(1);
+        u32 index = row.ind_objfld_hashval & (_db.ind_objfld_buckets_n - 1);
         lib_json::FNode* *prev = &_db.ind_objfld_buckets_elems[index];
         do {
             lib_json::FNode* ret = *prev;
@@ -449,7 +440,7 @@ bool lib_json::ind_objfld_InsertMaybe(lib_json::FNode& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void lib_json::ind_objfld_Remove(lib_json::FNode& row) {
     if (LIKELY(row.ind_objfld_next != (lib_json::FNode*)-1)) {// check if in hash already
-        u32 index = lib_json::FldKey_Hash(0, fldkey_Get(row)) & (_db.ind_objfld_buckets_n - 1);
+        u32 index = row.ind_objfld_hashval & (_db.ind_objfld_buckets_n - 1);
         lib_json::FNode* *prev = &_db.ind_objfld_buckets_elems[index]; // addr of pointer to current element
         while (lib_json::FNode *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -466,8 +457,14 @@ void lib_json::ind_objfld_Remove(lib_json::FNode& row) {
 // --- lib_json.FDb.ind_objfld.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void lib_json::ind_objfld_Reserve(int n) {
+    ind_objfld_AbsReserve(_db.ind_objfld_n + n);
+}
+
+// --- lib_json.FDb.ind_objfld.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void lib_json::ind_objfld_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_objfld_buckets_n;
-    u32 new_nelems   = _db.ind_objfld_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -486,7 +483,7 @@ void lib_json::ind_objfld_Reserve(int n) {
             while (elem) {
                 lib_json::FNode &row        = *elem;
                 lib_json::FNode* next       = row.ind_objfld_next;
-                u32 index          = lib_json::FldKey_Hash(0, fldkey_Get(row)) & (new_nbuckets-1);
+                u32 index          = row.ind_objfld_hashval & (new_nbuckets-1);
                 row.ind_objfld_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -545,9 +542,6 @@ void lib_json::FldKey_Print(lib_json::FldKey& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "lib_json.FldKey";
 
-    u64_PrintHex(u64(row.object), temp, 8, true);
-    PrintAttrSpaceReset(str,"object", temp);
-
     algo::strptr_Print(row.field, temp);
     PrintAttrSpaceReset(str,"field", temp);
 }
@@ -571,15 +565,11 @@ void lib_json::c_child_Cascdel(lib_json::FNode& node) {
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 void lib_json::c_child_Insert(lib_json::FNode& node, lib_json::FNode& row) {
-    if (bool_Update(row.node_c_child_in_ary,true)) {
-        // reserve space
+    if (!row.node_c_child_in_ary) {
         c_child_Reserve(node, 1);
-        u32 n  = node.c_child_n;
-        u32 at = n;
-        lib_json::FNode* *elems = node.c_child_elems;
-        elems[at] = &row;
-        node.c_child_n = n+1;
-
+        u32 n  = node.c_child_n++;
+        node.c_child_elems[n] = &row;
+        row.node_c_child_in_ary = true;
     }
 }
 
@@ -588,7 +578,7 @@ void lib_json::c_child_Insert(lib_json::FNode& node, lib_json::FNode& row) {
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 bool lib_json::c_child_InsertMaybe(lib_json::FNode& node, lib_json::FNode& row) {
-    bool retval = !row.node_c_child_in_ary;
+    bool retval = !node_c_child_InAryQ(row);
     c_child_Insert(node,row); // check is performed in _Insert again
     return retval;
 }
@@ -596,18 +586,18 @@ bool lib_json::c_child_InsertMaybe(lib_json::FNode& node, lib_json::FNode& row) 
 // --- lib_json.FNode.c_child.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void lib_json::c_child_Remove(lib_json::FNode& node, lib_json::FNode& row) {
+    int n = node.c_child_n;
     if (bool_Update(row.node_c_child_in_ary,false)) {
-        int lim = node.c_child_n;
         lib_json::FNode* *elems = node.c_child_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = lim-1; i>=0; i--) {
+        for (int i = n-1; i>=0; i--) {
             lib_json::FNode* elem = elems[i]; // fetch element
             if (elem == &row) {
                 int j = i + 1;
-                size_t nbytes = sizeof(lib_json::FNode*) * (lim - j);
+                size_t nbytes = sizeof(lib_json::FNode*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                node.c_child_n = lim - 1;
+                node.c_child_n = n - 1;
                 break;
             }
         }

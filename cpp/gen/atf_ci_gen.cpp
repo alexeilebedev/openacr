@@ -35,6 +35,8 @@
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/dmmeta_gen.h"
 #include "include/gen/dmmeta_gen.inl.h"
+#include "include/gen/lib_json_gen.h"
+#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/lib_amcdb_gen.h"
@@ -43,42 +45,41 @@
 #include "include/gen/lib_ctype_gen.inl.h"
 #include "include/gen/lib_git_gen.h"
 #include "include/gen/lib_git_gen.inl.h"
-#include "include/gen/lib_json_gen.h"
-#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/lib_prot_gen.h"
 #include "include/gen/lib_prot_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
+lib_json::FDb    lib_json::_db;     // dependency found via dev.targdep
 algo_lib::FDb    algo_lib::_db;     // dependency found via dev.targdep
 lib_ctype::FDb   lib_ctype::_db;    // dependency found via dev.targdep
 lib_git::FDb     lib_git::_db;      // dependency found via dev.targdep
-lib_json::FDb    lib_json::_db;     // dependency found via dev.targdep
 atf_ci::FDb      atf_ci::_db;       // dependency found via dev.targdep
 
 namespace atf_ci {
 const char *atf_ci_help =
 "atf_ci: Normalization tests (see citest table)\n"
 "Usage: atf_ci [[-citest:]<regx>] [options]\n"
-"    OPTION      TYPE    DFLT    COMMENT\n"
-"    -in         string  \"data\"  Input directory or filename, - for stdin\n"
-"    [citest]    regx    \"%\"     Regx of tests to run\n"
-"    -maxerr     int     0       Exit after this many errors\n"
-"    -cijob      regx    \"%\"\n"
-"    -capture                    Capture the output of the test\n"
-"    -verbose    int             Verbosity level (0..255); alias -v; cumulative\n"
-"    -debug      int             Debug level (0..255); alias -d; cumulative\n"
-"    -help                       Print help and exit; alias -h\n"
-"    -version                    Print version and exit\n"
-"    -signature                  Show signatures and exit; alias -sig\n"
+"    OPTION        TYPE    DFLT    COMMENT\n"
+"    -in           string  \"data\"  Input directory or filename, - for stdin\n"
+"    [citest]      regx    \"%\"     Regx of tests to run\n"
+"    -maxerr       int     0       Exit after this many errors\n"
+"    -cijob        regx    \"%\"\n"
+"    -capture                      Capture the output of the test\n"
+"    -check_clean          Y       Check for modifications after each test\n"
+"    -verbose      flag            Verbosity level (0..255); alias -v; cumulative\n"
+"    -debug        flag            Debug level (0..255); alias -d; cumulative\n"
+"    -help                         Print help and exit; alias -h\n"
+"    -version                      Print version and exit\n"
+"    -signature                    Show signatures and exit; alias -sig\n"
 ;
 
 
 } // namespace atf_ci
 namespace atf_ci { // gen:ns_gsymbol
     const atfdb::CijobPkey atfdb_cijob_comp("comp");
-    const atfdb::CijobPkey atfdb_cijob_cov("cov");
+    const atfdb::CijobPkey atfdb_cijob_coverage("coverage");
     const atfdb::CijobPkey atfdb_cijob_memcheck("memcheck");
     const atfdb::CijobPkey atfdb_cijob_normalize("normalize");
 } // gen:ns_gsymbol
@@ -108,8 +109,8 @@ namespace atf_ci { // gen:ns_print_proto
     static bool          scriptfile_InputMaybe(dev::Scriptfile &elem) __attribute__((nothrow));
     // func:atf_ci.FDb.ns.InputMaybe
     static bool          ns_InputMaybe(dmmeta::Ns &elem) __attribute__((nothrow));
-    // func:atf_ci.FDb.readme.InputMaybe
-    static bool          readme_InputMaybe(dev::Readme &elem) __attribute__((nothrow));
+    // func:atf_ci.FDb.readmefile.InputMaybe
+    static bool          readmefile_InputMaybe(dev::Readmefile &elem) __attribute__((nothrow));
     // func:atf_ci.FDb.builddir.InputMaybe
     static bool          builddir_InputMaybe(dev::Builddir &elem) __attribute__((nothrow));
     // func:atf_ci.FDb.cfg.InputMaybe
@@ -333,9 +334,8 @@ void atf_ci::ReadArgv() {
         }
         if (ch_N(attrname) == 0) {
             err << "atf_ci: too many arguments. error at "<<algo::strptr_ToSsim(arg)<<eol;
-        }
-        // read value into currently selected arg
-        if (haveval) {
+        } else if (haveval) {
+            // read value into currently selected arg
             bool ret=false;
             // it's already known which namespace is consuming the args,
             // so directly go there
@@ -378,6 +378,9 @@ void atf_ci::ReadArgv() {
         }ind_end
         doexit = true;
     }
+    algo_lib_logcat_debug.enabled = algo_lib::_db.cmdline.debug;
+    algo_lib_logcat_verbose.enabled = algo_lib::_db.cmdline.verbose > 0;
+    algo_lib_logcat_verbose2.enabled = algo_lib::_db.cmdline.verbose > 1;
     if (!dohelp) {
     }
     // dmmeta.floadtuples:atf_ci.FDb.cmdline
@@ -389,7 +392,7 @@ void atf_ci::ReadArgv() {
     }
     if (err != "") {
         algo_lib::_db.exit_code=1;
-        prerr(err);
+        prerr_(err); // already has eol
         doexit=true;
     }
     if (dohelp) {
@@ -434,7 +437,7 @@ static void atf_ci::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_ci.Input'  signature:'7a8e5cb51bc025925f1aa7f6a12998146ebda21c'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_ci.Input'  signature:'572ca634bbac62d53a8602668fbaa85db3b791f8'");
 }
 
 // --- atf_ci.FDb._db.InsertStrptrMaybe
@@ -463,10 +466,10 @@ bool atf_ci::InsertStrptrMaybe(algo::strptr str) {
             retval = retval && ns_InputMaybe(elem);
             break;
         }
-        case atf_ci_TableId_dev_Readme: { // finput:atf_ci.FDb.readme
-            dev::Readme elem;
-            retval = dev::Readme_ReadStrptrMaybe(elem, str);
-            retval = retval && readme_InputMaybe(elem);
+        case atf_ci_TableId_dev_Readmefile: { // finput:atf_ci.FDb.readmefile
+            dev::Readmefile elem;
+            retval = dev::Readmefile_ReadStrptrMaybe(elem, str);
+            retval = retval && readmefile_InputMaybe(elem);
             break;
         }
         case atf_ci_TableId_dev_Builddir: { // finput:atf_ci.FDb.builddir
@@ -529,7 +532,6 @@ bool atf_ci::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     } else if (root == "-") {
         retval = atf_ci::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
     } else if (DirectoryQ(root)) {
-        retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dev.gitfile"),recursive);
         retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ns"),recursive);
         retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ctype"),recursive);
         retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dmmeta.field"),recursive);
@@ -543,9 +545,10 @@ bool atf_ci::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cfmt"),recursive);
         retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cdflt"),recursive);
         retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dev.unstablefld"),recursive);
+        retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dev.gitfile"),recursive);
         retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dev.targsrc"),recursive);
         retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dev.scriptfile"),recursive);
-        retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dev.readme"),recursive);
+        retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dev.readmefile"),recursive);
         retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dev.noindent"),recursive);
         retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dev.msgfile"),recursive);
         retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"dev.cfg"),recursive);
@@ -553,8 +556,8 @@ bool atf_ci::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"atfdb.cipackage"),recursive);
         retval = retval && atf_ci::LoadTuplesFile(algo::SsimFname(root,"amcdb.bltin"),recursive);
     } else {
-        algo_lib::SaveBadTag("path", root);
-        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        algo_lib::AppendErrtext("path", root);
+        algo_lib::AppendErrtext("comment", "Wrong working directory?");
         retval = false;
     }
     return retval;
@@ -712,9 +715,10 @@ static void atf_ci::citest_LoadStatic() {
         void (*step)();
     } data[] = {
         { "atfdb.citest  citest:checkclean  cijob:normalize  sandbox:N  comment:\"Check that no files are modified\"", atf_ci::citest_checkclean }
-        ,{ "atfdb.citest  citest:atf_amc  cijob:comp  sandbox:N  comment:\"Test amc (run atf_amc)\"", atf_ci::citest_atf_amc }
+        ,{ "atfdb.citest  citest:cleantemp  cijob:normalize  sandbox:N  comment:\"Clean out temp directory every once in a while\"", atf_ci::citest_cleantemp }
         ,{ "atfdb.citest  citest:gitfile  cijob:normalize  sandbox:N  comment:\"Update gitfile tables by scanning filesystem\"", atf_ci::citest_gitfile }
         ,{ "atfdb.citest  citest:scanreadme  cijob:normalize  sandbox:N  comment:\"Update readme tables by scanning filesystem\"", atf_ci::citest_scanreadme }
+        ,{ "atfdb.citest  citest:quickreadme  cijob:normalize  sandbox:N  comment:\"Quick re-generate of readmes (without evaluation)\"", atf_ci::citest_quickreadme }
         ,{ "atfdb.citest  citest:ssimfile  cijob:normalize  sandbox:N  comment:\"Check for .ssim files with no corresponding ssimfile entry\"", atf_ci::citest_ssimfile }
         ,{ "atfdb.citest  citest:normalize_acr  cijob:normalize  sandbox:N  comment:\"Read ssim databases into memory and write back\"", atf_ci::citest_normalize_acr }
         ,{ "atfdb.citest  citest:src_lim  cijob:normalize  sandbox:N  comment:\"Source code police\"", atf_ci::citest_src_lim }
@@ -722,30 +726,34 @@ static void atf_ci::citest_LoadStatic() {
         ,{ "atfdb.citest  citest:bootstrap  cijob:normalize  sandbox:N  comment:\"Re-generate bootstrap files\"", atf_ci::citest_bootstrap }
         ,{ "atfdb.citest  citest:shebang  cijob:normalize  sandbox:N  comment:\"\"", atf_ci::citest_shebang }
         ,{ "atfdb.citest  citest:encoding  cijob:normalize  sandbox:N  comment:\"Check Encoding of h/cpp files\"", atf_ci::citest_encoding }
-        ,{ "atfdb.citest  citest:readme  cijob:normalize  sandbox:N  comment:\"Re-generate readme files\"", atf_ci::citest_readme }
         ,{ "atfdb.citest  citest:file_header  cijob:normalize  sandbox:N  comment:\"Update headers in source files\"", atf_ci::citest_file_header }
         ,{ "atfdb.citest  citest:non-copyrighted  cijob:normalize  sandbox:N  comment:\"Find non-copyrighted files\"", atf_ci::citest_non_copyrighted }
         ,{ "atfdb.citest  citest:iffy_src  cijob:normalize  sandbox:N  comment:\"Check for iffy source constructs with src_func\"", atf_ci::citest_iffy_src }
         ,{ "atfdb.citest  citest:stray_gen  cijob:normalize  sandbox:N  comment:\"*/gen/* file that doesn't appear to be generated by amc\"", atf_ci::citest_stray_gen }
         ,{ "atfdb.citest  citest:tempcode  cijob:normalize  sandbox:N  comment:\"Check for temp code inserted for testing only\"", atf_ci::citest_tempcode }
         ,{ "atfdb.citest  citest:lineendings  cijob:normalize  sandbox:N  comment:\"Correct windows-style line endings in known text files\"", atf_ci::citest_lineendings }
+        ,{ "atfdb.citest  citest:update_script  cijob:normalize  sandbox:N  comment:\"Update scriptfile table\"", atf_ci::citest_update_script }
         ,{ "atfdb.citest  citest:indent_script  cijob:normalize  sandbox:N  comment:\"Indent any bash script file\"", atf_ci::citest_indent_script }
-        ,{ "atfdb.citest  citest:comptest  cijob:comp  sandbox:N  comment:\"Rewrite/normalize component tests\"", atf_ci::citest_comptest }
-        ,{ "atfdb.citest  citest:cppcheck  cijob:comp  sandbox:N  comment:\"Cppcheck static code analysis\"", atf_ci::citest_cppcheck }
-        ,{ "atfdb.citest  citest:bintests  cijob:comp  sandbox:N  comment:\"Run bin/test-* scripts\"", atf_ci::citest_bintests }
+        ,{ "atfdb.citest  citest:cppcheck  cijob:normalize  sandbox:N  comment:\"Cppcheck static code analysis\"", atf_ci::citest_cppcheck }
         ,{ "atfdb.citest  citest:indent_srcfile  cijob:normalize  sandbox:N  comment:\"Indent any source files modified in last commit\"", atf_ci::citest_indent_srcfile }
+        ,{ "atfdb.citest  citest:readme  cijob:normalize  sandbox:N  comment:\"Re-generate readme files\"", atf_ci::citest_readme }
         ,{ "atfdb.citest  citest:normalize_amc_vis  cijob:normalize  sandbox:N  comment:\"Check that amc_vis doesn't see any circular dependencies\"", atf_ci::citest_normalize_amc_vis }
         ,{ "atfdb.citest  citest:normalize_acr_my  cijob:normalize  sandbox:N  comment:\"Round trip ssim databases through MariaDB and back\"", atf_ci::citest_normalize_acr_my }
         ,{ "atfdb.citest  citest:apm_check  cijob:normalize  sandbox:N  comment:\"\"", atf_ci::citest_apm_check }
+        ,{ "atfdb.citest  citest:atf_amc  cijob:comp  sandbox:N  comment:\"Test amc (run atf_amc)\"", atf_ci::citest_atf_amc }
+        ,{ "atfdb.citest  citest:comptest  cijob:comp  sandbox:N  comment:\"Rewrite/normalize component tests\"", atf_ci::citest_comptest }
+        ,{ "atfdb.citest  citest:bintests  cijob:comp  sandbox:N  comment:\"Run bin/test-* scripts\"", atf_ci::citest_bintests }
         ,{ "atfdb.citest  citest:atf_unit  cijob:comp  sandbox:N  comment:\"Run unit tests\"", atf_ci::citest_atf_unit }
         ,{ "atfdb.citest  citest:atf_comp  cijob:comp  sandbox:N  comment:\"Run component tests\"", atf_ci::citest_atf_comp }
-        ,{ "atfdb.citest  citest:atf_comp_cov  cijob:cov  sandbox:N  comment:\"Check component test coverage\"", atf_ci::citest_atf_comp_cov }
-        ,{ "atfdb.citest  citest:apm  cijob:comp  sandbox:Y  comment:\"Test APM\"", atf_ci::citest_apm }
-        ,{ "atfdb.citest  citest:atf_comp_mem  cijob:memcheck  sandbox:N  comment:\"Run component tests in memcheck mode (slow)\"", atf_ci::citest_atf_comp_mem }
+        ,{ "atfdb.citest  citest:atf_comp_cov  cijob:coverage  sandbox:N  comment:\"Check component test coverage\"", atf_ci::citest_atf_comp_cov }
         ,{ "atfdb.citest  citest:acr_ed_ssimfile  cijob:comp  sandbox:Y  comment:\"Create a new ssimfile\"", atf_ci::citest_acr_ed_ssimfile }
         ,{ "atfdb.citest  citest:acr_ed_ssimdb  cijob:comp  sandbox:Y  comment:\"Create a new ssimdb\"", atf_ci::citest_acr_ed_ssimdb }
-        ,{ "atfdb.citest  citest:apm_reinstall  cijob:comp  sandbox:Y  comment:\"Check that packages are removable\"", atf_ci::citest_apm_reinstall }
+        ,{ "atfdb.citest  citest:acr_ed_unittest  cijob:comp  sandbox:Y  comment:\"Create a new unit test\"", atf_ci::citest_acr_ed_unittest }
         ,{ "atfdb.citest  citest:acr_ed_target  cijob:comp  sandbox:Y  comment:\"Takes a while - do it last\"", atf_ci::citest_acr_ed_target }
+        ,{ "atfdb.citest  citest:apm  cijob:comp  sandbox:Y  comment:\"Test APM\"", atf_ci::citest_apm }
+        ,{ "atfdb.citest  citest:apm_reinstall  cijob:comp  sandbox:Y  comment:\"Check that packages are removable\"", atf_ci::citest_apm_reinstall }
+        ,{ "atfdb.citest  citest:abt_md_after_ssimfile_is_added  cijob:comp  sandbox:Y  comment:\"Test that directory README.md is updated with all new .md files\"", atf_ci::citest_abt_md_after_ssimfile_is_added }
+        ,{ "atfdb.citest  citest:atf_comp_mem  cijob:memcheck  sandbox:N  comment:\"Run component tests in memcheck mode (slow)\"", atf_ci::citest_atf_comp_mem }
         ,{NULL, NULL}
     };
     (void)data;
@@ -879,14 +887,9 @@ bool atf_ci::ssimfile_XrefMaybe(atf_ci::FSsimfile &row) {
 // Find row by key. Return NULL if not found.
 atf_ci::FSsimfile* atf_ci::ind_ssimfile_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_ssimfile_buckets_n - 1);
-    atf_ci::FSsimfile* *e = &_db.ind_ssimfile_buckets_elems[index];
-    atf_ci::FSsimfile* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).ssimfile == key;
-        if (done) break;
-        e         = &ret->ind_ssimfile_next;
-    } while (true);
+    atf_ci::FSsimfile *ret = _db.ind_ssimfile_buckets_elems[index];
+    for (; ret && !((*ret).ssimfile == key); ret = ret->ind_ssimfile_next) {
+    }
     return ret;
 }
 
@@ -918,10 +921,11 @@ atf_ci::FSsimfile& atf_ci::ind_ssimfile_GetOrCreate(const algo::strptr& key) {
 // --- atf_ci.FDb.ind_ssimfile.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool atf_ci::ind_ssimfile_InsertMaybe(atf_ci::FSsimfile& row) {
-    ind_ssimfile_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_ssimfile_next == (atf_ci::FSsimfile*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.ssimfile) & (_db.ind_ssimfile_buckets_n - 1);
+        row.ind_ssimfile_hashval = algo::Smallstr50_Hash(0, row.ssimfile);
+        ind_ssimfile_Reserve(1);
+        u32 index = row.ind_ssimfile_hashval & (_db.ind_ssimfile_buckets_n - 1);
         atf_ci::FSsimfile* *prev = &_db.ind_ssimfile_buckets_elems[index];
         do {
             atf_ci::FSsimfile* ret = *prev;
@@ -947,7 +951,7 @@ bool atf_ci::ind_ssimfile_InsertMaybe(atf_ci::FSsimfile& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void atf_ci::ind_ssimfile_Remove(atf_ci::FSsimfile& row) {
     if (LIKELY(row.ind_ssimfile_next != (atf_ci::FSsimfile*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.ssimfile) & (_db.ind_ssimfile_buckets_n - 1);
+        u32 index = row.ind_ssimfile_hashval & (_db.ind_ssimfile_buckets_n - 1);
         atf_ci::FSsimfile* *prev = &_db.ind_ssimfile_buckets_elems[index]; // addr of pointer to current element
         while (atf_ci::FSsimfile *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -964,8 +968,14 @@ void atf_ci::ind_ssimfile_Remove(atf_ci::FSsimfile& row) {
 // --- atf_ci.FDb.ind_ssimfile.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void atf_ci::ind_ssimfile_Reserve(int n) {
+    ind_ssimfile_AbsReserve(_db.ind_ssimfile_n + n);
+}
+
+// --- atf_ci.FDb.ind_ssimfile.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void atf_ci::ind_ssimfile_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_ssimfile_buckets_n;
-    u32 new_nelems   = _db.ind_ssimfile_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -984,7 +994,7 @@ void atf_ci::ind_ssimfile_Reserve(int n) {
             while (elem) {
                 atf_ci::FSsimfile &row        = *elem;
                 atf_ci::FSsimfile* next       = row.ind_ssimfile_next;
-                u32 index          = algo::Smallstr50_Hash(0, row.ssimfile) & (new_nbuckets-1);
+                u32 index          = row.ind_ssimfile_hashval & (new_nbuckets-1);
                 row.ind_ssimfile_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1122,14 +1132,9 @@ bool atf_ci::scriptfile_XrefMaybe(atf_ci::FScriptfile &row) {
 // Find row by key. Return NULL if not found.
 atf_ci::FScriptfile* atf_ci::ind_scriptfile_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr200_Hash(0, key) & (_db.ind_scriptfile_buckets_n - 1);
-    atf_ci::FScriptfile* *e = &_db.ind_scriptfile_buckets_elems[index];
-    atf_ci::FScriptfile* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).gitfile == key;
-        if (done) break;
-        e         = &ret->ind_scriptfile_next;
-    } while (true);
+    atf_ci::FScriptfile *ret = _db.ind_scriptfile_buckets_elems[index];
+    for (; ret && !((*ret).gitfile == key); ret = ret->ind_scriptfile_next) {
+    }
     return ret;
 }
 
@@ -1144,10 +1149,11 @@ atf_ci::FScriptfile& atf_ci::ind_scriptfile_FindX(const algo::strptr& key) {
 // --- atf_ci.FDb.ind_scriptfile.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool atf_ci::ind_scriptfile_InsertMaybe(atf_ci::FScriptfile& row) {
-    ind_scriptfile_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_scriptfile_next == (atf_ci::FScriptfile*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr200_Hash(0, row.gitfile) & (_db.ind_scriptfile_buckets_n - 1);
+        row.ind_scriptfile_hashval = algo::Smallstr200_Hash(0, row.gitfile);
+        ind_scriptfile_Reserve(1);
+        u32 index = row.ind_scriptfile_hashval & (_db.ind_scriptfile_buckets_n - 1);
         atf_ci::FScriptfile* *prev = &_db.ind_scriptfile_buckets_elems[index];
         do {
             atf_ci::FScriptfile* ret = *prev;
@@ -1173,7 +1179,7 @@ bool atf_ci::ind_scriptfile_InsertMaybe(atf_ci::FScriptfile& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void atf_ci::ind_scriptfile_Remove(atf_ci::FScriptfile& row) {
     if (LIKELY(row.ind_scriptfile_next != (atf_ci::FScriptfile*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr200_Hash(0, row.gitfile) & (_db.ind_scriptfile_buckets_n - 1);
+        u32 index = row.ind_scriptfile_hashval & (_db.ind_scriptfile_buckets_n - 1);
         atf_ci::FScriptfile* *prev = &_db.ind_scriptfile_buckets_elems[index]; // addr of pointer to current element
         while (atf_ci::FScriptfile *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1190,8 +1196,14 @@ void atf_ci::ind_scriptfile_Remove(atf_ci::FScriptfile& row) {
 // --- atf_ci.FDb.ind_scriptfile.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void atf_ci::ind_scriptfile_Reserve(int n) {
+    ind_scriptfile_AbsReserve(_db.ind_scriptfile_n + n);
+}
+
+// --- atf_ci.FDb.ind_scriptfile.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void atf_ci::ind_scriptfile_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_scriptfile_buckets_n;
-    u32 new_nelems   = _db.ind_scriptfile_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -1210,7 +1222,7 @@ void atf_ci::ind_scriptfile_Reserve(int n) {
             while (elem) {
                 atf_ci::FScriptfile &row        = *elem;
                 atf_ci::FScriptfile* next       = row.ind_scriptfile_next;
-                u32 index          = algo::Smallstr200_Hash(0, row.gitfile) & (new_nbuckets-1);
+                u32 index          = row.ind_scriptfile_hashval & (new_nbuckets-1);
                 row.ind_scriptfile_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1334,14 +1346,9 @@ bool atf_ci::ns_XrefMaybe(atf_ci::FNs &row) {
 // Find row by key. Return NULL if not found.
 atf_ci::FNs* atf_ci::ind_ns_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr16_Hash(0, key) & (_db.ind_ns_buckets_n - 1);
-    atf_ci::FNs* *e = &_db.ind_ns_buckets_elems[index];
-    atf_ci::FNs* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).ns == key;
-        if (done) break;
-        e         = &ret->ind_ns_next;
-    } while (true);
+    atf_ci::FNs *ret = _db.ind_ns_buckets_elems[index];
+    for (; ret && !((*ret).ns == key); ret = ret->ind_ns_next) {
+    }
     return ret;
 }
 
@@ -1373,10 +1380,11 @@ atf_ci::FNs& atf_ci::ind_ns_GetOrCreate(const algo::strptr& key) {
 // --- atf_ci.FDb.ind_ns.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool atf_ci::ind_ns_InsertMaybe(atf_ci::FNs& row) {
-    ind_ns_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_ns_next == (atf_ci::FNs*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr16_Hash(0, row.ns) & (_db.ind_ns_buckets_n - 1);
+        row.ind_ns_hashval = algo::Smallstr16_Hash(0, row.ns);
+        ind_ns_Reserve(1);
+        u32 index = row.ind_ns_hashval & (_db.ind_ns_buckets_n - 1);
         atf_ci::FNs* *prev = &_db.ind_ns_buckets_elems[index];
         do {
             atf_ci::FNs* ret = *prev;
@@ -1402,7 +1410,7 @@ bool atf_ci::ind_ns_InsertMaybe(atf_ci::FNs& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void atf_ci::ind_ns_Remove(atf_ci::FNs& row) {
     if (LIKELY(row.ind_ns_next != (atf_ci::FNs*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr16_Hash(0, row.ns) & (_db.ind_ns_buckets_n - 1);
+        u32 index = row.ind_ns_hashval & (_db.ind_ns_buckets_n - 1);
         atf_ci::FNs* *prev = &_db.ind_ns_buckets_elems[index]; // addr of pointer to current element
         while (atf_ci::FNs *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1419,8 +1427,14 @@ void atf_ci::ind_ns_Remove(atf_ci::FNs& row) {
 // --- atf_ci.FDb.ind_ns.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void atf_ci::ind_ns_Reserve(int n) {
+    ind_ns_AbsReserve(_db.ind_ns_n + n);
+}
+
+// --- atf_ci.FDb.ind_ns.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void atf_ci::ind_ns_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_ns_buckets_n;
-    u32 new_nelems   = _db.ind_ns_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -1439,7 +1453,7 @@ void atf_ci::ind_ns_Reserve(int n) {
             while (elem) {
                 atf_ci::FNs &row        = *elem;
                 atf_ci::FNs* next       = row.ind_ns_next;
-                u32 index          = algo::Smallstr16_Hash(0, row.ns) & (new_nbuckets-1);
+                u32 index          = row.ind_ns_hashval & (new_nbuckets-1);
                 row.ind_ns_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1452,99 +1466,99 @@ void atf_ci::ind_ns_Reserve(int n) {
     }
 }
 
-// --- atf_ci.FDb.readme.Alloc
+// --- atf_ci.FDb.readmefile.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-atf_ci::FReadme& atf_ci::readme_Alloc() {
-    atf_ci::FReadme* row = readme_AllocMaybe();
+atf_ci::FReadmefile& atf_ci::readmefile_Alloc() {
+    atf_ci::FReadmefile* row = readmefile_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
-        FatalErrorExit("atf_ci.out_of_mem  field:atf_ci.FDb.readme  comment:'Alloc failed'");
+        FatalErrorExit("atf_ci.out_of_mem  field:atf_ci.FDb.readmefile  comment:'Alloc failed'");
     }
     return *row;
 }
 
-// --- atf_ci.FDb.readme.AllocMaybe
+// --- atf_ci.FDb.readmefile.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-atf_ci::FReadme* atf_ci::readme_AllocMaybe() {
-    atf_ci::FReadme *row = (atf_ci::FReadme*)readme_AllocMem();
+atf_ci::FReadmefile* atf_ci::readmefile_AllocMaybe() {
+    atf_ci::FReadmefile *row = (atf_ci::FReadmefile*)readmefile_AllocMem();
     if (row) {
-        new (row) atf_ci::FReadme; // call constructor
+        new (row) atf_ci::FReadmefile; // call constructor
     }
     return row;
 }
 
-// --- atf_ci.FDb.readme.InsertMaybe
+// --- atf_ci.FDb.readmefile.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-atf_ci::FReadme* atf_ci::readme_InsertMaybe(const dev::Readme &value) {
-    atf_ci::FReadme *row = &readme_Alloc(); // if out of memory, process dies. if input error, return NULL.
-    readme_CopyIn(*row,const_cast<dev::Readme&>(value));
-    bool ok = readme_XrefMaybe(*row); // this may return false
+atf_ci::FReadmefile* atf_ci::readmefile_InsertMaybe(const dev::Readmefile &value) {
+    atf_ci::FReadmefile *row = &readmefile_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    readmefile_CopyIn(*row,const_cast<dev::Readmefile&>(value));
+    bool ok = readmefile_XrefMaybe(*row); // this may return false
     if (!ok) {
-        readme_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        readmefile_RemoveLast(); // delete offending row, any existing xrefs are cleared
         row = NULL; // forget this ever happened
     }
     return row;
 }
 
-// --- atf_ci.FDb.readme.AllocMem
+// --- atf_ci.FDb.readmefile.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* atf_ci::readme_AllocMem() {
-    u64 new_nelems     = _db.readme_n+1;
+void* atf_ci::readmefile_AllocMem() {
+    u64 new_nelems     = _db.readmefile_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
     u64 base  = u64(1)<<bsr;
     u64 index = new_nelems-base;
     void *ret = NULL;
     // if level doesn't exist yet, create it
-    atf_ci::FReadme*  lev   = NULL;
+    atf_ci::FReadmefile*  lev   = NULL;
     if (bsr < 32) {
-        lev = _db.readme_lary[bsr];
+        lev = _db.readmefile_lary[bsr];
         if (!lev) {
-            lev=(atf_ci::FReadme*)algo_lib::malloc_AllocMem(sizeof(atf_ci::FReadme) * (u64(1)<<bsr));
-            _db.readme_lary[bsr] = lev;
+            lev=(atf_ci::FReadmefile*)algo_lib::malloc_AllocMem(sizeof(atf_ci::FReadmefile) * (u64(1)<<bsr));
+            _db.readmefile_lary[bsr] = lev;
         }
     }
     // allocate element from this level
     if (lev) {
-        _db.readme_n = i32(new_nelems);
+        _db.readmefile_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
 }
 
-// --- atf_ci.FDb.readme.RemoveAll
+// --- atf_ci.FDb.readmefile.RemoveAll
 // Remove all elements from Lary
-void atf_ci::readme_RemoveAll() {
-    for (u64 n = _db.readme_n; n>0; ) {
+void atf_ci::readmefile_RemoveAll() {
+    for (u64 n = _db.readmefile_n; n>0; ) {
         n--;
-        readme_qFind(u64(n)).~FReadme(); // destroy last element
-        _db.readme_n = i32(n);
+        readmefile_qFind(u64(n)).~FReadmefile(); // destroy last element
+        _db.readmefile_n = i32(n);
     }
 }
 
-// --- atf_ci.FDb.readme.RemoveLast
+// --- atf_ci.FDb.readmefile.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void atf_ci::readme_RemoveLast() {
-    u64 n = _db.readme_n;
+void atf_ci::readmefile_RemoveLast() {
+    u64 n = _db.readmefile_n;
     if (n > 0) {
         n -= 1;
-        readme_qFind(u64(n)).~FReadme();
-        _db.readme_n = i32(n);
+        readmefile_qFind(u64(n)).~FReadmefile();
+        _db.readmefile_n = i32(n);
     }
 }
 
-// --- atf_ci.FDb.readme.InputMaybe
-static bool atf_ci::readme_InputMaybe(dev::Readme &elem) {
+// --- atf_ci.FDb.readmefile.InputMaybe
+static bool atf_ci::readmefile_InputMaybe(dev::Readmefile &elem) {
     bool retval = true;
-    retval = readme_InsertMaybe(elem) != nullptr;
+    retval = readmefile_InsertMaybe(elem) != nullptr;
     return retval;
 }
 
-// --- atf_ci.FDb.readme.XrefMaybe
+// --- atf_ci.FDb.readmefile.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-bool atf_ci::readme_XrefMaybe(atf_ci::FReadme &row) {
+bool atf_ci::readmefile_XrefMaybe(atf_ci::FReadmefile &row) {
     bool retval = true;
     (void)row;
     return retval;
@@ -1759,14 +1773,9 @@ bool atf_ci::cfg_XrefMaybe(atf_ci::FCfg &row) {
 // Find row by key. Return NULL if not found.
 atf_ci::FBuilddir* atf_ci::ind_builddir_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_builddir_buckets_n - 1);
-    atf_ci::FBuilddir* *e = &_db.ind_builddir_buckets_elems[index];
-    atf_ci::FBuilddir* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).builddir == key;
-        if (done) break;
-        e         = &ret->ind_builddir_next;
-    } while (true);
+    atf_ci::FBuilddir *ret = _db.ind_builddir_buckets_elems[index];
+    for (; ret && !((*ret).builddir == key); ret = ret->ind_builddir_next) {
+    }
     return ret;
 }
 
@@ -1798,10 +1807,11 @@ atf_ci::FBuilddir& atf_ci::ind_builddir_GetOrCreate(const algo::strptr& key) {
 // --- atf_ci.FDb.ind_builddir.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool atf_ci::ind_builddir_InsertMaybe(atf_ci::FBuilddir& row) {
-    ind_builddir_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_builddir_next == (atf_ci::FBuilddir*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.builddir) & (_db.ind_builddir_buckets_n - 1);
+        row.ind_builddir_hashval = algo::Smallstr50_Hash(0, row.builddir);
+        ind_builddir_Reserve(1);
+        u32 index = row.ind_builddir_hashval & (_db.ind_builddir_buckets_n - 1);
         atf_ci::FBuilddir* *prev = &_db.ind_builddir_buckets_elems[index];
         do {
             atf_ci::FBuilddir* ret = *prev;
@@ -1827,7 +1837,7 @@ bool atf_ci::ind_builddir_InsertMaybe(atf_ci::FBuilddir& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void atf_ci::ind_builddir_Remove(atf_ci::FBuilddir& row) {
     if (LIKELY(row.ind_builddir_next != (atf_ci::FBuilddir*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.builddir) & (_db.ind_builddir_buckets_n - 1);
+        u32 index = row.ind_builddir_hashval & (_db.ind_builddir_buckets_n - 1);
         atf_ci::FBuilddir* *prev = &_db.ind_builddir_buckets_elems[index]; // addr of pointer to current element
         while (atf_ci::FBuilddir *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1844,8 +1854,14 @@ void atf_ci::ind_builddir_Remove(atf_ci::FBuilddir& row) {
 // --- atf_ci.FDb.ind_builddir.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void atf_ci::ind_builddir_Reserve(int n) {
+    ind_builddir_AbsReserve(_db.ind_builddir_n + n);
+}
+
+// --- atf_ci.FDb.ind_builddir.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void atf_ci::ind_builddir_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_builddir_buckets_n;
-    u32 new_nelems   = _db.ind_builddir_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -1864,7 +1880,7 @@ void atf_ci::ind_builddir_Reserve(int n) {
             while (elem) {
                 atf_ci::FBuilddir &row        = *elem;
                 atf_ci::FBuilddir* next       = row.ind_builddir_next;
-                u32 index          = algo::Smallstr50_Hash(0, row.builddir) & (new_nbuckets-1);
+                u32 index          = row.ind_builddir_hashval & (new_nbuckets-1);
                 row.ind_builddir_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1988,14 +2004,9 @@ bool atf_ci::gitfile_XrefMaybe(atf_ci::FGitfile &row) {
 // Find row by key. Return NULL if not found.
 atf_ci::FGitfile* atf_ci::ind_gitfile_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr200_Hash(0, key) & (_db.ind_gitfile_buckets_n - 1);
-    atf_ci::FGitfile* *e = &_db.ind_gitfile_buckets_elems[index];
-    atf_ci::FGitfile* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).gitfile == key;
-        if (done) break;
-        e         = &ret->ind_gitfile_next;
-    } while (true);
+    atf_ci::FGitfile *ret = _db.ind_gitfile_buckets_elems[index];
+    for (; ret && !((*ret).gitfile == key); ret = ret->ind_gitfile_next) {
+    }
     return ret;
 }
 
@@ -2027,10 +2038,11 @@ atf_ci::FGitfile& atf_ci::ind_gitfile_GetOrCreate(const algo::strptr& key) {
 // --- atf_ci.FDb.ind_gitfile.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool atf_ci::ind_gitfile_InsertMaybe(atf_ci::FGitfile& row) {
-    ind_gitfile_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_gitfile_next == (atf_ci::FGitfile*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr200_Hash(0, row.gitfile) & (_db.ind_gitfile_buckets_n - 1);
+        row.ind_gitfile_hashval = algo::Smallstr200_Hash(0, row.gitfile);
+        ind_gitfile_Reserve(1);
+        u32 index = row.ind_gitfile_hashval & (_db.ind_gitfile_buckets_n - 1);
         atf_ci::FGitfile* *prev = &_db.ind_gitfile_buckets_elems[index];
         do {
             atf_ci::FGitfile* ret = *prev;
@@ -2056,7 +2068,7 @@ bool atf_ci::ind_gitfile_InsertMaybe(atf_ci::FGitfile& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void atf_ci::ind_gitfile_Remove(atf_ci::FGitfile& row) {
     if (LIKELY(row.ind_gitfile_next != (atf_ci::FGitfile*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr200_Hash(0, row.gitfile) & (_db.ind_gitfile_buckets_n - 1);
+        u32 index = row.ind_gitfile_hashval & (_db.ind_gitfile_buckets_n - 1);
         atf_ci::FGitfile* *prev = &_db.ind_gitfile_buckets_elems[index]; // addr of pointer to current element
         while (atf_ci::FGitfile *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -2073,8 +2085,14 @@ void atf_ci::ind_gitfile_Remove(atf_ci::FGitfile& row) {
 // --- atf_ci.FDb.ind_gitfile.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void atf_ci::ind_gitfile_Reserve(int n) {
+    ind_gitfile_AbsReserve(_db.ind_gitfile_n + n);
+}
+
+// --- atf_ci.FDb.ind_gitfile.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void atf_ci::ind_gitfile_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_gitfile_buckets_n;
-    u32 new_nelems   = _db.ind_gitfile_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -2093,7 +2111,7 @@ void atf_ci::ind_gitfile_Reserve(int n) {
             while (elem) {
                 atf_ci::FGitfile &row        = *elem;
                 atf_ci::FGitfile* next       = row.ind_gitfile_next;
-                u32 index          = algo::Smallstr200_Hash(0, row.gitfile) & (new_nbuckets-1);
+                u32 index          = row.ind_gitfile_hashval & (new_nbuckets-1);
                 row.ind_gitfile_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -2432,14 +2450,9 @@ bool atf_ci::msgfile_XrefMaybe(atf_ci::FMsgfile &row) {
 // Find row by key. Return NULL if not found.
 atf_ci::FCitest* atf_ci::ind_citest_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_citest_buckets_n - 1);
-    atf_ci::FCitest* *e = &_db.ind_citest_buckets_elems[index];
-    atf_ci::FCitest* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).citest == key;
-        if (done) break;
-        e         = &ret->ind_citest_next;
-    } while (true);
+    atf_ci::FCitest *ret = _db.ind_citest_buckets_elems[index];
+    for (; ret && !((*ret).citest == key); ret = ret->ind_citest_next) {
+    }
     return ret;
 }
 
@@ -2471,10 +2484,11 @@ atf_ci::FCitest& atf_ci::ind_citest_GetOrCreate(const algo::strptr& key) {
 // --- atf_ci.FDb.ind_citest.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool atf_ci::ind_citest_InsertMaybe(atf_ci::FCitest& row) {
-    ind_citest_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_citest_next == (atf_ci::FCitest*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.citest) & (_db.ind_citest_buckets_n - 1);
+        row.ind_citest_hashval = algo::Smallstr50_Hash(0, row.citest);
+        ind_citest_Reserve(1);
+        u32 index = row.ind_citest_hashval & (_db.ind_citest_buckets_n - 1);
         atf_ci::FCitest* *prev = &_db.ind_citest_buckets_elems[index];
         do {
             atf_ci::FCitest* ret = *prev;
@@ -2500,7 +2514,7 @@ bool atf_ci::ind_citest_InsertMaybe(atf_ci::FCitest& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void atf_ci::ind_citest_Remove(atf_ci::FCitest& row) {
     if (LIKELY(row.ind_citest_next != (atf_ci::FCitest*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.citest) & (_db.ind_citest_buckets_n - 1);
+        u32 index = row.ind_citest_hashval & (_db.ind_citest_buckets_n - 1);
         atf_ci::FCitest* *prev = &_db.ind_citest_buckets_elems[index]; // addr of pointer to current element
         while (atf_ci::FCitest *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -2517,8 +2531,14 @@ void atf_ci::ind_citest_Remove(atf_ci::FCitest& row) {
 // --- atf_ci.FDb.ind_citest.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void atf_ci::ind_citest_Reserve(int n) {
+    ind_citest_AbsReserve(_db.ind_citest_n + n);
+}
+
+// --- atf_ci.FDb.ind_citest.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void atf_ci::ind_citest_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_citest_buckets_n;
-    u32 new_nelems   = _db.ind_citest_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -2537,7 +2557,7 @@ void atf_ci::ind_citest_Reserve(int n) {
             while (elem) {
                 atf_ci::FCitest &row        = *elem;
                 atf_ci::FCitest* next       = row.ind_citest_next;
-                u32 index          = algo::Smallstr50_Hash(0, row.citest) & (new_nbuckets-1);
+                u32 index          = row.ind_citest_hashval & (new_nbuckets-1);
                 row.ind_citest_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -2640,14 +2660,9 @@ bool atf_ci::file_XrefMaybe(atf_ci::File &row) {
 // Find row by key. Return NULL if not found.
 atf_ci::File* atf_ci::ind_file_Find(const algo::strptr& key) {
     u32 index = algo::cstring_Hash(0, key) & (_db.ind_file_buckets_n - 1);
-    atf_ci::File* *e = &_db.ind_file_buckets_elems[index];
-    atf_ci::File* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).file == key;
-        if (done) break;
-        e         = &ret->ind_file_next;
-    } while (true);
+    atf_ci::File *ret = _db.ind_file_buckets_elems[index];
+    for (; ret && !((*ret).file == key); ret = ret->ind_file_next) {
+    }
     return ret;
 }
 
@@ -2679,10 +2694,11 @@ atf_ci::File& atf_ci::ind_file_GetOrCreate(const algo::strptr& key) {
 // --- atf_ci.FDb.ind_file.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool atf_ci::ind_file_InsertMaybe(atf_ci::File& row) {
-    ind_file_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_file_next == (atf_ci::File*)-1)) {// check if in hash already
-        u32 index = algo::cstring_Hash(0, row.file) & (_db.ind_file_buckets_n - 1);
+        row.ind_file_hashval = algo::cstring_Hash(0, row.file);
+        ind_file_Reserve(1);
+        u32 index = row.ind_file_hashval & (_db.ind_file_buckets_n - 1);
         atf_ci::File* *prev = &_db.ind_file_buckets_elems[index];
         do {
             atf_ci::File* ret = *prev;
@@ -2708,7 +2724,7 @@ bool atf_ci::ind_file_InsertMaybe(atf_ci::File& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void atf_ci::ind_file_Remove(atf_ci::File& row) {
     if (LIKELY(row.ind_file_next != (atf_ci::File*)-1)) {// check if in hash already
-        u32 index = algo::cstring_Hash(0, row.file) & (_db.ind_file_buckets_n - 1);
+        u32 index = row.ind_file_hashval & (_db.ind_file_buckets_n - 1);
         atf_ci::File* *prev = &_db.ind_file_buckets_elems[index]; // addr of pointer to current element
         while (atf_ci::File *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -2725,8 +2741,14 @@ void atf_ci::ind_file_Remove(atf_ci::File& row) {
 // --- atf_ci.FDb.ind_file.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void atf_ci::ind_file_Reserve(int n) {
+    ind_file_AbsReserve(_db.ind_file_n + n);
+}
+
+// --- atf_ci.FDb.ind_file.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void atf_ci::ind_file_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_file_buckets_n;
-    u32 new_nelems   = _db.ind_file_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -2745,7 +2767,7 @@ void atf_ci::ind_file_Reserve(int n) {
             while (elem) {
                 atf_ci::File &row        = *elem;
                 atf_ci::File* next       = row.ind_file_next;
-                u32 index          = algo::cstring_Hash(0, row.file) & (new_nbuckets-1);
+                u32 index          = row.ind_file_hashval & (new_nbuckets-1);
                 row.ind_file_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -2940,16 +2962,16 @@ void atf_ci::FDb_Init() {
         FatalErrorExit("out of memory"); // (atf_ci.FDb.ind_ns)
     }
     memset(_db.ind_ns_buckets_elems, 0, sizeof(atf_ci::FNs*)*_db.ind_ns_buckets_n); // (atf_ci.FDb.ind_ns)
-    // initialize LAry readme (atf_ci.FDb.readme)
-    _db.readme_n = 0;
-    memset(_db.readme_lary, 0, sizeof(_db.readme_lary)); // zero out all level pointers
-    atf_ci::FReadme* readme_first = (atf_ci::FReadme*)algo_lib::malloc_AllocMem(sizeof(atf_ci::FReadme) * (u64(1)<<4));
-    if (!readme_first) {
+    // initialize LAry readmefile (atf_ci.FDb.readmefile)
+    _db.readmefile_n = 0;
+    memset(_db.readmefile_lary, 0, sizeof(_db.readmefile_lary)); // zero out all level pointers
+    atf_ci::FReadmefile* readmefile_first = (atf_ci::FReadmefile*)algo_lib::malloc_AllocMem(sizeof(atf_ci::FReadmefile) * (u64(1)<<4));
+    if (!readmefile_first) {
         FatalErrorExit("out of memory");
     }
     for (int i = 0; i < 4; i++) {
-        _db.readme_lary[i]  = readme_first;
-        readme_first    += 1ULL<<i;
+        _db.readmefile_lary[i]  = readmefile_first;
+        readmefile_first    += 1ULL<<i;
     }
     // initialize LAry builddir (atf_ci.FDb.builddir)
     _db.builddir_n = 0;
@@ -3072,6 +3094,7 @@ void atf_ci::FDb_Init() {
         _db.cipackage_lary[i]  = cipackage_first;
         cipackage_first    += 1ULL<<i;
     }
+    _db.called_npm_install = bool(false);
 
     atf_ci::InitReflection();
     citest_LoadStatic(); // gen:ns_gstatic  gstatic:atf_ci.FDb.citest  load atf_ci.FCitest records
@@ -3117,7 +3140,7 @@ void atf_ci::FDb_Uninit() {
     // atf_ci.FDb.builddir.Uninit (Lary)  //
     // skip destruction in global scope
 
-    // atf_ci.FDb.readme.Uninit (Lary)  //
+    // atf_ci.FDb.readmefile.Uninit (Lary)  //
     // skip destruction in global scope
 
     // atf_ci.FDb.ind_ns.Uninit (Thash)  //
@@ -3229,9 +3252,9 @@ void atf_ci::FNs_Uninit(atf_ci::FNs& ns) {
     ind_ns_Remove(row); // remove ns from index ind_ns
 }
 
-// --- atf_ci.FReadme.base.CopyOut
+// --- atf_ci.FReadmefile.base.CopyOut
 // Copy fields out of row
-void atf_ci::readme_CopyOut(atf_ci::FReadme &row, dev::Readme &out) {
+void atf_ci::readmefile_CopyOut(atf_ci::FReadmefile &row, dev::Readmefile &out) {
     out.gitfile = row.gitfile;
     out.inl = row.inl;
     out.sandbox = row.sandbox;
@@ -3239,9 +3262,9 @@ void atf_ci::readme_CopyOut(atf_ci::FReadme &row, dev::Readme &out) {
     out.comment = row.comment;
 }
 
-// --- atf_ci.FReadme.base.CopyIn
+// --- atf_ci.FReadmefile.base.CopyIn
 // Copy fields in to row
-void atf_ci::readme_CopyIn(atf_ci::FReadme &row, dev::Readme &in) {
+void atf_ci::readmefile_CopyIn(atf_ci::FReadmefile &row, dev::Readmefile &in) {
     row.gitfile = in.gitfile;
     row.inl = in.inl;
     row.sandbox = in.sandbox;
@@ -3455,7 +3478,7 @@ const char* atf_ci::value_ToCstr(const atf_ci::TableId& parent) {
         case atf_ci_TableId_dev_Msgfile    : ret = "dev.Msgfile";  break;
         case atf_ci_TableId_dev_Noindent   : ret = "dev.Noindent";  break;
         case atf_ci_TableId_dmmeta_Ns      : ret = "dmmeta.Ns";  break;
-        case atf_ci_TableId_dev_Readme     : ret = "dev.Readme";  break;
+        case atf_ci_TableId_dev_Readmefile : ret = "dev.Readmefile";  break;
         case atf_ci_TableId_dev_Scriptfile : ret = "dev.Scriptfile";  break;
         case atf_ci_TableId_dmmeta_Ssimfile: ret = "dmmeta.Ssimfile";  break;
         case atf_ci_TableId_dev_Targsrc    : ret = "dev.Targsrc";  break;
@@ -3501,19 +3524,6 @@ bool atf_ci::value_SetStrptrMaybe(atf_ci::TableId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('d','m','m','e','t','a','.','n'): {
                     if (memcmp(rhs.elems+8,"s",1)==0) { value_SetEnum(parent,atf_ci_TableId_dmmeta_ns); ret = true; break; }
-                    break;
-                }
-            }
-            break;
-        }
-        case 10: {
-            switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('d','e','v','.','R','e','a','d'): {
-                    if (memcmp(rhs.elems+8,"me",2)==0) { value_SetEnum(parent,atf_ci_TableId_dev_Readme); ret = true; break; }
-                    break;
-                }
-                case LE_STR8('d','e','v','.','r','e','a','d'): {
-                    if (memcmp(rhs.elems+8,"me",2)==0) { value_SetEnum(parent,atf_ci_TableId_dev_readme); ret = true; break; }
                     break;
                 }
             }
@@ -3571,8 +3581,16 @@ bool atf_ci::value_SetStrptrMaybe(atf_ci::TableId& parent, algo::strptr rhs) {
         }
         case 14: {
             switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('d','e','v','.','R','e','a','d'): {
+                    if (memcmp(rhs.elems+8,"mefile",6)==0) { value_SetEnum(parent,atf_ci_TableId_dev_Readmefile); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('d','e','v','.','S','c','r','i'): {
                     if (memcmp(rhs.elems+8,"ptfile",6)==0) { value_SetEnum(parent,atf_ci_TableId_dev_Scriptfile); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('d','e','v','.','r','e','a','d'): {
+                    if (memcmp(rhs.elems+8,"mefile",6)==0) { value_SetEnum(parent,atf_ci_TableId_dev_readmefile); ret = true; break; }
                     break;
                 }
                 case LE_STR8('d','e','v','.','s','c','r','i'): {
@@ -3654,14 +3672,15 @@ void atf_ci::StaticCheck() {
 // --- atf_ci...main
 int main(int argc, char **argv) {
     try {
+        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         lib_ctype::FDb_Init();
         lib_git::FDb_Init();
-        lib_json::FDb_Init();
         atf_ci::FDb_Init();
         algo_lib::_db.argc = argc;
         algo_lib::_db.argv = argv;
         algo_lib::IohookInit();
+        algo_lib::_db.clock = algo::CurrSchedTime(); // initialize clock
         atf_ci::ReadArgv(); // dmmeta.main:atf_ci
         atf_ci::Main(); // user-defined main
     } catch(algo_lib::ErrorX &x) {
@@ -3673,10 +3692,10 @@ int main(int argc, char **argv) {
     }
     try {
         atf_ci::FDb_Uninit();
-        lib_json::FDb_Uninit();
         lib_git::FDb_Uninit();
         lib_ctype::FDb_Uninit();
         algo_lib::FDb_Uninit();
+        lib_json::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;

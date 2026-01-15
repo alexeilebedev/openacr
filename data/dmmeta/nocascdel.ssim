@@ -1,6 +1,6 @@
 dmmeta.nocascdel  xref:acr.FCtype.ind_ctype_rec  comment:""
-dmmeta.nocascdel  xref:acr.FCtype.zd_ctype_rec  comment:""
-dmmeta.nocascdel  xref:acr.FCtype.zd_ctype_selrec  comment:""
+dmmeta.nocascdel  xref:acr.FCtype.zd_rec  comment:""
+dmmeta.nocascdel  xref:acr.FCtype.zd_selrec  comment:""
 dmmeta.nocascdel  xref:acr.FFile.zd_frec  comment:""
 dmmeta.nocascdel  xref:acr.FPline.zd_child  comment:""
 dmmeta.nocascdel  xref:acr.FRec.c_pline  comment:""

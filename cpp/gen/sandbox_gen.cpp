@@ -31,12 +31,15 @@
 #include "include/gen/dev_gen.inl.h"
 #include "include/gen/algo_gen.h"
 #include "include/gen/algo_gen.inl.h"
+#include "include/gen/lib_json_gen.h"
+#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
+lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 sandbox::FDb    sandbox::_db;     // dependency found via dev.targdep
 
@@ -57,10 +60,11 @@ const char *sandbox_help =
 "    [cmd]...    string          Command to execute in sandbox\n"
 "    -diff                       Show diff after running command\n"
 "    -files...   string          Shell regx to diff\n"
-"    -refs       string  \"HEAD\"  Refs to fetch into sandbox\n"
+"    -refs       string  \"HEAD\"  Additional list of refs to fetch into sandbox\n"
+"    -ref        string  \"HEAD\"  Reset to this ref\n"
 "    -q                          Quiet mode\n"
-"    -verbose    int             Verbosity level (0..255); alias -v; cumulative\n"
-"    -debug      int             Debug level (0..255); alias -d; cumulative\n"
+"    -verbose    flag            Verbosity level (0..255); alias -v; cumulative\n"
+"    -debug      flag            Debug level (0..255); alias -d; cumulative\n"
 "    -help                       Print help and exit; alias -h\n"
 "    -version                    Print version and exit\n"
 "    -signature                  Show signatures and exit; alias -sig\n"
@@ -182,9 +186,8 @@ void sandbox::ReadArgv() {
         }
         if (ch_N(attrname) == 0) {
             err << "sandbox: too many arguments. error at "<<algo::strptr_ToSsim(arg)<<eol;
-        }
-        // read value into currently selected arg
-        if (haveval) {
+        } else if (haveval) {
+            // read value into currently selected arg
             bool ret=false;
             // it's already known which namespace is consuming the args,
             // so directly go there
@@ -228,6 +231,9 @@ void sandbox::ReadArgv() {
         }ind_end
         doexit = true;
     }
+    algo_lib_logcat_debug.enabled = algo_lib::_db.cmdline.debug;
+    algo_lib_logcat_verbose.enabled = algo_lib::_db.cmdline.verbose > 0;
+    algo_lib_logcat_verbose2.enabled = algo_lib::_db.cmdline.verbose > 1;
     if (!dohelp) {
         if (!name_present) {
             err << "sandbox: Missing value for required argument -name (see -help)" << eol;
@@ -243,7 +249,7 @@ void sandbox::ReadArgv() {
     }
     if (err != "") {
         algo_lib::_db.exit_code=1;
-        prerr(err);
+        prerr_(err); // already has eol
         doexit=true;
     }
     if (dohelp) {
@@ -333,8 +339,8 @@ bool sandbox::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && sandbox::LoadTuplesFile(algo::SsimFname(root,"dev.sbpath"),recursive);
         retval = retval && sandbox::LoadTuplesFile(algo::SsimFname(root,"dev.sandbox"),recursive);
     } else {
-        algo_lib::SaveBadTag("path", root);
-        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        algo_lib::AppendErrtext("path", root);
+        algo_lib::AppendErrtext("comment", "Wrong working directory?");
         retval = false;
     }
     return retval;
@@ -513,14 +519,9 @@ bool sandbox::sandbox_XrefMaybe(sandbox::FSandbox &row) {
 // Find row by key. Return NULL if not found.
 sandbox::FSandbox* sandbox::ind_sandbox_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_sandbox_buckets_n - 1);
-    sandbox::FSandbox* *e = &_db.ind_sandbox_buckets_elems[index];
-    sandbox::FSandbox* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).sandbox == key;
-        if (done) break;
-        e         = &ret->ind_sandbox_next;
-    } while (true);
+    sandbox::FSandbox *ret = _db.ind_sandbox_buckets_elems[index];
+    for (; ret && !((*ret).sandbox == key); ret = ret->ind_sandbox_next) {
+    }
     return ret;
 }
 
@@ -552,10 +553,11 @@ sandbox::FSandbox& sandbox::ind_sandbox_GetOrCreate(const algo::strptr& key) {
 // --- sandbox.FDb.ind_sandbox.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool sandbox::ind_sandbox_InsertMaybe(sandbox::FSandbox& row) {
-    ind_sandbox_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_sandbox_next == (sandbox::FSandbox*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.sandbox) & (_db.ind_sandbox_buckets_n - 1);
+        row.ind_sandbox_hashval = algo::Smallstr50_Hash(0, row.sandbox);
+        ind_sandbox_Reserve(1);
+        u32 index = row.ind_sandbox_hashval & (_db.ind_sandbox_buckets_n - 1);
         sandbox::FSandbox* *prev = &_db.ind_sandbox_buckets_elems[index];
         do {
             sandbox::FSandbox* ret = *prev;
@@ -581,7 +583,7 @@ bool sandbox::ind_sandbox_InsertMaybe(sandbox::FSandbox& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void sandbox::ind_sandbox_Remove(sandbox::FSandbox& row) {
     if (LIKELY(row.ind_sandbox_next != (sandbox::FSandbox*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.sandbox) & (_db.ind_sandbox_buckets_n - 1);
+        u32 index = row.ind_sandbox_hashval & (_db.ind_sandbox_buckets_n - 1);
         sandbox::FSandbox* *prev = &_db.ind_sandbox_buckets_elems[index]; // addr of pointer to current element
         while (sandbox::FSandbox *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -598,8 +600,14 @@ void sandbox::ind_sandbox_Remove(sandbox::FSandbox& row) {
 // --- sandbox.FDb.ind_sandbox.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void sandbox::ind_sandbox_Reserve(int n) {
+    ind_sandbox_AbsReserve(_db.ind_sandbox_n + n);
+}
+
+// --- sandbox.FDb.ind_sandbox.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void sandbox::ind_sandbox_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_sandbox_buckets_n;
-    u32 new_nelems   = _db.ind_sandbox_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -618,7 +626,7 @@ void sandbox::ind_sandbox_Reserve(int n) {
             while (elem) {
                 sandbox::FSandbox &row        = *elem;
                 sandbox::FSandbox* next       = row.ind_sandbox_next;
-                u32 index          = algo::Smallstr50_Hash(0, row.sandbox) & (new_nbuckets-1);
+                u32 index          = row.ind_sandbox_hashval & (new_nbuckets-1);
                 row.ind_sandbox_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1009,11 +1017,13 @@ void sandbox::StaticCheck() {
 // --- sandbox...main
 int main(int argc, char **argv) {
     try {
+        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         sandbox::FDb_Init();
         algo_lib::_db.argc = argc;
         algo_lib::_db.argv = argv;
         algo_lib::IohookInit();
+        algo_lib::_db.clock = algo::CurrSchedTime(); // initialize clock
         sandbox::ReadArgv(); // dmmeta.main:sandbox
         sandbox::Main(); // user-defined main
     } catch(algo_lib::ErrorX &x) {
@@ -1026,6 +1036,7 @@ int main(int argc, char **argv) {
     try {
         sandbox::FDb_Uninit();
         algo_lib::FDb_Uninit();
+        lib_json::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;

@@ -19,6 +19,7 @@
 <a href="#used-in-executables"></a>
 <!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:ImdbUses -->
 
+* [acr_ed](/txt/exe/acr_ed/internals.md) as [acr_ed.FMsgtype](/txt/exe/acr_ed/internals.md#acr_ed-fmsgtype)
 * [amc](/txt/exe/amc/internals.md) as [amc.FMsgtype](/txt/exe/amc/internals.md#amc-fmsgtype)
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:ImdbUses -->

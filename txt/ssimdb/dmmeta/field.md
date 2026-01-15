@@ -49,6 +49,7 @@ These ssimfiles are subsets of dmmeta.field
 * [dmmeta.Fflag](/txt/ssimdb/dmmeta/fflag.md) - Options for command-line flags 
 * [dmmeta.Findrem](/txt/ssimdb/dmmeta/findrem.md) - Request generation of FindRemove function 
 * [dmmeta.Finput](/txt/ssimdb/dmmeta/finput.md) - Describe input table of a program 
+* [dmmeta.Fkafka](/txt/ssimdb/dmmeta/fkafka.md) -  
 * [dmmeta.Fldoffset](/txt/ssimdb/dmmeta/fldoffset.md) - Assert field offset - will result in compile-time error if violated 
 * [dmmeta.Floadtuples](/txt/ssimdb/dmmeta/floadtuples.md) - Request that process automatically load any input tables on startup 
 * [dmmeta.Fnoremove](/txt/ssimdb/dmmeta/fnoremove.md) - Omit any functions for removing elements from table; Table is append-only 

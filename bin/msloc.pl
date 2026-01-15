@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-# Copyright (C) 2023-2024 AlgoRND
+# Copyright (C) 2023-2026 AlgoRND
 # Copyright (C) 2013-2014 NYSE | Intercontinental Exchange
 # Copyright (C) 2008-2012 AlgoEngineering LLC
 #

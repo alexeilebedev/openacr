@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 // Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
 //
 // License: GPL
@@ -17,7 +17,7 @@
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: atf_amc (exe) -- Unit tests for amc (see amctest table)
-// Exceptions: NO
+// Exceptions: yes
 // Source: cpp/atf_amc/hook.cpp
 //
 
@@ -80,14 +80,37 @@ void atf_amc::amctest_Hook1() {
 // Static hooks with argument
 // amctest itself uses static hook without argument, so we'll assume it's been
 // tested.
-void atf_amc::listtype_cd(atf_amc::FListtype &listtype) { listtype.seen = true; }
-void atf_amc::listtype_cdl(atf_amc::FListtype &listtype) { listtype.seen = true; }
-void atf_amc::listtype_cs(atf_amc::FListtype &listtype) { listtype.seen = true; }
-void atf_amc::listtype_csl(atf_amc::FListtype &listtype) { listtype.seen = true; }
-void atf_amc::listtype_zd(atf_amc::FListtype &listtype) { listtype.seen = true; }
-void atf_amc::listtype_zdl(atf_amc::FListtype &listtype) { listtype.seen = true; }
-void atf_amc::listtype_zs(atf_amc::FListtype &listtype) { listtype.seen = true; }
-void atf_amc::listtype_zsl(atf_amc::FListtype &listtype) { listtype.seen = true; }
+void atf_amc::listtype_cd(atf_amc::FListtype &listtype) {
+    listtype.seen = true;
+}
+
+void atf_amc::listtype_cdl(atf_amc::FListtype &listtype) {
+    listtype.seen = true;
+}
+
+void atf_amc::listtype_cs(atf_amc::FListtype &listtype) {
+    listtype.seen = true;
+}
+
+void atf_amc::listtype_csl(atf_amc::FListtype &listtype) {
+    listtype.seen = true;
+}
+
+void atf_amc::listtype_zd(atf_amc::FListtype &listtype) {
+    listtype.seen = true;
+}
+
+void atf_amc::listtype_zdl(atf_amc::FListtype &listtype) {
+    listtype.seen = true;
+}
+
+void atf_amc::listtype_zs(atf_amc::FListtype &listtype) {
+    listtype.seen = true;
+}
+
+void atf_amc::listtype_zsl(atf_amc::FListtype &listtype) {
+    listtype.seen = true;
+}
 
 void atf_amc::amctest_Hook2() {
     // call all static hooks

@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 // Copyright (C) 2023 Astra
 //
 // License: GPL
@@ -70,7 +70,9 @@ static void DeleteFiles(strptr dir, strptr pattern) {
 
 static void CleanupDirPhase(strptr covdir, atf_cov_Phase_value_Enum phase) {
     if (phase == atf_cov_Phase_value_runcmd) {
-        DeleteFiles(covdir,"*.gcda");
+        if (!atf_cov::_db.cmdline.incremental) {
+            DeleteFiles(covdir,"*.gcda");
+        }
         phase = atf_cov_Phase_value_gcov;// grab the next phases too
     }
     if (phase == atf_cov_Phase_value_gcov) {

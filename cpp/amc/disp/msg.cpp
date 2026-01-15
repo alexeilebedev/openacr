@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
 //
 // License: GPL
@@ -39,6 +39,8 @@ void amc::Disp_CreateFromMsg() {
                                                          , false // haslen
                                                          , false // call
                                                          , false // strict
+                                                         , typefld.p_field->p_ctype->c_ckafka // dyn
+                                                         , typefld.p_field->p_ctype->c_ckafka // kafka
                                                          , typefld.p_ctype->comment));
         (void)disp;
         // loop over all messages that use this header...

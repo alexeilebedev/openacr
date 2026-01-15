@@ -36,8 +36,8 @@ Usage: acr_dm [[-arg:]<string>] [options]
     -write_ours                  Write result to ours file
     -msize       int     7       Conflict marker size
     -rowid                       Output 'ours' rowid for merging into original ssimfiles
-    -verbose     int             Verbosity level (0..255); alias -v; cumulative
-    -debug       int             Debug level (0..255); alias -d; cumulative
+    -verbose     flag            Verbosity level (0..255); alias -v; cumulative
+    -debug       flag            Debug level (0..255); alias -d; cumulative
     -help                        Print help and exit; alias -h
     -version                     Print version and exit
     -signature                   Show signatures and exit; alias -sig

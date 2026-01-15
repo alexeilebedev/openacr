@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2012 AlgoEngineering LLC
 //
@@ -44,7 +44,7 @@ void amc::tclass_Val() {
 
     // endian suffix.
     Set(R, "$suffix", "");
-    Set(R, "$comment", field.comment);
+    Set(R, "$comment", field.comment, false);
 
     if (field.c_fbigend) {
         Set(R, "$suffix", "_be");

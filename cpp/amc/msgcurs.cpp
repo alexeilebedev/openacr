@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2019 NYSE | Intercontinental Exchange
 //
@@ -67,6 +67,7 @@ static amc::FFunc &CreateCursFunc(amc::FCtype &ctype, strptr name) {
 static void GenMsgcurs(amc::FCtype &fctype, amc::FCtype &parent) {
     amc::FField &lenfld = *parent.c_lenfld->p_field;
     algo_lib::Replscope R;
+    R.strict=2;
     Set(R,"$Cpptype",amc::NsToCpp(parent.ctype));
     Ins(&R, fctype.body, "typedef $Cpptype *ChildType;");// add a typedef
     amc::InsField(dmmeta::Field(tempstr()<<fctype.ctype<<".msg"

@@ -36,6 +36,7 @@ inline void sv2ssim::FBltin_Init(sv2ssim::FBltin& bltin) {
     bltin.bigendok = bool(false);
     bltin.issigned = bool(false);
     bltin.ind_bltin_next = (sv2ssim::FBltin*)-1; // (sv2ssim.FDb.ind_bltin) not-in-hash
+    bltin.ind_bltin_hashval = 0; // stored hash value
 }
 
 // --- sv2ssim.FBltin..Ctor

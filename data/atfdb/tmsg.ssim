@@ -10,6 +10,7 @@ atfdb.tmsg  tmsg:acr.CascDel2/100000.in  istuple:N  msg:'dmmeta.ns  ns:ns1      
 atfdb.tmsg  tmsg:acr.CascDel2/100010.in  istuple:N  msg:'dmmeta.ctype  ctype:ns1.c comment:"Will be deleted as well"'
 atfdb.tmsg  tmsg:acr.CascDel2/100020.in  istuple:N  msg:'dmmeta.field  field:ns1.c.d arg:i32 reftype:Val comment:"Will be deleted as well"'
 atfdb.tmsg  tmsg:acr.CascDel2/100030.in  istuple:N  msg:"acr.delete dmmeta.ns  ns:ns1"
+atfdb.tmsg  tmsg:acr.CascDel3/100000.in  istuple:N  msg:"acr.delete dmmeta.field  field:acr.FBltin.base"
 atfdb.tmsg  tmsg:acr.DelRecord/100000.in  istuple:N  msg:'dmmeta.ns  ns:samp  nstype:exe  license:GPL  comment:""'
 atfdb.tmsg  tmsg:acr.DelRecord/100010.in  istuple:N  msg:"dev.target  target:samp  license:GPL  compat:%-%g%.%-%"
 atfdb.tmsg  tmsg:acr.DelRecord/100020.in  istuple:N  msg:'dev.targdep  targdep:samp.algo_lib  comment:""'
@@ -121,6 +122,16 @@ atfdb.tmsg  tmsg:aqlite.Smoke/100010.in  istuple:N  msg:'dmmeta.ctype  ctype:i32
 atfdb.tmsg  tmsg:aqlite.Smoke/100020.in  istuple:N  msg:'dmmeta.field  field:abt.FArch.msghdr      arg:dev.Arch        reftype:Base    dflt:""  comment:""'
 atfdb.tmsg  tmsg:aqlite.Smoke/100030.in  istuple:N  msg:'dmmeta.field  field:abt.FCfg.msghdr       arg:dev.Cfg         reftype:Base    dflt:""  comment:""'
 atfdb.tmsg  tmsg:aqlite.Smoke/100040.in  istuple:N  msg:'dmmeta.field  field:abt.FCompiler.msghdr  arg:dev.Compiler    reftype:Base    dflt:""  comment:""'
+atfdb.tmsg  tmsg:jkv.ReverseSmoke/100000.in  istuple:N  msg:A.B::C
+atfdb.tmsg  tmsg:jkv.ReverseSmoke/100010.in  istuple:N  msg:A.D:true
+atfdb.tmsg  tmsg:jkv.ReverseSmoke/100020.in  istuple:N  msg:A.E:false
+atfdb.tmsg  tmsg:jkv.ReverseSmoke/100030.in  istuple:N  msg:A.F:null
+atfdb.tmsg  tmsg:jkv.ReverseSmoke/100040.in  istuple:N  msg:A.G-0:0.1
+atfdb.tmsg  tmsg:jkv.ReverseSmoke/100050.in  istuple:N  msg:A.G-1:0.2
+atfdb.tmsg  tmsg:jkv.ReverseSmoke/100060.in  istuple:N  msg:A.G-2:0.3
+atfdb.tmsg  tmsg:jkv.ReverseSmoke/100070.in  istuple:N  msg:"A.H:{}"
+atfdb.tmsg  tmsg:jkv.ReverseSmoke/100080.in  istuple:N  msg:A.I:0.33
+atfdb.tmsg  tmsg:jkv.Smoke/100000.in  istuple:N  msg:'{ "A": { "B": "C", "D": true, "E": false, "F": null, "G": [0.1, 0.2, 0.3], "H": {}, "I": 0.33 } }'
 atfdb.tmsg  tmsg:samp_meng.Smoke/100000.in  istuple:N  msg:'samp_meng.TextMsg text:"configure"'
 atfdb.tmsg  tmsg:samp_meng.Smoke/100010.in  istuple:N  msg:"samp_meng.NewSymbolReqMsg symbol:A"
 atfdb.tmsg  tmsg:samp_meng.Smoke/100020.in  istuple:N  msg:"samp_meng.NewSymbolReqMsg symbol:B"

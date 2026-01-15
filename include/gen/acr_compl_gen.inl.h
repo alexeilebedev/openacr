@@ -327,6 +327,7 @@ inline void acr_compl::FCtype_Init(acr_compl::FCtype& ctype) {
     ctype.c_ssimfile = NULL;
     ctype.c_argvtype = NULL;
     ctype.ind_ctype_next = (acr_compl::FCtype*)-1; // (acr_compl.FDb.ind_ctype) not-in-hash
+    ctype.ind_ctype_hashval = 0; // stored hash value
 }
 
 // --- acr_compl.FCtype..Ctor
@@ -1741,6 +1742,7 @@ inline void acr_compl::c_fcmdline_Remove(acr_compl::FNs& ns, acr_compl::FFcmdlin
 inline void acr_compl::FNs_Init(acr_compl::FNs& ns) {
     ns.c_fcmdline = NULL;
     ns.ind_ns_next = (acr_compl::FNs*)-1; // (acr_compl.FDb.ind_ns) not-in-hash
+    ns.ind_ns_hashval = 0; // stored hash value
 }
 
 // --- acr_compl.FNs..Ctor
@@ -1758,6 +1760,7 @@ inline  acr_compl::FNs::~FNs() {
 inline void acr_compl::FSsimfile_Init(acr_compl::FSsimfile& ssimfile) {
     ssimfile.p_ctype = NULL;
     ssimfile.ind_ssimfile_next = (acr_compl::FSsimfile*)-1; // (acr_compl.FDb.ind_ssimfile) not-in-hash
+    ssimfile.ind_ssimfile_hashval = 0; // stored hash value
 }
 
 // --- acr_compl.FSsimfile..Ctor

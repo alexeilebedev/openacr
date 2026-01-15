@@ -35,11 +35,6 @@ inline algo::aryptr<char> fm::ch_Getary(const fm::Code& parent) {
     return ret;
 }
 
-// --- fm.Code.ch.HashStrptr
-inline u32 fm::Code_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- fm.Code.ch.Init
 inline void fm::ch_Init(fm::Code &parent) {
     memset(parent.ch, ' ', 32);
@@ -143,11 +138,6 @@ inline algo::aryptr<char> fm::ch_Getary(const fm::Objtype& parent) {
     return ret;
 }
 
-// --- fm.Objtype.ch.HashStrptr
-inline u32 fm::Objtype_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- fm.Objtype.ch.Init
 inline void fm::ch_Init(fm::Objtype &parent) {
     memset(parent.ch, ' ', 15);
@@ -249,11 +239,6 @@ inline algo::aryptr<char> fm::ch_Getary(const fm::Objinst& parent) {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
-}
-
-// --- fm.Objinst.ch.HashStrptr
-inline u32 fm::Objinst_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- fm.Objinst.ch.Init
@@ -520,11 +505,6 @@ inline algo::aryptr<char> fm::ch_Getary(const fm::Summary& parent) {
     return ret;
 }
 
-// --- fm.Summary.ch.HashStrptr
-inline u32 fm::Summary_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- fm.Summary.ch.Init
 inline void fm::ch_Init(fm::Summary &parent) {
     memset(parent.ch, ' ', 64);
@@ -630,11 +610,6 @@ inline algo::aryptr<char> fm::ch_Getary(const fm::Description& parent) {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
-}
-
-// --- fm.Description.ch.HashStrptr
-inline u32 fm::Description_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- fm.Description.ch.Init
@@ -750,11 +725,6 @@ inline algo::aryptr<char> fm::ch_Getary(const fm::Source& parent) {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
-}
-
-// --- fm.Source.ch.HashStrptr
-inline u32 fm::Source_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- fm.Source.ch.Init

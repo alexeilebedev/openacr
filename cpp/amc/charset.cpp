@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
 //
@@ -59,8 +59,8 @@ void amc::tclass_Charset() {
     if (!charset->calc) {
         amc::FFunc *init = &amc::ind_func_GetOrCreate(tempstr() << field.field <<".Init");
         init->ismacro = true;
-        Set(R, "$name", name_Get(field));
-        Set(R, "$cppstr", ToCppStringExpr(charset->expr));
+        Set(R, "$name", name_Get(field), false);
+        Set(R, "$cppstr", ToCppStringExpr(charset->expr), false);
         // insert struct field
         InsVar(R, field.p_ctype, field.p_arg->cpp_type, name_Get(field), "", field.comment);
         if (charset->charrange) {

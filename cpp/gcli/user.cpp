@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -23,21 +23,21 @@
 
 // -----------------------------------------------------------------------------
 void gcli::Main_ShowUserlist() {
-    cstring out;
-    out << "USER\tNAME";
+    algo_lib::FTxttbl txttbl;
+    AddRow(txttbl);
+    AddCols(txttbl,"USER,NAME");
     if (gcli::_db.cmdline.t){
-        out << "\tID";
+        AddCol(txttbl,"ID");
     }
-    out<<eol;
     ind_beg(gcli::_db_user_curs, user, gcli::_db) if (user.select){
-        out << user.user;
-        out << "\t" << user.name;
+        AddRow(txttbl);
+        AddCol(txttbl,user.user);
+        AddCol(txttbl,user.name);
         if (gcli::_db.cmdline.t){
-            out << "\t" << user.id;
+            AddCol(txttbl,tempstr()<<user.id);
         }
-        out << eol;
     }ind_end;
-    prlog(Tabulated(out,"\t"));
+    prlog(txttbl);
 }
 // -----------------------------------------------------------------------------
 void gcli::gclicmd_user(gcli::FGclicmd &gclicmd){

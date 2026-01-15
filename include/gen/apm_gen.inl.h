@@ -227,6 +227,7 @@ inline void apm::FCtype_Init(apm::FCtype& ctype) {
     ctype.c_ssimreq_n = 0; // (apm.FCtype.c_ssimreq)
     ctype.c_ssimreq_max = 0; // (apm.FCtype.c_ssimreq)
     ctype.ind_ctype_next = (apm::FCtype*)-1; // (apm.FDb.ind_ctype) not-in-hash
+    ctype.ind_ctype_hashval = 0; // stored hash value
 }
 
 // --- apm.FCtype..Ctor
@@ -1549,6 +1550,7 @@ inline void apm::FMergefile_Init(apm::FMergefile& mergefile) {
     mergefile.ours_mode = i32(0);
     mergefile.theirs_mode = i32(0);
     mergefile.ind_mergefile_next = (apm::FMergefile*)-1; // (apm.FDb.ind_mergefile) not-in-hash
+    mergefile.ind_mergefile_hashval = 0; // stored hash value
 }
 
 // --- apm.FMergefile..Ctor
@@ -1565,6 +1567,7 @@ inline  apm::FMergefile::~FMergefile() {
 // Set all fields to initial values.
 inline void apm::FMkdir_Init(apm::FMkdir& mkdir) {
     mkdir.ind_mkdir_next = (apm::FMkdir*)-1; // (apm.FDb.ind_mkdir) not-in-hash
+    mkdir.ind_mkdir_hashval = 0; // stored hash value
 }
 
 // --- apm.FMkdir..Ctor
@@ -1597,9 +1600,9 @@ inline apm::FPkgkey* apm::zd_pkgkey_First(apm::FPackage& package) {
 
 // --- apm.FPackage.zd_pkgkey.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool apm::zd_pkgkey_InLlistQ(apm::FPkgkey& row) {
+inline bool apm::package_zd_pkgkey_InLlistQ(apm::FPkgkey& row) {
     bool result = false;
-    result = !(row.zd_pkgkey_next == (apm::FPkgkey*)-1);
+    result = !(row.package_zd_pkgkey_next == (apm::FPkgkey*)-1);
     return result;
 }
 
@@ -1619,14 +1622,14 @@ inline i32 apm::zd_pkgkey_N(const apm::FPackage& package) {
 
 // --- apm.FPackage.zd_pkgkey.Next
 // Return pointer to next element in the list
-inline apm::FPkgkey* apm::zd_pkgkey_Next(apm::FPkgkey &row) {
-    return row.zd_pkgkey_next;
+inline apm::FPkgkey* apm::package_zd_pkgkey_Next(apm::FPkgkey &row) {
+    return row.package_zd_pkgkey_next;
 }
 
 // --- apm.FPackage.zd_pkgkey.Prev
 // Return pointer to previous element in the list
-inline apm::FPkgkey* apm::zd_pkgkey_Prev(apm::FPkgkey &row) {
-    return row.zd_pkgkey_prev;
+inline apm::FPkgkey* apm::package_zd_pkgkey_Prev(apm::FPkgkey &row) {
+    return row.package_zd_pkgkey_prev;
 }
 
 // --- apm.FPackage.zd_pkgkey.qLast
@@ -1769,9 +1772,9 @@ inline apm::FPkgrec* apm::zd_pkgrec_First(apm::FPackage& package) {
 
 // --- apm.FPackage.zd_pkgrec.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool apm::zd_pkgrec_InLlistQ(apm::FPkgrec& row) {
+inline bool apm::package_zd_pkgrec_InLlistQ(apm::FPkgrec& row) {
     bool result = false;
-    result = !(row.zd_pkgrec_next == (apm::FPkgrec*)-1);
+    result = !(row.package_zd_pkgrec_next == (apm::FPkgrec*)-1);
     return result;
 }
 
@@ -1791,14 +1794,14 @@ inline i32 apm::zd_pkgrec_N(const apm::FPackage& package) {
 
 // --- apm.FPackage.zd_pkgrec.Next
 // Return pointer to next element in the list
-inline apm::FPkgrec* apm::zd_pkgrec_Next(apm::FPkgrec &row) {
-    return row.zd_pkgrec_next;
+inline apm::FPkgrec* apm::package_zd_pkgrec_Next(apm::FPkgrec &row) {
+    return row.package_zd_pkgrec_next;
 }
 
 // --- apm.FPackage.zd_pkgrec.Prev
 // Return pointer to previous element in the list
-inline apm::FPkgrec* apm::zd_pkgrec_Prev(apm::FPkgrec &row) {
-    return row.zd_pkgrec_prev;
+inline apm::FPkgrec* apm::package_zd_pkgrec_Prev(apm::FPkgrec &row) {
+    return row.package_zd_pkgrec_prev;
 }
 
 // --- apm.FPackage.zd_pkgrec.qLast
@@ -1828,6 +1831,7 @@ inline void apm::FPackage_Init(apm::FPackage& package) {
     package.zd_sel_package_next = (apm::FPackage*)-1; // (apm.FDb.zd_sel_package) not-in-list
     package.zd_sel_package_prev = NULL; // (apm.FDb.zd_sel_package)
     package.ind_package_next = (apm::FPackage*)-1; // (apm.FDb.ind_package) not-in-hash
+    package.ind_package_hashval = 0; // stored hash value
     package.zd_topo_package_next = (apm::FPackage*)-1; // (apm.FDb.zd_topo_package) not-in-list
     package.zd_topo_package_prev = NULL; // (apm.FDb.zd_topo_package)
 }
@@ -1847,7 +1851,7 @@ inline bool apm::package_zd_pkgkey_curs_ValidQ(package_zd_pkgkey_curs &curs) {
 // --- apm.FPackage.zd_pkgkey_curs.Next
 // proceed to next item
 inline void apm::package_zd_pkgkey_curs_Next(package_zd_pkgkey_curs &curs) {
-    apm::FPkgkey *next = (*curs.row).zd_pkgkey_next;
+    apm::FPkgkey *next = (*curs.row).package_zd_pkgkey_next;
     curs.row = next;
 }
 
@@ -1922,7 +1926,7 @@ inline bool apm::package_zd_pkgrec_curs_ValidQ(package_zd_pkgrec_curs &curs) {
 // --- apm.FPackage.zd_pkgrec_curs.Next
 // proceed to next item
 inline void apm::package_zd_pkgrec_curs_Next(package_zd_pkgrec_curs &curs) {
-    apm::FPkgrec *next = (*curs.row).zd_pkgrec_next;
+    apm::FPkgrec *next = (*curs.row).package_zd_pkgrec_next;
     curs.row = next;
 }
 
@@ -2027,8 +2031,9 @@ inline void apm::FPkgkey_Init(apm::FPkgkey& pkgkey) {
     pkgkey.c_pkgrec_n = 0; // (apm.FPkgkey.c_pkgrec)
     pkgkey.c_pkgrec_max = 0; // (apm.FPkgkey.c_pkgrec)
     pkgkey.ind_pkgkey_next = (apm::FPkgkey*)-1; // (apm.FDb.ind_pkgkey) not-in-hash
-    pkgkey.zd_pkgkey_next = (apm::FPkgkey*)-1; // (apm.FPackage.zd_pkgkey) not-in-list
-    pkgkey.zd_pkgkey_prev = NULL; // (apm.FPackage.zd_pkgkey)
+    pkgkey.ind_pkgkey_hashval = 0; // stored hash value
+    pkgkey.package_zd_pkgkey_next = (apm::FPkgkey*)-1; // (apm.FPackage.zd_pkgkey) not-in-list
+    pkgkey.package_zd_pkgkey_prev = NULL; // (apm.FPackage.zd_pkgkey)
 }
 
 // --- apm.FPkgkey.c_pkgrec_curs.Reset
@@ -2074,10 +2079,10 @@ inline void apm::FPkgrec_Init(apm::FPkgrec& pkgrec) {
     pkgrec.p_pkgkey = NULL;
     pkgrec.pkgkey_c_pkgrec_in_ary = bool(false);
     pkgrec.pkgrec_next = (apm::FPkgrec*)-1; // (apm.FDb.pkgrec) not-in-tpool's freelist
-    pkgrec.zd_pkgrec_next = (apm::FPkgrec*)-1; // (apm.FPackage.zd_pkgrec) not-in-list
-    pkgrec.zd_pkgrec_prev = NULL; // (apm.FPackage.zd_pkgrec)
-    pkgrec.zd_rec_pkgrec_next = (apm::FPkgrec*)-1; // (apm.FRec.zd_rec_pkgrec) not-in-list
-    pkgrec.zd_rec_pkgrec_prev = NULL; // (apm.FRec.zd_rec_pkgrec)
+    pkgrec.package_zd_pkgrec_next = (apm::FPkgrec*)-1; // (apm.FPackage.zd_pkgrec) not-in-list
+    pkgrec.package_zd_pkgrec_prev = NULL; // (apm.FPackage.zd_pkgrec)
+    pkgrec.rec_zd_rec_pkgrec_next = (apm::FPkgrec*)-1; // (apm.FRec.zd_rec_pkgrec) not-in-list
+    pkgrec.rec_zd_rec_pkgrec_prev = NULL; // (apm.FRec.zd_rec_pkgrec)
 }
 
 // --- apm.FPkgrec..Ctor
@@ -2154,9 +2159,9 @@ inline apm::FPkgrec* apm::zd_rec_pkgrec_First(apm::FRec& rec) {
 
 // --- apm.FRec.zd_rec_pkgrec.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool apm::zd_rec_pkgrec_InLlistQ(apm::FPkgrec& row) {
+inline bool apm::rec_zd_rec_pkgrec_InLlistQ(apm::FPkgrec& row) {
     bool result = false;
-    result = !(row.zd_rec_pkgrec_next == (apm::FPkgrec*)-1);
+    result = !(row.rec_zd_rec_pkgrec_next == (apm::FPkgrec*)-1);
     return result;
 }
 
@@ -2176,14 +2181,14 @@ inline i32 apm::zd_rec_pkgrec_N(const apm::FRec& rec) {
 
 // --- apm.FRec.zd_rec_pkgrec.Next
 // Return pointer to next element in the list
-inline apm::FPkgrec* apm::zd_rec_pkgrec_Next(apm::FPkgrec &row) {
-    return row.zd_rec_pkgrec_next;
+inline apm::FPkgrec* apm::rec_zd_rec_pkgrec_Next(apm::FPkgrec &row) {
+    return row.rec_zd_rec_pkgrec_next;
 }
 
 // --- apm.FRec.zd_rec_pkgrec.Prev
 // Return pointer to previous element in the list
-inline apm::FPkgrec* apm::zd_rec_pkgrec_Prev(apm::FPkgrec &row) {
-    return row.zd_rec_pkgrec_prev;
+inline apm::FPkgrec* apm::rec_zd_rec_pkgrec_Prev(apm::FPkgrec &row) {
+    return row.rec_zd_rec_pkgrec_prev;
 }
 
 // --- apm.FRec.zd_rec_pkgrec.qLast
@@ -2207,14 +2212,15 @@ inline void apm::FRec_Init(apm::FRec& rec) {
     rec.zd_rec_pkgrec_tail = NULL; // (apm.FRec.zd_rec_pkgrec)
     rec.rec_next = (apm::FRec*)-1; // (apm.FDb.rec) not-in-tpool's freelist
     rec.ind_rec_next = (apm::FRec*)-1; // (apm.FDb.ind_rec) not-in-hash
+    rec.ind_rec_hashval = 0; // stored hash value
     rec.zd_rec_next = (apm::FRec*)-1; // (apm.FDb.zd_rec) not-in-list
     rec.zd_rec_prev = NULL; // (apm.FDb.zd_rec)
     rec.zd_selrec_next = (apm::FRec*)-1; // (apm.FDb.zd_selrec) not-in-list
     rec.zd_selrec_prev = NULL; // (apm.FDb.zd_selrec)
     rec.zd_chooserec_next = (apm::FRec*)-1; // (apm.FDb.zd_chooserec) not-in-list
     rec.zd_chooserec_prev = NULL; // (apm.FDb.zd_chooserec)
-    rec.zd_ssimfile_rec_next = (apm::FRec*)-1; // (apm.FSsimfile.zd_ssimfile_rec) not-in-list
-    rec.zd_ssimfile_rec_prev = NULL; // (apm.FSsimfile.zd_ssimfile_rec)
+    rec.ssimfile_zd_ssimfile_rec_next = (apm::FRec*)-1; // (apm.FSsimfile.zd_ssimfile_rec) not-in-list
+    rec.ssimfile_zd_ssimfile_rec_prev = NULL; // (apm.FSsimfile.zd_ssimfile_rec)
 }
 
 // --- apm.FRec.c_child_curs.Reset
@@ -2257,7 +2263,7 @@ inline bool apm::rec_zd_rec_pkgrec_curs_ValidQ(rec_zd_rec_pkgrec_curs &curs) {
 // --- apm.FRec.zd_rec_pkgrec_curs.Next
 // proceed to next item
 inline void apm::rec_zd_rec_pkgrec_curs_Next(rec_zd_rec_pkgrec_curs &curs) {
-    apm::FPkgrec *next = (*curs.row).zd_rec_pkgrec_next;
+    apm::FPkgrec *next = (*curs.row).rec_zd_rec_pkgrec_next;
     curs.row = next;
 }
 
@@ -2293,9 +2299,9 @@ inline apm::FRec* apm::zd_ssimfile_rec_First(apm::FSsimfile& ssimfile) {
 
 // --- apm.FSsimfile.zd_ssimfile_rec.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool apm::zd_ssimfile_rec_InLlistQ(apm::FRec& row) {
+inline bool apm::ssimfile_zd_ssimfile_rec_InLlistQ(apm::FRec& row) {
     bool result = false;
-    result = !(row.zd_ssimfile_rec_next == (apm::FRec*)-1);
+    result = !(row.ssimfile_zd_ssimfile_rec_next == (apm::FRec*)-1);
     return result;
 }
 
@@ -2315,14 +2321,14 @@ inline i32 apm::zd_ssimfile_rec_N(const apm::FSsimfile& ssimfile) {
 
 // --- apm.FSsimfile.zd_ssimfile_rec.Next
 // Return pointer to next element in the list
-inline apm::FRec* apm::zd_ssimfile_rec_Next(apm::FRec &row) {
-    return row.zd_ssimfile_rec_next;
+inline apm::FRec* apm::ssimfile_zd_ssimfile_rec_Next(apm::FRec &row) {
+    return row.ssimfile_zd_ssimfile_rec_next;
 }
 
 // --- apm.FSsimfile.zd_ssimfile_rec.Prev
 // Return pointer to previous element in the list
-inline apm::FRec* apm::zd_ssimfile_rec_Prev(apm::FRec &row) {
-    return row.zd_ssimfile_rec_prev;
+inline apm::FRec* apm::ssimfile_zd_ssimfile_rec_Prev(apm::FRec &row) {
+    return row.ssimfile_zd_ssimfile_rec_prev;
 }
 
 // --- apm.FSsimfile.zd_ssimfile_rec.qLast
@@ -2341,6 +2347,7 @@ inline void apm::FSsimfile_Init(apm::FSsimfile& ssimfile) {
     ssimfile.zd_ssimfile_rec_n = 0; // (apm.FSsimfile.zd_ssimfile_rec)
     ssimfile.zd_ssimfile_rec_tail = NULL; // (apm.FSsimfile.zd_ssimfile_rec)
     ssimfile.ind_ssimfile_next = (apm::FSsimfile*)-1; // (apm.FDb.ind_ssimfile) not-in-hash
+    ssimfile.ind_ssimfile_hashval = 0; // stored hash value
 }
 
 // --- apm.FSsimfile.zd_ssimfile_rec_curs.Reset
@@ -2358,7 +2365,7 @@ inline bool apm::ssimfile_zd_ssimfile_rec_curs_ValidQ(ssimfile_zd_ssimfile_rec_c
 // --- apm.FSsimfile.zd_ssimfile_rec_curs.Next
 // proceed to next item
 inline void apm::ssimfile_zd_ssimfile_rec_curs_Next(ssimfile_zd_ssimfile_rec_curs &curs) {
-    apm::FRec *next = (*curs.row).zd_ssimfile_rec_next;
+    apm::FRec *next = (*curs.row).ssimfile_zd_ssimfile_rec_next;
     curs.row = next;
 }
 

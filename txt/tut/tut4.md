@@ -2,11 +2,13 @@
 <a href="#tutorial-4-command-lines"></a>
 All programs created with `amc` come with full command line support. 
 This means that there is a standard way in which every program parses
-its command line. 
-A command line is defined as a ctype (a struct), and options are described as fields. 
-The fields can be of any type, including a custom type (as usual, the notion of 
+its command line. And also that the command line is a regular struct and a
+function for parsing it from argc/argv.
+Command line options are described as fields. 
+The fields can be of any type, including any custom type (as usual, the notion of 
 'built-in' is not really relevant since pre-existing features are implemented in the 
-same way as new features might be). 
+same way as new features might be). For instance, if you defined a type and a way to read it
+from string, you can use fields of that type in any command line.
 The command lines of *all* programs are described in the `command` namespace. 
 Amc generates code to handle the following tasks:
 
@@ -396,11 +398,13 @@ Here is the code amc generated for `amc_proc`:
 
 ### Verbosity
 <a href="#verbosity"></a>
-You may have noticed the use of `prlog` to print things. `prlog` is one of a few C++ macros in OpenACR.
-(All macros are defined in [include/define.h]).
-Along with `prlog`, there is `prerr` that prints to stderr, `verblog`, which prints only
-if the command was invoked with `-v` or `-verbose`, and `dbglog`, which prints if the command was
-invoked with `-d` or `-debug`.
+You may have noticed the use of `prlog` to print things. `prlog` is a macro that accesses a temporary string
+for formatting, so you can write `prlog(a<<b<<c)` because it's implied that there is a `tempstr()` at the beginning
+of that expression.
+All macros are defined in [include/define.h].
+Along with `prlog`, there is `prerr` that prints to stderr, and `prcat(cat,x)`, which prints to log category `cat`.
+For instance, `prcat(debug,...)` or `prcat(verbose,...)`. Verbose tracing can be enabled with `-v`, Debug with `-d`,
+or with `-trace:verbose,debug`.
 
 Whenever a command line is converted to a string with the `_ToCmdline` function,
 it inherits a lower verbosity level than the parent. This allows tracing the process tree

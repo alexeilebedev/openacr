@@ -71,7 +71,7 @@ inline bool lib_json::JsonFirstNumCharQ(u32 ch) {
 
 // --- lib_json.FldKey..Hash
 inline u32 lib_json::FldKey_Hash(u32 prev, const lib_json::FldKey& rhs) {
-    prev = u64_Hash(prev, u64(rhs.object));
+    prev = u64_Hash(prev, u64(rhs.p_object));
     prev = strptr_Hash(prev, rhs.field);
     return prev;
 }
@@ -114,7 +114,7 @@ inline bool lib_json::FldKey_Lt(lib_json::FldKey& lhs, lib_json::FldKey& rhs) {
 // --- lib_json.FldKey..Cmp
 inline i32 lib_json::FldKey_Cmp(lib_json::FldKey& lhs, lib_json::FldKey& rhs) {
     i32 retval = 0;
-    retval = u64_Cmp((u64)(void*)lhs.object, (u64)(void*)rhs.object);
+    retval = u64_Cmp((u64)(void*)lhs.p_object, (u64)(void*)rhs.p_object);
     if (retval != 0) {
         return retval;
     }
@@ -125,13 +125,13 @@ inline i32 lib_json::FldKey_Cmp(lib_json::FldKey& lhs, lib_json::FldKey& rhs) {
 // --- lib_json.FldKey..Init
 // Set all fields to initial values.
 inline void lib_json::FldKey_Init(lib_json::FldKey& parent) {
-    parent.object = NULL;
+    parent.p_object = NULL;
 }
 
 // --- lib_json.FldKey..Eq
 inline bool lib_json::FldKey_Eq(lib_json::FldKey& lhs, lib_json::FldKey& rhs) {
     bool retval = true;
-    retval = u64_Eq((u64)(void*)lhs.object, (u64)(void*)rhs.object);
+    retval = u64_Eq((u64)(void*)lhs.p_object, (u64)(void*)rhs.p_object);
     if (!retval) {
         return false;
     }
@@ -155,8 +155,8 @@ inline  lib_json::FldKey::FldKey() {
 }
 
 // --- lib_json.FldKey..FieldwiseCtor
-inline  lib_json::FldKey::FldKey(lib_json::FNode* in_object, algo::strptr in_field)
-    : object(in_object)
+inline  lib_json::FldKey::FldKey(lib_json::FNode* in_p_object, algo::strptr in_field)
+    : p_object(in_p_object)
     , field(in_field)
  {
 }
@@ -242,6 +242,7 @@ inline void lib_json::FNode_Init(lib_json::FNode& node) {
     node.node_c_child_in_ary = bool(false);
     node.node_next = (lib_json::FNode*)-1; // (lib_json.FDb.node) not-in-tpool's freelist
     node.ind_objfld_next = (lib_json::FNode*)-1; // (lib_json.FDb.ind_objfld) not-in-hash
+    node.ind_objfld_hashval = 0; // stored hash value
 }
 
 // --- lib_json.FNode.c_child_curs.Reset

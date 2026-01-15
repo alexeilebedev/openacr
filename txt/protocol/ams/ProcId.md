@@ -1,4 +1,4 @@
-## ams.ProcId - Local process id, such as proc1-0, proc2-1 etc
+## ams.ProcId - Process ID within topology: type, node index, process index, e.g. proc-0-0
 
 
 ### Attributes

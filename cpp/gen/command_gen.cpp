@@ -67,7 +67,7 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_jcdb          : ret = "jcdb";  break;
         case command_FieldId_cache         : ret = "cache";  break;
         case command_FieldId_shortlink     : ret = "shortlink";  break;
-        case command_FieldId_readme        : ret = "readme";  break;
+        case command_FieldId_readmefile    : ret = "readmefile";  break;
         case command_FieldId_ns            : ret = "ns";  break;
         case command_FieldId_section       : ret = "section";  break;
         case command_FieldId_update        : ret = "update";  break;
@@ -154,6 +154,7 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_showcpp       : ret = "showcpp";  break;
         case command_FieldId_msgtype       : ret = "msgtype";  break;
         case command_FieldId_anonfld       : ret = "anonfld";  break;
+        case command_FieldId_amc           : ret = "amc";  break;
         case command_FieldId_sigcheck      : ret = "sigcheck";  break;
         case command_FieldId_data_dir      : ret = "data_dir";  break;
         case command_FieldId_related       : ret = "related";  break;
@@ -170,6 +171,7 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_in_dir        : ret = "in_dir";  break;
         case command_FieldId_out_dir       : ret = "out_dir";  break;
         case command_FieldId_proto         : ret = "proto";  break;
+        case command_FieldId_showcomment   : ret = "showcomment";  break;
         case command_FieldId_trace         : ret = "trace";  break;
         case command_FieldId_key           : ret = "key";  break;
         case command_FieldId_include       : ret = "include";  break;
@@ -209,6 +211,7 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_q             : ret = "q";  break;
         case command_FieldId_cijob         : ret = "cijob";  break;
         case command_FieldId_capture       : ret = "capture";  break;
+        case command_FieldId_check_clean   : ret = "check_clean";  break;
         case command_FieldId_exec          : ret = "exec";  break;
         case command_FieldId_astr          : ret = "astr";  break;
         case command_FieldId_anum          : ret = "anum";  break;
@@ -237,13 +240,16 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_normalize     : ret = "normalize";  break;
         case command_FieldId_covcapture    : ret = "covcapture";  break;
         case command_FieldId_covcheck      : ret = "covcheck";  break;
-        case command_FieldId_compdir       : ret = "compdir";  break;
+        case command_FieldId_bindir        : ret = "bindir";  break;
         case command_FieldId_check_untracked: ret = "check_untracked";  break;
         case command_FieldId_memcheck      : ret = "memcheck";  break;
         case command_FieldId_callgrind     : ret = "callgrind";  break;
         case command_FieldId_stream        : ret = "stream";  break;
         case command_FieldId_i             : ret = "i";  break;
         case command_FieldId_b             : ret = "b";  break;
+        case command_FieldId_covfast       : ret = "covfast";  break;
+        case command_FieldId_minrepeat     : ret = "minrepeat";  break;
+        case command_FieldId_maxrepeat     : ret = "maxrepeat";  break;
         case command_FieldId_covdir        : ret = "covdir";  break;
         case command_FieldId_logfile       : ret = "logfile";  break;
         case command_FieldId_runcmd        : ret = "runcmd";  break;
@@ -253,6 +259,9 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_ssim          : ret = "ssim";  break;
         case command_FieldId_xmlpretty     : ret = "xmlpretty";  break;
         case command_FieldId_summary       : ret = "summary";  break;
+        case command_FieldId_incremental   : ret = "incremental";  break;
+        case command_FieldId_tempdir       : ret = "tempdir";  break;
+        case command_FieldId_dbgshell      : ret = "dbgshell";  break;
         case command_FieldId_reprofile     : ret = "reprofile";  break;
         case command_FieldId_args          : ret = "args";  break;
         case command_FieldId_inputfile     : ret = "inputfile";  break;
@@ -283,7 +292,11 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_authdir       : ret = "authdir";  break;
         case command_FieldId_gitdir        : ret = "gitdir";  break;
         case command_FieldId_show_gitlab_system_notes: ret = "show_gitlab_system_notes";  break;
+        case command_FieldId_file          : ret = "file";  break;
+        case command_FieldId_kv            : ret = "kv";  break;
+        case command_FieldId_output        : ret = "output";  break;
         case command_FieldId_attach        : ret = "attach";  break;
+        case command_FieldId_pid           : ret = "pid";  break;
         case command_FieldId_catchthrow    : ret = "catchthrow";  break;
         case command_FieldId_tui           : ret = "tui";  break;
         case command_FieldId_bcmd          : ret = "bcmd";  break;
@@ -291,6 +304,7 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_manywin       : ret = "manywin";  break;
         case command_FieldId_follow_child  : ret = "follow_child";  break;
         case command_FieldId_py            : ret = "py";  break;
+        case command_FieldId_mp            : ret = "mp";  break;
         case command_FieldId_writessimfile : ret = "writessimfile";  break;
         case command_FieldId_url           : ret = "url";  break;
         case command_FieldId_tables        : ret = "tables";  break;
@@ -301,27 +315,35 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_commit        : ret = "commit";  break;
         case command_FieldId_undo          : ret = "undo";  break;
         case command_FieldId_hash          : ret = "hash";  break;
+        case command_FieldId_parse_make    : ret = "parse_make";  break;
+        case command_FieldId_makefile      : ret = "makefile";  break;
         case command_FieldId_expr          : ret = "expr";  break;
         case command_FieldId_style         : ret = "style";  break;
+        case command_FieldId_full          : ret = "full";  break;
+        case command_FieldId_f             : ret = "f";  break;
         case command_FieldId_match         : ret = "match";  break;
         case command_FieldId_string        : ret = "string";  break;
-        case command_FieldId_show          : ret = "show";  break;
         case command_FieldId_name          : ret = "name";  break;
         case command_FieldId_files         : ret = "files";  break;
         case command_FieldId_refs          : ret = "refs";  break;
-        case command_FieldId_body          : ret = "body";  break;
         case command_FieldId_targsrc       : ret = "targsrc";  break;
+        case command_FieldId_acrkey        : ret = "acrkey";  break;
         case command_FieldId_func          : ret = "func";  break;
         case command_FieldId_nextfile      : ret = "nextfile";  break;
         case command_FieldId_other         : ret = "other";  break;
         case command_FieldId_updateproto   : ret = "updateproto";  break;
-        case command_FieldId_listfunc      : ret = "listfunc";  break;
+        case command_FieldId_createmissing : ret = "createmissing";  break;
         case command_FieldId_iffy          : ret = "iffy";  break;
         case command_FieldId_gen           : ret = "gen";  break;
         case command_FieldId_showloc       : ret = "showloc";  break;
         case command_FieldId_showstatic    : ret = "showstatic";  break;
+        case command_FieldId_matchproto    : ret = "matchproto";  break;
+        case command_FieldId_matchbody     : ret = "matchbody";  break;
+        case command_FieldId_matchcomment  : ret = "matchcomment";  break;
         case command_FieldId_showsortkey   : ret = "showsortkey";  break;
+        case command_FieldId_showbody      : ret = "showbody";  break;
         case command_FieldId_sortname      : ret = "sortname";  break;
+        case command_FieldId_printssim     : ret = "printssim";  break;
         case command_FieldId_baddecl       : ret = "baddecl";  break;
         case command_FieldId_indent        : ret = "indent";  break;
         case command_FieldId_update_copyright: ret = "update_copyright";  break;
@@ -379,6 +401,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case 'e': {
                     value_SetEnum(parent,command_FieldId_e); ret = true; break;
                 }
+                case 'f': {
+                    value_SetEnum(parent,command_FieldId_f); ret = true; break;
+                }
                 case 'g': {
                     value_SetEnum(parent,command_FieldId_g); ret = true; break;
                 }
@@ -417,6 +442,12 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case LE_STR2('i','n'): {
                     value_SetEnum(parent,command_FieldId_in); ret = true; break;
                 }
+                case LE_STR2('k','v'): {
+                    value_SetEnum(parent,command_FieldId_kv); ret = true; break;
+                }
+                case LE_STR2('m','p'): {
+                    value_SetEnum(parent,command_FieldId_mp); ret = true; break;
+                }
                 case LE_STR2('m','r'): {
                     value_SetEnum(parent,command_FieldId_mr); ret = true; break;
                 }
@@ -434,6 +465,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
         }
         case 3: {
             switch (u64(algo::ReadLE16(rhs.elems))|(u64(rhs[2])<<16)) {
+                case LE_STR3('a','m','c'): {
+                    value_SetEnum(parent,command_FieldId_amc); ret = true; break;
+                }
                 case LE_STR3('a','r','g'): {
                     value_SetEnum(parent,command_FieldId_arg); ret = true; break;
                 }
@@ -472,6 +506,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR3('o','o','d'): {
                     value_SetEnum(parent,command_FieldId_ood); ret = true; break;
+                }
+                case LE_STR3('p','i','d'): {
+                    value_SetEnum(parent,command_FieldId_pid); ret = true; break;
                 }
                 case LE_STR3('r','e','f'): {
                     value_SetEnum(parent,command_FieldId_ref); ret = true; break;
@@ -523,9 +560,6 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case LE_STR4('b','c','m','d'): {
                     value_SetEnum(parent,command_FieldId_bcmd); ret = true; break;
                 }
-                case LE_STR4('b','o','d','y'): {
-                    value_SetEnum(parent,command_FieldId_body); ret = true; break;
-                }
                 case LE_STR4('d','a','t','a'): {
                     value_SetEnum(parent,command_FieldId_data); ret = true; break;
                 }
@@ -550,11 +584,17 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case LE_STR4('e','x','p','r'): {
                     value_SetEnum(parent,command_FieldId_expr); ret = true; break;
                 }
+                case LE_STR4('f','i','l','e'): {
+                    value_SetEnum(parent,command_FieldId_file); ret = true; break;
+                }
                 case LE_STR4('f','k','e','y'): {
                     value_SetEnum(parent,command_FieldId_fkey); ret = true; break;
                 }
                 case LE_STR4('f','l','a','g'): {
                     value_SetEnum(parent,command_FieldId_flag); ret = true; break;
+                }
+                case LE_STR4('f','u','l','l'): {
+                    value_SetEnum(parent,command_FieldId_full); ret = true; break;
                 }
                 case LE_STR4('f','u','n','c'): {
                     value_SetEnum(parent,command_FieldId_func); ret = true; break;
@@ -624,9 +664,6 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR4('s','e','r','v'): {
                     value_SetEnum(parent,command_FieldId_serv); ret = true; break;
-                }
-                case LE_STR4('s','h','o','w'): {
-                    value_SetEnum(parent,command_FieldId_show); ret = true; break;
                 }
                 case LE_STR4('s','s','i','m'): {
                     value_SetEnum(parent,command_FieldId_ssim); ret = true; break;
@@ -797,6 +834,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case LE_STR6('a','c','c','e','p','t'): {
                     value_SetEnum(parent,command_FieldId_accept); ret = true; break;
                 }
+                case LE_STR6('a','c','r','k','e','y'): {
+                    value_SetEnum(parent,command_FieldId_acrkey); ret = true; break;
+                }
                 case LE_STR6('a','n','c','h','o','r'): {
                     value_SetEnum(parent,command_FieldId_anchor); ret = true; break;
                 }
@@ -808,6 +848,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR6('b','i','g','e','n','d'): {
                     value_SetEnum(parent,command_FieldId_bigend); ret = true; break;
+                }
+                case LE_STR6('b','i','n','d','i','r'): {
+                    value_SetEnum(parent,command_FieldId_bindir); ret = true; break;
                 }
                 case LE_STR6('c','c','o','n','s','t'): {
                     value_SetEnum(parent,command_FieldId_cconst); ret = true; break;
@@ -878,11 +921,11 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case LE_STR6('o','r','i','g','i','n'): {
                     value_SetEnum(parent,command_FieldId_origin); ret = true; break;
                 }
+                case LE_STR6('o','u','t','p','u','t'): {
+                    value_SetEnum(parent,command_FieldId_output); ret = true; break;
+                }
                 case LE_STR6('p','r','e','t','t','y'): {
                     value_SetEnum(parent,command_FieldId_pretty); ret = true; break;
-                }
-                case LE_STR6('r','e','a','d','m','e'): {
-                    value_SetEnum(parent,command_FieldId_readme); ret = true; break;
                 }
                 case LE_STR6('r','e','g','x','o','f'): {
                     value_SetEnum(parent,command_FieldId_regxof); ret = true; break;
@@ -976,8 +1019,8 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case LE_STR7('c','o','m','m','e','n','t'): {
                     value_SetEnum(parent,command_FieldId_comment); ret = true; break;
                 }
-                case LE_STR7('c','o','m','p','d','i','r'): {
-                    value_SetEnum(parent,command_FieldId_compdir); ret = true; break;
+                case LE_STR7('c','o','v','f','a','s','t'): {
+                    value_SetEnum(parent,command_FieldId_covfast); ret = true; break;
                 }
                 case LE_STR7('c','p','p','f','u','n','c'): {
                     value_SetEnum(parent,command_FieldId_cppfunc); ret = true; break;
@@ -1096,6 +1139,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case LE_STR7('t','a','r','g','s','r','c'): {
                     value_SetEnum(parent,command_FieldId_targsrc); ret = true; break;
                 }
+                case LE_STR7('t','e','m','p','d','i','r'): {
+                    value_SetEnum(parent,command_FieldId_tempdir); ret = true; break;
+                }
                 case LE_STR7('t','i','m','e','o','u','t'): {
                     value_SetEnum(parent,command_FieldId_timeout); ret = true; break;
                 }
@@ -1131,14 +1177,17 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case LE_STR8('d','a','t','a','_','d','i','r'): {
                     value_SetEnum(parent,command_FieldId_data_dir); ret = true; break;
                 }
+                case LE_STR8('d','b','g','s','h','e','l','l'): {
+                    value_SetEnum(parent,command_FieldId_dbgshell); ret = true; break;
+                }
                 case LE_STR8('e','x','t','e','r','n','a','l'): {
                     value_SetEnum(parent,command_FieldId_external); ret = true; break;
                 }
-                case LE_STR8('l','i','s','t','f','u','n','c'): {
-                    value_SetEnum(parent,command_FieldId_listfunc); ret = true; break;
-                }
                 case LE_STR8('l','i','s','t','i','n','c','l'): {
                     value_SetEnum(parent,command_FieldId_listincl); ret = true; break;
+                }
+                case LE_STR8('m','a','k','e','f','i','l','e'): {
+                    value_SetEnum(parent,command_FieldId_makefile); ret = true; break;
                 }
                 case LE_STR8('m','a','x','g','r','o','u','p'): {
                     value_SetEnum(parent,command_FieldId_maxgroup); ret = true; break;
@@ -1160,6 +1209,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('s','e','l','e','c','t','o','r'): {
                     value_SetEnum(parent,command_FieldId_selector); ret = true; break;
+                }
+                case LE_STR8('s','h','o','w','b','o','d','y'): {
+                    value_SetEnum(parent,command_FieldId_showbody); ret = true; break;
                 }
                 case LE_STR8('s','h','o','w','f','i','l','e'): {
                     value_SetEnum(parent,command_FieldId_showfile); ret = true; break;
@@ -1207,12 +1259,24 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                     if (memcmp(rhs.elems+8,"e",1)==0) { value_SetEnum(parent,command_FieldId_inputfile); ret = true; break; }
                     break;
                 }
+                case LE_STR8('m','a','t','c','h','b','o','d'): {
+                    if (memcmp(rhs.elems+8,"y",1)==0) { value_SetEnum(parent,command_FieldId_matchbody); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('m','a','x','p','a','c','k','e'): {
                     if (memcmp(rhs.elems+8,"t",1)==0) { value_SetEnum(parent,command_FieldId_maxpacket); ret = true; break; }
                     break;
                 }
+                case LE_STR8('m','a','x','r','e','p','e','a'): {
+                    if (memcmp(rhs.elems+8,"t",1)==0) { value_SetEnum(parent,command_FieldId_maxrepeat); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('m','e','r','g','e','p','a','t'): {
                     if (memcmp(rhs.elems+8,"h",1)==0) { value_SetEnum(parent,command_FieldId_mergepath); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('m','i','n','r','e','p','e','a'): {
+                    if (memcmp(rhs.elems+8,"t",1)==0) { value_SetEnum(parent,command_FieldId_minrepeat); ret = true; break; }
                     break;
                 }
                 case LE_STR8('n','o','r','m','a','l','i','z'): {
@@ -1221,6 +1285,10 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('p','e','r','f','_','s','e','c'): {
                     if (memcmp(rhs.elems+8,"s",1)==0) { value_SetEnum(parent,command_FieldId_perf_secs); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('p','r','i','n','t','s','s','i'): {
+                    if (memcmp(rhs.elems+8,"m",1)==0) { value_SetEnum(parent,command_FieldId_printssim); ret = true; break; }
                     break;
                 }
                 case LE_STR8('r','e','c','v','d','e','l','a'): {
@@ -1272,12 +1340,24 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                     if (memcmp(rhs.elems+8,"st",2)==0) { value_SetEnum(parent,command_FieldId_gtblacttst); ret = true; break; }
                     break;
                 }
+                case LE_STR8('m','a','t','c','h','p','r','o'): {
+                    if (memcmp(rhs.elems+8,"to",2)==0) { value_SetEnum(parent,command_FieldId_matchproto); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('n','e','e','d','s','_','w','o'): {
                     if (memcmp(rhs.elems+8,"rk",2)==0) { value_SetEnum(parent,command_FieldId_needs_work); ret = true; break; }
                     break;
                 }
+                case LE_STR8('p','a','r','s','e','_','m','a'): {
+                    if (memcmp(rhs.elems+8,"ke",2)==0) { value_SetEnum(parent,command_FieldId_parse_make); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('p','r','i','n','t','i','n','p'): {
                     if (memcmp(rhs.elems+8,"ut",2)==0) { value_SetEnum(parent,command_FieldId_printinput); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('r','e','a','d','m','e','f','i'): {
+                    if (memcmp(rhs.elems+8,"le",2)==0) { value_SetEnum(parent,command_FieldId_readmefile); ret = true; break; }
                     break;
                 }
                 case LE_STR8('s','c','r','i','p','t','f','i'): {
@@ -1297,12 +1377,20 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
         }
         case 11: {
             switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('c','h','e','c','k','_','c','l'): {
+                    if (memcmp(rhs.elems+8,"ean",3)==0) { value_SetEnum(parent,command_FieldId_check_clean); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('f','i','l','e','_','p','r','e'): {
                     if (memcmp(rhs.elems+8,"fix",3)==0) { value_SetEnum(parent,command_FieldId_file_prefix); ret = true; break; }
                     break;
                 }
                 case LE_STR8('i','g','n','o','r','e','Q','u'): {
                     if (memcmp(rhs.elems+8,"ote",3)==0) { value_SetEnum(parent,command_FieldId_ignoreQuote); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('i','n','c','r','e','m','e','n'): {
+                    if (memcmp(rhs.elems+8,"tal",3)==0) { value_SetEnum(parent,command_FieldId_incremental); ret = true; break; }
                     break;
                 }
                 case LE_STR8('m','s','g','s','i','z','e','_'): {
@@ -1312,6 +1400,10 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('n','o','t','s','s','i','m','f'): {
                     if (memcmp(rhs.elems+8,"ile",3)==0) { value_SetEnum(parent,command_FieldId_notssimfile); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('s','h','o','w','c','o','m','m'): {
+                    if (memcmp(rhs.elems+8,"ent",3)==0) { value_SetEnum(parent,command_FieldId_showcomment); ret = true; break; }
                     break;
                 }
                 case LE_STR8('s','h','o','w','s','o','r','t'): {
@@ -1335,6 +1427,10 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                     if (memcmp(rhs.elems+8,"hild",4)==0) { value_SetEnum(parent,command_FieldId_follow_child); ret = true; break; }
                     break;
                 }
+                case LE_STR8('m','a','t','c','h','c','o','m'): {
+                    if (memcmp(rhs.elems+8,"ment",4)==0) { value_SetEnum(parent,command_FieldId_matchcomment); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('o','u','t','s','e','p','a','r'): {
                     if (memcmp(rhs.elems+8,"ator",4)==0) { value_SetEnum(parent,command_FieldId_outseparator); ret = true; break; }
                     break;
@@ -1356,6 +1452,10 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
         }
         case 13: {
             switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('c','r','e','a','t','e','m','i'): {
+                    if (memcmp(rhs.elems+8,"ssing",5)==0) { value_SetEnum(parent,command_FieldId_createmissing); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('p','r','e','f','e','r','_','s'): {
                     if (memcmp(rhs.elems+8,"igned",5)==0) { value_SetEnum(parent,command_FieldId_prefer_signed); ret = true; break; }
                     break;
@@ -1595,109 +1695,86 @@ bool command::abt_ReadFieldMaybe(command::abt& parent, algo::strptr field, algo:
     switch(field_id) {
         case command_FieldId_target: {
             retval = target_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case command_FieldId_in: {
             retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
-            break;
-        }
+        } break;
         case command_FieldId_cfg: {
             retval = cfg_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case command_FieldId_compiler: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.compiler, strval);
-            break;
-        }
+        } break;
         case command_FieldId_uname: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.uname, strval);
-            break;
-        }
+        } break;
         case command_FieldId_arch: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.arch, strval);
-            break;
-        }
+        } break;
         case command_FieldId_ood: {
             retval = bool_ReadStrptrMaybe(parent.ood, strval);
-            break;
-        }
+        } break;
         case command_FieldId_list: {
             retval = bool_ReadStrptrMaybe(parent.list, strval);
-            break;
-        }
+        } break;
         case command_FieldId_listincl: {
             retval = bool_ReadStrptrMaybe(parent.listincl, strval);
-            break;
-        }
+        } break;
         case command_FieldId_build: {
             retval = bool_ReadStrptrMaybe(parent.build, strval);
-            break;
-        }
+        } break;
         case command_FieldId_preproc: {
             retval = bool_ReadStrptrMaybe(parent.preproc, strval);
-            break;
-        }
+        } break;
         case command_FieldId_srcfile: {
             retval = srcfile_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case command_FieldId_clean: {
             retval = bool_ReadStrptrMaybe(parent.clean, strval);
-            break;
-        }
+        } break;
         case command_FieldId_dry_run: {
             retval = bool_ReadStrptrMaybe(parent.dry_run, strval);
-            break;
-        }
+        } break;
         case command_FieldId_maxjobs: {
             retval = i32_ReadStrptrMaybe(parent.maxjobs, strval);
-            break;
-        }
+        } break;
         case command_FieldId_printcmd: {
             retval = bool_ReadStrptrMaybe(parent.printcmd, strval);
-            break;
-        }
+        } break;
         case command_FieldId_force: {
             retval = bool_ReadStrptrMaybe(parent.force, strval);
-            break;
-        }
+        } break;
         case command_FieldId_install: {
             retval = bool_ReadStrptrMaybe(parent.install, strval);
-            break;
-        }
+        } break;
         case command_FieldId_coverity: {
             retval = bool_ReadStrptrMaybe(parent.coverity, strval);
-            break;
-        }
+        } break;
         case command_FieldId_package: {
             retval = algo::cstring_ReadStrptrMaybe(parent.package, strval);
-            break;
-        }
+        } break;
         case command_FieldId_maxerr: {
             retval = u32_ReadStrptrMaybe(parent.maxerr, strval);
-            break;
-        }
+        } break;
         case command_FieldId_disas: {
             retval = disas_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case command_FieldId_report: {
             retval = bool_ReadStrptrMaybe(parent.report, strval);
-            break;
-        }
+        } break;
         case command_FieldId_jcdb: {
             retval = algo::cstring_ReadStrptrMaybe(parent.jcdb, strval);
-            break;
-        }
+        } break;
         case command_FieldId_cache: {
             retval = cache_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case command_FieldId_shortlink: {
             retval = bool_ReadStrptrMaybe(parent.shortlink, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -1949,106 +2026,106 @@ algo::strptr command::abt_GetAnon(command::abt &parent, i32 idx) {
 i32 command::abt_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
     i32 retval = 1;
     switch (field) {
-        case command_FieldId_target: { // $comment
+        case command_FieldId_target: { //
             *out_anon = true;
         } break;
-        case command_FieldId_in: { // $comment
+        case command_FieldId_in: { //
             *out_anon = false;
         } break;
-        case command_FieldId_cfg: { // $comment
+        case command_FieldId_cfg: { //
             *out_anon = false;
         } break;
-        case command_FieldId_compiler: { // $comment
+        case command_FieldId_compiler: { //
             *out_anon = false;
         } break;
-        case command_FieldId_uname: { // $comment
+        case command_FieldId_uname: { //
             *out_anon = false;
         } break;
-        case command_FieldId_arch: { // $comment
+        case command_FieldId_arch: { //
             *out_anon = false;
         } break;
-        case command_FieldId_ood: { // $comment
-            *out_anon = false;
-            retval=0;
-            out_dflt="Y";
-        } break;
-        case command_FieldId_list: { // bool: no argument required but value may be specified as ood:Y
+        case command_FieldId_ood: { // bool: no argument required but value may be specified as ood:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_listincl: { // bool: no argument required but value may be specified as list:Y
+        case command_FieldId_list: { // bool: no argument required but value may be specified as list:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_build: { // bool: no argument required but value may be specified as listincl:Y
+        case command_FieldId_listincl: { // bool: no argument required but value may be specified as listincl:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_preproc: { // bool: no argument required but value may be specified as build:Y
+        case command_FieldId_build: { // bool: no argument required but value may be specified as build:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_srcfile: { // bool: no argument required but value may be specified as preproc:Y
-            *out_anon = false;
-        } break;
-        case command_FieldId_clean: { // bool: no argument required but value may be specified as preproc:Y
+        case command_FieldId_preproc: { // bool: no argument required but value may be specified as preproc:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_dry_run: { // bool: no argument required but value may be specified as clean:Y
+        case command_FieldId_srcfile: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_clean: { // bool: no argument required but value may be specified as clean:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_maxjobs: { // bool: no argument required but value may be specified as dry_run:Y
-            *out_anon = false;
-        } break;
-        case command_FieldId_printcmd: { // bool: no argument required but value may be specified as dry_run:Y
+        case command_FieldId_dry_run: { // bool: no argument required but value may be specified as dry_run:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_force: { // bool: no argument required but value may be specified as printcmd:Y
+        case command_FieldId_maxjobs: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_printcmd: { // bool: no argument required but value may be specified as printcmd:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_install: { // bool: no argument required but value may be specified as force:Y
+        case command_FieldId_force: { // bool: no argument required but value may be specified as force:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_coverity: { // bool: no argument required but value may be specified as install:Y
+        case command_FieldId_install: { // bool: no argument required but value may be specified as install:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_package: { // bool: no argument required but value may be specified as coverity:Y
-            *out_anon = false;
-        } break;
-        case command_FieldId_maxerr: { // bool: no argument required but value may be specified as coverity:Y
-            *out_anon = false;
-        } break;
-        case command_FieldId_disas: { // bool: no argument required but value may be specified as coverity:Y
-            *out_anon = false;
-        } break;
-        case command_FieldId_report: { // bool: no argument required but value may be specified as coverity:Y
+        case command_FieldId_coverity: { // bool: no argument required but value may be specified as coverity:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_jcdb: { // bool: no argument required but value may be specified as report:Y
+        case command_FieldId_package: { //
             *out_anon = false;
         } break;
-        case command_FieldId_cache: { // bool: no argument required but value may be specified as report:Y
+        case command_FieldId_maxerr: { //
             *out_anon = false;
         } break;
-        case command_FieldId_shortlink: { // bool: no argument required but value may be specified as report:Y
+        case command_FieldId_disas: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_report: { // bool: no argument required but value may be specified as report:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_jcdb: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_cache: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_shortlink: { // bool: no argument required but value may be specified as shortlink:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
@@ -2059,18 +2136,18 @@ i32 command::abt_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out
     return retval;
 }
 
-// --- command.abt_md.readme.Print
+// --- command.abt_md.readmefile.Print
 // Print back to string
-void command::readme_Print(command::abt_md& parent, algo::cstring &out) {
-    Regx_Print(parent.readme, out);
+void command::readmefile_Print(command::abt_md& parent, algo::cstring &out) {
+    Regx_Print(parent.readmefile, out);
 }
 
-// --- command.abt_md.readme.ReadStrptrMaybe
+// --- command.abt_md.readmefile.ReadStrptrMaybe
 // Read Regx from string
 // Convert string to field. Return success value
-bool command::readme_ReadStrptrMaybe(command::abt_md& parent, algo::strptr in) {
+bool command::readmefile_ReadStrptrMaybe(command::abt_md& parent, algo::strptr in) {
     bool retval = true;
-    Regx_ReadSql(parent.readme, in, true);
+    Regx_ReadSql(parent.readmefile, in, true);
     return retval;
 }
 
@@ -2112,53 +2189,44 @@ bool command::abt_md_ReadFieldMaybe(command::abt_md& parent, algo::strptr field,
     switch(field_id) {
         case command_FieldId_in: {
             retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
-            break;
-        }
-        case command_FieldId_readme: {
-            retval = readme_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
+        case command_FieldId_readmefile: {
+            retval = readmefile_ReadStrptrMaybe(parent, strval);
+        } break;
         case command_FieldId_ns: {
             retval = ns_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case command_FieldId_section: {
             retval = section_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case command_FieldId_update: {
             retval = bool_ReadStrptrMaybe(parent.update, strval);
-            break;
-        }
+        } break;
         case command_FieldId_check: {
             retval = bool_ReadStrptrMaybe(parent.check, strval);
-            break;
-        }
+        } break;
         case command_FieldId_link: {
             retval = bool_ReadStrptrMaybe(parent.link, strval);
-            break;
-        }
+        } break;
         case command_FieldId_anchor: {
             retval = bool_ReadStrptrMaybe(parent.anchor, strval);
-            break;
-        }
+        } break;
         case command_FieldId_print: {
             retval = bool_ReadStrptrMaybe(parent.print, strval);
-            break;
-        }
+        } break;
         case command_FieldId_dry_run: {
             retval = bool_ReadStrptrMaybe(parent.dry_run, strval);
-            break;
-        }
+        } break;
         case command_FieldId_external: {
             retval = bool_ReadStrptrMaybe(parent.external, strval);
-            break;
-        }
+        } break;
         case command_FieldId_evalcmd: {
             retval = bool_ReadStrptrMaybe(parent.evalcmd, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -2187,7 +2255,7 @@ bool command::abt_md_ReadTupleMaybe(command::abt_md &parent, algo::Tuple &tuple)
 // Set all fields to initial values.
 void command::abt_md_Init(command::abt_md& parent) {
     parent.in = algo::strptr("data");
-    Regx_ReadSql(parent.readme, "%", true);
+    Regx_ReadSql(parent.readmefile, "%", true);
     Regx_ReadSql(parent.ns, "", true);
     Regx_ReadSql(parent.section, "%", true);
     parent.update = bool(true);
@@ -2231,8 +2299,8 @@ void command::abt_md_PrintArgv(command::abt_md& row, algo::cstring& str) {
         strptr_PrintBash(temp,str);
     }
     ch_RemoveAll(temp);
-    command::readme_Print(const_cast<command::abt_md&>(row), temp);
-    str << " -readme:";
+    command::readmefile_Print(const_cast<command::abt_md&>(row), temp);
+    str << " -readmefile:";
     strptr_PrintBash(temp,str);
     if (!(row.ns.expr == "")) {
         ch_RemoveAll(temp);
@@ -2298,7 +2366,7 @@ void command::abt_md_PrintArgv(command::abt_md& row, algo::cstring& str) {
 algo::strptr command::abt_md_GetAnon(command::abt_md &parent, i32 idx) {
     (void)parent;//only to avoid -Wunused-parameter
     switch(idx) {
-        case(0): return strptr("readme", 6);
+        case(0): return strptr("readmefile", 10);
         case(1): return strptr("section", 7);
         default: return algo::strptr();
     }
@@ -2311,54 +2379,54 @@ algo::strptr command::abt_md_GetAnon(command::abt_md &parent, i32 idx) {
 i32 command::abt_md_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
     i32 retval = 1;
     switch (field) {
-        case command_FieldId_in: { // $comment
+        case command_FieldId_in: { //
             *out_anon = false;
         } break;
-        case command_FieldId_readme: { // $comment
+        case command_FieldId_readmefile: { //
             *out_anon = true;
         } break;
-        case command_FieldId_ns: { // $comment
+        case command_FieldId_ns: { //
             *out_anon = false;
         } break;
-        case command_FieldId_section: { // $comment
+        case command_FieldId_section: { //
             *out_anon = true;
         } break;
-        case command_FieldId_update: { // $comment
+        case command_FieldId_update: { // bool: no argument required but value may be specified as update:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_check: { // bool: no argument required but value may be specified as update:Y
+        case command_FieldId_check: { // bool: no argument required but value may be specified as check:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_link: { // bool: no argument required but value may be specified as check:Y
+        case command_FieldId_link: { // bool: no argument required but value may be specified as link:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_anchor: { // bool: no argument required but value may be specified as link:Y
+        case command_FieldId_anchor: { // bool: no argument required but value may be specified as anchor:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_print: { // bool: no argument required but value may be specified as anchor:Y
+        case command_FieldId_print: { // bool: no argument required but value may be specified as print:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_dry_run: { // bool: no argument required but value may be specified as print:Y
+        case command_FieldId_dry_run: { // bool: no argument required but value may be specified as dry_run:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_external: { // bool: no argument required but value may be specified as dry_run:Y
+        case command_FieldId_external: { // bool: no argument required but value may be specified as external:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_evalcmd: { // bool: no argument required but value may be specified as external:Y
+        case command_FieldId_evalcmd: { // bool: no argument required but value may be specified as evalcmd:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
@@ -2424,7 +2492,7 @@ algo::Fildes command::abt_md_StartRead(command::abt_md_proc& parent, algo_lib::F
 // --- command.abt_md_proc.abt_md.Kill
 // Kill subprocess and wait
 void command::abt_md_Kill(command::abt_md_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         kill(parent.pid,9);
         abt_md_Wait(parent);
     }
@@ -2513,10 +2581,10 @@ void command::abt_md_ToArgv(command::abt_md_proc& parent, algo::StringAry& args)
         cstring_Print(parent.cmd.in, *arg);
     }
 
-    if (parent.cmd.readme.expr != "%") {
+    if (parent.cmd.readmefile.expr != "%") {
         cstring *arg = &ary_Alloc(args);
-        *arg << "-readme:";
-        command::readme_Print(parent.cmd, *arg);
+        *arg << "-readmefile:";
+        command::readmefile_Print(parent.cmd, *arg);
     }
 
     if (parent.cmd.ns.expr != "") {
@@ -2646,7 +2714,7 @@ algo::Fildes command::abt_StartRead(command::abt_proc& parent, algo_lib::FFildes
 // --- command.abt_proc.abt.Kill
 // Kill subprocess and wait
 void command::abt_Kill(command::abt_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         kill(parent.pid,9);
         abt_Wait(parent);
     }
@@ -2959,6 +3027,25 @@ algo::aryptr<algo::cstring> command::where_AllocN(command::acr& parent, int n_el
     return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
 }
 
+// --- command.acr.where.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<algo::cstring> command::where_AllocNAt(command::acr& parent, int n_elems, int at) {
+    where_Reserve(parent, n_elems);
+    int n  = parent.where_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("command.bad_alloc_n_at  field:command.acr.where  comment:'index out of range'");
+    }
+    algo::cstring *elems = parent.where_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(algo::cstring));
+    for (int i = 0; i < n_elems; i++) {
+        new (elems + at + i) algo::cstring(); // construct new element, default initialize
+    }
+    parent.where_n = n+n_elems;
+    return algo::aryptr<algo::cstring>(elems+at,n_elems);
+}
+
 // --- command.acr.where.Remove
 // Remove item by index. If index outside of range, do nothing.
 void command::where_Remove(command::acr& parent, u32 i) {
@@ -3055,6 +3142,30 @@ bool command::where_ReadStrptrMaybe(command::acr& parent, algo::strptr in_str) {
     return retval;
 }
 
+// --- command.acr.where.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void command::where_Insary(command::acr& parent, algo::aryptr<algo::cstring> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.where_elems && rhs.elems < parent.where_elems + parent.where_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("command.tary_alias  field:command.acr.where  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(parent.where_elems+1))) {
+        FatalErrorExit("command.bad_insary  field:command.acr.where  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = parent.where_n - at;
+    where_Reserve(parent, nnew); // reserve space
+    for (int i = nmove-1; i >=0 ; --i) {
+        new (parent.where_elems + at + nnew + i) algo::cstring(parent.where_elems[at + i]);
+        parent.where_elems[at + i].~cstring(); // destroy element
+    }
+    for (int i = 0; i < nnew; ++i) {
+        new (parent.where_elems + at + i) algo::cstring(rhs[i]);
+    }
+    parent.where_n += nnew;
+}
+
 // --- command.acr.field.Addary
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
@@ -3115,6 +3226,25 @@ algo::aryptr<algo::cstring> command::field_AllocN(command::acr& parent, int n_el
     }
     parent.field_n = new_n;
     return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
+}
+
+// --- command.acr.field.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<algo::cstring> command::field_AllocNAt(command::acr& parent, int n_elems, int at) {
+    field_Reserve(parent, n_elems);
+    int n  = parent.field_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("command.bad_alloc_n_at  field:command.acr.field  comment:'index out of range'");
+    }
+    algo::cstring *elems = parent.field_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(algo::cstring));
+    for (int i = 0; i < n_elems; i++) {
+        new (elems + at + i) algo::cstring(); // construct new element, default initialize
+    }
+    parent.field_n = n+n_elems;
+    return algo::aryptr<algo::cstring>(elems+at,n_elems);
 }
 
 // --- command.acr.field.Remove
@@ -3213,6 +3343,30 @@ bool command::field_ReadStrptrMaybe(command::acr& parent, algo::strptr in_str) {
     return retval;
 }
 
+// --- command.acr.field.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void command::field_Insary(command::acr& parent, algo::aryptr<algo::cstring> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.field_elems && rhs.elems < parent.field_elems + parent.field_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("command.tary_alias  field:command.acr.field  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(parent.field_elems+1))) {
+        FatalErrorExit("command.bad_insary  field:command.acr.field  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = parent.field_n - at;
+    field_Reserve(parent, nnew); // reserve space
+    for (int i = nmove-1; i >=0 ; --i) {
+        new (parent.field_elems + at + nnew + i) algo::cstring(parent.field_elems[at + i]);
+        parent.field_elems[at + i].~cstring(); // destroy element
+    }
+    for (int i = 0; i < nnew; ++i) {
+        new (parent.field_elems + at + i) algo::cstring(rhs[i]);
+    }
+    parent.field_n += nnew;
+}
+
 // --- command.acr..ReadFieldMaybe
 bool command::acr_ReadFieldMaybe(command::acr& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
@@ -3221,161 +3375,125 @@ bool command::acr_ReadFieldMaybe(command::acr& parent, algo::strptr field, algo:
     switch(field_id) {
         case command_FieldId_query: {
             retval = algo::cstring_ReadStrptrMaybe(parent.query, strval);
-            break;
-        }
+        } break;
         case command_FieldId_where: {
             retval = where_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case command_FieldId_in: {
             retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
-            break;
-        }
+        } break;
         case command_FieldId_del: {
             retval = bool_ReadStrptrMaybe(parent.del, strval);
-            break;
-        }
+        } break;
         case command_FieldId_sel: {
             retval = bool_ReadStrptrMaybe(parent.sel, strval);
-            break;
-        }
+        } break;
         case command_FieldId_insert: {
             retval = bool_ReadStrptrMaybe(parent.insert, strval);
-            break;
-        }
+        } break;
         case command_FieldId_replace: {
             retval = bool_ReadStrptrMaybe(parent.replace, strval);
-            break;
-        }
+        } break;
         case command_FieldId_update: {
             retval = bool_ReadStrptrMaybe(parent.update, strval);
-            break;
-        }
+        } break;
         case command_FieldId_merge: {
             retval = bool_ReadStrptrMaybe(parent.merge, strval);
-            break;
-        }
+        } break;
         case command_FieldId_unused: {
             retval = bool_ReadStrptrMaybe(parent.unused, strval);
-            break;
-        }
+        } break;
         case command_FieldId_trunc: {
             retval = bool_ReadStrptrMaybe(parent.trunc, strval);
-            break;
-        }
+        } break;
         case command_FieldId_check: {
             retval = bool_ReadStrptrMaybe(parent.check, strval);
-            break;
-        }
+        } break;
         case command_FieldId_selerr: {
             retval = bool_ReadStrptrMaybe(parent.selerr, strval);
-            break;
-        }
+        } break;
         case command_FieldId_maxshow: {
             retval = i32_ReadStrptrMaybe(parent.maxshow, strval);
-            break;
-        }
+        } break;
         case command_FieldId_write: {
             retval = bool_ReadStrptrMaybe(parent.write, strval);
-            break;
-        }
+        } break;
         case command_FieldId_rename: {
             retval = algo::cstring_ReadStrptrMaybe(parent.rename, strval);
-            break;
-        }
+        } break;
         case command_FieldId_nup: {
             retval = i32_ReadStrptrMaybe(parent.nup, strval);
-            break;
-        }
+        } break;
         case command_FieldId_ndown: {
             retval = i32_ReadStrptrMaybe(parent.ndown, strval);
-            break;
-        }
+        } break;
         case command_FieldId_l: {
             retval = bool_ReadStrptrMaybe(parent.l, strval);
-            break;
-        }
+        } break;
         case command_FieldId_xref: {
             retval = bool_ReadStrptrMaybe(parent.xref, strval);
-            break;
-        }
+        } break;
         case command_FieldId_fldfunc: {
             retval = bool_ReadStrptrMaybe(parent.fldfunc, strval);
-            break;
-        }
+        } break;
         case command_FieldId_maxgroup: {
             retval = i32_ReadStrptrMaybe(parent.maxgroup, strval);
-            break;
-        }
+        } break;
         case command_FieldId_pretty: {
             retval = bool_ReadStrptrMaybe(parent.pretty, strval);
-            break;
-        }
+        } break;
         case command_FieldId_tree: {
             retval = bool_ReadStrptrMaybe(parent.tree, strval);
-            break;
-        }
+        } break;
         case command_FieldId_loose: {
             retval = bool_ReadStrptrMaybe(parent.loose, strval);
-            break;
-        }
+        } break;
         case command_FieldId_my: {
             retval = bool_ReadStrptrMaybe(parent.my, strval);
-            break;
-        }
+        } break;
         case command_FieldId_schema: {
             retval = algo::cstring_ReadStrptrMaybe(parent.schema, strval);
-            break;
-        }
+        } break;
         case command_FieldId_e: {
             retval = bool_ReadStrptrMaybe(parent.e, strval);
-            break;
-        }
+        } break;
         case command_FieldId_t: {
             retval = bool_ReadStrptrMaybe(parent.t, strval);
-            break;
-        }
+        } break;
         case command_FieldId_g: {
             retval = bool_ReadStrptrMaybe(parent.g, strval);
-            break;
-        }
+        } break;
         case command_FieldId_x: {
             retval = bool_ReadStrptrMaybe(parent.x, strval);
-            break;
-        }
+        } break;
         case command_FieldId_rowid: {
             retval = bool_ReadStrptrMaybe(parent.rowid, strval);
-            break;
-        }
+        } break;
         case command_FieldId_cmt: {
             retval = bool_ReadStrptrMaybe(parent.cmt, strval);
-            break;
-        }
+        } break;
         case command_FieldId_report: {
             retval = bool_ReadStrptrMaybe(parent.report, strval);
-            break;
-        }
+        } break;
         case command_FieldId_print: {
             retval = bool_ReadStrptrMaybe(parent.print, strval);
-            break;
-        }
+        } break;
         case command_FieldId_cmd: {
             retval = algo::cstring_ReadStrptrMaybe(parent.cmd, strval);
-            break;
-        }
+        } break;
         case command_FieldId_field: {
             retval = field_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case command_FieldId_regxof: {
             retval = algo::cstring_ReadStrptrMaybe(parent.regxof, strval);
-            break;
-        }
+        } break;
         case command_FieldId_meta: {
             retval = bool_ReadStrptrMaybe(parent.meta, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -3739,173 +3857,173 @@ algo::strptr command::acr_GetAnon(command::acr &parent, i32 idx) {
 i32 command::acr_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
     i32 retval = 1;
     switch (field) {
-        case command_FieldId_query: { // $comment
+        case command_FieldId_query: { //
             *out_anon = true;
         } break;
-        case command_FieldId_where: { // $comment
+        case command_FieldId_where: { //
             *out_anon = false;
         } break;
-        case command_FieldId_in: { // $comment
+        case command_FieldId_in: { //
             *out_anon = false;
         } break;
-        case command_FieldId_del: { // $comment
-            *out_anon = false;
-            retval=0;
-            out_dflt="Y";
-        } break;
-        case command_FieldId_sel: { // bool: no argument required but value may be specified as del:Y
+        case command_FieldId_del: { // bool: no argument required but value may be specified as del:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_insert: { // bool: no argument required but value may be specified as sel:Y
+        case command_FieldId_sel: { // bool: no argument required but value may be specified as sel:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_replace: { // bool: no argument required but value may be specified as insert:Y
+        case command_FieldId_insert: { // bool: no argument required but value may be specified as insert:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_update: { // bool: no argument required but value may be specified as replace:Y
+        case command_FieldId_replace: { // bool: no argument required but value may be specified as replace:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_merge: { // bool: no argument required but value may be specified as update:Y
+        case command_FieldId_update: { // bool: no argument required but value may be specified as update:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_unused: { // bool: no argument required but value may be specified as merge:Y
+        case command_FieldId_merge: { // bool: no argument required but value may be specified as merge:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_trunc: { // bool: no argument required but value may be specified as unused:Y
+        case command_FieldId_unused: { // bool: no argument required but value may be specified as unused:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_check: { // bool: no argument required but value may be specified as trunc:Y
+        case command_FieldId_trunc: { // bool: no argument required but value may be specified as trunc:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_selerr: { // bool: no argument required but value may be specified as check:Y
+        case command_FieldId_check: { // bool: no argument required but value may be specified as check:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_maxshow: { // bool: no argument required but value may be specified as selerr:Y
-            *out_anon = false;
-        } break;
-        case command_FieldId_write: { // bool: no argument required but value may be specified as selerr:Y
+        case command_FieldId_selerr: { // bool: no argument required but value may be specified as selerr:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_rename: { // bool: no argument required but value may be specified as write:Y
+        case command_FieldId_maxshow: { //
             *out_anon = false;
         } break;
-        case command_FieldId_nup: { // bool: no argument required but value may be specified as write:Y
-            *out_anon = false;
-        } break;
-        case command_FieldId_ndown: { // bool: no argument required but value may be specified as write:Y
-            *out_anon = false;
-        } break;
-        case command_FieldId_l: { // bool: no argument required but value may be specified as write:Y
+        case command_FieldId_write: { // bool: no argument required but value may be specified as write:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_xref: { // bool: no argument required but value may be specified as l:Y
+        case command_FieldId_rename: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_nup: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_ndown: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_l: { // bool: no argument required but value may be specified as l:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_fldfunc: { // bool: no argument required but value may be specified as xref:Y
+        case command_FieldId_xref: { // bool: no argument required but value may be specified as xref:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_maxgroup: { // bool: no argument required but value may be specified as fldfunc:Y
-            *out_anon = false;
-        } break;
-        case command_FieldId_pretty: { // bool: no argument required but value may be specified as fldfunc:Y
+        case command_FieldId_fldfunc: { // bool: no argument required but value may be specified as fldfunc:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_tree: { // bool: no argument required but value may be specified as pretty:Y
+        case command_FieldId_maxgroup: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_pretty: { // bool: no argument required but value may be specified as pretty:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_loose: { // bool: no argument required but value may be specified as tree:Y
+        case command_FieldId_tree: { // bool: no argument required but value may be specified as tree:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_my: { // bool: no argument required but value may be specified as loose:Y
+        case command_FieldId_loose: { // bool: no argument required but value may be specified as loose:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_schema: { // bool: no argument required but value may be specified as my:Y
-            *out_anon = false;
-        } break;
-        case command_FieldId_e: { // bool: no argument required but value may be specified as my:Y
+        case command_FieldId_my: { // bool: no argument required but value may be specified as my:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_t: { // bool: no argument required but value may be specified as e:Y
+        case command_FieldId_schema: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_e: { // bool: no argument required but value may be specified as e:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_g: { // bool: no argument required but value may be specified as t:Y
+        case command_FieldId_t: { // bool: no argument required but value may be specified as t:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_x: { // bool: no argument required but value may be specified as g:Y
+        case command_FieldId_g: { // bool: no argument required but value may be specified as g:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_rowid: { // bool: no argument required but value may be specified as x:Y
+        case command_FieldId_x: { // bool: no argument required but value may be specified as x:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_cmt: { // bool: no argument required but value may be specified as rowid:Y
+        case command_FieldId_rowid: { // bool: no argument required but value may be specified as rowid:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_report: { // bool: no argument required but value may be specified as cmt:Y
+        case command_FieldId_cmt: { // bool: no argument required but value may be specified as cmt:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_print: { // bool: no argument required but value may be specified as report:Y
+        case command_FieldId_report: { // bool: no argument required but value may be specified as report:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_cmd: { // bool: no argument required but value may be specified as print:Y
+        case command_FieldId_print: { // bool: no argument required but value may be specified as print:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_cmd: { //
             *out_anon = false;
         } break;
-        case command_FieldId_field: { // bool: no argument required but value may be specified as print:Y
+        case command_FieldId_field: { //
             *out_anon = false;
         } break;
-        case command_FieldId_regxof: { // bool: no argument required but value may be specified as print:Y
+        case command_FieldId_regxof: { //
             *out_anon = false;
         } break;
-        case command_FieldId_meta: { // bool: no argument required but value may be specified as print:Y
+        case command_FieldId_meta: { // bool: no argument required but value may be specified as meta:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
@@ -4018,33 +4136,29 @@ bool command::acr_compl_ReadFieldMaybe(command::acr_compl& parent, algo::strptr 
     switch(field_id) {
         case command_FieldId_data: {
             retval = algo::cstring_ReadStrptrMaybe(parent.data, strval);
-            break;
-        }
+        } break;
         case command_FieldId_schema: {
             retval = algo::cstring_ReadStrptrMaybe(parent.schema, strval);
-            break;
-        }
+        } break;
         case command_FieldId_line: {
             retval = algo::cstring_ReadStrptrMaybe(parent.line, strval);
-            break;
-        }
+        } break;
         case command_FieldId_point: {
             retval = algo::cstring_ReadStrptrMaybe(parent.point, strval);
-            break;
-        }
+        } break;
         case command_FieldId_type: {
             retval = algo::cstring_ReadStrptrMaybe(parent.type, strval);
-            break;
-        }
+        } break;
         case command_FieldId_install: {
             retval = bool_ReadStrptrMaybe(parent.install, strval);
-            break;
-        }
+        } break;
         case command_FieldId_debug_log: {
             retval = algo::cstring_ReadStrptrMaybe(parent.debug_log, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -4181,27 +4295,27 @@ void command::acr_compl_Print(command::acr_compl& row, algo::cstring& str) {
 i32 command::acr_compl_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
     i32 retval = 1;
     switch (field) {
-        case command_FieldId_data: { // $comment
+        case command_FieldId_data: { //
             *out_anon = false;
         } break;
-        case command_FieldId_schema: { // $comment
+        case command_FieldId_schema: { //
             *out_anon = false;
         } break;
-        case command_FieldId_line: { // $comment
+        case command_FieldId_line: { //
             *out_anon = false;
         } break;
-        case command_FieldId_point: { // $comment
+        case command_FieldId_point: { //
             *out_anon = false;
         } break;
-        case command_FieldId_type: { // $comment
+        case command_FieldId_type: { //
             *out_anon = false;
         } break;
-        case command_FieldId_install: { // $comment
+        case command_FieldId_install: { // bool: no argument required but value may be specified as install:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_debug_log: { // bool: no argument required but value may be specified as install:Y
+        case command_FieldId_debug_log: { //
             *out_anon = false;
         } break;
         default:
@@ -4265,7 +4379,7 @@ algo::Fildes command::acr_compl_StartRead(command::acr_compl_proc& parent, algo_
 // --- command.acr_compl_proc.acr_compl.Kill
 // Kill subprocess and wait
 void command::acr_compl_Kill(command::acr_compl_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         kill(parent.pid,9);
         acr_compl_Wait(parent);
     }
@@ -4464,6 +4578,25 @@ algo::aryptr<algo::cstring> command::arg_AllocN(command::acr_dm& parent, int n_e
     return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
 }
 
+// --- command.acr_dm.arg.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<algo::cstring> command::arg_AllocNAt(command::acr_dm& parent, int n_elems, int at) {
+    arg_Reserve(parent, n_elems);
+    int n  = parent.arg_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("command.bad_alloc_n_at  field:command.acr_dm.arg  comment:'index out of range'");
+    }
+    algo::cstring *elems = parent.arg_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(algo::cstring));
+    for (int i = 0; i < n_elems; i++) {
+        new (elems + at + i) algo::cstring(); // construct new element, default initialize
+    }
+    parent.arg_n = n+n_elems;
+    return algo::aryptr<algo::cstring>(elems+at,n_elems);
+}
+
 // --- command.acr_dm.arg.Remove
 // Remove item by index. If index outside of range, do nothing.
 void command::arg_Remove(command::acr_dm& parent, u32 i) {
@@ -4560,6 +4693,30 @@ bool command::arg_ReadStrptrMaybe(command::acr_dm& parent, algo::strptr in_str) 
     return retval;
 }
 
+// --- command.acr_dm.arg.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void command::arg_Insary(command::acr_dm& parent, algo::aryptr<algo::cstring> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.arg_elems && rhs.elems < parent.arg_elems + parent.arg_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("command.tary_alias  field:command.acr_dm.arg  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(parent.arg_elems+1))) {
+        FatalErrorExit("command.bad_insary  field:command.acr_dm.arg  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = parent.arg_n - at;
+    arg_Reserve(parent, nnew); // reserve space
+    for (int i = nmove-1; i >=0 ; --i) {
+        new (parent.arg_elems + at + nnew + i) algo::cstring(parent.arg_elems[at + i]);
+        parent.arg_elems[at + i].~cstring(); // destroy element
+    }
+    for (int i = 0; i < nnew; ++i) {
+        new (parent.arg_elems + at + i) algo::cstring(rhs[i]);
+    }
+    parent.arg_n += nnew;
+}
+
 // --- command.acr_dm..ReadFieldMaybe
 bool command::acr_dm_ReadFieldMaybe(command::acr_dm& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
@@ -4568,25 +4725,23 @@ bool command::acr_dm_ReadFieldMaybe(command::acr_dm& parent, algo::strptr field,
     switch(field_id) {
         case command_FieldId_in: {
             retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
-            break;
-        }
+        } break;
         case command_FieldId_arg: {
             retval = arg_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case command_FieldId_write_ours: {
             retval = bool_ReadStrptrMaybe(parent.write_ours, strval);
-            break;
-        }
+        } break;
         case command_FieldId_msize: {
             retval = u8_ReadStrptrMaybe(parent.msize, strval);
-            break;
-        }
+        } break;
         case command_FieldId_rowid: {
             retval = bool_ReadStrptrMaybe(parent.rowid, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -4693,21 +4848,21 @@ algo::strptr command::acr_dm_GetAnon(command::acr_dm &parent, i32 idx) {
 i32 command::acr_dm_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
     i32 retval = 1;
     switch (field) {
-        case command_FieldId_in: { // $comment
+        case command_FieldId_in: { //
             *out_anon = false;
         } break;
-        case command_FieldId_arg: { // $comment
+        case command_FieldId_arg: { //
             *out_anon = true;
         } break;
-        case command_FieldId_write_ours: { // $comment
+        case command_FieldId_write_ours: { // bool: no argument required but value may be specified as write_ours:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_msize: { // bool: no argument required but value may be specified as write_ours:Y
+        case command_FieldId_msize: { //
             *out_anon = false;
         } break;
-        case command_FieldId_rowid: { // bool: no argument required but value may be specified as write_ours:Y
+        case command_FieldId_rowid: { // bool: no argument required but value may be specified as rowid:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
@@ -4796,7 +4951,7 @@ algo::Fildes command::acr_dm_StartRead(command::acr_dm_proc& parent, algo_lib::F
 // --- command.acr_dm_proc.acr_dm.Kill
 // Kill subprocess and wait
 void command::acr_dm_Kill(command::acr_dm_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         kill(parent.pid,9);
         acr_dm_Wait(parent);
     }
@@ -4928,185 +5083,146 @@ bool command::acr_ed_ReadFieldMaybe(command::acr_ed& parent, algo::strptr field,
     switch(field_id) {
         case command_FieldId_in: {
             retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
-            break;
-        }
+        } break;
         case command_FieldId_create: {
             retval = bool_ReadStrptrMaybe(parent.create, strval);
-            break;
-        }
+        } break;
         case command_FieldId_del: {
             retval = bool_ReadStrptrMaybe(parent.del, strval);
-            break;
-        }
+        } break;
         case command_FieldId_rename: {
             retval = algo::cstring_ReadStrptrMaybe(parent.rename, strval);
-            break;
-        }
+        } break;
         case command_FieldId_finput: {
             retval = bool_ReadStrptrMaybe(parent.finput, strval);
-            break;
-        }
+        } break;
         case command_FieldId_foutput: {
             retval = bool_ReadStrptrMaybe(parent.foutput, strval);
-            break;
-        }
+        } break;
         case command_FieldId_srcfile: {
             retval = algo::cstring_ReadStrptrMaybe(parent.srcfile, strval);
-            break;
-        }
+        } break;
         case command_FieldId_gstatic: {
             retval = bool_ReadStrptrMaybe(parent.gstatic, strval);
-            break;
-        }
+        } break;
         case command_FieldId_indexed: {
             retval = bool_ReadStrptrMaybe(parent.indexed, strval);
-            break;
-        }
+        } break;
         case command_FieldId_target: {
             retval = algo::Smallstr16_ReadStrptrMaybe(parent.target, strval);
-            break;
-        }
+        } break;
         case command_FieldId_nstype: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.nstype, strval);
-            break;
-        }
+        } break;
         case command_FieldId_ctype: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.ctype, strval);
-            break;
-        }
+        } break;
         case command_FieldId_pooltype: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.pooltype, strval);
-            break;
-        }
+        } break;
         case command_FieldId_ssimfile: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.ssimfile, strval);
-            break;
-        }
+        } break;
         case command_FieldId_subset: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.subset, strval);
-            break;
-        }
+        } break;
         case command_FieldId_subset2: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.subset2, strval);
-            break;
-        }
+        } break;
         case command_FieldId_separator: {
             retval = algo::cstring_ReadStrptrMaybe(parent.separator, strval);
-            break;
-        }
+        } break;
         case command_FieldId_field: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.field, strval);
-            break;
-        }
+        } break;
         case command_FieldId_arg: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.arg, strval);
-            break;
-        }
+        } break;
         case command_FieldId_dflt: {
             retval = algo::cstring_ReadStrptrMaybe(parent.dflt, strval);
-            break;
-        }
+        } break;
         case command_FieldId_anon: {
             retval = bool_ReadStrptrMaybe(parent.anon, strval);
-            break;
-        }
+        } break;
         case command_FieldId_bigend: {
             retval = bool_ReadStrptrMaybe(parent.bigend, strval);
-            break;
-        }
+        } break;
         case command_FieldId_cascdel: {
             retval = bool_ReadStrptrMaybe(parent.cascdel, strval);
-            break;
-        }
+        } break;
         case command_FieldId_before: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.before, strval);
-            break;
-        }
+        } break;
         case command_FieldId_substr: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.substr, strval);
-            break;
-        }
+        } break;
         case command_FieldId_alias: {
             retval = bool_ReadStrptrMaybe(parent.alias, strval);
-            break;
-        }
+        } break;
         case command_FieldId_srcfield: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.srcfield, strval);
-            break;
-        }
+        } break;
         case command_FieldId_fstep: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.fstep, strval);
-            break;
-        }
+        } break;
         case command_FieldId_inscond: {
             retval = algo::cstring_ReadStrptrMaybe(parent.inscond, strval);
-            break;
-        }
+        } break;
         case command_FieldId_reftype: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.reftype, strval);
-            break;
-        }
+        } break;
         case command_FieldId_hashfld: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.hashfld, strval);
-            break;
-        }
+        } break;
         case command_FieldId_sortfld: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.sortfld, strval);
-            break;
-        }
+        } break;
         case command_FieldId_unittest: {
             retval = algo::cstring_ReadStrptrMaybe(parent.unittest, strval);
-            break;
-        }
+        } break;
         case command_FieldId_citest: {
             retval = algo::cstring_ReadStrptrMaybe(parent.citest, strval);
-            break;
-        }
+        } break;
         case command_FieldId_cppfunc: {
             retval = algo::cstring_ReadStrptrMaybe(parent.cppfunc, strval);
-            break;
-        }
+        } break;
         case command_FieldId_xref: {
             retval = bool_ReadStrptrMaybe(parent.xref, strval);
-            break;
-        }
+        } break;
         case command_FieldId_via: {
             retval = algo::cstring_ReadStrptrMaybe(parent.via, strval);
-            break;
-        }
+        } break;
         case command_FieldId_write: {
             retval = bool_ReadStrptrMaybe(parent.write, strval);
-            break;
-        }
+        } break;
         case command_FieldId_e: {
             retval = bool_ReadStrptrMaybe(parent.e, strval);
-            break;
-        }
+        } break;
         case command_FieldId_comment: {
             retval = algo::cstring_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
+        } break;
         case command_FieldId_sandbox: {
             retval = bool_ReadStrptrMaybe(parent.sandbox, strval);
-            break;
-        }
+        } break;
         case command_FieldId_test: {
             retval = bool_ReadStrptrMaybe(parent.test, strval);
-            break;
-        }
+        } break;
         case command_FieldId_showcpp: {
             retval = bool_ReadStrptrMaybe(parent.showcpp, strval);
-            break;
-        }
+        } break;
         case command_FieldId_msgtype: {
             retval = algo::cstring_ReadStrptrMaybe(parent.msgtype, strval);
-            break;
-        }
+        } break;
         case command_FieldId_anonfld: {
             retval = bool_ReadStrptrMaybe(parent.anonfld, strval);
-            break;
-        }
-        default: break;
+        } break;
+        case command_FieldId_amc: {
+            retval = bool_ReadStrptrMaybe(parent.amc, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -5175,6 +5291,7 @@ void command::acr_ed_Init(command::acr_ed& parent) {
     parent.showcpp = bool(false);
     parent.msgtype = algo::strptr("");
     parent.anonfld = bool(false);
+    parent.amc = bool(true);
 }
 
 // --- command.acr_ed..ToCmdline
@@ -5471,6 +5588,12 @@ void command::acr_ed_PrintArgv(command::acr_ed& row, algo::cstring& str) {
         str << " -anonfld:";
         strptr_PrintBash(temp,str);
     }
+    if (!(row.amc == true)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.amc, temp);
+        str << " -amc:";
+        strptr_PrintBash(temp,str);
+    }
 }
 
 // --- command.acr_ed..NArgs
@@ -5480,171 +5603,176 @@ void command::acr_ed_PrintArgv(command::acr_ed& row, algo::cstring& str) {
 i32 command::acr_ed_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
     i32 retval = 1;
     switch (field) {
-        case command_FieldId_in: { // $comment
+        case command_FieldId_in: { //
             *out_anon = false;
         } break;
-        case command_FieldId_create: { // $comment
-            *out_anon = false;
-            retval=0;
-            out_dflt="Y";
-        } break;
-        case command_FieldId_del: { // bool: no argument required but value may be specified as create:Y
+        case command_FieldId_create: { // bool: no argument required but value may be specified as create:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_rename: { // bool: no argument required but value may be specified as del:Y
-            *out_anon = false;
-        } break;
-        case command_FieldId_finput: { // bool: no argument required but value may be specified as del:Y
+        case command_FieldId_del: { // bool: no argument required but value may be specified as del:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_foutput: { // bool: no argument required but value may be specified as finput:Y
+        case command_FieldId_rename: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_finput: { // bool: no argument required but value may be specified as finput:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_srcfile: { // bool: no argument required but value may be specified as foutput:Y
-            *out_anon = false;
-        } break;
-        case command_FieldId_gstatic: { // bool: no argument required but value may be specified as foutput:Y
+        case command_FieldId_foutput: { // bool: no argument required but value may be specified as foutput:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_indexed: { // bool: no argument required but value may be specified as gstatic:Y
+        case command_FieldId_srcfile: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_gstatic: { // bool: no argument required but value may be specified as gstatic:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_target: { // bool: no argument required but value may be specified as indexed:Y
-            *out_anon = false;
-        } break;
-        case command_FieldId_nstype: { // bool: no argument required but value may be specified as indexed:Y
-            *out_anon = false;
-        } break;
-        case command_FieldId_ctype: { // bool: no argument required but value may be specified as indexed:Y
-            *out_anon = false;
-        } break;
-        case command_FieldId_pooltype: { // bool: no argument required but value may be specified as indexed:Y
-            *out_anon = false;
-        } break;
-        case command_FieldId_ssimfile: { // bool: no argument required but value may be specified as indexed:Y
-            *out_anon = false;
-        } break;
-        case command_FieldId_subset: { // bool: no argument required but value may be specified as indexed:Y
-            *out_anon = false;
-        } break;
-        case command_FieldId_subset2: { // bool: no argument required but value may be specified as indexed:Y
-            *out_anon = false;
-        } break;
-        case command_FieldId_separator: { // bool: no argument required but value may be specified as indexed:Y
-            *out_anon = false;
-        } break;
-        case command_FieldId_field: { // bool: no argument required but value may be specified as indexed:Y
-            *out_anon = false;
-        } break;
-        case command_FieldId_arg: { // bool: no argument required but value may be specified as indexed:Y
-            *out_anon = false;
-        } break;
-        case command_FieldId_dflt: { // bool: no argument required but value may be specified as indexed:Y
-            *out_anon = false;
-        } break;
-        case command_FieldId_anon: { // bool: no argument required but value may be specified as indexed:Y
+        case command_FieldId_indexed: { // bool: no argument required but value may be specified as indexed:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_bigend: { // bool: no argument required but value may be specified as anon:Y
+        case command_FieldId_target: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_nstype: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_ctype: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_pooltype: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_ssimfile: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_subset: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_subset2: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_separator: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_field: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_arg: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_dflt: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_anon: { // bool: no argument required but value may be specified as anon:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_cascdel: { // bool: no argument required but value may be specified as bigend:Y
+        case command_FieldId_bigend: { // bool: no argument required but value may be specified as bigend:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_before: { // bool: no argument required but value may be specified as cascdel:Y
-            *out_anon = false;
-        } break;
-        case command_FieldId_substr: { // bool: no argument required but value may be specified as cascdel:Y
-            *out_anon = false;
-        } break;
-        case command_FieldId_alias: { // bool: no argument required but value may be specified as cascdel:Y
+        case command_FieldId_cascdel: { // bool: no argument required but value may be specified as cascdel:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_srcfield: { // bool: no argument required but value may be specified as alias:Y
+        case command_FieldId_before: { //
             *out_anon = false;
         } break;
-        case command_FieldId_fstep: { // bool: no argument required but value may be specified as alias:Y
+        case command_FieldId_substr: { //
             *out_anon = false;
         } break;
-        case command_FieldId_inscond: { // bool: no argument required but value may be specified as alias:Y
-            *out_anon = false;
-        } break;
-        case command_FieldId_reftype: { // bool: no argument required but value may be specified as alias:Y
-            *out_anon = false;
-        } break;
-        case command_FieldId_hashfld: { // bool: no argument required but value may be specified as alias:Y
-            *out_anon = false;
-        } break;
-        case command_FieldId_sortfld: { // bool: no argument required but value may be specified as alias:Y
-            *out_anon = false;
-        } break;
-        case command_FieldId_unittest: { // bool: no argument required but value may be specified as alias:Y
-            *out_anon = false;
-        } break;
-        case command_FieldId_citest: { // bool: no argument required but value may be specified as alias:Y
-            *out_anon = false;
-        } break;
-        case command_FieldId_cppfunc: { // bool: no argument required but value may be specified as alias:Y
-            *out_anon = false;
-        } break;
-        case command_FieldId_xref: { // bool: no argument required but value may be specified as alias:Y
+        case command_FieldId_alias: { // bool: no argument required but value may be specified as alias:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_via: { // bool: no argument required but value may be specified as xref:Y
+        case command_FieldId_srcfield: { //
             *out_anon = false;
         } break;
-        case command_FieldId_write: { // bool: no argument required but value may be specified as xref:Y
+        case command_FieldId_fstep: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_inscond: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_reftype: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_hashfld: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_sortfld: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_unittest: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_citest: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_cppfunc: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_xref: { // bool: no argument required but value may be specified as xref:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_e: { // bool: no argument required but value may be specified as write:Y
+        case command_FieldId_via: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_write: { // bool: no argument required but value may be specified as write:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_comment: { // bool: no argument required but value may be specified as e:Y
-            *out_anon = false;
-        } break;
-        case command_FieldId_sandbox: { // bool: no argument required but value may be specified as e:Y
+        case command_FieldId_e: { // bool: no argument required but value may be specified as e:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_test: { // bool: no argument required but value may be specified as sandbox:Y
+        case command_FieldId_comment: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_sandbox: { // bool: no argument required but value may be specified as sandbox:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_showcpp: { // bool: no argument required but value may be specified as test:Y
+        case command_FieldId_test: { // bool: no argument required but value may be specified as test:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_msgtype: { // bool: no argument required but value may be specified as showcpp:Y
+        case command_FieldId_showcpp: { // bool: no argument required but value may be specified as showcpp:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_msgtype: { //
             *out_anon = false;
         } break;
-        case command_FieldId_anonfld: { // bool: no argument required but value may be specified as showcpp:Y
+        case command_FieldId_anonfld: { // bool: no argument required but value may be specified as anonfld:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_amc: { // bool: no argument required but value may be specified as amc:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
@@ -5710,7 +5838,7 @@ algo::Fildes command::acr_ed_StartRead(command::acr_ed_proc& parent, algo_lib::F
 // --- command.acr_ed_proc.acr_ed.Kill
 // Kill subprocess and wait
 void command::acr_ed_Kill(command::acr_ed_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         kill(parent.pid,9);
         acr_ed_Wait(parent);
     }
@@ -6062,6 +6190,12 @@ void command::acr_ed_ToArgv(command::acr_ed_proc& parent, algo::StringAry& args)
         *arg << "-anonfld:";
         bool_Print(parent.cmd.anonfld, *arg);
     }
+
+    if (parent.cmd.amc != true) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-amc:";
+        bool_Print(parent.cmd.amc, *arg);
+    }
     for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
         ary_Alloc(args) << "-verbose";
     }
@@ -6128,49 +6262,41 @@ bool command::acr_in_ReadFieldMaybe(command::acr_in& parent, algo::strptr field,
     switch(field_id) {
         case command_FieldId_ns: {
             retval = ns_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case command_FieldId_data: {
             retval = bool_ReadStrptrMaybe(parent.data, strval);
-            break;
-        }
+        } break;
         case command_FieldId_sigcheck: {
             retval = bool_ReadStrptrMaybe(parent.sigcheck, strval);
-            break;
-        }
+        } break;
         case command_FieldId_list: {
             retval = bool_ReadStrptrMaybe(parent.list, strval);
-            break;
-        }
+        } break;
         case command_FieldId_t: {
             retval = bool_ReadStrptrMaybe(parent.t, strval);
-            break;
-        }
+        } break;
         case command_FieldId_data_dir: {
             retval = algo::cstring_ReadStrptrMaybe(parent.data_dir, strval);
-            break;
-        }
+        } break;
         case command_FieldId_schema: {
             retval = algo::cstring_ReadStrptrMaybe(parent.schema, strval);
-            break;
-        }
+        } break;
         case command_FieldId_related: {
             retval = algo::cstring_ReadStrptrMaybe(parent.related, strval);
-            break;
-        }
+        } break;
         case command_FieldId_notssimfile: {
             retval = notssimfile_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case command_FieldId_checkable: {
             retval = bool_ReadStrptrMaybe(parent.checkable, strval);
-            break;
-        }
+        } break;
         case command_FieldId_r: {
             retval = r_ReadStrptrMaybe(parent, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -6317,47 +6443,47 @@ algo::strptr command::acr_in_GetAnon(command::acr_in &parent, i32 idx) {
 i32 command::acr_in_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
     i32 retval = 1;
     switch (field) {
-        case command_FieldId_ns: { // $comment
+        case command_FieldId_ns: { //
             *out_anon = true;
         } break;
-        case command_FieldId_data: { // $comment
+        case command_FieldId_data: { // bool: no argument required but value may be specified as data:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_sigcheck: { // bool: no argument required but value may be specified as data:Y
+        case command_FieldId_sigcheck: { // bool: no argument required but value may be specified as sigcheck:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_list: { // bool: no argument required but value may be specified as sigcheck:Y
+        case command_FieldId_list: { // bool: no argument required but value may be specified as list:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_t: { // bool: no argument required but value may be specified as list:Y
+        case command_FieldId_t: { // bool: no argument required but value may be specified as t:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_data_dir: { // bool: no argument required but value may be specified as t:Y
+        case command_FieldId_data_dir: { //
             *out_anon = false;
         } break;
-        case command_FieldId_schema: { // bool: no argument required but value may be specified as t:Y
+        case command_FieldId_schema: { //
             *out_anon = false;
         } break;
-        case command_FieldId_related: { // bool: no argument required but value may be specified as t:Y
+        case command_FieldId_related: { //
             *out_anon = false;
         } break;
-        case command_FieldId_notssimfile: { // bool: no argument required but value may be specified as t:Y
+        case command_FieldId_notssimfile: { //
             *out_anon = false;
         } break;
-        case command_FieldId_checkable: { // bool: no argument required but value may be specified as t:Y
+        case command_FieldId_checkable: { // bool: no argument required but value may be specified as checkable:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_r: { // bool: no argument required but value may be specified as checkable:Y
+        case command_FieldId_r: { //
             *out_anon = false;
         } break;
         default:
@@ -6421,7 +6547,7 @@ algo::Fildes command::acr_in_StartRead(command::acr_in_proc& parent, algo_lib::F
 // --- command.acr_in_proc.acr_in.Kill
 // Kill subprocess and wait
 void command::acr_in_Kill(command::acr_in_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         kill(parent.pid,9);
         acr_in_Wait(parent);
     }
@@ -6605,49 +6731,41 @@ bool command::acr_my_ReadFieldMaybe(command::acr_my& parent, algo::strptr field,
     switch(field_id) {
         case command_FieldId_nsdb: {
             retval = nsdb_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case command_FieldId_in: {
             retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
-            break;
-        }
+        } break;
         case command_FieldId_schema: {
             retval = algo::cstring_ReadStrptrMaybe(parent.schema, strval);
-            break;
-        }
+        } break;
         case command_FieldId_fldfunc: {
             retval = bool_ReadStrptrMaybe(parent.fldfunc, strval);
-            break;
-        }
+        } break;
         case command_FieldId_fkey: {
             retval = bool_ReadStrptrMaybe(parent.fkey, strval);
-            break;
-        }
+        } break;
         case command_FieldId_e: {
             retval = bool_ReadStrptrMaybe(parent.e, strval);
-            break;
-        }
+        } break;
         case command_FieldId_start: {
             retval = bool_ReadStrptrMaybe(parent.start, strval);
-            break;
-        }
+        } break;
         case command_FieldId_stop: {
             retval = bool_ReadStrptrMaybe(parent.stop, strval);
-            break;
-        }
+        } break;
         case command_FieldId_abort: {
             retval = bool_ReadStrptrMaybe(parent.abort, strval);
-            break;
-        }
+        } break;
         case command_FieldId_shell: {
             retval = bool_ReadStrptrMaybe(parent.shell, strval);
-            break;
-        }
+        } break;
         case command_FieldId_serv: {
             retval = bool_ReadStrptrMaybe(parent.serv, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -6794,51 +6912,51 @@ algo::strptr command::acr_my_GetAnon(command::acr_my &parent, i32 idx) {
 i32 command::acr_my_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
     i32 retval = 1;
     switch (field) {
-        case command_FieldId_nsdb: { // $comment
+        case command_FieldId_nsdb: { //
             *out_anon = true;
         } break;
-        case command_FieldId_in: { // $comment
+        case command_FieldId_in: { //
             *out_anon = false;
         } break;
-        case command_FieldId_schema: { // $comment
+        case command_FieldId_schema: { //
             *out_anon = false;
         } break;
-        case command_FieldId_fldfunc: { // $comment
-            *out_anon = false;
-            retval=0;
-            out_dflt="Y";
-        } break;
-        case command_FieldId_fkey: { // bool: no argument required but value may be specified as fldfunc:Y
+        case command_FieldId_fldfunc: { // bool: no argument required but value may be specified as fldfunc:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_e: { // bool: no argument required but value may be specified as fkey:Y
+        case command_FieldId_fkey: { // bool: no argument required but value may be specified as fkey:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_start: { // bool: no argument required but value may be specified as e:Y
+        case command_FieldId_e: { // bool: no argument required but value may be specified as e:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_stop: { // bool: no argument required but value may be specified as start:Y
+        case command_FieldId_start: { // bool: no argument required but value may be specified as start:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_abort: { // bool: no argument required but value may be specified as stop:Y
+        case command_FieldId_stop: { // bool: no argument required but value may be specified as stop:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_shell: { // bool: no argument required but value may be specified as abort:Y
+        case command_FieldId_abort: { // bool: no argument required but value may be specified as abort:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_serv: { // bool: no argument required but value may be specified as shell:Y
+        case command_FieldId_shell: { // bool: no argument required but value may be specified as shell:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_serv: { // bool: no argument required but value may be specified as serv:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
@@ -6904,7 +7022,7 @@ algo::Fildes command::acr_my_StartRead(command::acr_my_proc& parent, algo_lib::F
 // --- command.acr_my_proc.acr_my.Kill
 // Kill subprocess and wait
 void command::acr_my_Kill(command::acr_my_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         kill(parent.pid,9);
         acr_my_Wait(parent);
     }
@@ -7120,7 +7238,7 @@ algo::Fildes command::acr_StartRead(command::acr_proc& parent, algo_lib::FFildes
 // --- command.acr_proc.acr.Kill
 // Kill subprocess and wait
 void command::acr_Kill(command::acr_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         kill(parent.pid,9);
         acr_Wait(parent);
     }
@@ -7470,33 +7588,32 @@ bool command::amc_ReadFieldMaybe(command::amc& parent, algo::strptr field, algo:
     switch(field_id) {
         case command_FieldId_in_dir: {
             retval = algo::cstring_ReadStrptrMaybe(parent.in_dir, strval);
-            break;
-        }
+        } break;
         case command_FieldId_query: {
             retval = algo::cstring_ReadStrptrMaybe(parent.query, strval);
-            break;
-        }
+        } break;
         case command_FieldId_out_dir: {
             retval = algo::cstring_ReadStrptrMaybe(parent.out_dir, strval);
-            break;
-        }
+        } break;
         case command_FieldId_proto: {
             retval = bool_ReadStrptrMaybe(parent.proto, strval);
-            break;
-        }
+        } break;
+        case command_FieldId_showcomment: {
+            retval = bool_ReadStrptrMaybe(parent.showcomment, strval);
+        } break;
         case command_FieldId_report: {
             retval = bool_ReadStrptrMaybe(parent.report, strval);
-            break;
-        }
+        } break;
         case command_FieldId_e: {
             retval = bool_ReadStrptrMaybe(parent.e, strval);
-            break;
-        }
+        } break;
         case command_FieldId_trace: {
             retval = trace_ReadStrptrMaybe(parent, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -7528,6 +7645,7 @@ void command::amc_Init(command::amc& parent) {
     parent.query = algo::strptr("");
     parent.out_dir = algo::strptr(".");
     parent.proto = bool(false);
+    parent.showcomment = bool(true);
     parent.report = bool(true);
     parent.e = bool(false);
     Regx_ReadSql(parent.trace, "", true);
@@ -7579,6 +7697,12 @@ void command::amc_PrintArgv(command::amc& row, algo::cstring& str) {
         str << " -proto:";
         strptr_PrintBash(temp,str);
     }
+    if (!(row.showcomment == true)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.showcomment, temp);
+        str << " -showcomment:";
+        strptr_PrintBash(temp,str);
+    }
     if (!(row.report == true)) {
         ch_RemoveAll(temp);
         bool_Print(row.report, temp);
@@ -7615,31 +7739,36 @@ algo::strptr command::amc_GetAnon(command::amc &parent, i32 idx) {
 i32 command::amc_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
     i32 retval = 1;
     switch (field) {
-        case command_FieldId_in_dir: { // $comment
+        case command_FieldId_in_dir: { //
             *out_anon = false;
         } break;
-        case command_FieldId_query: { // $comment
+        case command_FieldId_query: { //
             *out_anon = true;
         } break;
-        case command_FieldId_out_dir: { // $comment
+        case command_FieldId_out_dir: { //
             *out_anon = false;
         } break;
-        case command_FieldId_proto: { // $comment
-            *out_anon = false;
-            retval=0;
-            out_dflt="Y";
-        } break;
-        case command_FieldId_report: { // bool: no argument required but value may be specified as proto:Y
+        case command_FieldId_proto: { // bool: no argument required but value may be specified as proto:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_e: { // bool: no argument required but value may be specified as report:Y
+        case command_FieldId_showcomment: { // bool: no argument required but value may be specified as showcomment:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_trace: { // bool: no argument required but value may be specified as e:Y
+        case command_FieldId_report: { // bool: no argument required but value may be specified as report:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_e: { // bool: no argument required but value may be specified as e:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_trace: { //
             *out_anon = false;
         } break;
         default:
@@ -7686,21 +7815,20 @@ bool command::amc_gc_ReadFieldMaybe(command::amc_gc& parent, algo::strptr field,
     switch(field_id) {
         case command_FieldId_target: {
             retval = target_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case command_FieldId_key: {
             retval = key_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case command_FieldId_include: {
             retval = bool_ReadStrptrMaybe(parent.include, strval);
-            break;
-        }
+        } break;
         case command_FieldId_in: {
             retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -7787,18 +7915,18 @@ void command::amc_gc_PrintArgv(command::amc_gc& row, algo::cstring& str) {
 i32 command::amc_gc_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
     i32 retval = 1;
     switch (field) {
-        case command_FieldId_target: { // $comment
+        case command_FieldId_target: { //
             *out_anon = false;
         } break;
-        case command_FieldId_key: { // $comment
+        case command_FieldId_key: { //
             *out_anon = false;
         } break;
-        case command_FieldId_include: { // $comment
+        case command_FieldId_include: { // bool: no argument required but value may be specified as include:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_in: { // bool: no argument required but value may be specified as include:Y
+        case command_FieldId_in: { //
             *out_anon = false;
         } break;
         default:
@@ -7862,7 +7990,7 @@ algo::Fildes command::amc_gc_StartRead(command::amc_gc_proc& parent, algo_lib::F
 // --- command.amc_gc_proc.amc_gc.Kill
 // Kill subprocess and wait
 void command::amc_gc_Kill(command::amc_gc_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         kill(parent.pid,9);
         amc_gc_Wait(parent);
     }
@@ -8036,7 +8164,7 @@ algo::Fildes command::amc_StartRead(command::amc_proc& parent, algo_lib::FFildes
 // --- command.amc_proc.amc.Kill
 // Kill subprocess and wait
 void command::amc_Kill(command::amc_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         kill(parent.pid,9);
         amc_Wait(parent);
     }
@@ -8143,6 +8271,12 @@ void command::amc_ToArgv(command::amc_proc& parent, algo::StringAry& args) {
         bool_Print(parent.cmd.proto, *arg);
     }
 
+    if (parent.cmd.showcomment != true) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-showcomment:";
+        bool_Print(parent.cmd.showcomment, *arg);
+    }
+
     if (parent.cmd.report != true) {
         cstring *arg = &ary_Alloc(args);
         *arg << "-report:";
@@ -8196,37 +8330,32 @@ bool command::amc_vis_ReadFieldMaybe(command::amc_vis& parent, algo::strptr fiel
     switch(field_id) {
         case command_FieldId_ctype: {
             retval = ctype_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case command_FieldId_in: {
             retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
-            break;
-        }
+        } break;
         case command_FieldId_dot: {
             retval = algo::cstring_ReadStrptrMaybe(parent.dot, strval);
-            break;
-        }
+        } break;
         case command_FieldId_xref: {
             retval = bool_ReadStrptrMaybe(parent.xref, strval);
-            break;
-        }
+        } break;
         case command_FieldId_xns: {
             retval = bool_ReadStrptrMaybe(parent.xns, strval);
-            break;
-        }
+        } break;
         case command_FieldId_noinput: {
             retval = bool_ReadStrptrMaybe(parent.noinput, strval);
-            break;
-        }
+        } break;
         case command_FieldId_check: {
             retval = bool_ReadStrptrMaybe(parent.check, strval);
-            break;
-        }
+        } break;
         case command_FieldId_render: {
             retval = bool_ReadStrptrMaybe(parent.render, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -8258,7 +8387,7 @@ void command::amc_vis_Init(command::amc_vis& parent) {
     parent.in = algo::strptr("data");
     parent.dot = algo::strptr("");
     parent.xref = bool(false);
-    parent.xns = bool(false);
+    parent.xns = bool(true);
     parent.noinput = bool(false);
     parent.check = bool(false);
     parent.render = bool(true);
@@ -8310,7 +8439,7 @@ void command::amc_vis_PrintArgv(command::amc_vis& row, algo::cstring& str) {
         str << " -xref:";
         strptr_PrintBash(temp,str);
     }
-    if (!(row.xns == false)) {
+    if (!(row.xns == true)) {
         ch_RemoveAll(temp);
         bool_Print(row.xns, temp);
         str << " -xns:";
@@ -8352,36 +8481,36 @@ algo::strptr command::amc_vis_GetAnon(command::amc_vis &parent, i32 idx) {
 i32 command::amc_vis_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
     i32 retval = 1;
     switch (field) {
-        case command_FieldId_ctype: { // $comment
+        case command_FieldId_ctype: { //
             *out_anon = true;
         } break;
-        case command_FieldId_in: { // $comment
+        case command_FieldId_in: { //
             *out_anon = false;
         } break;
-        case command_FieldId_dot: { // $comment
+        case command_FieldId_dot: { //
             *out_anon = false;
         } break;
-        case command_FieldId_xref: { // $comment
-            *out_anon = false;
-            retval=0;
-            out_dflt="Y";
-        } break;
-        case command_FieldId_xns: { // bool: no argument required but value may be specified as xref:Y
+        case command_FieldId_xref: { // bool: no argument required but value may be specified as xref:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_noinput: { // bool: no argument required but value may be specified as xns:Y
+        case command_FieldId_xns: { // bool: no argument required but value may be specified as xns:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_check: { // bool: no argument required but value may be specified as noinput:Y
+        case command_FieldId_noinput: { // bool: no argument required but value may be specified as noinput:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_render: { // bool: no argument required but value may be specified as check:Y
+        case command_FieldId_check: { // bool: no argument required but value may be specified as check:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_render: { // bool: no argument required but value may be specified as render:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
@@ -8447,7 +8576,7 @@ algo::Fildes command::amc_vis_StartRead(command::amc_vis_proc& parent, algo_lib:
 // --- command.amc_vis_proc.amc_vis.Kill
 // Kill subprocess and wait
 void command::amc_vis_Kill(command::amc_vis_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         kill(parent.pid,9);
         amc_vis_Wait(parent);
     }
@@ -8554,7 +8683,7 @@ void command::amc_vis_ToArgv(command::amc_vis_proc& parent, algo::StringAry& arg
         bool_Print(parent.cmd.xref, *arg);
     }
 
-    if (parent.cmd.xns != false) {
+    if (parent.cmd.xns != true) {
         cstring *arg = &ary_Alloc(args);
         *arg << "-xns:";
         bool_Print(parent.cmd.xns, *arg);
@@ -8590,242 +8719,6 @@ void command::amc_vis_proc_Uninit(command::amc_vis_proc& parent) {
     amc_vis_Kill(parent); // kill child, ensure forward progress
 }
 
-// --- command.ams_cat..ReadFieldMaybe
-bool command::ams_cat_ReadFieldMaybe(command::ams_cat& parent, algo::strptr field, algo::strptr strval) {
-    bool retval = true;
-    command::FieldId field_id;
-    (void)value_SetStrptrMaybe(field_id,field);
-    switch(field_id) {
-        case command_FieldId_in: {
-            retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
-            break;
-        }
-        default: break;
-    }
-    if (!retval) {
-        algo_lib::AppendErrtext("attr",field);
-    }
-    return retval;
-}
-
-// --- command.ams_cat..ReadTupleMaybe
-// Read fields of command::ams_cat from attributes of ascii tuple TUPLE
-bool command::ams_cat_ReadTupleMaybe(command::ams_cat &parent, algo::Tuple &tuple) {
-    bool retval = true;
-    ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
-        retval = ams_cat_ReadFieldMaybe(parent, attr.name, attr.value);
-        if (!retval) {
-            break;
-        }
-    }ind_end;
-    return retval;
-}
-
-// --- command.ams_cat..ToCmdline
-// Convenience function that returns a full command line
-// Assume command is in a directory called bin
-tempstr command::ams_cat_ToCmdline(command::ams_cat& row) {
-    tempstr ret;
-    ret << "bin/ams_cat ";
-    ams_cat_PrintArgv(row, ret);
-    // inherit less intense verbose, debug options
-    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
-        ret << " -verbose";
-    }
-    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
-        ret << " -debug";
-    }
-    return ret;
-}
-
-// --- command.ams_cat..PrintArgv
-// print string representation of ROW to string STR
-// cfmt:command.ams_cat.Argv  printfmt:Tuple
-void command::ams_cat_PrintArgv(command::ams_cat& row, algo::cstring& str) {
-    algo::tempstr temp;
-    (void)temp;
-    (void)str;
-    if (!(row.in == "data")) {
-        ch_RemoveAll(temp);
-        cstring_Print(row.in, temp);
-        str << " -in:";
-        strptr_PrintBash(temp,str);
-    }
-}
-
-// --- command.ams_cat..NArgs
-// Used with command lines
-// Return # of command-line arguments that must follow this argument
-// If FIELD is invalid, return -1
-i32 command::ams_cat_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
-    i32 retval = 1;
-    switch (field) {
-        case command_FieldId_in: { // $comment
-            *out_anon = false;
-        } break;
-        default:
-        retval=-1; // unrecognized
-    }
-    (void)out_dflt;//only to avoid -Wunused-parameter
-    return retval;
-}
-
-// --- command.ams_cat_proc.ams_cat.Start
-// Start subprocess
-// If subprocess already running, do nothing. Otherwise, start it
-int command::ams_cat_Start(command::ams_cat_proc& parent) {
-    int retval = 0;
-    if (parent.pid == 0) {
-        verblog(ams_cat_ToCmdline(parent)); // maybe print command
-#ifdef WIN32
-        algo_lib::ResolveExecFname(parent.path);
-        tempstr cmdline(ams_cat_ToCmdline(parent));
-        parent.pid = dospawn(Zeroterm(parent.path),Zeroterm(cmdline),parent.timeout,parent.fstdin,parent.fstdout,parent.fstderr);
-#else
-        parent.pid = fork();
-        if (parent.pid == 0) { // child
-            algo_lib::DieWithParent();
-            if (parent.timeout > 0) {
-                alarm(parent.timeout);
-            }
-            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdin , 0);
-            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdout, 1);
-            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstderr, 2);
-            if (retval==0) retval= ams_cat_Execv(parent);
-            if (retval != 0) { // if start fails, print error
-                int err=errno;
-                prerr("command.ams_cat_execv"
-                <<Keyval("errno",err)
-                <<Keyval("errstr",strerror(err))
-                <<Keyval("comment","Execv failed"));
-            }
-            _exit(127); // if failed to start, exit anyway
-        } else if (parent.pid == -1) {
-            retval = errno; // failed to fork
-        }
-#endif
-    }
-    parent.status = parent.pid > 0 ? 0 : -1; // if didn't start, set error status
-    return retval;
-}
-
-// --- command.ams_cat_proc.ams_cat.StartRead
-// Start subprocess & Read output
-algo::Fildes command::ams_cat_StartRead(command::ams_cat_proc& parent, algo_lib::FFildes &read) {
-    int pipefd[2];
-    int rc=pipe(pipefd);
-    (void)rc;
-    read.fd.value = pipefd[0];
-    parent.fstdout  << ">&" << pipefd[1];
-    ams_cat_Start(parent);
-    (void)close(pipefd[1]);
-    return read.fd;
-}
-
-// --- command.ams_cat_proc.ams_cat.Kill
-// Kill subprocess and wait
-void command::ams_cat_Kill(command::ams_cat_proc& parent) {
-    if (parent.pid != 0) {
-        kill(parent.pid,9);
-        ams_cat_Wait(parent);
-    }
-}
-
-// --- command.ams_cat_proc.ams_cat.Wait
-// Wait for subprocess to return
-void command::ams_cat_Wait(command::ams_cat_proc& parent) {
-    if (parent.pid > 0) {
-        int wait_flags = 0;
-        int wait_status = 0;
-        int rc = -1;
-        do {
-            // really wait for subprocess to exit
-            rc = waitpid(parent.pid,&wait_status,wait_flags);
-        } while (rc==-1 && errno==EINTR);
-        if (rc == parent.pid) {
-            parent.status = wait_status;
-            parent.pid = 0;
-        }
-    }
-}
-
-// --- command.ams_cat_proc.ams_cat.Exec
-// Start + Wait
-// Execute subprocess and return exit code
-int command::ams_cat_Exec(command::ams_cat_proc& parent) {
-    ams_cat_Start(parent);
-    ams_cat_Wait(parent);
-    return parent.status;
-}
-
-// --- command.ams_cat_proc.ams_cat.ExecX
-// Start + Wait, throw exception on error
-// Execute subprocess; throw human-readable exception on error
-void command::ams_cat_ExecX(command::ams_cat_proc& parent) {
-    int rc = ams_cat_Exec(parent);
-    vrfy(rc==0, tempstr() << "algo_lib.exec" << Keyval("cmd",ams_cat_ToCmdline(parent))
-    << Keyval("comment",algo::DescribeWaitStatus(parent.status)));
-}
-
-// --- command.ams_cat_proc.ams_cat.Execv
-// Call execv()
-// Call execv with specified parameters
-int command::ams_cat_Execv(command::ams_cat_proc& parent) {
-    int ret = 0;
-    algo::StringAry args;
-    ams_cat_ToArgv(parent, args);
-    char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
-    ind_beg(algo::StringAry_ary_curs,arg,args) {
-        argv[ind_curs(arg).index] = Zeroterm(arg);
-    }ind_end;
-    argv[ary_N(args)] = NULL;
-    // if parent.path is relative, search for it in PATH
-    algo_lib::ResolveExecFname(parent.path);
-    ret = execv(Zeroterm(parent.path),argv);
-    return ret;
-}
-
-// --- command.ams_cat_proc.ams_cat.ToCmdline
-algo::tempstr command::ams_cat_ToCmdline(command::ams_cat_proc& parent) {
-    algo::tempstr retval;
-    retval << parent.path << " ";
-    command::ams_cat_PrintArgv(parent.cmd,retval);
-    if (ch_N(parent.fstdin)) {
-        retval << " " << parent.fstdin;
-    }
-    if (ch_N(parent.fstdout)) {
-        retval << " " << parent.fstdout;
-    }
-    if (ch_N(parent.fstderr)) {
-        retval << " 2" << parent.fstderr;
-    }
-    return retval;
-}
-
-// --- command.ams_cat_proc.ams_cat.ToArgv
-// Form array from the command line
-void command::ams_cat_ToArgv(command::ams_cat_proc& parent, algo::StringAry& args) {
-    ary_RemoveAll(args);
-    ary_Alloc(args) << parent.path;
-
-    if (parent.cmd.in != "data") {
-        cstring *arg = &ary_Alloc(args);
-        *arg << "-in:";
-        cstring_Print(parent.cmd.in, *arg);
-    }
-    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
-        ary_Alloc(args) << "-verbose";
-    }
-}
-
-// --- command.ams_cat_proc..Uninit
-void command::ams_cat_proc_Uninit(command::ams_cat_proc& parent) {
-    command::ams_cat_proc &row = parent; (void)row;
-
-    // command.ams_cat_proc.ams_cat.Uninit (Exec)  //
-    ams_cat_Kill(parent); // kill child, ensure forward progress
-}
-
 // --- command.ams_sendtest.trace.Print
 // Print back to string
 void command::trace_Print(command::ams_sendtest& parent, algo::cstring &out) {
@@ -8849,61 +8742,50 @@ bool command::ams_sendtest_ReadFieldMaybe(command::ams_sendtest& parent, algo::s
     switch(field_id) {
         case command_FieldId_in: {
             retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
-            break;
-        }
+        } break;
         case command_FieldId_id: {
             retval = i32_ReadStrptrMaybe(parent.id, strval);
-            break;
-        }
+        } break;
         case command_FieldId_file_prefix: {
             retval = algo::cstring_ReadStrptrMaybe(parent.file_prefix, strval);
-            break;
-        }
+        } break;
         case command_FieldId_nchild: {
             retval = i32_ReadStrptrMaybe(parent.nchild, strval);
-            break;
-        }
+        } break;
         case command_FieldId_blocking: {
             retval = bool_ReadStrptrMaybe(parent.blocking, strval);
-            break;
-        }
+        } break;
         case command_FieldId_nmsg: {
             retval = i32_ReadStrptrMaybe(parent.nmsg, strval);
-            break;
-        }
+        } break;
         case command_FieldId_trace: {
             retval = trace_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case command_FieldId_timeout: {
             retval = i32_ReadStrptrMaybe(parent.timeout, strval);
-            break;
-        }
+        } break;
         case command_FieldId_recvdelay_ns: {
             retval = i64_ReadStrptrMaybe(parent.recvdelay_ns, strval);
-            break;
-        }
+        } break;
         case command_FieldId_senddelay_ns: {
             retval = i64_ReadStrptrMaybe(parent.senddelay_ns, strval);
-            break;
-        }
+        } break;
         case command_FieldId_msgsize_min: {
             retval = i32_ReadStrptrMaybe(parent.msgsize_min, strval);
-            break;
-        }
+        } break;
         case command_FieldId_msgsize_max: {
             retval = i32_ReadStrptrMaybe(parent.msgsize_max, strval);
-            break;
-        }
+        } break;
         case command_FieldId_bufsize: {
             retval = i32_ReadStrptrMaybe(parent.bufsize, strval);
-            break;
-        }
+        } break;
         case command_FieldId_recvdelay: {
             retval = i64_ReadStrptrMaybe(parent.recvdelay, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -9060,48 +8942,48 @@ void command::ams_sendtest_PrintArgv(command::ams_sendtest& row, algo::cstring& 
 i32 command::ams_sendtest_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
     i32 retval = 1;
     switch (field) {
-        case command_FieldId_in: { // $comment
+        case command_FieldId_in: { //
             *out_anon = false;
         } break;
-        case command_FieldId_id: { // $comment
+        case command_FieldId_id: { //
             *out_anon = false;
         } break;
-        case command_FieldId_file_prefix: { // $comment
+        case command_FieldId_file_prefix: { //
             *out_anon = false;
         } break;
-        case command_FieldId_nchild: { // $comment
+        case command_FieldId_nchild: { //
             *out_anon = false;
         } break;
-        case command_FieldId_blocking: { // $comment
+        case command_FieldId_blocking: { // bool: no argument required but value may be specified as blocking:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_nmsg: { // bool: no argument required but value may be specified as blocking:Y
+        case command_FieldId_nmsg: { //
             *out_anon = false;
         } break;
-        case command_FieldId_trace: { // bool: no argument required but value may be specified as blocking:Y
+        case command_FieldId_trace: { //
             *out_anon = false;
         } break;
-        case command_FieldId_timeout: { // bool: no argument required but value may be specified as blocking:Y
+        case command_FieldId_timeout: { //
             *out_anon = false;
         } break;
-        case command_FieldId_recvdelay_ns: { // bool: no argument required but value may be specified as blocking:Y
+        case command_FieldId_recvdelay_ns: { //
             *out_anon = false;
         } break;
-        case command_FieldId_senddelay_ns: { // bool: no argument required but value may be specified as blocking:Y
+        case command_FieldId_senddelay_ns: { //
             *out_anon = false;
         } break;
-        case command_FieldId_msgsize_min: { // bool: no argument required but value may be specified as blocking:Y
+        case command_FieldId_msgsize_min: { //
             *out_anon = false;
         } break;
-        case command_FieldId_msgsize_max: { // bool: no argument required but value may be specified as blocking:Y
+        case command_FieldId_msgsize_max: { //
             *out_anon = false;
         } break;
-        case command_FieldId_bufsize: { // bool: no argument required but value may be specified as blocking:Y
+        case command_FieldId_bufsize: { //
             *out_anon = false;
         } break;
-        case command_FieldId_recvdelay: { // bool: no argument required but value may be specified as blocking:Y
+        case command_FieldId_recvdelay: { //
             *out_anon = false;
         } break;
         default:
@@ -9165,7 +9047,7 @@ algo::Fildes command::ams_sendtest_StartRead(command::ams_sendtest_proc& parent,
 // --- command.ams_sendtest_proc.ams_sendtest.Kill
 // Kill subprocess and wait
 void command::ams_sendtest_Kill(command::ams_sendtest_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         kill(parent.pid,9);
         ams_sendtest_Wait(parent);
     }
@@ -9382,109 +9264,86 @@ bool command::apm_ReadFieldMaybe(command::apm& parent, algo::strptr field, algo:
     switch(field_id) {
         case command_FieldId_in: {
             retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
-            break;
-        }
+        } break;
         case command_FieldId_pkgdata: {
             retval = algo::cstring_ReadStrptrMaybe(parent.pkgdata, strval);
-            break;
-        }
+        } break;
         case command_FieldId_package: {
             retval = package_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case command_FieldId_ns: {
             retval = ns_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case command_FieldId_install: {
             retval = bool_ReadStrptrMaybe(parent.install, strval);
-            break;
-        }
+        } break;
         case command_FieldId_update: {
             retval = bool_ReadStrptrMaybe(parent.update, strval);
-            break;
-        }
+        } break;
         case command_FieldId_list: {
             retval = bool_ReadStrptrMaybe(parent.list, strval);
-            break;
-        }
+        } break;
         case command_FieldId_diff: {
             retval = bool_ReadStrptrMaybe(parent.diff, strval);
-            break;
-        }
+        } break;
         case command_FieldId_push: {
             retval = bool_ReadStrptrMaybe(parent.push, strval);
-            break;
-        }
+        } break;
         case command_FieldId_check: {
             retval = bool_ReadStrptrMaybe(parent.check, strval);
-            break;
-        }
+        } break;
         case command_FieldId_remove: {
             retval = bool_ReadStrptrMaybe(parent.remove, strval);
-            break;
-        }
+        } break;
         case command_FieldId_origin: {
             retval = algo::Smallstr200_ReadStrptrMaybe(parent.origin, strval);
-            break;
-        }
+        } break;
         case command_FieldId_ref: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.ref, strval);
-            break;
-        }
+        } break;
         case command_FieldId_dry_run: {
             retval = bool_ReadStrptrMaybe(parent.dry_run, strval);
-            break;
-        }
+        } break;
         case command_FieldId_showrec: {
             retval = bool_ReadStrptrMaybe(parent.showrec, strval);
-            break;
-        }
+        } break;
         case command_FieldId_showfile: {
             retval = bool_ReadStrptrMaybe(parent.showfile, strval);
-            break;
-        }
+        } break;
         case command_FieldId_R: {
             retval = bool_ReadStrptrMaybe(parent.R, strval);
-            break;
-        }
+        } break;
         case command_FieldId_l: {
             retval = bool_ReadStrptrMaybe(parent.l, strval);
-            break;
-        }
+        } break;
         case command_FieldId_reset: {
             retval = bool_ReadStrptrMaybe(parent.reset, strval);
-            break;
-        }
+        } break;
         case command_FieldId_checkclean: {
             retval = bool_ReadStrptrMaybe(parent.checkclean, strval);
-            break;
-        }
+        } break;
         case command_FieldId_t: {
             retval = bool_ReadStrptrMaybe(parent.t, strval);
-            break;
-        }
+        } break;
         case command_FieldId_stat: {
             retval = bool_ReadStrptrMaybe(parent.stat, strval);
-            break;
-        }
+        } break;
         case command_FieldId_annotate: {
             retval = algo::cstring_ReadStrptrMaybe(parent.annotate, strval);
-            break;
-        }
+        } break;
         case command_FieldId_data_in: {
             retval = algo::cstring_ReadStrptrMaybe(parent.data_in, strval);
-            break;
-        }
+        } break;
         case command_FieldId_e: {
             retval = bool_ReadStrptrMaybe(parent.e, strval);
-            break;
-        }
+        } break;
         case command_FieldId_binpath: {
             retval = algo::cstring_ReadStrptrMaybe(parent.binpath, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -9736,116 +9595,116 @@ algo::strptr command::apm_GetAnon(command::apm &parent, i32 idx) {
 i32 command::apm_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
     i32 retval = 1;
     switch (field) {
-        case command_FieldId_in: { // $comment
+        case command_FieldId_in: { //
             *out_anon = false;
         } break;
-        case command_FieldId_pkgdata: { // $comment
+        case command_FieldId_pkgdata: { //
             *out_anon = false;
         } break;
-        case command_FieldId_package: { // $comment
+        case command_FieldId_package: { //
             *out_anon = true;
         } break;
-        case command_FieldId_ns: { // $comment
+        case command_FieldId_ns: { //
             *out_anon = false;
         } break;
-        case command_FieldId_install: { // $comment
-            *out_anon = false;
-            retval=0;
-            out_dflt="Y";
-        } break;
-        case command_FieldId_update: { // bool: no argument required but value may be specified as install:Y
+        case command_FieldId_install: { // bool: no argument required but value may be specified as install:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_list: { // bool: no argument required but value may be specified as update:Y
+        case command_FieldId_update: { // bool: no argument required but value may be specified as update:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_diff: { // bool: no argument required but value may be specified as list:Y
+        case command_FieldId_list: { // bool: no argument required but value may be specified as list:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_push: { // bool: no argument required but value may be specified as diff:Y
+        case command_FieldId_diff: { // bool: no argument required but value may be specified as diff:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_check: { // bool: no argument required but value may be specified as push:Y
+        case command_FieldId_push: { // bool: no argument required but value may be specified as push:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_remove: { // bool: no argument required but value may be specified as check:Y
+        case command_FieldId_check: { // bool: no argument required but value may be specified as check:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_origin: { // bool: no argument required but value may be specified as remove:Y
-            *out_anon = false;
-        } break;
-        case command_FieldId_ref: { // bool: no argument required but value may be specified as remove:Y
-            *out_anon = false;
-        } break;
-        case command_FieldId_dry_run: { // bool: no argument required but value may be specified as remove:Y
+        case command_FieldId_remove: { // bool: no argument required but value may be specified as remove:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_showrec: { // bool: no argument required but value may be specified as dry_run:Y
+        case command_FieldId_origin: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_ref: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_dry_run: { // bool: no argument required but value may be specified as dry_run:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_showfile: { // bool: no argument required but value may be specified as showrec:Y
+        case command_FieldId_showrec: { // bool: no argument required but value may be specified as showrec:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_R: { // bool: no argument required but value may be specified as showfile:Y
+        case command_FieldId_showfile: { // bool: no argument required but value may be specified as showfile:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_l: { // bool: no argument required but value may be specified as R:Y
+        case command_FieldId_R: { // bool: no argument required but value may be specified as R:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_reset: { // bool: no argument required but value may be specified as l:Y
+        case command_FieldId_l: { // bool: no argument required but value may be specified as l:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_checkclean: { // bool: no argument required but value may be specified as reset:Y
+        case command_FieldId_reset: { // bool: no argument required but value may be specified as reset:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_t: { // bool: no argument required but value may be specified as checkclean:Y
+        case command_FieldId_checkclean: { // bool: no argument required but value may be specified as checkclean:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_stat: { // bool: no argument required but value may be specified as t:Y
+        case command_FieldId_t: { // bool: no argument required but value may be specified as t:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_annotate: { // bool: no argument required but value may be specified as stat:Y
-            *out_anon = false;
-        } break;
-        case command_FieldId_data_in: { // bool: no argument required but value may be specified as stat:Y
-            *out_anon = false;
-        } break;
-        case command_FieldId_e: { // bool: no argument required but value may be specified as stat:Y
+        case command_FieldId_stat: { // bool: no argument required but value may be specified as stat:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_binpath: { // bool: no argument required but value may be specified as e:Y
+        case command_FieldId_annotate: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_data_in: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_e: { // bool: no argument required but value may be specified as e:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_binpath: { //
             *out_anon = false;
         } break;
         default:
@@ -9909,7 +9768,7 @@ algo::Fildes command::apm_StartRead(command::apm_proc& parent, algo_lib::FFildes
 // --- command.apm_proc.apm.Kill
 // Kill subprocess and wait
 void command::apm_Kill(command::apm_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         kill(parent.pid,9);
         apm_Wait(parent);
     }
@@ -10160,6 +10019,21 @@ void command::apm_proc_Uninit(command::apm_proc& parent) {
     apm_Kill(parent); // kill child, ensure forward progress
 }
 
+// --- command.aqlite.ns.Print
+// Print back to string
+void command::ns_Print(command::aqlite& parent, algo::cstring &out) {
+    Regx_Print(parent.ns, out);
+}
+
+// --- command.aqlite.ns.ReadStrptrMaybe
+// Read Regx from string
+// Convert string to field. Return success value
+bool command::ns_ReadStrptrMaybe(command::aqlite& parent, algo::strptr in) {
+    bool retval = true;
+    Regx_ReadSql(parent.ns, in, true);
+    return retval;
+}
+
 // --- command.aqlite..ReadFieldMaybe
 bool command::aqlite_ReadFieldMaybe(command::aqlite& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
@@ -10168,17 +10042,20 @@ bool command::aqlite_ReadFieldMaybe(command::aqlite& parent, algo::strptr field,
     switch(field_id) {
         case command_FieldId_in: {
             retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
-            break;
-        }
+        } break;
         case command_FieldId_schema: {
             retval = algo::cstring_ReadStrptrMaybe(parent.schema, strval);
-            break;
-        }
+        } break;
         case command_FieldId_cmd: {
             retval = algo::cstring_ReadStrptrMaybe(parent.cmd, strval);
-            break;
-        }
-        default: break;
+        } break;
+        case command_FieldId_ns: {
+            retval = ns_ReadStrptrMaybe(parent, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -10201,6 +10078,14 @@ bool command::aqlite_ReadTupleMaybe(command::aqlite &parent, algo::Tuple &tuple)
         }
     }ind_end;
     return retval;
+}
+
+// --- command.aqlite..Init
+// Set all fields to initial values.
+void command::aqlite_Init(command::aqlite& parent) {
+    parent.in = algo::strptr("data");
+    parent.schema = algo::strptr("data");
+    Regx_ReadSql(parent.ns, "dmmeta", true);
 }
 
 // --- command.aqlite..ToCmdline
@@ -10243,6 +10128,12 @@ void command::aqlite_PrintArgv(command::aqlite& row, algo::cstring& str) {
     cstring_Print(row.cmd, temp);
     str << " -cmd:";
     strptr_PrintBash(temp,str);
+    if (!(row.ns.expr == "dmmeta")) {
+        ch_RemoveAll(temp);
+        command::ns_Print(const_cast<command::aqlite&>(row), temp);
+        str << " -ns:";
+        strptr_PrintBash(temp,str);
+    }
 }
 
 // --- command.aqlite..GetAnon
@@ -10261,14 +10152,17 @@ algo::strptr command::aqlite_GetAnon(command::aqlite &parent, i32 idx) {
 i32 command::aqlite_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
     i32 retval = 1;
     switch (field) {
-        case command_FieldId_in: { // $comment
+        case command_FieldId_in: { //
             *out_anon = false;
         } break;
-        case command_FieldId_schema: { // $comment
+        case command_FieldId_schema: { //
             *out_anon = false;
         } break;
-        case command_FieldId_cmd: { // $comment
+        case command_FieldId_cmd: { //
             *out_anon = true;
+        } break;
+        case command_FieldId_ns: { //
+            *out_anon = false;
         } break;
         default:
         retval=-1; // unrecognized
@@ -10332,7 +10226,7 @@ algo::Fildes command::aqlite_StartRead(command::aqlite_proc& parent, algo_lib::F
 // --- command.aqlite_proc.aqlite.Kill
 // Kill subprocess and wait
 void command::aqlite_Kill(command::aqlite_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         kill(parent.pid,9);
         aqlite_Wait(parent);
     }
@@ -10432,6 +10326,12 @@ void command::aqlite_ToArgv(command::aqlite_proc& parent, algo::StringAry& args)
         *arg << "-cmd:";
         cstring_Print(parent.cmd.cmd, *arg);
     }
+
+    if (parent.cmd.ns.expr != "dmmeta") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-ns:";
+        command::ns_Print(parent.cmd, *arg);
+    }
     for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
         ary_Alloc(args) << "-verbose";
     }
@@ -10468,21 +10368,20 @@ bool command::atf_amc_ReadFieldMaybe(command::atf_amc& parent, algo::strptr fiel
     switch(field_id) {
         case command_FieldId_in: {
             retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
-            break;
-        }
+        } break;
         case command_FieldId_amctest: {
             retval = amctest_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case command_FieldId_dofork: {
             retval = bool_ReadStrptrMaybe(parent.dofork, strval);
-            break;
-        }
+        } break;
         case command_FieldId_q: {
             retval = bool_ReadStrptrMaybe(parent.q, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -10580,18 +10479,18 @@ algo::strptr command::atf_amc_GetAnon(command::atf_amc &parent, i32 idx) {
 i32 command::atf_amc_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
     i32 retval = 1;
     switch (field) {
-        case command_FieldId_in: { // $comment
+        case command_FieldId_in: { //
             *out_anon = false;
         } break;
-        case command_FieldId_amctest: { // $comment
+        case command_FieldId_amctest: { //
             *out_anon = true;
         } break;
-        case command_FieldId_dofork: { // $comment
+        case command_FieldId_dofork: { // bool: no argument required but value may be specified as dofork:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_q: { // bool: no argument required but value may be specified as dofork:Y
+        case command_FieldId_q: { // bool: no argument required but value may be specified as q:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
@@ -10657,7 +10556,7 @@ algo::Fildes command::atf_amc_StartRead(command::atf_amc_proc& parent, algo_lib:
 // --- command.atf_amc_proc.atf_amc.Kill
 // Kill subprocess and wait
 void command::atf_amc_Kill(command::atf_amc_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         kill(parent.pid,9);
         atf_amc_Wait(parent);
     }
@@ -10814,25 +10713,26 @@ bool command::atf_ci_ReadFieldMaybe(command::atf_ci& parent, algo::strptr field,
     switch(field_id) {
         case command_FieldId_in: {
             retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
-            break;
-        }
+        } break;
         case command_FieldId_citest: {
             retval = citest_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case command_FieldId_maxerr: {
             retval = i32_ReadStrptrMaybe(parent.maxerr, strval);
-            break;
-        }
+        } break;
         case command_FieldId_cijob: {
             retval = cijob_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case command_FieldId_capture: {
             retval = bool_ReadStrptrMaybe(parent.capture, strval);
-            break;
-        }
-        default: break;
+        } break;
+        case command_FieldId_check_clean: {
+            retval = bool_ReadStrptrMaybe(parent.check_clean, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -10865,6 +10765,7 @@ void command::atf_ci_Init(command::atf_ci& parent) {
     parent.maxerr = i32(0);
     Regx_ReadSql(parent.cijob, "%", true);
     parent.capture = bool(false);
+    parent.check_clean = bool(true);
 }
 
 // --- command.atf_ci..ToCmdline
@@ -10919,6 +10820,12 @@ void command::atf_ci_PrintArgv(command::atf_ci& row, algo::cstring& str) {
         str << " -capture:";
         strptr_PrintBash(temp,str);
     }
+    if (!(row.check_clean == true)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.check_clean, temp);
+        str << " -check_clean:";
+        strptr_PrintBash(temp,str);
+    }
 }
 
 // --- command.atf_ci..GetAnon
@@ -10937,19 +10844,24 @@ algo::strptr command::atf_ci_GetAnon(command::atf_ci &parent, i32 idx) {
 i32 command::atf_ci_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
     i32 retval = 1;
     switch (field) {
-        case command_FieldId_in: { // $comment
+        case command_FieldId_in: { //
             *out_anon = false;
         } break;
-        case command_FieldId_citest: { // $comment
+        case command_FieldId_citest: { //
             *out_anon = true;
         } break;
-        case command_FieldId_maxerr: { // $comment
+        case command_FieldId_maxerr: { //
             *out_anon = false;
         } break;
-        case command_FieldId_cijob: { // $comment
+        case command_FieldId_cijob: { //
             *out_anon = false;
         } break;
-        case command_FieldId_capture: { // $comment
+        case command_FieldId_capture: { // bool: no argument required but value may be specified as capture:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_check_clean: { // bool: no argument required but value may be specified as check_clean:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
@@ -11015,7 +10927,7 @@ algo::Fildes command::atf_ci_StartRead(command::atf_ci_proc& parent, algo_lib::F
 // --- command.atf_ci_proc.atf_ci.Kill
 // Kill subprocess and wait
 void command::atf_ci_Kill(command::atf_ci_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         kill(parent.pid,9);
         atf_ci_Wait(parent);
     }
@@ -11127,6 +11039,12 @@ void command::atf_ci_ToArgv(command::atf_ci_proc& parent, algo::StringAry& args)
         *arg << "-capture:";
         bool_Print(parent.cmd.capture, *arg);
     }
+
+    if (parent.cmd.check_clean != true) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-check_clean:";
+        bool_Print(parent.cmd.check_clean, *arg);
+    }
     for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
         ary_Alloc(args) << "-verbose";
     }
@@ -11200,6 +11118,25 @@ algo::aryptr<algo::cstring> command::mstr_AllocN(command::atf_cmdline& parent, i
     }
     parent.mstr_n = new_n;
     return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
+}
+
+// --- command.atf_cmdline.mstr.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<algo::cstring> command::mstr_AllocNAt(command::atf_cmdline& parent, int n_elems, int at) {
+    mstr_Reserve(parent, n_elems);
+    int n  = parent.mstr_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("command.bad_alloc_n_at  field:command.atf_cmdline.mstr  comment:'index out of range'");
+    }
+    algo::cstring *elems = parent.mstr_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(algo::cstring));
+    for (int i = 0; i < n_elems; i++) {
+        new (elems + at + i) algo::cstring(); // construct new element, default initialize
+    }
+    parent.mstr_n = n+n_elems;
+    return algo::aryptr<algo::cstring>(elems+at,n_elems);
 }
 
 // --- command.atf_cmdline.mstr.Remove
@@ -11298,6 +11235,30 @@ bool command::mstr_ReadStrptrMaybe(command::atf_cmdline& parent, algo::strptr in
     return retval;
 }
 
+// --- command.atf_cmdline.mstr.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void command::mstr_Insary(command::atf_cmdline& parent, algo::aryptr<algo::cstring> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.mstr_elems && rhs.elems < parent.mstr_elems + parent.mstr_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("command.tary_alias  field:command.atf_cmdline.mstr  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(parent.mstr_elems+1))) {
+        FatalErrorExit("command.bad_insary  field:command.atf_cmdline.mstr  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = parent.mstr_n - at;
+    mstr_Reserve(parent, nnew); // reserve space
+    for (int i = nmove-1; i >=0 ; --i) {
+        new (parent.mstr_elems + at + nnew + i) algo::cstring(parent.mstr_elems[at + i]);
+        parent.mstr_elems[at + i].~cstring(); // destroy element
+    }
+    for (int i = 0; i < nnew; ++i) {
+        new (parent.mstr_elems + at + i) algo::cstring(rhs[i]);
+    }
+    parent.mstr_n += nnew;
+}
+
 // --- command.atf_cmdline.mnum.Addary
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
@@ -11356,6 +11317,25 @@ algo::aryptr<i32> command::mnum_AllocN(command::atf_cmdline& parent, int n_elems
     }
     parent.mnum_n = new_n;
     return algo::aryptr<i32>(elems + old_n, n_elems);
+}
+
+// --- command.atf_cmdline.mnum.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<i32> command::mnum_AllocNAt(command::atf_cmdline& parent, int n_elems, int at) {
+    mnum_Reserve(parent, n_elems);
+    int n  = parent.mnum_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("command.bad_alloc_n_at  field:command.atf_cmdline.mnum  comment:'index out of range'");
+    }
+    i32 *elems = parent.mnum_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(i32));
+    for (int i = 0; i < n_elems; i++) {
+        new (elems + at + i) i32(0); // construct new element, default initialize
+    }
+    parent.mnum_n = n+n_elems;
+    return algo::aryptr<i32>(elems+at,n_elems);
 }
 
 // --- command.atf_cmdline.mnum.Remove
@@ -11442,6 +11422,25 @@ bool command::mnum_ReadStrptrMaybe(command::atf_cmdline& parent, algo::strptr in
     return retval;
 }
 
+// --- command.atf_cmdline.mnum.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void command::mnum_Insary(command::atf_cmdline& parent, algo::aryptr<i32> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.mnum_elems && rhs.elems < parent.mnum_elems + parent.mnum_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("command.tary_alias  field:command.atf_cmdline.mnum  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(parent.mnum_elems+1))) {
+        FatalErrorExit("command.bad_insary  field:command.atf_cmdline.mnum  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = parent.mnum_n - at;
+    mnum_Reserve(parent, nnew); // reserve space
+    memmove(parent.mnum_elems + at + nnew, parent.mnum_elems + at, nmove * sizeof(i32));
+    memcpy(parent.mnum_elems + at, rhs.elems, nnew * sizeof(i32));
+    parent.mnum_n += nnew;
+}
+
 // --- command.atf_cmdline.mdbl.Addary
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
@@ -11500,6 +11499,25 @@ algo::aryptr<double> command::mdbl_AllocN(command::atf_cmdline& parent, int n_el
     }
     parent.mdbl_n = new_n;
     return algo::aryptr<double>(elems + old_n, n_elems);
+}
+
+// --- command.atf_cmdline.mdbl.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<double> command::mdbl_AllocNAt(command::atf_cmdline& parent, int n_elems, int at) {
+    mdbl_Reserve(parent, n_elems);
+    int n  = parent.mdbl_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("command.bad_alloc_n_at  field:command.atf_cmdline.mdbl  comment:'index out of range'");
+    }
+    double *elems = parent.mdbl_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(double));
+    for (int i = 0; i < n_elems; i++) {
+        new (elems + at + i) double(0.0); // construct new element, default initialize
+    }
+    parent.mdbl_n = n+n_elems;
+    return algo::aryptr<double>(elems+at,n_elems);
 }
 
 // --- command.atf_cmdline.mdbl.Remove
@@ -11586,6 +11604,25 @@ bool command::mdbl_ReadStrptrMaybe(command::atf_cmdline& parent, algo::strptr in
     return retval;
 }
 
+// --- command.atf_cmdline.mdbl.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void command::mdbl_Insary(command::atf_cmdline& parent, algo::aryptr<double> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.mdbl_elems && rhs.elems < parent.mdbl_elems + parent.mdbl_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("command.tary_alias  field:command.atf_cmdline.mdbl  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(parent.mdbl_elems+1))) {
+        FatalErrorExit("command.bad_insary  field:command.atf_cmdline.mdbl  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = parent.mdbl_n - at;
+    mdbl_Reserve(parent, nnew); // reserve space
+    memmove(parent.mdbl_elems + at + nnew, parent.mdbl_elems + at, nmove * sizeof(double));
+    memcpy(parent.mdbl_elems + at, rhs.elems, nnew * sizeof(double));
+    parent.mdbl_n += nnew;
+}
+
 // --- command.atf_cmdline.amnum.Addary
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
@@ -11644,6 +11681,25 @@ algo::aryptr<i32> command::amnum_AllocN(command::atf_cmdline& parent, int n_elem
     }
     parent.amnum_n = new_n;
     return algo::aryptr<i32>(elems + old_n, n_elems);
+}
+
+// --- command.atf_cmdline.amnum.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<i32> command::amnum_AllocNAt(command::atf_cmdline& parent, int n_elems, int at) {
+    amnum_Reserve(parent, n_elems);
+    int n  = parent.amnum_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("command.bad_alloc_n_at  field:command.atf_cmdline.amnum  comment:'index out of range'");
+    }
+    i32 *elems = parent.amnum_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(i32));
+    for (int i = 0; i < n_elems; i++) {
+        new (elems + at + i) i32(0); // construct new element, default initialize
+    }
+    parent.amnum_n = n+n_elems;
+    return algo::aryptr<i32>(elems+at,n_elems);
 }
 
 // --- command.atf_cmdline.amnum.Remove
@@ -11728,6 +11784,25 @@ bool command::amnum_ReadStrptrMaybe(command::atf_cmdline& parent, algo::strptr i
         amnum_RemoveLast(parent);
     }
     return retval;
+}
+
+// --- command.atf_cmdline.amnum.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void command::amnum_Insary(command::atf_cmdline& parent, algo::aryptr<i32> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.amnum_elems && rhs.elems < parent.amnum_elems + parent.amnum_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("command.tary_alias  field:command.atf_cmdline.amnum  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(parent.amnum_elems+1))) {
+        FatalErrorExit("command.bad_insary  field:command.atf_cmdline.amnum  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = parent.amnum_n - at;
+    amnum_Reserve(parent, nnew); // reserve space
+    memmove(parent.amnum_elems + at + nnew, parent.amnum_elems + at, nmove * sizeof(i32));
+    memcpy(parent.amnum_elems + at, rhs.elems, nnew * sizeof(i32));
+    parent.amnum_n += nnew;
 }
 
 // --- command.atf_cmdline.fconst.ToCstr
@@ -11831,93 +11906,74 @@ bool command::atf_cmdline_ReadFieldMaybe(command::atf_cmdline& parent, algo::str
     switch(field_id) {
         case command_FieldId_in: {
             retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
-            break;
-        }
+        } break;
         case command_FieldId_exec: {
             retval = bool_ReadStrptrMaybe(parent.exec, strval);
-            break;
-        }
+        } break;
         case command_FieldId_astr: {
             retval = algo::cstring_ReadStrptrMaybe(parent.astr, strval);
-            break;
-        }
+        } break;
         case command_FieldId_anum: {
             retval = i32_ReadStrptrMaybe(parent.anum, strval);
-            break;
-        }
+        } break;
         case command_FieldId_adbl: {
             retval = double_ReadStrptrMaybe(parent.adbl, strval);
-            break;
-        }
+        } break;
         case command_FieldId_aflag: {
             retval = bool_ReadStrptrMaybe(parent.aflag, strval);
-            break;
-        }
+        } break;
         case command_FieldId_str: {
             retval = algo::cstring_ReadStrptrMaybe(parent.str, strval);
-            break;
-        }
+        } break;
         case command_FieldId_num: {
             retval = i32_ReadStrptrMaybe(parent.num, strval);
-            break;
-        }
+        } break;
         case command_FieldId_dbl: {
             retval = double_ReadStrptrMaybe(parent.dbl, strval);
-            break;
-        }
+        } break;
         case command_FieldId_flag: {
             retval = bool_ReadStrptrMaybe(parent.flag, strval);
-            break;
-        }
+        } break;
         case command_FieldId_dstr: {
             retval = algo::cstring_ReadStrptrMaybe(parent.dstr, strval);
-            break;
-        }
+        } break;
         case command_FieldId_dnum: {
             retval = i32_ReadStrptrMaybe(parent.dnum, strval);
-            break;
-        }
+        } break;
         case command_FieldId_ddbl: {
             retval = double_ReadStrptrMaybe(parent.ddbl, strval);
-            break;
-        }
+        } break;
         case command_FieldId_dflag: {
             retval = bool_ReadStrptrMaybe(parent.dflag, strval);
-            break;
-        }
+        } break;
         case command_FieldId_mstr: {
             retval = mstr_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case command_FieldId_mnum: {
             retval = mnum_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case command_FieldId_mdbl: {
             retval = mdbl_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case command_FieldId_amnum: {
             retval = amnum_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case command_FieldId_fconst: {
             retval = fconst_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case command_FieldId_cconst: {
             retval = algo::Month_ReadStrptrMaybe(parent.cconst, strval);
-            break;
-        }
+        } break;
         case command_FieldId_dregx: {
             retval = dregx_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case command_FieldId_dpkey: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.dpkey, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -11970,7 +12026,6 @@ void command::atf_cmdline_Init(command::atf_cmdline& parent) {
     parent.amnum_n     	= 0; // (command.atf_cmdline.amnum)
     parent.amnum_max   	= 0; // (command.atf_cmdline.amnum)
     parent.fconst = u8(0);
-    parent.cconst = algo_MonthEnum(0);
     Regx_ReadSql(parent.dregx, "%", true);
     parent.dpkey = algo::strptr("");
 }
@@ -12132,12 +12187,10 @@ void command::atf_cmdline_PrintArgv(command::atf_cmdline& row, algo::cstring& st
         str << " -fconst:";
         strptr_PrintBash(temp,str);
     }
-    if (!(row.cconst == 0)) {
-        ch_RemoveAll(temp);
-        Month_Print(row.cconst, temp);
-        str << " -cconst:";
-        strptr_PrintBash(temp,str);
-    }
+    ch_RemoveAll(temp);
+    Month_Print(row.cconst, temp);
+    str << " -cconst:";
+    strptr_PrintBash(temp,str);
     if (!(row.dregx.expr == "%")) {
         ch_RemoveAll(temp);
         command::dregx_Print(const_cast<command::atf_cmdline&>(row), temp);
@@ -12171,78 +12224,78 @@ algo::strptr command::atf_cmdline_GetAnon(command::atf_cmdline &parent, i32 idx)
 i32 command::atf_cmdline_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
     i32 retval = 1;
     switch (field) {
-        case command_FieldId_in: { // $comment
+        case command_FieldId_in: { //
             *out_anon = false;
         } break;
-        case command_FieldId_exec: { // $comment
-            *out_anon = false;
-            retval=0;
-            out_dflt="Y";
-        } break;
-        case command_FieldId_astr: { // bool: no argument required but value may be specified as exec:Y
-            *out_anon = true;
-        } break;
-        case command_FieldId_anum: { // bool: no argument required but value may be specified as exec:Y
-            *out_anon = true;
-        } break;
-        case command_FieldId_adbl: { // bool: no argument required but value may be specified as exec:Y
-            *out_anon = true;
-        } break;
-        case command_FieldId_aflag: { // bool: no argument required but value may be specified as exec:Y
-            *out_anon = true;
-            retval=0;
-            out_dflt="Y";
-        } break;
-        case command_FieldId_str: { // bool: no argument required but value may be specified as aflag:Y
-            *out_anon = false;
-        } break;
-        case command_FieldId_num: { // bool: no argument required but value may be specified as aflag:Y
-            *out_anon = false;
-        } break;
-        case command_FieldId_dbl: { // bool: no argument required but value may be specified as aflag:Y
-            *out_anon = false;
-        } break;
-        case command_FieldId_flag: { // bool: no argument required but value may be specified as aflag:Y
+        case command_FieldId_exec: { // bool: no argument required but value may be specified as exec:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_dstr: { // bool: no argument required but value may be specified as flag:Y
+        case command_FieldId_astr: { //
+            *out_anon = true;
+        } break;
+        case command_FieldId_anum: { //
+            *out_anon = true;
+        } break;
+        case command_FieldId_adbl: { //
+            *out_anon = true;
+        } break;
+        case command_FieldId_aflag: { // bool: no argument required but value may be specified as aflag:Y
+            *out_anon = true;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_str: { //
             *out_anon = false;
         } break;
-        case command_FieldId_dnum: { // bool: no argument required but value may be specified as flag:Y
+        case command_FieldId_num: { //
             *out_anon = false;
         } break;
-        case command_FieldId_ddbl: { // bool: no argument required but value may be specified as flag:Y
+        case command_FieldId_dbl: { //
             *out_anon = false;
         } break;
-        case command_FieldId_dflag: { // bool: no argument required but value may be specified as flag:Y
+        case command_FieldId_flag: { // bool: no argument required but value may be specified as flag:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_mstr: { // bool: no argument required but value may be specified as dflag:Y
+        case command_FieldId_dstr: { //
             *out_anon = false;
         } break;
-        case command_FieldId_mnum: { // bool: no argument required but value may be specified as dflag:Y
+        case command_FieldId_dnum: { //
             *out_anon = false;
         } break;
-        case command_FieldId_mdbl: { // bool: no argument required but value may be specified as dflag:Y
+        case command_FieldId_ddbl: { //
             *out_anon = false;
         } break;
-        case command_FieldId_amnum: { // bool: no argument required but value may be specified as dflag:Y
+        case command_FieldId_dflag: { // bool: no argument required but value may be specified as dflag:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_mstr: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_mnum: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_mdbl: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_amnum: { //
             *out_anon = true;
         } break;
-        case command_FieldId_fconst: { // bool: no argument required but value may be specified as dflag:Y
+        case command_FieldId_fconst: { //
             *out_anon = false;
         } break;
-        case command_FieldId_cconst: { // bool: no argument required but value may be specified as dflag:Y
+        case command_FieldId_cconst: { //
             *out_anon = false;
         } break;
-        case command_FieldId_dregx: { // bool: no argument required but value may be specified as dflag:Y
+        case command_FieldId_dregx: { //
             *out_anon = false;
         } break;
-        case command_FieldId_dpkey: { // bool: no argument required but value may be specified as dflag:Y
+        case command_FieldId_dpkey: { //
             *out_anon = false;
         } break;
         default:
@@ -12372,7 +12425,7 @@ algo::Fildes command::atf_cmdline_StartRead(command::atf_cmdline_proc& parent, a
 // --- command.atf_cmdline_proc.atf_cmdline.Kill
 // Kill subprocess and wait
 void command::atf_cmdline_Kill(command::atf_cmdline_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         kill(parent.pid,9);
         atf_cmdline_Wait(parent);
     }
@@ -12565,7 +12618,7 @@ void command::atf_cmdline_ToArgv(command::atf_cmdline_proc& parent, algo::String
         command::fconst_Print(parent.cmd, *arg);
     }
 
-    if (parent.cmd.cconst != 0) {
+    if (true) {
         cstring *arg = &ary_Alloc(args);
         *arg << "-cconst:";
         Month_Print(parent.cmd.cconst, *arg);
@@ -12618,109 +12671,92 @@ bool command::atf_comp_ReadFieldMaybe(command::atf_comp& parent, algo::strptr fi
     switch(field_id) {
         case command_FieldId_in: {
             retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
-            break;
-        }
+        } break;
         case command_FieldId_comptest: {
             retval = comptest_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case command_FieldId_mdbg: {
             retval = bool_ReadStrptrMaybe(parent.mdbg, strval);
-            break;
-        }
+        } break;
         case command_FieldId_run: {
             retval = bool_ReadStrptrMaybe(parent.run, strval);
-            break;
-        }
+        } break;
         case command_FieldId_capture: {
             retval = bool_ReadStrptrMaybe(parent.capture, strval);
-            break;
-        }
+        } break;
         case command_FieldId_print: {
             retval = bool_ReadStrptrMaybe(parent.print, strval);
-            break;
-        }
+        } break;
         case command_FieldId_printinput: {
             retval = bool_ReadStrptrMaybe(parent.printinput, strval);
-            break;
-        }
+        } break;
         case command_FieldId_e: {
             retval = bool_ReadStrptrMaybe(parent.e, strval);
-            break;
-        }
+        } break;
         case command_FieldId_normalize: {
             retval = bool_ReadStrptrMaybe(parent.normalize, strval);
-            break;
-        }
+        } break;
         case command_FieldId_covcapture: {
             retval = bool_ReadStrptrMaybe(parent.covcapture, strval);
-            break;
-        }
+        } break;
         case command_FieldId_covcheck: {
             retval = bool_ReadStrptrMaybe(parent.covcheck, strval);
-            break;
-        }
-        case command_FieldId_compdir: {
-            retval = algo::cstring_ReadStrptrMaybe(parent.compdir, strval);
-            break;
-        }
+        } break;
+        case command_FieldId_bindir: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.bindir, strval);
+        } break;
         case command_FieldId_cfg: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.cfg, strval);
-            break;
-        }
+        } break;
         case command_FieldId_check_untracked: {
             retval = bool_ReadStrptrMaybe(parent.check_untracked, strval);
-            break;
-        }
+        } break;
         case command_FieldId_maxerr: {
             retval = i32_ReadStrptrMaybe(parent.maxerr, strval);
-            break;
-        }
+        } break;
         case command_FieldId_build: {
             retval = bool_ReadStrptrMaybe(parent.build, strval);
-            break;
-        }
-        case command_FieldId_ood: {
-            retval = bool_ReadStrptrMaybe(parent.ood, strval);
-            break;
-        }
+        } break;
         case command_FieldId_memcheck: {
             retval = bool_ReadStrptrMaybe(parent.memcheck, strval);
-            break;
-        }
+        } break;
         case command_FieldId_force: {
             retval = bool_ReadStrptrMaybe(parent.force, strval);
-            break;
-        }
+        } break;
         case command_FieldId_callgrind: {
             retval = bool_ReadStrptrMaybe(parent.callgrind, strval);
-            break;
-        }
+        } break;
         case command_FieldId_maxjobs: {
             retval = i32_ReadStrptrMaybe(parent.maxjobs, strval);
-            break;
-        }
+        } break;
         case command_FieldId_stream: {
             retval = bool_ReadStrptrMaybe(parent.stream, strval);
-            break;
-        }
+        } break;
         case command_FieldId_i: {
             retval = bool_ReadStrptrMaybe(parent.i, strval);
-            break;
-        }
+        } break;
         case command_FieldId_write: {
             retval = bool_ReadStrptrMaybe(parent.write, strval);
-            break;
-        }
+        } break;
         case command_FieldId_report: {
             retval = bool_ReadStrptrMaybe(parent.report, strval);
-            break;
-        }
+        } break;
         case command_FieldId_b: {
             retval = algo::cstring_ReadStrptrMaybe(parent.b, strval);
-            break;
-        }
-        default: break;
+        } break;
+        case command_FieldId_covfast: {
+            retval = bool_ReadStrptrMaybe(parent.covfast, strval);
+        } break;
+        case command_FieldId_minrepeat: {
+            retval = i32_ReadStrptrMaybe(parent.minrepeat, strval);
+        } break;
+        case command_FieldId_maxrepeat: {
+            retval = i32_ReadStrptrMaybe(parent.maxrepeat, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -12759,12 +12795,11 @@ void command::atf_comp_Init(command::atf_comp& parent) {
     parent.normalize = bool(false);
     parent.covcapture = bool(false);
     parent.covcheck = bool(false);
-    parent.compdir = algo::strptr("");
+    parent.bindir = algo::strptr("");
     parent.cfg = algo::strptr("release");
     parent.check_untracked = bool(true);
-    parent.maxerr = i32(1);
+    parent.maxerr = i32(3);
     parent.build = bool(false);
-    parent.ood = bool(false);
     parent.memcheck = bool(false);
     parent.force = bool(false);
     parent.callgrind = bool(false);
@@ -12772,8 +12807,11 @@ void command::atf_comp_Init(command::atf_comp& parent) {
     parent.stream = bool(false);
     parent.i = bool(false);
     parent.write = bool(true);
-    parent.report = bool(false);
+    parent.report = bool(true);
     parent.b = algo::strptr("");
+    parent.covfast = bool(true);
+    parent.minrepeat = i32(0);
+    parent.maxrepeat = i32(1);
 }
 
 // --- command.atf_comp..ToCmdline
@@ -12864,10 +12902,10 @@ void command::atf_comp_PrintArgv(command::atf_comp& row, algo::cstring& str) {
         str << " -covcheck:";
         strptr_PrintBash(temp,str);
     }
-    if (!(row.compdir == "")) {
+    if (!(row.bindir == "")) {
         ch_RemoveAll(temp);
-        cstring_Print(row.compdir, temp);
-        str << " -compdir:";
+        cstring_Print(row.bindir, temp);
+        str << " -bindir:";
         strptr_PrintBash(temp,str);
     }
     if (!(row.cfg == "release")) {
@@ -12882,7 +12920,7 @@ void command::atf_comp_PrintArgv(command::atf_comp& row, algo::cstring& str) {
         str << " -check_untracked:";
         strptr_PrintBash(temp,str);
     }
-    if (!(row.maxerr == 1)) {
+    if (!(row.maxerr == 3)) {
         ch_RemoveAll(temp);
         i32_Print(row.maxerr, temp);
         str << " -maxerr:";
@@ -12892,12 +12930,6 @@ void command::atf_comp_PrintArgv(command::atf_comp& row, algo::cstring& str) {
         ch_RemoveAll(temp);
         bool_Print(row.build, temp);
         str << " -build:";
-        strptr_PrintBash(temp,str);
-    }
-    if (!(row.ood == false)) {
-        ch_RemoveAll(temp);
-        bool_Print(row.ood, temp);
-        str << " -ood:";
         strptr_PrintBash(temp,str);
     }
     if (!(row.memcheck == false)) {
@@ -12942,7 +12974,7 @@ void command::atf_comp_PrintArgv(command::atf_comp& row, algo::cstring& str) {
         str << " -write:";
         strptr_PrintBash(temp,str);
     }
-    if (!(row.report == false)) {
+    if (!(row.report == true)) {
         ch_RemoveAll(temp);
         bool_Print(row.report, temp);
         str << " -report:";
@@ -12952,6 +12984,24 @@ void command::atf_comp_PrintArgv(command::atf_comp& row, algo::cstring& str) {
         ch_RemoveAll(temp);
         cstring_Print(row.b, temp);
         str << " -b:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.covfast == true)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.covfast, temp);
+        str << " -covfast:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.minrepeat == 0)) {
+        ch_RemoveAll(temp);
+        i32_Print(row.minrepeat, temp);
+        str << " -minrepeat:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.maxrepeat == 1)) {
+        ch_RemoveAll(temp);
+        i32_Print(row.maxrepeat, temp);
+        str << " -maxrepeat:";
         strptr_PrintBash(temp,str);
     }
 }
@@ -12972,120 +13022,126 @@ algo::strptr command::atf_comp_GetAnon(command::atf_comp &parent, i32 idx) {
 i32 command::atf_comp_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
     i32 retval = 1;
     switch (field) {
-        case command_FieldId_in: { // $comment
+        case command_FieldId_in: { //
             *out_anon = false;
         } break;
-        case command_FieldId_comptest: { // $comment
+        case command_FieldId_comptest: { //
             *out_anon = true;
         } break;
-        case command_FieldId_mdbg: { // $comment
+        case command_FieldId_mdbg: { // bool: no argument required but value may be specified as mdbg:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_run: { // bool: no argument required but value may be specified as mdbg:Y
+        case command_FieldId_run: { // bool: no argument required but value may be specified as run:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_capture: { // bool: no argument required but value may be specified as run:Y
+        case command_FieldId_capture: { // bool: no argument required but value may be specified as capture:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_print: { // bool: no argument required but value may be specified as capture:Y
+        case command_FieldId_print: { // bool: no argument required but value may be specified as print:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_printinput: { // bool: no argument required but value may be specified as print:Y
+        case command_FieldId_printinput: { // bool: no argument required but value may be specified as printinput:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_e: { // bool: no argument required but value may be specified as printinput:Y
+        case command_FieldId_e: { // bool: no argument required but value may be specified as e:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_normalize: { // bool: no argument required but value may be specified as e:Y
+        case command_FieldId_normalize: { // bool: no argument required but value may be specified as normalize:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_covcapture: { // bool: no argument required but value may be specified as normalize:Y
+        case command_FieldId_covcapture: { // bool: no argument required but value may be specified as covcapture:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_covcheck: { // bool: no argument required but value may be specified as covcapture:Y
+        case command_FieldId_covcheck: { // bool: no argument required but value may be specified as covcheck:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_compdir: { // bool: no argument required but value may be specified as covcheck:Y
+        case command_FieldId_bindir: { //
             *out_anon = false;
         } break;
-        case command_FieldId_cfg: { // bool: no argument required but value may be specified as covcheck:Y
+        case command_FieldId_cfg: { //
             *out_anon = false;
         } break;
-        case command_FieldId_check_untracked: { // bool: no argument required but value may be specified as covcheck:Y
-            *out_anon = false;
-            retval=0;
-            out_dflt="Y";
-        } break;
-        case command_FieldId_maxerr: { // bool: no argument required but value may be specified as check_untracked:Y
-            *out_anon = false;
-        } break;
-        case command_FieldId_build: { // bool: no argument required but value may be specified as check_untracked:Y
+        case command_FieldId_check_untracked: { // bool: no argument required but value may be specified as check_untracked:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_ood: { // bool: no argument required but value may be specified as build:Y
+        case command_FieldId_maxerr: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_build: { // bool: no argument required but value may be specified as build:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_memcheck: { // bool: no argument required but value may be specified as ood:Y
+        case command_FieldId_memcheck: { // bool: no argument required but value may be specified as memcheck:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_force: { // bool: no argument required but value may be specified as memcheck:Y
+        case command_FieldId_force: { // bool: no argument required but value may be specified as force:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_callgrind: { // bool: no argument required but value may be specified as force:Y
+        case command_FieldId_callgrind: { // bool: no argument required but value may be specified as callgrind:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_maxjobs: { // bool: no argument required but value may be specified as callgrind:Y
+        case command_FieldId_maxjobs: { //
             *out_anon = false;
         } break;
-        case command_FieldId_stream: { // bool: no argument required but value may be specified as callgrind:Y
-            *out_anon = false;
-            retval=0;
-            out_dflt="Y";
-        } break;
-        case command_FieldId_i: { // bool: no argument required but value may be specified as stream:Y
+        case command_FieldId_stream: { // bool: no argument required but value may be specified as stream:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_write: { // bool: no argument required but value may be specified as i:Y
+        case command_FieldId_i: { // bool: no argument required but value may be specified as i:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_report: { // bool: no argument required but value may be specified as write:Y
+        case command_FieldId_write: { // bool: no argument required but value may be specified as write:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_b: { // bool: no argument required but value may be specified as report:Y
+        case command_FieldId_report: { // bool: no argument required but value may be specified as report:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_b: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_covfast: { // bool: no argument required but value may be specified as covfast:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_minrepeat: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_maxrepeat: { //
             *out_anon = false;
         } break;
         default:
@@ -13149,7 +13205,7 @@ algo::Fildes command::atf_comp_StartRead(command::atf_comp_proc& parent, algo_li
 // --- command.atf_comp_proc.atf_comp.Kill
 // Kill subprocess and wait
 void command::atf_comp_Kill(command::atf_comp_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         kill(parent.pid,9);
         atf_comp_Wait(parent);
     }
@@ -13298,10 +13354,10 @@ void command::atf_comp_ToArgv(command::atf_comp_proc& parent, algo::StringAry& a
         bool_Print(parent.cmd.covcheck, *arg);
     }
 
-    if (parent.cmd.compdir != "") {
+    if (parent.cmd.bindir != "") {
         cstring *arg = &ary_Alloc(args);
-        *arg << "-compdir:";
-        cstring_Print(parent.cmd.compdir, *arg);
+        *arg << "-bindir:";
+        cstring_Print(parent.cmd.bindir, *arg);
     }
 
     if (parent.cmd.cfg != "release") {
@@ -13316,7 +13372,7 @@ void command::atf_comp_ToArgv(command::atf_comp_proc& parent, algo::StringAry& a
         bool_Print(parent.cmd.check_untracked, *arg);
     }
 
-    if (parent.cmd.maxerr != 1) {
+    if (parent.cmd.maxerr != 3) {
         cstring *arg = &ary_Alloc(args);
         *arg << "-maxerr:";
         i32_Print(parent.cmd.maxerr, *arg);
@@ -13326,12 +13382,6 @@ void command::atf_comp_ToArgv(command::atf_comp_proc& parent, algo::StringAry& a
         cstring *arg = &ary_Alloc(args);
         *arg << "-build:";
         bool_Print(parent.cmd.build, *arg);
-    }
-
-    if (parent.cmd.ood != false) {
-        cstring *arg = &ary_Alloc(args);
-        *arg << "-ood:";
-        bool_Print(parent.cmd.ood, *arg);
     }
 
     if (parent.cmd.memcheck != false) {
@@ -13376,7 +13426,7 @@ void command::atf_comp_ToArgv(command::atf_comp_proc& parent, algo::StringAry& a
         bool_Print(parent.cmd.write, *arg);
     }
 
-    if (parent.cmd.report != false) {
+    if (parent.cmd.report != true) {
         cstring *arg = &ary_Alloc(args);
         *arg << "-report:";
         bool_Print(parent.cmd.report, *arg);
@@ -13386,6 +13436,24 @@ void command::atf_comp_ToArgv(command::atf_comp_proc& parent, algo::StringAry& a
         cstring *arg = &ary_Alloc(args);
         *arg << "-b:";
         cstring_Print(parent.cmd.b, *arg);
+    }
+
+    if (parent.cmd.covfast != true) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-covfast:";
+        bool_Print(parent.cmd.covfast, *arg);
+    }
+
+    if (parent.cmd.minrepeat != 0) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-minrepeat:";
+        i32_Print(parent.cmd.minrepeat, *arg);
+    }
+
+    if (parent.cmd.maxrepeat != 1) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-maxrepeat:";
+        i32_Print(parent.cmd.maxrepeat, *arg);
     }
     for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
         ary_Alloc(args) << "-verbose";
@@ -13423,57 +13491,50 @@ bool command::atf_cov_ReadFieldMaybe(command::atf_cov& parent, algo::strptr fiel
     switch(field_id) {
         case command_FieldId_in: {
             retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
-            break;
-        }
+        } break;
         case command_FieldId_covdir: {
             retval = algo::cstring_ReadStrptrMaybe(parent.covdir, strval);
-            break;
-        }
+        } break;
         case command_FieldId_logfile: {
             retval = algo::cstring_ReadStrptrMaybe(parent.logfile, strval);
-            break;
-        }
+        } break;
         case command_FieldId_runcmd: {
             retval = algo::cstring_ReadStrptrMaybe(parent.runcmd, strval);
-            break;
-        }
+        } break;
         case command_FieldId_exclude: {
             retval = exclude_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case command_FieldId_mergepath: {
             retval = algo::cstring_ReadStrptrMaybe(parent.mergepath, strval);
-            break;
-        }
+        } break;
         case command_FieldId_gcov: {
             retval = bool_ReadStrptrMaybe(parent.gcov, strval);
-            break;
-        }
+        } break;
         case command_FieldId_ssim: {
             retval = bool_ReadStrptrMaybe(parent.ssim, strval);
-            break;
-        }
+        } break;
         case command_FieldId_report: {
             retval = bool_ReadStrptrMaybe(parent.report, strval);
-            break;
-        }
+        } break;
         case command_FieldId_capture: {
             retval = bool_ReadStrptrMaybe(parent.capture, strval);
-            break;
-        }
+        } break;
         case command_FieldId_xmlpretty: {
             retval = bool_ReadStrptrMaybe(parent.xmlpretty, strval);
-            break;
-        }
+        } break;
         case command_FieldId_summary: {
             retval = bool_ReadStrptrMaybe(parent.summary, strval);
-            break;
-        }
+        } break;
         case command_FieldId_check: {
             retval = bool_ReadStrptrMaybe(parent.check, strval);
-            break;
-        }
-        default: break;
+        } break;
+        case command_FieldId_incremental: {
+            retval = bool_ReadStrptrMaybe(parent.incremental, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -13510,6 +13571,7 @@ void command::atf_cov_Init(command::atf_cov& parent) {
     parent.xmlpretty = bool(false);
     parent.summary = bool(true);
     parent.check = bool(false);
+    parent.incremental = bool(false);
 }
 
 // --- command.atf_cov..ToCmdline
@@ -13614,6 +13676,12 @@ void command::atf_cov_PrintArgv(command::atf_cov& row, algo::cstring& str) {
         str << " -check:";
         strptr_PrintBash(temp,str);
     }
+    if (!(row.incremental == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.incremental, temp);
+        str << " -incremental:";
+        strptr_PrintBash(temp,str);
+    }
 }
 
 // --- command.atf_cov..NArgs
@@ -13623,55 +13691,60 @@ void command::atf_cov_PrintArgv(command::atf_cov& row, algo::cstring& str) {
 i32 command::atf_cov_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
     i32 retval = 1;
     switch (field) {
-        case command_FieldId_in: { // $comment
+        case command_FieldId_in: { //
             *out_anon = false;
         } break;
-        case command_FieldId_covdir: { // $comment
+        case command_FieldId_covdir: { //
             *out_anon = false;
         } break;
-        case command_FieldId_logfile: { // $comment
+        case command_FieldId_logfile: { //
             *out_anon = false;
         } break;
-        case command_FieldId_runcmd: { // $comment
+        case command_FieldId_runcmd: { //
             *out_anon = false;
         } break;
-        case command_FieldId_exclude: { // $comment
+        case command_FieldId_exclude: { //
             *out_anon = false;
         } break;
-        case command_FieldId_mergepath: { // $comment
+        case command_FieldId_mergepath: { //
             *out_anon = false;
         } break;
-        case command_FieldId_gcov: { // $comment
-            *out_anon = false;
-            retval=0;
-            out_dflt="Y";
-        } break;
-        case command_FieldId_ssim: { // bool: no argument required but value may be specified as gcov:Y
+        case command_FieldId_gcov: { // bool: no argument required but value may be specified as gcov:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_report: { // bool: no argument required but value may be specified as ssim:Y
+        case command_FieldId_ssim: { // bool: no argument required but value may be specified as ssim:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_capture: { // bool: no argument required but value may be specified as report:Y
+        case command_FieldId_report: { // bool: no argument required but value may be specified as report:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_xmlpretty: { // bool: no argument required but value may be specified as capture:Y
+        case command_FieldId_capture: { // bool: no argument required but value may be specified as capture:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_summary: { // bool: no argument required but value may be specified as xmlpretty:Y
+        case command_FieldId_xmlpretty: { // bool: no argument required but value may be specified as xmlpretty:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_check: { // bool: no argument required but value may be specified as summary:Y
+        case command_FieldId_summary: { // bool: no argument required but value may be specified as summary:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_check: { // bool: no argument required but value may be specified as check:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_incremental: { // bool: no argument required but value may be specified as incremental:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
@@ -13737,7 +13810,7 @@ algo::Fildes command::atf_cov_StartRead(command::atf_cov_proc& parent, algo_lib:
 // --- command.atf_cov_proc.atf_cov.Kill
 // Kill subprocess and wait
 void command::atf_cov_Kill(command::atf_cov_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         kill(parent.pid,9);
         atf_cov_Wait(parent);
     }
@@ -13897,6 +13970,12 @@ void command::atf_cov_ToArgv(command::atf_cov_proc& parent, algo::StringAry& arg
         *arg << "-check:";
         bool_Print(parent.cmd.check, *arg);
     }
+
+    if (parent.cmd.incremental != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-incremental:";
+        bool_Print(parent.cmd.incremental, *arg);
+    }
     for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
         ary_Alloc(args) << "-verbose";
     }
@@ -13908,6 +13987,353 @@ void command::atf_cov_proc_Uninit(command::atf_cov_proc& parent) {
 
     // command.atf_cov_proc.atf_cov.Uninit (Exec)  //
     atf_cov_Kill(parent); // kill child, ensure forward progress
+}
+
+// --- command.atf_exp..ReadFieldMaybe
+bool command::atf_exp_ReadFieldMaybe(command::atf_exp& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    command::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case command_FieldId_in: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
+        } break;
+        case command_FieldId_trace: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.trace, strval);
+        } break;
+        case command_FieldId_bindir: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.bindir, strval);
+        } break;
+        case command_FieldId_comptest: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.comptest, strval);
+        } break;
+        case command_FieldId_tempdir: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.tempdir, strval);
+        } break;
+        case command_FieldId_timeout: {
+            retval = double_ReadStrptrMaybe(parent.timeout, strval);
+        } break;
+        case command_FieldId_dbgshell: {
+            retval = bool_ReadStrptrMaybe(parent.dbgshell, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- command.atf_exp..ReadTupleMaybe
+// Read fields of command::atf_exp from attributes of ascii tuple TUPLE
+bool command::atf_exp_ReadTupleMaybe(command::atf_exp &parent, algo::Tuple &tuple) {
+    bool retval = true;
+    ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
+        retval = atf_exp_ReadFieldMaybe(parent, attr.name, attr.value);
+        if (!retval) {
+            break;
+        }
+    }ind_end;
+    return retval;
+}
+
+// --- command.atf_exp..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::atf_exp_ToCmdline(command::atf_exp& row) {
+    tempstr ret;
+    ret << "bin/atf_exp ";
+    atf_exp_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
+// --- command.atf_exp..PrintArgv
+// print string representation of ROW to string STR
+// cfmt:command.atf_exp.Argv  printfmt:Tuple
+void command::atf_exp_PrintArgv(command::atf_exp& row, algo::cstring& str) {
+    algo::tempstr temp;
+    (void)temp;
+    (void)str;
+    if (!(row.in == "data")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.in, temp);
+        str << " -in:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.trace == "")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.trace, temp);
+        str << " -trace:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.bindir == "bin")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.bindir, temp);
+        str << " -bindir:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.comptest == "")) {
+        ch_RemoveAll(temp);
+        Smallstr50_Print(row.comptest, temp);
+        str << " -comptest:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.tempdir == "")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.tempdir, temp);
+        str << " -tempdir:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.timeout == 8.0)) {
+        ch_RemoveAll(temp);
+        double_Print(row.timeout, temp);
+        str << " -timeout:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.dbgshell == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.dbgshell, temp);
+        str << " -dbgshell:";
+        strptr_PrintBash(temp,str);
+    }
+}
+
+// --- command.atf_exp..NArgs
+// Used with command lines
+// Return # of command-line arguments that must follow this argument
+// If FIELD is invalid, return -1
+i32 command::atf_exp_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
+    i32 retval = 1;
+    switch (field) {
+        case command_FieldId_in: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_trace: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_bindir: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_comptest: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_tempdir: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_timeout: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_dbgshell: { // bool: no argument required but value may be specified as dbgshell:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        default:
+        retval=-1; // unrecognized
+    }
+    return retval;
+}
+
+// --- command.atf_exp_proc.atf_exp.Start
+// Start subprocess
+// If subprocess already running, do nothing. Otherwise, start it
+int command::atf_exp_Start(command::atf_exp_proc& parent) {
+    int retval = 0;
+    if (parent.pid == 0) {
+        verblog(atf_exp_ToCmdline(parent)); // maybe print command
+#ifdef WIN32
+        algo_lib::ResolveExecFname(parent.path);
+        tempstr cmdline(atf_exp_ToCmdline(parent));
+        parent.pid = dospawn(Zeroterm(parent.path),Zeroterm(cmdline),parent.timeout,parent.fstdin,parent.fstdout,parent.fstderr);
+#else
+        parent.pid = fork();
+        if (parent.pid == 0) { // child
+            algo_lib::DieWithParent();
+            if (parent.timeout > 0) {
+                alarm(parent.timeout);
+            }
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdin , 0);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdout, 1);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstderr, 2);
+            if (retval==0) retval= atf_exp_Execv(parent);
+            if (retval != 0) { // if start fails, print error
+                int err=errno;
+                prerr("command.atf_exp_execv"
+                <<Keyval("errno",err)
+                <<Keyval("errstr",strerror(err))
+                <<Keyval("comment","Execv failed"));
+            }
+            _exit(127); // if failed to start, exit anyway
+        } else if (parent.pid == -1) {
+            retval = errno; // failed to fork
+        }
+#endif
+    }
+    parent.status = parent.pid > 0 ? 0 : -1; // if didn't start, set error status
+    return retval;
+}
+
+// --- command.atf_exp_proc.atf_exp.StartRead
+// Start subprocess & Read output
+algo::Fildes command::atf_exp_StartRead(command::atf_exp_proc& parent, algo_lib::FFildes &read) {
+    int pipefd[2];
+    int rc=pipe(pipefd);
+    (void)rc;
+    read.fd.value = pipefd[0];
+    parent.fstdout  << ">&" << pipefd[1];
+    atf_exp_Start(parent);
+    (void)close(pipefd[1]);
+    return read.fd;
+}
+
+// --- command.atf_exp_proc.atf_exp.Kill
+// Kill subprocess and wait
+void command::atf_exp_Kill(command::atf_exp_proc& parent) {
+    if (parent.pid > 0) {
+        kill(parent.pid,9);
+        atf_exp_Wait(parent);
+    }
+}
+
+// --- command.atf_exp_proc.atf_exp.Wait
+// Wait for subprocess to return
+void command::atf_exp_Wait(command::atf_exp_proc& parent) {
+    if (parent.pid > 0) {
+        int wait_flags = 0;
+        int wait_status = 0;
+        int rc = -1;
+        do {
+            // really wait for subprocess to exit
+            rc = waitpid(parent.pid,&wait_status,wait_flags);
+        } while (rc==-1 && errno==EINTR);
+        if (rc == parent.pid) {
+            parent.status = wait_status;
+            parent.pid = 0;
+        }
+    }
+}
+
+// --- command.atf_exp_proc.atf_exp.Exec
+// Start + Wait
+// Execute subprocess and return exit code
+int command::atf_exp_Exec(command::atf_exp_proc& parent) {
+    atf_exp_Start(parent);
+    atf_exp_Wait(parent);
+    return parent.status;
+}
+
+// --- command.atf_exp_proc.atf_exp.ExecX
+// Start + Wait, throw exception on error
+// Execute subprocess; throw human-readable exception on error
+void command::atf_exp_ExecX(command::atf_exp_proc& parent) {
+    int rc = atf_exp_Exec(parent);
+    vrfy(rc==0, tempstr() << "algo_lib.exec" << Keyval("cmd",atf_exp_ToCmdline(parent))
+    << Keyval("comment",algo::DescribeWaitStatus(parent.status)));
+}
+
+// --- command.atf_exp_proc.atf_exp.Execv
+// Call execv()
+// Call execv with specified parameters
+int command::atf_exp_Execv(command::atf_exp_proc& parent) {
+    int ret = 0;
+    algo::StringAry args;
+    atf_exp_ToArgv(parent, args);
+    char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
+    ind_beg(algo::StringAry_ary_curs,arg,args) {
+        argv[ind_curs(arg).index] = Zeroterm(arg);
+    }ind_end;
+    argv[ary_N(args)] = NULL;
+    // if parent.path is relative, search for it in PATH
+    algo_lib::ResolveExecFname(parent.path);
+    ret = execv(Zeroterm(parent.path),argv);
+    return ret;
+}
+
+// --- command.atf_exp_proc.atf_exp.ToCmdline
+algo::tempstr command::atf_exp_ToCmdline(command::atf_exp_proc& parent) {
+    algo::tempstr retval;
+    retval << parent.path << " ";
+    command::atf_exp_PrintArgv(parent.cmd,retval);
+    if (ch_N(parent.fstdin)) {
+        retval << " " << parent.fstdin;
+    }
+    if (ch_N(parent.fstdout)) {
+        retval << " " << parent.fstdout;
+    }
+    if (ch_N(parent.fstderr)) {
+        retval << " 2" << parent.fstderr;
+    }
+    return retval;
+}
+
+// --- command.atf_exp_proc.atf_exp.ToArgv
+// Form array from the command line
+void command::atf_exp_ToArgv(command::atf_exp_proc& parent, algo::StringAry& args) {
+    ary_RemoveAll(args);
+    ary_Alloc(args) << parent.path;
+
+    if (parent.cmd.in != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-in:";
+        cstring_Print(parent.cmd.in, *arg);
+    }
+
+    if (parent.cmd.trace != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-trace:";
+        cstring_Print(parent.cmd.trace, *arg);
+    }
+
+    if (parent.cmd.bindir != "bin") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-bindir:";
+        cstring_Print(parent.cmd.bindir, *arg);
+    }
+
+    if (parent.cmd.comptest != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-comptest:";
+        Smallstr50_Print(parent.cmd.comptest, *arg);
+    }
+
+    if (parent.cmd.tempdir != "") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-tempdir:";
+        cstring_Print(parent.cmd.tempdir, *arg);
+    }
+
+    if (parent.cmd.timeout != 8.0) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-timeout:";
+        double_Print(parent.cmd.timeout, *arg);
+    }
+
+    if (parent.cmd.dbgshell != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-dbgshell:";
+        bool_Print(parent.cmd.dbgshell, *arg);
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
+        ary_Alloc(args) << "-verbose";
+    }
+}
+
+// --- command.atf_exp_proc..Uninit
+void command::atf_exp_proc_Uninit(command::atf_exp_proc& parent) {
+    command::atf_exp_proc &row = parent; (void)row;
+
+    // command.atf_exp_proc.atf_exp.Uninit (Exec)  //
+    atf_exp_Kill(parent); // kill child, ensure forward progress
 }
 
 // --- command.atf_fuzz.fuzzstrat.Print
@@ -13933,37 +14359,32 @@ bool command::atf_fuzz_ReadFieldMaybe(command::atf_fuzz& parent, algo::strptr fi
     switch(field_id) {
         case command_FieldId_reprofile: {
             retval = algo::cstring_ReadStrptrMaybe(parent.reprofile, strval);
-            break;
-        }
+        } break;
         case command_FieldId_target: {
             retval = algo::Smallstr16_ReadStrptrMaybe(parent.target, strval);
-            break;
-        }
+        } break;
         case command_FieldId_args: {
             retval = algo::cstring_ReadStrptrMaybe(parent.args, strval);
-            break;
-        }
+        } break;
         case command_FieldId_inputfile: {
             retval = algo::cstring_ReadStrptrMaybe(parent.inputfile, strval);
-            break;
-        }
+        } break;
         case command_FieldId_fuzzstrat: {
             retval = fuzzstrat_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case command_FieldId_in: {
             retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
-            break;
-        }
+        } break;
         case command_FieldId_seed: {
             retval = i32_ReadStrptrMaybe(parent.seed, strval);
-            break;
-        }
+        } break;
         case command_FieldId_testprob: {
             retval = double_ReadStrptrMaybe(parent.testprob, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -14088,28 +14509,28 @@ algo::strptr command::atf_fuzz_GetAnon(command::atf_fuzz &parent, i32 idx) {
 i32 command::atf_fuzz_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
     i32 retval = 1;
     switch (field) {
-        case command_FieldId_reprofile: { // $comment
+        case command_FieldId_reprofile: { //
             *out_anon = false;
         } break;
-        case command_FieldId_target: { // $comment
+        case command_FieldId_target: { //
             *out_anon = true;
         } break;
-        case command_FieldId_args: { // $comment
+        case command_FieldId_args: { //
             *out_anon = true;
         } break;
-        case command_FieldId_inputfile: { // $comment
+        case command_FieldId_inputfile: { //
             *out_anon = false;
         } break;
-        case command_FieldId_fuzzstrat: { // $comment
+        case command_FieldId_fuzzstrat: { //
             *out_anon = false;
         } break;
-        case command_FieldId_in: { // $comment
+        case command_FieldId_in: { //
             *out_anon = false;
         } break;
-        case command_FieldId_seed: { // $comment
+        case command_FieldId_seed: { //
             *out_anon = false;
         } break;
-        case command_FieldId_testprob: { // $comment
+        case command_FieldId_testprob: { //
             *out_anon = false;
         } break;
         default:
@@ -14174,7 +14595,7 @@ algo::Fildes command::atf_fuzz_StartRead(command::atf_fuzz_proc& parent, algo_li
 // --- command.atf_fuzz_proc.atf_fuzz.Kill
 // Kill subprocess and wait
 void command::atf_fuzz_Kill(command::atf_fuzz_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         kill(parent.pid,9);
         atf_fuzz_Wait(parent);
     }
@@ -14340,41 +14761,35 @@ bool command::atf_gcli_ReadFieldMaybe(command::atf_gcli& parent, algo::strptr fi
     switch(field_id) {
         case command_FieldId_in: {
             retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
-            break;
-        }
+        } break;
         case command_FieldId_gtblacttst: {
             retval = gtblacttst_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case command_FieldId_id: {
             retval = algo::cstring_ReadStrptrMaybe(parent.id, strval);
-            break;
-        }
+        } break;
         case command_FieldId_mr: {
             retval = algo::cstring_ReadStrptrMaybe(parent.mr, strval);
-            break;
-        }
+        } break;
         case command_FieldId_note: {
             retval = algo::cstring_ReadStrptrMaybe(parent.note, strval);
-            break;
-        }
+        } break;
         case command_FieldId_capture: {
             retval = bool_ReadStrptrMaybe(parent.capture, strval);
-            break;
-        }
+        } break;
         case command_FieldId_skip_init: {
             retval = bool_ReadStrptrMaybe(parent.skip_init, strval);
-            break;
-        }
+        } break;
         case command_FieldId_skip_git_init: {
             retval = bool_ReadStrptrMaybe(parent.skip_git_init, strval);
-            break;
-        }
+        } break;
         case command_FieldId_dry_run: {
             retval = bool_ReadStrptrMaybe(parent.dry_run, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -14496,37 +14911,37 @@ void command::atf_gcli_PrintArgv(command::atf_gcli& row, algo::cstring& str) {
 i32 command::atf_gcli_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
     i32 retval = 1;
     switch (field) {
-        case command_FieldId_in: { // $comment
+        case command_FieldId_in: { //
             *out_anon = false;
         } break;
-        case command_FieldId_gtblacttst: { // $comment
+        case command_FieldId_gtblacttst: { //
             *out_anon = false;
         } break;
-        case command_FieldId_id: { // $comment
+        case command_FieldId_id: { //
             *out_anon = false;
         } break;
-        case command_FieldId_mr: { // $comment
+        case command_FieldId_mr: { //
             *out_anon = false;
         } break;
-        case command_FieldId_note: { // $comment
+        case command_FieldId_note: { //
             *out_anon = false;
         } break;
-        case command_FieldId_capture: { // $comment
-            *out_anon = false;
-            retval=0;
-            out_dflt="Y";
-        } break;
-        case command_FieldId_skip_init: { // bool: no argument required but value may be specified as capture:Y
+        case command_FieldId_capture: { // bool: no argument required but value may be specified as capture:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_skip_git_init: { // bool: no argument required but value may be specified as skip_init:Y
+        case command_FieldId_skip_init: { // bool: no argument required but value may be specified as skip_init:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_dry_run: { // bool: no argument required but value may be specified as skip_git_init:Y
+        case command_FieldId_skip_git_init: { // bool: no argument required but value may be specified as skip_git_init:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_dry_run: { // bool: no argument required but value may be specified as dry_run:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
@@ -14592,7 +15007,7 @@ algo::Fildes command::atf_gcli_StartRead(command::atf_gcli_proc& parent, algo_li
 // --- command.atf_gcli_proc.atf_gcli.Kill
 // Kill subprocess and wait
 void command::atf_gcli_Kill(command::atf_gcli_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         kill(parent.pid,9);
         atf_gcli_Wait(parent);
     }
@@ -14749,17 +15164,17 @@ bool command::atf_nrun_ReadFieldMaybe(command::atf_nrun& parent, algo::strptr fi
     switch(field_id) {
         case command_FieldId_in: {
             retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
-            break;
-        }
+        } break;
         case command_FieldId_maxjobs: {
             retval = i32_ReadStrptrMaybe(parent.maxjobs, strval);
-            break;
-        }
+        } break;
         case command_FieldId_ncmd: {
             retval = i32_ReadStrptrMaybe(parent.ncmd, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -14842,13 +15257,13 @@ algo::strptr command::atf_nrun_GetAnon(command::atf_nrun &parent, i32 idx) {
 i32 command::atf_nrun_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
     i32 retval = 1;
     switch (field) {
-        case command_FieldId_in: { // $comment
+        case command_FieldId_in: { //
             *out_anon = false;
         } break;
-        case command_FieldId_maxjobs: { // $comment
+        case command_FieldId_maxjobs: { //
             *out_anon = false;
         } break;
-        case command_FieldId_ncmd: { // $comment
+        case command_FieldId_ncmd: { //
             *out_anon = true;
         } break;
         default:
@@ -14913,7 +15328,7 @@ algo::Fildes command::atf_nrun_StartRead(command::atf_nrun_proc& parent, algo_li
 // --- command.atf_nrun_proc.atf_nrun.Kill
 // Kill subprocess and wait
 void command::atf_nrun_Kill(command::atf_nrun_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         kill(parent.pid,9);
         atf_nrun_Wait(parent);
     }
@@ -15049,45 +15464,38 @@ bool command::atf_unit_ReadFieldMaybe(command::atf_unit& parent, algo::strptr fi
     switch(field_id) {
         case command_FieldId_unittest: {
             retval = unittest_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case command_FieldId_nofork: {
             retval = bool_ReadStrptrMaybe(parent.nofork, strval);
-            break;
-        }
+        } break;
         case command_FieldId_arg: {
             retval = algo::cstring_ReadStrptrMaybe(parent.arg, strval);
-            break;
-        }
+        } break;
         case command_FieldId_data_dir: {
             retval = algo::cstring_ReadStrptrMaybe(parent.data_dir, strval);
-            break;
-        }
+        } break;
         case command_FieldId_mdbg: {
             retval = bool_ReadStrptrMaybe(parent.mdbg, strval);
-            break;
-        }
+        } break;
         case command_FieldId_perf_secs: {
             retval = double_ReadStrptrMaybe(parent.perf_secs, strval);
-            break;
-        }
+        } break;
         case command_FieldId_pertest_timeout: {
             retval = u32_ReadStrptrMaybe(parent.pertest_timeout, strval);
-            break;
-        }
+        } break;
         case command_FieldId_report: {
             retval = bool_ReadStrptrMaybe(parent.report, strval);
-            break;
-        }
+        } break;
         case command_FieldId_capture: {
             retval = bool_ReadStrptrMaybe(parent.capture, strval);
-            break;
-        }
+        } break;
         case command_FieldId_check_untracked: {
             retval = bool_ReadStrptrMaybe(parent.check_untracked, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -15227,42 +15635,42 @@ algo::strptr command::atf_unit_GetAnon(command::atf_unit &parent, i32 idx) {
 i32 command::atf_unit_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
     i32 retval = 1;
     switch (field) {
-        case command_FieldId_unittest: { // $comment
+        case command_FieldId_unittest: { //
             *out_anon = true;
         } break;
-        case command_FieldId_nofork: { // $comment
+        case command_FieldId_nofork: { // bool: no argument required but value may be specified as nofork:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_arg: { // bool: no argument required but value may be specified as nofork:Y
+        case command_FieldId_arg: { //
             *out_anon = false;
         } break;
-        case command_FieldId_data_dir: { // bool: no argument required but value may be specified as nofork:Y
+        case command_FieldId_data_dir: { //
             *out_anon = false;
         } break;
-        case command_FieldId_mdbg: { // bool: no argument required but value may be specified as nofork:Y
-            *out_anon = false;
-            retval=0;
-            out_dflt="Y";
-        } break;
-        case command_FieldId_perf_secs: { // bool: no argument required but value may be specified as mdbg:Y
-            *out_anon = false;
-        } break;
-        case command_FieldId_pertest_timeout: { // bool: no argument required but value may be specified as mdbg:Y
-            *out_anon = false;
-        } break;
-        case command_FieldId_report: { // bool: no argument required but value may be specified as mdbg:Y
+        case command_FieldId_mdbg: { // bool: no argument required but value may be specified as mdbg:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_capture: { // bool: no argument required but value may be specified as report:Y
+        case command_FieldId_perf_secs: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_pertest_timeout: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_report: { // bool: no argument required but value may be specified as report:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_check_untracked: { // bool: no argument required but value may be specified as capture:Y
+        case command_FieldId_capture: { // bool: no argument required but value may be specified as capture:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_check_untracked: { // bool: no argument required but value may be specified as check_untracked:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
@@ -15328,7 +15736,7 @@ algo::Fildes command::atf_unit_StartRead(command::atf_unit_proc& parent, algo_li
 // --- command.atf_unit_proc.atf_unit.Kill
 // Kill subprocess and wait
 void command::atf_unit_Kill(command::atf_unit_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         kill(parent.pid,9);
         atf_unit_Wait(parent);
     }
@@ -15506,13 +15914,14 @@ bool command::bash2html_ReadFieldMaybe(command::bash2html& parent, algo::strptr 
     switch(field_id) {
         case command_FieldId_in: {
             retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
-            break;
-        }
+        } break;
         case command_FieldId_test: {
             retval = bool_ReadStrptrMaybe(parent.test, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -15578,10 +15987,10 @@ void command::bash2html_PrintArgv(command::bash2html& row, algo::cstring& str) {
 i32 command::bash2html_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
     i32 retval = 1;
     switch (field) {
-        case command_FieldId_in: { // $comment
+        case command_FieldId_in: { //
             *out_anon = false;
         } break;
-        case command_FieldId_test: { // $comment
+        case command_FieldId_test: { // bool: no argument required but value may be specified as test:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
@@ -15647,7 +16056,7 @@ algo::Fildes command::bash2html_StartRead(command::bash2html_proc& parent, algo_
 // --- command.bash2html_proc.bash2html.Kill
 // Kill subprocess and wait
 void command::bash2html_Kill(command::bash2html_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         kill(parent.pid,9);
         bash2html_Wait(parent);
     }
@@ -15809,7 +16218,7 @@ algo::Fildes command::bash_StartRead(command::bash_proc& parent, algo_lib::FFild
 // --- command.bash_proc.bash.Kill
 // Kill subprocess and wait
 void command::bash_Kill(command::bash_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         kill(parent.pid,9);
         bash_Wait(parent);
     }
@@ -15969,6 +16378,25 @@ algo::aryptr<algo::cstring> command::cmd_AllocN(command::gcache& parent, int n_e
     return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
 }
 
+// --- command.gcache.cmd.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<algo::cstring> command::cmd_AllocNAt(command::gcache& parent, int n_elems, int at) {
+    cmd_Reserve(parent, n_elems);
+    int n  = parent.cmd_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("command.bad_alloc_n_at  field:command.gcache.cmd  comment:'index out of range'");
+    }
+    algo::cstring *elems = parent.cmd_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(algo::cstring));
+    for (int i = 0; i < n_elems; i++) {
+        new (elems + at + i) algo::cstring(); // construct new element, default initialize
+    }
+    parent.cmd_n = n+n_elems;
+    return algo::aryptr<algo::cstring>(elems+at,n_elems);
+}
+
 // --- command.gcache.cmd.Remove
 // Remove item by index. If index outside of range, do nothing.
 void command::cmd_Remove(command::gcache& parent, u32 i) {
@@ -16065,6 +16493,30 @@ bool command::cmd_ReadStrptrMaybe(command::gcache& parent, algo::strptr in_str) 
     return retval;
 }
 
+// --- command.gcache.cmd.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void command::cmd_Insary(command::gcache& parent, algo::aryptr<algo::cstring> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.cmd_elems && rhs.elems < parent.cmd_elems + parent.cmd_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("command.tary_alias  field:command.gcache.cmd  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(parent.cmd_elems+1))) {
+        FatalErrorExit("command.bad_insary  field:command.gcache.cmd  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = parent.cmd_n - at;
+    cmd_Reserve(parent, nnew); // reserve space
+    for (int i = nmove-1; i >=0 ; --i) {
+        new (parent.cmd_elems + at + nnew + i) algo::cstring(parent.cmd_elems[at + i]);
+        parent.cmd_elems[at + i].~cstring(); // destroy element
+    }
+    for (int i = 0; i < nnew; ++i) {
+        new (parent.cmd_elems + at + i) algo::cstring(rhs[i]);
+    }
+    parent.cmd_n += nnew;
+}
+
 // --- command.gcache..ReadFieldMaybe
 bool command::gcache_ReadFieldMaybe(command::gcache& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
@@ -16073,57 +16525,47 @@ bool command::gcache_ReadFieldMaybe(command::gcache& parent, algo::strptr field,
     switch(field_id) {
         case command_FieldId_in: {
             retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
-            break;
-        }
+        } break;
         case command_FieldId_cmd: {
             retval = cmd_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case command_FieldId_install: {
             retval = bool_ReadStrptrMaybe(parent.install, strval);
-            break;
-        }
+        } break;
         case command_FieldId_stats: {
             retval = bool_ReadStrptrMaybe(parent.stats, strval);
-            break;
-        }
+        } break;
         case command_FieldId_enable: {
             retval = bool_ReadStrptrMaybe(parent.enable, strval);
-            break;
-        }
+        } break;
         case command_FieldId_disable: {
             retval = bool_ReadStrptrMaybe(parent.disable, strval);
-            break;
-        }
+        } break;
         case command_FieldId_gc: {
             retval = bool_ReadStrptrMaybe(parent.gc, strval);
-            break;
-        }
+        } break;
         case command_FieldId_clean: {
             retval = bool_ReadStrptrMaybe(parent.clean, strval);
-            break;
-        }
+        } break;
         case command_FieldId_dir: {
             retval = algo::cstring_ReadStrptrMaybe(parent.dir, strval);
-            break;
-        }
+        } break;
         case command_FieldId_hitrate: {
             retval = bool_ReadStrptrMaybe(parent.hitrate, strval);
-            break;
-        }
+        } break;
         case command_FieldId_after: {
             retval = algo::UnTime_ReadStrptrMaybe(parent.after, strval);
-            break;
-        }
+        } break;
         case command_FieldId_report: {
             retval = bool_ReadStrptrMaybe(parent.report, strval);
-            break;
-        }
+        } break;
         case command_FieldId_force: {
             retval = bool_ReadStrptrMaybe(parent.force, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -16349,59 +16791,59 @@ algo::strptr command::gcache_GetAnon(command::gcache &parent, i32 idx) {
 i32 command::gcache_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
     i32 retval = 1;
     switch (field) {
-        case command_FieldId_in: { // $comment
+        case command_FieldId_in: { //
             *out_anon = false;
         } break;
-        case command_FieldId_cmd: { // $comment
+        case command_FieldId_cmd: { //
             *out_anon = true;
         } break;
-        case command_FieldId_install: { // $comment
+        case command_FieldId_install: { // bool: no argument required but value may be specified as install:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_stats: { // bool: no argument required but value may be specified as install:Y
+        case command_FieldId_stats: { // bool: no argument required but value may be specified as stats:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_enable: { // bool: no argument required but value may be specified as stats:Y
+        case command_FieldId_enable: { // bool: no argument required but value may be specified as enable:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_disable: { // bool: no argument required but value may be specified as enable:Y
+        case command_FieldId_disable: { // bool: no argument required but value may be specified as disable:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_gc: { // bool: no argument required but value may be specified as disable:Y
+        case command_FieldId_gc: { // bool: no argument required but value may be specified as gc:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_clean: { // bool: no argument required but value may be specified as gc:Y
+        case command_FieldId_clean: { // bool: no argument required but value may be specified as clean:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_dir: { // bool: no argument required but value may be specified as clean:Y
+        case command_FieldId_dir: { //
             *out_anon = false;
         } break;
-        case command_FieldId_hitrate: { // bool: no argument required but value may be specified as clean:Y
-            *out_anon = false;
-            retval=0;
-            out_dflt="Y";
-        } break;
-        case command_FieldId_after: { // bool: no argument required but value may be specified as hitrate:Y
-            *out_anon = false;
-        } break;
-        case command_FieldId_report: { // bool: no argument required but value may be specified as hitrate:Y
+        case command_FieldId_hitrate: { // bool: no argument required but value may be specified as hitrate:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_force: { // bool: no argument required but value may be specified as report:Y
+        case command_FieldId_after: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_report: { // bool: no argument required but value may be specified as report:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_force: { // bool: no argument required but value may be specified as force:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
@@ -16506,7 +16948,7 @@ algo::Fildes command::gcache_StartRead(command::gcache_proc& parent, algo_lib::F
 // --- command.gcache_proc.gcache.Kill
 // Kill subprocess and wait
 void command::gcache_Kill(command::gcache_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         kill(parent.pid,9);
         gcache_Wait(parent);
     }
@@ -16740,6 +17182,25 @@ algo::aryptr<algo::cstring> command::fields_AllocN(command::gcli& parent, int n_
     return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
 }
 
+// --- command.gcli.fields.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<algo::cstring> command::fields_AllocNAt(command::gcli& parent, int n_elems, int at) {
+    fields_Reserve(parent, n_elems);
+    int n  = parent.fields_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("command.bad_alloc_n_at  field:command.gcli.fields  comment:'index out of range'");
+    }
+    algo::cstring *elems = parent.fields_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(algo::cstring));
+    for (int i = 0; i < n_elems; i++) {
+        new (elems + at + i) algo::cstring(""); // construct new element, default initialize
+    }
+    parent.fields_n = n+n_elems;
+    return algo::aryptr<algo::cstring>(elems+at,n_elems);
+}
+
 // --- command.gcli.fields.Remove
 // Remove item by index. If index outside of range, do nothing.
 void command::fields_Remove(command::gcli& parent, u32 i) {
@@ -16836,6 +17297,30 @@ bool command::fields_ReadStrptrMaybe(command::gcli& parent, algo::strptr in_str)
     return retval;
 }
 
+// --- command.gcli.fields.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void command::fields_Insary(command::gcli& parent, algo::aryptr<algo::cstring> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.fields_elems && rhs.elems < parent.fields_elems + parent.fields_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("command.tary_alias  field:command.gcli.fields  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(parent.fields_elems+1))) {
+        FatalErrorExit("command.bad_insary  field:command.gcli.fields  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = parent.fields_n - at;
+    fields_Reserve(parent, nnew); // reserve space
+    for (int i = nmove-1; i >=0 ; --i) {
+        new (parent.fields_elems + at + nnew + i) algo::cstring(parent.fields_elems[at + i]);
+        parent.fields_elems[at + i].~cstring(); // destroy element
+    }
+    for (int i = 0; i < nnew; ++i) {
+        new (parent.fields_elems + at + i) algo::cstring(rhs[i]);
+    }
+    parent.fields_n += nnew;
+}
+
 // --- command.gcli..ReadFieldMaybe
 bool command::gcli_ReadFieldMaybe(command::gcli& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
@@ -16844,73 +17329,59 @@ bool command::gcli_ReadFieldMaybe(command::gcli& parent, algo::strptr field, alg
     switch(field_id) {
         case command_FieldId_in: {
             retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
-            break;
-        }
+        } break;
         case command_FieldId_selector: {
             retval = algo::Smallstr250_ReadStrptrMaybe(parent.selector, strval);
-            break;
-        }
+        } break;
         case command_FieldId_fields: {
             retval = fields_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case command_FieldId_accept: {
             retval = bool_ReadStrptrMaybe(parent.accept, strval);
-            break;
-        }
+        } break;
         case command_FieldId_start: {
             retval = bool_ReadStrptrMaybe(parent.start, strval);
-            break;
-        }
+        } break;
         case command_FieldId_list: {
             retval = bool_ReadStrptrMaybe(parent.list, strval);
-            break;
-        }
+        } break;
         case command_FieldId_create: {
             retval = bool_ReadStrptrMaybe(parent.create, strval);
-            break;
-        }
+        } break;
         case command_FieldId_update: {
             retval = bool_ReadStrptrMaybe(parent.update, strval);
-            break;
-        }
+        } break;
         case command_FieldId_approve: {
             retval = bool_ReadStrptrMaybe(parent.approve, strval);
-            break;
-        }
+        } break;
         case command_FieldId_needs_work: {
             retval = bool_ReadStrptrMaybe(parent.needs_work, strval);
-            break;
-        }
+        } break;
         case command_FieldId_stop: {
             retval = bool_ReadStrptrMaybe(parent.stop, strval);
-            break;
-        }
+        } break;
         case command_FieldId_t: {
             retval = bool_ReadStrptrMaybe(parent.t, strval);
-            break;
-        }
+        } break;
         case command_FieldId_e: {
             retval = bool_ReadStrptrMaybe(parent.e, strval);
-            break;
-        }
+        } break;
         case command_FieldId_authdir: {
             retval = algo::cstring_ReadStrptrMaybe(parent.authdir, strval);
-            break;
-        }
+        } break;
         case command_FieldId_dry_run: {
             retval = bool_ReadStrptrMaybe(parent.dry_run, strval);
-            break;
-        }
+        } break;
         case command_FieldId_gitdir: {
             retval = algo::cstring_ReadStrptrMaybe(parent.gitdir, strval);
-            break;
-        }
+        } break;
         case command_FieldId_show_gitlab_system_notes: {
             retval = bool_ReadStrptrMaybe(parent.show_gitlab_system_notes, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -17112,77 +17583,77 @@ algo::strptr command::gcli_GetAnon(command::gcli &parent, i32 idx) {
 i32 command::gcli_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
     i32 retval = 1;
     switch (field) {
-        case command_FieldId_in: { // $comment
+        case command_FieldId_in: { //
             *out_anon = false;
         } break;
-        case command_FieldId_selector: { // $comment
+        case command_FieldId_selector: { //
             *out_anon = true;
         } break;
-        case command_FieldId_fields: { // $comment
+        case command_FieldId_fields: { //
             *out_anon = true;
         } break;
-        case command_FieldId_accept: { // $comment
+        case command_FieldId_accept: { // bool: no argument required but value may be specified as accept:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_start: { // bool: no argument required but value may be specified as accept:Y
+        case command_FieldId_start: { // bool: no argument required but value may be specified as start:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_list: { // bool: no argument required but value may be specified as start:Y
+        case command_FieldId_list: { // bool: no argument required but value may be specified as list:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_create: { // bool: no argument required but value may be specified as list:Y
+        case command_FieldId_create: { // bool: no argument required but value may be specified as create:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_update: { // bool: no argument required but value may be specified as create:Y
+        case command_FieldId_update: { // bool: no argument required but value may be specified as update:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_approve: { // bool: no argument required but value may be specified as update:Y
+        case command_FieldId_approve: { // bool: no argument required but value may be specified as approve:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_needs_work: { // bool: no argument required but value may be specified as approve:Y
+        case command_FieldId_needs_work: { // bool: no argument required but value may be specified as needs_work:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_stop: { // bool: no argument required but value may be specified as needs_work:Y
+        case command_FieldId_stop: { // bool: no argument required but value may be specified as stop:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_t: { // bool: no argument required but value may be specified as stop:Y
+        case command_FieldId_t: { // bool: no argument required but value may be specified as t:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_e: { // bool: no argument required but value may be specified as t:Y
+        case command_FieldId_e: { // bool: no argument required but value may be specified as e:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_authdir: { // bool: no argument required but value may be specified as e:Y
+        case command_FieldId_authdir: { //
             *out_anon = false;
         } break;
-        case command_FieldId_dry_run: { // bool: no argument required but value may be specified as e:Y
+        case command_FieldId_dry_run: { // bool: no argument required but value may be specified as dry_run:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_gitdir: { // bool: no argument required but value may be specified as dry_run:Y
+        case command_FieldId_gitdir: { //
             *out_anon = false;
         } break;
-        case command_FieldId_show_gitlab_system_notes: { // bool: no argument required but value may be specified as dry_run:Y
+        case command_FieldId_show_gitlab_system_notes: { // bool: no argument required but value may be specified as show_gitlab_system_notes:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
@@ -17295,7 +17766,7 @@ algo::Fildes command::gcli_StartRead(command::gcli_proc& parent, algo_lib::FFild
 // --- command.gcli_proc.gcli.Kill
 // Kill subprocess and wait
 void command::gcli_Kill(command::gcli_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         kill(parent.pid,9);
         gcli_Wait(parent);
     }
@@ -17491,6 +17962,834 @@ void command::gcli_proc_Uninit(command::gcli_proc& parent) {
     gcli_Kill(parent); // kill child, ensure forward progress
 }
 
+// --- command.generic..PrintArgv
+// print string representation of ROW to string STR
+// cfmt:command.generic.ArgvGnu  printfmt:Auto
+void command::generic_PrintArgv(command::generic& row, algo::cstring& str) {
+    algo::tempstr temp;
+    (void)temp;
+    (void)str;
+    (void)row;//only to avoid -Wunused-parameter
+}
+
+// --- command.generic_proc.name.Start
+// Start subprocess
+// If subprocess already running, do nothing. Otherwise, start it
+int command::name_Start(command::generic_proc& parent) {
+    int retval = 0;
+    if (parent.pid == 0) {
+        verblog(name_ToCmdline(parent)); // maybe print command
+#ifdef WIN32
+        algo_lib::ResolveExecFname(parent.path);
+        tempstr cmdline(name_ToCmdline(parent));
+        parent.pid = dospawn(Zeroterm(parent.path),Zeroterm(cmdline),parent.timeout,parent.fstdin,parent.fstdout,parent.fstderr);
+#else
+        parent.pid = fork();
+        if (parent.pid == 0) { // child
+            algo_lib::DieWithParent();
+            if (parent.timeout > 0) {
+                alarm(parent.timeout);
+            }
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdin , 0);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdout, 1);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstderr, 2);
+            if (retval==0) retval= name_Execv(parent);
+            if (retval != 0) { // if start fails, print error
+                int err=errno;
+                prerr("command.name_execv"
+                <<Keyval("errno",err)
+                <<Keyval("errstr",strerror(err))
+                <<Keyval("comment","Execv failed"));
+            }
+            _exit(127); // if failed to start, exit anyway
+        } else if (parent.pid == -1) {
+            retval = errno; // failed to fork
+        }
+#endif
+    }
+    parent.status = parent.pid > 0 ? 0 : -1; // if didn't start, set error status
+    return retval;
+}
+
+// --- command.generic_proc.name.StartRead
+// Start subprocess & Read output
+algo::Fildes command::name_StartRead(command::generic_proc& parent, algo_lib::FFildes &read) {
+    int pipefd[2];
+    int rc=pipe(pipefd);
+    (void)rc;
+    read.fd.value = pipefd[0];
+    parent.fstdout  << ">&" << pipefd[1];
+    name_Start(parent);
+    (void)close(pipefd[1]);
+    return read.fd;
+}
+
+// --- command.generic_proc.name.Kill
+// Kill subprocess and wait
+void command::name_Kill(command::generic_proc& parent) {
+    if (parent.pid > 0) {
+        kill(parent.pid,9);
+        name_Wait(parent);
+    }
+}
+
+// --- command.generic_proc.name.Wait
+// Wait for subprocess to return
+void command::name_Wait(command::generic_proc& parent) {
+    if (parent.pid > 0) {
+        int wait_flags = 0;
+        int wait_status = 0;
+        int rc = -1;
+        do {
+            // really wait for subprocess to exit
+            rc = waitpid(parent.pid,&wait_status,wait_flags);
+        } while (rc==-1 && errno==EINTR);
+        if (rc == parent.pid) {
+            parent.status = wait_status;
+            parent.pid = 0;
+        }
+    }
+}
+
+// --- command.generic_proc.name.Exec
+// Start + Wait
+// Execute subprocess and return exit code
+int command::name_Exec(command::generic_proc& parent) {
+    name_Start(parent);
+    name_Wait(parent);
+    return parent.status;
+}
+
+// --- command.generic_proc.name.ExecX
+// Start + Wait, throw exception on error
+// Execute subprocess; throw human-readable exception on error
+void command::name_ExecX(command::generic_proc& parent) {
+    int rc = name_Exec(parent);
+    vrfy(rc==0, tempstr() << "algo_lib.exec" << Keyval("cmd",name_ToCmdline(parent))
+    << Keyval("comment",algo::DescribeWaitStatus(parent.status)));
+}
+
+// --- command.generic_proc.name.Execv
+// Call execv()
+// Call execv with specified parameters
+int command::name_Execv(command::generic_proc& parent) {
+    int ret = 0;
+    algo::StringAry args;
+    name_ToArgv(parent, args);
+    char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
+    ind_beg(algo::StringAry_ary_curs,arg,args) {
+        argv[ind_curs(arg).index] = Zeroterm(arg);
+    }ind_end;
+    argv[ary_N(args)] = NULL;
+    // if parent.path is relative, search for it in PATH
+    algo_lib::ResolveExecFname(parent.path);
+    ret = execv(Zeroterm(parent.path),argv);
+    return ret;
+}
+
+// --- command.generic_proc.name.ToCmdline
+algo::tempstr command::name_ToCmdline(command::generic_proc& parent) {
+    algo::tempstr retval;
+    retval << parent.path << " ";
+    command::generic_PrintArgv(parent.cmd,retval);
+    if (ch_N(parent.fstdin)) {
+        retval << " " << parent.fstdin;
+    }
+    if (ch_N(parent.fstdout)) {
+        retval << " " << parent.fstdout;
+    }
+    if (ch_N(parent.fstderr)) {
+        retval << " 2" << parent.fstderr;
+    }
+    return retval;
+}
+
+// --- command.generic_proc.name.ToArgv
+// Form array from the command line
+void command::name_ToArgv(command::generic_proc& parent, algo::StringAry& args) {
+    ary_RemoveAll(args);
+    ary_Alloc(args) << parent.path;
+}
+
+// --- command.generic_proc..Uninit
+void command::generic_proc_Uninit(command::generic_proc& parent) {
+    command::generic_proc &row = parent; (void)row;
+
+    // command.generic_proc.name.Uninit (Exec)  //
+    name_Kill(parent); // kill child, ensure forward progress
+}
+
+// --- command.jkv.kv.Addary
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+algo::aryptr<algo::cstring> command::kv_Addary(command::jkv& parent, algo::aryptr<algo::cstring> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.kv_elems && rhs.elems < parent.kv_elems + parent.kv_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("command.tary_alias  field:command.jkv.kv  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    int nnew = rhs.n_elems;
+    kv_Reserve(parent, nnew); // reserve space
+    int at = parent.kv_n;
+    for (int i = 0; i < nnew; i++) {
+        new (parent.kv_elems + at + i) algo::cstring(rhs[i]);
+        parent.kv_n++;
+    }
+    return algo::aryptr<algo::cstring>(parent.kv_elems + at, nnew);
+}
+
+// --- command.jkv.kv.Alloc
+// Reserve space. Insert element at the end
+// The new element is initialized to a default value
+algo::cstring& command::kv_Alloc(command::jkv& parent) {
+    kv_Reserve(parent, 1);
+    int n  = parent.kv_n;
+    int at = n;
+    algo::cstring *elems = parent.kv_elems;
+    new (elems + at) algo::cstring(); // construct new element, default initializer
+    parent.kv_n = n+1;
+    return elems[at];
+}
+
+// --- command.jkv.kv.AllocAt
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::cstring& command::kv_AllocAt(command::jkv& parent, int at) {
+    kv_Reserve(parent, 1);
+    int n  = parent.kv_n;
+    if (UNLIKELY(u64(at) >= u64(n+1))) {
+        FatalErrorExit("command.bad_alloc_at  field:command.jkv.kv  comment:'index out of range'");
+    }
+    algo::cstring *elems = parent.kv_elems;
+    memmove(elems + at + 1, elems + at, (n - at) * sizeof(algo::cstring));
+    new (elems + at) algo::cstring(); // construct element, default initializer
+    parent.kv_n = n+1;
+    return elems[at];
+}
+
+// --- command.jkv.kv.AllocN
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo::cstring> command::kv_AllocN(command::jkv& parent, int n_elems) {
+    kv_Reserve(parent, n_elems);
+    int old_n  = parent.kv_n;
+    int new_n = old_n + n_elems;
+    algo::cstring *elems = parent.kv_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) algo::cstring(); // construct new element, default initialize
+    }
+    parent.kv_n = new_n;
+    return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
+}
+
+// --- command.jkv.kv.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<algo::cstring> command::kv_AllocNAt(command::jkv& parent, int n_elems, int at) {
+    kv_Reserve(parent, n_elems);
+    int n  = parent.kv_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("command.bad_alloc_n_at  field:command.jkv.kv  comment:'index out of range'");
+    }
+    algo::cstring *elems = parent.kv_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(algo::cstring));
+    for (int i = 0; i < n_elems; i++) {
+        new (elems + at + i) algo::cstring(); // construct new element, default initialize
+    }
+    parent.kv_n = n+n_elems;
+    return algo::aryptr<algo::cstring>(elems+at,n_elems);
+}
+
+// --- command.jkv.kv.Remove
+// Remove item by index. If index outside of range, do nothing.
+void command::kv_Remove(command::jkv& parent, u32 i) {
+    u32 lim = parent.kv_n;
+    algo::cstring *elems = parent.kv_elems;
+    if (i < lim) {
+        elems[i].~cstring(); // destroy element
+        memmove(elems + i, elems + (i + 1), sizeof(algo::cstring) * (lim - (i + 1)));
+        parent.kv_n = lim - 1;
+    }
+}
+
+// --- command.jkv.kv.RemoveAll
+void command::kv_RemoveAll(command::jkv& parent) {
+    u32 n = parent.kv_n;
+    while (n > 0) {
+        n -= 1;
+        parent.kv_elems[n].~cstring();
+        parent.kv_n = n;
+    }
+}
+
+// --- command.jkv.kv.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void command::kv_RemoveLast(command::jkv& parent) {
+    u64 n = parent.kv_n;
+    if (n > 0) {
+        n -= 1;
+        kv_qFind(parent, u64(n)).~cstring();
+        parent.kv_n = n;
+    }
+}
+
+// --- command.jkv.kv.AbsReserve
+// Make sure N elements fit in array. Process dies if out of memory
+void command::kv_AbsReserve(command::jkv& parent, int n) {
+    u32 old_max  = parent.kv_max;
+    if (n > i32(old_max)) {
+        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.kv_elems, old_max * sizeof(algo::cstring), new_max * sizeof(algo::cstring));
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("command.tary_nomem  field:command.jkv.kv  comment:'out of memory'");
+        }
+        parent.kv_elems = (algo::cstring*)new_mem;
+        parent.kv_max = new_max;
+    }
+}
+
+// --- command.jkv.kv.Setary
+// Copy contents of RHS to PARENT.
+void command::kv_Setary(command::jkv& parent, command::jkv &rhs) {
+    kv_RemoveAll(parent);
+    int nnew = rhs.kv_n;
+    kv_Reserve(parent, nnew); // reserve space
+    for (int i = 0; i < nnew; i++) { // copy elements over
+        new (parent.kv_elems + i) algo::cstring(kv_qFind(rhs, i));
+        parent.kv_n = i + 1;
+    }
+}
+
+// --- command.jkv.kv.Setary2
+// Copy specified array into kv, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+void command::kv_Setary(command::jkv& parent, const algo::aryptr<algo::cstring> &rhs) {
+    kv_RemoveAll(parent);
+    kv_Addary(parent, rhs);
+}
+
+// --- command.jkv.kv.AllocNVal
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo::cstring> command::kv_AllocNVal(command::jkv& parent, int n_elems, const algo::cstring& val) {
+    kv_Reserve(parent, n_elems);
+    int old_n  = parent.kv_n;
+    int new_n = old_n + n_elems;
+    algo::cstring *elems = parent.kv_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) algo::cstring(val);
+    }
+    parent.kv_n = new_n;
+    return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
+}
+
+// --- command.jkv.kv.ReadStrptrMaybe
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+bool command::kv_ReadStrptrMaybe(command::jkv& parent, algo::strptr in_str) {
+    bool retval = true;
+    algo::cstring &elem = kv_Alloc(parent);
+    retval = algo::cstring_ReadStrptrMaybe(elem, in_str);
+    if (!retval) {
+        kv_RemoveLast(parent);
+    }
+    return retval;
+}
+
+// --- command.jkv.kv.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void command::kv_Insary(command::jkv& parent, algo::aryptr<algo::cstring> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.kv_elems && rhs.elems < parent.kv_elems + parent.kv_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("command.tary_alias  field:command.jkv.kv  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(parent.kv_elems+1))) {
+        FatalErrorExit("command.bad_insary  field:command.jkv.kv  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = parent.kv_n - at;
+    kv_Reserve(parent, nnew); // reserve space
+    for (int i = nmove-1; i >=0 ; --i) {
+        new (parent.kv_elems + at + nnew + i) algo::cstring(parent.kv_elems[at + i]);
+        parent.kv_elems[at + i].~cstring(); // destroy element
+    }
+    for (int i = 0; i < nnew; ++i) {
+        new (parent.kv_elems + at + i) algo::cstring(rhs[i]);
+    }
+    parent.kv_n += nnew;
+}
+
+// --- command.jkv.output.ToCstr
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+const char* command::output_ToCstr(const command::jkv& parent) {
+    const char *ret = NULL;
+    switch(output_GetEnum(parent)) {
+        case command_jkv_output_auto       : ret = "auto";  break;
+        case command_jkv_output_json       : ret = "json";  break;
+        case command_jkv_output_kv         : ret = "kv";  break;
+    }
+    return ret;
+}
+
+// --- command.jkv.output.Print
+// Convert output to a string. First, attempt conversion to a known string.
+// If no string matches, print output as a numeric value.
+void command::output_Print(const command::jkv& parent, algo::cstring &lhs) {
+    const char *strval = output_ToCstr(parent);
+    if (strval) {
+        lhs << strval;
+    } else {
+        lhs << parent.output;
+    }
+}
+
+// --- command.jkv.output.SetStrptrMaybe
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+bool command::output_SetStrptrMaybe(command::jkv& parent, algo::strptr rhs) {
+    bool ret = false;
+    switch (elems_N(rhs)) {
+        case 2: {
+            switch (u64(algo::ReadLE16(rhs.elems))) {
+                case LE_STR2('k','v'): {
+                    output_SetEnum(parent,command_jkv_output_kv); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 4: {
+            switch (u64(algo::ReadLE32(rhs.elems))) {
+                case LE_STR4('a','u','t','o'): {
+                    output_SetEnum(parent,command_jkv_output_auto); ret = true; break;
+                }
+                case LE_STR4('j','s','o','n'): {
+                    output_SetEnum(parent,command_jkv_output_json); ret = true; break;
+                }
+            }
+            break;
+        }
+    }
+    return ret;
+}
+
+// --- command.jkv.output.SetStrptr
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+void command::output_SetStrptr(command::jkv& parent, algo::strptr rhs, command_jkv_output_Enum dflt) {
+    if (!output_SetStrptrMaybe(parent,rhs)) output_SetEnum(parent,dflt);
+}
+
+// --- command.jkv.output.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool command::output_ReadStrptrMaybe(command::jkv& parent, algo::strptr rhs) {
+    bool retval = false;
+    retval = output_SetStrptrMaybe(parent,rhs); // try symbol conversion
+    if (!retval) { // didn't work? try reading as underlying type
+        retval = u8_ReadStrptrMaybe(parent.output,rhs);
+    }
+    return retval;
+}
+
+// --- command.jkv..ReadFieldMaybe
+bool command::jkv_ReadFieldMaybe(command::jkv& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    command::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
+    switch(field_id) {
+        case command_FieldId_in: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
+        } break;
+        case command_FieldId_file: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.file, strval);
+        } break;
+        case command_FieldId_kv: {
+            retval = kv_ReadStrptrMaybe(parent, strval);
+        } break;
+        case command_FieldId_r: {
+            retval = bool_ReadStrptrMaybe(parent.r, strval);
+        } break;
+        case command_FieldId_write: {
+            retval = bool_ReadStrptrMaybe(parent.write, strval);
+        } break;
+        case command_FieldId_output: {
+            retval = output_ReadStrptrMaybe(parent, strval);
+        } break;
+        case command_FieldId_pretty: {
+            retval = u32_ReadStrptrMaybe(parent.pretty, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- command.jkv..ReadTupleMaybe
+// Read fields of command::jkv from attributes of ascii tuple TUPLE
+bool command::jkv_ReadTupleMaybe(command::jkv &parent, algo::Tuple &tuple) {
+    bool retval = true;
+    int anon_idx = 0;
+    ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
+        if (ch_N(attr.name) == 0) {
+            attr.name = jkv_GetAnon(parent, anon_idx++);
+        }
+        retval = jkv_ReadFieldMaybe(parent, attr.name, attr.value);
+        if (!retval) {
+            break;
+        }
+    }ind_end;
+    return retval;
+}
+
+// --- command.jkv..Uninit
+void command::jkv_Uninit(command::jkv& parent) {
+    command::jkv &row = parent; (void)row;
+
+    // command.jkv.kv.Uninit (Tary)  //JSON Keyvals
+    // remove all elements from command.jkv.kv
+    kv_RemoveAll(parent);
+    // free memory for Tary command.jkv.kv
+    algo_lib::malloc_FreeMem(parent.kv_elems, sizeof(algo::cstring)*parent.kv_max); // (command.jkv.kv)
+}
+
+// --- command.jkv..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::jkv_ToCmdline(command::jkv& row) {
+    tempstr ret;
+    ret << "bin/jkv ";
+    jkv_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
+// --- command.jkv..PrintArgv
+// print string representation of ROW to string STR
+// cfmt:command.jkv.Argv  printfmt:Tuple
+void command::jkv_PrintArgv(command::jkv& row, algo::cstring& str) {
+    algo::tempstr temp;
+    (void)temp;
+    (void)str;
+    if (!(row.in == "data")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.in, temp);
+        str << " -in:";
+        strptr_PrintBash(temp,str);
+    }
+    ch_RemoveAll(temp);
+    cstring_Print(row.file, temp);
+    str << " -file:";
+    strptr_PrintBash(temp,str);
+    ind_beg(jkv_kv_curs,value,row) {
+        ch_RemoveAll(temp);
+        cstring_Print(value, temp);
+        str << " -kv:";
+        strptr_PrintBash(temp,str);
+    }ind_end;
+    if (!(row.r == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.r, temp);
+        str << " -r:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.write == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.write, temp);
+        str << " -write:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.output == 0)) {
+        ch_RemoveAll(temp);
+        command::output_Print(const_cast<command::jkv&>(row), temp);
+        str << " -output:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.pretty == 2)) {
+        ch_RemoveAll(temp);
+        u32_Print(row.pretty, temp);
+        str << " -pretty:";
+        strptr_PrintBash(temp,str);
+    }
+}
+
+// --- command.jkv..GetAnon
+algo::strptr command::jkv_GetAnon(command::jkv &parent, i32 idx) {
+    (void)parent;//only to avoid -Wunused-parameter
+    switch(idx) {
+        case(0): return strptr("file", 4);
+        default: return strptr("kv", 2);
+    }
+}
+
+// --- command.jkv..NArgs
+// Used with command lines
+// Return # of command-line arguments that must follow this argument
+// If FIELD is invalid, return -1
+i32 command::jkv_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
+    i32 retval = 1;
+    switch (field) {
+        case command_FieldId_in: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_file: { //
+            *out_anon = true;
+        } break;
+        case command_FieldId_kv: { //
+            *out_anon = true;
+        } break;
+        case command_FieldId_r: { // bool: no argument required but value may be specified as r:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_write: { // bool: no argument required but value may be specified as write:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_output: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_pretty: { //
+            *out_anon = false;
+        } break;
+        default:
+        retval=-1; // unrecognized
+    }
+    return retval;
+}
+
+// --- command.jkv..AssignOp
+command::jkv& command::jkv::operator =(const command::jkv &rhs) {
+    in = rhs.in;
+    file = rhs.file;
+    kv_Setary(*this, kv_Getary(const_cast<command::jkv&>(rhs)));
+    r = rhs.r;
+    write = rhs.write;
+    output = rhs.output;
+    pretty = rhs.pretty;
+    return *this;
+}
+
+// --- command.jkv..CopyCtor
+ command::jkv::jkv(const command::jkv &rhs)
+    : in(rhs.in)
+    , file(rhs.file)
+    , r(rhs.r)
+    , write(rhs.write)
+    , output(rhs.output)
+    , pretty(rhs.pretty)
+ {
+    kv_elems 	= 0; // (command.jkv.kv)
+    kv_n     	= 0; // (command.jkv.kv)
+    kv_max   	= 0; // (command.jkv.kv)
+    kv_Setary(*this, kv_Getary(const_cast<command::jkv&>(rhs)));
+}
+
+// --- command.jkv_proc.jkv.Start
+// Start subprocess
+// If subprocess already running, do nothing. Otherwise, start it
+int command::jkv_Start(command::jkv_proc& parent) {
+    int retval = 0;
+    if (parent.pid == 0) {
+        verblog(jkv_ToCmdline(parent)); // maybe print command
+#ifdef WIN32
+        algo_lib::ResolveExecFname(parent.path);
+        tempstr cmdline(jkv_ToCmdline(parent));
+        parent.pid = dospawn(Zeroterm(parent.path),Zeroterm(cmdline),parent.timeout,parent.fstdin,parent.fstdout,parent.fstderr);
+#else
+        parent.pid = fork();
+        if (parent.pid == 0) { // child
+            algo_lib::DieWithParent();
+            if (parent.timeout > 0) {
+                alarm(parent.timeout);
+            }
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdin , 0);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdout, 1);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstderr, 2);
+            if (retval==0) retval= jkv_Execv(parent);
+            if (retval != 0) { // if start fails, print error
+                int err=errno;
+                prerr("command.jkv_execv"
+                <<Keyval("errno",err)
+                <<Keyval("errstr",strerror(err))
+                <<Keyval("comment","Execv failed"));
+            }
+            _exit(127); // if failed to start, exit anyway
+        } else if (parent.pid == -1) {
+            retval = errno; // failed to fork
+        }
+#endif
+    }
+    parent.status = parent.pid > 0 ? 0 : -1; // if didn't start, set error status
+    return retval;
+}
+
+// --- command.jkv_proc.jkv.StartRead
+// Start subprocess & Read output
+algo::Fildes command::jkv_StartRead(command::jkv_proc& parent, algo_lib::FFildes &read) {
+    int pipefd[2];
+    int rc=pipe(pipefd);
+    (void)rc;
+    read.fd.value = pipefd[0];
+    parent.fstdout  << ">&" << pipefd[1];
+    jkv_Start(parent);
+    (void)close(pipefd[1]);
+    return read.fd;
+}
+
+// --- command.jkv_proc.jkv.Kill
+// Kill subprocess and wait
+void command::jkv_Kill(command::jkv_proc& parent) {
+    if (parent.pid > 0) {
+        kill(parent.pid,9);
+        jkv_Wait(parent);
+    }
+}
+
+// --- command.jkv_proc.jkv.Wait
+// Wait for subprocess to return
+void command::jkv_Wait(command::jkv_proc& parent) {
+    if (parent.pid > 0) {
+        int wait_flags = 0;
+        int wait_status = 0;
+        int rc = -1;
+        do {
+            // really wait for subprocess to exit
+            rc = waitpid(parent.pid,&wait_status,wait_flags);
+        } while (rc==-1 && errno==EINTR);
+        if (rc == parent.pid) {
+            parent.status = wait_status;
+            parent.pid = 0;
+        }
+    }
+}
+
+// --- command.jkv_proc.jkv.Exec
+// Start + Wait
+// Execute subprocess and return exit code
+int command::jkv_Exec(command::jkv_proc& parent) {
+    jkv_Start(parent);
+    jkv_Wait(parent);
+    return parent.status;
+}
+
+// --- command.jkv_proc.jkv.ExecX
+// Start + Wait, throw exception on error
+// Execute subprocess; throw human-readable exception on error
+void command::jkv_ExecX(command::jkv_proc& parent) {
+    int rc = jkv_Exec(parent);
+    vrfy(rc==0, tempstr() << "algo_lib.exec" << Keyval("cmd",jkv_ToCmdline(parent))
+    << Keyval("comment",algo::DescribeWaitStatus(parent.status)));
+}
+
+// --- command.jkv_proc.jkv.Execv
+// Call execv()
+// Call execv with specified parameters
+int command::jkv_Execv(command::jkv_proc& parent) {
+    int ret = 0;
+    algo::StringAry args;
+    jkv_ToArgv(parent, args);
+    char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
+    ind_beg(algo::StringAry_ary_curs,arg,args) {
+        argv[ind_curs(arg).index] = Zeroterm(arg);
+    }ind_end;
+    argv[ary_N(args)] = NULL;
+    // if parent.path is relative, search for it in PATH
+    algo_lib::ResolveExecFname(parent.path);
+    ret = execv(Zeroterm(parent.path),argv);
+    return ret;
+}
+
+// --- command.jkv_proc.jkv.ToCmdline
+algo::tempstr command::jkv_ToCmdline(command::jkv_proc& parent) {
+    algo::tempstr retval;
+    retval << parent.path << " ";
+    command::jkv_PrintArgv(parent.cmd,retval);
+    if (ch_N(parent.fstdin)) {
+        retval << " " << parent.fstdin;
+    }
+    if (ch_N(parent.fstdout)) {
+        retval << " " << parent.fstdout;
+    }
+    if (ch_N(parent.fstderr)) {
+        retval << " 2" << parent.fstderr;
+    }
+    return retval;
+}
+
+// --- command.jkv_proc.jkv.ToArgv
+// Form array from the command line
+void command::jkv_ToArgv(command::jkv_proc& parent, algo::StringAry& args) {
+    ary_RemoveAll(args);
+    ary_Alloc(args) << parent.path;
+
+    if (parent.cmd.in != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-in:";
+        cstring_Print(parent.cmd.in, *arg);
+    }
+
+    if (true) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-file:";
+        cstring_Print(parent.cmd.file, *arg);
+    }
+    ind_beg(command::jkv_kv_curs,value,parent.cmd) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-kv:";
+        cstring_Print(value, *arg);
+    }ind_end;
+
+    if (parent.cmd.r != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-r:";
+        bool_Print(parent.cmd.r, *arg);
+    }
+
+    if (parent.cmd.write != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-write:";
+        bool_Print(parent.cmd.write, *arg);
+    }
+
+    if (parent.cmd.output != 0) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-output:";
+        command::output_Print(parent.cmd, *arg);
+    }
+
+    if (parent.cmd.pretty != 2) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-pretty:";
+        u32_Print(parent.cmd.pretty, *arg);
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
+        ary_Alloc(args) << "-verbose";
+    }
+}
+
+// --- command.jkv_proc..Uninit
+void command::jkv_proc_Uninit(command::jkv_proc& parent) {
+    command::jkv_proc &row = parent; (void)row;
+
+    // command.jkv_proc.jkv.Uninit (Exec)  //
+    jkv_Kill(parent); // kill child, ensure forward progress
+}
+
 // --- command.mdbg.args.Addary
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
@@ -17551,6 +18850,25 @@ algo::aryptr<algo::cstring> command::args_AllocN(command::mdbg& parent, int n_el
     }
     parent.args_n = new_n;
     return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
+}
+
+// --- command.mdbg.args.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<algo::cstring> command::args_AllocNAt(command::mdbg& parent, int n_elems, int at) {
+    args_Reserve(parent, n_elems);
+    int n  = parent.args_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("command.bad_alloc_n_at  field:command.mdbg.args  comment:'index out of range'");
+    }
+    algo::cstring *elems = parent.args_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(algo::cstring));
+    for (int i = 0; i < n_elems; i++) {
+        new (elems + at + i) algo::cstring(""); // construct new element, default initialize
+    }
+    parent.args_n = n+n_elems;
+    return algo::aryptr<algo::cstring>(elems+at,n_elems);
 }
 
 // --- command.mdbg.args.Remove
@@ -17649,6 +18967,30 @@ bool command::args_ReadStrptrMaybe(command::mdbg& parent, algo::strptr in_str) {
     return retval;
 }
 
+// --- command.mdbg.args.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void command::args_Insary(command::mdbg& parent, algo::aryptr<algo::cstring> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.args_elems && rhs.elems < parent.args_elems + parent.args_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("command.tary_alias  field:command.mdbg.args  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(parent.args_elems+1))) {
+        FatalErrorExit("command.bad_insary  field:command.mdbg.args  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = parent.args_n - at;
+    args_Reserve(parent, nnew); // reserve space
+    for (int i = nmove-1; i >=0 ; --i) {
+        new (parent.args_elems + at + nnew + i) algo::cstring(parent.args_elems[at + i]);
+        parent.args_elems[at + i].~cstring(); // destroy element
+    }
+    for (int i = 0; i < nnew; ++i) {
+        new (parent.args_elems + at + i) algo::cstring(rhs[i]);
+    }
+    parent.args_n += nnew;
+}
+
 // --- command.mdbg.b.Addary
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
@@ -17709,6 +19051,25 @@ algo::aryptr<algo::cstring> command::b_AllocN(command::mdbg& parent, int n_elems
     }
     parent.b_n = new_n;
     return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
+}
+
+// --- command.mdbg.b.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<algo::cstring> command::b_AllocNAt(command::mdbg& parent, int n_elems, int at) {
+    b_Reserve(parent, n_elems);
+    int n  = parent.b_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("command.bad_alloc_n_at  field:command.mdbg.b  comment:'index out of range'");
+    }
+    algo::cstring *elems = parent.b_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(algo::cstring));
+    for (int i = 0; i < n_elems; i++) {
+        new (elems + at + i) algo::cstring(""); // construct new element, default initialize
+    }
+    parent.b_n = n+n_elems;
+    return algo::aryptr<algo::cstring>(elems+at,n_elems);
 }
 
 // --- command.mdbg.b.Remove
@@ -17807,6 +19168,30 @@ bool command::b_ReadStrptrMaybe(command::mdbg& parent, algo::strptr in_str) {
     return retval;
 }
 
+// --- command.mdbg.b.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void command::b_Insary(command::mdbg& parent, algo::aryptr<algo::cstring> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.b_elems && rhs.elems < parent.b_elems + parent.b_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("command.tary_alias  field:command.mdbg.b  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(parent.b_elems+1))) {
+        FatalErrorExit("command.bad_insary  field:command.mdbg.b  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = parent.b_n - at;
+    b_Reserve(parent, nnew); // reserve space
+    for (int i = nmove-1; i >=0 ; --i) {
+        new (parent.b_elems + at + nnew + i) algo::cstring(parent.b_elems[at + i]);
+        parent.b_elems[at + i].~cstring(); // destroy element
+    }
+    for (int i = 0; i < nnew; ++i) {
+        new (parent.b_elems + at + i) algo::cstring(rhs[i]);
+    }
+    parent.b_n += nnew;
+}
+
 // --- command.mdbg..ReadFieldMaybe
 bool command::mdbg_ReadFieldMaybe(command::mdbg& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
@@ -17815,65 +19200,59 @@ bool command::mdbg_ReadFieldMaybe(command::mdbg& parent, algo::strptr field, alg
     switch(field_id) {
         case command_FieldId_target: {
             retval = algo::Smallstr16_ReadStrptrMaybe(parent.target, strval);
-            break;
-        }
+        } break;
         case command_FieldId_in: {
             retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
-            break;
-        }
+        } break;
         case command_FieldId_args: {
             retval = args_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case command_FieldId_cfg: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.cfg, strval);
-            break;
-        }
+        } break;
         case command_FieldId_disas: {
             retval = bool_ReadStrptrMaybe(parent.disas, strval);
-            break;
-        }
+        } break;
         case command_FieldId_attach: {
             retval = bool_ReadStrptrMaybe(parent.attach, strval);
-            break;
-        }
+        } break;
+        case command_FieldId_pid: {
+            retval = i32_ReadStrptrMaybe(parent.pid, strval);
+        } break;
         case command_FieldId_b: {
             retval = b_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case command_FieldId_catchthrow: {
             retval = bool_ReadStrptrMaybe(parent.catchthrow, strval);
-            break;
-        }
+        } break;
         case command_FieldId_tui: {
             retval = bool_ReadStrptrMaybe(parent.tui, strval);
-            break;
-        }
+        } break;
         case command_FieldId_bcmd: {
             retval = algo::cstring_ReadStrptrMaybe(parent.bcmd, strval);
-            break;
-        }
+        } break;
         case command_FieldId_emacs: {
             retval = bool_ReadStrptrMaybe(parent.emacs, strval);
-            break;
-        }
+        } break;
         case command_FieldId_manywin: {
             retval = bool_ReadStrptrMaybe(parent.manywin, strval);
-            break;
-        }
+        } break;
         case command_FieldId_follow_child: {
             retval = bool_ReadStrptrMaybe(parent.follow_child, strval);
-            break;
-        }
+        } break;
         case command_FieldId_py: {
             retval = bool_ReadStrptrMaybe(parent.py, strval);
-            break;
-        }
+        } break;
         case command_FieldId_dry_run: {
             retval = bool_ReadStrptrMaybe(parent.dry_run, strval);
-            break;
-        }
-        default: break;
+        } break;
+        case command_FieldId_mp: {
+            retval = bool_ReadStrptrMaybe(parent.mp, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -17908,6 +19287,7 @@ void command::mdbg_Init(command::mdbg& parent) {
     parent.cfg = algo::strptr("debug");
     parent.disas = bool(false);
     parent.attach = bool(false);
+    parent.pid = i32(0);
     parent.b_elems 	= 0; // (command.mdbg.b)
     parent.b_n     	= 0; // (command.mdbg.b)
     parent.b_max   	= 0; // (command.mdbg.b)
@@ -17919,6 +19299,7 @@ void command::mdbg_Init(command::mdbg& parent) {
     parent.follow_child = bool(false);
     parent.py = bool(false);
     parent.dry_run = bool(false);
+    parent.mp = bool(false);
 }
 
 // --- command.mdbg..Uninit
@@ -17996,6 +19377,12 @@ void command::mdbg_PrintArgv(command::mdbg& row, algo::cstring& str) {
         str << " -attach:";
         strptr_PrintBash(temp,str);
     }
+    if (!(row.pid == 0)) {
+        ch_RemoveAll(temp);
+        i32_Print(row.pid, temp);
+        str << " -pid:";
+        strptr_PrintBash(temp,str);
+    }
     ind_beg(mdbg_b_curs,value,row) {
         ch_RemoveAll(temp);
         cstring_Print(value, temp);
@@ -18050,6 +19437,12 @@ void command::mdbg_PrintArgv(command::mdbg& row, algo::cstring& str) {
         str << " -dry_run:";
         strptr_PrintBash(temp,str);
     }
+    if (!(row.mp == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.mp, temp);
+        str << " -mp:";
+        strptr_PrintBash(temp,str);
+    }
 }
 
 // --- command.mdbg..GetAnon
@@ -18068,65 +19461,73 @@ algo::strptr command::mdbg_GetAnon(command::mdbg &parent, i32 idx) {
 i32 command::mdbg_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
     i32 retval = 1;
     switch (field) {
-        case command_FieldId_target: { // $comment
+        case command_FieldId_target: { //
             *out_anon = true;
         } break;
-        case command_FieldId_in: { // $comment
+        case command_FieldId_in: { //
             *out_anon = false;
         } break;
-        case command_FieldId_args: { // $comment
+        case command_FieldId_args: { //
             *out_anon = true;
         } break;
-        case command_FieldId_cfg: { // $comment
+        case command_FieldId_cfg: { //
             *out_anon = false;
         } break;
-        case command_FieldId_disas: { // $comment
-            *out_anon = false;
-            retval=0;
-            out_dflt="Y";
-        } break;
-        case command_FieldId_attach: { // bool: no argument required but value may be specified as disas:Y
+        case command_FieldId_disas: { // bool: no argument required but value may be specified as disas:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_b: { // bool: no argument required but value may be specified as attach:Y
-            *out_anon = false;
-        } break;
-        case command_FieldId_catchthrow: { // bool: no argument required but value may be specified as attach:Y
+        case command_FieldId_attach: { // bool: no argument required but value may be specified as attach:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_tui: { // bool: no argument required but value may be specified as catchthrow:Y
+        case command_FieldId_pid: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_b: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_catchthrow: { // bool: no argument required but value may be specified as catchthrow:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_bcmd: { // bool: no argument required but value may be specified as tui:Y
-            *out_anon = false;
-        } break;
-        case command_FieldId_emacs: { // bool: no argument required but value may be specified as tui:Y
+        case command_FieldId_tui: { // bool: no argument required but value may be specified as tui:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_manywin: { // bool: no argument required but value may be specified as emacs:Y
+        case command_FieldId_bcmd: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_emacs: { // bool: no argument required but value may be specified as emacs:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_follow_child: { // bool: no argument required but value may be specified as manywin:Y
+        case command_FieldId_manywin: { // bool: no argument required but value may be specified as manywin:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_py: { // bool: no argument required but value may be specified as follow_child:Y
+        case command_FieldId_follow_child: { // bool: no argument required but value may be specified as follow_child:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_dry_run: { // bool: no argument required but value may be specified as py:Y
+        case command_FieldId_py: { // bool: no argument required but value may be specified as py:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_dry_run: { // bool: no argument required but value may be specified as dry_run:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_mp: { // bool: no argument required but value may be specified as mp:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
@@ -18145,6 +19546,7 @@ command::mdbg& command::mdbg::operator =(const command::mdbg &rhs) {
     cfg = rhs.cfg;
     disas = rhs.disas;
     attach = rhs.attach;
+    pid = rhs.pid;
     b_Setary(*this, b_Getary(const_cast<command::mdbg&>(rhs)));
     catchthrow = rhs.catchthrow;
     tui = rhs.tui;
@@ -18154,6 +19556,7 @@ command::mdbg& command::mdbg::operator =(const command::mdbg &rhs) {
     follow_child = rhs.follow_child;
     py = rhs.py;
     dry_run = rhs.dry_run;
+    mp = rhs.mp;
     return *this;
 }
 
@@ -18164,6 +19567,7 @@ command::mdbg& command::mdbg::operator =(const command::mdbg &rhs) {
     , cfg(rhs.cfg)
     , disas(rhs.disas)
     , attach(rhs.attach)
+    , pid(rhs.pid)
     , catchthrow(rhs.catchthrow)
     , tui(rhs.tui)
     , bcmd(rhs.bcmd)
@@ -18172,6 +19576,7 @@ command::mdbg& command::mdbg::operator =(const command::mdbg &rhs) {
     , follow_child(rhs.follow_child)
     , py(rhs.py)
     , dry_run(rhs.dry_run)
+    , mp(rhs.mp)
  {
     args_elems 	= 0; // (command.mdbg.args)
     args_n     	= 0; // (command.mdbg.args)
@@ -18238,7 +19643,7 @@ algo::Fildes command::mdbg_StartRead(command::mdbg_proc& parent, algo_lib::FFild
 // --- command.mdbg_proc.mdbg.Kill
 // Kill subprocess and wait
 void command::mdbg_Kill(command::mdbg_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         kill(parent.pid,9);
         mdbg_Wait(parent);
     }
@@ -18355,6 +19760,12 @@ void command::mdbg_ToArgv(command::mdbg_proc& parent, algo::StringAry& args) {
         *arg << "-attach:";
         bool_Print(parent.cmd.attach, *arg);
     }
+
+    if (parent.cmd.pid != 0) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-pid:";
+        i32_Print(parent.cmd.pid, *arg);
+    }
     ind_beg(command::mdbg_b_curs,value,parent.cmd) {
         cstring *arg = &ary_Alloc(args);
         *arg << "-b:";
@@ -18408,6 +19819,12 @@ void command::mdbg_ToArgv(command::mdbg_proc& parent, algo::StringAry& args) {
         *arg << "-dry_run:";
         bool_Print(parent.cmd.dry_run, *arg);
     }
+
+    if (parent.cmd.mp != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-mp:";
+        bool_Print(parent.cmd.mp, *arg);
+    }
     for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
         ary_Alloc(args) << "-verbose";
     }
@@ -18429,37 +19846,32 @@ bool command::mysql2ssim_ReadFieldMaybe(command::mysql2ssim& parent, algo::strpt
     switch(field_id) {
         case command_FieldId_writessimfile: {
             retval = bool_ReadStrptrMaybe(parent.writessimfile, strval);
-            break;
-        }
+        } break;
         case command_FieldId_url: {
             retval = algo::cstring_ReadStrptrMaybe(parent.url, strval);
-            break;
-        }
+        } break;
         case command_FieldId_tables: {
             retval = algo::cstring_ReadStrptrMaybe(parent.tables, strval);
-            break;
-        }
+        } break;
         case command_FieldId_schema: {
             retval = bool_ReadStrptrMaybe(parent.schema, strval);
-            break;
-        }
+        } break;
         case command_FieldId_in: {
             retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
-            break;
-        }
+        } break;
         case command_FieldId_pretty: {
             retval = bool_ReadStrptrMaybe(parent.pretty, strval);
-            break;
-        }
+        } break;
         case command_FieldId_nologo: {
             retval = bool_ReadStrptrMaybe(parent.nologo, strval);
-            break;
-        }
+        } break;
         case command_FieldId_baddbok: {
             retval = bool_ReadStrptrMaybe(parent.baddbok, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -18571,36 +19983,36 @@ algo::strptr command::mysql2ssim_GetAnon(command::mysql2ssim &parent, i32 idx) {
 i32 command::mysql2ssim_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
     i32 retval = 1;
     switch (field) {
-        case command_FieldId_writessimfile: { // $comment
+        case command_FieldId_writessimfile: { // bool: no argument required but value may be specified as writessimfile:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_url: { // bool: no argument required but value may be specified as writessimfile:Y
+        case command_FieldId_url: { //
             *out_anon = true;
         } break;
-        case command_FieldId_tables: { // bool: no argument required but value may be specified as writessimfile:Y
+        case command_FieldId_tables: { //
             *out_anon = true;
         } break;
-        case command_FieldId_schema: { // bool: no argument required but value may be specified as writessimfile:Y
+        case command_FieldId_schema: { // bool: no argument required but value may be specified as schema:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_in: { // bool: no argument required but value may be specified as schema:Y
+        case command_FieldId_in: { //
             *out_anon = false;
         } break;
-        case command_FieldId_pretty: { // bool: no argument required but value may be specified as schema:Y
-            *out_anon = false;
-            retval=0;
-            out_dflt="Y";
-        } break;
-        case command_FieldId_nologo: { // bool: no argument required but value may be specified as pretty:Y
+        case command_FieldId_pretty: { // bool: no argument required but value may be specified as pretty:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_baddbok: { // bool: no argument required but value may be specified as nologo:Y
+        case command_FieldId_nologo: { // bool: no argument required but value may be specified as nologo:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_baddbok: { // bool: no argument required but value may be specified as baddbok:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
@@ -18666,7 +20078,7 @@ algo::Fildes command::mysql2ssim_StartRead(command::mysql2ssim_proc& parent, alg
 // --- command.mysql2ssim_proc.mysql2ssim.Kill
 // Kill subprocess and wait
 void command::mysql2ssim_Kill(command::mysql2ssim_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         kill(parent.pid,9);
         mysql2ssim_Wait(parent);
     }
@@ -18832,29 +20244,26 @@ bool command::orgfile_ReadFieldMaybe(command::orgfile& parent, algo::strptr fiel
     switch(field_id) {
         case command_FieldId_in: {
             retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
-            break;
-        }
+        } break;
         case command_FieldId_move: {
             retval = algo::cstring_ReadStrptrMaybe(parent.move, strval);
-            break;
-        }
+        } break;
         case command_FieldId_dedup: {
             retval = dedup_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case command_FieldId_commit: {
             retval = bool_ReadStrptrMaybe(parent.commit, strval);
-            break;
-        }
+        } break;
         case command_FieldId_undo: {
             retval = bool_ReadStrptrMaybe(parent.undo, strval);
-            break;
-        }
+        } break;
         case command_FieldId_hash: {
             retval = algo::cstring_ReadStrptrMaybe(parent.hash, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -18955,26 +20364,26 @@ void command::orgfile_PrintArgv(command::orgfile& row, algo::cstring& str) {
 i32 command::orgfile_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
     i32 retval = 1;
     switch (field) {
-        case command_FieldId_in: { // $comment
+        case command_FieldId_in: { //
             *out_anon = false;
         } break;
-        case command_FieldId_move: { // $comment
+        case command_FieldId_move: { //
             *out_anon = false;
         } break;
-        case command_FieldId_dedup: { // $comment
+        case command_FieldId_dedup: { //
             *out_anon = false;
         } break;
-        case command_FieldId_commit: { // $comment
-            *out_anon = false;
-            retval=0;
-            out_dflt="Y";
-        } break;
-        case command_FieldId_undo: { // bool: no argument required but value may be specified as commit:Y
+        case command_FieldId_commit: { // bool: no argument required but value may be specified as commit:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_hash: { // bool: no argument required but value may be specified as undo:Y
+        case command_FieldId_undo: { // bool: no argument required but value may be specified as undo:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_hash: { //
             *out_anon = false;
         } break;
         default:
@@ -19038,7 +20447,7 @@ algo::Fildes command::orgfile_StartRead(command::orgfile_proc& parent, algo_lib:
 // --- command.orgfile_proc.orgfile.Kill
 // Kill subprocess and wait
 void command::orgfile_Kill(command::orgfile_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         kill(parent.pid,9);
         orgfile_Wait(parent);
     }
@@ -19169,6 +20578,344 @@ void command::orgfile_proc_Uninit(command::orgfile_proc& parent) {
     orgfile_Kill(parent); // kill child, ensure forward progress
 }
 
+// --- command.samp_make.target.Print
+// Print back to string
+void command::target_Print(command::samp_make& parent, algo::cstring &out) {
+    Regx_Print(parent.target, out);
+}
+
+// --- command.samp_make.target.ReadStrptrMaybe
+// Read Regx from string
+// Convert string to field. Return success value
+bool command::target_ReadStrptrMaybe(command::samp_make& parent, algo::strptr in) {
+    bool retval = true;
+    Regx_ReadSql(parent.target, in, true);
+    return retval;
+}
+
+// --- command.samp_make..ReadFieldMaybe
+bool command::samp_make_ReadFieldMaybe(command::samp_make& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    command::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case command_FieldId_in: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
+        } break;
+        case command_FieldId_target: {
+            retval = target_ReadStrptrMaybe(parent, strval);
+        } break;
+        case command_FieldId_parse_make: {
+            retval = bool_ReadStrptrMaybe(parent.parse_make, strval);
+        } break;
+        case command_FieldId_makefile: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.makefile, strval);
+        } break;
+        case command_FieldId_write: {
+            retval = bool_ReadStrptrMaybe(parent.write, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- command.samp_make..ReadTupleMaybe
+// Read fields of command::samp_make from attributes of ascii tuple TUPLE
+bool command::samp_make_ReadTupleMaybe(command::samp_make &parent, algo::Tuple &tuple) {
+    bool retval = true;
+    ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
+        retval = samp_make_ReadFieldMaybe(parent, attr.name, attr.value);
+        if (!retval) {
+            break;
+        }
+    }ind_end;
+    return retval;
+}
+
+// --- command.samp_make..Init
+// Set all fields to initial values.
+void command::samp_make_Init(command::samp_make& parent) {
+    parent.in = algo::strptr("data");
+    Regx_ReadSql(parent.target, "%", true);
+    parent.parse_make = bool(false);
+    parent.makefile = algo::strptr("extern/gnumake/Simple-Makefile");
+    parent.write = bool(false);
+}
+
+// --- command.samp_make..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::samp_make_ToCmdline(command::samp_make& row) {
+    tempstr ret;
+    ret << "bin/samp_make ";
+    samp_make_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
+// --- command.samp_make..PrintArgv
+// print string representation of ROW to string STR
+// cfmt:command.samp_make.Argv  printfmt:Tuple
+void command::samp_make_PrintArgv(command::samp_make& row, algo::cstring& str) {
+    algo::tempstr temp;
+    (void)temp;
+    (void)str;
+    if (!(row.in == "data")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.in, temp);
+        str << " -in:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.target.expr == "%")) {
+        ch_RemoveAll(temp);
+        command::target_Print(const_cast<command::samp_make&>(row), temp);
+        str << " -target:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.parse_make == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.parse_make, temp);
+        str << " -parse_make:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.makefile == "extern/gnumake/Simple-Makefile")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.makefile, temp);
+        str << " -makefile:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.write == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.write, temp);
+        str << " -write:";
+        strptr_PrintBash(temp,str);
+    }
+}
+
+// --- command.samp_make..NArgs
+// Used with command lines
+// Return # of command-line arguments that must follow this argument
+// If FIELD is invalid, return -1
+i32 command::samp_make_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
+    i32 retval = 1;
+    switch (field) {
+        case command_FieldId_in: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_target: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_parse_make: { // bool: no argument required but value may be specified as parse_make:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_makefile: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_write: { // bool: no argument required but value may be specified as write:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        default:
+        retval=-1; // unrecognized
+    }
+    return retval;
+}
+
+// --- command.samp_make_proc.samp_make.Start
+// Start subprocess
+// If subprocess already running, do nothing. Otherwise, start it
+int command::samp_make_Start(command::samp_make_proc& parent) {
+    int retval = 0;
+    if (parent.pid == 0) {
+        verblog(samp_make_ToCmdline(parent)); // maybe print command
+#ifdef WIN32
+        algo_lib::ResolveExecFname(parent.path);
+        tempstr cmdline(samp_make_ToCmdline(parent));
+        parent.pid = dospawn(Zeroterm(parent.path),Zeroterm(cmdline),parent.timeout,parent.fstdin,parent.fstdout,parent.fstderr);
+#else
+        parent.pid = fork();
+        if (parent.pid == 0) { // child
+            algo_lib::DieWithParent();
+            if (parent.timeout > 0) {
+                alarm(parent.timeout);
+            }
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdin , 0);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdout, 1);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstderr, 2);
+            if (retval==0) retval= samp_make_Execv(parent);
+            if (retval != 0) { // if start fails, print error
+                int err=errno;
+                prerr("command.samp_make_execv"
+                <<Keyval("errno",err)
+                <<Keyval("errstr",strerror(err))
+                <<Keyval("comment","Execv failed"));
+            }
+            _exit(127); // if failed to start, exit anyway
+        } else if (parent.pid == -1) {
+            retval = errno; // failed to fork
+        }
+#endif
+    }
+    parent.status = parent.pid > 0 ? 0 : -1; // if didn't start, set error status
+    return retval;
+}
+
+// --- command.samp_make_proc.samp_make.StartRead
+// Start subprocess & Read output
+algo::Fildes command::samp_make_StartRead(command::samp_make_proc& parent, algo_lib::FFildes &read) {
+    int pipefd[2];
+    int rc=pipe(pipefd);
+    (void)rc;
+    read.fd.value = pipefd[0];
+    parent.fstdout  << ">&" << pipefd[1];
+    samp_make_Start(parent);
+    (void)close(pipefd[1]);
+    return read.fd;
+}
+
+// --- command.samp_make_proc.samp_make.Kill
+// Kill subprocess and wait
+void command::samp_make_Kill(command::samp_make_proc& parent) {
+    if (parent.pid > 0) {
+        kill(parent.pid,9);
+        samp_make_Wait(parent);
+    }
+}
+
+// --- command.samp_make_proc.samp_make.Wait
+// Wait for subprocess to return
+void command::samp_make_Wait(command::samp_make_proc& parent) {
+    if (parent.pid > 0) {
+        int wait_flags = 0;
+        int wait_status = 0;
+        int rc = -1;
+        do {
+            // really wait for subprocess to exit
+            rc = waitpid(parent.pid,&wait_status,wait_flags);
+        } while (rc==-1 && errno==EINTR);
+        if (rc == parent.pid) {
+            parent.status = wait_status;
+            parent.pid = 0;
+        }
+    }
+}
+
+// --- command.samp_make_proc.samp_make.Exec
+// Start + Wait
+// Execute subprocess and return exit code
+int command::samp_make_Exec(command::samp_make_proc& parent) {
+    samp_make_Start(parent);
+    samp_make_Wait(parent);
+    return parent.status;
+}
+
+// --- command.samp_make_proc.samp_make.ExecX
+// Start + Wait, throw exception on error
+// Execute subprocess; throw human-readable exception on error
+void command::samp_make_ExecX(command::samp_make_proc& parent) {
+    int rc = samp_make_Exec(parent);
+    vrfy(rc==0, tempstr() << "algo_lib.exec" << Keyval("cmd",samp_make_ToCmdline(parent))
+    << Keyval("comment",algo::DescribeWaitStatus(parent.status)));
+}
+
+// --- command.samp_make_proc.samp_make.Execv
+// Call execv()
+// Call execv with specified parameters
+int command::samp_make_Execv(command::samp_make_proc& parent) {
+    int ret = 0;
+    algo::StringAry args;
+    samp_make_ToArgv(parent, args);
+    char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
+    ind_beg(algo::StringAry_ary_curs,arg,args) {
+        argv[ind_curs(arg).index] = Zeroterm(arg);
+    }ind_end;
+    argv[ary_N(args)] = NULL;
+    // if parent.path is relative, search for it in PATH
+    algo_lib::ResolveExecFname(parent.path);
+    ret = execv(Zeroterm(parent.path),argv);
+    return ret;
+}
+
+// --- command.samp_make_proc.samp_make.ToCmdline
+algo::tempstr command::samp_make_ToCmdline(command::samp_make_proc& parent) {
+    algo::tempstr retval;
+    retval << parent.path << " ";
+    command::samp_make_PrintArgv(parent.cmd,retval);
+    if (ch_N(parent.fstdin)) {
+        retval << " " << parent.fstdin;
+    }
+    if (ch_N(parent.fstdout)) {
+        retval << " " << parent.fstdout;
+    }
+    if (ch_N(parent.fstderr)) {
+        retval << " 2" << parent.fstderr;
+    }
+    return retval;
+}
+
+// --- command.samp_make_proc.samp_make.ToArgv
+// Form array from the command line
+void command::samp_make_ToArgv(command::samp_make_proc& parent, algo::StringAry& args) {
+    ary_RemoveAll(args);
+    ary_Alloc(args) << parent.path;
+
+    if (parent.cmd.in != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-in:";
+        cstring_Print(parent.cmd.in, *arg);
+    }
+
+    if (parent.cmd.target.expr != "%") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-target:";
+        command::target_Print(parent.cmd, *arg);
+    }
+
+    if (parent.cmd.parse_make != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-parse_make:";
+        bool_Print(parent.cmd.parse_make, *arg);
+    }
+
+    if (parent.cmd.makefile != "extern/gnumake/Simple-Makefile") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-makefile:";
+        cstring_Print(parent.cmd.makefile, *arg);
+    }
+
+    if (parent.cmd.write != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-write:";
+        bool_Print(parent.cmd.write, *arg);
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
+        ary_Alloc(args) << "-verbose";
+    }
+}
+
+// --- command.samp_make_proc..Uninit
+void command::samp_make_proc_Uninit(command::samp_make_proc& parent) {
+    command::samp_make_proc &row = parent; (void)row;
+
+    // command.samp_make_proc.samp_make.Uninit (Exec)  //
+    samp_make_Kill(parent); // kill child, ensure forward progress
+}
+
 // --- command.samp_meng..ReadFieldMaybe
 bool command::samp_meng_ReadFieldMaybe(command::samp_meng& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
@@ -19177,9 +20924,11 @@ bool command::samp_meng_ReadFieldMaybe(command::samp_meng& parent, algo::strptr 
     switch(field_id) {
         case command_FieldId_in: {
             retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -19239,7 +20988,7 @@ void command::samp_meng_PrintArgv(command::samp_meng& row, algo::cstring& str) {
 i32 command::samp_meng_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
     i32 retval = 1;
     switch (field) {
-        case command_FieldId_in: { // $comment
+        case command_FieldId_in: { //
             *out_anon = false;
         } break;
         default:
@@ -19304,7 +21053,7 @@ algo::Fildes command::samp_meng_StartRead(command::samp_meng_proc& parent, algo_
 // --- command.samp_meng_proc.samp_meng.Kill
 // Kill subprocess and wait
 void command::samp_meng_Kill(command::samp_meng_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         kill(parent.pid,9);
         samp_meng_Wait(parent);
     }
@@ -19405,88 +21154,6 @@ void command::samp_meng_proc_Uninit(command::samp_meng_proc& parent) {
     samp_meng_Kill(parent); // kill child, ensure forward progress
 }
 
-// --- command.samp_regx.style.ToCstr
-// Convert numeric value of field to one of predefined string constants.
-// If string is found, return a static C string. Otherwise, return NULL.
-const char* command::style_ToCstr(const command::samp_regx& parent) {
-    const char *ret = NULL;
-    switch(style_GetEnum(parent)) {
-        case command_samp_regx_style_acr   : ret = "acr";  break;
-        case command_samp_regx_style_shell : ret = "shell";  break;
-        case command_samp_regx_style_classic: ret = "classic";  break;
-        case command_samp_regx_style_literal: ret = "literal";  break;
-    }
-    return ret;
-}
-
-// --- command.samp_regx.style.Print
-// Convert style to a string. First, attempt conversion to a known string.
-// If no string matches, print style as a numeric value.
-void command::style_Print(const command::samp_regx& parent, algo::cstring &lhs) {
-    const char *strval = style_ToCstr(parent);
-    if (strval) {
-        lhs << strval;
-    } else {
-        lhs << parent.style;
-    }
-}
-
-// --- command.samp_regx.style.SetStrptrMaybe
-// Convert string to field.
-// If the string is invalid, do not modify field and return false.
-// In case of success, return true
-bool command::style_SetStrptrMaybe(command::samp_regx& parent, algo::strptr rhs) {
-    bool ret = false;
-    switch (elems_N(rhs)) {
-        case 3: {
-            switch (u64(algo::ReadLE16(rhs.elems))|(u64(rhs[2])<<16)) {
-                case LE_STR3('a','c','r'): {
-                    style_SetEnum(parent,command_samp_regx_style_acr); ret = true; break;
-                }
-            }
-            break;
-        }
-        case 5: {
-            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
-                case LE_STR5('s','h','e','l','l'): {
-                    style_SetEnum(parent,command_samp_regx_style_shell); ret = true; break;
-                }
-            }
-            break;
-        }
-        case 7: {
-            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
-                case LE_STR7('c','l','a','s','s','i','c'): {
-                    style_SetEnum(parent,command_samp_regx_style_classic); ret = true; break;
-                }
-                case LE_STR7('l','i','t','e','r','a','l'): {
-                    style_SetEnum(parent,command_samp_regx_style_literal); ret = true; break;
-                }
-            }
-            break;
-        }
-    }
-    return ret;
-}
-
-// --- command.samp_regx.style.SetStrptr
-// Convert string to field.
-// If the string is invalid, set numeric value to DFLT
-void command::style_SetStrptr(command::samp_regx& parent, algo::strptr rhs, command_samp_regx_style_Enum dflt) {
-    if (!style_SetStrptrMaybe(parent,rhs)) style_SetEnum(parent,dflt);
-}
-
-// --- command.samp_regx.style.ReadStrptrMaybe
-// Convert string to field. Return success value
-bool command::style_ReadStrptrMaybe(command::samp_regx& parent, algo::strptr rhs) {
-    bool retval = false;
-    retval = style_SetStrptrMaybe(parent,rhs); // try symbol conversion
-    if (!retval) { // didn't work? try reading as underlying type
-        retval = u8_ReadStrptrMaybe(parent.style,rhs);
-    }
-    return retval;
-}
-
 // --- command.samp_regx..ReadFieldMaybe
 bool command::samp_regx_ReadFieldMaybe(command::samp_regx& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
@@ -19495,29 +21162,35 @@ bool command::samp_regx_ReadFieldMaybe(command::samp_regx& parent, algo::strptr 
     switch(field_id) {
         case command_FieldId_in: {
             retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
-            break;
-        }
+        } break;
         case command_FieldId_expr: {
             retval = algo::cstring_ReadStrptrMaybe(parent.expr, strval);
-            break;
-        }
+        } break;
         case command_FieldId_style: {
-            retval = style_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+            retval = algo_lib::RegxStyle_ReadStrptrMaybe(parent.style, strval);
+        } break;
+        case command_FieldId_trace: {
+            retval = bool_ReadStrptrMaybe(parent.trace, strval);
+        } break;
+        case command_FieldId_capture: {
+            retval = bool_ReadStrptrMaybe(parent.capture, strval);
+        } break;
+        case command_FieldId_full: {
+            retval = bool_ReadStrptrMaybe(parent.full, strval);
+        } break;
+        case command_FieldId_f: {
+            retval = bool_ReadStrptrMaybe(parent.f, strval);
+        } break;
         case command_FieldId_match: {
             retval = bool_ReadStrptrMaybe(parent.match, strval);
-            break;
-        }
+        } break;
         case command_FieldId_string: {
             retval = algo::cstring_ReadStrptrMaybe(parent.string, strval);
-            break;
-        }
-        case command_FieldId_show: {
-            retval = bool_ReadStrptrMaybe(parent.show, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -19576,10 +21249,34 @@ void command::samp_regx_PrintArgv(command::samp_regx& row, algo::cstring& str) {
     cstring_Print(row.expr, temp);
     str << " -expr:";
     strptr_PrintBash(temp,str);
-    if (!(row.style == 0)) {
+    if (!(row.style == 2)) {
         ch_RemoveAll(temp);
-        command::style_Print(const_cast<command::samp_regx&>(row), temp);
+        RegxStyle_Print(row.style, temp);
         str << " -style:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.trace == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.trace, temp);
+        str << " -trace:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.capture == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.capture, temp);
+        str << " -capture:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.full == true)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.full, temp);
+        str << " -full:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.f == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.f, temp);
+        str << " -f:";
         strptr_PrintBash(temp,str);
     }
     if (!(row.match == false)) {
@@ -19592,12 +21289,6 @@ void command::samp_regx_PrintArgv(command::samp_regx& row, algo::cstring& str) {
     cstring_Print(row.string, temp);
     str << " -string:";
     strptr_PrintBash(temp,str);
-    if (!(row.show == false)) {
-        ch_RemoveAll(temp);
-        bool_Print(row.show, temp);
-        str << " -show:";
-        strptr_PrintBash(temp,str);
-    }
 }
 
 // --- command.samp_regx..GetAnon
@@ -19617,27 +21308,42 @@ algo::strptr command::samp_regx_GetAnon(command::samp_regx &parent, i32 idx) {
 i32 command::samp_regx_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
     i32 retval = 1;
     switch (field) {
-        case command_FieldId_in: { // $comment
+        case command_FieldId_in: { //
             *out_anon = false;
         } break;
-        case command_FieldId_expr: { // $comment
+        case command_FieldId_expr: { //
             *out_anon = true;
         } break;
-        case command_FieldId_style: { // $comment
+        case command_FieldId_style: { //
             *out_anon = false;
         } break;
-        case command_FieldId_match: { // $comment
+        case command_FieldId_trace: { // bool: no argument required but value may be specified as trace:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_string: { // bool: no argument required but value may be specified as match:Y
-            *out_anon = true;
-        } break;
-        case command_FieldId_show: { // bool: no argument required but value may be specified as match:Y
+        case command_FieldId_capture: { // bool: no argument required but value may be specified as capture:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
+        } break;
+        case command_FieldId_full: { // bool: no argument required but value may be specified as full:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_f: { // bool: no argument required but value may be specified as f:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_match: { // bool: no argument required but value may be specified as match:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_string: { //
+            *out_anon = true;
         } break;
         default:
         retval=-1; // unrecognized
@@ -19700,7 +21406,7 @@ algo::Fildes command::samp_regx_StartRead(command::samp_regx_proc& parent, algo_
 // --- command.samp_regx_proc.samp_regx.Kill
 // Kill subprocess and wait
 void command::samp_regx_Kill(command::samp_regx_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         kill(parent.pid,9);
         samp_regx_Wait(parent);
     }
@@ -19795,10 +21501,34 @@ void command::samp_regx_ToArgv(command::samp_regx_proc& parent, algo::StringAry&
         cstring_Print(parent.cmd.expr, *arg);
     }
 
-    if (parent.cmd.style != 0) {
+    if (parent.cmd.style != 2) {
         cstring *arg = &ary_Alloc(args);
         *arg << "-style:";
-        command::style_Print(parent.cmd, *arg);
+        RegxStyle_Print(parent.cmd.style, *arg);
+    }
+
+    if (parent.cmd.trace != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-trace:";
+        bool_Print(parent.cmd.trace, *arg);
+    }
+
+    if (parent.cmd.capture != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-capture:";
+        bool_Print(parent.cmd.capture, *arg);
+    }
+
+    if (parent.cmd.full != true) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-full:";
+        bool_Print(parent.cmd.full, *arg);
+    }
+
+    if (parent.cmd.f != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-f:";
+        bool_Print(parent.cmd.f, *arg);
     }
 
     if (parent.cmd.match != false) {
@@ -19811,12 +21541,6 @@ void command::samp_regx_ToArgv(command::samp_regx_proc& parent, algo::StringAry&
         cstring *arg = &ary_Alloc(args);
         *arg << "-string:";
         cstring_Print(parent.cmd.string, *arg);
-    }
-
-    if (parent.cmd.show != false) {
-        cstring *arg = &ary_Alloc(args);
-        *arg << "-show:";
-        bool_Print(parent.cmd.show, *arg);
     }
     for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
         ary_Alloc(args) << "-verbose";
@@ -19906,6 +21630,25 @@ algo::aryptr<algo::cstring> command::cmd_AllocN(command::sandbox& parent, int n_
     }
     parent.cmd_n = new_n;
     return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
+}
+
+// --- command.sandbox.cmd.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<algo::cstring> command::cmd_AllocNAt(command::sandbox& parent, int n_elems, int at) {
+    cmd_Reserve(parent, n_elems);
+    int n  = parent.cmd_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("command.bad_alloc_n_at  field:command.sandbox.cmd  comment:'index out of range'");
+    }
+    algo::cstring *elems = parent.cmd_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(algo::cstring));
+    for (int i = 0; i < n_elems; i++) {
+        new (elems + at + i) algo::cstring(); // construct new element, default initialize
+    }
+    parent.cmd_n = n+n_elems;
+    return algo::aryptr<algo::cstring>(elems+at,n_elems);
 }
 
 // --- command.sandbox.cmd.Remove
@@ -20004,6 +21747,30 @@ bool command::cmd_ReadStrptrMaybe(command::sandbox& parent, algo::strptr in_str)
     return retval;
 }
 
+// --- command.sandbox.cmd.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void command::cmd_Insary(command::sandbox& parent, algo::aryptr<algo::cstring> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.cmd_elems && rhs.elems < parent.cmd_elems + parent.cmd_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("command.tary_alias  field:command.sandbox.cmd  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(parent.cmd_elems+1))) {
+        FatalErrorExit("command.bad_insary  field:command.sandbox.cmd  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = parent.cmd_n - at;
+    cmd_Reserve(parent, nnew); // reserve space
+    for (int i = nmove-1; i >=0 ; --i) {
+        new (parent.cmd_elems + at + nnew + i) algo::cstring(parent.cmd_elems[at + i]);
+        parent.cmd_elems[at + i].~cstring(); // destroy element
+    }
+    for (int i = 0; i < nnew; ++i) {
+        new (parent.cmd_elems + at + i) algo::cstring(rhs[i]);
+    }
+    parent.cmd_n += nnew;
+}
+
 // --- command.sandbox.files.Addary
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
@@ -20064,6 +21831,25 @@ algo::aryptr<algo::cstring> command::files_AllocN(command::sandbox& parent, int 
     }
     parent.files_n = new_n;
     return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
+}
+
+// --- command.sandbox.files.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<algo::cstring> command::files_AllocNAt(command::sandbox& parent, int n_elems, int at) {
+    files_Reserve(parent, n_elems);
+    int n  = parent.files_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("command.bad_alloc_n_at  field:command.sandbox.files  comment:'index out of range'");
+    }
+    algo::cstring *elems = parent.files_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(algo::cstring));
+    for (int i = 0; i < n_elems; i++) {
+        new (elems + at + i) algo::cstring(); // construct new element, default initialize
+    }
+    parent.files_n = n+n_elems;
+    return algo::aryptr<algo::cstring>(elems+at,n_elems);
 }
 
 // --- command.sandbox.files.Remove
@@ -20162,6 +21948,30 @@ bool command::files_ReadStrptrMaybe(command::sandbox& parent, algo::strptr in_st
     return retval;
 }
 
+// --- command.sandbox.files.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void command::files_Insary(command::sandbox& parent, algo::aryptr<algo::cstring> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.files_elems && rhs.elems < parent.files_elems + parent.files_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("command.tary_alias  field:command.sandbox.files  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(parent.files_elems+1))) {
+        FatalErrorExit("command.bad_insary  field:command.sandbox.files  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = parent.files_n - at;
+    files_Reserve(parent, nnew); // reserve space
+    for (int i = nmove-1; i >=0 ; --i) {
+        new (parent.files_elems + at + nnew + i) algo::cstring(parent.files_elems[at + i]);
+        parent.files_elems[at + i].~cstring(); // destroy element
+    }
+    for (int i = 0; i < nnew; ++i) {
+        new (parent.files_elems + at + i) algo::cstring(rhs[i]);
+    }
+    parent.files_n += nnew;
+}
+
 // --- command.sandbox..ReadFieldMaybe
 bool command::sandbox_ReadFieldMaybe(command::sandbox& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
@@ -20170,61 +21980,53 @@ bool command::sandbox_ReadFieldMaybe(command::sandbox& parent, algo::strptr fiel
     switch(field_id) {
         case command_FieldId_in: {
             retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
-            break;
-        }
+        } break;
         case command_FieldId_name: {
             retval = name_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case command_FieldId_create: {
             retval = bool_ReadStrptrMaybe(parent.create, strval);
-            break;
-        }
+        } break;
         case command_FieldId_list: {
             retval = bool_ReadStrptrMaybe(parent.list, strval);
-            break;
-        }
+        } break;
         case command_FieldId_reset: {
             retval = bool_ReadStrptrMaybe(parent.reset, strval);
-            break;
-        }
+        } break;
         case command_FieldId_clean: {
             retval = bool_ReadStrptrMaybe(parent.clean, strval);
-            break;
-        }
+        } break;
         case command_FieldId_shell: {
             retval = bool_ReadStrptrMaybe(parent.shell, strval);
-            break;
-        }
+        } break;
         case command_FieldId_del: {
             retval = bool_ReadStrptrMaybe(parent.del, strval);
-            break;
-        }
+        } break;
         case command_FieldId_gc: {
             retval = bool_ReadStrptrMaybe(parent.gc, strval);
-            break;
-        }
+        } break;
         case command_FieldId_cmd: {
             retval = cmd_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case command_FieldId_diff: {
             retval = bool_ReadStrptrMaybe(parent.diff, strval);
-            break;
-        }
+        } break;
         case command_FieldId_files: {
             retval = files_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case command_FieldId_refs: {
             retval = algo::cstring_ReadStrptrMaybe(parent.refs, strval);
-            break;
-        }
+        } break;
+        case command_FieldId_ref: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.ref, strval);
+        } break;
         case command_FieldId_q: {
             retval = bool_ReadStrptrMaybe(parent.q, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -20268,6 +22070,7 @@ void command::sandbox_Init(command::sandbox& parent) {
     parent.files_n     	= 0; // (command.sandbox.files)
     parent.files_max   	= 0; // (command.sandbox.files)
     parent.refs = algo::strptr("HEAD");
+    parent.ref = algo::strptr("HEAD");
     parent.q = bool(false);
 }
 
@@ -20388,6 +22191,12 @@ void command::sandbox_PrintArgv(command::sandbox& row, algo::cstring& str) {
         str << " -refs:";
         strptr_PrintBash(temp,str);
     }
+    if (!(row.ref == "HEAD")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.ref, temp);
+        str << " -ref:";
+        strptr_PrintBash(temp,str);
+    }
     if (!(row.q == false)) {
         ch_RemoveAll(temp);
         bool_Print(row.q, temp);
@@ -20412,62 +22221,65 @@ algo::strptr command::sandbox_GetAnon(command::sandbox &parent, i32 idx) {
 i32 command::sandbox_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
     i32 retval = 1;
     switch (field) {
-        case command_FieldId_in: { // $comment
+        case command_FieldId_in: { //
             *out_anon = false;
         } break;
-        case command_FieldId_name: { // $comment
+        case command_FieldId_name: { //
             *out_anon = true;
         } break;
-        case command_FieldId_create: { // $comment
+        case command_FieldId_create: { // bool: no argument required but value may be specified as create:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_list: { // bool: no argument required but value may be specified as create:Y
+        case command_FieldId_list: { // bool: no argument required but value may be specified as list:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_reset: { // bool: no argument required but value may be specified as list:Y
+        case command_FieldId_reset: { // bool: no argument required but value may be specified as reset:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_clean: { // bool: no argument required but value may be specified as reset:Y
+        case command_FieldId_clean: { // bool: no argument required but value may be specified as clean:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_shell: { // bool: no argument required but value may be specified as clean:Y
+        case command_FieldId_shell: { // bool: no argument required but value may be specified as shell:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_del: { // bool: no argument required but value may be specified as shell:Y
+        case command_FieldId_del: { // bool: no argument required but value may be specified as del:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_gc: { // bool: no argument required but value may be specified as del:Y
+        case command_FieldId_gc: { // bool: no argument required but value may be specified as gc:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_cmd: { // bool: no argument required but value may be specified as gc:Y
+        case command_FieldId_cmd: { //
             *out_anon = true;
         } break;
-        case command_FieldId_diff: { // bool: no argument required but value may be specified as gc:Y
+        case command_FieldId_diff: { // bool: no argument required but value may be specified as diff:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_files: { // bool: no argument required but value may be specified as diff:Y
+        case command_FieldId_files: { //
             *out_anon = false;
         } break;
-        case command_FieldId_refs: { // bool: no argument required but value may be specified as diff:Y
+        case command_FieldId_refs: { //
             *out_anon = false;
         } break;
-        case command_FieldId_q: { // bool: no argument required but value may be specified as diff:Y
+        case command_FieldId_ref: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_q: { // bool: no argument required but value may be specified as q:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
@@ -20493,6 +22305,7 @@ command::sandbox& command::sandbox::operator =(const command::sandbox &rhs) {
     diff = rhs.diff;
     files_Setary(*this, files_Getary(const_cast<command::sandbox&>(rhs)));
     refs = rhs.refs;
+    ref = rhs.ref;
     q = rhs.q;
     return *this;
 }
@@ -20510,6 +22323,7 @@ command::sandbox& command::sandbox::operator =(const command::sandbox &rhs) {
     , gc(rhs.gc)
     , diff(rhs.diff)
     , refs(rhs.refs)
+    , ref(rhs.ref)
     , q(rhs.q)
  {
     cmd_elems 	= 0; // (command.sandbox.cmd)
@@ -20577,7 +22391,7 @@ algo::Fildes command::sandbox_StartRead(command::sandbox_proc& parent, algo_lib:
 // --- command.sandbox_proc.sandbox.Kill
 // Kill subprocess and wait
 void command::sandbox_Kill(command::sandbox_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         kill(parent.pid,9);
         sandbox_Wait(parent);
     }
@@ -20736,6 +22550,12 @@ void command::sandbox_ToArgv(command::sandbox_proc& parent, algo::StringAry& arg
         cstring_Print(parent.cmd.refs, *arg);
     }
 
+    if (parent.cmd.ref != "HEAD") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-ref:";
+        cstring_Print(parent.cmd.ref, *arg);
+    }
+
     if (parent.cmd.q != false) {
         cstring *arg = &ary_Alloc(args);
         *arg << "-q:";
@@ -20754,51 +22574,6 @@ void command::sandbox_proc_Uninit(command::sandbox_proc& parent) {
     sandbox_Kill(parent); // kill child, ensure forward progress
 }
 
-// --- command.src_func.target.Print
-// Print back to string
-void command::target_Print(command::src_func& parent, algo::cstring &out) {
-    Regx_Print(parent.target, out);
-}
-
-// --- command.src_func.target.ReadStrptrMaybe
-// Read Regx from string
-// Convert string to field. Return success value
-bool command::target_ReadStrptrMaybe(command::src_func& parent, algo::strptr in) {
-    bool retval = true;
-    Regx_ReadSql(parent.target, in, true);
-    return retval;
-}
-
-// --- command.src_func.name.Print
-// Print back to string
-void command::name_Print(command::src_func& parent, algo::cstring &out) {
-    Regx_Print(parent.name, out);
-}
-
-// --- command.src_func.name.ReadStrptrMaybe
-// Read Regx from string
-// Convert string to field. Return success value
-bool command::name_ReadStrptrMaybe(command::src_func& parent, algo::strptr in) {
-    bool retval = true;
-    Regx_ReadSql(parent.name, in, true);
-    return retval;
-}
-
-// --- command.src_func.body.Print
-// Print back to string
-void command::body_Print(command::src_func& parent, algo::cstring &out) {
-    Regx_Print(parent.body, out);
-}
-
-// --- command.src_func.body.ReadStrptrMaybe
-// Read Regx from string
-// Convert string to field. Return success value
-bool command::body_ReadStrptrMaybe(command::src_func& parent, algo::strptr in) {
-    bool retval = true;
-    Regx_ReadSql(parent.body, in, true);
-    return retval;
-}
-
 // --- command.src_func.targsrc.Print
 // Print back to string
 void command::targsrc_Print(command::src_func& parent, algo::cstring &out) {
@@ -20811,6 +22586,21 @@ void command::targsrc_Print(command::src_func& parent, algo::cstring &out) {
 bool command::targsrc_ReadStrptrMaybe(command::src_func& parent, algo::strptr in) {
     bool retval = true;
     Regx_ReadSql(parent.targsrc, in, true);
+    return retval;
+}
+
+// --- command.src_func.acrkey.Print
+// Print back to string
+void command::acrkey_Print(command::src_func& parent, algo::cstring &out) {
+    Regx_Print(parent.acrkey, out);
+}
+
+// --- command.src_func.acrkey.ReadStrptrMaybe
+// Read Regx from string
+// Convert string to field. Return success value
+bool command::acrkey_ReadStrptrMaybe(command::src_func& parent, algo::strptr in) {
+    bool retval = true;
+    Regx_ReadSql(parent.acrkey, in, true);
     return retval;
 }
 
@@ -20829,18 +22619,48 @@ bool command::func_ReadStrptrMaybe(command::src_func& parent, algo::strptr in) {
     return retval;
 }
 
-// --- command.src_func.comment.Print
+// --- command.src_func.matchproto.Print
 // Print back to string
-void command::comment_Print(command::src_func& parent, algo::cstring &out) {
-    Regx_Print(parent.comment, out);
+void command::matchproto_Print(command::src_func& parent, algo::cstring &out) {
+    Regx_Print(parent.matchproto, out);
 }
 
-// --- command.src_func.comment.ReadStrptrMaybe
+// --- command.src_func.matchproto.ReadStrptrMaybe
 // Read Regx from string
 // Convert string to field. Return success value
-bool command::comment_ReadStrptrMaybe(command::src_func& parent, algo::strptr in) {
+bool command::matchproto_ReadStrptrMaybe(command::src_func& parent, algo::strptr in) {
     bool retval = true;
-    Regx_ReadSql(parent.comment, in, true);
+    Regx_ReadSql(parent.matchproto, in, true);
+    return retval;
+}
+
+// --- command.src_func.matchbody.Print
+// Print back to string
+void command::matchbody_Print(command::src_func& parent, algo::cstring &out) {
+    Regx_Print(parent.matchbody, out);
+}
+
+// --- command.src_func.matchbody.ReadStrptrMaybe
+// Read Regx from string
+// Convert string to field. Return success value
+bool command::matchbody_ReadStrptrMaybe(command::src_func& parent, algo::strptr in) {
+    bool retval = true;
+    Regx_ReadSql(parent.matchbody, in, true);
+    return retval;
+}
+
+// --- command.src_func.matchcomment.Print
+// Print back to string
+void command::matchcomment_Print(command::src_func& parent, algo::cstring &out) {
+    Regx_Print(parent.matchcomment, out);
+}
+
+// --- command.src_func.matchcomment.ReadStrptrMaybe
+// Read Regx from string
+// Convert string to field. Return success value
+bool command::matchcomment_ReadStrptrMaybe(command::src_func& parent, algo::strptr in) {
+    bool retval = true;
+    Regx_ReadSql(parent.matchcomment, in, true);
     return retval;
 }
 
@@ -20852,89 +22672,83 @@ bool command::src_func_ReadFieldMaybe(command::src_func& parent, algo::strptr fi
     switch(field_id) {
         case command_FieldId_in: {
             retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
-            break;
-        }
-        case command_FieldId_target: {
-            retval = target_ReadStrptrMaybe(parent, strval);
-            break;
-        }
-        case command_FieldId_name: {
-            retval = name_ReadStrptrMaybe(parent, strval);
-            break;
-        }
-        case command_FieldId_body: {
-            retval = body_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case command_FieldId_targsrc: {
             retval = targsrc_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
+        case command_FieldId_acrkey: {
+            retval = acrkey_ReadStrptrMaybe(parent, strval);
+        } break;
         case command_FieldId_func: {
             retval = func_ReadStrptrMaybe(parent, strval);
-            break;
-        }
-        case command_FieldId_comment: {
-            retval = comment_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case command_FieldId_nextfile: {
             retval = algo::Smallstr200_ReadStrptrMaybe(parent.nextfile, strval);
-            break;
-        }
+        } break;
         case command_FieldId_other: {
             retval = bool_ReadStrptrMaybe(parent.other, strval);
-            break;
-        }
+        } break;
+        case command_FieldId_list: {
+            retval = bool_ReadStrptrMaybe(parent.list, strval);
+        } break;
         case command_FieldId_updateproto: {
             retval = bool_ReadStrptrMaybe(parent.updateproto, strval);
-            break;
-        }
-        case command_FieldId_listfunc: {
-            retval = bool_ReadStrptrMaybe(parent.listfunc, strval);
-            break;
-        }
+        } break;
+        case command_FieldId_createmissing: {
+            retval = bool_ReadStrptrMaybe(parent.createmissing, strval);
+        } break;
         case command_FieldId_iffy: {
             retval = bool_ReadStrptrMaybe(parent.iffy, strval);
-            break;
-        }
-        case command_FieldId_proto: {
-            retval = bool_ReadStrptrMaybe(parent.proto, strval);
-            break;
-        }
+        } break;
         case command_FieldId_gen: {
             retval = bool_ReadStrptrMaybe(parent.gen, strval);
-            break;
-        }
+        } break;
         case command_FieldId_showloc: {
             retval = bool_ReadStrptrMaybe(parent.showloc, strval);
-            break;
-        }
+        } break;
+        case command_FieldId_f: {
+            retval = bool_ReadStrptrMaybe(parent.f, strval);
+        } break;
         case command_FieldId_showstatic: {
             retval = bool_ReadStrptrMaybe(parent.showstatic, strval);
-            break;
-        }
+        } break;
+        case command_FieldId_matchproto: {
+            retval = matchproto_ReadStrptrMaybe(parent, strval);
+        } break;
+        case command_FieldId_matchbody: {
+            retval = matchbody_ReadStrptrMaybe(parent, strval);
+        } break;
+        case command_FieldId_matchcomment: {
+            retval = matchcomment_ReadStrptrMaybe(parent, strval);
+        } break;
         case command_FieldId_showsortkey: {
             retval = bool_ReadStrptrMaybe(parent.showsortkey, strval);
-            break;
-        }
+        } break;
+        case command_FieldId_showcomment: {
+            retval = bool_ReadStrptrMaybe(parent.showcomment, strval);
+        } break;
+        case command_FieldId_showbody: {
+            retval = bool_ReadStrptrMaybe(parent.showbody, strval);
+        } break;
         case command_FieldId_sortname: {
             retval = bool_ReadStrptrMaybe(parent.sortname, strval);
-            break;
-        }
+        } break;
+        case command_FieldId_printssim: {
+            retval = bool_ReadStrptrMaybe(parent.printssim, strval);
+        } break;
         case command_FieldId_e: {
             retval = bool_ReadStrptrMaybe(parent.e, strval);
-            break;
-        }
+        } break;
         case command_FieldId_baddecl: {
             retval = bool_ReadStrptrMaybe(parent.baddecl, strval);
-            break;
-        }
+        } break;
         case command_FieldId_report: {
             retval = bool_ReadStrptrMaybe(parent.report, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -20963,23 +22777,27 @@ bool command::src_func_ReadTupleMaybe(command::src_func &parent, algo::Tuple &tu
 // Set all fields to initial values.
 void command::src_func_Init(command::src_func& parent) {
     parent.in = algo::strptr("data");
-    Regx_ReadSql(parent.target, "%", true);
-    Regx_ReadSql(parent.name, "%", true);
-    Regx_ReadSql(parent.body, "%", true);
-    Regx_ReadSql(parent.targsrc, "", true);
+    Regx_ReadSql(parent.targsrc, "%", true);
+    Regx_ReadSql(parent.acrkey, "%", true);
     Regx_ReadSql(parent.func, "%", true);
-    Regx_ReadSql(parent.comment, "%", true);
     parent.nextfile = algo::strptr("");
     parent.other = bool(false);
+    parent.list = bool(false);
     parent.updateproto = bool(false);
-    parent.listfunc = bool(false);
+    parent.createmissing = bool(false);
     parent.iffy = bool(false);
-    parent.proto = bool(false);
     parent.gen = bool(false);
-    parent.showloc = bool(true);
+    parent.showloc = bool(false);
+    parent.f = bool(false);
     parent.showstatic = bool(true);
+    Regx_ReadSql(parent.matchproto, "%", true);
+    Regx_ReadSql(parent.matchbody, "%", true);
+    Regx_ReadSql(parent.matchcomment, "%", true);
     parent.showsortkey = bool(false);
+    parent.showcomment = bool(false);
+    parent.showbody = bool(false);
     parent.sortname = bool(false);
+    parent.printssim = bool(false);
     parent.e = bool(false);
     parent.baddecl = bool(false);
     parent.report = bool(false);
@@ -21015,36 +22833,22 @@ void command::src_func_PrintArgv(command::src_func& row, algo::cstring& str) {
         str << " -in:";
         strptr_PrintBash(temp,str);
     }
-    ch_RemoveAll(temp);
-    command::target_Print(const_cast<command::src_func&>(row), temp);
-    str << " -target:";
-    strptr_PrintBash(temp,str);
-    ch_RemoveAll(temp);
-    command::name_Print(const_cast<command::src_func&>(row), temp);
-    str << " -name:";
-    strptr_PrintBash(temp,str);
-    ch_RemoveAll(temp);
-    command::body_Print(const_cast<command::src_func&>(row), temp);
-    str << " -body:";
-    strptr_PrintBash(temp,str);
-    if (!(row.targsrc.expr == "")) {
+    if (!(row.targsrc.expr == "%")) {
         ch_RemoveAll(temp);
         command::targsrc_Print(const_cast<command::src_func&>(row), temp);
         str << " -targsrc:";
         strptr_PrintBash(temp,str);
     }
-    if (!(row.func.expr == "%")) {
+    if (!(row.acrkey.expr == "%")) {
         ch_RemoveAll(temp);
-        command::func_Print(const_cast<command::src_func&>(row), temp);
-        str << " -func:";
+        command::acrkey_Print(const_cast<command::src_func&>(row), temp);
+        str << " -acrkey:";
         strptr_PrintBash(temp,str);
     }
-    if (!(row.comment.expr == "%")) {
-        ch_RemoveAll(temp);
-        command::comment_Print(const_cast<command::src_func&>(row), temp);
-        str << " -comment:";
-        strptr_PrintBash(temp,str);
-    }
+    ch_RemoveAll(temp);
+    command::func_Print(const_cast<command::src_func&>(row), temp);
+    str << " -func:";
+    strptr_PrintBash(temp,str);
     if (!(row.nextfile == "")) {
         ch_RemoveAll(temp);
         Smallstr200_Print(row.nextfile, temp);
@@ -21057,16 +22861,22 @@ void command::src_func_PrintArgv(command::src_func& row, algo::cstring& str) {
         str << " -other:";
         strptr_PrintBash(temp,str);
     }
+    if (!(row.list == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.list, temp);
+        str << " -list:";
+        strptr_PrintBash(temp,str);
+    }
     if (!(row.updateproto == false)) {
         ch_RemoveAll(temp);
         bool_Print(row.updateproto, temp);
         str << " -updateproto:";
         strptr_PrintBash(temp,str);
     }
-    if (!(row.listfunc == false)) {
+    if (!(row.createmissing == false)) {
         ch_RemoveAll(temp);
-        bool_Print(row.listfunc, temp);
-        str << " -listfunc:";
+        bool_Print(row.createmissing, temp);
+        str << " -createmissing:";
         strptr_PrintBash(temp,str);
     }
     if (!(row.iffy == false)) {
@@ -21075,22 +22885,22 @@ void command::src_func_PrintArgv(command::src_func& row, algo::cstring& str) {
         str << " -iffy:";
         strptr_PrintBash(temp,str);
     }
-    if (!(row.proto == false)) {
-        ch_RemoveAll(temp);
-        bool_Print(row.proto, temp);
-        str << " -proto:";
-        strptr_PrintBash(temp,str);
-    }
     if (!(row.gen == false)) {
         ch_RemoveAll(temp);
         bool_Print(row.gen, temp);
         str << " -gen:";
         strptr_PrintBash(temp,str);
     }
-    if (!(row.showloc == true)) {
+    if (!(row.showloc == false)) {
         ch_RemoveAll(temp);
         bool_Print(row.showloc, temp);
         str << " -showloc:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.f == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.f, temp);
+        str << " -f:";
         strptr_PrintBash(temp,str);
     }
     if (!(row.showstatic == true)) {
@@ -21099,16 +22909,52 @@ void command::src_func_PrintArgv(command::src_func& row, algo::cstring& str) {
         str << " -showstatic:";
         strptr_PrintBash(temp,str);
     }
+    if (!(row.matchproto.expr == "%")) {
+        ch_RemoveAll(temp);
+        command::matchproto_Print(const_cast<command::src_func&>(row), temp);
+        str << " -matchproto:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.matchbody.expr == "%")) {
+        ch_RemoveAll(temp);
+        command::matchbody_Print(const_cast<command::src_func&>(row), temp);
+        str << " -matchbody:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.matchcomment.expr == "%")) {
+        ch_RemoveAll(temp);
+        command::matchcomment_Print(const_cast<command::src_func&>(row), temp);
+        str << " -matchcomment:";
+        strptr_PrintBash(temp,str);
+    }
     if (!(row.showsortkey == false)) {
         ch_RemoveAll(temp);
         bool_Print(row.showsortkey, temp);
         str << " -showsortkey:";
         strptr_PrintBash(temp,str);
     }
+    if (!(row.showcomment == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.showcomment, temp);
+        str << " -showcomment:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.showbody == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.showbody, temp);
+        str << " -showbody:";
+        strptr_PrintBash(temp,str);
+    }
     if (!(row.sortname == false)) {
         ch_RemoveAll(temp);
         bool_Print(row.sortname, temp);
         str << " -sortname:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.printssim == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.printssim, temp);
+        str << " -printssim:";
         strptr_PrintBash(temp,str);
     }
     if (!(row.e == false)) {
@@ -21135,9 +22981,7 @@ void command::src_func_PrintArgv(command::src_func& row, algo::cstring& str) {
 algo::strptr command::src_func_GetAnon(command::src_func &parent, i32 idx) {
     (void)parent;//only to avoid -Wunused-parameter
     switch(idx) {
-        case(0): return strptr("target", 6);
-        case(1): return strptr("name", 4);
-        case(2): return strptr("body", 4);
+        case(0): return strptr("func", 4);
         default: return algo::strptr();
     }
 }
@@ -21149,91 +22993,111 @@ algo::strptr command::src_func_GetAnon(command::src_func &parent, i32 idx) {
 i32 command::src_func_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
     i32 retval = 1;
     switch (field) {
-        case command_FieldId_in: { // $comment
+        case command_FieldId_in: { //
             *out_anon = false;
         } break;
-        case command_FieldId_target: { // $comment
+        case command_FieldId_targsrc: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_acrkey: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_func: { //
             *out_anon = true;
         } break;
-        case command_FieldId_name: { // $comment
-            *out_anon = true;
-        } break;
-        case command_FieldId_body: { // $comment
-            *out_anon = true;
-        } break;
-        case command_FieldId_targsrc: { // $comment
+        case command_FieldId_nextfile: { //
             *out_anon = false;
         } break;
-        case command_FieldId_func: { // $comment
-            *out_anon = false;
-        } break;
-        case command_FieldId_comment: { // $comment
-            *out_anon = false;
-        } break;
-        case command_FieldId_nextfile: { // $comment
-            *out_anon = false;
-        } break;
-        case command_FieldId_other: { // $comment
+        case command_FieldId_other: { // bool: no argument required but value may be specified as other:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_updateproto: { // bool: no argument required but value may be specified as other:Y
+        case command_FieldId_list: { // bool: no argument required but value may be specified as list:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_listfunc: { // bool: no argument required but value may be specified as updateproto:Y
+        case command_FieldId_updateproto: { // bool: no argument required but value may be specified as updateproto:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_iffy: { // bool: no argument required but value may be specified as listfunc:Y
+        case command_FieldId_createmissing: { // bool: no argument required but value may be specified as createmissing:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_proto: { // bool: no argument required but value may be specified as iffy:Y
+        case command_FieldId_iffy: { // bool: no argument required but value may be specified as iffy:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_gen: { // bool: no argument required but value may be specified as proto:Y
+        case command_FieldId_gen: { // bool: no argument required but value may be specified as gen:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_showloc: { // bool: no argument required but value may be specified as gen:Y
+        case command_FieldId_showloc: { // bool: no argument required but value may be specified as showloc:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_showstatic: { // bool: no argument required but value may be specified as showloc:Y
+        case command_FieldId_f: { // bool: no argument required but value may be specified as f:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_showsortkey: { // bool: no argument required but value may be specified as showstatic:Y
+        case command_FieldId_showstatic: { // bool: no argument required but value may be specified as showstatic:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_sortname: { // bool: no argument required but value may be specified as showsortkey:Y
+        case command_FieldId_matchproto: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_matchbody: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_matchcomment: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_showsortkey: { // bool: no argument required but value may be specified as showsortkey:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_e: { // bool: no argument required but value may be specified as sortname:Y
+        case command_FieldId_showcomment: { // bool: no argument required but value may be specified as showcomment:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_baddecl: { // bool: no argument required but value may be specified as e:Y
+        case command_FieldId_showbody: { // bool: no argument required but value may be specified as showbody:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_report: { // bool: no argument required but value may be specified as baddecl:Y
+        case command_FieldId_sortname: { // bool: no argument required but value may be specified as sortname:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_printssim: { // bool: no argument required but value may be specified as printssim:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_e: { // bool: no argument required but value may be specified as e:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_baddecl: { // bool: no argument required but value may be specified as baddecl:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_report: { // bool: no argument required but value may be specified as report:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
@@ -21299,7 +23163,7 @@ algo::Fildes command::src_func_StartRead(command::src_func_proc& parent, algo_li
 // --- command.src_func_proc.src_func.Kill
 // Kill subprocess and wait
 void command::src_func_Kill(command::src_func_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         kill(parent.pid,9);
         src_func_Wait(parent);
     }
@@ -21388,40 +23252,22 @@ void command::src_func_ToArgv(command::src_func_proc& parent, algo::StringAry& a
         cstring_Print(parent.cmd.in, *arg);
     }
 
-    if (parent.cmd.target.expr != "%") {
-        cstring *arg = &ary_Alloc(args);
-        *arg << "-target:";
-        command::target_Print(parent.cmd, *arg);
-    }
-
-    if (parent.cmd.name.expr != "%") {
-        cstring *arg = &ary_Alloc(args);
-        *arg << "-name:";
-        command::name_Print(parent.cmd, *arg);
-    }
-
-    if (parent.cmd.body.expr != "%") {
-        cstring *arg = &ary_Alloc(args);
-        *arg << "-body:";
-        command::body_Print(parent.cmd, *arg);
-    }
-
-    if (parent.cmd.targsrc.expr != "") {
+    if (parent.cmd.targsrc.expr != "%") {
         cstring *arg = &ary_Alloc(args);
         *arg << "-targsrc:";
         command::targsrc_Print(parent.cmd, *arg);
+    }
+
+    if (parent.cmd.acrkey.expr != "%") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-acrkey:";
+        command::acrkey_Print(parent.cmd, *arg);
     }
 
     if (parent.cmd.func.expr != "%") {
         cstring *arg = &ary_Alloc(args);
         *arg << "-func:";
         command::func_Print(parent.cmd, *arg);
-    }
-
-    if (parent.cmd.comment.expr != "%") {
-        cstring *arg = &ary_Alloc(args);
-        *arg << "-comment:";
-        command::comment_Print(parent.cmd, *arg);
     }
 
     if (parent.cmd.nextfile != "") {
@@ -21436,16 +23282,22 @@ void command::src_func_ToArgv(command::src_func_proc& parent, algo::StringAry& a
         bool_Print(parent.cmd.other, *arg);
     }
 
+    if (parent.cmd.list != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-list:";
+        bool_Print(parent.cmd.list, *arg);
+    }
+
     if (parent.cmd.updateproto != false) {
         cstring *arg = &ary_Alloc(args);
         *arg << "-updateproto:";
         bool_Print(parent.cmd.updateproto, *arg);
     }
 
-    if (parent.cmd.listfunc != false) {
+    if (parent.cmd.createmissing != false) {
         cstring *arg = &ary_Alloc(args);
-        *arg << "-listfunc:";
-        bool_Print(parent.cmd.listfunc, *arg);
+        *arg << "-createmissing:";
+        bool_Print(parent.cmd.createmissing, *arg);
     }
 
     if (parent.cmd.iffy != false) {
@@ -21454,22 +23306,22 @@ void command::src_func_ToArgv(command::src_func_proc& parent, algo::StringAry& a
         bool_Print(parent.cmd.iffy, *arg);
     }
 
-    if (parent.cmd.proto != false) {
-        cstring *arg = &ary_Alloc(args);
-        *arg << "-proto:";
-        bool_Print(parent.cmd.proto, *arg);
-    }
-
     if (parent.cmd.gen != false) {
         cstring *arg = &ary_Alloc(args);
         *arg << "-gen:";
         bool_Print(parent.cmd.gen, *arg);
     }
 
-    if (parent.cmd.showloc != true) {
+    if (parent.cmd.showloc != false) {
         cstring *arg = &ary_Alloc(args);
         *arg << "-showloc:";
         bool_Print(parent.cmd.showloc, *arg);
+    }
+
+    if (parent.cmd.f != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-f:";
+        bool_Print(parent.cmd.f, *arg);
     }
 
     if (parent.cmd.showstatic != true) {
@@ -21478,16 +23330,52 @@ void command::src_func_ToArgv(command::src_func_proc& parent, algo::StringAry& a
         bool_Print(parent.cmd.showstatic, *arg);
     }
 
+    if (parent.cmd.matchproto.expr != "%") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-matchproto:";
+        command::matchproto_Print(parent.cmd, *arg);
+    }
+
+    if (parent.cmd.matchbody.expr != "%") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-matchbody:";
+        command::matchbody_Print(parent.cmd, *arg);
+    }
+
+    if (parent.cmd.matchcomment.expr != "%") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-matchcomment:";
+        command::matchcomment_Print(parent.cmd, *arg);
+    }
+
     if (parent.cmd.showsortkey != false) {
         cstring *arg = &ary_Alloc(args);
         *arg << "-showsortkey:";
         bool_Print(parent.cmd.showsortkey, *arg);
     }
 
+    if (parent.cmd.showcomment != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-showcomment:";
+        bool_Print(parent.cmd.showcomment, *arg);
+    }
+
+    if (parent.cmd.showbody != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-showbody:";
+        bool_Print(parent.cmd.showbody, *arg);
+    }
+
     if (parent.cmd.sortname != false) {
         cstring *arg = &ary_Alloc(args);
         *arg << "-sortname:";
         bool_Print(parent.cmd.sortname, *arg);
+    }
+
+    if (parent.cmd.printssim != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-printssim:";
+        bool_Print(parent.cmd.printssim, *arg);
     }
 
     if (parent.cmd.e != false) {
@@ -21558,29 +23446,26 @@ bool command::src_hdr_ReadFieldMaybe(command::src_hdr& parent, algo::strptr fiel
     switch(field_id) {
         case command_FieldId_in: {
             retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
-            break;
-        }
+        } break;
         case command_FieldId_targsrc: {
             retval = targsrc_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case command_FieldId_write: {
             retval = bool_ReadStrptrMaybe(parent.write, strval);
-            break;
-        }
+        } break;
         case command_FieldId_indent: {
             retval = bool_ReadStrptrMaybe(parent.indent, strval);
-            break;
-        }
+        } break;
         case command_FieldId_update_copyright: {
             retval = bool_ReadStrptrMaybe(parent.update_copyright, strval);
-            break;
-        }
+        } break;
         case command_FieldId_scriptfile: {
             retval = scriptfile_ReadStrptrMaybe(parent, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -21681,28 +23566,28 @@ void command::src_hdr_PrintArgv(command::src_hdr& row, algo::cstring& str) {
 i32 command::src_hdr_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
     i32 retval = 1;
     switch (field) {
-        case command_FieldId_in: { // $comment
+        case command_FieldId_in: { //
             *out_anon = false;
         } break;
-        case command_FieldId_targsrc: { // $comment
+        case command_FieldId_targsrc: { //
             *out_anon = false;
         } break;
-        case command_FieldId_write: { // $comment
-            *out_anon = false;
-            retval=0;
-            out_dflt="Y";
-        } break;
-        case command_FieldId_indent: { // bool: no argument required but value may be specified as write:Y
+        case command_FieldId_write: { // bool: no argument required but value may be specified as write:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_update_copyright: { // bool: no argument required but value may be specified as indent:Y
+        case command_FieldId_indent: { // bool: no argument required but value may be specified as indent:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_scriptfile: { // bool: no argument required but value may be specified as update_copyright:Y
+        case command_FieldId_update_copyright: { // bool: no argument required but value may be specified as update_copyright:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_scriptfile: { //
             *out_anon = false;
         } break;
         default:
@@ -21766,7 +23651,7 @@ algo::Fildes command::src_hdr_StartRead(command::src_hdr_proc& parent, algo_lib:
 // --- command.src_hdr_proc.src_hdr.Kill
 // Kill subprocess and wait
 void command::src_hdr_Kill(command::src_hdr_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         kill(parent.pid,9);
         src_hdr_Wait(parent);
     }
@@ -21935,37 +23820,32 @@ bool command::src_lim_ReadFieldMaybe(command::src_lim& parent, algo::strptr fiel
     switch(field_id) {
         case command_FieldId_in: {
             retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
-            break;
-        }
+        } break;
         case command_FieldId_linelim: {
             retval = bool_ReadStrptrMaybe(parent.linelim, strval);
-            break;
-        }
+        } break;
         case command_FieldId_srcfile: {
             retval = srcfile_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case command_FieldId_strayfile: {
             retval = bool_ReadStrptrMaybe(parent.strayfile, strval);
-            break;
-        }
+        } break;
         case command_FieldId_capture: {
             retval = bool_ReadStrptrMaybe(parent.capture, strval);
-            break;
-        }
+        } break;
         case command_FieldId_write: {
             retval = bool_ReadStrptrMaybe(parent.write, strval);
-            break;
-        }
+        } break;
         case command_FieldId_badchar: {
             retval = bool_ReadStrptrMaybe(parent.badchar, strval);
-            break;
-        }
+        } break;
         case command_FieldId_badline: {
             retval = badline_ReadStrptrMaybe(parent, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -22080,38 +23960,38 @@ void command::src_lim_PrintArgv(command::src_lim& row, algo::cstring& str) {
 i32 command::src_lim_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
     i32 retval = 1;
     switch (field) {
-        case command_FieldId_in: { // $comment
+        case command_FieldId_in: { //
             *out_anon = false;
         } break;
-        case command_FieldId_linelim: { // $comment
-            *out_anon = false;
-            retval=0;
-            out_dflt="Y";
-        } break;
-        case command_FieldId_srcfile: { // bool: no argument required but value may be specified as linelim:Y
-            *out_anon = false;
-        } break;
-        case command_FieldId_strayfile: { // bool: no argument required but value may be specified as linelim:Y
+        case command_FieldId_linelim: { // bool: no argument required but value may be specified as linelim:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_capture: { // bool: no argument required but value may be specified as strayfile:Y
+        case command_FieldId_srcfile: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_strayfile: { // bool: no argument required but value may be specified as strayfile:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_write: { // bool: no argument required but value may be specified as capture:Y
+        case command_FieldId_capture: { // bool: no argument required but value may be specified as capture:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_badchar: { // bool: no argument required but value may be specified as write:Y
+        case command_FieldId_write: { // bool: no argument required but value may be specified as write:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_badline: { // bool: no argument required but value may be specified as badchar:Y
+        case command_FieldId_badchar: { // bool: no argument required but value may be specified as badchar:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_badline: { //
             *out_anon = false;
         } break;
         default:
@@ -22175,7 +24055,7 @@ algo::Fildes command::src_lim_StartRead(command::src_lim_proc& parent, algo_lib:
 // --- command.src_lim_proc.src_lim.Kill
 // Kill subprocess and wait
 void command::src_lim_Kill(command::src_lim_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         kill(parent.pid,9);
         src_lim_Wait(parent);
     }
@@ -22326,13 +24206,14 @@ bool command::ssim2csv_ReadFieldMaybe(command::ssim2csv& parent, algo::strptr fi
     switch(field_id) {
         case command_FieldId_expand: {
             retval = algo::cstring_ReadStrptrMaybe(parent.expand, strval);
-            break;
-        }
+        } break;
         case command_FieldId_ignoreQuote: {
             retval = bool_ReadStrptrMaybe(parent.ignoreQuote, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -22398,10 +24279,10 @@ void command::ssim2csv_PrintArgv(command::ssim2csv& row, algo::cstring& str) {
 i32 command::ssim2csv_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
     i32 retval = 1;
     switch (field) {
-        case command_FieldId_expand: { // $comment
+        case command_FieldId_expand: { //
             *out_anon = false;
         } break;
-        case command_FieldId_ignoreQuote: { // $comment
+        case command_FieldId_ignoreQuote: { // bool: no argument required but value may be specified as ignoreQuote:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
@@ -22467,7 +24348,7 @@ algo::Fildes command::ssim2csv_StartRead(command::ssim2csv_proc& parent, algo_li
 // --- command.ssim2csv_proc.ssim2csv.Kill
 // Kill subprocess and wait
 void command::ssim2csv_Kill(command::ssim2csv_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         kill(parent.pid,9);
         ssim2csv_Wait(parent);
     }
@@ -22582,49 +24463,41 @@ bool command::ssim2mysql_ReadFieldMaybe(command::ssim2mysql& parent, algo::strpt
     switch(field_id) {
         case command_FieldId_url: {
             retval = algo::cstring_ReadStrptrMaybe(parent.url, strval);
-            break;
-        }
+        } break;
         case command_FieldId_data_dir: {
             retval = algo::cstring_ReadStrptrMaybe(parent.data_dir, strval);
-            break;
-        }
+        } break;
         case command_FieldId_maxpacket: {
             retval = i32_ReadStrptrMaybe(parent.maxpacket, strval);
-            break;
-        }
+        } break;
         case command_FieldId_replace: {
             retval = bool_ReadStrptrMaybe(parent.replace, strval);
-            break;
-        }
+        } break;
         case command_FieldId_trunc: {
             retval = bool_ReadStrptrMaybe(parent.trunc, strval);
-            break;
-        }
+        } break;
         case command_FieldId_dry_run: {
             retval = bool_ReadStrptrMaybe(parent.dry_run, strval);
-            break;
-        }
+        } break;
         case command_FieldId_fldfunc: {
             retval = bool_ReadStrptrMaybe(parent.fldfunc, strval);
-            break;
-        }
+        } break;
         case command_FieldId_in: {
             retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
-            break;
-        }
+        } break;
         case command_FieldId_db: {
             retval = algo::cstring_ReadStrptrMaybe(parent.db, strval);
-            break;
-        }
+        } break;
         case command_FieldId_createdb: {
             retval = bool_ReadStrptrMaybe(parent.createdb, strval);
-            break;
-        }
+        } break;
         case command_FieldId_fkey: {
             retval = bool_ReadStrptrMaybe(parent.fkey, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -22760,47 +24633,47 @@ void command::ssim2mysql_PrintArgv(command::ssim2mysql& row, algo::cstring& str)
 i32 command::ssim2mysql_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
     i32 retval = 1;
     switch (field) {
-        case command_FieldId_url: { // $comment
+        case command_FieldId_url: { //
             *out_anon = false;
         } break;
-        case command_FieldId_data_dir: { // $comment
+        case command_FieldId_data_dir: { //
             *out_anon = false;
         } break;
-        case command_FieldId_maxpacket: { // $comment
+        case command_FieldId_maxpacket: { //
             *out_anon = false;
         } break;
-        case command_FieldId_replace: { // $comment
-            *out_anon = false;
-            retval=0;
-            out_dflt="Y";
-        } break;
-        case command_FieldId_trunc: { // bool: no argument required but value may be specified as replace:Y
+        case command_FieldId_replace: { // bool: no argument required but value may be specified as replace:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_dry_run: { // bool: no argument required but value may be specified as trunc:Y
+        case command_FieldId_trunc: { // bool: no argument required but value may be specified as trunc:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_fldfunc: { // bool: no argument required but value may be specified as dry_run:Y
+        case command_FieldId_dry_run: { // bool: no argument required but value may be specified as dry_run:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_in: { // bool: no argument required but value may be specified as fldfunc:Y
-            *out_anon = false;
-        } break;
-        case command_FieldId_db: { // bool: no argument required but value may be specified as fldfunc:Y
-            *out_anon = false;
-        } break;
-        case command_FieldId_createdb: { // bool: no argument required but value may be specified as fldfunc:Y
+        case command_FieldId_fldfunc: { // bool: no argument required but value may be specified as fldfunc:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_fkey: { // bool: no argument required but value may be specified as createdb:Y
+        case command_FieldId_in: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_db: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_createdb: { // bool: no argument required but value may be specified as createdb:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_fkey: { // bool: no argument required but value may be specified as fkey:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
@@ -22866,7 +24739,7 @@ algo::Fildes command::ssim2mysql_StartRead(command::ssim2mysql_proc& parent, alg
 // --- command.ssim2mysql_proc.ssim2mysql.Kill
 // Kill subprocess and wait
 void command::ssim2mysql_Kill(command::ssim2mysql_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         kill(parent.pid,9);
         ssim2mysql_Wait(parent);
     }
@@ -23104,6 +24977,25 @@ algo::aryptr<algo::cstring> command::match_AllocN(command::ssimfilt& parent, int
     return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
 }
 
+// --- command.ssimfilt.match.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<algo::cstring> command::match_AllocNAt(command::ssimfilt& parent, int n_elems, int at) {
+    match_Reserve(parent, n_elems);
+    int n  = parent.match_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("command.bad_alloc_n_at  field:command.ssimfilt.match  comment:'index out of range'");
+    }
+    algo::cstring *elems = parent.match_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(algo::cstring));
+    for (int i = 0; i < n_elems; i++) {
+        new (elems + at + i) algo::cstring(); // construct new element, default initialize
+    }
+    parent.match_n = n+n_elems;
+    return algo::aryptr<algo::cstring>(elems+at,n_elems);
+}
+
 // --- command.ssimfilt.match.Remove
 // Remove item by index. If index outside of range, do nothing.
 void command::match_Remove(command::ssimfilt& parent, u32 i) {
@@ -23200,6 +25092,30 @@ bool command::match_ReadStrptrMaybe(command::ssimfilt& parent, algo::strptr in_s
     return retval;
 }
 
+// --- command.ssimfilt.match.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void command::match_Insary(command::ssimfilt& parent, algo::aryptr<algo::cstring> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.match_elems && rhs.elems < parent.match_elems + parent.match_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("command.tary_alias  field:command.ssimfilt.match  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(parent.match_elems+1))) {
+        FatalErrorExit("command.bad_insary  field:command.ssimfilt.match  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = parent.match_n - at;
+    match_Reserve(parent, nnew); // reserve space
+    for (int i = nmove-1; i >=0 ; --i) {
+        new (parent.match_elems + at + nnew + i) algo::cstring(parent.match_elems[at + i]);
+        parent.match_elems[at + i].~cstring(); // destroy element
+    }
+    for (int i = 0; i < nnew; ++i) {
+        new (parent.match_elems + at + i) algo::cstring(rhs[i]);
+    }
+    parent.match_n += nnew;
+}
+
 // --- command.ssimfilt.field.Addary
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
@@ -23260,6 +25176,25 @@ algo::aryptr<algo::cstring> command::field_AllocN(command::ssimfilt& parent, int
     }
     parent.field_n = new_n;
     return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
+}
+
+// --- command.ssimfilt.field.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<algo::cstring> command::field_AllocNAt(command::ssimfilt& parent, int n_elems, int at) {
+    field_Reserve(parent, n_elems);
+    int n  = parent.field_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("command.bad_alloc_n_at  field:command.ssimfilt.field  comment:'index out of range'");
+    }
+    algo::cstring *elems = parent.field_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(algo::cstring));
+    for (int i = 0; i < n_elems; i++) {
+        new (elems + at + i) algo::cstring(); // construct new element, default initialize
+    }
+    parent.field_n = n+n_elems;
+    return algo::aryptr<algo::cstring>(elems+at,n_elems);
 }
 
 // --- command.ssimfilt.field.Remove
@@ -23356,6 +25291,30 @@ bool command::field_ReadStrptrMaybe(command::ssimfilt& parent, algo::strptr in_s
         field_RemoveLast(parent);
     }
     return retval;
+}
+
+// --- command.ssimfilt.field.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void command::field_Insary(command::ssimfilt& parent, algo::aryptr<algo::cstring> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.field_elems && rhs.elems < parent.field_elems + parent.field_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("command.tary_alias  field:command.ssimfilt.field  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(parent.field_elems+1))) {
+        FatalErrorExit("command.bad_insary  field:command.ssimfilt.field  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = parent.field_n - at;
+    field_Reserve(parent, nnew); // reserve space
+    for (int i = nmove-1; i >=0 ; --i) {
+        new (parent.field_elems + at + nnew + i) algo::cstring(parent.field_elems[at + i]);
+        parent.field_elems[at + i].~cstring(); // destroy element
+    }
+    for (int i = 0; i < nnew; ++i) {
+        new (parent.field_elems + at + i) algo::cstring(rhs[i]);
+    }
+    parent.field_n += nnew;
 }
 
 // --- command.ssimfilt.format.ToCstr
@@ -23475,33 +25434,29 @@ bool command::ssimfilt_ReadFieldMaybe(command::ssimfilt& parent, algo::strptr fi
     switch(field_id) {
         case command_FieldId_in: {
             retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
-            break;
-        }
+        } break;
         case command_FieldId_typetag: {
             retval = typetag_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case command_FieldId_match: {
             retval = match_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case command_FieldId_field: {
             retval = field_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case command_FieldId_format: {
             retval = format_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case command_FieldId_t: {
             retval = bool_ReadStrptrMaybe(parent.t, strval);
-            break;
-        }
+        } break;
         case command_FieldId_cmd: {
             retval = algo::cstring_ReadStrptrMaybe(parent.cmd, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -23641,27 +25596,27 @@ algo::strptr command::ssimfilt_GetAnon(command::ssimfilt &parent, i32 idx) {
 i32 command::ssimfilt_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
     i32 retval = 1;
     switch (field) {
-        case command_FieldId_in: { // $comment
+        case command_FieldId_in: { //
             *out_anon = false;
         } break;
-        case command_FieldId_typetag: { // $comment
+        case command_FieldId_typetag: { //
             *out_anon = true;
         } break;
-        case command_FieldId_match: { // $comment
+        case command_FieldId_match: { //
             *out_anon = true;
         } break;
-        case command_FieldId_field: { // $comment
+        case command_FieldId_field: { //
             *out_anon = false;
         } break;
-        case command_FieldId_format: { // $comment
+        case command_FieldId_format: { //
             *out_anon = false;
         } break;
-        case command_FieldId_t: { // $comment
+        case command_FieldId_t: { // bool: no argument required but value may be specified as t:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_cmd: { // bool: no argument required but value may be specified as t:Y
+        case command_FieldId_cmd: { //
             *out_anon = false;
         } break;
         default:
@@ -23755,7 +25710,7 @@ algo::Fildes command::ssimfilt_StartRead(command::ssimfilt_proc& parent, algo_li
 // --- command.ssimfilt_proc.ssimfilt.Kill
 // Kill subprocess and wait
 void command::ssimfilt_Kill(command::ssimfilt_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         kill(parent.pid,9);
         ssimfilt_Wait(parent);
     }
@@ -23898,25 +25853,23 @@ bool command::strconv_ReadFieldMaybe(command::strconv& parent, algo::strptr fiel
     switch(field_id) {
         case command_FieldId_str: {
             retval = algo::cstring_ReadStrptrMaybe(parent.str, strval);
-            break;
-        }
+        } break;
         case command_FieldId_tocamelcase: {
             retval = bool_ReadStrptrMaybe(parent.tocamelcase, strval);
-            break;
-        }
+        } break;
         case command_FieldId_tolowerunder: {
             retval = bool_ReadStrptrMaybe(parent.tolowerunder, strval);
-            break;
-        }
+        } break;
         case command_FieldId_in: {
             retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
-            break;
-        }
+        } break;
         case command_FieldId_pathcomp: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.pathcomp, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -24011,23 +25964,23 @@ algo::strptr command::strconv_GetAnon(command::strconv &parent, i32 idx) {
 i32 command::strconv_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
     i32 retval = 1;
     switch (field) {
-        case command_FieldId_str: { // $comment
+        case command_FieldId_str: { //
             *out_anon = true;
         } break;
-        case command_FieldId_tocamelcase: { // $comment
+        case command_FieldId_tocamelcase: { // bool: no argument required but value may be specified as tocamelcase:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_tolowerunder: { // bool: no argument required but value may be specified as tocamelcase:Y
+        case command_FieldId_tolowerunder: { // bool: no argument required but value may be specified as tolowerunder:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_in: { // bool: no argument required but value may be specified as tolowerunder:Y
+        case command_FieldId_in: { //
             *out_anon = false;
         } break;
-        case command_FieldId_pathcomp: { // bool: no argument required but value may be specified as tolowerunder:Y
+        case command_FieldId_pathcomp: { //
             *out_anon = false;
         } break;
         default:
@@ -24091,7 +26044,7 @@ algo::Fildes command::strconv_StartRead(command::strconv_proc& parent, algo_lib:
 // --- command.strconv_proc.strconv.Kill
 // Kill subprocess and wait
 void command::strconv_Kill(command::strconv_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         kill(parent.pid,9);
         strconv_Wait(parent);
     }
@@ -24239,53 +26192,44 @@ bool command::sv2ssim_ReadFieldMaybe(command::sv2ssim& parent, algo::strptr fiel
     switch(field_id) {
         case command_FieldId_in: {
             retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
-            break;
-        }
+        } break;
         case command_FieldId_fname: {
             retval = algo::cstring_ReadStrptrMaybe(parent.fname, strval);
-            break;
-        }
+        } break;
         case command_FieldId_separator: {
             retval = char_ReadStrptrMaybe(parent.separator, strval);
-            break;
-        }
+        } break;
         case command_FieldId_outseparator: {
             retval = algo::cstring_ReadStrptrMaybe(parent.outseparator, strval);
-            break;
-        }
+        } break;
         case command_FieldId_header: {
             retval = bool_ReadStrptrMaybe(parent.header, strval);
-            break;
-        }
+        } break;
         case command_FieldId_ctype: {
             retval = algo::cstring_ReadStrptrMaybe(parent.ctype, strval);
-            break;
-        }
+        } break;
         case command_FieldId_ssimfile: {
             retval = algo::cstring_ReadStrptrMaybe(parent.ssimfile, strval);
-            break;
-        }
+        } break;
         case command_FieldId_schema: {
             retval = bool_ReadStrptrMaybe(parent.schema, strval);
-            break;
-        }
+        } break;
         case command_FieldId_field: {
             retval = field_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case command_FieldId_data: {
             retval = bool_ReadStrptrMaybe(parent.data, strval);
-            break;
-        }
+        } break;
         case command_FieldId_report: {
             retval = bool_ReadStrptrMaybe(parent.report, strval);
-            break;
-        }
+        } break;
         case command_FieldId_prefer_signed: {
             retval = bool_ReadStrptrMaybe(parent.prefer_signed, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -24438,48 +26382,48 @@ algo::strptr command::sv2ssim_GetAnon(command::sv2ssim &parent, i32 idx) {
 i32 command::sv2ssim_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
     i32 retval = 1;
     switch (field) {
-        case command_FieldId_in: { // $comment
+        case command_FieldId_in: { //
             *out_anon = false;
         } break;
-        case command_FieldId_fname: { // $comment
+        case command_FieldId_fname: { //
             *out_anon = true;
         } break;
-        case command_FieldId_separator: { // $comment
+        case command_FieldId_separator: { //
             *out_anon = false;
         } break;
-        case command_FieldId_outseparator: { // $comment
+        case command_FieldId_outseparator: { //
             *out_anon = false;
         } break;
-        case command_FieldId_header: { // $comment
-            *out_anon = false;
-            retval=0;
-            out_dflt="Y";
-        } break;
-        case command_FieldId_ctype: { // bool: no argument required but value may be specified as header:Y
-            *out_anon = false;
-        } break;
-        case command_FieldId_ssimfile: { // bool: no argument required but value may be specified as header:Y
-            *out_anon = false;
-        } break;
-        case command_FieldId_schema: { // bool: no argument required but value may be specified as header:Y
+        case command_FieldId_header: { // bool: no argument required but value may be specified as header:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_field: { // bool: no argument required but value may be specified as schema:Y
+        case command_FieldId_ctype: { //
             *out_anon = false;
         } break;
-        case command_FieldId_data: { // bool: no argument required but value may be specified as schema:Y
+        case command_FieldId_ssimfile: { //
             *out_anon = false;
-            retval=0;
-            out_dflt="Y";
         } break;
-        case command_FieldId_report: { // bool: no argument required but value may be specified as data:Y
+        case command_FieldId_schema: { // bool: no argument required but value may be specified as schema:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_prefer_signed: { // bool: no argument required but value may be specified as report:Y
+        case command_FieldId_field: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_data: { // bool: no argument required but value may be specified as data:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_report: { // bool: no argument required but value may be specified as report:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_prefer_signed: { // bool: no argument required but value may be specified as prefer_signed:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
@@ -24545,7 +26489,7 @@ algo::Fildes command::sv2ssim_StartRead(command::sv2ssim_proc& parent, algo_lib:
 // --- command.sv2ssim_proc.sv2ssim.Kill
 // Kill subprocess and wait
 void command::sv2ssim_Kill(command::sv2ssim_proc& parent) {
-    if (parent.pid != 0) {
+    if (parent.pid > 0) {
         kill(parent.pid,9);
         sv2ssim_Wait(parent);
     }

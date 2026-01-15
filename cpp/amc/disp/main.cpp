@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
 //
 // License: GPL
@@ -40,6 +40,21 @@ void amc::gen_ns_dispatch() {
     ind_beg(amc::ns_c_dispatch_curs, disp,ns) {
         if (disp.read) {
             Disp_Read(disp);
+        }
+    }ind_end;
+    ind_beg(amc::ns_c_dispatch_curs, disp,ns) {
+        if (disp.dyn) {
+            Disp_Delete(disp);
+        }
+    }ind_end;
+    ind_beg(amc::ns_c_dispatch_curs, disp,ns) {
+        if (disp.kafka) {
+            Disp_KafkaEncode(disp);
+        }
+    }ind_end;
+    ind_beg(amc::ns_c_dispatch_curs, disp,ns) {
+        if (disp.kafka) {
+            Disp_KafkaDecode(disp);
         }
     }ind_end;
     Filter_Gen(ns);

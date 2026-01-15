@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
 //
 // License: GPL
@@ -85,6 +85,11 @@ void amc::gen_trace() {
             }
         }ind_end;
         Main_Trace_Field(Subst(R,"$ns.trace.dispatch_$Dname_Unkmsg"), algo::Comment());
+        // this trace field will never be incremented but it's created anyway for symmetry --
+        // all trace fields that track steps are pairs of 2 u64's, N and total cycles.
+        if (dispatch.c_disptrace && dispatch.c_disptrace->cycle) {
+            Main_Trace_Field(Subst(R,"$ns.trace.dispatch_$Dname_Unkmsg_cycles"), algo::Comment());
+        }
     }ind_end;
 
     // alloc
@@ -96,21 +101,24 @@ void amc::gen_trace() {
             && parent.p_ns->c_globfld
             && field.c_ftrace;
         // Add tracefld for fbuf out egain
-        bool fbuf_trace = field.c_fbuf
-            && fbufdir_Get(*field.c_fbuf) == dmmeta_Fbufdir_fbufdir_out
-            && field.c_ftrace;
+        bool fbuf_trace = field.c_fbuf && field.c_ftrace;
+        bool fbuf_trace_in = fbuf_trace && fbufdir_Get(*field.c_fbuf) == dmmeta_Fbufdir_fbufdir_in;
+        bool fbuf_trace_out = fbuf_trace && fbufdir_Get(*field.c_fbuf) == dmmeta_Fbufdir_fbufdir_out;
+        Set(R,"$ns"      , ns_Get(parent));
+        Set(R,"$partrace", Refname(*field.p_ctype));
+        Set(R,"$name"    , name_Get(field));
         if (regular_trace) {
-            Set(R,"$ns"      , ns_Get(parent));
-            Set(R,"$partrace", Refname(*field.p_ctype));
-            Set(R,"$name"    , name_Get(field));
             Main_Trace_Field(Subst(R,"$ns.trace.alloc_$partrace_$name"), field.p_arg->comment);
             Main_Trace_Field(Subst(R,"$ns.trace.del_$partrace_$name"), field.p_arg->comment);
         }
-        if (fbuf_trace) {
-            Set(R,"$ns"      , ns_Get(parent));
-            Set(R,"$partrace", Refname(*field.p_ctype));
-            Set(R,"$name"    , name_Get(field));
+        if (fbuf_trace_out) {
             Main_Trace_Field(Subst(R,"$ns.trace.$partrace_$name_n_eagain"), field.p_arg->comment);
+            Main_Trace_Field(Subst(R,"$ns.trace.$partrace_$name_n_write_byte"), field.p_arg->comment);
+            Main_Trace_Field(Subst(R,"$ns.trace.$partrace_$name_n_write_msg"), field.p_arg->comment);
+        }
+        if (fbuf_trace_in) {
+            Main_Trace_Field(Subst(R,"$ns.trace.$partrace_$name_n_read_byte"), field.p_arg->comment);
+            Main_Trace_Field(Subst(R,"$ns.trace.$partrace_$name_n_read_msg"), field.p_arg->comment);
         }
         // mark field as being traced
         field.do_trace = regular_trace || fbuf_trace;

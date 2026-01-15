@@ -33,8 +33,8 @@ Usage: sv2ssim [-fname:]<string> [options]
     -data                           (output) Convert input file to ssim tuples
     -report                 Y       Print final report
     -prefer_signed                  Prefer signed types when given a choice
-    -verbose        int             Verbosity level (0..255); alias -v; cumulative
-    -debug          int             Debug level (0..255); alias -d; cumulative
+    -verbose        flag            Verbosity level (0..255); alias -v; cumulative
+    -debug          flag            Debug level (0..255); alias -d; cumulative
     -help                           Print help and exit; alias -h
     -version                        Print version and exit
     -signature                      Show signatures and exit; alias -sig
@@ -65,8 +65,10 @@ dmmeta.svtype  ctype:algo.Smallstr10   maxwid:10          fixedwid1:0  fixedwid2
 dmmeta.svtype  ctype:algo.Smallstr100  maxwid:100         fixedwid1:0  fixedwid2:0  comment:""
 dmmeta.svtype  ctype:algo.Smallstr150  maxwid:150         fixedwid1:0  fixedwid2:0  comment:""
 dmmeta.svtype  ctype:algo.Smallstr200  maxwid:200         fixedwid1:0  fixedwid2:0  comment:""
+dmmeta.svtype  ctype:algo.Smallstr249  maxwid:249         fixedwid1:0  fixedwid2:0  comment:""
 dmmeta.svtype  ctype:algo.Smallstr25   maxwid:25          fixedwid1:0  fixedwid2:0  comment:""
 dmmeta.svtype  ctype:algo.Smallstr250  maxwid:250         fixedwid1:0  fixedwid2:0  comment:""
+dmmeta.svtype  ctype:algo.Smallstr255  maxwid:255         fixedwid1:0  fixedwid2:0  comment:""
 dmmeta.svtype  ctype:algo.Smallstr50   maxwid:10          fixedwid1:0  fixedwid2:0  comment:""
 dmmeta.svtype  ctype:algo.cstring      maxwid:1000000000  fixedwid1:0  fixedwid2:0  comment:""
 dmmeta.svtype  ctype:bool              maxwid:1           fixedwid1:0  fixedwid2:0  comment:""
@@ -85,11 +87,11 @@ dmmeta.svtype  ctype:u64               maxwid:64          fixedwid1:0  fixedwid2
 
 ```
 inline-command: acr comptest:sv2ssim.%
-atfdb.comptest  comptest:sv2ssim.Convert1         timeout:10  memcheck:Y  exit_code:0  comment:""
-atfdb.comptest  comptest:sv2ssim.Convert1Signed   timeout:10  memcheck:Y  exit_code:0  comment:""
-atfdb.comptest  comptest:sv2ssim.Convert2         timeout:10  memcheck:Y  exit_code:0  comment:""
-atfdb.comptest  comptest:sv2ssim.Convert2Tsv      timeout:10  memcheck:Y  exit_code:0  comment:""
-atfdb.comptest  comptest:sv2ssim.UniqueFieldName  timeout:10  memcheck:Y  exit_code:0  comment:""
+atfdb.comptest  comptest:sv2ssim.Convert1         timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:""
+atfdb.comptest  comptest:sv2ssim.Convert1Signed   timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:""
+atfdb.comptest  comptest:sv2ssim.Convert2         timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:""
+atfdb.comptest  comptest:sv2ssim.Convert2Tsv      timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:""
+atfdb.comptest  comptest:sv2ssim.UniqueFieldName  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:""
 report.acr  n_select:5  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0
 ```
 
@@ -181,9 +183,9 @@ dmmeta.field  field:a.B._1960  arg:i32  reftype:Val  dflt:""  comment:_1960
 `sv2ssim` takes the following tables on input:
 |Ssimfile|Comment|
 |---|---|
-|[dmmeta.svtype](/txt/ssimdb/dmmeta/svtype.md)|Table for determining ctype from separated value file|
 |[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
 |[amcdb.bltin](/txt/ssimdb/amcdb/bltin.md)|Specify properties of a C built-in type|
+|[dmmeta.svtype](/txt/ssimdb/dmmeta/svtype.md)|Table for determining ctype from separated value file|
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
 

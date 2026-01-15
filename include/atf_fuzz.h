@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -34,6 +34,6 @@ namespace atf_fuzz { // update-hdr
     // cpp/atf_fuzz/atf_fuzz.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
-    // void fuzzstrat_skip_inputs();
-    void Main();
+    // void fuzzstrat_skip_inputs(); // gstatic/atfdb.fuzzstrat:skip_inputs
+    // void Main(); // main:atf_fuzz
 }

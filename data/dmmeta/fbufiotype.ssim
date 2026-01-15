@@ -1,0 +1,3 @@
+dmmeta.fbufiotype  fbufiotype:nofd  comment:"no iohook"
+dmmeta.fbufiotype  fbufiotype:openssl  comment:"standard + SSL_read, SSL_write"
+dmmeta.fbufiotype  fbufiotype:standard  comment:"unix standard: read, write"

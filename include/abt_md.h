@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -87,7 +87,7 @@ namespace abt_md { // update-hdr
     // Load specified readme into memory as FILE_SECTION records
     // the section table is global and is wiped on every readme.
     // Only lines starting with ## or ### are considered FILE_SECTIONS
-    void LoadSections(abt_md::FReadme &readme);
+    void LoadSections(abt_md::FReadmefile &readmefile);
 
     // Print a single section to string
     void PrintSection(abt_md::FFileSection &file_section, cstring &out);
@@ -102,8 +102,8 @@ namespace abt_md { // update-hdr
     // cpp/abt_md/main.cpp
     //
 
-    // Return true if readme file README needs section MDSECTION
-    bool NeedSectionQ(abt_md::FMdsection &mdsection, abt_md::FReadme &readme);
+    // Return true if readme file READMEFILE needs section MDSECTION
+    bool NeedSectionQ(abt_md::FMdsection &mdsection, abt_md::FReadmefile &readmefile);
 
     // Extract words from line up until first dash
     // E.g. LineKey("#### Some Text - blah") -> "some-text"
@@ -189,35 +189,41 @@ namespace abt_md { // update-hdr
     // canot handle exceptions like README.md
     void Main_XrefNs();
     void CheckLinks();
-    void Main();
+    void ProcessReadme(abt_md::FReadmefile& readmefile);
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void Main(); // main:abt_md
 
     // -------------------------------------------------------------------
     // cpp/abt_md/mdsection.cpp
     //
     void DescribeCtype(abt_md::FCtype *ctype, cstring &out);
     //     (user-implemented function, prototype is in amc-generated header)
-    // void mdsection_Tables(abt_md::FFileSection &section);
-    // void mdsection_Attributes(abt_md::FFileSection &section);
-    // void mdsection_Inputs(abt_md::FFileSection &section);
+    // void mdsection_Tables(abt_md::FFileSection &section); // gstatic/dev.mdsection:Tables
+    // void mdsection_Attributes(abt_md::FFileSection &section); // gstatic/dev.mdsection:Attributes
+    abt_md::FSsimfile *FieldSsimfile(abt_md::FCtype &ctype);
+    void PopulateScanNs(abt_md::FNs &ns);
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void mdsection_Inputs(abt_md::FFileSection &section); // gstatic/dev.mdsection:Inputs
+    // void mdsection_InputMessages(abt_md::FFileSection &section); // gstatic/dev.mdsection:InputMessages
     abt_md::FCtype *GenerateFieldsTable(abt_md::FCtype &ctype, cstring &text_out, cstring &base_note);
 
     // Extract generated info and combine into a table
     //     (user-implemented function, prototype is in amc-generated header)
-    // void mdsection_Imdb(abt_md::FFileSection &section);
-    // void mdsection_Options(abt_md::FFileSection &section);
-    // void mdsection_Ctypes(abt_md::FFileSection &section);
-    // void mdsection_Functions(abt_md::FFileSection &section);
+    // void mdsection_Imdb(abt_md::FFileSection &section); // gstatic/dev.mdsection:Imdb
+    // void mdsection_Options(abt_md::FFileSection &section); // gstatic/dev.mdsection:Options
+    // void mdsection_Ctypes(abt_md::FFileSection &section); // gstatic/dev.mdsection:Ctypes
+    // void mdsection_Functions(abt_md::FFileSection &section); // gstatic/dev.mdsection:Functions
 
     // Update title of document
     // - For namespace, pull namespace name and comment from ns table
     // - For script, use script name and comment from scriptfile table
     // For all other cases, leave title as-is
     // Section contents are user-defined
-    // void mdsection_Title(abt_md::FFileSection &section);
+    // void mdsection_Title(abt_md::FFileSection &section); // gstatic/dev.mdsection:Title
 
     // Update syntax string
     // Invoke command with -h flag and substitute output into section body
-    // void mdsection_Syntax(abt_md::FFileSection &section);
+    // void mdsection_Syntax(abt_md::FFileSection &section); // gstatic/dev.mdsection:Syntax
 
     // Table of contents
     // for README file, create links to subdirectories
@@ -227,34 +233,33 @@ namespace abt_md { // update-hdr
     // but can include those links outside of ToC
     // README.md must not include a link to internals.md on the same level (this link has to come
     // from above) to avoid contaminating ToC tree with unneeded details
-    // for more information see spnx
-    // void mdsection_Toc(abt_md::FFileSection &section);
+    // void mdsection_Toc(abt_md::FFileSection &section); // gstatic/dev.mdsection:Toc
 
     // Create links to other files in the same directory
-    // void mdsection_Chapters(abt_md::FFileSection &section);
-    // void mdsection_Sources(abt_md::FFileSection &section);
-    // void mdsection_Dependencies(abt_md::FFileSection &section);
-    // void mdsection_Description(abt_md::FFileSection &section);
-    // void mdsection_Content(abt_md::FFileSection &);
-    // void mdsection_Limitations(abt_md::FFileSection &);
-    // void mdsection_Example(abt_md::FFileSection &);
+    // void mdsection_Chapters(abt_md::FFileSection &section); // gstatic/dev.mdsection:Chapters
+    // void mdsection_Sources(abt_md::FFileSection &section); // gstatic/dev.mdsection:Sources
+    // void mdsection_Dependencies(abt_md::FFileSection &section); // gstatic/dev.mdsection:Dependencies
+    // void mdsection_Description(abt_md::FFileSection &section); // gstatic/dev.mdsection:Description
+    // void mdsection_Content(abt_md::FFileSection &); // gstatic/dev.mdsection:Content
+    // void mdsection_Limitations(abt_md::FFileSection &); // gstatic/dev.mdsection:Limitations
+    // void mdsection_Example(abt_md::FFileSection &); // gstatic/dev.mdsection:Example
 
     // Update tests section
     // Scan component tests for this namespace and print a table
-    // void mdsection_Tests(abt_md::FFileSection &section);
+    // void mdsection_Tests(abt_md::FFileSection &section); // gstatic/dev.mdsection:Tests
 
     // Update copyright section
-    // void mdsection_Copyright(abt_md::FFileSection &);
-    // void mdsection_Reftypes(abt_md::FFileSection &section);
-    // void mdsection_Subsets(abt_md::FFileSection &section);
+    // void mdsection_Copyright(abt_md::FFileSection &); // gstatic/dev.mdsection:Copyright
+    // void mdsection_Reftypes(abt_md::FFileSection &section); // gstatic/dev.mdsection:Reftypes
+    // void mdsection_Subsets(abt_md::FFileSection &section); // gstatic/dev.mdsection:Subsets
 
     // Show related ssimfiles (those that reference this ssimfile NOT through pkey)
-    // void mdsection_Related(abt_md::FFileSection &section);
+    // void mdsection_Related(abt_md::FFileSection &section); // gstatic/dev.mdsection:Related
 
     // Show related ssimfiles (those that reference this ssimfile NOT through pkey)
-    // void mdsection_CmdlineUses(abt_md::FFileSection &section);
+    // void mdsection_CmdlineUses(abt_md::FFileSection &section); // gstatic/dev.mdsection:CmdlineUses
 
     // Show related ssimfiles (those that reference this ssimfile NOT through pkey)
-    // void mdsection_ImdbUses(abt_md::FFileSection &section);
-    // void mdsection_Constants(abt_md::FFileSection &section);
+    // void mdsection_ImdbUses(abt_md::FFileSection &section); // gstatic/dev.mdsection:ImdbUses
+    // void mdsection_Constants(abt_md::FFileSection &section); // gstatic/dev.mdsection:Constants
 }

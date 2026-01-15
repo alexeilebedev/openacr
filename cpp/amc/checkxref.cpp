@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
 //
 // License: GPL
@@ -202,7 +202,9 @@ static void CheckXref_Impossible(amc::FXref &xref) {
     amc::FField     &field = *xref.p_field;
     // I temporarily allowed x-refs across namespace, but this quickly
     // turned out to be a bad idea  (Upptr is an exception)
-    if (field.reftype != dmmeta_Reftype_reftype_Upptr && !(amc::ns_Get(*field.p_ctype) == amc::ns_Get(*field.p_arg))) {
+    if (field.reftype != dmmeta_Reftype_reftype_Upptr
+        && field.reftype != dmmeta_Reftype_reftype_Ptr
+        && !(amc::ns_Get(*field.p_ctype) == amc::ns_Get(*field.p_arg))) {
         prerr("amc.xref_across_namespace"
               <<Keyval("xref",xref.field)
               <<Keyval("comment","xref across namespaces is not supported: parent and child must be in the same ns"));

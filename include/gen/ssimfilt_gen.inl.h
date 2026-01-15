@@ -316,6 +316,7 @@ inline ssimfilt::FUnstablefld& ssimfilt::_db_unstablefld_curs_Access(_db_unstabl
 // Set all fields to initial values.
 inline void ssimfilt::FUnstablefld_Init(ssimfilt::FUnstablefld& unstablefld) {
     unstablefld.ind_unstablefld_next = (ssimfilt::FUnstablefld*)-1; // (ssimfilt.FDb.ind_unstablefld) not-in-hash
+    unstablefld.ind_unstablefld_hashval = 0; // stored hash value
 }
 
 // --- ssimfilt.FUnstablefld..Ctor

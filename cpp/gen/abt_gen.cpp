@@ -37,10 +37,13 @@
 #include "include/gen/report_gen.inl.h"
 #include "include/gen/dmmeta_gen.h"
 #include "include/gen/dmmeta_gen.inl.h"
+#include "include/gen/lib_json_gen.h"
+#include "include/gen/lib_json_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
+lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 abt::FDb        abt::_db;         // dependency found via dev.targdep
 
@@ -73,15 +76,15 @@ const char *abt_help =
 "    -disas      regx    \"\"      Regex of function to disassemble\n"
 "    -report             Y       Print final report\n"
 "    -jcdb       string  \"\"      Create JSON compilation database in specified file\n"
-"    -cache      int     auto    Cache mode (auto|none|gcache|gcache-force|ccache)\n"
+"    -cache      enum    auto    Cache mode (auto|none|gcache|gcache-force|ccache)\n"
 "                                    auto  Select cache automatically among enabled\n"
 "                                    none  No cache\n"
 "                                    gcache  Select gcache if enabled (no cache if disabled)\n"
 "                                    gcache-force  Pass --force to gcache (no cache if disabled)\n"
 "                                    ccache  Select ccache if enabled (no cache if disabled)\n"
 "    -shortlink                  Try to shorten sort link if possible\n"
-"    -verbose    int             Verbosity level (0..255); alias -v; cumulative\n"
-"    -debug      int             Debug level (0..255); alias -d; cumulative\n"
+"    -verbose    flag            Verbosity level (0..255); alias -v; cumulative\n"
+"    -debug      flag            Debug level (0..255); alias -d; cumulative\n"
 "    -help                       Print help and exit; alias -h\n"
 "    -version                    Print version and exit\n"
 "    -signature                  Show signatures and exit; alias -sig\n"
@@ -224,6 +227,7 @@ void abt::FBuilddir_Init(abt::FBuilddir& builddir) {
     builddir.select = bool(false);
     builddir.p_compiler = NULL;
     builddir.ind_builddir_next = (abt::FBuilddir*)-1; // (abt.FDb.ind_builddir) not-in-hash
+    builddir.ind_builddir_hashval = 0; // stored hash value
 }
 
 // --- abt.FBuilddir..Uninit
@@ -723,14 +727,9 @@ bool abt::tool_opt_XrefMaybe(abt::FToolOpt &row) {
 // Find row by key. Return NULL if not found.
 abt::FTarget* abt::ind_target_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr16_Hash(0, key) & (_db.ind_target_buckets_n - 1);
-    abt::FTarget* *e = &_db.ind_target_buckets_elems[index];
-    abt::FTarget* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).target == key;
-        if (done) break;
-        e         = &ret->ind_target_next;
-    } while (true);
+    abt::FTarget *ret = _db.ind_target_buckets_elems[index];
+    for (; ret && !((*ret).target == key); ret = ret->ind_target_next) {
+    }
     return ret;
 }
 
@@ -754,10 +753,11 @@ abt::FTarget& abt::ind_target_GetOrCreate(const algo::strptr& key) {
 // --- abt.FDb.ind_target.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool abt::ind_target_InsertMaybe(abt::FTarget& row) {
-    ind_target_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_target_next == (abt::FTarget*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr16_Hash(0, row.target) & (_db.ind_target_buckets_n - 1);
+        row.ind_target_hashval = algo::Smallstr16_Hash(0, row.target);
+        ind_target_Reserve(1);
+        u32 index = row.ind_target_hashval & (_db.ind_target_buckets_n - 1);
         abt::FTarget* *prev = &_db.ind_target_buckets_elems[index];
         do {
             abt::FTarget* ret = *prev;
@@ -783,7 +783,7 @@ bool abt::ind_target_InsertMaybe(abt::FTarget& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void abt::ind_target_Remove(abt::FTarget& row) {
     if (LIKELY(row.ind_target_next != (abt::FTarget*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr16_Hash(0, row.target) & (_db.ind_target_buckets_n - 1);
+        u32 index = row.ind_target_hashval & (_db.ind_target_buckets_n - 1);
         abt::FTarget* *prev = &_db.ind_target_buckets_elems[index]; // addr of pointer to current element
         while (abt::FTarget *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -800,8 +800,14 @@ void abt::ind_target_Remove(abt::FTarget& row) {
 // --- abt.FDb.ind_target.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void abt::ind_target_Reserve(int n) {
+    ind_target_AbsReserve(_db.ind_target_n + n);
+}
+
+// --- abt.FDb.ind_target.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void abt::ind_target_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_target_buckets_n;
-    u32 new_nelems   = _db.ind_target_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -820,7 +826,7 @@ void abt::ind_target_Reserve(int n) {
             while (elem) {
                 abt::FTarget &row        = *elem;
                 abt::FTarget* next       = row.ind_target_next;
-                u32 index          = algo::Smallstr16_Hash(0, row.target) & (new_nbuckets-1);
+                u32 index          = row.ind_target_hashval & (new_nbuckets-1);
                 row.ind_target_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -943,14 +949,9 @@ bool abt::target_XrefMaybe(abt::FTarget &row) {
 // Find row by key. Return NULL if not found.
 abt::FTargsrc* abt::ind_targsrc_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_targsrc_buckets_n - 1);
-    abt::FTargsrc* *e = &_db.ind_targsrc_buckets_elems[index];
-    abt::FTargsrc* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).targsrc == key;
-        if (done) break;
-        e         = &ret->ind_targsrc_next;
-    } while (true);
+    abt::FTargsrc *ret = _db.ind_targsrc_buckets_elems[index];
+    for (; ret && !((*ret).targsrc == key); ret = ret->ind_targsrc_next) {
+    }
     return ret;
 }
 
@@ -974,10 +975,11 @@ abt::FTargsrc& abt::ind_targsrc_GetOrCreate(const algo::strptr& key) {
 // --- abt.FDb.ind_targsrc.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool abt::ind_targsrc_InsertMaybe(abt::FTargsrc& row) {
-    ind_targsrc_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_targsrc_next == (abt::FTargsrc*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr100_Hash(0, row.targsrc) & (_db.ind_targsrc_buckets_n - 1);
+        row.ind_targsrc_hashval = algo::Smallstr100_Hash(0, row.targsrc);
+        ind_targsrc_Reserve(1);
+        u32 index = row.ind_targsrc_hashval & (_db.ind_targsrc_buckets_n - 1);
         abt::FTargsrc* *prev = &_db.ind_targsrc_buckets_elems[index];
         do {
             abt::FTargsrc* ret = *prev;
@@ -1003,7 +1005,7 @@ bool abt::ind_targsrc_InsertMaybe(abt::FTargsrc& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void abt::ind_targsrc_Remove(abt::FTargsrc& row) {
     if (LIKELY(row.ind_targsrc_next != (abt::FTargsrc*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr100_Hash(0, row.targsrc) & (_db.ind_targsrc_buckets_n - 1);
+        u32 index = row.ind_targsrc_hashval & (_db.ind_targsrc_buckets_n - 1);
         abt::FTargsrc* *prev = &_db.ind_targsrc_buckets_elems[index]; // addr of pointer to current element
         while (abt::FTargsrc *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1020,8 +1022,14 @@ void abt::ind_targsrc_Remove(abt::FTargsrc& row) {
 // --- abt.FDb.ind_targsrc.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void abt::ind_targsrc_Reserve(int n) {
+    ind_targsrc_AbsReserve(_db.ind_targsrc_n + n);
+}
+
+// --- abt.FDb.ind_targsrc.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void abt::ind_targsrc_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_targsrc_buckets_n;
-    u32 new_nelems   = _db.ind_targsrc_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -1040,7 +1048,7 @@ void abt::ind_targsrc_Reserve(int n) {
             while (elem) {
                 abt::FTargsrc &row        = *elem;
                 abt::FTargsrc* next       = row.ind_targsrc_next;
-                u32 index          = algo::Smallstr100_Hash(0, row.targsrc) & (new_nbuckets-1);
+                u32 index          = row.ind_targsrc_hashval & (new_nbuckets-1);
                 row.ind_targsrc_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1470,9 +1478,8 @@ void abt::ReadArgv() {
         }
         if (ch_N(attrname) == 0) {
             err << "abt: too many arguments. error at "<<algo::strptr_ToSsim(arg)<<eol;
-        }
-        // read value into currently selected arg
-        if (haveval) {
+        } else if (haveval) {
+            // read value into currently selected arg
             bool ret=false;
             // it's already known which namespace is consuming the args,
             // so directly go there
@@ -1515,6 +1522,9 @@ void abt::ReadArgv() {
         }ind_end
         doexit = true;
     }
+    algo_lib_logcat_debug.enabled = algo_lib::_db.cmdline.debug;
+    algo_lib_logcat_verbose.enabled = algo_lib::_db.cmdline.verbose > 0;
+    algo_lib_logcat_verbose2.enabled = algo_lib::_db.cmdline.verbose > 1;
     if (!dohelp) {
     }
     // dmmeta.floadtuples:abt.FDb.cmdline
@@ -1526,7 +1536,7 @@ void abt::ReadArgv() {
     }
     if (err != "") {
         algo_lib::_db.exit_code=1;
-        prerr(err);
+        prerr_(err); // already has eol
         doexit=true;
     }
     if (dohelp) {
@@ -1571,7 +1581,7 @@ static void abt::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'abt.Input'  signature:'e6410c40f922d321b99d2a6d7a62d27f1d49a5ac'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'abt.Input'  signature:'a3467e9a802a9e293d88ca8cb2cead5a09c85dcf'");
 }
 
 // --- abt.FDb._db.InsertStrptrMaybe
@@ -1707,8 +1717,8 @@ bool abt::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dev.arch"),recursive);
         retval = retval && abt::LoadTuplesFile(algo::SsimFname(root,"dev.builddir"),recursive);
     } else {
-        algo_lib::SaveBadTag("path", root);
-        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        algo_lib::AppendErrtext("path", root);
+        algo_lib::AppendErrtext("comment", "Wrong working directory?");
         retval = false;
     }
     return retval;
@@ -1780,14 +1790,9 @@ bool abt::_db_XrefMaybe() {
 // Find row by key. Return NULL if not found.
 abt::FSyscmd* abt::ind_syscmd_Find(i64 key) {
     u32 index = ::i64_Hash(0, key) & (_db.ind_syscmd_buckets_n - 1);
-    abt::FSyscmd* *e = &_db.ind_syscmd_buckets_elems[index];
-    abt::FSyscmd* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).syscmd == key;
-        if (done) break;
-        e         = &ret->ind_syscmd_next;
-    } while (true);
+    abt::FSyscmd *ret = _db.ind_syscmd_buckets_elems[index];
+    for (; ret && !((*ret).syscmd == key); ret = ret->ind_syscmd_next) {
+    }
     return ret;
 }
 
@@ -1811,10 +1816,11 @@ abt::FSyscmd& abt::ind_syscmd_GetOrCreate(i64 key) {
 // --- abt.FDb.ind_syscmd.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool abt::ind_syscmd_InsertMaybe(abt::FSyscmd& row) {
-    ind_syscmd_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_syscmd_next == (abt::FSyscmd*)-1)) {// check if in hash already
-        u32 index = ::i64_Hash(0, row.syscmd) & (_db.ind_syscmd_buckets_n - 1);
+        row.ind_syscmd_hashval = ::i64_Hash(0, row.syscmd);
+        ind_syscmd_Reserve(1);
+        u32 index = row.ind_syscmd_hashval & (_db.ind_syscmd_buckets_n - 1);
         abt::FSyscmd* *prev = &_db.ind_syscmd_buckets_elems[index];
         do {
             abt::FSyscmd* ret = *prev;
@@ -1840,7 +1846,7 @@ bool abt::ind_syscmd_InsertMaybe(abt::FSyscmd& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void abt::ind_syscmd_Remove(abt::FSyscmd& row) {
     if (LIKELY(row.ind_syscmd_next != (abt::FSyscmd*)-1)) {// check if in hash already
-        u32 index = ::i64_Hash(0, row.syscmd) & (_db.ind_syscmd_buckets_n - 1);
+        u32 index = row.ind_syscmd_hashval & (_db.ind_syscmd_buckets_n - 1);
         abt::FSyscmd* *prev = &_db.ind_syscmd_buckets_elems[index]; // addr of pointer to current element
         while (abt::FSyscmd *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1857,8 +1863,14 @@ void abt::ind_syscmd_Remove(abt::FSyscmd& row) {
 // --- abt.FDb.ind_syscmd.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void abt::ind_syscmd_Reserve(int n) {
+    ind_syscmd_AbsReserve(_db.ind_syscmd_n + n);
+}
+
+// --- abt.FDb.ind_syscmd.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void abt::ind_syscmd_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_syscmd_buckets_n;
-    u32 new_nelems   = _db.ind_syscmd_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -1877,7 +1889,7 @@ void abt::ind_syscmd_Reserve(int n) {
             while (elem) {
                 abt::FSyscmd &row        = *elem;
                 abt::FSyscmd* next       = row.ind_syscmd_next;
-                u32 index          = ::i64_Hash(0, row.syscmd) & (new_nbuckets-1);
+                u32 index          = row.ind_syscmd_hashval & (new_nbuckets-1);
                 row.ind_syscmd_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1894,14 +1906,9 @@ void abt::ind_syscmd_Reserve(int n) {
 // Find row by key. Return NULL if not found.
 abt::FSyscmd* abt::ind_running_Find(i32 key) {
     u32 index = ::i32_Hash(0, key) & (_db.ind_running_buckets_n - 1);
-    abt::FSyscmd* *e = &_db.ind_running_buckets_elems[index];
-    abt::FSyscmd* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).pid == key;
-        if (done) break;
-        e         = &ret->ind_running_next;
-    } while (true);
+    abt::FSyscmd *ret = _db.ind_running_buckets_elems[index];
+    for (; ret && !((*ret).pid == key); ret = ret->ind_running_next) {
+    }
     return ret;
 }
 
@@ -1925,10 +1932,11 @@ abt::FSyscmd& abt::ind_running_GetOrCreate(i32 key) {
 // --- abt.FDb.ind_running.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool abt::ind_running_InsertMaybe(abt::FSyscmd& row) {
-    ind_running_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_running_next == (abt::FSyscmd*)-1)) {// check if in hash already
-        u32 index = ::i32_Hash(0, row.pid) & (_db.ind_running_buckets_n - 1);
+        row.ind_running_hashval = ::i32_Hash(0, row.pid);
+        ind_running_Reserve(1);
+        u32 index = row.ind_running_hashval & (_db.ind_running_buckets_n - 1);
         abt::FSyscmd* *prev = &_db.ind_running_buckets_elems[index];
         do {
             abt::FSyscmd* ret = *prev;
@@ -1954,7 +1962,7 @@ bool abt::ind_running_InsertMaybe(abt::FSyscmd& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void abt::ind_running_Remove(abt::FSyscmd& row) {
     if (LIKELY(row.ind_running_next != (abt::FSyscmd*)-1)) {// check if in hash already
-        u32 index = ::i32_Hash(0, row.pid) & (_db.ind_running_buckets_n - 1);
+        u32 index = row.ind_running_hashval & (_db.ind_running_buckets_n - 1);
         abt::FSyscmd* *prev = &_db.ind_running_buckets_elems[index]; // addr of pointer to current element
         while (abt::FSyscmd *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1971,8 +1979,14 @@ void abt::ind_running_Remove(abt::FSyscmd& row) {
 // --- abt.FDb.ind_running.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void abt::ind_running_Reserve(int n) {
+    ind_running_AbsReserve(_db.ind_running_n + n);
+}
+
+// --- abt.FDb.ind_running.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void abt::ind_running_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_running_buckets_n;
-    u32 new_nelems   = _db.ind_running_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -1991,7 +2005,7 @@ void abt::ind_running_Reserve(int n) {
             while (elem) {
                 abt::FSyscmd &row        = *elem;
                 abt::FSyscmd* next       = row.ind_running_next;
-                u32 index          = ::i32_Hash(0, row.pid) & (new_nbuckets-1);
+                u32 index          = row.ind_running_hashval & (new_nbuckets-1);
                 row.ind_running_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -2008,14 +2022,9 @@ void abt::ind_running_Reserve(int n) {
 // Find row by key. Return NULL if not found.
 abt::FSrcfile* abt::ind_srcfile_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr200_Hash(0, key) & (_db.ind_srcfile_buckets_n - 1);
-    abt::FSrcfile* *e = &_db.ind_srcfile_buckets_elems[index];
-    abt::FSrcfile* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).srcfile == key;
-        if (done) break;
-        e         = &ret->ind_srcfile_next;
-    } while (true);
+    abt::FSrcfile *ret = _db.ind_srcfile_buckets_elems[index];
+    for (; ret && !((*ret).srcfile == key); ret = ret->ind_srcfile_next) {
+    }
     return ret;
 }
 
@@ -2039,10 +2048,11 @@ abt::FSrcfile& abt::ind_srcfile_GetOrCreate(const algo::strptr& key) {
 // --- abt.FDb.ind_srcfile.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool abt::ind_srcfile_InsertMaybe(abt::FSrcfile& row) {
-    ind_srcfile_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_srcfile_next == (abt::FSrcfile*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr200_Hash(0, row.srcfile) & (_db.ind_srcfile_buckets_n - 1);
+        row.ind_srcfile_hashval = algo::Smallstr200_Hash(0, row.srcfile);
+        ind_srcfile_Reserve(1);
+        u32 index = row.ind_srcfile_hashval & (_db.ind_srcfile_buckets_n - 1);
         abt::FSrcfile* *prev = &_db.ind_srcfile_buckets_elems[index];
         do {
             abt::FSrcfile* ret = *prev;
@@ -2068,7 +2078,7 @@ bool abt::ind_srcfile_InsertMaybe(abt::FSrcfile& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void abt::ind_srcfile_Remove(abt::FSrcfile& row) {
     if (LIKELY(row.ind_srcfile_next != (abt::FSrcfile*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr200_Hash(0, row.srcfile) & (_db.ind_srcfile_buckets_n - 1);
+        u32 index = row.ind_srcfile_hashval & (_db.ind_srcfile_buckets_n - 1);
         abt::FSrcfile* *prev = &_db.ind_srcfile_buckets_elems[index]; // addr of pointer to current element
         while (abt::FSrcfile *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -2085,8 +2095,14 @@ void abt::ind_srcfile_Remove(abt::FSrcfile& row) {
 // --- abt.FDb.ind_srcfile.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void abt::ind_srcfile_Reserve(int n) {
+    ind_srcfile_AbsReserve(_db.ind_srcfile_n + n);
+}
+
+// --- abt.FDb.ind_srcfile.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void abt::ind_srcfile_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_srcfile_buckets_n;
-    u32 new_nelems   = _db.ind_srcfile_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -2105,7 +2121,7 @@ void abt::ind_srcfile_Reserve(int n) {
             while (elem) {
                 abt::FSrcfile &row        = *elem;
                 abt::FSrcfile* next       = row.ind_srcfile_next;
-                u32 index          = algo::Smallstr200_Hash(0, row.srcfile) & (new_nbuckets-1);
+                u32 index          = row.ind_srcfile_hashval & (new_nbuckets-1);
                 row.ind_srcfile_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -2219,14 +2235,9 @@ bool abt::cfg_XrefMaybe(abt::FCfg &row) {
 // Find row by key. Return NULL if not found.
 abt::FCfg* abt::ind_cfg_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_cfg_buckets_n - 1);
-    abt::FCfg* *e = &_db.ind_cfg_buckets_elems[index];
-    abt::FCfg* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).cfg == key;
-        if (done) break;
-        e         = &ret->ind_cfg_next;
-    } while (true);
+    abt::FCfg *ret = _db.ind_cfg_buckets_elems[index];
+    for (; ret && !((*ret).cfg == key); ret = ret->ind_cfg_next) {
+    }
     return ret;
 }
 
@@ -2250,10 +2261,11 @@ abt::FCfg& abt::ind_cfg_GetOrCreate(const algo::strptr& key) {
 // --- abt.FDb.ind_cfg.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool abt::ind_cfg_InsertMaybe(abt::FCfg& row) {
-    ind_cfg_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_cfg_next == (abt::FCfg*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.cfg) & (_db.ind_cfg_buckets_n - 1);
+        row.ind_cfg_hashval = algo::Smallstr50_Hash(0, row.cfg);
+        ind_cfg_Reserve(1);
+        u32 index = row.ind_cfg_hashval & (_db.ind_cfg_buckets_n - 1);
         abt::FCfg* *prev = &_db.ind_cfg_buckets_elems[index];
         do {
             abt::FCfg* ret = *prev;
@@ -2279,7 +2291,7 @@ bool abt::ind_cfg_InsertMaybe(abt::FCfg& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void abt::ind_cfg_Remove(abt::FCfg& row) {
     if (LIKELY(row.ind_cfg_next != (abt::FCfg*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.cfg) & (_db.ind_cfg_buckets_n - 1);
+        u32 index = row.ind_cfg_hashval & (_db.ind_cfg_buckets_n - 1);
         abt::FCfg* *prev = &_db.ind_cfg_buckets_elems[index]; // addr of pointer to current element
         while (abt::FCfg *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -2296,8 +2308,14 @@ void abt::ind_cfg_Remove(abt::FCfg& row) {
 // --- abt.FDb.ind_cfg.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void abt::ind_cfg_Reserve(int n) {
+    ind_cfg_AbsReserve(_db.ind_cfg_n + n);
+}
+
+// --- abt.FDb.ind_cfg.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void abt::ind_cfg_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_cfg_buckets_n;
-    u32 new_nelems   = _db.ind_cfg_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -2316,7 +2334,7 @@ void abt::ind_cfg_Reserve(int n) {
             while (elem) {
                 abt::FCfg &row        = *elem;
                 abt::FCfg* next       = row.ind_cfg_next;
-                u32 index          = algo::Smallstr50_Hash(0, row.cfg) & (new_nbuckets-1);
+                u32 index          = row.ind_cfg_hashval & (new_nbuckets-1);
                 row.ind_cfg_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -2430,14 +2448,9 @@ bool abt::uname_XrefMaybe(abt::FUname &row) {
 // Find row by key. Return NULL if not found.
 abt::FUname* abt::ind_uname_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_uname_buckets_n - 1);
-    abt::FUname* *e = &_db.ind_uname_buckets_elems[index];
-    abt::FUname* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).uname == key;
-        if (done) break;
-        e         = &ret->ind_uname_next;
-    } while (true);
+    abt::FUname *ret = _db.ind_uname_buckets_elems[index];
+    for (; ret && !((*ret).uname == key); ret = ret->ind_uname_next) {
+    }
     return ret;
 }
 
@@ -2461,10 +2474,11 @@ abt::FUname& abt::ind_uname_GetOrCreate(const algo::strptr& key) {
 // --- abt.FDb.ind_uname.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool abt::ind_uname_InsertMaybe(abt::FUname& row) {
-    ind_uname_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_uname_next == (abt::FUname*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.uname) & (_db.ind_uname_buckets_n - 1);
+        row.ind_uname_hashval = algo::Smallstr50_Hash(0, row.uname);
+        ind_uname_Reserve(1);
+        u32 index = row.ind_uname_hashval & (_db.ind_uname_buckets_n - 1);
         abt::FUname* *prev = &_db.ind_uname_buckets_elems[index];
         do {
             abt::FUname* ret = *prev;
@@ -2490,7 +2504,7 @@ bool abt::ind_uname_InsertMaybe(abt::FUname& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void abt::ind_uname_Remove(abt::FUname& row) {
     if (LIKELY(row.ind_uname_next != (abt::FUname*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.uname) & (_db.ind_uname_buckets_n - 1);
+        u32 index = row.ind_uname_hashval & (_db.ind_uname_buckets_n - 1);
         abt::FUname* *prev = &_db.ind_uname_buckets_elems[index]; // addr of pointer to current element
         while (abt::FUname *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -2507,8 +2521,14 @@ void abt::ind_uname_Remove(abt::FUname& row) {
 // --- abt.FDb.ind_uname.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void abt::ind_uname_Reserve(int n) {
+    ind_uname_AbsReserve(_db.ind_uname_n + n);
+}
+
+// --- abt.FDb.ind_uname.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void abt::ind_uname_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_uname_buckets_n;
-    u32 new_nelems   = _db.ind_uname_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -2527,7 +2547,7 @@ void abt::ind_uname_Reserve(int n) {
             while (elem) {
                 abt::FUname &row        = *elem;
                 abt::FUname* next       = row.ind_uname_next;
-                u32 index          = algo::Smallstr50_Hash(0, row.uname) & (new_nbuckets-1);
+                u32 index          = row.ind_uname_hashval & (new_nbuckets-1);
                 row.ind_uname_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -2641,14 +2661,9 @@ bool abt::compiler_XrefMaybe(abt::FCompiler &row) {
 // Find row by key. Return NULL if not found.
 abt::FCompiler* abt::ind_compiler_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_compiler_buckets_n - 1);
-    abt::FCompiler* *e = &_db.ind_compiler_buckets_elems[index];
-    abt::FCompiler* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).compiler == key;
-        if (done) break;
-        e         = &ret->ind_compiler_next;
-    } while (true);
+    abt::FCompiler *ret = _db.ind_compiler_buckets_elems[index];
+    for (; ret && !((*ret).compiler == key); ret = ret->ind_compiler_next) {
+    }
     return ret;
 }
 
@@ -2672,10 +2687,11 @@ abt::FCompiler& abt::ind_compiler_GetOrCreate(const algo::strptr& key) {
 // --- abt.FDb.ind_compiler.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool abt::ind_compiler_InsertMaybe(abt::FCompiler& row) {
-    ind_compiler_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_compiler_next == (abt::FCompiler*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.compiler) & (_db.ind_compiler_buckets_n - 1);
+        row.ind_compiler_hashval = algo::Smallstr50_Hash(0, row.compiler);
+        ind_compiler_Reserve(1);
+        u32 index = row.ind_compiler_hashval & (_db.ind_compiler_buckets_n - 1);
         abt::FCompiler* *prev = &_db.ind_compiler_buckets_elems[index];
         do {
             abt::FCompiler* ret = *prev;
@@ -2701,7 +2717,7 @@ bool abt::ind_compiler_InsertMaybe(abt::FCompiler& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void abt::ind_compiler_Remove(abt::FCompiler& row) {
     if (LIKELY(row.ind_compiler_next != (abt::FCompiler*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.compiler) & (_db.ind_compiler_buckets_n - 1);
+        u32 index = row.ind_compiler_hashval & (_db.ind_compiler_buckets_n - 1);
         abt::FCompiler* *prev = &_db.ind_compiler_buckets_elems[index]; // addr of pointer to current element
         while (abt::FCompiler *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -2718,8 +2734,14 @@ void abt::ind_compiler_Remove(abt::FCompiler& row) {
 // --- abt.FDb.ind_compiler.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void abt::ind_compiler_Reserve(int n) {
+    ind_compiler_AbsReserve(_db.ind_compiler_n + n);
+}
+
+// --- abt.FDb.ind_compiler.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void abt::ind_compiler_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_compiler_buckets_n;
-    u32 new_nelems   = _db.ind_compiler_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -2738,7 +2760,7 @@ void abt::ind_compiler_Reserve(int n) {
             while (elem) {
                 abt::FCompiler &row        = *elem;
                 abt::FCompiler* next       = row.ind_compiler_next;
-                u32 index          = algo::Smallstr50_Hash(0, row.compiler) & (new_nbuckets-1);
+                u32 index          = row.ind_compiler_hashval & (new_nbuckets-1);
                 row.ind_compiler_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -2852,14 +2874,9 @@ bool abt::arch_XrefMaybe(abt::FArch &row) {
 // Find row by key. Return NULL if not found.
 abt::FArch* abt::ind_arch_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_arch_buckets_n - 1);
-    abt::FArch* *e = &_db.ind_arch_buckets_elems[index];
-    abt::FArch* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).arch == key;
-        if (done) break;
-        e         = &ret->ind_arch_next;
-    } while (true);
+    abt::FArch *ret = _db.ind_arch_buckets_elems[index];
+    for (; ret && !((*ret).arch == key); ret = ret->ind_arch_next) {
+    }
     return ret;
 }
 
@@ -2883,10 +2900,11 @@ abt::FArch& abt::ind_arch_GetOrCreate(const algo::strptr& key) {
 // --- abt.FDb.ind_arch.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool abt::ind_arch_InsertMaybe(abt::FArch& row) {
-    ind_arch_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_arch_next == (abt::FArch*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.arch) & (_db.ind_arch_buckets_n - 1);
+        row.ind_arch_hashval = algo::Smallstr50_Hash(0, row.arch);
+        ind_arch_Reserve(1);
+        u32 index = row.ind_arch_hashval & (_db.ind_arch_buckets_n - 1);
         abt::FArch* *prev = &_db.ind_arch_buckets_elems[index];
         do {
             abt::FArch* ret = *prev;
@@ -2912,7 +2930,7 @@ bool abt::ind_arch_InsertMaybe(abt::FArch& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void abt::ind_arch_Remove(abt::FArch& row) {
     if (LIKELY(row.ind_arch_next != (abt::FArch*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.arch) & (_db.ind_arch_buckets_n - 1);
+        u32 index = row.ind_arch_hashval & (_db.ind_arch_buckets_n - 1);
         abt::FArch* *prev = &_db.ind_arch_buckets_elems[index]; // addr of pointer to current element
         while (abt::FArch *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -2929,8 +2947,14 @@ void abt::ind_arch_Remove(abt::FArch& row) {
 // --- abt.FDb.ind_arch.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void abt::ind_arch_Reserve(int n) {
+    ind_arch_AbsReserve(_db.ind_arch_n + n);
+}
+
+// --- abt.FDb.ind_arch.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void abt::ind_arch_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_arch_buckets_n;
-    u32 new_nelems   = _db.ind_arch_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -2949,7 +2973,7 @@ void abt::ind_arch_Reserve(int n) {
             while (elem) {
                 abt::FArch &row        = *elem;
                 abt::FArch* next       = row.ind_arch_next;
-                u32 index          = algo::Smallstr50_Hash(0, row.arch) & (new_nbuckets-1);
+                u32 index          = row.ind_arch_hashval & (new_nbuckets-1);
                 row.ind_arch_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -3498,14 +3522,9 @@ bool abt::syslib_XrefMaybe(abt::FSyslib &row) {
 // Find row by key. Return NULL if not found.
 abt::FSyslib* abt::ind_syslib_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_syslib_buckets_n - 1);
-    abt::FSyslib* *e = &_db.ind_syslib_buckets_elems[index];
-    abt::FSyslib* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).syslib == key;
-        if (done) break;
-        e         = &ret->ind_syslib_next;
-    } while (true);
+    abt::FSyslib *ret = _db.ind_syslib_buckets_elems[index];
+    for (; ret && !((*ret).syslib == key); ret = ret->ind_syslib_next) {
+    }
     return ret;
 }
 
@@ -3529,10 +3548,11 @@ abt::FSyslib& abt::ind_syslib_GetOrCreate(const algo::strptr& key) {
 // --- abt.FDb.ind_syslib.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool abt::ind_syslib_InsertMaybe(abt::FSyslib& row) {
-    ind_syslib_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_syslib_next == (abt::FSyslib*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.syslib) & (_db.ind_syslib_buckets_n - 1);
+        row.ind_syslib_hashval = algo::Smallstr50_Hash(0, row.syslib);
+        ind_syslib_Reserve(1);
+        u32 index = row.ind_syslib_hashval & (_db.ind_syslib_buckets_n - 1);
         abt::FSyslib* *prev = &_db.ind_syslib_buckets_elems[index];
         do {
             abt::FSyslib* ret = *prev;
@@ -3558,7 +3578,7 @@ bool abt::ind_syslib_InsertMaybe(abt::FSyslib& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void abt::ind_syslib_Remove(abt::FSyslib& row) {
     if (LIKELY(row.ind_syslib_next != (abt::FSyslib*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.syslib) & (_db.ind_syslib_buckets_n - 1);
+        u32 index = row.ind_syslib_hashval & (_db.ind_syslib_buckets_n - 1);
         abt::FSyslib* *prev = &_db.ind_syslib_buckets_elems[index]; // addr of pointer to current element
         while (abt::FSyslib *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -3575,8 +3595,14 @@ void abt::ind_syslib_Remove(abt::FSyslib& row) {
 // --- abt.FDb.ind_syslib.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void abt::ind_syslib_Reserve(int n) {
+    ind_syslib_AbsReserve(_db.ind_syslib_n + n);
+}
+
+// --- abt.FDb.ind_syslib.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void abt::ind_syslib_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_syslib_buckets_n;
-    u32 new_nelems   = _db.ind_syslib_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -3595,7 +3621,7 @@ void abt::ind_syslib_Reserve(int n) {
             while (elem) {
                 abt::FSyslib &row        = *elem;
                 abt::FSyslib* next       = row.ind_syslib_next;
-                u32 index          = algo::Smallstr50_Hash(0, row.syslib) & (new_nbuckets-1);
+                u32 index          = row.ind_syslib_hashval & (new_nbuckets-1);
                 row.ind_syslib_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -3727,14 +3753,9 @@ bool abt::include_XrefMaybe(abt::FInclude &row) {
 // Find row by key. Return NULL if not found.
 abt::FInclude* abt::ind_include_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr200_Hash(0, key) & (_db.ind_include_buckets_n - 1);
-    abt::FInclude* *e = &_db.ind_include_buckets_elems[index];
-    abt::FInclude* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).include == key;
-        if (done) break;
-        e         = &ret->ind_include_next;
-    } while (true);
+    abt::FInclude *ret = _db.ind_include_buckets_elems[index];
+    for (; ret && !((*ret).include == key); ret = ret->ind_include_next) {
+    }
     return ret;
 }
 
@@ -3758,10 +3779,11 @@ abt::FInclude& abt::ind_include_GetOrCreate(const algo::strptr& key) {
 // --- abt.FDb.ind_include.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool abt::ind_include_InsertMaybe(abt::FInclude& row) {
-    ind_include_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_include_next == (abt::FInclude*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr200_Hash(0, row.include) & (_db.ind_include_buckets_n - 1);
+        row.ind_include_hashval = algo::Smallstr200_Hash(0, row.include);
+        ind_include_Reserve(1);
+        u32 index = row.ind_include_hashval & (_db.ind_include_buckets_n - 1);
         abt::FInclude* *prev = &_db.ind_include_buckets_elems[index];
         do {
             abt::FInclude* ret = *prev;
@@ -3787,7 +3809,7 @@ bool abt::ind_include_InsertMaybe(abt::FInclude& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void abt::ind_include_Remove(abt::FInclude& row) {
     if (LIKELY(row.ind_include_next != (abt::FInclude*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr200_Hash(0, row.include) & (_db.ind_include_buckets_n - 1);
+        u32 index = row.ind_include_hashval & (_db.ind_include_buckets_n - 1);
         abt::FInclude* *prev = &_db.ind_include_buckets_elems[index]; // addr of pointer to current element
         while (abt::FInclude *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -3804,8 +3826,14 @@ void abt::ind_include_Remove(abt::FInclude& row) {
 // --- abt.FDb.ind_include.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void abt::ind_include_Reserve(int n) {
+    ind_include_AbsReserve(_db.ind_include_n + n);
+}
+
+// --- abt.FDb.ind_include.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void abt::ind_include_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_include_buckets_n;
-    u32 new_nelems   = _db.ind_include_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -3824,7 +3852,7 @@ void abt::ind_include_Reserve(int n) {
             while (elem) {
                 abt::FInclude &row        = *elem;
                 abt::FInclude* next       = row.ind_include_next;
-                u32 index          = algo::Smallstr200_Hash(0, row.include) & (new_nbuckets-1);
+                u32 index          = row.ind_include_hashval & (new_nbuckets-1);
                 row.ind_include_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -3897,6 +3925,25 @@ algo::aryptr<algo::cstring> abt::sysincl_AllocN(int n_elems) {
     }
     _db.sysincl_n = new_n;
     return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
+}
+
+// --- abt.FDb.sysincl.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<algo::cstring> abt::sysincl_AllocNAt(int n_elems, int at) {
+    sysincl_Reserve(n_elems);
+    int n  = _db.sysincl_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("abt.bad_alloc_n_at  field:abt.FDb.sysincl  comment:'index out of range'");
+    }
+    algo::cstring *elems = _db.sysincl_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(algo::cstring));
+    for (int i = 0; i < n_elems; i++) {
+        new (elems + at + i) algo::cstring(); // construct new element, default initialize
+    }
+    _db.sysincl_n = n+n_elems;
+    return algo::aryptr<algo::cstring>(elems+at,n_elems);
 }
 
 // --- abt.FDb.sysincl.Remove
@@ -3973,6 +4020,30 @@ bool abt::sysincl_ReadStrptrMaybe(algo::strptr in_str) {
         sysincl_RemoveLast();
     }
     return retval;
+}
+
+// --- abt.FDb.sysincl.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void abt::sysincl_Insary(algo::aryptr<algo::cstring> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= _db.sysincl_elems && rhs.elems < _db.sysincl_elems + _db.sysincl_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("abt.tary_alias  field:abt.FDb.sysincl  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(_db.sysincl_elems+1))) {
+        FatalErrorExit("abt.bad_insary  field:abt.FDb.sysincl  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = _db.sysincl_n - at;
+    sysincl_Reserve(nnew); // reserve space
+    for (int i = nmove-1; i >=0 ; --i) {
+        new (_db.sysincl_elems + at + nnew + i) algo::cstring(_db.sysincl_elems[at + i]);
+        _db.sysincl_elems[at + i].~cstring(); // destroy element
+    }
+    for (int i = 0; i < nnew; ++i) {
+        new (_db.sysincl_elems + at + i) algo::cstring(rhs[i]);
+    }
+    _db.sysincl_n += nnew;
 }
 
 // --- abt.FDb.zs_origsel_target.Insert
@@ -4151,14 +4222,9 @@ bool abt::ns_XrefMaybe(abt::FNs &row) {
 // Find row by key. Return NULL if not found.
 abt::FNs* abt::ind_ns_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr16_Hash(0, key) & (_db.ind_ns_buckets_n - 1);
-    abt::FNs* *e = &_db.ind_ns_buckets_elems[index];
-    abt::FNs* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).ns == key;
-        if (done) break;
-        e         = &ret->ind_ns_next;
-    } while (true);
+    abt::FNs *ret = _db.ind_ns_buckets_elems[index];
+    for (; ret && !((*ret).ns == key); ret = ret->ind_ns_next) {
+    }
     return ret;
 }
 
@@ -4182,10 +4248,11 @@ abt::FNs& abt::ind_ns_GetOrCreate(const algo::strptr& key) {
 // --- abt.FDb.ind_ns.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool abt::ind_ns_InsertMaybe(abt::FNs& row) {
-    ind_ns_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_ns_next == (abt::FNs*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr16_Hash(0, row.ns) & (_db.ind_ns_buckets_n - 1);
+        row.ind_ns_hashval = algo::Smallstr16_Hash(0, row.ns);
+        ind_ns_Reserve(1);
+        u32 index = row.ind_ns_hashval & (_db.ind_ns_buckets_n - 1);
         abt::FNs* *prev = &_db.ind_ns_buckets_elems[index];
         do {
             abt::FNs* ret = *prev;
@@ -4211,7 +4278,7 @@ bool abt::ind_ns_InsertMaybe(abt::FNs& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void abt::ind_ns_Remove(abt::FNs& row) {
     if (LIKELY(row.ind_ns_next != (abt::FNs*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr16_Hash(0, row.ns) & (_db.ind_ns_buckets_n - 1);
+        u32 index = row.ind_ns_hashval & (_db.ind_ns_buckets_n - 1);
         abt::FNs* *prev = &_db.ind_ns_buckets_elems[index]; // addr of pointer to current element
         while (abt::FNs *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -4228,8 +4295,14 @@ void abt::ind_ns_Remove(abt::FNs& row) {
 // --- abt.FDb.ind_ns.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void abt::ind_ns_Reserve(int n) {
+    ind_ns_AbsReserve(_db.ind_ns_n + n);
+}
+
+// --- abt.FDb.ind_ns.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void abt::ind_ns_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_ns_buckets_n;
-    u32 new_nelems   = _db.ind_ns_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -4248,7 +4321,7 @@ void abt::ind_ns_Reserve(int n) {
             while (elem) {
                 abt::FNs &row        = *elem;
                 abt::FNs* next       = row.ind_ns_next;
-                u32 index          = algo::Smallstr16_Hash(0, row.ns) & (new_nbuckets-1);
+                u32 index          = row.ind_ns_hashval & (new_nbuckets-1);
                 row.ind_ns_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -4351,14 +4424,9 @@ bool abt::filestat_XrefMaybe(abt::FFilestat &row) {
 // Find row by key. Return NULL if not found.
 abt::FFilestat* abt::ind_filestat_Find(const algo::strptr& key) {
     u32 index = algo::cstring_Hash(0, key) & (_db.ind_filestat_buckets_n - 1);
-    abt::FFilestat* *e = &_db.ind_filestat_buckets_elems[index];
-    abt::FFilestat* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).filename == key;
-        if (done) break;
-        e         = &ret->ind_filestat_next;
-    } while (true);
+    abt::FFilestat *ret = _db.ind_filestat_buckets_elems[index];
+    for (; ret && !((*ret).filename == key); ret = ret->ind_filestat_next) {
+    }
     return ret;
 }
 
@@ -4382,10 +4450,11 @@ abt::FFilestat& abt::ind_filestat_GetOrCreate(const algo::strptr& key) {
 // --- abt.FDb.ind_filestat.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool abt::ind_filestat_InsertMaybe(abt::FFilestat& row) {
-    ind_filestat_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_filestat_next == (abt::FFilestat*)-1)) {// check if in hash already
-        u32 index = algo::cstring_Hash(0, row.filename) & (_db.ind_filestat_buckets_n - 1);
+        row.ind_filestat_hashval = algo::cstring_Hash(0, row.filename);
+        ind_filestat_Reserve(1);
+        u32 index = row.ind_filestat_hashval & (_db.ind_filestat_buckets_n - 1);
         abt::FFilestat* *prev = &_db.ind_filestat_buckets_elems[index];
         do {
             abt::FFilestat* ret = *prev;
@@ -4411,7 +4480,7 @@ bool abt::ind_filestat_InsertMaybe(abt::FFilestat& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void abt::ind_filestat_Remove(abt::FFilestat& row) {
     if (LIKELY(row.ind_filestat_next != (abt::FFilestat*)-1)) {// check if in hash already
-        u32 index = algo::cstring_Hash(0, row.filename) & (_db.ind_filestat_buckets_n - 1);
+        u32 index = row.ind_filestat_hashval & (_db.ind_filestat_buckets_n - 1);
         abt::FFilestat* *prev = &_db.ind_filestat_buckets_elems[index]; // addr of pointer to current element
         while (abt::FFilestat *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -4428,8 +4497,14 @@ void abt::ind_filestat_Remove(abt::FFilestat& row) {
 // --- abt.FDb.ind_filestat.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void abt::ind_filestat_Reserve(int n) {
+    ind_filestat_AbsReserve(_db.ind_filestat_n + n);
+}
+
+// --- abt.FDb.ind_filestat.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void abt::ind_filestat_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_filestat_buckets_n;
-    u32 new_nelems   = _db.ind_filestat_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -4448,7 +4523,7 @@ void abt::ind_filestat_Reserve(int n) {
             while (elem) {
                 abt::FFilestat &row        = *elem;
                 abt::FFilestat* next       = row.ind_filestat_next;
-                u32 index          = algo::cstring_Hash(0, row.filename) & (new_nbuckets-1);
+                u32 index          = row.ind_filestat_hashval & (new_nbuckets-1);
                 row.ind_filestat_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -4581,14 +4656,9 @@ bool abt::builddir_XrefMaybe(abt::FBuilddir &row) {
 // Find row by key. Return NULL if not found.
 abt::FBuilddir* abt::ind_builddir_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_builddir_buckets_n - 1);
-    abt::FBuilddir* *e = &_db.ind_builddir_buckets_elems[index];
-    abt::FBuilddir* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).builddir == key;
-        if (done) break;
-        e         = &ret->ind_builddir_next;
-    } while (true);
+    abt::FBuilddir *ret = _db.ind_builddir_buckets_elems[index];
+    for (; ret && !((*ret).builddir == key); ret = ret->ind_builddir_next) {
+    }
     return ret;
 }
 
@@ -4612,10 +4682,11 @@ abt::FBuilddir& abt::ind_builddir_GetOrCreate(const algo::strptr& key) {
 // --- abt.FDb.ind_builddir.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool abt::ind_builddir_InsertMaybe(abt::FBuilddir& row) {
-    ind_builddir_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_builddir_next == (abt::FBuilddir*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.builddir) & (_db.ind_builddir_buckets_n - 1);
+        row.ind_builddir_hashval = algo::Smallstr50_Hash(0, row.builddir);
+        ind_builddir_Reserve(1);
+        u32 index = row.ind_builddir_hashval & (_db.ind_builddir_buckets_n - 1);
         abt::FBuilddir* *prev = &_db.ind_builddir_buckets_elems[index];
         do {
             abt::FBuilddir* ret = *prev;
@@ -4641,7 +4712,7 @@ bool abt::ind_builddir_InsertMaybe(abt::FBuilddir& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void abt::ind_builddir_Remove(abt::FBuilddir& row) {
     if (LIKELY(row.ind_builddir_next != (abt::FBuilddir*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.builddir) & (_db.ind_builddir_buckets_n - 1);
+        u32 index = row.ind_builddir_hashval & (_db.ind_builddir_buckets_n - 1);
         abt::FBuilddir* *prev = &_db.ind_builddir_buckets_elems[index]; // addr of pointer to current element
         while (abt::FBuilddir *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -4658,8 +4729,14 @@ void abt::ind_builddir_Remove(abt::FBuilddir& row) {
 // --- abt.FDb.ind_builddir.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void abt::ind_builddir_Reserve(int n) {
+    ind_builddir_AbsReserve(_db.ind_builddir_n + n);
+}
+
+// --- abt.FDb.ind_builddir.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void abt::ind_builddir_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_builddir_buckets_n;
-    u32 new_nelems   = _db.ind_builddir_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -4678,7 +4755,7 @@ void abt::ind_builddir_Reserve(int n) {
             while (elem) {
                 abt::FBuilddir &row        = *elem;
                 abt::FBuilddir* next       = row.ind_builddir_next;
-                u32 index          = algo::Smallstr50_Hash(0, row.builddir) & (new_nbuckets-1);
+                u32 index          = row.ind_builddir_hashval & (new_nbuckets-1);
                 row.ind_builddir_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -5386,12 +5463,12 @@ algo::Smallstr10 abt::ext_Get(abt::FSrcfile& srcfile) {
 // --- abt.FSrcfile.zd_include.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
 void abt::zd_include_Insert(abt::FSrcfile& srcfile, abt::FInclude& row) {
-    if (!zd_include_InLlistQ(row)) {
+    if (!srcfile_zd_include_InLlistQ(row)) {
         abt::FInclude* old_tail = srcfile.zd_include_tail;
-        row.zd_include_next = NULL;
-        row.zd_include_prev = old_tail;
+        row.srcfile_zd_include_next = NULL;
+        row.srcfile_zd_include_prev = old_tail;
         srcfile.zd_include_tail = &row;
-        abt::FInclude **new_row_a = &old_tail->zd_include_next;
+        abt::FInclude **new_row_a = &old_tail->srcfile_zd_include_next;
         abt::FInclude **new_row_b = &srcfile.zd_include_head;
         abt::FInclude **new_row = old_tail ? new_row_a : new_row_b;
         *new_row = &row;
@@ -5402,23 +5479,23 @@ void abt::zd_include_Insert(abt::FSrcfile& srcfile, abt::FInclude& row) {
 // --- abt.FSrcfile.zd_include.Remove
 // Remove element from index. If element is not in index, do nothing.
 void abt::zd_include_Remove(abt::FSrcfile& srcfile, abt::FInclude& row) {
-    if (zd_include_InLlistQ(row)) {
+    if (srcfile_zd_include_InLlistQ(row)) {
         abt::FInclude* old_head       = srcfile.zd_include_head;
         (void)old_head; // in case it's not used
-        abt::FInclude* prev = row.zd_include_prev;
-        abt::FInclude* next = row.zd_include_next;
+        abt::FInclude* prev = row.srcfile_zd_include_prev;
+        abt::FInclude* next = row.srcfile_zd_include_next;
         // if element is first, adjust list head; otherwise, adjust previous element's next
-        abt::FInclude **new_next_a = &prev->zd_include_next;
+        abt::FInclude **new_next_a = &prev->srcfile_zd_include_next;
         abt::FInclude **new_next_b = &srcfile.zd_include_head;
         abt::FInclude **new_next = prev ? new_next_a : new_next_b;
         *new_next = next;
         // if element is last, adjust list tail; otherwise, adjust next element's prev
-        abt::FInclude **new_prev_a = &next->zd_include_prev;
+        abt::FInclude **new_prev_a = &next->srcfile_zd_include_prev;
         abt::FInclude **new_prev_b = &srcfile.zd_include_tail;
         abt::FInclude **new_prev = next ? new_prev_a : new_prev_b;
         *new_prev = prev;
         srcfile.zd_include_n--;
-        row.zd_include_next=(abt::FInclude*)-1; // not-in-list
+        row.srcfile_zd_include_next=(abt::FInclude*)-1; // not-in-list
     }
 }
 
@@ -5430,9 +5507,9 @@ void abt::zd_include_RemoveAll(abt::FSrcfile& srcfile) {
     srcfile.zd_include_tail = NULL;
     srcfile.zd_include_n = 0;
     while (row) {
-        abt::FInclude* row_next = row->zd_include_next;
-        row->zd_include_next  = (abt::FInclude*)-1;
-        row->zd_include_prev  = NULL;
+        abt::FInclude* row_next = row->srcfile_zd_include_next;
+        row->srcfile_zd_include_next  = (abt::FInclude*)-1;
+        row->srcfile_zd_include_prev  = NULL;
         row = row_next;
     }
 }
@@ -5443,14 +5520,14 @@ abt::FInclude* abt::zd_include_RemoveFirst(abt::FSrcfile& srcfile) {
     abt::FInclude *row = NULL;
     row = srcfile.zd_include_head;
     if (row) {
-        abt::FInclude *next = row->zd_include_next;
+        abt::FInclude *next = row->srcfile_zd_include_next;
         srcfile.zd_include_head = next;
-        abt::FInclude **new_end_a = &next->zd_include_prev;
+        abt::FInclude **new_end_a = &next->srcfile_zd_include_prev;
         abt::FInclude **new_end_b = &srcfile.zd_include_tail;
         abt::FInclude **new_end = next ? new_end_a : new_end_b;
         *new_end = NULL;
         srcfile.zd_include_n--;
-        row->zd_include_next = (abt::FInclude*)-1; // mark as not-in-list
+        row->srcfile_zd_include_next = (abt::FInclude*)-1; // mark as not-in-list
     }
     return row;
 }
@@ -5468,6 +5545,7 @@ void abt::FSrcfile_Init(abt::FSrcfile& srcfile) {
     srcfile.zd_include_tail = NULL; // (abt.FSrcfile.zd_include)
     srcfile.printed = bool(false);
     srcfile.ind_srcfile_next = (abt::FSrcfile*)-1; // (abt.FDb.ind_srcfile) not-in-hash
+    srcfile.ind_srcfile_hashval = 0; // stored hash value
     srcfile.zs_srcfile_read_next = (abt::FSrcfile*)-1; // (abt.FDb.zs_srcfile_read) not-in-list
     srcfile.zd_inclstack_next = (abt::FSrcfile*)-1; // (abt.FDb.zd_inclstack) not-in-list
     srcfile.zd_inclstack_prev = NULL; // (abt.FDb.zd_inclstack)
@@ -5511,15 +5589,11 @@ void abt::syscmd_CopyIn(abt::FSyscmd &row, dev::Syscmd &in) {
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 void abt::c_prior_Insert(abt::FSyscmd& syscmd, abt::FSyscmddep& row) {
-    if (bool_Update(row.syscmd_c_prior_in_ary,true)) {
-        // reserve space
+    if (!row.syscmd_c_prior_in_ary) {
         c_prior_Reserve(syscmd, 1);
-        u32 n  = syscmd.c_prior_n;
-        u32 at = n;
-        abt::FSyscmddep* *elems = syscmd.c_prior_elems;
-        elems[at] = &row;
-        syscmd.c_prior_n = n+1;
-
+        u32 n  = syscmd.c_prior_n++;
+        syscmd.c_prior_elems[n] = &row;
+        row.syscmd_c_prior_in_ary = true;
     }
 }
 
@@ -5528,7 +5602,7 @@ void abt::c_prior_Insert(abt::FSyscmd& syscmd, abt::FSyscmddep& row) {
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 bool abt::c_prior_InsertMaybe(abt::FSyscmd& syscmd, abt::FSyscmddep& row) {
-    bool retval = !row.syscmd_c_prior_in_ary;
+    bool retval = !syscmd_c_prior_InAryQ(row);
     c_prior_Insert(syscmd,row); // check is performed in _Insert again
     return retval;
 }
@@ -5536,18 +5610,18 @@ bool abt::c_prior_InsertMaybe(abt::FSyscmd& syscmd, abt::FSyscmddep& row) {
 // --- abt.FSyscmd.c_prior.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void abt::c_prior_Remove(abt::FSyscmd& syscmd, abt::FSyscmddep& row) {
+    int n = syscmd.c_prior_n;
     if (bool_Update(row.syscmd_c_prior_in_ary,false)) {
-        int lim = syscmd.c_prior_n;
         abt::FSyscmddep* *elems = syscmd.c_prior_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = lim-1; i>=0; i--) {
+        for (int i = n-1; i>=0; i--) {
             abt::FSyscmddep* elem = elems[i]; // fetch element
             if (elem == &row) {
                 int j = i + 1;
-                size_t nbytes = sizeof(abt::FSyscmddep*) * (lim - j);
+                size_t nbytes = sizeof(abt::FSyscmddep*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                syscmd.c_prior_n = lim - 1;
+                syscmd.c_prior_n = n - 1;
                 break;
             }
         }
@@ -5575,15 +5649,11 @@ void abt::c_prior_Reserve(abt::FSyscmd& syscmd, u32 n) {
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 void abt::c_next_Insert(abt::FSyscmd& syscmd, abt::FSyscmddep& row) {
-    if (bool_Update(row.syscmd_c_next_in_ary,true)) {
-        // reserve space
+    if (!row.syscmd_c_next_in_ary) {
         c_next_Reserve(syscmd, 1);
-        u32 n  = syscmd.c_next_n;
-        u32 at = n;
-        abt::FSyscmddep* *elems = syscmd.c_next_elems;
-        elems[at] = &row;
-        syscmd.c_next_n = n+1;
-
+        u32 n  = syscmd.c_next_n++;
+        syscmd.c_next_elems[n] = &row;
+        row.syscmd_c_next_in_ary = true;
     }
 }
 
@@ -5592,7 +5662,7 @@ void abt::c_next_Insert(abt::FSyscmd& syscmd, abt::FSyscmddep& row) {
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 bool abt::c_next_InsertMaybe(abt::FSyscmd& syscmd, abt::FSyscmddep& row) {
-    bool retval = !row.syscmd_c_next_in_ary;
+    bool retval = !syscmd_c_next_InAryQ(row);
     c_next_Insert(syscmd,row); // check is performed in _Insert again
     return retval;
 }
@@ -5600,18 +5670,18 @@ bool abt::c_next_InsertMaybe(abt::FSyscmd& syscmd, abt::FSyscmddep& row) {
 // --- abt.FSyscmd.c_next.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void abt::c_next_Remove(abt::FSyscmd& syscmd, abt::FSyscmddep& row) {
+    int n = syscmd.c_next_n;
     if (bool_Update(row.syscmd_c_next_in_ary,false)) {
-        int lim = syscmd.c_next_n;
         abt::FSyscmddep* *elems = syscmd.c_next_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = lim-1; i>=0; i--) {
+        for (int i = n-1; i>=0; i--) {
             abt::FSyscmddep* elem = elems[i]; // fetch element
             if (elem == &row) {
                 int j = i + 1;
-                size_t nbytes = sizeof(abt::FSyscmddep*) * (lim - j);
+                size_t nbytes = sizeof(abt::FSyscmddep*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                syscmd.c_next_n = lim - 1;
+                syscmd.c_next_n = n - 1;
                 break;
             }
         }
@@ -5655,7 +5725,9 @@ void abt::FSyscmd_Init(abt::FSyscmd& syscmd) {
     syscmd.line_n = u64(0);
     syscmd.redirect = bool(true);
     syscmd.ind_syscmd_next = (abt::FSyscmd*)-1; // (abt.FDb.ind_syscmd) not-in-hash
+    syscmd.ind_syscmd_hashval = 0; // stored hash value
     syscmd.ind_running_next = (abt::FSyscmd*)-1; // (abt.FDb.ind_running) not-in-hash
+    syscmd.ind_running_hashval = 0; // stored hash value
     syscmd.bh_syscmd_idx = -1; // (abt.FDb.bh_syscmd) not-in-heap
 }
 
@@ -5771,15 +5843,11 @@ void abt::target_CopyIn(abt::FTarget &row, dev::Target &in) {
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 void abt::c_targsrc_Insert(abt::FTarget& target, abt::FTargsrc& row) {
-    if (bool_Update(row.target_c_targsrc_in_ary,true)) {
-        // reserve space
+    if (!row.target_c_targsrc_in_ary) {
         c_targsrc_Reserve(target, 1);
-        u32 n  = target.c_targsrc_n;
-        u32 at = n;
-        abt::FTargsrc* *elems = target.c_targsrc_elems;
-        elems[at] = &row;
-        target.c_targsrc_n = n+1;
-
+        u32 n  = target.c_targsrc_n++;
+        target.c_targsrc_elems[n] = &row;
+        row.target_c_targsrc_in_ary = true;
     }
 }
 
@@ -5788,7 +5856,7 @@ void abt::c_targsrc_Insert(abt::FTarget& target, abt::FTargsrc& row) {
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 bool abt::c_targsrc_InsertMaybe(abt::FTarget& target, abt::FTargsrc& row) {
-    bool retval = !row.target_c_targsrc_in_ary;
+    bool retval = !target_c_targsrc_InAryQ(row);
     c_targsrc_Insert(target,row); // check is performed in _Insert again
     return retval;
 }
@@ -5796,18 +5864,18 @@ bool abt::c_targsrc_InsertMaybe(abt::FTarget& target, abt::FTargsrc& row) {
 // --- abt.FTarget.c_targsrc.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void abt::c_targsrc_Remove(abt::FTarget& target, abt::FTargsrc& row) {
+    int n = target.c_targsrc_n;
     if (bool_Update(row.target_c_targsrc_in_ary,false)) {
-        int lim = target.c_targsrc_n;
         abt::FTargsrc* *elems = target.c_targsrc_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = lim-1; i>=0; i--) {
+        for (int i = n-1; i>=0; i--) {
             abt::FTargsrc* elem = elems[i]; // fetch element
             if (elem == &row) {
                 int j = i + 1;
-                size_t nbytes = sizeof(abt::FTargsrc*) * (lim - j);
+                size_t nbytes = sizeof(abt::FTargsrc*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                target.c_targsrc_n = lim - 1;
+                target.c_targsrc_n = n - 1;
                 break;
             }
         }
@@ -5835,14 +5903,9 @@ void abt::c_targsrc_Reserve(abt::FTarget& target, u32 n) {
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 void abt::c_srcfile_Insert(abt::FTarget& target, abt::FSrcfile& row) {
-    // reserve space
     c_srcfile_Reserve(target, 1);
-    u32 n  = target.c_srcfile_n;
-    u32 at = n;
-    abt::FSrcfile* *elems = target.c_srcfile_elems;
-    elems[at] = &row;
-    target.c_srcfile_n = n+1;
-
+    u32 n  = target.c_srcfile_n++;
+    target.c_srcfile_elems[n] = &row;
 }
 
 // --- abt.FTarget.c_srcfile.ScanInsertMaybe
@@ -5871,20 +5934,18 @@ bool abt::c_srcfile_ScanInsertMaybe(abt::FTarget& target, abt::FSrcfile& row) {
 // --- abt.FTarget.c_srcfile.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void abt::c_srcfile_Remove(abt::FTarget& target, abt::FSrcfile& row) {
-    int lim = target.c_srcfile_n;
-    abt::FSrcfile* *elems = target.c_srcfile_elems;
-    // search backward, so that most recently added element is found first.
-    // if found, shift array.
-    for (int i = lim-1; i>=0; i--) {
-        abt::FSrcfile* elem = elems[i]; // fetch element
-        if (elem == &row) {
-            int j = i + 1;
-            size_t nbytes = sizeof(abt::FSrcfile*) * (lim - j);
-            memmove(elems + i, elems + j, nbytes);
-            target.c_srcfile_n = lim - 1;
-            break;
+    int n = target.c_srcfile_n;
+    int j=0;
+    for (int i=0; i<n; i++) {
+        if (target.c_srcfile_elems[i] == &row) {
+        } else {
+            if (j != i) {
+                target.c_srcfile_elems[j] = target.c_srcfile_elems[i];
+            }
+            j++;
         }
     }
+    target.c_srcfile_n = j;
 }
 
 // --- abt.FTarget.c_srcfile.Reserve
@@ -5908,15 +5969,11 @@ void abt::c_srcfile_Reserve(abt::FTarget& target, u32 n) {
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 void abt::c_targdep_Insert(abt::FTarget& target, abt::FTargdep& row) {
-    if (bool_Update(row.target_c_targdep_in_ary,true)) {
-        // reserve space
+    if (!row.target_c_targdep_in_ary) {
         c_targdep_Reserve(target, 1);
-        u32 n  = target.c_targdep_n;
-        u32 at = n;
-        abt::FTargdep* *elems = target.c_targdep_elems;
-        elems[at] = &row;
-        target.c_targdep_n = n+1;
-
+        u32 n  = target.c_targdep_n++;
+        target.c_targdep_elems[n] = &row;
+        row.target_c_targdep_in_ary = true;
     }
 }
 
@@ -5925,7 +5982,7 @@ void abt::c_targdep_Insert(abt::FTarget& target, abt::FTargdep& row) {
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 bool abt::c_targdep_InsertMaybe(abt::FTarget& target, abt::FTargdep& row) {
-    bool retval = !row.target_c_targdep_in_ary;
+    bool retval = !target_c_targdep_InAryQ(row);
     c_targdep_Insert(target,row); // check is performed in _Insert again
     return retval;
 }
@@ -5933,18 +5990,18 @@ bool abt::c_targdep_InsertMaybe(abt::FTarget& target, abt::FTargdep& row) {
 // --- abt.FTarget.c_targdep.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void abt::c_targdep_Remove(abt::FTarget& target, abt::FTargdep& row) {
+    int n = target.c_targdep_n;
     if (bool_Update(row.target_c_targdep_in_ary,false)) {
-        int lim = target.c_targdep_n;
         abt::FTargdep* *elems = target.c_targdep_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = lim-1; i>=0; i--) {
+        for (int i = n-1; i>=0; i--) {
             abt::FTargdep* elem = elems[i]; // fetch element
             if (elem == &row) {
                 int j = i + 1;
-                size_t nbytes = sizeof(abt::FTargdep*) * (lim - j);
+                size_t nbytes = sizeof(abt::FTargdep*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                target.c_targdep_n = lim - 1;
+                target.c_targdep_n = n - 1;
                 break;
             }
         }
@@ -5972,15 +6029,11 @@ void abt::c_targdep_Reserve(abt::FTarget& target, u32 n) {
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 void abt::c_targsyslib_Insert(abt::FTarget& target, abt::FTargsyslib& row) {
-    if (bool_Update(row.target_c_targsyslib_in_ary,true)) {
-        // reserve space
+    if (!row.target_c_targsyslib_in_ary) {
         c_targsyslib_Reserve(target, 1);
-        u32 n  = target.c_targsyslib_n;
-        u32 at = n;
-        abt::FTargsyslib* *elems = target.c_targsyslib_elems;
-        elems[at] = &row;
-        target.c_targsyslib_n = n+1;
-
+        u32 n  = target.c_targsyslib_n++;
+        target.c_targsyslib_elems[n] = &row;
+        row.target_c_targsyslib_in_ary = true;
     }
 }
 
@@ -5989,7 +6042,7 @@ void abt::c_targsyslib_Insert(abt::FTarget& target, abt::FTargsyslib& row) {
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 bool abt::c_targsyslib_InsertMaybe(abt::FTarget& target, abt::FTargsyslib& row) {
-    bool retval = !row.target_c_targsyslib_in_ary;
+    bool retval = !target_c_targsyslib_InAryQ(row);
     c_targsyslib_Insert(target,row); // check is performed in _Insert again
     return retval;
 }
@@ -5997,18 +6050,18 @@ bool abt::c_targsyslib_InsertMaybe(abt::FTarget& target, abt::FTargsyslib& row) 
 // --- abt.FTarget.c_targsyslib.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void abt::c_targsyslib_Remove(abt::FTarget& target, abt::FTargsyslib& row) {
+    int n = target.c_targsyslib_n;
     if (bool_Update(row.target_c_targsyslib_in_ary,false)) {
-        int lim = target.c_targsyslib_n;
         abt::FTargsyslib* *elems = target.c_targsyslib_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = lim-1; i>=0; i--) {
+        for (int i = n-1; i>=0; i--) {
             abt::FTargsyslib* elem = elems[i]; // fetch element
             if (elem == &row) {
                 int j = i + 1;
-                size_t nbytes = sizeof(abt::FTargsyslib*) * (lim - j);
+                size_t nbytes = sizeof(abt::FTargsyslib*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                target.c_targsyslib_n = lim - 1;
+                target.c_targsyslib_n = n - 1;
                 break;
             }
         }
@@ -6036,14 +6089,9 @@ void abt::c_targsyslib_Reserve(abt::FTarget& target, u32 n) {
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 void abt::c_alldep_Insert(abt::FTarget& target, abt::FTarget& row) {
-    // reserve space
     c_alldep_Reserve(target, 1);
-    u32 n  = target.c_alldep_n;
-    u32 at = n;
-    abt::FTarget* *elems = target.c_alldep_elems;
-    elems[at] = &row;
-    target.c_alldep_n = n+1;
-
+    u32 n  = target.c_alldep_n++;
+    target.c_alldep_elems[n] = &row;
 }
 
 // --- abt.FTarget.c_alldep.ScanInsertMaybe
@@ -6072,20 +6120,18 @@ bool abt::c_alldep_ScanInsertMaybe(abt::FTarget& target, abt::FTarget& row) {
 // --- abt.FTarget.c_alldep.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void abt::c_alldep_Remove(abt::FTarget& target, abt::FTarget& row) {
-    int lim = target.c_alldep_n;
-    abt::FTarget* *elems = target.c_alldep_elems;
-    // search backward, so that most recently added element is found first.
-    // if found, shift array.
-    for (int i = lim-1; i>=0; i--) {
-        abt::FTarget* elem = elems[i]; // fetch element
-        if (elem == &row) {
-            int j = i + 1;
-            size_t nbytes = sizeof(abt::FTarget*) * (lim - j);
-            memmove(elems + i, elems + j, nbytes);
-            target.c_alldep_n = lim - 1;
-            break;
+    int n = target.c_alldep_n;
+    int j=0;
+    for (int i=0; i<n; i++) {
+        if (target.c_alldep_elems[i] == &row) {
+        } else {
+            if (j != i) {
+                target.c_alldep_elems[j] = target.c_alldep_elems[i];
+            }
+            j++;
         }
     }
+    target.c_alldep_n = j;
 }
 
 // --- abt.FTarget.c_alldep.Reserve
@@ -6133,6 +6179,7 @@ void abt::FTarget_Init(abt::FTarget& target) {
     target.libdep_visited = bool(false);
     target.origsel = bool(false);
     target.ind_target_next = (abt::FTarget*)-1; // (abt.FDb.ind_target) not-in-hash
+    target.ind_target_hashval = 0; // stored hash value
     target.zs_sel_target_next = (abt::FTarget*)-1; // (abt.FDb.zs_sel_target) not-in-list
     target.zs_origsel_target_next = (abt::FTarget*)-1; // (abt.FDb.zs_origsel_target) not-in-list
 }
@@ -6231,6 +6278,12 @@ algo::Smallstr50 abt::syslib_Get(abt::FTargsyslib& targsyslib) {
 // --- abt.FTargsyslib.uname.Get
 algo::Smallstr50 abt::uname_Get(abt::FTargsyslib& targsyslib) {
     algo::Smallstr50 ret(algo::Pathcomp(targsyslib.targsyslib, "/LL"));
+    return ret;
+}
+
+// --- abt.FTargsyslib.prefix.Get
+algo::Smallstr50 abt::prefix_Get(abt::FTargsyslib& targsyslib) {
+    algo::Smallstr50 ret(algo::Pathcomp(targsyslib.targsyslib, ".RL"));
     return ret;
 }
 
@@ -6677,11 +6730,13 @@ void abt::StaticCheck() {
 // --- abt...main
 int main(int argc, char **argv) {
     try {
+        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         abt::FDb_Init();
         algo_lib::_db.argc = argc;
         algo_lib::_db.argv = argv;
         algo_lib::IohookInit();
+        algo_lib::_db.clock = algo::CurrSchedTime(); // initialize clock
         abt::ReadArgv(); // dmmeta.main:abt
         abt::Main(); // user-defined main
     } catch(algo_lib::ErrorX &x) {
@@ -6694,6 +6749,7 @@ int main(int argc, char **argv) {
     try {
         abt::FDb_Uninit();
         algo_lib::FDb_Uninit();
+        lib_json::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;

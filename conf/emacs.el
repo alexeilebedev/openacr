@@ -83,38 +83,6 @@
   )
 
 ;;
-;; jira-code
-;;
-(defun jira-code ()
-  "Wrap region in jira code block"
-  (interactive)
-  (point-to-register 1)
-  (exchange-point-and-mark)
-  (insert "{code}\n")
-  (jump-to-register 1)
-  (insert "{code}\n")
-  )
-
-;;
-;; jira-before-after
-;;
-(defun jira-before-after ()
-  "Create a rewrite block"
-  (interactive)
-  (kill-ring-save (point) (mark))
-  (point-to-register 1)
-  (exchange-point-and-mark)
-  (insert "Before:\n")
-  (insert "{code}\n")
-  (jump-to-register 1)
-  (insert "{code}\n")
-  (insert "After:\n")
-  (insert "{code}\n")
-  (yank)
-  (insert "{code}\n")
-  )
-
-;;
 ;; consider _ as part of identifier
 ;; use font colors
 ;; use which-function-mode
@@ -202,6 +170,11 @@
                 ("\\.ssim$"  . ssim-mode)
                 ("\\.md$"  . markdown-mode)
                 ("\\.markdown$"  . markdown-mode)
+                ("\\.jx$"  . javascript-mode)
+                ("\\.jsx$"  . javascript-mode)
+                ("\\.mjs$"  . javascript-mode)
+                ("\\.ts$"  . javascript-mode)
+                ("\\.tsx$"  . javascript-mode)
                 ) auto-mode-alist))
 
 (autoload 'markdown-mode "markdown-mode"
@@ -310,23 +283,9 @@
 (fset 'compile-show-output
       "\C-x1\C-x2\C-xo\C-xb*comp\C-i\C-m\C-[>\C-xo")
 
-;;-----------------------------------------------------------------------------
-;; gnome work-around
-;; what does this do exactly?
-
-(define-key function-key-map "\eO1;2P" [(shift f1)])
-(define-key function-key-map "\eO1;2Q" [(shift f2)])
-(define-key function-key-map "\eO1;2R" [(shift f3)])
-(define-key function-key-map "\eO1;2S" [(shift f4)])
-
-(define-key function-key-map "\eO1;5P" [(control f1)])
-(define-key function-key-map "\eO1;5Q" [(control f2)])
-(define-key function-key-map "\eO1;5R" [(control f3)])
-(define-key function-key-map "\eO1;5S" [(control f4)])
-
 ;;------------------------------------------------------------------------------
 
-; strip 'Directory '
+                                        ; strip 'Directory '
 (setq compile-command              (concat "cd " ffroot-directory " && ai % 2>&1 | break-long-lines"))
 
 (setq-default c-basic-offset               4)
@@ -356,21 +315,16 @@
 
 ;; visual studio's alt-2 command
 (global-set-key (kbd "M-2")           'compile-show-output)
-(global-set-key (kbd "<f2>")          'bm-next)
-(global-set-key (kbd "C-<f2>")        'bm-bookmark-line)
-
+(global-set-key (kbd "<f2>")          'grep-find)
 (global-set-key (kbd "<f3>")          'ff-word)
 (global-set-key (kbd "C-<f3>")        'ff-word-with-generated-code)
-(global-set-key (kbd "<f2>")         'ff-try-to-find-function-definition)
 
-(global-set-key (kbd "S-<f4>")        'previous-error)
 (global-set-key (kbd "<f4>")          'next-error)
-(global-set-key (kbd "C-<f4>")        'kill-current-buffer)
+(global-set-key (kbd "C-<f4>")        'previous-error)
 
 (global-set-key (kbd "C-<tab>")       'next-buffer)
 (global-set-key (kbd "<backtab>")     'previous-buffer)
 
-(global-set-key (kbd "M-<f8>")        'trim-and-indent-region)
 (global-set-key (kbd "C-M-\\")        'trim-and-indent-region)
 
 (global-set-key (kbd "C-<home>")      'beginning-of-buffer)
@@ -379,7 +333,6 @@
 (global-set-key (kbd "C-<delete>")    'kill-word)
 (global-set-key (kbd "C-<return>")    'electric-buffer-list)
 (global-set-key (kbd "C-\\")          'bury-buffer)
-(global-set-key (kbd "C-.")           'complete-symbol)
 (global-set-key (kbd "M-o")           'algo-ff-toggle-source)
 (global-set-key (kbd "M-p")           'algo-ff-open-other)
 (global-set-key (kbd "C-%")           'query-replace-regexp)
@@ -388,13 +341,16 @@
 
 ;; debugger commands
 (global-set-key (kbd "<f11>")     'gud-step)   ;step into
-(global-set-key (kbd "S-<f11>")   'gud-finish) ;step out of function
+(global-set-key (kbd "C-<f11>")   'gud-finish) ;step out of function
+
 (global-set-key (kbd "<f10>")     'gud-next)   ;step over
-(global-set-key (kbd "C-<f10>")   'gud-until)  ;go until current line
 (global-set-key (kbd "<f12>")     'gdb-restore-windows)
-(global-set-key (kbd "<f5>")      'gud-cont) ;run
-(global-set-key (kbd "<f9>")      'gud-break) ;set breakpoint
-(global-set-key (kbd "C-<f9>")    'gud-remove) ;clear breakpoint
+(global-set-key (kbd "<f5>")      'gud-cont) ; run
+(global-set-key (kbd "C-<f5>")    (lambda () (interactive) (gud-call "start")))
+
+(global-set-key (kbd "<f9>")      'gud-break)  ; set breakpoint
+(global-set-key (kbd "M-<f9>")    (lambda () (interactive) (gud-call "del")))
+(global-set-key (kbd "C-<f9>")    'gud-until)  ;go until current line
 
 (global-set-key (kbd "M-<f11>")   'gud-down)
 (global-set-key (kbd "M-S-<f11>") 'gud-up)

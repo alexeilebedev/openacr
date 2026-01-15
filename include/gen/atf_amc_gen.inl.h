@@ -1052,8 +1052,7 @@ inline  atf_amc::Bitset::Bitset() {
 // --- atf_amc.Bytebuf.in.Max
 // Return max. number of bytes in the buffer.
 inline i32 atf_amc::in_Max(atf_amc::Bytebuf& bytebuf) {
-    return 64;
-    (void)bytebuf;//only to avoid -Wunused-parameter
+    return bytebuf.in_max;
 }
 
 // --- atf_amc.Bytebuf.in.N
@@ -1067,6 +1066,11 @@ inline  atf_amc::Bytebuf::Bytebuf() {
     atf_amc::Bytebuf_Init(*this);
     // added because atf_amc.Bytebuf.in (Fbuf) does not need initialization
     // coverity[uninit_member]
+}
+
+// --- atf_amc.Bytebuf..Dtor
+inline  atf_amc::Bytebuf::~Bytebuf() {
+    atf_amc::Bytebuf_Uninit(*this);
 }
 
 // --- atf_amc.BytebufDyn.in.Max
@@ -1901,26 +1905,6 @@ inline void atf_amc::intval_Set(atf_amc::DispFilter& parent, u32 rhs) {
     pmask_qSetBit(parent, 9); // mark presence in pmask
 }
 
-// --- atf_amc.DispFilter.pmask_bitcurs.Reset
-inline void atf_amc::DispFilter_pmask_bitcurs_Reset(DispFilter_pmask_bitcurs &curs, atf_amc::DispFilter &parent) {
-    curs.elems = &pmask_qFind(parent,0);
-    curs.n_elems = pmask_N(parent);
-    curs.bit = -1;
-    DispFilter_pmask_bitcurs_Next(curs);
-}
-
-// --- atf_amc.DispFilter.pmask_bitcurs.ValidQ
-// cursor points to valid item
-inline bool atf_amc::DispFilter_pmask_bitcurs_ValidQ(DispFilter_pmask_bitcurs &curs) {
-    return curs.bit < curs.n_elems*64;
-}
-
-// --- atf_amc.DispFilter.pmask_bitcurs.Access
-// item access
-inline int& atf_amc::DispFilter_pmask_bitcurs_Access(DispFilter_pmask_bitcurs &curs) {
-    return curs.bit;
-}
-
 // --- atf_amc.DispFilter.pmask_curs.Reset
 // cursor points to valid item
 inline void atf_amc::DispFilter_pmask_curs_Reset(DispFilter_pmask_curs &curs, atf_amc::DispFilter &parent) {
@@ -2141,7 +2125,7 @@ inline atf_amc::FCascdel* atf_amc::bh_child_bheap_First(atf_amc::FCascdel& cascd
 // Return true if row is in index, false otherwise
 inline bool atf_amc::bh_child_bheap_InBheapQ(atf_amc::FCascdel& row) {
     bool result = false;
-    result = row.bh_child_bheap_idx != -1;
+    result = row.cascdel_bh_child_bheap_idx != -1;
     return result;
 }
 
@@ -2167,9 +2151,9 @@ inline atf_amc::FCascdel* atf_amc::zd_childlist_First(atf_amc::FCascdel& cascdel
 
 // --- atf_amc.FCascdel.zd_childlist.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool atf_amc::zd_childlist_InLlistQ(atf_amc::FCascdel& row) {
+inline bool atf_amc::cascdel_zd_childlist_InLlistQ(atf_amc::FCascdel& row) {
     bool result = false;
-    result = !(row.zd_childlist_next == (atf_amc::FCascdel*)-1);
+    result = !(row.cascdel_zd_childlist_next == (atf_amc::FCascdel*)-1);
     return result;
 }
 
@@ -2189,14 +2173,14 @@ inline i32 atf_amc::zd_childlist_N(const atf_amc::FCascdel& cascdel) {
 
 // --- atf_amc.FCascdel.zd_childlist.Next
 // Return pointer to next element in the list
-inline atf_amc::FCascdel* atf_amc::zd_childlist_Next(atf_amc::FCascdel &row) {
-    return row.zd_childlist_next;
+inline atf_amc::FCascdel* atf_amc::cascdel_zd_childlist_Next(atf_amc::FCascdel &row) {
+    return row.cascdel_zd_childlist_next;
 }
 
 // --- atf_amc.FCascdel.zd_childlist.Prev
 // Return pointer to previous element in the list
-inline atf_amc::FCascdel* atf_amc::zd_childlist_Prev(atf_amc::FCascdel &row) {
-    return row.zd_childlist_prev;
+inline atf_amc::FCascdel* atf_amc::cascdel_zd_childlist_Prev(atf_amc::FCascdel &row) {
+    return row.cascdel_zd_childlist_prev;
 }
 
 // --- atf_amc.FCascdel.zd_childlist.qLast
@@ -2216,7 +2200,7 @@ inline bool atf_amc::tr_child_atree_EmptyQ(atf_amc::FCascdel& cascdel) {
 // --- atf_amc.FCascdel.tr_child_atree.InTreeQ
 // Return true if row is in the tree, false otherwise
 inline bool atf_amc::tr_child_atree_InTreeQ(atf_amc::FCascdel& row) {
-    return row.tr_child_atree_up != (atf_amc::FCascdel*)-1;
+    return row.cascdel_tr_child_atree_up != (atf_amc::FCascdel*)-1;
 }
 
 // --- atf_amc.FCascdel.tr_child_atree.RemoveAll
@@ -2279,7 +2263,7 @@ inline bool atf_amc::cascdel_zd_childlist_curs_ValidQ(cascdel_zd_childlist_curs 
 // --- atf_amc.FCascdel.zd_childlist_curs.Next
 // proceed to next item
 inline void atf_amc::cascdel_zd_childlist_curs_Next(cascdel_zd_childlist_curs &curs) {
-    atf_amc::FCascdel *next = (*curs.row).zd_childlist_next;
+    atf_amc::FCascdel *next = (*curs.row).cascdel_zd_childlist_next;
     curs.row = next;
 }
 
@@ -2327,6 +2311,7 @@ inline  atf_amc::FCascdel::~FCascdel() {
 // Set all fields to initial values.
 inline void atf_amc::FCstring_Init(atf_amc::FCstring& cstring) {
     cstring.ind_cstring_next = (atf_amc::FCstring*)-1; // (atf_amc.FDb.ind_cstring) not-in-hash
+    cstring.ind_cstring_hashval = 0; // stored hash value
 }
 
 // --- atf_amc.FCstring..Ctor
@@ -3451,7 +3436,7 @@ inline i32 atf_amc::c_typek_N() {
 inline void atf_amc::c_typek_RemoveAll() {
     for (u32 i = 0; i < _db.c_typek_n; i++) {
         // mark all elements as not-in-array
-        _db.c_typek_elems[i]->_db_c_typek_in_ary = false;
+        _db.c_typek_elems[i]->c_typek_in_ary = false;
     }
     _db.c_typek_n = 0;
 }
@@ -3465,13 +3450,132 @@ inline atf_amc::FTypeK& atf_amc::c_typek_qFind(u32 idx) {
 // --- atf_amc.FDb.c_typek.InAryQ
 // True if row is in any ptrary instance
 inline bool atf_amc::c_typek_InAryQ(atf_amc::FTypeK& row) {
-    return row._db_c_typek_in_ary;
+    return row.c_typek_in_ary;
 }
 
 // --- atf_amc.FDb.c_typek.qLast
 // Reference to last element without bounds checking
 inline atf_amc::FTypeK& atf_amc::c_typek_qLast() {
     return *_db.c_typek_elems[_db.c_typek_n-1];
+}
+
+// --- atf_amc.FDb.c_typel.EmptyQ
+// Return true if index is empty
+inline bool atf_amc::c_typel_EmptyQ() {
+    return _db.c_typel_n == 0;
+}
+
+// --- atf_amc.FDb.c_typel.Find
+// Look up row by row id. Return NULL if out of range
+inline atf_amc::FTypeL* atf_amc::c_typel_Find(u32 t) {
+    atf_amc::FTypeL *retval = NULL;
+    u64 idx = t;
+    u64 lim = _db.c_typel_n;
+    if (idx < lim) {
+        retval = _db.c_typel_elems[idx];
+    }
+    return retval;
+}
+
+// --- atf_amc.FDb.c_typel.Getary
+// Return array of pointers
+inline algo::aryptr<atf_amc::FTypeL*> atf_amc::c_typel_Getary() {
+    return algo::aryptr<atf_amc::FTypeL*>(_db.c_typel_elems, _db.c_typel_n);
+}
+
+// --- atf_amc.FDb.c_typel.First
+inline atf_amc::FTypeL* atf_amc::c_typel_First() {
+    atf_amc::FTypeL *row = NULL;
+    row = _db.c_typel_n ? _db.c_typel_elems[0] : NULL;
+    return row;
+}
+
+// --- atf_amc.FDb.c_typel.Last
+inline atf_amc::FTypeL* atf_amc::c_typel_Last() {
+    atf_amc::FTypeL *row = NULL;
+    row = _db.c_typel_n ? _db.c_typel_elems[_db.c_typel_n-1] : NULL;
+    return row;
+}
+
+// --- atf_amc.FDb.c_typel.N
+// Return number of items in the pointer array
+inline i32 atf_amc::c_typel_N() {
+    return _db.c_typel_n;
+}
+
+// --- atf_amc.FDb.c_typel.RemoveAll
+// Empty the index. (The rows are not deleted)
+inline void atf_amc::c_typel_RemoveAll() {
+    for (u32 i = 0; i < _db.c_typel_n; i++) {
+        _db.c_typel_elems[i]->c_typel_idx = -1;
+    }
+    _db.c_typel_n = 0;
+}
+
+// --- atf_amc.FDb.c_typel.qFind
+// Return reference without bounds checking
+inline atf_amc::FTypeL& atf_amc::c_typel_qFind(u32 idx) {
+    return *_db.c_typel_elems[idx];
+}
+
+// --- atf_amc.FDb.c_typel.InAryQ
+// True if row is in any ptrary instance
+inline bool atf_amc::c_typel_InAryQ(atf_amc::FTypeL& row) {
+    return row.c_typel_idx != -1;
+}
+
+// --- atf_amc.FDb.c_typel.qLast
+// Reference to last element without bounds checking
+inline atf_amc::FTypeL& atf_amc::c_typel_qLast() {
+    return *_db.c_typel_elems[_db.c_typel_n-1];
+}
+
+// --- atf_amc.FDb.c_typem.EmptyQ
+// Return true if index is empty
+inline bool atf_amc::c_typem_EmptyQ() {
+    return _db.c_typem_n == 0;
+}
+
+// --- atf_amc.FDb.c_typem.Find
+// Look up row by row id. Return NULL if out of range
+inline atf_amc::FTypeM* atf_amc::c_typem_Find(u32 t) {
+    atf_amc::FTypeM *retval = NULL;
+    u64 idx = t;
+    u64 lim = _db.c_typem_n;
+    if (idx < lim) {
+        retval = _db.c_typem_elems[idx];
+    }
+    return retval;
+}
+
+// --- atf_amc.FDb.c_typem.Getary
+// Return array of pointers
+inline algo::aryptr<atf_amc::FTypeM*> atf_amc::c_typem_Getary() {
+    return algo::aryptr<atf_amc::FTypeM*>(_db.c_typem_elems, _db.c_typem_n);
+}
+
+// --- atf_amc.FDb.c_typem.N
+// Return number of items in the pointer array
+inline i32 atf_amc::c_typem_N() {
+    return _db.c_typem_n;
+}
+
+// --- atf_amc.FDb.c_typem.RemoveAll
+// Empty the index. (The rows are not deleted)
+inline void atf_amc::c_typem_RemoveAll() {
+    _db.c_typem_n = 0;
+}
+
+// --- atf_amc.FDb.c_typem.qFind
+// Return reference without bounds checking
+inline atf_amc::FTypeM& atf_amc::c_typem_qFind(u32 idx) {
+    return *_db.c_typem_elems[idx];
+}
+
+// --- atf_amc.FDb.c_typem.qLast
+// Reference to last element without bounds checking
+inline atf_amc::FTypeM& atf_amc::c_typem_qLast() {
+    return *_db.c_typem_elems[_db.c_typem_n-1];
 }
 
 // --- atf_amc.FDb.avl.EmptyQ
@@ -3643,6 +3747,72 @@ inline atf_amc::FThashElem& atf_amc::thash_elem_qFind(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     return _db.thash_elem_lary[bsr][index];
+}
+
+// --- atf_amc.FDb.ind_hashable.EmptyQ
+// Return true if hash is empty
+inline bool atf_amc::ind_hashable_EmptyQ() {
+    return _db.ind_hashable_n == 0;
+}
+
+// --- atf_amc.FDb.ind_hashable.N
+// Return number of items in the hash
+inline i32 atf_amc::ind_hashable_N() {
+    return _db.ind_hashable_n;
+}
+
+// --- atf_amc.FDb.bh_time_entry.EmptyQ
+// Return true if index is empty
+inline bool atf_amc::bh_time_entry_EmptyQ() {
+    return _db.bh_time_entry_n == 0;
+}
+
+// --- atf_amc.FDb.bh_time_entry.First
+// If index empty, return NULL. Otherwise return pointer to first element in index
+inline atf_amc::FTimeEntry* atf_amc::bh_time_entry_First() {
+    atf_amc::FTimeEntry *row = NULL;
+    if (_db.bh_time_entry_n > 0) {
+        row = _db.bh_time_entry_elems[0];
+    }
+    return row;
+}
+
+// --- atf_amc.FDb.bh_time_entry.InBheapQ
+// Return true if row is in index, false otherwise
+inline bool atf_amc::bh_time_entry_InBheapQ(atf_amc::FTimeEntry& row) {
+    bool result = false;
+    result = row.bh_time_entry_idx != -1;
+    return result;
+}
+
+// --- atf_amc.FDb.bh_time_entry.N
+// Return number of items in the heap
+inline i32 atf_amc::bh_time_entry_N() {
+    return _db.bh_time_entry_n;
+}
+
+// --- atf_amc.FDb.ind_linear.EmptyQ
+// Return true if hash is empty
+inline bool atf_amc::ind_linear_EmptyQ() {
+    return _db.ind_linear_n == 0;
+}
+
+// --- atf_amc.FDb.ind_linear.N
+// Return number of items in the hash
+inline i32 atf_amc::ind_linear_N() {
+    return _db.ind_linear_n;
+}
+
+// --- atf_amc.FDb.ind_strkey.EmptyQ
+// Return true if hash is empty
+inline bool atf_amc::ind_strkey_EmptyQ() {
+    return _db.ind_strkey_n == 0;
+}
+
+// --- atf_amc.FDb.ind_strkey.N
+// Return number of items in the hash
+inline i32 atf_amc::ind_strkey_N() {
+    return _db.ind_strkey_n;
 }
 
 // --- atf_amc.FDb.bh_typec_curs.Access
@@ -4273,13 +4443,63 @@ inline bool atf_amc::_db_c_typek_oncecurs_ValidQ(_db_c_typek_oncecurs &curs) {
 // --- atf_amc.FDb.c_typek_oncecurs.Next
 // proceed to next item
 inline void atf_amc::_db_c_typek_oncecurs_Next(_db_c_typek_oncecurs &curs) {
-    curs.elems[curs.index]->_db_c_typek_in_ary = false;
+    curs.elems[curs.index]->c_typek_in_ary = false;
     curs.index++;
 }
 
 // --- atf_amc.FDb.c_typek_oncecurs.Access
 // item access
 inline atf_amc::FTypeK& atf_amc::_db_c_typek_oncecurs_Access(_db_c_typek_oncecurs &curs) {
+    return *curs.elems[curs.index];
+}
+
+// --- atf_amc.FDb.c_typel_curs.Reset
+inline void atf_amc::_db_c_typel_curs_Reset(_db_c_typel_curs &curs, atf_amc::FDb &parent) {
+    curs.elems = parent.c_typel_elems;
+    curs.n_elems = parent.c_typel_n;
+    curs.index = 0;
+}
+
+// --- atf_amc.FDb.c_typel_curs.ValidQ
+// cursor points to valid item
+inline bool atf_amc::_db_c_typel_curs_ValidQ(_db_c_typel_curs &curs) {
+    return curs.index < curs.n_elems;
+}
+
+// --- atf_amc.FDb.c_typel_curs.Next
+// proceed to next item
+inline void atf_amc::_db_c_typel_curs_Next(_db_c_typel_curs &curs) {
+    curs.index++;
+}
+
+// --- atf_amc.FDb.c_typel_curs.Access
+// item access
+inline atf_amc::FTypeL& atf_amc::_db_c_typel_curs_Access(_db_c_typel_curs &curs) {
+    return *curs.elems[curs.index];
+}
+
+// --- atf_amc.FDb.c_typem_curs.Reset
+inline void atf_amc::_db_c_typem_curs_Reset(_db_c_typem_curs &curs, atf_amc::FDb &parent) {
+    curs.elems = parent.c_typem_elems;
+    curs.n_elems = parent.c_typem_n;
+    curs.index = 0;
+}
+
+// --- atf_amc.FDb.c_typem_curs.ValidQ
+// cursor points to valid item
+inline bool atf_amc::_db_c_typem_curs_ValidQ(_db_c_typem_curs &curs) {
+    return curs.index < curs.n_elems;
+}
+
+// --- atf_amc.FDb.c_typem_curs.Next
+// proceed to next item
+inline void atf_amc::_db_c_typem_curs_Next(_db_c_typem_curs &curs) {
+    curs.index++;
+}
+
+// --- atf_amc.FDb.c_typem_curs.Access
+// item access
+inline atf_amc::FTypeM& atf_amc::_db_c_typem_curs_Access(_db_c_typem_curs &curs) {
     return *curs.elems[curs.index];
 }
 
@@ -4380,6 +4600,59 @@ inline void atf_amc::_db_thash_elem_curs_Next(_db_thash_elem_curs &curs) {
 // item access
 inline atf_amc::FThashElem& atf_amc::_db_thash_elem_curs_Access(_db_thash_elem_curs &curs) {
     return thash_elem_qFind(u64(curs.index));
+}
+
+// --- atf_amc.FDb.bh_time_entry_curs.Access
+// Access current element. If not more elements, return NULL
+inline atf_amc::FTimeEntry& atf_amc::_db_bh_time_entry_curs_Access(_db_bh_time_entry_curs &curs) {
+    return *curs.temp_elems[0];
+}
+
+// --- atf_amc.FDb.bh_time_entry_curs.ValidQ
+// Return true if Access() will return non-NULL.
+inline bool atf_amc::_db_bh_time_entry_curs_ValidQ(_db_bh_time_entry_curs &curs) {
+    return curs.temp_n > 0;
+}
+
+// --- atf_amc.FDb.ind_linear_curs.ValidQ
+// cursor points to valid item
+inline bool atf_amc::_db_ind_linear_curs_ValidQ(_db_ind_linear_curs &curs) {
+    return *curs.prow != NULL;
+}
+
+// --- atf_amc.FDb.ind_linear_curs.Next
+// proceed to next item
+inline void atf_amc::_db_ind_linear_curs_Next(_db_ind_linear_curs &curs) {
+    curs.prow = &(*curs.prow)->ind_linear_next;
+    while (!*curs.prow) {
+        curs.bucket += 1;
+        if (curs.bucket >= curs.parent->ind_linear_buckets_n) break;
+        curs.prow = &curs.parent->ind_linear_buckets_elems[curs.bucket];
+    }
+}
+
+// --- atf_amc.FDb.ind_linear_curs.Access
+// item access
+inline atf_amc::FHashableLinear& atf_amc::_db_ind_linear_curs_Access(_db_ind_linear_curs &curs) {
+    return **curs.prow;
+}
+
+// --- atf_amc.FHashableLinear..Init
+// Set all fields to initial values.
+inline void atf_amc::FHashableLinear_Init(atf_amc::FHashableLinear& hashable_linear) {
+    hashable_linear.ind_linear_next = (atf_amc::FHashableLinear*)-1; // (atf_amc.FDb.ind_linear) not-in-hash
+    hashable_linear.ind_linear_hashval = 0; // stored hash value
+    hashable_linear.hashable_linear_next = (atf_amc::FHashableLinear*)-1; // (atf_amc.FDb.hashable_linear) not-in-tpool's freelist
+}
+
+// --- atf_amc.FHashableLinear..Ctor
+inline  atf_amc::FHashableLinear::FHashableLinear() {
+    atf_amc::FHashableLinear_Init(*this);
+}
+
+// --- atf_amc.FHashableLinear..Dtor
+inline  atf_amc::FHashableLinear::~FHashableLinear() {
+    atf_amc::FHashableLinear_Uninit(*this);
 }
 
 // --- atf_amc.TypeG..Hash
@@ -4705,6 +4978,7 @@ inline  atf_amc::FPerfSortString::~FPerfSortString() {
 inline void atf_amc::FThashElem_Init(atf_amc::FThashElem& thash_elem) {
     thash_elem.key = u64(0);
     thash_elem.ind_thash_elem_next = (atf_amc::FThashElem*)-1; // (atf_amc.FDb.ind_thash_elem) not-in-hash
+    thash_elem.ind_thash_elem_hashval = 0; // stored hash value
 }
 
 // --- atf_amc.FThashElem..Ctor
@@ -4715,6 +4989,37 @@ inline  atf_amc::FThashElem::FThashElem() {
 // --- atf_amc.FThashElem..Dtor
 inline  atf_amc::FThashElem::~FThashElem() {
     atf_amc::FThashElem_Uninit(*this);
+}
+
+// --- atf_amc.FTimeEntry.time.Lt
+// Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
+inline bool atf_amc::time_Lt(atf_amc::FTimeEntry& time_entry, atf_amc::FTimeEntry &rhs) {
+    return algo::SchedTime_Lt(time_entry.time,rhs.time);
+}
+
+// --- atf_amc.FTimeEntry.time.Cmp
+// Compare two fields.
+inline i32 atf_amc::time_Cmp(atf_amc::FTimeEntry& time_entry, atf_amc::FTimeEntry &rhs) {
+    i32 retval = 0;
+    retval = algo::SchedTime_Cmp(time_entry.time, rhs.time);
+    return retval;
+}
+
+// --- atf_amc.FTimeEntry..Init
+// Set all fields to initial values.
+inline void atf_amc::FTimeEntry_Init(atf_amc::FTimeEntry& time_entry) {
+    time_entry.time_entry_next = (atf_amc::FTimeEntry*)-1; // (atf_amc.FDb.time_entry) not-in-tpool's freelist
+    time_entry.bh_time_entry_idx = -1; // (atf_amc.FDb.bh_time_entry) not-in-heap
+}
+
+// --- atf_amc.FTimeEntry..Ctor
+inline  atf_amc::FTimeEntry::FTimeEntry() {
+    atf_amc::FTimeEntry_Init(*this);
+}
+
+// --- atf_amc.FTimeEntry..Dtor
+inline  atf_amc::FTimeEntry::~FTimeEntry() {
+    atf_amc::FTimeEntry_Uninit(*this);
 }
 
 // --- atf_amc.FTypeC..Init
@@ -4823,9 +5128,9 @@ inline atf_amc::FTypeB* atf_amc::zdl_typeb_First(atf_amc::FTypeA& typea) {
 
 // --- atf_amc.FTypeA.zdl_typeb.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool atf_amc::zdl_typeb_InLlistQ(atf_amc::FTypeB& row) {
+inline bool atf_amc::typea_zdl_typeb_InLlistQ(atf_amc::FTypeB& row) {
     bool result = false;
-    result = !(row.zdl_typeb_next == (atf_amc::FTypeB*)-1);
+    result = !(row.typea_zdl_typeb_next == (atf_amc::FTypeB*)-1);
     return result;
 }
 
@@ -4845,14 +5150,14 @@ inline i32 atf_amc::zdl_typeb_N(const atf_amc::FTypeA& typea) {
 
 // --- atf_amc.FTypeA.zdl_typeb.Next
 // Return pointer to next element in the list
-inline atf_amc::FTypeB* atf_amc::zdl_typeb_Next(atf_amc::FTypeB &row) {
-    return row.zdl_typeb_next;
+inline atf_amc::FTypeB* atf_amc::typea_zdl_typeb_Next(atf_amc::FTypeB &row) {
+    return row.typea_zdl_typeb_next;
 }
 
 // --- atf_amc.FTypeA.zdl_typeb.Prev
 // Return pointer to previous element in the list
-inline atf_amc::FTypeB* atf_amc::zdl_typeb_Prev(atf_amc::FTypeB &row) {
-    return row.zdl_typeb_prev;
+inline atf_amc::FTypeB* atf_amc::typea_zdl_typeb_Prev(atf_amc::FTypeB &row) {
+    return row.typea_zdl_typeb_prev;
 }
 
 // --- atf_amc.FTypeA.zdl_typeb.qLast
@@ -4883,7 +5188,7 @@ inline atf_amc::FTypeB* atf_amc::bh_typeb_First(atf_amc::FTypeA& typea) {
 // Return true if row is in index, false otherwise
 inline bool atf_amc::bh_typeb_InBheapQ(atf_amc::FTypeB& row) {
     bool result = false;
-    result = row.bh_typeb_idx != -1;
+    result = row.typea_bh_typeb_idx != -1;
     return result;
 }
 
@@ -4933,7 +5238,7 @@ inline bool atf_amc::typea_zdl_typeb_curs_ValidQ(typea_zdl_typeb_curs &curs) {
 // --- atf_amc.FTypeA.zdl_typeb_curs.Next
 // proceed to next item
 inline void atf_amc::typea_zdl_typeb_curs_Next(typea_zdl_typeb_curs &curs) {
-    atf_amc::FTypeB *next = (*curs.row).zdl_typeb_next;
+    atf_amc::FTypeB *next = (*curs.row).typea_zdl_typeb_next;
     curs.row = next;
 }
 
@@ -4973,9 +5278,9 @@ inline void atf_amc::FTypeB_Init(atf_amc::FTypeB& typeb) {
     typeb.typea = i32(0);
     typeb.j = i32(0);
     typeb.typeb_next = (atf_amc::FTypeB*)-1; // (atf_amc.FDb.typeb) not-in-tpool's freelist
-    typeb.zdl_typeb_next = (atf_amc::FTypeB*)-1; // (atf_amc.FTypeA.zdl_typeb) not-in-list
-    typeb.zdl_typeb_prev = NULL; // (atf_amc.FTypeA.zdl_typeb)
-    typeb.bh_typeb_idx = -1; // (atf_amc.FTypeA.bh_typeb) not-in-heap
+    typeb.typea_zdl_typeb_next = (atf_amc::FTypeB*)-1; // (atf_amc.FTypeA.zdl_typeb) not-in-list
+    typeb.typea_zdl_typeb_prev = NULL; // (atf_amc.FTypeA.zdl_typeb)
+    typeb.typea_bh_typeb_idx = -1; // (atf_amc.FTypeA.bh_typeb) not-in-heap
 }
 
 // --- atf_amc.FTypeB..Ctor
@@ -5014,12 +5319,35 @@ inline  atf_amc::FTypeD::~FTypeD() {
 // Set all fields to initial values.
 inline void atf_amc::FTypeK_Init(atf_amc::FTypeK& parent) {
     parent.value = u32(0);
-    parent._db_c_typek_in_ary = bool(false);
+    parent.c_typek_in_ary = bool(false);
 }
 
 // --- atf_amc.FTypeK..Ctor
 inline  atf_amc::FTypeK::FTypeK() {
     atf_amc::FTypeK_Init(*this);
+}
+
+// --- atf_amc.FTypeL..Init
+// Set all fields to initial values.
+inline void atf_amc::FTypeL_Init(atf_amc::FTypeL& parent) {
+    parent.value = u32(0);
+    parent.c_typel_idx = i32(-1);
+}
+
+// --- atf_amc.FTypeL..Ctor
+inline  atf_amc::FTypeL::FTypeL() {
+    atf_amc::FTypeL_Init(*this);
+}
+
+// --- atf_amc.FTypeM..Init
+// Set all fields to initial values.
+inline void atf_amc::FTypeM_Init(atf_amc::FTypeM& parent) {
+    parent.value = u32(0);
+}
+
+// --- atf_amc.FTypeM..Ctor
+inline  atf_amc::FTypeM::FTypeM() {
+    atf_amc::FTypeM_Init(*this);
 }
 
 // --- atf_amc.FTypeS.zdl_typet.EmptyQ
@@ -5038,9 +5366,9 @@ inline atf_amc::FTypeT* atf_amc::zdl_typet_First(atf_amc::FTypeS& types) {
 
 // --- atf_amc.FTypeS.zdl_typet.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool atf_amc::zdl_typet_InLlistQ(atf_amc::FTypeT& row) {
+inline bool atf_amc::types_zdl_typet_InLlistQ(atf_amc::FTypeT& row) {
     bool result = false;
-    result = !(row.zdl_typet_next == (atf_amc::FTypeT*)-1);
+    result = !(row.types_zdl_typet_next == (atf_amc::FTypeT*)-1);
     return result;
 }
 
@@ -5060,14 +5388,14 @@ inline i32 atf_amc::zdl_typet_N(const atf_amc::FTypeS& types) {
 
 // --- atf_amc.FTypeS.zdl_typet.Next
 // Return pointer to next element in the list
-inline atf_amc::FTypeT* atf_amc::zdl_typet_Next(atf_amc::FTypeT &row) {
-    return row.zdl_typet_next;
+inline atf_amc::FTypeT* atf_amc::types_zdl_typet_Next(atf_amc::FTypeT &row) {
+    return row.types_zdl_typet_next;
 }
 
 // --- atf_amc.FTypeS.zdl_typet.Prev
 // Return pointer to previous element in the list
-inline atf_amc::FTypeT* atf_amc::zdl_typet_Prev(atf_amc::FTypeT &row) {
-    return row.zdl_typet_prev;
+inline atf_amc::FTypeT* atf_amc::types_zdl_typet_Prev(atf_amc::FTypeT &row) {
+    return row.types_zdl_typet_prev;
 }
 
 // --- atf_amc.FTypeS.zdl_typet.qLast
@@ -5086,6 +5414,7 @@ inline void atf_amc::FTypeS_Init(atf_amc::FTypeS& types) {
     types.zdl_typet_n = 0; // (atf_amc.FTypeS.zdl_typet)
     types.zdl_typet_tail = NULL; // (atf_amc.FTypeS.zdl_typet)
     types.ind_types_next = (atf_amc::FTypeS*)-1; // (atf_amc.FDb.ind_types) not-in-hash
+    types.ind_types_hashval = 0; // stored hash value
 }
 
 // --- atf_amc.FTypeS.zdl_typet_curs.Reset
@@ -5103,7 +5432,7 @@ inline bool atf_amc::types_zdl_typet_curs_ValidQ(types_zdl_typet_curs &curs) {
 // --- atf_amc.FTypeS.zdl_typet_curs.Next
 // proceed to next item
 inline void atf_amc::types_zdl_typet_curs_Next(types_zdl_typet_curs &curs) {
-    atf_amc::FTypeT *next = (*curs.row).zdl_typet_next;
+    atf_amc::FTypeT *next = (*curs.row).types_zdl_typet_next;
     curs.row = next;
 }
 
@@ -5128,8 +5457,8 @@ inline  atf_amc::FTypeS::~FTypeS() {
 inline void atf_amc::FTypeT_Init(atf_amc::FTypeT& typet) {
     typet.types = i32(0);
     typet.j = i32(0);
-    typet.zdl_typet_next = (atf_amc::FTypeT*)-1; // (atf_amc.FTypeS.zdl_typet) not-in-list
-    typet.zdl_typet_prev = NULL; // (atf_amc.FTypeS.zdl_typet)
+    typet.types_zdl_typet_next = (atf_amc::FTypeT*)-1; // (atf_amc.FTypeS.zdl_typet) not-in-list
+    typet.types_zdl_typet_prev = NULL; // (atf_amc.FTypeS.zdl_typet)
 }
 
 // --- atf_amc.FTypeT..Ctor
@@ -5518,6 +5847,25 @@ inline  atf_amc::FieldId::FieldId(atf_amc_FieldIdEnum arg) {
     this->value = i32(arg);
 }
 
+// --- atf_amc.Hashable..Init
+// Set all fields to initial values.
+inline void atf_amc::Hashable_Init(atf_amc::Hashable& hashable) {
+    hashable.hashable = i32(0);
+    hashable.hashable_next = (atf_amc::Hashable*)-1; // (atf_amc.FDb.hashable) not-in-tpool's freelist
+    hashable.ind_hashable_next = (atf_amc::Hashable*)-1; // (atf_amc.FDb.ind_hashable) not-in-hash
+    hashable.ind_hashable_hashval = 0; // stored hash value
+}
+
+// --- atf_amc.Hashable..Ctor
+inline  atf_amc::Hashable::Hashable() {
+    atf_amc::Hashable_Init(*this);
+}
+
+// --- atf_amc.Hashable..Dtor
+inline  atf_amc::Hashable::~Hashable() {
+    atf_amc::Hashable_Uninit(*this);
+}
+
 // --- atf_amc.Hooktype.callback.Call
 // Invoke function by pointer
 inline void atf_amc::callback_Call(atf_amc::Hooktype& parent, atf_amc::Hooktype& arg) {
@@ -5831,8 +6179,7 @@ inline  atf_amc::Lary32::~Lary32() {
 // --- atf_amc.Linebuf.in.Max
 // Return max. number of bytes in the buffer.
 inline i32 atf_amc::in_Max(atf_amc::Linebuf& linebuf) {
-    return 64;
-    (void)linebuf;//only to avoid -Wunused-parameter
+    return linebuf.in_max;
 }
 
 // --- atf_amc.Linebuf.in.N
@@ -5846,6 +6193,11 @@ inline  atf_amc::Linebuf::Linebuf() {
     atf_amc::Linebuf_Init(*this);
     // added because atf_amc.Linebuf.in (Fbuf) does not need initialization
     // coverity[uninit_member]
+}
+
+// --- atf_amc.Linebuf..Dtor
+inline  atf_amc::Linebuf::~Linebuf() {
+    atf_amc::Linebuf_Uninit(*this);
 }
 
 // --- atf_amc.MsgHdrLT.type.GetEnum
@@ -6453,7 +6805,7 @@ inline u32 atf_amc::v_N(const atf_amc::MsgLTV& parent) {
 
 // --- atf_amc.MsgLTV.v_curs.Reset
 inline void atf_amc::MsgLTV_v_curs_Reset(MsgLTV_v_curs &curs, atf_amc::MsgLTV &parent) {
-    curs.ptr = (u8*)&parent + sizeof(atf_amc::MsgLTV);
+    curs.ptr = (u8*)v_Addr(parent);
     curs.length = i32(parent.len + 2) - sizeof(atf_amc::MsgLTV);
     curs.index = 0;
 }
@@ -6508,8 +6860,7 @@ inline  atf_amc::MsgLTV::MsgLTV() {
 // --- atf_amc.Msgbuf.in_buf.Max
 // Return max. number of bytes in the buffer.
 inline i32 atf_amc::in_buf_Max(atf_amc::Msgbuf& msgbuf) {
-    return 64;
-    (void)msgbuf;//only to avoid -Wunused-parameter
+    return msgbuf.in_buf_max;
 }
 
 // --- atf_amc.Msgbuf.in_buf.N
@@ -6521,8 +6872,7 @@ inline i32 atf_amc::in_buf_N(atf_amc::Msgbuf& msgbuf) {
 // --- atf_amc.Msgbuf.in_custom.Max
 // Return max. number of bytes in the buffer.
 inline i32 atf_amc::in_custom_Max(atf_amc::Msgbuf& msgbuf) {
-    return 64;
-    (void)msgbuf;//only to avoid -Wunused-parameter
+    return msgbuf.in_custom_max;
 }
 
 // --- atf_amc.Msgbuf.in_custom.N
@@ -6534,8 +6884,7 @@ inline i32 atf_amc::in_custom_N(atf_amc::Msgbuf& msgbuf) {
 // --- atf_amc.Msgbuf.out_extra.Max
 // Return max. number of bytes in the buffer.
 inline i32 atf_amc::out_extra_Max(atf_amc::Msgbuf& msgbuf) {
-    return 64;
-    (void)msgbuf;//only to avoid -Wunused-parameter
+    return msgbuf.out_extra_max;
 }
 
 // --- atf_amc.Msgbuf.out_extra.N
@@ -6547,8 +6896,7 @@ inline i32 atf_amc::out_extra_N(atf_amc::Msgbuf& msgbuf) {
 // --- atf_amc.Msgbuf.in_extra.Max
 // Return max. number of bytes in the buffer.
 inline i32 atf_amc::in_extra_Max(atf_amc::Msgbuf& msgbuf) {
-    return 64;
-    (void)msgbuf;//only to avoid -Wunused-parameter
+    return msgbuf.in_extra_max;
 }
 
 // --- atf_amc.Msgbuf.in_extra.N
@@ -7860,66 +8208,6 @@ inline void atf_amc::value7_Set(atf_amc::PmaskMultiple& parent, u32 rhs) {
     parent.value7 = rhs;
     assigned_qSetBit(parent, 6); // mark presence in pmask
     present_qSetBit(parent, 6); // mark presence in pmask
-}
-
-// --- atf_amc.PmaskMultiple.present_bitcurs.Reset
-inline void atf_amc::PmaskMultiple_present_bitcurs_Reset(PmaskMultiple_present_bitcurs &curs, atf_amc::PmaskMultiple &parent) {
-    curs.elems = &present_qFind(parent,0);
-    curs.n_elems = present_N(parent);
-    curs.bit = -1;
-    PmaskMultiple_present_bitcurs_Next(curs);
-}
-
-// --- atf_amc.PmaskMultiple.present_bitcurs.ValidQ
-// cursor points to valid item
-inline bool atf_amc::PmaskMultiple_present_bitcurs_ValidQ(PmaskMultiple_present_bitcurs &curs) {
-    return curs.bit < curs.n_elems*32;
-}
-
-// --- atf_amc.PmaskMultiple.present_bitcurs.Access
-// item access
-inline int& atf_amc::PmaskMultiple_present_bitcurs_Access(PmaskMultiple_present_bitcurs &curs) {
-    return curs.bit;
-}
-
-// --- atf_amc.PmaskMultiple.assigned_bitcurs.Reset
-inline void atf_amc::PmaskMultiple_assigned_bitcurs_Reset(PmaskMultiple_assigned_bitcurs &curs, atf_amc::PmaskMultiple &parent) {
-    curs.elems = &assigned_qFind(parent,0);
-    curs.n_elems = assigned_N(parent);
-    curs.bit = -1;
-    PmaskMultiple_assigned_bitcurs_Next(curs);
-}
-
-// --- atf_amc.PmaskMultiple.assigned_bitcurs.ValidQ
-// cursor points to valid item
-inline bool atf_amc::PmaskMultiple_assigned_bitcurs_ValidQ(PmaskMultiple_assigned_bitcurs &curs) {
-    return curs.bit < curs.n_elems*32;
-}
-
-// --- atf_amc.PmaskMultiple.assigned_bitcurs.Access
-// item access
-inline int& atf_amc::PmaskMultiple_assigned_bitcurs_Access(PmaskMultiple_assigned_bitcurs &curs) {
-    return curs.bit;
-}
-
-// --- atf_amc.PmaskMultiple.nullable_bitcurs.Reset
-inline void atf_amc::PmaskMultiple_nullable_bitcurs_Reset(PmaskMultiple_nullable_bitcurs &curs, atf_amc::PmaskMultiple &parent) {
-    curs.elems = &nullable_qFind(parent,0);
-    curs.n_elems = nullable_N(parent);
-    curs.bit = -1;
-    PmaskMultiple_nullable_bitcurs_Next(curs);
-}
-
-// --- atf_amc.PmaskMultiple.nullable_bitcurs.ValidQ
-// cursor points to valid item
-inline bool atf_amc::PmaskMultiple_nullable_bitcurs_ValidQ(PmaskMultiple_nullable_bitcurs &curs) {
-    return curs.bit < curs.n_elems*32;
-}
-
-// --- atf_amc.PmaskMultiple.nullable_bitcurs.Access
-// item access
-inline int& atf_amc::PmaskMultiple_nullable_bitcurs_Access(PmaskMultiple_nullable_bitcurs &curs) {
-    return curs.bit;
 }
 
 // --- atf_amc.PmaskMultiple..Ctor
@@ -10236,26 +10524,6 @@ inline void atf_amc::value5_Set(atf_amc::PmaskU32& parent, u32 rhs) {
     pmask_qSetBit(parent, 4); // mark presence in pmask
 }
 
-// --- atf_amc.PmaskU32.pmask_bitcurs.Reset
-inline void atf_amc::PmaskU32_pmask_bitcurs_Reset(PmaskU32_pmask_bitcurs &curs, atf_amc::PmaskU32 &parent) {
-    curs.elems = &pmask_qFind(parent,0);
-    curs.n_elems = pmask_N(parent);
-    curs.bit = -1;
-    PmaskU32_pmask_bitcurs_Next(curs);
-}
-
-// --- atf_amc.PmaskU32.pmask_bitcurs.ValidQ
-// cursor points to valid item
-inline bool atf_amc::PmaskU32_pmask_bitcurs_ValidQ(PmaskU32_pmask_bitcurs &curs) {
-    return curs.bit < curs.n_elems*32;
-}
-
-// --- atf_amc.PmaskU32.pmask_bitcurs.Access
-// item access
-inline int& atf_amc::PmaskU32_pmask_bitcurs_Access(PmaskU32_pmask_bitcurs &curs) {
-    return curs.bit;
-}
-
 // --- atf_amc.PmaskU32..Init
 // Set all fields to initial values.
 inline void atf_amc::PmaskU32_Init(atf_amc::PmaskU32& parent) {
@@ -10506,26 +10774,6 @@ inline u64& atf_amc::pmask_qFind(atf_amc::PmaskU555& parent, u64 t) {
     return parent.pmask_elems[u64(t)];
 }
 
-// --- atf_amc.PmaskU555.pmask_bitcurs.Reset
-inline void atf_amc::PmaskU555_pmask_bitcurs_Reset(PmaskU555_pmask_bitcurs &curs, atf_amc::PmaskU555 &parent) {
-    curs.elems = &pmask_qFind(parent,0);
-    curs.n_elems = pmask_N(parent);
-    curs.bit = -1;
-    PmaskU555_pmask_bitcurs_Next(curs);
-}
-
-// --- atf_amc.PmaskU555.pmask_bitcurs.ValidQ
-// cursor points to valid item
-inline bool atf_amc::PmaskU555_pmask_bitcurs_ValidQ(PmaskU555_pmask_bitcurs &curs) {
-    return curs.bit < curs.n_elems*64;
-}
-
-// --- atf_amc.PmaskU555.pmask_bitcurs.Access
-// item access
-inline int& atf_amc::PmaskU555_pmask_bitcurs_Access(PmaskU555_pmask_bitcurs &curs) {
-    return curs.bit;
-}
-
 // --- atf_amc.PmaskU555.pmask_curs.Reset
 // cursor points to valid item
 inline void atf_amc::PmaskU555_pmask_curs_Reset(PmaskU555_pmask_curs &curs, atf_amc::PmaskU555 &parent) {
@@ -10610,11 +10858,6 @@ inline algo::aryptr<char> atf_amc::ch_Getary(const atf_amc::RnullStr6_U32& paren
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
-}
-
-// --- atf_amc.RnullStr6_U32.ch.HashStrptr
-inline u32 atf_amc::RnullStr6_U32_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- atf_amc.RnullStr6_U32.ch.Init
@@ -10768,11 +11011,6 @@ inline algo::aryptr<char> atf_amc::ch_Getary(const atf_amc::RpasU32Str6& parent)
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
-}
-
-// --- atf_amc.RpasU32Str6.ch.HashStrptr
-inline u32 atf_amc::RpasU32Str6_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- atf_amc.RpasU32Str6.ch.Init
@@ -11190,6 +11428,24 @@ inline  atf_amc::SsimfilesCase::SsimfilesCase(atf_amc_SsimfilesCaseEnum arg) {
     this->value = u32(arg);
 }
 
+// --- atf_amc.Strkey..Init
+// Set all fields to initial values.
+inline void atf_amc::Strkey_Init(atf_amc::Strkey& strkey) {
+    strkey.strkey_next = (atf_amc::Strkey*)-1; // (atf_amc.FDb.strkey) not-in-tpool's freelist
+    strkey.ind_strkey_next = (atf_amc::Strkey*)-1; // (atf_amc.FDb.ind_strkey) not-in-hash
+    strkey.ind_strkey_hashval = 0; // stored hash value
+}
+
+// --- atf_amc.Strkey..Ctor
+inline  atf_amc::Strkey::Strkey() {
+    atf_amc::Strkey_Init(*this);
+}
+
+// --- atf_amc.Strkey..Dtor
+inline  atf_amc::Strkey::~Strkey() {
+    atf_amc::Strkey_Uninit(*this);
+}
+
 // --- atf_amc.TableId.value.GetEnum
 // Get value of field as enum type
 inline atf_amc_TableIdEnum atf_amc::value_GetEnum(const atf_amc::TableId& parent) {
@@ -11523,7 +11779,7 @@ inline u32 atf_amc::text_N(const atf_amc::Text& parent) {
 
 // --- atf_amc.Text.text_curs.Reset
 inline void atf_amc::Text_text_curs_Reset(Text_text_curs &curs, atf_amc::Text &parent) {
-    curs.ptr = (u8*)&parent + sizeof(atf_amc::Text);
+    curs.ptr = (u8*)text_Addr(parent);
     curs.length = i32(parent.length) - sizeof(atf_amc::Text);
     curs.index = 0;
 }
@@ -12304,6 +12560,668 @@ inline  atf_amc::Typefconst::Typefconst(atf_amc_Typefconst_value_Enum arg) {
     this->value = u32(arg);
 }
 
+// --- atf_amc.Varlen2Msg.base.Castdown
+// Check if atf_amc::MsgHeader is an instance of Varlen2Msg by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of Varlen2Msg.
+// If not successful, quietly return NULL.
+inline atf_amc::Varlen2Msg* atf_amc::Varlen2Msg_Castdown(atf_amc::MsgHeader &hdr) {
+    bool cond = hdr.type == (0x1001);
+    cond &= i32(hdr.length) >= ssizeof(atf_amc::Varlen2Msg);
+    return cond ? reinterpret_cast<atf_amc::Varlen2Msg*>(&hdr) : NULL;
+}
+
+// --- atf_amc.Varlen2Msg.base.Castbase
+inline atf_amc::MsgHeader& atf_amc::Castbase(atf_amc::Varlen2Msg& parent) {
+    return reinterpret_cast<atf_amc::MsgHeader&>(parent);
+}
+
+// --- atf_amc.Varlen2Msg.s1.N
+// Return number of elements in varlen field
+inline u32 atf_amc::s1_N(const atf_amc::Varlen2Msg& parent) {
+    return u32((parent.s1_end) / sizeof(char));
+}
+
+// --- atf_amc.Varlen2Msg.s2.N
+// Return number of elements in varlen field
+inline u32 atf_amc::s2_N(const atf_amc::Varlen2Msg& parent) {
+    return u32((parent.s2_end - parent.s1_end) / sizeof(char));
+}
+
+// --- atf_amc.Varlen2Msg.s3.N
+// Return number of elements in varlen field
+inline u32 atf_amc::s3_N(const atf_amc::Varlen2Msg& parent) {
+    u32 length = i32(((atf_amc::Varlen2Msg&)parent).length);
+    u32 extra_bytes = u32_Max(length,sizeof(atf_amc::Varlen2Msg)) - sizeof(atf_amc::Varlen2Msg) - parent.s2_end; // avoid unsigned subtraction underflow
+    return u32(extra_bytes / sizeof(char));
+}
+
+// --- atf_amc.Varlen2Msg.s1_curs.Reset
+inline void atf_amc::Varlen2Msg_s1_curs_Reset(Varlen2Msg_s1_curs &curs, atf_amc::Varlen2Msg &parent) {
+    curs.ptr = (u8*)s1_Addr(parent);
+    curs.length = parent.s1_end;
+    curs.index = 0;
+}
+
+// --- atf_amc.Varlen2Msg.s1_curs.ValidQ
+// cursor points to valid item
+inline bool atf_amc::Varlen2Msg_s1_curs_ValidQ(Varlen2Msg_s1_curs &curs) {
+    bool valid = ssizeof(char) <= curs.length;
+    return valid;
+}
+
+// --- atf_amc.Varlen2Msg.s1_curs.Next
+// proceed to next item
+inline void atf_amc::Varlen2Msg_s1_curs_Next(Varlen2Msg_s1_curs &curs) {
+    i32 len = i32(sizeof(char));
+    curs.ptr += len;
+    curs.length -= len;
+    ++curs.index;
+}
+
+// --- atf_amc.Varlen2Msg.s1_curs.Access
+// item access
+inline char& atf_amc::Varlen2Msg_s1_curs_Access(Varlen2Msg_s1_curs &curs) {
+    return *(char*)curs.ptr;
+}
+
+// --- atf_amc.Varlen2Msg.s2_curs.Reset
+inline void atf_amc::Varlen2Msg_s2_curs_Reset(Varlen2Msg_s2_curs &curs, atf_amc::Varlen2Msg &parent) {
+    curs.ptr = (u8*)s2_Addr(parent);
+    curs.length = parent.s2_end- parent.s1_end;
+    curs.index = 0;
+}
+
+// --- atf_amc.Varlen2Msg.s2_curs.ValidQ
+// cursor points to valid item
+inline bool atf_amc::Varlen2Msg_s2_curs_ValidQ(Varlen2Msg_s2_curs &curs) {
+    bool valid = ssizeof(char) <= curs.length;
+    return valid;
+}
+
+// --- atf_amc.Varlen2Msg.s2_curs.Next
+// proceed to next item
+inline void atf_amc::Varlen2Msg_s2_curs_Next(Varlen2Msg_s2_curs &curs) {
+    i32 len = i32(sizeof(char));
+    curs.ptr += len;
+    curs.length -= len;
+    ++curs.index;
+}
+
+// --- atf_amc.Varlen2Msg.s2_curs.Access
+// item access
+inline char& atf_amc::Varlen2Msg_s2_curs_Access(Varlen2Msg_s2_curs &curs) {
+    return *(char*)curs.ptr;
+}
+
+// --- atf_amc.Varlen2Msg.s3_curs.Reset
+inline void atf_amc::Varlen2Msg_s3_curs_Reset(Varlen2Msg_s3_curs &curs, atf_amc::Varlen2Msg &parent) {
+    curs.ptr = (u8*)s3_Addr(parent);
+    curs.length = i32(parent.length) - parent.s2_end - sizeof(atf_amc::Varlen2Msg);
+    curs.index = 0;
+}
+
+// --- atf_amc.Varlen2Msg.s3_curs.ValidQ
+// cursor points to valid item
+inline bool atf_amc::Varlen2Msg_s3_curs_ValidQ(Varlen2Msg_s3_curs &curs) {
+    bool valid = ssizeof(char) <= curs.length;
+    return valid;
+}
+
+// --- atf_amc.Varlen2Msg.s3_curs.Next
+// proceed to next item
+inline void atf_amc::Varlen2Msg_s3_curs_Next(Varlen2Msg_s3_curs &curs) {
+    i32 len = i32(sizeof(char));
+    curs.ptr += len;
+    curs.length -= len;
+    ++curs.index;
+}
+
+// --- atf_amc.Varlen2Msg.s3_curs.Access
+// item access
+inline char& atf_amc::Varlen2Msg_s3_curs_Access(Varlen2Msg_s3_curs &curs) {
+    return *(char*)curs.ptr;
+}
+
+// --- atf_amc.Varlen2Msg..GetMsgLength
+// Message length (uses length field)
+inline i32 atf_amc::GetMsgLength(const atf_amc::Varlen2Msg& parent) {
+    return i32(const_cast<atf_amc::Varlen2Msg&>(parent).length);
+}
+
+// --- atf_amc.Varlen2Msg..GetMsgMemptr
+// Memptr encompassing the message (uses length field)
+inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::Varlen2Msg& row) {
+    return algo::memptr((u8*)&row, i32(const_cast<atf_amc::Varlen2Msg&>(row).length));
+}
+
+// --- atf_amc.Varlen2Msg..Init
+// Set all fields to initial values.
+inline void atf_amc::Varlen2Msg_Init(atf_amc::Varlen2Msg& parent) {
+    parent.type = atf_amc_MsgTypeEnum(0x1001);
+    parent.length = atf_amc::MsgLength(ssizeof(parent) + (0));
+    parent.s1_end = atf_amc::MsgLength(0); // s1: initialize
+    parent.s2_end = atf_amc::MsgLength(0); // s2: initialize
+}
+
+// --- atf_amc.Varlen2Msg..Ctor
+inline  atf_amc::Varlen2Msg::Varlen2Msg() {
+    atf_amc::Varlen2Msg_Init(*this);
+}
+
+// --- atf_amc.Varlen2aMsg.base.Castdown
+// Check if atf_amc::MsgHeader is an instance of Varlen2aMsg by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of Varlen2aMsg.
+// If not successful, quietly return NULL.
+inline atf_amc::Varlen2aMsg* atf_amc::Varlen2aMsg_Castdown(atf_amc::MsgHeader &hdr) {
+    bool cond = hdr.type == (0x1002);
+    cond &= i32(hdr.length) >= ssizeof(atf_amc::Varlen2aMsg);
+    return cond ? reinterpret_cast<atf_amc::Varlen2aMsg*>(&hdr) : NULL;
+}
+
+// --- atf_amc.Varlen2aMsg.base.Castbase
+inline atf_amc::MsgHeader& atf_amc::Castbase(atf_amc::Varlen2aMsg& parent) {
+    return reinterpret_cast<atf_amc::MsgHeader&>(parent);
+}
+
+// --- atf_amc.Varlen2aMsg.u1.N
+// Return number of elements in varlen field
+inline u32 atf_amc::u1_N(const atf_amc::Varlen2aMsg& parent) {
+    return u32((parent.u1_end) / sizeof(u32));
+}
+
+// --- atf_amc.Varlen2aMsg.u2.N
+// Return number of elements in varlen field
+inline u32 atf_amc::u2_N(const atf_amc::Varlen2aMsg& parent) {
+    return u32((parent.u2_end - parent.u1_end) / sizeof(u32));
+}
+
+// --- atf_amc.Varlen2aMsg.u3.N
+// Return number of elements in varlen field
+inline u32 atf_amc::u3_N(const atf_amc::Varlen2aMsg& parent) {
+    u32 length = i32(((atf_amc::Varlen2aMsg&)parent).length);
+    u32 extra_bytes = u32_Max(length,sizeof(atf_amc::Varlen2aMsg)) - sizeof(atf_amc::Varlen2aMsg) - parent.u2_end; // avoid unsigned subtraction underflow
+    return u32(extra_bytes / sizeof(u32));
+}
+
+// --- atf_amc.Varlen2aMsg.u1_curs.Reset
+inline void atf_amc::Varlen2aMsg_u1_curs_Reset(Varlen2aMsg_u1_curs &curs, atf_amc::Varlen2aMsg &parent) {
+    curs.ptr = (u8*)u1_Addr(parent);
+    curs.length = parent.u1_end;
+    curs.index = 0;
+}
+
+// --- atf_amc.Varlen2aMsg.u1_curs.ValidQ
+// cursor points to valid item
+inline bool atf_amc::Varlen2aMsg_u1_curs_ValidQ(Varlen2aMsg_u1_curs &curs) {
+    bool valid = ssizeof(u32) <= curs.length;
+    return valid;
+}
+
+// --- atf_amc.Varlen2aMsg.u1_curs.Next
+// proceed to next item
+inline void atf_amc::Varlen2aMsg_u1_curs_Next(Varlen2aMsg_u1_curs &curs) {
+    i32 len = i32(sizeof(u32));
+    curs.ptr += len;
+    curs.length -= len;
+    ++curs.index;
+}
+
+// --- atf_amc.Varlen2aMsg.u1_curs.Access
+// item access
+inline u32& atf_amc::Varlen2aMsg_u1_curs_Access(Varlen2aMsg_u1_curs &curs) {
+    return *(u32*)curs.ptr;
+}
+
+// --- atf_amc.Varlen2aMsg.u2_curs.Reset
+inline void atf_amc::Varlen2aMsg_u2_curs_Reset(Varlen2aMsg_u2_curs &curs, atf_amc::Varlen2aMsg &parent) {
+    curs.ptr = (u8*)u2_Addr(parent);
+    curs.length = parent.u2_end- parent.u1_end;
+    curs.index = 0;
+}
+
+// --- atf_amc.Varlen2aMsg.u2_curs.ValidQ
+// cursor points to valid item
+inline bool atf_amc::Varlen2aMsg_u2_curs_ValidQ(Varlen2aMsg_u2_curs &curs) {
+    bool valid = ssizeof(u32) <= curs.length;
+    return valid;
+}
+
+// --- atf_amc.Varlen2aMsg.u2_curs.Next
+// proceed to next item
+inline void atf_amc::Varlen2aMsg_u2_curs_Next(Varlen2aMsg_u2_curs &curs) {
+    i32 len = i32(sizeof(u32));
+    curs.ptr += len;
+    curs.length -= len;
+    ++curs.index;
+}
+
+// --- atf_amc.Varlen2aMsg.u2_curs.Access
+// item access
+inline u32& atf_amc::Varlen2aMsg_u2_curs_Access(Varlen2aMsg_u2_curs &curs) {
+    return *(u32*)curs.ptr;
+}
+
+// --- atf_amc.Varlen2aMsg.u3_curs.Reset
+inline void atf_amc::Varlen2aMsg_u3_curs_Reset(Varlen2aMsg_u3_curs &curs, atf_amc::Varlen2aMsg &parent) {
+    curs.ptr = (u8*)u3_Addr(parent);
+    curs.length = i32(parent.length) - parent.u2_end - sizeof(atf_amc::Varlen2aMsg);
+    curs.index = 0;
+}
+
+// --- atf_amc.Varlen2aMsg.u3_curs.ValidQ
+// cursor points to valid item
+inline bool atf_amc::Varlen2aMsg_u3_curs_ValidQ(Varlen2aMsg_u3_curs &curs) {
+    bool valid = ssizeof(u32) <= curs.length;
+    return valid;
+}
+
+// --- atf_amc.Varlen2aMsg.u3_curs.Next
+// proceed to next item
+inline void atf_amc::Varlen2aMsg_u3_curs_Next(Varlen2aMsg_u3_curs &curs) {
+    i32 len = i32(sizeof(u32));
+    curs.ptr += len;
+    curs.length -= len;
+    ++curs.index;
+}
+
+// --- atf_amc.Varlen2aMsg.u3_curs.Access
+// item access
+inline u32& atf_amc::Varlen2aMsg_u3_curs_Access(Varlen2aMsg_u3_curs &curs) {
+    return *(u32*)curs.ptr;
+}
+
+// --- atf_amc.Varlen2aMsg..GetMsgLength
+// Message length (uses length field)
+inline i32 atf_amc::GetMsgLength(const atf_amc::Varlen2aMsg& parent) {
+    return i32(const_cast<atf_amc::Varlen2aMsg&>(parent).length);
+}
+
+// --- atf_amc.Varlen2aMsg..GetMsgMemptr
+// Memptr encompassing the message (uses length field)
+inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::Varlen2aMsg& row) {
+    return algo::memptr((u8*)&row, i32(const_cast<atf_amc::Varlen2aMsg&>(row).length));
+}
+
+// --- atf_amc.Varlen2aMsg..Init
+// Set all fields to initial values.
+inline void atf_amc::Varlen2aMsg_Init(atf_amc::Varlen2aMsg& parent) {
+    parent.type = atf_amc_MsgTypeEnum(0x1002);
+    parent.length = atf_amc::MsgLength(ssizeof(parent) + (0));
+    parent.u1_end = atf_amc::MsgLength(0); // u1: initialize
+    parent.u2_end = atf_amc::MsgLength(0); // u2: initialize
+}
+
+// --- atf_amc.Varlen2aMsg..Ctor
+inline  atf_amc::Varlen2aMsg::Varlen2aMsg() {
+    atf_amc::Varlen2aMsg_Init(*this);
+}
+
+// --- atf_amc.Varlen2mMsg.base.Castdown
+// Check if atf_amc::MsgHeader is an instance of Varlen2mMsg by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of Varlen2mMsg.
+// If not successful, quietly return NULL.
+inline atf_amc::Varlen2mMsg* atf_amc::Varlen2mMsg_Castdown(atf_amc::MsgHeader &hdr) {
+    bool cond = hdr.type == (0x1004);
+    cond &= i32(hdr.length) >= ssizeof(atf_amc::Varlen2mMsg);
+    return cond ? reinterpret_cast<atf_amc::Varlen2mMsg*>(&hdr) : NULL;
+}
+
+// --- atf_amc.Varlen2mMsg.base.Castbase
+inline atf_amc::MsgHeader& atf_amc::Castbase(atf_amc::Varlen2mMsg& parent) {
+    return reinterpret_cast<atf_amc::MsgHeader&>(parent);
+}
+
+// --- atf_amc.Varlen2mMsg.m1.N
+// Return number of elements in varlen field
+inline u32 atf_amc::m1_N(const atf_amc::Varlen2mMsg& parent) {
+    return u32((parent.m1_end) / sizeof(u8));
+}
+
+// --- atf_amc.Varlen2mMsg.m2.N
+// Return number of elements in varlen field
+inline u32 atf_amc::m2_N(const atf_amc::Varlen2mMsg& parent) {
+    return u32((parent.m2_end - parent.m1_end) / sizeof(u8));
+}
+
+// --- atf_amc.Varlen2mMsg.m3.N
+// Return number of elements in varlen field
+inline u32 atf_amc::m3_N(const atf_amc::Varlen2mMsg& parent) {
+    u32 length = i32(((atf_amc::Varlen2mMsg&)parent).length);
+    u32 extra_bytes = u32_Max(length,sizeof(atf_amc::Varlen2mMsg)) - sizeof(atf_amc::Varlen2mMsg) - parent.m2_end; // avoid unsigned subtraction underflow
+    return u32(extra_bytes / sizeof(u8));
+}
+
+// --- atf_amc.Varlen2mMsg.m1_curs.Reset
+inline void atf_amc::Varlen2mMsg_m1_curs_Reset(Varlen2mMsg_m1_curs &curs, atf_amc::Varlen2mMsg &parent) {
+    curs.ptr = (u8*)m1_Addr(parent);
+    curs.length = parent.m1_end;
+    curs.index = 0;
+}
+
+// --- atf_amc.Varlen2mMsg.m1_curs.ValidQ
+// cursor points to valid item
+inline bool atf_amc::Varlen2mMsg_m1_curs_ValidQ(Varlen2mMsg_m1_curs &curs) {
+    bool valid = ssizeof(atf_amc::MsgHeader) <= curs.length;
+    valid = valid && unsigned(i32((*(atf_amc::MsgHeader*)curs.ptr).length)-ssizeof(atf_amc::MsgHeader)) <= curs.length-ssizeof(atf_amc::MsgHeader);
+    return valid;
+}
+
+// --- atf_amc.Varlen2mMsg.m1_curs.Next
+// proceed to next item
+inline void atf_amc::Varlen2mMsg_m1_curs_Next(Varlen2mMsg_m1_curs &curs) {
+    i32 len = i32((*(atf_amc::MsgHeader*)curs.ptr).length);
+    curs.ptr += len;
+    curs.length -= len;
+    ++curs.index;
+}
+
+// --- atf_amc.Varlen2mMsg.m1_curs.Access
+// item access
+inline atf_amc::MsgHeader& atf_amc::Varlen2mMsg_m1_curs_Access(Varlen2mMsg_m1_curs &curs) {
+    return *(atf_amc::MsgHeader*)curs.ptr;
+}
+
+// --- atf_amc.Varlen2mMsg.m2_curs.Reset
+inline void atf_amc::Varlen2mMsg_m2_curs_Reset(Varlen2mMsg_m2_curs &curs, atf_amc::Varlen2mMsg &parent) {
+    curs.ptr = (u8*)m2_Addr(parent);
+    curs.length = parent.m2_end- parent.m1_end;
+    curs.index = 0;
+}
+
+// --- atf_amc.Varlen2mMsg.m2_curs.ValidQ
+// cursor points to valid item
+inline bool atf_amc::Varlen2mMsg_m2_curs_ValidQ(Varlen2mMsg_m2_curs &curs) {
+    bool valid = ssizeof(atf_amc::MsgHeader) <= curs.length;
+    valid = valid && unsigned(i32((*(atf_amc::MsgHeader*)curs.ptr).length)-ssizeof(atf_amc::MsgHeader)) <= curs.length-ssizeof(atf_amc::MsgHeader);
+    return valid;
+}
+
+// --- atf_amc.Varlen2mMsg.m2_curs.Next
+// proceed to next item
+inline void atf_amc::Varlen2mMsg_m2_curs_Next(Varlen2mMsg_m2_curs &curs) {
+    i32 len = i32((*(atf_amc::MsgHeader*)curs.ptr).length);
+    curs.ptr += len;
+    curs.length -= len;
+    ++curs.index;
+}
+
+// --- atf_amc.Varlen2mMsg.m2_curs.Access
+// item access
+inline atf_amc::MsgHeader& atf_amc::Varlen2mMsg_m2_curs_Access(Varlen2mMsg_m2_curs &curs) {
+    return *(atf_amc::MsgHeader*)curs.ptr;
+}
+
+// --- atf_amc.Varlen2mMsg.m3_curs.Reset
+inline void atf_amc::Varlen2mMsg_m3_curs_Reset(Varlen2mMsg_m3_curs &curs, atf_amc::Varlen2mMsg &parent) {
+    curs.ptr = (u8*)m3_Addr(parent);
+    curs.length = i32(parent.length) - parent.m2_end - sizeof(atf_amc::Varlen2mMsg);
+    curs.index = 0;
+}
+
+// --- atf_amc.Varlen2mMsg.m3_curs.ValidQ
+// cursor points to valid item
+inline bool atf_amc::Varlen2mMsg_m3_curs_ValidQ(Varlen2mMsg_m3_curs &curs) {
+    bool valid = ssizeof(atf_amc::MsgHeader) <= curs.length;
+    valid = valid && unsigned(i32((*(atf_amc::MsgHeader*)curs.ptr).length)-ssizeof(atf_amc::MsgHeader)) <= curs.length-ssizeof(atf_amc::MsgHeader);
+    return valid;
+}
+
+// --- atf_amc.Varlen2mMsg.m3_curs.Next
+// proceed to next item
+inline void atf_amc::Varlen2mMsg_m3_curs_Next(Varlen2mMsg_m3_curs &curs) {
+    i32 len = i32((*(atf_amc::MsgHeader*)curs.ptr).length);
+    curs.ptr += len;
+    curs.length -= len;
+    ++curs.index;
+}
+
+// --- atf_amc.Varlen2mMsg.m3_curs.Access
+// item access
+inline atf_amc::MsgHeader& atf_amc::Varlen2mMsg_m3_curs_Access(Varlen2mMsg_m3_curs &curs) {
+    return *(atf_amc::MsgHeader*)curs.ptr;
+}
+
+// --- atf_amc.Varlen2mMsg..GetMsgLength
+// Message length (uses length field)
+inline i32 atf_amc::GetMsgLength(const atf_amc::Varlen2mMsg& parent) {
+    return i32(const_cast<atf_amc::Varlen2mMsg&>(parent).length);
+}
+
+// --- atf_amc.Varlen2mMsg..GetMsgMemptr
+// Memptr encompassing the message (uses length field)
+inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::Varlen2mMsg& row) {
+    return algo::memptr((u8*)&row, i32(const_cast<atf_amc::Varlen2mMsg&>(row).length));
+}
+
+// --- atf_amc.Varlen2mMsg..Init
+// Set all fields to initial values.
+inline void atf_amc::Varlen2mMsg_Init(atf_amc::Varlen2mMsg& parent) {
+    parent.type = atf_amc_MsgTypeEnum(0x1004);
+    parent.length = atf_amc::MsgLength(ssizeof(parent) + (0));
+    parent.m1_end = atf_amc::MsgLength(0); // m1: initialize
+    parent.m2_end = atf_amc::MsgLength(0); // m2: initialize
+}
+
+// --- atf_amc.Varlen2mMsg..Ctor
+inline  atf_amc::Varlen2mMsg::Varlen2mMsg() {
+    atf_amc::Varlen2mMsg_Init(*this);
+}
+
+// --- atf_amc.VarlenK.i.N
+// Return number of elements in varlen field
+inline u32 atf_amc::i_N(const atf_amc::VarlenK& v1) {
+    u32 length = i32(((atf_amc::VarlenK&)v1).length);
+    u32 extra_bytes = u32_Max(length,sizeof(atf_amc::VarlenK)) - sizeof(atf_amc::VarlenK); // avoid unsigned subtraction underflow
+    return u32(extra_bytes / sizeof(u32));
+}
+
+// --- atf_amc.VarlenK.i_curs.Reset
+inline void atf_amc::v1_i_curs_Reset(v1_i_curs &curs, atf_amc::VarlenK &parent) {
+    curs.ptr = (u8*)i_Addr(parent);
+    curs.length = i32(parent.length) - sizeof(atf_amc::VarlenK);
+    curs.index = 0;
+}
+
+// --- atf_amc.VarlenK.i_curs.ValidQ
+// cursor points to valid item
+inline bool atf_amc::v1_i_curs_ValidQ(v1_i_curs &curs) {
+    bool valid = ssizeof(u32) <= curs.length;
+    return valid;
+}
+
+// --- atf_amc.VarlenK.i_curs.Next
+// proceed to next item
+inline void atf_amc::v1_i_curs_Next(v1_i_curs &curs) {
+    i32 len = i32(sizeof(u32));
+    curs.ptr += len;
+    curs.length -= len;
+    ++curs.index;
+}
+
+// --- atf_amc.VarlenK.i_curs.Access
+// item access
+inline u32& atf_amc::v1_i_curs_Access(v1_i_curs &curs) {
+    return *(u32*)curs.ptr;
+}
+
+// --- atf_amc.VarlenK..GetMsgLength
+// Message length (uses length field)
+inline i32 atf_amc::GetMsgLength(const atf_amc::VarlenK& parent) {
+    return i32(const_cast<atf_amc::VarlenK&>(parent).length);
+}
+
+// --- atf_amc.VarlenK..GetMsgMemptr
+// Memptr encompassing the message (uses length field)
+inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::VarlenK& row) {
+    return algo::memptr((u8*)&row, i32(const_cast<atf_amc::VarlenK&>(row).length));
+}
+
+// --- atf_amc.VarlenK..Init
+// Set all fields to initial values.
+inline void atf_amc::VarlenK_Init(atf_amc::VarlenK& v1) {
+    v1.length = u32(0);
+}
+
+// --- atf_amc.VarlenK..Ctor
+inline  atf_amc::VarlenK::VarlenK() {
+    atf_amc::VarlenK_Init(*this);
+}
+
+// --- atf_amc.Varlen2vMsg.base.Castdown
+// Check if atf_amc::MsgHeader is an instance of Varlen2vMsg by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of Varlen2vMsg.
+// If not successful, quietly return NULL.
+inline atf_amc::Varlen2vMsg* atf_amc::Varlen2vMsg_Castdown(atf_amc::MsgHeader &hdr) {
+    bool cond = hdr.type == (0x1003);
+    cond &= i32(hdr.length) >= ssizeof(atf_amc::Varlen2vMsg);
+    return cond ? reinterpret_cast<atf_amc::Varlen2vMsg*>(&hdr) : NULL;
+}
+
+// --- atf_amc.Varlen2vMsg.base.Castbase
+inline atf_amc::MsgHeader& atf_amc::Castbase(atf_amc::Varlen2vMsg& parent) {
+    return reinterpret_cast<atf_amc::MsgHeader&>(parent);
+}
+
+// --- atf_amc.Varlen2vMsg.v1.N
+// Return number of elements in varlen field
+inline u32 atf_amc::v1_N(const atf_amc::Varlen2vMsg& parent) {
+    return u32((parent.v1_end) / sizeof(u8));
+}
+
+// --- atf_amc.Varlen2vMsg.v2.N
+// Return number of elements in varlen field
+inline u32 atf_amc::v2_N(const atf_amc::Varlen2vMsg& parent) {
+    return u32((parent.v2_end - parent.v1_end) / sizeof(u8));
+}
+
+// --- atf_amc.Varlen2vMsg.v3.N
+// Return number of elements in varlen field
+inline u32 atf_amc::v3_N(const atf_amc::Varlen2vMsg& parent) {
+    u32 length = i32(((atf_amc::Varlen2vMsg&)parent).length);
+    u32 extra_bytes = u32_Max(length,sizeof(atf_amc::Varlen2vMsg)) - sizeof(atf_amc::Varlen2vMsg) - parent.v2_end; // avoid unsigned subtraction underflow
+    return u32(extra_bytes / sizeof(u8));
+}
+
+// --- atf_amc.Varlen2vMsg.v1_curs.Reset
+inline void atf_amc::Varlen2vMsg_v1_curs_Reset(Varlen2vMsg_v1_curs &curs, atf_amc::Varlen2vMsg &parent) {
+    curs.ptr = (u8*)v1_Addr(parent);
+    curs.length = parent.v1_end;
+    curs.index = 0;
+}
+
+// --- atf_amc.Varlen2vMsg.v1_curs.ValidQ
+// cursor points to valid item
+inline bool atf_amc::Varlen2vMsg_v1_curs_ValidQ(Varlen2vMsg_v1_curs &curs) {
+    bool valid = ssizeof(atf_amc::VarlenK) <= curs.length;
+    valid = valid && unsigned(i32((*(atf_amc::VarlenK*)curs.ptr).length)-ssizeof(atf_amc::VarlenK)) <= curs.length-ssizeof(atf_amc::VarlenK);
+    return valid;
+}
+
+// --- atf_amc.Varlen2vMsg.v1_curs.Next
+// proceed to next item
+inline void atf_amc::Varlen2vMsg_v1_curs_Next(Varlen2vMsg_v1_curs &curs) {
+    i32 len = i32((*(atf_amc::VarlenK*)curs.ptr).length);
+    curs.ptr += len;
+    curs.length -= len;
+    ++curs.index;
+}
+
+// --- atf_amc.Varlen2vMsg.v1_curs.Access
+// item access
+inline atf_amc::VarlenK& atf_amc::Varlen2vMsg_v1_curs_Access(Varlen2vMsg_v1_curs &curs) {
+    return *(atf_amc::VarlenK*)curs.ptr;
+}
+
+// --- atf_amc.Varlen2vMsg.v2_curs.Reset
+inline void atf_amc::Varlen2vMsg_v2_curs_Reset(Varlen2vMsg_v2_curs &curs, atf_amc::Varlen2vMsg &parent) {
+    curs.ptr = (u8*)v2_Addr(parent);
+    curs.length = parent.v2_end- parent.v1_end;
+    curs.index = 0;
+}
+
+// --- atf_amc.Varlen2vMsg.v2_curs.ValidQ
+// cursor points to valid item
+inline bool atf_amc::Varlen2vMsg_v2_curs_ValidQ(Varlen2vMsg_v2_curs &curs) {
+    bool valid = ssizeof(atf_amc::VarlenK) <= curs.length;
+    valid = valid && unsigned(i32((*(atf_amc::VarlenK*)curs.ptr).length)-ssizeof(atf_amc::VarlenK)) <= curs.length-ssizeof(atf_amc::VarlenK);
+    return valid;
+}
+
+// --- atf_amc.Varlen2vMsg.v2_curs.Next
+// proceed to next item
+inline void atf_amc::Varlen2vMsg_v2_curs_Next(Varlen2vMsg_v2_curs &curs) {
+    i32 len = i32((*(atf_amc::VarlenK*)curs.ptr).length);
+    curs.ptr += len;
+    curs.length -= len;
+    ++curs.index;
+}
+
+// --- atf_amc.Varlen2vMsg.v2_curs.Access
+// item access
+inline atf_amc::VarlenK& atf_amc::Varlen2vMsg_v2_curs_Access(Varlen2vMsg_v2_curs &curs) {
+    return *(atf_amc::VarlenK*)curs.ptr;
+}
+
+// --- atf_amc.Varlen2vMsg.v3_curs.Reset
+inline void atf_amc::Varlen2vMsg_v3_curs_Reset(Varlen2vMsg_v3_curs &curs, atf_amc::Varlen2vMsg &parent) {
+    curs.ptr = (u8*)v3_Addr(parent);
+    curs.length = i32(parent.length) - parent.v2_end - sizeof(atf_amc::Varlen2vMsg);
+    curs.index = 0;
+}
+
+// --- atf_amc.Varlen2vMsg.v3_curs.ValidQ
+// cursor points to valid item
+inline bool atf_amc::Varlen2vMsg_v3_curs_ValidQ(Varlen2vMsg_v3_curs &curs) {
+    bool valid = ssizeof(atf_amc::VarlenK) <= curs.length;
+    valid = valid && unsigned(i32((*(atf_amc::VarlenK*)curs.ptr).length)-ssizeof(atf_amc::VarlenK)) <= curs.length-ssizeof(atf_amc::VarlenK);
+    return valid;
+}
+
+// --- atf_amc.Varlen2vMsg.v3_curs.Next
+// proceed to next item
+inline void atf_amc::Varlen2vMsg_v3_curs_Next(Varlen2vMsg_v3_curs &curs) {
+    i32 len = i32((*(atf_amc::VarlenK*)curs.ptr).length);
+    curs.ptr += len;
+    curs.length -= len;
+    ++curs.index;
+}
+
+// --- atf_amc.Varlen2vMsg.v3_curs.Access
+// item access
+inline atf_amc::VarlenK& atf_amc::Varlen2vMsg_v3_curs_Access(Varlen2vMsg_v3_curs &curs) {
+    return *(atf_amc::VarlenK*)curs.ptr;
+}
+
+// --- atf_amc.Varlen2vMsg..GetMsgLength
+// Message length (uses length field)
+inline i32 atf_amc::GetMsgLength(const atf_amc::Varlen2vMsg& parent) {
+    return i32(const_cast<atf_amc::Varlen2vMsg&>(parent).length);
+}
+
+// --- atf_amc.Varlen2vMsg..GetMsgMemptr
+// Memptr encompassing the message (uses length field)
+inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::Varlen2vMsg& row) {
+    return algo::memptr((u8*)&row, i32(const_cast<atf_amc::Varlen2vMsg&>(row).length));
+}
+
+// --- atf_amc.Varlen2vMsg..Init
+// Set all fields to initial values.
+inline void atf_amc::Varlen2vMsg_Init(atf_amc::Varlen2vMsg& parent) {
+    parent.type = atf_amc_MsgTypeEnum(0x1003);
+    parent.length = atf_amc::MsgLength(ssizeof(parent) + (0));
+    parent.v1_end = atf_amc::MsgLength(0); // v1: initialize
+    parent.v2_end = atf_amc::MsgLength(0); // v2: initialize
+}
+
+// --- atf_amc.Varlen2vMsg..Ctor
+inline  atf_amc::Varlen2vMsg::Varlen2vMsg() {
+    atf_amc::Varlen2vMsg_Init(*this);
+}
+
 // --- atf_amc.VarlenAlloc.elem.N
 // Return number of elements in varlen field
 inline u32 atf_amc::elem_N(const atf_amc::VarlenAlloc& varlenalloc) {
@@ -12314,7 +13232,7 @@ inline u32 atf_amc::elem_N(const atf_amc::VarlenAlloc& varlenalloc) {
 
 // --- atf_amc.VarlenAlloc.elem_curs.Reset
 inline void atf_amc::varlenalloc_elem_curs_Reset(varlenalloc_elem_curs &curs, atf_amc::VarlenAlloc &parent) {
-    curs.ptr = (u8*)&parent + sizeof(atf_amc::VarlenAlloc);
+    curs.ptr = (u8*)elem_Addr(parent);
     curs.length = i32(parent.length) - sizeof(atf_amc::VarlenAlloc);
     curs.index = 0;
 }
@@ -12432,7 +13350,7 @@ inline u32 atf_amc::varlen_N(const atf_amc::VarlenExtern& varlen_extern) {
 
 // --- atf_amc.VarlenExtern.varlen_curs.Reset
 inline void atf_amc::varlen_extern_varlen_curs_Reset(varlen_extern_varlen_curs &curs, atf_amc::VarlenExtern &parent) {
-    curs.ptr = (u8*)&parent + sizeof(atf_amc::VarlenExtern);
+    curs.ptr = (u8*)varlen_Addr(parent);
     curs.length = i32(length_Get(parent)) - sizeof(atf_amc::VarlenExtern);
     curs.index = 0;
 }
@@ -12550,7 +13468,7 @@ inline u32 atf_amc::typeh_N(const atf_amc::VarlenH& parent) {
 
 // --- atf_amc.VarlenH.typeh_curs.Reset
 inline void atf_amc::VarlenH_typeh_curs_Reset(VarlenH_typeh_curs &curs, atf_amc::VarlenH &parent) {
-    curs.ptr = (u8*)&parent + sizeof(atf_amc::VarlenH);
+    curs.ptr = (u8*)typeh_Addr(parent);
     curs.length = i32(parent.length) - sizeof(atf_amc::VarlenH);
     curs.index = 0;
 }
@@ -12658,66 +13576,6 @@ inline  atf_amc::VarlenH_curs::VarlenH_curs() {
     atf_amc::VarlenH_curs_Init(*this);
 }
 
-// --- atf_amc.VarlenK.i.N
-// Return number of elements in varlen field
-inline u32 atf_amc::i_N(const atf_amc::VarlenK& k) {
-    u32 length = i32(((atf_amc::VarlenK&)k).length);
-    u32 extra_bytes = u32_Max(length,sizeof(atf_amc::VarlenK)) - sizeof(atf_amc::VarlenK); // avoid unsigned subtraction underflow
-    return u32(extra_bytes / sizeof(u32));
-}
-
-// --- atf_amc.VarlenK.i_curs.Reset
-inline void atf_amc::k_i_curs_Reset(k_i_curs &curs, atf_amc::VarlenK &parent) {
-    curs.ptr = (u8*)&parent + sizeof(atf_amc::VarlenK);
-    curs.length = i32(parent.length) - sizeof(atf_amc::VarlenK);
-    curs.index = 0;
-}
-
-// --- atf_amc.VarlenK.i_curs.ValidQ
-// cursor points to valid item
-inline bool atf_amc::k_i_curs_ValidQ(k_i_curs &curs) {
-    bool valid = ssizeof(u32) <= curs.length;
-    return valid;
-}
-
-// --- atf_amc.VarlenK.i_curs.Next
-// proceed to next item
-inline void atf_amc::k_i_curs_Next(k_i_curs &curs) {
-    i32 len = i32(sizeof(u32));
-    curs.ptr += len;
-    curs.length -= len;
-    ++curs.index;
-}
-
-// --- atf_amc.VarlenK.i_curs.Access
-// item access
-inline u32& atf_amc::k_i_curs_Access(k_i_curs &curs) {
-    return *(u32*)curs.ptr;
-}
-
-// --- atf_amc.VarlenK..GetMsgLength
-// Message length (uses length field)
-inline i32 atf_amc::GetMsgLength(const atf_amc::VarlenK& parent) {
-    return i32(const_cast<atf_amc::VarlenK&>(parent).length);
-}
-
-// --- atf_amc.VarlenK..GetMsgMemptr
-// Memptr encompassing the message (uses length field)
-inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::VarlenK& row) {
-    return algo::memptr((u8*)&row, i32(const_cast<atf_amc::VarlenK&>(row).length));
-}
-
-// --- atf_amc.VarlenK..Init
-// Set all fields to initial values.
-inline void atf_amc::VarlenK_Init(atf_amc::VarlenK& k) {
-    k.length = u32(0);
-}
-
-// --- atf_amc.VarlenK..Ctor
-inline  atf_amc::VarlenK::VarlenK() {
-    atf_amc::VarlenK_Init(*this);
-}
-
 // --- atf_amc.VarlenK_curs..ValidQ
 inline bool atf_amc::VarlenK_curs_ValidQ(atf_amc::VarlenK_curs& curs) {
     return curs.msg != NULL;
@@ -12802,7 +13660,7 @@ inline u32 atf_amc::k_N(const atf_amc::VarlenMsg& parent) {
 
 // --- atf_amc.VarlenMsg.k_curs.Reset
 inline void atf_amc::VarlenMsg_k_curs_Reset(VarlenMsg_k_curs &curs, atf_amc::VarlenMsg &parent) {
-    curs.ptr = (u8*)&parent + sizeof(atf_amc::VarlenMsg);
+    curs.ptr = (u8*)k_Addr(parent);
     curs.length = i32(parent.length) - sizeof(atf_amc::VarlenMsg);
     curs.index = 0;
 }
@@ -12991,6 +13849,26 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const atf_amc::TypeB
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const atf_amc::Typefconst &row) {// cfmt:atf_amc.Typefconst.String
     atf_amc::Typefconst_Print(const_cast<atf_amc::Typefconst&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const atf_amc::Varlen2Msg &row) {// cfmt:atf_amc.Varlen2Msg.String
+    atf_amc::Varlen2Msg_Print(const_cast<atf_amc::Varlen2Msg&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const atf_amc::Varlen2aMsg &row) {// cfmt:atf_amc.Varlen2aMsg.String
+    atf_amc::Varlen2aMsg_Print(const_cast<atf_amc::Varlen2aMsg&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const atf_amc::Varlen2mMsg &row) {// cfmt:atf_amc.Varlen2mMsg.String
+    atf_amc::Varlen2mMsg_Print(const_cast<atf_amc::Varlen2mMsg&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const atf_amc::Varlen2vMsg &row) {// cfmt:atf_amc.Varlen2vMsg.String
+    atf_amc::Varlen2vMsg_Print(const_cast<atf_amc::Varlen2vMsg&>(row), str);
     return str;
 }
 

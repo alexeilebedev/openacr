@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
 //
@@ -37,6 +37,7 @@ namespace src_func { // update-hdr
     // cpp/src_func/edit.cpp -- Implementation of -e
     //
     void Main_EditFunc();
+    void Main_CreateMissing();
 
     // -------------------------------------------------------------------
     // cpp/src_func/fileloc.cpp -- Location in file, for each function
@@ -94,13 +95,17 @@ namespace src_func { // update-hdr
     // Check if line contains function start
     // Criteria are:
     // - first character nonblank
+    // - has parentheses
     // - last nonblank character is {
     // - it's not namespace, enum or struct
     bool FuncstartQ(strptr line, strptr trimmedline);
 
     // Extract function namespace name
     // void *ns::blah(arg1, arg2) -> ns
-    strptr GetFuncNs(strptr funcname);
+    tempstr GetFuncNs(src_func::FFunc &func);
+
+    // Filter functions based on parameters provided on command line.
+    bool MatchFuncQ(src_func::FFunc &func);
 
     // Get srcfile filter from update-hdr line.
     // If none specified, use %
@@ -108,9 +113,23 @@ namespace src_func { // update-hdr
 
     // extract namespace name from a line like 'namespace xyz {'
     strptr Nsline_GetNamespace(strptr str);
+    void RewriteOpts();
+
+    // Calculate a set of prefixes & suffixes (together:affixes)
+    // which "look like generated code"
+    // We will not generate prototypes for functions that look like generated code
+    // (this is a heuristic, not a hard rule, but it saves hours of debugging when it works)
+    // The reason is that if something changes in the underlying table where the userfunc
+    // no longer gets generated (and thus expected) by amc, the user function should trigger
+    // a compile error from lack of prototype.
+    // Also, for each prototype that we refused to generate because a function matched
+    // a known gen affix, we add a comment to the include file.
+    void CalcGenaffix();
+    src_func::FGenaffix *FindAffix(strptr cppname);
 
     // Main
-    void Main();
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void Main(); // main:src_func
 
     // -------------------------------------------------------------------
     // cpp/src_func/nextfile.cpp -- Find next file in target

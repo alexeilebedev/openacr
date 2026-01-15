@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -49,14 +49,14 @@ static void FormTuple(gcli::FGclicmd &gclicmd){
 // -----------------------------------------------------------------------------
 static void JsonJkeyVal(gcli::FGclicmd &gclicmd, cstring &jkey, strptr val){
     // insert value if the key is specified
-    dbglog(Keyval(jkey,val));
+    prcat(debug,Keyval(jkey,val));
     if (val!=""){
         tempstr gclicmdj2f_key;
         gclicmdj2f_key=gcli::FGclicmdj2f_Concat_gclicmd_jkey(gclicmd.gclicmd,jkey);
         if (gcli::FGclicmdj2f *gclicmdj2f=gcli::ind_gclicmdj2f_Find(gclicmdj2f_key)){
             // trigger stanza processing if the value repeats
             if (gclicmdj2f->select) {
-                dbglog("TUPLE");
+                prcat(debug,"TUPLE");
                 FormTuple(gclicmd);
             }
             // Fill all fields matching jkey with its value
@@ -71,7 +71,7 @@ static void JsonJkeyVal(gcli::FGclicmd &gclicmd, cstring &jkey, strptr val){
                     gclicmdf.uval<<Trimmed(val);
                 }
                 gclicmd.select=true;
-                dbglog(Keyval(gclicmdf.gclicmdf,val));
+                prcat(debug,Keyval(gclicmdf.gclicmdf,val));
             }ind_end;
         }
     }
@@ -128,7 +128,7 @@ static void JsonTuple(gcli::FGclicmd &gclicmd, lib_json::FNode* node, cstring &j
     } while (0)
 // -----------------------------------------------------------------------------
 
-// Curl write callback fuction
+// Curl write callback function
 static size_t CurlWrite(char *ptr, size_t size, size_t nmemb, void *userdata) {
     vrfy_(userdata);
     gcli::FHttp &http = *(gcli::FHttp *)userdata;
@@ -266,16 +266,16 @@ static bool CurlExecPage(gcli::FGclicmd &gclicmd, strptr per_page, strptr page) 
         // print debug output
         if (algo_lib::_db.cmdline.debug) {
             // params
-            dbglog(http);
+            prcat(debug,http);
             // headers
             ind_beg(gcli::FHttp_response_header_curs,rh,http){
-                dbglog(rh);
+                prcat(debug,rh);
             }ind_end;
             // json
             if (http.response_json_parser.root_node) {
                 cstring out;
                 JsonSerialize(http.response_json_parser.root_node,out,true);
-                dbglog(out);
+                prcat(debug,out);
             }
         }
         bool ok=http.response_status_code == 200 || http.response_status_code == 201;
@@ -294,7 +294,7 @@ static bool CurlExecPage(gcli::FGclicmd &gclicmd, strptr per_page, strptr page) 
                 out="request failed, repeat with -debug for diagnostics";
             }
         }
-        vrfy(ok, tempstr()
+        vrfy(ok,tempstr()
              <<Keyval("status",http.response_status_line)
              <<Keyval("message",out)
              <<Keyval("reason",reason)
@@ -359,8 +359,9 @@ static bool CurlExecPageTry(gcli::FGclicmd &gclicmd, strptr per_page, strptr pag
         try {
             ret=CurlExecPage(gclicmd,per_page,page);
             break;
-        } catch (...) {
-            sleep(5);
+        } catch (algo_lib::ErrorX &x) {
+            prlog("gcli.error  "<<x.str);
+            sleep(2);
         }
     }while (--try_cnt!=0);
     return ret;

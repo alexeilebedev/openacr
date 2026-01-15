@@ -23,12 +23,12 @@ Usage: amc_vis [[-ctype:]<regx>] [options]
     -in         string  "data"  Input directory or filename, - for stdin
     -dot        string  ""      Save dot file with specified filename
     -xref                       Include all ctypes referenced by selected ones
-    -xns                        Cross namespace boundaries
+    -xns                Y       Cross namespace boundaries
     -noinput                    Deselect module inputs
     -check                      Check model for dependency problems
     -render             Y       Produce an ascii drawing
-    -verbose    int             Verbosity level (0..255); alias -v; cumulative
-    -debug      int             Debug level (0..255); alias -d; cumulative
+    -verbose    flag            Verbosity level (0..255); alias -v; cumulative
+    -debug      flag            Debug level (0..255); alias -d; cumulative
     -help                       Print help and exit; alias -h
     -version                    Print version and exit
     -signature                  Show signatures and exit; alias -sig
@@ -110,11 +110,11 @@ amc_vis can also output an dot file, which can then be viewed in a browser:
 `amc_vis` takes the following tables on input:
 |Ssimfile|Comment|
 |---|---|
-|[dmmeta.reftype](/txt/ssimdb/dmmeta/reftype.md)|Field type constructor (e.g. reference type)|
+|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
 |[dmmeta.ctype](/txt/ssimdb/dmmeta/ctype.md)|Struct|
 |[dmmeta.field](/txt/ssimdb/dmmeta/field.md)|Specify field of a struct|
 |[dmmeta.finput](/txt/ssimdb/dmmeta/finput.md)|Describe input table of a program|
-|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
+|[dmmeta.reftype](/txt/ssimdb/dmmeta/reftype.md)|Field type constructor (e.g. reference type)|
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
 

@@ -48,16 +48,12 @@ To visualize xrefs, it may be useful to use [amc_vis](/txt/exe/amc_vis/README.md
 To visualize the example above, we would use
 ```
 inline-command: amc_vis amc.FTarget\|amc.FTargdep
-                                                       
-                                                       
-                                       / amc.FTargdep  
-                                       |               
-                   / amc.FTarget       |               
-                   |<------------------|Upptr p_target 
-                   |Ptrary c_targdep-->|               
-                   |<------------------|Upptr p_parent 
-                   |                   -               
-                   |                                   
-                   -                                   
+                                      / amc.FTargdep  
+                  / amc.FTarget       |               
+                  |<------------------|Upptr p_target 
+                  |Ptrary c_targdep-->|               
+                  |<------------------|Upptr p_parent 
+                  |                   -               
+                  -                                   
 ```
 

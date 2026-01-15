@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2023 Astra
 // Copyright (C) 2019 NYSE | Intercontinental Exchange
 //

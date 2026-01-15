@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -22,6 +22,13 @@
 #include "include/algo.h"
 #include "include/gcli.h"
 
+// -----------------------------------------------------------------------------
+void gcli::RemoveEditFile(){
+    if (gcli::_db.edit_file!="") {
+        unlink(Zeroterm(gcli::_db.edit_file));
+        gcli::_db.edit_file="";
+    }
+}
 // -----------------------------------------------------------------------------
 // Manage environment variables: USER,HOME,EDITOR
 static void Main_ManageEnv() {
@@ -94,6 +101,7 @@ static void Main_Setopts(){
 
     Main_ManageEnv();
     gcli::Main_ManageAuth();
+
     SetHeaderToken(gcli::_db.grepo_sel.token);
 }
 // -----------------------------------------------------------------------------

@@ -1,0 +1,24 @@
+dkrdb.dctr  dctr:a1  build:test/docker/a1/a1.build  start:test/docker/a1/a1.start  run:test/docker/a1/a1.run  gen:test/docker/gen/a1.gen  comment:""
+dkrdb.dctr  dctr:a1-alt  build:test/docker/a1/a1.build  start:test/docker/a1/a1-alt.start  run:test/docker/a1/a1-alt.run  gen:test/docker/gen/a1.gen  comment:""
+dkrdb.dctr  dctr:a2  build:test/docker/a2/a2.build  start:test/docker/a2/a2.start  run:test/docker/a2/a2.run  gen:test/docker/gen/a2.gen  comment:""
+dkrdb.dctr  dctr:a3  build:test/docker/a3/a3.build  start:test/docker/a3/a3.start  run:test/docker/a3/a3.run  gen:test/docker/gen/a3.gen  comment:"Orphan"
+dkrdb.dctrua  dctrua:a1/from.  uval:ubuntu
+dkrdb.dctrua  dctrua:a1/run.dhost  uval:$dhost$
+dkrdb.dctrua  dctrua:a1/run.dserv  uval:$dserv$
+dkrdb.dctrua  dctrua:a1/run.dctr  uval:a1
+dkrdb.dctrua  dctrua:a1-alt/from.  uval:ubuntu
+dkrdb.dctrua  dctrua:a1-alt/run.dhost  uval:$dhost$
+dkrdb.dctrua  dctrua:a1-alt/run.dserv  uval:$dserv$
+dkrdb.dctrua  dctrua:a1-alt/run.dctr  uval:a1
+dkrdb.dctrua  dctrua:a2/from.  uval:ubuntu
+dkrdb.dctrua  dctrua:a2/run.dhost  uval:$dhost$
+dkrdb.dctrua  dctrua:a2/run.dserv  uval:$dserv$
+dkrdb.dctrua  dctrua:a2/run.dctr  uval:a2
+dkrdb.dhost  dhost:s1.example.com  ip:10.0.0.1  ext_ip:r1.example.com  ext_port:3022  user:dcliusr  vpn:Y comment:""
+dkrdb.dhost  dhost:s2.example.com  ip:10.0.0.2  ext_ip:r2.example.com  ext_port:3022  user:dcliusr  vpn:Y comment:""
+dkrdb.dhost  dhost:s3.example.com  ip:10.0.0.3  ext_ip:r3.example.com  ext_port:3022  user:dcliusr  vpn:Y comment:""
+dkrdb.dctrhost  dctrhost:a1.s1.example.com  comment:""
+dkrdb.dctrhost  dctrhost:a1-alt.s1.example.com  comment:""
+dkrdb.dctrhost  dctrhost:a2.s1.example.com  comment:""
+dkrdb.dctrhost  dctrhost:a1.s2.example.com  comment:""
+dkrdb.dctrhost  dctrhost:a2.s2.example.com  comment:""

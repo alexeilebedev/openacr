@@ -1,6 +1,14 @@
 ## ietf - Some IETF structs
 
 
+### Table Of Contents
+<a href="#table-of-contents"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
+&nbsp;&nbsp;&bull;&nbsp;  [Ctypes](#ctypes)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Functions](#functions)<br/>
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
+
 ### Ctypes
 <a href="#ctypes"></a>
 <!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Ctypes -->
@@ -29,4 +37,37 @@ Other ctypes in this namespace which don't have own readme files
 |addr|u32|[Val](/txt/exe/amc/reftypes.md#val)|||
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Ctypes -->
+
+### Functions
+<a href="#functions"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Functions -->
+Functions exported from this namespace:
+
+```c++
+void ietf::Ipport_Print(ietf::Ipport row, algo::cstring &str) 
+```
+
+```c++
+bool ietf::Ipport_ReadStrptrMaybe(ietf::Ipport &row, strptr in) 
+```
+
+```c++
+void ietf::Ipv4Addr_Print(ietf::Ipv4Addr row, algo::cstring &str) 
+```
+
+```c++
+// Parse an IpV4 address from STR to IP
+// Return success value. If not successful, output value is not modified.
+bool ietf::Ipv4Addr_ReadStrptrMaybe(ietf::Ipv4Addr &ip, algo::strptr str) 
+```
+
+```c++
+void ietf::Ipv4_Print(ietf::Ipv4 row, algo::cstring &str) 
+```
+
+```c++
+bool ietf::Ipv4_ReadStrptrMaybe(ietf::Ipv4 &ip, algo::strptr str) 
+```
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Functions -->
 

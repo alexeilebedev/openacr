@@ -30,27 +30,27 @@
 
 // --- amsdb_FieldIdEnum
 
-enum amsdb_FieldIdEnum {             // amsdb.FieldId.value
-     amsdb_FieldId_proctype     = 0
-    ,amsdb_FieldId_id           = 1
-    ,amsdb_FieldId_ns           = 2
-    ,amsdb_FieldId_comment      = 3
-    ,amsdb_FieldId_streamtype   = 4
-    ,amsdb_FieldId_value        = 5
+enum amsdb_FieldIdEnum {           // amsdb.FieldId.value
+     amsdb_FieldId_proctype   = 0
+    ,amsdb_FieldId_id         = 1
+    ,amsdb_FieldId_ns         = 2
+    ,amsdb_FieldId_comment    = 3
+    ,amsdb_FieldId_shmtype    = 4
+    ,amsdb_FieldId_nonblock   = 5
+    ,amsdb_FieldId_value      = 6
 };
 
-enum { amsdb_FieldIdEnum_N = 6 };
+enum { amsdb_FieldIdEnum_N = 7 };
 
 namespace amsdb { // gen:ns_pkeytypedef
-    typedef algo::Smallstr50 ProcTypePkey;
-    typedef algo::Smallstr50 StreamTypePkey;
+    typedef algo::Smallstr50 ShmtypePkey;
 } // gen:ns_pkeytypedef
 namespace amsdb { // gen:ns_tclass_field
 } // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace amsdb { struct FieldId; }
-namespace amsdb { struct ProcType; }
-namespace amsdb { struct StreamType; }
+namespace amsdb { struct Proctype; }
+namespace amsdb { struct Shmtype; }
 namespace amsdb { // gen:ns_print_struct
 
 // --- amsdb.FieldId
@@ -107,55 +107,59 @@ inline void          FieldId_Init(amsdb::FieldId& parent);
 // func:amsdb.FieldId..Print
 void                 FieldId_Print(amsdb::FieldId& row, algo::cstring& str) __attribute__((nothrow));
 
-// --- amsdb.ProcType
-struct ProcType { // amsdb.ProcType
-    algo::Smallstr50   proctype;   //
+// --- amsdb.Proctype
+struct Proctype { // amsdb.Proctype
+    algo::Smallstr16   proctype;   //
     u32                id;         //   0
     algo::Smallstr16   ns;         //
     algo::Comment      comment;    //
-    // func:amsdb.ProcType..Ctor
-    inline               ProcType() __attribute__((nothrow));
+    // func:amsdb.Proctype..Ctor
+    inline               Proctype() __attribute__((nothrow));
 };
 
-// func:amsdb.ProcType..ReadFieldMaybe
-bool                 ProcType_ReadFieldMaybe(amsdb::ProcType& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of amsdb::ProcType from an ascii string.
+// func:amsdb.Proctype..ReadFieldMaybe
+bool                 Proctype_ReadFieldMaybe(amsdb::Proctype& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of amsdb::Proctype from an ascii string.
 // The format of the string is an ssim Tuple
-// func:amsdb.ProcType..ReadStrptrMaybe
-bool                 ProcType_ReadStrptrMaybe(amsdb::ProcType &parent, algo::strptr in_str) __attribute__((nothrow));
+// func:amsdb.Proctype..ReadStrptrMaybe
+bool                 Proctype_ReadStrptrMaybe(amsdb::Proctype &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
-// func:amsdb.ProcType..Init
-inline void          ProcType_Init(amsdb::ProcType& parent);
+// func:amsdb.Proctype..Init
+inline void          Proctype_Init(amsdb::Proctype& parent);
 // print string representation of ROW to string STR
-// cfmt:amsdb.ProcType.String  printfmt:Tuple
-// func:amsdb.ProcType..Print
-void                 ProcType_Print(amsdb::ProcType& row, algo::cstring& str) __attribute__((nothrow));
+// cfmt:amsdb.Proctype.String  printfmt:Tuple
+// func:amsdb.Proctype..Print
+void                 Proctype_Print(amsdb::Proctype& row, algo::cstring& str) __attribute__((nothrow));
 
-// --- amsdb.StreamType
-struct StreamType { // amsdb.StreamType
-    algo::Smallstr50   streamtype;   //
-    ams::StreamType    id;           //
-    algo::Comment      comment;      //
-    // func:amsdb.StreamType..Ctor
-    inline               StreamType() __attribute__((nothrow));
+// --- amsdb.Shmtype
+struct Shmtype { // amsdb.Shmtype
+    algo::Smallstr50   shmtype;    //
+    ams::Shmtype       id;         //
+    bool               nonblock;   //   false  Non-blocking (lossy) stream
+    algo::Comment      comment;    //
+    // func:amsdb.Shmtype..Ctor
+    inline               Shmtype() __attribute__((nothrow));
 };
 
-// func:amsdb.StreamType..ReadFieldMaybe
-bool                 StreamType_ReadFieldMaybe(amsdb::StreamType& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of amsdb::StreamType from an ascii string.
+// func:amsdb.Shmtype..ReadFieldMaybe
+bool                 Shmtype_ReadFieldMaybe(amsdb::Shmtype& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of amsdb::Shmtype from an ascii string.
 // The format of the string is an ssim Tuple
-// func:amsdb.StreamType..ReadStrptrMaybe
-bool                 StreamType_ReadStrptrMaybe(amsdb::StreamType &parent, algo::strptr in_str) __attribute__((nothrow));
+// func:amsdb.Shmtype..ReadStrptrMaybe
+bool                 Shmtype_ReadStrptrMaybe(amsdb::Shmtype &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:amsdb.Shmtype..Init
+inline void          Shmtype_Init(amsdb::Shmtype& parent);
 // print string representation of ROW to string STR
-// cfmt:amsdb.StreamType.String  printfmt:Tuple
-// func:amsdb.StreamType..Print
-void                 StreamType_Print(amsdb::StreamType& row, algo::cstring& str) __attribute__((nothrow));
+// cfmt:amsdb.Shmtype.String  printfmt:Tuple
+// func:amsdb.Shmtype..Print
+void                 Shmtype_Print(amsdb::Shmtype& row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace amsdb { // gen:ns_func
 } // gen:ns_func
 // gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const amsdb::FieldId &row);// cfmt:amsdb.FieldId.String
-inline algo::cstring &operator <<(algo::cstring &str, const amsdb::ProcType &row);// cfmt:amsdb.ProcType.String
-inline algo::cstring &operator <<(algo::cstring &str, const amsdb::StreamType &row);// cfmt:amsdb.StreamType.String
+inline algo::cstring &operator <<(algo::cstring &str, const amsdb::Proctype &row);// cfmt:amsdb.Proctype.String
+inline algo::cstring &operator <<(algo::cstring &str, const amsdb::Shmtype &row);// cfmt:amsdb.Shmtype.String
 }

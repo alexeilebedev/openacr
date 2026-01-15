@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
 //
@@ -203,6 +203,7 @@ static void PrintNewField(dmmeta::Field &field) {
         acr_ed::_db.out_ssim << "  acr.rowid:"<<rowid << eol;
     }
 }
+
 void acr_ed::edaction_Delete_Field() {
     command::acr acr;
     acr.query << "field:"<<acr_ed::_db.cmdline.field;
@@ -305,7 +306,7 @@ void acr_ed::edaction_Create_Field() {
         if (IsPkey(*child, acr_ed::_db.keyfld) && acr_ed::_db.could_be_ptr) {
             prlog("acr_ed.subset"
                   <<Keyval("field",field.field)
-                  <<Keyval("comment","Chooseing Ptr reftype because xref goes through primary key"));
+                  <<Keyval("comment","Choosing Ptr reftype because xref goes through primary key"));
             field.reftype = dmmeta_Reftype_reftype_Ptr;
         }
     }

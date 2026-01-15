@@ -202,6 +202,7 @@ inline  atf_fuzz::FFuzzstrat::FFuzzstrat() {
 // Set all fields to initial values.
 inline void atf_fuzz::FTarget_Init(atf_fuzz::FTarget& target) {
     target.ind_target_next = (atf_fuzz::FTarget*)-1; // (atf_fuzz.FDb.ind_target) not-in-hash
+    target.ind_target_hashval = 0; // stored hash value
 }
 
 // --- atf_fuzz.FTarget..Ctor

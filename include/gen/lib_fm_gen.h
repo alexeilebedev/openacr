@@ -54,10 +54,10 @@ namespace lib_fm { // gen:ns_pkeytypedef
 namespace lib_fm { // gen:ns_tclass_field
 } // gen:ns_tclass_field
 // gen:ns_fwddecl2
+namespace lib_fm { struct FAlarm; }
 namespace lib_fm { struct _db_alarm_curs; }
 namespace lib_fm { struct _db_alm_code_curs; }
 namespace lib_fm { struct _db_alm_objtype_curs; }
-namespace lib_fm { struct FAlarm; }
 namespace lib_fm { struct FAlmCode; }
 namespace lib_fm { struct FAlmObjtype; }
 namespace lib_fm { struct trace; }
@@ -85,19 +85,20 @@ namespace lib_fm { // gen:ns_print_struct
 // global access: ind_alarm (Thash, hash field alarm)
 // global access: h_alarm (Hook)
 struct FAlarm { // lib_fm.FAlarm
-    algo::Smallstr200   alarm;             // Alarm identity: code@object
-    fm::Flag            flag;              // Flag: raised or cleared
-    fm::Severity        severity;          // Perceived severity
-    i32                 n_occurred;        //   0  How many times the alarm occurred since first_time
-    algo::UnTime        first_time;        // Time of first occurrence
-    algo::UnTime        last_time;         // Time of last occurrence
-    algo::UnTime        clear_time;        // Time when the alarm has beed cleared (only for cleared alarms
-    algo::UnTime        update_time;       // Time of last update
-    fm::Summary         objtype_summary;   // Object type explained
-    fm::Summary         summary;           // Alarm summary from inventory
-    fm::Description     description;       // Alarm message from object
-    fm::Source          source;            // Subsystem where alarm has been detected
-    lib_fm::FAlarm*     ind_alarm_next;    // hash next
+    algo::Smallstr200   alarm;               // Alarm identity: code@object
+    fm::Flag            flag;                // Flag: raised or cleared
+    fm::Severity        severity;            // Perceived severity
+    i32                 n_occurred;          //   0  How many times the alarm occurred since first_time
+    algo::UnTime        first_time;          // Time of first occurrence
+    algo::UnTime        last_time;           // Time of last occurrence
+    algo::UnTime        clear_time;          // Time when the alarm has beed cleared (only for cleared alarms
+    algo::UnTime        update_time;         // Time of last update
+    fm::Summary         objtype_summary;     // Object type explained
+    fm::Summary         summary;             // Alarm summary from inventory
+    fm::Description     description;         // Alarm message from object
+    fm::Source          source;              // Subsystem where alarm has been detected
+    lib_fm::FAlarm*     ind_alarm_next;      // hash next
+    u32                 ind_alarm_hashval;   // hash value
     // func:lib_fm.FAlarm..AssignOp
     lib_fm::FAlarm&      operator =(const lib_fm::FAlarm &rhs) = delete;
     // func:lib_fm.FAlarm..CopyCtor
@@ -146,11 +147,12 @@ void                 FAlarm_Uninit(lib_fm::FAlarm& alarm) __attribute__((nothrow
 // global access: alm_code (Lary, by rowid)
 // global access: ind_alm_code (Thash, hash field alm_code)
 struct FAlmCode { // lib_fm.FAlmCode
-    fm::Code            alm_code;            // Alarm code
-    fm::Severity        severity;            // Assigned severity
-    fm::Source          source;              //
-    fm::Summary         summary;             // Alarm summary (slogan)
-    lib_fm::FAlmCode*   ind_alm_code_next;   // hash next
+    fm::Code            alm_code;               // Alarm code
+    fm::Severity        severity;               // Assigned severity
+    fm::Source          source;                 //
+    fm::Summary         summary;                // Alarm summary (slogan)
+    lib_fm::FAlmCode*   ind_alm_code_next;      // hash next
+    u32                 ind_alm_code_hashval;   // hash value
     // func:lib_fm.FAlmCode..AssignOp
     inline lib_fm::FAlmCode& operator =(const lib_fm::FAlmCode &rhs) = delete;
     // func:lib_fm.FAlmCode..CopyCtor
@@ -184,9 +186,10 @@ void                 FAlmCode_Uninit(lib_fm::FAlmCode& alm_code) __attribute__((
 // global access: alm_objtype (Lary, by rowid)
 // global access: ind_alm_objtype (Thash, hash field alm_objtype)
 struct FAlmObjtype { // lib_fm.FAlmObjtype
-    fm::Objtype            alm_objtype;            // Object type
-    fm::Summary            summary;                // Object type summary
-    lib_fm::FAlmObjtype*   ind_alm_objtype_next;   // hash next
+    fm::Objtype            alm_objtype;               // Object type
+    fm::Summary            summary;                   // Object type summary
+    lib_fm::FAlmObjtype*   ind_alm_objtype_next;      // hash next
+    u32                    ind_alm_objtype_hashval;   // hash value
     // func:lib_fm.FAlmObjtype..AssignOp
     inline lib_fm::FAlmObjtype& operator =(const lib_fm::FAlmObjtype &rhs) = delete;
     // func:lib_fm.FAlmObjtype..CopyCtor
@@ -351,6 +354,9 @@ void                 ind_alarm_Remove(lib_fm::FAlarm& row) __attribute__((nothro
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:lib_fm.FDb.ind_alarm.Reserve
 void                 ind_alarm_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:lib_fm.FDb.ind_alarm.AbsReserve
+void                 ind_alarm_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -416,6 +422,9 @@ void                 ind_alm_code_Remove(lib_fm::FAlmCode& row) __attribute__((n
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:lib_fm.FDb.ind_alm_code.Reserve
 void                 ind_alm_code_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:lib_fm.FDb.ind_alm_code.AbsReserve
+void                 ind_alm_code_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -481,6 +490,9 @@ void                 ind_alm_objtype_Remove(lib_fm::FAlmObjtype& row) __attribut
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:lib_fm.FDb.ind_alm_objtype.Reserve
 void                 ind_alm_objtype_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:lib_fm.FDb.ind_alm_objtype.AbsReserve
+void                 ind_alm_objtype_AbsReserve(int n) __attribute__((nothrow));
 
 // Invoke function by pointer
 // func:lib_fm.FDb.h_alarm.Call

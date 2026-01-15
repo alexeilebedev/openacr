@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
 //
@@ -251,10 +251,12 @@ void amc::tfunc_Ctype_ReadFieldMaybe() {
                 fcn.body << SetPresentExpr(field, "parent");
                 Ins(&R, fcn.body,"    }");
             }
-            Ins(&R, fcn.body,"    break;");
-            Ins(&R, fcn.body,"}");
+            Ins(&R, fcn.body,"} break;");
         }ind_end;
-        Ins(&R, fcn.body, "default: break;");
+        Ins(&R, fcn.body, "default: {");
+        Ins(&R, fcn.body, "    retval = false;");
+        Ins(&R, fcn.body, "    algo_lib::AppendErrtext(\"comment\", \"unrecognized attr\");");
+        Ins(&R, fcn.body, "} break;");
         Ins(&R, fcn.body, "}");
         Ins(&R, fcn.body, "if (!retval) {");
         Ins(&R, fcn.body, "    algo_lib::AppendErrtext(\"attr\",field);");
@@ -280,6 +282,7 @@ void amc::GenRead(amc::FCtype &ctype, amc::FCfmt &cfmt) {
         }
         Ins(&R, func.comment, "Read fields of $Cpptype from an ascii string.");
         if (cfmt.printfmt == dmmeta_Printfmt_printfmt_Extern) {
+            func.acrkey << "cfmt:"<<cfmt.cfmt;
             func.extrn = true;
         } else if (cfmt.printfmt == dmmeta_Printfmt_printfmt_Sep) {
             Ctype_ReadStrptrMaybe_Sep(R, ctype, func, cfmt.sep);

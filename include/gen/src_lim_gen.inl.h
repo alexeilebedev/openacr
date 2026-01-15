@@ -407,9 +407,9 @@ inline src_lim::FInclude* src_lim::zd_include_First(src_lim::FGitfile& gitfile) 
 
 // --- src_lim.FGitfile.zd_include.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool src_lim::zd_include_InLlistQ(src_lim::FInclude& row) {
+inline bool src_lim::gitfile_zd_include_InLlistQ(src_lim::FInclude& row) {
     bool result = false;
-    result = !(row.zd_include_next == (src_lim::FInclude*)-1);
+    result = !(row.gitfile_zd_include_next == (src_lim::FInclude*)-1);
     return result;
 }
 
@@ -429,14 +429,14 @@ inline i32 src_lim::zd_include_N(const src_lim::FGitfile& gitfile) {
 
 // --- src_lim.FGitfile.zd_include.Next
 // Return pointer to next element in the list
-inline src_lim::FInclude* src_lim::zd_include_Next(src_lim::FInclude &row) {
-    return row.zd_include_next;
+inline src_lim::FInclude* src_lim::gitfile_zd_include_Next(src_lim::FInclude &row) {
+    return row.gitfile_zd_include_next;
 }
 
 // --- src_lim.FGitfile.zd_include.Prev
 // Return pointer to previous element in the list
-inline src_lim::FInclude* src_lim::zd_include_Prev(src_lim::FInclude &row) {
-    return row.zd_include_prev;
+inline src_lim::FInclude* src_lim::gitfile_zd_include_Prev(src_lim::FInclude &row) {
+    return row.gitfile_zd_include_prev;
 }
 
 // --- src_lim.FGitfile.zd_include.qLast
@@ -496,6 +496,7 @@ inline void src_lim::FGitfile_Init(src_lim::FGitfile& gitfile) {
     gitfile.c_linelim = NULL;
     gitfile.c_targsrc = NULL;
     gitfile.ind_gitfile_next = (src_lim::FGitfile*)-1; // (src_lim.FDb.ind_gitfile) not-in-hash
+    gitfile.ind_gitfile_hashval = 0; // stored hash value
 }
 
 // --- src_lim.FGitfile.zd_include_curs.Reset
@@ -513,7 +514,7 @@ inline bool src_lim::gitfile_zd_include_curs_ValidQ(gitfile_zd_include_curs &cur
 // --- src_lim.FGitfile.zd_include_curs.Next
 // proceed to next item
 inline void src_lim::gitfile_zd_include_curs_Next(gitfile_zd_include_curs &curs) {
-    src_lim::FInclude *next = (*curs.row).zd_include_next;
+    src_lim::FInclude *next = (*curs.row).gitfile_zd_include_next;
     curs.row = next;
 }
 
@@ -537,8 +538,8 @@ inline  src_lim::FGitfile::~FGitfile() {
 // Set all fields to initial values.
 inline void src_lim::FInclude_Init(src_lim::FInclude& include) {
     include.sys = bool(false);
-    include.zd_include_next = (src_lim::FInclude*)-1; // (src_lim.FGitfile.zd_include) not-in-list
-    include.zd_include_prev = NULL; // (src_lim.FGitfile.zd_include)
+    include.gitfile_zd_include_next = (src_lim::FInclude*)-1; // (src_lim.FGitfile.zd_include) not-in-list
+    include.gitfile_zd_include_prev = NULL; // (src_lim.FGitfile.zd_include)
 }
 
 // --- src_lim.FInclude..Ctor

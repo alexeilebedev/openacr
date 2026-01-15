@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
 //
@@ -18,7 +18,7 @@
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: atf_amc (exe) -- Unit tests for amc (see amctest table)
-// Exceptions: NO
+// Exceptions: yes
 // Source: cpp/atf_amc/fbuf.cpp
 //
 
@@ -116,6 +116,7 @@ void atf_amc::amctest_msgbuf_test4() {
     in_buf_WriteAll(msgbuf, (u8*)hdr2, 60); // write second message partially
     //
     msg = in_buf_GetMsg(msgbuf); // get first message
+    vrfy_(msg);
     vrfyeq_(msg->type, hdr->type); //it should be OK
     vrfyeq_(msg->length, hdr->length); //it should be OK
     vrfyeq_(memcmp(msg, hdr, hdr->length), 0);
@@ -124,8 +125,9 @@ void atf_amc::amctest_msgbuf_test4() {
     msg = in_buf_GetMsg(msgbuf);// try to access next message
     vrfyeq_((u64)msg, (u64)0);// message should not be there
 
-    in_buf_WriteAll(msgbuf, ((u8*)hdr2)+60, 4);// write remainder of second message
+    vrfy_(in_buf_WriteAll(msgbuf, ((u8*)hdr2)+60, 4));// write remainder of second message
     msg = in_buf_GetMsg(msgbuf);// try to access second message
+    vrfy_(msg);
     vrfyeq_(msg->type, hdr2->type);// message is there
     vrfyeq_(msg->length, hdr2->length);// message is there
     vrfyeq_(memcmp(msg, hdr2, hdr2->length), 0);

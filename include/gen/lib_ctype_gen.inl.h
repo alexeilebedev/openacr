@@ -1214,9 +1214,11 @@ inline lib_ctype::FSqltype& lib_ctype::_db_sqltype_curs_Access(_db_sqltype_curs 
 // Set all fields to initial values.
 inline void lib_ctype::FFconst_Init(lib_ctype::FFconst& fconst) {
     fconst.ind_fconst_key_next = (lib_ctype::FFconst*)-1; // (lib_ctype.FDb.ind_fconst_key) not-in-hash
+    fconst.ind_fconst_key_hashval = 0; // stored hash value
     fconst.ind_fconst_next = (lib_ctype::FFconst*)-1; // (lib_ctype.FDb.ind_fconst) not-in-hash
-    fconst.zd_fconst_next = (lib_ctype::FFconst*)-1; // (lib_ctype.FField.zd_fconst) not-in-list
-    fconst.zd_fconst_prev = NULL; // (lib_ctype.FField.zd_fconst)
+    fconst.ind_fconst_hashval = 0; // stored hash value
+    fconst.field_zd_fconst_next = (lib_ctype::FFconst*)-1; // (lib_ctype.FField.zd_fconst) not-in-list
+    fconst.field_zd_fconst_prev = NULL; // (lib_ctype.FField.zd_fconst)
 }
 
 // --- lib_ctype.FFconst..Ctor
@@ -1265,9 +1267,9 @@ inline lib_ctype::FFconst* lib_ctype::zd_fconst_First(lib_ctype::FField& field) 
 
 // --- lib_ctype.FField.zd_fconst.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool lib_ctype::zd_fconst_InLlistQ(lib_ctype::FFconst& row) {
+inline bool lib_ctype::field_zd_fconst_InLlistQ(lib_ctype::FFconst& row) {
     bool result = false;
-    result = !(row.zd_fconst_next == (lib_ctype::FFconst*)-1);
+    result = !(row.field_zd_fconst_next == (lib_ctype::FFconst*)-1);
     return result;
 }
 
@@ -1287,14 +1289,14 @@ inline i32 lib_ctype::zd_fconst_N(const lib_ctype::FField& field) {
 
 // --- lib_ctype.FField.zd_fconst.Next
 // Return pointer to next element in the list
-inline lib_ctype::FFconst* lib_ctype::zd_fconst_Next(lib_ctype::FFconst &row) {
-    return row.zd_fconst_next;
+inline lib_ctype::FFconst* lib_ctype::field_zd_fconst_Next(lib_ctype::FFconst &row) {
+    return row.field_zd_fconst_next;
 }
 
 // --- lib_ctype.FField.zd_fconst.Prev
 // Return pointer to previous element in the list
-inline lib_ctype::FFconst* lib_ctype::zd_fconst_Prev(lib_ctype::FFconst &row) {
-    return row.zd_fconst_prev;
+inline lib_ctype::FFconst* lib_ctype::field_zd_fconst_Prev(lib_ctype::FFconst &row) {
+    return row.field_zd_fconst_prev;
 }
 
 // --- lib_ctype.FField.zd_fconst.qLast
@@ -1438,7 +1440,7 @@ inline bool lib_ctype::field_zd_fconst_curs_ValidQ(field_zd_fconst_curs &curs) {
 // --- lib_ctype.FField.zd_fconst_curs.Next
 // proceed to next item
 inline void lib_ctype::field_zd_fconst_curs_Next(field_zd_fconst_curs &curs) {
-    lib_ctype::FFconst *next = (*curs.row).zd_fconst_next;
+    lib_ctype::FFconst *next = (*curs.row).field_zd_fconst_next;
     curs.row = next;
 }
 
@@ -1506,6 +1508,7 @@ inline  lib_ctype::FSqltype::~FSqltype() {
 inline void lib_ctype::FSsimfile_Init(lib_ctype::FSsimfile& ssimfile) {
     ssimfile.p_ctype = NULL;
     ssimfile.ind_ssimfile_next = (lib_ctype::FSsimfile*)-1; // (lib_ctype.FDb.ind_ssimfile) not-in-hash
+    ssimfile.ind_ssimfile_hashval = 0; // stored hash value
 }
 
 // --- lib_ctype.FSsimfile..Ctor

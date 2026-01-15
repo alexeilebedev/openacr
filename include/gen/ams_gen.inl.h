@@ -27,414 +27,6 @@
 #include "include/gen/ietf_gen.inl.h"
 //#pragma endinclude
 
-// --- ams.AlarmSyncMsg.base.Castdown
-// Check if ams::MsgHeader is an instance of AlarmSyncMsg by checking the type field
-// If it is, return the pointer of target type.
-// Additionally, check if the length field permits valid instance of AlarmSyncMsg.
-// If not successful, quietly return NULL.
-inline ams::AlarmSyncMsg* ams::AlarmSyncMsg_Castdown(ams::MsgHeader &hdr) {
-    bool cond = hdr.type == (18);
-    cond &= i32(hdr.length) >= ssizeof(ams::AlarmSyncMsg);
-    return cond ? reinterpret_cast<ams::AlarmSyncMsg*>(&hdr) : NULL;
-}
-
-// --- ams.AlarmSyncMsg.base.Castbase
-inline ams::MsgHeader& ams::Castbase(ams::AlarmSyncMsg& parent) {
-    return reinterpret_cast<ams::MsgHeader&>(parent);
-}
-
-// --- ams.AlarmSyncMsg..GetMsgLength
-// Message length (uses length field)
-inline i32 ams::GetMsgLength(const ams::AlarmSyncMsg& parent) {
-    return i32(const_cast<ams::AlarmSyncMsg&>(parent).length);
-}
-
-// --- ams.AlarmSyncMsg..GetMsgMemptr
-// Memptr encompassing the message (uses length field)
-inline algo::memptr ams::GetMsgMemptr(const ams::AlarmSyncMsg& row) {
-    return algo::memptr((u8*)&row, i32(const_cast<ams::AlarmSyncMsg&>(row).length));
-}
-
-// --- ams.AlarmSyncMsg..Init
-// Set all fields to initial values.
-inline void ams::AlarmSyncMsg_Init(ams::AlarmSyncMsg& parent) {
-    parent.type = u32(18);
-    parent.length = u32(ssizeof(parent) + (0));
-}
-
-// --- ams.AlarmSyncMsg..Ctor
-inline  ams::AlarmSyncMsg::AlarmSyncMsg() {
-    ams::AlarmSyncMsg_Init(*this);
-}
-
-// --- ams.AlarmSyncMsg..FieldwiseCtor
-inline  ams::AlarmSyncMsg::AlarmSyncMsg(algo::UnTime in_updated_after)
-    : updated_after(in_updated_after)
- {
-    this->type = u32(18);
-    this->length = u32(ssizeof(*this) + (0));
-}
-
-// --- ams.ProcType.value.GetEnum
-// Get value of field as enum type
-inline ams_ProcTypeEnum ams::value_GetEnum(const ams::ProcType& parent) {
-    return ams_ProcTypeEnum(parent.value);
-}
-
-// --- ams.ProcType.value.SetEnum
-// Set value of field from enum type.
-inline void ams::value_SetEnum(ams::ProcType& parent, ams_ProcTypeEnum rhs) {
-    parent.value = u8(rhs);
-}
-
-// --- ams.ProcType..Hash
-inline u32 ams::ProcType_Hash(u32 prev, ams::ProcType rhs) {
-    prev = u8_Hash(prev, rhs.value);
-    return prev;
-}
-
-// --- ams.ProcType..EqOp
-inline bool ams::ProcType::operator ==(const ams::ProcType &rhs) const {
-    return ams::ProcType_Eq(const_cast<ams::ProcType&>(*this),const_cast<ams::ProcType&>(rhs));
-}
-
-// --- ams.ProcType..NeOp
-inline bool ams::ProcType::operator !=(const ams::ProcType &rhs) const {
-    return !ams::ProcType_Eq(const_cast<ams::ProcType&>(*this),const_cast<ams::ProcType&>(rhs));
-}
-
-// --- ams.ProcType..Cmp
-inline i32 ams::ProcType_Cmp(ams::ProcType lhs, ams::ProcType rhs) {
-    i32 retval = 0;
-    retval = u8_Cmp(lhs.value, rhs.value);
-    return retval;
-}
-
-// --- ams.ProcType..Init
-// Set all fields to initial values.
-inline void ams::ProcType_Init(ams::ProcType& parent) {
-    parent.value = u8(0);
-}
-
-// --- ams.ProcType..Eq
-inline bool ams::ProcType_Eq(ams::ProcType lhs, ams::ProcType rhs) {
-    bool retval = true;
-    retval = u8_Eq(lhs.value, rhs.value);
-    return retval;
-}
-
-// --- ams.ProcType..EqEnum
-// define enum comparison operator to avoid ambiguity
-inline bool ams::ProcType::operator ==(ams_ProcTypeEnum rhs) const {
-    return ams_ProcTypeEnum(value) == rhs;
-}
-
-// --- ams.ProcType..Ctor
-inline  ams::ProcType::ProcType() {
-    ams::ProcType_Init(*this);
-}
-
-// --- ams.ProcType..FieldwiseCtor
-inline  ams::ProcType::ProcType(u8 in_value)
-    : value(in_value)
- {
-}
-
-// --- ams.ProcType..EnumCtor
-inline  ams::ProcType::ProcType(ams_ProcTypeEnum arg) {
-    this->value = u8(arg);
-}
-
-// --- ams.ProcId..Hash
-inline u32 ams::ProcId_Hash(u32 prev, ams::ProcId rhs) {
-    prev = ProcType_Hash(prev, rhs.proc_type);
-    prev = u8_Hash(prev, rhs.procidx);
-    return prev;
-}
-
-// --- ams.ProcId..EqOp
-inline bool ams::ProcId::operator ==(const ams::ProcId &rhs) const {
-    return ams::ProcId_Eq(const_cast<ams::ProcId&>(*this),const_cast<ams::ProcId&>(rhs));
-}
-
-// --- ams.ProcId..NeOp
-inline bool ams::ProcId::operator !=(const ams::ProcId &rhs) const {
-    return !ams::ProcId_Eq(const_cast<ams::ProcId&>(*this),const_cast<ams::ProcId&>(rhs));
-}
-
-// --- ams.ProcId..Cmp
-inline i32 ams::ProcId_Cmp(ams::ProcId lhs, ams::ProcId rhs) {
-    i32 retval = 0;
-    retval = ams::ProcType_Cmp(lhs.proc_type, rhs.proc_type);
-    if (retval != 0) {
-        return retval;
-    }
-    retval = u8_Cmp(lhs.procidx, rhs.procidx);
-    return retval;
-}
-
-// --- ams.ProcId..Init
-// Set all fields to initial values.
-inline void ams::ProcId_Init(ams::ProcId& parent) {
-    parent.procidx = u8(0);
-}
-
-// --- ams.ProcId..Eq
-inline bool ams::ProcId_Eq(ams::ProcId lhs, ams::ProcId rhs) {
-    bool retval = true;
-    retval = ams::ProcType_Eq(lhs.proc_type, rhs.proc_type);
-    if (!retval) {
-        return false;
-    }
-    retval = u8_Eq(lhs.procidx, rhs.procidx);
-    return retval;
-}
-
-// --- ams.ProcId..Ctor
-inline  ams::ProcId::ProcId() {
-    ams::ProcId_Init(*this);
-}
-
-// --- ams.ProcId..FieldwiseCtor
-inline  ams::ProcId::ProcId(ams::ProcType in_proc_type, u8 in_procidx)
-    : proc_type(in_proc_type)
-    , procidx(in_procidx)
- {
-}
-
-// --- ams.StreamType.value.GetEnum
-// Get value of field as enum type
-inline ams_StreamTypeEnum ams::value_GetEnum(const ams::StreamType& parent) {
-    return ams_StreamTypeEnum(parent.value);
-}
-
-// --- ams.StreamType.value.SetEnum
-// Set value of field from enum type.
-inline void ams::value_SetEnum(ams::StreamType& parent, ams_StreamTypeEnum rhs) {
-    parent.value = u8(rhs);
-}
-
-// --- ams.StreamType..Hash
-inline u32 ams::StreamType_Hash(u32 prev, ams::StreamType rhs) {
-    prev = u8_Hash(prev, rhs.value);
-    return prev;
-}
-
-// --- ams.StreamType..EqOp
-inline bool ams::StreamType::operator ==(const ams::StreamType &rhs) const {
-    return ams::StreamType_Eq(const_cast<ams::StreamType&>(*this),const_cast<ams::StreamType&>(rhs));
-}
-
-// --- ams.StreamType..NeOp
-inline bool ams::StreamType::operator !=(const ams::StreamType &rhs) const {
-    return !ams::StreamType_Eq(const_cast<ams::StreamType&>(*this),const_cast<ams::StreamType&>(rhs));
-}
-
-// --- ams.StreamType..Cmp
-inline i32 ams::StreamType_Cmp(ams::StreamType lhs, ams::StreamType rhs) {
-    i32 retval = 0;
-    retval = u8_Cmp(lhs.value, rhs.value);
-    return retval;
-}
-
-// --- ams.StreamType..Init
-// Set all fields to initial values.
-inline void ams::StreamType_Init(ams::StreamType& parent) {
-    parent.value = u8(0);
-}
-
-// --- ams.StreamType..Eq
-inline bool ams::StreamType_Eq(ams::StreamType lhs, ams::StreamType rhs) {
-    bool retval = true;
-    retval = u8_Eq(lhs.value, rhs.value);
-    return retval;
-}
-
-// --- ams.StreamType..EqEnum
-// define enum comparison operator to avoid ambiguity
-inline bool ams::StreamType::operator ==(ams_StreamTypeEnum rhs) const {
-    return ams_StreamTypeEnum(value) == rhs;
-}
-
-// --- ams.StreamType..Ctor
-inline  ams::StreamType::StreamType() {
-    ams::StreamType_Init(*this);
-}
-
-// --- ams.StreamType..FieldwiseCtor
-inline  ams::StreamType::StreamType(u8 in_value)
-    : value(in_value)
- {
-}
-
-// --- ams.StreamType..EnumCtor
-inline  ams::StreamType::StreamType(ams_StreamTypeEnum arg) {
-    this->value = u8(arg);
-}
-
-// --- ams.StreamId..Hash
-inline u32 ams::StreamId_Hash(u32 prev, ams::StreamId rhs) {
-    prev = ProcId_Hash(prev, rhs.proc_id);
-    prev = StreamType_Hash(prev, rhs.stream_type);
-    prev = u8_Hash(prev, rhs.streamidx);
-    return prev;
-}
-
-// --- ams.StreamId..EqOp
-inline bool ams::StreamId::operator ==(const ams::StreamId &rhs) const {
-    return ams::StreamId_Eq(const_cast<ams::StreamId&>(*this),const_cast<ams::StreamId&>(rhs));
-}
-
-// --- ams.StreamId..NeOp
-inline bool ams::StreamId::operator !=(const ams::StreamId &rhs) const {
-    return !ams::StreamId_Eq(const_cast<ams::StreamId&>(*this),const_cast<ams::StreamId&>(rhs));
-}
-
-// --- ams.StreamId..Cmp
-inline i32 ams::StreamId_Cmp(ams::StreamId lhs, ams::StreamId rhs) {
-    i32 retval = 0;
-    retval = ams::ProcId_Cmp(lhs.proc_id, rhs.proc_id);
-    if (retval != 0) {
-        return retval;
-    }
-    retval = ams::StreamType_Cmp(lhs.stream_type, rhs.stream_type);
-    if (retval != 0) {
-        return retval;
-    }
-    retval = u8_Cmp(lhs.streamidx, rhs.streamidx);
-    return retval;
-}
-
-// --- ams.StreamId..Init
-// Set all fields to initial values.
-inline void ams::StreamId_Init(ams::StreamId& parent) {
-    parent.streamidx = u8(0);
-}
-
-// --- ams.StreamId..Eq
-inline bool ams::StreamId_Eq(ams::StreamId lhs, ams::StreamId rhs) {
-    bool retval = true;
-    retval = ams::ProcId_Eq(lhs.proc_id, rhs.proc_id);
-    if (!retval) {
-        return false;
-    }
-    retval = ams::StreamType_Eq(lhs.stream_type, rhs.stream_type);
-    if (!retval) {
-        return false;
-    }
-    retval = u8_Eq(lhs.streamidx, rhs.streamidx);
-    return retval;
-}
-
-// --- ams.StreamId..Ctor
-inline  ams::StreamId::StreamId() {
-    ams::StreamId_Init(*this);
-}
-
-// --- ams.StreamId..FieldwiseCtor
-inline  ams::StreamId::StreamId(ams::ProcId in_proc_id, ams::StreamType in_stream_type, u8 in_streamidx)
-    : proc_id(in_proc_id)
-    , stream_type(in_stream_type)
-    , streamidx(in_streamidx)
- {
-}
-
-// --- ams.DfltStream.base.Castdown
-// Check if ams::MsgHeader is an instance of DfltStream by checking the type field
-// If it is, return the pointer of target type.
-// Additionally, check if the length field permits valid instance of DfltStream.
-// If not successful, quietly return NULL.
-inline ams::DfltStream* ams::DfltStream_Castdown(ams::MsgHeader &hdr) {
-    bool cond = hdr.type == (21);
-    cond &= i32(hdr.length) >= ssizeof(ams::DfltStream);
-    return cond ? reinterpret_cast<ams::DfltStream*>(&hdr) : NULL;
-}
-
-// --- ams.DfltStream.base.Castbase
-inline ams::MsgHeader& ams::Castbase(ams::DfltStream& parent) {
-    return reinterpret_cast<ams::MsgHeader&>(parent);
-}
-
-// --- ams.DfltStream..GetMsgLength
-// Message length (uses length field)
-inline i32 ams::GetMsgLength(const ams::DfltStream& parent) {
-    return i32(const_cast<ams::DfltStream&>(parent).length);
-}
-
-// --- ams.DfltStream..GetMsgMemptr
-// Memptr encompassing the message (uses length field)
-inline algo::memptr ams::GetMsgMemptr(const ams::DfltStream& row) {
-    return algo::memptr((u8*)&row, i32(const_cast<ams::DfltStream&>(row).length));
-}
-
-// --- ams.DfltStream..Init
-// Set all fields to initial values.
-inline void ams::DfltStream_Init(ams::DfltStream& parent) {
-    parent.type = u32(21);
-    parent.length = u32(ssizeof(parent) + (0));
-}
-
-// --- ams.DfltStream..Ctor
-inline  ams::DfltStream::DfltStream() {
-    ams::DfltStream_Init(*this);
-}
-
-// --- ams.DfltStream..FieldwiseCtor
-inline  ams::DfltStream::DfltStream(ams::StreamId in_stream_id)
-    : stream_id(in_stream_id)
- {
-    this->type = u32(21);
-    this->length = u32(ssizeof(*this) + (0));
-}
-
-// --- ams.DumpStreamTableMsg.base.Castdown
-// Check if ams::MsgHeader is an instance of DumpStreamTableMsg by checking the type field
-// If it is, return the pointer of target type.
-// Additionally, check if the length field permits valid instance of DumpStreamTableMsg.
-// If not successful, quietly return NULL.
-inline ams::DumpStreamTableMsg* ams::DumpStreamTableMsg_Castdown(ams::MsgHeader &hdr) {
-    bool cond = hdr.type == (12);
-    cond &= i32(hdr.length) >= ssizeof(ams::DumpStreamTableMsg);
-    return cond ? reinterpret_cast<ams::DumpStreamTableMsg*>(&hdr) : NULL;
-}
-
-// --- ams.DumpStreamTableMsg.base.Castbase
-inline ams::MsgHeader& ams::Castbase(ams::DumpStreamTableMsg& parent) {
-    return reinterpret_cast<ams::MsgHeader&>(parent);
-}
-
-// --- ams.DumpStreamTableMsg..GetMsgLength
-// Message length (uses length field)
-inline i32 ams::GetMsgLength(const ams::DumpStreamTableMsg& parent) {
-    return i32(const_cast<ams::DumpStreamTableMsg&>(parent).length);
-}
-
-// --- ams.DumpStreamTableMsg..GetMsgMemptr
-// Memptr encompassing the message (uses length field)
-inline algo::memptr ams::GetMsgMemptr(const ams::DumpStreamTableMsg& row) {
-    return algo::memptr((u8*)&row, i32(const_cast<ams::DumpStreamTableMsg&>(row).length));
-}
-
-// --- ams.DumpStreamTableMsg..Init
-// Set all fields to initial values.
-inline void ams::DumpStreamTableMsg_Init(ams::DumpStreamTableMsg& parent) {
-    parent.type = u32(12);
-    parent.length = u32(ssizeof(parent) + (0));
-}
-
-// --- ams.DumpStreamTableMsg..Ctor
-inline  ams::DumpStreamTableMsg::DumpStreamTableMsg() {
-    ams::DumpStreamTableMsg_Init(*this);
-}
-
-// --- ams.DumpStreamTableMsg..FieldwiseCtor
-inline  ams::DumpStreamTableMsg::DumpStreamTableMsg(ams::ProcId in_proc_id)
-    : proc_id(in_proc_id)
- {
-    this->type = u32(12);
-    this->length = u32(ssizeof(*this) + (0));
-}
-
 // --- ams.ExpectMsg.base.Castdown
 // Check if ams::MsgHeader is an instance of ExpectMsg by checking the type field
 // If it is, return the pointer of target type.
@@ -461,7 +53,7 @@ inline u32 ams::text_N(const ams::ExpectMsg& parent) {
 
 // --- ams.ExpectMsg.text_curs.Reset
 inline void ams::ExpectMsg_text_curs_Reset(ExpectMsg_text_curs &curs, ams::ExpectMsg &parent) {
-    curs.ptr = (u8*)&parent + sizeof(ams::ExpectMsg);
+    curs.ptr = (u8*)text_Addr(parent);
     curs.length = i32(parent.length) - sizeof(ams::ExpectMsg);
     curs.index = 0;
 }
@@ -551,52 +143,169 @@ inline  ams::FieldId::FieldId(ams_FieldIdEnum arg) {
     this->value = i32(arg);
 }
 
-// --- ams.HeartbeatMsg.base.Castdown
-// Check if ams::MsgHeader is an instance of HeartbeatMsg by checking the type field
-// If it is, return the pointer of target type.
-// Additionally, check if the length field permits valid instance of HeartbeatMsg.
-// If not successful, quietly return NULL.
-inline ams::HeartbeatMsg* ams::HeartbeatMsg_Castdown(ams::MsgHeader &hdr) {
-    bool cond = hdr.type == (16);
-    cond &= i32(hdr.length) >= ssizeof(ams::HeartbeatMsg);
-    return cond ? reinterpret_cast<ams::HeartbeatMsg*>(&hdr) : NULL;
+// --- ams.Proctype.value.GetEnum
+// Get value of field as enum type
+inline ams_ProctypeEnum ams::value_GetEnum(const ams::Proctype& parent) {
+    return ams_ProctypeEnum(parent.value);
 }
 
-// --- ams.HeartbeatMsg.base.Castbase
-inline ams::MsgHeader& ams::Castbase(ams::HeartbeatMsg& parent) {
-    return reinterpret_cast<ams::MsgHeader&>(parent);
+// --- ams.Proctype.value.SetEnum
+// Set value of field from enum type.
+inline void ams::value_SetEnum(ams::Proctype& parent, ams_ProctypeEnum rhs) {
+    parent.value = u8(rhs);
 }
 
-// --- ams.HeartbeatMsg..GetMsgLength
-// Message length (uses length field)
-inline i32 ams::GetMsgLength(const ams::HeartbeatMsg& parent) {
-    return i32(const_cast<ams::HeartbeatMsg&>(parent).length);
+// --- ams.Proctype..Hash
+inline u32 ams::Proctype_Hash(u32 prev, ams::Proctype rhs) {
+    prev = u8_Hash(prev, rhs.value);
+    return prev;
 }
 
-// --- ams.HeartbeatMsg..GetMsgMemptr
-// Memptr encompassing the message (uses length field)
-inline algo::memptr ams::GetMsgMemptr(const ams::HeartbeatMsg& row) {
-    return algo::memptr((u8*)&row, i32(const_cast<ams::HeartbeatMsg&>(row).length));
+// --- ams.Proctype..EqOp
+inline bool ams::Proctype::operator ==(const ams::Proctype &rhs) const {
+    return ams::Proctype_Eq(const_cast<ams::Proctype&>(*this),const_cast<ams::Proctype&>(rhs));
 }
 
-// --- ams.HeartbeatMsg..Init
+// --- ams.Proctype..NeOp
+inline bool ams::Proctype::operator !=(const ams::Proctype &rhs) const {
+    return !ams::Proctype_Eq(const_cast<ams::Proctype&>(*this),const_cast<ams::Proctype&>(rhs));
+}
+
+// --- ams.Proctype..Cmp
+inline i32 ams::Proctype_Cmp(ams::Proctype lhs, ams::Proctype rhs) {
+    i32 retval = 0;
+    retval = u8_Cmp(lhs.value, rhs.value);
+    return retval;
+}
+
+// --- ams.Proctype..Init
 // Set all fields to initial values.
-inline void ams::HeartbeatMsg_Init(ams::HeartbeatMsg& parent) {
-    parent.type = u32(16);
-    parent.length = u32(ssizeof(parent) + (0));
+inline void ams::Proctype_Init(ams::Proctype& parent) {
+    parent.value = u8(0);
 }
 
-// --- ams.HeartbeatMsg..Ctor
-inline  ams::HeartbeatMsg::HeartbeatMsg() {
-    ams::HeartbeatMsg_Init(*this);
+// --- ams.Proctype..Eq
+inline bool ams::Proctype_Eq(ams::Proctype lhs, ams::Proctype rhs) {
+    bool retval = true;
+    retval = u8_Eq(lhs.value, rhs.value);
+    return retval;
 }
 
-// --- ams.HeartbeatMsg..FieldwiseCtor
-inline  ams::HeartbeatMsg::HeartbeatMsg(algo::UnTime in_time)
-    : time(in_time)
+// --- ams.Proctype..EqEnum
+// define enum comparison operator to avoid ambiguity
+inline bool ams::Proctype::operator ==(ams_ProctypeEnum rhs) const {
+    return ams_ProctypeEnum(value) == rhs;
+}
+
+// --- ams.Proctype..Ctor
+inline  ams::Proctype::Proctype() {
+    ams::Proctype_Init(*this);
+}
+
+// --- ams.Proctype..FieldwiseCtor
+inline  ams::Proctype::Proctype(u8 in_value)
+    : value(in_value)
  {
-    this->type = u32(16);
-    this->length = u32(ssizeof(*this) + (0));
+}
+
+// --- ams.Proctype..EnumCtor
+inline  ams::Proctype::Proctype(ams_ProctypeEnum arg) {
+    this->value = u8(arg);
+}
+
+// --- ams.ProcId.proctype.Get
+// Retrieve bitfield from value of field value
+//    8 bits starting at bit 24.
+inline ams::Proctype ams::proctype_Get(const ams::ProcId& parent) {
+    return ams::Proctype((parent.value >> 24) & 0xff);
+}
+
+// --- ams.ProcId.proctype.Set
+// Set bitfield in value of field 'value'
+//    8 bits starting at bit 24.
+inline void ams::proctype_Set(ams::ProcId& parent, ams::Proctype rhs) {
+    u32 t1    = u32(0xff) << 24;
+    u32 t2    = (u32(rhs.value) & 0xff) << 24;
+    parent.value = u32((parent.value & ~t1) | t2);
+}
+
+// --- ams.ProcId.nodeidx.Get
+// Retrieve bitfield from value of field value
+//    8 bits starting at bit 8.
+inline u8 ams::nodeidx_Get(const ams::ProcId& parent) {
+    return u8((parent.value >> 8) & 0xff);
+}
+
+// --- ams.ProcId.nodeidx.Set
+// Set bitfield in value of field 'value'
+//    8 bits starting at bit 8.
+inline void ams::nodeidx_Set(ams::ProcId& parent, u8 rhs) {
+    u32 t1    = u32(0xff) << 8;
+    u32 t2    = (u32(rhs) & 0xff) << 8;
+    parent.value = u32((parent.value & ~t1) | t2);
+}
+
+// --- ams.ProcId.procidx.Get
+// Retrieve bitfield from value of field value
+//    4 bits starting at bit 0.
+inline u8 ams::procidx_Get(const ams::ProcId& parent) {
+    return u8((parent.value >> 0) & 0x0f);
+}
+
+// --- ams.ProcId.procidx.Set
+// Set bitfield in value of field 'value'
+//    4 bits starting at bit 0.
+inline void ams::procidx_Set(ams::ProcId& parent, u8 rhs) {
+    u32 t1    = u32(0x0f) << 0;
+    u32 t2    = (u32(rhs) & 0x0f) << 0;
+    parent.value = u32((parent.value & ~t1) | t2);
+}
+
+// --- ams.ProcId..Hash
+inline u32 ams::ProcId_Hash(u32 prev, ams::ProcId rhs) {
+    prev = u32_Hash(prev, rhs.value);
+    return prev;
+}
+
+// --- ams.ProcId..EqOp
+inline bool ams::ProcId::operator ==(const ams::ProcId &rhs) const {
+    return ams::ProcId_Eq(const_cast<ams::ProcId&>(*this),const_cast<ams::ProcId&>(rhs));
+}
+
+// --- ams.ProcId..NeOp
+inline bool ams::ProcId::operator !=(const ams::ProcId &rhs) const {
+    return !ams::ProcId_Eq(const_cast<ams::ProcId&>(*this),const_cast<ams::ProcId&>(rhs));
+}
+
+// --- ams.ProcId..Cmp
+inline i32 ams::ProcId_Cmp(ams::ProcId lhs, ams::ProcId rhs) {
+    i32 retval = 0;
+    retval = u32_Cmp(lhs.value, rhs.value);
+    return retval;
+}
+
+// --- ams.ProcId..Init
+// Set all fields to initial values.
+inline void ams::ProcId_Init(ams::ProcId& parent) {
+    parent.value = u32(0);
+}
+
+// --- ams.ProcId..Eq
+inline bool ams::ProcId_Eq(ams::ProcId lhs, ams::ProcId rhs) {
+    bool retval = true;
+    retval = u32_Eq(lhs.value, rhs.value);
+    return retval;
+}
+
+// --- ams.ProcId..Ctor
+inline  ams::ProcId::ProcId() {
+    ams::ProcId_Init(*this);
+}
+
+// --- ams.ProcId..FieldwiseCtor
+inline  ams::ProcId::ProcId(u32 in_value)
+    : value(in_value)
+ {
 }
 
 // --- ams.InputLineMsg.base.Castdown
@@ -625,7 +334,7 @@ inline u32 ams::payload_N(const ams::InputLineMsg& parent) {
 
 // --- ams.InputLineMsg.payload_curs.Reset
 inline void ams::InputLineMsg_payload_curs_Reset(InputLineMsg_payload_curs &curs, ams::InputLineMsg &parent) {
-    curs.ptr = (u8*)&parent + sizeof(ams::InputLineMsg);
+    curs.ptr = (u8*)payload_Addr(parent);
     curs.length = i32(parent.length) - sizeof(ams::InputLineMsg);
     curs.index = 0;
 }
@@ -676,6 +385,14 @@ inline  ams::InputLineMsg::InputLineMsg() {
     ams::InputLineMsg_Init(*this);
 }
 
+// --- ams.InputLineMsg..FieldwiseCtor
+inline  ams::InputLineMsg::InputLineMsg(ams::ProcId in_proc_id)
+    : proc_id(in_proc_id)
+ {
+    this->type = u32(22);
+    this->length = u32(ssizeof(*this) + (0));
+}
+
 // --- ams.LogMsg.base.Castdown
 // Check if ams::MsgHeader is an instance of LogMsg by checking the type field
 // If it is, return the pointer of target type.
@@ -692,18 +409,53 @@ inline ams::MsgHeader& ams::Castbase(ams::LogMsg& parent) {
     return reinterpret_cast<ams::MsgHeader&>(parent);
 }
 
+// --- ams.LogMsg.logcat.N
+// Return number of elements in varlen field
+inline u32 ams::logcat_N(const ams::LogMsg& parent) {
+    return u32((parent.logcat_end) / sizeof(char));
+}
+
 // --- ams.LogMsg.text.N
 // Return number of elements in varlen field
 inline u32 ams::text_N(const ams::LogMsg& parent) {
     u32 length = i32(((ams::LogMsg&)parent).length);
-    u32 extra_bytes = u32_Max(length,sizeof(ams::LogMsg)) - sizeof(ams::LogMsg); // avoid unsigned subtraction underflow
+    u32 extra_bytes = u32_Max(length,sizeof(ams::LogMsg)) - sizeof(ams::LogMsg) - parent.logcat_end; // avoid unsigned subtraction underflow
     return u32(extra_bytes / sizeof(char));
+}
+
+// --- ams.LogMsg.logcat_curs.Reset
+inline void ams::LogMsg_logcat_curs_Reset(LogMsg_logcat_curs &curs, ams::LogMsg &parent) {
+    curs.ptr = (u8*)logcat_Addr(parent);
+    curs.length = parent.logcat_end;
+    curs.index = 0;
+}
+
+// --- ams.LogMsg.logcat_curs.ValidQ
+// cursor points to valid item
+inline bool ams::LogMsg_logcat_curs_ValidQ(LogMsg_logcat_curs &curs) {
+    bool valid = ssizeof(char) <= curs.length;
+    return valid;
+}
+
+// --- ams.LogMsg.logcat_curs.Next
+// proceed to next item
+inline void ams::LogMsg_logcat_curs_Next(LogMsg_logcat_curs &curs) {
+    i32 len = i32(sizeof(char));
+    curs.ptr += len;
+    curs.length -= len;
+    ++curs.index;
+}
+
+// --- ams.LogMsg.logcat_curs.Access
+// item access
+inline char& ams::LogMsg_logcat_curs_Access(LogMsg_logcat_curs &curs) {
+    return *(char*)curs.ptr;
 }
 
 // --- ams.LogMsg.text_curs.Reset
 inline void ams::LogMsg_text_curs_Reset(LogMsg_text_curs &curs, ams::LogMsg &parent) {
-    curs.ptr = (u8*)&parent + sizeof(ams::LogMsg);
-    curs.length = i32(parent.length) - sizeof(ams::LogMsg);
+    curs.ptr = (u8*)text_Addr(parent);
+    curs.length = i32(parent.length) - parent.logcat_end - sizeof(ams::LogMsg);
     curs.index = 0;
 }
 
@@ -746,6 +498,7 @@ inline algo::memptr ams::GetMsgMemptr(const ams::LogMsg& row) {
 inline void ams::LogMsg_Init(ams::LogMsg& parent) {
     parent.type = u32(6);
     parent.length = u32(ssizeof(parent) + (0));
+    parent.logcat_end = u32(0); // logcat: initialize
 }
 
 // --- ams.LogMsg..Ctor
@@ -754,91 +507,12 @@ inline  ams::LogMsg::LogMsg() {
 }
 
 // --- ams.LogMsg..FieldwiseCtor
-inline  ams::LogMsg::LogMsg(const algo::strptr& in_logcat, algo::SchedTime in_tstamp)
-    : logcat(in_logcat)
+inline  ams::LogMsg::LogMsg(ams::ProcId in_proc_id, algo::SchedTime in_tstamp)
+    : proc_id(in_proc_id)
     , tstamp(in_tstamp)
  {
     this->type = u32(6);
     this->length = u32(ssizeof(*this) + (0));
-}
-
-// --- ams.Member.mode.GetEnum
-// Get value of field as enum type
-inline ams_Member_mode_Enum ams::mode_GetEnum(const ams::Member& parent) {
-    return ams_Member_mode_Enum(parent.mode);
-}
-
-// --- ams.Member.mode.SetEnum
-// Set value of field from enum type.
-inline void ams::mode_SetEnum(ams::Member& parent, ams_Member_mode_Enum rhs) {
-    parent.mode = u8(rhs);
-}
-
-// --- ams.Member..Hash
-inline u32 ams::Member_Hash(u32 prev, ams::Member rhs) {
-    prev = ProcId_Hash(prev, rhs.proc_id);
-    prev = StreamId_Hash(prev, rhs.stream_id);
-    prev = u8_Hash(prev, rhs.mode);
-    return prev;
-}
-
-// --- ams.Member..EqOp
-inline bool ams::Member::operator ==(const ams::Member &rhs) const {
-    return ams::Member_Eq(const_cast<ams::Member&>(*this),const_cast<ams::Member&>(rhs));
-}
-
-// --- ams.Member..NeOp
-inline bool ams::Member::operator !=(const ams::Member &rhs) const {
-    return !ams::Member_Eq(const_cast<ams::Member&>(*this),const_cast<ams::Member&>(rhs));
-}
-
-// --- ams.Member..Cmp
-inline i32 ams::Member_Cmp(ams::Member lhs, ams::Member rhs) {
-    i32 retval = 0;
-    retval = ams::ProcId_Cmp(lhs.proc_id, rhs.proc_id);
-    if (retval != 0) {
-        return retval;
-    }
-    retval = ams::StreamId_Cmp(lhs.stream_id, rhs.stream_id);
-    if (retval != 0) {
-        return retval;
-    }
-    retval = u8_Cmp(lhs.mode, rhs.mode);
-    return retval;
-}
-
-// --- ams.Member..Init
-// Set all fields to initial values.
-inline void ams::Member_Init(ams::Member& parent) {
-    parent.mode = u8(0);
-}
-
-// --- ams.Member..Eq
-inline bool ams::Member_Eq(ams::Member lhs, ams::Member rhs) {
-    bool retval = true;
-    retval = ams::ProcId_Eq(lhs.proc_id, rhs.proc_id);
-    if (!retval) {
-        return false;
-    }
-    retval = ams::StreamId_Eq(lhs.stream_id, rhs.stream_id);
-    if (!retval) {
-        return false;
-    }
-    retval = u8_Eq(lhs.mode, rhs.mode);
-    return retval;
-}
-
-// --- ams.Member..Ctor
-inline  ams::Member::Member() {
-    ams::Member_Init(*this);
-}
-
-// --- ams.Member..FieldwiseCtor
-inline  ams::Member::Member(ams::ProcId in_proc_id, ams::StreamId in_stream_id, u8 in_mode)
-    : proc_id(in_proc_id)
-    , stream_id(in_stream_id)
-    , mode(in_mode)
- {
 }
 
 // --- ams.MsgBlock.header.Castdown
@@ -867,7 +541,7 @@ inline u32 ams::messages_N(const ams::MsgBlock& parent) {
 
 // --- ams.MsgBlock.messages_curs.Reset
 inline void ams::MsgBlock_messages_curs_Reset(MsgBlock_messages_curs &curs, ams::MsgBlock &parent) {
-    curs.ptr = (u8*)&parent + sizeof(ams::MsgBlock);
+    curs.ptr = (u8*)messages_Addr(parent);
     curs.length = i32(parent.length) - sizeof(ams::MsgBlock);
     curs.index = 0;
 }
@@ -923,14 +597,14 @@ inline  ams::MsgBlock::MsgBlock() {
 
 // --- ams.MsgHeader.type.GetEnum
 // Get value of field as enum type
-inline ams_MsgHeader_type_Enum ams::type_GetEnum(const ams::MsgHeader& data) {
-    return ams_MsgHeader_type_Enum(data.type);
+inline ams_MsgHeader_type_Enum ams::type_GetEnum(const ams::MsgHeader& payload) {
+    return ams_MsgHeader_type_Enum(payload.type);
 }
 
 // --- ams.MsgHeader.type.SetEnum
 // Set value of field from enum type.
-inline void ams::type_SetEnum(ams::MsgHeader& data, ams_MsgHeader_type_Enum rhs) {
-    data.type = u32(rhs);
+inline void ams::type_SetEnum(ams::MsgHeader& payload, ams_MsgHeader_type_Enum rhs) {
+    payload.type = u32(rhs);
 }
 
 // --- ams.MsgHeader..GetMsgLength
@@ -947,9 +621,9 @@ inline algo::memptr ams::GetMsgMemptr(const ams::MsgHeader& row) {
 
 // --- ams.MsgHeader..Init
 // Set all fields to initial values.
-inline void ams::MsgHeader_Init(ams::MsgHeader& data) {
-    data.type = u32(0);
-    data.length = u32(0);
+inline void ams::MsgHeader_Init(ams::MsgHeader& payload) {
+    payload.type = u32(0);
+    payload.length = u32(0);
 }
 
 // --- ams.MsgHeader..Ctor
@@ -1061,575 +735,936 @@ inline  ams::MsgHeader_curs::MsgHeader_curs() {
     ams::MsgHeader_curs_Init(*this);
 }
 
-// --- ams.StreamPos..Init
-// Set all fields to initial values.
-inline void ams::StreamPos_Init(ams::StreamPos& parent) {
-    parent.seq = u64(1);
-    parent.off = u64(0);
-}
-
-// --- ams.StreamPos..Ctor
-inline  ams::StreamPos::StreamPos() {
-    ams::StreamPos_Init(*this);
-}
-
-// --- ams.StreamPos..FieldwiseCtor
-inline  ams::StreamPos::StreamPos(u64 in_seq, u64 in_off)
-    : seq(in_seq)
-    , off(in_off)
- {
-}
-
-// --- ams.OpenMsg.base.Castdown
-// Check if ams::MsgHeader is an instance of OpenMsg by checking the type field
+// --- ams.ProcEofMsg.base.Castdown
+// Check if ams::MsgHeader is an instance of ProcEofMsg by checking the type field
 // If it is, return the pointer of target type.
-// Additionally, check if the length field permits valid instance of OpenMsg.
+// Additionally, check if the length field permits valid instance of ProcEofMsg.
 // If not successful, quietly return NULL.
-inline ams::OpenMsg* ams::OpenMsg_Castdown(ams::MsgHeader &hdr) {
-    bool cond = hdr.type == (7);
-    cond &= i32(hdr.length) >= ssizeof(ams::OpenMsg);
-    return cond ? reinterpret_cast<ams::OpenMsg*>(&hdr) : NULL;
+inline ams::ProcEofMsg* ams::ProcEofMsg_Castdown(ams::MsgHeader &hdr) {
+    bool cond = hdr.type == (703);
+    cond &= i32(hdr.length) >= ssizeof(ams::ProcEofMsg);
+    return cond ? reinterpret_cast<ams::ProcEofMsg*>(&hdr) : NULL;
 }
 
-// --- ams.OpenMsg.base.Castbase
-inline ams::MsgHeader& ams::Castbase(ams::OpenMsg& parent) {
+// --- ams.ProcEofMsg.base.Castbase
+inline ams::MsgHeader& ams::Castbase(ams::ProcEofMsg& parent) {
     return reinterpret_cast<ams::MsgHeader&>(parent);
 }
 
-// --- ams.OpenMsg..GetMsgLength
+// --- ams.ProcEofMsg..GetMsgLength
 // Message length (uses length field)
-inline i32 ams::GetMsgLength(const ams::OpenMsg& parent) {
-    return i32(const_cast<ams::OpenMsg&>(parent).length);
+inline i32 ams::GetMsgLength(const ams::ProcEofMsg& parent) {
+    return i32(const_cast<ams::ProcEofMsg&>(parent).length);
 }
 
-// --- ams.OpenMsg..GetMsgMemptr
+// --- ams.ProcEofMsg..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr ams::GetMsgMemptr(const ams::OpenMsg& row) {
-    return algo::memptr((u8*)&row, i32(const_cast<ams::OpenMsg&>(row).length));
+inline algo::memptr ams::GetMsgMemptr(const ams::ProcEofMsg& row) {
+    return algo::memptr((u8*)&row, i32(const_cast<ams::ProcEofMsg&>(row).length));
 }
 
-// --- ams.OpenMsg..Init
+// --- ams.ProcEofMsg..Init
 // Set all fields to initial values.
-inline void ams::OpenMsg_Init(ams::OpenMsg& parent) {
-    parent.type = u32(7);
+inline void ams::ProcEofMsg_Init(ams::ProcEofMsg& parent) {
+    parent.type = u32(703);
     parent.length = u32(ssizeof(parent) + (0));
 }
 
-// --- ams.OpenMsg..Ctor
-inline  ams::OpenMsg::OpenMsg() {
-    ams::OpenMsg_Init(*this);
+// --- ams.ProcEofMsg..Ctor
+inline  ams::ProcEofMsg::ProcEofMsg() {
+    ams::ProcEofMsg_Init(*this);
 }
 
-// --- ams.OpenMsg..FieldwiseCtor
-inline  ams::OpenMsg::OpenMsg(ams::Member in_member, ams::StreamPos in_pos)
-    : member(in_member)
-    , pos(in_pos)
- {
-    this->type = u32(7);
-    this->length = u32(ssizeof(*this) + (0));
-}
-
-// --- ams.PrlogMsg.base.Castdown
-// Check if ams::MsgHeader is an instance of PrlogMsg by checking the type field
+// --- ams.ProcKillMsg.base.Castdown
+// Check if ams::MsgHeader is an instance of ProcKillMsg by checking the type field
 // If it is, return the pointer of target type.
-// Additionally, check if the length field permits valid instance of PrlogMsg.
+// Additionally, check if the length field permits valid instance of ProcKillMsg.
 // If not successful, quietly return NULL.
-inline ams::PrlogMsg* ams::PrlogMsg_Castdown(ams::MsgHeader &hdr) {
-    bool cond = hdr.type == (229);
-    cond &= i32(hdr.length) >= ssizeof(ams::PrlogMsg);
-    return cond ? reinterpret_cast<ams::PrlogMsg*>(&hdr) : NULL;
+inline ams::ProcKillMsg* ams::ProcKillMsg_Castdown(ams::MsgHeader &hdr) {
+    bool cond = hdr.type == (704);
+    cond &= i32(hdr.length) >= ssizeof(ams::ProcKillMsg);
+    return cond ? reinterpret_cast<ams::ProcKillMsg*>(&hdr) : NULL;
 }
 
-// --- ams.PrlogMsg.base.Castbase
-inline ams::MsgHeader& ams::Castbase(ams::PrlogMsg& parent) {
+// --- ams.ProcKillMsg.base.Castbase
+inline ams::MsgHeader& ams::Castbase(ams::ProcKillMsg& parent) {
     return reinterpret_cast<ams::MsgHeader&>(parent);
 }
 
-// --- ams.PrlogMsg.data.Get
-// Return pointer to optional last element (NULL if none)
-// The parent's length field is assumed to have already been checked for validity.
-// If the parent's lengthis too short to allow a full-sized data, return NULL.
-// Since the last element is itself variable-length, two more checks are applied:
-// If data's length field value is too short, return NULL.
-// If data's length field value extends past parent's allowed length, return NULL.
-inline ams::MsgHeader* ams::data_Get(ams::PrlogMsg& parent) {
-    i32 totlen = i32(parent.length);
-    u8 *end = (u8*)&parent + sizeof(ams::PrlogMsg);
-    ams::MsgHeader *ptr = (ams::MsgHeader*)end;
-    bool exists = ssizeof(ams::PrlogMsg) + sizeof_ams_MsgHeader <= totlen;
-    exists = exists && i32((*ptr).length) >= sizeof_ams_MsgHeader && ssizeof(ams::PrlogMsg) + i32((*ptr).length) <= totlen;
-    return exists ? ptr : NULL;
-}
-
-// --- ams.PrlogMsg..GetMsgLength
+// --- ams.ProcKillMsg..GetMsgLength
 // Message length (uses length field)
-inline i32 ams::GetMsgLength(const ams::PrlogMsg& parent) {
-    return i32(const_cast<ams::PrlogMsg&>(parent).length);
+inline i32 ams::GetMsgLength(const ams::ProcKillMsg& parent) {
+    return i32(const_cast<ams::ProcKillMsg&>(parent).length);
 }
 
-// --- ams.PrlogMsg..GetMsgMemptr
+// --- ams.ProcKillMsg..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr ams::GetMsgMemptr(const ams::PrlogMsg& row) {
-    return algo::memptr((u8*)&row, i32(const_cast<ams::PrlogMsg&>(row).length));
+inline algo::memptr ams::GetMsgMemptr(const ams::ProcKillMsg& row) {
+    return algo::memptr((u8*)&row, i32(const_cast<ams::ProcKillMsg&>(row).length));
 }
 
-// --- ams.PrlogMsg..Init
+// --- ams.ProcKillMsg..Init
 // Set all fields to initial values.
-inline void ams::PrlogMsg_Init(ams::PrlogMsg& parent) {
-    parent.type = u32(229);
+inline void ams::ProcKillMsg_Init(ams::ProcKillMsg& parent) {
+    parent.type = u32(704);
     parent.length = u32(ssizeof(parent) + (0));
+    parent.signal = i32(15);
 }
 
-// --- ams.PrlogMsg..Ctor
-inline  ams::PrlogMsg::PrlogMsg() {
-    ams::PrlogMsg_Init(*this);
+// --- ams.ProcKillMsg..Ctor
+inline  ams::ProcKillMsg::ProcKillMsg() {
+    ams::ProcKillMsg_Init(*this);
 }
 
-// --- ams.ProcAddMsg.base.Castdown
-// Check if ams::MsgHeader is an instance of ProcAddMsg by checking the type field
+// --- ams.ProcMsg.base.Castdown
+// Check if ams::MsgHeader is an instance of ProcMsg by checking the type field
 // If it is, return the pointer of target type.
-// Additionally, check if the length field permits valid instance of ProcAddMsg.
+// Additionally, check if the length field permits valid instance of ProcMsg.
 // If not successful, quietly return NULL.
-inline ams::ProcAddMsg* ams::ProcAddMsg_Castdown(ams::MsgHeader &hdr) {
-    bool cond = hdr.type == (4);
-    cond &= i32(hdr.length) >= ssizeof(ams::ProcAddMsg);
-    return cond ? reinterpret_cast<ams::ProcAddMsg*>(&hdr) : NULL;
+inline ams::ProcMsg* ams::ProcMsg_Castdown(ams::MsgHeader &hdr) {
+    bool cond = hdr.type == (701);
+    cond &= i32(hdr.length) >= ssizeof(ams::ProcMsg);
+    return cond ? reinterpret_cast<ams::ProcMsg*>(&hdr) : NULL;
 }
 
-// --- ams.ProcAddMsg.base.Castbase
-inline ams::MsgHeader& ams::Castbase(ams::ProcAddMsg& parent) {
+// --- ams.ProcMsg.base.Castbase
+inline ams::MsgHeader& ams::Castbase(ams::ProcMsg& parent) {
     return reinterpret_cast<ams::MsgHeader&>(parent);
 }
 
-// --- ams.ProcAddMsg..GetMsgLength
+// --- ams.ProcMsg.payload.N
+// Return number of elements in varlen field
+inline u32 ams::payload_N(const ams::ProcMsg& parent) {
+    u32 length = i32(((ams::ProcMsg&)parent).length);
+    u32 extra_bytes = u32_Max(length,sizeof(ams::ProcMsg)) - sizeof(ams::ProcMsg); // avoid unsigned subtraction underflow
+    return u32(extra_bytes / sizeof(char));
+}
+
+// --- ams.ProcMsg.payload_curs.Reset
+inline void ams::ProcMsg_payload_curs_Reset(ProcMsg_payload_curs &curs, ams::ProcMsg &parent) {
+    curs.ptr = (u8*)payload_Addr(parent);
+    curs.length = i32(parent.length) - sizeof(ams::ProcMsg);
+    curs.index = 0;
+}
+
+// --- ams.ProcMsg.payload_curs.ValidQ
+// cursor points to valid item
+inline bool ams::ProcMsg_payload_curs_ValidQ(ProcMsg_payload_curs &curs) {
+    bool valid = ssizeof(char) <= curs.length;
+    return valid;
+}
+
+// --- ams.ProcMsg.payload_curs.Next
+// proceed to next item
+inline void ams::ProcMsg_payload_curs_Next(ProcMsg_payload_curs &curs) {
+    i32 len = i32(sizeof(char));
+    curs.ptr += len;
+    curs.length -= len;
+    ++curs.index;
+}
+
+// --- ams.ProcMsg.payload_curs.Access
+// item access
+inline char& ams::ProcMsg_payload_curs_Access(ProcMsg_payload_curs &curs) {
+    return *(char*)curs.ptr;
+}
+
+// --- ams.ProcMsg..GetMsgLength
 // Message length (uses length field)
-inline i32 ams::GetMsgLength(const ams::ProcAddMsg& parent) {
-    return i32(const_cast<ams::ProcAddMsg&>(parent).length);
+inline i32 ams::GetMsgLength(const ams::ProcMsg& parent) {
+    return i32(const_cast<ams::ProcMsg&>(parent).length);
 }
 
-// --- ams.ProcAddMsg..GetMsgMemptr
+// --- ams.ProcMsg..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr ams::GetMsgMemptr(const ams::ProcAddMsg& row) {
-    return algo::memptr((u8*)&row, i32(const_cast<ams::ProcAddMsg&>(row).length));
+inline algo::memptr ams::GetMsgMemptr(const ams::ProcMsg& row) {
+    return algo::memptr((u8*)&row, i32(const_cast<ams::ProcMsg&>(row).length));
 }
 
-// --- ams.ProcAddMsg..Init
+// --- ams.ProcMsg..Init
 // Set all fields to initial values.
-inline void ams::ProcAddMsg_Init(ams::ProcAddMsg& parent) {
-    parent.type = u32(4);
+inline void ams::ProcMsg_Init(ams::ProcMsg& parent) {
+    parent.type = u32(701);
     parent.length = u32(ssizeof(parent) + (0));
 }
 
-// --- ams.ProcAddMsg..Ctor
-inline  ams::ProcAddMsg::ProcAddMsg() {
-    ams::ProcAddMsg_Init(*this);
+// --- ams.ProcMsg..Ctor
+inline  ams::ProcMsg::ProcMsg() {
+    ams::ProcMsg_Init(*this);
 }
 
-// --- ams.ProcAddMsg..FieldwiseCtor
-inline  ams::ProcAddMsg::ProcAddMsg(ams::ProcId in_proc_id)
-    : proc_id(in_proc_id)
- {
-    this->type = u32(4);
-    this->length = u32(ssizeof(*this) + (0));
-}
-
-// --- ams.ProcRemoveMsg.base.Castdown
-// Check if ams::MsgHeader is an instance of ProcRemoveMsg by checking the type field
+// --- ams.ProcReadMsg.base.Castdown
+// Check if ams::MsgHeader is an instance of ProcReadMsg by checking the type field
 // If it is, return the pointer of target type.
-// Additionally, check if the length field permits valid instance of ProcRemoveMsg.
+// Additionally, check if the length field permits valid instance of ProcReadMsg.
 // If not successful, quietly return NULL.
-inline ams::ProcRemoveMsg* ams::ProcRemoveMsg_Castdown(ams::MsgHeader &hdr) {
-    bool cond = hdr.type == (5);
-    cond &= i32(hdr.length) >= ssizeof(ams::ProcRemoveMsg);
-    return cond ? reinterpret_cast<ams::ProcRemoveMsg*>(&hdr) : NULL;
+inline ams::ProcReadMsg* ams::ProcReadMsg_Castdown(ams::MsgHeader &hdr) {
+    bool cond = hdr.type == (702);
+    cond &= i32(hdr.length) >= ssizeof(ams::ProcReadMsg);
+    return cond ? reinterpret_cast<ams::ProcReadMsg*>(&hdr) : NULL;
 }
 
-// --- ams.ProcRemoveMsg.base.Castbase
-inline ams::MsgHeader& ams::Castbase(ams::ProcRemoveMsg& parent) {
+// --- ams.ProcReadMsg.base.Castbase
+inline ams::MsgHeader& ams::Castbase(ams::ProcReadMsg& parent) {
     return reinterpret_cast<ams::MsgHeader&>(parent);
 }
 
-// --- ams.ProcRemoveMsg..GetMsgLength
+// --- ams.ProcReadMsg.until.N
+// Return number of elements in varlen field
+inline u32 ams::until_N(const ams::ProcReadMsg& parent) {
+    u32 length = i32(((ams::ProcReadMsg&)parent).length);
+    u32 extra_bytes = u32_Max(length,sizeof(ams::ProcReadMsg)) - sizeof(ams::ProcReadMsg); // avoid unsigned subtraction underflow
+    return u32(extra_bytes / sizeof(char));
+}
+
+// --- ams.ProcReadMsg.until_curs.Reset
+inline void ams::ProcReadMsg_until_curs_Reset(ProcReadMsg_until_curs &curs, ams::ProcReadMsg &parent) {
+    curs.ptr = (u8*)until_Addr(parent);
+    curs.length = i32(parent.length) - sizeof(ams::ProcReadMsg);
+    curs.index = 0;
+}
+
+// --- ams.ProcReadMsg.until_curs.ValidQ
+// cursor points to valid item
+inline bool ams::ProcReadMsg_until_curs_ValidQ(ProcReadMsg_until_curs &curs) {
+    bool valid = ssizeof(char) <= curs.length;
+    return valid;
+}
+
+// --- ams.ProcReadMsg.until_curs.Next
+// proceed to next item
+inline void ams::ProcReadMsg_until_curs_Next(ProcReadMsg_until_curs &curs) {
+    i32 len = i32(sizeof(char));
+    curs.ptr += len;
+    curs.length -= len;
+    ++curs.index;
+}
+
+// --- ams.ProcReadMsg.until_curs.Access
+// item access
+inline char& ams::ProcReadMsg_until_curs_Access(ProcReadMsg_until_curs &curs) {
+    return *(char*)curs.ptr;
+}
+
+// --- ams.ProcReadMsg..GetMsgLength
 // Message length (uses length field)
-inline i32 ams::GetMsgLength(const ams::ProcRemoveMsg& parent) {
-    return i32(const_cast<ams::ProcRemoveMsg&>(parent).length);
+inline i32 ams::GetMsgLength(const ams::ProcReadMsg& parent) {
+    return i32(const_cast<ams::ProcReadMsg&>(parent).length);
 }
 
-// --- ams.ProcRemoveMsg..GetMsgMemptr
+// --- ams.ProcReadMsg..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr ams::GetMsgMemptr(const ams::ProcRemoveMsg& row) {
-    return algo::memptr((u8*)&row, i32(const_cast<ams::ProcRemoveMsg&>(row).length));
+inline algo::memptr ams::GetMsgMemptr(const ams::ProcReadMsg& row) {
+    return algo::memptr((u8*)&row, i32(const_cast<ams::ProcReadMsg&>(row).length));
 }
 
-// --- ams.ProcRemoveMsg..Init
+// --- ams.ProcReadMsg..Init
 // Set all fields to initial values.
-inline void ams::ProcRemoveMsg_Init(ams::ProcRemoveMsg& parent) {
-    parent.type = u32(5);
+inline void ams::ProcReadMsg_Init(ams::ProcReadMsg& parent) {
+    parent.type = u32(702);
     parent.length = u32(ssizeof(parent) + (0));
 }
 
-// --- ams.ProcRemoveMsg..Ctor
-inline  ams::ProcRemoveMsg::ProcRemoveMsg() {
-    ams::ProcRemoveMsg_Init(*this);
+// --- ams.ProcReadMsg..Ctor
+inline  ams::ProcReadMsg::ProcReadMsg() {
+    ams::ProcReadMsg_Init(*this);
 }
 
-// --- ams.ProcRemoveMsg..FieldwiseCtor
-inline  ams::ProcRemoveMsg::ProcRemoveMsg(ams::ProcId in_proc_id)
-    : proc_id(in_proc_id)
- {
-    this->type = u32(5);
-    this->length = u32(ssizeof(*this) + (0));
-}
-
-// --- ams.SeqmsgId..Init
-// Set all fields to initial values.
-inline void ams::SeqmsgId_Init(ams::SeqmsgId& parent) {
-    parent.seq = u64(1);
-    parent.off = u32(0);
-}
-
-// --- ams.SeqmsgId..Ctor
-inline  ams::SeqmsgId::SeqmsgId() {
-    ams::SeqmsgId_Init(*this);
-}
-
-// --- ams.SeqmsgId..FieldwiseCtor
-inline  ams::SeqmsgId::SeqmsgId(ams::StreamId in_stream_id, u64 in_seq, u32 in_off)
-    : stream_id(in_stream_id)
-    , seq(in_seq)
-    , off(in_off)
- {
-}
-
-// --- ams.Seqmsg.base.Castdown
-// Check if ams::MsgHeader is an instance of Seqmsg by checking the type field
+// --- ams.ProcStartMsg.base.Castdown
+// Check if ams::MsgHeader is an instance of ProcStartMsg by checking the type field
 // If it is, return the pointer of target type.
-// Additionally, check if the length field permits valid instance of Seqmsg.
+// Additionally, check if the length field permits valid instance of ProcStartMsg.
 // If not successful, quietly return NULL.
-inline ams::Seqmsg* ams::Seqmsg_Castdown(ams::MsgHeader &hdr) {
-    bool cond = hdr.type == (10);
-    cond &= i32(hdr.length) >= ssizeof(ams::Seqmsg);
-    return cond ? reinterpret_cast<ams::Seqmsg*>(&hdr) : NULL;
+inline ams::ProcStartMsg* ams::ProcStartMsg_Castdown(ams::MsgHeader &hdr) {
+    bool cond = hdr.type == (700);
+    cond &= i32(hdr.length) >= ssizeof(ams::ProcStartMsg);
+    return cond ? reinterpret_cast<ams::ProcStartMsg*>(&hdr) : NULL;
 }
 
-// --- ams.Seqmsg.base.Castbase
-inline ams::MsgHeader& ams::Castbase(ams::Seqmsg& parent) {
+// --- ams.ProcStartMsg.base.Castbase
+inline ams::MsgHeader& ams::Castbase(ams::ProcStartMsg& parent) {
     return reinterpret_cast<ams::MsgHeader&>(parent);
 }
 
-// --- ams.Seqmsg.payload.Get
-// Return pointer to optional last element (NULL if none)
-// The parent's length field is assumed to have already been checked for validity.
-// If the parent's lengthis too short to allow a full-sized payload, return NULL.
-// Since the last element is itself variable-length, two more checks are applied:
-// If payload's length field value is too short, return NULL.
-// If payload's length field value extends past parent's allowed length, return NULL.
-inline ams::MsgHeader* ams::payload_Get(ams::Seqmsg& parent) {
-    i32 totlen = i32(parent.length);
-    u8 *end = (u8*)&parent + sizeof(ams::Seqmsg);
-    ams::MsgHeader *ptr = (ams::MsgHeader*)end;
-    bool exists = ssizeof(ams::Seqmsg) + sizeof_ams_MsgHeader <= totlen;
-    exists = exists && i32((*ptr).length) >= sizeof_ams_MsgHeader && ssizeof(ams::Seqmsg) + i32((*ptr).length) <= totlen;
-    return exists ? ptr : NULL;
+// --- ams.ProcStartMsg.cmd.N
+// Return number of elements in varlen field
+inline u32 ams::cmd_N(const ams::ProcStartMsg& parent) {
+    u32 length = i32(((ams::ProcStartMsg&)parent).length);
+    u32 extra_bytes = u32_Max(length,sizeof(ams::ProcStartMsg)) - sizeof(ams::ProcStartMsg); // avoid unsigned subtraction underflow
+    return u32(extra_bytes / sizeof(char));
 }
 
-// --- ams.Seqmsg..GetMsgLength
+// --- ams.ProcStartMsg.cmd_curs.Reset
+inline void ams::ProcStartMsg_cmd_curs_Reset(ProcStartMsg_cmd_curs &curs, ams::ProcStartMsg &parent) {
+    curs.ptr = (u8*)cmd_Addr(parent);
+    curs.length = i32(parent.length) - sizeof(ams::ProcStartMsg);
+    curs.index = 0;
+}
+
+// --- ams.ProcStartMsg.cmd_curs.ValidQ
+// cursor points to valid item
+inline bool ams::ProcStartMsg_cmd_curs_ValidQ(ProcStartMsg_cmd_curs &curs) {
+    bool valid = ssizeof(char) <= curs.length;
+    return valid;
+}
+
+// --- ams.ProcStartMsg.cmd_curs.Next
+// proceed to next item
+inline void ams::ProcStartMsg_cmd_curs_Next(ProcStartMsg_cmd_curs &curs) {
+    i32 len = i32(sizeof(char));
+    curs.ptr += len;
+    curs.length -= len;
+    ++curs.index;
+}
+
+// --- ams.ProcStartMsg.cmd_curs.Access
+// item access
+inline char& ams::ProcStartMsg_cmd_curs_Access(ProcStartMsg_cmd_curs &curs) {
+    return *(char*)curs.ptr;
+}
+
+// --- ams.ProcStartMsg..GetMsgLength
 // Message length (uses length field)
-inline i32 ams::GetMsgLength(const ams::Seqmsg& parent) {
-    return i32(const_cast<ams::Seqmsg&>(parent).length);
+inline i32 ams::GetMsgLength(const ams::ProcStartMsg& parent) {
+    return i32(const_cast<ams::ProcStartMsg&>(parent).length);
 }
 
-// --- ams.Seqmsg..GetMsgMemptr
+// --- ams.ProcStartMsg..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr ams::GetMsgMemptr(const ams::Seqmsg& row) {
-    return algo::memptr((u8*)&row, i32(const_cast<ams::Seqmsg&>(row).length));
+inline algo::memptr ams::GetMsgMemptr(const ams::ProcStartMsg& row) {
+    return algo::memptr((u8*)&row, i32(const_cast<ams::ProcStartMsg&>(row).length));
 }
 
-// --- ams.Seqmsg..Init
+// --- ams.ProcStartMsg..Init
 // Set all fields to initial values.
-inline void ams::Seqmsg_Init(ams::Seqmsg& parent) {
-    parent.type = u32(10);
+inline void ams::ProcStartMsg_Init(ams::ProcStartMsg& parent) {
+    parent.type = u32(700);
     parent.length = u32(ssizeof(parent) + (0));
-    parent.tsc = u64(0);
+    parent.pty = bool(false);
 }
 
-// --- ams.Seqmsg..Ctor
-inline  ams::Seqmsg::Seqmsg() {
-    ams::Seqmsg_Init(*this);
+// --- ams.ProcStartMsg..Ctor
+inline  ams::ProcStartMsg::ProcStartMsg() {
+    ams::ProcStartMsg_Init(*this);
 }
 
-// --- ams.Seqmsg..FieldwiseCtor
-inline  ams::Seqmsg::Seqmsg(ams::SeqmsgId in_seqmsg_id, u64 in_tsc)
-    : seqmsg_id(in_seqmsg_id)
-    , tsc(in_tsc)
- {
-    this->type = u32(10);
-    this->length = u32(ssizeof(*this) + (0));
-}
-
-// --- ams.SeqmsgTrace.base.Castdown
-// Check if ams::MsgHeader is an instance of SeqmsgTrace by checking the type field
+// --- ams.ProcStatusMsg.base.Castdown
+// Check if ams::MsgHeader is an instance of ProcStatusMsg by checking the type field
 // If it is, return the pointer of target type.
-// Additionally, check if the length field permits valid instance of SeqmsgTrace.
+// Additionally, check if the length field permits valid instance of ProcStatusMsg.
 // If not successful, quietly return NULL.
-inline ams::SeqmsgTrace* ams::SeqmsgTrace_Castdown(ams::MsgHeader &hdr) {
-    bool cond = hdr.type == (11);
-    cond &= i32(hdr.length) >= ssizeof(ams::SeqmsgTrace);
-    return cond ? reinterpret_cast<ams::SeqmsgTrace*>(&hdr) : NULL;
+inline ams::ProcStatusMsg* ams::ProcStatusMsg_Castdown(ams::MsgHeader &hdr) {
+    bool cond = hdr.type == (705);
+    cond &= i32(hdr.length) >= ssizeof(ams::ProcStatusMsg);
+    return cond ? reinterpret_cast<ams::ProcStatusMsg*>(&hdr) : NULL;
 }
 
-// --- ams.SeqmsgTrace.base.Castbase
-inline ams::MsgHeader& ams::Castbase(ams::SeqmsgTrace& parent) {
+// --- ams.ProcStatusMsg.base.Castbase
+inline ams::MsgHeader& ams::Castbase(ams::ProcStatusMsg& parent) {
     return reinterpret_cast<ams::MsgHeader&>(parent);
 }
 
-// --- ams.SeqmsgTrace.mode.GetEnum
-// Get value of field as enum type
-inline ams_SeqmsgTrace_mode_Enum ams::mode_GetEnum(const ams::SeqmsgTrace& parent) {
-    return ams_SeqmsgTrace_mode_Enum(parent.mode);
-}
-
-// --- ams.SeqmsgTrace.mode.SetEnum
-// Set value of field from enum type.
-inline void ams::mode_SetEnum(ams::SeqmsgTrace& parent, ams_SeqmsgTrace_mode_Enum rhs) {
-    parent.mode = u8(rhs);
-}
-
-// --- ams.SeqmsgTrace.payload.Get
-// Return pointer to optional last element (NULL if none)
-// The parent's length field is assumed to have already been checked for validity.
-// If the parent's lengthis too short to allow a full-sized payload, return NULL.
-// Since the last element is itself variable-length, two more checks are applied:
-// If payload's length field value is too short, return NULL.
-// If payload's length field value extends past parent's allowed length, return NULL.
-inline ams::MsgHeader* ams::payload_Get(ams::SeqmsgTrace& parent) {
-    i32 totlen = i32(parent.length);
-    u8 *end = (u8*)&parent + sizeof(ams::SeqmsgTrace);
-    ams::MsgHeader *ptr = (ams::MsgHeader*)end;
-    bool exists = ssizeof(ams::SeqmsgTrace) + sizeof_ams_MsgHeader <= totlen;
-    exists = exists && i32((*ptr).length) >= sizeof_ams_MsgHeader && ssizeof(ams::SeqmsgTrace) + i32((*ptr).length) <= totlen;
-    return exists ? ptr : NULL;
-}
-
-// --- ams.SeqmsgTrace..GetMsgLength
+// --- ams.ProcStatusMsg..GetMsgLength
 // Message length (uses length field)
-inline i32 ams::GetMsgLength(const ams::SeqmsgTrace& parent) {
-    return i32(const_cast<ams::SeqmsgTrace&>(parent).length);
+inline i32 ams::GetMsgLength(const ams::ProcStatusMsg& parent) {
+    return i32(const_cast<ams::ProcStatusMsg&>(parent).length);
 }
 
-// --- ams.SeqmsgTrace..GetMsgMemptr
+// --- ams.ProcStatusMsg..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr ams::GetMsgMemptr(const ams::SeqmsgTrace& row) {
-    return algo::memptr((u8*)&row, i32(const_cast<ams::SeqmsgTrace&>(row).length));
+inline algo::memptr ams::GetMsgMemptr(const ams::ProcStatusMsg& row) {
+    return algo::memptr((u8*)&row, i32(const_cast<ams::ProcStatusMsg&>(row).length));
 }
 
-// --- ams.SeqmsgTrace..Init
+// --- ams.ProcStatusMsg..Init
 // Set all fields to initial values.
-inline void ams::SeqmsgTrace_Init(ams::SeqmsgTrace& parent) {
-    parent.type = u32(11);
+inline void ams::ProcStatusMsg_Init(ams::ProcStatusMsg& parent) {
+    parent.type = u32(705);
     parent.length = u32(ssizeof(parent) + (0));
-    parent.mode = u8(0);
-    parent.tsc = u64(0);
 }
 
-// --- ams.SeqmsgTrace..Ctor
-inline  ams::SeqmsgTrace::SeqmsgTrace() {
-    ams::SeqmsgTrace_Init(*this);
+// --- ams.ProcStatusMsg..Ctor
+inline  ams::ProcStatusMsg::ProcStatusMsg() {
+    ams::ProcStatusMsg_Init(*this);
 }
 
-// --- ams.SeqmsgTrace..FieldwiseCtor
-inline  ams::SeqmsgTrace::SeqmsgTrace(ams::ProcId in_proc_id, u8 in_mode, ams::SeqmsgId in_seqmsg_id, u64 in_tsc)
-    : proc_id(in_proc_id)
-    , mode(in_mode)
-    , seqmsg_id(in_seqmsg_id)
-    , tsc(in_tsc)
- {
-    this->type = u32(11);
-    this->length = u32(ssizeof(*this) + (0));
+// --- ams.RemDirRecurseMsg.base.Castdown
+// Check if ams::MsgHeader is an instance of RemDirRecurseMsg by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of RemDirRecurseMsg.
+// If not successful, quietly return NULL.
+inline ams::RemDirRecurseMsg* ams::RemDirRecurseMsg_Castdown(ams::MsgHeader &hdr) {
+    bool cond = hdr.type == (633);
+    cond &= i32(hdr.length) >= ssizeof(ams::RemDirRecurseMsg);
+    return cond ? reinterpret_cast<ams::RemDirRecurseMsg*>(&hdr) : NULL;
 }
 
-// --- ams.StreamFlags.write.Get
+// --- ams.RemDirRecurseMsg.base.Castbase
+inline ams::MsgHeader& ams::Castbase(ams::RemDirRecurseMsg& parent) {
+    return reinterpret_cast<ams::MsgHeader&>(parent);
+}
+
+// --- ams.RemDirRecurseMsg.pathname.N
+// Return number of elements in varlen field
+inline u32 ams::pathname_N(const ams::RemDirRecurseMsg& parent) {
+    u32 length = i32(((ams::RemDirRecurseMsg&)parent).length);
+    u32 extra_bytes = u32_Max(length,sizeof(ams::RemDirRecurseMsg)) - sizeof(ams::RemDirRecurseMsg); // avoid unsigned subtraction underflow
+    return u32(extra_bytes / sizeof(char));
+}
+
+// --- ams.RemDirRecurseMsg.pathname_curs.Reset
+inline void ams::RemDirRecurseMsg_pathname_curs_Reset(RemDirRecurseMsg_pathname_curs &curs, ams::RemDirRecurseMsg &parent) {
+    curs.ptr = (u8*)pathname_Addr(parent);
+    curs.length = i32(parent.length) - sizeof(ams::RemDirRecurseMsg);
+    curs.index = 0;
+}
+
+// --- ams.RemDirRecurseMsg.pathname_curs.ValidQ
+// cursor points to valid item
+inline bool ams::RemDirRecurseMsg_pathname_curs_ValidQ(RemDirRecurseMsg_pathname_curs &curs) {
+    bool valid = ssizeof(char) <= curs.length;
+    return valid;
+}
+
+// --- ams.RemDirRecurseMsg.pathname_curs.Next
+// proceed to next item
+inline void ams::RemDirRecurseMsg_pathname_curs_Next(RemDirRecurseMsg_pathname_curs &curs) {
+    i32 len = i32(sizeof(char));
+    curs.ptr += len;
+    curs.length -= len;
+    ++curs.index;
+}
+
+// --- ams.RemDirRecurseMsg.pathname_curs.Access
+// item access
+inline char& ams::RemDirRecurseMsg_pathname_curs_Access(RemDirRecurseMsg_pathname_curs &curs) {
+    return *(char*)curs.ptr;
+}
+
+// --- ams.RemDirRecurseMsg..GetMsgLength
+// Message length (uses length field)
+inline i32 ams::GetMsgLength(const ams::RemDirRecurseMsg& parent) {
+    return i32(const_cast<ams::RemDirRecurseMsg&>(parent).length);
+}
+
+// --- ams.RemDirRecurseMsg..GetMsgMemptr
+// Memptr encompassing the message (uses length field)
+inline algo::memptr ams::GetMsgMemptr(const ams::RemDirRecurseMsg& row) {
+    return algo::memptr((u8*)&row, i32(const_cast<ams::RemDirRecurseMsg&>(row).length));
+}
+
+// --- ams.RemDirRecurseMsg..Init
+// Set all fields to initial values.
+inline void ams::RemDirRecurseMsg_Init(ams::RemDirRecurseMsg& parent) {
+    parent.type = u32(633);
+    parent.length = u32(ssizeof(parent) + (0));
+    parent.remove_topmost = bool(false);
+}
+
+// --- ams.RemDirRecurseMsg..Ctor
+inline  ams::RemDirRecurseMsg::RemDirRecurseMsg() {
+    ams::RemDirRecurseMsg_Init(*this);
+}
+
+// --- ams.ShmFlags.write.Get
 // Retrieve bitfield from value of field value
 //    1 bits starting at bit 1.
-inline bool ams::write_Get(const ams::StreamFlags& parent) {
+inline bool ams::write_Get(const ams::ShmFlags& parent) {
     return bool((parent.value >> 1) & 0x01);
 }
 
-// --- ams.StreamFlags.write.Set
+// --- ams.ShmFlags.write.Set
 // Set bitfield in value of field 'value'
 //    1 bits starting at bit 1.
-inline void ams::write_Set(ams::StreamFlags& parent, bool rhs) {
+inline void ams::write_Set(ams::ShmFlags& parent, bool rhs) {
     u8 t1    = u8(0x01) << 1;
     u8 t2    = (u8(rhs) & 0x01) << 1;
     parent.value = u8((parent.value & ~t1) | t2);
 }
 
-// --- ams.StreamFlags.read.Get
+// --- ams.ShmFlags.read.Get
 // Retrieve bitfield from value of field value
 //    1 bits starting at bit 2.
-inline bool ams::read_Get(const ams::StreamFlags& parent) {
+inline bool ams::read_Get(const ams::ShmFlags& parent) {
     return bool((parent.value >> 2) & 0x01);
 }
 
-// --- ams.StreamFlags.read.Set
+// --- ams.ShmFlags.read.Set
 // Set bitfield in value of field 'value'
 //    1 bits starting at bit 2.
-inline void ams::read_Set(ams::StreamFlags& parent, bool rhs) {
+inline void ams::read_Set(ams::ShmFlags& parent, bool rhs) {
     u8 t1    = u8(0x01) << 2;
     u8 t2    = (u8(rhs) & 0x01) << 2;
     parent.value = u8((parent.value & ~t1) | t2);
 }
 
-// --- ams.StreamFlags.nonblock.Get
+// --- ams.ShmFlags.nonblock.Get
 // Retrieve bitfield from value of field value
 //    1 bits starting at bit 3.
-inline bool ams::nonblock_Get(const ams::StreamFlags& parent) {
+inline bool ams::nonblock_Get(const ams::ShmFlags& parent) {
     return bool((parent.value >> 3) & 0x01);
 }
 
-// --- ams.StreamFlags.nonblock.Set
+// --- ams.ShmFlags.nonblock.Set
 // Set bitfield in value of field 'value'
 //    1 bits starting at bit 3.
-inline void ams::nonblock_Set(ams::StreamFlags& parent, bool rhs) {
+inline void ams::nonblock_Set(ams::ShmFlags& parent, bool rhs) {
     u8 t1    = u8(0x01) << 3;
     u8 t2    = (u8(rhs) & 0x01) << 3;
     parent.value = u8((parent.value & ~t1) | t2);
 }
 
-// --- ams.StreamFlags.trace_read.Get
-// Retrieve bitfield from value of field value
-//    1 bits starting at bit 4.
-inline bool ams::trace_read_Get(const ams::StreamFlags& parent) {
-    return bool((parent.value >> 4) & 0x01);
-}
-
-// --- ams.StreamFlags.trace_read.Set
-// Set bitfield in value of field 'value'
-//    1 bits starting at bit 4.
-inline void ams::trace_read_Set(ams::StreamFlags& parent, bool rhs) {
-    u8 t1    = u8(0x01) << 4;
-    u8 t2    = (u8(rhs) & 0x01) << 4;
-    parent.value = u8((parent.value & ~t1) | t2);
-}
-
-// --- ams.StreamFlags.trace_write.Get
-// Retrieve bitfield from value of field value
-//    1 bits starting at bit 5.
-inline bool ams::trace_write_Get(const ams::StreamFlags& parent) {
-    return bool((parent.value >> 5) & 0x01);
-}
-
-// --- ams.StreamFlags.trace_write.Set
-// Set bitfield in value of field 'value'
-//    1 bits starting at bit 5.
-inline void ams::trace_write_Set(ams::StreamFlags& parent, bool rhs) {
-    u8 t1    = u8(0x01) << 5;
-    u8 t2    = (u8(rhs) & 0x01) << 5;
-    parent.value = u8((parent.value & ~t1) | t2);
-}
-
-// --- ams.StreamFlags.write_err.Get
+// --- ams.ShmFlags.write_err.Get
 // Retrieve bitfield from value of field value
 //    1 bits starting at bit 6.
-inline bool ams::write_err_Get(const ams::StreamFlags& parent) {
+inline bool ams::write_err_Get(const ams::ShmFlags& parent) {
     return bool((parent.value >> 6) & 0x01);
 }
 
-// --- ams.StreamFlags.write_err.Set
+// --- ams.ShmFlags.write_err.Set
 // Set bitfield in value of field 'value'
 //    1 bits starting at bit 6.
-inline void ams::write_err_Set(ams::StreamFlags& parent, bool rhs) {
+inline void ams::write_err_Set(ams::ShmFlags& parent, bool rhs) {
     u8 t1    = u8(0x01) << 6;
     u8 t2    = (u8(rhs) & 0x01) << 6;
     parent.value = u8((parent.value & ~t1) | t2);
 }
 
-// --- ams.StreamFlags.trace_text.Get
-// Retrieve bitfield from value of field value
-//    1 bits starting at bit 7.
-inline bool ams::trace_text_Get(const ams::StreamFlags& parent) {
-    return bool((parent.value >> 7) & 0x01);
-}
-
-// --- ams.StreamFlags.trace_text.Set
-// Set bitfield in value of field 'value'
-//    1 bits starting at bit 7.
-inline void ams::trace_text_Set(ams::StreamFlags& parent, bool rhs) {
-    u8 t1    = u8(0x01) << 7;
-    u8 t2    = (u8(rhs) & 0x01) << 7;
-    parent.value = u8((parent.value & ~t1) | t2);
-}
-
-// --- ams.StreamFlags..Init
+// --- ams.ShmFlags..Init
 // Set all fields to initial values.
-inline void ams::StreamFlags_Init(ams::StreamFlags& parent) {
+inline void ams::ShmFlags_Init(ams::ShmFlags& parent) {
     parent.value = u8(0);
 }
 
-// --- ams.StreamFlags..Ctor
-inline  ams::StreamFlags::StreamFlags() {
-    ams::StreamFlags_Init(*this);
+// --- ams.ShmFlags..Ctor
+inline  ams::ShmFlags::ShmFlags() {
+    ams::ShmFlags_Init(*this);
 }
 
-// --- ams.StreamFlags..FieldwiseCtor
-inline  ams::StreamFlags::StreamFlags(u8 in_value)
+// --- ams.ShmFlags..FieldwiseCtor
+inline  ams::ShmFlags::ShmFlags(u8 in_value)
     : value(in_value)
  {
 }
 
-// --- ams.StreamFlags..EnumCtor
-inline  ams::StreamFlags::StreamFlags(ams_StreamFlagsEnum arg) {
+// --- ams.ShmFlags..EnumCtor
+inline  ams::ShmFlags::ShmFlags(ams_ShmFlagsEnum arg) {
     this->value = u8(arg);
 }
 
-// --- ams.StreamHbMsg.base.Castdown
-// Check if ams::MsgHeader is an instance of StreamHbMsg by checking the type field
-// If it is, return the pointer of target type.
-// Additionally, check if the length field permits valid instance of StreamHbMsg.
-// If not successful, quietly return NULL.
-inline ams::StreamHbMsg* ams::StreamHbMsg_Castdown(ams::MsgHeader &hdr) {
-    bool cond = hdr.type == (3);
-    cond &= i32(hdr.length) >= ssizeof(ams::StreamHbMsg);
-    return cond ? reinterpret_cast<ams::StreamHbMsg*>(&hdr) : NULL;
+// --- ams.Shmtype.value.GetEnum
+// Get value of field as enum type
+inline ams_ShmtypeEnum ams::value_GetEnum(const ams::Shmtype& parent) {
+    return ams_ShmtypeEnum(parent.value);
 }
 
-// --- ams.StreamHbMsg.base.Castbase
-inline ams::MsgHeader& ams::Castbase(ams::StreamHbMsg& parent) {
+// --- ams.Shmtype.value.SetEnum
+// Set value of field from enum type.
+inline void ams::value_SetEnum(ams::Shmtype& parent, ams_ShmtypeEnum rhs) {
+    parent.value = u8(rhs);
+}
+
+// --- ams.Shmtype..Hash
+inline u32 ams::Shmtype_Hash(u32 prev, ams::Shmtype rhs) {
+    prev = u8_Hash(prev, rhs.value);
+    return prev;
+}
+
+// --- ams.Shmtype..EqOp
+inline bool ams::Shmtype::operator ==(const ams::Shmtype &rhs) const {
+    return ams::Shmtype_Eq(const_cast<ams::Shmtype&>(*this),const_cast<ams::Shmtype&>(rhs));
+}
+
+// --- ams.Shmtype..NeOp
+inline bool ams::Shmtype::operator !=(const ams::Shmtype &rhs) const {
+    return !ams::Shmtype_Eq(const_cast<ams::Shmtype&>(*this),const_cast<ams::Shmtype&>(rhs));
+}
+
+// --- ams.Shmtype..Cmp
+inline i32 ams::Shmtype_Cmp(ams::Shmtype lhs, ams::Shmtype rhs) {
+    i32 retval = 0;
+    retval = u8_Cmp(lhs.value, rhs.value);
+    return retval;
+}
+
+// --- ams.Shmtype..Init
+// Set all fields to initial values.
+inline void ams::Shmtype_Init(ams::Shmtype& parent) {
+    parent.value = u8(0);
+}
+
+// --- ams.Shmtype..Eq
+inline bool ams::Shmtype_Eq(ams::Shmtype lhs, ams::Shmtype rhs) {
+    bool retval = true;
+    retval = u8_Eq(lhs.value, rhs.value);
+    return retval;
+}
+
+// --- ams.Shmtype..EqEnum
+// define enum comparison operator to avoid ambiguity
+inline bool ams::Shmtype::operator ==(ams_ShmtypeEnum rhs) const {
+    return ams_ShmtypeEnum(value) == rhs;
+}
+
+// --- ams.Shmtype..Ctor
+inline  ams::Shmtype::Shmtype() {
+    ams::Shmtype_Init(*this);
+}
+
+// --- ams.Shmtype..FieldwiseCtor
+inline  ams::Shmtype::Shmtype(u8 in_value)
+    : value(in_value)
+ {
+}
+
+// --- ams.Shmtype..EnumCtor
+inline  ams::Shmtype::Shmtype(ams_ShmtypeEnum arg) {
+    this->value = u8(arg);
+}
+
+// --- ams.ShmId..Hash
+inline u32 ams::ShmId_Hash(u32 prev, ams::ShmId rhs) {
+    prev = ProcId_Hash(prev, rhs.proc_id);
+    prev = Shmtype_Hash(prev, rhs.shmtype);
+    prev = u8_Hash(prev, rhs.index);
+    return prev;
+}
+
+// --- ams.ShmId..EqOp
+inline bool ams::ShmId::operator ==(const ams::ShmId &rhs) const {
+    return ams::ShmId_Eq(const_cast<ams::ShmId&>(*this),const_cast<ams::ShmId&>(rhs));
+}
+
+// --- ams.ShmId..NeOp
+inline bool ams::ShmId::operator !=(const ams::ShmId &rhs) const {
+    return !ams::ShmId_Eq(const_cast<ams::ShmId&>(*this),const_cast<ams::ShmId&>(rhs));
+}
+
+// --- ams.ShmId..Cmp
+inline i32 ams::ShmId_Cmp(ams::ShmId lhs, ams::ShmId rhs) {
+    i32 retval = 0;
+    retval = ams::ProcId_Cmp(lhs.proc_id, rhs.proc_id);
+    if (retval != 0) {
+        return retval;
+    }
+    retval = ams::Shmtype_Cmp(lhs.shmtype, rhs.shmtype);
+    if (retval != 0) {
+        return retval;
+    }
+    retval = u8_Cmp(lhs.index, rhs.index);
+    return retval;
+}
+
+// --- ams.ShmId..Init
+// Set all fields to initial values.
+inline void ams::ShmId_Init(ams::ShmId& parent) {
+    parent.index = u8(0);
+}
+
+// --- ams.ShmId..Eq
+inline bool ams::ShmId_Eq(ams::ShmId lhs, ams::ShmId rhs) {
+    bool retval = true;
+    retval = ams::ProcId_Eq(lhs.proc_id, rhs.proc_id);
+    if (!retval) {
+        return false;
+    }
+    retval = ams::Shmtype_Eq(lhs.shmtype, rhs.shmtype);
+    if (!retval) {
+        return false;
+    }
+    retval = u8_Eq(lhs.index, rhs.index);
+    return retval;
+}
+
+// --- ams.ShmId..Ctor
+inline  ams::ShmId::ShmId() {
+    ams::ShmId_Init(*this);
+}
+
+// --- ams.ShmId..FieldwiseCtor
+inline  ams::ShmId::ShmId(ams::ProcId in_proc_id, ams::Shmtype in_shmtype, u8 in_index)
+    : proc_id(in_proc_id)
+    , shmtype(in_shmtype)
+    , index(in_index)
+ {
+}
+
+// --- ams.ShmemberFlags.r.Get
+// Retrieve bitfield from value of field value
+//    1 bits starting at bit 0.
+inline bool ams::r_Get(const ams::ShmemberFlags& parent) {
+    return bool((parent.value >> 0) & 0x01);
+}
+
+// --- ams.ShmemberFlags.r.Set
+// Set bitfield in value of field 'value'
+//    1 bits starting at bit 0.
+inline void ams::r_Set(ams::ShmemberFlags& parent, bool rhs) {
+    u16 t1    = u16(0x01) << 0;
+    u16 t2    = (u16(rhs) & 0x01) << 0;
+    parent.value = u16((parent.value & ~t1) | t2);
+}
+
+// --- ams.ShmemberFlags.w.Get
+// Retrieve bitfield from value of field value
+//    1 bits starting at bit 1.
+inline bool ams::w_Get(const ams::ShmemberFlags& parent) {
+    return bool((parent.value >> 1) & 0x01);
+}
+
+// --- ams.ShmemberFlags.w.Set
+// Set bitfield in value of field 'value'
+//    1 bits starting at bit 1.
+inline void ams::w_Set(ams::ShmemberFlags& parent, bool rhs) {
+    u16 t1    = u16(0x01) << 1;
+    u16 t2    = (u16(rhs) & 0x01) << 1;
+    parent.value = u16((parent.value & ~t1) | t2);
+}
+
+// --- ams.ShmemberFlags..Hash
+inline u32 ams::ShmemberFlags_Hash(u32 prev, ams::ShmemberFlags rhs) {
+    prev = u16_Hash(prev, rhs.value);
+    return prev;
+}
+
+// --- ams.ShmemberFlags..EqOp
+inline bool ams::ShmemberFlags::operator ==(const ams::ShmemberFlags &rhs) const {
+    return ams::ShmemberFlags_Eq(const_cast<ams::ShmemberFlags&>(*this),const_cast<ams::ShmemberFlags&>(rhs));
+}
+
+// --- ams.ShmemberFlags..NeOp
+inline bool ams::ShmemberFlags::operator !=(const ams::ShmemberFlags &rhs) const {
+    return !ams::ShmemberFlags_Eq(const_cast<ams::ShmemberFlags&>(*this),const_cast<ams::ShmemberFlags&>(rhs));
+}
+
+// --- ams.ShmemberFlags..Cmp
+inline i32 ams::ShmemberFlags_Cmp(ams::ShmemberFlags lhs, ams::ShmemberFlags rhs) {
+    i32 retval = 0;
+    retval = u16_Cmp(lhs.value, rhs.value);
+    return retval;
+}
+
+// --- ams.ShmemberFlags..Init
+// Set all fields to initial values.
+inline void ams::ShmemberFlags_Init(ams::ShmemberFlags& parent) {
+    parent.value = u16(0);
+    r_Set(parent, 0); // default value
+    w_Set(parent, 0); // default value
+}
+
+// --- ams.ShmemberFlags..Eq
+inline bool ams::ShmemberFlags_Eq(ams::ShmemberFlags lhs, ams::ShmemberFlags rhs) {
+    bool retval = true;
+    retval = u16_Eq(lhs.value, rhs.value);
+    return retval;
+}
+
+// --- ams.ShmemberFlags..EqEnum
+// define enum comparison operator to avoid ambiguity
+inline bool ams::ShmemberFlags::operator ==(ams_ShmemberFlagsEnum rhs) const {
+    return ams_ShmemberFlagsEnum(value) == rhs;
+}
+
+// --- ams.ShmemberFlags..Ctor
+inline  ams::ShmemberFlags::ShmemberFlags() {
+    ams::ShmemberFlags_Init(*this);
+}
+
+// --- ams.ShmemberFlags..FieldwiseCtor
+inline  ams::ShmemberFlags::ShmemberFlags(u16 in_value)
+    : value(in_value)
+ {
+}
+
+// --- ams.ShmemberFlags..EnumCtor
+inline  ams::ShmemberFlags::ShmemberFlags(ams_ShmemberFlagsEnum arg) {
+    this->value = u16(arg);
+}
+
+// --- ams.ShmemberId..Hash
+inline u32 ams::ShmemberId_Hash(u32 prev, ams::ShmemberId rhs) {
+    prev = ShmId_Hash(prev, rhs.shm_id);
+    prev = ProcId_Hash(prev, rhs.proc_id);
+    prev = ShmemberFlags_Hash(prev, rhs.flags);
+    return prev;
+}
+
+// --- ams.ShmemberId..EqOp
+inline bool ams::ShmemberId::operator ==(const ams::ShmemberId &rhs) const {
+    return ams::ShmemberId_Eq(const_cast<ams::ShmemberId&>(*this),const_cast<ams::ShmemberId&>(rhs));
+}
+
+// --- ams.ShmemberId..NeOp
+inline bool ams::ShmemberId::operator !=(const ams::ShmemberId &rhs) const {
+    return !ams::ShmemberId_Eq(const_cast<ams::ShmemberId&>(*this),const_cast<ams::ShmemberId&>(rhs));
+}
+
+// --- ams.ShmemberId..Cmp
+inline i32 ams::ShmemberId_Cmp(ams::ShmemberId lhs, ams::ShmemberId rhs) {
+    i32 retval = 0;
+    retval = ams::ShmId_Cmp(lhs.shm_id, rhs.shm_id);
+    if (retval != 0) {
+        return retval;
+    }
+    retval = ams::ProcId_Cmp(lhs.proc_id, rhs.proc_id);
+    if (retval != 0) {
+        return retval;
+    }
+    retval = ams::ShmemberFlags_Cmp(lhs.flags, rhs.flags);
+    return retval;
+}
+
+// --- ams.ShmemberId..Init
+// Set all fields to initial values.
+inline void ams::ShmemberId_Init(ams::ShmemberId& parent) {
+    parent.flags = ams::ShmemberFlags(0);
+}
+
+// --- ams.ShmemberId..Eq
+inline bool ams::ShmemberId_Eq(ams::ShmemberId lhs, ams::ShmemberId rhs) {
+    bool retval = true;
+    retval = ams::ShmId_Eq(lhs.shm_id, rhs.shm_id);
+    if (!retval) {
+        return false;
+    }
+    retval = ams::ProcId_Eq(lhs.proc_id, rhs.proc_id);
+    if (!retval) {
+        return false;
+    }
+    retval = ams::ShmemberFlags_Eq(lhs.flags, rhs.flags);
+    return retval;
+}
+
+// --- ams.ShmemberId..Ctor
+inline  ams::ShmemberId::ShmemberId() {
+    ams::ShmemberId_Init(*this);
+}
+
+// --- ams.ShmemberId..FieldwiseCtor
+inline  ams::ShmemberId::ShmemberId(ams::ShmId in_shm_id, ams::ProcId in_proc_id, ams::ShmemberFlags in_flags)
+    : shm_id(in_shm_id)
+    , proc_id(in_proc_id)
+    , flags(in_flags)
+ {
+}
+
+// --- ams.ShmHbMsg.base.Castdown
+// Check if ams::MsgHeader is an instance of ShmHbMsg by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of ShmHbMsg.
+// If not successful, quietly return NULL.
+inline ams::ShmHbMsg* ams::ShmHbMsg_Castdown(ams::MsgHeader &hdr) {
+    bool cond = hdr.type == (3);
+    cond &= i32(hdr.length) >= ssizeof(ams::ShmHbMsg);
+    return cond ? reinterpret_cast<ams::ShmHbMsg*>(&hdr) : NULL;
+}
+
+// --- ams.ShmHbMsg.base.Castbase
+inline ams::MsgHeader& ams::Castbase(ams::ShmHbMsg& parent) {
     return reinterpret_cast<ams::MsgHeader&>(parent);
 }
 
-// --- ams.StreamHbMsg..GetMsgLength
+// --- ams.ShmHbMsg..GetMsgLength
 // Message length (uses length field)
-inline i32 ams::GetMsgLength(const ams::StreamHbMsg& parent) {
-    return i32(const_cast<ams::StreamHbMsg&>(parent).length);
+inline i32 ams::GetMsgLength(const ams::ShmHbMsg& parent) {
+    return i32(const_cast<ams::ShmHbMsg&>(parent).length);
 }
 
-// --- ams.StreamHbMsg..GetMsgMemptr
+// --- ams.ShmHbMsg..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr ams::GetMsgMemptr(const ams::StreamHbMsg& row) {
-    return algo::memptr((u8*)&row, i32(const_cast<ams::StreamHbMsg&>(row).length));
+inline algo::memptr ams::GetMsgMemptr(const ams::ShmHbMsg& row) {
+    return algo::memptr((u8*)&row, i32(const_cast<ams::ShmHbMsg&>(row).length));
 }
 
-// --- ams.StreamHbMsg..Init
+// --- ams.ShmHbMsg..Init
 // Set all fields to initial values.
-inline void ams::StreamHbMsg_Init(ams::StreamHbMsg& parent) {
+inline void ams::ShmHbMsg_Init(ams::ShmHbMsg& parent) {
     parent.type = u32(3);
     parent.length = u32(ssizeof(parent) + (0));
+    parent.off = u64(0);
     parent.wbudget = u32(0);
 }
 
-// --- ams.StreamHbMsg..Ctor
-inline  ams::StreamHbMsg::StreamHbMsg() {
-    ams::StreamHbMsg_Init(*this);
+// --- ams.ShmHbMsg..Ctor
+inline  ams::ShmHbMsg::ShmHbMsg() {
+    ams::ShmHbMsg_Init(*this);
 }
 
-// --- ams.StreamHbMsg..FieldwiseCtor
-inline  ams::StreamHbMsg::StreamHbMsg(ams::Member in_member, ams::StreamPos in_pos, u32 in_wbudget)
-    : member(in_member)
-    , pos(in_pos)
+// --- ams.ShmHbMsg..FieldwiseCtor
+inline  ams::ShmHbMsg::ShmHbMsg(ams::ShmemberId in_shmember, u64 in_off, u32 in_wbudget)
+    : shmember(in_shmember)
+    , off(in_off)
     , wbudget(in_wbudget)
  {
     this->type = u32(3);
+    this->length = u32(ssizeof(*this) + (0));
+}
+
+// --- ams.Shmmsg.base.Castdown
+// Check if ams::MsgHeader is an instance of Shmmsg by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of Shmmsg.
+// If not successful, quietly return NULL.
+inline ams::Shmmsg* ams::Shmmsg_Castdown(ams::MsgHeader &hdr) {
+    bool cond = hdr.type == (10);
+    cond &= i32(hdr.length) >= ssizeof(ams::Shmmsg);
+    return cond ? reinterpret_cast<ams::Shmmsg*>(&hdr) : NULL;
+}
+
+// --- ams.Shmmsg.base.Castbase
+inline ams::MsgHeader& ams::Castbase(ams::Shmmsg& parent) {
+    return reinterpret_cast<ams::MsgHeader&>(parent);
+}
+
+// --- ams.Shmmsg.payload.Get
+// Return pointer to optional last element (NULL if none)
+// The parent's length field is assumed to have already been checked for validity.
+// If the parent's lengthis too short to allow a full-sized payload, return NULL.
+// Since the last element is itself variable-length, two more checks are applied:
+// If payload's length field value is too short, return NULL.
+// If payload's length field value extends past parent's allowed length, return NULL.
+inline ams::MsgHeader* ams::payload_Get(ams::Shmmsg& parent) {
+    i32 totlen = i32(parent.length);
+    u8 *end = (u8*)&parent + sizeof(ams::Shmmsg);
+    ams::MsgHeader *ptr = (ams::MsgHeader*)end;
+    bool exists = ssizeof(ams::Shmmsg) + sizeof_ams_MsgHeader <= totlen;
+    exists = exists && i32((*ptr).length) >= sizeof_ams_MsgHeader && ssizeof(ams::Shmmsg) + i32((*ptr).length) <= totlen;
+    return exists ? ptr : NULL;
+}
+
+// --- ams.Shmmsg..GetMsgLength
+// Message length (uses length field)
+inline i32 ams::GetMsgLength(const ams::Shmmsg& parent) {
+    return i32(const_cast<ams::Shmmsg&>(parent).length);
+}
+
+// --- ams.Shmmsg..GetMsgMemptr
+// Memptr encompassing the message (uses length field)
+inline algo::memptr ams::GetMsgMemptr(const ams::Shmmsg& row) {
+    return algo::memptr((u8*)&row, i32(const_cast<ams::Shmmsg&>(row).length));
+}
+
+// --- ams.Shmmsg..Init
+// Set all fields to initial values.
+inline void ams::Shmmsg_Init(ams::Shmmsg& parent) {
+    parent.type = u32(10);
+    parent.length = u32(ssizeof(parent) + (0));
+    parent.off = u64(0);
+    parent.tstamp = u64(0);
+}
+
+// --- ams.Shmmsg..Ctor
+inline  ams::Shmmsg::Shmmsg() {
+    ams::Shmmsg_Init(*this);
+}
+
+// --- ams.Shmmsg..FieldwiseCtor
+inline  ams::Shmmsg::Shmmsg(ams::ShmId in_shm_id, u64 in_off, u64 in_tstamp)
+    : shm_id(in_shm_id)
+    , off(in_off)
+    , tstamp(in_tstamp)
+ {
+    this->type = u32(10);
     this->length = u32(ssizeof(*this) + (0));
 }
 
@@ -1673,358 +1708,6 @@ inline  ams::TerminateMsg::TerminateMsg() {
     ams::TerminateMsg_Init(*this);
 }
 
-// --- ams.Trace2Msg.base.Castdown
-// Check if ams::MsgHeader is an instance of Trace2Msg by checking the type field
-// If it is, return the pointer of target type.
-// Additionally, check if the length field permits valid instance of Trace2Msg.
-// If not successful, quietly return NULL.
-inline ams::Trace2Msg* ams::Trace2Msg_Castdown(ams::MsgHeader &hdr) {
-    bool cond = hdr.type == (108);
-    cond &= i32(hdr.length) >= ssizeof(ams::Trace2Msg);
-    return cond ? reinterpret_cast<ams::Trace2Msg*>(&hdr) : NULL;
-}
-
-// --- ams.Trace2Msg.base.Castbase
-inline ams::MsgHeader& ams::Castbase(ams::Trace2Msg& parent) {
-    return reinterpret_cast<ams::MsgHeader&>(parent);
-}
-
-// --- ams.Trace2Msg.data.N
-// Return number of elements in varlen field
-inline u32 ams::data_N(const ams::Trace2Msg& parent) {
-    u32 length = i32(((ams::Trace2Msg&)parent).length);
-    u32 extra_bytes = u32_Max(length,sizeof(ams::Trace2Msg)) - sizeof(ams::Trace2Msg); // avoid unsigned subtraction underflow
-    return u32(extra_bytes / sizeof(u64));
-}
-
-// --- ams.Trace2Msg.data_curs.Reset
-inline void ams::Trace2Msg_data_curs_Reset(Trace2Msg_data_curs &curs, ams::Trace2Msg &parent) {
-    curs.ptr = (u8*)&parent + sizeof(ams::Trace2Msg);
-    curs.length = i32(parent.length) - sizeof(ams::Trace2Msg);
-    curs.index = 0;
-}
-
-// --- ams.Trace2Msg.data_curs.ValidQ
-// cursor points to valid item
-inline bool ams::Trace2Msg_data_curs_ValidQ(Trace2Msg_data_curs &curs) {
-    bool valid = ssizeof(u64) <= curs.length;
-    return valid;
-}
-
-// --- ams.Trace2Msg.data_curs.Next
-// proceed to next item
-inline void ams::Trace2Msg_data_curs_Next(Trace2Msg_data_curs &curs) {
-    i32 len = i32(sizeof(u64));
-    curs.ptr += len;
-    curs.length -= len;
-    ++curs.index;
-}
-
-// --- ams.Trace2Msg.data_curs.Access
-// item access
-inline u64& ams::Trace2Msg_data_curs_Access(Trace2Msg_data_curs &curs) {
-    return *(u64*)curs.ptr;
-}
-
-// --- ams.Trace2Msg..GetMsgLength
-// Message length (uses length field)
-inline i32 ams::GetMsgLength(const ams::Trace2Msg& parent) {
-    return i32(const_cast<ams::Trace2Msg&>(parent).length);
-}
-
-// --- ams.Trace2Msg..GetMsgMemptr
-// Memptr encompassing the message (uses length field)
-inline algo::memptr ams::GetMsgMemptr(const ams::Trace2Msg& row) {
-    return algo::memptr((u8*)&row, i32(const_cast<ams::Trace2Msg&>(row).length));
-}
-
-// --- ams.Trace2Msg..Init
-// Set all fields to initial values.
-inline void ams::Trace2Msg_Init(ams::Trace2Msg& parent) {
-    parent.type = u32(108);
-    parent.length = u32(ssizeof(parent) + (0));
-    parent.trace = u8(0);
-}
-
-// --- ams.Trace2Msg..Ctor
-inline  ams::Trace2Msg::Trace2Msg() {
-    ams::Trace2Msg_Init(*this);
-}
-
-// --- ams.Trace2Msg..FieldwiseCtor
-inline  ams::Trace2Msg::Trace2Msg(ams::ProcId in_proc, u8 in_trace, algo::UnTime in_tstamp)
-    : proc(in_proc)
-    , trace(in_trace)
-    , tstamp(in_tstamp)
- {
-    this->type = u32(108);
-    this->length = u32(ssizeof(*this) + (0));
-}
-
-// --- ams.TraceInfo2Msg.base.Castdown
-// Check if ams::MsgHeader is an instance of TraceInfo2Msg by checking the type field
-// If it is, return the pointer of target type.
-// Additionally, check if the length field permits valid instance of TraceInfo2Msg.
-// If not successful, quietly return NULL.
-inline ams::TraceInfo2Msg* ams::TraceInfo2Msg_Castdown(ams::MsgHeader &hdr) {
-    bool cond = hdr.type == (109);
-    cond &= i32(hdr.length) >= ssizeof(ams::TraceInfo2Msg);
-    return cond ? reinterpret_cast<ams::TraceInfo2Msg*>(&hdr) : NULL;
-}
-
-// --- ams.TraceInfo2Msg.base.Castbase
-inline ams::MsgHeader& ams::Castbase(ams::TraceInfo2Msg& parent) {
-    return reinterpret_cast<ams::MsgHeader&>(parent);
-}
-
-// --- ams.TraceInfo2Msg.data.N
-// Return number of elements in varlen field
-inline u32 ams::data_N(const ams::TraceInfo2Msg& parent) {
-    u32 length = i32(((ams::TraceInfo2Msg&)parent).length);
-    u32 extra_bytes = u32_Max(length,sizeof(ams::TraceInfo2Msg)) - sizeof(ams::TraceInfo2Msg); // avoid unsigned subtraction underflow
-    return u32(extra_bytes / sizeof(char));
-}
-
-// --- ams.TraceInfo2Msg.data_curs.Reset
-inline void ams::TraceInfo2Msg_data_curs_Reset(TraceInfo2Msg_data_curs &curs, ams::TraceInfo2Msg &parent) {
-    curs.ptr = (u8*)&parent + sizeof(ams::TraceInfo2Msg);
-    curs.length = i32(parent.length) - sizeof(ams::TraceInfo2Msg);
-    curs.index = 0;
-}
-
-// --- ams.TraceInfo2Msg.data_curs.ValidQ
-// cursor points to valid item
-inline bool ams::TraceInfo2Msg_data_curs_ValidQ(TraceInfo2Msg_data_curs &curs) {
-    bool valid = ssizeof(char) <= curs.length;
-    return valid;
-}
-
-// --- ams.TraceInfo2Msg.data_curs.Next
-// proceed to next item
-inline void ams::TraceInfo2Msg_data_curs_Next(TraceInfo2Msg_data_curs &curs) {
-    i32 len = i32(sizeof(char));
-    curs.ptr += len;
-    curs.length -= len;
-    ++curs.index;
-}
-
-// --- ams.TraceInfo2Msg.data_curs.Access
-// item access
-inline char& ams::TraceInfo2Msg_data_curs_Access(TraceInfo2Msg_data_curs &curs) {
-    return *(char*)curs.ptr;
-}
-
-// --- ams.TraceInfo2Msg..GetMsgLength
-// Message length (uses length field)
-inline i32 ams::GetMsgLength(const ams::TraceInfo2Msg& parent) {
-    return i32(const_cast<ams::TraceInfo2Msg&>(parent).length);
-}
-
-// --- ams.TraceInfo2Msg..GetMsgMemptr
-// Memptr encompassing the message (uses length field)
-inline algo::memptr ams::GetMsgMemptr(const ams::TraceInfo2Msg& row) {
-    return algo::memptr((u8*)&row, i32(const_cast<ams::TraceInfo2Msg&>(row).length));
-}
-
-// --- ams.TraceInfo2Msg..Init
-// Set all fields to initial values.
-inline void ams::TraceInfo2Msg_Init(ams::TraceInfo2Msg& parent) {
-    parent.type = u32(109);
-    parent.length = u32(ssizeof(parent) + (0));
-    parent.trace = u8(0);
-    parent.part = u8(0);
-}
-
-// --- ams.TraceInfo2Msg..Ctor
-inline  ams::TraceInfo2Msg::TraceInfo2Msg() {
-    ams::TraceInfo2Msg_Init(*this);
-}
-
-// --- ams.TraceInfo2Msg..FieldwiseCtor
-inline  ams::TraceInfo2Msg::TraceInfo2Msg(ams::ProcId in_proc, u8 in_trace, algo::UnTime in_tstamp, u8 in_part)
-    : proc(in_proc)
-    , trace(in_trace)
-    , tstamp(in_tstamp)
-    , part(in_part)
- {
-    this->type = u32(109);
-    this->length = u32(ssizeof(*this) + (0));
-}
-
-// --- ams.TraceInfoMsg.base.Castdown
-// Check if ams::MsgHeader is an instance of TraceInfoMsg by checking the type field
-// If it is, return the pointer of target type.
-// Additionally, check if the length field permits valid instance of TraceInfoMsg.
-// If not successful, quietly return NULL.
-inline ams::TraceInfoMsg* ams::TraceInfoMsg_Castdown(ams::MsgHeader &hdr) {
-    bool cond = hdr.type == (9);
-    cond &= i32(hdr.length) >= ssizeof(ams::TraceInfoMsg);
-    return cond ? reinterpret_cast<ams::TraceInfoMsg*>(&hdr) : NULL;
-}
-
-// --- ams.TraceInfoMsg.base.Castbase
-inline ams::MsgHeader& ams::Castbase(ams::TraceInfoMsg& parent) {
-    return reinterpret_cast<ams::MsgHeader&>(parent);
-}
-
-// --- ams.TraceInfoMsg.data.N
-// Return number of elements in varlen field
-inline u32 ams::data_N(const ams::TraceInfoMsg& parent) {
-    u32 length = i32(((ams::TraceInfoMsg&)parent).length);
-    u32 extra_bytes = u32_Max(length,sizeof(ams::TraceInfoMsg)) - sizeof(ams::TraceInfoMsg); // avoid unsigned subtraction underflow
-    return u32(extra_bytes / sizeof(char));
-}
-
-// --- ams.TraceInfoMsg.data_curs.Reset
-inline void ams::TraceInfoMsg_data_curs_Reset(TraceInfoMsg_data_curs &curs, ams::TraceInfoMsg &parent) {
-    curs.ptr = (u8*)&parent + sizeof(ams::TraceInfoMsg);
-    curs.length = i32(parent.length) - sizeof(ams::TraceInfoMsg);
-    curs.index = 0;
-}
-
-// --- ams.TraceInfoMsg.data_curs.ValidQ
-// cursor points to valid item
-inline bool ams::TraceInfoMsg_data_curs_ValidQ(TraceInfoMsg_data_curs &curs) {
-    bool valid = ssizeof(char) <= curs.length;
-    return valid;
-}
-
-// --- ams.TraceInfoMsg.data_curs.Next
-// proceed to next item
-inline void ams::TraceInfoMsg_data_curs_Next(TraceInfoMsg_data_curs &curs) {
-    i32 len = i32(sizeof(char));
-    curs.ptr += len;
-    curs.length -= len;
-    ++curs.index;
-}
-
-// --- ams.TraceInfoMsg.data_curs.Access
-// item access
-inline char& ams::TraceInfoMsg_data_curs_Access(TraceInfoMsg_data_curs &curs) {
-    return *(char*)curs.ptr;
-}
-
-// --- ams.TraceInfoMsg..GetMsgLength
-// Message length (uses length field)
-inline i32 ams::GetMsgLength(const ams::TraceInfoMsg& parent) {
-    return i32(const_cast<ams::TraceInfoMsg&>(parent).length);
-}
-
-// --- ams.TraceInfoMsg..GetMsgMemptr
-// Memptr encompassing the message (uses length field)
-inline algo::memptr ams::GetMsgMemptr(const ams::TraceInfoMsg& row) {
-    return algo::memptr((u8*)&row, i32(const_cast<ams::TraceInfoMsg&>(row).length));
-}
-
-// --- ams.TraceInfoMsg..Init
-// Set all fields to initial values.
-inline void ams::TraceInfoMsg_Init(ams::TraceInfoMsg& parent) {
-    parent.type = u32(9);
-    parent.length = u32(ssizeof(parent) + (0));
-    parent.part = u8(0);
-}
-
-// --- ams.TraceInfoMsg..Ctor
-inline  ams::TraceInfoMsg::TraceInfoMsg() {
-    ams::TraceInfoMsg_Init(*this);
-}
-
-// --- ams.TraceInfoMsg..FieldwiseCtor
-inline  ams::TraceInfoMsg::TraceInfoMsg(ams::ProcId in_proc, algo::UnTime in_tstamp, u8 in_part)
-    : proc(in_proc)
-    , tstamp(in_tstamp)
-    , part(in_part)
- {
-    this->type = u32(9);
-    this->length = u32(ssizeof(*this) + (0));
-}
-
-// --- ams.TraceMsg.base.Castdown
-// Check if ams::MsgHeader is an instance of TraceMsg by checking the type field
-// If it is, return the pointer of target type.
-// Additionally, check if the length field permits valid instance of TraceMsg.
-// If not successful, quietly return NULL.
-inline ams::TraceMsg* ams::TraceMsg_Castdown(ams::MsgHeader &hdr) {
-    bool cond = hdr.type == (8);
-    cond &= i32(hdr.length) >= ssizeof(ams::TraceMsg);
-    return cond ? reinterpret_cast<ams::TraceMsg*>(&hdr) : NULL;
-}
-
-// --- ams.TraceMsg.base.Castbase
-inline ams::MsgHeader& ams::Castbase(ams::TraceMsg& parent) {
-    return reinterpret_cast<ams::MsgHeader&>(parent);
-}
-
-// --- ams.TraceMsg.data.N
-// Return number of elements in varlen field
-inline u32 ams::data_N(const ams::TraceMsg& parent) {
-    u32 length = i32(((ams::TraceMsg&)parent).length);
-    u32 extra_bytes = u32_Max(length,sizeof(ams::TraceMsg)) - sizeof(ams::TraceMsg); // avoid unsigned subtraction underflow
-    return u32(extra_bytes / sizeof(u64));
-}
-
-// --- ams.TraceMsg.data_curs.Reset
-inline void ams::TraceMsg_data_curs_Reset(TraceMsg_data_curs &curs, ams::TraceMsg &parent) {
-    curs.ptr = (u8*)&parent + sizeof(ams::TraceMsg);
-    curs.length = i32(parent.length) - sizeof(ams::TraceMsg);
-    curs.index = 0;
-}
-
-// --- ams.TraceMsg.data_curs.ValidQ
-// cursor points to valid item
-inline bool ams::TraceMsg_data_curs_ValidQ(TraceMsg_data_curs &curs) {
-    bool valid = ssizeof(u64) <= curs.length;
-    return valid;
-}
-
-// --- ams.TraceMsg.data_curs.Next
-// proceed to next item
-inline void ams::TraceMsg_data_curs_Next(TraceMsg_data_curs &curs) {
-    i32 len = i32(sizeof(u64));
-    curs.ptr += len;
-    curs.length -= len;
-    ++curs.index;
-}
-
-// --- ams.TraceMsg.data_curs.Access
-// item access
-inline u64& ams::TraceMsg_data_curs_Access(TraceMsg_data_curs &curs) {
-    return *(u64*)curs.ptr;
-}
-
-// --- ams.TraceMsg..GetMsgLength
-// Message length (uses length field)
-inline i32 ams::GetMsgLength(const ams::TraceMsg& parent) {
-    return i32(const_cast<ams::TraceMsg&>(parent).length);
-}
-
-// --- ams.TraceMsg..GetMsgMemptr
-// Memptr encompassing the message (uses length field)
-inline algo::memptr ams::GetMsgMemptr(const ams::TraceMsg& row) {
-    return algo::memptr((u8*)&row, i32(const_cast<ams::TraceMsg&>(row).length));
-}
-
-// --- ams.TraceMsg..Init
-// Set all fields to initial values.
-inline void ams::TraceMsg_Init(ams::TraceMsg& parent) {
-    parent.type = u32(8);
-    parent.length = u32(ssizeof(parent) + (0));
-}
-
-// --- ams.TraceMsg..Ctor
-inline  ams::TraceMsg::TraceMsg() {
-    ams::TraceMsg_Init(*this);
-}
-
-// --- ams.TraceMsg..FieldwiseCtor
-inline  ams::TraceMsg::TraceMsg(ams::ProcId in_proc, algo::UnTime in_tstamp)
-    : proc(in_proc)
-    , tstamp(in_tstamp)
- {
-    this->type = u32(8);
-    this->length = u32(ssizeof(*this) + (0));
-}
-
 // --- ams.UdpFrame.header.Castdown
 // Check if ams::MsgHeader is an instance of UdpFrame by checking the type field
 // If it is, return the pointer of target type.
@@ -2051,7 +1734,7 @@ inline u32 ams::payload_N(const ams::UdpFrame& parent) {
 
 // --- ams.UdpFrame.payload_curs.Reset
 inline void ams::UdpFrame_payload_curs_Reset(UdpFrame_payload_curs &curs, ams::UdpFrame &parent) {
-    curs.ptr = (u8*)&parent + sizeof(ams::UdpFrame);
+    curs.ptr = (u8*)payload_Addr(parent);
     curs.length = i32(parent.length) - sizeof(ams::UdpFrame);
     curs.index = 0;
 }
@@ -2104,36 +1787,6 @@ inline  ams::UdpFrame::UdpFrame() {
     ams::UdpFrame_Init(*this);
 }
 
-inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::AlarmSyncMsg &row) {// cfmt:ams.AlarmSyncMsg.String
-    ams::AlarmSyncMsg_Print(const_cast<ams::AlarmSyncMsg&>(row), str);
-    return str;
-}
-
-inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::ProcId &row) {// cfmt:ams.ProcId.String
-    ams::ProcId_Print(const_cast<ams::ProcId&>(row), str);
-    return str;
-}
-
-inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::StreamType &row) {// cfmt:ams.StreamType.String
-    ams::StreamType_Print(const_cast<ams::StreamType&>(row), str);
-    return str;
-}
-
-inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::StreamId &row) {// cfmt:ams.StreamId.String
-    ams::StreamId_Print(const_cast<ams::StreamId&>(row), str);
-    return str;
-}
-
-inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::DfltStream &row) {// cfmt:ams.DfltStream.String
-    ams::DfltStream_Print(const_cast<ams::DfltStream&>(row), str);
-    return str;
-}
-
-inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::DumpStreamTableMsg &row) {// cfmt:ams.DumpStreamTableMsg.String
-    ams::DumpStreamTableMsg_Print(const_cast<ams::DumpStreamTableMsg&>(row), str);
-    return str;
-}
-
 inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::ExpectMsg &row) {// cfmt:ams.ExpectMsg.String
     ams::ExpectMsg_Print(const_cast<ams::ExpectMsg&>(row), str);
     return str;
@@ -2144,8 +1797,13 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::FieldId &
     return str;
 }
 
-inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::HeartbeatMsg &row) {// cfmt:ams.HeartbeatMsg.String
-    ams::HeartbeatMsg_Print(const_cast<ams::HeartbeatMsg&>(row), str);
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::Proctype &row) {// cfmt:ams.Proctype.String
+    ams::Proctype_Print(const_cast<ams::Proctype&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::ProcId &row) {// cfmt:ams.ProcId.String
+    ams::ProcId_Print(const_cast<ams::ProcId&>(row), str);
     return str;
 }
 
@@ -2154,8 +1812,8 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::InputLine
     return str;
 }
 
-inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::Member &row) {// cfmt:ams.Member.String
-    ams::Member_Print(const_cast<ams::Member&>(row), str);
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::LogMsg &row) {// cfmt:ams.LogMsg.String
+    ams::LogMsg_Print(const_cast<ams::LogMsg&>(row), str);
     return str;
 }
 
@@ -2169,53 +1827,68 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::MsgHeader
     return str;
 }
 
-inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::StreamPos &row) {// cfmt:ams.StreamPos.String
-    ams::StreamPos_Print(const_cast<ams::StreamPos&>(row), str);
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::ProcEofMsg &row) {// cfmt:ams.ProcEofMsg.String
+    ams::ProcEofMsg_Print(const_cast<ams::ProcEofMsg&>(row), str);
     return str;
 }
 
-inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::OpenMsg &row) {// cfmt:ams.OpenMsg.String
-    ams::OpenMsg_Print(const_cast<ams::OpenMsg&>(row), str);
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::ProcKillMsg &row) {// cfmt:ams.ProcKillMsg.String
+    ams::ProcKillMsg_Print(const_cast<ams::ProcKillMsg&>(row), str);
     return str;
 }
 
-inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::PrlogMsg &row) {// cfmt:ams.PrlogMsg.String
-    ams::PrlogMsg_Print(const_cast<ams::PrlogMsg&>(row), str);
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::ProcMsg &row) {// cfmt:ams.ProcMsg.String
+    ams::ProcMsg_Print(const_cast<ams::ProcMsg&>(row), str);
     return str;
 }
 
-inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::ProcAddMsg &row) {// cfmt:ams.ProcAddMsg.String
-    ams::ProcAddMsg_Print(const_cast<ams::ProcAddMsg&>(row), str);
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::ProcReadMsg &row) {// cfmt:ams.ProcReadMsg.String
+    ams::ProcReadMsg_Print(const_cast<ams::ProcReadMsg&>(row), str);
     return str;
 }
 
-inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::ProcRemoveMsg &row) {// cfmt:ams.ProcRemoveMsg.String
-    ams::ProcRemoveMsg_Print(const_cast<ams::ProcRemoveMsg&>(row), str);
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::ProcStartMsg &row) {// cfmt:ams.ProcStartMsg.String
+    ams::ProcStartMsg_Print(const_cast<ams::ProcStartMsg&>(row), str);
     return str;
 }
 
-inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::SeqmsgId &row) {// cfmt:ams.SeqmsgId.String
-    ams::SeqmsgId_Print(const_cast<ams::SeqmsgId&>(row), str);
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::ProcStatusMsg &row) {// cfmt:ams.ProcStatusMsg.String
+    ams::ProcStatusMsg_Print(const_cast<ams::ProcStatusMsg&>(row), str);
     return str;
 }
 
-inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::Seqmsg &row) {// cfmt:ams.Seqmsg.String
-    ams::Seqmsg_Print(const_cast<ams::Seqmsg&>(row), str);
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::ShmFlags &row) {// cfmt:ams.ShmFlags.String
+    ams::ShmFlags_Print(const_cast<ams::ShmFlags&>(row), str);
     return str;
 }
 
-inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::SeqmsgTrace &row) {// cfmt:ams.SeqmsgTrace.String
-    ams::SeqmsgTrace_Print(const_cast<ams::SeqmsgTrace&>(row), str);
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::Shmtype &row) {// cfmt:ams.Shmtype.String
+    ams::Shmtype_Print(const_cast<ams::Shmtype&>(row), str);
     return str;
 }
 
-inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::StreamFlags &row) {// cfmt:ams.StreamFlags.String
-    ams::StreamFlags_Print(const_cast<ams::StreamFlags&>(row), str);
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::ShmId &row) {// cfmt:ams.ShmId.String
+    ams::ShmId_Print(const_cast<ams::ShmId&>(row), str);
     return str;
 }
 
-inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::StreamHbMsg &row) {// cfmt:ams.StreamHbMsg.String
-    ams::StreamHbMsg_Print(const_cast<ams::StreamHbMsg&>(row), str);
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::ShmemberFlags &row) {// cfmt:ams.ShmemberFlags.String
+    ams::ShmemberFlags_Print(const_cast<ams::ShmemberFlags&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::ShmemberId &row) {// cfmt:ams.ShmemberId.String
+    ams::ShmemberId_Print(const_cast<ams::ShmemberId&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::ShmHbMsg &row) {// cfmt:ams.ShmHbMsg.String
+    ams::ShmHbMsg_Print(const_cast<ams::ShmHbMsg&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ams::Shmmsg &row) {// cfmt:ams.Shmmsg.String
+    ams::Shmmsg_Print(const_cast<ams::Shmmsg&>(row), str);
     return str;
 }
 

@@ -43,6 +43,26 @@ namespace algo { // gen:ns_print_proto
     inline static bool   linear_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:algo.FileFlags.printerr.ReadStrptrMaybe
     inline static bool   printerr_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    // Swap values elem_a and elem_b
+    // func:algo.I32RangeAry.ary.Swap
+    inline static void   ary_Swap(algo::i32_Range &elem_a, algo::i32_Range &elem_b) __attribute__((nothrow));
+    // Left circular shift of three-tuple
+    // func:algo.I32RangeAry.ary.Rotleft
+    inline static void   ary_Rotleft(algo::i32_Range &elem_a, algo::i32_Range &elem_b, algo::i32_Range &elem_c) __attribute__((nothrow));
+    // Compare values elem_a and elem_b
+    // The comparison function must be anti-symmetric: if a>b, then !(b>a).
+    // If not, mayhem results.
+    // func:algo.I32RangeAry.ary.Lt
+    static bool          ary_Lt(algo::i32_Range &elem_a, algo::i32_Range &elem_b) __attribute__((nothrow));
+    // Internal insertion sort
+    // func:algo.I32RangeAry.ary.IntInsertionSort
+    static void          ary_IntInsertionSort(algo::i32_Range *elems, int n) __attribute__((nothrow));
+    // Internal heap sort
+    // func:algo.I32RangeAry.ary.IntHeapSort
+    static void          ary_IntHeapSort(algo::i32_Range *elems, int n) __attribute__((nothrow));
+    // Quick sort engine
+    // func:algo.I32RangeAry.ary.IntQuickSort
+    static void          ary_IntQuickSort(algo::i32_Range *elems, int n, int depth) __attribute__((nothrow));
     // func:algo.IOEvtFlags.read.ReadStrptrMaybe
     inline static bool   read_ReadStrptrMaybe(algo::IOEvtFlags &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:algo.IOEvtFlags.write.ReadStrptrMaybe
@@ -150,6 +170,23 @@ algo::aryptr<char> algo::ch_AllocN(algo::cstring& parent, int n_elems) {
     return algo::aryptr<char>(elems + old_n, n_elems);
 }
 
+// --- algo.cstring.ch.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<char> algo::ch_AllocNAt(algo::cstring& parent, int n_elems, int at) {
+    ch_Reserve(parent, n_elems);
+    int n  = parent.ch_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("algo.bad_alloc_n_at  field:algo.cstring.ch  comment:'index out of range'");
+    }
+    char *elems = parent.ch_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(char));
+    memset(elems + at, 0, n_elems); // initialize new space
+    parent.ch_n = n+n_elems;
+    return algo::aryptr<char>(elems+at,n_elems);
+}
+
 // --- algo.cstring.ch.Remove
 // Remove item by index. If index outside of range, do nothing.
 void algo::ch_Remove(algo::cstring& parent, u32 i) {
@@ -230,6 +267,25 @@ bool algo::ch_ReadStrptrMaybe(algo::cstring& parent, algo::strptr in_str) {
     ch_RemoveAll(parent);
     ch_Addary(parent,in_str);
     return retval;
+}
+
+// --- algo.cstring.ch.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void algo::ch_Insary(algo::cstring& parent, algo::aryptr<char> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.ch_elems && rhs.elems < parent.ch_elems + parent.ch_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("algo.tary_alias  field:algo.cstring.ch  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(parent.ch_elems+1))) {
+        FatalErrorExit("algo.bad_insary  field:algo.cstring.ch  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = parent.ch_n - at;
+    ch_Reserve(parent, nnew); // reserve space
+    memmove(parent.ch_elems + at + nnew, parent.ch_elems + at, nmove * sizeof(char));
+    memcpy(parent.ch_elems + at, rhs.elems, nnew * sizeof(char));
+    parent.ch_n += nnew;
 }
 
 // --- algo.cstring..Uninit
@@ -412,6 +468,23 @@ algo::aryptr<u8> algo::ary_AllocN(algo::ByteAry& parent, int n_elems) {
     return algo::aryptr<u8>(elems + old_n, n_elems);
 }
 
+// --- algo.ByteAry.ary.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<u8> algo::ary_AllocNAt(algo::ByteAry& parent, int n_elems, int at) {
+    ary_Reserve(parent, n_elems);
+    int n  = parent.ary_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("algo.bad_alloc_n_at  field:algo.ByteAry.ary  comment:'index out of range'");
+    }
+    u8 *elems = parent.ary_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(u8));
+    memset(elems + at, 0, n_elems); // initialize new space
+    parent.ary_n = n+n_elems;
+    return algo::aryptr<u8>(elems+at,n_elems);
+}
+
 // --- algo.ByteAry.ary.Remove
 // Remove item by index. If index outside of range, do nothing.
 void algo::ary_Remove(algo::ByteAry& parent, u32 i) {
@@ -494,6 +567,25 @@ bool algo::ary_ReadStrptrMaybe(algo::ByteAry& parent, algo::strptr in_str) {
     return retval;
 }
 
+// --- algo.ByteAry.ary.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void algo::ary_Insary(algo::ByteAry& parent, algo::aryptr<u8> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.ary_elems && rhs.elems < parent.ary_elems + parent.ary_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("algo.tary_alias  field:algo.ByteAry.ary  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(parent.ary_elems+1))) {
+        FatalErrorExit("algo.bad_insary  field:algo.ByteAry.ary  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = parent.ary_n - at;
+    ary_Reserve(parent, nnew); // reserve space
+    memmove(parent.ary_elems + at + nnew, parent.ary_elems + at, nmove * sizeof(u8));
+    memcpy(parent.ary_elems + at, rhs.elems, nnew * sizeof(u8));
+    parent.ary_n += nnew;
+}
+
 // --- algo.ByteAry..Uninit
 void algo::ByteAry_Uninit(algo::ByteAry& parent) {
     algo::ByteAry &row = parent; (void)row;
@@ -547,22 +639,6 @@ bool algo::ch_ReadStrptrMaybe(algo::Charset& parent, algo::strptr in_str) {
     return retval;
 }
 
-// --- algo.Charset.ch_bitcurs.Next
-// proceed to next item
-void algo::Charset_ch_bitcurs_Next(Charset_ch_bitcurs &curs) {
-    ++curs.bit;
-    int index = curs.bit / 64;
-    int offset = curs.bit % 64;
-    for (; index < curs.n_elems; ++index, offset = 0) {
-        u64 rest = curs.elems[index] >> offset;
-        if (rest) {
-            offset += algo::u64_BitScanForward(rest);
-            break;
-        }
-    }
-    curs.bit = index * 64 + offset;
-}
-
 // --- algo.Smallstr150.ch.Print
 void algo::ch_Print(algo::Smallstr150& parent, algo::cstring &out) {
     ch_Addary(out, ch_Getary(parent));
@@ -576,7 +652,7 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr150& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 150");
+        algo_lib::AppendErrtext("comment","text too long, limit 150");
     }
     return retval;
 }
@@ -648,7 +724,7 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr250& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 250");
+        algo_lib::AppendErrtext("comment","text too long, limit 250");
     }
     return retval;
 }
@@ -804,6 +880,7 @@ const char* algo::value_ToCstr(const algo::Errns& parent) {
     switch(value_GetEnum(parent)) {
         case algo_Errns_unix               : ret = "unix";  break;
         case algo_Errns_win                : ret = "win";  break;
+        case algo_Errns_ssl                : ret = "ssl";  break;
     }
     return ret;
 }
@@ -829,6 +906,9 @@ bool algo::value_SetStrptrMaybe(algo::Errns& parent, algo::strptr rhs) {
     switch (elems_N(rhs)) {
         case 3: {
             switch (u64(algo::ReadLE16(rhs.elems))|(u64(rhs[2])<<16)) {
+                case LE_STR3('s','s','l'): {
+                    value_SetEnum(parent,algo_Errns_ssl); ret = true; break;
+                }
                 case LE_STR3('w','i','n'): {
                     value_SetEnum(parent,algo_Errns_win); ret = true; break;
                 }
@@ -927,6 +1007,7 @@ const char* algo::value_ToCstr(const algo::FieldId& parent) {
     switch(value_GetEnum(parent)) {
         case algo_FieldId_name             : ret = "name";  break;
         case algo_FieldId_value            : ret = "value";  break;
+        case algo_FieldId_ary              : ret = "ary";  break;
         case algo_FieldId_ch               : ret = "ch";  break;
         case algo_FieldId_exponent         : ret = "exponent";  break;
         case algo_FieldId_mantissa         : ret = "mantissa";  break;
@@ -949,7 +1030,6 @@ const char* algo::value_ToCstr(const algo::FieldId& parent) {
         case algo_FieldId_overflow         : ret = "overflow";  break;
         case algo_FieldId_hex              : ret = "hex";  break;
         case algo_FieldId_sha1sig          : ret = "sha1sig";  break;
-        case algo_FieldId_ary              : ret = "ary";  break;
         case algo_FieldId_attrs            : ret = "attrs";  break;
         case algo_FieldId_head             : ret = "head";  break;
         case algo_FieldId_protocol         : ret = "protocol";  break;
@@ -1284,41 +1364,35 @@ bool algo::FileFlags_ReadFieldMaybe(algo::FileFlags& parent, algo::strptr field,
     switch(field_id) {
         case algo_FieldId_value: {
             retval = u32_ReadStrptrMaybe(parent.value, strval);
-            break;
-        }
+        } break;
         case algo_FieldId_append: {
             retval = append_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case algo_FieldId_read: {
             retval = read_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case algo_FieldId_write: {
             retval = write_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case algo_FieldId__throw: {
             retval = _throw_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case algo_FieldId_temp: {
             retval = temp_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case algo_FieldId_overlap: {
             retval = overlap_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case algo_FieldId_linear: {
             retval = linear_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case algo_FieldId_printerr: {
             retval = printerr_ReadStrptrMaybe(parent, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -1883,6 +1957,374 @@ bool algo::I32Dec5_ReadStrptrMaybe(algo::I32Dec5 &parent, algo::strptr in_str) {
 // cfmt:algo.I32Dec5.String  printfmt:Raw
 void algo::I32Dec5_Print(algo::I32Dec5 row, algo::cstring& str) {
     algo::value_Print(row, str);
+}
+
+// --- algo.I32RangeAry.ary.Addary
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+algo::aryptr<algo::i32_Range> algo::ary_Addary(algo::I32RangeAry& parent, algo::aryptr<algo::i32_Range> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.ary_elems && rhs.elems < parent.ary_elems + parent.ary_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("algo.tary_alias  field:algo.I32RangeAry.ary  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    int nnew = rhs.n_elems;
+    ary_Reserve(parent, nnew); // reserve space
+    int at = parent.ary_n;
+    for (int i = 0; i < nnew; i++) {
+        new (parent.ary_elems + at + i) algo::i32_Range(rhs[i]);
+        parent.ary_n++;
+    }
+    return algo::aryptr<algo::i32_Range>(parent.ary_elems + at, nnew);
+}
+
+// --- algo.I32RangeAry.ary.Alloc
+// Reserve space. Insert element at the end
+// The new element is initialized to a default value
+algo::i32_Range& algo::ary_Alloc(algo::I32RangeAry& parent) {
+    ary_Reserve(parent, 1);
+    int n  = parent.ary_n;
+    int at = n;
+    algo::i32_Range *elems = parent.ary_elems;
+    new (elems + at) algo::i32_Range(); // construct new element, default initializer
+    parent.ary_n = n+1;
+    return elems[at];
+}
+
+// --- algo.I32RangeAry.ary.AllocAt
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::i32_Range& algo::ary_AllocAt(algo::I32RangeAry& parent, int at) {
+    ary_Reserve(parent, 1);
+    int n  = parent.ary_n;
+    if (UNLIKELY(u64(at) >= u64(n+1))) {
+        FatalErrorExit("algo.bad_alloc_at  field:algo.I32RangeAry.ary  comment:'index out of range'");
+    }
+    algo::i32_Range *elems = parent.ary_elems;
+    memmove(elems + at + 1, elems + at, (n - at) * sizeof(algo::i32_Range));
+    new (elems + at) algo::i32_Range(); // construct element, default initializer
+    parent.ary_n = n+1;
+    return elems[at];
+}
+
+// --- algo.I32RangeAry.ary.AllocN
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo::i32_Range> algo::ary_AllocN(algo::I32RangeAry& parent, int n_elems) {
+    ary_Reserve(parent, n_elems);
+    int old_n  = parent.ary_n;
+    int new_n = old_n + n_elems;
+    algo::i32_Range *elems = parent.ary_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) algo::i32_Range(); // construct new element, default initialize
+    }
+    parent.ary_n = new_n;
+    return algo::aryptr<algo::i32_Range>(elems + old_n, n_elems);
+}
+
+// --- algo.I32RangeAry.ary.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<algo::i32_Range> algo::ary_AllocNAt(algo::I32RangeAry& parent, int n_elems, int at) {
+    ary_Reserve(parent, n_elems);
+    int n  = parent.ary_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("algo.bad_alloc_n_at  field:algo.I32RangeAry.ary  comment:'index out of range'");
+    }
+    algo::i32_Range *elems = parent.ary_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(algo::i32_Range));
+    for (int i = 0; i < n_elems; i++) {
+        new (elems + at + i) algo::i32_Range(); // construct new element, default initialize
+    }
+    parent.ary_n = n+n_elems;
+    return algo::aryptr<algo::i32_Range>(elems+at,n_elems);
+}
+
+// --- algo.I32RangeAry.ary.Remove
+// Remove item by index. If index outside of range, do nothing.
+void algo::ary_Remove(algo::I32RangeAry& parent, u32 i) {
+    u32 lim = parent.ary_n;
+    algo::i32_Range *elems = parent.ary_elems;
+    if (i < lim) {
+        memmove(elems + i, elems + (i + 1), sizeof(algo::i32_Range) * (lim - (i + 1)));
+        parent.ary_n = lim - 1;
+    }
+}
+
+// --- algo.I32RangeAry.ary.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void algo::ary_RemoveLast(algo::I32RangeAry& parent) {
+    u64 n = parent.ary_n;
+    if (n > 0) {
+        n -= 1;
+        parent.ary_n = n;
+    }
+}
+
+// --- algo.I32RangeAry.ary.AbsReserve
+// Make sure N elements fit in array. Process dies if out of memory
+void algo::ary_AbsReserve(algo::I32RangeAry& parent, int n) {
+    u32 old_max  = parent.ary_max;
+    if (n > i32(old_max)) {
+        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.ary_elems, old_max * sizeof(algo::i32_Range), new_max * sizeof(algo::i32_Range));
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("algo.tary_nomem  field:algo.I32RangeAry.ary  comment:'out of memory'");
+        }
+        parent.ary_elems = (algo::i32_Range*)new_mem;
+        parent.ary_max = new_max;
+    }
+}
+
+// --- algo.I32RangeAry.ary.Setary
+// Copy contents of RHS to PARENT.
+void algo::ary_Setary(algo::I32RangeAry& parent, algo::I32RangeAry &rhs) {
+    ary_RemoveAll(parent);
+    int nnew = rhs.ary_n;
+    ary_Reserve(parent, nnew); // reserve space
+    for (int i = 0; i < nnew; i++) { // copy elements over
+        new (parent.ary_elems + i) algo::i32_Range(ary_qFind(rhs, i));
+        parent.ary_n = i + 1;
+    }
+}
+
+// --- algo.I32RangeAry.ary.Setary2
+// Copy specified array into ary, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+void algo::ary_Setary(algo::I32RangeAry& parent, const algo::aryptr<algo::i32_Range> &rhs) {
+    ary_RemoveAll(parent);
+    ary_Addary(parent, rhs);
+}
+
+// --- algo.I32RangeAry.ary.AllocNVal
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo::i32_Range> algo::ary_AllocNVal(algo::I32RangeAry& parent, int n_elems, const algo::i32_Range& val) {
+    ary_Reserve(parent, n_elems);
+    int old_n  = parent.ary_n;
+    int new_n = old_n + n_elems;
+    algo::i32_Range *elems = parent.ary_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) algo::i32_Range(val);
+    }
+    parent.ary_n = new_n;
+    return algo::aryptr<algo::i32_Range>(elems + old_n, n_elems);
+}
+
+// --- algo.I32RangeAry.ary.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void algo::ary_Insary(algo::I32RangeAry& parent, algo::aryptr<algo::i32_Range> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.ary_elems && rhs.elems < parent.ary_elems + parent.ary_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("algo.tary_alias  field:algo.I32RangeAry.ary  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(parent.ary_elems+1))) {
+        FatalErrorExit("algo.bad_insary  field:algo.I32RangeAry.ary  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = parent.ary_n - at;
+    ary_Reserve(parent, nnew); // reserve space
+    for (int i = nmove-1; i >=0 ; --i) {
+        new (parent.ary_elems + at + nnew + i) algo::i32_Range(parent.ary_elems[at + i]);
+    }
+    for (int i = 0; i < nnew; ++i) {
+        new (parent.ary_elems + at + i) algo::i32_Range(rhs[i]);
+    }
+    parent.ary_n += nnew;
+}
+
+// --- algo.I32RangeAry.ary.Swap
+// Swap values elem_a and elem_b
+inline static void algo::ary_Swap(algo::i32_Range &elem_a, algo::i32_Range &elem_b) {
+    u8 temp[sizeof(algo::i32_Range)];
+    memcpy(&temp  , &elem_a, sizeof(algo::i32_Range));
+    memcpy(&elem_a, &elem_b, sizeof(algo::i32_Range));
+    memcpy(&elem_b, &temp  , sizeof(algo::i32_Range));
+}
+
+// --- algo.I32RangeAry.ary.Rotleft
+// Left circular shift of three-tuple
+inline static void algo::ary_Rotleft(algo::i32_Range &elem_a, algo::i32_Range &elem_b, algo::i32_Range &elem_c) {
+    u8 temp[sizeof(algo::i32_Range)];
+    memcpy(&temp, &elem_a   , sizeof(algo::i32_Range));
+    memcpy(&elem_a   , &elem_b   , sizeof(algo::i32_Range));
+    memcpy(&elem_b   , &elem_c   , sizeof(algo::i32_Range));
+    memcpy(&elem_c   , &temp, sizeof(algo::i32_Range));
+}
+
+// --- algo.I32RangeAry.ary.Lt
+// Compare values elem_a and elem_b
+// The comparison function must be anti-symmetric: if a>b, then !(b>a).
+// If not, mayhem results.
+static bool algo::ary_Lt(algo::i32_Range &elem_a, algo::i32_Range &elem_b) {
+    bool ret;
+    ret = elem_a.beg < elem_b.beg;
+    return ret;
+}
+
+// --- algo.I32RangeAry.ary.SortedQ
+// Verify whether array is sorted
+bool algo::ary_SortedQ(algo::I32RangeAry& parent) {
+    algo::i32_Range *elems = ary_Getary(parent).elems;
+    int n = ary_N(parent);
+    for (int i = 1; i < n; i++) {
+        if (ary_Lt(elems[i], elems[i-1])) {
+            return false;
+        }
+    }
+    return true;
+}
+
+// --- algo.I32RangeAry.ary.IntInsertionSort
+// Internal insertion sort
+static void algo::ary_IntInsertionSort(algo::i32_Range *elems, int n) {
+    for (int i = 1; i < n; ++i) {
+        int j = i;
+        // find the spot for ith element.
+        while (j>0 && ary_Lt(elems[i], elems[j-1])) {
+            j--;
+        }
+        if (j<i) {
+            u8 tmp[sizeof(algo::i32_Range)];
+            memcpy (tmp                       , &elems[i], sizeof(algo::i32_Range)      );
+            memmove(&elems[j+1], &elems[j], sizeof(algo::i32_Range)*(i-j));
+            memcpy (&elems[j]  , tmp                     , sizeof(algo::i32_Range)      );
+        }
+    }
+}
+
+// --- algo.I32RangeAry.ary.IntHeapSort
+// Internal heap sort
+static void algo::ary_IntHeapSort(algo::i32_Range *elems, int n) {
+    // construct max-heap.
+    // k=current element
+    // j=parent element
+    for (int i = 1; i < n; i++) {
+        int k=i;
+        int j=(i-1)/2;
+        while (ary_Lt(elems[j], elems[k])) {
+            ary_Swap(elems[k],elems[j]);
+            k=j;
+            j=(k-1)/2;
+        }
+    }
+    // remove elements from heap one-by-one,
+    // deposit them in reverse order starting at the end of ARY.
+    for (int i = n - 1; i>=0; i--) {
+        int k = 0;
+        int l = 1;
+        while (l<i) {
+            l += l<i-1 && ary_Lt(elems[l], elems[l+1]);
+            if (ary_Lt(elems[l], elems[i])) {
+                break;
+            }
+            ary_Swap(elems[k], elems[l]);
+            k = l;
+            l = k*2+1;
+        }
+        if (i != k) {
+            ary_Swap(elems[i],elems[k]);
+        }
+    }
+}
+
+// --- algo.I32RangeAry.ary.IntQuickSort
+// Quick sort engine
+static void algo::ary_IntQuickSort(algo::i32_Range *elems, int n, int depth) {
+    while (n>16) {
+        // detect degenerate case and revert to heap sort
+        if (depth==0) {
+            ary_IntHeapSort(elems,n);
+            return;
+        }
+        // elements to sort initially to determine pivot.
+        // choose pp=n/2 in case the input is already sorted.
+        int pi = 0;
+        int pp = n/2;
+        int pj = n-1;
+        // insertion sort for 1st, middle and last element
+        if (ary_Lt(elems[pp], elems[pi])) {
+            ary_Swap(elems[pi], elems[pp]);
+        }
+        if (ary_Lt(elems[pj], elems[pp])) {
+            if (ary_Lt(elems[pj], elems[pi])) {
+                ary_Rotleft(elems[pi], elems[pj], elems[pp]);
+            } else {
+                ary_Swap(elems[pj], elems[pp]);
+            }
+        }
+        // deposit pivot near the end of the array and skip it.
+        ary_Swap(elems[--pj], elems[pp]);
+        // reference to pivot
+        algo::i32_Range &pivot = elems[pj];
+        for(;;){
+            while (ary_Lt(elems[++pi], pivot)) {
+            }
+            while (ary_Lt(pivot, elems[--pj])) {
+            }
+            if (pj <= pi) {
+                break;
+            }
+            ary_Swap(elems[pi],elems[pj]);
+        }
+        depth -= 1;
+        ary_IntQuickSort(elems, pi, depth);
+        elems += pi;
+        n -= pi;
+    }
+    // sort the remainder of this section
+    ary_IntInsertionSort(elems,n);
+}
+
+// --- algo.I32RangeAry.ary.InsertionSort
+// Insertion sort
+void algo::ary_InsertionSort(algo::I32RangeAry& parent) {
+    algo::i32_Range *elems = ary_Getary(parent).elems;
+    int n = ary_N(parent);
+    ary_IntInsertionSort(elems, n);
+}
+
+// --- algo.I32RangeAry.ary.HeapSort
+// Heap sort
+void algo::ary_HeapSort(algo::I32RangeAry& parent) {
+    algo::i32_Range *elems = ary_Getary(parent).elems;
+    int n = ary_N(parent);
+    ary_IntHeapSort(elems, n);
+}
+
+// --- algo.I32RangeAry.ary.QuickSort
+// Quick sort
+void algo::ary_QuickSort(algo::I32RangeAry& parent) {
+    // compute max recursion depth based on number of elements in the array
+    int max_depth = algo::CeilingLog2(u32(ary_N(parent) + 1)) + 3;
+    algo::i32_Range *elems = ary_Getary(parent).elems;
+    int n = ary_N(parent);
+    ary_IntQuickSort(elems, n, max_depth);
+}
+
+// --- algo.I32RangeAry..Uninit
+void algo::I32RangeAry_Uninit(algo::I32RangeAry& parent) {
+    algo::I32RangeAry &row = parent; (void)row;
+
+    // algo.I32RangeAry.ary.Uninit (Tary)  //
+    // remove all elements from algo.I32RangeAry.ary
+    ary_RemoveAll(parent);
+    // free memory for Tary algo.I32RangeAry.ary
+    algo_lib::malloc_FreeMem(parent.ary_elems, sizeof(algo::i32_Range)*parent.ary_max); // (algo.I32RangeAry.ary)
+}
+
+// --- algo.I32RangeAry..AssignOp
+algo::I32RangeAry& algo::I32RangeAry::operator =(const algo::I32RangeAry &rhs) {
+    ary_Setary(*this, ary_Getary(const_cast<algo::I32RangeAry&>(rhs)));
+    return *this;
+}
+
+// --- algo.I32RangeAry..CopyCtor
+ algo::I32RangeAry::I32RangeAry(const algo::I32RangeAry &rhs) {
+    ary_elems 	= 0; // (algo.I32RangeAry.ary)
+    ary_n     	= 0; // (algo.I32RangeAry.ary)
+    ary_max   	= 0; // (algo.I32RangeAry.ary)
+    ary_Setary(*this, ary_Getary(const_cast<algo::I32RangeAry&>(rhs)));
 }
 
 // --- algo.I64Dec1.value.SetDoubleMaybe
@@ -2857,25 +3299,23 @@ bool algo::IOEvtFlags_ReadFieldMaybe(algo::IOEvtFlags& parent, algo::strptr fiel
     switch(field_id) {
         case algo_FieldId_value: {
             retval = u32_ReadStrptrMaybe(parent.value, strval);
-            break;
-        }
+        } break;
         case algo_FieldId_read: {
             retval = read_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case algo_FieldId_write: {
             retval = write_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case algo_FieldId_eof: {
             retval = eof_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case algo_FieldId_err: {
             retval = err_ReadStrptrMaybe(parent, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -2962,13 +3402,14 @@ bool algo::IPoint_ReadFieldMaybe(algo::IPoint& parent, algo::strptr field, algo:
     switch(field_id) {
         case algo_FieldId_x: {
             retval = i32_ReadStrptrMaybe(parent.x, strval);
-            break;
-        }
+        } break;
         case algo_FieldId_y: {
             retval = i32_ReadStrptrMaybe(parent.y, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -3013,7 +3454,7 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr50& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 50");
+        algo_lib::AppendErrtext("comment","text too long, limit 50");
     }
     return retval;
 }
@@ -3094,7 +3535,7 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr100& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 100");
+        algo_lib::AppendErrtext("comment","text too long, limit 100");
     }
     return retval;
 }
@@ -3222,6 +3663,23 @@ algo::aryptr<char> algo::buf_AllocN(algo::LineBuf& parent, int n_elems) {
     return algo::aryptr<char>(elems + old_n, n_elems);
 }
 
+// --- algo.LineBuf.buf.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<char> algo::buf_AllocNAt(algo::LineBuf& parent, int n_elems, int at) {
+    buf_Reserve(parent, n_elems);
+    int n  = parent.buf_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("algo.bad_alloc_n_at  field:algo.LineBuf.buf  comment:'index out of range'");
+    }
+    char *elems = parent.buf_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(char));
+    memset(elems + at, 0, n_elems); // initialize new space
+    parent.buf_n = n+n_elems;
+    return algo::aryptr<char>(elems+at,n_elems);
+}
+
 // --- algo.LineBuf.buf.Remove
 // Remove item by index. If index outside of range, do nothing.
 void algo::buf_Remove(algo::LineBuf& parent, u32 i) {
@@ -3304,6 +3762,25 @@ bool algo::buf_ReadStrptrMaybe(algo::LineBuf& parent, algo::strptr in_str) {
     return retval;
 }
 
+// --- algo.LineBuf.buf.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void algo::buf_Insary(algo::LineBuf& parent, algo::aryptr<char> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.buf_elems && rhs.elems < parent.buf_elems + parent.buf_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("algo.tary_alias  field:algo.LineBuf.buf  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(parent.buf_elems+1))) {
+        FatalErrorExit("algo.bad_insary  field:algo.LineBuf.buf  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = parent.buf_n - at;
+    buf_Reserve(parent, nnew); // reserve space
+    memmove(parent.buf_elems + at + nnew, parent.buf_elems + at, nmove * sizeof(char));
+    memcpy(parent.buf_elems + at, rhs.elems, nnew * sizeof(char));
+    parent.buf_n += nnew;
+}
+
 // --- algo.LineBuf..Uninit
 void algo::LineBuf_Uninit(algo::LineBuf& parent) {
     algo::LineBuf &row = parent; (void)row;
@@ -3349,7 +3826,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr10_U64& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 10");
+        algo_lib::AppendErrtext("comment","text too long, limit 10");
     }
     return retval;
 }
@@ -3459,7 +3936,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr11_U64& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 11");
+        algo_lib::AppendErrtext("comment","text too long, limit 11");
     }
     return retval;
 }
@@ -3569,7 +4046,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr12_U64& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 12");
+        algo_lib::AppendErrtext("comment","text too long, limit 12");
     }
     return retval;
 }
@@ -3679,7 +4156,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr13_U64_Base36& parent, algo::strptr r
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 13");
+        algo_lib::AppendErrtext("comment","text too long, limit 13");
     }
     return retval;
 }
@@ -3809,7 +4286,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr16_U64_Base16& parent, algo::strptr r
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 16");
+        algo_lib::AppendErrtext("comment","text too long, limit 16");
     }
     return retval;
 }
@@ -3937,7 +4414,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr1_U32& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 1");
+        algo_lib::AppendErrtext("comment","text too long, limit 1");
     }
     return retval;
 }
@@ -4047,7 +4524,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr20_U64& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 20");
+        algo_lib::AppendErrtext("comment","text too long, limit 20");
     }
     return retval;
 }
@@ -4165,7 +4642,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr22_U64& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 22");
+        algo_lib::AppendErrtext("comment","text too long, limit 22");
     }
     return retval;
 }
@@ -4283,7 +4760,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr2_U32& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 2");
+        algo_lib::AppendErrtext("comment","text too long, limit 2");
     }
     return retval;
 }
@@ -4393,7 +4870,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr3_U32& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 3");
+        algo_lib::AppendErrtext("comment","text too long, limit 3");
     }
     return retval;
 }
@@ -4503,7 +4980,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr4_U32& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 4");
+        algo_lib::AppendErrtext("comment","text too long, limit 4");
     }
     return retval;
 }
@@ -4613,7 +5090,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr5_U32& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 5");
+        algo_lib::AppendErrtext("comment","text too long, limit 5");
     }
     return retval;
 }
@@ -4723,7 +5200,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr5_U32_Base36& parent, algo::strptr rh
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 5");
+        algo_lib::AppendErrtext("comment","text too long, limit 5");
     }
     return retval;
 }
@@ -4850,7 +5327,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr6_U32& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 6");
+        algo_lib::AppendErrtext("comment","text too long, limit 6");
     }
     return retval;
 }
@@ -4960,7 +5437,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr7_U32& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 7");
+        algo_lib::AppendErrtext("comment","text too long, limit 7");
     }
     return retval;
 }
@@ -5070,7 +5547,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr7_U32_Base36& parent, algo::strptr rh
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 7");
+        algo_lib::AppendErrtext("comment","text too long, limit 7");
     }
     return retval;
 }
@@ -5198,7 +5675,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr8_U32& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 8");
+        algo_lib::AppendErrtext("comment","text too long, limit 8");
     }
     return retval;
 }
@@ -5308,7 +5785,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr8_U32_Base16& parent, algo::strptr rh
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 8");
+        algo_lib::AppendErrtext("comment","text too long, limit 8");
     }
     return retval;
 }
@@ -5436,7 +5913,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr8_U64& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 8");
+        algo_lib::AppendErrtext("comment","text too long, limit 8");
     }
     return retval;
 }
@@ -5546,7 +6023,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr9_U32& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 9");
+        algo_lib::AppendErrtext("comment","text too long, limit 9");
     }
     return retval;
 }
@@ -5656,7 +6133,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr9_U64& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 9");
+        algo_lib::AppendErrtext("comment","text too long, limit 9");
     }
     return retval;
 }
@@ -5766,7 +6243,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr10& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 10");
+        algo_lib::AppendErrtext("comment","text too long, limit 10");
     }
     return retval;
 }
@@ -5824,7 +6301,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr12& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 12");
+        algo_lib::AppendErrtext("comment","text too long, limit 12");
     }
     return retval;
 }
@@ -5882,7 +6359,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr14& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 14");
+        algo_lib::AppendErrtext("comment","text too long, limit 14");
     }
     return retval;
 }
@@ -5940,7 +6417,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr15& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 15");
+        algo_lib::AppendErrtext("comment","text too long, limit 15");
     }
     return retval;
 }
@@ -5998,7 +6475,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr20_I64& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 20");
+        algo_lib::AppendErrtext("comment","text too long, limit 20");
     }
     return retval;
 }
@@ -6129,7 +6606,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr20_U64& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 20");
+        algo_lib::AppendErrtext("comment","text too long, limit 20");
     }
     return retval;
 }
@@ -6247,7 +6724,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr3& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 3");
+        algo_lib::AppendErrtext("comment","text too long, limit 3");
     }
     return retval;
 }
@@ -6305,7 +6782,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr3_I16& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 3");
+        algo_lib::AppendErrtext("comment","text too long, limit 3");
     }
     return retval;
 }
@@ -6428,7 +6905,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr4& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 4");
+        algo_lib::AppendErrtext("comment","text too long, limit 4");
     }
     return retval;
 }
@@ -6486,7 +6963,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr5& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 5");
+        algo_lib::AppendErrtext("comment","text too long, limit 5");
     }
     return retval;
 }
@@ -6544,7 +7021,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr5_I16& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 5");
+        algo_lib::AppendErrtext("comment","text too long, limit 5");
     }
     return retval;
 }
@@ -6660,7 +7137,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr6& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 6");
+        algo_lib::AppendErrtext("comment","text too long, limit 6");
     }
     return retval;
 }
@@ -6718,7 +7195,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr6_U32& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 6");
+        algo_lib::AppendErrtext("comment","text too long, limit 6");
     }
     return retval;
 }
@@ -6828,7 +7305,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr7_I32_Base36& parent, algo::strptr 
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 7");
+        algo_lib::AppendErrtext("comment","text too long, limit 7");
     }
     return retval;
 }
@@ -6969,7 +7446,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr8& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 8");
+        algo_lib::AppendErrtext("comment","text too long, limit 8");
     }
     return retval;
 }
@@ -7027,7 +7504,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr9& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 9");
+        algo_lib::AppendErrtext("comment","text too long, limit 9");
     }
     return retval;
 }
@@ -7323,29 +7800,26 @@ bool algo::NumParseFlags_ReadFieldMaybe(algo::NumParseFlags& parent, algo::strpt
     switch(field_id) {
         case algo_FieldId_value: {
             retval = u32_ReadStrptrMaybe(parent.value, strval);
-            break;
-        }
+        } break;
         case algo_FieldId_err: {
             retval = err_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case algo_FieldId_ok: {
             retval = ok_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case algo_FieldId_neg: {
             retval = neg_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case algo_FieldId_overflow: {
             retval = overflow_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case algo_FieldId_hex: {
             retval = hex_ReadStrptrMaybe(parent, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -7444,7 +7918,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr1& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 1");
+        algo_lib::AppendErrtext("comment","text too long, limit 1");
     }
     return retval;
 }
@@ -7502,7 +7976,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr10& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 10");
+        algo_lib::AppendErrtext("comment","text too long, limit 10");
     }
     return retval;
 }
@@ -7560,7 +8034,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr100& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 100");
+        algo_lib::AppendErrtext("comment","text too long, limit 100");
     }
     return retval;
 }
@@ -7618,7 +8092,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr1000& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 1000");
+        algo_lib::AppendErrtext("comment","text too long, limit 1000");
     }
     return retval;
 }
@@ -7676,7 +8150,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr11& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 11");
+        algo_lib::AppendErrtext("comment","text too long, limit 11");
     }
     return retval;
 }
@@ -7734,7 +8208,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr12& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 12");
+        algo_lib::AppendErrtext("comment","text too long, limit 12");
     }
     return retval;
 }
@@ -7792,7 +8266,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr129& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 129");
+        algo_lib::AppendErrtext("comment","text too long, limit 129");
     }
     return retval;
 }
@@ -7850,7 +8324,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr13& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 13");
+        algo_lib::AppendErrtext("comment","text too long, limit 13");
     }
     return retval;
 }
@@ -7908,7 +8382,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr14& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 14");
+        algo_lib::AppendErrtext("comment","text too long, limit 14");
     }
     return retval;
 }
@@ -7966,7 +8440,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr15& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 15");
+        algo_lib::AppendErrtext("comment","text too long, limit 15");
     }
     return retval;
 }
@@ -8024,7 +8498,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr151& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 151");
+        algo_lib::AppendErrtext("comment","text too long, limit 151");
     }
     return retval;
 }
@@ -8082,7 +8556,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr16& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 16");
+        algo_lib::AppendErrtext("comment","text too long, limit 16");
     }
     return retval;
 }
@@ -8140,7 +8614,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr17& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 17");
+        algo_lib::AppendErrtext("comment","text too long, limit 17");
     }
     return retval;
 }
@@ -8198,7 +8672,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr18& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 18");
+        algo_lib::AppendErrtext("comment","text too long, limit 18");
     }
     return retval;
 }
@@ -8256,7 +8730,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr19& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 19");
+        algo_lib::AppendErrtext("comment","text too long, limit 19");
     }
     return retval;
 }
@@ -8314,7 +8788,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr2& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 2");
+        algo_lib::AppendErrtext("comment","text too long, limit 2");
     }
     return retval;
 }
@@ -8372,7 +8846,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr20& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 20");
+        algo_lib::AppendErrtext("comment","text too long, limit 20");
     }
     return retval;
 }
@@ -8430,7 +8904,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr21& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 21");
+        algo_lib::AppendErrtext("comment","text too long, limit 21");
     }
     return retval;
 }
@@ -8488,7 +8962,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr24& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 24");
+        algo_lib::AppendErrtext("comment","text too long, limit 24");
     }
     return retval;
 }
@@ -8546,7 +9020,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr25& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 25");
+        algo_lib::AppendErrtext("comment","text too long, limit 25");
     }
     return retval;
 }
@@ -8604,7 +9078,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr28& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 28");
+        algo_lib::AppendErrtext("comment","text too long, limit 28");
     }
     return retval;
 }
@@ -8662,7 +9136,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr3& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 3");
+        algo_lib::AppendErrtext("comment","text too long, limit 3");
     }
     return retval;
 }
@@ -8720,7 +9194,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr30& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 30");
+        algo_lib::AppendErrtext("comment","text too long, limit 30");
     }
     return retval;
 }
@@ -8778,7 +9252,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr32& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 32");
+        algo_lib::AppendErrtext("comment","text too long, limit 32");
     }
     return retval;
 }
@@ -8836,7 +9310,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr33& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 33");
+        algo_lib::AppendErrtext("comment","text too long, limit 33");
     }
     return retval;
 }
@@ -8894,7 +9368,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr35& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 35");
+        algo_lib::AppendErrtext("comment","text too long, limit 35");
     }
     return retval;
 }
@@ -8952,7 +9426,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr36& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 36");
+        algo_lib::AppendErrtext("comment","text too long, limit 36");
     }
     return retval;
 }
@@ -9010,7 +9484,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr4& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 4");
+        algo_lib::AppendErrtext("comment","text too long, limit 4");
     }
     return retval;
 }
@@ -9068,7 +9542,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr40& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 40");
+        algo_lib::AppendErrtext("comment","text too long, limit 40");
     }
     return retval;
 }
@@ -9126,7 +9600,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr41& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 41");
+        algo_lib::AppendErrtext("comment","text too long, limit 41");
     }
     return retval;
 }
@@ -9184,7 +9658,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr43& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 43");
+        algo_lib::AppendErrtext("comment","text too long, limit 43");
     }
     return retval;
 }
@@ -9242,7 +9716,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr44& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 44");
+        algo_lib::AppendErrtext("comment","text too long, limit 44");
     }
     return retval;
 }
@@ -9300,7 +9774,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr48& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 48");
+        algo_lib::AppendErrtext("comment","text too long, limit 48");
     }
     return retval;
 }
@@ -9358,7 +9832,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr5& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 5");
+        algo_lib::AppendErrtext("comment","text too long, limit 5");
     }
     return retval;
 }
@@ -9416,7 +9890,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr50& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 50");
+        algo_lib::AppendErrtext("comment","text too long, limit 50");
     }
     return retval;
 }
@@ -9474,7 +9948,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr54& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 54");
+        algo_lib::AppendErrtext("comment","text too long, limit 54");
     }
     return retval;
 }
@@ -9532,7 +10006,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr55& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 55");
+        algo_lib::AppendErrtext("comment","text too long, limit 55");
     }
     return retval;
 }
@@ -9590,7 +10064,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr6& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 6");
+        algo_lib::AppendErrtext("comment","text too long, limit 6");
     }
     return retval;
 }
@@ -9648,7 +10122,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr60& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 60");
+        algo_lib::AppendErrtext("comment","text too long, limit 60");
     }
     return retval;
 }
@@ -9706,7 +10180,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr62& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 62");
+        algo_lib::AppendErrtext("comment","text too long, limit 62");
     }
     return retval;
 }
@@ -9764,7 +10238,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr66& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 66");
+        algo_lib::AppendErrtext("comment","text too long, limit 66");
     }
     return retval;
 }
@@ -9822,7 +10296,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr6_U32& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 6");
+        algo_lib::AppendErrtext("comment","text too long, limit 6");
     }
     return retval;
 }
@@ -9932,7 +10406,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr7& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 7");
+        algo_lib::AppendErrtext("comment","text too long, limit 7");
     }
     return retval;
 }
@@ -9990,7 +10464,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr8& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 8");
+        algo_lib::AppendErrtext("comment","text too long, limit 8");
     }
     return retval;
 }
@@ -10048,7 +10522,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr80& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 80");
+        algo_lib::AppendErrtext("comment","text too long, limit 80");
     }
     return retval;
 }
@@ -10106,7 +10580,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr9& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 9");
+        algo_lib::AppendErrtext("comment","text too long, limit 9");
     }
     return retval;
 }
@@ -10164,7 +10638,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr10& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 10");
+        algo_lib::AppendErrtext("comment","text too long, limit 10");
     }
     return retval;
 }
@@ -10222,7 +10696,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr100& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 100");
+        algo_lib::AppendErrtext("comment","text too long, limit 100");
     }
     return retval;
 }
@@ -10280,7 +10754,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr11& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 11");
+        algo_lib::AppendErrtext("comment","text too long, limit 11");
     }
     return retval;
 }
@@ -10338,7 +10812,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr12& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 12");
+        algo_lib::AppendErrtext("comment","text too long, limit 12");
     }
     return retval;
 }
@@ -10396,7 +10870,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr128& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 128");
+        algo_lib::AppendErrtext("comment","text too long, limit 128");
     }
     return retval;
 }
@@ -10454,7 +10928,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr14& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 14");
+        algo_lib::AppendErrtext("comment","text too long, limit 14");
     }
     return retval;
 }
@@ -10512,7 +10986,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr15& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 15");
+        algo_lib::AppendErrtext("comment","text too long, limit 15");
     }
     return retval;
 }
@@ -10570,7 +11044,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr16& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 16");
+        algo_lib::AppendErrtext("comment","text too long, limit 16");
     }
     return retval;
 }
@@ -10628,7 +11102,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr18& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 18");
+        algo_lib::AppendErrtext("comment","text too long, limit 18");
     }
     return retval;
 }
@@ -10686,7 +11160,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr2& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 2");
+        algo_lib::AppendErrtext("comment","text too long, limit 2");
     }
     return retval;
 }
@@ -10744,7 +11218,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr20& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 20");
+        algo_lib::AppendErrtext("comment","text too long, limit 20");
     }
     return retval;
 }
@@ -10802,7 +11276,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr200& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 200");
+        algo_lib::AppendErrtext("comment","text too long, limit 200");
     }
     return retval;
 }
@@ -10825,7 +11299,7 @@ void algo::ch_SetStrptr(algo::RspaceStr200& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RspaceStr200..Hash
-u32 algo::RspaceStr200_Hash(u32 prev, const algo::RspaceStr200& rhs) {
+u32 algo::RspaceStr200_Hash(u32 prev, algo::RspaceStr200 rhs) {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -10843,7 +11317,7 @@ bool algo::RspaceStr200_ReadStrptrMaybe(algo::RspaceStr200 &parent, algo::strptr
 // --- algo.RspaceStr200..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RspaceStr200.String  printfmt:Raw
-void algo::RspaceStr200_Print(algo::RspaceStr200& row, algo::cstring& str) {
+void algo::RspaceStr200_Print(algo::RspaceStr200 row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
@@ -10860,7 +11334,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr21& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 21");
+        algo_lib::AppendErrtext("comment","text too long, limit 21");
     }
     return retval;
 }
@@ -10918,7 +11392,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr24& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 24");
+        algo_lib::AppendErrtext("comment","text too long, limit 24");
     }
     return retval;
 }
@@ -10976,7 +11450,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr240& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 240");
+        algo_lib::AppendErrtext("comment","text too long, limit 240");
     }
     return retval;
 }
@@ -11034,7 +11508,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr25& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 25");
+        algo_lib::AppendErrtext("comment","text too long, limit 25");
     }
     return retval;
 }
@@ -11092,7 +11566,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr26& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 26");
+        algo_lib::AppendErrtext("comment","text too long, limit 26");
     }
     return retval;
 }
@@ -11150,7 +11624,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr3& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 3");
+        algo_lib::AppendErrtext("comment","text too long, limit 3");
     }
     return retval;
 }
@@ -11208,7 +11682,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr31& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 31");
+        algo_lib::AppendErrtext("comment","text too long, limit 31");
     }
     return retval;
 }
@@ -11266,7 +11740,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr32& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 32");
+        algo_lib::AppendErrtext("comment","text too long, limit 32");
     }
     return retval;
 }
@@ -11324,7 +11798,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr4& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 4");
+        algo_lib::AppendErrtext("comment","text too long, limit 4");
     }
     return retval;
 }
@@ -11382,7 +11856,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr40& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 40");
+        algo_lib::AppendErrtext("comment","text too long, limit 40");
     }
     return retval;
 }
@@ -11440,7 +11914,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr5& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 5");
+        algo_lib::AppendErrtext("comment","text too long, limit 5");
     }
     return retval;
 }
@@ -11498,7 +11972,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr50& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 50");
+        algo_lib::AppendErrtext("comment","text too long, limit 50");
     }
     return retval;
 }
@@ -11556,7 +12030,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr6& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 6");
+        algo_lib::AppendErrtext("comment","text too long, limit 6");
     }
     return retval;
 }
@@ -11614,7 +12088,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr64& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 64");
+        algo_lib::AppendErrtext("comment","text too long, limit 64");
     }
     return retval;
 }
@@ -11672,7 +12146,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr7& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 7");
+        algo_lib::AppendErrtext("comment","text too long, limit 7");
     }
     return retval;
 }
@@ -11730,7 +12204,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr75& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 75");
+        algo_lib::AppendErrtext("comment","text too long, limit 75");
     }
     return retval;
 }
@@ -11788,7 +12262,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr8& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 8");
+        algo_lib::AppendErrtext("comment","text too long, limit 8");
     }
     return retval;
 }
@@ -11846,7 +12320,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr9& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 9");
+        algo_lib::AppendErrtext("comment","text too long, limit 9");
     }
     return retval;
 }
@@ -11977,7 +12451,7 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr1& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 1");
+        algo_lib::AppendErrtext("comment","text too long, limit 1");
     }
     return retval;
 }
@@ -12033,7 +12507,7 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr10& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 10");
+        algo_lib::AppendErrtext("comment","text too long, limit 10");
     }
     return retval;
 }
@@ -12089,7 +12563,7 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr16& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 16");
+        algo_lib::AppendErrtext("comment","text too long, limit 16");
     }
     return retval;
 }
@@ -12145,7 +12619,7 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr2& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 2");
+        algo_lib::AppendErrtext("comment","text too long, limit 2");
     }
     return retval;
 }
@@ -12201,7 +12675,7 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr20& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 20");
+        algo_lib::AppendErrtext("comment","text too long, limit 20");
     }
     return retval;
 }
@@ -12257,7 +12731,7 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr200& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 200");
+        algo_lib::AppendErrtext("comment","text too long, limit 200");
     }
     return retval;
 }
@@ -12300,6 +12774,62 @@ void algo::Smallstr200_Print(algo::Smallstr200& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
+// --- algo.Smallstr249.ch.Print
+void algo::ch_Print(algo::Smallstr249& parent, algo::cstring &out) {
+    ch_Addary(out, ch_Getary(parent));
+}
+
+// --- algo.Smallstr249.ch.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool algo::ch_ReadStrptrMaybe(algo::Smallstr249& parent, algo::strptr rhs) {
+    bool retval = false;
+    if (rhs.n_elems <= 249) {
+        ch_SetStrptr(parent, rhs);
+        retval = true;
+    } else {
+        algo_lib::AppendErrtext("comment","text too long, limit 249");
+    }
+    return retval;
+}
+
+// --- algo.Smallstr249.ch.SetStrptr
+// Copy from strptr, clipping length
+// Set string to the value provided by RHS.
+// If RHS is too large, it is silently clipped.
+void algo::ch_SetStrptr(algo::Smallstr249& parent, const algo::strptr& rhs) {
+    int len = i32_Min(rhs.n_elems, 249);
+    char *rhs_elems = rhs.elems;
+    int i = 0;
+    int j = 0;
+    for (; i < len; i++, j++) {
+        parent.ch[j] = rhs_elems[i];
+    }
+    parent.n_ch       = u8(len);
+}
+
+// --- algo.Smallstr249..Hash
+u32 algo::Smallstr249_Hash(u32 prev, const algo::Smallstr249& rhs) {
+    algo::strptr ch_strptr = ch_Getary(rhs);
+    prev = ::strptr_Hash(prev, ch_strptr);
+    return prev;
+}
+
+// --- algo.Smallstr249..ReadStrptrMaybe
+// Read fields of algo::Smallstr249 from an ascii string.
+// The format of the string is the format of the algo::Smallstr249's only field
+bool algo::Smallstr249_ReadStrptrMaybe(algo::Smallstr249 &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = retval && ch_ReadStrptrMaybe(parent, in_str);
+    return retval;
+}
+
+// --- algo.Smallstr249..Print
+// print string representation of ROW to string STR
+// cfmt:algo.Smallstr249.String  printfmt:Raw
+void algo::Smallstr249_Print(algo::Smallstr249& row, algo::cstring& str) {
+    algo::ch_Print(row, str);
+}
+
 // --- algo.Smallstr25.ch.Print
 void algo::ch_Print(algo::Smallstr25& parent, algo::cstring &out) {
     ch_Addary(out, ch_Getary(parent));
@@ -12313,7 +12843,7 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr25& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 25");
+        algo_lib::AppendErrtext("comment","text too long, limit 25");
     }
     return retval;
 }
@@ -12356,6 +12886,62 @@ void algo::Smallstr25_Print(algo::Smallstr25& row, algo::cstring& str) {
     algo::ch_Print(row, str);
 }
 
+// --- algo.Smallstr255.ch.Print
+void algo::ch_Print(algo::Smallstr255& parent, algo::cstring &out) {
+    ch_Addary(out, ch_Getary(parent));
+}
+
+// --- algo.Smallstr255.ch.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool algo::ch_ReadStrptrMaybe(algo::Smallstr255& parent, algo::strptr rhs) {
+    bool retval = false;
+    if (rhs.n_elems <= 255) {
+        ch_SetStrptr(parent, rhs);
+        retval = true;
+    } else {
+        algo_lib::AppendErrtext("comment","text too long, limit 255");
+    }
+    return retval;
+}
+
+// --- algo.Smallstr255.ch.SetStrptr
+// Copy from strptr, clipping length
+// Set string to the value provided by RHS.
+// If RHS is too large, it is silently clipped.
+void algo::ch_SetStrptr(algo::Smallstr255& parent, const algo::strptr& rhs) {
+    int len = i32_Min(rhs.n_elems, 255);
+    char *rhs_elems = rhs.elems;
+    int i = 0;
+    int j = 0;
+    for (; i < len; i++, j++) {
+        parent.ch[j] = rhs_elems[i];
+    }
+    parent.n_ch       = u8(len);
+}
+
+// --- algo.Smallstr255..Hash
+u32 algo::Smallstr255_Hash(u32 prev, const algo::Smallstr255& rhs) {
+    algo::strptr ch_strptr = ch_Getary(rhs);
+    prev = ::strptr_Hash(prev, ch_strptr);
+    return prev;
+}
+
+// --- algo.Smallstr255..ReadStrptrMaybe
+// Read fields of algo::Smallstr255 from an ascii string.
+// The format of the string is the format of the algo::Smallstr255's only field
+bool algo::Smallstr255_ReadStrptrMaybe(algo::Smallstr255 &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = retval && ch_ReadStrptrMaybe(parent, in_str);
+    return retval;
+}
+
+// --- algo.Smallstr255..Print
+// print string representation of ROW to string STR
+// cfmt:algo.Smallstr255.String  printfmt:Raw
+void algo::Smallstr255_Print(algo::Smallstr255& row, algo::cstring& str) {
+    algo::ch_Print(row, str);
+}
+
 // --- algo.Smallstr3.ch.Print
 void algo::ch_Print(algo::Smallstr3& parent, algo::cstring &out) {
     ch_Addary(out, ch_Getary(parent));
@@ -12369,7 +12955,7 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr3& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 3");
+        algo_lib::AppendErrtext("comment","text too long, limit 3");
     }
     return retval;
 }
@@ -12425,7 +13011,7 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr30& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 30");
+        algo_lib::AppendErrtext("comment","text too long, limit 30");
     }
     return retval;
 }
@@ -12481,7 +13067,7 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr32& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 32");
+        algo_lib::AppendErrtext("comment","text too long, limit 32");
     }
     return retval;
 }
@@ -12537,7 +13123,7 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr4& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 4");
+        algo_lib::AppendErrtext("comment","text too long, limit 4");
     }
     return retval;
 }
@@ -12593,7 +13179,7 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr40& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 40");
+        algo_lib::AppendErrtext("comment","text too long, limit 40");
     }
     return retval;
 }
@@ -12649,7 +13235,7 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr5& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 5");
+        algo_lib::AppendErrtext("comment","text too long, limit 5");
     }
     return retval;
 }
@@ -12754,6 +13340,25 @@ algo::aryptr<algo::cstring> algo::ary_AllocN(algo::StringAry& parent, int n_elem
     return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
 }
 
+// --- algo.StringAry.ary.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<algo::cstring> algo::ary_AllocNAt(algo::StringAry& parent, int n_elems, int at) {
+    ary_Reserve(parent, n_elems);
+    int n  = parent.ary_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("algo.bad_alloc_n_at  field:algo.StringAry.ary  comment:'index out of range'");
+    }
+    algo::cstring *elems = parent.ary_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(algo::cstring));
+    for (int i = 0; i < n_elems; i++) {
+        new (elems + at + i) algo::cstring(); // construct new element, default initialize
+    }
+    parent.ary_n = n+n_elems;
+    return algo::aryptr<algo::cstring>(elems+at,n_elems);
+}
+
 // --- algo.StringAry.ary.Remove
 // Remove item by index. If index outside of range, do nothing.
 void algo::ary_Remove(algo::StringAry& parent, u32 i) {
@@ -12848,6 +13453,30 @@ bool algo::ary_ReadStrptrMaybe(algo::StringAry& parent, algo::strptr in_str) {
         ary_RemoveLast(parent);
     }
     return retval;
+}
+
+// --- algo.StringAry.ary.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void algo::ary_Insary(algo::StringAry& parent, algo::aryptr<algo::cstring> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.ary_elems && rhs.elems < parent.ary_elems + parent.ary_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("algo.tary_alias  field:algo.StringAry.ary  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(parent.ary_elems+1))) {
+        FatalErrorExit("algo.bad_insary  field:algo.StringAry.ary  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = parent.ary_n - at;
+    ary_Reserve(parent, nnew); // reserve space
+    for (int i = nmove-1; i >=0 ; --i) {
+        new (parent.ary_elems + at + nnew + i) algo::cstring(parent.ary_elems[at + i]);
+        parent.ary_elems[at + i].~cstring(); // destroy element
+    }
+    for (int i = 0; i < nnew; ++i) {
+        new (parent.ary_elems + at + i) algo::cstring(rhs[i]);
+    }
+    parent.ary_n += nnew;
 }
 
 // --- algo.StringAry..ReadStrptrMaybe
@@ -13008,6 +13637,7 @@ const char* algo::value_ToCstr(const algo::TextJust& parent) {
         case algo_TextJust_j_right         : ret = "j_right";  break;
         case algo_TextJust_j_left          : ret = "j_left";  break;
         case algo_TextJust_j_center        : ret = "j_center";  break;
+        case algo_TextJust_j_auto          : ret = "j_auto";  break;
     }
     return ret;
 }
@@ -13033,6 +13663,9 @@ bool algo::value_SetStrptrMaybe(algo::TextJust& parent, algo::strptr rhs) {
     switch (elems_N(rhs)) {
         case 6: {
             switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)) {
+                case LE_STR6('j','_','a','u','t','o'): {
+                    value_SetEnum(parent,algo_TextJust_j_auto); ret = true; break;
+                }
                 case LE_STR6('j','_','l','e','f','t'): {
                     value_SetEnum(parent,algo_TextJust_j_left); ret = true; break;
                 }
@@ -13193,6 +13826,25 @@ algo::aryptr<algo::Attr> algo::attrs_AllocN(algo::Tuple& parent, int n_elems) {
     return algo::aryptr<algo::Attr>(elems + old_n, n_elems);
 }
 
+// --- algo.Tuple.attrs.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<algo::Attr> algo::attrs_AllocNAt(algo::Tuple& parent, int n_elems, int at) {
+    attrs_Reserve(parent, n_elems);
+    int n  = parent.attrs_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("algo.bad_alloc_n_at  field:algo.Tuple.attrs  comment:'index out of range'");
+    }
+    algo::Attr *elems = parent.attrs_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(algo::Attr));
+    for (int i = 0; i < n_elems; i++) {
+        new (elems + at + i) algo::Attr(); // construct new element, default initialize
+    }
+    parent.attrs_n = n+n_elems;
+    return algo::aryptr<algo::Attr>(elems+at,n_elems);
+}
+
 // --- algo.Tuple.attrs.Remove
 // Remove item by index. If index outside of range, do nothing.
 void algo::attrs_Remove(algo::Tuple& parent, u32 i) {
@@ -13289,6 +13941,30 @@ bool algo::attrs_ReadStrptrMaybe(algo::Tuple& parent, algo::strptr in_str) {
     return retval;
 }
 
+// --- algo.Tuple.attrs.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void algo::attrs_Insary(algo::Tuple& parent, algo::aryptr<algo::Attr> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.attrs_elems && rhs.elems < parent.attrs_elems + parent.attrs_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("algo.tary_alias  field:algo.Tuple.attrs  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(parent.attrs_elems+1))) {
+        FatalErrorExit("algo.bad_insary  field:algo.Tuple.attrs  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = parent.attrs_n - at;
+    attrs_Reserve(parent, nnew); // reserve space
+    for (int i = nmove-1; i >=0 ; --i) {
+        new (parent.attrs_elems + at + nnew + i) algo::Attr(parent.attrs_elems[at + i]);
+        parent.attrs_elems[at + i].~Attr(); // destroy element
+    }
+    for (int i = 0; i < nnew; ++i) {
+        new (parent.attrs_elems + at + i) algo::Attr(rhs[i]);
+    }
+    parent.attrs_n += nnew;
+}
+
 // --- algo.Tuple..Uninit
 void algo::Tuple_Uninit(algo::Tuple& parent) {
     algo::Tuple &row = parent; (void)row;
@@ -13315,6 +13991,256 @@ algo::Tuple& algo::Tuple::operator =(const algo::Tuple &rhs) {
     attrs_n     	= 0; // (algo.Tuple.attrs)
     attrs_max   	= 0; // (algo.Tuple.attrs)
     attrs_Setary(*this, attrs_Getary(const_cast<algo::Tuple&>(rhs)));
+}
+
+// --- algo.U16Ary.ary.Eq
+bool algo::ary_Eq(const algo::U16Ary& parent,const algo::U16Ary &rhs) {
+    int len = ary_N(parent);
+    if (len != ary_N(rhs)) {
+        return false;
+    }
+    for (int i = 0; i < len; i++) {
+        if (!(parent.ary_elems[i] == rhs.ary_elems[i])) {
+            return false;
+        }
+    }
+    return true;
+}
+
+// --- algo.U16Ary.ary.Cmp
+int algo::ary_Cmp(algo::U16Ary& parent, algo::U16Ary &rhs) {
+    int len = i32_Min(ary_N(parent), ary_N(rhs));
+    int retval = 0;
+    for (int i = 0; i < len; i++) {
+        retval = u16_Cmp(parent.ary_elems[i], rhs.ary_elems[i]);
+        if (retval != 0) {
+            return retval;
+        }
+    }
+    return i32_Cmp(ary_N(parent), ary_N(rhs));
+}
+
+// --- algo.U16Ary.ary.Addary
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+algo::aryptr<u16> algo::ary_Addary(algo::U16Ary& parent, algo::aryptr<u16> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.ary_elems && rhs.elems < parent.ary_elems + parent.ary_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("algo.tary_alias  field:algo.U16Ary.ary  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    int nnew = rhs.n_elems;
+    ary_Reserve(parent, nnew); // reserve space
+    int at = parent.ary_n;
+    memcpy(parent.ary_elems + at, rhs.elems, nnew * sizeof(u16));
+    parent.ary_n += nnew;
+    return algo::aryptr<u16>(parent.ary_elems + at, nnew);
+}
+
+// --- algo.U16Ary.ary.Alloc
+// Reserve space. Insert element at the end
+// The new element is initialized to a default value
+u16& algo::ary_Alloc(algo::U16Ary& parent) {
+    ary_Reserve(parent, 1);
+    int n  = parent.ary_n;
+    int at = n;
+    u16 *elems = parent.ary_elems;
+    new (elems + at) u16(0); // construct new element, default initializer
+    parent.ary_n = n+1;
+    return elems[at];
+}
+
+// --- algo.U16Ary.ary.AllocAt
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+u16& algo::ary_AllocAt(algo::U16Ary& parent, int at) {
+    ary_Reserve(parent, 1);
+    int n  = parent.ary_n;
+    if (UNLIKELY(u64(at) >= u64(n+1))) {
+        FatalErrorExit("algo.bad_alloc_at  field:algo.U16Ary.ary  comment:'index out of range'");
+    }
+    u16 *elems = parent.ary_elems;
+    memmove(elems + at + 1, elems + at, (n - at) * sizeof(u16));
+    new (elems + at) u16(0); // construct element, default initializer
+    parent.ary_n = n+1;
+    return elems[at];
+}
+
+// --- algo.U16Ary.ary.AllocN
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<u16> algo::ary_AllocN(algo::U16Ary& parent, int n_elems) {
+    ary_Reserve(parent, n_elems);
+    int old_n  = parent.ary_n;
+    int new_n = old_n + n_elems;
+    u16 *elems = parent.ary_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) u16(0); // construct new element, default initialize
+    }
+    parent.ary_n = new_n;
+    return algo::aryptr<u16>(elems + old_n, n_elems);
+}
+
+// --- algo.U16Ary.ary.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<u16> algo::ary_AllocNAt(algo::U16Ary& parent, int n_elems, int at) {
+    ary_Reserve(parent, n_elems);
+    int n  = parent.ary_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("algo.bad_alloc_n_at  field:algo.U16Ary.ary  comment:'index out of range'");
+    }
+    u16 *elems = parent.ary_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(u16));
+    for (int i = 0; i < n_elems; i++) {
+        new (elems + at + i) u16(0); // construct new element, default initialize
+    }
+    parent.ary_n = n+n_elems;
+    return algo::aryptr<u16>(elems+at,n_elems);
+}
+
+// --- algo.U16Ary.ary.Remove
+// Remove item by index. If index outside of range, do nothing.
+void algo::ary_Remove(algo::U16Ary& parent, u32 i) {
+    u32 lim = parent.ary_n;
+    u16 *elems = parent.ary_elems;
+    if (i < lim) {
+        memmove(elems + i, elems + (i + 1), sizeof(u16) * (lim - (i + 1)));
+        parent.ary_n = lim - 1;
+    }
+}
+
+// --- algo.U16Ary.ary.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void algo::ary_RemoveLast(algo::U16Ary& parent) {
+    u64 n = parent.ary_n;
+    if (n > 0) {
+        n -= 1;
+        parent.ary_n = n;
+    }
+}
+
+// --- algo.U16Ary.ary.AbsReserve
+// Make sure N elements fit in array. Process dies if out of memory
+void algo::ary_AbsReserve(algo::U16Ary& parent, int n) {
+    u32 old_max  = parent.ary_max;
+    if (n > i32(old_max)) {
+        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.ary_elems, old_max * sizeof(u16), new_max * sizeof(u16));
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("algo.tary_nomem  field:algo.U16Ary.ary  comment:'out of memory'");
+        }
+        parent.ary_elems = (u16*)new_mem;
+        parent.ary_max = new_max;
+    }
+}
+
+// --- algo.U16Ary.ary.Setary
+// Copy contents of RHS to PARENT.
+void algo::ary_Setary(algo::U16Ary& parent, algo::U16Ary &rhs) {
+    ary_RemoveAll(parent);
+    int nnew = rhs.ary_n;
+    ary_Reserve(parent, nnew); // reserve space
+    for (int i = 0; i < nnew; i++) { // copy elements over
+        new (parent.ary_elems + i) u16(ary_qFind(rhs, i));
+        parent.ary_n = i + 1;
+    }
+}
+
+// --- algo.U16Ary.ary.Setary2
+// Copy specified array into ary, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+void algo::ary_Setary(algo::U16Ary& parent, const algo::aryptr<u16> &rhs) {
+    ary_RemoveAll(parent);
+    ary_Addary(parent, rhs);
+}
+
+// --- algo.U16Ary.ary.AllocNVal
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<u16> algo::ary_AllocNVal(algo::U16Ary& parent, int n_elems, const u16& val) {
+    ary_Reserve(parent, n_elems);
+    int old_n  = parent.ary_n;
+    int new_n = old_n + n_elems;
+    u16 *elems = parent.ary_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) u16(val);
+    }
+    parent.ary_n = new_n;
+    return algo::aryptr<u16>(elems + old_n, n_elems);
+}
+
+// --- algo.U16Ary.ary.ReadStrptrMaybe
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+bool algo::ary_ReadStrptrMaybe(algo::U16Ary& parent, algo::strptr in_str) {
+    bool retval = true;
+    u16 &elem = ary_Alloc(parent);
+    retval = u16_ReadStrptrMaybe(elem, in_str);
+    if (!retval) {
+        ary_RemoveLast(parent);
+    }
+    return retval;
+}
+
+// --- algo.U16Ary.ary.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void algo::ary_Insary(algo::U16Ary& parent, algo::aryptr<u16> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.ary_elems && rhs.elems < parent.ary_elems + parent.ary_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("algo.tary_alias  field:algo.U16Ary.ary  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(parent.ary_elems+1))) {
+        FatalErrorExit("algo.bad_insary  field:algo.U16Ary.ary  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = parent.ary_n - at;
+    ary_Reserve(parent, nnew); // reserve space
+    memmove(parent.ary_elems + at + nnew, parent.ary_elems + at, nmove * sizeof(u16));
+    memcpy(parent.ary_elems + at, rhs.elems, nnew * sizeof(u16));
+    parent.ary_n += nnew;
+}
+
+// --- algo.U16Ary..Uninit
+void algo::U16Ary_Uninit(algo::U16Ary& parent) {
+    algo::U16Ary &row = parent; (void)row;
+
+    // algo.U16Ary.ary.Uninit (Tary)  //Array of u16 values
+    // remove all elements from algo.U16Ary.ary
+    ary_RemoveAll(parent);
+    // free memory for Tary algo.U16Ary.ary
+    algo_lib::malloc_FreeMem(parent.ary_elems, sizeof(u16)*parent.ary_max); // (algo.U16Ary.ary)
+}
+
+// --- algo.U16Ary..Print
+// print string representation of ROW to string STR
+// cfmt:algo.U16Ary.String  printfmt:Tuple
+void algo::U16Ary_Print(algo::U16Ary& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "algo.U16Ary";
+
+    ind_beg(U16Ary_ary_curs,ary,row) {
+        u16_Print(ary, temp);
+        tempstr name;
+        name << "ary.";
+        name << ind_curs(ary).index;
+        PrintAttrSpaceReset(str, name, temp);
+    }ind_end;
+}
+
+// --- algo.U16Ary..AssignOp
+algo::U16Ary& algo::U16Ary::operator =(const algo::U16Ary &rhs) {
+    ary_Setary(*this, ary_Getary(const_cast<algo::U16Ary&>(rhs)));
+    return *this;
+}
+
+// --- algo.U16Ary..CopyCtor
+ algo::U16Ary::U16Ary(const algo::U16Ary &rhs) {
+    ary_elems 	= 0; // (algo.U16Ary.ary)
+    ary_n     	= 0; // (algo.U16Ary.ary)
+    ary_max   	= 0; // (algo.U16Ary.ary)
+    ary_Setary(*this, ary_Getary(const_cast<algo::U16Ary&>(rhs)));
 }
 
 // --- algo.U16Dec2.value.SetDoubleMaybe
@@ -13399,6 +14325,256 @@ bool algo::U16Dec2_ReadStrptrMaybe(algo::U16Dec2 &parent, algo::strptr in_str) {
 // cfmt:algo.U16Dec2.String  printfmt:Raw
 void algo::U16Dec2_Print(algo::U16Dec2 row, algo::cstring& str) {
     algo::value_Print(row, str);
+}
+
+// --- algo.U32Ary.ary.Eq
+bool algo::ary_Eq(const algo::U32Ary& parent,const algo::U32Ary &rhs) {
+    int len = ary_N(parent);
+    if (len != ary_N(rhs)) {
+        return false;
+    }
+    for (int i = 0; i < len; i++) {
+        if (!(parent.ary_elems[i] == rhs.ary_elems[i])) {
+            return false;
+        }
+    }
+    return true;
+}
+
+// --- algo.U32Ary.ary.Cmp
+int algo::ary_Cmp(algo::U32Ary& parent, algo::U32Ary &rhs) {
+    int len = i32_Min(ary_N(parent), ary_N(rhs));
+    int retval = 0;
+    for (int i = 0; i < len; i++) {
+        retval = u32_Cmp(parent.ary_elems[i], rhs.ary_elems[i]);
+        if (retval != 0) {
+            return retval;
+        }
+    }
+    return i32_Cmp(ary_N(parent), ary_N(rhs));
+}
+
+// --- algo.U32Ary.ary.Addary
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+algo::aryptr<u32> algo::ary_Addary(algo::U32Ary& parent, algo::aryptr<u32> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.ary_elems && rhs.elems < parent.ary_elems + parent.ary_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("algo.tary_alias  field:algo.U32Ary.ary  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    int nnew = rhs.n_elems;
+    ary_Reserve(parent, nnew); // reserve space
+    int at = parent.ary_n;
+    memcpy(parent.ary_elems + at, rhs.elems, nnew * sizeof(u32));
+    parent.ary_n += nnew;
+    return algo::aryptr<u32>(parent.ary_elems + at, nnew);
+}
+
+// --- algo.U32Ary.ary.Alloc
+// Reserve space. Insert element at the end
+// The new element is initialized to a default value
+u32& algo::ary_Alloc(algo::U32Ary& parent) {
+    ary_Reserve(parent, 1);
+    int n  = parent.ary_n;
+    int at = n;
+    u32 *elems = parent.ary_elems;
+    new (elems + at) u32(0); // construct new element, default initializer
+    parent.ary_n = n+1;
+    return elems[at];
+}
+
+// --- algo.U32Ary.ary.AllocAt
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+u32& algo::ary_AllocAt(algo::U32Ary& parent, int at) {
+    ary_Reserve(parent, 1);
+    int n  = parent.ary_n;
+    if (UNLIKELY(u64(at) >= u64(n+1))) {
+        FatalErrorExit("algo.bad_alloc_at  field:algo.U32Ary.ary  comment:'index out of range'");
+    }
+    u32 *elems = parent.ary_elems;
+    memmove(elems + at + 1, elems + at, (n - at) * sizeof(u32));
+    new (elems + at) u32(0); // construct element, default initializer
+    parent.ary_n = n+1;
+    return elems[at];
+}
+
+// --- algo.U32Ary.ary.AllocN
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<u32> algo::ary_AllocN(algo::U32Ary& parent, int n_elems) {
+    ary_Reserve(parent, n_elems);
+    int old_n  = parent.ary_n;
+    int new_n = old_n + n_elems;
+    u32 *elems = parent.ary_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) u32(0); // construct new element, default initialize
+    }
+    parent.ary_n = new_n;
+    return algo::aryptr<u32>(elems + old_n, n_elems);
+}
+
+// --- algo.U32Ary.ary.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<u32> algo::ary_AllocNAt(algo::U32Ary& parent, int n_elems, int at) {
+    ary_Reserve(parent, n_elems);
+    int n  = parent.ary_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("algo.bad_alloc_n_at  field:algo.U32Ary.ary  comment:'index out of range'");
+    }
+    u32 *elems = parent.ary_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(u32));
+    for (int i = 0; i < n_elems; i++) {
+        new (elems + at + i) u32(0); // construct new element, default initialize
+    }
+    parent.ary_n = n+n_elems;
+    return algo::aryptr<u32>(elems+at,n_elems);
+}
+
+// --- algo.U32Ary.ary.Remove
+// Remove item by index. If index outside of range, do nothing.
+void algo::ary_Remove(algo::U32Ary& parent, u32 i) {
+    u32 lim = parent.ary_n;
+    u32 *elems = parent.ary_elems;
+    if (i < lim) {
+        memmove(elems + i, elems + (i + 1), sizeof(u32) * (lim - (i + 1)));
+        parent.ary_n = lim - 1;
+    }
+}
+
+// --- algo.U32Ary.ary.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void algo::ary_RemoveLast(algo::U32Ary& parent) {
+    u64 n = parent.ary_n;
+    if (n > 0) {
+        n -= 1;
+        parent.ary_n = n;
+    }
+}
+
+// --- algo.U32Ary.ary.AbsReserve
+// Make sure N elements fit in array. Process dies if out of memory
+void algo::ary_AbsReserve(algo::U32Ary& parent, int n) {
+    u32 old_max  = parent.ary_max;
+    if (n > i32(old_max)) {
+        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.ary_elems, old_max * sizeof(u32), new_max * sizeof(u32));
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("algo.tary_nomem  field:algo.U32Ary.ary  comment:'out of memory'");
+        }
+        parent.ary_elems = (u32*)new_mem;
+        parent.ary_max = new_max;
+    }
+}
+
+// --- algo.U32Ary.ary.Setary
+// Copy contents of RHS to PARENT.
+void algo::ary_Setary(algo::U32Ary& parent, algo::U32Ary &rhs) {
+    ary_RemoveAll(parent);
+    int nnew = rhs.ary_n;
+    ary_Reserve(parent, nnew); // reserve space
+    for (int i = 0; i < nnew; i++) { // copy elements over
+        new (parent.ary_elems + i) u32(ary_qFind(rhs, i));
+        parent.ary_n = i + 1;
+    }
+}
+
+// --- algo.U32Ary.ary.Setary2
+// Copy specified array into ary, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+void algo::ary_Setary(algo::U32Ary& parent, const algo::aryptr<u32> &rhs) {
+    ary_RemoveAll(parent);
+    ary_Addary(parent, rhs);
+}
+
+// --- algo.U32Ary.ary.AllocNVal
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<u32> algo::ary_AllocNVal(algo::U32Ary& parent, int n_elems, const u32& val) {
+    ary_Reserve(parent, n_elems);
+    int old_n  = parent.ary_n;
+    int new_n = old_n + n_elems;
+    u32 *elems = parent.ary_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) u32(val);
+    }
+    parent.ary_n = new_n;
+    return algo::aryptr<u32>(elems + old_n, n_elems);
+}
+
+// --- algo.U32Ary.ary.ReadStrptrMaybe
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+bool algo::ary_ReadStrptrMaybe(algo::U32Ary& parent, algo::strptr in_str) {
+    bool retval = true;
+    u32 &elem = ary_Alloc(parent);
+    retval = u32_ReadStrptrMaybe(elem, in_str);
+    if (!retval) {
+        ary_RemoveLast(parent);
+    }
+    return retval;
+}
+
+// --- algo.U32Ary.ary.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void algo::ary_Insary(algo::U32Ary& parent, algo::aryptr<u32> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.ary_elems && rhs.elems < parent.ary_elems + parent.ary_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("algo.tary_alias  field:algo.U32Ary.ary  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(parent.ary_elems+1))) {
+        FatalErrorExit("algo.bad_insary  field:algo.U32Ary.ary  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = parent.ary_n - at;
+    ary_Reserve(parent, nnew); // reserve space
+    memmove(parent.ary_elems + at + nnew, parent.ary_elems + at, nmove * sizeof(u32));
+    memcpy(parent.ary_elems + at, rhs.elems, nnew * sizeof(u32));
+    parent.ary_n += nnew;
+}
+
+// --- algo.U32Ary..Uninit
+void algo::U32Ary_Uninit(algo::U32Ary& parent) {
+    algo::U32Ary &row = parent; (void)row;
+
+    // algo.U32Ary.ary.Uninit (Tary)  //Array of u16 values
+    // remove all elements from algo.U32Ary.ary
+    ary_RemoveAll(parent);
+    // free memory for Tary algo.U32Ary.ary
+    algo_lib::malloc_FreeMem(parent.ary_elems, sizeof(u32)*parent.ary_max); // (algo.U32Ary.ary)
+}
+
+// --- algo.U32Ary..Print
+// print string representation of ROW to string STR
+// cfmt:algo.U32Ary.String  printfmt:Tuple
+void algo::U32Ary_Print(algo::U32Ary& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "algo.U32Ary";
+
+    ind_beg(U32Ary_ary_curs,ary,row) {
+        u32_Print(ary, temp);
+        tempstr name;
+        name << "ary.";
+        name << ind_curs(ary).index;
+        PrintAttrSpaceReset(str, name, temp);
+    }ind_end;
+}
+
+// --- algo.U32Ary..AssignOp
+algo::U32Ary& algo::U32Ary::operator =(const algo::U32Ary &rhs) {
+    ary_Setary(*this, ary_Getary(const_cast<algo::U32Ary&>(rhs)));
+    return *this;
+}
+
+// --- algo.U32Ary..CopyCtor
+ algo::U32Ary::U32Ary(const algo::U32Ary &rhs) {
+    ary_elems 	= 0; // (algo.U32Ary.ary)
+    ary_n     	= 0; // (algo.U32Ary.ary)
+    ary_max   	= 0; // (algo.U32Ary.ary)
+    ary_Setary(*this, ary_Getary(const_cast<algo::U32Ary&>(rhs)));
 }
 
 // --- algo.U32Dec1.value.SetDoubleMaybe
@@ -13821,6 +14997,49 @@ void algo::U32Dec5_Print(algo::U32Dec5 row, algo::cstring& str) {
     algo::value_Print(row, str);
 }
 
+// --- algo.U32LinearKey..ReadStrptrMaybe
+// Read fields of algo::U32LinearKey from an ascii string.
+// The format of the string is the format of the algo::U32LinearKey's only field
+bool algo::U32LinearKey_ReadStrptrMaybe(algo::U32LinearKey &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = retval && u32_ReadStrptrMaybe(parent.value, in_str);
+    return retval;
+}
+
+// --- algo.U32LinearKey..Print
+// print string representation of ROW to string STR
+// cfmt:algo.U32LinearKey.String  printfmt:Raw
+void algo::U32LinearKey_Print(algo::U32LinearKey row, algo::cstring& str) {
+    u32_Print(row.value, str);
+}
+
+// --- algo.U64Ary.ary.Eq
+bool algo::ary_Eq(const algo::U64Ary& parent,const algo::U64Ary &rhs) {
+    int len = ary_N(parent);
+    if (len != ary_N(rhs)) {
+        return false;
+    }
+    for (int i = 0; i < len; i++) {
+        if (!(parent.ary_elems[i] == rhs.ary_elems[i])) {
+            return false;
+        }
+    }
+    return true;
+}
+
+// --- algo.U64Ary.ary.Cmp
+int algo::ary_Cmp(algo::U64Ary& parent, algo::U64Ary &rhs) {
+    int len = i32_Min(ary_N(parent), ary_N(rhs));
+    int retval = 0;
+    for (int i = 0; i < len; i++) {
+        retval = u64_Cmp(parent.ary_elems[i], rhs.ary_elems[i]);
+        if (retval != 0) {
+            return retval;
+        }
+    }
+    return i32_Cmp(ary_N(parent), ary_N(rhs));
+}
+
 // --- algo.U64Ary.ary.Addary
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
@@ -13879,6 +15098,25 @@ algo::aryptr<u64> algo::ary_AllocN(algo::U64Ary& parent, int n_elems) {
     }
     parent.ary_n = new_n;
     return algo::aryptr<u64>(elems + old_n, n_elems);
+}
+
+// --- algo.U64Ary.ary.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<u64> algo::ary_AllocNAt(algo::U64Ary& parent, int n_elems, int at) {
+    ary_Reserve(parent, n_elems);
+    int n  = parent.ary_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("algo.bad_alloc_n_at  field:algo.U64Ary.ary  comment:'index out of range'");
+    }
+    u64 *elems = parent.ary_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(u64));
+    for (int i = 0; i < n_elems; i++) {
+        new (elems + at + i) u64(0); // construct new element, default initialize
+    }
+    parent.ary_n = n+n_elems;
+    return algo::aryptr<u64>(elems+at,n_elems);
 }
 
 // --- algo.U64Ary.ary.Remove
@@ -13965,6 +15203,25 @@ bool algo::ary_ReadStrptrMaybe(algo::U64Ary& parent, algo::strptr in_str) {
     return retval;
 }
 
+// --- algo.U64Ary.ary.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void algo::ary_Insary(algo::U64Ary& parent, algo::aryptr<u64> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.ary_elems && rhs.elems < parent.ary_elems + parent.ary_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("algo.tary_alias  field:algo.U64Ary.ary  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(parent.ary_elems+1))) {
+        FatalErrorExit("algo.bad_insary  field:algo.U64Ary.ary  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = parent.ary_n - at;
+    ary_Reserve(parent, nnew); // reserve space
+    memmove(parent.ary_elems + at + nnew, parent.ary_elems + at, nmove * sizeof(u64));
+    memcpy(parent.ary_elems + at, rhs.elems, nnew * sizeof(u64));
+    parent.ary_n += nnew;
+}
+
 // --- algo.U64Ary..Uninit
 void algo::U64Ary_Uninit(algo::U64Ary& parent) {
     algo::U64Ary &row = parent; (void)row;
@@ -13974,6 +15231,22 @@ void algo::U64Ary_Uninit(algo::U64Ary& parent) {
     ary_RemoveAll(parent);
     // free memory for Tary algo.U64Ary.ary
     algo_lib::malloc_FreeMem(parent.ary_elems, sizeof(u64)*parent.ary_max); // (algo.U64Ary.ary)
+}
+
+// --- algo.U64Ary..Print
+// print string representation of ROW to string STR
+// cfmt:algo.U64Ary.String  printfmt:Tuple
+void algo::U64Ary_Print(algo::U64Ary& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "algo.U64Ary";
+
+    ind_beg(U64Ary_ary_curs,ary,row) {
+        u64_Print(ary, temp);
+        tempstr name;
+        name << "ary.";
+        name << ind_curs(ary).index;
+        PrintAttrSpaceReset(str, name, temp);
+    }ind_end;
 }
 
 // --- algo.U64Ary..AssignOp
@@ -15201,6 +16474,9 @@ void algo::StaticCheck() {
     algo_assert(sizeof(algo::ImrowXrefXFcn) == 8); // csize:algo.ImrowXrefXFcn
     algo_assert(sizeof(algo::strptr) == 16); // csize:algo.strptr
     algo_assert(sizeof(algo::PrlogFcn) == 8); // csize:algo.PrlogFcn
+    algo_assert(sizeof(algo::RspaceStr8) == 8); // csize:algo.RspaceStr8
+    algo_assert(sizeof(algo::RspaceStr9) == 9); // csize:algo.RspaceStr9
+    algo_assert(sizeof(algo::Smallstr10) == 12); // csize:algo.Smallstr10
     algo_assert(sizeof(algo::memptr) == 16); // csize:algo.memptr
     algo_assert(_offset_of(algo::UnTime, value) + sizeof(((algo::UnTime*)0)->value) == sizeof(algo::UnTime));
     // check that bitfield fits width

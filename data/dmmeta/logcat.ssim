@@ -1,3 +1,10 @@
-dmmeta.logcat  logcat:expect  enabled:N  builtin:N  comment:"lib_ams expect implementation"
-dmmeta.logcat  logcat:stderr  enabled:Y  builtin:Y  comment:"Standard error (cannot be disabled)"
-dmmeta.logcat  logcat:stdout  enabled:Y  builtin:Y  comment:"Standard output (cannot be disabled)"
+dmmeta.logcat  logcat:ams  enabled:N  builtin:N  stdout:Y  maxmsg:0  window:0  comment:"Trace ams bus"
+dmmeta.logcat  logcat:debug  enabled:N  builtin:N  stdout:N  maxmsg:0  window:0  comment:"Debug messages"
+dmmeta.logcat  logcat:inserr  enabled:N  builtin:Y  stdout:N  maxmsg:10  window:10  comment:"In-memory db insert error"
+dmmeta.logcat  logcat:slowness  enabled:N  builtin:N  stdout:Y  maxmsg:10  window:5  comment:"Debug slowness"
+dmmeta.logcat  logcat:stderr  enabled:Y  builtin:Y  stdout:N  maxmsg:0  window:0  comment:"Standard error (cannot be disabled)"
+dmmeta.logcat  logcat:stdout  enabled:Y  builtin:Y  stdout:Y  maxmsg:0  window:0  comment:"Standard output (cannot be disabled)"
+dmmeta.logcat  logcat:timestamps  enabled:N  builtin:N  stdout:Y  maxmsg:0  window:0  comment:"Show timestamps"
+dmmeta.logcat  logcat:verbose  enabled:N  builtin:N  stdout:N  maxmsg:0  window:0  comment:"Verbose messages go here"
+dmmeta.logcat  logcat:verbose2  enabled:N  builtin:N  stdout:N  maxmsg:0  window:0  comment:"Extra verbose messages go here"
+dmmeta.logcat  logcat:warn  enabled:Y  builtin:N  stdout:N  maxmsg:100  window:5  comment:Warnings

@@ -42,8 +42,6 @@
 &#128196; [amc_gc - Internals](/txt/exe/amc_gc/internals.md)<br/>
 &#128196; [amc_vis - Draw access path diagrams](/txt/exe/amc_vis/README.md)<br/>
 &#128196; [amc_vis - Internals](/txt/exe/amc_vis/internals.md)<br/>
-&#128196; [ams_cat - Algo Messaging System sample tool](/txt/exe/ams_cat/README.md)<br/>
-&#128196; [ams_cat - Internals](/txt/exe/ams_cat/internals.md)<br/>
 &#128196; [ams_sendtest - Algo Messaging System test tool](/txt/exe/ams_sendtest/README.md)<br/>
 &#128196; [ams_sendtest - Internals](/txt/exe/ams_sendtest/internals.md)<br/>
 &#128196; [apm - Algo Package Manager](/txt/exe/apm/README.md)<br/>
@@ -60,6 +58,8 @@
 &#128196; [atf_comp - Internals](/txt/exe/atf_comp/internals.md)<br/>
 &#128196; [atf_cov - Line coverage](/txt/exe/atf_cov/README.md)<br/>
 &#128196; [atf_cov - Internals](/txt/exe/atf_cov/internals.md)<br/>
+&#128196; [atf_exp - ATF expect](/txt/exe/atf_exp/README.md)<br/>
+&#128196; [atf_exp - Internals](/txt/exe/atf_exp/internals.md)<br/>
 &#128196; [atf_fuzz - Generator of bad inputs for targets](/txt/exe/atf_fuzz/README.md)<br/>
 &#128196; [atf_fuzz - Internals](/txt/exe/atf_fuzz/internals.md)<br/>
 &#128196; [atf_gcli - test harness for gcli](/txt/exe/atf_gcli/README.md)<br/>
@@ -74,13 +74,17 @@
 &#128196; [gcache - Internals](/txt/exe/gcache/internals.md)<br/>
 &#128196; [gcli - Gcli - gitlab/github command-line client](/txt/exe/gcli/README.md)<br/>
 &#128196; [gcli - Internals](/txt/exe/gcli/internals.md)<br/>
+&#128196; [jkv - JSON <-> key-value mapping tool](/txt/exe/jkv/README.md)<br/>
+&#128196; [jkv - Internals](/txt/exe/jkv/internals.md)<br/>
 &#128196; [mdbg - Gdb front-end](/txt/exe/mdbg/README.md)<br/>
 &#128196; [mdbg - Internals](/txt/exe/mdbg/internals.md)<br/>
 &#128196; [mysql2ssim - mysql -> ssim conversion tool](/txt/exe/mysql2ssim/README.md)<br/>
 &#128196; [mysql2ssim - Internals](/txt/exe/mysql2ssim/internals.md)<br/>
 &#128196; [orgfile - Organize and deduplicate files by timestamp and by contents](/txt/exe/orgfile/README.md)<br/>
 &#128196; [orgfile - Internals](/txt/exe/orgfile/internals.md)<br/>
-&#128196; [samp_meng -](/txt/exe/samp_meng/README.md)<br/>
+&#128196; [samp_make - sample program for Makefile management](/txt/exe/samp_make/README.md)<br/>
+&#128196; [samp_make - Internals](/txt/exe/samp_make/internals.md)<br/>
+&#128196; [samp_meng - Sample matching engine](/txt/exe/samp_meng/README.md)<br/>
 &#128196; [samp_meng - Internals](/txt/exe/samp_meng/internals.md)<br/>
 &#128196; [samp_regx - Test tool for regular expressions](/txt/exe/samp_regx/README.md)<br/>
 &#128196; [samp_regx - Internals](/txt/exe/samp_regx/internals.md)<br/>

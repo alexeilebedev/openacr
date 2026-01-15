@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -36,5 +36,6 @@ namespace sandbox { // update-hdr
     void ResetSandbox(sandbox::FSandbox &sandbox);
     void AcrApply(algo::strptr script, algo::strptr op);
     void ListSandbox();
-    void Main();
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void Main(); // main:sandbox
 }

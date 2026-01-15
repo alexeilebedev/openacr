@@ -1,4 +1,4 @@
-## gclidb.gclicmd -
+## gclidb.gclicmd - table of static gcli commands
 
 
 ### Attributes
@@ -10,7 +10,7 @@
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|gclicmd|[algo.Smallstr250](/txt/protocol/algo/README.md#algo-smallstr250)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|gclicmd|[algo.Smallstr250](/txt/protocol/algo/README.md#algo-smallstr250)|[Val](/txt/exe/amc/reftypes.md#val)||table of static commands|
 |gclicmdf2j|[gclidb.Gclicmd](/txt/ssimdb/gclidb/gclicmd.md)|[Pkey](/txt/exe/amc/reftypes.md#pkey)||Base for gclicmdf2j|
 |comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
 

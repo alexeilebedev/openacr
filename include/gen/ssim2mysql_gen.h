@@ -137,6 +137,7 @@ struct FColumn { // ssim2mysql.FColumn
     bool                   is_pkey;                    //   false
     bool                   ssimfile_c_column_in_ary;   //   false  membership flag
     ssim2mysql::FColumn*   ind_column_next;            // hash next
+    u32                    ind_column_hashval;         // hash value
     // func:ssim2mysql.FColumn..AssignOp
     inline ssim2mysql::FColumn& operator =(const ssim2mysql::FColumn &rhs) = delete;
     // func:ssim2mysql.FColumn..CopyCtor
@@ -178,15 +179,16 @@ void                 FColumn_Print(ssim2mysql::FColumn& row, algo::cstring& str)
 // access: ssim2mysql.FField.p_arg (Upptr)
 // access: ssim2mysql.FSsimfile.p_ctype (Upptr)
 struct FCtype { // ssim2mysql.FCtype
-    algo::Smallstr100        ctype;            // Identifier. must be ns.typename
-    algo::Comment            comment;          //
-    ssim2mysql::FNs*         p_ns;             // reference to parent row
-    ssim2mysql::FSqltype*    c_sqltype;        // optional pointer
-    ssim2mysql::FField**     c_field_elems;    // array of pointers
-    u32                      c_field_n;        // array of pointers
-    u32                      c_field_max;      // capacity of allocated array
-    ssim2mysql::FSsimfile*   c_ssimfile;       // optional pointer
-    ssim2mysql::FCtype*      ind_ctype_next;   // hash next
+    algo::Smallstr100        ctype;               // Identifier. must be ns.typename
+    algo::Comment            comment;             //
+    ssim2mysql::FNs*         p_ns;                // reference to parent row
+    ssim2mysql::FSqltype*    c_sqltype;           // optional pointer
+    ssim2mysql::FField**     c_field_elems;       // array of pointers
+    u32                      c_field_n;           // array of pointers
+    u32                      c_field_max;         // capacity of allocated array
+    ssim2mysql::FSsimfile*   c_ssimfile;          // optional pointer
+    ssim2mysql::FCtype*      ind_ctype_next;      // hash next
+    u32                      ind_ctype_hashval;   // hash value
     // x-reference on ssim2mysql.FCtype.p_ns prevents copy
     // x-reference on ssim2mysql.FCtype.c_sqltype prevents copy
     // reftype Ptrary of ssim2mysql.FCtype.c_field prohibits copy
@@ -389,6 +391,9 @@ void                 ind_column_Remove(ssim2mysql::FColumn& row) __attribute__((
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:ssim2mysql.FDb.ind_column.Reserve
 void                 ind_column_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:ssim2mysql.FDb.ind_column.AbsReserve
+void                 ind_column_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -673,6 +678,9 @@ void                 ind_ns_Remove(ssim2mysql::FNs& row) __attribute__((nothrow)
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:ssim2mysql.FDb.ind_ns.Reserve
 void                 ind_ns_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:ssim2mysql.FDb.ind_ns.AbsReserve
+void                 ind_ns_AbsReserve(int n) __attribute__((nothrow));
 
 // Return true if hash is empty
 // func:ssim2mysql.FDb.ind_ctype.EmptyQ
@@ -698,6 +706,9 @@ void                 ind_ctype_Remove(ssim2mysql::FCtype& row) __attribute__((no
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:ssim2mysql.FDb.ind_ctype.Reserve
 void                 ind_ctype_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:ssim2mysql.FDb.ind_ctype.AbsReserve
+void                 ind_ctype_AbsReserve(int n) __attribute__((nothrow));
 
 // Return true if hash is empty
 // func:ssim2mysql.FDb.ind_field.EmptyQ
@@ -723,6 +734,9 @@ void                 ind_field_Remove(ssim2mysql::FField& row) __attribute__((no
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:ssim2mysql.FDb.ind_field.Reserve
 void                 ind_field_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:ssim2mysql.FDb.ind_field.AbsReserve
+void                 ind_field_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -822,6 +836,9 @@ void                 ind_ssimfile_Remove(ssim2mysql::FSsimfile& row) __attribute
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:ssim2mysql.FDb.ind_ssimfile.Reserve
 void                 ind_ssimfile_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:ssim2mysql.FDb.ind_ssimfile.AbsReserve
+void                 ind_ssimfile_AbsReserve(int n) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:ssim2mysql.FDb.zs_cmd.EmptyQ
@@ -1100,6 +1117,7 @@ void                 FDb_Uninit() __attribute__((nothrow));
 // access: ssim2mysql.FSubstr.p_field (Upptr)
 struct FField { // ssim2mysql.FField
     ssim2mysql::FField*    ind_field_next;         // hash next
+    u32                    ind_field_hashval;      // hash value
     algo::Smallstr100      field;                  // Primary key, as ctype.name
     algo::Smallstr100      arg;                    // Type of field
     algo::Smallstr50       reftype;                //   "Val"  Type constructor
@@ -1171,16 +1189,16 @@ struct FInput { // ssim2mysql.FInput
     ssim2mysql::FInput*   input_next;            // Pointer to next free element int tpool
     ssim2mysql::FInput*   cd_input_line_next;    // zslist link; -1 means not-in-list
     ssim2mysql::FInput*   cd_input_line_prev;    // previous element
-    u8                    in_buf_elems[65536];   // pointer to elements of inline array
+    u8*                   in_buf_elems;          //   NULL  pointer to elements of indirect array
+    u32                   in_buf_max;            //   0  current length of allocated array
     i32                   in_buf_start;          // beginning of valid bytes (in bytes)
     i32                   in_buf_end;            // end of valid bytes (in bytes)
-    bool                  in_buf_eof;            // no more data will be written to buffer
-    algo::Errcode         in_buf_err;            // system error code
-    bool                  in_buf_msgvalid;       // current message is valid
     i32                   in_buf_msglen;         // current message length
-    algo_lib::FIohook     in_buf_iohook;         // edge-triggered hook for refilling buffer
+    algo::Errcode         in_buf_err;            // system error code
+    algo_lib::FIohook     in_buf_iohook;         // edge-triggered hook for the buffer
+    bool                  in_buf_eof;            // no more data will be written to buffer
+    bool                  in_buf_msgvalid;       // current message is valid
     bool                  in_buf_epoll_enable;   // use epoll?
-    enum { in_buf_max = 65536 };
     algo::Tuple           tuple;                 // Temp tuple
     algo::cstring         warnstr;               // Warning string
     // field ssim2mysql.FInput.in_buf prevents copy
@@ -1221,6 +1239,12 @@ void                 in_buf_EndRead(ssim2mysql::FInput& input) __attribute__((no
 //
 // func:ssim2mysql.FInput.in_buf.GetMsg
 algo::aryptr<char>   in_buf_GetMsg(ssim2mysql::FInput& input) __attribute__((nothrow));
+// Set buffer size.
+// Unconditionally reallocate buffer to have size NEW_MAX
+// If the buffer has data in it, NEW_MAX is adjusted so that the data is not lost
+// (best to call this before filling the buffer)
+// func:ssim2mysql.FInput.in_buf.Realloc
+void                 in_buf_Realloc(ssim2mysql::FInput& input, int new_max) __attribute__((nothrow));
 // Return max. number of bytes in the buffer.
 // func:ssim2mysql.FInput.in_buf.Max
 inline i32           in_buf_Max(ssim2mysql::FInput& input) __attribute__((nothrow));
@@ -1243,13 +1267,17 @@ void                 in_buf_SkipBytes(ssim2mysql::FInput& input, int n) __attrib
 // Skip current message, if any.
 // func:ssim2mysql.FInput.in_buf.SkipMsg
 void                 in_buf_SkipMsg(ssim2mysql::FInput& input) __attribute__((nothrow));
-// Attempt to write buffer contents to fd
+// Attempt to write buffer contents to fbuf, return success
 // Write bytes to the buffer. If the entire block is written, return true,
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
 //
 // func:ssim2mysql.FInput.in_buf.WriteAll
 bool                 in_buf_WriteAll(ssim2mysql::FInput& input, u8 *in, i32 in_n) __attribute__((nothrow));
+// Write buffer contents to fbuf, reallocate as needed
+// Write bytes to the buffer. The entire block is always written
+// func:ssim2mysql.FInput.in_buf.WriteReserve
+void                 in_buf_WriteReserve(ssim2mysql::FInput& input, u8 *in, i32 in_n) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:ssim2mysql.FInput..Init
@@ -1268,6 +1296,7 @@ void                 FInput_Print(ssim2mysql::FInput& row, algo::cstring& str) _
 // access: ssim2mysql.FCtype.p_ns (Upptr)
 struct FNs { // ssim2mysql.FNs
     ssim2mysql::FNs*          ind_ns_next;        // hash next
+    u32                       ind_ns_hashval;     // hash value
     algo::Smallstr16          ns;                 // Namespace name (primary key)
     algo::Smallstr50          nstype;             // Namespace type
     algo::Smallstr50          license;            // Associated license
@@ -1405,6 +1434,7 @@ void                 FSqltype_Print(ssim2mysql::FSqltype& row, algo::cstring& st
 // access: ssim2mysql.FNs.c_ssimfile (Ptrary)
 struct FSsimfile { // ssim2mysql.FSsimfile
     ssim2mysql::FSsimfile*   ind_ssimfile_next;      // hash next
+    u32                      ind_ssimfile_hashval;   // hash value
     ssim2mysql::FSsimfile*   zd_ssimfile_next;       // zslist link; -1 means not-in-list
     ssim2mysql::FSsimfile*   zd_ssimfile_prev;       // previous element
     algo::Smallstr50         ssimfile;               //

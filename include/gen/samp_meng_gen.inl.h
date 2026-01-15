@@ -128,6 +128,7 @@ inline  samp_meng::CancelReqMsg::CancelReqMsg(u64 in_order)
 
 // --- samp_meng.trace..Ctor
 inline  samp_meng::trace::trace() {
+    samp_meng::trace_Init(*this);
 }
 
 // --- samp_meng.FDb.fdin.EmptyQ
@@ -540,8 +541,7 @@ inline samp_meng::FUser& samp_meng::_db_user_curs_Access(_db_user_curs &curs) {
 // --- samp_meng.FFdin.in.Max
 // Return max. number of bytes in the buffer.
 inline i32 samp_meng::in_Max(samp_meng::FFdin& fdin) {
-    return 8192;
-    (void)fdin;//only to avoid -Wunused-parameter
+    return fdin.in_max;
 }
 
 // --- samp_meng.FFdin.in.N
@@ -812,9 +812,10 @@ inline void samp_meng::FOrder_Init(samp_meng::FOrder& order) {
     order.p_user = NULL;
     order.order_next = (samp_meng::FOrder*)-1; // (samp_meng.FDb.order) not-in-tpool's freelist
     order.ind_order_next = (samp_meng::FOrder*)-1; // (samp_meng.FDb.ind_order) not-in-hash
-    order.bh_order_idx = -1; // (samp_meng.FOrdq.bh_order) not-in-heap
-    order.zd_order_next = (samp_meng::FOrder*)-1; // (samp_meng.FUser.zd_order) not-in-list
-    order.zd_order_prev = NULL; // (samp_meng.FUser.zd_order)
+    order.ind_order_hashval = 0; // stored hash value
+    order.ordq_bh_order_idx = -1; // (samp_meng.FOrdq.bh_order) not-in-heap
+    order.user_zd_order_next = (samp_meng::FOrder*)-1; // (samp_meng.FUser.zd_order) not-in-list
+    order.user_zd_order_prev = NULL; // (samp_meng.FUser.zd_order)
 }
 
 // --- samp_meng.FOrder..Ctor
@@ -847,7 +848,7 @@ inline samp_meng::FOrder* samp_meng::bh_order_First(samp_meng::FOrdq& ordq) {
 // Return true if row is in index, false otherwise
 inline bool samp_meng::bh_order_InBheapQ(samp_meng::FOrder& row) {
     bool result = false;
-    result = row.bh_order_idx != -1;
+    result = row.ordq_bh_order_idx != -1;
     return result;
 }
 
@@ -991,6 +992,7 @@ inline void samp_meng::FSymbol_Init(samp_meng::FSymbol& symbol) {
     symbol.c_ordq_n = 0; // (samp_meng.FSymbol.c_ordq)
     symbol.c_ordq_max = 0; // (samp_meng.FSymbol.c_ordq)
     symbol.ind_symbol_next = (samp_meng::FSymbol*)-1; // (samp_meng.FDb.ind_symbol) not-in-hash
+    symbol.ind_symbol_hashval = 0; // stored hash value
 }
 
 // --- samp_meng.FSymbol.c_ordq_curs.Reset
@@ -1044,9 +1046,9 @@ inline samp_meng::FOrder* samp_meng::zd_order_First(samp_meng::FUser& user) {
 
 // --- samp_meng.FUser.zd_order.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool samp_meng::zd_order_InLlistQ(samp_meng::FOrder& row) {
+inline bool samp_meng::user_zd_order_InLlistQ(samp_meng::FOrder& row) {
     bool result = false;
-    result = !(row.zd_order_next == (samp_meng::FOrder*)-1);
+    result = !(row.user_zd_order_next == (samp_meng::FOrder*)-1);
     return result;
 }
 
@@ -1066,14 +1068,14 @@ inline i32 samp_meng::zd_order_N(const samp_meng::FUser& user) {
 
 // --- samp_meng.FUser.zd_order.Next
 // Return pointer to next element in the list
-inline samp_meng::FOrder* samp_meng::zd_order_Next(samp_meng::FOrder &row) {
-    return row.zd_order_next;
+inline samp_meng::FOrder* samp_meng::user_zd_order_Next(samp_meng::FOrder &row) {
+    return row.user_zd_order_next;
 }
 
 // --- samp_meng.FUser.zd_order.Prev
 // Return pointer to previous element in the list
-inline samp_meng::FOrder* samp_meng::zd_order_Prev(samp_meng::FOrder &row) {
-    return row.zd_order_prev;
+inline samp_meng::FOrder* samp_meng::user_zd_order_Prev(samp_meng::FOrder &row) {
+    return row.user_zd_order_prev;
 }
 
 // --- samp_meng.FUser.zd_order.qLast
@@ -1092,6 +1094,7 @@ inline void samp_meng::FUser_Init(samp_meng::FUser& user) {
     user.zd_order_n = 0; // (samp_meng.FUser.zd_order)
     user.zd_order_tail = NULL; // (samp_meng.FUser.zd_order)
     user.ind_user_next = (samp_meng::FUser*)-1; // (samp_meng.FDb.ind_user) not-in-hash
+    user.ind_user_hashval = 0; // stored hash value
 }
 
 // --- samp_meng.FUser.zd_order_curs.Reset
@@ -1109,7 +1112,7 @@ inline bool samp_meng::user_zd_order_curs_ValidQ(user_zd_order_curs &curs) {
 // --- samp_meng.FUser.zd_order_curs.Next
 // proceed to next item
 inline void samp_meng::user_zd_order_curs_Next(user_zd_order_curs &curs) {
-    samp_meng::FOrder *next = (*curs.row).zd_order_next;
+    samp_meng::FOrder *next = (*curs.row).user_zd_order_next;
     curs.row = next;
 }
 
@@ -1777,7 +1780,7 @@ inline u32 samp_meng::text_N(const samp_meng::TextMsg& parent) {
 
 // --- samp_meng.TextMsg.text_curs.Reset
 inline void samp_meng::TextMsg_text_curs_Reset(TextMsg_text_curs &curs, samp_meng::TextMsg &parent) {
-    curs.ptr = (u8*)&parent + sizeof(samp_meng::TextMsg);
+    curs.ptr = (u8*)text_Addr(parent);
     curs.length = i32(parent.length) - sizeof(samp_meng::TextMsg);
     curs.index = 0;
 }

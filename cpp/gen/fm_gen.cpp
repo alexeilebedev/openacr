@@ -48,7 +48,7 @@ bool fm::ch_ReadStrptrMaybe(fm::Code& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 32");
+        algo_lib::AppendErrtext("comment","text too long, limit 32");
     }
     return retval;
 }
@@ -106,7 +106,7 @@ bool fm::ch_ReadStrptrMaybe(fm::Objtype& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 15");
+        algo_lib::AppendErrtext("comment","text too long, limit 15");
     }
     return retval;
 }
@@ -164,7 +164,7 @@ bool fm::ch_ReadStrptrMaybe(fm::Objinst& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 79");
+        algo_lib::AppendErrtext("comment","text too long, limit 79");
     }
     return retval;
 }
@@ -396,7 +396,7 @@ bool fm::ch_ReadStrptrMaybe(fm::Summary& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 64");
+        algo_lib::AppendErrtext("comment","text too long, limit 64");
     }
     return retval;
 }
@@ -454,7 +454,7 @@ bool fm::ch_ReadStrptrMaybe(fm::Description& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 128");
+        algo_lib::AppendErrtext("comment","text too long, limit 128");
     }
     return retval;
 }
@@ -512,7 +512,7 @@ bool fm::ch_ReadStrptrMaybe(fm::Source& parent, algo::strptr rhs) {
         ch_SetStrptr(parent, rhs);
         retval = true;
     } else {
-        algo_lib::SaveBadTag("comment","text too long, limit 32");
+        algo_lib::AppendErrtext("comment","text too long, limit 32");
     }
     return retval;
 }
@@ -574,73 +574,59 @@ bool fm::AlarmMsg_ReadFieldMaybe(fm::AlarmMsg& parent, algo::strptr field, algo:
     switch(field_id) {
         case fm_FieldId_base: {
             retval = false;
-            break;
-        }
+        } break;
         case fm_FieldId_type: {
             retval = false;
-            break;
-        }
+        } break;
         case fm_FieldId_length: {
             retval = false;
-            break;
-        }
+        } break;
         case fm_FieldId_code: {
             retval = fm::Code_ReadStrptrMaybe(parent.code, strval);
-            break;
-        }
+        } break;
         case fm_FieldId_objtype: {
             retval = fm::Objtype_ReadStrptrMaybe(parent.objtype, strval);
-            break;
-        }
+        } break;
         case fm_FieldId_objinst: {
             retval = fm::Objinst_ReadStrptrMaybe(parent.objinst, strval);
-            break;
-        }
+        } break;
         case fm_FieldId_flag: {
             retval = fm::Flag_ReadStrptrMaybe(parent.flag, strval);
-            break;
-        }
+        } break;
         case fm_FieldId_severity: {
             retval = fm::Severity_ReadStrptrMaybe(parent.severity, strval);
-            break;
-        }
+        } break;
         case fm_FieldId_n_occurred: {
             retval = i32_ReadStrptrMaybe(parent.n_occurred, strval);
-            break;
-        }
+        } break;
         case fm_FieldId_first_time: {
             retval = algo::UnTime_ReadStrptrMaybe(parent.first_time, strval);
-            break;
-        }
+        } break;
         case fm_FieldId_last_time: {
             retval = algo::UnTime_ReadStrptrMaybe(parent.last_time, strval);
-            break;
-        }
+        } break;
         case fm_FieldId_clear_time: {
             retval = algo::UnTime_ReadStrptrMaybe(parent.clear_time, strval);
-            break;
-        }
+        } break;
         case fm_FieldId_update_time: {
             retval = algo::UnTime_ReadStrptrMaybe(parent.update_time, strval);
-            break;
-        }
+        } break;
         case fm_FieldId_objtype_summary: {
             retval = fm::Summary_ReadStrptrMaybe(parent.objtype_summary, strval);
-            break;
-        }
+        } break;
         case fm_FieldId_summary: {
             retval = fm::Summary_ReadStrptrMaybe(parent.summary, strval);
-            break;
-        }
+        } break;
         case fm_FieldId_description: {
             retval = fm::Description_ReadStrptrMaybe(parent.description, strval);
-            break;
-        }
+        } break;
         case fm_FieldId_source: {
             retval = fm::Source_ReadStrptrMaybe(parent.source, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);

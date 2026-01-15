@@ -119,9 +119,9 @@ All allocations are done through global `acr::_db` [acr.FDb](#acr-fdb) structure
 |[acr.FRec](#acr-frec)||FDb.rec (Tpool)|zd_all_selrec (Llist)|c_ssimreq_rec (Ptrary)|
 ||||Err.rec (Ptr)|
 ||||FCheck.c_bad_rec (Ptrary)|
-||||FCtype.zd_ctype_rec (Llist)|
+||||FCtype.zd_rec (Llist)|
 ||||FCtype.ind_ctype_rec (Thash)|
-||||FCtype.zd_ctype_selrec (Llist)|
+||||FCtype.zd_selrec (Llist)|
 ||||FFile.zd_frec (Llist)|
 ||||FPline.p_rec (Upptr)|
 ||||FQuery.c_rec (Ptrary)|
@@ -403,9 +403,9 @@ private:
 |acr.FCtype.c_field|[acr.FField](/txt/exe/acr/internals.md#acr-ffield)|[Ptrary](/txt/exe/amc/reftypes.md#ptrary)|||
 |acr.FCtype.c_cdflt|[acr.FCdflt](/txt/exe/acr/internals.md#acr-fcdflt)|[Ptr](/txt/exe/amc/reftypes.md#ptr)|||
 |acr.FCtype.c_ssimfile|[acr.FSsimfile](/txt/exe/acr/internals.md#acr-fssimfile)|[Ptr](/txt/exe/amc/reftypes.md#ptr)|||
-|acr.FCtype.zd_ctype_rec|[acr.FRec](/txt/exe/acr/internals.md#acr-frec)|[Llist](/txt/exe/amc/reftypes.md#llist)||List of all records with this ctype|
+|acr.FCtype.zd_rec|[acr.FRec](/txt/exe/acr/internals.md#acr-frec)|[Llist](/txt/exe/amc/reftypes.md#llist)||List of all records with this ctype|
 |acr.FCtype.ind_ctype_rec|[acr.FRec](/txt/exe/acr/internals.md#acr-frec)|[Thash](/txt/exe/amc/reftypes.md#thash)||Index of records by primary key|
-|acr.FCtype.zd_ctype_selrec|[acr.FRec](/txt/exe/acr/internals.md#acr-frec)|[Llist](/txt/exe/amc/reftypes.md#llist)||List of selected records|
+|acr.FCtype.zd_selrec|[acr.FRec](/txt/exe/acr/internals.md#acr-frec)|[Llist](/txt/exe/amc/reftypes.md#llist)||List of selected records|
 |acr.FCtype.n_insert|i32|[Val](/txt/exe/amc/reftypes.md#val)|0|Number of tuples inserted|
 |acr.FCtype.rank|i32|[Val](/txt/exe/amc/reftypes.md#val)|false|Topological sort rank|
 |acr.FCtype.c_child|[acr.FCtype](/txt/exe/acr/internals.md#acr-fctype)|[Ptrary](/txt/exe/amc/reftypes.md#ptrary)||all tables that reference this table|
@@ -434,13 +434,13 @@ struct FCtype { // acr.FCtype
     u32                 c_field_max;                   // capacity of allocated array
     acr::FCdflt*        c_cdflt;                       // optional pointer
     acr::FSsimfile*     c_ssimfile;                    // optional pointer
-    acr::FRec*          zd_ctype_rec_head;             // zero-terminated doubly linked list
-    acr::FRec*          zd_ctype_rec_tail;             // pointer to last element
+    acr::FRec*          zd_rec_head;                   // zero-terminated doubly linked list
+    acr::FRec*          zd_rec_tail;                   // pointer to last element
     acr::FRec**         ind_ctype_rec_buckets_elems;   // pointer to bucket array
     i32                 ind_ctype_rec_buckets_n;       // number of elements in bucket array
     i32                 ind_ctype_rec_n;               // number of elements in the hash table
-    acr::FRec*          zd_ctype_selrec_head;          // zero-terminated doubly linked list
-    acr::FRec*          zd_ctype_selrec_tail;          // pointer to last element
+    acr::FRec*          zd_selrec_head;                // zero-terminated doubly linked list
+    acr::FRec*          zd_selrec_tail;                // pointer to last element
     i32                 n_insert;                      //   0  Number of tuples inserted
     i32                 rank;                          //   false  Topological sort rank
     acr::FCtype**       c_child_elems;                 // array of pointers
@@ -460,17 +460,18 @@ struct FCtype { // acr.FCtype
     acr::FSsimreq**     c_ssimreq_elems;               // array of pointers
     u32                 c_ssimreq_n;                   // array of pointers
     u32                 c_ssimreq_max;                 // capacity of allocated array
-    bool                _db_c_ctype_front_in_ary;      //   false  membership flag
+    bool                c_ctype_front_in_ary;          //   false  membership flag
     acr::FCtype*        ind_ctype_next;                // hash next
+    u32                 ind_ctype_hashval;             // hash value
     acr::FCtype*        zd_sel_ctype_next;             // zslist link; -1 means not-in-list
     acr::FCtype*        zd_sel_ctype_prev;             // previous element
     i32                 bh_ctype_topo_idx;             // index in heap; -1 means not-in-heap
     // reftype Ptrary of acr.FCtype.c_field prohibits copy
     // x-reference on acr.FCtype.c_cdflt prevents copy
     // x-reference on acr.FCtype.c_ssimfile prevents copy
-    // reftype Llist of acr.FCtype.zd_ctype_rec prohibits copy
+    // reftype Llist of acr.FCtype.zd_rec prohibits copy
     // reftype Thash of acr.FCtype.ind_ctype_rec prohibits copy
-    // reftype Llist of acr.FCtype.zd_ctype_selrec prohibits copy
+    // reftype Llist of acr.FCtype.zd_selrec prohibits copy
     // reftype Ptrary of acr.FCtype.c_child prohibits copy
     // x-reference on acr.FCtype.c_bltin prevents copy
     // reftype Llist of acr.FCtype.zd_arg prohibits copy
@@ -480,9 +481,9 @@ struct FCtype { // acr.FCtype
     // reftype Ptrary of acr.FCtype.c_field prohibits copy
     // x-reference on acr.FCtype.c_cdflt prevents copy
     // x-reference on acr.FCtype.c_ssimfile prevents copy
-    // reftype Llist of acr.FCtype.zd_ctype_rec prohibits copy
+    // reftype Llist of acr.FCtype.zd_rec prohibits copy
     // reftype Thash of acr.FCtype.ind_ctype_rec prohibits copy
-    // reftype Llist of acr.FCtype.zd_ctype_selrec prohibits copy
+    // reftype Llist of acr.FCtype.zd_selrec prohibits copy
     // reftype Ptrary of acr.FCtype.c_child prohibits copy
     // x-reference on acr.FCtype.c_bltin prevents copy
     // reftype Llist of acr.FCtype.zd_arg prohibits copy
@@ -773,9 +774,10 @@ struct FEvalattr { // acr.FEvalattr
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/acr_gen.h](/include/gen/acr_gen.h)
 ```
 struct FField { // acr.FField
-    acr::FField*        zd_arg_next;            // zslist link; -1 means not-in-list
-    acr::FField*        zd_arg_prev;            // previous element
+    acr::FField*        ctype_zd_arg_next;      // zslist link; -1 means not-in-list
+    acr::FField*        ctype_zd_arg_prev;      // previous element
     acr::FField*        ind_field_next;         // hash next
+    u32                 ind_field_hashval;      // hash value
     algo::Smallstr100   field;                  // Primary key, as ctype.name
     algo::Smallstr100   arg;                    // Type of field
     algo::Smallstr50    reftype;                //   "Val"  Type constructor
@@ -832,16 +834,17 @@ private:
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/acr_gen.h](/include/gen/acr_gen.h)
 ```
 struct FFile { // acr.FFile
-    acr::FFile*     ind_file_next;   // hash next
-    algo::cstring   file;            // Primary key
-    algo::cstring   filename;        // Non-empty if it's a real file
-    bool            ephemeral;       //   false  Do not save back
-    bool            sticky;          //   false  Records loaded from file are written back to file
-    u32             lineno;          //   1  Current line number
-    acr::FRec*      zd_frec_head;    // zero-terminated doubly linked list
-    acr::FRec*      zd_frec_tail;    // pointer to last element
-    algo::UnTime    modtime;         // File modification time at time of loading
-    bool            autoloaded;      //   false  File was pulled in implicitly: loaded records are not 'inserted'
+    acr::FFile*     ind_file_next;      // hash next
+    u32             ind_file_hashval;   // hash value
+    algo::cstring   file;               // Primary key
+    algo::cstring   filename;           // Non-empty if it's a real file
+    bool            ephemeral;          //   false  Do not save back
+    bool            sticky;             //   false  Records loaded from file are written back to file
+    u32             lineno;             //   1  Current line number
+    acr::FRec*      zd_frec_head;       // zero-terminated doubly linked list
+    acr::FRec*      zd_frec_tail;       // pointer to last element
+    algo::UnTime    modtime;            // File modification time at time of loading
+    bool            autoloaded;         //   false  File was pulled in implicitly: loaded records are not 'inserted'
     // reftype Llist of acr.FFile.zd_frec prohibits copy
     // func:acr.FFile..AssignOp
     inline acr::FFile&   operator =(const acr::FFile &rhs) = delete;
@@ -903,15 +906,15 @@ private:
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/acr_gen.h](/include/gen/acr_gen.h)
 ```
 struct FPdep { // acr.FPdep: Dependency between two print-line records
-    acr::FPdep*    pdep_next;       // Pointer to next free element int tpool
-    acr::FPdep*    zd_pdep_next;    // zslist link; -1 means not-in-list
-    acr::FPdep*    zd_pdep_prev;    // previous element
-    acr::FPline*   p_parent;        // reference to parent row
-    acr::FPline*   p_child;         // reference to parent row
-    i32            weight;          //   0
-    i32            lindex;          //   0  Index of child referencing attr
-    acr::FPdep*    zd_child_next;   // zslist link; -1 means not-in-list
-    acr::FPdep*    zd_child_prev;   // previous element
+    acr::FPdep*    pdep_next;             // Pointer to next free element int tpool
+    acr::FPdep*    zd_pdep_next;          // zslist link; -1 means not-in-list
+    acr::FPdep*    zd_pdep_prev;          // previous element
+    acr::FPline*   p_parent;              // reference to parent row
+    acr::FPline*   p_child;               // reference to parent row
+    i32            weight;                //   0
+    i32            lindex;                //   0  Index of child referencing attr
+    acr::FPdep*    pline_zd_child_next;   // zslist link; -1 means not-in-list
+    acr::FPdep*    pline_zd_child_prev;   // previous element
     // func:acr.FPdep..AssignOp
     inline acr::FPdep&   operator =(const acr::FPdep &rhs) = delete;
     // func:acr.FPdep..CopyCtor
@@ -1114,10 +1117,11 @@ struct FPrint { // acr.FPrint: Print function
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/acr_gen.h](/include/gen/acr_gen.h)
 ```
 struct FPrintAttr { // acr.FPrintAttr
-    acr::FPrintAttr*    ind_printattr_next;   // hash next
-    acr::FPrint*        p_print;              // reference to parent row
-    algo::Smallstr100   field;                //   0
-    u32                 width;                //   0  Name width
+    acr::FPrintAttr*    print_ind_printattr_next;      // hash next
+    u32                 print_ind_printattr_hashval;   // hash value
+    acr::FPrint*        p_print;                       // reference to parent row
+    algo::Smallstr100   field;                         //   0
+    u32                 width;                         //   0  Name width
     // func:acr.FPrintAttr..AssignOp
     inline acr::FPrintAttr& operator =(const acr::FPrintAttr &rhs) = delete;
     // func:acr.FPrintAttr..CopyCtor
@@ -1238,6 +1242,7 @@ private:
 |---|---|---|---|---|
 |acr.FRec.pkey|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)||Record key (arbitrary string)|
 |acr.FRec.oldpkey|[algo.cstring](/txt/protocol/algo/cstring.md)|[Delptr](/txt/exe/amc/reftypes.md#delptr)||Old pkey (if renamed)|
+|acr.FRec.oldhead|[algo.cstring](/txt/protocol/algo/cstring.md)|[Delptr](/txt/exe/amc/reftypes.md#delptr)||Old tuple head (if renamed)|
 |acr.FRec.tuple|[algo.Tuple](/txt/protocol/algo/Tuple.md)|[Val](/txt/exe/amc/reftypes.md#val)||Data item|
 |acr.FRec.del|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|Delete?|
 |acr.FRec.mod|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|Record was modified?|
@@ -1256,36 +1261,40 @@ private:
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/acr_gen.h](/include/gen/acr_gen.h)
 ```
 struct FRec { // acr.FRec
-    acr::FRec*        zd_ctype_rec_next;          // zslist link; -1 means not-in-list
-    acr::FRec*        zd_ctype_rec_prev;          // previous element
-    acr::FRec*        ind_ctype_rec_next;         // hash next
-    acr::FRec*        zd_ctype_selrec_next;       // zslist link; -1 means not-in-list
-    acr::FRec*        zd_ctype_selrec_prev;       // previous element
-    acr::FRec*        rec_next;                   // Pointer to next free element int tpool
-    acr::FRec*        zd_all_selrec_next;         // zslist link; -1 means not-in-list
-    acr::FRec*        zd_all_selrec_prev;         // previous element
-    acr::FRec*        zd_frec_next;               // zslist link; -1 means not-in-list
-    acr::FRec*        zd_frec_prev;               // previous element
-    algo::cstring     pkey;                       // Record key (arbitrary string)
-    algo::cstring*    oldpkey;                    // Private pointer to value
-    algo::Tuple       tuple;                      // Data item
-    bool              del;                        //   false  Delete?
-    bool              mod;                        //   false  Record was modified?
-    bool              metasel;                    //   false  Select for meta-data
-    bool              isnew;                      //   false  Inserted newly
-    i32               seldist;                    //   0  Distance to selection. >0 is up, <0 is down
-    acr::RecSortkey   sortkey;                    // Output sort key
-    acr::FPline*      c_pline;                    // Optional pline. optional pointer
-    acr::FFile*       p_outfile;                  // reference to parent row
-    acr::FFile*       p_infile;                   // reference to parent row
-    acr::FCtype*      p_ctype;                    // reference to parent row
-    i32               lineno;                     //   0
-    bool              _db_c_ssimreq_rec_in_ary;   //   false  membership flag
+    acr::FRec*        ctype_zd_rec_next;             // zslist link; -1 means not-in-list
+    acr::FRec*        ctype_zd_rec_prev;             // previous element
+    acr::FRec*        ctype_ind_ctype_rec_next;      // hash next
+    u32               ctype_ind_ctype_rec_hashval;   // hash value
+    acr::FRec*        ctype_zd_selrec_next;          // zslist link; -1 means not-in-list
+    acr::FRec*        ctype_zd_selrec_prev;          // previous element
+    acr::FRec*        rec_next;                      // Pointer to next free element int tpool
+    acr::FRec*        zd_all_selrec_next;            // zslist link; -1 means not-in-list
+    acr::FRec*        zd_all_selrec_prev;            // previous element
+    acr::FRec*        file_zd_frec_next;             // zslist link; -1 means not-in-list
+    acr::FRec*        file_zd_frec_prev;             // previous element
+    algo::cstring     pkey;                          // Record key (arbitrary string)
+    algo::cstring*    oldpkey;                       // Private pointer to value
+    algo::cstring*    oldhead;                       // Private pointer to value
+    algo::Tuple       tuple;                         // Data item
+    bool              del;                           //   false  Delete?
+    bool              mod;                           //   false  Record was modified?
+    bool              metasel;                       //   false  Select for meta-data
+    bool              isnew;                         //   false  Inserted newly
+    i32               seldist;                       //   0  Distance to selection. >0 is up, <0 is down
+    acr::RecSortkey   sortkey;                       // Output sort key
+    acr::FPline*      c_pline;                       // Optional pline. optional pointer
+    acr::FFile*       p_outfile;                     // reference to parent row
+    acr::FFile*       p_infile;                      // reference to parent row
+    acr::FCtype*      p_ctype;                       // reference to parent row
+    i32               lineno;                        //   0
+    bool              c_ssimreq_rec_in_ary;          //   false  membership flag
     // reftype Delptr of acr.FRec.oldpkey prohibits copy
+    // reftype Delptr of acr.FRec.oldhead prohibits copy
     // x-reference on acr.FRec.c_pline prevents copy
     // func:acr.FRec..AssignOp
     acr::FRec&           operator =(const acr::FRec &rhs) = delete;
     // reftype Delptr of acr.FRec.oldpkey prohibits copy
+    // reftype Delptr of acr.FRec.oldhead prohibits copy
     // x-reference on acr.FRec.c_pline prevents copy
     // func:acr.FRec..CopyCtor
     FRec(const acr::FRec &rhs) = delete;
@@ -1345,9 +1354,10 @@ private:
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/acr_gen.h](/include/gen/acr_gen.h)
 ```
 struct FSortkey { // acr.FSortkey: Keep track of next rowid for each sortkey
-    acr::FSortkey*    ind_sortkey_next;   // hash next
-    acr::RecSortkey   sortkey;            // Sort key
-    double            next_rowid;         //   0
+    acr::FSortkey*    ind_sortkey_next;      // hash next
+    u32               ind_sortkey_hashval;   // hash value
+    acr::RecSortkey   sortkey;               // Sort key
+    double            next_rowid;            //   0
     // func:acr.FSortkey..AssignOp
     inline acr::FSortkey& operator =(const acr::FSortkey &rhs) = delete;
     // func:acr.FSortkey..CopyCtor
@@ -1383,12 +1393,13 @@ private:
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/acr_gen.h](/include/gen/acr_gen.h)
 ```
 struct FSsimfile { // acr.FSsimfile: One full table
-    acr::FSsimfile*     ind_ssimfile_next;   // hash next
-    algo::Smallstr50    ssimfile;            //
-    algo::Smallstr100   ctype;               //
-    acr::FFile*         c_file;              // optional!. optional pointer
-    acr::FCtype*        p_ctype;             // reference to parent row
-    acr::FSsimsort*     c_ssimsort;          // Optional sort order. optional pointer
+    acr::FSsimfile*     ind_ssimfile_next;      // hash next
+    u32                 ind_ssimfile_hashval;   // hash value
+    algo::Smallstr50    ssimfile;               //
+    algo::Smallstr100   ctype;                  //
+    acr::FFile*         c_file;                 // optional!. optional pointer
+    acr::FCtype*        p_ctype;                // reference to parent row
+    acr::FSsimsort*     c_ssimsort;             // Optional sort order. optional pointer
     // x-reference on acr.FSsimfile.p_ctype prevents copy
     // x-reference on acr.FSsimfile.c_ssimsort prevents copy
     // func:acr.FSsimfile..AssignOp
@@ -1476,9 +1487,10 @@ private:
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/acr_gen.h](/include/gen/acr_gen.h)
 ```
 struct FSsimsort { // acr.FSsimsort
-    acr::FSsimsort*     ind_ssimsort_next;   // hash next
-    algo::Smallstr50    ssimfile;            //
-    algo::Smallstr100   sortfld;             //
+    acr::FSsimsort*     ind_ssimsort_next;      // hash next
+    u32                 ind_ssimsort_hashval;   // hash value
+    algo::Smallstr50    ssimfile;               //
+    algo::Smallstr100   sortfld;                //
     // func:acr.FSsimsort..AssignOp
     inline acr::FSsimsort& operator =(const acr::FSsimsort &rhs) = delete;
     // func:acr.FSsimsort..CopyCtor
@@ -1542,8 +1554,9 @@ private:
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/acr_gen.h](/include/gen/acr_gen.h)
 ```
 struct FTempkey { // acr.FTempkey
-    acr::FTempkey*   ind_tempkey_next;   // hash next
-    algo::cstring    tempkey;            //
+    acr::FTempkey*   ind_tempkey_next;      // hash next
+    u32              ind_tempkey_hashval;   // hash value
+    algo::cstring    tempkey;               //
     // func:acr.FTempkey..AssignOp
     inline acr::FTempkey& operator =(const acr::FTempkey &rhs) = delete;
     // func:acr.FTempkey..CopyCtor
@@ -1574,9 +1587,10 @@ private:
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/acr_gen.h](/include/gen/acr_gen.h)
 ```
 struct FUniqueattr { // acr.FUniqueattr
-    acr::FUniqueattr*   uniqueattr_next;       // Pointer to next free element int tpool
-    acr::FUniqueattr*   ind_uniqueattr_next;   // hash next
-    algo::cstring       uniqueattr;            // Data
+    acr::FUniqueattr*   uniqueattr_next;          // Pointer to next free element int tpool
+    acr::FUniqueattr*   ind_uniqueattr_next;      // hash next
+    u32                 ind_uniqueattr_hashval;   // hash value
+    algo::cstring       uniqueattr;               // Data
     // func:acr.FUniqueattr..AssignOp
     inline acr::FUniqueattr& operator =(const acr::FUniqueattr &rhs) = delete;
     // func:acr.FUniqueattr..CopyCtor
@@ -1657,6 +1671,7 @@ These can be executed with `atf_comp <comptest> -v`
 |[acr.BadReftype](/test/atf_comp/acr.BadReftype)|Invalid reftype detected|
 |[acr.CascDel](/test/atf_comp/acr.CascDel)|-del recursively deletes dependent records|
 |[acr.CascDel2](/test/atf_comp/acr.CascDel2)|Insert records & cascade delete them -- no change|
+|[acr.CascDel3](/test/atf_comp/acr.CascDel3)|acr.delete cascade deletes|
 |[acr.DelField](/test/atf_comp/acr.DelField)|A field is deleted|
 |[acr.DelRecord](/test/atf_comp/acr.DelRecord)|A record is deleted|
 |[acr.DeleteReinsert](/test/atf_comp/acr.DeleteReinsert)|A record is deleted and re-inserted|

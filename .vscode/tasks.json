@@ -1,0 +1,67 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "ACR release build",
+            "type": "shell",
+            "command": "ai && acr -check % && amc && update-hdr && abt %",
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "ACR debug build",
+            "type": "shell",
+            "command": "abt -cfg:debug %",
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "dependsOn": [
+                "ACR release build"
+            ]
+        },
+        {
+            "label": "ACR normalize",
+            "type": "shell",
+            "command": "normalize",
+            "group": {
+                "kind": "test",
+                "isDefault": false
+            },
+            "dependsOn": [
+                "ACR release build"
+            ]
+        },
+        {
+            "label": "ACR select debug target",
+            "type": "shell",
+            "command": "bin/vscode-select-debug-target ${file} ${workspaceFolder}/temp/a.out",
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "dependsOn": [
+                "ACR debug build"
+            ]
+        },
+        {
+            "label": "Indent current source and update headers",
+            "type": "shell",
+            "command": "bin/cpp-indent ${file}; update-hdr",
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+        },
+    ]
+}

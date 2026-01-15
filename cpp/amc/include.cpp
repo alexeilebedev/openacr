@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
 //
@@ -32,7 +32,8 @@ static bool ArgNeedsFwdDeclQ(amc::FField &field) {
         || field.reftype == dmmeta_Reftype_reftype_Base
         || field.reftype == dmmeta_Reftype_reftype_Varlen
         || field.reftype == dmmeta_Reftype_reftype_Opt
-        || field.reftype == dmmeta_Reftype_reftype_Fbuf;
+        || field.reftype == dmmeta_Reftype_reftype_Fbuf
+        || field.reftype == dmmeta_Reftype_reftype_Hook;
 }
 
 // -----------------------------------------------------------------------------
@@ -79,6 +80,7 @@ static void CollectParentns(amc::FNs &tgt, amc::FNs &parentns) {
 // Emit include scan guards for all headers
 void amc::GenInclude() {
     algo_lib::Replscope R;
+    R.strict=2;
 
     // load copyright for all generated files
     amc::_db.copyright = FileToString(dev_gitfile_conf_copyright_txt);
@@ -94,7 +96,7 @@ void amc::GenInclude() {
     }ind_end;
 
     // keep gen file names unique -- gdb requires unique names to set breakpoints
-    ind_beg(amc::_db_ns_curs, ns,amc::_db) {
+    ind_beg(amc::_db_ns_curs, ns,amc::_db) if (ns.c_nscpp) {
         Set(R, "$ns", ns.ns);
         ns.hdr  = &outfile_Create(Subst(R, "include/gen/$ns_gen.h")).text;
         ns.inl  = &outfile_Create(Subst(R, "include/gen/$ns_gen.inl.h")).text;
@@ -103,18 +105,18 @@ void amc::GenInclude() {
     }ind_end;
 
     // Add pragmas
-    ind_beg(amc::_db_ns_curs, ns,amc::_db) if (ch_N(ns.ns)) {
+    ind_beg(amc::_db_ns_curs, ns,amc::_db) if (ns.c_nscpp && ch_N(ns.ns)) {
         Ins(&R, *ns.hdr,"#pragma once");
         Ins(&R, *ns.inl,"#pragma once");
     }ind_end;
 
     // If generating executable target, instantiate all databases in dependency order.
-    ind_beg(amc::_db_ns_curs, ns,amc::_db) {
+    ind_beg(amc::_db_ns_curs, ns,amc::_db) if (ns.c_nscpp) {
         CollectParentns(ns, ns);
     }ind_end;
 
     // Add auto-generated includes
-    ind_beg(amc::_db_ns_curs, ns,amc::_db) if (ch_N(ns.ns)) {
+    ind_beg(amc::_db_ns_curs, ns,amc::_db) if (ns.c_nscpp && ch_N(ns.ns)) {
         ind_beg(amc::ns_c_nsinclude_curs, nsinclude, ns) {
             if (nsinclude.sys) {
                 *ns.hdr <<"#include <"<< name_Get(nsinclude) << ">" << eol;
@@ -200,6 +202,8 @@ void amc::GenUsedNs() {
     }ind_end;
 
     // check that one exe doesn't use another exe (will break during linking, but not fatal for amc)
+    // #AL# this can be OK since we allow cross-namespace pointers
+#if 0
     ind_beg(amc::_db_ns_curs, ns, amc::_db) {
         ind_beg(amc::ns_c_cppincl_curs, usedns, ns) if (&usedns != &ns) {
             if (usedns.nstype == dmmeta_Nstype_nstype_exe
@@ -216,6 +220,7 @@ void amc::GenUsedNs() {
             }
         }ind_end;
     }ind_end;
+#endif
 }
 
 // -----------------------------------------------------------------------------

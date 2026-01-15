@@ -1,2 +1,3 @@
 unknownMacro
-nullPointer:cpp/wcli/main.cpp
+preprocessorErrorDirective:cpp/lib/algo/bin_encode.cpp
+preprocessorErrorDirective:cpp/lib/algo/bin_decode.cpp

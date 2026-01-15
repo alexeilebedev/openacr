@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
 //
@@ -91,12 +91,7 @@ struct TimeTestIter {
     bool EndQ();                   // is finished
 };
 
-TimeTestIter::TimeTestIter(i64 in_ups, i64 in_off)
-    :gen_ut(SPREAD)
-    ,gen_frac(in_ups)
-    ,ups(in_ups)
-    ,off(in_off)
-    ,iter(LIMIT) {
+TimeTestIter::TimeTestIter(i64 in_ups, i64 in_off):gen_ut(SPREAD),gen_frac(in_ups),ups(in_ups),off(in_off),iter(LIMIT) {
     Sync();
 }
 

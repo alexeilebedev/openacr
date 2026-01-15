@@ -1,4 +1,4 @@
-## bin/update-scriptfile -
+## bin/update-scriptfile - Update dev.scriptfile table from git
 
 
 ### Sources

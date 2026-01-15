@@ -1,0 +1,4 @@
+dev.netproto  netproto:http  tls:N  comment:https://datatracker.ietf.org/doc/html/rfc2616
+dev.netproto  netproto:https  tls:Y  comment:""
+dev.netproto  netproto:smtp  tls:N  comment:""
+dev.netproto  netproto:ssh  tls:Y  comment:https://www.rfc-editor.org/rfc/rfc4253

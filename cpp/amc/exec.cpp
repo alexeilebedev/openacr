@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2012 AlgoEngineering LLC
@@ -95,7 +95,7 @@ void amc::tfunc_Exec_Kill() {
     amc::FFunc& kill = amc::CreateCurFunc();
     Ins(&R, kill.ret  , "void",false);
     Ins(&R, kill.proto, "$name_Kill($Parent)",false);
-    Ins(&R, kill.body, "if ($_pid != 0) {");
+    Ins(&R, kill.body, "if ($_pid > 0) {");
     Ins(&R, kill.body, "    kill($_pid,9);");
     Ins(&R, kill.body, "    $name_Wait($pararg);");
     Ins(&R, kill.body, "}");

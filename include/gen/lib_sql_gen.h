@@ -53,9 +53,10 @@ namespace lib_sql { // gen:ns_print_struct
 // global access: attr (Lary, by rowid)
 // global access: ind_attr (Thash, hash field attr)
 struct FAttr { // lib_sql.FAttr
-    algo::cstring     attr;            //
-    bool              isbool;          //   false
-    lib_sql::FAttr*   ind_attr_next;   // hash next
+    algo::cstring     attr;               //
+    bool              isbool;             //   false
+    lib_sql::FAttr*   ind_attr_next;      // hash next
+    u32               ind_attr_hashval;   // hash value
     // func:lib_sql.FAttr..AssignOp
     inline lib_sql::FAttr& operator =(const lib_sql::FAttr &rhs) = delete;
     // func:lib_sql.FAttr..CopyCtor
@@ -190,6 +191,9 @@ void                 ind_attr_Remove(lib_sql::FAttr& row) __attribute__((nothrow
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:lib_sql.FDb.ind_attr.Reserve
 void                 ind_attr_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:lib_sql.FDb.ind_attr.AbsReserve
+void                 ind_attr_AbsReserve(int n) __attribute__((nothrow));
 
 // cursor points to valid item
 // func:lib_sql.FDb.attr_curs.Reset

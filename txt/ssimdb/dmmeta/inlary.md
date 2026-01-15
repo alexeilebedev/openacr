@@ -12,7 +12,7 @@ Here is an example:
 ```
 inline-command: acr -t field:algo_lib.FDb.temp_strings | egrep algo_lib.FDb
     dmmeta.ctype  ctype:algo_lib.FDb  comment:"In-memory database for algo_lib"
-      dmmeta.field  field:algo_lib.FDb.temp_strings  arg:algo.cstring  reftype:Inlary  dflt:""  comment:"* initialization order is important *"
+      dmmeta.field  field:algo_lib.FDb.temp_strings  arg:algo.cstring  reftype:Inlary  dflt:""  comment:""
         dmmeta.inlary  field:algo_lib.FDb.temp_strings  min:8  max:8  comment:""
 ```
 

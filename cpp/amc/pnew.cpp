@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
 //
 // License: GPL
@@ -67,27 +67,27 @@ static void PnewAppend(algo_lib::Replscope &R, amc::Genpnew &pnew) {
 
 // -----------------------------------------------------------------------------
 
-static void PnewAmsStream(algo_lib::Replscope &R, amc::Genpnew &pnew) {
-    AddProtoArg(*pnew.p_func, "lib_ams::FStream &", "stream");
+static void PnewShm(algo_lib::Replscope &R, amc::Genpnew &pnew) {
+    AddProtoArg(*pnew.p_func, "lib_ams::FShm &", "shm");
     pnew.req_pack=true;
 
     if (bool_Update(amc::_db.has_ams_fwd_declare,true)) {
         if (amc::FNs *ns = amc::ind_ns_Find("lib_ams")) {
             // forward-declare
             BeginNsBlock(*ns->hdr, *ns, "");
-            Ins(&R, *ns->hdr, "struct FStream;");
-            Ins(&R, *ns->hdr, "void *BeginWrite(lib_ams::FStream &stream, int len);");
-            Ins(&R, *ns->hdr, "void EndWrite(lib_ams::FStream &stream, void *msg, int len);");
+            Ins(&R, *ns->hdr, "struct FShm;");
+            Ins(&R, *ns->hdr, "void *BeginWrite(lib_ams::FShm &shm, int len);");
+            Ins(&R, *ns->hdr, "void EndWrite(lib_ams::FShm &shm, void *msg, int len);");
             EndNsBlock(*ns->hdr, *ns, "");
         }
     }
 
-    Ins(&R, pnew.preamble, "msg = ($Cpptype*)lib_ams::BeginWrite(stream,int(len));");
+    Ins(&R, pnew.preamble, "msg = ($Cpptype*)lib_ams::BeginWrite(shm,int(len));");
     Ins(&R, pnew.preamble, "if (!msg) {");
     Ins(&R, pnew.preamble, "    return NULL; // no room.");
     Ins(&R, pnew.preamble, "}");
 
-    Ins(&R, pnew.postamble, "lib_ams::EndWrite(stream,msg,int(len));");
+    Ins(&R, pnew.postamble, "lib_ams::EndWrite(shm,msg,int(len));");
 }
 
 // -----------------------------------------------------------------------------
@@ -110,7 +110,16 @@ static void Pnew_CopyFields(amc::Genpnew &genpnew) {
             Set(R, "$extra", tempstr() << lenfld->extra);
             Ins(&R, func.body, AssignExpr(field, "*msg", "len + ($extra)", true)<<";");
         } else if (field.reftype == dmmeta_Reftype_reftype_Varlen) {
-            Ins(&R, func.body, "memcpy($name_Addr(*msg), $name.elems, ary_len);");
+            Ins(&R, func.body, "memcpy($name_Addr(*msg), $name.elems, $name_ary_len);");
+            if (ctype_zd_varlenfld_Next(field)) {
+                if (ctype_zd_varlenfld_Prev(field)) {
+                    Set(R, "$prevendexpr", VarlenEndExpr("(*msg)",*ctype_zd_varlenfld_Prev(field)));
+                    Set(R, "$endassign", VarlenEndAssign("(*msg)",field,Subst(R,"$prevendexpr + $name_ary_len")));
+                } else {
+                    Set(R, "$endassign", VarlenEndAssign("(*msg)",field,Subst(R,"$name_ary_len")));
+                }
+                Ins(&R, func.body, "$endassign;");
+            }
         } else if (field.reftype == dmmeta_Reftype_reftype_Opt) {
             Ins(&R, func.body, "if ($name) {");
             Ins(&R, func.body, "    memcpy((u8*)msg + sizeof($Cpptype), $name, opt_len);");
@@ -129,13 +138,12 @@ static void HandleLen(amc::Genpnew &genpnew) {
     amc::FCtype &ctype = *genpnew.p_ctype;
 
     Ins(&R, func.body, "size_t len = sizeof($Cpptype);");
-
-    if (ctype.c_varlenfld) {
-        Set(R, "$name", name_Get(*ctype.c_varlenfld));
-        Set(R, "$Vartype", ctype.c_varlenfld->p_arg->c_lenfld ? strptr("u8") : ctype.c_varlenfld->cpp_type);
-        Ins(&R, func.body, tempstr() << "u32 ary_len = elems_N($name) * sizeof($Vartype);");
-        Ins(&R, func.body, "len += ary_len;");
-    }
+    ind_beg(amc::ctype_zd_varlenfld_curs,varlenfld,ctype) {
+        Set(R, "$name", name_Get(varlenfld));
+        Set(R, "$Vartype", varlenfld.p_arg->c_lenfld ? strptr("u8") : varlenfld.cpp_type);
+        Ins(&R, func.body, tempstr() << "u32 $name_ary_len = elems_N($name) * sizeof($Vartype);");
+        Ins(&R, func.body, "len += $name_ary_len;");
+    }ind_end;
 
     if (ctype.c_optfld) {
         Set(R, "$name", name_Get(*ctype.c_optfld));
@@ -158,7 +166,7 @@ static void DispatchBuftype(amc::FPnew &pnew, amc::Genpnew &genpnew) {
     switch(pnewtype) {
     case amc_Pnewtype_Memptr      : PnewMemptr(R, genpnew); break;
     case amc_Pnewtype_ByteAry     : PnewByteAry(R, genpnew); break;
-    case amc_Pnewtype_AmsStream   : PnewAmsStream(R, genpnew); break;
+    case amc_Pnewtype_Shm         : PnewShm(R, genpnew); break;
     case amc_Pnewtype_Append      : PnewAppend(R, genpnew); break;
     default                           : vrfy(0, "unsupported buftype"); break;
     }

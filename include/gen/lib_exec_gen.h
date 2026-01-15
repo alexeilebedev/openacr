@@ -259,6 +259,9 @@ void                 ind_running_Remove(lib_exec::FSyscmd& row) __attribute__((n
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:lib_exec.FDb.ind_running.Reserve
 void                 ind_running_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:lib_exec.FDb.ind_running.AbsReserve
+void                 ind_running_AbsReserve(int n) __attribute__((nothrow));
 
 // Remove all elements from heap and free memory used by the array.
 // func:lib_exec.FDb.bh_syscmd.Dealloc
@@ -404,32 +407,33 @@ void                 FDb_Uninit() __attribute__((nothrow));
 // access: lib_exec.FSyscmddep.p_child (Upptr)
 // access: lib_exec.FSyscmddep.p_parent (Upptr)
 struct FSyscmd { // lib_exec.FSyscmd
-    lib_exec::FSyscmd*       ind_running_next;   // hash next
-    i32                      bh_syscmd_idx;      // index in heap; -1 means not-in-heap
-    lib_exec::FSyscmd*       zd_started_next;    // zslist link; -1 means not-in-list
-    lib_exec::FSyscmd*       zd_started_prev;    // previous element
-    i64                      syscmd;             //   0  Step number
-    algo::cstring            command;            // Command to execute
-    i32                      pid;                //   0  PID, if running
-    i32                      status;             //   0  Exit status (if command has completed)
-    i32                      nprereq;            //   0  Number of live pre-requisites
-    bool                     fail_prereq;        //   false  Set if one of pre-requisites fails
-    bool                     completed;          //   false  Completed?
-    i32                      maxtime;            //   0  Optional max running time (used to use SIGALRM)
-    lib_exec::FSyscmddep**   c_prior_elems;      // array of pointers
-    u32                      c_prior_n;          // array of pointers
-    u32                      c_prior_max;        // capacity of allocated array
-    lib_exec::FSyscmddep**   c_next_elems;       // array of pointers
-    u32                      c_next_n;           // array of pointers
-    u32                      c_next_max;         // capacity of allocated array
-    i32                      rowid;              //   0
-    algo::cstring            message;            // Message to print when command finishes
-    bool                     redir_out;          //   true  Redirect stdout/stderr to temp file
-    bool                     show_out;           //   true  Print stdout/stderr
-    algo_lib::FFildes        stdout_fd;          // Temporary file containing stdout of subprocess
-    algo_lib::FFildes        stderr_fd;          // Temporary file containing stderr of subprocess
-    i32                      signal;             //   0  Signal received by process (if any)
-    algo::StringAry          args;               // Overrides 'command'
+    lib_exec::FSyscmd*       ind_running_next;      // hash next
+    u32                      ind_running_hashval;   // hash value
+    i32                      bh_syscmd_idx;         // index in heap; -1 means not-in-heap
+    lib_exec::FSyscmd*       zd_started_next;       // zslist link; -1 means not-in-list
+    lib_exec::FSyscmd*       zd_started_prev;       // previous element
+    i64                      syscmd;                //   0  Step number
+    algo::cstring            command;               // Command to execute
+    i32                      pid;                   //   0  PID, if running
+    i32                      status;                //   0  Exit status (if command has completed)
+    i32                      nprereq;               //   0  Number of live pre-requisites
+    bool                     fail_prereq;           //   false  Set if one of pre-requisites fails
+    bool                     completed;             //   false  Completed?
+    i32                      maxtime;               //   0  Optional max running time (used to use SIGALRM)
+    lib_exec::FSyscmddep**   c_prior_elems;         // array of pointers
+    u32                      c_prior_n;             // array of pointers
+    u32                      c_prior_max;           // capacity of allocated array
+    lib_exec::FSyscmddep**   c_next_elems;          // array of pointers
+    u32                      c_next_n;              // array of pointers
+    u32                      c_next_max;            // capacity of allocated array
+    i32                      rowid;                 //   0
+    algo::cstring            message;               // Message to print when command finishes
+    bool                     redir_out;             //   true  Redirect stdout/stderr to temp file
+    bool                     show_out;              //   true  Print stdout/stderr
+    algo_lib::FFildes        stdout_fd;             // Temporary file containing stdout of subprocess
+    algo_lib::FFildes        stderr_fd;             // Temporary file containing stderr of subprocess
+    i32                      signal;                //   0  Signal received by process (if any)
+    algo::StringAry          args;                  // Overrides 'command'
     // reftype Ptrary of lib_exec.FSyscmd.c_prior prohibits copy
     // reftype Ptrary of lib_exec.FSyscmd.c_next prohibits copy
     // func:lib_exec.FSyscmd..AssignOp
@@ -609,10 +613,6 @@ void                 syscmddep_CopyOut(lib_exec::FSyscmddep &row, dev::Syscmddep
 // Copy fields in to row
 // func:lib_exec.FSyscmddep.msghdr.CopyIn
 void                 syscmddep_CopyIn(lib_exec::FSyscmddep &row, dev::Syscmddep &in) __attribute__((nothrow));
-
-// func:lib_exec.FSyscmddep.syscmddep.Get
-// this function is 'extrn' and implemented by user
-algo::RspaceStr16    syscmddep_Get(lib_exec::FSyscmddep& syscmddep) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:lib_exec.FSyscmddep..Init

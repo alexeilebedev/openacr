@@ -5,12 +5,13 @@ List of supported step types
 ```
 inline-command: acr steptype | ssimfilt ^ -t
 STEPTYPE       COMMENT
-Callback       Check field on every scheduler cycle; Does not update _db.next_loop
-Extern
-Inline         Check field on every scheduler cycle
-InlineOnce     Check timeout field on every scheduler cycle; Do not reschedule
-InlineRecur    Check timeout field on every scheduler cycle; reschedule with delay
-TimeHookRecur  Bheap version of InlineRecur
+Callback       Inline, call step func always; Does not update _db.next_loop, does not affect hot polling
+Extern         User provides scheduling by implementing _FirstChanged.
+Inline         Inline, call step func always
+InlineOnce     Inline, call step func at given time (time is given by first elemement of index)
+InlineRecur    Inline, call step func with given periodicity
+TimeHookOnce   TimeHook, call step func at given time (time is given by first elemement of index)
+TimeHookRecur  TimeHook, call step func with given periodicity
 
 ```
 
@@ -36,4 +37,12 @@ These ssimfiles reference dmmeta.steptype
 * [dmmeta.fstep via steptype](/txt/ssimdb/dmmeta/fstep.md) - Generate a main loop step to be executed whenever a field is non-empty 
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Related -->
+
+### Used In Executables
+<a href="#used-in-executables"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:ImdbUses -->
+
+* [amc](/txt/exe/amc/internals.md) as [amc.FSteptype](/txt/exe/amc/internals.md#amc-fsteptype)
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:ImdbUses -->
 

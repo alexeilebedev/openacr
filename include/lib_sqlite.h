@@ -1,3 +1,4 @@
+// Copyright (C) 2026 AlgoRND
 // Copyright (C) 2023 Astra
 //
 // License: GPL
@@ -38,7 +39,8 @@ namespace lib_sqlite { // update-hdr
     // cpp/lib_sqlite/lib_sqlite.cpp
     //
     int Open(lib_sqlite::FConn& conn);
-    void db_Cleanup(lib_sqlite::FConn &parent);
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void db_Cleanup(lib_sqlite::FConn &parent); // fcleanup:lib_sqlite.FConn.db
     void Init();
 
     // -------------------------------------------------------------------

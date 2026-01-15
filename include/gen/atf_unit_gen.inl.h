@@ -662,6 +662,7 @@ inline void atf_unit::FUnittest_Init(atf_unit::FUnittest& unittest) {
     unittest.success = bool(false);
     unittest.c_syscmd = NULL;
     unittest.ind_unittest_next = (atf_unit::FUnittest*)-1; // (atf_unit.FDb.ind_unittest) not-in-hash
+    unittest.ind_unittest_hashval = 0; // stored hash value
     unittest.step = NULL;
 }
 

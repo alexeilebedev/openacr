@@ -1,4 +1,4 @@
-## gclidb.gtblact -
+## gclidb.gtblact - static combination of gcli tables and actions
 
 
 ### Attributes

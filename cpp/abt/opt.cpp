@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
 //
@@ -31,7 +31,7 @@ tempstr abt::EvalSrcfileCmdline(abt::FBuilddir &builddir, abt::FTarget &target, 
     algo_lib::Replscope &R = builddir.R;
     // Detect source file language here
     bool c_file = ext_Get(srcfile) =="c";
-    bool cpp_file = ext_Get(srcfile) =="cpp";
+    bool cpp_file = (ext_Get(srcfile) =="cpp" || ext_Get(srcfile) =="cc" )   ;
     bool hpp_file = ext_Get(srcfile) == "hpp";
     bool rc_file = ext_Get(srcfile) == "rc";
     if (rc_file) {

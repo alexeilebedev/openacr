@@ -22,11 +22,13 @@
 <!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Subsets -->
 These ssimfiles are subsets of dmmeta.ns
 
+* [amsdb.Proctype](/txt/ssimdb/amsdb/proctype.md) -  
 * [dev.Target](/txt/ssimdb/dev/target.md) - Build target 
 * [dmmeta.Main](/txt/ssimdb/dmmeta/main.md) - Generate Main function for namespace 
 * [dmmeta.Nscpp](/txt/ssimdb/dmmeta/nscpp.md) - Generate C++ code for this namespace 
 * [dmmeta.Nsdb](/txt/ssimdb/dmmeta/nsdb.md) - Annotate ssimdb namespaces 
 * [dmmeta.Nsfast](/txt/ssimdb/dmmeta/nsfast.md) - Whether namespace is FAST 
+* [dmmeta.Nsjs](/txt/ssimdb/dmmeta/nsjs.md) - Generate JavaScript code for this namespace 
 * [dmmeta.Nsproto](/txt/ssimdb/dmmeta/nsproto.md) - Annotate protocol namespace (collection of types, no state) 
 * [dmmeta.Nsversion](/txt/ssimdb/dmmeta/nsversion.md) - Namespace version 
 * [dmmeta.Nsx](/txt/ssimdb/dmmeta/nsx.md) - Control code-generation and exception handling options for process/library 
@@ -40,7 +42,7 @@ These ssimfiles reference dmmeta.ns
 
 * [amsdb.proctype via ns](/txt/ssimdb/amsdb/proctype.md) -  
 * [atfdb.comptest via target](/txt/ssimdb/atfdb/comptest.md) -  
-* [atfdb.unittest via target](/txt/ssimdb/atfdb/unittest.md) -  
+* [atfdb.unittest via ns](/txt/ssimdb/atfdb/unittest.md) -  
 * [dmmeta.ctype via ns](/txt/ssimdb/dmmeta/ctype.md) - Parent namespace 
 * [dmmeta.dispatch via ns](/txt/ssimdb/dmmeta/dispatch.md) - Parent namespace 
 * [dmmeta.dispsig via ns](/txt/ssimdb/dmmeta/dispsig.md) - Cryptographic signature of all dispatches 
@@ -68,6 +70,7 @@ These ssimfiles reference dmmeta.ns
 * [abt_md -ns](/txt/exe/abt_md/README.md) - (overrides -readme) Process readmes for this namespace 
 * [acr_in -ns](/txt/exe/acr_in/README.md) - Regx of matching namespace 
 * [apm -ns](/txt/exe/apm/README.md) - Operate on specified namespace only 
+* [aqlite -ns](/txt/exe/aqlite/README.md) - Regx of databases to attach 
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:CmdlineUses -->
 

@@ -31,6 +31,7 @@ The following source files are part of this tool:
 |[cpp/mdbg/mdbg.cpp](/cpp/mdbg/mdbg.cpp)||
 |[include/gen/mdbg_gen.h](/include/gen/mdbg_gen.h)||
 |[include/gen/mdbg_gen.inl.h](/include/gen/mdbg_gen.inl.h)||
+|[include/mdbg.h](/include/mdbg.h)||
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Sources -->
 
@@ -115,6 +116,7 @@ struct FCfg { // mdbg.FCfg
     u32                 c_builddir_n;       // array of pointers
     u32                 c_builddir_max;     // capacity of allocated array
     mdbg::FCfg*         ind_cfg_next;       // hash next
+    u32                 ind_cfg_hashval;    // hash value
     // reftype Ptrary of mdbg.FCfg.c_builddir prohibits copy
     // func:mdbg.FCfg..AssignOp
     inline mdbg::FCfg&   operator =(const mdbg::FCfg &rhs) = delete;

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Copyright (C) 2023-2024 AlgoRND
+# Copyright (C) 2023-2026 AlgoRND
 #
 # License: GPL
 # This program is free software: you can redistribute it and/or modify
@@ -19,5 +19,5 @@
 set -o pipefail
 set -e
 job="${1:-normalize}"
-echo "# Running tests: $(bin/acr atfdb.citest.cijob:$job -field citest | tr '\n' ',')"
-(bin/ai && bin/atf_ci -cijob:"${job}") 2>&1 | bin/hilite -e
+echo "# Running tests: $(acr atfdb.citest.cijob:$job -field citest | tr '\n' ',')"
+(ai && atf_ci -cijob:"${job}") 2>&1 | hilite -e

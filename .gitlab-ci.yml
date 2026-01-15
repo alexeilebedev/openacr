@@ -9,9 +9,9 @@ cache:
     - temp/cppcheck.Linux.g++
 
 stages:
+  - master-only
   - build
   - test
-  - master-only
   - sched-only
 
 # skip pipeline for master, and for temporary branches not eligible to be merged
@@ -20,6 +20,12 @@ stages:
     - master
     - /^tmp.*/
     - schedules
+
+# skip pipeline schedules
+.excludes_schedules: &excludes_schedules_tmp
+  except:
+    - schedules
+    - /^tmp.*/
 
 # execute pipeline on when master changes
 .masteronly: &masteronly
@@ -35,18 +41,20 @@ stages:
     when: always
 
 before_script:
-  - 'echo "${CI_JOB_STAGE}:${CI_JOB_NAME} host:$(hostname) pwd:$(pwd) user:$(whoami) date:$(date)"'
-  - export PATH=$PATH:bin
+  - echo "${CI_JOB_STAGE}:${CI_JOB_NAME} host:$(hostname) pwd:$(pwd) user:$(whoami) date:$(date)"
+  - export PATH="$PATH:bin"
 
 build:
   stage: build
   script:
     - bin/ai
+    - gcache -install -dir .gcache
   artifacts:
     paths:
       - build
+      - .gcache
     expire_in: 1 week
-  <<: *excludes
+  <<: *excludes_schedules_tmp
 
 normalize:
   stage: test
@@ -64,15 +72,29 @@ comp:
   script:
     - bin/normalize "${CI_JOB_NAME}"
   artifacts:
+    when: always
+    paths:
+      - temp/*.log
+    expire_in: 1 week
+    # run on feature branches  (no master no schedule)
+  <<: *excludes
+
+
+coverage:
+  stage: test
+  script:
+    - bin/normalize "${CI_JOB_NAME}"
+  # added coverage report parsing
+  coverage: '/TOTAL\s+\d+\s+\d+\s+([\d.]+)%?/'  # Extracts 58.62 from "TOTAL 22124 12970 58.62"
+  artifacts:
+    when: always
     reports:
       coverage_report:
         coverage_format: cobertura
         path: temp/atf_comp/cov.d/cobertura.xml
-    when: on_failure
-    paths:
-      - temp/*.log
-    expire_in: 1 week
-  <<: *excludes
+  # run on all CI runs(feature branches for MR code coverage widget and master branch for analytics)
+  <<: *excludes_schedules_tmp
+
 
 memcheck:
   stage: test
@@ -80,35 +102,11 @@ memcheck:
     - bin/normalize "${CI_JOB_NAME}"
   <<: *excludes
 
-# Master only actions
-
-deploy-html-docs:
-# build pages for gitlab deployment
-  stage: master-only
-  script:
-   - bin/gitlab_master_ci deploy-html-docs
-  <<: *masteronly
-
-backup-master-to-github:
-# push master to github
-  stage: master-only
-  script:
-   - bin/gitlab_master_ci backup-master-to-github
-  <<: *masteronly
-
-backup-issues-to-github:
-# read all open issue and create files based on them
-# create commit and push it as issue branch
-  stage: master-only
-  script:
-   - bin/gitlab_master_ci backup-issues-to-github
-  <<: *masteronly
-
 # Schedule only actions
 
 future-scheduled-actions:
 # Do some task
-  stage: sched-only  
+  stage: sched-only
   script:
    - echo HELLO SCHED
   <<: *schedonly
