@@ -34,33 +34,34 @@ const char *gclidb_Gact_gact_approve      = "approve";
 const char *gclidb_Gact_gact_create       = "create";
 const char *gclidb_Gact_gact_list         = "list";
 const char *gclidb_Gact_gact_needs_work   = "needs_work";
-const char *gclidb_Gact_gact_start        = "start";
-const char *gclidb_Gact_gact_stop         = "stop";
-const char *gclidb_Gact_gact_update       = "update";
+
+const char *gclidb_Gact_gact_start   = "start";
+const char *gclidb_Gact_gact_stop    = "stop";
+
+const char *gclidb_Gact_gact_update   = "update";
 
 // compile-time string constants for gclidb.Gclicmd.gclicmd
-const char *gclidb_Gclicmd_gclicmd_graphql   = "graphql";
+const char *gclidb_Gclicmd_gclicmd_graphql    = "graphql";
+const char *gclidb_Gclicmd_gclicmd_issueadd   = "issueadd";
 
-const char *gclidb_Gclicmd_gclicmd_issueadd      = "issueadd";
 const char *gclidb_Gclicmd_gclicmd_issuelist     = "issuelist";
 const char *gclidb_Gclicmd_gclicmd_issuemod      = "issuemod";
 const char *gclidb_Gclicmd_gclicmd_issuenote     = "issuenote";
 const char *gclidb_Gclicmd_gclicmd_issuesearch   = "issuesearch";
 const char *gclidb_Gclicmd_gclicmd_mraccept      = "mraccept";
+const char *gclidb_Gclicmd_gclicmd_mrlist        = "mrlist";
+const char *gclidb_Gclicmd_gclicmd_mrlistdet     = "mrlistdet";
+const char *gclidb_Gclicmd_gclicmd_mrmod         = "mrmod";
+const char *gclidb_Gclicmd_gclicmd_mrnote        = "mrnote";
+const char *gclidb_Gclicmd_gclicmd_mrnoteadd     = "mrnoteadd";
+const char *gclidb_Gclicmd_gclicmd_mrnotemod     = "mrnotemod";
+const char *gclidb_Gclicmd_gclicmd_mrreq         = "mrreq";
+const char *gclidb_Gclicmd_gclicmd_mrreview      = "mrreview";
+const char *gclidb_Gclicmd_gclicmd_mrreviewrm    = "mrreviewrm";
 
-const char *gclidb_Gclicmd_gclicmd_mrlist       = "mrlist";
-const char *gclidb_Gclicmd_gclicmd_mrlistdet    = "mrlistdet";
-const char *gclidb_Gclicmd_gclicmd_mrmod        = "mrmod";
-const char *gclidb_Gclicmd_gclicmd_mrnote       = "mrnote";
-const char *gclidb_Gclicmd_gclicmd_mrnoteadd    = "mrnoteadd";
-const char *gclidb_Gclicmd_gclicmd_mrnotemod    = "mrnotemod";
-const char *gclidb_Gclicmd_gclicmd_mrreq        = "mrreq";
-const char *gclidb_Gclicmd_gclicmd_mrreview     = "mrreview";
-const char *gclidb_Gclicmd_gclicmd_mrreviewrm   = "mrreviewrm";
-const char *gclidb_Gclicmd_gclicmd_mrsearch     = "mrsearch";
-const char *gclidb_Gclicmd_gclicmd_mslist       = "mslist";
-const char *gclidb_Gclicmd_gclicmd_noteadd      = "noteadd";
-
+const char *gclidb_Gclicmd_gclicmd_mrsearch       = "mrsearch";
+const char *gclidb_Gclicmd_gclicmd_mslist         = "mslist";
+const char *gclidb_Gclicmd_gclicmd_noteadd        = "noteadd";
 const char *gclidb_Gclicmd_gclicmd_notemod        = "notemod";
 const char *gclidb_Gclicmd_gclicmd_repojob        = "repojob";
 const char *gclidb_Gclicmd_gclicmd_repojobtrace   = "repojobtrace";
@@ -72,6 +73,7 @@ const char *gclidb_Gclicmd_gclicmd_userlist       = "userlist";
 // compile-time string constants for gclidb.Gclienv.gclienv
 const char *gclidb_Gclienv_gclienv_all    = "all";
 const char *gclidb_Gclienv_gclienv_ghub   = "ghub";
+
 const char *gclidb_Gclienv_gclienv_glab   = "glab";
 
 // compile-time string constants for gclidb.Gclisub.gclisub
@@ -81,14 +83,12 @@ const char *gclidb_Gclisub_gclisub__IN_AUTH   = "$IN_AUTH";
 const char *gclidb_Gclisub_gclisub__ISSUE     = "$ISSUE";
 const char *gclidb_Gclisub_gclisub__ISSUE_    = "$ISSUE#";
 const char *gclidb_Gclisub_gclisub__MNOTE     = "$MNOTE";
-
-const char *gclidb_Gclisub_gclisub__MR     = "$MR";
-const char *gclidb_Gclisub_gclisub__MR_    = "$MR_";
-const char *gclidb_Gclisub_gclisub__NOTE   = "$NOTE";
-
-const char *gclidb_Gclisub_gclisub__REPO    = "$REPO";
-const char *gclidb_Gclisub_gclisub__TOKEN   = "$TOKEN";
-const char *gclidb_Gclisub_gclisub__USER    = "$USER";
+const char *gclidb_Gclisub_gclisub__MR        = "$MR";
+const char *gclidb_Gclisub_gclisub__MR_       = "$MR_";
+const char *gclidb_Gclisub_gclisub__NOTE      = "$NOTE";
+const char *gclidb_Gclisub_gclisub__REPO      = "$REPO";
+const char *gclidb_Gclisub_gclisub__TOKEN     = "$TOKEN";
+const char *gclidb_Gclisub_gclisub__USER      = "$USER";
 
 // compile-time string constants for gclidb.Gfld.gfld
 const char *gclidb_Gfld_gfld_action         = "action";
@@ -101,13 +101,12 @@ const char *gclidb_Gfld_gfld_labels         = "labels";
 const char *gclidb_Gfld_gfld_milestone      = "milestone";
 const char *gclidb_Gfld_gfld_name           = "name";
 const char *gclidb_Gfld_gfld_note           = "note";
-
-const char *gclidb_Gfld_gfld_repo       = "repo";
-const char *gclidb_Gfld_gfld_reviewer   = "reviewer";
-const char *gclidb_Gfld_gfld_state      = "state";
-const char *gclidb_Gfld_gfld_title      = "title";
-const char *gclidb_Gfld_gfld_token      = "token";
-const char *gclidb_Gfld_gfld_user       = "user";
+const char *gclidb_Gfld_gfld_repo           = "repo";
+const char *gclidb_Gfld_gfld_reviewer       = "reviewer";
+const char *gclidb_Gfld_gfld_state          = "state";
+const char *gclidb_Gfld_gfld_title          = "title";
+const char *gclidb_Gfld_gfld_token          = "token";
+const char *gclidb_Gfld_gfld_user           = "user";
 
 // compile-time string constants for gclidb.Grepogitport.grepogitport
 const char *gclidb_Grepogitport_grepogitport_default             = "default";
@@ -130,15 +129,13 @@ const char *gclidb_Gstate_gstate_state_set_open     = "state_set_open";
 const char *gclidb_Gstate_gstate_state_set_opened   = "state_set_opened";
 
 // compile-time string constants for gclidb.Gtbl.gtbl
-const char *gclidb_Gtbl_gtbl_gitconfig   = "gitconfig";
-
-const char *gclidb_Gtbl_gtbl_help        = "help";
-const char *gclidb_Gtbl_gtbl_issue       = "issue";
-const char *gclidb_Gtbl_gtbl_issuenote   = "issuenote";
-const char *gclidb_Gtbl_gtbl_milestone   = "milestone";
-const char *gclidb_Gtbl_gtbl_mr          = "mr";
-const char *gclidb_Gtbl_gtbl_mrjob       = "mrjob";
-
+const char *gclidb_Gtbl_gtbl_gitconfig    = "gitconfig";
+const char *gclidb_Gtbl_gtbl_help         = "help";
+const char *gclidb_Gtbl_gtbl_issue        = "issue";
+const char *gclidb_Gtbl_gtbl_issuenote    = "issuenote";
+const char *gclidb_Gtbl_gtbl_milestone    = "milestone";
+const char *gclidb_Gtbl_gtbl_mr           = "mr";
+const char *gclidb_Gtbl_gtbl_mrjob        = "mrjob";
 const char *gclidb_Gtbl_gtbl_mrnote       = "mrnote";
 const char *gclidb_Gtbl_gtbl_repo         = "repo";
 const char *gclidb_Gtbl_gtbl_reporemote   = "reporemote";
@@ -150,33 +147,32 @@ const char *gclidb_Gtblact_gtblact_repo_create        = "repo_create";
 const char *gclidb_Gtblact_gtblact_gitconfig_create   = "gitconfig_create";
 const char *gclidb_Gtblact_gtblact_gitconfig_list     = "gitconfig_list";
 const char *gclidb_Gtblact_gtblact_repo_update        = "repo_update";
-
-const char *gclidb_Gtblact_gtblact_reporemote_list   = "reporemote_list";
-
-const char *gclidb_Gtblact_gtblact_repo_list      = "repo_list";
-const char *gclidb_Gtblact_gtblact_issue_create   = "issue_create";
-
+const char *gclidb_Gtblact_gtblact_reporemote_list    = "reporemote_list";
+const char *gclidb_Gtblact_gtblact_repo_list          = "repo_list";
+const char *gclidb_Gtblact_gtblact_issue_create       = "issue_create";
 const char *gclidb_Gtblact_gtblact_issue_update       = "issue_update";
 const char *gclidb_Gtblact_gtblact_issue_start        = "issue_start";
 const char *gclidb_Gtblact_gtblact_issue_list         = "issue_list";
+
 const char *gclidb_Gtblact_gtblact_mrnote_create      = "mrnote_create";
 const char *gclidb_Gtblact_gtblact_issuenote_create   = "issuenote_create";
 const char *gclidb_Gtblact_gtblact_issuenote_list     = "issuenote_list";
 const char *gclidb_Gtblact_gtblact_issuenote_update   = "issuenote_update";
-const char *gclidb_Gtblact_gtblact_mrnote_update      = "mrnote_update";
-const char *gclidb_Gtblact_gtblact_mrnote_list        = "mrnote_list";
 
-const char *gclidb_Gtblact_gtblact_mr_list            = "mr_list";
-const char *gclidb_Gtblact_gtblact_milestone_list     = "milestone_list";
-const char *gclidb_Gtblact_gtblact_user_list          = "user_list";
-const char *gclidb_Gtblact_gtblact_mr_create          = "mr_create";
-const char *gclidb_Gtblact_gtblact_mr_start           = "mr_start";
-const char *gclidb_Gtblact_gtblact_mr_approve         = "mr_approve";
-const char *gclidb_Gtblact_gtblact_mr_accept          = "mr_accept";
-const char *gclidb_Gtblact_gtblact_mr_update          = "mr_update";
-const char *gclidb_Gtblact_gtblact_mr_needs_work      = "mr_needs_work";
-const char *gclidb_Gtblact_gtblact_mr_stop            = "mr_stop";
-const char *gclidb_Gtblact_gtblact_mrjob_list         = "mrjob_list";
+const char *gclidb_Gtblact_gtblact_mrnote_update    = "mrnote_update";
+const char *gclidb_Gtblact_gtblact_mrnote_list      = "mrnote_list";
+const char *gclidb_Gtblact_gtblact_mr_list          = "mr_list";
+const char *gclidb_Gtblact_gtblact_milestone_list   = "milestone_list";
+const char *gclidb_Gtblact_gtblact_user_list        = "user_list";
+const char *gclidb_Gtblact_gtblact_mr_create        = "mr_create";
+const char *gclidb_Gtblact_gtblact_mr_start         = "mr_start";
+const char *gclidb_Gtblact_gtblact_mr_approve       = "mr_approve";
+const char *gclidb_Gtblact_gtblact_mr_accept        = "mr_accept";
+const char *gclidb_Gtblact_gtblact_mr_update        = "mr_update";
+const char *gclidb_Gtblact_gtblact_mr_needs_work    = "mr_needs_work";
+const char *gclidb_Gtblact_gtblact_mr_stop          = "mr_stop";
+const char *gclidb_Gtblact_gtblact_mrjob_list       = "mrjob_list";
+
 const char *gclidb_Gtblact_gtblact_issue_needs_work   = "issue_needs_work";
 const char *gclidb_Gtblact_gtblact_issue_stop         = "issue_stop";
 
@@ -198,8 +194,7 @@ const char *gclidb_Label_label_invalid            = "invalid";
 const char *gclidb_Label_label_low_priority       = "low_priority";
 const char *gclidb_Label_label_medium_priority    = "medium_priority";
 const char *gclidb_Label_label_question           = "question";
-
-const char *gclidb_Label_label_wontfix   = "wontfix";
+const char *gclidb_Label_label_wontfix            = "wontfix";
 
 namespace gclidb { // gen:ns_print_proto
     // func:gclidb...SizeCheck

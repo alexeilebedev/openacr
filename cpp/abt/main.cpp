@@ -443,14 +443,28 @@ static void Main_GuessParams() {
         builddir->path << "build/" << (key_builddir == builddir->builddir && !abt::_db.cmdline.shortlink ? tempstr(cfg.cfg) : key_builddir);
         //initialize replacements
         Set(builddir->R,"$uname"   ,uname);
-        Set(builddir->R,"$compiler",compiler);
         Set(builddir->R,"$cfg"     ,cfg.cfg);
         Set(builddir->R,"$arch"    ,arch);
         Set(builddir->R,"$out_dir" ,builddir->path);
-        Set(builddir->R,"$_ar"     ,builddir->p_compiler->ar);// avoid substitution conflict with $arch
-        Set(builddir->R,"$ranlib"  ,builddir->p_compiler->ranlib);
+        tempstr ar_cmd(builddir->p_compiler->ar);
+        tempstr ranlib_cmd(builddir->p_compiler->ranlib);
+        tempstr link_cmd(builddir->p_compiler->link);
+        tempstr compiler_cmd(compiler);
+
+        // On Darwin ARM64, need to use arch prefix for proper tool execution
+        if (StartsWithQ(builddir->builddir, "Darwin-clang++") && EndsWithQ(builddir->builddir, "-arm64")) {
+            ar_cmd = tempstr() << "arch -arm64 " << ar_cmd;
+            ranlib_cmd = tempstr() << "arch -arm64 " << ranlib_cmd;
+            link_cmd = tempstr() << "arch -arm64 " << link_cmd;
+            compiler_cmd = tempstr() << "arch -arm64 " << compiler_cmd;
+        }
+
+        Set(builddir->R,"$compiler",compiler_cmd);
+
+        Set(builddir->R,"$_ar"     ,ar_cmd);// avoid substitution conflict with $arch
+        Set(builddir->R,"$ranlib"  ,ranlib_cmd);
         Set(builddir->R,"$libext"  ,builddir->p_compiler->libext);
-        Set(builddir->R,"$link"    ,builddir->p_compiler->link);
+        Set(builddir->R,"$link"    ,link_cmd);
         Set(builddir->R,"$buildpath",builddir->path);
         Set(builddir->R,"$builddir","$uname-$compiler.$cfg-$arch");
     }ind_end;

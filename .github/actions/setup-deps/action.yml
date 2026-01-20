@@ -3,7 +3,8 @@ description: Installs required developer tools and libraries
 runs:
   using: "composite"
   steps:
-    - name: Install dependencies
+    - name: Install Linux dependencies
+      if: runner.os == 'Linux'
       shell: bash
       run: |
         sudo apt-get update && sudo apt-get install -y \
@@ -17,3 +18,16 @@ runs:
           llvm \
           cppcheck \
           valgrind
+    - name: Install macOS dependencies
+      if: runner.os == 'macOS'
+      shell: bash
+      run: |
+        brew install \
+          mariadb \
+          openssl \
+          curl \
+          lz4 \
+          llvm \
+          cppcheck
+        # Create mariadb symlink for header compatibility
+        sudo ln -sf /opt/homebrew/opt/mariadb/include/mysql /opt/homebrew/opt/mariadb/include/mariadb || true

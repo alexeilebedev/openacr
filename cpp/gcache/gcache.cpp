@@ -286,6 +286,7 @@ bool gcache::FdToFile(algo::Fildes from, algo::cstring &to_fname) {
         bool use_cfr = true;
         bool ok =false;
         // try using in-kernel copy
+#ifdef __linux__
         if (use_cfr) {
             struct stat stat;
             errno_vrfy(fstat(from.value, &stat)==0,"fstat");
@@ -295,6 +296,7 @@ bool gcache::FdToFile(algo::Fildes from, algo::cstring &to_fname) {
                 _db.report.copy_file_range=true;
             }
         }
+#endif
         // try the old-fashioned way
         if (!ok) {
             char buf[BUFSIZ];

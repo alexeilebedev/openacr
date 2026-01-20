@@ -943,6 +943,9 @@ namespace algo { // update-hdr
     void u64_PrintBase32(u64 k, algo::cstring &str);
     void Uuid_Print(algo::Uuid &parent, algo::cstring &str);
 
+    // Read algo::Attr from string in format "name:value"
+    bool Attr_ReadStrptrMaybe(algo::Attr &parent, algo::strptr in_str);
+
     // -------------------------------------------------------------------
     // cpp/lib/algo/lib.cpp -- Main file
     //
