@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -79,8 +79,6 @@ void gcli::ShowHelp(strptr gtbl_key, strptr gact_key){
     Regx_ReadSql(gtbl_regx,gtbl_key, false);
     algo_lib::Regx gact_regx;
     Regx_ReadSql(gact_regx,gact_key, false);
-    cstring out;
-    out << "TABLE\tUSE/DFLT\tCOMMENT\n";
 
     ind_beg(gcli::_db_gtblact_curs, gtblact, gcli::_db) {
         if (gcli::FGtbl *gtbl=gcli::ind_gtbl_Find(gtbl_Get(gtblact))) {
@@ -88,31 +86,30 @@ void gcli::ShowHelp(strptr gtbl_key, strptr gact_key){
         }
     }ind_end;
 
+    algo_lib::FTxttbl txttbl;
+    AddRow(txttbl);
+    AddCols(txttbl,"TABLE,USE/DFLT,COMMENT");
     ind_beg(gcli::_db_gtbl_curs, gtbl, gcli::_db) if (algo_lib::Regx_Match(gtbl_regx,gtbl.gtbl)){
-        tempstr comment;
-        algo::ListSep ls(",");
-        out << gtbl.gtbl
-            << "\t"
-            << "\t" << gtbl.comment
-            << eol;
+        AddRow(txttbl);
+        AddCol(txttbl,gtbl.gtbl);
+        AddCol(txttbl,"");
+        AddCol(txttbl,gtbl.comment);
         if (gcli::_db.cmdline.t){
             ind_beg(gcli::gtbl_c_gtblact_curs,gtblact,gtbl) if (algo_lib::Regx_Match(gact_regx,gact_Get(gtblact))){
-                out << "  -" << gact_Get(gtblact)
-                    << "\t"
-                    << "\t"<< Useline(gtblact)
-                    << eol;
+                AddRow(txttbl);
+                AddCol(txttbl,tempstr()<<"  -" << gact_Get(gtblact));
+                AddCol(txttbl,"");
+                AddCol(txttbl,Useline(gtblact));
                 ind_beg(gcli::gtblact_c_gtblactfld_curs,gtblactfld,gtblact){
-                    out << "     " << Usefield(gtblactfld)
-                        << "\t" << gtblactfld.dflt
-                        << "\t" << gtblactfld.comment
-                        //                        << "\t" << gtblactfld.dflt
-                        << eol;
+                    AddRow(txttbl);
+                    AddCol(txttbl,tempstr()<<"     " << Usefield(gtblactfld));
+                    AddCol(txttbl,gtblactfld.dflt);
+                    AddCol(txttbl,gtblactfld.comment);
                 }ind_end;
             }ind_end;
         }
     }ind_end;
-
-    prlog(Tabulated(out,"\t"));
+    prlog(txttbl);
 }
 // -----------------------------------------------------------------------------
 void gcli::gtblact_help_list(gcli::FGtblact &gtblact){

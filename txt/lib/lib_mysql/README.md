@@ -4,34 +4,11 @@
 ### Table Of Contents
 <a href="#table-of-contents"></a>
 <!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
-&nbsp;&nbsp;&bull;&nbsp;  [Ctypes](#ctypes)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Functions](#functions)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
-
-### Ctypes
-<a href="#ctypes"></a>
-Other ctypes in this namespace which don't have own readme files
-
-#### lib_mysql.FDb - In-memory database for lib_mysql
-<a href="#lib_mysql-fdb"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|res|lib_mysql.Res|Cppstack||Provides default name for variables of this type|
-|_db|lib_mysql.FDb|Global|
-|mysql|MYSQL|Ptr|
-
-#### lib_mysql.Res - 
-<a href="#lib_mysql-res"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|res|MYSQL_RES|Ptr|
 
 ### Functions
 <a href="#functions"></a>
@@ -39,17 +16,17 @@ Other ctypes in this namespace which don't have own readme files
 Functions exported from this namespace:
 
 ```c++
+// replace first occurence of ? in LHS with Y
+// QUOTES   quotes to use (' or "); if set to zero, quotes are omitted.
+void lib_mysql::MBind(MYSQL *conn, cstring &lhs, strptr y, char quotes) 
+```
+
+```c++
 // LHS      output buffer
 // CONN     mysql context (includes collation info)
 // RHS      string to print
 // QUOTES   quotes to use (' or "); if set to zero, quotes are omitted.
 void lib_mysql::MPrintQuoted(cstring &lhs, MYSQL *conn, strptr rhs, char quotes) 
-```
-
-```c++
-// replace first occurence of ? in LHS with Y
-// QUOTES   quotes to use (' or "); if set to zero, quotes are omitted.
-void lib_mysql::MBind(MYSQL *conn, cstring &lhs, strptr y, char quotes) 
 ```
 
 ```c++
@@ -71,16 +48,6 @@ void lib_mysql::res_Cleanup(lib_mysql::Res &res)
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Functions -->
 
-### Inputs
-<a href="#inputs"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
-`lib_mysql` takes the following tables on input:
-|Ssimfile|Comment|
-|---|---|
-|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
-
 ### Sources
 <a href="#sources"></a>
 <!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Sources -->
@@ -96,16 +63,6 @@ The following source files are part of this tool:
 |[include/lib_mysql.h](/include/lib_mysql.h)||
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Sources -->
-
-### Dependencies
-<a href="#dependencies"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Dependencies -->
-The build target depends on the following libraries
-|Target|Comment|
-|---|---|
-|[algo_lib](/txt/lib/algo_lib/README.md)|Support library for all executables|
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Dependencies -->
 
 ### In Memory DB
 <a href="#in-memory-db"></a>

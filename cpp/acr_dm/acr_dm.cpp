@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -137,7 +137,7 @@ void acr_dm::Main_Dump() {
             }ind_end;
             out << eol;
         }ind_end;
-        dbglog(out);
+        prcat(debug,out);
     }
 }
 

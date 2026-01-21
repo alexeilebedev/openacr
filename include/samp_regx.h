@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -33,5 +33,6 @@ namespace samp_regx { // update-hdr
     // -------------------------------------------------------------------
     // cpp/samp_regx/samp_regx.cpp
     //
-    void Main();
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void Main(); // main:samp_regx
 }

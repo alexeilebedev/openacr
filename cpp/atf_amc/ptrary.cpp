@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 // Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
 //
 // License: GPL
@@ -17,7 +17,7 @@
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: atf_amc (exe) -- Unit tests for amc (see amctest table)
-// Exceptions: NO
+// Exceptions: yes
 // Source: cpp/atf_amc/ptrary.cpp
 //
 
@@ -31,31 +31,31 @@ void atf_amc::amctest_PtraryInsert() {
     // insert a.
     c_typek_Insert(a);
     vrfy_(c_typek_Find(0)==&a);
-    vrfy_(a._db_c_typek_in_ary ==true);
+    vrfy_(a.c_typek_in_ary ==true);
     vrfy_(c_typek_N()==1);
 
     // insert again -- no effect
     c_typek_Insert(a);
     vrfy_(c_typek_Find(0)==&a);
-    vrfy_(a._db_c_typek_in_ary ==true);
+    vrfy_(a.c_typek_in_ary ==true);
     vrfy_(c_typek_N()==1);
 
     // remove
     c_typek_Remove(a);
     vrfy_(c_typek_Find(0)==NULL);
-    vrfy_(a._db_c_typek_in_ary ==false);
+    vrfy_(a.c_typek_in_ary ==false);
     vrfy_(c_typek_N()==0);
 
     // remove again -- no effect
     c_typek_Remove(a);
     vrfy_(c_typek_Find(0)==NULL);
-    vrfy_(a._db_c_typek_in_ary ==false);
+    vrfy_(a.c_typek_in_ary ==false);
     vrfy_(c_typek_N()==0);
 
     // reinsert -- should be there now
     c_typek_Insert(a);
     vrfy_(c_typek_Find(0)==&a);
-    vrfy_(a._db_c_typek_in_ary ==true);
+    vrfy_(a.c_typek_in_ary ==true);
     vrfy_(c_typek_N()==1);
 }
 
@@ -65,14 +65,94 @@ void atf_amc::amctest_PtraryCursor() {
 
     c_typek_Insert(a);
     c_typek_Insert(b);
-    vrfy_(a._db_c_typek_in_ary ==true);
-    vrfy_(b._db_c_typek_in_ary ==true);
+    vrfy_(_db.c_typek_n==2);
+    vrfy_(a.c_typek_in_ary ==true);
+    vrfy_(b.c_typek_in_ary ==true);
     // check that once cursor on unique array removes elements from list
     ind_beg(_db_c_typek_oncecurs,typek,_db) {
         vrfy_(ind_curs(typek).index!=0 || &typek == &a);
         vrfy_(ind_curs(typek).index!=1 || &typek == &b);
     }ind_end;
     vrfy_(c_typek_N()==0);
-    vrfy_(a._db_c_typek_in_ary ==false);
-    vrfy_(b._db_c_typek_in_ary ==false);
+    vrfy_(a.c_typek_in_ary ==false);
+    vrfy_(b.c_typek_in_ary ==false);
+}
+
+// -----------------------------------------------------------------------------
+
+void atf_amc::amctest_PtraryHeaplike() {
+    atf_amc::FTypeL a,b,c;
+    vrfy_(c_typel_First()==NULL);
+    vrfy_(c_typel_Last()==NULL);
+
+    vrfy_(a.c_typel_idx==-1);
+    vrfy_(b.c_typel_idx==-1);
+    vrfy_(c.c_typel_idx==-1);
+
+    c_typel_Insert(a);
+    vrfy_(c_typel_First()==&a);
+    vrfy_(_db.c_typel_n==1);
+    c_typel_Insert(b);
+    vrfy_(c_typel_Last()==&b);
+    vrfy_(_db.c_typel_n==2);
+    c_typel_Insert(c);
+    vrfy_(c_typel_Last()==&c);
+
+    vrfy_(_db.c_typel_n==3);
+    vrfy_(a.c_typel_idx==0);
+    vrfy_(b.c_typel_idx==1);
+    vrfy_(c.c_typel_idx==2);
+
+    c_typel_Remove(a);
+    vrfy_(_db.c_typel_n==2);
+    vrfy_(a.c_typel_idx==-1);
+    vrfy_(b.c_typel_idx==1);
+    vrfy_(c.c_typel_idx==0);
+
+    c_typel_RemoveAll();
+    vrfy_(_db.c_typel_n==0);
+    vrfy_(a.c_typel_idx==-1);
+    vrfy_(b.c_typel_idx==-1);
+    vrfy_(c.c_typel_idx==-1);
+
+    c_typel_Insert(a);
+    c_typel_Insert(b);
+    c_typel_Insert(c);
+    vrfy_(c_typel_Last()==&c && c.c_typel_idx==2 && c_typel_RemoveLast()==&c);
+    vrfy_(c_typel_Last()==&b && b.c_typel_idx==1 && c_typel_RemoveLast()==&b);
+    vrfy_(c_typel_Last()==&a && a.c_typel_idx==0 && c_typel_RemoveLast()==&a);
+    vrfy_(c_typel_Last()==NULL && c_typel_RemoveLast()==NULL);
+
+    c_typel_Insert(a);
+    c_typel_Insert(b);
+    c_typel_Insert(c);
+    vrfy_(c_typel_First()==&a && a.c_typel_idx==0 && c_typel_RemoveFirst()==&a);
+    vrfy_(c_typel_First()==&c && c.c_typel_idx==0 && c_typel_RemoveFirst()==&c);
+    vrfy_(c_typel_First()==&b && b.c_typel_idx==0 && c_typel_RemoveFirst()==&b);
+    vrfy_(c_typel_Last()==NULL && c_typel_RemoveFirst()==NULL);
+}
+
+// -----------------------------------------------------------------------------
+
+void atf_amc::amctest_PtraryNonUnique() {
+    atf_amc::FTypeM a,b,c;
+
+    c_typem_Insert(a);
+    c_typem_Insert(b);
+    c_typem_Insert(c);
+    c_typem_Insert(a);
+    c_typem_Insert(a);
+    c_typem_Insert(c);
+
+    vrfy_(_db.c_typem_n == 6);
+
+    // non-unique Ptary - removal must scan for all references
+    c_typem_Remove(a);
+    vrfy_(_db.c_typem_n == 3);
+
+    c_typem_Remove(c);
+    vrfy_(_db.c_typem_n == 1);
+
+    c_typem_Remove(b);
+    vrfy_(_db.c_typem_n == 0);
 }

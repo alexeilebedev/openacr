@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 //
@@ -557,11 +557,10 @@ algo::Fildes algo::OpenFile(const strptr& filename, algo::FileFlags flags) {
         write_Set(flags, true);
     }
     if (append_Get(flags)) {
-        // #AL# without O_APPEND, 2 processes cannot reliably append to the same file
-        // #AL# warning: O_APPEND does not work on NFS systems (see man 2 open)
-        //os_flags |= O_APPEND;
+        os_flags = O_APPEND | O_RDWR | O_CREAT;
+    } else if (write_Get(flags) && read_Get(flags)) { // read+write = no truncate
         os_flags = O_RDWR | O_CREAT;
-    } else if (write_Get(flags)) {
+    } else if (write_Get(flags)) { // write = truncate
         os_flags = O_RDWR | O_CREAT | O_TRUNC;
     } else if (read_Get(flags)) {
         os_flags = O_RDONLY;
@@ -662,7 +661,7 @@ bool algo::TruncateFile(Fildes fd, i64 size) {
 // File is read using a "safe" method of succesively calling read.
 // relying on reported file size or using mmap does not work in all cases
 // Todo: test on windows
-const tempstr algo::FileToString(const strptr& fname, algo::FileFlags flags DFLTVAL(algo_FileFlags__throw)) {
+const tempstr algo::FileToString(const strptr& fname, algo::FileFlags flags DFLTVAL(algo::FileFlags())) {
     algo_lib::FFildes fd;
     tempstr ret;
     fd.fd = OpenRead(fname,flags);

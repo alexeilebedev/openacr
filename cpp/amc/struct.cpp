@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2016-2019 NYSE | Intercontinental Exchange
 //
@@ -34,7 +34,7 @@ bool amc::PassFieldViaArgQ(amc::FField &field, amc::FCtype &ctype) {
         && !(field.c_typefld && ctype.c_msgtype)
         && !(GetLenfld(field) && ctype.c_msgtype)
         && !FldfuncQ(field)
-        && (&field != ctype.c_varlenfld);// stack constructor doesn't accept varlen or optional fields
+        && !ctype_zd_varlenfld_InLlistQ(field);// stack constructor doesn't accept varlen or optional fields
     return ok;
 }
 
@@ -98,7 +98,7 @@ static void GenStruct_Ctor2(algo_lib::Replscope &R, amc::FCtype &ctype) {
                     Ins(&R, *ns.hdr, (cur_priv ? "private:" : "public:"));
                 }
                 tempstr proto;
-                PrintFuncProto(func,&ctype,proto);
+                PrintFuncProto(func,&ctype,proto,false);
                 algo::InsertIndent(*ns.hdr, proto,1);
             }ind_end;
         }ind_end;
@@ -110,7 +110,7 @@ static void GenStruct_Ctor2(algo_lib::Replscope &R, amc::FCtype &ctype) {
                 Ins(&R, *ns.hdr, (cur_priv ? "private:" : "public:"));
             }
             tempstr proto;
-            PrintFuncProto(func,&ctype,proto);
+            PrintFuncProto(func,&ctype,proto,false);
             algo::InsertIndent(*ns.hdr,proto,1);
         }ind_end;
     }
@@ -122,7 +122,7 @@ static void GenStruct_Ctor2(algo_lib::Replscope &R, amc::FCtype &ctype) {
                 Ins(&R, *ns.hdr, (cur_priv ? "private:" : "public:"));
             }
             tempstr proto;
-            PrintFuncProto(func,&ctype,proto);
+            PrintFuncProto(func,&ctype,proto,false);
             algo::InsertIndent(*ns.hdr,proto,1);
         }ind_end;
     }ind_end;

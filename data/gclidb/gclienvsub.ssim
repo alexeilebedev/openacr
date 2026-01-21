@@ -1,6 +1,7 @@
 gclidb.gclienvsub  gclienvsub:all.$REPO  fwd:Y  rev:N  uval:""
 gclidb.gclienvsub  gclienvsub:ghub.$GITDIR  fwd:Y  rev:N  uval:ghub_vparizhs_ghp
-gclidb.gclienvsub  gclienvsub:ghub.$TOKEN  fwd:Y  rev:Y  uval:REDACTED
+gclidb.gclienvsub  gclienvsub:ghub.$TOKEN  fwd:Y  rev:Y  uval:test/gcli/github_token.base64
+gclidb.gclienvsub  gclienvsub:ghub.$ID_RSA  fwd:N  rev:N  uval:test/gcli/id_rsa_gclisvc.base64
 gclidb.gclienvsub  gclienvsub:ghub.$HOST  fwd:Y  rev:Y  uval:https://api.github.com
 gclidb.gclienvsub  gclienvsub:ghub.$IN_AUTH  fwd:Y  rev:Y  uval:temp/.ssim_ghub
 gclidb.gclienvsub  gclienvsub:ghub.$ISSUE  fwd:Y  rev:Y  uval:""
@@ -12,7 +13,8 @@ gclidb.gclienvsub  gclienvsub:ghub.$NOTE  fwd:Y  rev:N  uval:""
 gclidb.gclienvsub  gclienvsub:ghub.$REPO  fwd:Y  rev:Y  uval:vparizhs/ghp
 gclidb.gclienvsub  gclienvsub:ghub.$USER  fwd:Y  rev:Y  uval:vparizhs
 gclidb.gclienvsub  gclienvsub:glab.$GITDIR  fwd:Y  rev:N  uval:glab_glpat
-gclidb.gclienvsub  gclienvsub:glab.$TOKEN  fwd:Y  rev:Y  uval:glpat-Hf38RB2J9GUZRhc54FCs
+gclidb.gclienvsub  gclienvsub:glab.$TOKEN  fwd:Y  rev:Y  uval:test/gcli/gitlab_token.base64
+gclidb.gclienvsub  gclienvsub:glab.$ID_RSA  fwd:N  rev:N  uval:test/gcli/id_rsa_gclisvc.base64
 gclidb.gclienvsub  gclienvsub:glab.$HOST  fwd:Y  rev:Y  uval:https://gitlab.vovaco.com
 gclidb.gclienvsub  gclienvsub:glab.$IN_AUTH  fwd:Y  rev:Y  uval:temp/.ssim_glab
 gclidb.gclienvsub  gclienvsub:glab.$ISSUE  fwd:Y  rev:Y  uval:""
@@ -22,4 +24,4 @@ gclidb.gclienvsub  gclienvsub:glab.$MR  fwd:Y  rev:Y  uval:""
 gclidb.gclienvsub  gclienvsub:glab.$MR_  fwd:N  rev:Y  uval:""
 gclidb.gclienvsub  gclienvsub:glab.$NOTE  fwd:Y  rev:N  uval:""
 gclidb.gclienvsub  gclienvsub:glab.$REPO  fwd:Y  rev:Y  uval:algornd/glpat
-gclidb.gclienvsub  gclienvsub:glab.$USER  fwd:Y  rev:Y  uval:project_7_bot_c2b9d6b53237c073b0df26fc148838bb
+gclidb.gclienvsub  gclienvsub:glab.$USER  fwd:Y  rev:Y  uval:vparizhs

@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
 //
@@ -66,29 +66,6 @@ static tempstr Sortkey(src_func::FTargsrc &targsrc, strptr funcline, i32 lineno)
 
 // -----------------------------------------------------------------------------
 
-// Try to figure out if function has an amc-defined prototype by looking up its prefix
-// in dispatch table for its namespace.
-// This only works if dispatch name does not contain an underscore
-static bool AmcProtQ(strptr funcname) {
-    bool ret=false;
-    strptr prefix = Pathcomp(funcname, "(LL RR*RR&RR");
-    int start =0, next=0;
-    for (; start < prefix.n_elems; start = next+1) {
-        next=FindFrom(prefix,'_',start);
-        if (next==-1) {
-            break;
-        }
-        tempstr key(tempstr() << FirstN(prefix,next));
-        if (src_func::ind_genprefix_Find(key)) {
-            ret=true;
-            break;
-        }
-    }
-    return ret;
-}
-
-// -----------------------------------------------------------------------------
-
 // Create function record associated with FNAME,LINENO
 // Where first line is FUNCLINE
 static src_func::FFunc *CreateFunc(src_func::FTargsrc &targsrc, strptr funcline, strptr precomment) {
@@ -103,15 +80,30 @@ static src_func::FFunc *CreateFunc(src_func::FTargsrc &targsrc, strptr funcline,
         }
         func->isinline = FindStr(funcline,"inline")!=-1;
         func->sortkey=Sortkey(targsrc,funcline,src_func::_db.cur_line);
-        func->amcprot = AmcProtQ(func->func);
+        tempstr key(Pathcomp(func->func, "(LL RR*RR&RR"));
+        Replace(key,"::",".");
+        func->p_userfunc = src_func::ind_userfunc_cppname_Find(key);
         func->p_targsrc = &targsrc;
         func->precomment = precomment;
         func->mystery = ch_N(func->precomment)<20 && !func->isstatic && !func->isinline;
         func->line = src_func::_db.cur_line;
+        // Compute a key-looking string, e.g. ns.blah
+        // for a function "void *ns::blah(arg1, arg2)"
+        // For a static function where ns is not part of the definition,
+        // grab ns name from the target
+        tempstr ns = src_func::GetFuncNs(*func);
+        if (ns == "") {
+            ns = func->p_targsrc->p_target->target;
+        }
+        func->name << ns << "." << Pathcomp(func->func,"(LL RR:RR");
+
         // function may fail to xref (and that's ok)
         bool xrefok=func_XrefMaybe(*func);
         if (!xrefok) {
             verblog(Location(*func,0)<<": src_func can't parse declaration: "<<func->func<<" (failed to xref)");
+        }
+        if (func->p_userfunc) {
+            zd_func_Insert(*func->p_userfunc,*func);
         }
         src_func::_db.report.n_func++;
         src_func::_db.report.n_static += func->isstatic;
@@ -126,8 +118,8 @@ static src_func::FFunc *CreateFunc(src_func::FTargsrc &targsrc, strptr funcline,
 // Scan contents of FNAME and create function records
 static void ScanFile(src_func::FTargsrc &targsrc) {
     algo_lib::MmapFile file;
-    verblog2("src_func.scanfile"
-             <<Keyval("src",src_Get(targsrc)));
+    prcat(verbose2,"src_func.scanfile"
+          <<Keyval("src",src_Get(targsrc)));
     MmapFile_Load(file,src_Get(targsrc));
     cstring precomment;
     src_func::FFunc *func=NULL;
@@ -173,52 +165,15 @@ static bool VisitfileQ(src_func::FTargsrc &targsrc) {
     strptr ext = Pathcomp(targsrc.targsrc,"/RR.LR");
     bool issrc = ext == "cpp";
     bool inlhdr = ext == "inl.h";
-    bool ret = (issrc || inlhdr);
-    if (src_func::_db.cmdline.updateproto) {
-        ret &= targsrc.p_target->select;
-    } else {
-        ret &=
-            Regx_Match(src_func::_db.cmdline.targsrc, targsrc.targsrc)
-            || targsrc.p_target->select;
-    }
-    ret &= (src_func::_db.cmdline.gen || !GeneratedQ(targsrc));
+    bool ret = (issrc || inlhdr) && targsrc.select;
+    ret = ret && (src_func::_db.cmdline.gen || !GeneratedQ(targsrc));
     return ret;
-}
-
-// -----------------------------------------------------------------------------
-
-static void CreatePrefix(strptr ns, strptr name) {
-    src_func::ind_genprefix_GetOrCreate(tempstr() << ns << "::" << name);
-}
-
-// -----------------------------------------------------------------------------
-
-// Compute a table of function name prefixes that correspond to generated functions.
-// We should not emit prototypes for these since this will allow dead code
-// to exist.
-static void PrepGenprefix() {
-    ind_beg(src_func::_db_gstatic_curs,gstatic,src_func::_db) {
-        CreatePrefix(ns_Get(gstatic), dmmeta::Field_name_Get(gstatic.field));
-    }ind_end;
-    ind_beg(src_func::_db_dispatch_curs,dispatch,src_func::_db) {
-        CreatePrefix(ns_Get(dispatch), name_Get(dispatch));
-    }ind_end;
-
-    ind_beg(src_func::_db_fstep_curs,fstep,src_func::_db) {
-        CreatePrefix(ns_Get(fstep), name_Get(fstep));
-    }ind_end;
-    ind_beg(src_func::_db_genprefix_curs,genprefix,src_func::_db) {
-        verblog2("src_func.prefix"
-                 <<Keyval("prefix",genprefix.genprefix));
-    }ind_end;
 }
 
 // -----------------------------------------------------------------------------
 
 // Read functions from all sources
 void src_func::Main_ScanFiles() {
-    // Create genprefix
-    PrepGenprefix();
     // load functions
     ind_beg(src_func::_db_targsrc_curs,targsrc,src_func::_db) {
         if (VisitfileQ(targsrc)) {

@@ -68,17 +68,17 @@ check_bitfld     N      Check that bitfields don't overlap
 
 Select first 10 functions from amc source code:
 ```
-inline-command: src_func amc gen_% -proto -comment: | sort -k 3 | head
-cpp/amc/gen.cpp:230: void amc::gen_basepool() 
-cpp/amc/cget.cpp:121: void amc::gen_cget()
-cpp/amc/gen.cpp:614: void amc::gen_check_bigend() 
-cpp/amc/gen.cpp:310: void amc::gen_check_bitfld() 
-cpp/amc/gen.cpp:110: void amc::gen_check_cascdel() 
-cpp/amc/gen.cpp:496: void amc::gen_check_cpptype() 
-cpp/amc/gen.cpp:1454: void amc::gen_check_fcurs() 
-cpp/amc/gen.cpp:215: void amc::gen_check_prefix() 
-cpp/amc/gen.cpp:432: void amc::gen_check_reftype() 
-cpp/amc/gen.cpp:136: void amc::gen_check_ssimsort() 
+inline-command: src_func amc.gen_% | sort -k 3 | head
+void amc::gen_cget()
+void amc::gen_fcmap()
+void amc::gen_basepool() 
+void amc::gen_bitfldenum() 
+void amc::gen_check_basefield() 
+void amc::gen_check_basepool() 
+void amc::gen_check_bigend() 
+void amc::gen_check_bitfld() 
+void amc::gen_check_cascdel() 
+void amc::gen_check_cheapcopy() 
 ```
 
 In language-centric systems, one would start by writing some functions, and then use "reflection" to
@@ -112,7 +112,6 @@ italicised fields: *ns* are [**fldfunc**](/txt/ssim.md#fldfunc) fields
 
 * [abt_md](/txt/exe/abt_md/internals.md) as [abt_md.FGstatic](/txt/exe/abt_md/internals.md#abt_md-fgstatic)
 * [amc](/txt/exe/amc/internals.md) as [amc.FGstatic](/txt/exe/amc/internals.md#amc-fgstatic)
-* [src_func](/txt/exe/src_func/internals.md) as [src_func.FGstatic](/txt/exe/src_func/internals.md#src_func-fgstatic)
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:ImdbUses -->
 

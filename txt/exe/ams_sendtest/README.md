@@ -32,8 +32,8 @@ Usage: ams_sendtest [options]
     -msgsize_max   int     1024    Maximum message length
     -bufsize       int     32768   Shared memory buffer size
     -recvdelay     int     0       Pause nanoseconds between messages
-    -verbose       int             Verbosity level (0..255); alias -v; cumulative
-    -debug         int             Debug level (0..255); alias -d; cumulative
+    -verbose       flag            Verbosity level (0..255); alias -v; cumulative
+    -debug         flag            Debug level (0..255); alias -d; cumulative
     -help                          Print help and exit; alias -h
     -version                       Print version and exit
     -signature                     Show signatures and exit; alias -sig

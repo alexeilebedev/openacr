@@ -33,10 +33,13 @@
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
+#include "include/gen/lib_json_gen.h"
+#include "include/gen/lib_json_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
+lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 atf_cov::FDb    atf_cov::_db;     // dependency found via dev.targdep
 
@@ -44,25 +47,26 @@ namespace atf_cov {
 const char *atf_cov_help =
 "atf_cov: Line coverage\n"
 "Usage: atf_cov [options]\n"
-"    OPTION      TYPE    DFLT                              COMMENT\n"
-"    -in         string  \"data\"                            Input directory or filename, - for stdin\n"
-"    -covdir     string  \"temp/covdata\"                    Output directory to save coverage data\n"
-"    -logfile    string  \"\"                                Log file\n"
-"    -runcmd     string  \"\"                                command to run\n"
-"    -exclude    regx    \"(extern|include/gen|cpp/gen)/%\"  Exclude gitfiles (external, generated)\n"
-"    -mergepath  string  \"\"                                colon-separated dir list to load .cov.ssim files from\n"
-"    -gcov                                                 run gcov\n"
-"    -ssim                                                 write out ssim files\n"
-"    -report                                               write out all reports\n"
-"    -capture                                              Write coverage information into tgtcov table\n"
-"    -xmlpretty                                            Generate pretty-formatted XML\n"
-"    -summary            Y                                 Show summary figures\n"
-"    -check                                                Check coverage information against tgtcov table\n"
-"    -verbose    int                                       Verbosity level (0..255); alias -v; cumulative\n"
-"    -debug      int                                       Debug level (0..255); alias -d; cumulative\n"
-"    -help                                                 Print help and exit; alias -h\n"
-"    -version                                              Print version and exit\n"
-"    -signature                                            Show signatures and exit; alias -sig\n"
+"    OPTION        TYPE    DFLT                              COMMENT\n"
+"    -in           string  \"data\"                            Input directory or filename, - for stdin\n"
+"    -covdir       string  \"temp/covdata\"                    Output directory to save coverage data\n"
+"    -logfile      string  \"\"                                Log file\n"
+"    -runcmd       string  \"\"                                command to run\n"
+"    -exclude      regx    \"(extern|include/gen|cpp/gen)/%\"  Exclude gitfiles (external, generated)\n"
+"    -mergepath    string  \"\"                                colon-separated dir list to load .cov.ssim files from\n"
+"    -gcov                                                   run gcov\n"
+"    -ssim                                                   write out ssim files\n"
+"    -report                                                 write out all reports\n"
+"    -capture                                                Write coverage information into tgtcov table\n"
+"    -xmlpretty                                              Generate pretty-formatted XML\n"
+"    -summary              Y                                 Show summary figures\n"
+"    -check                                                  Check coverage information against tgtcov table\n"
+"    -incremental                                            Keep *.gcda files from previous run\n"
+"    -verbose      flag                                      Verbosity level (0..255); alias -v; cumulative\n"
+"    -debug        flag                                      Debug level (0..255); alias -d; cumulative\n"
+"    -help                                                   Print help and exit; alias -h\n"
+"    -version                                                Print version and exit\n"
+"    -signature                                              Show signatures and exit; alias -sig\n"
 ;
 
 
@@ -177,7 +181,7 @@ void atf_cov::FCovline_Print(atf_cov::FCovline& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf_cov.FCovline";
 
-    algo::Smallstr200_Print(row.covline, temp);
+    algo::cstring_Print(row.covline, temp);
     PrintAttrSpaceReset(str,"covline", temp);
 
     char_Print(row.flag, temp);
@@ -304,9 +308,8 @@ void atf_cov::ReadArgv() {
         }
         if (ch_N(attrname) == 0) {
             err << "atf_cov: too many arguments. error at "<<algo::strptr_ToSsim(arg)<<eol;
-        }
-        // read value into currently selected arg
-        if (haveval) {
+        } else if (haveval) {
+            // read value into currently selected arg
             bool ret=false;
             // it's already known which namespace is consuming the args,
             // so directly go there
@@ -349,6 +352,9 @@ void atf_cov::ReadArgv() {
         }ind_end
         doexit = true;
     }
+    algo_lib_logcat_debug.enabled = algo_lib::_db.cmdline.debug;
+    algo_lib_logcat_verbose.enabled = algo_lib::_db.cmdline.verbose > 0;
+    algo_lib_logcat_verbose2.enabled = algo_lib::_db.cmdline.verbose > 1;
     if (!dohelp) {
     }
     // dmmeta.floadtuples:atf_cov.FDb.cmdline
@@ -360,7 +366,7 @@ void atf_cov::ReadArgv() {
     }
     if (err != "") {
         algo_lib::_db.exit_code=1;
-        prerr(err);
+        prerr_(err); // already has eol
         doexit=true;
     }
     if (dohelp) {
@@ -405,7 +411,7 @@ static void atf_cov::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_cov.Input'  signature:'bae3d22d101a439927195b2697d7d68f8ee4bff5'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_cov.Input'  signature:'d66d21a3b569781c26e5ede79240bebe11ae80c4'");
 }
 
 // --- atf_cov.FDb._db.InsertStrptrMaybe
@@ -476,17 +482,17 @@ bool atf_cov::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     } else if (root == "-") {
         retval = atf_cov::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
     } else if (DirectoryQ(root)) {
-        retval = retval && atf_cov::LoadTuplesFile(algo::SsimFname(root,"dev.gitfile"),recursive);
         retval = retval && atf_cov::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
         retval = retval && atf_cov::LoadTuplesFile(algo::SsimFname(root,"dev.target"),recursive);
         retval = retval && atf_cov::LoadTuplesFile(algo::SsimFname(root,"dev.tgtcov"),recursive);
+        retval = retval && atf_cov::LoadTuplesFile(algo::SsimFname(root,"dev.gitfile"),recursive);
         retval = retval && atf_cov::LoadTuplesFile(algo::SsimFname(root,"dev.targsrc"),recursive);
         retval = retval && atf_cov::LoadTuplesFile(algo::SsimFname(root,"dev.covtarget"),recursive);
         retval = retval && atf_cov::LoadTuplesFile(algo::SsimFname(root,"dev.covline"),recursive);
         retval = retval && atf_cov::LoadTuplesFile(algo::SsimFname(root,"dev.covfile"),recursive);
     } else {
-        algo_lib::SaveBadTag("path", root);
-        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        algo_lib::AppendErrtext("path", root);
+        algo_lib::AppendErrtext("comment", "Wrong working directory?");
         retval = false;
     }
     return retval;
@@ -677,15 +683,10 @@ bool atf_cov::covline_XrefMaybe(atf_cov::FCovline &row) {
 // --- atf_cov.FDb.ind_covline.Find
 // Find row by key. Return NULL if not found.
 atf_cov::FCovline* atf_cov::ind_covline_Find(const algo::strptr& key) {
-    u32 index = algo::Smallstr200_Hash(0, key) & (_db.ind_covline_buckets_n - 1);
-    atf_cov::FCovline* *e = &_db.ind_covline_buckets_elems[index];
-    atf_cov::FCovline* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).covline == key;
-        if (done) break;
-        e         = &ret->ind_covline_next;
-    } while (true);
+    u32 index = algo::cstring_Hash(0, key) & (_db.ind_covline_buckets_n - 1);
+    atf_cov::FCovline *ret = _db.ind_covline_buckets_elems[index];
+    for (; ret && !((*ret).covline == key); ret = ret->ind_covline_next) {
+    }
     return ret;
 }
 
@@ -700,10 +701,11 @@ atf_cov::FCovline& atf_cov::ind_covline_FindX(const algo::strptr& key) {
 // --- atf_cov.FDb.ind_covline.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool atf_cov::ind_covline_InsertMaybe(atf_cov::FCovline& row) {
-    ind_covline_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_covline_next == (atf_cov::FCovline*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr200_Hash(0, row.covline) & (_db.ind_covline_buckets_n - 1);
+        row.ind_covline_hashval = algo::cstring_Hash(0, row.covline);
+        ind_covline_Reserve(1);
+        u32 index = row.ind_covline_hashval & (_db.ind_covline_buckets_n - 1);
         atf_cov::FCovline* *prev = &_db.ind_covline_buckets_elems[index];
         do {
             atf_cov::FCovline* ret = *prev;
@@ -729,7 +731,7 @@ bool atf_cov::ind_covline_InsertMaybe(atf_cov::FCovline& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void atf_cov::ind_covline_Remove(atf_cov::FCovline& row) {
     if (LIKELY(row.ind_covline_next != (atf_cov::FCovline*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr200_Hash(0, row.covline) & (_db.ind_covline_buckets_n - 1);
+        u32 index = row.ind_covline_hashval & (_db.ind_covline_buckets_n - 1);
         atf_cov::FCovline* *prev = &_db.ind_covline_buckets_elems[index]; // addr of pointer to current element
         while (atf_cov::FCovline *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -746,8 +748,14 @@ void atf_cov::ind_covline_Remove(atf_cov::FCovline& row) {
 // --- atf_cov.FDb.ind_covline.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void atf_cov::ind_covline_Reserve(int n) {
+    ind_covline_AbsReserve(_db.ind_covline_n + n);
+}
+
+// --- atf_cov.FDb.ind_covline.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void atf_cov::ind_covline_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_covline_buckets_n;
-    u32 new_nelems   = _db.ind_covline_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -766,7 +774,7 @@ void atf_cov::ind_covline_Reserve(int n) {
             while (elem) {
                 atf_cov::FCovline &row        = *elem;
                 atf_cov::FCovline* next       = row.ind_covline_next;
-                u32 index          = algo::Smallstr200_Hash(0, row.covline) & (new_nbuckets-1);
+                u32 index          = row.ind_covline_hashval & (new_nbuckets-1);
                 row.ind_covline_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -890,14 +898,9 @@ bool atf_cov::target_XrefMaybe(atf_cov::FTarget &row) {
 // Find row by key. Return NULL if not found.
 atf_cov::FTarget* atf_cov::ind_target_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr16_Hash(0, key) & (_db.ind_target_buckets_n - 1);
-    atf_cov::FTarget* *e = &_db.ind_target_buckets_elems[index];
-    atf_cov::FTarget* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).target == key;
-        if (done) break;
-        e         = &ret->ind_target_next;
-    } while (true);
+    atf_cov::FTarget *ret = _db.ind_target_buckets_elems[index];
+    for (; ret && !((*ret).target == key); ret = ret->ind_target_next) {
+    }
     return ret;
 }
 
@@ -929,10 +932,11 @@ atf_cov::FTarget& atf_cov::ind_target_GetOrCreate(const algo::strptr& key) {
 // --- atf_cov.FDb.ind_target.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool atf_cov::ind_target_InsertMaybe(atf_cov::FTarget& row) {
-    ind_target_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_target_next == (atf_cov::FTarget*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr16_Hash(0, row.target) & (_db.ind_target_buckets_n - 1);
+        row.ind_target_hashval = algo::Smallstr16_Hash(0, row.target);
+        ind_target_Reserve(1);
+        u32 index = row.ind_target_hashval & (_db.ind_target_buckets_n - 1);
         atf_cov::FTarget* *prev = &_db.ind_target_buckets_elems[index];
         do {
             atf_cov::FTarget* ret = *prev;
@@ -958,7 +962,7 @@ bool atf_cov::ind_target_InsertMaybe(atf_cov::FTarget& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void atf_cov::ind_target_Remove(atf_cov::FTarget& row) {
     if (LIKELY(row.ind_target_next != (atf_cov::FTarget*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr16_Hash(0, row.target) & (_db.ind_target_buckets_n - 1);
+        u32 index = row.ind_target_hashval & (_db.ind_target_buckets_n - 1);
         atf_cov::FTarget* *prev = &_db.ind_target_buckets_elems[index]; // addr of pointer to current element
         while (atf_cov::FTarget *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -975,8 +979,14 @@ void atf_cov::ind_target_Remove(atf_cov::FTarget& row) {
 // --- atf_cov.FDb.ind_target.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void atf_cov::ind_target_Reserve(int n) {
+    ind_target_AbsReserve(_db.ind_target_n + n);
+}
+
+// --- atf_cov.FDb.ind_target.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void atf_cov::ind_target_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_target_buckets_n;
-    u32 new_nelems   = _db.ind_target_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -995,7 +1005,7 @@ void atf_cov::ind_target_Reserve(int n) {
             while (elem) {
                 atf_cov::FTarget &row        = *elem;
                 atf_cov::FTarget* next       = row.ind_target_next;
-                u32 index          = algo::Smallstr16_Hash(0, row.target) & (new_nbuckets-1);
+                u32 index          = row.ind_target_hashval & (new_nbuckets-1);
                 row.ind_target_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1150,14 +1160,9 @@ bool atf_cov::targsrc_XrefMaybe(atf_cov::FTargsrc &row) {
 // Find row by key. Return NULL if not found.
 atf_cov::FTargsrc* atf_cov::ind_targsrc_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_targsrc_buckets_n - 1);
-    atf_cov::FTargsrc* *e = &_db.ind_targsrc_buckets_elems[index];
-    atf_cov::FTargsrc* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).targsrc == key;
-        if (done) break;
-        e         = &ret->ind_targsrc_next;
-    } while (true);
+    atf_cov::FTargsrc *ret = _db.ind_targsrc_buckets_elems[index];
+    for (; ret && !((*ret).targsrc == key); ret = ret->ind_targsrc_next) {
+    }
     return ret;
 }
 
@@ -1172,10 +1177,11 @@ atf_cov::FTargsrc& atf_cov::ind_targsrc_FindX(const algo::strptr& key) {
 // --- atf_cov.FDb.ind_targsrc.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool atf_cov::ind_targsrc_InsertMaybe(atf_cov::FTargsrc& row) {
-    ind_targsrc_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_targsrc_next == (atf_cov::FTargsrc*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr100_Hash(0, row.targsrc) & (_db.ind_targsrc_buckets_n - 1);
+        row.ind_targsrc_hashval = algo::Smallstr100_Hash(0, row.targsrc);
+        ind_targsrc_Reserve(1);
+        u32 index = row.ind_targsrc_hashval & (_db.ind_targsrc_buckets_n - 1);
         atf_cov::FTargsrc* *prev = &_db.ind_targsrc_buckets_elems[index];
         do {
             atf_cov::FTargsrc* ret = *prev;
@@ -1201,7 +1207,7 @@ bool atf_cov::ind_targsrc_InsertMaybe(atf_cov::FTargsrc& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void atf_cov::ind_targsrc_Remove(atf_cov::FTargsrc& row) {
     if (LIKELY(row.ind_targsrc_next != (atf_cov::FTargsrc*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr100_Hash(0, row.targsrc) & (_db.ind_targsrc_buckets_n - 1);
+        u32 index = row.ind_targsrc_hashval & (_db.ind_targsrc_buckets_n - 1);
         atf_cov::FTargsrc* *prev = &_db.ind_targsrc_buckets_elems[index]; // addr of pointer to current element
         while (atf_cov::FTargsrc *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1218,8 +1224,14 @@ void atf_cov::ind_targsrc_Remove(atf_cov::FTargsrc& row) {
 // --- atf_cov.FDb.ind_targsrc.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void atf_cov::ind_targsrc_Reserve(int n) {
+    ind_targsrc_AbsReserve(_db.ind_targsrc_n + n);
+}
+
+// --- atf_cov.FDb.ind_targsrc.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void atf_cov::ind_targsrc_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_targsrc_buckets_n;
-    u32 new_nelems   = _db.ind_targsrc_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -1238,7 +1250,7 @@ void atf_cov::ind_targsrc_Reserve(int n) {
             while (elem) {
                 atf_cov::FTargsrc &row        = *elem;
                 atf_cov::FTargsrc* next       = row.ind_targsrc_next;
-                u32 index          = algo::Smallstr100_Hash(0, row.targsrc) & (new_nbuckets-1);
+                u32 index          = row.ind_targsrc_hashval & (new_nbuckets-1);
                 row.ind_targsrc_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1362,14 +1374,9 @@ bool atf_cov::gitfile_XrefMaybe(atf_cov::FGitfile &row) {
 // Find row by key. Return NULL if not found.
 atf_cov::FGitfile* atf_cov::ind_gitfile_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr200_Hash(0, key) & (_db.ind_gitfile_buckets_n - 1);
-    atf_cov::FGitfile* *e = &_db.ind_gitfile_buckets_elems[index];
-    atf_cov::FGitfile* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).gitfile == key;
-        if (done) break;
-        e         = &ret->ind_gitfile_next;
-    } while (true);
+    atf_cov::FGitfile *ret = _db.ind_gitfile_buckets_elems[index];
+    for (; ret && !((*ret).gitfile == key); ret = ret->ind_gitfile_next) {
+    }
     return ret;
 }
 
@@ -1401,10 +1408,11 @@ atf_cov::FGitfile& atf_cov::ind_gitfile_GetOrCreate(const algo::strptr& key) {
 // --- atf_cov.FDb.ind_gitfile.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool atf_cov::ind_gitfile_InsertMaybe(atf_cov::FGitfile& row) {
-    ind_gitfile_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_gitfile_next == (atf_cov::FGitfile*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr200_Hash(0, row.gitfile) & (_db.ind_gitfile_buckets_n - 1);
+        row.ind_gitfile_hashval = algo::Smallstr200_Hash(0, row.gitfile);
+        ind_gitfile_Reserve(1);
+        u32 index = row.ind_gitfile_hashval & (_db.ind_gitfile_buckets_n - 1);
         atf_cov::FGitfile* *prev = &_db.ind_gitfile_buckets_elems[index];
         do {
             atf_cov::FGitfile* ret = *prev;
@@ -1430,7 +1438,7 @@ bool atf_cov::ind_gitfile_InsertMaybe(atf_cov::FGitfile& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void atf_cov::ind_gitfile_Remove(atf_cov::FGitfile& row) {
     if (LIKELY(row.ind_gitfile_next != (atf_cov::FGitfile*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr200_Hash(0, row.gitfile) & (_db.ind_gitfile_buckets_n - 1);
+        u32 index = row.ind_gitfile_hashval & (_db.ind_gitfile_buckets_n - 1);
         atf_cov::FGitfile* *prev = &_db.ind_gitfile_buckets_elems[index]; // addr of pointer to current element
         while (atf_cov::FGitfile *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1447,8 +1455,14 @@ void atf_cov::ind_gitfile_Remove(atf_cov::FGitfile& row) {
 // --- atf_cov.FDb.ind_gitfile.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void atf_cov::ind_gitfile_Reserve(int n) {
+    ind_gitfile_AbsReserve(_db.ind_gitfile_n + n);
+}
+
+// --- atf_cov.FDb.ind_gitfile.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void atf_cov::ind_gitfile_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_gitfile_buckets_n;
-    u32 new_nelems   = _db.ind_gitfile_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -1467,7 +1481,7 @@ void atf_cov::ind_gitfile_Reserve(int n) {
             while (elem) {
                 atf_cov::FGitfile &row        = *elem;
                 atf_cov::FGitfile* next       = row.ind_gitfile_next;
-                u32 index          = algo::Smallstr200_Hash(0, row.gitfile) & (new_nbuckets-1);
+                u32 index          = row.ind_gitfile_hashval & (new_nbuckets-1);
                 row.ind_gitfile_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1829,14 +1843,9 @@ bool atf_cov::tgtcov_XrefMaybe(atf_cov::FTgtcov &row) {
 // Find row by key. Return NULL if not found.
 atf_cov::FTgtcov* atf_cov::ind_tgtcov_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr16_Hash(0, key) & (_db.ind_tgtcov_buckets_n - 1);
-    atf_cov::FTgtcov* *e = &_db.ind_tgtcov_buckets_elems[index];
-    atf_cov::FTgtcov* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).target == key;
-        if (done) break;
-        e         = &ret->ind_tgtcov_next;
-    } while (true);
+    atf_cov::FTgtcov *ret = _db.ind_tgtcov_buckets_elems[index];
+    for (; ret && !((*ret).target == key); ret = ret->ind_tgtcov_next) {
+    }
     return ret;
 }
 
@@ -1851,10 +1860,11 @@ atf_cov::FTgtcov& atf_cov::ind_tgtcov_FindX(const algo::strptr& key) {
 // --- atf_cov.FDb.ind_tgtcov.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool atf_cov::ind_tgtcov_InsertMaybe(atf_cov::FTgtcov& row) {
-    ind_tgtcov_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_tgtcov_next == (atf_cov::FTgtcov*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr16_Hash(0, row.target) & (_db.ind_tgtcov_buckets_n - 1);
+        row.ind_tgtcov_hashval = algo::Smallstr16_Hash(0, row.target);
+        ind_tgtcov_Reserve(1);
+        u32 index = row.ind_tgtcov_hashval & (_db.ind_tgtcov_buckets_n - 1);
         atf_cov::FTgtcov* *prev = &_db.ind_tgtcov_buckets_elems[index];
         do {
             atf_cov::FTgtcov* ret = *prev;
@@ -1880,7 +1890,7 @@ bool atf_cov::ind_tgtcov_InsertMaybe(atf_cov::FTgtcov& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void atf_cov::ind_tgtcov_Remove(atf_cov::FTgtcov& row) {
     if (LIKELY(row.ind_tgtcov_next != (atf_cov::FTgtcov*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr16_Hash(0, row.target) & (_db.ind_tgtcov_buckets_n - 1);
+        u32 index = row.ind_tgtcov_hashval & (_db.ind_tgtcov_buckets_n - 1);
         atf_cov::FTgtcov* *prev = &_db.ind_tgtcov_buckets_elems[index]; // addr of pointer to current element
         while (atf_cov::FTgtcov *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1897,8 +1907,14 @@ void atf_cov::ind_tgtcov_Remove(atf_cov::FTgtcov& row) {
 // --- atf_cov.FDb.ind_tgtcov.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void atf_cov::ind_tgtcov_Reserve(int n) {
+    ind_tgtcov_AbsReserve(_db.ind_tgtcov_n + n);
+}
+
+// --- atf_cov.FDb.ind_tgtcov.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void atf_cov::ind_tgtcov_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_tgtcov_buckets_n;
-    u32 new_nelems   = _db.ind_tgtcov_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -1917,7 +1933,7 @@ void atf_cov::ind_tgtcov_Reserve(int n) {
             while (elem) {
                 atf_cov::FTgtcov &row        = *elem;
                 atf_cov::FTgtcov* next       = row.ind_tgtcov_next;
-                u32 index          = algo::Smallstr16_Hash(0, row.target) & (new_nbuckets-1);
+                u32 index          = row.ind_tgtcov_hashval & (new_nbuckets-1);
                 row.ind_tgtcov_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -2129,15 +2145,11 @@ algo::Smallstr50 atf_cov::ext_Get(atf_cov::FGitfile& gitfile) {
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 void atf_cov::c_covline_Insert(atf_cov::FGitfile& gitfile, atf_cov::FCovline& row) {
-    if (bool_Update(row.gitfile_c_covline_in_ary,true)) {
-        // reserve space
+    if (!row.gitfile_c_covline_in_ary) {
         c_covline_Reserve(gitfile, 1);
-        u32 n  = gitfile.c_covline_n;
-        u32 at = n;
-        atf_cov::FCovline* *elems = gitfile.c_covline_elems;
-        elems[at] = &row;
-        gitfile.c_covline_n = n+1;
-
+        u32 n  = gitfile.c_covline_n++;
+        gitfile.c_covline_elems[n] = &row;
+        row.gitfile_c_covline_in_ary = true;
     }
 }
 
@@ -2146,7 +2158,7 @@ void atf_cov::c_covline_Insert(atf_cov::FGitfile& gitfile, atf_cov::FCovline& ro
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 bool atf_cov::c_covline_InsertMaybe(atf_cov::FGitfile& gitfile, atf_cov::FCovline& row) {
-    bool retval = !row.gitfile_c_covline_in_ary;
+    bool retval = !gitfile_c_covline_InAryQ(row);
     c_covline_Insert(gitfile,row); // check is performed in _Insert again
     return retval;
 }
@@ -2154,18 +2166,18 @@ bool atf_cov::c_covline_InsertMaybe(atf_cov::FGitfile& gitfile, atf_cov::FCovlin
 // --- atf_cov.FGitfile.c_covline.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void atf_cov::c_covline_Remove(atf_cov::FGitfile& gitfile, atf_cov::FCovline& row) {
+    int n = gitfile.c_covline_n;
     if (bool_Update(row.gitfile_c_covline_in_ary,false)) {
-        int lim = gitfile.c_covline_n;
         atf_cov::FCovline* *elems = gitfile.c_covline_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = lim-1; i>=0; i--) {
+        for (int i = n-1; i>=0; i--) {
             atf_cov::FCovline* elem = elems[i]; // fetch element
             if (elem == &row) {
                 int j = i + 1;
-                size_t nbytes = sizeof(atf_cov::FCovline*) * (lim - j);
+                size_t nbytes = sizeof(atf_cov::FCovline*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                gitfile.c_covline_n = lim - 1;
+                gitfile.c_covline_n = n - 1;
                 break;
             }
         }
@@ -2214,15 +2226,11 @@ void atf_cov::target_CopyIn(atf_cov::FTarget &row, dev::Target &in) {
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 void atf_cov::c_targsrc_Insert(atf_cov::FTarget& target, atf_cov::FTargsrc& row) {
-    if (bool_Update(row.target_c_targsrc_in_ary,true)) {
-        // reserve space
+    if (!row.target_c_targsrc_in_ary) {
         c_targsrc_Reserve(target, 1);
-        u32 n  = target.c_targsrc_n;
-        u32 at = n;
-        atf_cov::FTargsrc* *elems = target.c_targsrc_elems;
-        elems[at] = &row;
-        target.c_targsrc_n = n+1;
-
+        u32 n  = target.c_targsrc_n++;
+        target.c_targsrc_elems[n] = &row;
+        row.target_c_targsrc_in_ary = true;
     }
 }
 
@@ -2231,7 +2239,7 @@ void atf_cov::c_targsrc_Insert(atf_cov::FTarget& target, atf_cov::FTargsrc& row)
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 bool atf_cov::c_targsrc_InsertMaybe(atf_cov::FTarget& target, atf_cov::FTargsrc& row) {
-    bool retval = !row.target_c_targsrc_in_ary;
+    bool retval = !target_c_targsrc_InAryQ(row);
     c_targsrc_Insert(target,row); // check is performed in _Insert again
     return retval;
 }
@@ -2239,18 +2247,18 @@ bool atf_cov::c_targsrc_InsertMaybe(atf_cov::FTarget& target, atf_cov::FTargsrc&
 // --- atf_cov.FTarget.c_targsrc.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void atf_cov::c_targsrc_Remove(atf_cov::FTarget& target, atf_cov::FTargsrc& row) {
+    int n = target.c_targsrc_n;
     if (bool_Update(row.target_c_targsrc_in_ary,false)) {
-        int lim = target.c_targsrc_n;
         atf_cov::FTargsrc* *elems = target.c_targsrc_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = lim-1; i>=0; i--) {
+        for (int i = n-1; i>=0; i--) {
             atf_cov::FTargsrc* elem = elems[i]; // fetch element
             if (elem == &row) {
                 int j = i + 1;
-                size_t nbytes = sizeof(atf_cov::FTargsrc*) * (lim - j);
+                size_t nbytes = sizeof(atf_cov::FTargsrc*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                target.c_targsrc_n = lim - 1;
+                target.c_targsrc_n = n - 1;
                 break;
             }
         }
@@ -2683,11 +2691,13 @@ void atf_cov::StaticCheck() {
 // --- atf_cov...main
 int main(int argc, char **argv) {
     try {
+        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         atf_cov::FDb_Init();
         algo_lib::_db.argc = argc;
         algo_lib::_db.argv = argv;
         algo_lib::IohookInit();
+        algo_lib::_db.clock = algo::CurrSchedTime(); // initialize clock
         atf_cov::ReadArgv(); // dmmeta.main:atf_cov
         atf_cov::Main(); // user-defined main
     } catch(algo_lib::ErrorX &x) {
@@ -2700,6 +2710,7 @@ int main(int argc, char **argv) {
     try {
         atf_cov::FDb_Uninit();
         algo_lib::FDb_Uninit();
+        lib_json::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;

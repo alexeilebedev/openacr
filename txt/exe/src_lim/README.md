@@ -26,8 +26,8 @@ Usage: src_lim [options]
     -write                      Update ssim database (with -capture)
     -badchar                    Check for bad chars in source files
     -badline    regx    ""      Check badline (acr badline)
-    -verbose    int             Verbosity level (0..255); alias -v; cumulative
-    -debug      int             Debug level (0..255); alias -d; cumulative
+    -verbose    flag            Verbosity level (0..255); alias -v; cumulative
+    -debug      flag            Debug level (0..255); alias -d; cumulative
     -help                       Print help and exit; alias -h
     -version                    Print version and exit
     -signature                  Show signatures and exit; alias -sig
@@ -72,12 +72,12 @@ Usage: src_lim [options]
 `src_lim` takes the following tables on input:
 |Ssimfile|Comment|
 |---|---|
-|[dev.gitfile](/txt/ssimdb/dev/gitfile.md)|File managed by git|
 |[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
-|[dev.targsrc](/txt/ssimdb/dev/targsrc.md)|List of sources for target|
-|[dev.linelim](/txt/ssimdb/dev/linelim.md)||
-|[dev.include](/txt/ssimdb/dev/include.md)|A site where one file includes another|
 |[dev.badline](/txt/ssimdb/dev/badline.md)|Regex of a dubious source code line|
+|[dev.gitfile](/txt/ssimdb/dev/gitfile.md)|File managed by git|
+|[dev.include](/txt/ssimdb/dev/include.md)|A site where one file includes another|
+|[dev.linelim](/txt/ssimdb/dev/linelim.md)||
+|[dev.targsrc](/txt/ssimdb/dev/targsrc.md)|List of sources for target|
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
 

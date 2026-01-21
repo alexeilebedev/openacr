@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 //
@@ -62,8 +62,8 @@ bool char_ReadStrptrMaybe(char &row, algo::strptr str) {
         row = str[0];
     } else {
         retval = false;
-        algo_lib::SaveBadTag("comment", "bad char");
-        algo_lib::SaveBadTag("value",str);
+        algo_lib::AppendErrtext("comment", "bad char");
+        algo_lib::AppendErrtext("value",str);
     }
     return retval;
 }
@@ -91,8 +91,8 @@ bool double_ReadStrptrMaybe(double &row, algo::strptr str) {
         row = val;
     } else {
         retval = false;
-        algo_lib::SaveBadTag("comment", "bad number");
-        algo_lib::SaveBadTag("value",str);
+        algo_lib::AppendErrtext("comment", "bad number");
+        algo_lib::AppendErrtext("value",str);
     }
     return retval;
 }
@@ -106,8 +106,8 @@ bool bool_ReadStrptrMaybe(bool &row, algo::strptr str) {
         row = ret.value;
     } else {
         retval = false;
-        algo_lib::SaveBadTag("comment", "invalid bool");
-        algo_lib::SaveBadTag("value",str);
+        algo_lib::AppendErrtext("comment", "invalid bool");
+        algo_lib::AppendErrtext("value",str);
     }
     return retval;
 }
@@ -159,8 +159,8 @@ bool algo::UnTime_ReadStrptrMaybe(algo::UnTime &row, algo::strptr str) {
         row = ToUnTime(time_struct);
     } else {
         retval = false;
-        algo_lib::SaveBadTag("comment", "bad time");
-        algo_lib::SaveBadTag("value",str);
+        algo_lib::AppendErrtext("comment", "bad time");
+        algo_lib::AppendErrtext("value",str);
     }
     return retval;
 }
@@ -177,9 +177,9 @@ bool algo::UnDiff_ReadStrptrMaybe(UnDiff &row, algo::strptr str) {
         row = ToUnDiff(time_struct);
     } else {
         retval = false;
-        algo_lib::SaveBadTag("comment", "bad time");
-        algo_lib::SaveBadTag("value",str);
-        algo_lib::SaveBadTag("format",format);
+        algo_lib::AppendErrtext("comment", "bad time");
+        algo_lib::AppendErrtext("value",str);
+        algo_lib::AppendErrtext("format",format);
     }
     return retval;
 }
@@ -1188,23 +1188,16 @@ void algo::Ipmask_Print(algo::Ipmask &row, algo::cstring &str) {
     str << 32-bit;
 }
 
+// Decode error using algo_lib table of decoders
 void algo::Errcode_Print(algo::Errcode &row, algo::cstring &str) {
     int code = code_Get(row);
     int type = type_Get(row);
-    if (code != 0) {
-        switch(type) {
-        case algo_Errns_unix: {
-            char buf[512];
-            str << strerror_r(code,buf,sizeof(buf));
-            break;
-        }
-        case algo_Errns_win: {
-            str<<"Windows Error "<<code;
-            break;
-        }
-        default:
-            break;
-        }
+    algo_lib::FErrns *errns=algo_lib::errns_Find(type);
+    if (errns && errns->decode) {
+        decode_Call(*errns,code);
+        str<<errns->outstr;
+    } else {
+        str<<type_Get(row)<<" "<<code;
     }
 }
 
@@ -1273,122 +1266,6 @@ void algo::strptr_PrintCsv(algo::strptr str, algo::cstring &out, char quote) {
 // Print CSV field, auto-determine quotes
 void algo::strptr_PrintCsv(algo::strptr str, algo::cstring &out) {
     strptr_PrintCsv(str,out,0);
-}
-
-// -----------------------------------------------------------------------------
-
-static void PrintRow(cstring &str, algo_lib::FTxtrow &row, bool use_style) {
-    ind_beg(algo_lib::txtrow_c_txtcell_curs, txtcell, row) {
-        int extra = txtcell.width - ch_N(txtcell.rsep) - ch_N(txtcell.text);
-        int l = txtcell.justify>0 ? extra
-            : txtcell.justify<0 ? 0
-            : extra/2;
-        char_PrintNTimes(' ', str,  l);
-        algo::TermStyle style = use_style ? txtcell.style : algo::TermStyle(algo_TermStyle_default);
-        if (style != algo_TermStyle_default) {
-            if (style & algo_TermStyle_bold) {
-                // do it
-            }
-            if (style & algo_TermStyle_red) {
-                str << "\033[91m";
-            }
-            if (style & algo_TermStyle_green) {
-                str << "\033[92m";
-            }
-            if (style & algo_TermStyle_blue) {
-                str << "\033[94m";
-            }
-        }
-        str << txtcell.text;
-        if (style) {
-            strptr_Print("\033[0m", str);
-        }
-        char_PrintNTimes(' ', str,  extra-l);
-        str << txtcell.rsep;
-    }ind_end;
-    // trim whitespace on the right
-    while (ch_N(str) && ch_qLast(str) == ' ') {
-        str.ch_n--;
-    }
-    str << eol;
-}
-
-static void Normalize(algo_lib::FTxttbl &txttbl) {
-    algo::U64Ary norm;
-    ary_Alloc(norm) = 0;
-    int maxspan = 0;
-    ind_beg(algo_lib::txttbl_c_txtrow_curs,txtrow,txttbl) if (txtrow.select) {
-        ind_beg(algo_lib::txtrow_c_txtcell_curs, txtcell, txtrow) {
-            maxspan = i32_Max(maxspan, txtcell.span);
-        }ind_end;
-    }ind_end;
-    frep_(span,maxspan+1) {
-        ind_beg(algo_lib::txttbl_c_txtrow_curs,txtrow,txttbl) if (txtrow.select) {
-            int i = 0;
-            ind_beg(algo_lib::txtrow_c_txtcell_curs, txtcell, txtrow) {
-                if (txtcell.span == span) {
-                    int w = i32_Max(ch_N(txtcell.text) + ch_N(txtcell.rsep), txtcell.width);
-                    // apply width
-                    int r = i + txtcell.span;
-                    while (r >= ary_N(norm)) {
-                        int last = ary_qLast(norm);
-                        ary_Alloc(norm) = last;
-                    }
-                    int extra = w - (ary_qFind(norm, r) - ary_qFind(norm, i));
-                    if (extra > 0) {
-                        for (int j = r; j < ary_N(norm); j++) {
-                            ary_qFind(norm, j) += extra;
-                        }
-                    }
-                }
-                i += txtcell.span;
-            }ind_end;
-        }ind_end;
-    }
-    ind_beg(algo_lib::txttbl_c_txtrow_curs,txtrow,txttbl) if (txtrow.select) {
-        int i = 0;
-        ind_beg(algo_lib::txtrow_c_txtcell_curs, txtcell, txtrow) {
-            txtcell.width = ary_qFind(norm, i+txtcell.span) - ary_qFind(norm, i);
-            i += txtcell.span;
-        }ind_end;;
-    }ind_end;;
-}
-
-void algo_lib::FTxttbl_Print(algo_lib::FTxttbl &T_, algo::cstring &str) {
-    algo_lib::FTxttbl            &txttbl         = const_cast<algo_lib::FTxttbl&>(T_);
-    bool              use_style = algo::SaneTerminalQ();
-    if (bool_Update(txttbl.normalized,true)) {
-        Normalize(txttbl);
-    }
-    ind_beg(algo_lib::txttbl_c_txtrow_curs,txtrow,txttbl) if (txtrow.select) {
-        PrintRow(str,txtrow,use_style);
-    }ind_end;
-}
-
-static tempstr NewlineToBr(strptr s) {
-    tempstr ret(s);
-    Replace(ret,"\n","<br>");
-    return ret;
-}
-
-void algo_lib::FTxttbl_Markdown(algo_lib::FTxttbl &T_, algo::cstring &str) {
-    algo_lib::FTxttbl            &txttbl         = const_cast<algo_lib::FTxttbl&>(T_);
-    // First row of the table is always the header
-    // Second row have to be inserted as |---| for markdown
-    ind_beg(algo_lib::txttbl_c_txtrow_curs,txtrow,txttbl) if (txtrow.select && c_txtcell_N(txtrow)) {
-        str<<"|";
-        ind_beg(algo_lib::txtrow_c_txtcell_curs, txtcell, txtrow) {
-            // markdown is thrown away by \n in the cells, so it has to be replaced with <br>
-            str<<NewlineToBr(txtcell.text)<<"|";
-        }ind_end;
-        str<<eol;
-        if (ind_curs(txtrow).index==0) {
-            frep_(i,c_txtcell_N(txtrow)) {
-                str<<"|---";
-            };
-            str<<"|"<<eol;
-        }
-    }ind_end;
 }
 
 void algo::URL_Print(algo::URL &url, algo::cstring &str) {
@@ -1702,7 +1579,7 @@ bool algo::Charset_ReadStrptrMaybe(algo::Charset &lhs, strptr rhs) {
                 }
             } else {
                 retval = false;
-                algo_lib::SaveBadTag("comment","Invalid char range");
+                algo_lib::AppendErrtext("comment","Invalid char range");
             }
             i+=2;
         } else {
@@ -1804,7 +1681,7 @@ bool algo::Sha1sig_ReadStrptrMaybe(algo::Sha1sig &sha1sig, algo::strptr str) {
         sha1sig=temp;
     } else {
         retval = false;
-        algo_lib::SaveBadTag("comment", "invalid sha1sig format");
+        algo_lib::AppendErrtext("comment", "invalid sha1sig format");
     }
     return retval;
 }
@@ -2185,7 +2062,7 @@ void algo::u64_PrintBase32(u64 k, algo::cstring &str) {
 }
 
 void algo::Uuid_Print(algo::Uuid &parent, algo::cstring &str) {
-    ch_Reserve(str,16+4);
+    ch_Reserve(str,16*2+4);
     algo::u64_PrintHex(parent.value_elems[0],str,2,false,false);
     algo::u64_PrintHex(parent.value_elems[1],str,2,false,false);
     algo::u64_PrintHex(parent.value_elems[2],str,2,false,false);
@@ -2206,4 +2083,66 @@ void algo::Uuid_Print(algo::Uuid &parent, algo::cstring &str) {
     algo::u64_PrintHex(parent.value_elems[13],str,2,false,false);
     algo::u64_PrintHex(parent.value_elems[14],str,2,false,false);
     algo::u64_PrintHex(parent.value_elems[15],str,2,false,false);
+}
+
+bool algo::Uuid_ReadStrptrMaybe(algo::Uuid &parent, strptr str) {
+    int pos(0);
+    int left(ch_N(str));
+    int index(0);
+    bool ok(true);
+    while (ok && index < value_N(parent) && left) {
+        if (str[pos]=='-') {
+            ++pos;
+            --left;
+        } else {
+            u8 hi,lo;
+            ok = left>=2 && ParseHex1(str[pos],hi) && ParseHex1(str[pos+1],lo);
+            if (ok) {
+                parent.value_elems[index] = (hi << 4) + lo;
+                pos += 2;
+                left -=2;
+                ++index;
+            }
+        }
+    }
+    ok = ok && index == value_N(parent) && !left;
+    if (!ok) {
+        algo::Refurbish(parent);
+    }
+    return ok;
+}
+
+// print bytes in hex e.g: 00 01 ff
+void algo::memptr_Print(algo::memptr parent, algo::cstring &str) {
+    algo::ListSep ls(" ");
+    frep_(i,elems_N(parent)) {
+        MaybeSpace(str);
+        u64_PrintHex(parent[i],str,2,false,false);
+    }
+}
+
+void algo::ByteAry_Print(algo::ByteAry &parent, algo::cstring &str) {
+    str << ary_Getary(parent);
+}
+
+// read bytes in hex e.g: 00 01 ff
+bool algo::ByteAry_ReadStrptrMaybe(algo::ByteAry &parent, strptr str) {
+    ary_RemoveAll(parent);
+    bool cont(false);
+    frep_(i,ch_N(str)) {
+        u8 digit;
+        if (algo::ParseHex1(str[i],digit)) {
+            if (cont) {
+                u8 &val = *ary_Last(parent);
+                val = val << 4 | digit;
+            } else {
+                ary_Alloc(parent) = digit;
+            }
+            cont = !cont;
+        } else {
+            // allow non-hex chars, just drop continuation flag
+            cont = false;
+        }
+    }
+    return true;
 }

@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2012 AlgoEngineering LLC
@@ -27,13 +27,31 @@
 #include "include/algo.h"
 #include "include/gen/amc_vis_gen.h"
 #include "include/gen/amc_vis_gen.inl.h"
+#include <sys/ioctl.h>
+#include <unistd.h>
 
+FILE *_pager=NULL;
+static void StartPager() {
+    if (!_pager) {
+        _pager = popen("less -n -S -R -P '%lb lines, %pb%% done.'", "w");
+        if (_pager) {
+            dup2(fileno(_pager),STDOUT_FILENO);
+        }
+    }
+}
+static void StopPager() {
+    if (_pager) {
+        close(STDOUT_FILENO);// without this, pager hangs
+        pclose(_pager);
+        _pager=NULL;
+    }
+}
 
 // -----------------------------------------------------------------------------
 
 // schedule a before b
-static void MakeABeforeB(amc_vis::Link &a, amc_vis::Link &b) {
-    amc_vis::Linkdep &linkdep = amc_vis::linkdep_Alloc();
+static void MakeABeforeB(amc_vis::FLink &a, amc_vis::FLink &b) {
+    amc_vis::FLinkdep &linkdep = amc_vis::linkdep_Alloc();
     linkdep.p_link_from     = &a;
     linkdep.p_link_to       = &b;
     vrfy(amc_vis::linkdep_XrefMaybe(linkdep), algo_lib::_db.errtext);
@@ -41,10 +59,14 @@ static void MakeABeforeB(amc_vis::Link &a, amc_vis::Link &b) {
 
 // -----------------------------------------------------------------------------
 
+// Each access path gets 1 row -- the function setes FLink.outrow
+// for all existing links
 static void Main_RowLayout() {
     // count # incoming links for each link
     ind_beg(amc_vis::_db_link_curs, link, amc_vis::_db) {
-        link.linkkey.colweight = zd_link_out_N(*link.p_node2) + zd_link_in_N(*link.p_node2);
+        // the more incoming links a column has, the sooner we want to schedule its rows
+        // to clear it out of the way
+        link.linkkey.colweight = -(zd_link_out_N(*link.p_node2) + zd_link_in_N(*link.p_node2));
         ind_beg(amc_vis::link_zd_linkdep_out_curs, linkdep, link) {
             linkdep.p_link_to->linkkey.n_link_in++;
         }ind_end;
@@ -54,18 +76,20 @@ static void Main_RowLayout() {
         amc_vis::bh_link_Reheap(link);
     }ind_end;
 
-    // topologically sort fields! create final sorted list of links -- linklist
-    while (amc_vis::Link *link = amc_vis::bh_link_RemoveFirst()) {
+    // topologically sort fields! create final sorted list of links
+    int nextrow = 0;
+    while (amc_vis::FLink *link = amc_vis::bh_link_RemoveFirst()) {
+        link->outrow = nextrow++;
         amc_vis::c_linklist_Insert(*link);
         // schedule rest sooner
         if (link == link->p_node2->c_top) {
-            link->p_node2->c_bottom->linkkey.topbot -= 1;
             amc_vis::bh_link_Reheap(*link->p_node2->c_bottom);
-        }
-        // Schedule all links that lead to the same node sooner
-        if (link == link->p_node2->c_top) {
-            ind_beg(amc_vis::node_zd_link_in_curs, prior, *link->p_node2) if (prior.p_node1 == link->p_node1 && prior.p_node2 == link->p_node2 && bh_link_InBheapQ(prior)) {
-                prior.linkkey.samecol -= 2;
+            ind_beg(amc_vis::node_zd_link_out_curs, out, *link->p_node2) if (bh_link_InBheapQ(out)) {
+                out.linkkey.samecol --;
+                amc_vis::bh_link_Reheap(out);
+            }ind_end;
+            ind_beg(amc_vis::node_zd_link_in_curs, prior, *link->p_node2) if (bh_link_InBheapQ(prior)) {
+                prior.linkkey.samecol--;
                 amc_vis::bh_link_Reheap(prior);
             }ind_end;
         }
@@ -75,38 +99,30 @@ static void Main_RowLayout() {
             amc_vis::bh_link_Reheap(*from.p_link_to);
         }ind_end;
     }
-
-    // allocate each field to a row
-    // rows will be created later
-    int next_outrow = 0;
-    ind_beg(amc_vis::_db_c_linklist_curs, link, amc_vis::_db) {
-        next_outrow += 1;
-        if (&link == link.p_node2->c_top) {
-            next_outrow += 1;
-        }
-        // allocate row
-        link.outrow = next_outrow;
-        // skip one row after bottom item
-        if (&link == link.p_node2->c_bottom) {
-            next_outrow += 1;
-        }
-    }ind_end;
 }
 
 // -----------------------------------------------------------------------------
 
+// Compute X position (column) for node NODE.
+// NODE's rows (top,bottom) have already been computed, now we have to place it
+// in such a way that it doesn't overlap any existing label
 static i32 ComputeXpos(amc_vis::FNode *node) {
     i32 xpos = 0;
     if (amc_vis::_db.cmdline.render) {// save time if not rendering...
-        ind_beg(amc_vis::_db_node_curs, prior, amc_vis::_db) if (&prior != node) {
-            ind_beg(amc_vis::node_zd_link_out_curs, link, prior) {
-                if (link.outrow >= node->c_top->outrow && link.outrow <= node->c_bottom->outrow) {
-                    xpos = i32_Max(xpos, prior.xpos + ch_N(link.label1));
-                    xpos = i32_Max(xpos, prior.xpos + ch_N(link.label2));
-                } else if (link.p_node1->c_top->outrow <= node->c_top->outrow && link.p_node2->c_bottom->outrow >= node->c_bottom->outrow) {
-                    xpos = i32_Max(xpos, prior.xpos + 2);
-                }
-            }ind_end;
+        ind_beg(amc_vis::node_zd_link_in_curs, link, *node) if (link.p_node1 != node) {
+            int newpos = i32_Max(xpos, link.p_node1->xpos + i32_Max(ch_N(link.label1), ch_N(link.label2)) + 4);
+            xpos = newpos;
+        }ind_end;
+        ind_beg(amc_vis::_db_node_curs, prior, amc_vis::_db) if (&prior != node && !bh_node_InBheapQ(prior)) {
+            // place this column to the right of any column which overlaps it
+            if (i32_Max(prior.c_top->outrow, node->c_top->outrow) < i32_Min(prior.c_bottom->outrow, node->c_bottom->outrow)) {
+                i32 nodewid=ch_N(prior.label);
+                ind_beg(amc_vis::node_zd_link_out_curs, link, prior) {
+                    nodewid = i32_Max(nodewid, ch_N(link.label1));
+                }ind_end;
+                int newpos = i32_Max(xpos, prior.xpos + nodewid + 4);
+                xpos = newpos;
+            }
         }ind_end;
     }
     return xpos;
@@ -136,10 +152,12 @@ static void ShowCircular(amc_vis::FNode *node, int level) {
 
 // -----------------------------------------------------------------------------
 
+// Check if reference indicates a dependency between types
+// for the purposes of column layout
 static bool DepRefQ(amc_vis::FField &field) {
     return field.p_arg != field.p_ctype
-        && field.reftype != dmmeta_Reftype_reftype_Global
         && field.reftype != dmmeta_Reftype_reftype_Regx
+        && field.reftype != dmmeta_Reftype_reftype_Base
         && field.reftype != dmmeta_Reftype_reftype_RegxSql
         && field.reftype != dmmeta_Reftype_reftype_Hook;
 }
@@ -152,7 +170,7 @@ static void Main_ColLayout() {
     ind_beg(amc_vis::_db_node_curs, node, amc_vis::_db) {
         ind_beg(amc_vis::ctype_c_field_curs, field, *node.p_ctype) {
             amc_vis::FNode *node_to = amc_vis::ind_node_Find(field.arg);
-            if (node_to != NULL && !field.p_reftype->isnew && DepRefQ(field)) {
+            if (node_to != NULL && DepRefQ(field)) {
                 amc_vis::FNodedep &nodedep = amc_vis::nodedep_Alloc();
                 nodedep.name       = name_Get(field);
                 nodedep.reftype    = field.reftype;
@@ -173,7 +191,6 @@ static void Main_ColLayout() {
     ind_beg(amc_vis::_db_node_curs, node, amc_vis::_db) {
         ind_beg(amc_vis::node_zd_nodedep_out_curs, nodedep, node) {
             nodedep.p_node2->nodekey.n_ct_in++;
-            nodedep.p_node2->nodekey.prev_xpos = ComputeXpos(&node);
         }ind_end;
     }ind_end;
 
@@ -191,12 +208,11 @@ static void Main_ColLayout() {
             nerr++;
             prlog("");
         }
-        node->xpos = ComputeXpos(node) + 4;
+        node->xpos = ComputeXpos(node);
         // reduce dependency count for target columns
         // can this loop around???
         ind_beg(amc_vis::node_zd_nodedep_out_curs, nodedep, *node) if (amc_vis::bh_node_InBheapQ(*nodedep.p_node2)) {
             nodedep.p_node2->nodekey.n_ct_in--;
-            nodedep.p_node2->nodekey.prev_xpos = ComputeXpos(nodedep.p_node2);
             amc_vis::bh_node_Reheap(*nodedep.p_node2);
         }ind_end;
     }
@@ -223,20 +239,20 @@ static void Main_Render() {
     // create rows:
     // each row is an array of chars.
     while (amc_vis::outrow_N() < max_rows) {
-        amc_vis::Outrow &outrow = amc_vis::outrow_Alloc();
+        amc_vis::FOutrow &outrow = amc_vis::outrow_Alloc();
         vrfy(amc_vis::outrow_XrefMaybe(outrow), algo_lib::_db.errtext);
         amc_vis::text_Reserve(outrow, screen_wid);
         outrow.text_n = screen_wid;
-        Fill(text_Getary(outrow), (unsigned char)' ');
+        Fill(text_Getary(outrow), u16(' '));
     }
 
     // draw arrows.
     // these go left or right between columns
     ind_beg(amc_vis::_db_c_linklist_curs, link, amc_vis::_db) if (link.p_node2 != link.p_node1) {
-        algo::aryptr<u8> line = text_Getary(amc_vis::outrow_qFind(link.outrow));
+        algo::aryptr<u16> line = text_Getary(amc_vis::outrow_qFind(link.outrow));
 
         bool rtol = link.p_node1->xpos > link.p_node2->xpos;
-        char arrow = rtol ? '<' : '>';
+        u16 arrow = (rtol ? '<' : '>') | link.p_node2->p_ctype->color;
         int left = link.p_node1->xpos;
         int right = link.p_node2->xpos;
         if (rtol) {
@@ -244,7 +260,7 @@ static void Main_Render() {
             right = link.p_node1->xpos;
         }
         for (int i = left; i < right; i++) {
-            line[i] = '-';
+            line[i] = ('-') | link.p_node2->p_ctype->color;
         }
         if (rtol) {
             line[left] = arrow;
@@ -255,19 +271,18 @@ static void Main_Render() {
 
     // render boxes -- for each node, extending from opener to bottom fields
     ind_beg(amc_vis::_db_node_curs, node, amc_vis::_db) {
-        amc_vis::Link &top = *node.c_top;
-        amc_vis::Link &bot = *node.c_bottom;
+        amc_vis::FLink &top = *node.c_top;
+        amc_vis::FLink &bot = *node.c_bottom;
         int left = node.xpos;
-
         // draw the box
         for (int y = top.outrow; y <= bot.outrow; y++) {
-            amc_vis::Outrow &outrow = amc_vis::outrow_qFind(y);
-            text_qFind(outrow, left) = y == top.outrow ? '/' : y == bot.outrow ? '-' : '|';
+            amc_vis::FOutrow &outrow = amc_vis::outrow_qFind(y);
+            text_qFind(outrow, left) = node.p_ctype->color | (y == top.outrow ? '/' : y == bot.outrow ? '-' : '|');
         }
     }ind_end;
 
     ind_beg(amc_vis::_db_c_linklist_curs, link, amc_vis::_db) {
-        algo::aryptr<u8> line = text_Getary(amc_vis::outrow_qFind(link.outrow));
+        algo::aryptr<u16> line = text_Getary(amc_vis::outrow_qFind(link.outrow));
 
         // render left label
         if (link.p_node1 && link.p_node1 != link.p_node2) {
@@ -282,14 +297,34 @@ static void Main_Render() {
             int xleft = link.p_node2->xpos;
             strptr s = link.label2;
             frep_(i,elems_N(s)) {
-                line[xleft + 2 + i] = s[i];
+                line[xleft + 2 + i] = link.p_node2->p_ctype->color | s[i];
             }
         }
     }ind_end;
 
+    // automatically use pager if the output is too big
+    if (amc_vis::_db.hastty && (amc_vis::outrow_N() > amc_vis::_db.term_hei || screen_wid > amc_vis::_db.term_wid)) {
+        StartPager();
+    }
 
     ind_beg(amc_vis::_db_outrow_curs, outrow, amc_vis::_db) {
-        prlog(ToStrPtr(text_Getary(outrow)));
+        // Translate outrow to string, applying color
+        tempstr str;
+        algo::aryptr<u16> line = text_Getary(outrow);
+        int last_color=0;
+        for (int i=0; i<line.n_elems; i++) {
+            int color=amc_vis::_db.usecolor ? (line.elems[i]>>8) : 0;
+            char ch=line.elems[i]&0xff;
+            if (color != last_color) {
+                str << "\033["<<color<<"m";
+                last_color=color;
+            }
+            str << ch;
+        }
+        if (last_color!=0) {
+            str << "\033[0m";
+        }
+        prlog(str);
     }ind_end;
 }
 
@@ -383,20 +418,47 @@ static void Main_GenerateDot() {
 // -----------------------------------------------------------------------------
 
 void amc_vis::Main() {
+    // determine terminal size
+    _db.hastty = isatty(1);
+    if (_db.hastty) {
+        struct winsize w;
+        ioctl(1, TIOCGWINSZ, &w);
+        _db.term_wid = w.ws_col;
+        _db.term_hei = w.ws_row;
+        _db.usecolor = true;
+    } else {
+        _db.term_wid = INT_MAX;
+        _db.term_hei = INT_MAX;
+    }
+
     // mark ctypes as selected
     ind_beg(amc_vis::_db_ctype_curs, ctype, amc_vis::_db) if (Regx_Match(amc_vis::_db.cmdline.ctype, strptr(ctype.ctype))) {
+        ctype.userselect=true;
+        if (_db.usecolor) {
+            // 30:black 31:red 32:green 33:yellow 34:blue 35:magenta 36:cyan 37:white reset:0
+            ctype.color=35<<8;
+        }
         zd_select_Insert(ctype);
     }ind_end;
+
+    // only a single ctype passed? make ourselves useful and extend the selection
+    if (zd_select_N()==1) {
+        _db.cmdline.xref=true;
+    }
 
     // select all reachable ctypes
     if (amc_vis::_db.cmdline.xref) {
         ind_beg(amc_vis::_db_ctype_curs, ctype, amc_vis::_db) if (Regx_Match(amc_vis::_db.cmdline.ctype, strptr(ctype.ctype))) {
             ind_beg(amc_vis::ctype_c_field_curs, field, ctype) {
-                bool select  = amc_vis::_db.cmdline.xns || ns_Get(*field.p_arg) == ns_Get(ctype);
+                bool select  = amc_vis::_db.cmdline.xns ? ns_Get(*field.p_arg)!="" : ns_Get(*field.p_arg) == ns_Get(ctype);
                 if (select) {
                     zd_select_Insert(*field.p_arg);
                 }
             }ind_end;
+            // add the global object
+            if (amc_vis::FCtype *db=ind_ctype_Find(dmmeta::Ctype_Concat_ns_name(ns_Get(ctype),"FDb"))) {
+                zd_select_Insert(*db);
+            }
         }ind_end;
     }
 
@@ -428,7 +490,7 @@ void amc_vis::Main() {
         ind_beg(amc_vis::ctype_c_field_curs, field, *node.p_ctype) {
             amc_vis::FNode *thatnode = amc_vis::ind_node_Find(field.arg);
             if (thatnode && &node != thatnode && !thatnode->c_top && field.p_reftype->isval) {
-                amc_vis::Link &link = amc_vis::link_Alloc();
+                amc_vis::FLink &link = amc_vis::link_Alloc();
                 link.p_node1 = &node;
                 link.p_node2 = thatnode;
                 link.link    = thatnode->node;
@@ -443,7 +505,7 @@ void amc_vis::Main() {
     // create top and bottom fields for each node (if not already there).
     ind_beg(amc_vis::_db_node_curs, node, amc_vis::_db) {
         if (!node.c_top) {
-            amc_vis::Link &link = amc_vis::link_Alloc();
+            amc_vis::FLink &link = amc_vis::link_Alloc();
             link.p_node1 = &node;
             link.p_node2 = &node;
             link.link    = node.node;
@@ -452,7 +514,7 @@ void amc_vis::Main() {
             node.c_top = &link;
         }
         if (!node.c_bottom) {
-            amc_vis::Link &link = amc_vis::link_Alloc();
+            amc_vis::FLink &link = amc_vis::link_Alloc();
             link.p_node1 = &node;
             link.p_node2 = &node;
             link.link    = tempstr() << node.node << ".<bottom>";
@@ -467,7 +529,7 @@ void amc_vis::Main() {
         ind_beg(amc_vis::ctype_c_field_curs, field, *node.p_ctype) {
             amc_vis::FNode *thatnode = amc_vis::ind_node_Find(field.arg);
             if (DepRefQ(field) && thatnode && !field.p_reftype->isval) {
-                amc_vis::Link *link = &amc_vis::link_Alloc();
+                amc_vis::FLink *link = &amc_vis::link_Alloc();
                 link->link           = field.field;
                 link->upptr          = field.p_reftype->up;
                 link->label1         = tempstr() << field.reftype << " "<<name_Get(field);
@@ -510,4 +572,6 @@ void amc_vis::Main() {
     if (amc_vis::_db.cmdline.render) {
         Main_Render();
     }
+
+    StopPager();
 }

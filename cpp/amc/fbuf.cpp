@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2014-2019 NYSE | Intercontinental Exchange
 //
@@ -27,8 +27,9 @@
 static bool ReadQ(amc::FFbuf &fbuf) {
     return fbufdir_Get(fbuf) == dmmeta_Fbufdir_fbufdir_in;
 }
+
 static bool HasFdQ(amc::FFbuf &fbuf) {
-    return fbuf.insready != "" && fbuf.insready != fbuf.field;
+    return fbuf.iotype != amc::dmmeta_fbufiotype_nofd;
 }
 
 //
@@ -38,13 +39,25 @@ void amc::tclass_Fbuf() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;
     amc::FNs &ns = *amc::_db.genctx.p_field->p_ctype->p_ns;
-
-    Set(R, "$dflt"     , field.dflt.value);
-    Set(R, "$ns"     , ns.ns);
-
     (void)ns;
     vrfy(field.c_fbuf, tempstr()<<"fbuf record required for field "<<field.field);
     amc::FFbuf &fbuf = *field.c_fbuf;
+
+    Set(R, "$dflt", field.dflt.value);
+    Set(R, "$ns", ns.ns);
+
+    if (fbuf.insready == fbuf.field) {
+        prlog("amc: please update fbuf record");
+        prlog("acr.merge dmmeta.fbuf field:"<<fbuf.field<<" insready:'' iotype:nofd");
+        algo_lib::_db.exit_code=1;
+    }
+
+    if (fbuf.inseof == fbuf.field) {
+        prlog("amc: please update fbuf record");
+        prlog("acr.merge dmmeta.fbuf field:"<<fbuf.field<<" inseof:''");
+        algo_lib::_db.exit_code=1;
+    }
+
     bool inmsgbuf = fbuf.fbuftype == dmmeta_Fbuftype_fbuftype_Msgbuf && ReadQ(fbuf);
     bool linebuf = fbuf.fbuftype == dmmeta_Fbuftype_fbuftype_Linebuf;
 
@@ -52,33 +65,38 @@ void amc::tclass_Fbuf() {
     vrfy(!inmsgbuf || field.p_arg->c_lenfld, tempstr()<<"Msgbuf requires a type with lenfld. field: "<<field.field);
     vrfy(!linebuf || ch_N(field.dflt.value) > 0, "Linebuf requires dflt (end of line value)");
 
-    Set(R, "$bufsize", tempstr()<<fbuf.max);
     Set(R, "$Rettype", (inmsgbuf ? "$Cpptype*" : "algo::aryptr<$Cpptype>"));
 
     // how to force the elems to go to the end of of the struct?
-    if (fbuf.max == 0) {
-        InsVar(R, field.p_ctype    , "u8*", "$name_elems", "NULL", "pointer to elements of indirect array");
-        InsVar(R, field.p_ctype    , "u32", "$name_max", "0", "current length of allocated array");
-    } else {
-        InsVar(R, field.p_ctype    , "u8", "$name_elems[$bufsize]", "", "pointer to elements of inline array");
-    }
+    InsVar(R, field.p_ctype    , "u8*", "$name_elems", "NULL", "pointer to elements of indirect array");
+    InsVar(R, field.p_ctype    , "u32", "$name_max", "0", "current length of allocated array");
     InsVar(R, field.p_ctype    , "i32", "$name_start", "", "beginning of valid bytes (in bytes)");
     InsVar(R, field.p_ctype    , "i32", "$name_end", "", "end of valid bytes (in bytes)");
-    InsVar(R, field.p_ctype    , "bool", "$name_eof", "", "no more data will be written to buffer");
-    InsVar(R, field.p_ctype    , "algo::Errcode", "$name_err", "", "system error code");
-    InsVar(R, field.p_ctype    , "bool", "$name_msgvalid", "", "current message is valid");
     InsVar(R, field.p_ctype    , "i32", "$name_msglen", "", "current message length");
-    if (ReadQ(fbuf) && HasFdQ(fbuf)) {
-        InsVar(R, field.p_ctype, "algo_lib::FIohook", "$name_iohook", "", "edge-triggered hook for refilling buffer");
+    InsVar(R, field.p_ctype    , "algo::Errcode", "$name_err", "", "system error code");
+    if (HasFdQ(fbuf) && field.c_fbuf->iotype == dmmeta_fbufiotype_openssl) {
+        InsVar(R, field.p_ctype, "SSL*", "$name_ssl", "", "TLS connection");
+    }
+    if (HasFdQ(fbuf)) {
+        InsVar(R, field.p_ctype, "algo_lib::FIohook", "$name_iohook", "", "edge-triggered hook for the buffer");
     }
     if (ReadQ(fbuf) == false && HasFdQ(fbuf)) {
-        InsVar(R, field.p_ctype, "algo_lib::FIohook", "$name_iohook", "", "edge-triggered hook for emptying buffer");
-        InsVar(R, field.p_ctype, "bool", "$name_zerocopy", "", "support zero-copy optimization");
         InsVar(R, field.p_ctype, "u64", "$name_n_eagain", "", "eagain counter");
     }
+    if (field.do_trace) {
+        if (ReadQ(fbuf)) {
+            InsVar(R, field.p_ctype, "u64", "$name_n_read_byte", "", "read bytes");
+            InsVar(R, field.p_ctype, "u64", "$name_n_read_msg", "", "read bytes");
+        } else {
+            InsVar(R, field.p_ctype, "u64", "$name_n_write_byte", "", "written bytes");
+            InsVar(R, field.p_ctype, "u64", "$name_n_write_msg", "", "written messages");
+        }
+    }
+    InsVar(R, field.p_ctype    , "bool", "$name_eof", "", "no more data will be written to buffer");
+    InsVar(R, field.p_ctype    , "bool", "$name_msgvalid", "", "current message is valid");
     InsVar(R, field.p_ctype    , "bool", "$name_epoll_enable", "", "use epoll?");
-    if (fbuf.max > 0) {
-        InsStruct(R, field.p_ctype    , "enum { $name_max = $bufsize };");
+    if (ReadQ(fbuf) == false && HasFdQ(fbuf)) {
+        InsVar(R, field.p_ctype, "bool", "$name_zerocopy", "", "support zero-copy optimization");
     }
 
     Set(R, "$ready", name_Get(*fbuf.p_insready));
@@ -102,18 +120,22 @@ void amc::tfunc_Fbuf_BeginRead() {
         amc::FFunc& func = amc::CreateCurFunc();
         Ins(&R, func.comment, "Attach file descriptor and begin reading using edge-triggered epoll.");
         Ins(&R, func.comment, "File descriptor becomes owned by $Partype.$name via FIohook field.");
-        Ins(&R, func.comment, "Whenever the file descriptor becomes readable, insert $parname into $ready.");
+        if (fbuf.insready != "") {
+            Ins(&R, func.comment, "Whenever the file descriptor becomes readable, insert $parname into $ready.");
+        }
         Ins(&R, func.proto, "$name_BeginRead($Parent, algo::Fildes fd)",false);
         Ins(&R, func.ret  , "void",false);
-        Ins(&R, func.body, "callback_Set1($parname.$name_iohook, $parname, $ns::$ready_Insert);");
         Ins(&R, func.body, "$parname.$name_iohook.fildes = fd;");
-        Ins(&R, func.body, "IOEvtFlags flags;");
-        Ins(&R, func.body, "read_Set(flags, true);");
-        Ins(&R, func.body, "if ($pararg.$name_epoll_enable) {");
-        Ins(&R, func.body, "    algo_lib::IohookAdd($parname.$name_iohook, flags);");
-        Ins(&R, func.body, "} else {");
-        Ins(&R, func.body, "    $ns::$ready_Insert($pararg);");
-        Ins(&R, func.body, "}");
+        if (fbuf.insready != "") {
+            Ins(&R, func.body, "callback_Set1($parname.$name_iohook, $parname, $ns::$ready_Insert);");
+            Ins(&R, func.body, "IOEvtFlags flags;");
+            Ins(&R, func.body, "read_Set(flags, true);");
+            Ins(&R, func.body, "if ($pararg.$name_epoll_enable) {");
+            Ins(&R, func.body, "    algo_lib::IohookAdd($parname.$name_iohook, flags);");
+            Ins(&R, func.body, "} else {");
+            Ins(&R, func.body, "    $ns::$ready_Insert($pararg);");
+            Ins(&R, func.body, "}");
+        }
     }
 }
 
@@ -169,7 +191,7 @@ void amc::tfunc_Fbuf_GetMsg() {
         } else if (msgbuf) {
             Ins(&R, getmsg.body, "ret = $parname.$name_msgvalid ? hdr : NULL;");
         }
-        if (fbuf.inseof != fbuf.field) {
+        if (fbuf.inseof != "") {
             Ins(&R, getmsg.body, "if (!$parname.$name_msgvalid && $parname.$name_eof) { // all messages processed");
             Ins(&R, getmsg.body, "    $ns::$eof_Insert($pararg);");
             Ins(&R, getmsg.body, "}");
@@ -185,10 +207,8 @@ void amc::tfunc_Fbuf_Init() {
 
     amc::FFunc& init = amc::CreateCurFunc();
     init.inl = false;
-    if (fbuf.max == 0) {
-        Ins(&R, init.body    , "$parname.$name_elems = NULL; // $name: initialize");
-        Ins(&R, init.body    , "$parname.$name_max = 0; // $name: initialize");
-    }
+    Ins(&R, init.body    , "$parname.$name_elems = NULL; // $name: initialize");
+    Ins(&R, init.body    , "$parname.$name_max = 0; // $name: initialize");
     Ins(&R, init.body    , "$parname.$name_end = 0; // $name: initialize");
     Ins(&R, init.body    , "$parname.$name_start = 0; // $name: initialize");
     Ins(&R, init.body    , "$parname.$name_eof = false; // $name: initialize");
@@ -199,21 +219,30 @@ void amc::tfunc_Fbuf_Init() {
     Ins(&R, init.body, "$parname.$name_msgvalid = false; // $name: initialize");
     Ins(&R, init.body, "$parname.$name_msglen = 0; // $name: initialize");
     Ins(&R, init.body, "$parname.$name_epoll_enable = true; // $name: initialize");
+    if (HasFdQ(fbuf) && field.c_fbuf->iotype == dmmeta_fbufiotype_openssl) {
+        Ins(&R, init.body, "$parname.$name_ssl = NULL; // $name: initialize");
+    }
+    // initialize buffer
+    Set(R,"$fbufmax",tempstr()<<fbuf.max);
+    Ins(&R, init.body, "$name_Realloc($pararg, $fbufmax);");
+
+    if (field.do_trace) {
+        if (ReadQ(fbuf)) {
+            Ins(&R, init.body, "$parname.$name_n_read_byte = 0; // $name: initialize");
+            Ins(&R, init.body, "$parname.$name_n_read_msg = 0; // $name: initialize");
+        } else {
+            Ins(&R, init.body, "$parname.$name_n_write_byte = 0; // $name: initialize");
+            Ins(&R, init.body, "$parname.$name_n_write_msg = 0; // $name: initialize");
+        }
+    }
 }
 
 void amc::tfunc_Fbuf_Max() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
-    amc::FField &field = *amc::_db.genctx.p_field;
-    amc::FFbuf &fbuf = *field.c_fbuf;
     amc::FFunc& maxitems = amc::CreateCurFunc();
     Ins(&R, maxitems.ret  , "i32", false);
     Ins(&R, maxitems.proto, "$name_Max($Parent)", false);
-    if (fbuf.max == 0) {
-        Ins(&R, maxitems.body, "return $pararg.$name_max;");
-    } else {
-        Ins(&R, maxitems.body, "return $bufsize;");
-    }
-    MaybeUnused(maxitems,Subst(R,"$pararg"));
+    Ins(&R, maxitems.body, "return $parname.$name_max;");
 }
 
 void amc::tfunc_Fbuf_N() {
@@ -229,7 +258,6 @@ void amc::tfunc_Fbuf_Refill() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;
     amc::FFbuf &fbuf = *field.c_fbuf;
-
     if (ReadQ(fbuf) && HasFdQ(fbuf)) {
         amc::FFunc& refill = amc::CreateCurFunc();
         Ins(&R, refill.ret  , "bool",false);
@@ -246,19 +274,42 @@ void amc::tfunc_Fbuf_Refill() {
         Ins(&R, refill.body    , "        end = $parname.$name_end;");
         Ins(&R, refill.body    , "        nfree = max - end;");
         Ins(&R, refill.body    , "    }");
-        Ins(&R, refill.body    , "    ssize_t ret         = read(fd, $parname.$name_elems + end, nfree);");
-        Ins(&R, refill.body    , "    readable            = !(ret < 0 && errno == EAGAIN);");
-        Ins(&R, refill.body    , "    bool error          = ret < 0 && errno != EAGAIN; // detect permanent error on this fd");
-        Ins(&R, refill.body    , "    bool eof            = error || (ret == 0 && nfree > 0);");
-        Ins(&R, refill.body    , "    $parname.$name_end += i32_Max(ret,0); // new end of bytes");
-        Ins(&R, refill.body    , "    if (error) {");
-        Ins(&R, refill.body    , "        $parname.$name_err = algo::FromErrno(errno); // fetch errno");
-        Ins(&R, refill.body    , "    }");
-        Ins(&R, refill.body    , "    $parname.$name_eof |= eof;");
+        if (fbuf.iotype == dmmeta_fbufiotype_openssl) {
+            Ins(&R, refill.body, "    if ($parname.$name_ssl) {");
+            Ins(&R, refill.body, "        int ret = SSL_read($parname.$name_ssl,$parname.$name_elems + end, nfree);");
+            Ins(&R, refill.body, "        int err = SSL_get_error($parname.$name_ssl,ret);");
+            Ins(&R, refill.body, "        bool fdretry = err == SSL_ERROR_WANT_READ || err == SSL_ERROR_WANT_WRITE;");
+            Ins(&R, refill.body, "        bool sslretry = fdretry || err == SSL_ERROR_WANT_CONNECT || err == SSL_ERROR_WANT_ACCEPT || err == SSL_ERROR_WANT_X509_LOOKUP;");
+            Ins(&R, refill.body, "        bool zero = err == SSL_ERROR_ZERO_RETURN;");
+            Ins(&R, refill.body, "        readable = !fdretry;");
+            Ins(&R, refill.body, "        bool error = err && !sslretry;");
+            Ins(&R, refill.body, "        bool eof = error || zero;");
+            Ins(&R, refill.body, "        $parname.$name_end += i32_Max(ret,0); // new end of bytes");
+            Ins(&R, refill.body, "        if (error) {");
+            Ins(&R, refill.body, "            $parname.$name_err = algo::MakeErrcode(algo_Errns_ssl, err);");
+            Ins(&R, refill.body, "        }");
+            Ins(&R, refill.body, "        $parname.$name_eof |= eof;");
+            Ins(&R, refill.body, "    } else {");
+        } {
+            Ins(&R, refill.body, "        ssize_t ret         = read(fd, $parname.$name_elems + end, nfree);");
+            Ins(&R, refill.body, "        readable            = !(ret < 0 && errno == EAGAIN);");
+            Ins(&R, refill.body, "        bool error          = ret < 0 && errno != EAGAIN; // detect permanent error on this fd");
+            Ins(&R, refill.body, "        bool eof            = error || (ret == 0 && nfree > 0);");
+            Ins(&R, refill.body, "        $parname.$name_end += i32_Max(ret,0); // new end of bytes");
+            Ins(&R, refill.body, "        if (error) {");
+            Ins(&R, refill.body, "            $parname.$name_err = algo::FromErrno(errno); // fetch errno");
+            Ins(&R, refill.body, "        }");
+            Ins(&R, refill.body, "        $parname.$name_eof |= eof;");
+        }
+        if (fbuf.iotype == dmmeta_fbufiotype_openssl) {
+            Ins(&R, refill.body, "    }"); // ssl else
+        }
         Ins(&R, refill.body    , "}");
-        Ins(&R, refill.body    , "if (!readable && $pararg.$name_epoll_enable) {");
-        Ins(&R, refill.body    , "    $ns::$ready_Remove($pararg);");
-        Ins(&R, refill.body    , "}");
+        if (fbuf.insready != "") {
+            Ins(&R, refill.body    , "if (!readable && $pararg.$name_epoll_enable) {");
+            Ins(&R, refill.body    , "    $ns::$ready_Remove($pararg);");
+            Ins(&R, refill.body    , "}");
+        }
         Ins(&R, refill.body    , "return readable;");
     }
 }
@@ -289,6 +340,7 @@ void amc::tfunc_Fbuf_ScanMsg() {
         Ins(&R, scanmsg.ret  , "void",false);
         Ins(&R, scanmsg.proto, "$name_ScanMsg($Parent)",false);
         if (bytebuf_extern) {
+            scanmsg.acrkey << "fbuf:"<<fbuf.field;
             scanmsg.extrn=true;
         }
         if (!scanmsg.extrn) {
@@ -367,6 +419,14 @@ void amc::tfunc_Fbuf_SkipBytes() {
         Ins(&R, skipbytes.body     , "n = i32_Min(n,avail);");
         Ins(&R, skipbytes.body     , "$parname.$name_start += n;");
         Ins(&R, skipbytes.body     , "$parname.$name_msgvalid = false;");
+        if (field.do_trace && ReadQ(fbuf)) {
+            Ins(&R, skipbytes.body, "    if (n) {");
+            Ins(&R, skipbytes.body, "        $ns::_db.trace.$partrace_$name_n_read_byte+=n;");
+            Ins(&R, skipbytes.body, "        $pararg.$name_n_read_byte+=n;");
+            Ins(&R, skipbytes.body, "        $ns::_db.trace.$partrace_$name_n_read_msg++;");
+            Ins(&R, skipbytes.body, "        $pararg.$name_n_read_msg++;");
+            Ins(&R, skipbytes.body, "    }");
+        }
     }
 }
 
@@ -391,7 +451,27 @@ void amc::tfunc_Fbuf_SkipMsg() {
     Ins(&R, skipmsg.body    , "    $parname.$name_start = start;");
     Ins(&R, skipmsg.body    , "    $parname.$name_msgvalid = false;");
     Ins(&R, skipmsg.body    , "    $parname.$name_msglen   = 0; // reset message length -- important for delimited streams");
+    if (field.do_trace && ReadQ(fbuf)) {
+        Ins(&R, skipmsg.body, "    $ns::_db.trace.$partrace_$name_n_read_byte+=skip;");
+        Ins(&R, skipmsg.body, "    $pararg.$name_n_read_byte+=skip;");
+        Ins(&R, skipmsg.body, "    $ns::_db.trace.$partrace_$name_n_read_msg++;");
+        Ins(&R, skipmsg.body, "    $pararg.$name_n_read_msg++;");
+    }
     Ins(&R, skipmsg.body    , "}");
+}
+
+void amc::tfunc_Fbuf_WriteReserve() {
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FFunc& func = amc::CreateCurFunc();
+    Ins(&R, func.comment, "Write bytes to the buffer. The entire block is always written");
+    Ins(&R, func.ret  , "void",false);
+    Ins(&R, func.proto, "$name_WriteReserve($Parent, u8 *in, i32 in_n)",false);
+    Ins(&R, func.body , "if (!$name_WriteAll($pararg, in, in_n)) {");
+    Ins(&R, func.body , "    $name_Realloc($pararg, $parname.$name_max*2);");
+    Ins(&R, func.body , "    if (!$name_WriteAll($pararg, in, in_n)) {");
+    Ins(&R, func.body , "        FatalErrorExit(\"$name: out of memory\");");
+    Ins(&R, func.body , "    }");
+    Ins(&R, func.body , "}");
 }
 
 void amc::tfunc_Fbuf_WriteAll() {
@@ -400,7 +480,6 @@ void amc::tfunc_Fbuf_WriteAll() {
     amc::FFbuf &fbuf = *field.c_fbuf;
 
     amc::FFunc& writeall = amc::CreateCurFunc();
-    writeall.inl = false;
     Ins(&R, writeall.comment, "Write bytes to the buffer. If the entire block is written, return true,");
     Ins(&R, writeall.comment, "Otherwise return false.");
     Ins(&R, writeall.comment, "Bytes in the buffer are potentially shifted left to make room for the message.");
@@ -415,22 +494,35 @@ void amc::tfunc_Fbuf_WriteAll() {
     Ins(&R, writeall.body    , "// now try to write the message.");
     Ins(&R, writeall.body    , "i32 end = $parname.$name_end;");
     Ins(&R, writeall.body    , "bool fits = end + in_n <= max;");
+    Ins(&R, writeall.body, "    if (fits) {");
+    if (field.do_trace && !ReadQ(fbuf)) {
+        Ins(&R, writeall.body, "    $ns::_db.trace.$partrace_$name_n_write_byte+=in_n;");
+        Ins(&R, writeall.body, "    $ns::_db.trace.$partrace_$name_n_write_msg++;");
+        Ins(&R, writeall.body, "    $pararg.$name_n_write_byte+=in_n;");
+        Ins(&R, writeall.body, "    $pararg.$name_n_write_msg++;");
+    }
     if (ReadQ(fbuf) == false && HasFdQ(fbuf)) {
-        Ins(&R, writeall.body, "if ($parname.$name_zerocopy && fits && out_N($pararg)==0) {// in kernel bypass situations this is faster");
-        Ins(&R, writeall.body, "    int rc = write($pararg.out_iohook.fildes.value, in, in_n);");
-        Ins(&R, writeall.body, "    if (rc >= 0) {");
-        Ins(&R, writeall.body, "        in += rc;");
-        Ins(&R, writeall.body, "        in_n -= rc;");
+        Ins(&R, writeall.body, "    if ($parname.$name_zerocopy && out_N($pararg)==0) {// in kernel bypass situations this is faster");
+        if (fbuf.iotype == dmmeta_fbufiotype_openssl) {
+            Ins(&R, writeall.body, "    int rc = $pararg.out_ssl ? SSL_write($pararg.out_ssl, in, in_n)");
+            Ins(&R, writeall.body, "         : write($pararg.out_iohook.fildes.value, in, in_n);");
+        } else {
+            Ins(&R, writeall.body, "    int rc = write($pararg.out_iohook.fildes.value, in, in_n);");
+        }
+        Ins(&R, writeall.body, "        if (rc >= 0) {");
+        Ins(&R, writeall.body, "            in += rc;");
+        Ins(&R, writeall.body, "            in_n -= rc;");
+        Ins(&R, writeall.body, "        }");
         Ins(&R, writeall.body, "    }");
-        Ins(&R, writeall.body, "}");
     }
-    Ins(&R, writeall.body    , "if (fits && in_n > 0) {");
-    Ins(&R, writeall.body    , "    memcpy($parname.$name_elems + end, in, in_n);");
-    Ins(&R, writeall.body    , "    $parname.$name_end = end + in_n;");
-    if (ReadQ(fbuf) == false && HasFdQ(fbuf)) {
-        Ins(&R, writeall.body, "    $ready_Insert($pararg); // schedule outflow");
+    Ins(&R, writeall.body    , "    if (in_n > 0) {");
+    Ins(&R, writeall.body    , "        memcpy($parname.$name_elems + end, in, in_n);");
+    Ins(&R, writeall.body    , "        $parname.$name_end = end + in_n;");
+    if (ReadQ(fbuf) == false && HasFdQ(fbuf) && fbuf.insready != "") {
+        Ins(&R, writeall.body, "        $ready_Insert($pararg); // schedule outflow");
     }
-    Ins(&R, writeall.body    , "}");
+    Ins(&R, writeall.body    , "    }");
+    Ins(&R, writeall.body, "    }");
     Ins(&R, writeall.body    , "return fits;");
 }
 
@@ -465,21 +557,25 @@ void amc::tfunc_Fbuf_BeginWrite() {
     if (ReadQ(fbuf) == false && HasFdQ(fbuf)) {
         amc::FFunc& func = amc::CreateCurFunc();
         Ins(&R, func.comment, "Attach file descriptor and begin outflowing buffer reading using edge-triggered epoll.");
-        Ins(&R, func.comment, "Whenever buffer is non-empty and fd is writable, insert $parname into $ready.");
+        if (fbuf.insready != "") {
+            Ins(&R, func.comment, "Whenever buffer is non-empty and fd is writable, insert $parname into $ready.");
+        }
         Ins(&R, func.comment, "User should implement a step function that calls $name_Outflow.");
         Ins(&R, func.proto, "$name_BeginWrite($Parent, algo::Fildes fd, bool nodelete)",false);
         Ins(&R, func.ret  , "void",false);
         Ins(&R, func.body, "callback_Set1($parname.$name_iohook, $parname, $ns::$ready_Insert);");
-        Ins(&R, func.body, "$parname.$name_iohook.fildes    = fd;");
         Ins(&R, func.body, "if (nodelete) {");
         Ins(&R, func.body, "    $parname.$name_epoll_enable    = false; // cannot register fd twice -- disable epoll on shared fd");
         Ins(&R, func.body, "    $parname.$name_iohook.nodelete = true;");
         Ins(&R, func.body, "}");
-        Ins(&R, func.body, "IOEvtFlags flags;");
-        Ins(&R, func.body, "write_Set(flags, true);");
-        Ins(&R, func.body, "if ($parname.$name_epoll_enable) {");
-        Ins(&R, func.body, "    algo_lib::IohookAdd($parname.$name_iohook, flags);");
-        Ins(&R, func.body, "}");
+        if (fbuf.insready != "") {
+            Ins(&R, func.body, "$parname.$name_iohook.fildes    = fd;");
+            Ins(&R, func.body, "IOEvtFlags flags;");
+            Ins(&R, func.body, "write_Set(flags, true);");
+            Ins(&R, func.body, "if ($parname.$name_epoll_enable) {");
+            Ins(&R, func.body, "    algo_lib::IohookAdd($parname.$name_iohook, flags);");
+            Ins(&R, func.body, "}");
+        }
     }
 }
 
@@ -491,26 +587,55 @@ void amc::tfunc_Fbuf_Outflow() {
 
     if (!ReadQ(fbuf) && HasFdQ(fbuf)) {
         amc::FFunc& func = amc::CreateCurFunc();
-        Ins(&R, func.comment, "Once all bytes are written or when fd buffer is full, buffer is automatically removed from $ready list.");
-        Ins(&R, func.comment, "Edge-triggered epoll will re-insert $name into $ready.");
+        if (fbuf.insready != "") {
+            Ins(&R, func.comment, "Once all bytes are written or when fd buffer is full, buffer is automatically removed from $ready list.");
+            Ins(&R, func.comment, "Edge-triggered epoll will re-insert $name into $ready.");
+        }
         Ins(&R, func.proto, "$name_Outflow($Parent)",false);
         Ins(&R, func.ret  , "bool",false);
         Ins(&R, func.body    , "int  nwrite   = $name_N($pararg);");
         Ins(&R, func.body    , "int  start    = $pararg.$name_start;");
-        Ins(&R, func.body    , "int  nwritten = nwrite > 0 ? write($pararg.$name_iohook.fildes.value, $pararg.$name_elems + start, nwrite) : 0;");
-        Ins(&R, func.body    , "bool good     = nwritten >= 0 || errno == EAGAIN;");
-        if (field.do_trace) {
-            Ins(&R, func.body    , "if(errno == EAGAIN) {");
-            Ins(&R, func.body    , "    $ns::_db.trace.$partrace_$name_n_eagain++;");
-            Ins(&R, func.body    , "    $pararg.$name_n_eagain++;");
+        Ins(&R, func.body    , "int  nwritten;");
+        if (fbuf.iotype == dmmeta_fbufiotype_openssl) {
+            Ins(&R, func.body, "if ($pararg.$name_ssl) {");
+            Ins(&R, func.body, "    nwritten = SSL_write($pararg.$name_ssl, $pararg.$name_elems + start, nwrite);");
+            Ins(&R, func.body, "    int err = SSL_get_error($pararg.$name_ssl,nwritten);");
+            Ins(&R, func.body, "    bool fdretry = err == SSL_ERROR_WANT_READ || err == SSL_ERROR_WANT_WRITE;");
+            Ins(&R, func.body, "    bool sslretry = fdretry || err == SSL_ERROR_WANT_CONNECT || err == SSL_ERROR_WANT_ACCEPT || err == SSL_ERROR_WANT_X509_LOOKUP;");
+            Ins(&R, func.body, "    bool good = nwritten >= 0 || sslretry;");
+            Ins(&R, func.body, "    nwritten = i32_Max(nwritten,0);");
+            if (field.do_trace) {
+                Ins(&R, func.body, "    if (fdretry) {");
+                Ins(&R, func.body, "        $ns::_db.trace.$partrace_$name_n_eagain++;");
+                Ins(&R, func.body, "        $pararg.$name_n_eagain++;");
+                Ins(&R, func.body, "    }");
+            }
+            Ins(&R, func.body, "if (!good) {");
+            Ins(&R, func.body, "    $pararg.$name_err = algo::MakeErrcode(algo_Errns_ssl, err); // save error code");
+            if (fbuf.inseof != "") {
+                Ins(&R, func.body, "    $ns::$eof_Insert($pararg); // the end");
+            }
+            Ins(&R, func.body, "}");
+            Ins(&R, func.body, "} else {");
+        } {
+            Ins(&R, func.body    , "nwritten = nwrite > 0 ? write($pararg.$name_iohook.fildes.value, $pararg.$name_elems + start, nwrite) : 0;");
+            Ins(&R, func.body    , "bool good     = nwritten >= 0 || errno == EAGAIN;");
+            if (field.do_trace) {
+                Ins(&R, func.body, "if(nwritten < 0 && errno == EAGAIN) {");
+                Ins(&R, func.body, "    $ns::_db.trace.$partrace_$name_n_eagain++;");
+                Ins(&R, func.body, "    $pararg.$name_n_eagain++;");
+                Ins(&R, func.body, "}");
+            }
+            Ins(&R, func.body    , "if (!good) {");
+            Ins(&R, func.body    , "    $pararg.$name_err = algo::FromErrno(errno); // save error code");
+            if (fbuf.inseof != "") {
+                Ins(&R, func.body, "    $ns::$eof_Insert($pararg); // the end");
+            }
             Ins(&R, func.body    , "}");
         }
-        Ins(&R, func.body    , "if (!good) {");
-        Ins(&R, func.body    , "    $pararg.$name_err = algo::FromErrno(errno); // save error code");
-        if (fbuf.inseof != fbuf.field) {
-            Ins(&R, func.body, "    $ns::$eof_Insert($pararg); // the end");
+        if (fbuf.iotype == dmmeta_fbufiotype_openssl) {
+            Ins(&R, func.body, "}");
         }
-        Ins(&R, func.body    , "}");
         Ins(&R, func.body    , "if (nwritten > 0) {");
         Ins(&R, func.body    , "    $name_SkipBytes($pararg,nwritten); // skip written bytes");
         Ins(&R, func.body    , "}");
@@ -518,9 +643,11 @@ void amc::tfunc_Fbuf_Outflow() {
         Ins(&R, func.body    , "if ($pararg.$name_epoll_enable) {");
         Ins(&R, func.body    , "    done |= nwritten<0;");
         Ins(&R, func.body    , "}");
-        Ins(&R, func.body    , "if (done) {");
-        Ins(&R, func.body    , "    $ns::$ready_Remove($pararg); // done writing");
-        Ins(&R, func.body    , "}");
+        if (fbuf.insready != "") {
+            Ins(&R, func.body    , "if (done) {");
+            Ins(&R, func.body    , "    $ns::$ready_Remove($pararg); // done writing");
+            Ins(&R, func.body    , "}");
+        }
         Ins(&R, func.body    , "return nwritten > 0;");
     }
 }
@@ -536,7 +663,9 @@ void amc::tfunc_Fbuf_EndRead() {
         Ins(&R, func.ret  , "void",false);
         Ins(&R, func.body, "if (ValidQ($parname.$name_iohook.fildes)) {");
         Ins(&R, func.body, "    $parname.$name_eof = true;");
-        Ins(&R, func.body, "    $ns::$ready_Insert($pararg);");
+        if (fbuf.insready != "") {
+            Ins(&R, func.body, "    $ns::$ready_Insert($pararg);");
+        }
         Ins(&R, func.body, "}");
     }
 }
@@ -560,39 +689,29 @@ void amc::tfunc_Fbuf_EndWrite() {
 
 void amc::tfunc_Fbuf_Realloc() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
-    amc::FField &field = *amc::_db.genctx.p_field;
-    amc::FFbuf &fbuf = *field.c_fbuf;
-
-    if (fbuf.max==0) {
-        amc::FFunc& func = amc::CreateCurFunc();
-        Ins(&R, func.comment, "Unconditionally reallocate buffer to have size NEW_MAX");
-        Ins(&R, func.comment, "If the buffer has data in it, NEW_MAX is adjusted so that the data is not lost");
-        Ins(&R, func.comment, "(best to call this before filling the buffer)");
-        Ins(&R, func.proto, "$name_Realloc($Parent, int new_max)",false);
-        Ins(&R, func.ret  , "void",false);
-        Ins(&R, func.body, "new_max = i32_Max(new_max, $parname.$name_end);");
-        Ins(&R, func.body, "u8 *new_mem = $parname.$name_elems");
-        Ins(&R, func.body, "            ? (u8*)$basepool_ReallocMem($parname.$name_elems, $parname.$name_max, new_max)");
-        Ins(&R, func.body, "            : (u8*)$basepool_AllocMem(new_max);");
-        Ins(&R, func.body, "if (UNLIKELY(!new_mem)) {");
-        Ins(&R, func.body, "    FatalErrorExit(\"$ns.fbuf_nomem  field:$field  comment:'out of memory'\");");
-        Ins(&R, func.body, "}");
-        Ins(&R, func.body, "$parname.$name_elems = new_mem;");
-        Ins(&R, func.body, "$parname.$name_max = new_max;");
-    }
+    amc::FFunc& func = amc::CreateCurFunc();
+    Ins(&R, func.comment, "Unconditionally reallocate buffer to have size NEW_MAX");
+    Ins(&R, func.comment, "If the buffer has data in it, NEW_MAX is adjusted so that the data is not lost");
+    Ins(&R, func.comment, "(best to call this before filling the buffer)");
+    Ins(&R, func.proto, "$name_Realloc($Parent, int new_max)",false);
+    Ins(&R, func.ret  , "void",false);
+    Ins(&R, func.body, "new_max = i32_Max(new_max, $parname.$name_end);");
+    Ins(&R, func.body, "u8 *new_mem = $parname.$name_elems");
+    Ins(&R, func.body, "            ? (u8*)$basepool_ReallocMem($parname.$name_elems, $parname.$name_max, new_max)");
+    Ins(&R, func.body, "            : (u8*)$basepool_AllocMem(new_max);");
+    Ins(&R, func.body, "if (UNLIKELY(!new_mem)) {");
+    Ins(&R, func.body, "    FatalErrorExit(\"$ns.fbuf_nomem  field:$field  comment:'out of memory'\");");
+    Ins(&R, func.body, "}");
+    Ins(&R, func.body, "$parname.$name_elems = new_mem;");
+    Ins(&R, func.body, "$parname.$name_max = new_max;");
 }
 
 void amc::tfunc_Fbuf_Uninit() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
-    amc::FField &field = *amc::_db.genctx.p_field;
-    amc::FFbuf &fbuf = *field.c_fbuf;
-
-    if (fbuf.max==0) {
-        amc::FFunc& uninit = amc::CreateCurFunc();
-        Ins(&R, uninit.body, "if ($parname.$name_elems) {");
-        Ins(&R, uninit.body, "    $basepool_FreeMem($parname.$name_elems, sizeof($Cpptype)*$parname.$name_max); // ($field)");
-        Ins(&R, uninit.body, "}");
-        Ins(&R, uninit.body, "$parname.$name_elems = NULL;");
-        Ins(&R, uninit.body, "$parname.$name_max = 0;");
-    }
+    amc::FFunc& uninit = amc::CreateCurFunc();
+    Ins(&R, uninit.body, "if ($parname.$name_elems) {");
+    Ins(&R, uninit.body, "    $basepool_FreeMem($parname.$name_elems, sizeof($Cpptype)*$parname.$name_max); // ($field)");
+    Ins(&R, uninit.body, "}");
+    Ins(&R, uninit.body, "$parname.$name_elems = NULL;");
+    Ins(&R, uninit.body, "$parname.$name_max = 0;");
 }

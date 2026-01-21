@@ -24,6 +24,24 @@
 
 #include "include/algo.h"  // hard-coded include
 
+// --- ...StaticCheck
+void StaticCheck() {
+    algo_assert(sizeof(bool) == 1); // csize:bool
+    algo_assert(sizeof(char) == 1); // csize:char
+    algo_assert(sizeof(double) == 8); // csize:double
+    algo_assert(sizeof(float) == 4); // csize:float
+    algo_assert(sizeof(i16) == 2); // csize:i16
+    algo_assert(sizeof(i32) == 4); // csize:i32
+    algo_assert(sizeof(i64) == 8); // csize:i64
+    algo_assert(sizeof(i8) == 1); // csize:i8
+    algo_assert(sizeof(u8) == 1); // csize:u8
+    algo_assert(sizeof(u128) == 16); // csize:u128
+    algo_assert(sizeof(u16) == 2); // csize:u16
+    algo_assert(sizeof(u32) == 4); // csize:u32
+    algo_assert(sizeof(u64) == 8); // csize:u64
+    algo_assert(_offset_of(pad_byte, value) + sizeof(((pad_byte*)0)->value) == sizeof(pad_byte));
+}
+
 // --- i16..ReadStrptrMaybe
 // Read fields of i16 from an ascii string.
 // Attempt to parse i16 from in_str
@@ -96,8 +114,8 @@ bool i16_ReadStrptrMaybe(i16 &parent, algo::strptr in_str) {
     if (retval) {
         parent = num;
     } else {
-        algo_lib::SaveBadTag("comment", "i16_ReadStrptrMaybe: bad number");
-        algo_lib::SaveBadTag("value",in_str);
+        algo_lib::AppendErrtext("comment", "i16_ReadStrptrMaybe: bad number");
+        algo_lib::AppendErrtext("value",in_str);
     }
     return retval;
 }
@@ -174,8 +192,8 @@ bool i32_ReadStrptrMaybe(i32 &parent, algo::strptr in_str) {
     if (retval) {
         parent = num;
     } else {
-        algo_lib::SaveBadTag("comment", "i32_ReadStrptrMaybe: bad number");
-        algo_lib::SaveBadTag("value",in_str);
+        algo_lib::AppendErrtext("comment", "i32_ReadStrptrMaybe: bad number");
+        algo_lib::AppendErrtext("value",in_str);
     }
     return retval;
 }
@@ -268,8 +286,8 @@ bool i64_ReadStrptrMaybe(i64 &parent, algo::strptr in_str) {
     if (retval) {
         parent = num;
     } else {
-        algo_lib::SaveBadTag("comment", "i64_ReadStrptrMaybe: bad number");
-        algo_lib::SaveBadTag("value",in_str);
+        algo_lib::AppendErrtext("comment", "i64_ReadStrptrMaybe: bad number");
+        algo_lib::AppendErrtext("value",in_str);
     }
     return retval;
 }
@@ -346,8 +364,8 @@ bool i8_ReadStrptrMaybe(i8 &parent, algo::strptr in_str) {
     if (retval) {
         parent = num;
     } else {
-        algo_lib::SaveBadTag("comment", "i8_ReadStrptrMaybe: bad number");
-        algo_lib::SaveBadTag("value",in_str);
+        algo_lib::AppendErrtext("comment", "i8_ReadStrptrMaybe: bad number");
+        algo_lib::AppendErrtext("value",in_str);
     }
     return retval;
 }
@@ -424,8 +442,8 @@ bool u8_ReadStrptrMaybe(u8 &parent, algo::strptr in_str) {
     if (retval) {
         parent = num;
     } else {
-        algo_lib::SaveBadTag("comment", "u8_ReadStrptrMaybe: bad number");
-        algo_lib::SaveBadTag("value",in_str);
+        algo_lib::AppendErrtext("comment", "u8_ReadStrptrMaybe: bad number");
+        algo_lib::AppendErrtext("value",in_str);
     }
     return retval;
 }
@@ -518,8 +536,8 @@ bool u128_ReadStrptrMaybe(u128 &parent, algo::strptr in_str) {
     if (retval) {
         parent = num;
     } else {
-        algo_lib::SaveBadTag("comment", "u128_ReadStrptrMaybe: bad number");
-        algo_lib::SaveBadTag("value",in_str);
+        algo_lib::AppendErrtext("comment", "u128_ReadStrptrMaybe: bad number");
+        algo_lib::AppendErrtext("value",in_str);
     }
     return retval;
 }
@@ -596,8 +614,8 @@ bool u16_ReadStrptrMaybe(u16 &parent, algo::strptr in_str) {
     if (retval) {
         parent = num;
     } else {
-        algo_lib::SaveBadTag("comment", "u16_ReadStrptrMaybe: bad number");
-        algo_lib::SaveBadTag("value",in_str);
+        algo_lib::AppendErrtext("comment", "u16_ReadStrptrMaybe: bad number");
+        algo_lib::AppendErrtext("value",in_str);
     }
     return retval;
 }
@@ -674,8 +692,8 @@ bool u32_ReadStrptrMaybe(u32 &parent, algo::strptr in_str) {
     if (retval) {
         parent = num;
     } else {
-        algo_lib::SaveBadTag("comment", "u32_ReadStrptrMaybe: bad number");
-        algo_lib::SaveBadTag("value",in_str);
+        algo_lib::AppendErrtext("comment", "u32_ReadStrptrMaybe: bad number");
+        algo_lib::AppendErrtext("value",in_str);
     }
     return retval;
 }
@@ -768,8 +786,8 @@ bool u64_ReadStrptrMaybe(u64 &parent, algo::strptr in_str) {
     if (retval) {
         parent = num;
     } else {
-        algo_lib::SaveBadTag("comment", "u64_ReadStrptrMaybe: bad number");
-        algo_lib::SaveBadTag("value",in_str);
+        algo_lib::AppendErrtext("comment", "u64_ReadStrptrMaybe: bad number");
+        algo_lib::AppendErrtext("value",in_str);
     }
     return retval;
 }

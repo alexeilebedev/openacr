@@ -1,5 +1,6 @@
 gclidb.gclisub  gclisub:$GITDIR  comment:""
 gclidb.gclisub  gclisub:$HOST  comment:""
+gclidb.gclisub  gclisub:$ID_RSA  comment:""
 gclidb.gclisub  gclisub:$IN_AUTH  comment:""
 gclidb.gclisub  gclisub:$ISSUE  comment:""
 gclidb.gclisub  gclisub:"$ISSUE#"  comment:""

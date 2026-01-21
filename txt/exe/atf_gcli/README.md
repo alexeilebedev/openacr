@@ -7,7 +7,6 @@
 &nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
 &#128196; [atf_gcli - Internals](/txt/exe/atf_gcli/internals.md)<br/>
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
@@ -28,8 +27,8 @@ Usage: atf_gcli [options]
     -skip_init                      Skip setting local files - already set
     -skip_git_init                  Skip setting local files - already set
     -dry_run                        Print actions, do not perform
-    -verbose        int             Verbosity level (0..255); alias -v; cumulative
-    -debug          int             Debug level (0..255); alias -d; cumulative
+    -verbose        flag            Verbosity level (0..255); alias -v; cumulative
+    -debug          flag            Debug level (0..255); alias -d; cumulative
     -help                           Print help and exit; alias -h
     -version                        Print version and exit
     -signature                      Show signatures and exit; alias -sig
@@ -77,25 +76,12 @@ Usage: atf_gcli [options]
 `atf_gcli` takes the following tables on input:
 |Ssimfile|Comment|
 |---|---|
+|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
 |[gclidb.gclienv](/txt/ssimdb/gclidb/gclienv.md)||
-|[gclidb.gtblact](/txt/ssimdb/gclidb/gtblact.md)||
+|[gclidb.gclienvsub](/txt/ssimdb/gclidb/gclienvsub.md)||
+|[gclidb.gtblact](/txt/ssimdb/gclidb/gtblact.md)|static combination of gcli tables and actions|
 |[gclidb.gtblacttst](/txt/ssimdb/gclidb/gtblacttst.md)||
 |[gclidb.gtblacttstout](/txt/ssimdb/gclidb/gtblacttstout.md)||
-|[gclidb.gclienvsub](/txt/ssimdb/gclidb/gclienvsub.md)||
-|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
-
-### Sources
-<a href="#sources"></a>
-The source code license is GPL
-The following source files are part of this tool:
-
-|Source File|Comment|
-|---|---|
-|[cpp/atf/atf_gcli.cpp](/cpp/atf/atf_gcli.cpp)||
-|[cpp/gen/atf_gcli_gen.cpp](/cpp/gen/atf_gcli_gen.cpp)||
-|[include/atf_gcli.h](/include/atf_gcli.h)||
-|[include/gen/atf_gcli_gen.h](/include/gen/atf_gcli_gen.h)||
-|[include/gen/atf_gcli_gen.inl.h](/include/gen/atf_gcli_gen.inl.h)||
 

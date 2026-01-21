@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -41,7 +41,8 @@ namespace acr_in { // update-hdr
     // True if we are doing a reverse lookup of namespaces by ssimfile,
     // as opposed to a forward lookup of ssimfiles by namespace
     bool ReverseLookupQ();
-    void Main();
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void Main(); // main:acr_in
 
     // -------------------------------------------------------------------
     // cpp/acr_in/data.cpp

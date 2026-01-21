@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
 //
 // License: GPL
@@ -57,6 +57,7 @@ void amc::gen_ns_write() {
         ns.inl=NULL;
         ns.hdr=NULL;
         ns.cpp=NULL;
+        ns.js.mdl=NULL;
     }
 }
 

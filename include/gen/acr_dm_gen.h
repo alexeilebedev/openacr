@@ -52,7 +52,6 @@ namespace acr_dm { struct _db_tuple_curs; }
 namespace acr_dm { struct _db_attr_curs; }
 namespace acr_dm { struct _db_value_curs; }
 namespace acr_dm { struct _db_bh_tuple_curs; }
-namespace acr_dm { struct Source_source_bitcurs; }
 namespace acr_dm { struct tuple_zs_attr_curs; }
 namespace acr_dm { struct trace; }
 namespace acr_dm { struct FDb; }
@@ -69,12 +68,12 @@ namespace acr_dm { // gen:ns_print_struct
 // access: acr_dm.FTuple.zs_attr (Llist)
 // access: acr_dm.FValue.p_attr (Upptr)
 struct FAttr { // acr_dm.FAttr
-    algo::cstring     name;            //
-    acr_dm::FTuple*   p_tuple;         // reference to parent row
-    acr_dm::FValue*   zs_value_head;   // zero-terminated singly linked list
-    i32               zs_value_n;      // zero-terminated singly linked list
-    acr_dm::FValue*   zs_value_tail;   // pointer to last element
-    acr_dm::FAttr*    zs_attr_next;    // zslist link; -1 means not-in-list
+    algo::cstring     name;                 //
+    acr_dm::FTuple*   p_tuple;              // reference to parent row
+    acr_dm::FValue*   zs_value_head;        // zero-terminated singly linked list
+    i32               zs_value_n;           // zero-terminated singly linked list
+    acr_dm::FValue*   zs_value_tail;        // pointer to last element
+    acr_dm::FAttr*    tuple_zs_attr_next;   // zslist link; -1 means not-in-list
     // reftype Llist of acr_dm.FAttr.zs_value prohibits copy
     // func:acr_dm.FAttr..AssignOp
     inline acr_dm::FAttr& operator =(const acr_dm::FAttr &rhs) = delete;
@@ -100,7 +99,7 @@ inline bool          zs_value_EmptyQ(acr_dm::FAttr& attr) __attribute__((__warn_
 inline acr_dm::FValue* zs_value_First(acr_dm::FAttr& attr) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:acr_dm.FAttr.zs_value.InLlistQ
-inline bool          zs_value_InLlistQ(acr_dm::FValue& row) __attribute__((__warn_unused_result__, nothrow));
+inline bool          attr_zs_value_InLlistQ(acr_dm::FValue& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:acr_dm.FAttr.zs_value.Insert
 void                 zs_value_Insert(acr_dm::FAttr& attr, acr_dm::FValue& row) __attribute__((nothrow));
@@ -112,7 +111,7 @@ inline acr_dm::FValue* zs_value_Last(acr_dm::FAttr& attr) __attribute__((__warn_
 inline i32           zs_value_N(const acr_dm::FAttr& attr) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:acr_dm.FAttr.zs_value.Next
-inline acr_dm::FValue* zs_value_Next(acr_dm::FValue &row) __attribute__((__warn_unused_result__, nothrow));
+inline acr_dm::FValue* attr_zs_value_Next(acr_dm::FValue &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // Since the list is singly-linked, use linear search to locate the element.
 // func:acr_dm.FAttr.zs_value.Remove
@@ -282,6 +281,9 @@ void                 ind_tuple_Remove(acr_dm::FTuple& row) __attribute__((nothro
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:acr_dm.FDb.ind_tuple.Reserve
 void                 ind_tuple_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:acr_dm.FDb.ind_tuple.AbsReserve
+void                 ind_tuple_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -560,17 +562,6 @@ inline void          source_OrBits(acr_dm::Source& parent, acr_dm::Source &rhs) 
 // func:acr_dm.Source.source.Sup
 inline i32           source_Sup(acr_dm::Source& parent) __attribute__((__warn_unused_result__, nothrow));
 
-// proceed to next item
-// func:acr_dm.Source.source_bitcurs.Next
-void                 Source_source_bitcurs_Next(Source_source_bitcurs &curs);
-// func:acr_dm.Source.source_bitcurs.Reset
-inline void          Source_source_bitcurs_Reset(Source_source_bitcurs &curs, acr_dm::Source &parent) __attribute__((nothrow));
-// cursor points to valid item
-// func:acr_dm.Source.source_bitcurs.ValidQ
-inline bool          Source_source_bitcurs_ValidQ(Source_source_bitcurs &curs) __attribute__((nothrow));
-// item access
-// func:acr_dm.Source.source_bitcurs.Access
-inline int&          Source_source_bitcurs_Access(Source_source_bitcurs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:acr_dm.Source..Init
 inline void          Source_Init(acr_dm::Source& parent);
@@ -582,14 +573,15 @@ inline void          Source_Init(acr_dm::Source& parent);
 // global access: bh_tuple (Bheap, sort field rowid)
 // access: acr_dm.FAttr.p_tuple (Upptr)
 struct FTuple { // acr_dm.FTuple
-    acr_dm::FTuple*   ind_tuple_next;   // hash next
-    i32               bh_tuple_idx;     // index in heap; -1 means not-in-heap
-    algo::cstring     key;              //
-    acr_dm::Rowid     rowid;            //
-    acr_dm::FAttr*    zs_attr_head;     // zero-terminated singly linked list
-    i32               zs_attr_n;        // zero-terminated singly linked list
-    acr_dm::FAttr*    zs_attr_tail;     // pointer to last element
-    acr_dm::Source    source;           //
+    acr_dm::FTuple*   ind_tuple_next;      // hash next
+    u32               ind_tuple_hashval;   // hash value
+    i32               bh_tuple_idx;        // index in heap; -1 means not-in-heap
+    algo::cstring     key;                 //
+    acr_dm::Rowid     rowid;               //
+    acr_dm::FAttr*    zs_attr_head;        // zero-terminated singly linked list
+    i32               zs_attr_n;           // zero-terminated singly linked list
+    acr_dm::FAttr*    zs_attr_tail;        // pointer to last element
+    acr_dm::Source    source;              //
     // reftype Llist of acr_dm.FTuple.zs_attr prohibits copy
     // func:acr_dm.FTuple..AssignOp
     inline acr_dm::FTuple& operator =(const acr_dm::FTuple &rhs) = delete;
@@ -622,7 +614,7 @@ inline bool          zs_attr_EmptyQ(acr_dm::FTuple& tuple) __attribute__((__warn
 inline acr_dm::FAttr* zs_attr_First(acr_dm::FTuple& tuple) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:acr_dm.FTuple.zs_attr.InLlistQ
-inline bool          zs_attr_InLlistQ(acr_dm::FAttr& row) __attribute__((__warn_unused_result__, nothrow));
+inline bool          tuple_zs_attr_InLlistQ(acr_dm::FAttr& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:acr_dm.FTuple.zs_attr.Insert
 void                 zs_attr_Insert(acr_dm::FTuple& tuple, acr_dm::FAttr& row) __attribute__((nothrow));
@@ -634,7 +626,7 @@ inline acr_dm::FAttr* zs_attr_Last(acr_dm::FTuple& tuple) __attribute__((__warn_
 inline i32           zs_attr_N(const acr_dm::FTuple& tuple) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:acr_dm.FTuple.zs_attr.Next
-inline acr_dm::FAttr* zs_attr_Next(acr_dm::FAttr &row) __attribute__((__warn_unused_result__, nothrow));
+inline acr_dm::FAttr* tuple_zs_attr_Next(acr_dm::FAttr &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // Since the list is singly-linked, use linear search to locate the element.
 // func:acr_dm.FTuple.zs_attr.Remove
@@ -672,10 +664,10 @@ void                 FTuple_Uninit(acr_dm::FTuple& tuple) __attribute__((nothrow
 // global access: value (Lary, by rowid)
 // access: acr_dm.FAttr.zs_value (Llist)
 struct FValue { // acr_dm.FValue
-    acr_dm::FValue*   zs_value_next;   // zslist link; -1 means not-in-list
-    algo::cstring     value;           //
-    acr_dm::FAttr*    p_attr;          // reference to parent row
-    acr_dm::Source    source;          //
+    acr_dm::FValue*   attr_zs_value_next;   // zslist link; -1 means not-in-list
+    algo::cstring     value;                //
+    acr_dm::FAttr*    p_attr;               // reference to parent row
+    acr_dm::Source    source;               //
     // func:acr_dm.FValue..AssignOp
     inline acr_dm::FValue& operator =(const acr_dm::FValue &rhs) = delete;
     // func:acr_dm.FValue..CopyCtor
@@ -795,15 +787,6 @@ struct _db_bh_tuple_curs {
     int            temp_max;      // max number of elements possible in the helper heap
     _db_bh_tuple_curs() : parent(NULL), temp_elems(NULL), temp_n(0), temp_max(0) {}
     ~_db_bh_tuple_curs();
-};
-
-
-struct Source_source_bitcurs {// cursor
-    typedef int& ChildType;
-    u8* elems;
-    int n_elems;
-    int bit;
-    Source_source_bitcurs() : elems(0), n_elems(0), bit(0) {}
 };
 
 

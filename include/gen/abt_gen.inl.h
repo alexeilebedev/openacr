@@ -35,6 +35,7 @@
 // Set all fields to initial values.
 inline void abt::FArch_Init(abt::FArch& arch) {
     arch.ind_arch_next = (abt::FArch*)-1; // (abt.FDb.ind_arch) not-in-hash
+    arch.ind_arch_hashval = 0; // stored hash value
 }
 
 // --- abt.FArch..Ctor
@@ -61,6 +62,7 @@ inline  abt::FBuilddir::~FBuilddir() {
 // Set all fields to initial values.
 inline void abt::FCfg_Init(abt::FCfg& cfg) {
     cfg.ind_cfg_next = (abt::FCfg*)-1; // (abt.FDb.ind_cfg) not-in-hash
+    cfg.ind_cfg_hashval = 0; // stored hash value
 }
 
 // --- abt.FCfg..Ctor
@@ -77,6 +79,7 @@ inline  abt::FCfg::~FCfg() {
 // Set all fields to initial values.
 inline void abt::FCompiler_Init(abt::FCompiler& compiler) {
     compiler.ind_compiler_next = (abt::FCompiler*)-1; // (abt.FDb.ind_compiler) not-in-hash
+    compiler.ind_compiler_hashval = 0; // stored hash value
 }
 
 // --- abt.FCompiler..Ctor
@@ -1835,6 +1838,7 @@ inline void abt::FFilestat_Init(abt::FFilestat& filestat) {
     filestat.isdir = bool(false);
     filestat.exists = bool(false);
     filestat.ind_filestat_next = (abt::FFilestat*)-1; // (abt.FDb.ind_filestat) not-in-hash
+    filestat.ind_filestat_hashval = 0; // stored hash value
 }
 
 // --- abt.FFilestat..Ctor
@@ -1854,8 +1858,9 @@ inline void abt::FInclude_Init(abt::FInclude& include) {
     include.p_header = NULL;
     include.wantprint = bool(false);
     include.ind_include_next = (abt::FInclude*)-1; // (abt.FDb.ind_include) not-in-hash
-    include.zd_include_next = (abt::FInclude*)-1; // (abt.FSrcfile.zd_include) not-in-list
-    include.zd_include_prev = NULL; // (abt.FSrcfile.zd_include)
+    include.ind_include_hashval = 0; // stored hash value
+    include.srcfile_zd_include_next = (abt::FInclude*)-1; // (abt.FSrcfile.zd_include) not-in-list
+    include.srcfile_zd_include_prev = NULL; // (abt.FSrcfile.zd_include)
 }
 
 // --- abt.FInclude..Ctor
@@ -1872,6 +1877,7 @@ inline  abt::FInclude::~FInclude() {
 // Set all fields to initial values.
 inline void abt::FNs_Init(abt::FNs& ns) {
     ns.ind_ns_next = (abt::FNs*)-1; // (abt.FDb.ind_ns) not-in-hash
+    ns.ind_ns_hashval = 0; // stored hash value
 }
 
 // --- abt.FNs..Ctor
@@ -1900,9 +1906,9 @@ inline abt::FInclude* abt::zd_include_First(abt::FSrcfile& srcfile) {
 
 // --- abt.FSrcfile.zd_include.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool abt::zd_include_InLlistQ(abt::FInclude& row) {
+inline bool abt::srcfile_zd_include_InLlistQ(abt::FInclude& row) {
     bool result = false;
-    result = !(row.zd_include_next == (abt::FInclude*)-1);
+    result = !(row.srcfile_zd_include_next == (abt::FInclude*)-1);
     return result;
 }
 
@@ -1922,14 +1928,14 @@ inline i32 abt::zd_include_N(const abt::FSrcfile& srcfile) {
 
 // --- abt.FSrcfile.zd_include.Next
 // Return pointer to next element in the list
-inline abt::FInclude* abt::zd_include_Next(abt::FInclude &row) {
-    return row.zd_include_next;
+inline abt::FInclude* abt::srcfile_zd_include_Next(abt::FInclude &row) {
+    return row.srcfile_zd_include_next;
 }
 
 // --- abt.FSrcfile.zd_include.Prev
 // Return pointer to previous element in the list
-inline abt::FInclude* abt::zd_include_Prev(abt::FInclude &row) {
-    return row.zd_include_prev;
+inline abt::FInclude* abt::srcfile_zd_include_Prev(abt::FInclude &row) {
+    return row.srcfile_zd_include_prev;
 }
 
 // --- abt.FSrcfile.zd_include.qLast
@@ -1955,7 +1961,7 @@ inline bool abt::srcfile_zd_include_curs_ValidQ(srcfile_zd_include_curs &curs) {
 // --- abt.FSrcfile.zd_include_curs.Next
 // proceed to next item
 inline void abt::srcfile_zd_include_curs_Next(srcfile_zd_include_curs &curs) {
-    abt::FInclude *next = (*curs.row).zd_include_next;
+    abt::FInclude *next = (*curs.row).srcfile_zd_include_next;
     curs.row = next;
 }
 
@@ -2176,6 +2182,7 @@ inline  abt::FSyscmddep::~FSyscmddep() {
 // Set all fields to initial values.
 inline void abt::FSyslib_Init(abt::FSyslib& syslib) {
     syslib.ind_syslib_next = (abt::FSyslib*)-1; // (abt.FDb.ind_syslib) not-in-hash
+    syslib.ind_syslib_hashval = 0; // stored hash value
 }
 
 // --- abt.FSyslib..Ctor
@@ -2616,6 +2623,7 @@ inline void abt::FTargsrc_Init(abt::FTargsrc& targsrc) {
     targsrc.p_target = NULL;
     targsrc.target_c_targsrc_in_ary = bool(false);
     targsrc.ind_targsrc_next = (abt::FTargsrc*)-1; // (abt.FDb.ind_targsrc) not-in-hash
+    targsrc.ind_targsrc_hashval = 0; // stored hash value
 }
 
 // --- abt.FTargsrc..Ctor
@@ -2653,6 +2661,7 @@ inline  abt::FToolOpt::FToolOpt() {
 // Set all fields to initial values.
 inline void abt::FUname_Init(abt::FUname& uname) {
     uname.ind_uname_next = (abt::FUname*)-1; // (abt.FDb.ind_uname) not-in-hash
+    uname.ind_uname_hashval = 0; // stored hash value
 }
 
 // --- abt.FUname..Ctor

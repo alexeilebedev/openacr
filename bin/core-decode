@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+# Copyright (C) 2025-2026 AlgoRND
+#
+# find  latest file in current folder   decode it
+
+set -e
+
+# Parameters
+silent=${1:-0}      # 1 = silent, 0 = normal
+core_dir=${2:-.}    # directory to search for core files
+
+# Find newest core file in specified directory
+core=$(find "$core_dir" -maxdepth 1 -type f -name "core.*" -printf "%T@ %p\n" 2>/dev/null \
+           | sort -nr | head -1 | awk '{print $2}')
+
+if [ -z "$core" ]; then
+    if [ "$silent" -ne 1 ]; then
+        echo "no core file found in $core_dir"
+    fi
+    exit 1
+fi
+
+echo "core found: $core"
+
+# Extract exe name from filename: core.<exe>.pid.ts
+exe=$(basename "$core" | cut -d'.' -f2)
+echo "exe: $exe"
+
+# Find matching executable in local system
+bin=$(find . -type f -executable -name "$exe" -print -quit)
+[ -z "$bin" ] && { echo "binary $exe not found"; exit 1; }
+echo "binary: $bin"
+
+# Determine decoded file location in the same folder as core
+core_folder=$(dirname "$core")
+decoded_core="$core_folder/decoded_core.log"
+
+# Decode
+gdb --batch \
+    -ex "thread apply all bt full" \
+    "$bin" "$core" \
+    > "$decoded_core" 2>&1
+
+# Exclude warnings / empty lines
+# grep -v "Can't open file" "$decoded_core" | grep -v '^$'
+echo "decoded core saved to: $decoded_core"

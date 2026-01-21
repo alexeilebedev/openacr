@@ -56,10 +56,12 @@ All allocations are done through global `atf_comp::_db` [atf_comp.FDb](#atf_comp
 |Ctype|Ssimfile|Create|Access|
 |---|---|---|---|
 |[atf_comp.FComptest](#atf_comp-fcomptest)|[atfdb.comptest](/txt/ssimdb/atfdb/comptest.md)|FDb.comptest (Lary)|comptest (Lary, by rowid)|ind_comptest (Thash, hash field comptest)|zd_sel_comptest (Llist)|zd_run_comptest (Llist)|zd_out_comptest (Llist)|
+|[atf_comp.FCovdir](#atf_comp-fcovdir)||FDb.covdir (Lary)|covdir (Lary, by rowid)|zd_covdir_free (Llist)|
+||||FComptest.c_covdir (Ptr)|
 |[atf_comp.FDb](#atf_comp-fdb)||FDb._db (Global)|
 |[atf_comp.FTargs](#atf_comp-ftargs)|[atfdb.targs](/txt/ssimdb/atfdb/targs.md)|FDb.targs (Tpool)|zd_out_targs (Llist)|
 ||||FComptest.c_targs (Ptr)|
-|[atf_comp.FTfilt](#atf_comp-ftfilt)|[atfdb.tfilt](/txt/ssimdb/atfdb/tfilt.md)|FDb.tfilt (Tpool)|zd_out_tfilt (Llist)|
+|[atf_comp.FTfilt](#atf_comp-ftfilt)|[atfdb.tfilt](/txt/ssimdb/atfdb/tfilt.md)|FDb.tfilt (Tpool)|zd_out_tfilt (Llist)|ind_tfilt (Thash, hash field comptest)|
 ||||FComptest.c_tfilt (Ptr)|
 |[atf_comp.FTmsg](#atf_comp-ftmsg)|[atfdb.tmsg](/txt/ssimdb/atfdb/tmsg.md)|FDb.tmsg (Tpool)|zd_out_tmsg (Llist)|
 ||||FComptest.zd_tmsg (Llist)|
@@ -82,15 +84,17 @@ All allocations are done through global `atf_comp::_db` [atf_comp.FDb](#atf_comp
 |atf_comp.FComptest.finish|[algo.SchedTime](/txt/protocol/algo/SchedTime.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
 |atf_comp.FComptest.elapsed|double|[Val](/txt/exe/amc/reftypes.md#val)|||
 |atf_comp.FComptest.thook|[algo_lib.FTimehook](/txt/lib/algo_lib/README.md#algo_lib-ftimehook)|[Val](/txt/exe/amc/reftypes.md#val)|||
-|atf_comp.FComptest.success|bool|[Val](/txt/exe/amc/reftypes.md#val)|||
+|atf_comp.FComptest.success|bool|[Val](/txt/exe/amc/reftypes.md#val)||Success so far|
+|atf_comp.FComptest.nrun|i32|[Val](/txt/exe/amc/reftypes.md#val)||Number of times the test ran|
 |atf_comp.FComptest.file_memcheck|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
 |atf_comp.FComptest.file_callgrind_log|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
 |atf_comp.FComptest.file_callgrind_out|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
-|atf_comp.FComptest.covdir|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
 |atf_comp.FComptest.zd_tmsg|[atf_comp.FTmsg](/txt/exe/atf_comp/internals.md#atf_comp-ftmsg)|[Llist](/txt/exe/amc/reftypes.md#llist)|||
 |atf_comp.FComptest.need_write|bool|[Val](/txt/exe/amc/reftypes.md#val)||Component test modified during runtime, needs to be written back|
 |atf_comp.FComptest.err|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)||Error string|
 |atf_comp.FComptest.filter_command|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|atf_comp.FComptest.c_covdir|[atf_comp.FCovdir](/txt/exe/atf_comp/internals.md#atf_comp-fcovdir)|[Ptr](/txt/exe/amc/reftypes.md#ptr)|||
+|atf_comp.FComptest.dir|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
 
 #### Struct FComptest
 <a href="#struct-fcomptest"></a>
@@ -102,7 +106,10 @@ struct FComptest { // atf_comp.FComptest
     algo::Smallstr50       comptest;               //
     i32                    timeout;                //   10
     bool                   memcheck;               //   true
+    bool                   coverage;               //   true
     u8                     exit_code;              //   0  Exit code to check
+    i32                    ncore;                  //   1
+    i32                    repeat;                 //   1  Number of times to repeat the test
     algo::Comment          comment;                //
     algo::cstring          file_test_out;          //
     algo::cstring          file_test_in;           //
@@ -114,18 +121,21 @@ struct FComptest { // atf_comp.FComptest
     algo::SchedTime        finish;                 //
     double                 elapsed;                //   0.0
     algo_lib::FTimehook    thook;                  //
-    bool                   success;                //   false
+    bool                   success;                //   false  Success so far
+    i32                    nrun;                   //   0  Number of times the test ran
     algo::cstring          file_memcheck;          //
     algo::cstring          file_callgrind_log;     //
     algo::cstring          file_callgrind_out;     //
-    algo::cstring          covdir;                 //
     atf_comp::FTmsg*       zd_tmsg_head;           // zero-terminated doubly linked list
     i32                    zd_tmsg_n;              // zero-terminated doubly linked list
     atf_comp::FTmsg*       zd_tmsg_tail;           // pointer to last element
     bool                   need_write;             //   false  Component test modified during runtime, needs to be written back
     algo::cstring          err;                    // Error string
     algo::cstring          filter_command;         //
+    atf_comp::FCovdir*     c_covdir;               // optional pointer
+    algo::cstring          dir;                    //
     atf_comp::FComptest*   ind_comptest_next;      // hash next
+    u32                    ind_comptest_hashval;   // hash value
     atf_comp::FComptest*   zd_sel_comptest_next;   // zslist link; -1 means not-in-list
     atf_comp::FComptest*   zd_sel_comptest_prev;   // previous element
     atf_comp::FComptest*   zd_run_comptest_next;   // zslist link; -1 means not-in-list
@@ -158,6 +168,39 @@ private:
 };
 ```
 
+#### atf_comp.FCovdir - 
+<a href="#atf_comp-fcovdir"></a>
+
+#### atf_comp.FCovdir Fields
+<a href="#atf_comp-fcovdir-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|atf_comp.FCovdir.covdir|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+
+#### Struct FCovdir
+<a href="#struct-fcovdir"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/atf_comp_gen.h](/include/gen/atf_comp_gen.h)
+```
+struct FCovdir { // atf_comp.FCovdir
+    algo::cstring        covdir;                //
+    atf_comp::FCovdir*   zd_covdir_free_next;   // zslist link; -1 means not-in-list
+    atf_comp::FCovdir*   zd_covdir_free_prev;   // previous element
+    // func:atf_comp.FCovdir..AssignOp
+    inline atf_comp::FCovdir& operator =(const atf_comp::FCovdir &rhs) = delete;
+    // func:atf_comp.FCovdir..CopyCtor
+    inline               FCovdir(const atf_comp::FCovdir &rhs) = delete;
+private:
+    // func:atf_comp.FCovdir..Ctor
+    inline               FCovdir() __attribute__((nothrow));
+    // func:atf_comp.FCovdir..Dtor
+    inline               ~FCovdir() __attribute__((nothrow));
+    friend atf_comp::FCovdir&   covdir_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend atf_comp::FCovdir*   covdir_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 covdir_RemoveAll() __attribute__((nothrow));
+    friend void                 covdir_RemoveLast() __attribute__((nothrow));
+};
+```
+
 #### atf_comp.FDb - In-memory database for atf_comp
 <a href="#atf_comp-fdb"></a>
 
@@ -170,7 +213,7 @@ private:
 |atf_comp.FDb.tempdir|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|"temp/atf_comp"||
 |atf_comp.FDb.comptest|[atf_comp.FComptest](/txt/exe/atf_comp/internals.md#atf_comp-fcomptest)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
 |atf_comp.FDb.ind_comptest|[atf_comp.FComptest](/txt/exe/atf_comp/internals.md#atf_comp-fcomptest)|[Thash](/txt/exe/amc/reftypes.md#thash)|||
-|atf_comp.FDb.compdir|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|atf_comp.FDb.bindir|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)||Directory with binaries|
 |atf_comp.FDb.report|[report.atf_comp](/txt/protocol/report/README.md#report-atf_comp)|[Val](/txt/exe/amc/reftypes.md#val)||Final report|
 |atf_comp.FDb.zd_sel_comptest|[atf_comp.FComptest](/txt/exe/atf_comp/internals.md#atf_comp-fcomptest)|[Llist](/txt/exe/amc/reftypes.md#llist)|||
 |atf_comp.FDb.targs|[atf_comp.FTargs](/txt/exe/atf_comp/internals.md#atf_comp-ftargs)|[Tpool](/txt/exe/amc/reftypes.md#tpool)|||
@@ -182,6 +225,11 @@ private:
 |atf_comp.FDb.nchange|i32|[Val](/txt/exe/amc/reftypes.md#val)|||
 |atf_comp.FDb.zd_out_tfilt|[atf_comp.FTfilt](/txt/exe/atf_comp/internals.md#atf_comp-ftfilt)|[Llist](/txt/exe/amc/reftypes.md#llist)|||
 |atf_comp.FDb.zd_out_targs|[atf_comp.FTargs](/txt/exe/atf_comp/internals.md#atf_comp-ftargs)|[Llist](/txt/exe/amc/reftypes.md#llist)|||
+|atf_comp.FDb.covdir|[atf_comp.FCovdir](/txt/exe/atf_comp/internals.md#atf_comp-fcovdir)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
+|atf_comp.FDb.zd_covdir_free|[atf_comp.FCovdir](/txt/exe/atf_comp/internals.md#atf_comp-fcovdir)|[Llist](/txt/exe/amc/reftypes.md#llist)|||
+|atf_comp.FDb.ncore_used|i32|[Val](/txt/exe/amc/reftypes.md#val)||Number of cores 'used' by running child tests|
+|atf_comp.FDb.ind_tfilt|[atf_comp.FTfilt](/txt/exe/atf_comp/internals.md#atf_comp-ftfilt)|[Thash](/txt/exe/amc/reftypes.md#thash)|||
+|atf_comp.FDb.th_runtest|[algo_lib.FTimehook](/txt/lib/algo_lib/README.md#algo_lib-ftimehook)|[Val](/txt/exe/amc/reftypes.md#val)|||
 
 #### Struct FDb
 <a href="#struct-fdb"></a>
@@ -195,7 +243,7 @@ struct FDb { // atf_comp.FDb: In-memory database for atf_comp
     atf_comp::FComptest**   ind_comptest_buckets_elems;   // pointer to bucket array
     i32                     ind_comptest_buckets_n;       // number of elements in bucket array
     i32                     ind_comptest_n;               // number of elements in the hash table
-    algo::cstring           compdir;                      //
+    algo::cstring           bindir;                       // Directory with binaries
     report::atf_comp        report;                       // Final report
     atf_comp::FComptest*    zd_sel_comptest_head;         // zero-terminated doubly linked list
     i32                     zd_sel_comptest_n;            // zero-terminated doubly linked list
@@ -209,8 +257,8 @@ struct FDb { // atf_comp.FDb: In-memory database for atf_comp
     atf_comp::FComptest*    zd_run_comptest_head;         // zero-terminated doubly linked list
     i32                     zd_run_comptest_n;            // zero-terminated doubly linked list
     atf_comp::FComptest*    zd_run_comptest_tail;         // pointer to last element
-    algo::SchedTime         zd_run_comptest_next;         // atf_comp.FDb.zd_run_comptest          Next invocation time
-    algo::SchedTime         zd_run_comptest_delay;        // atf_comp.FDb.zd_run_comptest          Delay between invocations
+    algo::SchedTime         zd_run_comptest_next;         // atf_comp.FDb.zd_run_comptest                        Next invocation time
+    algo::SchedTime         zd_run_comptest_delay;        // atf_comp.FDb.zd_run_comptest                        Delay between invocations
     atf_comp::FTmsg*        zd_out_tmsg_head;             // zero-terminated doubly linked list
     i32                     zd_out_tmsg_n;                // zero-terminated doubly linked list
     atf_comp::FTmsg*        zd_out_tmsg_tail;             // pointer to last element
@@ -224,6 +272,16 @@ struct FDb { // atf_comp.FDb: In-memory database for atf_comp
     atf_comp::FTargs*       zd_out_targs_head;            // zero-terminated doubly linked list
     i32                     zd_out_targs_n;               // zero-terminated doubly linked list
     atf_comp::FTargs*       zd_out_targs_tail;            // pointer to last element
+    atf_comp::FCovdir*      covdir_lary[32];              // level array
+    i32                     covdir_n;                     // number of elements in array
+    atf_comp::FCovdir*      zd_covdir_free_head;          // zero-terminated doubly linked list
+    i32                     zd_covdir_free_n;             // zero-terminated doubly linked list
+    atf_comp::FCovdir*      zd_covdir_free_tail;          // pointer to last element
+    i32                     ncore_used;                   //   0  Number of cores 'used' by running child tests
+    atf_comp::FTfilt**      ind_tfilt_buckets_elems;      // pointer to bucket array
+    i32                     ind_tfilt_buckets_n;          // number of elements in bucket array
+    i32                     ind_tfilt_n;                  // number of elements in the hash table
+    algo_lib::FTimehook     th_runtest;                   //
     atf_comp::trace         trace;                        //
 };
 ```
@@ -283,6 +341,8 @@ struct FTfilt { // atf_comp.FTfilt
     atf_comp::FTfilt*   tfilt_next;          // Pointer to next free element int tpool
     atf_comp::FTfilt*   zd_out_tfilt_next;   // zslist link; -1 means not-in-list
     atf_comp::FTfilt*   zd_out_tfilt_prev;   // previous element
+    atf_comp::FTfilt*   ind_tfilt_next;      // hash next
+    u32                 ind_tfilt_hashval;   // hash value
     algo::Smallstr50    comptest;            //
     algo::cstring       filter;              //
     algo::Comment       comment;             //
@@ -317,14 +377,14 @@ private:
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/atf_comp_gen.h](/include/gen/atf_comp_gen.h)
 ```
 struct FTmsg { // atf_comp.FTmsg
-    atf_comp::FTmsg*   zd_tmsg_next;       // zslist link; -1 means not-in-list
-    atf_comp::FTmsg*   zd_tmsg_prev;       // previous element
-    atf_comp::FTmsg*   tmsg_next;          // Pointer to next free element int tpool
-    atf_comp::FTmsg*   zd_out_tmsg_next;   // zslist link; -1 means not-in-list
-    atf_comp::FTmsg*   zd_out_tmsg_prev;   // previous element
-    algo::Smallstr50   tmsg;               //
-    bool               istuple;            //   false
-    algo::cstring      msg;                //
+    atf_comp::FTmsg*   comptest_zd_tmsg_next;   // zslist link; -1 means not-in-list
+    atf_comp::FTmsg*   comptest_zd_tmsg_prev;   // previous element
+    atf_comp::FTmsg*   tmsg_next;               // Pointer to next free element int tpool
+    atf_comp::FTmsg*   zd_out_tmsg_next;        // zslist link; -1 means not-in-list
+    atf_comp::FTmsg*   zd_out_tmsg_prev;        // previous element
+    algo::Smallstr50   tmsg;                    //
+    bool               istuple;                 //   false
+    algo::cstring      msg;                     //
     // func:atf_comp.FTmsg..AssignOp
     inline atf_comp::FTmsg& operator =(const atf_comp::FTmsg &rhs) = delete;
     // func:atf_comp.FTmsg..CopyCtor

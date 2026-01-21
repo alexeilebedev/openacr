@@ -24,6 +24,7 @@
 
 #pragma once
 #include "include/gen/algo_gen.h"
+#include "include/gen/algo_lib_gen.h"
 //#pragma endinclude
 // gen:ns_enums
 
@@ -56,7 +57,7 @@ enum command_FieldIdEnum {                             // command.FieldId.value
     ,command_FieldId_jcdb                       = 23
     ,command_FieldId_cache                      = 24
     ,command_FieldId_shortlink                  = 25
-    ,command_FieldId_readme                     = 26
+    ,command_FieldId_readmefile                 = 26
     ,command_FieldId_ns                         = 27
     ,command_FieldId_section                    = 28
     ,command_FieldId_update                     = 29
@@ -143,200 +144,222 @@ enum command_FieldIdEnum {                             // command.FieldId.value
     ,command_FieldId_showcpp                    = 110
     ,command_FieldId_msgtype                    = 111
     ,command_FieldId_anonfld                    = 112
-    ,command_FieldId_sigcheck                   = 113
-    ,command_FieldId_data_dir                   = 114
-    ,command_FieldId_related                    = 115
-    ,command_FieldId_notssimfile                = 116
-    ,command_FieldId_checkable                  = 117
-    ,command_FieldId_r                          = 118
-    ,command_FieldId_nsdb                       = 119
-    ,command_FieldId_fkey                       = 120
-    ,command_FieldId_start                      = 121
-    ,command_FieldId_stop                       = 122
-    ,command_FieldId_abort                      = 123
-    ,command_FieldId_shell                      = 124
-    ,command_FieldId_serv                       = 125
-    ,command_FieldId_in_dir                     = 126
-    ,command_FieldId_out_dir                    = 127
-    ,command_FieldId_proto                      = 128
-    ,command_FieldId_trace                      = 129
-    ,command_FieldId_key                        = 130
-    ,command_FieldId_include                    = 131
-    ,command_FieldId_dot                        = 132
-    ,command_FieldId_xns                        = 133
-    ,command_FieldId_noinput                    = 134
-    ,command_FieldId_render                     = 135
-    ,command_FieldId_id                         = 136
-    ,command_FieldId_file_prefix                = 137
-    ,command_FieldId_nchild                     = 138
-    ,command_FieldId_blocking                   = 139
-    ,command_FieldId_nmsg                       = 140
-    ,command_FieldId_timeout                    = 141
-    ,command_FieldId_recvdelay_ns               = 142
-    ,command_FieldId_senddelay_ns               = 143
-    ,command_FieldId_msgsize_min                = 144
-    ,command_FieldId_msgsize_max                = 145
-    ,command_FieldId_bufsize                    = 146
-    ,command_FieldId_recvdelay                  = 147
-    ,command_FieldId_pkgdata                    = 148
-    ,command_FieldId_diff                       = 149
-    ,command_FieldId_push                       = 150
-    ,command_FieldId_remove                     = 151
-    ,command_FieldId_origin                     = 152
-    ,command_FieldId_ref                        = 153
-    ,command_FieldId_showrec                    = 154
-    ,command_FieldId_showfile                   = 155
-    ,command_FieldId_R                          = 156
-    ,command_FieldId_reset                      = 157
-    ,command_FieldId_checkclean                 = 158
-    ,command_FieldId_stat                       = 159
-    ,command_FieldId_annotate                   = 160
-    ,command_FieldId_data_in                    = 161
-    ,command_FieldId_binpath                    = 162
-    ,command_FieldId_amctest                    = 163
-    ,command_FieldId_dofork                     = 164
-    ,command_FieldId_q                          = 165
-    ,command_FieldId_cijob                      = 166
-    ,command_FieldId_capture                    = 167
-    ,command_FieldId_exec                       = 168
-    ,command_FieldId_astr                       = 169
-    ,command_FieldId_anum                       = 170
-    ,command_FieldId_adbl                       = 171
-    ,command_FieldId_aflag                      = 172
-    ,command_FieldId_str                        = 173
-    ,command_FieldId_num                        = 174
-    ,command_FieldId_dbl                        = 175
-    ,command_FieldId_flag                       = 176
-    ,command_FieldId_dstr                       = 177
-    ,command_FieldId_dnum                       = 178
-    ,command_FieldId_ddbl                       = 179
-    ,command_FieldId_dflag                      = 180
-    ,command_FieldId_mstr                       = 181
-    ,command_FieldId_mnum                       = 182
-    ,command_FieldId_mdbl                       = 183
-    ,command_FieldId_amnum                      = 184
-    ,command_FieldId_fconst                     = 185
-    ,command_FieldId_cconst                     = 186
-    ,command_FieldId_dregx                      = 187
-    ,command_FieldId_dpkey                      = 188
-    ,command_FieldId_comptest                   = 189
-    ,command_FieldId_mdbg                       = 190
-    ,command_FieldId_run                        = 191
-    ,command_FieldId_printinput                 = 192
-    ,command_FieldId_normalize                  = 193
-    ,command_FieldId_covcapture                 = 194
-    ,command_FieldId_covcheck                   = 195
-    ,command_FieldId_compdir                    = 196
-    ,command_FieldId_check_untracked            = 197
-    ,command_FieldId_memcheck                   = 198
-    ,command_FieldId_callgrind                  = 199
-    ,command_FieldId_stream                     = 200
-    ,command_FieldId_i                          = 201
-    ,command_FieldId_b                          = 202
-    ,command_FieldId_covdir                     = 203
-    ,command_FieldId_logfile                    = 204
-    ,command_FieldId_runcmd                     = 205
-    ,command_FieldId_exclude                    = 206
-    ,command_FieldId_mergepath                  = 207
-    ,command_FieldId_gcov                       = 208
-    ,command_FieldId_ssim                       = 209
-    ,command_FieldId_xmlpretty                  = 210
-    ,command_FieldId_summary                    = 211
-    ,command_FieldId_reprofile                  = 212
-    ,command_FieldId_args                       = 213
-    ,command_FieldId_inputfile                  = 214
-    ,command_FieldId_fuzzstrat                  = 215
-    ,command_FieldId_seed                       = 216
-    ,command_FieldId_testprob                   = 217
-    ,command_FieldId_gtblacttst                 = 218
-    ,command_FieldId_mr                         = 219
-    ,command_FieldId_note                       = 220
-    ,command_FieldId_skip_init                  = 221
-    ,command_FieldId_skip_git_init              = 222
-    ,command_FieldId_ncmd                       = 223
-    ,command_FieldId_nofork                     = 224
-    ,command_FieldId_perf_secs                  = 225
-    ,command_FieldId_pertest_timeout            = 226
-    ,command_FieldId_stats                      = 227
-    ,command_FieldId_enable                     = 228
-    ,command_FieldId_disable                    = 229
-    ,command_FieldId_gc                         = 230
-    ,command_FieldId_dir                        = 231
-    ,command_FieldId_hitrate                    = 232
-    ,command_FieldId_after                      = 233
-    ,command_FieldId_selector                   = 234
-    ,command_FieldId_fields                     = 235
-    ,command_FieldId_accept                     = 236
-    ,command_FieldId_approve                    = 237
-    ,command_FieldId_needs_work                 = 238
-    ,command_FieldId_authdir                    = 239
-    ,command_FieldId_gitdir                     = 240
-    ,command_FieldId_show_gitlab_system_notes   = 241
-    ,command_FieldId_attach                     = 242
-    ,command_FieldId_catchthrow                 = 243
-    ,command_FieldId_tui                        = 244
-    ,command_FieldId_bcmd                       = 245
-    ,command_FieldId_emacs                      = 246
-    ,command_FieldId_manywin                    = 247
-    ,command_FieldId_follow_child               = 248
-    ,command_FieldId_py                         = 249
-    ,command_FieldId_writessimfile              = 250
-    ,command_FieldId_url                        = 251
-    ,command_FieldId_tables                     = 252
-    ,command_FieldId_nologo                     = 253
-    ,command_FieldId_baddbok                    = 254
-    ,command_FieldId_move                       = 255
-    ,command_FieldId_dedup                      = 256
-    ,command_FieldId_commit                     = 257
-    ,command_FieldId_undo                       = 258
-    ,command_FieldId_hash                       = 259
-    ,command_FieldId_expr                       = 260
-    ,command_FieldId_style                      = 261
-    ,command_FieldId_match                      = 262
-    ,command_FieldId_string                     = 263
-    ,command_FieldId_show                       = 264
-    ,command_FieldId_name                       = 265
-    ,command_FieldId_files                      = 266
-    ,command_FieldId_refs                       = 267
-    ,command_FieldId_body                       = 268
-    ,command_FieldId_targsrc                    = 269
-    ,command_FieldId_func                       = 270
-    ,command_FieldId_nextfile                   = 271
-    ,command_FieldId_other                      = 272
-    ,command_FieldId_updateproto                = 273
-    ,command_FieldId_listfunc                   = 274
-    ,command_FieldId_iffy                       = 275
-    ,command_FieldId_gen                        = 276
-    ,command_FieldId_showloc                    = 277
-    ,command_FieldId_showstatic                 = 278
-    ,command_FieldId_showsortkey                = 279
-    ,command_FieldId_sortname                   = 280
-    ,command_FieldId_baddecl                    = 281
-    ,command_FieldId_indent                     = 282
-    ,command_FieldId_update_copyright           = 283
-    ,command_FieldId_scriptfile                 = 284
-    ,command_FieldId_linelim                    = 285
-    ,command_FieldId_strayfile                  = 286
-    ,command_FieldId_badchar                    = 287
-    ,command_FieldId_badline                    = 288
-    ,command_FieldId_expand                     = 289
-    ,command_FieldId_ignoreQuote                = 290
-    ,command_FieldId_maxpacket                  = 291
-    ,command_FieldId_db                         = 292
-    ,command_FieldId_createdb                   = 293
-    ,command_FieldId_typetag                    = 294
-    ,command_FieldId_format                     = 295
-    ,command_FieldId_tocamelcase                = 296
-    ,command_FieldId_tolowerunder               = 297
-    ,command_FieldId_pathcomp                   = 298
-    ,command_FieldId_fname                      = 299
-    ,command_FieldId_outseparator               = 300
-    ,command_FieldId_header                     = 301
-    ,command_FieldId_prefer_signed              = 302
-    ,command_FieldId_value                      = 303
+    ,command_FieldId_amc                        = 113
+    ,command_FieldId_sigcheck                   = 114
+    ,command_FieldId_data_dir                   = 115
+    ,command_FieldId_related                    = 116
+    ,command_FieldId_notssimfile                = 117
+    ,command_FieldId_checkable                  = 118
+    ,command_FieldId_r                          = 119
+    ,command_FieldId_nsdb                       = 120
+    ,command_FieldId_fkey                       = 121
+    ,command_FieldId_start                      = 122
+    ,command_FieldId_stop                       = 123
+    ,command_FieldId_abort                      = 124
+    ,command_FieldId_shell                      = 125
+    ,command_FieldId_serv                       = 126
+    ,command_FieldId_in_dir                     = 127
+    ,command_FieldId_out_dir                    = 128
+    ,command_FieldId_proto                      = 129
+    ,command_FieldId_showcomment                = 130
+    ,command_FieldId_trace                      = 131
+    ,command_FieldId_key                        = 132
+    ,command_FieldId_include                    = 133
+    ,command_FieldId_dot                        = 134
+    ,command_FieldId_xns                        = 135
+    ,command_FieldId_noinput                    = 136
+    ,command_FieldId_render                     = 137
+    ,command_FieldId_id                         = 138
+    ,command_FieldId_file_prefix                = 139
+    ,command_FieldId_nchild                     = 140
+    ,command_FieldId_blocking                   = 141
+    ,command_FieldId_nmsg                       = 142
+    ,command_FieldId_timeout                    = 143
+    ,command_FieldId_recvdelay_ns               = 144
+    ,command_FieldId_senddelay_ns               = 145
+    ,command_FieldId_msgsize_min                = 146
+    ,command_FieldId_msgsize_max                = 147
+    ,command_FieldId_bufsize                    = 148
+    ,command_FieldId_recvdelay                  = 149
+    ,command_FieldId_pkgdata                    = 150
+    ,command_FieldId_diff                       = 151
+    ,command_FieldId_push                       = 152
+    ,command_FieldId_remove                     = 153
+    ,command_FieldId_origin                     = 154
+    ,command_FieldId_ref                        = 155
+    ,command_FieldId_showrec                    = 156
+    ,command_FieldId_showfile                   = 157
+    ,command_FieldId_R                          = 158
+    ,command_FieldId_reset                      = 159
+    ,command_FieldId_checkclean                 = 160
+    ,command_FieldId_stat                       = 161
+    ,command_FieldId_annotate                   = 162
+    ,command_FieldId_data_in                    = 163
+    ,command_FieldId_binpath                    = 164
+    ,command_FieldId_amctest                    = 165
+    ,command_FieldId_dofork                     = 166
+    ,command_FieldId_q                          = 167
+    ,command_FieldId_cijob                      = 168
+    ,command_FieldId_capture                    = 169
+    ,command_FieldId_check_clean                = 170
+    ,command_FieldId_exec                       = 171
+    ,command_FieldId_astr                       = 172
+    ,command_FieldId_anum                       = 173
+    ,command_FieldId_adbl                       = 174
+    ,command_FieldId_aflag                      = 175
+    ,command_FieldId_str                        = 176
+    ,command_FieldId_num                        = 177
+    ,command_FieldId_dbl                        = 178
+    ,command_FieldId_flag                       = 179
+    ,command_FieldId_dstr                       = 180
+    ,command_FieldId_dnum                       = 181
+    ,command_FieldId_ddbl                       = 182
+    ,command_FieldId_dflag                      = 183
+    ,command_FieldId_mstr                       = 184
+    ,command_FieldId_mnum                       = 185
+    ,command_FieldId_mdbl                       = 186
+    ,command_FieldId_amnum                      = 187
+    ,command_FieldId_fconst                     = 188
+    ,command_FieldId_cconst                     = 189
+    ,command_FieldId_dregx                      = 190
+    ,command_FieldId_dpkey                      = 191
+    ,command_FieldId_comptest                   = 192
+    ,command_FieldId_mdbg                       = 193
+    ,command_FieldId_run                        = 194
+    ,command_FieldId_printinput                 = 195
+    ,command_FieldId_normalize                  = 196
+    ,command_FieldId_covcapture                 = 197
+    ,command_FieldId_covcheck                   = 198
+    ,command_FieldId_bindir                     = 199
+    ,command_FieldId_check_untracked            = 200
+    ,command_FieldId_memcheck                   = 201
+    ,command_FieldId_callgrind                  = 202
+    ,command_FieldId_stream                     = 203
+    ,command_FieldId_i                          = 204
+    ,command_FieldId_b                          = 205
+    ,command_FieldId_covfast                    = 206
+    ,command_FieldId_minrepeat                  = 207
+    ,command_FieldId_maxrepeat                  = 208
+    ,command_FieldId_covdir                     = 209
+    ,command_FieldId_logfile                    = 210
+    ,command_FieldId_runcmd                     = 211
+    ,command_FieldId_exclude                    = 212
+    ,command_FieldId_mergepath                  = 213
+    ,command_FieldId_gcov                       = 214
+    ,command_FieldId_ssim                       = 215
+    ,command_FieldId_xmlpretty                  = 216
+    ,command_FieldId_summary                    = 217
+    ,command_FieldId_incremental                = 218
+    ,command_FieldId_tempdir                    = 219
+    ,command_FieldId_dbgshell                   = 220
+    ,command_FieldId_reprofile                  = 221
+    ,command_FieldId_args                       = 222
+    ,command_FieldId_inputfile                  = 223
+    ,command_FieldId_fuzzstrat                  = 224
+    ,command_FieldId_seed                       = 225
+    ,command_FieldId_testprob                   = 226
+    ,command_FieldId_gtblacttst                 = 227
+    ,command_FieldId_mr                         = 228
+    ,command_FieldId_note                       = 229
+    ,command_FieldId_skip_init                  = 230
+    ,command_FieldId_skip_git_init              = 231
+    ,command_FieldId_ncmd                       = 232
+    ,command_FieldId_nofork                     = 233
+    ,command_FieldId_perf_secs                  = 234
+    ,command_FieldId_pertest_timeout            = 235
+    ,command_FieldId_stats                      = 236
+    ,command_FieldId_enable                     = 237
+    ,command_FieldId_disable                    = 238
+    ,command_FieldId_gc                         = 239
+    ,command_FieldId_dir                        = 240
+    ,command_FieldId_hitrate                    = 241
+    ,command_FieldId_after                      = 242
+    ,command_FieldId_selector                   = 243
+    ,command_FieldId_fields                     = 244
+    ,command_FieldId_accept                     = 245
+    ,command_FieldId_approve                    = 246
+    ,command_FieldId_needs_work                 = 247
+    ,command_FieldId_authdir                    = 248
+    ,command_FieldId_gitdir                     = 249
+    ,command_FieldId_show_gitlab_system_notes   = 250
+    ,command_FieldId_file                       = 251
+    ,command_FieldId_kv                         = 252
+    ,command_FieldId_output                     = 253
+    ,command_FieldId_attach                     = 254
+    ,command_FieldId_pid                        = 255
+    ,command_FieldId_catchthrow                 = 256
+    ,command_FieldId_tui                        = 257
+    ,command_FieldId_bcmd                       = 258
+    ,command_FieldId_emacs                      = 259
+    ,command_FieldId_manywin                    = 260
+    ,command_FieldId_follow_child               = 261
+    ,command_FieldId_py                         = 262
+    ,command_FieldId_mp                         = 263
+    ,command_FieldId_writessimfile              = 264
+    ,command_FieldId_url                        = 265
+    ,command_FieldId_tables                     = 266
+    ,command_FieldId_nologo                     = 267
+    ,command_FieldId_baddbok                    = 268
+    ,command_FieldId_move                       = 269
+    ,command_FieldId_dedup                      = 270
+    ,command_FieldId_commit                     = 271
+    ,command_FieldId_undo                       = 272
+    ,command_FieldId_hash                       = 273
+    ,command_FieldId_parse_make                 = 274
+    ,command_FieldId_makefile                   = 275
+    ,command_FieldId_expr                       = 276
+    ,command_FieldId_style                      = 277
+    ,command_FieldId_full                       = 278
+    ,command_FieldId_f                          = 279
+    ,command_FieldId_match                      = 280
+    ,command_FieldId_string                     = 281
+    ,command_FieldId_name                       = 282
+    ,command_FieldId_files                      = 283
+    ,command_FieldId_refs                       = 284
+    ,command_FieldId_targsrc                    = 285
+    ,command_FieldId_acrkey                     = 286
+    ,command_FieldId_func                       = 287
+    ,command_FieldId_nextfile                   = 288
+    ,command_FieldId_other                      = 289
+    ,command_FieldId_updateproto                = 290
+    ,command_FieldId_createmissing              = 291
+    ,command_FieldId_iffy                       = 292
+    ,command_FieldId_gen                        = 293
+    ,command_FieldId_showloc                    = 294
+    ,command_FieldId_showstatic                 = 295
+    ,command_FieldId_matchproto                 = 296
+    ,command_FieldId_matchbody                  = 297
+    ,command_FieldId_matchcomment               = 298
+    ,command_FieldId_showsortkey                = 299
+    ,command_FieldId_showbody                   = 300
+    ,command_FieldId_sortname                   = 301
+    ,command_FieldId_printssim                  = 302
+    ,command_FieldId_baddecl                    = 303
+    ,command_FieldId_indent                     = 304
+    ,command_FieldId_update_copyright           = 305
+    ,command_FieldId_scriptfile                 = 306
+    ,command_FieldId_linelim                    = 307
+    ,command_FieldId_strayfile                  = 308
+    ,command_FieldId_badchar                    = 309
+    ,command_FieldId_badline                    = 310
+    ,command_FieldId_expand                     = 311
+    ,command_FieldId_ignoreQuote                = 312
+    ,command_FieldId_maxpacket                  = 313
+    ,command_FieldId_db                         = 314
+    ,command_FieldId_createdb                   = 315
+    ,command_FieldId_typetag                    = 316
+    ,command_FieldId_format                     = 317
+    ,command_FieldId_tocamelcase                = 318
+    ,command_FieldId_tolowerunder               = 319
+    ,command_FieldId_pathcomp                   = 320
+    ,command_FieldId_fname                      = 321
+    ,command_FieldId_outseparator               = 322
+    ,command_FieldId_header                     = 323
+    ,command_FieldId_prefer_signed              = 324
+    ,command_FieldId_value                      = 325
 };
 
-enum { command_FieldIdEnum_N = 304 };
+enum { command_FieldIdEnum_N = 326 };
 
 
 // --- command_abt_cache_Enum
@@ -363,16 +386,15 @@ enum command_atf_cmdline_fconst_Enum {         // command.atf_cmdline.fconst
 enum { command_atf_cmdline_fconst_Enum_N = 3 };
 
 
-// --- command_samp_regx_style_Enum
+// --- command_jkv_output_Enum
 
-enum command_samp_regx_style_Enum {          // command.samp_regx.style
-     command_samp_regx_style_acr       = 0   // ACR-style regx
-    ,command_samp_regx_style_shell     = 1   // Shell-style regx
-    ,command_samp_regx_style_classic   = 2   // Classic regx
-    ,command_samp_regx_style_literal   = 3   // Literal string
+enum command_jkv_output_Enum {        // command.jkv.output
+     command_jkv_output_auto    = 0   // Automatic
+    ,command_jkv_output_json    = 1   // Json only
+    ,command_jkv_output_kv      = 2   // Key-value only
 };
 
-enum { command_samp_regx_style_Enum_N = 4 };
+enum { command_jkv_output_Enum_N = 3 };
 
 
 // --- command_ssimfilt_format_Enum
@@ -404,6 +426,7 @@ namespace command { struct atf_cmdline_mdbl_curs; }
 namespace command { struct atf_cmdline_amnum_curs; }
 namespace command { struct gcache_cmd_curs; }
 namespace command { struct gcli_fields_curs; }
+namespace command { struct jkv_kv_curs; }
 namespace command { struct mdbg_args_curs; }
 namespace command { struct mdbg_b_curs; }
 namespace command { struct sandbox_cmd_curs; }
@@ -433,8 +456,6 @@ namespace command { struct amc_gc_proc; }
 namespace command { struct amc_proc; }
 namespace command { struct amc_vis; }
 namespace command { struct amc_vis_proc; }
-namespace command { struct ams_cat; }
-namespace command { struct ams_cat_proc; }
 namespace command { struct ams_sendtest; }
 namespace command { struct ams_sendtest_proc; }
 namespace command { struct apm; }
@@ -451,6 +472,8 @@ namespace command { struct atf_comp; }
 namespace command { struct atf_comp_proc; }
 namespace command { struct atf_cov; }
 namespace command { struct atf_cov_proc; }
+namespace command { struct atf_exp; }
+namespace command { struct atf_exp_proc; }
 namespace command { struct atf_fuzz; }
 namespace command { struct atf_fuzz_proc; }
 namespace command { struct atf_gcli; }
@@ -467,12 +490,18 @@ namespace command { struct gcache; }
 namespace command { struct gcache_proc; }
 namespace command { struct gcli; }
 namespace command { struct gcli_proc; }
+namespace command { struct generic; }
+namespace command { struct generic_proc; }
+namespace command { struct jkv; }
+namespace command { struct jkv_proc; }
 namespace command { struct mdbg; }
 namespace command { struct mdbg_proc; }
 namespace command { struct mysql2ssim; }
 namespace command { struct mysql2ssim_proc; }
 namespace command { struct orgfile; }
 namespace command { struct orgfile_proc; }
+namespace command { struct samp_make; }
+namespace command { struct samp_make_proc; }
 namespace command { struct samp_meng; }
 namespace command { struct samp_meng_proc; }
 namespace command { struct samp_regx; }
@@ -670,29 +699,29 @@ i32                  abt_NArgs(command::FieldId field, algo::strptr& out_dflt, b
 // --- command.abt_md
 // access: command.abt_md_proc.abt_md (Exec)
 struct abt_md { // command.abt_md
-    algo::cstring    in;         //   "data"  Input directory or filename, - for stdin
-    algo_lib::Regx   readme;     //   "%"  Sql Regx of dev::Readme
-    algo_lib::Regx   ns;         //   ""  Sql Regx of dmmeta::Ns
-    algo_lib::Regx   section;    //   "%"  Sql Regx
-    bool             update;     //   true  (action) Update mode: Re-generate mdfiles
-    bool             check;      //   false  (action) Check mode: Check syntax and links
-    bool             link;       //   false  (with -print) Print links
-    bool             anchor;     //   false  (with -print) Print anchors
-    bool             print;      //   false  (action) Query mode: Print .md section without evaluating
-    bool             dry_run;    //   false  Do not write changes to disk
-    bool             external;   //   false  Check external links as well (may fail if no internet connection)
-    bool             evalcmd;    //   true  Execute inline-commands
+    algo::cstring    in;           //   "data"  Input directory or filename, - for stdin
+    algo_lib::Regx   readmefile;   //   "%"  Sql Regx of dev::Readmefile
+    algo_lib::Regx   ns;           //   ""  Sql Regx of dmmeta::Ns
+    algo_lib::Regx   section;      //   "%"  Sql Regx
+    bool             update;       //   true  (action) Update mode: Re-generate mdfiles
+    bool             check;        //   false  (action) Check mode: Check syntax and links
+    bool             link;         //   false  (with -print) Print links
+    bool             anchor;       //   false  (with -print) Print anchors
+    bool             print;        //   false  (action) Query mode: Print .md section without evaluating
+    bool             dry_run;      //   false  Do not write changes to disk
+    bool             external;     //   false  Check external links as well (may fail if no internet connection)
+    bool             evalcmd;      //   true  Execute inline-commands
     // func:command.abt_md..Ctor
     inline               abt_md() __attribute__((nothrow));
 };
 
 // Print back to string
-// func:command.abt_md.readme.Print
-void                 readme_Print(command::abt_md& parent, algo::cstring &out) __attribute__((nothrow));
+// func:command.abt_md.readmefile.Print
+void                 readmefile_Print(command::abt_md& parent, algo::cstring &out) __attribute__((nothrow));
 // Read Regx from string
 // Convert string to field. Return success value
-// func:command.abt_md.readme.ReadStrptrMaybe
-bool                 readme_ReadStrptrMaybe(command::abt_md& parent, algo::strptr in) __attribute__((nothrow));
+// func:command.abt_md.readmefile.ReadStrptrMaybe
+bool                 readmefile_ReadStrptrMaybe(command::abt_md& parent, algo::strptr in) __attribute__((nothrow));
 
 // Print back to string
 // func:command.abt_md.ns.Print
@@ -912,6 +941,11 @@ algo::cstring&       where_AllocAt(command::acr& parent, int at) __attribute__((
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:command.acr.where.AllocN
 algo::aryptr<algo::cstring> where_AllocN(command::acr& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:command.acr.where.AllocNAt
+algo::aryptr<algo::cstring> where_AllocNAt(command::acr& parent, int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:command.acr.where.EmptyQ
 inline bool          where_EmptyQ(command::acr& parent) __attribute__((nothrow));
@@ -968,6 +1002,10 @@ algo::aryptr<algo::cstring> where_AllocNVal(command::acr& parent, int n_elems, c
 // Function returns success value.
 // func:command.acr.where.ReadStrptrMaybe
 bool                 where_ReadStrptrMaybe(command::acr& parent, algo::strptr in_str) __attribute__((nothrow));
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:command.acr.where.Insary
+void                 where_Insary(command::acr& parent, algo::aryptr<algo::cstring> rhs, int at) __attribute__((nothrow));
 
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
@@ -985,6 +1023,11 @@ algo::cstring&       field_AllocAt(command::acr& parent, int at) __attribute__((
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:command.acr.field.AllocN
 algo::aryptr<algo::cstring> field_AllocN(command::acr& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:command.acr.field.AllocNAt
+algo::aryptr<algo::cstring> field_AllocNAt(command::acr& parent, int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:command.acr.field.EmptyQ
 inline bool          field_EmptyQ(command::acr& parent) __attribute__((nothrow));
@@ -1041,6 +1084,10 @@ algo::aryptr<algo::cstring> field_AllocNVal(command::acr& parent, int n_elems, c
 // Function returns success value.
 // func:command.acr.field.ReadStrptrMaybe
 bool                 field_ReadStrptrMaybe(command::acr& parent, algo::strptr in_str) __attribute__((nothrow));
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:command.acr.field.Insary
+void                 field_Insary(command::acr& parent, algo::aryptr<algo::cstring> rhs, int at) __attribute__((nothrow));
 
 // proceed to next item
 // func:command.acr.where_curs.Next
@@ -1223,6 +1270,11 @@ algo::cstring&       arg_AllocAt(command::acr_dm& parent, int at) __attribute__(
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:command.acr_dm.arg.AllocN
 algo::aryptr<algo::cstring> arg_AllocN(command::acr_dm& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:command.acr_dm.arg.AllocNAt
+algo::aryptr<algo::cstring> arg_AllocNAt(command::acr_dm& parent, int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:command.acr_dm.arg.EmptyQ
 inline bool          arg_EmptyQ(command::acr_dm& parent) __attribute__((nothrow));
@@ -1279,6 +1331,10 @@ algo::aryptr<algo::cstring> arg_AllocNVal(command::acr_dm& parent, int n_elems, 
 // Function returns success value.
 // func:command.acr_dm.arg.ReadStrptrMaybe
 bool                 arg_ReadStrptrMaybe(command::acr_dm& parent, algo::strptr in_str) __attribute__((nothrow));
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:command.acr_dm.arg.Insary
+void                 arg_Insary(command::acr_dm& parent, algo::aryptr<algo::cstring> rhs, int at) __attribute__((nothrow));
 
 // proceed to next item
 // func:command.acr_dm.arg_curs.Next
@@ -1418,6 +1474,7 @@ struct acr_ed { // command.acr_ed
     bool                showcpp;     //   false  (With -sandbox), show resulting diff
     algo::cstring       msgtype;     //   ""  (with -ctype) use this msgtype as type
     bool                anonfld;     //   false  Create anonfld
+    bool                amc;         //   true  Run amc if needed
     // func:command.acr_ed..Ctor
     inline               acr_ed() __attribute__((nothrow));
 };
@@ -1775,13 +1832,14 @@ void                 acr_proc_Uninit(command::acr_proc& parent) __attribute__((n
 // --- command.amc
 // access: command.amc_proc.amc (Exec)
 struct amc { // command.amc
-    algo::cstring    in_dir;    //   "data"  Root of input ssim dir
-    algo::cstring    query;     //   ""  Query mode: generate code for specified object
-    algo::cstring    out_dir;   //   "."  Root of output cpp dir
-    bool             proto;     //   false  Print prototype
-    bool             report;    //   true  Final report
-    bool             e;         //   false  Open matching records in editor
-    algo_lib::Regx   trace;     //   ""  Sql Regx
+    algo::cstring    in_dir;        //   "data"  Root of input ssim dir
+    algo::cstring    query;         //   ""  Query mode: generate code for specified object
+    algo::cstring    out_dir;       //   "."  Root of output cpp dir
+    bool             proto;         //   false  Print prototype
+    bool             showcomment;   //   true  Show generated comments
+    bool             report;        //   true  Final report
+    bool             e;             //   false  Open matching records in editor
+    algo_lib::Regx   trace;         //   ""  Sql Regx
     // func:command.amc..Ctor
     inline               amc() __attribute__((nothrow));
 };
@@ -1980,7 +2038,7 @@ struct amc_vis { // command.amc_vis
     algo::cstring    in;        //   "data"  Input directory or filename, - for stdin
     algo::cstring    dot;       //   ""  Save dot file with specified filename
     bool             xref;      //   false  Include all ctypes referenced by selected ones
-    bool             xns;       //   false  Cross namespace boundaries
+    bool             xns;       //   true  Cross namespace boundaries
     bool             noinput;   //   false  Deselect module inputs
     bool             check;     //   false  Check model for dependency problems
     bool             render;    //   true  Produce an ascii drawing
@@ -2072,89 +2130,6 @@ void                 amc_vis_ToArgv(command::amc_vis_proc& parent, algo::StringA
 inline void          amc_vis_proc_Init(command::amc_vis_proc& parent);
 // func:command.amc_vis_proc..Uninit
 void                 amc_vis_proc_Uninit(command::amc_vis_proc& parent) __attribute__((nothrow));
-
-// --- command.ams_cat
-// access: command.ams_cat_proc.ams_cat (Exec)
-struct ams_cat { // command.ams_cat
-    algo::cstring   in;   //   "data"  Input directory or filename, - for stdin
-    // func:command.ams_cat..Ctor
-    inline               ams_cat() __attribute__((nothrow));
-};
-
-// func:command.ams_cat..ReadFieldMaybe
-bool                 ams_cat_ReadFieldMaybe(command::ams_cat& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of command::ams_cat from attributes of ascii tuple TUPLE
-// func:command.ams_cat..ReadTupleMaybe
-bool                 ams_cat_ReadTupleMaybe(command::ams_cat &parent, algo::Tuple &tuple) __attribute__((nothrow));
-// Set all fields to initial values.
-// func:command.ams_cat..Init
-inline void          ams_cat_Init(command::ams_cat& parent);
-// Convenience function that returns a full command line
-// Assume command is in a directory called bin
-// func:command.ams_cat..ToCmdline
-tempstr              ams_cat_ToCmdline(command::ams_cat& row) __attribute__((nothrow));
-// print string representation of ROW to string STR
-// cfmt:command.ams_cat.Argv  printfmt:Tuple
-// func:command.ams_cat..PrintArgv
-void                 ams_cat_PrintArgv(command::ams_cat& row, algo::cstring& str) __attribute__((nothrow));
-// Used with command lines
-// Return # of command-line arguments that must follow this argument
-// If FIELD is invalid, return -1
-// func:command.ams_cat..NArgs
-i32                  ams_cat_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
-
-// --- command.ams_cat_proc
-struct ams_cat_proc { // command.ams_cat_proc: Subprocess: Algo Messaging System sample tool
-    algo::cstring      path;      //   "bin/ams_cat"  path for executable
-    command::ams_cat   cmd;       // command line for child process
-    algo::cstring      fstdin;    // redirect for stdin
-    algo::cstring      fstdout;   // redirect for stdout
-    algo::cstring      fstderr;   // redirect for stderr
-    pid_t              pid;       //   0  pid of running child process
-    i32                timeout;   //   0  optional timeout for child process
-    i32                status;    //   0  last exit status of child process
-    // func:command.ams_cat_proc..Ctor
-    inline               ams_cat_proc() __attribute__((nothrow));
-    // func:command.ams_cat_proc..Dtor
-    inline               ~ams_cat_proc() __attribute__((nothrow));
-};
-
-// Start subprocess
-// If subprocess already running, do nothing. Otherwise, start it
-// func:command.ams_cat_proc.ams_cat.Start
-int                  ams_cat_Start(command::ams_cat_proc& parent) __attribute__((nothrow));
-// Start subprocess & Read output
-// func:command.ams_cat_proc.ams_cat.StartRead
-algo::Fildes         ams_cat_StartRead(command::ams_cat_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
-// Kill subprocess and wait
-// func:command.ams_cat_proc.ams_cat.Kill
-void                 ams_cat_Kill(command::ams_cat_proc& parent);
-// Wait for subprocess to return
-// func:command.ams_cat_proc.ams_cat.Wait
-void                 ams_cat_Wait(command::ams_cat_proc& parent) __attribute__((nothrow));
-// Start + Wait
-// Execute subprocess and return exit code
-// func:command.ams_cat_proc.ams_cat.Exec
-int                  ams_cat_Exec(command::ams_cat_proc& parent) __attribute__((nothrow));
-// Start + Wait, throw exception on error
-// Execute subprocess; throw human-readable exception on error
-// func:command.ams_cat_proc.ams_cat.ExecX
-void                 ams_cat_ExecX(command::ams_cat_proc& parent);
-// Call execv()
-// Call execv with specified parameters
-// func:command.ams_cat_proc.ams_cat.Execv
-int                  ams_cat_Execv(command::ams_cat_proc& parent) __attribute__((nothrow));
-// func:command.ams_cat_proc.ams_cat.ToCmdline
-algo::tempstr        ams_cat_ToCmdline(command::ams_cat_proc& parent) __attribute__((nothrow));
-// Form array from the command line
-// func:command.ams_cat_proc.ams_cat.ToArgv
-void                 ams_cat_ToArgv(command::ams_cat_proc& parent, algo::StringAry& args) __attribute__((nothrow));
-
-// Set all fields to initial values.
-// func:command.ams_cat_proc..Init
-inline void          ams_cat_proc_Init(command::ams_cat_proc& parent);
-// func:command.ams_cat_proc..Uninit
-void                 ams_cat_proc_Uninit(command::ams_cat_proc& parent) __attribute__((nothrow));
 
 // --- command.ams_sendtest
 // access: command.ams_sendtest_proc.ams_sendtest (Exec)
@@ -2389,12 +2364,21 @@ void                 apm_proc_Uninit(command::apm_proc& parent) __attribute__((n
 // --- command.aqlite
 // access: command.aqlite_proc.aqlite (Exec)
 struct aqlite { // command.aqlite
-    algo::cstring   in;       //   "data"  Input directory or filename, - for stdin
-    algo::cstring   schema;   //   "data"  Schema dir
-    algo::cstring   cmd;      // Sql Query to run
+    algo::cstring    in;       //   "data"  Input directory or filename, - for stdin
+    algo::cstring    schema;   //   "data"  Schema dir
+    algo::cstring    cmd;      // Sql Query to run
+    algo_lib::Regx   ns;       //   "dmmeta"  Sql Regx of dmmeta::Ns
     // func:command.aqlite..Ctor
     inline               aqlite() __attribute__((nothrow));
 };
+
+// Print back to string
+// func:command.aqlite.ns.Print
+void                 ns_Print(command::aqlite& parent, algo::cstring &out) __attribute__((nothrow));
+// Read Regx from string
+// Convert string to field. Return success value
+// func:command.aqlite.ns.ReadStrptrMaybe
+bool                 ns_ReadStrptrMaybe(command::aqlite& parent, algo::strptr in) __attribute__((nothrow));
 
 // func:command.aqlite..ReadFieldMaybe
 bool                 aqlite_ReadFieldMaybe(command::aqlite& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
@@ -2403,7 +2387,7 @@ bool                 aqlite_ReadFieldMaybe(command::aqlite& parent, algo::strptr
 bool                 aqlite_ReadTupleMaybe(command::aqlite &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:command.aqlite..Init
-inline void          aqlite_Init(command::aqlite& parent);
+void                 aqlite_Init(command::aqlite& parent);
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
 // func:command.aqlite..ToCmdline
@@ -2572,11 +2556,12 @@ void                 atf_amc_proc_Uninit(command::atf_amc_proc& parent) __attrib
 // --- command.atf_ci
 // access: command.atf_ci_proc.atf_ci (Exec)
 struct atf_ci { // command.atf_ci
-    algo::cstring    in;        //   "data"  Input directory or filename, - for stdin
-    algo_lib::Regx   citest;    //   "%"  Sql Regx of atfdb::Citest
-    i32              maxerr;    //   0  Exit after this many errors
-    algo_lib::Regx   cijob;     //   "%"  Sql Regx of atfdb::Cijob
-    bool             capture;   //   false  Capture the output of the test
+    algo::cstring    in;            //   "data"  Input directory or filename, - for stdin
+    algo_lib::Regx   citest;        //   "%"  Sql Regx of atfdb::Citest
+    i32              maxerr;        //   0  Exit after this many errors
+    algo_lib::Regx   cijob;         //   "%"  Sql Regx of atfdb::Cijob
+    bool             capture;       //   false  Capture the output of the test
+    bool             check_clean;   //   true  Check for modifications after each test
     // func:command.atf_ci..Ctor
     inline               atf_ci() __attribute__((nothrow));
 };
@@ -2704,7 +2689,7 @@ struct atf_cmdline { // command.atf_cmdline
     u32                 amnum_n;       // number of elements in array
     u32                 amnum_max;     // max. capacity of array before realloc
     u8                  fconst;        //   0  Fconst for field
-    algo::Month         cconst;        //   0  Fconst for arg ctype
+    algo::Month         cconst;        // Fconst for arg ctype
     algo_lib::Regx      dregx;         //   "%"  Sql Regx of dmmeta::Ctype
     algo::Smallstr100   dpkey;         //   ""  Predefined pkey
     // func:command.atf_cmdline..AssignOp
@@ -2733,6 +2718,11 @@ algo::cstring&       mstr_AllocAt(command::atf_cmdline& parent, int at) __attrib
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:command.atf_cmdline.mstr.AllocN
 algo::aryptr<algo::cstring> mstr_AllocN(command::atf_cmdline& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:command.atf_cmdline.mstr.AllocNAt
+algo::aryptr<algo::cstring> mstr_AllocNAt(command::atf_cmdline& parent, int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:command.atf_cmdline.mstr.EmptyQ
 inline bool          mstr_EmptyQ(command::atf_cmdline& parent) __attribute__((nothrow));
@@ -2789,6 +2779,10 @@ algo::aryptr<algo::cstring> mstr_AllocNVal(command::atf_cmdline& parent, int n_e
 // Function returns success value.
 // func:command.atf_cmdline.mstr.ReadStrptrMaybe
 bool                 mstr_ReadStrptrMaybe(command::atf_cmdline& parent, algo::strptr in_str) __attribute__((nothrow));
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:command.atf_cmdline.mstr.Insary
+void                 mstr_Insary(command::atf_cmdline& parent, algo::aryptr<algo::cstring> rhs, int at) __attribute__((nothrow));
 
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
@@ -2806,6 +2800,11 @@ i32&                 mnum_AllocAt(command::atf_cmdline& parent, int at) __attrib
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:command.atf_cmdline.mnum.AllocN
 algo::aryptr<i32>    mnum_AllocN(command::atf_cmdline& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:command.atf_cmdline.mnum.AllocNAt
+algo::aryptr<i32>    mnum_AllocNAt(command::atf_cmdline& parent, int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:command.atf_cmdline.mnum.EmptyQ
 inline bool          mnum_EmptyQ(command::atf_cmdline& parent) __attribute__((nothrow));
@@ -2862,6 +2861,10 @@ algo::aryptr<i32>    mnum_AllocNVal(command::atf_cmdline& parent, int n_elems, c
 // Function returns success value.
 // func:command.atf_cmdline.mnum.ReadStrptrMaybe
 bool                 mnum_ReadStrptrMaybe(command::atf_cmdline& parent, algo::strptr in_str) __attribute__((nothrow));
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:command.atf_cmdline.mnum.Insary
+void                 mnum_Insary(command::atf_cmdline& parent, algo::aryptr<i32> rhs, int at) __attribute__((nothrow));
 
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
@@ -2879,6 +2882,11 @@ double&              mdbl_AllocAt(command::atf_cmdline& parent, int at) __attrib
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:command.atf_cmdline.mdbl.AllocN
 algo::aryptr<double> mdbl_AllocN(command::atf_cmdline& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:command.atf_cmdline.mdbl.AllocNAt
+algo::aryptr<double> mdbl_AllocNAt(command::atf_cmdline& parent, int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:command.atf_cmdline.mdbl.EmptyQ
 inline bool          mdbl_EmptyQ(command::atf_cmdline& parent) __attribute__((nothrow));
@@ -2935,6 +2943,10 @@ algo::aryptr<double> mdbl_AllocNVal(command::atf_cmdline& parent, int n_elems, c
 // Function returns success value.
 // func:command.atf_cmdline.mdbl.ReadStrptrMaybe
 bool                 mdbl_ReadStrptrMaybe(command::atf_cmdline& parent, algo::strptr in_str) __attribute__((nothrow));
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:command.atf_cmdline.mdbl.Insary
+void                 mdbl_Insary(command::atf_cmdline& parent, algo::aryptr<double> rhs, int at) __attribute__((nothrow));
 
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
@@ -2952,6 +2964,11 @@ i32&                 amnum_AllocAt(command::atf_cmdline& parent, int at) __attri
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:command.atf_cmdline.amnum.AllocN
 algo::aryptr<i32>    amnum_AllocN(command::atf_cmdline& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:command.atf_cmdline.amnum.AllocNAt
+algo::aryptr<i32>    amnum_AllocNAt(command::atf_cmdline& parent, int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:command.atf_cmdline.amnum.EmptyQ
 inline bool          amnum_EmptyQ(command::atf_cmdline& parent) __attribute__((nothrow));
@@ -3008,6 +3025,10 @@ algo::aryptr<i32>    amnum_AllocNVal(command::atf_cmdline& parent, int n_elems, 
 // Function returns success value.
 // func:command.atf_cmdline.amnum.ReadStrptrMaybe
 bool                 amnum_ReadStrptrMaybe(command::atf_cmdline& parent, algo::strptr in_str) __attribute__((nothrow));
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:command.atf_cmdline.amnum.Insary
+void                 amnum_Insary(command::atf_cmdline& parent, algo::aryptr<i32> rhs, int at) __attribute__((nothrow));
 
 // Get value of field as enum type
 // func:command.atf_cmdline.fconst.GetEnum
@@ -3181,12 +3202,11 @@ struct atf_comp { // command.atf_comp
     bool               normalize;         //   false  (action) Renumber and normalize tmsgs
     bool               covcapture;        //   false  (action) Capture new coverage percentages and save back
     bool               covcheck;          //   false  (action) Check coverage percentages against tgtcov table
-    algo::cstring      compdir;           //   ""  Component image directory (exe)
+    algo::cstring      bindir;            //   ""  Directory with binaries (default: build/cfg)
     algo::Smallstr50   cfg;               //   "release"  Set config
     bool               check_untracked;   //   true  Check for untracked file before allowing test to run
-    i32                maxerr;            //   1  Exit after this many errors
+    i32                maxerr;            //   3  Exit after this many errors
     bool               build;             //   false  Build given cfg before test
-    bool               ood;               //   false  Check given cfg for ood before test
     bool               memcheck;          //   false  Run under memory checker (valgrind)
     bool               force;             //   false  (With -memcheck) run suppressed memcheck
     bool               callgrind;         //   false  Run under callgrind profiler (valgrind)
@@ -3194,8 +3214,11 @@ struct atf_comp { // command.atf_comp
     bool               stream;            //   false  prints component's output
     bool               i;                 //   false  Read and execute testcase from stdin
     bool               write;             //   true  (implied with -e) Write any changes back to ssim tables
-    bool               report;            //   false  Print final report
+    bool               report;            //   true  Print final report
     algo::cstring      b;                 //   ""  Breakpoint passed to mdbg as-is
+    bool               covfast;           //   true  Speedup coverage processing
+    i32                minrepeat;         //   0  Execute every comptest at least this many times
+    i32                maxrepeat;         //   1  Don't repeat any individual comptest more than X times
     // func:command.atf_comp..Ctor
     inline               atf_comp() __attribute__((nothrow));
 };
@@ -3288,19 +3311,20 @@ void                 atf_comp_proc_Uninit(command::atf_comp_proc& parent) __attr
 // --- command.atf_cov
 // access: command.atf_cov_proc.atf_cov (Exec)
 struct atf_cov { // command.atf_cov
-    algo::cstring    in;          //   "data"  Input directory or filename, - for stdin
-    algo::cstring    covdir;      //   "temp/covdata"  Output directory to save coverage data
-    algo::cstring    logfile;     //   ""  Log file
-    algo::cstring    runcmd;      //   ""  command to run
-    algo_lib::Regx   exclude;     //   "(extern|include/gen|cpp/gen)/%"  Sql Regx of dev::Gitfile
-    algo::cstring    mergepath;   //   ""  colon-separated dir list to load .cov.ssim files from
-    bool             gcov;        //   false  run gcov
-    bool             ssim;        //   false  write out ssim files
-    bool             report;      //   false  write out all reports
-    bool             capture;     //   false  Write coverage information into tgtcov table
-    bool             xmlpretty;   //   false  Generate pretty-formatted XML
-    bool             summary;     //   true  Show summary figures
-    bool             check;       //   false  Check coverage information against tgtcov table
+    algo::cstring    in;            //   "data"  Input directory or filename, - for stdin
+    algo::cstring    covdir;        //   "temp/covdata"  Output directory to save coverage data
+    algo::cstring    logfile;       //   ""  Log file
+    algo::cstring    runcmd;        //   ""  command to run
+    algo_lib::Regx   exclude;       //   "(extern|include/gen|cpp/gen)/%"  Sql Regx of dev::Gitfile
+    algo::cstring    mergepath;     //   ""  colon-separated dir list to load .cov.ssim files from
+    bool             gcov;          //   false  run gcov
+    bool             ssim;          //   false  write out ssim files
+    bool             report;        //   false  write out all reports
+    bool             capture;       //   false  Write coverage information into tgtcov table
+    bool             xmlpretty;     //   false  Generate pretty-formatted XML
+    bool             summary;       //   true  Show summary figures
+    bool             check;         //   false  Check coverage information against tgtcov table
+    bool             incremental;   //   false  Keep *.gcda files from previous run
     // func:command.atf_cov..Ctor
     inline               atf_cov() __attribute__((nothrow));
 };
@@ -3387,6 +3411,95 @@ void                 atf_cov_ToArgv(command::atf_cov_proc& parent, algo::StringA
 inline void          atf_cov_proc_Init(command::atf_cov_proc& parent);
 // func:command.atf_cov_proc..Uninit
 void                 atf_cov_proc_Uninit(command::atf_cov_proc& parent) __attribute__((nothrow));
+
+// --- command.atf_exp
+// access: command.atf_exp_proc.atf_exp (Exec)
+struct atf_exp { // command.atf_exp
+    algo::cstring      in;         //   "data"  Input directory or filename, - for stdin
+    algo::cstring      trace;      //   ""  Regx of things to trace
+    algo::cstring      bindir;     //   "bin"  Directory with binaries
+    algo::Smallstr50   comptest;   //   ""  Component test name
+    algo::cstring      tempdir;    //   ""  Temporary directory for the component test
+    double             timeout;    //   8.0  Timeout in seconds for a step
+    bool               dbgshell;   //   false  Invoke bash with curr envs in case of timeout
+    // func:command.atf_exp..Ctor
+    inline               atf_exp() __attribute__((nothrow));
+};
+
+// func:command.atf_exp..ReadFieldMaybe
+bool                 atf_exp_ReadFieldMaybe(command::atf_exp& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of command::atf_exp from attributes of ascii tuple TUPLE
+// func:command.atf_exp..ReadTupleMaybe
+bool                 atf_exp_ReadTupleMaybe(command::atf_exp &parent, algo::Tuple &tuple) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:command.atf_exp..Init
+inline void          atf_exp_Init(command::atf_exp& parent);
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+// func:command.atf_exp..ToCmdline
+tempstr              atf_exp_ToCmdline(command::atf_exp& row) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:command.atf_exp.Argv  printfmt:Tuple
+// func:command.atf_exp..PrintArgv
+void                 atf_exp_PrintArgv(command::atf_exp& row, algo::cstring& str) __attribute__((nothrow));
+// Used with command lines
+// Return # of command-line arguments that must follow this argument
+// If FIELD is invalid, return -1
+// func:command.atf_exp..NArgs
+i32                  atf_exp_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
+
+// --- command.atf_exp_proc
+struct atf_exp_proc { // command.atf_exp_proc: Subprocess: ATF expect
+    algo::cstring      path;      //   "bin/atf_exp"  path for executable
+    command::atf_exp   cmd;       // command line for child process
+    algo::cstring      fstdin;    // redirect for stdin
+    algo::cstring      fstdout;   // redirect for stdout
+    algo::cstring      fstderr;   // redirect for stderr
+    pid_t              pid;       //   0  pid of running child process
+    i32                timeout;   //   0  optional timeout for child process
+    i32                status;    //   0  last exit status of child process
+    // func:command.atf_exp_proc..Ctor
+    inline               atf_exp_proc() __attribute__((nothrow));
+    // func:command.atf_exp_proc..Dtor
+    inline               ~atf_exp_proc() __attribute__((nothrow));
+};
+
+// Start subprocess
+// If subprocess already running, do nothing. Otherwise, start it
+// func:command.atf_exp_proc.atf_exp.Start
+int                  atf_exp_Start(command::atf_exp_proc& parent) __attribute__((nothrow));
+// Start subprocess & Read output
+// func:command.atf_exp_proc.atf_exp.StartRead
+algo::Fildes         atf_exp_StartRead(command::atf_exp_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
+// Kill subprocess and wait
+// func:command.atf_exp_proc.atf_exp.Kill
+void                 atf_exp_Kill(command::atf_exp_proc& parent);
+// Wait for subprocess to return
+// func:command.atf_exp_proc.atf_exp.Wait
+void                 atf_exp_Wait(command::atf_exp_proc& parent) __attribute__((nothrow));
+// Start + Wait
+// Execute subprocess and return exit code
+// func:command.atf_exp_proc.atf_exp.Exec
+int                  atf_exp_Exec(command::atf_exp_proc& parent) __attribute__((nothrow));
+// Start + Wait, throw exception on error
+// Execute subprocess; throw human-readable exception on error
+// func:command.atf_exp_proc.atf_exp.ExecX
+void                 atf_exp_ExecX(command::atf_exp_proc& parent);
+// Call execv()
+// Call execv with specified parameters
+// func:command.atf_exp_proc.atf_exp.Execv
+int                  atf_exp_Execv(command::atf_exp_proc& parent) __attribute__((nothrow));
+// func:command.atf_exp_proc.atf_exp.ToCmdline
+algo::tempstr        atf_exp_ToCmdline(command::atf_exp_proc& parent) __attribute__((nothrow));
+// Form array from the command line
+// func:command.atf_exp_proc.atf_exp.ToArgv
+void                 atf_exp_ToArgv(command::atf_exp_proc& parent, algo::StringAry& args) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:command.atf_exp_proc..Init
+inline void          atf_exp_proc_Init(command::atf_exp_proc& parent);
+// func:command.atf_exp_proc..Uninit
+void                 atf_exp_proc_Uninit(command::atf_exp_proc& parent) __attribute__((nothrow));
 
 // --- command.atf_fuzz
 // access: command.atf_fuzz_proc.atf_fuzz (Exec)
@@ -3973,6 +4086,11 @@ algo::cstring&       cmd_AllocAt(command::gcache& parent, int at) __attribute__(
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:command.gcache.cmd.AllocN
 algo::aryptr<algo::cstring> cmd_AllocN(command::gcache& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:command.gcache.cmd.AllocNAt
+algo::aryptr<algo::cstring> cmd_AllocNAt(command::gcache& parent, int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:command.gcache.cmd.EmptyQ
 inline bool          cmd_EmptyQ(command::gcache& parent) __attribute__((nothrow));
@@ -4029,6 +4147,10 @@ algo::aryptr<algo::cstring> cmd_AllocNVal(command::gcache& parent, int n_elems, 
 // Function returns success value.
 // func:command.gcache.cmd.ReadStrptrMaybe
 bool                 cmd_ReadStrptrMaybe(command::gcache& parent, algo::strptr in_str) __attribute__((nothrow));
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:command.gcache.cmd.Insary
+void                 cmd_Insary(command::gcache& parent, algo::aryptr<algo::cstring> rhs, int at) __attribute__((nothrow));
 
 // proceed to next item
 // func:command.gcache.cmd_curs.Next
@@ -4132,7 +4254,7 @@ struct gcli { // command.gcli
     algo::cstring*      fields_elems;               // pointer to elements
     u32                 fields_n;                   // number of elements in array
     u32                 fields_max;                 // max. capacity of array before realloc
-    bool                accept;                     //   false  (action) accept a slected merge request
+    bool                accept;                     //   false  (action) accept a selected merge request
     bool                start;                      //   false  (action) start working on a selected issue
     bool                list;                       //   false  (action) show selected table
     bool                create;                     //   false  (action) create a table record(s)
@@ -4172,6 +4294,11 @@ algo::cstring&       fields_AllocAt(command::gcli& parent, int at) __attribute__
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:command.gcli.fields.AllocN
 algo::aryptr<algo::cstring> fields_AllocN(command::gcli& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:command.gcli.fields.AllocNAt
+algo::aryptr<algo::cstring> fields_AllocNAt(command::gcli& parent, int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:command.gcli.fields.EmptyQ
 inline bool          fields_EmptyQ(command::gcli& parent) __attribute__((nothrow));
@@ -4228,6 +4355,10 @@ algo::aryptr<algo::cstring> fields_AllocNVal(command::gcli& parent, int n_elems,
 // Function returns success value.
 // func:command.gcli.fields.ReadStrptrMaybe
 bool                 fields_ReadStrptrMaybe(command::gcli& parent, algo::strptr in_str) __attribute__((nothrow));
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:command.gcli.fields.Insary
+void                 fields_Insary(command::gcli& parent, algo::aryptr<algo::cstring> rhs, int at) __attribute__((nothrow));
 
 // proceed to next item
 // func:command.gcli.fields_curs.Next
@@ -4319,6 +4450,292 @@ inline void          gcli_proc_Init(command::gcli_proc& parent);
 // func:command.gcli_proc..Uninit
 void                 gcli_proc_Uninit(command::gcli_proc& parent) __attribute__((nothrow));
 
+// --- command.generic
+// access: command.generic_proc.name (Exec)
+struct generic { // command.generic: Any generic subprocess
+    // func:command.generic..Ctor
+    inline               generic() __attribute__((nothrow));
+};
+
+// print string representation of ROW to string STR
+// cfmt:command.generic.ArgvGnu  printfmt:Auto
+// func:command.generic..PrintArgv
+void                 generic_PrintArgv(command::generic& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- command.generic_proc
+struct generic_proc { // command.generic_proc
+    algo::cstring      path;      //   ""  path for executable
+    command::generic   cmd;       // command line for child process
+    algo::cstring      fstdin;    // redirect for stdin
+    algo::cstring      fstdout;   // redirect for stdout
+    algo::cstring      fstderr;   // redirect for stderr
+    pid_t              pid;       //   0  pid of running child process
+    i32                timeout;   //   0  optional timeout for child process
+    i32                status;    //   0  last exit status of child process
+    // func:command.generic_proc..Ctor
+    inline               generic_proc() __attribute__((nothrow));
+    // func:command.generic_proc..Dtor
+    inline               ~generic_proc() __attribute__((nothrow));
+};
+
+// Start subprocess
+// If subprocess already running, do nothing. Otherwise, start it
+// func:command.generic_proc.name.Start
+int                  name_Start(command::generic_proc& parent) __attribute__((nothrow));
+// Start subprocess & Read output
+// func:command.generic_proc.name.StartRead
+algo::Fildes         name_StartRead(command::generic_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
+// Kill subprocess and wait
+// func:command.generic_proc.name.Kill
+void                 name_Kill(command::generic_proc& parent);
+// Wait for subprocess to return
+// func:command.generic_proc.name.Wait
+void                 name_Wait(command::generic_proc& parent) __attribute__((nothrow));
+// Start + Wait
+// Execute subprocess and return exit code
+// func:command.generic_proc.name.Exec
+int                  name_Exec(command::generic_proc& parent) __attribute__((nothrow));
+// Start + Wait, throw exception on error
+// Execute subprocess; throw human-readable exception on error
+// func:command.generic_proc.name.ExecX
+void                 name_ExecX(command::generic_proc& parent);
+// Call execv()
+// Call execv with specified parameters
+// func:command.generic_proc.name.Execv
+int                  name_Execv(command::generic_proc& parent) __attribute__((nothrow));
+// func:command.generic_proc.name.ToCmdline
+algo::tempstr        name_ToCmdline(command::generic_proc& parent) __attribute__((nothrow));
+// Form array from the command line
+// func:command.generic_proc.name.ToArgv
+void                 name_ToArgv(command::generic_proc& parent, algo::StringAry& args) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:command.generic_proc..Init
+inline void          generic_proc_Init(command::generic_proc& parent);
+// func:command.generic_proc..Uninit
+void                 generic_proc_Uninit(command::generic_proc& parent) __attribute__((nothrow));
+
+// --- command.jkv
+// access: command.jkv_proc.jkv (Exec)
+struct jkv { // command.jkv
+    algo::cstring    in;         //   "data"  Input directory or filename, - for stdin
+    algo::cstring    file;       // Filename (use - for stdin)
+    algo::cstring*   kv_elems;   // pointer to elements
+    u32              kv_n;       // number of elements in array
+    u32              kv_max;     // max. capacity of array before realloc
+    bool             r;          //   false  Reverse (json keyvals -> JSON) mapping
+    bool             write;      //   false  Write the modified file back
+    u8               output;     //   0  Output format
+    u32              pretty;     //   2  Pretty-printer (0-compact; 1=algo style; 2=jq style)
+    // func:command.jkv..AssignOp
+    command::jkv&        operator =(const command::jkv &rhs) __attribute__((nothrow));
+    // func:command.jkv..Ctor
+    inline               jkv() __attribute__((nothrow));
+    // func:command.jkv..Dtor
+    inline               ~jkv() __attribute__((nothrow));
+    // func:command.jkv..CopyCtor
+    jkv(const command::jkv &rhs) __attribute__((nothrow));
+};
+
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:command.jkv.kv.Addary
+algo::aryptr<algo::cstring> kv_Addary(command::jkv& parent, algo::aryptr<algo::cstring> rhs) __attribute__((nothrow));
+// Reserve space. Insert element at the end
+// The new element is initialized to a default value
+// func:command.jkv.kv.Alloc
+algo::cstring&       kv_Alloc(command::jkv& parent) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:command.jkv.kv.AllocAt
+algo::cstring&       kv_AllocAt(command::jkv& parent, int at) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:command.jkv.kv.AllocN
+algo::aryptr<algo::cstring> kv_AllocN(command::jkv& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:command.jkv.kv.AllocNAt
+algo::aryptr<algo::cstring> kv_AllocNAt(command::jkv& parent, int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:command.jkv.kv.EmptyQ
+inline bool          kv_EmptyQ(command::jkv& parent) __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+// func:command.jkv.kv.Find
+inline algo::cstring* kv_Find(command::jkv& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
+// Return array pointer by value
+// func:command.jkv.kv.Getary
+inline algo::aryptr<algo::cstring> kv_Getary(const command::jkv& parent) __attribute__((nothrow));
+// Return pointer to last element of array, or NULL if array is empty
+// func:command.jkv.kv.Last
+inline algo::cstring* kv_Last(command::jkv& parent) __attribute__((nothrow, pure));
+// Return max. number of items in the array
+// func:command.jkv.kv.Max
+inline i32           kv_Max(command::jkv& parent) __attribute__((nothrow));
+// Return number of items in the array
+// func:command.jkv.kv.N
+inline i32           kv_N(const command::jkv& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove item by index. If index outside of range, do nothing.
+// func:command.jkv.kv.Remove
+void                 kv_Remove(command::jkv& parent, u32 i) __attribute__((nothrow));
+// func:command.jkv.kv.RemoveAll
+void                 kv_RemoveAll(command::jkv& parent) __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:command.jkv.kv.RemoveLast
+void                 kv_RemoveLast(command::jkv& parent) __attribute__((nothrow));
+// Make sure N *more* elements will fit in array. Process dies if out of memory
+// func:command.jkv.kv.Reserve
+inline void          kv_Reserve(command::jkv& parent, int n) __attribute__((nothrow));
+// Make sure N elements fit in array. Process dies if out of memory
+// func:command.jkv.kv.AbsReserve
+void                 kv_AbsReserve(command::jkv& parent, int n) __attribute__((nothrow));
+// Copy contents of RHS to PARENT.
+// func:command.jkv.kv.Setary
+void                 kv_Setary(command::jkv& parent, command::jkv &rhs) __attribute__((nothrow));
+// Copy specified array into kv, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+// func:command.jkv.kv.Setary2
+void                 kv_Setary(command::jkv& parent, const algo::aryptr<algo::cstring> &rhs) __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:command.jkv.kv.qFind
+inline algo::cstring& kv_qFind(command::jkv& parent, u64 t) __attribute__((nothrow));
+// Return reference to last element of array. No bounds checking
+// func:command.jkv.kv.qLast
+inline algo::cstring& kv_qLast(command::jkv& parent) __attribute__((nothrow));
+// Return row id of specified element
+// func:command.jkv.kv.rowid_Get
+inline u64           kv_rowid_Get(command::jkv& parent, algo::cstring &elem) __attribute__((nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:command.jkv.kv.AllocNVal
+algo::aryptr<algo::cstring> kv_AllocNVal(command::jkv& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+// func:command.jkv.kv.ReadStrptrMaybe
+bool                 kv_ReadStrptrMaybe(command::jkv& parent, algo::strptr in_str) __attribute__((nothrow));
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:command.jkv.kv.Insary
+void                 kv_Insary(command::jkv& parent, algo::aryptr<algo::cstring> rhs, int at) __attribute__((nothrow));
+
+// Get value of field as enum type
+// func:command.jkv.output.GetEnum
+inline command_jkv_output_Enum output_GetEnum(const command::jkv& parent) __attribute__((nothrow));
+// Set value of field from enum type.
+// func:command.jkv.output.SetEnum
+inline void          output_SetEnum(command::jkv& parent, command_jkv_output_Enum rhs) __attribute__((nothrow));
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+// func:command.jkv.output.ToCstr
+const char*          output_ToCstr(const command::jkv& parent) __attribute__((nothrow));
+// Convert output to a string. First, attempt conversion to a known string.
+// If no string matches, print output as a numeric value.
+// func:command.jkv.output.Print
+void                 output_Print(const command::jkv& parent, algo::cstring &lhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+// func:command.jkv.output.SetStrptrMaybe
+bool                 output_SetStrptrMaybe(command::jkv& parent, algo::strptr rhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+// func:command.jkv.output.SetStrptr
+void                 output_SetStrptr(command::jkv& parent, algo::strptr rhs, command_jkv_output_Enum dflt) __attribute__((nothrow));
+// Convert string to field. Return success value
+// func:command.jkv.output.ReadStrptrMaybe
+bool                 output_ReadStrptrMaybe(command::jkv& parent, algo::strptr rhs) __attribute__((nothrow));
+
+// proceed to next item
+// func:command.jkv.kv_curs.Next
+inline void          jkv_kv_curs_Next(jkv_kv_curs &curs) __attribute__((nothrow));
+// func:command.jkv.kv_curs.Reset
+inline void          jkv_kv_curs_Reset(jkv_kv_curs &curs, command::jkv &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:command.jkv.kv_curs.ValidQ
+inline bool          jkv_kv_curs_ValidQ(jkv_kv_curs &curs) __attribute__((nothrow));
+// item access
+// func:command.jkv.kv_curs.Access
+inline algo::cstring& jkv_kv_curs_Access(jkv_kv_curs &curs) __attribute__((nothrow));
+// func:command.jkv..ReadFieldMaybe
+bool                 jkv_ReadFieldMaybe(command::jkv& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of command::jkv from attributes of ascii tuple TUPLE
+// func:command.jkv..ReadTupleMaybe
+bool                 jkv_ReadTupleMaybe(command::jkv &parent, algo::Tuple &tuple) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:command.jkv..Init
+inline void          jkv_Init(command::jkv& parent);
+// func:command.jkv..Uninit
+void                 jkv_Uninit(command::jkv& parent) __attribute__((nothrow));
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+// func:command.jkv..ToCmdline
+tempstr              jkv_ToCmdline(command::jkv& row) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:command.jkv.Argv  printfmt:Tuple
+// func:command.jkv..PrintArgv
+void                 jkv_PrintArgv(command::jkv& row, algo::cstring& str) __attribute__((nothrow));
+// func:command.jkv..GetAnon
+algo::strptr         jkv_GetAnon(command::jkv &parent, i32 idx) __attribute__((nothrow));
+// Used with command lines
+// Return # of command-line arguments that must follow this argument
+// If FIELD is invalid, return -1
+// func:command.jkv..NArgs
+i32                  jkv_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
+
+// --- command.jkv_proc
+struct jkv_proc { // command.jkv_proc: Subprocess: JSON <-> key-value mapping tool
+    algo::cstring   path;      //   "bin/jkv"  path for executable
+    command::jkv    cmd;       // command line for child process
+    algo::cstring   fstdin;    // redirect for stdin
+    algo::cstring   fstdout;   // redirect for stdout
+    algo::cstring   fstderr;   // redirect for stderr
+    pid_t           pid;       //   0  pid of running child process
+    i32             timeout;   //   0  optional timeout for child process
+    i32             status;    //   0  last exit status of child process
+    // func:command.jkv_proc..Ctor
+    inline               jkv_proc() __attribute__((nothrow));
+    // func:command.jkv_proc..Dtor
+    inline               ~jkv_proc() __attribute__((nothrow));
+};
+
+// Start subprocess
+// If subprocess already running, do nothing. Otherwise, start it
+// func:command.jkv_proc.jkv.Start
+int                  jkv_Start(command::jkv_proc& parent) __attribute__((nothrow));
+// Start subprocess & Read output
+// func:command.jkv_proc.jkv.StartRead
+algo::Fildes         jkv_StartRead(command::jkv_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
+// Kill subprocess and wait
+// func:command.jkv_proc.jkv.Kill
+void                 jkv_Kill(command::jkv_proc& parent);
+// Wait for subprocess to return
+// func:command.jkv_proc.jkv.Wait
+void                 jkv_Wait(command::jkv_proc& parent) __attribute__((nothrow));
+// Start + Wait
+// Execute subprocess and return exit code
+// func:command.jkv_proc.jkv.Exec
+int                  jkv_Exec(command::jkv_proc& parent) __attribute__((nothrow));
+// Start + Wait, throw exception on error
+// Execute subprocess; throw human-readable exception on error
+// func:command.jkv_proc.jkv.ExecX
+void                 jkv_ExecX(command::jkv_proc& parent);
+// Call execv()
+// Call execv with specified parameters
+// func:command.jkv_proc.jkv.Execv
+int                  jkv_Execv(command::jkv_proc& parent) __attribute__((nothrow));
+// func:command.jkv_proc.jkv.ToCmdline
+algo::tempstr        jkv_ToCmdline(command::jkv_proc& parent) __attribute__((nothrow));
+// Form array from the command line
+// func:command.jkv_proc.jkv.ToArgv
+void                 jkv_ToArgv(command::jkv_proc& parent, algo::StringAry& args) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:command.jkv_proc..Init
+inline void          jkv_proc_Init(command::jkv_proc& parent);
+// func:command.jkv_proc..Uninit
+void                 jkv_proc_Uninit(command::jkv_proc& parent) __attribute__((nothrow));
+
 // --- command.mdbg
 // access: command.mdbg_proc.mdbg (Exec)
 struct mdbg { // command.mdbg
@@ -4330,6 +4747,7 @@ struct mdbg { // command.mdbg
     algo::Smallstr50   cfg;            //   "debug"  Configuration to use
     bool               disas;          //   false  Show disassembly (use F12)
     bool               attach;         //   false  Attach to a running process
+    i32                pid;            //   0  (with -attach) Pid, if omitted mdbg will guess
     algo::cstring*     b_elems;        // pointer to elements
     u32                b_n;            // number of elements in array
     u32                b_max;          // max. capacity of array before realloc
@@ -4338,9 +4756,10 @@ struct mdbg { // command.mdbg
     algo::cstring      bcmd;           //   ""  Evaluate command at breakpoint
     bool               emacs;          //   true  Use emacs environment as the debugger
     bool               manywin;        //   false  Use gdb-many-windows emacs mode
-    bool               follow_child;   //   false
+    bool               follow_child;   //   false  When forking, follow child (default is parent)
     bool               py;             //   false  Enable python scripting
     bool               dry_run;        //   false  Print commands but don't execute
+    bool               mp;             //   false  Multi-process debugging
     // func:command.mdbg..AssignOp
     command::mdbg&       operator =(const command::mdbg &rhs) __attribute__((nothrow));
     // func:command.mdbg..Ctor
@@ -4367,6 +4786,11 @@ algo::cstring&       args_AllocAt(command::mdbg& parent, int at) __attribute__((
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:command.mdbg.args.AllocN
 algo::aryptr<algo::cstring> args_AllocN(command::mdbg& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:command.mdbg.args.AllocNAt
+algo::aryptr<algo::cstring> args_AllocNAt(command::mdbg& parent, int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:command.mdbg.args.EmptyQ
 inline bool          args_EmptyQ(command::mdbg& parent) __attribute__((nothrow));
@@ -4423,6 +4847,10 @@ algo::aryptr<algo::cstring> args_AllocNVal(command::mdbg& parent, int n_elems, c
 // Function returns success value.
 // func:command.mdbg.args.ReadStrptrMaybe
 bool                 args_ReadStrptrMaybe(command::mdbg& parent, algo::strptr in_str) __attribute__((nothrow));
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:command.mdbg.args.Insary
+void                 args_Insary(command::mdbg& parent, algo::aryptr<algo::cstring> rhs, int at) __attribute__((nothrow));
 
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
@@ -4440,6 +4868,11 @@ algo::cstring&       b_AllocAt(command::mdbg& parent, int at) __attribute__((__w
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:command.mdbg.b.AllocN
 algo::aryptr<algo::cstring> b_AllocN(command::mdbg& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:command.mdbg.b.AllocNAt
+algo::aryptr<algo::cstring> b_AllocNAt(command::mdbg& parent, int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:command.mdbg.b.EmptyQ
 inline bool          b_EmptyQ(command::mdbg& parent) __attribute__((nothrow));
@@ -4496,6 +4929,10 @@ algo::aryptr<algo::cstring> b_AllocNVal(command::mdbg& parent, int n_elems, cons
 // Function returns success value.
 // func:command.mdbg.b.ReadStrptrMaybe
 bool                 b_ReadStrptrMaybe(command::mdbg& parent, algo::strptr in_str) __attribute__((nothrow));
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:command.mdbg.b.Insary
+void                 b_Insary(command::mdbg& parent, algo::aryptr<algo::cstring> rhs, int at) __attribute__((nothrow));
 
 // proceed to next item
 // func:command.mdbg.args_curs.Next
@@ -4786,6 +5223,101 @@ inline void          orgfile_proc_Init(command::orgfile_proc& parent);
 // func:command.orgfile_proc..Uninit
 void                 orgfile_proc_Uninit(command::orgfile_proc& parent) __attribute__((nothrow));
 
+// --- command.samp_make
+// access: command.samp_make_proc.samp_make (Exec)
+struct samp_make { // command.samp_make
+    algo::cstring    in;           //   "data"  Input directory or filename, - for stdin
+    algo_lib::Regx   target;       //   "%"  Sql Regx of sampdb::Target
+    bool             parse_make;   //   false  Parse extern/gnumake/Simple-Makefile
+    algo::cstring    makefile;     //   "extern/gnumake/Simple-Makefile"  (with parse_make) makefile to parse
+    bool             write;        //   false  P(with parse_make) write ssimfiles, otherwise print them
+    // func:command.samp_make..Ctor
+    inline               samp_make() __attribute__((nothrow));
+};
+
+// Print back to string
+// func:command.samp_make.target.Print
+void                 target_Print(command::samp_make& parent, algo::cstring &out) __attribute__((nothrow));
+// Read Regx from string
+// Convert string to field. Return success value
+// func:command.samp_make.target.ReadStrptrMaybe
+bool                 target_ReadStrptrMaybe(command::samp_make& parent, algo::strptr in) __attribute__((nothrow));
+
+// func:command.samp_make..ReadFieldMaybe
+bool                 samp_make_ReadFieldMaybe(command::samp_make& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of command::samp_make from attributes of ascii tuple TUPLE
+// func:command.samp_make..ReadTupleMaybe
+bool                 samp_make_ReadTupleMaybe(command::samp_make &parent, algo::Tuple &tuple) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:command.samp_make..Init
+void                 samp_make_Init(command::samp_make& parent);
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+// func:command.samp_make..ToCmdline
+tempstr              samp_make_ToCmdline(command::samp_make& row) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:command.samp_make.Argv  printfmt:Tuple
+// func:command.samp_make..PrintArgv
+void                 samp_make_PrintArgv(command::samp_make& row, algo::cstring& str) __attribute__((nothrow));
+// Used with command lines
+// Return # of command-line arguments that must follow this argument
+// If FIELD is invalid, return -1
+// func:command.samp_make..NArgs
+i32                  samp_make_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
+
+// --- command.samp_make_proc
+struct samp_make_proc { // command.samp_make_proc: Subprocess: sample program for Makefile management
+    algo::cstring        path;      //   "bin/samp_make"  path for executable
+    command::samp_make   cmd;       // command line for child process
+    algo::cstring        fstdin;    // redirect for stdin
+    algo::cstring        fstdout;   // redirect for stdout
+    algo::cstring        fstderr;   // redirect for stderr
+    pid_t                pid;       //   0  pid of running child process
+    i32                  timeout;   //   0  optional timeout for child process
+    i32                  status;    //   0  last exit status of child process
+    // func:command.samp_make_proc..Ctor
+    inline               samp_make_proc() __attribute__((nothrow));
+    // func:command.samp_make_proc..Dtor
+    inline               ~samp_make_proc() __attribute__((nothrow));
+};
+
+// Start subprocess
+// If subprocess already running, do nothing. Otherwise, start it
+// func:command.samp_make_proc.samp_make.Start
+int                  samp_make_Start(command::samp_make_proc& parent) __attribute__((nothrow));
+// Start subprocess & Read output
+// func:command.samp_make_proc.samp_make.StartRead
+algo::Fildes         samp_make_StartRead(command::samp_make_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
+// Kill subprocess and wait
+// func:command.samp_make_proc.samp_make.Kill
+void                 samp_make_Kill(command::samp_make_proc& parent);
+// Wait for subprocess to return
+// func:command.samp_make_proc.samp_make.Wait
+void                 samp_make_Wait(command::samp_make_proc& parent) __attribute__((nothrow));
+// Start + Wait
+// Execute subprocess and return exit code
+// func:command.samp_make_proc.samp_make.Exec
+int                  samp_make_Exec(command::samp_make_proc& parent) __attribute__((nothrow));
+// Start + Wait, throw exception on error
+// Execute subprocess; throw human-readable exception on error
+// func:command.samp_make_proc.samp_make.ExecX
+void                 samp_make_ExecX(command::samp_make_proc& parent);
+// Call execv()
+// Call execv with specified parameters
+// func:command.samp_make_proc.samp_make.Execv
+int                  samp_make_Execv(command::samp_make_proc& parent) __attribute__((nothrow));
+// func:command.samp_make_proc.samp_make.ToCmdline
+algo::tempstr        samp_make_ToCmdline(command::samp_make_proc& parent) __attribute__((nothrow));
+// Form array from the command line
+// func:command.samp_make_proc.samp_make.ToArgv
+void                 samp_make_ToArgv(command::samp_make_proc& parent, algo::StringAry& args) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:command.samp_make_proc..Init
+inline void          samp_make_proc_Init(command::samp_make_proc& parent);
+// func:command.samp_make_proc..Uninit
+void                 samp_make_proc_Uninit(command::samp_make_proc& parent) __attribute__((nothrow));
+
 // --- command.samp_meng
 // access: command.samp_meng_proc.samp_meng (Exec)
 struct samp_meng { // command.samp_meng
@@ -4817,7 +5349,7 @@ void                 samp_meng_PrintArgv(command::samp_meng& row, algo::cstring&
 i32                  samp_meng_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
 
 // --- command.samp_meng_proc
-struct samp_meng_proc { // command.samp_meng_proc: Subprocess: 
+struct samp_meng_proc { // command.samp_meng_proc: Subprocess: Sample matching engine
     algo::cstring        path;      //   "bin/samp_meng"  path for executable
     command::samp_meng   cmd;       // command line for child process
     algo::cstring        fstdin;    // redirect for stdin
@@ -4872,42 +5404,18 @@ void                 samp_meng_proc_Uninit(command::samp_meng_proc& parent) __at
 // --- command.samp_regx
 // access: command.samp_regx_proc.samp_regx (Exec)
 struct samp_regx { // command.samp_regx
-    algo::cstring   in;       //   "data"  Input directory or filename, - for stdin
-    algo::cstring   expr;     // Expression
-    u8              style;    //   0  Regx style
-    bool            match;    //   false  Match a string
-    algo::cstring   string;   //   ""  String to match
-    bool            show;     //   false  Show regx innards
+    algo::cstring         in;        //   "data"  Input directory or filename, - for stdin
+    algo::cstring         expr;      // Expression
+    algo_lib::RegxStyle   style;     //   2  Regx style
+    bool                  trace;     //   false  Trace regx innards
+    bool                  capture;   //   false  Use capture groups
+    bool                  full;      //   true  Match full string
+    bool                  f;         //   false  <string> is a filename, grep the lines
+    bool                  match;     //   false  Match a string, exit code represnts success
+    algo::cstring         string;    //   ""  String to match
     // func:command.samp_regx..Ctor
     inline               samp_regx() __attribute__((nothrow));
 };
-
-// Get value of field as enum type
-// func:command.samp_regx.style.GetEnum
-inline command_samp_regx_style_Enum style_GetEnum(const command::samp_regx& parent) __attribute__((nothrow));
-// Set value of field from enum type.
-// func:command.samp_regx.style.SetEnum
-inline void          style_SetEnum(command::samp_regx& parent, command_samp_regx_style_Enum rhs) __attribute__((nothrow));
-// Convert numeric value of field to one of predefined string constants.
-// If string is found, return a static C string. Otherwise, return NULL.
-// func:command.samp_regx.style.ToCstr
-const char*          style_ToCstr(const command::samp_regx& parent) __attribute__((nothrow));
-// Convert style to a string. First, attempt conversion to a known string.
-// If no string matches, print style as a numeric value.
-// func:command.samp_regx.style.Print
-void                 style_Print(const command::samp_regx& parent, algo::cstring &lhs) __attribute__((nothrow));
-// Convert string to field.
-// If the string is invalid, do not modify field and return false.
-// In case of success, return true
-// func:command.samp_regx.style.SetStrptrMaybe
-bool                 style_SetStrptrMaybe(command::samp_regx& parent, algo::strptr rhs) __attribute__((nothrow));
-// Convert string to field.
-// If the string is invalid, set numeric value to DFLT
-// func:command.samp_regx.style.SetStrptr
-void                 style_SetStrptr(command::samp_regx& parent, algo::strptr rhs, command_samp_regx_style_Enum dflt) __attribute__((nothrow));
-// Convert string to field. Return success value
-// func:command.samp_regx.style.ReadStrptrMaybe
-bool                 style_ReadStrptrMaybe(command::samp_regx& parent, algo::strptr rhs) __attribute__((nothrow));
 
 // func:command.samp_regx..ReadFieldMaybe
 bool                 samp_regx_ReadFieldMaybe(command::samp_regx& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
@@ -5005,7 +5513,8 @@ struct sandbox { // command.sandbox
     algo::cstring*   files_elems;   // pointer to elements
     u32              files_n;       // number of elements in array
     u32              files_max;     // max. capacity of array before realloc
-    algo::cstring    refs;          //   "HEAD"  Refs to fetch into sandbox
+    algo::cstring    refs;          //   "HEAD"  Additional list of refs to fetch into sandbox
+    algo::cstring    ref;           //   "HEAD"  Reset to this ref
     bool             q;             //   false  Quiet mode
     // func:command.sandbox..AssignOp
     command::sandbox&    operator =(const command::sandbox &rhs) __attribute__((nothrow));
@@ -5041,6 +5550,11 @@ algo::cstring&       cmd_AllocAt(command::sandbox& parent, int at) __attribute__
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:command.sandbox.cmd.AllocN
 algo::aryptr<algo::cstring> cmd_AllocN(command::sandbox& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:command.sandbox.cmd.AllocNAt
+algo::aryptr<algo::cstring> cmd_AllocNAt(command::sandbox& parent, int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:command.sandbox.cmd.EmptyQ
 inline bool          cmd_EmptyQ(command::sandbox& parent) __attribute__((nothrow));
@@ -5097,6 +5611,10 @@ algo::aryptr<algo::cstring> cmd_AllocNVal(command::sandbox& parent, int n_elems,
 // Function returns success value.
 // func:command.sandbox.cmd.ReadStrptrMaybe
 bool                 cmd_ReadStrptrMaybe(command::sandbox& parent, algo::strptr in_str) __attribute__((nothrow));
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:command.sandbox.cmd.Insary
+void                 cmd_Insary(command::sandbox& parent, algo::aryptr<algo::cstring> rhs, int at) __attribute__((nothrow));
 
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
@@ -5114,6 +5632,11 @@ algo::cstring&       files_AllocAt(command::sandbox& parent, int at) __attribute
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:command.sandbox.files.AllocN
 algo::aryptr<algo::cstring> files_AllocN(command::sandbox& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:command.sandbox.files.AllocNAt
+algo::aryptr<algo::cstring> files_AllocNAt(command::sandbox& parent, int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:command.sandbox.files.EmptyQ
 inline bool          files_EmptyQ(command::sandbox& parent) __attribute__((nothrow));
@@ -5170,6 +5693,10 @@ algo::aryptr<algo::cstring> files_AllocNVal(command::sandbox& parent, int n_elem
 // Function returns success value.
 // func:command.sandbox.files.ReadStrptrMaybe
 bool                 files_ReadStrptrMaybe(command::sandbox& parent, algo::strptr in_str) __attribute__((nothrow));
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:command.sandbox.files.Insary
+void                 files_Insary(command::sandbox& parent, algo::aryptr<algo::cstring> rhs, int at) __attribute__((nothrow));
 
 // proceed to next item
 // func:command.sandbox.cmd_curs.Next
@@ -5275,54 +5802,34 @@ void                 sandbox_proc_Uninit(command::sandbox_proc& parent) __attrib
 // --- command.src_func
 // access: command.src_func_proc.src_func (Exec)
 struct src_func { // command.src_func
-    algo::cstring       in;            //   "data"  Input directory or filename, - for stdin
-    algo_lib::Regx      target;        //   "%"  Sql Regx of dev::Target
-    algo_lib::Regx      name;          //   "%"  Sql Regx
-    algo_lib::Regx      body;          //   "%"  Sql Regx
-    algo_lib::Regx      targsrc;       //   ""  Sql Regx of dev::Targsrc
-    algo_lib::Regx      func;          //   "%"  Sql Regx
-    algo_lib::Regx      comment;       //   "%"  Sql Regx
-    algo::Smallstr200   nextfile;      //   ""  Print name of next srcfile in targsrc list
-    bool                other;         //   false  (with -nextfile), name of previous file
-    bool                updateproto;   //   false  Update prototypes in headers
-    bool                listfunc;      //   false  Show functions in target
-    bool                iffy;          //   false  Select functions that may contain errors
-    bool                proto;         //   false  (with -listfunc) List prototypes only
-    bool                gen;           //   false  (with -listfunc) Visit generated files
-    bool                showloc;       //   true  (with -listfunc) Show file location
-    bool                showstatic;    //   true  (with -listfunc) Show static functions
-    bool                showsortkey;   //   false  (with -listfunc) Display function sortkey
-    bool                sortname;      //   false  (with -listfunc) Sort functions by name
-    bool                e;             //   false  (with -listfunc) Edit found functions
-    bool                baddecl;       //   false  Report and fail on bad declarations
-    bool                report;        //   false
+    algo::cstring       in;              //   "data"  Input directory or filename, - for stdin
+    algo_lib::Regx      targsrc;         //   "%"  Sql Regx of dev::Targsrc
+    algo_lib::Regx      acrkey;          //   "%"  Sql Regx
+    algo_lib::Regx      func;            //   "%"  Sql Regx of dev::Target
+    algo::Smallstr200   nextfile;        //   ""  (action) Print name of next srcfile in targsrc list
+    bool                other;           //   false      (with -nextfile), name of previous file
+    bool                list;            //   false  (action) List matching functions
+    bool                updateproto;     //   false  (action) Update prototypes in headers
+    bool                createmissing;   //   false  (action) Create missing functions declared in userfunc table
+    bool                iffy;            //   false  (filter) Select functions that may contain errors
+    bool                gen;             //   false  (scan) Scan generated files
+    bool                showloc;         //   false  (output) Show file location
+    bool                f;               //   false  (output) -sortname -showcomment -showbody
+    bool                showstatic;      //   true  (filter) Allow static functions
+    algo_lib::Regx      matchproto;      //   "%"  Sql Regx
+    algo_lib::Regx      matchbody;       //   "%"  Sql Regx
+    algo_lib::Regx      matchcomment;    //   "%"  Sql Regx
+    bool                showsortkey;     //   false  (output) Display function sortkey
+    bool                showcomment;     //   false  (output) Display function comment
+    bool                showbody;        //   false  (output) Print function body
+    bool                sortname;        //   false  (output) Sort functions by name
+    bool                printssim;       //   false  (output) Print ssim tuples
+    bool                e;               //   false  Edit found functions
+    bool                baddecl;         //   false  Report and fail on bad declarations
+    bool                report;          //   false  Print final report
     // func:command.src_func..Ctor
     inline               src_func() __attribute__((nothrow));
 };
-
-// Print back to string
-// func:command.src_func.target.Print
-void                 target_Print(command::src_func& parent, algo::cstring &out) __attribute__((nothrow));
-// Read Regx from string
-// Convert string to field. Return success value
-// func:command.src_func.target.ReadStrptrMaybe
-bool                 target_ReadStrptrMaybe(command::src_func& parent, algo::strptr in) __attribute__((nothrow));
-
-// Print back to string
-// func:command.src_func.name.Print
-void                 name_Print(command::src_func& parent, algo::cstring &out) __attribute__((nothrow));
-// Read Regx from string
-// Convert string to field. Return success value
-// func:command.src_func.name.ReadStrptrMaybe
-bool                 name_ReadStrptrMaybe(command::src_func& parent, algo::strptr in) __attribute__((nothrow));
-
-// Print back to string
-// func:command.src_func.body.Print
-void                 body_Print(command::src_func& parent, algo::cstring &out) __attribute__((nothrow));
-// Read Regx from string
-// Convert string to field. Return success value
-// func:command.src_func.body.ReadStrptrMaybe
-bool                 body_ReadStrptrMaybe(command::src_func& parent, algo::strptr in) __attribute__((nothrow));
 
 // Print back to string
 // func:command.src_func.targsrc.Print
@@ -5333,6 +5840,14 @@ void                 targsrc_Print(command::src_func& parent, algo::cstring &out
 bool                 targsrc_ReadStrptrMaybe(command::src_func& parent, algo::strptr in) __attribute__((nothrow));
 
 // Print back to string
+// func:command.src_func.acrkey.Print
+void                 acrkey_Print(command::src_func& parent, algo::cstring &out) __attribute__((nothrow));
+// Read Regx from string
+// Convert string to field. Return success value
+// func:command.src_func.acrkey.ReadStrptrMaybe
+bool                 acrkey_ReadStrptrMaybe(command::src_func& parent, algo::strptr in) __attribute__((nothrow));
+
+// Print back to string
 // func:command.src_func.func.Print
 void                 func_Print(command::src_func& parent, algo::cstring &out) __attribute__((nothrow));
 // Read Regx from string
@@ -5341,12 +5856,28 @@ void                 func_Print(command::src_func& parent, algo::cstring &out) _
 bool                 func_ReadStrptrMaybe(command::src_func& parent, algo::strptr in) __attribute__((nothrow));
 
 // Print back to string
-// func:command.src_func.comment.Print
-void                 comment_Print(command::src_func& parent, algo::cstring &out) __attribute__((nothrow));
+// func:command.src_func.matchproto.Print
+void                 matchproto_Print(command::src_func& parent, algo::cstring &out) __attribute__((nothrow));
 // Read Regx from string
 // Convert string to field. Return success value
-// func:command.src_func.comment.ReadStrptrMaybe
-bool                 comment_ReadStrptrMaybe(command::src_func& parent, algo::strptr in) __attribute__((nothrow));
+// func:command.src_func.matchproto.ReadStrptrMaybe
+bool                 matchproto_ReadStrptrMaybe(command::src_func& parent, algo::strptr in) __attribute__((nothrow));
+
+// Print back to string
+// func:command.src_func.matchbody.Print
+void                 matchbody_Print(command::src_func& parent, algo::cstring &out) __attribute__((nothrow));
+// Read Regx from string
+// Convert string to field. Return success value
+// func:command.src_func.matchbody.ReadStrptrMaybe
+bool                 matchbody_ReadStrptrMaybe(command::src_func& parent, algo::strptr in) __attribute__((nothrow));
+
+// Print back to string
+// func:command.src_func.matchcomment.Print
+void                 matchcomment_Print(command::src_func& parent, algo::cstring &out) __attribute__((nothrow));
+// Read Regx from string
+// Convert string to field. Return success value
+// func:command.src_func.matchcomment.ReadStrptrMaybe
+bool                 matchcomment_ReadStrptrMaybe(command::src_func& parent, algo::strptr in) __attribute__((nothrow));
 
 // func:command.src_func..ReadFieldMaybe
 bool                 src_func_ReadFieldMaybe(command::src_func& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
@@ -5860,6 +6391,11 @@ algo::cstring&       match_AllocAt(command::ssimfilt& parent, int at) __attribut
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:command.ssimfilt.match.AllocN
 algo::aryptr<algo::cstring> match_AllocN(command::ssimfilt& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:command.ssimfilt.match.AllocNAt
+algo::aryptr<algo::cstring> match_AllocNAt(command::ssimfilt& parent, int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:command.ssimfilt.match.EmptyQ
 inline bool          match_EmptyQ(command::ssimfilt& parent) __attribute__((nothrow));
@@ -5916,6 +6452,10 @@ algo::aryptr<algo::cstring> match_AllocNVal(command::ssimfilt& parent, int n_ele
 // Function returns success value.
 // func:command.ssimfilt.match.ReadStrptrMaybe
 bool                 match_ReadStrptrMaybe(command::ssimfilt& parent, algo::strptr in_str) __attribute__((nothrow));
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:command.ssimfilt.match.Insary
+void                 match_Insary(command::ssimfilt& parent, algo::aryptr<algo::cstring> rhs, int at) __attribute__((nothrow));
 
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
@@ -5933,6 +6473,11 @@ algo::cstring&       field_AllocAt(command::ssimfilt& parent, int at) __attribut
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:command.ssimfilt.field.AllocN
 algo::aryptr<algo::cstring> field_AllocN(command::ssimfilt& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:command.ssimfilt.field.AllocNAt
+algo::aryptr<algo::cstring> field_AllocNAt(command::ssimfilt& parent, int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:command.ssimfilt.field.EmptyQ
 inline bool          field_EmptyQ(command::ssimfilt& parent) __attribute__((nothrow));
@@ -5989,6 +6534,10 @@ algo::aryptr<algo::cstring> field_AllocNVal(command::ssimfilt& parent, int n_ele
 // Function returns success value.
 // func:command.ssimfilt.field.ReadStrptrMaybe
 bool                 field_ReadStrptrMaybe(command::ssimfilt& parent, algo::strptr in_str) __attribute__((nothrow));
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:command.ssimfilt.field.Insary
+void                 field_Insary(command::ssimfilt& parent, algo::aryptr<algo::cstring> rhs, int at) __attribute__((nothrow));
 
 // Get value of field as enum type
 // func:command.ssimfilt.format.GetEnum
@@ -6391,6 +6940,15 @@ struct gcli_fields_curs {// cursor
     int n_elems;
     int index;
     gcli_fields_curs() { elems=NULL; n_elems=0; index=0; }
+};
+
+
+struct jkv_kv_curs {// cursor
+    typedef algo::cstring ChildType;
+    algo::cstring* elems;
+    int n_elems;
+    int index;
+    jkv_kv_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
 

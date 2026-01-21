@@ -43,9 +43,9 @@ inline acr_dm::FValue* acr_dm::zs_value_First(acr_dm::FAttr& attr) {
 
 // --- acr_dm.FAttr.zs_value.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool acr_dm::zs_value_InLlistQ(acr_dm::FValue& row) {
+inline bool acr_dm::attr_zs_value_InLlistQ(acr_dm::FValue& row) {
     bool result = false;
-    result = !(row.zs_value_next == (acr_dm::FValue*)-1);
+    result = !(row.attr_zs_value_next == (acr_dm::FValue*)-1);
     return result;
 }
 
@@ -65,8 +65,8 @@ inline i32 acr_dm::zs_value_N(const acr_dm::FAttr& attr) {
 
 // --- acr_dm.FAttr.zs_value.Next
 // Return pointer to next element in the list
-inline acr_dm::FValue* acr_dm::zs_value_Next(acr_dm::FValue &row) {
-    return row.zs_value_next;
+inline acr_dm::FValue* acr_dm::attr_zs_value_Next(acr_dm::FValue &row) {
+    return row.attr_zs_value_next;
 }
 
 // --- acr_dm.FAttr.zs_value.qLast
@@ -92,7 +92,7 @@ inline bool acr_dm::attr_zs_value_curs_ValidQ(attr_zs_value_curs &curs) {
 // --- acr_dm.FAttr.zs_value_curs.Next
 // proceed to next item
 inline void acr_dm::attr_zs_value_curs_Next(attr_zs_value_curs &curs) {
-    acr_dm::FValue *next = (*curs.row).zs_value_next;
+    acr_dm::FValue *next = (*curs.row).attr_zs_value_next;
     curs.row = next;
 }
 
@@ -109,7 +109,7 @@ inline void acr_dm::FAttr_Init(acr_dm::FAttr& attr) {
     attr.zs_value_head = NULL; // (acr_dm.FAttr.zs_value)
     attr.zs_value_n = 0; // (acr_dm.FAttr.zs_value)
     attr.zs_value_tail = NULL; // (acr_dm.FAttr.zs_value)
-    attr.zs_attr_next = (acr_dm::FAttr*)-1; // (acr_dm.FTuple.zs_attr) not-in-list
+    attr.tuple_zs_attr_next = (acr_dm::FAttr*)-1; // (acr_dm.FTuple.zs_attr) not-in-list
 }
 
 // --- acr_dm.FAttr..Ctor
@@ -649,26 +649,6 @@ inline i32 acr_dm::source_Sup(acr_dm::Source& parent) {
     return ret;
 }
 
-// --- acr_dm.Source.source_bitcurs.Reset
-inline void acr_dm::Source_source_bitcurs_Reset(Source_source_bitcurs &curs, acr_dm::Source &parent) {
-    curs.elems = &source_qFind(parent,0);
-    curs.n_elems = source_N(parent);
-    curs.bit = -1;
-    Source_source_bitcurs_Next(curs);
-}
-
-// --- acr_dm.Source.source_bitcurs.ValidQ
-// cursor points to valid item
-inline bool acr_dm::Source_source_bitcurs_ValidQ(Source_source_bitcurs &curs) {
-    return curs.bit < curs.n_elems*8;
-}
-
-// --- acr_dm.Source.source_bitcurs.Access
-// item access
-inline int& acr_dm::Source_source_bitcurs_Access(Source_source_bitcurs &curs) {
-    return curs.bit;
-}
-
 // --- acr_dm.Source..Init
 // Set all fields to initial values.
 inline void acr_dm::Source_Init(acr_dm::Source& parent) {
@@ -710,9 +690,9 @@ inline acr_dm::FAttr* acr_dm::zs_attr_First(acr_dm::FTuple& tuple) {
 
 // --- acr_dm.FTuple.zs_attr.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool acr_dm::zs_attr_InLlistQ(acr_dm::FAttr& row) {
+inline bool acr_dm::tuple_zs_attr_InLlistQ(acr_dm::FAttr& row) {
     bool result = false;
-    result = !(row.zs_attr_next == (acr_dm::FAttr*)-1);
+    result = !(row.tuple_zs_attr_next == (acr_dm::FAttr*)-1);
     return result;
 }
 
@@ -732,8 +712,8 @@ inline i32 acr_dm::zs_attr_N(const acr_dm::FTuple& tuple) {
 
 // --- acr_dm.FTuple.zs_attr.Next
 // Return pointer to next element in the list
-inline acr_dm::FAttr* acr_dm::zs_attr_Next(acr_dm::FAttr &row) {
-    return row.zs_attr_next;
+inline acr_dm::FAttr* acr_dm::tuple_zs_attr_Next(acr_dm::FAttr &row) {
+    return row.tuple_zs_attr_next;
 }
 
 // --- acr_dm.FTuple.zs_attr.qLast
@@ -751,6 +731,7 @@ inline void acr_dm::FTuple_Init(acr_dm::FTuple& tuple) {
     tuple.zs_attr_n = 0; // (acr_dm.FTuple.zs_attr)
     tuple.zs_attr_tail = NULL; // (acr_dm.FTuple.zs_attr)
     tuple.ind_tuple_next = (acr_dm::FTuple*)-1; // (acr_dm.FDb.ind_tuple) not-in-hash
+    tuple.ind_tuple_hashval = 0; // stored hash value
     tuple.bh_tuple_idx = -1; // (acr_dm.FDb.bh_tuple) not-in-heap
 }
 
@@ -769,7 +750,7 @@ inline bool acr_dm::tuple_zs_attr_curs_ValidQ(tuple_zs_attr_curs &curs) {
 // --- acr_dm.FTuple.zs_attr_curs.Next
 // proceed to next item
 inline void acr_dm::tuple_zs_attr_curs_Next(tuple_zs_attr_curs &curs) {
-    acr_dm::FAttr *next = (*curs.row).zs_attr_next;
+    acr_dm::FAttr *next = (*curs.row).tuple_zs_attr_next;
     curs.row = next;
 }
 
@@ -793,7 +774,7 @@ inline  acr_dm::FTuple::~FTuple() {
 // Set all fields to initial values.
 inline void acr_dm::FValue_Init(acr_dm::FValue& value) {
     value.p_attr = NULL;
-    value.zs_value_next = (acr_dm::FValue*)-1; // (acr_dm.FAttr.zs_value) not-in-list
+    value.attr_zs_value_next = (acr_dm::FValue*)-1; // (acr_dm.FAttr.zs_value) not-in-list
 }
 
 // --- acr_dm.FValue..Ctor

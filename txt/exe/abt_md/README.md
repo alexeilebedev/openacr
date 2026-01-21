@@ -17,25 +17,25 @@
 <!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Syntax -->
 ```
 abt_md: Tool to generate markdown documentation
-Usage: abt_md [[-readme:]<regx>] [[-section:]<regx>] [options]
-    OPTION      TYPE    DFLT    COMMENT
-    -in         string  "data"  Input directory or filename, - for stdin
-    [readme]    regx    "%"     Regx of readme to process/show (empty=all)
-    -ns         regx    ""      (overrides -readme) Process readmes for this namespace
-    [section]   regx    "%"     Select specific section to process
-    -update             Y       (action) Update mode: Re-generate mdfiles
-    -check                      (action) Check mode: Check syntax and links
-    -link                       (with -print) Print links
-    -anchor                     (with -print) Print anchors
-    -print                      (action) Query mode: Print .md section without evaluating
-    -dry_run                    Do not write changes to disk
-    -external                   Check external links as well (may fail if no internet connection)
-    -evalcmd            Y       Execute inline-commands
-    -verbose    int             Verbosity level (0..255); alias -v; cumulative
-    -debug      int             Debug level (0..255); alias -d; cumulative
-    -help                       Print help and exit; alias -h
-    -version                    Print version and exit
-    -signature                  Show signatures and exit; alias -sig
+Usage: abt_md [[-readmefile:]<regx>] [[-section:]<regx>] [options]
+    OPTION        TYPE    DFLT    COMMENT
+    -in           string  "data"  Input directory or filename, - for stdin
+    [readmefile]  regx    "%"     Regx of readme to process/show (empty=all)
+    -ns           regx    ""      (overrides -readme) Process readmes for this namespace
+    [section]     regx    "%"     Select specific section to process
+    -update               Y       (action) Update mode: Re-generate mdfiles
+    -check                        (action) Check mode: Check syntax and links
+    -link                         (with -print) Print links
+    -anchor                       (with -print) Print anchors
+    -print                        (action) Query mode: Print .md section without evaluating
+    -dry_run                      Do not write changes to disk
+    -external                     Check external links as well (may fail if no internet connection)
+    -evalcmd              Y       Execute inline-commands
+    -verbose      flag            Verbosity level (0..255); alias -v; cumulative
+    -debug        flag            Debug level (0..255); alias -d; cumulative
+    -help                         Print help and exit; alias -h
+    -version                      Print version and exit
+    -signature                    Show signatures and exit; alias -sig
 
 ```
 
@@ -72,8 +72,8 @@ processing.
 #### -in -- Input directory or filename, - for stdin
 <a href="#-in"></a>
 
-#### -readme -- Regx of readme to process/show (empty=all)
-<a href="#-readme"></a>
+#### -readmefile -- Regx of readme to process/show (empty=all)
+<a href="#-readmefile"></a>
 
 #### -ns -- (overrides -readme) Process readmes for this namespace
 <a href="#-ns"></a>
@@ -118,25 +118,28 @@ errlist abt_md -check
 `abt_md` takes the following tables on input:
 |Ssimfile|Comment|
 |---|---|
-|[amcdb.tclass](/txt/ssimdb/amcdb/tclass.md)|AMC template class|
-|[dmmeta.reftype](/txt/ssimdb/dmmeta/reftype.md)|Field type constructor (e.g. reference type)|
-|[dmmeta.nstype](/txt/ssimdb/dmmeta/nstype.md)|Namespace type|
-|[dmmeta.ns](/txt/ssimdb/dmmeta/ns.md)|Namespace (for in-memory database, protocol, etc)|
-|[dmmeta.ctype](/txt/ssimdb/dmmeta/ctype.md)|Struct|
-|[dmmeta.field](/txt/ssimdb/dmmeta/field.md)|Specify field of a struct|
-|[dmmeta.substr](/txt/ssimdb/dmmeta/substr.md)|Specify that the field value is computed from a substring of another field|
-|[dmmeta.ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|File with ssim tuples|
-|[dmmeta.gstatic](/txt/ssimdb/dmmeta/gstatic.md)|Load entries for this table at startup time|
-|[dmmeta.gconst](/txt/ssimdb/dmmeta/gconst.md)|Import ssim table columns as fconst for a field|
-|[dmmeta.fconst](/txt/ssimdb/dmmeta/fconst.md)|Specify enum value (integer + string constant) for a field|
 |[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
+|[atfdb.comptest](/txt/ssimdb/atfdb/comptest.md)||
+|[dmmeta.ctype](/txt/ssimdb/dmmeta/ctype.md)|Struct|
+|[dmmeta.dispatch](/txt/ssimdb/dmmeta/dispatch.md)|Generate code for a multi-way branch|
+|[dmmeta.dispatch_msg](/txt/ssimdb/dmmeta/dispatch_msg.md)|Add message to a dispatch|
+|[dmmeta.fconst](/txt/ssimdb/dmmeta/fconst.md)|Specify enum value (integer + string constant) for a field|
+|[dmmeta.field](/txt/ssimdb/dmmeta/field.md)|Specify field of a struct|
+|[dmmeta.finput](/txt/ssimdb/dmmeta/finput.md)|Describe input table of a program|
+|[dmmeta.gconst](/txt/ssimdb/dmmeta/gconst.md)|Import ssim table columns as fconst for a field|
+|[dmmeta.gstatic](/txt/ssimdb/dmmeta/gstatic.md)|Load entries for this table at startup time|
+|[dmmeta.ns](/txt/ssimdb/dmmeta/ns.md)|Namespace (for in-memory database, protocol, etc)|
+|[dmmeta.nstype](/txt/ssimdb/dmmeta/nstype.md)|Namespace type|
+|[dev.readmefile](/txt/ssimdb/dev/readmefile.md)|File containing documentation|
+|[dev.readmesort](/txt/ssimdb/dev/readmesort.md)|sorted categories of txt/ *.md files presented in dev.readme|
+|[dmmeta.reftype](/txt/ssimdb/dmmeta/reftype.md)|Field type constructor (e.g. reference type)|
+|[dev.scriptfile](/txt/ssimdb/dev/scriptfile.md)|Known script file|
+|[dmmeta.ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|File with ssim tuples|
+|[dmmeta.substr](/txt/ssimdb/dmmeta/substr.md)|Specify that the field value is computed from a substring of another field|
+|[dev.targdep](/txt/ssimdb/dev/targdep.md)|Dependency between targets|
 |[dev.target](/txt/ssimdb/dev/target.md)|Build target|
 |[dev.targsrc](/txt/ssimdb/dev/targsrc.md)|List of sources for target|
-|[dev.targdep](/txt/ssimdb/dev/targdep.md)|Dependency between targets|
-|[dev.scriptfile](/txt/ssimdb/dev/scriptfile.md)|Known script file|
-|[dev.readmesort](/txt/ssimdb/dev/readmesort.md)|sorted categories of txt/ *.md files presented in dev.readme|
-|[dev.readme](/txt/ssimdb/dev/readme.md)|File containing documentation|
-|[atfdb.comptest](/txt/ssimdb/atfdb/comptest.md)||
+|[amcdb.tclass](/txt/ssimdb/amcdb/tclass.md)|AMC template class|
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
 

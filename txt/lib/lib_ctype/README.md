@@ -18,15 +18,8 @@
 Functions exported from this namespace:
 
 ```c++
-// Find ctype from ctype name
-// Supports ctype and ssimfile lookups.
-lib_ctype::FCtype *lib_ctype::TagToCtype(strptr name) 
-```
-
-```c++
-// Find ctype from tuple type tag.
-// Supports ctype and ssimfile lookups.
-lib_ctype::FCtype *lib_ctype::TagToCtype(algo::Tuple &tuple) 
+// Retrieve base type for the given ctype
+lib_ctype::FCtype *lib_ctype::Basetype(lib_ctype::FCtype &ctype) 
 ```
 
 ```c++
@@ -35,13 +28,40 @@ bool lib_ctype::EqualDefaultQ(algo::Attr *attr, lib_ctype::FField &field)
 ```
 
 ```c++
-// Print attributes from TUPLE,
-// which is known to be of ctype CTYPE, to cstring TEXT.
-// Output fields in normalized order, respecting Base.
-// If SKIP_DFLT is true, do not print fields which happen to match their default.
-// Suports Varlen fields.
-// Attributes that are themselves tuples are recursively normalized as well.
-void lib_ctype::PrintTupleAttrs(cstring& text, algo::Tuple &tuple, lib_ctype::FCtype &ctype, bool skip_dflt) 
+// Fill Replscope with attribute values (including substrings) of tuple
+// So, if STR is dev.targdep targdep:a.b comment:"blah"
+// Then R will be filled with variables $targdep, $target, $parent, $comment
+// This can be used to perform $-substitution in strings.
+void lib_ctype::FillReplscope(algo_lib::Replscope &R, algo::Tuple &tuple) 
+```
+
+```c++
+// Same as tuple version of FillReplscope, but also parses the tuple from STR
+void lib_ctype::FillReplscope(algo_lib::Replscope &R, strptr str) 
+```
+
+```c++
+// Find fconst from field and ssim attr value.
+lib_ctype::FFconst *lib_ctype::FindFconst(lib_ctype::FField *field, cstring& attr_value) 
+```
+
+```c++
+// Find field by name, possibly scanning base fields
+// Skips dot-suffix first, i.e. attr "abc.4" is looked up as "abc" (used for Varlen fields)
+lib_ctype::FField *lib_ctype::FindField(lib_ctype::FCtype &ctype, strptr name) 
+```
+
+```c++
+// Prepare main schema
+void lib_ctype::Init() 
+```
+
+```c++
+// Match Tuple EXPECT against tuple RESULT.
+// EXPECT must be a subset of RESULT for the match to pass.
+// Results of comparison, mostly represented as a match distance, are saved in MATCH.
+// Search exits early if match.distance exceeds match.maxdist.
+void lib_ctype::Match_Tuple(lib_ctype::Match &match, Tuple &expect, Tuple &result) 
 ```
 
 ```c++
@@ -59,44 +79,13 @@ tempstr lib_ctype::NormalizeSsimTuple(strptr str, bool skip_dflt)
 ```
 
 ```c++
-// Retrieve base type for the given ctype
-lib_ctype::FCtype *lib_ctype::Basetype(lib_ctype::FCtype &ctype) 
-```
-
-```c++
-// Find field by name, possibly scanning base fields
-// Skips dot-suffix first, i.e. attr "abc.4" is looked up as "abc" (used for Varlen fields)
-lib_ctype::FField *lib_ctype::FindField(lib_ctype::FCtype &ctype, strptr name) 
-```
-
-```c++
-// Check if field is printed as tuple -- i.e. requires recursive parsing
-bool lib_ctype::TupleFieldQ(lib_ctype::FField &field) 
-```
-
-```c++
-// Check if attribute is a tuple.
-// This is basically the same as TupleFieldQ, but returns false for
-// empty Opt fields.
-bool lib_ctype::TupleAttrQ(lib_ctype::FField &field, strptr val) 
-```
-
-```c++
-// Prepare main schema
-void lib_ctype::Init() 
-```
-
-```c++
-// Find fconst from field and ssim attr value.
-lib_ctype::FFconst *lib_ctype::FindFconst(lib_ctype::FField *field, cstring& attr_value) 
-```
-
-```c++
-// Match Tuple EXPECT against tuple RESULT.
-// EXPECT must be a subset of RESULT for the match to pass.
-// Results of comparison, mostly represented as a match distance, are saved in MATCH.
-// Search exits early if match.distance exceeds match.maxdist.
-void lib_ctype::Match_Tuple(lib_ctype::Match &match, Tuple &expect, Tuple &result) 
+// Print attributes from TUPLE,
+// which is known to be of ctype CTYPE, to cstring TEXT.
+// Output fields in normalized order, respecting Base.
+// If SKIP_DFLT is true, do not print fields which happen to match their default.
+// Suports Varlen fields.
+// Attributes that are themselves tuples are recursively normalized as well.
+void lib_ctype::PrintTupleAttrs(cstring& text, algo::Tuple &tuple, lib_ctype::FCtype &ctype, bool skip_dflt) 
 ```
 
 ```c++
@@ -108,16 +97,27 @@ tempstr lib_ctype::StabilizeSsimTuple(strptr str)
 ```
 
 ```c++
-// Same as tuple version of FillReplscope, but also parses the tuple from STR
-void lib_ctype::FillReplscope(algo_lib::Replscope &R, strptr str) 
+// Find ctype from tuple type tag.
+// Supports ctype and ssimfile lookups.
+lib_ctype::FCtype *lib_ctype::TagToCtype(algo::Tuple &tuple) 
 ```
 
 ```c++
-// Fill Replscope with attribute values (including substrings) of tuple
-// So, if STR is dev.targdep targdep:a.b comment:"blah"
-// Then R will be filled with variables $targdep, $target, $parent, $comment
-// This can be used to perform $-substitution in strings.
-void lib_ctype::FillReplscope(algo_lib::Replscope &R, algo::Tuple &tuple) 
+// Find ctype from ctype name
+// Supports ctype and ssimfile lookups.
+lib_ctype::FCtype *lib_ctype::TagToCtype(strptr name) 
+```
+
+```c++
+// Check if attribute is a tuple.
+// This is basically the same as TupleFieldQ, but returns false for
+// empty Opt fields.
+bool lib_ctype::TupleAttrQ(lib_ctype::FField &field, strptr val) 
+```
+
+```c++
+// Check if field is printed as tuple -- i.e. requires recursive parsing
+bool lib_ctype::TupleFieldQ(lib_ctype::FField &field) 
 ```
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Functions -->
@@ -128,19 +128,19 @@ void lib_ctype::FillReplscope(algo_lib::Replscope &R, algo::Tuple &tuple)
 `lib_ctype` takes the following tables on input:
 |Ssimfile|Comment|
 |---|---|
-|[dmmeta.ctype](/txt/ssimdb/dmmeta/ctype.md)|Struct|
-|[dmmeta.field](/txt/ssimdb/dmmeta/field.md)|Specify field of a struct|
-|[dmmeta.substr](/txt/ssimdb/dmmeta/substr.md)|Specify that the field value is computed from a substring of another field|
-|[dmmeta.ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|File with ssim tuples|
-|[dmmeta.sqltype](/txt/ssimdb/dmmeta/sqltype.md)|Mapping of ctype -> SQL expression|
-|[dmmeta.ftuple](/txt/ssimdb/dmmeta/ftuple.md)||
-|[dmmeta.fconst](/txt/ssimdb/dmmeta/fconst.md)|Specify enum value (integer + string constant) for a field|
 |[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
-|[dmmeta.cppfunc](/txt/ssimdb/dmmeta/cppfunc.md)|Value of field provided by this expression|
-|[dmmeta.cfmt](/txt/ssimdb/dmmeta/cfmt.md)|Specify options for printing/reading ctypes into multiple formats|
-|[dmmeta.cdflt](/txt/ssimdb/dmmeta/cdflt.md)|Specify default value for single-value types that lack fields|
-|[dev.unstablefld](/txt/ssimdb/dev/unstablefld.md)|Fields that should be stripped from component test output because they contain timestamps etc.|
 |[amcdb.bltin](/txt/ssimdb/amcdb/bltin.md)|Specify properties of a C built-in type|
+|[dmmeta.cdflt](/txt/ssimdb/dmmeta/cdflt.md)|Specify default value for single-value types that lack fields|
+|[dmmeta.cfmt](/txt/ssimdb/dmmeta/cfmt.md)|Specify options for printing/reading ctypes into multiple formats|
+|[dmmeta.cppfunc](/txt/ssimdb/dmmeta/cppfunc.md)|Value of field provided by this expression|
+|[dmmeta.ctype](/txt/ssimdb/dmmeta/ctype.md)|Struct|
+|[dmmeta.fconst](/txt/ssimdb/dmmeta/fconst.md)|Specify enum value (integer + string constant) for a field|
+|[dmmeta.field](/txt/ssimdb/dmmeta/field.md)|Specify field of a struct|
+|[dmmeta.ftuple](/txt/ssimdb/dmmeta/ftuple.md)||
+|[dmmeta.sqltype](/txt/ssimdb/dmmeta/sqltype.md)|Mapping of ctype -> SQL expression|
+|[dmmeta.ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|File with ssim tuples|
+|[dmmeta.substr](/txt/ssimdb/dmmeta/substr.md)|Specify that the field value is computed from a substring of another field|
+|[dev.unstablefld](/txt/ssimdb/dev/unstablefld.md)|Fields that should be stripped from component test output because they contain timestamps etc.|
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
 
@@ -327,6 +327,7 @@ struct FCfmt { // lib_ctype.FCfmt
     algo::Comment       comment;               //
     bool                ctype_c_cfmt_in_ary;   //   false  membership flag
     lib_ctype::FCfmt*   ind_cfmt_next;         // hash next
+    u32                 ind_cfmt_hashval;      // hash value
     // func:lib_ctype.FCfmt..AssignOp
     lib_ctype::FCfmt&    operator =(const lib_ctype::FCfmt &rhs) = delete;
     // func:lib_ctype.FCfmt..CopyCtor
@@ -400,19 +401,20 @@ private:
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/lib_ctype_gen.h](/include/gen/lib_ctype_gen.h)
 ```
 struct FCtype { // lib_ctype.FCtype
-    algo::Smallstr100      ctype;            // Identifier. must be ns.typename
-    algo::Comment          comment;          //
-    lib_ctype::FField**    c_field_elems;    // array of pointers
-    u32                    c_field_n;        // array of pointers
-    u32                    c_field_max;      // capacity of allocated array
-    algo::Smallstr50       printfmt;         //
-    lib_ctype::FCdflt*     c_cdflt;          // optional pointer
-    lib_ctype::FCfmt**     c_cfmt_elems;     // array of pointers
-    u32                    c_cfmt_n;         // array of pointers
-    u32                    c_cfmt_max;       // capacity of allocated array
-    lib_ctype::FBltin*     c_bltin;          // optional pointer
-    lib_ctype::FSqltype*   c_sqltype;        // optional pointer
-    lib_ctype::FCtype*     ind_ctype_next;   // hash next
+    algo::Smallstr100      ctype;               // Identifier. must be ns.typename
+    algo::Comment          comment;             //
+    lib_ctype::FField**    c_field_elems;       // array of pointers
+    u32                    c_field_n;           // array of pointers
+    u32                    c_field_max;         // capacity of allocated array
+    algo::Smallstr50       printfmt;            //
+    lib_ctype::FCdflt*     c_cdflt;             // optional pointer
+    lib_ctype::FCfmt**     c_cfmt_elems;        // array of pointers
+    u32                    c_cfmt_n;            // array of pointers
+    u32                    c_cfmt_max;          // capacity of allocated array
+    lib_ctype::FBltin*     c_bltin;             // optional pointer
+    lib_ctype::FSqltype*   c_sqltype;           // optional pointer
+    lib_ctype::FCtype*     ind_ctype_next;      // hash next
+    u32                    ind_ctype_hashval;   // hash value
     // reftype Ptrary of lib_ctype.FCtype.c_field prohibits copy
     // x-reference on lib_ctype.FCtype.c_cdflt prevents copy
     // reftype Ptrary of lib_ctype.FCtype.c_cfmt prohibits copy
@@ -539,14 +541,16 @@ struct FDb { // lib_ctype.FDb: In-memory database for lib_ctype
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/lib_ctype_gen.h](/include/gen/lib_ctype_gen.h)
 ```
 struct FFconst { // lib_ctype.FFconst
-    lib_ctype::FFconst*   ind_fconst_key_next;   // hash next
-    lib_ctype::FFconst*   ind_fconst_next;       // hash next
-    algo::Smallstr100     fconst;                //
-    algo::CppExpr         value;                 //
-    algo::Comment         comment;               //
-    algo::cstring         key;                   //
-    lib_ctype::FFconst*   zd_fconst_next;        // zslist link; -1 means not-in-list
-    lib_ctype::FFconst*   zd_fconst_prev;        // previous element
+    lib_ctype::FFconst*   ind_fconst_key_next;      // hash next
+    u32                   ind_fconst_key_hashval;   // hash value
+    lib_ctype::FFconst*   ind_fconst_next;          // hash next
+    u32                   ind_fconst_hashval;       // hash value
+    algo::Smallstr100     fconst;                   //
+    algo::CppExpr         value;                    //
+    algo::Comment         comment;                  //
+    algo::cstring         key;                      //
+    lib_ctype::FFconst*   field_zd_fconst_next;     // zslist link; -1 means not-in-list
+    lib_ctype::FFconst*   field_zd_fconst_prev;     // previous element
     // func:lib_ctype.FFconst..AssignOp
     inline lib_ctype::FFconst& operator =(const lib_ctype::FFconst &rhs) = delete;
     // func:lib_ctype.FFconst..CopyCtor
@@ -589,6 +593,7 @@ Generated by [amc](/txt/exe/amc/README.md) into [include/gen/lib_ctype_gen.h](/i
 ```
 struct FField { // lib_ctype.FField
     lib_ctype::FField*         ind_field_next;            // hash next
+    u32                        ind_field_hashval;         // hash value
     algo::Smallstr100          field;                     // Primary key, as ctype.name
     algo::Smallstr100          arg;                       // Type of field
     algo::Smallstr50           reftype;                   //   "Val"  Type constructor
@@ -723,10 +728,11 @@ private:
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/lib_ctype_gen.h](/include/gen/lib_ctype_gen.h)
 ```
 struct FSsimfile { // lib_ctype.FSsimfile
-    lib_ctype::FSsimfile*   ind_ssimfile_next;   // hash next
-    algo::Smallstr50        ssimfile;            //
-    algo::Smallstr100       ctype;               //
-    lib_ctype::FCtype*      p_ctype;             // reference to parent row
+    lib_ctype::FSsimfile*   ind_ssimfile_next;      // hash next
+    u32                     ind_ssimfile_hashval;   // hash value
+    algo::Smallstr50        ssimfile;               //
+    algo::Smallstr100       ctype;                  //
+    lib_ctype::FCtype*      p_ctype;                // reference to parent row
     // x-reference on lib_ctype.FSsimfile.p_ctype prevents copy
     // func:lib_ctype.FSsimfile..AssignOp
     inline lib_ctype::FSsimfile& operator =(const lib_ctype::FSsimfile &rhs) = delete;

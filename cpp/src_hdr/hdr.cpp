@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -28,13 +28,15 @@
 // -----------------------------------------------------------------------------
 
 static void InsertComment(src_hdr::FSrc &src, strptr text, cstring &out) {
-    ind_beg(Line_curs,line,text) {
-        out<<src.cmtstring;
-        if (ch_N(line)) {
-            out<<" "<<line;
-        }
-        out<<eol;
-    }ind_end;
+    if (src.cmtstring != "") {
+        ind_beg(Line_curs,line,text) {
+            out<<src.cmtstring;
+            if (ch_N(line)) {
+                out<<" "<<line;
+            }
+            out<<eol;
+        }ind_end;
+    }
 }
 
 // -----------------------------------------------------------------------------
@@ -83,12 +85,18 @@ static void DescribeTarget(src_hdr::FSrc &src, src_hdr::FNs &ns, cstring &out) {
 // <TARGSRC DESCRIPTION>
 static void Save(src_hdr::FSrc &src) {
     cstring out;
-    ind_beg(algo::Line_curs,line,src.shebang) {
-        out << "#" << line << eol;
-    }ind_end;
-    InsertComment(src,src.copyright,out);
-    InsertComment(src,"\n",out);
-
+    verblog("src_hdr.file"
+            <<Keyval("file",src.src)
+            <<Keyval("shebang",src.shebang)
+            <<Keyval("license",src.p_license->text)
+            <<Keyval("comment",src.comment)
+            <<Keyval("cmtstring",src.cmtstring)
+            <<Keyval("copyright",src.copyright));
+    out << src.shebang;
+    if (src.copyright != "") {
+        InsertComment(src,src.copyright,out);
+        InsertComment(src,"\n",out);
+    }
     if (src.p_license) {
         strptr license = src.p_license->text;
         if (license != "") {
@@ -106,7 +114,6 @@ static void Save(src_hdr::FSrc &src) {
     out<<eol;
     out<<src.body;
 
-    verblog(out);
     if (src_hdr::_db.cmdline.write) {
         (void)SafeStringToFile(out,src.src,algo::FileFlags());
     }
@@ -115,10 +122,7 @@ static void Save(src_hdr::FSrc &src) {
 // -----------------------------------------------------------------------------
 
 static void ReadTagLine(src_hdr::FSrc &src, strptr line) {
-    if (StartsWithQ(line,"!")) {// shebang
-        src.shebang << line << eol;
-        // ignore, we re-generate this
-    } else if (StartsWithQ(line,"Target:")) {
+    if (StartsWithQ(line,"Target:")) {
         // ignore, we re-generate this
     } else if (StartsWithQ(line,"License:")) {
         // ignore, we re-generate this
@@ -226,18 +230,36 @@ static void UpdateCopyright(src_hdr::FSrc &src) {
 
 // -----------------------------------------------------------------------------
 
+static strptr GuessCmtString(strptr shebang) {
+    shebang=Trimmed(shebang);
+    strptr executable=Pathcomp(shebang," LR LL");
+    strptr ret = executable == "node" ? "//"
+        : "#";
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
 static void RebuildHeader(src_hdr::FSrc &src) {
     algo_lib::MmapFile file;
     if (MmapFile_Load(file,src.src)) {
         src.text=file.text;
         bool inhdr=true;
         ind_beg(Line_curs,line,src.text) {
-            // empty lines following header are part of the header
-            inhdr = inhdr && (StartsWithQ(line,src.cmtstring) || !ch_N(Trimmed(line)));
-            if (inhdr) {
-                ReadTagLine(src,Trimmed(RestFrom(line,ch_N(src.cmtstring))));
+            if (ind_curs(line).i==0 && StartsWithQ(line,"#!")) {
+                src.shebang << line << eol;
+                // if the file had no extension, guess comment string from shebang line
+                if (src.cmtstring == "") {
+                    src.cmtstring = GuessCmtString(src.shebang);
+                }
             } else {
-                src.body<<line<<eol;
+                // empty lines following header are part of the header
+                inhdr = inhdr && (StartsWithQ(line,src.cmtstring) || !ch_N(Trimmed(line)));
+                if (inhdr) {
+                    ReadTagLine(src,Trimmed(RestFrom(line,ch_N(src.cmtstring))));
+                } else {
+                    src.body<<line<<eol;
+                }
             }
         }ind_end;
         UpdateCopyright(src);
@@ -289,11 +311,15 @@ void src_hdr::Main() {
     }ind_end;
     ind_beg(src_hdr::_db_scriptfile_curs,scriptfile,src_hdr::_db) {
         if (Regx_Match(_db.cmdline.scriptfile,scriptfile.gitfile) && !Regx_Match(exclude,scriptfile.gitfile)) {
+            algo::strptr ext = GetFileExt(scriptfile.gitfile);
             src_hdr::FSrc src;
             src.src=scriptfile.gitfile;
             src.p_targsrc=NULL;
             src.p_license=scriptfile.p_license;
-            src.cmtstring="#";
+            src.cmtstring = ext == "" ? ""
+                : ext == ".mjs" || ext == ".js" || ext == ".jsx" || ext == ".ts" || ext == ".tsx" ? "//"
+                : ext == ".json" ? ""
+                : "#";
             RebuildHeader(src);
         }
     }ind_end;

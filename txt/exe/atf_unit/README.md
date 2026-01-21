@@ -28,8 +28,8 @@ Usage: atf_unit [[-unittest:]<regx>] [options]
     -report                   Y       Print final report
     -capture                          Re-capture test results
     -check_untracked          Y       Check for untracked file before allowing test to run
-    -verbose          int             Verbosity level (0..255); alias -v; cumulative
-    -debug            int             Debug level (0..255); alias -d; cumulative
+    -verbose          flag            Verbosity level (0..255); alias -v; cumulative
+    -debug            flag            Debug level (0..255); alias -d; cumulative
     -help                             Print help and exit; alias -h
     -version                          Print version and exit
     -signature                        Show signatures and exit; alias -sig
@@ -80,9 +80,9 @@ Usage: atf_unit [[-unittest:]<regx>] [options]
 `atf_unit` takes the following tables on input:
 |Ssimfile|Comment|
 |---|---|
-|[fmdb.alm_objtype](/txt/ssimdb/fmdb/alm_objtype.md)|Alarm resource type|
-|[fmdb.alm_code](/txt/ssimdb/fmdb/alm_code.md)||
 |[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
+|[fmdb.alm_code](/txt/ssimdb/fmdb/alm_code.md)||
+|[fmdb.alm_objtype](/txt/ssimdb/fmdb/alm_objtype.md)|Alarm resource type|
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
 

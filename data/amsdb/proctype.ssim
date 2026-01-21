@@ -1,2 +1,2 @@
-amsdb.proctype  proctype:0  id:0  ns:""  comment:"No process"
-amsdb.proctype  proctype:amstest  id:5  ns:ams_sendtest  comment:"Ams testing"
+amsdb.proctype  proctype:""  id:0  ns:""  comment:"No process"
+amsdb.proctype  proctype:ams_sendtest  id:5  ns:ams_sendtest  comment:"Ams testing"

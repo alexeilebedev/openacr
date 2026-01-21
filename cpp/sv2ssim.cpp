@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -185,6 +185,8 @@ void sv2ssim::OutputSchema() {
             bool match=false;
             if (svtype.ctype == "bool") {
                 match=field.couldbe_bool;
+            } else if (svtype.ctype == "char") {
+                match=!fldnumeric && field.maxwid<=1;
             } else if (numeric) {
                 u64 maxval = u64(1)<<svtype.maxwid;
                 match = field.couldbe_int && field.maxval <= maxval;

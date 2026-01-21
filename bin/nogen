@@ -1,1 +1,1 @@
-grephunk 'f:!/gen/' | hilite -d | less -r
+grephunk 'f:!/gen/' 'f:!internals.md' | hilite -d | less -r

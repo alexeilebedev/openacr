@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2012 AlgoEngineering LLC
 //
@@ -24,9 +24,56 @@
 
 #include "include/amc.h"
 
+amc::FField *amc::LengthField(amc::FCtype &ctype) {
+    return ctype.c_lenfld ? ctype.c_lenfld->p_field : NULL;
+}
+
+tempstr amc::LengthType(amc::FCtype &ctype) {
+    tempstr ret;
+    if (amc::FField *lenfld = LengthField(ctype)) {
+        ret << lenfld->cpp_type;
+    } else {
+        ret << "u32";
+    }
+    return ret;
+}
+
+tempstr amc::VarlenEndName(amc::FField &field) {
+    return tempstr() << name_Get(field) << "_end";
+}
+
+tempstr amc::VarlenEndExpr(strptr parname, amc::FField &field) {
+    tempstr ret;
+    if (amc::FField *lenfld = LengthField(*field.p_ctype)) {
+        ret = FieldvalExpr(NULL,*lenfld,parname,VarlenEndName(field));
+    } else {
+        ret << VarlenEndName(field);
+    }
+    return ret;
+}
+
+tempstr amc::VarlenEndAssign(strptr parname, amc::FField &field, strptr value) {
+    tempstr ret;
+    if (amc::FField *lenfld = LengthField(*field.p_ctype)) {
+        ret = AssignExpr(*lenfld, parname, value, true, VarlenEndName(field));
+    } else {
+        ret << VarlenEndName(field) << " = " << value;
+    }
+    return ret;
+}
+
+tempstr amc::VarlenEndIncr(strptr parname, amc::FField &field, strptr incr) {
+    tempstr value = tempstr() << VarlenEndExpr(parname,field) << " + " << incr;
+    return amc::VarlenEndAssign(parname, field, value);
+}
+
 void amc::tclass_Varlen() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;
+    if (ctype_zd_varlenfld_Next(field)) {
+        Set(R, "$lentype", LengthType(*field.p_ctype));
+        InsVar(R, field.p_ctype, "$lentype", VarlenEndName(field), "", "end of $name field");
+    }
     InsStruct(R, field.p_ctype, "// var-length field $field starts here. access it with $name_Addr");
     Set(R, "$lenexpr", LengthExpr(*field.p_ctype, Subst(R,"$parname")));
     Set(R, "$curslenexpr", LengthExpr(*field.p_ctype, Subst(R,"parent")));
@@ -46,23 +93,28 @@ void amc::tclass_Varlen() {
     // Ensure that this field is last
     bool seen = false;
     ind_beg(amc::ctype_c_field_curs, _field,*field.p_ctype) {
-        if (seen) {
+        if (_field.reftype == dmmeta_Reftype_reftype_Varlen) {
+            seen = true;
+        } else if (seen) {
             prerr("amc.varlen_last"
                   <<Keyval("field",field.field)
-                  <<Keyval("comment","Variable-length field must be last"));
-            algo_lib::_db.exit_code=1;
+                  <<Keyval("comment","Variable-length field(s) must be last"));
         }
-        seen = seen || &field == &_field;
     }ind_end;
-
 }
 
 void amc::tfunc_Varlen_Addr() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
     amc::FFunc& addr = amc::CreateCurFunc();
     Ins(&R, addr.ret  , "$rettype*", false);
     Ins(&R, addr.proto, "$name_Addr($Parent)", false);
-    Ins(&R, addr.body, "return ($rettype*)((u8*)&$parname + sizeof($Partype)); // address of varlen portion");
+    if (ctype_zd_varlenfld_Prev(field)) {
+        Set(R, "$prevend", VarlenEndExpr(Subst(R,"$parname"),*ctype_zd_varlenfld_Prev(field)));
+        Ins(&R, addr.body, "return ($rettype*)((u8*)&$parname + sizeof($Partype) + $prevend); // address of varlen portion");
+    } else {
+        Ins(&R, addr.body, "return ($rettype*)((u8*)&$parname + sizeof($Partype)); // address of varlen portion");
+    }
 }
 
 void amc::tfunc_Varlen_Getary() {
@@ -80,13 +132,25 @@ void amc::tfunc_Varlen_N() {
     amc::FFunc& get_n = amc::CreateCurFunc();
     Ins(&R, get_n.ret  , "u32",false);
     Ins(&R, get_n.proto, "$name_N($Cparent)",false);
-    if (field.p_ctype->c_lenfld) {
-        Set(R, "$lenexpr", LengthExpr(*field.p_ctype, "(($Partype&)$parname)"));
-        Ins(&R, get_n.body, "u32 length = $lenexpr;");
-        Ins(&R, get_n.body, "u32 extra_bytes = u32_Max(length,sizeof($Partype)) - sizeof($Partype); // avoid unsigned subtraction underflow");
-        Ins(&R, get_n.body, "return u32(extra_bytes / sizeof($rettype));");
+    if (ctype_zd_varlenfld_Prev(field)) {
+        Set(R, "$prevend", VarlenEndExpr(Subst(R,"$parname"),*ctype_zd_varlenfld_Prev(field)));
+        Set(R, "$minusprevend", " - $prevend");
     } else {
-        get_n.extrn=true;
+        Set(R, "$minusprevend", "");
+    }
+    if (ctype_zd_varlenfld_Next(field)) {
+        Set(R, "$endexpr", VarlenEndExpr(Subst(R,"$parname"),field));
+        Ins(&R, get_n.body, "return u32(($endexpr$minusprevend) / sizeof($rettype));");
+    } else {
+        if (field.p_ctype->c_lenfld) {
+            Set(R, "$lenexpr", LengthExpr(*field.p_ctype, "(($Partype&)$parname)"));
+            Ins(&R, get_n.body, "u32 length = $lenexpr;");
+            Ins(&R, get_n.body, "u32 extra_bytes = u32_Max(length,sizeof($Partype)) - sizeof($Partype)$minusprevend; // avoid unsigned subtraction underflow");
+            Ins(&R, get_n.body, "return u32(extra_bytes / sizeof($rettype));");
+        } else {
+            get_n.acrkey << "field:"<<field.field;
+            get_n.extrn=true;
+        }
     }
 }
 
@@ -100,17 +164,65 @@ void amc::tfunc_Varlen_ReadStrptrMaybe() {
         Ins(&R, rd.proto, "$name_ReadStrptrMaybe($Parent, algo::strptr in_str)", false);
         Ins(&R, rd.body, "bool retval = true;");
         Ins(&R, rd.body, "if (algo_lib::_db.varlenbuf) {");
+        if (ctype_zd_varlenfld_Next(field)) {
+            Set(R, "$endexpr", VarlenEndExpr(Subst(R,"$parname"),field));
+        }
         if ((field.arg == "char" || field.arg == "u8")) {
-            Ins(&R, rd.body , "    ary_Addary(*algo_lib::_db.varlenbuf, strptr_ToMemptr(in_str));");
+            if (ctype_zd_varlenfld_Next(field)) {
+                Ins(&R, rd.body , "    ary_Insary(*algo_lib::_db.varlenbuf,strptr_ToMemptr(in_str),$endexpr);");
+                Ins(&R, rd.body , "    u32 incr = ch_N(in_str);");
+            } else {
+                Ins(&R, rd.body , "    ary_Addary(*algo_lib::_db.varlenbuf, strptr_ToMemptr(in_str));");
+            }
         } else if (field.p_arg->c_typefld) {
             Set(R, "$Fldhdrtype", field.p_arg->c_typefld->p_ctype->cpp_type);
             Ins(&R, rd.body, "    algo::ByteAry temp;");
             Ins(&R, rd.body, "    retval = $FldhdrtypeMsgs_ReadStrptrMaybe(in_str, temp); // read any of several message types here");
-            Ins(&R, rd.body, "    ary_Addary(*algo_lib::_db.varlenbuf, ary_Getary(temp)); // return it");
+            if (ctype_zd_varlenfld_Next(field)) {
+                Ins(&R, rd.body , "    ary_Insary(*algo_lib::_db.varlenbuf,ary_Getary(temp),$endexpr);");
+                Ins(&R, rd.body , "    u32 incr = ary_N(temp);");
+            } else {
+                Ins(&R, rd.body, "    ary_Addary(*algo_lib::_db.varlenbuf, ary_Getary(temp)); // return it");
+            }
         } else {
             Set(R, "$Fldcpptype", field.cpp_type);
-            Ins(&R, rd.body , "    $Fldcpptype *$name_tmp = new(ary_AllocN(*algo_lib::_db.varlenbuf, sizeof($Fldcpptype)).elems) $Fldcpptype;");
+            if (ctype_zd_varlenfld_Next(field)) {
+                Ins(&R, rd.body , "    $Fldcpptype *$name_tmp = new(ary_AllocNAt(*algo_lib::_db.varlenbuf, sizeof($Fldcpptype), $endexpr).elems) $Fldcpptype;");
+                Ins(&R, rd.body , "    u32 incr = sizeof($Fldcpptype);");
+            } else {
+                Ins(&R, rd.body , "    $Fldcpptype *$name_tmp = new(ary_AllocN(*algo_lib::_db.varlenbuf, sizeof($Fldcpptype)).elems) $Fldcpptype;");
+            }
+            if (VarlenQ(*field.p_arg)) {
+                Ins(&R, rd.body , "    algo::ByteAry varlenbuf;");
+                Ins(&R, rd.body , "    algo::ByteAry *varlenbuf_save = algo_lib::_db.varlenbuf;");
+                Ins(&R, rd.body , "    algo_lib::_db.varlenbuf = &varlenbuf;");
+            }
             Ins(&R, rd.body , "    retval = $Cpptype_ReadStrptrMaybe(*$name_tmp, in_str);");
+            if (VarlenQ(*field.p_arg)) {
+                Ins(&R, rd.body , "    algo_lib::_db.varlenbuf = varlenbuf_save;");
+                if (field.p_ctype->c_lenfld) {
+                    cstring len("sizeof($Fldcpptype)+ary_N(varlenbuf)");
+                    if (field.p_ctype->c_lenfld->extra > 0) {
+                        len << "+" << field.p_ctype->c_lenfld->extra;
+                    } else if (field.p_ctype->c_lenfld->extra < 0) {
+                        len << field.p_ctype->c_lenfld->extra;
+                    }
+                    Set(R,"$lenincr",amc::AssignExpr(*field.p_ctype->c_lenfld->p_field,Subst(R,"(*$name_tmp)"),Subst(R,len),true));
+                    Ins(&R, rd.body , "    $lenincr;");
+                }
+                if (ctype_zd_varlenfld_Next(field)) {
+                    Ins(&R, rd.body , "    ary_Insary(*algo_lib::_db.varlenbuf,varlenbuf,$endexpr+sizeof($Fldcpptype));");
+                    Ins(&R, rd.body , "    incr += ary_N(varlenbuf);");
+                } else {
+                    Ins(&R, rd.body , "    ary_Addary(*algo_lib::_db.varlenbuf,varlenbuf);");
+                }
+            }
+        }
+        if (ctype_zd_varlenfld_Next(field)) {
+            for (FField *ptr = &field; ctype_zd_varlenfld_Next(*ptr); ptr = ctype_zd_varlenfld_Next(*ptr)) {
+                Set(R, "$endincr", VarlenEndIncr(Subst(R,"$parname"),*ptr,"incr"));
+                Ins(&R, rd.body , "    $endincr;");
+            }
         }
         Ins(&R, rd.body, "}");
         SetPresent(rd,Subst(R,"$parname"),field);
@@ -140,8 +252,19 @@ void amc::tfunc_Varlen_curs() {
             amc::FFunc& curs_reset = amc::CreateInlineFunc(Subst(R,"$field_curs.Reset"));
             Ins(&R, curs_reset.ret  , "void", false);
             Ins(&R, curs_reset.proto, "$Parname_$name_curs_Reset($Parname_$name_curs &curs, $Partype &parent)", false);
-            Ins(&R, curs_reset.body, "curs.ptr = (u8*)&parent + sizeof($Partype);");
-            Ins(&R, curs_reset.body, "curs.length = $curslenexpr - sizeof($Partype);");
+            Ins(&R, curs_reset.body, "curs.ptr = (u8*)$name_Addr(parent);");
+            if (ctype_zd_varlenfld_Prev(field)) {
+                Set(R, "$prevend", VarlenEndExpr(Subst(R,"$parname"),*ctype_zd_varlenfld_Prev(field)));
+                Set(R, "$minusprevend", "- $prevend");
+            } else {
+                Set(R, "$minusprevend", "");
+            }
+            if (ctype_zd_varlenfld_Next(field)) {
+                Set(R, "$endexpr", VarlenEndExpr(Subst(R,"$parname"),field));
+                Ins(&R, curs_reset.body, "curs.length = $endexpr$minusprevend;");
+            } else {
+                Ins(&R, curs_reset.body, "curs.length = $curslenexpr $minusprevend - sizeof($Partype);");
+            }
             Ins(&R, curs_reset.body, "curs.index = 0;");
         }
 
@@ -184,4 +307,15 @@ void amc::tfunc_Varlen_curs() {
 
 void amc::tfunc_Varlen_Print() {
     tfunc_Inlary_Print();
+}
+
+void amc::tfunc_Varlen_Init() {
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
+    amc::FFunc& init = amc::CreateCurFunc();
+    init.inl = true;
+    if (ctype_zd_varlenfld_Next(field)) {
+        Set(R, "$endassign", VarlenEndAssign(Subst(R,"$parname"),field,"0"));
+        Ins(&R, init.body, "$endassign; // $name: initialize");
+    }
 }

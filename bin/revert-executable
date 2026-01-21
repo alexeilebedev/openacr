@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# Copyright (C) 2025-2026 AlgoRND
+#
+# revert an executable to specified ref
+# (e.g. restore-target amc MERGE_HEAD)
+
+TGT=$1
+REF=$2
+if [ -z "$TGT" ] || [ -z "$REF" ]; then
+    echo "usage: $0 <target> <ref>"
+    exit 1
+fi
+sandbox amc -reset -ref $REF -- bash -c "abt $TGT" && cp temp/sandbox.amc/build/release/$TGT build/release/

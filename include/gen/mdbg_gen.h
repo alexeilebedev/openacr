@@ -130,6 +130,7 @@ struct FCfg { // mdbg.FCfg
     u32                 c_builddir_n;       // array of pointers
     u32                 c_builddir_max;     // capacity of allocated array
     mdbg::FCfg*         ind_cfg_next;       // hash next
+    u32                 ind_cfg_hashval;    // hash value
     // reftype Ptrary of mdbg.FCfg.c_builddir prohibits copy
     // func:mdbg.FCfg..AssignOp
     inline mdbg::FCfg&   operator =(const mdbg::FCfg &rhs) = delete;
@@ -379,6 +380,9 @@ void                 ind_cfg_Remove(mdbg::FCfg& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:mdbg.FDb.ind_cfg.Reserve
 void                 ind_cfg_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:mdbg.FDb.ind_cfg.AbsReserve
+void                 ind_cfg_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.

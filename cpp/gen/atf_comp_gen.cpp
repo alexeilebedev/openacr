@@ -35,21 +35,21 @@
 #include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/report_gen.h"
 #include "include/gen/report_gen.inl.h"
+#include "include/gen/lib_json_gen.h"
+#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/lib_amcdb_gen.h"
 #include "include/gen/lib_amcdb_gen.inl.h"
 #include "include/gen/lib_ctype_gen.h"
 #include "include/gen/lib_ctype_gen.inl.h"
-#include "include/gen/lib_json_gen.h"
-#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/lib_prot_gen.h"
 #include "include/gen/lib_prot_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
+lib_json::FDb    lib_json::_db;     // dependency found via dev.targdep
 algo_lib::FDb    algo_lib::_db;     // dependency found via dev.targdep
 lib_ctype::FDb   lib_ctype::_db;    // dependency found via dev.targdep
-lib_json::FDb    lib_json::_db;     // dependency found via dev.targdep
 atf_comp::FDb    atf_comp::_db;     // dependency found via dev.targdep
 
 namespace atf_comp {
@@ -68,12 +68,11 @@ const char *atf_comp_help =
 "    -normalize                           (action) Renumber and normalize tmsgs\n"
 "    -covcapture                          (action) Capture new coverage percentages and save back\n"
 "    -covcheck                            (action) Check coverage percentages against tgtcov table\n"
-"    -compdir          string  \"\"         Component image directory (exe)\n"
+"    -bindir           string  \"\"         Directory with binaries (default: build/cfg)\n"
 "    -cfg              string  \"release\"  Set config\n"
 "    -check_untracked          Y          Check for untracked file before allowing test to run\n"
-"    -maxerr           int     1          Exit after this many errors\n"
+"    -maxerr           int     3          Exit after this many errors\n"
 "    -build                               Build given cfg before test\n"
-"    -ood                                 Check given cfg for ood before test\n"
 "    -memcheck                            Run under memory checker (valgrind)\n"
 "    -force                               (With -memcheck) run suppressed memcheck\n"
 "    -callgrind                           Run under callgrind profiler (valgrind)\n"
@@ -81,10 +80,13 @@ const char *atf_comp_help =
 "    -stream                              prints component's output\n"
 "    -i                                   Read and execute testcase from stdin\n"
 "    -write                    Y          (implied with -e) Write any changes back to ssim tables\n"
-"    -report                              Print final report\n"
+"    -report                   Y          Print final report\n"
 "    -b                string  \"\"         Breakpoint passed to mdbg as-is\n"
-"    -verbose          int                Verbosity level (0..255); alias -v; cumulative\n"
-"    -debug            int                Debug level (0..255); alias -d; cumulative\n"
+"    -covfast                  Y          Speedup coverage processing\n"
+"    -minrepeat        int     0          Execute every comptest at least this many times\n"
+"    -maxrepeat        int     1          Don't repeat any individual comptest more than X times\n"
+"    -verbose          flag               Verbosity level (0..255); alias -v; cumulative\n"
+"    -debug            flag               Debug level (0..255); alias -d; cumulative\n"
 "    -help                                Print help and exit; alias -h\n"
 "    -version                             Print version and exit\n"
 "    -signature                           Show signatures and exit; alias -sig\n"
@@ -98,14 +100,6 @@ namespace atf_comp { // gen:ns_print_proto
     static void          InitReflection();
     // func:atf_comp.FDb.comptest.InputMaybe
     static bool          comptest_InputMaybe(atfdb::Comptest &elem) __attribute__((nothrow));
-    // First element of index changed.
-    // func:atf_comp.FDb.zd_sel_comptest.FirstChanged
-    static void          zd_sel_comptest_FirstChanged() __attribute__((nothrow));
-    // Update cycles count from previous clock capture
-    // func:atf_comp.FDb.zd_sel_comptest.UpdateCycles
-    inline static void   zd_sel_comptest_UpdateCycles() __attribute__((nothrow));
-    // func:atf_comp.FDb.zd_sel_comptest.Call
-    inline static void   zd_sel_comptest_Call() __attribute__((nothrow));
     // func:atf_comp.FDb.targs.InputMaybe
     static bool          targs_InputMaybe(atfdb::Targs &elem) __attribute__((nothrow));
     // func:atf_comp.FDb.tmsg.InputMaybe
@@ -133,7 +127,10 @@ void atf_comp::comptest_CopyOut(atf_comp::FComptest &row, atfdb::Comptest &out) 
     out.comptest = row.comptest;
     out.timeout = row.timeout;
     out.memcheck = row.memcheck;
+    out.coverage = row.coverage;
     out.exit_code = row.exit_code;
+    out.ncore = row.ncore;
+    out.repeat = row.repeat;
     out.comment = row.comment;
 }
 
@@ -143,7 +140,10 @@ void atf_comp::comptest_CopyIn(atf_comp::FComptest &row, atfdb::Comptest &in) {
     row.comptest = in.comptest;
     row.timeout = in.timeout;
     row.memcheck = in.memcheck;
+    row.coverage = in.coverage;
     row.exit_code = in.exit_code;
+    row.ncore = in.ncore;
+    row.repeat = in.repeat;
     row.comment = in.comment;
 }
 
@@ -192,12 +192,12 @@ void atf_comp::zd_tmsg_Cascdel(atf_comp::FComptest& comptest) {
 // --- atf_comp.FComptest.zd_tmsg.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
 void atf_comp::zd_tmsg_Insert(atf_comp::FComptest& comptest, atf_comp::FTmsg& row) {
-    if (!zd_tmsg_InLlistQ(row)) {
+    if (!comptest_zd_tmsg_InLlistQ(row)) {
         atf_comp::FTmsg* old_tail = comptest.zd_tmsg_tail;
-        row.zd_tmsg_next = NULL;
-        row.zd_tmsg_prev = old_tail;
+        row.comptest_zd_tmsg_next = NULL;
+        row.comptest_zd_tmsg_prev = old_tail;
         comptest.zd_tmsg_tail = &row;
-        atf_comp::FTmsg **new_row_a = &old_tail->zd_tmsg_next;
+        atf_comp::FTmsg **new_row_a = &old_tail->comptest_zd_tmsg_next;
         atf_comp::FTmsg **new_row_b = &comptest.zd_tmsg_head;
         atf_comp::FTmsg **new_row = old_tail ? new_row_a : new_row_b;
         *new_row = &row;
@@ -208,23 +208,23 @@ void atf_comp::zd_tmsg_Insert(atf_comp::FComptest& comptest, atf_comp::FTmsg& ro
 // --- atf_comp.FComptest.zd_tmsg.Remove
 // Remove element from index. If element is not in index, do nothing.
 void atf_comp::zd_tmsg_Remove(atf_comp::FComptest& comptest, atf_comp::FTmsg& row) {
-    if (zd_tmsg_InLlistQ(row)) {
+    if (comptest_zd_tmsg_InLlistQ(row)) {
         atf_comp::FTmsg* old_head       = comptest.zd_tmsg_head;
         (void)old_head; // in case it's not used
-        atf_comp::FTmsg* prev = row.zd_tmsg_prev;
-        atf_comp::FTmsg* next = row.zd_tmsg_next;
+        atf_comp::FTmsg* prev = row.comptest_zd_tmsg_prev;
+        atf_comp::FTmsg* next = row.comptest_zd_tmsg_next;
         // if element is first, adjust list head; otherwise, adjust previous element's next
-        atf_comp::FTmsg **new_next_a = &prev->zd_tmsg_next;
+        atf_comp::FTmsg **new_next_a = &prev->comptest_zd_tmsg_next;
         atf_comp::FTmsg **new_next_b = &comptest.zd_tmsg_head;
         atf_comp::FTmsg **new_next = prev ? new_next_a : new_next_b;
         *new_next = next;
         // if element is last, adjust list tail; otherwise, adjust next element's prev
-        atf_comp::FTmsg **new_prev_a = &next->zd_tmsg_prev;
+        atf_comp::FTmsg **new_prev_a = &next->comptest_zd_tmsg_prev;
         atf_comp::FTmsg **new_prev_b = &comptest.zd_tmsg_tail;
         atf_comp::FTmsg **new_prev = next ? new_prev_a : new_prev_b;
         *new_prev = prev;
         comptest.zd_tmsg_n--;
-        row.zd_tmsg_next=(atf_comp::FTmsg*)-1; // not-in-list
+        row.comptest_zd_tmsg_next=(atf_comp::FTmsg*)-1; // not-in-list
     }
 }
 
@@ -236,9 +236,9 @@ void atf_comp::zd_tmsg_RemoveAll(atf_comp::FComptest& comptest) {
     comptest.zd_tmsg_tail = NULL;
     comptest.zd_tmsg_n = 0;
     while (row) {
-        atf_comp::FTmsg* row_next = row->zd_tmsg_next;
-        row->zd_tmsg_next  = (atf_comp::FTmsg*)-1;
-        row->zd_tmsg_prev  = NULL;
+        atf_comp::FTmsg* row_next = row->comptest_zd_tmsg_next;
+        row->comptest_zd_tmsg_next  = (atf_comp::FTmsg*)-1;
+        row->comptest_zd_tmsg_prev  = NULL;
         row = row_next;
     }
 }
@@ -249,14 +249,14 @@ atf_comp::FTmsg* atf_comp::zd_tmsg_RemoveFirst(atf_comp::FComptest& comptest) {
     atf_comp::FTmsg *row = NULL;
     row = comptest.zd_tmsg_head;
     if (row) {
-        atf_comp::FTmsg *next = row->zd_tmsg_next;
+        atf_comp::FTmsg *next = row->comptest_zd_tmsg_next;
         comptest.zd_tmsg_head = next;
-        atf_comp::FTmsg **new_end_a = &next->zd_tmsg_prev;
+        atf_comp::FTmsg **new_end_a = &next->comptest_zd_tmsg_prev;
         atf_comp::FTmsg **new_end_b = &comptest.zd_tmsg_tail;
         atf_comp::FTmsg **new_end = next ? new_end_a : new_end_b;
         *new_end = NULL;
         comptest.zd_tmsg_n--;
-        row->zd_tmsg_next = (atf_comp::FTmsg*)-1; // mark as not-in-list
+        row->comptest_zd_tmsg_next = (atf_comp::FTmsg*)-1; // mark as not-in-list
     }
     return row;
 }
@@ -266,17 +266,23 @@ atf_comp::FTmsg* atf_comp::zd_tmsg_RemoveFirst(atf_comp::FComptest& comptest) {
 void atf_comp::FComptest_Init(atf_comp::FComptest& comptest) {
     comptest.timeout = i32(10);
     comptest.memcheck = bool(true);
+    comptest.coverage = bool(true);
     comptest.exit_code = u8(0);
+    comptest.ncore = i32(1);
+    comptest.repeat = i32(1);
     comptest.c_targs = NULL;
     comptest.msg_index = i32(0);
     comptest.c_tfilt = NULL;
     comptest.elapsed = double(0.0);
     comptest.success = bool(false);
+    comptest.nrun = i32(0);
     comptest.zd_tmsg_head = NULL; // (atf_comp.FComptest.zd_tmsg)
     comptest.zd_tmsg_n = 0; // (atf_comp.FComptest.zd_tmsg)
     comptest.zd_tmsg_tail = NULL; // (atf_comp.FComptest.zd_tmsg)
     comptest.need_write = bool(false);
+    comptest.c_covdir = NULL;
     comptest.ind_comptest_next = (atf_comp::FComptest*)-1; // (atf_comp.FDb.ind_comptest) not-in-hash
+    comptest.ind_comptest_hashval = 0; // stored hash value
     comptest.zd_sel_comptest_next = (atf_comp::FComptest*)-1; // (atf_comp.FDb.zd_sel_comptest) not-in-list
     comptest.zd_sel_comptest_prev = NULL; // (atf_comp.FDb.zd_sel_comptest)
     comptest.zd_run_comptest_next = (atf_comp::FComptest*)-1; // (atf_comp.FDb.zd_run_comptest) not-in-list
@@ -295,6 +301,12 @@ void atf_comp::FComptest_Uninit(atf_comp::FComptest& comptest) {
     ind_comptest_Remove(row); // remove comptest from index ind_comptest
     zd_sel_comptest_Remove(row); // remove comptest from index zd_sel_comptest
     zd_out_comptest_Remove(row); // remove comptest from index zd_out_comptest
+}
+
+// --- atf_comp.FCovdir..Uninit
+void atf_comp::FCovdir_Uninit(atf_comp::FCovdir& covdir) {
+    atf_comp::FCovdir &row = covdir; (void)row;
+    zd_covdir_free_Remove(row); // remove covdir from index zd_covdir_free
 }
 
 // --- atf_comp.trace..Print
@@ -392,9 +404,8 @@ void atf_comp::ReadArgv() {
         }
         if (ch_N(attrname) == 0) {
             err << "atf_comp: too many arguments. error at "<<algo::strptr_ToSsim(arg)<<eol;
-        }
-        // read value into currently selected arg
-        if (haveval) {
+        } else if (haveval) {
+            // read value into currently selected arg
             bool ret=false;
             // it's already known which namespace is consuming the args,
             // so directly go there
@@ -437,6 +448,9 @@ void atf_comp::ReadArgv() {
         }ind_end
         doexit = true;
     }
+    algo_lib_logcat_debug.enabled = algo_lib::_db.cmdline.debug;
+    algo_lib_logcat_verbose.enabled = algo_lib::_db.cmdline.verbose > 0;
+    algo_lib_logcat_verbose2.enabled = algo_lib::_db.cmdline.verbose > 1;
     if (!dohelp) {
     }
     // dmmeta.floadtuples:atf_comp.FDb.cmdline
@@ -448,7 +462,7 @@ void atf_comp::ReadArgv() {
     }
     if (err != "") {
         algo_lib::_db.exit_code=1;
-        prerr(err);
+        prerr_(err); // already has eol
         doexit=true;
     }
     if (dohelp) {
@@ -474,7 +488,6 @@ void atf_comp::MainLoop() {
 // --- atf_comp.FDb._db.Step
 // Main step
 void atf_comp::Step() {
-    zd_sel_comptest_Call();
     zd_run_comptest_Call();
 }
 
@@ -495,7 +508,7 @@ static void atf_comp::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_comp.Input'  signature:'b05bbcc62beda39e9afa4145fceb830147523bd6'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_comp.Input'  signature:'a1f857af527d388c20fb27796f5f322b4bd1e42f'");
 }
 
 // --- atf_comp.FDb._db.InsertStrptrMaybe
@@ -566,8 +579,8 @@ bool atf_comp::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"atfdb.targs"),recursive);
         retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"amcdb.bltin"),recursive);
     } else {
-        algo_lib::SaveBadTag("path", root);
-        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        algo_lib::AppendErrtext("path", root);
+        algo_lib::AppendErrtext("comment", "Wrong working directory?");
         retval = false;
     }
     return retval;
@@ -765,14 +778,9 @@ bool atf_comp::comptest_XrefMaybe(atf_comp::FComptest &row) {
 // Find row by key. Return NULL if not found.
 atf_comp::FComptest* atf_comp::ind_comptest_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_comptest_buckets_n - 1);
-    atf_comp::FComptest* *e = &_db.ind_comptest_buckets_elems[index];
-    atf_comp::FComptest* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).comptest == key;
-        if (done) break;
-        e         = &ret->ind_comptest_next;
-    } while (true);
+    atf_comp::FComptest *ret = _db.ind_comptest_buckets_elems[index];
+    for (; ret && !((*ret).comptest == key); ret = ret->ind_comptest_next) {
+    }
     return ret;
 }
 
@@ -804,10 +812,11 @@ atf_comp::FComptest& atf_comp::ind_comptest_GetOrCreate(const algo::strptr& key)
 // --- atf_comp.FDb.ind_comptest.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool atf_comp::ind_comptest_InsertMaybe(atf_comp::FComptest& row) {
-    ind_comptest_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_comptest_next == (atf_comp::FComptest*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.comptest) & (_db.ind_comptest_buckets_n - 1);
+        row.ind_comptest_hashval = algo::Smallstr50_Hash(0, row.comptest);
+        ind_comptest_Reserve(1);
+        u32 index = row.ind_comptest_hashval & (_db.ind_comptest_buckets_n - 1);
         atf_comp::FComptest* *prev = &_db.ind_comptest_buckets_elems[index];
         do {
             atf_comp::FComptest* ret = *prev;
@@ -833,7 +842,7 @@ bool atf_comp::ind_comptest_InsertMaybe(atf_comp::FComptest& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void atf_comp::ind_comptest_Remove(atf_comp::FComptest& row) {
     if (LIKELY(row.ind_comptest_next != (atf_comp::FComptest*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.comptest) & (_db.ind_comptest_buckets_n - 1);
+        u32 index = row.ind_comptest_hashval & (_db.ind_comptest_buckets_n - 1);
         atf_comp::FComptest* *prev = &_db.ind_comptest_buckets_elems[index]; // addr of pointer to current element
         while (atf_comp::FComptest *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -850,8 +859,14 @@ void atf_comp::ind_comptest_Remove(atf_comp::FComptest& row) {
 // --- atf_comp.FDb.ind_comptest.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void atf_comp::ind_comptest_Reserve(int n) {
+    ind_comptest_AbsReserve(_db.ind_comptest_n + n);
+}
+
+// --- atf_comp.FDb.ind_comptest.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void atf_comp::ind_comptest_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_comptest_buckets_n;
-    u32 new_nelems   = _db.ind_comptest_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -870,7 +885,7 @@ void atf_comp::ind_comptest_Reserve(int n) {
             while (elem) {
                 atf_comp::FComptest &row        = *elem;
                 atf_comp::FComptest* next       = row.ind_comptest_next;
-                u32 index          = algo::Smallstr50_Hash(0, row.comptest) & (new_nbuckets-1);
+                u32 index          = row.ind_comptest_hashval & (new_nbuckets-1);
                 row.ind_comptest_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -896,9 +911,6 @@ void atf_comp::zd_sel_comptest_Insert(atf_comp::FComptest& row) {
         atf_comp::FComptest **new_row = old_tail ? new_row_a : new_row_b;
         *new_row = &row;
         _db.zd_sel_comptest_n++;
-        if (_db.zd_sel_comptest_head == &row) {
-            zd_sel_comptest_FirstChanged();
-        }
     }
 }
 
@@ -922,9 +934,6 @@ void atf_comp::zd_sel_comptest_Remove(atf_comp::FComptest& row) {
         *new_prev = prev;
         _db.zd_sel_comptest_n--;
         row.zd_sel_comptest_next=(atf_comp::FComptest*)-1; // not-in-list
-        if (old_head != _db.zd_sel_comptest_head) {
-            zd_sel_comptest_FirstChanged();
-        }
     }
 }
 
@@ -935,21 +944,16 @@ void atf_comp::zd_sel_comptest_RemoveAll() {
     _db.zd_sel_comptest_head = NULL;
     _db.zd_sel_comptest_tail = NULL;
     _db.zd_sel_comptest_n = 0;
-    bool do_fire = (NULL != row);
     while (row) {
         atf_comp::FComptest* row_next = row->zd_sel_comptest_next;
         row->zd_sel_comptest_next  = (atf_comp::FComptest*)-1;
         row->zd_sel_comptest_prev  = NULL;
         row = row_next;
     }
-    if (do_fire) {
-        zd_sel_comptest_FirstChanged();
-    }
 }
 
 // --- atf_comp.FDb.zd_sel_comptest.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-// Call FirstChanged trigger.
 atf_comp::FComptest* atf_comp::zd_sel_comptest_RemoveFirst() {
     atf_comp::FComptest *row = NULL;
     row = _db.zd_sel_comptest_head;
@@ -962,30 +966,8 @@ atf_comp::FComptest* atf_comp::zd_sel_comptest_RemoveFirst() {
         *new_end = NULL;
         _db.zd_sel_comptest_n--;
         row->zd_sel_comptest_next = (atf_comp::FComptest*)-1; // mark as not-in-list
-        zd_sel_comptest_FirstChanged();
     }
     return row;
-}
-
-// --- atf_comp.FDb.zd_sel_comptest.FirstChanged
-// First element of index changed.
-static void atf_comp::zd_sel_comptest_FirstChanged() {
-}
-
-// --- atf_comp.FDb.zd_sel_comptest.UpdateCycles
-// Update cycles count from previous clock capture
-inline static void atf_comp::zd_sel_comptest_UpdateCycles() {
-    u64 cur_cycles                      = algo::get_cycles();
-    algo_lib::_db.clock                 = algo::SchedTime(cur_cycles);
-}
-
-// --- atf_comp.FDb.zd_sel_comptest.Call
-inline static void atf_comp::zd_sel_comptest_Call() {
-    if (!atf_comp::zd_sel_comptest_EmptyQ()) { // fstep:atf_comp.FDb.zd_sel_comptest
-        atf_comp::zd_sel_comptest_Step(); // steptype:Inline: call function on every step
-        zd_sel_comptest_UpdateCycles();
-        algo_lib::_db.next_loop = algo_lib::_db.clock;
-    }
 }
 
 // --- atf_comp.FDb.targs.Alloc
@@ -1381,6 +1363,15 @@ bool atf_comp::tfilt_XrefMaybe(atf_comp::FTfilt &row) {
     // insert tfilt into index zd_out_tfilt
     if (true) { // user-defined insert condition
         zd_out_tfilt_Insert(row);
+    }
+    // insert tfilt into index ind_tfilt
+    if (true) { // user-defined insert condition
+        bool success = ind_tfilt_InsertMaybe(row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "atf_comp.duplicate_key  xref:atf_comp.FDb.ind_tfilt"; // check for duplicate key
+            return false;
+        }
     }
     return retval;
 }
@@ -1854,6 +1845,266 @@ bool atf_comp::zd_out_targs_SaveSsimfile(algo::strptr fname) {
     return algo::SafeStringToFile(text, fname);
 }
 
+// --- atf_comp.FDb.covdir.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+atf_comp::FCovdir& atf_comp::covdir_Alloc() {
+    atf_comp::FCovdir* row = covdir_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("atf_comp.out_of_mem  field:atf_comp.FDb.covdir  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- atf_comp.FDb.covdir.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+atf_comp::FCovdir* atf_comp::covdir_AllocMaybe() {
+    atf_comp::FCovdir *row = (atf_comp::FCovdir*)covdir_AllocMem();
+    if (row) {
+        new (row) atf_comp::FCovdir; // call constructor
+    }
+    return row;
+}
+
+// --- atf_comp.FDb.covdir.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* atf_comp::covdir_AllocMem() {
+    u64 new_nelems     = _db.covdir_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    atf_comp::FCovdir*  lev   = NULL;
+    if (bsr < 32) {
+        lev = _db.covdir_lary[bsr];
+        if (!lev) {
+            lev=(atf_comp::FCovdir*)algo_lib::malloc_AllocMem(sizeof(atf_comp::FCovdir) * (u64(1)<<bsr));
+            _db.covdir_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.covdir_n = i32(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- atf_comp.FDb.covdir.RemoveAll
+// Remove all elements from Lary
+void atf_comp::covdir_RemoveAll() {
+    for (u64 n = _db.covdir_n; n>0; ) {
+        n--;
+        covdir_qFind(u64(n)).~FCovdir(); // destroy last element
+        _db.covdir_n = i32(n);
+    }
+}
+
+// --- atf_comp.FDb.covdir.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void atf_comp::covdir_RemoveLast() {
+    u64 n = _db.covdir_n;
+    if (n > 0) {
+        n -= 1;
+        covdir_qFind(u64(n)).~FCovdir();
+        _db.covdir_n = i32(n);
+    }
+}
+
+// --- atf_comp.FDb.covdir.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool atf_comp::covdir_XrefMaybe(atf_comp::FCovdir &row) {
+    bool retval = true;
+    (void)row;
+    // insert covdir into index zd_covdir_free
+    if (true) { // user-defined insert condition
+        zd_covdir_free_Insert(row);
+    }
+    return retval;
+}
+
+// --- atf_comp.FDb.zd_covdir_free.Insert
+// Insert row into linked list. If row is already in linked list, do nothing.
+void atf_comp::zd_covdir_free_Insert(atf_comp::FCovdir& row) {
+    if (!zd_covdir_free_InLlistQ(row)) {
+        atf_comp::FCovdir* old_tail = _db.zd_covdir_free_tail;
+        row.zd_covdir_free_next = NULL;
+        row.zd_covdir_free_prev = old_tail;
+        _db.zd_covdir_free_tail = &row;
+        atf_comp::FCovdir **new_row_a = &old_tail->zd_covdir_free_next;
+        atf_comp::FCovdir **new_row_b = &_db.zd_covdir_free_head;
+        atf_comp::FCovdir **new_row = old_tail ? new_row_a : new_row_b;
+        *new_row = &row;
+        _db.zd_covdir_free_n++;
+    }
+}
+
+// --- atf_comp.FDb.zd_covdir_free.Remove
+// Remove element from index. If element is not in index, do nothing.
+void atf_comp::zd_covdir_free_Remove(atf_comp::FCovdir& row) {
+    if (zd_covdir_free_InLlistQ(row)) {
+        atf_comp::FCovdir* old_head       = _db.zd_covdir_free_head;
+        (void)old_head; // in case it's not used
+        atf_comp::FCovdir* prev = row.zd_covdir_free_prev;
+        atf_comp::FCovdir* next = row.zd_covdir_free_next;
+        // if element is first, adjust list head; otherwise, adjust previous element's next
+        atf_comp::FCovdir **new_next_a = &prev->zd_covdir_free_next;
+        atf_comp::FCovdir **new_next_b = &_db.zd_covdir_free_head;
+        atf_comp::FCovdir **new_next = prev ? new_next_a : new_next_b;
+        *new_next = next;
+        // if element is last, adjust list tail; otherwise, adjust next element's prev
+        atf_comp::FCovdir **new_prev_a = &next->zd_covdir_free_prev;
+        atf_comp::FCovdir **new_prev_b = &_db.zd_covdir_free_tail;
+        atf_comp::FCovdir **new_prev = next ? new_prev_a : new_prev_b;
+        *new_prev = prev;
+        _db.zd_covdir_free_n--;
+        row.zd_covdir_free_next=(atf_comp::FCovdir*)-1; // not-in-list
+    }
+}
+
+// --- atf_comp.FDb.zd_covdir_free.RemoveAll
+// Empty the index. (The rows are not deleted)
+void atf_comp::zd_covdir_free_RemoveAll() {
+    atf_comp::FCovdir* row = _db.zd_covdir_free_head;
+    _db.zd_covdir_free_head = NULL;
+    _db.zd_covdir_free_tail = NULL;
+    _db.zd_covdir_free_n = 0;
+    while (row) {
+        atf_comp::FCovdir* row_next = row->zd_covdir_free_next;
+        row->zd_covdir_free_next  = (atf_comp::FCovdir*)-1;
+        row->zd_covdir_free_prev  = NULL;
+        row = row_next;
+    }
+}
+
+// --- atf_comp.FDb.zd_covdir_free.RemoveFirst
+// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+atf_comp::FCovdir* atf_comp::zd_covdir_free_RemoveFirst() {
+    atf_comp::FCovdir *row = NULL;
+    row = _db.zd_covdir_free_head;
+    if (row) {
+        atf_comp::FCovdir *next = row->zd_covdir_free_next;
+        _db.zd_covdir_free_head = next;
+        atf_comp::FCovdir **new_end_a = &next->zd_covdir_free_prev;
+        atf_comp::FCovdir **new_end_b = &_db.zd_covdir_free_tail;
+        atf_comp::FCovdir **new_end = next ? new_end_a : new_end_b;
+        *new_end = NULL;
+        _db.zd_covdir_free_n--;
+        row->zd_covdir_free_next = (atf_comp::FCovdir*)-1; // mark as not-in-list
+    }
+    return row;
+}
+
+// --- atf_comp.FDb.ind_tfilt.Find
+// Find row by key. Return NULL if not found.
+atf_comp::FTfilt* atf_comp::ind_tfilt_Find(const algo::strptr& key) {
+    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_tfilt_buckets_n - 1);
+    atf_comp::FTfilt *ret = _db.ind_tfilt_buckets_elems[index];
+    for (; ret && !((*ret).comptest == key); ret = ret->ind_tfilt_next) {
+    }
+    return ret;
+}
+
+// --- atf_comp.FDb.ind_tfilt.FindX
+// Look up row by key and return reference. Throw exception if not found
+atf_comp::FTfilt& atf_comp::ind_tfilt_FindX(const algo::strptr& key) {
+    atf_comp::FTfilt* ret = ind_tfilt_Find(key);
+    vrfy(ret, tempstr() << "atf_comp.key_error  table:ind_tfilt  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
+// --- atf_comp.FDb.ind_tfilt.InsertMaybe
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool atf_comp::ind_tfilt_InsertMaybe(atf_comp::FTfilt& row) {
+    bool retval = true; // if already in hash, InsertMaybe returns true
+    if (LIKELY(row.ind_tfilt_next == (atf_comp::FTfilt*)-1)) {// check if in hash already
+        row.ind_tfilt_hashval = algo::Smallstr50_Hash(0, row.comptest);
+        ind_tfilt_Reserve(1);
+        u32 index = row.ind_tfilt_hashval & (_db.ind_tfilt_buckets_n - 1);
+        atf_comp::FTfilt* *prev = &_db.ind_tfilt_buckets_elems[index];
+        do {
+            atf_comp::FTfilt* ret = *prev;
+            if (!ret) { // exit condition 1: reached the end of the list
+                break;
+            }
+            if ((*ret).comptest == row.comptest) { // exit condition 2: found matching key
+                retval = false;
+                break;
+            }
+            prev = &ret->ind_tfilt_next;
+        } while (true);
+        if (retval) {
+            row.ind_tfilt_next = *prev;
+            _db.ind_tfilt_n++;
+            *prev = &row;
+        }
+    }
+    return retval;
+}
+
+// --- atf_comp.FDb.ind_tfilt.Remove
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void atf_comp::ind_tfilt_Remove(atf_comp::FTfilt& row) {
+    if (LIKELY(row.ind_tfilt_next != (atf_comp::FTfilt*)-1)) {// check if in hash already
+        u32 index = row.ind_tfilt_hashval & (_db.ind_tfilt_buckets_n - 1);
+        atf_comp::FTfilt* *prev = &_db.ind_tfilt_buckets_elems[index]; // addr of pointer to current element
+        while (atf_comp::FTfilt *next = *prev) {                          // scan the collision chain for our element
+            if (next == &row) {        // found it?
+                *prev = next->ind_tfilt_next; // unlink (singly linked list)
+                _db.ind_tfilt_n--;
+                row.ind_tfilt_next = (atf_comp::FTfilt*)-1;// not-in-hash
+                break;
+            }
+            prev = &next->ind_tfilt_next;
+        }
+    }
+}
+
+// --- atf_comp.FDb.ind_tfilt.Reserve
+// Reserve enough room in the hash for N more elements. Return success code.
+void atf_comp::ind_tfilt_Reserve(int n) {
+    ind_tfilt_AbsReserve(_db.ind_tfilt_n + n);
+}
+
+// --- atf_comp.FDb.ind_tfilt.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void atf_comp::ind_tfilt_AbsReserve(int n) {
+    u32 old_nbuckets = _db.ind_tfilt_buckets_n;
+    u32 new_nelems   = n;
+    // # of elements has to be roughly equal to the number of buckets
+    if (new_nelems > old_nbuckets) {
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
+        u32 old_size = old_nbuckets * sizeof(atf_comp::FTfilt*);
+        u32 new_size = new_nbuckets * sizeof(atf_comp::FTfilt*);
+        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
+        // means new memory will have to be allocated anyway
+        atf_comp::FTfilt* *new_buckets = (atf_comp::FTfilt**)algo_lib::malloc_AllocMem(new_size);
+        if (UNLIKELY(!new_buckets)) {
+            FatalErrorExit("atf_comp.out_of_memory  field:atf_comp.FDb.ind_tfilt");
+        }
+        memset(new_buckets, 0, new_size); // clear pointers
+        // rehash all entries
+        for (int i = 0; i < _db.ind_tfilt_buckets_n; i++) {
+            atf_comp::FTfilt* elem = _db.ind_tfilt_buckets_elems[i];
+            while (elem) {
+                atf_comp::FTfilt &row        = *elem;
+                atf_comp::FTfilt* next       = row.ind_tfilt_next;
+                u32 index          = row.ind_tfilt_hashval & (new_nbuckets-1);
+                row.ind_tfilt_next     = new_buckets[index];
+                new_buckets[index] = &row;
+                elem               = next;
+            }
+        }
+        // free old array
+        algo_lib::malloc_FreeMem(_db.ind_tfilt_buckets_elems, old_size);
+        _db.ind_tfilt_buckets_elems = new_buckets;
+        _db.ind_tfilt_buckets_n = new_nbuckets;
+    }
+}
+
 // --- atf_comp.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
 static algo::ImrowPtr atf_comp::trace_RowidFind(int t) {
@@ -1917,6 +2168,29 @@ void atf_comp::FDb_Init() {
     _db.zd_out_targs_head = NULL; // (atf_comp.FDb.zd_out_targs)
     _db.zd_out_targs_n = 0; // (atf_comp.FDb.zd_out_targs)
     _db.zd_out_targs_tail = NULL; // (atf_comp.FDb.zd_out_targs)
+    // initialize LAry covdir (atf_comp.FDb.covdir)
+    _db.covdir_n = 0;
+    memset(_db.covdir_lary, 0, sizeof(_db.covdir_lary)); // zero out all level pointers
+    atf_comp::FCovdir* covdir_first = (atf_comp::FCovdir*)algo_lib::malloc_AllocMem(sizeof(atf_comp::FCovdir) * (u64(1)<<4));
+    if (!covdir_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.covdir_lary[i]  = covdir_first;
+        covdir_first    += 1ULL<<i;
+    }
+    _db.zd_covdir_free_head = NULL; // (atf_comp.FDb.zd_covdir_free)
+    _db.zd_covdir_free_n = 0; // (atf_comp.FDb.zd_covdir_free)
+    _db.zd_covdir_free_tail = NULL; // (atf_comp.FDb.zd_covdir_free)
+    _db.ncore_used = i32(0);
+    // initialize hash table for atf_comp::FTfilt;
+    _db.ind_tfilt_n             	= 0; // (atf_comp.FDb.ind_tfilt)
+    _db.ind_tfilt_buckets_n     	= 4; // (atf_comp.FDb.ind_tfilt)
+    _db.ind_tfilt_buckets_elems 	= (atf_comp::FTfilt**)algo_lib::malloc_AllocMem(sizeof(atf_comp::FTfilt*)*_db.ind_tfilt_buckets_n); // initial buckets (atf_comp.FDb.ind_tfilt)
+    if (!_db.ind_tfilt_buckets_elems) {
+        FatalErrorExit("out of memory"); // (atf_comp.FDb.ind_tfilt)
+    }
+    memset(_db.ind_tfilt_buckets_elems, 0, sizeof(atf_comp::FTfilt*)*_db.ind_tfilt_buckets_n); // (atf_comp.FDb.ind_tfilt)
 
     atf_comp::InitReflection();
 }
@@ -1924,6 +2198,12 @@ void atf_comp::FDb_Init() {
 // --- atf_comp.FDb..Uninit
 void atf_comp::FDb_Uninit() {
     atf_comp::FDb &row = _db; (void)row;
+
+    // atf_comp.FDb.ind_tfilt.Uninit (Thash)  //
+    // skip destruction of ind_tfilt in global scope
+
+    // atf_comp.FDb.covdir.Uninit (Lary)  //
+    // skip destruction in global scope
 
     // atf_comp.FDb.ind_comptest.Uninit (Thash)  //
     // skip destruction of ind_comptest in global scope
@@ -1980,6 +2260,7 @@ void atf_comp::FTfilt_Uninit(atf_comp::FTfilt& tfilt) {
         c_tfilt_Remove(*p_comptest, row);// remove tfilt from index c_tfilt
     }
     zd_out_tfilt_Remove(row); // remove tfilt from index zd_out_tfilt
+    ind_tfilt_Remove(row); // remove tfilt from index ind_tfilt
 }
 
 // --- atf_comp.FTmsg.base.CopyOut
@@ -2234,13 +2515,14 @@ void atf_comp::StaticCheck() {
 // --- atf_comp...main
 int main(int argc, char **argv) {
     try {
+        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         lib_ctype::FDb_Init();
-        lib_json::FDb_Init();
         atf_comp::FDb_Init();
         algo_lib::_db.argc = argc;
         algo_lib::_db.argv = argv;
         algo_lib::IohookInit();
+        algo_lib::_db.clock = algo::CurrSchedTime(); // initialize clock
         atf_comp::ReadArgv(); // dmmeta.main:atf_comp
         atf_comp::Main(); // user-defined main
     } catch(algo_lib::ErrorX &x) {
@@ -2252,9 +2534,9 @@ int main(int argc, char **argv) {
     }
     try {
         atf_comp::FDb_Uninit();
-        lib_json::FDb_Uninit();
         lib_ctype::FDb_Uninit();
         algo_lib::FDb_Uninit();
+        lib_json::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;

@@ -84,6 +84,12 @@ const char *dev_Mdmark_state_END        = "END";
 const char *dev_Mdmark_state_BEG_AUTO   = "BEG_AUTO";
 const char *dev_Mdmark_state_END_AUTO   = "END_AUTO";
 
+// compile-time string constants for dev.Netproto.netproto
+const char *dev_Netproto_netproto_http    = "http";
+const char *dev_Netproto_netproto_https   = "https";
+const char *dev_Netproto_netproto_smtp    = "smtp";
+const char *dev_Netproto_netproto_ssh     = "ssh";
+
 // compile-time string constants for dev.Sandbox.sandbox
 const char *dev_Sandbox_sandbox_abt_md   = "abt_md";
 
@@ -110,13 +116,14 @@ bool dev::Arch_ReadFieldMaybe(dev::Arch& parent, algo::strptr field, algo::strpt
     switch(field_id) {
         case dev_FieldId_arch: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.arch, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -158,21 +165,20 @@ bool dev::Badline_ReadFieldMaybe(dev::Badline& parent, algo::strptr field, algo:
     switch(field_id) {
         case dev_FieldId_badline: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.badline, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_expr: {
             retval = algo::Smallstr200_ReadStrptrMaybe(parent.expr, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_targsrc_regx: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.targsrc_regx, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -273,29 +279,26 @@ bool dev::Builddir_ReadFieldMaybe(dev::Builddir& parent, algo::strptr field, alg
     switch(field_id) {
         case dev_FieldId_builddir: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.builddir, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_uname: {
             retval = false;
-            break;
-        }
+        } break;
         case dev_FieldId_compiler: {
             retval = false;
-            break;
-        }
+        } break;
         case dev_FieldId_cfg: {
             retval = false;
-            break;
-        }
+        } break;
         case dev_FieldId_arch: {
             retval = false;
-            break;
-        }
+        } break;
         case dev_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -337,17 +340,17 @@ bool dev::Cfg_ReadFieldMaybe(dev::Cfg& parent, algo::strptr field, algo::strptr 
     switch(field_id) {
         case dev_FieldId_cfg: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.cfg, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_suffix: {
             retval = algo::Smallstr5_ReadStrptrMaybe(parent.suffix, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -392,45 +395,38 @@ bool dev::Compiler_ReadFieldMaybe(dev::Compiler& parent, algo::strptr field, alg
     switch(field_id) {
         case dev_FieldId_compiler: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.compiler, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_ranlib: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.ranlib, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_ar: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.ar, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_link: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.link, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_libext: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.libext, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_exeext: {
             retval = algo::Smallstr20_ReadStrptrMaybe(parent.exeext, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_pchext: {
             retval = algo::Smallstr20_ReadStrptrMaybe(parent.pchext, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_objext: {
             retval = algo::Smallstr20_ReadStrptrMaybe(parent.objext, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_rc: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.rc, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -496,17 +492,17 @@ bool dev::Copyright_ReadFieldMaybe(dev::Copyright& parent, algo::strptr field, a
     switch(field_id) {
         case dev_FieldId_copyright: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.copyright, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_dflt: {
             retval = bool_ReadStrptrMaybe(parent.dflt, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -551,33 +547,29 @@ bool dev::Covfile_ReadFieldMaybe(dev::Covfile& parent, algo::strptr field, algo:
     switch(field_id) {
         case dev_FieldId_covfile: {
             retval = algo::Smallstr200_ReadStrptrMaybe(parent.covfile, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_total: {
             retval = u32_ReadStrptrMaybe(parent.total, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_nonexe: {
             retval = u32_ReadStrptrMaybe(parent.nonexe, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_exe: {
             retval = u32_ReadStrptrMaybe(parent.exe, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_exer: {
             retval = algo::U32Dec2_ReadStrptrMaybe(parent.exer, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_hit: {
             retval = u32_ReadStrptrMaybe(parent.hit, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_cov: {
             retval = algo::U32Dec2_ReadStrptrMaybe(parent.cov, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -734,30 +726,27 @@ bool dev::Covline_ReadFieldMaybe(dev::Covline& parent, algo::strptr field, algo:
     (void)value_SetStrptrMaybe(field_id,field);
     switch(field_id) {
         case dev_FieldId_covline: {
-            retval = algo::Smallstr200_ReadStrptrMaybe(parent.covline, strval);
-            break;
-        }
+            retval = algo::cstring_ReadStrptrMaybe(parent.covline, strval);
+        } break;
         case dev_FieldId_src: {
             retval = false;
-            break;
-        }
+        } break;
         case dev_FieldId_line: {
             retval = false;
-            break;
-        }
+        } break;
         case dev_FieldId_flag: {
             retval = flag_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_hit: {
             retval = u32_ReadStrptrMaybe(parent.hit, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_text: {
             retval = algo::cstring_ReadStrptrMaybe(parent.text, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -784,7 +773,7 @@ void dev::Covline_Print(dev::Covline& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "dev.covline";
 
-    algo::Smallstr200_Print(row.covline, temp);
+    algo::cstring_Print(row.covline, temp);
     PrintAttrSpaceReset(str,"covline", temp);
 
     dev::flag_Print(row, temp);
@@ -805,33 +794,29 @@ bool dev::Covtarget_ReadFieldMaybe(dev::Covtarget& parent, algo::strptr field, a
     switch(field_id) {
         case dev_FieldId_covtarget: {
             retval = algo::Smallstr16_ReadStrptrMaybe(parent.covtarget, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_total: {
             retval = u32_ReadStrptrMaybe(parent.total, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_nonexe: {
             retval = u32_ReadStrptrMaybe(parent.nonexe, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_exe: {
             retval = u32_ReadStrptrMaybe(parent.exe, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_exer: {
             retval = algo::U32Dec2_ReadStrptrMaybe(parent.exer, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_hit: {
             retval = u32_ReadStrptrMaybe(parent.hit, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_cov: {
             retval = algo::U32Dec2_ReadStrptrMaybe(parent.cov, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -917,25 +902,23 @@ bool dev::Edaction_ReadFieldMaybe(dev::Edaction& parent, algo::strptr field, alg
     switch(field_id) {
         case dev_FieldId_edaction: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.edaction, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_edacttype: {
             retval = false;
-            break;
-        }
+        } break;
         case dev_FieldId_name: {
             retval = false;
-            break;
-        }
+        } break;
         case dev_FieldId_needamc: {
             retval = bool_ReadStrptrMaybe(parent.needamc, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -980,13 +963,14 @@ bool dev::Edacttype_ReadFieldMaybe(dev::Edacttype& parent, algo::strptr field, a
     switch(field_id) {
         case dev_FieldId_edacttype: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.edacttype, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -1094,6 +1078,8 @@ const char* dev::value_ToCstr(const dev::FieldId& parent) {
         case dev_FieldId_path              : ret = "path";  break;
         case dev_FieldId_genlist           : ret = "genlist";  break;
         case dev_FieldId_strict            : ret = "strict";  break;
+        case dev_FieldId_netproto          : ret = "netproto";  break;
+        case dev_FieldId_tls               : ret = "tls";  break;
         case dev_FieldId_opt_type          : ret = "opt_type";  break;
         case dev_FieldId_sep               : ret = "sep";  break;
         case dev_FieldId_baseref           : ret = "baseref";  break;
@@ -1103,10 +1089,13 @@ const char* dev::value_ToCstr(const dev::FieldId& parent) {
         case dev_FieldId_soft              : ret = "soft";  break;
         case dev_FieldId_pkgkey            : ret = "pkgkey";  break;
         case dev_FieldId_key               : ret = "key";  break;
+        case dev_FieldId_prototransport    : ret = "prototransport";  break;
+        case dev_FieldId_transport         : ret = "transport";  break;
         case dev_FieldId_inl               : ret = "inl";  break;
         case dev_FieldId_sandbox           : ret = "sandbox";  break;
         case dev_FieldId_filter            : ret = "filter";  break;
         case dev_FieldId_readmesort        : ret = "readmesort";  break;
+        case dev_FieldId_rpm               : ret = "rpm";  break;
         case dev_FieldId_sbpath            : ret = "sbpath";  break;
         case dev_FieldId_syscmd            : ret = "syscmd";  break;
         case dev_FieldId_execkey           : ret = "execkey";  break;
@@ -1117,13 +1106,13 @@ const char* dev::value_ToCstr(const dev::FieldId& parent) {
         case dev_FieldId_fail_prereq       : ret = "fail_prereq";  break;
         case dev_FieldId_completed         : ret = "completed";  break;
         case dev_FieldId_maxtime           : ret = "maxtime";  break;
-        case dev_FieldId_syscmddep         : ret = "syscmddep";  break;
         case dev_FieldId_child             : ret = "child";  break;
         case dev_FieldId_syslib            : ret = "syslib";  break;
         case dev_FieldId_targdep           : ret = "targdep";  break;
         case dev_FieldId_target            : ret = "target";  break;
         case dev_FieldId_targsrc           : ret = "targsrc";  break;
         case dev_FieldId_targsyslib        : ret = "targsyslib";  break;
+        case dev_FieldId_prefix            : ret = "prefix";  break;
         case dev_FieldId_cov_min           : ret = "cov_min";  break;
         case dev_FieldId_maxerr            : ret = "maxerr";  break;
         case dev_FieldId_timefmt           : ret = "timefmt";  break;
@@ -1131,6 +1120,7 @@ const char* dev::value_ToCstr(const dev::FieldId& parent) {
         case dev_FieldId_tool_opt          : ret = "tool_opt";  break;
         case dev_FieldId_opt               : ret = "opt";  break;
         case dev_FieldId_sortfld           : ret = "sortfld";  break;
+        case dev_FieldId_ip                : ret = "ip";  break;
         case dev_FieldId_field             : ret = "field";  break;
         case dev_FieldId_value             : ret = "value";  break;
     }
@@ -1160,6 +1150,9 @@ bool dev::value_SetStrptrMaybe(dev::FieldId& parent, algo::strptr rhs) {
             switch (u64(algo::ReadLE16(rhs.elems))) {
                 case LE_STR2('a','r'): {
                     value_SetEnum(parent,dev_FieldId_ar); ret = true; break;
+                }
+                case LE_STR2('i','p'): {
+                    value_SetEnum(parent,dev_FieldId_ip); ret = true; break;
                 }
                 case LE_STR2('r','c'): {
                     value_SetEnum(parent,dev_FieldId_rc); ret = true; break;
@@ -1196,6 +1189,9 @@ bool dev::value_SetStrptrMaybe(dev::FieldId& parent, algo::strptr rhs) {
                 case LE_STR3('p','i','d'): {
                     value_SetEnum(parent,dev_FieldId_pid); ret = true; break;
                 }
+                case LE_STR3('r','p','m'): {
+                    value_SetEnum(parent,dev_FieldId_rpm); ret = true; break;
+                }
                 case LE_STR3('s','e','p'): {
                     value_SetEnum(parent,dev_FieldId_sep); ret = true; break;
                 }
@@ -1204,6 +1200,9 @@ bool dev::value_SetStrptrMaybe(dev::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR3('s','y','s'): {
                     value_SetEnum(parent,dev_FieldId_sys); ret = true; break;
+                }
+                case LE_STR3('t','l','s'): {
+                    value_SetEnum(parent,dev_FieldId_tls); ret = true; break;
                 }
             }
             break;
@@ -1331,6 +1330,9 @@ bool dev::value_SetStrptrMaybe(dev::FieldId& parent, algo::strptr rhs) {
                 case LE_STR6('p','k','g','k','e','y'): {
                     value_SetEnum(parent,dev_FieldId_pkgkey); ret = true; break;
                 }
+                case LE_STR6('p','r','e','f','i','x'): {
+                    value_SetEnum(parent,dev_FieldId_prefix); ret = true; break;
+                }
                 case LE_STR6('r','a','n','l','i','b'): {
                     value_SetEnum(parent,dev_FieldId_ranlib); ret = true; break;
                 }
@@ -1455,6 +1457,9 @@ bool dev::value_SetStrptrMaybe(dev::FieldId& parent, algo::strptr rhs) {
                 case LE_STR8('f','i','l','e','n','a','m','e'): {
                     value_SetEnum(parent,dev_FieldId_filename); ret = true; break;
                 }
+                case LE_STR8('n','e','t','p','r','o','t','o'): {
+                    value_SetEnum(parent,dev_FieldId_netproto); ret = true; break;
+                }
                 case LE_STR8('o','p','t','_','t','y','p','e'): {
                     value_SetEnum(parent,dev_FieldId_opt_type); ret = true; break;
                 }
@@ -1494,8 +1499,8 @@ bool dev::value_SetStrptrMaybe(dev::FieldId& parent, algo::strptr rhs) {
                     if (memcmp(rhs.elems+8,"e",1)==0) { value_SetEnum(parent,dev_FieldId_nlongline); ret = true; break; }
                     break;
                 }
-                case LE_STR8('s','y','s','c','m','d','d','e'): {
-                    if (memcmp(rhs.elems+8,"p",1)==0) { value_SetEnum(parent,dev_FieldId_syscmddep); ret = true; break; }
+                case LE_STR8('t','r','a','n','s','p','o','r'): {
+                    if (memcmp(rhs.elems+8,"t",1)==0) { value_SetEnum(parent,dev_FieldId_transport); ret = true; break; }
                     break;
                 }
             }
@@ -1543,6 +1548,15 @@ bool dev::value_SetStrptrMaybe(dev::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('t','a','r','g','s','r','c','_'): {
                     if (memcmp(rhs.elems+8,"regx",4)==0) { value_SetEnum(parent,dev_FieldId_targsrc_regx); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 14: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('p','r','o','t','o','t','r','a'): {
+                    if (memcmp(rhs.elems+8,"nsport",6)==0) { value_SetEnum(parent,dev_FieldId_prototransport); ret = true; break; }
                     break;
                 }
             }
@@ -1606,13 +1620,14 @@ bool dev::Gitfile_ReadFieldMaybe(dev::Gitfile& parent, algo::strptr field, algo:
     switch(field_id) {
         case dev_FieldId_gitfile: {
             retval = algo::Smallstr200_ReadStrptrMaybe(parent.gitfile, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_ext: {
             retval = false;
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -1651,29 +1666,26 @@ bool dev::Gitinfo_ReadFieldMaybe(dev::Gitinfo& parent, algo::strptr field, algo:
     switch(field_id) {
         case dev_FieldId_gitinfo: {
             retval = algo::Smallstr40_ReadStrptrMaybe(parent.gitinfo, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_author: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.author, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_cfg: {
             retval = algo::Smallstr40_ReadStrptrMaybe(parent.cfg, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_compver: {
             retval = algo::Smallstr20_ReadStrptrMaybe(parent.compver, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_package: {
             retval = algo::Smallstr40_ReadStrptrMaybe(parent.package, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -1727,17 +1739,17 @@ bool dev::Hilite_ReadFieldMaybe(dev::Hilite& parent, algo::strptr field, algo::s
     switch(field_id) {
         case dev_FieldId_hilite: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.hilite, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_color: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.color, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -1782,17 +1794,17 @@ bool dev::Htmlentity_ReadFieldMaybe(dev::Htmlentity& parent, algo::strptr field,
     switch(field_id) {
         case dev_FieldId_htmlentity: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.htmlentity, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_code: {
             retval = i32_ReadStrptrMaybe(parent.code, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -1866,25 +1878,23 @@ bool dev::Include_ReadFieldMaybe(dev::Include& parent, algo::strptr field, algo:
     switch(field_id) {
         case dev_FieldId_include: {
             retval = algo::Smallstr200_ReadStrptrMaybe(parent.include, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_srcfile: {
             retval = false;
-            break;
-        }
+        } break;
         case dev_FieldId_filename: {
             retval = false;
-            break;
-        }
+        } break;
         case dev_FieldId_sys: {
             retval = bool_ReadStrptrMaybe(parent.sys, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -1929,13 +1939,14 @@ bool dev::License_ReadFieldMaybe(dev::License& parent, algo::strptr field, algo:
     switch(field_id) {
         case dev_FieldId_license: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.license, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -1977,41 +1988,35 @@ bool dev::Linelim_ReadFieldMaybe(dev::Linelim& parent, algo::strptr field, algo:
     switch(field_id) {
         case dev_FieldId_gitfile: {
             retval = algo::Smallstr200_ReadStrptrMaybe(parent.gitfile, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_nlongline: {
             retval = u32_ReadStrptrMaybe(parent.nlongline, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_longestline: {
             retval = u32_ReadStrptrMaybe(parent.longestline, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_nbadws: {
             retval = u32_ReadStrptrMaybe(parent.nbadws, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_maxws: {
             retval = u32_ReadStrptrMaybe(parent.maxws, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_nlongfunc: {
             retval = u32_ReadStrptrMaybe(parent.nlongfunc, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_longestfunc: {
             retval = u32_ReadStrptrMaybe(parent.longestfunc, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_nmysteryfunc: {
             retval = u32_ReadStrptrMaybe(parent.nmysteryfunc, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_badness: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.badness, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -2074,17 +2079,17 @@ bool dev::Mdmark_ReadFieldMaybe(dev::Mdmark& parent, algo::strptr field, algo::s
     switch(field_id) {
         case dev_FieldId_mdmark: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.mdmark, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_state: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.state, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_param: {
             retval = algo::cstring_ReadStrptrMaybe(parent.param, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -2192,25 +2197,23 @@ bool dev::Mdsection_ReadFieldMaybe(dev::Mdsection& parent, algo::strptr field, a
     switch(field_id) {
         case dev_FieldId_mdsection: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.mdsection, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_match: {
             retval = algo::Smallstr200_ReadStrptrMaybe(parent.match, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_path: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.path, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_genlist: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.genlist, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -2261,17 +2264,17 @@ bool dev::Msgfile_ReadFieldMaybe(dev::Msgfile& parent, algo::strptr field, algo:
     switch(field_id) {
         case dev_FieldId_gitfile: {
             retval = algo::Smallstr200_ReadStrptrMaybe(parent.gitfile, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_strict: {
             retval = bool_ReadStrptrMaybe(parent.strict, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -2308,6 +2311,61 @@ void dev::Msgfile_Print(dev::Msgfile& row, algo::cstring& str) {
     PrintAttrSpaceReset(str,"comment", temp);
 }
 
+// --- dev.Netproto..ReadFieldMaybe
+bool dev::Netproto_ReadFieldMaybe(dev::Netproto& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    dev::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case dev_FieldId_netproto: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.netproto, strval);
+        } break;
+        case dev_FieldId_tls: {
+            retval = bool_ReadStrptrMaybe(parent.tls, strval);
+        } break;
+        case dev_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- dev.Netproto..ReadStrptrMaybe
+// Read fields of dev::Netproto from an ascii string.
+// The format of the string is an ssim Tuple
+bool dev::Netproto_ReadStrptrMaybe(dev::Netproto &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "dev.netproto") || algo::StripTypeTag(in_str, "dev.Netproto");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && Netproto_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- dev.Netproto..Print
+// print string representation of ROW to string STR
+// cfmt:dev.Netproto.String  printfmt:Tuple
+void dev::Netproto_Print(dev::Netproto& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "dev.netproto";
+
+    algo::Smallstr50_Print(row.netproto, temp);
+    PrintAttrSpaceReset(str,"netproto", temp);
+
+    bool_Print(row.tls, temp);
+    PrintAttrSpaceReset(str,"tls", temp);
+
+    algo::Comment_Print(row.comment, temp);
+    PrintAttrSpaceReset(str,"comment", temp);
+}
+
 // --- dev.Noindent..ReadFieldMaybe
 bool dev::Noindent_ReadFieldMaybe(dev::Noindent& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
@@ -2316,13 +2374,14 @@ bool dev::Noindent_ReadFieldMaybe(dev::Noindent& parent, algo::strptr field, alg
     switch(field_id) {
         case dev_FieldId_gitfile: {
             retval = algo::Smallstr200_ReadStrptrMaybe(parent.gitfile, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -2364,17 +2423,17 @@ bool dev::OptType_ReadFieldMaybe(dev::OptType& parent, algo::strptr field, algo:
     switch(field_id) {
         case dev_FieldId_opt_type: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.opt_type, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_sep: {
             retval = algo::RspaceStr4_ReadStrptrMaybe(parent.sep, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -2419,21 +2478,20 @@ bool dev::Package_ReadFieldMaybe(dev::Package& parent, algo::strptr field, algo:
     switch(field_id) {
         case dev_FieldId_package: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.package, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_baseref: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.baseref, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_origin: {
             retval = algo::Smallstr200_ReadStrptrMaybe(parent.origin, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -2510,25 +2568,23 @@ bool dev::Pkgdep_ReadFieldMaybe(dev::Pkgdep& parent, algo::strptr field, algo::s
     switch(field_id) {
         case dev_FieldId_pkgdep: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.pkgdep, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_package: {
             retval = false;
-            break;
-        }
+        } break;
         case dev_FieldId_parent: {
             retval = false;
-            break;
-        }
+        } break;
         case dev_FieldId_soft: {
             retval = bool_ReadStrptrMaybe(parent.soft, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -2602,21 +2658,20 @@ bool dev::Pkgkey_ReadFieldMaybe(dev::Pkgkey& parent, algo::strptr field, algo::s
     switch(field_id) {
         case dev_FieldId_pkgkey: {
             retval = algo::Smallstr150_ReadStrptrMaybe(parent.pkgkey, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_package: {
             retval = false;
-            break;
-        }
+        } break;
         case dev_FieldId_key: {
             retval = false;
-            break;
-        }
+        } break;
         case dev_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -2650,33 +2705,57 @@ void dev::Pkgkey_Print(dev::Pkgkey& row, algo::cstring& str) {
     PrintAttrSpaceReset(str,"comment", temp);
 }
 
-// --- dev.Readme..ReadFieldMaybe
-bool dev::Readme_ReadFieldMaybe(dev::Readme& parent, algo::strptr field, algo::strptr strval) {
+// --- dev.Prototransport.netproto.Get
+algo::Smallstr50 dev::netproto_Get(dev::Prototransport& parent) {
+    algo::Smallstr50 ret(algo::Pathcomp(parent.prototransport, "/RL"));
+    return ret;
+}
+
+// --- dev.Prototransport.netproto.Get2
+algo::Smallstr50 dev::Prototransport_netproto_Get(algo::strptr arg) {
+    algo::Smallstr50 ret(algo::Pathcomp(arg, "/RL"));
+    return ret;
+}
+
+// --- dev.Prototransport.transport.Get
+algo::Smallstr50 dev::transport_Get(dev::Prototransport& parent) {
+    algo::Smallstr50 ret(algo::Pathcomp(parent.prototransport, "/RR"));
+    return ret;
+}
+
+// --- dev.Prototransport.transport.Get2
+algo::Smallstr50 dev::Prototransport_transport_Get(algo::strptr arg) {
+    algo::Smallstr50 ret(algo::Pathcomp(arg, "/RR"));
+    return ret;
+}
+
+// --- dev.Prototransport..Concat_netproto_transport
+tempstr dev::Prototransport_Concat_netproto_transport( const algo::strptr& netproto ,const algo::strptr& transport ) {
+    return tempstr() << netproto <<'/'<< transport ;
+}
+
+// --- dev.Prototransport..ReadFieldMaybe
+bool dev::Prototransport_ReadFieldMaybe(dev::Prototransport& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
     dev::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
     switch(field_id) {
-        case dev_FieldId_gitfile: {
-            retval = algo::Smallstr200_ReadStrptrMaybe(parent.gitfile, strval);
-            break;
-        }
-        case dev_FieldId_inl: {
-            retval = bool_ReadStrptrMaybe(parent.inl, strval);
-            break;
-        }
-        case dev_FieldId_sandbox: {
-            retval = bool_ReadStrptrMaybe(parent.sandbox, strval);
-            break;
-        }
-        case dev_FieldId_filter: {
-            retval = algo::Smallstr100_ReadStrptrMaybe(parent.filter, strval);
-            break;
-        }
+        case dev_FieldId_prototransport: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.prototransport, strval);
+        } break;
+        case dev_FieldId_netproto: {
+            retval = false;
+        } break;
+        case dev_FieldId_transport: {
+            retval = false;
+        } break;
         case dev_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -2684,24 +2763,82 @@ bool dev::Readme_ReadFieldMaybe(dev::Readme& parent, algo::strptr field, algo::s
     return retval;
 }
 
-// --- dev.Readme..ReadStrptrMaybe
-// Read fields of dev::Readme from an ascii string.
+// --- dev.Prototransport..ReadStrptrMaybe
+// Read fields of dev::Prototransport from an ascii string.
 // The format of the string is an ssim Tuple
-bool dev::Readme_ReadStrptrMaybe(dev::Readme &parent, algo::strptr in_str) {
+bool dev::Prototransport_ReadStrptrMaybe(dev::Prototransport &parent, algo::strptr in_str) {
     bool retval = true;
-    retval = algo::StripTypeTag(in_str, "dev.readme") || algo::StripTypeTag(in_str, "dev.Readme");
+    retval = algo::StripTypeTag(in_str, "dev.prototransport") || algo::StripTypeTag(in_str, "dev.Prototransport");
     ind_beg(algo::Attr_curs, attr, in_str) {
-        retval = retval && Readme_ReadFieldMaybe(parent, attr.name, attr.value);
+        retval = retval && Prototransport_ReadFieldMaybe(parent, attr.name, attr.value);
     }ind_end;
     return retval;
 }
 
-// --- dev.Readme..Print
+// --- dev.Prototransport..Print
 // print string representation of ROW to string STR
-// cfmt:dev.Readme.String  printfmt:Tuple
-void dev::Readme_Print(dev::Readme& row, algo::cstring& str) {
+// cfmt:dev.Prototransport.String  printfmt:Tuple
+void dev::Prototransport_Print(dev::Prototransport& row, algo::cstring& str) {
     algo::tempstr temp;
-    str << "dev.readme";
+    str << "dev.prototransport";
+
+    algo::Smallstr50_Print(row.prototransport, temp);
+    PrintAttrSpaceReset(str,"prototransport", temp);
+
+    algo::Comment_Print(row.comment, temp);
+    PrintAttrSpaceReset(str,"comment", temp);
+}
+
+// --- dev.Readmefile..ReadFieldMaybe
+bool dev::Readmefile_ReadFieldMaybe(dev::Readmefile& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    dev::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case dev_FieldId_gitfile: {
+            retval = algo::Smallstr200_ReadStrptrMaybe(parent.gitfile, strval);
+        } break;
+        case dev_FieldId_inl: {
+            retval = bool_ReadStrptrMaybe(parent.inl, strval);
+        } break;
+        case dev_FieldId_sandbox: {
+            retval = bool_ReadStrptrMaybe(parent.sandbox, strval);
+        } break;
+        case dev_FieldId_filter: {
+            retval = algo::Smallstr100_ReadStrptrMaybe(parent.filter, strval);
+        } break;
+        case dev_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- dev.Readmefile..ReadStrptrMaybe
+// Read fields of dev::Readmefile from an ascii string.
+// The format of the string is an ssim Tuple
+bool dev::Readmefile_ReadStrptrMaybe(dev::Readmefile &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "dev.readmefile") || algo::StripTypeTag(in_str, "dev.Readmefile");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && Readmefile_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- dev.Readmefile..Print
+// print string representation of ROW to string STR
+// cfmt:dev.Readmefile.String  printfmt:Tuple
+void dev::Readmefile_Print(dev::Readmefile& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "dev.readmefile";
 
     algo::Smallstr200_Print(row.gitfile, temp);
     PrintAttrSpaceReset(str,"gitfile", temp);
@@ -2727,13 +2864,14 @@ bool dev::Readmesort_ReadFieldMaybe(dev::Readmesort& parent, algo::strptr field,
     switch(field_id) {
         case dev_FieldId_readmesort: {
             retval = algo::Smallstr250_ReadStrptrMaybe(parent.readmesort, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -2767,6 +2905,55 @@ void dev::Readmesort_Print(dev::Readmesort& row, algo::cstring& str) {
     PrintAttrSpaceReset(str,"comment", temp);
 }
 
+// --- dev.Rpm..ReadFieldMaybe
+bool dev::Rpm_ReadFieldMaybe(dev::Rpm& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    dev::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case dev_FieldId_rpm: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.rpm, strval);
+        } break;
+        case dev_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- dev.Rpm..ReadStrptrMaybe
+// Read fields of dev::Rpm from an ascii string.
+// The format of the string is an ssim Tuple
+bool dev::Rpm_ReadStrptrMaybe(dev::Rpm &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "dev.rpm") || algo::StripTypeTag(in_str, "dev.Rpm");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && Rpm_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- dev.Rpm..Print
+// print string representation of ROW to string STR
+// cfmt:dev.Rpm.String  printfmt:Tuple
+void dev::Rpm_Print(dev::Rpm& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "dev.rpm";
+
+    algo::Smallstr50_Print(row.rpm, temp);
+    PrintAttrSpaceReset(str,"rpm", temp);
+
+    algo::Comment_Print(row.comment, temp);
+    PrintAttrSpaceReset(str,"comment", temp);
+}
+
 // --- dev.Sandbox..ReadFieldMaybe
 bool dev::Sandbox_ReadFieldMaybe(dev::Sandbox& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
@@ -2775,13 +2962,14 @@ bool dev::Sandbox_ReadFieldMaybe(dev::Sandbox& parent, algo::strptr field, algo:
     switch(field_id) {
         case dev_FieldId_sandbox: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.sandbox, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -2823,13 +3011,14 @@ bool dev::Sbpath_ReadFieldMaybe(dev::Sbpath& parent, algo::strptr field, algo::s
     switch(field_id) {
         case dev_FieldId_sbpath: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.sbpath, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -2883,21 +3072,20 @@ bool dev::Scriptfile_ReadFieldMaybe(dev::Scriptfile& parent, algo::strptr field,
     switch(field_id) {
         case dev_FieldId_gitfile: {
             retval = algo::Smallstr200_ReadStrptrMaybe(parent.gitfile, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_name: {
             retval = false;
-            break;
-        }
+        } break;
         case dev_FieldId_license: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.license, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -2954,13 +3142,14 @@ bool dev::Srcfile_ReadFieldMaybe(dev::Srcfile& parent, algo::strptr field, algo:
     switch(field_id) {
         case dev_FieldId_srcfile: {
             retval = algo::Smallstr200_ReadStrptrMaybe(parent.srcfile, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_ext: {
             retval = false;
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -2999,41 +3188,35 @@ bool dev::Syscmd_ReadFieldMaybe(dev::Syscmd& parent, algo::strptr field, algo::s
     switch(field_id) {
         case dev_FieldId_syscmd: {
             retval = i64_ReadStrptrMaybe(parent.syscmd, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_execkey: {
             retval = false;
-            break;
-        }
+        } break;
         case dev_FieldId_command: {
             retval = algo::cstring_ReadStrptrMaybe(parent.command, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_pid: {
             retval = i32_ReadStrptrMaybe(parent.pid, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_status: {
             retval = i32_ReadStrptrMaybe(parent.status, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_nprereq: {
             retval = i32_ReadStrptrMaybe(parent.nprereq, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_fail_prereq: {
             retval = bool_ReadStrptrMaybe(parent.fail_prereq, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_completed: {
             retval = bool_ReadStrptrMaybe(parent.completed, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_maxtime: {
             retval = i32_ReadStrptrMaybe(parent.maxtime, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -3091,19 +3274,16 @@ bool dev::Syscmddep_ReadFieldMaybe(dev::Syscmddep& parent, algo::strptr field, a
     dev::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
     switch(field_id) {
-        case dev_FieldId_syscmddep: {
-            retval = false;
-            break;
-        }
         case dev_FieldId_child: {
             retval = i64_ReadStrptrMaybe(parent.child, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_parent: {
             retval = i64_ReadStrptrMaybe(parent.parent, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -3145,13 +3325,14 @@ bool dev::Syslib_ReadFieldMaybe(dev::Syslib& parent, algo::strptr field, algo::s
     switch(field_id) {
         case dev_FieldId_syslib: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.syslib, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -3222,21 +3403,20 @@ bool dev::Targdep_ReadFieldMaybe(dev::Targdep& parent, algo::strptr field, algo:
     switch(field_id) {
         case dev_FieldId_targdep: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.targdep, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_target: {
             retval = false;
-            break;
-        }
+        } break;
         case dev_FieldId_parent: {
             retval = false;
-            break;
-        }
+        } break;
         case dev_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -3278,9 +3458,11 @@ bool dev::Target_ReadFieldMaybe(dev::Target& parent, algo::strptr field, algo::s
     switch(field_id) {
         case dev_FieldId_target: {
             retval = algo::Smallstr16_ReadStrptrMaybe(parent.target, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -3360,25 +3542,23 @@ bool dev::Targsrc_ReadFieldMaybe(dev::Targsrc& parent, algo::strptr field, algo:
     switch(field_id) {
         case dev_FieldId_targsrc: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.targsrc, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_target: {
             retval = false;
-            break;
-        }
+        } break;
         case dev_FieldId_src: {
             retval = false;
-            break;
-        }
+        } break;
         case dev_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_ext: {
             retval = false;
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -3448,6 +3628,18 @@ algo::Smallstr50 dev::Targsyslib_uname_Get(algo::strptr arg) {
     return ret;
 }
 
+// --- dev.Targsyslib.prefix.Get
+algo::Smallstr50 dev::prefix_Get(dev::Targsyslib& parent) {
+    algo::Smallstr50 ret(algo::Pathcomp(parent.targsyslib, ".RL"));
+    return ret;
+}
+
+// --- dev.Targsyslib.prefix.Get2
+algo::Smallstr50 dev::Targsyslib_prefix_Get(algo::strptr arg) {
+    algo::Smallstr50 ret(algo::Pathcomp(arg, ".RL"));
+    return ret;
+}
+
 // --- dev.Targsyslib..Concat_uname_target_syslib
 tempstr dev::Targsyslib_Concat_uname_target_syslib( const algo::strptr& uname ,const algo::strptr& target ,const algo::strptr& syslib ) {
     return tempstr() << uname <<'/'<< target <<'.'<< syslib ;
@@ -3461,25 +3653,26 @@ bool dev::Targsyslib_ReadFieldMaybe(dev::Targsyslib& parent, algo::strptr field,
     switch(field_id) {
         case dev_FieldId_targsyslib: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.targsyslib, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_target: {
             retval = false;
-            break;
-        }
+        } break;
         case dev_FieldId_syslib: {
             retval = false;
-            break;
-        }
+        } break;
         case dev_FieldId_uname: {
             retval = false;
-            break;
-        }
+        } break;
+        case dev_FieldId_prefix: {
+            retval = false;
+        } break;
         case dev_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -3521,21 +3714,20 @@ bool dev::Tgtcov_ReadFieldMaybe(dev::Tgtcov& parent, algo::strptr field, algo::s
     switch(field_id) {
         case dev_FieldId_target: {
             retval = algo::Smallstr16_ReadStrptrMaybe(parent.target, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_cov_min: {
             retval = algo::U32Dec2_ReadStrptrMaybe(parent.cov_min, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_maxerr: {
             retval = algo::U32Dec2_ReadStrptrMaybe(parent.maxerr, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -3583,17 +3775,17 @@ bool dev::Timefmt_ReadFieldMaybe(dev::Timefmt& parent, algo::strptr field, algo:
     switch(field_id) {
         case dev_FieldId_timefmt: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.timefmt, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_dirname: {
             retval = bool_ReadStrptrMaybe(parent.dirname, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -3739,45 +3931,38 @@ bool dev::ToolOpt_ReadFieldMaybe(dev::ToolOpt& parent, algo::strptr field, algo:
     switch(field_id) {
         case dev_FieldId_tool_opt: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.tool_opt, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_uname: {
             retval = false;
-            break;
-        }
+        } break;
         case dev_FieldId_compiler: {
             retval = false;
-            break;
-        }
+        } break;
         case dev_FieldId_cfg: {
             retval = false;
-            break;
-        }
+        } break;
         case dev_FieldId_arch: {
             retval = false;
-            break;
-        }
+        } break;
         case dev_FieldId_target: {
             retval = false;
-            break;
-        }
+        } break;
         case dev_FieldId_opt_type: {
             retval = false;
-            break;
-        }
+        } break;
         case dev_FieldId_opt: {
             retval = false;
-            break;
-        }
+        } break;
         case dev_FieldId_sortfld: {
             retval = false;
-            break;
-        }
+        } break;
         case dev_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -3811,6 +3996,61 @@ void dev::ToolOpt_Print(dev::ToolOpt& row, algo::cstring& str) {
     PrintAttrSpaceReset(str,"comment", temp);
 }
 
+// --- dev.Transport..ReadFieldMaybe
+bool dev::Transport_ReadFieldMaybe(dev::Transport& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    dev::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case dev_FieldId_transport: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.transport, strval);
+        } break;
+        case dev_FieldId_ip: {
+            retval = bool_ReadStrptrMaybe(parent.ip, strval);
+        } break;
+        case dev_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- dev.Transport..ReadStrptrMaybe
+// Read fields of dev::Transport from an ascii string.
+// The format of the string is an ssim Tuple
+bool dev::Transport_ReadStrptrMaybe(dev::Transport &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "dev.transport") || algo::StripTypeTag(in_str, "dev.Transport");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && Transport_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- dev.Transport..Print
+// print string representation of ROW to string STR
+// cfmt:dev.Transport.String  printfmt:Tuple
+void dev::Transport_Print(dev::Transport& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "dev.transport";
+
+    algo::Smallstr50_Print(row.transport, temp);
+    PrintAttrSpaceReset(str,"transport", temp);
+
+    bool_Print(row.ip, temp);
+    PrintAttrSpaceReset(str,"ip", temp);
+
+    algo::Comment_Print(row.comment, temp);
+    PrintAttrSpaceReset(str,"comment", temp);
+}
+
 // --- dev.Uname..ReadFieldMaybe
 bool dev::Uname_ReadFieldMaybe(dev::Uname& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
@@ -3819,13 +4059,14 @@ bool dev::Uname_ReadFieldMaybe(dev::Uname& parent, algo::strptr field, algo::str
     switch(field_id) {
         case dev_FieldId_uname: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.uname, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -3867,13 +4108,14 @@ bool dev::Unstablefld_ReadFieldMaybe(dev::Unstablefld& parent, algo::strptr fiel
     switch(field_id) {
         case dev_FieldId_field: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.field, strval);
-            break;
-        }
+        } break;
         case dev_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);

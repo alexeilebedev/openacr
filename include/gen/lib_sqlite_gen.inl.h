@@ -46,6 +46,7 @@ inline void lib_sqlite::FConn_Init(lib_sqlite::FConn& conn) {
     conn.db = NULL;
     conn.conn_next = (lib_sqlite::FConn*)-1; // (lib_sqlite.FDb.conn) not-in-tpool's freelist
     conn.ind_conn_next = (lib_sqlite::FConn*)-1; // (lib_sqlite.FDb.ind_conn) not-in-hash
+    conn.ind_conn_hashval = 0; // stored hash value
 }
 
 // --- lib_sqlite.FConn..Ctor
@@ -184,9 +185,9 @@ inline lib_sqlite::FRow* lib_sqlite::zd_row_First(lib_sqlite::FCtype& ctype) {
 
 // --- lib_sqlite.FCtype.zd_row.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool lib_sqlite::zd_row_InLlistQ(lib_sqlite::FRow& row) {
+inline bool lib_sqlite::ctype_zd_row_InLlistQ(lib_sqlite::FRow& row) {
     bool result = false;
-    result = !(row.zd_row_next == (lib_sqlite::FRow*)-1);
+    result = !(row.ctype_zd_row_next == (lib_sqlite::FRow*)-1);
     return result;
 }
 
@@ -206,14 +207,14 @@ inline i32 lib_sqlite::zd_row_N(const lib_sqlite::FCtype& ctype) {
 
 // --- lib_sqlite.FCtype.zd_row.Next
 // Return pointer to next element in the list
-inline lib_sqlite::FRow* lib_sqlite::zd_row_Next(lib_sqlite::FRow &row) {
-    return row.zd_row_next;
+inline lib_sqlite::FRow* lib_sqlite::ctype_zd_row_Next(lib_sqlite::FRow &row) {
+    return row.ctype_zd_row_next;
 }
 
 // --- lib_sqlite.FCtype.zd_row.Prev
 // Return pointer to previous element in the list
-inline lib_sqlite::FRow* lib_sqlite::zd_row_Prev(lib_sqlite::FRow &row) {
-    return row.zd_row_prev;
+inline lib_sqlite::FRow* lib_sqlite::ctype_zd_row_Prev(lib_sqlite::FRow &row) {
+    return row.ctype_zd_row_prev;
 }
 
 // --- lib_sqlite.FCtype.zd_row.qLast
@@ -334,7 +335,7 @@ inline bool lib_sqlite::ctype_zd_row_curs_ValidQ(ctype_zd_row_curs &curs) {
 // --- lib_sqlite.FCtype.zd_row_curs.Next
 // proceed to next item
 inline void lib_sqlite::ctype_zd_row_curs_Next(ctype_zd_row_curs &curs) {
-    lib_sqlite::FRow *next = (*curs.row).zd_row_next;
+    lib_sqlite::FRow *next = (*curs.row).ctype_zd_row_next;
     curs.row = next;
 }
 
@@ -1211,6 +1212,7 @@ inline void lib_sqlite::FNs_Init(lib_sqlite::FNs& ns) {
     ns.c_ssimfile_n = 0; // (lib_sqlite.FNs.c_ssimfile)
     ns.c_ssimfile_max = 0; // (lib_sqlite.FNs.c_ssimfile)
     ns.ind_ns_next = (lib_sqlite::FNs*)-1; // (lib_sqlite.FDb.ind_ns) not-in-hash
+    ns.ind_ns_hashval = 0; // stored hash value
 }
 
 // --- lib_sqlite.FNs.c_ssimfile_curs.Reset
@@ -1254,9 +1256,10 @@ inline void lib_sqlite::FRow_Init(lib_sqlite::FRow& trow) {
     trow.p_ctype = NULL;
     trow.rowid = i64(0);
     trow.ctype_c_row_in_ary = bool(false);
-    trow.zd_row_next = (lib_sqlite::FRow*)-1; // (lib_sqlite.FCtype.zd_row) not-in-list
-    trow.zd_row_prev = NULL; // (lib_sqlite.FCtype.zd_row)
-    trow.ind_pkey_next = (lib_sqlite::FRow*)-1; // (lib_sqlite.FCtype.ind_pkey) not-in-hash
+    trow.ctype_zd_row_next = (lib_sqlite::FRow*)-1; // (lib_sqlite.FCtype.zd_row) not-in-list
+    trow.ctype_zd_row_prev = NULL; // (lib_sqlite.FCtype.zd_row)
+    trow.ctype_ind_pkey_next = (lib_sqlite::FRow*)-1; // (lib_sqlite.FCtype.ind_pkey) not-in-hash
+    trow.ctype_ind_pkey_hashval = 0; // stored hash value
 }
 
 // --- lib_sqlite.FRow..Ctor
@@ -1285,6 +1288,7 @@ inline void lib_sqlite::FSsimfile_Init(lib_sqlite::FSsimfile& ssimfile) {
     ssimfile.p_ns = NULL;
     ssimfile.ns_c_ssimfile_in_ary = bool(false);
     ssimfile.ind_ssimfile_next = (lib_sqlite::FSsimfile*)-1; // (lib_sqlite.FDb.ind_ssimfile) not-in-hash
+    ssimfile.ind_ssimfile_hashval = 0; // stored hash value
 }
 
 // --- lib_sqlite.FSsimfile..Ctor

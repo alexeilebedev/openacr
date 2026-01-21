@@ -183,6 +183,7 @@ inline sandbox::FSbpath& sandbox::_db_sbpath_curs_Access(_db_sbpath_curs &curs) 
 inline void sandbox::FSandbox_Init(sandbox::FSandbox& sandbox) {
     sandbox.select = bool(false);
     sandbox.ind_sandbox_next = (sandbox::FSandbox*)-1; // (sandbox.FDb.ind_sandbox) not-in-hash
+    sandbox.ind_sandbox_hashval = 0; // stored hash value
 }
 
 // --- sandbox.FSandbox..Ctor

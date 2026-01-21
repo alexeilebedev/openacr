@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 // Copyright (C) 2023 Astra
 //
 // License: GPL
@@ -26,27 +26,44 @@
 
 // -----------------------------------------------------------------------------
 
-// Compute component directory depending on config given on command line
-void atf_comp::Main_GuessCompdir() {
-    atf_comp::_db.compdir = atf_comp::_db.cmdline.compdir;
-    if (atf_comp::_db.compdir == "") {
-        atf_comp::_db.compdir = tempstr("build/")<<atf_comp::_db.cmdline.cfg;
+static tempstr GetArgs(atf_comp::FComptest &comptest) {
+    tempstr ret;
+    if (comptest.c_targs) {
+        ret << comptest.c_targs->args;
     }
-    vrfy(DirectoryQ(atf_comp::_db.compdir), tempstr()<<"Can't find component directory: "<<atf_comp::_db.compdir);
+    return ret;
+}
+
+static tempstr GetFilter(atf_comp::FComptest &comptest) {
+    tempstr ret;
+    if (comptest.c_tfilt) {
+        ret << comptest.c_tfilt->filter;
+    }
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// Compute component directory depending on config given on command line
+void atf_comp::Main_GuessBindir() {
+    atf_comp::_db.bindir = atf_comp::_db.cmdline.bindir;
+    if (atf_comp::_db.bindir == "") {
+        atf_comp::_db.bindir = tempstr("build/")<<atf_comp::_db.cmdline.cfg;
+    }
+    vrfy(DirectoryQ(atf_comp::_db.bindir), tempstr()<<"Can't find component directory: "<<atf_comp::_db.bindir);
 }
 
 // -----------------------------------------------------------------------------
 
 // Run abt for build or ood check for config given on command line
-// -cfg, -build, and -ood options are passed directly to abt
+// -cfg, -build options are passed directly to abt
 void atf_comp::Main_Ood() {
-    if (atf_comp::_db.cmdline.compdir == "") {
-        if (atf_comp::_db.cmdline.build || atf_comp::_db.cmdline.ood) {
+    if (atf_comp::_db.cmdline.bindir == "") {
+        if (atf_comp::_db.cmdline.build) {
             command::abt_proc abt;
             Regx_ReadSql(abt.cmd.target,"%",true);
             abt.cmd.cfg.expr = atf_comp::_db.cmdline.cfg;
             abt.cmd.build = atf_comp::_db.cmdline.build;
-            abt.cmd.ood   = atf_comp::_db.cmdline.ood;
             abt_ExecX(abt);
         }
     } else {
@@ -74,7 +91,7 @@ static void CheckUntrackedFiles(cstring &comment) {
 // may slow down execution greatly. Timeout given on the comptest record is
 // 3 * typical elapsed time for running release executable without any tool.
 // This functios applies known slowdown figures for various configurations and tools.
-int atf_comp::GetTimeout(atf_comp::FComptest &comptest) {
+int atf_comp::CalcTimeout(atf_comp::FComptest &comptest) {
     double timeout(comptest.timeout);
     if (atf_comp::_db.cmdline.cfg == dev_Cfg_cfg_debug) {
         timeout *= 4;
@@ -99,12 +116,12 @@ int atf_comp::GetTimeout(atf_comp::FComptest &comptest) {
 // If invoked with -callgrind, wrap the command line with valgrind
 //   and initialize COMPTEST.FILE_CALLGRIND_LOG, COMPTEST.FILE_CALLGRIND_OUT pathname
 // If invoked with -coverage, wrap the command line with atf_cov
-//   and initialize COMPTEST.COVDIR
+//   and link with covdir
 //
 void atf_comp::SetupCmdline(atf_comp::FComptest &comptest, algo_lib::Replscope &R) {
     // Compose component path from component directory and target name given
     // on first part of testcase name
-    comptest.bash.cmd.c   = DirFileJoin(atf_comp::_db.compdir,target_Get(comptest));
+    comptest.bash.cmd.c   = DirFileJoin(atf_comp::_db.bindir,target_Get(comptest));
     if (comptest.c_tfilt) {
         comptest.filter_command = Subst(R,comptest.c_tfilt->filter);
     }
@@ -112,19 +129,17 @@ void atf_comp::SetupCmdline(atf_comp::FComptest &comptest, algo_lib::Replscope &
         comptest.bash.cmd.c << " ";
         Ins(&R,comptest.bash.cmd.c,comptest.c_targs->args,false);
     }
+    vrfy_(comptest.dir != "");
     if (atf_comp::_db.cmdline.memcheck) {
-        comptest.file_memcheck = tempstr()
-            << DirFileJoin(atf_comp::_db.tempdir,comptest.comptest) << ".memcheck.log";
+        comptest.file_memcheck = DirFileJoin(comptest.dir, "memcheck.log");
         comptest.bash.cmd.c = tempstr()
             << "valgrind --tool=memcheck --log-file=" << comptest.file_memcheck
             << " " << comptest.bash.cmd.c;
         DeleteFile(comptest.file_memcheck);
     }
     if (atf_comp::_db.cmdline.callgrind) {
-        comptest.file_callgrind_log = tempstr()
-            << DirFileJoin(atf_comp::_db.tempdir,comptest.comptest) << ".callgrind.log";
-        comptest.file_callgrind_out = tempstr()
-            << DirFileJoin(atf_comp::_db.tempdir,comptest.comptest) << ".callgrind.out";
+        comptest.file_callgrind_log = DirFileJoin(comptest.dir, "callgrind.log");
+        comptest.file_callgrind_out = DirFileJoin(comptest.dir, "callgrind.out");
         comptest.bash.cmd.c = tempstr()
             << "valgrind --tool=callgrind"
             << " --log-file=" << comptest.file_callgrind_log
@@ -134,10 +149,20 @@ void atf_comp::SetupCmdline(atf_comp::FComptest &comptest, algo_lib::Replscope &
         DeleteFile(comptest.file_callgrind_out);
     }
     if (atf_comp::_db.cmdline.cfg == dev_Cfg_cfg_coverage) {
-        comptest.covdir = tempstr() << DirFileJoin(atf_comp::_db.tempdir,comptest.comptest) << ".cov.d";
+        FCovdir *covdir = zd_covdir_free_RemoveFirst();
+        if (!covdir) {
+            covdir = &covdir_Alloc();
+            covdir->covdir = _db.cmdline.covfast
+                ? DirFileJoin(atf_comp::_db.tempdir,"cov.d/") << covdir_N()
+                : DirFileJoin(comptest.dir, "cov.d");
+        }
+        comptest.c_covdir = covdir;
         command::atf_cov_proc atf_cov;
-        atf_cov.cmd.covdir = comptest.covdir;
-        atf_cov.cmd.logfile = DirFileJoin( comptest.covdir,"atf_cov.log");
+        atf_cov.cmd.covdir = covdir->covdir;
+        atf_cov.cmd.incremental = _db.cmdline.covfast;
+        atf_cov.cmd.logfile = _db.cmdline.covfast
+            ? DirFileJoin(covdir->covdir, comptest.comptest) << ".atf_cov.log"
+            : DirFileJoin(covdir->covdir,"atf_cov.log");
         atf_cov.cmd.runcmd = comptest.bash.cmd.c;
         comptest.bash.cmd.c = tempstr() << atf_cov.path << " ";
         atf_cov_PrintArgv(atf_cov.cmd,comptest.bash.cmd.c);
@@ -149,7 +174,7 @@ void atf_comp::SetupCmdline(atf_comp::FComptest &comptest, algo_lib::Replscope &
 // Initialize COMPTEST.FILE_TEST_IN
 // Write input messages to file
 void atf_comp::PrepareInput(atf_comp::FComptest &comptest) {
-    comptest.file_test_in  = tempstr() << DirFileJoin(atf_comp::_db.tempdir,comptest.comptest) << ".in";
+    comptest.file_test_in  = DirFileJoin(comptest.dir,"in");
     tempstr teststr;
     ind_beg(comptest_zd_tmsg_curs,tmsg,comptest) {
         if (dir_Get(tmsg) == atfdb_Msgdir_msgdir_in) {
@@ -162,62 +187,70 @@ void atf_comp::PrepareInput(atf_comp::FComptest &comptest) {
 // -----------------------------------------------------------------------------
 
 void atf_comp::Comptest_Start(atf_comp::FComptest &comptest) {
-    atf_comp::_db.report.nrun++;
-    verblog("atf_comp.test_start"
-            << Keyval("comptest",comptest.comptest));
-    atf_comp::zd_run_comptest_Insert(comptest);
-    PrepareInput(comptest);
-    comptest.file_test_out = tempstr() << DirFileJoin(atf_comp::_db.tempdir,comptest.comptest) << ".out";
-    auto tempdir = algo::DirFileJoin(_db.tempdir,comptest.comptest);
-    algo::CreateDirRecurse(tempdir);
+    if (comptest.nrun < i32_Max(_db.cmdline.minrepeat, comptest.repeat)) {
+        // increment global counter -- this counts how many tests we started
+        atf_comp::_db.report.nrun++;
+        atf_comp::zd_run_comptest_Insert(comptest);
+        _db.ncore_used += comptest.ncore;
+        comptest.dir = algo::DirFileJoin(_db.tempdir,comptest.comptest);
+        algo::RemDirRecurse(comptest.dir,false);// clear any old state for this case (maybe from previous run)
+        algo::CreateDirRecurse(comptest.dir);
+        PrepareInput(comptest);
+        comptest.file_test_out = DirFileJoin(comptest.dir,"out");
+        verblog("atf_comp.test_start"
+                << Keyval("comptest",comptest.comptest)
+                << Keyval("n_running",zd_run_comptest_N())
+                << Keyval("ncore_used",_db.ncore_used)
+                << Keyval("outfile",comptest.file_test_out)
+                );
 
-    // compute command line
-    algo_lib::Replscope R;
-    Set(R,"$tempdir",tempdir);
-    Set(R,"$comptest",comptest.comptest);
-    Set(R,"$compdir",atf_comp::_db.compdir);
-    SetupCmdline(comptest,R);
-    tempstr out;
-    out << "# atf_comp -report:N -printinput "<<comptest.comptest
-        << " | " <<target_Get(comptest);
-    if (comptest.c_targs) {
-        out <<" " <<Subst(R,comptest.c_targs->args);
-    }
-    if (comptest.c_tfilt && ch_N(comptest.c_tfilt->filter)) {
-        out << " | " << Subst(R,comptest.filter_command);
-    }
-    verblog("repro: "<<out);
-    out << eol;
-    StringToFile(out, comptest.file_test_out);
-    comptest.bash.timeout = GetTimeout(comptest);
-    comptest.bash.fstdin << "<" << comptest.file_test_in;
-    if (_db.cmdline.stream) {
-        comptest.bash.cmd.c << " |& tee -a " << comptest.file_test_out;
-    } else {
-        comptest.bash.fstdout << ">" << comptest.file_test_out;
-        comptest.bash.fstderr = ">&1";
-    }
-    int rc = bash_Start(comptest.bash);
-    if (rc != 0) {
-        comptest.err << "Failed to start "<<comptest.bash.cmd.c;
-        Comptest_Finish(comptest);
-    } else {
-        comptest.start = algo::CurrSchedTime();
+        // calculate timeout
+        int timeout = CalcTimeout(comptest);
+        // compute command line
+        algo_lib::Replscope R;
+        Set(R,"$$","$");
+        Set(R,"$tempdir",comptest.dir);
+        Set(R,"$comptest",comptest.comptest);
+        Set(R,"$timeout",tempstr()<<timeout);
+        Set(R,"$bindir",atf_comp::_db.bindir);
+        SetupCmdline(comptest,R);
+        verblog("atf_comp "<<comptest.comptest<<" -report:N -printinput | " << target_Get(comptest) << " "<<Subst(R,GetArgs(comptest)));
+        comptest.bash.timeout = timeout;
+        comptest.bash.fstdin << "<" << comptest.file_test_in;
+        if (_db.cmdline.stream) {
+            comptest.bash.cmd.c << " |& tee " << comptest.file_test_out;
+        } else {
+            comptest.bash.fstdout << ">" << comptest.file_test_out;
+            comptest.bash.fstderr = ">&1";
+        }
+        int rc = bash_Start(comptest.bash);
+        if (rc != 0) {
+            comptest.err << "Failed to start "<<comptest.bash.cmd.c;
+            Comptest_Finish(comptest);
+        } else {
+            comptest.start = algo::CurrSchedTime();
+        }
     }
 }
 
 // -----------------------------------------------------------------------------
 
 // Start next test
-void atf_comp::zd_sel_comptest_Step() {
-    while (atf_comp::zd_run_comptest_N() < atf_comp::_db.cmdline.maxjobs && zd_sel_comptest_First()) {
+// If no tests are running, it's always OK to start.
+// Otherwise, the test is started only if total "# of cores used" after
+// starting the test would not exceed the limit
+void atf_comp::StartNextTest() {
+    if (!zd_sel_comptest_First()) {
+        // done!
+    } else if (atf_comp::_db.report.nerr >= _db.cmdline.maxerr) {
+        prerr("atf_comp: skipping rest of tests");
+        // don't reschedule
+    } else if (!_db.ncore_used || _db.ncore_used + zd_sel_comptest_First()->ncore <= atf_comp::_db.cmdline.maxjobs) {
         atf_comp::FComptest &comptest = *atf_comp::zd_sel_comptest_RemoveFirst();
-        if (atf_comp::_db.report.nerr >= _db.cmdline.maxerr) {
-            atf_comp::zd_sel_comptest_RemoveAll();
-            prerr("atf_comp: too many errors, not starting tests");
-            break;
-        }
         Comptest_Start(comptest);
+        ThScheduleIn(_db.th_runtest, algo::SchedTime(0));
+    } else {
+        // don't reschedule -- exiting comptest will reschedule
     }
 }
 
@@ -287,7 +320,6 @@ i32 atf_comp::GetNumMemoryErrors(atf_comp::FComptest &comptest) {
 
 // Cleanup test structure after run
 void atf_comp::Comptest_Finish(atf_comp::FComptest &comptest) {
-    dbglog("Comptest_Finish");
     bool did_run = !(comptest.start == algo::SchedTime());
     algo::ListSep ls("; ");
     if (did_run) {
@@ -314,19 +346,42 @@ void atf_comp::Comptest_Finish(atf_comp::FComptest &comptest) {
                   << Keyval("output_file",comptest.file_callgrind_out)
                   << Keyval("comment","Use kcachegrind (linux), or qcachegrind (macos) to open the file"));
         }
+        comptest.nrun++;
+        comptest.finish = algo::CurrSchedTime();
+        comptest.elapsed = ElapsedSecs(comptest.start,comptest.finish);
+        if (comptest.err != "") {
+            prlog("Component test output below:");
+            ind_beg(algo::FileLine_curs,line,comptest.file_test_out) {
+                prlog("    "<<line);
+            }ind_end;
+        }
     }
     comptest.success = did_run && ch_N(comptest.err) == 0;
-    // Conclude test case - updates stats, print test case status
-    atf_comp::_db.report.nerr  += comptest.success ? 0 : 1;
-    atf_comp::_db.report.npass += did_run && comptest.success ? 1 : 0;
-    comptest.finish = algo::CurrSchedTime();
-    comptest.elapsed = ElapsedSecs(comptest.start,comptest.finish);
     prlog("atf_comp.comptest"
           <<Keyval("comptest",comptest.comptest)
+          <<Keyval("nrun",comptest.nrun)
           <<Keyval("success",comptest.success)
           <<Keyval("elapsed",comptest.elapsed)
           <<Keyval("comment",comptest.err));
+    _db.ncore_used -= comptest.ncore;
     atf_comp::zd_run_comptest_Remove(comptest);
+    if (comptest.c_covdir && _db.cmdline.covfast) {
+        zd_covdir_free_Insert(*comptest.c_covdir);
+    }
+    // check if comptest needs to run more times
+    // (under coverage, maxrepeat is 1)
+    // if a comptest fails even once, it is not re-run
+    atf_comp::_db.report.npass += did_run && comptest.success;
+    atf_comp::_db.report.nerr  += comptest.success ? 0 : 1;
+    int lim = algo::Clipped(comptest.repeat, _db.cmdline.minrepeat, _db.cmdline.maxrepeat+1);
+    if (comptest.success && comptest.nrun < lim) {
+        algo::Refurbish(comptest.bash);
+        algo::Refurbish(comptest.start);
+        algo::Refurbish(comptest.finish);
+        zd_sel_comptest_Insert(comptest);// reinsert
+    }
+    // maybe start another test
+    ThScheduleIn(_db.th_runtest, algo::SchedTime(0));
 }
 
 // -----------------------------------------------------------------------------
@@ -386,6 +441,13 @@ void atf_comp::Main_Print(cstring &out, bool show_output, bool show_testcase) {
             }
             out << eol;
             out << "comment "<<comptest.comment<<eol;
+            if (comptest.ncore > 1) {
+                out << "ncore " << comptest.ncore << eol;
+            }
+            out << "timeout "<<comptest.timeout<<eol;
+            out << "repeat "<<comptest.repeat<<eol;
+            out << "memcheck "<<comptest.memcheck<<eol;
+            out << "coverage "<<comptest.coverage<<eol;
             out << "exit_code "<<comptest.exit_code<<eol;
             if (comptest.c_tfilt && ch_N(comptest.c_tfilt->filter)) {
                 out << "filter "<<comptest.c_tfilt->filter<<eol;
@@ -412,21 +474,26 @@ void atf_comp::Main_Print(cstring &out, bool show_output, bool show_testcase) {
 
 // Merge outputs of multiple atf_cov runs into a single report.
 void atf_comp::Main_Coverage() {
-    if (atf_comp::_db.cmdline.cfg == dev_Cfg_cfg_coverage) {
+    if (atf_comp::_db.cmdline.cfg != dev_Cfg_cfg_coverage) {
+        // not applicable
+    } else if (algo_lib::_db.exit_code != 0) {
+        prlog("atf_comp: coverage: skipping collection of coverage stats");
+    } else {
         cstring dir = DirFileJoin(atf_comp::_db.tempdir,"cov.d");
         CreateDirRecurse(dir);
         command::atf_cov_proc atf_cov;
         atf_cov.cmd.covdir = dir;
         atf_cov.cmd.logfile = DirFileJoin(atf_cov.cmd.covdir,"atf_cov.log");
         algo::ListSep ls(":");
-        ind_beg(_db_comptest_curs,comptest,_db) if (comptest.covdir != "") {
-            atf_cov.cmd.mergepath << ls << comptest.covdir;
+        ind_beg(_db_covdir_curs,covdir,_db) {
+            atf_cov.cmd.mergepath << ls << covdir.covdir;
         }ind_end;
         atf_cov.cmd.gcov = true;
         atf_cov.cmd.ssim = true;
         atf_cov.cmd.report = true;
         atf_cov.cmd.check = _db.cmdline.covcheck;
         atf_cov.cmd.capture = _db.cmdline.covcapture;
+        prlog("atf_comp: "<<atf_cov_ToCmdline(atf_cov));
         int rc=atf_cov_Exec(atf_cov);
         // show summary
         SysCmd(tempstr()<<"cat "<<DirFileJoin(dir,"summary.txt"));
@@ -438,8 +505,15 @@ void atf_comp::Main_Coverage() {
 
 // -----------------------------------------------------------------------------
 
-// Rewrite / normalize tags in all tmsgs
-// If a tmsg corresponds to an unknown type, the message is deleted
+// Rewrite / normalize component tests
+// - Rewrite type tags in all tmsgs
+//   If a tmsg corresponds to an unknown type, the message is deleted
+// - Rewrite "abc | xyz" as
+//   targs abc
+//   tfilt xyz
+// First, we want to see the true output of abc (the component test), prior to filtering
+// Second, xyz will "eat" the non-zero exit code of abc and we don't want to use 'set -o pipefail' tricks
+// TODO: also detect errors in command line for subcommand
 void atf_comp::Main_Normalize() {
     ind_beg(_db_zd_sel_comptest_curs,comptest,_db) {
         int rank=0;
@@ -454,6 +528,27 @@ void atf_comp::Main_Normalize() {
                 tmsg.msg = result;
             }
         }ind_end;
+        if (comptest.c_targs) {
+            tempstr oldargs = GetArgs(comptest);
+            tempstr oldfilter = GetFilter(comptest);
+            tempstr newfilter(algo::Trimmed(Pathcomp(oldargs,"|LR")));
+            if (newfilter == "") {
+                newfilter=oldfilter;
+            }
+            if (newfilter != "") {
+                atf_comp::FTfilt *tfilt=comptest.c_tfilt;
+                if (!tfilt) {
+                    tfilt=&tfilt_Alloc();
+                    tfilt->comptest=comptest.comptest;
+                    tfilt_XrefMaybe(*tfilt);
+                }
+            }
+            if (comptest.c_tfilt) {
+                comptest.c_tfilt->filter = Trimmed(newfilter);
+            }
+            comptest.c_targs->args = algo::Trimmed(Pathcomp(oldargs,"|LL"));
+            comptest.need_write = GetArgs(comptest) != oldargs || GetFilter(comptest) != oldfilter;
+        }
     }ind_end;
 }
 
@@ -484,8 +579,16 @@ void atf_comp::Main_Write() {
 void atf_comp::Main_Select() {
     ind_beg(_db_comptest_curs,comptest,_db) {
         atf_comp::_db.report.ntest++;
-        if (Regx_Match(_db.cmdline.comptest, comptest.comptest)
-            && (!_db.cmdline.memcheck || _db.cmdline.force || comptest.memcheck)) {
+        bool match = Regx_Match(_db.cmdline.comptest, comptest.comptest);
+        // skip tests marked memcheck:N in memcheck mode
+        if (_db.cmdline.memcheck) {
+            match = match && (comptest.memcheck || _db.cmdline.force);
+        }
+        // skip tests marked coverage:N in coverage mode
+        if (_db.cmdline.cfg == dev_Cfg_cfg_coverage) {
+            match = match && (comptest.coverage || _db.cmdline.force);
+        }
+        if (match) {
             zd_sel_comptest_Insert(comptest);
         } else {
             atf_comp::_db.report.nskip++;
@@ -535,10 +638,6 @@ void atf_comp::Main_RewriteCmdline() {
          || (_db.cmdline.mdbg && _db.cmdline.covcheck)
          ,"-mdbg flag is incompatible with coverage");
 
-    if (_db.cmdline.maxjobs==0) {
-        _db.cmdline.maxjobs = sysconf(_SC_NPROCESSORS_ONLN);
-    }
-    i32_UpdateMax(_db.cmdline.maxjobs,1);
     int n_tools = _db.cmdline.memcheck + _db.cmdline.callgrind;
     vrfy(n_tools<=1,"-memcheck and -callgrind are mutually exclusive");
 
@@ -557,9 +656,25 @@ void atf_comp::Main_RewriteCmdline() {
         _db.cmdline.cfg=dev_Cfg_cfg_coverage;
     }
     if (_db.cmdline.normalize || _db.cmdline.print || _db.cmdline.printinput|| _db.cmdline.mdbg) {
+        _db.cmdline.report=false;// will mess up the print
         _db.cmdline.e=false; // doesn't make sense
         _db.cmdline.run = false;
     }
+    if (_db.cmdline.maxjobs==0) {
+        if (_db.cmdline.cfg==dev_Cfg_cfg_coverage) {
+            _db.cmdline.maxjobs = 1;
+        } else {
+            _db.cmdline.maxjobs = sysconf(_SC_NPROCESSORS_ONLN);
+        }
+    }
+    // if invoked as atf_comp -minrepeat 1000, then set both to 1000
+    i32_UpdateMax(_db.cmdline.maxrepeat, _db.cmdline.minrepeat);
+    // disable repeat when calculating coverage or doing slow checking
+    if (_db.cmdline.memcheck || _db.cmdline.callgrind || _db.cmdline.cfg == dev_Cfg_cfg_coverage) {
+        _db.cmdline.minrepeat = i32_Min(1, _db.cmdline.minrepeat);
+        _db.cmdline.maxrepeat = 1;
+    }
+    i32_UpdateMax(_db.cmdline.maxjobs,1);
     // print potentially new command line
     // #AL# I think the options -covcapture, -covcheck should go away
     // In -cfg:coverage mode, the coverage information should be considered part of the test
@@ -572,6 +687,8 @@ void atf_comp::Main_RewriteCmdline() {
               <<Keyval("build",Bool(_db.cmdline.build))
               <<Keyval("cfg",_db.cmdline.cfg)
               <<Keyval("run",Bool(_db.cmdline.run))
+              <<Keyval("maxjobs",_db.cmdline.maxjobs)
+              <<Keyval("maxrepeat",_db.cmdline.maxrepeat)
               <<Keyval("capture",Bool(_db.cmdline.capture))
               <<Keyval("edit",Bool(_db.cmdline.e))
               <<Keyval("verbose",Bool(algo_lib::_db.cmdline.verbose)));
@@ -583,17 +700,18 @@ void atf_comp::Main_RewriteCmdline() {
 void atf_comp::Main() {
     lib_ctype::Init();
     Main_RewriteCmdline();
-    Main_GuessCompdir();
+    // select directory from which executables are launched.
+    Main_GuessBindir();
     Main_SetupSigchild();
     // check lock file
     algo_lib::FLockfile lockfile;
-    if (_db.cmdline.run || _db.cmdline.capture || _db.cmdline.e || _db.cmdline.normalize) {
+    if (_db.cmdline.run || _db.cmdline.capture || _db.cmdline.normalize) {
         vrfy(LockFileInit(lockfile, "temp/atf_comp.lock", FailokQ(true)),
              tempstr("atf_comp.lock")
              <<Keyval("success","N")
              <<Keyval("comment","another instance of atf_comp is already running"));
         vrfy_(StartsWithQ(_db.tempdir, "temp/"));// safety
-        algo::RemDirRecurse(atf_comp::_db.tempdir,false);// clear state
+        algo::RemDirRecurse(atf_comp::_db.tempdir,false);// clear entire state
         algo::CreateDirRecurse(atf_comp::_db.tempdir);// start over
     }
     if (_db.cmdline.check_untracked) {
@@ -616,11 +734,15 @@ void atf_comp::Main() {
         Main_Debug();
     }
     if (_db.cmdline.run) {
+        // schedule function to invoke next selected test
+        hook_Set0(_db.th_runtest, StartNextTest);
+        ThScheduleIn(_db.th_runtest, algo::SchedTime(0));
         atf_comp::MainLoop();
-        atf_comp::Main_Coverage();
+        // set non-zero exit code before coverage calculation
         if (atf_comp::_db.report.npass < atf_comp::_db.report.nrun) {
             algo_lib::_db.exit_code=1;
         }
+        atf_comp::Main_Coverage();
     }
     // report failed tests at the end
     ind_beg(_db_comptest_curs,comptest,_db) {

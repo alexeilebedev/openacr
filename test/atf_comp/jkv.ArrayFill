@@ -1,0 +1,19 @@
+{
+    "a": {
+        "b": {
+            "c": [
+                true,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                false
+            ]
+        }
+    }
+}

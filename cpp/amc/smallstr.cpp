@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2013 AlgoEngineering LLC
@@ -247,7 +247,7 @@ void amc::tfunc_Smallstr_ReadStrptrMaybe() {
         Ins(&R, rd.body, "    $name_SetStrptr($pararg, rhs);");
         Ins(&R, rd.body, "    retval = true;");
         Ins(&R, rd.body, "} else {");
-        Ins(&R, rd.body, "    algo_lib::SaveBadTag(\"comment\",\"text too long, limit $max_length\");");
+        Ins(&R, rd.body, "    algo_lib::AppendErrtext(\"comment\",\"text too long, limit $max_length\");");
         Ins(&R, rd.body, "}");
         Ins(&R, rd.body, "return retval;");
     }
@@ -262,27 +262,6 @@ void amc::tfunc_Smallstr_Print() {
     Ins(&R, print.ret  , "void", false);
     Ins(&R, print.proto, "$name_Print($Parent, algo::cstring &out)", false);
     Ins(&R, print.body, "ch_Addary(out, $name_Getary($pararg));");
-}
-
-// -----------------------------------------------------------------------------
-
-void amc::tfunc_Smallstr_HashStrptr() {
-    algo_lib::Replscope &R = amc::_db.genctx.R;
-    amc::FField &field = *amc::_db.genctx.p_field;
-    amc::FFunc& hash = amc::CreateCurFunc();
-    // PARENT IS LIMITED TO HAVING 1 SMALLSTR FIELD
-    vrfy(amc::c_datafld_N(*field.p_ctype)==1, "amc.smallstr_hash  comment:'Hash for smallstr is limited to one field'");
-
-    // HASH FUNCTION
-    // The hash function is calculated on the valid characters of the string.
-    // I.e. if the string representation is changed (from leftpad to rightpad, etc)
-    // the hash function doesn't change.
-    // This guarantee is important, as string lengths often mismatch between keys (e.g.
-    // string 'xyz' stored as RspaceStr10 vs RspaceStr20)
-    hash.inl=true;
-    Ins(&R, hash.ret  , "u32", false);
-    Ins(&R, hash.proto, "$Parname_Hash(u32 prev, const algo::strptr &str)", false);
-    Ins(&R, hash.body, "return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);");
 }
 
 // -----------------------------------------------------------------------------

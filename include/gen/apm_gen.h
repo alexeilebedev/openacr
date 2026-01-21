@@ -126,8 +126,6 @@ namespace apm { struct FieldId; }
 namespace apm { struct TableId; }
 namespace apm { extern struct apm::FDb _db; }
 namespace apm { // gen:ns_gsymbol
-    extern const algo::strptr dev_package_amc; // "amc"
-    extern const algo::strptr dev_package_apm; // "apm"
     extern const algo::strptr dev_package_openacr; // "openacr"
 } // gen:ns_gsymbol
 namespace apm { // gen:ns_print_struct
@@ -141,16 +139,17 @@ namespace apm { // gen:ns_print_struct
 // access: apm.FSsimfile.p_ctype (Upptr)
 // access: apm.FSsimreq.p_ctype (Upptr)
 struct FCtype { // apm.FCtype
-    algo::Smallstr100   ctype;             // Identifier. must be ns.typename
-    algo::Comment       comment;           //
-    apm::FSsimfile*     c_ssimfile;        // optional pointer
-    apm::FField**       c_field_elems;     // array of pointers
-    u32                 c_field_n;         // array of pointers
-    u32                 c_field_max;       // capacity of allocated array
-    apm::FSsimreq**     c_ssimreq_elems;   // array of pointers
-    u32                 c_ssimreq_n;       // array of pointers
-    u32                 c_ssimreq_max;     // capacity of allocated array
-    apm::FCtype*        ind_ctype_next;    // hash next
+    algo::Smallstr100   ctype;               // Identifier. must be ns.typename
+    algo::Comment       comment;             //
+    apm::FSsimfile*     c_ssimfile;          // optional pointer
+    apm::FField**       c_field_elems;       // array of pointers
+    u32                 c_field_n;           // array of pointers
+    u32                 c_field_max;         // capacity of allocated array
+    apm::FSsimreq**     c_ssimreq_elems;     // array of pointers
+    u32                 c_ssimreq_n;         // array of pointers
+    u32                 c_ssimreq_max;       // capacity of allocated array
+    apm::FCtype*        ind_ctype_next;      // hash next
+    u32                 ind_ctype_hashval;   // hash value
     // x-reference on apm.FCtype.c_ssimfile prevents copy
     // reftype Ptrary of apm.FCtype.c_field prohibits copy
     // reftype Ptrary of apm.FCtype.c_ssimreq prohibits copy
@@ -540,6 +539,9 @@ void                 ind_package_Remove(apm::FPackage& row) __attribute__((nothr
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:apm.FDb.ind_package.Reserve
 void                 ind_package_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:apm.FDb.ind_package.AbsReserve
+void                 ind_package_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -681,6 +683,9 @@ void                 ind_mergefile_Remove(apm::FMergefile& row) __attribute__((n
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:apm.FDb.ind_mergefile.Reserve
 void                 ind_mergefile_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:apm.FDb.ind_mergefile.AbsReserve
+void                 ind_mergefile_AbsReserve(int n) __attribute__((nothrow));
 
 // Return true if hash is empty
 // func:apm.FDb.ind_pkgkey.EmptyQ
@@ -703,6 +708,9 @@ void                 ind_pkgkey_Remove(apm::FPkgkey& row) __attribute__((nothrow
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:apm.FDb.ind_pkgkey.Reserve
 void                 ind_pkgkey_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:apm.FDb.ind_pkgkey.AbsReserve
+void                 ind_pkgkey_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -768,6 +776,9 @@ void                 ind_ctype_Remove(apm::FCtype& row) __attribute__((nothrow))
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:apm.FDb.ind_ctype.Reserve
 void                 ind_ctype_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:apm.FDb.ind_ctype.AbsReserve
+void                 ind_ctype_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -830,6 +841,9 @@ void                 ind_field_Remove(apm::FField& row) __attribute__((nothrow))
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:apm.FDb.ind_field.Reserve
 void                 ind_field_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:apm.FDb.ind_field.AbsReserve
+void                 ind_field_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -892,6 +906,9 @@ void                 ind_ssimfile_Remove(apm::FSsimfile& row) __attribute__((not
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:apm.FDb.ind_ssimfile.Reserve
 void                 ind_ssimfile_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:apm.FDb.ind_ssimfile.AbsReserve
+void                 ind_ssimfile_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -944,6 +961,9 @@ void                 ind_rec_Remove(apm::FRec& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:apm.FDb.ind_rec.Reserve
 void                 ind_rec_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:apm.FDb.ind_rec.AbsReserve
+void                 ind_rec_AbsReserve(int n) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:apm.FDb.zd_rec.EmptyQ
@@ -1263,6 +1283,9 @@ void                 ind_mkdir_Remove(apm::FMkdir& row) __attribute__((nothrow))
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:apm.FDb.ind_mkdir.Reserve
 void                 ind_mkdir_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:apm.FDb.ind_mkdir.AbsReserve
+void                 ind_mkdir_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -1523,6 +1546,7 @@ void                 FDb_Uninit() __attribute__((nothrow));
 // access: apm.FSubstr.p_srcfield (Upptr)
 struct FField { // apm.FField
     apm::FField*        ind_field_next;         // hash next
+    u32                 ind_field_hashval;      // hash value
     algo::Smallstr100   field;                  // Primary key, as ctype.name
     algo::Smallstr100   arg;                    // Type of field
     algo::Smallstr50    reftype;                //   "Val"  Type constructor
@@ -1587,14 +1611,15 @@ void                 FField_Uninit(apm::FField& field) __attribute__((nothrow));
 // global access: mergefile (Lary, by rowid)
 // global access: ind_mergefile (Thash, hash field mergefile)
 struct FMergefile { // apm.FMergefile
-    apm::FMergefile*   ind_mergefile_next;   // hash next
-    algo::cstring      mergefile;            //
-    algo::cstring      base_file;            //
-    i32                base_mode;            //   0
-    algo::cstring      ours_file;            //
-    i32                ours_mode;            //   0
-    algo::cstring      theirs_file;          //
-    i32                theirs_mode;          //   0
+    apm::FMergefile*   ind_mergefile_next;      // hash next
+    u32                ind_mergefile_hashval;   // hash value
+    algo::cstring      mergefile;               //
+    algo::cstring      base_file;               //
+    i32                base_mode;               //   0
+    algo::cstring      ours_file;               //
+    i32                ours_mode;               //   0
+    algo::cstring      theirs_file;             //
+    i32                theirs_mode;             //   0
     // func:apm.FMergefile..AssignOp
     inline apm::FMergefile& operator =(const apm::FMergefile &rhs) = delete;
     // func:apm.FMergefile..CopyCtor
@@ -1625,8 +1650,9 @@ void                 FMergefile_Print(apm::FMergefile& row, algo::cstring& str) 
 // global access: mkdir (Lary, by rowid)
 // global access: ind_mkdir (Thash, hash field mkdir)
 struct FMkdir { // apm.FMkdir
-    apm::FMkdir*    ind_mkdir_next;   // hash next
-    algo::cstring   mkdir;            //
+    apm::FMkdir*    ind_mkdir_next;      // hash next
+    u32             ind_mkdir_hashval;   // hash value
+    algo::cstring   mkdir;               //
     // func:apm.FMkdir..AssignOp
     inline apm::FMkdir&  operator =(const apm::FMkdir &rhs) = delete;
     // func:apm.FMkdir..CopyCtor
@@ -1686,6 +1712,7 @@ struct FPackage { // apm.FPackage
     apm::FPackage*      zd_sel_package_next;     // zslist link; -1 means not-in-list
     apm::FPackage*      zd_sel_package_prev;     // previous element
     apm::FPackage*      ind_package_next;        // hash next
+    u32                 ind_package_hashval;     // hash value
     apm::FPackage*      zd_topo_package_next;    // zslist link; -1 means not-in-list
     apm::FPackage*      zd_topo_package_prev;    // previous element
     algo::Smallstr50    package;                 // Package name
@@ -1743,7 +1770,7 @@ inline bool          zd_pkgkey_EmptyQ(apm::FPackage& package) __attribute__((__w
 inline apm::FPkgkey* zd_pkgkey_First(apm::FPackage& package) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:apm.FPackage.zd_pkgkey.InLlistQ
-inline bool          zd_pkgkey_InLlistQ(apm::FPkgkey& row) __attribute__((__warn_unused_result__, nothrow));
+inline bool          package_zd_pkgkey_InLlistQ(apm::FPkgkey& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:apm.FPackage.zd_pkgkey.Insert
 void                 zd_pkgkey_Insert(apm::FPackage& package, apm::FPkgkey& row) __attribute__((nothrow));
@@ -1755,10 +1782,10 @@ inline apm::FPkgkey* zd_pkgkey_Last(apm::FPackage& package) __attribute__((__war
 inline i32           zd_pkgkey_N(const apm::FPackage& package) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:apm.FPackage.zd_pkgkey.Next
-inline apm::FPkgkey* zd_pkgkey_Next(apm::FPkgkey &row) __attribute__((__warn_unused_result__, nothrow));
+inline apm::FPkgkey* package_zd_pkgkey_Next(apm::FPkgkey &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
 // func:apm.FPackage.zd_pkgkey.Prev
-inline apm::FPkgkey* zd_pkgkey_Prev(apm::FPkgkey &row) __attribute__((__warn_unused_result__, nothrow));
+inline apm::FPkgkey* package_zd_pkgkey_Prev(apm::FPkgkey &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:apm.FPackage.zd_pkgkey.Remove
 void                 zd_pkgkey_Remove(apm::FPackage& package, apm::FPkgkey& row) __attribute__((nothrow));
@@ -1860,7 +1887,7 @@ inline bool          zd_pkgrec_EmptyQ(apm::FPackage& package) __attribute__((__w
 inline apm::FPkgrec* zd_pkgrec_First(apm::FPackage& package) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:apm.FPackage.zd_pkgrec.InLlistQ
-inline bool          zd_pkgrec_InLlistQ(apm::FPkgrec& row) __attribute__((__warn_unused_result__, nothrow));
+inline bool          package_zd_pkgrec_InLlistQ(apm::FPkgrec& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:apm.FPackage.zd_pkgrec.Insert
 void                 zd_pkgrec_Insert(apm::FPackage& package, apm::FPkgrec& row) __attribute__((nothrow));
@@ -1872,10 +1899,10 @@ inline apm::FPkgrec* zd_pkgrec_Last(apm::FPackage& package) __attribute__((__war
 inline i32           zd_pkgrec_N(const apm::FPackage& package) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:apm.FPackage.zd_pkgrec.Next
-inline apm::FPkgrec* zd_pkgrec_Next(apm::FPkgrec &row) __attribute__((__warn_unused_result__, nothrow));
+inline apm::FPkgrec* package_zd_pkgrec_Next(apm::FPkgrec &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
 // func:apm.FPackage.zd_pkgrec.Prev
-inline apm::FPkgrec* zd_pkgrec_Prev(apm::FPkgrec &row) __attribute__((__warn_unused_result__, nothrow));
+inline apm::FPkgrec* package_zd_pkgrec_Prev(apm::FPkgrec &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:apm.FPackage.zd_pkgrec.Remove
 void                 zd_pkgrec_Remove(apm::FPackage& package, apm::FPkgrec& row) __attribute__((nothrow));
@@ -1999,14 +2026,15 @@ void                 FPkgdep_Uninit(apm::FPkgdep& pkgdep) __attribute__((nothrow
 // access: apm.FPackage.zd_pkgkey (Llist)
 // access: apm.FPkgrec.p_pkgkey (Upptr)
 struct FPkgkey { // apm.FPkgkey
-    apm::FPkgkey*       ind_pkgkey_next;   // hash next
-    apm::FPkgkey*       zd_pkgkey_next;    // zslist link; -1 means not-in-list
-    apm::FPkgkey*       zd_pkgkey_prev;    // previous element
-    algo::Smallstr150   pkgkey;            //
-    algo::Comment       comment;           //
-    apm::FPkgrec**      c_pkgrec_elems;    // array of pointers
-    u32                 c_pkgrec_n;        // array of pointers
-    u32                 c_pkgrec_max;      // capacity of allocated array
+    apm::FPkgkey*       ind_pkgkey_next;          // hash next
+    u32                 ind_pkgkey_hashval;       // hash value
+    apm::FPkgkey*       package_zd_pkgkey_next;   // zslist link; -1 means not-in-list
+    apm::FPkgkey*       package_zd_pkgkey_prev;   // previous element
+    algo::Smallstr150   pkgkey;                   //
+    algo::Comment       comment;                  //
+    apm::FPkgrec**      c_pkgrec_elems;           // array of pointers
+    u32                 c_pkgrec_n;               // array of pointers
+    u32                 c_pkgrec_max;             // capacity of allocated array
     // reftype Ptrary of apm.FPkgkey.c_pkgrec prohibits copy
     // func:apm.FPkgkey..AssignOp
     inline apm::FPkgkey& operator =(const apm::FPkgkey &rhs) = delete;
@@ -2101,14 +2129,14 @@ void                 FPkgkey_Uninit(apm::FPkgkey& pkgkey) __attribute__((nothrow
 // access: apm.FRec.zd_rec_pkgrec (Llist)
 struct FPkgrec { // apm.FPkgrec
     apm::FPkgrec*    pkgrec_next;              // Pointer to next free element int tpool
-    apm::FPkgrec*    zd_pkgrec_next;           // zslist link; -1 means not-in-list
-    apm::FPkgrec*    zd_pkgrec_prev;           // previous element
+    apm::FPkgrec*    package_zd_pkgrec_next;   // zslist link; -1 means not-in-list
+    apm::FPkgrec*    package_zd_pkgrec_prev;   // previous element
     apm::FPackage*   p_package;                // reference to parent row
     apm::FRec*       p_rec;                    // reference to parent row
     apm::FPkgkey*    p_pkgkey;                 // reference to parent row
     bool             pkgkey_c_pkgrec_in_ary;   //   false  membership flag
-    apm::FPkgrec*    zd_rec_pkgrec_next;       // zslist link; -1 means not-in-list
-    apm::FPkgrec*    zd_rec_pkgrec_prev;       // previous element
+    apm::FPkgrec*    rec_zd_rec_pkgrec_next;   // zslist link; -1 means not-in-list
+    apm::FPkgrec*    rec_zd_rec_pkgrec_prev;   // previous element
     // func:apm.FPkgrec..AssignOp
     inline apm::FPkgrec& operator =(const apm::FPkgrec &rhs) = delete;
     // func:apm.FPkgrec..CopyCtor
@@ -2139,26 +2167,27 @@ void                 FPkgrec_Uninit(apm::FPkgrec& pkgrec) __attribute__((nothrow
 // access: apm.FRec.c_child (Ptrary)
 // access: apm.FSsimfile.zd_ssimfile_rec (Llist)
 struct FRec { // apm.FRec
-    apm::FRec*        rec_next;               // Pointer to next free element int tpool
-    apm::FRec*        ind_rec_next;           // hash next
-    apm::FRec*        zd_rec_next;            // zslist link; -1 means not-in-list
-    apm::FRec*        zd_rec_prev;            // previous element
-    apm::FRec*        zd_selrec_next;         // zslist link; -1 means not-in-list
-    apm::FRec*        zd_selrec_prev;         // previous element
-    apm::FRec*        zd_chooserec_next;      // zslist link; -1 means not-in-list
-    apm::FRec*        zd_chooserec_prev;      // previous element
-    algo::cstring     rec;                    // Primary key: ssimfile:pkey
-    apm::FSsimfile*   p_ssimfile;             // reference to parent row
-    algo::Tuple       tuple;                  // Original record from file
-    apm::FRec**       c_child_elems;          // array of pointers
-    u32               c_child_n;              // array of pointers
-    u32               c_child_max;            // capacity of allocated array
-    i32               level;                  //   0
-    apm::FPkgrec*     zd_rec_pkgrec_head;     // zero-terminated doubly linked list
-    i32               zd_rec_pkgrec_n;        // zero-terminated doubly linked list
-    apm::FPkgrec*     zd_rec_pkgrec_tail;     // pointer to last element
-    apm::FRec*        zd_ssimfile_rec_next;   // zslist link; -1 means not-in-list
-    apm::FRec*        zd_ssimfile_rec_prev;   // previous element
+    apm::FRec*        rec_next;                        // Pointer to next free element int tpool
+    apm::FRec*        ind_rec_next;                    // hash next
+    u32               ind_rec_hashval;                 // hash value
+    apm::FRec*        zd_rec_next;                     // zslist link; -1 means not-in-list
+    apm::FRec*        zd_rec_prev;                     // previous element
+    apm::FRec*        zd_selrec_next;                  // zslist link; -1 means not-in-list
+    apm::FRec*        zd_selrec_prev;                  // previous element
+    apm::FRec*        zd_chooserec_next;               // zslist link; -1 means not-in-list
+    apm::FRec*        zd_chooserec_prev;               // previous element
+    algo::cstring     rec;                             // Primary key: ssimfile:pkey
+    apm::FSsimfile*   p_ssimfile;                      // reference to parent row
+    algo::Tuple       tuple;                           // Original record from file
+    apm::FRec**       c_child_elems;                   // array of pointers
+    u32               c_child_n;                       // array of pointers
+    u32               c_child_max;                     // capacity of allocated array
+    i32               level;                           //   0
+    apm::FPkgrec*     zd_rec_pkgrec_head;              // zero-terminated doubly linked list
+    i32               zd_rec_pkgrec_n;                 // zero-terminated doubly linked list
+    apm::FPkgrec*     zd_rec_pkgrec_tail;              // pointer to last element
+    apm::FRec*        ssimfile_zd_ssimfile_rec_next;   // zslist link; -1 means not-in-list
+    apm::FRec*        ssimfile_zd_ssimfile_rec_prev;   // previous element
     // reftype Ptrary of apm.FRec.c_child prohibits copy
     // reftype Llist of apm.FRec.zd_rec_pkgrec prohibits copy
     // func:apm.FRec..AssignOp
@@ -2226,7 +2255,7 @@ inline bool          zd_rec_pkgrec_EmptyQ(apm::FRec& rec) __attribute__((__warn_
 inline apm::FPkgrec* zd_rec_pkgrec_First(apm::FRec& rec) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:apm.FRec.zd_rec_pkgrec.InLlistQ
-inline bool          zd_rec_pkgrec_InLlistQ(apm::FPkgrec& row) __attribute__((__warn_unused_result__, nothrow));
+inline bool          rec_zd_rec_pkgrec_InLlistQ(apm::FPkgrec& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:apm.FRec.zd_rec_pkgrec.Insert
 void                 zd_rec_pkgrec_Insert(apm::FRec& rec, apm::FPkgrec& row) __attribute__((nothrow));
@@ -2238,10 +2267,10 @@ inline apm::FPkgrec* zd_rec_pkgrec_Last(apm::FRec& rec) __attribute__((__warn_un
 inline i32           zd_rec_pkgrec_N(const apm::FRec& rec) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:apm.FRec.zd_rec_pkgrec.Next
-inline apm::FPkgrec* zd_rec_pkgrec_Next(apm::FPkgrec &row) __attribute__((__warn_unused_result__, nothrow));
+inline apm::FPkgrec* rec_zd_rec_pkgrec_Next(apm::FPkgrec &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
 // func:apm.FRec.zd_rec_pkgrec.Prev
-inline apm::FPkgrec* zd_rec_pkgrec_Prev(apm::FPkgrec &row) __attribute__((__warn_unused_result__, nothrow));
+inline apm::FPkgrec* rec_zd_rec_pkgrec_Prev(apm::FPkgrec &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:apm.FRec.zd_rec_pkgrec.Remove
 void                 zd_rec_pkgrec_Remove(apm::FRec& rec, apm::FPkgrec& row) __attribute__((nothrow));
@@ -2293,6 +2322,7 @@ void                 FRec_Uninit(apm::FRec& rec) __attribute__((nothrow));
 // access: apm.FSsimreq.p_child_ssimfile (Upptr)
 struct FSsimfile { // apm.FSsimfile
     apm::FSsimfile*     ind_ssimfile_next;      // hash next
+    u32                 ind_ssimfile_hashval;   // hash value
     algo::Smallstr50    ssimfile;               //
     algo::Smallstr100   ctype;                  //
     apm::FCtype*        p_ctype;                // reference to parent row
@@ -2342,7 +2372,7 @@ inline bool          zd_ssimfile_rec_EmptyQ(apm::FSsimfile& ssimfile) __attribut
 inline apm::FRec*    zd_ssimfile_rec_First(apm::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:apm.FSsimfile.zd_ssimfile_rec.InLlistQ
-inline bool          zd_ssimfile_rec_InLlistQ(apm::FRec& row) __attribute__((__warn_unused_result__, nothrow));
+inline bool          ssimfile_zd_ssimfile_rec_InLlistQ(apm::FRec& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:apm.FSsimfile.zd_ssimfile_rec.Insert
 void                 zd_ssimfile_rec_Insert(apm::FSsimfile& ssimfile, apm::FRec& row) __attribute__((nothrow));
@@ -2354,10 +2384,10 @@ inline apm::FRec*    zd_ssimfile_rec_Last(apm::FSsimfile& ssimfile) __attribute_
 inline i32           zd_ssimfile_rec_N(const apm::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:apm.FSsimfile.zd_ssimfile_rec.Next
-inline apm::FRec*    zd_ssimfile_rec_Next(apm::FRec &row) __attribute__((__warn_unused_result__, nothrow));
+inline apm::FRec*    ssimfile_zd_ssimfile_rec_Next(apm::FRec &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
 // func:apm.FSsimfile.zd_ssimfile_rec.Prev
-inline apm::FRec*    zd_ssimfile_rec_Prev(apm::FRec &row) __attribute__((__warn_unused_result__, nothrow));
+inline apm::FRec*    ssimfile_zd_ssimfile_rec_Prev(apm::FRec &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:apm.FSsimfile.zd_ssimfile_rec.Remove
 void                 zd_ssimfile_rec_Remove(apm::FSsimfile& ssimfile, apm::FRec& row) __attribute__((nothrow));

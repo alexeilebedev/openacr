@@ -1,4 +1,4 @@
-atfdb.cijob  cijob:comp  comment:"Component test"
-atfdb.cijob  cijob:cov  comment:"Coverage test"
+atfdb.cijob  cijob:comp  comment:"Coverage and component test"
+atfdb.cijob  cijob:coverage  comment:"compute coverage"
 atfdb.cijob  cijob:memcheck  comment:"Component tests in memcheck mode"
 atfdb.cijob  cijob:normalize  comment:"Default job, fast normalization & unit tests"

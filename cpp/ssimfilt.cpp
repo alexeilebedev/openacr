@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -20,7 +20,6 @@
 //
 
 #include "include/algo.h"
-#include "include/lib_json.h"
 #include "include/ssimfilt.h"
 #include "include/lib_ctype.h"
 
@@ -246,7 +245,12 @@ void ssimfilt::PrintCsv(algo::Tuple &tuple) {
 void ssimfilt::Table_Save(algo::Tuple &tuple) {
     // flush when input type changes
     if (tuple_N()>0) {
-        if (tuple_qFind(0).head != tuple.head) {
+        auto& header = tuple_qFind(0);
+        auto flush = header.head.name == ""
+            ? header.head.value != tuple.head.value
+            : header.head.name != tuple.head.name;
+        flush |= attrs_N(tuple) != attrs_N(header);
+        if (flush) {
             Table_Flush();
         }
     }
@@ -320,7 +324,9 @@ void ssimfilt::Main() {
     // Populate output select
     ind_beg(command::ssimfilt_field_curs,match,_db.cmdline) {
         KVRegx &kvregx=selfield_Alloc();
-        Regx_ReadSql(kvregx.key,match,true);
+        tempstr expr(match);
+        Replace(expr,",","|");// field1,field2 -> field1|field2
+        Regx_ReadSql(kvregx.key,expr,true);
     }ind_end;
 
     if (_db.cmdline.t) {

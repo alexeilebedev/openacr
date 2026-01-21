@@ -1,5 +1,5 @@
-amcdb.bltin  ctype:bool  likeu64:N  bigendok:N  issigned:N  comment:"dflt is a c++ expr: real dflt is 'N'"
-amcdb.bltin  ctype:char  likeu64:N  bigendok:N  issigned:N  comment:char
+amcdb.bltin  ctype:bool  likeu64:Y  bigendok:N  issigned:N  comment:"dflt is a c++ expr: real dflt is 'N'"
+amcdb.bltin  ctype:char  likeu64:Y  bigendok:N  issigned:N  comment:char
 amcdb.bltin  ctype:double  likeu64:N  bigendok:N  issigned:Y  comment:double
 amcdb.bltin  ctype:float  likeu64:N  bigendok:N  issigned:Y  comment:float
 amcdb.bltin  ctype:i16  likeu64:Y  bigendok:Y  issigned:Y  comment:"16-bit   signed integer"

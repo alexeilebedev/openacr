@@ -33,18 +33,18 @@
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/dev_gen.h"
 #include "include/gen/dev_gen.inl.h"
-#include "include/gen/algo_lib_gen.h"
-#include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/lib_json_gen.h"
 #include "include/gen/lib_json_gen.inl.h"
+#include "include/gen/algo_lib_gen.h"
+#include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/lib_prot_gen.h"
 #include "include/gen/lib_prot_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
-algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
+algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 acr_ed::FDb     acr_ed::_db;      // dependency found via dev.targdep
 
 namespace acr_ed {
@@ -97,8 +97,9 @@ const char *acr_ed_help =
 "    -showcpp                    (With -sandbox), show resulting diff\n"
 "    -msgtype    string  \"\"      (with -ctype) use this msgtype as type\n"
 "    -anonfld                    Create anonfld\n"
-"    -verbose    int             Verbosity level (0..255); alias -v; cumulative\n"
-"    -debug      int             Debug level (0..255); alias -d; cumulative\n"
+"    -amc                Y       Run amc if needed\n"
+"    -verbose    flag            Verbosity level (0..255); alias -v; cumulative\n"
+"    -debug      flag            Debug level (0..255); alias -d; cumulative\n"
 "    -help                       Print help and exit; alias -h\n"
 "    -version                    Print version and exit\n"
 "    -signature                  Show signatures and exit; alias -sig\n"
@@ -108,13 +109,11 @@ const char *acr_ed_help =
 } // namespace acr_ed
 namespace acr_ed { // gen:ns_gsymbol
     const char* atfdb_cijob_comp("comp");
-    const char* atfdb_cijob_cov("cov");
+    const char* atfdb_cijob_coverage("coverage");
     const char* atfdb_cijob_memcheck("memcheck");
     const char* atfdb_cijob_normalize("normalize");
 } // gen:ns_gsymbol
 namespace acr_ed { // gen:ns_gsymbol
-    const algo::strptr dev_package_amc("amc");
-    const algo::strptr dev_package_apm("apm");
     const algo::strptr dev_package_openacr("openacr");
 } // gen:ns_gsymbol
 namespace acr_ed { // gen:ns_print_proto
@@ -155,6 +154,8 @@ namespace acr_ed { // gen:ns_print_proto
     static void          edaction_LoadStatic() __attribute__((nothrow));
     // func:acr_ed.FDb.gitfile.InputMaybe
     static bool          gitfile_InputMaybe(dev::Gitfile &elem) __attribute__((nothrow));
+    // func:acr_ed.FDb.msgtype.InputMaybe
+    static bool          msgtype_InputMaybe(dmmeta::Msgtype &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
     // func:acr_ed.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
@@ -292,15 +293,11 @@ algo::Smallstr100 acr_ed::name_Get(acr_ed::FCtype& ctype) {
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 void acr_ed::c_field_Insert(acr_ed::FCtype& ctype, acr_ed::FField& row) {
-    if (bool_Update(row.ctype_c_field_in_ary,true)) {
-        // reserve space
+    if (!row.ctype_c_field_in_ary) {
         c_field_Reserve(ctype, 1);
-        u32 n  = ctype.c_field_n;
-        u32 at = n;
-        acr_ed::FField* *elems = ctype.c_field_elems;
-        elems[at] = &row;
-        ctype.c_field_n = n+1;
-
+        u32 n  = ctype.c_field_n++;
+        ctype.c_field_elems[n] = &row;
+        row.ctype_c_field_in_ary = true;
     }
 }
 
@@ -309,7 +306,7 @@ void acr_ed::c_field_Insert(acr_ed::FCtype& ctype, acr_ed::FField& row) {
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 bool acr_ed::c_field_InsertMaybe(acr_ed::FCtype& ctype, acr_ed::FField& row) {
-    bool retval = !row.ctype_c_field_in_ary;
+    bool retval = !ctype_c_field_InAryQ(row);
     c_field_Insert(ctype,row); // check is performed in _Insert again
     return retval;
 }
@@ -317,18 +314,18 @@ bool acr_ed::c_field_InsertMaybe(acr_ed::FCtype& ctype, acr_ed::FField& row) {
 // --- acr_ed.FCtype.c_field.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void acr_ed::c_field_Remove(acr_ed::FCtype& ctype, acr_ed::FField& row) {
+    int n = ctype.c_field_n;
     if (bool_Update(row.ctype_c_field_in_ary,false)) {
-        int lim = ctype.c_field_n;
         acr_ed::FField* *elems = ctype.c_field_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = lim-1; i>=0; i--) {
+        for (int i = n-1; i>=0; i--) {
             acr_ed::FField* elem = elems[i]; // fetch element
             if (elem == &row) {
                 int j = i + 1;
-                size_t nbytes = sizeof(acr_ed::FField*) * (lim - j);
+                size_t nbytes = sizeof(acr_ed::FField*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                ctype.c_field_n = lim - 1;
+                ctype.c_field_n = n - 1;
                 break;
             }
         }
@@ -356,14 +353,9 @@ void acr_ed::c_field_Reserve(acr_ed::FCtype& ctype, u32 n) {
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 void acr_ed::c_cfmt_Insert(acr_ed::FCtype& ctype, acr_ed::FCfmt& row) {
-    // reserve space
     c_cfmt_Reserve(ctype, 1);
-    u32 n  = ctype.c_cfmt_n;
-    u32 at = n;
-    acr_ed::FCfmt* *elems = ctype.c_cfmt_elems;
-    elems[at] = &row;
-    ctype.c_cfmt_n = n+1;
-
+    u32 n  = ctype.c_cfmt_n++;
+    ctype.c_cfmt_elems[n] = &row;
 }
 
 // --- acr_ed.FCtype.c_cfmt.ScanInsertMaybe
@@ -392,20 +384,18 @@ bool acr_ed::c_cfmt_ScanInsertMaybe(acr_ed::FCtype& ctype, acr_ed::FCfmt& row) {
 // --- acr_ed.FCtype.c_cfmt.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void acr_ed::c_cfmt_Remove(acr_ed::FCtype& ctype, acr_ed::FCfmt& row) {
-    int lim = ctype.c_cfmt_n;
-    acr_ed::FCfmt* *elems = ctype.c_cfmt_elems;
-    // search backward, so that most recently added element is found first.
-    // if found, shift array.
-    for (int i = lim-1; i>=0; i--) {
-        acr_ed::FCfmt* elem = elems[i]; // fetch element
-        if (elem == &row) {
-            int j = i + 1;
-            size_t nbytes = sizeof(acr_ed::FCfmt*) * (lim - j);
-            memmove(elems + i, elems + j, nbytes);
-            ctype.c_cfmt_n = lim - 1;
-            break;
+    int n = ctype.c_cfmt_n;
+    int j=0;
+    for (int i=0; i<n; i++) {
+        if (ctype.c_cfmt_elems[i] == &row) {
+        } else {
+            if (j != i) {
+                ctype.c_cfmt_elems[j] = ctype.c_cfmt_elems[i];
+            }
+            j++;
         }
     }
+    ctype.c_cfmt_n = j;
 }
 
 // --- acr_ed.FCtype.c_cfmt.Reserve
@@ -441,6 +431,7 @@ void acr_ed::FCtype_Init(acr_ed::FCtype& ctype) {
     ctype.c_cfmt_n = 0; // (acr_ed.FCtype.c_cfmt)
     ctype.c_cfmt_max = 0; // (acr_ed.FCtype.c_cfmt)
     ctype.ind_ctype_next = (acr_ed::FCtype*)-1; // (acr_ed.FDb.ind_ctype) not-in-hash
+    ctype.ind_ctype_hashval = 0; // stored hash value
 }
 
 // --- acr_ed.FCtype..Uninit
@@ -599,14 +590,9 @@ bool acr_ed::ns_XrefMaybe(acr_ed::FNs &row) {
 // Find row by key. Return NULL if not found.
 acr_ed::FNs* acr_ed::ind_ns_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr16_Hash(0, key) & (_db.ind_ns_buckets_n - 1);
-    acr_ed::FNs* *e = &_db.ind_ns_buckets_elems[index];
-    acr_ed::FNs* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).ns == key;
-        if (done) break;
-        e         = &ret->ind_ns_next;
-    } while (true);
+    acr_ed::FNs *ret = _db.ind_ns_buckets_elems[index];
+    for (; ret && !((*ret).ns == key); ret = ret->ind_ns_next) {
+    }
     return ret;
 }
 
@@ -638,10 +624,11 @@ acr_ed::FNs& acr_ed::ind_ns_GetOrCreate(const algo::strptr& key) {
 // --- acr_ed.FDb.ind_ns.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool acr_ed::ind_ns_InsertMaybe(acr_ed::FNs& row) {
-    ind_ns_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_ns_next == (acr_ed::FNs*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr16_Hash(0, row.ns) & (_db.ind_ns_buckets_n - 1);
+        row.ind_ns_hashval = algo::Smallstr16_Hash(0, row.ns);
+        ind_ns_Reserve(1);
+        u32 index = row.ind_ns_hashval & (_db.ind_ns_buckets_n - 1);
         acr_ed::FNs* *prev = &_db.ind_ns_buckets_elems[index];
         do {
             acr_ed::FNs* ret = *prev;
@@ -667,7 +654,7 @@ bool acr_ed::ind_ns_InsertMaybe(acr_ed::FNs& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void acr_ed::ind_ns_Remove(acr_ed::FNs& row) {
     if (LIKELY(row.ind_ns_next != (acr_ed::FNs*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr16_Hash(0, row.ns) & (_db.ind_ns_buckets_n - 1);
+        u32 index = row.ind_ns_hashval & (_db.ind_ns_buckets_n - 1);
         acr_ed::FNs* *prev = &_db.ind_ns_buckets_elems[index]; // addr of pointer to current element
         while (acr_ed::FNs *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -684,8 +671,14 @@ void acr_ed::ind_ns_Remove(acr_ed::FNs& row) {
 // --- acr_ed.FDb.ind_ns.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void acr_ed::ind_ns_Reserve(int n) {
+    ind_ns_AbsReserve(_db.ind_ns_n + n);
+}
+
+// --- acr_ed.FDb.ind_ns.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void acr_ed::ind_ns_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_ns_buckets_n;
-    u32 new_nelems   = _db.ind_ns_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -704,7 +697,7 @@ void acr_ed::ind_ns_Reserve(int n) {
             while (elem) {
                 acr_ed::FNs &row        = *elem;
                 acr_ed::FNs* next       = row.ind_ns_next;
-                u32 index          = algo::Smallstr16_Hash(0, row.ns) & (new_nbuckets-1);
+                u32 index          = row.ind_ns_hashval & (new_nbuckets-1);
                 row.ind_ns_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -786,9 +779,8 @@ void acr_ed::ReadArgv() {
         }
         if (ch_N(attrname) == 0) {
             err << "acr_ed: too many arguments. error at "<<algo::strptr_ToSsim(arg)<<eol;
-        }
-        // read value into currently selected arg
-        if (haveval) {
+        } else if (haveval) {
+            // read value into currently selected arg
             bool ret=false;
             // it's already known which namespace is consuming the args,
             // so directly go there
@@ -831,6 +823,9 @@ void acr_ed::ReadArgv() {
         }ind_end
         doexit = true;
     }
+    algo_lib_logcat_debug.enabled = algo_lib::_db.cmdline.debug;
+    algo_lib_logcat_verbose.enabled = algo_lib::_db.cmdline.verbose > 0;
+    algo_lib_logcat_verbose2.enabled = algo_lib::_db.cmdline.verbose > 1;
     if (!dohelp) {
     }
     // dmmeta.floadtuples:acr_ed.FDb.cmdline
@@ -842,7 +837,7 @@ void acr_ed::ReadArgv() {
     }
     if (err != "") {
         algo_lib::_db.exit_code=1;
-        prerr(err);
+        prerr_(err); // already has eol
         doexit=true;
     }
     if (dohelp) {
@@ -887,7 +882,7 @@ static void acr_ed::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_ed.Input'  signature:'042948d5ec028115be9d280cd8fe64e20bae7485'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_ed.Input'  signature:'c33981549fb661085a0bfba14529630cc4312242'");
 }
 
 // --- acr_ed.FDb._db.InsertStrptrMaybe
@@ -994,6 +989,12 @@ bool acr_ed::InsertStrptrMaybe(algo::strptr str) {
             retval = retval && gitfile_InputMaybe(elem);
             break;
         }
+        case acr_ed_TableId_dmmeta_Msgtype: { // finput:acr_ed.FDb.msgtype
+            dmmeta::Msgtype elem;
+            retval = dmmeta::Msgtype_ReadStrptrMaybe(elem, str);
+            retval = retval && msgtype_InputMaybe(elem);
+            break;
+        }
         default:
         break;
     } //switch
@@ -1012,7 +1013,6 @@ bool acr_ed::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     } else if (root == "-") {
         retval = acr_ed::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
     } else if (DirectoryQ(root)) {
-        retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dev.gitfile"),recursive);
         retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ns"),recursive);
         retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ctype"),recursive);
         retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dmmeta.field"),recursive);
@@ -1020,6 +1020,7 @@ bool acr_ed::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dmmeta.nsdb"),recursive);
         retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ssimfile"),recursive);
         retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dmmeta.pack"),recursive);
+        retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dmmeta.msgtype"),recursive);
         retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dmmeta.fprefix"),recursive);
         retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dmmeta.listtype"),recursive);
         retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
@@ -1027,11 +1028,12 @@ bool acr_ed::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cpptype"),recursive);
         retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cfmt"),recursive);
         retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dev.target"),recursive);
+        retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dev.gitfile"),recursive);
         retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dev.targsrc"),recursive);
         retval = retval && acr_ed::LoadTuplesFile(algo::SsimFname(root,"dev.sbpath"),recursive);
     } else {
-        algo_lib::SaveBadTag("path", root);
-        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        algo_lib::AppendErrtext("path", root);
+        algo_lib::AppendErrtext("comment", "Wrong working directory?");
         retval = false;
     }
     return retval;
@@ -1231,14 +1233,9 @@ bool acr_ed::field_XrefMaybe(acr_ed::FField &row) {
 // Find row by key. Return NULL if not found.
 acr_ed::FField* acr_ed::ind_field_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_field_buckets_n - 1);
-    acr_ed::FField* *e = &_db.ind_field_buckets_elems[index];
-    acr_ed::FField* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).field == key;
-        if (done) break;
-        e         = &ret->ind_field_next;
-    } while (true);
+    acr_ed::FField *ret = _db.ind_field_buckets_elems[index];
+    for (; ret && !((*ret).field == key); ret = ret->ind_field_next) {
+    }
     return ret;
 }
 
@@ -1253,10 +1250,11 @@ acr_ed::FField& acr_ed::ind_field_FindX(const algo::strptr& key) {
 // --- acr_ed.FDb.ind_field.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool acr_ed::ind_field_InsertMaybe(acr_ed::FField& row) {
-    ind_field_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_field_next == (acr_ed::FField*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr100_Hash(0, row.field) & (_db.ind_field_buckets_n - 1);
+        row.ind_field_hashval = algo::Smallstr100_Hash(0, row.field);
+        ind_field_Reserve(1);
+        u32 index = row.ind_field_hashval & (_db.ind_field_buckets_n - 1);
         acr_ed::FField* *prev = &_db.ind_field_buckets_elems[index];
         do {
             acr_ed::FField* ret = *prev;
@@ -1282,7 +1280,7 @@ bool acr_ed::ind_field_InsertMaybe(acr_ed::FField& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void acr_ed::ind_field_Remove(acr_ed::FField& row) {
     if (LIKELY(row.ind_field_next != (acr_ed::FField*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr100_Hash(0, row.field) & (_db.ind_field_buckets_n - 1);
+        u32 index = row.ind_field_hashval & (_db.ind_field_buckets_n - 1);
         acr_ed::FField* *prev = &_db.ind_field_buckets_elems[index]; // addr of pointer to current element
         while (acr_ed::FField *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1299,8 +1297,14 @@ void acr_ed::ind_field_Remove(acr_ed::FField& row) {
 // --- acr_ed.FDb.ind_field.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void acr_ed::ind_field_Reserve(int n) {
+    ind_field_AbsReserve(_db.ind_field_n + n);
+}
+
+// --- acr_ed.FDb.ind_field.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void acr_ed::ind_field_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_field_buckets_n;
-    u32 new_nelems   = _db.ind_field_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -1319,7 +1323,7 @@ void acr_ed::ind_field_Reserve(int n) {
             while (elem) {
                 acr_ed::FField &row        = *elem;
                 acr_ed::FField* next       = row.ind_field_next;
-                u32 index          = algo::Smallstr100_Hash(0, row.field) & (new_nbuckets-1);
+                u32 index          = row.ind_field_hashval & (new_nbuckets-1);
                 row.ind_field_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1442,14 +1446,9 @@ bool acr_ed::ctype_XrefMaybe(acr_ed::FCtype &row) {
 // Find row by key. Return NULL if not found.
 acr_ed::FCtype* acr_ed::ind_ctype_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_ctype_buckets_n - 1);
-    acr_ed::FCtype* *e = &_db.ind_ctype_buckets_elems[index];
-    acr_ed::FCtype* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).ctype == key;
-        if (done) break;
-        e         = &ret->ind_ctype_next;
-    } while (true);
+    acr_ed::FCtype *ret = _db.ind_ctype_buckets_elems[index];
+    for (; ret && !((*ret).ctype == key); ret = ret->ind_ctype_next) {
+    }
     return ret;
 }
 
@@ -1464,10 +1463,11 @@ acr_ed::FCtype& acr_ed::ind_ctype_FindX(const algo::strptr& key) {
 // --- acr_ed.FDb.ind_ctype.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool acr_ed::ind_ctype_InsertMaybe(acr_ed::FCtype& row) {
-    ind_ctype_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_ctype_next == (acr_ed::FCtype*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr100_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
+        row.ind_ctype_hashval = algo::Smallstr100_Hash(0, row.ctype);
+        ind_ctype_Reserve(1);
+        u32 index = row.ind_ctype_hashval & (_db.ind_ctype_buckets_n - 1);
         acr_ed::FCtype* *prev = &_db.ind_ctype_buckets_elems[index];
         do {
             acr_ed::FCtype* ret = *prev;
@@ -1493,7 +1493,7 @@ bool acr_ed::ind_ctype_InsertMaybe(acr_ed::FCtype& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void acr_ed::ind_ctype_Remove(acr_ed::FCtype& row) {
     if (LIKELY(row.ind_ctype_next != (acr_ed::FCtype*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr100_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
+        u32 index = row.ind_ctype_hashval & (_db.ind_ctype_buckets_n - 1);
         acr_ed::FCtype* *prev = &_db.ind_ctype_buckets_elems[index]; // addr of pointer to current element
         while (acr_ed::FCtype *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1510,8 +1510,14 @@ void acr_ed::ind_ctype_Remove(acr_ed::FCtype& row) {
 // --- acr_ed.FDb.ind_ctype.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void acr_ed::ind_ctype_Reserve(int n) {
+    ind_ctype_AbsReserve(_db.ind_ctype_n + n);
+}
+
+// --- acr_ed.FDb.ind_ctype.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void acr_ed::ind_ctype_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_ctype_buckets_n;
-    u32 new_nelems   = _db.ind_ctype_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -1530,7 +1536,7 @@ void acr_ed::ind_ctype_Reserve(int n) {
             while (elem) {
                 acr_ed::FCtype &row        = *elem;
                 acr_ed::FCtype* next       = row.ind_ctype_next;
-                u32 index          = algo::Smallstr100_Hash(0, row.ctype) & (new_nbuckets-1);
+                u32 index          = row.ind_ctype_hashval & (new_nbuckets-1);
                 row.ind_ctype_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1671,14 +1677,9 @@ bool acr_ed::ssimfile_XrefMaybe(acr_ed::FSsimfile &row) {
 // Find row by key. Return NULL if not found.
 acr_ed::FSsimfile* acr_ed::ind_ssimfile_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_ssimfile_buckets_n - 1);
-    acr_ed::FSsimfile* *e = &_db.ind_ssimfile_buckets_elems[index];
-    acr_ed::FSsimfile* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).ssimfile == key;
-        if (done) break;
-        e         = &ret->ind_ssimfile_next;
-    } while (true);
+    acr_ed::FSsimfile *ret = _db.ind_ssimfile_buckets_elems[index];
+    for (; ret && !((*ret).ssimfile == key); ret = ret->ind_ssimfile_next) {
+    }
     return ret;
 }
 
@@ -1693,10 +1694,11 @@ acr_ed::FSsimfile& acr_ed::ind_ssimfile_FindX(const algo::strptr& key) {
 // --- acr_ed.FDb.ind_ssimfile.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool acr_ed::ind_ssimfile_InsertMaybe(acr_ed::FSsimfile& row) {
-    ind_ssimfile_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_ssimfile_next == (acr_ed::FSsimfile*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.ssimfile) & (_db.ind_ssimfile_buckets_n - 1);
+        row.ind_ssimfile_hashval = algo::Smallstr50_Hash(0, row.ssimfile);
+        ind_ssimfile_Reserve(1);
+        u32 index = row.ind_ssimfile_hashval & (_db.ind_ssimfile_buckets_n - 1);
         acr_ed::FSsimfile* *prev = &_db.ind_ssimfile_buckets_elems[index];
         do {
             acr_ed::FSsimfile* ret = *prev;
@@ -1722,7 +1724,7 @@ bool acr_ed::ind_ssimfile_InsertMaybe(acr_ed::FSsimfile& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void acr_ed::ind_ssimfile_Remove(acr_ed::FSsimfile& row) {
     if (LIKELY(row.ind_ssimfile_next != (acr_ed::FSsimfile*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.ssimfile) & (_db.ind_ssimfile_buckets_n - 1);
+        u32 index = row.ind_ssimfile_hashval & (_db.ind_ssimfile_buckets_n - 1);
         acr_ed::FSsimfile* *prev = &_db.ind_ssimfile_buckets_elems[index]; // addr of pointer to current element
         while (acr_ed::FSsimfile *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1739,8 +1741,14 @@ void acr_ed::ind_ssimfile_Remove(acr_ed::FSsimfile& row) {
 // --- acr_ed.FDb.ind_ssimfile.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void acr_ed::ind_ssimfile_Reserve(int n) {
+    ind_ssimfile_AbsReserve(_db.ind_ssimfile_n + n);
+}
+
+// --- acr_ed.FDb.ind_ssimfile.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void acr_ed::ind_ssimfile_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_ssimfile_buckets_n;
-    u32 new_nelems   = _db.ind_ssimfile_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -1759,7 +1767,7 @@ void acr_ed::ind_ssimfile_Reserve(int n) {
             while (elem) {
                 acr_ed::FSsimfile &row        = *elem;
                 acr_ed::FSsimfile* next       = row.ind_ssimfile_next;
-                u32 index          = algo::Smallstr50_Hash(0, row.ssimfile) & (new_nbuckets-1);
+                u32 index          = row.ind_ssimfile_hashval & (new_nbuckets-1);
                 row.ind_ssimfile_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1936,6 +1944,25 @@ algo::aryptr<algo::cstring> acr_ed::vis_AllocN(int n_elems) {
     return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
 }
 
+// --- acr_ed.FDb.vis.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<algo::cstring> acr_ed::vis_AllocNAt(int n_elems, int at) {
+    vis_Reserve(n_elems);
+    int n  = _db.vis_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("acr_ed.bad_alloc_n_at  field:acr_ed.FDb.vis  comment:'index out of range'");
+    }
+    algo::cstring *elems = _db.vis_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(algo::cstring));
+    for (int i = 0; i < n_elems; i++) {
+        new (elems + at + i) algo::cstring(); // construct new element, default initialize
+    }
+    _db.vis_n = n+n_elems;
+    return algo::aryptr<algo::cstring>(elems+at,n_elems);
+}
+
 // --- acr_ed.FDb.vis.Remove
 // Remove item by index. If index outside of range, do nothing.
 void acr_ed::vis_Remove(u32 i) {
@@ -2010,6 +2037,30 @@ bool acr_ed::vis_ReadStrptrMaybe(algo::strptr in_str) {
         vis_RemoveLast();
     }
     return retval;
+}
+
+// --- acr_ed.FDb.vis.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void acr_ed::vis_Insary(algo::aryptr<algo::cstring> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= _db.vis_elems && rhs.elems < _db.vis_elems + _db.vis_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("acr_ed.tary_alias  field:acr_ed.FDb.vis  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(_db.vis_elems+1))) {
+        FatalErrorExit("acr_ed.bad_insary  field:acr_ed.FDb.vis  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = _db.vis_n - at;
+    vis_Reserve(nnew); // reserve space
+    for (int i = nmove-1; i >=0 ; --i) {
+        new (_db.vis_elems + at + nnew + i) algo::cstring(_db.vis_elems[at + i]);
+        _db.vis_elems[at + i].~cstring(); // destroy element
+    }
+    for (int i = 0; i < nnew; ++i) {
+        new (_db.vis_elems + at + i) algo::cstring(rhs[i]);
+    }
+    _db.vis_n += nnew;
 }
 
 // --- acr_ed.FDb.listtype.Alloc
@@ -2113,14 +2164,9 @@ bool acr_ed::listtype_XrefMaybe(acr_ed::FListtype &row) {
 // Find row by key. Return NULL if not found.
 acr_ed::FListtype* acr_ed::ind_listtype_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr5_Hash(0, key) & (_db.ind_listtype_buckets_n - 1);
-    acr_ed::FListtype* *e = &_db.ind_listtype_buckets_elems[index];
-    acr_ed::FListtype* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).listtype == key;
-        if (done) break;
-        e         = &ret->ind_listtype_next;
-    } while (true);
+    acr_ed::FListtype *ret = _db.ind_listtype_buckets_elems[index];
+    for (; ret && !((*ret).listtype == key); ret = ret->ind_listtype_next) {
+    }
     return ret;
 }
 
@@ -2152,10 +2198,11 @@ acr_ed::FListtype& acr_ed::ind_listtype_GetOrCreate(const algo::strptr& key) {
 // --- acr_ed.FDb.ind_listtype.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool acr_ed::ind_listtype_InsertMaybe(acr_ed::FListtype& row) {
-    ind_listtype_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_listtype_next == (acr_ed::FListtype*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr5_Hash(0, row.listtype) & (_db.ind_listtype_buckets_n - 1);
+        row.ind_listtype_hashval = algo::Smallstr5_Hash(0, row.listtype);
+        ind_listtype_Reserve(1);
+        u32 index = row.ind_listtype_hashval & (_db.ind_listtype_buckets_n - 1);
         acr_ed::FListtype* *prev = &_db.ind_listtype_buckets_elems[index];
         do {
             acr_ed::FListtype* ret = *prev;
@@ -2181,7 +2228,7 @@ bool acr_ed::ind_listtype_InsertMaybe(acr_ed::FListtype& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void acr_ed::ind_listtype_Remove(acr_ed::FListtype& row) {
     if (LIKELY(row.ind_listtype_next != (acr_ed::FListtype*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr5_Hash(0, row.listtype) & (_db.ind_listtype_buckets_n - 1);
+        u32 index = row.ind_listtype_hashval & (_db.ind_listtype_buckets_n - 1);
         acr_ed::FListtype* *prev = &_db.ind_listtype_buckets_elems[index]; // addr of pointer to current element
         while (acr_ed::FListtype *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -2198,8 +2245,14 @@ void acr_ed::ind_listtype_Remove(acr_ed::FListtype& row) {
 // --- acr_ed.FDb.ind_listtype.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void acr_ed::ind_listtype_Reserve(int n) {
+    ind_listtype_AbsReserve(_db.ind_listtype_n + n);
+}
+
+// --- acr_ed.FDb.ind_listtype.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void acr_ed::ind_listtype_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_listtype_buckets_n;
-    u32 new_nelems   = _db.ind_listtype_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -2218,7 +2271,7 @@ void acr_ed::ind_listtype_Reserve(int n) {
             while (elem) {
                 acr_ed::FListtype &row        = *elem;
                 acr_ed::FListtype* next       = row.ind_listtype_next;
-                u32 index          = algo::Smallstr5_Hash(0, row.listtype) & (new_nbuckets-1);
+                u32 index          = row.ind_listtype_hashval & (new_nbuckets-1);
                 row.ind_listtype_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -2332,14 +2385,9 @@ bool acr_ed::fprefix_XrefMaybe(acr_ed::FFprefix &row) {
 // Find row by key. Return NULL if not found.
 acr_ed::FFprefix* acr_ed::ind_fprefix_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr5_Hash(0, key) & (_db.ind_fprefix_buckets_n - 1);
-    acr_ed::FFprefix* *e = &_db.ind_fprefix_buckets_elems[index];
-    acr_ed::FFprefix* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).fprefix == key;
-        if (done) break;
-        e         = &ret->ind_fprefix_next;
-    } while (true);
+    acr_ed::FFprefix *ret = _db.ind_fprefix_buckets_elems[index];
+    for (; ret && !((*ret).fprefix == key); ret = ret->ind_fprefix_next) {
+    }
     return ret;
 }
 
@@ -2371,10 +2419,11 @@ acr_ed::FFprefix& acr_ed::ind_fprefix_GetOrCreate(const algo::strptr& key) {
 // --- acr_ed.FDb.ind_fprefix.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool acr_ed::ind_fprefix_InsertMaybe(acr_ed::FFprefix& row) {
-    ind_fprefix_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_fprefix_next == (acr_ed::FFprefix*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr5_Hash(0, row.fprefix) & (_db.ind_fprefix_buckets_n - 1);
+        row.ind_fprefix_hashval = algo::Smallstr5_Hash(0, row.fprefix);
+        ind_fprefix_Reserve(1);
+        u32 index = row.ind_fprefix_hashval & (_db.ind_fprefix_buckets_n - 1);
         acr_ed::FFprefix* *prev = &_db.ind_fprefix_buckets_elems[index];
         do {
             acr_ed::FFprefix* ret = *prev;
@@ -2400,7 +2449,7 @@ bool acr_ed::ind_fprefix_InsertMaybe(acr_ed::FFprefix& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void acr_ed::ind_fprefix_Remove(acr_ed::FFprefix& row) {
     if (LIKELY(row.ind_fprefix_next != (acr_ed::FFprefix*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr5_Hash(0, row.fprefix) & (_db.ind_fprefix_buckets_n - 1);
+        u32 index = row.ind_fprefix_hashval & (_db.ind_fprefix_buckets_n - 1);
         acr_ed::FFprefix* *prev = &_db.ind_fprefix_buckets_elems[index]; // addr of pointer to current element
         while (acr_ed::FFprefix *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -2417,8 +2466,14 @@ void acr_ed::ind_fprefix_Remove(acr_ed::FFprefix& row) {
 // --- acr_ed.FDb.ind_fprefix.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void acr_ed::ind_fprefix_Reserve(int n) {
+    ind_fprefix_AbsReserve(_db.ind_fprefix_n + n);
+}
+
+// --- acr_ed.FDb.ind_fprefix.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void acr_ed::ind_fprefix_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_fprefix_buckets_n;
-    u32 new_nelems   = _db.ind_fprefix_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -2437,7 +2492,7 @@ void acr_ed::ind_fprefix_Reserve(int n) {
             while (elem) {
                 acr_ed::FFprefix &row        = *elem;
                 acr_ed::FFprefix* next       = row.ind_fprefix_next;
-                u32 index          = algo::Smallstr5_Hash(0, row.fprefix) & (new_nbuckets-1);
+                u32 index          = row.ind_fprefix_hashval & (new_nbuckets-1);
                 row.ind_fprefix_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -2560,14 +2615,9 @@ bool acr_ed::target_XrefMaybe(acr_ed::FTarget &row) {
 // Find row by key. Return NULL if not found.
 acr_ed::FTarget* acr_ed::ind_target_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr16_Hash(0, key) & (_db.ind_target_buckets_n - 1);
-    acr_ed::FTarget* *e = &_db.ind_target_buckets_elems[index];
-    acr_ed::FTarget* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).target == key;
-        if (done) break;
-        e         = &ret->ind_target_next;
-    } while (true);
+    acr_ed::FTarget *ret = _db.ind_target_buckets_elems[index];
+    for (; ret && !((*ret).target == key); ret = ret->ind_target_next) {
+    }
     return ret;
 }
 
@@ -2582,10 +2632,11 @@ acr_ed::FTarget& acr_ed::ind_target_FindX(const algo::strptr& key) {
 // --- acr_ed.FDb.ind_target.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool acr_ed::ind_target_InsertMaybe(acr_ed::FTarget& row) {
-    ind_target_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_target_next == (acr_ed::FTarget*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr16_Hash(0, row.target) & (_db.ind_target_buckets_n - 1);
+        row.ind_target_hashval = algo::Smallstr16_Hash(0, row.target);
+        ind_target_Reserve(1);
+        u32 index = row.ind_target_hashval & (_db.ind_target_buckets_n - 1);
         acr_ed::FTarget* *prev = &_db.ind_target_buckets_elems[index];
         do {
             acr_ed::FTarget* ret = *prev;
@@ -2611,7 +2662,7 @@ bool acr_ed::ind_target_InsertMaybe(acr_ed::FTarget& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void acr_ed::ind_target_Remove(acr_ed::FTarget& row) {
     if (LIKELY(row.ind_target_next != (acr_ed::FTarget*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr16_Hash(0, row.target) & (_db.ind_target_buckets_n - 1);
+        u32 index = row.ind_target_hashval & (_db.ind_target_buckets_n - 1);
         acr_ed::FTarget* *prev = &_db.ind_target_buckets_elems[index]; // addr of pointer to current element
         while (acr_ed::FTarget *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -2628,8 +2679,14 @@ void acr_ed::ind_target_Remove(acr_ed::FTarget& row) {
 // --- acr_ed.FDb.ind_target.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void acr_ed::ind_target_Reserve(int n) {
+    ind_target_AbsReserve(_db.ind_target_n + n);
+}
+
+// --- acr_ed.FDb.ind_target.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void acr_ed::ind_target_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_target_buckets_n;
-    u32 new_nelems   = _db.ind_target_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -2648,7 +2705,7 @@ void acr_ed::ind_target_Reserve(int n) {
             while (elem) {
                 acr_ed::FTarget &row        = *elem;
                 acr_ed::FTarget* next       = row.ind_target_next;
-                u32 index          = algo::Smallstr16_Hash(0, row.target) & (new_nbuckets-1);
+                u32 index          = row.ind_target_hashval & (new_nbuckets-1);
                 row.ind_target_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -2827,7 +2884,7 @@ algo::Fildes acr_ed::abt_StartRead(algo_lib::FFildes &read) {
 // --- acr_ed.FDb.abt.Kill
 // Kill subprocess and wait
 void acr_ed::abt_Kill() {
-    if (_db.abt_pid != 0) {
+    if (_db.abt_pid > 0) {
         kill(_db.abt_pid,9);
         abt_Wait();
     }
@@ -3722,14 +3779,9 @@ bool acr_ed::nsdb_XrefMaybe(acr_ed::FNsdb &row) {
 // Find row by key. Return NULL if not found.
 acr_ed::FNsdb* acr_ed::ind_nsdb_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr16_Hash(0, key) & (_db.ind_nsdb_buckets_n - 1);
-    acr_ed::FNsdb* *e = &_db.ind_nsdb_buckets_elems[index];
-    acr_ed::FNsdb* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).ns == key;
-        if (done) break;
-        e         = &ret->ind_nsdb_next;
-    } while (true);
+    acr_ed::FNsdb *ret = _db.ind_nsdb_buckets_elems[index];
+    for (; ret && !((*ret).ns == key); ret = ret->ind_nsdb_next) {
+    }
     return ret;
 }
 
@@ -3761,10 +3813,11 @@ acr_ed::FNsdb& acr_ed::ind_nsdb_GetOrCreate(const algo::strptr& key) {
 // --- acr_ed.FDb.ind_nsdb.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool acr_ed::ind_nsdb_InsertMaybe(acr_ed::FNsdb& row) {
-    ind_nsdb_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_nsdb_next == (acr_ed::FNsdb*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr16_Hash(0, row.ns) & (_db.ind_nsdb_buckets_n - 1);
+        row.ind_nsdb_hashval = algo::Smallstr16_Hash(0, row.ns);
+        ind_nsdb_Reserve(1);
+        u32 index = row.ind_nsdb_hashval & (_db.ind_nsdb_buckets_n - 1);
         acr_ed::FNsdb* *prev = &_db.ind_nsdb_buckets_elems[index];
         do {
             acr_ed::FNsdb* ret = *prev;
@@ -3790,7 +3843,7 @@ bool acr_ed::ind_nsdb_InsertMaybe(acr_ed::FNsdb& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void acr_ed::ind_nsdb_Remove(acr_ed::FNsdb& row) {
     if (LIKELY(row.ind_nsdb_next != (acr_ed::FNsdb*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr16_Hash(0, row.ns) & (_db.ind_nsdb_buckets_n - 1);
+        u32 index = row.ind_nsdb_hashval & (_db.ind_nsdb_buckets_n - 1);
         acr_ed::FNsdb* *prev = &_db.ind_nsdb_buckets_elems[index]; // addr of pointer to current element
         while (acr_ed::FNsdb *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -3807,8 +3860,14 @@ void acr_ed::ind_nsdb_Remove(acr_ed::FNsdb& row) {
 // --- acr_ed.FDb.ind_nsdb.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void acr_ed::ind_nsdb_Reserve(int n) {
+    ind_nsdb_AbsReserve(_db.ind_nsdb_n + n);
+}
+
+// --- acr_ed.FDb.ind_nsdb.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void acr_ed::ind_nsdb_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_nsdb_buckets_n;
-    u32 new_nelems   = _db.ind_nsdb_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -3827,7 +3886,7 @@ void acr_ed::ind_nsdb_Reserve(int n) {
             while (elem) {
                 acr_ed::FNsdb &row        = *elem;
                 acr_ed::FNsdb* next       = row.ind_nsdb_next;
-                u32 index          = algo::Smallstr16_Hash(0, row.ns) & (new_nbuckets-1);
+                u32 index          = row.ind_nsdb_hashval & (new_nbuckets-1);
                 row.ind_nsdb_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -3956,14 +4015,9 @@ bool acr_ed::edaction_XrefMaybe(acr_ed::FEdaction &row) {
 // Find row by key. Return NULL if not found.
 acr_ed::FEdaction* acr_ed::ind_edaction_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_edaction_buckets_n - 1);
-    acr_ed::FEdaction* *e = &_db.ind_edaction_buckets_elems[index];
-    acr_ed::FEdaction* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).edaction == key;
-        if (done) break;
-        e         = &ret->ind_edaction_next;
-    } while (true);
+    acr_ed::FEdaction *ret = _db.ind_edaction_buckets_elems[index];
+    for (; ret && !((*ret).edaction == key); ret = ret->ind_edaction_next) {
+    }
     return ret;
 }
 
@@ -3995,10 +4049,11 @@ acr_ed::FEdaction& acr_ed::ind_edaction_GetOrCreate(const algo::strptr& key) {
 // --- acr_ed.FDb.ind_edaction.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool acr_ed::ind_edaction_InsertMaybe(acr_ed::FEdaction& row) {
-    ind_edaction_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_edaction_next == (acr_ed::FEdaction*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.edaction) & (_db.ind_edaction_buckets_n - 1);
+        row.ind_edaction_hashval = algo::Smallstr50_Hash(0, row.edaction);
+        ind_edaction_Reserve(1);
+        u32 index = row.ind_edaction_hashval & (_db.ind_edaction_buckets_n - 1);
         acr_ed::FEdaction* *prev = &_db.ind_edaction_buckets_elems[index];
         do {
             acr_ed::FEdaction* ret = *prev;
@@ -4024,7 +4079,7 @@ bool acr_ed::ind_edaction_InsertMaybe(acr_ed::FEdaction& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void acr_ed::ind_edaction_Remove(acr_ed::FEdaction& row) {
     if (LIKELY(row.ind_edaction_next != (acr_ed::FEdaction*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.edaction) & (_db.ind_edaction_buckets_n - 1);
+        u32 index = row.ind_edaction_hashval & (_db.ind_edaction_buckets_n - 1);
         acr_ed::FEdaction* *prev = &_db.ind_edaction_buckets_elems[index]; // addr of pointer to current element
         while (acr_ed::FEdaction *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -4041,8 +4096,14 @@ void acr_ed::ind_edaction_Remove(acr_ed::FEdaction& row) {
 // --- acr_ed.FDb.ind_edaction.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void acr_ed::ind_edaction_Reserve(int n) {
+    ind_edaction_AbsReserve(_db.ind_edaction_n + n);
+}
+
+// --- acr_ed.FDb.ind_edaction.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void acr_ed::ind_edaction_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_edaction_buckets_n;
-    u32 new_nelems   = _db.ind_edaction_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -4061,7 +4122,7 @@ void acr_ed::ind_edaction_Reserve(int n) {
             while (elem) {
                 acr_ed::FEdaction &row        = *elem;
                 acr_ed::FEdaction* next       = row.ind_edaction_next;
-                u32 index          = algo::Smallstr50_Hash(0, row.edaction) & (new_nbuckets-1);
+                u32 index          = row.ind_edaction_hashval & (new_nbuckets-1);
                 row.ind_edaction_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -4167,6 +4228,104 @@ static bool acr_ed::gitfile_InputMaybe(dev::Gitfile &elem) {
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 bool acr_ed::gitfile_XrefMaybe(acr_ed::FGitfile &row) {
+    bool retval = true;
+    (void)row;
+    return retval;
+}
+
+// --- acr_ed.FDb.msgtype.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+acr_ed::FMsgtype& acr_ed::msgtype_Alloc() {
+    acr_ed::FMsgtype* row = msgtype_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("acr_ed.out_of_mem  field:acr_ed.FDb.msgtype  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- acr_ed.FDb.msgtype.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+acr_ed::FMsgtype* acr_ed::msgtype_AllocMaybe() {
+    acr_ed::FMsgtype *row = (acr_ed::FMsgtype*)msgtype_AllocMem();
+    if (row) {
+        new (row) acr_ed::FMsgtype; // call constructor
+    }
+    return row;
+}
+
+// --- acr_ed.FDb.msgtype.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+acr_ed::FMsgtype* acr_ed::msgtype_InsertMaybe(const dmmeta::Msgtype &value) {
+    acr_ed::FMsgtype *row = &msgtype_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    msgtype_CopyIn(*row,const_cast<dmmeta::Msgtype&>(value));
+    bool ok = msgtype_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        msgtype_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- acr_ed.FDb.msgtype.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* acr_ed::msgtype_AllocMem() {
+    u64 new_nelems     = _db.msgtype_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    acr_ed::FMsgtype*  lev   = NULL;
+    if (bsr < 32) {
+        lev = _db.msgtype_lary[bsr];
+        if (!lev) {
+            lev=(acr_ed::FMsgtype*)algo_lib::malloc_AllocMem(sizeof(acr_ed::FMsgtype) * (u64(1)<<bsr));
+            _db.msgtype_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.msgtype_n = i32(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- acr_ed.FDb.msgtype.RemoveAll
+// Remove all elements from Lary
+void acr_ed::msgtype_RemoveAll() {
+    for (u64 n = _db.msgtype_n; n>0; ) {
+        n--;
+        msgtype_qFind(u64(n)).~FMsgtype(); // destroy last element
+        _db.msgtype_n = i32(n);
+    }
+}
+
+// --- acr_ed.FDb.msgtype.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void acr_ed::msgtype_RemoveLast() {
+    u64 n = _db.msgtype_n;
+    if (n > 0) {
+        n -= 1;
+        msgtype_qFind(u64(n)).~FMsgtype();
+        _db.msgtype_n = i32(n);
+    }
+}
+
+// --- acr_ed.FDb.msgtype.InputMaybe
+static bool acr_ed::msgtype_InputMaybe(dmmeta::Msgtype &elem) {
+    bool retval = true;
+    retval = msgtype_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- acr_ed.FDb.msgtype.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool acr_ed::msgtype_XrefMaybe(acr_ed::FMsgtype &row) {
     bool retval = true;
     (void)row;
     return retval;
@@ -4445,6 +4604,17 @@ void acr_ed::FDb_Init() {
         _db.gitfile_lary[i]  = gitfile_first;
         gitfile_first    += 1ULL<<i;
     }
+    // initialize LAry msgtype (acr_ed.FDb.msgtype)
+    _db.msgtype_n = 0;
+    memset(_db.msgtype_lary, 0, sizeof(_db.msgtype_lary)); // zero out all level pointers
+    acr_ed::FMsgtype* msgtype_first = (acr_ed::FMsgtype*)algo_lib::malloc_AllocMem(sizeof(acr_ed::FMsgtype) * (u64(1)<<4));
+    if (!msgtype_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.msgtype_lary[i]  = msgtype_first;
+        msgtype_first    += 1ULL<<i;
+    }
 
     acr_ed::InitReflection();
     edaction_LoadStatic(); // gen:ns_gstatic  gstatic:acr_ed.FDb.edaction  load acr_ed.FEdaction records
@@ -4453,6 +4623,9 @@ void acr_ed::FDb_Init() {
 // --- acr_ed.FDb..Uninit
 void acr_ed::FDb_Uninit() {
     acr_ed::FDb &row = _db; (void)row;
+
+    // acr_ed.FDb.msgtype.Uninit (Lary)  //
+    // skip destruction in global scope
 
     // acr_ed.FDb.gitfile.Uninit (Lary)  //
     // skip destruction in global scope
@@ -4589,6 +4762,7 @@ void acr_ed::FField_Init(acr_ed::FField& field) {
     field.p_ns = NULL;
     field.ctype_c_field_in_ary = bool(false);
     field.ind_field_next = (acr_ed::FField*)-1; // (acr_ed.FDb.ind_field) not-in-hash
+    field.ind_field_hashval = 0; // stored hash value
 }
 
 // --- acr_ed.FField..Uninit
@@ -4665,6 +4839,20 @@ void acr_ed::listtype_CopyIn(acr_ed::FListtype &row, dmmeta::Listtype &in) {
 void acr_ed::FListtype_Uninit(acr_ed::FListtype& listtype) {
     acr_ed::FListtype &row = listtype; (void)row;
     ind_listtype_Remove(row); // remove listtype from index ind_listtype
+}
+
+// --- acr_ed.FMsgtype.base.CopyOut
+// Copy fields out of row
+void acr_ed::msgtype_CopyOut(acr_ed::FMsgtype &row, dmmeta::Msgtype &out) {
+    out.ctype = row.ctype;
+    out.type = row.type;
+}
+
+// --- acr_ed.FMsgtype.base.CopyIn
+// Copy fields in to row
+void acr_ed::msgtype_CopyIn(acr_ed::FMsgtype &row, dmmeta::Msgtype &in) {
+    row.ctype = in.ctype;
+    row.type = in.type;
 }
 
 // --- acr_ed.FNs.msghdr.CopyOut
@@ -4805,12 +4993,12 @@ void acr_ed::target_CopyIn(acr_ed::FTarget &row, dev::Target &in) {
 // --- acr_ed.FTarget.zd_targsrc.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
 void acr_ed::zd_targsrc_Insert(acr_ed::FTarget& target, acr_ed::FTargsrc& row) {
-    if (!zd_targsrc_InLlistQ(row)) {
+    if (!target_zd_targsrc_InLlistQ(row)) {
         acr_ed::FTargsrc* old_tail = target.zd_targsrc_tail;
-        row.zd_targsrc_next = NULL;
-        row.zd_targsrc_prev = old_tail;
+        row.target_zd_targsrc_next = NULL;
+        row.target_zd_targsrc_prev = old_tail;
         target.zd_targsrc_tail = &row;
-        acr_ed::FTargsrc **new_row_a = &old_tail->zd_targsrc_next;
+        acr_ed::FTargsrc **new_row_a = &old_tail->target_zd_targsrc_next;
         acr_ed::FTargsrc **new_row_b = &target.zd_targsrc_head;
         acr_ed::FTargsrc **new_row = old_tail ? new_row_a : new_row_b;
         *new_row = &row;
@@ -4821,23 +5009,23 @@ void acr_ed::zd_targsrc_Insert(acr_ed::FTarget& target, acr_ed::FTargsrc& row) {
 // --- acr_ed.FTarget.zd_targsrc.Remove
 // Remove element from index. If element is not in index, do nothing.
 void acr_ed::zd_targsrc_Remove(acr_ed::FTarget& target, acr_ed::FTargsrc& row) {
-    if (zd_targsrc_InLlistQ(row)) {
+    if (target_zd_targsrc_InLlistQ(row)) {
         acr_ed::FTargsrc* old_head       = target.zd_targsrc_head;
         (void)old_head; // in case it's not used
-        acr_ed::FTargsrc* prev = row.zd_targsrc_prev;
-        acr_ed::FTargsrc* next = row.zd_targsrc_next;
+        acr_ed::FTargsrc* prev = row.target_zd_targsrc_prev;
+        acr_ed::FTargsrc* next = row.target_zd_targsrc_next;
         // if element is first, adjust list head; otherwise, adjust previous element's next
-        acr_ed::FTargsrc **new_next_a = &prev->zd_targsrc_next;
+        acr_ed::FTargsrc **new_next_a = &prev->target_zd_targsrc_next;
         acr_ed::FTargsrc **new_next_b = &target.zd_targsrc_head;
         acr_ed::FTargsrc **new_next = prev ? new_next_a : new_next_b;
         *new_next = next;
         // if element is last, adjust list tail; otherwise, adjust next element's prev
-        acr_ed::FTargsrc **new_prev_a = &next->zd_targsrc_prev;
+        acr_ed::FTargsrc **new_prev_a = &next->target_zd_targsrc_prev;
         acr_ed::FTargsrc **new_prev_b = &target.zd_targsrc_tail;
         acr_ed::FTargsrc **new_prev = next ? new_prev_a : new_prev_b;
         *new_prev = prev;
         target.zd_targsrc_n--;
-        row.zd_targsrc_next=(acr_ed::FTargsrc*)-1; // not-in-list
+        row.target_zd_targsrc_next=(acr_ed::FTargsrc*)-1; // not-in-list
     }
 }
 
@@ -4849,9 +5037,9 @@ void acr_ed::zd_targsrc_RemoveAll(acr_ed::FTarget& target) {
     target.zd_targsrc_tail = NULL;
     target.zd_targsrc_n = 0;
     while (row) {
-        acr_ed::FTargsrc* row_next = row->zd_targsrc_next;
-        row->zd_targsrc_next  = (acr_ed::FTargsrc*)-1;
-        row->zd_targsrc_prev  = NULL;
+        acr_ed::FTargsrc* row_next = row->target_zd_targsrc_next;
+        row->target_zd_targsrc_next  = (acr_ed::FTargsrc*)-1;
+        row->target_zd_targsrc_prev  = NULL;
         row = row_next;
     }
 }
@@ -4862,14 +5050,14 @@ acr_ed::FTargsrc* acr_ed::zd_targsrc_RemoveFirst(acr_ed::FTarget& target) {
     acr_ed::FTargsrc *row = NULL;
     row = target.zd_targsrc_head;
     if (row) {
-        acr_ed::FTargsrc *next = row->zd_targsrc_next;
+        acr_ed::FTargsrc *next = row->target_zd_targsrc_next;
         target.zd_targsrc_head = next;
-        acr_ed::FTargsrc **new_end_a = &next->zd_targsrc_prev;
+        acr_ed::FTargsrc **new_end_a = &next->target_zd_targsrc_prev;
         acr_ed::FTargsrc **new_end_b = &target.zd_targsrc_tail;
         acr_ed::FTargsrc **new_end = next ? new_end_a : new_end_b;
         *new_end = NULL;
         target.zd_targsrc_n--;
-        row->zd_targsrc_next = (acr_ed::FTargsrc*)-1; // mark as not-in-list
+        row->target_zd_targsrc_next = (acr_ed::FTargsrc*)-1; // mark as not-in-list
     }
     return row;
 }
@@ -5040,6 +5228,7 @@ const char* acr_ed::value_ToCstr(const acr_ed::TableId& parent) {
         case acr_ed_TableId_dmmeta_Fprefix : ret = "dmmeta.Fprefix";  break;
         case acr_ed_TableId_dev_Gitfile    : ret = "dev.Gitfile";  break;
         case acr_ed_TableId_dmmeta_Listtype: ret = "dmmeta.Listtype";  break;
+        case acr_ed_TableId_dmmeta_Msgtype : ret = "dmmeta.Msgtype";  break;
         case acr_ed_TableId_dmmeta_Ns      : ret = "dmmeta.Ns";  break;
         case acr_ed_TableId_dmmeta_Nsdb    : ret = "dmmeta.Nsdb";  break;
         case acr_ed_TableId_dmmeta_Pack    : ret = "dmmeta.Pack";  break;
@@ -5183,6 +5372,10 @@ bool acr_ed::value_SetStrptrMaybe(acr_ed::TableId& parent, algo::strptr rhs) {
                     if (memcmp(rhs.elems+8,"prefix",6)==0) { value_SetEnum(parent,acr_ed_TableId_dmmeta_Fprefix); ret = true; break; }
                     break;
                 }
+                case LE_STR8('d','m','m','e','t','a','.','M'): {
+                    if (memcmp(rhs.elems+8,"sgtype",6)==0) { value_SetEnum(parent,acr_ed_TableId_dmmeta_Msgtype); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('d','m','m','e','t','a','.','T'): {
                     if (memcmp(rhs.elems+8,"ypefld",6)==0) { value_SetEnum(parent,acr_ed_TableId_dmmeta_Typefld); ret = true; break; }
                     break;
@@ -5193,6 +5386,10 @@ bool acr_ed::value_SetStrptrMaybe(acr_ed::TableId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('d','m','m','e','t','a','.','f'): {
                     if (memcmp(rhs.elems+8,"prefix",6)==0) { value_SetEnum(parent,acr_ed_TableId_dmmeta_fprefix); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('d','m','m','e','t','a','.','m'): {
+                    if (memcmp(rhs.elems+8,"sgtype",6)==0) { value_SetEnum(parent,acr_ed_TableId_dmmeta_msgtype); ret = true; break; }
                     break;
                 }
                 case LE_STR8('d','m','m','e','t','a','.','t'): {
@@ -5274,12 +5471,13 @@ void acr_ed::StaticCheck() {
 // --- acr_ed...main
 int main(int argc, char **argv) {
     try {
-        algo_lib::FDb_Init();
         lib_json::FDb_Init();
+        algo_lib::FDb_Init();
         acr_ed::FDb_Init();
         algo_lib::_db.argc = argc;
         algo_lib::_db.argv = argv;
         algo_lib::IohookInit();
+        algo_lib::_db.clock = algo::CurrSchedTime(); // initialize clock
         acr_ed::ReadArgv(); // dmmeta.main:acr_ed
         acr_ed::Main(); // user-defined main
     } catch(algo_lib::ErrorX &x) {
@@ -5291,8 +5489,8 @@ int main(int argc, char **argv) {
     }
     try {
         acr_ed::FDb_Uninit();
-        lib_json::FDb_Uninit();
         algo_lib::FDb_Uninit();
+        lib_json::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;

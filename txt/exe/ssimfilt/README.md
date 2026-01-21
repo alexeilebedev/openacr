@@ -22,7 +22,7 @@ Usage: ssimfilt [[-typetag:]<regx>] [[-match:]<string>] [options]
     [typetag]   regx    "%"     (filter) Match typetag. ^=first encountered typetag
     [match]...  string          (filter) Select input tuple if value of key matches value (regx:regx)
     -field...   string          (project) Select fields for output (regx)
-    -format     int     ssim    Output format for selected tuples (ssim|csv|field|cmd|json|stablefld|table|mdtable)
+    -format     enum    ssim    Output format for selected tuples (ssim|csv|field|cmd|json|stablefld|table|mdtable)
                                     ssim  Print selected/filtered tuples
                                     csv  First tuple determines header. CSV quoting is used. Newlines are removed
                                     field  Print selected fields, one per line
@@ -33,8 +33,8 @@ Usage: ssimfilt [[-typetag:]<regx>] [[-match:]<string>] [options]
                                     mdtable  ASCII Markdown table with | separators for each group of tuples
     -t                          Alias for -format:table
     -cmd        string  ""      Command to output
-    -verbose    int             Verbosity level (0..255); alias -v; cumulative
-    -debug      int             Debug level (0..255); alias -d; cumulative
+    -verbose    flag            Verbosity level (0..255); alias -v; cumulative
+    -debug      flag            Debug level (0..255); alias -d; cumulative
     -help                       Print help and exit; alias -h
     -version                    Print version and exit
     -signature                  Show signatures and exit; alias -sig
@@ -100,19 +100,20 @@ acr field | ssimfilt -cmd 'echo $field/$arg' | bash
 `ssimfilt` takes the following tables on input:
 |Ssimfile|Comment|
 |---|---|
-|[dmmeta.ctype](/txt/ssimdb/dmmeta/ctype.md)|Struct|
-|[dmmeta.field](/txt/ssimdb/dmmeta/field.md)|Specify field of a struct|
-|[dmmeta.substr](/txt/ssimdb/dmmeta/substr.md)|Specify that the field value is computed from a substring of another field|
-|[dmmeta.ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|File with ssim tuples|
-|[dmmeta.sqltype](/txt/ssimdb/dmmeta/sqltype.md)|Mapping of ctype -> SQL expression|
-|[dmmeta.ftuple](/txt/ssimdb/dmmeta/ftuple.md)||
-|[dmmeta.fconst](/txt/ssimdb/dmmeta/fconst.md)|Specify enum value (integer + string constant) for a field|
 |[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
-|[dmmeta.cppfunc](/txt/ssimdb/dmmeta/cppfunc.md)|Value of field provided by this expression|
-|[dmmeta.cfmt](/txt/ssimdb/dmmeta/cfmt.md)|Specify options for printing/reading ctypes into multiple formats|
-|[dmmeta.cdflt](/txt/ssimdb/dmmeta/cdflt.md)|Specify default value for single-value types that lack fields|
-|[dev.unstablefld](/txt/ssimdb/dev/unstablefld.md)|Fields that should be stripped from component test output because they contain timestamps etc.|
 |[amcdb.bltin](/txt/ssimdb/amcdb/bltin.md)|Specify properties of a C built-in type|
+|[dmmeta.cdflt](/txt/ssimdb/dmmeta/cdflt.md)|Specify default value for single-value types that lack fields|
+|[dmmeta.cfmt](/txt/ssimdb/dmmeta/cfmt.md)|Specify options for printing/reading ctypes into multiple formats|
+|[dmmeta.cppfunc](/txt/ssimdb/dmmeta/cppfunc.md)|Value of field provided by this expression|
+|[dmmeta.ctype](/txt/ssimdb/dmmeta/ctype.md)|Struct|
+|[dmmeta.fconst](/txt/ssimdb/dmmeta/fconst.md)|Specify enum value (integer + string constant) for a field|
+|[dmmeta.field](/txt/ssimdb/dmmeta/field.md)|Specify field of a struct|
+|[dmmeta.ftuple](/txt/ssimdb/dmmeta/ftuple.md)||
+|[dmmeta.sqltype](/txt/ssimdb/dmmeta/sqltype.md)|Mapping of ctype -> SQL expression|
+|[dmmeta.ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|File with ssim tuples|
+|[dmmeta.substr](/txt/ssimdb/dmmeta/substr.md)|Specify that the field value is computed from a substring of another field|
+|[dev.unstablefld](/txt/ssimdb/dev/unstablefld.md)|Fields that should be stripped from component test output because they contain timestamps etc.|
+|[dev.unstablefld](/txt/ssimdb/dev/unstablefld.md)|Fields that should be stripped from component test output because they contain timestamps etc.|
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
 

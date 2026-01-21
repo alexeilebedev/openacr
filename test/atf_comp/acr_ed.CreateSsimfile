@@ -1,0 +1,20 @@
+set -e
+bin/acr  -query:'' -replace:Y -check:Y -selerr:N -write:Y -t:Y << EOF
+dmmeta.ctype  ctype:dmmeta.Xyz  comment:""
+dmmeta.field  field:dmmeta.Xyz.xyz  arg:algo.Smallstr50  reftype:Val  dflt:""  comment:""
+dmmeta.ssimfile  ssimfile:dmmeta.xyz  ctype:dmmeta.Xyz
+dmmeta.ssimsort  ssimfile:dmmeta.xyz  sortfld:dmmeta.Xyz.xyz  comment:""
+dmmeta.field  field:dmmeta.Xyz.comment  arg:algo.Comment  reftype:Val  dflt:""  comment:""
+dev.gitfile  gitfile:data/dmmeta/xyz.ssim
+dev.gitfile  gitfile:txt/ssimdb/dmmeta/xyz.md
+dev.readmefile  gitfile:txt/ssimdb/dmmeta/xyz.md  inl:N  sandbox:N  filter:""  comment:""
+dmmeta.cfmt  cfmt:dmmeta.Xyz.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+EOF
+
+mkdir -p data/dmmeta/
+touch data/dmmeta/xyz.ssim
+git add data/dmmeta/xyz.ssim
+mkdir -p txt/ssimdb/dmmeta/
+touch txt/ssimdb/dmmeta/xyz.md
+git add txt/ssimdb/dmmeta/xyz.md
+bin/amc

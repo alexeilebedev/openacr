@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2013 AlgoEngineering LLC
@@ -113,7 +113,7 @@ static void PrintCtypeComments(acr::FPrint &print) {
     // show sample tuples for any ctype for which it makes
     // sense for the user to type in a tuple
     ind_beg(acr::_db_zd_sel_ctype_curs, ctype, acr::_db) {
-        if (!zd_ctype_selrec_EmptyQ(ctype) || acr::zd_all_selrec_EmptyQ()) {
+        if (!zd_selrec_EmptyQ(ctype) || acr::zd_all_selrec_EmptyQ()) {
             PrintSampleTuple(ctype,print.out);
             nsample++;
         }
@@ -341,12 +341,27 @@ static void EndGroup(acr::FPrint &print) {
             print.out << eol;
         }
         int indent = GetDepth(rec.c_pline->key) * 2;
+        bool isnew=rec.isnew;
         // indent
         char_PrintNTimes(' ', print.out,  indent);
+        if (!rec.del) {
+            algo::strptr oldhead = rec.oldhead ? algo::strptr(*rec.oldhead) : algo::strptr(rec.tuple.head.value);
+            algo::strptr oldpkey = rec.oldpkey ? algo::strptr(*rec.oldpkey) : algo::strptr(rec.pkey);
+            // when the head or primary key of a record are changed,
+            // we must print a "delete" command for the old record, since the
+            // "update" no longer properly describes the modification
+            if (attrs_Find(rec.tuple,0) && (oldhead != rec.tuple.head.value || oldpkey != rec.pkey)) {
+                print.out << "acr.delete";
+                PrintAttrSpace(print.out, "", oldhead);
+                PrintAttrSpace(print.out, attrs_Find(rec.tuple,0)->name, oldpkey);
+                print.out << eol;
+                isnew=true; // re-print as new
+            }
+        }
         if (print.showstatus) {
             if (rec.del) {
                 print.out << "acr.delete  ";
-            } else if (rec.isnew) {
+            } else if (isnew) {// use locally computed value
                 print.out << "acr.insert  ";
             } else if (rec.mod) {
                 print.out << "acr.update  ";

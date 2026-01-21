@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# Copyright (C) 2025-2026 AlgoRND
+#
+
+N=$(cat test/filt.sed | wc -l)
+for ((i=N; i>0; i--)); do
+    echo "trying to remove line #$i"
+    cp "test/filt.sed" "temp/filt.bak"
+    sed -i "${i}d" "test/filt.sed"
+    atf_comp -capture % >/dev/null 2>/dev/null
+    mod=$(git ls-files -m "test/atf_comp/")
+    if [ "$mod" != "" ]; then
+        mv "temp/filt.bak" "test/filt.sed"
+    else
+        echo "success - line unused"
+    fi
+    git checkout "test/atf_comp"
+done

@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2012 AlgoEngineering LLC
 //
@@ -44,31 +44,24 @@ void amc::tclass_Llist() {
     }
 
     // helper fields
-    Set(R, "$desc", listtype.haveprev ? "zero-terminated doubly linked list" : "zero-terminated singly linked list");
+    strptr desc = listtype.haveprev ? "zero-terminated doubly linked list" : "zero-terminated singly linked list";
 
-    // if (field.p_arg->c_varlenfld && field.p_arg->c_varlenfld->processed) {
-    //     prerr("amc.gen_llist"
-    //           <<Keyval("field",field.field)
-    //           <<Keyval("comment","no field cannot appear after varlen field"));
-    //     algo_lib::_db.exit_code++;
-    // }
-
-    InsVar(R, field.p_ctype           , "$Cpptype*", "$name_head", "", "$desc");
+    InsVar(R, field.p_ctype           , "$Cpptype*", "$name_head", "", desc);
     if (llist->havecount) {
-        InsVar(R, field.p_ctype       , "i32", "$name_n", "", "$desc");
+        InsVar(R, field.p_ctype       , "i32", "$name_n", "", desc);
     }
     if (llist->havetail) {
         InsVar(R, field.p_ctype       , "$Cpptype*", "$name_tail", "", "pointer to last element");
     }
-    InsVar(R, field.p_arg             , "$Cpptype*", "$name_next", "", "zslist link; -1 means not-in-list");
+    InsVar(R, field.p_arg             , "$Cpptype*", "$xfname_next", "", "zslist link; -1 means not-in-list");
     if (listtype.haveprev) {
-        InsVar(R, field.p_arg         , "$Cpptype*", "$name_prev", "", "previous element");
+        InsVar(R, field.p_arg         , "$Cpptype*", "$xfname_prev", "", "previous element");
     }
     amc::FFunc *child_init = amc::init_GetOrCreate(*field.p_arg);
     Set(R, "$fname"     , Refname(*field.p_arg));
-    Ins(&R, child_init->body    , "$fname.$name_next = ($Cpptype*)-1; // ($field) not-in-list");
+    Ins(&R, child_init->body    , "$fname.$xfname_next = ($Cpptype*)-1; // ($field) not-in-list");
     if (listtype.haveprev) {
-        Ins(&R, child_init->body, "$fname.$name_prev = NULL; // ($field)");
+        Ins(&R, child_init->body, "$fname.$xfname_prev = NULL; // ($field)");
     }
 }
 
@@ -115,9 +108,9 @@ void amc::tfunc_Llist_InLlistQ() {
 
     amc::FFunc& inlist = amc::CreateCurFunc();
     Ins(&R, inlist.ret  , "bool", false);
-    Ins(&R, inlist.proto, "$name_InLlistQ($Cpptype& row)", false);
+    Ins(&R, inlist.proto, "$xfname_InLlistQ($Cpptype& row)", false);
     Ins(&R, inlist.body, "bool result = false;");
-    Ins(&R, inlist.body, "result = !(row.$name_next == ($Cpptype*)-1);");
+    Ins(&R, inlist.body, "result = !(row.$xfname_next == ($Cpptype*)-1);");
     Ins(&R, inlist.body, "return result;");
 }
 
@@ -154,7 +147,7 @@ void amc::tfunc_Llist_Last() {
         Ins(&R, last.ret  , "$Cpptype*", false);
         Ins(&R, last.proto, "$name_Last($Parent)", false);
         Ins(&R, last.body, "$Cpptype *row = NULL;");
-        Ins(&R, last.body, "row = $parname.$name_head ? $parname.$name_head->$name_prev : NULL;");
+        Ins(&R, last.body, "row = $parname.$name_head ? $parname.$name_head->$xfname_prev : NULL;");
         Ins(&R, last.body, "return row;");
     }
 }
@@ -166,7 +159,7 @@ void amc::tfunc_Llist_N() {
 
     if (llist->havecount) {
         amc::FFunc& nitems = amc::CreateCurFunc();
-        Ins(&R, nitems.ret  , "i32", false);
+        AddRetval(nitems, "i32", "", "");
         Ins(&R, nitems.proto, "$name_N($Cparent)", false);
         Ins(&R, nitems.body, "return $parname.$name_n;");
     }
@@ -177,8 +170,8 @@ void amc::tfunc_Llist_Next() {
 
     amc::FFunc& next = amc::CreateCurFunc();
     Ins(&R, next.ret  , "$Cpptype*", false);
-    Ins(&R, next.proto, "$name_Next($Cpptype &row)", false);
-    Ins(&R, next.body, "return row.$name_next;");
+    Ins(&R, next.proto, "$xfname_Next($Cpptype &row)", false);
+    Ins(&R, next.body, "return row.$xfname_next;");
 }
 
 void amc::tfunc_Llist_Prev() {
@@ -189,8 +182,8 @@ void amc::tfunc_Llist_Prev() {
     if (llist->p_listtype->haveprev) {
         amc::FFunc& prev = amc::CreateCurFunc();
         Ins(&R, prev.ret  , "$Cpptype*", false);
-        Ins(&R, prev.proto, "$name_Prev($Cpptype &row)", false);
-        Ins(&R, prev.body, "return row.$name_prev;");
+        Ins(&R, prev.proto, "$xfname_Prev($Cpptype &row)", false);
+        Ins(&R, prev.body, "return row.$xfname_prev;");
     }
 }
 
@@ -202,7 +195,7 @@ void amc::tfunc_Llist_Remove() {
     amc::FFunc& remove = amc::CreateCurFunc();
     Ins(&R,             remove.ret  , "void", false);
     Ins(&R,             remove.proto, "$name_Remove($Parent, $Cpptype& row)", false);
-    Ins(&R,             remove.body, "if ($name_InLlistQ(row)) {");
+    Ins(&R,             remove.body, "if ($xfname_InLlistQ(row)) {");
     Ins(&R,             remove.body, "    $Cpptype* old_head       = $parname.$name_head;");
     Ins(&R,             remove.body, "    (void)old_head; // in case it's not used");
 
@@ -210,35 +203,35 @@ void amc::tfunc_Llist_Remove() {
         // this logic is somewhat convoluted. the llist->p_listtype->circular section seems much cleaner.
         // are there really that many cases involved???
         if (llist->p_listtype->haveprev) {
-            Ins(&R,         remove.body, "    $Cpptype* prev = row.$name_prev;");
-            Ins(&R,         remove.body, "    $Cpptype* next = row.$name_next;");
+            Ins(&R,         remove.body, "    $Cpptype* prev = row.$xfname_prev;");
+            Ins(&R,         remove.body, "    $Cpptype* next = row.$xfname_next;");
             Ins(&R,         remove.body, "    // if element is first, adjust list head; otherwise, adjust previous element's next");
-            Ins(&R,         remove.body, "    $Cpptype **new_next_a = &prev->$name_next;");
+            Ins(&R,         remove.body, "    $Cpptype **new_next_a = &prev->$xfname_next;");
             Ins(&R,         remove.body, "    $Cpptype **new_next_b = &$parname.$name_head;");
             Ins(&R,         remove.body, "    $Cpptype **new_next = prev ? new_next_a : new_next_b;");
             Ins(&R,         remove.body, "    *new_next = next;");
             if (llist->havetail) {
                 Ins(&R,     remove.body, "    // if element is last, adjust list tail; otherwise, adjust next element's prev");
-                Ins(&R,     remove.body, "    $Cpptype **new_prev_a = &next->$name_prev;");
+                Ins(&R,     remove.body, "    $Cpptype **new_prev_a = &next->$xfname_prev;");
                 Ins(&R,     remove.body, "    $Cpptype **new_prev_b = &$parname.$name_tail;");
                 Ins(&R,     remove.body, "    $Cpptype **new_prev = next ? new_prev_a : new_prev_b;");
                 Ins(&R,     remove.body, "    *new_prev = prev;");
             } else {
                 Ins(&R,     remove.body, "    // if element is not last, adjust next element's prev");
                 Ins(&R,     remove.body, "    if (next != NULL) {");
-                Ins(&R,     remove.body, "        next->$name_prev = prev;");
+                Ins(&R,     remove.body, "        next->$xfname_prev = prev;");
                 Ins(&R,     remove.body, "    }");
             }
             if (llist->havecount) {
                 Ins(&R,     remove.body, "    $parname.$name_n--;");
             }
-            Ins(&R,         remove.body, "    row.$name_next=($Cpptype*)-1; // not-in-list");
+            Ins(&R,         remove.body, "    row.$xfname_next=($Cpptype*)-1; // not-in-list");
         } else {
             Ins(&R,         remove.comment, "Since the list is singly-linked, use linear search to locate the element.");
             Ins(&R,         remove.body, "    $Cpptype* prev=NULL;");
             Ins(&R,         remove.body, "    $Cpptype* cur     = $parname.$name_head;");
             Ins(&R,         remove.body, "    while (cur) {  // search for element by pointer");
-            Ins(&R,         remove.body, "        $Cpptype* next = cur->$name_next;");
+            Ins(&R,         remove.body, "        $Cpptype* next = cur->$xfname_next;");
             Ins(&R,         remove.body, "        if (cur == &row) {");
             if (llist->havecount) {
                 Ins(&R,     remove.body, "            $parname.$name_n--;  // adjust count");
@@ -251,11 +244,11 @@ void amc::tfunc_Llist_Remove() {
             }
             Ins(&R,         remove.body, "            // disconnect element from linked list");
             Ins(&R,         remove.body, "            if (prev) {");
-            Ins(&R,         remove.body, "                prev->$name_next = next;");
+            Ins(&R,         remove.body, "                prev->$xfname_next = next;");
             Ins(&R,         remove.body, "            } else {");
             Ins(&R,         remove.body, "                $parname.$name_head = next;");
             Ins(&R,         remove.body, "            }");
-            Ins(&R,         remove.body, "            row.$name_next = ($Cpptype*)-1; // not-in-list");
+            Ins(&R,         remove.body, "            row.$xfname_next = ($Cpptype*)-1; // not-in-list");
             Ins(&R,         remove.body, "            break;");
             Ins(&R,         remove.body, "        }");
             Ins(&R,         remove.body, "        prev = cur;");
@@ -263,21 +256,21 @@ void amc::tfunc_Llist_Remove() {
             Ins(&R,         remove.body, "    }");
         }
     } else { // llist->p_listtype->circular
-        Ins(&R,             remove.body, "    $Cpptype *oldnext = row.$name_next;");
+        Ins(&R,             remove.body, "    $Cpptype *oldnext = row.$xfname_next;");
         if (llist->p_listtype->haveprev) {
-            Ins(&R,         remove.body, "    $Cpptype *oldprev = row.$name_prev;");
+            Ins(&R,         remove.body, "    $Cpptype *oldprev = row.$xfname_prev;");
         } else {
             Ins(&R,         remove.comment, "Since the list is singly-linked, use linear search to locate the element.");
             Ins(&R,         remove.body, "    // find previous element with linear search -- always scans the entire list");
-            Ins(&R,         remove.body, "    $Cpptype *oldprev = row.$name_next;");
-            Ins(&R,         remove.body, "    while (oldprev->$name_next != &row) {");
-            Ins(&R,         remove.body, "        oldprev = oldprev->$name_next;");
+            Ins(&R,         remove.body, "    $Cpptype *oldprev = row.$xfname_next;");
+            Ins(&R,         remove.body, "    while (oldprev->$xfname_next != &row) {");
+            Ins(&R,         remove.body, "        oldprev = oldprev->$xfname_next;");
             Ins(&R,         remove.body, "    }");
         }
         if (llist->p_listtype->haveprev) {
-            Ins(&R,         remove.body, "    oldnext->$name_prev = oldprev; // remove element from list");
+            Ins(&R,         remove.body, "    oldnext->$xfname_prev = oldprev; // remove element from list");
         }
-        Ins(&R,             remove.body, "    oldprev->$name_next = oldnext;");
+        Ins(&R,             remove.body, "    oldprev->$xfname_next = oldnext;");
         if (llist->havecount) {
             Ins(&R,         remove.body, "    $parname.$name_n--;  // adjust count");
         }
@@ -289,9 +282,9 @@ void amc::tfunc_Llist_Remove() {
             Ins(&R,         remove.body, "        $parname.$name_tail = oldprev==&row ? NULL : oldprev; // adjust list tail");
             Ins(&R,         remove.body, "    }");
         }
-        Ins(&R,             remove.body, "    row.$name_next = ($Cpptype*)-1; // mark element as not-in-list);");
+        Ins(&R,             remove.body, "    row.$xfname_next = ($Cpptype*)-1; // mark element as not-in-list);");
         if (llist->p_listtype->haveprev) {
-            Ins(&R,         remove.body, "    row.$name_prev = NULL; // clear back-pointer");
+            Ins(&R,         remove.body, "    row.$xfname_prev = NULL; // clear back-pointer");
         }
     }
     if (field.need_firstchanged) {
@@ -325,10 +318,10 @@ void amc::tfunc_Llist_RemoveAll() {
         Ins(&R, flush.body, "bool do_fire = (NULL != row);");
     }
     Ins(&R, flush.body, "while (row) {");
-    Ins(&R, flush.body, "    $Cpptype* row_next = row->$name_next;");
-    Ins(&R, flush.body, "    row->$name_next  = ($Cpptype*)-1;");
+    Ins(&R, flush.body, "    $Cpptype* row_next = row->$xfname_next;");
+    Ins(&R, flush.body, "    row->$xfname_next  = ($Cpptype*)-1;");
     if (llist->p_listtype->haveprev) {
-        Ins(&R, flush.body, "    row->$name_prev  = NULL;");
+        Ins(&R, flush.body, "    row->$xfname_prev  = NULL;");
     }
     if (!llist->p_listtype->circular) {
         Ins(&R, flush.body, "    row = row_next;");
@@ -355,11 +348,11 @@ void amc::tfunc_Llist_RemoveFirst() {
     Ins(&R,         remfirst.body, "row = $parname.$name_head;");
     Ins(&R,         remfirst.body, "if (row) {");
     if (!llist->p_listtype->circular) {
-        Ins(&R,         remfirst.body, "    $Cpptype *next = row->$name_next;");
+        Ins(&R,         remfirst.body, "    $Cpptype *next = row->$xfname_next;");
         Ins(&R,         remfirst.body, "    $parname.$name_head = next;");
         if (llist->havetail) {
             if (llist->p_listtype->haveprev) {
-                Ins(&R, remfirst.body, "    $Cpptype **new_end_a = &next->$name_prev;");
+                Ins(&R, remfirst.body, "    $Cpptype **new_end_a = &next->$xfname_prev;");
                 Ins(&R, remfirst.body, "    $Cpptype **new_end_b = &$parname.$name_tail;");
                 Ins(&R, remfirst.body, "    $Cpptype **new_end = next ? new_end_a : new_end_b;");
                 Ins(&R, remfirst.body, "    *new_end = NULL;");
@@ -371,14 +364,14 @@ void amc::tfunc_Llist_RemoveFirst() {
             }
         }
     } else {
-        Ins(&R, remfirst.body,         "    bool hasmore = row!=row->$name_next;");
-        Ins(&R, remfirst.body,         "    $parname.$name_head = hasmore ? row->$name_next : NULL;");
+        Ins(&R, remfirst.body,         "    bool hasmore = row!=row->$xfname_next;");
+        Ins(&R, remfirst.body,         "    $parname.$name_head = hasmore ? row->$xfname_next : NULL;");
         if (llist->p_listtype->haveprev) {
-            Ins(&R, remfirst.body,     "    row->$name_next->$name_prev = row->$name_prev;");
-            Ins(&R, remfirst.body,     "    row->$name_prev->$name_next = row->$name_next;");
-            Ins(&R, remfirst.body,     "    row->$name_prev = NULL;");
+            Ins(&R, remfirst.body,     "    row->$xfname_next->$xfname_prev = row->$xfname_prev;");
+            Ins(&R, remfirst.body,     "    row->$xfname_prev->$xfname_next = row->$xfname_next;");
+            Ins(&R, remfirst.body,     "    row->$xfname_prev = NULL;");
         } else if (llist->havetail) {
-            Ins(&R, remfirst.body,     "    $parname.$name_tail->$name_next = row->$name_next;");
+            Ins(&R, remfirst.body,     "    $parname.$name_tail->$xfname_next = row->$xfname_next;");
             Ins(&R, remfirst.body,     "    // clear list's tail pointer if list is empty.");
             Ins(&R, remfirst.body,     "    if (!hasmore) {");
             Ins(&R, remfirst.body,     "        $parname.$name_tail = NULL;");
@@ -391,7 +384,7 @@ void amc::tfunc_Llist_RemoveFirst() {
     if (llist->havecount) {
         Ins(&R,     remfirst.body, "    $parname.$name_n--;");
     }
-    Ins(&R,         remfirst.body, "    row->$name_next = ($Cpptype*)-1; // mark as not-in-list");
+    Ins(&R,         remfirst.body, "    row->$xfname_next = ($Cpptype*)-1; // mark as not-in-list");
     if (field.need_firstchanged) {
         Ins(&R,     remfirst.comment, "Call FirstChanged trigger.");
         Ins(&R,     remfirst.body, "    $name_FirstChanged($pararg);");
@@ -415,7 +408,7 @@ void amc::tfunc_Llist_RotateFirst() {
         if (llist->havetail) {
             Ins(&R,     rotfirst.body, "    $parname.$name_tail = $parname.$name_head;");
         }
-        Ins(&R,         rotfirst.body, "    $parname.$name_head = row->$name_next;");
+        Ins(&R,         rotfirst.body, "    $parname.$name_head = row->$xfname_next;");
         Ins(&R,         rotfirst.body, "}");
         Ins(&R,         rotfirst.body, "return row;");
     }
@@ -430,48 +423,48 @@ void amc::tfunc_Llist_Insert() {
     // private function to update the linked list.
     amc::FFunc& ins = amc::CreateCurFunc();
     Ins(&R,             ins.proto, "$name_Insert($Parent, $Cpptype& row)", false);
-    Ins(&R,             ins.body, "if (!$name_InLlistQ(row)) {");
+    Ins(&R,             ins.body, "if (!$xfname_InLlistQ(row)) {");
     Ins(&R,             ins.ret  , "void", false);
     if (!listtype.circular) {
         // doubly linked list case
         if (listtype.haveprev) {
             if (listtype.instail) {// doubly linked, tail insertion
                 Ins(&R,     ins.body, "    $Cpptype* old_tail = $parname.$name_tail;");
-                Ins(&R,     ins.body, "    row.$name_next = NULL;");
-                Ins(&R,     ins.body, "    row.$name_prev = old_tail;");
+                Ins(&R,     ins.body, "    row.$xfname_next = NULL;");
+                Ins(&R,     ins.body, "    row.$xfname_prev = old_tail;");
                 Ins(&R,     ins.body, "    $parname.$name_tail = &row;");
-                Ins(&R,     ins.body, "    $Cpptype **new_row_a = &old_tail->$name_next;");
+                Ins(&R,     ins.body, "    $Cpptype **new_row_a = &old_tail->$xfname_next;");
                 Ins(&R,     ins.body, "    $Cpptype **new_row_b = &$parname.$name_head;");
                 Ins(&R,     ins.body, "    $Cpptype **new_row = old_tail ? new_row_a : new_row_b;");
                 Ins(&R,     ins.body, "    *new_row = &row;");
             } else { // doubly linked, head insertion
                 Ins(&R,     ins.body, "    $Cpptype* old_head = $parname.$name_head;");
-                Ins(&R,     ins.body, "    row.$name_prev = NULL;");
-                Ins(&R,     ins.body, "    row.$name_next = old_head;");
+                Ins(&R,     ins.body, "    row.$xfname_prev = NULL;");
+                Ins(&R,     ins.body, "    row.$xfname_next = old_head;");
                 Ins(&R,     ins.body, "    $parname.$name_head  = &row;");
                 if (llist->havetail) {
-                    Ins(&R, ins.body, "    $Cpptype **new_row_a = &old_head->$name_prev;");
+                    Ins(&R, ins.body, "    $Cpptype **new_row_a = &old_head->$xfname_prev;");
                     Ins(&R, ins.body, "    $Cpptype **new_row_b = &$parname.$name_tail;");
                     Ins(&R, ins.body, "    $Cpptype **new_row = old_head ? new_row_a : new_row_b;");
                     Ins(&R, ins.body, "    *new_row = &row;");
                 } else {
                     Ins(&R, ins.body, "    if (old_head) {");
-                    Ins(&R, ins.body, "        old_head->$name_prev = &row;");
+                    Ins(&R, ins.body, "        old_head->$xfname_prev = &row;");
                     Ins(&R, ins.body, "    }");
                 }
             }
         } else {
             if (listtype.instail) { // singly linked, tail insertion
                 Ins(&R,     ins.body, "    $Cpptype* old_tail       = $parname.$name_tail;");
-                Ins(&R,     ins.body, "    row.$name_next  = NULL;");
+                Ins(&R,     ins.body, "    row.$xfname_next  = NULL;");
                 Ins(&R,     ins.body, "    $parname.$name_tail = &row;");
-                Ins(&R,     ins.body, "    $Cpptype **new_row_a = &old_tail->$name_next;");
+                Ins(&R,     ins.body, "    $Cpptype **new_row_a = &old_tail->$xfname_next;");
                 Ins(&R,     ins.body, "    $Cpptype **new_row_b = &$parname.$name_head;");
                 Ins(&R,     ins.body, "    $Cpptype **new_row = old_tail ? new_row_a : new_row_b;");
                 Ins(&R,     ins.body, "    *new_row = &row;");
             } else { // singly linked, head insertion
                 Ins(&R,     ins.body, "    $Cpptype* old_head = $parname.$name_head;");
-                Ins(&R,     ins.body, "    row.$name_next  = old_head;");
+                Ins(&R,     ins.body, "    row.$xfname_next  = old_head;");
                 Ins(&R,     ins.body, "    $parname.$name_head = &row;");
                 if (llist->havetail) {
                     Ins(&R, ins.body, "    if (!old_head) {");
@@ -482,13 +475,13 @@ void amc::tfunc_Llist_Insert() {
         }
     } else { // llist->p_listtype->circular
         Ins(&R,             ins.body, "    if ($parname.$name_head) {");
-        Ins(&R,             ins.body, "        row.$name_next = $parname.$name_head;");
+        Ins(&R,             ins.body, "        row.$xfname_next = $parname.$name_head;");
         if (listtype.haveprev) {
-            Ins(&R,         ins.body, "        row.$name_prev = $parname.$name_head->$name_prev;");
-            Ins(&R,         ins.body, "        row.$name_prev->$name_next = &row;");
-            Ins(&R,         ins.body, "        row.$name_next->$name_prev = &row;");
+            Ins(&R,         ins.body, "        row.$xfname_prev = $parname.$name_head->$xfname_prev;");
+            Ins(&R,         ins.body, "        row.$xfname_prev->$xfname_next = &row;");
+            Ins(&R,         ins.body, "        row.$xfname_next->$xfname_prev = &row;");
         } else if (llist->havetail) {
-            Ins(&R,         ins.body, "        $parname.$name_tail->$name_next = &row;");
+            Ins(&R,         ins.body, "        $parname.$name_tail->$xfname_next = &row;");
             if (listtype.instail) {
                 Ins(&R,     ins.body, "        $parname.$name_tail = &row;");
             }
@@ -500,9 +493,9 @@ void amc::tfunc_Llist_Insert() {
             Ins(&R,         ins.body, "        $parname.$name_head = &row;");
         }
         Ins(&R,             ins.body, "    } else {");
-        Ins(&R,             ins.body, "        row.$name_next = &row;");
+        Ins(&R,             ins.body, "        row.$xfname_next = &row;");
         if (listtype.haveprev) {
-            Ins(&R,         ins.body, "        row.$name_prev = &row;");
+            Ins(&R,         ins.body, "        row.$xfname_prev = &row;");
         }
         Ins(&R,             ins.body, "        $parname.$name_head = &row;");
         if (llist->havetail) {
@@ -544,7 +537,7 @@ void amc::tfunc_Llist_qLast() {
         Ins(&R, qlast.ret  , "$Cpptype&", false);
         Ins(&R, qlast.proto, "$name_qLast($Parent)", false);
         Ins(&R, qlast.body, "$Cpptype *row = NULL;");
-        Ins(&R, qlast.body, "row = $parname.$name_head ? $parname.$name_head->$name_prev : NULL;");
+        Ins(&R, qlast.body, "row = $parname.$name_head ? $parname.$name_head->$xfname_prev : NULL;");
         Ins(&R, qlast.body, "return *row;");
     }
 }
@@ -561,10 +554,10 @@ void amc::tclass_ZSListMT() {
     InsStruct(R, field.p_ctype, "");
     InsVar(R, field.p_ctype, "$Cpptype*", "$name_head", "", "ZSListMT - zero-terminated singly linked list -- read side");
     InsVar(R, field.p_ctype, "$Cpptype*", "$name_mt", "", "elements inserted here from another thread -- write side");
-    InsVar(R, field.p_arg, "$Cpptype*", "$name_next", "", "zslist link; -1 means not-in-list");
+    InsVar(R, field.p_arg, "$Cpptype*", "$xfname_next", "", "zslist link; -1 means not-in-list");
     Ins(&R, child_init->body  , "");
     Ins(&R, child_init->body  , "// ($field) not-in-list");
-    Ins(&R, child_init->body  , "$fname.$name_next = ($Cpptype*)-1;");
+    Ins(&R, child_init->body  , "$fname.$xfname_next = ($Cpptype*)-1;");
 }
 
 void amc::tfunc_ZSListMT_DestructiveFirst() {
@@ -586,8 +579,8 @@ void amc::tfunc_ZSListMT_DestructiveFirst() {
     Ins(&R,     first.body, "    $Cpptype* temp = __sync_lock_test_and_set(&$parname.$name_mt, NULL);");
     Ins(&R,     first.body, "    if (temp) {");
     Ins(&R,     first.body, "        do {");
-    Ins(&R,     first.body, "            $Cpptype* next     = temp->$name_next;");
-    Ins(&R,     first.body, "            temp->$name_next = row;");
+    Ins(&R,     first.body, "            $Cpptype* next     = temp->$xfname_next;");
+    Ins(&R,     first.body, "            temp->$xfname_next = row;");
     Ins(&R,     first.body, "            row              = temp;");
     Ins(&R,     first.body, "            temp             = next;");
     Ins(&R,     first.body, "        } while (temp);");
@@ -606,9 +599,9 @@ void amc::tfunc_ZSListMT_RemoveFirst() {
     Ins(&R,     remfirst.proto, "$name_RemoveFirst($Parent)", false);
     Ins(&R,     remfirst.body, "$Cpptype *row = $name_DestructiveFirst($pararg);");
     Ins(&R,     remfirst.body, "if (row) {");
-    Ins(&R,     remfirst.body, "    $Cpptype *next = row->$name_next;");
+    Ins(&R,     remfirst.body, "    $Cpptype *next = row->$xfname_next;");
     Ins(&R,     remfirst.body, "    $parname.$name_head = next;");
-    Ins(&R,     remfirst.body, "    row->$name_next = ($Cpptype*)-1; // mark as not-in-list");
+    Ins(&R,     remfirst.body, "    row->$xfname_next = ($Cpptype*)-1; // mark as not-in-list");
     Ins(&R,     remfirst.body, "}");
     Ins(&R,     remfirst.body, "return row;");
 }
@@ -619,9 +612,9 @@ void amc::tfunc_ZSListMT_InLlistQ() {
     amc::FFunc& inlist = amc::CreateCurFunc();
     inlist.inl=true;
     Ins(&R,     inlist.ret  , "bool", false);
-    Ins(&R,     inlist.proto, "$name_InLlistQ($Cpptype& row)", false);
+    Ins(&R,     inlist.proto, "$xfname_InLlistQ($Cpptype& row)", false);
     Ins(&R,     inlist.body, "bool result = false;");
-    Ins(&R,     inlist.body, "result = !(row.$name_next == ($Cpptype*)-1);");
+    Ins(&R,     inlist.body, "result = !(row.$xfname_next == ($Cpptype*)-1);");
     Ins(&R,     inlist.body, "return result;");
 }
 
@@ -631,13 +624,13 @@ void amc::tfunc_ZSListMT_Insert() {
     amc::FFunc& insert = amc::CreateCurFunc();
     Ins(&R,     insert.ret  , "void", false);
     Ins(&R,     insert.proto, "$name_Insert($Parent, $Cpptype& row)", false);
-    Ins(&R,     insert.body, "if (!$name_InLlistQ(row)) {");
+    Ins(&R,     insert.body, "if (!$xfname_InLlistQ(row)) {");
     Ins(&R,     insert.body, "    // insertion into thread-safe linked list.");
     Ins(&R,     insert.body, "    $Cpptype *temp = NULL;");
     Ins(&R,     insert.body, "    $Cpptype *oldval = $parname.$name_mt;");
     Ins(&R,     insert.body, "    do {");
     Ins(&R,     insert.body, "        temp = oldval;");
-    Ins(&R,     insert.body, "        row.$name_next = temp;");
+    Ins(&R,     insert.body, "        row.$xfname_next = temp;");
     Ins(&R,     insert.body, "        oldval = __sync_val_compare_and_swap(&$parname.$name_mt, temp, &row);");
     Ins(&R,     insert.body, "    } while (oldval != temp);");
     Ins(&R,     insert.body, "}");
@@ -711,7 +704,7 @@ void amc::Llist_curs(bool needdel) {
         // so it must be ignored.
         if (needdel) {
             Ins(&R, func.body, "if (curs.row) {");
-            Ins(&R, func.body, "    curs.next = (*curs.row).$name_next;");
+            Ins(&R, func.body, "    curs.next = (*curs.row).$xfname_next;");
             if (circular) {
                 Ins(&R, func.body, "    if (curs.next == *curs.head) {");
                 Ins(&R, func.body, "        curs.next = NULL;");
@@ -737,7 +730,7 @@ void amc::Llist_curs(bool needdel) {
         if (needdel) {
             Ins(&R, func.body, "$Cpptype *next = curs.next;");
         } else {
-            Ins(&R, func.body, "$Cpptype *next = (*curs.row).$name_next;");
+            Ins(&R, func.body, "$Cpptype *next = (*curs.row).$xfname_next;");
         }
         Ins(&R, func.body, "curs.row = next;");
         if (circular && !needdel) {
@@ -747,7 +740,7 @@ void amc::Llist_curs(bool needdel) {
         }
         if (needdel) {
             Ins(&R, func.body, "if (curs.row) {");
-            Ins(&R, func.body, "    curs.next = (*curs.row).$name_next;");
+            Ins(&R, func.body, "    curs.next = (*curs.row).$xfname_next;");
             if (circular) {
                 Ins(&R, func.body, "if (curs.next == *curs.head) {");
                 Ins(&R, func.body, "    curs.next = NULL;");

@@ -29,12 +29,15 @@
 #include "include/gen/algo_gen.inl.h"
 #include "include/gen/command_gen.h"
 #include "include/gen/command_gen.inl.h"
+#include "include/gen/lib_json_gen.h"
+#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
+lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 acr_dm::FDb     acr_dm::_db;      // dependency found via dev.targdep
 
@@ -48,8 +51,8 @@ const char *acr_dm_help =
 "    -write_ours                  Write result to ours file\n"
 "    -msize       int     7       Conflict marker size\n"
 "    -rowid                       Output 'ours' rowid for merging into original ssimfiles\n"
-"    -verbose     int             Verbosity level (0..255); alias -v; cumulative\n"
-"    -debug       int             Debug level (0..255); alias -d; cumulative\n"
+"    -verbose     flag            Verbosity level (0..255); alias -v; cumulative\n"
+"    -debug       flag            Debug level (0..255); alias -d; cumulative\n"
 "    -help                        Print help and exit; alias -h\n"
 "    -version                     Print version and exit\n"
 "    -signature                   Show signatures and exit; alias -sig\n"
@@ -91,11 +94,11 @@ namespace acr_dm { // gen:ns_print_proto
 // --- acr_dm.FAttr.zs_value.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
 void acr_dm::zs_value_Insert(acr_dm::FAttr& attr, acr_dm::FValue& row) {
-    if (!zs_value_InLlistQ(row)) {
+    if (!attr_zs_value_InLlistQ(row)) {
         acr_dm::FValue* old_tail       = attr.zs_value_tail;
-        row.zs_value_next  = NULL;
+        row.attr_zs_value_next  = NULL;
         attr.zs_value_tail = &row;
-        acr_dm::FValue **new_row_a = &old_tail->zs_value_next;
+        acr_dm::FValue **new_row_a = &old_tail->attr_zs_value_next;
         acr_dm::FValue **new_row_b = &attr.zs_value_head;
         acr_dm::FValue **new_row = old_tail ? new_row_a : new_row_b;
         *new_row = &row;
@@ -107,13 +110,13 @@ void acr_dm::zs_value_Insert(acr_dm::FAttr& attr, acr_dm::FValue& row) {
 // Remove element from index. If element is not in index, do nothing.
 // Since the list is singly-linked, use linear search to locate the element.
 void acr_dm::zs_value_Remove(acr_dm::FAttr& attr, acr_dm::FValue& row) {
-    if (zs_value_InLlistQ(row)) {
+    if (attr_zs_value_InLlistQ(row)) {
         acr_dm::FValue* old_head       = attr.zs_value_head;
         (void)old_head; // in case it's not used
         acr_dm::FValue* prev=NULL;
         acr_dm::FValue* cur     = attr.zs_value_head;
         while (cur) {  // search for element by pointer
-            acr_dm::FValue* next = cur->zs_value_next;
+            acr_dm::FValue* next = cur->attr_zs_value_next;
             if (cur == &row) {
                 attr.zs_value_n--;  // adjust count
 
@@ -122,11 +125,11 @@ void acr_dm::zs_value_Remove(acr_dm::FAttr& attr, acr_dm::FValue& row) {
                 }
                 // disconnect element from linked list
                 if (prev) {
-                    prev->zs_value_next = next;
+                    prev->attr_zs_value_next = next;
                 } else {
                     attr.zs_value_head = next;
                 }
-                row.zs_value_next = (acr_dm::FValue*)-1; // not-in-list
+                row.attr_zs_value_next = (acr_dm::FValue*)-1; // not-in-list
                 break;
             }
             prev = cur;
@@ -143,8 +146,8 @@ void acr_dm::zs_value_RemoveAll(acr_dm::FAttr& attr) {
     attr.zs_value_tail = NULL;
     attr.zs_value_n = 0;
     while (row) {
-        acr_dm::FValue* row_next = row->zs_value_next;
-        row->zs_value_next  = (acr_dm::FValue*)-1;
+        acr_dm::FValue* row_next = row->attr_zs_value_next;
+        row->attr_zs_value_next  = (acr_dm::FValue*)-1;
         row = row_next;
     }
 }
@@ -155,14 +158,14 @@ acr_dm::FValue* acr_dm::zs_value_RemoveFirst(acr_dm::FAttr& attr) {
     acr_dm::FValue *row = NULL;
     row = attr.zs_value_head;
     if (row) {
-        acr_dm::FValue *next = row->zs_value_next;
+        acr_dm::FValue *next = row->attr_zs_value_next;
         attr.zs_value_head = next;
         // clear list's tail pointer if list is empty.
         if (!next) {
             attr.zs_value_tail = NULL;
         }
         attr.zs_value_n--;
-        row->zs_value_next = (acr_dm::FValue*)-1; // mark as not-in-list
+        row->attr_zs_value_next = (acr_dm::FValue*)-1; // mark as not-in-list
     }
     return row;
 }
@@ -271,9 +274,8 @@ void acr_dm::ReadArgv() {
         }
         if (ch_N(attrname) == 0) {
             err << "acr_dm: too many arguments. error at "<<algo::strptr_ToSsim(arg)<<eol;
-        }
-        // read value into currently selected arg
-        if (haveval) {
+        } else if (haveval) {
+            // read value into currently selected arg
             bool ret=false;
             // it's already known which namespace is consuming the args,
             // so directly go there
@@ -316,6 +318,9 @@ void acr_dm::ReadArgv() {
         }ind_end
         doexit = true;
     }
+    algo_lib_logcat_debug.enabled = algo_lib::_db.cmdline.debug;
+    algo_lib_logcat_verbose.enabled = algo_lib::_db.cmdline.verbose > 0;
+    algo_lib_logcat_verbose2.enabled = algo_lib::_db.cmdline.verbose > 1;
     if (!dohelp) {
     }
     // dmmeta.floadtuples:acr_dm.FDb.cmdline
@@ -327,7 +332,7 @@ void acr_dm::ReadArgv() {
     }
     if (err != "") {
         algo_lib::_db.exit_code=1;
-        prerr(err);
+        prerr_(err); // already has eol
         doexit=true;
     }
     if (dohelp) {
@@ -394,8 +399,8 @@ bool acr_dm::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     } else if (DirectoryQ(root)) {
         retval = retval && acr_dm::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
     } else {
-        algo_lib::SaveBadTag("path", root);
-        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        algo_lib::AppendErrtext("path", root);
+        algo_lib::AppendErrtext("comment", "Wrong working directory?");
         retval = false;
     }
     return retval;
@@ -552,14 +557,9 @@ bool acr_dm::tuple_XrefMaybe(acr_dm::FTuple &row) {
 // Find row by key. Return NULL if not found.
 acr_dm::FTuple* acr_dm::ind_tuple_Find(const algo::strptr& key) {
     u32 index = algo::cstring_Hash(0, key) & (_db.ind_tuple_buckets_n - 1);
-    acr_dm::FTuple* *e = &_db.ind_tuple_buckets_elems[index];
-    acr_dm::FTuple* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).key == key;
-        if (done) break;
-        e         = &ret->ind_tuple_next;
-    } while (true);
+    acr_dm::FTuple *ret = _db.ind_tuple_buckets_elems[index];
+    for (; ret && !((*ret).key == key); ret = ret->ind_tuple_next) {
+    }
     return ret;
 }
 
@@ -591,10 +591,11 @@ acr_dm::FTuple& acr_dm::ind_tuple_GetOrCreate(const algo::strptr& key) {
 // --- acr_dm.FDb.ind_tuple.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool acr_dm::ind_tuple_InsertMaybe(acr_dm::FTuple& row) {
-    ind_tuple_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_tuple_next == (acr_dm::FTuple*)-1)) {// check if in hash already
-        u32 index = algo::cstring_Hash(0, row.key) & (_db.ind_tuple_buckets_n - 1);
+        row.ind_tuple_hashval = algo::cstring_Hash(0, row.key);
+        ind_tuple_Reserve(1);
+        u32 index = row.ind_tuple_hashval & (_db.ind_tuple_buckets_n - 1);
         acr_dm::FTuple* *prev = &_db.ind_tuple_buckets_elems[index];
         do {
             acr_dm::FTuple* ret = *prev;
@@ -620,7 +621,7 @@ bool acr_dm::ind_tuple_InsertMaybe(acr_dm::FTuple& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void acr_dm::ind_tuple_Remove(acr_dm::FTuple& row) {
     if (LIKELY(row.ind_tuple_next != (acr_dm::FTuple*)-1)) {// check if in hash already
-        u32 index = algo::cstring_Hash(0, row.key) & (_db.ind_tuple_buckets_n - 1);
+        u32 index = row.ind_tuple_hashval & (_db.ind_tuple_buckets_n - 1);
         acr_dm::FTuple* *prev = &_db.ind_tuple_buckets_elems[index]; // addr of pointer to current element
         while (acr_dm::FTuple *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -637,8 +638,14 @@ void acr_dm::ind_tuple_Remove(acr_dm::FTuple& row) {
 // --- acr_dm.FDb.ind_tuple.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void acr_dm::ind_tuple_Reserve(int n) {
+    ind_tuple_AbsReserve(_db.ind_tuple_n + n);
+}
+
+// --- acr_dm.FDb.ind_tuple.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void acr_dm::ind_tuple_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_tuple_buckets_n;
-    u32 new_nelems   = _db.ind_tuple_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -657,7 +664,7 @@ void acr_dm::ind_tuple_Reserve(int n) {
             while (elem) {
                 acr_dm::FTuple &row        = *elem;
                 acr_dm::FTuple* next       = row.ind_tuple_next;
-                u32 index          = algo::cstring_Hash(0, row.key) & (new_nbuckets-1);
+                u32 index          = row.ind_tuple_hashval & (new_nbuckets-1);
                 row.ind_tuple_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1196,17 +1203,17 @@ bool acr_dm::Rowid_ReadFieldMaybe(acr_dm::Rowid& parent, algo::strptr field, alg
     switch(field_id) {
         case acr_dm_FieldId_f1: {
             retval = i32_ReadStrptrMaybe(parent.f1, strval);
-            break;
-        }
+        } break;
         case acr_dm_FieldId_f2: {
             retval = i32_ReadStrptrMaybe(parent.f2, strval);
-            break;
-        }
+        } break;
         case acr_dm_FieldId_f3: {
             retval = i32_ReadStrptrMaybe(parent.f3, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -1243,30 +1250,14 @@ void acr_dm::Rowid_Print(acr_dm::Rowid& row, algo::cstring& str) {
     i32_Print(row.f3, str);
 }
 
-// --- acr_dm.Source.source_bitcurs.Next
-// proceed to next item
-void acr_dm::Source_source_bitcurs_Next(Source_source_bitcurs &curs) {
-    ++curs.bit;
-    int index = curs.bit / 8;
-    int offset = curs.bit % 8;
-    for (; index < curs.n_elems; ++index, offset = 0) {
-        u64 rest = curs.elems[index] >> offset;
-        if (rest) {
-            offset += algo::u64_BitScanForward(rest);
-            break;
-        }
-    }
-    curs.bit = index * 8 + offset;
-}
-
 // --- acr_dm.FTuple.zs_attr.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
 void acr_dm::zs_attr_Insert(acr_dm::FTuple& tuple, acr_dm::FAttr& row) {
-    if (!zs_attr_InLlistQ(row)) {
+    if (!tuple_zs_attr_InLlistQ(row)) {
         acr_dm::FAttr* old_tail       = tuple.zs_attr_tail;
-        row.zs_attr_next  = NULL;
+        row.tuple_zs_attr_next  = NULL;
         tuple.zs_attr_tail = &row;
-        acr_dm::FAttr **new_row_a = &old_tail->zs_attr_next;
+        acr_dm::FAttr **new_row_a = &old_tail->tuple_zs_attr_next;
         acr_dm::FAttr **new_row_b = &tuple.zs_attr_head;
         acr_dm::FAttr **new_row = old_tail ? new_row_a : new_row_b;
         *new_row = &row;
@@ -1278,13 +1269,13 @@ void acr_dm::zs_attr_Insert(acr_dm::FTuple& tuple, acr_dm::FAttr& row) {
 // Remove element from index. If element is not in index, do nothing.
 // Since the list is singly-linked, use linear search to locate the element.
 void acr_dm::zs_attr_Remove(acr_dm::FTuple& tuple, acr_dm::FAttr& row) {
-    if (zs_attr_InLlistQ(row)) {
+    if (tuple_zs_attr_InLlistQ(row)) {
         acr_dm::FAttr* old_head       = tuple.zs_attr_head;
         (void)old_head; // in case it's not used
         acr_dm::FAttr* prev=NULL;
         acr_dm::FAttr* cur     = tuple.zs_attr_head;
         while (cur) {  // search for element by pointer
-            acr_dm::FAttr* next = cur->zs_attr_next;
+            acr_dm::FAttr* next = cur->tuple_zs_attr_next;
             if (cur == &row) {
                 tuple.zs_attr_n--;  // adjust count
 
@@ -1293,11 +1284,11 @@ void acr_dm::zs_attr_Remove(acr_dm::FTuple& tuple, acr_dm::FAttr& row) {
                 }
                 // disconnect element from linked list
                 if (prev) {
-                    prev->zs_attr_next = next;
+                    prev->tuple_zs_attr_next = next;
                 } else {
                     tuple.zs_attr_head = next;
                 }
-                row.zs_attr_next = (acr_dm::FAttr*)-1; // not-in-list
+                row.tuple_zs_attr_next = (acr_dm::FAttr*)-1; // not-in-list
                 break;
             }
             prev = cur;
@@ -1314,8 +1305,8 @@ void acr_dm::zs_attr_RemoveAll(acr_dm::FTuple& tuple) {
     tuple.zs_attr_tail = NULL;
     tuple.zs_attr_n = 0;
     while (row) {
-        acr_dm::FAttr* row_next = row->zs_attr_next;
-        row->zs_attr_next  = (acr_dm::FAttr*)-1;
+        acr_dm::FAttr* row_next = row->tuple_zs_attr_next;
+        row->tuple_zs_attr_next  = (acr_dm::FAttr*)-1;
         row = row_next;
     }
 }
@@ -1326,14 +1317,14 @@ acr_dm::FAttr* acr_dm::zs_attr_RemoveFirst(acr_dm::FTuple& tuple) {
     acr_dm::FAttr *row = NULL;
     row = tuple.zs_attr_head;
     if (row) {
-        acr_dm::FAttr *next = row->zs_attr_next;
+        acr_dm::FAttr *next = row->tuple_zs_attr_next;
         tuple.zs_attr_head = next;
         // clear list's tail pointer if list is empty.
         if (!next) {
             tuple.zs_attr_tail = NULL;
         }
         tuple.zs_attr_n--;
-        row->zs_attr_next = (acr_dm::FAttr*)-1; // mark as not-in-list
+        row->tuple_zs_attr_next = (acr_dm::FAttr*)-1; // mark as not-in-list
     }
     return row;
 }
@@ -1459,11 +1450,13 @@ void acr_dm::StaticCheck() {
 // --- acr_dm...main
 int main(int argc, char **argv) {
     try {
+        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         acr_dm::FDb_Init();
         algo_lib::_db.argc = argc;
         algo_lib::_db.argv = argv;
         algo_lib::IohookInit();
+        algo_lib::_db.clock = algo::CurrSchedTime(); // initialize clock
         acr_dm::ReadArgv(); // dmmeta.main:acr_dm
         acr_dm::Main(); // user-defined main
     } catch(algo_lib::ErrorX &x) {
@@ -1476,6 +1469,7 @@ int main(int argc, char **argv) {
     try {
         acr_dm::FDb_Uninit();
         algo_lib::FDb_Uninit();
+        lib_json::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;

@@ -77,6 +77,7 @@ const char *gclidb_Gclienv_gclienv_glab   = "glab";
 // compile-time string constants for gclidb.Gclisub.gclisub
 const char *gclidb_Gclisub_gclisub__GITDIR    = "$GITDIR";
 const char *gclidb_Gclisub_gclisub__HOST      = "$HOST";
+const char *gclidb_Gclisub_gclisub__ID_RSA    = "$ID_RSA";
 const char *gclidb_Gclisub_gclisub__IN_AUTH   = "$IN_AUTH";
 const char *gclidb_Gclisub_gclisub__ISSUE     = "$ISSUE";
 const char *gclidb_Gclisub_gclisub__ISSUE_    = "$ISSUE#";
@@ -108,15 +109,6 @@ const char *gclidb_Gfld_gfld_state      = "state";
 const char *gclidb_Gfld_gfld_title      = "title";
 const char *gclidb_Gfld_gfld_token      = "token";
 const char *gclidb_Gfld_gfld_user       = "user";
-
-// compile-time string constants for gclidb.Grepogitport.grepogitport
-const char *gclidb_Grepogitport_grepogitport_default             = "default";
-const char *gclidb_Grepogitport_grepogitport_github_com          = "github.com";
-const char *gclidb_Grepogitport_grepogitport_gitlab_vovaco_com   = "gitlab.vovaco.com";
-
-// compile-time string constants for gclidb.Grepossh.grepossh
-const char *gclidb_Grepossh_grepossh_glpat          = "glpat";
-const char *gclidb_Grepossh_grepossh_vparizhs_ghp   = "vparizhs/ghp";
 
 // compile-time string constants for gclidb.Gstate.gstate
 const char *gclidb_Gstate_gstate_state_all          = "state_all";
@@ -247,10 +239,6 @@ const char* gclidb::value_ToCstr(const gclidb::FieldId& parent) {
         case gclidb_FieldId_descr          : ret = "descr";  break;
         case gclidb_FieldId_active         : ret = "active";  break;
         case gclidb_FieldId_priv           : ret = "priv";  break;
-        case gclidb_FieldId_grepogitport   : ret = "grepogitport";  break;
-        case gclidb_FieldId_port           : ret = "port";  break;
-        case gclidb_FieldId_grepossh       : ret = "grepossh";  break;
-        case gclidb_FieldId_sshid          : ret = "sshid";  break;
         case gclidb_FieldId_gstate         : ret = "gstate";  break;
         case gclidb_FieldId_st             : ret = "st";  break;
         case gclidb_FieldId_state          : ret = "state";  break;
@@ -433,9 +421,6 @@ bool gclidb::value_SetStrptrMaybe(gclidb::FieldId& parent, algo::strptr rhs) {
                 case LE_STR4('n','o','t','e'): {
                     value_SetEnum(parent,gclidb_FieldId_note); ret = true; break;
                 }
-                case LE_STR4('p','o','r','t'): {
-                    value_SetEnum(parent,gclidb_FieldId_port); ret = true; break;
-                }
                 case LE_STR4('p','r','i','v'): {
                     value_SetEnum(parent,gclidb_FieldId_priv); ret = true; break;
                 }
@@ -494,9 +479,6 @@ bool gclidb::value_SetStrptrMaybe(gclidb::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR5('m','r','j','o','b'): {
                     value_SetEnum(parent,gclidb_FieldId_mrjob); ret = true; break;
-                }
-                case LE_STR5('s','s','h','i','d'): {
-                    value_SetEnum(parent,gclidb_FieldId_sshid); ret = true; break;
                 }
                 case LE_STR5('s','t','a','t','e'): {
                     value_SetEnum(parent,gclidb_FieldId_state); ret = true; break;
@@ -600,9 +582,6 @@ bool gclidb::value_SetStrptrMaybe(gclidb::FieldId& parent, algo::strptr rhs) {
                 case LE_STR8('g','c','l','i','c','m','d','t'): {
                     value_SetEnum(parent,gclidb_FieldId_gclicmdt); ret = true; break;
                 }
-                case LE_STR8('g','r','e','p','o','s','s','h'): {
-                    value_SetEnum(parent,gclidb_FieldId_grepossh); ret = true; break;
-                }
                 case LE_STR8('o','p','t','i','o','n','a','l'): {
                     value_SetEnum(parent,gclidb_FieldId_optional); ret = true; break;
                 }
@@ -669,15 +648,6 @@ bool gclidb::value_SetStrptrMaybe(gclidb::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('s','o','u','r','c','e','_','r'): {
                     if (memcmp(rhs.elems+8,"epo",3)==0) { value_SetEnum(parent,gclidb_FieldId_source_repo); ret = true; break; }
-                    break;
-                }
-            }
-            break;
-        }
-        case 12: {
-            switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('g','r','e','p','o','g','i','t'): {
-                    if (memcmp(rhs.elems+8,"port",4)==0) { value_SetEnum(parent,gclidb_FieldId_grepogitport); ret = true; break; }
                     break;
                 }
             }
@@ -773,13 +743,14 @@ bool gclidb::Gact_ReadFieldMaybe(gclidb::Gact& parent, algo::strptr field, algo:
     switch(field_id) {
         case gclidb_FieldId_gact: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.gact, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -821,13 +792,14 @@ bool gclidb::Gatv_ReadFieldMaybe(gclidb::Gatv& parent, algo::strptr field, algo:
     switch(field_id) {
         case gclidb_FieldId_gatv: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.gatv, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -869,17 +841,17 @@ bool gclidb::Gclicmd_ReadFieldMaybe(gclidb::Gclicmd& parent, algo::strptr field,
     switch(field_id) {
         case gclidb_FieldId_gclicmd: {
             retval = algo::Smallstr250_ReadStrptrMaybe(parent.gclicmd, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_gclicmdf2j: {
             retval = algo::Smallstr250_ReadStrptrMaybe(parent.gclicmdf2j, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -977,33 +949,29 @@ bool gclidb::Gclicmdf2j_ReadFieldMaybe(gclidb::Gclicmdf2j& parent, algo::strptr 
     switch(field_id) {
         case gclidb_FieldId_gclicmdf2j: {
             retval = algo::Smallstr250_ReadStrptrMaybe(parent.gclicmdf2j, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_gclicmdf: {
             retval = false;
-            break;
-        }
+        } break;
         case gclidb_FieldId_gclicmd: {
             retval = false;
-            break;
-        }
+        } break;
         case gclidb_FieldId_field: {
             retval = false;
-            break;
-        }
+        } break;
         case gclidb_FieldId_jkey: {
             retval = false;
-            break;
-        }
+        } break;
         case gclidb_FieldId_dup: {
             retval = bool_ReadStrptrMaybe(parent.dup, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -1077,29 +1045,26 @@ bool gclidb::Gclicmdt_ReadFieldMaybe(gclidb::Gclicmdt& parent, algo::strptr fiel
     switch(field_id) {
         case gclidb_FieldId_gclicmdt: {
             retval = algo::Smallstr250_ReadStrptrMaybe(parent.gclicmdt, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_gmethod: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.gmethod, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_gclicmd: {
             retval = false;
-            break;
-        }
+        } break;
         case gclidb_FieldId_gtype: {
             retval = false;
-            break;
-        }
+        } break;
         case gclidb_FieldId_uri: {
             retval = algo::Comment_ReadStrptrMaybe(parent.uri, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -1147,17 +1112,17 @@ bool gclidb::Gclienv_ReadFieldMaybe(gclidb::Gclienv& parent, algo::strptr field,
     switch(field_id) {
         case gclidb_FieldId_gclienv: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.gclienv, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_addon: {
             retval = algo::cstring_ReadStrptrMaybe(parent.addon, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -1231,29 +1196,26 @@ bool gclidb::Gclienvsub_ReadFieldMaybe(gclidb::Gclienvsub& parent, algo::strptr 
     switch(field_id) {
         case gclidb_FieldId_gclienvsub: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.gclienvsub, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_gclienv: {
             retval = false;
-            break;
-        }
+        } break;
         case gclidb_FieldId_sub: {
             retval = false;
-            break;
-        }
+        } break;
         case gclidb_FieldId_fwd: {
             retval = bool_ReadStrptrMaybe(parent.fwd, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_rev: {
             retval = bool_ReadStrptrMaybe(parent.rev, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_uval: {
             retval = algo::cstring_ReadStrptrMaybe(parent.uval, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -1301,13 +1263,14 @@ bool gclidb::Gclisub_ReadFieldMaybe(gclidb::Gclisub& parent, algo::strptr field,
     switch(field_id) {
         case gclidb_FieldId_gclisub: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.gclisub, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -1349,13 +1312,14 @@ bool gclidb::Gfld_ReadFieldMaybe(gclidb::Gfld& parent, algo::strptr field, algo:
     switch(field_id) {
         case gclidb_FieldId_gfld: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.gfld, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -1438,17 +1402,17 @@ bool gclidb::Gmethod_ReadFieldMaybe(gclidb::Gmethod& parent, algo::strptr field,
     switch(field_id) {
         case gclidb_FieldId_gmethod: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.gmethod, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_val: {
             retval = u32_ReadStrptrMaybe(parent.val, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -1522,53 +1486,44 @@ bool gclidb::Grepo_ReadFieldMaybe(gclidb::Grepo& parent, algo::strptr field, alg
     switch(field_id) {
         case gclidb_FieldId_grepo: {
             retval = algo::Smallstr250_ReadStrptrMaybe(parent.grepo, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_host: {
             retval = false;
-            break;
-        }
+        } break;
         case gclidb_FieldId_fname: {
             retval = false;
-            break;
-        }
+        } break;
         case gclidb_FieldId_name: {
             retval = algo::cstring_ReadStrptrMaybe(parent.name, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_token: {
             retval = algo::cstring_ReadStrptrMaybe(parent.token, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_default_branch: {
             retval = algo::cstring_ReadStrptrMaybe(parent.default_branch, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_keyid: {
             retval = algo::cstring_ReadStrptrMaybe(parent.keyid, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_ssh_repo: {
             retval = algo::cstring_ReadStrptrMaybe(parent.ssh_repo, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_web_url: {
             retval = algo::cstring_ReadStrptrMaybe(parent.web_url, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_descr: {
             retval = algo::cstring_ReadStrptrMaybe(parent.descr, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_active: {
             retval = bool_ReadStrptrMaybe(parent.active, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_priv: {
             retval = algo::cstring_ReadStrptrMaybe(parent.priv, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -1633,132 +1588,6 @@ void gclidb::Grepo_Print(gclidb::Grepo& row, algo::cstring& str) {
     PrintAttrSpaceReset(str,"priv", temp);
 }
 
-// --- gclidb.Grepogitport..ReadFieldMaybe
-bool gclidb::Grepogitport_ReadFieldMaybe(gclidb::Grepogitport& parent, algo::strptr field, algo::strptr strval) {
-    bool retval = true;
-    gclidb::FieldId field_id;
-    (void)value_SetStrptrMaybe(field_id,field);
-    switch(field_id) {
-        case gclidb_FieldId_grepogitport: {
-            retval = algo::Smallstr50_ReadStrptrMaybe(parent.grepogitport, strval);
-            break;
-        }
-        case gclidb_FieldId_port: {
-            retval = algo::cstring_ReadStrptrMaybe(parent.port, strval);
-            break;
-        }
-        case gclidb_FieldId_comment: {
-            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
-    }
-    if (!retval) {
-        algo_lib::AppendErrtext("attr",field);
-    }
-    return retval;
-}
-
-// --- gclidb.Grepogitport..ReadStrptrMaybe
-// Read fields of gclidb::Grepogitport from an ascii string.
-// The format of the string is an ssim Tuple
-bool gclidb::Grepogitport_ReadStrptrMaybe(gclidb::Grepogitport &parent, algo::strptr in_str) {
-    bool retval = true;
-    retval = algo::StripTypeTag(in_str, "gclidb.grepogitport") || algo::StripTypeTag(in_str, "gclidb.Grepogitport");
-    ind_beg(algo::Attr_curs, attr, in_str) {
-        retval = retval && Grepogitport_ReadFieldMaybe(parent, attr.name, attr.value);
-    }ind_end;
-    return retval;
-}
-
-// --- gclidb.Grepogitport..Print
-// print string representation of ROW to string STR
-// cfmt:gclidb.Grepogitport.String  printfmt:Tuple
-void gclidb::Grepogitport_Print(gclidb::Grepogitport& row, algo::cstring& str) {
-    algo::tempstr temp;
-    str << "gclidb.grepogitport";
-
-    algo::Smallstr50_Print(row.grepogitport, temp);
-    PrintAttrSpaceReset(str,"grepogitport", temp);
-
-    algo::cstring_Print(row.port, temp);
-    PrintAttrSpaceReset(str,"port", temp);
-
-    algo::Comment_Print(row.comment, temp);
-    PrintAttrSpaceReset(str,"comment", temp);
-}
-
-// --- gclidb.Grepossh.name.Get
-algo::cstring gclidb::name_Get(gclidb::Grepossh& parent) {
-    algo::cstring ret(algo::Pathcomp(parent.sshid, "/RR"));
-    return ret;
-}
-
-// --- gclidb.Grepossh.name.Get2
-algo::cstring gclidb::Grepossh_name_Get(algo::strptr arg) {
-    algo::cstring ret(algo::Pathcomp(arg, "/RR"));
-    return ret;
-}
-
-// --- gclidb.Grepossh..ReadFieldMaybe
-bool gclidb::Grepossh_ReadFieldMaybe(gclidb::Grepossh& parent, algo::strptr field, algo::strptr strval) {
-    bool retval = true;
-    gclidb::FieldId field_id;
-    (void)value_SetStrptrMaybe(field_id,field);
-    switch(field_id) {
-        case gclidb_FieldId_grepossh: {
-            retval = algo::Smallstr50_ReadStrptrMaybe(parent.grepossh, strval);
-            break;
-        }
-        case gclidb_FieldId_sshid: {
-            retval = algo::Smallstr200_ReadStrptrMaybe(parent.sshid, strval);
-            break;
-        }
-        case gclidb_FieldId_name: {
-            retval = false;
-            break;
-        }
-        case gclidb_FieldId_comment: {
-            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
-    }
-    if (!retval) {
-        algo_lib::AppendErrtext("attr",field);
-    }
-    return retval;
-}
-
-// --- gclidb.Grepossh..ReadStrptrMaybe
-// Read fields of gclidb::Grepossh from an ascii string.
-// The format of the string is an ssim Tuple
-bool gclidb::Grepossh_ReadStrptrMaybe(gclidb::Grepossh &parent, algo::strptr in_str) {
-    bool retval = true;
-    retval = algo::StripTypeTag(in_str, "gclidb.grepossh") || algo::StripTypeTag(in_str, "gclidb.Grepossh");
-    ind_beg(algo::Attr_curs, attr, in_str) {
-        retval = retval && Grepossh_ReadFieldMaybe(parent, attr.name, attr.value);
-    }ind_end;
-    return retval;
-}
-
-// --- gclidb.Grepossh..Print
-// print string representation of ROW to string STR
-// cfmt:gclidb.Grepossh.String  printfmt:Tuple
-void gclidb::Grepossh_Print(gclidb::Grepossh& row, algo::cstring& str) {
-    algo::tempstr temp;
-    str << "gclidb.grepossh";
-
-    algo::Smallstr50_Print(row.grepossh, temp);
-    PrintAttrSpaceReset(str,"grepossh", temp);
-
-    algo::Smallstr200_Print(row.sshid, temp);
-    PrintAttrSpaceReset(str,"sshid", temp);
-
-    algo::Comment_Print(row.comment, temp);
-    PrintAttrSpaceReset(str,"comment", temp);
-}
-
 // --- gclidb.Gstate.st.Get
 algo::cstring gclidb::st_Get(gclidb::Gstate& parent) {
     algo::cstring ret(algo::Pathcomp(parent.gstate, "_LL"));
@@ -1796,21 +1625,20 @@ bool gclidb::Gstate_ReadFieldMaybe(gclidb::Gstate& parent, algo::strptr field, a
     switch(field_id) {
         case gclidb_FieldId_gstate: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.gstate, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_st: {
             retval = false;
-            break;
-        }
+        } break;
         case gclidb_FieldId_state: {
             retval = false;
-            break;
-        }
+        } break;
         case gclidb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -1881,21 +1709,20 @@ bool gclidb::Gstatet_ReadFieldMaybe(gclidb::Gstatet& parent, algo::strptr field,
     switch(field_id) {
         case gclidb_FieldId_gstatet: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.gstatet, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_gtype: {
             retval = false;
-            break;
-        }
+        } break;
         case gclidb_FieldId_gstate: {
             retval = false;
-            break;
-        }
+        } break;
         case gclidb_FieldId_state: {
             retval = algo::cstring_ReadStrptrMaybe(parent.state, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -1937,13 +1764,14 @@ bool gclidb::Gtbl_ReadFieldMaybe(gclidb::Gtbl& parent, algo::strptr field, algo:
     switch(field_id) {
         case gclidb_FieldId_gtbl: {
             retval = algo::Smallstr250_ReadStrptrMaybe(parent.gtbl, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -2014,29 +1842,26 @@ bool gclidb::Gtblact_ReadFieldMaybe(gclidb::Gtblact& parent, algo::strptr field,
     switch(field_id) {
         case gclidb_FieldId_gtblact: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.gtblact, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_gtbl: {
             retval = false;
-            break;
-        }
+        } break;
         case gclidb_FieldId_gact: {
             retval = false;
-            break;
-        }
+        } break;
         case gclidb_FieldId_t: {
             retval = bool_ReadStrptrMaybe(parent.t, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_e: {
             retval = bool_ReadStrptrMaybe(parent.e, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_auth: {
             retval = bool_ReadStrptrMaybe(parent.auth, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -2113,37 +1938,32 @@ bool gclidb::Gtblactfld_ReadFieldMaybe(gclidb::Gtblactfld& parent, algo::strptr 
     switch(field_id) {
         case gclidb_FieldId_gtblactfld: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.gtblactfld, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_gtblact: {
             retval = false;
-            break;
-        }
+        } break;
         case gclidb_FieldId_field: {
             retval = false;
-            break;
-        }
+        } break;
         case gclidb_FieldId_dflt: {
             retval = algo::cstring_ReadStrptrMaybe(parent.dflt, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_field_name_dflt: {
             retval = bool_ReadStrptrMaybe(parent.field_name_dflt, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_optional: {
             retval = bool_ReadStrptrMaybe(parent.optional, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_regx: {
             retval = bool_ReadStrptrMaybe(parent.regx, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -2233,33 +2053,29 @@ bool gclidb::Gtblacttst_ReadFieldMaybe(gclidb::Gtblacttst& parent, algo::strptr 
     switch(field_id) {
         case gclidb_FieldId_gtblacttst: {
             retval = algo::Smallstr250_ReadStrptrMaybe(parent.gtblacttst, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_gtblact: {
             retval = false;
-            break;
-        }
+        } break;
         case gclidb_FieldId_gclienv: {
             retval = false;
-            break;
-        }
+        } break;
         case gclidb_FieldId_working: {
             retval = bool_ReadStrptrMaybe(parent.working, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_t: {
             retval = false;
-            break;
-        }
+        } break;
         case gclidb_FieldId_cmd: {
             retval = algo::cstring_ReadStrptrMaybe(parent.cmd, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -2336,21 +2152,20 @@ bool gclidb::Gtblacttstout_ReadFieldMaybe(gclidb::Gtblacttstout& parent, algo::s
     switch(field_id) {
         case gclidb_FieldId_gtblacttstout: {
             retval = algo::Smallstr250_ReadStrptrMaybe(parent.gtblacttstout, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_gtblacttst: {
             retval = false;
-            break;
-        }
+        } break;
         case gclidb_FieldId_out: {
             retval = false;
-            break;
-        }
+        } break;
         case gclidb_FieldId_text: {
             retval = algo::cstring_ReadStrptrMaybe(parent.text, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -2392,17 +2207,17 @@ bool gclidb::Gtype_ReadFieldMaybe(gclidb::Gtype& parent, algo::strptr field, alg
     switch(field_id) {
         case gclidb_FieldId_gtype: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.gtype, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_default_url: {
             retval = algo::cstring_ReadStrptrMaybe(parent.default_url, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -2476,21 +2291,20 @@ bool gclidb::Gtypeh_ReadFieldMaybe(gclidb::Gtypeh& parent, algo::strptr field, a
     switch(field_id) {
         case gclidb_FieldId_gtypeh: {
             retval = algo::Smallstr250_ReadStrptrMaybe(parent.gtypeh, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_gtype: {
             retval = false;
-            break;
-        }
+        } break;
         case gclidb_FieldId_name: {
             retval = false;
-            break;
-        }
+        } break;
         case gclidb_FieldId_header: {
             retval = algo::cstring_ReadStrptrMaybe(parent.header, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -2561,21 +2375,20 @@ bool gclidb::Gtypeprefix_ReadFieldMaybe(gclidb::Gtypeprefix& parent, algo::strpt
     switch(field_id) {
         case gclidb_FieldId_gtypeprefix: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.gtypeprefix, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_gtype: {
             retval = false;
-            break;
-        }
+        } break;
         case gclidb_FieldId_prefix: {
             retval = false;
-            break;
-        }
+        } break;
         case gclidb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -2646,57 +2459,47 @@ bool gclidb::Issue_ReadFieldMaybe(gclidb::Issue& parent, algo::strptr field, alg
     switch(field_id) {
         case gclidb_FieldId_issue: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.issue, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_project: {
             retval = false;
-            break;
-        }
+        } break;
         case gclidb_FieldId_iid: {
             retval = false;
-            break;
-        }
+        } break;
         case gclidb_FieldId_assignee: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.assignee, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_labels: {
             retval = algo::cstring_ReadStrptrMaybe(parent.labels, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_milestone_iid: {
             retval = algo::cstring_ReadStrptrMaybe(parent.milestone_iid, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_milestone_num: {
             retval = algo::cstring_ReadStrptrMaybe(parent.milestone_num, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_milestone: {
             retval = algo::cstring_ReadStrptrMaybe(parent.milestone, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_title: {
             retval = algo::cstring_ReadStrptrMaybe(parent.title, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_author: {
             retval = algo::cstring_ReadStrptrMaybe(parent.author, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_state: {
             retval = algo::cstring_ReadStrptrMaybe(parent.state, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_mr: {
             retval = algo::cstring_ReadStrptrMaybe(parent.mr, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_description: {
             retval = algo::cstring_ReadStrptrMaybe(parent.description, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -2794,29 +2597,26 @@ bool gclidb::Issuenote_ReadFieldMaybe(gclidb::Issuenote& parent, algo::strptr fi
     switch(field_id) {
         case gclidb_FieldId_issuenote: {
             retval = algo::Smallstr250_ReadStrptrMaybe(parent.issuenote, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_issue: {
             retval = false;
-            break;
-        }
+        } break;
         case gclidb_FieldId_nid: {
             retval = false;
-            break;
-        }
+        } break;
         case gclidb_FieldId_note: {
             retval = algo::cstring_ReadStrptrMaybe(parent.note, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_system: {
             retval = algo::cstring_ReadStrptrMaybe(parent.system, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_author: {
             retval = algo::cstring_ReadStrptrMaybe(parent.author, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -2893,25 +2693,23 @@ bool gclidb::Issuepipeline_ReadFieldMaybe(gclidb::Issuepipeline& parent, algo::s
     switch(field_id) {
         case gclidb_FieldId_issuepipeline: {
             retval = algo::Smallstr250_ReadStrptrMaybe(parent.issuepipeline, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_issue: {
             retval = false;
-            break;
-        }
+        } break;
         case gclidb_FieldId_id: {
             retval = false;
-            break;
-        }
+        } break;
         case gclidb_FieldId_id_in: {
             retval = algo::cstring_ReadStrptrMaybe(parent.id_in, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_status: {
             retval = algo::cstring_ReadStrptrMaybe(parent.status, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -2956,13 +2754,14 @@ bool gclidb::Label_ReadFieldMaybe(gclidb::Label& parent, algo::strptr field, alg
     switch(field_id) {
         case gclidb_FieldId_label: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.label, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -3033,25 +2832,23 @@ bool gclidb::Milestone_ReadFieldMaybe(gclidb::Milestone& parent, algo::strptr fi
     switch(field_id) {
         case gclidb_FieldId_milestone: {
             retval = algo::Smallstr200_ReadStrptrMaybe(parent.milestone, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_project: {
             retval = false;
-            break;
-        }
+        } break;
         case gclidb_FieldId_iid: {
             retval = false;
-            break;
-        }
+        } break;
         case gclidb_FieldId_description: {
             retval = algo::cstring_ReadStrptrMaybe(parent.description, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_title: {
             retval = algo::cstring_ReadStrptrMaybe(parent.title, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -3125,61 +2922,50 @@ bool gclidb::Mr_ReadFieldMaybe(gclidb::Mr& parent, algo::strptr field, algo::str
     switch(field_id) {
         case gclidb_FieldId_mr: {
             retval = algo::Smallstr150_ReadStrptrMaybe(parent.mr, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_proj: {
             retval = false;
-            break;
-        }
+        } break;
         case gclidb_FieldId_iid: {
             retval = false;
-            break;
-        }
+        } break;
         case gclidb_FieldId_state: {
             retval = algo::cstring_ReadStrptrMaybe(parent.state, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_title: {
             retval = algo::cstring_ReadStrptrMaybe(parent.title, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_description: {
             retval = algo::cstring_ReadStrptrMaybe(parent.description, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_source_branch: {
             retval = algo::cstring_ReadStrptrMaybe(parent.source_branch, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_source_repo: {
             retval = algo::cstring_ReadStrptrMaybe(parent.source_repo, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_reviewer: {
             retval = algo::cstring_ReadStrptrMaybe(parent.reviewer, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_author: {
             retval = algo::cstring_ReadStrptrMaybe(parent.author, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_pipeline_status: {
             retval = algo::Smallstr20_ReadStrptrMaybe(parent.pipeline_status, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_pipeline_id: {
             retval = algo::cstring_ReadStrptrMaybe(parent.pipeline_id, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_draft: {
             retval = algo::cstring_ReadStrptrMaybe(parent.draft, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_node_id: {
             retval = algo::cstring_ReadStrptrMaybe(parent.node_id, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -3280,41 +3066,35 @@ bool gclidb::Mrjob_ReadFieldMaybe(gclidb::Mrjob& parent, algo::strptr field, alg
     switch(field_id) {
         case gclidb_FieldId_mrjob: {
             retval = algo::Smallstr250_ReadStrptrMaybe(parent.mrjob, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_mr: {
             retval = false;
-            break;
-        }
+        } break;
         case gclidb_FieldId_job: {
             retval = false;
-            break;
-        }
+        } break;
         case gclidb_FieldId_ref: {
             retval = algo::Smallstr150_ReadStrptrMaybe(parent.ref, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_id: {
             retval = algo::cstring_ReadStrptrMaybe(parent.id, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_name: {
             retval = algo::cstring_ReadStrptrMaybe(parent.name, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_pipeline_id: {
             retval = algo::cstring_ReadStrptrMaybe(parent.pipeline_id, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_status: {
             retval = algo::cstring_ReadStrptrMaybe(parent.status, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_runner: {
             retval = algo::cstring_ReadStrptrMaybe(parent.runner, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -3400,29 +3180,26 @@ bool gclidb::Mrnote_ReadFieldMaybe(gclidb::Mrnote& parent, algo::strptr field, a
     switch(field_id) {
         case gclidb_FieldId_system: {
             retval = algo::cstring_ReadStrptrMaybe(parent.system, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_mrnote: {
             retval = algo::Smallstr250_ReadStrptrMaybe(parent.mrnote, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_nid: {
             retval = false;
-            break;
-        }
+        } break;
         case gclidb_FieldId_note: {
             retval = algo::cstring_ReadStrptrMaybe(parent.note, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_author: {
             retval = algo::cstring_ReadStrptrMaybe(parent.author, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_mr: {
             retval = false;
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -3470,17 +3247,17 @@ bool gclidb::User_ReadFieldMaybe(gclidb::User& parent, algo::strptr field, algo:
     switch(field_id) {
         case gclidb_FieldId_user: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.user, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_id: {
             retval = u32_ReadStrptrMaybe(parent.id, strval);
-            break;
-        }
+        } break;
         case gclidb_FieldId_name: {
             retval = algo::cstring_ReadStrptrMaybe(parent.name, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);

@@ -323,6 +323,17 @@ inline  dev::Msgfile::Msgfile() {
     dev::Msgfile_Init(*this);
 }
 
+// --- dev.Netproto..Init
+// Set all fields to initial values.
+inline void dev::Netproto_Init(dev::Netproto& parent) {
+    parent.tls = bool(false);
+}
+
+// --- dev.Netproto..Ctor
+inline  dev::Netproto::Netproto() {
+    dev::Netproto_Init(*this);
+}
+
 // --- dev.Noindent..Ctor
 inline  dev::Noindent::Noindent() {
 }
@@ -382,20 +393,24 @@ inline  dev::Pkgkey::Pkgkey(const algo::strptr& in_pkgkey, const algo::Comment& 
  {
 }
 
-// --- dev.Readme..Init
+// --- dev.Prototransport..Ctor
+inline  dev::Prototransport::Prototransport() {
+}
+
+// --- dev.Readmefile..Init
 // Set all fields to initial values.
-inline void dev::Readme_Init(dev::Readme& parent) {
+inline void dev::Readmefile_Init(dev::Readmefile& parent) {
     parent.inl = bool(false);
     parent.sandbox = bool(false);
 }
 
-// --- dev.Readme..Ctor
-inline  dev::Readme::Readme() {
-    dev::Readme_Init(*this);
+// --- dev.Readmefile..Ctor
+inline  dev::Readmefile::Readmefile() {
+    dev::Readmefile_Init(*this);
 }
 
-// --- dev.Readme..FieldwiseCtor
-inline  dev::Readme::Readme(const algo::strptr& in_gitfile, bool in_inl, bool in_sandbox, const algo::strptr& in_filter, const algo::Comment& in_comment)
+// --- dev.Readmefile..FieldwiseCtor
+inline  dev::Readmefile::Readmefile(const algo::strptr& in_gitfile, bool in_inl, bool in_sandbox, const algo::strptr& in_filter, const algo::Comment& in_comment)
     : gitfile(in_gitfile)
     , inl(in_inl)
     , sandbox(in_sandbox)
@@ -406,6 +421,10 @@ inline  dev::Readme::Readme(const algo::strptr& in_gitfile, bool in_inl, bool in
 
 // --- dev.Readmesort..Ctor
 inline  dev::Readmesort::Readmesort() {
+}
+
+// --- dev.Rpm..Ctor
+inline  dev::Rpm::Rpm() {
 }
 
 // --- dev.Sandbox..Ctor
@@ -539,6 +558,17 @@ inline  dev::ToolOpt::ToolOpt(const algo::strptr& in_tool_opt, const algo::Comme
  {
 }
 
+// --- dev.Transport..Init
+// Set all fields to initial values.
+inline void dev::Transport_Init(dev::Transport& parent) {
+    parent.ip = bool(false);
+}
+
+// --- dev.Transport..Ctor
+inline  dev::Transport::Transport() {
+    dev::Transport_Init(*this);
+}
+
 // --- dev.Uname..Ctor
 inline  dev::Uname::Uname() {
 }
@@ -639,6 +669,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Msgfile &
     return str;
 }
 
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Netproto &row) {// cfmt:dev.Netproto.String
+    dev::Netproto_Print(const_cast<dev::Netproto&>(row), str);
+    return str;
+}
+
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Noindent &row) {// cfmt:dev.Noindent.String
     dev::Noindent_Print(const_cast<dev::Noindent&>(row), str);
     return str;
@@ -659,13 +694,23 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Pkgkey &r
     return str;
 }
 
-inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Readme &row) {// cfmt:dev.Readme.String
-    dev::Readme_Print(const_cast<dev::Readme&>(row), str);
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Prototransport &row) {// cfmt:dev.Prototransport.String
+    dev::Prototransport_Print(const_cast<dev::Prototransport&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Readmefile &row) {// cfmt:dev.Readmefile.String
+    dev::Readmefile_Print(const_cast<dev::Readmefile&>(row), str);
     return str;
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Readmesort &row) {// cfmt:dev.Readmesort.String
     dev::Readmesort_Print(const_cast<dev::Readmesort&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Rpm &row) {// cfmt:dev.Rpm.String
+    dev::Rpm_Print(const_cast<dev::Rpm&>(row), str);
     return str;
 }
 
@@ -736,6 +781,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Timefmt &
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::ToolOpt &row) {// cfmt:dev.ToolOpt.String
     dev::ToolOpt_Print(const_cast<dev::ToolOpt&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Transport &row) {// cfmt:dev.Transport.String
+    dev::Transport_Print(const_cast<dev::Transport&>(row), str);
     return str;
 }
 

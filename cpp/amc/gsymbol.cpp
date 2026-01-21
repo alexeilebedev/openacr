@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2023 Astra
 // Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
 //
@@ -45,7 +45,7 @@ void amc::gen_ns_gsymbol() {
     amc::_db.genctx.p_field = NULL;
     ind_beg(amc::ns_c_gsymbol_curs, gsymbol,ns) {
         algo_lib::Regx regx;
-        (void)Regx_ReadSql(regx, tempstr() <<"%("<<gsymbol.inc<<")%", true);
+        Regx_ReadSql(regx, gsymbol.inc, false);
         algo_lib::MmapFile file;
         tempstr fname(SsimFname(amc::_db.cmdline.in_dir,ssimfile_Get(gsymbol)));
         vrfy(MmapFile_Load(file,fname),tempstr()<<"amc.load"<<Keyval("filename",fname));

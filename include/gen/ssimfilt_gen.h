@@ -308,6 +308,9 @@ void                 ind_unstablefld_Remove(ssimfilt::FUnstablefld& row) __attri
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:ssimfilt.FDb.ind_unstablefld.Reserve
 void                 ind_unstablefld_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:ssimfilt.FDb.ind_unstablefld.AbsReserve
+void                 ind_unstablefld_AbsReserve(int n) __attribute__((nothrow));
 
 // cursor points to valid item
 // func:ssimfilt.FDb.tuple_curs.Reset
@@ -368,9 +371,10 @@ void                 FDb_Uninit() __attribute__((nothrow));
 // global access: unstablefld (Lary, by rowid)
 // global access: ind_unstablefld (Thash, hash field field)
 struct FUnstablefld { // ssimfilt.FUnstablefld
-    ssimfilt::FUnstablefld*   ind_unstablefld_next;   // hash next
-    algo::Smallstr100         field;                  //
-    algo::Comment             comment;                //
+    ssimfilt::FUnstablefld*   ind_unstablefld_next;      // hash next
+    u32                       ind_unstablefld_hashval;   // hash value
+    algo::Smallstr100         field;                     //
+    algo::Comment             comment;                   //
     // func:ssimfilt.FUnstablefld..AssignOp
     inline ssimfilt::FUnstablefld& operator =(const ssimfilt::FUnstablefld &rhs) = delete;
     // func:ssimfilt.FUnstablefld..CopyCtor

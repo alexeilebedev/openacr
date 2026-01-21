@@ -47,15 +47,15 @@ Usage: abt [[-target:]<regx>] [options]
     -disas      regx    ""      Regex of function to disassemble
     -report             Y       Print final report
     -jcdb       string  ""      Create JSON compilation database in specified file
-    -cache      int     auto    Cache mode (auto|none|gcache|gcache-force|ccache)
+    -cache      enum    auto    Cache mode (auto|none|gcache|gcache-force|ccache)
                                     auto  Select cache automatically among enabled
                                     none  No cache
                                     gcache  Select gcache if enabled (no cache if disabled)
                                     gcache-force  Pass --force to gcache (no cache if disabled)
                                     ccache  Select ccache if enabled (no cache if disabled)
     -shortlink                  Try to shorten sort link if possible
-    -verbose    int             Verbosity level (0..255); alias -v; cumulative
-    -debug      int             Debug level (0..255); alias -d; cumulative
+    -verbose    flag            Verbosity level (0..255); alias -v; cumulative
+    -debug      flag            Debug level (0..255); alias -d; cumulative
     -help                       Print help and exit; alias -h
     -version                    Print version and exit
     -signature                  Show signatures and exit; alias -sig
@@ -232,7 +232,7 @@ dev.include  include:cpp/abt/ood.cpp:include/abt.h  sys:N  comment:""
 dev.include  include:cpp/abt/opt.cpp:include/abt.h  sys:N  comment:""
 dev.include  include:cpp/abt/scan.cpp:include/algo.h  sys:N  comment:""
 dev.include  include:cpp/abt/scan.cpp:include/abt.h  sys:N  comment:""
-abt.config  builddir:***  ood_src:***  ood_target:***  cache:***
+abt.config  builddir:Linux-g++.release-x86_64  ood_src:***  ood_target:***  cache:***
 report.abt  n_target:***  time:***  hitrate:***  pch_hitrate:***  n_warn:0  n_err:0  n_install:***
 ```
 
@@ -348,22 +348,22 @@ instead of `../build/Linux-g++.release-x86_64`.
 `abt` takes the following tables on input:
 |Ssimfile|Comment|
 |---|---|
-|[dmmeta.ns](/txt/ssimdb/dmmeta/ns.md)|Namespace (for in-memory database, protocol, etc)|
 |[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
-|[dev.uname](/txt/ssimdb/dev/uname.md)|List of known unames|
-|[dev.tool_opt](/txt/ssimdb/dev/tool_opt.md)|Compiler/linker options to use|
-|[dev.target](/txt/ssimdb/dev/target.md)|Build target|
-|[dev.syslib](/txt/ssimdb/dev/syslib.md)|Registered system library|
-|[dev.targsyslib](/txt/ssimdb/dev/targsyslib.md)|Use of system library by target|
-|[dev.targsrc](/txt/ssimdb/dev/targsrc.md)|List of sources for target|
-|[dev.targdep](/txt/ssimdb/dev/targdep.md)|Dependency between targets|
-|[dev.syscmd](/txt/ssimdb/dev/syscmd.md)|System command to execute|
-|[dev.syscmddep](/txt/ssimdb/dev/syscmddep.md)|Dependency between two commands|
-|[dev.include](/txt/ssimdb/dev/include.md)|A site where one file includes another|
-|[dev.compiler](/txt/ssimdb/dev/compiler.md)|One of the known compilers|
-|[dev.cfg](/txt/ssimdb/dev/cfg.md)|Compiler configuration|
 |[dev.arch](/txt/ssimdb/dev/arch.md)|System architecture|
 |[dev.builddir](/txt/ssimdb/dev/builddir.md)|Directory where object files/executables go. Determines compile/link options|
+|[dev.cfg](/txt/ssimdb/dev/cfg.md)|Compiler configuration|
+|[dev.compiler](/txt/ssimdb/dev/compiler.md)|One of the known compilers|
+|[dev.include](/txt/ssimdb/dev/include.md)|A site where one file includes another|
+|[dmmeta.ns](/txt/ssimdb/dmmeta/ns.md)|Namespace (for in-memory database, protocol, etc)|
+|[dev.syscmd](/txt/ssimdb/dev/syscmd.md)|System command to execute|
+|[dev.syscmddep](/txt/ssimdb/dev/syscmddep.md)|Dependency between two commands|
+|[dev.syslib](/txt/ssimdb/dev/syslib.md)|Registered system library|
+|[dev.targdep](/txt/ssimdb/dev/targdep.md)|Dependency between targets|
+|[dev.target](/txt/ssimdb/dev/target.md)|Build target|
+|[dev.targsrc](/txt/ssimdb/dev/targsrc.md)|List of sources for target|
+|[dev.targsyslib](/txt/ssimdb/dev/targsyslib.md)|Use of system library by target|
+|[dev.tool_opt](/txt/ssimdb/dev/tool_opt.md)|Compiler/linker options to use|
+|[dev.uname](/txt/ssimdb/dev/uname.md)|List of known unames|
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
 

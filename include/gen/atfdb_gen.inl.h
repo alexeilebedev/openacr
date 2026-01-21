@@ -58,14 +58,6 @@ inline  atfdb::Citest::Citest() {
     atfdb::Citest_Init(*this);
 }
 
-// --- atfdb.Comptest..Init
-// Set all fields to initial values.
-inline void atfdb::Comptest_Init(atfdb::Comptest& parent) {
-    parent.timeout = i32(10);
-    parent.memcheck = bool(true);
-    parent.exit_code = u8(0);
-}
-
 // --- atfdb.Comptest..Ctor
 inline  atfdb::Comptest::Comptest() {
     atfdb::Comptest_Init(*this);
@@ -153,6 +145,10 @@ inline  atfdb::Tmsg::Tmsg() {
 inline  atfdb::Unittest::Unittest() {
 }
 
+// --- atfdb.Var..Ctor
+inline  atfdb::Var::Var() {
+}
+
 inline algo::cstring &algo::operator <<(algo::cstring &str, const atfdb::Cijob &row) {// cfmt:atfdb.Cijob.String
     atfdb::Cijob_Print(const_cast<atfdb::Cijob&>(row), str);
     return str;
@@ -215,5 +211,10 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const atfdb::Tfilt &
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const atfdb::Tmsg &row) {// cfmt:atfdb.Tmsg.String
     atfdb::Tmsg_Print(const_cast<atfdb::Tmsg&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const atfdb::Var &row) {// cfmt:atfdb.Var.String
+    atfdb::Var_Print(const_cast<atfdb::Var&>(row), str);
     return str;
 }

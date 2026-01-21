@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2012 AlgoEngineering LLC
@@ -76,7 +76,7 @@ void amc::gen_usedns() {
 void amc::gen_include() {
     amc::GenInclude();
 
-    ind_beg(amc::_db_ns_curs, ns,amc::_db) if (ch_N(ns.ns)) {
+    ind_beg(amc::_db_ns_curs, ns,amc::_db) if (ns.c_nscpp && ch_N(ns.ns)) {
         tempstr glob_text;
         if (ExeQ(ns)) {
             glob_text << eol;
@@ -168,31 +168,29 @@ void amc::gen_check_cheapcopy() {
 // ----------------------------------------------------------------------------
 
 void amc::gen_check_static() {
-    // check if gstatic field has references to fields which are finput
-    ind_beg(amc::_db_gstatic_curs, gstatic, amc::_db) {
-        // Ptrary can be both xref and non-xref -- for now assume it's xref
-        ind_beg(amc::ctype_c_field_curs, field, *gstatic.p_field->p_arg) {
-            bool isxref = field.p_reftype->isxref;
-            isxref |= (field.reftype == dmmeta_Reftype_reftype_Ptrary);
-            isxref |= (field.reftype == dmmeta_Reftype_reftype_Ptr);
-            isxref |= (field.reftype == dmmeta_Reftype_reftype_Hook);
-            amc::FField *inst = amc::FirstInst(*field.p_arg);
-            if (!isxref && inst && inst->c_finput) {
-                amccheck(0,"amc.gstatic_uses_finput"
-                         <<Keyval("ctype",gstatic.p_field->arg)
-                         <<Keyval("uses",field.arg)
-                         <<Keyval("via",field.field)
-                         <<Keyval("reftype",field.reftype)
-                         <<Keyval("comment","A statically loaded table cannot refer to a dynamically loaded one."));
-            }
-            if (!isxref && inst && inst->c_gstatic && gstatic.p_field->p_arg->topo_idx < inst->c_gstatic->p_field->p_arg->topo_idx) {
+    ind_beg(amc::_db_xref_curs, xref, amc::_db) {
+        amc::FField *parent = FirstInst(*xref.p_field->p_ctype);
+        amc::FField *child = FirstInst(*xref.p_field->p_arg);
+        if (xref.p_field->reftype == dmmeta_Reftype_reftype_Upptr) {
+            algo::TSwap(child,parent);
+        }
+        if (child && parent && child->c_gstatic && parent->c_gstatic) {
+            if (child->c_gstatic->rowid < parent->c_gstatic->rowid) {
                 amccheck(0,"amc.gstatic_dep"
-                         <<Keyval("ctype",gstatic.p_field->arg)
-                         <<Keyval("uses",field.arg)
-                         <<Keyval("via",field.field)
-                         <<Keyval("comment","An earlier static table is referring to a later table"));
+                         <<Keyval("ctype",child->arg)
+                         <<Keyval("uses",parent->arg)
+                         <<Keyval("via",xref.field)
+                         <<Keyval("comment","An earlier static table is referring to a later table. To fix: `acr gstatic -e` and change rowids"));
             }
-        }ind_end;
+        }
+        if (child && parent && child->c_gstatic && parent->c_finput) {
+            amccheck(0,"amc.gstatic_uses_finput"
+                     <<Keyval("ctype",child->arg)
+                     <<Keyval("uses",parent->arg)
+                     <<Keyval("via",xref.field)
+                     <<Keyval("reftype",xref.p_field->reftype)
+                     <<Keyval("comment","A statically loaded table cannot refer to a dynamically loaded one."));
+        }
     }ind_end;
 }
 
@@ -432,7 +430,7 @@ static void CheckReftype(amc::FField &field, strptr reftype, bool haschild, strp
 void amc::gen_check_reftype() {
     ind_beg(amc::_db_field_curs, field,amc::_db) {
         tempstr err;
-        if (field.p_ctype->c_varlenfld == &field && !(field.reftype == dmmeta_Reftype_reftype_Varlen)) {
+        if (ctype_zd_varlenfld_InLlistQ(field) && !(field.reftype == dmmeta_Reftype_reftype_Varlen)) {
             err = "Field reftype must be Varlen";
         }
         CheckReftype(field, dmmeta_Reftype_reftype_Hook, field.c_hook, dmmeta_Ssimfile_ssimfile_dmmeta_hook, err);
@@ -561,7 +559,7 @@ static bool NeedFirstchangedQ(amc::FField &field) {
 // -----------------------------------------------------------------------------
 
 void amc::gen_prep_field() {
-    // other field stuff -- determine ctype, set c_varlenfld, etc.
+    // other field stuff -- determine ctype, set zd_varlenfld, etc.
     ind_beg(amc::_db_field_curs, field,amc::_db) {
         amc::FCtype& ctype     = *field.p_ctype;
 
@@ -586,7 +584,7 @@ void amc::gen_prep_field() {
             field.cpp_type = amc::NsToCpp(field.p_arg->ctype);
         }
         if (field.reftype == dmmeta_Reftype_reftype_Varlen) {
-            amc::c_varlenfld_InsertMaybe(ctype,field);
+            amc::zd_varlenfld_Insert(ctype,field);
         }
         if (field.reftype == dmmeta_Reftype_reftype_Opt) {
             amc::c_optfld_InsertMaybe(ctype,field);
@@ -783,7 +781,7 @@ void amc::gen_xref2() {
 
 void amc::gen_select_ns() {
     ind_beg(amc::_db_ns_curs, ns,amc::_db) {
-        ns.select = ns.c_nscpp;
+        ns.select = ns.c_nscpp || ns.c_nsjs;
     }ind_end;
 }
 
@@ -855,7 +853,11 @@ void amc::gen_bitfldenum() {
             fconst.fconst = tempstr() << srcfield.field << "/" << name_Get(*bitfld.p_field);
             fconst.comment = algo::Comment(bitfld.field);
             // cpp_type has not yet defined, assume cpp_type = ctype
-            fconst.value = algo::CppExpr(tempstr() << "("<< srcfield.p_arg->ctype << "(1)<<" << bitfld.offset << ")");
+            // fconst.value = algo::CppExpr(tempstr() << "("<< srcfield.p_arg->ctype << "(1)<<" << bitfld.offset << ")");
+            // AP: needs to be compatible with js, do not use native c types
+            cstring value;
+            algo::u64_PrintHex(u64(1)<<bitfld.offset,value,0);
+            fconst.value = algo::CppExpr(value);
             amc::fconst_InsertMaybe(fconst);
         }ind_end;
     }ind_end;
@@ -1059,20 +1061,32 @@ void amc::gen_newfield_ptrary() {
     // add membership flag to unique ptrarys
     // check that ptrary target is in the same namespace --
     // we will be extending it with a membership flag.
-    ind_beg(amc::_db_ptrary_curs, ptrary, amc::_db) if (ptrary.unique) {
-        vrfy(ptrary.p_field->p_ctype->p_ns == ptrary.p_field->p_arg->p_ns
-             ,tempstr()<<"amc.foreign_ptrary"
-             <<Keyval("field",ptrary.field)
-             <<Keyval("arg",ptrary.p_field->arg)
-             );
-        dmmeta::Field newfield;
-        tempstr refname = amc::Refname(*ptrary.p_field->p_ctype);
-        newfield.field         = tempstr()<<ptrary.p_field->arg<<"."<<refname<<"_"<<name_Get(*ptrary.p_field)<<"_in_ary";
-        newfield.arg           = "bool";
-        newfield.dflt.value    = "false";
-        newfield.comment.value = "membership flag";
-        newfield.reftype       = dmmeta_Reftype_reftype_Val;
-        InsField(newfield);
+    ind_beg(amc::_db_ptrary_curs, ptrary, amc::_db) {
+        if (ptrary.unique) {
+            vrfy(ptrary.p_field->p_ctype->p_ns == ptrary.p_field->p_arg->p_ns
+                 ,tempstr()<<"amc.foreign_ptrary"
+                 <<Keyval("field",ptrary.field)
+                 <<Keyval("arg",ptrary.p_field->arg)
+                 );
+            dmmeta::Field newfield;
+            tempstr xf;
+            if (!GlobalQ(*ptrary.p_field->p_ctype)) {
+                xf << amc::Refname(*ptrary.p_field->p_ctype) << "_";
+            }
+            if (ptrary.heaplike) {
+                newfield.field         = tempstr()<<ptrary.p_field->arg<<"."<<xf<<name_Get(*ptrary.p_field)<<"_idx";
+                newfield.arg           = "i32";
+                newfield.dflt.value    = "-1";
+                newfield.comment.value = "Array index (-1 = not in array)";
+            } else {
+                newfield.field         = tempstr()<<ptrary.p_field->arg<<"."<<xf<<name_Get(*ptrary.p_field)<<"_in_ary";
+                newfield.arg           = "bool";
+                newfield.dflt.value    = "false";
+                newfield.comment.value = "membership flag";
+            }
+            newfield.reftype       = dmmeta_Reftype_reftype_Val;
+            InsField(newfield);
+        }
     }ind_end;
 }
 
@@ -1148,6 +1162,15 @@ void amc::gen_ns_check_pack() {
 
 // -----------------------------------------------------------------------------
 
+// A singly linked list requires scanning to locate the element to delete.
+// It is considered an access path with quadratic deletion cost.
+// So is a Ptrary.
+bool amc::SlowDelQ(amc::FField &field) {
+    return field.c_xref
+        && ((field.c_ptrary && !field.c_ptrary->heaplike)
+            ||(field.c_llist && !field.c_llist->p_listtype->haveprev));
+}
+
 void amc::gen_ns_check_path() {
     amc::FNs &ns =*amc::_db.c_ns;
     ind_beg(amc::ns_c_ctype_curs, ctype, ns) {
@@ -1155,21 +1178,22 @@ void amc::gen_ns_check_path() {
         int ndel=0;
         ind_beg(amc::ctype_zd_access_curs,access,ctype) {
             ndel += access.p_reftype->del;
-            if (access.c_xref) {// don't count raw ptrary
-                nslow += access.reftype==dmmeta_Reftype_reftype_Ptrary;
-                nslow += access.reftype==dmmeta_Reftype_reftype_Llist
-                    && access.c_llist && !access.c_llist->p_listtype->haveprev;
-            }
+            nslow += SlowDelQ(access);
         }ind_end;
         bool good=ndel==0 || nslow<2;
         amccheck(good
                  , "amc.many_slow_paths"
                  <<Keyval("ctype",ctype.ctype)
-                 <<Keyval("npaths",nslow)
-                 <<Keyval("comment","Impractically slow access path"));
+                 <<Keyval("ndel",ndel)
+                 <<Keyval("nslow",nslow)
+                 <<Keyval("comment","Access path with quadratic deletion cost found"));
         if (!good) {
             ind_beg(amc::ctype_zd_access_curs,access,ctype) {
-                prerr("# "<<access.field<<" "<<access.reftype);
+                prerr("amc.access_path"
+                      <<Keyval("field",access.field)
+                      <<Keyval("reftype",access.reftype)
+                      <<Keyval("del",access.p_reftype->del)
+                      <<Keyval("slowdel",SlowDelQ(access)));
             }ind_end;
         }
     }ind_end;
@@ -1178,7 +1202,7 @@ void amc::gen_ns_check_path() {
 // -----------------------------------------------------------------------------
 
 void amc::gen_ns_pkeytypedef() {
-    ind_beg(amc::_db_ns_curs, ns, amc::_db) if (ns.select) {
+    ind_beg(amc::_db_ns_curs, ns, amc::_db) if (ns.c_nscpp) {
         amc::BeginNsBlock(*ns.hdr, ns, "");
         ind_beg(amc::ns_c_ctype_curs, ctype,ns) if (ctype.c_pkeyfield) {
             *ns.hdr<<"    typedef"
@@ -1193,7 +1217,7 @@ void amc::gen_ns_pkeytypedef() {
 // -----------------------------------------------------------------------------
 
 void amc::gen_ns_enums() {
-    ind_beg(amc::_db_ns_curs, ns, amc::_db) if (ns.select) {
+    ind_beg(amc::_db_ns_curs, ns, amc::_db) if (ns.c_nscpp) {
         *ns.hdr<<"// gen:ns_enums" << eol;
         ind_beg(amc::ns_c_ctype_curs, ctype, ns) {
             amc::Main_GenEnum(ns, ctype); // experimental
@@ -1230,60 +1254,64 @@ void amc::gen_ns_funcindex() {
 // to the cpp file
 void amc::gen_ns_print_proto() {
     amc::FNs &ns =*amc::_db.c_ns;
-    algo_lib::Replscope R;
-    Set(R, "$ns", ns.ns);
-    amc::BeginNsBlock(*ns.cpp, ns, "");
-    ind_beg(amc::ns_c_func_curs, func,ns) {
-        bool print = func.priv && !func.ismacro && !func.globns && !func.disable && !func.member;
-        if (print) {
-            tempstr proto;
-            PrintFuncProto(func, NULL, proto);
-            algo::InsertIndent(*ns.cpp, proto, 1);
-        }
-    }ind_end;
-    amc::EndNsBlock(*ns.cpp, ns, "");
-    amc::_db.lim_ind_func=amc::ind_func_N();
+    if (ns.c_nscpp) {
+        algo_lib::Replscope R;
+        Set(R, "$ns", ns.ns);
+        amc::BeginNsBlock(*ns.cpp, ns, "");
+        ind_beg(amc::ns_c_func_curs, func,ns) {
+            bool print = func.priv && !func.ismacro && !func.globns && !func.disable && !func.member;
+            if (print) {
+                tempstr proto;
+                PrintFuncProto(func, NULL, proto, false);
+                algo::InsertIndent(*ns.cpp, proto, 1);
+            }
+        }ind_end;
+        amc::EndNsBlock(*ns.cpp, ns, "");
+        amc::_db.lim_ind_func=amc::ind_func_N();
+    }
 }
 
 void amc::gen_ns_print_struct() {
     amc::FNs &ns =*amc::_db.c_ns;
-    amc::BeginNsBlock(*ns.hdr, ns, "");
-    ind_beg(amc::ns_c_ctype_curs, ctype,ns) {
-        if (!ctype.c_cextern) {
-            amc::GenStruct(ns, ctype);
-        }
-        ind_beg(amc::ctype_c_field_curs, field,ctype) {
-            int n_hdr = ch_N(*ns.hdr);
-            ind_beg(amc::field_c_ffunc_curs, ffunc,field) {
+    if (ns.c_nscpp) {
+        amc::BeginNsBlock(*ns.hdr, ns, "");
+        ind_beg(amc::ns_c_ctype_curs, ctype,ns) {
+            if (!ctype.c_cextern) {
+                amc::GenStruct(ns, ctype);
+            }
+            ind_beg(amc::ctype_c_field_curs, field,ctype) {
+                int n_hdr = ch_N(*ns.hdr);
+                ind_beg(amc::field_c_ffunc_curs, ffunc,field) {
+                    if (!ffunc.printed && !ffunc.ismacro && !ffunc.globns && !ffunc.disable) {
+                        if (!ffunc.priv && !ffunc.member) {
+                            tempstr proto;
+                            PrintFuncProto(ffunc,NULL,proto, false);// goes to header
+                            algo::InsertIndent(*ns.hdr, proto, 0);
+                        }
+                        PrintFuncBody(ns,ffunc);// goes to source
+                        ffunc.printed=true;
+                    }
+                }ind_end;
+                if (ch_N(*ns.hdr) > n_hdr) {
+                    *ns.hdr << eol;
+                }
+            }ind_end;
+            ind_beg(amc::ctype_c_ffunc_curs, ffunc, ctype) {
                 if (!ffunc.printed && !ffunc.ismacro && !ffunc.globns && !ffunc.disable) {
                     if (!ffunc.priv && !ffunc.member) {
                         tempstr proto;
-                        PrintFuncProto(ffunc,NULL,proto);// goes to header
+                        PrintFuncProto(ffunc,NULL,proto,false);// goes to header
                         algo::InsertIndent(*ns.hdr, proto, 0);
                     }
-                    PrintFuncBody(ns,ffunc);// goes to source
+                    if (!ffunc.extrn && !ffunc.deleted) {
+                        PrintFuncBody(ns,ffunc);// goes to source
+                    }
                     ffunc.printed=true;
                 }
             }ind_end;
-            if (ch_N(*ns.hdr) > n_hdr) {
-                *ns.hdr << eol;
-            }
         }ind_end;
-        ind_beg(amc::ctype_c_ffunc_curs, ffunc, ctype) {
-            if (!ffunc.printed && !ffunc.ismacro && !ffunc.globns && !ffunc.disable) {
-                if (!ffunc.priv && !ffunc.member) {
-                    tempstr proto;
-                    PrintFuncProto(ffunc,NULL,proto);// goes to header
-                    algo::InsertIndent(*ns.hdr, proto, 0);
-                }
-                if (!ffunc.extrn && !ffunc.deleted) {
-                    PrintFuncBody(ns,ffunc);// goes to source
-                }
-                ffunc.printed=true;
-            }
-        }ind_end;
-    }ind_end;
-    amc::EndNsBlock(*ns.hdr, ns, "");
+        amc::EndNsBlock(*ns.hdr, ns, "");
+    }
 }
 
 void amc::gen_ns_curstext() {
@@ -1305,36 +1333,38 @@ void amc::gen_ns_pnew() {
 
 void amc::gen_ns_func() {
     amc::FNs &ns =*amc::_db.c_ns;
-    algo_lib::Replscope R;
-    Set(R, "$ns", ns.ns);
-    amc::BeginNsBlock(*ns.hdr, ns, "");
-    ind_beg(amc::ns_c_func_curs, func,ns) {
-        if (!func.printed && !func.ismacro && !func.disable && !func.member && !func.globns) {
-            if (!func.priv) {
-                tempstr proto;
-                PrintFuncProto(func, NULL, proto);
-                algo::InsertIndent(*ns.hdr, proto, 0);
+    if (ns.c_nscpp) {
+        algo_lib::Replscope R;
+        Set(R, "$ns", ns.ns);
+        amc::BeginNsBlock(*ns.hdr, ns, "");
+        ind_beg(amc::ns_c_func_curs, func,ns) {
+            if (!func.printed && !func.ismacro && !func.disable && !func.member && !func.globns) {
+                if (!func.priv) {
+                    tempstr proto;
+                    PrintFuncProto(func, NULL, proto, false);
+                    algo::InsertIndent(*ns.hdr, proto, 0);
+                }
+                if (!func.extrn && !func.deleted) {
+                    PrintFuncBody(ns, func);
+                }
+                func.printed = true;
             }
-            if (!func.extrn && !func.deleted) {
-                PrintFuncBody(ns, func);
+        }ind_end;
+        amc::EndNsBlock(*ns.hdr, ns, "");
+        ind_beg(amc::ns_c_func_curs, func,ns) {
+            if (!func.printed && !func.ismacro && !func.disable && !func.member && func.globns) {
+                if (!func.priv) {
+                    tempstr proto;
+                    PrintFuncProto(func, NULL, proto, false);
+                    algo::InsertIndent(*ns.hdr, proto, 0);
+                }
+                if (!func.extrn && !func.deleted) {
+                    PrintFuncBody(ns, func);
+                }
+                func.printed = true;
             }
-            func.printed = true;
-        }
-    }ind_end;
-    amc::EndNsBlock(*ns.hdr, ns, "");
-    ind_beg(amc::ns_c_func_curs, func,ns) {
-        if (!func.printed && !func.ismacro && !func.disable && !func.member && func.globns) {
-            if (!func.priv) {
-                tempstr proto;
-                PrintFuncProto(func, NULL, proto);
-                algo::InsertIndent(*ns.hdr, proto, 0);
-            }
-            if (!func.extrn && !func.deleted) {
-                PrintFuncBody(ns, func);
-            }
-            func.printed = true;
-        }
-    }ind_end;
+        }ind_end;
+    }
 }
 
 // -----------------------------------------------------------------------------
@@ -1376,14 +1406,16 @@ static void GenOperators(algo_lib::Replscope &R, amc::FNs &ns, amc::FCtype &ctyp
 
 void amc::gen_ns_operators() {
     amc::FNs &ns =*amc::_db.c_ns;
-    algo_lib::Replscope R;
-    // generate "operator <<" for every print function...
-    *ns.hdr<<"// gen:ns_operators" << eol;
-    *ns.hdr << "namespace algo {" << eol;
-    ind_beg(amc::ns_c_ctype_curs, ctype, ns) {
-        GenOperators(R,ns,ctype);
-    }ind_end;
-    *ns.hdr << "}" << eol;
+    if (ns.c_nscpp) {
+        algo_lib::Replscope R;
+        // generate "operator <<" for every print function...
+        *ns.hdr<<"// gen:ns_operators" << eol;
+        *ns.hdr << "namespace algo {" << eol;
+        ind_beg(amc::ns_c_ctype_curs, ctype, ns) {
+            GenOperators(R,ns,ctype);
+        }ind_end;
+        *ns.hdr << "}" << eol;
+    }
 }
 
 // -----------------------------------------------------------------------------
@@ -1453,7 +1485,15 @@ void amc::gen_proc() {
 
 void amc::gen_check_fcurs() {
     ind_beg(_db_fcurs_curs,fcurs,_db) {
-        tempstr key = amcdb::Tfunc_Concat_tclass_name(fcurs.p_field->reftype, curstype_Get(fcurs));
+        // A field can correspond to several template classes
+        // but that relationship is elucidated in the function GenTclass_Field
+        // and not known anywhere else; For existing cursors, the reftype alone is sufficient,
+        // plus Bitset tclass.
+        tempstr tclass(fcurs.p_field->reftype);
+        if (fcurs.p_field->c_fbitset) {
+            tclass=amc_tclass_Bitset.tclass;
+        }
+        tempstr key = amcdb::Tfunc_Concat_tclass_name(tclass, curstype_Get(fcurs));
         amc::FTfunc *tfunc=ind_tfunc_Find(key);
         if (!tfunc || !tfunc->c_tcurs) {
             prlog("amc.cursory_examination"
@@ -1468,7 +1508,7 @@ void amc::gen_check_fcurs() {
 void amc::gen_check_varlen() {
     ind_beg(amc::_db_ctype_curs,ctype,amc::_db) {
         // messages with Varlen etc cannot be cheap copy
-        if ((ctype.c_varlenfld || ctype.c_optfld) && ctype.c_cpptype && ctype.c_cpptype->cheap_copy) {
+        if ((!zd_varlenfld_EmptyQ(ctype) || ctype.c_optfld) && ctype.c_cpptype && ctype.c_cpptype->cheap_copy) {
             prlog("ams.a_little_too_cheap"
                   <<Keyval("ctype",ctype.ctype)
                   <<Keyval("comment","Types with Varlen/Opt fields should not be marked cheap_copy. Merge the following line to fix error"));
@@ -1503,4 +1543,65 @@ void amc::gen_sortssimfile() {
     ind_beg(amc::_db_c_ssimfile_sorted_curs,ssimfile,_db) {
         ssimfile.topoindex=ind_curs(ssimfile).index;
     }ind_end;
+}
+
+void amc::gen_create_userfunc() {
+    ind_beg(amc::_db_func_curs, func, _db) {
+        if (func.extrn) {
+            amc::FUserfunc &userfunc = userfunc_Alloc();
+            userfunc.userfunc = func.func;
+            userfunc.acrkey   = func.acrkey;
+            userfunc.cppname  = tempstr()<<ns_Get(func)<<"."<<Pathcomp(func.proto,"(LL");
+        }
+    }ind_end;
+}
+
+void amc::gen_table_write() {
+    cstring str;
+    ind_beg(_db_ctypelen_curs,ctypelen,_db) {
+        dmmeta::Ctypelen out;
+        ctypelen_CopyOut(ctypelen,out);
+        str << out << eol;
+    }ind_end;
+    ind_beg(_db_dispsig_curs,dispsig,_db) {
+        dmmeta::Dispsig out;
+        dispsig_CopyOut(dispsig,out);
+        str << out << eol;
+    }ind_end;
+    ind_beg(_db_tracefld_curs,tracefld,_db) {
+        dmmeta::Tracefld out;
+        tracefld_CopyOut(tracefld,out);
+        str << out << eol;
+    }ind_end;
+    ind_beg(_db_tracerec_curs,tracerec,_db) {
+        dmmeta::Tracerec out;
+        tracerec_CopyOut(tracerec,out);
+        str << out << eol;
+    }ind_end;
+    ind_beg(amc::_db_userfunc_curs,userfunc,_db) {
+        dmmeta::Userfunc out;
+        userfunc_CopyOut(userfunc,out);
+        str << out << eol;
+    }ind_end;
+
+    if (algo_lib::_db.exit_code==0 && !amc::QueryModeQ()) {
+        algo_lib::FTempfile temp;
+        TempfileInitX(temp,"amc");
+        SafeStringToFile(str,temp.filename);
+        command::acr_proc acr;
+        acr.cmd.trunc=true;
+        acr.cmd.replace=true;
+        acr.cmd.in=DirFileJoin(_db.cmdline.out_dir,"data");
+        acr.cmd.print=false;
+        acr.cmd.write=true;
+        acr.cmd.report=true;
+        acr.fstdin<<"<"<<temp.filename;
+        algo_lib::FFildes read;
+        ind_beg(algo::FileLine_curs,line,acr_StartRead(acr,read)) {
+            report::acr report;
+            if (report::acr_ReadStrptrMaybe(report,line)) {
+                _db.report.n_filemod += report.n_file_mod;
+            }
+        }ind_end;
+    }
 }

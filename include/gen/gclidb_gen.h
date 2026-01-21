@@ -65,74 +65,70 @@ enum gclidb_FieldIdEnum {                   // gclidb.FieldId.value
     ,gclidb_FieldId_descr             = 32
     ,gclidb_FieldId_active            = 33
     ,gclidb_FieldId_priv              = 34
-    ,gclidb_FieldId_grepogitport      = 35
-    ,gclidb_FieldId_port              = 36
-    ,gclidb_FieldId_grepossh          = 37
-    ,gclidb_FieldId_sshid             = 38
-    ,gclidb_FieldId_gstate            = 39
-    ,gclidb_FieldId_st                = 40
-    ,gclidb_FieldId_state             = 41
-    ,gclidb_FieldId_gstatet           = 42
-    ,gclidb_FieldId_gtbl              = 43
-    ,gclidb_FieldId_gtblact           = 44
-    ,gclidb_FieldId_t                 = 45
-    ,gclidb_FieldId_e                 = 46
-    ,gclidb_FieldId_auth              = 47
-    ,gclidb_FieldId_gtblactfld        = 48
-    ,gclidb_FieldId_dflt              = 49
-    ,gclidb_FieldId_field_name_dflt   = 50
-    ,gclidb_FieldId_optional          = 51
-    ,gclidb_FieldId_regx              = 52
-    ,gclidb_FieldId_gtblacttst        = 53
-    ,gclidb_FieldId_working           = 54
-    ,gclidb_FieldId_cmd               = 55
-    ,gclidb_FieldId_gtblacttstout     = 56
-    ,gclidb_FieldId_out               = 57
-    ,gclidb_FieldId_text              = 58
-    ,gclidb_FieldId_default_url       = 59
-    ,gclidb_FieldId_gtypeh            = 60
-    ,gclidb_FieldId_header            = 61
-    ,gclidb_FieldId_gtypeprefix       = 62
-    ,gclidb_FieldId_prefix            = 63
-    ,gclidb_FieldId_issue             = 64
-    ,gclidb_FieldId_project           = 65
-    ,gclidb_FieldId_iid               = 66
-    ,gclidb_FieldId_assignee          = 67
-    ,gclidb_FieldId_labels            = 68
-    ,gclidb_FieldId_milestone_iid     = 69
-    ,gclidb_FieldId_milestone_num     = 70
-    ,gclidb_FieldId_milestone         = 71
-    ,gclidb_FieldId_title             = 72
-    ,gclidb_FieldId_author            = 73
-    ,gclidb_FieldId_mr                = 74
-    ,gclidb_FieldId_description       = 75
-    ,gclidb_FieldId_issuenote         = 76
-    ,gclidb_FieldId_nid               = 77
-    ,gclidb_FieldId_note              = 78
-    ,gclidb_FieldId_system            = 79
-    ,gclidb_FieldId_issuepipeline     = 80
-    ,gclidb_FieldId_id                = 81
-    ,gclidb_FieldId_id_in             = 82
-    ,gclidb_FieldId_status            = 83
-    ,gclidb_FieldId_label             = 84
-    ,gclidb_FieldId_proj              = 85
-    ,gclidb_FieldId_source_branch     = 86
-    ,gclidb_FieldId_source_repo       = 87
-    ,gclidb_FieldId_reviewer          = 88
-    ,gclidb_FieldId_pipeline_status   = 89
-    ,gclidb_FieldId_pipeline_id       = 90
-    ,gclidb_FieldId_draft             = 91
-    ,gclidb_FieldId_node_id           = 92
-    ,gclidb_FieldId_mrjob             = 93
-    ,gclidb_FieldId_job               = 94
-    ,gclidb_FieldId_ref               = 95
-    ,gclidb_FieldId_runner            = 96
-    ,gclidb_FieldId_mrnote            = 97
-    ,gclidb_FieldId_user              = 98
-    ,gclidb_FieldId_value             = 99
+    ,gclidb_FieldId_gstate            = 35
+    ,gclidb_FieldId_st                = 36
+    ,gclidb_FieldId_state             = 37
+    ,gclidb_FieldId_gstatet           = 38
+    ,gclidb_FieldId_gtbl              = 39
+    ,gclidb_FieldId_gtblact           = 40
+    ,gclidb_FieldId_t                 = 41
+    ,gclidb_FieldId_e                 = 42
+    ,gclidb_FieldId_auth              = 43
+    ,gclidb_FieldId_gtblactfld        = 44
+    ,gclidb_FieldId_dflt              = 45
+    ,gclidb_FieldId_field_name_dflt   = 46
+    ,gclidb_FieldId_optional          = 47
+    ,gclidb_FieldId_regx              = 48
+    ,gclidb_FieldId_gtblacttst        = 49
+    ,gclidb_FieldId_working           = 50
+    ,gclidb_FieldId_cmd               = 51
+    ,gclidb_FieldId_gtblacttstout     = 52
+    ,gclidb_FieldId_out               = 53
+    ,gclidb_FieldId_text              = 54
+    ,gclidb_FieldId_default_url       = 55
+    ,gclidb_FieldId_gtypeh            = 56
+    ,gclidb_FieldId_header            = 57
+    ,gclidb_FieldId_gtypeprefix       = 58
+    ,gclidb_FieldId_prefix            = 59
+    ,gclidb_FieldId_issue             = 60
+    ,gclidb_FieldId_project           = 61
+    ,gclidb_FieldId_iid               = 62
+    ,gclidb_FieldId_assignee          = 63
+    ,gclidb_FieldId_labels            = 64
+    ,gclidb_FieldId_milestone_iid     = 65
+    ,gclidb_FieldId_milestone_num     = 66
+    ,gclidb_FieldId_milestone         = 67
+    ,gclidb_FieldId_title             = 68
+    ,gclidb_FieldId_author            = 69
+    ,gclidb_FieldId_mr                = 70
+    ,gclidb_FieldId_description       = 71
+    ,gclidb_FieldId_issuenote         = 72
+    ,gclidb_FieldId_nid               = 73
+    ,gclidb_FieldId_note              = 74
+    ,gclidb_FieldId_system            = 75
+    ,gclidb_FieldId_issuepipeline     = 76
+    ,gclidb_FieldId_id                = 77
+    ,gclidb_FieldId_id_in             = 78
+    ,gclidb_FieldId_status            = 79
+    ,gclidb_FieldId_label             = 80
+    ,gclidb_FieldId_proj              = 81
+    ,gclidb_FieldId_source_branch     = 82
+    ,gclidb_FieldId_source_repo       = 83
+    ,gclidb_FieldId_reviewer          = 84
+    ,gclidb_FieldId_pipeline_status   = 85
+    ,gclidb_FieldId_pipeline_id       = 86
+    ,gclidb_FieldId_draft             = 87
+    ,gclidb_FieldId_node_id           = 88
+    ,gclidb_FieldId_mrjob             = 89
+    ,gclidb_FieldId_job               = 90
+    ,gclidb_FieldId_ref               = 91
+    ,gclidb_FieldId_runner            = 92
+    ,gclidb_FieldId_mrnote            = 93
+    ,gclidb_FieldId_user              = 94
+    ,gclidb_FieldId_value             = 95
 };
 
-enum { gclidb_FieldIdEnum_N = 100 };
+enum { gclidb_FieldIdEnum_N = 96 };
 
 extern const char *  gclidb_Gact_gact_accept;       // accept        fconst:gclidb.Gact.gact/accept
 extern const char *  gclidb_Gact_gact_approve;      // approve       fconst:gclidb.Gact.gact/approve
@@ -173,6 +169,7 @@ extern const char *  gclidb_Gclienv_gclienv_ghub;   // ghub    fconst:gclidb.Gcl
 extern const char *  gclidb_Gclienv_gclienv_glab;   // glab    fconst:gclidb.Gclienv.gclienv/glab
 extern const char *  gclidb_Gclisub_gclisub__GITDIR;    // $GITDIR     fconst:gclidb.Gclisub.gclisub/$GITDIR
 extern const char *  gclidb_Gclisub_gclisub__HOST;      // $HOST       fconst:gclidb.Gclisub.gclisub/$HOST
+extern const char *  gclidb_Gclisub_gclisub__ID_RSA;    // $ID_RSA     fconst:gclidb.Gclisub.gclisub/$ID_RSA
 extern const char *  gclidb_Gclisub_gclisub__IN_AUTH;   // $IN_AUTH    fconst:gclidb.Gclisub.gclisub/$IN_AUTH
 extern const char *  gclidb_Gclisub_gclisub__ISSUE;     // $ISSUE      fconst:gclidb.Gclisub.gclisub/$ISSUE
 extern const char *  gclidb_Gclisub_gclisub__ISSUE_;    // $ISSUE#     fconst:gclidb.Gclisub.gclisub/$ISSUE#
@@ -199,11 +196,6 @@ extern const char *  gclidb_Gfld_gfld_state;          // state           fconst:
 extern const char *  gclidb_Gfld_gfld_title;          // title           fconst:gclidb.Gfld.gfld/title
 extern const char *  gclidb_Gfld_gfld_token;          // token           fconst:gclidb.Gfld.gfld/token
 extern const char *  gclidb_Gfld_gfld_user;           // user            fconst:gclidb.Gfld.gfld/user
-extern const char *  gclidb_Grepogitport_grepogitport_default;             // default              fconst:gclidb.Grepogitport.grepogitport/default
-extern const char *  gclidb_Grepogitport_grepogitport_github_com;          // github.com           fconst:gclidb.Grepogitport.grepogitport/github.com
-extern const char *  gclidb_Grepogitport_grepogitport_gitlab_vovaco_com;   // gitlab.vovaco.com    fconst:gclidb.Grepogitport.grepogitport/gitlab.vovaco.com
-extern const char *  gclidb_Grepossh_grepossh_glpat;          // glpat           fconst:gclidb.Grepossh.grepossh/glpat
-extern const char *  gclidb_Grepossh_grepossh_vparizhs_ghp;   // vparizhs/ghp    fconst:gclidb.Grepossh.grepossh/vparizhs/ghp
 extern const char *  gclidb_Gstate_gstate_state_all;          // state_all           fconst:gclidb.Gstate.gstate/state_all
 extern const char *  gclidb_Gstate_gstate_state_close;        // state_close         fconst:gclidb.Gstate.gstate/state_close
 extern const char *  gclidb_Gstate_gstate_state_closed;       // state_closed        fconst:gclidb.Gstate.gstate/state_closed
@@ -283,8 +275,6 @@ namespace gclidb { // gen:ns_pkeytypedef
     typedef algo::Smallstr250 GithostPkey;
     typedef algo::Smallstr50 GmethodPkey;
     typedef algo::Smallstr250 GrepoPkey;
-    typedef algo::Smallstr50 GrepogitportPkey;
-    typedef algo::Smallstr50 GreposshPkey;
     typedef algo::Smallstr50 GstatePkey;
     typedef algo::Smallstr50 GstatetPkey;
     typedef algo::Smallstr250 GtblPkey;
@@ -322,8 +312,6 @@ namespace gclidb { struct Gfld; }
 namespace gclidb { struct Githost; }
 namespace gclidb { struct Gmethod; }
 namespace gclidb { struct Grepo; }
-namespace gclidb { struct Grepogitport; }
-namespace gclidb { struct Grepossh; }
 namespace gclidb { struct Gstate; }
 namespace gclidb { struct Gstatet; }
 namespace gclidb { struct Gtbl; }
@@ -439,8 +427,8 @@ bool                 Gatv_ReadStrptrMaybe(gclidb::Gatv &parent, algo::strptr in_
 void                 Gatv_Print(gclidb::Gatv& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- gclidb.Gclicmd
-struct Gclicmd { // gclidb.Gclicmd
-    algo::Smallstr250   gclicmd;      //
+struct Gclicmd { // gclidb.Gclicmd: table of static gcli commands
+    algo::Smallstr250   gclicmd;      // table of static commands
     algo::Smallstr250   gclicmdf2j;   // Base for gclicmdf2j
     algo::Comment       comment;      //
     // func:gclidb.Gclicmd..Ctor
@@ -723,51 +711,6 @@ void                 Grepo_Init(gclidb::Grepo& parent);
 // func:gclidb.Grepo..Print
 void                 Grepo_Print(gclidb::Grepo& row, algo::cstring& str) __attribute__((nothrow));
 
-// --- gclidb.Grepogitport
-struct Grepogitport { // gclidb.Grepogitport: Default ports for repositories
-    algo::Smallstr50   grepogitport;   // grepo git host
-    algo::cstring      port;           // ssh port for config
-    algo::Comment      comment;        //
-    // func:gclidb.Grepogitport..Ctor
-    inline               Grepogitport() __attribute__((nothrow));
-};
-
-// func:gclidb.Grepogitport..ReadFieldMaybe
-bool                 Grepogitport_ReadFieldMaybe(gclidb::Grepogitport& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of gclidb::Grepogitport from an ascii string.
-// The format of the string is an ssim Tuple
-// func:gclidb.Grepogitport..ReadStrptrMaybe
-bool                 Grepogitport_ReadStrptrMaybe(gclidb::Grepogitport &parent, algo::strptr in_str) __attribute__((nothrow));
-// print string representation of ROW to string STR
-// cfmt:gclidb.Grepogitport.String  printfmt:Tuple
-// func:gclidb.Grepogitport..Print
-void                 Grepogitport_Print(gclidb::Grepogitport& row, algo::cstring& str) __attribute__((nothrow));
-
-// --- gclidb.Grepossh
-struct Grepossh { // gclidb.Grepossh: Ssh key table
-    algo::Smallstr50    grepossh;   // grepo project/repo name
-    algo::Smallstr200   sshid;      // ssh id key name for ssh config
-    algo::Comment       comment;    //
-    // func:gclidb.Grepossh..Ctor
-    inline               Grepossh() __attribute__((nothrow));
-};
-
-// func:gclidb.Grepossh.name.Get
-algo::cstring        name_Get(gclidb::Grepossh& parent) __attribute__((__warn_unused_result__, nothrow));
-// func:gclidb.Grepossh.name.Get2
-algo::cstring        Grepossh_name_Get(algo::strptr arg) __attribute__((nothrow));
-
-// func:gclidb.Grepossh..ReadFieldMaybe
-bool                 Grepossh_ReadFieldMaybe(gclidb::Grepossh& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of gclidb::Grepossh from an ascii string.
-// The format of the string is an ssim Tuple
-// func:gclidb.Grepossh..ReadStrptrMaybe
-bool                 Grepossh_ReadStrptrMaybe(gclidb::Grepossh &parent, algo::strptr in_str) __attribute__((nothrow));
-// print string representation of ROW to string STR
-// cfmt:gclidb.Grepossh.String  printfmt:Tuple
-// func:gclidb.Grepossh..Print
-void                 Grepossh_Print(gclidb::Grepossh& row, algo::cstring& str) __attribute__((nothrow));
-
 // --- gclidb.Gstate
 struct Gstate { // gclidb.Gstate: Issue/MR state list
     algo::Smallstr50   gstate;    //
@@ -850,7 +793,7 @@ bool                 Gtbl_ReadStrptrMaybe(gclidb::Gtbl &parent, algo::strptr in_
 void                 Gtbl_Print(gclidb::Gtbl& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- gclidb.Gtblact
-struct Gtblact { // gclidb.Gtblact
+struct Gtblact { // gclidb.Gtblact: static combination of gcli tables and actions
     algo::Smallstr50   gtblact;   //
     bool               t;         //   false
     bool               e;         //   false
@@ -1388,8 +1331,6 @@ inline algo::cstring &operator <<(algo::cstring &str, const gclidb::Gclisub &row
 inline algo::cstring &operator <<(algo::cstring &str, const gclidb::Gfld &row);// cfmt:gclidb.Gfld.String
 inline algo::cstring &operator <<(algo::cstring &str, const gclidb::Gmethod &row);// cfmt:gclidb.Gmethod.String
 inline algo::cstring &operator <<(algo::cstring &str, const gclidb::Grepo &row);// cfmt:gclidb.Grepo.String
-inline algo::cstring &operator <<(algo::cstring &str, const gclidb::Grepogitport &row);// cfmt:gclidb.Grepogitport.String
-inline algo::cstring &operator <<(algo::cstring &str, const gclidb::Grepossh &row);// cfmt:gclidb.Grepossh.String
 inline algo::cstring &operator <<(algo::cstring &str, const gclidb::Gstate &row);// cfmt:gclidb.Gstate.String
 inline algo::cstring &operator <<(algo::cstring &str, const gclidb::Gstatet &row);// cfmt:gclidb.Gstatet.String
 inline algo::cstring &operator <<(algo::cstring &str, const gclidb::Gtbl &row);// cfmt:gclidb.Gtbl.String

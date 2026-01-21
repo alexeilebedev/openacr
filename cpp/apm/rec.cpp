@@ -1,4 +1,4 @@
-// Copyright (C) 2024 AlgoRND
+// Copyright (C) 2024,2026 AlgoRND
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -46,7 +46,7 @@ static void LoadRecsFile(algo::strptr filename) {
 // Add any records from ssimfile SSIMFILE matching regx VALUE_REGX
 // to ZD_CHOOSEREC (initial selection).
 static void ChooseRec(apm::FSsimfile &ssimfile, algo_lib::Regx &value_regx) {
-    if (value_regx.literal) {
+    if (literal_Get(value_regx.flags)) {
         tempstr key=tempstr()<<ssimfile.ssimfile<<":"<<value_regx.expr;
         if (apm::FRec *rec=apm::ind_rec_Find(key)) {
             zd_chooserec_Insert(*rec);
@@ -72,7 +72,7 @@ static void SelectPkgkeyRecs(apm::FPkgkey &pkgkey) {
     Regx_ReadAcr(value_regx,Pathcomp(key,":LR"),true);
     vrfy_(!apm::zd_chooserec_N());
     // produce initial chooserec selection
-    if (ssimfile_regx.literal) {
+    if (literal_Get(ssimfile_regx.flags)) {
         if (apm::FSsimfile *ssimfile=apm::ind_ssimfile_Find(ssimfile_regx.expr)) {
             ChooseRec(*ssimfile,value_regx);
         }
@@ -87,7 +87,7 @@ static void SelectPkgkeyRecs(apm::FPkgkey &pkgkey) {
     ind_beg(apm::_db_zd_chooserec_curs,rec,apm::_db) {
         ind_beg(apm::rec_c_child_curs,childrec,rec) {
             if (!zd_chooserec_InLlistQ(childrec)) {
-                verblog2(pkgkey.pkgkey<<": adding child "<<childrec.rec<<", level "<<rec.level+1);
+                prcat(verbose2,pkgkey.pkgkey<<": adding child "<<childrec.rec<<", level "<<rec.level+1);
                 zd_chooserec_Insert(childrec);
                 childrec.level=rec.level+1;
             }
@@ -100,6 +100,21 @@ static void SelectPkgkeyRecs(apm::FPkgkey &pkgkey) {
     }ind_end;
     // clear zd_chooserec
     apm::zd_chooserec_RemoveAll();
+}
+
+// -----------------------------------------------------------------------------
+
+// return TRUE if the field is a valid edge for transitive closure.
+// The field is chosen if it's the pkey, or a leftmost subtring of pkey
+bool apm::LeftCheckQ(apm::FField &field) {
+    apm::FCtype &ctype=*field.p_ctype;
+    bool ret=field.reftype == dmmeta_Reftype_reftype_Pkey;
+    apm::FField *pkey =c_field_Find(ctype,0);
+    if (pkey) {
+        ret = pkey==&field
+            || (field.c_substr && field.c_substr->srcfield==pkey->field && algo::LeftPathcompQ(field.c_substr->expr.value));
+    }
+    return ret;
 }
 
 // -----------------------------------------------------------------------------
@@ -136,7 +151,7 @@ void apm::LoadRecs() {
     // build graph of all records
     // compute c_child, c_leftchild
     ind_beg(_db_zd_rec_curs,rec,_db) {
-        ind_beg(ctype_c_field_curs,field,*rec.p_ssimfile->p_ctype) if (field.reftype==dmmeta_Reftype_reftype_Pkey) {
+        ind_beg(ctype_c_field_curs,field,*rec.p_ssimfile->p_ctype) if (LeftCheckQ(field)) {
             algo::Attr *attr=attr_Find(rec.tuple,name_Get(field.c_substr ? *field.c_substr->p_srcfield:field));
             if (attr && field.p_arg->c_ssimfile) {
                 algo::strptr value = field.c_substr ? Pathcomp(attr->value,field.c_substr->expr.value) : attr->value;
@@ -158,7 +173,7 @@ void apm::LoadRecs() {
                     tempstr child_key = Subst(R,ssimreq.ssimreq);
                     apm::FRec *child = apm::ind_rec_Find(child_key);
                     if (child && child != &rec) {
-                        verblog2(child->rec<<" now child of "<<rec.rec);
+                        prcat(verbose2,child->rec<<" now child of "<<rec.rec);
                         c_child_Insert(rec,*child);
                     }
                 }

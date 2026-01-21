@@ -31,6 +31,8 @@
 #include "include/gen/algo_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
+#include "include/gen/lib_json_gen.h"
+#include "include/gen/lib_json_gen.inl.h"
 //#pragma endinclude
 lib_exec::_db_bh_syscmd_curs::~_db_bh_syscmd_curs() {
     algo_lib::malloc_FreeMem(temp_elems, sizeof(void*) * temp_max);
@@ -71,25 +73,23 @@ bool lib_exec::Cmdline_ReadFieldMaybe(lib_exec::Cmdline& parent, algo::strptr fi
     switch(field_id) {
         case lib_exec_FieldId_dry_run: {
             retval = bool_ReadStrptrMaybe(parent.dry_run, strval);
-            break;
-        }
+        } break;
         case lib_exec_FieldId_q: {
             retval = bool_ReadStrptrMaybe(parent.q, strval);
-            break;
-        }
+        } break;
         case lib_exec_FieldId_maxjobs: {
             retval = i32_ReadStrptrMaybe(parent.maxjobs, strval);
-            break;
-        }
+        } break;
         case lib_exec_FieldId_complooo: {
             retval = bool_ReadStrptrMaybe(parent.complooo, strval);
-            break;
-        }
+        } break;
         case lib_exec_FieldId_merge_output: {
             retval = bool_ReadStrptrMaybe(parent.merge_output, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -173,25 +173,25 @@ void lib_exec::Cmdline_PrintArgv(lib_exec::Cmdline& row, algo::cstring& str) {
 i32 lib_exec::Cmdline_NArgs(lib_exec::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
     i32 retval = 1;
     switch (field) {
-        case lib_exec_FieldId_dry_run: { // $comment
+        case lib_exec_FieldId_dry_run: { // bool: no argument required but value may be specified as dry_run:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case lib_exec_FieldId_q: { // bool: no argument required but value may be specified as dry_run:Y
+        case lib_exec_FieldId_q: { // bool: no argument required but value may be specified as q:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case lib_exec_FieldId_maxjobs: { // bool: no argument required but value may be specified as q:Y
+        case lib_exec_FieldId_maxjobs: { //
             *out_anon = false;
         } break;
-        case lib_exec_FieldId_complooo: { // bool: no argument required but value may be specified as q:Y
+        case lib_exec_FieldId_complooo: { // bool: no argument required but value may be specified as complooo:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case lib_exec_FieldId_merge_output: { // bool: no argument required but value may be specified as complooo:Y
+        case lib_exec_FieldId_merge_output: { // bool: no argument required but value may be specified as merge_output:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
@@ -250,8 +250,8 @@ bool lib_exec::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     } else if (DirectoryQ(root)) {
         retval = retval && lib_exec::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
     } else {
-        algo_lib::SaveBadTag("path", root);
-        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        algo_lib::AppendErrtext("path", root);
+        algo_lib::AppendErrtext("comment", "Wrong working directory?");
         retval = false;
     }
     return retval;
@@ -540,14 +540,9 @@ bool lib_exec::syscmd_XrefMaybe(lib_exec::FSyscmd &row) {
 // Find row by key. Return NULL if not found.
 lib_exec::FSyscmd* lib_exec::ind_running_Find(i32 key) {
     u32 index = ::i32_Hash(0, key) & (_db.ind_running_buckets_n - 1);
-    lib_exec::FSyscmd* *e = &_db.ind_running_buckets_elems[index];
-    lib_exec::FSyscmd* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).pid == key;
-        if (done) break;
-        e         = &ret->ind_running_next;
-    } while (true);
+    lib_exec::FSyscmd *ret = _db.ind_running_buckets_elems[index];
+    for (; ret && !((*ret).pid == key); ret = ret->ind_running_next) {
+    }
     return ret;
 }
 
@@ -571,10 +566,11 @@ lib_exec::FSyscmd& lib_exec::ind_running_GetOrCreate(i32 key) {
 // --- lib_exec.FDb.ind_running.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool lib_exec::ind_running_InsertMaybe(lib_exec::FSyscmd& row) {
-    ind_running_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_running_next == (lib_exec::FSyscmd*)-1)) {// check if in hash already
-        u32 index = ::i32_Hash(0, row.pid) & (_db.ind_running_buckets_n - 1);
+        row.ind_running_hashval = ::i32_Hash(0, row.pid);
+        ind_running_Reserve(1);
+        u32 index = row.ind_running_hashval & (_db.ind_running_buckets_n - 1);
         lib_exec::FSyscmd* *prev = &_db.ind_running_buckets_elems[index];
         do {
             lib_exec::FSyscmd* ret = *prev;
@@ -600,7 +596,7 @@ bool lib_exec::ind_running_InsertMaybe(lib_exec::FSyscmd& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void lib_exec::ind_running_Remove(lib_exec::FSyscmd& row) {
     if (LIKELY(row.ind_running_next != (lib_exec::FSyscmd*)-1)) {// check if in hash already
-        u32 index = ::i32_Hash(0, row.pid) & (_db.ind_running_buckets_n - 1);
+        u32 index = row.ind_running_hashval & (_db.ind_running_buckets_n - 1);
         lib_exec::FSyscmd* *prev = &_db.ind_running_buckets_elems[index]; // addr of pointer to current element
         while (lib_exec::FSyscmd *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -617,8 +613,14 @@ void lib_exec::ind_running_Remove(lib_exec::FSyscmd& row) {
 // --- lib_exec.FDb.ind_running.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void lib_exec::ind_running_Reserve(int n) {
+    ind_running_AbsReserve(_db.ind_running_n + n);
+}
+
+// --- lib_exec.FDb.ind_running.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void lib_exec::ind_running_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_running_buckets_n;
-    u32 new_nelems   = _db.ind_running_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -637,7 +639,7 @@ void lib_exec::ind_running_Reserve(int n) {
             while (elem) {
                 lib_exec::FSyscmd &row        = *elem;
                 lib_exec::FSyscmd* next       = row.ind_running_next;
-                u32 index          = ::i32_Hash(0, row.pid) & (new_nbuckets-1);
+                u32 index          = row.ind_running_hashval & (new_nbuckets-1);
                 row.ind_running_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1088,15 +1090,11 @@ void lib_exec::syscmd_CopyIn(lib_exec::FSyscmd &row, dev::Syscmd &in) {
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 void lib_exec::c_prior_Insert(lib_exec::FSyscmd& syscmd, lib_exec::FSyscmddep& row) {
-    if (bool_Update(row.syscmd_c_prior_in_ary,true)) {
-        // reserve space
+    if (!row.syscmd_c_prior_in_ary) {
         c_prior_Reserve(syscmd, 1);
-        u32 n  = syscmd.c_prior_n;
-        u32 at = n;
-        lib_exec::FSyscmddep* *elems = syscmd.c_prior_elems;
-        elems[at] = &row;
-        syscmd.c_prior_n = n+1;
-
+        u32 n  = syscmd.c_prior_n++;
+        syscmd.c_prior_elems[n] = &row;
+        row.syscmd_c_prior_in_ary = true;
     }
 }
 
@@ -1105,7 +1103,7 @@ void lib_exec::c_prior_Insert(lib_exec::FSyscmd& syscmd, lib_exec::FSyscmddep& r
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 bool lib_exec::c_prior_InsertMaybe(lib_exec::FSyscmd& syscmd, lib_exec::FSyscmddep& row) {
-    bool retval = !row.syscmd_c_prior_in_ary;
+    bool retval = !syscmd_c_prior_InAryQ(row);
     c_prior_Insert(syscmd,row); // check is performed in _Insert again
     return retval;
 }
@@ -1113,18 +1111,18 @@ bool lib_exec::c_prior_InsertMaybe(lib_exec::FSyscmd& syscmd, lib_exec::FSyscmdd
 // --- lib_exec.FSyscmd.c_prior.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void lib_exec::c_prior_Remove(lib_exec::FSyscmd& syscmd, lib_exec::FSyscmddep& row) {
+    int n = syscmd.c_prior_n;
     if (bool_Update(row.syscmd_c_prior_in_ary,false)) {
-        int lim = syscmd.c_prior_n;
         lib_exec::FSyscmddep* *elems = syscmd.c_prior_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = lim-1; i>=0; i--) {
+        for (int i = n-1; i>=0; i--) {
             lib_exec::FSyscmddep* elem = elems[i]; // fetch element
             if (elem == &row) {
                 int j = i + 1;
-                size_t nbytes = sizeof(lib_exec::FSyscmddep*) * (lim - j);
+                size_t nbytes = sizeof(lib_exec::FSyscmddep*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                syscmd.c_prior_n = lim - 1;
+                syscmd.c_prior_n = n - 1;
                 break;
             }
         }
@@ -1152,15 +1150,11 @@ void lib_exec::c_prior_Reserve(lib_exec::FSyscmd& syscmd, u32 n) {
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 void lib_exec::c_next_Insert(lib_exec::FSyscmd& syscmd, lib_exec::FSyscmddep& row) {
-    if (bool_Update(row.syscmd_c_next_in_ary,true)) {
-        // reserve space
+    if (!row.syscmd_c_next_in_ary) {
         c_next_Reserve(syscmd, 1);
-        u32 n  = syscmd.c_next_n;
-        u32 at = n;
-        lib_exec::FSyscmddep* *elems = syscmd.c_next_elems;
-        elems[at] = &row;
-        syscmd.c_next_n = n+1;
-
+        u32 n  = syscmd.c_next_n++;
+        syscmd.c_next_elems[n] = &row;
+        row.syscmd_c_next_in_ary = true;
     }
 }
 
@@ -1169,7 +1163,7 @@ void lib_exec::c_next_Insert(lib_exec::FSyscmd& syscmd, lib_exec::FSyscmddep& ro
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 bool lib_exec::c_next_InsertMaybe(lib_exec::FSyscmd& syscmd, lib_exec::FSyscmddep& row) {
-    bool retval = !row.syscmd_c_next_in_ary;
+    bool retval = !syscmd_c_next_InAryQ(row);
     c_next_Insert(syscmd,row); // check is performed in _Insert again
     return retval;
 }
@@ -1177,18 +1171,18 @@ bool lib_exec::c_next_InsertMaybe(lib_exec::FSyscmd& syscmd, lib_exec::FSyscmdde
 // --- lib_exec.FSyscmd.c_next.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void lib_exec::c_next_Remove(lib_exec::FSyscmd& syscmd, lib_exec::FSyscmddep& row) {
+    int n = syscmd.c_next_n;
     if (bool_Update(row.syscmd_c_next_in_ary,false)) {
-        int lim = syscmd.c_next_n;
         lib_exec::FSyscmddep* *elems = syscmd.c_next_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = lim-1; i>=0; i--) {
+        for (int i = n-1; i>=0; i--) {
             lib_exec::FSyscmddep* elem = elems[i]; // fetch element
             if (elem == &row) {
                 int j = i + 1;
-                size_t nbytes = sizeof(lib_exec::FSyscmddep*) * (lim - j);
+                size_t nbytes = sizeof(lib_exec::FSyscmddep*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                syscmd.c_next_n = lim - 1;
+                syscmd.c_next_n = n - 1;
                 break;
             }
         }
@@ -1233,6 +1227,7 @@ void lib_exec::FSyscmd_Init(lib_exec::FSyscmd& syscmd) {
     syscmd.show_out = bool(true);
     syscmd.signal = i32(0);
     syscmd.ind_running_next = (lib_exec::FSyscmd*)-1; // (lib_exec.FDb.ind_running) not-in-hash
+    syscmd.ind_running_hashval = 0; // stored hash value
     syscmd.bh_syscmd_idx = -1; // (lib_exec.FDb.bh_syscmd) not-in-heap
     syscmd.zd_started_next = (lib_exec::FSyscmd*)-1; // (lib_exec.FDb.zd_started) not-in-list
     syscmd.zd_started_prev = NULL; // (lib_exec.FDb.zd_started)

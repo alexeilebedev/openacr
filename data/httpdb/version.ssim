@@ -1,0 +1,5 @@
+httpdb.version  version:HTTP/0.9  comment:"RFC 1945"
+httpdb.version  version:HTTP/1.0  comment:"RFC 1945"
+httpdb.version  version:HTTP/1.1  comment:"RFC 9112"
+httpdb.version  version:HTTP/2.0  comment:"RFC 9113"
+httpdb.version  version:HTTP/3.0  comment:"RFC 9114"

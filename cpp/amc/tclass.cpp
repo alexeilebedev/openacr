@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
 //
 // License: GPL
@@ -30,7 +30,7 @@ void amc::ResetVars(amc::Genctx &ctx) {
     amc::FNs &ns = *ctx.p_ns;
     amc::FCtype *parent = ctx.p_ctype;
     amc::FField *field = ctx.p_field;
-    ind_replvar_Cascdel(R);
+    ind_replvar_Cascdel(R);// clean out varsx
     Set(R, "$ns", ns.ns);
 
     if (parent) {
@@ -49,6 +49,7 @@ void amc::ResetVars(amc::Genctx &ctx) {
         if (field) {
             Set(R, "$field"    , field->field);
             Set(R, "$name"     , name_Get(*field));
+            Set(R, "$xfname"   , glob ? "$name" : "$parname_$name");// prefix for fields added to child record - must include parent name for disambiguation
             Set(R, "$Cpptype"  , field->p_arg->cpp_type);
             Set(R, "$Ctype"    , name_Get(*field->p_arg));
             if (field->p_reftype->usebasepool) {
@@ -175,7 +176,7 @@ static void GenTclass_Field(amc::FField &field) {
 // (template class, no relation to C++ notion of template or class)
 // based on its type and associated records, and each tclass generates zero or more tfuncs
 void amc::gen_ns_tclass_field() {
-    ind_beg(amc::_db_ns_curs, ns, amc::_db) if (ns.select) {
+    ind_beg(amc::_db_ns_curs, ns, amc::_db) if (ns.c_nscpp) {
         amc::_db.genctx.p_ns = &ns;
         amc::BeginNsBlock(*ns.hdr, ns, "");
         ind_beg(amc::ns_c_ctype_curs, ctype,ns) {
@@ -215,12 +216,9 @@ void amc::gen_ns_tclass_ctype() {
 // -----------------------------------------------------------------------------
 
 void amc::gen_ns_tclass_ns() {
-    amc::FNs &ns =*amc::_db.c_ns;
     amc::_db.genctx.p_ns = amc::_db.c_ns;
     amc::_db.genctx.p_ctype = NULL;
     amc::_db.genctx.p_field = NULL;
-    if (ns.ns != "") {
-        ResetVars(amc::_db.genctx);
-        GenTclass(amc_tclass_Ns);
-    }
+    ResetVars(amc::_db.genctx);
+    GenTclass(amc_tclass_Ns);
 }

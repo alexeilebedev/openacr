@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 // Copyright (C) 2023 Astra
 // Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
 //
@@ -53,27 +53,10 @@ void acr_ed::edaction_Create_Ssimfile() {
         acr_ed::_db.out_ssim << field_comment << eol;
 
         // register ssimfile
-        {
-            tempstr fname(SsimFname("data", acr_ed::_db.cmdline.ssimfile));
-            dev::Gitfile gitfile;
-            gitfile.gitfile = fname;
-            acr_ed::_db.out_ssim << gitfile << eol;
-            acr_ed::_db.script << "touch "<<fname<<eol;
-            acr_ed::_db.script << "git add "<<fname<<eol;
-        }
+        acr_ed::RegisterFile(SsimFname("data", acr_ed::_db.cmdline.ssimfile), "");
 
         // create readme
-        {
-            dev::Gitfile gitfile;
-            gitfile.gitfile = tempstr()<<"txt/ssimdb/"<<ns_Get(ssimfile)<<"/"<<name_Get(ssimfile)<<".md";
-            acr_ed::_db.out_ssim << gitfile << eol;
-            dev::Readme readme;
-            readme.gitfile = gitfile.gitfile;
-            acr_ed::_db.out_ssim << readme << eol;
-            acr_ed::_db.script << "mkdir -p "<<GetDirName(readme.gitfile)<<eol;
-            acr_ed::_db.script << "touch "<<gitfile.gitfile<<eol;
-            acr_ed::_db.script << "git add "<<gitfile.gitfile<<eol;
-        }
+        acr_ed::RegisterFile(tempstr()<<"txt/ssimdb/"<<ns_Get(ssimfile)<<"/"<<name_Get(ssimfile)<<".md", "");
 
         dmmeta::Cfmt cfmt(tempstr() << acr_ed::_db.cmdline.ctype << "." << dmmeta_Strfmt_strfmt_String
                           , dmmeta_Printfmt_printfmt_Tuple
@@ -111,18 +94,29 @@ void acr_ed::edaction_Rename_Ssimfile() {
 
     Set(R, "$oldctype", ssimfile.ctype);
 
-    Ins(&R, acr_ed::_db.script, "bin/acr ssimfile:$oldkey -rename:$newkey -write");
-    Ins(&R, acr_ed::_db.script, "git mv $oldfname $newfname");
-    Ins(&R, acr_ed::_db.script, "bin/acr gitfile:$oldfname -rename:$newfname -write");
-
     // update primary key field if its name is the same as ssimfile name
-    if (c_field_N(*ssimfile.p_ctype)>0 && ns_Get(ssimfile) == name_Get(*c_field_Find(*ssimfile.p_ctype,0))) {
+    if (c_field_N(*ssimfile.p_ctype)>0 && name_Get(ssimfile) == name_Get(*c_field_Find(*ssimfile.p_ctype,0))) {
         command::acr acr;
         acr.query = tempstr() << "dmmeta.field:"<<ssimfile.ctype<<"."<<name_Get(ssimfile);
         acr.rename = tempstr() << ssimfile.ctype<<"."<<name_Get(newssimfile);
         acr.write=true;
         _db.script << acr_ToCmdline(acr) << eol;
     }
+
+    // rename the ssimfile record, move the ssimfile,
+    // rename the readme, and move the md file
+    // -x -- renames md file & git file
+    // -g -- adds 'git mv' command
+    {
+        command::acr acr;
+        acr.query << "ssimfile:"<<acr_ed::_db.cmdline.ssimfile;
+        acr.rename = acr_ed::_db.cmdline.rename;
+        acr.write = true;
+        acr.x = true;
+        acr.g = true;
+        Ins(&R, acr_ed::_db.script, acr_ToCmdline(acr));
+    }
+
     // rename ctype if it was named consistently with the ssimfile
     tempstr oldctype = tempstr()<<ns_Get(ssimfile)<<"."<<ToCamelCase(name_Get(ssimfile));
     if (oldctype == ssimfile.ctype) {
@@ -159,7 +153,7 @@ void acr_ed::edaction_Rename_Ssimfile() {
     }
     {
         command::acr acr;
-        acr.query = tempstr() << acr_ed::_db.cmdline.rename<<".%";
+        acr.query = tempstr() << acr_ed::_db.cmdline.rename<<":%";
         acr.print=false;
         acr.check=true;
         _db.script << acr_ToCmdline(acr) << eol;

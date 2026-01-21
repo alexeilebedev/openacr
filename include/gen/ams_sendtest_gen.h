@@ -57,6 +57,8 @@ namespace ams_sendtest { // gen:ns_print_struct
 // --- ams_sendtest.AmsSendTest
 struct AmsSendTest { // ams_sendtest.AmsSendTest
     u64                   n_msg_send;         //   0  Number of messages sent
+    u64                   off_send;           //   0  Offset sent
+    u64                   off_recv;           //   0  Offset received
     u64                   n_msg_recv;         //   0  Number of messages received
     u64                   n_write_wait;       //   0  Number of waits by parent
     u64                   n_msg_limit;        //   1000000  Limit of messages to send
@@ -151,7 +153,7 @@ void                 trace_Print(ams_sendtest::trace& row, algo::cstring& str) _
 // --- ams_sendtest.FDb
 // create: ams_sendtest.FDb._db (Global)
 struct FDb { // ams_sendtest.FDb: In-memory database for ams_sendtest
-    lib_ams::FStream*           c_out;            // Output goes here. optional pointer
+    lib_ams::FShm*              c_out;            // Output goes here. optional pointer
     command::ams_sendtest       cmdline;          //
     ams_sendtest::AmsSendTest   ams_send_test;    //
     ams_sendtest::FChild*       child_lary[32];   // level array

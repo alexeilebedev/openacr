@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-# Copyright (C) 2023-2024 AlgoRND
+# Copyright (C) 2023-2026 AlgoRND
 # Copyright (C) 2022 Astra
 # Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 # Copyright (C) 2008-2013 AlgoEngineering LLC
@@ -36,8 +36,7 @@ my @linepat    = ();
 my @pathpat    = (
     '!'.
     join('|',
-         ('^\.svn/'
-          ,'^build/'
+         ('^build/'
           ,'^temp/'
           ,'^\.git/'))
     );
@@ -143,9 +142,7 @@ if ($wholeword) {
 
 if ($no_autogen) {
     push(@pathpat, "!/gen/");
-    push(@pathpat, "!apssuite/");
     push(@pathpat, "!extern/");
-    push(@pathpat, "!temp/");
 }
 
 if (!@dirs) {

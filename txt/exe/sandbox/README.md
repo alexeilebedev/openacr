@@ -44,10 +44,11 @@ Usage: sandbox [-name:]<regx> [[-cmd:]<string>] [options]
     [cmd]...    string          Command to execute in sandbox
     -diff                       Show diff after running command
     -files...   string          Shell regx to diff
-    -refs       string  "HEAD"  Refs to fetch into sandbox
+    -refs       string  "HEAD"  Additional list of refs to fetch into sandbox
+    -ref        string  "HEAD"  Reset to this ref
     -q                          Quiet mode
-    -verbose    int             Verbosity level (0..255); alias -v; cumulative
-    -debug      int             Debug level (0..255); alias -d; cumulative
+    -verbose    flag            Verbosity level (0..255); alias -v; cumulative
+    -debug      flag            Debug level (0..255); alias -d; cumulative
     -help                       Print help and exit; alias -h
     -version                    Print version and exit
     -signature                  Show signatures and exit; alias -sig
@@ -206,8 +207,11 @@ $ sandbox test -create "sandbox test2 -create 'command'" -del
 #### -files -- Shell regx to diff
 <a href="#-files"></a>
 
-#### -refs -- Refs to fetch into sandbox
+#### -refs -- Additional list of refs to fetch into sandbox
 <a href="#-refs"></a>
+
+#### -ref -- Reset to this ref
+<a href="#-ref"></a>
 
 #### -q -- Quiet mode
 <a href="#-q"></a>
@@ -221,8 +225,8 @@ $ sandbox test -create "sandbox test2 -create 'command'" -del
 |Ssimfile|Comment|
 |---|---|
 |[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
-|[dev.sbpath](/txt/ssimdb/dev/sbpath.md)|Extra files to copy into the sandbox|
 |[dev.sandbox](/txt/ssimdb/dev/sandbox.md)|Registered sandbox|
+|[dev.sbpath](/txt/ssimdb/dev/sbpath.md)|Extra files to copy into the sandbox|
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
 

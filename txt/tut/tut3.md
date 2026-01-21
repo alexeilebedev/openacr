@@ -35,10 +35,10 @@ acr.insert  dev.gitfile  gitfile:include/gen/samp_tut3_gen.h
 acr.insert  dev.gitfile  gitfile:include/gen/samp_tut3_gen.inl.h
 acr.insert  dev.gitfile  gitfile:include/samp_tut3.h
 acr.insert  dev.gitfile  gitfile:txt/exe/samp_tut3/README.md
-  acr.insert  dev.readme  gitfile:txt/exe/samp_tut3/README.md      inl:N   sandbox:N   filter:""  comment:""
+  acr.insert  dev.readmefile  gitfile:txt/exe/samp_tut3/README.md      inl:N  sandbox:N  filter:""  comment:""
 
 acr.insert  dev.gitfile  gitfile:txt/exe/samp_tut3/internals.md
-  acr.insert  dev.readme  gitfile:txt/exe/samp_tut3/internals.md  inl:N   sandbox:N   filter:""  comment:""
+  acr.insert  dev.readmefile  gitfile:txt/exe/samp_tut3/internals.md  inl:N  sandbox:N  filter:""  comment:""
 
 acr.insert  dmmeta.ns  ns:samp_tut3  nstype:exe  license:GPL  comment:""
   acr.insert  dev.target  target:samp_tut3
@@ -66,7 +66,7 @@ acr.insert  dmmeta.ctype  ctype:command.samp_tut3  comment:""
   acr.insert  dmmeta.cfmt  cfmt:command.samp_tut3.Argv  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
 report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
 report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
-abt.config  builddir:***  ood_src:***  ood_target:***  cache:***
+abt.config  builddir:Linux-g++.release-x86_64  ood_src:***  ood_target:***  cache:***
 report.abt  n_target:***  time:***  hitrate:***  pch_hitrate:***  n_warn:0  n_err:0  n_install:***
 please execute $(acr_compl -install) to add completions support for new target
 report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
@@ -124,25 +124,23 @@ Now let's modify our app so that it prints numbers `0..10`, asynchronously, then
 There are many ways to do it, so we'll start with the most general one: a table.
 
 ```
-inline-command: acr_ed -create -ctype samp_tut3.Value -subset i32 -pooltype Tpool -write
+inline-command: acr_ed -create -ctype samp_tut3.Value -subset i32 -pooltype Tpool -write -amc:N
 report.acr_check  records:***  errors:0
 acr.insert  dmmeta.ctype  ctype:samp_tut3.Value  comment:""
   acr.insert  dmmeta.field  field:samp_tut3.Value.value  arg:i32  reftype:Val  dflt:""  comment:""
 
 acr.insert  dmmeta.field  field:samp_tut3.FDb.value  arg:samp_tut3.Value  reftype:Tpool  dflt:""  comment:""
 report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
-report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
 ```
 
 ```
-inline-command: acr_ed -create -field samp_tut3.FDb.zd_value -fstep Inline -write
+inline-command: acr_ed -create -field samp_tut3.FDb.zd_value -fstep Inline -write -amc:N
 report.acr_check  records:***  errors:0
 acr.insert  dmmeta.field  field:samp_tut3.FDb.zd_value  arg:samp_tut3.Value  reftype:Llist  dflt:""  comment:""
   acr.insert  dmmeta.llist  field:samp_tut3.FDb.zd_value  havetail:Y  havecount:Y  comment:""
   acr.insert  dmmeta.fstep  fstep:samp_tut3.FDb.zd_value  steptype:Inline  comment:""
   acr.insert  dmmeta.xref  field:samp_tut3.FDb.zd_value  inscond:true  via:""
 report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
-report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
 ```
 
 The above commands, which are best practiced interactively, add the following records to our database:
@@ -154,7 +152,6 @@ dmmeta.nstype  nstype:exe  comment:Executable
   dmmeta.ns  ns:samp_tut3  nstype:exe  license:GPL  comment:""
     dmmeta.ctype  ctype:samp_tut3.Value  comment:""
       dmmeta.field  field:samp_tut3.Value.value  arg:i32  reftype:Val  dflt:""  comment:""
-      dmmeta.ctypelen  ctype:samp_tut3.Value  len:32  alignment:8  padbytes:4  plaindata:N
 
 dmmeta.field  field:samp_tut3.FDb.value     arg:samp_tut3.Value  reftype:Tpool  dflt:""  comment:""
 dmmeta.field  field:samp_tut3.FDb.zd_value  arg:samp_tut3.Value  reftype:Llist  dflt:""  comment:""
@@ -196,8 +193,9 @@ void samp_tut3::Main() {
 ```
 
 ```
-inline-command: ai samp_tut3
-abt.config  builddir:***  ood_src:***  ood_target:***  cache:***
+inline-command: amc && ai samp_tut3
+report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
+abt.config  builddir:Linux-g++.release-x86_64  ood_src:***  ood_target:***  cache:***
 report.abt  n_target:***  time:***  hitrate:***  pch_hitrate:***  n_warn:0  n_err:0  n_install:***
 ```
 
@@ -223,8 +221,7 @@ Let's proceed slowly and understand what code got generated, and what we can do 
 First, let's check the new `MainLoop`;
 
 ```
-inline-command: amc samp_tut3.%.MainLoop
-
+inline-command: src_func -gen -f samp_tut3.MainLoop
 // --- samp_tut3.FDb._db.MainLoop
 // Main loop.
 void samp_tut3::MainLoop() {
@@ -236,32 +233,25 @@ void samp_tut3::MainLoop() {
     } while (algo_lib::_db.next_loop < algo_lib::_db.limit);
 }
 
-report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
 ```
 
 We see that `samp_tut3::Step` is now called. That's because we defined the `fstep` record on `zd_value`.
 Let's drill down to `Step`:
 
 ```
-inline-command: amc samp_tut3.%.Step
-
+inline-command: src_func -gen -f samp_tut3.Step
 // --- samp_tut3.FDb._db.Step
 // Main step
 void samp_tut3::Step() {
     zd_value_Call();
 }
-// func:samp_tut3.FDb.zd_value.Step
-// this function is 'extrn' and implemented by user
-void                 zd_value_Step() __attribute__((nothrow));
 
-report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
 ```
 
 Almost nothing interesting here... Let's check `zd_value_Call`:
 
 ```
-inline-command: amc samp_tut3.%.zd_value.Call
-
+inline-command: src_func -gen -f samp_tut3.zd_value_Call
 // --- samp_tut3.FDb.zd_value.Call
 inline static void samp_tut3::zd_value_Call() {
     if (!samp_tut3::zd_value_EmptyQ()) { // fstep:samp_tut3.FDb.zd_value
@@ -271,7 +261,6 @@ inline static void samp_tut3::zd_value_Call() {
     }
 }
 
-report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
 ```
 
 Finally, the interesting bit. We see that the main `Step` checks to see if `zd_value` is empty.

@@ -31,12 +31,15 @@
 #include "include/gen/algo_gen.inl.h"
 #include "include/gen/dev_gen.h"
 #include "include/gen/dev_gen.inl.h"
+#include "include/gen/lib_json_gen.h"
+#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
+lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 orgfile::FDb    orgfile::_db;     // dependency found via dev.targdep
 
@@ -51,8 +54,8 @@ const char *orgfile_help =
 "    -commit                     Apply changes\n"
 "    -undo                       Read previous orgfile output, undoing movement\n"
 "    -hash       string  \"sha1\"  Hash command to use for deduplication\n"
-"    -verbose    int             Verbosity level (0..255); alias -v; cumulative\n"
-"    -debug      int             Debug level (0..255); alias -d; cumulative\n"
+"    -verbose    flag            Verbosity level (0..255); alias -v; cumulative\n"
+"    -debug      flag            Debug level (0..255); alias -d; cumulative\n"
 "    -help                       Print help and exit; alias -h\n"
 "    -version                    Print version and exit\n"
 "    -signature                  Show signatures and exit; alias -sig\n"
@@ -154,9 +157,8 @@ void orgfile::ReadArgv() {
         }
         if (ch_N(attrname) == 0) {
             err << "orgfile: too many arguments. error at "<<algo::strptr_ToSsim(arg)<<eol;
-        }
-        // read value into currently selected arg
-        if (haveval) {
+        } else if (haveval) {
+            // read value into currently selected arg
             bool ret=false;
             // it's already known which namespace is consuming the args,
             // so directly go there
@@ -199,6 +201,9 @@ void orgfile::ReadArgv() {
         }ind_end
         doexit = true;
     }
+    algo_lib_logcat_debug.enabled = algo_lib::_db.cmdline.debug;
+    algo_lib_logcat_verbose.enabled = algo_lib::_db.cmdline.verbose > 0;
+    algo_lib_logcat_verbose2.enabled = algo_lib::_db.cmdline.verbose > 1;
     if (!dohelp) {
     }
     // dmmeta.floadtuples:orgfile.FDb.cmdline
@@ -210,7 +215,7 @@ void orgfile::ReadArgv() {
     }
     if (err != "") {
         algo_lib::_db.exit_code=1;
-        prerr(err);
+        prerr_(err); // already has eol
         doexit=true;
     }
     if (dohelp) {
@@ -293,8 +298,8 @@ bool orgfile::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && orgfile::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
         retval = retval && orgfile::LoadTuplesFile(algo::SsimFname(root,"dev.timefmt"),recursive);
     } else {
-        algo_lib::SaveBadTag("path", root);
-        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        algo_lib::AppendErrtext("path", root);
+        algo_lib::AppendErrtext("comment", "Wrong working directory?");
         retval = false;
     }
     return retval;
@@ -483,14 +488,9 @@ bool orgfile::filename_XrefMaybe(orgfile::FFilename &row) {
 // Find row by key. Return NULL if not found.
 orgfile::FFilename* orgfile::ind_filename_Find(const algo::strptr& key) {
     u32 index = algo::cstring_Hash(0, key) & (_db.ind_filename_buckets_n - 1);
-    orgfile::FFilename* *e = &_db.ind_filename_buckets_elems[index];
-    orgfile::FFilename* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).filename == key;
-        if (done) break;
-        e         = &ret->ind_filename_next;
-    } while (true);
+    orgfile::FFilename *ret = _db.ind_filename_buckets_elems[index];
+    for (; ret && !((*ret).filename == key); ret = ret->ind_filename_next) {
+    }
     return ret;
 }
 
@@ -505,10 +505,11 @@ orgfile::FFilename& orgfile::ind_filename_FindX(const algo::strptr& key) {
 // --- orgfile.FDb.ind_filename.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool orgfile::ind_filename_InsertMaybe(orgfile::FFilename& row) {
-    ind_filename_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_filename_next == (orgfile::FFilename*)-1)) {// check if in hash already
-        u32 index = algo::cstring_Hash(0, row.filename) & (_db.ind_filename_buckets_n - 1);
+        row.ind_filename_hashval = algo::cstring_Hash(0, row.filename);
+        ind_filename_Reserve(1);
+        u32 index = row.ind_filename_hashval & (_db.ind_filename_buckets_n - 1);
         orgfile::FFilename* *prev = &_db.ind_filename_buckets_elems[index];
         do {
             orgfile::FFilename* ret = *prev;
@@ -534,7 +535,7 @@ bool orgfile::ind_filename_InsertMaybe(orgfile::FFilename& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void orgfile::ind_filename_Remove(orgfile::FFilename& row) {
     if (LIKELY(row.ind_filename_next != (orgfile::FFilename*)-1)) {// check if in hash already
-        u32 index = algo::cstring_Hash(0, row.filename) & (_db.ind_filename_buckets_n - 1);
+        u32 index = row.ind_filename_hashval & (_db.ind_filename_buckets_n - 1);
         orgfile::FFilename* *prev = &_db.ind_filename_buckets_elems[index]; // addr of pointer to current element
         while (orgfile::FFilename *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -551,8 +552,14 @@ void orgfile::ind_filename_Remove(orgfile::FFilename& row) {
 // --- orgfile.FDb.ind_filename.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void orgfile::ind_filename_Reserve(int n) {
+    ind_filename_AbsReserve(_db.ind_filename_n + n);
+}
+
+// --- orgfile.FDb.ind_filename.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void orgfile::ind_filename_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_filename_buckets_n;
-    u32 new_nelems   = _db.ind_filename_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -571,7 +578,7 @@ void orgfile::ind_filename_Reserve(int n) {
             while (elem) {
                 orgfile::FFilename &row        = *elem;
                 orgfile::FFilename* next       = row.ind_filename_next;
-                u32 index          = algo::cstring_Hash(0, row.filename) & (new_nbuckets-1);
+                u32 index          = row.ind_filename_hashval & (new_nbuckets-1);
                 row.ind_filename_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -674,14 +681,9 @@ bool orgfile::filehash_XrefMaybe(orgfile::FFilehash &row) {
 // Find row by key. Return NULL if not found.
 orgfile::FFilehash* orgfile::ind_filehash_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr40_Hash(0, key) & (_db.ind_filehash_buckets_n - 1);
-    orgfile::FFilehash* *e = &_db.ind_filehash_buckets_elems[index];
-    orgfile::FFilehash* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).filehash == key;
-        if (done) break;
-        e         = &ret->ind_filehash_next;
-    } while (true);
+    orgfile::FFilehash *ret = _db.ind_filehash_buckets_elems[index];
+    for (; ret && !((*ret).filehash == key); ret = ret->ind_filehash_next) {
+    }
     return ret;
 }
 
@@ -713,10 +715,11 @@ orgfile::FFilehash& orgfile::ind_filehash_GetOrCreate(const algo::strptr& key) {
 // --- orgfile.FDb.ind_filehash.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool orgfile::ind_filehash_InsertMaybe(orgfile::FFilehash& row) {
-    ind_filehash_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_filehash_next == (orgfile::FFilehash*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr40_Hash(0, row.filehash) & (_db.ind_filehash_buckets_n - 1);
+        row.ind_filehash_hashval = algo::Smallstr40_Hash(0, row.filehash);
+        ind_filehash_Reserve(1);
+        u32 index = row.ind_filehash_hashval & (_db.ind_filehash_buckets_n - 1);
         orgfile::FFilehash* *prev = &_db.ind_filehash_buckets_elems[index];
         do {
             orgfile::FFilehash* ret = *prev;
@@ -742,7 +745,7 @@ bool orgfile::ind_filehash_InsertMaybe(orgfile::FFilehash& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void orgfile::ind_filehash_Remove(orgfile::FFilehash& row) {
     if (LIKELY(row.ind_filehash_next != (orgfile::FFilehash*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr40_Hash(0, row.filehash) & (_db.ind_filehash_buckets_n - 1);
+        u32 index = row.ind_filehash_hashval & (_db.ind_filehash_buckets_n - 1);
         orgfile::FFilehash* *prev = &_db.ind_filehash_buckets_elems[index]; // addr of pointer to current element
         while (orgfile::FFilehash *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -759,8 +762,14 @@ void orgfile::ind_filehash_Remove(orgfile::FFilehash& row) {
 // --- orgfile.FDb.ind_filehash.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void orgfile::ind_filehash_Reserve(int n) {
+    ind_filehash_AbsReserve(_db.ind_filehash_n + n);
+}
+
+// --- orgfile.FDb.ind_filehash.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void orgfile::ind_filehash_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_filehash_buckets_n;
-    u32 new_nelems   = _db.ind_filehash_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -779,7 +788,7 @@ void orgfile::ind_filehash_Reserve(int n) {
             while (elem) {
                 orgfile::FFilehash &row        = *elem;
                 orgfile::FFilehash* next       = row.ind_filehash_next;
-                u32 index          = algo::Smallstr40_Hash(0, row.filehash) & (new_nbuckets-1);
+                u32 index          = row.ind_filehash_hashval & (new_nbuckets-1);
                 row.ind_filehash_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -971,15 +980,11 @@ void orgfile::FDb_Uninit() {
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 void orgfile::c_filename_Insert(orgfile::FFilehash& filehash, orgfile::FFilename& row) {
-    if (bool_Update(row.filehash_c_filename_in_ary,true)) {
-        // reserve space
+    if (!row.filehash_c_filename_in_ary) {
         c_filename_Reserve(filehash, 1);
-        u32 n  = filehash.c_filename_n;
-        u32 at = n;
-        orgfile::FFilename* *elems = filehash.c_filename_elems;
-        elems[at] = &row;
-        filehash.c_filename_n = n+1;
-
+        u32 n  = filehash.c_filename_n++;
+        filehash.c_filename_elems[n] = &row;
+        row.filehash_c_filename_in_ary = true;
     }
 }
 
@@ -988,7 +993,7 @@ void orgfile::c_filename_Insert(orgfile::FFilehash& filehash, orgfile::FFilename
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 bool orgfile::c_filename_InsertMaybe(orgfile::FFilehash& filehash, orgfile::FFilename& row) {
-    bool retval = !row.filehash_c_filename_in_ary;
+    bool retval = !filehash_c_filename_InAryQ(row);
     c_filename_Insert(filehash,row); // check is performed in _Insert again
     return retval;
 }
@@ -996,18 +1001,18 @@ bool orgfile::c_filename_InsertMaybe(orgfile::FFilehash& filehash, orgfile::FFil
 // --- orgfile.FFilehash.c_filename.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void orgfile::c_filename_Remove(orgfile::FFilehash& filehash, orgfile::FFilename& row) {
+    int n = filehash.c_filename_n;
     if (bool_Update(row.filehash_c_filename_in_ary,false)) {
-        int lim = filehash.c_filename_n;
         orgfile::FFilename* *elems = filehash.c_filename_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = lim-1; i>=0; i--) {
+        for (int i = n-1; i>=0; i--) {
             orgfile::FFilename* elem = elems[i]; // fetch element
             if (elem == &row) {
                 int j = i + 1;
-                size_t nbytes = sizeof(orgfile::FFilename*) * (lim - j);
+                size_t nbytes = sizeof(orgfile::FFilename*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                filehash.c_filename_n = lim - 1;
+                filehash.c_filename_n = n - 1;
                 break;
             }
         }
@@ -1267,17 +1272,17 @@ bool orgfile::dedup_ReadFieldMaybe(orgfile::dedup& parent, algo::strptr field, a
     switch(field_id) {
         case orgfile_FieldId_original: {
             retval = algo::cstring_ReadStrptrMaybe(parent.original, strval);
-            break;
-        }
+        } break;
         case orgfile_FieldId_duplicate: {
             retval = algo::cstring_ReadStrptrMaybe(parent.duplicate, strval);
-            break;
-        }
+        } break;
         case orgfile_FieldId_comment: {
             retval = algo::cstring_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -1322,17 +1327,17 @@ bool orgfile::move_ReadFieldMaybe(orgfile::move& parent, algo::strptr field, alg
     switch(field_id) {
         case orgfile_FieldId_pathname: {
             retval = algo::cstring_ReadStrptrMaybe(parent.pathname, strval);
-            break;
-        }
+        } break;
         case orgfile_FieldId_tgtfile: {
             retval = algo::cstring_ReadStrptrMaybe(parent.tgtfile, strval);
-            break;
-        }
+        } break;
         case orgfile_FieldId_comment: {
             retval = algo::cstring_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -1381,11 +1386,13 @@ void orgfile::StaticCheck() {
 // --- orgfile...main
 int main(int argc, char **argv) {
     try {
+        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         orgfile::FDb_Init();
         algo_lib::_db.argc = argc;
         algo_lib::_db.argv = argv;
         algo_lib::IohookInit();
+        algo_lib::_db.clock = algo::CurrSchedTime(); // initialize clock
         orgfile::ReadArgv(); // dmmeta.main:orgfile
         orgfile::Main(); // user-defined main
     } catch(algo_lib::ErrorX &x) {
@@ -1398,6 +1405,7 @@ int main(int argc, char **argv) {
     try {
         orgfile::FDb_Uninit();
         algo_lib::FDb_Uninit();
+        lib_json::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;

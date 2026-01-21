@@ -1,4 +1,4 @@
-// Copyright (C) 2024 AlgoRND
+// Copyright (C) 2024,2026 AlgoRND
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -14,9 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
-// Target: samp_meng (exe)
+// Target: samp_meng (exe) -- Sample matching engine
 // Exceptions: yes
-// Header: include/samp_meng.h
+// Header: include/samp_meng.h -- Main header
 //
 
 #include "include/gen/samp_meng_gen.h"
@@ -30,16 +30,16 @@ namespace samp_meng { // update-hdr
     //     To convert this section to a hand-written section, remove the word 'update-hdr' from namespace line.
 
     // -------------------------------------------------------------------
-    // cpp/samp_meng/samp_meng.cpp
+    // cpp/samp_meng/samp_meng.cpp -- Main source
     //
     //     (user-implemented function, prototype is in amc-generated header)
-    // void In_TextMsg(samp_meng::TextMsg &);
+    // void In_TextMsg(samp_meng::TextMsg &); // dispatch_msg:samp_meng.In/samp_meng.TextMsg
 
     // Create new symbol
-    // void In_NewSymbolReqMsg(samp_meng::NewSymbolReqMsg &msg);
+    // void In_NewSymbolReqMsg(samp_meng::NewSymbolReqMsg &msg); // dispatch_msg:samp_meng.In/samp_meng.NewSymbolReqMsg
 
     // Create new user.
-    // void In_NewUserReqMsg(samp_meng::NewUserReqMsg &msg);
+    // void In_NewUserReqMsg(samp_meng::NewUserReqMsg &msg); // dispatch_msg:samp_meng.In/samp_meng.NewUserReqMsg
 
     // Add an order to the orderbook.
     // Publish any resulting trades; If order is IOC, cancel the remainder back,
@@ -49,20 +49,20 @@ namespace samp_meng { // update-hdr
     // PRICE: order price
     // QTY: signed quantity; positive=buy, negative=sell
     // IOC: if TRUE, order is cancelled immediately after matching
-    // void In_NewOrderReqMsg(samp_meng::NewOrderReqMsg &msg);
+    // void In_NewOrderReqMsg(samp_meng::NewOrderReqMsg &msg); // dispatch_msg:samp_meng.In/samp_meng.NewOrderReqMsg
 
     // Cancel a single order
     void CancelOrder(samp_meng::FOrder *order, bool notify);
 
     // Cancel a single order
     //     (user-implemented function, prototype is in amc-generated header)
-    // void In_CancelReqMsg(samp_meng::CancelReqMsg &msg);
+    // void In_CancelReqMsg(samp_meng::CancelReqMsg &msg); // dispatch_msg:samp_meng.In/samp_meng.CancelReqMsg
 
     // Cancel all orders for user
-    // void In_MassCancelReqMsg(samp_meng::MassCancelReqMsg &msg);
-    // void cd_fdin_eof_Step();
+    // void In_MassCancelReqMsg(samp_meng::MassCancelReqMsg &msg); // dispatch_msg:samp_meng.In/samp_meng.MassCancelReqMsg
+    // void cd_fdin_eof_Step(); // fstep:samp_meng.FDb.cd_fdin_eof
 
     // Read next input line from stdin
-    // void cd_fdin_read_Step();
-    void Main();
+    // void cd_fdin_read_Step(); // fstep:samp_meng.FDb.cd_fdin_read
+    // void Main(); // main:samp_meng
 }

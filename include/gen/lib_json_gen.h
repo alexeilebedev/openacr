@@ -224,6 +224,9 @@ void                 ind_objfld_Remove(lib_json::FNode& row) __attribute__((noth
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:lib_json.FDb.ind_objfld.Reserve
 void                 ind_objfld_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:lib_json.FDb.ind_objfld.AbsReserve
+void                 ind_objfld_AbsReserve(int n) __attribute__((nothrow));
 
 // func:lib_json.FDb.JsonNumChar.Match
 inline bool          JsonNumCharQ(u32 ch) __attribute__((nothrow));
@@ -239,8 +242,8 @@ void                 FDb_Uninit() __attribute__((nothrow));
 
 // --- lib_json.FldKey
 struct FldKey { // lib_json.FldKey
-    lib_json::FNode*   object;   // optional pointer
-    algo::strptr       field;    //
+    lib_json::FNode*   p_object;   // reference to parent row
+    algo::strptr       field;      //
     // func:lib_json.FldKey..EqOp
     inline bool          operator ==(const lib_json::FldKey &rhs) const __attribute__((nothrow));
     // func:lib_json.FldKey..NeOp
@@ -256,7 +259,7 @@ struct FldKey { // lib_json.FldKey
     // func:lib_json.FldKey..Ctor
     inline               FldKey() __attribute__((nothrow));
     // func:lib_json.FldKey..FieldwiseCtor
-    explicit inline               FldKey(lib_json::FNode* in_object, algo::strptr in_field) __attribute__((nothrow));
+    explicit inline               FldKey(lib_json::FNode* in_p_object, algo::strptr in_field) __attribute__((nothrow));
 };
 
 // func:lib_json.FldKey..Hash
@@ -285,10 +288,11 @@ void                 FldKey_Print(lib_json::FldKey& row, algo::cstring& str) __a
 // access: lib_json.FNode.c_child (Ptrary)
 // access: lib_json.FParser.node (Ptr)
 // access: lib_json.FParser.root_node (Ptr)
-// access: lib_json.FldKey.object (Ptr)
+// access: lib_json.FldKey.p_object (Upptr)
 struct FNode { // lib_json.FNode
     lib_json::FNode*    node_next;             // Pointer to next free element int tpool
     lib_json::FNode*    ind_objfld_next;       // hash next
+    u32                 ind_objfld_hashval;    // hash value
     lib_json::FNode*    p_parent;              // reference to parent row
     lib_json::FNode**   c_child_elems;         // array of pointers
     u32                 c_child_n;             // array of pointers

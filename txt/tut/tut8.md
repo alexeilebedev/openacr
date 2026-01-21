@@ -8,11 +8,11 @@ and proceed interactively.
 We will choose the `dev` namespace; this choice is arbitrary.
 
 ```
-inline-command: acr_ed -create -ssimfile dev.a -write
+inline-command: acr_ed -create -ssimfile dev.a -write -amc:N
 report.acr_check  records:***  errors:0
 acr.insert  dev.gitfile  gitfile:data/dev/a.ssim
 acr.insert  dev.gitfile  gitfile:txt/ssimdb/dev/a.md
-  acr.insert  dev.readme  gitfile:txt/ssimdb/dev/a.md  inl:N  sandbox:N  filter:""  comment:""
+  acr.insert  dev.readmefile  gitfile:txt/ssimdb/dev/a.md  inl:N  sandbox:N  filter:""  comment:""
 
 acr.insert  dmmeta.ctype  ctype:dev.A  comment:""
   acr.insert  dmmeta.field  field:dev.A.a        arg:algo.Smallstr50  reftype:Val  dflt:""  comment:""
@@ -22,7 +22,6 @@ acr.insert  dmmeta.ctype  ctype:dev.A  comment:""
 acr.insert  dmmeta.ssimfile  ssimfile:dev.a  ctype:dev.A
   acr.insert  dmmeta.ssimsort  ssimfile:dev.a  sortfld:dev.A.a  comment:""
 report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
-report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
 ```
 
 This will create a new empty table data/dev/a.ssim. The ctype for `a` has a single string field
@@ -89,11 +88,11 @@ Any fields that aren't specified are assigned default values. Let's illustrate b
 creating a temporary table:
 
 ```
-inline-command: acr_ed -create -ssimfile dev.t -write
+inline-command: acr_ed -create -ssimfile dev.t -write -amc:N
 report.acr_check  records:***  errors:0
 acr.insert  dev.gitfile  gitfile:data/dev/t.ssim
 acr.insert  dev.gitfile  gitfile:txt/ssimdb/dev/t.md
-  acr.insert  dev.readme  gitfile:txt/ssimdb/dev/t.md  inl:N  sandbox:N  filter:""  comment:""
+  acr.insert  dev.readmefile  gitfile:txt/ssimdb/dev/t.md  inl:N  sandbox:N  filter:""  comment:""
 
 acr.insert  dmmeta.ctype  ctype:dev.T  comment:""
   acr.insert  dmmeta.field  field:dev.T.t        arg:algo.Smallstr50  reftype:Val  dflt:""  comment:""
@@ -103,17 +102,15 @@ acr.insert  dmmeta.ctype  ctype:dev.T  comment:""
 acr.insert  dmmeta.ssimfile  ssimfile:dev.t  ctype:dev.T
   acr.insert  dmmeta.ssimsort  ssimfile:dev.t  sortfld:dev.T.t  comment:""
 report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
-report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
 ```
 
 Now we add an extra attribute to `t` called `val`, with integer type.
 
 ```
-inline-command: acr_ed -create -field dev.T.val -arg u32 -write
+inline-command: acr_ed -create -field dev.T.val -arg u32 -write -amc:N
 report.acr_check  records:***  errors:0
 acr.insert  dmmeta.field  field:dev.T.val  arg:u32  reftype:Val  dflt:""  comment:""
 report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
-report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
 ```
 
 Insert some data using a bash one-liner:
@@ -149,11 +146,10 @@ Let's illustrate using the same `t` table. We'll need another column, call it `v
 set `val` back to 3:
 
 ```
-inline-command: acr_ed -create -field dev.T.val2 -arg u32 -write
+inline-command: acr_ed -create -field dev.T.val2 -arg u32 -write -amc:N
 report.acr_check  records:***  errors:0
 acr.insert  dmmeta.field  field:dev.T.val2  arg:u32  reftype:Val  dflt:""  comment:""
 report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
-report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
 ```
 
 ```
@@ -216,11 +212,10 @@ One command per output row would have been much slower
 Let's illustrate adding a column to the `a` table:
 
 ```
-inline-command: acr_ed -create -field dev.A.b -arg u32 -write
+inline-command: acr_ed -create -field dev.A.b -arg u32 -write -amc:N
 report.acr_check  records:***  errors:0
 acr.insert  dmmeta.field  field:dev.A.b  arg:u32  reftype:Val  dflt:""  comment:""
 report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
-report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
 ```
 
 Let's update a few values with `acr -merge`:
@@ -267,11 +262,11 @@ Now let's create another table which will be a subset of the first, and populate
 When we specify the -subset parameter, we must include the ctype (not ssimfile).
 
 ```
-inline-command: acr_ed -create -ssimfile:dev.b -subset dev.A -write
+inline-command: acr_ed -create -ssimfile:dev.b -subset dev.A -write -amc:N
 report.acr_check  records:***  errors:0
 acr.insert  dev.gitfile  gitfile:data/dev/b.ssim
 acr.insert  dev.gitfile  gitfile:txt/ssimdb/dev/b.md
-  acr.insert  dev.readme  gitfile:txt/ssimdb/dev/b.md  inl:N  sandbox:N  filter:""  comment:""
+  acr.insert  dev.readmefile  gitfile:txt/ssimdb/dev/b.md  inl:N  sandbox:N  filter:""  comment:""
 
 acr.insert  dmmeta.ctype  ctype:dev.B  comment:""
   acr.insert  dmmeta.field  field:dev.B.a        arg:dev.A         reftype:Pkey  dflt:""  comment:""
@@ -281,7 +276,6 @@ acr.insert  dmmeta.ctype  ctype:dev.B  comment:""
 acr.insert  dmmeta.ssimfile  ssimfile:dev.b  ctype:dev.B
   acr.insert  dmmeta.ssimsort  ssimfile:dev.b  sortfld:dev.B.a  comment:""
 report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
-report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
 ```
 
 Let's quickly check how `B`'s fields were defined:
@@ -467,9 +461,11 @@ Here is an example:
 
 ```
 inline-command: acr a:a3 -rename a99 -write
-acr.update  dev.a  a:a99  b:0  comment:""
+acr.delete  dev.a  a:a3
+acr.insert  dev.a  a:a99  b:0  comment:""
 
-acr.update  dev.b  a:a99  comment:""
+acr.delete  dev.b  a:a3
+acr.insert  dev.b  a:a99  comment:""
 report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
 ```
 
@@ -489,11 +485,11 @@ an independent table; we will populate it with a few colors. Then,
 we'll let's create a table `d`, whose key is a cross product of `b` and `c`.
 
 ```
-inline-command: acr_ed -create -ssimfile:dev.c -write
+inline-command: acr_ed -create -ssimfile:dev.c -write -amc:N
 report.acr_check  records:***  errors:0
 acr.insert  dev.gitfile  gitfile:data/dev/c.ssim
 acr.insert  dev.gitfile  gitfile:txt/ssimdb/dev/c.md
-  acr.insert  dev.readme  gitfile:txt/ssimdb/dev/c.md  inl:N  sandbox:N  filter:""  comment:""
+  acr.insert  dev.readmefile  gitfile:txt/ssimdb/dev/c.md  inl:N  sandbox:N  filter:""  comment:""
 
 acr.insert  dmmeta.ctype  ctype:dev.C  comment:""
   acr.insert  dmmeta.field  field:dev.C.c        arg:algo.Smallstr50  reftype:Val  dflt:""  comment:""
@@ -503,7 +499,6 @@ acr.insert  dmmeta.ctype  ctype:dev.C  comment:""
 acr.insert  dmmeta.ssimfile  ssimfile:dev.c  ctype:dev.C
   acr.insert  dmmeta.ssimsort  ssimfile:dev.c  sortfld:dev.C.c  comment:""
 report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
-report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
 ```
 
 ```
@@ -515,11 +510,11 @@ report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***
 ```
 
 ```
-inline-command: acr_ed -create -ssimfile dev.d -subset dev.B -subset2 dev.C -separator . -write
+inline-command: acr_ed -create -ssimfile dev.d -subset dev.B -subset2 dev.C -separator . -write -amc:N
 report.acr_check  records:***  errors:0
 acr.insert  dev.gitfile  gitfile:data/dev/d.ssim
 acr.insert  dev.gitfile  gitfile:txt/ssimdb/dev/d.md
-  acr.insert  dev.readme  gitfile:txt/ssimdb/dev/d.md  inl:N  sandbox:N  filter:""  comment:""
+  acr.insert  dev.readmefile  gitfile:txt/ssimdb/dev/d.md  inl:N  sandbox:N  filter:""  comment:""
 
 acr.insert  dmmeta.ctype  ctype:dev.D  comment:""
   acr.insert  dmmeta.field  field:dev.D.d  arg:algo.Smallstr50  reftype:Val   dflt:""  comment:""
@@ -535,7 +530,6 @@ acr.insert  dmmeta.ctype  ctype:dev.D  comment:""
 acr.insert  dmmeta.ssimfile  ssimfile:dev.d  ctype:dev.D
   acr.insert  dmmeta.ssimsort  ssimfile:dev.d  sortfld:dev.D.d  comment:""
 report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
-report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
 ```
 
 ```
@@ -609,7 +603,6 @@ dmmeta.nstype  nstype:ssimdb  comment:"Ssim database (not a target)"
 
       dmmeta.field  field:dev.D.comment  arg:algo.Comment  reftype:Val  dflt:""  comment:""
       dmmeta.cfmt  cfmt:dev.D.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
-      dmmeta.ctypelen  ctype:dev.D  len:204  alignment:1  padbytes:0  plaindata:Y
 
 dmmeta.ssimfile  ssimfile:dev.d  ctype:dev.D
   dmmeta.ssimsort  ssimfile:dev.d  sortfld:dev.D.d  comment:""
@@ -663,7 +656,7 @@ search is called algo::Pathcomp.
 The function that parses these expressions is called Pathcomp, and we can view its source code:
 
 ```
-inline-command: src_func algo_lib Pathcomp
+inline-command: src_func -f algo.Pathcomp
 // S         source string
 // EXPR      string in the form (XYZ)*
 // - X is the character to search
@@ -681,7 +674,6 @@ inline-command: src_func algo_lib Pathcomp
 // More examples:
 // s = "abcd"; expr = ".LL"; result = "abcd"
 // s = "abcd"; expr = ".LR"; result = ""
-cpp/lib/algo/string.cpp:44: 
 strptr algo::Pathcomp(strptr s, strptr expr) {
     int start  = 0;
     int end    = s.n_elems;
@@ -780,7 +772,6 @@ dmmeta.nstype  nstype:ssimdb  comment:"Ssim database (not a target)"
       dmmeta.field  field:dev.C.c        arg:algo.Smallstr50  reftype:Val  dflt:""  comment:""
       dmmeta.field  field:dev.C.comment  arg:algo.Comment     reftype:Val  dflt:""  comment:""
       dmmeta.cfmt  cfmt:dev.C.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
-      dmmeta.ctypelen  ctype:dev.C  len:204  alignment:1  padbytes:0  plaindata:Y
 
 dmmeta.field  field:dev.D.c  arg:dev.C  reftype:Pkey  dflt:""  comment:""
   dmmeta.substr  field:dev.D.c  expr:.RR  srcfield:dev.D.d
@@ -901,7 +892,6 @@ dmmeta.ctype  ctype:dev.C  comment:""
   dmmeta.field  field:dev.C.c        arg:algo.Smallstr50  reftype:Val  dflt:""  comment:""
   dmmeta.field  field:dev.C.comment  arg:algo.Comment     reftype:Val  dflt:""  comment:""
   dmmeta.cfmt  cfmt:dev.C.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
-  dmmeta.ctypelen  ctype:dev.C  len:204  alignment:1  padbytes:0  plaindata:Y
 report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
 ```
 

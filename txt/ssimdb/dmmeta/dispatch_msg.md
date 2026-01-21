@@ -23,6 +23,7 @@ italicised fields: *dispatch, ctype* are [**fldfunc**](/txt/ssim.md#fldfunc) fie
 <a href="#used-in-executables"></a>
 <!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:ImdbUses -->
 
+* [abt_md](/txt/exe/abt_md/internals.md) as [abt_md.FDispatchMsg](/txt/exe/abt_md/internals.md#abt_md-fdispatchmsg)
 * [amc](/txt/exe/amc/internals.md) as [amc.FDispatchmsg](/txt/exe/amc/internals.md#amc-fdispatchmsg)
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:ImdbUses -->

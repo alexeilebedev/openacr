@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -219,9 +219,7 @@ ams::MsgHeader *lib_ams::ReadMsg(lib_ams::FReadfile &rf, u64 seqno) {
     if (OkQ(rf) && rf.block.first_seqno <= seqno && seqno < rf.block.first_seqno + rf.block.n_messages) {
         u32 *offset = offset_Find(rf,seqno - rf.block.first_seqno);
         if (offset) {
-            //prlog(*offset);
             msg = (ams::MsgHeader*)(rf.buf_elems + *offset);
-            //prlog("msg type " << msg->type << "  length:" << msg->length);
         }
     }
     return msg;

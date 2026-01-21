@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Copyright (C) 2025-2026 AlgoRND
+#
+
+if [ -z "$RMTAGENT" ]; then
+    echo "RMTAGENT not set. Please set RMTAGENT to ip:port"
+    exit 1
+fi
+
+IFS=':' read -r ip port <<< "$RMTAGENT"
+cat - | nc "$ip" "$port"

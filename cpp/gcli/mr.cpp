@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -24,50 +24,72 @@
 void gcli::gclicmd_graphql(gcli::FGclicmd&){
 }
 // -----------------------------------------------------------------------------
+static tempstr ShowMRDesc(gcli::FMr &mr){
+    algo_lib::FTxttbl txttbl;
+    AddRow(txttbl);
+    AddCol(txttbl,"DESCRIPTION");
+    AddRow(txttbl);
+    AddCol(txttbl,mr.description);
+    return tempstr()<<txttbl;
+}
+// -----------------------------------------------------------------------------
+static tempstr ShowMRNote(gcli::FMr &mr){
+    algo_lib::FTxttbl txttbl;
+
+    AddRow(txttbl);
+    AddCols(txttbl,"MRNOTE,AUTHOR");
+
+    ind_beg(gcli::mr_c_mrnote_curs, mrnote, mr) if (mrnote.select){
+        AddRow(txttbl);
+        AddCol(txttbl,mrnote.mrnote);
+        AddCol(txttbl,mrnote.author);
+
+        AddRow(txttbl);
+        AddCol(txttbl,mrnote.note);
+    }ind_end;
+    return tempstr()<<txttbl;
+}
+// -----------------------------------------------------------------------------
+static tempstr ShowMRJob(gcli::FMr &mr){
+    algo_lib::FTxttbl txttbl;
+
+    AddRow(txttbl);
+    AddCols(txttbl,"MRJOB,STATUS,RUNNER");
+    ind_beg(gcli::mr_c_mrjob_curs, mrjob,mr) {
+        AddRow(txttbl);
+        AddCol(txttbl,mrjob.mrjob);
+        AddCol(txttbl,mrjob.status);
+        AddCol(txttbl,mrjob.runner);
+    }ind_end;
+    return tempstr()<<txttbl;
+}
+// -----------------------------------------------------------------------------
 void gcli::Main_ShowMrlist() {
     cstring out;
-    out << "MR\tISSUE\tAUTHOR\tREVIEWER\tPIPELINE\tSTATE\tTITLE\n";
+    algo_lib::FTxttbl txttbl;
+    AddRow(txttbl);
+    AddCols(txttbl,"MR,ISSUE,AUTHOR,REVIEWER,PIPELINE,STATE,TITLE");
     ind_beg(gcli::_db_mr_curs, mr, gcli::_db) if (mr.select) {
-        out << mr.mr
-            << "\t" << mr.source_branch
-            << "\t" << mr.author
-            << "\t" << mr.reviewer
-            << "\t" << mr.pipeline_status
-            << "\t" << mr.state<<mr.draft
-            << "\t" << mr.title
-            << eol;
+        AddRow(txttbl);
+        AddCol(txttbl,mr.mr);
+        AddCol(txttbl,mr.source_branch);
+        AddCol(txttbl,mr.author);
+        AddCol(txttbl,mr.reviewer);
+        AddCol(txttbl,mr.pipeline_status);
+        AddCol(txttbl,tempstr()<<mr.state<<mr.draft);
+        AddCol(txttbl,mr.title);
         if (gcli::_db.cmdline.t){
-            out << eol;
-            out << "DESCRIPTION" << eol;
-            out << mr.description << eol;
+            out<<ShowMRDesc(mr)<<eol;
             if (c_mrnote_N(mr)){
-                out << eol;
-                out << "MRNOTE\tAUTHOR\n";
+                out<<ShowMRNote(mr)<<eol;
             }
-            ind_beg(gcli::mr_c_mrnote_curs, mrnote, mr) if (mrnote.select){
-                out << mrnote.mrnote;
-                out << "\t" << mrnote.author;
-                out << eol;
-                //                out << "NOTE:";
-                out << mrnote.note;
-                out << eol;
-                out << eol;
-            }ind_end;
             if (c_mrjob_N(mr)){
-                out << eol;
-                //                out << "MRJOB\tSTATUS\tID" << eol;
-                out << "MRJOB\tSTATUS\tRUNNER" << eol;
-                ind_beg(gcli::mr_c_mrjob_curs, mrjob,mr) {
-                    out << mrjob.mrjob;
-                    out << "\t" << mrjob.status;
-                    out << "\t" << mrjob.runner;
-                    //                    out << "\t" << mrjob.id;
-                    out << eol;
-                }ind_end;
+                out<<ShowMRJob(mr)<<eol;
             }
         }
     }ind_end;
-    prlog(Tabulated(out,"\t"));
+    prlog(txttbl);
+    prlog(out);
 }
 // -----------------------------------------------------------------------------
 static tempstr MrName(strptr proj, strptr iid){
@@ -243,7 +265,10 @@ void gcli::gtblact_mr_create(gcli::FGtblact &gtblact){
     gtblact.id=branch;
     // add mrlist for xref
     // read the issue - it validates its presence
-    AddGclicmd(gclidb_Gclicmd_gclicmd_mrlist,true,"");
+    gcli::FGclicmd &gclicmd_mrlist=AddGclicmd(gclidb_Gclicmd_gclicmd_mrlist,true,"");
+    if (gcli::_db.p_gtype->gtype==gclidb_Gtype_gtype_glpat){
+        gclicmd_mrlist.cond=tempstr()<<"state="<<gcli::Gstate(gclidb_Gstate_gstate_state_opened);
+    }
     gcli::FIssue &issue=ReadSingleIssue(gtblact);
 
     // Valdiate that all git changes are commited
@@ -552,7 +577,10 @@ void gcli::gtblact_mr_start(gcli::FGtblact &gtblact){
     // Check branch exists
     tempstr mr_branch(mr.mr);
     Replace(mr_branch,":","_");
-    CheckGitBranchExists(mr_branch);
+    vrfy(CheckGitBranchExists(mr_branch), tempstr()
+         <<Keyval("branch",mr_branch)
+         <<Keyval("comment","branch exists")
+         );
     // Check dir is clean
     AssertGitWorkDirClean();
     // Checkout branch

@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2014-2019 NYSE | Intercontinental Exchange
 //
@@ -23,7 +23,6 @@
 //
 
 #include "include/algo.h"
-#include "include/lib_json.h"
 
 static void JsonParseError(lib_json::FParser &parser, strptr info) {
     if (lib_json::JsonParseOkQ(parser)) {
@@ -74,7 +73,12 @@ lib_json::FNode &lib_json::NewNode(lib_json::FNode *parent, lib_json_FNode_type_
     return NewNode(parent,type,strptr());
 }
 
-static lib_json::FNode &NewNodeSmart(lib_json::FNode *parent, lib_json_FNode_type_Enum type, strptr field) {
+// PARENT    parent node or NULL
+// TYPE      node type
+// VALUE     node value where applicable (only for field, string, number)
+// Construct 2 nodes, a "field" node which has the name FIELD, and its value
+// of type TYPE. Return the VALUE
+lib_json::FNode &lib_json::NewFieldVal(lib_json::FNode *parent, lib_json_FNode_type_Enum type, strptr field) {
     bool is_obj = parent && parent->type == lib_json_FNode_type_object;
     vrfy(is_obj == !!elems_N(field),"wrong use of field name");
     if (is_obj) {
@@ -89,24 +93,35 @@ lib_json::FNode &lib_json::NewFieldNode(lib_json::FNode *parent, strptr field) {
 }
 
 lib_json::FNode &lib_json::NewObjectNode(lib_json::FNode *parent, strptr field DFLTVAL(strptr())) {
-    return NewNodeSmart(parent, lib_json_FNode_type_object, field);
+    return NewFieldVal(parent, lib_json_FNode_type_object, field);
 }
 
 lib_json::FNode &lib_json::NewArrayNode(lib_json::FNode *parent, strptr field DFLTVAL(strptr())) {
-    return NewNodeSmart(parent, lib_json_FNode_type_array, field);
+    return NewFieldVal(parent, lib_json_FNode_type_array, field);
 }
 
 lib_json::FNode &lib_json::NewStringNode(lib_json::FNode *parent, strptr field DFLTVAL(strptr()), strptr value DFLTVAL(strptr())) {
-    lib_json::FNode &node = NewNodeSmart(parent, lib_json_FNode_type_string, field);
+    lib_json::FNode &node = NewFieldVal(parent, lib_json_FNode_type_string, field);
     node.value = value;
     return node;
 }
 
 lib_json::FNode &lib_json::NewNumberNode(lib_json::FNode *parent, strptr field DFLTVAL(strptr()), strptr value DFLTVAL(strptr("0"))) {
-    lib_json::FNode &node = NewNodeSmart(parent, lib_json_FNode_type_number, field);
+    lib_json::FNode &node = NewFieldVal(parent, lib_json_FNode_type_number, field);
     node.value = value;
     return node;
 }
+
+lib_json::FNode &lib_json::NewBoolNode(lib_json::FNode *parent, strptr field DFLTVAL(strptr()), bool value DFLTVAL(true)) {
+    lib_json::FNode *node(NULL);
+    if (value){
+        node = &NewFieldVal(parent, lib_json_FNode_type_true, field);
+    } else {
+        node = &NewFieldVal(parent, lib_json_FNode_type_false, field);
+    }
+    return *node;
+}
+
 
 // add new node as child of current node (or as root node)
 // NULL on error
@@ -554,91 +569,98 @@ void lib_json::root_node_Cleanup(lib_json::FParser& parent) {
 // quotation mark, reverse solidus, and the control characters (U+0000
 // through U+001F)."
 //    -- this says that solidus need not be escaped when printing -- only when parsing!
-void lib_json::JsonSerializeString(algo::strptr str, algo::cstring &lhs) {
-    lhs << '"';
+void lib_json::JsonSerializeString(algo::strptr str, algo::cstring &out) {
+    out << '"';
     frep_(i,elems_N(str)) {
         switch (str[i]) {
-        case '"' :  lhs << '\\' << str[i]; break;
-        case '\\':  lhs << '\\' << str[i]; break;
-        case '\b':  lhs << "\\b";          break;
-        case '\f':  lhs << "\\f";          break;
-        case '\n':  lhs << "\\n";          break;
-        case '\r':  lhs << "\\r";          break;
-        case '\t':  lhs << "\\t";          break;
+        case '"' :  out << '\\' << str[i]; break;
+        case '\\':  out << '\\' << str[i]; break;
+        case '\b':  out << "\\b";          break;
+        case '\f':  out << "\\f";          break;
+        case '\n':  out << "\\n";          break;
+        case '\r':  out << "\\r";          break;
+        case '\t':  out << "\\t";          break;
         default  :  if (str[i] & ~0x1f) {
-                lhs << str[i];
+                out << str[i];
             } else {
                 // escape control chars
-                lhs << "\\u";
-                u64_PrintHex(str[i],lhs,4,false,true);
+                out << "\\u";
+                u64_PrintHex(str[i],out,4,false,true);
             }
             break;
         }
     }
-    lhs << '"';
+    out << '"';
 }
 
 // Serialize to string
 // Serialize to JSON tree to text
 // NODE      root node to start from
-// LHS       target string
-// PRETTY    whether or not pretty-format
+// OUT       target string
+// PRETTY    pretty printer setting:
+//           0 = no pretty printer (compact output)
+//           1 = algo style pretty printer
+//           2 = standard (jq) style) pretty printer
 // INDENT    level of indenting (for pretty-formatting)
-void lib_json::JsonSerialize(lib_json::FNode* node, cstring &lhs, bool pretty, u32 indent) {
+void lib_json::JsonSerialize(lib_json::FNode* node, cstring &out, u32 pretty DFLTVAL(0), u32 indent DFLTVAL(0)) {
     if (node) {
         switch (node->type) {
-        case lib_json_FNode_type_null  :    lhs<<"null";      break;
-        case lib_json_FNode_type_true  :    lhs<<"true";      break;
-        case lib_json_FNode_type_false :    lhs<<"false";     break;
-        case lib_json_FNode_type_number:    lhs<<node->value; break;
+        case lib_json_FNode_type_null  :    out<<"null";      break;
+        case lib_json_FNode_type_true  :    out<<"true";      break;
+        case lib_json_FNode_type_false :    out<<"false";     break;
+        case lib_json_FNode_type_number:    out<<node->value; break;
 
         case lib_json_FNode_type_string: {
-            JsonSerializeString(node->value,lhs);
+            JsonSerializeString(node->value,out);
             break;
         }
 
         case lib_json_FNode_type_field : {
             // silently omit malformed fields
             if (c_child_N(*node)==1) {
-                JsonSerializeString(node->value,lhs);
-                lhs<<':';
-                lib_json::JsonSerialize(c_child_Find(*node,0),lhs,pretty,indent);
+                JsonSerializeString(node->value,out);
+                out<<':';
+                // jq style: space after:
+                if (pretty==2) {
+                    out<<' ';
+                }
+                lib_json::JsonSerialize(c_child_Find(*node,0),out,pretty,indent);
             }
         } break;
 
         case lib_json_FNode_type_array:
         case lib_json_FNode_type_object: {
-            lhs<< (node->type == lib_json_FNode_type_object ? '{' : '[');
+            out<< (node->type == lib_json_FNode_type_object ? '{' : '[');
             indent++;
-            algo::ListSep ls(",");
             ind_beg(lib_json::node_c_child_curs, child, *node) {
                 if (pretty) {
-                    lhs<< '\n';
-                    char_PrintNTimes(' ',lhs,indent*4);
+                    out<< '\n';
+                    char_PrintNTimes(' ',out,indent*4);
                 }
-                lhs<<ls;
-                lib_json::JsonSerialize(&child,lhs,pretty,indent);
+                // algo style: comma before element
+                if (pretty!=2 && ind_curs(child).index > 0) {
+                    out<<",";
+                }
+                lib_json::JsonSerialize(&child,out,pretty,indent);
+                // jq style: comma after element
+                if (pretty==2 && ind_curs(child).index < u32(c_child_N(*node)-1)) {
+                    out<<",";
+                }
             }ind_end;
             indent--;
-            if (pretty) {
-                lhs<<'\n';
-                char_PrintNTimes(' ',lhs,indent*4);
+            // newline: always there in algo format
+            // only if non-empty object in jq format
+            if (pretty==2 ? c_child_N(*node)>0 : pretty>0) {
+                out<<'\n';
+                char_PrintNTimes(' ',out,indent*4);
             }
-            lhs<< (node->type == lib_json_FNode_type_object ? '}' : ']');
+            out<< (node->type == lib_json_FNode_type_object ? '}' : ']');
         } break;
 
         default:
             vrfy_(0);
         }
     }
-}
-
-void lib_json::JsonSerialize(lib_json::FNode* node, cstring &lhs, bool pretty) {
-    lib_json::JsonSerialize(node,lhs,pretty,0);
-}
-
-void lib_json::JsonSerialize(lib_json::FNode* node, cstring &lhs) {
-    lib_json::JsonSerialize(node,lhs,false,0);
 }
 
 // Find node in object chain
@@ -706,6 +728,63 @@ u32 lib_json::u32_Get(lib_json::FNode* parent, strptr path, int dflt DFLTVAL(0))
             break;
         case lib_json_FNode_type_number:
             u32_ReadStrptrMaybe(ret,node->value);
+            break;
+        default: break;
+        }
+    }
+    return ret;
+}
+
+// Get node value as u32
+// If the path is not found, or the value is malformatted, DFLT is returned.
+// true/false is converted to 0/1
+//
+// PARENT    node to start from
+// PATH      dot-separated list of field keys
+u32 lib_json::i32_Get(lib_json::FNode* parent, strptr path, int dflt DFLTVAL(0)) {
+    lib_json::FNode* node = lib_json::node_Find(parent,path);
+    i32 ret=dflt;
+    if (node) {
+        switch (node->type) {
+        case lib_json_FNode_type_true:
+            ret = 1;
+            break;
+        case lib_json_FNode_type_false:
+            ret = 0;
+            break;
+        case lib_json_FNode_type_number:
+            i32_ReadStrptrMaybe(ret,node->value);
+            break;
+        default: break;
+        }
+    }
+    return ret;
+}
+
+// Get node value as bool
+// number is converted: zero - false, nonzero true
+// empty string - false, non-empty string true
+// On any error, DFLT is returned.
+//
+// PARENT    node to start from
+// PATH      dot-separated list of field keys
+u32 lib_json::bool_Get(lib_json::FNode* parent, strptr path, int dflt DFLTVAL(false)) {
+    lib_json::FNode* node = lib_json::node_Find(parent,path);
+    bool ret=dflt;
+    u32 num(0);
+    if (node) {
+        switch (node->type) {
+        case lib_json_FNode_type_true:
+            ret = true;
+            break;
+        case lib_json_FNode_type_false:
+            ret = false;
+            break;
+        case lib_json_FNode_type_number:
+            ret = u32_ReadStrptrMaybe(num,node->value) && num;
+            break;
+        case lib_json_FNode_type_string:
+            ret = ch_N(node->value);
             break;
         default: break;
         }
@@ -804,12 +883,17 @@ lib_json::FNode *algo::cstring_FmtJson(algo::cstring &value, lib_json::FNode *pa
     return strptr_FmtJson(value,parent);
 }
 
+// TODO generate with amc
+lib_json::FNode *algo::Smallstr50_FmtJson(algo::Smallstr50 &value, lib_json::FNode *parent) {
+    return strptr_FmtJson(value,parent);
+}
+
 // -----------------------------------------------------------------------------
 
 lib_json::FldKey lib_json::fldkey_Get(lib_json::FNode &node) {
     lib_json::FldKey ret;
     if (node.p_parent && node.p_parent->type==lib_json_FNode_type_field) {
-        ret.object = node.p_parent->p_parent;
+        ret.p_object = node.p_parent->p_parent;
         ret.field = node.p_parent->value;
     }
     return ret;

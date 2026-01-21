@@ -24,8 +24,8 @@ Usage: src_hdr [options]
     -indent                            Indent source files
     -update_copyright                  Update copyright year for current company
     -scriptfile        regx    ""      Regx of scripts to update header
-    -verbose           int             Verbosity level (0..255); alias -v; cumulative
-    -debug             int             Debug level (0..255); alias -d; cumulative
+    -verbose           flag            Verbosity level (0..255); alias -v; cumulative
+    -debug             flag            Debug level (0..255); alias -d; cumulative
     -help                              Print help and exit; alias -h
     -version                           Print version and exit
     -signature                         Show signatures and exit; alias -sig
@@ -64,14 +64,14 @@ Usage: src_hdr [options]
 `src_hdr` takes the following tables on input:
 |Ssimfile|Comment|
 |---|---|
+|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
+|[dev.copyright](/txt/ssimdb/dev/copyright.md)|Copyrighting entity|
 |[dev.license](/txt/ssimdb/dev/license.md)|Source code license|
 |[dmmeta.ns](/txt/ssimdb/dmmeta/ns.md)|Namespace (for in-memory database, protocol, etc)|
 |[dmmeta.nsx](/txt/ssimdb/dmmeta/nsx.md)|Control code-generation and exception handling options for process/library|
-|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
+|[dev.scriptfile](/txt/ssimdb/dev/scriptfile.md)|Known script file|
 |[dev.target](/txt/ssimdb/dev/target.md)|Build target|
 |[dev.targsrc](/txt/ssimdb/dev/targsrc.md)|List of sources for target|
-|[dev.scriptfile](/txt/ssimdb/dev/scriptfile.md)|Known script file|
-|[dev.copyright](/txt/ssimdb/dev/copyright.md)|Copyrighting entity|
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
 

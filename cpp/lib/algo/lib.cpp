@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2013 AlgoEngineering LLC
@@ -205,6 +205,17 @@ void algo::attr_Add(Tuple &T, strptr name, strptr value) {
     attr.value = value;
 }
 
+// Update atribute if exists, otherwise create new one
+void algo::attr_Set(Tuple &T, strptr name, strptr value) {
+    ind_beg(algo::Tuple_attrs_curs,attr,T) {
+        if (attr.name==name) {
+            attr.value=value;
+            return;
+        }
+    }ind_end;
+    attr_Add(T,name,value);
+}
+
 // -----------------------------------------------------------------------------
 
 void algo_lib::fildes_Cleanup(algo_lib::FIohook &iohook) {
@@ -236,6 +247,7 @@ void algo::SleepMsec(int ms) {
 
 // -----------------------------------------------------------------------------
 
+// Reeturn Errcode corresponding to a UNIX error code VAL
 Errcode algo::FromErrno(i64 val) {
     Errcode ret;
     code_Set(ret, val);
@@ -243,10 +255,12 @@ Errcode algo::FromErrno(i64 val) {
     return ret;
 }
 
-Errcode algo::FromWinErr(i64 val) {
+// Return Errcode corresponding to namespace <ns> and code VAL
+// The namespace should have a decoder function (decode_Call(*errns_Find(ns), val))
+Errcode algo::MakeErrcode(algo::Errns ns, i64 val) {
     Errcode ret;
+    type_Set(ret, ns);
     code_Set(ret, val);
-    type_Set(ret, algo_Errns_win);
     return ret;
 }
 
@@ -373,28 +387,14 @@ void algo::SetupExitSignals(bool sigint DFLTVAL(true)) {
 }
 
 void algo_lib::bh_timehook_Step() {
-    // execute all expired time hooks (but no time hook gets executed twice in this loop)
     algo_lib::FTimehook *timehook = algo_lib::bh_timehook_First();
-    u64 clock_thresh = algo_lib::_db.clock;// process all expired timehooks; no timehook gets 2 callbacks
-    while (timehook && timehook->time < clock_thresh) {
-        // advance timehook to the future (even if is non-recurrent).
-        // this means that before the next time it's scheduled with bh_timehook_Reheap,
-        // it will wait at least DELAY clocks.
+    if (timehook->recurrent) {
         timehook->time.value = algo_lib::_db.clock + timehook->delay;
-        if (timehook->recurrent) {
-            algo_lib::bh_timehook_ReheapFirst();
-        } else {
-            algo_lib::bh_timehook_RemoveFirst();
-        }
-        hook_Call(*timehook,*timehook);
-        algo_lib::_db.next_loop = algo_lib::_db.clock; // callback may have created work to do
-        algo_lib::bh_timehook_UpdateCycles();
-        timehook = algo_lib::bh_timehook_First();
-        clock_thresh = u64_Max(clock_thresh,3000)-3000;// lower threshold by 1 microsecond to avoid timehook pileup
+        algo_lib::bh_timehook_ReheapFirst();
+    } else {
+        algo_lib::bh_timehook_RemoveFirst();
     }
-    if (timehook) {
-        algo_lib::_db.next_loop.value = u64_Min(timehook->time.value, algo_lib::_db.next_loop);
-    }
+    hook_Call(*timehook,*timehook);
 }
 
 // -----------------------------------------------------------------------------
@@ -452,18 +452,33 @@ void algo_lib::DieWithParent() {
     //  Anything exec()'ed on top won't work.
 #else
     prctl(PR_SET_PDEATHSIG, SIGKILL);
+    prctl(PR_SET_DUMPABLE, 1, 0, 0, 0); // produce dump as a child
 #endif
+}
+
+// Return name of temp directory.
+// If it's not already initialized, it is set to the default value:
+//     temp/<procname> where <procname> is taken from argv[0].
+// The directory is created as needed.
+algo::strptr algo_lib::GetTempDir() {
+    if (_db.tempdir == "") {
+        algo::strptr procname = algo::Pathcomp(algo::strptr(algo_lib::_db.argv[0]), "/RR");
+        _db.tempdir << "temp/" << procname;
+        mkdir("temp",0755);
+        mkdir(Zeroterm(_db.tempdir),0755);// process-specific subdirectory
+    }
+    return _db.tempdir;
 }
 
 // Create temporary file
 // tempfile.fildes points to the new temp file after this
-// temp file is created under temp/
+// temp file is created under _db.tempdir
 // prefix is a namespace-unique name, such as "amc.xyz"
-// Actual file that's created becomes "temp/amc.xyz.XXXXXX"
+// Actual file that's created becomes "temp/amc/xyz.XXXXXX"
 // Computed filename is saved to tempfile.filename
 void algo_lib::TempfileInitX(algo_lib::FTempfile &tempfile, strptr prefix) {
     if (tempfile.fildes.fd == algo::Fildes()) {
-        tempfile.filename << "temp/"<<prefix<<".XXXXXX";
+        tempfile.filename = DirFileJoin(GetTempDir(),tempstr()<<prefix<<".XXXXXX");
         mode_t mask = umask(S_IXUSR | S_IRWXG | S_IWOTH | S_IXOTH);
         tempfile.fildes.fd = algo::Fildes(mkstemp((char*)Zeroterm(tempfile.filename)));
         umask(mask);
@@ -489,7 +504,7 @@ double algo::double_WeakRandom(double scale) {
 i32 algo::i32_WeakRandom(i32 modulo) {
     // #AL# annotation doesn't seem to work. why?
     // coverity[dont_call]
-    return random() % modulo;
+    return random() % i32_Max(modulo,1);
 }
 
 // -----------------------------------------------------------------------------
@@ -673,4 +688,43 @@ void algo_lib::PopDir() {
         errno_vrfy(chdir(Zeroterm(dirstack_qLast()))==0, "chdir");
         dirstack_RemoveLast();
     }
+}
+
+// -----------------------------------------------------------------------------
+
+static void unix_Decode(algo_lib::FErrns &errns, i32 &code) {
+    errns.outstr <<algo::reset<<strerror(code);
+}
+
+// Global initializer, called from algo_lib::FDb_Init
+void algo_lib::errns_Userinit() {
+    // add unix error decoder
+    {
+        algo_lib::FErrns &errns = *errns_Find(algo_Errns_unix);
+        decode_Set2(errns,errns,unix_Decode);
+
+    }
+}
+
+void algo_lib::UpdateRate(algo::I64Rate &rate, i64 val) {
+    rate.delta=val-rate.last;
+    rate.last=val;
+}
+
+// For InlineOnce and TimeHookOnce steps, break
+// out of the enclosing while loop (over timeouts).
+// Calling this function may be necessary when it becomes known that
+// no further progress can be made by the step function.
+void algo_lib::EndStep() {
+    algo_lib::_db.step_limit.value = 0;
+}
+
+void algo_lib::_db_Userinit() {
+    algo_lib::_db.last_signal = 0;
+    ind_beg_aryptr(cstring, str, algo_lib::temp_strings_Getary()) {
+        ch_Reserve(str, 256);
+    }ind_end_aryptr;
+    algo_lib::_db.n_temp = algo_lib::temp_strings_N();
+    algo_lib::bh_timehook_Reserve(32);
+    algo_lib::InitCpuHz();
 }

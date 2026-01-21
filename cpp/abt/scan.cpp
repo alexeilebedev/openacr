@@ -1,4 +1,4 @@
-// Copyright (C) 2024 AlgoRND
+// Copyright (C) 2024,2026 AlgoRND
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -184,9 +184,7 @@ void abt::ScanSrcfile() {
     while(abt::FSrcfile *srcfile = abt::zs_srcfile_read_First()) {
         srcfile->objkey = abt::GetObjkey(srcfile->srcfile);
         // read file, scan includes
-        if (!algo::StartsWithQ(srcfile->srcfile,"extern/")) {
-            ScanHeaders(srcfile);
-        }
+        ScanHeaders(srcfile);
         abt::zs_srcfile_read_RemoveFirst();
     }
 }

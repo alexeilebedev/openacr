@@ -20,7 +20,7 @@
 <!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Related -->
 These ssimfiles reference gclidb.gtbl
 
-* [gclidb.gtblact via gtbl](/txt/ssimdb/gclidb/gtblact.md) -  
+* [gclidb.gtblact via gtbl](/txt/ssimdb/gclidb/gtblact.md) - static combination of gcli tables and actions 
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Related -->
 

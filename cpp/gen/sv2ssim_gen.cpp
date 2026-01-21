@@ -33,6 +33,8 @@
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/dmmeta_gen.h"
 #include "include/gen/dmmeta_gen.inl.h"
+#include "include/gen/lib_json_gen.h"
+#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/lib_amcdb_gen.h"
@@ -41,6 +43,7 @@
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
+lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 sv2ssim::FDb    sv2ssim::_db;     // dependency found via dev.targdep
 
@@ -61,8 +64,8 @@ const char *sv2ssim_help =
 "    -data                           (output) Convert input file to ssim tuples\n"
 "    -report                 Y       Print final report\n"
 "    -prefer_signed                  Prefer signed types when given a choice\n"
-"    -verbose        int             Verbosity level (0..255); alias -v; cumulative\n"
-"    -debug          int             Debug level (0..255); alias -d; cumulative\n"
+"    -verbose        flag            Verbosity level (0..255); alias -v; cumulative\n"
+"    -debug          flag            Debug level (0..255); alias -d; cumulative\n"
 "    -help                           Print help and exit; alias -h\n"
 "    -version                        Print version and exit\n"
 "    -signature                      Show signatures and exit; alias -sig\n"
@@ -210,9 +213,8 @@ void sv2ssim::ReadArgv() {
         }
         if (ch_N(attrname) == 0) {
             err << "sv2ssim: too many arguments. error at "<<algo::strptr_ToSsim(arg)<<eol;
-        }
-        // read value into currently selected arg
-        if (haveval) {
+        } else if (haveval) {
+            // read value into currently selected arg
             bool ret=false;
             // it's already known which namespace is consuming the args,
             // so directly go there
@@ -256,6 +258,9 @@ void sv2ssim::ReadArgv() {
         }ind_end
         doexit = true;
     }
+    algo_lib_logcat_debug.enabled = algo_lib::_db.cmdline.debug;
+    algo_lib_logcat_verbose.enabled = algo_lib::_db.cmdline.verbose > 0;
+    algo_lib_logcat_verbose2.enabled = algo_lib::_db.cmdline.verbose > 1;
     if (!dohelp) {
         if (!fname_present) {
             err << "sv2ssim: Missing value for required argument -fname (see -help)" << eol;
@@ -271,7 +276,7 @@ void sv2ssim::ReadArgv() {
     }
     if (err != "") {
         algo_lib::_db.exit_code=1;
-        prerr(err);
+        prerr_(err); // already has eol
         doexit=true;
     }
     if (dohelp) {
@@ -361,8 +366,8 @@ bool sv2ssim::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && sv2ssim::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
         retval = retval && sv2ssim::LoadTuplesFile(algo::SsimFname(root,"amcdb.bltin"),recursive);
     } else {
-        algo_lib::SaveBadTag("path", root);
-        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        algo_lib::AppendErrtext("path", root);
+        algo_lib::AppendErrtext("comment", "Wrong working directory?");
         retval = false;
     }
     return retval;
@@ -579,6 +584,25 @@ algo::aryptr<algo::cstring> sv2ssim::linetok_AllocN(int n_elems) {
     return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
 }
 
+// --- sv2ssim.FDb.linetok.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<algo::cstring> sv2ssim::linetok_AllocNAt(int n_elems, int at) {
+    linetok_Reserve(n_elems);
+    int n  = _db.linetok_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("sv2ssim.bad_alloc_n_at  field:sv2ssim.FDb.linetok  comment:'index out of range'");
+    }
+    algo::cstring *elems = _db.linetok_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(algo::cstring));
+    for (int i = 0; i < n_elems; i++) {
+        new (elems + at + i) algo::cstring(); // construct new element, default initialize
+    }
+    _db.linetok_n = n+n_elems;
+    return algo::aryptr<algo::cstring>(elems+at,n_elems);
+}
+
 // --- sv2ssim.FDb.linetok.Remove
 // Remove item by index. If index outside of range, do nothing.
 void sv2ssim::linetok_Remove(u32 i) {
@@ -653,6 +677,30 @@ bool sv2ssim::linetok_ReadStrptrMaybe(algo::strptr in_str) {
         linetok_RemoveLast();
     }
     return retval;
+}
+
+// --- sv2ssim.FDb.linetok.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void sv2ssim::linetok_Insary(algo::aryptr<algo::cstring> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= _db.linetok_elems && rhs.elems < _db.linetok_elems + _db.linetok_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("sv2ssim.tary_alias  field:sv2ssim.FDb.linetok  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(_db.linetok_elems+1))) {
+        FatalErrorExit("sv2ssim.bad_insary  field:sv2ssim.FDb.linetok  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = _db.linetok_n - at;
+    linetok_Reserve(nnew); // reserve space
+    for (int i = nmove-1; i >=0 ; --i) {
+        new (_db.linetok_elems + at + nnew + i) algo::cstring(_db.linetok_elems[at + i]);
+        _db.linetok_elems[at + i].~cstring(); // destroy element
+    }
+    for (int i = 0; i < nnew; ++i) {
+        new (_db.linetok_elems + at + i) algo::cstring(rhs[i]);
+    }
+    _db.linetok_n += nnew;
 }
 
 // --- sv2ssim.FDb.svtype.Alloc
@@ -757,14 +805,9 @@ bool sv2ssim::svtype_XrefMaybe(sv2ssim::FSvtype &row) {
 // Find row by key. Return NULL if not found.
 sv2ssim::FField* sv2ssim::ind_field_Find(const algo::strptr& key) {
     u32 index = algo::cstring_Hash(0, key) & (_db.ind_field_buckets_n - 1);
-    sv2ssim::FField* *e = &_db.ind_field_buckets_elems[index];
-    sv2ssim::FField* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).name == key;
-        if (done) break;
-        e         = &ret->ind_field_next;
-    } while (true);
+    sv2ssim::FField *ret = _db.ind_field_buckets_elems[index];
+    for (; ret && !((*ret).name == key); ret = ret->ind_field_next) {
+    }
     return ret;
 }
 
@@ -796,10 +839,11 @@ sv2ssim::FField& sv2ssim::ind_field_GetOrCreate(const algo::strptr& key) {
 // --- sv2ssim.FDb.ind_field.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool sv2ssim::ind_field_InsertMaybe(sv2ssim::FField& row) {
-    ind_field_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_field_next == (sv2ssim::FField*)-1)) {// check if in hash already
-        u32 index = algo::cstring_Hash(0, row.name) & (_db.ind_field_buckets_n - 1);
+        row.ind_field_hashval = algo::cstring_Hash(0, row.name);
+        ind_field_Reserve(1);
+        u32 index = row.ind_field_hashval & (_db.ind_field_buckets_n - 1);
         sv2ssim::FField* *prev = &_db.ind_field_buckets_elems[index];
         do {
             sv2ssim::FField* ret = *prev;
@@ -825,7 +869,7 @@ bool sv2ssim::ind_field_InsertMaybe(sv2ssim::FField& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void sv2ssim::ind_field_Remove(sv2ssim::FField& row) {
     if (LIKELY(row.ind_field_next != (sv2ssim::FField*)-1)) {// check if in hash already
-        u32 index = algo::cstring_Hash(0, row.name) & (_db.ind_field_buckets_n - 1);
+        u32 index = row.ind_field_hashval & (_db.ind_field_buckets_n - 1);
         sv2ssim::FField* *prev = &_db.ind_field_buckets_elems[index]; // addr of pointer to current element
         while (sv2ssim::FField *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -842,8 +886,14 @@ void sv2ssim::ind_field_Remove(sv2ssim::FField& row) {
 // --- sv2ssim.FDb.ind_field.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void sv2ssim::ind_field_Reserve(int n) {
+    ind_field_AbsReserve(_db.ind_field_n + n);
+}
+
+// --- sv2ssim.FDb.ind_field.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void sv2ssim::ind_field_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_field_buckets_n;
-    u32 new_nelems   = _db.ind_field_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -862,7 +912,7 @@ void sv2ssim::ind_field_Reserve(int n) {
             while (elem) {
                 sv2ssim::FField &row        = *elem;
                 sv2ssim::FField* next       = row.ind_field_next;
-                u32 index          = algo::cstring_Hash(0, row.name) & (new_nbuckets-1);
+                u32 index          = row.ind_field_hashval & (new_nbuckets-1);
                 row.ind_field_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1058,14 +1108,9 @@ bool sv2ssim::bltin_XrefMaybe(sv2ssim::FBltin &row) {
 // Find row by key. Return NULL if not found.
 sv2ssim::FBltin* sv2ssim::ind_bltin_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_bltin_buckets_n - 1);
-    sv2ssim::FBltin* *e = &_db.ind_bltin_buckets_elems[index];
-    sv2ssim::FBltin* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).ctype == key;
-        if (done) break;
-        e         = &ret->ind_bltin_next;
-    } while (true);
+    sv2ssim::FBltin *ret = _db.ind_bltin_buckets_elems[index];
+    for (; ret && !((*ret).ctype == key); ret = ret->ind_bltin_next) {
+    }
     return ret;
 }
 
@@ -1097,10 +1142,11 @@ sv2ssim::FBltin& sv2ssim::ind_bltin_GetOrCreate(const algo::strptr& key) {
 // --- sv2ssim.FDb.ind_bltin.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool sv2ssim::ind_bltin_InsertMaybe(sv2ssim::FBltin& row) {
-    ind_bltin_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_bltin_next == (sv2ssim::FBltin*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr100_Hash(0, row.ctype) & (_db.ind_bltin_buckets_n - 1);
+        row.ind_bltin_hashval = algo::Smallstr100_Hash(0, row.ctype);
+        ind_bltin_Reserve(1);
+        u32 index = row.ind_bltin_hashval & (_db.ind_bltin_buckets_n - 1);
         sv2ssim::FBltin* *prev = &_db.ind_bltin_buckets_elems[index];
         do {
             sv2ssim::FBltin* ret = *prev;
@@ -1126,7 +1172,7 @@ bool sv2ssim::ind_bltin_InsertMaybe(sv2ssim::FBltin& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void sv2ssim::ind_bltin_Remove(sv2ssim::FBltin& row) {
     if (LIKELY(row.ind_bltin_next != (sv2ssim::FBltin*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr100_Hash(0, row.ctype) & (_db.ind_bltin_buckets_n - 1);
+        u32 index = row.ind_bltin_hashval & (_db.ind_bltin_buckets_n - 1);
         sv2ssim::FBltin* *prev = &_db.ind_bltin_buckets_elems[index]; // addr of pointer to current element
         while (sv2ssim::FBltin *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1143,8 +1189,14 @@ void sv2ssim::ind_bltin_Remove(sv2ssim::FBltin& row) {
 // --- sv2ssim.FDb.ind_bltin.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void sv2ssim::ind_bltin_Reserve(int n) {
+    ind_bltin_AbsReserve(_db.ind_bltin_n + n);
+}
+
+// --- sv2ssim.FDb.ind_bltin.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void sv2ssim::ind_bltin_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_bltin_buckets_n;
-    u32 new_nelems   = _db.ind_bltin_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -1163,7 +1215,7 @@ void sv2ssim::ind_bltin_Reserve(int n) {
             while (elem) {
                 sv2ssim::FBltin &row        = *elem;
                 sv2ssim::FBltin* next       = row.ind_bltin_next;
-                u32 index          = algo::Smallstr100_Hash(0, row.ctype) & (new_nbuckets-1);
+                u32 index          = row.ind_bltin_hashval & (new_nbuckets-1);
                 row.ind_bltin_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1294,6 +1346,7 @@ void sv2ssim::FField_Init(sv2ssim::FField& field) {
     field.couldbe_double = bool(true);
     field.rowid = i32(0);
     field.ind_field_next = (sv2ssim::FField*)-1; // (sv2ssim.FDb.ind_field) not-in-hash
+    field.ind_field_hashval = 0; // stored hash value
     field.zd_selfield_next = (sv2ssim::FField*)-1; // (sv2ssim.FDb.zd_selfield) not-in-list
     field.zd_selfield_prev = NULL; // (sv2ssim.FDb.zd_selfield)
 }
@@ -1306,61 +1359,50 @@ bool sv2ssim::FField_ReadFieldMaybe(sv2ssim::FField& parent, algo::strptr field,
     switch(field_id) {
         case sv2ssim_FieldId_name: {
             retval = algo::cstring_ReadStrptrMaybe(parent.name, strval);
-            break;
-        }
+        } break;
         case sv2ssim_FieldId_ctype: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.ctype, strval);
-            break;
-        }
+        } break;
         case sv2ssim_FieldId_maxwid: {
             retval = i32_ReadStrptrMaybe(parent.maxwid, strval);
-            break;
-        }
+        } break;
         case sv2ssim_FieldId_minval: {
             retval = double_ReadStrptrMaybe(parent.minval, strval);
-            break;
-        }
+        } break;
         case sv2ssim_FieldId_maxval: {
             retval = double_ReadStrptrMaybe(parent.maxval, strval);
-            break;
-        }
+        } break;
         case sv2ssim_FieldId_minwid_fix1: {
             retval = i32_ReadStrptrMaybe(parent.minwid_fix1, strval);
-            break;
-        }
+        } break;
         case sv2ssim_FieldId_maxwid_fix1: {
             retval = i32_ReadStrptrMaybe(parent.maxwid_fix1, strval);
-            break;
-        }
+        } break;
         case sv2ssim_FieldId_minwid_fix2: {
             retval = i32_ReadStrptrMaybe(parent.minwid_fix2, strval);
-            break;
-        }
+        } break;
         case sv2ssim_FieldId_maxwid_fix2: {
             retval = i32_ReadStrptrMaybe(parent.maxwid_fix2, strval);
-            break;
-        }
+        } break;
         case sv2ssim_FieldId_couldbe_int: {
             retval = bool_ReadStrptrMaybe(parent.couldbe_int, strval);
-            break;
-        }
+        } break;
         case sv2ssim_FieldId_couldbe_bool: {
             retval = bool_ReadStrptrMaybe(parent.couldbe_bool, strval);
-            break;
-        }
+        } break;
         case sv2ssim_FieldId_couldbe_fixwid: {
             retval = bool_ReadStrptrMaybe(parent.couldbe_fixwid, strval);
-            break;
-        }
+        } break;
         case sv2ssim_FieldId_couldbe_double: {
             retval = bool_ReadStrptrMaybe(parent.couldbe_double, strval);
-            break;
-        }
+        } break;
         case sv2ssim_FieldId_rowid: {
             retval = i32_ReadStrptrMaybe(parent.rowid, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -1720,11 +1762,13 @@ void sv2ssim::StaticCheck() {
 // --- sv2ssim...main
 int main(int argc, char **argv) {
     try {
+        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         sv2ssim::FDb_Init();
         algo_lib::_db.argc = argc;
         algo_lib::_db.argv = argv;
         algo_lib::IohookInit();
+        algo_lib::_db.clock = algo::CurrSchedTime(); // initialize clock
         sv2ssim::ReadArgv(); // dmmeta.main:sv2ssim
         sv2ssim::Main(); // user-defined main
     } catch(algo_lib::ErrorX &x) {
@@ -1737,6 +1781,7 @@ int main(int argc, char **argv) {
     try {
         sv2ssim::FDb_Uninit();
         algo_lib::FDb_Uninit();
+        lib_json::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;

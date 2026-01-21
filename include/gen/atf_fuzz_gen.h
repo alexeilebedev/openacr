@@ -247,6 +247,9 @@ void                 ind_target_Remove(atf_fuzz::FTarget& row) __attribute__((no
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:atf_fuzz.FDb.ind_target.Reserve
 void                 ind_target_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:atf_fuzz.FDb.ind_target.AbsReserve
+void                 ind_target_AbsReserve(int n) __attribute__((nothrow));
 
 // cursor points to valid item
 // func:atf_fuzz.FDb.fuzzstrat_curs.Reset
@@ -315,8 +318,9 @@ inline void          FFuzzstrat_Init(atf_fuzz::FFuzzstrat& fuzzstrat);
 // global access: ind_target (Thash, hash field target)
 // global access: c_target (Ptr)
 struct FTarget { // atf_fuzz.FTarget
-    atf_fuzz::FTarget*   ind_target_next;   // hash next
-    algo::Smallstr16     target;            // Primary key - name of target
+    atf_fuzz::FTarget*   ind_target_next;      // hash next
+    u32                  ind_target_hashval;   // hash value
+    algo::Smallstr16     target;               // Primary key - name of target
     // func:atf_fuzz.FTarget..AssignOp
     inline atf_fuzz::FTarget& operator =(const atf_fuzz::FTarget &rhs) = delete;
     // func:atf_fuzz.FTarget..CopyCtor

@@ -8,4 +8,9 @@ dmmeta.lenfld  field:atf_amc.VarlenAlloc.length  extra:0
 dmmeta.lenfld  field:atf_amc.VarlenExtern.length  extra:0
 dmmeta.lenfld  field:atf_amc.VarlenH.length  extra:0
 dmmeta.lenfld  field:atf_amc.VarlenK.length  extra:0
+dmmeta.lenfld  field:kafka.Frame.size  extra:-4
 dmmeta.lenfld  field:samp_meng.MsgHeader.length  extra:0
+dmmeta.lenfld  field:ws.Frame16.ext_payload_len  extra:-4
+dmmeta.lenfld  field:ws.Frame64.ext_payload_len  extra:-10
+dmmeta.lenfld  field:ws.FrameMasked16.ext_payload_len  extra:-8
+dmmeta.lenfld  field:ws.FrameMasked64.ext_payload_len  extra:-14

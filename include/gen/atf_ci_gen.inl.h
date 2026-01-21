@@ -34,6 +34,7 @@
 // Set all fields to initial values.
 inline void atf_ci::FBuilddir_Init(atf_ci::FBuilddir& builddir) {
     builddir.ind_builddir_next = (atf_ci::FBuilddir*)-1; // (atf_ci.FDb.ind_builddir) not-in-hash
+    builddir.ind_builddir_hashval = 0; // stored hash value
 }
 
 // --- atf_ci.FBuilddir..Ctor
@@ -78,6 +79,7 @@ inline void atf_ci::FCitest_Init(atf_ci::FCitest& citest) {
     citest.nerr = i32(0);
     citest.step = NULL;
     citest.ind_citest_next = (atf_ci::FCitest*)-1; // (atf_ci.FDb.ind_citest) not-in-hash
+    citest.ind_citest_hashval = 0; // stored hash value
 }
 
 // --- atf_ci.FCitest..Ctor
@@ -298,46 +300,46 @@ inline i32 atf_ci::ind_ns_N() {
     return _db.ind_ns_n;
 }
 
-// --- atf_ci.FDb.readme.EmptyQ
+// --- atf_ci.FDb.readmefile.EmptyQ
 // Return true if index is empty
-inline bool atf_ci::readme_EmptyQ() {
-    return _db.readme_n == 0;
+inline bool atf_ci::readmefile_EmptyQ() {
+    return _db.readmefile_n == 0;
 }
 
-// --- atf_ci.FDb.readme.Find
+// --- atf_ci.FDb.readmefile.Find
 // Look up row by row id. Return NULL if out of range
-inline atf_ci::FReadme* atf_ci::readme_Find(u64 t) {
-    atf_ci::FReadme *retval = NULL;
-    if (LIKELY(u64(t) < u64(_db.readme_n))) {
+inline atf_ci::FReadmefile* atf_ci::readmefile_Find(u64 t) {
+    atf_ci::FReadmefile *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.readmefile_n))) {
         u64 x = t + 1;
         u64 bsr   = algo::u64_BitScanReverse(x);
         u64 base  = u64(1)<<bsr;
         u64 index = x-base;
-        retval = &_db.readme_lary[bsr][index];
+        retval = &_db.readmefile_lary[bsr][index];
     }
     return retval;
 }
 
-// --- atf_ci.FDb.readme.Last
+// --- atf_ci.FDb.readmefile.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline atf_ci::FReadme* atf_ci::readme_Last() {
-    return readme_Find(u64(_db.readme_n-1));
+inline atf_ci::FReadmefile* atf_ci::readmefile_Last() {
+    return readmefile_Find(u64(_db.readmefile_n-1));
 }
 
-// --- atf_ci.FDb.readme.N
+// --- atf_ci.FDb.readmefile.N
 // Return number of items in the pool
-inline i32 atf_ci::readme_N() {
-    return _db.readme_n;
+inline i32 atf_ci::readmefile_N() {
+    return _db.readmefile_n;
 }
 
-// --- atf_ci.FDb.readme.qFind
+// --- atf_ci.FDb.readmefile.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline atf_ci::FReadme& atf_ci::readme_qFind(u64 t) {
+inline atf_ci::FReadmefile& atf_ci::readmefile_qFind(u64 t) {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
-    return _db.readme_lary[bsr][index];
+    return _db.readmefile_lary[bsr][index];
 }
 
 // --- atf_ci.FDb.builddir.EmptyQ
@@ -824,29 +826,29 @@ inline atf_ci::FNs& atf_ci::_db_ns_curs_Access(_db_ns_curs &curs) {
     return ns_qFind(u64(curs.index));
 }
 
-// --- atf_ci.FDb.readme_curs.Reset
+// --- atf_ci.FDb.readmefile_curs.Reset
 // cursor points to valid item
-inline void atf_ci::_db_readme_curs_Reset(_db_readme_curs &curs, atf_ci::FDb &parent) {
+inline void atf_ci::_db_readmefile_curs_Reset(_db_readmefile_curs &curs, atf_ci::FDb &parent) {
     curs.parent = &parent;
     curs.index = 0;
 }
 
-// --- atf_ci.FDb.readme_curs.ValidQ
+// --- atf_ci.FDb.readmefile_curs.ValidQ
 // cursor points to valid item
-inline bool atf_ci::_db_readme_curs_ValidQ(_db_readme_curs &curs) {
-    return curs.index < _db.readme_n;
+inline bool atf_ci::_db_readmefile_curs_ValidQ(_db_readmefile_curs &curs) {
+    return curs.index < _db.readmefile_n;
 }
 
-// --- atf_ci.FDb.readme_curs.Next
+// --- atf_ci.FDb.readmefile_curs.Next
 // proceed to next item
-inline void atf_ci::_db_readme_curs_Next(_db_readme_curs &curs) {
+inline void atf_ci::_db_readmefile_curs_Next(_db_readmefile_curs &curs) {
     curs.index++;
 }
 
-// --- atf_ci.FDb.readme_curs.Access
+// --- atf_ci.FDb.readmefile_curs.Access
 // item access
-inline atf_ci::FReadme& atf_ci::_db_readme_curs_Access(_db_readme_curs &curs) {
-    return readme_qFind(u64(curs.index));
+inline atf_ci::FReadmefile& atf_ci::_db_readmefile_curs_Access(_db_readmefile_curs &curs) {
+    return readmefile_qFind(u64(curs.index));
 }
 
 // --- atf_ci.FDb.builddir_curs.Reset
@@ -1120,6 +1122,7 @@ inline void atf_ci::FGitfile_Init(atf_ci::FGitfile& gitfile) {
     gitfile.c_scriptfile = NULL;
     gitfile.c_targsrc = NULL;
     gitfile.ind_gitfile_next = (atf_ci::FGitfile*)-1; // (atf_ci.FDb.ind_gitfile) not-in-hash
+    gitfile.ind_gitfile_hashval = 0; // stored hash value
 }
 
 // --- atf_ci.FGitfile..Ctor
@@ -1156,6 +1159,7 @@ inline  atf_ci::FNoindent::~FNoindent() {
 // Set all fields to initial values.
 inline void atf_ci::FNs_Init(atf_ci::FNs& ns) {
     ns.ind_ns_next = (atf_ci::FNs*)-1; // (atf_ci.FDb.ind_ns) not-in-hash
+    ns.ind_ns_hashval = 0; // stored hash value
 }
 
 // --- atf_ci.FNs..Ctor
@@ -1168,22 +1172,23 @@ inline  atf_ci::FNs::~FNs() {
     atf_ci::FNs_Uninit(*this);
 }
 
-// --- atf_ci.FReadme..Init
+// --- atf_ci.FReadmefile..Init
 // Set all fields to initial values.
-inline void atf_ci::FReadme_Init(atf_ci::FReadme& readme) {
-    readme.inl = bool(false);
-    readme.sandbox = bool(false);
+inline void atf_ci::FReadmefile_Init(atf_ci::FReadmefile& readmefile) {
+    readmefile.inl = bool(false);
+    readmefile.sandbox = bool(false);
 }
 
-// --- atf_ci.FReadme..Ctor
-inline  atf_ci::FReadme::FReadme() {
-    atf_ci::FReadme_Init(*this);
+// --- atf_ci.FReadmefile..Ctor
+inline  atf_ci::FReadmefile::FReadmefile() {
+    atf_ci::FReadmefile_Init(*this);
 }
 
 // --- atf_ci.FScriptfile..Init
 // Set all fields to initial values.
 inline void atf_ci::FScriptfile_Init(atf_ci::FScriptfile& scriptfile) {
     scriptfile.ind_scriptfile_next = (atf_ci::FScriptfile*)-1; // (atf_ci.FDb.ind_scriptfile) not-in-hash
+    scriptfile.ind_scriptfile_hashval = 0; // stored hash value
 }
 
 // --- atf_ci.FScriptfile..Ctor
@@ -1200,6 +1205,7 @@ inline  atf_ci::FScriptfile::~FScriptfile() {
 // Set all fields to initial values.
 inline void atf_ci::FSsimfile_Init(atf_ci::FSsimfile& ssimfile) {
     ssimfile.ind_ssimfile_next = (atf_ci::FSsimfile*)-1; // (atf_ci.FDb.ind_ssimfile) not-in-hash
+    ssimfile.ind_ssimfile_hashval = 0; // stored hash value
 }
 
 // --- atf_ci.FSsimfile..Ctor
@@ -1266,6 +1272,7 @@ inline void atf_ci::File_Init(atf_ci::File& file) {
     file.file_exists = bool(false);
     file.record_exists = bool(false);
     file.ind_file_next = (atf_ci::File*)-1; // (atf_ci.FDb.ind_file) not-in-hash
+    file.ind_file_hashval = 0; // stored hash value
 }
 
 // --- atf_ci.File..Ctor

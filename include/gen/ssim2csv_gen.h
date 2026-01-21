@@ -201,6 +201,9 @@ void                 ind_expand_Remove(ssim2csv::FExpand& row) __attribute__((no
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:ssim2csv.FDb.ind_expand.Reserve
 void                 ind_expand_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:ssim2csv.FDb.ind_expand.AbsReserve
+void                 ind_expand_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -262,6 +265,9 @@ void                 ind_outfile_Remove(ssim2csv::FOutfile& row) __attribute__((
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:ssim2csv.FDb.ind_outfile.Reserve
 void                 ind_outfile_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:ssim2csv.FDb.ind_outfile.AbsReserve
+void                 ind_outfile_AbsReserve(int n) __attribute__((nothrow));
 
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
@@ -279,6 +285,11 @@ algo::cstring&       name_AllocAt(int at) __attribute__((__warn_unused_result__,
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:ssim2csv.FDb.name.AllocN
 algo::aryptr<algo::cstring> name_AllocN(int n_elems) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:ssim2csv.FDb.name.AllocNAt
+algo::aryptr<algo::cstring> name_AllocNAt(int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:ssim2csv.FDb.name.EmptyQ
 inline bool          name_EmptyQ() __attribute__((nothrow));
@@ -328,6 +339,10 @@ algo::aryptr<algo::cstring> name_AllocNVal(int n_elems, const algo::cstring& val
 // Function returns success value.
 // func:ssim2csv.FDb.name.ReadStrptrMaybe
 bool                 name_ReadStrptrMaybe(algo::strptr in_str) __attribute__((nothrow));
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:ssim2csv.FDb.name.Insary
+void                 name_Insary(algo::aryptr<algo::cstring> rhs, int at) __attribute__((nothrow));
 
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
@@ -345,6 +360,11 @@ algo::cstring&       value_AllocAt(int at) __attribute__((__warn_unused_result__
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:ssim2csv.FDb.value.AllocN
 algo::aryptr<algo::cstring> value_AllocN(int n_elems) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:ssim2csv.FDb.value.AllocNAt
+algo::aryptr<algo::cstring> value_AllocNAt(int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:ssim2csv.FDb.value.EmptyQ
 inline bool          value_EmptyQ() __attribute__((nothrow));
@@ -394,6 +414,10 @@ algo::aryptr<algo::cstring> value_AllocNVal(int n_elems, const algo::cstring& va
 // Function returns success value.
 // func:ssim2csv.FDb.value.ReadStrptrMaybe
 bool                 value_ReadStrptrMaybe(algo::strptr in_str) __attribute__((nothrow));
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:ssim2csv.FDb.value.Insary
+void                 value_Insary(algo::aryptr<algo::cstring> rhs, int at) __attribute__((nothrow));
 
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
@@ -411,6 +435,11 @@ ssim2csv::FFlatten&  flatten_AllocAt(int at) __attribute__((__warn_unused_result
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:ssim2csv.FDb.flatten.AllocN
 algo::aryptr<ssim2csv::FFlatten> flatten_AllocN(int n_elems) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:ssim2csv.FDb.flatten.AllocNAt
+algo::aryptr<ssim2csv::FFlatten> flatten_AllocNAt(int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:ssim2csv.FDb.flatten.EmptyQ
 inline bool          flatten_EmptyQ() __attribute__((nothrow));
@@ -455,6 +484,10 @@ inline u64           flatten_rowid_Get(ssim2csv::FFlatten &elem) __attribute__((
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:ssim2csv.FDb.flatten.AllocNVal
 algo::aryptr<ssim2csv::FFlatten> flatten_AllocNVal(int n_elems, const ssim2csv::FFlatten& val) __attribute__((nothrow));
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:ssim2csv.FDb.flatten.Insary
+void                 flatten_Insary(algo::aryptr<ssim2csv::FFlatten> rhs, int at) __attribute__((nothrow));
 
 // cursor points to valid item
 // func:ssim2csv.FDb.expand_curs.Reset
@@ -524,8 +557,9 @@ void                 FDb_Uninit() __attribute__((nothrow));
 // global access: expand (Lary, by rowid)
 // global access: ind_expand (Thash, hash field expand)
 struct FExpand { // ssim2csv.FExpand
-    ssim2csv::FExpand*   ind_expand_next;   // hash next
-    algo::cstring        expand;            //
+    ssim2csv::FExpand*   ind_expand_next;      // hash next
+    u32                  ind_expand_hashval;   // hash value
+    algo::cstring        expand;               //
     // func:ssim2csv.FExpand..AssignOp
     inline ssim2csv::FExpand& operator =(const ssim2csv::FExpand &rhs) = delete;
     // func:ssim2csv.FExpand..CopyCtor
@@ -570,10 +604,11 @@ void                 FFlatten_Print(ssim2csv::FFlatten& row, algo::cstring& str)
 // global access: outfile (Lary, by rowid)
 // global access: ind_outfile (Thash, hash field outfile)
 struct FOutfile { // ssim2csv.FOutfile
-    ssim2csv::FOutfile*   ind_outfile_next;   // hash next
-    algo_lib::FFildes     fildes;             //
-    algo::cstring         header;             //
-    algo::cstring         outfile;            //
+    ssim2csv::FOutfile*   ind_outfile_next;      // hash next
+    u32                   ind_outfile_hashval;   // hash value
+    algo_lib::FFildes     fildes;                //
+    algo::cstring         header;                //
+    algo::cstring         outfile;               //
     // func:ssim2csv.FOutfile..AssignOp
     inline ssim2csv::FOutfile& operator =(const ssim2csv::FOutfile &rhs) = delete;
     // func:ssim2csv.FOutfile..CopyCtor

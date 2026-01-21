@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2012 AlgoEngineering LLC
@@ -46,13 +46,14 @@ void amc::tfunc_Io_InputMaybe() {
         // nonextern -> inputmaybe calls InsertMaybe
         if (finput.extrn) {
             if (!GenThrowQ(*field.p_ctype->p_ns)) {
+                input.acrkey << "finput:"<<field.field;
                 input.extrn = true;
             } else {
                 Ins(&R, input.body, "bool retval = true;");
                 Ins(&R, input.body, "try {");
                 Ins(&R, input.body, "    $name_Input($pararg, elem);");
                 Ins(&R, input.body, "} catch (algo_lib::ErrorX &x) {");
-                Ins(&R, input.body, "    algo_lib::SaveBadTag(\"input_error\",x.str);");
+                Ins(&R, input.body, "    algo_lib::AppendErrtext(\"input_error\",x.str);");
                 Ins(&R, input.body, "    retval = false;");
                 Ins(&R, input.body, "}");
                 Ins(&R, input.body, "return retval;");
@@ -83,6 +84,7 @@ void amc::tfunc_Io_Input() {
         amc::FFunc& input = amc::CreateCurFunc();
         Ins(&R, input.ret, "void", false);
         Ins(&R, input.proto, "$name_Input($Parent, $Basetype &elem)", false);
+        input.acrkey << "finput:"<<field.field;
         input.extrn = true;
     }
 }

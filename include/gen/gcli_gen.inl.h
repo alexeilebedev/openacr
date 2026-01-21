@@ -75,90 +75,6 @@ inline gcli::FGtype& gcli::gtype_qFind(u64 t) {
     return _db.gtype_lary[bsr][index];
 }
 
-// --- gcli.FDb.grepossh.EmptyQ
-// Return true if index is empty
-inline bool gcli::grepossh_EmptyQ() {
-    return _db.grepossh_n == 0;
-}
-
-// --- gcli.FDb.grepossh.Find
-// Look up row by row id. Return NULL if out of range
-inline gcli::FGrepossh* gcli::grepossh_Find(u64 t) {
-    gcli::FGrepossh *retval = NULL;
-    if (LIKELY(u64(t) < u64(_db.grepossh_n))) {
-        u64 x = t + 1;
-        u64 bsr   = algo::u64_BitScanReverse(x);
-        u64 base  = u64(1)<<bsr;
-        u64 index = x-base;
-        retval = &_db.grepossh_lary[bsr][index];
-    }
-    return retval;
-}
-
-// --- gcli.FDb.grepossh.Last
-// Return pointer to last element of array, or NULL if array is empty
-inline gcli::FGrepossh* gcli::grepossh_Last() {
-    return grepossh_Find(u64(_db.grepossh_n-1));
-}
-
-// --- gcli.FDb.grepossh.N
-// Return number of items in the pool
-inline i32 gcli::grepossh_N() {
-    return _db.grepossh_n;
-}
-
-// --- gcli.FDb.grepossh.qFind
-// 'quick' Access row by row id. No bounds checking.
-inline gcli::FGrepossh& gcli::grepossh_qFind(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
-    return _db.grepossh_lary[bsr][index];
-}
-
-// --- gcli.FDb.grepogitport.EmptyQ
-// Return true if index is empty
-inline bool gcli::grepogitport_EmptyQ() {
-    return _db.grepogitport_n == 0;
-}
-
-// --- gcli.FDb.grepogitport.Find
-// Look up row by row id. Return NULL if out of range
-inline gcli::FGrepogitport* gcli::grepogitport_Find(u64 t) {
-    gcli::FGrepogitport *retval = NULL;
-    if (LIKELY(u64(t) < u64(_db.grepogitport_n))) {
-        u64 x = t + 1;
-        u64 bsr   = algo::u64_BitScanReverse(x);
-        u64 base  = u64(1)<<bsr;
-        u64 index = x-base;
-        retval = &_db.grepogitport_lary[bsr][index];
-    }
-    return retval;
-}
-
-// --- gcli.FDb.grepogitport.Last
-// Return pointer to last element of array, or NULL if array is empty
-inline gcli::FGrepogitport* gcli::grepogitport_Last() {
-    return grepogitport_Find(u64(_db.grepogitport_n-1));
-}
-
-// --- gcli.FDb.grepogitport.N
-// Return number of items in the pool
-inline i32 gcli::grepogitport_N() {
-    return _db.grepogitport_n;
-}
-
-// --- gcli.FDb.grepogitport.qFind
-// 'quick' Access row by row id. No bounds checking.
-inline gcli::FGrepogitport& gcli::grepogitport_qFind(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
-    return _db.grepogitport_lary[bsr][index];
-}
-
 // --- gcli.FDb.githost.EmptyQ
 // Return true if index is empty
 inline bool gcli::githost_EmptyQ() {
@@ -591,30 +507,6 @@ inline i32 gcli::ind_githost_N() {
     return _db.ind_githost_n;
 }
 
-// --- gcli.FDb.ind_grepogitport.EmptyQ
-// Return true if hash is empty
-inline bool gcli::ind_grepogitport_EmptyQ() {
-    return _db.ind_grepogitport_n == 0;
-}
-
-// --- gcli.FDb.ind_grepogitport.N
-// Return number of items in the hash
-inline i32 gcli::ind_grepogitport_N() {
-    return _db.ind_grepogitport_n;
-}
-
-// --- gcli.FDb.ind_grepossh.EmptyQ
-// Return true if hash is empty
-inline bool gcli::ind_grepossh_EmptyQ() {
-    return _db.ind_grepossh_n == 0;
-}
-
-// --- gcli.FDb.ind_grepossh.N
-// Return number of items in the hash
-inline i32 gcli::ind_grepossh_N() {
-    return _db.ind_grepossh_n;
-}
-
 // --- gcli.FDb.ind_gtype.EmptyQ
 // Return true if hash is empty
 inline bool gcli::ind_gtype_EmptyQ() {
@@ -662,7 +554,7 @@ inline i32 gcli::c_gclicmd_N() {
 inline void gcli::c_gclicmd_RemoveAll() {
     for (u32 i = 0; i < _db.c_gclicmd_n; i++) {
         // mark all elements as not-in-array
-        _db.c_gclicmd_elems[i]->_db_c_gclicmd_in_ary = false;
+        _db.c_gclicmd_elems[i]->c_gclicmd_in_ary = false;
     }
     _db.c_gclicmd_n = 0;
 }
@@ -676,7 +568,7 @@ inline gcli::FGclicmd& gcli::c_gclicmd_qFind(u32 idx) {
 // --- gcli.FDb.c_gclicmd.InAryQ
 // True if row is in any ptrary instance
 inline bool gcli::c_gclicmd_InAryQ(gcli::FGclicmd& row) {
-    return row._db_c_gclicmd_in_ary;
+    return row.c_gclicmd_in_ary;
 }
 
 // --- gcli.FDb.c_gclicmd.qLast
@@ -1592,7 +1484,7 @@ inline i32 gcli::c_gfld_N() {
 inline void gcli::c_gfld_RemoveAll() {
     for (u32 i = 0; i < _db.c_gfld_n; i++) {
         // mark all elements as not-in-array
-        _db.c_gfld_elems[i]->_db_c_gfld_in_ary = false;
+        _db.c_gfld_elems[i]->c_gfld_in_ary = false;
     }
     _db.c_gfld_n = 0;
 }
@@ -1606,7 +1498,7 @@ inline gcli::FGfld& gcli::c_gfld_qFind(u32 idx) {
 // --- gcli.FDb.c_gfld.InAryQ
 // True if row is in any ptrary instance
 inline bool gcli::c_gfld_InAryQ(gcli::FGfld& row) {
-    return row._db_c_gfld_in_ary;
+    return row.c_gfld_in_ary;
 }
 
 // --- gcli.FDb.c_gfld.qLast
@@ -1746,56 +1638,6 @@ inline void gcli::_db_gtype_curs_Next(_db_gtype_curs &curs) {
 // item access
 inline gcli::FGtype& gcli::_db_gtype_curs_Access(_db_gtype_curs &curs) {
     return gtype_qFind(u64(curs.index));
-}
-
-// --- gcli.FDb.grepossh_curs.Reset
-// cursor points to valid item
-inline void gcli::_db_grepossh_curs_Reset(_db_grepossh_curs &curs, gcli::FDb &parent) {
-    curs.parent = &parent;
-    curs.index = 0;
-}
-
-// --- gcli.FDb.grepossh_curs.ValidQ
-// cursor points to valid item
-inline bool gcli::_db_grepossh_curs_ValidQ(_db_grepossh_curs &curs) {
-    return curs.index < _db.grepossh_n;
-}
-
-// --- gcli.FDb.grepossh_curs.Next
-// proceed to next item
-inline void gcli::_db_grepossh_curs_Next(_db_grepossh_curs &curs) {
-    curs.index++;
-}
-
-// --- gcli.FDb.grepossh_curs.Access
-// item access
-inline gcli::FGrepossh& gcli::_db_grepossh_curs_Access(_db_grepossh_curs &curs) {
-    return grepossh_qFind(u64(curs.index));
-}
-
-// --- gcli.FDb.grepogitport_curs.Reset
-// cursor points to valid item
-inline void gcli::_db_grepogitport_curs_Reset(_db_grepogitport_curs &curs, gcli::FDb &parent) {
-    curs.parent = &parent;
-    curs.index = 0;
-}
-
-// --- gcli.FDb.grepogitport_curs.ValidQ
-// cursor points to valid item
-inline bool gcli::_db_grepogitport_curs_ValidQ(_db_grepogitport_curs &curs) {
-    return curs.index < _db.grepogitport_n;
-}
-
-// --- gcli.FDb.grepogitport_curs.Next
-// proceed to next item
-inline void gcli::_db_grepogitport_curs_Next(_db_grepogitport_curs &curs) {
-    curs.index++;
-}
-
-// --- gcli.FDb.grepogitport_curs.Access
-// item access
-inline gcli::FGrepogitport& gcli::_db_grepogitport_curs_Access(_db_grepogitport_curs &curs) {
-    return grepogitport_qFind(u64(curs.index));
 }
 
 // --- gcli.FDb.githost_curs.Reset
@@ -2527,6 +2369,7 @@ inline gcli::FGact& gcli::_db_gact_curs_Access(_db_gact_curs &curs) {
 // Set all fields to initial values.
 inline void gcli::FGact_Init(gcli::FGact& gact) {
     gact.ind_gact_next = (gcli::FGact*)-1; // (gcli.FDb.ind_gact) not-in-hash
+    gact.ind_gact_hashval = 0; // stored hash value
 }
 
 // --- gcli.FGact..Ctor
@@ -2884,6 +2727,7 @@ inline  gcli::FGclicmd::~FGclicmd() {
 inline void gcli::FGclicmdarg_Init(gcli::FGclicmdarg& gclicmdarg) {
     gclicmdarg.gclicmd_c_gclicmdarg_in_ary = bool(false);
     gclicmdarg.ind_gclicmdarg_next = (gcli::FGclicmdarg*)-1; // (gcli.FDb.ind_gclicmdarg) not-in-hash
+    gclicmdarg.ind_gclicmdarg_hashval = 0; // stored hash value
 }
 
 // --- gcli.FGclicmdarg..Ctor
@@ -2962,6 +2806,7 @@ inline void gcli::FGclicmdc_Init(gcli::FGclicmdc& gclicmdc) {
     gclicmdc.c_gclicmdf_max = 0; // (gcli.FGclicmdc.c_gclicmdf)
     gclicmdc.gclicmd_c_gclicmdc_in_ary = bool(false);
     gclicmdc.ind_gclicmdc_next = (gcli::FGclicmdc*)-1; // (gcli.FDb.ind_gclicmdc) not-in-hash
+    gclicmdc.ind_gclicmdc_hashval = 0; // stored hash value
 }
 
 // --- gcli.FGclicmdc.c_gclicmdf_curs.Reset
@@ -3004,6 +2849,7 @@ inline  gcli::FGclicmdc::~FGclicmdc() {
 inline void gcli::FGclicmdf_Init(gcli::FGclicmdf& gclicmdf) {
     gclicmdf.gclicmdc_c_gclicmdf_in_ary = bool(false);
     gclicmdf.ind_gclicmdf_next = (gcli::FGclicmdf*)-1; // (gcli.FDb.ind_gclicmdf) not-in-hash
+    gclicmdf.ind_gclicmdf_hashval = 0; // stored hash value
 }
 
 // --- gcli.FGclicmdf..Ctor
@@ -3091,6 +2937,7 @@ inline void gcli::FGclicmdj2f_Init(gcli::FGclicmdj2f& gclicmdj2f) {
     gclicmdj2f.c_gclicmdf_n = 0; // (gcli.FGclicmdj2f.c_gclicmdf)
     gclicmdj2f.c_gclicmdf_max = 0; // (gcli.FGclicmdj2f.c_gclicmdf)
     gclicmdj2f.ind_gclicmdj2f_next = (gcli::FGclicmdj2f*)-1; // (gcli.FDb.ind_gclicmdj2f) not-in-hash
+    gclicmdj2f.ind_gclicmdj2f_hashval = 0; // stored hash value
 }
 
 // --- gcli.FGclicmdj2f.c_gclicmdf_curs.Reset
@@ -3135,6 +2982,7 @@ inline void gcli::FGclicmdt_Init(gcli::FGclicmdt& gclicmdt) {
     gclicmdt.p_gclicmd = NULL;
     gclicmdt.p_gtype = NULL;
     gclicmdt.ind_gclicmdt_next = (gcli::FGclicmdt*)-1; // (gcli.FDb.ind_gclicmdt) not-in-hash
+    gclicmdt.ind_gclicmdt_hashval = 0; // stored hash value
 }
 
 // --- gcli.FGclicmdt..Ctor
@@ -3211,8 +3059,9 @@ inline void gcli::FGfld_Init(gcli::FGfld& gfld) {
     gfld.c_gtblactfld_elems = NULL; // (gcli.FGfld.c_gtblactfld)
     gfld.c_gtblactfld_n = 0; // (gcli.FGfld.c_gtblactfld)
     gfld.c_gtblactfld_max = 0; // (gcli.FGfld.c_gtblactfld)
-    gfld._db_c_gfld_in_ary = bool(false);
+    gfld.c_gfld_in_ary = bool(false);
     gfld.ind_gfld_next = (gcli::FGfld*)-1; // (gcli.FDb.ind_gfld) not-in-hash
+    gfld.ind_gfld_hashval = 0; // stored hash value
 }
 
 // --- gcli.FGfld.c_gtblactfld_curs.Reset
@@ -3254,6 +3103,7 @@ inline  gcli::FGfld::~FGfld() {
 // Set all fields to initial values.
 inline void gcli::FGithost_Init(gcli::FGithost& githost) {
     githost.ind_githost_next = (gcli::FGithost*)-1; // (gcli.FDb.ind_githost) not-in-hash
+    githost.ind_githost_hashval = 0; // stored hash value
 }
 
 // --- gcli.FGithost..Ctor
@@ -3271,6 +3121,7 @@ inline  gcli::FGithost::~FGithost() {
 inline void gcli::FGmethod_Init(gcli::FGmethod& gmethod) {
     gmethod.val = u32(0);
     gmethod.ind_gmethod_next = (gcli::FGmethod*)-1; // (gcli.FDb.ind_gmethod) not-in-hash
+    gmethod.ind_gmethod_hashval = 0; // stored hash value
 }
 
 // --- gcli.FGmethod..Ctor
@@ -3293,42 +3144,11 @@ inline  gcli::FGrepo::~FGrepo() {
     gcli::FGrepo_Uninit(*this);
 }
 
-// --- gcli.FGrepogitport..Init
-// Set all fields to initial values.
-inline void gcli::FGrepogitport_Init(gcli::FGrepogitport& grepogitport) {
-    grepogitport.ind_grepogitport_next = (gcli::FGrepogitport*)-1; // (gcli.FDb.ind_grepogitport) not-in-hash
-}
-
-// --- gcli.FGrepogitport..Ctor
-inline  gcli::FGrepogitport::FGrepogitport() {
-    gcli::FGrepogitport_Init(*this);
-}
-
-// --- gcli.FGrepogitport..Dtor
-inline  gcli::FGrepogitport::~FGrepogitport() {
-    gcli::FGrepogitport_Uninit(*this);
-}
-
-// --- gcli.FGrepossh..Init
-// Set all fields to initial values.
-inline void gcli::FGrepossh_Init(gcli::FGrepossh& grepossh) {
-    grepossh.ind_grepossh_next = (gcli::FGrepossh*)-1; // (gcli.FDb.ind_grepossh) not-in-hash
-}
-
-// --- gcli.FGrepossh..Ctor
-inline  gcli::FGrepossh::FGrepossh() {
-    gcli::FGrepossh_Init(*this);
-}
-
-// --- gcli.FGrepossh..Dtor
-inline  gcli::FGrepossh::~FGrepossh() {
-    gcli::FGrepossh_Uninit(*this);
-}
-
 // --- gcli.FGstatet..Init
 // Set all fields to initial values.
 inline void gcli::FGstatet_Init(gcli::FGstatet& gstatet) {
     gstatet.ind_gstatet_next = (gcli::FGstatet*)-1; // (gcli.FDb.ind_gstatet) not-in-hash
+    gstatet.ind_gstatet_hashval = 0; // stored hash value
 }
 
 // --- gcli.FGstatet..Ctor
@@ -3408,6 +3228,7 @@ inline void gcli::FGtbl_Init(gcli::FGtbl& gtbl) {
     gtbl.c_gtblact_n = 0; // (gcli.FGtbl.c_gtblact)
     gtbl.c_gtblact_max = 0; // (gcli.FGtbl.c_gtblact)
     gtbl.ind_gtbl_next = (gcli::FGtbl*)-1; // (gcli.FDb.ind_gtbl) not-in-hash
+    gtbl.ind_gtbl_hashval = 0; // stored hash value
 }
 
 // --- gcli.FGtbl.c_gtblact_curs.Reset
@@ -3682,6 +3503,7 @@ inline void gcli::FGtype_Init(gcli::FGtype& gtype) {
     gtype.c_gtypeprefix_n = 0; // (gcli.FGtype.c_gtypeprefix)
     gtype.c_gtypeprefix_max = 0; // (gcli.FGtype.c_gtypeprefix)
     gtype.ind_gtype_next = (gcli::FGtype*)-1; // (gcli.FDb.ind_gtype) not-in-hash
+    gtype.ind_gtype_hashval = 0; // stored hash value
 }
 
 // --- gcli.FGtype.c_gtypeh_curs.Reset
@@ -4074,6 +3896,7 @@ inline void gcli::FIssuenote_Init(gcli::FIssuenote& issuenote) {
     issuenote.select = bool(false);
     issuenote.issue_c_issuenote_in_ary = bool(false);
     issuenote.ind_issuenote_next = (gcli::FIssuenote*)-1; // (gcli.FDb.ind_issuenote) not-in-hash
+    issuenote.ind_issuenote_hashval = 0; // stored hash value
 }
 
 // --- gcli.FIssuenote..Ctor
@@ -4091,6 +3914,7 @@ inline  gcli::FIssuenote::~FIssuenote() {
 inline void gcli::FMilestone_Init(gcli::FMilestone& milestone) {
     milestone.select = bool(false);
     milestone.ind_milestone_next = (gcli::FMilestone*)-1; // (gcli.FDb.ind_milestone) not-in-hash
+    milestone.ind_milestone_hashval = 0; // stored hash value
 }
 
 // --- gcli.FMilestone..Ctor
@@ -4295,6 +4119,7 @@ inline void gcli::FMrnote_Init(gcli::FMrnote& mrnote) {
     mrnote.select = bool(false);
     mrnote.mr_c_mrnote_in_ary = bool(false);
     mrnote.ind_mrnote_next = (gcli::FMrnote*)-1; // (gcli.FDb.ind_mrnote) not-in-hash
+    mrnote.ind_mrnote_hashval = 0; // stored hash value
 }
 
 // --- gcli.FMrnote..Ctor
@@ -4317,6 +4142,7 @@ inline void gcli::FUser_Init(gcli::FUser& user) {
     user.id = u32(0);
     user.select = bool(false);
     user.ind_user_next = (gcli::FUser*)-1; // (gcli.FDb.ind_user) not-in-hash
+    user.ind_user_hashval = 0; // stored hash value
 }
 
 // --- gcli.FUser..Ctor

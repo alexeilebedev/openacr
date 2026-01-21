@@ -24,7 +24,7 @@ italicised fields: *target, src, ext* are [**fldfunc**](/txt/ssim.md#fldfunc) fi
 <a href="#used-in-commands"></a>
 <!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:CmdlineUses -->
 
-* [src_func -targsrc](/txt/exe/src_func/README.md) - Visit these sources (optional) 
+* [src_func -targsrc](/txt/exe/src_func/README.md) - (scan) Limit scanning to these sources only 
 * [src_hdr -targsrc](/txt/exe/src_hdr/README.md) - Regx of targsrc to update 
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:CmdlineUses -->

@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2012 AlgoEngineering LLC
@@ -25,7 +25,24 @@
 
 #include "include/amc.h"
 
+
 // -----------------------------------------------------------------------------
+
+static bool HashLinearQ() {
+    amc::FField &field = *amc::_db.genctx.p_field;
+    amc::FThash &thash = *field.c_thash;
+    amc::FField *hashfld = thash.p_hashfld;
+    amc::FChash *chash = hashfld->p_arg->c_chash;
+    return chash && chash->hashtype == dmmeta_Hashtype_hashtype_Linear;
+}
+
+static bool HashLinearUniqueQ() {
+    amc::FField &field = *amc::_db.genctx.p_field;
+    amc::FThash &thash = *field.c_thash;
+    amc::FField *hashfld = thash.p_hashfld;
+    amc::FChash *chash = hashfld->p_arg->c_chash;
+    return chash && chash->hashtype == dmmeta_Hashtype_hashtype_Linear && thash.unique;
+}
 
 static bool EarlierPoolQ(amc::FField &field, amc::FField &first_inst) {
     bool same_scope = field.p_ctype == first_inst.p_ctype;
@@ -71,7 +88,7 @@ static void Thash_Check(amc::FField &field) {
             prlog("dmmeta.thash"
                   <<Keyval("field",field.field)
                   <<Keyval("unique","N"));
-            //algo_lib::_db.exit_code=1;
+            algo_lib::_db.exit_code=1;
         }
     }
 }
@@ -92,11 +109,13 @@ void amc::tclass_Thash() {
     InsVar(R, field.p_ctype     , "$Cpptype**", "$name_buckets_elems", "", "pointer to bucket array");
     InsVar(R, field.p_ctype     , "i32", "$name_buckets_n", "", "number of elements in bucket array");
     InsVar(R, field.p_ctype     , "i32", "$name_n", "", "number of elements in the hash table");
-    InsVar(R, field.p_arg       , "$Cpptype*", "$name_next", "", "hash next");
+    InsVar(R, field.p_arg       , "$Cpptype*", "$xfname_next", "", "hash next");
+    InsVar(R, field.p_arg       , "u32", "$xfname_hashval", "", "hash value");
 
     amc::FFunc *child_init = amc::init_GetOrCreate(*field.p_arg);
     Set(R, "$fname"     , Refname(*field.p_arg));
-    Ins(&R, child_init->body, "$fname.$name_next = ($Cpptype*)-1; // ($field) not-in-hash");
+    Ins(&R, child_init->body, "$fname.$xfname_next = ($Cpptype*)-1; // ($field) not-in-hash");
+    Ins(&R, child_init->body, "$fname.$xfname_hashval = 0; // stored hash value");
 
     Thash_Check(field);
 }
@@ -109,15 +128,17 @@ void amc::tfunc_Thash_Find() {
     amc::FFunc& find = amc::CreateCurFunc();
     Ins(&R, find.ret  , "$Cpptype*", false);
     Ins(&R, find.proto, "$name_Find($Parent, $Hashfldarg key)", false);
-    Ins(&R, find.body, "u32 index = $Hashfldtype_Hash(0, key) & ($parname.$name_buckets_n - 1);");
-    Ins(&R, find.body, "$Cpptype* *e = &$parname.$name_buckets_elems[index];");
-    Ins(&R, find.body, "$Cpptype* ret=NULL;");
-    Ins(&R, find.body, "do {");
-    Ins(&R, find.body, "    ret       = *e;");
-    Ins(&R, find.body, "    bool done = !ret || $rethashfld == key;");
-    Ins(&R, find.body, "    if (done) break;");
-    Ins(&R, find.body, "    e         = &ret->$name_next;");
-    Ins(&R, find.body, "} while (true);");
+    if (HashLinearQ()) {
+        Ins(&R, find.body, "u32 index = key;");
+        Ins(&R, find.body, "$Cpptype *ret = index < u32($parname.$name_buckets_n) ? $parname.$name_buckets_elems[index] : NULL;");
+    } else {
+        Ins(&R, find.body, "u32 index = $Hashfldtype_Hash(0, key) & ($parname.$name_buckets_n - 1);");
+        Ins(&R, find.body, "$Cpptype *ret = $parname.$name_buckets_elems[index];");
+    }
+    if (!HashLinearUniqueQ()) {
+        Ins(&R, find.body, "for (; ret && !($rethashfld == key); ret = ret->$xfname_next) {");
+        Ins(&R, find.body, "}");
+    }
     Ins(&R, find.body, "return ret;");
 }
 
@@ -142,34 +163,55 @@ void amc::tfunc_Thash_Reserve() {
     amc::FFunc& reserve = amc::CreateCurFunc();
     Ins(&R, reserve.ret  , "void", false);
     Ins(&R, reserve.proto, "$name_Reserve($Parent, int n)", false);
+    Ins(&R, reserve.body, " $name_AbsReserve($pararg,$parname.$name_n + n);");
+}
+
+// -----------------------------------------------------------------------------
+
+void amc::tfunc_Thash_AbsReserve() {
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+
+    amc::FFunc& reserve = amc::CreateCurFunc();
+    Ins(&R, reserve.ret  , "void", false);
+    Ins(&R, reserve.proto, "$name_AbsReserve($Parent, int n)", false);
     Ins(&R, reserve.body, "u32 old_nbuckets = $parname.$name_buckets_n;");
-    Ins(&R, reserve.body, "u32 new_nelems   = $parname.$name_n + n;");
+    Ins(&R, reserve.body, "u32 new_nelems   = n;");
     Ins(&R, reserve.body, "// # of elements has to be roughly equal to the number of buckets");
     Ins(&R, reserve.body, "if (new_nelems > old_nbuckets) {");
     Ins(&R, reserve.body, "    int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));");
     Ins(&R, reserve.body, "    u32 old_size = old_nbuckets * sizeof($Cpptype*);");
     Ins(&R, reserve.body, "    u32 new_size = new_nbuckets * sizeof($Cpptype*);");
-    Ins(&R, reserve.body, "    // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably");
-    Ins(&R, reserve.body, "    // means new memory will have to be allocated anyway");
-    Ins(&R, reserve.body, "    $Cpptype* *new_buckets = ($Cpptype**)$basepool_AllocMem(new_size);");
-    Ins(&R, reserve.body, "    if (UNLIKELY(!new_buckets)) {");
-    Ins(&R, reserve.body, "        FatalErrorExit(\"$ns.out_of_memory  field:$field\");");
-    Ins(&R, reserve.body, "    }");
-    Ins(&R, reserve.body, "    memset(new_buckets, 0, new_size); // clear pointers");
-    Ins(&R, reserve.body, "    // rehash all entries");
-    Ins(&R, reserve.body, "    for (int i = 0; i < $parname.$name_buckets_n; i++) {");
-    Ins(&R, reserve.body, "        $Cpptype* elem = $parname.$name_buckets_elems[i];");
-    Ins(&R, reserve.body, "        while (elem) {");
-    Ins(&R, reserve.body, "            $Cpptype &row        = *elem;");
-    Ins(&R, reserve.body, "            $Cpptype* next       = row.$name_next;");
-    Ins(&R, reserve.body, "            u32 index          = $Hashfldtype_Hash(0, $gethashfld) & (new_nbuckets-1);");
-    Ins(&R, reserve.body, "            row.$name_next     = new_buckets[index];");
-    Ins(&R, reserve.body, "            new_buckets[index] = &row;");
-    Ins(&R, reserve.body, "            elem               = next;");
-    Ins(&R, reserve.body, "        }");
-    Ins(&R, reserve.body, "    }");
-    Ins(&R, reserve.body, "    // free old array");
-    Ins(&R, reserve.body, "    $basepool_FreeMem($parname.$name_buckets_elems, old_size);");
+    if (HashLinearQ()) {
+        Ins(&R, reserve.body, "    // realloc, old entries keep their positions");
+        Ins(&R, reserve.body, "    $Cpptype* *new_buckets = ($Cpptype**)$basepool_ReallocMem($parname.$name_buckets_elems, old_size, new_size);");
+        Ins(&R, reserve.body, "    if (UNLIKELY(!new_buckets)) {");
+        Ins(&R, reserve.body, "        FatalErrorExit(\"$ns.out_of_memory  field:$field\");");
+        Ins(&R, reserve.body, "    }");
+        Ins(&R, reserve.body, "    // clear tail of reallocated space");
+        Ins(&R, reserve.body, "    memset(new_buckets+old_nbuckets, 0, new_size-old_size);");
+    } else {
+        Ins(&R, reserve.body, "    // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably");
+        Ins(&R, reserve.body, "    // means new memory will have to be allocated anyway");
+        Ins(&R, reserve.body, "    $Cpptype* *new_buckets = ($Cpptype**)$basepool_AllocMem(new_size);");
+        Ins(&R, reserve.body, "    if (UNLIKELY(!new_buckets)) {");
+        Ins(&R, reserve.body, "        FatalErrorExit(\"$ns.out_of_memory  field:$field\");");
+        Ins(&R, reserve.body, "    }");
+        Ins(&R, reserve.body, "    memset(new_buckets, 0, new_size); // clear pointers");
+        Ins(&R, reserve.body, "    // rehash all entries");
+        Ins(&R, reserve.body, "    for (int i = 0; i < $parname.$name_buckets_n; i++) {");
+        Ins(&R, reserve.body, "        $Cpptype* elem = $parname.$name_buckets_elems[i];");
+        Ins(&R, reserve.body, "        while (elem) {");
+        Ins(&R, reserve.body, "            $Cpptype &row        = *elem;");
+        Ins(&R, reserve.body, "            $Cpptype* next       = row.$xfname_next;");
+        Ins(&R, reserve.body, "            u32 index          = row.$xfname_hashval & (new_nbuckets-1);");
+        Ins(&R, reserve.body, "            row.$xfname_next     = new_buckets[index];");
+        Ins(&R, reserve.body, "            new_buckets[index] = &row;");
+        Ins(&R, reserve.body, "            elem               = next;");
+        Ins(&R, reserve.body, "        }");
+        Ins(&R, reserve.body, "    }");
+        Ins(&R, reserve.body, "    // free old array");
+        Ins(&R, reserve.body, "    $basepool_FreeMem($parname.$name_buckets_elems, old_size);");
+    }
     Ins(&R, reserve.body, "    $parname.$name_buckets_elems = new_buckets;");
     Ins(&R, reserve.body, "    $parname.$name_buckets_n = new_nbuckets;");
     Ins(&R, reserve.body, "}");
@@ -218,7 +260,7 @@ static bool CanGetOrCreateQ(amc::FField &field) {
         n_iffy_path += !ignore && !always_succeeds;
     }ind_end;
     return n_iffy_path <= max_iffy_path
-        && !ctype.c_varlenfld
+        && zd_varlenfld_EmptyQ(ctype)
         && !ctype.c_optfld
         && FirstInst(ctype)!=NULL;
 }
@@ -296,10 +338,17 @@ void amc::tfunc_Thash_InsertMaybe() {
     Ins(&R, ins.comment, "Insert row into hash table. Return true if row is reachable through the hash after the function completes.");
     Ins(&R, ins.ret  , "bool", false);
     Ins(&R, ins.proto, "$name_InsertMaybe($Parent, $Cpptype& row)", false);
-    Ins(&R, ins.body    , "$name_Reserve($pararg, 1);");
     Ins(&R, ins.body    , "bool retval = true; // if already in hash, InsertMaybe returns true");
-    Ins(&R, ins.body    , "if (LIKELY(row.$name_next == ($Cpptype*)-1)) {// check if in hash already");
-    Ins(&R, ins.body    , "    u32 index = $Hashfldtype_Hash(0, $gethashfld) & ($parname.$name_buckets_n - 1);");
+    Ins(&R, ins.body    , "if (LIKELY(row.$xfname_next == ($Cpptype*)-1)) {// check if in hash already");
+    if (HashLinearQ()) {
+        Ins(&R, ins.body    , "    row.$xfname_hashval = $gethashfld;");
+        Ins(&R, ins.body    , "    $name_AbsReserve($pararg, row.$xfname_hashval + 1);");
+        Ins(&R, ins.body    , "    u32 index = row.$xfname_hashval;");
+    } else {
+        Ins(&R, ins.body    , "    row.$xfname_hashval = $Hashfldtype_Hash(0, $gethashfld);");
+        Ins(&R, ins.body    , "    $name_Reserve($pararg, 1);");
+        Ins(&R, ins.body    , "    u32 index = row.$xfname_hashval & ($parname.$name_buckets_n - 1);");
+    }
     Ins(&R, ins.body    , "    $Cpptype* *prev = &$parname.$name_buckets_elems[index];");
     if (thash.unique) {
         Ins(&R, ins.body, "    do {");
@@ -311,11 +360,11 @@ void amc::tfunc_Thash_InsertMaybe() {
         Ins(&R, ins.body, "            retval = false;");
         Ins(&R, ins.body, "            break;");
         Ins(&R, ins.body, "        }");
-        Ins(&R, ins.body, "        prev = &ret->$name_next;");
+        Ins(&R, ins.body, "        prev = &ret->$xfname_next;");
         Ins(&R, ins.body, "    } while (true);");
     }
     Ins(&R, ins.body    , "    if (retval) {");
-    Ins(&R, ins.body    , "        row.$name_next = *prev;");
+    Ins(&R, ins.body    , "        row.$xfname_next = *prev;");
     Ins(&R, ins.body    , "        $parname.$name_n++;");
     Ins(&R, ins.body    , "        *prev = &row;");
     Ins(&R, ins.body    , "    }");
@@ -333,7 +382,7 @@ void amc::tfunc_Thash_Cascdel() {
         Ins(&R, cascdel.body, "    for (int i = 0; i < $parname.$name_buckets_n; i++) {");
         Ins(&R, cascdel.body, "        $Cpptype *elem = $parname.$name_buckets_elems[i];");
         Ins(&R, cascdel.body, "        while (elem) {");
-        Ins(&R, cascdel.body, "            $Cpptype *next = elem->$name_next;");
+        Ins(&R, cascdel.body, "            $Cpptype *next = elem->$xfname_next;");
         Ins(&R, cascdel.body, DeleteExpr(field, "$pararg", "*elem") << ";");
         Ins(&R, cascdel.body, "            elem = next;");
         Ins(&R, cascdel.body, "        }");
@@ -348,17 +397,22 @@ void amc::tfunc_Thash_Remove() {
     amc::FFunc& rem = amc::CreateCurFunc();
     Ins(&R, rem.ret  , "void", false);
     Ins(&R, rem.proto, "$name_Remove($Parent, $Cpptype& row)", false);
-    Ins(&R, rem.body, "if (LIKELY(row.$name_next != ($Cpptype*)-1)) {// check if in hash already");
-    Ins(&R, rem.body, "    u32 index = $Hashfldtype_Hash(0, $gethashfld) & ($parname.$name_buckets_n - 1);");
-    Ins(&R, rem.body, "    $Cpptype* *prev = &$parname.$name_buckets_elems[index]; // addr of pointer to current element");
+    Ins(&R, rem.body, "if (LIKELY(row.$xfname_next != ($Cpptype*)-1)) {// check if in hash already");
+    if (HashLinearQ()) {
+        Ins(&R, rem.body, "    u32 index = row.$xfname_hashval;");
+        Ins(&R, rem.body, "    $Cpptype* *prev = index < u32($parname.$name_buckets_n) ? &$parname.$name_buckets_elems[index] : NULL; // addr of pointer to current element");
+    } else {
+        Ins(&R, rem.body, "    u32 index = row.$xfname_hashval & ($parname.$name_buckets_n - 1);");
+        Ins(&R, rem.body, "    $Cpptype* *prev = &$parname.$name_buckets_elems[index]; // addr of pointer to current element");
+    }
     Ins(&R, rem.body, "    while ($Cpptype *next = *prev) {                          // scan the collision chain for our element");
     Ins(&R, rem.body, "        if (next == &row) {        // found it?");
-    Ins(&R, rem.body, "            *prev = next->$name_next; // unlink (singly linked list)");
+    Ins(&R, rem.body, "            *prev = next->$xfname_next; // unlink (singly linked list)");
     Ins(&R, rem.body, "            $parname.$name_n--;");
-    Ins(&R, rem.body, "            row.$name_next = ($Cpptype*)-1;// not-in-hash");
+    Ins(&R, rem.body, "            row.$xfname_next = ($Cpptype*)-1;// not-in-hash");
     Ins(&R, rem.body, "            break;");
     Ins(&R, rem.body, "        }");
-    Ins(&R, rem.body, "        prev = &next->$name_next;");
+    Ins(&R, rem.body, "        prev = &next->$xfname_next;");
     Ins(&R, rem.body, "    }");
     Ins(&R, rem.body, "}");
 }
@@ -371,18 +425,29 @@ void amc::tfunc_Thash_FindRemove() {
         amc::FFunc& findrem = amc::CreateCurFunc();
         Ins(&R, findrem.ret  , "$Cpptype*", false);
         Ins(&R, findrem.proto, "$name_FindRemove($Parent, $Hashfldarg key)", false);
-        Ins(&R, findrem.body, "u32 index = $Hashfldtype_Hash(0, key) & ($parname.$name_buckets_n - 1);");
-        Ins(&R, findrem.body, "$Cpptype* *prev = &$parname.$name_buckets_elems[index];");
+        if (HashLinearQ()) {
+            Ins(&R, findrem.body, "    u32 index = key;");
+            Ins(&R, findrem.body, "    $Cpptype* *prev = index < u32($parname.$name_buckets_n) ? &$parname.$name_buckets_elems[index] : NULL; // addr of pointer to current element");
+        } else {
+            Ins(&R, findrem.body, "    u32 index = $Hashfldtype_Hash(0, key) & ($parname.$name_buckets_n - 1);");
+            Ins(&R, findrem.body, "    $Cpptype* *prev = &$parname.$name_buckets_elems[index];");
+        }
         Ins(&R, findrem.body, "$Cpptype* ret=NULL;");
+        if (HashLinearQ()) {
+            Ins(&R, findrem.body, "if (prev) {");
+        }
         Ins(&R, findrem.body, "do {");
         Ins(&R, findrem.body, "    ret       = *prev;");
         Ins(&R, findrem.body, "    bool done = !ret || $rethashfld == key;");
         Ins(&R, findrem.body, "    if (done) break;");
-        Ins(&R, findrem.body, "    prev         = &ret->$name_next;");
+        Ins(&R, findrem.body, "    prev         = &ret->$xfname_next;");
         Ins(&R, findrem.body, "} while (true);");
+        if (HashLinearQ()) {
+            Ins(&R, findrem.body, "}");
+        }
         Ins(&R, findrem.body, "if (ret) {");
-        Ins(&R, findrem.body, "    *prev = ret->$name_next;");
-        Ins(&R, findrem.body, "    ret->$name_next = ($Cpptype*)-1; // not-in-hash");
+        Ins(&R, findrem.body, "    *prev = ret->$xfname_next;");
+        Ins(&R, findrem.body, "    ret->$xfname_next = ($Cpptype*)-1; // not-in-hash");
         Ins(&R, findrem.body, "    $parname.$name_n--;");
         Ins(&R, findrem.body, "}");
         Ins(&R, findrem.body, "return ret;");
@@ -462,7 +527,7 @@ void amc::tfunc_Thash_curs() {
         Ins(&R, curs_next.comment, "proceed to next item");
         Ins(&R, curs_next.ret  , "void", false);
         Ins(&R, curs_next.proto, "$Parname_$name_curs_Next($Parname_$name_curs &curs)", false);
-        Ins(&R, curs_next.body, "curs.prow = &(*curs.prow)->$name_next;");
+        Ins(&R, curs_next.body, "curs.prow = &(*curs.prow)->$xfname_next;");
         Ins(&R, curs_next.body, "while (!*curs.prow) {");
         Ins(&R, curs_next.body, "    curs.bucket += 1;");
         Ins(&R, curs_next.body, "    if (curs.bucket >= curs.parent->$name_buckets_n) break;");

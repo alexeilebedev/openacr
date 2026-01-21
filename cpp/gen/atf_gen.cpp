@@ -271,25 +271,23 @@ bool atf::Testrun_ReadFieldMaybe(atf::Testrun& parent, algo::strptr field, algo:
     switch(field_id) {
         case atf_FieldId_testrun: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.testrun, strval);
-            break;
-        }
+        } break;
         case atf_FieldId_testresult: {
             retval = atf::Testresult_ReadStrptrMaybe(parent.testresult, strval);
-            break;
-        }
+        } break;
         case atf_FieldId_n_step: {
             retval = u64_ReadStrptrMaybe(parent.n_step, strval);
-            break;
-        }
+        } break;
         case atf_FieldId_n_cmp: {
             retval = u64_ReadStrptrMaybe(parent.n_cmp, strval);
-            break;
-        }
+        } break;
         case atf_FieldId_comment: {
             retval = algo::cstring_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);

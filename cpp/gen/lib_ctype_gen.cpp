@@ -33,6 +33,8 @@
 #include "include/gen/dmmeta_gen.inl.h"
 #include "include/gen/dev_gen.h"
 #include "include/gen/dev_gen.inl.h"
+#include "include/gen/lib_json_gen.h"
+#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/lib_amcdb_gen.h"
@@ -84,9 +86,11 @@ bool lib_ctype::Cmdline_ReadFieldMaybe(lib_ctype::Cmdline& parent, algo::strptr 
     switch(field_id) {
         case lib_ctype_FieldId_in: {
             retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -146,7 +150,7 @@ void lib_ctype::Cmdline_PrintArgv(lib_ctype::Cmdline& row, algo::cstring& str) {
 i32 lib_ctype::Cmdline_NArgs(lib_ctype::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
     i32 retval = 1;
     switch (field) {
-        case lib_ctype_FieldId_in: { // $comment
+        case lib_ctype_FieldId_in: { //
             *out_anon = false;
         } break;
         default:
@@ -260,6 +264,7 @@ void lib_ctype::FCfmt_Init(lib_ctype::FCfmt& cfmt) {
     cfmt.genop = bool(false);
     cfmt.ctype_c_cfmt_in_ary = bool(false);
     cfmt.ind_cfmt_next = (lib_ctype::FCfmt*)-1; // (lib_ctype.FDb.ind_cfmt) not-in-hash
+    cfmt.ind_cfmt_hashval = 0; // stored hash value
 }
 
 // --- lib_ctype.FCfmt..Uninit
@@ -361,15 +366,11 @@ algo::Smallstr100 lib_ctype::name_Get(lib_ctype::FCtype& ctype) {
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 void lib_ctype::c_field_Insert(lib_ctype::FCtype& ctype, lib_ctype::FField& row) {
-    if (bool_Update(row.ctype_c_field_in_ary,true)) {
-        // reserve space
+    if (!row.ctype_c_field_in_ary) {
         c_field_Reserve(ctype, 1);
-        u32 n  = ctype.c_field_n;
-        u32 at = n;
-        lib_ctype::FField* *elems = ctype.c_field_elems;
-        elems[at] = &row;
-        ctype.c_field_n = n+1;
-
+        u32 n  = ctype.c_field_n++;
+        ctype.c_field_elems[n] = &row;
+        row.ctype_c_field_in_ary = true;
     }
 }
 
@@ -378,7 +379,7 @@ void lib_ctype::c_field_Insert(lib_ctype::FCtype& ctype, lib_ctype::FField& row)
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 bool lib_ctype::c_field_InsertMaybe(lib_ctype::FCtype& ctype, lib_ctype::FField& row) {
-    bool retval = !row.ctype_c_field_in_ary;
+    bool retval = !ctype_c_field_InAryQ(row);
     c_field_Insert(ctype,row); // check is performed in _Insert again
     return retval;
 }
@@ -386,18 +387,18 @@ bool lib_ctype::c_field_InsertMaybe(lib_ctype::FCtype& ctype, lib_ctype::FField&
 // --- lib_ctype.FCtype.c_field.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void lib_ctype::c_field_Remove(lib_ctype::FCtype& ctype, lib_ctype::FField& row) {
+    int n = ctype.c_field_n;
     if (bool_Update(row.ctype_c_field_in_ary,false)) {
-        int lim = ctype.c_field_n;
         lib_ctype::FField* *elems = ctype.c_field_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = lim-1; i>=0; i--) {
+        for (int i = n-1; i>=0; i--) {
             lib_ctype::FField* elem = elems[i]; // fetch element
             if (elem == &row) {
                 int j = i + 1;
-                size_t nbytes = sizeof(lib_ctype::FField*) * (lim - j);
+                size_t nbytes = sizeof(lib_ctype::FField*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                ctype.c_field_n = lim - 1;
+                ctype.c_field_n = n - 1;
                 break;
             }
         }
@@ -425,15 +426,11 @@ void lib_ctype::c_field_Reserve(lib_ctype::FCtype& ctype, u32 n) {
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 void lib_ctype::c_cfmt_Insert(lib_ctype::FCtype& ctype, lib_ctype::FCfmt& row) {
-    if (bool_Update(row.ctype_c_cfmt_in_ary,true)) {
-        // reserve space
+    if (!row.ctype_c_cfmt_in_ary) {
         c_cfmt_Reserve(ctype, 1);
-        u32 n  = ctype.c_cfmt_n;
-        u32 at = n;
-        lib_ctype::FCfmt* *elems = ctype.c_cfmt_elems;
-        elems[at] = &row;
-        ctype.c_cfmt_n = n+1;
-
+        u32 n  = ctype.c_cfmt_n++;
+        ctype.c_cfmt_elems[n] = &row;
+        row.ctype_c_cfmt_in_ary = true;
     }
 }
 
@@ -442,7 +439,7 @@ void lib_ctype::c_cfmt_Insert(lib_ctype::FCtype& ctype, lib_ctype::FCfmt& row) {
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 bool lib_ctype::c_cfmt_InsertMaybe(lib_ctype::FCtype& ctype, lib_ctype::FCfmt& row) {
-    bool retval = !row.ctype_c_cfmt_in_ary;
+    bool retval = !ctype_c_cfmt_InAryQ(row);
     c_cfmt_Insert(ctype,row); // check is performed in _Insert again
     return retval;
 }
@@ -450,18 +447,18 @@ bool lib_ctype::c_cfmt_InsertMaybe(lib_ctype::FCtype& ctype, lib_ctype::FCfmt& r
 // --- lib_ctype.FCtype.c_cfmt.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void lib_ctype::c_cfmt_Remove(lib_ctype::FCtype& ctype, lib_ctype::FCfmt& row) {
+    int n = ctype.c_cfmt_n;
     if (bool_Update(row.ctype_c_cfmt_in_ary,false)) {
-        int lim = ctype.c_cfmt_n;
         lib_ctype::FCfmt* *elems = ctype.c_cfmt_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = lim-1; i>=0; i--) {
+        for (int i = n-1; i>=0; i--) {
             lib_ctype::FCfmt* elem = elems[i]; // fetch element
             if (elem == &row) {
                 int j = i + 1;
-                size_t nbytes = sizeof(lib_ctype::FCfmt*) * (lim - j);
+                size_t nbytes = sizeof(lib_ctype::FCfmt*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                ctype.c_cfmt_n = lim - 1;
+                ctype.c_cfmt_n = n - 1;
                 break;
             }
         }
@@ -498,6 +495,7 @@ void lib_ctype::FCtype_Init(lib_ctype::FCtype& ctype) {
     ctype.c_bltin = NULL;
     ctype.c_sqltype = NULL;
     ctype.ind_ctype_next = (lib_ctype::FCtype*)-1; // (lib_ctype.FDb.ind_ctype) not-in-hash
+    ctype.ind_ctype_hashval = 0; // stored hash value
 }
 
 // --- lib_ctype.FCtype..Uninit
@@ -631,14 +629,9 @@ bool lib_ctype::fconst_XrefMaybe(lib_ctype::FFconst &row) {
 // Find row by key. Return NULL if not found.
 lib_ctype::FFconst* lib_ctype::ind_fconst_key_Find(const algo::strptr& key) {
     u32 index = algo::cstring_Hash(0, key) & (_db.ind_fconst_key_buckets_n - 1);
-    lib_ctype::FFconst* *e = &_db.ind_fconst_key_buckets_elems[index];
-    lib_ctype::FFconst* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).key == key;
-        if (done) break;
-        e         = &ret->ind_fconst_key_next;
-    } while (true);
+    lib_ctype::FFconst *ret = _db.ind_fconst_key_buckets_elems[index];
+    for (; ret && !((*ret).key == key); ret = ret->ind_fconst_key_next) {
+    }
     return ret;
 }
 
@@ -653,10 +646,11 @@ lib_ctype::FFconst& lib_ctype::ind_fconst_key_FindX(const algo::strptr& key) {
 // --- lib_ctype.FDb.ind_fconst_key.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool lib_ctype::ind_fconst_key_InsertMaybe(lib_ctype::FFconst& row) {
-    ind_fconst_key_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_fconst_key_next == (lib_ctype::FFconst*)-1)) {// check if in hash already
-        u32 index = algo::cstring_Hash(0, row.key) & (_db.ind_fconst_key_buckets_n - 1);
+        row.ind_fconst_key_hashval = algo::cstring_Hash(0, row.key);
+        ind_fconst_key_Reserve(1);
+        u32 index = row.ind_fconst_key_hashval & (_db.ind_fconst_key_buckets_n - 1);
         lib_ctype::FFconst* *prev = &_db.ind_fconst_key_buckets_elems[index];
         do {
             lib_ctype::FFconst* ret = *prev;
@@ -682,7 +676,7 @@ bool lib_ctype::ind_fconst_key_InsertMaybe(lib_ctype::FFconst& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void lib_ctype::ind_fconst_key_Remove(lib_ctype::FFconst& row) {
     if (LIKELY(row.ind_fconst_key_next != (lib_ctype::FFconst*)-1)) {// check if in hash already
-        u32 index = algo::cstring_Hash(0, row.key) & (_db.ind_fconst_key_buckets_n - 1);
+        u32 index = row.ind_fconst_key_hashval & (_db.ind_fconst_key_buckets_n - 1);
         lib_ctype::FFconst* *prev = &_db.ind_fconst_key_buckets_elems[index]; // addr of pointer to current element
         while (lib_ctype::FFconst *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -699,8 +693,14 @@ void lib_ctype::ind_fconst_key_Remove(lib_ctype::FFconst& row) {
 // --- lib_ctype.FDb.ind_fconst_key.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void lib_ctype::ind_fconst_key_Reserve(int n) {
+    ind_fconst_key_AbsReserve(_db.ind_fconst_key_n + n);
+}
+
+// --- lib_ctype.FDb.ind_fconst_key.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void lib_ctype::ind_fconst_key_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_fconst_key_buckets_n;
-    u32 new_nelems   = _db.ind_fconst_key_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -719,7 +719,7 @@ void lib_ctype::ind_fconst_key_Reserve(int n) {
             while (elem) {
                 lib_ctype::FFconst &row        = *elem;
                 lib_ctype::FFconst* next       = row.ind_fconst_key_next;
-                u32 index          = algo::cstring_Hash(0, row.key) & (new_nbuckets-1);
+                u32 index          = row.ind_fconst_key_hashval & (new_nbuckets-1);
                 row.ind_fconst_key_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -736,14 +736,9 @@ void lib_ctype::ind_fconst_key_Reserve(int n) {
 // Find row by key. Return NULL if not found.
 lib_ctype::FFconst* lib_ctype::ind_fconst_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_fconst_buckets_n - 1);
-    lib_ctype::FFconst* *e = &_db.ind_fconst_buckets_elems[index];
-    lib_ctype::FFconst* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).fconst == key;
-        if (done) break;
-        e         = &ret->ind_fconst_next;
-    } while (true);
+    lib_ctype::FFconst *ret = _db.ind_fconst_buckets_elems[index];
+    for (; ret && !((*ret).fconst == key); ret = ret->ind_fconst_next) {
+    }
     return ret;
 }
 
@@ -758,10 +753,11 @@ lib_ctype::FFconst& lib_ctype::ind_fconst_FindX(const algo::strptr& key) {
 // --- lib_ctype.FDb.ind_fconst.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool lib_ctype::ind_fconst_InsertMaybe(lib_ctype::FFconst& row) {
-    ind_fconst_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_fconst_next == (lib_ctype::FFconst*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr100_Hash(0, row.fconst) & (_db.ind_fconst_buckets_n - 1);
+        row.ind_fconst_hashval = algo::Smallstr100_Hash(0, row.fconst);
+        ind_fconst_Reserve(1);
+        u32 index = row.ind_fconst_hashval & (_db.ind_fconst_buckets_n - 1);
         lib_ctype::FFconst* *prev = &_db.ind_fconst_buckets_elems[index];
         do {
             lib_ctype::FFconst* ret = *prev;
@@ -787,7 +783,7 @@ bool lib_ctype::ind_fconst_InsertMaybe(lib_ctype::FFconst& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void lib_ctype::ind_fconst_Remove(lib_ctype::FFconst& row) {
     if (LIKELY(row.ind_fconst_next != (lib_ctype::FFconst*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr100_Hash(0, row.fconst) & (_db.ind_fconst_buckets_n - 1);
+        u32 index = row.ind_fconst_hashval & (_db.ind_fconst_buckets_n - 1);
         lib_ctype::FFconst* *prev = &_db.ind_fconst_buckets_elems[index]; // addr of pointer to current element
         while (lib_ctype::FFconst *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -804,8 +800,14 @@ void lib_ctype::ind_fconst_Remove(lib_ctype::FFconst& row) {
 // --- lib_ctype.FDb.ind_fconst.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void lib_ctype::ind_fconst_Reserve(int n) {
+    ind_fconst_AbsReserve(_db.ind_fconst_n + n);
+}
+
+// --- lib_ctype.FDb.ind_fconst.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void lib_ctype::ind_fconst_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_fconst_buckets_n;
-    u32 new_nelems   = _db.ind_fconst_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -824,7 +826,7 @@ void lib_ctype::ind_fconst_Reserve(int n) {
             while (elem) {
                 lib_ctype::FFconst &row        = *elem;
                 lib_ctype::FFconst* next       = row.ind_fconst_next;
-                u32 index          = algo::Smallstr100_Hash(0, row.fconst) & (new_nbuckets-1);
+                u32 index          = row.ind_fconst_hashval & (new_nbuckets-1);
                 row.ind_fconst_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -947,14 +949,9 @@ bool lib_ctype::ssimfile_XrefMaybe(lib_ctype::FSsimfile &row) {
 // Find row by key. Return NULL if not found.
 lib_ctype::FSsimfile* lib_ctype::ind_ssimfile_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_ssimfile_buckets_n - 1);
-    lib_ctype::FSsimfile* *e = &_db.ind_ssimfile_buckets_elems[index];
-    lib_ctype::FSsimfile* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).ssimfile == key;
-        if (done) break;
-        e         = &ret->ind_ssimfile_next;
-    } while (true);
+    lib_ctype::FSsimfile *ret = _db.ind_ssimfile_buckets_elems[index];
+    for (; ret && !((*ret).ssimfile == key); ret = ret->ind_ssimfile_next) {
+    }
     return ret;
 }
 
@@ -969,10 +966,11 @@ lib_ctype::FSsimfile& lib_ctype::ind_ssimfile_FindX(const algo::strptr& key) {
 // --- lib_ctype.FDb.ind_ssimfile.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool lib_ctype::ind_ssimfile_InsertMaybe(lib_ctype::FSsimfile& row) {
-    ind_ssimfile_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_ssimfile_next == (lib_ctype::FSsimfile*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.ssimfile) & (_db.ind_ssimfile_buckets_n - 1);
+        row.ind_ssimfile_hashval = algo::Smallstr50_Hash(0, row.ssimfile);
+        ind_ssimfile_Reserve(1);
+        u32 index = row.ind_ssimfile_hashval & (_db.ind_ssimfile_buckets_n - 1);
         lib_ctype::FSsimfile* *prev = &_db.ind_ssimfile_buckets_elems[index];
         do {
             lib_ctype::FSsimfile* ret = *prev;
@@ -998,7 +996,7 @@ bool lib_ctype::ind_ssimfile_InsertMaybe(lib_ctype::FSsimfile& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void lib_ctype::ind_ssimfile_Remove(lib_ctype::FSsimfile& row) {
     if (LIKELY(row.ind_ssimfile_next != (lib_ctype::FSsimfile*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.ssimfile) & (_db.ind_ssimfile_buckets_n - 1);
+        u32 index = row.ind_ssimfile_hashval & (_db.ind_ssimfile_buckets_n - 1);
         lib_ctype::FSsimfile* *prev = &_db.ind_ssimfile_buckets_elems[index]; // addr of pointer to current element
         while (lib_ctype::FSsimfile *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1015,8 +1013,14 @@ void lib_ctype::ind_ssimfile_Remove(lib_ctype::FSsimfile& row) {
 // --- lib_ctype.FDb.ind_ssimfile.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void lib_ctype::ind_ssimfile_Reserve(int n) {
+    ind_ssimfile_AbsReserve(_db.ind_ssimfile_n + n);
+}
+
+// --- lib_ctype.FDb.ind_ssimfile.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void lib_ctype::ind_ssimfile_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_ssimfile_buckets_n;
-    u32 new_nelems   = _db.ind_ssimfile_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -1035,7 +1039,7 @@ void lib_ctype::ind_ssimfile_Reserve(int n) {
             while (elem) {
                 lib_ctype::FSsimfile &row        = *elem;
                 lib_ctype::FSsimfile* next       = row.ind_ssimfile_next;
-                u32 index          = algo::Smallstr50_Hash(0, row.ssimfile) & (new_nbuckets-1);
+                u32 index          = row.ind_ssimfile_hashval & (new_nbuckets-1);
                 row.ind_ssimfile_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1251,14 +1255,9 @@ bool lib_ctype::ctype_XrefMaybe(lib_ctype::FCtype &row) {
 // Find row by key. Return NULL if not found.
 lib_ctype::FCtype* lib_ctype::ind_ctype_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_ctype_buckets_n - 1);
-    lib_ctype::FCtype* *e = &_db.ind_ctype_buckets_elems[index];
-    lib_ctype::FCtype* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).ctype == key;
-        if (done) break;
-        e         = &ret->ind_ctype_next;
-    } while (true);
+    lib_ctype::FCtype *ret = _db.ind_ctype_buckets_elems[index];
+    for (; ret && !((*ret).ctype == key); ret = ret->ind_ctype_next) {
+    }
     return ret;
 }
 
@@ -1290,10 +1289,11 @@ lib_ctype::FCtype& lib_ctype::ind_ctype_GetOrCreate(const algo::strptr& key) {
 // --- lib_ctype.FDb.ind_ctype.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool lib_ctype::ind_ctype_InsertMaybe(lib_ctype::FCtype& row) {
-    ind_ctype_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_ctype_next == (lib_ctype::FCtype*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr100_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
+        row.ind_ctype_hashval = algo::Smallstr100_Hash(0, row.ctype);
+        ind_ctype_Reserve(1);
+        u32 index = row.ind_ctype_hashval & (_db.ind_ctype_buckets_n - 1);
         lib_ctype::FCtype* *prev = &_db.ind_ctype_buckets_elems[index];
         do {
             lib_ctype::FCtype* ret = *prev;
@@ -1319,7 +1319,7 @@ bool lib_ctype::ind_ctype_InsertMaybe(lib_ctype::FCtype& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void lib_ctype::ind_ctype_Remove(lib_ctype::FCtype& row) {
     if (LIKELY(row.ind_ctype_next != (lib_ctype::FCtype*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr100_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
+        u32 index = row.ind_ctype_hashval & (_db.ind_ctype_buckets_n - 1);
         lib_ctype::FCtype* *prev = &_db.ind_ctype_buckets_elems[index]; // addr of pointer to current element
         while (lib_ctype::FCtype *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1336,8 +1336,14 @@ void lib_ctype::ind_ctype_Remove(lib_ctype::FCtype& row) {
 // --- lib_ctype.FDb.ind_ctype.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void lib_ctype::ind_ctype_Reserve(int n) {
+    ind_ctype_AbsReserve(_db.ind_ctype_n + n);
+}
+
+// --- lib_ctype.FDb.ind_ctype.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void lib_ctype::ind_ctype_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_ctype_buckets_n;
-    u32 new_nelems   = _db.ind_ctype_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -1356,7 +1362,7 @@ void lib_ctype::ind_ctype_Reserve(int n) {
             while (elem) {
                 lib_ctype::FCtype &row        = *elem;
                 lib_ctype::FCtype* next       = row.ind_ctype_next;
-                u32 index          = algo::Smallstr100_Hash(0, row.ctype) & (new_nbuckets-1);
+                u32 index          = row.ind_ctype_hashval & (new_nbuckets-1);
                 row.ind_ctype_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1488,14 +1494,9 @@ bool lib_ctype::field_XrefMaybe(lib_ctype::FField &row) {
 // Find row by key. Return NULL if not found.
 lib_ctype::FField* lib_ctype::ind_field_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_field_buckets_n - 1);
-    lib_ctype::FField* *e = &_db.ind_field_buckets_elems[index];
-    lib_ctype::FField* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).field == key;
-        if (done) break;
-        e         = &ret->ind_field_next;
-    } while (true);
+    lib_ctype::FField *ret = _db.ind_field_buckets_elems[index];
+    for (; ret && !((*ret).field == key); ret = ret->ind_field_next) {
+    }
     return ret;
 }
 
@@ -1510,10 +1511,11 @@ lib_ctype::FField& lib_ctype::ind_field_FindX(const algo::strptr& key) {
 // --- lib_ctype.FDb.ind_field.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool lib_ctype::ind_field_InsertMaybe(lib_ctype::FField& row) {
-    ind_field_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_field_next == (lib_ctype::FField*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr100_Hash(0, row.field) & (_db.ind_field_buckets_n - 1);
+        row.ind_field_hashval = algo::Smallstr100_Hash(0, row.field);
+        ind_field_Reserve(1);
+        u32 index = row.ind_field_hashval & (_db.ind_field_buckets_n - 1);
         lib_ctype::FField* *prev = &_db.ind_field_buckets_elems[index];
         do {
             lib_ctype::FField* ret = *prev;
@@ -1539,7 +1541,7 @@ bool lib_ctype::ind_field_InsertMaybe(lib_ctype::FField& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void lib_ctype::ind_field_Remove(lib_ctype::FField& row) {
     if (LIKELY(row.ind_field_next != (lib_ctype::FField*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr100_Hash(0, row.field) & (_db.ind_field_buckets_n - 1);
+        u32 index = row.ind_field_hashval & (_db.ind_field_buckets_n - 1);
         lib_ctype::FField* *prev = &_db.ind_field_buckets_elems[index]; // addr of pointer to current element
         while (lib_ctype::FField *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1556,8 +1558,14 @@ void lib_ctype::ind_field_Remove(lib_ctype::FField& row) {
 // --- lib_ctype.FDb.ind_field.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void lib_ctype::ind_field_Reserve(int n) {
+    ind_field_AbsReserve(_db.ind_field_n + n);
+}
+
+// --- lib_ctype.FDb.ind_field.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void lib_ctype::ind_field_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_field_buckets_n;
-    u32 new_nelems   = _db.ind_field_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -1576,7 +1584,7 @@ void lib_ctype::ind_field_Reserve(int n) {
             while (elem) {
                 lib_ctype::FField &row        = *elem;
                 lib_ctype::FField* next       = row.ind_field_next;
-                u32 index          = algo::Smallstr100_Hash(0, row.field) & (new_nbuckets-1);
+                u32 index          = row.ind_field_hashval & (new_nbuckets-1);
                 row.ind_field_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1823,8 +1831,8 @@ bool lib_ctype::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && lib_ctype::LoadTuplesFile(algo::SsimFname(root,"dev.unstablefld"),recursive);
         retval = retval && lib_ctype::LoadTuplesFile(algo::SsimFname(root,"amcdb.bltin"),recursive);
     } else {
-        algo_lib::SaveBadTag("path", root);
-        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        algo_lib::AppendErrtext("path", root);
+        algo_lib::AppendErrtext("comment", "Wrong working directory?");
         retval = false;
     }
     return retval;
@@ -2002,14 +2010,9 @@ bool lib_ctype::cfmt_XrefMaybe(lib_ctype::FCfmt &row) {
 // Find row by key. Return NULL if not found.
 lib_ctype::FCfmt* lib_ctype::ind_cfmt_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_cfmt_buckets_n - 1);
-    lib_ctype::FCfmt* *e = &_db.ind_cfmt_buckets_elems[index];
-    lib_ctype::FCfmt* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).cfmt == key;
-        if (done) break;
-        e         = &ret->ind_cfmt_next;
-    } while (true);
+    lib_ctype::FCfmt *ret = _db.ind_cfmt_buckets_elems[index];
+    for (; ret && !((*ret).cfmt == key); ret = ret->ind_cfmt_next) {
+    }
     return ret;
 }
 
@@ -2024,10 +2027,11 @@ lib_ctype::FCfmt& lib_ctype::ind_cfmt_FindX(const algo::strptr& key) {
 // --- lib_ctype.FDb.ind_cfmt.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool lib_ctype::ind_cfmt_InsertMaybe(lib_ctype::FCfmt& row) {
-    ind_cfmt_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_cfmt_next == (lib_ctype::FCfmt*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr100_Hash(0, row.cfmt) & (_db.ind_cfmt_buckets_n - 1);
+        row.ind_cfmt_hashval = algo::Smallstr100_Hash(0, row.cfmt);
+        ind_cfmt_Reserve(1);
+        u32 index = row.ind_cfmt_hashval & (_db.ind_cfmt_buckets_n - 1);
         lib_ctype::FCfmt* *prev = &_db.ind_cfmt_buckets_elems[index];
         do {
             lib_ctype::FCfmt* ret = *prev;
@@ -2053,7 +2057,7 @@ bool lib_ctype::ind_cfmt_InsertMaybe(lib_ctype::FCfmt& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void lib_ctype::ind_cfmt_Remove(lib_ctype::FCfmt& row) {
     if (LIKELY(row.ind_cfmt_next != (lib_ctype::FCfmt*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr100_Hash(0, row.cfmt) & (_db.ind_cfmt_buckets_n - 1);
+        u32 index = row.ind_cfmt_hashval & (_db.ind_cfmt_buckets_n - 1);
         lib_ctype::FCfmt* *prev = &_db.ind_cfmt_buckets_elems[index]; // addr of pointer to current element
         while (lib_ctype::FCfmt *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -2070,8 +2074,14 @@ void lib_ctype::ind_cfmt_Remove(lib_ctype::FCfmt& row) {
 // --- lib_ctype.FDb.ind_cfmt.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void lib_ctype::ind_cfmt_Reserve(int n) {
+    ind_cfmt_AbsReserve(_db.ind_cfmt_n + n);
+}
+
+// --- lib_ctype.FDb.ind_cfmt.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void lib_ctype::ind_cfmt_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_cfmt_buckets_n;
-    u32 new_nelems   = _db.ind_cfmt_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -2090,7 +2100,7 @@ void lib_ctype::ind_cfmt_Reserve(int n) {
             while (elem) {
                 lib_ctype::FCfmt &row        = *elem;
                 lib_ctype::FCfmt* next       = row.ind_cfmt_next;
-                u32 index          = algo::Smallstr100_Hash(0, row.cfmt) & (new_nbuckets-1);
+                u32 index          = row.ind_cfmt_hashval & (new_nbuckets-1);
                 row.ind_cfmt_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -3037,12 +3047,12 @@ algo::Smallstr50 lib_ctype::name_Get(lib_ctype::FField& field) {
 // --- lib_ctype.FField.zd_fconst.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
 void lib_ctype::zd_fconst_Insert(lib_ctype::FField& field, lib_ctype::FFconst& row) {
-    if (!zd_fconst_InLlistQ(row)) {
+    if (!field_zd_fconst_InLlistQ(row)) {
         lib_ctype::FFconst* old_tail = field.zd_fconst_tail;
-        row.zd_fconst_next = NULL;
-        row.zd_fconst_prev = old_tail;
+        row.field_zd_fconst_next = NULL;
+        row.field_zd_fconst_prev = old_tail;
         field.zd_fconst_tail = &row;
-        lib_ctype::FFconst **new_row_a = &old_tail->zd_fconst_next;
+        lib_ctype::FFconst **new_row_a = &old_tail->field_zd_fconst_next;
         lib_ctype::FFconst **new_row_b = &field.zd_fconst_head;
         lib_ctype::FFconst **new_row = old_tail ? new_row_a : new_row_b;
         *new_row = &row;
@@ -3053,23 +3063,23 @@ void lib_ctype::zd_fconst_Insert(lib_ctype::FField& field, lib_ctype::FFconst& r
 // --- lib_ctype.FField.zd_fconst.Remove
 // Remove element from index. If element is not in index, do nothing.
 void lib_ctype::zd_fconst_Remove(lib_ctype::FField& field, lib_ctype::FFconst& row) {
-    if (zd_fconst_InLlistQ(row)) {
+    if (field_zd_fconst_InLlistQ(row)) {
         lib_ctype::FFconst* old_head       = field.zd_fconst_head;
         (void)old_head; // in case it's not used
-        lib_ctype::FFconst* prev = row.zd_fconst_prev;
-        lib_ctype::FFconst* next = row.zd_fconst_next;
+        lib_ctype::FFconst* prev = row.field_zd_fconst_prev;
+        lib_ctype::FFconst* next = row.field_zd_fconst_next;
         // if element is first, adjust list head; otherwise, adjust previous element's next
-        lib_ctype::FFconst **new_next_a = &prev->zd_fconst_next;
+        lib_ctype::FFconst **new_next_a = &prev->field_zd_fconst_next;
         lib_ctype::FFconst **new_next_b = &field.zd_fconst_head;
         lib_ctype::FFconst **new_next = prev ? new_next_a : new_next_b;
         *new_next = next;
         // if element is last, adjust list tail; otherwise, adjust next element's prev
-        lib_ctype::FFconst **new_prev_a = &next->zd_fconst_prev;
+        lib_ctype::FFconst **new_prev_a = &next->field_zd_fconst_prev;
         lib_ctype::FFconst **new_prev_b = &field.zd_fconst_tail;
         lib_ctype::FFconst **new_prev = next ? new_prev_a : new_prev_b;
         *new_prev = prev;
         field.zd_fconst_n--;
-        row.zd_fconst_next=(lib_ctype::FFconst*)-1; // not-in-list
+        row.field_zd_fconst_next=(lib_ctype::FFconst*)-1; // not-in-list
     }
 }
 
@@ -3081,9 +3091,9 @@ void lib_ctype::zd_fconst_RemoveAll(lib_ctype::FField& field) {
     field.zd_fconst_tail = NULL;
     field.zd_fconst_n = 0;
     while (row) {
-        lib_ctype::FFconst* row_next = row->zd_fconst_next;
-        row->zd_fconst_next  = (lib_ctype::FFconst*)-1;
-        row->zd_fconst_prev  = NULL;
+        lib_ctype::FFconst* row_next = row->field_zd_fconst_next;
+        row->field_zd_fconst_next  = (lib_ctype::FFconst*)-1;
+        row->field_zd_fconst_prev  = NULL;
         row = row_next;
     }
 }
@@ -3094,14 +3104,14 @@ lib_ctype::FFconst* lib_ctype::zd_fconst_RemoveFirst(lib_ctype::FField& field) {
     lib_ctype::FFconst *row = NULL;
     row = field.zd_fconst_head;
     if (row) {
-        lib_ctype::FFconst *next = row->zd_fconst_next;
+        lib_ctype::FFconst *next = row->field_zd_fconst_next;
         field.zd_fconst_head = next;
-        lib_ctype::FFconst **new_end_a = &next->zd_fconst_prev;
+        lib_ctype::FFconst **new_end_a = &next->field_zd_fconst_prev;
         lib_ctype::FFconst **new_end_b = &field.zd_fconst_tail;
         lib_ctype::FFconst **new_end = next ? new_end_a : new_end_b;
         *new_end = NULL;
         field.zd_fconst_n--;
-        row->zd_fconst_next = (lib_ctype::FFconst*)-1; // mark as not-in-list
+        row->field_zd_fconst_next = (lib_ctype::FFconst*)-1; // mark as not-in-list
     }
     return row;
 }
@@ -3110,15 +3120,11 @@ lib_ctype::FFconst* lib_ctype::zd_fconst_RemoveFirst(lib_ctype::FField& field) {
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 void lib_ctype::c_substr_srcfield_Insert(lib_ctype::FField& field, lib_ctype::FSubstr& row) {
-    if (bool_Update(row.field_c_substr_srcfield_in_ary,true)) {
-        // reserve space
+    if (!row.field_c_substr_srcfield_in_ary) {
         c_substr_srcfield_Reserve(field, 1);
-        u32 n  = field.c_substr_srcfield_n;
-        u32 at = n;
-        lib_ctype::FSubstr* *elems = field.c_substr_srcfield_elems;
-        elems[at] = &row;
-        field.c_substr_srcfield_n = n+1;
-
+        u32 n  = field.c_substr_srcfield_n++;
+        field.c_substr_srcfield_elems[n] = &row;
+        row.field_c_substr_srcfield_in_ary = true;
     }
 }
 
@@ -3127,7 +3133,7 @@ void lib_ctype::c_substr_srcfield_Insert(lib_ctype::FField& field, lib_ctype::FS
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 bool lib_ctype::c_substr_srcfield_InsertMaybe(lib_ctype::FField& field, lib_ctype::FSubstr& row) {
-    bool retval = !row.field_c_substr_srcfield_in_ary;
+    bool retval = !field_c_substr_srcfield_InAryQ(row);
     c_substr_srcfield_Insert(field,row); // check is performed in _Insert again
     return retval;
 }
@@ -3135,18 +3141,18 @@ bool lib_ctype::c_substr_srcfield_InsertMaybe(lib_ctype::FField& field, lib_ctyp
 // --- lib_ctype.FField.c_substr_srcfield.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void lib_ctype::c_substr_srcfield_Remove(lib_ctype::FField& field, lib_ctype::FSubstr& row) {
+    int n = field.c_substr_srcfield_n;
     if (bool_Update(row.field_c_substr_srcfield_in_ary,false)) {
-        int lim = field.c_substr_srcfield_n;
         lib_ctype::FSubstr* *elems = field.c_substr_srcfield_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = lim-1; i>=0; i--) {
+        for (int i = n-1; i>=0; i--) {
             lib_ctype::FSubstr* elem = elems[i]; // fetch element
             if (elem == &row) {
                 int j = i + 1;
-                size_t nbytes = sizeof(lib_ctype::FSubstr*) * (lim - j);
+                size_t nbytes = sizeof(lib_ctype::FSubstr*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                field.c_substr_srcfield_n = lim - 1;
+                field.c_substr_srcfield_n = n - 1;
                 break;
             }
         }
@@ -3190,6 +3196,7 @@ void lib_ctype::FField_Init(lib_ctype::FField& field) {
     field.c_substr_srcfield_max = 0; // (lib_ctype.FField.c_substr_srcfield)
     field.ctype_c_field_in_ary = bool(false);
     field.ind_field_next = (lib_ctype::FField*)-1; // (lib_ctype.FDb.ind_field) not-in-hash
+    field.ind_field_hashval = 0; // stored hash value
 }
 
 // --- lib_ctype.FField..Uninit

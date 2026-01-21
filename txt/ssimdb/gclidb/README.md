@@ -7,7 +7,7 @@
 <!-- dev.mdmark  mdmark:TOC  state:BEG_AUTO  param:Toc -->
 &#128196; [gclidb.gact - Action that may be performed on a table](/txt/ssimdb/gclidb/gact.md)<br/>
 &#128196; [gclidb.gatv -](/txt/ssimdb/gclidb/gatv.md)<br/>
-&#128196; [gclidb.gclicmd -](/txt/ssimdb/gclidb/gclicmd.md)<br/>
+&#128196; [gclidb.gclicmd - table of static gcli commands](/txt/ssimdb/gclidb/gclicmd.md)<br/>
 &#128196; [gclidb.gclicmdf2j - Mapping of internal fields to JSON fields for gitlab/github](/txt/ssimdb/gclidb/gclicmdf2j.md)<br/>
 &#128196; [gclidb.gclicmdt - Internal test](/txt/ssimdb/gclidb/gclicmdt.md)<br/>
 &#128196; [gclidb.gclienv -](/txt/ssimdb/gclidb/gclienv.md)<br/>
@@ -17,12 +17,10 @@
 &#128196; [gclidb.githost -](/txt/ssimdb/gclidb/githost.md)<br/>
 &#128196; [gclidb.gmethod - HTTP method list](/txt/ssimdb/gclidb/gmethod.md)<br/>
 &#128196; [gclidb.grepo - Repo table (acr grepo -in ~/.ssim)](/txt/ssimdb/gclidb/grepo.md)<br/>
-&#128196; [gclidb.grepogitport - Default ports for repositories](/txt/ssimdb/gclidb/grepogitport.md)<br/>
-&#128196; [gclidb.grepossh - Ssh key table](/txt/ssimdb/gclidb/grepossh.md)<br/>
 &#128196; [gclidb.gstate - Issue/MR state list](/txt/ssimdb/gclidb/gstate.md)<br/>
 &#128196; [gclidb.gstatet - Internal](/txt/ssimdb/gclidb/gstatet.md)<br/>
 &#128196; [gclidb.gtbl - Supported gcli tables](/txt/ssimdb/gclidb/gtbl.md)<br/>
-&#128196; [gclidb.gtblact -](/txt/ssimdb/gclidb/gtblact.md)<br/>
+&#128196; [gclidb.gtblact - static combination of gcli tables and actions](/txt/ssimdb/gclidb/gtblact.md)<br/>
 &#128196; [gclidb.gtblactfld - List of available for each table & action combination](/txt/ssimdb/gclidb/gtblactfld.md)<br/>
 &#128196; [gclidb.gtblacttst -](/txt/ssimdb/gclidb/gtblacttst.md)<br/>
 &#128196; [gclidb.gtblacttstout -](/txt/ssimdb/gclidb/gtblacttstout.md)<br/>

@@ -395,14 +395,15 @@ private:
 // access: acr_compl.FField.p_ctype (Upptr)
 // access: acr_compl.FSsimfile.p_ctype (Upptr)
 struct FCtype { // acr_compl.FCtype
-    algo::Smallstr100       ctype;            // Identifier. must be ns.typename
-    algo::Comment           comment;          //
-    acr_compl::FField**     c_field_elems;    // array of pointers
-    u32                     c_field_n;        // array of pointers
-    u32                     c_field_max;      // capacity of allocated array
-    acr_compl::FSsimfile*   c_ssimfile;       // optional pointer
-    acr_compl::FArgvtype*   c_argvtype;       // optional pointer
-    acr_compl::FCtype*      ind_ctype_next;   // hash next
+    algo::Smallstr100       ctype;               // Identifier. must be ns.typename
+    algo::Comment           comment;             //
+    acr_compl::FField**     c_field_elems;       // array of pointers
+    u32                     c_field_n;           // array of pointers
+    u32                     c_field_max;         // capacity of allocated array
+    acr_compl::FSsimfile*   c_ssimfile;          // optional pointer
+    acr_compl::FArgvtype*   c_argvtype;          // optional pointer
+    acr_compl::FCtype*      ind_ctype_next;      // hash next
+    u32                     ind_ctype_hashval;   // hash value
     // reftype Ptrary of acr_compl.FCtype.c_field prohibits copy
     // x-reference on acr_compl.FCtype.c_ssimfile prevents copy
     // x-reference on acr_compl.FCtype.c_argvtype prevents copy
@@ -649,6 +650,11 @@ algo::cstring&       word_AllocAt(int at) __attribute__((__warn_unused_result__,
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:acr_compl.FDb.word.AllocN
 algo::aryptr<algo::cstring> word_AllocN(int n_elems) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:acr_compl.FDb.word.AllocNAt
+algo::aryptr<algo::cstring> word_AllocNAt(int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:acr_compl.FDb.word.EmptyQ
 inline bool          word_EmptyQ() __attribute__((nothrow));
@@ -698,6 +704,10 @@ algo::aryptr<algo::cstring> word_AllocNVal(int n_elems, const algo::cstring& val
 // Function returns success value.
 // func:acr_compl.FDb.word.ReadStrptrMaybe
 bool                 word_ReadStrptrMaybe(algo::strptr in_str) __attribute__((nothrow));
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:acr_compl.FDb.word.Insary
+void                 word_Insary(algo::aryptr<algo::cstring> rhs, int at) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -757,6 +767,9 @@ void                 ind_ctype_Remove(acr_compl::FCtype& row) __attribute__((not
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:acr_compl.FDb.ind_ctype.Reserve
 void                 ind_ctype_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:acr_compl.FDb.ind_ctype.AbsReserve
+void                 ind_ctype_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -813,6 +826,9 @@ void                 ind_field_Remove(acr_compl::FField& row) __attribute__((not
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:acr_compl.FDb.ind_field.Reserve
 void                 ind_field_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:acr_compl.FDb.ind_field.AbsReserve
+void                 ind_field_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -869,6 +885,9 @@ void                 ind_ssimfile_Remove(acr_compl::FSsimfile& row) __attribute_
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:acr_compl.FDb.ind_ssimfile.Reserve
 void                 ind_ssimfile_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:acr_compl.FDb.ind_ssimfile.AbsReserve
+void                 ind_ssimfile_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -1207,6 +1226,9 @@ void                 ind_ns_Remove(acr_compl::FNs& row) __attribute__((nothrow))
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:acr_compl.FDb.ind_ns.Reserve
 void                 ind_ns_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:acr_compl.FDb.ind_ns.AbsReserve
+void                 ind_ns_AbsReserve(int n) __attribute__((nothrow));
 
 // Return true if hash is empty
 // func:acr_compl.FDb.ind_cmd_field_name.EmptyQ
@@ -1226,6 +1248,9 @@ void                 ind_cmd_field_name_Remove(acr_compl::FField& row) __attribu
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:acr_compl.FDb.ind_cmd_field_name.Reserve
 void                 ind_cmd_field_name_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:acr_compl.FDb.ind_cmd_field_name.AbsReserve
+void                 ind_cmd_field_name_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -1712,28 +1737,30 @@ void                 FFflag_Uninit(acr_compl::FFflag& fflag) __attribute__((noth
 // access: acr_compl.FFcmdline.p_field (Upptr)
 // access: acr_compl.FFcmdline.p_basecmdline (Upptr)
 struct FField { // acr_compl.FField
-    acr_compl::FField*     ind_field_next;            // hash next
-    acr_compl::FField*     zd_cmd_field_next;         // zslist link; -1 means not-in-list
-    acr_compl::FField*     zd_cmd_field_prev;         // previous element
-    acr_compl::FField*     ind_cmd_field_name_next;   // hash next
-    algo::Smallstr100      field;                     // Primary key, as ctype.name
-    algo::Smallstr100      arg;                       // Type of field
-    algo::Smallstr50       reftype;                   //   "Val"  Type constructor
-    algo::CppExpr          dflt;                      // Default value (c++ expression)
-    algo::Comment          comment;                   //
-    acr_compl::FCtype*     p_arg;                     // reference to parent row
-    acr_compl::FAnonfld*   c_anonfld;                 // optional pointer
-    acr_compl::FFconst**   c_fconst_elems;            // array of pointers
-    u32                    c_fconst_n;                // array of pointers
-    u32                    c_fconst_max;              // capacity of allocated array
-    bool                   seen;                      //   false
-    acr_compl::FFflag*     c_fflag;                   // optional pointer
-    acr_compl::FCtype*     p_ctype;                   // reference to parent row
-    acr_compl::FFalias*    c_falias;                  // optional pointer
-    acr_compl::FFalias**   c_falias_srcfield_elems;   // array of pointers
-    u32                    c_falias_srcfield_n;       // array of pointers
-    u32                    c_falias_srcfield_max;     // capacity of allocated array
-    bool                   ctype_c_field_in_ary;      //   false  membership flag
+    acr_compl::FField*     ind_field_next;               // hash next
+    u32                    ind_field_hashval;            // hash value
+    acr_compl::FField*     zd_cmd_field_next;            // zslist link; -1 means not-in-list
+    acr_compl::FField*     zd_cmd_field_prev;            // previous element
+    acr_compl::FField*     ind_cmd_field_name_next;      // hash next
+    u32                    ind_cmd_field_name_hashval;   // hash value
+    algo::Smallstr100      field;                        // Primary key, as ctype.name
+    algo::Smallstr100      arg;                          // Type of field
+    algo::Smallstr50       reftype;                      //   "Val"  Type constructor
+    algo::CppExpr          dflt;                         // Default value (c++ expression)
+    algo::Comment          comment;                      //
+    acr_compl::FCtype*     p_arg;                        // reference to parent row
+    acr_compl::FAnonfld*   c_anonfld;                    // optional pointer
+    acr_compl::FFconst**   c_fconst_elems;               // array of pointers
+    u32                    c_fconst_n;                   // array of pointers
+    u32                    c_fconst_max;                 // capacity of allocated array
+    bool                   seen;                         //   false
+    acr_compl::FFflag*     c_fflag;                      // optional pointer
+    acr_compl::FCtype*     p_ctype;                      // reference to parent row
+    acr_compl::FFalias*    c_falias;                     // optional pointer
+    acr_compl::FFalias**   c_falias_srcfield_elems;      // array of pointers
+    u32                    c_falias_srcfield_n;          // array of pointers
+    u32                    c_falias_srcfield_max;        // capacity of allocated array
+    bool                   ctype_c_field_in_ary;         //   false  membership flag
     // x-reference on acr_compl.FField.p_arg prevents copy
     // x-reference on acr_compl.FField.c_anonfld prevents copy
     // reftype Ptrary of acr_compl.FField.c_fconst prohibits copy
@@ -1914,12 +1941,13 @@ void                 FField_Print(acr_compl::FField& row, algo::cstring& str) __
 // global access: ns (Lary, by rowid)
 // global access: ind_ns (Thash, hash field ns)
 struct FNs { // acr_compl.FNs
-    acr_compl::FNs*         ind_ns_next;   // hash next
-    algo::Smallstr16        ns;            // Namespace name (primary key)
-    algo::Smallstr50        nstype;        // Namespace type
-    algo::Smallstr50        license;       // Associated license
-    algo::Comment           comment;       //
-    acr_compl::FFcmdline*   c_fcmdline;    // optional pointer
+    acr_compl::FNs*         ind_ns_next;      // hash next
+    u32                     ind_ns_hashval;   // hash value
+    algo::Smallstr16        ns;               // Namespace name (primary key)
+    algo::Smallstr50        nstype;           // Namespace type
+    algo::Smallstr50        license;          // Associated license
+    algo::Comment           comment;          //
+    acr_compl::FFcmdline*   c_fcmdline;       // optional pointer
     // x-reference on acr_compl.FNs.c_fcmdline prevents copy
     // func:acr_compl.FNs..AssignOp
     inline acr_compl::FNs& operator =(const acr_compl::FNs &rhs) = delete;
@@ -1963,10 +1991,11 @@ void                 FNs_Uninit(acr_compl::FNs& ns) __attribute__((nothrow));
 // global access: ind_ssimfile (Thash, hash field ssimfile)
 // access: acr_compl.FCtype.c_ssimfile (Ptr)
 struct FSsimfile { // acr_compl.FSsimfile
-    acr_compl::FSsimfile*   ind_ssimfile_next;   // hash next
-    algo::Smallstr50        ssimfile;            //
-    algo::Smallstr100       ctype;               //
-    acr_compl::FCtype*      p_ctype;             // reference to parent row
+    acr_compl::FSsimfile*   ind_ssimfile_next;      // hash next
+    u32                     ind_ssimfile_hashval;   // hash value
+    algo::Smallstr50        ssimfile;               //
+    algo::Smallstr100       ctype;                  //
+    acr_compl::FCtype*      p_ctype;                // reference to parent row
     // x-reference on acr_compl.FSsimfile.p_ctype prevents copy
     // func:acr_compl.FSsimfile..AssignOp
     inline acr_compl::FSsimfile& operator =(const acr_compl::FSsimfile &rhs) = delete;

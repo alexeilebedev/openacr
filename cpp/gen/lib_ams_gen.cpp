@@ -42,16 +42,19 @@
 #include "include/gen/lib_prot_gen.h"
 #include "include/gen/lib_prot_gen.inl.h"
 //#pragma endinclude
+lib_ams::_db_bh_shmember_read_curs::~_db_bh_shmember_read_curs() {
+    algo_lib::malloc_FreeMem(temp_elems, sizeof(void*) * temp_max);
+
+}
+
 namespace lib_ams { // gen:ns_gsymbol
-    const char* amsdb_proctype_0("0");
-    const char* amsdb_proctype_amstest("amstest");
+    const char* amsdb_proctype_("");
+    const char* amsdb_proctype_ams_sendtest("ams_sendtest");
 } // gen:ns_gsymbol
 namespace lib_ams { // gen:ns_gsymbol
-    const char* amsdb_streamtype_0("0");
-    const char* amsdb_streamtype_ctl("ctl");
-    const char* amsdb_streamtype_io("io");
-    const char* amsdb_streamtype_out("out");
-    const char* amsdb_streamtype_trace("trace");
+    const char* amsdb_shmtype_ctl("ctl");
+    const char* amsdb_shmtype_log("log");
+    const char* amsdb_shmtype_out("out");
 } // gen:ns_gsymbol
 namespace lib_ams { // gen:ns_print_proto
     // First element of index changed.
@@ -79,10 +82,10 @@ namespace lib_ams { // gen:ns_print_proto
     // func:lib_ams.FDb.zd_flush.Call
     inline static void   zd_flush_Call() __attribute__((nothrow));
     // Update cycles count from previous clock capture
-    // func:lib_ams.FDb.cd_stream_hb.UpdateCycles
-    inline static void   cd_stream_hb_UpdateCycles() __attribute__((nothrow));
-    // func:lib_ams.FDb.cd_stream_hb.Call
-    inline static void   cd_stream_hb_Call() __attribute__((nothrow));
+    // func:lib_ams.FDb.cd_hb.UpdateCycles
+    inline static void   cd_hb_UpdateCycles() __attribute__((nothrow));
+    // func:lib_ams.FDb.cd_hb.Call
+    inline static void   cd_hb_Call() __attribute__((nothrow));
     // First element of index changed.
     // func:lib_ams.FDb.cd_poll_read.FirstChanged
     static void          cd_poll_read_FirstChanged() __attribute__((nothrow));
@@ -91,8 +94,33 @@ namespace lib_ams { // gen:ns_print_proto
     inline static void   cd_poll_read_UpdateCycles() __attribute__((nothrow));
     // func:lib_ams.FDb.cd_poll_read.Call
     inline static void   cd_poll_read_Call() __attribute__((nothrow));
-    // func:lib_ams.FDb.streamtype.LoadStatic
-    static void          streamtype_LoadStatic() __attribute__((nothrow));
+    // Update cycles count from previous clock capture
+    // func:lib_ams.FDb.cd_slow_poll_read.UpdateCycles
+    inline static void   cd_slow_poll_read_UpdateCycles() __attribute__((nothrow));
+    // func:lib_ams.FDb.cd_slow_poll_read.Call
+    inline static void   cd_slow_poll_read_Call() __attribute__((nothrow));
+    // func:lib_ams.FDb.shmtype.LoadStatic
+    static void          shmtype_LoadStatic() __attribute__((nothrow));
+    // Find new location for ROW starting at IDX
+    // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
+    // func:lib_ams.FDb.bh_shmember_read.Downheap
+    static int           bh_shmember_read_Downheap(lib_ams::FShmember& row, int idx) __attribute__((nothrow));
+    // Find and return index of new location for element ROW in the heap, starting at index IDX.
+    // Move any elements along the way but do not modify ROW.
+    // func:lib_ams.FDb.bh_shmember_read.Upheap
+    static int           bh_shmember_read_Upheap(lib_ams::FShmember& row, int idx) __attribute__((nothrow));
+    // func:lib_ams.FDb.bh_shmember_read.ElemLt
+    inline static bool   bh_shmember_read_ElemLt(lib_ams::FShmember &a, lib_ams::FShmember &b) __attribute__((nothrow));
+    // func:lib_ams.FDb.bh_shmember_read_curs.Add
+    static void          _db_bh_shmember_read_curs_Add(_db_bh_shmember_read_curs &curs, lib_ams::FShmember& row);
+    // First element of index changed.
+    // func:lib_ams.FDb.bh_shmember_read.FirstChanged
+    static void          bh_shmember_read_FirstChanged() __attribute__((nothrow));
+    // Update cycles count from previous clock capture
+    // func:lib_ams.FDb.bh_shmember_read.UpdateCycles
+    inline static void   bh_shmember_read_UpdateCycles() __attribute__((nothrow));
+    // func:lib_ams.FDb.bh_shmember_read.Call
+    inline static void   bh_shmember_read_Call() __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
     // func:lib_ams.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
@@ -117,8 +145,6 @@ namespace lib_ams { // gen:ns_print_proto
 const char* lib_ams::value_ToCstr(const lib_ams::CtlConnCase& parent) {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
-        case lib_ams_CtlConnCase_ams_AlarmSyncMsg: ret = "ams.AlarmSyncMsg";  break;
-        case lib_ams_CtlConnCase_ams_HeartbeatMsg: ret = "ams.HeartbeatMsg";  break;
         case lib_ams_CtlConnCase_fm_AlarmMsg: ret = "fm.AlarmMsg";  break;
     }
     return ret;
@@ -147,19 +173,6 @@ bool lib_ams::value_SetStrptrMaybe(lib_ams::CtlConnCase& parent, algo::strptr rh
             switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('f','m','.','A','l','a','r','m'): {
                     if (memcmp(rhs.elems+8,"Msg",3)==0) { value_SetEnum(parent,lib_ams_CtlConnCase_fm_AlarmMsg); ret = true; break; }
-                    break;
-                }
-            }
-            break;
-        }
-        case 16: {
-            switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('a','m','s','.','A','l','a','r'): {
-                    if (memcmp(rhs.elems+8,"mSyncMsg",8)==0) { value_SetEnum(parent,lib_ams_CtlConnCase_ams_AlarmSyncMsg); ret = true; break; }
-                    break;
-                }
-                case LE_STR8('a','m','s','.','H','e','a','r'): {
-                    if (memcmp(rhs.elems+8,"tbeatMsg",8)==0) { value_SetEnum(parent,lib_ams_CtlConnCase_ams_HeartbeatMsg); ret = true; break; }
                     break;
                 }
             }
@@ -202,10 +215,7 @@ bool lib_ams::CtlConnCase_ReadStrptrMaybe(lib_ams::CtlConnCase &parent, algo::st
 const char* lib_ams::value_ToCstr(const lib_ams::CtlMsgCase& parent) {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
-        case lib_ams_CtlMsgCase_ams_DumpStreamTableMsg: ret = "ams.DumpStreamTableMsg";  break;
-        case lib_ams_CtlMsgCase_ams_ProcAddMsg: ret = "ams.ProcAddMsg";  break;
-        case lib_ams_CtlMsgCase_ams_ProcRemoveMsg: ret = "ams.ProcRemoveMsg";  break;
-        case lib_ams_CtlMsgCase_ams_StreamHbMsg: ret = "ams.StreamHbMsg";  break;
+        case lib_ams_CtlMsgCase_ams_ShmHbMsg: ret = "ams.ShmHbMsg";  break;
     }
     return ret;
 }
@@ -229,37 +239,10 @@ void lib_ams::value_Print(const lib_ams::CtlMsgCase& parent, algo::cstring &lhs)
 bool lib_ams::value_SetStrptrMaybe(lib_ams::CtlMsgCase& parent, algo::strptr rhs) {
     bool ret = false;
     switch (elems_N(rhs)) {
-        case 14: {
+        case 12: {
             switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('a','m','s','.','P','r','o','c'): {
-                    if (memcmp(rhs.elems+8,"AddMsg",6)==0) { value_SetEnum(parent,lib_ams_CtlMsgCase_ams_ProcAddMsg); ret = true; break; }
-                    break;
-                }
-            }
-            break;
-        }
-        case 15: {
-            switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('a','m','s','.','S','t','r','e'): {
-                    if (memcmp(rhs.elems+8,"amHbMsg",7)==0) { value_SetEnum(parent,lib_ams_CtlMsgCase_ams_StreamHbMsg); ret = true; break; }
-                    break;
-                }
-            }
-            break;
-        }
-        case 17: {
-            switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('a','m','s','.','P','r','o','c'): {
-                    if (memcmp(rhs.elems+8,"RemoveMsg",9)==0) { value_SetEnum(parent,lib_ams_CtlMsgCase_ams_ProcRemoveMsg); ret = true; break; }
-                    break;
-                }
-            }
-            break;
-        }
-        case 22: {
-            switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('a','m','s','.','D','u','m','p'): {
-                    if (memcmp(rhs.elems+8,"StreamTableMsg",14)==0) { value_SetEnum(parent,lib_ams_CtlMsgCase_ams_DumpStreamTableMsg); ret = true; break; }
+                case LE_STR8('a','m','s','.','S','h','m','H'): {
+                    if (memcmp(rhs.elems+8,"bMsg",4)==0) { value_SetEnum(parent,lib_ams_CtlMsgCase_ams_ShmHbMsg); ret = true; break; }
                     break;
                 }
             }
@@ -296,6 +279,39 @@ bool lib_ams::CtlMsgCase_ReadStrptrMaybe(lib_ams::CtlMsgCase &parent, algo::strp
     return retval;
 }
 
+// --- lib_ams.trace..Init
+// Set all fields to initial values.
+void lib_ams::trace_Init(lib_ams::trace& parent) {
+    parent.n_fdin_drop_notgt = u64(0);
+    parent.n_fdin_posted = u64(0);
+    parent.n_fdin_pushback = u64(0);
+    parent.n_write_block_spin = u64(0);
+    parent.step_cd_fdin_eof = u64(0);
+    parent.step_cd_fdin_eof_cycles = u64(0);
+    parent.step_cd_fdin_read = u64(0);
+    parent.step_cd_fdin_read_cycles = u64(0);
+    parent.step_cd_hb = u64(0);
+    parent.step_cd_hb_cycles = u64(0);
+    parent.step_zd_flush = u64(0);
+    parent.step_zd_flush_cycles = u64(0);
+    parent.step_cd_poll_read = u64(0);
+    parent.step_cd_poll_read_cycles = u64(0);
+    parent.step_cd_slow_poll_read = u64(0);
+    parent.step_cd_slow_poll_read_cycles = u64(0);
+    parent.step_bh_shmember_read = u64(0);
+    parent.step_bh_shmember_read_cycles = u64(0);
+    parent.alloc__db_fdin = u64(0);
+    parent.del__db_fdin = u64(0);
+    parent.alloc__db_shm = u64(0);
+    parent.del__db_shm = u64(0);
+    parent.alloc__db_proc = u64(0);
+    parent.del__db_proc = u64(0);
+    parent.alloc__db_shmember = u64(0);
+    parent.del__db_shmember = u64(0);
+    parent.alloc__db_shmtype = u64(0);
+    parent.del__db_shmtype = u64(0);
+}
+
 // --- lib_ams.trace..Print
 // print string representation of ROW to string STR
 // cfmt:lib_ams.trace.String  printfmt:Tuple
@@ -314,6 +330,78 @@ void lib_ams::trace_Print(lib_ams::trace& row, algo::cstring& str) {
 
     u64_Print(row.n_write_block_spin, temp);
     PrintAttrSpaceReset(str,"n_write_block_spin", temp);
+
+    u64_Print(row.step_cd_fdin_eof, temp);
+    PrintAttrSpaceReset(str,"step_cd_fdin_eof", temp);
+
+    u64_Print(row.step_cd_fdin_eof_cycles, temp);
+    PrintAttrSpaceReset(str,"step_cd_fdin_eof_cycles", temp);
+
+    u64_Print(row.step_cd_fdin_read, temp);
+    PrintAttrSpaceReset(str,"step_cd_fdin_read", temp);
+
+    u64_Print(row.step_cd_fdin_read_cycles, temp);
+    PrintAttrSpaceReset(str,"step_cd_fdin_read_cycles", temp);
+
+    u64_Print(row.step_cd_hb, temp);
+    PrintAttrSpaceReset(str,"step_cd_hb", temp);
+
+    u64_Print(row.step_cd_hb_cycles, temp);
+    PrintAttrSpaceReset(str,"step_cd_hb_cycles", temp);
+
+    u64_Print(row.step_zd_flush, temp);
+    PrintAttrSpaceReset(str,"step_zd_flush", temp);
+
+    u64_Print(row.step_zd_flush_cycles, temp);
+    PrintAttrSpaceReset(str,"step_zd_flush_cycles", temp);
+
+    u64_Print(row.step_cd_poll_read, temp);
+    PrintAttrSpaceReset(str,"step_cd_poll_read", temp);
+
+    u64_Print(row.step_cd_poll_read_cycles, temp);
+    PrintAttrSpaceReset(str,"step_cd_poll_read_cycles", temp);
+
+    u64_Print(row.step_cd_slow_poll_read, temp);
+    PrintAttrSpaceReset(str,"step_cd_slow_poll_read", temp);
+
+    u64_Print(row.step_cd_slow_poll_read_cycles, temp);
+    PrintAttrSpaceReset(str,"step_cd_slow_poll_read_cycles", temp);
+
+    u64_Print(row.step_bh_shmember_read, temp);
+    PrintAttrSpaceReset(str,"step_bh_shmember_read", temp);
+
+    u64_Print(row.step_bh_shmember_read_cycles, temp);
+    PrintAttrSpaceReset(str,"step_bh_shmember_read_cycles", temp);
+
+    u64_Print(row.alloc__db_fdin, temp);
+    PrintAttrSpaceReset(str,"alloc__db_fdin", temp);
+
+    u64_Print(row.del__db_fdin, temp);
+    PrintAttrSpaceReset(str,"del__db_fdin", temp);
+
+    u64_Print(row.alloc__db_shm, temp);
+    PrintAttrSpaceReset(str,"alloc__db_shm", temp);
+
+    u64_Print(row.del__db_shm, temp);
+    PrintAttrSpaceReset(str,"del__db_shm", temp);
+
+    u64_Print(row.alloc__db_proc, temp);
+    PrintAttrSpaceReset(str,"alloc__db_proc", temp);
+
+    u64_Print(row.del__db_proc, temp);
+    PrintAttrSpaceReset(str,"del__db_proc", temp);
+
+    u64_Print(row.alloc__db_shmember, temp);
+    PrintAttrSpaceReset(str,"alloc__db_shmember", temp);
+
+    u64_Print(row.del__db_shmember, temp);
+    PrintAttrSpaceReset(str,"del__db_shmember", temp);
+
+    u64_Print(row.alloc__db_shmtype, temp);
+    PrintAttrSpaceReset(str,"alloc__db_shmtype", temp);
+
+    u64_Print(row.del__db_shmtype, temp);
+    PrintAttrSpaceReset(str,"del__db_shmtype", temp);
 }
 
 // --- lib_ams.FDb.fdin.Alloc
@@ -333,6 +421,7 @@ lib_ams::FFdin* lib_ams::fdin_AllocMaybe() {
     lib_ams::FFdin *row = (lib_ams::FFdin*)fdin_AllocMem();
     if (row) {
         new (row) lib_ams::FFdin; // call constructor
+        ++lib_ams::_db.trace.alloc__db_fdin;
     }
     return row;
 }
@@ -366,6 +455,7 @@ void* lib_ams::fdin_AllocMem() {
 // --- lib_ams.FDb.fdin.RemoveAll
 // Remove all elements from Lary
 void lib_ams::fdin_RemoveAll() {
+    lib_ams::_db.trace.del__db_fdin += _db.fdin_n;
     for (u64 n = _db.fdin_n; n>0; ) {
         n--;
         fdin_qFind(u64(n)).~FFdin(); // destroy last element
@@ -380,6 +470,7 @@ void lib_ams::fdin_RemoveLast() {
     if (n > 0) {
         n -= 1;
         fdin_qFind(u64(n)).~FFdin();
+        ++lib_ams::_db.trace.del__db_fdin;
         _db.fdin_n = i32(n);
     }
 }
@@ -495,6 +586,9 @@ static void lib_ams::cd_fdin_eof_FirstChanged() {
 // Update cycles count from previous clock capture
 inline static void lib_ams::cd_fdin_eof_UpdateCycles() {
     u64 cur_cycles                      = algo::get_cycles();
+    u64 prev_cycles                     = algo_lib::_db.clock.value;
+    ++lib_ams::_db.trace.step_cd_fdin_eof;
+    lib_ams::_db.trace.step_cd_fdin_eof_cycles  += cur_cycles - prev_cycles;
     algo_lib::_db.clock                 = algo::SchedTime(cur_cycles);
 }
 
@@ -609,6 +703,9 @@ static void lib_ams::cd_fdin_read_FirstChanged() {
 // Update cycles count from previous clock capture
 inline static void lib_ams::cd_fdin_read_UpdateCycles() {
     u64 cur_cycles                      = algo::get_cycles();
+    u64 prev_cycles                     = algo_lib::_db.clock.value;
+    ++lib_ams::_db.trace.step_cd_fdin_read;
+    lib_ams::_db.trace.step_cd_fdin_read_cycles  += cur_cycles - prev_cycles;
     algo_lib::_db.clock                 = algo::SchedTime(cur_cycles);
 }
 
@@ -626,9 +723,11 @@ inline static void lib_ams::cd_fdin_read_Call() {
 void lib_ams::Step() {
     cd_fdin_eof_Call();
     cd_fdin_read_Call();
-    cd_stream_hb_Call();
+    cd_hb_Call();
     zd_flush_Call();
     cd_poll_read_Call();
+    cd_slow_poll_read_Call();
+    bh_shmember_read_Call();
 }
 
 // --- lib_ams.FDb._db.InitReflection
@@ -648,8 +747,8 @@ static void lib_ams::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'lib_ams.CtlConn'  signature:'a97117f47887d9e386b0b46863db70bcc5ee1d43'");
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'lib_ams.CtlMsg'  signature:'90f280b1d0ea224349fab6afa67209c80742b8f4'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'lib_ams.CtlConn'  signature:'83624960d9b39fa4bb8b968922178ca988f4bf18'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'lib_ams.CtlMsg'  signature:'ed438eec919efe449c056873abddbc2332d54b53'");
 }
 
 // --- lib_ams.FDb._db.InsertStrptrMaybe
@@ -672,8 +771,8 @@ bool lib_ams::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     } else if (DirectoryQ(root)) {
         retval = retval && lib_ams::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
     } else {
-        algo_lib::SaveBadTag("path", root);
-        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        algo_lib::AppendErrtext("path", root);
+        algo_lib::AppendErrtext("comment", "Wrong working directory?");
         retval = false;
     }
     return retval;
@@ -847,6 +946,9 @@ void lib_ams::zd_flush_FirstChanged() {
 // Update cycles count from previous clock capture
 inline static void lib_ams::zd_flush_UpdateCycles() {
     u64 cur_cycles                      = algo::get_cycles();
+    u64 prev_cycles                     = algo_lib::_db.clock.value;
+    ++lib_ams::_db.trace.step_zd_flush;
+    lib_ams::_db.trace.step_zd_flush_cycles  += cur_cycles - prev_cycles;
     algo_lib::_db.clock                 = algo::SchedTime(cur_cycles);
 }
 
@@ -876,340 +978,357 @@ void lib_ams::zd_flush_SetDelay(algo::SchedTime delay) {
     }
 }
 
-// --- lib_ams.FDb.stream.Alloc
+// --- lib_ams.FDb.shm.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-lib_ams::FStream& lib_ams::stream_Alloc() {
-    lib_ams::FStream* row = stream_AllocMaybe();
+lib_ams::FShm& lib_ams::shm_Alloc() {
+    lib_ams::FShm* row = shm_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
-        FatalErrorExit("lib_ams.out_of_mem  field:lib_ams.FDb.stream  comment:'Alloc failed'");
+        FatalErrorExit("lib_ams.out_of_mem  field:lib_ams.FDb.shm  comment:'Alloc failed'");
     }
     return *row;
 }
 
-// --- lib_ams.FDb.stream.AllocMaybe
+// --- lib_ams.FDb.shm.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-lib_ams::FStream* lib_ams::stream_AllocMaybe() {
-    lib_ams::FStream *row = (lib_ams::FStream*)stream_AllocMem();
+lib_ams::FShm* lib_ams::shm_AllocMaybe() {
+    lib_ams::FShm *row = (lib_ams::FShm*)shm_AllocMem();
     if (row) {
-        new (row) lib_ams::FStream; // call constructor
+        new (row) lib_ams::FShm; // call constructor
+        ++lib_ams::_db.trace.alloc__db_shm;
     }
     return row;
 }
 
-// --- lib_ams.FDb.stream.AllocMem
+// --- lib_ams.FDb.shm.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* lib_ams::stream_AllocMem() {
-    u64 new_nelems     = _db.stream_n+1;
+void* lib_ams::shm_AllocMem() {
+    u64 new_nelems     = _db.shm_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
     u64 base  = u64(1)<<bsr;
     u64 index = new_nelems-base;
     void *ret = NULL;
     // if level doesn't exist yet, create it
-    lib_ams::FStream*  lev   = NULL;
+    lib_ams::FShm*  lev   = NULL;
     if (bsr < 32) {
-        lev = _db.stream_lary[bsr];
+        lev = _db.shm_lary[bsr];
         if (!lev) {
-            lev=(lib_ams::FStream*)algo_lib::malloc_AllocMem(sizeof(lib_ams::FStream) * (u64(1)<<bsr));
-            _db.stream_lary[bsr] = lev;
+            lev=(lib_ams::FShm*)algo_lib::malloc_AllocMem(sizeof(lib_ams::FShm) * (u64(1)<<bsr));
+            _db.shm_lary[bsr] = lev;
         }
     }
     // allocate element from this level
     if (lev) {
-        _db.stream_n = i32(new_nelems);
+        _db.shm_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
 }
 
-// --- lib_ams.FDb.stream.RemoveAll
+// --- lib_ams.FDb.shm.RemoveAll
 // Remove all elements from Lary
-void lib_ams::stream_RemoveAll() {
-    for (u64 n = _db.stream_n; n>0; ) {
+void lib_ams::shm_RemoveAll() {
+    lib_ams::_db.trace.del__db_shm += _db.shm_n;
+    for (u64 n = _db.shm_n; n>0; ) {
         n--;
-        stream_qFind(u64(n)).~FStream(); // destroy last element
-        _db.stream_n = i32(n);
+        shm_qFind(u64(n)).~FShm(); // destroy last element
+        _db.shm_n = i32(n);
     }
 }
 
-// --- lib_ams.FDb.stream.RemoveLast
+// --- lib_ams.FDb.shm.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void lib_ams::stream_RemoveLast() {
-    u64 n = _db.stream_n;
+void lib_ams::shm_RemoveLast() {
+    u64 n = _db.shm_n;
     if (n > 0) {
         n -= 1;
-        stream_qFind(u64(n)).~FStream();
-        _db.stream_n = i32(n);
+        shm_qFind(u64(n)).~FShm();
+        ++lib_ams::_db.trace.del__db_shm;
+        _db.shm_n = i32(n);
     }
 }
 
-// --- lib_ams.FDb.stream.XrefMaybe
+// --- lib_ams.FDb.shm.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-bool lib_ams::stream_XrefMaybe(lib_ams::FStream &row) {
+bool lib_ams::shm_XrefMaybe(lib_ams::FShm &row) {
     bool retval = true;
     (void)row;
-    lib_ams::FStreamType* p_stream_type = lib_ams::ind_streamtype_Find(row.stream_id.stream_type);
-    if (UNLIKELY(!p_stream_type)) {
-        algo_lib::ResetErrtext() << "lib_ams.bad_xref  index:lib_ams.FDb.ind_streamtype" << Keyval("key", row.stream_id.stream_type);
+    lib_ams::FShmtype* p_shmtype = lib_ams::ind_shmtype_Find(row.shm_id.shmtype);
+    if (UNLIKELY(!p_shmtype)) {
+        algo_lib::ResetErrtext() << "lib_ams.bad_xref  index:lib_ams.FDb.ind_shmtype" << Keyval("key", row.shm_id.shmtype);
         return false;
     }
-    // stream: save pointer to stream_type
+    // shm: save pointer to shmtype
     if (true) { // user-defined insert condition
-        row.p_streamtype = p_stream_type;
+        row.p_shmtype = p_shmtype;
     }
-    // insert stream into index ind_stream
+    // insert shm into index ind_shm
     if (true) { // user-defined insert condition
-        bool success = ind_stream_InsertMaybe(row);
+        bool success = ind_shm_InsertMaybe(row);
         if (UNLIKELY(!success)) {
             ch_RemoveAll(algo_lib::_db.errtext);
-            algo_lib::_db.errtext << "lib_ams.duplicate_key  xref:lib_ams.FDb.ind_stream"; // check for duplicate key
+            algo_lib::_db.errtext << "lib_ams.duplicate_key  xref:lib_ams.FDb.ind_shm"; // check for duplicate key
             return false;
         }
+    }
+    lib_ams::FProc* p_proc_id = lib_ams::ind_proc_Find(row.shm_id.proc_id);
+    if (UNLIKELY(!p_proc_id)) {
+        algo_lib::ResetErrtext() << "lib_ams.bad_xref  index:lib_ams.FDb.ind_proc" << Keyval("key", row.shm_id.proc_id);
+        return false;
+    }
+    // insert shm into index c_shm
+    if (true) { // user-defined insert condition
+        c_shm_Insert(*p_proc_id, row);
     }
     return retval;
 }
 
-// --- lib_ams.FDb.ind_stream.Find
+// --- lib_ams.FDb.ind_shm.Find
 // Find row by key. Return NULL if not found.
-lib_ams::FStream* lib_ams::ind_stream_Find(ams::StreamId key) {
-    u32 index = ams::StreamId_Hash(0, key) & (_db.ind_stream_buckets_n - 1);
-    lib_ams::FStream* *e = &_db.ind_stream_buckets_elems[index];
-    lib_ams::FStream* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).stream_id == key;
-        if (done) break;
-        e         = &ret->ind_stream_next;
-    } while (true);
+lib_ams::FShm* lib_ams::ind_shm_Find(ams::ShmId key) {
+    u32 index = ams::ShmId_Hash(0, key) & (_db.ind_shm_buckets_n - 1);
+    lib_ams::FShm *ret = _db.ind_shm_buckets_elems[index];
+    for (; ret && !((*ret).shm_id == key); ret = ret->ind_shm_next) {
+    }
     return ret;
 }
 
-// --- lib_ams.FDb.ind_stream.FindX
+// --- lib_ams.FDb.ind_shm.FindX
 // Look up row by key and return reference. Throw exception if not found
-lib_ams::FStream& lib_ams::ind_stream_FindX(ams::StreamId key) {
-    lib_ams::FStream* ret = ind_stream_Find(key);
-    vrfy(ret, tempstr() << "lib_ams.key_error  table:ind_stream  key:'"<<key<<"'  comment:'key not found'");
+lib_ams::FShm& lib_ams::ind_shm_FindX(ams::ShmId key) {
+    lib_ams::FShm* ret = ind_shm_Find(key);
+    vrfy(ret, tempstr() << "lib_ams.key_error  table:ind_shm  key:'"<<key<<"'  comment:'key not found'");
     return *ret;
 }
 
-// --- lib_ams.FDb.ind_stream.InsertMaybe
+// --- lib_ams.FDb.ind_shm.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool lib_ams::ind_stream_InsertMaybe(lib_ams::FStream& row) {
-    ind_stream_Reserve(1);
+bool lib_ams::ind_shm_InsertMaybe(lib_ams::FShm& row) {
     bool retval = true; // if already in hash, InsertMaybe returns true
-    if (LIKELY(row.ind_stream_next == (lib_ams::FStream*)-1)) {// check if in hash already
-        u32 index = ams::StreamId_Hash(0, row.stream_id) & (_db.ind_stream_buckets_n - 1);
-        lib_ams::FStream* *prev = &_db.ind_stream_buckets_elems[index];
+    if (LIKELY(row.ind_shm_next == (lib_ams::FShm*)-1)) {// check if in hash already
+        row.ind_shm_hashval = ams::ShmId_Hash(0, row.shm_id);
+        ind_shm_Reserve(1);
+        u32 index = row.ind_shm_hashval & (_db.ind_shm_buckets_n - 1);
+        lib_ams::FShm* *prev = &_db.ind_shm_buckets_elems[index];
         do {
-            lib_ams::FStream* ret = *prev;
+            lib_ams::FShm* ret = *prev;
             if (!ret) { // exit condition 1: reached the end of the list
                 break;
             }
-            if ((*ret).stream_id == row.stream_id) { // exit condition 2: found matching key
+            if ((*ret).shm_id == row.shm_id) { // exit condition 2: found matching key
                 retval = false;
                 break;
             }
-            prev = &ret->ind_stream_next;
+            prev = &ret->ind_shm_next;
         } while (true);
         if (retval) {
-            row.ind_stream_next = *prev;
-            _db.ind_stream_n++;
+            row.ind_shm_next = *prev;
+            _db.ind_shm_n++;
             *prev = &row;
         }
     }
     return retval;
 }
 
-// --- lib_ams.FDb.ind_stream.Remove
+// --- lib_ams.FDb.ind_shm.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void lib_ams::ind_stream_Remove(lib_ams::FStream& row) {
-    if (LIKELY(row.ind_stream_next != (lib_ams::FStream*)-1)) {// check if in hash already
-        u32 index = ams::StreamId_Hash(0, row.stream_id) & (_db.ind_stream_buckets_n - 1);
-        lib_ams::FStream* *prev = &_db.ind_stream_buckets_elems[index]; // addr of pointer to current element
-        while (lib_ams::FStream *next = *prev) {                          // scan the collision chain for our element
+void lib_ams::ind_shm_Remove(lib_ams::FShm& row) {
+    if (LIKELY(row.ind_shm_next != (lib_ams::FShm*)-1)) {// check if in hash already
+        u32 index = row.ind_shm_hashval & (_db.ind_shm_buckets_n - 1);
+        lib_ams::FShm* *prev = &_db.ind_shm_buckets_elems[index]; // addr of pointer to current element
+        while (lib_ams::FShm *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
-                *prev = next->ind_stream_next; // unlink (singly linked list)
-                _db.ind_stream_n--;
-                row.ind_stream_next = (lib_ams::FStream*)-1;// not-in-hash
+                *prev = next->ind_shm_next; // unlink (singly linked list)
+                _db.ind_shm_n--;
+                row.ind_shm_next = (lib_ams::FShm*)-1;// not-in-hash
                 break;
             }
-            prev = &next->ind_stream_next;
+            prev = &next->ind_shm_next;
         }
     }
 }
 
-// --- lib_ams.FDb.ind_stream.Reserve
+// --- lib_ams.FDb.ind_shm.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void lib_ams::ind_stream_Reserve(int n) {
-    u32 old_nbuckets = _db.ind_stream_buckets_n;
-    u32 new_nelems   = _db.ind_stream_n + n;
+void lib_ams::ind_shm_Reserve(int n) {
+    ind_shm_AbsReserve(_db.ind_shm_n + n);
+}
+
+// --- lib_ams.FDb.ind_shm.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void lib_ams::ind_shm_AbsReserve(int n) {
+    u32 old_nbuckets = _db.ind_shm_buckets_n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
-        u32 old_size = old_nbuckets * sizeof(lib_ams::FStream*);
-        u32 new_size = new_nbuckets * sizeof(lib_ams::FStream*);
+        u32 old_size = old_nbuckets * sizeof(lib_ams::FShm*);
+        u32 new_size = new_nbuckets * sizeof(lib_ams::FShm*);
         // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
         // means new memory will have to be allocated anyway
-        lib_ams::FStream* *new_buckets = (lib_ams::FStream**)algo_lib::malloc_AllocMem(new_size);
+        lib_ams::FShm* *new_buckets = (lib_ams::FShm**)algo_lib::malloc_AllocMem(new_size);
         if (UNLIKELY(!new_buckets)) {
-            FatalErrorExit("lib_ams.out_of_memory  field:lib_ams.FDb.ind_stream");
+            FatalErrorExit("lib_ams.out_of_memory  field:lib_ams.FDb.ind_shm");
         }
         memset(new_buckets, 0, new_size); // clear pointers
         // rehash all entries
-        for (int i = 0; i < _db.ind_stream_buckets_n; i++) {
-            lib_ams::FStream* elem = _db.ind_stream_buckets_elems[i];
+        for (int i = 0; i < _db.ind_shm_buckets_n; i++) {
+            lib_ams::FShm* elem = _db.ind_shm_buckets_elems[i];
             while (elem) {
-                lib_ams::FStream &row        = *elem;
-                lib_ams::FStream* next       = row.ind_stream_next;
-                u32 index          = ams::StreamId_Hash(0, row.stream_id) & (new_nbuckets-1);
-                row.ind_stream_next     = new_buckets[index];
+                lib_ams::FShm &row        = *elem;
+                lib_ams::FShm* next       = row.ind_shm_next;
+                u32 index          = row.ind_shm_hashval & (new_nbuckets-1);
+                row.ind_shm_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
             }
         }
         // free old array
-        algo_lib::malloc_FreeMem(_db.ind_stream_buckets_elems, old_size);
-        _db.ind_stream_buckets_elems = new_buckets;
-        _db.ind_stream_buckets_n = new_nbuckets;
+        algo_lib::malloc_FreeMem(_db.ind_shm_buckets_elems, old_size);
+        _db.ind_shm_buckets_elems = new_buckets;
+        _db.ind_shm_buckets_n = new_nbuckets;
     }
 }
 
-// --- lib_ams.FDb.cd_stream_hb.Insert
+// --- lib_ams.FDb.cd_hb.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void lib_ams::cd_stream_hb_Insert(lib_ams::FStream& row) {
-    if (!cd_stream_hb_InLlistQ(row)) {
-        if (_db.cd_stream_hb_head) {
-            row.cd_stream_hb_next = _db.cd_stream_hb_head;
-            row.cd_stream_hb_prev = _db.cd_stream_hb_head->cd_stream_hb_prev;
-            row.cd_stream_hb_prev->cd_stream_hb_next = &row;
-            row.cd_stream_hb_next->cd_stream_hb_prev = &row;
+void lib_ams::cd_hb_Insert(lib_ams::FShmember& row) {
+    if (!cd_hb_InLlistQ(row)) {
+        if (_db.cd_hb_head) {
+            row.cd_hb_next = _db.cd_hb_head;
+            row.cd_hb_prev = _db.cd_hb_head->cd_hb_prev;
+            row.cd_hb_prev->cd_hb_next = &row;
+            row.cd_hb_next->cd_hb_prev = &row;
         } else {
-            row.cd_stream_hb_next = &row;
-            row.cd_stream_hb_prev = &row;
-            _db.cd_stream_hb_head = &row;
+            row.cd_hb_next = &row;
+            row.cd_hb_prev = &row;
+            _db.cd_hb_head = &row;
         }
-        _db.cd_stream_hb_n++;
-        if (_db.cd_stream_hb_head == &row) {
-            cd_stream_hb_FirstChanged();
+        _db.cd_hb_n++;
+        if (_db.cd_hb_head == &row) {
+            cd_hb_FirstChanged();
         }
     }
 }
 
-// --- lib_ams.FDb.cd_stream_hb.Remove
+// --- lib_ams.FDb.cd_hb.Remove
 // Remove element from index. If element is not in index, do nothing.
-void lib_ams::cd_stream_hb_Remove(lib_ams::FStream& row) {
-    if (cd_stream_hb_InLlistQ(row)) {
-        lib_ams::FStream* old_head       = _db.cd_stream_hb_head;
+void lib_ams::cd_hb_Remove(lib_ams::FShmember& row) {
+    if (cd_hb_InLlistQ(row)) {
+        lib_ams::FShmember* old_head       = _db.cd_hb_head;
         (void)old_head; // in case it's not used
-        lib_ams::FStream *oldnext = row.cd_stream_hb_next;
-        lib_ams::FStream *oldprev = row.cd_stream_hb_prev;
-        oldnext->cd_stream_hb_prev = oldprev; // remove element from list
-        oldprev->cd_stream_hb_next = oldnext;
-        _db.cd_stream_hb_n--;  // adjust count
-        if (&row == _db.cd_stream_hb_head) {
-            _db.cd_stream_hb_head = oldnext==&row ? NULL : oldnext; // adjust list head
+        lib_ams::FShmember *oldnext = row.cd_hb_next;
+        lib_ams::FShmember *oldprev = row.cd_hb_prev;
+        oldnext->cd_hb_prev = oldprev; // remove element from list
+        oldprev->cd_hb_next = oldnext;
+        _db.cd_hb_n--;  // adjust count
+        if (&row == _db.cd_hb_head) {
+            _db.cd_hb_head = oldnext==&row ? NULL : oldnext; // adjust list head
         }
-        row.cd_stream_hb_next = (lib_ams::FStream*)-1; // mark element as not-in-list);
-        row.cd_stream_hb_prev = NULL; // clear back-pointer
-        if (old_head != _db.cd_stream_hb_head) {
-            cd_stream_hb_FirstChanged();
+        row.cd_hb_next = (lib_ams::FShmember*)-1; // mark element as not-in-list);
+        row.cd_hb_prev = NULL; // clear back-pointer
+        if (old_head != _db.cd_hb_head) {
+            cd_hb_FirstChanged();
         }
     }
 }
 
-// --- lib_ams.FDb.cd_stream_hb.RemoveAll
+// --- lib_ams.FDb.cd_hb.RemoveAll
 // Empty the index. (The rows are not deleted)
-void lib_ams::cd_stream_hb_RemoveAll() {
-    lib_ams::FStream* row = _db.cd_stream_hb_head;
-    lib_ams::FStream* head = _db.cd_stream_hb_head;
-    _db.cd_stream_hb_head = NULL;
-    _db.cd_stream_hb_n = 0;
+void lib_ams::cd_hb_RemoveAll() {
+    lib_ams::FShmember* row = _db.cd_hb_head;
+    lib_ams::FShmember* head = _db.cd_hb_head;
+    _db.cd_hb_head = NULL;
+    _db.cd_hb_n = 0;
     bool do_fire = (NULL != row);
     while (row) {
-        lib_ams::FStream* row_next = row->cd_stream_hb_next;
-        row->cd_stream_hb_next  = (lib_ams::FStream*)-1;
-        row->cd_stream_hb_prev  = NULL;
+        lib_ams::FShmember* row_next = row->cd_hb_next;
+        row->cd_hb_next  = (lib_ams::FShmember*)-1;
+        row->cd_hb_prev  = NULL;
         row = row_next != head  ? row_next : NULL;
     }
     if (do_fire) {
-        cd_stream_hb_FirstChanged();
+        cd_hb_FirstChanged();
     }
 }
 
-// --- lib_ams.FDb.cd_stream_hb.RemoveFirst
+// --- lib_ams.FDb.cd_hb.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
 // Call FirstChanged trigger.
-lib_ams::FStream* lib_ams::cd_stream_hb_RemoveFirst() {
-    lib_ams::FStream *row = NULL;
-    row = _db.cd_stream_hb_head;
+lib_ams::FShmember* lib_ams::cd_hb_RemoveFirst() {
+    lib_ams::FShmember *row = NULL;
+    row = _db.cd_hb_head;
     if (row) {
-        bool hasmore = row!=row->cd_stream_hb_next;
-        _db.cd_stream_hb_head = hasmore ? row->cd_stream_hb_next : NULL;
-        row->cd_stream_hb_next->cd_stream_hb_prev = row->cd_stream_hb_prev;
-        row->cd_stream_hb_prev->cd_stream_hb_next = row->cd_stream_hb_next;
-        row->cd_stream_hb_prev = NULL;
-        _db.cd_stream_hb_n--;
-        row->cd_stream_hb_next = (lib_ams::FStream*)-1; // mark as not-in-list
-        cd_stream_hb_FirstChanged();
+        bool hasmore = row!=row->cd_hb_next;
+        _db.cd_hb_head = hasmore ? row->cd_hb_next : NULL;
+        row->cd_hb_next->cd_hb_prev = row->cd_hb_prev;
+        row->cd_hb_prev->cd_hb_next = row->cd_hb_next;
+        row->cd_hb_prev = NULL;
+        _db.cd_hb_n--;
+        row->cd_hb_next = (lib_ams::FShmember*)-1; // mark as not-in-list
+        cd_hb_FirstChanged();
     }
     return row;
 }
 
-// --- lib_ams.FDb.cd_stream_hb.RotateFirst
+// --- lib_ams.FDb.cd_hb.RotateFirst
 // If linked list is empty, return NULL.
 // Otherwise return head item and advance head to the next item.
-lib_ams::FStream* lib_ams::cd_stream_hb_RotateFirst() {
-    lib_ams::FStream *row = NULL;
-    row = _db.cd_stream_hb_head;
+lib_ams::FShmember* lib_ams::cd_hb_RotateFirst() {
+    lib_ams::FShmember *row = NULL;
+    row = _db.cd_hb_head;
     if (row) {
-        _db.cd_stream_hb_head = row->cd_stream_hb_next;
+        _db.cd_hb_head = row->cd_hb_next;
     }
     return row;
 }
 
-// --- lib_ams.FDb.cd_stream_hb.FirstChanged
+// --- lib_ams.FDb.cd_hb.FirstChanged
 // First element of index changed.
-void lib_ams::cd_stream_hb_FirstChanged() {
+void lib_ams::cd_hb_FirstChanged() {
 }
 
-// --- lib_ams.FDb.cd_stream_hb.UpdateCycles
+// --- lib_ams.FDb.cd_hb.UpdateCycles
 // Update cycles count from previous clock capture
-inline static void lib_ams::cd_stream_hb_UpdateCycles() {
+inline static void lib_ams::cd_hb_UpdateCycles() {
     u64 cur_cycles                      = algo::get_cycles();
+    u64 prev_cycles                     = algo_lib::_db.clock.value;
+    ++lib_ams::_db.trace.step_cd_hb;
+    lib_ams::_db.trace.step_cd_hb_cycles  += cur_cycles - prev_cycles;
     algo_lib::_db.clock                 = algo::SchedTime(cur_cycles);
 }
 
-// --- lib_ams.FDb.cd_stream_hb.Call
-inline static void lib_ams::cd_stream_hb_Call() {
-    if (!lib_ams::cd_stream_hb_EmptyQ()) { // fstep:lib_ams.FDb.cd_stream_hb
-        if (lib_ams::_db.cd_stream_hb_next < algo_lib::_db.clock) {
-            u64 effective_delay = lib_ams::_db.cd_stream_hb_delay / u64_Max(1,lib_ams::cd_stream_hb_N());
-            lib_ams::_db.cd_stream_hb_next = algo_lib::_db.clock + algo::SchedTime(effective_delay);
-            lib_ams::cd_stream_hb_Step(); // steptype:InlineRecur: call function every N clock cycles
-            cd_stream_hb_UpdateCycles();
+// --- lib_ams.FDb.cd_hb.Call
+inline static void lib_ams::cd_hb_Call() {
+    if (!lib_ams::cd_hb_EmptyQ()) { // fstep:lib_ams.FDb.cd_hb
+        if (lib_ams::_db.cd_hb_next < algo_lib::_db.clock) {
+            u64 effective_delay = lib_ams::_db.cd_hb_delay / u64_Max(1,lib_ams::cd_hb_N());
+            lib_ams::_db.cd_hb_next = algo_lib::_db.clock + algo::SchedTime(effective_delay);
+            lib_ams::cd_hb_Step(); // steptype:InlineRecur: call function every N clock cycles
+            cd_hb_UpdateCycles();
         }
-        algo_lib::_db.next_loop.value = u64_Min(lib_ams::_db.cd_stream_hb_next, algo_lib::_db.next_loop);
+        algo_lib::_db.next_loop.value = u64_Min(lib_ams::_db.cd_hb_next, algo_lib::_db.next_loop);
     }
 }
 
-// --- lib_ams.FDb.cd_stream_hb.SetDelay
+// --- lib_ams.FDb.cd_hb.SetDelay
 // Set inter-step delay to specified value.
 // The difference between new delay and current delay is added to the next scheduled time.
-void lib_ams::cd_stream_hb_SetDelay(algo::SchedTime delay) {
-    i64 diff = delay.value - lib_ams::_db.cd_stream_hb_delay.value;
-    lib_ams::_db.cd_stream_hb_delay = delay;
+void lib_ams::cd_hb_SetDelay(algo::SchedTime delay) {
+    i64 diff = delay.value - lib_ams::_db.cd_hb_delay.value;
+    lib_ams::_db.cd_hb_delay = delay;
     if (diff > 0) {
-        lib_ams::_db.cd_stream_hb_next.value += diff;
+        lib_ams::_db.cd_hb_next.value += diff;
     } else {
-        lib_ams::_db.cd_stream_hb_next.value = algo::u64_SubClip(lib_ams::_db.cd_stream_hb_next.value,-diff);
+        lib_ams::_db.cd_hb_next.value = algo::u64_SubClip(lib_ams::_db.cd_hb_next.value,-diff);
     }
 }
 
 // --- lib_ams.FDb.cd_poll_read.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void lib_ams::cd_poll_read_Insert(lib_ams::FStream& row) {
+void lib_ams::cd_poll_read_Insert(lib_ams::FShmember& row) {
     if (!cd_poll_read_InLlistQ(row)) {
         if (_db.cd_poll_read_head) {
             row.cd_poll_read_next = _db.cd_poll_read_head;
@@ -1230,19 +1349,19 @@ void lib_ams::cd_poll_read_Insert(lib_ams::FStream& row) {
 
 // --- lib_ams.FDb.cd_poll_read.Remove
 // Remove element from index. If element is not in index, do nothing.
-void lib_ams::cd_poll_read_Remove(lib_ams::FStream& row) {
+void lib_ams::cd_poll_read_Remove(lib_ams::FShmember& row) {
     if (cd_poll_read_InLlistQ(row)) {
-        lib_ams::FStream* old_head       = _db.cd_poll_read_head;
+        lib_ams::FShmember* old_head       = _db.cd_poll_read_head;
         (void)old_head; // in case it's not used
-        lib_ams::FStream *oldnext = row.cd_poll_read_next;
-        lib_ams::FStream *oldprev = row.cd_poll_read_prev;
+        lib_ams::FShmember *oldnext = row.cd_poll_read_next;
+        lib_ams::FShmember *oldprev = row.cd_poll_read_prev;
         oldnext->cd_poll_read_prev = oldprev; // remove element from list
         oldprev->cd_poll_read_next = oldnext;
         _db.cd_poll_read_n--;  // adjust count
         if (&row == _db.cd_poll_read_head) {
             _db.cd_poll_read_head = oldnext==&row ? NULL : oldnext; // adjust list head
         }
-        row.cd_poll_read_next = (lib_ams::FStream*)-1; // mark element as not-in-list);
+        row.cd_poll_read_next = (lib_ams::FShmember*)-1; // mark element as not-in-list);
         row.cd_poll_read_prev = NULL; // clear back-pointer
         if (old_head != _db.cd_poll_read_head) {
             cd_poll_read_FirstChanged();
@@ -1253,14 +1372,14 @@ void lib_ams::cd_poll_read_Remove(lib_ams::FStream& row) {
 // --- lib_ams.FDb.cd_poll_read.RemoveAll
 // Empty the index. (The rows are not deleted)
 void lib_ams::cd_poll_read_RemoveAll() {
-    lib_ams::FStream* row = _db.cd_poll_read_head;
-    lib_ams::FStream* head = _db.cd_poll_read_head;
+    lib_ams::FShmember* row = _db.cd_poll_read_head;
+    lib_ams::FShmember* head = _db.cd_poll_read_head;
     _db.cd_poll_read_head = NULL;
     _db.cd_poll_read_n = 0;
     bool do_fire = (NULL != row);
     while (row) {
-        lib_ams::FStream* row_next = row->cd_poll_read_next;
-        row->cd_poll_read_next  = (lib_ams::FStream*)-1;
+        lib_ams::FShmember* row_next = row->cd_poll_read_next;
+        row->cd_poll_read_next  = (lib_ams::FShmember*)-1;
         row->cd_poll_read_prev  = NULL;
         row = row_next != head  ? row_next : NULL;
     }
@@ -1272,8 +1391,8 @@ void lib_ams::cd_poll_read_RemoveAll() {
 // --- lib_ams.FDb.cd_poll_read.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
 // Call FirstChanged trigger.
-lib_ams::FStream* lib_ams::cd_poll_read_RemoveFirst() {
-    lib_ams::FStream *row = NULL;
+lib_ams::FShmember* lib_ams::cd_poll_read_RemoveFirst() {
+    lib_ams::FShmember *row = NULL;
     row = _db.cd_poll_read_head;
     if (row) {
         bool hasmore = row!=row->cd_poll_read_next;
@@ -1282,7 +1401,7 @@ lib_ams::FStream* lib_ams::cd_poll_read_RemoveFirst() {
         row->cd_poll_read_prev->cd_poll_read_next = row->cd_poll_read_next;
         row->cd_poll_read_prev = NULL;
         _db.cd_poll_read_n--;
-        row->cd_poll_read_next = (lib_ams::FStream*)-1; // mark as not-in-list
+        row->cd_poll_read_next = (lib_ams::FShmember*)-1; // mark as not-in-list
         cd_poll_read_FirstChanged();
     }
     return row;
@@ -1291,8 +1410,8 @@ lib_ams::FStream* lib_ams::cd_poll_read_RemoveFirst() {
 // --- lib_ams.FDb.cd_poll_read.RotateFirst
 // If linked list is empty, return NULL.
 // Otherwise return head item and advance head to the next item.
-lib_ams::FStream* lib_ams::cd_poll_read_RotateFirst() {
-    lib_ams::FStream *row = NULL;
+lib_ams::FShmember* lib_ams::cd_poll_read_RotateFirst() {
+    lib_ams::FShmember *row = NULL;
     row = _db.cd_poll_read_head;
     if (row) {
         _db.cd_poll_read_head = row->cd_poll_read_next;
@@ -1309,6 +1428,9 @@ static void lib_ams::cd_poll_read_FirstChanged() {
 // Update cycles count from previous clock capture
 inline static void lib_ams::cd_poll_read_UpdateCycles() {
     u64 cur_cycles                      = algo::get_cycles();
+    u64 prev_cycles                     = algo_lib::_db.clock.value;
+    ++lib_ams::_db.trace.step_cd_poll_read;
+    lib_ams::_db.trace.step_cd_poll_read_cycles  += cur_cycles - prev_cycles;
     algo_lib::_db.clock                 = algo::SchedTime(cur_cycles);
 }
 
@@ -1318,6 +1440,139 @@ inline static void lib_ams::cd_poll_read_Call() {
         lib_ams::cd_poll_read_Step(); // steptype:Inline: call function on every step
         cd_poll_read_UpdateCycles();
         algo_lib::_db.next_loop = algo_lib::_db.clock;
+    }
+}
+
+// --- lib_ams.FDb.cd_slow_poll_read.Insert
+// Insert row into linked list. If row is already in linked list, do nothing.
+void lib_ams::cd_slow_poll_read_Insert(lib_ams::FShmember& row) {
+    if (!cd_slow_poll_read_InLlistQ(row)) {
+        if (_db.cd_slow_poll_read_head) {
+            row.cd_slow_poll_read_next = _db.cd_slow_poll_read_head;
+            row.cd_slow_poll_read_prev = _db.cd_slow_poll_read_head->cd_slow_poll_read_prev;
+            row.cd_slow_poll_read_prev->cd_slow_poll_read_next = &row;
+            row.cd_slow_poll_read_next->cd_slow_poll_read_prev = &row;
+        } else {
+            row.cd_slow_poll_read_next = &row;
+            row.cd_slow_poll_read_prev = &row;
+            _db.cd_slow_poll_read_head = &row;
+        }
+        _db.cd_slow_poll_read_n++;
+        if (_db.cd_slow_poll_read_head == &row) {
+            cd_slow_poll_read_FirstChanged();
+        }
+    }
+}
+
+// --- lib_ams.FDb.cd_slow_poll_read.Remove
+// Remove element from index. If element is not in index, do nothing.
+void lib_ams::cd_slow_poll_read_Remove(lib_ams::FShmember& row) {
+    if (cd_slow_poll_read_InLlistQ(row)) {
+        lib_ams::FShmember* old_head       = _db.cd_slow_poll_read_head;
+        (void)old_head; // in case it's not used
+        lib_ams::FShmember *oldnext = row.cd_slow_poll_read_next;
+        lib_ams::FShmember *oldprev = row.cd_slow_poll_read_prev;
+        oldnext->cd_slow_poll_read_prev = oldprev; // remove element from list
+        oldprev->cd_slow_poll_read_next = oldnext;
+        _db.cd_slow_poll_read_n--;  // adjust count
+        if (&row == _db.cd_slow_poll_read_head) {
+            _db.cd_slow_poll_read_head = oldnext==&row ? NULL : oldnext; // adjust list head
+        }
+        row.cd_slow_poll_read_next = (lib_ams::FShmember*)-1; // mark element as not-in-list);
+        row.cd_slow_poll_read_prev = NULL; // clear back-pointer
+        if (old_head != _db.cd_slow_poll_read_head) {
+            cd_slow_poll_read_FirstChanged();
+        }
+    }
+}
+
+// --- lib_ams.FDb.cd_slow_poll_read.RemoveAll
+// Empty the index. (The rows are not deleted)
+void lib_ams::cd_slow_poll_read_RemoveAll() {
+    lib_ams::FShmember* row = _db.cd_slow_poll_read_head;
+    lib_ams::FShmember* head = _db.cd_slow_poll_read_head;
+    _db.cd_slow_poll_read_head = NULL;
+    _db.cd_slow_poll_read_n = 0;
+    bool do_fire = (NULL != row);
+    while (row) {
+        lib_ams::FShmember* row_next = row->cd_slow_poll_read_next;
+        row->cd_slow_poll_read_next  = (lib_ams::FShmember*)-1;
+        row->cd_slow_poll_read_prev  = NULL;
+        row = row_next != head  ? row_next : NULL;
+    }
+    if (do_fire) {
+        cd_slow_poll_read_FirstChanged();
+    }
+}
+
+// --- lib_ams.FDb.cd_slow_poll_read.RemoveFirst
+// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+// Call FirstChanged trigger.
+lib_ams::FShmember* lib_ams::cd_slow_poll_read_RemoveFirst() {
+    lib_ams::FShmember *row = NULL;
+    row = _db.cd_slow_poll_read_head;
+    if (row) {
+        bool hasmore = row!=row->cd_slow_poll_read_next;
+        _db.cd_slow_poll_read_head = hasmore ? row->cd_slow_poll_read_next : NULL;
+        row->cd_slow_poll_read_next->cd_slow_poll_read_prev = row->cd_slow_poll_read_prev;
+        row->cd_slow_poll_read_prev->cd_slow_poll_read_next = row->cd_slow_poll_read_next;
+        row->cd_slow_poll_read_prev = NULL;
+        _db.cd_slow_poll_read_n--;
+        row->cd_slow_poll_read_next = (lib_ams::FShmember*)-1; // mark as not-in-list
+        cd_slow_poll_read_FirstChanged();
+    }
+    return row;
+}
+
+// --- lib_ams.FDb.cd_slow_poll_read.RotateFirst
+// If linked list is empty, return NULL.
+// Otherwise return head item and advance head to the next item.
+lib_ams::FShmember* lib_ams::cd_slow_poll_read_RotateFirst() {
+    lib_ams::FShmember *row = NULL;
+    row = _db.cd_slow_poll_read_head;
+    if (row) {
+        _db.cd_slow_poll_read_head = row->cd_slow_poll_read_next;
+    }
+    return row;
+}
+
+// --- lib_ams.FDb.cd_slow_poll_read.FirstChanged
+// First element of index changed.
+void lib_ams::cd_slow_poll_read_FirstChanged() {
+}
+
+// --- lib_ams.FDb.cd_slow_poll_read.UpdateCycles
+// Update cycles count from previous clock capture
+inline static void lib_ams::cd_slow_poll_read_UpdateCycles() {
+    u64 cur_cycles                      = algo::get_cycles();
+    u64 prev_cycles                     = algo_lib::_db.clock.value;
+    ++lib_ams::_db.trace.step_cd_slow_poll_read;
+    lib_ams::_db.trace.step_cd_slow_poll_read_cycles  += cur_cycles - prev_cycles;
+    algo_lib::_db.clock                 = algo::SchedTime(cur_cycles);
+}
+
+// --- lib_ams.FDb.cd_slow_poll_read.Call
+inline static void lib_ams::cd_slow_poll_read_Call() {
+    if (!lib_ams::cd_slow_poll_read_EmptyQ()) { // fstep:lib_ams.FDb.cd_slow_poll_read
+        if (lib_ams::_db.cd_slow_poll_read_next < algo_lib::_db.clock) {
+            lib_ams::_db.cd_slow_poll_read_next = algo_lib::_db.clock + lib_ams::_db.cd_slow_poll_read_delay;
+            lib_ams::cd_slow_poll_read_Step(); // steptype:InlineRecur: call function every N clock cycles
+            cd_slow_poll_read_UpdateCycles();
+        }
+        algo_lib::_db.next_loop.value = u64_Min(lib_ams::_db.cd_slow_poll_read_next, algo_lib::_db.next_loop);
+    }
+}
+
+// --- lib_ams.FDb.cd_slow_poll_read.SetDelay
+// Set inter-step delay to specified value.
+// The difference between new delay and current delay is added to the next scheduled time.
+void lib_ams::cd_slow_poll_read_SetDelay(algo::SchedTime delay) {
+    i64 diff = delay.value - lib_ams::_db.cd_slow_poll_read_delay.value;
+    lib_ams::_db.cd_slow_poll_read_delay = delay;
+    if (diff > 0) {
+        lib_ams::_db.cd_slow_poll_read_next.value += diff;
+    } else {
+        lib_ams::_db.cd_slow_poll_read_next.value = algo::u64_SubClip(lib_ams::_db.cd_slow_poll_read_next.value,-diff);
     }
 }
 
@@ -1338,6 +1593,7 @@ lib_ams::FProc* lib_ams::proc_AllocMaybe() {
     lib_ams::FProc *row = (lib_ams::FProc*)proc_AllocMem();
     if (row) {
         new (row) lib_ams::FProc; // call constructor
+        ++lib_ams::_db.trace.alloc__db_proc;
     }
     return row;
 }
@@ -1347,6 +1603,7 @@ lib_ams::FProc* lib_ams::proc_AllocMaybe() {
 void lib_ams::proc_Delete(lib_ams::FProc &row) {
     row.~FProc();
     proc_FreeMem(row);
+    ++lib_ams::_db.trace.del__db_proc;
 }
 
 // --- lib_ams.FDb.proc.AllocMem
@@ -1433,14 +1690,9 @@ bool lib_ams::proc_XrefMaybe(lib_ams::FProc &row) {
 // Find row by key. Return NULL if not found.
 lib_ams::FProc* lib_ams::ind_proc_Find(ams::ProcId key) {
     u32 index = ams::ProcId_Hash(0, key) & (_db.ind_proc_buckets_n - 1);
-    lib_ams::FProc* *e = &_db.ind_proc_buckets_elems[index];
-    lib_ams::FProc* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).proc_id == key;
-        if (done) break;
-        e         = &ret->ind_proc_next;
-    } while (true);
+    lib_ams::FProc *ret = _db.ind_proc_buckets_elems[index];
+    for (; ret && !((*ret).proc_id == key); ret = ret->ind_proc_next) {
+    }
     return ret;
 }
 
@@ -1472,10 +1724,11 @@ lib_ams::FProc& lib_ams::ind_proc_GetOrCreate(ams::ProcId key) {
 // --- lib_ams.FDb.ind_proc.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool lib_ams::ind_proc_InsertMaybe(lib_ams::FProc& row) {
-    ind_proc_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_proc_next == (lib_ams::FProc*)-1)) {// check if in hash already
-        u32 index = ams::ProcId_Hash(0, row.proc_id) & (_db.ind_proc_buckets_n - 1);
+        row.ind_proc_hashval = ams::ProcId_Hash(0, row.proc_id);
+        ind_proc_Reserve(1);
+        u32 index = row.ind_proc_hashval & (_db.ind_proc_buckets_n - 1);
         lib_ams::FProc* *prev = &_db.ind_proc_buckets_elems[index];
         do {
             lib_ams::FProc* ret = *prev;
@@ -1501,7 +1754,7 @@ bool lib_ams::ind_proc_InsertMaybe(lib_ams::FProc& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void lib_ams::ind_proc_Remove(lib_ams::FProc& row) {
     if (LIKELY(row.ind_proc_next != (lib_ams::FProc*)-1)) {// check if in hash already
-        u32 index = ams::ProcId_Hash(0, row.proc_id) & (_db.ind_proc_buckets_n - 1);
+        u32 index = row.ind_proc_hashval & (_db.ind_proc_buckets_n - 1);
         lib_ams::FProc* *prev = &_db.ind_proc_buckets_elems[index]; // addr of pointer to current element
         while (lib_ams::FProc *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1518,8 +1771,14 @@ void lib_ams::ind_proc_Remove(lib_ams::FProc& row) {
 // --- lib_ams.FDb.ind_proc.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void lib_ams::ind_proc_Reserve(int n) {
+    ind_proc_AbsReserve(_db.ind_proc_n + n);
+}
+
+// --- lib_ams.FDb.ind_proc.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void lib_ams::ind_proc_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_proc_buckets_n;
-    u32 new_nelems   = _db.ind_proc_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -1538,7 +1797,7 @@ void lib_ams::ind_proc_Reserve(int n) {
             while (elem) {
                 lib_ams::FProc &row        = *elem;
                 lib_ams::FProc* next       = row.ind_proc_next;
-                u32 index          = ams::ProcId_Hash(0, row.proc_id) & (new_nbuckets-1);
+                u32 index          = row.ind_proc_hashval & (new_nbuckets-1);
                 row.ind_proc_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1551,67 +1810,69 @@ void lib_ams::ind_proc_Reserve(int n) {
     }
 }
 
-// --- lib_ams.FDb.member.Alloc
+// --- lib_ams.FDb.shmember.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-lib_ams::FMember& lib_ams::member_Alloc() {
-    lib_ams::FMember* row = member_AllocMaybe();
+lib_ams::FShmember& lib_ams::shmember_Alloc() {
+    lib_ams::FShmember* row = shmember_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
-        FatalErrorExit("lib_ams.out_of_mem  field:lib_ams.FDb.member  comment:'Alloc failed'");
+        FatalErrorExit("lib_ams.out_of_mem  field:lib_ams.FDb.shmember  comment:'Alloc failed'");
     }
     return *row;
 }
 
-// --- lib_ams.FDb.member.AllocMaybe
+// --- lib_ams.FDb.shmember.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-lib_ams::FMember* lib_ams::member_AllocMaybe() {
-    lib_ams::FMember *row = (lib_ams::FMember*)member_AllocMem();
+lib_ams::FShmember* lib_ams::shmember_AllocMaybe() {
+    lib_ams::FShmember *row = (lib_ams::FShmember*)shmember_AllocMem();
     if (row) {
-        new (row) lib_ams::FMember; // call constructor
+        new (row) lib_ams::FShmember; // call constructor
+        ++lib_ams::_db.trace.alloc__db_shmember;
     }
     return row;
 }
 
-// --- lib_ams.FDb.member.Delete
+// --- lib_ams.FDb.shmember.Delete
 // Remove row from all global and cross indices, then deallocate row
-void lib_ams::member_Delete(lib_ams::FMember &row) {
-    row.~FMember();
-    member_FreeMem(row);
+void lib_ams::shmember_Delete(lib_ams::FShmember &row) {
+    row.~FShmember();
+    shmember_FreeMem(row);
+    ++lib_ams::_db.trace.del__db_shmember;
 }
 
-// --- lib_ams.FDb.member.AllocMem
+// --- lib_ams.FDb.shmember.AllocMem
 // Allocate space for one element
 // If no memory available, return NULL.
-void* lib_ams::member_AllocMem() {
-    lib_ams::FMember *row = _db.member_free;
+void* lib_ams::shmember_AllocMem() {
+    lib_ams::FShmember *row = _db.shmember_free;
     if (UNLIKELY(!row)) {
-        member_Reserve(1);
-        row = _db.member_free;
+        shmember_Reserve(1);
+        row = _db.shmember_free;
     }
     if (row) {
-        _db.member_free = row->member_next;
+        _db.shmember_free = row->shmember_next;
     }
     return row;
 }
 
-// --- lib_ams.FDb.member.FreeMem
+// --- lib_ams.FDb.shmember.FreeMem
 // Remove mem from all global and cross indices, then deallocate mem
-void lib_ams::member_FreeMem(lib_ams::FMember &row) {
-    if (UNLIKELY(row.member_next != (lib_ams::FMember*)-1)) {
-        FatalErrorExit("lib_ams.tpool_double_delete  pool:lib_ams.FDb.member  comment:'double deletion caught'");
+void lib_ams::shmember_FreeMem(lib_ams::FShmember &row) {
+    if (UNLIKELY(row.shmember_next != (lib_ams::FShmember*)-1)) {
+        FatalErrorExit("lib_ams.tpool_double_delete  pool:lib_ams.FDb.shmember  comment:'double deletion caught'");
     }
-    row.member_next = _db.member_free; // insert into free list
-    _db.member_free  = &row;
+    row.shmember_next = _db.shmember_free; // insert into free list
+    _db.shmember_free  = &row;
 }
 
-// --- lib_ams.FDb.member.Reserve
+// --- lib_ams.FDb.shmember.Reserve
 // Preallocate memory for N more elements
 // Return number of elements actually reserved.
-u64 lib_ams::member_Reserve(u64 n_elems) {
+u64 lib_ams::shmember_Reserve(u64 n_elems) {
     u64 ret = 0;
     while (ret < n_elems) {
-        u64 size = _db.member_blocksize; // underlying allocator is probably Lpool
-        u64 reserved = member_ReserveMem(size);
+        u64 size = _db.shmember_blocksize; // underlying allocator is probably Lpool
+        u64 reserved = shmember_ReserveMem(size);
         ret += reserved;
         if (reserved == 0) {
             break;
@@ -1620,472 +1881,488 @@ u64 lib_ams::member_Reserve(u64 n_elems) {
     return ret;
 }
 
-// --- lib_ams.FDb.member.ReserveMem
+// --- lib_ams.FDb.shmember.ReserveMem
 // Allocate block of given size, break up into small elements and append to free list.
 // Return number of elements reserved.
-u64 lib_ams::member_ReserveMem(u64 size) {
+u64 lib_ams::shmember_ReserveMem(u64 size) {
     u64 ret = 0;
-    if (size >= sizeof(lib_ams::FMember)) {
-        lib_ams::FMember *mem = (lib_ams::FMember*)algo_lib::malloc_AllocMem(size);
-        ret = mem ? size / sizeof(lib_ams::FMember) : 0;
+    if (size >= sizeof(lib_ams::FShmember)) {
+        lib_ams::FShmember *mem = (lib_ams::FShmember*)algo_lib::malloc_AllocMem(size);
+        ret = mem ? size / sizeof(lib_ams::FShmember) : 0;
         // add newly allocated elements to the free list;
         for (u64 i=0; i < ret; i++) {
-            mem[i].member_next = _db.member_free;
-            _db.member_free = mem+i;
+            mem[i].shmember_next = _db.shmember_free;
+            _db.shmember_free = mem+i;
         }
     }
     return ret;
 }
 
-// --- lib_ams.FDb.member.XrefMaybe
+// --- lib_ams.FDb.shmember.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-bool lib_ams::member_XrefMaybe(lib_ams::FMember &row) {
+bool lib_ams::shmember_XrefMaybe(lib_ams::FShmember &row) {
     bool retval = true;
     (void)row;
-    lib_ams::FStream* p_stream_id = lib_ams::ind_stream_Find(row.member.stream_id);
-    if (UNLIKELY(!p_stream_id)) {
-        algo_lib::ResetErrtext() << "lib_ams.bad_xref  index:lib_ams.FDb.ind_stream" << Keyval("key", row.member.stream_id);
+    lib_ams::FShm* p_shm_id = lib_ams::ind_shm_Find(row.shmember.shm_id);
+    if (UNLIKELY(!p_shm_id)) {
+        algo_lib::ResetErrtext() << "lib_ams.bad_xref  index:lib_ams.FDb.ind_shm" << Keyval("key", row.shmember.shm_id);
         return false;
     }
-    // member: save pointer to stream_id
+    // shmember: save pointer to shm_id
     if (true) { // user-defined insert condition
-        row.p_stream = p_stream_id;
+        row.p_shm = p_shm_id;
     }
-    lib_ams::FProc* p_proc_id = lib_ams::ind_proc_Find(row.member.proc_id);
+    lib_ams::FProc* p_proc_id = lib_ams::ind_proc_Find(row.shmember.proc_id);
     if (UNLIKELY(!p_proc_id)) {
-        algo_lib::ResetErrtext() << "lib_ams.bad_xref  index:lib_ams.FDb.ind_proc" << Keyval("key", row.member.proc_id);
+        algo_lib::ResetErrtext() << "lib_ams.bad_xref  index:lib_ams.FDb.ind_proc" << Keyval("key", row.shmember.proc_id);
         return false;
     }
-    // member: save pointer to proc_id
+    // shmember: save pointer to proc_id
     if (true) { // user-defined insert condition
         row.p_proc = p_proc_id;
     }
-    // insert member into index ind_member
+    // insert shmember into index c_shmember
     if (true) { // user-defined insert condition
-        bool success = ind_member_InsertMaybe(row);
+        c_shmember_Insert(*p_proc_id, row);
+    }
+    // insert shmember into index c_shmember
+    if (true) { // user-defined insert condition
+        c_shmember_Insert(*p_shm_id, row);
+    }
+    // insert shmember into index ind_shmember
+    if (true) { // user-defined insert condition
+        bool success = ind_shmember_InsertMaybe(row);
         if (UNLIKELY(!success)) {
             ch_RemoveAll(algo_lib::_db.errtext);
-            algo_lib::_db.errtext << "lib_ams.duplicate_key  xref:lib_ams.FDb.ind_member"; // check for duplicate key
+            algo_lib::_db.errtext << "lib_ams.duplicate_key  xref:lib_ams.FDb.ind_shmember"; // check for duplicate key
             return false;
         }
-    }
-    // insert member into index zd_member_bystream
-    if (true) { // user-defined insert condition
-        zd_member_bystream_Insert(*p_stream_id, row);
-    }
-    // insert member into index zd_member_byproc
-    if (true) { // user-defined insert condition
-        zd_member_byproc_Insert(*p_proc_id, row);
     }
     return retval;
 }
 
-// --- lib_ams.FDb.ind_member.Find
+// --- lib_ams.FDb.ind_shmember.Find
 // Find row by key. Return NULL if not found.
-lib_ams::FMember* lib_ams::ind_member_Find(ams::Member key) {
-    u32 index = ams::Member_Hash(0, key) & (_db.ind_member_buckets_n - 1);
-    lib_ams::FMember* *e = &_db.ind_member_buckets_elems[index];
-    lib_ams::FMember* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).member == key;
-        if (done) break;
-        e         = &ret->ind_member_next;
-    } while (true);
+lib_ams::FShmember* lib_ams::ind_shmember_Find(ams::ShmemberId key) {
+    u32 index = ams::ShmemberId_Hash(0, key) & (_db.ind_shmember_buckets_n - 1);
+    lib_ams::FShmember *ret = _db.ind_shmember_buckets_elems[index];
+    for (; ret && !((*ret).shmember == key); ret = ret->ind_shmember_next) {
+    }
     return ret;
 }
 
-// --- lib_ams.FDb.ind_member.FindX
+// --- lib_ams.FDb.ind_shmember.FindX
 // Look up row by key and return reference. Throw exception if not found
-lib_ams::FMember& lib_ams::ind_member_FindX(ams::Member key) {
-    lib_ams::FMember* ret = ind_member_Find(key);
-    vrfy(ret, tempstr() << "lib_ams.key_error  table:ind_member  key:'"<<key<<"'  comment:'key not found'");
+lib_ams::FShmember& lib_ams::ind_shmember_FindX(ams::ShmemberId key) {
+    lib_ams::FShmember* ret = ind_shmember_Find(key);
+    vrfy(ret, tempstr() << "lib_ams.key_error  table:ind_shmember  key:'"<<key<<"'  comment:'key not found'");
     return *ret;
 }
 
-// --- lib_ams.FDb.ind_member.InsertMaybe
+// --- lib_ams.FDb.ind_shmember.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool lib_ams::ind_member_InsertMaybe(lib_ams::FMember& row) {
-    ind_member_Reserve(1);
+bool lib_ams::ind_shmember_InsertMaybe(lib_ams::FShmember& row) {
     bool retval = true; // if already in hash, InsertMaybe returns true
-    if (LIKELY(row.ind_member_next == (lib_ams::FMember*)-1)) {// check if in hash already
-        u32 index = ams::Member_Hash(0, row.member) & (_db.ind_member_buckets_n - 1);
-        lib_ams::FMember* *prev = &_db.ind_member_buckets_elems[index];
+    if (LIKELY(row.ind_shmember_next == (lib_ams::FShmember*)-1)) {// check if in hash already
+        row.ind_shmember_hashval = ams::ShmemberId_Hash(0, row.shmember);
+        ind_shmember_Reserve(1);
+        u32 index = row.ind_shmember_hashval & (_db.ind_shmember_buckets_n - 1);
+        lib_ams::FShmember* *prev = &_db.ind_shmember_buckets_elems[index];
         do {
-            lib_ams::FMember* ret = *prev;
+            lib_ams::FShmember* ret = *prev;
             if (!ret) { // exit condition 1: reached the end of the list
                 break;
             }
-            if ((*ret).member == row.member) { // exit condition 2: found matching key
+            if ((*ret).shmember == row.shmember) { // exit condition 2: found matching key
                 retval = false;
                 break;
             }
-            prev = &ret->ind_member_next;
+            prev = &ret->ind_shmember_next;
         } while (true);
         if (retval) {
-            row.ind_member_next = *prev;
-            _db.ind_member_n++;
+            row.ind_shmember_next = *prev;
+            _db.ind_shmember_n++;
             *prev = &row;
         }
     }
     return retval;
 }
 
-// --- lib_ams.FDb.ind_member.Remove
+// --- lib_ams.FDb.ind_shmember.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void lib_ams::ind_member_Remove(lib_ams::FMember& row) {
-    if (LIKELY(row.ind_member_next != (lib_ams::FMember*)-1)) {// check if in hash already
-        u32 index = ams::Member_Hash(0, row.member) & (_db.ind_member_buckets_n - 1);
-        lib_ams::FMember* *prev = &_db.ind_member_buckets_elems[index]; // addr of pointer to current element
-        while (lib_ams::FMember *next = *prev) {                          // scan the collision chain for our element
+void lib_ams::ind_shmember_Remove(lib_ams::FShmember& row) {
+    if (LIKELY(row.ind_shmember_next != (lib_ams::FShmember*)-1)) {// check if in hash already
+        u32 index = row.ind_shmember_hashval & (_db.ind_shmember_buckets_n - 1);
+        lib_ams::FShmember* *prev = &_db.ind_shmember_buckets_elems[index]; // addr of pointer to current element
+        while (lib_ams::FShmember *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
-                *prev = next->ind_member_next; // unlink (singly linked list)
-                _db.ind_member_n--;
-                row.ind_member_next = (lib_ams::FMember*)-1;// not-in-hash
+                *prev = next->ind_shmember_next; // unlink (singly linked list)
+                _db.ind_shmember_n--;
+                row.ind_shmember_next = (lib_ams::FShmember*)-1;// not-in-hash
                 break;
             }
-            prev = &next->ind_member_next;
+            prev = &next->ind_shmember_next;
         }
     }
 }
 
-// --- lib_ams.FDb.ind_member.Reserve
+// --- lib_ams.FDb.ind_shmember.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void lib_ams::ind_member_Reserve(int n) {
-    u32 old_nbuckets = _db.ind_member_buckets_n;
-    u32 new_nelems   = _db.ind_member_n + n;
+void lib_ams::ind_shmember_Reserve(int n) {
+    ind_shmember_AbsReserve(_db.ind_shmember_n + n);
+}
+
+// --- lib_ams.FDb.ind_shmember.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void lib_ams::ind_shmember_AbsReserve(int n) {
+    u32 old_nbuckets = _db.ind_shmember_buckets_n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
-        u32 old_size = old_nbuckets * sizeof(lib_ams::FMember*);
-        u32 new_size = new_nbuckets * sizeof(lib_ams::FMember*);
+        u32 old_size = old_nbuckets * sizeof(lib_ams::FShmember*);
+        u32 new_size = new_nbuckets * sizeof(lib_ams::FShmember*);
         // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
         // means new memory will have to be allocated anyway
-        lib_ams::FMember* *new_buckets = (lib_ams::FMember**)algo_lib::malloc_AllocMem(new_size);
+        lib_ams::FShmember* *new_buckets = (lib_ams::FShmember**)algo_lib::malloc_AllocMem(new_size);
         if (UNLIKELY(!new_buckets)) {
-            FatalErrorExit("lib_ams.out_of_memory  field:lib_ams.FDb.ind_member");
+            FatalErrorExit("lib_ams.out_of_memory  field:lib_ams.FDb.ind_shmember");
         }
         memset(new_buckets, 0, new_size); // clear pointers
         // rehash all entries
-        for (int i = 0; i < _db.ind_member_buckets_n; i++) {
-            lib_ams::FMember* elem = _db.ind_member_buckets_elems[i];
+        for (int i = 0; i < _db.ind_shmember_buckets_n; i++) {
+            lib_ams::FShmember* elem = _db.ind_shmember_buckets_elems[i];
             while (elem) {
-                lib_ams::FMember &row        = *elem;
-                lib_ams::FMember* next       = row.ind_member_next;
-                u32 index          = ams::Member_Hash(0, row.member) & (new_nbuckets-1);
-                row.ind_member_next     = new_buckets[index];
+                lib_ams::FShmember &row        = *elem;
+                lib_ams::FShmember* next       = row.ind_shmember_next;
+                u32 index          = row.ind_shmember_hashval & (new_nbuckets-1);
+                row.ind_shmember_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
             }
         }
         // free old array
-        algo_lib::malloc_FreeMem(_db.ind_member_buckets_elems, old_size);
-        _db.ind_member_buckets_elems = new_buckets;
-        _db.ind_member_buckets_n = new_nbuckets;
+        algo_lib::malloc_FreeMem(_db.ind_shmember_buckets_elems, old_size);
+        _db.ind_shmember_buckets_elems = new_buckets;
+        _db.ind_shmember_buckets_n = new_nbuckets;
     }
 }
 
-// --- lib_ams.FDb.streamtype.Alloc
+// --- lib_ams.FDb.shmtype.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-lib_ams::FStreamType& lib_ams::streamtype_Alloc() {
-    lib_ams::FStreamType* row = streamtype_AllocMaybe();
+lib_ams::FShmtype& lib_ams::shmtype_Alloc() {
+    lib_ams::FShmtype* row = shmtype_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
-        FatalErrorExit("lib_ams.out_of_mem  field:lib_ams.FDb.streamtype  comment:'Alloc failed'");
+        FatalErrorExit("lib_ams.out_of_mem  field:lib_ams.FDb.shmtype  comment:'Alloc failed'");
     }
     return *row;
 }
 
-// --- lib_ams.FDb.streamtype.AllocMaybe
+// --- lib_ams.FDb.shmtype.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-lib_ams::FStreamType* lib_ams::streamtype_AllocMaybe() {
-    lib_ams::FStreamType *row = (lib_ams::FStreamType*)streamtype_AllocMem();
+lib_ams::FShmtype* lib_ams::shmtype_AllocMaybe() {
+    lib_ams::FShmtype *row = (lib_ams::FShmtype*)shmtype_AllocMem();
     if (row) {
-        new (row) lib_ams::FStreamType; // call constructor
+        new (row) lib_ams::FShmtype; // call constructor
+        ++lib_ams::_db.trace.alloc__db_shmtype;
     }
     return row;
 }
 
-// --- lib_ams.FDb.streamtype.InsertMaybe
+// --- lib_ams.FDb.shmtype.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-lib_ams::FStreamType* lib_ams::streamtype_InsertMaybe(const amsdb::StreamType &value) {
-    lib_ams::FStreamType *row = &streamtype_Alloc(); // if out of memory, process dies. if input error, return NULL.
-    streamtype_CopyIn(*row,const_cast<amsdb::StreamType&>(value));
-    bool ok = streamtype_XrefMaybe(*row); // this may return false
+lib_ams::FShmtype* lib_ams::shmtype_InsertMaybe(const amsdb::Shmtype &value) {
+    lib_ams::FShmtype *row = &shmtype_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    shmtype_CopyIn(*row,const_cast<amsdb::Shmtype&>(value));
+    bool ok = shmtype_XrefMaybe(*row); // this may return false
     if (!ok) {
-        streamtype_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        shmtype_RemoveLast(); // delete offending row, any existing xrefs are cleared
         row = NULL; // forget this ever happened
     }
     return row;
 }
 
-// --- lib_ams.FDb.streamtype.AllocMem
+// --- lib_ams.FDb.shmtype.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* lib_ams::streamtype_AllocMem() {
-    u64 new_nelems     = _db.streamtype_n+1;
+void* lib_ams::shmtype_AllocMem() {
+    u64 new_nelems     = _db.shmtype_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
     u64 base  = u64(1)<<bsr;
     u64 index = new_nelems-base;
     void *ret = NULL;
     // if level doesn't exist yet, create it
-    lib_ams::FStreamType*  lev   = NULL;
+    lib_ams::FShmtype*  lev   = NULL;
     if (bsr < 32) {
-        lev = _db.streamtype_lary[bsr];
+        lev = _db.shmtype_lary[bsr];
         if (!lev) {
-            lev=(lib_ams::FStreamType*)algo_lib::malloc_AllocMem(sizeof(lib_ams::FStreamType) * (u64(1)<<bsr));
-            _db.streamtype_lary[bsr] = lev;
+            lev=(lib_ams::FShmtype*)algo_lib::malloc_AllocMem(sizeof(lib_ams::FShmtype) * (u64(1)<<bsr));
+            _db.shmtype_lary[bsr] = lev;
         }
     }
     // allocate element from this level
     if (lev) {
-        _db.streamtype_n = i32(new_nelems);
+        _db.shmtype_n = i32(new_nelems);
         ret = lev + index;
     }
     return ret;
 }
 
-// --- lib_ams.FDb.streamtype.RemoveAll
+// --- lib_ams.FDb.shmtype.RemoveAll
 // Remove all elements from Lary
-void lib_ams::streamtype_RemoveAll() {
-    for (u64 n = _db.streamtype_n; n>0; ) {
+void lib_ams::shmtype_RemoveAll() {
+    lib_ams::_db.trace.del__db_shmtype += _db.shmtype_n;
+    for (u64 n = _db.shmtype_n; n>0; ) {
         n--;
-        streamtype_qFind(u64(n)).~FStreamType(); // destroy last element
-        _db.streamtype_n = i32(n);
+        shmtype_qFind(u64(n)).~FShmtype(); // destroy last element
+        _db.shmtype_n = i32(n);
     }
 }
 
-// --- lib_ams.FDb.streamtype.RemoveLast
+// --- lib_ams.FDb.shmtype.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void lib_ams::streamtype_RemoveLast() {
-    u64 n = _db.streamtype_n;
+void lib_ams::shmtype_RemoveLast() {
+    u64 n = _db.shmtype_n;
     if (n > 0) {
         n -= 1;
-        streamtype_qFind(u64(n)).~FStreamType();
-        _db.streamtype_n = i32(n);
+        shmtype_qFind(u64(n)).~FShmtype();
+        ++lib_ams::_db.trace.del__db_shmtype;
+        _db.shmtype_n = i32(n);
     }
 }
 
-// --- lib_ams.FDb.streamtype.LoadStatic
-static void lib_ams::streamtype_LoadStatic() {
+// --- lib_ams.FDb.shmtype.LoadStatic
+static void lib_ams::shmtype_LoadStatic() {
     static struct _t {
         const char *s;
     } data[] = {
-        { "amsdb.streamtype  streamtype:0  id:0  comment:\"No stream\"" }
-        ,{ "amsdb.streamtype  streamtype:ctl  id:1  comment:\"AMS control messages\"" }
-        ,{ "amsdb.streamtype  streamtype:io  id:5  comment:\"Messages intended for file output\"" }
-        ,{ "amsdb.streamtype  streamtype:out  id:2  comment:\"Log messages, alarms\"" }
-        ,{ "amsdb.streamtype  streamtype:trace  id:6  comment:\"Trace messages\"" }
+        { "amsdb.shmtype  shmtype:ctl  id:1  nonblock:Y  comment:\"AMS control messages\"" }
+        ,{ "amsdb.shmtype  shmtype:log  id:9  nonblock:N  comment:\"Log messages\"" }
+        ,{ "amsdb.shmtype  shmtype:out  id:2  nonblock:N  comment:\"Log messages, alarms\"" }
         ,{NULL}
     };
     (void)data;
-    amsdb::StreamType streamtype;
+    amsdb::Shmtype shmtype;
     for (int i=0; data[i].s; i++) {
-        (void)amsdb::StreamType_ReadStrptrMaybe(streamtype, algo::strptr(data[i].s));
-        lib_ams::FStreamType *elem = streamtype_InsertMaybe(streamtype);
+        (void)amsdb::Shmtype_ReadStrptrMaybe(shmtype, algo::strptr(data[i].s));
+        lib_ams::FShmtype *elem = shmtype_InsertMaybe(shmtype);
         (void)elem;
     }
 }
 
-// --- lib_ams.FDb.streamtype.XrefMaybe
+// --- lib_ams.FDb.shmtype.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-bool lib_ams::streamtype_XrefMaybe(lib_ams::FStreamType &row) {
+bool lib_ams::shmtype_XrefMaybe(lib_ams::FShmtype &row) {
     bool retval = true;
     (void)row;
-    // insert streamtype into index ind_streamtype
+    // insert shmtype into index ind_shmtype
     if (true) { // user-defined insert condition
-        bool success = ind_streamtype_InsertMaybe(row);
+        bool success = ind_shmtype_InsertMaybe(row);
         if (UNLIKELY(!success)) {
             ch_RemoveAll(algo_lib::_db.errtext);
-            algo_lib::_db.errtext << "lib_ams.duplicate_key  xref:lib_ams.FDb.ind_streamtype"; // check for duplicate key
+            algo_lib::_db.errtext << "lib_ams.duplicate_key  xref:lib_ams.FDb.ind_shmtype"; // check for duplicate key
             return false;
         }
     }
     return retval;
 }
 
-// --- lib_ams.FDb.ind_streamtype.Find
+// --- lib_ams.FDb.ind_shmtype.Find
 // Find row by key. Return NULL if not found.
-lib_ams::FStreamType* lib_ams::ind_streamtype_Find(ams::StreamType key) {
-    u32 index = ams::StreamType_Hash(0, key) & (_db.ind_streamtype_buckets_n - 1);
-    lib_ams::FStreamType* *e = &_db.ind_streamtype_buckets_elems[index];
-    lib_ams::FStreamType* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).id == key;
-        if (done) break;
-        e         = &ret->ind_streamtype_next;
-    } while (true);
+lib_ams::FShmtype* lib_ams::ind_shmtype_Find(ams::Shmtype key) {
+    u32 index = ams::Shmtype_Hash(0, key) & (_db.ind_shmtype_buckets_n - 1);
+    lib_ams::FShmtype *ret = _db.ind_shmtype_buckets_elems[index];
+    for (; ret && !((*ret).id == key); ret = ret->ind_shmtype_next) {
+    }
     return ret;
 }
 
-// --- lib_ams.FDb.ind_streamtype.FindX
+// --- lib_ams.FDb.ind_shmtype.FindX
 // Look up row by key and return reference. Throw exception if not found
-lib_ams::FStreamType& lib_ams::ind_streamtype_FindX(ams::StreamType key) {
-    lib_ams::FStreamType* ret = ind_streamtype_Find(key);
-    vrfy(ret, tempstr() << "lib_ams.key_error  table:ind_streamtype  key:'"<<key<<"'  comment:'key not found'");
+lib_ams::FShmtype& lib_ams::ind_shmtype_FindX(ams::Shmtype key) {
+    lib_ams::FShmtype* ret = ind_shmtype_Find(key);
+    vrfy(ret, tempstr() << "lib_ams.key_error  table:ind_shmtype  key:'"<<key<<"'  comment:'key not found'");
     return *ret;
 }
 
-// --- lib_ams.FDb.ind_streamtype.GetOrCreate
+// --- lib_ams.FDb.ind_shmtype.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-lib_ams::FStreamType& lib_ams::ind_streamtype_GetOrCreate(ams::StreamType key) {
-    lib_ams::FStreamType* ret = ind_streamtype_Find(key);
+lib_ams::FShmtype& lib_ams::ind_shmtype_GetOrCreate(ams::Shmtype key) {
+    lib_ams::FShmtype* ret = ind_shmtype_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
-        ret         = &streamtype_Alloc();
+        ret         = &shmtype_Alloc();
         (*ret).id = key;
-        bool good = streamtype_XrefMaybe(*ret);
+        bool good = shmtype_XrefMaybe(*ret);
         if (!good) {
-            streamtype_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            shmtype_RemoveLast(); // delete offending row, any existing xrefs are cleared
             ret = NULL;
         }
     }
-    vrfy(ret, tempstr() << "lib_ams.create_error  table:ind_streamtype  key:'"<<key<<"'  comment:'bad xref'");
+    vrfy(ret, tempstr() << "lib_ams.create_error  table:ind_shmtype  key:'"<<key<<"'  comment:'bad xref'");
     return *ret;
 }
 
-// --- lib_ams.FDb.ind_streamtype.InsertMaybe
+// --- lib_ams.FDb.ind_shmtype.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool lib_ams::ind_streamtype_InsertMaybe(lib_ams::FStreamType& row) {
-    ind_streamtype_Reserve(1);
+bool lib_ams::ind_shmtype_InsertMaybe(lib_ams::FShmtype& row) {
     bool retval = true; // if already in hash, InsertMaybe returns true
-    if (LIKELY(row.ind_streamtype_next == (lib_ams::FStreamType*)-1)) {// check if in hash already
-        u32 index = ams::StreamType_Hash(0, row.id) & (_db.ind_streamtype_buckets_n - 1);
-        lib_ams::FStreamType* *prev = &_db.ind_streamtype_buckets_elems[index];
+    if (LIKELY(row.ind_shmtype_next == (lib_ams::FShmtype*)-1)) {// check if in hash already
+        row.ind_shmtype_hashval = ams::Shmtype_Hash(0, row.id);
+        ind_shmtype_Reserve(1);
+        u32 index = row.ind_shmtype_hashval & (_db.ind_shmtype_buckets_n - 1);
+        lib_ams::FShmtype* *prev = &_db.ind_shmtype_buckets_elems[index];
         if (retval) {
-            row.ind_streamtype_next = *prev;
-            _db.ind_streamtype_n++;
+            row.ind_shmtype_next = *prev;
+            _db.ind_shmtype_n++;
             *prev = &row;
         }
     }
     return retval;
 }
 
-// --- lib_ams.FDb.ind_streamtype.Remove
+// --- lib_ams.FDb.ind_shmtype.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void lib_ams::ind_streamtype_Remove(lib_ams::FStreamType& row) {
-    if (LIKELY(row.ind_streamtype_next != (lib_ams::FStreamType*)-1)) {// check if in hash already
-        u32 index = ams::StreamType_Hash(0, row.id) & (_db.ind_streamtype_buckets_n - 1);
-        lib_ams::FStreamType* *prev = &_db.ind_streamtype_buckets_elems[index]; // addr of pointer to current element
-        while (lib_ams::FStreamType *next = *prev) {                          // scan the collision chain for our element
+void lib_ams::ind_shmtype_Remove(lib_ams::FShmtype& row) {
+    if (LIKELY(row.ind_shmtype_next != (lib_ams::FShmtype*)-1)) {// check if in hash already
+        u32 index = row.ind_shmtype_hashval & (_db.ind_shmtype_buckets_n - 1);
+        lib_ams::FShmtype* *prev = &_db.ind_shmtype_buckets_elems[index]; // addr of pointer to current element
+        while (lib_ams::FShmtype *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
-                *prev = next->ind_streamtype_next; // unlink (singly linked list)
-                _db.ind_streamtype_n--;
-                row.ind_streamtype_next = (lib_ams::FStreamType*)-1;// not-in-hash
+                *prev = next->ind_shmtype_next; // unlink (singly linked list)
+                _db.ind_shmtype_n--;
+                row.ind_shmtype_next = (lib_ams::FShmtype*)-1;// not-in-hash
                 break;
             }
-            prev = &next->ind_streamtype_next;
+            prev = &next->ind_shmtype_next;
         }
     }
 }
 
-// --- lib_ams.FDb.ind_streamtype.Reserve
+// --- lib_ams.FDb.ind_shmtype.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void lib_ams::ind_streamtype_Reserve(int n) {
-    u32 old_nbuckets = _db.ind_streamtype_buckets_n;
-    u32 new_nelems   = _db.ind_streamtype_n + n;
+void lib_ams::ind_shmtype_Reserve(int n) {
+    ind_shmtype_AbsReserve(_db.ind_shmtype_n + n);
+}
+
+// --- lib_ams.FDb.ind_shmtype.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void lib_ams::ind_shmtype_AbsReserve(int n) {
+    u32 old_nbuckets = _db.ind_shmtype_buckets_n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
-        u32 old_size = old_nbuckets * sizeof(lib_ams::FStreamType*);
-        u32 new_size = new_nbuckets * sizeof(lib_ams::FStreamType*);
+        u32 old_size = old_nbuckets * sizeof(lib_ams::FShmtype*);
+        u32 new_size = new_nbuckets * sizeof(lib_ams::FShmtype*);
         // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
         // means new memory will have to be allocated anyway
-        lib_ams::FStreamType* *new_buckets = (lib_ams::FStreamType**)algo_lib::malloc_AllocMem(new_size);
+        lib_ams::FShmtype* *new_buckets = (lib_ams::FShmtype**)algo_lib::malloc_AllocMem(new_size);
         if (UNLIKELY(!new_buckets)) {
-            FatalErrorExit("lib_ams.out_of_memory  field:lib_ams.FDb.ind_streamtype");
+            FatalErrorExit("lib_ams.out_of_memory  field:lib_ams.FDb.ind_shmtype");
         }
         memset(new_buckets, 0, new_size); // clear pointers
         // rehash all entries
-        for (int i = 0; i < _db.ind_streamtype_buckets_n; i++) {
-            lib_ams::FStreamType* elem = _db.ind_streamtype_buckets_elems[i];
+        for (int i = 0; i < _db.ind_shmtype_buckets_n; i++) {
+            lib_ams::FShmtype* elem = _db.ind_shmtype_buckets_elems[i];
             while (elem) {
-                lib_ams::FStreamType &row        = *elem;
-                lib_ams::FStreamType* next       = row.ind_streamtype_next;
-                u32 index          = ams::StreamType_Hash(0, row.id) & (new_nbuckets-1);
-                row.ind_streamtype_next     = new_buckets[index];
+                lib_ams::FShmtype &row        = *elem;
+                lib_ams::FShmtype* next       = row.ind_shmtype_next;
+                u32 index          = row.ind_shmtype_hashval & (new_nbuckets-1);
+                row.ind_shmtype_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
             }
         }
         // free old array
-        algo_lib::malloc_FreeMem(_db.ind_streamtype_buckets_elems, old_size);
-        _db.ind_streamtype_buckets_elems = new_buckets;
-        _db.ind_streamtype_buckets_n = new_nbuckets;
+        algo_lib::malloc_FreeMem(_db.ind_shmtype_buckets_elems, old_size);
+        _db.ind_shmtype_buckets_elems = new_buckets;
+        _db.ind_shmtype_buckets_n = new_nbuckets;
     }
 }
 
-// --- lib_ams.FDb.zd_ctlin.Insert
-// Insert row into linked list. If row is already in linked list, do nothing.
-void lib_ams::zd_ctlin_Insert(lib_ams::FStream& row) {
-    if (!zd_ctlin_InLlistQ(row)) {
-        lib_ams::FStream* old_tail = _db.zd_ctlin_tail;
-        row.zd_ctlin_next = NULL;
-        row.zd_ctlin_prev = old_tail;
-        _db.zd_ctlin_tail = &row;
-        lib_ams::FStream **new_row_a = &old_tail->zd_ctlin_next;
-        lib_ams::FStream **new_row_b = &_db.zd_ctlin_head;
-        lib_ams::FStream **new_row = old_tail ? new_row_a : new_row_b;
-        *new_row = &row;
-        _db.zd_ctlin_n++;
+// --- lib_ams.FDb.c_ctlin.Insert
+// Insert pointer to row into array. Row must not already be in array.
+// If pointer is already in the array, it may be inserted twice.
+void lib_ams::c_ctlin_Insert(lib_ams::FShmember& row) {
+    if (row.c_ctlin_idx == -1) {
+        c_ctlin_Reserve(1);
+        u32 n  = _db.c_ctlin_n++;
+        _db.c_ctlin_elems[n] = &row;
+        row.c_ctlin_idx = n;
     }
 }
 
-// --- lib_ams.FDb.zd_ctlin.Remove
-// Remove element from index. If element is not in index, do nothing.
-void lib_ams::zd_ctlin_Remove(lib_ams::FStream& row) {
-    if (zd_ctlin_InLlistQ(row)) {
-        lib_ams::FStream* old_head       = _db.zd_ctlin_head;
-        (void)old_head; // in case it's not used
-        lib_ams::FStream* prev = row.zd_ctlin_prev;
-        lib_ams::FStream* next = row.zd_ctlin_next;
-        // if element is first, adjust list head; otherwise, adjust previous element's next
-        lib_ams::FStream **new_next_a = &prev->zd_ctlin_next;
-        lib_ams::FStream **new_next_b = &_db.zd_ctlin_head;
-        lib_ams::FStream **new_next = prev ? new_next_a : new_next_b;
-        *new_next = next;
-        // if element is last, adjust list tail; otherwise, adjust next element's prev
-        lib_ams::FStream **new_prev_a = &next->zd_ctlin_prev;
-        lib_ams::FStream **new_prev_b = &_db.zd_ctlin_tail;
-        lib_ams::FStream **new_prev = next ? new_prev_a : new_prev_b;
-        *new_prev = prev;
-        _db.zd_ctlin_n--;
-        row.zd_ctlin_next=(lib_ams::FStream*)-1; // not-in-list
+// --- lib_ams.FDb.c_ctlin.InsertMaybe
+// Insert pointer to row in array.
+// If row is already in the array, do nothing.
+// Return value: whether element was inserted into array.
+bool lib_ams::c_ctlin_InsertMaybe(lib_ams::FShmember& row) {
+    bool retval = !c_ctlin_InAryQ(row);
+    c_ctlin_Insert(row); // check is performed in _Insert again
+    return retval;
+}
+
+// --- lib_ams.FDb.c_ctlin.Remove
+// Find element using linear scan. If element is in array, remove, otherwise do nothing
+void lib_ams::c_ctlin_Remove(lib_ams::FShmember& row) {
+    int n = _db.c_ctlin_n;
+    int idx = row.c_ctlin_idx;
+    if (idx != -1) {
+        lib_ams::FShmember *last = _db.c_ctlin_elems[n-1];
+        last->c_ctlin_idx = idx;
+        _db.c_ctlin_elems[idx] = last;
+        row.c_ctlin_idx = -1;
+        _db.c_ctlin_n = n - 1;
     }
 }
 
-// --- lib_ams.FDb.zd_ctlin.RemoveAll
-// Empty the index. (The rows are not deleted)
-void lib_ams::zd_ctlin_RemoveAll() {
-    lib_ams::FStream* row = _db.zd_ctlin_head;
-    _db.zd_ctlin_head = NULL;
-    _db.zd_ctlin_tail = NULL;
-    _db.zd_ctlin_n = 0;
-    while (row) {
-        lib_ams::FStream* row_next = row->zd_ctlin_next;
-        row->zd_ctlin_next  = (lib_ams::FStream*)-1;
-        row->zd_ctlin_prev  = NULL;
-        row = row_next;
+// --- lib_ams.FDb.c_ctlin.Reserve
+// Reserve space in index for N more elements;
+void lib_ams::c_ctlin_Reserve(u32 n) {
+    u32 old_max = _db.c_ctlin_max;
+    if (UNLIKELY(_db.c_ctlin_n + n > old_max)) {
+        u32 new_max  = u32_Max(4, old_max * 2);
+        u32 old_size = old_max * sizeof(lib_ams::FShmember*);
+        u32 new_size = new_max * sizeof(lib_ams::FShmember*);
+        void *new_mem = algo_lib::malloc_ReallocMem(_db.c_ctlin_elems, old_size, new_size);
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("lib_ams.out_of_memory  field:lib_ams.FDb.c_ctlin");
+        }
+        _db.c_ctlin_elems = (lib_ams::FShmember**)new_mem;
+        _db.c_ctlin_max = new_max;
     }
 }
 
-// --- lib_ams.FDb.zd_ctlin.RemoveFirst
-// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-lib_ams::FStream* lib_ams::zd_ctlin_RemoveFirst() {
-    lib_ams::FStream *row = NULL;
-    row = _db.zd_ctlin_head;
-    if (row) {
-        lib_ams::FStream *next = row->zd_ctlin_next;
-        _db.zd_ctlin_head = next;
-        lib_ams::FStream **new_end_a = &next->zd_ctlin_prev;
-        lib_ams::FStream **new_end_b = &_db.zd_ctlin_tail;
-        lib_ams::FStream **new_end = next ? new_end_a : new_end_b;
-        *new_end = NULL;
-        _db.zd_ctlin_n--;
-        row->zd_ctlin_next = (lib_ams::FStream*)-1; // mark as not-in-list
+// --- lib_ams.FDb.c_ctlin.RemoveFirst
+// Heap-like Ptrary: remove first element
+// If index is empty, return NULL. Otherwise remove and return first element in index.
+lib_ams::FShmember* lib_ams::c_ctlin_RemoveFirst() {
+    lib_ams::FShmember *row = NULL;
+    int n = _db.c_ctlin_n;
+    if (n > 0) {
+        row = _db.c_ctlin_elems[0];
+        row->c_ctlin_idx=-1;
+        _db.c_ctlin_elems[n-1]->c_ctlin_idx=0;
+        _db.c_ctlin_elems[0]=_db.c_ctlin_elems[n-1];
+        _db.c_ctlin_n = n-1;
+    }
+    return row;
+}
+
+// --- lib_ams.FDb.c_ctlin.RemoveLast
+// Ptrary: remove last element
+// If index is empty, return NULL. Otherwise remove and return last element in index.
+lib_ams::FShmember* lib_ams::c_ctlin_RemoveLast() {
+    lib_ams::FShmember *row = NULL;
+    int n = _db.c_ctlin_n;
+    if (n > 0) {
+        row = _db.c_ctlin_elems[n-1];
+        row->c_ctlin_idx=-1;
+        _db.c_ctlin_n = n-1;
     }
     return row;
 }
@@ -2162,10 +2439,222 @@ lib_ams::FProc* lib_ams::zd_proc_RemoveFirst() {
     return row;
 }
 
-// --- lib_ams.FDb.regx_trace.Print
-// Print back to string
-void lib_ams::regx_trace_Print(algo::cstring &out) {
-    Regx_Print(_db.regx_trace, out);
+// --- lib_ams.FDb.bh_shmember_read.Dealloc
+// Remove all elements from heap and free memory used by the array.
+void lib_ams::bh_shmember_read_Dealloc() {
+    bh_shmember_read_RemoveAll();
+    algo_lib::malloc_FreeMem(_db.bh_shmember_read_elems, sizeof(lib_ams::FShmember*)*_db.bh_shmember_read_max);
+    _db.bh_shmember_read_max   = 0;
+    _db.bh_shmember_read_elems = NULL;
+}
+
+// --- lib_ams.FDb.bh_shmember_read.Downheap
+// Find new location for ROW starting at IDX
+// NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
+static int lib_ams::bh_shmember_read_Downheap(lib_ams::FShmember& row, int idx) {
+    lib_ams::FShmember* *elems = _db.bh_shmember_read_elems;
+    int n = _db.bh_shmember_read_n;
+    int child = idx*2+1;
+    while (child < n) {
+        lib_ams::FShmember* p = elems[child]; // left child
+        int rchild = child+1;
+        if (rchild < n) {
+            lib_ams::FShmember* q = elems[rchild]; // right child
+            if (bh_shmember_read_ElemLt(*q,*p)) {
+                child = rchild;
+                p     = q;
+            }
+        }
+        if (!bh_shmember_read_ElemLt(*p,row)) {
+            break;
+        }
+        p->bh_shmember_read_idx   = idx;
+        elems[idx]     = p;
+        idx            = child;
+        child          = idx*2+1;
+    }
+    return idx;
+}
+
+// --- lib_ams.FDb.bh_shmember_read.Insert
+// Insert row. Row must not already be in index. If row is already in index, do nothing.
+void lib_ams::bh_shmember_read_Insert(lib_ams::FShmember& row) {
+    if (LIKELY(row.bh_shmember_read_idx == -1)) {
+        bh_shmember_read_Reserve(1);
+        int n = _db.bh_shmember_read_n;
+        _db.bh_shmember_read_n = n + 1;
+        int new_idx = bh_shmember_read_Upheap(row, n);
+        row.bh_shmember_read_idx = new_idx;
+        _db.bh_shmember_read_elems[new_idx] = &row;
+        if (new_idx==0) {
+            bh_shmember_read_FirstChanged();
+        }
+    }
+}
+
+// --- lib_ams.FDb.bh_shmember_read.Reheap
+// If row is in heap, update its position. If row is not in heap, insert it.
+// Return new position of item in the heap (0=top)
+// If first item of the is changed, update fstep:lib_ams.FDb.bh_shmember_read
+i32 lib_ams::bh_shmember_read_Reheap(lib_ams::FShmember& row) {
+    int old_idx = row.bh_shmember_read_idx;
+    bool isnew = old_idx == -1;
+    if (isnew) {
+        bh_shmember_read_Reserve(1);
+        old_idx = _db.bh_shmember_read_n++;
+    }
+    int new_idx = bh_shmember_read_Upheap(row, old_idx);
+    if (!isnew && new_idx == old_idx) {
+        new_idx = bh_shmember_read_Downheap(row, old_idx);
+    }
+    row.bh_shmember_read_idx = new_idx;
+    _db.bh_shmember_read_elems[new_idx] = &row;
+    bool changed = new_idx==0 || old_idx==0;
+    if (changed) {
+        bh_shmember_read_FirstChanged();
+    }
+    return new_idx;
+}
+
+// --- lib_ams.FDb.bh_shmember_read.ReheapFirst
+// Key of first element in the heap changed. Move it.
+// This function does not check the insert condition.
+// Return new position of item in the heap (0=top).
+// Heap must be non-empty or behavior is undefined.
+// Update fstep:lib_ams.FDb.bh_shmember_read
+i32 lib_ams::bh_shmember_read_ReheapFirst() {
+    lib_ams::FShmember &row = *_db.bh_shmember_read_elems[0];
+    i32 new_idx = bh_shmember_read_Downheap(row, 0);
+    row.bh_shmember_read_idx = new_idx;
+    _db.bh_shmember_read_elems[new_idx] = &row;
+    if (new_idx != 0) {
+        bh_shmember_read_FirstChanged();
+    }
+    return new_idx;
+}
+
+// --- lib_ams.FDb.bh_shmember_read.Remove
+// Remove element from index. If element is not in index, do nothing.
+void lib_ams::bh_shmember_read_Remove(lib_ams::FShmember& row) {
+    if (bh_shmember_read_InBheapQ(row)) {
+        int old_idx = row.bh_shmember_read_idx;
+        if (_db.bh_shmember_read_elems[old_idx] == &row) { // sanity check: heap points back to row
+            row.bh_shmember_read_idx = -1;           // mark not in heap
+            i32 n = _db.bh_shmember_read_n - 1; // index of last element in heap
+            _db.bh_shmember_read_n = n;         // decrease count
+            if (old_idx != n) {
+                lib_ams::FShmember *elem = _db.bh_shmember_read_elems[n];
+                int new_idx = bh_shmember_read_Upheap(*elem, old_idx);
+                if (new_idx == old_idx) {
+                    new_idx = bh_shmember_read_Downheap(*elem, old_idx);
+                }
+                elem->bh_shmember_read_idx = new_idx;
+                _db.bh_shmember_read_elems[new_idx] = elem;
+            }
+            if (old_idx == 0) {
+                bh_shmember_read_FirstChanged();
+            }
+        }
+    }
+}
+
+// --- lib_ams.FDb.bh_shmember_read.RemoveAll
+// Remove all elements from binary heap
+void lib_ams::bh_shmember_read_RemoveAll() {
+    int n = _db.bh_shmember_read_n;
+    for (int i = n - 1; i>=0; i--) {
+        _db.bh_shmember_read_elems[i]->bh_shmember_read_idx = -1; // mark not-in-heap
+    }
+    _db.bh_shmember_read_n = 0;
+    if (n > 0) {
+        bh_shmember_read_FirstChanged();
+    }
+}
+
+// --- lib_ams.FDb.bh_shmember_read.RemoveFirst
+// If index is empty, return NULL. Otherwise remove and return first key in index.
+//  Call 'head changed' trigger.
+lib_ams::FShmember* lib_ams::bh_shmember_read_RemoveFirst() {
+    lib_ams::FShmember *row = NULL;
+    if (_db.bh_shmember_read_n > 0) {
+        row = _db.bh_shmember_read_elems[0];
+        row->bh_shmember_read_idx = -1;           // mark not in heap
+        i32 n = _db.bh_shmember_read_n - 1; // index of last element in heap
+        _db.bh_shmember_read_n = n;         // decrease count
+        if (n) {
+            lib_ams::FShmember &elem = *_db.bh_shmember_read_elems[n];
+            int new_idx = bh_shmember_read_Downheap(elem, 0);
+            elem.bh_shmember_read_idx = new_idx;
+            _db.bh_shmember_read_elems[new_idx] = &elem;
+        }
+        bh_shmember_read_FirstChanged();
+    }
+    return row;
+}
+
+// --- lib_ams.FDb.bh_shmember_read.Reserve
+// Reserve space in index for N more elements
+void lib_ams::bh_shmember_read_Reserve(int n) {
+    i32 old_max = _db.bh_shmember_read_max;
+    if (UNLIKELY(_db.bh_shmember_read_n + n > old_max)) {
+        u32 new_max  = u32_Max(4, old_max * 2);
+        u32 old_size = old_max * sizeof(lib_ams::FShmember*);
+        u32 new_size = new_max * sizeof(lib_ams::FShmember*);
+        void *new_mem = algo_lib::malloc_ReallocMem(_db.bh_shmember_read_elems, old_size, new_size);
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("lib_ams.out_of_memory  field:lib_ams.FDb.bh_shmember_read");
+        }
+        _db.bh_shmember_read_elems = (lib_ams::FShmember**)new_mem;
+        _db.bh_shmember_read_max = new_max;
+    }
+}
+
+// --- lib_ams.FDb.bh_shmember_read.Upheap
+// Find and return index of new location for element ROW in the heap, starting at index IDX.
+// Move any elements along the way but do not modify ROW.
+static int lib_ams::bh_shmember_read_Upheap(lib_ams::FShmember& row, int idx) {
+    lib_ams::FShmember* *elems = _db.bh_shmember_read_elems;
+    while (idx>0) {
+        int j = (idx-1)/2;
+        lib_ams::FShmember* p = elems[j];
+        if (!bh_shmember_read_ElemLt(row, *p)) {
+            break;
+        }
+        p->bh_shmember_read_idx = idx;
+        elems[idx] = p;
+        idx = j;
+    }
+    return idx;
+}
+
+// --- lib_ams.FDb.bh_shmember_read.ElemLt
+inline static bool lib_ams::bh_shmember_read_ElemLt(lib_ams::FShmember &a, lib_ams::FShmember &b) {
+    (void)_db;
+    return a.sortkey < b.sortkey;
+}
+
+// --- lib_ams.FDb.bh_shmember_read.FirstChanged
+// First element of index changed.
+static void lib_ams::bh_shmember_read_FirstChanged() {
+}
+
+// --- lib_ams.FDb.bh_shmember_read.UpdateCycles
+// Update cycles count from previous clock capture
+inline static void lib_ams::bh_shmember_read_UpdateCycles() {
+    u64 cur_cycles                      = algo::get_cycles();
+    u64 prev_cycles                     = algo_lib::_db.clock.value;
+    ++lib_ams::_db.trace.step_bh_shmember_read;
+    lib_ams::_db.trace.step_bh_shmember_read_cycles  += cur_cycles - prev_cycles;
+    algo_lib::_db.clock                 = algo::SchedTime(cur_cycles);
+}
+
+// --- lib_ams.FDb.bh_shmember_read.Call
+inline static void lib_ams::bh_shmember_read_Call() {
+    if (!lib_ams::bh_shmember_read_EmptyQ()) { // fstep:lib_ams.FDb.bh_shmember_read
+        lib_ams::bh_shmember_read_Step(); // steptype:Inline: call function on every step
+        bh_shmember_read_UpdateCycles();
+        algo_lib::_db.next_loop = algo_lib::_db.clock;
+    }
 }
 
 // --- lib_ams.FDb.trace.RowidFind
@@ -2178,6 +2667,106 @@ static algo::ImrowPtr lib_ams::trace_RowidFind(int t) {
 // Function return 1
 inline static i32 lib_ams::trace_N() {
     return 1;
+}
+
+// --- lib_ams.FDb.ind_shmember_curs.Reset
+void lib_ams::_db_ind_shmember_curs_Reset(_db_ind_shmember_curs &curs, lib_ams::FDb &parent) {
+    curs.bucket = 0;
+    curs.parent = &parent;
+    curs.prow = &parent.ind_shmember_buckets_elems[0]; // hash never has zero buckets
+    while (!*curs.prow) {
+        curs.bucket += 1;
+        if (curs.bucket == parent.ind_shmember_buckets_n) break;
+        curs.prow = &parent.ind_shmember_buckets_elems[curs.bucket];
+    }
+}
+
+// --- lib_ams.FDb.bh_shmember_read_curs.Add
+static void lib_ams::_db_bh_shmember_read_curs_Add(_db_bh_shmember_read_curs &curs, lib_ams::FShmember& row) {
+    u32 n = curs.temp_n;
+    int i = n;
+    curs.temp_n = n+1;
+    lib_ams::FShmember* *elems = curs.temp_elems;
+    while (i>0) {
+        int j = (i-1)/2;
+        lib_ams::FShmember* p = elems[j];
+        if (!bh_shmember_read_ElemLt(row,*p)) {
+            break;
+        }
+        elems[i]=p;
+        i=j;
+    }
+    elems[i]=&row;
+}
+
+// --- lib_ams.FDb.bh_shmember_read_curs.Reserve
+void lib_ams::_db_bh_shmember_read_curs_Reserve(_db_bh_shmember_read_curs &curs, int n) {
+    if (n > curs.temp_max) {
+        size_t old_size   = sizeof(void*) * curs.temp_max;
+        size_t new_size   = sizeof(void*) * bh_shmember_read_N();
+        curs.temp_elems   = (lib_ams::FShmember**)algo_lib::malloc_ReallocMem(curs.temp_elems, old_size, new_size);
+        if (!curs.temp_elems) {
+            algo::FatalErrorExit("lib_ams.cursor_out_of_memory  func:lib_ams.FDb.bh_shmember_read_curs.Reserve");
+        }
+        curs.temp_max       = bh_shmember_read_N();
+    }
+}
+
+// --- lib_ams.FDb.bh_shmember_read_curs.Reset
+// Reset cursor. If HEAP is non-empty, add its top element to CURS.
+void lib_ams::_db_bh_shmember_read_curs_Reset(_db_bh_shmember_read_curs &curs, lib_ams::FDb &parent) {
+    curs.parent       = &parent;
+    _db_bh_shmember_read_curs_Reserve(curs, bh_shmember_read_N());
+    curs.temp_n = 0;
+    if (parent.bh_shmember_read_n > 0) {
+        lib_ams::FShmember &first = *parent.bh_shmember_read_elems[0];
+        curs.temp_elems[0] = &first; // insert first element in heap
+        curs.temp_n = 1;
+    }
+}
+
+// --- lib_ams.FDb.bh_shmember_read_curs.Next
+// Advance cursor.
+void lib_ams::_db_bh_shmember_read_curs_Next(_db_bh_shmember_read_curs &curs) {
+    lib_ams::FShmember* *elems = curs.temp_elems;
+    int n = curs.temp_n;
+    if (n > 0) {
+        // remove top element from heap
+        lib_ams::FShmember* dead = elems[0];
+        int i       = 0;
+        lib_ams::FShmember* last = curs.temp_elems[n-1];
+        // downheap last elem
+        do {
+            lib_ams::FShmember* choose = last;
+            int l         = i*2+1;
+            if (l<n) {
+                lib_ams::FShmember* el = elems[l];
+                int r     = l+1;
+                r        -= r==n;
+                lib_ams::FShmember* er = elems[r];
+                if (bh_shmember_read_ElemLt(*er,*el)) {
+                    el  = er;
+                    l   = r;
+                }
+                bool b = bh_shmember_read_ElemLt(*el,*last);
+                if (b) choose = el;
+                if (!b) l = n;
+            }
+            elems[i] = choose;
+            i = l;
+        } while (i < n);
+        curs.temp_n = n-1;
+        int index = dead->bh_shmember_read_idx;
+        i = (index*2+1);
+        if (i < bh_shmember_read_N()) {
+            lib_ams::FShmember &elem = *curs.parent->bh_shmember_read_elems[i];
+            _db_bh_shmember_read_curs_Add(curs, elem);
+        }
+        if (i+1 < bh_shmember_read_N()) {
+            lib_ams::FShmember &elem = *curs.parent->bh_shmember_read_elems[i + 1];
+            _db_bh_shmember_read_curs_Add(curs, elem);
+        }
+    }
 }
 
 // --- lib_ams.FDb..Init
@@ -2202,32 +2791,35 @@ void lib_ams::FDb_Init() {
     _db.zd_flush_n = 0; // (lib_ams.FDb.zd_flush)
     _db.zd_flush_tail = NULL; // (lib_ams.FDb.zd_flush)
     lib_ams::_db.zd_flush_delay = algo::ToSchedTime(0.1); // initialize fstep delay (lib_ams.FDb.zd_flush)
-    // initialize LAry stream (lib_ams.FDb.stream)
-    _db.stream_n = 0;
-    memset(_db.stream_lary, 0, sizeof(_db.stream_lary)); // zero out all level pointers
-    lib_ams::FStream* stream_first = (lib_ams::FStream*)algo_lib::malloc_AllocMem(sizeof(lib_ams::FStream) * (u64(1)<<4));
-    if (!stream_first) {
+    // initialize LAry shm (lib_ams.FDb.shm)
+    _db.shm_n = 0;
+    memset(_db.shm_lary, 0, sizeof(_db.shm_lary)); // zero out all level pointers
+    lib_ams::FShm* shm_first = (lib_ams::FShm*)algo_lib::malloc_AllocMem(sizeof(lib_ams::FShm) * (u64(1)<<4));
+    if (!shm_first) {
         FatalErrorExit("out of memory");
     }
     for (int i = 0; i < 4; i++) {
-        _db.stream_lary[i]  = stream_first;
-        stream_first    += 1ULL<<i;
+        _db.shm_lary[i]  = shm_first;
+        shm_first    += 1ULL<<i;
     }
-    // initialize hash table for lib_ams::FStream;
-    _db.ind_stream_n             	= 0; // (lib_ams.FDb.ind_stream)
-    _db.ind_stream_buckets_n     	= 4; // (lib_ams.FDb.ind_stream)
-    _db.ind_stream_buckets_elems 	= (lib_ams::FStream**)algo_lib::malloc_AllocMem(sizeof(lib_ams::FStream*)*_db.ind_stream_buckets_n); // initial buckets (lib_ams.FDb.ind_stream)
-    if (!_db.ind_stream_buckets_elems) {
-        FatalErrorExit("out of memory"); // (lib_ams.FDb.ind_stream)
+    // initialize hash table for lib_ams::FShm;
+    _db.ind_shm_n             	= 0; // (lib_ams.FDb.ind_shm)
+    _db.ind_shm_buckets_n     	= 4; // (lib_ams.FDb.ind_shm)
+    _db.ind_shm_buckets_elems 	= (lib_ams::FShm**)algo_lib::malloc_AllocMem(sizeof(lib_ams::FShm*)*_db.ind_shm_buckets_n); // initial buckets (lib_ams.FDb.ind_shm)
+    if (!_db.ind_shm_buckets_elems) {
+        FatalErrorExit("out of memory"); // (lib_ams.FDb.ind_shm)
     }
-    memset(_db.ind_stream_buckets_elems, 0, sizeof(lib_ams::FStream*)*_db.ind_stream_buckets_n); // (lib_ams.FDb.ind_stream)
-    _db.cd_stream_hb_head = NULL; // (lib_ams.FDb.cd_stream_hb)
-    _db.cd_stream_hb_n = 0; // (lib_ams.FDb.cd_stream_hb)
-    lib_ams::_db.cd_stream_hb_delay = algo::ToSchedTime(1); // initialize fstep delay (lib_ams.FDb.cd_stream_hb)
+    memset(_db.ind_shm_buckets_elems, 0, sizeof(lib_ams::FShm*)*_db.ind_shm_buckets_n); // (lib_ams.FDb.ind_shm)
+    _db.cd_hb_head = NULL; // (lib_ams.FDb.cd_hb)
+    _db.cd_hb_n = 0; // (lib_ams.FDb.cd_hb)
+    lib_ams::_db.cd_hb_delay = algo::ToSchedTime(1); // initialize fstep delay (lib_ams.FDb.cd_hb)
     _db.shmem_size = i32(32768);
     _db.max_msg_size = i32(4096);
     _db.cd_poll_read_head = NULL; // (lib_ams.FDb.cd_poll_read)
     _db.cd_poll_read_n = 0; // (lib_ams.FDb.cd_poll_read)
+    _db.cd_slow_poll_read_head = NULL; // (lib_ams.FDb.cd_slow_poll_read)
+    _db.cd_slow_poll_read_n = 0; // (lib_ams.FDb.cd_slow_poll_read)
+    lib_ams::_db.cd_slow_poll_read_delay = algo::ToSchedTime(0.0005); // initialize fstep delay (lib_ams.FDb.cd_slow_poll_read)
     _db.file_prefix = algo::strptr("");
     // proc: initialize Tpool
     _db.proc_free      = NULL;
@@ -2240,73 +2832,84 @@ void lib_ams::FDb_Init() {
         FatalErrorExit("out of memory"); // (lib_ams.FDb.ind_proc)
     }
     memset(_db.ind_proc_buckets_elems, 0, sizeof(lib_ams::FProc*)*_db.ind_proc_buckets_n); // (lib_ams.FDb.ind_proc)
-    // member: initialize Tpool
-    _db.member_free      = NULL;
-    _db.member_blocksize = algo::BumpToPow2(64 * sizeof(lib_ams::FMember)); // allocate 64-127 elements at a time
-    // initialize hash table for lib_ams::FMember;
-    _db.ind_member_n             	= 0; // (lib_ams.FDb.ind_member)
-    _db.ind_member_buckets_n     	= 4; // (lib_ams.FDb.ind_member)
-    _db.ind_member_buckets_elems 	= (lib_ams::FMember**)algo_lib::malloc_AllocMem(sizeof(lib_ams::FMember*)*_db.ind_member_buckets_n); // initial buckets (lib_ams.FDb.ind_member)
-    if (!_db.ind_member_buckets_elems) {
-        FatalErrorExit("out of memory"); // (lib_ams.FDb.ind_member)
+    // shmember: initialize Tpool
+    _db.shmember_free      = NULL;
+    _db.shmember_blocksize = algo::BumpToPow2(64 * sizeof(lib_ams::FShmember)); // allocate 64-127 elements at a time
+    // initialize hash table for lib_ams::FShmember;
+    _db.ind_shmember_n             	= 0; // (lib_ams.FDb.ind_shmember)
+    _db.ind_shmember_buckets_n     	= 4; // (lib_ams.FDb.ind_shmember)
+    _db.ind_shmember_buckets_elems 	= (lib_ams::FShmember**)algo_lib::malloc_AllocMem(sizeof(lib_ams::FShmember*)*_db.ind_shmember_buckets_n); // initial buckets (lib_ams.FDb.ind_shmember)
+    if (!_db.ind_shmember_buckets_elems) {
+        FatalErrorExit("out of memory"); // (lib_ams.FDb.ind_shmember)
     }
-    memset(_db.ind_member_buckets_elems, 0, sizeof(lib_ams::FMember*)*_db.ind_member_buckets_n); // (lib_ams.FDb.ind_member)
-    // initialize LAry streamtype (lib_ams.FDb.streamtype)
-    _db.streamtype_n = 0;
-    memset(_db.streamtype_lary, 0, sizeof(_db.streamtype_lary)); // zero out all level pointers
-    lib_ams::FStreamType* streamtype_first = (lib_ams::FStreamType*)algo_lib::malloc_AllocMem(sizeof(lib_ams::FStreamType) * (u64(1)<<4));
-    if (!streamtype_first) {
+    memset(_db.ind_shmember_buckets_elems, 0, sizeof(lib_ams::FShmember*)*_db.ind_shmember_buckets_n); // (lib_ams.FDb.ind_shmember)
+    // initialize LAry shmtype (lib_ams.FDb.shmtype)
+    _db.shmtype_n = 0;
+    memset(_db.shmtype_lary, 0, sizeof(_db.shmtype_lary)); // zero out all level pointers
+    lib_ams::FShmtype* shmtype_first = (lib_ams::FShmtype*)algo_lib::malloc_AllocMem(sizeof(lib_ams::FShmtype) * (u64(1)<<4));
+    if (!shmtype_first) {
         FatalErrorExit("out of memory");
     }
     for (int i = 0; i < 4; i++) {
-        _db.streamtype_lary[i]  = streamtype_first;
-        streamtype_first    += 1ULL<<i;
+        _db.shmtype_lary[i]  = shmtype_first;
+        shmtype_first    += 1ULL<<i;
     }
-    // initialize hash table for lib_ams::FStreamType;
-    _db.ind_streamtype_n             	= 0; // (lib_ams.FDb.ind_streamtype)
-    _db.ind_streamtype_buckets_n     	= 4; // (lib_ams.FDb.ind_streamtype)
-    _db.ind_streamtype_buckets_elems 	= (lib_ams::FStreamType**)algo_lib::malloc_AllocMem(sizeof(lib_ams::FStreamType*)*_db.ind_streamtype_buckets_n); // initial buckets (lib_ams.FDb.ind_streamtype)
-    if (!_db.ind_streamtype_buckets_elems) {
-        FatalErrorExit("out of memory"); // (lib_ams.FDb.ind_streamtype)
+    // initialize hash table for lib_ams::FShmtype;
+    _db.ind_shmtype_n             	= 0; // (lib_ams.FDb.ind_shmtype)
+    _db.ind_shmtype_buckets_n     	= 4; // (lib_ams.FDb.ind_shmtype)
+    _db.ind_shmtype_buckets_elems 	= (lib_ams::FShmtype**)algo_lib::malloc_AllocMem(sizeof(lib_ams::FShmtype*)*_db.ind_shmtype_buckets_n); // initial buckets (lib_ams.FDb.ind_shmtype)
+    if (!_db.ind_shmtype_buckets_elems) {
+        FatalErrorExit("out of memory"); // (lib_ams.FDb.ind_shmtype)
     }
-    memset(_db.ind_streamtype_buckets_elems, 0, sizeof(lib_ams::FStreamType*)*_db.ind_streamtype_buckets_n); // (lib_ams.FDb.ind_streamtype)
-    _db.zd_ctlin_head = NULL; // (lib_ams.FDb.zd_ctlin)
-    _db.zd_ctlin_n = 0; // (lib_ams.FDb.zd_ctlin)
-    _db.zd_ctlin_tail = NULL; // (lib_ams.FDb.zd_ctlin)
-    _db.stream_files_cleaned = bool(false);
+    memset(_db.ind_shmtype_buckets_elems, 0, sizeof(lib_ams::FShmtype*)*_db.ind_shmtype_buckets_n); // (lib_ams.FDb.ind_shmtype)
+    _db.c_ctlin_elems = NULL; // (lib_ams.FDb.c_ctlin)
+    _db.c_ctlin_n = 0; // (lib_ams.FDb.c_ctlin)
+    _db.c_ctlin_max = 0; // (lib_ams.FDb.c_ctlin)
+    _db.shm_files_cleaned = bool(false);
     _db.shmem_mode = bool(false);
     _db.zd_proc_head = NULL; // (lib_ams.FDb.zd_proc)
     _db.zd_proc_n = 0; // (lib_ams.FDb.zd_proc)
     _db.zd_proc_tail = NULL; // (lib_ams.FDb.zd_proc)
-    _db.c_stream_ctl = NULL;
+    _db.c_shm_ctl = NULL;
     _db.expect_pos = i32(0);
     _db.expect_timeout = double(10.0);
-    _db.c_stream_out = NULL;
+    _db.c_cur_shmember = NULL;
+    _db.bh_shmember_read_max   	= 0; // (lib_ams.FDb.bh_shmember_read)
+    _db.bh_shmember_read_n     	= 0; // (lib_ams.FDb.bh_shmember_read)
+    _db.bh_shmember_read_elems 	= NULL; // (lib_ams.FDb.bh_shmember_read)
+    _db.c_thisproc = NULL;
+    _db.powersave = bool(false);
 
     lib_ams::InitReflection();
-    streamtype_LoadStatic(); // gen:ns_gstatic  gstatic:lib_ams.FDb.streamtype  load lib_ams.FStreamType records
+    shmtype_LoadStatic(); // gen:ns_gstatic  gstatic:lib_ams.FDb.shmtype  load lib_ams.FShmtype records
 }
 
 // --- lib_ams.FDb..Uninit
 void lib_ams::FDb_Uninit() {
     lib_ams::FDb &row = _db; (void)row;
 
-    // lib_ams.FDb.ind_streamtype.Uninit (Thash)  //
-    // skip destruction of ind_streamtype in global scope
-
-    // lib_ams.FDb.streamtype.Uninit (Lary)  //
+    // lib_ams.FDb.bh_shmember_read.Uninit (Bheap)  //
     // skip destruction in global scope
 
-    // lib_ams.FDb.ind_member.Uninit (Thash)  //
-    // skip destruction of ind_member in global scope
+    // lib_ams.FDb.c_ctlin.Uninit (Ptrary)  //
+    algo_lib::malloc_FreeMem(_db.c_ctlin_elems, sizeof(lib_ams::FShmember*)*_db.c_ctlin_max); // (lib_ams.FDb.c_ctlin)
+
+    // lib_ams.FDb.ind_shmtype.Uninit (Thash)  //
+    // skip destruction of ind_shmtype in global scope
+
+    // lib_ams.FDb.shmtype.Uninit (Lary)  //
+    // skip destruction in global scope
+
+    // lib_ams.FDb.ind_shmember.Uninit (Thash)  //
+    // skip destruction of ind_shmember in global scope
 
     // lib_ams.FDb.ind_proc.Uninit (Thash)  //
     // skip destruction of ind_proc in global scope
 
-    // lib_ams.FDb.ind_stream.Uninit (Thash)  //Index of streams by stream id
-    // skip destruction of ind_stream in global scope
+    // lib_ams.FDb.ind_shm.Uninit (Thash)  //Index of streams by stream id
+    // skip destruction of ind_shm in global scope
 
-    // lib_ams.FDb.stream.Uninit (Lary)  //Table of streams
+    // lib_ams.FDb.shm.Uninit (Lary)  //Table of streams
     // skip destruction in global scope
 
     // lib_ams.FDb.fdin.Uninit (Lary)  //ams control messages on stdin
@@ -2319,8 +2922,8 @@ void lib_ams::FDb_Uninit() {
 // File descriptor becomes owned by lib_ams::FFdin.in via FIohook field.
 // Whenever the file descriptor becomes readable, insert fdin into cd_fdin_read.
 void lib_ams::in_BeginRead(lib_ams::FFdin& fdin, algo::Fildes fd) {
-    callback_Set1(fdin.in_iohook, fdin, lib_ams::cd_fdin_read_Insert);
     fdin.in_iohook.fildes = fd;
+    callback_Set1(fdin.in_iohook, fdin, lib_ams::cd_fdin_read_Insert);
     IOEvtFlags flags;
     read_Set(flags, true);
     if (fdin.in_epoll_enable) {
@@ -2371,6 +2974,23 @@ algo::aryptr<char> lib_ams::in_GetMsg(lib_ams::FFdin& fdin) {
         lib_ams::cd_fdin_eof_Insert(fdin);
     }
     return ret;
+}
+
+// --- lib_ams.FFdin.in.Realloc
+// Set buffer size.
+// Unconditionally reallocate buffer to have size NEW_MAX
+// If the buffer has data in it, NEW_MAX is adjusted so that the data is not lost
+// (best to call this before filling the buffer)
+void lib_ams::in_Realloc(lib_ams::FFdin& fdin, int new_max) {
+    new_max = i32_Max(new_max, fdin.in_end);
+    u8 *new_mem = fdin.in_elems
+    ? (u8*)algo_lib::malloc_ReallocMem(fdin.in_elems, fdin.in_max, new_max)
+    : (u8*)algo_lib::malloc_AllocMem(new_max);
+    if (UNLIKELY(!new_mem)) {
+        FatalErrorExit("lib_ams.fbuf_nomem  field:lib_ams.FFdin.in  comment:'out of memory'");
+    }
+    fdin.in_elems = new_mem;
+    fdin.in_max = new_max;
 }
 
 // --- lib_ams.FFdin.in.Refill
@@ -2479,7 +3099,7 @@ void lib_ams::in_SkipMsg(lib_ams::FFdin& fdin) {
 }
 
 // --- lib_ams.FFdin.in.WriteAll
-// Attempt to write buffer contents to fd
+// Attempt to write buffer contents to fbuf, return success
 // Write bytes to the buffer. If the entire block is written, return true,
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
@@ -2493,22 +3113,39 @@ bool lib_ams::in_WriteAll(lib_ams::FFdin& fdin, u8 *in, i32 in_n) {
     // now try to write the message.
     i32 end = fdin.in_end;
     bool fits = end + in_n <= max;
-    if (fits && in_n > 0) {
-        memcpy(fdin.in_elems + end, in, in_n);
-        fdin.in_end = end + in_n;
+    if (fits) {
+        if (in_n > 0) {
+            memcpy(fdin.in_elems + end, in, in_n);
+            fdin.in_end = end + in_n;
+        }
     }
     return fits;
+}
+
+// --- lib_ams.FFdin.in.WriteReserve
+// Write buffer contents to fbuf, reallocate as needed
+// Write bytes to the buffer. The entire block is always written
+void lib_ams::in_WriteReserve(lib_ams::FFdin& fdin, u8 *in, i32 in_n) {
+    if (!in_WriteAll(fdin, in, in_n)) {
+        in_Realloc(fdin, fdin.in_max*2);
+        if (!in_WriteAll(fdin, in, in_n)) {
+            FatalErrorExit("in: out of memory");
+        }
+    }
 }
 
 // --- lib_ams.FFdin..Init
 // Set all fields to initial values.
 void lib_ams::FFdin_Init(lib_ams::FFdin& fdin) {
+    fdin.in_elems = NULL; // in: initialize
+    fdin.in_max = 0; // in: initialize
     fdin.in_end = 0; // in: initialize
     fdin.in_start = 0; // in: initialize
     fdin.in_eof = false; // in: initialize
     fdin.in_msgvalid = false; // in: initialize
     fdin.in_msglen = 0; // in: initialize
     fdin.in_epoll_enable = true; // in: initialize
+    in_Realloc(fdin, 8192);
     fdin.cd_fdin_eof_next = (lib_ams::FFdin*)-1; // (lib_ams.FDb.cd_fdin_eof) not-in-list
     fdin.cd_fdin_eof_prev = NULL; // (lib_ams.FDb.cd_fdin_eof)
     fdin.cd_fdin_read_next = (lib_ams::FFdin*)-1; // (lib_ams.FDb.cd_fdin_read) not-in-list
@@ -2520,98 +3157,177 @@ void lib_ams::FFdin_Uninit(lib_ams::FFdin& fdin) {
     lib_ams::FFdin &row = fdin; (void)row;
     cd_fdin_eof_Remove(row); // remove fdin from index cd_fdin_eof
     cd_fdin_read_Remove(row); // remove fdin from index cd_fdin_read
+
+    // lib_ams.FFdin.in.Uninit (Fbuf)  //
+    if (fdin.in_elems) {
+        algo_lib::malloc_FreeMem(fdin.in_elems, sizeof(char)*fdin.in_max); // (lib_ams.FFdin.in)
+    }
+    fdin.in_elems = NULL;
+    fdin.in_max = 0;
 }
 
-// --- lib_ams.FMember..Uninit
-void lib_ams::FMember_Uninit(lib_ams::FMember& member) {
-    lib_ams::FMember &row = member; (void)row;
-    ind_member_Remove(row); // remove member from index ind_member
-    lib_ams::FStream* p_stream_id = lib_ams::ind_stream_Find(row.member.stream_id);
-    if (p_stream_id)  {
-        zd_member_bystream_Remove(*p_stream_id, row);// remove member from index zd_member_bystream
-    }
-    lib_ams::FProc* p_proc_id = lib_ams::ind_proc_Find(row.member.proc_id);
-    if (p_proc_id)  {
-        zd_member_byproc_Remove(*p_proc_id, row);// remove member from index zd_member_byproc
-    }
-}
-
-// --- lib_ams.FProc.zd_member_byproc.Cascdel
-// Delete all elements in the linked list.
-void lib_ams::zd_member_byproc_Cascdel(lib_ams::FProc& proc) {
-    while (lib_ams::FMember *zd_member_byproc_first = zd_member_byproc_First(proc)) {
-        member_Delete(*zd_member_byproc_first);
+// --- lib_ams.FProc.c_shm.Insert
+// Insert pointer to row into array. Row must not already be in array.
+// If pointer is already in the array, it may be inserted twice.
+void lib_ams::c_shm_Insert(lib_ams::FProc& proc, lib_ams::FShm& row) {
+    if (row.proc_c_shm_idx == -1) {
+        c_shm_Reserve(proc, 1);
+        u32 n  = proc.c_shm_n++;
+        proc.c_shm_elems[n] = &row;
+        row.proc_c_shm_idx = n;
     }
 }
 
-// --- lib_ams.FProc.zd_member_byproc.Insert
-// Insert row into linked list. If row is already in linked list, do nothing.
-void lib_ams::zd_member_byproc_Insert(lib_ams::FProc& proc, lib_ams::FMember& row) {
-    if (!zd_member_byproc_InLlistQ(row)) {
-        lib_ams::FMember* old_tail = proc.zd_member_byproc_tail;
-        row.zd_member_byproc_next = NULL;
-        row.zd_member_byproc_prev = old_tail;
-        proc.zd_member_byproc_tail = &row;
-        lib_ams::FMember **new_row_a = &old_tail->zd_member_byproc_next;
-        lib_ams::FMember **new_row_b = &proc.zd_member_byproc_head;
-        lib_ams::FMember **new_row = old_tail ? new_row_a : new_row_b;
-        *new_row = &row;
-        proc.zd_member_byproc_n++;
+// --- lib_ams.FProc.c_shm.InsertMaybe
+// Insert pointer to row in array.
+// If row is already in the array, do nothing.
+// Return value: whether element was inserted into array.
+bool lib_ams::c_shm_InsertMaybe(lib_ams::FProc& proc, lib_ams::FShm& row) {
+    bool retval = !proc_c_shm_InAryQ(row);
+    c_shm_Insert(proc,row); // check is performed in _Insert again
+    return retval;
+}
+
+// --- lib_ams.FProc.c_shm.Remove
+// Find element using linear scan. If element is in array, remove, otherwise do nothing
+void lib_ams::c_shm_Remove(lib_ams::FProc& proc, lib_ams::FShm& row) {
+    int n = proc.c_shm_n;
+    int idx = row.proc_c_shm_idx;
+    if (idx != -1) {
+        lib_ams::FShm *last = proc.c_shm_elems[n-1];
+        last->proc_c_shm_idx = idx;
+        proc.c_shm_elems[idx] = last;
+        row.proc_c_shm_idx = -1;
+        proc.c_shm_n = n - 1;
     }
 }
 
-// --- lib_ams.FProc.zd_member_byproc.Remove
-// Remove element from index. If element is not in index, do nothing.
-void lib_ams::zd_member_byproc_Remove(lib_ams::FProc& proc, lib_ams::FMember& row) {
-    if (zd_member_byproc_InLlistQ(row)) {
-        lib_ams::FMember* old_head       = proc.zd_member_byproc_head;
-        (void)old_head; // in case it's not used
-        lib_ams::FMember* prev = row.zd_member_byproc_prev;
-        lib_ams::FMember* next = row.zd_member_byproc_next;
-        // if element is first, adjust list head; otherwise, adjust previous element's next
-        lib_ams::FMember **new_next_a = &prev->zd_member_byproc_next;
-        lib_ams::FMember **new_next_b = &proc.zd_member_byproc_head;
-        lib_ams::FMember **new_next = prev ? new_next_a : new_next_b;
-        *new_next = next;
-        // if element is last, adjust list tail; otherwise, adjust next element's prev
-        lib_ams::FMember **new_prev_a = &next->zd_member_byproc_prev;
-        lib_ams::FMember **new_prev_b = &proc.zd_member_byproc_tail;
-        lib_ams::FMember **new_prev = next ? new_prev_a : new_prev_b;
-        *new_prev = prev;
-        proc.zd_member_byproc_n--;
-        row.zd_member_byproc_next=(lib_ams::FMember*)-1; // not-in-list
+// --- lib_ams.FProc.c_shm.Reserve
+// Reserve space in index for N more elements;
+void lib_ams::c_shm_Reserve(lib_ams::FProc& proc, u32 n) {
+    u32 old_max = proc.c_shm_max;
+    if (UNLIKELY(proc.c_shm_n + n > old_max)) {
+        u32 new_max  = u32_Max(4, old_max * 2);
+        u32 old_size = old_max * sizeof(lib_ams::FShm*);
+        u32 new_size = new_max * sizeof(lib_ams::FShm*);
+        void *new_mem = algo_lib::malloc_ReallocMem(proc.c_shm_elems, old_size, new_size);
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("lib_ams.out_of_memory  field:lib_ams.FProc.c_shm");
+        }
+        proc.c_shm_elems = (lib_ams::FShm**)new_mem;
+        proc.c_shm_max = new_max;
     }
 }
 
-// --- lib_ams.FProc.zd_member_byproc.RemoveAll
-// Empty the index. (The rows are not deleted)
-void lib_ams::zd_member_byproc_RemoveAll(lib_ams::FProc& proc) {
-    lib_ams::FMember* row = proc.zd_member_byproc_head;
-    proc.zd_member_byproc_head = NULL;
-    proc.zd_member_byproc_tail = NULL;
-    proc.zd_member_byproc_n = 0;
-    while (row) {
-        lib_ams::FMember* row_next = row->zd_member_byproc_next;
-        row->zd_member_byproc_next  = (lib_ams::FMember*)-1;
-        row->zd_member_byproc_prev  = NULL;
-        row = row_next;
+// --- lib_ams.FProc.c_shm.RemoveFirst
+// Heap-like Ptrary: remove first element
+// If index is empty, return NULL. Otherwise remove and return first element in index.
+lib_ams::FShm* lib_ams::c_shm_RemoveFirst(lib_ams::FProc& proc) {
+    lib_ams::FShm *row = NULL;
+    int n = proc.c_shm_n;
+    if (n > 0) {
+        row = proc.c_shm_elems[0];
+        row->proc_c_shm_idx=-1;
+        proc.c_shm_elems[n-1]->proc_c_shm_idx=0;
+        proc.c_shm_elems[0]=proc.c_shm_elems[n-1];
+        proc.c_shm_n = n-1;
+    }
+    return row;
+}
+
+// --- lib_ams.FProc.c_shm.RemoveLast
+// Ptrary: remove last element
+// If index is empty, return NULL. Otherwise remove and return last element in index.
+lib_ams::FShm* lib_ams::c_shm_RemoveLast(lib_ams::FProc& proc) {
+    lib_ams::FShm *row = NULL;
+    int n = proc.c_shm_n;
+    if (n > 0) {
+        row = proc.c_shm_elems[n-1];
+        row->proc_c_shm_idx=-1;
+        proc.c_shm_n = n-1;
+    }
+    return row;
+}
+
+// --- lib_ams.FProc.c_shmember.Insert
+// Insert pointer to row into array. Row must not already be in array.
+// If pointer is already in the array, it may be inserted twice.
+void lib_ams::c_shmember_Insert(lib_ams::FProc& proc, lib_ams::FShmember& row) {
+    if (row.proc_c_shmember_idx == -1) {
+        c_shmember_Reserve(proc, 1);
+        u32 n  = proc.c_shmember_n++;
+        proc.c_shmember_elems[n] = &row;
+        row.proc_c_shmember_idx = n;
     }
 }
 
-// --- lib_ams.FProc.zd_member_byproc.RemoveFirst
-// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-lib_ams::FMember* lib_ams::zd_member_byproc_RemoveFirst(lib_ams::FProc& proc) {
-    lib_ams::FMember *row = NULL;
-    row = proc.zd_member_byproc_head;
-    if (row) {
-        lib_ams::FMember *next = row->zd_member_byproc_next;
-        proc.zd_member_byproc_head = next;
-        lib_ams::FMember **new_end_a = &next->zd_member_byproc_prev;
-        lib_ams::FMember **new_end_b = &proc.zd_member_byproc_tail;
-        lib_ams::FMember **new_end = next ? new_end_a : new_end_b;
-        *new_end = NULL;
-        proc.zd_member_byproc_n--;
-        row->zd_member_byproc_next = (lib_ams::FMember*)-1; // mark as not-in-list
+// --- lib_ams.FProc.c_shmember.InsertMaybe
+// Insert pointer to row in array.
+// If row is already in the array, do nothing.
+// Return value: whether element was inserted into array.
+bool lib_ams::c_shmember_InsertMaybe(lib_ams::FProc& proc, lib_ams::FShmember& row) {
+    bool retval = !proc_c_shmember_InAryQ(row);
+    c_shmember_Insert(proc,row); // check is performed in _Insert again
+    return retval;
+}
+
+// --- lib_ams.FProc.c_shmember.Remove
+// Find element using linear scan. If element is in array, remove, otherwise do nothing
+void lib_ams::c_shmember_Remove(lib_ams::FProc& proc, lib_ams::FShmember& row) {
+    int n = proc.c_shmember_n;
+    int idx = row.proc_c_shmember_idx;
+    if (idx != -1) {
+        lib_ams::FShmember *last = proc.c_shmember_elems[n-1];
+        last->proc_c_shmember_idx = idx;
+        proc.c_shmember_elems[idx] = last;
+        row.proc_c_shmember_idx = -1;
+        proc.c_shmember_n = n - 1;
+    }
+}
+
+// --- lib_ams.FProc.c_shmember.Reserve
+// Reserve space in index for N more elements;
+void lib_ams::c_shmember_Reserve(lib_ams::FProc& proc, u32 n) {
+    u32 old_max = proc.c_shmember_max;
+    if (UNLIKELY(proc.c_shmember_n + n > old_max)) {
+        u32 new_max  = u32_Max(4, old_max * 2);
+        u32 old_size = old_max * sizeof(lib_ams::FShmember*);
+        u32 new_size = new_max * sizeof(lib_ams::FShmember*);
+        void *new_mem = algo_lib::malloc_ReallocMem(proc.c_shmember_elems, old_size, new_size);
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("lib_ams.out_of_memory  field:lib_ams.FProc.c_shmember");
+        }
+        proc.c_shmember_elems = (lib_ams::FShmember**)new_mem;
+        proc.c_shmember_max = new_max;
+    }
+}
+
+// --- lib_ams.FProc.c_shmember.RemoveFirst
+// Heap-like Ptrary: remove first element
+// If index is empty, return NULL. Otherwise remove and return first element in index.
+lib_ams::FShmember* lib_ams::c_shmember_RemoveFirst(lib_ams::FProc& proc) {
+    lib_ams::FShmember *row = NULL;
+    int n = proc.c_shmember_n;
+    if (n > 0) {
+        row = proc.c_shmember_elems[0];
+        row->proc_c_shmember_idx=-1;
+        proc.c_shmember_elems[n-1]->proc_c_shmember_idx=0;
+        proc.c_shmember_elems[0]=proc.c_shmember_elems[n-1];
+        proc.c_shmember_n = n-1;
+    }
+    return row;
+}
+
+// --- lib_ams.FProc.c_shmember.RemoveLast
+// Ptrary: remove last element
+// If index is empty, return NULL. Otherwise remove and return last element in index.
+lib_ams::FShmember* lib_ams::c_shmember_RemoveLast(lib_ams::FProc& proc) {
+    lib_ams::FShmember *row = NULL;
+    int n = proc.c_shmember_n;
+    if (n > 0) {
+        row = proc.c_shmember_elems[n-1];
+        row->proc_c_shmember_idx=-1;
+        proc.c_shmember_n = n-1;
     }
     return row;
 }
@@ -2619,9 +3335,14 @@ lib_ams::FMember* lib_ams::zd_member_byproc_RemoveFirst(lib_ams::FProc& proc) {
 // --- lib_ams.FProc..Uninit
 void lib_ams::FProc_Uninit(lib_ams::FProc& proc) {
     lib_ams::FProc &row = proc; (void)row;
-    zd_member_byproc_Cascdel(proc); // dmmeta.cascdel:lib_ams.FProc.zd_member_byproc
     ind_proc_Remove(row); // remove proc from index ind_proc
     zd_proc_Remove(row); // remove proc from index zd_proc
+
+    // lib_ams.FProc.c_shmember.Uninit (Ptrary)  //List of AMS shm readers/writers at this proc
+    algo_lib::malloc_FreeMem(proc.c_shmember_elems, sizeof(lib_ams::FShmember*)*proc.c_shmember_max); // (lib_ams.FProc.c_shmember)
+
+    // lib_ams.FProc.c_shm.Uninit (Ptrary)  //
+    algo_lib::malloc_FreeMem(proc.c_shm_elems, sizeof(lib_ams::FShm*)*proc.c_shm_max); // (lib_ams.FProc.c_shm)
 }
 
 // --- lib_ams.FReadfile.buf.Addary
@@ -2680,6 +3401,23 @@ algo::aryptr<u8> lib_ams::buf_AllocN(lib_ams::FReadfile& parent, int n_elems) {
     memset(elems + old_n, 0, new_n - old_n); // initialize new space
     parent.buf_n = new_n;
     return algo::aryptr<u8>(elems + old_n, n_elems);
+}
+
+// --- lib_ams.FReadfile.buf.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<u8> lib_ams::buf_AllocNAt(lib_ams::FReadfile& parent, int n_elems, int at) {
+    buf_Reserve(parent, n_elems);
+    int n  = parent.buf_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("lib_ams.bad_alloc_n_at  field:lib_ams.FReadfile.buf  comment:'index out of range'");
+    }
+    u8 *elems = parent.buf_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(u8));
+    memset(elems + at, 0, n_elems); // initialize new space
+    parent.buf_n = n+n_elems;
+    return algo::aryptr<u8>(elems+at,n_elems);
 }
 
 // --- lib_ams.FReadfile.buf.Remove
@@ -2764,6 +3502,25 @@ bool lib_ams::buf_ReadStrptrMaybe(lib_ams::FReadfile& parent, algo::strptr in_st
     return retval;
 }
 
+// --- lib_ams.FReadfile.buf.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void lib_ams::buf_Insary(lib_ams::FReadfile& parent, algo::aryptr<u8> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.buf_elems && rhs.elems < parent.buf_elems + parent.buf_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("lib_ams.tary_alias  field:lib_ams.FReadfile.buf  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(parent.buf_elems+1))) {
+        FatalErrorExit("lib_ams.bad_insary  field:lib_ams.FReadfile.buf  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = parent.buf_n - at;
+    buf_Reserve(parent, nnew); // reserve space
+    memmove(parent.buf_elems + at + nnew, parent.buf_elems + at, nmove * sizeof(u8));
+    memcpy(parent.buf_elems + at, rhs.elems, nnew * sizeof(u8));
+    parent.buf_n += nnew;
+}
+
 // --- lib_ams.FReadfile.cbuf.Addary
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
@@ -2820,6 +3577,23 @@ algo::aryptr<u8> lib_ams::cbuf_AllocN(lib_ams::FReadfile& parent, int n_elems) {
     memset(elems + old_n, 0, new_n - old_n); // initialize new space
     parent.cbuf_n = new_n;
     return algo::aryptr<u8>(elems + old_n, n_elems);
+}
+
+// --- lib_ams.FReadfile.cbuf.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<u8> lib_ams::cbuf_AllocNAt(lib_ams::FReadfile& parent, int n_elems, int at) {
+    cbuf_Reserve(parent, n_elems);
+    int n  = parent.cbuf_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("lib_ams.bad_alloc_n_at  field:lib_ams.FReadfile.cbuf  comment:'index out of range'");
+    }
+    u8 *elems = parent.cbuf_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(u8));
+    memset(elems + at, 0, n_elems); // initialize new space
+    parent.cbuf_n = n+n_elems;
+    return algo::aryptr<u8>(elems+at,n_elems);
 }
 
 // --- lib_ams.FReadfile.cbuf.Remove
@@ -2904,6 +3678,25 @@ bool lib_ams::cbuf_ReadStrptrMaybe(lib_ams::FReadfile& parent, algo::strptr in_s
     return retval;
 }
 
+// --- lib_ams.FReadfile.cbuf.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void lib_ams::cbuf_Insary(lib_ams::FReadfile& parent, algo::aryptr<u8> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.cbuf_elems && rhs.elems < parent.cbuf_elems + parent.cbuf_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("lib_ams.tary_alias  field:lib_ams.FReadfile.cbuf  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(parent.cbuf_elems+1))) {
+        FatalErrorExit("lib_ams.bad_insary  field:lib_ams.FReadfile.cbuf  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = parent.cbuf_n - at;
+    cbuf_Reserve(parent, nnew); // reserve space
+    memmove(parent.cbuf_elems + at + nnew, parent.cbuf_elems + at, nmove * sizeof(u8));
+    memcpy(parent.cbuf_elems + at, rhs.elems, nnew * sizeof(u8));
+    parent.cbuf_n += nnew;
+}
+
 // --- lib_ams.FReadfile.offset.Addary
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
@@ -2962,6 +3755,25 @@ algo::aryptr<u32> lib_ams::offset_AllocN(lib_ams::FReadfile& parent, int n_elems
     }
     parent.offset_n = new_n;
     return algo::aryptr<u32>(elems + old_n, n_elems);
+}
+
+// --- lib_ams.FReadfile.offset.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<u32> lib_ams::offset_AllocNAt(lib_ams::FReadfile& parent, int n_elems, int at) {
+    offset_Reserve(parent, n_elems);
+    int n  = parent.offset_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("lib_ams.bad_alloc_n_at  field:lib_ams.FReadfile.offset  comment:'index out of range'");
+    }
+    u32 *elems = parent.offset_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(u32));
+    for (int i = 0; i < n_elems; i++) {
+        new (elems + at + i) u32(0); // construct new element, default initialize
+    }
+    parent.offset_n = n+n_elems;
+    return algo::aryptr<u32>(elems+at,n_elems);
 }
 
 // --- lib_ams.FReadfile.offset.Remove
@@ -3046,6 +3858,25 @@ bool lib_ams::offset_ReadStrptrMaybe(lib_ams::FReadfile& parent, algo::strptr in
         offset_RemoveLast(parent);
     }
     return retval;
+}
+
+// --- lib_ams.FReadfile.offset.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void lib_ams::offset_Insary(lib_ams::FReadfile& parent, algo::aryptr<u32> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.offset_elems && rhs.elems < parent.offset_elems + parent.offset_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("lib_ams.tary_alias  field:lib_ams.FReadfile.offset  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(parent.offset_elems+1))) {
+        FatalErrorExit("lib_ams.bad_insary  field:lib_ams.FReadfile.offset  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = parent.offset_n - at;
+    offset_Reserve(parent, nnew); // reserve space
+    memmove(parent.offset_elems + at + nnew, parent.offset_elems + at, nmove * sizeof(u32));
+    memcpy(parent.offset_elems + at, rhs.elems, nnew * sizeof(u32));
+    parent.offset_n += nnew;
 }
 
 // --- lib_ams.FReadfile..Uninit
@@ -3144,137 +3975,194 @@ lib_ams::FReadfile& lib_ams::FReadfile::operator =(const lib_ams::FReadfile &rhs
     offset_Setary(*this, offset_Getary(const_cast<lib_ams::FReadfile&>(rhs)));
 }
 
-// --- lib_ams.FStream.zd_member_bystream.Insert
-// Insert row into linked list. If row is already in linked list, do nothing.
-void lib_ams::zd_member_bystream_Insert(lib_ams::FStream& stream, lib_ams::FMember& row) {
-    if (!zd_member_bystream_InLlistQ(row)) {
-        lib_ams::FMember* old_tail = stream.zd_member_bystream_tail;
-        row.zd_member_bystream_next = NULL;
-        row.zd_member_bystream_prev = old_tail;
-        stream.zd_member_bystream_tail = &row;
-        lib_ams::FMember **new_row_a = &old_tail->zd_member_bystream_next;
-        lib_ams::FMember **new_row_b = &stream.zd_member_bystream_head;
-        lib_ams::FMember **new_row = old_tail ? new_row_a : new_row_b;
-        *new_row = &row;
-        stream.zd_member_bystream_n++;
+// --- lib_ams.FShm.c_shmember.Insert
+// Insert pointer to row into array. Row must not already be in array.
+// If pointer is already in the array, it may be inserted twice.
+void lib_ams::c_shmember_Insert(lib_ams::FShm& shm, lib_ams::FShmember& row) {
+    if (row.shm_c_shmember_idx == -1) {
+        c_shmember_Reserve(shm, 1);
+        u32 n  = shm.c_shmember_n++;
+        shm.c_shmember_elems[n] = &row;
+        row.shm_c_shmember_idx = n;
     }
 }
 
-// --- lib_ams.FStream.zd_member_bystream.Remove
-// Remove element from index. If element is not in index, do nothing.
-void lib_ams::zd_member_bystream_Remove(lib_ams::FStream& stream, lib_ams::FMember& row) {
-    if (zd_member_bystream_InLlistQ(row)) {
-        lib_ams::FMember* old_head       = stream.zd_member_bystream_head;
-        (void)old_head; // in case it's not used
-        lib_ams::FMember* prev = row.zd_member_bystream_prev;
-        lib_ams::FMember* next = row.zd_member_bystream_next;
-        // if element is first, adjust list head; otherwise, adjust previous element's next
-        lib_ams::FMember **new_next_a = &prev->zd_member_bystream_next;
-        lib_ams::FMember **new_next_b = &stream.zd_member_bystream_head;
-        lib_ams::FMember **new_next = prev ? new_next_a : new_next_b;
-        *new_next = next;
-        // if element is last, adjust list tail; otherwise, adjust next element's prev
-        lib_ams::FMember **new_prev_a = &next->zd_member_bystream_prev;
-        lib_ams::FMember **new_prev_b = &stream.zd_member_bystream_tail;
-        lib_ams::FMember **new_prev = next ? new_prev_a : new_prev_b;
-        *new_prev = prev;
-        stream.zd_member_bystream_n--;
-        row.zd_member_bystream_next=(lib_ams::FMember*)-1; // not-in-list
+// --- lib_ams.FShm.c_shmember.InsertMaybe
+// Insert pointer to row in array.
+// If row is already in the array, do nothing.
+// Return value: whether element was inserted into array.
+bool lib_ams::c_shmember_InsertMaybe(lib_ams::FShm& shm, lib_ams::FShmember& row) {
+    bool retval = !shm_c_shmember_InAryQ(row);
+    c_shmember_Insert(shm,row); // check is performed in _Insert again
+    return retval;
+}
+
+// --- lib_ams.FShm.c_shmember.Remove
+// Find element using linear scan. If element is in array, remove, otherwise do nothing
+void lib_ams::c_shmember_Remove(lib_ams::FShm& shm, lib_ams::FShmember& row) {
+    int n = shm.c_shmember_n;
+    int idx = row.shm_c_shmember_idx;
+    if (idx != -1) {
+        lib_ams::FShmember *last = shm.c_shmember_elems[n-1];
+        last->shm_c_shmember_idx = idx;
+        shm.c_shmember_elems[idx] = last;
+        row.shm_c_shmember_idx = -1;
+        shm.c_shmember_n = n - 1;
     }
 }
 
-// --- lib_ams.FStream.zd_member_bystream.RemoveAll
-// Empty the index. (The rows are not deleted)
-void lib_ams::zd_member_bystream_RemoveAll(lib_ams::FStream& stream) {
-    lib_ams::FMember* row = stream.zd_member_bystream_head;
-    stream.zd_member_bystream_head = NULL;
-    stream.zd_member_bystream_tail = NULL;
-    stream.zd_member_bystream_n = 0;
-    while (row) {
-        lib_ams::FMember* row_next = row->zd_member_bystream_next;
-        row->zd_member_bystream_next  = (lib_ams::FMember*)-1;
-        row->zd_member_bystream_prev  = NULL;
-        row = row_next;
+// --- lib_ams.FShm.c_shmember.Reserve
+// Reserve space in index for N more elements;
+void lib_ams::c_shmember_Reserve(lib_ams::FShm& shm, u32 n) {
+    u32 old_max = shm.c_shmember_max;
+    if (UNLIKELY(shm.c_shmember_n + n > old_max)) {
+        u32 new_max  = u32_Max(4, old_max * 2);
+        u32 old_size = old_max * sizeof(lib_ams::FShmember*);
+        u32 new_size = new_max * sizeof(lib_ams::FShmember*);
+        void *new_mem = algo_lib::malloc_ReallocMem(shm.c_shmember_elems, old_size, new_size);
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("lib_ams.out_of_memory  field:lib_ams.FShm.c_shmember");
+        }
+        shm.c_shmember_elems = (lib_ams::FShmember**)new_mem;
+        shm.c_shmember_max = new_max;
     }
 }
 
-// --- lib_ams.FStream.zd_member_bystream.RemoveFirst
-// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-lib_ams::FMember* lib_ams::zd_member_bystream_RemoveFirst(lib_ams::FStream& stream) {
-    lib_ams::FMember *row = NULL;
-    row = stream.zd_member_bystream_head;
-    if (row) {
-        lib_ams::FMember *next = row->zd_member_bystream_next;
-        stream.zd_member_bystream_head = next;
-        lib_ams::FMember **new_end_a = &next->zd_member_bystream_prev;
-        lib_ams::FMember **new_end_b = &stream.zd_member_bystream_tail;
-        lib_ams::FMember **new_end = next ? new_end_a : new_end_b;
-        *new_end = NULL;
-        stream.zd_member_bystream_n--;
-        row->zd_member_bystream_next = (lib_ams::FMember*)-1; // mark as not-in-list
+// --- lib_ams.FShm.c_shmember.RemoveFirst
+// Heap-like Ptrary: remove first element
+// If index is empty, return NULL. Otherwise remove and return first element in index.
+lib_ams::FShmember* lib_ams::c_shmember_RemoveFirst(lib_ams::FShm& shm) {
+    lib_ams::FShmember *row = NULL;
+    int n = shm.c_shmember_n;
+    if (n > 0) {
+        row = shm.c_shmember_elems[0];
+        row->shm_c_shmember_idx=-1;
+        shm.c_shmember_elems[n-1]->shm_c_shmember_idx=0;
+        shm.c_shmember_elems[0]=shm.c_shmember_elems[n-1];
+        shm.c_shmember_n = n-1;
     }
     return row;
 }
 
-// --- lib_ams.FStream..Init
+// --- lib_ams.FShm.c_shmember.RemoveLast
+// Ptrary: remove last element
+// If index is empty, return NULL. Otherwise remove and return last element in index.
+lib_ams::FShmember* lib_ams::c_shmember_RemoveLast(lib_ams::FShm& shm) {
+    lib_ams::FShmember *row = NULL;
+    int n = shm.c_shmember_n;
+    if (n > 0) {
+        row = shm.c_shmember_elems[n-1];
+        row->shm_c_shmember_idx=-1;
+        shm.c_shmember_n = n-1;
+    }
+    return row;
+}
+
+// --- lib_ams.FShm..Init
 // Set all fields to initial values.
-void lib_ams::FStream_Init(lib_ams::FStream& stream) {
-    stream.shm_handle = NULL;
-    stream.limit = u64(0);
-    stream.offset_mask = u64(0);
-    stream.cur_msg = NULL;
-    stream.zd_member_bystream_head = NULL; // (lib_ams.FStream.zd_member_bystream)
-    stream.zd_member_bystream_n = 0; // (lib_ams.FStream.zd_member_bystream)
-    stream.zd_member_bystream_tail = NULL; // (lib_ams.FStream.zd_member_bystream)
-    stream.next_ackoff = u64(1023);
-    stream.p_streamtype = NULL;
-    stream.n_write_block = u32(0);
-    stream.burst = i32(20);
-    stream.writer_error = bool(false);
-    stream.ind_stream_next = (lib_ams::FStream*)-1; // (lib_ams.FDb.ind_stream) not-in-hash
-    stream.cd_stream_hb_next = (lib_ams::FStream*)-1; // (lib_ams.FDb.cd_stream_hb) not-in-list
-    stream.cd_stream_hb_prev = NULL; // (lib_ams.FDb.cd_stream_hb)
-    stream.cd_poll_read_next = (lib_ams::FStream*)-1; // (lib_ams.FDb.cd_poll_read) not-in-list
-    stream.cd_poll_read_prev = NULL; // (lib_ams.FDb.cd_poll_read)
-    stream.zd_ctlin_next = (lib_ams::FStream*)-1; // (lib_ams.FDb.zd_ctlin) not-in-list
-    stream.zd_ctlin_prev = NULL; // (lib_ams.FDb.zd_ctlin)
-    stream.h_msg = NULL;
-    stream.h_msg_ctx = 0;
-    stream.h_msg_orig = NULL;
-    stream.h_msg_orig_ctx = 0;
+void lib_ams::FShm_Init(lib_ams::FShm& shm) {
+    shm.c_shmember_elems = NULL; // (lib_ams.FShm.c_shmember)
+    shm.c_shmember_n = 0; // (lib_ams.FShm.c_shmember)
+    shm.c_shmember_max = 0; // (lib_ams.FShm.c_shmember)
+    shm.shm_handle = NULL;
+    shm.c_read = NULL;
+    shm.c_write = NULL;
+    shm.writelimit = u64(0);
+    shm.offset_mask = u64(0);
+    shm.next_ackoff = u64(1023);
+    shm.p_shmtype = NULL;
+    shm.n_write_block = u32(0);
+    shm.error = bool(false);
+    shm.created = bool(false);
+    shm.schedbias = i64(0);
+    shm.proc_c_shm_idx = i32(-1);
+    shm.ind_shm_next = (lib_ams::FShm*)-1; // (lib_ams.FDb.ind_shm) not-in-hash
+    shm.ind_shm_hashval = 0; // stored hash value
+    shm.h_amsmsg = NULL;
+    shm.h_amsmsg_ctx = 0;
+    shm.h_msg_orig = NULL;
+    shm.h_msg_orig_ctx = 0;
 }
 
-// --- lib_ams.FStream..Uninit
-void lib_ams::FStream_Uninit(lib_ams::FStream& stream) {
-    lib_ams::FStream &row = stream; (void)row;
-    ind_stream_Remove(row); // remove stream from index ind_stream
-    cd_stream_hb_Remove(row); // remove stream from index cd_stream_hb
-    cd_poll_read_Remove(row); // remove stream from index cd_poll_read
-    zd_ctlin_Remove(row); // remove stream from index zd_ctlin
-    shm_handle_Cleanup(stream); // dmmeta.fcleanup:lib_ams.FStream.shm_handle
-    shm_file_Cleanup(stream); // dmmeta.fcleanup:lib_ams.FStream.shm_file
+// --- lib_ams.FShm..Uninit
+void lib_ams::FShm_Uninit(lib_ams::FShm& shm) {
+    lib_ams::FShm &row = shm; (void)row;
+    shm_file_Cleanup(shm); // dmmeta.fcleanup:lib_ams.FShm.shm_file
+    ind_shm_Remove(row); // remove shm from index ind_shm
+    lib_ams::FProc* p_proc_id = lib_ams::ind_proc_Find(row.shm_id.proc_id);
+    if (p_proc_id)  {
+        c_shm_Remove(*p_proc_id, row);// remove shm from index c_shm
+    }
+
+    // lib_ams.FShm.c_shmember.Uninit (Ptrary)  //List of all read/write members
+    algo_lib::malloc_FreeMem(shm.c_shmember_elems, sizeof(lib_ams::FShmember*)*shm.c_shmember_max); // (lib_ams.FShm.c_shmember)
 }
 
-// --- lib_ams.FStreamType.base.CopyOut
+// --- lib_ams.FShmember..Init
+// Set all fields to initial values.
+void lib_ams::FShmember_Init(lib_ams::FShmember& shmember) {
+    shmember.off = u64(0);
+    shmember.sortkey = u64(0);
+    shmember.budget = u64(0);
+    shmember.p_shm = NULL;
+    shmember.c_cur_msg = NULL;
+    shmember.p_proc = NULL;
+    shmember.c_ctlin_idx = i32(-1);
+    shmember.proc_c_shmember_idx = i32(-1);
+    shmember.shm_c_shmember_idx = i32(-1);
+    shmember.cd_hb_next = (lib_ams::FShmember*)-1; // (lib_ams.FDb.cd_hb) not-in-list
+    shmember.cd_hb_prev = NULL; // (lib_ams.FDb.cd_hb)
+    shmember.cd_poll_read_next = (lib_ams::FShmember*)-1; // (lib_ams.FDb.cd_poll_read) not-in-list
+    shmember.cd_poll_read_prev = NULL; // (lib_ams.FDb.cd_poll_read)
+    shmember.cd_slow_poll_read_next = (lib_ams::FShmember*)-1; // (lib_ams.FDb.cd_slow_poll_read) not-in-list
+    shmember.cd_slow_poll_read_prev = NULL; // (lib_ams.FDb.cd_slow_poll_read)
+    shmember.shmember_next = (lib_ams::FShmember*)-1; // (lib_ams.FDb.shmember) not-in-tpool's freelist
+    shmember.ind_shmember_next = (lib_ams::FShmember*)-1; // (lib_ams.FDb.ind_shmember) not-in-hash
+    shmember.ind_shmember_hashval = 0; // stored hash value
+    shmember.bh_shmember_read_idx = -1; // (lib_ams.FDb.bh_shmember_read) not-in-heap
+}
+
+// --- lib_ams.FShmember..Uninit
+void lib_ams::FShmember_Uninit(lib_ams::FShmember& shmember) {
+    lib_ams::FShmember &row = shmember; (void)row;
+    lib_ams::FProc* p_proc_id = lib_ams::ind_proc_Find(row.shmember.proc_id);
+    if (p_proc_id)  {
+        c_shmember_Remove(*p_proc_id, row);// remove shmember from index c_shmember
+    }
+    lib_ams::FShm* p_shm_id = lib_ams::ind_shm_Find(row.shmember.shm_id);
+    if (p_shm_id)  {
+        c_shmember_Remove(*p_shm_id, row);// remove shmember from index c_shmember
+    }
+    cd_hb_Remove(row); // remove shmember from index cd_hb
+    cd_poll_read_Remove(row); // remove shmember from index cd_poll_read
+    cd_slow_poll_read_Remove(row); // remove shmember from index cd_slow_poll_read
+    ind_shmember_Remove(row); // remove shmember from index ind_shmember
+    c_ctlin_Remove(row); // remove shmember from index c_ctlin
+    bh_shmember_read_Remove(row); // remove shmember from index bh_shmember_read
+}
+
+// --- lib_ams.FShmtype.base.CopyOut
 // Copy fields out of row
-void lib_ams::streamtype_CopyOut(lib_ams::FStreamType &row, amsdb::StreamType &out) {
-    out.streamtype = row.streamtype;
+void lib_ams::shmtype_CopyOut(lib_ams::FShmtype &row, amsdb::Shmtype &out) {
+    out.shmtype = row.shmtype;
     out.id = row.id;
+    out.nonblock = row.nonblock;
     out.comment = row.comment;
 }
 
-// --- lib_ams.FStreamType.base.CopyIn
+// --- lib_ams.FShmtype.base.CopyIn
 // Copy fields in to row
-void lib_ams::streamtype_CopyIn(lib_ams::FStreamType &row, amsdb::StreamType &in) {
-    row.streamtype = in.streamtype;
+void lib_ams::shmtype_CopyIn(lib_ams::FShmtype &row, amsdb::Shmtype &in) {
+    row.shmtype = in.shmtype;
     row.id = in.id;
+    row.nonblock = in.nonblock;
     row.comment = in.comment;
 }
 
-// --- lib_ams.FStreamType..Uninit
-void lib_ams::FStreamType_Uninit(lib_ams::FStreamType& streamtype) {
-    lib_ams::FStreamType &row = streamtype; (void)row;
-    ind_streamtype_Remove(row); // remove streamtype from index ind_streamtype
+// --- lib_ams.FShmtype..Uninit
+void lib_ams::FShmtype_Uninit(lib_ams::FShmtype& shmtype) {
+    lib_ams::FShmtype &row = shmtype; (void)row;
+    ind_shmtype_Remove(row); // remove shmtype from index ind_shmtype
 }
 
 // --- lib_ams.FWritefile.buf.Addary
@@ -3333,6 +4221,23 @@ algo::aryptr<u8> lib_ams::buf_AllocN(lib_ams::FWritefile& writefile, int n_elems
     memset(elems + old_n, 0, new_n - old_n); // initialize new space
     writefile.buf_n = new_n;
     return algo::aryptr<u8>(elems + old_n, n_elems);
+}
+
+// --- lib_ams.FWritefile.buf.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<u8> lib_ams::buf_AllocNAt(lib_ams::FWritefile& writefile, int n_elems, int at) {
+    buf_Reserve(writefile, n_elems);
+    int n  = writefile.buf_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("lib_ams.bad_alloc_n_at  field:lib_ams.FWritefile.buf  comment:'index out of range'");
+    }
+    u8 *elems = writefile.buf_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(u8));
+    memset(elems + at, 0, n_elems); // initialize new space
+    writefile.buf_n = n+n_elems;
+    return algo::aryptr<u8>(elems+at,n_elems);
 }
 
 // --- lib_ams.FWritefile.buf.Remove
@@ -3417,6 +4322,25 @@ bool lib_ams::buf_ReadStrptrMaybe(lib_ams::FWritefile& writefile, algo::strptr i
     return retval;
 }
 
+// --- lib_ams.FWritefile.buf.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void lib_ams::buf_Insary(lib_ams::FWritefile& writefile, algo::aryptr<u8> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= writefile.buf_elems && rhs.elems < writefile.buf_elems + writefile.buf_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("lib_ams.tary_alias  field:lib_ams.FWritefile.buf  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(writefile.buf_elems+1))) {
+        FatalErrorExit("lib_ams.bad_insary  field:lib_ams.FWritefile.buf  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = writefile.buf_n - at;
+    buf_Reserve(writefile, nnew); // reserve space
+    memmove(writefile.buf_elems + at + nnew, writefile.buf_elems + at, nmove * sizeof(u8));
+    memcpy(writefile.buf_elems + at, rhs.elems, nnew * sizeof(u8));
+    writefile.buf_n += nnew;
+}
+
 // --- lib_ams.FWritefile.cbuf.Addary
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
@@ -3473,6 +4397,23 @@ algo::aryptr<u8> lib_ams::cbuf_AllocN(lib_ams::FWritefile& writefile, int n_elem
     memset(elems + old_n, 0, new_n - old_n); // initialize new space
     writefile.cbuf_n = new_n;
     return algo::aryptr<u8>(elems + old_n, n_elems);
+}
+
+// --- lib_ams.FWritefile.cbuf.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<u8> lib_ams::cbuf_AllocNAt(lib_ams::FWritefile& writefile, int n_elems, int at) {
+    cbuf_Reserve(writefile, n_elems);
+    int n  = writefile.cbuf_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("lib_ams.bad_alloc_n_at  field:lib_ams.FWritefile.cbuf  comment:'index out of range'");
+    }
+    u8 *elems = writefile.cbuf_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(u8));
+    memset(elems + at, 0, n_elems); // initialize new space
+    writefile.cbuf_n = n+n_elems;
+    return algo::aryptr<u8>(elems+at,n_elems);
 }
 
 // --- lib_ams.FWritefile.cbuf.Remove
@@ -3557,11 +4498,30 @@ bool lib_ams::cbuf_ReadStrptrMaybe(lib_ams::FWritefile& writefile, algo::strptr 
     return retval;
 }
 
+// --- lib_ams.FWritefile.cbuf.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void lib_ams::cbuf_Insary(lib_ams::FWritefile& writefile, algo::aryptr<u8> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= writefile.cbuf_elems && rhs.elems < writefile.cbuf_elems + writefile.cbuf_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("lib_ams.tary_alias  field:lib_ams.FWritefile.cbuf  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(writefile.cbuf_elems+1))) {
+        FatalErrorExit("lib_ams.bad_insary  field:lib_ams.FWritefile.cbuf  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = writefile.cbuf_n - at;
+    cbuf_Reserve(writefile, nnew); // reserve space
+    memmove(writefile.cbuf_elems + at + nnew, writefile.cbuf_elems + at, nmove * sizeof(u8));
+    memcpy(writefile.cbuf_elems + at, rhs.elems, nnew * sizeof(u8));
+    writefile.cbuf_n += nnew;
+}
+
 // --- lib_ams.FWritefile..Uninit
 void lib_ams::FWritefile_Uninit(lib_ams::FWritefile& writefile) {
     lib_ams::FWritefile &row = writefile; (void)row;
-    zd_flush_Remove(row); // remove writefile from index zd_flush
     fd_Cleanup(writefile); // dmmeta.fcleanup:lib_ams.FWritefile.fd
+    zd_flush_Remove(row); // remove writefile from index zd_flush
 
     // lib_ams.FWritefile.cbuf.Uninit (Tary)  //Compressed buffer
     // remove all elements from lib_ams.FWritefile.cbuf
@@ -3681,17 +4641,76 @@ void lib_ams::FieldId_Print(lib_ams::FieldId& row, algo::cstring& str) {
     lib_ams::value_Print(row, str);
 }
 
+// --- lib_ams.MsgFmt.format.ToCstr
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+const char* lib_ams::format_ToCstr(const lib_ams::MsgFmt& parent) {
+    const char *ret = NULL;
+    switch(format_GetEnum(parent)) {
+        case lib_ams_MsgFmt_format_ssim    : ret = "ssim";  break;
+        case lib_ams_MsgFmt_format_bin     : ret = "bin";  break;
+    }
+    return ret;
+}
+
+// --- lib_ams.MsgFmt.format.Print
+// Convert format to a string. First, attempt conversion to a known string.
+// If no string matches, print format as a numeric value.
+void lib_ams::format_Print(const lib_ams::MsgFmt& parent, algo::cstring &lhs) {
+    const char *strval = format_ToCstr(parent);
+    if (strval) {
+        lhs << strval;
+    } else {
+        lhs << parent.format;
+    }
+}
+
+// --- lib_ams.MsgFmt.format.SetStrptrMaybe
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+bool lib_ams::format_SetStrptrMaybe(lib_ams::MsgFmt& parent, algo::strptr rhs) {
+    bool ret = false;
+    switch (elems_N(rhs)) {
+        case 3: {
+            switch (u64(algo::ReadLE16(rhs.elems))|(u64(rhs[2])<<16)) {
+                case LE_STR3('b','i','n'): {
+                    format_SetEnum(parent,lib_ams_MsgFmt_format_bin); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 4: {
+            switch (u64(algo::ReadLE32(rhs.elems))) {
+                case LE_STR4('s','s','i','m'): {
+                    format_SetEnum(parent,lib_ams_MsgFmt_format_ssim); ret = true; break;
+                }
+            }
+            break;
+        }
+    }
+    return ret;
+}
+
+// --- lib_ams.MsgFmt.format.SetStrptr
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+void lib_ams::format_SetStrptr(lib_ams::MsgFmt& parent, algo::strptr rhs, lib_ams_MsgFmt_format_Enum dflt) {
+    if (!format_SetStrptrMaybe(parent,rhs)) format_SetEnum(parent,dflt);
+}
+
 // --- lib_ams...SizeCheck
 inline static void lib_ams::SizeCheck() {
 }
 
 // --- lib_ams...StaticCheck
 void lib_ams::StaticCheck() {
-    algo_assert(sizeof(lib_ams::stream_h_msg_hook) == 8); // csize:lib_ams.stream_h_msg_hook
-    algo_assert(sizeof(lib_ams::stream_h_msg_orig_hook) == 8); // csize:lib_ams.stream_h_msg_orig_hook
+    algo_assert(sizeof(lib_ams::parent_h_convert_hook) == 8); // csize:lib_ams.parent_h_convert_hook
+    algo_assert(sizeof(lib_ams::shm_h_amsmsg_hook) == 8); // csize:lib_ams.shm_h_amsmsg_hook
+    algo_assert(sizeof(lib_ams::shm_h_msg_orig_hook) == 8); // csize:lib_ams.shm_h_msg_orig_hook
     algo_assert(_offset_of(lib_ams::CtlConnCase, value) + sizeof(((lib_ams::CtlConnCase*)0)->value) == sizeof(lib_ams::CtlConnCase));
     algo_assert(_offset_of(lib_ams::CtlMsgCase, value) + sizeof(((lib_ams::CtlMsgCase*)0)->value) == sizeof(lib_ams::CtlMsgCase));
-    algo_assert(_offset_of(lib_ams::trace, n_write_block_spin) + sizeof(((lib_ams::trace*)0)->n_write_block_spin) == sizeof(lib_ams::trace));
+    algo_assert(_offset_of(lib_ams::trace, del__db_shmtype) + sizeof(((lib_ams::trace*)0)->del__db_shmtype) == sizeof(lib_ams::trace));
     algo_assert(_offset_of(lib_ams::FieldId, value) + sizeof(((lib_ams::FieldId*)0)->value) == sizeof(lib_ams::FieldId));
 }
 
@@ -3699,21 +4718,9 @@ void lib_ams::StaticCheck() {
 int lib_ams::CtlMsgDispatchRaw(lib_ams::CtlMsgCase type, u8 *msg, u32 len) {
     int ret = 0;
     switch(type) {
-        case 12: if (sizeof(ams::DumpStreamTableMsg) <= len) {
-            lib_ams::CtlMsg_DumpStreamTableMsg((ams::DumpStreamTableMsg&)*msg);
-            ret = (int)sizeof(ams::DumpStreamTableMsg);
-        } break;
-        case 4: if (sizeof(ams::ProcAddMsg) <= len) {
-            lib_ams::CtlMsg_ProcAddMsg((ams::ProcAddMsg&)*msg);
-            ret = (int)sizeof(ams::ProcAddMsg);
-        } break;
-        case 5: if (sizeof(ams::ProcRemoveMsg) <= len) {
-            lib_ams::CtlMsg_ProcRemoveMsg((ams::ProcRemoveMsg&)*msg);
-            ret = (int)sizeof(ams::ProcRemoveMsg);
-        } break;
-        case 3: if (sizeof(ams::StreamHbMsg) <= len) {
-            lib_ams::CtlMsg_StreamHbMsg((ams::StreamHbMsg&)*msg);
-            ret = (int)sizeof(ams::StreamHbMsg);
+        case 3: if (sizeof(ams::ShmHbMsg) <= len) {
+            lib_ams::CtlMsg_ShmHbMsg((ams::ShmHbMsg&)*msg);
+            ret = (int)sizeof(ams::ShmHbMsg);
         } break;
         default:
         break;
@@ -3735,49 +4742,54 @@ void lib_ams::vCtlMsgDispatch(ams::MsgHeader& msg) {
 // --- lib_ams...InputLineMsg_FmtByteAry
 // Construct a new ams::InputLineMsg in the space provided by BUF.
 // If BUF doesn't have enough space available, throw exception.
-ams::InputLineMsg * lib_ams::InputLineMsg_FmtByteAry(algo::ByteAry &buf, algo::aryptr<char > payload) {
+ams::InputLineMsg * lib_ams::InputLineMsg_FmtByteAry(algo::ByteAry &buf, ams::ProcId proc_id, algo::aryptr<char > payload) {
     ams::InputLineMsg  *msg = NULL;
     size_t len = sizeof(ams::InputLineMsg);
-    u32 ary_len = elems_N(payload) * sizeof(char);
-    len += ary_len;
+    u32 payload_ary_len = elems_N(payload) * sizeof(char);
+    len += payload_ary_len;
     ary_RemoveAll(buf);
     msg = (ams::InputLineMsg*)ary_AllocN(buf,len).elems;
     msg->type = u32(22);
     msg->length = u32(len + (0));
-    memcpy(payload_Addr(*msg), payload.elems, ary_len);
+    msg->proc_id = proc_id;
+    memcpy(payload_Addr(*msg), payload.elems, payload_ary_len);
     return msg;
 }
 
-// --- lib_ams...LogMsg_FmtAmsStream
+// --- lib_ams...LogMsg_FmtShm
 // Construct a new ams::LogMsg in the space provided by BUF.
 // If BUF doesn't have enough space available, throw exception.
-ams::LogMsg * lib_ams::LogMsg_FmtAmsStream(lib_ams::FStream &stream, const algo::strptr& logcat, algo::SchedTime tstamp, algo::aryptr<char > text) {
+ams::LogMsg * lib_ams::LogMsg_FmtShm(lib_ams::FShm &shm, ams::ProcId proc_id, algo::SchedTime tstamp, algo::aryptr<char > logcat, algo::aryptr<char > text) {
     ams::LogMsg  *msg = NULL;
     size_t len = sizeof(ams::LogMsg);
-    u32 ary_len = elems_N(text) * sizeof(char);
-    len += ary_len;
-    msg = (ams::LogMsg*)lib_ams::BeginWrite(stream,int(len));
+    u32 logcat_ary_len = elems_N(logcat) * sizeof(char);
+    len += logcat_ary_len;
+    u32 text_ary_len = elems_N(text) * sizeof(char);
+    len += text_ary_len;
+    msg = (ams::LogMsg*)lib_ams::BeginWrite(shm,int(len));
     if (!msg) {
         return NULL; // no room.
     }
     msg->type = u32(6);
     msg->length = u32(len + (0));
-    msg->logcat = logcat;
+    msg->proc_id = proc_id;
     msg->tstamp = tstamp;
-    memcpy(text_Addr(*msg), text.elems, ary_len);
-    lib_ams::EndWrite(stream,msg,int(len));
+    memcpy(logcat_Addr(*msg), logcat.elems, logcat_ary_len);
+    (*msg).logcat_end = u32(logcat_ary_len);
+    memcpy(text_Addr(*msg), text.elems, text_ary_len);
+    lib_ams::EndWrite(shm,msg,int(len));
     return msg;
 }
 
-// --- lib_ams...MsgBlock_FmtAmsStream
+// --- lib_ams...MsgBlock_FmtShm
 // Construct a new ams::MsgBlock in the space provided by BUF.
 // If BUF doesn't have enough space available, throw exception.
-ams::MsgBlock * lib_ams::MsgBlock_FmtAmsStream(lib_ams::FStream &stream, u64 first_seqno, u32 n_messages, u32 original_length, algo::aryptr<u8 > messages) {
+ams::MsgBlock * lib_ams::MsgBlock_FmtShm(lib_ams::FShm &shm, u64 first_seqno, u32 n_messages, u32 original_length, algo::aryptr<u8 > messages) {
     ams::MsgBlock  *msg = NULL;
     size_t len = sizeof(ams::MsgBlock);
-    u32 ary_len = elems_N(messages) * sizeof(u8);
-    len += ary_len;
-    msg = (ams::MsgBlock*)lib_ams::BeginWrite(stream,int(len));
+    u32 messages_ary_len = elems_N(messages) * sizeof(u8);
+    len += messages_ary_len;
+    msg = (ams::MsgBlock*)lib_ams::BeginWrite(shm,int(len));
     if (!msg) {
         return NULL; // no room.
     }
@@ -3786,202 +4798,55 @@ ams::MsgBlock * lib_ams::MsgBlock_FmtAmsStream(lib_ams::FStream &stream, u64 fir
     msg->first_seqno = first_seqno;
     msg->n_messages = n_messages;
     msg->original_length = original_length;
-    memcpy(messages_Addr(*msg), messages.elems, ary_len);
-    lib_ams::EndWrite(stream,msg,int(len));
+    memcpy(messages_Addr(*msg), messages.elems, messages_ary_len);
+    lib_ams::EndWrite(shm,msg,int(len));
     return msg;
 }
 
-// --- lib_ams...OpenMsg_FmtAmsStream
-// Construct a new ams::OpenMsg in the space provided by BUF.
+// --- lib_ams...ShmHbMsg_FmtShm
+// Construct a new ams::ShmHbMsg in the space provided by BUF.
 // If BUF doesn't have enough space available, throw exception.
-ams::OpenMsg * lib_ams::OpenMsg_FmtAmsStream(lib_ams::FStream &stream, ams::Member member, ams::StreamPos pos) {
-    ams::OpenMsg  *msg = NULL;
-    size_t len = sizeof(ams::OpenMsg);
-    msg = (ams::OpenMsg*)lib_ams::BeginWrite(stream,int(len));
-    if (!msg) {
-        return NULL; // no room.
-    }
-    msg->type = u32(7);
-    msg->length = u32(len + (0));
-    msg->member = member;
-    msg->pos = pos;
-    lib_ams::EndWrite(stream,msg,int(len));
-    return msg;
-}
-
-// --- lib_ams...PrlogMsg_FmtAmsStream
-// Construct a new ams::PrlogMsg in the space provided by BUF.
-// If BUF doesn't have enough space available, throw exception.
-ams::PrlogMsg * lib_ams::PrlogMsg_FmtAmsStream(lib_ams::FStream &stream, const algo::strptr& logcat, algo::SchedTime tstamp, ams::MsgHeader* data) {
-    ams::PrlogMsg  *msg = NULL;
-    size_t len = sizeof(ams::PrlogMsg);
-    int opt_len = data ? i32(data[0].length) : 0;
-    len += opt_len;
-    msg = (ams::PrlogMsg*)lib_ams::BeginWrite(stream,int(len));
-    if (!msg) {
-        return NULL; // no room.
-    }
-    msg->type = u32(229);
-    msg->length = u32(len + (0));
-    msg->logcat = logcat;
-    msg->tstamp = tstamp;
-    if (data) {
-        memcpy((u8*)msg + sizeof(ams::PrlogMsg), data, opt_len);
-    }
-    lib_ams::EndWrite(stream,msg,int(len));
-    return msg;
-}
-
-// --- lib_ams...ProcAddMsg_FmtAmsStream
-// Construct a new ams::ProcAddMsg in the space provided by BUF.
-// If BUF doesn't have enough space available, throw exception.
-ams::ProcAddMsg * lib_ams::ProcAddMsg_FmtAmsStream(lib_ams::FStream &stream, ams::ProcId proc_id) {
-    ams::ProcAddMsg  *msg = NULL;
-    size_t len = sizeof(ams::ProcAddMsg);
-    msg = (ams::ProcAddMsg*)lib_ams::BeginWrite(stream,int(len));
-    if (!msg) {
-        return NULL; // no room.
-    }
-    msg->type = u32(4);
-    msg->length = u32(len + (0));
-    msg->proc_id = proc_id;
-    lib_ams::EndWrite(stream,msg,int(len));
-    return msg;
-}
-
-// --- lib_ams...ProcRemoveMsg_FmtAmsStream
-// Construct a new ams::ProcRemoveMsg in the space provided by BUF.
-// If BUF doesn't have enough space available, throw exception.
-ams::ProcRemoveMsg * lib_ams::ProcRemoveMsg_FmtAmsStream(lib_ams::FStream &stream, ams::ProcId proc_id) {
-    ams::ProcRemoveMsg  *msg = NULL;
-    size_t len = sizeof(ams::ProcRemoveMsg);
-    msg = (ams::ProcRemoveMsg*)lib_ams::BeginWrite(stream,int(len));
-    if (!msg) {
-        return NULL; // no room.
-    }
-    msg->type = u32(5);
-    msg->length = u32(len + (0));
-    msg->proc_id = proc_id;
-    lib_ams::EndWrite(stream,msg,int(len));
-    return msg;
-}
-
-// --- lib_ams...StreamHbMsg_FmtAmsStream
-// Construct a new ams::StreamHbMsg in the space provided by BUF.
-// If BUF doesn't have enough space available, throw exception.
-ams::StreamHbMsg * lib_ams::StreamHbMsg_FmtAmsStream(lib_ams::FStream &stream, ams::Member member, ams::StreamPos pos, u32 wbudget) {
-    ams::StreamHbMsg  *msg = NULL;
-    size_t len = sizeof(ams::StreamHbMsg);
-    msg = (ams::StreamHbMsg*)lib_ams::BeginWrite(stream,int(len));
+ams::ShmHbMsg * lib_ams::ShmHbMsg_FmtShm(lib_ams::FShm &shm, ams::ShmemberId shmember, u64 off, u32 wbudget) {
+    ams::ShmHbMsg  *msg = NULL;
+    size_t len = sizeof(ams::ShmHbMsg);
+    msg = (ams::ShmHbMsg*)lib_ams::BeginWrite(shm,int(len));
     if (!msg) {
         return NULL; // no room.
     }
     msg->type = u32(3);
     msg->length = u32(len + (0));
-    msg->member = member;
-    msg->pos = pos;
+    msg->shmember = shmember;
+    msg->off = off;
     msg->wbudget = wbudget;
-    lib_ams::EndWrite(stream,msg,int(len));
+    lib_ams::EndWrite(shm,msg,int(len));
     return msg;
 }
 
-// --- lib_ams...Trace2Msg_FmtAmsStream
-// Construct a new ams::Trace2Msg in the space provided by BUF.
+// --- lib_ams...TerminateMsg_FmtShm
+// Construct a new ams::TerminateMsg in the space provided by BUF.
 // If BUF doesn't have enough space available, throw exception.
-ams::Trace2Msg * lib_ams::Trace2Msg_FmtAmsStream(lib_ams::FStream &stream, ams::ProcId proc, u8 trace, algo::UnTime tstamp, algo::aryptr<u64 > data) {
-    ams::Trace2Msg  *msg = NULL;
-    size_t len = sizeof(ams::Trace2Msg);
-    u32 ary_len = elems_N(data) * sizeof(u64);
-    len += ary_len;
-    msg = (ams::Trace2Msg*)lib_ams::BeginWrite(stream,int(len));
+ams::TerminateMsg * lib_ams::TerminateMsg_FmtShm(lib_ams::FShm &shm) {
+    ams::TerminateMsg  *msg = NULL;
+    size_t len = sizeof(ams::TerminateMsg);
+    msg = (ams::TerminateMsg*)lib_ams::BeginWrite(shm,int(len));
     if (!msg) {
         return NULL; // no room.
     }
-    msg->type = u32(108);
+    msg->type = u32(352);
     msg->length = u32(len + (0));
-    msg->proc = proc;
-    msg->trace = trace;
-    msg->tstamp = tstamp;
-    memcpy(data_Addr(*msg), data.elems, ary_len);
-    lib_ams::EndWrite(stream,msg,int(len));
+    lib_ams::EndWrite(shm,msg,int(len));
     return msg;
 }
 
-// --- lib_ams...TraceInfo2Msg_FmtAmsStream
-// Construct a new ams::TraceInfo2Msg in the space provided by BUF.
-// If BUF doesn't have enough space available, throw exception.
-ams::TraceInfo2Msg * lib_ams::TraceInfo2Msg_FmtAmsStream(lib_ams::FStream &stream, ams::ProcId proc, u8 trace, algo::UnTime tstamp, u8 part, algo::aryptr<char > data) {
-    ams::TraceInfo2Msg  *msg = NULL;
-    size_t len = sizeof(ams::TraceInfo2Msg);
-    u32 ary_len = elems_N(data) * sizeof(char);
-    len += ary_len;
-    msg = (ams::TraceInfo2Msg*)lib_ams::BeginWrite(stream,int(len));
-    if (!msg) {
-        return NULL; // no room.
-    }
-    msg->type = u32(109);
-    msg->length = u32(len + (0));
-    msg->proc = proc;
-    msg->trace = trace;
-    msg->tstamp = tstamp;
-    msg->part = part;
-    memcpy(data_Addr(*msg), data.elems, ary_len);
-    lib_ams::EndWrite(stream,msg,int(len));
-    return msg;
-}
-
-// --- lib_ams...TraceInfoMsg_FmtAmsStream
-// Construct a new ams::TraceInfoMsg in the space provided by BUF.
-// If BUF doesn't have enough space available, throw exception.
-ams::TraceInfoMsg * lib_ams::TraceInfoMsg_FmtAmsStream(lib_ams::FStream &stream, ams::ProcId proc, algo::UnTime tstamp, u8 part, algo::aryptr<char > data) {
-    ams::TraceInfoMsg  *msg = NULL;
-    size_t len = sizeof(ams::TraceInfoMsg);
-    u32 ary_len = elems_N(data) * sizeof(char);
-    len += ary_len;
-    msg = (ams::TraceInfoMsg*)lib_ams::BeginWrite(stream,int(len));
-    if (!msg) {
-        return NULL; // no room.
-    }
-    msg->type = u32(9);
-    msg->length = u32(len + (0));
-    msg->proc = proc;
-    msg->tstamp = tstamp;
-    msg->part = part;
-    memcpy(data_Addr(*msg), data.elems, ary_len);
-    lib_ams::EndWrite(stream,msg,int(len));
-    return msg;
-}
-
-// --- lib_ams...TraceMsg_FmtAmsStream
-// Construct a new ams::TraceMsg in the space provided by BUF.
-// If BUF doesn't have enough space available, throw exception.
-ams::TraceMsg * lib_ams::TraceMsg_FmtAmsStream(lib_ams::FStream &stream, ams::ProcId proc, algo::UnTime tstamp, algo::aryptr<u64 > data) {
-    ams::TraceMsg  *msg = NULL;
-    size_t len = sizeof(ams::TraceMsg);
-    u32 ary_len = elems_N(data) * sizeof(u64);
-    len += ary_len;
-    msg = (ams::TraceMsg*)lib_ams::BeginWrite(stream,int(len));
-    if (!msg) {
-        return NULL; // no room.
-    }
-    msg->type = u32(8);
-    msg->length = u32(len + (0));
-    msg->proc = proc;
-    msg->tstamp = tstamp;
-    memcpy(data_Addr(*msg), data.elems, ary_len);
-    lib_ams::EndWrite(stream,msg,int(len));
-    return msg;
-}
-
-// --- lib_ams...UdpFrame_FmtAmsStream
+// --- lib_ams...UdpFrame_FmtShm
 // Construct a new ams::UdpFrame in the space provided by BUF.
 // If BUF doesn't have enough space available, throw exception.
-ams::UdpFrame * lib_ams::UdpFrame_FmtAmsStream(lib_ams::FStream &stream, algo::UnTime timestamp, ietf::Ipv4 src_ip, ietf::Ipv4 dst_ip, u16 src_port, u16 dst_port, algo::aryptr<u8 > payload) {
+ams::UdpFrame * lib_ams::UdpFrame_FmtShm(lib_ams::FShm &shm, algo::UnTime timestamp, ietf::Ipv4 src_ip, ietf::Ipv4 dst_ip, u16 src_port, u16 dst_port, algo::aryptr<u8 > payload) {
     ams::UdpFrame  *msg = NULL;
     size_t len = sizeof(ams::UdpFrame);
-    u32 ary_len = elems_N(payload) * sizeof(u8);
-    len += ary_len;
-    msg = (ams::UdpFrame*)lib_ams::BeginWrite(stream,int(len));
+    u32 payload_ary_len = elems_N(payload) * sizeof(u8);
+    len += payload_ary_len;
+    msg = (ams::UdpFrame*)lib_ams::BeginWrite(shm,int(len));
     if (!msg) {
         return NULL; // no room.
     }
@@ -3992,7 +4857,7 @@ ams::UdpFrame * lib_ams::UdpFrame_FmtAmsStream(lib_ams::FStream &stream, algo::U
     msg->dst_ip = dst_ip;
     msg->src_port = src_port;
     msg->dst_port = dst_port;
-    memcpy(payload_Addr(*msg), payload.elems, ary_len);
-    lib_ams::EndWrite(stream,msg,int(len));
+    memcpy(payload_Addr(*msg), payload.elems, payload_ary_len);
+    lib_ams::EndWrite(shm,msg,int(len));
     return msg;
 }

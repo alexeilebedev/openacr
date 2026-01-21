@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
 //
@@ -57,9 +57,50 @@ void atf_ci::citest_indent_srcfile() {
 
 // -----------------------------------------------------------------------------
 
+void atf_ci::citest_update_script() {
+    tempstr newfiles;
+    ind_beg(algo::Dir_curs,entry,"bin/*") if (ind_gitfile_Find(entry.pathname)) {
+        struct stat buf;
+        int rc=lstat(Zeroterm(entry.pathname), &buf);
+        bool script=false;
+        if (rc==0 && S_ISREG(buf.st_mode) && (buf.st_mode & S_IXUSR)!=0) {
+            ind_beg(algo::FileLine_curs,line,entry.pathname) {
+                if (StartsWithQ(line,"#!/")) {
+                    script=true;
+                }
+                break;// first line only
+            }ind_end;
+        }
+        if (script) {
+            if (!ind_scriptfile_Find(entry.pathname)) {
+                dev::Scriptfile out;
+                out.gitfile=entry.pathname;
+                newfiles<<out<<eol;
+            }
+            tempstr doc=tempstr()<<"txt/script/"<<entry.filename<<".md";
+            if (!algo::FileQ(doc)) {
+                StringToFile("",doc);
+                SysCmd(tempstr()<<"git add "<<doc);
+            }
+            dev::Readmefile out;
+            out.gitfile=doc;
+            newfiles<<out<<eol;
+        }
+    }ind_end;
+    algo::strptr txnfile("temp/update-script");
+    StringToFile(newfiles,txnfile);
+    command::acr_proc acr;
+    acr.cmd.insert=true;
+    acr.cmd.write=true;
+    acr.cmd.report=false;
+    acr.fstdin<<"<"<<txnfile;
+    acr_Exec(acr);
+}
+
+// -----------------------------------------------------------------------------
+
 // indent all script files modified in the last commit
 void atf_ci::citest_indent_script() {
-    SysCmd("update-scriptfile");
     tempstr modfiles(SysEval("git diff-tree --name-only  HEAD -r --no-commit-id",FailokQ(true),1024*1024*10));
     ind_beg(Line_curs,line,modfiles) {
         if (atf_ci::FGitfile *gitfile = ind_gitfile_Find(line)) {
@@ -90,7 +131,7 @@ void atf_ci::citest_file_header() {
 void atf_ci::citest_src_lim() {
     command::src_lim src_lim;
     src_lim.strayfile=true;
-    // #AL# temporarrily disabling line limit check
+    // #AL# disabling line limit check
     // because nobody is using it
     src_lim.linelim=false;
     src_lim.badline.expr="%";
@@ -150,6 +191,9 @@ static bool BadCharQ(unsigned char c) {
         && c != 0xA3 // Windows-1252 GBP symbol
         && c != 0xA4 // Windows-1252 currency sign
         && c != 0xA5 // Windows-1252 JPY symbol
+        && c != 0xE2 // next three chars is "full block" Unicode: U+2588 (Full Block)
+        && c != 0x96
+        && c != 0x88 // UTF-8 Encoding: 0xE2 0x96 0x88 (3 bytes per block)
         ;
 }
 
@@ -167,7 +211,7 @@ static bool HasBadCharQ(strptr s) {
 void atf_ci::citest_encoding() {
     ind_beg(_db_gitfile_curs, gitfile, _db) {
         const strptr ext = GetFileExt(gitfile.gitfile);
-        if (ext == ".cpp" || ext == ".h") {
+        if (ext == ".cpp" || ext == ".cc" || ext == ".h") {
             ind_beg(algo::FileLine_curs, line, gitfile.gitfile) {
                 if (HasBadCharQ(line)) {
                     prlog(gitfile.gitfile <<":" << ind_curs(line).i+1 << ": bad char in line: " << line);
@@ -182,14 +226,15 @@ void atf_ci::citest_encoding() {
 
 void atf_ci::citest_iffy_src() {
     command::src_func src_func;
+    src_func.func.expr = "%.%";
     src_func.iffy = true;
-    src_func.listfunc = true;
-    src_func.proto = true;
+    src_func.baddecl = true;// gripe about declarations that src_func doesn't like
+    src_func.list = true;
     src_func.report = false;
     cstring output(Trimmed(SysEval(src_func_ToCmdline(src_func),FailokQ(false),1024*1024)));
     if (output != "") {
         prlog(output);
-        vrfy(0,"Please fix above instances of iffy code and retry");
+        vrfy(0,"Please fix above instances and retry");
     }
 }
 
@@ -202,4 +247,6 @@ void atf_ci::citest_non_copyrighted() {
         vrfy(0,"Each C++ file, and each non-trivial script file shall be copyrighted."
              " Put copyright notice to above files.");
     }
+    SysCmd("bin/src_hdr -update_copyright -scriptfile bin/%");
+    CheckCleanDirs("bin/*");
 }

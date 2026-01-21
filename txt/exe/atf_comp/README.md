@@ -46,12 +46,11 @@ Usage: atf_comp [[-comptest:]<regx>] [options]
     -normalize                           (action) Renumber and normalize tmsgs
     -covcapture                          (action) Capture new coverage percentages and save back
     -covcheck                            (action) Check coverage percentages against tgtcov table
-    -compdir          string  ""         Component image directory (exe)
+    -bindir           string  ""         Directory with binaries (default: build/cfg)
     -cfg              string  "release"  Set config
     -check_untracked          Y          Check for untracked file before allowing test to run
-    -maxerr           int     1          Exit after this many errors
+    -maxerr           int     3          Exit after this many errors
     -build                               Build given cfg before test
-    -ood                                 Check given cfg for ood before test
     -memcheck                            Run under memory checker (valgrind)
     -force                               (With -memcheck) run suppressed memcheck
     -callgrind                           Run under callgrind profiler (valgrind)
@@ -59,10 +58,13 @@ Usage: atf_comp [[-comptest:]<regx>] [options]
     -stream                              prints component's output
     -i                                   Read and execute testcase from stdin
     -write                    Y          (implied with -e) Write any changes back to ssim tables
-    -report                              Print final report
+    -report                   Y          Print final report
     -b                string  ""         Breakpoint passed to mdbg as-is
-    -verbose          int                Verbosity level (0..255); alias -v; cumulative
-    -debug            int                Debug level (0..255); alias -d; cumulative
+    -covfast                  Y          Speedup coverage processing
+    -minrepeat        int     0          Execute every comptest at least this many times
+    -maxrepeat        int     1          Don't repeat any individual comptest more than X times
+    -verbose          flag               Verbosity level (0..255); alias -v; cumulative
+    -debug            flag               Debug level (0..255); alias -d; cumulative
     -help                                Print help and exit; alias -h
     -version                             Print version and exit
     -signature                           Show signatures and exit; alias -sig
@@ -348,8 +350,8 @@ For complex filter, dedicated executable is possible.
 #### -covcheck -- (action) Check coverage percentages against tgtcov table
 <a href="#-covcheck"></a>
 
-#### -compdir -- Component image directory (exe)
-<a href="#-compdir"></a>
+#### -bindir -- Directory with binaries (default: build/cfg)
+<a href="#-bindir"></a>
 
 #### -cfg -- Set config
 <a href="#-cfg"></a>
@@ -362,9 +364,6 @@ For complex filter, dedicated executable is possible.
 
 #### -build -- Build given cfg before test
 <a href="#-build"></a>
-
-#### -ood -- Check given cfg for ood before test
-<a href="#-ood"></a>
 
 #### -memcheck -- Run under memory checker (valgrind)
 <a href="#-memcheck"></a>
@@ -393,6 +392,15 @@ For complex filter, dedicated executable is possible.
 #### -b -- Breakpoint passed to mdbg as-is
 <a href="#-b"></a>
 
+#### -covfast -- Speedup coverage processing
+<a href="#-covfast"></a>
+
+#### -minrepeat -- Execute every comptest at least this many times
+<a href="#-minrepeat"></a>
+
+#### -maxrepeat -- Don't repeat any individual comptest more than X times
+<a href="#-maxrepeat"></a>
+
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
 
 ### Inputs
@@ -401,23 +409,23 @@ For complex filter, dedicated executable is possible.
 `atf_comp` takes the following tables on input:
 |Ssimfile|Comment|
 |---|---|
-|[dmmeta.ctype](/txt/ssimdb/dmmeta/ctype.md)|Struct|
-|[dmmeta.field](/txt/ssimdb/dmmeta/field.md)|Specify field of a struct|
-|[dmmeta.substr](/txt/ssimdb/dmmeta/substr.md)|Specify that the field value is computed from a substring of another field|
-|[dmmeta.ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|File with ssim tuples|
-|[dmmeta.sqltype](/txt/ssimdb/dmmeta/sqltype.md)|Mapping of ctype -> SQL expression|
-|[dmmeta.ftuple](/txt/ssimdb/dmmeta/ftuple.md)||
-|[dmmeta.fconst](/txt/ssimdb/dmmeta/fconst.md)|Specify enum value (integer + string constant) for a field|
 |[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
-|[dmmeta.cppfunc](/txt/ssimdb/dmmeta/cppfunc.md)|Value of field provided by this expression|
-|[dmmeta.cfmt](/txt/ssimdb/dmmeta/cfmt.md)|Specify options for printing/reading ctypes into multiple formats|
+|[amcdb.bltin](/txt/ssimdb/amcdb/bltin.md)|Specify properties of a C built-in type|
 |[dmmeta.cdflt](/txt/ssimdb/dmmeta/cdflt.md)|Specify default value for single-value types that lack fields|
+|[dmmeta.cfmt](/txt/ssimdb/dmmeta/cfmt.md)|Specify options for printing/reading ctypes into multiple formats|
+|[dmmeta.cppfunc](/txt/ssimdb/dmmeta/cppfunc.md)|Value of field provided by this expression|
+|[dmmeta.ctype](/txt/ssimdb/dmmeta/ctype.md)|Struct|
+|[dmmeta.fconst](/txt/ssimdb/dmmeta/fconst.md)|Specify enum value (integer + string constant) for a field|
+|[dmmeta.field](/txt/ssimdb/dmmeta/field.md)|Specify field of a struct|
+|[dmmeta.ftuple](/txt/ssimdb/dmmeta/ftuple.md)||
+|[dmmeta.sqltype](/txt/ssimdb/dmmeta/sqltype.md)|Mapping of ctype -> SQL expression|
+|[dmmeta.ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|File with ssim tuples|
+|[dmmeta.substr](/txt/ssimdb/dmmeta/substr.md)|Specify that the field value is computed from a substring of another field|
 |[dev.unstablefld](/txt/ssimdb/dev/unstablefld.md)|Fields that should be stripped from component test output because they contain timestamps etc.|
 |[atfdb.comptest](/txt/ssimdb/atfdb/comptest.md)||
-|[atfdb.tmsg](/txt/ssimdb/atfdb/tmsg.md)||
-|[atfdb.tfilt](/txt/ssimdb/atfdb/tfilt.md)||
 |[atfdb.targs](/txt/ssimdb/atfdb/targs.md)||
-|[amcdb.bltin](/txt/ssimdb/amcdb/bltin.md)|Specify properties of a C built-in type|
+|[atfdb.tfilt](/txt/ssimdb/atfdb/tfilt.md)||
+|[atfdb.tmsg](/txt/ssimdb/atfdb/tmsg.md)||
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
 

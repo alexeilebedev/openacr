@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 // Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
 //
 // License: GPL
@@ -35,5 +35,6 @@ namespace strconv { // update-hdr
     // -------------------------------------------------------------------
     // cpp/strconv/strconv.cpp
     //
-    void Main();
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void Main(); // main:strconv
 }
