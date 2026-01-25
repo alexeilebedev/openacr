@@ -1993,7 +1993,8 @@ namespace algo_lib { // update-hdr
     // Calling this function may be necessary when it becomes known that
     // no further progress can be made by the step function.
     void EndStep();
-    void _db_Userinit();
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void Userinit(); // fuserinit:algo_lib.FDb._db
 
     // -------------------------------------------------------------------
     // cpp/lib/algo/line.cpp -- Line processing

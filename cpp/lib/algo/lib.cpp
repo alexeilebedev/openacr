@@ -719,7 +719,7 @@ void algo_lib::EndStep() {
     algo_lib::_db.step_limit.value = 0;
 }
 
-void algo_lib::_db_Userinit() {
+void algo_lib::Userinit() {
     algo_lib::_db.last_signal = 0;
     ind_beg_aryptr(cstring, str, algo_lib::temp_strings_Getary()) {
         ch_Reserve(str, 256);

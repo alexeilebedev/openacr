@@ -513,8 +513,12 @@ void amc::tfunc_Ctype_Init() {
         }
         if (field.c_fuserinit) {
             Set(R, "$field", field.field);
-            Set(R, "$name", name_Get(field));
-            Ins(&R, text, "$name_Userinit(); // dmmeta.fuserinit:$field");
+            if (field.reftype == dmmeta_Reftype_reftype_Global) {
+                Ins(&R, text, "Userinit($pararg); // dmmeta.fuserinit:$field");
+            } else {
+                Set(R, "$name", name_Get(field));
+                Ins(&R, text, "$name_Userinit($pararg); // dmmeta.fuserinit:$field");
+            }
         }
     }ind_end;
 
