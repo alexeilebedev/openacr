@@ -126,6 +126,26 @@ inline atf_comp::FTmsg& atf_comp::zd_tmsg_qLast(atf_comp::FComptest& comptest) {
     return *row;
 }
 
+// --- atf_comp.FComptest.c_tifilt.InsertMaybe
+// Insert row into pointer index. Return final membership status.
+inline bool atf_comp::c_tifilt_InsertMaybe(atf_comp::FComptest& comptest, atf_comp::FTifilt& row) {
+    atf_comp::FTifilt* ptr = comptest.c_tifilt;
+    bool retval = (ptr == NULL) | (ptr == &row);
+    if (retval) {
+        comptest.c_tifilt = &row;
+    }
+    return retval;
+}
+
+// --- atf_comp.FComptest.c_tifilt.Remove
+// Remove element from index. If element is not in index, do nothing.
+inline void atf_comp::c_tifilt_Remove(atf_comp::FComptest& comptest, atf_comp::FTifilt& row) {
+    atf_comp::FTifilt *ptr = comptest.c_tifilt;
+    if (LIKELY(ptr == &row)) {
+        comptest.c_tifilt = NULL;
+    }
+}
+
 // --- atf_comp.FComptest.zd_tmsg_curs.Reset
 // cursor points to valid item
 inline void atf_comp::comptest_zd_tmsg_curs_Reset(comptest_zd_tmsg_curs &curs, atf_comp::FComptest &parent) {
@@ -572,6 +592,62 @@ inline atf_comp::FTargs& atf_comp::zd_out_targs_qLast() {
     return *row;
 }
 
+// --- atf_comp.FDb.zd_out_tifilt.EmptyQ
+// Return true if index is empty
+inline bool atf_comp::zd_out_tifilt_EmptyQ() {
+    return _db.zd_out_tifilt_head == NULL;
+}
+
+// --- atf_comp.FDb.zd_out_tifilt.First
+// If index empty, return NULL. Otherwise return pointer to first element in index
+inline atf_comp::FTifilt* atf_comp::zd_out_tifilt_First() {
+    atf_comp::FTifilt *row = NULL;
+    row = _db.zd_out_tifilt_head;
+    return row;
+}
+
+// --- atf_comp.FDb.zd_out_tifilt.InLlistQ
+// Return true if row is in the linked list, false otherwise
+inline bool atf_comp::zd_out_tifilt_InLlistQ(atf_comp::FTifilt& row) {
+    bool result = false;
+    result = !(row.zd_out_tifilt_next == (atf_comp::FTifilt*)-1);
+    return result;
+}
+
+// --- atf_comp.FDb.zd_out_tifilt.Last
+// If index empty, return NULL. Otherwise return pointer to last element in index
+inline atf_comp::FTifilt* atf_comp::zd_out_tifilt_Last() {
+    atf_comp::FTifilt *row = NULL;
+    row = _db.zd_out_tifilt_tail;
+    return row;
+}
+
+// --- atf_comp.FDb.zd_out_tifilt.N
+// Return number of items in the linked list
+inline i32 atf_comp::zd_out_tifilt_N() {
+    return _db.zd_out_tifilt_n;
+}
+
+// --- atf_comp.FDb.zd_out_tifilt.Next
+// Return pointer to next element in the list
+inline atf_comp::FTifilt* atf_comp::zd_out_tifilt_Next(atf_comp::FTifilt &row) {
+    return row.zd_out_tifilt_next;
+}
+
+// --- atf_comp.FDb.zd_out_tifilt.Prev
+// Return pointer to previous element in the list
+inline atf_comp::FTifilt* atf_comp::zd_out_tifilt_Prev(atf_comp::FTifilt &row) {
+    return row.zd_out_tifilt_prev;
+}
+
+// --- atf_comp.FDb.zd_out_tifilt.qLast
+// Return reference to last element in the index. No bounds checking.
+inline atf_comp::FTifilt& atf_comp::zd_out_tifilt_qLast() {
+    atf_comp::FTifilt *row = NULL;
+    row = _db.zd_out_tifilt_tail;
+    return *row;
+}
+
 // --- atf_comp.FDb.covdir.EmptyQ
 // Return true if index is empty
 inline bool atf_comp::covdir_EmptyQ() {
@@ -857,6 +933,31 @@ inline atf_comp::FTargs& atf_comp::_db_zd_out_targs_curs_Access(_db_zd_out_targs
     return *curs.row;
 }
 
+// --- atf_comp.FDb.zd_out_tifilt_curs.Reset
+// cursor points to valid item
+inline void atf_comp::_db_zd_out_tifilt_curs_Reset(_db_zd_out_tifilt_curs &curs, atf_comp::FDb &parent) {
+    curs.row = parent.zd_out_tifilt_head;
+}
+
+// --- atf_comp.FDb.zd_out_tifilt_curs.ValidQ
+// cursor points to valid item
+inline bool atf_comp::_db_zd_out_tifilt_curs_ValidQ(_db_zd_out_tifilt_curs &curs) {
+    return curs.row != NULL;
+}
+
+// --- atf_comp.FDb.zd_out_tifilt_curs.Next
+// proceed to next item
+inline void atf_comp::_db_zd_out_tifilt_curs_Next(_db_zd_out_tifilt_curs &curs) {
+    atf_comp::FTifilt *next = (*curs.row).zd_out_tifilt_next;
+    curs.row = next;
+}
+
+// --- atf_comp.FDb.zd_out_tifilt_curs.Access
+// item access
+inline atf_comp::FTifilt& atf_comp::_db_zd_out_tifilt_curs_Access(_db_zd_out_tifilt_curs &curs) {
+    return *curs.row;
+}
+
 // --- atf_comp.FDb.covdir_curs.Reset
 // cursor points to valid item
 inline void atf_comp::_db_covdir_curs_Reset(_db_covdir_curs &curs, atf_comp::FDb &parent) {
@@ -943,6 +1044,24 @@ inline  atf_comp::FTfilt::FTfilt() {
 // --- atf_comp.FTfilt..Dtor
 inline  atf_comp::FTfilt::~FTfilt() {
     atf_comp::FTfilt_Uninit(*this);
+}
+
+// --- atf_comp.FTifilt..Init
+// Set all fields to initial values.
+inline void atf_comp::FTifilt_Init(atf_comp::FTifilt& tifilt) {
+    tifilt.tifilt_next = (atf_comp::FTifilt*)-1; // (atf_comp.FDb.tifilt) not-in-tpool's freelist
+    tifilt.zd_out_tifilt_next = (atf_comp::FTifilt*)-1; // (atf_comp.FDb.zd_out_tifilt) not-in-list
+    tifilt.zd_out_tifilt_prev = NULL; // (atf_comp.FDb.zd_out_tifilt)
+}
+
+// --- atf_comp.FTifilt..Ctor
+inline  atf_comp::FTifilt::FTifilt() {
+    atf_comp::FTifilt_Init(*this);
+}
+
+// --- atf_comp.FTifilt..Dtor
+inline  atf_comp::FTifilt::~FTifilt() {
+    atf_comp::FTifilt_Uninit(*this);
 }
 
 // --- atf_comp.FTmsg..Init

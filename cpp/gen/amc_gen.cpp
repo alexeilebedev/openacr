@@ -6942,7 +6942,7 @@ static void amc::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'amc.Input'  signature:'e9d5953ed69a710a66a2fe892cfbeee717f873b3'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'amc.Input'  signature:'dcef24cf11d5533b270d4be5e0651a9024d4443a'");
 }
 
 // --- amc.FDb._db.InsertStrptrMaybe
@@ -29478,6 +29478,7 @@ void amc::FJstype_Uninit(amc::FJstype& jstype) {
 void amc::lenfld_CopyOut(amc::FLenfld &row, dmmeta::Lenfld &out) {
     out.field = row.field;
     out.extra = row.extra;
+    out.scale = row.scale;
 }
 
 // --- amc.FLenfld.msghdr.CopyIn
@@ -29485,6 +29486,7 @@ void amc::lenfld_CopyOut(amc::FLenfld &row, dmmeta::Lenfld &out) {
 void amc::lenfld_CopyIn(amc::FLenfld &row, dmmeta::Lenfld &in) {
     row.field = in.field;
     row.extra = in.extra;
+    row.scale = in.scale;
 }
 
 // --- amc.FLenfld.ctype.Get

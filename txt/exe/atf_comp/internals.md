@@ -63,6 +63,8 @@ All allocations are done through global `atf_comp::_db` [atf_comp.FDb](#atf_comp
 ||||FComptest.c_targs (Ptr)|
 |[atf_comp.FTfilt](#atf_comp-ftfilt)|[atfdb.tfilt](/txt/ssimdb/atfdb/tfilt.md)|FDb.tfilt (Tpool)|zd_out_tfilt (Llist)|ind_tfilt (Thash, hash field comptest)|
 ||||FComptest.c_tfilt (Ptr)|
+|[atf_comp.FTifilt](#atf_comp-ftifilt)|[atfdb.tifilt](/txt/ssimdb/atfdb/tifilt.md)|FDb.tifilt (Tpool)|zd_out_tifilt (Llist)|
+||||FComptest.c_tifilt (Ptr)|
 |[atf_comp.FTmsg](#atf_comp-ftmsg)|[atfdb.tmsg](/txt/ssimdb/atfdb/tmsg.md)|FDb.tmsg (Tpool)|zd_out_tmsg (Llist)|
 ||||FComptest.zd_tmsg (Llist)|
 
@@ -92,7 +94,10 @@ All allocations are done through global `atf_comp::_db` [atf_comp.FDb](#atf_comp
 |atf_comp.FComptest.zd_tmsg|[atf_comp.FTmsg](/txt/exe/atf_comp/internals.md#atf_comp-ftmsg)|[Llist](/txt/exe/amc/reftypes.md#llist)|||
 |atf_comp.FComptest.need_write|bool|[Val](/txt/exe/amc/reftypes.md#val)||Component test modified during runtime, needs to be written back|
 |atf_comp.FComptest.err|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)||Error string|
-|atf_comp.FComptest.filter_command|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|atf_comp.FComptest.c_tifilt|[atf_comp.FTifilt](/txt/exe/atf_comp/internals.md#atf_comp-ftifilt)|[Ptr](/txt/exe/amc/reftypes.md#ptr)|||
+|atf_comp.FComptest.file_run|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)||Path to run script|
+|atf_comp.FComptest.script|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)||Run script content|
+|atf_comp.FComptest.R|[algo_lib.Replscope](/txt/lib/algo_lib/README.md#algo_lib-replscope)|[Val](/txt/exe/amc/reftypes.md#val)||Variable substitution scope|
 |atf_comp.FComptest.c_covdir|[atf_comp.FCovdir](/txt/exe/atf_comp/internals.md#atf_comp-fcovdir)|[Ptr](/txt/exe/amc/reftypes.md#ptr)|||
 |atf_comp.FComptest.dir|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
 
@@ -131,7 +136,10 @@ struct FComptest { // atf_comp.FComptest
     atf_comp::FTmsg*       zd_tmsg_tail;           // pointer to last element
     bool                   need_write;             //   false  Component test modified during runtime, needs to be written back
     algo::cstring          err;                    // Error string
-    algo::cstring          filter_command;         //
+    atf_comp::FTifilt*     c_tifilt;               // optional pointer
+    algo::cstring          file_run;               // Path to run script
+    algo::cstring          script;                 // Run script content
+    algo_lib::Replscope    R;                      // Variable substitution scope
     atf_comp::FCovdir*     c_covdir;               // optional pointer
     algo::cstring          dir;                    //
     atf_comp::FComptest*   ind_comptest_next;      // hash next
@@ -147,6 +155,8 @@ struct FComptest { // atf_comp.FComptest
     // x-reference on atf_comp.FComptest.c_tfilt prevents copy
     // value field atf_comp.FComptest.thook is not copiable
     // reftype Llist of atf_comp.FComptest.zd_tmsg prohibits copy
+    // x-reference on atf_comp.FComptest.c_tifilt prevents copy
+    // value field atf_comp.FComptest.R is not copiable
     // func:atf_comp.FComptest..AssignOp
     atf_comp::FComptest& operator =(const atf_comp::FComptest &rhs) = delete;
     // value field atf_comp.FComptest.bash is not copiable
@@ -154,6 +164,8 @@ struct FComptest { // atf_comp.FComptest
     // x-reference on atf_comp.FComptest.c_tfilt prevents copy
     // value field atf_comp.FComptest.thook is not copiable
     // reftype Llist of atf_comp.FComptest.zd_tmsg prohibits copy
+    // x-reference on atf_comp.FComptest.c_tifilt prevents copy
+    // value field atf_comp.FComptest.R is not copiable
     // func:atf_comp.FComptest..CopyCtor
     FComptest(const atf_comp::FComptest &rhs) = delete;
 private:
@@ -225,6 +237,8 @@ private:
 |atf_comp.FDb.nchange|i32|[Val](/txt/exe/amc/reftypes.md#val)|||
 |atf_comp.FDb.zd_out_tfilt|[atf_comp.FTfilt](/txt/exe/atf_comp/internals.md#atf_comp-ftfilt)|[Llist](/txt/exe/amc/reftypes.md#llist)|||
 |atf_comp.FDb.zd_out_targs|[atf_comp.FTargs](/txt/exe/atf_comp/internals.md#atf_comp-ftargs)|[Llist](/txt/exe/amc/reftypes.md#llist)|||
+|atf_comp.FDb.tifilt|[atf_comp.FTifilt](/txt/exe/atf_comp/internals.md#atf_comp-ftifilt)|[Tpool](/txt/exe/amc/reftypes.md#tpool)|||
+|atf_comp.FDb.zd_out_tifilt|[atf_comp.FTifilt](/txt/exe/atf_comp/internals.md#atf_comp-ftifilt)|[Llist](/txt/exe/amc/reftypes.md#llist)|||
 |atf_comp.FDb.covdir|[atf_comp.FCovdir](/txt/exe/atf_comp/internals.md#atf_comp-fcovdir)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
 |atf_comp.FDb.zd_covdir_free|[atf_comp.FCovdir](/txt/exe/atf_comp/internals.md#atf_comp-fcovdir)|[Llist](/txt/exe/amc/reftypes.md#llist)|||
 |atf_comp.FDb.ncore_used|i32|[Val](/txt/exe/amc/reftypes.md#val)||Number of cores 'used' by running child tests|
@@ -272,6 +286,11 @@ struct FDb { // atf_comp.FDb: In-memory database for atf_comp
     atf_comp::FTargs*       zd_out_targs_head;            // zero-terminated doubly linked list
     i32                     zd_out_targs_n;               // zero-terminated doubly linked list
     atf_comp::FTargs*       zd_out_targs_tail;            // pointer to last element
+    u64                     tifilt_blocksize;             // # bytes per block
+    atf_comp::FTifilt*      tifilt_free;                  //
+    atf_comp::FTifilt*      zd_out_tifilt_head;           // zero-terminated doubly linked list
+    i32                     zd_out_tifilt_n;              // zero-terminated doubly linked list
+    atf_comp::FTifilt*      zd_out_tifilt_tail;           // pointer to last element
     atf_comp::FCovdir*      covdir_lary[32];              // level array
     i32                     covdir_n;                     // number of elements in array
     atf_comp::FCovdir*      zd_covdir_free_head;          // zero-terminated doubly linked list
@@ -358,6 +377,43 @@ private:
     friend atf_comp::FTfilt&    tfilt_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend atf_comp::FTfilt*    tfilt_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 tfilt_Delete(atf_comp::FTfilt &row) __attribute__((nothrow));
+};
+```
+
+#### atf_comp.FTifilt - Input filter for component test
+<a href="#atf_comp-ftifilt"></a>
+
+#### atf_comp.FTifilt Fields
+<a href="#atf_comp-ftifilt-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|atf_comp.FTifilt.base|[atfdb.Tifilt](/txt/ssimdb/atfdb/tifilt.md)|[Base](/txt/ssimdb/atfdb/tifilt.md)|||
+
+#### Struct FTifilt
+<a href="#struct-ftifilt"></a>
+*Note:* field ``atf_comp.FTifilt.base`` has reftype ``base`` so the fields of [atfdb.Tifilt](/txt/ssimdb/atfdb/tifilt.md) above are included into the resulting struct.
+
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/atf_comp_gen.h](/include/gen/atf_comp_gen.h)
+```
+struct FTifilt { // atf_comp.FTifilt
+    atf_comp::FTifilt*   tifilt_next;          // Pointer to next free element int tpool
+    atf_comp::FTifilt*   zd_out_tifilt_next;   // zslist link; -1 means not-in-list
+    atf_comp::FTifilt*   zd_out_tifilt_prev;   // previous element
+    algo::Smallstr50     comptest;             //
+    algo::cstring        ifilter;              // Command to preprocess input
+    algo::Comment        comment;              //
+    // func:atf_comp.FTifilt..AssignOp
+    inline atf_comp::FTifilt& operator =(const atf_comp::FTifilt &rhs) = delete;
+    // func:atf_comp.FTifilt..CopyCtor
+    inline               FTifilt(const atf_comp::FTifilt &rhs) = delete;
+private:
+    // func:atf_comp.FTifilt..Ctor
+    inline               FTifilt() __attribute__((nothrow));
+    // func:atf_comp.FTifilt..Dtor
+    inline               ~FTifilt() __attribute__((nothrow));
+    friend atf_comp::FTifilt&   tifilt_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend atf_comp::FTifilt*   tifilt_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 tifilt_Delete(atf_comp::FTifilt &row) __attribute__((nothrow));
 };
 ```
 

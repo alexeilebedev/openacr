@@ -113,7 +113,7 @@ void amc::tfunc_Bitset_GetBit() {
     Ins(&R, getbit.body, "u64 elem_idx = bit_idx >> $idxshift;");
     Ins(&R, getbit.body, "u64 shift = bit_idx & $shiftmask;");
     Ins(&R, getbit.body, "bool ret = false;");
-    Ins(&R, getbit.body, "u64 lim = $name_N($parname);");
+    Ins(&R, getbit.body, "u64 lim = $name_N($pararg);");
     Ins(&R, getbit.body, "if (elem_idx < lim) {");
     Ins(&R, getbit.body, "    $Cpptype &elem = $name_qFind($pararg, elem_idx); // fetch element");
     Ins(&R, getbit.body, "    ret = (elem >> shift) & 1;                 // extract bit");
@@ -184,7 +184,7 @@ void amc::tfunc_Bitset_ClearBit() {
     Ins(&R, clearbit.proto, "$name_ClearBit($Parent, u32 bit_idx)",false);
     Ins(&R, clearbit.body, "u64 elem_idx = bit_idx >> $idxshift;");
     Ins(&R, clearbit.body, "u64 shift = bit_idx & $shiftmask;");
-    Ins(&R, clearbit.body, "u64 lim = $name_N($parname);");
+    Ins(&R, clearbit.body, "u64 lim = $name_N($pararg);");
     Ins(&R, clearbit.body, "if (elem_idx < lim) {");
     Ins(&R, clearbit.body, "    $Cpptype &elem = $name_qFind($pararg, elem_idx); // fetch");
     Ins(&R, clearbit.body, "    elem = elem & ~($Cpptype(1) << shift); // clear bit");
@@ -213,7 +213,7 @@ void amc::tfunc_Bitset_SetBit() {
     Ins(&R, setbit.proto, "$name_SetBit($Parent, u32 bit_idx)",false);
     Ins(&R, setbit.body, "u64 elem_idx = bit_idx >> $idxshift;");
     Ins(&R, setbit.body, "u64 shift = bit_idx & $shiftmask;");
-    Ins(&R, setbit.body, "u64 lim = $name_N($parname);");
+    Ins(&R, setbit.body, "u64 lim = $name_N($pararg);");
     Ins(&R, setbit.body, "if (elem_idx < lim) {");
     Ins(&R, setbit.body, "    $Cpptype &elem = $name_qFind($pararg, elem_idx); // fetch");
     Ins(&R, setbit.body, "    elem = elem | ($Cpptype(1) << shift); // set bit");
@@ -265,28 +265,38 @@ void amc::tfunc_Bitset_ClearBitsAll() {
 
 void amc::tfunc_Bitset_ClearBits() {
     algo_lib::Replscope &R        = amc::_db.genctx.R;
-    amc::FFunc &qclearbits = amc::CreateCurFunc();
-    Ins(&R, qclearbits.ret  , "void",false);
-    Ins(&R, qclearbits.proto, "$name_ClearBits($Parent, $Partype &rhs)",false);
-    Ins(&R, qclearbits.body, "u64 n = u64_Min($name_N($pararg), $name_N(rhs));");
-    Ins(&R, qclearbits.body, "for (u64 i = 0; i < n; i++) {");
-    Ins(&R, qclearbits.body, "    $name_qFind($pararg, i) &= ~$name_qFind(rhs, i);");
-    Ins(&R, qclearbits.body, "}");
+    amc::FField         &field    = *amc::_db.genctx.p_field;
+    if (GlobalQ(*field.p_ctype)) {
+        // skip for global - no second instance to compare against
+    } else {
+        amc::FFunc &qclearbits = amc::CreateCurFunc();
+        Ins(&R, qclearbits.ret  , "void",false);
+        Ins(&R, qclearbits.proto, "$name_ClearBits($Parent, $Partype &rhs)",false);
+        Ins(&R, qclearbits.body, "u64 n = u64_Min($name_N($pararg), $name_N(rhs));");
+        Ins(&R, qclearbits.body, "for (u64 i = 0; i < n; i++) {");
+        Ins(&R, qclearbits.body, "    $name_qFind($pararg, i) &= ~$name_qFind(rhs, i);");
+        Ins(&R, qclearbits.body, "}");
+    }
 }
 
 // -----------------------------------------------------------------------------
 
 void amc::tfunc_Bitset_OrBits() {
     algo_lib::Replscope &R        = amc::_db.genctx.R;
-    amc::FFunc &qsetbits = amc::CreateCurFunc();
-    Ins(&R, qsetbits.comment, "Set PARENT to union of two bitsets.");
-    Ins(&R, qsetbits.comment, "(This function is not named Set.. to avoid triple entendre).");
-    Ins(&R, qsetbits.ret  , "void",false);
-    Ins(&R, qsetbits.proto, "$name_OrBits($Parent, $Partype &rhs)",false);
-    Ins(&R, qsetbits.body, "u64 n = u64_Min($name_N($pararg), $name_N(rhs));");
-    Ins(&R, qsetbits.body, "for (u64 i = 0; i < n; i++) {");
-    Ins(&R, qsetbits.body, "    $name_qFind($pararg, i) |= $name_qFind(rhs, i);");
-    Ins(&R, qsetbits.body, "}");
+    amc::FField         &field    = *amc::_db.genctx.p_field;
+    if (GlobalQ(*field.p_ctype)) {
+        // skip for global - no second instance to compare against
+    } else {
+        amc::FFunc &qsetbits = amc::CreateCurFunc();
+        Ins(&R, qsetbits.comment, "Set PARENT to union of two bitsets.");
+        Ins(&R, qsetbits.comment, "(This function is not named Set.. to avoid triple entendre).");
+        Ins(&R, qsetbits.ret  , "void",false);
+        Ins(&R, qsetbits.proto, "$name_OrBits($Parent, $Partype &rhs)",false);
+        Ins(&R, qsetbits.body, "u64 n = u64_Min($name_N($pararg), $name_N(rhs));");
+        Ins(&R, qsetbits.body, "for (u64 i = 0; i < n; i++) {");
+        Ins(&R, qsetbits.body, "    $name_qFind($pararg, i) |= $name_qFind(rhs, i);");
+        Ins(&R, qsetbits.body, "}");
+    }
 }
 
 // -----------------------------------------------------------------------------
@@ -325,7 +335,7 @@ void amc::tfunc_Bitset_AllocBit() {
         Ins(&R, allocbit.comment, "New values are initialized with zero.");
         Ins(&R, allocbit.ret  , "void",false);
         Ins(&R, allocbit.proto, "$name_AllocBit($Parent, u32 bit_idx)",false);
-        Ins(&R, allocbit.body, "$name_ExpandBits($parname, bit_idx + 1);");
+        Ins(&R, allocbit.body, "$name_ExpandBits($pararg, bit_idx + 1);");
     }
 }
 

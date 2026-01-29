@@ -178,7 +178,9 @@ bool amc::PtrQ(amc::FField &field) {
 // make sure the specified type is forward-declared
 // in given namespace.
 void amc::AddFwdDecl(amc::FNs &ns, amc::FCtype &ctype) {
-    if (ns_Get(ctype) != "") {
+    // skip extern types that are not structs (e.g. typedefs like algo.strptr)
+    bool dominated = ctype.c_cextern && !ctype.c_cextern->isstruct;
+    if (ns_Get(ctype) != "" && !dominated) {
         amc::ind_fwddecl_GetOrCreate(tempstr()<<ns.ns<<"."<<ctype.ctype);
         amc::c_cppincl_ScanInsertMaybe(ns, *ctype.p_ns);
     }
@@ -787,7 +789,15 @@ tempstr amc::LengthExpr(amc::FCtype &ctype, strptr name) {
     tempstr ret;
     ret << "i32(";
     if (ctype.c_lenfld) {
+        vrfy(ctype.c_lenfld->scale > 0
+             , tempstr() << "amc.bad_scale"
+             << Keyval("lenfld", ctype.c_lenfld->field)
+             << Keyval("scale", ctype.c_lenfld->scale)
+             << Keyval("comment", "scale must be > 0"));
         ret << FieldvalExpr(&ctype, *ctype.c_lenfld->p_field, name);
+        if (ctype.c_lenfld->scale != 1) {
+            ret << " * " << ctype.c_lenfld->scale;
+        }
         if (ctype.c_lenfld->extra > 0) {
             ret << " - " << ctype.c_lenfld->extra;
         } else if (ctype.c_lenfld->extra < 0) {

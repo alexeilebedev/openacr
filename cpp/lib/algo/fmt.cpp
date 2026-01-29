@@ -1688,6 +1688,74 @@ bool algo::Sha1sig_ReadStrptrMaybe(algo::Sha1sig &sha1sig, algo::strptr str) {
 
 // -----------------------------------------------------------------------------
 
+// Return length of valid UTF-8 sequence starting at position POS in string S.
+// Returns 0 if the byte at POS is not a valid UTF-8 lead byte or if the
+// sequence is incomplete/malformed.
+// This function validates:
+// - Correct lead byte ranges (0xC2-0xDF for 2-byte, 0xE0-0xEF for 3-byte, 0xF0-0xF4 for 4-byte)
+// - Continuation bytes have correct format (10xxxxxx)
+// - No overlong encodings
+// - No UTF-16 surrogate halves
+// - No codepoints > U+10FFFF
+int algo::Utf8SeqLen(strptr s, int pos) {
+    if (pos >= s.n_elems) {
+        return 0;
+    }
+    u8 c = s[pos];
+    int seq_len = 0;
+    int remaining = s.n_elems - pos;
+
+    if (c < 0x80) {
+        // ASCII - but we return 0 to indicate "not a multibyte sequence"
+        return 0;
+    } else if (c >= 0xC2 && c <= 0xDF) {
+        // 2-byte sequence
+        seq_len = 2;
+    } else if (c >= 0xE0 && c <= 0xEF) {
+        // 3-byte sequence
+        seq_len = 3;
+    } else if (c >= 0xF0 && c <= 0xF4) {
+        // 4-byte sequence
+        seq_len = 4;
+    } else {
+        // Invalid lead byte (0x80-0xBF, 0xC0-0xC1, 0xF5-0xFF)
+        return 0;
+    }
+
+    // Check we have enough bytes
+    if (remaining < seq_len) {
+        return 0;
+    }
+
+    // Validate continuation bytes (must be 10xxxxxx)
+    for (int j = 1; j < seq_len; ++j) {
+        if ((s[pos + j] & 0xC0) != 0x80) {
+            return 0;
+        }
+    }
+
+    // Check for overlong encodings and invalid codepoints
+    if (seq_len == 3) {
+        if (c == 0xE0 && (s[pos + 1] & 0xE0) == 0x80) {
+            return 0; // Overlong 3-byte sequence
+        }
+        if (c == 0xED && (s[pos + 1] & 0xE0) == 0xA0) {
+            return 0; // UTF-16 surrogate halves
+        }
+    } else if (seq_len == 4) {
+        if (c == 0xF0 && (s[pos + 1] & 0xF0) == 0x80) {
+            return 0; // Overlong 4-byte sequence
+        }
+        if (c == 0xF4 && (s[pos + 1] & 0xF0) > 0x80) {
+            return 0; // Codepoint > U+10FFFF
+        }
+    }
+
+    return seq_len;
+}
+
+// -----------------------------------------------------------------------------
+
 // Write character C into buffer BUF, using C++ character escapement rules
 // BUF must have room for at least 4 extra characters
 // Return number of characters written
@@ -1747,8 +1815,17 @@ void algo::strptr_PrintCppQuoted(algo::strptr str, algo::cstring &out, char quot
     int src_n=str.n_elems;// source count of chars
     int n=out.ch_n;// destination count of chars
     buf[n++] = quote_char;// opening quote
-    for (int i=0; i<src_n; i++) {
-        n += _PrintQuotedChar(srcbuf[i],buf+n,quote_char);
+    for (int i=0; i<src_n;) {
+        int seq_len = Utf8SeqLen(str, i);
+        if (seq_len > 0) {
+            // copy entire multi-byte UTF-8 sequence verbatim
+            memcpy(buf + n, srcbuf + i, seq_len);
+            n += seq_len;
+            i += seq_len;
+        } else {
+            n += _PrintQuotedChar(srcbuf[i], buf + n, quote_char);
+            ++i;
+        }
     }
     buf[n++] = quote_char;// closing quote
     out.ch_n = n;

@@ -14206,6 +14206,7 @@ inline  amc::FJstype::~FJstype() {
 // Set all fields to initial values.
 inline void amc::FLenfld_Init(amc::FLenfld& lenfld) {
     lenfld.extra = i32(0);
+    lenfld.scale = i32(1);
     lenfld.p_field = NULL;
 }
 

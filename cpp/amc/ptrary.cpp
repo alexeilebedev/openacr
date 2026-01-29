@@ -310,8 +310,8 @@ void amc::tfunc_Ptrary_RemoveFirst() {
         Ins(&R, func.body, "int n = $parname.$name_n;");
         Ins(&R, func.body, "if (n > 0) {");
         Ins(&R, func.body, "    row = $parname.$name_elems[0];");
-        Ins(&R, func.body, "    row->$xfname_idx=-1;");
         Ins(&R, func.body, "    $parname.$name_elems[n-1]->$xfname_idx=0;");
+        Ins(&R, func.body, "    row->$xfname_idx=-1;");
         Ins(&R, func.body, "    $parname.$name_elems[0]=$parname.$name_elems[n-1];");
         Ins(&R, func.body, "    $parname.$name_n = n-1;");
         Ins(&R, func.body, "}");

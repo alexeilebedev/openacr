@@ -506,6 +506,7 @@ extern const char *  dmmeta_Ssimfile_ssimfile_atfdb_test_gsymbol_char;     // at
 extern const char *  dmmeta_Ssimfile_ssimfile_atfdb_test_gsymbol_pkey;     // atfdb.test_gsymbol_pkey      fconst:dmmeta.Ssimfile.ssimfile/atfdb.test_gsymbol_pkey
 extern const char *  dmmeta_Ssimfile_ssimfile_atfdb_test_gsymbol_strptr;   // atfdb.test_gsymbol_strptr    fconst:dmmeta.Ssimfile.ssimfile/atfdb.test_gsymbol_strptr
 extern const char *  dmmeta_Ssimfile_ssimfile_atfdb_tfilt;                 // atfdb.tfilt                  fconst:dmmeta.Ssimfile.ssimfile/atfdb.tfilt
+extern const char *  dmmeta_Ssimfile_ssimfile_atfdb_tifilt;                // atfdb.tifilt                 fconst:dmmeta.Ssimfile.ssimfile/atfdb.tifilt
 extern const char *  dmmeta_Ssimfile_ssimfile_atfdb_tmsg;                  // atfdb.tmsg                   fconst:dmmeta.Ssimfile.ssimfile/atfdb.tmsg
 extern const char *  dmmeta_Ssimfile_ssimfile_atfdb_unittest;              // atfdb.unittest               fconst:dmmeta.Ssimfile.ssimfile/atfdb.unittest
 extern const char *  dmmeta_Ssimfile_ssimfile_atfdb_var;                   // atfdb.var                    fconst:dmmeta.Ssimfile.ssimfile/atfdb.var
@@ -3143,10 +3144,11 @@ void                 KafkaTypeKind_Print(dmmeta::KafkaTypeKind& row, algo::cstri
 struct Lenfld { // dmmeta.Lenfld: Specify which gives length of varlen portion in bytes
     algo::Smallstr100   field;   // Name of length field
     i32                 extra;   //   0  Extra #bytes to add
+    i32                 scale;   //   1  Multiplier for length field value
     // func:dmmeta.Lenfld..Ctor
     inline               Lenfld() __attribute__((nothrow));
     // func:dmmeta.Lenfld..FieldwiseCtor
-    explicit inline               Lenfld(const algo::strptr& in_field, i32 in_extra) __attribute__((nothrow));
+    explicit inline               Lenfld(const algo::strptr& in_field, i32 in_extra, i32 in_scale) __attribute__((nothrow));
 };
 
 // func:dmmeta.Lenfld.ctype.Get

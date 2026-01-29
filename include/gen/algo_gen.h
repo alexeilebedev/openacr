@@ -6375,8 +6375,6 @@ struct RnullStr100 { // algo.RnullStr100: fixed-length string padded on the righ
     inline               RnullStr100(const algo::strptr &rhs) __attribute__((nothrow));
     // func:algo.RnullStr100.ch.Cast
     inline               operator algo::strptr() const __attribute__((nothrow));
-    // func:algo.RnullStr100..EqOpAryptr
-    inline bool          operator ==(const algo::aryptr<char> &rhs) const __attribute__((nothrow));
     // func:algo.RnullStr100..AssignOp
     inline algo::RnullStr100& operator =(const algo::RnullStr100 &rhs) __attribute__((nothrow));
     // func:algo.RnullStr100..Ctor
@@ -7074,8 +7072,6 @@ struct RnullStr16 { // algo.RnullStr16: fixed-length string padded on the right 
     inline               RnullStr16(const algo::strptr &rhs) __attribute__((nothrow));
     // func:algo.RnullStr16.ch.Cast
     inline               operator algo::strptr() const __attribute__((nothrow));
-    // func:algo.RnullStr16..EqOpAryptr
-    inline bool          operator ==(const algo::aryptr<char> &rhs) const __attribute__((nothrow));
     // func:algo.RnullStr16..AssignOp
     inline algo::RnullStr16& operator =(const algo::RnullStr16 &rhs) __attribute__((nothrow));
     // func:algo.RnullStr16..Ctor
@@ -7299,8 +7295,6 @@ struct RnullStr19 { // algo.RnullStr19: fixed-length string padded on the right 
     inline               RnullStr19(const algo::strptr &rhs) __attribute__((nothrow));
     // func:algo.RnullStr19.ch.Cast
     inline               operator algo::strptr() const __attribute__((nothrow));
-    // func:algo.RnullStr19..EqOpAryptr
-    inline bool          operator ==(const algo::aryptr<char> &rhs) const __attribute__((nothrow));
     // func:algo.RnullStr19..AssignOp
     inline algo::RnullStr19& operator =(const algo::RnullStr19 &rhs) __attribute__((nothrow));
     // func:algo.RnullStr19..Ctor
@@ -7524,8 +7518,6 @@ struct RnullStr21 { // algo.RnullStr21: fixed-length string padded on the right 
     inline               RnullStr21(const algo::strptr &rhs) __attribute__((nothrow));
     // func:algo.RnullStr21.ch.Cast
     inline               operator algo::strptr() const __attribute__((nothrow));
-    // func:algo.RnullStr21..EqOpAryptr
-    inline bool          operator ==(const algo::aryptr<char> &rhs) const __attribute__((nothrow));
     // func:algo.RnullStr21..AssignOp
     inline algo::RnullStr21& operator =(const algo::RnullStr21 &rhs) __attribute__((nothrow));
     // func:algo.RnullStr21..Ctor
@@ -7907,8 +7899,6 @@ struct RnullStr30 { // algo.RnullStr30: fixed-length string padded on the right 
     inline               RnullStr30(const algo::strptr &rhs) __attribute__((nothrow));
     // func:algo.RnullStr30.ch.Cast
     inline               operator algo::strptr() const __attribute__((nothrow));
-    // func:algo.RnullStr30..EqOpAryptr
-    inline bool          operator ==(const algo::aryptr<char> &rhs) const __attribute__((nothrow));
     // func:algo.RnullStr30..AssignOp
     inline algo::RnullStr30& operator =(const algo::RnullStr30 &rhs) __attribute__((nothrow));
     // func:algo.RnullStr30..Ctor
@@ -8288,8 +8278,6 @@ struct RnullStr4 { // algo.RnullStr4: fixed-length string padded on the right wi
     inline               RnullStr4(const algo::strptr &rhs) __attribute__((nothrow));
     // func:algo.RnullStr4.ch.Cast
     inline               operator algo::strptr() const __attribute__((nothrow));
-    // func:algo.RnullStr4..EqOpAryptr
-    inline bool          operator ==(const algo::aryptr<char> &rhs) const __attribute__((nothrow));
     // func:algo.RnullStr4..AssignOp
     inline algo::RnullStr4& operator =(const algo::RnullStr4 &rhs) __attribute__((nothrow));
     // func:algo.RnullStr4..Ctor
@@ -8513,8 +8501,6 @@ struct RnullStr43 { // algo.RnullStr43: fixed-length string padded on the right 
     inline               RnullStr43(const algo::strptr &rhs) __attribute__((nothrow));
     // func:algo.RnullStr43.ch.Cast
     inline               operator algo::strptr() const __attribute__((nothrow));
-    // func:algo.RnullStr43..EqOpAryptr
-    inline bool          operator ==(const algo::aryptr<char> &rhs) const __attribute__((nothrow));
     // func:algo.RnullStr43..AssignOp
     inline algo::RnullStr43& operator =(const algo::RnullStr43 &rhs) __attribute__((nothrow));
     // func:algo.RnullStr43..Ctor
@@ -8580,8 +8566,6 @@ struct RnullStr44 { // algo.RnullStr44: fixed-length string padded on the right 
     inline               RnullStr44(const algo::strptr &rhs) __attribute__((nothrow));
     // func:algo.RnullStr44.ch.Cast
     inline               operator algo::strptr() const __attribute__((nothrow));
-    // func:algo.RnullStr44..EqOpAryptr
-    inline bool          operator ==(const algo::aryptr<char> &rhs) const __attribute__((nothrow));
     // func:algo.RnullStr44..AssignOp
     inline algo::RnullStr44& operator =(const algo::RnullStr44 &rhs) __attribute__((nothrow));
     // func:algo.RnullStr44..Ctor
@@ -8647,8 +8631,6 @@ struct RnullStr48 { // algo.RnullStr48: fixed-length string padded on the right 
     inline               RnullStr48(const algo::strptr &rhs) __attribute__((nothrow));
     // func:algo.RnullStr48.ch.Cast
     inline               operator algo::strptr() const __attribute__((nothrow));
-    // func:algo.RnullStr48..EqOpAryptr
-    inline bool          operator ==(const algo::aryptr<char> &rhs) const __attribute__((nothrow));
     // func:algo.RnullStr48..AssignOp
     inline algo::RnullStr48& operator =(const algo::RnullStr48 &rhs) __attribute__((nothrow));
     // func:algo.RnullStr48..Ctor
@@ -8714,8 +8696,6 @@ struct RnullStr5 { // algo.RnullStr5: fixed-length string padded on the right wi
     inline               RnullStr5(const algo::strptr &rhs) __attribute__((nothrow));
     // func:algo.RnullStr5.ch.Cast
     inline               operator algo::strptr() const __attribute__((nothrow));
-    // func:algo.RnullStr5..EqOpAryptr
-    inline bool          operator ==(const algo::aryptr<char> &rhs) const __attribute__((nothrow));
     // func:algo.RnullStr5..AssignOp
     inline algo::RnullStr5& operator =(const algo::RnullStr5 &rhs) __attribute__((nothrow));
     // func:algo.RnullStr5..Ctor
@@ -8781,8 +8761,6 @@ struct RnullStr50 { // algo.RnullStr50: fixed-length string padded on the right 
     inline               RnullStr50(const algo::strptr &rhs) __attribute__((nothrow));
     // func:algo.RnullStr50.ch.Cast
     inline               operator algo::strptr() const __attribute__((nothrow));
-    // func:algo.RnullStr50..EqOpAryptr
-    inline bool          operator ==(const algo::aryptr<char> &rhs) const __attribute__((nothrow));
     // func:algo.RnullStr50..AssignOp
     inline algo::RnullStr50& operator =(const algo::RnullStr50 &rhs) __attribute__((nothrow));
     // func:algo.RnullStr50..Ctor
@@ -8927,8 +8905,6 @@ struct RnullStr55 { // algo.RnullStr55: fixed-length string padded on the right 
     inline               RnullStr55(const algo::strptr &rhs) __attribute__((nothrow));
     // func:algo.RnullStr55.ch.Cast
     inline               operator algo::strptr() const __attribute__((nothrow));
-    // func:algo.RnullStr55..EqOpAryptr
-    inline bool          operator ==(const algo::aryptr<char> &rhs) const __attribute__((nothrow));
     // func:algo.RnullStr55..AssignOp
     inline algo::RnullStr55& operator =(const algo::RnullStr55 &rhs) __attribute__((nothrow));
     // func:algo.RnullStr55..Ctor
@@ -9231,8 +9207,6 @@ struct RnullStr66 { // algo.RnullStr66: fixed-length string padded on the right 
     inline               RnullStr66(const algo::strptr &rhs) __attribute__((nothrow));
     // func:algo.RnullStr66.ch.Cast
     inline               operator algo::strptr() const __attribute__((nothrow));
-    // func:algo.RnullStr66..EqOpAryptr
-    inline bool          operator ==(const algo::aryptr<char> &rhs) const __attribute__((nothrow));
     // func:algo.RnullStr66..AssignOp
     inline algo::RnullStr66& operator =(const algo::RnullStr66 &rhs) __attribute__((nothrow));
     // func:algo.RnullStr66..Ctor
@@ -9463,8 +9437,6 @@ struct RnullStr8 { // algo.RnullStr8: fixed-length string padded on the right wi
     inline               RnullStr8(const algo::strptr &rhs) __attribute__((nothrow));
     // func:algo.RnullStr8.ch.Cast
     inline               operator algo::strptr() const __attribute__((nothrow));
-    // func:algo.RnullStr8..EqOpAryptr
-    inline bool          operator ==(const algo::aryptr<char> &rhs) const __attribute__((nothrow));
     // func:algo.RnullStr8..AssignOp
     inline algo::RnullStr8& operator =(const algo::RnullStr8 &rhs) __attribute__((nothrow));
     // func:algo.RnullStr8..Ctor
@@ -9530,8 +9502,6 @@ struct RnullStr80 { // algo.RnullStr80: fixed-length string padded on the right 
     inline               RnullStr80(const algo::strptr &rhs) __attribute__((nothrow));
     // func:algo.RnullStr80.ch.Cast
     inline               operator algo::strptr() const __attribute__((nothrow));
-    // func:algo.RnullStr80..EqOpAryptr
-    inline bool          operator ==(const algo::aryptr<char> &rhs) const __attribute__((nothrow));
     // func:algo.RnullStr80..AssignOp
     inline algo::RnullStr80& operator =(const algo::RnullStr80 &rhs) __attribute__((nothrow));
     // func:algo.RnullStr80..Ctor
@@ -10138,8 +10108,6 @@ struct RspaceStr16 { // algo.RspaceStr16: fixed-length string padded on the righ
     inline               RspaceStr16(const algo::strptr &rhs) __attribute__((nothrow));
     // func:algo.RspaceStr16.ch.Cast
     inline               operator algo::strptr() const __attribute__((nothrow));
-    // func:algo.RspaceStr16..EqOpAryptr
-    inline bool          operator ==(const algo::aryptr<char> &rhs) const __attribute__((nothrow));
     // func:algo.RspaceStr16..AssignOp
     inline algo::RspaceStr16& operator =(const algo::RspaceStr16 &rhs) __attribute__((nothrow));
     // func:algo.RspaceStr16..Ctor
@@ -10535,8 +10503,6 @@ struct RspaceStr24 { // algo.RspaceStr24: fixed-length string padded on the righ
     inline               RspaceStr24(const algo::strptr &rhs) __attribute__((nothrow));
     // func:algo.RspaceStr24.ch.Cast
     inline               operator algo::strptr() const __attribute__((nothrow));
-    // func:algo.RspaceStr24..EqOpAryptr
-    inline bool          operator ==(const algo::aryptr<char> &rhs) const __attribute__((nothrow));
     // func:algo.RspaceStr24..AssignOp
     inline algo::RspaceStr24& operator =(const algo::RspaceStr24 &rhs) __attribute__((nothrow));
     // func:algo.RspaceStr24..Ctor
@@ -10668,8 +10634,6 @@ struct RspaceStr25 { // algo.RspaceStr25: fixed-length string padded on the righ
     inline               RspaceStr25(const algo::strptr &rhs) __attribute__((nothrow));
     // func:algo.RspaceStr25.ch.Cast
     inline               operator algo::strptr() const __attribute__((nothrow));
-    // func:algo.RspaceStr25..EqOpAryptr
-    inline bool          operator ==(const algo::aryptr<char> &rhs) const __attribute__((nothrow));
     // func:algo.RspaceStr25..AssignOp
     inline algo::RspaceStr25& operator =(const algo::RspaceStr25 &rhs) __attribute__((nothrow));
     // func:algo.RspaceStr25..Ctor
@@ -11065,8 +11029,6 @@ struct RspaceStr40 { // algo.RspaceStr40: fixed-length string padded on the righ
     inline               RspaceStr40(const algo::strptr &rhs) __attribute__((nothrow));
     // func:algo.RspaceStr40.ch.Cast
     inline               operator algo::strptr() const __attribute__((nothrow));
-    // func:algo.RspaceStr40..EqOpAryptr
-    inline bool          operator ==(const algo::aryptr<char> &rhs) const __attribute__((nothrow));
     // func:algo.RspaceStr40..AssignOp
     inline algo::RspaceStr40& operator =(const algo::RspaceStr40 &rhs) __attribute__((nothrow));
     // func:algo.RspaceStr40..Ctor
@@ -11534,8 +11496,6 @@ struct RspaceStr8 { // algo.RspaceStr8: fixed-length string padded on the right 
     inline               RspaceStr8(const algo::strptr &rhs) __attribute__((nothrow));
     // func:algo.RspaceStr8.ch.Cast
     inline               operator algo::strptr() const __attribute__((nothrow));
-    // func:algo.RspaceStr8..EqOpAryptr
-    inline bool          operator ==(const algo::aryptr<char> &rhs) const __attribute__((nothrow));
     // func:algo.RspaceStr8..AssignOp
     inline algo::RspaceStr8& operator =(const algo::RspaceStr8 &rhs) __attribute__((nothrow));
     // func:algo.RspaceStr8..Ctor
@@ -12443,8 +12403,6 @@ struct Smallstr255 { // algo.Smallstr255: inline string with length field
     inline               Smallstr255(const algo::strptr &rhs) __attribute__((nothrow));
     // func:algo.Smallstr255.ch.Cast
     inline               operator algo::strptr() const __attribute__((nothrow));
-    // func:algo.Smallstr255..EqOpAryptr
-    inline bool          operator ==(const algo::aryptr<char> &rhs) const __attribute__((nothrow));
     // func:algo.Smallstr255..AssignOp
     inline algo::Smallstr255& operator =(const algo::Smallstr255 &rhs) __attribute__((nothrow));
     // func:algo.Smallstr255..Ctor

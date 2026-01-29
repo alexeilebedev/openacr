@@ -132,6 +132,9 @@ void amc::tfunc_Opt_ReadStrptrMaybe() {
             } else if (lenfld.extra < 0) {
                 lenassign << lenfld.extra;
             }
+            if (lenfld.scale != 1) {
+                lenassign = tempstr() << "(" << lenassign << ") / " << lenfld.scale;
+            }
             Set(R, "$assignlen", AssignExpr(*lenfld.p_field, "*ctype", lenassign, true));
             Ins(&R, doread.body, "if (algo::ByteAry* varlenbuf_save = algo_lib::_db.varlenbuf) {");
             Ins(&R, doread.body, "    int len = sizeof($Ctype);");

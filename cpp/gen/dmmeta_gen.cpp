@@ -255,6 +255,7 @@ const char *dmmeta_Ssimfile_ssimfile_atfdb_test_gsymbol_char     = "atfdb.test_g
 const char *dmmeta_Ssimfile_ssimfile_atfdb_test_gsymbol_pkey     = "atfdb.test_gsymbol_pkey";
 const char *dmmeta_Ssimfile_ssimfile_atfdb_test_gsymbol_strptr   = "atfdb.test_gsymbol_strptr";
 const char *dmmeta_Ssimfile_ssimfile_atfdb_tfilt                 = "atfdb.tfilt";
+const char *dmmeta_Ssimfile_ssimfile_atfdb_tifilt                = "atfdb.tifilt";
 const char *dmmeta_Ssimfile_ssimfile_atfdb_tmsg                  = "atfdb.tmsg";
 const char *dmmeta_Ssimfile_ssimfile_atfdb_unittest              = "atfdb.unittest";
 const char *dmmeta_Ssimfile_ssimfile_atfdb_var                   = "atfdb.var";
@@ -7047,6 +7048,9 @@ bool dmmeta::Lenfld_ReadFieldMaybe(dmmeta::Lenfld& parent, algo::strptr field, a
         case dmmeta_FieldId_ctype: {
             retval = false;
         } break;
+        case dmmeta_FieldId_scale: {
+            retval = i32_ReadStrptrMaybe(parent.scale, strval);
+        } break;
         default: {
             retval = false;
             algo_lib::AppendErrtext("comment", "unrecognized attr");
@@ -7082,6 +7086,9 @@ void dmmeta::Lenfld_Print(dmmeta::Lenfld& row, algo::cstring& str) {
 
     i32_Print(row.extra, temp);
     PrintAttrSpaceReset(str,"extra", temp);
+
+    i32_Print(row.scale, temp);
+    PrintAttrSpaceReset(str,"scale", temp);
 }
 
 // --- dmmeta.Listtype..ReadFieldMaybe

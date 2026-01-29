@@ -7846,11 +7846,6 @@ inline bool algo::RnullStr100_Update(algo::RnullStr100 &lhs, algo::RnullStr100& 
     return ret;
 }
 
-// --- algo.RnullStr100..EqOpAryptr
-inline bool algo::RnullStr100::operator ==(const algo::aryptr<char> &rhs) const {
-    return algo::strptr_Eq(ch_Getary(*this), rhs);
-}
-
 // --- algo.RnullStr100..AssignOp
 inline algo::RnullStr100& algo::RnullStr100::operator =(const algo::RnullStr100 &rhs) {
     // type is plaindata, with no holes, copying as memory
@@ -9051,11 +9046,6 @@ inline bool algo::RnullStr16_Update(algo::RnullStr16 &lhs, algo::RnullStr16 rhs)
     return ret;
 }
 
-// --- algo.RnullStr16..EqOpAryptr
-inline bool algo::RnullStr16::operator ==(const algo::aryptr<char> &rhs) const {
-    return algo::strptr_Eq(ch_Getary(*this), rhs);
-}
-
 // --- algo.RnullStr16..AssignOp
 inline algo::RnullStr16& algo::RnullStr16::operator =(const algo::RnullStr16 &rhs) {
     // type is plaindata, with no holes, copying as memory
@@ -9433,11 +9423,6 @@ inline bool algo::RnullStr19_Update(algo::RnullStr19 &lhs, algo::RnullStr19& rhs
     return ret;
 }
 
-// --- algo.RnullStr19..EqOpAryptr
-inline bool algo::RnullStr19::operator ==(const algo::aryptr<char> &rhs) const {
-    return algo::strptr_Eq(ch_Getary(*this), rhs);
-}
-
 // --- algo.RnullStr19..AssignOp
 inline algo::RnullStr19& algo::RnullStr19::operator =(const algo::RnullStr19 &rhs) {
     // type is plaindata, with no holes, copying as memory
@@ -9811,11 +9796,6 @@ inline bool algo::RnullStr21_Update(algo::RnullStr21 &lhs, algo::RnullStr21& rhs
         lhs = rhs; // update
     }
     return ret;
-}
-
-// --- algo.RnullStr21..EqOpAryptr
-inline bool algo::RnullStr21::operator ==(const algo::aryptr<char> &rhs) const {
-    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RnullStr21..AssignOp
@@ -10469,11 +10449,6 @@ inline bool algo::RnullStr30_Update(algo::RnullStr30 &lhs, algo::RnullStr30 rhs)
         lhs = rhs; // update
     }
     return ret;
-}
-
-// --- algo.RnullStr30..EqOpAryptr
-inline bool algo::RnullStr30::operator ==(const algo::aryptr<char> &rhs) const {
-    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RnullStr30..AssignOp
@@ -11132,11 +11107,6 @@ inline bool algo::RnullStr4_Update(algo::RnullStr4 &lhs, algo::RnullStr4 rhs) {
     return ret;
 }
 
-// --- algo.RnullStr4..EqOpAryptr
-inline bool algo::RnullStr4::operator ==(const algo::aryptr<char> &rhs) const {
-    return algo::strptr_Eq(ch_Getary(*this), rhs);
-}
-
 // --- algo.RnullStr4..AssignOp
 inline algo::RnullStr4& algo::RnullStr4::operator =(const algo::RnullStr4 &rhs) {
     // type is plaindata, with no holes, copying as memory
@@ -11522,11 +11492,6 @@ inline bool algo::RnullStr43_Update(algo::RnullStr43 &lhs, algo::RnullStr43& rhs
     return ret;
 }
 
-// --- algo.RnullStr43..EqOpAryptr
-inline bool algo::RnullStr43::operator ==(const algo::aryptr<char> &rhs) const {
-    return algo::strptr_Eq(ch_Getary(*this), rhs);
-}
-
 // --- algo.RnullStr43..AssignOp
 inline algo::RnullStr43& algo::RnullStr43::operator =(const algo::RnullStr43 &rhs) {
     // type is plaindata, with no holes, copying as memory
@@ -11630,11 +11595,6 @@ inline bool algo::RnullStr44_Update(algo::RnullStr44 &lhs, algo::RnullStr44& rhs
         lhs = rhs; // update
     }
     return ret;
-}
-
-// --- algo.RnullStr44..EqOpAryptr
-inline bool algo::RnullStr44::operator ==(const algo::aryptr<char> &rhs) const {
-    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RnullStr44..AssignOp
@@ -11742,11 +11702,6 @@ inline bool algo::RnullStr48_Update(algo::RnullStr48 &lhs, algo::RnullStr48& rhs
     return ret;
 }
 
-// --- algo.RnullStr48..EqOpAryptr
-inline bool algo::RnullStr48::operator ==(const algo::aryptr<char> &rhs) const {
-    return algo::strptr_Eq(ch_Getary(*this), rhs);
-}
-
 // --- algo.RnullStr48..AssignOp
 inline algo::RnullStr48& algo::RnullStr48::operator =(const algo::RnullStr48 &rhs) {
     // type is plaindata, with no holes, copying as memory
@@ -11846,11 +11801,6 @@ inline bool algo::RnullStr5_Update(algo::RnullStr5 &lhs, algo::RnullStr5 rhs) {
         lhs = rhs; // update
     }
     return ret;
-}
-
-// --- algo.RnullStr5..EqOpAryptr
-inline bool algo::RnullStr5::operator ==(const algo::aryptr<char> &rhs) const {
-    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RnullStr5..AssignOp
@@ -11957,11 +11907,6 @@ inline bool algo::RnullStr50_Update(algo::RnullStr50 &lhs, algo::RnullStr50& rhs
         lhs = rhs; // update
     }
     return ret;
-}
-
-// --- algo.RnullStr50..EqOpAryptr
-inline bool algo::RnullStr50::operator ==(const algo::aryptr<char> &rhs) const {
-    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RnullStr50..AssignOp
@@ -12212,11 +12157,6 @@ inline bool algo::RnullStr55_Update(algo::RnullStr55 &lhs, algo::RnullStr55& rhs
         lhs = rhs; // update
     }
     return ret;
-}
-
-// --- algo.RnullStr55..EqOpAryptr
-inline bool algo::RnullStr55::operator ==(const algo::aryptr<char> &rhs) const {
-    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RnullStr55..AssignOp
@@ -12748,11 +12688,6 @@ inline bool algo::RnullStr66_Update(algo::RnullStr66 &lhs, algo::RnullStr66& rhs
     return ret;
 }
 
-// --- algo.RnullStr66..EqOpAryptr
-inline bool algo::RnullStr66::operator ==(const algo::aryptr<char> &rhs) const {
-    return algo::strptr_Eq(ch_Getary(*this), rhs);
-}
-
 // --- algo.RnullStr66..AssignOp
 inline algo::RnullStr66& algo::RnullStr66::operator =(const algo::RnullStr66 &rhs) {
     // type is plaindata, with no holes, copying as memory
@@ -13091,11 +13026,6 @@ inline bool algo::RnullStr8_Update(algo::RnullStr8 &lhs, algo::RnullStr8 rhs) {
     return ret;
 }
 
-// --- algo.RnullStr8..EqOpAryptr
-inline bool algo::RnullStr8::operator ==(const algo::aryptr<char> &rhs) const {
-    return algo::strptr_Eq(ch_Getary(*this), rhs);
-}
-
 // --- algo.RnullStr8..AssignOp
 inline algo::RnullStr8& algo::RnullStr8::operator =(const algo::RnullStr8 &rhs) {
     // type is plaindata, with no holes, copying as memory
@@ -13203,11 +13133,6 @@ inline bool algo::RnullStr80_Update(algo::RnullStr80 &lhs, algo::RnullStr80& rhs
         lhs = rhs; // update
     }
     return ret;
-}
-
-// --- algo.RnullStr80..EqOpAryptr
-inline bool algo::RnullStr80::operator ==(const algo::aryptr<char> &rhs) const {
-    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RnullStr80..AssignOp
@@ -14183,11 +14108,6 @@ inline bool algo::RspaceStr16_Update(algo::RspaceStr16 &lhs, algo::RspaceStr16 r
     return ret;
 }
 
-// --- algo.RspaceStr16..EqOpAryptr
-inline bool algo::RspaceStr16::operator ==(const algo::aryptr<char> &rhs) const {
-    return algo::strptr_Eq(ch_Getary(*this), rhs);
-}
-
 // --- algo.RspaceStr16..AssignOp
 inline algo::RspaceStr16& algo::RspaceStr16::operator =(const algo::RspaceStr16 &rhs) {
     // type is plaindata, with no holes, copying as memory
@@ -14798,11 +14718,6 @@ inline bool algo::RspaceStr24_Update(algo::RspaceStr24 &lhs, algo::RspaceStr24 r
     return ret;
 }
 
-// --- algo.RspaceStr24..EqOpAryptr
-inline bool algo::RspaceStr24::operator ==(const algo::aryptr<char> &rhs) const {
-    return algo::strptr_Eq(ch_Getary(*this), rhs);
-}
-
 // --- algo.RspaceStr24..AssignOp
 inline algo::RspaceStr24& algo::RspaceStr24::operator =(const algo::RspaceStr24 &rhs) {
     // type is plaindata, with no holes, copying as memory
@@ -15005,11 +14920,6 @@ inline bool algo::RspaceStr25_Update(algo::RspaceStr25 &lhs, algo::RspaceStr25 r
         lhs = rhs; // update
     }
     return ret;
-}
-
-// --- algo.RspaceStr25..EqOpAryptr
-inline bool algo::RspaceStr25::operator ==(const algo::aryptr<char> &rhs) const {
-    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RspaceStr25..AssignOp
@@ -15611,11 +15521,6 @@ inline bool algo::RspaceStr40_Eq(algo::RspaceStr40 lhs, algo::RspaceStr40 rhs) {
     &&*(u64*)(lhs.ch+24) == *(u64*)(rhs.ch+24)
     &&*(u64*)(lhs.ch+32) == *(u64*)(rhs.ch+32);
     return retval;
-}
-
-// --- algo.RspaceStr40..EqOpAryptr
-inline bool algo::RspaceStr40::operator ==(const algo::aryptr<char> &rhs) const {
-    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RspaceStr40..AssignOp
@@ -16378,11 +16283,6 @@ inline bool algo::RspaceStr8_Update(algo::RspaceStr8 &lhs, algo::RspaceStr8 rhs)
         lhs = rhs; // update
     }
     return ret;
-}
-
-// --- algo.RspaceStr8..EqOpAryptr
-inline bool algo::RspaceStr8::operator ==(const algo::aryptr<char> &rhs) const {
-    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RspaceStr8..AssignOp
@@ -17820,11 +17720,6 @@ inline bool algo::Smallstr255_Eq(algo::Smallstr255& lhs, algo::Smallstr255& rhs)
     bool retval = true;
     retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
-}
-
-// --- algo.Smallstr255..EqOpAryptr
-inline bool algo::Smallstr255::operator ==(const algo::aryptr<char> &rhs) const {
-    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.Smallstr255..AssignOp

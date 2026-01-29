@@ -488,6 +488,11 @@ namespace atf_amc { // update-hdr
     // Check that gconst field within tuple is printed as raw
     // void amctest_PrintRawGconst(); // gstatic/atfdb.amctest:PrintRawGconst
     // void amctest_MsgLength(); // gstatic/atfdb.amctest:MsgLength
+
+    // Test that lenfld scale attribute works correctly
+    // MsgHdrLTScale has: len (u8), scale:4, extra:-2
+    // Formula: actual_length = len * scale - extra = len * 4 + 2
+    // void amctest_LenfldScale(); // gstatic/atfdb.amctest:LenfldScale
     void Phase(algo::strptr phase);
     //     (user-implemented function, prototype is in amc-generated header)
     // void Main(); // main:atf_amc

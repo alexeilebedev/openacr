@@ -388,7 +388,8 @@ void amc::tfunc_Ctype_Cmp() {
         cmp.extrn = ctype.c_ccmp->extrn;
         cmp.inl = c_datafld_N(ctype) < 4;
         AddRetval(cmp, "i32", "retval", "0");
-        if (ctype.c_bltin) {
+        if (cmp.extrn) {
+        } else if (ctype.c_bltin) {
             Ins(&R, cmp.body, "retval = lhs<rhs ? -1 : lhs>rhs;");
         } else {
             bool need_test = false;
@@ -480,7 +481,8 @@ void amc::tfunc_Ctype_Lt() {
         Ins(&R, oplt.proto, "$Name_Lt($ByvalArgtype lhs, $ByvalArgtype rhs)", false);
         oplt.extrn = ctype.c_ccmp->extrn;
         oplt.inl = true;
-        if (ctype.c_bltin) {
+        if (oplt.extrn) {
+        } else if (ctype.c_bltin) {
             Ins(&R, oplt.body    , "return lhs < rhs;");
         } else if (c_datafld_N(ctype) == 1) { // special case -- single field.
             // Lt function is faster than Cmp because there are fewer calculations to do
@@ -1002,7 +1004,8 @@ void amc::tfunc_Ctype2_FieldwiseCtor() {
                 Ins(&R, func.body, "    $assign;");
             } else if (val && lenfld && ctype.c_msgtype) {
                 Set(R, "$extralen", tempstr() << lenfld->extra);
-                Set(R, "$assign", amc::AssignExpr(fld, "*this", "ssizeof(*this) + ($extralen)", true));
+                Set(R, "$scalelen", tempstr() << lenfld->scale);
+                Set(R, "$assign", amc::AssignExpr(fld, "*this", "(ssizeof(*this) + ($extralen)) / ($scalelen)", true));
                 Ins(&R, func.body, "    $assign;");
             } else if (fld.c_fbigend) {
                 Set(R, "$name", name_Get(fld));
@@ -1272,7 +1275,9 @@ void amc::tfunc_Ctype_EqOpAryptr() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
     bool single_smallstr = c_datafld_N(ctype)==1 && c_datafld_Find(ctype,0)->reftype==dmmeta_Reftype_reftype_Smallstr;
-    if (ctype.c_ccmp && single_smallstr) {
+    // C++20 requires same-type operator== when generating aryptr comparison to avoid ambiguity
+    // Only generate if genop is set (which also generates same-type operator==)
+    if (ctype.c_ccmp && ctype.c_ccmp->genop && single_smallstr) {
         amc::FFunc& func = amc::CreateCurFunc();
         func.inl=true;
         func.member=true;

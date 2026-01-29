@@ -49,11 +49,13 @@ enum atf_comp_TableIdEnum {                  // atf_comp.TableId.value
     ,atf_comp_TableId_atfdb_targs      = 1   // atfdb.targs -> atf_comp.FTargs
     ,atf_comp_TableId_atfdb_Tfilt      = 2   // atfdb.Tfilt -> atf_comp.FTfilt
     ,atf_comp_TableId_atfdb_tfilt      = 2   // atfdb.tfilt -> atf_comp.FTfilt
-    ,atf_comp_TableId_atfdb_Tmsg       = 3   // atfdb.Tmsg -> atf_comp.FTmsg
-    ,atf_comp_TableId_atfdb_tmsg       = 3   // atfdb.tmsg -> atf_comp.FTmsg
+    ,atf_comp_TableId_atfdb_Tifilt     = 3   // atfdb.Tifilt -> atf_comp.FTifilt
+    ,atf_comp_TableId_atfdb_tifilt     = 3   // atfdb.tifilt -> atf_comp.FTifilt
+    ,atf_comp_TableId_atfdb_Tmsg       = 4   // atfdb.Tmsg -> atf_comp.FTmsg
+    ,atf_comp_TableId_atfdb_tmsg       = 4   // atfdb.tmsg -> atf_comp.FTmsg
 };
 
-enum { atf_comp_TableIdEnum_N = 8 };
+enum { atf_comp_TableIdEnum_N = 10 };
 
 namespace atf_comp { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
@@ -64,6 +66,7 @@ extern const char *atf_comp_help;
 namespace atfdb { struct Comptest; }
 namespace atfdb { struct Targs; }
 namespace atfdb { struct Tfilt; }
+namespace atfdb { struct Tifilt; }
 namespace atfdb { struct Tmsg; }
 namespace atf_comp { struct comptest_zd_tmsg_curs; }
 namespace atf_comp { struct _db_comptest_curs; }
@@ -73,6 +76,7 @@ namespace atf_comp { struct _db_zd_out_tmsg_curs; }
 namespace atf_comp { struct _db_zd_out_comptest_curs; }
 namespace atf_comp { struct _db_zd_out_tfilt_curs; }
 namespace atf_comp { struct _db_zd_out_targs_curs; }
+namespace atf_comp { struct _db_zd_out_tifilt_curs; }
 namespace atf_comp { struct _db_covdir_curs; }
 namespace atf_comp { struct _db_zd_covdir_free_curs; }
 namespace atf_comp { struct FComptest; }
@@ -81,6 +85,7 @@ namespace atf_comp { struct trace; }
 namespace atf_comp { struct FDb; }
 namespace atf_comp { struct FTargs; }
 namespace atf_comp { struct FTfilt; }
+namespace atf_comp { struct FTifilt; }
 namespace atf_comp { struct FTmsg; }
 namespace atf_comp { struct FieldId; }
 namespace atf_comp { struct TableId; }
@@ -123,7 +128,10 @@ struct FComptest { // atf_comp.FComptest
     atf_comp::FTmsg*       zd_tmsg_tail;           // pointer to last element
     bool                   need_write;             //   false  Component test modified during runtime, needs to be written back
     algo::cstring          err;                    // Error string
-    algo::cstring          filter_command;         //
+    atf_comp::FTifilt*     c_tifilt;               // optional pointer
+    algo::cstring          file_run;               // Path to run script
+    algo::cstring          script;                 // Run script content
+    algo_lib::Replscope    R;                      // Variable substitution scope
     atf_comp::FCovdir*     c_covdir;               // optional pointer
     algo::cstring          dir;                    //
     atf_comp::FComptest*   ind_comptest_next;      // hash next
@@ -139,6 +147,8 @@ struct FComptest { // atf_comp.FComptest
     // x-reference on atf_comp.FComptest.c_tfilt prevents copy
     // value field atf_comp.FComptest.thook is not copiable
     // reftype Llist of atf_comp.FComptest.zd_tmsg prohibits copy
+    // x-reference on atf_comp.FComptest.c_tifilt prevents copy
+    // value field atf_comp.FComptest.R is not copiable
     // func:atf_comp.FComptest..AssignOp
     atf_comp::FComptest& operator =(const atf_comp::FComptest &rhs) = delete;
     // value field atf_comp.FComptest.bash is not copiable
@@ -146,6 +156,8 @@ struct FComptest { // atf_comp.FComptest
     // x-reference on atf_comp.FComptest.c_tfilt prevents copy
     // value field atf_comp.FComptest.thook is not copiable
     // reftype Llist of atf_comp.FComptest.zd_tmsg prohibits copy
+    // x-reference on atf_comp.FComptest.c_tifilt prevents copy
+    // value field atf_comp.FComptest.R is not copiable
     // func:atf_comp.FComptest..CopyCtor
     FComptest(const atf_comp::FComptest &rhs) = delete;
 private:
@@ -233,6 +245,17 @@ atf_comp::FTmsg*     zd_tmsg_RemoveFirst(atf_comp::FComptest& comptest) __attrib
 // Return reference to last element in the index. No bounds checking.
 // func:atf_comp.FComptest.zd_tmsg.qLast
 inline atf_comp::FTmsg& zd_tmsg_qLast(atf_comp::FComptest& comptest) __attribute__((__warn_unused_result__, nothrow));
+
+// Delete referred-to items.
+// Deleted pointed-to item.
+// func:atf_comp.FComptest.c_tifilt.Cascdel
+void                 c_tifilt_Cascdel(atf_comp::FComptest& comptest) __attribute__((nothrow));
+// Insert row into pointer index. Return final membership status.
+// func:atf_comp.FComptest.c_tifilt.InsertMaybe
+inline bool          c_tifilt_InsertMaybe(atf_comp::FComptest& comptest, atf_comp::FTifilt& row) __attribute__((nothrow));
+// Remove element from index. If element is not in index, do nothing.
+// func:atf_comp.FComptest.c_tifilt.Remove
+inline void          c_tifilt_Remove(atf_comp::FComptest& comptest, atf_comp::FTifilt& row) __attribute__((nothrow));
 
 // cursor points to valid item
 // func:atf_comp.FComptest.zd_tmsg_curs.Reset
@@ -334,6 +357,11 @@ struct FDb { // atf_comp.FDb: In-memory database for atf_comp
     atf_comp::FTargs*       zd_out_targs_head;            // zero-terminated doubly linked list
     i32                     zd_out_targs_n;               // zero-terminated doubly linked list
     atf_comp::FTargs*       zd_out_targs_tail;            // pointer to last element
+    u64                     tifilt_blocksize;             // # bytes per block
+    atf_comp::FTifilt*      tifilt_free;                  //
+    atf_comp::FTifilt*      zd_out_tifilt_head;           // zero-terminated doubly linked list
+    i32                     zd_out_tifilt_n;              // zero-terminated doubly linked list
+    atf_comp::FTifilt*      zd_out_tifilt_tail;           // pointer to last element
     atf_comp::FCovdir*      covdir_lary[32];              // level array
     i32                     covdir_n;                     // number of elements in array
     atf_comp::FCovdir*      zd_covdir_free_head;          // zero-terminated doubly linked list
@@ -812,6 +840,80 @@ bool                 zd_out_targs_SaveSsimfile(algo::strptr fname) __attribute__
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:atf_comp.FDb.tifilt.Alloc
+atf_comp::FTifilt&   tifilt_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:atf_comp.FDb.tifilt.AllocMaybe
+atf_comp::FTifilt*   tifilt_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:atf_comp.FDb.tifilt.InsertMaybe
+atf_comp::FTifilt*   tifilt_InsertMaybe(const atfdb::Tifilt &value) __attribute__((nothrow));
+// Remove row from all global and cross indices, then deallocate row
+// func:atf_comp.FDb.tifilt.Delete
+void                 tifilt_Delete(atf_comp::FTifilt &row) __attribute__((nothrow));
+// Allocate space for one element
+// If no memory available, return NULL.
+// func:atf_comp.FDb.tifilt.AllocMem
+void*                tifilt_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Remove mem from all global and cross indices, then deallocate mem
+// func:atf_comp.FDb.tifilt.FreeMem
+void                 tifilt_FreeMem(atf_comp::FTifilt &row) __attribute__((nothrow));
+// Preallocate memory for N more elements
+// Return number of elements actually reserved.
+// func:atf_comp.FDb.tifilt.Reserve
+u64                  tifilt_Reserve(u64 n_elems) __attribute__((nothrow));
+// Allocate block of given size, break up into small elements and append to free list.
+// Return number of elements reserved.
+// func:atf_comp.FDb.tifilt.ReserveMem
+u64                  tifilt_ReserveMem(u64 size) __attribute__((nothrow));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_comp.FDb.tifilt.XrefMaybe
+bool                 tifilt_XrefMaybe(atf_comp::FTifilt &row);
+
+// Return true if index is empty
+// func:atf_comp.FDb.zd_out_tifilt.EmptyQ
+inline bool          zd_out_tifilt_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
+// If index empty, return NULL. Otherwise return pointer to first element in index
+// func:atf_comp.FDb.zd_out_tifilt.First
+inline atf_comp::FTifilt* zd_out_tifilt_First() __attribute__((__warn_unused_result__, nothrow, pure));
+// Return true if row is in the linked list, false otherwise
+// func:atf_comp.FDb.zd_out_tifilt.InLlistQ
+inline bool          zd_out_tifilt_InLlistQ(atf_comp::FTifilt& row) __attribute__((__warn_unused_result__, nothrow));
+// Insert row into linked list. If row is already in linked list, do nothing.
+// func:atf_comp.FDb.zd_out_tifilt.Insert
+void                 zd_out_tifilt_Insert(atf_comp::FTifilt& row) __attribute__((nothrow));
+// If index empty, return NULL. Otherwise return pointer to last element in index
+// func:atf_comp.FDb.zd_out_tifilt.Last
+inline atf_comp::FTifilt* zd_out_tifilt_Last() __attribute__((__warn_unused_result__, nothrow, pure));
+// Return number of items in the linked list
+// func:atf_comp.FDb.zd_out_tifilt.N
+inline i32           zd_out_tifilt_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to next element in the list
+// func:atf_comp.FDb.zd_out_tifilt.Next
+inline atf_comp::FTifilt* zd_out_tifilt_Next(atf_comp::FTifilt &row) __attribute__((__warn_unused_result__, nothrow));
+// Return pointer to previous element in the list
+// func:atf_comp.FDb.zd_out_tifilt.Prev
+inline atf_comp::FTifilt* zd_out_tifilt_Prev(atf_comp::FTifilt &row) __attribute__((__warn_unused_result__, nothrow));
+// Remove element from index. If element is not in index, do nothing.
+// func:atf_comp.FDb.zd_out_tifilt.Remove
+void                 zd_out_tifilt_Remove(atf_comp::FTifilt& row) __attribute__((nothrow));
+// Empty the index. (The rows are not deleted)
+// func:atf_comp.FDb.zd_out_tifilt.RemoveAll
+void                 zd_out_tifilt_RemoveAll() __attribute__((nothrow));
+// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+// func:atf_comp.FDb.zd_out_tifilt.RemoveFirst
+atf_comp::FTifilt*   zd_out_tifilt_RemoveFirst() __attribute__((nothrow));
+// Return reference to last element in the index. No bounds checking.
+// func:atf_comp.FDb.zd_out_tifilt.qLast
+inline atf_comp::FTifilt& zd_out_tifilt_qLast() __attribute__((__warn_unused_result__, nothrow));
+// Save table to ssimfile
+// func:atf_comp.FDb.zd_out_tifilt.SaveSsimfile
+bool                 zd_out_tifilt_SaveSsimfile(algo::strptr fname) __attribute__((nothrow));
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
 // func:atf_comp.FDb.covdir.Alloc
 atf_comp::FCovdir&   covdir_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
@@ -993,6 +1095,18 @@ inline void          _db_zd_out_targs_curs_Next(_db_zd_out_targs_curs &curs) __a
 // func:atf_comp.FDb.zd_out_targs_curs.Access
 inline atf_comp::FTargs& _db_zd_out_targs_curs_Access(_db_zd_out_targs_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
+// func:atf_comp.FDb.zd_out_tifilt_curs.Reset
+inline void          _db_zd_out_tifilt_curs_Reset(_db_zd_out_tifilt_curs &curs, atf_comp::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:atf_comp.FDb.zd_out_tifilt_curs.ValidQ
+inline bool          _db_zd_out_tifilt_curs_ValidQ(_db_zd_out_tifilt_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:atf_comp.FDb.zd_out_tifilt_curs.Next
+inline void          _db_zd_out_tifilt_curs_Next(_db_zd_out_tifilt_curs &curs) __attribute__((nothrow));
+// item access
+// func:atf_comp.FDb.zd_out_tifilt_curs.Access
+inline atf_comp::FTifilt& _db_zd_out_tifilt_curs_Access(_db_zd_out_tifilt_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
 // func:atf_comp.FDb.covdir_curs.Reset
 inline void          _db_covdir_curs_Reset(_db_covdir_curs &curs, atf_comp::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
@@ -1099,6 +1213,44 @@ void                 tfilt_CopyIn(atf_comp::FTfilt &row, atfdb::Tfilt &in) __att
 inline void          FTfilt_Init(atf_comp::FTfilt& tfilt);
 // func:atf_comp.FTfilt..Uninit
 void                 FTfilt_Uninit(atf_comp::FTfilt& tfilt) __attribute__((nothrow));
+
+// --- atf_comp.FTifilt
+// create: atf_comp.FDb.tifilt (Tpool)
+// global access: zd_out_tifilt (Llist)
+// access: atf_comp.FComptest.c_tifilt (Ptr)
+struct FTifilt { // atf_comp.FTifilt
+    atf_comp::FTifilt*   tifilt_next;          // Pointer to next free element int tpool
+    atf_comp::FTifilt*   zd_out_tifilt_next;   // zslist link; -1 means not-in-list
+    atf_comp::FTifilt*   zd_out_tifilt_prev;   // previous element
+    algo::Smallstr50     comptest;             //
+    algo::cstring        ifilter;              // Command to preprocess input
+    algo::Comment        comment;              //
+    // func:atf_comp.FTifilt..AssignOp
+    inline atf_comp::FTifilt& operator =(const atf_comp::FTifilt &rhs) = delete;
+    // func:atf_comp.FTifilt..CopyCtor
+    inline               FTifilt(const atf_comp::FTifilt &rhs) = delete;
+private:
+    // func:atf_comp.FTifilt..Ctor
+    inline               FTifilt() __attribute__((nothrow));
+    // func:atf_comp.FTifilt..Dtor
+    inline               ~FTifilt() __attribute__((nothrow));
+    friend atf_comp::FTifilt&   tifilt_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend atf_comp::FTifilt*   tifilt_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 tifilt_Delete(atf_comp::FTifilt &row) __attribute__((nothrow));
+};
+
+// Copy fields out of row
+// func:atf_comp.FTifilt.base.CopyOut
+void                 tifilt_CopyOut(atf_comp::FTifilt &row, atfdb::Tifilt &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:atf_comp.FTifilt.base.CopyIn
+void                 tifilt_CopyIn(atf_comp::FTifilt &row, atfdb::Tifilt &in) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:atf_comp.FTifilt..Init
+inline void          FTifilt_Init(atf_comp::FTifilt& tifilt);
+// func:atf_comp.FTifilt..Uninit
+void                 FTifilt_Uninit(atf_comp::FTifilt& tifilt) __attribute__((nothrow));
 
 // --- atf_comp.FTmsg
 // create: atf_comp.FDb.tmsg (Tpool)
@@ -1323,6 +1475,15 @@ struct _db_zd_out_targs_curs {// fcurs:atf_comp.FDb.zd_out_targs/curs
     typedef atf_comp::FTargs ChildType;
     atf_comp::FTargs* row;
     _db_zd_out_targs_curs() {
+        row = NULL;
+    }
+};
+
+
+struct _db_zd_out_tifilt_curs {// fcurs:atf_comp.FDb.zd_out_tifilt/curs
+    typedef atf_comp::FTifilt ChildType;
+    atf_comp::FTifilt* row;
+    _db_zd_out_tifilt_curs() {
         row = NULL;
     }
 };

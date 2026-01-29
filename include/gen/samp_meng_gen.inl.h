@@ -74,7 +74,7 @@ inline  samp_meng::CancelOrderMsg::CancelOrderMsg(u64 in_order)
     : order(in_order)
  {
     this->type = u8(3);
-    this->length = u8(ssizeof(*this) + (0));
+    this->length = u8((ssizeof(*this) + (0)) / (1));
 }
 
 // --- samp_meng.CancelReqMsg.base.Castdown
@@ -123,7 +123,7 @@ inline  samp_meng::CancelReqMsg::CancelReqMsg(u64 in_order)
     : order(in_order)
  {
     this->type = u8(11);
-    this->length = u8(ssizeof(*this) + (0));
+    this->length = u8((ssizeof(*this) + (0)) / (1));
 }
 
 // --- samp_meng.trace..Ctor
@@ -1256,7 +1256,7 @@ inline  samp_meng::MassCancelReqMsg::MassCancelReqMsg(u32 in_user)
     : user(in_user)
  {
     this->type = u8(12);
-    this->length = u8(ssizeof(*this) + (0));
+    this->length = u8((ssizeof(*this) + (0)) / (1));
 }
 
 // --- samp_meng.MsgHeader.type.GetEnum
@@ -1450,7 +1450,7 @@ inline  samp_meng::NewOrderMsg::NewOrderMsg(algo::UnTime in_time, samp_meng::I64
     , qty(in_qty)
  {
     this->type = u8(2);
-    this->length = u8(ssizeof(*this) + (0));
+    this->length = u8((ssizeof(*this) + (0)) / (1));
 }
 
 // --- samp_meng.NewOrderReqMsg.base.Castdown
@@ -1505,7 +1505,7 @@ inline  samp_meng::NewOrderReqMsg::NewOrderReqMsg(bool in_ioc, i32 in_qty, samp_
     , user(in_user)
  {
     this->type = u8(10);
-    this->length = u8(ssizeof(*this) + (0));
+    this->length = u8((ssizeof(*this) + (0)) / (1));
 }
 
 // --- samp_meng.NewSymbolMsg.base.Castdown
@@ -1553,7 +1553,7 @@ inline  samp_meng::NewSymbolMsg::NewSymbolMsg(const samp_meng::Symbol& in_symbol
     : symbol(in_symbol)
  {
     this->type = u8(5);
-    this->length = u8(ssizeof(*this) + (0));
+    this->length = u8((ssizeof(*this) + (0)) / (1));
 }
 
 // --- samp_meng.NewSymbolReqMsg.base.Castdown
@@ -1601,7 +1601,7 @@ inline  samp_meng::NewSymbolReqMsg::NewSymbolReqMsg(const samp_meng::Symbol& in_
     : symbol(in_symbol)
  {
     this->type = u8(13);
-    this->length = u8(ssizeof(*this) + (0));
+    this->length = u8((ssizeof(*this) + (0)) / (1));
 }
 
 // --- samp_meng.NewUserMsg.base.Castdown
@@ -1650,7 +1650,7 @@ inline  samp_meng::NewUserMsg::NewUserMsg(u32 in_user)
     : user(in_user)
  {
     this->type = u8(6);
-    this->length = u8(ssizeof(*this) + (0));
+    this->length = u8((ssizeof(*this) + (0)) / (1));
 }
 
 // --- samp_meng.NewUserReqMsg.base.Castdown
@@ -1699,7 +1699,7 @@ inline  samp_meng::NewUserReqMsg::NewUserReqMsg(u32 in_user)
     : user(in_user)
  {
     this->type = u8(14);
-    this->length = u8(ssizeof(*this) + (0));
+    this->length = u8((ssizeof(*this) + (0)) / (1));
 }
 
 // --- samp_meng.OrderTradeMsg.base.Castdown
@@ -1751,7 +1751,7 @@ inline  samp_meng::OrderTradeMsg::OrderTradeMsg(u64 in_order, u32 in_qty, samp_m
     , price(in_price)
  {
     this->type = u8(4);
-    this->length = u8(ssizeof(*this) + (0));
+    this->length = u8((ssizeof(*this) + (0)) / (1));
 }
 
 // --- samp_meng.TextMsg.base.Castdown

@@ -19,6 +19,7 @@ dmmeta.ssimfile  ssimfile:atfdb.test_gsymbol_char  ctype:atfdb.TestGsymbolChar
 dmmeta.ssimfile  ssimfile:atfdb.test_gsymbol_pkey  ctype:atfdb.TestGsymbolPkey
 dmmeta.ssimfile  ssimfile:atfdb.test_gsymbol_strptr  ctype:atfdb.TestGsymbolStrptr
 dmmeta.ssimfile  ssimfile:atfdb.tfilt  ctype:atfdb.Tfilt
+dmmeta.ssimfile  ssimfile:atfdb.tifilt  ctype:atfdb.Tifilt
 dmmeta.ssimfile  ssimfile:atfdb.tmsg  ctype:atfdb.Tmsg
 dmmeta.ssimfile  ssimfile:atfdb.unittest  ctype:atfdb.Unittest
 dmmeta.ssimfile  ssimfile:atfdb.var  ctype:atfdb.Var

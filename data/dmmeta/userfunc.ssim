@@ -776,6 +776,7 @@ dmmeta.userfunc  userfunc:atf_amc...amctest_Hook2  acrkey:gstatic/atfdb.amctest:
 dmmeta.userfunc  userfunc:atf_amc...amctest_ImdXref  acrkey:gstatic/atfdb.amctest:ImdXref  cppname:atf_amc.amctest_ImdXref  comment:""
 dmmeta.userfunc  userfunc:atf_amc...amctest_Inlary_ReadPrint  acrkey:gstatic/atfdb.amctest:Inlary_ReadPrint  cppname:atf_amc.amctest_Inlary_ReadPrint  comment:""
 dmmeta.userfunc  userfunc:atf_amc...amctest_LaryFind  acrkey:gstatic/atfdb.amctest:LaryFind  cppname:atf_amc.amctest_LaryFind  comment:""
+dmmeta.userfunc  userfunc:atf_amc...amctest_LenfldScale  acrkey:gstatic/atfdb.amctest:LenfldScale  cppname:atf_amc.amctest_LenfldScale  comment:""
 dmmeta.userfunc  userfunc:atf_amc...amctest_LineIter  acrkey:gstatic/atfdb.amctest:LineIter  cppname:atf_amc.amctest_LineIter  comment:""
 dmmeta.userfunc  userfunc:atf_amc...amctest_Lpool  acrkey:gstatic/atfdb.amctest:Lpool  cppname:atf_amc.amctest_Lpool  comment:""
 dmmeta.userfunc  userfunc:atf_amc...amctest_LpoolLockMem  acrkey:gstatic/atfdb.amctest:LpoolLockMem  cppname:atf_amc.amctest_LpoolLockMem  comment:""

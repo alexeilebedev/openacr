@@ -233,6 +233,24 @@ enum atf_amc_MsgHdrLTMsgsCaseEnum {                   // atf_amc.MsgHdrLTMsgsCas
 enum { atf_amc_MsgHdrLTMsgsCaseEnum_N = 4 };
 
 
+// --- atf_amc_MsgHdrLTScale_type_Enum
+
+enum atf_amc_MsgHdrLTScale_type_Enum {                       // atf_amc.MsgHdrLTScale.type
+     atf_amc_MsgHdrLTScale_type_atf_amc_MsgLTScaleA   = 'S'
+};
+
+enum { atf_amc_MsgHdrLTScale_type_Enum_N = 1 };
+
+
+// --- atf_amc_MsgHdrLTScaleMsgsCaseEnum
+
+enum atf_amc_MsgHdrLTScaleMsgsCaseEnum {                        // atf_amc.MsgHdrLTScaleMsgsCase.value
+     atf_amc_MsgHdrLTScaleMsgsCase_atf_amc_MsgLTScaleA   = 'S'
+};
+
+enum { atf_amc_MsgHdrLTScaleMsgsCaseEnum_N = 1 };
+
+
 // --- atf_amc_MsgTypeEnum
 
 enum atf_amc_MsgTypeEnum {                            // atf_amc.MsgType.value
@@ -340,6 +358,7 @@ namespace atf_amc { struct TypeS; }
 namespace atf_amc { struct TypeT; }
 namespace atf_amc { struct Hooktype; }
 namespace atf_amc { struct MsgHdrLT; }
+namespace atf_amc { struct MsgHdrLTScale; }
 namespace atf_amc { struct MsgHeader; }
 namespace atf_amc { struct VarlenK; }
 namespace atf_amc { struct TypeH; }
@@ -351,6 +370,7 @@ namespace atf_amc { struct MsgLTA; }
 namespace atf_amc { struct MsgLTB; }
 namespace atf_amc { struct MsgLTO; }
 namespace atf_amc { struct MsgLTV; }
+namespace atf_amc { struct MsgLTScaleA; }
 namespace atf_amc { struct Seqmsg; }
 namespace atf_amc { struct Text; }
 namespace atf_amc { struct Varlen2Msg; }
@@ -479,6 +499,8 @@ namespace atf_amc { struct InlaryPrint; }
 namespace atf_amc { struct Lary32; }
 namespace atf_amc { struct Linebuf; }
 namespace atf_amc { struct MsgHdrLTMsgsCase; }
+namespace atf_amc { struct MsgHdrLTScaleMsgsCase; }
+namespace atf_amc { struct MsgHdrLTScale_curs; }
 namespace atf_amc { struct MsgHdrLT_curs; }
 namespace atf_amc { struct MsgHeader_curs; }
 namespace atf_amc { struct Msgbuf; }
@@ -6376,6 +6398,140 @@ bool                 MsgHdrLTMsgsCase_ReadStrptrMaybe(atf_amc::MsgHdrLTMsgsCase 
 // func:atf_amc.MsgHdrLTMsgsCase..Init
 inline void          MsgHdrLTMsgsCase_Init(atf_amc::MsgHdrLTMsgsCase& parent);
 
+// --- atf_amc.MsgHdrLTScale
+// access: atf_amc.MsgLTScaleA.base (Base)
+// access: atf_amc.MsgHdrLTScale_curs.msg (Ptr)
+#pragma pack(push,1)
+struct MsgHdrLTScale { // atf_amc.MsgHdrLTScale
+    u8     len;    //   0  Length in 4-byte words
+    char   type;   //   0
+    // func:atf_amc.MsgHdrLTScale..Ctor
+    inline               MsgHdrLTScale() __attribute__((nothrow));
+};
+#pragma pack(pop)
+
+// Get value of field as enum type
+// func:atf_amc.MsgHdrLTScale.type.GetEnum
+inline atf_amc_MsgHdrLTScale_type_Enum type_GetEnum(const atf_amc::MsgHdrLTScale& parent) __attribute__((nothrow));
+// Set value of field from enum type.
+// func:atf_amc.MsgHdrLTScale.type.SetEnum
+inline void          type_SetEnum(atf_amc::MsgHdrLTScale& parent, atf_amc_MsgHdrLTScale_type_Enum rhs) __attribute__((nothrow));
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+// func:atf_amc.MsgHdrLTScale.type.ToCstr
+const char*          type_ToCstr(const atf_amc::MsgHdrLTScale& parent) __attribute__((nothrow));
+// Convert type to a string. First, attempt conversion to a known string.
+// If no string matches, print type as a numeric value.
+// func:atf_amc.MsgHdrLTScale.type.Print
+void                 type_Print(const atf_amc::MsgHdrLTScale& parent, algo::cstring &lhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+// func:atf_amc.MsgHdrLTScale.type.SetStrptrMaybe
+bool                 type_SetStrptrMaybe(atf_amc::MsgHdrLTScale& parent, algo::strptr rhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+// func:atf_amc.MsgHdrLTScale.type.SetStrptr
+void                 type_SetStrptr(atf_amc::MsgHdrLTScale& parent, algo::strptr rhs, atf_amc_MsgHdrLTScale_type_Enum dflt) __attribute__((nothrow));
+// Convert string to field. Return success value
+// func:atf_amc.MsgHdrLTScale.type.ReadStrptrMaybe
+bool                 type_ReadStrptrMaybe(atf_amc::MsgHdrLTScale& parent, algo::strptr rhs) __attribute__((nothrow));
+
+// func:atf_amc.MsgHdrLTScale..ReadFieldMaybe
+bool                 MsgHdrLTScale_ReadFieldMaybe(atf_amc::MsgHdrLTScale& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of atf_amc::MsgHdrLTScale from an ascii string.
+// The format of the string is an ssim Tuple
+// func:atf_amc.MsgHdrLTScale..ReadStrptrMaybe
+bool                 MsgHdrLTScale_ReadStrptrMaybe(atf_amc::MsgHdrLTScale &parent, algo::strptr in_str) __attribute__((nothrow));
+// Message length (uses length field)
+// func:atf_amc.MsgHdrLTScale..GetMsgLength
+inline i32           GetMsgLength(const atf_amc::MsgHdrLTScale& parent) __attribute__((nothrow));
+// Memptr encompassing the message (uses length field)
+// func:atf_amc.MsgHdrLTScale..GetMsgMemptr
+inline algo::memptr  GetMsgMemptr(const atf_amc::MsgHdrLTScale& row) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:atf_amc.MsgHdrLTScale..Init
+inline void          MsgHdrLTScale_Init(atf_amc::MsgHdrLTScale& parent);
+// print string representation of ROW to string STR
+// cfmt:atf_amc.MsgHdrLTScale.String  printfmt:Tuple
+// func:atf_amc.MsgHdrLTScale..Print
+void                 MsgHdrLTScale_Print(atf_amc::MsgHdrLTScale& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- atf_amc.MsgHdrLTScaleMsgsCase
+#pragma pack(push,1)
+struct MsgHdrLTScaleMsgsCase { // atf_amc.MsgHdrLTScaleMsgsCase: Enum for dispatch atf_amc.MsgHdrLTScaleMsgs
+    u32   value;   //   0
+    // func:atf_amc.MsgHdrLTScaleMsgsCase.value.Cast
+    inline               operator atf_amc_MsgHdrLTScaleMsgsCaseEnum() const __attribute__((nothrow));
+    // func:atf_amc.MsgHdrLTScaleMsgsCase..Ctor
+    inline               MsgHdrLTScaleMsgsCase() __attribute__((nothrow));
+    // func:atf_amc.MsgHdrLTScaleMsgsCase..FieldwiseCtor
+    explicit inline               MsgHdrLTScaleMsgsCase(u32 in_value) __attribute__((nothrow));
+    // func:atf_amc.MsgHdrLTScaleMsgsCase..EnumCtor
+    inline               MsgHdrLTScaleMsgsCase(atf_amc_MsgHdrLTScaleMsgsCaseEnum arg) __attribute__((nothrow));
+};
+#pragma pack(pop)
+
+// Get value of field as enum type
+// func:atf_amc.MsgHdrLTScaleMsgsCase.value.GetEnum
+inline atf_amc_MsgHdrLTScaleMsgsCaseEnum value_GetEnum(const atf_amc::MsgHdrLTScaleMsgsCase& parent) __attribute__((nothrow));
+// Set value of field from enum type.
+// func:atf_amc.MsgHdrLTScaleMsgsCase.value.SetEnum
+inline void          value_SetEnum(atf_amc::MsgHdrLTScaleMsgsCase& parent, atf_amc_MsgHdrLTScaleMsgsCaseEnum rhs) __attribute__((nothrow));
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+// func:atf_amc.MsgHdrLTScaleMsgsCase.value.ToCstr
+const char*          value_ToCstr(const atf_amc::MsgHdrLTScaleMsgsCase& parent) __attribute__((nothrow));
+// Convert value to a string. First, attempt conversion to a known string.
+// If no string matches, print value as a numeric value.
+// func:atf_amc.MsgHdrLTScaleMsgsCase.value.Print
+void                 value_Print(const atf_amc::MsgHdrLTScaleMsgsCase& parent, algo::cstring &lhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+// func:atf_amc.MsgHdrLTScaleMsgsCase.value.SetStrptrMaybe
+bool                 value_SetStrptrMaybe(atf_amc::MsgHdrLTScaleMsgsCase& parent, algo::strptr rhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+// func:atf_amc.MsgHdrLTScaleMsgsCase.value.SetStrptr
+void                 value_SetStrptr(atf_amc::MsgHdrLTScaleMsgsCase& parent, algo::strptr rhs, atf_amc_MsgHdrLTScaleMsgsCaseEnum dflt) __attribute__((nothrow));
+// Convert string to field. Return success value
+// func:atf_amc.MsgHdrLTScaleMsgsCase.value.ReadStrptrMaybe
+bool                 value_ReadStrptrMaybe(atf_amc::MsgHdrLTScaleMsgsCase& parent, algo::strptr rhs) __attribute__((nothrow));
+
+// Read fields of atf_amc::MsgHdrLTScaleMsgsCase from an ascii string.
+// The format of the string is the format of the atf_amc::MsgHdrLTScaleMsgsCase's only field
+// func:atf_amc.MsgHdrLTScaleMsgsCase..ReadStrptrMaybe
+bool                 MsgHdrLTScaleMsgsCase_ReadStrptrMaybe(atf_amc::MsgHdrLTScaleMsgsCase &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:atf_amc.MsgHdrLTScaleMsgsCase..Init
+inline void          MsgHdrLTScaleMsgsCase_Init(atf_amc::MsgHdrLTScaleMsgsCase& parent);
+
+// --- atf_amc.MsgHdrLTScale_curs
+#pragma pack(push,1)
+struct MsgHdrLTScale_curs { // atf_amc.MsgHdrLTScale_curs: Cursor for scanning messages in a memptr
+    typedef atf_amc::MsgHdrLTScale *ChildType;
+    atf_amc::MsgHdrLTScale*   msg;      // Pointer to current message. optional pointer
+    u8*                       bytes;    // Beginning of region. optional pointer
+    i32                       limit;    //   0  # Of bytes in the region
+    i32                       msglen;   //   0  Length of current message (if any)
+    // func:atf_amc.MsgHdrLTScale_curs..Ctor
+    inline               MsgHdrLTScale_curs() __attribute__((nothrow));
+};
+#pragma pack(pop)
+
+// func:atf_amc.MsgHdrLTScale_curs..ValidQ
+inline bool          MsgHdrLTScale_curs_ValidQ(atf_amc::MsgHdrLTScale_curs& curs) __attribute__((nothrow));
+// func:atf_amc.MsgHdrLTScale_curs..Reset
+inline void          MsgHdrLTScale_curs_Reset(atf_amc::MsgHdrLTScale_curs& curs, algo::memptr buf) __attribute__((nothrow));
+// func:atf_amc.MsgHdrLTScale_curs..Access
+inline atf_amc::MsgHdrLTScale*& MsgHdrLTScale_curs_Access(atf_amc::MsgHdrLTScale_curs& curs) __attribute__((nothrow));
+// func:atf_amc.MsgHdrLTScale_curs..Next
+inline void          MsgHdrLTScale_curs_Next(atf_amc::MsgHdrLTScale_curs& curs) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:atf_amc.MsgHdrLTScale_curs..Init
+inline void          MsgHdrLTScale_curs_Init(atf_amc::MsgHdrLTScale_curs& parent);
+
 // --- atf_amc.MsgHdrLT_curs
 #pragma pack(push,1)
 struct MsgHdrLT_curs { // atf_amc.MsgHdrLT_curs: Cursor for scanning messages in a memptr
@@ -6748,6 +6904,48 @@ inline void          MsgLTO_Init(atf_amc::MsgLTO& parent);
 // cfmt:atf_amc.MsgLTO.String  printfmt:Tuple
 // func:atf_amc.MsgLTO..Print
 void                 MsgLTO_Print(atf_amc::MsgLTO& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- atf_amc.MsgLTScaleA
+#pragma pack(push,1)
+struct MsgLTScaleA { // atf_amc.MsgLTScaleA
+    u8     len;    //   (ssizeof(parent) + (-2)) / 4  Length in 4-byte words
+    char   type;   //   'S'
+    // func:atf_amc.MsgLTScaleA..Ctor
+    inline               MsgLTScaleA() __attribute__((nothrow));
+};
+#pragma pack(pop)
+
+// Copy fields out of row
+// func:atf_amc.MsgLTScaleA.base.CopyOut
+void                 parent_CopyOut(atf_amc::MsgLTScaleA &row, atf_amc::MsgHdrLTScale &out) __attribute__((nothrow));
+// Check if atf_amc::MsgHdrLTScale is an instance of MsgLTScaleA by checking the type field
+// If it is, return the pointer of target type.
+// Additionally, check if the length field permits valid instance of MsgLTScaleA.
+// If not successful, quietly return NULL.
+// func:atf_amc.MsgLTScaleA.base.Castdown
+inline atf_amc::MsgLTScaleA* MsgLTScaleA_Castdown(atf_amc::MsgHdrLTScale &hdr);
+// func:atf_amc.MsgLTScaleA.base.Castbase
+inline atf_amc::MsgHdrLTScale& Castbase(atf_amc::MsgLTScaleA& parent);
+
+// func:atf_amc.MsgLTScaleA..ReadFieldMaybe
+bool                 MsgLTScaleA_ReadFieldMaybe(atf_amc::MsgLTScaleA& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of atf_amc::MsgLTScaleA from an ascii string.
+// The format of the string is an ssim Tuple
+// func:atf_amc.MsgLTScaleA..ReadStrptrMaybe
+bool                 MsgLTScaleA_ReadStrptrMaybe(atf_amc::MsgLTScaleA &parent, algo::strptr in_str) __attribute__((nothrow));
+// Message length (uses length field)
+// func:atf_amc.MsgLTScaleA..GetMsgLength
+inline i32           GetMsgLength(const atf_amc::MsgLTScaleA& parent) __attribute__((nothrow));
+// Memptr encompassing the message (uses length field)
+// func:atf_amc.MsgLTScaleA..GetMsgMemptr
+inline algo::memptr  GetMsgMemptr(const atf_amc::MsgLTScaleA& row) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:atf_amc.MsgLTScaleA..Init
+inline void          MsgLTScaleA_Init(atf_amc::MsgLTScaleA& parent);
+// print string representation of ROW to string STR
+// cfmt:atf_amc.MsgLTScaleA.String  printfmt:Tuple
+// func:atf_amc.MsgLTScaleA..Print
+void                 MsgLTScaleA_Print(atf_amc::MsgLTScaleA& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_amc.MsgLTV
 #pragma pack(push,1)
@@ -12393,6 +12591,10 @@ void                 amctest_Inlary_ReadPrint();
 // this function is 'extrn' and implemented by user
 void                 amctest_LaryFind();
 // User-implemented function from gstatic:atf_amc.FDb.amctest
+// func:atf_amc...amctest_LenfldScale
+// this function is 'extrn' and implemented by user
+void                 amctest_LenfldScale();
+// User-implemented function from gstatic:atf_amc.FDb.amctest
 // func:atf_amc...amctest_LineIter
 // this function is 'extrn' and implemented by user
 void                 amctest_LineIter();
@@ -13058,6 +13260,11 @@ bool                 MsgHdrLTMsgs_Print(algo::cstring &str, atf_amc::MsgHdrLT &m
 // Print message to STR. If message is too short for MSG_LEN, print nothing.
 // MSG.LENGTH must have already been validated against msg_len.
 // This function will additionally validate that sizeof(Msg) <= msg_len
+// func:atf_amc.MsgHdrLTScaleMsgs..Print
+bool                 MsgHdrLTScaleMsgs_Print(algo::cstring &str, atf_amc::MsgHdrLTScale &msg, u32 msg_len);
+// Print message to STR. If message is too short for MSG_LEN, print nothing.
+// MSG.LENGTH must have already been validated against msg_len.
+// This function will additionally validate that sizeof(Msg) <= msg_len
 // func:atf_amc.MsgHeaderMsgs..Print
 bool                 MsgHeaderMsgs_Print(algo::cstring &str, atf_amc::MsgHeader &msg, u32 msg_len);
 // Parse ascii representation of message into binary, appending new data to BUF.
@@ -13078,6 +13285,12 @@ atf_amc::MsgHdrLTMsgsCase MsgHdrLTMsgs_ReadStrptr(algo::strptr str, algo::ByteAr
 // Parse ascii representation of message into binary, appending new data to BUF.
 // func:atf_amc.MsgHdrLTMsgs..ReadStrptrMaybe
 bool                 MsgHdrLTMsgs_ReadStrptrMaybe(algo::strptr str, algo::ByteAry &buf);
+// Parse ascii representation of message into binary, appending new data to BUF.
+// func:atf_amc.MsgHdrLTScaleMsgs..ReadStrptr
+atf_amc::MsgHdrLTScaleMsgsCase MsgHdrLTScaleMsgs_ReadStrptr(algo::strptr str, algo::ByteAry &buf);
+// Parse ascii representation of message into binary, appending new data to BUF.
+// func:atf_amc.MsgHdrLTScaleMsgs..ReadStrptrMaybe
+bool                 MsgHdrLTScaleMsgs_ReadStrptrMaybe(algo::strptr str, algo::ByteAry &buf);
 // Parse ascii representation of message into binary, appending new data to BUF.
 // func:atf_amc.MsgHeaderMsgs..ReadStrptr
 atf_amc::MsgType     MsgHeaderMsgs_ReadStrptr(algo::strptr str, algo::ByteAry &buf);
@@ -13157,12 +13370,14 @@ inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::trace &row)
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::TypeG &row);// cfmt:atf_amc.TypeG.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::FieldId &row);// cfmt:atf_amc.FieldId.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::MsgHdrLT &row);// cfmt:atf_amc.MsgHdrLT.String
+inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::MsgHdrLTScale &row);// cfmt:atf_amc.MsgHdrLTScale.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::MsgType &row);// cfmt:atf_amc.MsgType.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::MsgLength &row);// cfmt:atf_amc.MsgLength.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::MsgHeader &row);// cfmt:atf_amc.MsgHeader.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::MsgLTA &row);// cfmt:atf_amc.MsgLTA.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::MsgLTB &row);// cfmt:atf_amc.MsgLTB.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::MsgLTO &row);// cfmt:atf_amc.MsgLTO.String
+inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::MsgLTScaleA &row);// cfmt:atf_amc.MsgLTScaleA.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::MsgLTV &row);// cfmt:atf_amc.MsgLTV.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::OptAlloc &row);// cfmt:atf_amc.OptAlloc.String
 inline algo::cstring &operator <<(algo::cstring &str, const atf_amc::OptG &row);// cfmt:atf_amc.OptG.String

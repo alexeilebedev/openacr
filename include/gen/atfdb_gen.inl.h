@@ -130,6 +130,10 @@ inline  atfdb::TestGsymbolStrptr::TestGsymbolStrptr() {
 inline  atfdb::Tfilt::Tfilt() {
 }
 
+// --- atfdb.Tifilt..Ctor
+inline  atfdb::Tifilt::Tifilt() {
+}
+
 // --- atfdb.Tmsg..Init
 // Set all fields to initial values.
 inline void atfdb::Tmsg_Init(atfdb::Tmsg& parent) {
@@ -206,6 +210,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const atfdb::TestGsy
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const atfdb::Tfilt &row) {// cfmt:atfdb.Tfilt.String
     atfdb::Tfilt_Print(const_cast<atfdb::Tfilt&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const atfdb::Tifilt &row) {// cfmt:atfdb.Tifilt.String
+    atfdb::Tifilt_Print(const_cast<atfdb::Tifilt&>(row), str);
     return str;
 }
 

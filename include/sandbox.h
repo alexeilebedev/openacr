@@ -33,8 +33,12 @@ namespace sandbox { // update-hdr
     // -------------------------------------------------------------------
     // cpp/sandbox.cpp
     //
-    void ResetSandbox(sandbox::FSandbox &sandbox);
-    void AcrApply(algo::strptr script, algo::strptr op);
+
+    // Generate shell helper functions (called once at script start)
+    void AddResetFunc();
+
+    // Add list output to script (uses column -t for formatting)
+    // Assumes Set was already called for each sandbox
     void ListSandbox();
     //     (user-implemented function, prototype is in amc-generated header)
     // void Main(); // main:sandbox

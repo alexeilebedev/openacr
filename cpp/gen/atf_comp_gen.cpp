@@ -111,6 +111,8 @@ namespace atf_comp { // gen:ns_print_proto
     inline static void   zd_run_comptest_UpdateCycles() __attribute__((nothrow));
     // func:atf_comp.FDb.zd_run_comptest.Call
     inline static void   zd_run_comptest_Call() __attribute__((nothrow));
+    // func:atf_comp.FDb.tifilt.InputMaybe
+    static bool          tifilt_InputMaybe(atfdb::Tifilt &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
     // func:atf_comp.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
@@ -261,6 +263,17 @@ atf_comp::FTmsg* atf_comp::zd_tmsg_RemoveFirst(atf_comp::FComptest& comptest) {
     return row;
 }
 
+// --- atf_comp.FComptest.c_tifilt.Cascdel
+// Delete referred-to items.
+// Deleted pointed-to item.
+void atf_comp::c_tifilt_Cascdel(atf_comp::FComptest& comptest) {
+    atf_comp::FTifilt *ptr = comptest.c_tifilt;
+    if (ptr) {
+        tifilt_Delete(*ptr);
+        comptest.c_tifilt = NULL;
+    }
+}
+
 // --- atf_comp.FComptest..Init
 // Set all fields to initial values.
 void atf_comp::FComptest_Init(atf_comp::FComptest& comptest) {
@@ -280,6 +293,7 @@ void atf_comp::FComptest_Init(atf_comp::FComptest& comptest) {
     comptest.zd_tmsg_n = 0; // (atf_comp.FComptest.zd_tmsg)
     comptest.zd_tmsg_tail = NULL; // (atf_comp.FComptest.zd_tmsg)
     comptest.need_write = bool(false);
+    comptest.c_tifilt = NULL;
     comptest.c_covdir = NULL;
     comptest.ind_comptest_next = (atf_comp::FComptest*)-1; // (atf_comp.FDb.ind_comptest) not-in-hash
     comptest.ind_comptest_hashval = 0; // stored hash value
@@ -294,6 +308,7 @@ void atf_comp::FComptest_Init(atf_comp::FComptest& comptest) {
 // --- atf_comp.FComptest..Uninit
 void atf_comp::FComptest_Uninit(atf_comp::FComptest& comptest) {
     atf_comp::FComptest &row = comptest; (void)row;
+    c_tifilt_Cascdel(comptest); // dmmeta.cascdel:atf_comp.FComptest.c_tifilt
     zd_tmsg_Cascdel(comptest); // dmmeta.cascdel:atf_comp.FComptest.zd_tmsg
     c_tfilt_Cascdel(comptest); // dmmeta.cascdel:atf_comp.FComptest.c_tfilt
     c_targs_Cascdel(comptest); // dmmeta.cascdel:atf_comp.FComptest.c_targs
@@ -508,7 +523,7 @@ static void atf_comp::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_comp.Input'  signature:'a1f857af527d388c20fb27796f5f322b4bd1e42f'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_comp.Input'  signature:'2fbe0bcca8334015139d5f83bcb568d203375c6e'");
 }
 
 // --- atf_comp.FDb._db.InsertStrptrMaybe
@@ -543,6 +558,12 @@ bool atf_comp::InsertStrptrMaybe(algo::strptr str) {
             retval = retval && tfilt_InputMaybe(elem);
             break;
         }
+        case atf_comp_TableId_atfdb_Tifilt: { // finput:atf_comp.FDb.tifilt
+            atfdb::Tifilt elem;
+            retval = atfdb::Tifilt_ReadStrptrMaybe(elem, str);
+            retval = retval && tifilt_InputMaybe(elem);
+            break;
+        }
         default:
         break;
     } //switch
@@ -575,6 +596,7 @@ bool atf_comp::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"dev.unstablefld"),recursive);
         retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"atfdb.comptest"),recursive);
         retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"atfdb.tmsg"),recursive);
+        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"atfdb.tifilt"),recursive);
         retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"atfdb.tfilt"),recursive);
         retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"atfdb.targs"),recursive);
         retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"amcdb.bltin"),recursive);
@@ -634,6 +656,7 @@ u32 atf_comp::SaveTuples(algo::strptr root) {
     (void)zd_out_comptest_SaveSsimfile(SsimFname(root, "atfdb.comptest"));
     (void)zd_out_tfilt_SaveSsimfile(SsimFname(root, "atfdb.tfilt"));
     (void)zd_out_targs_SaveSsimfile(SsimFname(root, "atfdb.targs"));
+    (void)zd_out_tifilt_SaveSsimfile(SsimFname(root, "atfdb.tifilt"));
     retval = algo_lib::_db.stringtofile_nwrite - nbefore;
     return retval;
 }
@@ -1845,6 +1868,227 @@ bool atf_comp::zd_out_targs_SaveSsimfile(algo::strptr fname) {
     return algo::SafeStringToFile(text, fname);
 }
 
+// --- atf_comp.FDb.tifilt.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+atf_comp::FTifilt& atf_comp::tifilt_Alloc() {
+    atf_comp::FTifilt* row = tifilt_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("atf_comp.out_of_mem  field:atf_comp.FDb.tifilt  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- atf_comp.FDb.tifilt.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+atf_comp::FTifilt* atf_comp::tifilt_AllocMaybe() {
+    atf_comp::FTifilt *row = (atf_comp::FTifilt*)tifilt_AllocMem();
+    if (row) {
+        new (row) atf_comp::FTifilt; // call constructor
+    }
+    return row;
+}
+
+// --- atf_comp.FDb.tifilt.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+atf_comp::FTifilt* atf_comp::tifilt_InsertMaybe(const atfdb::Tifilt &value) {
+    atf_comp::FTifilt *row = &tifilt_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    tifilt_CopyIn(*row,const_cast<atfdb::Tifilt&>(value));
+    bool ok = tifilt_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        tifilt_Delete(*row); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- atf_comp.FDb.tifilt.Delete
+// Remove row from all global and cross indices, then deallocate row
+void atf_comp::tifilt_Delete(atf_comp::FTifilt &row) {
+    row.~FTifilt();
+    tifilt_FreeMem(row);
+}
+
+// --- atf_comp.FDb.tifilt.AllocMem
+// Allocate space for one element
+// If no memory available, return NULL.
+void* atf_comp::tifilt_AllocMem() {
+    atf_comp::FTifilt *row = _db.tifilt_free;
+    if (UNLIKELY(!row)) {
+        tifilt_Reserve(1);
+        row = _db.tifilt_free;
+    }
+    if (row) {
+        _db.tifilt_free = row->tifilt_next;
+    }
+    return row;
+}
+
+// --- atf_comp.FDb.tifilt.FreeMem
+// Remove mem from all global and cross indices, then deallocate mem
+void atf_comp::tifilt_FreeMem(atf_comp::FTifilt &row) {
+    if (UNLIKELY(row.tifilt_next != (atf_comp::FTifilt*)-1)) {
+        FatalErrorExit("atf_comp.tpool_double_delete  pool:atf_comp.FDb.tifilt  comment:'double deletion caught'");
+    }
+    row.tifilt_next = _db.tifilt_free; // insert into free list
+    _db.tifilt_free  = &row;
+}
+
+// --- atf_comp.FDb.tifilt.Reserve
+// Preallocate memory for N more elements
+// Return number of elements actually reserved.
+u64 atf_comp::tifilt_Reserve(u64 n_elems) {
+    u64 ret = 0;
+    while (ret < n_elems) {
+        u64 size = _db.tifilt_blocksize; // underlying allocator is probably Lpool
+        u64 reserved = tifilt_ReserveMem(size);
+        ret += reserved;
+        if (reserved == 0) {
+            break;
+        }
+    }
+    return ret;
+}
+
+// --- atf_comp.FDb.tifilt.ReserveMem
+// Allocate block of given size, break up into small elements and append to free list.
+// Return number of elements reserved.
+u64 atf_comp::tifilt_ReserveMem(u64 size) {
+    u64 ret = 0;
+    if (size >= sizeof(atf_comp::FTifilt)) {
+        atf_comp::FTifilt *mem = (atf_comp::FTifilt*)algo_lib::malloc_AllocMem(size);
+        ret = mem ? size / sizeof(atf_comp::FTifilt) : 0;
+        // add newly allocated elements to the free list;
+        for (u64 i=0; i < ret; i++) {
+            mem[i].tifilt_next = _db.tifilt_free;
+            _db.tifilt_free = mem+i;
+        }
+    }
+    return ret;
+}
+
+// --- atf_comp.FDb.tifilt.InputMaybe
+static bool atf_comp::tifilt_InputMaybe(atfdb::Tifilt &elem) {
+    bool retval = true;
+    retval = tifilt_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- atf_comp.FDb.tifilt.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool atf_comp::tifilt_XrefMaybe(atf_comp::FTifilt &row) {
+    bool retval = true;
+    (void)row;
+    atf_comp::FComptest* p_comptest = atf_comp::ind_comptest_Find(row.comptest);
+    if (UNLIKELY(!p_comptest)) {
+        algo_lib::ResetErrtext() << "atf_comp.bad_xref  index:atf_comp.FDb.ind_comptest" << Keyval("key", row.comptest);
+        return false;
+    }
+    // insert tifilt into index c_tifilt
+    if (true) { // user-defined insert condition
+        bool success = c_tifilt_InsertMaybe(*p_comptest, row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "atf_comp.duplicate_key  xref:atf_comp.FComptest.c_tifilt"; // check for duplicate key
+            return false;
+        }
+    }
+    // insert tifilt into index zd_out_tifilt
+    if (true) { // user-defined insert condition
+        zd_out_tifilt_Insert(row);
+    }
+    return retval;
+}
+
+// --- atf_comp.FDb.zd_out_tifilt.Insert
+// Insert row into linked list. If row is already in linked list, do nothing.
+void atf_comp::zd_out_tifilt_Insert(atf_comp::FTifilt& row) {
+    if (!zd_out_tifilt_InLlistQ(row)) {
+        atf_comp::FTifilt* old_tail = _db.zd_out_tifilt_tail;
+        row.zd_out_tifilt_next = NULL;
+        row.zd_out_tifilt_prev = old_tail;
+        _db.zd_out_tifilt_tail = &row;
+        atf_comp::FTifilt **new_row_a = &old_tail->zd_out_tifilt_next;
+        atf_comp::FTifilt **new_row_b = &_db.zd_out_tifilt_head;
+        atf_comp::FTifilt **new_row = old_tail ? new_row_a : new_row_b;
+        *new_row = &row;
+        _db.zd_out_tifilt_n++;
+    }
+}
+
+// --- atf_comp.FDb.zd_out_tifilt.Remove
+// Remove element from index. If element is not in index, do nothing.
+void atf_comp::zd_out_tifilt_Remove(atf_comp::FTifilt& row) {
+    if (zd_out_tifilt_InLlistQ(row)) {
+        atf_comp::FTifilt* old_head       = _db.zd_out_tifilt_head;
+        (void)old_head; // in case it's not used
+        atf_comp::FTifilt* prev = row.zd_out_tifilt_prev;
+        atf_comp::FTifilt* next = row.zd_out_tifilt_next;
+        // if element is first, adjust list head; otherwise, adjust previous element's next
+        atf_comp::FTifilt **new_next_a = &prev->zd_out_tifilt_next;
+        atf_comp::FTifilt **new_next_b = &_db.zd_out_tifilt_head;
+        atf_comp::FTifilt **new_next = prev ? new_next_a : new_next_b;
+        *new_next = next;
+        // if element is last, adjust list tail; otherwise, adjust next element's prev
+        atf_comp::FTifilt **new_prev_a = &next->zd_out_tifilt_prev;
+        atf_comp::FTifilt **new_prev_b = &_db.zd_out_tifilt_tail;
+        atf_comp::FTifilt **new_prev = next ? new_prev_a : new_prev_b;
+        *new_prev = prev;
+        _db.zd_out_tifilt_n--;
+        row.zd_out_tifilt_next=(atf_comp::FTifilt*)-1; // not-in-list
+    }
+}
+
+// --- atf_comp.FDb.zd_out_tifilt.RemoveAll
+// Empty the index. (The rows are not deleted)
+void atf_comp::zd_out_tifilt_RemoveAll() {
+    atf_comp::FTifilt* row = _db.zd_out_tifilt_head;
+    _db.zd_out_tifilt_head = NULL;
+    _db.zd_out_tifilt_tail = NULL;
+    _db.zd_out_tifilt_n = 0;
+    while (row) {
+        atf_comp::FTifilt* row_next = row->zd_out_tifilt_next;
+        row->zd_out_tifilt_next  = (atf_comp::FTifilt*)-1;
+        row->zd_out_tifilt_prev  = NULL;
+        row = row_next;
+    }
+}
+
+// --- atf_comp.FDb.zd_out_tifilt.RemoveFirst
+// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+atf_comp::FTifilt* atf_comp::zd_out_tifilt_RemoveFirst() {
+    atf_comp::FTifilt *row = NULL;
+    row = _db.zd_out_tifilt_head;
+    if (row) {
+        atf_comp::FTifilt *next = row->zd_out_tifilt_next;
+        _db.zd_out_tifilt_head = next;
+        atf_comp::FTifilt **new_end_a = &next->zd_out_tifilt_prev;
+        atf_comp::FTifilt **new_end_b = &_db.zd_out_tifilt_tail;
+        atf_comp::FTifilt **new_end = next ? new_end_a : new_end_b;
+        *new_end = NULL;
+        _db.zd_out_tifilt_n--;
+        row->zd_out_tifilt_next = (atf_comp::FTifilt*)-1; // mark as not-in-list
+    }
+    return row;
+}
+
+// --- atf_comp.FDb.zd_out_tifilt.SaveSsimfile
+// Save table to ssimfile
+bool atf_comp::zd_out_tifilt_SaveSsimfile(algo::strptr fname) {
+    cstring text;
+    ind_beg(atf_comp::_db_zd_out_tifilt_curs, zd_out_tifilt, atf_comp::_db) {
+        atfdb::Tifilt out;
+        tifilt_CopyOut(zd_out_tifilt, out);
+        atfdb::Tifilt_Print(out, text);
+        text << eol;
+    }ind_end;
+    (void)algo::CreateDirRecurse(algo::GetDirName(fname));
+    // it is a silent error if the file cannot be saved.
+    return algo::SafeStringToFile(text, fname);
+}
+
 // --- atf_comp.FDb.covdir.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -2168,6 +2412,12 @@ void atf_comp::FDb_Init() {
     _db.zd_out_targs_head = NULL; // (atf_comp.FDb.zd_out_targs)
     _db.zd_out_targs_n = 0; // (atf_comp.FDb.zd_out_targs)
     _db.zd_out_targs_tail = NULL; // (atf_comp.FDb.zd_out_targs)
+    // tifilt: initialize Tpool
+    _db.tifilt_free      = NULL;
+    _db.tifilt_blocksize = algo::BumpToPow2(64 * sizeof(atf_comp::FTifilt)); // allocate 64-127 elements at a time
+    _db.zd_out_tifilt_head = NULL; // (atf_comp.FDb.zd_out_tifilt)
+    _db.zd_out_tifilt_n = 0; // (atf_comp.FDb.zd_out_tifilt)
+    _db.zd_out_tifilt_tail = NULL; // (atf_comp.FDb.zd_out_tifilt)
     // initialize LAry covdir (atf_comp.FDb.covdir)
     _db.covdir_n = 0;
     memset(_db.covdir_lary, 0, sizeof(_db.covdir_lary)); // zero out all level pointers
@@ -2261,6 +2511,32 @@ void atf_comp::FTfilt_Uninit(atf_comp::FTfilt& tfilt) {
     }
     zd_out_tfilt_Remove(row); // remove tfilt from index zd_out_tfilt
     ind_tfilt_Remove(row); // remove tfilt from index ind_tfilt
+}
+
+// --- atf_comp.FTifilt.base.CopyOut
+// Copy fields out of row
+void atf_comp::tifilt_CopyOut(atf_comp::FTifilt &row, atfdb::Tifilt &out) {
+    out.comptest = row.comptest;
+    out.ifilter = row.ifilter;
+    out.comment = row.comment;
+}
+
+// --- atf_comp.FTifilt.base.CopyIn
+// Copy fields in to row
+void atf_comp::tifilt_CopyIn(atf_comp::FTifilt &row, atfdb::Tifilt &in) {
+    row.comptest = in.comptest;
+    row.ifilter = in.ifilter;
+    row.comment = in.comment;
+}
+
+// --- atf_comp.FTifilt..Uninit
+void atf_comp::FTifilt_Uninit(atf_comp::FTifilt& tifilt) {
+    atf_comp::FTifilt &row = tifilt; (void)row;
+    atf_comp::FComptest* p_comptest = atf_comp::ind_comptest_Find(row.comptest);
+    if (p_comptest)  {
+        c_tifilt_Remove(*p_comptest, row);// remove tifilt from index c_tifilt
+    }
+    zd_out_tifilt_Remove(row); // remove tifilt from index zd_out_tifilt
 }
 
 // --- atf_comp.FTmsg.base.CopyOut
@@ -2394,6 +2670,7 @@ const char* atf_comp::value_ToCstr(const atf_comp::TableId& parent) {
         case atf_comp_TableId_atfdb_Comptest: ret = "atfdb.Comptest";  break;
         case atf_comp_TableId_atfdb_Targs  : ret = "atfdb.Targs";  break;
         case atf_comp_TableId_atfdb_Tfilt  : ret = "atfdb.Tfilt";  break;
+        case atf_comp_TableId_atfdb_Tifilt : ret = "atfdb.Tifilt";  break;
         case atf_comp_TableId_atfdb_Tmsg   : ret = "atfdb.Tmsg";  break;
     }
     return ret;
@@ -2447,6 +2724,19 @@ bool atf_comp::value_SetStrptrMaybe(atf_comp::TableId& parent, algo::strptr rhs)
                 }
                 case LE_STR8('a','t','f','d','b','.','t','f'): {
                     if (memcmp(rhs.elems+8,"ilt",3)==0) { value_SetEnum(parent,atf_comp_TableId_atfdb_tfilt); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 12: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','t','f','d','b','.','T','i'): {
+                    if (memcmp(rhs.elems+8,"filt",4)==0) { value_SetEnum(parent,atf_comp_TableId_atfdb_Tifilt); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('a','t','f','d','b','.','t','i'): {
+                    if (memcmp(rhs.elems+8,"filt",4)==0) { value_SetEnum(parent,atf_comp_TableId_atfdb_tifilt); ret = true; break; }
                     break;
                 }
             }

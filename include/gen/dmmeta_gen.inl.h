@@ -991,6 +991,7 @@ inline  dmmeta::KafkaTypeKind::KafkaTypeKind() {
 // Set all fields to initial values.
 inline void dmmeta::Lenfld_Init(dmmeta::Lenfld& parent) {
     parent.extra = i32(0);
+    parent.scale = i32(1);
 }
 
 // --- dmmeta.Lenfld..Ctor
@@ -999,9 +1000,10 @@ inline  dmmeta::Lenfld::Lenfld() {
 }
 
 // --- dmmeta.Lenfld..FieldwiseCtor
-inline  dmmeta::Lenfld::Lenfld(const algo::strptr& in_field, i32 in_extra)
+inline  dmmeta::Lenfld::Lenfld(const algo::strptr& in_field, i32 in_extra, i32 in_scale)
     : field(in_field)
     , extra(in_extra)
+    , scale(in_scale)
  {
 }
 

@@ -56,7 +56,7 @@ namespace atf_comp { // update-hdr
     // This functios applies known slowdown figures for various configurations and tools.
     int CalcTimeout(atf_comp::FComptest &comptest);
 
-    // Initialize COMPTEST.BASH.CMD to the command that will execute
+    // Initialize CMD to the command that will execute
     // If invoked with -memcheck, wrap the command line with valgrind
     // and initialize COMPTEST.FILE_MEMCHECK pathname
     // If invoked with -callgrind, wrap the command line with valgrind
@@ -64,11 +64,14 @@ namespace atf_comp { // update-hdr
     // If invoked with -coverage, wrap the command line with atf_cov
     // and link with covdir
     //
-    void SetupCmdline(atf_comp::FComptest &comptest, algo_lib::Replscope &R);
+    void SetupCmdline(atf_comp::FComptest &comptest);
 
-    // Initialize COMPTEST.FILE_TEST_IN
-    // Write input messages to file
+    // Write script header and input preparation using heredoc
+    // Use ifilter if present, otherwise cat
     void PrepareInput(atf_comp::FComptest &comptest);
+
+    // Write script to file
+    void Comptest_WriteScript(atf_comp::FComptest &comptest);
     void Comptest_Start(atf_comp::FComptest &comptest);
 
     // Start next test
@@ -141,6 +144,7 @@ namespace atf_comp { // update-hdr
     // comptest <name> <args> -- component test name & command-line arguments
     // comment <text>    -- comment
     // exit_code <code>  -- exit code
+    // ifilter <cmd>     -- input filter (preprocesses input before target)
     // filter <code>     -- output filter
     // expect <msg>      -- expected outputline
     // <anything else>   -- input message

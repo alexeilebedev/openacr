@@ -74,7 +74,11 @@ void amc::Field_UpdateDflt(amc::FField &field) {
     }
     if (amc::FLenfld *lenfld = GetLenfld(field)) {
         if (field.p_ctype->c_msgtype) {
-            field.dflt.value = tempstr() << "ssizeof(*this) + (" << lenfld->extra << ")";
+            if (lenfld->scale != 1) {
+                field.dflt.value = tempstr() << "(ssizeof(*this) + (" << lenfld->extra << ")) / " << lenfld->scale;
+            } else {
+                field.dflt.value = tempstr() << "ssizeof(*this) + (" << lenfld->extra << ")";
+            }
         }
     }
 }

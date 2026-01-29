@@ -83,7 +83,8 @@ static void GenAllocFunc(algo_lib::Replscope &R, amc::FFunc &func, amc::FField &
     amc::FLenfld *lenfld = (*field.p_arg).c_lenfld;
     if (lenfld) {
         Set(R, "$extra", tempstr() << field.p_arg->c_lenfld->extra);
-        Set(R, "$setlen", AssignExpr(*lenfld->p_field, "*row", "$poolvarlen - $extra", true));
+        Set(R, "$scale", tempstr() << field.p_arg->c_lenfld->scale);
+        Set(R, "$setlen", AssignExpr(*lenfld->p_field, "*row", "($poolvarlen / ($scale)) - $extra", true));
         Ins(&R, func.body, "    $setlen;");
     }
     // initialize type field

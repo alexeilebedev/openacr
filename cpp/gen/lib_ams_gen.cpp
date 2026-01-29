@@ -2345,8 +2345,8 @@ lib_ams::FShmember* lib_ams::c_ctlin_RemoveFirst() {
     int n = _db.c_ctlin_n;
     if (n > 0) {
         row = _db.c_ctlin_elems[0];
-        row->c_ctlin_idx=-1;
         _db.c_ctlin_elems[n-1]->c_ctlin_idx=0;
+        row->c_ctlin_idx=-1;
         _db.c_ctlin_elems[0]=_db.c_ctlin_elems[n-1];
         _db.c_ctlin_n = n-1;
     }
@@ -3227,8 +3227,8 @@ lib_ams::FShm* lib_ams::c_shm_RemoveFirst(lib_ams::FProc& proc) {
     int n = proc.c_shm_n;
     if (n > 0) {
         row = proc.c_shm_elems[0];
-        row->proc_c_shm_idx=-1;
         proc.c_shm_elems[n-1]->proc_c_shm_idx=0;
+        row->proc_c_shm_idx=-1;
         proc.c_shm_elems[0]=proc.c_shm_elems[n-1];
         proc.c_shm_n = n-1;
     }
@@ -3310,8 +3310,8 @@ lib_ams::FShmember* lib_ams::c_shmember_RemoveFirst(lib_ams::FProc& proc) {
     int n = proc.c_shmember_n;
     if (n > 0) {
         row = proc.c_shmember_elems[0];
-        row->proc_c_shmember_idx=-1;
         proc.c_shmember_elems[n-1]->proc_c_shmember_idx=0;
+        row->proc_c_shmember_idx=-1;
         proc.c_shmember_elems[0]=proc.c_shmember_elems[n-1];
         proc.c_shmember_n = n-1;
     }
@@ -4036,8 +4036,8 @@ lib_ams::FShmember* lib_ams::c_shmember_RemoveFirst(lib_ams::FShm& shm) {
     int n = shm.c_shmember_n;
     if (n > 0) {
         row = shm.c_shmember_elems[0];
-        row->shm_c_shmember_idx=-1;
         shm.c_shmember_elems[n-1]->shm_c_shmember_idx=0;
+        row->shm_c_shmember_idx=-1;
         shm.c_shmember_elems[0]=shm.c_shmember_elems[n-1];
         shm.c_shmember_n = n-1;
     }
@@ -4750,7 +4750,7 @@ ams::InputLineMsg * lib_ams::InputLineMsg_FmtByteAry(algo::ByteAry &buf, ams::Pr
     ary_RemoveAll(buf);
     msg = (ams::InputLineMsg*)ary_AllocN(buf,len).elems;
     msg->type = u32(22);
-    msg->length = u32(len + (0));
+    msg->length = u32((len + (0)) / (1));
     msg->proc_id = proc_id;
     memcpy(payload_Addr(*msg), payload.elems, payload_ary_len);
     return msg;
@@ -4771,7 +4771,7 @@ ams::LogMsg * lib_ams::LogMsg_FmtShm(lib_ams::FShm &shm, ams::ProcId proc_id, al
         return NULL; // no room.
     }
     msg->type = u32(6);
-    msg->length = u32(len + (0));
+    msg->length = u32((len + (0)) / (1));
     msg->proc_id = proc_id;
     msg->tstamp = tstamp;
     memcpy(logcat_Addr(*msg), logcat.elems, logcat_ary_len);
@@ -4794,7 +4794,7 @@ ams::MsgBlock * lib_ams::MsgBlock_FmtShm(lib_ams::FShm &shm, u64 first_seqno, u3
         return NULL; // no room.
     }
     msg->type = u32(1);
-    msg->length = u32(len + (0));
+    msg->length = u32((len + (0)) / (1));
     msg->first_seqno = first_seqno;
     msg->n_messages = n_messages;
     msg->original_length = original_length;
@@ -4814,7 +4814,7 @@ ams::ShmHbMsg * lib_ams::ShmHbMsg_FmtShm(lib_ams::FShm &shm, ams::ShmemberId shm
         return NULL; // no room.
     }
     msg->type = u32(3);
-    msg->length = u32(len + (0));
+    msg->length = u32((len + (0)) / (1));
     msg->shmember = shmember;
     msg->off = off;
     msg->wbudget = wbudget;
@@ -4833,7 +4833,7 @@ ams::TerminateMsg * lib_ams::TerminateMsg_FmtShm(lib_ams::FShm &shm) {
         return NULL; // no room.
     }
     msg->type = u32(352);
-    msg->length = u32(len + (0));
+    msg->length = u32((len + (0)) / (1));
     lib_ams::EndWrite(shm,msg,int(len));
     return msg;
 }
@@ -4851,7 +4851,7 @@ ams::UdpFrame * lib_ams::UdpFrame_FmtShm(lib_ams::FShm &shm, algo::UnTime timest
         return NULL; // no room.
     }
     msg->type = u32(2);
-    msg->length = u32(len + (0));
+    msg->length = u32((len + (0)) / (1));
     msg->timestamp = timestamp;
     msg->src_ip = src_ip;
     msg->dst_ip = dst_ip;

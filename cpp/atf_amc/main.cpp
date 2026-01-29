@@ -370,6 +370,28 @@ void atf_amc::amctest_MsgLength() {
 
 // -----------------------------------------------------------------------------
 
+// Test that lenfld scale attribute works correctly
+// MsgHdrLTScale has: len (u8), scale:4, extra:-2
+// Formula: actual_length = len * scale - extra = len * 4 + 2
+void atf_amc::amctest_LenfldScale() {
+    // Check that Init sets len correctly
+    // MsgLTScaleA is 2 bytes (len:u8 + type:char)
+    // With extra=-2: len = (sizeof(MsgLTScaleA) + (-2)) / 4 = (2 - 2) / 4 = 0
+    atf_amc::MsgLTScaleA msg;
+    vrfyeq_(sizeof(msg), 2);
+    vrfyeq_(msg.len, 0);  // (2 + (-2)) / 4 = 0
+    vrfyeq_(GetMsgLength(msg), 2);  // 0 * 4 + 2 = 2
+    vrfyeq_(GetMsgMemptr(msg).n_elems, 2);
+
+    // Manually set len and verify GetMsgLength
+    msg.len = 1;  // should give length 1*4+2 = 6
+    vrfyeq_(GetMsgLength(msg), 6);
+    msg.len = 10;  // should give length 10*4+2 = 42
+    vrfyeq_(GetMsgLength(msg), 42);
+}
+
+// -----------------------------------------------------------------------------
+
 void atf_amc::Phase(algo::strptr phase) {
     verblog("--- step: "<<phase);
 }
