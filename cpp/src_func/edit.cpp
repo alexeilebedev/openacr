@@ -41,9 +41,10 @@ void src_func::Main_EditFunc() {
 
 void src_func::Main_CreateMissing() {
     ind_beg(_db_userfunc_curs,userfunc,_db) {
+        src_func::FUserfunc *alias = ind_userfunc_cppname_Find(userfunc.cppname);
         if (!zd_func_EmptyQ(userfunc)) {
             // instances exist
-        } else if (ind_userfunc_cppname_Find(userfunc.cppname)!=NULL) {
+        } else if (alias && alias!=&userfunc) {
             // instances don't exist...
             // but another function with the same cpp name exists.
             // this means we can't reliably determine if the function is missing

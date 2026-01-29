@@ -728,6 +728,10 @@ void algo_lib::UpdateRate(algo::I64Rate &rate, i64 val)
 ```
 
 ```c++
+void algo_lib::Userinit() 
+```
+
+```c++
 int WCOREDUMP(int status) 
 ```
 
@@ -763,10 +767,6 @@ bool algo_lib::WritePid(algo_lib::FLockfile &lockfile)
 
 ```c++
 template<class T> inline T &algo::aryptr<T>::operator [](u32 idx) const 
-```
-
-```c++
-void algo_lib::_db_Userinit() 
 ```
 
 ```c++

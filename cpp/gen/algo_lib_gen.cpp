@@ -3886,7 +3886,7 @@ void algo_lib::FDb_Init() {
     (void)Charset_ReadStrptrPlain(_db.SsimBreakName, "[]{}()\t \r\n:");
     (void)Charset_ReadStrptrPlain(_db.SsimBreakValue, "[]{}()\t \r\n");
     (void)Charset_ReadStrptrMaybe(_db.SsimQuotesafe, "a-zA-Z0-9_;&*^%$@.!:,+/-");
-    _db_Userinit(); // dmmeta.fuserinit:algo_lib.FDb._db
+    Userinit(); // dmmeta.fuserinit:algo_lib.FDb._db
     // initialize LAry imtable (algo_lib.FDb.imtable)
     _db.imtable_n = 0;
     memset(_db.imtable_lary, 0, sizeof(_db.imtable_lary)); // zero out all level pointers
