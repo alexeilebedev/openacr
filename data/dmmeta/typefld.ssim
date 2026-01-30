@@ -1,5 +1,6 @@
 dmmeta.typefld  field:ams.MsgHeader.type  comment:""
 dmmeta.typefld  field:atf_amc.MsgHdrLT.type  comment:""
+dmmeta.typefld  field:atf_amc.MsgHdrLTScale.type  comment:""
 dmmeta.typefld  field:atf_amc.MsgHeader.type  comment:""
 dmmeta.typefld  field:kafka.GroupRecordKeyHeader.type  comment:""
 dmmeta.typefld  field:kafka.GroupRecordValueHeader.type  comment:""

@@ -316,50 +316,51 @@ enum command_FieldIdEnum {                             // command.FieldId.value
     ,command_FieldId_name                       = 282
     ,command_FieldId_files                      = 283
     ,command_FieldId_refs                       = 284
-    ,command_FieldId_targsrc                    = 285
-    ,command_FieldId_acrkey                     = 286
-    ,command_FieldId_func                       = 287
-    ,command_FieldId_nextfile                   = 288
-    ,command_FieldId_other                      = 289
-    ,command_FieldId_updateproto                = 290
-    ,command_FieldId_createmissing              = 291
-    ,command_FieldId_iffy                       = 292
-    ,command_FieldId_gen                        = 293
-    ,command_FieldId_showloc                    = 294
-    ,command_FieldId_showstatic                 = 295
-    ,command_FieldId_matchproto                 = 296
-    ,command_FieldId_matchbody                  = 297
-    ,command_FieldId_matchcomment               = 298
-    ,command_FieldId_showsortkey                = 299
-    ,command_FieldId_showbody                   = 300
-    ,command_FieldId_sortname                   = 301
-    ,command_FieldId_printssim                  = 302
-    ,command_FieldId_baddecl                    = 303
-    ,command_FieldId_indent                     = 304
-    ,command_FieldId_update_copyright           = 305
-    ,command_FieldId_scriptfile                 = 306
-    ,command_FieldId_linelim                    = 307
-    ,command_FieldId_strayfile                  = 308
-    ,command_FieldId_badchar                    = 309
-    ,command_FieldId_badline                    = 310
-    ,command_FieldId_expand                     = 311
-    ,command_FieldId_ignoreQuote                = 312
-    ,command_FieldId_maxpacket                  = 313
-    ,command_FieldId_db                         = 314
-    ,command_FieldId_createdb                   = 315
-    ,command_FieldId_typetag                    = 316
-    ,command_FieldId_format                     = 317
-    ,command_FieldId_tocamelcase                = 318
-    ,command_FieldId_tolowerunder               = 319
-    ,command_FieldId_pathcomp                   = 320
-    ,command_FieldId_fname                      = 321
-    ,command_FieldId_outseparator               = 322
-    ,command_FieldId_header                     = 323
-    ,command_FieldId_prefer_signed              = 324
-    ,command_FieldId_value                      = 325
+    ,command_FieldId_pull                       = 285
+    ,command_FieldId_targsrc                    = 286
+    ,command_FieldId_acrkey                     = 287
+    ,command_FieldId_func                       = 288
+    ,command_FieldId_nextfile                   = 289
+    ,command_FieldId_other                      = 290
+    ,command_FieldId_updateproto                = 291
+    ,command_FieldId_createmissing              = 292
+    ,command_FieldId_iffy                       = 293
+    ,command_FieldId_gen                        = 294
+    ,command_FieldId_showloc                    = 295
+    ,command_FieldId_showstatic                 = 296
+    ,command_FieldId_matchproto                 = 297
+    ,command_FieldId_matchbody                  = 298
+    ,command_FieldId_matchcomment               = 299
+    ,command_FieldId_showsortkey                = 300
+    ,command_FieldId_showbody                   = 301
+    ,command_FieldId_sortname                   = 302
+    ,command_FieldId_printssim                  = 303
+    ,command_FieldId_baddecl                    = 304
+    ,command_FieldId_indent                     = 305
+    ,command_FieldId_update_copyright           = 306
+    ,command_FieldId_scriptfile                 = 307
+    ,command_FieldId_linelim                    = 308
+    ,command_FieldId_strayfile                  = 309
+    ,command_FieldId_badchar                    = 310
+    ,command_FieldId_badline                    = 311
+    ,command_FieldId_expand                     = 312
+    ,command_FieldId_ignoreQuote                = 313
+    ,command_FieldId_maxpacket                  = 314
+    ,command_FieldId_db                         = 315
+    ,command_FieldId_createdb                   = 316
+    ,command_FieldId_typetag                    = 317
+    ,command_FieldId_format                     = 318
+    ,command_FieldId_tocamelcase                = 319
+    ,command_FieldId_tolowerunder               = 320
+    ,command_FieldId_pathcomp                   = 321
+    ,command_FieldId_fname                      = 322
+    ,command_FieldId_outseparator               = 323
+    ,command_FieldId_header                     = 324
+    ,command_FieldId_prefer_signed              = 325
+    ,command_FieldId_value                      = 326
 };
 
-enum { command_FieldIdEnum_N = 326 };
+enum { command_FieldIdEnum_N = 327 };
 
 
 // --- command_abt_cache_Enum
@@ -5516,6 +5517,8 @@ struct sandbox { // command.sandbox
     algo::cstring    refs;          //   "HEAD"  Additional list of refs to fetch into sandbox
     algo::cstring    ref;           //   "HEAD"  Reset to this ref
     bool             q;             //   false  Quiet mode
+    bool             pull;          //   false  Pull changes from sandbox to main repo
+    bool             dry_run;       //   false  Print commands without executing
     // func:command.sandbox..AssignOp
     command::sandbox&    operator =(const command::sandbox &rhs) __attribute__((nothrow));
     // func:command.sandbox..Ctor

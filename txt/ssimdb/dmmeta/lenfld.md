@@ -15,6 +15,7 @@ italicised fields: *ctype* are [**fldfunc**](/txt/ssim.md#fldfunc) fields
 |field|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftypes.md#pkey)||Name of length field|
 |extra|i32|[Val](/txt/exe/amc/reftypes.md#val)||Extra #bytes to add|
 |*ctype*|*[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)*|*[Pkey](/txt/exe/amc/reftypes.md#pkey)*||*Name of length field<br>.RL of field*|
+|scale|i32|[Val](/txt/exe/amc/reftypes.md#val)|1|Multiplier for length field value|
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Attributes -->
 

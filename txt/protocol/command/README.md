@@ -674,6 +674,8 @@ Other ctypes in this namespace which don't have own readme files
 |refs|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|"HEAD"|Additional list of refs to fetch into sandbox|
 |ref|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|"HEAD"|Reset to this ref|
 |q|bool|[Val](/txt/exe/amc/reftypes.md#val)||Quiet mode|
+|pull|bool|[Val](/txt/exe/amc/reftypes.md#val)||Pull changes from sandbox to main repo|
+|dry_run|bool|[Val](/txt/exe/amc/reftypes.md#val)||Print commands without executing|
 
 #### command.src_func - Command line for [src_func](/txt/exe/src_func/README.md)
 <a href="#command-src_func"></a>

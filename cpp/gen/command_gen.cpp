@@ -326,6 +326,7 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_name          : ret = "name";  break;
         case command_FieldId_files         : ret = "files";  break;
         case command_FieldId_refs          : ret = "refs";  break;
+        case command_FieldId_pull          : ret = "pull";  break;
         case command_FieldId_targsrc       : ret = "targsrc";  break;
         case command_FieldId_acrkey        : ret = "acrkey";  break;
         case command_FieldId_func          : ret = "func";  break;
@@ -652,6 +653,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR4('n','s','d','b'): {
                     value_SetEnum(parent,command_FieldId_nsdb); ret = true; break;
+                }
+                case LE_STR4('p','u','l','l'): {
+                    value_SetEnum(parent,command_FieldId_pull); ret = true; break;
                 }
                 case LE_STR4('p','u','s','h'): {
                     value_SetEnum(parent,command_FieldId_push); ret = true; break;
@@ -22023,6 +22027,12 @@ bool command::sandbox_ReadFieldMaybe(command::sandbox& parent, algo::strptr fiel
         case command_FieldId_q: {
             retval = bool_ReadStrptrMaybe(parent.q, strval);
         } break;
+        case command_FieldId_pull: {
+            retval = bool_ReadStrptrMaybe(parent.pull, strval);
+        } break;
+        case command_FieldId_dry_run: {
+            retval = bool_ReadStrptrMaybe(parent.dry_run, strval);
+        } break;
         default: {
             retval = false;
             algo_lib::AppendErrtext("comment", "unrecognized attr");
@@ -22072,6 +22082,8 @@ void command::sandbox_Init(command::sandbox& parent) {
     parent.refs = algo::strptr("HEAD");
     parent.ref = algo::strptr("HEAD");
     parent.q = bool(false);
+    parent.pull = bool(false);
+    parent.dry_run = bool(false);
 }
 
 // --- command.sandbox..Uninit
@@ -22203,6 +22215,18 @@ void command::sandbox_PrintArgv(command::sandbox& row, algo::cstring& str) {
         str << " -q:";
         strptr_PrintBash(temp,str);
     }
+    if (!(row.pull == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.pull, temp);
+        str << " -pull:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.dry_run == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.dry_run, temp);
+        str << " -dry_run:";
+        strptr_PrintBash(temp,str);
+    }
 }
 
 // --- command.sandbox..GetAnon
@@ -22284,6 +22308,16 @@ i32 command::sandbox_NArgs(command::FieldId field, algo::strptr& out_dflt, bool*
             retval=0;
             out_dflt="Y";
         } break;
+        case command_FieldId_pull: { // bool: no argument required but value may be specified as pull:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_dry_run: { // bool: no argument required but value may be specified as dry_run:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
         default:
         retval=-1; // unrecognized
     }
@@ -22307,6 +22341,8 @@ command::sandbox& command::sandbox::operator =(const command::sandbox &rhs) {
     refs = rhs.refs;
     ref = rhs.ref;
     q = rhs.q;
+    pull = rhs.pull;
+    dry_run = rhs.dry_run;
     return *this;
 }
 
@@ -22325,6 +22361,8 @@ command::sandbox& command::sandbox::operator =(const command::sandbox &rhs) {
     , refs(rhs.refs)
     , ref(rhs.ref)
     , q(rhs.q)
+    , pull(rhs.pull)
+    , dry_run(rhs.dry_run)
  {
     cmd_elems 	= 0; // (command.sandbox.cmd)
     cmd_n     	= 0; // (command.sandbox.cmd)
@@ -22560,6 +22598,18 @@ void command::sandbox_ToArgv(command::sandbox_proc& parent, algo::StringAry& arg
         cstring *arg = &ary_Alloc(args);
         *arg << "-q:";
         bool_Print(parent.cmd.q, *arg);
+    }
+
+    if (parent.cmd.pull != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-pull:";
+        bool_Print(parent.cmd.pull, *arg);
+    }
+
+    if (parent.cmd.dry_run != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-dry_run:";
+        bool_Print(parent.cmd.dry_run, *arg);
     }
     for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
         ary_Alloc(args) << "-verbose";

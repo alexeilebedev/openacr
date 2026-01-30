@@ -1,0 +1,40 @@
+dry_run: set -eu -o pipefail
+curdir=$(pwd)
+ref_sha=$(git rev-parse HEAD)
+extra_sha=$(git rev-parse HEAD | tr '\n' ' ')
+gitfiles="$(git ls-files -m) .gcache .gitignore build temp/.empty"
+
+clone_sandbox() {
+  local dir=$1
+  if git rev-parse --is-shallow-repository | grep -q true; then
+    git clone . "$dir" 2>/dev/null
+  else  # ignore:hanging_else
+    git clone --local . "$dir" 2>/dev/null
+  fi
+}
+sync_sandbox() {
+  local dir=$1
+  git -C "$dir" fetch -q "$curdir" "$ref_sha" $extra_sha
+  git -C "$dir" reset --hard -q
+  git -C "$dir" clean --exclude=build --exclude=.gcache -fxq .
+  git -C "$dir" checkout -B baseline "$ref_sha" -q
+}
+reset_sandbox() {
+  local dir=$1 name=$2 quiet=${3:-}
+  [ -z "$quiet" ] && echo "sandbox.reset  sandbox:$name  dir:$dir" >&2
+  [ ! -d "$dir" ] && clone_sandbox "$dir"
+  if ! sync_sandbox "$dir"; then
+    rm -rf "$dir"
+    clone_sandbox "$dir"
+  fi
+  rsync --relative --ignore-missing-args -ac $gitfiles "$dir/"
+  git -C "$dir" commit --allow-empty -m baseline -q 2>/dev/null
+}
+
+[ ! -d "temp/sandbox.amc" ] && reset_sandbox "temp/sandbox.amc" "amc" "1"
+pushd "temp/sandbox.amc" >/dev/null || exit 1
+
+git reset --hard -q
+git clean -df . -q
+popd >/dev/null || exit 1
+

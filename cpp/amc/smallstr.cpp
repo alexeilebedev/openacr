@@ -374,7 +374,7 @@ void amc::tfunc_Smallstr_CtorStrptr() {
         func.inl=true;
         func.comment="";// erase it
         func.member=true;
-        Ins(&R, func.proto, "$Parname(const algo::strptr &rhs)", false);
+        Ins(&R, func.proto, "$Name(const algo::strptr &rhs)", false);
         Ins(&R, func.body, "$name_SetStrptr(*this, rhs);");
     }
 }

@@ -82,6 +82,9 @@ void amc::Disp_Read(amc::FDispatch &disp) {
         } else if (lenfld && lenfld->extra < 0) {
             lenassign << lenfld->extra;
         }
+        if (lenfld && lenfld->scale != 1) {
+            lenassign = tempstr() << "(" << lenassign << ") / " << lenfld->scale;
+        }
         Ins(&R, func.body        , "case $caseenumprefix_$msgns_$Msgname: {");
         amc::FCfmt *cfmt = FindStringRead(*msg.p_ctype);
         if (!cfmt) {

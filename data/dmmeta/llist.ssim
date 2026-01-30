@@ -82,6 +82,7 @@ dmmeta.llist  field:atf_comp.FDb.zd_covdir_free  havetail:Y  havecount:Y  commen
 dmmeta.llist  field:atf_comp.FDb.zd_out_comptest  havetail:Y  havecount:Y  comment:""
 dmmeta.llist  field:atf_comp.FDb.zd_out_targs  havetail:Y  havecount:Y  comment:""
 dmmeta.llist  field:atf_comp.FDb.zd_out_tfilt  havetail:Y  havecount:Y  comment:""
+dmmeta.llist  field:atf_comp.FDb.zd_out_tifilt  havetail:Y  havecount:Y  comment:""
 dmmeta.llist  field:atf_comp.FDb.zd_out_tmsg  havetail:Y  havecount:Y  comment:""
 dmmeta.llist  field:atf_comp.FDb.zd_run_comptest  havetail:Y  havecount:Y  comment:""
 dmmeta.llist  field:atf_comp.FDb.zd_sel_comptest  havetail:Y  havecount:Y  comment:""

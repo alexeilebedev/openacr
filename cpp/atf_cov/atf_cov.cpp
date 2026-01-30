@@ -29,12 +29,14 @@ static void Prlog(algo_lib::FLogcat *logcat, algo::SchedTime tstamp, strptr str)
     WriteFileX(atf_cov::_db.logfd.fd,strptr_ToMemptr(str));
 }
 
-static tempstr GetGcovDstDir(strptr name) {
+static tempstr GetGcovDstDir(strptr covdir, strptr name) {
     tempstr dir(".");
-    int pos = FindStr(name,"##");
-    if (pos >=0) {
-        dir = ch_FirstN(name,pos);
-        Translate(dir,"#","/");
+    // Mangle covdir to match gcov filename format (/ -> #)
+    tempstr mangled_covdir(covdir);
+    Translate(mangled_covdir, "/", "#");
+    // Check if filename starts with mangled covdir
+    if (StartsWithQ(name, mangled_covdir)) {
+        dir = covdir;
     }
     return dir;
 }
@@ -93,35 +95,42 @@ static void CleanupDirPhase(strptr covdir, atf_cov_Phase_value_Enum phase) {
 
 void atf_cov::RunGcov(strptr covdir) {
     cstring covdir_full = GetFullPath(covdir);
+    // Create build symlink in covdir for relative gcno paths
+    {
+        cstring build_target = DirFileJoin(algo::GetCurDir(), "build");
+        cstring build_link = DirFileJoin(covdir, "build");
+        int rc = symlink(Zeroterm(build_target), Zeroterm(build_link));
+        (void)rc;
+    }
     // cleanup current dir from .gcov files
     ind_beg(algo::Dir_curs,ent,"*.gcov") {
-        cstring dst_dir = GetGcovDstDir(ent.filename);
+        cstring dst_dir = GetGcovDstDir(covdir, ent.filename);
         cstring dst_dir_full = GetFullPath(dst_dir);
         if (dst_dir_full == covdir_full) {
             DeleteFile(ent.filename);
         }
     }ind_end;
-    // walk .gcda, prepare .gcno, run gcov - produce .gcov
+    // walk .gcda, prepare .gcno symlinks
+    cstring gcov_cmd;
+    gcov_cmd << "gcov -p -l";
     ind_beg(algo::Dir_curs,ent,DirFileJoin(covdir,"*.gcda")) {
         cstring gcno_dst_path = ReplaceExt(ent.pathname,".gcno");
         cstring gcno_src_path = ReplaceExt(ent.filename,".gcno"); // mangled
         Translate(gcno_src_path,"#","/"); // demangle
         errno_vrfy_(symlink(Zeroterm(gcno_src_path),Zeroterm(gcno_dst_path))==0);
-        tempstr cmd;
-        cmd << "gcov -p -l " << ent.pathname;
-        if (ValidQ(_db.logfd.fd)) {
-            cmd << " >&" << _db.logfd.fd.value << " 2>&" << _db.logfd.fd.value;
-        }
-        SysCmd(cmd);
+        gcov_cmd << " " << ent.pathname;
     }ind_end;
+    // run gcov once with all gcda files
+    if (ValidQ(_db.logfd.fd)) {
+        gcov_cmd << " >&" << _db.logfd.fd.value << " 2>&" << _db.logfd.fd.value;
+    }
+    SysCmd(gcov_cmd);
     // walk .ccov in current directory, move relevant to covdir
     ind_beg(algo::Dir_curs,ent,"*.gcov") {
-        prlog(ent.filename);
-        cstring dst_dir = GetGcovDstDir(ent.filename);
+        cstring dst_dir = GetGcovDstDir(covdir, ent.filename);
         cstring dst_dir_full = GetFullPath(dst_dir);
         cstring dst_path = DirFileJoin(covdir,ent.filename);
         if (dst_dir_full == covdir_full && dst_dir_full != algo::GetCurDir()) {
-            prlog(dst_path);
             errno_vrfy_(rename(Zeroterm(ent.pathname),Zeroterm(dst_path))==0);
         }
     }ind_end;

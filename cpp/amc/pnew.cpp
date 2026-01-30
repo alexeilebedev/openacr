@@ -108,7 +108,8 @@ static void Pnew_CopyFields(amc::Genpnew &genpnew) {
             Ins(&R, func.body, "$name_Setary(*msg, $name);");
         } else if (amc::FLenfld *lenfld = GetLenfld(field)) {
             Set(R, "$extra", tempstr() << lenfld->extra);
-            Ins(&R, func.body, AssignExpr(field, "*msg", "len + ($extra)", true)<<";");
+            Set(R, "$scale", tempstr() << lenfld->scale);
+            Ins(&R, func.body, AssignExpr(field, "*msg", "(len + ($extra)) / ($scale)", true)<<";");
         } else if (field.reftype == dmmeta_Reftype_reftype_Varlen) {
             Ins(&R, func.body, "memcpy($name_Addr(*msg), $name.elems, $name_ary_len);");
             if (ctype_zd_varlenfld_Next(field)) {

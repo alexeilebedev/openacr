@@ -2686,7 +2686,7 @@ ams::ProcMsg * atf_exp::ProcMsg_FmtAppend(algo::ByteAry &buf, const algo::strptr
     len += payload_ary_len;
     msg = (ams::ProcMsg*)ary_AllocN(buf,len).elems;
     msg->type = u32(701);
-    msg->length = u32(len + (0));
+    msg->length = u32((len + (0)) / (1));
     msg->proc = proc;
     memcpy(payload_Addr(*msg), payload.elems, payload_ary_len);
     return msg;
@@ -2700,7 +2700,7 @@ ams::ProcStatusMsg * atf_exp::ProcStatusMsg_FmtAppend(algo::ByteAry &buf, const 
     size_t len = sizeof(ams::ProcStatusMsg);
     msg = (ams::ProcStatusMsg*)ary_AllocN(buf,len).elems;
     msg->type = u32(705);
-    msg->length = u32(len + (0));
+    msg->length = u32((len + (0)) / (1));
     msg->proc = proc;
     msg->status = status;
     return msg;

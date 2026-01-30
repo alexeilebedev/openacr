@@ -17,6 +17,7 @@ dmmeta.ssimsort  ssimfile:atfdb.test_gsymbol_char  sortfld:atfdb.TestGsymbolChar
 dmmeta.ssimsort  ssimfile:atfdb.test_gsymbol_pkey  sortfld:atfdb.TestGsymbolPkey.test_gsymbol_pkey  comment:""
 dmmeta.ssimsort  ssimfile:atfdb.test_gsymbol_strptr  sortfld:atfdb.TestGsymbolStrptr.test_gsymbol_strptr  comment:""
 dmmeta.ssimsort  ssimfile:atfdb.tfilt  sortfld:atfdb.Tfilt.comptest  comment:""
+dmmeta.ssimsort  ssimfile:atfdb.tifilt  sortfld:atfdb.Tifilt.comptest  comment:""
 dmmeta.ssimsort  ssimfile:atfdb.tmsg  sortfld:atfdb.Tmsg.tmsg  comment:""
 dmmeta.ssimsort  ssimfile:atfdb.unittest  sortfld:atfdb.Unittest.unittest  comment:""
 dmmeta.ssimsort  ssimfile:atfdb.var  sortfld:atfdb.Var.var  comment:""

@@ -53,6 +53,9 @@ void atf_comp::Main_EditSelected() {
                 if (comptest.c_tfilt) {
                     zd_out_tfilt_Remove(*comptest.c_tfilt);
                 }
+                if (comptest.c_tifilt) {
+                    zd_out_tifilt_Remove(*comptest.c_tifilt);
+                }
                 zd_out_comptest_Remove(comptest);
                 zd_sel_comptest_Remove(comptest);
                 _db.nchange++;

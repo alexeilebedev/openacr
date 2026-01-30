@@ -47,6 +47,8 @@ Usage: sandbox [-name:]<regx> [[-cmd:]<string>] [options]
     -refs       string  "HEAD"  Additional list of refs to fetch into sandbox
     -ref        string  "HEAD"  Reset to this ref
     -q                          Quiet mode
+    -pull                       Pull changes from sandbox to main repo
+    -dry_run                    Print commands without executing
     -verbose    flag            Verbosity level (0..255); alias -v; cumulative
     -debug      flag            Debug level (0..255); alias -d; cumulative
     -help                       Print help and exit; alias -h
@@ -215,6 +217,12 @@ $ sandbox test -create "sandbox test2 -create 'command'" -del
 
 #### -q -- Quiet mode
 <a href="#-q"></a>
+
+#### -pull -- Pull changes from sandbox to main repo
+<a href="#-pull"></a>
+
+#### -dry_run -- Print commands without executing
+<a href="#-dry_run"></a>
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
 

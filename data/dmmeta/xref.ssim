@@ -561,6 +561,8 @@ dmmeta.xref  field:atf_comp.FDb.zd_out_tmsg  inscond:true  via:""
 dmmeta.xref  field:atf_comp.FDb.zd_out_comptest  inscond:true  via:""
 dmmeta.xref  field:atf_comp.FDb.zd_out_tfilt  inscond:true  via:""
 dmmeta.xref  field:atf_comp.FDb.zd_out_targs  inscond:true  via:""
+dmmeta.xref  field:atf_comp.FComptest.c_tifilt  inscond:true  via:atf_comp.FDb.ind_comptest/atfdb.Tifilt.comptest
+dmmeta.xref  field:atf_comp.FDb.zd_out_tifilt  inscond:true  via:""
 dmmeta.xref  field:atf_comp.FDb.zd_covdir_free  inscond:true  via:""
 dmmeta.xref  field:atf_comp.FDb.ind_tfilt  inscond:true  via:""
 dmmeta.xref  field:atf_cov.FDb.ind_covline  inscond:true  via:""

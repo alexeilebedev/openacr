@@ -24,6 +24,12 @@
 
 #pragma once
 
+// pad_byte constructors (type is in root namespace, no target generates these)
+inline pad_byte::pad_byte() : value(0) {
+}
+inline pad_byte::pad_byte(u8 in_value) : value(in_value) {
+}
+
 template<class T> inline tempstr &algo::operator <<(const tempstr &lhs, const T &rhs) {
     (cstring&)lhs << rhs;
     return (tempstr&)lhs;

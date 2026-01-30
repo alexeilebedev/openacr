@@ -65,7 +65,7 @@ void amc::GenTableId(amc::FNs &ns) {
         fconst.comment.value = tempstr()<<base->ctype<<" -> "<<ctype.ctype;
         amc::fconst_InsertMaybe(fconst);
 
-        if (base->c_ssimfile && base->c_ssimfile->ssimfile != name_Get(fconst)) {
+        if (base->c_ssimfile && !algo::strptr_Eq(base->c_ssimfile->ssimfile, name_Get(fconst))) {
             fconst.fconst = tempstr() << table_ctype.ctype << ".value/" << base->c_ssimfile->ssimfile;
             fconst.comment.value = tempstr()<<base->c_ssimfile->ssimfile<<" -> "<<ctype.ctype;
             amc::fconst_InsertMaybe(fconst);

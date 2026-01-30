@@ -27,14 +27,14 @@
 #include "include/gen/sandbox_gen.inl.h"
 #include "include/gen/command_gen.h"
 #include "include/gen/command_gen.inl.h"
-#include "include/gen/dev_gen.h"
-#include "include/gen/dev_gen.inl.h"
 #include "include/gen/algo_gen.h"
 #include "include/gen/algo_gen.inl.h"
-#include "include/gen/lib_json_gen.h"
-#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
+#include "include/gen/dev_gen.h"
+#include "include/gen/dev_gen.inl.h"
+#include "include/gen/lib_json_gen.h"
+#include "include/gen/lib_json_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
@@ -63,6 +63,8 @@ const char *sandbox_help =
 "    -refs       string  \"HEAD\"  Additional list of refs to fetch into sandbox\n"
 "    -ref        string  \"HEAD\"  Reset to this ref\n"
 "    -q                          Quiet mode\n"
+"    -pull                       Pull changes from sandbox to main repo\n"
+"    -dry_run                    Print commands without executing\n"
 "    -verbose    flag            Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug      flag            Debug level (0..255); alias -d; cumulative\n"
 "    -help                       Print help and exit; alias -h\n"
@@ -294,7 +296,7 @@ static void sandbox::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'sandbox.Input'  signature:'cc12803fdb112312e03adeccfcb9535fc5825f85'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'sandbox.Input'  signature:'07ae92f6d6b401e7881e6da0eef752ef2d0ab64c'");
 }
 
 // --- sandbox.FDb._db.InsertStrptrMaybe

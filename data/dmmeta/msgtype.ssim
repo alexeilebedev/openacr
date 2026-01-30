@@ -16,6 +16,7 @@ dmmeta.msgtype  ctype:ams.UdpFrame  type:2
 dmmeta.msgtype  ctype:atf_amc.MsgLTA  type:"'A'"
 dmmeta.msgtype  ctype:atf_amc.MsgLTB  type:"'B'"
 dmmeta.msgtype  ctype:atf_amc.MsgLTO  type:"'O'"
+dmmeta.msgtype  ctype:atf_amc.MsgLTScaleA  type:"'S'"
 dmmeta.msgtype  ctype:atf_amc.MsgLTV  type:"'V'"
 dmmeta.msgtype  ctype:atf_amc.Seqmsg  type:0x0905
 dmmeta.msgtype  ctype:atf_amc.Text  type:0x0412

@@ -544,7 +544,7 @@ ws::Frame16 * lib_ws::Frame16_FmtByteAry(algo::ByteAry &buf, u8 byte0, algo::ary
     msg = (ws::Frame16*)ary_AllocN(buf,len).elems;
     msg->byte0 = byte0;
     msg->byte1 = u8(126);
-    ext_payload_len_Set(*msg, u16(len + (-4)));
+    ext_payload_len_Set(*msg, u16((len + (-4)) / (1)));
     memcpy(payload_Addr(*msg), payload.elems, payload_ary_len);
     return msg;
 }
@@ -561,7 +561,7 @@ ws::Frame64 * lib_ws::Frame64_FmtByteAry(algo::ByteAry &buf, u8 byte0, algo::ary
     msg = (ws::Frame64*)ary_AllocN(buf,len).elems;
     msg->byte0 = byte0;
     msg->byte1 = u8(127);
-    ext_payload_len_Set(*msg, u64(len + (-10)));
+    ext_payload_len_Set(*msg, u64((len + (-10)) / (1)));
     memcpy(payload_Addr(*msg), payload.elems, payload_ary_len);
     return msg;
 }
@@ -595,7 +595,7 @@ ws::FrameMasked16 * lib_ws::FrameMasked16_FmtByteAry(algo::ByteAry &buf, u8 byte
     msg = (ws::FrameMasked16*)ary_AllocN(buf,len).elems;
     msg->byte0 = byte0;
     msg->byte1 = u8(254);
-    ext_payload_len_Set(*msg, u16(len + (-8)));
+    ext_payload_len_Set(*msg, u16((len + (-8)) / (1)));
     msg->masking_key = masking_key;
     memcpy(payload_Addr(*msg), payload.elems, payload_ary_len);
     return msg;
@@ -613,7 +613,7 @@ ws::FrameMasked64 * lib_ws::FrameMasked64_FmtByteAry(algo::ByteAry &buf, u8 byte
     msg = (ws::FrameMasked64*)ary_AllocN(buf,len).elems;
     msg->byte0 = byte0;
     msg->byte1 = u8(255);
-    ext_payload_len_Set(*msg, u64(len + (-14)));
+    ext_payload_len_Set(*msg, u64((len + (-14)) / (1)));
     msg->masking_key = masking_key;
     memcpy(payload_Addr(*msg), payload.elems, payload_ary_len);
     return msg;

@@ -3193,6 +3193,19 @@ tempstr algo::UrlDecode(strptr in, bool plus)
 ```
 
 ```c++
+// Return length of valid UTF-8 sequence starting at position POS in string S.
+// Returns 0 if the byte at POS is not a valid UTF-8 lead byte or if the
+// sequence is incomplete/malformed.
+// This function validates:
+// - Correct lead byte ranges (0xC2-0xDF for 2-byte, 0xE0-0xEF for 3-byte, 0xF0-0xF4 for 4-byte)
+// - Continuation bytes have correct format (10xxxxxx)
+// - No overlong encodings
+// - No UTF-16 surrogate halves
+// - No codepoints > U+10FFFF
+int algo::Utf8SeqLen(strptr s, int pos) 
+```
+
+```c++
 void algo::Uuid_Print(algo::Uuid &parent, algo::cstring &str) 
 ```
 

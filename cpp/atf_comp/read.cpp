@@ -28,6 +28,7 @@
 // comptest <name> <args> -- component test name & command-line arguments
 // comment <text>    -- comment
 // exit_code <code>  -- exit code
+// ifilter <cmd>     -- input filter (preprocesses input before target)
 // filter <code>     -- output filter
 // expect <msg>      -- expected outputline
 // <anything else>   -- input message
@@ -52,6 +53,7 @@ void atf_comp::Main_Read(algo::Fildes fd) {
                 zd_tmsg_Cascdel(*comptest);// clear our tmsgs under this test
                 c_targs_Cascdel(*comptest);
                 c_tfilt_Cascdel(*comptest);
+                c_tifilt_Cascdel(*comptest);
             }
             verblog("# read testcase "<<comptest->comptest);
             atf_comp::FTargs &targs=targs_Alloc();
@@ -76,6 +78,13 @@ void atf_comp::Main_Read(algo::Fildes fd) {
             bool_ReadStrptrMaybe(comptest->memcheck,rest);
         } else if (comptest && word == "coverage") {
             bool_ReadStrptrMaybe(comptest->coverage,rest);
+        } else if (comptest && word == "ifilter") {
+            if (!comptest->c_tifilt) {
+                atf_comp::FTifilt &tifilt=tifilt_Alloc();
+                tifilt.comptest=comptest->comptest;
+                tifilt_XrefMaybe(tifilt);
+            }
+            comptest->c_tifilt->ifilter=rest;
         } else if (comptest && word == "filter") {
             if (!comptest->c_tfilt) {
                 atf_comp::FTfilt &tfilt=tfilt_Alloc();

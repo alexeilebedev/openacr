@@ -5919,7 +5919,7 @@ atf_amc::VarlenExtern* atf_amc::varlen_extern_AllocExtraMaybe(void *extra, i32 n
     atf_amc::VarlenExtern *row = (atf_amc::VarlenExtern*)varlen_extern_AllocMem(sizeof(atf_amc::VarlenExtern) + nbyte_extra);
     if (row) {
         new (row) atf_amc::VarlenExtern; // call constructor
-        length_Set(*row, u32(sizeof(atf_amc::VarlenExtern) + nbyte_extra - 0));
+        length_Set(*row, u32((sizeof(atf_amc::VarlenExtern) + nbyte_extra / (1)) - 0));
         if (extra) {
             memcpy((u8*)row + sizeof(atf_amc::VarlenExtern), extra, nbyte_extra);
         }
@@ -6114,6 +6114,7 @@ static void atf_amc::amctest_LoadStatic() {
         ,{ "atfdb.amctest  amctest:ImdXref  comment:\"\"", atf_amc::amctest_ImdXref }
         ,{ "atfdb.amctest  amctest:Inlary_ReadPrint  comment:\"Check Inlary read/print\"", atf_amc::amctest_Inlary_ReadPrint }
         ,{ "atfdb.amctest  amctest:LaryFind  comment:\"\"", atf_amc::amctest_LaryFind }
+        ,{ "atfdb.amctest  amctest:LenfldScale  comment:\"Test lenfld scale attribute\"", atf_amc::amctest_LenfldScale }
         ,{ "atfdb.amctest  amctest:LineIter  comment:\"Iterate over lines\"", atf_amc::amctest_LineIter }
         ,{ "atfdb.amctest  amctest:Lpool  comment:\"\"", atf_amc::amctest_Lpool }
         ,{ "atfdb.amctest  amctest:LpoolLockMem  comment:\"\"", atf_amc::amctest_LpoolLockMem }
@@ -6538,7 +6539,7 @@ atf_amc::OptAlloc* atf_amc::optalloc_AllocExtraMaybe(void *extra, i32 nbyte_extr
     atf_amc::OptAlloc *row = (atf_amc::OptAlloc*)optalloc_AllocMem(sizeof(atf_amc::OptAlloc) + nbyte_extra);
     if (row) {
         new (row) atf_amc::OptAlloc; // call constructor
-        row->length = u32(sizeof(atf_amc::OptAlloc) + nbyte_extra - 0);
+        row->length = u32((sizeof(atf_amc::OptAlloc) + nbyte_extra / (1)) - 0);
         if (extra) {
             memcpy((u8*)row + sizeof(atf_amc::OptAlloc), extra, nbyte_extra);
         }
@@ -6685,7 +6686,7 @@ atf_amc::VarlenAlloc* atf_amc::varlenalloc_AllocExtraMaybe(void *extra, i32 nbyt
     atf_amc::VarlenAlloc *row = (atf_amc::VarlenAlloc*)varlenalloc_AllocMem(sizeof(atf_amc::VarlenAlloc) + nbyte_extra);
     if (row) {
         new (row) atf_amc::VarlenAlloc; // call constructor
-        row->length = u32(sizeof(atf_amc::VarlenAlloc) + nbyte_extra - 0);
+        row->length = u32((sizeof(atf_amc::VarlenAlloc) + nbyte_extra / (1)) - 0);
         if (extra) {
             memcpy((u8*)row + sizeof(atf_amc::VarlenAlloc), extra, nbyte_extra);
         }
@@ -6821,7 +6822,7 @@ atf_amc::FOptG* atf_amc::optg_AllocExtraMaybe(void *extra, i32 nbyte_extra) {
     atf_amc::FOptG *row = (atf_amc::FOptG*)optg_AllocMem(sizeof(atf_amc::FOptG) + nbyte_extra);
     if (row) {
         new (row) atf_amc::FOptG; // call constructor
-        row->length = u32(sizeof(atf_amc::FOptG) + nbyte_extra - 0);
+        row->length = u32((sizeof(atf_amc::FOptG) + nbyte_extra / (1)) - 0);
         if (extra) {
             memcpy((u8*)row + sizeof(atf_amc::FOptG), extra, nbyte_extra);
         }
@@ -6983,8 +6984,8 @@ atf_amc::FTypeL* atf_amc::c_typel_RemoveFirst() {
     int n = _db.c_typel_n;
     if (n > 0) {
         row = _db.c_typel_elems[0];
-        row->c_typel_idx=-1;
         _db.c_typel_elems[n-1]->c_typel_idx=0;
+        row->c_typel_idx=-1;
         _db.c_typel_elems[0]=_db.c_typel_elems[n-1];
         _db.c_typel_n = n-1;
     }
@@ -12887,6 +12888,181 @@ bool atf_amc::MsgHdrLTMsgsCase_ReadStrptrMaybe(atf_amc::MsgHdrLTMsgsCase &parent
     return retval;
 }
 
+// --- atf_amc.MsgHdrLTScale.type.ToCstr
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+const char* atf_amc::type_ToCstr(const atf_amc::MsgHdrLTScale& parent) {
+    const char *ret = NULL;
+    switch(type_GetEnum(parent)) {
+        case atf_amc_MsgHdrLTScale_type_atf_amc_MsgLTScaleA: ret = "atf_amc.MsgLTScaleA";  break;
+    }
+    return ret;
+}
+
+// --- atf_amc.MsgHdrLTScale.type.Print
+// Convert type to a string. First, attempt conversion to a known string.
+// If no string matches, print type as a numeric value.
+void atf_amc::type_Print(const atf_amc::MsgHdrLTScale& parent, algo::cstring &lhs) {
+    const char *strval = type_ToCstr(parent);
+    if (strval) {
+        lhs << strval;
+    } else {
+        lhs << parent.type;
+    }
+}
+
+// --- atf_amc.MsgHdrLTScale.type.SetStrptrMaybe
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+bool atf_amc::type_SetStrptrMaybe(atf_amc::MsgHdrLTScale& parent, algo::strptr rhs) {
+    bool ret = false;
+    switch (elems_N(rhs)) {
+        case 19: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','t','f','_','a','m','c','.'): {
+                    if (memcmp(rhs.elems+8,"MsgLTScaleA",11)==0) { type_SetEnum(parent,atf_amc_MsgHdrLTScale_type_atf_amc_MsgLTScaleA); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+    }
+    return ret;
+}
+
+// --- atf_amc.MsgHdrLTScale.type.SetStrptr
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+void atf_amc::type_SetStrptr(atf_amc::MsgHdrLTScale& parent, algo::strptr rhs, atf_amc_MsgHdrLTScale_type_Enum dflt) {
+    if (!type_SetStrptrMaybe(parent,rhs)) type_SetEnum(parent,dflt);
+}
+
+// --- atf_amc.MsgHdrLTScale.type.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool atf_amc::type_ReadStrptrMaybe(atf_amc::MsgHdrLTScale& parent, algo::strptr rhs) {
+    bool retval = false;
+    retval = type_SetStrptrMaybe(parent,rhs); // try symbol conversion
+    if (!retval) { // didn't work? try reading as underlying type
+        retval = char_ReadStrptrMaybe(parent.type,rhs);
+    }
+    return retval;
+}
+
+// --- atf_amc.MsgHdrLTScale..ReadFieldMaybe
+bool atf_amc::MsgHdrLTScale_ReadFieldMaybe(atf_amc::MsgHdrLTScale& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    atf_amc::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case atf_amc_FieldId_len: {
+            retval = false;
+        } break;
+        case atf_amc_FieldId_type: {
+            retval = type_ReadStrptrMaybe(parent, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- atf_amc.MsgHdrLTScale..ReadStrptrMaybe
+// Read fields of atf_amc::MsgHdrLTScale from an ascii string.
+// The format of the string is an ssim Tuple
+bool atf_amc::MsgHdrLTScale_ReadStrptrMaybe(atf_amc::MsgHdrLTScale &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "atf_amc.MsgHdrLTScale");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && MsgHdrLTScale_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- atf_amc.MsgHdrLTScale..Print
+// print string representation of ROW to string STR
+// cfmt:atf_amc.MsgHdrLTScale.String  printfmt:Tuple
+void atf_amc::MsgHdrLTScale_Print(atf_amc::MsgHdrLTScale& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "atf_amc.MsgHdrLTScale";
+    (void)row;//only to avoid -Wunused-parameter
+}
+
+// --- atf_amc.MsgHdrLTScaleMsgsCase.value.ToCstr
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+const char* atf_amc::value_ToCstr(const atf_amc::MsgHdrLTScaleMsgsCase& parent) {
+    const char *ret = NULL;
+    switch(value_GetEnum(parent)) {
+        case atf_amc_MsgHdrLTScaleMsgsCase_atf_amc_MsgLTScaleA: ret = "atf_amc.MsgLTScaleA";  break;
+    }
+    return ret;
+}
+
+// --- atf_amc.MsgHdrLTScaleMsgsCase.value.Print
+// Convert value to a string. First, attempt conversion to a known string.
+// If no string matches, print value as a numeric value.
+void atf_amc::value_Print(const atf_amc::MsgHdrLTScaleMsgsCase& parent, algo::cstring &lhs) {
+    const char *strval = value_ToCstr(parent);
+    if (strval) {
+        lhs << strval;
+    } else {
+        lhs << parent.value;
+    }
+}
+
+// --- atf_amc.MsgHdrLTScaleMsgsCase.value.SetStrptrMaybe
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+bool atf_amc::value_SetStrptrMaybe(atf_amc::MsgHdrLTScaleMsgsCase& parent, algo::strptr rhs) {
+    bool ret = false;
+    switch (elems_N(rhs)) {
+        case 19: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','t','f','_','a','m','c','.'): {
+                    if (memcmp(rhs.elems+8,"MsgLTScaleA",11)==0) { value_SetEnum(parent,atf_amc_MsgHdrLTScaleMsgsCase_atf_amc_MsgLTScaleA); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+    }
+    return ret;
+}
+
+// --- atf_amc.MsgHdrLTScaleMsgsCase.value.SetStrptr
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+void atf_amc::value_SetStrptr(atf_amc::MsgHdrLTScaleMsgsCase& parent, algo::strptr rhs, atf_amc_MsgHdrLTScaleMsgsCaseEnum dflt) {
+    if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
+}
+
+// --- atf_amc.MsgHdrLTScaleMsgsCase.value.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool atf_amc::value_ReadStrptrMaybe(atf_amc::MsgHdrLTScaleMsgsCase& parent, algo::strptr rhs) {
+    bool retval = false;
+    retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
+    if (!retval) { // didn't work? try reading as underlying type
+        retval = u32_ReadStrptrMaybe(parent.value,rhs);
+    }
+    return retval;
+}
+
+// --- atf_amc.MsgHdrLTScaleMsgsCase..ReadStrptrMaybe
+// Read fields of atf_amc::MsgHdrLTScaleMsgsCase from an ascii string.
+// The format of the string is the format of the atf_amc::MsgHdrLTScaleMsgsCase's only field
+bool atf_amc::MsgHdrLTScaleMsgsCase_ReadStrptrMaybe(atf_amc::MsgHdrLTScaleMsgsCase &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = retval && value_ReadStrptrMaybe(parent, in_str);
+    return retval;
+}
+
 // --- atf_amc.MsgType.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
@@ -13292,6 +13468,64 @@ void atf_amc::MsgLTO_Print(atf_amc::MsgLTO& row, algo::cstring& str) {
         atf_amc::o_Print(row, temp);
         PrintAttrSpaceReset(str,"o", temp);
     }
+}
+
+// --- atf_amc.MsgLTScaleA.base.CopyOut
+// Copy fields out of row
+void atf_amc::parent_CopyOut(atf_amc::MsgLTScaleA &row, atf_amc::MsgHdrLTScale &out) {
+    // len: field value is computed
+    // type: field value is computed
+    (void)row;//only to avoid -Wunused-parameter
+    (void)out;//only to avoid -Wunused-parameter
+}
+
+// --- atf_amc.MsgLTScaleA..ReadFieldMaybe
+bool atf_amc::MsgLTScaleA_ReadFieldMaybe(atf_amc::MsgLTScaleA& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    atf_amc::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case atf_amc_FieldId_base: {
+            retval = false;
+        } break;
+        case atf_amc_FieldId_len: {
+            retval = false;
+        } break;
+        case atf_amc_FieldId_type: {
+            retval = false;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    (void)parent;//only to avoid -Wunused-parameter
+    (void)strval;//only to avoid -Wunused-parameter
+    return retval;
+}
+
+// --- atf_amc.MsgLTScaleA..ReadStrptrMaybe
+// Read fields of atf_amc::MsgLTScaleA from an ascii string.
+// The format of the string is an ssim Tuple
+bool atf_amc::MsgLTScaleA_ReadStrptrMaybe(atf_amc::MsgLTScaleA &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "atf_amc.MsgLTScaleA");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && MsgLTScaleA_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- atf_amc.MsgLTScaleA..Print
+// print string representation of ROW to string STR
+// cfmt:atf_amc.MsgLTScaleA.String  printfmt:Tuple
+void atf_amc::MsgLTScaleA_Print(atf_amc::MsgLTScaleA& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "atf_amc.MsgLTScaleA";
+    (void)row;//only to avoid -Wunused-parameter
 }
 
 // --- atf_amc.MsgLTV.base.CopyOut
@@ -19254,6 +19488,9 @@ void atf_amc::StaticCheck() {
     algo_assert(_offset_of(atf_amc::trace, step_cd_in_msg_cycles) + sizeof(((atf_amc::trace*)0)->step_cd_in_msg_cycles) == sizeof(atf_amc::trace));
     algo_assert(_offset_of(atf_amc::FieldId, value) + sizeof(((atf_amc::FieldId*)0)->value) == sizeof(atf_amc::FieldId));
     algo_assert(_offset_of(atf_amc::MsgHdrLTMsgsCase, value) + sizeof(((atf_amc::MsgHdrLTMsgsCase*)0)->value) == sizeof(atf_amc::MsgHdrLTMsgsCase));
+    algo_assert(_offset_of(atf_amc::MsgHdrLTScale, type) + sizeof(((atf_amc::MsgHdrLTScale*)0)->type) == sizeof(atf_amc::MsgHdrLTScale));
+    algo_assert(_offset_of(atf_amc::MsgHdrLTScaleMsgsCase, value) + sizeof(((atf_amc::MsgHdrLTScaleMsgsCase*)0)->value) == sizeof(atf_amc::MsgHdrLTScaleMsgsCase));
+    algo_assert(_offset_of(atf_amc::MsgHdrLTScale_curs, msglen) + sizeof(((atf_amc::MsgHdrLTScale_curs*)0)->msglen) == sizeof(atf_amc::MsgHdrLTScale_curs));
     algo_assert(_offset_of(atf_amc::MsgHdrLT_curs, msglen) + sizeof(((atf_amc::MsgHdrLT_curs*)0)->msglen) == sizeof(atf_amc::MsgHdrLT_curs));
     algo_assert(_offset_of(atf_amc::MsgType, value) + sizeof(((atf_amc::MsgType*)0)->value) == sizeof(atf_amc::MsgType));
     algo_assert(_offset_of(atf_amc::MsgLength, value) + sizeof(((atf_amc::MsgLength*)0)->value) == sizeof(atf_amc::MsgLength));
@@ -19261,6 +19498,7 @@ void atf_amc::StaticCheck() {
     algo_assert(_offset_of(atf_amc::MsgHeader_curs, msglen) + sizeof(((atf_amc::MsgHeader_curs*)0)->msglen) == sizeof(atf_amc::MsgHeader_curs));
     algo_assert(_offset_of(atf_amc::MsgLTA, a) + sizeof(((atf_amc::MsgLTA*)0)->a) == sizeof(atf_amc::MsgLTA));
     algo_assert(_offset_of(atf_amc::MsgLTB, b) + sizeof(((atf_amc::MsgLTB*)0)->b) == sizeof(atf_amc::MsgLTB));
+    algo_assert(_offset_of(atf_amc::MsgLTScaleA, type) + sizeof(((atf_amc::MsgLTScaleA*)0)->type) == sizeof(atf_amc::MsgLTScaleA));
     algo_assert(_offset_of(atf_amc::MsgsCase, value) + sizeof(((atf_amc::MsgsCase*)0)->value) == sizeof(atf_amc::MsgsCase));
     // check that bitfield fits width
     algo_assert(sizeof(((atf_amc::NetBitfld1*)0)->value_be)*8 >= 12);
@@ -19303,6 +19541,23 @@ bool atf_amc::MsgHdrLTMsgs_Print(algo::cstring &str, atf_amc::MsgHdrLT &msg, u32
         case 'V': {
             if (sizeof(atf_amc::MsgLTV) > msg_len) { return false; }
             MsgLTV_Print((atf_amc::MsgLTV&)(msg), str);
+            return true;
+        }
+        default:
+
+        return false;
+    }
+}
+
+// --- atf_amc.MsgHdrLTScaleMsgs..Print
+// Print message to STR. If message is too short for MSG_LEN, print nothing.
+// MSG.LENGTH must have already been validated against msg_len.
+// This function will additionally validate that sizeof(Msg) <= msg_len
+bool atf_amc::MsgHdrLTScaleMsgs_Print(algo::cstring &str, atf_amc::MsgHdrLTScale &msg, u32 msg_len) {
+    switch(msg.type) {
+        case 'S': {
+            if (sizeof(atf_amc::MsgLTScaleA) > msg_len) { return false; }
+            MsgLTScaleA_Print((atf_amc::MsgLTScaleA&)(msg), str);
             return true;
         }
         default:
@@ -19481,6 +19736,34 @@ bool atf_amc::MsgHdrLTMsgs_ReadStrptrMaybe(algo::strptr str, algo::ByteAry &buf)
     return !(msgtype == atf_amc::MsgHdrLTMsgsCase());
 }
 
+// --- atf_amc.MsgHdrLTScaleMsgs..ReadStrptr
+// Parse ascii representation of message into binary, appending new data to BUF.
+atf_amc::MsgHdrLTScaleMsgsCase atf_amc::MsgHdrLTScaleMsgs_ReadStrptr(algo::strptr str, algo::ByteAry &buf) {
+    bool ok = false;
+    tempstr msgtype_str;
+    algo::StringIter iter(str);
+    cstring_ReadCmdarg(msgtype_str, iter, false); // read first word
+    atf_amc::MsgHdrLTScaleMsgsCase msgtype;
+    value_SetStrptrMaybe(msgtype, msgtype_str); // map string -> enum
+    switch (value_GetEnum(msgtype)) { // what message is it?
+        case atf_amc_MsgHdrLTScaleMsgsCase_atf_amc_MsgLTScaleA: {
+            int len = sizeof(atf_amc::MsgLTScaleA);
+            atf_amc::MsgLTScaleA *ctype = new(ary_AllocN(buf, len).elems) atf_amc::MsgLTScaleA; // default values
+            ok = MsgLTScaleA_ReadStrptrMaybe(*ctype, str); // now read attributes
+        } break; // atf_amc::MsgLTScaleA case
+
+        default: break;
+    }
+    return ok ? msgtype : atf_amc::MsgHdrLTScaleMsgsCase();
+}
+
+// --- atf_amc.MsgHdrLTScaleMsgs..ReadStrptrMaybe
+// Parse ascii representation of message into binary, appending new data to BUF.
+bool atf_amc::MsgHdrLTScaleMsgs_ReadStrptrMaybe(algo::strptr str, algo::ByteAry &buf) {
+    atf_amc::MsgHdrLTScaleMsgsCase msgtype = MsgHdrLTScaleMsgs_ReadStrptr(str,buf);
+    return !(msgtype == atf_amc::MsgHdrLTScaleMsgsCase());
+}
+
 // --- atf_amc.MsgHeaderMsgs..ReadStrptr
 // Parse ascii representation of message into binary, appending new data to BUF.
 atf_amc::MsgType atf_amc::MsgHeaderMsgs_ReadStrptr(algo::strptr str, algo::ByteAry &buf) {
@@ -19604,7 +19887,7 @@ atf_amc::MsgLTO * atf_amc::MsgLTO_FmtByteAry(algo::ByteAry &buf, atf_amc::MsgHdr
     len += opt_len;
     ary_RemoveAll(buf);
     msg = (atf_amc::MsgLTO*)ary_AllocN(buf,len).elems;
-    msg->len = u8(len + (-2));
+    msg->len = u8((len + (-2)) / (1));
     msg->type = char('O');
     if (o) {
         memcpy((u8*)msg + sizeof(atf_amc::MsgLTO), o, opt_len);
@@ -19622,7 +19905,7 @@ atf_amc::MsgLTV * atf_amc::MsgLTV_FmtByteAry(algo::ByteAry &buf, algo::memptr v)
     len += v_ary_len;
     ary_RemoveAll(buf);
     msg = (atf_amc::MsgLTV*)ary_AllocN(buf,len).elems;
-    msg->len = u8(len + (-2));
+    msg->len = u8((len + (-2)) / (1));
     msg->type = char('V');
     memcpy(v_Addr(*msg), v.elems, v_ary_len);
     return msg;
@@ -19637,7 +19920,7 @@ atf_amc::OptG * atf_amc::OptG_FmtByteAry(algo::ByteAry &buf, atf_amc::TypeG* typ
     len += opt_len;
     ary_RemoveAll(buf);
     msg = (atf_amc::OptG*)ary_AllocN(buf,len).elems;
-    msg->length = u32(len + (0));
+    msg->length = u32((len + (0)) / (1));
     if (typeg) {
         memcpy((u8*)msg + sizeof(atf_amc::OptG), typeg, opt_len);
     }
@@ -19657,7 +19940,7 @@ atf_amc::OptG * atf_amc::OptG_FmtMemptr(algo::memptr &buf, atf_amc::TypeG* typeg
     }
     msg = (atf_amc::OptG*)buf.elems;
     buf        = RestFrom(buf,len);
-    msg->length = u32(len + (0));
+    msg->length = u32((len + (0)) / (1));
     if (typeg) {
         memcpy((u8*)msg + sizeof(atf_amc::OptG), typeg, opt_len);
     }
@@ -19674,7 +19957,7 @@ atf_amc::OptOptG * atf_amc::OptOptG_FmtByteAry(algo::ByteAry &buf, atf_amc::OptG
     len += opt_len;
     ary_RemoveAll(buf);
     msg = (atf_amc::OptOptG*)ary_AllocN(buf,len).elems;
-    msg->length = u32(len + (0));
+    msg->length = u32((len + (0)) / (1));
     if (optg) {
         memcpy((u8*)msg + sizeof(atf_amc::OptOptG), optg, opt_len);
     }
@@ -19695,7 +19978,7 @@ atf_amc::OptOptG * atf_amc::OptOptG_FmtMemptr(algo::memptr &buf, atf_amc::OptG* 
     }
     msg = (atf_amc::OptOptG*)buf.elems;
     buf        = RestFrom(buf,len);
-    msg->length = u32(len + (0));
+    msg->length = u32((len + (0)) / (1));
     if (optg) {
         memcpy((u8*)msg + sizeof(atf_amc::OptOptG), optg, opt_len);
     }
@@ -19713,7 +19996,7 @@ atf_amc::Text * atf_amc::Text_FmtByteAry(algo::ByteAry &buf, algo::aryptr<char >
     ary_RemoveAll(buf);
     msg = (atf_amc::Text*)ary_AllocN(buf,len).elems;
     msg->type = atf_amc::MsgType(0x0412);
-    msg->length = atf_amc::MsgLength(len + (0));
+    msg->length = atf_amc::MsgLength((len + (0)) / (1));
     memcpy(text_Addr(*msg), text.elems, text_ary_len);
     return msg;
 }
@@ -19733,7 +20016,7 @@ atf_amc::Varlen2Msg * atf_amc::Varlen2Msg_FmtByteAry(algo::ByteAry &buf, algo::a
     ary_RemoveAll(buf);
     msg = (atf_amc::Varlen2Msg*)ary_AllocN(buf,len).elems;
     msg->type = atf_amc::MsgType(0x1001);
-    msg->length = atf_amc::MsgLength(len + (0));
+    msg->length = atf_amc::MsgLength((len + (0)) / (1));
     memcpy(s1_Addr(*msg), s1.elems, s1_ary_len);
     (*msg).s1_end = atf_amc::MsgLength(s1_ary_len);
     memcpy(s2_Addr(*msg), s2.elems, s2_ary_len);
@@ -19757,7 +20040,7 @@ atf_amc::Varlen2aMsg * atf_amc::Varlen2aMsg_FmtByteAry(algo::ByteAry &buf, algo:
     ary_RemoveAll(buf);
     msg = (atf_amc::Varlen2aMsg*)ary_AllocN(buf,len).elems;
     msg->type = atf_amc::MsgType(0x1002);
-    msg->length = atf_amc::MsgLength(len + (0));
+    msg->length = atf_amc::MsgLength((len + (0)) / (1));
     memcpy(u1_Addr(*msg), u1.elems, u1_ary_len);
     (*msg).u1_end = atf_amc::MsgLength(u1_ary_len);
     memcpy(u2_Addr(*msg), u2.elems, u2_ary_len);
@@ -19781,7 +20064,7 @@ atf_amc::Varlen2mMsg * atf_amc::Varlen2mMsg_FmtByteAry(algo::ByteAry &buf, algo:
     ary_RemoveAll(buf);
     msg = (atf_amc::Varlen2mMsg*)ary_AllocN(buf,len).elems;
     msg->type = atf_amc::MsgType(0x1004);
-    msg->length = atf_amc::MsgLength(len + (0));
+    msg->length = atf_amc::MsgLength((len + (0)) / (1));
     memcpy(m1_Addr(*msg), m1.elems, m1_ary_len);
     (*msg).m1_end = atf_amc::MsgLength(m1_ary_len);
     memcpy(m2_Addr(*msg), m2.elems, m2_ary_len);
@@ -19805,7 +20088,7 @@ atf_amc::Varlen2vMsg * atf_amc::Varlen2vMsg_FmtByteAry(algo::ByteAry &buf, algo:
     ary_RemoveAll(buf);
     msg = (atf_amc::Varlen2vMsg*)ary_AllocN(buf,len).elems;
     msg->type = atf_amc::MsgType(0x1003);
-    msg->length = atf_amc::MsgLength(len + (0));
+    msg->length = atf_amc::MsgLength((len + (0)) / (1));
     memcpy(v1_Addr(*msg), v1.elems, v1_ary_len);
     (*msg).v1_end = atf_amc::MsgLength(v1_ary_len);
     memcpy(v2_Addr(*msg), v2.elems, v2_ary_len);
@@ -19824,7 +20107,7 @@ atf_amc::VarlenK * atf_amc::VarlenK_FmtByteAry(algo::ByteAry &buf, algo::aryptr<
     len += i_ary_len;
     ary_RemoveAll(buf);
     msg = (atf_amc::VarlenK*)ary_AllocN(buf,len).elems;
-    msg->length = u32(len + (0));
+    msg->length = u32((len + (0)) / (1));
     memcpy(i_Addr(*msg), i.elems, i_ary_len);
     return msg;
 }
@@ -19843,7 +20126,7 @@ atf_amc::VarlenK * atf_amc::VarlenK_FmtMemptr(algo::memptr &buf, algo::aryptr<u3
     }
     msg = (atf_amc::VarlenK*)buf.elems;
     buf        = RestFrom(buf,len);
-    msg->length = u32(len + (0));
+    msg->length = u32((len + (0)) / (1));
     memcpy(i_Addr(*msg), i.elems, i_ary_len);
     return msg;
 }

@@ -32,6 +32,7 @@ These ssimfiles are subsets of atfdb.comptest
 
 * [atfdb.Targs](/txt/ssimdb/atfdb/targs.md) -  
 * [atfdb.Tfilt](/txt/ssimdb/atfdb/tfilt.md) -  
+* [atfdb.Tifilt](/txt/ssimdb/atfdb/tifilt.md) - Input filter for component test 
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Subsets -->
 

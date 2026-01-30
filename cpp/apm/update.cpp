@@ -104,7 +104,7 @@ void apm::MergeFiles(apm::FPackage &package) {
         }
         if (mergefile.ours_mode != 0 && mergefile.theirs_mode != 0) {
             // merge
-            _db.script << "git merge-file "
+            _db.script << "git merge-file --no-diff3"
                        <<" -L "<<strptr_ToBash(mergefile.mergefile)
                        <<" -L base"
                        <<" -L package"

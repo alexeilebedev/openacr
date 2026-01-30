@@ -55,18 +55,19 @@ enum atfdb_FieldIdEnum {                       // atfdb.FieldId.value
     ,atfdb_FieldId_test_gsymbol_pkey     = 22
     ,atfdb_FieldId_test_gsymbol_strptr   = 23
     ,atfdb_FieldId_filter                = 24
-    ,atfdb_FieldId_tmsg                  = 25
-    ,atfdb_FieldId_rank                  = 26
-    ,atfdb_FieldId_dir                   = 27
-    ,atfdb_FieldId_istuple               = 28
-    ,atfdb_FieldId_msg                   = 29
-    ,atfdb_FieldId_unittest              = 30
-    ,atfdb_FieldId_ns                    = 31
-    ,atfdb_FieldId_var                   = 32
-    ,atfdb_FieldId_value                 = 33
+    ,atfdb_FieldId_ifilter               = 25
+    ,atfdb_FieldId_tmsg                  = 26
+    ,atfdb_FieldId_rank                  = 27
+    ,atfdb_FieldId_dir                   = 28
+    ,atfdb_FieldId_istuple               = 29
+    ,atfdb_FieldId_msg                   = 30
+    ,atfdb_FieldId_unittest              = 31
+    ,atfdb_FieldId_ns                    = 32
+    ,atfdb_FieldId_var                   = 33
+    ,atfdb_FieldId_value                 = 34
 };
 
-enum { atfdb_FieldIdEnum_N = 34 };
+enum { atfdb_FieldIdEnum_N = 35 };
 
 extern const char *  atfdb_Msgdir_msgdir_exp;   // exp    fconst:atfdb.Msgdir.msgdir/exp
 extern const char *  atfdb_Msgdir_msgdir_in;    // in     fconst:atfdb.Msgdir.msgdir/in
@@ -100,6 +101,7 @@ namespace atfdb { struct TestGsymbolChar; }
 namespace atfdb { struct TestGsymbolPkey; }
 namespace atfdb { struct TestGsymbolStrptr; }
 namespace atfdb { struct Tfilt; }
+namespace atfdb { struct Tifilt; }
 namespace atfdb { struct Tmsg; }
 namespace atfdb { struct Unittest; }
 namespace atfdb { struct Var; }
@@ -420,6 +422,26 @@ bool                 Tfilt_ReadStrptrMaybe(atfdb::Tfilt &parent, algo::strptr in
 // func:atfdb.Tfilt..Print
 void                 Tfilt_Print(atfdb::Tfilt& row, algo::cstring& str) __attribute__((nothrow));
 
+// --- atfdb.Tifilt
+struct Tifilt { // atfdb.Tifilt: Input filter for component test
+    algo::Smallstr50   comptest;   //
+    algo::cstring      ifilter;    // Command to preprocess input
+    algo::Comment      comment;    //
+    // func:atfdb.Tifilt..Ctor
+    inline               Tifilt() __attribute__((nothrow));
+};
+
+// func:atfdb.Tifilt..ReadFieldMaybe
+bool                 Tifilt_ReadFieldMaybe(atfdb::Tifilt& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of atfdb::Tifilt from an ascii string.
+// The format of the string is an ssim Tuple
+// func:atfdb.Tifilt..ReadStrptrMaybe
+bool                 Tifilt_ReadStrptrMaybe(atfdb::Tifilt &parent, algo::strptr in_str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atfdb.Tifilt.String  printfmt:Tuple
+// func:atfdb.Tifilt..Print
+void                 Tifilt_Print(atfdb::Tifilt& row, algo::cstring& str) __attribute__((nothrow));
+
 // --- atfdb.Tmsg
 struct Tmsg { // atfdb.Tmsg
     algo::Smallstr50   tmsg;      //
@@ -530,6 +552,7 @@ inline algo::cstring &operator <<(algo::cstring &str, const atfdb::TestGsymbolCh
 inline algo::cstring &operator <<(algo::cstring &str, const atfdb::TestGsymbolPkey &row);// cfmt:atfdb.TestGsymbolPkey.String
 inline algo::cstring &operator <<(algo::cstring &str, const atfdb::TestGsymbolStrptr &row);// cfmt:atfdb.TestGsymbolStrptr.String
 inline algo::cstring &operator <<(algo::cstring &str, const atfdb::Tfilt &row);// cfmt:atfdb.Tfilt.String
+inline algo::cstring &operator <<(algo::cstring &str, const atfdb::Tifilt &row);// cfmt:atfdb.Tifilt.String
 inline algo::cstring &operator <<(algo::cstring &str, const atfdb::Tmsg &row);// cfmt:atfdb.Tmsg.String
 inline algo::cstring &operator <<(algo::cstring &str, const atfdb::Var &row);// cfmt:atfdb.Var.String
 }

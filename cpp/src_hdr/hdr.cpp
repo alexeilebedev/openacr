@@ -196,6 +196,7 @@ static void ParseCopyright(algo::strptr text, algo::strptr &years, algo::strptr 
 // put current year copyright of company specified as -update_copyright arg
 static void UpdateCopyright(src_hdr::FSrc &src) {
     u32 year = GetLocalTimeStruct(algo::CurrUnTime()).tm_year + 1900;
+    u32 maxyear = 0;
     ind_beg(src_hdr::_db_copyright_curs,copyright,src_hdr::_db) {
         copyright.years="";
     }ind_end;
@@ -208,9 +209,10 @@ static void UpdateCopyright(src_hdr::FSrc &src) {
         if (copyright) {
             copyright->years = years;
         }
+        u32_UpdateMax(maxyear, ParseU32(Pathcomp(years,",RR-RR"),0));
     }ind_end;
     // insert default copyright
-    if (src_hdr::_db.cmdline.update_copyright && src_hdr::_db.c_dflt_copyright) {
+    if (src_hdr::_db.cmdline.update_copyright && src_hdr::_db.c_dflt_copyright && maxyear < year) {
         UpdateCopyrightYear(src_hdr::_db.c_dflt_copyright->years, year);
     }
     // sort copyrights by last year

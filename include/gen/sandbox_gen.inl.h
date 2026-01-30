@@ -24,8 +24,9 @@
 
 #pragma once
 #include "include/gen/command_gen.inl.h"
-#include "include/gen/dev_gen.inl.h"
 #include "include/gen/algo_gen.inl.h"
+#include "include/gen/algo_lib_gen.inl.h"
+#include "include/gen/dev_gen.inl.h"
 //#pragma endinclude
 
 // --- sandbox.trace..Ctor

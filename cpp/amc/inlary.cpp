@@ -35,7 +35,7 @@
 static void CheckSep(amc::FField &field) {
     char sep = GetSep(field);
     amc::FCfmt *cfmt = FindStringRead(*field.p_ctype);
-    if (cfmt && !sep && field.arg != "char" && field.arg != "u8") {
+    if (cfmt && !sep && field.arg != "char" && field.arg != "u8" && field.arg != "pad_byte") {
         prerr("amc.inlary_not_printed"
               <<Keyval("inlary",field.field)
               <<Keyval("cfmt",cfmt->cfmt)

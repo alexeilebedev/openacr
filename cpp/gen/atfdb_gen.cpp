@@ -425,6 +425,7 @@ const char* atfdb::value_ToCstr(const atfdb::FieldId& parent) {
         case atfdb_FieldId_test_gsymbol_pkey: ret = "test_gsymbol_pkey";  break;
         case atfdb_FieldId_test_gsymbol_strptr: ret = "test_gsymbol_strptr";  break;
         case atfdb_FieldId_filter          : ret = "filter";  break;
+        case atfdb_FieldId_ifilter         : ret = "ifilter";  break;
         case atfdb_FieldId_tmsg            : ret = "tmsg";  break;
         case atfdb_FieldId_rank            : ret = "rank";  break;
         case atfdb_FieldId_dir             : ret = "dir";  break;
@@ -540,6 +541,9 @@ bool atfdb::value_SetStrptrMaybe(atfdb::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR7('c','o','m','m','e','n','t'): {
                     value_SetEnum(parent,atfdb_FieldId_comment); ret = true; break;
+                }
+                case LE_STR7('i','f','i','l','t','e','r'): {
+                    value_SetEnum(parent,atfdb_FieldId_ifilter); ret = true; break;
                 }
                 case LE_STR7('i','s','t','u','p','l','e'): {
                     value_SetEnum(parent,atfdb_FieldId_istuple); ret = true; break;
@@ -994,6 +998,61 @@ void atfdb::Tfilt_Print(atfdb::Tfilt& row, algo::cstring& str) {
 
     algo::cstring_Print(row.filter, temp);
     PrintAttrSpaceReset(str,"filter", temp);
+
+    algo::Comment_Print(row.comment, temp);
+    PrintAttrSpaceReset(str,"comment", temp);
+}
+
+// --- atfdb.Tifilt..ReadFieldMaybe
+bool atfdb::Tifilt_ReadFieldMaybe(atfdb::Tifilt& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    atfdb::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case atfdb_FieldId_comptest: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.comptest, strval);
+        } break;
+        case atfdb_FieldId_ifilter: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.ifilter, strval);
+        } break;
+        case atfdb_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- atfdb.Tifilt..ReadStrptrMaybe
+// Read fields of atfdb::Tifilt from an ascii string.
+// The format of the string is an ssim Tuple
+bool atfdb::Tifilt_ReadStrptrMaybe(atfdb::Tifilt &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "atfdb.tifilt") || algo::StripTypeTag(in_str, "atfdb.Tifilt");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && Tifilt_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- atfdb.Tifilt..Print
+// print string representation of ROW to string STR
+// cfmt:atfdb.Tifilt.String  printfmt:Tuple
+void atfdb::Tifilt_Print(atfdb::Tifilt& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "atfdb.tifilt";
+
+    algo::Smallstr50_Print(row.comptest, temp);
+    PrintAttrSpaceReset(str,"comptest", temp);
+
+    algo::cstring_Print(row.ifilter, temp);
+    PrintAttrSpaceReset(str,"ifilter", temp);
 
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);

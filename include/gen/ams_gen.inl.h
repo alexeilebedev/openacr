@@ -390,7 +390,7 @@ inline  ams::InputLineMsg::InputLineMsg(ams::ProcId in_proc_id)
     : proc_id(in_proc_id)
  {
     this->type = u32(22);
-    this->length = u32(ssizeof(*this) + (0));
+    this->length = u32((ssizeof(*this) + (0)) / (1));
 }
 
 // --- ams.LogMsg.base.Castdown
@@ -512,7 +512,7 @@ inline  ams::LogMsg::LogMsg(ams::ProcId in_proc_id, algo::SchedTime in_tstamp)
     , tstamp(in_tstamp)
  {
     this->type = u32(6);
-    this->length = u32(ssizeof(*this) + (0));
+    this->length = u32((ssizeof(*this) + (0)) / (1));
 }
 
 // --- ams.MsgBlock.header.Castdown
@@ -1597,7 +1597,7 @@ inline  ams::ShmHbMsg::ShmHbMsg(ams::ShmemberId in_shmember, u64 in_off, u32 in_
     , wbudget(in_wbudget)
  {
     this->type = u32(3);
-    this->length = u32(ssizeof(*this) + (0));
+    this->length = u32((ssizeof(*this) + (0)) / (1));
 }
 
 // --- ams.Shmmsg.base.Castdown
@@ -1665,7 +1665,7 @@ inline  ams::Shmmsg::Shmmsg(ams::ShmId in_shm_id, u64 in_off, u64 in_tstamp)
     , tstamp(in_tstamp)
  {
     this->type = u32(10);
-    this->length = u32(ssizeof(*this) + (0));
+    this->length = u32((ssizeof(*this) + (0)) / (1));
 }
 
 // --- ams.TerminateMsg.base.Castdown

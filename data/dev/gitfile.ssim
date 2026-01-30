@@ -542,6 +542,7 @@ dev.gitfile  gitfile:data/atfdb/test_gsymbol_char.ssim
 dev.gitfile  gitfile:data/atfdb/test_gsymbol_pkey.ssim
 dev.gitfile  gitfile:data/atfdb/test_gsymbol_strptr.ssim
 dev.gitfile  gitfile:data/atfdb/tfilt.ssim
+dev.gitfile  gitfile:data/atfdb/tifilt.ssim
 dev.gitfile  gitfile:data/atfdb/tmsg.ssim
 dev.gitfile  gitfile:data/atfdb/unittest.ssim
 dev.gitfile  gitfile:data/atfdb/var.ssim
@@ -1211,6 +1212,17 @@ dev.gitfile  gitfile:test/atf_comp/mdbg.Smoke
 dev.gitfile  gitfile:test/atf_comp/mdbg.SmokeBreak
 dev.gitfile  gitfile:test/atf_comp/mdbg.SmokeBreak2
 dev.gitfile  gitfile:test/atf_comp/samp_meng.Smoke
+dev.gitfile  gitfile:test/atf_comp/sandbox.Anon
+dev.gitfile  gitfile:test/atf_comp/sandbox.Clean
+dev.gitfile  gitfile:test/atf_comp/sandbox.Command
+dev.gitfile  gitfile:test/atf_comp/sandbox.Create
+dev.gitfile  gitfile:test/atf_comp/sandbox.Del
+dev.gitfile  gitfile:test/atf_comp/sandbox.Diff
+dev.gitfile  gitfile:test/atf_comp/sandbox.Gc
+dev.gitfile  gitfile:test/atf_comp/sandbox.List
+dev.gitfile  gitfile:test/atf_comp/sandbox.Pull
+dev.gitfile  gitfile:test/atf_comp/sandbox.Reset
+dev.gitfile  gitfile:test/atf_comp/sandbox.StdinMulti
 dev.gitfile  gitfile:test/atf_comp/ssimfilt.Csv
 dev.gitfile  gitfile:test/atf_comp/ssimfilt.CsvField
 dev.gitfile  gitfile:test/atf_comp/ssimfilt.FirstTag
@@ -1513,6 +1525,7 @@ dev.gitfile  gitfile:txt/ssimdb/atfdb/test_gsymbol_char.md
 dev.gitfile  gitfile:txt/ssimdb/atfdb/test_gsymbol_pkey.md
 dev.gitfile  gitfile:txt/ssimdb/atfdb/test_gsymbol_strptr.md
 dev.gitfile  gitfile:txt/ssimdb/atfdb/tfilt.md
+dev.gitfile  gitfile:txt/ssimdb/atfdb/tifilt.md
 dev.gitfile  gitfile:txt/ssimdb/atfdb/tmsg.md
 dev.gitfile  gitfile:txt/ssimdb/atfdb/unittest.md
 dev.gitfile  gitfile:txt/ssimdb/atfdb/var.md

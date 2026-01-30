@@ -110,7 +110,7 @@ int atf_comp::CalcTimeout(atf_comp::FComptest &comptest) {
 
 // -----------------------------------------------------------------------------
 
-// Initialize COMPTEST.BASH.CMD to the command that will execute
+// Initialize CMD to the command that will execute
 // If invoked with -memcheck, wrap the command line with valgrind
 //   and initialize COMPTEST.FILE_MEMCHECK pathname
 // If invoked with -callgrind, wrap the command line with valgrind
@@ -118,33 +118,33 @@ int atf_comp::CalcTimeout(atf_comp::FComptest &comptest) {
 // If invoked with -coverage, wrap the command line with atf_cov
 //   and link with covdir
 //
-void atf_comp::SetupCmdline(atf_comp::FComptest &comptest, algo_lib::Replscope &R) {
+void atf_comp::SetupCmdline(atf_comp::FComptest &comptest) {
+    PrepareInput(comptest);
+    auto& R = comptest.R;
     // Compose component path from component directory and target name given
     // on first part of testcase name
-    comptest.bash.cmd.c   = DirFileJoin(atf_comp::_db.bindir,target_Get(comptest));
-    if (comptest.c_tfilt) {
-        comptest.filter_command = Subst(R,comptest.c_tfilt->filter);
-    }
+    cstring cmd;
+    cmd << DirFileJoin(atf_comp::_db.bindir,target_Get(comptest));
     if (comptest.c_targs) {
-        comptest.bash.cmd.c << " ";
-        Ins(&R,comptest.bash.cmd.c,comptest.c_targs->args,false);
+        cmd << " ";
+        Ins(&R,cmd,comptest.c_targs->args,false);
     }
     vrfy_(comptest.dir != "");
     if (atf_comp::_db.cmdline.memcheck) {
         comptest.file_memcheck = DirFileJoin(comptest.dir, "memcheck.log");
-        comptest.bash.cmd.c = tempstr()
+        cmd = tempstr()
             << "valgrind --tool=memcheck --log-file=" << comptest.file_memcheck
-            << " " << comptest.bash.cmd.c;
+            << " " << cmd;
         DeleteFile(comptest.file_memcheck);
     }
     if (atf_comp::_db.cmdline.callgrind) {
         comptest.file_callgrind_log = DirFileJoin(comptest.dir, "callgrind.log");
         comptest.file_callgrind_out = DirFileJoin(comptest.dir, "callgrind.out");
-        comptest.bash.cmd.c = tempstr()
+        cmd = tempstr()
             << "valgrind --tool=callgrind"
             << " --log-file=" << comptest.file_callgrind_log
             << " --callgrind-out-file=" << comptest.file_callgrind_out
-            << " " << comptest.bash.cmd.c;
+            << " " << cmd;
         DeleteFile(comptest.file_callgrind_log);
         DeleteFile(comptest.file_callgrind_out);
     }
@@ -163,25 +163,53 @@ void atf_comp::SetupCmdline(atf_comp::FComptest &comptest, algo_lib::Replscope &
         atf_cov.cmd.logfile = _db.cmdline.covfast
             ? DirFileJoin(covdir->covdir, comptest.comptest) << ".atf_cov.log"
             : DirFileJoin(covdir->covdir,"atf_cov.log");
-        atf_cov.cmd.runcmd = comptest.bash.cmd.c;
-        comptest.bash.cmd.c = tempstr() << atf_cov.path << " ";
-        atf_cov_PrintArgv(atf_cov.cmd,comptest.bash.cmd.c);
+        atf_cov.cmd.runcmd = cmd;
+        cmd = tempstr() << atf_cov_ToCmdline(atf_cov);
     }
+
+    // Write command to script with input redirect and output capture
+    comptest.script << "{ " << cmd << "; } < " << comptest.file_test_in;
+    if (_db.cmdline.stream) {
+        comptest.script << " |& tee -a " << comptest.file_test_out;
+    } else {
+        comptest.script << " > " << comptest.file_test_out << " 2>&1";
+    }
+    comptest.script << eol;
 }
 
 // -----------------------------------------------------------------------------
 
-// Initialize COMPTEST.FILE_TEST_IN
-// Write input messages to file
+// Write script header and input preparation using heredoc
+// Use ifilter if present, otherwise cat
 void atf_comp::PrepareInput(atf_comp::FComptest &comptest) {
-    comptest.file_test_in  = DirFileJoin(comptest.dir,"in");
-    tempstr teststr;
-    ind_beg(comptest_zd_tmsg_curs,tmsg,comptest) {
+    comptest.script << "#!/usr/bin/env bash" << eol;
+    Ins(&comptest.R, comptest.script, "export tempdir=$tempdir");
+    Ins(&comptest.R, comptest.script, "export comptest=$comptest");
+    Ins(&comptest.R, comptest.script, "export compdir=$compdir");
+    Ins(&comptest.R, comptest.script, "mkdir -p $tempdir");
+
+    // Input preparation using heredoc
+    if (comptest.c_tifilt && ch_N(comptest.c_tifilt->ifilter)) {
+        comptest.script << Subst(comptest.R, comptest.c_tifilt->ifilter);
+    } else {
+        comptest.script << "cat";
+    }
+    comptest.script << " > " << comptest.file_test_in << " << 'ATFEOF'" << eol;
+    ind_beg(comptest_zd_tmsg_curs, tmsg, comptest) {
         if (dir_Get(tmsg) == atfdb_Msgdir_msgdir_in) {
-            teststr << tmsg.msg << eol;
+            comptest.script << tmsg.msg << eol;
         }
     }ind_end;
-    StringToFile(teststr, comptest.file_test_in);
+    comptest.script << "ATFEOF" << eol;
+}
+
+// -----------------------------------------------------------------------------
+
+// Write script to file
+void atf_comp::Comptest_WriteScript(atf_comp::FComptest &comptest) {
+    StringToFile(comptest.script, comptest.file_run);
+    comptest.bash.fstdin << "<" << comptest.file_run;
+    comptest.bash.timeout = CalcTimeout(comptest);
 }
 
 // -----------------------------------------------------------------------------
@@ -192,11 +220,10 @@ void atf_comp::Comptest_Start(atf_comp::FComptest &comptest) {
         atf_comp::_db.report.nrun++;
         atf_comp::zd_run_comptest_Insert(comptest);
         _db.ncore_used += comptest.ncore;
-        comptest.dir = algo::DirFileJoin(_db.tempdir,comptest.comptest);
-        algo::RemDirRecurse(comptest.dir,false);// clear any old state for this case (maybe from previous run)
+        algo::RemDirRecurse(comptest.dir, false);
         algo::CreateDirRecurse(comptest.dir);
-        PrepareInput(comptest);
-        comptest.file_test_out = DirFileJoin(comptest.dir,"out");
+        SetupCmdline(comptest);
+        Comptest_WriteScript(comptest);
         verblog("atf_comp.test_start"
                 << Keyval("comptest",comptest.comptest)
                 << Keyval("n_running",zd_run_comptest_N())
@@ -204,25 +231,6 @@ void atf_comp::Comptest_Start(atf_comp::FComptest &comptest) {
                 << Keyval("outfile",comptest.file_test_out)
                 );
 
-        // calculate timeout
-        int timeout = CalcTimeout(comptest);
-        // compute command line
-        algo_lib::Replscope R;
-        Set(R,"$$","$");
-        Set(R,"$tempdir",comptest.dir);
-        Set(R,"$comptest",comptest.comptest);
-        Set(R,"$timeout",tempstr()<<timeout);
-        Set(R,"$bindir",atf_comp::_db.bindir);
-        SetupCmdline(comptest,R);
-        verblog("atf_comp "<<comptest.comptest<<" -report:N -printinput | " << target_Get(comptest) << " "<<Subst(R,GetArgs(comptest)));
-        comptest.bash.timeout = timeout;
-        comptest.bash.fstdin << "<" << comptest.file_test_in;
-        if (_db.cmdline.stream) {
-            comptest.bash.cmd.c << " |& tee " << comptest.file_test_out;
-        } else {
-            comptest.bash.fstdout << ">" << comptest.file_test_out;
-            comptest.bash.fstderr = ">&1";
-        }
         int rc = bash_Start(comptest.bash);
         if (rc != 0) {
             comptest.err << "Failed to start "<<comptest.bash.cmd.c;
@@ -265,7 +273,7 @@ bool atf_comp::CompareOutput(atf_comp::FComptest &comptest) {
     if (comptest.c_tfilt) {
         fname << ".filt";
         command::bash_proc bash;
-        bash.cmd.c = comptest.filter_command;
+        bash.cmd.c = Subst(comptest.R,comptest.c_tfilt->filter);
         bash.fstdin = tempstr() << "<" << comptest.file_test_out;
         bash.fstdout = tempstr() << ">" << fname;
         bash_ExecX(bash);
@@ -452,6 +460,9 @@ void atf_comp::Main_Print(cstring &out, bool show_output, bool show_testcase) {
             if (comptest.c_tfilt && ch_N(comptest.c_tfilt->filter)) {
                 out << "filter "<<comptest.c_tfilt->filter<<eol;
             }
+            if (comptest.c_tifilt && ch_N(comptest.c_tifilt->ifilter)) {
+                out << "ifilter "<<comptest.c_tifilt->ifilter<<eol;
+            }
         }
         ind_beg(comptest_zd_tmsg_curs,tmsg,comptest) {
             if (dir_Get(tmsg) == atfdb_Msgdir_msgdir_in) {
@@ -578,6 +589,15 @@ void atf_comp::Main_Write() {
 // If no comptests selected, print warning
 void atf_comp::Main_Select() {
     ind_beg(_db_comptest_curs,comptest,_db) {
+        // Set up per-test directory
+        comptest.dir = algo::DirFileJoin(_db.tempdir, comptest.comptest);
+        comptest.file_test_in  = tempstr() << comptest.dir << ".in";
+        comptest.file_test_out = tempstr() << comptest.dir << ".out";
+        comptest.file_run      = tempstr() << comptest.dir << ".run";
+        Set(comptest.R, "$tempdir", Pathcomp(comptest.file_run, "/RL"));
+        Set(comptest.R, "$comptest", comptest.comptest);
+        Set(comptest.R, "$compdir", atf_comp::_db.bindir);
+
         atf_comp::_db.report.ntest++;
         bool match = Regx_Match(_db.cmdline.comptest, comptest.comptest);
         // skip tests marked memcheck:N in memcheck mode
@@ -614,6 +634,8 @@ void atf_comp::Main_Select() {
 void atf_comp::Main_Debug() {
     ind_beg(_db_zd_sel_comptest_curs,comptest,_db) {
         PrepareInput(comptest);
+        Comptest_WriteScript(comptest);
+        bash_ExecX(comptest.bash);
         command::mdbg_proc mdbg;
         mdbg.cmd.target = target_Get(comptest);
         if (comptest.c_targs) {

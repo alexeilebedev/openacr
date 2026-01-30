@@ -3003,7 +3003,7 @@ ams::LogMsg * ams::LogMsg_FmtByteAry(algo::ByteAry &buf, ams::ProcId proc_id, al
     ary_RemoveAll(buf);
     msg = (ams::LogMsg*)ary_AllocN(buf,len).elems;
     msg->type = u32(6);
-    msg->length = u32(len + (0));
+    msg->length = u32((len + (0)) / (1));
     msg->proc_id = proc_id;
     msg->tstamp = tstamp;
     memcpy(logcat_Addr(*msg), logcat.elems, logcat_ary_len);
@@ -3023,7 +3023,7 @@ ams::MsgBlock * ams::MsgBlock_FmtByteAry(algo::ByteAry &buf, u64 first_seqno, u3
     ary_RemoveAll(buf);
     msg = (ams::MsgBlock*)ary_AllocN(buf,len).elems;
     msg->type = u32(1);
-    msg->length = u32(len + (0));
+    msg->length = u32((len + (0)) / (1));
     msg->first_seqno = first_seqno;
     msg->n_messages = n_messages;
     msg->original_length = original_length;
@@ -3046,7 +3046,7 @@ ams::MsgBlock * ams::MsgBlock_FmtMemptr(algo::memptr &buf, u64 first_seqno, u32 
     msg = (ams::MsgBlock*)buf.elems;
     buf        = RestFrom(buf,len);
     msg->type = u32(1);
-    msg->length = u32(len + (0));
+    msg->length = u32((len + (0)) / (1));
     msg->first_seqno = first_seqno;
     msg->n_messages = n_messages;
     msg->original_length = original_length;
@@ -3065,7 +3065,7 @@ ams::UdpFrame * ams::UdpFrame_FmtByteAry(algo::ByteAry &buf, algo::UnTime timest
     ary_RemoveAll(buf);
     msg = (ams::UdpFrame*)ary_AllocN(buf,len).elems;
     msg->type = u32(2);
-    msg->length = u32(len + (0));
+    msg->length = u32((len + (0)) / (1));
     msg->timestamp = timestamp;
     msg->src_ip = src_ip;
     msg->dst_ip = dst_ip;
@@ -3090,7 +3090,7 @@ ams::UdpFrame * ams::UdpFrame_FmtMemptr(algo::memptr &buf, algo::UnTime timestam
     msg = (ams::UdpFrame*)buf.elems;
     buf        = RestFrom(buf,len);
     msg->type = u32(2);
-    msg->length = u32(len + (0));
+    msg->length = u32((len + (0)) / (1));
     msg->timestamp = timestamp;
     msg->src_ip = src_ip;
     msg->dst_ip = dst_ip;

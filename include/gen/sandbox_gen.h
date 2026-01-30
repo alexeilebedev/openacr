@@ -24,8 +24,9 @@
 
 #pragma once
 #include "include/gen/command_gen.h"
-#include "include/gen/dev_gen.h"
 #include "include/gen/algo_gen.h"
+#include "include/gen/algo_lib_gen.h"
+#include "include/gen/dev_gen.h"
 //#pragma endinclude
 // gen:ns_enums
 
@@ -90,6 +91,8 @@ struct FDb { // sandbox.FDb: In-memory database for sandbox
     i32                   ind_sandbox_n;               // number of elements in the hash table
     sandbox::FSbpath*     sbpath_lary[32];             // level array
     i32                   sbpath_n;                    // number of elements in array
+    algo::cstring         script;                      // Accumulated shell script
+    algo_lib::Replscope   R;                           // Global variable substitution
     sandbox::trace        trace;                       //
 };
 
@@ -281,14 +284,17 @@ void                 FDb_Uninit() __attribute__((nothrow));
 // global access: sandbox (Lary, by rowid)
 // global access: ind_sandbox (Thash, hash field sandbox)
 struct FSandbox { // sandbox.FSandbox
-    sandbox::FSandbox*   ind_sandbox_next;      // hash next
-    u32                  ind_sandbox_hashval;   // hash value
-    algo::Smallstr50     sandbox;               //
-    algo::Comment        comment;               //
-    algo::cstring        dir;                   //
-    bool                 select;                //   false
+    sandbox::FSandbox*    ind_sandbox_next;      // hash next
+    u32                   ind_sandbox_hashval;   // hash value
+    algo::Smallstr50      sandbox;               //
+    algo::Comment         comment;               //
+    algo::cstring         dir;                   //
+    bool                  select;                //   false
+    algo_lib::Replscope   R;                     // Variable substitution
+    // value field sandbox.FSandbox.R is not copiable
     // func:sandbox.FSandbox..AssignOp
     inline sandbox::FSandbox& operator =(const sandbox::FSandbox &rhs) = delete;
+    // value field sandbox.FSandbox.R is not copiable
     // func:sandbox.FSandbox..CopyCtor
     inline               FSandbox(const sandbox::FSandbox &rhs) = delete;
 private:

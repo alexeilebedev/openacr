@@ -425,6 +425,7 @@ For complex filter, dedicated executable is possible.
 |[atfdb.comptest](/txt/ssimdb/atfdb/comptest.md)||
 |[atfdb.targs](/txt/ssimdb/atfdb/targs.md)||
 |[atfdb.tfilt](/txt/ssimdb/atfdb/tfilt.md)||
+|[atfdb.tifilt](/txt/ssimdb/atfdb/tifilt.md)|Input filter for component test|
 |[atfdb.tmsg](/txt/ssimdb/atfdb/tmsg.md)||
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->

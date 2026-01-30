@@ -130,6 +130,19 @@ void atf_amc::amctest_PtraryHeaplike() {
     vrfy_(c_typel_First()==&c && c.c_typel_idx==0 && c_typel_RemoveFirst()==&c);
     vrfy_(c_typel_First()==&b && b.c_typel_idx==0 && c_typel_RemoveFirst()==&b);
     vrfy_(c_typel_Last()==NULL && c_typel_RemoveFirst()==NULL);
+    // verify removed elements have idx==-1
+    vrfy_(a.c_typel_idx==-1);
+    vrfy_(b.c_typel_idx==-1);
+    vrfy_(c.c_typel_idx==-1);
+
+    // Test RemoveFirst edge case when n==1
+    // This catches a bug where elems[n-1]->idx=0 overwrites row->idx=-1
+    // when n==1 (because elems[0] == elems[n-1] == row)
+    c_typel_Insert(a);
+    vrfy_(c_typel_N()==1);
+    vrfy_(c_typel_RemoveFirst()==&a);
+    vrfy_(a.c_typel_idx==-1);  // must be -1, not 0
+    vrfy_(!c_typel_InAryQ(a)); // must report not-in-array
 }
 
 // -----------------------------------------------------------------------------

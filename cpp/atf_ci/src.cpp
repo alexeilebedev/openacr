@@ -185,27 +185,23 @@ void atf_ci::citest_stray_gen() {
 
 // -----------------------------------------------------------------------------
 
-static bool BadCharQ(unsigned char c) {
-    return c >= 0x80
-        && c != 0x80 // Windows-1252 EUR symbol
-        && c != 0xA3 // Windows-1252 GBP symbol
-        && c != 0xA4 // Windows-1252 currency sign
-        && c != 0xA5 // Windows-1252 JPY symbol
-        && c != 0xE2 // next three chars is "full block" Unicode: U+2588 (Full Block)
-        && c != 0x96
-        && c != 0x88 // UTF-8 Encoding: 0xE2 0x96 0x88 (3 bytes per block)
-        ;
-}
-
-static bool HasBadCharQ(strptr s) {
-    bool ret=false;
-    for (int i=0; i<s.n_elems; i++) {
-        if (BadCharQ(s[i])) {
-            ret=true;
-            break;
+// Validate that a string contains only valid UTF-8 sequences
+// Uses algo::Utf8SeqLen for multibyte validation
+static bool IsValidUTF8(strptr s) {
+    for (int i = 0; i < s.n_elems; ) {
+        u8 c = s[i];
+        if (c < 0x80) {
+            // ASCII - single byte
+            i++;
+        } else {
+            int seq_len = algo::Utf8SeqLen(s, i);
+            if (seq_len == 0) {
+                return false; // Invalid UTF-8 sequence
+            }
+            i += seq_len;
         }
     }
-    return ret;
+    return true;
 }
 
 void atf_ci::citest_encoding() {
@@ -213,8 +209,8 @@ void atf_ci::citest_encoding() {
         const strptr ext = GetFileExt(gitfile.gitfile);
         if (ext == ".cpp" || ext == ".cc" || ext == ".h") {
             ind_beg(algo::FileLine_curs, line, gitfile.gitfile) {
-                if (HasBadCharQ(line)) {
-                    prlog(gitfile.gitfile <<":" << ind_curs(line).i+1 << ": bad char in line: " << line);
+                if (!IsValidUTF8(line)) {
+                    prlog(gitfile.gitfile <<":" << ind_curs(line).i+1 << ": invalid UTF-8 sequence in line: " << line);
                     algo_lib::_db.exit_code = 1;
                 }
             }ind_end;

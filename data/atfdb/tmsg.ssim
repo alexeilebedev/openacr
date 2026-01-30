@@ -155,6 +155,10 @@ atfdb.tmsg  tmsg:samp_meng.Smoke/100190.in  istuple:N  msg:"samp_meng.NewOrderRe
 atfdb.tmsg  tmsg:samp_meng.Smoke/100200.in  istuple:N  msg:"samp_meng.NewOrderReqMsg user:3 symbol:B price:10.0 qty:100 ioc:false"
 atfdb.tmsg  tmsg:samp_meng.Smoke/100210.in  istuple:N  msg:"samp_meng.NewOrderReqMsg user:3 symbol:B price:10.0 qty:100 ioc:false"
 atfdb.tmsg  tmsg:samp_meng.Smoke/100220.in  istuple:N  msg:"samp_meng.MassCancelReqMsg user:3"
+atfdb.tmsg  tmsg:sandbox.List/100000.in  istuple:N  msg:'dev.sandbox  sandbox:test1  comment:"Test sandbox 1"'
+atfdb.tmsg  tmsg:sandbox.List/100010.in  istuple:N  msg:'dev.sandbox  sandbox:test2  comment:"Test sandbox 2"'
+atfdb.tmsg  tmsg:sandbox.StdinMulti/100000.in  istuple:N  msg:"echo line1"
+atfdb.tmsg  tmsg:sandbox.StdinMulti/100010.in  istuple:N  msg:"echo line2"
 atfdb.tmsg  tmsg:ssimfilt.Csv/100000.in  istuple:N  msg:"dmmeta.nstype  nstype:exe       comment:Executable"
 atfdb.tmsg  tmsg:ssimfilt.Csv/100010.in  istuple:N  msg:"dmmeta.nstype  nstype:lib       comment:Library"
 atfdb.tmsg  tmsg:ssimfilt.Csv/100020.in  istuple:N  msg:'dmmeta.nstype  nstype:none      comment:"Skip building"'

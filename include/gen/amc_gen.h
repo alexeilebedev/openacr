@@ -14448,6 +14448,7 @@ void                 FJstype_Uninit(amc::FJstype& jstype) __attribute__((nothrow
 struct FLenfld { // amc.FLenfld
     algo::Smallstr100   field;     // Name of length field
     i32                 extra;     //   0  Extra #bytes to add
+    i32                 scale;     //   1  Multiplier for length field value
     amc::FField*        p_field;   // reference to parent row
     // x-reference on amc.FLenfld.p_field prevents copy
     // func:amc.FLenfld..AssignOp

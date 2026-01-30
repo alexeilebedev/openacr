@@ -83,7 +83,7 @@ static void CheckFieldVal(amc::FField* field, amc::FField* otherField, const dmm
     int match = 0;
     int regexpMatch = 0;
     ind_beg(amc::field_zs_fcmap_curs, fcmap, *field) if (fcmap.p_rightField == otherField){
-        match       += (leftVal_Get(fcmap) == val);
+        match       += (leftVal_Get(fcmap) == strptr(val));
         regexpMatch += (leftVal_Get(fcmap) == "*");
     }ind_end;
     if( i32_Max(match, regexpMatch) != 1){
