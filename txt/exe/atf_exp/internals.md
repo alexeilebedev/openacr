@@ -262,3 +262,14 @@ struct Proc { // atf_exp.Proc
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Imdb -->
 
+### Tests
+<a href="#tests"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Tests -->
+The following component tests are defined for `atf_exp`.
+These can be executed with `atf_comp <comptest> -v`
+|Comptest|Comment|
+|---|---|
+|[atf_exp.AcrInteractive](/test/atf_comp/atf_exp.AcrInteractive)|Interactive acr test via atf_exp|
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Tests -->
+

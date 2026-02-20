@@ -123,9 +123,9 @@ e.g. to test debug executables under `build/debug`, use:
 atf_comp -cfg:debug
 ```
 
-In order to specify completely different directory use `-compdir` option, e.g.:
+In order to specify completely different directory use `-bindir` option, e.g.:
 ```
-atf_comp -compdir:other_dir
+atf_comp -bindir:other_dir
 ```
 
 ### Keeping target executables up to date

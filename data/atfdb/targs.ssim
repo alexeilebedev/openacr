@@ -188,6 +188,7 @@ atfdb.targs  comptest:atf_cmdline.RichExec  args:"-exec -verbose -verbose -verbo
 atfdb.targs  comptest:atf_cmdline.Sig  args:-sig
 atfdb.targs  comptest:atf_cmdline.Verbose  args:"-verbose -verbose blah -str blah"
 atfdb.targs  comptest:atf_cmdline.Version  args:-version
+atfdb.targs  comptest:atf_exp.AcrInteractive  args:"-bindir:$bindir -comptest:$comptest -tempdir:$tempdir"
 atfdb.targs  comptest:jkv.ArrayFill  args:"/dev/null -r -- a.b.c-0:true -10:false"
 atfdb.targs  comptest:jkv.ReverseSmoke  args:"- -r"
 atfdb.targs  comptest:jkv.Smoke  args:-

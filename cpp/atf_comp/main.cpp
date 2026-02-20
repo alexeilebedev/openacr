@@ -185,7 +185,7 @@ void atf_comp::PrepareInput(atf_comp::FComptest &comptest) {
     comptest.script << "#!/usr/bin/env bash" << eol;
     Ins(&comptest.R, comptest.script, "export tempdir=$tempdir");
     Ins(&comptest.R, comptest.script, "export comptest=$comptest");
-    Ins(&comptest.R, comptest.script, "export compdir=$compdir");
+    Ins(&comptest.R, comptest.script, "export bindir=$bindir");
     Ins(&comptest.R, comptest.script, "mkdir -p $tempdir");
 
     // Input preparation using heredoc
@@ -594,9 +594,11 @@ void atf_comp::Main_Select() {
         comptest.file_test_in  = tempstr() << comptest.dir << ".in";
         comptest.file_test_out = tempstr() << comptest.dir << ".out";
         comptest.file_run      = tempstr() << comptest.dir << ".run";
+        Set(comptest.R, "$$", "$");
         Set(comptest.R, "$tempdir", Pathcomp(comptest.file_run, "/RL"));
         Set(comptest.R, "$comptest", comptest.comptest);
-        Set(comptest.R, "$compdir", atf_comp::_db.bindir);
+        Set(comptest.R, "$timeout", tempstr()<<CalcTimeout(comptest));
+        Set(comptest.R, "$bindir", atf_comp::_db.bindir);
 
         atf_comp::_db.report.ntest++;
         bool match = Regx_Match(_db.cmdline.comptest, comptest.comptest);
