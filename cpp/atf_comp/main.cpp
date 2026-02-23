@@ -153,7 +153,7 @@ void atf_comp::SetupCmdline(atf_comp::FComptest &comptest) {
         if (!covdir) {
             covdir = &covdir_Alloc();
             covdir->covdir = _db.cmdline.covfast
-                ? DirFileJoin(atf_comp::_db.tempdir,"cov.d/") << covdir_N()
+                ? DirFileJoin(atf_comp::_db.cmdline.tempdir,"cov.d/") << covdir_N()
                 : DirFileJoin(comptest.dir, "cov.d");
         }
         comptest.c_covdir = covdir;
@@ -167,40 +167,48 @@ void atf_comp::SetupCmdline(atf_comp::FComptest &comptest) {
         cmd = tempstr() << atf_cov_ToCmdline(atf_cov);
     }
 
-    // Write command to script with input redirect and output capture
+    // Write command to script with input redirect and raw output capture.
+    // Use || to capture exit code without triggering set -e; filter runs regardless.
+    comptest.script << "exit_code=0" << eol;
     comptest.script << "{ " << cmd << "; } < " << comptest.file_test_in;
-    if (_db.cmdline.stream) {
-        comptest.script << " |& tee -a " << comptest.file_test_out;
-    } else {
-        comptest.script << " > " << comptest.file_test_out << " 2>&1";
-    }
-    comptest.script << eol;
+    comptest.script << " 2>&1 | tee -a " << comptest.file_test_out_raw << (_db.cmdline.stream ? "" : " >/dev/null");
+    comptest.script << " || exit_code=$?" << eol;
+
+    // Run filter (or cat) on raw output to produce final .out
+    strptr filter = comptest.c_tfilt ? comptest.c_tfilt->filter : strptr("cat");
+    comptest.script << "(" << Subst(comptest.R, filter) << ") < " << comptest.file_test_out_raw << " > " << comptest.file_test_out << eol;
+    comptest.script << "exit $exit_code" << eol;
 }
 
 // -----------------------------------------------------------------------------
 
-// Write script header and input preparation using heredoc
-// Use ifilter if present, otherwise cat
+// Write script header and input preparation
+// Step 1: write tmsgs to file. Step 2: run ifilter (or cat) on that file
 void atf_comp::PrepareInput(atf_comp::FComptest &comptest) {
     comptest.script << "#!/usr/bin/env bash" << eol;
+    comptest.script << "set -eu" << (algo_lib::_db.cmdline.verbose ? "x" : "") << " -o pipefail" << eol;
     Ins(&comptest.R, comptest.script, "export tempdir=$tempdir");
     Ins(&comptest.R, comptest.script, "export comptest=$comptest");
     Ins(&comptest.R, comptest.script, "export bindir=$bindir");
+    Ins(&comptest.R, comptest.script, "export in_raw=$in_raw");
+    Ins(&comptest.R, comptest.script, "export out_raw=$out_raw");
+    Ins(&comptest.R, comptest.script, "export finput=$finput");
+    Ins(&comptest.R, comptest.script, "export foutput=$foutput");
     Ins(&comptest.R, comptest.script, "mkdir -p $tempdir");
 
-    // Input preparation using heredoc
-    if (comptest.c_tifilt && ch_N(comptest.c_tifilt->ifilter)) {
-        comptest.script << Subst(comptest.R, comptest.c_tifilt->ifilter);
-    } else {
-        comptest.script << "cat";
-    }
-    comptest.script << " > " << comptest.file_test_in << " << 'ATFEOF'" << eol;
+    // write tmsgs to .in.raw file via heredoc. We write to a file so
+    // multiple processes can consume them.
+    comptest.script << "cat > " << comptest.file_test_in_raw << " << 'ATFEOF'" << eol;
     ind_beg(comptest_zd_tmsg_curs, tmsg, comptest) {
         if (dir_Get(tmsg) == atfdb_Msgdir_msgdir_in) {
             comptest.script << tmsg.msg << eol;
         }
     }ind_end;
     comptest.script << "ATFEOF" << eol;
+
+    // run ifilter (or cat) with .in.raw as stdin, output to .in
+    strptr ifilter = comptest.c_tifilt ? comptest.c_tifilt->ifilter : strptr("cat");
+    comptest.script << "(" << Subst(comptest.R, ifilter) << ") < " << comptest.file_test_in_raw << " > " << comptest.file_test_in << eol;
 }
 
 // -----------------------------------------------------------------------------
@@ -265,21 +273,11 @@ void atf_comp::StartNextTest() {
 // -----------------------------------------------------------------------------
 
 // Compare output of current test with the reference file.
-// If tfilt exists, filter output before matching
 // Any difference = error
 // return true for success, false for error
 bool atf_comp::CompareOutput(atf_comp::FComptest &comptest) {
     cstring fname(comptest.file_test_out);
-    if (comptest.c_tfilt) {
-        fname << ".filt";
-        command::bash_proc bash;
-        bash.cmd.c = Subst(comptest.R,comptest.c_tfilt->filter);
-        bash.fstdin = tempstr() << "<" << comptest.file_test_out;
-        bash.fstdout = tempstr() << ">" << fname;
-        bash_ExecX(bash);
-    };
-
-    cstring expect_fname = tempstr() << "test/atf_comp/" << comptest.comptest;
+    cstring expect_fname = tempstr() << _db.cmdline.testdir << algo::MaybeDirSep << comptest.comptest;
     verblog("# ----- test output -----\n"<<FileToString(fname)<<"\n# ----- end test output -----");
 
     verblog("atf_comp.compare_file"
@@ -470,7 +468,7 @@ void atf_comp::Main_Print(cstring &out, bool show_output, bool show_testcase) {
             }
         }ind_end;
         if (show_output) {
-            tempstr fname=DirFileJoin("test/atf_comp",comptest.comptest);
+            tempstr fname=DirFileJoin(_db.cmdline.testdir,comptest.comptest);
             out << eol;
             out << "# Expected output below ("<<fname<<")\n";
             ind_beg(algo::FileLine_curs,line,fname) {
@@ -490,7 +488,7 @@ void atf_comp::Main_Coverage() {
     } else if (algo_lib::_db.exit_code != 0) {
         prlog("atf_comp: coverage: skipping collection of coverage stats");
     } else {
-        cstring dir = DirFileJoin(atf_comp::_db.tempdir,"cov.d");
+        cstring dir = DirFileJoin(atf_comp::_db.cmdline.tempdir,"cov.d");
         CreateDirRecurse(dir);
         command::atf_cov_proc atf_cov;
         atf_cov.cmd.covdir = dir;
@@ -590,15 +588,21 @@ void atf_comp::Main_Write() {
 void atf_comp::Main_Select() {
     ind_beg(_db_comptest_curs,comptest,_db) {
         // Set up per-test directory
-        comptest.dir = algo::DirFileJoin(_db.tempdir, comptest.comptest);
-        comptest.file_test_in  = tempstr() << comptest.dir << ".in";
-        comptest.file_test_out = tempstr() << comptest.dir << ".out";
-        comptest.file_run      = tempstr() << comptest.dir << ".run";
+        comptest.dir = algo::DirFileJoin(_db.cmdline.tempdir, comptest.comptest);
+        comptest.file_test_in      = tempstr() << comptest.dir << ".in";
+        comptest.file_test_in_raw  = tempstr() << comptest.dir << ".in.raw";
+        comptest.file_test_out     = tempstr() << comptest.dir << ".out";
+        comptest.file_test_out_raw = tempstr() << comptest.dir << ".out.raw";
+        comptest.file_run          = tempstr() << comptest.dir << ".run";
         Set(comptest.R, "$$", "$");
         Set(comptest.R, "$tempdir", Pathcomp(comptest.file_run, "/RL"));
         Set(comptest.R, "$comptest", comptest.comptest);
         Set(comptest.R, "$timeout", tempstr()<<CalcTimeout(comptest));
         Set(comptest.R, "$bindir", atf_comp::_db.bindir);
+        Set(comptest.R, "$in_raw", comptest.file_test_in_raw);
+        Set(comptest.R, "$finput", comptest.file_test_in);
+        Set(comptest.R, "$out_raw", comptest.file_test_out_raw);
+        Set(comptest.R, "$foutput", comptest.file_test_out);
 
         atf_comp::_db.report.ntest++;
         bool match = Regx_Match(_db.cmdline.comptest, comptest.comptest);
@@ -730,13 +734,13 @@ void atf_comp::Main() {
     // check lock file
     algo_lib::FLockfile lockfile;
     if (_db.cmdline.run || _db.cmdline.capture || _db.cmdline.normalize) {
-        vrfy(LockFileInit(lockfile, "temp/atf_comp.lock", FailokQ(true)),
+        vrfy(LockFileInit(lockfile, tempstr()<<_db.cmdline.tempdir<<".lock", FailokQ(true)),
              tempstr("atf_comp.lock")
              <<Keyval("success","N")
              <<Keyval("comment","another instance of atf_comp is already running"));
-        vrfy_(StartsWithQ(_db.tempdir, "temp/"));// safety
-        algo::RemDirRecurse(atf_comp::_db.tempdir,false);// clear entire state
-        algo::CreateDirRecurse(atf_comp::_db.tempdir);// start over
+        vrfy_(StartsWithQ(_db.cmdline.tempdir, "temp/"));// safety
+        algo::RemDirRecurse(atf_comp::_db.cmdline.tempdir,false);// clear entire state
+        algo::CreateDirRecurse(atf_comp::_db.cmdline.tempdir);// start over
     }
     if (_db.cmdline.check_untracked) {
         tempstr untracked_files;

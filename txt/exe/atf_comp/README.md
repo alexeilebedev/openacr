@@ -34,40 +34,42 @@
 ```
 atf_comp: Algo Test Framework - Component test execution
 Usage: atf_comp [[-comptest:]<regx>] [options]
-    OPTION            TYPE    DFLT       COMMENT
-    -in               string  "data"     Input directory or filename, - for stdin
-    [comptest]        regx    "%"        Select comptest (SQL regex)
-    -mdbg                                (action) Run component test under debugger
-    -run                      Y          (action) Run selected component tests
-    -capture                             (action) Re-capture test results
-    -print                               (action) Print testcase
-    -printinput                          (action) Print input of test case
-    -e                                   (action) Open selected testcases in an editor
-    -normalize                           (action) Renumber and normalize tmsgs
-    -covcapture                          (action) Capture new coverage percentages and save back
-    -covcheck                            (action) Check coverage percentages against tgtcov table
-    -bindir           string  ""         Directory with binaries (default: build/cfg)
-    -cfg              string  "release"  Set config
-    -check_untracked          Y          Check for untracked file before allowing test to run
-    -maxerr           int     3          Exit after this many errors
-    -build                               Build given cfg before test
-    -memcheck                            Run under memory checker (valgrind)
-    -force                               (With -memcheck) run suppressed memcheck
-    -callgrind                           Run under callgrind profiler (valgrind)
-    -maxjobs          int     0          Maximum number of tests run in parallel
-    -stream                              prints component's output
-    -i                                   Read and execute testcase from stdin
-    -write                    Y          (implied with -e) Write any changes back to ssim tables
-    -report                   Y          Print final report
-    -b                string  ""         Breakpoint passed to mdbg as-is
-    -covfast                  Y          Speedup coverage processing
-    -minrepeat        int     0          Execute every comptest at least this many times
-    -maxrepeat        int     1          Don't repeat any individual comptest more than X times
-    -verbose          flag               Verbosity level (0..255); alias -v; cumulative
-    -debug            flag               Debug level (0..255); alias -d; cumulative
-    -help                                Print help and exit; alias -h
-    -version                             Print version and exit
-    -signature                           Show signatures and exit; alias -sig
+    OPTION            TYPE    DFLT             COMMENT
+    -in               string  "data"           Input directory or filename, - for stdin
+    [comptest]        regx    "%"              Select comptest (SQL regex)
+    -mdbg                                      (action) Run component test under debugger
+    -run                      Y                (action) Run selected component tests
+    -capture                                   (action) Re-capture test results
+    -print                                     (action) Print testcase
+    -printinput                                (action) Print input of test case
+    -e                                         (action) Open selected testcases in an editor
+    -normalize                                 (action) Renumber and normalize tmsgs
+    -covcapture                                (action) Capture new coverage percentages and save back
+    -covcheck                                  (action) Check coverage percentages against tgtcov table
+    -bindir           string  ""               Directory with binaries (default: build/cfg)
+    -tempdir          string  "temp/atf_comp"  Temp directory
+    -testdir          string  "test/atf_comp"  Test data directory
+    -cfg              string  "release"        Set config
+    -check_untracked          Y                Check for untracked file before allowing test to run
+    -maxerr           int     3                Exit after this many errors
+    -build                                     Build given cfg before test
+    -memcheck                                  Run under memory checker (valgrind)
+    -force                                     (With -memcheck) run suppressed memcheck
+    -callgrind                                 Run under callgrind profiler (valgrind)
+    -maxjobs          int     0                Maximum number of tests run in parallel
+    -stream                                    prints component's output
+    -i                                         Read and execute testcase from stdin
+    -write                    Y                (implied with -e) Write any changes back to ssim tables
+    -report                   Y                Print final report
+    -b                string  ""               Breakpoint passed to mdbg as-is
+    -covfast                  Y                Speedup coverage processing
+    -minrepeat        int     0                Execute every comptest at least this many times
+    -maxrepeat        int     1                Don't repeat any individual comptest more than X times
+    -verbose          flag                     Verbosity level (0..255); alias -v; cumulative
+    -debug            flag                     Debug level (0..255); alias -d; cumulative
+    -help                                      Print help and exit; alias -h
+    -version                                   Print version and exit
+    -signature                                 Show signatures and exit; alias -sig
 
 ```
 
@@ -352,6 +354,12 @@ For complex filter, dedicated executable is possible.
 
 #### -bindir -- Directory with binaries (default: build/cfg)
 <a href="#-bindir"></a>
+
+#### -tempdir -- Temp directory
+<a href="#-tempdir"></a>
+
+#### -testdir -- Test data directory
+<a href="#-testdir"></a>
 
 #### -cfg -- Set config
 <a href="#-cfg"></a>

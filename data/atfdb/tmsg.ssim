@@ -122,6 +122,11 @@ atfdb.tmsg  tmsg:aqlite.Smoke/100010.in  istuple:N  msg:'dmmeta.ctype  ctype:i32
 atfdb.tmsg  tmsg:aqlite.Smoke/100020.in  istuple:N  msg:'dmmeta.field  field:abt.FArch.msghdr      arg:dev.Arch        reftype:Base    dflt:""  comment:""'
 atfdb.tmsg  tmsg:aqlite.Smoke/100030.in  istuple:N  msg:'dmmeta.field  field:abt.FCfg.msghdr       arg:dev.Cfg         reftype:Base    dflt:""  comment:""'
 atfdb.tmsg  tmsg:aqlite.Smoke/100040.in  istuple:N  msg:'dmmeta.field  field:abt.FCompiler.msghdr  arg:dev.Compiler    reftype:Base    dflt:""  comment:""'
+atfdb.tmsg  tmsg:atf_comp.Smoke/100000.in  istuple:N  msg:'atfdb.comptest  comptest:cat.Hello  comment:""  timeout:5  repeat:1  memcheck:Y  coverage:Y  exit_code:0'
+atfdb.tmsg  tmsg:atf_comp.Smoke/100010.in  istuple:N  msg:'atfdb.tifilt  comptest:cat.Hello  ifilter:sort  comment:""'
+atfdb.tmsg  tmsg:atf_comp.Smoke/100020.in  istuple:N  msg:'atfdb.tfilt  comptest:cat.Hello  filter:"sort -r"  comment:""'
+atfdb.tmsg  tmsg:atf_comp.Smoke/100030.in  istuple:N  msg:"atfdb.tmsg  tmsg:cat.Hello/100000.in  istuple:N  msg:b"
+atfdb.tmsg  tmsg:atf_comp.Smoke/100040.in  istuple:N  msg:"atfdb.tmsg  tmsg:cat.Hello/100001.in  istuple:N  msg:a"
 atfdb.tmsg  tmsg:atf_exp.AcrInteractive/100000.in  istuple:N  msg:'ams.ProcStartMsg  proc:acr  cmd:"$bindir/acr -in:- %"'
 atfdb.tmsg  tmsg:atf_exp.AcrInteractive/100010.in  istuple:N  msg:"ams.ProcMsg  proc:acr  payload:'dmmeta.ns  ns:testns  nstype:exe  license:GPL  comment:\"test namespace\"'"
 atfdb.tmsg  tmsg:atf_exp.AcrInteractive/100020.in  istuple:N  msg:"ams.ProcEofMsg  proc:acr"
