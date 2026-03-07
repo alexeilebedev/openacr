@@ -56,40 +56,42 @@ namespace atf_comp {
 const char *atf_comp_help =
 "atf_comp: Algo Test Framework - Component test execution\n"
 "Usage: atf_comp [[-comptest:]<regx>] [options]\n"
-"    OPTION            TYPE    DFLT       COMMENT\n"
-"    -in               string  \"data\"     Input directory or filename, - for stdin\n"
-"    [comptest]        regx    \"%\"        Select comptest (SQL regex)\n"
-"    -mdbg                                (action) Run component test under debugger\n"
-"    -run                      Y          (action) Run selected component tests\n"
-"    -capture                             (action) Re-capture test results\n"
-"    -print                               (action) Print testcase\n"
-"    -printinput                          (action) Print input of test case\n"
-"    -e                                   (action) Open selected testcases in an editor\n"
-"    -normalize                           (action) Renumber and normalize tmsgs\n"
-"    -covcapture                          (action) Capture new coverage percentages and save back\n"
-"    -covcheck                            (action) Check coverage percentages against tgtcov table\n"
-"    -bindir           string  \"\"         Directory with binaries (default: build/cfg)\n"
-"    -cfg              string  \"release\"  Set config\n"
-"    -check_untracked          Y          Check for untracked file before allowing test to run\n"
-"    -maxerr           int     3          Exit after this many errors\n"
-"    -build                               Build given cfg before test\n"
-"    -memcheck                            Run under memory checker (valgrind)\n"
-"    -force                               (With -memcheck) run suppressed memcheck\n"
-"    -callgrind                           Run under callgrind profiler (valgrind)\n"
-"    -maxjobs          int     0          Maximum number of tests run in parallel\n"
-"    -stream                              prints component's output\n"
-"    -i                                   Read and execute testcase from stdin\n"
-"    -write                    Y          (implied with -e) Write any changes back to ssim tables\n"
-"    -report                   Y          Print final report\n"
-"    -b                string  \"\"         Breakpoint passed to mdbg as-is\n"
-"    -covfast                  Y          Speedup coverage processing\n"
-"    -minrepeat        int     0          Execute every comptest at least this many times\n"
-"    -maxrepeat        int     1          Don't repeat any individual comptest more than X times\n"
-"    -verbose          flag               Verbosity level (0..255); alias -v; cumulative\n"
-"    -debug            flag               Debug level (0..255); alias -d; cumulative\n"
-"    -help                                Print help and exit; alias -h\n"
-"    -version                             Print version and exit\n"
-"    -signature                           Show signatures and exit; alias -sig\n"
+"    OPTION            TYPE    DFLT             COMMENT\n"
+"    -in               string  \"data\"           Input directory or filename, - for stdin\n"
+"    [comptest]        regx    \"%\"              Select comptest (SQL regex)\n"
+"    -mdbg                                      (action) Run component test under debugger\n"
+"    -run                      Y                (action) Run selected component tests\n"
+"    -capture                                   (action) Re-capture test results\n"
+"    -print                                     (action) Print testcase\n"
+"    -printinput                                (action) Print input of test case\n"
+"    -e                                         (action) Open selected testcases in an editor\n"
+"    -normalize                                 (action) Renumber and normalize tmsgs\n"
+"    -covcapture                                (action) Capture new coverage percentages and save back\n"
+"    -covcheck                                  (action) Check coverage percentages against tgtcov table\n"
+"    -bindir           string  \"\"               Directory with binaries (default: build/cfg)\n"
+"    -tempdir          string  \"temp/atf_comp\"  Temp directory\n"
+"    -testdir          string  \"test/atf_comp\"  Test data directory\n"
+"    -cfg              string  \"release\"        Set config\n"
+"    -check_untracked          Y                Check for untracked file before allowing test to run\n"
+"    -maxerr           int     3                Exit after this many errors\n"
+"    -build                                     Build given cfg before test\n"
+"    -memcheck                                  Run under memory checker (valgrind)\n"
+"    -force                                     (With -memcheck) run suppressed memcheck\n"
+"    -callgrind                                 Run under callgrind profiler (valgrind)\n"
+"    -maxjobs          int     0                Maximum number of tests run in parallel\n"
+"    -stream                                    prints component's output\n"
+"    -i                                         Read and execute testcase from stdin\n"
+"    -write                    Y                (implied with -e) Write any changes back to ssim tables\n"
+"    -report                   Y                Print final report\n"
+"    -b                string  \"\"               Breakpoint passed to mdbg as-is\n"
+"    -covfast                  Y                Speedup coverage processing\n"
+"    -minrepeat        int     0                Execute every comptest at least this many times\n"
+"    -maxrepeat        int     1                Don't repeat any individual comptest more than X times\n"
+"    -verbose          flag                     Verbosity level (0..255); alias -v; cumulative\n"
+"    -debug            flag                     Debug level (0..255); alias -d; cumulative\n"
+"    -help                                      Print help and exit; alias -h\n"
+"    -version                                   Print version and exit\n"
+"    -signature                                 Show signatures and exit; alias -sig\n"
 ;
 
 
@@ -523,7 +525,7 @@ static void atf_comp::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_comp.Input'  signature:'2fbe0bcca8334015139d5f83bcb568d203375c6e'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_comp.Input'  signature:'059b0415b175885bd0615ce4d2784b62bfe9807f'");
 }
 
 // --- atf_comp.FDb._db.InsertStrptrMaybe
@@ -2364,7 +2366,6 @@ inline static i32 atf_comp::trace_N() {
 // --- atf_comp.FDb..Init
 // Set all fields to initial values.
 void atf_comp::FDb_Init() {
-    _db.tempdir = algo::strptr("temp/atf_comp");
     // initialize LAry comptest (atf_comp.FDb.comptest)
     _db.comptest_n = 0;
     memset(_db.comptest_lary, 0, sizeof(_db.comptest_lary)); // zero out all level pointers

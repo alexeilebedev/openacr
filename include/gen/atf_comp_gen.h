@@ -109,7 +109,9 @@ struct FComptest { // atf_comp.FComptest
     i32                    repeat;                 //   1  Number of times to repeat the test
     algo::Comment          comment;                //
     algo::cstring          file_test_out;          //
+    algo::cstring          file_test_out_raw;      // Path to raw target output before filter
     algo::cstring          file_test_in;           //
+    algo::cstring          file_test_in_raw;       // Path to raw tmsg input file
     command::bash_proc     bash;                   //
     atf_comp::FTargs*      c_targs;                // optional pointer
     i32                    msg_index;              //   0
@@ -322,7 +324,6 @@ void                 trace_Print(atf_comp::trace& row, algo::cstring& str) __att
 // create: atf_comp.FDb._db (Global)
 struct FDb { // atf_comp.FDb: In-memory database for atf_comp
     command::atf_comp       cmdline;                      //
-    algo::cstring           tempdir;                      //   "temp/atf_comp"
     atf_comp::FComptest*    comptest_lary[32];            // level array
     i32                     comptest_n;                   // number of elements in array
     atf_comp::FComptest**   ind_comptest_buckets_elems;   // pointer to bucket array

@@ -188,6 +188,8 @@ atfdb.comptest  comptest:atf_cmdline.RichExec  timeout:10  memcheck:Y  coverage:
 atfdb.comptest  comptest:atf_cmdline.Sig  timeout:10  memcheck:Y  coverage:Y  exit_code:1  ncore:1  repeat:1  comment:""
 atfdb.comptest  comptest:atf_cmdline.Verbose  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:""
 atfdb.comptest  comptest:atf_cmdline.Version  timeout:10  memcheck:Y  coverage:Y  exit_code:1  ncore:1  repeat:1  comment:""
+atfdb.comptest  comptest:atf_comp.Smoke  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:""
+atfdb.comptest  comptest:atf_exp.AcrInteractive  timeout:10  memcheck:N  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:"Interactive acr test via atf_exp"
 atfdb.comptest  comptest:jkv.ArrayFill  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:""
 atfdb.comptest  comptest:jkv.ReverseSmoke  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:""
 atfdb.comptest  comptest:jkv.Smoke  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:""

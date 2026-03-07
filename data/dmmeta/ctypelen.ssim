@@ -702,9 +702,9 @@ dmmeta.ctypelen  ctype:atf_ci.FSsimfile  len:168  alignment:8  padbytes:2  plain
 dmmeta.ctypelen  ctype:atf_ci.FTargsrc  len:254  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:atf_ci.File  len:40  alignment:8  padbytes:10  plaindata:N
 dmmeta.ctypelen  ctype:atf_cmdline.FDb  len:368  alignment:8  padbytes:7  plaindata:N
-dmmeta.ctypelen  ctype:atf_comp.FComptest  len:696  alignment:8  padbytes:27  plaindata:N
+dmmeta.ctypelen  ctype:atf_comp.FComptest  len:728  alignment:8  padbytes:27  plaindata:N
 dmmeta.ctypelen  ctype:atf_comp.FCovdir  len:32  alignment:8  padbytes:0  plaindata:N
-dmmeta.ctypelen  ctype:atf_comp.FDb  len:1160  alignment:8  padbytes:59  plaindata:N
+dmmeta.ctypelen  ctype:atf_comp.FDb  len:1176  alignment:8  padbytes:59  plaindata:N
 dmmeta.ctypelen  ctype:atf_comp.FTargs  len:96  alignment:8  padbytes:4  plaindata:N
 dmmeta.ctypelen  ctype:atf_comp.FTfilt  len:256  alignment:8  padbytes:0  plaindata:N
 dmmeta.ctypelen  ctype:atf_comp.FTifilt  len:248  alignment:8  padbytes:4  plaindata:N
@@ -776,7 +776,7 @@ dmmeta.ctypelen  ctype:command.aqlite  len:88  alignment:8  padbytes:0  plaindat
 dmmeta.ctypelen  ctype:command.atf_amc  len:64  alignment:8  padbytes:6  plaindata:N
 dmmeta.ctypelen  ctype:command.atf_ci  len:112  alignment:8  padbytes:10  plaindata:N
 dmmeta.ctypelen  ctype:command.atf_cmdline  len:360  alignment:8  padbytes:45  plaindata:N
-dmmeta.ctypelen  ctype:command.atf_comp  len:192  alignment:8  padbytes:17  plaindata:N
+dmmeta.ctypelen  ctype:command.atf_comp  len:224  alignment:8  padbytes:17  plaindata:N
 dmmeta.ctypelen  ctype:command.atf_cov  len:128  alignment:8  padbytes:0  plaindata:N
 dmmeta.ctypelen  ctype:command.atf_exp  len:136  alignment:8  padbytes:11  plaindata:N
 dmmeta.ctypelen  ctype:command.atf_fuzz  len:144  alignment:8  padbytes:10  plaindata:N

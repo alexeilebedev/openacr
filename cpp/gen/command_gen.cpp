@@ -241,6 +241,8 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_covcapture    : ret = "covcapture";  break;
         case command_FieldId_covcheck      : ret = "covcheck";  break;
         case command_FieldId_bindir        : ret = "bindir";  break;
+        case command_FieldId_tempdir       : ret = "tempdir";  break;
+        case command_FieldId_testdir       : ret = "testdir";  break;
         case command_FieldId_check_untracked: ret = "check_untracked";  break;
         case command_FieldId_memcheck      : ret = "memcheck";  break;
         case command_FieldId_callgrind     : ret = "callgrind";  break;
@@ -260,7 +262,6 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_xmlpretty     : ret = "xmlpretty";  break;
         case command_FieldId_summary       : ret = "summary";  break;
         case command_FieldId_incremental   : ret = "incremental";  break;
-        case command_FieldId_tempdir       : ret = "tempdir";  break;
         case command_FieldId_dbgshell      : ret = "dbgshell";  break;
         case command_FieldId_reprofile     : ret = "reprofile";  break;
         case command_FieldId_args          : ret = "args";  break;
@@ -1145,6 +1146,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR7('t','e','m','p','d','i','r'): {
                     value_SetEnum(parent,command_FieldId_tempdir); ret = true; break;
+                }
+                case LE_STR7('t','e','s','t','d','i','r'): {
+                    value_SetEnum(parent,command_FieldId_testdir); ret = true; break;
                 }
                 case LE_STR7('t','i','m','e','o','u','t'): {
                     value_SetEnum(parent,command_FieldId_timeout); ret = true; break;
@@ -12709,6 +12713,12 @@ bool command::atf_comp_ReadFieldMaybe(command::atf_comp& parent, algo::strptr fi
         case command_FieldId_bindir: {
             retval = algo::cstring_ReadStrptrMaybe(parent.bindir, strval);
         } break;
+        case command_FieldId_tempdir: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.tempdir, strval);
+        } break;
+        case command_FieldId_testdir: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.testdir, strval);
+        } break;
         case command_FieldId_cfg: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.cfg, strval);
         } break;
@@ -12800,6 +12810,8 @@ void command::atf_comp_Init(command::atf_comp& parent) {
     parent.covcapture = bool(false);
     parent.covcheck = bool(false);
     parent.bindir = algo::strptr("");
+    parent.tempdir = algo::strptr("temp/atf_comp");
+    parent.testdir = algo::strptr("test/atf_comp");
     parent.cfg = algo::strptr("release");
     parent.check_untracked = bool(true);
     parent.maxerr = i32(3);
@@ -12910,6 +12922,18 @@ void command::atf_comp_PrintArgv(command::atf_comp& row, algo::cstring& str) {
         ch_RemoveAll(temp);
         cstring_Print(row.bindir, temp);
         str << " -bindir:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.tempdir == "temp/atf_comp")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.tempdir, temp);
+        str << " -tempdir:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.testdir == "test/atf_comp")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.testdir, temp);
+        str << " -testdir:";
         strptr_PrintBash(temp,str);
     }
     if (!(row.cfg == "release")) {
@@ -13078,6 +13102,12 @@ i32 command::atf_comp_NArgs(command::FieldId field, algo::strptr& out_dflt, bool
             out_dflt="Y";
         } break;
         case command_FieldId_bindir: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_tempdir: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_testdir: { //
             *out_anon = false;
         } break;
         case command_FieldId_cfg: { //
@@ -13362,6 +13392,18 @@ void command::atf_comp_ToArgv(command::atf_comp_proc& parent, algo::StringAry& a
         cstring *arg = &ary_Alloc(args);
         *arg << "-bindir:";
         cstring_Print(parent.cmd.bindir, *arg);
+    }
+
+    if (parent.cmd.tempdir != "temp/atf_comp") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-tempdir:";
+        cstring_Print(parent.cmd.tempdir, *arg);
+    }
+
+    if (parent.cmd.testdir != "test/atf_comp") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-testdir:";
+        cstring_Print(parent.cmd.testdir, *arg);
     }
 
     if (parent.cmd.cfg != "release") {

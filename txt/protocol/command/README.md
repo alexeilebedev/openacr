@@ -381,6 +381,8 @@ Other ctypes in this namespace which don't have own readme files
 |covcapture|bool|[Val](/txt/exe/amc/reftypes.md#val)||(action) Capture new coverage percentages and save back|
 |covcheck|bool|[Val](/txt/exe/amc/reftypes.md#val)||(action) Check coverage percentages against tgtcov table|
 |bindir|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|""|Directory with binaries (default: build/cfg)|
+|tempdir|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|"temp/atf_comp"|Temp directory|
+|testdir|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|"test/atf_comp"|Test data directory|
 |cfg|[dev.Cfg](/txt/ssimdb/dev/cfg.md)|[Pkey](/txt/exe/amc/reftypes.md#pkey)|"release"|Set config|
 |check_untracked|bool|[Val](/txt/exe/amc/reftypes.md#val)|true|Check for untracked file before allowing test to run|
 |maxerr|i32|[Val](/txt/exe/amc/reftypes.md#val)|3|Exit after this many errors|

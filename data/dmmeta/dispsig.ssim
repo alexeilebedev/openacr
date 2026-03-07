@@ -14,7 +14,7 @@ dmmeta.dispsig  dispsig:atf_amc.Input  signature:3b9943558be9b03e79fade60297ec50
 dmmeta.dispsig  dispsig:atf_amc.Msgs  signature:f80a13e46fff2c18de1f4dbbbb11703d07c170d2
 dmmeta.dispsig  dispsig:atf_amc.Ssimfiles  signature:f2409fade5c9373dc13379fe888df9435e3c0987
 dmmeta.dispsig  dispsig:atf_ci.Input  signature:572ca634bbac62d53a8602668fbaa85db3b791f8
-dmmeta.dispsig  dispsig:atf_comp.Input  signature:2fbe0bcca8334015139d5f83bcb568d203375c6e
+dmmeta.dispsig  dispsig:atf_comp.Input  signature:059b0415b175885bd0615ce4d2784b62bfe9807f
 dmmeta.dispsig  dispsig:atf_cov.Input  signature:d66d21a3b569781c26e5ede79240bebe11ae80c4
 dmmeta.dispsig  dispsig:atf_exp.In  signature:fd4b4ce25976a60f5880564b2d24879add6a27d0
 dmmeta.dispsig  dispsig:atf_fuzz.Input  signature:9ba6a4d39f12eb6e4056fa626a272e08de588888

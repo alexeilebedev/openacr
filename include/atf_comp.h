@@ -66,8 +66,8 @@ namespace atf_comp { // update-hdr
     //
     void SetupCmdline(atf_comp::FComptest &comptest);
 
-    // Write script header and input preparation using heredoc
-    // Use ifilter if present, otherwise cat
+    // Write script header and input preparation
+    // Step 1: write tmsgs to file. Step 2: run ifilter (or cat) on that file
     void PrepareInput(atf_comp::FComptest &comptest);
 
     // Write script to file
@@ -81,7 +81,6 @@ namespace atf_comp { // update-hdr
     void StartNextTest();
 
     // Compare output of current test with the reference file.
-    // If tfilt exists, filter output before matching
     // Any difference = error
     // return true for success, false for error
     bool CompareOutput(atf_comp::FComptest &comptest);

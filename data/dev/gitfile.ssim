@@ -1204,6 +1204,8 @@ dev.gitfile  gitfile:test/atf_comp/atf_cmdline.RichExec
 dev.gitfile  gitfile:test/atf_comp/atf_cmdline.Sig
 dev.gitfile  gitfile:test/atf_comp/atf_cmdline.Verbose
 dev.gitfile  gitfile:test/atf_comp/atf_cmdline.Version
+dev.gitfile  gitfile:test/atf_comp/atf_comp.Smoke
+dev.gitfile  gitfile:test/atf_comp/atf_exp.AcrInteractive
 dev.gitfile  gitfile:test/atf_comp/jkv.ArrayFill
 dev.gitfile  gitfile:test/atf_comp/jkv.ReverseSmoke
 dev.gitfile  gitfile:test/atf_comp/jkv.Smoke
