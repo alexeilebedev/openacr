@@ -31,6 +31,7 @@ dmmeta.fcmdline  field:lib_exec.FDb.cmdline  read:Y  basecmdline:algo_lib.FDb.cm
 dmmeta.fcmdline  field:mdbg.FDb.cmdline  read:Y  basecmdline:algo_lib.FDb.cmdline  comment:""
 dmmeta.fcmdline  field:mysql2ssim.FDb.cmdline  read:Y  basecmdline:algo_lib.FDb.cmdline  comment:""
 dmmeta.fcmdline  field:orgfile.FDb.cmdline  read:Y  basecmdline:algo_lib.FDb.cmdline  comment:""
+dmmeta.fcmdline  field:risk_engine.FDb.cmdline  read:Y  basecmdline:algo_lib.FDb.cmdline  comment:""
 dmmeta.fcmdline  field:samp_make.FDb.cmdline  read:Y  basecmdline:algo_lib.FDb.cmdline  comment:""
 dmmeta.fcmdline  field:samp_meng.FDb.cmdline  read:Y  basecmdline:algo_lib.FDb.cmdline  comment:""
 dmmeta.fcmdline  field:samp_regx.FDb.cmdline  read:Y  basecmdline:algo_lib.FDb.cmdline  comment:""

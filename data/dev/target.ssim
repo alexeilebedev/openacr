@@ -50,6 +50,7 @@ dev.target  target:lib_ws
 dev.target  target:mdbg
 dev.target  target:mysql2ssim
 dev.target  target:orgfile
+dev.target  target:risk_engine
 dev.target  target:samp_make
 dev.target  target:samp_meng
 dev.target  target:samp_regx

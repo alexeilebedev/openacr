@@ -32,6 +32,7 @@ dmmeta.ssimfile  ssimfile:dev.copyright  ctype:dev.Copyright
 dmmeta.ssimfile  ssimfile:dev.covfile  ctype:dev.Covfile
 dmmeta.ssimfile  ssimfile:dev.covline  ctype:dev.Covline
 dmmeta.ssimfile  ssimfile:dev.covtarget  ctype:dev.Covtarget
+dmmeta.ssimfile  ssimfile:dev.cpty  ctype:dev.Cpty
 dmmeta.ssimfile  ssimfile:dev.edaction  ctype:dev.Edaction
 dmmeta.ssimfile  ssimfile:dev.edacttype  ctype:dev.Edacttype
 dmmeta.ssimfile  ssimfile:dev.gitfile  ctype:dev.Gitfile
@@ -39,7 +40,10 @@ dmmeta.ssimfile  ssimfile:dev.gitinfo  ctype:dev.Gitinfo
 dmmeta.ssimfile  ssimfile:dev.hilite  ctype:dev.Hilite
 dmmeta.ssimfile  ssimfile:dev.htmlentity  ctype:dev.Htmlentity
 dmmeta.ssimfile  ssimfile:dev.include  ctype:dev.Include
+dmmeta.ssimfile  ssimfile:dev.instrtype  ctype:dev.Instrtype
+dmmeta.ssimfile  ssimfile:dev.instrument  ctype:dev.Instrument
 dmmeta.ssimfile  ssimfile:dev.license  ctype:dev.License
+dmmeta.ssimfile  ssimfile:dev.limittype  ctype:dev.Limittype
 dmmeta.ssimfile  ssimfile:dev.linelim  ctype:dev.Linelim
 dmmeta.ssimfile  ssimfile:dev.mdmark  ctype:dev.Mdmark
 dmmeta.ssimfile  ssimfile:dev.mdsection  ctype:dev.Mdsection
@@ -50,9 +54,11 @@ dmmeta.ssimfile  ssimfile:dev.opt_type  ctype:dev.OptType
 dmmeta.ssimfile  ssimfile:dev.package  ctype:dev.Package
 dmmeta.ssimfile  ssimfile:dev.pkgdep  ctype:dev.Pkgdep
 dmmeta.ssimfile  ssimfile:dev.pkgkey  ctype:dev.Pkgkey
+dmmeta.ssimfile  ssimfile:dev.position  ctype:dev.Position
 dmmeta.ssimfile  ssimfile:dev.prototransport  ctype:dev.Prototransport
 dmmeta.ssimfile  ssimfile:dev.readmefile  ctype:dev.Readmefile
 dmmeta.ssimfile  ssimfile:dev.readmesort  ctype:dev.Readmesort
+dmmeta.ssimfile  ssimfile:dev.risklimit  ctype:dev.Risklimit
 dmmeta.ssimfile  ssimfile:dev.rpm  ctype:dev.Rpm
 dmmeta.ssimfile  ssimfile:dev.sandbox  ctype:dev.Sandbox
 dmmeta.ssimfile  ssimfile:dev.sbpath  ctype:dev.Sbpath

@@ -1,0 +1,5 @@
+dev.cpty  cpty:client_x  comment:"Hedge Fund Client X"
+dev.cpty  cpty:client_y  comment:"Pension Fund Client Y"
+dev.cpty  cpty:desk_a  comment:"Equities Trading Desk A"
+dev.cpty  cpty:desk_b  comment:"Fixed Income Desk B"
+dev.cpty  cpty:desk_c  comment:"Macro Trading Desk C"

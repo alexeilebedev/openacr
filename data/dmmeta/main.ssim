@@ -29,6 +29,7 @@ dmmeta.main  ns:jkv  ismodule:N
 dmmeta.main  ns:mdbg  ismodule:N
 dmmeta.main  ns:mysql2ssim  ismodule:N
 dmmeta.main  ns:orgfile  ismodule:N
+dmmeta.main  ns:risk_engine  ismodule:N
 dmmeta.main  ns:samp_make  ismodule:N
 dmmeta.main  ns:samp_meng  ismodule:N
 dmmeta.main  ns:samp_regx  ismodule:N

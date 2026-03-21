@@ -1,0 +1,4 @@
+dev.instrtype  instrtype:bond  comment:"Fixed income securities"
+dev.instrtype  instrtype:commodity  comment:"Physical commodities and futures"
+dev.instrtype  instrtype:equity  comment:"Common stock and ETFs"
+dev.instrtype  instrtype:fx  comment:"Foreign exchange"
