@@ -161,7 +161,8 @@ Each milestone teaches one OpenACR concept and produces a working program.
 | **M5** | Two panels + Enter/Backspace navigation | Xref traversal, navigation stack, the core experience |
 | **M6a** | gstatic Hook dispatch — replace string if-chain | gstatic, Hook reftype, function-pointer dispatch |
 | **M6b** | `/` filter mode + mode-qualified keybindings | algo::Regx, composite key lookup, mode-driven data |
-| **M7** | Tests, docs, SESE cleanup | Component tests, normalization, documentation |
+| **M7a** | Component tests + documentation | `atfdb.comptest` infrastructure, full development loop |
+| **M7b** | Naventry filter state + keybind substr validation | Schema evolution, `dmmeta.substr` decomposition |
 
 ### Key principle
 
@@ -179,7 +180,8 @@ Each milestone teaches one OpenACR concept and produces a working program.
 | M5 | `data/dmmeta/xref.ssim` (acr_nav entries) | Understand xref wiring |
 | M6a | `data/dmmeta/gstatic.ssim`, `data/dmmeta/hook.ssim`, `amc.FGen.step` pattern | gstatic + Hook dispatch |
 | M6b | `data/gclidb/gclicmd.ssim`, `cpp/samp_regx/samp_regx.cpp` | mode-qualified keybinds, algo::Regx |
-| M7 | `data/atfdb/comptest.ssim`, `test/atf_comp/` | Test patterns |
+| M7a | `data/atfdb/comptest.ssim`, `test/atf_comp/` | Test patterns |
+| M7b | `data/dmmeta/substr.ssim`, `data/dmmeta/field.ssim` | Schema evolution, substr decomposition |
 
 ### Verification (every milestone)
 
@@ -188,17 +190,13 @@ Each milestone teaches one OpenACR concept and produces a working program.
 - `abt -build acr_nav` compiles (M2+)
 - `amc_vis acr_nav.%` shows clean access path diagram (M2+)
 
-### Design notes from review
+### Open items
 
-- **switch_panel direction (resolved in M5):** Split `switch_panel` into `switch_panel_left`/`switch_panel_right`. Left at leftmost panel is no-op, Right at rightmost is no-op. Directional semantics scale to N panels without code changes (just add panel records with increasing `position` values and wire keybinds).
-- **Keybinding design:** Current keybinds cover arrow keys and vim (j/k), but MacBook keyboards lack PgUp/PgDn. Broader question: what's the right set of navigation actions for a schema browser? Should page_up/page_down exist at all, or is `/` filter (M6) the real fast-navigation answer? Should we support emacs muscle memory (Ctrl-N/Ctrl-P)? Control characters (bytes 1-31) currently need a code change to map to key names — is there a more data-driven way? Needs a design session before adding more keybinds.
-- **M5 factorization debt (address in M6+):**
-  - `PanelItemCount` and `Render` dispatch on `panel.position` (0 vs 1) — adding a third panel requires code changes. To factorize: each panel record should carry enough data to describe its content source (e.g., a `content_type` field), and rendering should be a single loop over panel records.
-  - ~~`DispatchAction` is a string if-chain over action names — function-pointer dispatch (like `amcdb.gen` generators) warranted when action count grows beyond ~10.~~ Resolved in M6a: gstatic + Hook dispatch via `navaction_<key>()` handlers, `step_Call(*keybind->p_navaction)`.
-  - `SelectedCtype` walks O(n) through `zd_sel_ctype` linked list per call — cached once per event iteration, but would benefit from a direct index if scaling to very large namespaces.
-  - Navigation stack (`Naventry`) stores only `ctype_name`, `scroll_offset`, `sel_row` — no filter state. Following a ref while filtered, then pressing Backspace to go back, won't restore the filter. To fix: add `filter` (cstring) and `navmode` (Smallstr50) fields to `acr_nav.Naventry`.
-  - Printable char text input in filter mode is inline code in the event loop, not data-driven dispatch. Justified asymmetry (text input vs action dispatch), but not factorized.
-  - Composite keybind keys (`browse.Up`) embed a navmode prefix without referential integrity — `acr -check` won't catch `keybind:typo.Up`. To fix: add a `dmmeta.substr` that decomposes the keybind pkey and validates the mode portion against `navmode.ssim`.
+- **Keybinding design:** Control characters (bytes 1-31) need a code change to map to key names. Needs a design session before adding Ctrl-N/Ctrl-P or other control keybinds.
+- **Panel dispatch on position:** `PanelItemCount` and `Render` dispatch on `panel.position` (0 vs 1). N=2 with genuinely different iteration patterns (linked list vs Ptrary) — not a missing noun. Revisit when a third panel type is needed.
+- **Filter text input:** Printable char handling in filter mode is inline, not data-driven dispatch. Justified asymmetry (text input vs action dispatch).
+- **M7b — Naventry filter state:** `Naventry` has no filter state. Following a ref while filtered, then Backspace, won't restore the filter. Fix: add `filter` and `navmode` fields to `acr_nav.Naventry`.
+- **M7b — Keybind referential integrity:** Composite keys (`browse.Up`) embed a navmode prefix without validation. Fix: add `dmmeta.substr` to decompose the pkey and validate against `navmode.ssim`.
 
 ### Other ideas (backlog)
 

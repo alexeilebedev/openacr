@@ -1,0 +1,59 @@
+acr_nav.FCtype  (3 fields)
+  base                  dmmeta.Ctype                Base
+  c_field               acr_nav.FField              Ptrary
+  p_ns                  acr_nav.FNs                 Upptr
+acr_nav.FDb  (28 fields)
+  _db                   acr_nav.FDb                 Global
+  cmdline               command.acr_nav             Val
+  ctype                 acr_nav.FCtype              Lary
+  ind_ctype             acr_nav.FCtype              Thash
+  field                 acr_nav.FField              Lary
+  ind_field             acr_nav.FField              Thash
+  ns                    acr_nav.FNs                 Lary
+  ind_ns                acr_nav.FNs                 Thash
+  reftype               acr_nav.FReftype            Lary
+  ind_reftype           acr_nav.FReftype            Thash
+  navaction             acr_nav.FNavaction          Lary
+  ind_navaction         acr_nav.FNavaction          Thash
+  keybind               acr_nav.FKeybind            Lary
+  ind_keybind           acr_nav.FKeybind            Thash
+  panel                 acr_nav.FPanel              Lary
+  ind_panel             acr_nav.FPanel              Thash
+  navmode               acr_nav.FNavmode            Lary
+  ind_navmode           acr_nav.FNavmode            Thash
+  navstack              acr_nav.Naventry            Tary
+  zd_sel_ctype          acr_nav.FCtype              Llist
+  p_cur_panel           acr_nav.FPanel              Ptr
+  p_left_panel          acr_nav.FPanel              Ptr
+  p_right_panel         acr_nav.FPanel              Ptr
+  p_cur_mode            acr_nav.FNavmode            Ptr
+  filter                algo.cstring                Val
+  running               bool                        Val
+  term_hei              i32                         Val
+  term_wid              i32                         Val
+acr_nav.FField  (4 fields)
+  base                  dmmeta.Field                Base
+  p_ctype               acr_nav.FCtype              Upptr
+  p_arg                 acr_nav.FCtype              Upptr
+  p_reftype             acr_nav.FReftype            Upptr
+acr_nav.FKeybind  (2 fields)
+  base                  acr_navdb.Keybind           Base
+  p_navaction           acr_nav.FNavaction          Upptr
+acr_nav.FNavaction  (2 fields)
+  base                  acr_navdb.Navaction         Base
+  step                                              Hook
+acr_nav.FNavmode  (1 fields)
+  base                  acr_navdb.Navmode           Base
+acr_nav.FNs  (1 fields)
+  base                  dmmeta.Ns                   Base
+acr_nav.FPanel  (3 fields)
+  base                  acr_navdb.Panel             Base
+  scroll_offset         i32                         Val
+  sel_row               i32                         Val
+acr_nav.FReftype  (1 fields)
+  base                  dmmeta.Reftype              Base
+acr_nav.Naventry  (3 fields)
+  ctype_name            algo.cstring                Val
+  scroll_offset         i32                         Val
+  sel_row               i32                         Val
+acr_nav.report  n_ctype:1380  n_field:5501  n_sel_ctype:10  n_keybind:21  n_panel:2  n_navaction:12  n_navmode:2

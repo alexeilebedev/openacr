@@ -1,0 +1,17 @@
+acr_navdb.Keybind  (3 fields)
+  keybind               algo.Smallstr50             Val
+  navaction             acr_navdb.Navaction         Pkey
+  comment               algo.Comment                Val
+acr_navdb.Navaction  (2 fields)
+  navaction             algo.Smallstr50             Val
+  comment               algo.Comment                Val
+acr_navdb.Navmode  (2 fields)
+  navmode               algo.Smallstr50             Val
+  comment               algo.Comment                Val
+acr_navdb.Panel  (5 fields)
+  panel                 algo.Smallstr50             Val
+  title                 algo.cstring                Val
+  position              i32                         Val
+  width_pct             i32                         Val
+  comment               algo.Comment                Val
+acr_nav.report  n_ctype:1380  n_field:5501  n_sel_ctype:4  n_keybind:21  n_panel:2  n_navaction:12  n_navmode:2
