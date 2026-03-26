@@ -188,8 +188,12 @@ Each milestone teaches one OpenACR concept and produces a working program.
 
 ### Design notes from review
 
-- **switch_panel direction:** Left/Right both map to `switch_panel` — works as a toggle for 2 panels, but a 3rd panel would need directional variants (`switch_panel_left`/`switch_panel_right`) or a new `direction` field on the keybind. Track if panel count grows.
+- **switch_panel direction (resolved in M5):** Split `switch_panel` into `switch_panel_left`/`switch_panel_right`. Left at leftmost panel is no-op, Right at rightmost is no-op. Directional semantics scale to N panels without code changes (just add panel records with increasing `position` values and wire keybinds).
 - **Keybinding design:** Current keybinds cover arrow keys and vim (j/k), but MacBook keyboards lack PgUp/PgDn. Broader question: what's the right set of navigation actions for a schema browser? Should page_up/page_down exist at all, or is `/` filter (M6) the real fast-navigation answer? Should we support emacs muscle memory (Ctrl-N/Ctrl-P)? Control characters (bytes 1-31) currently need a code change to map to key names — is there a more data-driven way? Needs a design session before adding more keybinds.
+- **M5 factorization debt (address in M6+):**
+  - `PanelItemCount` and `Render` dispatch on `panel.position` (0 vs 1) — adding a third panel requires code changes. To factorize: each panel record should carry enough data to describe its content source (e.g., a `content_type` field), and rendering should be a single loop over panel records.
+  - `DispatchAction` is a string if-chain over action names — function-pointer dispatch (like `amcdb.gen` generators) warranted when action count grows beyond ~10.
+  - `SelectedCtype` walks O(n) through `zd_sel_ctype` linked list per call — cached once per event iteration, but would benefit from a direct index if scaling to very large namespaces.
 
 ### Other ideas (backlog)
 
