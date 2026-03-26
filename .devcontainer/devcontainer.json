@@ -1,0 +1,15 @@
+{
+  "name": "openacr",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "containerEnv": {
+    "PATH": "/root/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/workspaces/openacr/bin",
+    "TERM": "xterm-256color"
+  },
+  "mounts": [
+    "source=openacr-build,target=/workspaces/openacr/build,type=volume",
+    "source=openacr-claude,target=/root/.claude,type=volume"
+  ],
+  "postCreateCommand": "curl -fsSL https://claude.ai/install.sh | bash && ai"
+}
