@@ -75,8 +75,8 @@ namespace acr_nav { // gen:ns_print_proto
     static bool          ns_InputMaybe(dmmeta::Ns &elem) __attribute__((nothrow));
     // func:acr_nav.FDb.reftype.InputMaybe
     static bool          reftype_InputMaybe(dmmeta::Reftype &elem) __attribute__((nothrow));
-    // func:acr_nav.FDb.navaction.InputMaybe
-    static bool          navaction_InputMaybe(acr_navdb::Navaction &elem) __attribute__((nothrow));
+    // func:acr_nav.FDb.navaction.LoadStatic
+    static void          navaction_LoadStatic() __attribute__((nothrow));
     // func:acr_nav.FDb.keybind.InputMaybe
     static bool          keybind_InputMaybe(acr_navdb::Keybind &elem) __attribute__((nothrow));
     // func:acr_nav.FDb.panel.InputMaybe
@@ -387,7 +387,7 @@ static void acr_nav::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_nav.Input'  signature:'b7b6ce513cd428f89f653cefb0166772a8f3d607'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_nav.Input'  signature:'3cb58cd50e9df0eab6d60e0169008466dd750ae6'");
 }
 
 // --- acr_nav.FDb._db.InsertStrptrMaybe
@@ -420,12 +420,6 @@ bool acr_nav::InsertStrptrMaybe(algo::strptr str) {
             dmmeta::Reftype elem;
             retval = dmmeta::Reftype_ReadStrptrMaybe(elem, str);
             retval = retval && reftype_InputMaybe(elem);
-            break;
-        }
-        case acr_nav_TableId_acr_navdb_Navaction: { // finput:acr_nav.FDb.navaction
-            acr_navdb::Navaction elem;
-            retval = acr_navdb::Navaction_ReadStrptrMaybe(elem, str);
-            retval = retval && navaction_InputMaybe(elem);
             break;
         }
         case acr_nav_TableId_acr_navdb_Keybind: { // finput:acr_nav.FDb.keybind
@@ -471,7 +465,6 @@ bool acr_nav::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && acr_nav::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
         retval = retval && acr_nav::LoadTuplesFile(algo::SsimFname(root,"acr_navdb.panel"),recursive);
         retval = retval && acr_nav::LoadTuplesFile(algo::SsimFname(root,"acr_navdb.navmode"),recursive);
-        retval = retval && acr_nav::LoadTuplesFile(algo::SsimFname(root,"acr_navdb.navaction"),recursive);
         retval = retval && acr_nav::LoadTuplesFile(algo::SsimFname(root,"acr_navdb.keybind"),recursive);
     } else {
         algo_lib::AppendErrtext("path", root);
@@ -1555,11 +1548,36 @@ void acr_nav::navaction_RemoveLast() {
     }
 }
 
-// --- acr_nav.FDb.navaction.InputMaybe
-static bool acr_nav::navaction_InputMaybe(acr_navdb::Navaction &elem) {
-    bool retval = true;
-    retval = navaction_InsertMaybe(elem) != nullptr;
-    return retval;
+// --- acr_nav.FDb.navaction.LoadStatic
+static void acr_nav::navaction_LoadStatic() {
+    static struct _t {
+        const char *s;
+        void (*step)();
+    } data[] = {
+        { "acr_navdb.navaction  navaction:filter_accept  comment:\"Accept current filter text\"", acr_nav::navaction_filter_accept }
+        ,{ "acr_navdb.navaction  navaction:filter_cancel  comment:\"Cancel filter input\"", acr_nav::navaction_filter_cancel }
+        ,{ "acr_navdb.navaction  navaction:filter_start  comment:\"Enter filter input mode\"", acr_nav::navaction_filter_start }
+        ,{ "acr_navdb.navaction  navaction:follow_ref  comment:\"Follow reference to target ctype\"", acr_nav::navaction_follow_ref }
+        ,{ "acr_navdb.navaction  navaction:go_back  comment:\"Return to previous ctype\"", acr_nav::navaction_go_back }
+        ,{ "acr_navdb.navaction  navaction:move_down  comment:\"Move selection down\"", acr_nav::navaction_move_down }
+        ,{ "acr_navdb.navaction  navaction:move_up  comment:\"Move selection up\"", acr_nav::navaction_move_up }
+        ,{ "acr_navdb.navaction  navaction:page_down  comment:\"Move selection down one page\"", acr_nav::navaction_page_down }
+        ,{ "acr_navdb.navaction  navaction:page_up  comment:\"Move selection up one page\"", acr_nav::navaction_page_up }
+        ,{ "acr_navdb.navaction  navaction:quit  comment:\"Exit acr_nav\"", acr_nav::navaction_quit }
+        ,{ "acr_navdb.navaction  navaction:switch_panel_left  comment:\"Move focus to panel on the left\"", acr_nav::navaction_switch_panel_left }
+        ,{ "acr_navdb.navaction  navaction:switch_panel_right  comment:\"Move focus to panel on the right\"", acr_nav::navaction_switch_panel_right }
+        ,{NULL, NULL}
+    };
+    (void)data;
+    acr_navdb::Navaction navaction;
+    for (int i=0; data[i].s; i++) {
+        (void)acr_navdb::Navaction_ReadStrptrMaybe(navaction, algo::strptr(data[i].s));
+        acr_nav::FNavaction *elem = navaction_InsertMaybe(navaction);
+        vrfy(elem, tempstr("acr_nav.static_insert_fatal_error")
+        << Keyval("tuple",algo::strptr(data[i].s))
+        << Keyval("comment",algo_lib::DetachBadTags()));
+        elem->step = data[i].step;
+    }
 }
 
 // --- acr_nav.FDb.navaction.XrefMaybe
@@ -2802,12 +2820,15 @@ void acr_nav::FDb_Init() {
     _db.zd_sel_ctype_n = 0; // (acr_nav.FDb.zd_sel_ctype)
     _db.zd_sel_ctype_tail = NULL; // (acr_nav.FDb.zd_sel_ctype)
     _db.p_cur_panel = NULL;
+    _db.p_left_panel = NULL;
+    _db.p_right_panel = NULL;
     _db.p_cur_mode = NULL;
     _db.running = bool(true);
     _db.term_hei = i32(0);
     _db.term_wid = i32(0);
 
     acr_nav::InitReflection();
+    navaction_LoadStatic(); // gen:ns_gstatic  gstatic:acr_nav.FDb.navaction  load acr_nav.FNavaction records
 }
 
 // --- acr_nav.FDb..Uninit
@@ -3185,7 +3206,6 @@ const char* acr_nav::value_ToCstr(const acr_nav::TableId& parent) {
         case acr_nav_TableId_dmmeta_Ctype  : ret = "dmmeta.Ctype";  break;
         case acr_nav_TableId_dmmeta_Field  : ret = "dmmeta.Field";  break;
         case acr_nav_TableId_acr_navdb_Keybind: ret = "acr_navdb.Keybind";  break;
-        case acr_nav_TableId_acr_navdb_Navaction: ret = "acr_navdb.Navaction";  break;
         case acr_nav_TableId_acr_navdb_Navmode: ret = "acr_navdb.Navmode";  break;
         case acr_nav_TableId_dmmeta_Ns     : ret = "dmmeta.Ns";  break;
         case acr_nav_TableId_acr_navdb_Panel: ret = "acr_navdb.Panel";  break;
@@ -3282,16 +3302,6 @@ bool acr_nav::value_SetStrptrMaybe(acr_nav::TableId& parent, algo::strptr rhs) {
             }
             break;
         }
-        case 19: {
-            switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('a','c','r','_','n','a','v','d'): {
-                    if (memcmp(rhs.elems+8,"b.Navaction",11)==0) { value_SetEnum(parent,acr_nav_TableId_acr_navdb_Navaction); ret = true; break; }
-                    if (memcmp(rhs.elems+8,"b.navaction",11)==0) { value_SetEnum(parent,acr_nav_TableId_acr_navdb_navaction); ret = true; break; }
-                    break;
-                }
-            }
-            break;
-        }
     }
     return ret;
 }
@@ -3336,6 +3346,7 @@ inline static void acr_nav::SizeCheck() {
 
 // --- acr_nav...StaticCheck
 void acr_nav::StaticCheck() {
+    algo_assert(sizeof(acr_nav::navaction_step_hook) == 8); // csize:acr_nav.navaction_step_hook
     algo_assert(_offset_of(acr_nav::FieldId, value) + sizeof(((acr_nav::FieldId*)0)->value) == sizeof(acr_nav::FieldId));
 }
 

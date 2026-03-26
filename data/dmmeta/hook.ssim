@@ -1,5 +1,6 @@
 dmmeta.hook  field:abt_md.FMdsection.step
 dmmeta.hook  field:acr_ed.FEdaction.step
+dmmeta.hook  field:acr_nav.FNavaction.step
 dmmeta.hook  field:algo_lib.FDb.h_fatalerror
 dmmeta.hook  field:algo_lib.FErrns.decode
 dmmeta.hook  field:algo_lib.FIohook.callback

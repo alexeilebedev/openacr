@@ -1,8 +1,8 @@
-# M6a: gstatic Hook Dispatch (Data-Driven Keybindings)
+# M6a: gstatic Hook Dispatch (Data-Driven Keybindings) [DONE]
 
 ## Context
 
-acr_nav M1–M5 are complete. `DispatchAction` (`cpp/acr_nav/acr_nav.cpp:214-266`) is a string if-chain with 10 comparisons dispatching actions. This should be function-pointer dispatch via gstatic + Hook, matching the `amc.FGen.step` pattern. Pure refactor — behavior unchanged, architecture improved.
+acr_nav M1–M5 are complete. `DispatchAction` (`cpp/acr_nav/acr_nav.cpp:214-266`) is a string if-chain with 9 comparisons dispatching actions. This should be function-pointer dispatch via gstatic + Hook, matching the `amc.FGen.step` pattern. Pure refactor — behavior unchanged, architecture improved.
 
 ## Approach
 
@@ -11,8 +11,12 @@ acr_nav M1–M5 are complete. `DispatchAction` (`cpp/acr_nav/acr_nav.cpp:214-266
 **`data/dmmeta/field.ssim`** — add:
 ```
 dmmeta.field  field:acr_nav.FNavaction.step  arg:""  reftype:Hook  dflt:""  comment:""
+dmmeta.field  field:acr_nav.FDb.p_left_panel  arg:acr_nav.FPanel  reftype:Ptr  dflt:""  comment:"Left panel (ctype list)"
+dmmeta.field  field:acr_nav.FDb.p_right_panel  arg:acr_nav.FPanel  reftype:Ptr  dflt:""  comment:"Right panel (field list)"
 ```
 Using `arg:""` gives parameterless handlers (`void acr_nav::navaction_move_up()`). Handlers access state through `_db` globals. Same pattern as `amc.FGen.step`.
+
+The `p_left_panel`/`p_right_panel` Ptr fields centralize panel resolution — set once in `Main()`, used by all handlers. Eliminates repeated `ind_panel_Find()` hash lookups and centralizes the string literals `"ctype_list"`/`"field_list"` to one place.
 
 **`data/dmmeta/hook.ssim`** — add:
 ```
@@ -34,7 +38,7 @@ Run `amc` to regenerate. This produces forward declarations for 12 functions nam
 
 ### Phase 2: Implement 12 action handler functions
 
-Replace `DispatchAction` with individual functions. Each accesses panels via `ind_panel_Find()` and state via `_db`. SESE throughout.
+Replace `DispatchAction` with individual functions. Each accesses panels via `_db.p_left_panel`/`_db.p_right_panel` and state via `_db`. SESE throughout.
 
 | Function | Body (from current DispatchAction) |
 |---|---|
@@ -57,7 +61,7 @@ DispatchAction(keybind->p_navaction->navaction, sel_ct, left, right);
 ```
 To:
 ```cpp
-keybind->p_navaction->step();
+step_Call(*keybind->p_navaction);
 ```
 
 Delete the old `DispatchAction` function.
@@ -75,7 +79,7 @@ Delete the old `DispatchAction` function.
 
 | File | Change |
 |---|---|
-| `data/dmmeta/field.ssim` | Add `acr_nav.FNavaction.step` Hook |
+| `data/dmmeta/field.ssim` | Add `acr_nav.FNavaction.step` Hook, `p_left_panel`/`p_right_panel` Ptr |
 | `data/dmmeta/hook.ssim` | Add hook declaration |
 | `data/dmmeta/gstatic.ssim` | Add `acr_nav.FDb.navaction` |
 | `data/dmmeta/finput.ssim` | Remove navaction finput |
@@ -87,6 +91,7 @@ Delete the old `DispatchAction` function.
 1. **`arg:""` not `arg:acr_nav.FNavaction`** — handlers don't need the navaction reference, just `_db` globals. Same pattern as `amc.FGen.step`.
 2. **Filter handlers are stubs** — M6b implements filter mode. This keeps M6a as a pure refactor with no behavior change.
 3. **Keybinds stay flat** — mode-qualified keybinds are M6b scope. The current 13 flat keybind records work unchanged with `ind_keybind_Find(key_name)`.
+4. **`p_left_panel`/`p_right_panel` Ptr fields** — centralizes panel resolution in `Main()`. Handlers use `_db` pointers directly instead of repeated hash lookups. `ind_panel_Find` appears exactly twice (both in `Main()` init).
 
 ## Verification
 

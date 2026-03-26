@@ -211,58 +211,114 @@ static void AdjustScroll(acr_nav::FPanel &panel, int n_items) {
 
 // -----------------------------------------------------------------------------
 
-static void DispatchAction(strptr action, acr_nav::FCtype *sel_ct,
-                           acr_nav::FPanel *left, acr_nav::FPanel *right) {
+void acr_nav::navaction_move_up() {
     acr_nav::FPanel &panel = *acr_nav::_db.p_cur_panel;
+    panel.sel_row = i32_Max(0, panel.sel_row - 1);
+}
+
+// -----------------------------------------------------------------------------
+
+void acr_nav::navaction_move_down() {
+    acr_nav::FPanel &panel = *acr_nav::_db.p_cur_panel;
+    acr_nav::FCtype *sel_ct = SelectedCtype(*acr_nav::_db.p_left_panel);
     int n_items = PanelItemCount(panel, sel_ct);
     int last = i32_Max(0, n_items - 1);
-    if (action == "move_up") {
-        panel.sel_row = i32_Max(0, panel.sel_row - 1);
-    } else if (action == "move_down") {
-        panel.sel_row = i32_Min(last, panel.sel_row + 1);
-    } else if (action == "page_up") {
-        int page = acr_nav::_db.term_hei - 2;
-        panel.sel_row = i32_Max(0, panel.sel_row - page);
-    } else if (action == "page_down") {
-        int page = acr_nav::_db.term_hei - 2;
-        panel.sel_row = i32_Min(last, panel.sel_row + page);
-    } else if (action == "switch_panel_left") {
-        if (panel.position > left->position) {
-            acr_nav::_db.p_cur_panel = left;
-        }
-    } else if (action == "switch_panel_right") {
-        if (panel.position < right->position) {
-            acr_nav::_db.p_cur_panel = right;
-        }
-    } else if (action == "follow_ref") {
-        if (panel.position == 0) {
-            acr_nav::_db.p_cur_panel = right;
-        } else if (panel.position == 1 && sel_ct && panel.sel_row < c_field_N(*sel_ct)) {
-            acr_nav::FField *fld = c_field_Find(*sel_ct, panel.sel_row);
-            if (fld && fld->p_arg != sel_ct && zd_sel_ctype_InLlistQ(*fld->p_arg)) {
-                acr_nav::Naventry &entry = acr_nav::navstack_Alloc();
-                entry.ctype_name = sel_ct->ctype;
-                entry.scroll_offset = left->scroll_offset;
-                entry.sel_row = left->sel_row;
-                int target_idx = 0;
-                ind_beg(acr_nav::_db_zd_sel_ctype_curs, ct, acr_nav::_db) {
-                    if (&ct == fld->p_arg) {
-                        left->sel_row = target_idx;
-                    }
-                    target_idx++;
-                } ind_end;
-            }
-        }
-    } else if (action == "go_back") {
-        if (!acr_nav::navstack_EmptyQ()) {
-            acr_nav::Naventry *entry = acr_nav::navstack_Last();
-            left->scroll_offset = entry->scroll_offset;
-            left->sel_row = entry->sel_row;
-            acr_nav::navstack_RemoveLast();
-        }
-    } else if (action == "quit") {
-        acr_nav::_db.running = false;
+    panel.sel_row = i32_Min(last, panel.sel_row + 1);
+}
+
+// -----------------------------------------------------------------------------
+
+void acr_nav::navaction_page_up() {
+    acr_nav::FPanel &panel = *acr_nav::_db.p_cur_panel;
+    int page = acr_nav::_db.term_hei - 2;
+    panel.sel_row = i32_Max(0, panel.sel_row - page);
+}
+
+// -----------------------------------------------------------------------------
+
+void acr_nav::navaction_page_down() {
+    acr_nav::FPanel &panel = *acr_nav::_db.p_cur_panel;
+    acr_nav::FCtype *sel_ct = SelectedCtype(*acr_nav::_db.p_left_panel);
+    int n_items = PanelItemCount(panel, sel_ct);
+    int last = i32_Max(0, n_items - 1);
+    int page = acr_nav::_db.term_hei - 2;
+    panel.sel_row = i32_Min(last, panel.sel_row + page);
+}
+
+// -----------------------------------------------------------------------------
+
+void acr_nav::navaction_switch_panel_left() {
+    acr_nav::FPanel &panel = *acr_nav::_db.p_cur_panel;
+    if (panel.position > acr_nav::_db.p_left_panel->position) {
+        acr_nav::_db.p_cur_panel = acr_nav::_db.p_left_panel;
     }
+}
+
+// -----------------------------------------------------------------------------
+
+void acr_nav::navaction_switch_panel_right() {
+    acr_nav::FPanel &panel = *acr_nav::_db.p_cur_panel;
+    if (panel.position < acr_nav::_db.p_right_panel->position) {
+        acr_nav::_db.p_cur_panel = acr_nav::_db.p_right_panel;
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+void acr_nav::navaction_follow_ref() {
+    acr_nav::FPanel &panel = *acr_nav::_db.p_cur_panel;
+    acr_nav::FPanel *left = acr_nav::_db.p_left_panel;
+    acr_nav::FCtype *sel_ct = SelectedCtype(*left);
+    if (panel.position == 0) {
+        acr_nav::_db.p_cur_panel = acr_nav::_db.p_right_panel;
+    } else if (panel.position == 1 && sel_ct && panel.sel_row < c_field_N(*sel_ct)) {
+        acr_nav::FField *fld = c_field_Find(*sel_ct, panel.sel_row);
+        if (fld && fld->p_arg != sel_ct && zd_sel_ctype_InLlistQ(*fld->p_arg)) {
+            acr_nav::Naventry &entry = acr_nav::navstack_Alloc();
+            entry.ctype_name = sel_ct->ctype;
+            entry.scroll_offset = left->scroll_offset;
+            entry.sel_row = left->sel_row;
+            int target_idx = 0;
+            ind_beg(acr_nav::_db_zd_sel_ctype_curs, ct, acr_nav::_db) {
+                if (&ct == fld->p_arg) {
+                    left->sel_row = target_idx;
+                }
+                target_idx++;
+            } ind_end;
+        }
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+void acr_nav::navaction_go_back() {
+    if (!acr_nav::navstack_EmptyQ()) {
+        acr_nav::Naventry *entry = acr_nav::navstack_Last();
+        acr_nav::_db.p_left_panel->scroll_offset = entry->scroll_offset;
+        acr_nav::_db.p_left_panel->sel_row = entry->sel_row;
+        acr_nav::navstack_RemoveLast();
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+void acr_nav::navaction_quit() {
+    acr_nav::_db.running = false;
+}
+
+// -----------------------------------------------------------------------------
+
+void acr_nav::navaction_filter_start() {
+}
+
+// -----------------------------------------------------------------------------
+
+void acr_nav::navaction_filter_cancel() {
+}
+
+// -----------------------------------------------------------------------------
+
+void acr_nav::navaction_filter_accept() {
 }
 
 // -----------------------------------------------------------------------------
@@ -412,10 +468,12 @@ void acr_nav::Main() {
     } else {
         DetectTerminal();
         EnterRawMode();
-        acr_nav::FPanel *left = ind_panel_Find("ctype_list");
-        acr_nav::FPanel *right = ind_panel_Find("field_list");
-        vrfy(left, "panel 'ctype_list' not found");
-        vrfy(right, "panel 'field_list' not found");
+        _db.p_left_panel = ind_panel_Find("ctype_list");
+        _db.p_right_panel = ind_panel_Find("field_list");
+        vrfy(_db.p_left_panel, "panel 'ctype_list' not found");
+        vrfy(_db.p_right_panel, "panel 'field_list' not found");
+        acr_nav::FPanel *left = _db.p_left_panel;
+        acr_nav::FPanel *right = _db.p_right_panel;
         _db.p_cur_panel = left;
         _db.p_cur_mode = ind_navmode_Find("browse");
         vrfy(_db.p_cur_mode, "navmode 'browse' not found");
@@ -432,7 +490,7 @@ void acr_nav::Main() {
             if (keybind) {
                 sel_ct = SelectedCtype(*left);
                 acr_nav::FCtype *prev_sel_ct = sel_ct;
-                DispatchAction(keybind->p_navaction->navaction, sel_ct, left, right);
+                step_Call(*keybind->p_navaction);
                 sel_ct = SelectedCtype(*left);
                 if (sel_ct != prev_sel_ct) {
                     right->sel_row = 0;

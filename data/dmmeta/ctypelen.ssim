@@ -137,10 +137,10 @@ dmmeta.ctypelen  ctype:acr_my.FDb  len:688  alignment:8  padbytes:14  plaindata:
 dmmeta.ctypelen  ctype:acr_my.FNsdb  len:171  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:acr_my.FSsimfile  len:154  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:acr_nav.FCtype  len:312  alignment:8  padbytes:6  plaindata:N
-dmmeta.ctypelen  ctype:acr_nav.FDb  len:2384  alignment:8  padbytes:42  plaindata:N
+dmmeta.ctypelen  ctype:acr_nav.FDb  len:2400  alignment:8  padbytes:42  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.FField  len:704  alignment:8  padbytes:7  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.FKeybind  len:280  alignment:8  padbytes:4  plaindata:N
-dmmeta.ctypelen  ctype:acr_nav.FNavaction  len:216  alignment:8  padbytes:0  plaindata:N
+dmmeta.ctypelen  ctype:acr_nav.FNavaction  len:224  alignment:8  padbytes:0  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.FNavmode  len:216  alignment:8  padbytes:0  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.FNs  len:288  alignment:8  padbytes:2  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.FPanel  len:248  alignment:8  padbytes:0  plaindata:N

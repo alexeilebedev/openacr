@@ -972,11 +972,20 @@ inline  acr_nav::FKeybind::~FKeybind() {
     acr_nav::FKeybind_Uninit(*this);
 }
 
+// --- acr_nav.FNavaction.step.Call
+// Invoke function by pointer
+inline void acr_nav::step_Call(acr_nav::FNavaction& navaction) {
+    if (navaction.step) {
+        navaction.step();
+    }
+}
+
 // --- acr_nav.FNavaction..Init
 // Set all fields to initial values.
 inline void acr_nav::FNavaction_Init(acr_nav::FNavaction& navaction) {
     navaction.ind_navaction_next = (acr_nav::FNavaction*)-1; // (acr_nav.FDb.ind_navaction) not-in-hash
     navaction.ind_navaction_hashval = 0; // stored hash value
+    navaction.step = NULL;
 }
 
 // --- acr_nav.FNavaction..Ctor

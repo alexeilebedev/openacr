@@ -41,26 +41,24 @@ enum { acr_nav_FieldIdEnum_N = 1 };
 
 // --- acr_nav_TableIdEnum
 
-enum acr_nav_TableIdEnum {                       // acr_nav.TableId.value
-     acr_nav_TableId_dmmeta_Ctype          = 0   // dmmeta.Ctype -> acr_nav.FCtype
-    ,acr_nav_TableId_dmmeta_ctype          = 0   // dmmeta.ctype -> acr_nav.FCtype
-    ,acr_nav_TableId_dmmeta_Field          = 1   // dmmeta.Field -> acr_nav.FField
-    ,acr_nav_TableId_dmmeta_field          = 1   // dmmeta.field -> acr_nav.FField
-    ,acr_nav_TableId_acr_navdb_Keybind     = 2   // acr_navdb.Keybind -> acr_nav.FKeybind
-    ,acr_nav_TableId_acr_navdb_keybind     = 2   // acr_navdb.keybind -> acr_nav.FKeybind
-    ,acr_nav_TableId_acr_navdb_Navaction   = 3   // acr_navdb.Navaction -> acr_nav.FNavaction
-    ,acr_nav_TableId_acr_navdb_navaction   = 3   // acr_navdb.navaction -> acr_nav.FNavaction
-    ,acr_nav_TableId_acr_navdb_Navmode     = 4   // acr_navdb.Navmode -> acr_nav.FNavmode
-    ,acr_nav_TableId_acr_navdb_navmode     = 4   // acr_navdb.navmode -> acr_nav.FNavmode
-    ,acr_nav_TableId_dmmeta_Ns             = 5   // dmmeta.Ns -> acr_nav.FNs
-    ,acr_nav_TableId_dmmeta_ns             = 5   // dmmeta.ns -> acr_nav.FNs
-    ,acr_nav_TableId_acr_navdb_Panel       = 6   // acr_navdb.Panel -> acr_nav.FPanel
-    ,acr_nav_TableId_acr_navdb_panel       = 6   // acr_navdb.panel -> acr_nav.FPanel
-    ,acr_nav_TableId_dmmeta_Reftype        = 7   // dmmeta.Reftype -> acr_nav.FReftype
-    ,acr_nav_TableId_dmmeta_reftype        = 7   // dmmeta.reftype -> acr_nav.FReftype
+enum acr_nav_TableIdEnum {                     // acr_nav.TableId.value
+     acr_nav_TableId_dmmeta_Ctype        = 0   // dmmeta.Ctype -> acr_nav.FCtype
+    ,acr_nav_TableId_dmmeta_ctype        = 0   // dmmeta.ctype -> acr_nav.FCtype
+    ,acr_nav_TableId_dmmeta_Field        = 1   // dmmeta.Field -> acr_nav.FField
+    ,acr_nav_TableId_dmmeta_field        = 1   // dmmeta.field -> acr_nav.FField
+    ,acr_nav_TableId_acr_navdb_Keybind   = 2   // acr_navdb.Keybind -> acr_nav.FKeybind
+    ,acr_nav_TableId_acr_navdb_keybind   = 2   // acr_navdb.keybind -> acr_nav.FKeybind
+    ,acr_nav_TableId_acr_navdb_Navmode   = 3   // acr_navdb.Navmode -> acr_nav.FNavmode
+    ,acr_nav_TableId_acr_navdb_navmode   = 3   // acr_navdb.navmode -> acr_nav.FNavmode
+    ,acr_nav_TableId_dmmeta_Ns           = 4   // dmmeta.Ns -> acr_nav.FNs
+    ,acr_nav_TableId_dmmeta_ns           = 4   // dmmeta.ns -> acr_nav.FNs
+    ,acr_nav_TableId_acr_navdb_Panel     = 5   // acr_navdb.Panel -> acr_nav.FPanel
+    ,acr_nav_TableId_acr_navdb_panel     = 5   // acr_navdb.panel -> acr_nav.FPanel
+    ,acr_nav_TableId_dmmeta_Reftype      = 6   // dmmeta.Reftype -> acr_nav.FReftype
+    ,acr_nav_TableId_dmmeta_reftype      = 6   // dmmeta.reftype -> acr_nav.FReftype
 };
 
-enum { acr_nav_TableIdEnum_N = 16 };
+enum { acr_nav_TableIdEnum_N = 14 };
 
 namespace acr_nav { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
@@ -101,6 +99,9 @@ namespace acr_nav { struct FieldId; }
 namespace acr_nav { struct Naventry; }
 namespace acr_nav { struct TableId; }
 namespace acr_nav { extern struct acr_nav::FDb _db; }
+namespace acr_nav { // hook_fcn_typedef
+    typedef void (*navaction_step_hook)(); // hook:acr_nav.FNavaction.step
+} // hook_decl
 namespace acr_nav { // gen:ns_print_struct
 
 // --- acr_nav.FCtype
@@ -274,6 +275,8 @@ struct FDb { // acr_nav.FDb
     i32                     zd_sel_ctype_n;                // zero-terminated doubly linked list
     acr_nav::FCtype*        zd_sel_ctype_tail;             // pointer to last element
     acr_nav::FPanel*        p_cur_panel;                   // Currently focused panel. optional pointer
+    acr_nav::FPanel*        p_left_panel;                  // Left panel (ctype list). optional pointer
+    acr_nav::FPanel*        p_right_panel;                 // Right panel (field list). optional pointer
     acr_nav::FNavmode*      p_cur_mode;                    // Current UI mode (browse/filter). optional pointer
     algo::cstring           filter;                        // Current filter text
     bool                    running;                       //   true  Event loop control
@@ -1201,12 +1204,15 @@ void                 FKeybind_Uninit(acr_nav::FKeybind& keybind) __attribute__((
 // global access: ind_navaction (Thash, hash field navaction)
 // access: acr_nav.FKeybind.p_navaction (Upptr)
 struct FNavaction { // acr_nav.FNavaction
-    acr_nav::FNavaction*   ind_navaction_next;      // hash next
-    u32                    ind_navaction_hashval;   // hash value
-    algo::Smallstr50       navaction;               //
-    algo::Comment          comment;                 //
+    acr_nav::FNavaction*           ind_navaction_next;      // hash next
+    u32                            ind_navaction_hashval;   // hash value
+    algo::Smallstr50               navaction;               //
+    algo::Comment                  comment;                 //
+    acr_nav::navaction_step_hook   step;                    //   NULL  Pointer to a function
+    // reftype Hook of acr_nav.FNavaction.step prohibits copy
     // func:acr_nav.FNavaction..AssignOp
     inline acr_nav::FNavaction& operator =(const acr_nav::FNavaction &rhs) = delete;
+    // reftype Hook of acr_nav.FNavaction.step prohibits copy
     // func:acr_nav.FNavaction..CopyCtor
     inline               FNavaction(const acr_nav::FNavaction &rhs) = delete;
 private:
@@ -1226,6 +1232,10 @@ void                 navaction_CopyOut(acr_nav::FNavaction &row, acr_navdb::Nava
 // Copy fields in to row
 // func:acr_nav.FNavaction.base.CopyIn
 void                 navaction_CopyIn(acr_nav::FNavaction &row, acr_navdb::Navaction &in) __attribute__((nothrow));
+
+// Invoke function by pointer
+// func:acr_nav.FNavaction.step.Call
+inline void          step_Call(acr_nav::FNavaction& navaction) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:acr_nav.FNavaction..Init
@@ -1316,6 +1326,8 @@ void                 FNs_Uninit(acr_nav::FNs& ns) __attribute__((nothrow));
 // global access: panel (Lary, by rowid)
 // global access: ind_panel (Thash, hash field panel)
 // global access: p_cur_panel (Ptr)
+// global access: p_left_panel (Ptr)
+// global access: p_right_panel (Ptr)
 struct FPanel { // acr_nav.FPanel
     acr_nav::FPanel*   ind_panel_next;      // hash next
     u32                ind_panel_hashval;   // hash value
@@ -1616,6 +1628,54 @@ struct _db_zd_sel_ctype_curs {// fcurs:acr_nav.FDb.zd_sel_ctype/curs
 
 } // gen:ns_curstext
 namespace acr_nav { // gen:ns_func
+// User-implemented function from gstatic:acr_nav.FDb.navaction
+// func:acr_nav...navaction_filter_accept
+// this function is 'extrn' and implemented by user
+void                 navaction_filter_accept();
+// User-implemented function from gstatic:acr_nav.FDb.navaction
+// func:acr_nav...navaction_filter_cancel
+// this function is 'extrn' and implemented by user
+void                 navaction_filter_cancel();
+// User-implemented function from gstatic:acr_nav.FDb.navaction
+// func:acr_nav...navaction_filter_start
+// this function is 'extrn' and implemented by user
+void                 navaction_filter_start();
+// User-implemented function from gstatic:acr_nav.FDb.navaction
+// func:acr_nav...navaction_follow_ref
+// this function is 'extrn' and implemented by user
+void                 navaction_follow_ref();
+// User-implemented function from gstatic:acr_nav.FDb.navaction
+// func:acr_nav...navaction_go_back
+// this function is 'extrn' and implemented by user
+void                 navaction_go_back();
+// User-implemented function from gstatic:acr_nav.FDb.navaction
+// func:acr_nav...navaction_move_down
+// this function is 'extrn' and implemented by user
+void                 navaction_move_down();
+// User-implemented function from gstatic:acr_nav.FDb.navaction
+// func:acr_nav...navaction_move_up
+// this function is 'extrn' and implemented by user
+void                 navaction_move_up();
+// User-implemented function from gstatic:acr_nav.FDb.navaction
+// func:acr_nav...navaction_page_down
+// this function is 'extrn' and implemented by user
+void                 navaction_page_down();
+// User-implemented function from gstatic:acr_nav.FDb.navaction
+// func:acr_nav...navaction_page_up
+// this function is 'extrn' and implemented by user
+void                 navaction_page_up();
+// User-implemented function from gstatic:acr_nav.FDb.navaction
+// func:acr_nav...navaction_quit
+// this function is 'extrn' and implemented by user
+void                 navaction_quit();
+// User-implemented function from gstatic:acr_nav.FDb.navaction
+// func:acr_nav...navaction_switch_panel_left
+// this function is 'extrn' and implemented by user
+void                 navaction_switch_panel_left();
+// User-implemented function from gstatic:acr_nav.FDb.navaction
+// func:acr_nav...navaction_switch_panel_right
+// this function is 'extrn' and implemented by user
+void                 navaction_switch_panel_right();
 // func:acr_nav...StaticCheck
 void                 StaticCheck();
 } // gen:ns_func
