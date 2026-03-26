@@ -13,7 +13,7 @@ M6a replaced the string if-chain in `DispatchAction` with gstatic Hook dispatch.
 acr_navdb.navaction  navaction:filter_backspace  comment:"Delete last filter character"
 ```
 
-**`data/acr_navdb/keybind.ssim`** — replace all 13 flat records with 15 mode-qualified composite keys (`navmode.keyname`). The existing `ind_keybind` Thash hashes on `acr_navdb.Keybind.keybind` (Smallstr50, unique:Y) — composite keys are just different key strings, no schema changes needed.
+**`data/acr_navdb/keybind.ssim`** — replace all 13 flat records with 21 mode-qualified composite keys (`navmode.keyname`). Filter mode is a "lens" — all navigation works, printable keys modify filter text, Escape exits. The existing `ind_keybind` Thash hashes on `acr_navdb.Keybind.keybind` (Smallstr50, unique:Y) — composite keys are just different key strings, no schema changes needed.
 
 ```
 acr_navdb.keybind  keybind:browse./          navaction:filter_start        comment:""
@@ -29,8 +29,14 @@ acr_navdb.keybind  keybind:browse.j          navaction:move_down           comme
 acr_navdb.keybind  keybind:browse.k          navaction:move_up             comment:""
 acr_navdb.keybind  keybind:browse.q          navaction:quit                comment:""
 acr_navdb.keybind  keybind:filter.Backspace  navaction:filter_backspace    comment:""
-acr_navdb.keybind  keybind:filter.Enter      navaction:filter_accept       comment:""
+acr_navdb.keybind  keybind:filter.Down       navaction:move_down           comment:""
+acr_navdb.keybind  keybind:filter.Enter      navaction:follow_ref          comment:""
 acr_navdb.keybind  keybind:filter.Escape     navaction:filter_cancel       comment:""
+acr_navdb.keybind  keybind:filter.Left       navaction:switch_panel_left   comment:""
+acr_navdb.keybind  keybind:filter.PgDown     navaction:page_down           comment:""
+acr_navdb.keybind  keybind:filter.PgUp       navaction:page_up             comment:""
+acr_navdb.keybind  keybind:filter.Right      navaction:switch_panel_right  comment:""
+acr_navdb.keybind  keybind:filter.Up         navaction:move_up             comment:""
 ```
 
 Adding a new mode = adding keybind records, zero code changes.
@@ -39,39 +45,38 @@ Run `amc` to regenerate (adds `navaction_filter_backspace` forward declaration).
 
 ### Phase 2: Update event loop for composite key lookup
 
-Change keybind lookup from `ind_keybind_Find(key_name)` to:
+Change keybind lookup from `ind_keybind_Find(key_name)` to composite key, and use a `did_something` flag so both bound-action dispatch and printable-char fallback share the post-action path (AdjustScroll, Render, selection reset):
 ```cpp
 tempstr composite;
 composite << _db.p_cur_mode->navmode << "." << key_name;
 acr_nav::FKeybind *keybind = ind_keybind_Find(composite);
+bool did_something = false;
 if (keybind) {
-    keybind->p_navaction->step();
+    step_Call(*keybind->p_navaction);
+    did_something = true;
 }
-```
-
-One small fallback for unbound printable chars in filter mode (text input, not action dispatch):
-```cpp
 bool in_filter = (_db.p_cur_mode->navmode == "filter");
 if (!keybind && in_filter && ch_N(key_name) == 1 && ch_qFind(key_name, 0) >= 32) {
     _db.filter << key_name;
     ApplyFilter();
-    // reset left panel selection
+    did_something = true;
+}
+if (did_something) {
+    // selection reset, AdjustScroll, Render (existing post-action block)
 }
 ```
 
 ### Phase 3: Implement filter logic
 
-**`ApplyFilter()` helper** — rebuilds `zd_sel_ctype` from all ctypes matching both namespace regex AND filter text:
+**`ApplyFilter()` replaces `PopulateSelCtype()`** — one function for both initial load and filter updates. `PopulateSelCtype()` is eliminated:
 - `zd_sel_ctype_RemoveAll()`
-- If filter non-empty: `Regx_ReadSql(regx, "%" + filter + "%", false)` for substring matching
-- Re-iterate `_db_ctype_curs`, insert matches
-
-**Refactor `PopulateSelCtype()`** to call `ApplyFilter()` (same code path for initial load and filter updates).
+- If filter non-empty: `Regx_ReadSql(regx, "%" + _db.filter + "%", false)` for substring matching
+- Iterate `_db_ctype_curs`, check namespace regex (`Regx_Match(_db.cmdline.ns, ns_Get(ctype))`) AND filter text match, insert matches
+- `Main()` calls `ApplyFilter()` where it currently calls `PopulateSelCtype()`
 
 **Fill in handler implementations (replacing M6a stubs):**
 - `navaction_filter_start`: set `p_cur_mode` to filter, clear `_db.filter`, focus left panel
 - `navaction_filter_cancel`: set `p_cur_mode` to browse, clear `_db.filter`, call `ApplyFilter()`, reset left panel selection
-- `navaction_filter_accept`: set `p_cur_mode` to browse (keep filtered list)
 - `navaction_filter_backspace`: if `ch_N(_db.filter) > 0`, remove last char, call `ApplyFilter()`, reset left panel selection
 
 **Status bar update in Render():**
@@ -111,9 +116,12 @@ if (!keybind && in_filter && ch_N(key_name) == 1 && ch_qFind(key_name, 0) >= 32)
 
 ## Factorization debt (carried forward, not M6b scope)
 
-- `PanelItemCount` and `Render` dispatch on `panel.position` (0 vs 1) — `ideas.md:194`
+- `PanelItemCount` and `Render` dispatch on `panel.position` (0 vs 1) — `ideas.md:196`
 - `follow_ref` handler branches on `panel.position` — same issue
-- Printable char text input in filter mode is inline code, not data-driven dispatch
+- `SelectedCtype` walks O(n) through `zd_sel_ctype` linked list — `ideas.md:198`
+- Printable char text input in filter mode is inline code, not data-driven dispatch — `ideas.md:200`
+- Nav stack (`Naventry`) doesn't store filter state — `ideas.md:199`
+- Composite keybind keys lack referential integrity on mode prefix — `ideas.md:201`
 
 ## Verification
 

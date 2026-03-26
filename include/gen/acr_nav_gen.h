@@ -1629,9 +1629,9 @@ struct _db_zd_sel_ctype_curs {// fcurs:acr_nav.FDb.zd_sel_ctype/curs
 } // gen:ns_curstext
 namespace acr_nav { // gen:ns_func
 // User-implemented function from gstatic:acr_nav.FDb.navaction
-// func:acr_nav...navaction_filter_accept
+// func:acr_nav...navaction_filter_backspace
 // this function is 'extrn' and implemented by user
-void                 navaction_filter_accept();
+void                 navaction_filter_backspace();
 // User-implemented function from gstatic:acr_nav.FDb.navaction
 // func:acr_nav...navaction_filter_cancel
 // this function is 'extrn' and implemented by user

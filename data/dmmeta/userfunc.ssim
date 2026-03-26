@@ -51,7 +51,7 @@ dmmeta.userfunc  userfunc:acr_ed...edaction_Rename_Target  acrkey:gstatic/dev.ed
 dmmeta.userfunc  userfunc:acr_ed.FDb._db.Main  acrkey:main:acr_ed  cppname:acr_ed.Main  comment:""
 dmmeta.userfunc  userfunc:acr_in.FDb._db.Main  acrkey:main:acr_in  cppname:acr_in.Main  comment:""
 dmmeta.userfunc  userfunc:acr_my.FDb._db.Main  acrkey:main:acr_my  cppname:acr_my.Main  comment:""
-dmmeta.userfunc  userfunc:acr_nav...navaction_filter_accept  acrkey:gstatic/acr_navdb.navaction:filter_accept  cppname:acr_nav.navaction_filter_accept  comment:""
+dmmeta.userfunc  userfunc:acr_nav...navaction_filter_backspace  acrkey:gstatic/acr_navdb.navaction:filter_backspace  cppname:acr_nav.navaction_filter_backspace  comment:""
 dmmeta.userfunc  userfunc:acr_nav...navaction_filter_cancel  acrkey:gstatic/acr_navdb.navaction:filter_cancel  cppname:acr_nav.navaction_filter_cancel  comment:""
 dmmeta.userfunc  userfunc:acr_nav...navaction_filter_start  acrkey:gstatic/acr_navdb.navaction:filter_start  cppname:acr_nav.navaction_filter_start  comment:""
 dmmeta.userfunc  userfunc:acr_nav...navaction_follow_ref  acrkey:gstatic/acr_navdb.navaction:follow_ref  cppname:acr_nav.navaction_follow_ref  comment:""

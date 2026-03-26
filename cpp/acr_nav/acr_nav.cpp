@@ -70,11 +70,23 @@ static void DetectTerminal() {
 
 // -----------------------------------------------------------------------------
 
-static void PopulateSelCtype() {
+static void ApplyFilter() {
+    acr_nav::zd_sel_ctype_RemoveAll();
+    algo_lib::Regx filter_regx;
+    bool has_filter = ch_N(acr_nav::_db.filter) > 0;
+    if (has_filter) {
+        tempstr pattern;
+        pattern << "%" << acr_nav::_db.filter << "%";
+        algo::MakeLower(pattern);
+        algo_lib::Regx_ReadSql(filter_regx, pattern, false);
+    }
     ind_beg(acr_nav::_db_ctype_curs, ctype, acr_nav::_db) {
-        bool match = Regx_Match(acr_nav::_db.cmdline.ns, ns_Get(ctype));
-        if (match) {
-            zd_sel_ctype_Insert(ctype);
+        bool ns_match = algo_lib::Regx_Match(acr_nav::_db.cmdline.ns, ns_Get(ctype));
+        tempstr lower_name(ctype.ctype);
+        algo::MakeLower(lower_name);
+        bool filter_match = !has_filter || algo_lib::Regx_Match(filter_regx, lower_name);
+        if (ns_match && filter_match) {
+            acr_nav::zd_sel_ctype_Insert(ctype);
         }
     } ind_end;
 }
@@ -309,16 +321,34 @@ void acr_nav::navaction_quit() {
 // -----------------------------------------------------------------------------
 
 void acr_nav::navaction_filter_start() {
+    acr_nav::FNavmode *mode = ind_navmode_Find("filter");
+    vrfy(mode, "navmode 'filter' not found");
+    acr_nav::_db.p_cur_mode = mode;
+    ch_RemoveAll(acr_nav::_db.filter);
+    acr_nav::_db.p_cur_panel = acr_nav::_db.p_left_panel;
 }
 
 // -----------------------------------------------------------------------------
 
 void acr_nav::navaction_filter_cancel() {
+    acr_nav::FNavmode *mode = ind_navmode_Find("browse");
+    vrfy(mode, "navmode 'browse' not found");
+    acr_nav::_db.p_cur_mode = mode;
+    ch_RemoveAll(acr_nav::_db.filter);
+    ApplyFilter();
+    acr_nav::_db.p_left_panel->sel_row = 0;
+    acr_nav::_db.p_left_panel->scroll_offset = 0;
 }
 
 // -----------------------------------------------------------------------------
 
-void acr_nav::navaction_filter_accept() {
+void acr_nav::navaction_filter_backspace() {
+    if (ch_N(acr_nav::_db.filter) > 0) {
+        acr_nav::_db.filter.ch_n = ch_N(acr_nav::_db.filter) - 1;
+        ApplyFilter();
+        acr_nav::_db.p_left_panel->sel_row = 0;
+        acr_nav::_db.p_left_panel->scroll_offset = 0;
+    }
 }
 
 // -----------------------------------------------------------------------------
@@ -437,7 +467,12 @@ static void Render(acr_nav::FCtype *sel_ct, acr_nav::FPanel *left, acr_nav::FPan
     // Status bar
     buf << "\x1b[7m";
     tempstr status;
-    status << " q:quit  Arrows:navigate  Enter:follow  Backspace:back";
+    bool in_filter = (acr_nav::_db.p_cur_mode->navmode == "filter");
+    if (in_filter) {
+        status << " /" << acr_nav::_db.filter;
+    } else {
+        status << " q:quit  Arrows:navigate  Enter:follow  Backspace:back  /:filter";
+    }
     acr_nav::FPanel &cur = *acr_nav::_db.p_cur_panel;
     int cur_items = PanelItemCount(cur, sel_ct);
     tempstr pos;
@@ -461,7 +496,7 @@ static void Render(acr_nav::FCtype *sel_ct, acr_nav::FPanel *left, acr_nav::FPan
 // -----------------------------------------------------------------------------
 
 void acr_nav::Main() {
-    PopulateSelCtype();
+    ApplyFilter();
     bool is_tty = isatty(STDOUT_FILENO);
     if (!is_tty) {
         BatchOutput();
@@ -486,11 +521,24 @@ void acr_nav::Main() {
         _db.running = true;
         while (_db.running) {
             tempstr key_name = ReadKeyName();
-            acr_nav::FKeybind *keybind = ind_keybind_Find(key_name);
+            tempstr composite;
+            composite << _db.p_cur_mode->navmode << "." << key_name;
+            acr_nav::FKeybind *keybind = ind_keybind_Find(composite);
+            acr_nav::FCtype *prev_sel_ct = sel_ct;
+            bool did_something = false;
             if (keybind) {
-                sel_ct = SelectedCtype(*left);
-                acr_nav::FCtype *prev_sel_ct = sel_ct;
                 step_Call(*keybind->p_navaction);
+                did_something = true;
+            }
+            bool in_filter = (_db.p_cur_mode->navmode == "filter");
+            if (!keybind && in_filter && ch_N(key_name) == 1 && ch_qFind(key_name, 0) >= 32) {
+                _db.filter << key_name;
+                ApplyFilter();
+                left->sel_row = 0;
+                left->scroll_offset = 0;
+                did_something = true;
+            }
+            if (did_something) {
                 sel_ct = SelectedCtype(*left);
                 if (sel_ct != prev_sel_ct) {
                     right->sel_row = 0;

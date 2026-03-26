@@ -196,6 +196,9 @@ Each milestone teaches one OpenACR concept and produces a working program.
   - `PanelItemCount` and `Render` dispatch on `panel.position` (0 vs 1) — adding a third panel requires code changes. To factorize: each panel record should carry enough data to describe its content source (e.g., a `content_type` field), and rendering should be a single loop over panel records.
   - ~~`DispatchAction` is a string if-chain over action names — function-pointer dispatch (like `amcdb.gen` generators) warranted when action count grows beyond ~10.~~ Resolved in M6a: gstatic + Hook dispatch via `navaction_<key>()` handlers, `step_Call(*keybind->p_navaction)`.
   - `SelectedCtype` walks O(n) through `zd_sel_ctype` linked list per call — cached once per event iteration, but would benefit from a direct index if scaling to very large namespaces.
+  - Navigation stack (`Naventry`) stores only `ctype_name`, `scroll_offset`, `sel_row` — no filter state. Following a ref while filtered, then pressing Backspace to go back, won't restore the filter. To fix: add `filter` (cstring) and `navmode` (Smallstr50) fields to `acr_nav.Naventry`.
+  - Printable char text input in filter mode is inline code in the event loop, not data-driven dispatch. Justified asymmetry (text input vs action dispatch), but not factorized.
+  - Composite keybind keys (`browse.Up`) embed a navmode prefix without referential integrity — `acr -check` won't catch `keybind:typo.Up`. To fix: add a `dmmeta.substr` that decomposes the keybind pkey and validates the mode portion against `navmode.ssim`.
 
 ### Other ideas (backlog)
 

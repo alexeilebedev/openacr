@@ -1554,7 +1554,7 @@ static void acr_nav::navaction_LoadStatic() {
         const char *s;
         void (*step)();
     } data[] = {
-        { "acr_navdb.navaction  navaction:filter_accept  comment:\"Accept current filter text\"", acr_nav::navaction_filter_accept }
+        { "acr_navdb.navaction  navaction:filter_backspace  comment:\"Delete last filter character\"", acr_nav::navaction_filter_backspace }
         ,{ "acr_navdb.navaction  navaction:filter_cancel  comment:\"Cancel filter input\"", acr_nav::navaction_filter_cancel }
         ,{ "acr_navdb.navaction  navaction:filter_start  comment:\"Enter filter input mode\"", acr_nav::navaction_filter_start }
         ,{ "acr_navdb.navaction  navaction:follow_ref  comment:\"Follow reference to target ctype\"", acr_nav::navaction_follow_ref }
