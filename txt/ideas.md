@@ -189,6 +189,7 @@ Each milestone teaches one OpenACR concept and produces a working program.
 ### Design notes from review
 
 - **switch_panel direction:** Left/Right both map to `switch_panel` — works as a toggle for 2 panels, but a 3rd panel would need directional variants (`switch_panel_left`/`switch_panel_right`) or a new `direction` field on the keybind. Track if panel count grows.
+- **Keybinding design:** Current keybinds cover arrow keys and vim (j/k), but MacBook keyboards lack PgUp/PgDn. Broader question: what's the right set of navigation actions for a schema browser? Should page_up/page_down exist at all, or is `/` filter (M6) the real fast-navigation answer? Should we support emacs muscle memory (Ctrl-N/Ctrl-P)? Control characters (bytes 1-31) currently need a code change to map to key names — is there a more data-driven way? Needs a design session before adding more keybinds.
 
 ### Other ideas (backlog)
 
