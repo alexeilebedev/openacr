@@ -159,7 +159,8 @@ Each milestone teaches one OpenACR concept and produces a working program.
 | **M3** | `Main()` that prints ctypes + fields | Cursor loops, hash lookups, Upptr traversal |
 | **M4** | Single-panel scrollable TUI | Terminal raw mode, ANSI rendering, event loop |
 | **M5** | Two panels + Enter/Backspace navigation | Xref traversal, navigation stack, the core experience |
-| **M6** | `/` filter mode + data-driven keybindings | algo::Regx, gstatic dispatch, no switch statements |
+| **M6a** | gstatic Hook dispatch — replace string if-chain | gstatic, Hook reftype, function-pointer dispatch |
+| **M6b** | `/` filter mode + mode-qualified keybindings | algo::Regx, composite key lookup, mode-driven data |
 | **M7** | Tests, docs, SESE cleanup | Component tests, normalization, documentation |
 
 ### Key principle
@@ -176,7 +177,8 @@ Each milestone teaches one OpenACR concept and produces a working program.
 | M3 | `include/gen/acr_nav_gen.inl.h` (own generated cursors) | Learn the generated API |
 | M4 | `amc_vis.cpp` lines with `\x1b[` (ANSI codes) | Rendering patterns |
 | M5 | `data/dmmeta/xref.ssim` (acr_nav entries) | Understand xref wiring |
-| M6 | `data/dmmeta/gstatic.ssim`, `data/gclidb/gclicmd.ssim` | gstatic + data-driven dispatch |
+| M6a | `data/dmmeta/gstatic.ssim`, `data/dmmeta/hook.ssim`, `amc.FGen.step` pattern | gstatic + Hook dispatch |
+| M6b | `data/gclidb/gclicmd.ssim`, `cpp/samp_regx/samp_regx.cpp` | mode-qualified keybinds, algo::Regx |
 | M7 | `data/atfdb/comptest.ssim`, `test/atf_comp/` | Test patterns |
 
 ### Verification (every milestone)
