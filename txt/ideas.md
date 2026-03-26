@@ -146,58 +146,6 @@ Design principles (from the OpenACR philosophy):
 
 ## Chosen project: `acr_nav` with integrated query/filter
 
-Build acr_nav incrementally, absorbing acr_query as a filter mode (press `/` to search).
-Each milestone teaches one OpenACR concept and produces a working program.
-
-### Milestones
-
-| # | What you build | What you learn |
-|---|---------------|----------------|
-| **M0** | Nothing — explore existing tools | `acr` queries, `amc_vis`, how tools are modeled as data |
-| **M1** | Ssimfile config tables, zero C++ | Schema design, controlled vocabularies, `acr -check` |
-| **M2** | Scaffold with `acr_ed`, run `amc` | Meta-schema, reftypes, generated API, `amc_vis acr_nav.%` |
-| **M3** | `Main()` that prints ctypes + fields | Cursor loops, hash lookups, Upptr traversal |
-| **M4** | Single-panel scrollable TUI | Terminal raw mode, ANSI rendering, event loop |
-| **M5** | Two panels + Enter/Backspace navigation | Xref traversal, navigation stack, the core experience |
-| **M6a** | gstatic Hook dispatch — replace string if-chain | gstatic, Hook reftype, function-pointer dispatch |
-| **M6b** | `/` filter mode + mode-qualified keybindings | algo::Regx, composite key lookup, mode-driven data |
-| **M7a** | Component tests + documentation | `atfdb.comptest` infrastructure, full development loop |
-| **M7b** | Naventry filter state + keybind substr validation | Schema evolution, `dmmeta.substr` decomposition |
-
-### Key principle
-
-**Schema before code.** M1 is pure data design — no C++ at all. By M2, `amc_vis acr_nav.%` already shows the tool's access path diagram before a single line of hand-written C++ exists.
-
-### What to study at each milestone
-
-| Milestone | Study | Why |
-|-----------|-------|-----|
-| M0 | `amc_vis.cpp`, `acr dmmeta.field:amc_vis.FDb.%` | Pattern to follow |
-| M1 | `data/dmmeta/reftype.ssim`, `data/gclidb/gtblact.ssim` | Best examples of data-driven design |
-| M2 | `include/gen/amc_vis_gen.h`, `cpp/gen/amc_vis_gen.cpp` | Understand generated code |
-| M3 | `include/gen/acr_nav_gen.inl.h` (own generated cursors) | Learn the generated API |
-| M4 | `amc_vis.cpp` lines with `\x1b[` (ANSI codes) | Rendering patterns |
-| M5 | `data/dmmeta/xref.ssim` (acr_nav entries) | Understand xref wiring |
-| M6a | `data/dmmeta/gstatic.ssim`, `data/dmmeta/hook.ssim`, `amc.FGen.step` pattern | gstatic + Hook dispatch |
-| M6b | `data/gclidb/gclicmd.ssim`, `cpp/samp_regx/samp_regx.cpp` | mode-qualified keybinds, algo::Regx |
-| M7a | `data/atfdb/comptest.ssim`, `test/atf_comp/` | Test patterns |
-| M7b | `data/dmmeta/substr.ssim`, `data/dmmeta/field.ssim` | Schema evolution, substr decomposition |
-
-### Verification (every milestone)
-
-- `acr -check` passes
-- `amc` runs clean (M2+)
-- `abt -build acr_nav` compiles (M2+)
-- `amc_vis acr_nav.%` shows clean access path diagram (M2+)
-
-### Open items
-
-- **Keybinding design:** Control characters (bytes 1-31) need a code change to map to key names. Needs a design session before adding Ctrl-N/Ctrl-P or other control keybinds.
-- **Panel dispatch on position:** `PanelItemCount` and `Render` dispatch on `panel.position` (0 vs 1). N=2 with genuinely different iteration patterns (linked list vs Ptrary) — not a missing noun. Revisit when a third panel type is needed.
-- **Filter text input:** Printable char handling in filter mode is inline, not data-driven dispatch. Justified asymmetry (text input vs action dispatch).
-- **M7b — Naventry filter state:** `Naventry` has no filter state. Following a ref while filtered, then Backspace, won't restore the filter. Fix: add `filter` and `navmode` fields to `acr_nav.Naventry`.
-- **M7b — Keybind referential integrity:** Composite keys (`browse.Up`) embed a navmode prefix without validation. Fix: add `dmmeta.substr` to decompose the pkey and validate against `navmode.ssim`.
-
 ### Other ideas (backlog)
 
 - **ssim_diff** (#2) — strong standalone project if acr_nav stalls
