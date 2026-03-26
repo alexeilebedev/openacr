@@ -7191,6 +7191,295 @@ void command::acr_my_proc_Uninit(command::acr_my_proc& parent) {
     acr_my_Kill(parent); // kill child, ensure forward progress
 }
 
+// --- command.acr_nav.ns.Print
+// Print back to string
+void command::ns_Print(command::acr_nav& parent, algo::cstring &out) {
+    Regx_Print(parent.ns, out);
+}
+
+// --- command.acr_nav.ns.ReadStrptrMaybe
+// Read Regx from string
+// Convert string to field. Return success value
+bool command::ns_ReadStrptrMaybe(command::acr_nav& parent, algo::strptr in) {
+    bool retval = true;
+    Regx_ReadSql(parent.ns, in, true);
+    return retval;
+}
+
+// --- command.acr_nav..ReadFieldMaybe
+bool command::acr_nav_ReadFieldMaybe(command::acr_nav& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    command::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case command_FieldId_in: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
+        } break;
+        case command_FieldId_ns: {
+            retval = ns_ReadStrptrMaybe(parent, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- command.acr_nav..ReadTupleMaybe
+// Read fields of command::acr_nav from attributes of ascii tuple TUPLE
+bool command::acr_nav_ReadTupleMaybe(command::acr_nav &parent, algo::Tuple &tuple) {
+    bool retval = true;
+    int anon_idx = 0;
+    ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
+        if (ch_N(attr.name) == 0) {
+            attr.name = acr_nav_GetAnon(parent, anon_idx++);
+        }
+        retval = acr_nav_ReadFieldMaybe(parent, attr.name, attr.value);
+        if (!retval) {
+            break;
+        }
+    }ind_end;
+    return retval;
+}
+
+// --- command.acr_nav..Init
+// Set all fields to initial values.
+void command::acr_nav_Init(command::acr_nav& parent) {
+    parent.in = algo::strptr("data");
+    Regx_ReadSql(parent.ns, "%", true);
+}
+
+// --- command.acr_nav..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::acr_nav_ToCmdline(command::acr_nav& row) {
+    tempstr ret;
+    ret << "bin/acr_nav ";
+    acr_nav_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
+// --- command.acr_nav..PrintArgv
+// print string representation of ROW to string STR
+// cfmt:command.acr_nav.Argv  printfmt:Tuple
+void command::acr_nav_PrintArgv(command::acr_nav& row, algo::cstring& str) {
+    algo::tempstr temp;
+    (void)temp;
+    (void)str;
+    if (!(row.in == "data")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.in, temp);
+        str << " -in:";
+        strptr_PrintBash(temp,str);
+    }
+    ch_RemoveAll(temp);
+    command::ns_Print(const_cast<command::acr_nav&>(row), temp);
+    str << " -ns:";
+    strptr_PrintBash(temp,str);
+}
+
+// --- command.acr_nav..GetAnon
+algo::strptr command::acr_nav_GetAnon(command::acr_nav &parent, i32 idx) {
+    (void)parent;//only to avoid -Wunused-parameter
+    switch(idx) {
+        case(0): return strptr("ns", 2);
+        default: return algo::strptr();
+    }
+}
+
+// --- command.acr_nav..NArgs
+// Used with command lines
+// Return # of command-line arguments that must follow this argument
+// If FIELD is invalid, return -1
+i32 command::acr_nav_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
+    i32 retval = 1;
+    switch (field) {
+        case command_FieldId_in: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_ns: { //
+            *out_anon = true;
+        } break;
+        default:
+        retval=-1; // unrecognized
+    }
+    (void)out_dflt;//only to avoid -Wunused-parameter
+    return retval;
+}
+
+// --- command.acr_nav_proc.acr_nav.Start
+// Start subprocess
+// If subprocess already running, do nothing. Otherwise, start it
+int command::acr_nav_Start(command::acr_nav_proc& parent) {
+    int retval = 0;
+    if (parent.pid == 0) {
+        verblog(acr_nav_ToCmdline(parent)); // maybe print command
+#ifdef WIN32
+        algo_lib::ResolveExecFname(parent.path);
+        tempstr cmdline(acr_nav_ToCmdline(parent));
+        parent.pid = dospawn(Zeroterm(parent.path),Zeroterm(cmdline),parent.timeout,parent.fstdin,parent.fstdout,parent.fstderr);
+#else
+        parent.pid = fork();
+        if (parent.pid == 0) { // child
+            algo_lib::DieWithParent();
+            if (parent.timeout > 0) {
+                alarm(parent.timeout);
+            }
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdin , 0);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdout, 1);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstderr, 2);
+            if (retval==0) retval= acr_nav_Execv(parent);
+            if (retval != 0) { // if start fails, print error
+                int err=errno;
+                prerr("command.acr_nav_execv"
+                <<Keyval("errno",err)
+                <<Keyval("errstr",strerror(err))
+                <<Keyval("comment","Execv failed"));
+            }
+            _exit(127); // if failed to start, exit anyway
+        } else if (parent.pid == -1) {
+            retval = errno; // failed to fork
+        }
+#endif
+    }
+    parent.status = parent.pid > 0 ? 0 : -1; // if didn't start, set error status
+    return retval;
+}
+
+// --- command.acr_nav_proc.acr_nav.StartRead
+// Start subprocess & Read output
+algo::Fildes command::acr_nav_StartRead(command::acr_nav_proc& parent, algo_lib::FFildes &read) {
+    int pipefd[2];
+    int rc=pipe(pipefd);
+    (void)rc;
+    read.fd.value = pipefd[0];
+    parent.fstdout  << ">&" << pipefd[1];
+    acr_nav_Start(parent);
+    (void)close(pipefd[1]);
+    return read.fd;
+}
+
+// --- command.acr_nav_proc.acr_nav.Kill
+// Kill subprocess and wait
+void command::acr_nav_Kill(command::acr_nav_proc& parent) {
+    if (parent.pid > 0) {
+        kill(parent.pid,9);
+        acr_nav_Wait(parent);
+    }
+}
+
+// --- command.acr_nav_proc.acr_nav.Wait
+// Wait for subprocess to return
+void command::acr_nav_Wait(command::acr_nav_proc& parent) {
+    if (parent.pid > 0) {
+        int wait_flags = 0;
+        int wait_status = 0;
+        int rc = -1;
+        do {
+            // really wait for subprocess to exit
+            rc = waitpid(parent.pid,&wait_status,wait_flags);
+        } while (rc==-1 && errno==EINTR);
+        if (rc == parent.pid) {
+            parent.status = wait_status;
+            parent.pid = 0;
+        }
+    }
+}
+
+// --- command.acr_nav_proc.acr_nav.Exec
+// Start + Wait
+// Execute subprocess and return exit code
+int command::acr_nav_Exec(command::acr_nav_proc& parent) {
+    acr_nav_Start(parent);
+    acr_nav_Wait(parent);
+    return parent.status;
+}
+
+// --- command.acr_nav_proc.acr_nav.ExecX
+// Start + Wait, throw exception on error
+// Execute subprocess; throw human-readable exception on error
+void command::acr_nav_ExecX(command::acr_nav_proc& parent) {
+    int rc = acr_nav_Exec(parent);
+    vrfy(rc==0, tempstr() << "algo_lib.exec" << Keyval("cmd",acr_nav_ToCmdline(parent))
+    << Keyval("comment",algo::DescribeWaitStatus(parent.status)));
+}
+
+// --- command.acr_nav_proc.acr_nav.Execv
+// Call execv()
+// Call execv with specified parameters
+int command::acr_nav_Execv(command::acr_nav_proc& parent) {
+    int ret = 0;
+    algo::StringAry args;
+    acr_nav_ToArgv(parent, args);
+    char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
+    ind_beg(algo::StringAry_ary_curs,arg,args) {
+        argv[ind_curs(arg).index] = Zeroterm(arg);
+    }ind_end;
+    argv[ary_N(args)] = NULL;
+    // if parent.path is relative, search for it in PATH
+    algo_lib::ResolveExecFname(parent.path);
+    ret = execv(Zeroterm(parent.path),argv);
+    return ret;
+}
+
+// --- command.acr_nav_proc.acr_nav.ToCmdline
+algo::tempstr command::acr_nav_ToCmdline(command::acr_nav_proc& parent) {
+    algo::tempstr retval;
+    retval << parent.path << " ";
+    command::acr_nav_PrintArgv(parent.cmd,retval);
+    if (ch_N(parent.fstdin)) {
+        retval << " " << parent.fstdin;
+    }
+    if (ch_N(parent.fstdout)) {
+        retval << " " << parent.fstdout;
+    }
+    if (ch_N(parent.fstderr)) {
+        retval << " 2" << parent.fstderr;
+    }
+    return retval;
+}
+
+// --- command.acr_nav_proc.acr_nav.ToArgv
+// Form array from the command line
+void command::acr_nav_ToArgv(command::acr_nav_proc& parent, algo::StringAry& args) {
+    ary_RemoveAll(args);
+    ary_Alloc(args) << parent.path;
+
+    if (parent.cmd.in != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-in:";
+        cstring_Print(parent.cmd.in, *arg);
+    }
+
+    if (parent.cmd.ns.expr != "%") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-ns:";
+        command::ns_Print(parent.cmd, *arg);
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
+        ary_Alloc(args) << "-verbose";
+    }
+}
+
+// --- command.acr_nav_proc..Uninit
+void command::acr_nav_proc_Uninit(command::acr_nav_proc& parent) {
+    command::acr_nav_proc &row = parent; (void)row;
+
+    // command.acr_nav_proc.acr_nav.Uninit (Exec)  //
+    acr_nav_Kill(parent); // kill child, ensure forward progress
+}
+
 // --- command.acr_proc.acr.Start
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it

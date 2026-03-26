@@ -20,6 +20,7 @@ dev.gitfile  gitfile:bin/acr_dm
 dev.gitfile  gitfile:bin/acr_ed
 dev.gitfile  gitfile:bin/acr_in
 dev.gitfile  gitfile:bin/acr_my
+dev.gitfile  gitfile:bin/acr_nav
 dev.gitfile  gitfile:bin/ai
 dev.gitfile  gitfile:bin/alexei-setup-soft-links
 dev.gitfile  gitfile:bin/amc
@@ -179,6 +180,7 @@ dev.gitfile  gitfile:cpp/acr_ed/unittest.cpp
 dev.gitfile  gitfile:cpp/acr_in/acr_in.cpp
 dev.gitfile  gitfile:cpp/acr_in/data.cpp
 dev.gitfile  gitfile:cpp/acr_my/acr_my.cpp
+dev.gitfile  gitfile:cpp/acr_nav/acr_nav.cpp
 dev.gitfile  gitfile:cpp/amc/alias.cpp
 dev.gitfile  gitfile:cpp/amc/amc_gc.cpp
 dev.gitfile  gitfile:cpp/amc/amc_vis.cpp
@@ -377,6 +379,7 @@ dev.gitfile  gitfile:cpp/gen/acr_ed_gen.cpp
 dev.gitfile  gitfile:cpp/gen/acr_gen.cpp
 dev.gitfile  gitfile:cpp/gen/acr_in_gen.cpp
 dev.gitfile  gitfile:cpp/gen/acr_my_gen.cpp
+dev.gitfile  gitfile:cpp/gen/acr_nav_gen.cpp
 dev.gitfile  gitfile:cpp/gen/acr_navdb_gen.cpp
 dev.gitfile  gitfile:cpp/gen/algo_gen.cpp
 dev.gitfile  gitfile:cpp/gen/algo_lib_gen.cpp
@@ -787,6 +790,7 @@ dev.gitfile  gitfile:include/acr_compl.h
 dev.gitfile  gitfile:include/acr_dm.h
 dev.gitfile  gitfile:include/acr_ed.h
 dev.gitfile  gitfile:include/acr_in.h
+dev.gitfile  gitfile:include/acr_nav.h
 dev.gitfile  gitfile:include/algo.h
 dev.gitfile  gitfile:include/algo.inl.h
 dev.gitfile  gitfile:include/amc.h
@@ -825,6 +829,8 @@ dev.gitfile  gitfile:include/gen/acr_in_gen.h
 dev.gitfile  gitfile:include/gen/acr_in_gen.inl.h
 dev.gitfile  gitfile:include/gen/acr_my_gen.h
 dev.gitfile  gitfile:include/gen/acr_my_gen.inl.h
+dev.gitfile  gitfile:include/gen/acr_nav_gen.h
+dev.gitfile  gitfile:include/gen/acr_nav_gen.inl.h
 dev.gitfile  gitfile:include/gen/acr_navdb_gen.h
 dev.gitfile  gitfile:include/gen/acr_navdb_gen.inl.h
 dev.gitfile  gitfile:include/gen/algo_gen.h
@@ -1283,6 +1289,8 @@ dev.gitfile  gitfile:txt/exe/acr_in/README.md
 dev.gitfile  gitfile:txt/exe/acr_in/internals.md
 dev.gitfile  gitfile:txt/exe/acr_my/README.md
 dev.gitfile  gitfile:txt/exe/acr_my/internals.md
+dev.gitfile  gitfile:txt/exe/acr_nav/README.md
+dev.gitfile  gitfile:txt/exe/acr_nav/internals.md
 dev.gitfile  gitfile:txt/exe/amc/README.md
 dev.gitfile  gitfile:txt/exe/amc/enum.md
 dev.gitfile  gitfile:txt/exe/amc/exec.md

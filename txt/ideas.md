@@ -186,6 +186,10 @@ Each milestone teaches one OpenACR concept and produces a working program.
 - `abt -build acr_nav` compiles (M2+)
 - `amc_vis acr_nav.%` shows clean access path diagram (M2+)
 
+### Design notes from review
+
+- **switch_panel direction:** Left/Right both map to `switch_panel` — works as a toggle for 2 panels, but a 3rd panel would need directional variants (`switch_panel_left`/`switch_panel_right`) or a new `direction` field on the keybind. Track if panel count grows.
+
 ### Other ideas (backlog)
 
 - **ssim_diff** (#2) — strong standalone project if acr_nav stalls

@@ -136,6 +136,16 @@ dmmeta.ctypelen  ctype:acr_in.FTuple  len:128  alignment:8  padbytes:11  plainda
 dmmeta.ctypelen  ctype:acr_my.FDb  len:688  alignment:8  padbytes:14  plaindata:N
 dmmeta.ctypelen  ctype:acr_my.FNsdb  len:171  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:acr_my.FSsimfile  len:154  alignment:1  padbytes:0  plaindata:Y
+dmmeta.ctypelen  ctype:acr_nav.FCtype  len:312  alignment:8  padbytes:6  plaindata:N
+dmmeta.ctypelen  ctype:acr_nav.FDb  len:2384  alignment:8  padbytes:42  plaindata:N
+dmmeta.ctypelen  ctype:acr_nav.FField  len:704  alignment:8  padbytes:7  plaindata:N
+dmmeta.ctypelen  ctype:acr_nav.FKeybind  len:280  alignment:8  padbytes:4  plaindata:N
+dmmeta.ctypelen  ctype:acr_nav.FNavaction  len:216  alignment:8  padbytes:0  plaindata:N
+dmmeta.ctypelen  ctype:acr_nav.FNavmode  len:216  alignment:8  padbytes:0  plaindata:N
+dmmeta.ctypelen  ctype:acr_nav.FNs  len:288  alignment:8  padbytes:2  plaindata:N
+dmmeta.ctypelen  ctype:acr_nav.FPanel  len:248  alignment:8  padbytes:0  plaindata:N
+dmmeta.ctypelen  ctype:acr_nav.FReftype  len:80  alignment:8  padbytes:5  plaindata:N
+dmmeta.ctypelen  ctype:acr_nav.Naventry  len:24  alignment:8  padbytes:0  plaindata:N
 dmmeta.ctypelen  ctype:acr_navdb.Keybind  len:256  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:acr_navdb.Navaction  len:204  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:acr_navdb.Navmode  len:204  alignment:1  padbytes:0  plaindata:Y
@@ -771,6 +781,7 @@ dmmeta.ctypelen  ctype:command.acr_dm  len:40  alignment:8  padbytes:5  plaindat
 dmmeta.ctypelen  ctype:command.acr_ed  len:1608  alignment:8  padbytes:50  plaindata:N
 dmmeta.ctypelen  ctype:command.acr_in  len:184  alignment:8  padbytes:11  plaindata:N
 dmmeta.ctypelen  ctype:command.acr_my  len:80  alignment:8  padbytes:0  plaindata:N
+dmmeta.ctypelen  ctype:command.acr_nav  len:56  alignment:8  padbytes:0  plaindata:N
 dmmeta.ctypelen  ctype:command.amc  len:96  alignment:8  padbytes:4  plaindata:N
 dmmeta.ctypelen  ctype:command.amc_gc  len:104  alignment:8  padbytes:7  plaindata:N
 dmmeta.ctypelen  ctype:command.amc_vis  len:80  alignment:8  padbytes:3  plaindata:N

@@ -1,4 +1,4 @@
-# acr_nav — TUI Schema Explorer: M1 + M2 Plan
+# acr_nav — TUI Schema Explorer: M1 + M2 Plan [DONE]
 
 ## Context
 

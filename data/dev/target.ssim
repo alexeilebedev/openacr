@@ -7,6 +7,7 @@ dev.target  target:acr_dm
 dev.target  target:acr_ed
 dev.target  target:acr_in
 dev.target  target:acr_my
+dev.target  target:acr_nav
 dev.target  target:algo_lib
 dev.target  target:amc
 dev.target  target:amc_gc

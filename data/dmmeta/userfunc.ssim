@@ -51,6 +51,7 @@ dmmeta.userfunc  userfunc:acr_ed...edaction_Rename_Target  acrkey:gstatic/dev.ed
 dmmeta.userfunc  userfunc:acr_ed.FDb._db.Main  acrkey:main:acr_ed  cppname:acr_ed.Main  comment:""
 dmmeta.userfunc  userfunc:acr_in.FDb._db.Main  acrkey:main:acr_in  cppname:acr_in.Main  comment:""
 dmmeta.userfunc  userfunc:acr_my.FDb._db.Main  acrkey:main:acr_my  cppname:acr_my.Main  comment:""
+dmmeta.userfunc  userfunc:acr_nav.FDb._db.Main  acrkey:main:acr_nav  cppname:acr_nav.Main  comment:""
 dmmeta.userfunc  userfunc:algo.Attr..Print  acrkey:cfmt:algo.Attr.String  cppname:algo.Attr_Print  comment:""
 dmmeta.userfunc  userfunc:algo.Attr..ReadStrptrMaybe  acrkey:cfmt:algo.Attr.String  cppname:algo.Attr_ReadStrptrMaybe  comment:""
 dmmeta.userfunc  userfunc:algo.Bool..Print  acrkey:cfmt:algo.Bool.String  cppname:algo.Bool_Print  comment:""

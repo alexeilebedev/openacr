@@ -451,6 +451,8 @@ namespace command { struct acr_in; }
 namespace command { struct acr_in_proc; }
 namespace command { struct acr_my; }
 namespace command { struct acr_my_proc; }
+namespace command { struct acr_nav; }
+namespace command { struct acr_nav_proc; }
 namespace command { struct acr_proc; }
 namespace command { struct amc; }
 namespace command { struct amc_gc; }
@@ -1777,6 +1779,100 @@ void                 acr_my_ToArgv(command::acr_my_proc& parent, algo::StringAry
 inline void          acr_my_proc_Init(command::acr_my_proc& parent);
 // func:command.acr_my_proc..Uninit
 void                 acr_my_proc_Uninit(command::acr_my_proc& parent) __attribute__((nothrow));
+
+// --- command.acr_nav
+// access: command.acr_nav_proc.acr_nav (Exec)
+struct acr_nav { // command.acr_nav
+    algo::cstring    in;   //   "data"  Input directory or filename, - for stdin
+    algo_lib::Regx   ns;   //   "%"  Sql Regx of dmmeta::Ns
+    // func:command.acr_nav..Ctor
+    inline               acr_nav() __attribute__((nothrow));
+};
+
+// Print back to string
+// func:command.acr_nav.ns.Print
+void                 ns_Print(command::acr_nav& parent, algo::cstring &out) __attribute__((nothrow));
+// Read Regx from string
+// Convert string to field. Return success value
+// func:command.acr_nav.ns.ReadStrptrMaybe
+bool                 ns_ReadStrptrMaybe(command::acr_nav& parent, algo::strptr in) __attribute__((nothrow));
+
+// func:command.acr_nav..ReadFieldMaybe
+bool                 acr_nav_ReadFieldMaybe(command::acr_nav& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of command::acr_nav from attributes of ascii tuple TUPLE
+// func:command.acr_nav..ReadTupleMaybe
+bool                 acr_nav_ReadTupleMaybe(command::acr_nav &parent, algo::Tuple &tuple) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:command.acr_nav..Init
+void                 acr_nav_Init(command::acr_nav& parent);
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+// func:command.acr_nav..ToCmdline
+tempstr              acr_nav_ToCmdline(command::acr_nav& row) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:command.acr_nav.Argv  printfmt:Tuple
+// func:command.acr_nav..PrintArgv
+void                 acr_nav_PrintArgv(command::acr_nav& row, algo::cstring& str) __attribute__((nothrow));
+// func:command.acr_nav..GetAnon
+algo::strptr         acr_nav_GetAnon(command::acr_nav &parent, i32 idx) __attribute__((nothrow));
+// Used with command lines
+// Return # of command-line arguments that must follow this argument
+// If FIELD is invalid, return -1
+// func:command.acr_nav..NArgs
+i32                  acr_nav_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
+
+// --- command.acr_nav_proc
+struct acr_nav_proc { // command.acr_nav_proc: Subprocess: TUI schema explorer for browsing ctypes, fields, and cross-references
+    algo::cstring      path;      //   "bin/acr_nav"  path for executable
+    command::acr_nav   cmd;       // command line for child process
+    algo::cstring      fstdin;    // redirect for stdin
+    algo::cstring      fstdout;   // redirect for stdout
+    algo::cstring      fstderr;   // redirect for stderr
+    pid_t              pid;       //   0  pid of running child process
+    i32                timeout;   //   0  optional timeout for child process
+    i32                status;    //   0  last exit status of child process
+    // func:command.acr_nav_proc..Ctor
+    inline               acr_nav_proc() __attribute__((nothrow));
+    // func:command.acr_nav_proc..Dtor
+    inline               ~acr_nav_proc() __attribute__((nothrow));
+};
+
+// Start subprocess
+// If subprocess already running, do nothing. Otherwise, start it
+// func:command.acr_nav_proc.acr_nav.Start
+int                  acr_nav_Start(command::acr_nav_proc& parent) __attribute__((nothrow));
+// Start subprocess & Read output
+// func:command.acr_nav_proc.acr_nav.StartRead
+algo::Fildes         acr_nav_StartRead(command::acr_nav_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
+// Kill subprocess and wait
+// func:command.acr_nav_proc.acr_nav.Kill
+void                 acr_nav_Kill(command::acr_nav_proc& parent);
+// Wait for subprocess to return
+// func:command.acr_nav_proc.acr_nav.Wait
+void                 acr_nav_Wait(command::acr_nav_proc& parent) __attribute__((nothrow));
+// Start + Wait
+// Execute subprocess and return exit code
+// func:command.acr_nav_proc.acr_nav.Exec
+int                  acr_nav_Exec(command::acr_nav_proc& parent) __attribute__((nothrow));
+// Start + Wait, throw exception on error
+// Execute subprocess; throw human-readable exception on error
+// func:command.acr_nav_proc.acr_nav.ExecX
+void                 acr_nav_ExecX(command::acr_nav_proc& parent);
+// Call execv()
+// Call execv with specified parameters
+// func:command.acr_nav_proc.acr_nav.Execv
+int                  acr_nav_Execv(command::acr_nav_proc& parent) __attribute__((nothrow));
+// func:command.acr_nav_proc.acr_nav.ToCmdline
+algo::tempstr        acr_nav_ToCmdline(command::acr_nav_proc& parent) __attribute__((nothrow));
+// Form array from the command line
+// func:command.acr_nav_proc.acr_nav.ToArgv
+void                 acr_nav_ToArgv(command::acr_nav_proc& parent, algo::StringAry& args) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:command.acr_nav_proc..Init
+inline void          acr_nav_proc_Init(command::acr_nav_proc& parent);
+// func:command.acr_nav_proc..Uninit
+void                 acr_nav_proc_Uninit(command::acr_nav_proc& parent) __attribute__((nothrow));
 
 // --- command.acr_proc
 struct acr_proc { // command.acr_proc: Subprocess: Algo Cross-Reference - ssimfile database & update tool

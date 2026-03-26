@@ -564,6 +564,30 @@ inline  command::acr_my_proc::~acr_my_proc() {
     command::acr_my_proc_Uninit(*this);
 }
 
+// --- command.acr_nav..Ctor
+inline  command::acr_nav::acr_nav() {
+    command::acr_nav_Init(*this);
+}
+
+// --- command.acr_nav_proc..Init
+// Set all fields to initial values.
+inline void command::acr_nav_proc_Init(command::acr_nav_proc& parent) {
+    parent.path = algo::strptr("bin/acr_nav");
+    parent.pid = pid_t(0);
+    parent.timeout = i32(0);
+    parent.status = i32(0);
+}
+
+// --- command.acr_nav_proc..Ctor
+inline  command::acr_nav_proc::acr_nav_proc() {
+    command::acr_nav_proc_Init(*this);
+}
+
+// --- command.acr_nav_proc..Dtor
+inline  command::acr_nav_proc::~acr_nav_proc() {
+    command::acr_nav_proc_Uninit(*this);
+}
+
 // --- command.acr_proc..Init
 // Set all fields to initial values.
 inline void command::acr_proc_Init(command::acr_proc& parent) {

@@ -17,6 +17,8 @@ dev.readmefile  gitfile:txt/exe/acr_in/README.md  inl:N  sandbox:N  filter:""  c
 dev.readmefile  gitfile:txt/exe/acr_in/internals.md  inl:N  sandbox:N  filter:""  comment:""
 dev.readmefile  gitfile:txt/exe/acr_my/README.md  inl:N  sandbox:N  filter:""  comment:""
 dev.readmefile  gitfile:txt/exe/acr_my/internals.md  inl:N  sandbox:N  filter:""  comment:""
+dev.readmefile  gitfile:txt/exe/acr_nav/README.md  inl:N  sandbox:N  filter:""  comment:""
+dev.readmefile  gitfile:txt/exe/acr_nav/internals.md  inl:N  sandbox:N  filter:""  comment:""
 dev.readmefile  gitfile:txt/exe/amc/README.md  inl:N  sandbox:N  filter:""  comment:""
 dev.readmefile  gitfile:txt/exe/amc/enum.md  inl:N  sandbox:N  filter:""  comment:""
 dev.readmefile  gitfile:txt/exe/amc/exec.md  inl:N  sandbox:N  filter:""  comment:""

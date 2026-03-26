@@ -6,6 +6,7 @@ dmmeta.fcmdline  field:acr_dm.FDb.cmdline  read:Y  basecmdline:algo_lib.FDb.cmdl
 dmmeta.fcmdline  field:acr_ed.FDb.cmdline  read:Y  basecmdline:algo_lib.FDb.cmdline  comment:""
 dmmeta.fcmdline  field:acr_in.FDb.cmdline  read:Y  basecmdline:algo_lib.FDb.cmdline  comment:""
 dmmeta.fcmdline  field:acr_my.FDb.cmdline  read:Y  basecmdline:algo_lib.FDb.cmdline  comment:""
+dmmeta.fcmdline  field:acr_nav.FDb.cmdline  read:Y  basecmdline:algo_lib.FDb.cmdline  comment:""
 dmmeta.fcmdline  field:algo_lib.FDb.cmdline  read:Y  basecmdline:""  comment:""
 dmmeta.fcmdline  field:amc.FDb.cmdline  read:Y  basecmdline:algo_lib.FDb.cmdline  comment:""
 dmmeta.fcmdline  field:amc_gc.FDb.cmdline  read:Y  basecmdline:algo_lib.FDb.cmdline  comment:""
