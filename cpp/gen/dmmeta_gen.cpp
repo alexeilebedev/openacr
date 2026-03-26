@@ -87,6 +87,7 @@ const char *dmmeta_Ns_ns_acr_dm      = "acr_dm";
 const char *dmmeta_Ns_ns_acr_ed      = "acr_ed";
 const char *dmmeta_Ns_ns_acr_in      = "acr_in";
 const char *dmmeta_Ns_ns_acr_my      = "acr_my";
+const char *dmmeta_Ns_ns_acr_navdb   = "acr_navdb";
 const char *dmmeta_Ns_ns_algo        = "algo";
 const char *dmmeta_Ns_ns_algo_lib    = "algo_lib";
 const char *dmmeta_Ns_ns_amc         = "amc";
@@ -231,10 +232,15 @@ const char *dmmeta_Sorttype_sorttype_InsertionSort   = "InsertionSort";
 const char *dmmeta_Sorttype_sorttype_HeapSort        = "HeapSort";
 
 // compile-time string constants for dmmeta.Ssimfile.ssimfile
-const char *dmmeta_Ssimfile_ssimfile_amcdb_bltin      = "amcdb.bltin";
-const char *dmmeta_Ssimfile_ssimfile_amcdb_curstype   = "amcdb.curstype";
-const char *dmmeta_Ssimfile_ssimfile_amcdb_gen        = "amcdb.gen";
-const char *dmmeta_Ssimfile_ssimfile_amcdb_regxtype   = "amcdb.regxtype";
+const char *dmmeta_Ssimfile_ssimfile_acr_navdb_keybind     = "acr_navdb.keybind";
+const char *dmmeta_Ssimfile_ssimfile_acr_navdb_navaction   = "acr_navdb.navaction";
+const char *dmmeta_Ssimfile_ssimfile_acr_navdb_navmode     = "acr_navdb.navmode";
+
+const char *dmmeta_Ssimfile_ssimfile_acr_navdb_panel   = "acr_navdb.panel";
+const char *dmmeta_Ssimfile_ssimfile_amcdb_bltin       = "amcdb.bltin";
+const char *dmmeta_Ssimfile_ssimfile_amcdb_curstype    = "amcdb.curstype";
+const char *dmmeta_Ssimfile_ssimfile_amcdb_gen         = "amcdb.gen";
+const char *dmmeta_Ssimfile_ssimfile_amcdb_regxtype    = "amcdb.regxtype";
 
 const char *dmmeta_Ssimfile_ssimfile_amcdb_tclass     = "amcdb.tclass";
 const char *dmmeta_Ssimfile_ssimfile_amcdb_tcurs      = "amcdb.tcurs";

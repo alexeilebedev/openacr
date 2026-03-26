@@ -1,3 +1,7 @@
+dmmeta.ssimfile  ssimfile:acr_navdb.keybind  ctype:acr_navdb.Keybind
+dmmeta.ssimfile  ssimfile:acr_navdb.navaction  ctype:acr_navdb.Navaction
+dmmeta.ssimfile  ssimfile:acr_navdb.navmode  ctype:acr_navdb.Navmode
+dmmeta.ssimfile  ssimfile:acr_navdb.panel  ctype:acr_navdb.Panel
 dmmeta.ssimfile  ssimfile:amcdb.bltin  ctype:amcdb.Bltin
 dmmeta.ssimfile  ssimfile:amcdb.curstype  ctype:amcdb.Curstype
 dmmeta.ssimfile  ssimfile:amcdb.gen  ctype:amcdb.Gen

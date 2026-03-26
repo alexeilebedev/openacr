@@ -377,6 +377,7 @@ dev.gitfile  gitfile:cpp/gen/acr_ed_gen.cpp
 dev.gitfile  gitfile:cpp/gen/acr_gen.cpp
 dev.gitfile  gitfile:cpp/gen/acr_in_gen.cpp
 dev.gitfile  gitfile:cpp/gen/acr_my_gen.cpp
+dev.gitfile  gitfile:cpp/gen/acr_navdb_gen.cpp
 dev.gitfile  gitfile:cpp/gen/algo_gen.cpp
 dev.gitfile  gitfile:cpp/gen/algo_lib_gen.cpp
 dev.gitfile  gitfile:cpp/gen/amc_gc_gen.cpp
@@ -521,6 +522,10 @@ dev.gitfile  gitfile:cpp/ssim2mysql.cpp
 dev.gitfile  gitfile:cpp/ssimfilt.cpp
 dev.gitfile  gitfile:cpp/strconv/strconv.cpp
 dev.gitfile  gitfile:cpp/sv2ssim.cpp
+dev.gitfile  gitfile:data/acr_navdb/keybind.ssim
+dev.gitfile  gitfile:data/acr_navdb/navaction.ssim
+dev.gitfile  gitfile:data/acr_navdb/navmode.ssim
+dev.gitfile  gitfile:data/acr_navdb/panel.ssim
 dev.gitfile  gitfile:data/amcdb/bltin.ssim
 dev.gitfile  gitfile:data/amcdb/curstype.ssim
 dev.gitfile  gitfile:data/amcdb/gen.ssim
@@ -820,6 +825,8 @@ dev.gitfile  gitfile:include/gen/acr_in_gen.h
 dev.gitfile  gitfile:include/gen/acr_in_gen.inl.h
 dev.gitfile  gitfile:include/gen/acr_my_gen.h
 dev.gitfile  gitfile:include/gen/acr_my_gen.inl.h
+dev.gitfile  gitfile:include/gen/acr_navdb_gen.h
+dev.gitfile  gitfile:include/gen/acr_navdb_gen.inl.h
 dev.gitfile  gitfile:include/gen/algo_gen.h
 dev.gitfile  gitfile:include/gen/algo_gen.inl.h
 dev.gitfile  gitfile:include/gen/algo_lib_gen.h
@@ -1503,6 +1510,11 @@ dev.gitfile  gitfile:txt/script/zfs_snapshot.pl.md
 dev.gitfile  gitfile:txt/setup.md
 dev.gitfile  gitfile:txt/ssim.md
 dev.gitfile  gitfile:txt/ssimdb/README.md
+dev.gitfile  gitfile:txt/ssimdb/acr_navdb/README.md
+dev.gitfile  gitfile:txt/ssimdb/acr_navdb/keybind.md
+dev.gitfile  gitfile:txt/ssimdb/acr_navdb/navaction.md
+dev.gitfile  gitfile:txt/ssimdb/acr_navdb/navmode.md
+dev.gitfile  gitfile:txt/ssimdb/acr_navdb/panel.md
 dev.gitfile  gitfile:txt/ssimdb/amcdb/README.md
 dev.gitfile  gitfile:txt/ssimdb/amcdb/bltin.md
 dev.gitfile  gitfile:txt/ssimdb/amcdb/curstype.md

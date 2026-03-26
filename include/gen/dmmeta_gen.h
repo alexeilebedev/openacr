@@ -317,6 +317,7 @@ extern const char *  dmmeta_Ns_ns_acr_dm;         // acr_dm          fconst:dmme
 extern const char *  dmmeta_Ns_ns_acr_ed;         // acr_ed          fconst:dmmeta.Ns.ns/acr_ed
 extern const char *  dmmeta_Ns_ns_acr_in;         // acr_in          fconst:dmmeta.Ns.ns/acr_in
 extern const char *  dmmeta_Ns_ns_acr_my;         // acr_my          fconst:dmmeta.Ns.ns/acr_my
+extern const char *  dmmeta_Ns_ns_acr_navdb;      // acr_navdb       fconst:dmmeta.Ns.ns/acr_navdb
 extern const char *  dmmeta_Ns_ns_algo;           // algo            fconst:dmmeta.Ns.ns/algo
 extern const char *  dmmeta_Ns_ns_algo_lib;       // algo_lib        fconst:dmmeta.Ns.ns/algo_lib
 extern const char *  dmmeta_Ns_ns_amc;            // amc             fconst:dmmeta.Ns.ns/amc
@@ -485,6 +486,10 @@ enum { dmmeta_ReftypeCaseEnum_N = 35 };
 extern const char *  dmmeta_Sorttype_sorttype_QuickSort;       // QuickSort        fconst:dmmeta.Sorttype.sorttype/QuickSort
 extern const char *  dmmeta_Sorttype_sorttype_InsertionSort;   // InsertionSort    fconst:dmmeta.Sorttype.sorttype/InsertionSort
 extern const char *  dmmeta_Sorttype_sorttype_HeapSort;        // HeapSort         fconst:dmmeta.Sorttype.sorttype/HeapSort
+extern const char *  dmmeta_Ssimfile_ssimfile_acr_navdb_keybind;           // acr_navdb.keybind            fconst:dmmeta.Ssimfile.ssimfile/acr_navdb.keybind
+extern const char *  dmmeta_Ssimfile_ssimfile_acr_navdb_navaction;         // acr_navdb.navaction          fconst:dmmeta.Ssimfile.ssimfile/acr_navdb.navaction
+extern const char *  dmmeta_Ssimfile_ssimfile_acr_navdb_navmode;           // acr_navdb.navmode            fconst:dmmeta.Ssimfile.ssimfile/acr_navdb.navmode
+extern const char *  dmmeta_Ssimfile_ssimfile_acr_navdb_panel;             // acr_navdb.panel              fconst:dmmeta.Ssimfile.ssimfile/acr_navdb.panel
 extern const char *  dmmeta_Ssimfile_ssimfile_amcdb_bltin;                 // amcdb.bltin                  fconst:dmmeta.Ssimfile.ssimfile/amcdb.bltin
 extern const char *  dmmeta_Ssimfile_ssimfile_amcdb_curstype;              // amcdb.curstype               fconst:dmmeta.Ssimfile.ssimfile/amcdb.curstype
 extern const char *  dmmeta_Ssimfile_ssimfile_amcdb_gen;                   // amcdb.gen                    fconst:dmmeta.Ssimfile.ssimfile/amcdb.gen

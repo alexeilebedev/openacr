@@ -11,12 +11,14 @@ Branch `acr-nav` exists with `txt/ideas.md` committed. M0 exploration is complet
 
 ### Verified against amc_vis
 
-1. **Core wrapper types match amc_vis exactly.** FCtype(Base:dmmeta.Ctype), FField(Base:dmmeta.Field), FReftype, FNs — same pattern, same xref wiring. Via paths verified:
+1. **Core wrapper types match amc_vis exactly.** FCtype(Base:dmmeta.Ctype), FField(Base:dmmeta.Field), FReftype — same pattern, same xref wiring. Via paths verified:
    - `FCtype.c_field via ind_ctype/dmmeta.Field.ctype` — identical to amc_vis
    - `FField.p_arg via ind_ctype/dmmeta.Field.arg` — identical to amc_vis
-   - `FCtype.p_ns via ind_ns/dmmeta.Ctype.ns` — valid (dmmeta.Ctype.ns is Pkey substr, expr:.RL)
+   - `FCtype.p_ns via ind_ns/dmmeta.Ctype.ns` — **new for acr_nav** (amc_vis has no FNs). Valid: dmmeta.Ctype.ns is Pkey substr, expr:.RL
 
 2. **zd_sel_ctype inscond:false** — matches amc_vis.FDb.zd_select exactly.
+
+4. **filter_accept has no keybind** — intentional. Enter→follow_ref in browse mode and Enter→filter_accept in filter mode collide on the same pkey. Mode-dependent keybind dispatch (M6) will resolve this. Until then, C++ code in M3 hardcodes "Enter in filter mode = filter_accept."
 
 3. **Failed xref = silent rejection** — verified in amc_vis_gen.cpp. Fields with unresolvable p_arg are skipped.
 
@@ -215,7 +217,7 @@ acr_ed -create -field acr_nav.FDb.term_wid -arg i32 -comment "Terminal width" -w
 ```bash
 acr -check                    # Referential integrity
 amc                           # Generate code
-abt -install acr_nav          # Build
+abt -build -install acr_nav   # Build
 amc_vis acr_nav.%             # Access path diagram
 ```
 

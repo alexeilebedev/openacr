@@ -1,0 +1,2 @@
+acr_navdb.panel  panel:ctype_list  title:Types   position:0  width_pct:40  comment:""
+acr_navdb.panel  panel:field_list  title:Fields  position:1  width_pct:60  comment:""
