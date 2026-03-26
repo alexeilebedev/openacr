@@ -93,9 +93,6 @@ Each milestone teaches one OpenACR concept and produces a working program.
 ### Open items
 
 - **Keybinding design:** Control characters (bytes 1-31) need a code change to map to key names. Needs a design session before adding Ctrl-N/Ctrl-P or other control keybinds.
-- **Filter text input:** Printable char handling in filter mode is inline, not data-driven dispatch. Justified asymmetry (text input vs action dispatch).
-- **Naventry.ctype_name dead data:** Written but never read — `go_back` uses `sel_row` to locate the ctype. Could be removed or used for robust name-based lookup in a future change.
-- **follow_ref mode transition:** Whether `follow_ref` should switch to browse mode after following from filter mode is a UX design question. M7b's filter save/restore makes the round-trip correct either way.
 
 ### Known limitations
 

@@ -52,10 +52,9 @@ acr_nav.FPanel  (3 fields)
   sel_row               i32                         Val
 acr_nav.FReftype  (1 fields)
   base                  dmmeta.Reftype              Base
-acr_nav.Naventry  (5 fields)
-  ctype_name            algo.cstring                Val
+acr_nav.Naventry  (4 fields)
   filter                algo.cstring                Val
   navmode               algo.Smallstr50             Val
   scroll_offset         i32                         Val
   sel_row               i32                         Val
-acr_nav.report  n_ctype:1380  n_field:5504  n_sel_ctype:10  n_keybind:21  n_panel:2  n_navaction:12  n_navmode:2
+acr_nav.report  n_ctype:1380  n_field:5503  n_sel_ctype:10  n_keybind:21  n_panel:2  n_navaction:12  n_navmode:2

@@ -68,6 +68,11 @@ static void DetectTerminal() {
     acr_nav::_db.term_hei = w.ws_row;
 }
 
+static void SwitchToBrowse() {
+    acr_nav::_db.p_cur_mode = acr_nav::ind_navmode_Find("browse");
+    vrfy(acr_nav::_db.p_cur_mode, "navmode 'browse' not found");
+}
+
 // -----------------------------------------------------------------------------
 
 static void ApplyFilter() {
@@ -285,13 +290,18 @@ void acr_nav::navaction_follow_ref() {
         acr_nav::_db.p_cur_panel = acr_nav::_db.p_right_panel;
     } else if (panel.position == 1 && sel_ct && panel.sel_row < c_field_N(*sel_ct)) {
         acr_nav::FField *fld = c_field_Find(*sel_ct, panel.sel_row);
-        if (fld && fld->p_arg != sel_ct && zd_sel_ctype_InLlistQ(*fld->p_arg)) {
+        bool ns_match = fld && fld->p_arg != sel_ct
+            && algo_lib::Regx_Match(acr_nav::_db.cmdline.ns, ns_Get(*fld->p_arg));
+        if (ns_match) {
             acr_nav::Naventry &entry = acr_nav::navstack_Alloc();
-            entry.ctype_name = sel_ct->ctype;
             entry.filter = acr_nav::_db.filter;
             entry.navmode = acr_nav::_db.p_cur_mode->navmode;
             entry.scroll_offset = left->scroll_offset;
             entry.sel_row = left->sel_row;
+            // Switch to browse mode with full ctype list so target is reachable
+            acr_nav::_db.filter = "";
+            SwitchToBrowse();
+            ApplyFilter();
             int target_idx = 0;
             ind_beg(acr_nav::_db_zd_sel_ctype_curs, ct, acr_nav::_db) {
                 if (&ct == fld->p_arg) {
@@ -339,9 +349,7 @@ void acr_nav::navaction_filter_start() {
 // -----------------------------------------------------------------------------
 
 void acr_nav::navaction_filter_cancel() {
-    acr_nav::FNavmode *mode = ind_navmode_Find("browse");
-    vrfy(mode, "navmode 'browse' not found");
-    acr_nav::_db.p_cur_mode = mode;
+    SwitchToBrowse();
     ch_RemoveAll(acr_nav::_db.filter);
     ApplyFilter();
     acr_nav::_db.p_left_panel->sel_row = 0;
@@ -518,8 +526,7 @@ void acr_nav::Main() {
         acr_nav::FPanel *left = _db.p_left_panel;
         acr_nav::FPanel *right = _db.p_right_panel;
         _db.p_cur_panel = left;
-        _db.p_cur_mode = ind_navmode_Find("browse");
-        vrfy(_db.p_cur_mode, "navmode 'browse' not found");
+        SwitchToBrowse();
         left->sel_row = 0;
         left->scroll_offset = 0;
         right->sel_row = 0;

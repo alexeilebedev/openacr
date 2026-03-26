@@ -733,7 +733,6 @@ dmmeta.field  field:acr_nav.FPanel.base  arg:acr_navdb.Panel  reftype:Base  dflt
 dmmeta.field  field:acr_nav.FPanel.scroll_offset  arg:i32  reftype:Val  dflt:""  comment:"Scroll position"
 dmmeta.field  field:acr_nav.FPanel.sel_row  arg:i32  reftype:Val  dflt:""  comment:"Selected row"
 dmmeta.field  field:acr_nav.FReftype.base  arg:dmmeta.Reftype  reftype:Base  dflt:""  comment:""
-dmmeta.field  field:acr_nav.Naventry.ctype_name  arg:algo.cstring  reftype:Val  dflt:""  comment:"Ctype name"
 dmmeta.field  field:acr_nav.Naventry.filter  arg:algo.cstring  reftype:Val  dflt:""  comment:"Filter text at time of push"
 dmmeta.field  field:acr_nav.Naventry.navmode  arg:algo.Smallstr50  reftype:Val  dflt:""  comment:"Navigation mode at time of push"
 dmmeta.field  field:acr_nav.Naventry.scroll_offset  arg:i32  reftype:Val  dflt:""  comment:""

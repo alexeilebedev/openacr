@@ -1474,7 +1474,6 @@ void                 FieldId_Print(acr_nav::FieldId& row, algo::cstring& str) __
 // --- acr_nav.Naventry
 // create: acr_nav.FDb.navstack (Tary)
 struct Naventry { // acr_nav.Naventry: Navigation stack entry
-    algo::cstring      ctype_name;      // Ctype name
     algo::cstring      filter;          // Filter text at time of push
     algo::Smallstr50   navmode;         // Navigation mode at time of push
     i32                scroll_offset;   //   0
