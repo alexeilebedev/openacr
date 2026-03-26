@@ -41,8 +41,8 @@ const char* acr_navdb::value_ToCstr(const acr_navdb::FieldId& parent) {
     switch(value_GetEnum(parent)) {
         case acr_navdb_FieldId_keybind     : ret = "keybind";  break;
         case acr_navdb_FieldId_navaction   : ret = "navaction";  break;
-        case acr_navdb_FieldId_comment     : ret = "comment";  break;
         case acr_navdb_FieldId_navmode     : ret = "navmode";  break;
+        case acr_navdb_FieldId_comment     : ret = "comment";  break;
         case acr_navdb_FieldId_panel       : ret = "panel";  break;
         case acr_navdb_FieldId_title       : ret = "title";  break;
         case acr_navdb_FieldId_position    : ret = "position";  break;
@@ -158,6 +158,18 @@ void acr_navdb::FieldId_Print(acr_navdb::FieldId& row, algo::cstring& str) {
     acr_navdb::value_Print(row, str);
 }
 
+// --- acr_navdb.Keybind.navmode.Get
+algo::Smallstr50 acr_navdb::navmode_Get(acr_navdb::Keybind& parent) {
+    algo::Smallstr50 ret(algo::Pathcomp(parent.keybind, ".RL"));
+    return ret;
+}
+
+// --- acr_navdb.Keybind.navmode.Get2
+algo::Smallstr50 acr_navdb::Keybind_navmode_Get(algo::strptr arg) {
+    algo::Smallstr50 ret(algo::Pathcomp(arg, ".RL"));
+    return ret;
+}
+
 // --- acr_navdb.Keybind..ReadFieldMaybe
 bool acr_navdb::Keybind_ReadFieldMaybe(acr_navdb::Keybind& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
@@ -169,6 +181,9 @@ bool acr_navdb::Keybind_ReadFieldMaybe(acr_navdb::Keybind& parent, algo::strptr 
         } break;
         case acr_navdb_FieldId_navaction: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.navaction, strval);
+        } break;
+        case acr_navdb_FieldId_navmode: {
+            retval = false;
         } break;
         case acr_navdb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);

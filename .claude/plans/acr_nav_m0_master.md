@@ -62,7 +62,7 @@ Each milestone teaches one OpenACR concept and produces a working program.
 | **M6a** | gstatic Hook dispatch — replace string if-chain | gstatic, Hook reftype, function-pointer dispatch | Done |
 | **M6b** | `/` filter mode + mode-qualified keybindings | algo::Regx, composite key lookup, mode-driven data | Done |
 | **M7a** | Component tests + documentation | `atfdb.comptest` infrastructure, full development loop | Done |
-| **M7b** | Naventry filter state + keybind substr validation | Schema evolution, `dmmeta.substr` decomposition | |
+| **M7b** | Naventry filter state + keybind substr validation | Schema evolution, `dmmeta.substr` decomposition | Done |
 
 ### Key principle
 
@@ -93,7 +93,10 @@ Each milestone teaches one OpenACR concept and produces a working program.
 ### Open items
 
 - **Keybinding design:** Control characters (bytes 1-31) need a code change to map to key names. Needs a design session before adding Ctrl-N/Ctrl-P or other control keybinds.
-- **Panel dispatch on position:** `PanelItemCount` and `Render` dispatch on `panel.position` (0 vs 1). N=2 with genuinely different iteration patterns (linked list vs Ptrary) — not a missing noun. Revisit when a third panel type is needed.
 - **Filter text input:** Printable char handling in filter mode is inline, not data-driven dispatch. Justified asymmetry (text input vs action dispatch).
-- **M7b — Naventry filter state:** `Naventry` has no filter state. Following a ref while filtered, then Backspace, won't restore the filter. Fix: add `filter` and `navmode` fields to `acr_nav.Naventry`.
-- **M7b — Keybind referential integrity:** Composite keys (`browse.Up`) embed a navmode prefix without validation. Fix: add `dmmeta.substr` to decompose the pkey and validate against `navmode.ssim`.
+- **Naventry.ctype_name dead data:** Written but never read — `go_back` uses `sel_row` to locate the ctype. Could be removed or used for robust name-based lookup in a future change.
+- **follow_ref mode transition:** Whether `follow_ref` should switch to browse mode after following from filter mode is a UX design question. M7b's filter save/restore makes the round-trip correct either way.
+
+### Known limitations
+
+- **Panel dispatch on position:** `PanelItemCount` and `Render` dispatch on `panel.position` (0 vs 1). N=2 with genuinely different iteration patterns (linked list vs Ptrary) — not a missing noun. Revisit when a third panel type is needed.

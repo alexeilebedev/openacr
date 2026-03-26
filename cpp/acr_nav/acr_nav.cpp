@@ -288,6 +288,8 @@ void acr_nav::navaction_follow_ref() {
         if (fld && fld->p_arg != sel_ct && zd_sel_ctype_InLlistQ(*fld->p_arg)) {
             acr_nav::Naventry &entry = acr_nav::navstack_Alloc();
             entry.ctype_name = sel_ct->ctype;
+            entry.filter = acr_nav::_db.filter;
+            entry.navmode = acr_nav::_db.p_cur_mode->navmode;
             entry.scroll_offset = left->scroll_offset;
             entry.sel_row = left->sel_row;
             int target_idx = 0;
@@ -306,6 +308,12 @@ void acr_nav::navaction_follow_ref() {
 void acr_nav::navaction_go_back() {
     if (!acr_nav::navstack_EmptyQ()) {
         acr_nav::Naventry *entry = acr_nav::navstack_Last();
+        acr_nav::_db.filter = entry->filter;
+        acr_nav::FNavmode *mode = acr_nav::ind_navmode_Find(entry->navmode);
+        if (mode) {
+            acr_nav::_db.p_cur_mode = mode;
+        }
+        ApplyFilter();
         acr_nav::_db.p_left_panel->scroll_offset = entry->scroll_offset;
         acr_nav::_db.p_left_panel->sel_row = entry->sel_row;
         acr_nav::navstack_RemoveLast();

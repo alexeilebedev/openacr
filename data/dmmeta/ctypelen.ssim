@@ -145,7 +145,7 @@ dmmeta.ctypelen  ctype:acr_nav.FNavmode  len:216  alignment:8  padbytes:0  plain
 dmmeta.ctypelen  ctype:acr_nav.FNs  len:288  alignment:8  padbytes:2  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.FPanel  len:248  alignment:8  padbytes:0  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.FReftype  len:80  alignment:8  padbytes:5  plaindata:N
-dmmeta.ctypelen  ctype:acr_nav.Naventry  len:24  alignment:8  padbytes:0  plaindata:N
+dmmeta.ctypelen  ctype:acr_nav.Naventry  len:96  alignment:8  padbytes:4  plaindata:N
 dmmeta.ctypelen  ctype:acr_navdb.Keybind  len:256  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:acr_navdb.Navaction  len:204  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:acr_navdb.Navmode  len:204  alignment:1  padbytes:0  plaindata:Y

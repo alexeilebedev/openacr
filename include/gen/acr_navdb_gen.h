@@ -32,8 +32,8 @@
 enum acr_navdb_FieldIdEnum {            // acr_navdb.FieldId.value
      acr_navdb_FieldId_keybind     = 0
     ,acr_navdb_FieldId_navaction   = 1
-    ,acr_navdb_FieldId_comment     = 2
-    ,acr_navdb_FieldId_navmode     = 3
+    ,acr_navdb_FieldId_navmode     = 2
+    ,acr_navdb_FieldId_comment     = 3
     ,acr_navdb_FieldId_panel       = 4
     ,acr_navdb_FieldId_title       = 5
     ,acr_navdb_FieldId_position    = 6
@@ -121,6 +121,11 @@ struct Keybind { // acr_navdb.Keybind: Key-to-action mapping for acr_nav
     // func:acr_navdb.Keybind..Ctor
     inline               Keybind() __attribute__((nothrow));
 };
+
+// func:acr_navdb.Keybind.navmode.Get
+algo::Smallstr50     navmode_Get(acr_navdb::Keybind& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:acr_navdb.Keybind.navmode.Get2
+algo::Smallstr50     Keybind_navmode_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:acr_navdb.Keybind..ReadFieldMaybe
 bool                 Keybind_ReadFieldMaybe(acr_navdb::Keybind& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));

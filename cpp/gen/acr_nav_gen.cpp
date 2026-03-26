@@ -387,7 +387,7 @@ static void acr_nav::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_nav.Input'  signature:'3cb58cd50e9df0eab6d60e0169008466dd750ae6'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_nav.Input'  signature:'75168965bb7ad26c8ac4bcf34c7e189b16c1923c'");
 }
 
 // --- acr_nav.FDb._db.InsertStrptrMaybe
@@ -2964,6 +2964,12 @@ void acr_nav::keybind_CopyIn(acr_nav::FKeybind &row, acr_navdb::Keybind &in) {
     row.keybind = in.keybind;
     row.navaction = in.navaction;
     row.comment = in.comment;
+}
+
+// --- acr_nav.FKeybind.navmode.Get
+algo::Smallstr50 acr_nav::navmode_Get(acr_nav::FKeybind& keybind) {
+    algo::Smallstr50 ret(algo::Pathcomp(keybind.keybind, ".RL"));
+    return ret;
 }
 
 // --- acr_nav.FKeybind..Uninit

@@ -1,4 +1,4 @@
-# Plan: acr_nav M7a — Component Tests + Documentation
+# Plan: acr_nav M7a — Component Tests + Documentation [DONE]
 
 ## Context
 

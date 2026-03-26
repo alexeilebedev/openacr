@@ -1192,6 +1192,9 @@ void                 keybind_CopyOut(acr_nav::FKeybind &row, acr_navdb::Keybind 
 // func:acr_nav.FKeybind.base.CopyIn
 void                 keybind_CopyIn(acr_nav::FKeybind &row, acr_navdb::Keybind &in) __attribute__((nothrow));
 
+// func:acr_nav.FKeybind.navmode.Get
+algo::Smallstr50     navmode_Get(acr_nav::FKeybind& keybind) __attribute__((__warn_unused_result__, nothrow));
+
 // Set all fields to initial values.
 // func:acr_nav.FKeybind..Init
 inline void          FKeybind_Init(acr_nav::FKeybind& keybind);
@@ -1471,9 +1474,11 @@ void                 FieldId_Print(acr_nav::FieldId& row, algo::cstring& str) __
 // --- acr_nav.Naventry
 // create: acr_nav.FDb.navstack (Tary)
 struct Naventry { // acr_nav.Naventry: Navigation stack entry
-    algo::cstring   ctype_name;      // Ctype name
-    i32             scroll_offset;   //   0
-    i32             sel_row;         //   0
+    algo::cstring      ctype_name;      // Ctype name
+    algo::cstring      filter;          // Filter text at time of push
+    algo::Smallstr50   navmode;         // Navigation mode at time of push
+    i32                scroll_offset;   //   0
+    i32                sel_row;         //   0
     // func:acr_nav.Naventry..Ctor
     inline               Naventry() __attribute__((nothrow));
 };

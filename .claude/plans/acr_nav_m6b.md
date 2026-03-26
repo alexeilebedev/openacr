@@ -1,4 +1,4 @@
-# M6b: `/` Filter Mode + Mode-Qualified Keybindings
+# M6b: `/` Filter Mode + Mode-Qualified Keybindings [DONE]
 
 ## Context
 
