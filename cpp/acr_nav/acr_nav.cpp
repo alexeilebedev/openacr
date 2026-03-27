@@ -194,6 +194,24 @@ static acr_nav::FCtype* SelectedCtype(acr_nav::FPanel &left) {
 
 // -----------------------------------------------------------------------------
 
+static int RightPanelFieldCount(acr_nav::FCtype *sel_ct) {
+    int ret = 0;
+    if (sel_ct) {
+        ret = acr_nav::_db.show_xref ? c_field_arg_N(*sel_ct) : c_field_N(*sel_ct);
+    }
+    return ret;
+}
+
+static acr_nav::FField* RightPanelFieldFind(acr_nav::FCtype *sel_ct, int idx) {
+    acr_nav::FField *ret = NULL;
+    if (sel_ct) {
+        ret = acr_nav::_db.show_xref ? c_field_arg_Find(*sel_ct, idx) : c_field_Find(*sel_ct, idx);
+    }
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
 // Panel item count dispatches on position (0=ctype list, 1=field list).
 // The two panels have structurally different roles (parent/child),
 // not N instances of one concept -- factoring into step hooks
@@ -203,9 +221,7 @@ static int PanelItemCount(acr_nav::FPanel &panel, acr_nav::FCtype *sel_ct) {
     if (panel.position == 0) {
         ret = acr_nav::zd_sel_ctype_N();
     } else if (panel.position == 1) {
-        if (sel_ct) {
-            ret = c_field_N(*sel_ct);
-        }
+        ret = RightPanelFieldCount(sel_ct);
     }
     return ret;
 }
@@ -286,21 +302,28 @@ void acr_nav::navaction_follow_ref() {
     acr_nav::FCtype *sel_ct = SelectedCtype(*left);
     if (panel.position == 0) {
         acr_nav::_db.p_cur_panel = acr_nav::_db.p_right_panel;
-    } else if (panel.position == 1 && sel_ct && panel.sel_row < c_field_N(*sel_ct)) {
-        acr_nav::FField *fld = c_field_Find(*sel_ct, panel.sel_row);
-        if (fld && fld->p_arg != sel_ct) {
+    } else if (panel.position == 1 && sel_ct && panel.sel_row < RightPanelFieldCount(sel_ct)) {
+        acr_nav::FField *fld = RightPanelFieldFind(sel_ct, panel.sel_row);
+        acr_nav::FCtype *target = NULL;
+        if (fld) {
+            target = acr_nav::_db.show_xref ? fld->p_ctype : fld->p_arg;
+        }
+        if (fld && target != sel_ct) {
             acr_nav::Naventry &entry = acr_nav::navstack_Alloc();
             entry.filter = acr_nav::_db.filter;
             entry.navmode = acr_nav::_db.p_cur_mode->navmode;
             entry.scroll_offset = left->scroll_offset;
             entry.sel_row = left->sel_row;
+            entry.show_xref = acr_nav::_db.show_xref;
+            // Reset to forward view on navigation -- new ctype starts in its natural view
+            acr_nav::_db.show_xref = false;
             // Switch to browse mode with full ctype list so target is reachable
             acr_nav::_db.filter = "";
             SwitchToBrowse();
             ApplyFilter();
             int target_idx = 0;
             ind_beg(acr_nav::_db_zd_sel_ctype_curs, ct, acr_nav::_db) {
-                if (&ct == fld->p_arg) {
+                if (&ct == target) {
                     left->sel_row = target_idx;
                 }
                 target_idx++;
@@ -332,6 +355,7 @@ void acr_nav::navaction_go_back() {
     if (!acr_nav::navstack_EmptyQ()) {
         acr_nav::Naventry *entry = acr_nav::navstack_Last();
         acr_nav::_db.filter = entry->filter;
+        acr_nav::_db.show_xref = entry->show_xref;
         acr_nav::FNavmode *mode = acr_nav::ind_navmode_Find(entry->navmode);
         if (mode) {
             acr_nav::_db.p_cur_mode = mode;
@@ -347,6 +371,20 @@ void acr_nav::navaction_go_back() {
 
 void acr_nav::navaction_quit() {
     acr_nav::_db.running = false;
+}
+
+// -----------------------------------------------------------------------------
+
+void acr_nav::navaction_toggle_xref() {
+    acr_nav::_db.show_xref = !acr_nav::_db.show_xref;
+    acr_nav::_db.p_right_panel->sel_row = 0;
+    acr_nav::_db.p_right_panel->scroll_offset = 0;
+}
+
+// -----------------------------------------------------------------------------
+
+void acr_nav::navaction_filter_accept() {
+    SwitchToBrowse();
 }
 
 // -----------------------------------------------------------------------------
@@ -438,8 +476,14 @@ static void Render(acr_nav::FCtype *sel_ct, acr_nav::FPanel *left, acr_nav::FPan
     {
         tempstr rtitle;
         if (sel_ct) {
-            rtitle << " " << right->title << ": " << sel_ct->ctype
-                   << " (" << c_field_N(*sel_ct) << ")";
+            rtitle << " ";
+            if (acr_nav::_db.show_xref) {
+                rtitle << "xref_list";
+            } else {
+                rtitle << right->title;
+            }
+            rtitle << ": " << sel_ct->ctype
+                   << " (" << RightPanelFieldCount(sel_ct) << ")";
         } else {
             rtitle << " " << right->title << " (empty)";
         }
@@ -462,7 +506,7 @@ static void Render(acr_nav::FCtype *sel_ct, acr_nav::FPanel *left, acr_nav::FPan
             skip++;
         }
     }
-    int n_right = sel_ct ? c_field_N(*sel_ct) : 0;
+    int n_right = RightPanelFieldCount(sel_ct);
 
     for (int row = 0; row < visible; row++) {
         // Left cell
@@ -491,11 +535,11 @@ static void Render(acr_nav::FCtype *sel_ct, acr_nav::FPanel *left, acr_nav::FPan
         acr_nav::FField *fld = nullptr;
         if (sel_ct && right_data_idx < n_right) {
             right_sel = (right_data_idx == right->sel_row);
-            fld = c_field_Find(*sel_ct, right_data_idx);
+            fld = RightPanelFieldFind(sel_ct, right_data_idx);
             if (fld) {
                 right_cell << " " << name_Get(*fld);
                 char_PrintNTimes(' ', right_cell, i32_Max(1, 24 - ch_N(right_cell)));
-                right_cell << fld->p_arg->ctype;
+                right_cell << (acr_nav::_db.show_xref ? fld->p_ctype->ctype : fld->p_arg->ctype);
                 char_PrintNTimes(' ', right_cell, i32_Max(1, 48 - ch_N(right_cell)));
                 right_cell << fld->p_reftype->reftype;
             }
@@ -522,7 +566,7 @@ static void Render(acr_nav::FCtype *sel_ct, acr_nav::FPanel *left, acr_nav::FPan
     if (in_filter) {
         status << " /" << acr_nav::_db.filter;
     } else {
-        status << " q:quit  j/k:move  Space/b:page  Enter/l:follow  Backspace:back  /:filter";
+        status << " q:quit  j/k:move  Space/b:page  Enter/l:follow  Backspace:back  /:filter  Tab/r:xref";
     }
     acr_nav::FPanel &cur = *acr_nav::_db.p_cur_panel;
     int cur_items = PanelItemCount(cur, sel_ct);
@@ -588,7 +632,7 @@ static bool ProcessKey(algo::strptr key_name) {
             right->scroll_offset = 0;
         }
         AdjustScroll(*left, acr_nav::zd_sel_ctype_N());
-        AdjustScroll(*right, sel_ct ? c_field_N(*sel_ct) : 0);
+        AdjustScroll(*right, RightPanelFieldCount(sel_ct));
     }
     return did_something;
 }
@@ -608,6 +652,7 @@ static void HeadlessOutput() {
     screen.n_sel_ctype = acr_nav::zd_sel_ctype_N();
     screen.n_ctype = acr_nav::ctype_N();
     screen.n_field = acr_nav::field_N();
+    screen.show_xref = acr_nav::_db.show_xref;
     prlog(screen);
     // Left panel state
     acr_nav::PanelState left_state;
@@ -625,10 +670,10 @@ static void HeadlessOutput() {
     right_state.panel = right->panel;
     right_state.sel_row = right->sel_row;
     right_state.scroll_offset = right->scroll_offset;
-    right_state.n_items = sel_ct ? c_field_N(*sel_ct) : 0;
+    right_state.n_items = RightPanelFieldCount(sel_ct);
     right_state.sel_value = "";
-    if (sel_ct && right->sel_row < c_field_N(*sel_ct)) {
-        acr_nav::FField *fld = c_field_Find(*sel_ct, right->sel_row);
+    if (sel_ct && right->sel_row < RightPanelFieldCount(sel_ct)) {
+        acr_nav::FField *fld = RightPanelFieldFind(sel_ct, right->sel_row);
         if (fld) {
             right_state.sel_value = fld->field;
         }
@@ -636,18 +681,26 @@ static void HeadlessOutput() {
     prlog(right_state);
     // Visible fields
     if (sel_ct) {
-        ind_beg(acr_nav::ctype_c_field_curs, field, *sel_ct) {
-            acr_nav::VisibleField vf;
-            vf.row = ind_curs(field).index;
-            vf.field = field.field;
-            vf.arg = field.p_arg->ctype;
-            vf.reftype = field.p_reftype->reftype;
-            if (field.p_reftype->c_reftypestyle) {
-                vf.style = field.p_reftype->c_reftypestyle->p_navstyle->navstyle;
+        int n_vis = RightPanelFieldCount(sel_ct);
+        for (int i = 0; i < n_vis; i++) {
+            acr_nav::FField *field = RightPanelFieldFind(sel_ct, i);
+            if (!field) {
+                continue;
             }
-            vf.navigable = (field.p_arg != sel_ct) ? "Y" : "N";
+            acr_nav::VisibleField vf;
+            vf.row = i;
+            vf.field = field->field;
+            vf.arg = field->p_arg->ctype;
+            vf.reftype = field->p_reftype->reftype;
+            if (field->p_reftype->c_reftypestyle) {
+                vf.style = field->p_reftype->c_reftypestyle->p_navstyle->navstyle;
+            }
+            bool navigable = acr_nav::_db.show_xref
+                ? (field->p_ctype != sel_ct)
+                : (field->p_arg != sel_ct);
+            vf.navigable = navigable ? "Y" : "N";
             prlog(vf);
-        } ind_end;
+        }
     }
     // Blank line terminates screenshot block
     prlog("");

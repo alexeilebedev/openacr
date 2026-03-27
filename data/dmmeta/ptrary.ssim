@@ -37,6 +37,7 @@ dmmeta.ptrary  field:acr_in.FTarget.c_targdep_child  unique:Y  heaplike:N
 dmmeta.ptrary  field:acr_in.FTuple.c_child  unique:N  heaplike:N
 dmmeta.ptrary  field:acr_in.FTuple.c_parent  unique:N  heaplike:N
 dmmeta.ptrary  field:acr_nav.FCtype.c_field  unique:Y  heaplike:N
+dmmeta.ptrary  field:acr_nav.FCtype.c_field_arg  unique:Y  heaplike:N
 dmmeta.ptrary  field:algo_lib.FTxtrow.c_txtcell  unique:Y  heaplike:N
 dmmeta.ptrary  field:algo_lib.FTxttbl.c_txtrow  unique:Y  heaplike:N
 dmmeta.ptrary  field:amc.FCtype.c_datafld  unique:Y  heaplike:N

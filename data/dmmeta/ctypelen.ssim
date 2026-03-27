@@ -136,9 +136,9 @@ dmmeta.ctypelen  ctype:acr_in.FTuple  len:128  alignment:8  padbytes:11  plainda
 dmmeta.ctypelen  ctype:acr_my.FDb  len:688  alignment:8  padbytes:14  plaindata:N
 dmmeta.ctypelen  ctype:acr_my.FNsdb  len:171  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:acr_my.FSsimfile  len:154  alignment:1  padbytes:0  plaindata:Y
-dmmeta.ctypelen  ctype:acr_nav.FCtype  len:312  alignment:8  padbytes:6  plaindata:N
-dmmeta.ctypelen  ctype:acr_nav.FDb  len:2944  alignment:8  padbytes:58  plaindata:N
-dmmeta.ctypelen  ctype:acr_nav.FField  len:704  alignment:8  padbytes:7  plaindata:N
+dmmeta.ctypelen  ctype:acr_nav.FCtype  len:328  alignment:8  padbytes:6  plaindata:N
+dmmeta.ctypelen  ctype:acr_nav.FDb  len:2944  alignment:8  padbytes:57  plaindata:N
+dmmeta.ctypelen  ctype:acr_nav.FField  len:704  alignment:8  padbytes:6  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.FKeybind  len:280  alignment:8  padbytes:4  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.FNavaction  len:224  alignment:8  padbytes:0  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.FNavmode  len:216  alignment:8  padbytes:0  plaindata:N
@@ -147,9 +147,9 @@ dmmeta.ctypelen  ctype:acr_nav.FNs  len:288  alignment:8  padbytes:2  plaindata:
 dmmeta.ctypelen  ctype:acr_nav.FPanel  len:248  alignment:8  padbytes:0  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.FReftype  len:88  alignment:8  padbytes:5  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.FReftypestyle  len:224  alignment:8  padbytes:0  plaindata:N
-dmmeta.ctypelen  ctype:acr_nav.Naventry  len:80  alignment:8  padbytes:4  plaindata:N
+dmmeta.ctypelen  ctype:acr_nav.Naventry  len:80  alignment:8  padbytes:3  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.PanelState  len:80  alignment:8  padbytes:0  plaindata:N
-dmmeta.ctypelen  ctype:acr_nav.Screen  len:136  alignment:8  padbytes:0  plaindata:N
+dmmeta.ctypelen  ctype:acr_nav.Screen  len:144  alignment:8  padbytes:7  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.Screenshot  len:52  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:acr_nav.SendKey  len:52  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:acr_nav.VisibleField  len:324  alignment:4  padbytes:0  plaindata:Y

@@ -88,6 +88,7 @@ namespace dmmeta { struct Reftype; }
 namespace acr_navdb { struct Reftypestyle; }
 namespace acr_nav { struct FNavstyle; }
 namespace acr_nav { struct ctype_c_field_curs; }
+namespace acr_nav { struct ctype_c_field_arg_curs; }
 namespace acr_nav { struct _db_ctype_curs; }
 namespace acr_nav { struct _db_field_curs; }
 namespace acr_nav { struct _db_ns_curs; }
@@ -134,16 +135,21 @@ struct FCtype { // acr_nav.FCtype
     acr_nav::FField**   c_field_elems;       // array of pointers
     u32                 c_field_n;           // array of pointers
     u32                 c_field_max;         // capacity of allocated array
+    acr_nav::FField**   c_field_arg_elems;   // array of pointers
+    u32                 c_field_arg_n;       // array of pointers
+    u32                 c_field_arg_max;     // capacity of allocated array
     acr_nav::FNs*       p_ns;                // reference to parent row
     acr_nav::FCtype*    ind_ctype_next;      // hash next
     u32                 ind_ctype_hashval;   // hash value
     acr_nav::FCtype*    zd_sel_ctype_next;   // zslist link; -1 means not-in-list
     acr_nav::FCtype*    zd_sel_ctype_prev;   // previous element
     // reftype Ptrary of acr_nav.FCtype.c_field prohibits copy
+    // reftype Ptrary of acr_nav.FCtype.c_field_arg prohibits copy
     // x-reference on acr_nav.FCtype.p_ns prevents copy
     // func:acr_nav.FCtype..AssignOp
     inline acr_nav::FCtype& operator =(const acr_nav::FCtype &rhs) = delete;
     // reftype Ptrary of acr_nav.FCtype.c_field prohibits copy
+    // reftype Ptrary of acr_nav.FCtype.c_field_arg prohibits copy
     // x-reference on acr_nav.FCtype.p_ns prevents copy
     // func:acr_nav.FCtype..CopyCtor
     inline               FCtype(const acr_nav::FCtype &rhs) = delete;
@@ -211,6 +217,46 @@ inline bool          ctype_c_field_InAryQ(acr_nav::FField& row) __attribute__((n
 // func:acr_nav.FCtype.c_field.qLast
 inline acr_nav::FField& c_field_qLast(acr_nav::FCtype& ctype) __attribute__((nothrow));
 
+// Return true if index is empty
+// func:acr_nav.FCtype.c_field_arg.EmptyQ
+inline bool          c_field_arg_EmptyQ(acr_nav::FCtype& ctype) __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+// func:acr_nav.FCtype.c_field_arg.Find
+inline acr_nav::FField* c_field_arg_Find(acr_nav::FCtype& ctype, u32 t) __attribute__((__warn_unused_result__, nothrow));
+// Return array of pointers
+// func:acr_nav.FCtype.c_field_arg.Getary
+inline algo::aryptr<acr_nav::FField*> c_field_arg_Getary(acr_nav::FCtype& ctype) __attribute__((nothrow));
+// Insert pointer to row into array. Row must not already be in array.
+// If pointer is already in the array, it may be inserted twice.
+// func:acr_nav.FCtype.c_field_arg.Insert
+void                 c_field_arg_Insert(acr_nav::FCtype& ctype, acr_nav::FField& row) __attribute__((nothrow));
+// Insert pointer to row in array.
+// If row is already in the array, do nothing.
+// Return value: whether element was inserted into array.
+// func:acr_nav.FCtype.c_field_arg.InsertMaybe
+bool                 c_field_arg_InsertMaybe(acr_nav::FCtype& ctype, acr_nav::FField& row) __attribute__((nothrow));
+// Return number of items in the pointer array
+// func:acr_nav.FCtype.c_field_arg.N
+inline i32           c_field_arg_N(const acr_nav::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+// Find element using linear scan. If element is in array, remove, otherwise do nothing
+// func:acr_nav.FCtype.c_field_arg.Remove
+void                 c_field_arg_Remove(acr_nav::FCtype& ctype, acr_nav::FField& row) __attribute__((nothrow));
+// Empty the index. (The rows are not deleted)
+// func:acr_nav.FCtype.c_field_arg.RemoveAll
+inline void          c_field_arg_RemoveAll(acr_nav::FCtype& ctype) __attribute__((nothrow));
+// Reserve space in index for N more elements;
+// func:acr_nav.FCtype.c_field_arg.Reserve
+void                 c_field_arg_Reserve(acr_nav::FCtype& ctype, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+// func:acr_nav.FCtype.c_field_arg.qFind
+inline acr_nav::FField& c_field_arg_qFind(acr_nav::FCtype& ctype, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+// func:acr_nav.FCtype.c_field_arg.InAryQ
+inline bool          ctype_c_field_arg_InAryQ(acr_nav::FField& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+// func:acr_nav.FCtype.c_field_arg.qLast
+inline acr_nav::FField& c_field_arg_qLast(acr_nav::FCtype& ctype) __attribute__((nothrow));
+
 // func:acr_nav.FCtype.c_field_curs.Reset
 inline void          ctype_c_field_curs_Reset(ctype_c_field_curs &curs, acr_nav::FCtype &parent) __attribute__((nothrow));
 // cursor points to valid item
@@ -222,6 +268,17 @@ inline void          ctype_c_field_curs_Next(ctype_c_field_curs &curs) __attribu
 // item access
 // func:acr_nav.FCtype.c_field_curs.Access
 inline acr_nav::FField& ctype_c_field_curs_Access(ctype_c_field_curs &curs) __attribute__((nothrow));
+// func:acr_nav.FCtype.c_field_arg_curs.Reset
+inline void          ctype_c_field_arg_curs_Reset(ctype_c_field_arg_curs &curs, acr_nav::FCtype &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:acr_nav.FCtype.c_field_arg_curs.ValidQ
+inline bool          ctype_c_field_arg_curs_ValidQ(ctype_c_field_arg_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:acr_nav.FCtype.c_field_arg_curs.Next
+inline void          ctype_c_field_arg_curs_Next(ctype_c_field_arg_curs &curs) __attribute__((nothrow));
+// item access
+// func:acr_nav.FCtype.c_field_arg_curs.Access
+inline acr_nav::FField& ctype_c_field_arg_curs_Access(ctype_c_field_arg_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:acr_nav.FCtype..Init
 inline void          FCtype_Init(acr_nav::FCtype& ctype);
@@ -310,6 +367,7 @@ struct FDb { // acr_nav.FDb
     acr_nav::FReftypestyle**   ind_reftypestyle_buckets_elems;   // pointer to bucket array
     i32                        ind_reftypestyle_buckets_n;       // number of elements in bucket array
     i32                        ind_reftypestyle_n;               // number of elements in the hash table
+    bool                       show_xref;                        //   false  When true, right panel shows reverse xrefs
     acr_nav::trace             trace;                            //
 };
 
@@ -1287,18 +1345,20 @@ void                 FDb_Uninit() __attribute__((nothrow));
 // global access: field (Lary, by rowid)
 // global access: ind_field (Thash, hash field field)
 // access: acr_nav.FCtype.c_field (Ptrary)
+// access: acr_nav.FCtype.c_field_arg (Ptrary)
 struct FField { // acr_nav.FField
-    acr_nav::FField*     ind_field_next;         // hash next
-    u32                  ind_field_hashval;      // hash value
-    algo::Smallstr100    field;                  // Primary key, as ctype.name
-    algo::Smallstr100    arg;                    // Type of field
-    algo::Smallstr50     reftype;                //   "Val"  Type constructor
-    algo::CppExpr        dflt;                   // Default value (c++ expression)
-    algo::Comment        comment;                //
-    acr_nav::FCtype*     p_ctype;                // reference to parent row
-    acr_nav::FCtype*     p_arg;                  // reference to parent row
-    acr_nav::FReftype*   p_reftype;              // reference to parent row
-    bool                 ctype_c_field_in_ary;   //   false  membership flag
+    acr_nav::FField*     ind_field_next;             // hash next
+    u32                  ind_field_hashval;          // hash value
+    algo::Smallstr100    field;                      // Primary key, as ctype.name
+    algo::Smallstr100    arg;                        // Type of field
+    algo::Smallstr50     reftype;                    //   "Val"  Type constructor
+    algo::CppExpr        dflt;                       // Default value (c++ expression)
+    algo::Comment        comment;                    //
+    acr_nav::FCtype*     p_ctype;                    // reference to parent row
+    acr_nav::FCtype*     p_arg;                      // reference to parent row
+    acr_nav::FReftype*   p_reftype;                  // reference to parent row
+    bool                 ctype_c_field_in_ary;       //   false  membership flag
+    bool                 ctype_c_field_arg_in_ary;   //   false  membership flag
     // x-reference on acr_nav.FField.p_ctype prevents copy
     // x-reference on acr_nav.FField.p_arg prevents copy
     // x-reference on acr_nav.FField.p_reftype prevents copy
@@ -1763,6 +1823,7 @@ struct Naventry { // acr_nav.Naventry: Navigation stack entry
     algo::Smallstr50   navmode;         // Navigation mode at time of push
     i32                scroll_offset;   //   0
     i32                sel_row;         //   0
+    bool               show_xref;       //   false  View mode at time of push
     // func:acr_nav.Naventry..Ctor
     inline               Naventry() __attribute__((nothrow));
 };
@@ -1799,6 +1860,7 @@ struct Screen { // acr_nav.Screen: Headless screen state output
     i32                n_sel_ctype;      //   0  Number of ctypes matching filter
     i32                n_ctype;          //   0  Total number of ctypes
     i32                n_field;          //   0  Total number of fields
+    bool               show_xref;        //   false  True when right panel shows reverse xrefs
     // func:acr_nav.Screen..Ctor
     inline               Screen() __attribute__((nothrow));
 };
@@ -1922,6 +1984,15 @@ struct ctype_c_field_curs {// fcurs:acr_nav.FCtype.c_field/curs
 };
 
 
+struct ctype_c_field_arg_curs {// fcurs:acr_nav.FCtype.c_field_arg/curs
+    typedef acr_nav::FField ChildType;
+    acr_nav::FField** elems;
+    u32 n_elems;
+    u32 index;
+    ctype_c_field_arg_curs() { elems=NULL; n_elems=0; index=0; }
+};
+
+
 struct _db_ctype_curs {// cursor
     typedef acr_nav::FCtype ChildType;
     acr_nav::FDb *parent;
@@ -2022,6 +2093,10 @@ struct _db_reftypestyle_curs {// cursor
 } // gen:ns_curstext
 namespace acr_nav { // gen:ns_func
 // User-implemented function from gstatic:acr_nav.FDb.navaction
+// func:acr_nav...navaction_filter_accept
+// this function is 'extrn' and implemented by user
+void                 navaction_filter_accept();
+// User-implemented function from gstatic:acr_nav.FDb.navaction
 // func:acr_nav...navaction_filter_append_space
 // this function is 'extrn' and implemented by user
 void                 navaction_filter_append_space();
@@ -2085,6 +2160,10 @@ void                 navaction_switch_panel_left();
 // func:acr_nav...navaction_switch_panel_right
 // this function is 'extrn' and implemented by user
 void                 navaction_switch_panel_right();
+// User-implemented function from gstatic:acr_nav.FDb.navaction
+// func:acr_nav...navaction_toggle_xref
+// this function is 'extrn' and implemented by user
+void                 navaction_toggle_xref();
 // func:acr_nav...StaticCheck
 void                 StaticCheck();
 } // gen:ns_func

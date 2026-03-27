@@ -174,6 +174,8 @@ atfdb.comptest  comptest:acr_nav.HeadlessFilter  timeout:10  memcheck:Y  coverag
 atfdb.comptest  comptest:acr_nav.HeadlessFollow  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:"Headless follow reference"
 atfdb.comptest  comptest:acr_nav.HeadlessInit  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:"Headless auto-screenshot on empty stdin"
 atfdb.comptest  comptest:acr_nav.HeadlessNav  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:"Headless navigation"
+atfdb.comptest  comptest:acr_nav.HeadlessXref  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:"Headless reverse xref toggle, follow, and go back"
+atfdb.comptest  comptest:acr_nav.HeadlessXrefEmpty  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:"Headless reverse xref on ctype with no reverse refs"
 atfdb.comptest  comptest:aqlite.CompileOptions  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:""
 atfdb.comptest  comptest:aqlite.Constraints  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:""
 atfdb.comptest  comptest:aqlite.ErrorHandling  timeout:10  memcheck:Y  coverage:Y  exit_code:1  ncore:1  repeat:1  comment:""

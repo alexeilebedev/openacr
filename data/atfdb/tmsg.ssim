@@ -123,6 +123,21 @@ atfdb.tmsg  tmsg:acr_nav.HeadlessFollow/100110.in  istuple:N  msg:acr_nav.Screen
 atfdb.tmsg  tmsg:acr_nav.HeadlessNav/100000.in  istuple:N  msg:"acr_nav.SendKey  key:j"
 atfdb.tmsg  tmsg:acr_nav.HeadlessNav/100010.in  istuple:N  msg:"acr_nav.SendKey  key:j"
 atfdb.tmsg  tmsg:acr_nav.HeadlessNav/100020.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.HeadlessXref/100000.in  istuple:N  msg:"acr_nav.SendKey  key:j"
+atfdb.tmsg  tmsg:acr_nav.HeadlessXref/100010.in  istuple:N  msg:"acr_nav.SendKey  key:j"
+atfdb.tmsg  tmsg:acr_nav.HeadlessXref/100020.in  istuple:N  msg:"acr_nav.SendKey  key:j"
+atfdb.tmsg  tmsg:acr_nav.HeadlessXref/100030.in  istuple:N  msg:"acr_nav.SendKey  key:r"
+atfdb.tmsg  tmsg:acr_nav.HeadlessXref/100040.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.HeadlessXref/100050.in  istuple:N  msg:"acr_nav.SendKey  key:Right"
+atfdb.tmsg  tmsg:acr_nav.HeadlessXref/100060.in  istuple:N  msg:"acr_nav.SendKey  key:Enter"
+atfdb.tmsg  tmsg:acr_nav.HeadlessXref/100070.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.HeadlessXref/100080.in  istuple:N  msg:"acr_nav.SendKey  key:Backspace"
+atfdb.tmsg  tmsg:acr_nav.HeadlessXref/100090.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.HeadlessXrefEmpty/100000.in  istuple:N  msg:"acr_nav.SendKey  key:j"
+atfdb.tmsg  tmsg:acr_nav.HeadlessXrefEmpty/100010.in  istuple:N  msg:"acr_nav.SendKey  key:r"
+atfdb.tmsg  tmsg:acr_nav.HeadlessXrefEmpty/100020.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.HeadlessXrefEmpty/100030.in  istuple:N  msg:"acr_nav.SendKey  key:r"
+atfdb.tmsg  tmsg:acr_nav.HeadlessXrefEmpty/100040.in  istuple:N  msg:acr_nav.Screenshot
 atfdb.tmsg  tmsg:aqlite.Constraints/100000.in  istuple:N  msg:'dmmeta.ctype  ctype:dmmeta.TestConstraint     comment:"Test ctype for constraint combinations"'
 atfdb.tmsg  tmsg:aqlite.Constraints/100010.in  istuple:N  msg:'dmmeta.field  field:dmmeta.TestConstraint.id    arg:i32          reftype:Val   dflt:""  comment:"ID field"'
 atfdb.tmsg  tmsg:aqlite.Constraints/100020.in  istuple:N  msg:'dmmeta.field  field:dmmeta.TestConstraint.name  arg:algo.cstring reftype:Val   dflt:""  comment:"Name"'

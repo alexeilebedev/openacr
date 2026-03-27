@@ -174,6 +174,8 @@ atfdb.targs  comptest:acr_nav.HeadlessFilter  args:-headless
 atfdb.targs  comptest:acr_nav.HeadlessFollow  args:-headless
 atfdb.targs  comptest:acr_nav.HeadlessInit  args:-headless
 atfdb.targs  comptest:acr_nav.HeadlessNav  args:-headless
+atfdb.targs  comptest:acr_nav.HeadlessXref  args:-headless
+atfdb.targs  comptest:acr_nav.HeadlessXrefEmpty  args:-headless
 atfdb.targs  comptest:aqlite.CompileOptions  args:'-in:- "PRAGMA compile_options;"'
 atfdb.targs  comptest:aqlite.Constraints  args:"-in:- \"select count(*) as or_test from field where ns = 'dmmeta' OR arg like 'algo.cstr%'; select count(*) as and_test from field where ns = 'dmmeta' AND reftype = 'Val'\""
 atfdb.targs  comptest:aqlite.ErrorHandling  args:"-in:- \"select count(*) from field where nonexistent_field = 'test'\""

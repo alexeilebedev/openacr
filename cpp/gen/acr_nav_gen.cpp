@@ -183,11 +183,74 @@ void acr_nav::c_field_Reserve(acr_nav::FCtype& ctype, u32 n) {
     }
 }
 
+// --- acr_nav.FCtype.c_field_arg.Insert
+// Insert pointer to row into array. Row must not already be in array.
+// If pointer is already in the array, it may be inserted twice.
+void acr_nav::c_field_arg_Insert(acr_nav::FCtype& ctype, acr_nav::FField& row) {
+    if (!row.ctype_c_field_arg_in_ary) {
+        c_field_arg_Reserve(ctype, 1);
+        u32 n  = ctype.c_field_arg_n++;
+        ctype.c_field_arg_elems[n] = &row;
+        row.ctype_c_field_arg_in_ary = true;
+    }
+}
+
+// --- acr_nav.FCtype.c_field_arg.InsertMaybe
+// Insert pointer to row in array.
+// If row is already in the array, do nothing.
+// Return value: whether element was inserted into array.
+bool acr_nav::c_field_arg_InsertMaybe(acr_nav::FCtype& ctype, acr_nav::FField& row) {
+    bool retval = !ctype_c_field_arg_InAryQ(row);
+    c_field_arg_Insert(ctype,row); // check is performed in _Insert again
+    return retval;
+}
+
+// --- acr_nav.FCtype.c_field_arg.Remove
+// Find element using linear scan. If element is in array, remove, otherwise do nothing
+void acr_nav::c_field_arg_Remove(acr_nav::FCtype& ctype, acr_nav::FField& row) {
+    int n = ctype.c_field_arg_n;
+    if (bool_Update(row.ctype_c_field_arg_in_ary,false)) {
+        acr_nav::FField* *elems = ctype.c_field_arg_elems;
+        // search backward, so that most recently added element is found first.
+        // if found, shift array.
+        for (int i = n-1; i>=0; i--) {
+            acr_nav::FField* elem = elems[i]; // fetch element
+            if (elem == &row) {
+                int j = i + 1;
+                size_t nbytes = sizeof(acr_nav::FField*) * (n - j);
+                memmove(elems + i, elems + j, nbytes);
+                ctype.c_field_arg_n = n - 1;
+                break;
+            }
+        }
+    }
+}
+
+// --- acr_nav.FCtype.c_field_arg.Reserve
+// Reserve space in index for N more elements;
+void acr_nav::c_field_arg_Reserve(acr_nav::FCtype& ctype, u32 n) {
+    u32 old_max = ctype.c_field_arg_max;
+    if (UNLIKELY(ctype.c_field_arg_n + n > old_max)) {
+        u32 new_max  = u32_Max(4, old_max * 2);
+        u32 old_size = old_max * sizeof(acr_nav::FField*);
+        u32 new_size = new_max * sizeof(acr_nav::FField*);
+        void *new_mem = algo_lib::malloc_ReallocMem(ctype.c_field_arg_elems, old_size, new_size);
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("acr_nav.out_of_memory  field:acr_nav.FCtype.c_field_arg");
+        }
+        ctype.c_field_arg_elems = (acr_nav::FField**)new_mem;
+        ctype.c_field_arg_max = new_max;
+    }
+}
+
 // --- acr_nav.FCtype..Uninit
 void acr_nav::FCtype_Uninit(acr_nav::FCtype& ctype) {
     acr_nav::FCtype &row = ctype; (void)row;
     ind_ctype_Remove(row); // remove ctype from index ind_ctype
     zd_sel_ctype_Remove(row); // remove ctype from index zd_sel_ctype
+
+    // acr_nav.FCtype.c_field_arg.Uninit (Ptrary)  //Fields from other ctypes whose arg is this ctype (reverse xrefs)
+    algo_lib::malloc_FreeMem(ctype.c_field_arg_elems, sizeof(acr_nav::FField*)*ctype.c_field_arg_max); // (acr_nav.FCtype.c_field_arg)
 
     // acr_nav.FCtype.c_field.Uninit (Ptrary)  //
     algo_lib::malloc_FreeMem(ctype.c_field_elems, sizeof(acr_nav::FField*)*ctype.c_field_max); // (acr_nav.FCtype.c_field)
@@ -374,7 +437,7 @@ static void acr_nav::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_nav.Input'  signature:'05ee76cdf94ed52736d11fe99f347da1896d6e08'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_nav.Input'  signature:'a7214a0262eafd4f1f40d64cf3cbaaae6ffd805e'");
 }
 
 // --- acr_nav.FDb._db.InsertStrptrMaybe
@@ -894,6 +957,10 @@ bool acr_nav::field_XrefMaybe(acr_nav::FField &row) {
     // insert field into index c_field
     if (true) { // user-defined insert condition
         c_field_Insert(*p_ctype, row);
+    }
+    // insert field into index c_field_arg
+    if (true) { // user-defined insert condition
+        c_field_arg_Insert(*p_arg, row);
     }
     return retval;
 }
@@ -1555,7 +1622,8 @@ static void acr_nav::navaction_LoadStatic() {
         const char *s;
         void (*step)();
     } data[] = {
-        { "acr_navdb.navaction  navaction:filter_append_space  comment:\"Append space to filter text\"", acr_nav::navaction_filter_append_space }
+        { "acr_navdb.navaction  navaction:filter_accept  comment:\"Accept filter and return to browse mode\"", acr_nav::navaction_filter_accept }
+        ,{ "acr_navdb.navaction  navaction:filter_append_space  comment:\"Append space to filter text\"", acr_nav::navaction_filter_append_space }
         ,{ "acr_navdb.navaction  navaction:filter_backspace  comment:\"Delete last filter character\"", acr_nav::navaction_filter_backspace }
         ,{ "acr_navdb.navaction  navaction:filter_cancel  comment:\"Cancel filter input\"", acr_nav::navaction_filter_cancel }
         ,{ "acr_navdb.navaction  navaction:filter_clear  comment:\"Clear filter text\"", acr_nav::navaction_filter_clear }
@@ -1571,6 +1639,7 @@ static void acr_nav::navaction_LoadStatic() {
         ,{ "acr_navdb.navaction  navaction:quit  comment:\"Exit acr_nav\"", acr_nav::navaction_quit }
         ,{ "acr_navdb.navaction  navaction:switch_panel_left  comment:\"Move focus to panel on the left\"", acr_nav::navaction_switch_panel_left }
         ,{ "acr_navdb.navaction  navaction:switch_panel_right  comment:\"Move focus to panel on the right\"", acr_nav::navaction_switch_panel_right }
+        ,{ "acr_navdb.navaction  navaction:toggle_xref  comment:\"Toggle right panel between fields and reverse xrefs\"", acr_nav::navaction_toggle_xref }
         ,{NULL, NULL}
     };
     (void)data;
@@ -3338,6 +3407,7 @@ void acr_nav::FDb_Init() {
         FatalErrorExit("out of memory"); // (acr_nav.FDb.ind_reftypestyle)
     }
     memset(_db.ind_reftypestyle_buckets_elems, 0, sizeof(acr_nav::FReftypestyle*)*_db.ind_reftypestyle_buckets_n); // (acr_nav.FDb.ind_reftypestyle)
+    _db.show_xref = bool(false);
 
     acr_nav::InitReflection();
     navaction_LoadStatic(); // gen:ns_gstatic  gstatic:acr_nav.FDb.navaction  load acr_nav.FNavaction records
@@ -3460,6 +3530,7 @@ void acr_nav::FField_Init(acr_nav::FField& field) {
     field.p_arg = NULL;
     field.p_reftype = NULL;
     field.ctype_c_field_in_ary = bool(false);
+    field.ctype_c_field_arg_in_ary = bool(false);
     field.ind_field_next = (acr_nav::FField*)-1; // (acr_nav.FDb.ind_field) not-in-hash
     field.ind_field_hashval = 0; // stored hash value
 }
@@ -3471,6 +3542,10 @@ void acr_nav::FField_Uninit(acr_nav::FField& field) {
     acr_nav::FCtype* p_ctype = acr_nav::ind_ctype_Find(ctype_Get(row));
     if (p_ctype)  {
         c_field_Remove(*p_ctype, row);// remove field from index c_field
+    }
+    acr_nav::FCtype* p_arg = acr_nav::ind_ctype_Find(row.arg);
+    if (p_arg)  {
+        c_field_arg_Remove(*p_arg, row);// remove field from index c_field_arg
     }
 }
 
@@ -3861,6 +3936,9 @@ void acr_nav::Screen_Print(acr_nav::Screen& row, algo::cstring& str) {
 
     i32_Print(row.n_field, temp);
     PrintAttrSpaceReset(str,"n_field", temp);
+
+    bool_Print(row.show_xref, temp);
+    PrintAttrSpaceReset(str,"show_xref", temp);
 }
 
 // --- acr_nav.Screenshot..ReadFieldMaybe

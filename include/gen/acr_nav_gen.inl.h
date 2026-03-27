@@ -87,6 +87,64 @@ inline acr_nav::FField& acr_nav::c_field_qLast(acr_nav::FCtype& ctype) {
     return *ctype.c_field_elems[ctype.c_field_n-1];
 }
 
+// --- acr_nav.FCtype.c_field_arg.EmptyQ
+// Return true if index is empty
+inline bool acr_nav::c_field_arg_EmptyQ(acr_nav::FCtype& ctype) {
+    return ctype.c_field_arg_n == 0;
+}
+
+// --- acr_nav.FCtype.c_field_arg.Find
+// Look up row by row id. Return NULL if out of range
+inline acr_nav::FField* acr_nav::c_field_arg_Find(acr_nav::FCtype& ctype, u32 t) {
+    acr_nav::FField *retval = NULL;
+    u64 idx = t;
+    u64 lim = ctype.c_field_arg_n;
+    if (idx < lim) {
+        retval = ctype.c_field_arg_elems[idx];
+    }
+    return retval;
+}
+
+// --- acr_nav.FCtype.c_field_arg.Getary
+// Return array of pointers
+inline algo::aryptr<acr_nav::FField*> acr_nav::c_field_arg_Getary(acr_nav::FCtype& ctype) {
+    return algo::aryptr<acr_nav::FField*>(ctype.c_field_arg_elems, ctype.c_field_arg_n);
+}
+
+// --- acr_nav.FCtype.c_field_arg.N
+// Return number of items in the pointer array
+inline i32 acr_nav::c_field_arg_N(const acr_nav::FCtype& ctype) {
+    return ctype.c_field_arg_n;
+}
+
+// --- acr_nav.FCtype.c_field_arg.RemoveAll
+// Empty the index. (The rows are not deleted)
+inline void acr_nav::c_field_arg_RemoveAll(acr_nav::FCtype& ctype) {
+    for (u32 i = 0; i < ctype.c_field_arg_n; i++) {
+        // mark all elements as not-in-array
+        ctype.c_field_arg_elems[i]->ctype_c_field_arg_in_ary = false;
+    }
+    ctype.c_field_arg_n = 0;
+}
+
+// --- acr_nav.FCtype.c_field_arg.qFind
+// Return reference without bounds checking
+inline acr_nav::FField& acr_nav::c_field_arg_qFind(acr_nav::FCtype& ctype, u32 idx) {
+    return *ctype.c_field_arg_elems[idx];
+}
+
+// --- acr_nav.FCtype.c_field_arg.InAryQ
+// True if row is in any ptrary instance
+inline bool acr_nav::ctype_c_field_arg_InAryQ(acr_nav::FField& row) {
+    return row.ctype_c_field_arg_in_ary;
+}
+
+// --- acr_nav.FCtype.c_field_arg.qLast
+// Reference to last element without bounds checking
+inline acr_nav::FField& acr_nav::c_field_arg_qLast(acr_nav::FCtype& ctype) {
+    return *ctype.c_field_arg_elems[ctype.c_field_arg_n-1];
+}
+
 // --- acr_nav.FCtype.c_field_curs.Reset
 inline void acr_nav::ctype_c_field_curs_Reset(ctype_c_field_curs &curs, acr_nav::FCtype &parent) {
     curs.elems = parent.c_field_elems;
@@ -112,12 +170,40 @@ inline acr_nav::FField& acr_nav::ctype_c_field_curs_Access(ctype_c_field_curs &c
     return *curs.elems[curs.index];
 }
 
+// --- acr_nav.FCtype.c_field_arg_curs.Reset
+inline void acr_nav::ctype_c_field_arg_curs_Reset(ctype_c_field_arg_curs &curs, acr_nav::FCtype &parent) {
+    curs.elems = parent.c_field_arg_elems;
+    curs.n_elems = parent.c_field_arg_n;
+    curs.index = 0;
+}
+
+// --- acr_nav.FCtype.c_field_arg_curs.ValidQ
+// cursor points to valid item
+inline bool acr_nav::ctype_c_field_arg_curs_ValidQ(ctype_c_field_arg_curs &curs) {
+    return curs.index < curs.n_elems;
+}
+
+// --- acr_nav.FCtype.c_field_arg_curs.Next
+// proceed to next item
+inline void acr_nav::ctype_c_field_arg_curs_Next(ctype_c_field_arg_curs &curs) {
+    curs.index++;
+}
+
+// --- acr_nav.FCtype.c_field_arg_curs.Access
+// item access
+inline acr_nav::FField& acr_nav::ctype_c_field_arg_curs_Access(ctype_c_field_arg_curs &curs) {
+    return *curs.elems[curs.index];
+}
+
 // --- acr_nav.FCtype..Init
 // Set all fields to initial values.
 inline void acr_nav::FCtype_Init(acr_nav::FCtype& ctype) {
     ctype.c_field_elems = NULL; // (acr_nav.FCtype.c_field)
     ctype.c_field_n = 0; // (acr_nav.FCtype.c_field)
     ctype.c_field_max = 0; // (acr_nav.FCtype.c_field)
+    ctype.c_field_arg_elems = NULL; // (acr_nav.FCtype.c_field_arg)
+    ctype.c_field_arg_n = 0; // (acr_nav.FCtype.c_field_arg)
+    ctype.c_field_arg_max = 0; // (acr_nav.FCtype.c_field_arg)
     ctype.p_ns = NULL;
     ctype.ind_ctype_next = (acr_nav::FCtype*)-1; // (acr_nav.FDb.ind_ctype) not-in-hash
     ctype.ind_ctype_hashval = 0; // stored hash value
@@ -1323,6 +1409,7 @@ inline  acr_nav::FieldId::FieldId(acr_nav_FieldIdEnum arg) {
 inline void acr_nav::Naventry_Init(acr_nav::Naventry& parent) {
     parent.scroll_offset = i32(0);
     parent.sel_row = i32(0);
+    parent.show_xref = bool(false);
 }
 
 // --- acr_nav.Naventry..Ctor
@@ -1350,6 +1437,7 @@ inline void acr_nav::Screen_Init(acr_nav::Screen& parent) {
     parent.n_sel_ctype = i32(0);
     parent.n_ctype = i32(0);
     parent.n_field = i32(0);
+    parent.show_xref = bool(false);
 }
 
 // --- acr_nav.Screen..Ctor
