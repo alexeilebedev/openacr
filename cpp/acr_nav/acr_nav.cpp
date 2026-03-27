@@ -228,8 +228,15 @@ static int PanelItemCount(acr_nav::FPanel &panel, acr_nav::FCtype *sel_ct) {
 
 // -----------------------------------------------------------------------------
 
+// Number of content rows available for the dual-panel display.
+// Subtracts title bar (1) and status bar (1), plus breadcrumb bar (1) when navstack is non-empty.
+static int VisibleRows() {
+    int chrome = 2 + (acr_nav::navstack_N() > 0 ? 1 : 0);
+    return i32_Max(1, acr_nav::_db.term_hei - chrome);
+}
+
 static void AdjustScroll(acr_nav::FPanel &panel, int n_items) {
-    int visible = i32_Max(1, acr_nav::_db.term_hei - 2);
+    int visible = VisibleRows();
     int last = i32_Max(0, n_items - 1);
     panel.sel_row = i32_Max(0, i32_Min(panel.sel_row, last));
     if (panel.sel_row >= panel.scroll_offset + visible) {
@@ -261,7 +268,7 @@ void acr_nav::navaction_move_down() {
 
 void acr_nav::navaction_page_up() {
     acr_nav::FPanel &panel = *acr_nav::_db.p_cur_panel;
-    int page = acr_nav::_db.term_hei - 2;
+    int page = VisibleRows();
     panel.sel_row = i32_Max(0, panel.sel_row - page);
 }
 
@@ -272,7 +279,7 @@ void acr_nav::navaction_page_down() {
     acr_nav::FCtype *sel_ct = SelectedCtype(*acr_nav::_db.p_left_panel);
     int n_items = PanelItemCount(panel, sel_ct);
     int last = i32_Max(0, n_items - 1);
-    int page = acr_nav::_db.term_hei - 2;
+    int page = VisibleRows();
     panel.sel_row = i32_Min(last, panel.sel_row + page);
 }
 
@@ -315,6 +322,7 @@ void acr_nav::navaction_follow_ref() {
             entry.scroll_offset = left->scroll_offset;
             entry.sel_row = left->sel_row;
             entry.show_xref = acr_nav::_db.show_xref;
+            entry.ctype = sel_ct->ctype;
             // Reset to forward view on navigation -- new ctype starts in its natural view
             acr_nav::_db.show_xref = false;
             // Switch to browse mode with full ctype list so target is reachable
@@ -445,6 +453,22 @@ static void EmitStyle(cstring &out, acr_nav::FNavstyle &style) {
     }
 }
 
+// Build breadcrumb trail from navigation stack.
+// Returns empty string at depth 0, or "A > B > C" showing the path of ctypes visited.
+static tempstr BuildBreadcrumb(acr_nav::FCtype *sel_ct) {
+    tempstr bc;
+    for (int i = 0; i < acr_nav::navstack_N(); i++) {
+        if (i > 0) {
+            bc << " > ";
+        }
+        bc << acr_nav::navstack_qFind(i).ctype;
+    }
+    if (acr_nav::navstack_N() > 0 && sel_ct) {
+        bc << " > " << sel_ct->ctype;
+    }
+    return bc;
+}
+
 // Build status bar hint string from keybind records.
 // Groups keys by navaction hint label, ordered by hint_order.
 static void BuildStatusHint(cstring &out) {
@@ -551,7 +575,8 @@ static void Render(acr_nav::FCtype *sel_ct, acr_nav::FPanel *left, acr_nav::FPan
     tempstr buf;
     buf << "\x1b[H";
     int wid = acr_nav::_db.term_wid;
-    int visible = i32_Max(1, acr_nav::_db.term_hei - 2);
+    bool show_breadcrumb = acr_nav::navstack_N() > 0;
+    int visible = VisibleRows();
     int left_wid = i32_Max(2, wid * left->width_pct / 100);
     int right_wid = i32_Max(1, wid - left_wid);
     bool left_focused = (acr_nav::_db.p_cur_panel == left);
@@ -668,6 +693,19 @@ static void Render(acr_nav::FCtype *sel_ct, acr_nav::FPanel *left, acr_nav::FPan
         }
     }
 
+    // Breadcrumb bar -- shown only when navigation stack is non-empty
+    if (show_breadcrumb) {
+        tempstr breadcrumb(BuildBreadcrumb(sel_ct));
+        tempstr bcline;
+        bcline << " " << breadcrumb;
+        if (ch_N(bcline) > wid) {
+            bcline.ch_n = wid;
+        }
+        char_PrintNTimes(' ', bcline, i32_Max(0, wid - ch_N(bcline)));
+        EmitStyle(buf, *p_statusbar);
+        buf << bcline << "\x1b[0m\r\n";
+    }
+
     // Status bar
     EmitStyle(buf, *p_statusbar);
     tempstr status;
@@ -685,11 +723,6 @@ static void Render(acr_nav::FCtype *sel_ct, acr_nav::FPanel *left, acr_nav::FPan
         pos << (cur.sel_row + 1) << "/" << cur_items;
     } else {
         pos << "0/0";
-    }
-    if (acr_nav::navstack_N() > 0) {
-        tempstr depth;
-        depth << "  [depth:" << acr_nav::navstack_N() << "]";
-        status << depth;
     }
     char_PrintNTimes(' ', status, i32_Max(1, wid - ch_N(status) - ch_N(pos)));
     status << pos;
@@ -771,6 +804,7 @@ static void HeadlessOutput() {
     screen.n_field = acr_nav::field_N();
     screen.show_xref = acr_nav::_db.show_xref;
     screen.show_help = acr_nav::_db.show_help;
+    screen.breadcrumb = BuildBreadcrumb(sel_ct);
     prlog(screen);
     // Left panel state
     acr_nav::PanelState left_state;

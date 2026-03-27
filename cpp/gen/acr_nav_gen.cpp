@@ -3921,6 +3921,17 @@ void acr_nav::PanelState_Print(acr_nav::PanelState& row, algo::cstring& str) {
     PrintAttrSpaceReset(str,"sel_value", temp);
 }
 
+// --- acr_nav.Screen..Init
+// Set all fields to initial values.
+void acr_nav::Screen_Init(acr_nav::Screen& parent) {
+    parent.navstack_depth = i32(0);
+    parent.n_sel_ctype = i32(0);
+    parent.n_ctype = i32(0);
+    parent.n_field = i32(0);
+    parent.show_xref = bool(false);
+    parent.show_help = bool(false);
+}
+
 // --- acr_nav.Screen..Print
 // print string representation of ROW to string STR
 // cfmt:acr_nav.Screen.String  printfmt:Tuple
@@ -3954,6 +3965,9 @@ void acr_nav::Screen_Print(acr_nav::Screen& row, algo::cstring& str) {
 
     bool_Print(row.show_help, temp);
     PrintAttrSpaceReset(str,"show_help", temp);
+
+    algo::cstring_Print(row.breadcrumb, temp);
+    PrintAttrSpaceReset(str,"breadcrumb", temp);
 }
 
 // --- acr_nav.Screenshot..ReadFieldMaybe

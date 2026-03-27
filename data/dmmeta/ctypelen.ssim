@@ -147,9 +147,9 @@ dmmeta.ctypelen  ctype:acr_nav.FNs  len:288  alignment:8  padbytes:2  plaindata:
 dmmeta.ctypelen  ctype:acr_nav.FPanel  len:248  alignment:8  padbytes:0  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.FReftype  len:88  alignment:8  padbytes:5  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.FReftypestyle  len:224  alignment:8  padbytes:0  plaindata:N
-dmmeta.ctypelen  ctype:acr_nav.Naventry  len:80  alignment:8  padbytes:3  plaindata:N
+dmmeta.ctypelen  ctype:acr_nav.Naventry  len:184  alignment:8  padbytes:5  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.PanelState  len:80  alignment:8  padbytes:0  plaindata:N
-dmmeta.ctypelen  ctype:acr_nav.Screen  len:144  alignment:8  padbytes:6  plaindata:N
+dmmeta.ctypelen  ctype:acr_nav.Screen  len:160  alignment:8  padbytes:6  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.Screenshot  len:52  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:acr_nav.SendKey  len:52  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:acr_nav.VisibleField  len:324  alignment:4  padbytes:0  plaindata:Y

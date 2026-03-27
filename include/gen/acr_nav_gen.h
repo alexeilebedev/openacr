@@ -1825,11 +1825,12 @@ void                 FieldId_Print(acr_nav::FieldId& row, algo::cstring& str) __
 // --- acr_nav.Naventry
 // create: acr_nav.FDb.navstack (Tary)
 struct Naventry { // acr_nav.Naventry: Navigation stack entry
-    algo::cstring      filter;          // Filter text at time of push
-    algo::Smallstr50   navmode;         // Navigation mode at time of push
-    i32                scroll_offset;   //   0
-    i32                sel_row;         //   0
-    bool               show_xref;       //   false  View mode at time of push
+    algo::cstring       filter;          // Filter text at time of push
+    algo::Smallstr50    navmode;         // Navigation mode at time of push
+    i32                 scroll_offset;   //   0
+    i32                 sel_row;         //   0
+    bool                show_xref;       //   false  View mode at time of push
+    algo::Smallstr100   ctype;           // Ctype being viewed at time of push
     // func:acr_nav.Naventry..Ctor
     inline               Naventry() __attribute__((nothrow));
 };
@@ -1868,13 +1869,14 @@ struct Screen { // acr_nav.Screen: Headless screen state output
     i32                n_field;          //   0  Total number of fields
     bool               show_xref;        //   false  True when right panel shows reverse xrefs
     bool               show_help;        //   false  Help overlay visible
+    algo::cstring      breadcrumb;       // Navigation breadcrumb trail (display string)
     // func:acr_nav.Screen..Ctor
     inline               Screen() __attribute__((nothrow));
 };
 
 // Set all fields to initial values.
 // func:acr_nav.Screen..Init
-inline void          Screen_Init(acr_nav::Screen& parent);
+void                 Screen_Init(acr_nav::Screen& parent);
 // print string representation of ROW to string STR
 // cfmt:acr_nav.Screen.String  printfmt:Tuple
 // func:acr_nav.Screen..Print

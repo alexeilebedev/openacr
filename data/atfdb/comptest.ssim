@@ -170,6 +170,7 @@ atfdb.comptest  comptest:acr_ed.CreateTarget  timeout:10  memcheck:Y  coverage:Y
 atfdb.comptest  comptest:acr_in.Reverse  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:""
 atfdb.comptest  comptest:acr_in.Simple  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:""
 atfdb.comptest  comptest:acr_in.Tree  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:""
+atfdb.comptest  comptest:acr_nav.HeadlessBreadcrumb  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:"Headless breadcrumb trail at multiple depths"
 atfdb.comptest  comptest:acr_nav.HeadlessFilter  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:"Headless filter mode"
 atfdb.comptest  comptest:acr_nav.HeadlessFollow  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:"Headless follow reference"
 atfdb.comptest  comptest:acr_nav.HeadlessHelp  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:"Headless help overlay toggle"

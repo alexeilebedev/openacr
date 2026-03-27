@@ -1431,17 +1431,6 @@ inline  acr_nav::PanelState::PanelState() {
     acr_nav::PanelState_Init(*this);
 }
 
-// --- acr_nav.Screen..Init
-// Set all fields to initial values.
-inline void acr_nav::Screen_Init(acr_nav::Screen& parent) {
-    parent.navstack_depth = i32(0);
-    parent.n_sel_ctype = i32(0);
-    parent.n_ctype = i32(0);
-    parent.n_field = i32(0);
-    parent.show_xref = bool(false);
-    parent.show_help = bool(false);
-}
-
 // --- acr_nav.Screen..Ctor
 inline  acr_nav::Screen::Screen() {
     acr_nav::Screen_Init(*this);
