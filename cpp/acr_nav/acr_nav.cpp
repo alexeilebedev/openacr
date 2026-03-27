@@ -89,7 +89,7 @@ static void ApplyFilter() {
         tempstr lower_name(ctype.ctype);
         algo::MakeLower(lower_name);
         bool filter_match = !has_filter || algo_lib::Regx_Match(filter_regx, lower_name);
-        if (filter_match) {
+        if (ch_N(ctype.ctype) > 0 && filter_match) {
             acr_nav::zd_sel_ctype_Insert(ctype);
         }
     } ind_end;
