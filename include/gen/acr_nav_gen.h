@@ -1633,6 +1633,10 @@ struct _db_zd_sel_ctype_curs {// fcurs:acr_nav.FDb.zd_sel_ctype/curs
 } // gen:ns_curstext
 namespace acr_nav { // gen:ns_func
 // User-implemented function from gstatic:acr_nav.FDb.navaction
+// func:acr_nav...navaction_filter_append_space
+// this function is 'extrn' and implemented by user
+void                 navaction_filter_append_space();
+// User-implemented function from gstatic:acr_nav.FDb.navaction
 // func:acr_nav...navaction_filter_backspace
 // this function is 'extrn' and implemented by user
 void                 navaction_filter_backspace();
@@ -1640,6 +1644,10 @@ void                 navaction_filter_backspace();
 // func:acr_nav...navaction_filter_cancel
 // this function is 'extrn' and implemented by user
 void                 navaction_filter_cancel();
+// User-implemented function from gstatic:acr_nav.FDb.navaction
+// func:acr_nav...navaction_filter_clear
+// this function is 'extrn' and implemented by user
+void                 navaction_filter_clear();
 // User-implemented function from gstatic:acr_nav.FDb.navaction
 // func:acr_nav...navaction_filter_start
 // this function is 'extrn' and implemented by user
@@ -1652,6 +1660,14 @@ void                 navaction_follow_ref();
 // func:acr_nav...navaction_go_back
 // this function is 'extrn' and implemented by user
 void                 navaction_go_back();
+// User-implemented function from gstatic:acr_nav.FDb.navaction
+// func:acr_nav...navaction_go_bottom
+// this function is 'extrn' and implemented by user
+void                 navaction_go_bottom();
+// User-implemented function from gstatic:acr_nav.FDb.navaction
+// func:acr_nav...navaction_go_top
+// this function is 'extrn' and implemented by user
+void                 navaction_go_top();
 // User-implemented function from gstatic:acr_nav.FDb.navaction
 // func:acr_nav...navaction_move_down
 // this function is 'extrn' and implemented by user

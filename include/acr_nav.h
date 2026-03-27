@@ -33,5 +33,21 @@ namespace acr_nav { // update-hdr
     // cpp/acr_nav/acr_nav.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
+    // void navaction_move_up(); // gstatic/acr_navdb.navaction:move_up
+    // void navaction_move_down(); // gstatic/acr_navdb.navaction:move_down
+    // void navaction_page_up(); // gstatic/acr_navdb.navaction:page_up
+    // void navaction_page_down(); // gstatic/acr_navdb.navaction:page_down
+    // void navaction_switch_panel_left(); // gstatic/acr_navdb.navaction:switch_panel_left
+    // void navaction_switch_panel_right(); // gstatic/acr_navdb.navaction:switch_panel_right
+    // void navaction_follow_ref(); // gstatic/acr_navdb.navaction:follow_ref
+    // void navaction_go_top(); // gstatic/acr_navdb.navaction:go_top
+    // void navaction_go_bottom(); // gstatic/acr_navdb.navaction:go_bottom
+    // void navaction_go_back(); // gstatic/acr_navdb.navaction:go_back
+    // void navaction_quit(); // gstatic/acr_navdb.navaction:quit
+    // void navaction_filter_start(); // gstatic/acr_navdb.navaction:filter_start
+    // void navaction_filter_cancel(); // gstatic/acr_navdb.navaction:filter_cancel
+    // void navaction_filter_append_space(); // gstatic/acr_navdb.navaction:filter_append_space
+    // void navaction_filter_clear(); // gstatic/acr_navdb.navaction:filter_clear
+    // void navaction_filter_backspace(); // gstatic/acr_navdb.navaction:filter_backspace
     // void Main(); // main:acr_nav
 }

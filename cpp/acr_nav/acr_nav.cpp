@@ -98,6 +98,14 @@ static void ApplyFilter() {
 
 // -----------------------------------------------------------------------------
 
+static void ApplyFilterReset() {
+    ApplyFilter();
+    acr_nav::_db.p_left_panel->sel_row = 0;
+    acr_nav::_db.p_left_panel->scroll_offset = 0;
+}
+
+// -----------------------------------------------------------------------------
+
 static void BatchOutput() {
     ind_beg(acr_nav::_db_zd_sel_ctype_curs, ctype, acr_nav::_db) {
         prlog(ctype.ctype << "  (" << c_field_N(ctype) << " fields)");
@@ -169,6 +177,10 @@ static tempstr ReadKeyName() {
                     nr = read(STDIN_FILENO, &seq[2], 1);
                     (void)nr;
                     ret = "PgDown";
+                } else if (seq[1] == 'H') {
+                    ret = "Home";
+                } else if (seq[1] == 'F') {
+                    ret = "End";
                 }
             }
         }
@@ -176,7 +188,14 @@ static tempstr ReadKeyName() {
         ret = "Enter";
     } else if (c == 127 || c == 8) {
         ret = "Backspace";
-    } else if (c >= 32 && c < 127) {
+    } else if (c == 9) {
+        ret = "Tab";
+    } else if (c == ' ') {
+        ret = "Space";
+    } else if (c >= 1 && c <= 26 && c != 3 && c != 8 && c != 9 && c != 10 && c != 13) {
+        ret << "Ctrl-";
+        ret << char('A' + c - 1);
+    } else if (c > 32 && c < 127) {
         ret << c;
     }
     return ret;
@@ -199,7 +218,7 @@ static acr_nav::FCtype* SelectedCtype(acr_nav::FPanel &left) {
 // -----------------------------------------------------------------------------
 
 // Panel item count dispatches on position (0=ctype list, 1=field list).
-// M6+ debt: adding a third panel requires a code change here.
+// debt: adding a third panel requires a code change here.
 static int PanelItemCount(acr_nav::FPanel &panel, acr_nav::FCtype *sel_ct) {
     int ret = 0;
     if (panel.position == 0) {
@@ -315,6 +334,23 @@ void acr_nav::navaction_follow_ref() {
 
 // -----------------------------------------------------------------------------
 
+void acr_nav::navaction_go_top() {
+    acr_nav::FPanel &panel = *acr_nav::_db.p_cur_panel;
+    panel.sel_row = 0;
+}
+
+// -----------------------------------------------------------------------------
+
+void acr_nav::navaction_go_bottom() {
+    acr_nav::FPanel &panel = *acr_nav::_db.p_cur_panel;
+    acr_nav::FCtype *sel_ct = SelectedCtype(*acr_nav::_db.p_left_panel);
+    int n_items = PanelItemCount(panel, sel_ct);
+    int last = i32_Max(0, n_items - 1);
+    panel.sel_row = last;
+}
+
+// -----------------------------------------------------------------------------
+
 void acr_nav::navaction_go_back() {
     if (!acr_nav::navstack_EmptyQ()) {
         acr_nav::Naventry *entry = acr_nav::navstack_Last();
@@ -351,9 +387,21 @@ void acr_nav::navaction_filter_start() {
 void acr_nav::navaction_filter_cancel() {
     SwitchToBrowse();
     ch_RemoveAll(acr_nav::_db.filter);
-    ApplyFilter();
-    acr_nav::_db.p_left_panel->sel_row = 0;
-    acr_nav::_db.p_left_panel->scroll_offset = 0;
+    ApplyFilterReset();
+}
+
+// -----------------------------------------------------------------------------
+
+void acr_nav::navaction_filter_append_space() {
+    acr_nav::_db.filter << " ";
+    ApplyFilterReset();
+}
+
+// -----------------------------------------------------------------------------
+
+void acr_nav::navaction_filter_clear() {
+    ch_RemoveAll(acr_nav::_db.filter);
+    ApplyFilterReset();
 }
 
 // -----------------------------------------------------------------------------
@@ -361,9 +409,7 @@ void acr_nav::navaction_filter_cancel() {
 void acr_nav::navaction_filter_backspace() {
     if (ch_N(acr_nav::_db.filter) > 0) {
         acr_nav::_db.filter.ch_n = ch_N(acr_nav::_db.filter) - 1;
-        ApplyFilter();
-        acr_nav::_db.p_left_panel->sel_row = 0;
-        acr_nav::_db.p_left_panel->scroll_offset = 0;
+        ApplyFilterReset();
     }
 }
 
@@ -487,7 +533,7 @@ static void Render(acr_nav::FCtype *sel_ct, acr_nav::FPanel *left, acr_nav::FPan
     if (in_filter) {
         status << " /" << acr_nav::_db.filter;
     } else {
-        status << " q:quit  Arrows:navigate  Enter:follow  Backspace:back  /:filter";
+        status << " q:quit  j/k:move  Space/b:page  Enter/l:follow  Backspace:back  /:filter";
     }
     acr_nav::FPanel &cur = *acr_nav::_db.p_cur_panel;
     int cur_items = PanelItemCount(cur, sel_ct);
@@ -546,11 +592,9 @@ void acr_nav::Main() {
                 did_something = true;
             }
             bool in_filter = (_db.p_cur_mode->navmode == "filter");
-            if (!keybind && in_filter && ch_N(key_name) == 1 && ch_qFind(key_name, 0) >= 32) {
+            if (!keybind && in_filter && ch_N(key_name) == 1 && ch_qFind(key_name, 0) > 32) {
                 _db.filter << key_name;
-                ApplyFilter();
-                left->sel_row = 0;
-                left->scroll_offset = 0;
+                ApplyFilterReset();
                 did_something = true;
             }
             if (did_something) {

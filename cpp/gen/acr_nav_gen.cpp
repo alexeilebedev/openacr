@@ -1554,11 +1554,15 @@ static void acr_nav::navaction_LoadStatic() {
         const char *s;
         void (*step)();
     } data[] = {
-        { "acr_navdb.navaction  navaction:filter_backspace  comment:\"Delete last filter character\"", acr_nav::navaction_filter_backspace }
+        { "acr_navdb.navaction  navaction:filter_append_space  comment:\"Append space to filter text\"", acr_nav::navaction_filter_append_space }
+        ,{ "acr_navdb.navaction  navaction:filter_backspace  comment:\"Delete last filter character\"", acr_nav::navaction_filter_backspace }
         ,{ "acr_navdb.navaction  navaction:filter_cancel  comment:\"Cancel filter input\"", acr_nav::navaction_filter_cancel }
+        ,{ "acr_navdb.navaction  navaction:filter_clear  comment:\"Clear filter text\"", acr_nav::navaction_filter_clear }
         ,{ "acr_navdb.navaction  navaction:filter_start  comment:\"Enter filter input mode\"", acr_nav::navaction_filter_start }
         ,{ "acr_navdb.navaction  navaction:follow_ref  comment:\"Follow reference to target ctype\"", acr_nav::navaction_follow_ref }
         ,{ "acr_navdb.navaction  navaction:go_back  comment:\"Return to previous ctype\"", acr_nav::navaction_go_back }
+        ,{ "acr_navdb.navaction  navaction:go_bottom  comment:\"Move selection to last item\"", acr_nav::navaction_go_bottom }
+        ,{ "acr_navdb.navaction  navaction:go_top  comment:\"Move selection to first item\"", acr_nav::navaction_go_top }
         ,{ "acr_navdb.navaction  navaction:move_down  comment:\"Move selection down\"", acr_nav::navaction_move_down }
         ,{ "acr_navdb.navaction  navaction:move_up  comment:\"Move selection up\"", acr_nav::navaction_move_up }
         ,{ "acr_navdb.navaction  navaction:page_down  comment:\"Move selection down one page\"", acr_nav::navaction_page_down }

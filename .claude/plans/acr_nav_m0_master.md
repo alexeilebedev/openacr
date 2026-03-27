@@ -63,6 +63,7 @@ Each milestone teaches one OpenACR concept and produces a working program.
 | **M6b** | `/` filter mode + mode-qualified keybindings | algo::Regx, composite key lookup, mode-driven data | Done |
 | **M7a** | Component tests + documentation | `atfdb.comptest` infrastructure, full development loop | Done |
 | **M7b** | Naventry filter state + keybind substr validation | Schema evolution, `dmmeta.substr` decomposition | Done |
+| **M8** | Keybinding redesign — normies + vim | Control char parsing, data-driven dispatch, factorization test | Done |
 
 ### Key principle
 
@@ -82,6 +83,7 @@ Each milestone teaches one OpenACR concept and produces a working program.
 | M6b | `data/gclidb/gclicmd.ssim`, `cpp/samp_regx/samp_regx.cpp` | mode-qualified keybinds, algo::Regx |
 | M7a | `data/atfdb/comptest.ssim`, `test/atf_comp/` | Test patterns |
 | M7b | `data/dmmeta/substr.ssim`, `data/dmmeta/field.ssim` | Schema evolution, substr decomposition |
+| M8 | Terminal byte-to-name parsing, the factorization boundary between code and data | Where code stops and data begins |
 
 ### Verification (every milestone)
 
@@ -92,7 +94,7 @@ Each milestone teaches one OpenACR concept and produces a working program.
 
 ### Open items
 
-- **Keybinding design:** Control characters (bytes 1-31) need a code change to map to key names. Needs a design session before adding Ctrl-N/Ctrl-P or other control keybinds.
+(none)
 
 ### Known limitations
 
