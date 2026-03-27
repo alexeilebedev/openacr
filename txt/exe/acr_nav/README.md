@@ -92,6 +92,7 @@ one `keybind` record, and one C++ handler function.
 <!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Options -->
 #### -headless -- Headless mode: structured I/O for agent testing
 <a href="#-headless"></a>
+
 #### -in -- Input directory or filename, - for stdin
 <a href="#-in"></a>
 

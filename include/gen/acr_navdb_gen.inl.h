@@ -83,9 +83,6 @@ inline void acr_navdb::Navstyle_Init(acr_navdb::Navstyle& parent) {
     parent.bold = bool(false);
     parent.dim = bool(false);
     parent.reverse = bool(false);
-    parent.fg_red = bool(false);
-    parent.fg_green = bool(false);
-    parent.fg_blue = bool(false);
 }
 
 // --- acr_navdb.Navstyle..Ctor

@@ -38,19 +38,17 @@ enum acr_navdb_FieldIdEnum {                // acr_navdb.FieldId.value
     ,acr_navdb_FieldId_bold           = 5
     ,acr_navdb_FieldId_dim            = 6
     ,acr_navdb_FieldId_reverse        = 7
-    ,acr_navdb_FieldId_fg_red         = 8
-    ,acr_navdb_FieldId_fg_green       = 9
-    ,acr_navdb_FieldId_fg_blue        = 10
-    ,acr_navdb_FieldId_panel          = 11
-    ,acr_navdb_FieldId_title          = 12
-    ,acr_navdb_FieldId_position       = 13
-    ,acr_navdb_FieldId_width_pct      = 14
-    ,acr_navdb_FieldId_reftypestyle   = 15
-    ,acr_navdb_FieldId_reftype        = 16
-    ,acr_navdb_FieldId_value          = 17
+    ,acr_navdb_FieldId_fg_color       = 8
+    ,acr_navdb_FieldId_panel          = 9
+    ,acr_navdb_FieldId_title          = 10
+    ,acr_navdb_FieldId_position       = 11
+    ,acr_navdb_FieldId_width_pct      = 12
+    ,acr_navdb_FieldId_reftypestyle   = 13
+    ,acr_navdb_FieldId_reftype        = 14
+    ,acr_navdb_FieldId_value          = 15
 };
 
-enum { acr_navdb_FieldIdEnum_N = 18 };
+enum { acr_navdb_FieldIdEnum_N = 16 };
 
 namespace acr_navdb { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 KeybindPkey;
@@ -195,9 +193,7 @@ struct Navstyle { // acr_navdb.Navstyle
     bool               bold;       //   false
     bool               dim;        //   false
     bool               reverse;    //   false
-    bool               fg_red;     //   false
-    bool               fg_green;   //   false
-    bool               fg_blue;    //   false
+    algo::TermColor    fg_color;   // Foreground color
     algo::Comment      comment;    //
     // func:acr_navdb.Navstyle..Ctor
     inline               Navstyle() __attribute__((nothrow));

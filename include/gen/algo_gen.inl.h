@@ -18613,6 +18613,45 @@ inline  algo::StringAry::~StringAry() {
     algo::StringAry_Uninit(*this);
 }
 
+// --- algo.TermColor.value.GetEnum
+// Get value of field as enum type
+inline algo_TermColorEnum algo::value_GetEnum(const algo::TermColor& parent) {
+    return algo_TermColorEnum(parent.value);
+}
+
+// --- algo.TermColor.value.SetEnum
+// Set value of field from enum type.
+inline void algo::value_SetEnum(algo::TermColor& parent, algo_TermColorEnum rhs) {
+    parent.value = u32(rhs);
+}
+
+// --- algo.TermColor.value.Cast
+inline  algo::TermColor::operator algo_TermColorEnum() const {
+    return algo_TermColorEnum((*this).value);
+}
+
+// --- algo.TermColor..Init
+// Set all fields to initial values.
+inline void algo::TermColor_Init(algo::TermColor& parent) {
+    parent.value = u32(0);
+}
+
+// --- algo.TermColor..Ctor
+inline  algo::TermColor::TermColor() {
+    algo::TermColor_Init(*this);
+}
+
+// --- algo.TermColor..FieldwiseCtor
+inline  algo::TermColor::TermColor(u32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- algo.TermColor..EnumCtor
+inline  algo::TermColor::TermColor(algo_TermColorEnum arg) {
+    this->value = u32(arg);
+}
+
 // --- algo.TermStyle.value.GetEnum
 // Get value of field as enum type
 inline algo_TermStyleEnum algo::value_GetEnum(const algo::TermStyle& parent) {
@@ -21277,6 +21316,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const algo::Sha1sig 
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const algo::StringAry &row) {// cfmt:algo.StringAry.String
     algo::StringAry_Print(const_cast<algo::StringAry&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const algo::TermColor &row) {// cfmt:algo.TermColor.String
+    algo::TermColor_Print(const_cast<algo::TermColor&>(row), str);
     return str;
 }
 

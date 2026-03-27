@@ -156,6 +156,7 @@ dmmeta.cpptype  ctype:algo.Smallstr32  ctor:N  dtor:N  cheap_copy:N
 dmmeta.cpptype  ctype:algo.Smallstr4  ctor:N  dtor:N  cheap_copy:N
 dmmeta.cpptype  ctype:algo.Smallstr40  ctor:N  dtor:N  cheap_copy:N
 dmmeta.cpptype  ctype:algo.Smallstr50  ctor:N  dtor:N  cheap_copy:N
+dmmeta.cpptype  ctype:algo.TermColor  ctor:Y  dtor:N  cheap_copy:Y
 dmmeta.cpptype  ctype:algo.TermStyle  ctor:Y  dtor:N  cheap_copy:Y
 dmmeta.cpptype  ctype:algo.TextJust  ctor:Y  dtor:N  cheap_copy:Y
 dmmeta.cpptype  ctype:algo.U16Dec2  ctor:Y  dtor:N  cheap_copy:Y

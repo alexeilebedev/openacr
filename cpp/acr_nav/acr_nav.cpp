@@ -396,9 +396,8 @@ static void EmitStyle(cstring &out, acr_nav::FNavstyle &style) {
     if (style.bold) out << "\x1b[1m";
     if (style.dim) out << "\x1b[2m";
     if (style.reverse) out << "\x1b[7m";
-    int color = (style.fg_red ? 1 : 0) | (style.fg_green ? 2 : 0) | (style.fg_blue ? 4 : 0);
-    if (color > 0) {
-        out << "\x1b[" << (90 + color) << "m";
+    if (style.fg_color != algo_TermColor_default) {
+        out << "\x1b[" << (90 + u32(style.fg_color)) << "m";
     }
 }
 

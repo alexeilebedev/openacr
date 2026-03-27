@@ -13521,6 +13521,130 @@ algo::StringAry& algo::StringAry::operator =(const algo::StringAry &rhs) {
     ary_Setary(*this, ary_Getary(const_cast<algo::StringAry&>(rhs)));
 }
 
+// --- algo.TermColor.value.ToCstr
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+const char* algo::value_ToCstr(const algo::TermColor& parent) {
+    const char *ret = NULL;
+    switch(value_GetEnum(parent)) {
+        case algo_TermColor_blue           : ret = "blue";  break;
+        case algo_TermColor_cyan           : ret = "cyan";  break;
+        case algo_TermColor_default        : ret = "default";  break;
+        case algo_TermColor_green          : ret = "green";  break;
+        case algo_TermColor_magenta        : ret = "magenta";  break;
+        case algo_TermColor_red            : ret = "red";  break;
+        case algo_TermColor_white          : ret = "white";  break;
+        case algo_TermColor_yellow         : ret = "yellow";  break;
+    }
+    return ret;
+}
+
+// --- algo.TermColor.value.Print
+// Convert value to a string. First, attempt conversion to a known string.
+// If no string matches, print value as a numeric value.
+void algo::value_Print(const algo::TermColor& parent, algo::cstring &lhs) {
+    const char *strval = value_ToCstr(parent);
+    if (strval) {
+        lhs << strval;
+    } else {
+        lhs << parent.value;
+    }
+}
+
+// --- algo.TermColor.value.SetStrptrMaybe
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+bool algo::value_SetStrptrMaybe(algo::TermColor& parent, algo::strptr rhs) {
+    bool ret = false;
+    switch (elems_N(rhs)) {
+        case 3: {
+            switch (u64(algo::ReadLE16(rhs.elems))|(u64(rhs[2])<<16)) {
+                case LE_STR3('r','e','d'): {
+                    value_SetEnum(parent,algo_TermColor_red); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 4: {
+            switch (u64(algo::ReadLE32(rhs.elems))) {
+                case LE_STR4('b','l','u','e'): {
+                    value_SetEnum(parent,algo_TermColor_blue); ret = true; break;
+                }
+                case LE_STR4('c','y','a','n'): {
+                    value_SetEnum(parent,algo_TermColor_cyan); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 5: {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+                case LE_STR5('g','r','e','e','n'): {
+                    value_SetEnum(parent,algo_TermColor_green); ret = true; break;
+                }
+                case LE_STR5('w','h','i','t','e'): {
+                    value_SetEnum(parent,algo_TermColor_white); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 6: {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)) {
+                case LE_STR6('y','e','l','l','o','w'): {
+                    value_SetEnum(parent,algo_TermColor_yellow); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 7: {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
+                case LE_STR7('d','e','f','a','u','l','t'): {
+                    value_SetEnum(parent,algo_TermColor_default); ret = true; break;
+                }
+                case LE_STR7('m','a','g','e','n','t','a'): {
+                    value_SetEnum(parent,algo_TermColor_magenta); ret = true; break;
+                }
+            }
+            break;
+        }
+    }
+    return ret;
+}
+
+// --- algo.TermColor.value.SetStrptr
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+void algo::value_SetStrptr(algo::TermColor& parent, algo::strptr rhs, algo_TermColorEnum dflt) {
+    if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
+}
+
+// --- algo.TermColor.value.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool algo::value_ReadStrptrMaybe(algo::TermColor& parent, algo::strptr rhs) {
+    bool retval = false;
+    retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
+    if (!retval) { // didn't work? try reading as underlying type
+        retval = u32_ReadStrptrMaybe(parent.value,rhs);
+    }
+    return retval;
+}
+
+// --- algo.TermColor..ReadStrptrMaybe
+// Read fields of algo::TermColor from an ascii string.
+// The format of the string is the format of the algo::TermColor's only field
+bool algo::TermColor_ReadStrptrMaybe(algo::TermColor &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = retval && value_ReadStrptrMaybe(parent, in_str);
+    return retval;
+}
+
+// --- algo.TermColor..Print
+// print string representation of ROW to string STR
+// cfmt:algo.TermColor.String  printfmt:Raw
+void algo::TermColor_Print(algo::TermColor row, algo::cstring& str) {
+    algo::value_Print(row, str);
+}
+
 // --- algo.TermStyle.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.

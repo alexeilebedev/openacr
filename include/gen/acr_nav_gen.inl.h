@@ -1179,9 +1179,6 @@ inline void acr_nav::FNavstyle_Init(acr_nav::FNavstyle& navstyle) {
     navstyle.bold = bool(false);
     navstyle.dim = bool(false);
     navstyle.reverse = bool(false);
-    navstyle.fg_red = bool(false);
-    navstyle.fg_green = bool(false);
-    navstyle.fg_blue = bool(false);
     navstyle.ind_navstyle_next = (acr_nav::FNavstyle*)-1; // (acr_nav.FDb.ind_navstyle) not-in-hash
     navstyle.ind_navstyle_hashval = 0; // stored hash value
 }

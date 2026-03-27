@@ -180,6 +180,22 @@ enum algo_NumParseFlagsEnum {               // algo.NumParseFlags.value
 enum { algo_NumParseFlagsEnum_N = 5 };
 
 
+// --- algo_TermColorEnum
+
+enum algo_TermColorEnum {          // algo.TermColor.value
+     algo_TermColor_blue      = 4
+    ,algo_TermColor_cyan      = 6
+    ,algo_TermColor_default   = 0
+    ,algo_TermColor_green     = 2
+    ,algo_TermColor_magenta   = 5
+    ,algo_TermColor_red       = 1
+    ,algo_TermColor_white     = 7
+    ,algo_TermColor_yellow    = 3
+};
+
+enum { algo_TermColorEnum_N = 8 };
+
+
 // --- algo_TermStyleEnum
 
 enum algo_TermStyleEnum {             // algo.TermStyle.value
@@ -406,6 +422,7 @@ namespace algo { struct Smallstr4; }
 namespace algo { struct Smallstr40; }
 namespace algo { struct Smallstr5; }
 namespace algo { struct StringAry; }
+namespace algo { struct TermColor; }
 namespace algo { struct TermStyle; }
 namespace algo { struct TextJust; }
 namespace algo { struct TstampCache; }
@@ -13054,6 +13071,58 @@ void                 StringAry_Uninit(algo::StringAry& parent) __attribute__((no
 // func:algo.StringAry..Print
 void                 StringAry_Print(algo::StringAry& row, algo::cstring& str) __attribute__((nothrow));
 
+// --- algo.TermColor
+struct TermColor { // algo.TermColor: ANSI terminal foreground color
+    u32   value;   //   0
+    // func:algo.TermColor.value.Cast
+    inline               operator algo_TermColorEnum() const __attribute__((nothrow));
+    // func:algo.TermColor..Ctor
+    inline               TermColor() __attribute__((nothrow));
+    // func:algo.TermColor..FieldwiseCtor
+    explicit inline               TermColor(u32 in_value) __attribute__((nothrow));
+    // func:algo.TermColor..EnumCtor
+    inline               TermColor(algo_TermColorEnum arg) __attribute__((nothrow));
+};
+
+// Get value of field as enum type
+// func:algo.TermColor.value.GetEnum
+inline algo_TermColorEnum value_GetEnum(const algo::TermColor& parent) __attribute__((nothrow));
+// Set value of field from enum type.
+// func:algo.TermColor.value.SetEnum
+inline void          value_SetEnum(algo::TermColor& parent, algo_TermColorEnum rhs) __attribute__((nothrow));
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+// func:algo.TermColor.value.ToCstr
+const char*          value_ToCstr(const algo::TermColor& parent) __attribute__((nothrow));
+// Convert value to a string. First, attempt conversion to a known string.
+// If no string matches, print value as a numeric value.
+// func:algo.TermColor.value.Print
+void                 value_Print(const algo::TermColor& parent, algo::cstring &lhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+// func:algo.TermColor.value.SetStrptrMaybe
+bool                 value_SetStrptrMaybe(algo::TermColor& parent, algo::strptr rhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+// func:algo.TermColor.value.SetStrptr
+void                 value_SetStrptr(algo::TermColor& parent, algo::strptr rhs, algo_TermColorEnum dflt) __attribute__((nothrow));
+// Convert string to field. Return success value
+// func:algo.TermColor.value.ReadStrptrMaybe
+bool                 value_ReadStrptrMaybe(algo::TermColor& parent, algo::strptr rhs) __attribute__((nothrow));
+
+// Read fields of algo::TermColor from an ascii string.
+// The format of the string is the format of the algo::TermColor's only field
+// func:algo.TermColor..ReadStrptrMaybe
+bool                 TermColor_ReadStrptrMaybe(algo::TermColor &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:algo.TermColor..Init
+inline void          TermColor_Init(algo::TermColor& parent);
+// print string representation of ROW to string STR
+// cfmt:algo.TermColor.String  printfmt:Raw
+// func:algo.TermColor..Print
+void                 TermColor_Print(algo::TermColor row, algo::cstring& str) __attribute__((nothrow));
+
 // --- algo.TermStyle
 struct TermStyle { // algo.TermStyle: terminal style
     u32   value;   //   0
@@ -15095,6 +15164,7 @@ inline algo::cstring &operator <<(algo::cstring &str, const algo::SchedTime &row
 inline algo::cstring &operator <<(algo::cstring &str, const algo::SeqType &row);// cfmt:algo.SeqType.String
 inline algo::cstring &operator <<(algo::cstring &str, const algo::Sha1sig &row);// cfmt:algo.Sha1sig.String
 inline algo::cstring &operator <<(algo::cstring &str, const algo::StringAry &row);// cfmt:algo.StringAry.String
+inline algo::cstring &operator <<(algo::cstring &str, const algo::TermColor &row);// cfmt:algo.TermColor.String
 inline algo::cstring &operator <<(algo::cstring &str, const algo::TermStyle &row);// cfmt:algo.TermStyle.String
 inline algo::cstring &operator <<(algo::cstring &str, const algo::TextJust &row);// cfmt:algo.TextJust.String
 inline algo::cstring &operator <<(algo::cstring &str, const algo::Tuple &row);// cfmt:algo.Tuple.String

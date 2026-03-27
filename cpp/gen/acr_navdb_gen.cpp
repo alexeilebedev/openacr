@@ -47,9 +47,7 @@ const char* acr_navdb::value_ToCstr(const acr_navdb::FieldId& parent) {
         case acr_navdb_FieldId_bold        : ret = "bold";  break;
         case acr_navdb_FieldId_dim         : ret = "dim";  break;
         case acr_navdb_FieldId_reverse     : ret = "reverse";  break;
-        case acr_navdb_FieldId_fg_red      : ret = "fg_red";  break;
-        case acr_navdb_FieldId_fg_green    : ret = "fg_green";  break;
-        case acr_navdb_FieldId_fg_blue     : ret = "fg_blue";  break;
+        case acr_navdb_FieldId_fg_color    : ret = "fg_color";  break;
         case acr_navdb_FieldId_panel       : ret = "panel";  break;
         case acr_navdb_FieldId_title       : ret = "title";  break;
         case acr_navdb_FieldId_position    : ret = "position";  break;
@@ -110,21 +108,10 @@ bool acr_navdb::value_SetStrptrMaybe(acr_navdb::FieldId& parent, algo::strptr rh
             }
             break;
         }
-        case 6: {
-            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)) {
-                case LE_STR6('f','g','_','r','e','d'): {
-                    value_SetEnum(parent,acr_navdb_FieldId_fg_red); ret = true; break;
-                }
-            }
-            break;
-        }
         case 7: {
             switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
                 case LE_STR7('c','o','m','m','e','n','t'): {
                     value_SetEnum(parent,acr_navdb_FieldId_comment); ret = true; break;
-                }
-                case LE_STR7('f','g','_','b','l','u','e'): {
-                    value_SetEnum(parent,acr_navdb_FieldId_fg_blue); ret = true; break;
                 }
                 case LE_STR7('k','e','y','b','i','n','d'): {
                     value_SetEnum(parent,acr_navdb_FieldId_keybind); ret = true; break;
@@ -143,8 +130,8 @@ bool acr_navdb::value_SetStrptrMaybe(acr_navdb::FieldId& parent, algo::strptr rh
         }
         case 8: {
             switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('f','g','_','g','r','e','e','n'): {
-                    value_SetEnum(parent,acr_navdb_FieldId_fg_green); ret = true; break;
+                case LE_STR8('f','g','_','c','o','l','o','r'): {
+                    value_SetEnum(parent,acr_navdb_FieldId_fg_color); ret = true; break;
                 }
                 case LE_STR8('n','a','v','s','t','y','l','e'): {
                     value_SetEnum(parent,acr_navdb_FieldId_navstyle); ret = true; break;
@@ -401,14 +388,8 @@ bool acr_navdb::Navstyle_ReadFieldMaybe(acr_navdb::Navstyle& parent, algo::strpt
         case acr_navdb_FieldId_reverse: {
             retval = bool_ReadStrptrMaybe(parent.reverse, strval);
         } break;
-        case acr_navdb_FieldId_fg_red: {
-            retval = bool_ReadStrptrMaybe(parent.fg_red, strval);
-        } break;
-        case acr_navdb_FieldId_fg_green: {
-            retval = bool_ReadStrptrMaybe(parent.fg_green, strval);
-        } break;
-        case acr_navdb_FieldId_fg_blue: {
-            retval = bool_ReadStrptrMaybe(parent.fg_blue, strval);
+        case acr_navdb_FieldId_fg_color: {
+            retval = algo::TermColor_ReadStrptrMaybe(parent.fg_color, strval);
         } break;
         case acr_navdb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
@@ -455,14 +436,8 @@ void acr_navdb::Navstyle_Print(acr_navdb::Navstyle& row, algo::cstring& str) {
     bool_Print(row.reverse, temp);
     PrintAttrSpaceReset(str,"reverse", temp);
 
-    bool_Print(row.fg_red, temp);
-    PrintAttrSpaceReset(str,"fg_red", temp);
-
-    bool_Print(row.fg_green, temp);
-    PrintAttrSpaceReset(str,"fg_green", temp);
-
-    bool_Print(row.fg_blue, temp);
-    PrintAttrSpaceReset(str,"fg_blue", temp);
+    algo::TermColor_Print(row.fg_color, temp);
+    PrintAttrSpaceReset(str,"fg_color", temp);
 
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);

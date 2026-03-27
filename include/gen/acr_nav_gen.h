@@ -1482,9 +1482,7 @@ struct FNavstyle { // acr_nav.FNavstyle
     bool                  bold;                   //   false
     bool                  dim;                    //   false
     bool                  reverse;                //   false
-    bool                  fg_red;                 //   false
-    bool                  fg_green;               //   false
-    bool                  fg_blue;                //   false
+    algo::TermColor       fg_color;               // Foreground color
     algo::Comment         comment;                //
     // func:acr_nav.FNavstyle..AssignOp
     inline acr_nav::FNavstyle& operator =(const acr_nav::FNavstyle &rhs) = delete;

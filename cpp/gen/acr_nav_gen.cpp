@@ -374,7 +374,7 @@ static void acr_nav::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_nav.Input'  signature:'ddad0de977ffe834ac0cc76b691b21e9a4aab5b6'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_nav.Input'  signature:'05ee76cdf94ed52736d11fe99f347da1896d6e08'");
 }
 
 // --- acr_nav.FDb._db.InsertStrptrMaybe
@@ -3549,9 +3549,7 @@ void acr_nav::navstyle_CopyOut(acr_nav::FNavstyle &row, acr_navdb::Navstyle &out
     out.bold = row.bold;
     out.dim = row.dim;
     out.reverse = row.reverse;
-    out.fg_red = row.fg_red;
-    out.fg_green = row.fg_green;
-    out.fg_blue = row.fg_blue;
+    out.fg_color = row.fg_color;
     out.comment = row.comment;
 }
 
@@ -3562,9 +3560,7 @@ void acr_nav::navstyle_CopyIn(acr_nav::FNavstyle &row, acr_navdb::Navstyle &in) 
     row.bold = in.bold;
     row.dim = in.dim;
     row.reverse = in.reverse;
-    row.fg_red = in.fg_red;
-    row.fg_green = in.fg_green;
-    row.fg_blue = in.fg_blue;
+    row.fg_color = in.fg_color;
     row.comment = in.comment;
 }
 

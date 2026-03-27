@@ -1,4 +1,4 @@
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1388  n_ctype:1389  n_field:5544
-acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:1388  sel_value:DIR
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1389  n_ctype:1390  n_field:5543
+acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:1389  sel_value:DIR
 acr_nav.PanelState  panel:field_list  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
 
