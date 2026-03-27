@@ -528,7 +528,9 @@ dev.gitfile  gitfile:cpp/sv2ssim.cpp
 dev.gitfile  gitfile:data/acr_navdb/keybind.ssim
 dev.gitfile  gitfile:data/acr_navdb/navaction.ssim
 dev.gitfile  gitfile:data/acr_navdb/navmode.ssim
+dev.gitfile  gitfile:data/acr_navdb/navstyle.ssim
 dev.gitfile  gitfile:data/acr_navdb/panel.ssim
+dev.gitfile  gitfile:data/acr_navdb/reftypestyle.ssim
 dev.gitfile  gitfile:data/amcdb/bltin.ssim
 dev.gitfile  gitfile:data/amcdb/curstype.ssim
 dev.gitfile  gitfile:data/amcdb/gen.ssim
@@ -1522,7 +1524,9 @@ dev.gitfile  gitfile:txt/ssimdb/acr_navdb/README.md
 dev.gitfile  gitfile:txt/ssimdb/acr_navdb/keybind.md
 dev.gitfile  gitfile:txt/ssimdb/acr_navdb/navaction.md
 dev.gitfile  gitfile:txt/ssimdb/acr_navdb/navmode.md
+dev.gitfile  gitfile:txt/ssimdb/acr_navdb/navstyle.md
 dev.gitfile  gitfile:txt/ssimdb/acr_navdb/panel.md
+dev.gitfile  gitfile:txt/ssimdb/acr_navdb/reftypestyle.md
 dev.gitfile  gitfile:txt/ssimdb/amcdb/README.md
 dev.gitfile  gitfile:txt/ssimdb/amcdb/bltin.md
 dev.gitfile  gitfile:txt/ssimdb/amcdb/curstype.md

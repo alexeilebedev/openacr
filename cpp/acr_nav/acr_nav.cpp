@@ -418,6 +418,20 @@ void acr_nav::navaction_filter_backspace() {
 
 // -----------------------------------------------------------------------------
 
+// Emit ANSI escape sequences for a named terminal style.
+// Attributes compose: caller may emit selection style then field color.
+static void EmitStyle(cstring &out, acr_nav::FNavstyle &style) {
+    if (style.bold) out << "\x1b[1m";
+    if (style.dim) out << "\x1b[2m";
+    if (style.reverse) out << "\x1b[7m";
+    int color = (style.fg_red ? 1 : 0) | (style.fg_green ? 2 : 0) | (style.fg_blue ? 4 : 0);
+    if (color > 0) {
+        out << "\x1b[" << (90 + color) << "m";
+    }
+}
+
+// -----------------------------------------------------------------------------
+
 static void Render(acr_nav::FCtype *sel_ct, acr_nav::FPanel *left, acr_nav::FPanel *right) {
     DetectTerminal();
     tempstr buf;
@@ -428,6 +442,15 @@ static void Render(acr_nav::FCtype *sel_ct, acr_nav::FPanel *left, acr_nav::FPan
     int right_wid = i32_Max(1, wid - left_wid);
     bool left_focused = (acr_nav::_db.p_cur_panel == left);
 
+    // Resolve named styles once per frame
+    acr_nav::FNavstyle *p_title_focus = acr_nav::ind_navstyle_Find("title_focus");
+    acr_nav::FNavstyle *p_title_nofocus = acr_nav::ind_navstyle_Find("title_nofocus");
+    acr_nav::FNavstyle *p_sel_focus = acr_nav::ind_navstyle_Find("sel_focus");
+    acr_nav::FNavstyle *p_sel_nofocus = acr_nav::ind_navstyle_Find("sel_nofocus");
+    acr_nav::FNavstyle *p_statusbar = acr_nav::ind_navstyle_Find("statusbar");
+    vrfy(p_title_focus && p_title_nofocus && p_sel_focus && p_sel_nofocus && p_statusbar
+         , "required navstyle records missing");
+
     // Title bar -- left panel
     {
         tempstr ltitle;
@@ -436,11 +459,7 @@ static void Render(acr_nav::FCtype *sel_ct, acr_nav::FPanel *left, acr_nav::FPan
             ltitle.ch_n = left_wid - 1;
         }
         char_PrintNTimes(' ', ltitle, i32_Max(0, left_wid - 1 - ch_N(ltitle)));
-        if (left_focused) {
-            buf << "\x1b[7m";
-        } else {
-            buf << "\x1b[2;7m";
-        }
+        EmitStyle(buf, *(left_focused ? p_title_focus : p_title_nofocus));
         buf << ltitle << "\x1b[0m";
     }
     buf << "|";
@@ -457,11 +476,7 @@ static void Render(acr_nav::FCtype *sel_ct, acr_nav::FPanel *left, acr_nav::FPan
             rtitle.ch_n = right_wid;
         }
         char_PrintNTimes(' ', rtitle, i32_Max(0, right_wid - ch_N(rtitle)));
-        if (!left_focused) {
-            buf << "\x1b[7m";
-        } else {
-            buf << "\x1b[2;7m";
-        }
+        EmitStyle(buf, *(!left_focused ? p_title_focus : p_title_nofocus));
         buf << rtitle << "\x1b[0m";
     }
     buf << "\r\n";
@@ -492,10 +507,8 @@ static void Render(acr_nav::FCtype *sel_ct, acr_nav::FPanel *left, acr_nav::FPan
         }
         char_PrintNTimes(' ', left_cell, i32_Max(0, left_wid - 1 - ch_N(left_cell)));
 
-        if (left_sel && left_focused) {
-            buf << "\x1b[7m";
-        } else if (left_sel) {
-            buf << "\x1b[1m";
+        if (left_sel) {
+            EmitStyle(buf, *(left_focused ? p_sel_focus : p_sel_nofocus));
         }
         buf << left_cell << "\x1b[0m";
         buf << "|";
@@ -504,9 +517,10 @@ static void Render(acr_nav::FCtype *sel_ct, acr_nav::FPanel *left, acr_nav::FPan
         tempstr right_cell;
         bool right_sel = false;
         int right_data_idx = right->scroll_offset + row;
+        acr_nav::FField *fld = nullptr;
         if (sel_ct && right_data_idx < n_right) {
             right_sel = (right_data_idx == right->sel_row);
-            acr_nav::FField *fld = c_field_Find(*sel_ct, right_data_idx);
+            fld = c_field_Find(*sel_ct, right_data_idx);
             if (fld) {
                 right_cell << " " << name_Get(*fld);
                 char_PrintNTimes(' ', right_cell, i32_Max(1, 24 - ch_N(right_cell)));
@@ -520,17 +534,18 @@ static void Render(acr_nav::FCtype *sel_ct, acr_nav::FPanel *left, acr_nav::FPan
         }
         char_PrintNTimes(' ', right_cell, i32_Max(0, right_wid - ch_N(right_cell)));
 
-        if (right_sel && !left_focused) {
-            buf << "\x1b[7m";
-        } else if (right_sel) {
-            buf << "\x1b[1m";
+        if (right_sel) {
+            EmitStyle(buf, *(!left_focused ? p_sel_focus : p_sel_nofocus));
+        }
+        if (fld && fld->p_reftype->c_reftypestyle) {
+            EmitStyle(buf, *fld->p_reftype->c_reftypestyle->p_navstyle);
         }
         buf << right_cell << "\x1b[0m";
         buf << "\x1b[K\r\n";
     }
 
     // Status bar
-    buf << "\x1b[7m";
+    EmitStyle(buf, *p_statusbar);
     tempstr status;
     bool in_filter = (acr_nav::_db.p_cur_mode == acr_nav::_db.p_filter_mode);
     if (in_filter) {

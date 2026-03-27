@@ -77,6 +77,22 @@ inline  acr_navdb::Navaction::Navaction() {
 inline  acr_navdb::Navmode::Navmode() {
 }
 
+// --- acr_navdb.Navstyle..Init
+// Set all fields to initial values.
+inline void acr_navdb::Navstyle_Init(acr_navdb::Navstyle& parent) {
+    parent.bold = bool(false);
+    parent.dim = bool(false);
+    parent.reverse = bool(false);
+    parent.fg_red = bool(false);
+    parent.fg_green = bool(false);
+    parent.fg_blue = bool(false);
+}
+
+// --- acr_navdb.Navstyle..Ctor
+inline  acr_navdb::Navstyle::Navstyle() {
+    acr_navdb::Navstyle_Init(*this);
+}
+
 // --- acr_navdb.Panel..Init
 // Set all fields to initial values.
 inline void acr_navdb::Panel_Init(acr_navdb::Panel& parent) {
@@ -87,6 +103,10 @@ inline void acr_navdb::Panel_Init(acr_navdb::Panel& parent) {
 // --- acr_navdb.Panel..Ctor
 inline  acr_navdb::Panel::Panel() {
     acr_navdb::Panel_Init(*this);
+}
+
+// --- acr_navdb.Reftypestyle..Ctor
+inline  acr_navdb::Reftypestyle::Reftypestyle() {
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const acr_navdb::FieldId &row) {// cfmt:acr_navdb.FieldId.String
@@ -109,7 +129,17 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const acr_navdb::Nav
     return str;
 }
 
+inline algo::cstring &algo::operator <<(algo::cstring &str, const acr_navdb::Navstyle &row) {// cfmt:acr_navdb.Navstyle.String
+    acr_navdb::Navstyle_Print(const_cast<acr_navdb::Navstyle&>(row), str);
+    return str;
+}
+
 inline algo::cstring &algo::operator <<(algo::cstring &str, const acr_navdb::Panel &row) {// cfmt:acr_navdb.Panel.String
     acr_navdb::Panel_Print(const_cast<acr_navdb::Panel&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const acr_navdb::Reftypestyle &row) {// cfmt:acr_navdb.Reftypestyle.String
+    acr_navdb::Reftypestyle_Print(const_cast<acr_navdb::Reftypestyle&>(row), str);
     return str;
 }

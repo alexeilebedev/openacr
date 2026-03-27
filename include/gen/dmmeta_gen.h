@@ -490,7 +490,9 @@ extern const char *  dmmeta_Sorttype_sorttype_HeapSort;        // HeapSort      
 extern const char *  dmmeta_Ssimfile_ssimfile_acr_navdb_keybind;           // acr_navdb.keybind            fconst:dmmeta.Ssimfile.ssimfile/acr_navdb.keybind
 extern const char *  dmmeta_Ssimfile_ssimfile_acr_navdb_navaction;         // acr_navdb.navaction          fconst:dmmeta.Ssimfile.ssimfile/acr_navdb.navaction
 extern const char *  dmmeta_Ssimfile_ssimfile_acr_navdb_navmode;           // acr_navdb.navmode            fconst:dmmeta.Ssimfile.ssimfile/acr_navdb.navmode
+extern const char *  dmmeta_Ssimfile_ssimfile_acr_navdb_navstyle;          // acr_navdb.navstyle           fconst:dmmeta.Ssimfile.ssimfile/acr_navdb.navstyle
 extern const char *  dmmeta_Ssimfile_ssimfile_acr_navdb_panel;             // acr_navdb.panel              fconst:dmmeta.Ssimfile.ssimfile/acr_navdb.panel
+extern const char *  dmmeta_Ssimfile_ssimfile_acr_navdb_reftypestyle;      // acr_navdb.reftypestyle       fconst:dmmeta.Ssimfile.ssimfile/acr_navdb.reftypestyle
 extern const char *  dmmeta_Ssimfile_ssimfile_amcdb_bltin;                 // amcdb.bltin                  fconst:dmmeta.Ssimfile.ssimfile/amcdb.bltin
 extern const char *  dmmeta_Ssimfile_ssimfile_amcdb_curstype;              // amcdb.curstype               fconst:dmmeta.Ssimfile.ssimfile/amcdb.curstype
 extern const char *  dmmeta_Ssimfile_ssimfile_amcdb_gen;                   // amcdb.gen                    fconst:dmmeta.Ssimfile.ssimfile/amcdb.gen

@@ -237,11 +237,13 @@ const char *dmmeta_Ssimfile_ssimfile_acr_navdb_keybind     = "acr_navdb.keybind"
 const char *dmmeta_Ssimfile_ssimfile_acr_navdb_navaction   = "acr_navdb.navaction";
 const char *dmmeta_Ssimfile_ssimfile_acr_navdb_navmode     = "acr_navdb.navmode";
 
-const char *dmmeta_Ssimfile_ssimfile_acr_navdb_panel   = "acr_navdb.panel";
-const char *dmmeta_Ssimfile_ssimfile_amcdb_bltin       = "amcdb.bltin";
-const char *dmmeta_Ssimfile_ssimfile_amcdb_curstype    = "amcdb.curstype";
-const char *dmmeta_Ssimfile_ssimfile_amcdb_gen         = "amcdb.gen";
-const char *dmmeta_Ssimfile_ssimfile_amcdb_regxtype    = "amcdb.regxtype";
+const char *dmmeta_Ssimfile_ssimfile_acr_navdb_navstyle       = "acr_navdb.navstyle";
+const char *dmmeta_Ssimfile_ssimfile_acr_navdb_panel          = "acr_navdb.panel";
+const char *dmmeta_Ssimfile_ssimfile_acr_navdb_reftypestyle   = "acr_navdb.reftypestyle";
+const char *dmmeta_Ssimfile_ssimfile_amcdb_bltin              = "amcdb.bltin";
+const char *dmmeta_Ssimfile_ssimfile_amcdb_curstype           = "amcdb.curstype";
+const char *dmmeta_Ssimfile_ssimfile_amcdb_gen                = "amcdb.gen";
+const char *dmmeta_Ssimfile_ssimfile_amcdb_regxtype           = "amcdb.regxtype";
 
 const char *dmmeta_Ssimfile_ssimfile_amcdb_tclass     = "amcdb.tclass";
 const char *dmmeta_Ssimfile_ssimfile_amcdb_tcurs      = "amcdb.tcurs";

@@ -41,24 +41,28 @@ enum { acr_nav_FieldIdEnum_N = 1 };
 
 // --- acr_nav_TableIdEnum
 
-enum acr_nav_TableIdEnum {                     // acr_nav.TableId.value
-     acr_nav_TableId_dmmeta_Ctype        = 0   // dmmeta.Ctype -> acr_nav.FCtype
-    ,acr_nav_TableId_dmmeta_ctype        = 0   // dmmeta.ctype -> acr_nav.FCtype
-    ,acr_nav_TableId_dmmeta_Field        = 1   // dmmeta.Field -> acr_nav.FField
-    ,acr_nav_TableId_dmmeta_field        = 1   // dmmeta.field -> acr_nav.FField
-    ,acr_nav_TableId_acr_navdb_Keybind   = 2   // acr_navdb.Keybind -> acr_nav.FKeybind
-    ,acr_nav_TableId_acr_navdb_keybind   = 2   // acr_navdb.keybind -> acr_nav.FKeybind
-    ,acr_nav_TableId_acr_navdb_Navmode   = 3   // acr_navdb.Navmode -> acr_nav.FNavmode
-    ,acr_nav_TableId_acr_navdb_navmode   = 3   // acr_navdb.navmode -> acr_nav.FNavmode
-    ,acr_nav_TableId_dmmeta_Ns           = 4   // dmmeta.Ns -> acr_nav.FNs
-    ,acr_nav_TableId_dmmeta_ns           = 4   // dmmeta.ns -> acr_nav.FNs
-    ,acr_nav_TableId_acr_navdb_Panel     = 5   // acr_navdb.Panel -> acr_nav.FPanel
-    ,acr_nav_TableId_acr_navdb_panel     = 5   // acr_navdb.panel -> acr_nav.FPanel
-    ,acr_nav_TableId_dmmeta_Reftype      = 6   // dmmeta.Reftype -> acr_nav.FReftype
-    ,acr_nav_TableId_dmmeta_reftype      = 6   // dmmeta.reftype -> acr_nav.FReftype
+enum acr_nav_TableIdEnum {                          // acr_nav.TableId.value
+     acr_nav_TableId_dmmeta_Ctype             = 0   // dmmeta.Ctype -> acr_nav.FCtype
+    ,acr_nav_TableId_dmmeta_ctype             = 0   // dmmeta.ctype -> acr_nav.FCtype
+    ,acr_nav_TableId_dmmeta_Field             = 1   // dmmeta.Field -> acr_nav.FField
+    ,acr_nav_TableId_dmmeta_field             = 1   // dmmeta.field -> acr_nav.FField
+    ,acr_nav_TableId_acr_navdb_Keybind        = 2   // acr_navdb.Keybind -> acr_nav.FKeybind
+    ,acr_nav_TableId_acr_navdb_keybind        = 2   // acr_navdb.keybind -> acr_nav.FKeybind
+    ,acr_nav_TableId_acr_navdb_Navmode        = 3   // acr_navdb.Navmode -> acr_nav.FNavmode
+    ,acr_nav_TableId_acr_navdb_navmode        = 3   // acr_navdb.navmode -> acr_nav.FNavmode
+    ,acr_nav_TableId_acr_navdb_Navstyle       = 4   // acr_navdb.Navstyle -> acr_nav.FNavstyle
+    ,acr_nav_TableId_acr_navdb_navstyle       = 4   // acr_navdb.navstyle -> acr_nav.FNavstyle
+    ,acr_nav_TableId_dmmeta_Ns                = 5   // dmmeta.Ns -> acr_nav.FNs
+    ,acr_nav_TableId_dmmeta_ns                = 5   // dmmeta.ns -> acr_nav.FNs
+    ,acr_nav_TableId_acr_navdb_Panel          = 6   // acr_navdb.Panel -> acr_nav.FPanel
+    ,acr_nav_TableId_acr_navdb_panel          = 6   // acr_navdb.panel -> acr_nav.FPanel
+    ,acr_nav_TableId_dmmeta_Reftype           = 7   // dmmeta.Reftype -> acr_nav.FReftype
+    ,acr_nav_TableId_dmmeta_reftype           = 7   // dmmeta.reftype -> acr_nav.FReftype
+    ,acr_nav_TableId_acr_navdb_Reftypestyle   = 8   // acr_navdb.Reftypestyle -> acr_nav.FReftypestyle
+    ,acr_nav_TableId_acr_navdb_reftypestyle   = 8   // acr_navdb.reftypestyle -> acr_nav.FReftypestyle
 };
 
-enum { acr_nav_TableIdEnum_N = 14 };
+enum { acr_nav_TableIdEnum_N = 18 };
 
 namespace acr_nav { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
@@ -75,9 +79,12 @@ namespace acr_navdb { struct Keybind; }
 namespace acr_nav { struct FNavaction; }
 namespace acr_navdb { struct Navaction; }
 namespace acr_navdb { struct Navmode; }
+namespace acr_navdb { struct Navstyle; }
 namespace dmmeta { struct Ns; }
 namespace acr_navdb { struct Panel; }
 namespace dmmeta { struct Reftype; }
+namespace acr_navdb { struct Reftypestyle; }
+namespace acr_nav { struct FNavstyle; }
 namespace acr_nav { struct ctype_c_field_curs; }
 namespace acr_nav { struct _db_ctype_curs; }
 namespace acr_nav { struct _db_field_curs; }
@@ -89,12 +96,15 @@ namespace acr_nav { struct _db_panel_curs; }
 namespace acr_nav { struct _db_navmode_curs; }
 namespace acr_nav { struct _db_navstack_curs; }
 namespace acr_nav { struct _db_zd_sel_ctype_curs; }
+namespace acr_nav { struct _db_navstyle_curs; }
+namespace acr_nav { struct _db_reftypestyle_curs; }
 namespace acr_nav { struct trace; }
 namespace acr_nav { struct FDb; }
 namespace acr_nav { struct FField; }
 namespace acr_nav { struct FKeybind; }
 namespace acr_nav { struct FNavmode; }
 namespace acr_nav { struct FPanel; }
+namespace acr_nav { struct FReftypestyle; }
 namespace acr_nav { struct FieldId; }
 namespace acr_nav { struct Naventry; }
 namespace acr_nav { struct TableId; }
@@ -227,63 +237,73 @@ void                 trace_Print(acr_nav::trace& row, algo::cstring& str) __attr
 // --- acr_nav.FDb
 // create: acr_nav.FDb._db (Global)
 struct FDb { // acr_nav.FDb
-    command::acr_nav        cmdline;                       //
-    acr_nav::FCtype*        ctype_lary[32];                // level array
-    i32                     ctype_n;                       // number of elements in array
-    acr_nav::FCtype**       ind_ctype_buckets_elems;       // pointer to bucket array
-    i32                     ind_ctype_buckets_n;           // number of elements in bucket array
-    i32                     ind_ctype_n;                   // number of elements in the hash table
-    acr_nav::FField*        field_lary[32];                // level array
-    i32                     field_n;                       // number of elements in array
-    acr_nav::FField**       ind_field_buckets_elems;       // pointer to bucket array
-    i32                     ind_field_buckets_n;           // number of elements in bucket array
-    i32                     ind_field_n;                   // number of elements in the hash table
-    acr_nav::FNs*           ns_lary[32];                   // level array
-    i32                     ns_n;                          // number of elements in array
-    acr_nav::FNs**          ind_ns_buckets_elems;          // pointer to bucket array
-    i32                     ind_ns_buckets_n;              // number of elements in bucket array
-    i32                     ind_ns_n;                      // number of elements in the hash table
-    acr_nav::FReftype*      reftype_lary[32];              // level array
-    i32                     reftype_n;                     // number of elements in array
-    acr_nav::FReftype**     ind_reftype_buckets_elems;     // pointer to bucket array
-    i32                     ind_reftype_buckets_n;         // number of elements in bucket array
-    i32                     ind_reftype_n;                 // number of elements in the hash table
-    acr_nav::FNavaction*    navaction_lary[32];            // level array
-    i32                     navaction_n;                   // number of elements in array
-    acr_nav::FNavaction**   ind_navaction_buckets_elems;   // pointer to bucket array
-    i32                     ind_navaction_buckets_n;       // number of elements in bucket array
-    i32                     ind_navaction_n;               // number of elements in the hash table
-    acr_nav::FKeybind*      keybind_lary[32];              // level array
-    i32                     keybind_n;                     // number of elements in array
-    acr_nav::FKeybind**     ind_keybind_buckets_elems;     // pointer to bucket array
-    i32                     ind_keybind_buckets_n;         // number of elements in bucket array
-    i32                     ind_keybind_n;                 // number of elements in the hash table
-    acr_nav::FPanel*        panel_lary[32];                // level array
-    i32                     panel_n;                       // number of elements in array
-    acr_nav::FPanel**       ind_panel_buckets_elems;       // pointer to bucket array
-    i32                     ind_panel_buckets_n;           // number of elements in bucket array
-    i32                     ind_panel_n;                   // number of elements in the hash table
-    acr_nav::FNavmode*      navmode_lary[32];              // level array
-    i32                     navmode_n;                     // number of elements in array
-    acr_nav::FNavmode**     ind_navmode_buckets_elems;     // pointer to bucket array
-    i32                     ind_navmode_buckets_n;         // number of elements in bucket array
-    i32                     ind_navmode_n;                 // number of elements in the hash table
-    acr_nav::Naventry*      navstack_elems;                // pointer to elements
-    u32                     navstack_n;                    // number of elements in array
-    u32                     navstack_max;                  // max. capacity of array before realloc
-    acr_nav::FCtype*        zd_sel_ctype_head;             // zero-terminated doubly linked list
-    i32                     zd_sel_ctype_n;                // zero-terminated doubly linked list
-    acr_nav::FCtype*        zd_sel_ctype_tail;             // pointer to last element
-    acr_nav::FPanel*        p_cur_panel;                   // Currently focused panel. optional pointer
-    acr_nav::FPanel*        p_left_panel;                  // Left panel (ctype list). optional pointer
-    acr_nav::FPanel*        p_right_panel;                 // Right panel (field list). optional pointer
-    acr_nav::FNavmode*      p_cur_mode;                    // Current UI mode (browse/filter). optional pointer
-    acr_nav::FNavmode*      p_filter_mode;                 // Cached pointer to filter navmode for fast comparison. optional pointer
-    algo::cstring           filter;                        // Current filter text
-    bool                    running;                       //   true  Event loop control
-    i32                     term_hei;                      //   0  Terminal height
-    i32                     term_wid;                      //   0  Terminal width
-    acr_nav::trace          trace;                         //
+    command::acr_nav           cmdline;                          //
+    acr_nav::FCtype*           ctype_lary[32];                   // level array
+    i32                        ctype_n;                          // number of elements in array
+    acr_nav::FCtype**          ind_ctype_buckets_elems;          // pointer to bucket array
+    i32                        ind_ctype_buckets_n;              // number of elements in bucket array
+    i32                        ind_ctype_n;                      // number of elements in the hash table
+    acr_nav::FField*           field_lary[32];                   // level array
+    i32                        field_n;                          // number of elements in array
+    acr_nav::FField**          ind_field_buckets_elems;          // pointer to bucket array
+    i32                        ind_field_buckets_n;              // number of elements in bucket array
+    i32                        ind_field_n;                      // number of elements in the hash table
+    acr_nav::FNs*              ns_lary[32];                      // level array
+    i32                        ns_n;                             // number of elements in array
+    acr_nav::FNs**             ind_ns_buckets_elems;             // pointer to bucket array
+    i32                        ind_ns_buckets_n;                 // number of elements in bucket array
+    i32                        ind_ns_n;                         // number of elements in the hash table
+    acr_nav::FReftype*         reftype_lary[32];                 // level array
+    i32                        reftype_n;                        // number of elements in array
+    acr_nav::FReftype**        ind_reftype_buckets_elems;        // pointer to bucket array
+    i32                        ind_reftype_buckets_n;            // number of elements in bucket array
+    i32                        ind_reftype_n;                    // number of elements in the hash table
+    acr_nav::FNavaction*       navaction_lary[32];               // level array
+    i32                        navaction_n;                      // number of elements in array
+    acr_nav::FNavaction**      ind_navaction_buckets_elems;      // pointer to bucket array
+    i32                        ind_navaction_buckets_n;          // number of elements in bucket array
+    i32                        ind_navaction_n;                  // number of elements in the hash table
+    acr_nav::FKeybind*         keybind_lary[32];                 // level array
+    i32                        keybind_n;                        // number of elements in array
+    acr_nav::FKeybind**        ind_keybind_buckets_elems;        // pointer to bucket array
+    i32                        ind_keybind_buckets_n;            // number of elements in bucket array
+    i32                        ind_keybind_n;                    // number of elements in the hash table
+    acr_nav::FPanel*           panel_lary[32];                   // level array
+    i32                        panel_n;                          // number of elements in array
+    acr_nav::FPanel**          ind_panel_buckets_elems;          // pointer to bucket array
+    i32                        ind_panel_buckets_n;              // number of elements in bucket array
+    i32                        ind_panel_n;                      // number of elements in the hash table
+    acr_nav::FNavmode*         navmode_lary[32];                 // level array
+    i32                        navmode_n;                        // number of elements in array
+    acr_nav::FNavmode**        ind_navmode_buckets_elems;        // pointer to bucket array
+    i32                        ind_navmode_buckets_n;            // number of elements in bucket array
+    i32                        ind_navmode_n;                    // number of elements in the hash table
+    acr_nav::Naventry*         navstack_elems;                   // pointer to elements
+    u32                        navstack_n;                       // number of elements in array
+    u32                        navstack_max;                     // max. capacity of array before realloc
+    acr_nav::FCtype*           zd_sel_ctype_head;                // zero-terminated doubly linked list
+    i32                        zd_sel_ctype_n;                   // zero-terminated doubly linked list
+    acr_nav::FCtype*           zd_sel_ctype_tail;                // pointer to last element
+    acr_nav::FPanel*           p_cur_panel;                      // Currently focused panel. optional pointer
+    acr_nav::FPanel*           p_left_panel;                     // Left panel (ctype list). optional pointer
+    acr_nav::FPanel*           p_right_panel;                    // Right panel (field list). optional pointer
+    acr_nav::FNavmode*         p_cur_mode;                       // Current UI mode (browse/filter). optional pointer
+    acr_nav::FNavmode*         p_filter_mode;                    // Cached pointer to filter navmode for fast comparison. optional pointer
+    algo::cstring              filter;                           // Current filter text
+    bool                       running;                          //   true  Event loop control
+    i32                        term_hei;                         //   0  Terminal height
+    i32                        term_wid;                         //   0  Terminal width
+    acr_nav::FNavstyle*        navstyle_lary[32];                // level array
+    i32                        navstyle_n;                       // number of elements in array
+    acr_nav::FNavstyle**       ind_navstyle_buckets_elems;       // pointer to bucket array
+    i32                        ind_navstyle_buckets_n;           // number of elements in bucket array
+    i32                        ind_navstyle_n;                   // number of elements in the hash table
+    acr_nav::FReftypestyle*    reftypestyle_lary[32];            // level array
+    i32                        reftypestyle_n;                   // number of elements in array
+    acr_nav::FReftypestyle**   ind_reftypestyle_buckets_elems;   // pointer to bucket array
+    i32                        ind_reftypestyle_buckets_n;       // number of elements in bucket array
+    i32                        ind_reftypestyle_n;               // number of elements in the hash table
+    acr_nav::trace             trace;                            //
 };
 
 // Read argc,argv directly into the fields of the command line(s)
@@ -973,6 +993,139 @@ acr_nav::FCtype*     zd_sel_ctype_RemoveFirst() __attribute__((nothrow));
 // func:acr_nav.FDb.zd_sel_ctype.qLast
 inline acr_nav::FCtype& zd_sel_ctype_qLast() __attribute__((__warn_unused_result__, nothrow));
 
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:acr_nav.FDb.navstyle.Alloc
+acr_nav::FNavstyle&  navstyle_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:acr_nav.FDb.navstyle.AllocMaybe
+acr_nav::FNavstyle*  navstyle_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:acr_nav.FDb.navstyle.InsertMaybe
+acr_nav::FNavstyle*  navstyle_InsertMaybe(const acr_navdb::Navstyle &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:acr_nav.FDb.navstyle.AllocMem
+void*                navstyle_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:acr_nav.FDb.navstyle.EmptyQ
+inline bool          navstyle_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:acr_nav.FDb.navstyle.Find
+inline acr_nav::FNavstyle* navstyle_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:acr_nav.FDb.navstyle.Last
+inline acr_nav::FNavstyle* navstyle_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:acr_nav.FDb.navstyle.N
+inline i32           navstyle_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:acr_nav.FDb.navstyle.RemoveAll
+void                 navstyle_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:acr_nav.FDb.navstyle.RemoveLast
+void                 navstyle_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:acr_nav.FDb.navstyle.qFind
+inline acr_nav::FNavstyle& navstyle_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:acr_nav.FDb.navstyle.XrefMaybe
+bool                 navstyle_XrefMaybe(acr_nav::FNavstyle &row);
+
+// Return true if hash is empty
+// func:acr_nav.FDb.ind_navstyle.EmptyQ
+inline bool          ind_navstyle_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+// func:acr_nav.FDb.ind_navstyle.Find
+acr_nav::FNavstyle*  ind_navstyle_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:acr_nav.FDb.ind_navstyle.FindX
+acr_nav::FNavstyle&  ind_navstyle_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:acr_nav.FDb.ind_navstyle.GetOrCreate
+acr_nav::FNavstyle&  ind_navstyle_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
+// Return number of items in the hash
+// func:acr_nav.FDb.ind_navstyle.N
+inline i32           ind_navstyle_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:acr_nav.FDb.ind_navstyle.InsertMaybe
+bool                 ind_navstyle_InsertMaybe(acr_nav::FNavstyle& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+// func:acr_nav.FDb.ind_navstyle.Remove
+void                 ind_navstyle_Remove(acr_nav::FNavstyle& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+// func:acr_nav.FDb.ind_navstyle.Reserve
+void                 ind_navstyle_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:acr_nav.FDb.ind_navstyle.AbsReserve
+void                 ind_navstyle_AbsReserve(int n) __attribute__((nothrow));
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:acr_nav.FDb.reftypestyle.Alloc
+acr_nav::FReftypestyle& reftypestyle_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:acr_nav.FDb.reftypestyle.AllocMaybe
+acr_nav::FReftypestyle* reftypestyle_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:acr_nav.FDb.reftypestyle.InsertMaybe
+acr_nav::FReftypestyle* reftypestyle_InsertMaybe(const acr_navdb::Reftypestyle &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:acr_nav.FDb.reftypestyle.AllocMem
+void*                reftypestyle_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:acr_nav.FDb.reftypestyle.EmptyQ
+inline bool          reftypestyle_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:acr_nav.FDb.reftypestyle.Find
+inline acr_nav::FReftypestyle* reftypestyle_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:acr_nav.FDb.reftypestyle.Last
+inline acr_nav::FReftypestyle* reftypestyle_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:acr_nav.FDb.reftypestyle.N
+inline i32           reftypestyle_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:acr_nav.FDb.reftypestyle.RemoveAll
+void                 reftypestyle_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:acr_nav.FDb.reftypestyle.RemoveLast
+void                 reftypestyle_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:acr_nav.FDb.reftypestyle.qFind
+inline acr_nav::FReftypestyle& reftypestyle_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:acr_nav.FDb.reftypestyle.XrefMaybe
+bool                 reftypestyle_XrefMaybe(acr_nav::FReftypestyle &row);
+
+// Return true if hash is empty
+// func:acr_nav.FDb.ind_reftypestyle.EmptyQ
+inline bool          ind_reftypestyle_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+// func:acr_nav.FDb.ind_reftypestyle.Find
+acr_nav::FReftypestyle* ind_reftypestyle_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:acr_nav.FDb.ind_reftypestyle.FindX
+acr_nav::FReftypestyle& ind_reftypestyle_FindX(const algo::strptr& key);
+// Return number of items in the hash
+// func:acr_nav.FDb.ind_reftypestyle.N
+inline i32           ind_reftypestyle_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:acr_nav.FDb.ind_reftypestyle.InsertMaybe
+bool                 ind_reftypestyle_InsertMaybe(acr_nav::FReftypestyle& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+// func:acr_nav.FDb.ind_reftypestyle.Remove
+void                 ind_reftypestyle_Remove(acr_nav::FReftypestyle& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+// func:acr_nav.FDb.ind_reftypestyle.Reserve
+void                 ind_reftypestyle_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:acr_nav.FDb.ind_reftypestyle.AbsReserve
+void                 ind_reftypestyle_AbsReserve(int n) __attribute__((nothrow));
+
 // cursor points to valid item
 // func:acr_nav.FDb.ctype_curs.Reset
 inline void          _db_ctype_curs_Reset(_db_ctype_curs &curs, acr_nav::FDb &parent) __attribute__((nothrow));
@@ -1092,6 +1245,30 @@ inline void          _db_zd_sel_ctype_curs_Next(_db_zd_sel_ctype_curs &curs) __a
 // item access
 // func:acr_nav.FDb.zd_sel_ctype_curs.Access
 inline acr_nav::FCtype& _db_zd_sel_ctype_curs_Access(_db_zd_sel_ctype_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:acr_nav.FDb.navstyle_curs.Reset
+inline void          _db_navstyle_curs_Reset(_db_navstyle_curs &curs, acr_nav::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:acr_nav.FDb.navstyle_curs.ValidQ
+inline bool          _db_navstyle_curs_ValidQ(_db_navstyle_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:acr_nav.FDb.navstyle_curs.Next
+inline void          _db_navstyle_curs_Next(_db_navstyle_curs &curs) __attribute__((nothrow));
+// item access
+// func:acr_nav.FDb.navstyle_curs.Access
+inline acr_nav::FNavstyle& _db_navstyle_curs_Access(_db_navstyle_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:acr_nav.FDb.reftypestyle_curs.Reset
+inline void          _db_reftypestyle_curs_Reset(_db_reftypestyle_curs &curs, acr_nav::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:acr_nav.FDb.reftypestyle_curs.ValidQ
+inline bool          _db_reftypestyle_curs_ValidQ(_db_reftypestyle_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:acr_nav.FDb.reftypestyle_curs.Next
+inline void          _db_reftypestyle_curs_Next(_db_reftypestyle_curs &curs) __attribute__((nothrow));
+// item access
+// func:acr_nav.FDb.reftypestyle_curs.Access
+inline acr_nav::FReftypestyle& _db_reftypestyle_curs_Access(_db_reftypestyle_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:acr_nav.FDb..Init
 void                 FDb_Init();
@@ -1286,6 +1463,50 @@ inline void          FNavmode_Init(acr_nav::FNavmode& navmode);
 // func:acr_nav.FNavmode..Uninit
 void                 FNavmode_Uninit(acr_nav::FNavmode& navmode) __attribute__((nothrow));
 
+// --- acr_nav.FNavstyle
+// create: acr_nav.FDb.navstyle (Lary)
+// global access: navstyle (Lary, by rowid)
+// global access: ind_navstyle (Thash, hash field navstyle)
+// access: acr_nav.FReftypestyle.p_navstyle (Upptr)
+struct FNavstyle { // acr_nav.FNavstyle
+    acr_nav::FNavstyle*   ind_navstyle_next;      // hash next
+    u32                   ind_navstyle_hashval;   // hash value
+    algo::Smallstr50      navstyle;               //
+    bool                  bold;                   //   false
+    bool                  dim;                    //   false
+    bool                  reverse;                //   false
+    bool                  fg_red;                 //   false
+    bool                  fg_green;               //   false
+    bool                  fg_blue;                //   false
+    algo::Comment         comment;                //
+    // func:acr_nav.FNavstyle..AssignOp
+    inline acr_nav::FNavstyle& operator =(const acr_nav::FNavstyle &rhs) = delete;
+    // func:acr_nav.FNavstyle..CopyCtor
+    inline               FNavstyle(const acr_nav::FNavstyle &rhs) = delete;
+private:
+    // func:acr_nav.FNavstyle..Ctor
+    inline               FNavstyle() __attribute__((nothrow));
+    // func:acr_nav.FNavstyle..Dtor
+    inline               ~FNavstyle() __attribute__((nothrow));
+    friend acr_nav::FNavstyle&  navstyle_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend acr_nav::FNavstyle*  navstyle_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 navstyle_RemoveAll() __attribute__((nothrow));
+    friend void                 navstyle_RemoveLast() __attribute__((nothrow));
+};
+
+// Copy fields out of row
+// func:acr_nav.FNavstyle.base.CopyOut
+void                 navstyle_CopyOut(acr_nav::FNavstyle &row, acr_navdb::Navstyle &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:acr_nav.FNavstyle.base.CopyIn
+void                 navstyle_CopyIn(acr_nav::FNavstyle &row, acr_navdb::Navstyle &in) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:acr_nav.FNavstyle..Init
+inline void          FNavstyle_Init(acr_nav::FNavstyle& navstyle);
+// func:acr_nav.FNavstyle..Uninit
+void                 FNavstyle_Uninit(acr_nav::FNavstyle& navstyle) __attribute__((nothrow));
+
 // --- acr_nav.FNs
 // create: acr_nav.FDb.ns (Lary)
 // global access: ns (Lary, by rowid)
@@ -1377,22 +1598,25 @@ void                 FPanel_Uninit(acr_nav::FPanel& panel) __attribute__((nothro
 // global access: ind_reftype (Thash, hash field reftype)
 // access: acr_nav.FField.p_reftype (Upptr)
 struct FReftype { // acr_nav.FReftype
-    acr_nav::FReftype*   ind_reftype_next;      // hash next
-    u32                  ind_reftype_hashval;   // hash value
-    algo::Smallstr50     reftype;               //   "Val"
-    bool                 isval;                 //   false  True if field makes values of target type
-    bool                 cascins;               //   false  Field is cascade-insert
-    bool                 usebasepool;           //   false  Fields with this type make use of dmmeta.basepool
-    bool                 cancopy;               //   false  This type of field can be copied
-    bool                 isxref;                //   false  This type of field is an x-ref
-    bool                 del;                   //   false  Supports random deletion?
-    bool                 up;                    //   false  This type of field is a reference
-    bool                 isnew;                 //   false  If set, skip this relation in amc_vis
-    bool                 hasalloc;              //   false  Generte Alloc/Delete functions for arg type
-    bool                 inst;                  //   false  Field creates an instance of arg type (directly or indirectly)
-    bool                 varlen;                //   false  This pool supports varlen allocations
+    acr_nav::FReftype*        ind_reftype_next;      // hash next
+    u32                       ind_reftype_hashval;   // hash value
+    algo::Smallstr50          reftype;               //   "Val"
+    bool                      isval;                 //   false  True if field makes values of target type
+    bool                      cascins;               //   false  Field is cascade-insert
+    bool                      usebasepool;           //   false  Fields with this type make use of dmmeta.basepool
+    bool                      cancopy;               //   false  This type of field can be copied
+    bool                      isxref;                //   false  This type of field is an x-ref
+    bool                      del;                   //   false  Supports random deletion?
+    bool                      up;                    //   false  This type of field is a reference
+    bool                      isnew;                 //   false  If set, skip this relation in amc_vis
+    bool                      hasalloc;              //   false  Generte Alloc/Delete functions for arg type
+    bool                      inst;                  //   false  Field creates an instance of arg type (directly or indirectly)
+    bool                      varlen;                //   false  This pool supports varlen allocations
+    acr_nav::FReftypestyle*   c_reftypestyle;        // optional pointer
+    // x-reference on acr_nav.FReftype.c_reftypestyle prevents copy
     // func:acr_nav.FReftype..AssignOp
     acr_nav::FReftype&   operator =(const acr_nav::FReftype &rhs) = delete;
+    // x-reference on acr_nav.FReftype.c_reftypestyle prevents copy
     // func:acr_nav.FReftype..CopyCtor
     FReftype(const acr_nav::FReftype &rhs) = delete;
 private:
@@ -1413,11 +1637,65 @@ void                 reftype_CopyOut(acr_nav::FReftype &row, dmmeta::Reftype &ou
 // func:acr_nav.FReftype.base.CopyIn
 void                 reftype_CopyIn(acr_nav::FReftype &row, dmmeta::Reftype &in) __attribute__((nothrow));
 
+// Insert row into pointer index. Return final membership status.
+// func:acr_nav.FReftype.c_reftypestyle.InsertMaybe
+inline bool          c_reftypestyle_InsertMaybe(acr_nav::FReftype& reftype, acr_nav::FReftypestyle& row) __attribute__((nothrow));
+// Remove element from index. If element is not in index, do nothing.
+// func:acr_nav.FReftype.c_reftypestyle.Remove
+inline void          c_reftypestyle_Remove(acr_nav::FReftype& reftype, acr_nav::FReftypestyle& row) __attribute__((nothrow));
+
 // Set all fields to initial values.
 // func:acr_nav.FReftype..Init
 void                 FReftype_Init(acr_nav::FReftype& reftype);
 // func:acr_nav.FReftype..Uninit
 void                 FReftype_Uninit(acr_nav::FReftype& reftype) __attribute__((nothrow));
+
+// --- acr_nav.FReftypestyle
+// create: acr_nav.FDb.reftypestyle (Lary)
+// global access: reftypestyle (Lary, by rowid)
+// global access: ind_reftypestyle (Thash, hash field reftypestyle)
+// access: acr_nav.FReftype.c_reftypestyle (Ptr)
+struct FReftypestyle { // acr_nav.FReftypestyle
+    acr_nav::FReftypestyle*   ind_reftypestyle_next;      // hash next
+    u32                       ind_reftypestyle_hashval;   // hash value
+    algo::Smallstr50          reftypestyle;               //
+    algo::Comment             comment;                    //
+    acr_nav::FNavstyle*       p_navstyle;                 // reference to parent row
+    // x-reference on acr_nav.FReftypestyle.p_navstyle prevents copy
+    // func:acr_nav.FReftypestyle..AssignOp
+    inline acr_nav::FReftypestyle& operator =(const acr_nav::FReftypestyle &rhs) = delete;
+    // x-reference on acr_nav.FReftypestyle.p_navstyle prevents copy
+    // func:acr_nav.FReftypestyle..CopyCtor
+    inline               FReftypestyle(const acr_nav::FReftypestyle &rhs) = delete;
+private:
+    // func:acr_nav.FReftypestyle..Ctor
+    inline               FReftypestyle() __attribute__((nothrow));
+    // func:acr_nav.FReftypestyle..Dtor
+    inline               ~FReftypestyle() __attribute__((nothrow));
+    friend acr_nav::FReftypestyle& reftypestyle_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend acr_nav::FReftypestyle* reftypestyle_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 reftypestyle_RemoveAll() __attribute__((nothrow));
+    friend void                 reftypestyle_RemoveLast() __attribute__((nothrow));
+};
+
+// Copy fields out of row
+// func:acr_nav.FReftypestyle.base.CopyOut
+void                 reftypestyle_CopyOut(acr_nav::FReftypestyle &row, acr_navdb::Reftypestyle &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:acr_nav.FReftypestyle.base.CopyIn
+void                 reftypestyle_CopyIn(acr_nav::FReftypestyle &row, acr_navdb::Reftypestyle &in) __attribute__((nothrow));
+
+// func:acr_nav.FReftypestyle.reftype.Get
+algo::Smallstr50     reftype_Get(acr_nav::FReftypestyle& reftypestyle) __attribute__((__warn_unused_result__, nothrow));
+
+// func:acr_nav.FReftypestyle.navstyle.Get
+algo::Smallstr50     navstyle_Get(acr_nav::FReftypestyle& reftypestyle) __attribute__((__warn_unused_result__, nothrow));
+
+// Set all fields to initial values.
+// func:acr_nav.FReftypestyle..Init
+inline void          FReftypestyle_Init(acr_nav::FReftypestyle& reftypestyle);
+// func:acr_nav.FReftypestyle..Uninit
+void                 FReftypestyle_Uninit(acr_nav::FReftypestyle& reftypestyle) __attribute__((nothrow));
 
 // --- acr_nav.FieldId
 #pragma pack(push,1)
@@ -1630,6 +1908,22 @@ struct _db_zd_sel_ctype_curs {// fcurs:acr_nav.FDb.zd_sel_ctype/curs
     _db_zd_sel_ctype_curs() {
         row = NULL;
     }
+};
+
+
+struct _db_navstyle_curs {// cursor
+    typedef acr_nav::FNavstyle ChildType;
+    acr_nav::FDb *parent;
+    i64 index;
+    _db_navstyle_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_reftypestyle_curs {// cursor
+    typedef acr_nav::FReftypestyle ChildType;
+    acr_nav::FDb *parent;
+    i64 index;
+    _db_reftypestyle_curs(){ parent=NULL; index=0; }
 };
 
 } // gen:ns_curstext

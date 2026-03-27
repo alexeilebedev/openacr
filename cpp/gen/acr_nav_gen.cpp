@@ -83,6 +83,10 @@ namespace acr_nav { // gen:ns_print_proto
     static bool          panel_InputMaybe(acr_navdb::Panel &elem) __attribute__((nothrow));
     // func:acr_nav.FDb.navmode.InputMaybe
     static bool          navmode_InputMaybe(acr_navdb::Navmode &elem) __attribute__((nothrow));
+    // func:acr_nav.FDb.navstyle.InputMaybe
+    static bool          navstyle_InputMaybe(acr_navdb::Navstyle &elem) __attribute__((nothrow));
+    // func:acr_nav.FDb.reftypestyle.InputMaybe
+    static bool          reftypestyle_InputMaybe(acr_navdb::Reftypestyle &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
     // func:acr_nav.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
@@ -387,7 +391,7 @@ static void acr_nav::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_nav.Input'  signature:'75168965bb7ad26c8ac4bcf34c7e189b16c1923c'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_nav.Input'  signature:'ddad0de977ffe834ac0cc76b691b21e9a4aab5b6'");
 }
 
 // --- acr_nav.FDb._db.InsertStrptrMaybe
@@ -440,6 +444,18 @@ bool acr_nav::InsertStrptrMaybe(algo::strptr str) {
             retval = retval && navmode_InputMaybe(elem);
             break;
         }
+        case acr_nav_TableId_acr_navdb_Navstyle: { // finput:acr_nav.FDb.navstyle
+            acr_navdb::Navstyle elem;
+            retval = acr_navdb::Navstyle_ReadStrptrMaybe(elem, str);
+            retval = retval && navstyle_InputMaybe(elem);
+            break;
+        }
+        case acr_nav_TableId_acr_navdb_Reftypestyle: { // finput:acr_nav.FDb.reftypestyle
+            acr_navdb::Reftypestyle elem;
+            retval = acr_navdb::Reftypestyle_ReadStrptrMaybe(elem, str);
+            retval = retval && reftypestyle_InputMaybe(elem);
+            break;
+        }
         default:
         break;
     } //switch
@@ -463,6 +479,8 @@ bool acr_nav::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && acr_nav::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ctype"),recursive);
         retval = retval && acr_nav::LoadTuplesFile(algo::SsimFname(root,"dmmeta.field"),recursive);
         retval = retval && acr_nav::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
+        retval = retval && acr_nav::LoadTuplesFile(algo::SsimFname(root,"acr_navdb.navstyle"),recursive);
+        retval = retval && acr_nav::LoadTuplesFile(algo::SsimFname(root,"acr_navdb.reftypestyle"),recursive);
         retval = retval && acr_nav::LoadTuplesFile(algo::SsimFname(root,"acr_navdb.panel"),recursive);
         retval = retval && acr_nav::LoadTuplesFile(algo::SsimFname(root,"acr_navdb.navmode"),recursive);
         retval = retval && acr_nav::LoadTuplesFile(algo::SsimFname(root,"acr_navdb.keybind"),recursive);
@@ -2650,6 +2668,474 @@ acr_nav::FCtype* acr_nav::zd_sel_ctype_RemoveFirst() {
     return row;
 }
 
+// --- acr_nav.FDb.navstyle.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+acr_nav::FNavstyle& acr_nav::navstyle_Alloc() {
+    acr_nav::FNavstyle* row = navstyle_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("acr_nav.out_of_mem  field:acr_nav.FDb.navstyle  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- acr_nav.FDb.navstyle.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+acr_nav::FNavstyle* acr_nav::navstyle_AllocMaybe() {
+    acr_nav::FNavstyle *row = (acr_nav::FNavstyle*)navstyle_AllocMem();
+    if (row) {
+        new (row) acr_nav::FNavstyle; // call constructor
+    }
+    return row;
+}
+
+// --- acr_nav.FDb.navstyle.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+acr_nav::FNavstyle* acr_nav::navstyle_InsertMaybe(const acr_navdb::Navstyle &value) {
+    acr_nav::FNavstyle *row = &navstyle_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    navstyle_CopyIn(*row,const_cast<acr_navdb::Navstyle&>(value));
+    bool ok = navstyle_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        navstyle_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- acr_nav.FDb.navstyle.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* acr_nav::navstyle_AllocMem() {
+    u64 new_nelems     = _db.navstyle_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    acr_nav::FNavstyle*  lev   = NULL;
+    if (bsr < 32) {
+        lev = _db.navstyle_lary[bsr];
+        if (!lev) {
+            lev=(acr_nav::FNavstyle*)algo_lib::malloc_AllocMem(sizeof(acr_nav::FNavstyle) * (u64(1)<<bsr));
+            _db.navstyle_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.navstyle_n = i32(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- acr_nav.FDb.navstyle.RemoveAll
+// Remove all elements from Lary
+void acr_nav::navstyle_RemoveAll() {
+    for (u64 n = _db.navstyle_n; n>0; ) {
+        n--;
+        navstyle_qFind(u64(n)).~FNavstyle(); // destroy last element
+        _db.navstyle_n = i32(n);
+    }
+}
+
+// --- acr_nav.FDb.navstyle.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void acr_nav::navstyle_RemoveLast() {
+    u64 n = _db.navstyle_n;
+    if (n > 0) {
+        n -= 1;
+        navstyle_qFind(u64(n)).~FNavstyle();
+        _db.navstyle_n = i32(n);
+    }
+}
+
+// --- acr_nav.FDb.navstyle.InputMaybe
+static bool acr_nav::navstyle_InputMaybe(acr_navdb::Navstyle &elem) {
+    bool retval = true;
+    retval = navstyle_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- acr_nav.FDb.navstyle.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool acr_nav::navstyle_XrefMaybe(acr_nav::FNavstyle &row) {
+    bool retval = true;
+    (void)row;
+    // insert navstyle into index ind_navstyle
+    if (true) { // user-defined insert condition
+        bool success = ind_navstyle_InsertMaybe(row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "acr_nav.duplicate_key  xref:acr_nav.FDb.ind_navstyle"; // check for duplicate key
+            return false;
+        }
+    }
+    return retval;
+}
+
+// --- acr_nav.FDb.ind_navstyle.Find
+// Find row by key. Return NULL if not found.
+acr_nav::FNavstyle* acr_nav::ind_navstyle_Find(const algo::strptr& key) {
+    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_navstyle_buckets_n - 1);
+    acr_nav::FNavstyle *ret = _db.ind_navstyle_buckets_elems[index];
+    for (; ret && !((*ret).navstyle == key); ret = ret->ind_navstyle_next) {
+    }
+    return ret;
+}
+
+// --- acr_nav.FDb.ind_navstyle.FindX
+// Look up row by key and return reference. Throw exception if not found
+acr_nav::FNavstyle& acr_nav::ind_navstyle_FindX(const algo::strptr& key) {
+    acr_nav::FNavstyle* ret = ind_navstyle_Find(key);
+    vrfy(ret, tempstr() << "acr_nav.key_error  table:ind_navstyle  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
+// --- acr_nav.FDb.ind_navstyle.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+acr_nav::FNavstyle& acr_nav::ind_navstyle_GetOrCreate(const algo::strptr& key) {
+    acr_nav::FNavstyle* ret = ind_navstyle_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &navstyle_Alloc();
+        (*ret).navstyle = key;
+        bool good = navstyle_XrefMaybe(*ret);
+        if (!good) {
+            navstyle_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    vrfy(ret, tempstr() << "acr_nav.create_error  table:ind_navstyle  key:'"<<key<<"'  comment:'bad xref'");
+    return *ret;
+}
+
+// --- acr_nav.FDb.ind_navstyle.InsertMaybe
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool acr_nav::ind_navstyle_InsertMaybe(acr_nav::FNavstyle& row) {
+    bool retval = true; // if already in hash, InsertMaybe returns true
+    if (LIKELY(row.ind_navstyle_next == (acr_nav::FNavstyle*)-1)) {// check if in hash already
+        row.ind_navstyle_hashval = algo::Smallstr50_Hash(0, row.navstyle);
+        ind_navstyle_Reserve(1);
+        u32 index = row.ind_navstyle_hashval & (_db.ind_navstyle_buckets_n - 1);
+        acr_nav::FNavstyle* *prev = &_db.ind_navstyle_buckets_elems[index];
+        do {
+            acr_nav::FNavstyle* ret = *prev;
+            if (!ret) { // exit condition 1: reached the end of the list
+                break;
+            }
+            if ((*ret).navstyle == row.navstyle) { // exit condition 2: found matching key
+                retval = false;
+                break;
+            }
+            prev = &ret->ind_navstyle_next;
+        } while (true);
+        if (retval) {
+            row.ind_navstyle_next = *prev;
+            _db.ind_navstyle_n++;
+            *prev = &row;
+        }
+    }
+    return retval;
+}
+
+// --- acr_nav.FDb.ind_navstyle.Remove
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void acr_nav::ind_navstyle_Remove(acr_nav::FNavstyle& row) {
+    if (LIKELY(row.ind_navstyle_next != (acr_nav::FNavstyle*)-1)) {// check if in hash already
+        u32 index = row.ind_navstyle_hashval & (_db.ind_navstyle_buckets_n - 1);
+        acr_nav::FNavstyle* *prev = &_db.ind_navstyle_buckets_elems[index]; // addr of pointer to current element
+        while (acr_nav::FNavstyle *next = *prev) {                          // scan the collision chain for our element
+            if (next == &row) {        // found it?
+                *prev = next->ind_navstyle_next; // unlink (singly linked list)
+                _db.ind_navstyle_n--;
+                row.ind_navstyle_next = (acr_nav::FNavstyle*)-1;// not-in-hash
+                break;
+            }
+            prev = &next->ind_navstyle_next;
+        }
+    }
+}
+
+// --- acr_nav.FDb.ind_navstyle.Reserve
+// Reserve enough room in the hash for N more elements. Return success code.
+void acr_nav::ind_navstyle_Reserve(int n) {
+    ind_navstyle_AbsReserve(_db.ind_navstyle_n + n);
+}
+
+// --- acr_nav.FDb.ind_navstyle.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void acr_nav::ind_navstyle_AbsReserve(int n) {
+    u32 old_nbuckets = _db.ind_navstyle_buckets_n;
+    u32 new_nelems   = n;
+    // # of elements has to be roughly equal to the number of buckets
+    if (new_nelems > old_nbuckets) {
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
+        u32 old_size = old_nbuckets * sizeof(acr_nav::FNavstyle*);
+        u32 new_size = new_nbuckets * sizeof(acr_nav::FNavstyle*);
+        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
+        // means new memory will have to be allocated anyway
+        acr_nav::FNavstyle* *new_buckets = (acr_nav::FNavstyle**)algo_lib::malloc_AllocMem(new_size);
+        if (UNLIKELY(!new_buckets)) {
+            FatalErrorExit("acr_nav.out_of_memory  field:acr_nav.FDb.ind_navstyle");
+        }
+        memset(new_buckets, 0, new_size); // clear pointers
+        // rehash all entries
+        for (int i = 0; i < _db.ind_navstyle_buckets_n; i++) {
+            acr_nav::FNavstyle* elem = _db.ind_navstyle_buckets_elems[i];
+            while (elem) {
+                acr_nav::FNavstyle &row        = *elem;
+                acr_nav::FNavstyle* next       = row.ind_navstyle_next;
+                u32 index          = row.ind_navstyle_hashval & (new_nbuckets-1);
+                row.ind_navstyle_next     = new_buckets[index];
+                new_buckets[index] = &row;
+                elem               = next;
+            }
+        }
+        // free old array
+        algo_lib::malloc_FreeMem(_db.ind_navstyle_buckets_elems, old_size);
+        _db.ind_navstyle_buckets_elems = new_buckets;
+        _db.ind_navstyle_buckets_n = new_nbuckets;
+    }
+}
+
+// --- acr_nav.FDb.reftypestyle.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+acr_nav::FReftypestyle& acr_nav::reftypestyle_Alloc() {
+    acr_nav::FReftypestyle* row = reftypestyle_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("acr_nav.out_of_mem  field:acr_nav.FDb.reftypestyle  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- acr_nav.FDb.reftypestyle.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+acr_nav::FReftypestyle* acr_nav::reftypestyle_AllocMaybe() {
+    acr_nav::FReftypestyle *row = (acr_nav::FReftypestyle*)reftypestyle_AllocMem();
+    if (row) {
+        new (row) acr_nav::FReftypestyle; // call constructor
+    }
+    return row;
+}
+
+// --- acr_nav.FDb.reftypestyle.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+acr_nav::FReftypestyle* acr_nav::reftypestyle_InsertMaybe(const acr_navdb::Reftypestyle &value) {
+    acr_nav::FReftypestyle *row = &reftypestyle_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    reftypestyle_CopyIn(*row,const_cast<acr_navdb::Reftypestyle&>(value));
+    bool ok = reftypestyle_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        reftypestyle_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- acr_nav.FDb.reftypestyle.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* acr_nav::reftypestyle_AllocMem() {
+    u64 new_nelems     = _db.reftypestyle_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    acr_nav::FReftypestyle*  lev   = NULL;
+    if (bsr < 32) {
+        lev = _db.reftypestyle_lary[bsr];
+        if (!lev) {
+            lev=(acr_nav::FReftypestyle*)algo_lib::malloc_AllocMem(sizeof(acr_nav::FReftypestyle) * (u64(1)<<bsr));
+            _db.reftypestyle_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.reftypestyle_n = i32(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- acr_nav.FDb.reftypestyle.RemoveAll
+// Remove all elements from Lary
+void acr_nav::reftypestyle_RemoveAll() {
+    for (u64 n = _db.reftypestyle_n; n>0; ) {
+        n--;
+        reftypestyle_qFind(u64(n)).~FReftypestyle(); // destroy last element
+        _db.reftypestyle_n = i32(n);
+    }
+}
+
+// --- acr_nav.FDb.reftypestyle.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void acr_nav::reftypestyle_RemoveLast() {
+    u64 n = _db.reftypestyle_n;
+    if (n > 0) {
+        n -= 1;
+        reftypestyle_qFind(u64(n)).~FReftypestyle();
+        _db.reftypestyle_n = i32(n);
+    }
+}
+
+// --- acr_nav.FDb.reftypestyle.InputMaybe
+static bool acr_nav::reftypestyle_InputMaybe(acr_navdb::Reftypestyle &elem) {
+    bool retval = true;
+    retval = reftypestyle_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- acr_nav.FDb.reftypestyle.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool acr_nav::reftypestyle_XrefMaybe(acr_nav::FReftypestyle &row) {
+    bool retval = true;
+    (void)row;
+    acr_nav::FNavstyle* p_navstyle = acr_nav::ind_navstyle_Find(navstyle_Get(row));
+    if (UNLIKELY(!p_navstyle)) {
+        algo_lib::ResetErrtext() << "acr_nav.bad_xref  index:acr_nav.FDb.ind_navstyle" << Keyval("key", navstyle_Get(row));
+        return false;
+    }
+    // reftypestyle: save pointer to navstyle
+    if (true) { // user-defined insert condition
+        row.p_navstyle = p_navstyle;
+    }
+    // insert reftypestyle into index ind_reftypestyle
+    if (true) { // user-defined insert condition
+        bool success = ind_reftypestyle_InsertMaybe(row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "acr_nav.duplicate_key  xref:acr_nav.FDb.ind_reftypestyle"; // check for duplicate key
+            return false;
+        }
+    }
+    acr_nav::FReftype* p_reftype = acr_nav::ind_reftype_Find(reftype_Get(row));
+    if (UNLIKELY(!p_reftype)) {
+        algo_lib::ResetErrtext() << "acr_nav.bad_xref  index:acr_nav.FDb.ind_reftype" << Keyval("key", reftype_Get(row));
+        return false;
+    }
+    // insert reftypestyle into index c_reftypestyle
+    if (true) { // user-defined insert condition
+        bool success = c_reftypestyle_InsertMaybe(*p_reftype, row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "acr_nav.duplicate_key  xref:acr_nav.FReftype.c_reftypestyle"; // check for duplicate key
+            return false;
+        }
+    }
+    return retval;
+}
+
+// --- acr_nav.FDb.ind_reftypestyle.Find
+// Find row by key. Return NULL if not found.
+acr_nav::FReftypestyle* acr_nav::ind_reftypestyle_Find(const algo::strptr& key) {
+    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_reftypestyle_buckets_n - 1);
+    acr_nav::FReftypestyle *ret = _db.ind_reftypestyle_buckets_elems[index];
+    for (; ret && !((*ret).reftypestyle == key); ret = ret->ind_reftypestyle_next) {
+    }
+    return ret;
+}
+
+// --- acr_nav.FDb.ind_reftypestyle.FindX
+// Look up row by key and return reference. Throw exception if not found
+acr_nav::FReftypestyle& acr_nav::ind_reftypestyle_FindX(const algo::strptr& key) {
+    acr_nav::FReftypestyle* ret = ind_reftypestyle_Find(key);
+    vrfy(ret, tempstr() << "acr_nav.key_error  table:ind_reftypestyle  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
+// --- acr_nav.FDb.ind_reftypestyle.InsertMaybe
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool acr_nav::ind_reftypestyle_InsertMaybe(acr_nav::FReftypestyle& row) {
+    bool retval = true; // if already in hash, InsertMaybe returns true
+    if (LIKELY(row.ind_reftypestyle_next == (acr_nav::FReftypestyle*)-1)) {// check if in hash already
+        row.ind_reftypestyle_hashval = algo::Smallstr50_Hash(0, row.reftypestyle);
+        ind_reftypestyle_Reserve(1);
+        u32 index = row.ind_reftypestyle_hashval & (_db.ind_reftypestyle_buckets_n - 1);
+        acr_nav::FReftypestyle* *prev = &_db.ind_reftypestyle_buckets_elems[index];
+        do {
+            acr_nav::FReftypestyle* ret = *prev;
+            if (!ret) { // exit condition 1: reached the end of the list
+                break;
+            }
+            if ((*ret).reftypestyle == row.reftypestyle) { // exit condition 2: found matching key
+                retval = false;
+                break;
+            }
+            prev = &ret->ind_reftypestyle_next;
+        } while (true);
+        if (retval) {
+            row.ind_reftypestyle_next = *prev;
+            _db.ind_reftypestyle_n++;
+            *prev = &row;
+        }
+    }
+    return retval;
+}
+
+// --- acr_nav.FDb.ind_reftypestyle.Remove
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void acr_nav::ind_reftypestyle_Remove(acr_nav::FReftypestyle& row) {
+    if (LIKELY(row.ind_reftypestyle_next != (acr_nav::FReftypestyle*)-1)) {// check if in hash already
+        u32 index = row.ind_reftypestyle_hashval & (_db.ind_reftypestyle_buckets_n - 1);
+        acr_nav::FReftypestyle* *prev = &_db.ind_reftypestyle_buckets_elems[index]; // addr of pointer to current element
+        while (acr_nav::FReftypestyle *next = *prev) {                          // scan the collision chain for our element
+            if (next == &row) {        // found it?
+                *prev = next->ind_reftypestyle_next; // unlink (singly linked list)
+                _db.ind_reftypestyle_n--;
+                row.ind_reftypestyle_next = (acr_nav::FReftypestyle*)-1;// not-in-hash
+                break;
+            }
+            prev = &next->ind_reftypestyle_next;
+        }
+    }
+}
+
+// --- acr_nav.FDb.ind_reftypestyle.Reserve
+// Reserve enough room in the hash for N more elements. Return success code.
+void acr_nav::ind_reftypestyle_Reserve(int n) {
+    ind_reftypestyle_AbsReserve(_db.ind_reftypestyle_n + n);
+}
+
+// --- acr_nav.FDb.ind_reftypestyle.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void acr_nav::ind_reftypestyle_AbsReserve(int n) {
+    u32 old_nbuckets = _db.ind_reftypestyle_buckets_n;
+    u32 new_nelems   = n;
+    // # of elements has to be roughly equal to the number of buckets
+    if (new_nelems > old_nbuckets) {
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
+        u32 old_size = old_nbuckets * sizeof(acr_nav::FReftypestyle*);
+        u32 new_size = new_nbuckets * sizeof(acr_nav::FReftypestyle*);
+        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
+        // means new memory will have to be allocated anyway
+        acr_nav::FReftypestyle* *new_buckets = (acr_nav::FReftypestyle**)algo_lib::malloc_AllocMem(new_size);
+        if (UNLIKELY(!new_buckets)) {
+            FatalErrorExit("acr_nav.out_of_memory  field:acr_nav.FDb.ind_reftypestyle");
+        }
+        memset(new_buckets, 0, new_size); // clear pointers
+        // rehash all entries
+        for (int i = 0; i < _db.ind_reftypestyle_buckets_n; i++) {
+            acr_nav::FReftypestyle* elem = _db.ind_reftypestyle_buckets_elems[i];
+            while (elem) {
+                acr_nav::FReftypestyle &row        = *elem;
+                acr_nav::FReftypestyle* next       = row.ind_reftypestyle_next;
+                u32 index          = row.ind_reftypestyle_hashval & (new_nbuckets-1);
+                row.ind_reftypestyle_next     = new_buckets[index];
+                new_buckets[index] = &row;
+                elem               = next;
+            }
+        }
+        // free old array
+        algo_lib::malloc_FreeMem(_db.ind_reftypestyle_buckets_elems, old_size);
+        _db.ind_reftypestyle_buckets_elems = new_buckets;
+        _db.ind_reftypestyle_buckets_n = new_nbuckets;
+    }
+}
+
 // --- acr_nav.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
 static algo::ImrowPtr acr_nav::trace_RowidFind(int t) {
@@ -2831,6 +3317,44 @@ void acr_nav::FDb_Init() {
     _db.running = bool(true);
     _db.term_hei = i32(0);
     _db.term_wid = i32(0);
+    // initialize LAry navstyle (acr_nav.FDb.navstyle)
+    _db.navstyle_n = 0;
+    memset(_db.navstyle_lary, 0, sizeof(_db.navstyle_lary)); // zero out all level pointers
+    acr_nav::FNavstyle* navstyle_first = (acr_nav::FNavstyle*)algo_lib::malloc_AllocMem(sizeof(acr_nav::FNavstyle) * (u64(1)<<4));
+    if (!navstyle_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.navstyle_lary[i]  = navstyle_first;
+        navstyle_first    += 1ULL<<i;
+    }
+    // initialize hash table for acr_nav::FNavstyle;
+    _db.ind_navstyle_n             	= 0; // (acr_nav.FDb.ind_navstyle)
+    _db.ind_navstyle_buckets_n     	= 4; // (acr_nav.FDb.ind_navstyle)
+    _db.ind_navstyle_buckets_elems 	= (acr_nav::FNavstyle**)algo_lib::malloc_AllocMem(sizeof(acr_nav::FNavstyle*)*_db.ind_navstyle_buckets_n); // initial buckets (acr_nav.FDb.ind_navstyle)
+    if (!_db.ind_navstyle_buckets_elems) {
+        FatalErrorExit("out of memory"); // (acr_nav.FDb.ind_navstyle)
+    }
+    memset(_db.ind_navstyle_buckets_elems, 0, sizeof(acr_nav::FNavstyle*)*_db.ind_navstyle_buckets_n); // (acr_nav.FDb.ind_navstyle)
+    // initialize LAry reftypestyle (acr_nav.FDb.reftypestyle)
+    _db.reftypestyle_n = 0;
+    memset(_db.reftypestyle_lary, 0, sizeof(_db.reftypestyle_lary)); // zero out all level pointers
+    acr_nav::FReftypestyle* reftypestyle_first = (acr_nav::FReftypestyle*)algo_lib::malloc_AllocMem(sizeof(acr_nav::FReftypestyle) * (u64(1)<<4));
+    if (!reftypestyle_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.reftypestyle_lary[i]  = reftypestyle_first;
+        reftypestyle_first    += 1ULL<<i;
+    }
+    // initialize hash table for acr_nav::FReftypestyle;
+    _db.ind_reftypestyle_n             	= 0; // (acr_nav.FDb.ind_reftypestyle)
+    _db.ind_reftypestyle_buckets_n     	= 4; // (acr_nav.FDb.ind_reftypestyle)
+    _db.ind_reftypestyle_buckets_elems 	= (acr_nav::FReftypestyle**)algo_lib::malloc_AllocMem(sizeof(acr_nav::FReftypestyle*)*_db.ind_reftypestyle_buckets_n); // initial buckets (acr_nav.FDb.ind_reftypestyle)
+    if (!_db.ind_reftypestyle_buckets_elems) {
+        FatalErrorExit("out of memory"); // (acr_nav.FDb.ind_reftypestyle)
+    }
+    memset(_db.ind_reftypestyle_buckets_elems, 0, sizeof(acr_nav::FReftypestyle*)*_db.ind_reftypestyle_buckets_n); // (acr_nav.FDb.ind_reftypestyle)
 
     acr_nav::InitReflection();
     navaction_LoadStatic(); // gen:ns_gstatic  gstatic:acr_nav.FDb.navaction  load acr_nav.FNavaction records
@@ -2839,6 +3363,18 @@ void acr_nav::FDb_Init() {
 // --- acr_nav.FDb..Uninit
 void acr_nav::FDb_Uninit() {
     acr_nav::FDb &row = _db; (void)row;
+
+    // acr_nav.FDb.ind_reftypestyle.Uninit (Thash)  //
+    // skip destruction of ind_reftypestyle in global scope
+
+    // acr_nav.FDb.reftypestyle.Uninit (Lary)  //
+    // skip destruction in global scope
+
+    // acr_nav.FDb.ind_navstyle.Uninit (Thash)  //
+    // skip destruction of ind_navstyle in global scope
+
+    // acr_nav.FDb.navstyle.Uninit (Lary)  //
+    // skip destruction in global scope
 
     // acr_nav.FDb.navstack.Uninit (Tary)  //Navigation history
     // remove all elements from acr_nav.FDb.navstack
@@ -3023,6 +3559,38 @@ void acr_nav::FNavmode_Uninit(acr_nav::FNavmode& navmode) {
     ind_navmode_Remove(row); // remove navmode from index ind_navmode
 }
 
+// --- acr_nav.FNavstyle.base.CopyOut
+// Copy fields out of row
+void acr_nav::navstyle_CopyOut(acr_nav::FNavstyle &row, acr_navdb::Navstyle &out) {
+    out.navstyle = row.navstyle;
+    out.bold = row.bold;
+    out.dim = row.dim;
+    out.reverse = row.reverse;
+    out.fg_red = row.fg_red;
+    out.fg_green = row.fg_green;
+    out.fg_blue = row.fg_blue;
+    out.comment = row.comment;
+}
+
+// --- acr_nav.FNavstyle.base.CopyIn
+// Copy fields in to row
+void acr_nav::navstyle_CopyIn(acr_nav::FNavstyle &row, acr_navdb::Navstyle &in) {
+    row.navstyle = in.navstyle;
+    row.bold = in.bold;
+    row.dim = in.dim;
+    row.reverse = in.reverse;
+    row.fg_red = in.fg_red;
+    row.fg_green = in.fg_green;
+    row.fg_blue = in.fg_blue;
+    row.comment = in.comment;
+}
+
+// --- acr_nav.FNavstyle..Uninit
+void acr_nav::FNavstyle_Uninit(acr_nav::FNavstyle& navstyle) {
+    acr_nav::FNavstyle &row = navstyle; (void)row;
+    ind_navstyle_Remove(row); // remove navstyle from index ind_navstyle
+}
+
 // --- acr_nav.FNs.base.CopyOut
 // Copy fields out of row
 void acr_nav::ns_CopyOut(acr_nav::FNs &row, dmmeta::Ns &out) {
@@ -3122,6 +3690,7 @@ void acr_nav::FReftype_Init(acr_nav::FReftype& reftype) {
     reftype.hasalloc = bool(false);
     reftype.inst = bool(false);
     reftype.varlen = bool(false);
+    reftype.c_reftypestyle = NULL;
     reftype.ind_reftype_next = (acr_nav::FReftype*)-1; // (acr_nav.FDb.ind_reftype) not-in-hash
     reftype.ind_reftype_hashval = 0; // stored hash value
 }
@@ -3130,6 +3699,42 @@ void acr_nav::FReftype_Init(acr_nav::FReftype& reftype) {
 void acr_nav::FReftype_Uninit(acr_nav::FReftype& reftype) {
     acr_nav::FReftype &row = reftype; (void)row;
     ind_reftype_Remove(row); // remove reftype from index ind_reftype
+}
+
+// --- acr_nav.FReftypestyle.base.CopyOut
+// Copy fields out of row
+void acr_nav::reftypestyle_CopyOut(acr_nav::FReftypestyle &row, acr_navdb::Reftypestyle &out) {
+    out.reftypestyle = row.reftypestyle;
+    out.comment = row.comment;
+}
+
+// --- acr_nav.FReftypestyle.base.CopyIn
+// Copy fields in to row
+void acr_nav::reftypestyle_CopyIn(acr_nav::FReftypestyle &row, acr_navdb::Reftypestyle &in) {
+    row.reftypestyle = in.reftypestyle;
+    row.comment = in.comment;
+}
+
+// --- acr_nav.FReftypestyle.reftype.Get
+algo::Smallstr50 acr_nav::reftype_Get(acr_nav::FReftypestyle& reftypestyle) {
+    algo::Smallstr50 ret(algo::Pathcomp(reftypestyle.reftypestyle, ".RL"));
+    return ret;
+}
+
+// --- acr_nav.FReftypestyle.navstyle.Get
+algo::Smallstr50 acr_nav::navstyle_Get(acr_nav::FReftypestyle& reftypestyle) {
+    algo::Smallstr50 ret(algo::Pathcomp(reftypestyle.reftypestyle, ".RR"));
+    return ret;
+}
+
+// --- acr_nav.FReftypestyle..Uninit
+void acr_nav::FReftypestyle_Uninit(acr_nav::FReftypestyle& reftypestyle) {
+    acr_nav::FReftypestyle &row = reftypestyle; (void)row;
+    ind_reftypestyle_Remove(row); // remove reftypestyle from index ind_reftypestyle
+    acr_nav::FReftype* p_reftype = acr_nav::ind_reftype_Find(reftype_Get(row));
+    if (p_reftype)  {
+        c_reftypestyle_Remove(*p_reftype, row);// remove reftypestyle from index c_reftypestyle
+    }
 }
 
 // --- acr_nav.FieldId.value.ToCstr
@@ -3218,9 +3823,11 @@ const char* acr_nav::value_ToCstr(const acr_nav::TableId& parent) {
         case acr_nav_TableId_dmmeta_Field  : ret = "dmmeta.Field";  break;
         case acr_nav_TableId_acr_navdb_Keybind: ret = "acr_navdb.Keybind";  break;
         case acr_nav_TableId_acr_navdb_Navmode: ret = "acr_navdb.Navmode";  break;
+        case acr_nav_TableId_acr_navdb_Navstyle: ret = "acr_navdb.Navstyle";  break;
         case acr_nav_TableId_dmmeta_Ns     : ret = "dmmeta.Ns";  break;
         case acr_nav_TableId_acr_navdb_Panel: ret = "acr_navdb.Panel";  break;
         case acr_nav_TableId_dmmeta_Reftype: ret = "dmmeta.Reftype";  break;
+        case acr_nav_TableId_acr_navdb_Reftypestyle: ret = "acr_navdb.Reftypestyle";  break;
     }
     return ret;
 }
@@ -3308,6 +3915,26 @@ bool acr_nav::value_SetStrptrMaybe(acr_nav::TableId& parent, algo::strptr rhs) {
                     if (memcmp(rhs.elems+8,"b.keybind",9)==0) { value_SetEnum(parent,acr_nav_TableId_acr_navdb_keybind); ret = true; break; }
                     if (memcmp(rhs.elems+8,"b.Navmode",9)==0) { value_SetEnum(parent,acr_nav_TableId_acr_navdb_Navmode); ret = true; break; }
                     if (memcmp(rhs.elems+8,"b.navmode",9)==0) { value_SetEnum(parent,acr_nav_TableId_acr_navdb_navmode); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 18: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','c','r','_','n','a','v','d'): {
+                    if (memcmp(rhs.elems+8,"b.Navstyle",10)==0) { value_SetEnum(parent,acr_nav_TableId_acr_navdb_Navstyle); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"b.navstyle",10)==0) { value_SetEnum(parent,acr_nav_TableId_acr_navdb_navstyle); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 22: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','c','r','_','n','a','v','d'): {
+                    if (memcmp(rhs.elems+8,"b.Reftypestyle",14)==0) { value_SetEnum(parent,acr_nav_TableId_acr_navdb_Reftypestyle); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"b.reftypestyle",14)==0) { value_SetEnum(parent,acr_nav_TableId_acr_navdb_reftypestyle); ret = true; break; }
                     break;
                 }
             }

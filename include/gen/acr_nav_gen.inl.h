@@ -694,6 +694,114 @@ inline acr_nav::FCtype& acr_nav::zd_sel_ctype_qLast() {
     return *row;
 }
 
+// --- acr_nav.FDb.navstyle.EmptyQ
+// Return true if index is empty
+inline bool acr_nav::navstyle_EmptyQ() {
+    return _db.navstyle_n == 0;
+}
+
+// --- acr_nav.FDb.navstyle.Find
+// Look up row by row id. Return NULL if out of range
+inline acr_nav::FNavstyle* acr_nav::navstyle_Find(u64 t) {
+    acr_nav::FNavstyle *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.navstyle_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.navstyle_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- acr_nav.FDb.navstyle.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline acr_nav::FNavstyle* acr_nav::navstyle_Last() {
+    return navstyle_Find(u64(_db.navstyle_n-1));
+}
+
+// --- acr_nav.FDb.navstyle.N
+// Return number of items in the pool
+inline i32 acr_nav::navstyle_N() {
+    return _db.navstyle_n;
+}
+
+// --- acr_nav.FDb.navstyle.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline acr_nav::FNavstyle& acr_nav::navstyle_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.navstyle_lary[bsr][index];
+}
+
+// --- acr_nav.FDb.ind_navstyle.EmptyQ
+// Return true if hash is empty
+inline bool acr_nav::ind_navstyle_EmptyQ() {
+    return _db.ind_navstyle_n == 0;
+}
+
+// --- acr_nav.FDb.ind_navstyle.N
+// Return number of items in the hash
+inline i32 acr_nav::ind_navstyle_N() {
+    return _db.ind_navstyle_n;
+}
+
+// --- acr_nav.FDb.reftypestyle.EmptyQ
+// Return true if index is empty
+inline bool acr_nav::reftypestyle_EmptyQ() {
+    return _db.reftypestyle_n == 0;
+}
+
+// --- acr_nav.FDb.reftypestyle.Find
+// Look up row by row id. Return NULL if out of range
+inline acr_nav::FReftypestyle* acr_nav::reftypestyle_Find(u64 t) {
+    acr_nav::FReftypestyle *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.reftypestyle_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.reftypestyle_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- acr_nav.FDb.reftypestyle.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline acr_nav::FReftypestyle* acr_nav::reftypestyle_Last() {
+    return reftypestyle_Find(u64(_db.reftypestyle_n-1));
+}
+
+// --- acr_nav.FDb.reftypestyle.N
+// Return number of items in the pool
+inline i32 acr_nav::reftypestyle_N() {
+    return _db.reftypestyle_n;
+}
+
+// --- acr_nav.FDb.reftypestyle.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline acr_nav::FReftypestyle& acr_nav::reftypestyle_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.reftypestyle_lary[bsr][index];
+}
+
+// --- acr_nav.FDb.ind_reftypestyle.EmptyQ
+// Return true if hash is empty
+inline bool acr_nav::ind_reftypestyle_EmptyQ() {
+    return _db.ind_reftypestyle_n == 0;
+}
+
+// --- acr_nav.FDb.ind_reftypestyle.N
+// Return number of items in the hash
+inline i32 acr_nav::ind_reftypestyle_N() {
+    return _db.ind_reftypestyle_n;
+}
+
 // --- acr_nav.FDb.ctype_curs.Reset
 // cursor points to valid item
 inline void acr_nav::_db_ctype_curs_Reset(_db_ctype_curs &curs, acr_nav::FDb &parent) {
@@ -944,6 +1052,56 @@ inline acr_nav::FCtype& acr_nav::_db_zd_sel_ctype_curs_Access(_db_zd_sel_ctype_c
     return *curs.row;
 }
 
+// --- acr_nav.FDb.navstyle_curs.Reset
+// cursor points to valid item
+inline void acr_nav::_db_navstyle_curs_Reset(_db_navstyle_curs &curs, acr_nav::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- acr_nav.FDb.navstyle_curs.ValidQ
+// cursor points to valid item
+inline bool acr_nav::_db_navstyle_curs_ValidQ(_db_navstyle_curs &curs) {
+    return curs.index < _db.navstyle_n;
+}
+
+// --- acr_nav.FDb.navstyle_curs.Next
+// proceed to next item
+inline void acr_nav::_db_navstyle_curs_Next(_db_navstyle_curs &curs) {
+    curs.index++;
+}
+
+// --- acr_nav.FDb.navstyle_curs.Access
+// item access
+inline acr_nav::FNavstyle& acr_nav::_db_navstyle_curs_Access(_db_navstyle_curs &curs) {
+    return navstyle_qFind(u64(curs.index));
+}
+
+// --- acr_nav.FDb.reftypestyle_curs.Reset
+// cursor points to valid item
+inline void acr_nav::_db_reftypestyle_curs_Reset(_db_reftypestyle_curs &curs, acr_nav::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- acr_nav.FDb.reftypestyle_curs.ValidQ
+// cursor points to valid item
+inline bool acr_nav::_db_reftypestyle_curs_ValidQ(_db_reftypestyle_curs &curs) {
+    return curs.index < _db.reftypestyle_n;
+}
+
+// --- acr_nav.FDb.reftypestyle_curs.Next
+// proceed to next item
+inline void acr_nav::_db_reftypestyle_curs_Next(_db_reftypestyle_curs &curs) {
+    curs.index++;
+}
+
+// --- acr_nav.FDb.reftypestyle_curs.Access
+// item access
+inline acr_nav::FReftypestyle& acr_nav::_db_reftypestyle_curs_Access(_db_reftypestyle_curs &curs) {
+    return reftypestyle_qFind(u64(curs.index));
+}
+
 // --- acr_nav.FField..Ctor
 inline  acr_nav::FField::FField() {
     acr_nav::FField_Init(*this);
@@ -1015,6 +1173,29 @@ inline  acr_nav::FNavmode::~FNavmode() {
     acr_nav::FNavmode_Uninit(*this);
 }
 
+// --- acr_nav.FNavstyle..Init
+// Set all fields to initial values.
+inline void acr_nav::FNavstyle_Init(acr_nav::FNavstyle& navstyle) {
+    navstyle.bold = bool(false);
+    navstyle.dim = bool(false);
+    navstyle.reverse = bool(false);
+    navstyle.fg_red = bool(false);
+    navstyle.fg_green = bool(false);
+    navstyle.fg_blue = bool(false);
+    navstyle.ind_navstyle_next = (acr_nav::FNavstyle*)-1; // (acr_nav.FDb.ind_navstyle) not-in-hash
+    navstyle.ind_navstyle_hashval = 0; // stored hash value
+}
+
+// --- acr_nav.FNavstyle..Ctor
+inline  acr_nav::FNavstyle::FNavstyle() {
+    acr_nav::FNavstyle_Init(*this);
+}
+
+// --- acr_nav.FNavstyle..Dtor
+inline  acr_nav::FNavstyle::~FNavstyle() {
+    acr_nav::FNavstyle_Uninit(*this);
+}
+
 // --- acr_nav.FNs..Init
 // Set all fields to initial values.
 inline void acr_nav::FNs_Init(acr_nav::FNs& ns) {
@@ -1053,6 +1234,26 @@ inline  acr_nav::FPanel::~FPanel() {
     acr_nav::FPanel_Uninit(*this);
 }
 
+// --- acr_nav.FReftype.c_reftypestyle.InsertMaybe
+// Insert row into pointer index. Return final membership status.
+inline bool acr_nav::c_reftypestyle_InsertMaybe(acr_nav::FReftype& reftype, acr_nav::FReftypestyle& row) {
+    acr_nav::FReftypestyle* ptr = reftype.c_reftypestyle;
+    bool retval = (ptr == NULL) | (ptr == &row);
+    if (retval) {
+        reftype.c_reftypestyle = &row;
+    }
+    return retval;
+}
+
+// --- acr_nav.FReftype.c_reftypestyle.Remove
+// Remove element from index. If element is not in index, do nothing.
+inline void acr_nav::c_reftypestyle_Remove(acr_nav::FReftype& reftype, acr_nav::FReftypestyle& row) {
+    acr_nav::FReftypestyle *ptr = reftype.c_reftypestyle;
+    if (LIKELY(ptr == &row)) {
+        reftype.c_reftypestyle = NULL;
+    }
+}
+
 // --- acr_nav.FReftype..Ctor
 inline  acr_nav::FReftype::FReftype() {
     acr_nav::FReftype_Init(*this);
@@ -1061,6 +1262,24 @@ inline  acr_nav::FReftype::FReftype() {
 // --- acr_nav.FReftype..Dtor
 inline  acr_nav::FReftype::~FReftype() {
     acr_nav::FReftype_Uninit(*this);
+}
+
+// --- acr_nav.FReftypestyle..Init
+// Set all fields to initial values.
+inline void acr_nav::FReftypestyle_Init(acr_nav::FReftypestyle& reftypestyle) {
+    reftypestyle.p_navstyle = NULL;
+    reftypestyle.ind_reftypestyle_next = (acr_nav::FReftypestyle*)-1; // (acr_nav.FDb.ind_reftypestyle) not-in-hash
+    reftypestyle.ind_reftypestyle_hashval = 0; // stored hash value
+}
+
+// --- acr_nav.FReftypestyle..Ctor
+inline  acr_nav::FReftypestyle::FReftypestyle() {
+    acr_nav::FReftypestyle_Init(*this);
+}
+
+// --- acr_nav.FReftypestyle..Dtor
+inline  acr_nav::FReftypestyle::~FReftypestyle() {
+    acr_nav::FReftypestyle_Uninit(*this);
 }
 
 // --- acr_nav.FieldId.value.GetEnum
