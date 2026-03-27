@@ -37,27 +37,27 @@ This eliminates M9 Issues 2 and 3 in one stroke — follow_ref no longer checks 
 
 **Input** — line-oriented ssimfile commands on stdin:
 ```
-acr_nav.send_key  key:j
-acr_nav.send_key  key:Enter
-acr_nav.screenshot
+acr_nav.SendKey  key:j
+acr_nav.SendKey  key:Enter
+acr_nav.Screenshot
 ```
 
-`send_key` feeds into the existing keybind+navaction dispatch — no new dispatch table needed. `screenshot` is the only headless-specific operation. Unrecognized lines are silently ignored (consistent with `InsertStrptrMaybe` convention). `send_key key:q` sets `_db.running=false`, ending the loop.
+`SendKey` feeds into the existing keybind+navaction dispatch — no new dispatch table needed. `Screenshot` is the only headless-specific operation. Unrecognized lines are silently ignored (consistent with `InsertStrptrMaybe` convention). `SendKey key:q` sets `_db.running=false`, ending the loop.
 
 **Output** — structured records on stdout per screenshot (or on EOF):
 ```
-acr_nav.screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1384  n_ctype:1384  n_field:5503
-acr_nav.panel_state  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:1384  sel_value:abt_md.Aline
-acr_nav.panel_state  panel:field_list  sel_row:0  scroll_offset:0  n_items:4  sel_value:""
-acr_nav.visible_field  row:0  field:abt_md.Aline.aline  arg:algo.Smallstr200  reftype:Val  style:field_val  navigable:N
-acr_nav.visible_field  row:1  field:abt_md.Aline.p_abt_md  arg:abt_md.Abt_md  reftype:Upptr  style:field_nav  navigable:Y
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1384  n_ctype:1384  n_field:5503
+acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:1384  sel_value:abt_md.Aline
+acr_nav.PanelState  panel:field_list  sel_row:0  scroll_offset:0  n_items:4  sel_value:""
+acr_nav.VisibleField  row:0  field:abt_md.Aline.aline  arg:algo.Smallstr200  reftype:Val  style:field_val  navigable:N
+acr_nav.VisibleField  row:1  field:abt_md.Aline.p_abt_md  arg:abt_md.Abt_md  reftype:Upptr  style:field_upref  navigable:Y
 ```
 
 Blank line terminates each screenshot block. Agent controls when to screenshot (send 5 filter keys, then 1 screenshot = token-efficient). On EOF, always emits a final auto-screenshot.
 
 **Style vocabulary** (for agent reasoning about field colors):
 - `field_val` — data value fields (Val, Smallstr, Bitfld, etc.)
-- `field_nav` — upward reference fields (Pkey, Upptr, Base, Regx, RegxSql)
+- `field_upref` — upward reference fields (Pkey, Upptr, Base, Regx, RegxSql)
 - `field_idx` — index/pool fields (Thash, Llist, Bheap, Atree, Ptrary, Lary, Tpool, etc.)
 
 **Note on filter mode:** `filter_cancel` (Escape) clears the filter text. There is no `filter_accept` action. To observe filtered results, take the screenshot *while still in filter mode* (before Escape). The `mode:filter` value in the Screen record tells the agent it's in filter mode.
@@ -66,8 +66,8 @@ Blank line terminates each screenshot block. Agent controls when to screenshot (
 
 | M9 Bug | What agent sees in headless output |
 |--------|-------------------------------------|
-| Wrong color categories | `style:field_nav` on a Lary field — Lary is a pool, not a nav reference |
-| Missing nav markers | `navigable:N` + `style:field_nav` — color says navigable, field says not |
+| Wrong color categories | `style:field_upref` on a Lary field — Lary is a pool, not a nav reference |
+| Missing nav markers | `navigable:N` + `style:field_upref` — color says navigable, field says not |
 | Navigation blocked | `follow_ref` → screenshot shows `sel_value` unchanged — navigation failed |
 | Sub-format in color encoding | Output uses `style:field_val` (single name), not 3 booleans — the format itself avoids sub-formats |
 
@@ -193,7 +193,7 @@ if (headless) {
 amc && ai
 acr_nav -headless < /dev/null
 # Should output structured records for all loaded ctypes
-echo -e "acr_nav.send_key  key:/\nacr_nav.send_key  key:a\nacr_nav.send_key  key:m\nacr_nav.send_key  key:c\nacr_nav.screenshot" | acr_nav -headless
+echo -e "acr_nav.SendKey  key:/\nacr_nav.SendKey  key:a\nacr_nav.SendKey  key:m\nacr_nav.SendKey  key:c\nacr_nav.Screenshot" | acr_nav -headless
 # Should show n_sel_ctype < 1384 (filtered, screenshot taken while in filter mode)
 normalize comp
 ```
@@ -227,18 +227,18 @@ normalize comp
 
 **Why does ProcessKey() internalize sel_ct tracking?** The interactive loop (lines 608, 621-625) tracks prev_sel_ct vs sel_ct to reset the right panel on ctype change. If ProcessKey doesn't handle this internally, both callers need the same 5-line post-dispatch block — defeating the extraction.
 
-**Why not an external pty wrapper?** A pty wrapper reverse-engineers ANSI escapes back into structure — lossy, fragile, and can't distinguish semantic styles (field_nav vs coincidental cyan). HeadlessOutput() has direct access to the semantic data.
+**Why not an external pty wrapper?** A pty wrapper reverse-engineers ANSI escapes back into structure — lossy, fragile, and can't distinguish semantic styles (field_upref vs coincidental cyan). HeadlessOutput() has direct access to the semantic data.
 
-**Why ssimfile tuples for input?** Consistency with OpenACR patterns. `acr_nav.send_key  key:j` is self-documenting. amc-generated parsers make input handling correct by construction.
+**Why ssimfile tuples for input?** Consistency with OpenACR patterns. `acr_nav.SendKey  key:j` is self-documenting. amc-generated parsers make input handling correct by construction.
 
 **Why not a dispatch table for headless commands?** There are exactly 2 protocol verbs: input (send_key feeds into existing keybind dispatch) and output (screenshot). Two fixed verbs don't form a growing category. If a third verb ever appears, factor then.
 
 ## Verification
 
 1. `acr_nav -headless < /dev/null` — auto-screenshot showing all loaded ctypes
-2. `echo "acr_nav.screenshot" | acr_nav -headless` — explicit screenshot, same result
-3. `echo -e "acr_nav.send_key  key:j\nacr_nav.screenshot" | acr_nav -headless` — should show sel_row:1
-4. `echo "acr_nav.send_key  key:j" | acr_nav -headless` — auto-screenshot on EOF shows sel_row:1
+2. `echo "acr_nav.Screenshot" | acr_nav -headless` — explicit screenshot, same result
+3. `echo -e "acr_nav.SendKey  key:j\nacr_nav.Screenshot" | acr_nav -headless` — should show sel_row:1
+4. `echo "acr_nav.SendKey  key:j" | acr_nav -headless` — auto-screenshot on EOF shows sel_row:1
 5. Filter test: `send_key key:/` + chars + screenshot (in filter mode) — verify n_sel_ctype decreased
 6. Follow test: navigate to a field with `navigable:Y`, `send_key key:Enter`, screenshot — verify sel_value changed and navstack_depth:1
 7. `normalize comp` — all new tests pass

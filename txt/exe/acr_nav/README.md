@@ -5,8 +5,9 @@ Two-panel layout: ctype list (left), fields for the selected ctype (right).
 Navigate with arrow keys, press Enter to follow a field reference to its target ctype,
 press Backspace to go back. Press `/` to filter ctypes by name.
 
-When stdout is not a TTY (e.g., piped to a file), `acr_nav` prints a flat listing
-of ctypes and fields instead of launching the TUI.
+When stdout is not a TTY or when `-headless` is specified, `acr_nav` enters headless mode:
+it reads structured commands (`acr_nav.SendKey`, `acr_nav.Screenshot`) from stdin and emits
+structured screen state records on stdout. This enables agent-driven testing without a terminal.
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
@@ -25,10 +26,10 @@ of ctypes and fields instead of launching the TUI.
 <!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Syntax -->
 ```
 acr_nav: TUI schema explorer for browsing ctypes, fields, and cross-references
-Usage: acr_nav [[-ns:]<regx>] [options]
+Usage: acr_nav [options]
     OPTION      TYPE    DFLT    COMMENT
+    -headless                   Headless mode: structured I/O for agent testing
     -in         string  "data"  Input directory or filename, - for stdin
-    [ns]        regx    "%"     Namespace filter regex
     -verbose    flag            Verbosity level (0..255); alias -v; cumulative
     -debug      flag            Debug level (0..255); alias -d; cumulative
     -help                       Print help and exit; alias -h
@@ -89,11 +90,10 @@ one `keybind` record, and one C++ handler function.
 <a href="#options"></a>
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Options -->
+#### -headless -- Headless mode: structured I/O for agent testing
+<a href="#-headless"></a>
 #### -in -- Input directory or filename, - for stdin
 <a href="#-in"></a>
-
-#### -ns -- Namespace filter regex
-<a href="#-ns"></a>
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
 
@@ -108,9 +108,11 @@ one `keybind` record, and one C++ handler function.
 |[dmmeta.field](/txt/ssimdb/dmmeta/field.md)|Specify field of a struct|
 |[acr_navdb.keybind](/txt/ssimdb/acr_navdb/keybind.md)|Key-to-action mapping for acr_nav|
 |[acr_navdb.navmode](/txt/ssimdb/acr_navdb/navmode.md)|UI mode for acr_nav|
+|[acr_navdb.navstyle](/txt/ssimdb/acr_navdb/navstyle.md)||
 |[dmmeta.ns](/txt/ssimdb/dmmeta/ns.md)|Namespace (for in-memory database, protocol, etc)|
 |[acr_navdb.panel](/txt/ssimdb/acr_navdb/panel.md)|Panel definition for acr_nav TUI layout|
 |[dmmeta.reftype](/txt/ssimdb/dmmeta/reftype.md)|Field type constructor (e.g. reference type)|
+|[acr_navdb.reftypestyle](/txt/ssimdb/acr_navdb/reftypestyle.md)||
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
 

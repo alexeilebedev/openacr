@@ -50,10 +50,10 @@ acr_nav::FDb    acr_nav::_db;     // dependency found via dev.targdep
 namespace acr_nav {
 const char *acr_nav_help =
 "acr_nav: TUI schema explorer for browsing ctypes, fields, and cross-references\n"
-"Usage: acr_nav [[-ns:]<regx>] [options]\n"
+"Usage: acr_nav [options]\n"
 "    OPTION      TYPE    DFLT    COMMENT\n"
+"    -headless                   Headless mode: structured I/O for agent testing\n"
 "    -in         string  \"data\"  Input directory or filename, - for stdin\n"
-"    [ns]        regx    \"%\"     Namespace filter regex\n"
 "    -verbose    flag            Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug      flag            Debug level (0..255); alias -d; cumulative\n"
 "    -help                       Print help and exit; alias -h\n"
@@ -212,8 +212,6 @@ void acr_nav::ReadArgv() {
     algo_lib::Cmdline &base = algo_lib::_db.cmdline;
     int needarg=-1;// unknown
     int argidx=1;// skip process name
-    int anonidx=0;
-    algo::strptr nextanon = command::acr_nav_GetAnon(cmd, anonidx);
     tempstr err;
     algo::strptr attrname;
     bool isanon=false; // true if attrname is anonfld (positional)
@@ -269,22 +267,7 @@ void acr_nav::ReadArgv() {
             if (needarg<0) {
                 err<<"acr_nav: unknown option "<<Keyval("value",arg)<<eol;
             } else {
-                if (isanon) {
-                    if (attrname == nextanon) { // treat named anon (positional) argument as unnamed
-                        attrname = ""; // treat it as unnamed
-                    } else if (nextanon != "") { // disallow out-of-order anon (positional) args
-                        err<<"acr_nav: error at "<<algo::strptr_ToSsim(arg)<<": must be preceded by [-"<<nextanon<<"]"<<eol;
-                    }
-                }
             }
-        }
-        // look up anon field name based on index
-        // anon fields are only allowed in the leaf ns, never base
-        if (ch_N(attrname) == 0) {
-            attrname = nextanon;
-            nextanon = command::acr_nav_GetAnon(cmd, ++anonidx);
-            command::FieldId_ReadStrptrMaybe(attrid,attrname);
-            whichns=1;
         }
         if (ch_N(attrname) == 0) {
             err << "acr_nav: too many arguments. error at "<<algo::strptr_ToSsim(arg)<<eol;
@@ -3743,6 +3726,8 @@ void acr_nav::FReftypestyle_Uninit(acr_nav::FReftypestyle& reftypestyle) {
 const char* acr_nav::value_ToCstr(const acr_nav::FieldId& parent) {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
+        case acr_nav_FieldId_screenshot    : ret = "screenshot";  break;
+        case acr_nav_FieldId_key           : ret = "key";  break;
         case acr_nav_FieldId_value         : ret = "value";  break;
     }
     return ret;
@@ -3767,10 +3752,27 @@ void acr_nav::value_Print(const acr_nav::FieldId& parent, algo::cstring &lhs) {
 bool acr_nav::value_SetStrptrMaybe(acr_nav::FieldId& parent, algo::strptr rhs) {
     bool ret = false;
     switch (elems_N(rhs)) {
+        case 3: {
+            switch (u64(algo::ReadLE16(rhs.elems))|(u64(rhs[2])<<16)) {
+                case LE_STR3('k','e','y'): {
+                    value_SetEnum(parent,acr_nav_FieldId_key); ret = true; break;
+                }
+            }
+            break;
+        }
         case 5: {
             switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
                 case LE_STR5('v','a','l','u','e'): {
                     value_SetEnum(parent,acr_nav_FieldId_value); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 10: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('s','c','r','e','e','n','s','h'): {
+                    if (memcmp(rhs.elems+8,"ot",2)==0) { value_SetEnum(parent,acr_nav_FieldId_screenshot); ret = true; break; }
+                    break;
                 }
             }
             break;
@@ -3811,6 +3813,122 @@ bool acr_nav::FieldId_ReadStrptrMaybe(acr_nav::FieldId &parent, algo::strptr in_
 // cfmt:acr_nav.FieldId.String  printfmt:Raw
 void acr_nav::FieldId_Print(acr_nav::FieldId& row, algo::cstring& str) {
     acr_nav::value_Print(row, str);
+}
+
+// --- acr_nav.PanelState..Print
+// print string representation of ROW to string STR
+// cfmt:acr_nav.PanelState.String  printfmt:Tuple
+void acr_nav::PanelState_Print(acr_nav::PanelState& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "acr_nav.PanelState";
+
+    algo::Smallstr50_Print(row.panel, temp);
+    PrintAttrSpaceReset(str,"panel", temp);
+
+    i32_Print(row.sel_row, temp);
+    PrintAttrSpaceReset(str,"sel_row", temp);
+
+    i32_Print(row.scroll_offset, temp);
+    PrintAttrSpaceReset(str,"scroll_offset", temp);
+
+    i32_Print(row.n_items, temp);
+    PrintAttrSpaceReset(str,"n_items", temp);
+
+    algo::cstring_Print(row.sel_value, temp);
+    PrintAttrSpaceReset(str,"sel_value", temp);
+}
+
+// --- acr_nav.Screen..Print
+// print string representation of ROW to string STR
+// cfmt:acr_nav.Screen.String  printfmt:Tuple
+void acr_nav::Screen_Print(acr_nav::Screen& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "acr_nav.Screen";
+
+    algo::Smallstr50_Print(row.mode, temp);
+    PrintAttrSpaceReset(str,"mode", temp);
+
+    algo::Smallstr50_Print(row.focus, temp);
+    PrintAttrSpaceReset(str,"focus", temp);
+
+    algo::cstring_Print(row.filter, temp);
+    PrintAttrSpaceReset(str,"filter", temp);
+
+    i32_Print(row.navstack_depth, temp);
+    PrintAttrSpaceReset(str,"navstack_depth", temp);
+
+    i32_Print(row.n_sel_ctype, temp);
+    PrintAttrSpaceReset(str,"n_sel_ctype", temp);
+
+    i32_Print(row.n_ctype, temp);
+    PrintAttrSpaceReset(str,"n_ctype", temp);
+
+    i32_Print(row.n_field, temp);
+    PrintAttrSpaceReset(str,"n_field", temp);
+}
+
+// --- acr_nav.Screenshot..ReadFieldMaybe
+bool acr_nav::Screenshot_ReadFieldMaybe(acr_nav::Screenshot& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    acr_nav::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case acr_nav_FieldId_screenshot: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.screenshot, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- acr_nav.Screenshot..ReadStrptrMaybe
+// Read fields of acr_nav::Screenshot from an ascii string.
+// The format of the string is an ssim Tuple
+bool acr_nav::Screenshot_ReadStrptrMaybe(acr_nav::Screenshot &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "acr_nav.Screenshot");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && Screenshot_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- acr_nav.SendKey..ReadFieldMaybe
+bool acr_nav::SendKey_ReadFieldMaybe(acr_nav::SendKey& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    acr_nav::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case acr_nav_FieldId_key: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.key, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- acr_nav.SendKey..ReadStrptrMaybe
+// Read fields of acr_nav::SendKey from an ascii string.
+// The format of the string is an ssim Tuple
+bool acr_nav::SendKey_ReadStrptrMaybe(acr_nav::SendKey &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "acr_nav.SendKey");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && SendKey_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
 }
 
 // --- acr_nav.TableId.value.ToCstr
@@ -3976,6 +4094,32 @@ bool acr_nav::TableId_ReadStrptrMaybe(acr_nav::TableId &parent, algo::strptr in_
 // cfmt:acr_nav.TableId.String  printfmt:Raw
 void acr_nav::TableId_Print(acr_nav::TableId& row, algo::cstring& str) {
     acr_nav::value_Print(row, str);
+}
+
+// --- acr_nav.VisibleField..Print
+// print string representation of ROW to string STR
+// cfmt:acr_nav.VisibleField.String  printfmt:Tuple
+void acr_nav::VisibleField_Print(acr_nav::VisibleField& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "acr_nav.VisibleField";
+
+    i32_Print(row.row, temp);
+    PrintAttrSpaceReset(str,"row", temp);
+
+    algo::Smallstr100_Print(row.field, temp);
+    PrintAttrSpaceReset(str,"field", temp);
+
+    algo::Smallstr100_Print(row.arg, temp);
+    PrintAttrSpaceReset(str,"arg", temp);
+
+    algo::Smallstr50_Print(row.reftype, temp);
+    PrintAttrSpaceReset(str,"reftype", temp);
+
+    algo::Smallstr50_Print(row.style, temp);
+    PrintAttrSpaceReset(str,"style", temp);
+
+    algo::Smallstr10_Print(row.navigable, temp);
+    PrintAttrSpaceReset(str,"navigable", temp);
 }
 
 // --- acr_nav...SizeCheck

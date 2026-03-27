@@ -564,6 +564,13 @@ inline  command::acr_my_proc::~acr_my_proc() {
     command::acr_my_proc_Uninit(*this);
 }
 
+// --- command.acr_nav..Init
+// Set all fields to initial values.
+inline void command::acr_nav_Init(command::acr_nav& parent) {
+    parent.headless = bool(false);
+    parent.in = algo::strptr("data");
+}
+
 // --- command.acr_nav..Ctor
 inline  command::acr_nav::acr_nav() {
     command::acr_nav_Init(*this);

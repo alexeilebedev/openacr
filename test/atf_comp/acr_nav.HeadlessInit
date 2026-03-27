@@ -1,0 +1,5 @@
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1389  n_ctype:1389  n_field:5544
+acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:1389  sel_value:""
+acr_nav.PanelState  panel:field_list  sel_row:0  scroll_offset:0  n_items:1  sel_value:""
+acr_nav.VisibleField  row:0  field:""  arg:""  reftype:Val  style:field_val  navigable:N
+

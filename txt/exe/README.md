@@ -23,6 +23,8 @@
 &#128196; [acr_in - Internals](/txt/exe/acr_in/internals.md)<br/>
 &#128196; [acr_my - ACR <-> MariaDB adaptor](/txt/exe/acr_my/README.md)<br/>
 &#128196; [acr_my - Internals](/txt/exe/acr_my/internals.md)<br/>
+&#128196; [acr_nav - TUI schema explorer for browsing ctypes, fields, and cross-references](/txt/exe/acr_nav/README.md)<br/>
+&#128196; [acr_nav - Internals](/txt/exe/acr_nav/internals.md)<br/>
 &#128196; [amc - Algo Model Compiler: generate code under include/gen and cpp/gen](/txt/exe/amc/README.md)<br/>
 &#128196; [amc Enumerated Types](/txt/exe/amc/enum.md)<br/>
 &#128196; [amc Subprocess Invocation](/txt/exe/amc/exec.md)<br/>

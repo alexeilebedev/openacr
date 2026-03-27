@@ -170,9 +170,10 @@ atfdb.targs  comptest:acr_ed.CreateTarget  args:"-create -target xyz"
 atfdb.targs  comptest:acr_in.Reverse  args:"-r dev.targdep"
 atfdb.targs  comptest:acr_in.Simple  args:acr_in
 atfdb.targs  comptest:acr_in.Tree  args:"acr_in -t"
-atfdb.targs  comptest:acr_nav.BatchConfig  args:"-ns:acr_navdb"
-atfdb.targs  comptest:acr_nav.BatchSelf  args:"-ns:acr_nav"
-atfdb.targs  comptest:acr_nav.EmptyResult  args:"-ns:nonexistent"
+atfdb.targs  comptest:acr_nav.HeadlessFilter  args:-headless
+atfdb.targs  comptest:acr_nav.HeadlessFollow  args:-headless
+atfdb.targs  comptest:acr_nav.HeadlessInit  args:-headless
+atfdb.targs  comptest:acr_nav.HeadlessNav  args:-headless
 atfdb.targs  comptest:aqlite.CompileOptions  args:'-in:- "PRAGMA compile_options;"'
 atfdb.targs  comptest:aqlite.Constraints  args:"-in:- \"select count(*) as or_test from field where ns = 'dmmeta' OR arg like 'algo.cstr%'; select count(*) as and_test from field where ns = 'dmmeta' AND reftype = 'Val'\""
 atfdb.targs  comptest:aqlite.ErrorHandling  args:"-in:- \"select count(*) from field where nonexistent_field = 'test'\""

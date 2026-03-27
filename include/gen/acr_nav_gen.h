@@ -32,11 +32,13 @@
 
 // --- acr_nav_FieldIdEnum
 
-enum acr_nav_FieldIdEnum {        // acr_nav.FieldId.value
-     acr_nav_FieldId_value   = 0
+enum acr_nav_FieldIdEnum {             // acr_nav.FieldId.value
+     acr_nav_FieldId_screenshot   = 0
+    ,acr_nav_FieldId_key          = 1
+    ,acr_nav_FieldId_value        = 2
 };
 
-enum { acr_nav_FieldIdEnum_N = 1 };
+enum { acr_nav_FieldIdEnum_N = 3 };
 
 
 // --- acr_nav_TableIdEnum
@@ -107,7 +109,12 @@ namespace acr_nav { struct FPanel; }
 namespace acr_nav { struct FReftypestyle; }
 namespace acr_nav { struct FieldId; }
 namespace acr_nav { struct Naventry; }
+namespace acr_nav { struct PanelState; }
+namespace acr_nav { struct Screen; }
+namespace acr_nav { struct Screenshot; }
+namespace acr_nav { struct SendKey; }
 namespace acr_nav { struct TableId; }
+namespace acr_nav { struct VisibleField; }
 namespace acr_nav { extern struct acr_nav::FDb _db; }
 namespace acr_nav { // hook_fcn_typedef
     typedef void (*navaction_step_hook)(); // hook:acr_nav.FNavaction.step
@@ -1766,6 +1773,74 @@ struct Naventry { // acr_nav.Naventry: Navigation stack entry
 // func:acr_nav.Naventry..Init
 inline void          Naventry_Init(acr_nav::Naventry& parent);
 
+// --- acr_nav.PanelState
+struct PanelState { // acr_nav.PanelState: Headless panel state output
+    algo::Smallstr50   panel;           // Panel name
+    i32                sel_row;         //   0  Selected row index
+    i32                scroll_offset;   //   0  Scroll position
+    i32                n_items;         //   0  Total item count
+    algo::cstring      sel_value;       // Display value of selected item
+    // func:acr_nav.PanelState..Ctor
+    inline               PanelState() __attribute__((nothrow));
+};
+
+// Set all fields to initial values.
+// func:acr_nav.PanelState..Init
+inline void          PanelState_Init(acr_nav::PanelState& parent);
+// print string representation of ROW to string STR
+// cfmt:acr_nav.PanelState.String  printfmt:Tuple
+// func:acr_nav.PanelState..Print
+void                 PanelState_Print(acr_nav::PanelState& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- acr_nav.Screen
+struct Screen { // acr_nav.Screen: Headless screen state output
+    algo::Smallstr50   mode;             // Current UI mode (browse/filter)
+    algo::Smallstr50   focus;            // Currently focused panel
+    algo::cstring      filter;           // Current filter text
+    i32                navstack_depth;   //   0  Navigation stack depth
+    i32                n_sel_ctype;      //   0  Number of ctypes matching filter
+    i32                n_ctype;          //   0  Total number of ctypes
+    i32                n_field;          //   0  Total number of fields
+    // func:acr_nav.Screen..Ctor
+    inline               Screen() __attribute__((nothrow));
+};
+
+// Set all fields to initial values.
+// func:acr_nav.Screen..Init
+inline void          Screen_Init(acr_nav::Screen& parent);
+// print string representation of ROW to string STR
+// cfmt:acr_nav.Screen.String  printfmt:Tuple
+// func:acr_nav.Screen..Print
+void                 Screen_Print(acr_nav::Screen& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- acr_nav.Screenshot
+struct Screenshot { // acr_nav.Screenshot: Headless command: emit screen state
+    algo::Smallstr50   screenshot;   //
+    // func:acr_nav.Screenshot..Ctor
+    inline               Screenshot() __attribute__((nothrow));
+};
+
+// func:acr_nav.Screenshot..ReadFieldMaybe
+bool                 Screenshot_ReadFieldMaybe(acr_nav::Screenshot& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of acr_nav::Screenshot from an ascii string.
+// The format of the string is an ssim Tuple
+// func:acr_nav.Screenshot..ReadStrptrMaybe
+bool                 Screenshot_ReadStrptrMaybe(acr_nav::Screenshot &parent, algo::strptr in_str) __attribute__((nothrow));
+
+// --- acr_nav.SendKey
+struct SendKey { // acr_nav.SendKey: Headless command: send keystroke
+    algo::Smallstr50   key;   // Key name to send
+    // func:acr_nav.SendKey..Ctor
+    inline               SendKey() __attribute__((nothrow));
+};
+
+// func:acr_nav.SendKey..ReadFieldMaybe
+bool                 SendKey_ReadFieldMaybe(acr_nav::SendKey& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of acr_nav::SendKey from an ascii string.
+// The format of the string is an ssim Tuple
+// func:acr_nav.SendKey..ReadStrptrMaybe
+bool                 SendKey_ReadStrptrMaybe(acr_nav::SendKey &parent, algo::strptr in_str) __attribute__((nothrow));
+
 // --- acr_nav.TableId
 struct TableId { // acr_nav.TableId: Index of table in this namespace
     i32   value;   //   -1  index of table
@@ -1817,6 +1892,26 @@ inline void          TableId_Init(acr_nav::TableId& parent);
 // cfmt:acr_nav.TableId.String  printfmt:Raw
 // func:acr_nav.TableId..Print
 void                 TableId_Print(acr_nav::TableId& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- acr_nav.VisibleField
+struct VisibleField { // acr_nav.VisibleField: Headless field output
+    i32                 row;         //   0  Row index in field list
+    algo::Smallstr100   field;       // Fully qualified field name
+    algo::Smallstr100   arg;         // Argument ctype
+    algo::Smallstr50    reftype;     // Reference type
+    algo::Smallstr50    style;       // Visual style name
+    algo::Smallstr10    navigable;   // Y if follow_ref would navigate
+    // func:acr_nav.VisibleField..Ctor
+    inline               VisibleField() __attribute__((nothrow));
+};
+
+// Set all fields to initial values.
+// func:acr_nav.VisibleField..Init
+inline void          VisibleField_Init(acr_nav::VisibleField& parent);
+// print string representation of ROW to string STR
+// cfmt:acr_nav.VisibleField.String  printfmt:Tuple
+// func:acr_nav.VisibleField..Print
+void                 VisibleField_Print(acr_nav::VisibleField& row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace acr_nav { // gen:ns_curstext
 
@@ -2005,5 +2100,8 @@ int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const acr_nav::trace &row);// cfmt:acr_nav.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const acr_nav::FieldId &row);// cfmt:acr_nav.FieldId.String
+inline algo::cstring &operator <<(algo::cstring &str, const acr_nav::PanelState &row);// cfmt:acr_nav.PanelState.String
+inline algo::cstring &operator <<(algo::cstring &str, const acr_nav::Screen &row);// cfmt:acr_nav.Screen.String
 inline algo::cstring &operator <<(algo::cstring &str, const acr_nav::TableId &row);// cfmt:acr_nav.TableId.String
+inline algo::cstring &operator <<(algo::cstring &str, const acr_nav::VisibleField &row);// cfmt:acr_nav.VisibleField.String
 }

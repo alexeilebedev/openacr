@@ -1333,6 +1333,41 @@ inline  acr_nav::Naventry::Naventry() {
     acr_nav::Naventry_Init(*this);
 }
 
+// --- acr_nav.PanelState..Init
+// Set all fields to initial values.
+inline void acr_nav::PanelState_Init(acr_nav::PanelState& parent) {
+    parent.sel_row = i32(0);
+    parent.scroll_offset = i32(0);
+    parent.n_items = i32(0);
+}
+
+// --- acr_nav.PanelState..Ctor
+inline  acr_nav::PanelState::PanelState() {
+    acr_nav::PanelState_Init(*this);
+}
+
+// --- acr_nav.Screen..Init
+// Set all fields to initial values.
+inline void acr_nav::Screen_Init(acr_nav::Screen& parent) {
+    parent.navstack_depth = i32(0);
+    parent.n_sel_ctype = i32(0);
+    parent.n_ctype = i32(0);
+    parent.n_field = i32(0);
+}
+
+// --- acr_nav.Screen..Ctor
+inline  acr_nav::Screen::Screen() {
+    acr_nav::Screen_Init(*this);
+}
+
+// --- acr_nav.Screenshot..Ctor
+inline  acr_nav::Screenshot::Screenshot() {
+}
+
+// --- acr_nav.SendKey..Ctor
+inline  acr_nav::SendKey::SendKey() {
+}
+
 // --- acr_nav.TableId.value.GetEnum
 // Get value of field as enum type
 inline acr_nav_TableIdEnum acr_nav::value_GetEnum(const acr_nav::TableId& parent) {
@@ -1372,6 +1407,17 @@ inline  acr_nav::TableId::TableId(acr_nav_TableIdEnum arg) {
     this->value = i32(arg);
 }
 
+// --- acr_nav.VisibleField..Init
+// Set all fields to initial values.
+inline void acr_nav::VisibleField_Init(acr_nav::VisibleField& parent) {
+    parent.row = i32(0);
+}
+
+// --- acr_nav.VisibleField..Ctor
+inline  acr_nav::VisibleField::VisibleField() {
+    acr_nav::VisibleField_Init(*this);
+}
+
 inline algo::cstring &algo::operator <<(algo::cstring &str, const acr_nav::trace &row) {// cfmt:acr_nav.trace.String
     acr_nav::trace_Print(const_cast<acr_nav::trace&>(row), str);
     return str;
@@ -1382,7 +1428,22 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const acr_nav::Field
     return str;
 }
 
+inline algo::cstring &algo::operator <<(algo::cstring &str, const acr_nav::PanelState &row) {// cfmt:acr_nav.PanelState.String
+    acr_nav::PanelState_Print(const_cast<acr_nav::PanelState&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const acr_nav::Screen &row) {// cfmt:acr_nav.Screen.String
+    acr_nav::Screen_Print(const_cast<acr_nav::Screen&>(row), str);
+    return str;
+}
+
 inline algo::cstring &algo::operator <<(algo::cstring &str, const acr_nav::TableId &row) {// cfmt:acr_nav.TableId.String
     acr_nav::TableId_Print(const_cast<acr_nav::TableId&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const acr_nav::VisibleField &row) {// cfmt:acr_nav.VisibleField.String
+    acr_nav::VisibleField_Print(const_cast<acr_nav::VisibleField&>(row), str);
     return str;
 }

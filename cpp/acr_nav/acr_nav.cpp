@@ -86,11 +86,10 @@ static void ApplyFilter() {
         algo_lib::Regx_ReadSql(filter_regx, pattern, false);
     }
     ind_beg(acr_nav::_db_ctype_curs, ctype, acr_nav::_db) {
-        bool ns_match = algo_lib::Regx_Match(acr_nav::_db.cmdline.ns, ns_Get(ctype));
         tempstr lower_name(ctype.ctype);
         algo::MakeLower(lower_name);
         bool filter_match = !has_filter || algo_lib::Regx_Match(filter_regx, lower_name);
-        if (ns_match && filter_match) {
+        if (filter_match) {
             acr_nav::zd_sel_ctype_Insert(ctype);
         }
     } ind_end;
@@ -102,31 +101,6 @@ static void ApplyFilterReset() {
     ApplyFilter();
     acr_nav::_db.p_left_panel->sel_row = 0;
     acr_nav::_db.p_left_panel->scroll_offset = 0;
-}
-
-// -----------------------------------------------------------------------------
-
-static void BatchOutput() {
-    ind_beg(acr_nav::_db_zd_sel_ctype_curs, ctype, acr_nav::_db) {
-        prlog(ctype.ctype << "  (" << c_field_N(ctype) << " fields)");
-        ind_beg(acr_nav::ctype_c_field_curs, field, ctype) {
-            tempstr out;
-            out << "  " << name_Get(field);
-            char_PrintNTimes(' ', out, i32_Max(1, 24 - ch_N(out)));
-            out << field.p_arg->ctype;
-            char_PrintNTimes(' ', out, i32_Max(1, 52 - ch_N(out)));
-            out << field.p_reftype->reftype;
-            prlog(out);
-        } ind_end;
-    } ind_end;
-    prlog("acr_nav.report"
-          << Keyval("n_ctype", acr_nav::ctype_N())
-          << Keyval("n_field", acr_nav::field_N())
-          << Keyval("n_sel_ctype", acr_nav::zd_sel_ctype_N())
-          << Keyval("n_keybind", acr_nav::keybind_N())
-          << Keyval("n_panel", acr_nav::panel_N())
-          << Keyval("n_navaction", acr_nav::navaction_N())
-          << Keyval("n_navmode", acr_nav::navmode_N()));
 }
 
 // -----------------------------------------------------------------------------
@@ -314,9 +288,7 @@ void acr_nav::navaction_follow_ref() {
         acr_nav::_db.p_cur_panel = acr_nav::_db.p_right_panel;
     } else if (panel.position == 1 && sel_ct && panel.sel_row < c_field_N(*sel_ct)) {
         acr_nav::FField *fld = c_field_Find(*sel_ct, panel.sel_row);
-        bool ns_match = fld && fld->p_arg != sel_ct
-            && algo_lib::Regx_Match(acr_nav::_db.cmdline.ns, ns_Get(*fld->p_arg));
-        if (ns_match) {
+        if (fld && fld->p_arg != sel_ct) {
             acr_nav::Naventry &entry = acr_nav::navstack_Alloc();
             entry.filter = acr_nav::_db.filter;
             entry.navmode = acr_nav::_db.p_cur_mode->navmode;
@@ -575,56 +547,160 @@ static void Render(acr_nav::FCtype *sel_ct, acr_nav::FPanel *left, acr_nav::FPan
 
 // -----------------------------------------------------------------------------
 
+static void InitPanels() {
+    acr_nav::_db.p_left_panel = acr_nav::ind_panel_Find("ctype_list");
+    acr_nav::_db.p_right_panel = acr_nav::ind_panel_Find("field_list");
+    vrfy(acr_nav::_db.p_left_panel, "panel 'ctype_list' not found");
+    vrfy(acr_nav::_db.p_right_panel, "panel 'field_list' not found");
+    acr_nav::_db.p_cur_panel = acr_nav::_db.p_left_panel;
+    acr_nav::_db.p_filter_mode = acr_nav::ind_navmode_Find("filter");
+    vrfy(acr_nav::_db.p_filter_mode, "navmode 'filter' not found");
+    SwitchToBrowse();
+    acr_nav::_db.p_left_panel->sel_row = 0;
+    acr_nav::_db.p_left_panel->scroll_offset = 0;
+    acr_nav::_db.p_right_panel->sel_row = 0;
+    acr_nav::_db.p_right_panel->scroll_offset = 0;
+}
+
+// -----------------------------------------------------------------------------
+
+static bool ProcessKey(algo::strptr key_name) {
+    acr_nav::FPanel *left = acr_nav::_db.p_left_panel;
+    acr_nav::FPanel *right = acr_nav::_db.p_right_panel;
+    acr_nav::FCtype *prev_sel_ct = SelectedCtype(*left);
+    tempstr composite;
+    composite << acr_nav::_db.p_cur_mode->navmode << "." << key_name;
+    acr_nav::FKeybind *keybind = acr_nav::ind_keybind_Find(composite);
+    bool did_something = false;
+    if (keybind) {
+        step_Call(*keybind->p_navaction);
+        did_something = true;
+    }
+    bool in_filter = (acr_nav::_db.p_cur_mode == acr_nav::_db.p_filter_mode);
+    if (!keybind && in_filter && elems_N(key_name) == 1 && key_name[0] > 32) {
+        acr_nav::_db.filter << key_name;
+        ApplyFilterReset();
+        did_something = true;
+    }
+    if (did_something) {
+        acr_nav::FCtype *sel_ct = SelectedCtype(*left);
+        if (sel_ct != prev_sel_ct) {
+            right->sel_row = 0;
+            right->scroll_offset = 0;
+        }
+        AdjustScroll(*left, acr_nav::zd_sel_ctype_N());
+        AdjustScroll(*right, sel_ct ? c_field_N(*sel_ct) : 0);
+    }
+    return did_something;
+}
+
+// -----------------------------------------------------------------------------
+
+static void HeadlessOutput() {
+    acr_nav::FPanel *left = acr_nav::_db.p_left_panel;
+    acr_nav::FPanel *right = acr_nav::_db.p_right_panel;
+    acr_nav::FCtype *sel_ct = SelectedCtype(*left);
+    // Screen record
+    acr_nav::Screen screen;
+    screen.mode = acr_nav::_db.p_cur_mode->navmode;
+    screen.focus = acr_nav::_db.p_cur_panel->panel;
+    screen.filter = acr_nav::_db.filter;
+    screen.navstack_depth = acr_nav::navstack_N();
+    screen.n_sel_ctype = acr_nav::zd_sel_ctype_N();
+    screen.n_ctype = acr_nav::ctype_N();
+    screen.n_field = acr_nav::field_N();
+    prlog(screen);
+    // Left panel state
+    acr_nav::PanelState left_state;
+    left_state.panel = left->panel;
+    left_state.sel_row = left->sel_row;
+    left_state.scroll_offset = left->scroll_offset;
+    left_state.n_items = acr_nav::zd_sel_ctype_N();
+    left_state.sel_value = "";
+    if (sel_ct) {
+        left_state.sel_value = sel_ct->ctype;
+    }
+    prlog(left_state);
+    // Right panel state
+    acr_nav::PanelState right_state;
+    right_state.panel = right->panel;
+    right_state.sel_row = right->sel_row;
+    right_state.scroll_offset = right->scroll_offset;
+    right_state.n_items = sel_ct ? c_field_N(*sel_ct) : 0;
+    right_state.sel_value = "";
+    if (sel_ct && right->sel_row < c_field_N(*sel_ct)) {
+        acr_nav::FField *fld = c_field_Find(*sel_ct, right->sel_row);
+        if (fld) {
+            right_state.sel_value = fld->field;
+        }
+    }
+    prlog(right_state);
+    // Visible fields
+    if (sel_ct) {
+        ind_beg(acr_nav::ctype_c_field_curs, field, *sel_ct) {
+            acr_nav::VisibleField vf;
+            vf.row = ind_curs(field).index;
+            vf.field = field.field;
+            vf.arg = field.p_arg->ctype;
+            vf.reftype = field.p_reftype->reftype;
+            if (field.p_reftype->c_reftypestyle) {
+                vf.style = field.p_reftype->c_reftypestyle->p_navstyle->navstyle;
+            }
+            vf.navigable = (field.p_arg != sel_ct) ? "Y" : "N";
+            prlog(vf);
+        } ind_end;
+    }
+    // Blank line terminates screenshot block
+    prlog("");
+}
+
+// -----------------------------------------------------------------------------
+
+static void HeadlessMain() {
+    InitPanels();
+    acr_nav::_db.term_hei = 100000;
+    acr_nav::_db.running = true;
+    algo::LineBuf linebuf;
+    bool eof = false;
+    while (acr_nav::_db.running && !eof) {
+        char buf[4096];
+        ssize_t nr = read(STDIN_FILENO, buf, sizeof(buf));
+        eof = (nr <= 0);
+        algo::LinebufBegin(linebuf, algo::memptr((u8*)buf, eof ? 0 : nr), eof);
+        algo::strptr line;
+        while (algo::LinebufNext(linebuf, line)) {
+            acr_nav::SendKey send_key;
+            acr_nav::Screenshot screenshot;
+            if (acr_nav::SendKey_ReadStrptrMaybe(send_key, line)) {
+                ProcessKey(send_key.key);
+            } else if (acr_nav::Screenshot_ReadStrptrMaybe(screenshot, line)) {
+                HeadlessOutput();
+            }
+        }
+    }
+    HeadlessOutput();
+}
+
+// -----------------------------------------------------------------------------
+
 void acr_nav::Main() {
     ApplyFilter();
-    bool is_tty = isatty(STDOUT_FILENO);
-    if (!is_tty) {
-        BatchOutput();
+    bool headless = _db.cmdline.headless || !isatty(STDOUT_FILENO);
+    if (headless) {
+        HeadlessMain();
     } else {
+        InitPanels();
         DetectTerminal();
         EnterRawMode();
-        _db.p_left_panel = ind_panel_Find("ctype_list");
-        _db.p_right_panel = ind_panel_Find("field_list");
-        vrfy(_db.p_left_panel, "panel 'ctype_list' not found");
-        vrfy(_db.p_right_panel, "panel 'field_list' not found");
         acr_nav::FPanel *left = _db.p_left_panel;
         acr_nav::FPanel *right = _db.p_right_panel;
-        _db.p_cur_panel = left;
-        _db.p_filter_mode = ind_navmode_Find("filter");
-        vrfy(_db.p_filter_mode, "navmode 'filter' not found");
-        SwitchToBrowse();
-        left->sel_row = 0;
-        left->scroll_offset = 0;
-        right->sel_row = 0;
-        right->scroll_offset = 0;
         acr_nav::FCtype *sel_ct = SelectedCtype(*left);
         Render(sel_ct, left, right);
         _db.running = true;
         while (_db.running) {
             tempstr key_name = ReadKeyName();
-            tempstr composite;
-            composite << _db.p_cur_mode->navmode << "." << key_name;
-            acr_nav::FKeybind *keybind = ind_keybind_Find(composite);
-            acr_nav::FCtype *prev_sel_ct = sel_ct;
-            bool did_something = false;
-            if (keybind) {
-                step_Call(*keybind->p_navaction);
-                did_something = true;
-            }
-            bool in_filter = (_db.p_cur_mode == _db.p_filter_mode);
-            if (!keybind && in_filter && ch_N(key_name) == 1 && ch_qFind(key_name, 0) > 32) {
-                _db.filter << key_name;
-                ApplyFilterReset();
-                did_something = true;
-            }
-            if (did_something) {
+            if (ProcessKey(key_name)) {
                 sel_ct = SelectedCtype(*left);
-                if (sel_ct != prev_sel_ct) {
-                    right->sel_row = 0;
-                    right->scroll_offset = 0;
-                }
-                AdjustScroll(*left, acr_nav::zd_sel_ctype_N());
-                AdjustScroll(*right, sel_ct ? c_field_N(*sel_ct) : 0);
                 Render(sel_ct, left, right);
             }
         }

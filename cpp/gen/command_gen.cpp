@@ -168,6 +168,7 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_abort         : ret = "abort";  break;
         case command_FieldId_shell         : ret = "shell";  break;
         case command_FieldId_serv          : ret = "serv";  break;
+        case command_FieldId_headless      : ret = "headless";  break;
         case command_FieldId_in_dir        : ret = "in_dir";  break;
         case command_FieldId_out_dir       : ret = "out_dir";  break;
         case command_FieldId_proto         : ret = "proto";  break;
@@ -1190,6 +1191,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('e','x','t','e','r','n','a','l'): {
                     value_SetEnum(parent,command_FieldId_external); ret = true; break;
+                }
+                case LE_STR8('h','e','a','d','l','e','s','s'): {
+                    value_SetEnum(parent,command_FieldId_headless); ret = true; break;
                 }
                 case LE_STR8('l','i','s','t','i','n','c','l'): {
                     value_SetEnum(parent,command_FieldId_listincl); ret = true; break;
@@ -7191,32 +7195,17 @@ void command::acr_my_proc_Uninit(command::acr_my_proc& parent) {
     acr_my_Kill(parent); // kill child, ensure forward progress
 }
 
-// --- command.acr_nav.ns.Print
-// Print back to string
-void command::ns_Print(command::acr_nav& parent, algo::cstring &out) {
-    Regx_Print(parent.ns, out);
-}
-
-// --- command.acr_nav.ns.ReadStrptrMaybe
-// Read Regx from string
-// Convert string to field. Return success value
-bool command::ns_ReadStrptrMaybe(command::acr_nav& parent, algo::strptr in) {
-    bool retval = true;
-    Regx_ReadSql(parent.ns, in, true);
-    return retval;
-}
-
 // --- command.acr_nav..ReadFieldMaybe
 bool command::acr_nav_ReadFieldMaybe(command::acr_nav& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
     command::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
     switch(field_id) {
+        case command_FieldId_headless: {
+            retval = bool_ReadStrptrMaybe(parent.headless, strval);
+        } break;
         case command_FieldId_in: {
             retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
-        } break;
-        case command_FieldId_ns: {
-            retval = ns_ReadStrptrMaybe(parent, strval);
         } break;
         default: {
             retval = false;
@@ -7233,24 +7222,13 @@ bool command::acr_nav_ReadFieldMaybe(command::acr_nav& parent, algo::strptr fiel
 // Read fields of command::acr_nav from attributes of ascii tuple TUPLE
 bool command::acr_nav_ReadTupleMaybe(command::acr_nav &parent, algo::Tuple &tuple) {
     bool retval = true;
-    int anon_idx = 0;
     ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
-        if (ch_N(attr.name) == 0) {
-            attr.name = acr_nav_GetAnon(parent, anon_idx++);
-        }
         retval = acr_nav_ReadFieldMaybe(parent, attr.name, attr.value);
         if (!retval) {
             break;
         }
     }ind_end;
     return retval;
-}
-
-// --- command.acr_nav..Init
-// Set all fields to initial values.
-void command::acr_nav_Init(command::acr_nav& parent) {
-    parent.in = algo::strptr("data");
-    Regx_ReadSql(parent.ns, "%", true);
 }
 
 // --- command.acr_nav..ToCmdline
@@ -7277,24 +7255,17 @@ void command::acr_nav_PrintArgv(command::acr_nav& row, algo::cstring& str) {
     algo::tempstr temp;
     (void)temp;
     (void)str;
+    if (!(row.headless == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.headless, temp);
+        str << " -headless:";
+        strptr_PrintBash(temp,str);
+    }
     if (!(row.in == "data")) {
         ch_RemoveAll(temp);
         cstring_Print(row.in, temp);
         str << " -in:";
         strptr_PrintBash(temp,str);
-    }
-    ch_RemoveAll(temp);
-    command::ns_Print(const_cast<command::acr_nav&>(row), temp);
-    str << " -ns:";
-    strptr_PrintBash(temp,str);
-}
-
-// --- command.acr_nav..GetAnon
-algo::strptr command::acr_nav_GetAnon(command::acr_nav &parent, i32 idx) {
-    (void)parent;//only to avoid -Wunused-parameter
-    switch(idx) {
-        case(0): return strptr("ns", 2);
-        default: return algo::strptr();
     }
 }
 
@@ -7305,16 +7276,17 @@ algo::strptr command::acr_nav_GetAnon(command::acr_nav &parent, i32 idx) {
 i32 command::acr_nav_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
     i32 retval = 1;
     switch (field) {
+        case command_FieldId_headless: { // bool: no argument required but value may be specified as headless:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
         case command_FieldId_in: { //
             *out_anon = false;
-        } break;
-        case command_FieldId_ns: { //
-            *out_anon = true;
         } break;
         default:
         retval=-1; // unrecognized
     }
-    (void)out_dflt;//only to avoid -Wunused-parameter
     return retval;
 }
 
@@ -7456,16 +7428,16 @@ void command::acr_nav_ToArgv(command::acr_nav_proc& parent, algo::StringAry& arg
     ary_RemoveAll(args);
     ary_Alloc(args) << parent.path;
 
+    if (parent.cmd.headless != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-headless:";
+        bool_Print(parent.cmd.headless, *arg);
+    }
+
     if (parent.cmd.in != "data") {
         cstring *arg = &ary_Alloc(args);
         *arg << "-in:";
         cstring_Print(parent.cmd.in, *arg);
-    }
-
-    if (parent.cmd.ns.expr != "%") {
-        cstring *arg = &ary_Alloc(args);
-        *arg << "-ns:";
-        command::ns_Print(parent.cmd, *arg);
     }
     for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
         ary_Alloc(args) << "-verbose";
