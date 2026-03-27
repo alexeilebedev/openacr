@@ -140,6 +140,9 @@ static bool ByteAvailable() {
 
 // -----------------------------------------------------------------------------
 
+// VT100 byte-to-keyname mapping. Looks like a missing noun but
+// these are terminal protocol constants, not application data.
+// The data-driven boundary is one layer up: acr_navdb.keybind.
 static tempstr ReadKeyName() {
     tempstr ret;
     char c = 0;
@@ -218,7 +221,9 @@ static acr_nav::FCtype* SelectedCtype(acr_nav::FPanel &left) {
 // -----------------------------------------------------------------------------
 
 // Panel item count dispatches on position (0=ctype list, 1=field list).
-// debt: adding a third panel requires a code change here.
+// The two panels have structurally different roles (parent/child),
+// not N instances of one concept -- factoring into step hooks
+// would move the if elsewhere without reducing complexity.
 static int PanelItemCount(acr_nav::FPanel &panel, acr_nav::FCtype *sel_ct) {
     int ret = 0;
     if (panel.position == 0) {
@@ -375,9 +380,7 @@ void acr_nav::navaction_quit() {
 // -----------------------------------------------------------------------------
 
 void acr_nav::navaction_filter_start() {
-    acr_nav::FNavmode *mode = ind_navmode_Find("filter");
-    vrfy(mode, "navmode 'filter' not found");
-    acr_nav::_db.p_cur_mode = mode;
+    acr_nav::_db.p_cur_mode = acr_nav::_db.p_filter_mode;
     ch_RemoveAll(acr_nav::_db.filter);
     acr_nav::_db.p_cur_panel = acr_nav::_db.p_left_panel;
 }
@@ -529,7 +532,7 @@ static void Render(acr_nav::FCtype *sel_ct, acr_nav::FPanel *left, acr_nav::FPan
     // Status bar
     buf << "\x1b[7m";
     tempstr status;
-    bool in_filter = (acr_nav::_db.p_cur_mode->navmode == "filter");
+    bool in_filter = (acr_nav::_db.p_cur_mode == acr_nav::_db.p_filter_mode);
     if (in_filter) {
         status << " /" << acr_nav::_db.filter;
     } else {
@@ -572,6 +575,8 @@ void acr_nav::Main() {
         acr_nav::FPanel *left = _db.p_left_panel;
         acr_nav::FPanel *right = _db.p_right_panel;
         _db.p_cur_panel = left;
+        _db.p_filter_mode = ind_navmode_Find("filter");
+        vrfy(_db.p_filter_mode, "navmode 'filter' not found");
         SwitchToBrowse();
         left->sel_row = 0;
         left->scroll_offset = 0;
@@ -591,7 +596,7 @@ void acr_nav::Main() {
                 step_Call(*keybind->p_navaction);
                 did_something = true;
             }
-            bool in_filter = (_db.p_cur_mode->navmode == "filter");
+            bool in_filter = (_db.p_cur_mode == _db.p_filter_mode);
             if (!keybind && in_filter && ch_N(key_name) == 1 && ch_qFind(key_name, 0) > 32) {
                 _db.filter << key_name;
                 ApplyFilterReset();

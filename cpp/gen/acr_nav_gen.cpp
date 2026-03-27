@@ -2827,6 +2827,7 @@ void acr_nav::FDb_Init() {
     _db.p_left_panel = NULL;
     _db.p_right_panel = NULL;
     _db.p_cur_mode = NULL;
+    _db.p_filter_mode = NULL;
     _db.running = bool(true);
     _db.term_hei = i32(0);
     _db.term_wid = i32(0);

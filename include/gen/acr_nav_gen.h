@@ -278,6 +278,7 @@ struct FDb { // acr_nav.FDb
     acr_nav::FPanel*        p_left_panel;                  // Left panel (ctype list). optional pointer
     acr_nav::FPanel*        p_right_panel;                 // Right panel (field list). optional pointer
     acr_nav::FNavmode*      p_cur_mode;                    // Current UI mode (browse/filter). optional pointer
+    acr_nav::FNavmode*      p_filter_mode;                 // Cached pointer to filter navmode for fast comparison. optional pointer
     algo::cstring           filter;                        // Current filter text
     bool                    running;                       //   true  Event loop control
     i32                     term_hei;                      //   0  Terminal height
@@ -1251,6 +1252,7 @@ void                 FNavaction_Uninit(acr_nav::FNavaction& navaction) __attribu
 // global access: navmode (Lary, by rowid)
 // global access: ind_navmode (Thash, hash field navmode)
 // global access: p_cur_mode (Ptr)
+// global access: p_filter_mode (Ptr)
 struct FNavmode { // acr_nav.FNavmode
     acr_nav::FNavmode*   ind_navmode_next;      // hash next
     u32                  ind_navmode_hashval;   // hash value
