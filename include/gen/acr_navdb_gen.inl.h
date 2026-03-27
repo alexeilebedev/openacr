@@ -65,8 +65,15 @@ inline  acr_navdb::FieldId::FieldId(acr_navdb_FieldIdEnum arg) {
     this->value = i32(arg);
 }
 
+// --- acr_navdb.Keybind..Init
+// Set all fields to initial values.
+inline void acr_navdb::Keybind_Init(acr_navdb::Keybind& parent) {
+    parent.hint_order = i32(0);
+}
+
 // --- acr_navdb.Keybind..Ctor
 inline  acr_navdb::Keybind::Keybind() {
+    acr_navdb::Keybind_Init(*this);
 }
 
 // --- acr_navdb.Navaction..Ctor

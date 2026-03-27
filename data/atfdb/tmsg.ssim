@@ -108,6 +108,10 @@ atfdb.tmsg  tmsg:acr_nav.HeadlessFilter/100010.in  istuple:N  msg:"acr_nav.SendK
 atfdb.tmsg  tmsg:acr_nav.HeadlessFilter/100020.in  istuple:N  msg:"acr_nav.SendKey  key:m"
 atfdb.tmsg  tmsg:acr_nav.HeadlessFilter/100030.in  istuple:N  msg:"acr_nav.SendKey  key:c"
 atfdb.tmsg  tmsg:acr_nav.HeadlessFilter/100040.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.HeadlessHelp/100000.in  istuple:N  msg:"acr_nav.SendKey  key:?"
+atfdb.tmsg  tmsg:acr_nav.HeadlessHelp/100010.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.HeadlessHelp/100020.in  istuple:N  msg:"acr_nav.SendKey  key:j"
+atfdb.tmsg  tmsg:acr_nav.HeadlessHelp/100030.in  istuple:N  msg:acr_nav.Screenshot
 atfdb.tmsg  tmsg:acr_nav.HeadlessFollow/100000.in  istuple:N  msg:"acr_nav.SendKey  key:/"
 atfdb.tmsg  tmsg:acr_nav.HeadlessFollow/100010.in  istuple:N  msg:"acr_nav.SendKey  key:a"
 atfdb.tmsg  tmsg:acr_nav.HeadlessFollow/100020.in  istuple:N  msg:"acr_nav.SendKey  key:m"

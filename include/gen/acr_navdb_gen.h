@@ -33,22 +33,25 @@ enum acr_navdb_FieldIdEnum {                // acr_navdb.FieldId.value
      acr_navdb_FieldId_keybind        = 0
     ,acr_navdb_FieldId_navaction      = 1
     ,acr_navdb_FieldId_navmode        = 2
-    ,acr_navdb_FieldId_comment        = 3
-    ,acr_navdb_FieldId_navstyle       = 4
-    ,acr_navdb_FieldId_bold           = 5
-    ,acr_navdb_FieldId_dim            = 6
-    ,acr_navdb_FieldId_reverse        = 7
-    ,acr_navdb_FieldId_fg_color       = 8
-    ,acr_navdb_FieldId_panel          = 9
-    ,acr_navdb_FieldId_title          = 10
-    ,acr_navdb_FieldId_position       = 11
-    ,acr_navdb_FieldId_width_pct      = 12
-    ,acr_navdb_FieldId_reftypestyle   = 13
-    ,acr_navdb_FieldId_reftype        = 14
-    ,acr_navdb_FieldId_value          = 15
+    ,acr_navdb_FieldId_hint_order     = 3
+    ,acr_navdb_FieldId_key            = 4
+    ,acr_navdb_FieldId_comment        = 5
+    ,acr_navdb_FieldId_hint           = 6
+    ,acr_navdb_FieldId_navstyle       = 7
+    ,acr_navdb_FieldId_bold           = 8
+    ,acr_navdb_FieldId_dim            = 9
+    ,acr_navdb_FieldId_reverse        = 10
+    ,acr_navdb_FieldId_fg_color       = 11
+    ,acr_navdb_FieldId_panel          = 12
+    ,acr_navdb_FieldId_title          = 13
+    ,acr_navdb_FieldId_position       = 14
+    ,acr_navdb_FieldId_width_pct      = 15
+    ,acr_navdb_FieldId_reftypestyle   = 16
+    ,acr_navdb_FieldId_reftype        = 17
+    ,acr_navdb_FieldId_value          = 18
 };
 
-enum { acr_navdb_FieldIdEnum_N = 16 };
+enum { acr_navdb_FieldIdEnum_N = 19 };
 
 namespace acr_navdb { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 KeybindPkey;
@@ -126,9 +129,10 @@ void                 FieldId_Print(acr_navdb::FieldId& row, algo::cstring& str) 
 
 // --- acr_navdb.Keybind
 struct Keybind { // acr_navdb.Keybind: Key-to-action mapping for acr_nav
-    algo::Smallstr50   keybind;     //
-    algo::Smallstr50   navaction;   // Navigation action
-    algo::Comment      comment;     //
+    algo::Smallstr50   keybind;      //
+    algo::Smallstr50   navaction;    // Navigation action
+    i32                hint_order;   //   0  Status bar position; 0=hidden
+    algo::Comment      comment;      //
     // func:acr_navdb.Keybind..Ctor
     inline               Keybind() __attribute__((nothrow));
 };
@@ -138,12 +142,22 @@ algo::Smallstr50     navmode_Get(acr_navdb::Keybind& parent) __attribute__((__wa
 // func:acr_navdb.Keybind.navmode.Get2
 algo::Smallstr50     Keybind_navmode_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:acr_navdb.Keybind.key.Get
+algo::Smallstr50     key_Get(acr_navdb::Keybind& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:acr_navdb.Keybind.key.Get2
+algo::Smallstr50     Keybind_key_Get(algo::strptr arg) __attribute__((nothrow));
+
+// func:acr_navdb.Keybind..Concat_navmode_key
+tempstr              Keybind_Concat_navmode_key( const algo::strptr& navmode ,const algo::strptr& key );
 // func:acr_navdb.Keybind..ReadFieldMaybe
 bool                 Keybind_ReadFieldMaybe(acr_navdb::Keybind& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of acr_navdb::Keybind from an ascii string.
 // The format of the string is an ssim Tuple
 // func:acr_navdb.Keybind..ReadStrptrMaybe
 bool                 Keybind_ReadStrptrMaybe(acr_navdb::Keybind &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:acr_navdb.Keybind..Init
+inline void          Keybind_Init(acr_navdb::Keybind& parent);
 // print string representation of ROW to string STR
 // cfmt:acr_navdb.Keybind.String  printfmt:Tuple
 // func:acr_navdb.Keybind..Print
@@ -152,6 +166,7 @@ void                 Keybind_Print(acr_navdb::Keybind& row, algo::cstring& str) 
 // --- acr_navdb.Navaction
 struct Navaction { // acr_navdb.Navaction: Controlled vocabulary of navigation actions
     algo::Smallstr50   navaction;   //
+    algo::Smallstr50   hint;        // Short status bar label; empty=hidden
     algo::Comment      comment;     //
     // func:acr_navdb.Navaction..Ctor
     inline               Navaction() __attribute__((nothrow));

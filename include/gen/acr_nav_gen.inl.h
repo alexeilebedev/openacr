@@ -1201,6 +1201,7 @@ inline  acr_nav::FField::~FField() {
 // --- acr_nav.FKeybind..Init
 // Set all fields to initial values.
 inline void acr_nav::FKeybind_Init(acr_nav::FKeybind& keybind) {
+    keybind.hint_order = i32(0);
     keybind.p_navaction = NULL;
     keybind.ind_keybind_next = (acr_nav::FKeybind*)-1; // (acr_nav.FDb.ind_keybind) not-in-hash
     keybind.ind_keybind_hashval = 0; // stored hash value
@@ -1438,6 +1439,7 @@ inline void acr_nav::Screen_Init(acr_nav::Screen& parent) {
     parent.n_ctype = i32(0);
     parent.n_field = i32(0);
     parent.show_xref = bool(false);
+    parent.show_help = bool(false);
 }
 
 // --- acr_nav.Screen..Ctor

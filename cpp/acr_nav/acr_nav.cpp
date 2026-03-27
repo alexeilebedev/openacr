@@ -428,6 +428,12 @@ void acr_nav::navaction_filter_backspace() {
 
 // -----------------------------------------------------------------------------
 
+void acr_nav::navaction_show_help() {
+    acr_nav::_db.show_help = !acr_nav::_db.show_help;
+}
+
+// -----------------------------------------------------------------------------
+
 // Emit ANSI escape sequences for a named terminal style.
 // Attributes compose: caller may emit selection style then field color.
 static void EmitStyle(cstring &out, acr_nav::FNavstyle &style) {
@@ -437,6 +443,105 @@ static void EmitStyle(cstring &out, acr_nav::FNavstyle &style) {
     if (style.fg_color != algo_TermColor_default) {
         out << "\x1b[" << (90 + u32(style.fg_color)) << "m";
     }
+}
+
+// Build status bar hint string from keybind records.
+// Groups keys by navaction hint label, ordered by hint_order.
+static void BuildStatusHint(cstring &out) {
+    acr_nav::FKeybind *entries[64];
+    int n_entries = 0;
+    algo::strptr cur_mode = acr_nav::_db.p_cur_mode->navmode;
+    ind_beg(acr_nav::_db_keybind_curs, kb, acr_nav::_db) {
+        if (kb.hint_order > 0 && acr_nav::navmode_Get(kb) == cur_mode && n_entries < 64) {
+            entries[n_entries++] = &kb;
+        }
+    } ind_end;
+    // Sort by hint_order (insertion sort -- small array)
+    for (int i = 1; i < n_entries; i++) {
+        acr_nav::FKeybind *tmp = entries[i];
+        int j = i;
+        while (j > 0 && entries[j - 1]->hint_order > tmp->hint_order) {
+            entries[j] = entries[j - 1];
+            j--;
+        }
+        entries[j] = tmp;
+    }
+    // Group by hint label, format as "key1/key2:hint"
+    int i = 0;
+    while (i < n_entries) {
+        algo::Smallstr50 hint = entries[i]->p_navaction->hint;
+        if (ch_N(out) > 0) {
+            out << "  ";
+        }
+        int j = i;
+        while (j < n_entries && entries[j]->p_navaction->hint == hint) {
+            if (j > i) {
+                out << "/";
+            }
+            out << acr_nav::key_Get(*entries[j]);
+            j++;
+        }
+        out << ":" << hint;
+        i = j;
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+// Render help overlay showing all keybindings for the current mode.
+// Groups keys by navaction and shows the navaction comment as description.
+static void RenderHelpOverlay(cstring &buf, int wid, int visible) {
+    algo::strptr cur_mode = acr_nav::_db.p_cur_mode->navmode;
+    // Title row
+    tempstr title;
+    title << " ACR_NAV -- " << cur_mode << " mode keys";
+    char_PrintNTimes(' ', title, i32_Max(0, wid - ch_N(title)));
+    buf << "\x1b[1m" << title << "\x1b[0m\r\n";
+    int row = 1;
+    // One row per navaction that has keybinds in this mode
+    ind_beg(acr_nav::_db_navaction_curs, na, acr_nav::_db) {
+        if (row < visible - 1) {
+            tempstr keys;
+            ind_beg(acr_nav::_db_keybind_curs, kb, acr_nav::_db) {
+                if (kb.p_navaction == &na && acr_nav::navmode_Get(kb) == cur_mode) {
+                    if (ch_N(keys) > 0) {
+                        keys << ", ";
+                    }
+                    keys << acr_nav::key_Get(kb);
+                }
+            } ind_end;
+            if (ch_N(keys) > 0) {
+                tempstr line;
+                line << " ";
+                line << keys;
+                int key_col = 18;
+                if (ch_N(line) < key_col) {
+                    char_PrintNTimes(' ', line, key_col - ch_N(line));
+                } else {
+                    line << "  ";
+                }
+                line << na.comment;
+                if (ch_N(line) > wid) {
+                    line.ch_n = wid;
+                }
+                char_PrintNTimes(' ', line, i32_Max(0, wid - ch_N(line)));
+                buf << line << "\r\n";
+                row++;
+            }
+        }
+    } ind_end;
+    // Blank padding rows
+    while (row < visible - 1) {
+        tempstr empty;
+        char_PrintNTimes(' ', empty, wid);
+        buf << empty << "\r\n";
+        row++;
+    }
+    // Footer row
+    tempstr footer;
+    footer << " Press any key to close";
+    char_PrintNTimes(' ', footer, i32_Max(0, wid - ch_N(footer)));
+    buf << "\x1b[2m" << footer << "\x1b[0m\r\n";
 }
 
 // -----------------------------------------------------------------------------
@@ -497,66 +602,70 @@ static void Render(acr_nav::FCtype *sel_ct, acr_nav::FPanel *left, acr_nav::FPan
     buf << "\r\n";
 
     // Content rows
-    // Pre-walk left panel linked list to scroll_offset
-    acr_nav::FCtype *left_ptr = acr_nav::zd_sel_ctype_First();
-    {
-        int skip = 0;
-        while (left_ptr && skip < left->scroll_offset) {
-            left_ptr = acr_nav::zd_sel_ctype_Next(*left_ptr);
-            skip++;
-        }
-    }
-    int n_right = RightPanelFieldCount(sel_ct);
-
-    for (int row = 0; row < visible; row++) {
-        // Left cell
-        tempstr left_cell;
-        bool left_sel = false;
-        if (left_ptr) {
-            left_sel = (left->scroll_offset + row == left->sel_row);
-            left_cell << " " << left_ptr->ctype;
-            left_ptr = acr_nav::zd_sel_ctype_Next(*left_ptr);
-        }
-        if (ch_N(left_cell) > left_wid - 1) {
-            left_cell.ch_n = left_wid - 1;
-        }
-        char_PrintNTimes(' ', left_cell, i32_Max(0, left_wid - 1 - ch_N(left_cell)));
-
-        if (left_sel) {
-            EmitStyle(buf, *(left_focused ? p_sel_focus : p_sel_nofocus));
-        }
-        buf << left_cell << "\x1b[0m";
-        buf << "|";
-
-        // Right cell
-        tempstr right_cell;
-        bool right_sel = false;
-        int right_data_idx = right->scroll_offset + row;
-        acr_nav::FField *fld = nullptr;
-        if (sel_ct && right_data_idx < n_right) {
-            right_sel = (right_data_idx == right->sel_row);
-            fld = RightPanelFieldFind(sel_ct, right_data_idx);
-            if (fld) {
-                right_cell << " " << name_Get(*fld);
-                char_PrintNTimes(' ', right_cell, i32_Max(1, 24 - ch_N(right_cell)));
-                right_cell << (acr_nav::_db.show_xref ? fld->p_ctype->ctype : fld->p_arg->ctype);
-                char_PrintNTimes(' ', right_cell, i32_Max(1, 48 - ch_N(right_cell)));
-                right_cell << fld->p_reftype->reftype;
+    if (acr_nav::_db.show_help) {
+        RenderHelpOverlay(buf, wid, visible);
+    } else {
+        // Pre-walk left panel linked list to scroll_offset
+        acr_nav::FCtype *left_ptr = acr_nav::zd_sel_ctype_First();
+        {
+            int skip = 0;
+            while (left_ptr && skip < left->scroll_offset) {
+                left_ptr = acr_nav::zd_sel_ctype_Next(*left_ptr);
+                skip++;
             }
         }
-        if (ch_N(right_cell) > right_wid) {
-            right_cell.ch_n = right_wid;
-        }
-        char_PrintNTimes(' ', right_cell, i32_Max(0, right_wid - ch_N(right_cell)));
+        int n_right = RightPanelFieldCount(sel_ct);
 
-        if (right_sel) {
-            EmitStyle(buf, *(!left_focused ? p_sel_focus : p_sel_nofocus));
+        for (int row = 0; row < visible; row++) {
+            // Left cell
+            tempstr left_cell;
+            bool left_sel = false;
+            if (left_ptr) {
+                left_sel = (left->scroll_offset + row == left->sel_row);
+                left_cell << " " << left_ptr->ctype;
+                left_ptr = acr_nav::zd_sel_ctype_Next(*left_ptr);
+            }
+            if (ch_N(left_cell) > left_wid - 1) {
+                left_cell.ch_n = left_wid - 1;
+            }
+            char_PrintNTimes(' ', left_cell, i32_Max(0, left_wid - 1 - ch_N(left_cell)));
+
+            if (left_sel) {
+                EmitStyle(buf, *(left_focused ? p_sel_focus : p_sel_nofocus));
+            }
+            buf << left_cell << "\x1b[0m";
+            buf << "|";
+
+            // Right cell
+            tempstr right_cell;
+            bool right_sel = false;
+            int right_data_idx = right->scroll_offset + row;
+            acr_nav::FField *fld = nullptr;
+            if (sel_ct && right_data_idx < n_right) {
+                right_sel = (right_data_idx == right->sel_row);
+                fld = RightPanelFieldFind(sel_ct, right_data_idx);
+                if (fld) {
+                    right_cell << " " << name_Get(*fld);
+                    char_PrintNTimes(' ', right_cell, i32_Max(1, 24 - ch_N(right_cell)));
+                    right_cell << (acr_nav::_db.show_xref ? fld->p_ctype->ctype : fld->p_arg->ctype);
+                    char_PrintNTimes(' ', right_cell, i32_Max(1, 48 - ch_N(right_cell)));
+                    right_cell << fld->p_reftype->reftype;
+                }
+            }
+            if (ch_N(right_cell) > right_wid) {
+                right_cell.ch_n = right_wid;
+            }
+            char_PrintNTimes(' ', right_cell, i32_Max(0, right_wid - ch_N(right_cell)));
+
+            if (right_sel) {
+                EmitStyle(buf, *(!left_focused ? p_sel_focus : p_sel_nofocus));
+            }
+            if (fld && fld->p_reftype->c_reftypestyle) {
+                EmitStyle(buf, *fld->p_reftype->c_reftypestyle->p_navstyle);
+            }
+            buf << right_cell << "\x1b[0m";
+            buf << "\x1b[K\r\n";
         }
-        if (fld && fld->p_reftype->c_reftypestyle) {
-            EmitStyle(buf, *fld->p_reftype->c_reftypestyle->p_navstyle);
-        }
-        buf << right_cell << "\x1b[0m";
-        buf << "\x1b[K\r\n";
     }
 
     // Status bar
@@ -566,7 +675,8 @@ static void Render(acr_nav::FCtype *sel_ct, acr_nav::FPanel *left, acr_nav::FPan
     if (in_filter) {
         status << " /" << acr_nav::_db.filter;
     } else {
-        status << " q:quit  j/k:move  Space/b:page  Enter/l:follow  Backspace:back  /:filter  Tab/r:xref";
+        status << " ";
+        BuildStatusHint(status);
     }
     acr_nav::FPanel &cur = *acr_nav::_db.p_cur_panel;
     int cur_items = PanelItemCount(cur, sel_ct);
@@ -608,31 +718,38 @@ static void InitPanels() {
 // -----------------------------------------------------------------------------
 
 static bool ProcessKey(algo::strptr key_name) {
-    acr_nav::FPanel *left = acr_nav::_db.p_left_panel;
-    acr_nav::FPanel *right = acr_nav::_db.p_right_panel;
-    acr_nav::FCtype *prev_sel_ct = SelectedCtype(*left);
-    tempstr composite;
-    composite << acr_nav::_db.p_cur_mode->navmode << "." << key_name;
-    acr_nav::FKeybind *keybind = acr_nav::ind_keybind_Find(composite);
     bool did_something = false;
-    if (keybind) {
-        step_Call(*keybind->p_navaction);
+    // Any keypress dismisses help overlay
+    if (acr_nav::_db.show_help) {
+        acr_nav::_db.show_help = false;
         did_something = true;
     }
-    bool in_filter = (acr_nav::_db.p_cur_mode == acr_nav::_db.p_filter_mode);
-    if (!keybind && in_filter && elems_N(key_name) == 1 && key_name[0] > 32) {
-        acr_nav::_db.filter << key_name;
-        ApplyFilterReset();
-        did_something = true;
-    }
-    if (did_something) {
-        acr_nav::FCtype *sel_ct = SelectedCtype(*left);
-        if (sel_ct != prev_sel_ct) {
-            right->sel_row = 0;
-            right->scroll_offset = 0;
+    if (!did_something) {
+        acr_nav::FPanel *left = acr_nav::_db.p_left_panel;
+        acr_nav::FPanel *right = acr_nav::_db.p_right_panel;
+        acr_nav::FCtype *prev_sel_ct = SelectedCtype(*left);
+        tempstr composite;
+        composite << acr_nav::_db.p_cur_mode->navmode << "." << key_name;
+        acr_nav::FKeybind *keybind = acr_nav::ind_keybind_Find(composite);
+        if (keybind) {
+            step_Call(*keybind->p_navaction);
+            did_something = true;
         }
-        AdjustScroll(*left, acr_nav::zd_sel_ctype_N());
-        AdjustScroll(*right, RightPanelFieldCount(sel_ct));
+        bool in_filter = (acr_nav::_db.p_cur_mode == acr_nav::_db.p_filter_mode);
+        if (!keybind && in_filter && elems_N(key_name) == 1 && key_name[0] > 32) {
+            acr_nav::_db.filter << key_name;
+            ApplyFilterReset();
+            did_something = true;
+        }
+        if (did_something) {
+            acr_nav::FCtype *sel_ct = SelectedCtype(*left);
+            if (sel_ct != prev_sel_ct) {
+                right->sel_row = 0;
+                right->scroll_offset = 0;
+            }
+            AdjustScroll(*left, acr_nav::zd_sel_ctype_N());
+            AdjustScroll(*right, RightPanelFieldCount(sel_ct));
+        }
     }
     return did_something;
 }
@@ -653,6 +770,7 @@ static void HeadlessOutput() {
     screen.n_ctype = acr_nav::ctype_N();
     screen.n_field = acr_nav::field_N();
     screen.show_xref = acr_nav::_db.show_xref;
+    screen.show_help = acr_nav::_db.show_help;
     prlog(screen);
     // Left panel state
     acr_nav::PanelState left_state;

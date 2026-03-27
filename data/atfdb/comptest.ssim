@@ -172,6 +172,7 @@ atfdb.comptest  comptest:acr_in.Simple  timeout:10  memcheck:Y  coverage:Y  exit
 atfdb.comptest  comptest:acr_in.Tree  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:""
 atfdb.comptest  comptest:acr_nav.HeadlessFilter  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:"Headless filter mode"
 atfdb.comptest  comptest:acr_nav.HeadlessFollow  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:"Headless follow reference"
+atfdb.comptest  comptest:acr_nav.HeadlessHelp  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:"Headless help overlay toggle"
 atfdb.comptest  comptest:acr_nav.HeadlessInit  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:"Headless auto-screenshot on empty stdin"
 atfdb.comptest  comptest:acr_nav.HeadlessNav  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:"Headless navigation"
 atfdb.comptest  comptest:acr_nav.HeadlessXref  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:"Headless reverse xref toggle, follow, and go back"

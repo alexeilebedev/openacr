@@ -437,7 +437,7 @@ static void acr_nav::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_nav.Input'  signature:'a7214a0262eafd4f1f40d64cf3cbaaae6ffd805e'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_nav.Input'  signature:'79a7407e2d8b5af0a9260f55abbcf4a143f18699'");
 }
 
 // --- acr_nav.FDb._db.InsertStrptrMaybe
@@ -1622,24 +1622,25 @@ static void acr_nav::navaction_LoadStatic() {
         const char *s;
         void (*step)();
     } data[] = {
-        { "acr_navdb.navaction  navaction:filter_accept  comment:\"Accept filter and return to browse mode\"", acr_nav::navaction_filter_accept }
-        ,{ "acr_navdb.navaction  navaction:filter_append_space  comment:\"Append space to filter text\"", acr_nav::navaction_filter_append_space }
-        ,{ "acr_navdb.navaction  navaction:filter_backspace  comment:\"Delete last filter character\"", acr_nav::navaction_filter_backspace }
-        ,{ "acr_navdb.navaction  navaction:filter_cancel  comment:\"Cancel filter input\"", acr_nav::navaction_filter_cancel }
-        ,{ "acr_navdb.navaction  navaction:filter_clear  comment:\"Clear filter text\"", acr_nav::navaction_filter_clear }
-        ,{ "acr_navdb.navaction  navaction:filter_start  comment:\"Enter filter input mode\"", acr_nav::navaction_filter_start }
-        ,{ "acr_navdb.navaction  navaction:follow_ref  comment:\"Follow reference to target ctype\"", acr_nav::navaction_follow_ref }
-        ,{ "acr_navdb.navaction  navaction:go_back  comment:\"Return to previous ctype\"", acr_nav::navaction_go_back }
-        ,{ "acr_navdb.navaction  navaction:go_bottom  comment:\"Move selection to last item\"", acr_nav::navaction_go_bottom }
-        ,{ "acr_navdb.navaction  navaction:go_top  comment:\"Move selection to first item\"", acr_nav::navaction_go_top }
-        ,{ "acr_navdb.navaction  navaction:move_down  comment:\"Move selection down\"", acr_nav::navaction_move_down }
-        ,{ "acr_navdb.navaction  navaction:move_up  comment:\"Move selection up\"", acr_nav::navaction_move_up }
-        ,{ "acr_navdb.navaction  navaction:page_down  comment:\"Move selection down one page\"", acr_nav::navaction_page_down }
-        ,{ "acr_navdb.navaction  navaction:page_up  comment:\"Move selection up one page\"", acr_nav::navaction_page_up }
-        ,{ "acr_navdb.navaction  navaction:quit  comment:\"Exit acr_nav\"", acr_nav::navaction_quit }
-        ,{ "acr_navdb.navaction  navaction:switch_panel_left  comment:\"Move focus to panel on the left\"", acr_nav::navaction_switch_panel_left }
-        ,{ "acr_navdb.navaction  navaction:switch_panel_right  comment:\"Move focus to panel on the right\"", acr_nav::navaction_switch_panel_right }
-        ,{ "acr_navdb.navaction  navaction:toggle_xref  comment:\"Toggle right panel between fields and reverse xrefs\"", acr_nav::navaction_toggle_xref }
+        { "acr_navdb.navaction  navaction:filter_accept  hint:\"\"  comment:\"Accept filter and return to browse mode\"", acr_nav::navaction_filter_accept }
+        ,{ "acr_navdb.navaction  navaction:filter_append_space  hint:\"\"  comment:\"Append space to filter text\"", acr_nav::navaction_filter_append_space }
+        ,{ "acr_navdb.navaction  navaction:filter_backspace  hint:\"\"  comment:\"Delete last filter character\"", acr_nav::navaction_filter_backspace }
+        ,{ "acr_navdb.navaction  navaction:filter_cancel  hint:\"\"  comment:\"Cancel filter input\"", acr_nav::navaction_filter_cancel }
+        ,{ "acr_navdb.navaction  navaction:filter_clear  hint:\"\"  comment:\"Clear filter text\"", acr_nav::navaction_filter_clear }
+        ,{ "acr_navdb.navaction  navaction:filter_start  hint:filter  comment:\"Enter filter input mode\"", acr_nav::navaction_filter_start }
+        ,{ "acr_navdb.navaction  navaction:follow_ref  hint:follow  comment:\"Follow reference to target ctype\"", acr_nav::navaction_follow_ref }
+        ,{ "acr_navdb.navaction  navaction:go_back  hint:back  comment:\"Return to previous ctype\"", acr_nav::navaction_go_back }
+        ,{ "acr_navdb.navaction  navaction:go_bottom  hint:\"\"  comment:\"Move selection to last item\"", acr_nav::navaction_go_bottom }
+        ,{ "acr_navdb.navaction  navaction:go_top  hint:\"\"  comment:\"Move selection to first item\"", acr_nav::navaction_go_top }
+        ,{ "acr_navdb.navaction  navaction:move_down  hint:move  comment:\"Move selection down\"", acr_nav::navaction_move_down }
+        ,{ "acr_navdb.navaction  navaction:move_up  hint:move  comment:\"Move selection up\"", acr_nav::navaction_move_up }
+        ,{ "acr_navdb.navaction  navaction:page_down  hint:page  comment:\"Move selection down one page\"", acr_nav::navaction_page_down }
+        ,{ "acr_navdb.navaction  navaction:page_up  hint:page  comment:\"Move selection up one page\"", acr_nav::navaction_page_up }
+        ,{ "acr_navdb.navaction  navaction:quit  hint:quit  comment:\"Exit acr_nav\"", acr_nav::navaction_quit }
+        ,{ "acr_navdb.navaction  navaction:show_help  hint:help  comment:\"Toggle help overlay\"", acr_nav::navaction_show_help }
+        ,{ "acr_navdb.navaction  navaction:switch_panel_left  hint:\"\"  comment:\"Move focus to panel on the left\"", acr_nav::navaction_switch_panel_left }
+        ,{ "acr_navdb.navaction  navaction:switch_panel_right  hint:\"\"  comment:\"Move focus to panel on the right\"", acr_nav::navaction_switch_panel_right }
+        ,{ "acr_navdb.navaction  navaction:toggle_xref  hint:xref  comment:\"Toggle right panel between fields and reverse xrefs\"", acr_nav::navaction_toggle_xref }
         ,{NULL, NULL}
     };
     (void)data;
@@ -3408,6 +3409,7 @@ void acr_nav::FDb_Init() {
     }
     memset(_db.ind_reftypestyle_buckets_elems, 0, sizeof(acr_nav::FReftypestyle*)*_db.ind_reftypestyle_buckets_n); // (acr_nav.FDb.ind_reftypestyle)
     _db.show_xref = bool(false);
+    _db.show_help = bool(false);
 
     acr_nav::InitReflection();
     navaction_LoadStatic(); // gen:ns_gstatic  gstatic:acr_nav.FDb.navaction  load acr_nav.FNavaction records
@@ -3554,6 +3556,7 @@ void acr_nav::FField_Uninit(acr_nav::FField& field) {
 void acr_nav::keybind_CopyOut(acr_nav::FKeybind &row, acr_navdb::Keybind &out) {
     out.keybind = row.keybind;
     out.navaction = row.navaction;
+    out.hint_order = row.hint_order;
     out.comment = row.comment;
 }
 
@@ -3562,12 +3565,19 @@ void acr_nav::keybind_CopyOut(acr_nav::FKeybind &row, acr_navdb::Keybind &out) {
 void acr_nav::keybind_CopyIn(acr_nav::FKeybind &row, acr_navdb::Keybind &in) {
     row.keybind = in.keybind;
     row.navaction = in.navaction;
+    row.hint_order = in.hint_order;
     row.comment = in.comment;
 }
 
 // --- acr_nav.FKeybind.navmode.Get
 algo::Smallstr50 acr_nav::navmode_Get(acr_nav::FKeybind& keybind) {
     algo::Smallstr50 ret(algo::Pathcomp(keybind.keybind, ".RL"));
+    return ret;
+}
+
+// --- acr_nav.FKeybind.key.Get
+algo::Smallstr50 acr_nav::key_Get(acr_nav::FKeybind& keybind) {
+    algo::Smallstr50 ret(algo::Pathcomp(keybind.keybind, ".RR"));
     return ret;
 }
 
@@ -3581,6 +3591,7 @@ void acr_nav::FKeybind_Uninit(acr_nav::FKeybind& keybind) {
 // Copy fields out of row
 void acr_nav::navaction_CopyOut(acr_nav::FNavaction &row, acr_navdb::Navaction &out) {
     out.navaction = row.navaction;
+    out.hint = row.hint;
     out.comment = row.comment;
 }
 
@@ -3588,6 +3599,7 @@ void acr_nav::navaction_CopyOut(acr_nav::FNavaction &row, acr_navdb::Navaction &
 // Copy fields in to row
 void acr_nav::navaction_CopyIn(acr_nav::FNavaction &row, acr_navdb::Navaction &in) {
     row.navaction = in.navaction;
+    row.hint = in.hint;
     row.comment = in.comment;
 }
 
@@ -3939,6 +3951,9 @@ void acr_nav::Screen_Print(acr_nav::Screen& row, algo::cstring& str) {
 
     bool_Print(row.show_xref, temp);
     PrintAttrSpaceReset(str,"show_xref", temp);
+
+    bool_Print(row.show_help, temp);
+    PrintAttrSpaceReset(str,"show_help", temp);
 }
 
 // --- acr_nav.Screenshot..ReadFieldMaybe

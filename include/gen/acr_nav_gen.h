@@ -368,6 +368,7 @@ struct FDb { // acr_nav.FDb
     i32                        ind_reftypestyle_buckets_n;       // number of elements in bucket array
     i32                        ind_reftypestyle_n;               // number of elements in the hash table
     bool                       show_xref;                        //   false  When true, right panel shows reverse xrefs
+    bool                       show_help;                        //   false  When true, help overlay is shown
     acr_nav::trace             trace;                            //
 };
 
@@ -1411,6 +1412,7 @@ struct FKeybind { // acr_nav.FKeybind
     u32                    ind_keybind_hashval;   // hash value
     algo::Smallstr50       keybind;               //
     algo::Smallstr50       navaction;             // Navigation action
+    i32                    hint_order;            //   0  Status bar position; 0=hidden
     algo::Comment          comment;               //
     acr_nav::FNavaction*   p_navaction;           // reference to parent row
     // x-reference on acr_nav.FKeybind.p_navaction prevents copy
@@ -1440,6 +1442,9 @@ void                 keybind_CopyIn(acr_nav::FKeybind &row, acr_navdb::Keybind &
 // func:acr_nav.FKeybind.navmode.Get
 algo::Smallstr50     navmode_Get(acr_nav::FKeybind& keybind) __attribute__((__warn_unused_result__, nothrow));
 
+// func:acr_nav.FKeybind.key.Get
+algo::Smallstr50     key_Get(acr_nav::FKeybind& keybind) __attribute__((__warn_unused_result__, nothrow));
+
 // Set all fields to initial values.
 // func:acr_nav.FKeybind..Init
 inline void          FKeybind_Init(acr_nav::FKeybind& keybind);
@@ -1455,6 +1460,7 @@ struct FNavaction { // acr_nav.FNavaction
     acr_nav::FNavaction*           ind_navaction_next;      // hash next
     u32                            ind_navaction_hashval;   // hash value
     algo::Smallstr50               navaction;               //
+    algo::Smallstr50               hint;                    // Short status bar label; empty=hidden
     algo::Comment                  comment;                 //
     acr_nav::navaction_step_hook   step;                    //   NULL  Pointer to a function
     // reftype Hook of acr_nav.FNavaction.step prohibits copy
@@ -1861,6 +1867,7 @@ struct Screen { // acr_nav.Screen: Headless screen state output
     i32                n_ctype;          //   0  Total number of ctypes
     i32                n_field;          //   0  Total number of fields
     bool               show_xref;        //   false  True when right panel shows reverse xrefs
+    bool               show_help;        //   false  Help overlay visible
     // func:acr_nav.Screen..Ctor
     inline               Screen() __attribute__((nothrow));
 };
@@ -2152,6 +2159,10 @@ void                 navaction_page_up();
 // func:acr_nav...navaction_quit
 // this function is 'extrn' and implemented by user
 void                 navaction_quit();
+// User-implemented function from gstatic:acr_nav.FDb.navaction
+// func:acr_nav...navaction_show_help
+// this function is 'extrn' and implemented by user
+void                 navaction_show_help();
 // User-implemented function from gstatic:acr_nav.FDb.navaction
 // func:acr_nav...navaction_switch_panel_left
 // this function is 'extrn' and implemented by user
