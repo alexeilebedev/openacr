@@ -45,13 +45,18 @@ enum acr_navdb_FieldIdEnum {                // acr_navdb.FieldId.value
     ,acr_navdb_FieldId_panel          = 12
     ,acr_navdb_FieldId_title          = 13
     ,acr_navdb_FieldId_position       = 14
-    ,acr_navdb_FieldId_width_pct      = 15
-    ,acr_navdb_FieldId_reftypestyle   = 16
-    ,acr_navdb_FieldId_reftype        = 17
-    ,acr_navdb_FieldId_value          = 18
+    ,acr_navdb_FieldId_reftypestyle   = 15
+    ,acr_navdb_FieldId_reftype        = 16
+    ,acr_navdb_FieldId_viewmode       = 17
+    ,acr_navdb_FieldId_show_preview   = 18
+    ,acr_navdb_FieldId_show_xref      = 19
+    ,acr_navdb_FieldId_next           = 20
+    ,acr_navdb_FieldId_dflt           = 21
+    ,acr_navdb_FieldId_empty_msg      = 22
+    ,acr_navdb_FieldId_value          = 23
 };
 
-enum { acr_navdb_FieldIdEnum_N = 19 };
+enum { acr_navdb_FieldIdEnum_N = 24 };
 
 namespace acr_navdb { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 KeybindPkey;
@@ -60,6 +65,7 @@ namespace acr_navdb { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 NavstylePkey;
     typedef algo::Smallstr50 PanelPkey;
     typedef algo::Smallstr50 ReftypestylePkey;
+    typedef algo::Smallstr50 ViewmodePkey;
 } // gen:ns_pkeytypedef
 namespace acr_navdb { // gen:ns_tclass_field
 } // gen:ns_tclass_field
@@ -71,6 +77,7 @@ namespace acr_navdb { struct Navmode; }
 namespace acr_navdb { struct Navstyle; }
 namespace acr_navdb { struct Panel; }
 namespace acr_navdb { struct Reftypestyle; }
+namespace acr_navdb { struct Viewmode; }
 namespace acr_navdb { // gen:ns_print_struct
 
 // --- acr_navdb.FieldId
@@ -230,11 +237,10 @@ void                 Navstyle_Print(acr_navdb::Navstyle& row, algo::cstring& str
 
 // --- acr_navdb.Panel
 struct Panel { // acr_navdb.Panel: Panel definition for acr_nav TUI layout
-    algo::Smallstr50   panel;       //
-    algo::cstring      title;       // Display title
-    i32                position;    //   0  Left-to-right ordering
-    i32                width_pct;   //   0  Width as percentage of terminal
-    algo::Comment      comment;     //
+    algo::Smallstr50   panel;      //
+    algo::cstring      title;      // Display title
+    i32                position;   //   0  Left-to-right ordering
+    algo::Comment      comment;    //
     // func:acr_navdb.Panel..Ctor
     inline               Panel() __attribute__((nothrow));
 };
@@ -283,6 +289,34 @@ bool                 Reftypestyle_ReadStrptrMaybe(acr_navdb::Reftypestyle &paren
 // cfmt:acr_navdb.Reftypestyle.String  printfmt:Tuple
 // func:acr_navdb.Reftypestyle..Print
 void                 Reftypestyle_Print(acr_navdb::Reftypestyle& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- acr_navdb.Viewmode
+struct Viewmode { // acr_navdb.Viewmode: Right-panel view mode for acr_nav
+    algo::Smallstr50   viewmode;       //
+    bool               show_preview;   //   false  True when viewmode shows ssimfile preview
+    bool               show_xref;      //   false  True when viewmode shows reverse xrefs
+    algo::Smallstr50   title;          // Right panel title for this viewmode
+    algo::Smallstr50   next;           // Next viewmode in Tab cycle
+    bool               dflt;           //   false  True if this is the default viewmode
+    algo::Smallstr50   empty_msg;      // Message shown when right panel has no items
+    algo::Comment      comment;        //
+    // func:acr_navdb.Viewmode..Ctor
+    inline               Viewmode() __attribute__((nothrow));
+};
+
+// func:acr_navdb.Viewmode..ReadFieldMaybe
+bool                 Viewmode_ReadFieldMaybe(acr_navdb::Viewmode& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of acr_navdb::Viewmode from an ascii string.
+// The format of the string is an ssim Tuple
+// func:acr_navdb.Viewmode..ReadStrptrMaybe
+bool                 Viewmode_ReadStrptrMaybe(acr_navdb::Viewmode &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:acr_navdb.Viewmode..Init
+inline void          Viewmode_Init(acr_navdb::Viewmode& parent);
+// print string representation of ROW to string STR
+// cfmt:acr_navdb.Viewmode.String  printfmt:Tuple
+// func:acr_navdb.Viewmode..Print
+void                 Viewmode_Print(acr_navdb::Viewmode& row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace acr_navdb { // gen:ns_func
 } // gen:ns_func
@@ -295,4 +329,5 @@ inline algo::cstring &operator <<(algo::cstring &str, const acr_navdb::Navmode &
 inline algo::cstring &operator <<(algo::cstring &str, const acr_navdb::Navstyle &row);// cfmt:acr_navdb.Navstyle.String
 inline algo::cstring &operator <<(algo::cstring &str, const acr_navdb::Panel &row);// cfmt:acr_navdb.Panel.String
 inline algo::cstring &operator <<(algo::cstring &str, const acr_navdb::Reftypestyle &row);// cfmt:acr_navdb.Reftypestyle.String
+inline algo::cstring &operator <<(algo::cstring &str, const acr_navdb::Viewmode &row);// cfmt:acr_navdb.Viewmode.String
 }

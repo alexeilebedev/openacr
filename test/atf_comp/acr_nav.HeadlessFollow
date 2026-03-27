@@ -1,4 +1,4 @@
-acr_nav.Screen  mode:browse  focus:field_list  filter:amc.FDb  navstack_depth:0  n_sel_ctype:2  n_ctype:1390  n_field:5554  show_xref:N  show_help:N  breadcrumb:""
+acr_nav.Screen  mode:browse  focus:field_list  filter:amc.FDb  navstack_depth:0  n_sel_ctype:2  n_ctype:1393  n_field:5574  viewmode:fields  show_help:N  breadcrumb:""
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:2  sel_value:amc.FDb
 acr_nav.PanelState  panel:field_list  sel_row:1  scroll_offset:0  n_items:186  sel_value:amc.FDb.fsort
 acr_nav.VisibleField  row:0  field:amc.FDb.lpool  arg:u8  reftype:Lpool  style:field_pool  navigable:Y
@@ -188,7 +188,7 @@ acr_nav.VisibleField  row:183  field:amc.FDb.userfunc  arg:amc.FUserfunc  reftyp
 acr_nav.VisibleField  row:184  field:amc.FDb.steptype  arg:amc.FSteptype  reftype:Lary  style:field_pool  navigable:Y
 acr_nav.VisibleField  row:185  field:amc.FDb.ind_steptype  arg:amc.FSteptype  reftype:Thash  style:field_idx  navigable:Y
 
-acr_nav.Screen  mode:browse  focus:field_list  filter:amc.FDb  navstack_depth:0  n_sel_ctype:2  n_ctype:1390  n_field:5554  show_xref:N  show_help:N  breadcrumb:""
+acr_nav.Screen  mode:browse  focus:field_list  filter:amc.FDb  navstack_depth:0  n_sel_ctype:2  n_ctype:1393  n_field:5574  viewmode:fields  show_help:N  breadcrumb:""
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:2  sel_value:amc.FDb
 acr_nav.PanelState  panel:field_list  sel_row:1  scroll_offset:0  n_items:186  sel_value:amc.FDb.fsort
 acr_nav.VisibleField  row:0  field:amc.FDb.lpool  arg:u8  reftype:Lpool  style:field_pool  navigable:Y

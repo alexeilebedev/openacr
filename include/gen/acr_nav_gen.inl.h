@@ -145,6 +145,26 @@ inline acr_nav::FField& acr_nav::c_field_arg_qLast(acr_nav::FCtype& ctype) {
     return *ctype.c_field_arg_elems[ctype.c_field_arg_n-1];
 }
 
+// --- acr_nav.FCtype.c_ssimfile.InsertMaybe
+// Insert row into pointer index. Return final membership status.
+inline bool acr_nav::c_ssimfile_InsertMaybe(acr_nav::FCtype& ctype, acr_nav::FSsimfile& row) {
+    acr_nav::FSsimfile* ptr = ctype.c_ssimfile;
+    bool retval = (ptr == NULL) | (ptr == &row);
+    if (retval) {
+        ctype.c_ssimfile = &row;
+    }
+    return retval;
+}
+
+// --- acr_nav.FCtype.c_ssimfile.Remove
+// Remove element from index. If element is not in index, do nothing.
+inline void acr_nav::c_ssimfile_Remove(acr_nav::FCtype& ctype, acr_nav::FSsimfile& row) {
+    acr_nav::FSsimfile *ptr = ctype.c_ssimfile;
+    if (LIKELY(ptr == &row)) {
+        ctype.c_ssimfile = NULL;
+    }
+}
+
 // --- acr_nav.FCtype.c_field_curs.Reset
 inline void acr_nav::ctype_c_field_curs_Reset(ctype_c_field_curs &curs, acr_nav::FCtype &parent) {
     curs.elems = parent.c_field_elems;
@@ -204,6 +224,7 @@ inline void acr_nav::FCtype_Init(acr_nav::FCtype& ctype) {
     ctype.c_field_arg_elems = NULL; // (acr_nav.FCtype.c_field_arg)
     ctype.c_field_arg_n = 0; // (acr_nav.FCtype.c_field_arg)
     ctype.c_field_arg_max = 0; // (acr_nav.FCtype.c_field_arg)
+    ctype.c_ssimfile = NULL;
     ctype.p_ns = NULL;
     ctype.ind_ctype_next = (acr_nav::FCtype*)-1; // (acr_nav.FDb.ind_ctype) not-in-hash
     ctype.ind_ctype_hashval = 0; // stored hash value
@@ -888,6 +909,181 @@ inline i32 acr_nav::ind_reftypestyle_N() {
     return _db.ind_reftypestyle_n;
 }
 
+// --- acr_nav.FDb.ssimfile.EmptyQ
+// Return true if index is empty
+inline bool acr_nav::ssimfile_EmptyQ() {
+    return _db.ssimfile_n == 0;
+}
+
+// --- acr_nav.FDb.ssimfile.Find
+// Look up row by row id. Return NULL if out of range
+inline acr_nav::FSsimfile* acr_nav::ssimfile_Find(u64 t) {
+    acr_nav::FSsimfile *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.ssimfile_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.ssimfile_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- acr_nav.FDb.ssimfile.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline acr_nav::FSsimfile* acr_nav::ssimfile_Last() {
+    return ssimfile_Find(u64(_db.ssimfile_n-1));
+}
+
+// --- acr_nav.FDb.ssimfile.N
+// Return number of items in the pool
+inline i32 acr_nav::ssimfile_N() {
+    return _db.ssimfile_n;
+}
+
+// --- acr_nav.FDb.ssimfile.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline acr_nav::FSsimfile& acr_nav::ssimfile_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.ssimfile_lary[bsr][index];
+}
+
+// --- acr_nav.FDb.ind_ssimfile.EmptyQ
+// Return true if hash is empty
+inline bool acr_nav::ind_ssimfile_EmptyQ() {
+    return _db.ind_ssimfile_n == 0;
+}
+
+// --- acr_nav.FDb.ind_ssimfile.N
+// Return number of items in the hash
+inline i32 acr_nav::ind_ssimfile_N() {
+    return _db.ind_ssimfile_n;
+}
+
+// --- acr_nav.FDb.viewmode.EmptyQ
+// Return true if index is empty
+inline bool acr_nav::viewmode_EmptyQ() {
+    return _db.viewmode_n == 0;
+}
+
+// --- acr_nav.FDb.viewmode.Find
+// Look up row by row id. Return NULL if out of range
+inline acr_nav::FViewmode* acr_nav::viewmode_Find(u64 t) {
+    acr_nav::FViewmode *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.viewmode_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.viewmode_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- acr_nav.FDb.viewmode.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline acr_nav::FViewmode* acr_nav::viewmode_Last() {
+    return viewmode_Find(u64(_db.viewmode_n-1));
+}
+
+// --- acr_nav.FDb.viewmode.N
+// Return number of items in the pool
+inline i32 acr_nav::viewmode_N() {
+    return _db.viewmode_n;
+}
+
+// --- acr_nav.FDb.viewmode.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline acr_nav::FViewmode& acr_nav::viewmode_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.viewmode_lary[bsr][index];
+}
+
+// --- acr_nav.FDb.ind_viewmode.EmptyQ
+// Return true if hash is empty
+inline bool acr_nav::ind_viewmode_EmptyQ() {
+    return _db.ind_viewmode_n == 0;
+}
+
+// --- acr_nav.FDb.ind_viewmode.N
+// Return number of items in the hash
+inline i32 acr_nav::ind_viewmode_N() {
+    return _db.ind_viewmode_n;
+}
+
+// --- acr_nav.FDb.preview_line.EmptyQ
+// Return true if index is empty
+inline bool acr_nav::preview_line_EmptyQ() {
+    return _db.preview_line_n == 0;
+}
+
+// --- acr_nav.FDb.preview_line.Find
+// Look up row by row id. Return NULL if out of range
+inline algo::cstring* acr_nav::preview_line_Find(u64 t) {
+    u64 idx = t;
+    u64 lim = _db.preview_line_n;
+    if (idx >= lim) return NULL;
+    return _db.preview_line_elems + idx;
+}
+
+// --- acr_nav.FDb.preview_line.Getary
+// Return array pointer by value
+inline algo::aryptr<algo::cstring> acr_nav::preview_line_Getary() {
+    return algo::aryptr<algo::cstring>(_db.preview_line_elems, _db.preview_line_n);
+}
+
+// --- acr_nav.FDb.preview_line.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline algo::cstring* acr_nav::preview_line_Last() {
+    return preview_line_Find(u64(_db.preview_line_n-1));
+}
+
+// --- acr_nav.FDb.preview_line.Max
+// Return max. number of items in the array
+inline i32 acr_nav::preview_line_Max() {
+    return _db.preview_line_max;
+}
+
+// --- acr_nav.FDb.preview_line.N
+// Return number of items in the array
+inline i32 acr_nav::preview_line_N() {
+    return _db.preview_line_n;
+}
+
+// --- acr_nav.FDb.preview_line.Reserve
+// Make sure N *more* elements will fit in array. Process dies if out of memory
+inline void acr_nav::preview_line_Reserve(int n) {
+    u32 new_n = _db.preview_line_n + n;
+    if (UNLIKELY(new_n > _db.preview_line_max)) {
+        preview_line_AbsReserve(new_n);
+    }
+}
+
+// --- acr_nav.FDb.preview_line.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline algo::cstring& acr_nav::preview_line_qFind(u64 t) {
+    return _db.preview_line_elems[t];
+}
+
+// --- acr_nav.FDb.preview_line.qLast
+// Return reference to last element of array. No bounds checking
+inline algo::cstring& acr_nav::preview_line_qLast() {
+    return preview_line_qFind(u64(_db.preview_line_n-1));
+}
+
+// --- acr_nav.FDb.preview_line.rowid_Get
+// Return row id of specified element
+inline u64 acr_nav::preview_line_rowid_Get(algo::cstring &elem) {
+    u64 id = &elem - _db.preview_line_elems;
+    return u64(id);
+}
+
 // --- acr_nav.FDb.ctype_curs.Reset
 // cursor points to valid item
 inline void acr_nav::_db_ctype_curs_Reset(_db_ctype_curs &curs, acr_nav::FDb &parent) {
@@ -1188,6 +1384,81 @@ inline acr_nav::FReftypestyle& acr_nav::_db_reftypestyle_curs_Access(_db_reftype
     return reftypestyle_qFind(u64(curs.index));
 }
 
+// --- acr_nav.FDb.ssimfile_curs.Reset
+// cursor points to valid item
+inline void acr_nav::_db_ssimfile_curs_Reset(_db_ssimfile_curs &curs, acr_nav::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- acr_nav.FDb.ssimfile_curs.ValidQ
+// cursor points to valid item
+inline bool acr_nav::_db_ssimfile_curs_ValidQ(_db_ssimfile_curs &curs) {
+    return curs.index < _db.ssimfile_n;
+}
+
+// --- acr_nav.FDb.ssimfile_curs.Next
+// proceed to next item
+inline void acr_nav::_db_ssimfile_curs_Next(_db_ssimfile_curs &curs) {
+    curs.index++;
+}
+
+// --- acr_nav.FDb.ssimfile_curs.Access
+// item access
+inline acr_nav::FSsimfile& acr_nav::_db_ssimfile_curs_Access(_db_ssimfile_curs &curs) {
+    return ssimfile_qFind(u64(curs.index));
+}
+
+// --- acr_nav.FDb.viewmode_curs.Reset
+// cursor points to valid item
+inline void acr_nav::_db_viewmode_curs_Reset(_db_viewmode_curs &curs, acr_nav::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- acr_nav.FDb.viewmode_curs.ValidQ
+// cursor points to valid item
+inline bool acr_nav::_db_viewmode_curs_ValidQ(_db_viewmode_curs &curs) {
+    return curs.index < _db.viewmode_n;
+}
+
+// --- acr_nav.FDb.viewmode_curs.Next
+// proceed to next item
+inline void acr_nav::_db_viewmode_curs_Next(_db_viewmode_curs &curs) {
+    curs.index++;
+}
+
+// --- acr_nav.FDb.viewmode_curs.Access
+// item access
+inline acr_nav::FViewmode& acr_nav::_db_viewmode_curs_Access(_db_viewmode_curs &curs) {
+    return viewmode_qFind(u64(curs.index));
+}
+
+// --- acr_nav.FDb.preview_line_curs.Next
+// proceed to next item
+inline void acr_nav::_db_preview_line_curs_Next(_db_preview_line_curs &curs) {
+    curs.index++;
+}
+
+// --- acr_nav.FDb.preview_line_curs.Reset
+inline void acr_nav::_db_preview_line_curs_Reset(_db_preview_line_curs &curs, acr_nav::FDb &parent) {
+    curs.elems = parent.preview_line_elems;
+    curs.n_elems = parent.preview_line_n;
+    curs.index = 0;
+}
+
+// --- acr_nav.FDb.preview_line_curs.ValidQ
+// cursor points to valid item
+inline bool acr_nav::_db_preview_line_curs_ValidQ(_db_preview_line_curs &curs) {
+    return curs.index < curs.n_elems;
+}
+
+// --- acr_nav.FDb.preview_line_curs.Access
+// item access
+inline algo::cstring& acr_nav::_db_preview_line_curs_Access(_db_preview_line_curs &curs) {
+    return curs.elems[curs.index];
+}
+
 // --- acr_nav.FField..Ctor
 inline  acr_nav::FField::FField() {
     acr_nav::FField_Init(*this);
@@ -1301,7 +1572,6 @@ inline  acr_nav::FNs::~FNs() {
 // Set all fields to initial values.
 inline void acr_nav::FPanel_Init(acr_nav::FPanel& panel) {
     panel.position = i32(0);
-    panel.width_pct = i32(0);
     panel.scroll_offset = i32(0);
     panel.sel_row = i32(0);
     panel.ind_panel_next = (acr_nav::FPanel*)-1; // (acr_nav.FDb.ind_panel) not-in-hash
@@ -1366,6 +1636,44 @@ inline  acr_nav::FReftypestyle::~FReftypestyle() {
     acr_nav::FReftypestyle_Uninit(*this);
 }
 
+// --- acr_nav.FSsimfile..Init
+// Set all fields to initial values.
+inline void acr_nav::FSsimfile_Init(acr_nav::FSsimfile& ssimfile) {
+    ssimfile.p_ctype = NULL;
+    ssimfile.ind_ssimfile_next = (acr_nav::FSsimfile*)-1; // (acr_nav.FDb.ind_ssimfile) not-in-hash
+    ssimfile.ind_ssimfile_hashval = 0; // stored hash value
+}
+
+// --- acr_nav.FSsimfile..Ctor
+inline  acr_nav::FSsimfile::FSsimfile() {
+    acr_nav::FSsimfile_Init(*this);
+}
+
+// --- acr_nav.FSsimfile..Dtor
+inline  acr_nav::FSsimfile::~FSsimfile() {
+    acr_nav::FSsimfile_Uninit(*this);
+}
+
+// --- acr_nav.FViewmode..Init
+// Set all fields to initial values.
+inline void acr_nav::FViewmode_Init(acr_nav::FViewmode& viewmode) {
+    viewmode.show_preview = bool(false);
+    viewmode.show_xref = bool(false);
+    viewmode.dflt = bool(false);
+    viewmode.ind_viewmode_next = (acr_nav::FViewmode*)-1; // (acr_nav.FDb.ind_viewmode) not-in-hash
+    viewmode.ind_viewmode_hashval = 0; // stored hash value
+}
+
+// --- acr_nav.FViewmode..Ctor
+inline  acr_nav::FViewmode::FViewmode() {
+    acr_nav::FViewmode_Init(*this);
+}
+
+// --- acr_nav.FViewmode..Dtor
+inline  acr_nav::FViewmode::~FViewmode() {
+    acr_nav::FViewmode_Uninit(*this);
+}
+
 // --- acr_nav.FieldId.value.GetEnum
 // Get value of field as enum type
 inline acr_nav_FieldIdEnum acr_nav::value_GetEnum(const acr_nav::FieldId& parent) {
@@ -1410,7 +1718,6 @@ inline  acr_nav::FieldId::FieldId(acr_nav_FieldIdEnum arg) {
 inline void acr_nav::Naventry_Init(acr_nav::Naventry& parent) {
     parent.scroll_offset = i32(0);
     parent.sel_row = i32(0);
-    parent.show_xref = bool(false);
 }
 
 // --- acr_nav.Naventry..Ctor

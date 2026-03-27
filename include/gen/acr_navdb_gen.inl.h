@@ -101,7 +101,6 @@ inline  acr_navdb::Navstyle::Navstyle() {
 // Set all fields to initial values.
 inline void acr_navdb::Panel_Init(acr_navdb::Panel& parent) {
     parent.position = i32(0);
-    parent.width_pct = i32(0);
 }
 
 // --- acr_navdb.Panel..Ctor
@@ -111,6 +110,19 @@ inline  acr_navdb::Panel::Panel() {
 
 // --- acr_navdb.Reftypestyle..Ctor
 inline  acr_navdb::Reftypestyle::Reftypestyle() {
+}
+
+// --- acr_navdb.Viewmode..Init
+// Set all fields to initial values.
+inline void acr_navdb::Viewmode_Init(acr_navdb::Viewmode& parent) {
+    parent.show_preview = bool(false);
+    parent.show_xref = bool(false);
+    parent.dflt = bool(false);
+}
+
+// --- acr_navdb.Viewmode..Ctor
+inline  acr_navdb::Viewmode::Viewmode() {
+    acr_navdb::Viewmode_Init(*this);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const acr_navdb::FieldId &row) {// cfmt:acr_navdb.FieldId.String
@@ -145,5 +157,10 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const acr_navdb::Pan
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const acr_navdb::Reftypestyle &row) {// cfmt:acr_navdb.Reftypestyle.String
     acr_navdb::Reftypestyle_Print(const_cast<acr_navdb::Reftypestyle&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const acr_navdb::Viewmode &row) {// cfmt:acr_navdb.Viewmode.String
+    acr_navdb::Viewmode_Print(const_cast<acr_navdb::Viewmode&>(row), str);
     return str;
 }

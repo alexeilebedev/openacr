@@ -70,6 +70,8 @@ dmmeta.thash  field:acr_nav.FDb.ind_ns  hashfld:dmmeta.Ns.ns  unique:Y  comment:
 dmmeta.thash  field:acr_nav.FDb.ind_panel  hashfld:acr_navdb.Panel.panel  unique:Y  comment:""
 dmmeta.thash  field:acr_nav.FDb.ind_reftype  hashfld:dmmeta.Reftype.reftype  unique:Y  comment:""
 dmmeta.thash  field:acr_nav.FDb.ind_reftypestyle  hashfld:acr_navdb.Reftypestyle.reftypestyle  unique:Y  comment:""
+dmmeta.thash  field:acr_nav.FDb.ind_ssimfile  hashfld:dmmeta.Ssimfile.ssimfile  unique:Y  comment:""
+dmmeta.thash  field:acr_nav.FDb.ind_viewmode  hashfld:acr_navdb.Viewmode.viewmode  unique:Y  comment:""
 dmmeta.thash  field:algo_lib.FDb.ind_dispsigcheck  hashfld:dmmeta.Dispsigcheck.dispsig  unique:Y  comment:""
 dmmeta.thash  field:algo_lib.FDb.ind_imdb  hashfld:algo.Imdb.imdb  unique:Y  comment:""
 dmmeta.thash  field:algo_lib.FDb.ind_imtable  hashfld:algo.Imtable.imtable  unique:Y  comment:""

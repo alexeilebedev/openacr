@@ -240,6 +240,7 @@ const char *dmmeta_Ssimfile_ssimfile_acr_navdb_navmode     = "acr_navdb.navmode"
 const char *dmmeta_Ssimfile_ssimfile_acr_navdb_navstyle       = "acr_navdb.navstyle";
 const char *dmmeta_Ssimfile_ssimfile_acr_navdb_panel          = "acr_navdb.panel";
 const char *dmmeta_Ssimfile_ssimfile_acr_navdb_reftypestyle   = "acr_navdb.reftypestyle";
+const char *dmmeta_Ssimfile_ssimfile_acr_navdb_viewmode       = "acr_navdb.viewmode";
 const char *dmmeta_Ssimfile_ssimfile_amcdb_bltin              = "amcdb.bltin";
 const char *dmmeta_Ssimfile_ssimfile_amcdb_curstype           = "amcdb.curstype";
 const char *dmmeta_Ssimfile_ssimfile_amcdb_gen                = "amcdb.gen";

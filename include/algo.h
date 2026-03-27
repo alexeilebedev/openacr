@@ -1868,7 +1868,7 @@ namespace algo_lib { // update-hdr
 
     // User-defined cleanup trigger fildes field of ctype:algo_lib.FLockfile
     //     (user-implemented function, prototype is in amc-generated header)
-    // void fildes_Cleanup(algo_lib::FLockfile &lockfile); // fcleanup:algo_lib.FTempfile.fildes
+    // void fildes_Cleanup(algo_lib::FLockfile &lockfile); // fcleanup:algo_lib.FIohook.fildes
 
     // If PATH is an existing path, leave it unchanged
     // On Windows, If PATH.EXE is an existing path, return that
@@ -1919,7 +1919,7 @@ namespace algo_lib { // update-hdr
     void ReqExitMainLoop();
     //     (user-implemented function, prototype is in amc-generated header)
     // void fd_Cleanup(algo_lib::FFildes &fildes); // fcleanup:algo_lib.FFildes.fd
-    // void fildes_Cleanup(algo_lib::FIohook &iohook); // fcleanup:algo_lib.FTempfile.fildes
+    // void fildes_Cleanup(algo_lib::FIohook &iohook); // fcleanup:algo_lib.FIohook.fildes
     // void bh_timehook_Step(); // fstep:algo_lib.FDb.bh_timehook
 
     // Check signature on incoming data
@@ -1942,7 +1942,7 @@ namespace algo_lib { // update-hdr
     // Computed filename is saved to tempfile.filename
     void TempfileInitX(algo_lib::FTempfile &tempfile, strptr prefix);
     //     (user-implemented function, prototype is in amc-generated header)
-    // void fildes_Cleanup(algo_lib::FTempfile &tempfile); // fcleanup:algo_lib.FTempfile.fildes
+    // void fildes_Cleanup(algo_lib::FTempfile &tempfile); // fcleanup:algo_lib.FIohook.fildes
 
     // Interpret redirect string, return resulting fd
     // If no redirect applies, return -1

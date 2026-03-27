@@ -206,6 +206,7 @@ dmmeta.xref  field:acr_nav.FDb.ind_panel  inscond:true  via:""
 dmmeta.xref  field:acr_nav.FDb.ind_navmode  inscond:true  via:""
 dmmeta.xref  field:acr_nav.FCtype.c_field  inscond:true  via:acr_nav.FDb.ind_ctype/dmmeta.Field.ctype
 dmmeta.xref  field:acr_nav.FCtype.c_field_arg  inscond:true  via:acr_nav.FDb.ind_ctype/dmmeta.Field.arg
+dmmeta.xref  field:acr_nav.FCtype.c_ssimfile  inscond:true  via:acr_nav.FDb.ind_ctype/dmmeta.Ssimfile.ctype
 dmmeta.xref  field:acr_nav.FCtype.p_ns  inscond:true  via:acr_nav.FDb.ind_ns/dmmeta.Ctype.ns
 dmmeta.xref  field:acr_nav.FField.p_ctype  inscond:true  via:acr_nav.FDb.ind_ctype/dmmeta.Field.ctype
 dmmeta.xref  field:acr_nav.FField.p_arg  inscond:true  via:acr_nav.FDb.ind_ctype/dmmeta.Field.arg
@@ -214,8 +215,11 @@ dmmeta.xref  field:acr_nav.FKeybind.p_navaction  inscond:true  via:acr_nav.FDb.i
 dmmeta.xref  field:acr_nav.FDb.zd_sel_ctype  inscond:false  via:""
 dmmeta.xref  field:acr_nav.FDb.ind_navstyle  inscond:true  via:""
 dmmeta.xref  field:acr_nav.FDb.ind_reftypestyle  inscond:true  via:""
+dmmeta.xref  field:acr_nav.FDb.ind_ssimfile  inscond:true  via:""
+dmmeta.xref  field:acr_nav.FDb.ind_viewmode  inscond:true  via:""
 dmmeta.xref  field:acr_nav.FReftypestyle.p_navstyle  inscond:true  via:acr_nav.FDb.ind_navstyle/acr_navdb.Reftypestyle.navstyle
 dmmeta.xref  field:acr_nav.FReftype.c_reftypestyle  inscond:true  via:acr_nav.FDb.ind_reftype/acr_navdb.Reftypestyle.reftype
+dmmeta.xref  field:acr_nav.FSsimfile.p_ctype  inscond:true  via:acr_nav.FDb.ind_ctype/dmmeta.Ssimfile.ctype
 dmmeta.xref  field:algo_lib.FDb.ind_imtable  inscond:true  via:""
 dmmeta.xref  field:algo_lib.FDb.bh_timehook  inscond:false  via:""
 dmmeta.xref  field:algo_lib.FDb.ind_dispsigcheck  inscond:true  via:""

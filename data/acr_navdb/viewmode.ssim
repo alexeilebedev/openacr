@@ -1,0 +1,3 @@
+acr_navdb.viewmode  viewmode:fields   show_preview:N  show_xref:N  title:Fields   next:xref     dflt:Y  empty_msg:"no fields"   comment:"Forward fields of selected ctype"
+acr_navdb.viewmode  viewmode:preview  show_preview:Y  show_xref:N  title:Preview  next:fields   dflt:N  empty_msg:"no ssimfile"  comment:"Ssimfile record content preview"
+acr_navdb.viewmode  viewmode:xref     show_preview:N  show_xref:Y  title:Xrefs    next:preview  dflt:N  empty_msg:"no xrefs"    comment:"Reverse cross-references to selected ctype"

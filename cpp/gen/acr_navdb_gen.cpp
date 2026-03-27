@@ -54,9 +54,14 @@ const char* acr_navdb::value_ToCstr(const acr_navdb::FieldId& parent) {
         case acr_navdb_FieldId_panel       : ret = "panel";  break;
         case acr_navdb_FieldId_title       : ret = "title";  break;
         case acr_navdb_FieldId_position    : ret = "position";  break;
-        case acr_navdb_FieldId_width_pct   : ret = "width_pct";  break;
         case acr_navdb_FieldId_reftypestyle: ret = "reftypestyle";  break;
         case acr_navdb_FieldId_reftype     : ret = "reftype";  break;
+        case acr_navdb_FieldId_viewmode    : ret = "viewmode";  break;
+        case acr_navdb_FieldId_show_preview: ret = "show_preview";  break;
+        case acr_navdb_FieldId_show_xref   : ret = "show_xref";  break;
+        case acr_navdb_FieldId_next        : ret = "next";  break;
+        case acr_navdb_FieldId_dflt        : ret = "dflt";  break;
+        case acr_navdb_FieldId_empty_msg   : ret = "empty_msg";  break;
         case acr_navdb_FieldId_value       : ret = "value";  break;
     }
     return ret;
@@ -97,8 +102,14 @@ bool acr_navdb::value_SetStrptrMaybe(acr_navdb::FieldId& parent, algo::strptr rh
                 case LE_STR4('b','o','l','d'): {
                     value_SetEnum(parent,acr_navdb_FieldId_bold); ret = true; break;
                 }
+                case LE_STR4('d','f','l','t'): {
+                    value_SetEnum(parent,acr_navdb_FieldId_dflt); ret = true; break;
+                }
                 case LE_STR4('h','i','n','t'): {
                     value_SetEnum(parent,acr_navdb_FieldId_hint); ret = true; break;
+                }
+                case LE_STR4('n','e','x','t'): {
+                    value_SetEnum(parent,acr_navdb_FieldId_next); ret = true; break;
                 }
             }
             break;
@@ -148,17 +159,24 @@ bool acr_navdb::value_SetStrptrMaybe(acr_navdb::FieldId& parent, algo::strptr rh
                 case LE_STR8('p','o','s','i','t','i','o','n'): {
                     value_SetEnum(parent,acr_navdb_FieldId_position); ret = true; break;
                 }
+                case LE_STR8('v','i','e','w','m','o','d','e'): {
+                    value_SetEnum(parent,acr_navdb_FieldId_viewmode); ret = true; break;
+                }
             }
             break;
         }
         case 9: {
             switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('e','m','p','t','y','_','m','s'): {
+                    if (memcmp(rhs.elems+8,"g",1)==0) { value_SetEnum(parent,acr_navdb_FieldId_empty_msg); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('n','a','v','a','c','t','i','o'): {
                     if (memcmp(rhs.elems+8,"n",1)==0) { value_SetEnum(parent,acr_navdb_FieldId_navaction); ret = true; break; }
                     break;
                 }
-                case LE_STR8('w','i','d','t','h','_','p','c'): {
-                    if (memcmp(rhs.elems+8,"t",1)==0) { value_SetEnum(parent,acr_navdb_FieldId_width_pct); ret = true; break; }
+                case LE_STR8('s','h','o','w','_','x','r','e'): {
+                    if (memcmp(rhs.elems+8,"f",1)==0) { value_SetEnum(parent,acr_navdb_FieldId_show_xref); ret = true; break; }
                     break;
                 }
             }
@@ -177,6 +195,10 @@ bool acr_navdb::value_SetStrptrMaybe(acr_navdb::FieldId& parent, algo::strptr rh
             switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('r','e','f','t','y','p','e','s'): {
                     if (memcmp(rhs.elems+8,"tyle",4)==0) { value_SetEnum(parent,acr_navdb_FieldId_reftypestyle); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('s','h','o','w','_','p','r','e'): {
+                    if (memcmp(rhs.elems+8,"view",4)==0) { value_SetEnum(parent,acr_navdb_FieldId_show_preview); ret = true; break; }
                     break;
                 }
             }
@@ -508,9 +530,6 @@ bool acr_navdb::Panel_ReadFieldMaybe(acr_navdb::Panel& parent, algo::strptr fiel
         case acr_navdb_FieldId_position: {
             retval = i32_ReadStrptrMaybe(parent.position, strval);
         } break;
-        case acr_navdb_FieldId_width_pct: {
-            retval = i32_ReadStrptrMaybe(parent.width_pct, strval);
-        } break;
         case acr_navdb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
         } break;
@@ -552,9 +571,6 @@ void acr_navdb::Panel_Print(acr_navdb::Panel& row, algo::cstring& str) {
 
     i32_Print(row.position, temp);
     PrintAttrSpaceReset(str,"position", temp);
-
-    i32_Print(row.width_pct, temp);
-    PrintAttrSpaceReset(str,"width_pct", temp);
 
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);
@@ -639,6 +655,91 @@ void acr_navdb::Reftypestyle_Print(acr_navdb::Reftypestyle& row, algo::cstring& 
 
     algo::Smallstr50_Print(row.reftypestyle, temp);
     PrintAttrSpaceReset(str,"reftypestyle", temp);
+
+    algo::Comment_Print(row.comment, temp);
+    PrintAttrSpaceReset(str,"comment", temp);
+}
+
+// --- acr_navdb.Viewmode..ReadFieldMaybe
+bool acr_navdb::Viewmode_ReadFieldMaybe(acr_navdb::Viewmode& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    acr_navdb::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case acr_navdb_FieldId_viewmode: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.viewmode, strval);
+        } break;
+        case acr_navdb_FieldId_show_preview: {
+            retval = bool_ReadStrptrMaybe(parent.show_preview, strval);
+        } break;
+        case acr_navdb_FieldId_show_xref: {
+            retval = bool_ReadStrptrMaybe(parent.show_xref, strval);
+        } break;
+        case acr_navdb_FieldId_title: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.title, strval);
+        } break;
+        case acr_navdb_FieldId_next: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.next, strval);
+        } break;
+        case acr_navdb_FieldId_dflt: {
+            retval = bool_ReadStrptrMaybe(parent.dflt, strval);
+        } break;
+        case acr_navdb_FieldId_empty_msg: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.empty_msg, strval);
+        } break;
+        case acr_navdb_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- acr_navdb.Viewmode..ReadStrptrMaybe
+// Read fields of acr_navdb::Viewmode from an ascii string.
+// The format of the string is an ssim Tuple
+bool acr_navdb::Viewmode_ReadStrptrMaybe(acr_navdb::Viewmode &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "acr_navdb.viewmode") || algo::StripTypeTag(in_str, "acr_navdb.Viewmode");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && Viewmode_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- acr_navdb.Viewmode..Print
+// print string representation of ROW to string STR
+// cfmt:acr_navdb.Viewmode.String  printfmt:Tuple
+void acr_navdb::Viewmode_Print(acr_navdb::Viewmode& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "acr_navdb.viewmode";
+
+    algo::Smallstr50_Print(row.viewmode, temp);
+    PrintAttrSpaceReset(str,"viewmode", temp);
+
+    bool_Print(row.show_preview, temp);
+    PrintAttrSpaceReset(str,"show_preview", temp);
+
+    bool_Print(row.show_xref, temp);
+    PrintAttrSpaceReset(str,"show_xref", temp);
+
+    algo::Smallstr50_Print(row.title, temp);
+    PrintAttrSpaceReset(str,"title", temp);
+
+    algo::Smallstr50_Print(row.next, temp);
+    PrintAttrSpaceReset(str,"next", temp);
+
+    bool_Print(row.dflt, temp);
+    PrintAttrSpaceReset(str,"dflt", temp);
+
+    algo::Smallstr50_Print(row.empty_msg, temp);
+    PrintAttrSpaceReset(str,"empty_msg", temp);
 
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);

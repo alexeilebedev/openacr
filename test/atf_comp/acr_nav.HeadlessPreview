@@ -1,0 +1,40 @@
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:dmmeta.Reftype  navstack_depth:0  n_sel_ctype:1  n_ctype:1393  n_field:5574  viewmode:preview  show_help:N  breadcrumb:""
+acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:1  sel_value:dmmeta.Reftype
+acr_nav.PanelState  panel:field_list  sel_row:0  scroll_offset:0  n_items:35  sel_value:"Alias     Y      N        N            N        N       N    N   N      N         N     N     "
+
+acr_nav.Screen  mode:browse  focus:field_list  filter:dmmeta.Reftype  navstack_depth:0  n_sel_ctype:1  n_ctype:1393  n_field:5574  viewmode:preview  show_help:N  breadcrumb:""
+acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:1  sel_value:dmmeta.Reftype
+acr_nav.PanelState  panel:field_list  sel_row:1  scroll_offset:0  n_items:35  sel_value:"Atree     N      N        N            N        Y       N    N   N      N         N     N     "
+
+acr_nav.Screen  mode:browse  focus:field_list  filter:dmmeta.Reftype  navstack_depth:0  n_sel_ctype:1  n_ctype:1393  n_field:5574  viewmode:fields  show_help:N  breadcrumb:""
+acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:1  sel_value:dmmeta.Reftype
+acr_nav.PanelState  panel:field_list  sel_row:0  scroll_offset:0  n_items:12  sel_value:dmmeta.Reftype.reftype
+acr_nav.VisibleField  row:0  field:dmmeta.Reftype.reftype  arg:amcdb.Tclass  reftype:Pkey  style:field_upref  navigable:Y
+acr_nav.VisibleField  row:1  field:dmmeta.Reftype.isval  arg:bool  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:2  field:dmmeta.Reftype.cascins  arg:bool  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:3  field:dmmeta.Reftype.usebasepool  arg:bool  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:4  field:dmmeta.Reftype.cancopy  arg:bool  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:5  field:dmmeta.Reftype.isxref  arg:bool  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:6  field:dmmeta.Reftype.del  arg:bool  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:7  field:dmmeta.Reftype.up  arg:bool  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:8  field:dmmeta.Reftype.isnew  arg:bool  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:9  field:dmmeta.Reftype.hasalloc  arg:bool  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:10  field:dmmeta.Reftype.inst  arg:bool  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:11  field:dmmeta.Reftype.varlen  arg:bool  reftype:Val  style:field_val  navigable:Y
+
+acr_nav.Screen  mode:browse  focus:field_list  filter:dmmeta.Reftype  navstack_depth:0  n_sel_ctype:1  n_ctype:1393  n_field:5574  viewmode:fields  show_help:N  breadcrumb:""
+acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:1  sel_value:dmmeta.Reftype
+acr_nav.PanelState  panel:field_list  sel_row:0  scroll_offset:0  n_items:12  sel_value:dmmeta.Reftype.reftype
+acr_nav.VisibleField  row:0  field:dmmeta.Reftype.reftype  arg:amcdb.Tclass  reftype:Pkey  style:field_upref  navigable:Y
+acr_nav.VisibleField  row:1  field:dmmeta.Reftype.isval  arg:bool  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:2  field:dmmeta.Reftype.cascins  arg:bool  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:3  field:dmmeta.Reftype.usebasepool  arg:bool  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:4  field:dmmeta.Reftype.cancopy  arg:bool  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:5  field:dmmeta.Reftype.isxref  arg:bool  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:6  field:dmmeta.Reftype.del  arg:bool  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:7  field:dmmeta.Reftype.up  arg:bool  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:8  field:dmmeta.Reftype.isnew  arg:bool  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:9  field:dmmeta.Reftype.hasalloc  arg:bool  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:10  field:dmmeta.Reftype.inst  arg:bool  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:11  field:dmmeta.Reftype.varlen  arg:bool  reftype:Val  style:field_val  navigable:Y
+

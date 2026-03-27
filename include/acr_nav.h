@@ -45,10 +45,13 @@ namespace acr_nav { // update-hdr
     // void navaction_go_back(); // gstatic/acr_navdb.navaction:go_back
     // void navaction_quit(); // gstatic/acr_navdb.navaction:quit
     // void navaction_toggle_xref(); // gstatic/acr_navdb.navaction:toggle_xref
+    // void navaction_toggle_preview(); // gstatic/acr_navdb.navaction:toggle_preview
+    // void navaction_filter_accept(); // gstatic/acr_navdb.navaction:filter_accept
     // void navaction_filter_start(); // gstatic/acr_navdb.navaction:filter_start
     // void navaction_filter_cancel(); // gstatic/acr_navdb.navaction:filter_cancel
     // void navaction_filter_append_space(); // gstatic/acr_navdb.navaction:filter_append_space
     // void navaction_filter_clear(); // gstatic/acr_navdb.navaction:filter_clear
     // void navaction_filter_backspace(); // gstatic/acr_navdb.navaction:filter_backspace
+    // void navaction_show_help(); // gstatic/acr_navdb.navaction:show_help
     // void Main(); // main:acr_nav
 }
