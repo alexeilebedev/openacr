@@ -19,32 +19,13 @@
 | M12 | Reverse xref + filter_accept | Access paths: same data, second index |
 | M13 | Help overlay, status bar, preview, viewmode, filter UX | Self-describing: docs = data = behavior |
 | M14 | Breadcrumb navigation bar | Naventry ctype name, navstack as UI |
+| M15 | Help as right-panel viewmode | Controlled vocabulary refinement, startup discoverability |
 
 **Current:** ~1000 lines C++, 20 navactions, 37 keybinds, 2 modes, 2 panels, 4 viewmodes (fields/xref/preview/help), 8 navstyles, 35 reftypestyles, ~1390 ctypes / ~5570 fields.
 
 ---
 
 ## Ideas
-
-### Hint on Startup
-
-Show help on startup in the right panel (not as a full-screen overlay). Help should always be available as a right panel viewmode via `?`. Simplify the bottom status bar to breadcrumb + minimal hints (1 row). Deprecate full-screen overlay help.
-
-**Teaches:** Controlled vocabulary refinement. The existing viewmode system should absorb help naturally.
-**Value:** High. First-launch discoverability without blocking interaction.
-**Size:** Small-Medium.
-
-**Design note:** The right-panel dispatch currently uses pointer identity checks (`IsPreviewMode()`, `IsXrefMode()`) in 5 locations. This works for 3 modes but adding help requires deciding: does help render preformatted text (like preview) or structured records from keybind data (like field modes)? That choice determines whether a `has_fields` boolean or a different factoring axis (render hooks, `navigable` flag) is the right way to eliminate identity checks. Decide the rendering model first.
-
-**UX requirements from prototyping:**
-- Help auto-dismisses on any keypress (startup help is informational, not blocking)
-- Help is NOT in the Tab cycle — only reachable via `?` toggle
-- Consider splitting keys into two columns: standard keys (arrows, Enter, PgDown) and shortcuts (j, k, l) — makes it scannable for both audiences
-- Help sort order should be logical (movement, navigation, views, search, meta), not alphabetical by action name
-- Status bar hints should remain data-driven (from keybind/navaction records), not hardcoded strings
-
-
----
 
 ### Field Detail Drilldown
 
@@ -94,8 +75,9 @@ Press `:` for vim-style command input. `:goto <ctype>`, `:ns <regex>`, `:q`. Com
 
 | Milestone | Idea | Principle Demonstrated |
 |-----------|------|----------------------|
-| M15 | Hint on startup | Controlled vocabulary refinement, viewmode factoring |
 | M16 | Field detail drilldown | Orthogonal factorization, visible |
 | Later | Tree view, amc_vis, command mode | As interest dictates |
 
-**Sequencing rationale:** M15 is a usability win that also forces the viewmode dispatch to be factored properly. M16 loads the most new finputs and is best attempted after viewmode rendering is clean.
+**Sequencing rationale:** M16 loads the most new finputs and is best attempted now that viewmode rendering is clean.
+
+**Future factoring:** IsHelpMode (4 sites) and IsXrefMode (5 sites) are identity checks that should become data on FViewmode. At 2 modes per axis, the branching is trivial. Refactor when a 3rd mode is added to either axis. Documented in code at their definition sites.

@@ -194,17 +194,20 @@ static acr_nav::FCtype* SelectedCtype(acr_nav::FPanel &left) {
 
 // -----------------------------------------------------------------------------
 
+// IsXrefMode and IsHelpMode are identity checks that should become data on FViewmode.
+// At 2 modes per axis the branching is trivial; refactor when a 3rd mode is added.
+
+// 5 call sites dispatch on IsXrefMode() within the has_fields:Y path.
+// Future: field-source properties on FViewmode would eliminate all 5.
 static bool IsXrefMode() {
     return acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_xref_viewmode;
 }
 
+// 4 call sites dispatch on IsHelpMode() within the !has_fields path (3 helpers + RightPanelItemCount).
+// Future: line-source pointers on FViewmode would eliminate all 4.
 static bool IsHelpMode() {
     return acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_help_viewmode;
 }
-
-// Centralized line-source dispatch for !has_fields modes.
-// These 3 helpers plus RightPanelItemCount are the 4 places that check IsHelpMode().
-// Future: line-source pointers on FViewmode would eliminate all 4.
 static int RightPanelLineCount() {
     int ret = IsHelpMode() ? acr_nav::help_line_N() : acr_nav::preview_line_N();
     return ret;
