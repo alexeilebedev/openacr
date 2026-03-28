@@ -66,17 +66,6 @@ Toggle between flat ctype list and tree view grouped by namespace. Expandable/co
 
 ---
 
-### Breadcrumb Trail
-
-Display navstack as breadcrumb: `dmmeta.Ctype > dmmeta.Field > algo.cstring`. New view of existing data.
-
-**Teaches:** Modest (same data, new presentation).
-**Value:** Medium. Spatial orientation during deep reference chains.
-**Size:** Small.
-**Prerequisite:** Naventry should store a ctype name explicitly. Currently the ctype is only implied by `sel_row` (an index into the filtered list). If the list changes, the index is meaningless. This is a correctness improvement independent of breadcrumbs.
-
----
-
 ### Access Path Diagram (Inline amc_vis)
 
 Display a text-based access path diagram for the selected ctype. Shell out to `amc_vis` and render the output inline -- don't reimplement the layout algorithm.
