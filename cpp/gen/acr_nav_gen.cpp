@@ -69,6 +69,8 @@ namespace acr_nav { // gen:ns_print_proto
     static void          InitReflection();
     // func:acr_nav.FDb.ctype.InputMaybe
     static bool          ctype_InputMaybe(dmmeta::Ctype &elem) __attribute__((nothrow));
+    // func:acr_nav.FDb.helpgroup.InputMaybe
+    static bool          helpgroup_InputMaybe(acr_navdb::Helpgroup &elem) __attribute__((nothrow));
     // func:acr_nav.FDb.field.InputMaybe
     static bool          field_InputMaybe(dmmeta::Field &elem) __attribute__((nothrow));
     // func:acr_nav.FDb.ns.InputMaybe
@@ -441,7 +443,7 @@ static void acr_nav::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_nav.Input'  signature:'4bfc420733fc99694765d9419b7d34dc37f97590'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_nav.Input'  signature:'4046334daf3b1caaa077a937ea4fa755e374401c'");
 }
 
 // --- acr_nav.FDb._db.InsertStrptrMaybe
@@ -456,6 +458,12 @@ bool acr_nav::InsertStrptrMaybe(algo::strptr str) {
             dmmeta::Ctype elem;
             retval = dmmeta::Ctype_ReadStrptrMaybe(elem, str);
             retval = retval && ctype_InputMaybe(elem);
+            break;
+        }
+        case acr_nav_TableId_acr_navdb_Helpgroup: { // finput:acr_nav.FDb.helpgroup
+            acr_navdb::Helpgroup elem;
+            retval = acr_navdb::Helpgroup_ReadStrptrMaybe(elem, str);
+            retval = retval && helpgroup_InputMaybe(elem);
             break;
         }
         case acr_nav_TableId_dmmeta_Field: { // finput:acr_nav.FDb.field
@@ -547,6 +555,7 @@ bool acr_nav::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && acr_nav::LoadTuplesFile(algo::SsimFname(root,"acr_navdb.reftypestyle"),recursive);
         retval = retval && acr_nav::LoadTuplesFile(algo::SsimFname(root,"acr_navdb.panel"),recursive);
         retval = retval && acr_nav::LoadTuplesFile(algo::SsimFname(root,"acr_navdb.navmode"),recursive);
+        retval = retval && acr_nav::LoadTuplesFile(algo::SsimFname(root,"acr_navdb.helpgroup"),recursive);
         retval = retval && acr_nav::LoadTuplesFile(algo::SsimFname(root,"acr_navdb.keybind"),recursive);
     } else {
         algo_lib::AppendErrtext("path", root);
@@ -732,6 +741,237 @@ bool acr_nav::ctype_XrefMaybe(acr_nav::FCtype &row) {
         }
     }
     return retval;
+}
+
+// --- acr_nav.FDb.helpgroup.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+acr_nav::FHelpgroup& acr_nav::helpgroup_Alloc() {
+    acr_nav::FHelpgroup* row = helpgroup_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("acr_nav.out_of_mem  field:acr_nav.FDb.helpgroup  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- acr_nav.FDb.helpgroup.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+acr_nav::FHelpgroup* acr_nav::helpgroup_AllocMaybe() {
+    acr_nav::FHelpgroup *row = (acr_nav::FHelpgroup*)helpgroup_AllocMem();
+    if (row) {
+        new (row) acr_nav::FHelpgroup; // call constructor
+    }
+    return row;
+}
+
+// --- acr_nav.FDb.helpgroup.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+acr_nav::FHelpgroup* acr_nav::helpgroup_InsertMaybe(const acr_navdb::Helpgroup &value) {
+    acr_nav::FHelpgroup *row = &helpgroup_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    helpgroup_CopyIn(*row,const_cast<acr_navdb::Helpgroup&>(value));
+    bool ok = helpgroup_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        helpgroup_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- acr_nav.FDb.helpgroup.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* acr_nav::helpgroup_AllocMem() {
+    u64 new_nelems     = _db.helpgroup_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    acr_nav::FHelpgroup*  lev   = NULL;
+    if (bsr < 32) {
+        lev = _db.helpgroup_lary[bsr];
+        if (!lev) {
+            lev=(acr_nav::FHelpgroup*)algo_lib::malloc_AllocMem(sizeof(acr_nav::FHelpgroup) * (u64(1)<<bsr));
+            _db.helpgroup_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.helpgroup_n = i32(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- acr_nav.FDb.helpgroup.RemoveAll
+// Remove all elements from Lary
+void acr_nav::helpgroup_RemoveAll() {
+    for (u64 n = _db.helpgroup_n; n>0; ) {
+        n--;
+        helpgroup_qFind(u64(n)).~FHelpgroup(); // destroy last element
+        _db.helpgroup_n = i32(n);
+    }
+}
+
+// --- acr_nav.FDb.helpgroup.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void acr_nav::helpgroup_RemoveLast() {
+    u64 n = _db.helpgroup_n;
+    if (n > 0) {
+        n -= 1;
+        helpgroup_qFind(u64(n)).~FHelpgroup();
+        _db.helpgroup_n = i32(n);
+    }
+}
+
+// --- acr_nav.FDb.helpgroup.InputMaybe
+static bool acr_nav::helpgroup_InputMaybe(acr_navdb::Helpgroup &elem) {
+    bool retval = true;
+    retval = helpgroup_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- acr_nav.FDb.helpgroup.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool acr_nav::helpgroup_XrefMaybe(acr_nav::FHelpgroup &row) {
+    bool retval = true;
+    (void)row;
+    // insert helpgroup into index ind_helpgroup
+    if (true) { // user-defined insert condition
+        bool success = ind_helpgroup_InsertMaybe(row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "acr_nav.duplicate_key  xref:acr_nav.FDb.ind_helpgroup"; // check for duplicate key
+            return false;
+        }
+    }
+    return retval;
+}
+
+// --- acr_nav.FDb.ind_helpgroup.Find
+// Find row by key. Return NULL if not found.
+acr_nav::FHelpgroup* acr_nav::ind_helpgroup_Find(const algo::strptr& key) {
+    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_helpgroup_buckets_n - 1);
+    acr_nav::FHelpgroup *ret = _db.ind_helpgroup_buckets_elems[index];
+    for (; ret && !((*ret).helpgroup == key); ret = ret->ind_helpgroup_next) {
+    }
+    return ret;
+}
+
+// --- acr_nav.FDb.ind_helpgroup.FindX
+// Look up row by key and return reference. Throw exception if not found
+acr_nav::FHelpgroup& acr_nav::ind_helpgroup_FindX(const algo::strptr& key) {
+    acr_nav::FHelpgroup* ret = ind_helpgroup_Find(key);
+    vrfy(ret, tempstr() << "acr_nav.key_error  table:ind_helpgroup  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
+// --- acr_nav.FDb.ind_helpgroup.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+acr_nav::FHelpgroup& acr_nav::ind_helpgroup_GetOrCreate(const algo::strptr& key) {
+    acr_nav::FHelpgroup* ret = ind_helpgroup_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &helpgroup_Alloc();
+        (*ret).helpgroup = key;
+        bool good = helpgroup_XrefMaybe(*ret);
+        if (!good) {
+            helpgroup_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    vrfy(ret, tempstr() << "acr_nav.create_error  table:ind_helpgroup  key:'"<<key<<"'  comment:'bad xref'");
+    return *ret;
+}
+
+// --- acr_nav.FDb.ind_helpgroup.InsertMaybe
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool acr_nav::ind_helpgroup_InsertMaybe(acr_nav::FHelpgroup& row) {
+    bool retval = true; // if already in hash, InsertMaybe returns true
+    if (LIKELY(row.ind_helpgroup_next == (acr_nav::FHelpgroup*)-1)) {// check if in hash already
+        row.ind_helpgroup_hashval = algo::Smallstr50_Hash(0, row.helpgroup);
+        ind_helpgroup_Reserve(1);
+        u32 index = row.ind_helpgroup_hashval & (_db.ind_helpgroup_buckets_n - 1);
+        acr_nav::FHelpgroup* *prev = &_db.ind_helpgroup_buckets_elems[index];
+        do {
+            acr_nav::FHelpgroup* ret = *prev;
+            if (!ret) { // exit condition 1: reached the end of the list
+                break;
+            }
+            if ((*ret).helpgroup == row.helpgroup) { // exit condition 2: found matching key
+                retval = false;
+                break;
+            }
+            prev = &ret->ind_helpgroup_next;
+        } while (true);
+        if (retval) {
+            row.ind_helpgroup_next = *prev;
+            _db.ind_helpgroup_n++;
+            *prev = &row;
+        }
+    }
+    return retval;
+}
+
+// --- acr_nav.FDb.ind_helpgroup.Remove
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void acr_nav::ind_helpgroup_Remove(acr_nav::FHelpgroup& row) {
+    if (LIKELY(row.ind_helpgroup_next != (acr_nav::FHelpgroup*)-1)) {// check if in hash already
+        u32 index = row.ind_helpgroup_hashval & (_db.ind_helpgroup_buckets_n - 1);
+        acr_nav::FHelpgroup* *prev = &_db.ind_helpgroup_buckets_elems[index]; // addr of pointer to current element
+        while (acr_nav::FHelpgroup *next = *prev) {                          // scan the collision chain for our element
+            if (next == &row) {        // found it?
+                *prev = next->ind_helpgroup_next; // unlink (singly linked list)
+                _db.ind_helpgroup_n--;
+                row.ind_helpgroup_next = (acr_nav::FHelpgroup*)-1;// not-in-hash
+                break;
+            }
+            prev = &next->ind_helpgroup_next;
+        }
+    }
+}
+
+// --- acr_nav.FDb.ind_helpgroup.Reserve
+// Reserve enough room in the hash for N more elements. Return success code.
+void acr_nav::ind_helpgroup_Reserve(int n) {
+    ind_helpgroup_AbsReserve(_db.ind_helpgroup_n + n);
+}
+
+// --- acr_nav.FDb.ind_helpgroup.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void acr_nav::ind_helpgroup_AbsReserve(int n) {
+    u32 old_nbuckets = _db.ind_helpgroup_buckets_n;
+    u32 new_nelems   = n;
+    // # of elements has to be roughly equal to the number of buckets
+    if (new_nelems > old_nbuckets) {
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
+        u32 old_size = old_nbuckets * sizeof(acr_nav::FHelpgroup*);
+        u32 new_size = new_nbuckets * sizeof(acr_nav::FHelpgroup*);
+        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
+        // means new memory will have to be allocated anyway
+        acr_nav::FHelpgroup* *new_buckets = (acr_nav::FHelpgroup**)algo_lib::malloc_AllocMem(new_size);
+        if (UNLIKELY(!new_buckets)) {
+            FatalErrorExit("acr_nav.out_of_memory  field:acr_nav.FDb.ind_helpgroup");
+        }
+        memset(new_buckets, 0, new_size); // clear pointers
+        // rehash all entries
+        for (int i = 0; i < _db.ind_helpgroup_buckets_n; i++) {
+            acr_nav::FHelpgroup* elem = _db.ind_helpgroup_buckets_elems[i];
+            while (elem) {
+                acr_nav::FHelpgroup &row        = *elem;
+                acr_nav::FHelpgroup* next       = row.ind_helpgroup_next;
+                u32 index          = row.ind_helpgroup_hashval & (new_nbuckets-1);
+                row.ind_helpgroup_next     = new_buckets[index];
+                new_buckets[index] = &row;
+                elem               = next;
+            }
+        }
+        // free old array
+        algo_lib::malloc_FreeMem(_db.ind_helpgroup_buckets_elems, old_size);
+        _db.ind_helpgroup_buckets_elems = new_buckets;
+        _db.ind_helpgroup_buckets_n = new_nbuckets;
+    }
 }
 
 // --- acr_nav.FDb.ind_ctype.Find
@@ -1640,26 +1880,26 @@ static void acr_nav::navaction_LoadStatic() {
         const char *s;
         void (*step)();
     } data[] = {
-        { "acr_navdb.navaction  navaction:filter_accept  hint:\"\"  comment:\"Accept filter and return to browse mode\"", acr_nav::navaction_filter_accept }
-        ,{ "acr_navdb.navaction  navaction:filter_append_space  hint:\"\"  comment:\"Append space to filter text\"", acr_nav::navaction_filter_append_space }
-        ,{ "acr_navdb.navaction  navaction:filter_backspace  hint:\"\"  comment:\"Delete last filter character\"", acr_nav::navaction_filter_backspace }
-        ,{ "acr_navdb.navaction  navaction:filter_cancel  hint:\"\"  comment:\"Cancel filter input\"", acr_nav::navaction_filter_cancel }
-        ,{ "acr_navdb.navaction  navaction:filter_clear  hint:\"\"  comment:\"Clear filter text\"", acr_nav::navaction_filter_clear }
-        ,{ "acr_navdb.navaction  navaction:filter_start  hint:filter  comment:\"Enter filter input mode\"", acr_nav::navaction_filter_start }
-        ,{ "acr_navdb.navaction  navaction:follow_ref  hint:follow  comment:\"Follow reference to target ctype\"", acr_nav::navaction_follow_ref }
-        ,{ "acr_navdb.navaction  navaction:go_back  hint:back  comment:\"Return to previous ctype\"", acr_nav::navaction_go_back }
-        ,{ "acr_navdb.navaction  navaction:go_bottom  hint:\"\"  comment:\"Move selection to last item\"", acr_nav::navaction_go_bottom }
-        ,{ "acr_navdb.navaction  navaction:go_top  hint:\"\"  comment:\"Move selection to first item\"", acr_nav::navaction_go_top }
-        ,{ "acr_navdb.navaction  navaction:move_down  hint:move  comment:\"Move selection down\"", acr_nav::navaction_move_down }
-        ,{ "acr_navdb.navaction  navaction:move_up  hint:move  comment:\"Move selection up\"", acr_nav::navaction_move_up }
-        ,{ "acr_navdb.navaction  navaction:page_down  hint:page  comment:\"Move selection down one page\"", acr_nav::navaction_page_down }
-        ,{ "acr_navdb.navaction  navaction:page_up  hint:page  comment:\"Move selection up one page\"", acr_nav::navaction_page_up }
-        ,{ "acr_navdb.navaction  navaction:quit  hint:quit  comment:\"Exit acr_nav\"", acr_nav::navaction_quit }
-        ,{ "acr_navdb.navaction  navaction:show_help  hint:help  comment:\"Toggle help overlay\"", acr_nav::navaction_show_help }
-        ,{ "acr_navdb.navaction  navaction:switch_panel_left  hint:\"\"  comment:\"Move focus to panel on the left\"", acr_nav::navaction_switch_panel_left }
-        ,{ "acr_navdb.navaction  navaction:switch_panel_right  hint:\"\"  comment:\"Move focus to panel on the right\"", acr_nav::navaction_switch_panel_right }
-        ,{ "acr_navdb.navaction  navaction:toggle_preview  hint:preview  comment:\"Toggle ssimfile content preview\"", acr_nav::navaction_toggle_preview }
-        ,{ "acr_navdb.navaction  navaction:toggle_xref  hint:view  comment:\"Cycle right panel: fields, xrefs, preview\"", acr_nav::navaction_toggle_xref }
+        { "acr_navdb.navaction  navaction:filter_accept  hint:\"\"  helpgroup:\"\"  help_sort:0  comment:\"Accept filter and return to browse mode\"", acr_nav::navaction_filter_accept }
+        ,{ "acr_navdb.navaction  navaction:filter_append_space  hint:\"\"  helpgroup:\"\"  help_sort:0  comment:\"Append space to filter text\"", acr_nav::navaction_filter_append_space }
+        ,{ "acr_navdb.navaction  navaction:filter_backspace  hint:\"\"  helpgroup:\"\"  help_sort:0  comment:\"Delete last filter character\"", acr_nav::navaction_filter_backspace }
+        ,{ "acr_navdb.navaction  navaction:filter_cancel  hint:\"\"  helpgroup:\"\"  help_sort:0  comment:\"Cancel filter input\"", acr_nav::navaction_filter_cancel }
+        ,{ "acr_navdb.navaction  navaction:filter_clear  hint:\"\"  helpgroup:search  help_sort:11  comment:\"Clear filter text\"", acr_nav::navaction_filter_clear }
+        ,{ "acr_navdb.navaction  navaction:filter_start  hint:filter  helpgroup:search  help_sort:10  comment:\"Enter filter input mode\"", acr_nav::navaction_filter_start }
+        ,{ "acr_navdb.navaction  navaction:follow_ref  hint:follow  helpgroup:navigation  help_sort:10  comment:\"Follow reference to target ctype\"", acr_nav::navaction_follow_ref }
+        ,{ "acr_navdb.navaction  navaction:go_back  hint:back  helpgroup:navigation  help_sort:11  comment:\"Return to previous ctype\"", acr_nav::navaction_go_back }
+        ,{ "acr_navdb.navaction  navaction:go_bottom  hint:\"\"  helpgroup:movement  help_sort:15  comment:\"Jump to last item\"", acr_nav::navaction_go_bottom }
+        ,{ "acr_navdb.navaction  navaction:go_top  hint:\"\"  helpgroup:movement  help_sort:14  comment:\"Jump to first item\"", acr_nav::navaction_go_top }
+        ,{ "acr_navdb.navaction  navaction:move_down  hint:move  helpgroup:movement  help_sort:11  comment:\"Move selection down\"", acr_nav::navaction_move_down }
+        ,{ "acr_navdb.navaction  navaction:move_up  hint:move  helpgroup:movement  help_sort:10  comment:\"Move selection up\"", acr_nav::navaction_move_up }
+        ,{ "acr_navdb.navaction  navaction:page_down  hint:page  helpgroup:movement  help_sort:13  comment:\"Page down\"", acr_nav::navaction_page_down }
+        ,{ "acr_navdb.navaction  navaction:page_up  hint:page  helpgroup:movement  help_sort:12  comment:\"Page up\"", acr_nav::navaction_page_up }
+        ,{ "acr_navdb.navaction  navaction:quit  hint:quit  helpgroup:meta  help_sort:11  comment:\"Exit acr_nav\"", acr_nav::navaction_quit }
+        ,{ "acr_navdb.navaction  navaction:show_help  hint:help  helpgroup:meta  help_sort:10  comment:\"Toggle help panel\"", acr_nav::navaction_show_help }
+        ,{ "acr_navdb.navaction  navaction:switch_panel_left  hint:\"\"  helpgroup:navigation  help_sort:12  comment:\"Move focus to panel on the left\"", acr_nav::navaction_switch_panel_left }
+        ,{ "acr_navdb.navaction  navaction:switch_panel_right  hint:\"\"  helpgroup:navigation  help_sort:13  comment:\"Move focus to panel on the right\"", acr_nav::navaction_switch_panel_right }
+        ,{ "acr_navdb.navaction  navaction:toggle_preview  hint:preview  helpgroup:view  help_sort:11  comment:\"Toggle ssimfile content preview\"", acr_nav::navaction_toggle_preview }
+        ,{ "acr_navdb.navaction  navaction:toggle_xref  hint:view  helpgroup:view  help_sort:10  comment:\"Cycle right panel: fields, xrefs, preview\"", acr_nav::navaction_toggle_xref }
         ,{NULL, NULL}
     };
     (void)data;
@@ -3208,6 +3448,187 @@ void acr_nav::ind_reftypestyle_AbsReserve(int n) {
     }
 }
 
+// --- acr_nav.FDb.help_line.Addary
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+algo::aryptr<algo::cstring> acr_nav::help_line_Addary(algo::aryptr<algo::cstring> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= _db.help_line_elems && rhs.elems < _db.help_line_elems + _db.help_line_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("acr_nav.tary_alias  field:acr_nav.FDb.help_line  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    int nnew = rhs.n_elems;
+    help_line_Reserve(nnew); // reserve space
+    int at = _db.help_line_n;
+    for (int i = 0; i < nnew; i++) {
+        new (_db.help_line_elems + at + i) algo::cstring(rhs[i]);
+        _db.help_line_n++;
+    }
+    return algo::aryptr<algo::cstring>(_db.help_line_elems + at, nnew);
+}
+
+// --- acr_nav.FDb.help_line.Alloc
+// Reserve space. Insert element at the end
+// The new element is initialized to a default value
+algo::cstring& acr_nav::help_line_Alloc() {
+    help_line_Reserve(1);
+    int n  = _db.help_line_n;
+    int at = n;
+    algo::cstring *elems = _db.help_line_elems;
+    new (elems + at) algo::cstring(); // construct new element, default initializer
+    _db.help_line_n = n+1;
+    return elems[at];
+}
+
+// --- acr_nav.FDb.help_line.AllocAt
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::cstring& acr_nav::help_line_AllocAt(int at) {
+    help_line_Reserve(1);
+    int n  = _db.help_line_n;
+    if (UNLIKELY(u64(at) >= u64(n+1))) {
+        FatalErrorExit("acr_nav.bad_alloc_at  field:acr_nav.FDb.help_line  comment:'index out of range'");
+    }
+    algo::cstring *elems = _db.help_line_elems;
+    memmove(elems + at + 1, elems + at, (n - at) * sizeof(algo::cstring));
+    new (elems + at) algo::cstring(); // construct element, default initializer
+    _db.help_line_n = n+1;
+    return elems[at];
+}
+
+// --- acr_nav.FDb.help_line.AllocN
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo::cstring> acr_nav::help_line_AllocN(int n_elems) {
+    help_line_Reserve(n_elems);
+    int old_n  = _db.help_line_n;
+    int new_n = old_n + n_elems;
+    algo::cstring *elems = _db.help_line_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) algo::cstring(); // construct new element, default initialize
+    }
+    _db.help_line_n = new_n;
+    return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
+}
+
+// --- acr_nav.FDb.help_line.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<algo::cstring> acr_nav::help_line_AllocNAt(int n_elems, int at) {
+    help_line_Reserve(n_elems);
+    int n  = _db.help_line_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("acr_nav.bad_alloc_n_at  field:acr_nav.FDb.help_line  comment:'index out of range'");
+    }
+    algo::cstring *elems = _db.help_line_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(algo::cstring));
+    for (int i = 0; i < n_elems; i++) {
+        new (elems + at + i) algo::cstring(); // construct new element, default initialize
+    }
+    _db.help_line_n = n+n_elems;
+    return algo::aryptr<algo::cstring>(elems+at,n_elems);
+}
+
+// --- acr_nav.FDb.help_line.Remove
+// Remove item by index. If index outside of range, do nothing.
+void acr_nav::help_line_Remove(u32 i) {
+    u32 lim = _db.help_line_n;
+    algo::cstring *elems = _db.help_line_elems;
+    if (i < lim) {
+        elems[i].~cstring(); // destroy element
+        memmove(elems + i, elems + (i + 1), sizeof(algo::cstring) * (lim - (i + 1)));
+        _db.help_line_n = lim - 1;
+    }
+}
+
+// --- acr_nav.FDb.help_line.RemoveAll
+void acr_nav::help_line_RemoveAll() {
+    u32 n = _db.help_line_n;
+    while (n > 0) {
+        n -= 1;
+        _db.help_line_elems[n].~cstring();
+        _db.help_line_n = n;
+    }
+}
+
+// --- acr_nav.FDb.help_line.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void acr_nav::help_line_RemoveLast() {
+    u64 n = _db.help_line_n;
+    if (n > 0) {
+        n -= 1;
+        help_line_qFind(u64(n)).~cstring();
+        _db.help_line_n = n;
+    }
+}
+
+// --- acr_nav.FDb.help_line.AbsReserve
+// Make sure N elements fit in array. Process dies if out of memory
+void acr_nav::help_line_AbsReserve(int n) {
+    u32 old_max  = _db.help_line_max;
+    if (n > i32(old_max)) {
+        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+        void *new_mem = algo_lib::malloc_ReallocMem(_db.help_line_elems, old_max * sizeof(algo::cstring), new_max * sizeof(algo::cstring));
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("acr_nav.tary_nomem  field:acr_nav.FDb.help_line  comment:'out of memory'");
+        }
+        _db.help_line_elems = (algo::cstring*)new_mem;
+        _db.help_line_max = new_max;
+    }
+}
+
+// --- acr_nav.FDb.help_line.AllocNVal
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo::cstring> acr_nav::help_line_AllocNVal(int n_elems, const algo::cstring& val) {
+    help_line_Reserve(n_elems);
+    int old_n  = _db.help_line_n;
+    int new_n = old_n + n_elems;
+    algo::cstring *elems = _db.help_line_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) algo::cstring(val);
+    }
+    _db.help_line_n = new_n;
+    return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
+}
+
+// --- acr_nav.FDb.help_line.ReadStrptrMaybe
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+bool acr_nav::help_line_ReadStrptrMaybe(algo::strptr in_str) {
+    bool retval = true;
+    algo::cstring &elem = help_line_Alloc();
+    retval = algo::cstring_ReadStrptrMaybe(elem, in_str);
+    if (!retval) {
+        help_line_RemoveLast();
+    }
+    return retval;
+}
+
+// --- acr_nav.FDb.help_line.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void acr_nav::help_line_Insary(algo::aryptr<algo::cstring> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= _db.help_line_elems && rhs.elems < _db.help_line_elems + _db.help_line_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("acr_nav.tary_alias  field:acr_nav.FDb.help_line  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(_db.help_line_elems+1))) {
+        FatalErrorExit("acr_nav.bad_insary  field:acr_nav.FDb.help_line  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = _db.help_line_n - at;
+    help_line_Reserve(nnew); // reserve space
+    for (int i = nmove-1; i >=0 ; --i) {
+        new (_db.help_line_elems + at + nnew + i) algo::cstring(_db.help_line_elems[at + i]);
+        _db.help_line_elems[at + i].~cstring(); // destroy element
+    }
+    for (int i = 0; i < nnew; ++i) {
+        new (_db.help_line_elems + at + i) algo::cstring(rhs[i]);
+    }
+    _db.help_line_n += nnew;
+}
+
 // --- acr_nav.FDb.ssimfile.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -3878,6 +4299,25 @@ void acr_nav::FDb_Init() {
         _db.ctype_lary[i]  = ctype_first;
         ctype_first    += 1ULL<<i;
     }
+    // initialize LAry helpgroup (acr_nav.FDb.helpgroup)
+    _db.helpgroup_n = 0;
+    memset(_db.helpgroup_lary, 0, sizeof(_db.helpgroup_lary)); // zero out all level pointers
+    acr_nav::FHelpgroup* helpgroup_first = (acr_nav::FHelpgroup*)algo_lib::malloc_AllocMem(sizeof(acr_nav::FHelpgroup) * (u64(1)<<4));
+    if (!helpgroup_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.helpgroup_lary[i]  = helpgroup_first;
+        helpgroup_first    += 1ULL<<i;
+    }
+    // initialize hash table for acr_nav::FHelpgroup;
+    _db.ind_helpgroup_n             	= 0; // (acr_nav.FDb.ind_helpgroup)
+    _db.ind_helpgroup_buckets_n     	= 4; // (acr_nav.FDb.ind_helpgroup)
+    _db.ind_helpgroup_buckets_elems 	= (acr_nav::FHelpgroup**)algo_lib::malloc_AllocMem(sizeof(acr_nav::FHelpgroup*)*_db.ind_helpgroup_buckets_n); // initial buckets (acr_nav.FDb.ind_helpgroup)
+    if (!_db.ind_helpgroup_buckets_elems) {
+        FatalErrorExit("out of memory"); // (acr_nav.FDb.ind_helpgroup)
+    }
+    memset(_db.ind_helpgroup_buckets_elems, 0, sizeof(acr_nav::FHelpgroup*)*_db.ind_helpgroup_buckets_n); // (acr_nav.FDb.ind_helpgroup)
     // initialize hash table for acr_nav::FCtype;
     _db.ind_ctype_n             	= 0; // (acr_nav.FDb.ind_ctype)
     _db.ind_ctype_buckets_n     	= 4; // (acr_nav.FDb.ind_ctype)
@@ -4071,7 +4511,12 @@ void acr_nav::FDb_Init() {
         FatalErrorExit("out of memory"); // (acr_nav.FDb.ind_reftypestyle)
     }
     memset(_db.ind_reftypestyle_buckets_elems, 0, sizeof(acr_nav::FReftypestyle*)*_db.ind_reftypestyle_buckets_n); // (acr_nav.FDb.ind_reftypestyle)
-    _db.show_help = bool(false);
+    _db.help_line_elems 	= 0; // (acr_nav.FDb.help_line)
+    _db.help_line_n     	= 0; // (acr_nav.FDb.help_line)
+    _db.help_line_max   	= 0; // (acr_nav.FDb.help_line)
+    _db.p_help_viewmode = NULL;
+    _db.p_prev_viewmode = NULL;
+    _db.startup_help = bool(false);
     // initialize LAry ssimfile (acr_nav.FDb.ssimfile)
     _db.ssimfile_n = 0;
     memset(_db.ssimfile_lary, 0, sizeof(_db.ssimfile_lary)); // zero out all level pointers
@@ -4150,6 +4595,12 @@ void acr_nav::FDb_Uninit() {
     // acr_nav.FDb.ssimfile.Uninit (Lary)  //
     // skip destruction in global scope
 
+    // acr_nav.FDb.help_line.Uninit (Tary)  //Preformatted help content lines
+    // remove all elements from acr_nav.FDb.help_line
+    help_line_RemoveAll();
+    // free memory for Tary acr_nav.FDb.help_line
+    algo_lib::malloc_FreeMem(_db.help_line_elems, sizeof(algo::cstring)*_db.help_line_max); // (acr_nav.FDb.help_line)
+
     // acr_nav.FDb.ind_reftypestyle.Uninit (Thash)  //
     // skip destruction of ind_reftypestyle in global scope
 
@@ -4212,6 +4663,12 @@ void acr_nav::FDb_Uninit() {
 
     // acr_nav.FDb.ind_ctype.Uninit (Thash)  //
     // skip destruction of ind_ctype in global scope
+
+    // acr_nav.FDb.ind_helpgroup.Uninit (Thash)  //
+    // skip destruction of ind_helpgroup in global scope
+
+    // acr_nav.FDb.helpgroup.Uninit (Lary)  //
+    // skip destruction in global scope
 
     // acr_nav.FDb.ctype.Uninit (Lary)  //
     // skip destruction in global scope
@@ -4282,6 +4739,28 @@ void acr_nav::FField_Uninit(acr_nav::FField& field) {
     }
 }
 
+// --- acr_nav.FHelpgroup.base.CopyOut
+// Copy fields out of row
+void acr_nav::helpgroup_CopyOut(acr_nav::FHelpgroup &row, acr_navdb::Helpgroup &out) {
+    out.helpgroup = row.helpgroup;
+    out.sort_order = row.sort_order;
+    out.comment = row.comment;
+}
+
+// --- acr_nav.FHelpgroup.base.CopyIn
+// Copy fields in to row
+void acr_nav::helpgroup_CopyIn(acr_nav::FHelpgroup &row, acr_navdb::Helpgroup &in) {
+    row.helpgroup = in.helpgroup;
+    row.sort_order = in.sort_order;
+    row.comment = in.comment;
+}
+
+// --- acr_nav.FHelpgroup..Uninit
+void acr_nav::FHelpgroup_Uninit(acr_nav::FHelpgroup& helpgroup) {
+    acr_nav::FHelpgroup &row = helpgroup; (void)row;
+    ind_helpgroup_Remove(row); // remove helpgroup from index ind_helpgroup
+}
+
 // --- acr_nav.FKeybind.base.CopyOut
 // Copy fields out of row
 void acr_nav::keybind_CopyOut(acr_nav::FKeybind &row, acr_navdb::Keybind &out) {
@@ -4323,6 +4802,8 @@ void acr_nav::FKeybind_Uninit(acr_nav::FKeybind& keybind) {
 void acr_nav::navaction_CopyOut(acr_nav::FNavaction &row, acr_navdb::Navaction &out) {
     out.navaction = row.navaction;
     out.hint = row.hint;
+    out.helpgroup = row.helpgroup;
+    out.help_sort = row.help_sort;
     out.comment = row.comment;
 }
 
@@ -4331,6 +4812,8 @@ void acr_nav::navaction_CopyOut(acr_nav::FNavaction &row, acr_navdb::Navaction &
 void acr_nav::navaction_CopyIn(acr_nav::FNavaction &row, acr_navdb::Navaction &in) {
     row.navaction = in.navaction;
     row.hint = in.hint;
+    row.helpgroup = in.helpgroup;
+    row.help_sort = in.help_sort;
     row.comment = in.comment;
 }
 
@@ -4581,6 +5064,7 @@ void acr_nav::viewmode_CopyOut(acr_nav::FViewmode &row, acr_navdb::Viewmode &out
     out.title = row.title;
     out.next = row.next;
     out.empty_msg = row.empty_msg;
+    out.has_fields = row.has_fields;
     out.comment = row.comment;
 }
 
@@ -4591,6 +5075,7 @@ void acr_nav::viewmode_CopyIn(acr_nav::FViewmode &row, acr_navdb::Viewmode &in) 
     row.title = in.title;
     row.next = in.next;
     row.empty_msg = in.empty_msg;
+    row.has_fields = in.has_fields;
     row.comment = in.comment;
 }
 
@@ -4718,16 +5203,6 @@ void acr_nav::PanelState_Print(acr_nav::PanelState& row, algo::cstring& str) {
     PrintAttrSpaceReset(str,"sel_value", temp);
 }
 
-// --- acr_nav.Screen..Init
-// Set all fields to initial values.
-void acr_nav::Screen_Init(acr_nav::Screen& parent) {
-    parent.navstack_depth = i32(0);
-    parent.n_sel_ctype = i32(0);
-    parent.n_ctype = i32(0);
-    parent.n_field = i32(0);
-    parent.show_help = bool(false);
-}
-
 // --- acr_nav.Screen..Print
 // print string representation of ROW to string STR
 // cfmt:acr_nav.Screen.String  printfmt:Tuple
@@ -4758,9 +5233,6 @@ void acr_nav::Screen_Print(acr_nav::Screen& row, algo::cstring& str) {
 
     algo::Smallstr50_Print(row.viewmode, temp);
     PrintAttrSpaceReset(str,"viewmode", temp);
-
-    bool_Print(row.show_help, temp);
-    PrintAttrSpaceReset(str,"show_help", temp);
 
     algo::cstring_Print(row.breadcrumb, temp);
     PrintAttrSpaceReset(str,"breadcrumb", temp);
@@ -4838,6 +5310,7 @@ const char* acr_nav::value_ToCstr(const acr_nav::TableId& parent) {
     switch(value_GetEnum(parent)) {
         case acr_nav_TableId_dmmeta_Ctype  : ret = "dmmeta.Ctype";  break;
         case acr_nav_TableId_dmmeta_Field  : ret = "dmmeta.Field";  break;
+        case acr_nav_TableId_acr_navdb_Helpgroup: ret = "acr_navdb.Helpgroup";  break;
         case acr_nav_TableId_acr_navdb_Keybind: ret = "acr_navdb.Keybind";  break;
         case acr_nav_TableId_acr_navdb_Navmode: ret = "acr_navdb.Navmode";  break;
         case acr_nav_TableId_acr_navdb_Navstyle: ret = "acr_navdb.Navstyle";  break;
@@ -4954,6 +5427,16 @@ bool acr_nav::value_SetStrptrMaybe(acr_nav::TableId& parent, algo::strptr rhs) {
                     if (memcmp(rhs.elems+8,"b.navstyle",10)==0) { value_SetEnum(parent,acr_nav_TableId_acr_navdb_navstyle); ret = true; break; }
                     if (memcmp(rhs.elems+8,"b.Viewmode",10)==0) { value_SetEnum(parent,acr_nav_TableId_acr_navdb_Viewmode); ret = true; break; }
                     if (memcmp(rhs.elems+8,"b.viewmode",10)==0) { value_SetEnum(parent,acr_nav_TableId_acr_navdb_viewmode); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 19: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','c','r','_','n','a','v','d'): {
+                    if (memcmp(rhs.elems+8,"b.Helpgroup",11)==0) { value_SetEnum(parent,acr_nav_TableId_acr_navdb_Helpgroup); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"b.helpgroup",11)==0) { value_SetEnum(parent,acr_nav_TableId_acr_navdb_helpgroup); ret = true; break; }
                     break;
                 }
             }

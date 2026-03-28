@@ -39,13 +39,16 @@ namespace acr_navdb { // gen:ns_print_proto
 const char* acr_navdb::value_ToCstr(const acr_navdb::FieldId& parent) {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
+        case acr_navdb_FieldId_helpgroup   : ret = "helpgroup";  break;
+        case acr_navdb_FieldId_sort_order  : ret = "sort_order";  break;
+        case acr_navdb_FieldId_comment     : ret = "comment";  break;
         case acr_navdb_FieldId_keybind     : ret = "keybind";  break;
         case acr_navdb_FieldId_navaction   : ret = "navaction";  break;
         case acr_navdb_FieldId_navmode     : ret = "navmode";  break;
         case acr_navdb_FieldId_hint_order  : ret = "hint_order";  break;
         case acr_navdb_FieldId_key         : ret = "key";  break;
-        case acr_navdb_FieldId_comment     : ret = "comment";  break;
         case acr_navdb_FieldId_hint        : ret = "hint";  break;
+        case acr_navdb_FieldId_help_sort   : ret = "help_sort";  break;
         case acr_navdb_FieldId_navstyle    : ret = "navstyle";  break;
         case acr_navdb_FieldId_bold        : ret = "bold";  break;
         case acr_navdb_FieldId_dim         : ret = "dim";  break;
@@ -59,6 +62,7 @@ const char* acr_navdb::value_ToCstr(const acr_navdb::FieldId& parent) {
         case acr_navdb_FieldId_viewmode    : ret = "viewmode";  break;
         case acr_navdb_FieldId_next        : ret = "next";  break;
         case acr_navdb_FieldId_empty_msg   : ret = "empty_msg";  break;
+        case acr_navdb_FieldId_has_fields  : ret = "has_fields";  break;
         case acr_navdb_FieldId_value       : ret = "value";  break;
     }
     return ret;
@@ -165,6 +169,14 @@ bool acr_navdb::value_SetStrptrMaybe(acr_navdb::FieldId& parent, algo::strptr rh
                     if (memcmp(rhs.elems+8,"g",1)==0) { value_SetEnum(parent,acr_navdb_FieldId_empty_msg); ret = true; break; }
                     break;
                 }
+                case LE_STR8('h','e','l','p','_','s','o','r'): {
+                    if (memcmp(rhs.elems+8,"t",1)==0) { value_SetEnum(parent,acr_navdb_FieldId_help_sort); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('h','e','l','p','g','r','o','u'): {
+                    if (memcmp(rhs.elems+8,"p",1)==0) { value_SetEnum(parent,acr_navdb_FieldId_helpgroup); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('n','a','v','a','c','t','i','o'): {
                     if (memcmp(rhs.elems+8,"n",1)==0) { value_SetEnum(parent,acr_navdb_FieldId_navaction); ret = true; break; }
                     break;
@@ -174,8 +186,16 @@ bool acr_navdb::value_SetStrptrMaybe(acr_navdb::FieldId& parent, algo::strptr rh
         }
         case 10: {
             switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('h','a','s','_','f','i','e','l'): {
+                    if (memcmp(rhs.elems+8,"ds",2)==0) { value_SetEnum(parent,acr_navdb_FieldId_has_fields); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('h','i','n','t','_','o','r','d'): {
                     if (memcmp(rhs.elems+8,"er",2)==0) { value_SetEnum(parent,acr_navdb_FieldId_hint_order); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('s','o','r','t','_','o','r','d'): {
+                    if (memcmp(rhs.elems+8,"er",2)==0) { value_SetEnum(parent,acr_navdb_FieldId_sort_order); ret = true; break; }
                     break;
                 }
             }
@@ -226,6 +246,61 @@ bool acr_navdb::FieldId_ReadStrptrMaybe(acr_navdb::FieldId &parent, algo::strptr
 // cfmt:acr_navdb.FieldId.String  printfmt:Raw
 void acr_navdb::FieldId_Print(acr_navdb::FieldId& row, algo::cstring& str) {
     acr_navdb::value_Print(row, str);
+}
+
+// --- acr_navdb.Helpgroup..ReadFieldMaybe
+bool acr_navdb::Helpgroup_ReadFieldMaybe(acr_navdb::Helpgroup& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    acr_navdb::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case acr_navdb_FieldId_helpgroup: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.helpgroup, strval);
+        } break;
+        case acr_navdb_FieldId_sort_order: {
+            retval = i32_ReadStrptrMaybe(parent.sort_order, strval);
+        } break;
+        case acr_navdb_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- acr_navdb.Helpgroup..ReadStrptrMaybe
+// Read fields of acr_navdb::Helpgroup from an ascii string.
+// The format of the string is an ssim Tuple
+bool acr_navdb::Helpgroup_ReadStrptrMaybe(acr_navdb::Helpgroup &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "acr_navdb.helpgroup") || algo::StripTypeTag(in_str, "acr_navdb.Helpgroup");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && Helpgroup_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- acr_navdb.Helpgroup..Print
+// print string representation of ROW to string STR
+// cfmt:acr_navdb.Helpgroup.String  printfmt:Tuple
+void acr_navdb::Helpgroup_Print(acr_navdb::Helpgroup& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "acr_navdb.helpgroup";
+
+    algo::Smallstr50_Print(row.helpgroup, temp);
+    PrintAttrSpaceReset(str,"helpgroup", temp);
+
+    i32_Print(row.sort_order, temp);
+    PrintAttrSpaceReset(str,"sort_order", temp);
+
+    algo::Comment_Print(row.comment, temp);
+    PrintAttrSpaceReset(str,"comment", temp);
 }
 
 // --- acr_navdb.Keybind.navmode.Get
@@ -336,6 +411,12 @@ bool acr_navdb::Navaction_ReadFieldMaybe(acr_navdb::Navaction& parent, algo::str
         case acr_navdb_FieldId_hint: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.hint, strval);
         } break;
+        case acr_navdb_FieldId_helpgroup: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.helpgroup, strval);
+        } break;
+        case acr_navdb_FieldId_help_sort: {
+            retval = i32_ReadStrptrMaybe(parent.help_sort, strval);
+        } break;
         case acr_navdb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
         } break;
@@ -374,6 +455,12 @@ void acr_navdb::Navaction_Print(acr_navdb::Navaction& row, algo::cstring& str) {
 
     algo::Smallstr50_Print(row.hint, temp);
     PrintAttrSpaceReset(str,"hint", temp);
+
+    algo::Smallstr50_Print(row.helpgroup, temp);
+    PrintAttrSpaceReset(str,"helpgroup", temp);
+
+    i32_Print(row.help_sort, temp);
+    PrintAttrSpaceReset(str,"help_sort", temp);
 
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);
@@ -664,6 +751,9 @@ bool acr_navdb::Viewmode_ReadFieldMaybe(acr_navdb::Viewmode& parent, algo::strpt
         case acr_navdb_FieldId_empty_msg: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.empty_msg, strval);
         } break;
+        case acr_navdb_FieldId_has_fields: {
+            retval = bool_ReadStrptrMaybe(parent.has_fields, strval);
+        } break;
         case acr_navdb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
         } break;
@@ -708,6 +798,9 @@ void acr_navdb::Viewmode_Print(acr_navdb::Viewmode& row, algo::cstring& str) {
 
     algo::Smallstr50_Print(row.empty_msg, temp);
     PrintAttrSpaceReset(str,"empty_msg", temp);
+
+    bool_Print(row.has_fields, temp);
+    PrintAttrSpaceReset(str,"has_fields", temp);
 
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);

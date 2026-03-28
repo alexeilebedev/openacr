@@ -1,0 +1,5 @@
+acr_navdb.helpgroup  helpgroup:meta        sort_order:50  comment:"Help and quit"
+acr_navdb.helpgroup  helpgroup:movement    sort_order:10  comment:"Movement keys"
+acr_navdb.helpgroup  helpgroup:navigation  sort_order:20  comment:"Navigation keys"
+acr_navdb.helpgroup  helpgroup:search      sort_order:40  comment:"Search and filter keys"
+acr_navdb.helpgroup  helpgroup:view        sort_order:30  comment:"View mode keys"

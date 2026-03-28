@@ -1,3 +1,4 @@
+dmmeta.ssimfile  ssimfile:acr_navdb.helpgroup  ctype:acr_navdb.Helpgroup
 dmmeta.ssimfile  ssimfile:acr_navdb.keybind  ctype:acr_navdb.Keybind
 dmmeta.ssimfile  ssimfile:acr_navdb.navaction  ctype:acr_navdb.Navaction
 dmmeta.ssimfile  ssimfile:acr_navdb.navmode  ctype:acr_navdb.Navmode

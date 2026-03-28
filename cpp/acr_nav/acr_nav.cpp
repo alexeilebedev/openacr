@@ -198,8 +198,26 @@ static bool IsXrefMode() {
     return acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_xref_viewmode;
 }
 
-static bool IsPreviewMode() {
-    return acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_preview_viewmode;
+static bool IsHelpMode() {
+    return acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_help_viewmode;
+}
+
+// Centralized line-source dispatch for !has_fields modes.
+// These 3 helpers plus RightPanelItemCount are the 4 places that check IsHelpMode().
+// Future: line-source pointers on FViewmode would eliminate all 4.
+static int RightPanelLineCount() {
+    int ret = IsHelpMode() ? acr_nav::help_line_N() : acr_nav::preview_line_N();
+    return ret;
+}
+
+static algo::strptr RightPanelLineFind(int idx) {
+    algo::strptr ret = IsHelpMode() ? acr_nav::help_line_qFind(idx) : acr_nav::preview_line_qFind(idx);
+    return ret;
+}
+
+static algo::strptr RightPanelLineHeader() {
+    algo::strptr ret = IsHelpMode() ? acr_nav::_db.help_header : acr_nav::_db.preview_header;
+    return ret;
 }
 
 // Find the ssimfile backing a ctype. If the ctype itself has no ssimfile,
@@ -310,11 +328,11 @@ static void EnsurePreviewLoaded(acr_nav::FCtype *sel_ct) {
 
 static int RightPanelItemCount(acr_nav::FCtype *sel_ct) {
     int ret = 0;
-    if (IsPreviewMode()) {
-        if (sel_ct) {
+    if (!acr_nav::_db.p_cur_viewmode->has_fields) {
+        if (!IsHelpMode() && sel_ct) {
             EnsurePreviewLoaded(sel_ct);
-            ret = acr_nav::preview_line_N();
         }
+        ret = RightPanelLineCount();
     } else if (sel_ct) {
         ret = IsXrefMode() ? c_field_arg_N(*sel_ct) : c_field_N(*sel_ct);
     }
@@ -323,7 +341,7 @@ static int RightPanelItemCount(acr_nav::FCtype *sel_ct) {
 
 static acr_nav::FField* RightPanelFieldFind(acr_nav::FCtype *sel_ct, int idx) {
     acr_nav::FField *ret = NULL;
-    if (sel_ct && !IsPreviewMode()) {
+    if (sel_ct && acr_nav::_db.p_cur_viewmode->has_fields) {
         ret = IsXrefMode() ? c_field_arg_Find(*sel_ct, idx) : c_field_Find(*sel_ct, idx);
     }
     return ret;
@@ -428,7 +446,7 @@ void acr_nav::navaction_follow_ref() {
     acr_nav::FCtype *sel_ct = SelectedCtype(*left);
     if (panel.position == 0) {
         acr_nav::_db.p_cur_panel = acr_nav::_db.p_right_panel;
-    } else if (panel.position == 1 && !IsPreviewMode()
+    } else if (panel.position == 1 && acr_nav::_db.p_cur_viewmode->has_fields
                && sel_ct && panel.sel_row < RightPanelItemCount(sel_ct)) {
         acr_nav::FField *fld = RightPanelFieldFind(sel_ct, panel.sel_row);
         acr_nav::FCtype *target = NULL;
@@ -519,7 +537,8 @@ void acr_nav::navaction_toggle_xref() {
 
 void acr_nav::navaction_toggle_preview() {
     acr_nav::FCtype *sel_ct = SelectedCtype(*acr_nav::_db.p_left_panel);
-    bool go_preview = !IsPreviewMode() && sel_ct && FindSsimfile(*sel_ct);
+    bool in_preview = (acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_preview_viewmode);
+    bool go_preview = !in_preview && sel_ct && FindSsimfile(*sel_ct);
     acr_nav::_db.p_cur_viewmode = go_preview ? acr_nav::_db.p_preview_viewmode : acr_nav::_db.p_default_viewmode;
     acr_nav::_db.p_right_panel->sel_row = 0;
     acr_nav::_db.p_right_panel->scroll_offset = 0;
@@ -573,7 +592,14 @@ void acr_nav::navaction_filter_backspace() {
 // -----------------------------------------------------------------------------
 
 void acr_nav::navaction_show_help() {
-    acr_nav::_db.show_help = !acr_nav::_db.show_help;
+    if (IsHelpMode()) {
+        acr_nav::_db.p_cur_viewmode = acr_nav::_db.p_prev_viewmode;
+    } else {
+        acr_nav::_db.p_prev_viewmode = acr_nav::_db.p_cur_viewmode;
+        acr_nav::_db.p_cur_viewmode = acr_nav::_db.p_help_viewmode;
+    }
+    acr_nav::_db.p_right_panel->sel_row = 0;
+    acr_nav::_db.p_right_panel->scroll_offset = 0;
 }
 
 // -----------------------------------------------------------------------------
@@ -684,57 +710,85 @@ static void BuildStatusHint(cstring &out) {
 
 // -----------------------------------------------------------------------------
 
-// Render help overlay showing all keybindings for the current mode.
-// Groups keys by navaction and shows the navaction comment as description.
-static void RenderHelpOverlay(cstring &buf, int wid, int visible) {
-    algo::strptr cur_mode = acr_nav::_db.p_cur_mode->navmode;
-    // Title row
-    tempstr title;
-    title << " ACR_NAV -- " << cur_mode << " mode keys";
-    TruncPad(title, wid);
-    buf << "\x1b[1m" << title << "\x1b[0m\r\n";
-    int row = 1;
-    // One row per navaction that has keybinds in this mode
-    ind_beg(acr_nav::_db_navaction_curs, na, acr_nav::_db) {
-        if (row < visible - 1) {
-            tempstr keys;
-            ind_beg(acr_nav::_db_keybind_curs, kb, acr_nav::_db) {
-                if (kb.p_navaction == &na && acr_nav::navmode_Get(kb) == cur_mode) {
-                    if (ch_N(keys) > 0) {
-                        keys << ", ";
-                    }
-                    keys << acr_nav::key_Get(kb);
-                }
-            } ind_end;
-            if (ch_N(keys) > 0) {
-                tempstr line;
-                line << " ";
-                line << keys;
-                int key_col = 18;
-                if (ch_N(line) < key_col) {
-                    char_PrintNTimes(' ', line, key_col - ch_N(line));
-                } else {
-                    line << "  ";
-                }
-                line << na.comment;
-                TruncPad(line, wid);
-                buf << line << "\r\n";
-                row++;
-            }
+// Build preformatted help lines from keybind/navaction data.
+// Iterates helpgroup records by sort_order, then navactions within each group.
+// Keys split into standard (multi-char names) and shortcut (single letters).
+static void BuildHelpLines() {
+    acr_nav::help_line_RemoveAll();
+    // Collect helpgroups sorted by sort_order
+    acr_nav::FHelpgroup *groups[16];
+    int n_groups = 0;
+    ind_beg(acr_nav::_db_helpgroup_curs, hg, acr_nav::_db) {
+        if (n_groups < 16) {
+            groups[n_groups++] = &hg;
         }
     } ind_end;
-    // Blank padding rows
-    while (row < visible - 1) {
-        tempstr empty;
-        char_PrintNTimes(' ', empty, wid);
-        buf << empty << "\r\n";
-        row++;
+    for (int i = 1; i < n_groups; i++) {
+        acr_nav::FHelpgroup *tmp = groups[i];
+        int j = i;
+        while (j > 0 && groups[j - 1]->sort_order > tmp->sort_order) {
+            groups[j] = groups[j - 1];
+            j--;
+        }
+        groups[j] = tmp;
     }
-    // Footer row
-    tempstr footer;
-    footer << " Press any key to close";
-    TruncPad(footer, wid);
-    buf << "\x1b[2m" << footer << "\x1b[0m\r\n";
+    // Build header
+    {
+        tempstr hdr;
+        hdr << "Standard";
+        char_PrintNTimes(' ', hdr, i32_Max(1, 18 - ch_N(hdr)));
+        hdr << "Shortcut";
+        char_PrintNTimes(' ', hdr, i32_Max(1, 28 - ch_N(hdr)));
+        hdr << "Action";
+        acr_nav::_db.help_header = hdr;
+    }
+    // For each group, collect navactions and build lines
+    for (int g = 0; g < n_groups; g++) {
+        if (g > 0) {
+            acr_nav::help_line_Alloc() = "";
+        }
+        // Collect navactions in this group, sorted by help_sort
+        acr_nav::FNavaction *actions[32];
+        int n_actions = 0;
+        ind_beg(acr_nav::_db_navaction_curs, na, acr_nav::_db) {
+            if (ch_N(na.helpgroup) > 0 && na.helpgroup == groups[g]->helpgroup && n_actions < 32) {
+                actions[n_actions++] = &na;
+            }
+        } ind_end;
+        for (int i = 1; i < n_actions; i++) {
+            acr_nav::FNavaction *tmp = actions[i];
+            int j = i;
+            while (j > 0 && actions[j - 1]->help_sort > tmp->help_sort) {
+                actions[j] = actions[j - 1];
+                j--;
+            }
+            actions[j] = tmp;
+        }
+        // Build a line for each navaction
+        for (int a = 0; a < n_actions; a++) {
+            tempstr std_keys;
+            tempstr short_keys;
+            ind_beg(acr_nav::_db_keybind_curs, kb, acr_nav::_db) {
+                if (kb.p_navaction == actions[a] && acr_nav::navmode_Get(kb) == "browse") {
+                    algo::Smallstr50 key = acr_nav::key_Get(kb);
+                    algo::strptr keystr(key);
+                    bool is_shortcut = (elems_N(keystr) == 1 && ((keystr[0] >= 'a' && keystr[0] <= 'z') || (keystr[0] >= 'A' && keystr[0] <= 'Z')));
+                    cstring &target = is_shortcut ? short_keys : std_keys;
+                    if (ch_N(target) > 0) {
+                        target << "/";
+                    }
+                    target << key;
+                }
+            } ind_end;
+            tempstr line;
+            line << std_keys;
+            char_PrintNTimes(' ', line, i32_Max(1, 18 - ch_N(line)));
+            line << short_keys;
+            char_PrintNTimes(' ', line, i32_Max(1, 28 - ch_N(line)));
+            line << actions[a]->comment;
+            acr_nav::help_line_Alloc() = line;
+        }
+    }
 }
 
 // -----------------------------------------------------------------------------
@@ -769,71 +823,71 @@ static void RenderTitleBar(RenderCtx &ctx) {
 
 // -----------------------------------------------------------------------------
 
-// Render the content area: help overlay or dual-panel data rows.
+// Render the content area: dual-panel data rows.
 static void RenderContentArea(RenderCtx &ctx) {
-    if (acr_nav::_db.show_help) {
-        RenderHelpOverlay(ctx.buf, ctx.wid, ctx.visible);
-    } else {
-        // Pre-walk left panel linked list to scroll_offset
-        acr_nav::FCtype *left_ptr = acr_nav::zd_sel_ctype_First();
-        {
-            int skip = 0;
-            while (left_ptr && skip < acr_nav::_db.p_left_panel->scroll_offset) {
-                left_ptr = acr_nav::zd_sel_ctype_Next(*left_ptr);
-                skip++;
-            }
+    // Pre-walk left panel linked list to scroll_offset
+    acr_nav::FCtype *left_ptr = acr_nav::zd_sel_ctype_First();
+    {
+        int skip = 0;
+        while (left_ptr && skip < acr_nav::_db.p_left_panel->scroll_offset) {
+            left_ptr = acr_nav::zd_sel_ctype_Next(*left_ptr);
+            skip++;
         }
-        int n_right = RightPanelItemCount(ctx.sel_ct);
-        bool in_preview = IsPreviewMode();
-        bool in_xref = IsXrefMode();
-        int visible = ctx.visible;
+    }
+    int n_right = RightPanelItemCount(ctx.sel_ct);
+    bool has_fields = acr_nav::_db.p_cur_viewmode->has_fields;
+    bool in_xref = IsXrefMode();
+    int visible = ctx.visible;
 
-        // Column header row (all modes)
-        if (ctx.sel_ct) {
-            tempstr left_cell;
-            char_PrintNTimes(' ', left_cell, ctx.left_wid - 1);
-            ctx.buf << left_cell << "\x1b[0m|";
-            tempstr hdr;
-            if (in_preview && ch_N(acr_nav::_db.preview_header) > 0) {
-                hdr << " " << acr_nav::_db.preview_header;
-            } else if (!in_preview) {
-                hdr << " field";
-                char_PrintNTimes(' ', hdr, i32_Max(1, 24 - ch_N(hdr)));
-                hdr << (in_xref ? "ctype" : "arg");
-                char_PrintNTimes(' ', hdr, i32_Max(1, 48 - ch_N(hdr)));
-                hdr << "reftype";
+    // Column header row (all modes)
+    if (ctx.sel_ct || !has_fields) {
+        tempstr left_cell;
+        char_PrintNTimes(' ', left_cell, ctx.left_wid - 1);
+        ctx.buf << left_cell << "\x1b[0m|";
+        tempstr hdr;
+        if (!has_fields) {
+            algo::strptr line_header = RightPanelLineHeader();
+            if (ch_N(line_header) > 0) {
+                hdr << " " << line_header;
             }
-            TruncPad(hdr, ctx.right_wid);
-            EmitStyle(ctx.buf, !ctx.left_focused ? *acr_nav::_db.p_title_focus : *acr_nav::_db.p_title_nofocus);
-            ctx.buf << hdr << "\x1b[0m\x1b[K\r\n";
-            visible--;
+        } else {
+            hdr << " field";
+            char_PrintNTimes(' ', hdr, i32_Max(1, 24 - ch_N(hdr)));
+            hdr << (in_xref ? "ctype" : "arg");
+            char_PrintNTimes(' ', hdr, i32_Max(1, 48 - ch_N(hdr)));
+            hdr << "reftype";
         }
+        TruncPad(hdr, ctx.right_wid);
+        EmitStyle(ctx.buf, !ctx.left_focused ? *acr_nav::_db.p_title_focus : *acr_nav::_db.p_title_nofocus);
+        ctx.buf << hdr << "\x1b[0m\x1b[K\r\n";
+        visible--;
+    }
 
-        for (int row = 0; row < visible; row++) {
-            // Left cell
-            tempstr left_cell;
-            bool left_sel = false;
-            if (left_ptr) {
-                left_sel = (acr_nav::_db.p_left_panel->scroll_offset + row == acr_nav::_db.p_left_panel->sel_row);
-                left_cell << " " << left_ptr->ctype;
-                left_ptr = acr_nav::zd_sel_ctype_Next(*left_ptr);
-            }
-            TruncPad(left_cell, ctx.left_wid - 1);
-            if (left_sel) {
-                EmitStyle(ctx.buf, ctx.left_focused ? *acr_nav::_db.p_sel_focus : *acr_nav::_db.p_sel_nofocus);
-            }
-            ctx.buf << left_cell << "\x1b[0m|";
+    for (int row = 0; row < visible; row++) {
+        // Left cell
+        tempstr left_cell;
+        bool left_sel = false;
+        if (left_ptr) {
+            left_sel = (acr_nav::_db.p_left_panel->scroll_offset + row == acr_nav::_db.p_left_panel->sel_row);
+            left_cell << " " << left_ptr->ctype;
+            left_ptr = acr_nav::zd_sel_ctype_Next(*left_ptr);
+        }
+        TruncPad(left_cell, ctx.left_wid - 1);
+        if (left_sel) {
+            EmitStyle(ctx.buf, ctx.left_focused ? *acr_nav::_db.p_sel_focus : *acr_nav::_db.p_sel_nofocus);
+        }
+        ctx.buf << left_cell << "\x1b[0m|";
 
-            // Right cell
-            tempstr right_cell;
-            bool right_sel = false;
-            int right_data_idx = acr_nav::_db.p_right_panel->scroll_offset + row;
-            acr_nav::FField *fld = nullptr;
-            if (ctx.sel_ct && right_data_idx < n_right) {
-                right_sel = (right_data_idx == acr_nav::_db.p_right_panel->sel_row);
-                if (in_preview) {
-                    right_cell << " " << acr_nav::preview_line_qFind(right_data_idx);
-                } else {
+        // Right cell
+        tempstr right_cell;
+        bool right_sel = false;
+        int right_data_idx = acr_nav::_db.p_right_panel->scroll_offset + row;
+        acr_nav::FField *fld = nullptr;
+        if (ctx.sel_ct && right_data_idx < n_right) {
+            right_sel = (right_data_idx == acr_nav::_db.p_right_panel->sel_row);
+            if (!has_fields) {
+                right_cell << " " << RightPanelLineFind(right_data_idx);
+            } else {
                     fld = RightPanelFieldFind(ctx.sel_ct, right_data_idx);
                     if (fld) {
                         right_cell << " " << name_Get(*fld);
@@ -855,7 +909,6 @@ static void RenderContentArea(RenderCtx &ctx) {
             }
             ctx.buf << right_cell << "\x1b[0m\x1b[K\r\n";
         }
-    }
 }
 
 // -----------------------------------------------------------------------------
@@ -942,10 +995,16 @@ static void InitPanels() {
     acr_nav::_db.p_default_viewmode = acr_nav::ind_viewmode_Find("fields");
     acr_nav::_db.p_preview_viewmode = acr_nav::ind_viewmode_Find("preview");
     acr_nav::_db.p_xref_viewmode = acr_nav::ind_viewmode_Find("xref");
+    acr_nav::_db.p_help_viewmode = acr_nav::ind_viewmode_Find("help");
     vrfy(acr_nav::_db.p_default_viewmode, "viewmode 'fields' not found");
     vrfy(acr_nav::_db.p_preview_viewmode, "viewmode 'preview' not found");
     vrfy(acr_nav::_db.p_xref_viewmode, "viewmode 'xref' not found");
-    acr_nav::_db.p_cur_viewmode = acr_nav::_db.p_default_viewmode;
+    vrfy(acr_nav::_db.p_help_viewmode, "viewmode 'help' not found");
+    // Start in help mode so new users see keybindings
+    acr_nav::_db.p_cur_viewmode = acr_nav::_db.p_help_viewmode;
+    acr_nav::_db.p_prev_viewmode = acr_nav::_db.p_default_viewmode;
+    acr_nav::_db.startup_help = true;
+    BuildHelpLines();
     // Resolve well-known navstyle pointers by name
     acr_nav::_db.p_title_focus = acr_nav::ind_navstyle_Find("title_focus");
     acr_nav::_db.p_title_nofocus = acr_nav::ind_navstyle_Find("title_nofocus");
@@ -966,12 +1025,12 @@ static void InitPanels() {
 
 static bool ProcessKey(algo::strptr key_name) {
     bool did_something = false;
-    // Any keypress dismisses help overlay
-    if (acr_nav::_db.show_help) {
-        acr_nav::_db.show_help = false;
-        did_something = true;
+    // Startup help: first keypress dismisses and falls through to dispatch
+    if (acr_nav::_db.startup_help) {
+        acr_nav::_db.startup_help = false;
+        acr_nav::_db.p_cur_viewmode = acr_nav::_db.p_default_viewmode;
     }
-    if (!did_something) {
+    {
         acr_nav::FPanel *left = acr_nav::_db.p_left_panel;
         acr_nav::FPanel *right = acr_nav::_db.p_right_panel;
         acr_nav::FCtype *prev_sel_ct = SelectedCtype(*left);
@@ -1017,7 +1076,6 @@ static void HeadlessOutput() {
     screen.n_ctype = acr_nav::ctype_N();
     screen.n_field = acr_nav::field_N();
     screen.viewmode = acr_nav::_db.p_cur_viewmode->viewmode;
-    screen.show_help = acr_nav::_db.show_help;
     screen.breadcrumb = BuildBreadcrumb(sel_ct);
     prlog(screen);
     // Left panel state
@@ -1038,10 +1096,10 @@ static void HeadlessOutput() {
     right_state.scroll_offset = right->scroll_offset;
     right_state.n_items = RightPanelItemCount(sel_ct);
     right_state.sel_value = "";
-    if (sel_ct && right->sel_row < RightPanelItemCount(sel_ct)) {
-        if (IsPreviewMode()) {
-            right_state.sel_value = acr_nav::preview_line_qFind(right->sel_row);
-        } else {
+    if (right->sel_row < RightPanelItemCount(sel_ct)) {
+        if (!acr_nav::_db.p_cur_viewmode->has_fields) {
+            right_state.sel_value = RightPanelLineFind(right->sel_row);
+        } else if (sel_ct) {
             acr_nav::FField *fld = RightPanelFieldFind(sel_ct, right->sel_row);
             if (fld) {
                 right_state.sel_value = fld->field;
@@ -1049,8 +1107,8 @@ static void HeadlessOutput() {
         }
     }
     prlog(right_state);
-    // Visible fields (or preview lines)
-    if (sel_ct && !IsPreviewMode()) {
+    // Visible fields (field-based modes only)
+    if (sel_ct && acr_nav::_db.p_cur_viewmode->has_fields) {
         int n_vis = RightPanelItemCount(sel_ct);
         for (int i = 0; i < n_vis; i++) {
             acr_nav::FField *field = RightPanelFieldFind(sel_ct, i);

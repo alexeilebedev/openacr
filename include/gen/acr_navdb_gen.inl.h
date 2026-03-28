@@ -65,6 +65,17 @@ inline  acr_navdb::FieldId::FieldId(acr_navdb_FieldIdEnum arg) {
     this->value = i32(arg);
 }
 
+// --- acr_navdb.Helpgroup..Init
+// Set all fields to initial values.
+inline void acr_navdb::Helpgroup_Init(acr_navdb::Helpgroup& parent) {
+    parent.sort_order = i32(0);
+}
+
+// --- acr_navdb.Helpgroup..Ctor
+inline  acr_navdb::Helpgroup::Helpgroup() {
+    acr_navdb::Helpgroup_Init(*this);
+}
+
 // --- acr_navdb.Keybind..Init
 // Set all fields to initial values.
 inline void acr_navdb::Keybind_Init(acr_navdb::Keybind& parent) {
@@ -76,8 +87,15 @@ inline  acr_navdb::Keybind::Keybind() {
     acr_navdb::Keybind_Init(*this);
 }
 
+// --- acr_navdb.Navaction..Init
+// Set all fields to initial values.
+inline void acr_navdb::Navaction_Init(acr_navdb::Navaction& parent) {
+    parent.help_sort = i32(0);
+}
+
 // --- acr_navdb.Navaction..Ctor
 inline  acr_navdb::Navaction::Navaction() {
+    acr_navdb::Navaction_Init(*this);
 }
 
 // --- acr_navdb.Navmode..Ctor
@@ -112,12 +130,24 @@ inline  acr_navdb::Panel::Panel() {
 inline  acr_navdb::Reftypestyle::Reftypestyle() {
 }
 
+// --- acr_navdb.Viewmode..Init
+// Set all fields to initial values.
+inline void acr_navdb::Viewmode_Init(acr_navdb::Viewmode& parent) {
+    parent.has_fields = bool(false);
+}
+
 // --- acr_navdb.Viewmode..Ctor
 inline  acr_navdb::Viewmode::Viewmode() {
+    acr_navdb::Viewmode_Init(*this);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const acr_navdb::FieldId &row) {// cfmt:acr_navdb.FieldId.String
     acr_navdb::FieldId_Print(const_cast<acr_navdb::FieldId&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const acr_navdb::Helpgroup &row) {// cfmt:acr_navdb.Helpgroup.String
+    acr_navdb::Helpgroup_Print(const_cast<acr_navdb::Helpgroup&>(row), str);
     return str;
 }
 

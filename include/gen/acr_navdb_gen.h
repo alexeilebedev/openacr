@@ -30,32 +30,37 @@
 // --- acr_navdb_FieldIdEnum
 
 enum acr_navdb_FieldIdEnum {                // acr_navdb.FieldId.value
-     acr_navdb_FieldId_keybind        = 0
-    ,acr_navdb_FieldId_navaction      = 1
-    ,acr_navdb_FieldId_navmode        = 2
-    ,acr_navdb_FieldId_hint_order     = 3
-    ,acr_navdb_FieldId_key            = 4
-    ,acr_navdb_FieldId_comment        = 5
-    ,acr_navdb_FieldId_hint           = 6
-    ,acr_navdb_FieldId_navstyle       = 7
-    ,acr_navdb_FieldId_bold           = 8
-    ,acr_navdb_FieldId_dim            = 9
-    ,acr_navdb_FieldId_reverse        = 10
-    ,acr_navdb_FieldId_fg_color       = 11
-    ,acr_navdb_FieldId_panel          = 12
-    ,acr_navdb_FieldId_title          = 13
-    ,acr_navdb_FieldId_position       = 14
-    ,acr_navdb_FieldId_reftypestyle   = 15
-    ,acr_navdb_FieldId_reftype        = 16
-    ,acr_navdb_FieldId_viewmode       = 17
-    ,acr_navdb_FieldId_next           = 18
-    ,acr_navdb_FieldId_empty_msg      = 19
-    ,acr_navdb_FieldId_value          = 20
+     acr_navdb_FieldId_helpgroup      = 0
+    ,acr_navdb_FieldId_sort_order     = 1
+    ,acr_navdb_FieldId_comment        = 2
+    ,acr_navdb_FieldId_keybind        = 3
+    ,acr_navdb_FieldId_navaction      = 4
+    ,acr_navdb_FieldId_navmode        = 5
+    ,acr_navdb_FieldId_hint_order     = 6
+    ,acr_navdb_FieldId_key            = 7
+    ,acr_navdb_FieldId_hint           = 8
+    ,acr_navdb_FieldId_help_sort      = 9
+    ,acr_navdb_FieldId_navstyle       = 10
+    ,acr_navdb_FieldId_bold           = 11
+    ,acr_navdb_FieldId_dim            = 12
+    ,acr_navdb_FieldId_reverse        = 13
+    ,acr_navdb_FieldId_fg_color       = 14
+    ,acr_navdb_FieldId_panel          = 15
+    ,acr_navdb_FieldId_title          = 16
+    ,acr_navdb_FieldId_position       = 17
+    ,acr_navdb_FieldId_reftypestyle   = 18
+    ,acr_navdb_FieldId_reftype        = 19
+    ,acr_navdb_FieldId_viewmode       = 20
+    ,acr_navdb_FieldId_next           = 21
+    ,acr_navdb_FieldId_empty_msg      = 22
+    ,acr_navdb_FieldId_has_fields     = 23
+    ,acr_navdb_FieldId_value          = 24
 };
 
-enum { acr_navdb_FieldIdEnum_N = 21 };
+enum { acr_navdb_FieldIdEnum_N = 25 };
 
 namespace acr_navdb { // gen:ns_pkeytypedef
+    typedef algo::Smallstr50 HelpgroupPkey;
     typedef algo::Smallstr50 KeybindPkey;
     typedef algo::Smallstr50 NavactionPkey;
     typedef algo::Smallstr50 NavmodePkey;
@@ -68,6 +73,7 @@ namespace acr_navdb { // gen:ns_tclass_field
 } // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace acr_navdb { struct FieldId; }
+namespace acr_navdb { struct Helpgroup; }
 namespace acr_navdb { struct Keybind; }
 namespace acr_navdb { struct Navaction; }
 namespace acr_navdb { struct Navmode; }
@@ -131,6 +137,29 @@ inline void          FieldId_Init(acr_navdb::FieldId& parent);
 // func:acr_navdb.FieldId..Print
 void                 FieldId_Print(acr_navdb::FieldId& row, algo::cstring& str) __attribute__((nothrow));
 
+// --- acr_navdb.Helpgroup
+struct Helpgroup { // acr_navdb.Helpgroup: Help panel group category
+    algo::Smallstr50   helpgroup;    //
+    i32                sort_order;   //   0  Group ordering in help panel
+    algo::Comment      comment;      //
+    // func:acr_navdb.Helpgroup..Ctor
+    inline               Helpgroup() __attribute__((nothrow));
+};
+
+// func:acr_navdb.Helpgroup..ReadFieldMaybe
+bool                 Helpgroup_ReadFieldMaybe(acr_navdb::Helpgroup& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of acr_navdb::Helpgroup from an ascii string.
+// The format of the string is an ssim Tuple
+// func:acr_navdb.Helpgroup..ReadStrptrMaybe
+bool                 Helpgroup_ReadStrptrMaybe(acr_navdb::Helpgroup &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:acr_navdb.Helpgroup..Init
+inline void          Helpgroup_Init(acr_navdb::Helpgroup& parent);
+// print string representation of ROW to string STR
+// cfmt:acr_navdb.Helpgroup.String  printfmt:Tuple
+// func:acr_navdb.Helpgroup..Print
+void                 Helpgroup_Print(acr_navdb::Helpgroup& row, algo::cstring& str) __attribute__((nothrow));
+
 // --- acr_navdb.Keybind
 struct Keybind { // acr_navdb.Keybind: Key-to-action mapping for acr_nav
     algo::Smallstr50   keybind;      //
@@ -171,6 +200,8 @@ void                 Keybind_Print(acr_navdb::Keybind& row, algo::cstring& str) 
 struct Navaction { // acr_navdb.Navaction: Controlled vocabulary of navigation actions
     algo::Smallstr50   navaction;   //
     algo::Smallstr50   hint;        // Short status bar label; empty=hidden
+    algo::Smallstr50   helpgroup;   // Help group; empty=hidden from help
+    i32                help_sort;   //   0  Sort order within help group
     algo::Comment      comment;     //
     // func:acr_navdb.Navaction..Ctor
     inline               Navaction() __attribute__((nothrow));
@@ -182,6 +213,9 @@ bool                 Navaction_ReadFieldMaybe(acr_navdb::Navaction& parent, algo
 // The format of the string is an ssim Tuple
 // func:acr_navdb.Navaction..ReadStrptrMaybe
 bool                 Navaction_ReadStrptrMaybe(acr_navdb::Navaction &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:acr_navdb.Navaction..Init
+inline void          Navaction_Init(acr_navdb::Navaction& parent);
 // print string representation of ROW to string STR
 // cfmt:acr_navdb.Navaction.String  printfmt:Tuple
 // func:acr_navdb.Navaction..Print
@@ -289,11 +323,12 @@ void                 Reftypestyle_Print(acr_navdb::Reftypestyle& row, algo::cstr
 
 // --- acr_navdb.Viewmode
 struct Viewmode { // acr_navdb.Viewmode: Right-panel view mode for acr_nav
-    algo::Smallstr50   viewmode;    //
-    algo::Smallstr50   title;       // Right panel title for this viewmode
-    algo::Smallstr50   next;        // Next viewmode in Tab cycle
-    algo::Smallstr50   empty_msg;   // Message shown when right panel has no items
-    algo::Comment      comment;     //
+    algo::Smallstr50   viewmode;     //
+    algo::Smallstr50   title;        // Right panel title for this viewmode
+    algo::Smallstr50   next;         // Next viewmode in Tab cycle
+    algo::Smallstr50   empty_msg;    // Message shown when right panel has no items
+    bool               has_fields;   //   false  Y: renders field records; N: renders preformatted lines
+    algo::Comment      comment;      //
     // func:acr_navdb.Viewmode..Ctor
     inline               Viewmode() __attribute__((nothrow));
 };
@@ -304,6 +339,9 @@ bool                 Viewmode_ReadFieldMaybe(acr_navdb::Viewmode& parent, algo::
 // The format of the string is an ssim Tuple
 // func:acr_navdb.Viewmode..ReadStrptrMaybe
 bool                 Viewmode_ReadStrptrMaybe(acr_navdb::Viewmode &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:acr_navdb.Viewmode..Init
+inline void          Viewmode_Init(acr_navdb::Viewmode& parent);
 // print string representation of ROW to string STR
 // cfmt:acr_navdb.Viewmode.String  printfmt:Tuple
 // func:acr_navdb.Viewmode..Print
@@ -314,6 +352,7 @@ namespace acr_navdb { // gen:ns_func
 // gen:ns_operators
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const acr_navdb::FieldId &row);// cfmt:acr_navdb.FieldId.String
+inline algo::cstring &operator <<(algo::cstring &str, const acr_navdb::Helpgroup &row);// cfmt:acr_navdb.Helpgroup.String
 inline algo::cstring &operator <<(algo::cstring &str, const acr_navdb::Keybind &row);// cfmt:acr_navdb.Keybind.String
 inline algo::cstring &operator <<(algo::cstring &str, const acr_navdb::Navaction &row);// cfmt:acr_navdb.Navaction.String
 inline algo::cstring &operator <<(algo::cstring &str, const acr_navdb::Navmode &row);// cfmt:acr_navdb.Navmode.String

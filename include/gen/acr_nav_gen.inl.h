@@ -288,6 +288,60 @@ inline acr_nav::FCtype& acr_nav::ctype_qFind(u64 t) {
     return _db.ctype_lary[bsr][index];
 }
 
+// --- acr_nav.FDb.helpgroup.EmptyQ
+// Return true if index is empty
+inline bool acr_nav::helpgroup_EmptyQ() {
+    return _db.helpgroup_n == 0;
+}
+
+// --- acr_nav.FDb.helpgroup.Find
+// Look up row by row id. Return NULL if out of range
+inline acr_nav::FHelpgroup* acr_nav::helpgroup_Find(u64 t) {
+    acr_nav::FHelpgroup *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.helpgroup_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.helpgroup_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- acr_nav.FDb.helpgroup.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline acr_nav::FHelpgroup* acr_nav::helpgroup_Last() {
+    return helpgroup_Find(u64(_db.helpgroup_n-1));
+}
+
+// --- acr_nav.FDb.helpgroup.N
+// Return number of items in the pool
+inline i32 acr_nav::helpgroup_N() {
+    return _db.helpgroup_n;
+}
+
+// --- acr_nav.FDb.helpgroup.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline acr_nav::FHelpgroup& acr_nav::helpgroup_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.helpgroup_lary[bsr][index];
+}
+
+// --- acr_nav.FDb.ind_helpgroup.EmptyQ
+// Return true if hash is empty
+inline bool acr_nav::ind_helpgroup_EmptyQ() {
+    return _db.ind_helpgroup_n == 0;
+}
+
+// --- acr_nav.FDb.ind_helpgroup.N
+// Return number of items in the hash
+inline i32 acr_nav::ind_helpgroup_N() {
+    return _db.ind_helpgroup_n;
+}
+
 // --- acr_nav.FDb.ind_ctype.EmptyQ
 // Return true if hash is empty
 inline bool acr_nav::ind_ctype_EmptyQ() {
@@ -909,6 +963,73 @@ inline i32 acr_nav::ind_reftypestyle_N() {
     return _db.ind_reftypestyle_n;
 }
 
+// --- acr_nav.FDb.help_line.EmptyQ
+// Return true if index is empty
+inline bool acr_nav::help_line_EmptyQ() {
+    return _db.help_line_n == 0;
+}
+
+// --- acr_nav.FDb.help_line.Find
+// Look up row by row id. Return NULL if out of range
+inline algo::cstring* acr_nav::help_line_Find(u64 t) {
+    u64 idx = t;
+    u64 lim = _db.help_line_n;
+    if (idx >= lim) return NULL;
+    return _db.help_line_elems + idx;
+}
+
+// --- acr_nav.FDb.help_line.Getary
+// Return array pointer by value
+inline algo::aryptr<algo::cstring> acr_nav::help_line_Getary() {
+    return algo::aryptr<algo::cstring>(_db.help_line_elems, _db.help_line_n);
+}
+
+// --- acr_nav.FDb.help_line.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline algo::cstring* acr_nav::help_line_Last() {
+    return help_line_Find(u64(_db.help_line_n-1));
+}
+
+// --- acr_nav.FDb.help_line.Max
+// Return max. number of items in the array
+inline i32 acr_nav::help_line_Max() {
+    return _db.help_line_max;
+}
+
+// --- acr_nav.FDb.help_line.N
+// Return number of items in the array
+inline i32 acr_nav::help_line_N() {
+    return _db.help_line_n;
+}
+
+// --- acr_nav.FDb.help_line.Reserve
+// Make sure N *more* elements will fit in array. Process dies if out of memory
+inline void acr_nav::help_line_Reserve(int n) {
+    u32 new_n = _db.help_line_n + n;
+    if (UNLIKELY(new_n > _db.help_line_max)) {
+        help_line_AbsReserve(new_n);
+    }
+}
+
+// --- acr_nav.FDb.help_line.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline algo::cstring& acr_nav::help_line_qFind(u64 t) {
+    return _db.help_line_elems[t];
+}
+
+// --- acr_nav.FDb.help_line.qLast
+// Return reference to last element of array. No bounds checking
+inline algo::cstring& acr_nav::help_line_qLast() {
+    return help_line_qFind(u64(_db.help_line_n-1));
+}
+
+// --- acr_nav.FDb.help_line.rowid_Get
+// Return row id of specified element
+inline u64 acr_nav::help_line_rowid_Get(algo::cstring &elem) {
+    u64 id = &elem - _db.help_line_elems;
+    return u64(id);
+}
+
 // --- acr_nav.FDb.ssimfile.EmptyQ
 // Return true if index is empty
 inline bool acr_nav::ssimfile_EmptyQ() {
@@ -1107,6 +1228,31 @@ inline void acr_nav::_db_ctype_curs_Next(_db_ctype_curs &curs) {
 // item access
 inline acr_nav::FCtype& acr_nav::_db_ctype_curs_Access(_db_ctype_curs &curs) {
     return ctype_qFind(u64(curs.index));
+}
+
+// --- acr_nav.FDb.helpgroup_curs.Reset
+// cursor points to valid item
+inline void acr_nav::_db_helpgroup_curs_Reset(_db_helpgroup_curs &curs, acr_nav::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- acr_nav.FDb.helpgroup_curs.ValidQ
+// cursor points to valid item
+inline bool acr_nav::_db_helpgroup_curs_ValidQ(_db_helpgroup_curs &curs) {
+    return curs.index < _db.helpgroup_n;
+}
+
+// --- acr_nav.FDb.helpgroup_curs.Next
+// proceed to next item
+inline void acr_nav::_db_helpgroup_curs_Next(_db_helpgroup_curs &curs) {
+    curs.index++;
+}
+
+// --- acr_nav.FDb.helpgroup_curs.Access
+// item access
+inline acr_nav::FHelpgroup& acr_nav::_db_helpgroup_curs_Access(_db_helpgroup_curs &curs) {
+    return helpgroup_qFind(u64(curs.index));
 }
 
 // --- acr_nav.FDb.field_curs.Reset
@@ -1384,6 +1530,31 @@ inline acr_nav::FReftypestyle& acr_nav::_db_reftypestyle_curs_Access(_db_reftype
     return reftypestyle_qFind(u64(curs.index));
 }
 
+// --- acr_nav.FDb.help_line_curs.Next
+// proceed to next item
+inline void acr_nav::_db_help_line_curs_Next(_db_help_line_curs &curs) {
+    curs.index++;
+}
+
+// --- acr_nav.FDb.help_line_curs.Reset
+inline void acr_nav::_db_help_line_curs_Reset(_db_help_line_curs &curs, acr_nav::FDb &parent) {
+    curs.elems = parent.help_line_elems;
+    curs.n_elems = parent.help_line_n;
+    curs.index = 0;
+}
+
+// --- acr_nav.FDb.help_line_curs.ValidQ
+// cursor points to valid item
+inline bool acr_nav::_db_help_line_curs_ValidQ(_db_help_line_curs &curs) {
+    return curs.index < curs.n_elems;
+}
+
+// --- acr_nav.FDb.help_line_curs.Access
+// item access
+inline algo::cstring& acr_nav::_db_help_line_curs_Access(_db_help_line_curs &curs) {
+    return curs.elems[curs.index];
+}
+
 // --- acr_nav.FDb.ssimfile_curs.Reset
 // cursor points to valid item
 inline void acr_nav::_db_ssimfile_curs_Reset(_db_ssimfile_curs &curs, acr_nav::FDb &parent) {
@@ -1469,6 +1640,24 @@ inline  acr_nav::FField::~FField() {
     acr_nav::FField_Uninit(*this);
 }
 
+// --- acr_nav.FHelpgroup..Init
+// Set all fields to initial values.
+inline void acr_nav::FHelpgroup_Init(acr_nav::FHelpgroup& helpgroup) {
+    helpgroup.sort_order = i32(0);
+    helpgroup.ind_helpgroup_next = (acr_nav::FHelpgroup*)-1; // (acr_nav.FDb.ind_helpgroup) not-in-hash
+    helpgroup.ind_helpgroup_hashval = 0; // stored hash value
+}
+
+// --- acr_nav.FHelpgroup..Ctor
+inline  acr_nav::FHelpgroup::FHelpgroup() {
+    acr_nav::FHelpgroup_Init(*this);
+}
+
+// --- acr_nav.FHelpgroup..Dtor
+inline  acr_nav::FHelpgroup::~FHelpgroup() {
+    acr_nav::FHelpgroup_Uninit(*this);
+}
+
 // --- acr_nav.FKeybind..Init
 // Set all fields to initial values.
 inline void acr_nav::FKeybind_Init(acr_nav::FKeybind& keybind) {
@@ -1499,6 +1688,7 @@ inline void acr_nav::step_Call(acr_nav::FNavaction& navaction) {
 // --- acr_nav.FNavaction..Init
 // Set all fields to initial values.
 inline void acr_nav::FNavaction_Init(acr_nav::FNavaction& navaction) {
+    navaction.help_sort = i32(0);
     navaction.ind_navaction_next = (acr_nav::FNavaction*)-1; // (acr_nav.FDb.ind_navaction) not-in-hash
     navaction.ind_navaction_hashval = 0; // stored hash value
     navaction.step = NULL;
@@ -1657,6 +1847,7 @@ inline  acr_nav::FSsimfile::~FSsimfile() {
 // --- acr_nav.FViewmode..Init
 // Set all fields to initial values.
 inline void acr_nav::FViewmode_Init(acr_nav::FViewmode& viewmode) {
+    viewmode.has_fields = bool(false);
     viewmode.ind_viewmode_next = (acr_nav::FViewmode*)-1; // (acr_nav.FDb.ind_viewmode) not-in-hash
     viewmode.ind_viewmode_hashval = 0; // stored hash value
 }
@@ -1733,6 +1924,15 @@ inline void acr_nav::PanelState_Init(acr_nav::PanelState& parent) {
 // --- acr_nav.PanelState..Ctor
 inline  acr_nav::PanelState::PanelState() {
     acr_nav::PanelState_Init(*this);
+}
+
+// --- acr_nav.Screen..Init
+// Set all fields to initial values.
+inline void acr_nav::Screen_Init(acr_nav::Screen& parent) {
+    parent.navstack_depth = i32(0);
+    parent.n_sel_ctype = i32(0);
+    parent.n_ctype = i32(0);
+    parent.n_field = i32(0);
 }
 
 // --- acr_nav.Screen..Ctor
