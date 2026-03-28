@@ -41,8 +41,6 @@ Show help on startup in the right panel (not as a full-screen overlay). Help sho
 - Help sort order should be logical (movement, navigation, views, search, meta), not alphabetical by action name
 - Status bar hints should remain data-driven (from keybind/navaction records), not hardcoded strings
 
-**Design considerations from /acr review:**
-- `follow_ref` and `switch_panel_right` overlap in behavior from the left panel. Help display should show this to users.
 
 ---
 
