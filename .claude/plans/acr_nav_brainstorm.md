@@ -34,6 +34,8 @@ Show help on startup in the right panel (not as a full-screen overlay). Help sho
 **Value:** High. First-launch discoverability without blocking interaction.
 **Size:** Small-Medium.
 
+**Design note:** The right-panel dispatch currently uses pointer identity checks (`IsPreviewMode()`, `IsXrefMode()`) in 5 locations. This works for 3 modes but adding help requires deciding: does help render preformatted text (like preview) or structured records from keybind data (like field modes)? That choice determines whether a `has_fields` boolean or a different factoring axis (render hooks, `navigable` flag) is the right way to eliminate identity checks. Decide the rendering model first.
+
 **UX requirements from prototyping:**
 - Help auto-dismisses on any keypress (startup help is informational, not blocking)
 - Help is NOT in the Tab cycle — only reachable via `?` toggle
