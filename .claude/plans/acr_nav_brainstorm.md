@@ -25,6 +25,18 @@
 
 ---
 
+## Issues
+
+- when filter finds no types the types column shrinks to 0 width
+- when I filter and navigate to fields then hit d -> d is appended to the filter instead of showing detail
+    - navigate to fields, hit enter -> nothing happens (apply filter)
+    - probably right arrow / l should accept filter for better UX
+    - need to review these issues systemically
+    - maybe there are more broken flows like this
+- Shows Help: DIR (21) on startup. Should hide Type for Help.
+
+---
+
 ## Pain Points Observed
 
 These come from hands-on experimentation with the full toolset and reviewing tutorials 1-5.
