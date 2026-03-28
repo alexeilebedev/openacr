@@ -71,6 +71,27 @@ Press `:` for vim-style command input. `:goto <ctype>`, `:ns <regex>`, `:q`. Com
 
 ---
 
+### Generalized Headless: _db Pool Dump for Any Program
+
+Headless mode in acr_nav serializes curated projections (Screen, PanelState, VisibleField) as ssimfile records. But every amc-generated program already has typed pools in `_db`. If amc could generate a generic "dump all pools" function, any OpenACR program could expose its full in-memory state on demand — headless mode for free, from the schema.
+
+This is the "freeze a running program and look at its tables" idea turned into a general capability.
+
+**Teaches:** The deepest lesson — programs ARE in-memory databases, and that's not just a design philosophy, it's an operational interface.
+**Value:** Very high. Turns every tool into an agent-inspectable program.
+**Size:** Large. Requires amc generator work (pool iteration + ssim serialization for all ctypes).
+
+**What generalizes cleanly (output/dump side):**
+amc already generates `Print` for every ctype and knows every pool in FDb. A new `amcdb.gen` phase could generate `DumpAllPools()` — one record in `gen.ssim`, one generator, every program gets it. Passes the factorization test: capability added by adding records, not code.
+
+**What doesn't generalize (input/step side):**
+`SendKey` is an acr_nav verb — meaningful because it's a TUI with keybinds. A batch tool like `acr` has no keystrokes. A server has incoming messages. The "step" verb is program-specific even though the "dump" verb is universal. Don't oversell as "any tool becomes agent-testable" — only the output side generalizes cleanly. More precise: **any tool becomes agent-inspectable.**
+
+**Curated vs raw:**
+Raw pool dumps are the truth — curated views are opinions that drift. But raw dumps of a real program (thousands of records, runtime artifacts like file descriptors and computed caches) are a firehose. ACR answer: generate the raw dump (free from schema), let programs also define curated views as additional ctypes. Both, not either/or. The curated views are just more records — they pass the factorization test.
+
+---
+
 ## Recommended Sequence
 
 | Milestone | Idea | Principle Demonstrated |
