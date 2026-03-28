@@ -589,6 +589,58 @@ static void EmitStyle(cstring &out, acr_nav::FNavstyle &style) {
     }
 }
 
+// Truncate str to max_width characters, then right-pad with spaces to max_width.
+static void TruncPad(cstring &str, int max_width) {
+    if (ch_N(str) > max_width) {
+        str.ch_n = max_width;
+    }
+    char_PrintNTimes(' ', str, i32_Max(0, max_width - ch_N(str)));
+}
+
+// -----------------------------------------------------------------------------
+
+// Per-frame rendering context.  Populated once by Render, read by phase functions.
+struct RenderCtx {
+    cstring            &buf;
+    acr_nav::FCtype    *sel_ct;
+    acr_nav::FPanel    *left;
+    acr_nav::FPanel    *right;
+    int                 wid;
+    int                 left_wid;
+    int                 right_wid;
+    bool                left_focused;
+    bool                show_breadcrumb;
+    int                 visible;
+    acr_nav::FNavstyle &title_focus;
+    acr_nav::FNavstyle &title_nofocus;
+    acr_nav::FNavstyle &sel_focus;
+    acr_nav::FNavstyle &sel_nofocus;
+    acr_nav::FNavstyle &statusbar;
+    RenderCtx(cstring &buf_
+              , acr_nav::FCtype *sel_ct_
+              , acr_nav::FPanel *left_
+              , acr_nav::FPanel *right_
+              , int wid_
+              , int left_wid_
+              , int right_wid_
+              , bool left_focused_
+              , bool show_breadcrumb_
+              , int visible_
+              , acr_nav::FNavstyle &title_focus_
+              , acr_nav::FNavstyle &title_nofocus_
+              , acr_nav::FNavstyle &sel_focus_
+              , acr_nav::FNavstyle &sel_nofocus_
+              , acr_nav::FNavstyle &statusbar_)
+        : buf(buf_), sel_ct(sel_ct_), left(left_), right(right_)
+        , wid(wid_), left_wid(left_wid_), right_wid(right_wid_)
+        , left_focused(left_focused_), show_breadcrumb(show_breadcrumb_), visible(visible_)
+        , title_focus(title_focus_), title_nofocus(title_nofocus_)
+        , sel_focus(sel_focus_), sel_nofocus(sel_nofocus_), statusbar(statusbar_)
+    {}
+};
+
+// -----------------------------------------------------------------------------
+
 // Build breadcrumb trail from navigation stack.
 // Returns empty string at depth 0, or "A > B > C" showing the path of ctypes visited.
 static tempstr BuildBreadcrumb(acr_nav::FCtype *sel_ct) {
@@ -655,7 +707,7 @@ static void RenderHelpOverlay(cstring &buf, int wid, int visible) {
     // Title row
     tempstr title;
     title << " ACR_NAV -- " << cur_mode << " mode keys";
-    char_PrintNTimes(' ', title, i32_Max(0, wid - ch_N(title)));
+    TruncPad(title, wid);
     buf << "\x1b[1m" << title << "\x1b[0m\r\n";
     int row = 1;
     // One row per navaction that has keybinds in this mode
@@ -681,10 +733,7 @@ static void RenderHelpOverlay(cstring &buf, int wid, int visible) {
                     line << "  ";
                 }
                 line << na.comment;
-                if (ch_N(line) > wid) {
-                    line.ch_n = wid;
-                }
-                char_PrintNTimes(' ', line, i32_Max(0, wid - ch_N(line)));
+                TruncPad(line, wid);
                 buf << line << "\r\n";
                 row++;
             }
@@ -700,90 +749,66 @@ static void RenderHelpOverlay(cstring &buf, int wid, int visible) {
     // Footer row
     tempstr footer;
     footer << " Press any key to close";
-    char_PrintNTimes(' ', footer, i32_Max(0, wid - ch_N(footer)));
+    TruncPad(footer, wid);
     buf << "\x1b[2m" << footer << "\x1b[0m\r\n";
 }
 
 // -----------------------------------------------------------------------------
 
-static void Render(acr_nav::FCtype *sel_ct, acr_nav::FPanel *left, acr_nav::FPanel *right) {
-    DetectTerminal();
-    tempstr buf;
-    buf << "\x1b[H";
-    int wid = acr_nav::_db.term_wid;
-    bool show_breadcrumb = acr_nav::navstack_N() > 0;
-    int visible = VisibleRows();
-    // Left panel width: fits longest visible name, capped at 40% of terminal
-    int max_name = 0;
-    ind_beg(acr_nav::_db_zd_sel_ctype_curs, ct, acr_nav::_db) {
-        max_name = i32_Max(max_name, ch_N(ct.ctype));
-    } ind_end;
-    int left_wid = i32_Max(2, i32_Min(max_name + 2, wid * 40 / 100));
-    int right_wid = i32_Max(1, wid - left_wid);
-    bool left_focused = (acr_nav::_db.p_cur_panel == left);
-
-    // Resolve named styles once per frame
-    acr_nav::FNavstyle *p_title_focus = acr_nav::ind_navstyle_Find("title_focus");
-    acr_nav::FNavstyle *p_title_nofocus = acr_nav::ind_navstyle_Find("title_nofocus");
-    acr_nav::FNavstyle *p_sel_focus = acr_nav::ind_navstyle_Find("sel_focus");
-    acr_nav::FNavstyle *p_sel_nofocus = acr_nav::ind_navstyle_Find("sel_nofocus");
-    acr_nav::FNavstyle *p_statusbar = acr_nav::ind_navstyle_Find("statusbar");
-    vrfy(p_title_focus && p_title_nofocus && p_sel_focus && p_sel_nofocus && p_statusbar
-         , "required navstyle records missing");
-
-    // Title bar -- left panel
+// Render the title bar: left panel title | right panel title.
+static void RenderTitleBar(RenderCtx &ctx) {
+    // Left panel
     {
         tempstr ltitle;
-        ltitle << " " << left->title << " (" << acr_nav::zd_sel_ctype_N() << ")";
-        if (ch_N(ltitle) > left_wid - 1) {
-            ltitle.ch_n = left_wid - 1;
-        }
-        char_PrintNTimes(' ', ltitle, i32_Max(0, left_wid - 1 - ch_N(ltitle)));
-        EmitStyle(buf, *(left_focused ? p_title_focus : p_title_nofocus));
-        buf << ltitle << "\x1b[0m";
+        ltitle << " " << ctx.left->title << " (" << acr_nav::zd_sel_ctype_N() << ")";
+        TruncPad(ltitle, ctx.left_wid - 1);
+        EmitStyle(ctx.buf, ctx.left_focused ? ctx.title_focus : ctx.title_nofocus);
+        ctx.buf << ltitle << "\x1b[0m";
     }
-    buf << "|";
-    // Title bar -- right panel
+    ctx.buf << "|";
+    // Right panel
     {
         tempstr rtitle;
-        if (sel_ct) {
+        if (ctx.sel_ct) {
             rtitle << " " << acr_nav::_db.p_cur_viewmode->title
-                   << ": " << sel_ct->ctype
-                   << " (" << RightPanelItemCount(sel_ct) << ")";
+                   << ": " << ctx.sel_ct->ctype
+                   << " (" << RightPanelItemCount(ctx.sel_ct) << ")";
         } else {
-            rtitle << " " << right->title << " (empty)";
+            rtitle << " " << ctx.right->title << " (empty)";
         }
-        if (ch_N(rtitle) > right_wid) {
-            rtitle.ch_n = right_wid;
-        }
-        char_PrintNTimes(' ', rtitle, i32_Max(0, right_wid - ch_N(rtitle)));
-        EmitStyle(buf, *(!left_focused ? p_title_focus : p_title_nofocus));
-        buf << rtitle << "\x1b[0m";
+        TruncPad(rtitle, ctx.right_wid);
+        EmitStyle(ctx.buf, !ctx.left_focused ? ctx.title_focus : ctx.title_nofocus);
+        ctx.buf << rtitle << "\x1b[0m";
     }
-    buf << "\r\n";
+    ctx.buf << "\r\n";
+}
 
-    // Content rows
+// -----------------------------------------------------------------------------
+
+// Render the content area: help overlay or dual-panel data rows.
+static void RenderContentArea(RenderCtx &ctx) {
     if (acr_nav::_db.show_help) {
-        RenderHelpOverlay(buf, wid, visible);
+        RenderHelpOverlay(ctx.buf, ctx.wid, ctx.visible);
     } else {
         // Pre-walk left panel linked list to scroll_offset
         acr_nav::FCtype *left_ptr = acr_nav::zd_sel_ctype_First();
         {
             int skip = 0;
-            while (left_ptr && skip < left->scroll_offset) {
+            while (left_ptr && skip < ctx.left->scroll_offset) {
                 left_ptr = acr_nav::zd_sel_ctype_Next(*left_ptr);
                 skip++;
             }
         }
-        int n_right = RightPanelItemCount(sel_ct);
+        int n_right = RightPanelItemCount(ctx.sel_ct);
         bool in_preview = IsPreviewMode();
         bool in_xref = IsXrefMode();
+        int visible = ctx.visible;
 
         // Column header row (all modes)
-        if (sel_ct) {
+        if (ctx.sel_ct) {
             tempstr left_cell;
-            char_PrintNTimes(' ', left_cell, left_wid - 1);
-            buf << left_cell << "\x1b[0m|";
+            char_PrintNTimes(' ', left_cell, ctx.left_wid - 1);
+            ctx.buf << left_cell << "\x1b[0m|";
             tempstr hdr;
             if (in_preview && ch_N(acr_nav::_db.preview_header) > 0) {
                 hdr << " " << acr_nav::_db.preview_header;
@@ -794,12 +819,9 @@ static void Render(acr_nav::FCtype *sel_ct, acr_nav::FPanel *left, acr_nav::FPan
                 char_PrintNTimes(' ', hdr, i32_Max(1, 48 - ch_N(hdr)));
                 hdr << "reftype";
             }
-            if (ch_N(hdr) > right_wid) {
-                hdr.ch_n = right_wid;
-            }
-            char_PrintNTimes(' ', hdr, i32_Max(0, right_wid - ch_N(hdr)));
-            EmitStyle(buf, *(!left_focused ? p_title_focus : p_title_nofocus));
-            buf << hdr << "\x1b[0m\x1b[K\r\n";
+            TruncPad(hdr, ctx.right_wid);
+            EmitStyle(ctx.buf, !ctx.left_focused ? ctx.title_focus : ctx.title_nofocus);
+            ctx.buf << hdr << "\x1b[0m\x1b[K\r\n";
             visible--;
         }
 
@@ -808,74 +830,68 @@ static void Render(acr_nav::FCtype *sel_ct, acr_nav::FPanel *left, acr_nav::FPan
             tempstr left_cell;
             bool left_sel = false;
             if (left_ptr) {
-                left_sel = (left->scroll_offset + row == left->sel_row);
+                left_sel = (ctx.left->scroll_offset + row == ctx.left->sel_row);
                 left_cell << " " << left_ptr->ctype;
                 left_ptr = acr_nav::zd_sel_ctype_Next(*left_ptr);
             }
-            if (ch_N(left_cell) > left_wid - 1) {
-                left_cell.ch_n = left_wid - 1;
-            }
-            char_PrintNTimes(' ', left_cell, i32_Max(0, left_wid - 1 - ch_N(left_cell)));
-
+            TruncPad(left_cell, ctx.left_wid - 1);
             if (left_sel) {
-                EmitStyle(buf, *(left_focused ? p_sel_focus : p_sel_nofocus));
+                EmitStyle(ctx.buf, ctx.left_focused ? ctx.sel_focus : ctx.sel_nofocus);
             }
-            buf << left_cell << "\x1b[0m";
-            buf << "|";
+            ctx.buf << left_cell << "\x1b[0m|";
 
             // Right cell
             tempstr right_cell;
             bool right_sel = false;
-            int right_data_idx = right->scroll_offset + row;
+            int right_data_idx = ctx.right->scroll_offset + row;
             acr_nav::FField *fld = nullptr;
-            if (sel_ct && right_data_idx < n_right) {
-                right_sel = (right_data_idx == right->sel_row);
+            if (ctx.sel_ct && right_data_idx < n_right) {
+                right_sel = (right_data_idx == ctx.right->sel_row);
                 if (in_preview) {
                     right_cell << " " << acr_nav::preview_line_qFind(right_data_idx);
                 } else {
-                    fld = RightPanelFieldFind(sel_ct, right_data_idx);
+                    fld = RightPanelFieldFind(ctx.sel_ct, right_data_idx);
                     if (fld) {
                         right_cell << " " << name_Get(*fld);
                         char_PrintNTimes(' ', right_cell, i32_Max(1, 24 - ch_N(right_cell)));
-                        right_cell << (IsXrefMode() ? fld->p_ctype->ctype : fld->p_arg->ctype);
+                        right_cell << (in_xref ? fld->p_ctype->ctype : fld->p_arg->ctype);
                         char_PrintNTimes(' ', right_cell, i32_Max(1, 48 - ch_N(right_cell)));
                         right_cell << fld->p_reftype->reftype;
                     }
                 }
-            } else if (sel_ct && n_right == 0 && right_data_idx == 0) {
+            } else if (ctx.sel_ct && n_right == 0 && right_data_idx == 0) {
                 right_cell << " (" << acr_nav::_db.p_cur_viewmode->empty_msg << ")";
             }
-            if (ch_N(right_cell) > right_wid) {
-                right_cell.ch_n = right_wid;
-            }
-            char_PrintNTimes(' ', right_cell, i32_Max(0, right_wid - ch_N(right_cell)));
-
+            TruncPad(right_cell, ctx.right_wid);
             if (right_sel) {
-                EmitStyle(buf, *(!left_focused ? p_sel_focus : p_sel_nofocus));
+                EmitStyle(ctx.buf, !ctx.left_focused ? ctx.sel_focus : ctx.sel_nofocus);
             }
             if (fld && fld->p_reftype->c_reftypestyle) {
-                EmitStyle(buf, *fld->p_reftype->c_reftypestyle->p_navstyle);
+                EmitStyle(ctx.buf, *fld->p_reftype->c_reftypestyle->p_navstyle);
             }
-            buf << right_cell << "\x1b[0m";
-            buf << "\x1b[K\r\n";
+            ctx.buf << right_cell << "\x1b[0m\x1b[K\r\n";
         }
     }
+}
 
-    // Breadcrumb bar -- shown only when navigation stack is non-empty
-    if (show_breadcrumb) {
-        tempstr breadcrumb(BuildBreadcrumb(sel_ct));
+// -----------------------------------------------------------------------------
+
+// Render the breadcrumb bar (shown only when navstack is non-empty).
+static void RenderBreadcrumbBar(RenderCtx &ctx) {
+    if (ctx.show_breadcrumb) {
         tempstr bcline;
-        bcline << " " << breadcrumb;
-        if (ch_N(bcline) > wid) {
-            bcline.ch_n = wid;
-        }
-        char_PrintNTimes(' ', bcline, i32_Max(0, wid - ch_N(bcline)));
-        EmitStyle(buf, *p_statusbar);
-        buf << bcline << "\x1b[0m\r\n";
+        bcline << " " << BuildBreadcrumb(ctx.sel_ct);
+        TruncPad(bcline, ctx.wid);
+        EmitStyle(ctx.buf, ctx.statusbar);
+        ctx.buf << bcline << "\x1b[0m\r\n";
     }
+}
 
-    // Status bar
-    EmitStyle(buf, *p_statusbar);
+// -----------------------------------------------------------------------------
+
+// Render the status bar: filter text + hints + position indicator.
+static void RenderStatusBar(RenderCtx &ctx) {
+    EmitStyle(ctx.buf, ctx.statusbar);
     tempstr status;
     bool in_filter = (acr_nav::_db.p_cur_mode == acr_nav::_db.p_filter_mode);
     bool has_filter = ch_N(acr_nav::_db.filter) > 0;
@@ -890,17 +906,49 @@ static void Render(acr_nav::FCtype *sel_ct, acr_nav::FPanel *left, acr_nav::FPan
         BuildStatusHint(status);
     }
     acr_nav::FPanel &cur = *acr_nav::_db.p_cur_panel;
-    int cur_items = PanelItemCount(cur, sel_ct);
+    int cur_items = PanelItemCount(cur, ctx.sel_ct);
     tempstr pos;
     if (cur_items > 0) {
         pos << (cur.sel_row + 1) << "/" << cur_items;
     } else {
         pos << "0/0";
     }
-    char_PrintNTimes(' ', status, i32_Max(1, wid - ch_N(status) - ch_N(pos)));
+    char_PrintNTimes(' ', status, i32_Max(1, ctx.wid - ch_N(status) - ch_N(pos)));
     status << pos;
-    buf << status << "\x1b[0m";
+    ctx.buf << status << "\x1b[0m";
+}
 
+// -----------------------------------------------------------------------------
+
+static void Render(acr_nav::FCtype *sel_ct, acr_nav::FPanel *left, acr_nav::FPanel *right) {
+    DetectTerminal();
+    tempstr buf;
+    buf << "\x1b[H";
+    int wid = acr_nav::_db.term_wid;
+    // Left panel width: fits longest visible name, capped at 40% of terminal
+    int max_name = 0;
+    ind_beg(acr_nav::_db_zd_sel_ctype_curs, ct, acr_nav::_db) {
+        max_name = i32_Max(max_name, ch_N(ct.ctype));
+    } ind_end;
+    int left_wid = i32_Max(2, i32_Min(max_name + 2, wid * 40 / 100));
+    int right_wid = i32_Max(1, wid - left_wid);
+    // Resolve named styles once per frame
+    acr_nav::FNavstyle *p_tf = acr_nav::ind_navstyle_Find("title_focus");
+    acr_nav::FNavstyle *p_tn = acr_nav::ind_navstyle_Find("title_nofocus");
+    acr_nav::FNavstyle *p_sf = acr_nav::ind_navstyle_Find("sel_focus");
+    acr_nav::FNavstyle *p_sn = acr_nav::ind_navstyle_Find("sel_nofocus");
+    acr_nav::FNavstyle *p_sb = acr_nav::ind_navstyle_Find("statusbar");
+    vrfy(p_tf && p_tn && p_sf && p_sn && p_sb, "required navstyle records missing");
+    RenderCtx ctx(buf, sel_ct, left, right
+                  , wid, left_wid, right_wid
+                  , /*left_focused=*/(acr_nav::_db.p_cur_panel == left)
+                  , /*show_breadcrumb=*/(acr_nav::navstack_N() > 0)
+                  , /*visible=*/VisibleRows()
+                  , *p_tf, *p_tn, *p_sf, *p_sn, *p_sb);
+    RenderTitleBar(ctx);
+    RenderContentArea(ctx);
+    RenderBreadcrumbBar(ctx);
+    RenderStatusBar(ctx);
     WriteStdout(buf.ch_elems, ch_N(buf));
 }
 
