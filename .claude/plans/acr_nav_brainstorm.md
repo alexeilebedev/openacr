@@ -2,8 +2,6 @@
 
 ## Story So Far
 
-10 milestones (M0-M8), each teaching one OpenACR concept:
-
 | Milestone | Concept Taught | Key Artifact |
 |-----------|---------------|--------------|
 | M0 | Vision/design | Master plan |
@@ -17,54 +15,35 @@
 | M7a | Component tests | atfdb.comptest, normalize comp |
 | M7b | Substr decomposition | Naventry filter state, keybind validation |
 | M8 | Keybinding redesign | Vim + normie dual support |
-| M9 | Semantic field coloring + resolve hardcoded styles | Controlled vocab properties, data as stylesheet |
+| M11 | TermColor controlled vocabulary | Controlled vocab properties, data as stylesheet |
+| M12 | Reverse xref + filter_accept | Access paths: same data, second index |
+| M13 | Help overlay, status bar, preview, viewmode, filter UX | Self-describing: docs = data = behavior |
+| M14 | Breadcrumb navigation bar | Naventry ctype name, navstack as UI |
 
-**Current:** ~630 lines C++, 16 navactions, 31 keybinds, 2 modes, 2 panels, 8 navstyles, 35 reftypestyles, ~1380 ctypes / ~5500 fields.
-
-**Principles not yet taught by any milestone:** self-describing UI, orthogonal factorization (visible to user), access paths as new capability.
+**Current:** ~1000 lines C++, 20 navactions, 37 keybinds, 2 modes, 2 panels, 4 viewmodes (fields/xref/preview/help), 8 navstyles, 35 reftypestyles, ~1390 ctypes / ~5575 fields.
 
 ---
 
 ## Ideas
 
-### Reverse Xref ("Who Points Here?")
+### Hint on Startup
 
-Flip the right panel from "fields OF this ctype" to "fields POINTING TO this ctype." The same `dmmeta.field` records, accessed via a second Ptrary index. One xref record in the schema opens bidirectional graph navigation.
+Show help on startup in the right panel (not as a full-screen overlay). Help should always be available as a right panel viewmode via `?`. Simplify the bottom status bar to breadcrumb + minimal hints (1 row).
 
-**Teaches:** Access paths, not data structures. Same data, new index, new capability.
-**Value:** High. "Who depends on this type?" is essential for impact analysis.
-**Size:** Small.
+**Teaches:** Controlled vocabulary refinement. The existing viewmode system should absorb help naturally.
+**Value:** High. First-launch discoverability without blocking interaction.
+**Size:** Small-Medium.
 
----
+**UX requirements from prototyping:**
+- Help auto-dismisses on any keypress (startup help is informational, not blocking)
+- Help is NOT in the Tab cycle — only reachable via `?` toggle
+- Help display should split keys into two columns: standard keys (arrows, Enter, PgDown) and shortcuts (j, k, l) — makes it scannable for both audiences
+- Help sort order should be logical (movement, navigation, views, search, meta), not alphabetical by action name
+- Status bar hints should remain data-driven (from keybind/navaction records), not hardcoded strings
 
-### Semantic Field Coloring
-
-Color-code fields by reftype category: navigable references (Upptr/Pkey) vs container indexes (Thash/Llist/Ptrary) vs plain values (Val). The color mapping lives in records, not code.
-
-**Teaches:** Controlled vocabularies carry properties. Attaching a new property to a vocabulary member changes behavior without touching code.
-**Value:** High. Visual distinction between navigable links and plain data makes the tool instantly more scannable.
-**Size:** Small. Design should consider how styles are represented (the 3 hardcoded ANSI style roles in Render are a small missing noun worth resolving alongside this).
-
----
-
-### Self-Documenting Help
-
-Press `?` to see all keybindings for the current mode, generated from the `keybind` and `navaction` records. The help is never written by hand -- it IS the data that drives dispatch. The hardcoded status bar hint string should also become generated from records.
-
-**Teaches:** Self-describing. The system's documentation IS its specification. Adding a keybinding automatically updates the help.
-**Value:** High. Discoverability is the biggest barrier for TUI tools.
-**Size:** Small. Status bar generation is the higher-frequency win; full-screen overlay is an extension.
-
----
-
-### Ssimfile Content Preview
-
-When viewing a ctype with a backing ssimfile, preview actual records from that file. Navigate to `dmmeta.Reftype`, see the 35 reftype records with their boolean property columns. The meta-schema stops being abstract.
-
-**Teaches:** Self-describing. The ssimfile path is deterministic from the ssimfile pkey -- another teaching moment.
-**Value:** High. Eliminates the "exit, cat, re-enter" cycle. Makes acr_nav a complete exploration tool.
-**Size:** Medium. Requires loading `dmmeta.ssimfile` and on-demand file reading.
-**Design note:** This changes what the right panel displays. How to handle multiple right-panel content types (fields, preview, reverse xrefs) is a design question that should be resolved when this or reverse xref is first implemented -- not prescribed now.
+**Design considerations from /acr review:**
+- The `show_preview/show_xref/show_help` boolean triplet on viewmode (where exactly one is true) is an enum in disguise. Adding a new viewmode currently requires ~7 code changes. Factoring viewmode dispatch is the deeper structural opportunity here.
+- `follow_ref` and `switch_panel_right` overlap in behavior from the left panel. Help display should show this to users.
 
 ---
 
@@ -118,18 +97,17 @@ Press `:` for vim-style command input. `:goto <ctype>`, `:ns <regex>`, `:q`. Com
 **Size:** Medium.
 **Design note:** Both filter mode and command mode need free-text capture. The current code handles filter's printable-char capture as a special case. When command mode is designed, factoring `capture_text` into a mode property should be considered.
 
+
+---
+
 ---
 
 ## Recommended Sequence
 
 | Milestone | Idea | Principle Demonstrated |
 |-----------|------|----------------------|
-| M9 | ~~Semantic field coloring (+ resolve hardcoded styles)~~ DONE | Controlled vocab properties, data as stylesheet |
-| M10 | Reverse xref | Access paths: same data, second index |
-| M11 | Self-documenting help | Self-describing: docs = data = behavior |
-| M12 | Naventry ctype name + breadcrumb | Correctness fix + usability |
-| M13 | Ssimfile content preview | Self-describing: see the actual records |
-| M14 | Field detail drilldown | Orthogonal factorization, visible |
+| M15 | Hint on startup | Controlled vocabulary refinement, viewmode factoring |
+| M16 | Field detail drilldown | Orthogonal factorization, visible |
 | Later | Tree view, amc_vis, command mode | As interest dictates |
 
-**Sequencing rationale:** Front-loads small/high-impact ideas. M9-M11 are each single milestones that teach distinct principles. M10 and M13 both add right-panel content types -- whichever lands first will establish the pattern for the other. M14 loads the most new finputs and is best attempted after the tool's rendering model has matured through the earlier milestones.
+**Sequencing rationale:** M15 is a usability win that also forces the viewmode dispatch to be factored properly. M16 loads the most new finputs and is best attempted after viewmode rendering is clean.
