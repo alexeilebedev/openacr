@@ -121,14 +121,25 @@ Filter mode currently searches ctype names. Add a toggle to search field names a
 **Value:** Medium. Powerful for exploration once you know the vocabulary.
 **Size:** Medium. Needs a second filter index over fields.
 
-#### 2C. Access Path Diagram (Inline amc_vis)
+#### 2C-1. Access Path Diagram — Static (Inline amc_vis)
 
-New viewmode: "diagram". Shell out to `amc_vis <ctype>`, render output in right panel.
+New viewmode: "diagram". Shell out to `amc_vis <ctype>`, render output in right panel. Static picture — look but don't touch.
 
 **Solves:** P3 (tool-switching tax for access path visualization).
 **Teaches:** Makes access paths visual inside the tool. Same data, different rendering.
-**Value:** Medium. amc_vis exists at CLI, but inline removes context-switching.
-**Size:** Small if shelling out, Large if reimplementing. Challenge: amc_vis output can be very wide (150+ columns). Would need horizontal scrolling or truncation.
+**Value:** Medium. Removes context-switching to CLI.
+**Size:** Small. Same shell-out pattern as preview mode.
+**Limitation:** Static image. Can't navigate the graph — just a snapshot. amc_vis output can be very wide (150+ columns), needs horizontal scrolling or truncation.
+
+#### 2C-2. Access Path Diagram — Interactive Graph View
+
+Full interactive graph navigation inside acr_nav. Selected ctype rendered as center node, direct neighbors (field arg ctypes) as surrounding boxes connected by labeled edges (reftype + field name). Tab/Shift-Tab moves between nodes, Enter navigates into a node (push navstack, re-center graph on new ctype), Backspace returns.
+
+**Solves:** P3 (tool-switching tax), and goes further — you can **walk** the access path graph, not just look at a snapshot.
+**Teaches:** Access paths are the program's skeleton. Navigating them interactively builds intuition for how types connect — something static diagrams don't give you.
+**Value:** High. This is "acr_vis" as an interactive experience, not a batch tool. Combined with headless mode, an agent could navigate the graph programmatically.
+**Size:** Medium. What already exists: raw terminal, colors, navstack, viewmode system. What's new: ASCII box drawing (unicode `┌─┐│└─┘` + arrows), simple layout algorithm (center + ring of neighbors, not full amc_vis topological sort), node-to-node cursor movement (Tab order over nodes, no true 2D cursor needed).
+**Design note:** Keep layout simple — local neighborhood only (selected ctype + its direct references, 5-15 nodes). Full graph is amc_vis's job. The value is interactivity, not completeness.
 
 #### 2D. Cross-Namespace Dependency View
 
