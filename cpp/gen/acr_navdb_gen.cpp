@@ -57,10 +57,7 @@ const char* acr_navdb::value_ToCstr(const acr_navdb::FieldId& parent) {
         case acr_navdb_FieldId_reftypestyle: ret = "reftypestyle";  break;
         case acr_navdb_FieldId_reftype     : ret = "reftype";  break;
         case acr_navdb_FieldId_viewmode    : ret = "viewmode";  break;
-        case acr_navdb_FieldId_show_preview: ret = "show_preview";  break;
-        case acr_navdb_FieldId_show_xref   : ret = "show_xref";  break;
         case acr_navdb_FieldId_next        : ret = "next";  break;
-        case acr_navdb_FieldId_dflt        : ret = "dflt";  break;
         case acr_navdb_FieldId_empty_msg   : ret = "empty_msg";  break;
         case acr_navdb_FieldId_value       : ret = "value";  break;
     }
@@ -101,9 +98,6 @@ bool acr_navdb::value_SetStrptrMaybe(acr_navdb::FieldId& parent, algo::strptr rh
             switch (u64(algo::ReadLE32(rhs.elems))) {
                 case LE_STR4('b','o','l','d'): {
                     value_SetEnum(parent,acr_navdb_FieldId_bold); ret = true; break;
-                }
-                case LE_STR4('d','f','l','t'): {
-                    value_SetEnum(parent,acr_navdb_FieldId_dflt); ret = true; break;
                 }
                 case LE_STR4('h','i','n','t'): {
                     value_SetEnum(parent,acr_navdb_FieldId_hint); ret = true; break;
@@ -175,10 +169,6 @@ bool acr_navdb::value_SetStrptrMaybe(acr_navdb::FieldId& parent, algo::strptr rh
                     if (memcmp(rhs.elems+8,"n",1)==0) { value_SetEnum(parent,acr_navdb_FieldId_navaction); ret = true; break; }
                     break;
                 }
-                case LE_STR8('s','h','o','w','_','x','r','e'): {
-                    if (memcmp(rhs.elems+8,"f",1)==0) { value_SetEnum(parent,acr_navdb_FieldId_show_xref); ret = true; break; }
-                    break;
-                }
             }
             break;
         }
@@ -195,10 +185,6 @@ bool acr_navdb::value_SetStrptrMaybe(acr_navdb::FieldId& parent, algo::strptr rh
             switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('r','e','f','t','y','p','e','s'): {
                     if (memcmp(rhs.elems+8,"tyle",4)==0) { value_SetEnum(parent,acr_navdb_FieldId_reftypestyle); ret = true; break; }
-                    break;
-                }
-                case LE_STR8('s','h','o','w','_','p','r','e'): {
-                    if (memcmp(rhs.elems+8,"view",4)==0) { value_SetEnum(parent,acr_navdb_FieldId_show_preview); ret = true; break; }
                     break;
                 }
             }
@@ -669,20 +655,11 @@ bool acr_navdb::Viewmode_ReadFieldMaybe(acr_navdb::Viewmode& parent, algo::strpt
         case acr_navdb_FieldId_viewmode: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.viewmode, strval);
         } break;
-        case acr_navdb_FieldId_show_preview: {
-            retval = bool_ReadStrptrMaybe(parent.show_preview, strval);
-        } break;
-        case acr_navdb_FieldId_show_xref: {
-            retval = bool_ReadStrptrMaybe(parent.show_xref, strval);
-        } break;
         case acr_navdb_FieldId_title: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.title, strval);
         } break;
         case acr_navdb_FieldId_next: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.next, strval);
-        } break;
-        case acr_navdb_FieldId_dflt: {
-            retval = bool_ReadStrptrMaybe(parent.dflt, strval);
         } break;
         case acr_navdb_FieldId_empty_msg: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.empty_msg, strval);
@@ -723,20 +700,11 @@ void acr_navdb::Viewmode_Print(acr_navdb::Viewmode& row, algo::cstring& str) {
     algo::Smallstr50_Print(row.viewmode, temp);
     PrintAttrSpaceReset(str,"viewmode", temp);
 
-    bool_Print(row.show_preview, temp);
-    PrintAttrSpaceReset(str,"show_preview", temp);
-
-    bool_Print(row.show_xref, temp);
-    PrintAttrSpaceReset(str,"show_xref", temp);
-
     algo::Smallstr50_Print(row.title, temp);
     PrintAttrSpaceReset(str,"title", temp);
 
     algo::Smallstr50_Print(row.next, temp);
     PrintAttrSpaceReset(str,"next", temp);
-
-    bool_Print(row.dflt, temp);
-    PrintAttrSpaceReset(str,"dflt", temp);
 
     algo::Smallstr50_Print(row.empty_msg, temp);
     PrintAttrSpaceReset(str,"empty_msg", temp);

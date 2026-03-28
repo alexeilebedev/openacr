@@ -112,17 +112,8 @@ inline  acr_navdb::Panel::Panel() {
 inline  acr_navdb::Reftypestyle::Reftypestyle() {
 }
 
-// --- acr_navdb.Viewmode..Init
-// Set all fields to initial values.
-inline void acr_navdb::Viewmode_Init(acr_navdb::Viewmode& parent) {
-    parent.show_preview = bool(false);
-    parent.show_xref = bool(false);
-    parent.dflt = bool(false);
-}
-
 // --- acr_navdb.Viewmode..Ctor
 inline  acr_navdb::Viewmode::Viewmode() {
-    acr_navdb::Viewmode_Init(*this);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const acr_navdb::FieldId &row) {// cfmt:acr_navdb.FieldId.String

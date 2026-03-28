@@ -20,7 +20,7 @@
 | M13 | Help overlay, status bar, preview, viewmode, filter UX | Self-describing: docs = data = behavior |
 | M14 | Breadcrumb navigation bar | Naventry ctype name, navstack as UI |
 
-**Current:** ~1000 lines C++, 20 navactions, 37 keybinds, 2 modes, 2 panels, 4 viewmodes (fields/xref/preview/help), 8 navstyles, 35 reftypestyles, ~1390 ctypes / ~5575 fields.
+**Current:** ~1000 lines C++, 20 navactions, 37 keybinds, 2 modes, 2 panels, 4 viewmodes (fields/xref/preview/help), 8 navstyles, 35 reftypestyles, ~1390 ctypes / ~5570 fields.
 
 ---
 
@@ -42,7 +42,6 @@ Show help on startup in the right panel (not as a full-screen overlay). Help sho
 - Status bar hints should remain data-driven (from keybind/navaction records), not hardcoded strings
 
 **Design considerations from /acr review:**
-- The `show_preview/show_xref/show_help` boolean triplet on viewmode (where exactly one is true) is an enum in disguise. Adding a new viewmode currently requires ~7 code changes. Factoring viewmode dispatch is the deeper structural opportunity here.
 - `follow_ref` and `switch_panel_right` overlap in behavior from the left panel. Help display should show this to users.
 
 ---

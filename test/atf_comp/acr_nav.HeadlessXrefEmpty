@@ -1,12 +1,12 @@
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1392  n_ctype:1393  n_field:5574  viewmode:xref  show_help:N  breadcrumb:""
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1392  n_ctype:1393  n_field:5572  viewmode:xref  show_help:N  breadcrumb:""
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:1392  sel_value:HANDLE
 acr_nav.PanelState  panel:field_list  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1392  n_ctype:1393  n_field:5574  viewmode:preview  show_help:N  breadcrumb:""
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1392  n_ctype:1393  n_field:5572  viewmode:preview  show_help:N  breadcrumb:""
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:1392  sel_value:HANDLE
 acr_nav.PanelState  panel:field_list  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1392  n_ctype:1393  n_field:5574  viewmode:preview  show_help:N  breadcrumb:""
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1392  n_ctype:1393  n_field:5572  viewmode:preview  show_help:N  breadcrumb:""
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:1392  sel_value:HANDLE
 acr_nav.PanelState  panel:field_list  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
 

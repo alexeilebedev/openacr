@@ -441,7 +441,7 @@ static void acr_nav::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_nav.Input'  signature:'e2b6274af120153b818dfc78d324b488717b2b1e'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_nav.Input'  signature:'4bfc420733fc99694765d9419b7d34dc37f97590'");
 }
 
 // --- acr_nav.FDb._db.InsertStrptrMaybe
@@ -4117,6 +4117,7 @@ void acr_nav::FDb_Init() {
     _db.p_preview_ctype = NULL;
     _db.p_default_viewmode = NULL;
     _db.p_preview_viewmode = NULL;
+    _db.p_xref_viewmode = NULL;
 
     acr_nav::InitReflection();
     navaction_LoadStatic(); // gen:ns_gstatic  gstatic:acr_nav.FDb.navaction  load acr_nav.FNavaction records
@@ -4572,11 +4573,8 @@ void acr_nav::FSsimfile_Uninit(acr_nav::FSsimfile& ssimfile) {
 // Copy fields out of row
 void acr_nav::viewmode_CopyOut(acr_nav::FViewmode &row, acr_navdb::Viewmode &out) {
     out.viewmode = row.viewmode;
-    out.show_preview = row.show_preview;
-    out.show_xref = row.show_xref;
     out.title = row.title;
     out.next = row.next;
-    out.dflt = row.dflt;
     out.empty_msg = row.empty_msg;
     out.comment = row.comment;
 }
@@ -4585,11 +4583,8 @@ void acr_nav::viewmode_CopyOut(acr_nav::FViewmode &row, acr_navdb::Viewmode &out
 // Copy fields in to row
 void acr_nav::viewmode_CopyIn(acr_nav::FViewmode &row, acr_navdb::Viewmode &in) {
     row.viewmode = in.viewmode;
-    row.show_preview = in.show_preview;
-    row.show_xref = in.show_xref;
     row.title = in.title;
     row.next = in.next;
-    row.dflt = in.dflt;
     row.empty_msg = in.empty_msg;
     row.comment = in.comment;
 }

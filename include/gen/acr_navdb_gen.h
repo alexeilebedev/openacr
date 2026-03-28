@@ -48,15 +48,12 @@ enum acr_navdb_FieldIdEnum {                // acr_navdb.FieldId.value
     ,acr_navdb_FieldId_reftypestyle   = 15
     ,acr_navdb_FieldId_reftype        = 16
     ,acr_navdb_FieldId_viewmode       = 17
-    ,acr_navdb_FieldId_show_preview   = 18
-    ,acr_navdb_FieldId_show_xref      = 19
-    ,acr_navdb_FieldId_next           = 20
-    ,acr_navdb_FieldId_dflt           = 21
-    ,acr_navdb_FieldId_empty_msg      = 22
-    ,acr_navdb_FieldId_value          = 23
+    ,acr_navdb_FieldId_next           = 18
+    ,acr_navdb_FieldId_empty_msg      = 19
+    ,acr_navdb_FieldId_value          = 20
 };
 
-enum { acr_navdb_FieldIdEnum_N = 24 };
+enum { acr_navdb_FieldIdEnum_N = 21 };
 
 namespace acr_navdb { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 KeybindPkey;
@@ -210,7 +207,7 @@ bool                 Navmode_ReadStrptrMaybe(acr_navdb::Navmode &parent, algo::s
 void                 Navmode_Print(acr_navdb::Navmode& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- acr_navdb.Navstyle
-struct Navstyle { // acr_navdb.Navstyle
+struct Navstyle { // acr_navdb.Navstyle: Terminal visual style for acr_nav UI elements
     algo::Smallstr50   navstyle;   //
     bool               bold;       //   false
     bool               dim;        //   false
@@ -260,7 +257,7 @@ inline void          Panel_Init(acr_navdb::Panel& parent);
 void                 Panel_Print(acr_navdb::Panel& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- acr_navdb.Reftypestyle
-struct Reftypestyle { // acr_navdb.Reftypestyle
+struct Reftypestyle { // acr_navdb.Reftypestyle: Mapping from reftype to navstyle for field coloring
     algo::Smallstr50   reftypestyle;   //
     algo::Comment      comment;        //
     // func:acr_navdb.Reftypestyle..Ctor
@@ -292,14 +289,11 @@ void                 Reftypestyle_Print(acr_navdb::Reftypestyle& row, algo::cstr
 
 // --- acr_navdb.Viewmode
 struct Viewmode { // acr_navdb.Viewmode: Right-panel view mode for acr_nav
-    algo::Smallstr50   viewmode;       //
-    bool               show_preview;   //   false  True when viewmode shows ssimfile preview
-    bool               show_xref;      //   false  True when viewmode shows reverse xrefs
-    algo::Smallstr50   title;          // Right panel title for this viewmode
-    algo::Smallstr50   next;           // Next viewmode in Tab cycle
-    bool               dflt;           //   false  True if this is the default viewmode
-    algo::Smallstr50   empty_msg;      // Message shown when right panel has no items
-    algo::Comment      comment;        //
+    algo::Smallstr50   viewmode;    //
+    algo::Smallstr50   title;       // Right panel title for this viewmode
+    algo::Smallstr50   next;        // Next viewmode in Tab cycle
+    algo::Smallstr50   empty_msg;   // Message shown when right panel has no items
+    algo::Comment      comment;     //
     // func:acr_navdb.Viewmode..Ctor
     inline               Viewmode() __attribute__((nothrow));
 };
@@ -310,9 +304,6 @@ bool                 Viewmode_ReadFieldMaybe(acr_navdb::Viewmode& parent, algo::
 // The format of the string is an ssim Tuple
 // func:acr_navdb.Viewmode..ReadStrptrMaybe
 bool                 Viewmode_ReadStrptrMaybe(acr_navdb::Viewmode &parent, algo::strptr in_str) __attribute__((nothrow));
-// Set all fields to initial values.
-// func:acr_navdb.Viewmode..Init
-inline void          Viewmode_Init(acr_navdb::Viewmode& parent);
 // print string representation of ROW to string STR
 // cfmt:acr_navdb.Viewmode.String  printfmt:Tuple
 // func:acr_navdb.Viewmode..Print

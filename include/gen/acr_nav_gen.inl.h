@@ -1657,9 +1657,6 @@ inline  acr_nav::FSsimfile::~FSsimfile() {
 // --- acr_nav.FViewmode..Init
 // Set all fields to initial values.
 inline void acr_nav::FViewmode_Init(acr_nav::FViewmode& viewmode) {
-    viewmode.show_preview = bool(false);
-    viewmode.show_xref = bool(false);
-    viewmode.dflt = bool(false);
     viewmode.ind_viewmode_next = (acr_nav::FViewmode*)-1; // (acr_nav.FDb.ind_viewmode) not-in-hash
     viewmode.ind_viewmode_hashval = 0; // stored hash value
 }

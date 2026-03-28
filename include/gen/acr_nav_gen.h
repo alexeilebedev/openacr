@@ -372,8 +372,8 @@ struct FDb { // acr_nav.FDb
     i32                        zd_sel_ctype_n;                   // zero-terminated doubly linked list
     acr_nav::FCtype*           zd_sel_ctype_tail;                // pointer to last element
     acr_nav::FPanel*           p_cur_panel;                      // Currently focused panel. optional pointer
-    acr_nav::FPanel*           p_left_panel;                     // Left panel (ctype list). optional pointer
-    acr_nav::FPanel*           p_right_panel;                    // Right panel (field list). optional pointer
+    acr_nav::FPanel*           p_left_panel;                     // Left panel (ctype list). Named ptr is deliberate: 2-panel layout is fixed, position-based lookup unnecessary. optional pointer
+    acr_nav::FPanel*           p_right_panel;                    // Right panel (field list). Named ptr is deliberate: 2-panel layout is fixed, position-based lookup unnecessary. optional pointer
     acr_nav::FNavmode*         p_cur_mode;                       // Current UI mode (browse/filter). optional pointer
     acr_nav::FNavmode*         p_filter_mode;                    // Cached pointer to filter navmode for fast comparison. optional pointer
     algo::cstring              filter;                           // Current filter text
@@ -407,8 +407,9 @@ struct FDb { // acr_nav.FDb
     u32                        preview_line_n;                   // number of elements in array
     u32                        preview_line_max;                 // max. capacity of array before realloc
     acr_nav::FCtype*           p_preview_ctype;                  // Ctype whose preview is cached. optional pointer
-    acr_nav::FViewmode*        p_default_viewmode;               // Default viewmode (dflt:Y). optional pointer
-    acr_nav::FViewmode*        p_preview_viewmode;               // Preview viewmode (show_preview:Y). optional pointer
+    acr_nav::FViewmode*        p_default_viewmode;               // Default viewmode (viewmode:fields). optional pointer
+    acr_nav::FViewmode*        p_preview_viewmode;               // Preview viewmode (viewmode:preview). optional pointer
+    acr_nav::FViewmode*        p_xref_viewmode;                  // Xref viewmode (viewmode:xref). optional pointer
     acr_nav::trace             trace;                            //
 };
 
@@ -2107,15 +2108,13 @@ void                 FSsimfile_Uninit(acr_nav::FSsimfile& ssimfile) __attribute_
 // global access: p_cur_viewmode (Ptr)
 // global access: p_default_viewmode (Ptr)
 // global access: p_preview_viewmode (Ptr)
+// global access: p_xref_viewmode (Ptr)
 struct FViewmode { // acr_nav.FViewmode
     acr_nav::FViewmode*   ind_viewmode_next;      // hash next
     u32                   ind_viewmode_hashval;   // hash value
     algo::Smallstr50      viewmode;               //
-    bool                  show_preview;           //   false  True when viewmode shows ssimfile preview
-    bool                  show_xref;              //   false  True when viewmode shows reverse xrefs
     algo::Smallstr50      title;                  // Right panel title for this viewmode
     algo::Smallstr50      next;                   // Next viewmode in Tab cycle
-    bool                  dflt;                   //   false  True if this is the default viewmode
     algo::Smallstr50      empty_msg;              // Message shown when right panel has no items
     algo::Comment         comment;                //
     // func:acr_nav.FViewmode..AssignOp
@@ -2202,7 +2201,7 @@ void                 FieldId_Print(acr_nav::FieldId& row, algo::cstring& str) __
 
 // --- acr_nav.Naventry
 // create: acr_nav.FDb.navstack (Tary)
-struct Naventry { // acr_nav.Naventry: Navigation stack entry
+struct Naventry { // acr_nav.Naventry: Navigation stack entry. Uses raw strings not Pkeys: value type in Tary, stores snapshots not live references
     algo::cstring       filter;          // Filter text at time of push
     algo::Smallstr50    navmode;         // Navigation mode at time of push
     i32                 scroll_offset;   //   0

@@ -1,4 +1,4 @@
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:dmmeta.Field  navstack_depth:0  n_sel_ctype:1  n_ctype:1393  n_field:5574  viewmode:fields  show_help:N  breadcrumb:""
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:dmmeta.Field  navstack_depth:0  n_sel_ctype:1  n_ctype:1393  n_field:5572  viewmode:fields  show_help:N  breadcrumb:""
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:1  sel_value:dmmeta.Field
 acr_nav.PanelState  panel:field_list  sel_row:0  scroll_offset:0  n_items:8  sel_value:dmmeta.Field.field
 acr_nav.VisibleField  row:0  field:dmmeta.Field.field  arg:algo.Smallstr100  reftype:Val  style:field_val  navigable:Y
@@ -10,7 +10,7 @@ acr_nav.VisibleField  row:5  field:dmmeta.Field.reftype  arg:dmmeta.Reftype  ref
 acr_nav.VisibleField  row:6  field:dmmeta.Field.dflt  arg:algo.CppExpr  reftype:Val  style:field_val  navigable:Y
 acr_nav.VisibleField  row:7  field:dmmeta.Field.comment  arg:algo.Comment  reftype:Val  style:field_val  navigable:Y
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:dmmeta.Field  navstack_depth:0  n_sel_ctype:1  n_ctype:1393  n_field:5574  viewmode:xref  show_help:N  breadcrumb:""
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:dmmeta.Field  navstack_depth:0  n_sel_ctype:1  n_ctype:1393  n_field:5572  viewmode:xref  show_help:N  breadcrumb:""
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:1  sel_value:dmmeta.Field
 acr_nav.PanelState  panel:field_list  sel_row:0  scroll_offset:0  n_items:99  sel_value:abt_md.FField.base
 acr_nav.VisibleField  row:0  field:abt_md.FField.base  arg:dmmeta.Field  reftype:Base  style:field_upref  navigable:Y
@@ -113,11 +113,11 @@ acr_nav.VisibleField  row:96  field:lib_ctype.FField.msghdr  arg:dmmeta.Field  r
 acr_nav.VisibleField  row:97  field:lib_sqlite.FField.base  arg:dmmeta.Field  reftype:Base  style:field_upref  navigable:Y
 acr_nav.VisibleField  row:98  field:ssim2mysql.FField.msghdr  arg:dmmeta.Field  reftype:Base  style:field_upref  navigable:Y
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:dmmeta.Field  navstack_depth:0  n_sel_ctype:1  n_ctype:1393  n_field:5574  viewmode:preview  show_help:N  breadcrumb:""
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:dmmeta.Field  navstack_depth:0  n_sel_ctype:1  n_ctype:1393  n_field:5572  viewmode:preview  show_help:N  breadcrumb:""
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:1  sel_value:dmmeta.Field
-acr_nav.PanelState  panel:field_list  sel_row:0  scroll_offset:0  n_items:5574  sel_value:"                                                                            Val                                                                                                                 "
+acr_nav.PanelState  panel:field_list  sel_row:0  scroll_offset:0  n_items:5572  sel_value:"                                                                            Val                                                                                                                                                      "
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:dmmeta.Field  navstack_depth:0  n_sel_ctype:1  n_ctype:1393  n_field:5574  viewmode:fields  show_help:N  breadcrumb:""
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:dmmeta.Field  navstack_depth:0  n_sel_ctype:1  n_ctype:1393  n_field:5572  viewmode:fields  show_help:N  breadcrumb:""
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:1  sel_value:dmmeta.Field
 acr_nav.PanelState  panel:field_list  sel_row:0  scroll_offset:0  n_items:8  sel_value:dmmeta.Field.field
 acr_nav.VisibleField  row:0  field:dmmeta.Field.field  arg:algo.Smallstr100  reftype:Val  style:field_val  navigable:Y
@@ -129,7 +129,7 @@ acr_nav.VisibleField  row:5  field:dmmeta.Field.reftype  arg:dmmeta.Reftype  ref
 acr_nav.VisibleField  row:6  field:dmmeta.Field.dflt  arg:algo.CppExpr  reftype:Val  style:field_val  navigable:Y
 acr_nav.VisibleField  row:7  field:dmmeta.Field.comment  arg:algo.Comment  reftype:Val  style:field_val  navigable:Y
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:dmmeta.Field  navstack_depth:0  n_sel_ctype:1  n_ctype:1393  n_field:5574  viewmode:fields  show_help:N  breadcrumb:""
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:dmmeta.Field  navstack_depth:0  n_sel_ctype:1  n_ctype:1393  n_field:5572  viewmode:fields  show_help:N  breadcrumb:""
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:1  sel_value:dmmeta.Field
 acr_nav.PanelState  panel:field_list  sel_row:0  scroll_offset:0  n_items:8  sel_value:dmmeta.Field.field
 acr_nav.VisibleField  row:0  field:dmmeta.Field.field  arg:algo.Smallstr100  reftype:Val  style:field_val  navigable:Y

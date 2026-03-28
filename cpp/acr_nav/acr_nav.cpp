@@ -195,11 +195,11 @@ static acr_nav::FCtype* SelectedCtype(acr_nav::FPanel &left) {
 // -----------------------------------------------------------------------------
 
 static bool IsXrefMode() {
-    return acr_nav::_db.p_cur_viewmode && acr_nav::_db.p_cur_viewmode->show_xref;
+    return acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_xref_viewmode;
 }
 
 static bool IsPreviewMode() {
-    return acr_nav::_db.p_cur_viewmode && acr_nav::_db.p_cur_viewmode->show_preview;
+    return acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_preview_viewmode;
 }
 
 // Find the ssimfile backing a ctype. If the ctype itself has no ssimfile,
@@ -914,17 +914,13 @@ static void InitPanels() {
     acr_nav::_db.p_cur_panel = acr_nav::_db.p_left_panel;
     acr_nav::_db.p_filter_mode = acr_nav::ind_navmode_Find("filter");
     vrfy(acr_nav::_db.p_filter_mode, "navmode 'filter' not found");
-    // Resolve viewmode pointers from data properties
-    ind_beg(acr_nav::_db_viewmode_curs, vm, acr_nav::_db) {
-        if (vm.dflt) {
-            acr_nav::_db.p_default_viewmode = &vm;
-        }
-        if (vm.show_preview) {
-            acr_nav::_db.p_preview_viewmode = &vm;
-        }
-    } ind_end;
-    vrfy(acr_nav::_db.p_default_viewmode, "no viewmode with dflt:Y");
-    vrfy(acr_nav::_db.p_preview_viewmode, "no viewmode with show_preview:Y");
+    // Resolve well-known viewmode pointers by name
+    acr_nav::_db.p_default_viewmode = acr_nav::ind_viewmode_Find("fields");
+    acr_nav::_db.p_preview_viewmode = acr_nav::ind_viewmode_Find("preview");
+    acr_nav::_db.p_xref_viewmode = acr_nav::ind_viewmode_Find("xref");
+    vrfy(acr_nav::_db.p_default_viewmode, "viewmode 'fields' not found");
+    vrfy(acr_nav::_db.p_preview_viewmode, "viewmode 'preview' not found");
+    vrfy(acr_nav::_db.p_xref_viewmode, "viewmode 'xref' not found");
     acr_nav::_db.p_cur_viewmode = acr_nav::_db.p_default_viewmode;
     SwitchToBrowse();
     acr_nav::_db.p_left_panel->sel_row = 0;
