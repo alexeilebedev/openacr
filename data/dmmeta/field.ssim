@@ -816,7 +816,7 @@ dmmeta.field  field:acr_navdb.Viewmode.viewmode  arg:algo.Smallstr50  reftype:Va
 dmmeta.field  field:acr_navdb.Viewmode.show_preview  arg:bool  reftype:Val  dflt:false  comment:"True when viewmode shows ssimfile preview"
 dmmeta.field  field:acr_navdb.Viewmode.show_xref  arg:bool  reftype:Val  dflt:false  comment:"True when viewmode shows reverse xrefs"
 dmmeta.field  field:acr_navdb.Viewmode.title  arg:algo.Smallstr50  reftype:Val  dflt:""  comment:"Right panel title for this viewmode"
-dmmeta.field  field:acr_navdb.Viewmode.next  arg:algo.Smallstr50  reftype:Val  dflt:""  comment:"Next viewmode in Tab cycle"
+dmmeta.field  field:acr_navdb.Viewmode.next  arg:acr_navdb.Viewmode  reftype:Pkey  dflt:""  comment:"Next viewmode in Tab cycle"
 dmmeta.field  field:acr_navdb.Viewmode.dflt  arg:bool  reftype:Val  dflt:false  comment:"True if this is the default viewmode"
 dmmeta.field  field:acr_navdb.Viewmode.empty_msg  arg:algo.Smallstr50  reftype:Val  dflt:""  comment:"Message shown when right panel has no items"
 dmmeta.field  field:acr_navdb.Viewmode.comment  arg:algo.Comment  reftype:Val  dflt:""  comment:""

@@ -441,7 +441,7 @@ static void acr_nav::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_nav.Input'  signature:'7086cb634e3ac3a57c2c00f5b12bdac6b56aeb66'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_nav.Input'  signature:'e2b6274af120153b818dfc78d324b488717b2b1e'");
 }
 
 // --- acr_nav.FDb._db.InsertStrptrMaybe
