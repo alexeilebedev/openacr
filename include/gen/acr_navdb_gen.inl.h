@@ -26,6 +26,10 @@
 #include "include/gen/algo_gen.inl.h"
 //#pragma endinclude
 
+// --- acr_navdb.Detailsrc..Ctor
+inline  acr_navdb::Detailsrc::Detailsrc() {
+}
+
 // --- acr_navdb.FieldId.value.GetEnum
 // Get value of field as enum type
 inline acr_navdb_FieldIdEnum acr_navdb::value_GetEnum(const acr_navdb::FieldId& parent) {
@@ -139,6 +143,11 @@ inline void acr_navdb::Viewmode_Init(acr_navdb::Viewmode& parent) {
 // --- acr_navdb.Viewmode..Ctor
 inline  acr_navdb::Viewmode::Viewmode() {
     acr_navdb::Viewmode_Init(*this);
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const acr_navdb::Detailsrc &row) {// cfmt:acr_navdb.Detailsrc.String
+    acr_navdb::Detailsrc_Print(const_cast<acr_navdb::Detailsrc&>(row), str);
+    return str;
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const acr_navdb::FieldId &row) {// cfmt:acr_navdb.FieldId.String

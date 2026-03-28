@@ -53,5 +53,6 @@ namespace acr_nav { // update-hdr
     // void navaction_filter_clear(); // gstatic/acr_navdb.navaction:filter_clear
     // void navaction_filter_backspace(); // gstatic/acr_navdb.navaction:filter_backspace
     // void navaction_show_help(); // gstatic/acr_navdb.navaction:show_help
+    // void navaction_show_detail(); // gstatic/acr_navdb.navaction:show_detail
     // void Main(); // main:acr_nav
 }

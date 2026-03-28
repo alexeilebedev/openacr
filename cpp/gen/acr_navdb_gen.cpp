@@ -33,15 +33,65 @@ namespace acr_navdb { // gen:ns_print_proto
     inline static void   SizeCheck();
 } // gen:ns_print_proto
 
+// --- acr_navdb.Detailsrc..ReadFieldMaybe
+bool acr_navdb::Detailsrc_ReadFieldMaybe(acr_navdb::Detailsrc& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    acr_navdb::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case acr_navdb_FieldId_detailsrc: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.detailsrc, strval);
+        } break;
+        case acr_navdb_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- acr_navdb.Detailsrc..ReadStrptrMaybe
+// Read fields of acr_navdb::Detailsrc from an ascii string.
+// The format of the string is an ssim Tuple
+bool acr_navdb::Detailsrc_ReadStrptrMaybe(acr_navdb::Detailsrc &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "acr_navdb.detailsrc") || algo::StripTypeTag(in_str, "acr_navdb.Detailsrc");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && Detailsrc_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- acr_navdb.Detailsrc..Print
+// print string representation of ROW to string STR
+// cfmt:acr_navdb.Detailsrc.String  printfmt:Tuple
+void acr_navdb::Detailsrc_Print(acr_navdb::Detailsrc& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "acr_navdb.detailsrc";
+
+    algo::Smallstr50_Print(row.detailsrc, temp);
+    PrintAttrSpaceReset(str,"detailsrc", temp);
+
+    algo::Comment_Print(row.comment, temp);
+    PrintAttrSpaceReset(str,"comment", temp);
+}
+
 // --- acr_navdb.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 const char* acr_navdb::value_ToCstr(const acr_navdb::FieldId& parent) {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
+        case acr_navdb_FieldId_detailsrc   : ret = "detailsrc";  break;
+        case acr_navdb_FieldId_comment     : ret = "comment";  break;
         case acr_navdb_FieldId_helpgroup   : ret = "helpgroup";  break;
         case acr_navdb_FieldId_sort_order  : ret = "sort_order";  break;
-        case acr_navdb_FieldId_comment     : ret = "comment";  break;
         case acr_navdb_FieldId_keybind     : ret = "keybind";  break;
         case acr_navdb_FieldId_navaction   : ret = "navaction";  break;
         case acr_navdb_FieldId_navmode     : ret = "navmode";  break;
@@ -165,6 +215,10 @@ bool acr_navdb::value_SetStrptrMaybe(acr_navdb::FieldId& parent, algo::strptr rh
         }
         case 9: {
             switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('d','e','t','a','i','l','s','r'): {
+                    if (memcmp(rhs.elems+8,"c",1)==0) { value_SetEnum(parent,acr_navdb_FieldId_detailsrc); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('e','m','p','t','y','_','m','s'): {
                     if (memcmp(rhs.elems+8,"g",1)==0) { value_SetEnum(parent,acr_navdb_FieldId_empty_msg); ret = true; break; }
                     break;

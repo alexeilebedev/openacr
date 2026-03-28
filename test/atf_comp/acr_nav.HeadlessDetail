@@ -1,0 +1,192 @@
+acr_nav.Screen  mode:browse  focus:field_list  filter:acr_nav.fdb  navstack_depth:0  n_sel_ctype:1  n_ctype:1397  n_field:5594  viewmode:detail  breadcrumb:""
+acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:1  sel_value:acr_nav.FDb
+acr_nav.PanelState  panel:field_list  sel_row:0  scroll_offset:0  n_items:3  sel_value:'dmmeta.field  field:acr_nav.FDb.ind_ctype  arg:acr_nav.FCtype  reftype:Thash  dflt:""  comment:""'
+
+acr_nav.Screen  mode:browse  focus:field_list  filter:acr_nav.fdb  navstack_depth:0  n_sel_ctype:1  n_ctype:1397  n_field:5594  viewmode:fields  breadcrumb:""
+acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:1  sel_value:acr_nav.FDb
+acr_nav.PanelState  panel:field_list  sel_row:0  scroll_offset:0  n_items:56  sel_value:acr_nav.FDb._db
+acr_nav.VisibleField  row:0  field:acr_nav.FDb._db  arg:acr_nav.FDb  reftype:Global  style:field_val  navigable:N
+acr_nav.VisibleField  row:1  field:acr_nav.FDb.cmdline  arg:command.acr_nav  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:2  field:acr_nav.FDb.ctype  arg:acr_nav.FCtype  reftype:Lary  style:field_pool  navigable:Y
+acr_nav.VisibleField  row:3  field:acr_nav.FDb.detailsrc  arg:acr_nav.FDetailsrc  reftype:Lary  style:field_pool  navigable:Y
+acr_nav.VisibleField  row:4  field:acr_nav.FDb.helpgroup  arg:acr_nav.FHelpgroup  reftype:Lary  style:field_pool  navigable:Y
+acr_nav.VisibleField  row:5  field:acr_nav.FDb.ind_helpgroup  arg:acr_nav.FHelpgroup  reftype:Thash  style:field_idx  navigable:Y
+acr_nav.VisibleField  row:6  field:acr_nav.FDb.ind_ctype  arg:acr_nav.FCtype  reftype:Thash  style:field_idx  navigable:Y
+acr_nav.VisibleField  row:7  field:acr_nav.FDb.ind_detailsrc  arg:acr_nav.FDetailsrc  reftype:Thash  style:field_idx  navigable:Y
+acr_nav.VisibleField  row:8  field:acr_nav.FDb.field  arg:acr_nav.FField  reftype:Lary  style:field_pool  navigable:Y
+acr_nav.VisibleField  row:9  field:acr_nav.FDb.ind_field  arg:acr_nav.FField  reftype:Thash  style:field_idx  navigable:Y
+acr_nav.VisibleField  row:10  field:acr_nav.FDb.ns  arg:acr_nav.FNs  reftype:Lary  style:field_pool  navigable:Y
+acr_nav.VisibleField  row:11  field:acr_nav.FDb.ind_ns  arg:acr_nav.FNs  reftype:Thash  style:field_idx  navigable:Y
+acr_nav.VisibleField  row:12  field:acr_nav.FDb.reftype  arg:acr_nav.FReftype  reftype:Lary  style:field_pool  navigable:Y
+acr_nav.VisibleField  row:13  field:acr_nav.FDb.ind_reftype  arg:acr_nav.FReftype  reftype:Thash  style:field_idx  navigable:Y
+acr_nav.VisibleField  row:14  field:acr_nav.FDb.navaction  arg:acr_nav.FNavaction  reftype:Lary  style:field_pool  navigable:Y
+acr_nav.VisibleField  row:15  field:acr_nav.FDb.ind_navaction  arg:acr_nav.FNavaction  reftype:Thash  style:field_idx  navigable:Y
+acr_nav.VisibleField  row:16  field:acr_nav.FDb.keybind  arg:acr_nav.FKeybind  reftype:Lary  style:field_pool  navigable:Y
+acr_nav.VisibleField  row:17  field:acr_nav.FDb.ind_keybind  arg:acr_nav.FKeybind  reftype:Thash  style:field_idx  navigable:Y
+acr_nav.VisibleField  row:18  field:acr_nav.FDb.panel  arg:acr_nav.FPanel  reftype:Lary  style:field_pool  navigable:Y
+acr_nav.VisibleField  row:19  field:acr_nav.FDb.ind_panel  arg:acr_nav.FPanel  reftype:Thash  style:field_idx  navigable:Y
+acr_nav.VisibleField  row:20  field:acr_nav.FDb.navmode  arg:acr_nav.FNavmode  reftype:Lary  style:field_pool  navigable:Y
+acr_nav.VisibleField  row:21  field:acr_nav.FDb.ind_navmode  arg:acr_nav.FNavmode  reftype:Thash  style:field_idx  navigable:Y
+acr_nav.VisibleField  row:22  field:acr_nav.FDb.navstack  arg:acr_nav.Naventry  reftype:Tary  style:field_val  navigable:Y
+acr_nav.VisibleField  row:23  field:acr_nav.FDb.zd_sel_ctype  arg:acr_nav.FCtype  reftype:Llist  style:field_idx  navigable:Y
+acr_nav.VisibleField  row:24  field:acr_nav.FDb.p_cur_panel  arg:acr_nav.FPanel  reftype:Ptr  style:field_val  navigable:Y
+acr_nav.VisibleField  row:25  field:acr_nav.FDb.p_left_panel  arg:acr_nav.FPanel  reftype:Ptr  style:field_val  navigable:Y
+acr_nav.VisibleField  row:26  field:acr_nav.FDb.p_right_panel  arg:acr_nav.FPanel  reftype:Ptr  style:field_val  navigable:Y
+acr_nav.VisibleField  row:27  field:acr_nav.FDb.p_cur_mode  arg:acr_nav.FNavmode  reftype:Ptr  style:field_val  navigable:Y
+acr_nav.VisibleField  row:28  field:acr_nav.FDb.p_filter_mode  arg:acr_nav.FNavmode  reftype:Ptr  style:field_val  navigable:Y
+acr_nav.VisibleField  row:29  field:acr_nav.FDb.filter  arg:algo.cstring  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:30  field:acr_nav.FDb.running  arg:bool  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:31  field:acr_nav.FDb.term_hei  arg:i32  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:32  field:acr_nav.FDb.term_wid  arg:i32  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:33  field:acr_nav.FDb.navstyle  arg:acr_nav.FNavstyle  reftype:Lary  style:field_pool  navigable:Y
+acr_nav.VisibleField  row:34  field:acr_nav.FDb.ind_navstyle  arg:acr_nav.FNavstyle  reftype:Thash  style:field_idx  navigable:Y
+acr_nav.VisibleField  row:35  field:acr_nav.FDb.reftypestyle  arg:acr_nav.FReftypestyle  reftype:Lary  style:field_pool  navigable:Y
+acr_nav.VisibleField  row:36  field:acr_nav.FDb.ind_reftypestyle  arg:acr_nav.FReftypestyle  reftype:Thash  style:field_idx  navigable:Y
+acr_nav.VisibleField  row:37  field:acr_nav.FDb.p_help_viewmode  arg:acr_nav.FViewmode  reftype:Ptr  style:field_val  navigable:Y
+acr_nav.VisibleField  row:38  field:acr_nav.FDb.startup_help  arg:bool  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:39  field:acr_nav.FDb.ssimfile  arg:acr_nav.FSsimfile  reftype:Lary  style:field_pool  navigable:Y
+acr_nav.VisibleField  row:40  field:acr_nav.FDb.ind_ssimfile  arg:acr_nav.FSsimfile  reftype:Thash  style:field_idx  navigable:Y
+acr_nav.VisibleField  row:41  field:acr_nav.FDb.viewmode  arg:acr_nav.FViewmode  reftype:Lary  style:field_pool  navigable:Y
+acr_nav.VisibleField  row:42  field:acr_nav.FDb.ind_viewmode  arg:acr_nav.FViewmode  reftype:Thash  style:field_idx  navigable:Y
+acr_nav.VisibleField  row:43  field:acr_nav.FDb.p_cur_viewmode  arg:acr_nav.FViewmode  reftype:Ptr  style:field_val  navigable:Y
+acr_nav.VisibleField  row:44  field:acr_nav.FDb.viewmode_stack  arg:algo.Smallstr50  reftype:Tary  style:field_val  navigable:Y
+acr_nav.VisibleField  row:45  field:acr_nav.FDb.p_preview_ctype  arg:acr_nav.FCtype  reftype:Ptr  style:field_val  navigable:Y
+acr_nav.VisibleField  row:46  field:acr_nav.FDb.p_default_viewmode  arg:acr_nav.FViewmode  reftype:Ptr  style:field_val  navigable:Y
+acr_nav.VisibleField  row:47  field:acr_nav.FDb.p_detail_field  arg:acr_nav.FField  reftype:Ptr  style:field_val  navigable:Y
+acr_nav.VisibleField  row:48  field:acr_nav.FDb.p_detail_viewmode  arg:acr_nav.FViewmode  reftype:Ptr  style:field_val  navigable:Y
+acr_nav.VisibleField  row:49  field:acr_nav.FDb.p_preview_viewmode  arg:acr_nav.FViewmode  reftype:Ptr  style:field_val  navigable:Y
+acr_nav.VisibleField  row:50  field:acr_nav.FDb.p_xref_viewmode  arg:acr_nav.FViewmode  reftype:Ptr  style:field_val  navigable:Y
+acr_nav.VisibleField  row:51  field:acr_nav.FDb.p_title_focus  arg:acr_nav.FNavstyle  reftype:Ptr  style:field_val  navigable:Y
+acr_nav.VisibleField  row:52  field:acr_nav.FDb.p_title_nofocus  arg:acr_nav.FNavstyle  reftype:Ptr  style:field_val  navigable:Y
+acr_nav.VisibleField  row:53  field:acr_nav.FDb.p_sel_focus  arg:acr_nav.FNavstyle  reftype:Ptr  style:field_val  navigable:Y
+acr_nav.VisibleField  row:54  field:acr_nav.FDb.p_sel_nofocus  arg:acr_nav.FNavstyle  reftype:Ptr  style:field_val  navigable:Y
+acr_nav.VisibleField  row:55  field:acr_nav.FDb.p_statusbar  arg:acr_nav.FNavstyle  reftype:Ptr  style:field_val  navigable:Y
+
+acr_nav.Screen  mode:browse  focus:field_list  filter:acr_nav.fdb  navstack_depth:0  n_sel_ctype:1  n_ctype:1397  n_field:5594  viewmode:help  breadcrumb:""
+acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:1  sel_value:acr_nav.FDb
+acr_nav.PanelState  panel:field_list  sel_row:0  scroll_offset:0  n_items:21  sel_value:"Up                k         Move selection up"
+
+acr_nav.Screen  mode:browse  focus:field_list  filter:acr_nav.fdb  navstack_depth:0  n_sel_ctype:1  n_ctype:1397  n_field:5594  viewmode:detail  breadcrumb:""
+acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:1  sel_value:acr_nav.FDb
+acr_nav.PanelState  panel:field_list  sel_row:0  scroll_offset:0  n_items:1  sel_value:'dmmeta.field  field:acr_nav.FDb._db  arg:acr_nav.FDb  reftype:Global  dflt:""  comment:""'
+
+acr_nav.Screen  mode:browse  focus:field_list  filter:acr_nav.fdb  navstack_depth:0  n_sel_ctype:1  n_ctype:1397  n_field:5594  viewmode:fields  breadcrumb:""
+acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:1  sel_value:acr_nav.FDb
+acr_nav.PanelState  panel:field_list  sel_row:0  scroll_offset:0  n_items:56  sel_value:acr_nav.FDb._db
+acr_nav.VisibleField  row:0  field:acr_nav.FDb._db  arg:acr_nav.FDb  reftype:Global  style:field_val  navigable:N
+acr_nav.VisibleField  row:1  field:acr_nav.FDb.cmdline  arg:command.acr_nav  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:2  field:acr_nav.FDb.ctype  arg:acr_nav.FCtype  reftype:Lary  style:field_pool  navigable:Y
+acr_nav.VisibleField  row:3  field:acr_nav.FDb.detailsrc  arg:acr_nav.FDetailsrc  reftype:Lary  style:field_pool  navigable:Y
+acr_nav.VisibleField  row:4  field:acr_nav.FDb.helpgroup  arg:acr_nav.FHelpgroup  reftype:Lary  style:field_pool  navigable:Y
+acr_nav.VisibleField  row:5  field:acr_nav.FDb.ind_helpgroup  arg:acr_nav.FHelpgroup  reftype:Thash  style:field_idx  navigable:Y
+acr_nav.VisibleField  row:6  field:acr_nav.FDb.ind_ctype  arg:acr_nav.FCtype  reftype:Thash  style:field_idx  navigable:Y
+acr_nav.VisibleField  row:7  field:acr_nav.FDb.ind_detailsrc  arg:acr_nav.FDetailsrc  reftype:Thash  style:field_idx  navigable:Y
+acr_nav.VisibleField  row:8  field:acr_nav.FDb.field  arg:acr_nav.FField  reftype:Lary  style:field_pool  navigable:Y
+acr_nav.VisibleField  row:9  field:acr_nav.FDb.ind_field  arg:acr_nav.FField  reftype:Thash  style:field_idx  navigable:Y
+acr_nav.VisibleField  row:10  field:acr_nav.FDb.ns  arg:acr_nav.FNs  reftype:Lary  style:field_pool  navigable:Y
+acr_nav.VisibleField  row:11  field:acr_nav.FDb.ind_ns  arg:acr_nav.FNs  reftype:Thash  style:field_idx  navigable:Y
+acr_nav.VisibleField  row:12  field:acr_nav.FDb.reftype  arg:acr_nav.FReftype  reftype:Lary  style:field_pool  navigable:Y
+acr_nav.VisibleField  row:13  field:acr_nav.FDb.ind_reftype  arg:acr_nav.FReftype  reftype:Thash  style:field_idx  navigable:Y
+acr_nav.VisibleField  row:14  field:acr_nav.FDb.navaction  arg:acr_nav.FNavaction  reftype:Lary  style:field_pool  navigable:Y
+acr_nav.VisibleField  row:15  field:acr_nav.FDb.ind_navaction  arg:acr_nav.FNavaction  reftype:Thash  style:field_idx  navigable:Y
+acr_nav.VisibleField  row:16  field:acr_nav.FDb.keybind  arg:acr_nav.FKeybind  reftype:Lary  style:field_pool  navigable:Y
+acr_nav.VisibleField  row:17  field:acr_nav.FDb.ind_keybind  arg:acr_nav.FKeybind  reftype:Thash  style:field_idx  navigable:Y
+acr_nav.VisibleField  row:18  field:acr_nav.FDb.panel  arg:acr_nav.FPanel  reftype:Lary  style:field_pool  navigable:Y
+acr_nav.VisibleField  row:19  field:acr_nav.FDb.ind_panel  arg:acr_nav.FPanel  reftype:Thash  style:field_idx  navigable:Y
+acr_nav.VisibleField  row:20  field:acr_nav.FDb.navmode  arg:acr_nav.FNavmode  reftype:Lary  style:field_pool  navigable:Y
+acr_nav.VisibleField  row:21  field:acr_nav.FDb.ind_navmode  arg:acr_nav.FNavmode  reftype:Thash  style:field_idx  navigable:Y
+acr_nav.VisibleField  row:22  field:acr_nav.FDb.navstack  arg:acr_nav.Naventry  reftype:Tary  style:field_val  navigable:Y
+acr_nav.VisibleField  row:23  field:acr_nav.FDb.zd_sel_ctype  arg:acr_nav.FCtype  reftype:Llist  style:field_idx  navigable:Y
+acr_nav.VisibleField  row:24  field:acr_nav.FDb.p_cur_panel  arg:acr_nav.FPanel  reftype:Ptr  style:field_val  navigable:Y
+acr_nav.VisibleField  row:25  field:acr_nav.FDb.p_left_panel  arg:acr_nav.FPanel  reftype:Ptr  style:field_val  navigable:Y
+acr_nav.VisibleField  row:26  field:acr_nav.FDb.p_right_panel  arg:acr_nav.FPanel  reftype:Ptr  style:field_val  navigable:Y
+acr_nav.VisibleField  row:27  field:acr_nav.FDb.p_cur_mode  arg:acr_nav.FNavmode  reftype:Ptr  style:field_val  navigable:Y
+acr_nav.VisibleField  row:28  field:acr_nav.FDb.p_filter_mode  arg:acr_nav.FNavmode  reftype:Ptr  style:field_val  navigable:Y
+acr_nav.VisibleField  row:29  field:acr_nav.FDb.filter  arg:algo.cstring  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:30  field:acr_nav.FDb.running  arg:bool  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:31  field:acr_nav.FDb.term_hei  arg:i32  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:32  field:acr_nav.FDb.term_wid  arg:i32  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:33  field:acr_nav.FDb.navstyle  arg:acr_nav.FNavstyle  reftype:Lary  style:field_pool  navigable:Y
+acr_nav.VisibleField  row:34  field:acr_nav.FDb.ind_navstyle  arg:acr_nav.FNavstyle  reftype:Thash  style:field_idx  navigable:Y
+acr_nav.VisibleField  row:35  field:acr_nav.FDb.reftypestyle  arg:acr_nav.FReftypestyle  reftype:Lary  style:field_pool  navigable:Y
+acr_nav.VisibleField  row:36  field:acr_nav.FDb.ind_reftypestyle  arg:acr_nav.FReftypestyle  reftype:Thash  style:field_idx  navigable:Y
+acr_nav.VisibleField  row:37  field:acr_nav.FDb.p_help_viewmode  arg:acr_nav.FViewmode  reftype:Ptr  style:field_val  navigable:Y
+acr_nav.VisibleField  row:38  field:acr_nav.FDb.startup_help  arg:bool  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:39  field:acr_nav.FDb.ssimfile  arg:acr_nav.FSsimfile  reftype:Lary  style:field_pool  navigable:Y
+acr_nav.VisibleField  row:40  field:acr_nav.FDb.ind_ssimfile  arg:acr_nav.FSsimfile  reftype:Thash  style:field_idx  navigable:Y
+acr_nav.VisibleField  row:41  field:acr_nav.FDb.viewmode  arg:acr_nav.FViewmode  reftype:Lary  style:field_pool  navigable:Y
+acr_nav.VisibleField  row:42  field:acr_nav.FDb.ind_viewmode  arg:acr_nav.FViewmode  reftype:Thash  style:field_idx  navigable:Y
+acr_nav.VisibleField  row:43  field:acr_nav.FDb.p_cur_viewmode  arg:acr_nav.FViewmode  reftype:Ptr  style:field_val  navigable:Y
+acr_nav.VisibleField  row:44  field:acr_nav.FDb.viewmode_stack  arg:algo.Smallstr50  reftype:Tary  style:field_val  navigable:Y
+acr_nav.VisibleField  row:45  field:acr_nav.FDb.p_preview_ctype  arg:acr_nav.FCtype  reftype:Ptr  style:field_val  navigable:Y
+acr_nav.VisibleField  row:46  field:acr_nav.FDb.p_default_viewmode  arg:acr_nav.FViewmode  reftype:Ptr  style:field_val  navigable:Y
+acr_nav.VisibleField  row:47  field:acr_nav.FDb.p_detail_field  arg:acr_nav.FField  reftype:Ptr  style:field_val  navigable:Y
+acr_nav.VisibleField  row:48  field:acr_nav.FDb.p_detail_viewmode  arg:acr_nav.FViewmode  reftype:Ptr  style:field_val  navigable:Y
+acr_nav.VisibleField  row:49  field:acr_nav.FDb.p_preview_viewmode  arg:acr_nav.FViewmode  reftype:Ptr  style:field_val  navigable:Y
+acr_nav.VisibleField  row:50  field:acr_nav.FDb.p_xref_viewmode  arg:acr_nav.FViewmode  reftype:Ptr  style:field_val  navigable:Y
+acr_nav.VisibleField  row:51  field:acr_nav.FDb.p_title_focus  arg:acr_nav.FNavstyle  reftype:Ptr  style:field_val  navigable:Y
+acr_nav.VisibleField  row:52  field:acr_nav.FDb.p_title_nofocus  arg:acr_nav.FNavstyle  reftype:Ptr  style:field_val  navigable:Y
+acr_nav.VisibleField  row:53  field:acr_nav.FDb.p_sel_focus  arg:acr_nav.FNavstyle  reftype:Ptr  style:field_val  navigable:Y
+acr_nav.VisibleField  row:54  field:acr_nav.FDb.p_sel_nofocus  arg:acr_nav.FNavstyle  reftype:Ptr  style:field_val  navigable:Y
+acr_nav.VisibleField  row:55  field:acr_nav.FDb.p_statusbar  arg:acr_nav.FNavstyle  reftype:Ptr  style:field_val  navigable:Y
+
+acr_nav.Screen  mode:browse  focus:field_list  filter:acr_nav.fdb  navstack_depth:0  n_sel_ctype:1  n_ctype:1397  n_field:5594  viewmode:fields  breadcrumb:""
+acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:1  sel_value:acr_nav.FDb
+acr_nav.PanelState  panel:field_list  sel_row:0  scroll_offset:0  n_items:56  sel_value:acr_nav.FDb._db
+acr_nav.VisibleField  row:0  field:acr_nav.FDb._db  arg:acr_nav.FDb  reftype:Global  style:field_val  navigable:N
+acr_nav.VisibleField  row:1  field:acr_nav.FDb.cmdline  arg:command.acr_nav  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:2  field:acr_nav.FDb.ctype  arg:acr_nav.FCtype  reftype:Lary  style:field_pool  navigable:Y
+acr_nav.VisibleField  row:3  field:acr_nav.FDb.detailsrc  arg:acr_nav.FDetailsrc  reftype:Lary  style:field_pool  navigable:Y
+acr_nav.VisibleField  row:4  field:acr_nav.FDb.helpgroup  arg:acr_nav.FHelpgroup  reftype:Lary  style:field_pool  navigable:Y
+acr_nav.VisibleField  row:5  field:acr_nav.FDb.ind_helpgroup  arg:acr_nav.FHelpgroup  reftype:Thash  style:field_idx  navigable:Y
+acr_nav.VisibleField  row:6  field:acr_nav.FDb.ind_ctype  arg:acr_nav.FCtype  reftype:Thash  style:field_idx  navigable:Y
+acr_nav.VisibleField  row:7  field:acr_nav.FDb.ind_detailsrc  arg:acr_nav.FDetailsrc  reftype:Thash  style:field_idx  navigable:Y
+acr_nav.VisibleField  row:8  field:acr_nav.FDb.field  arg:acr_nav.FField  reftype:Lary  style:field_pool  navigable:Y
+acr_nav.VisibleField  row:9  field:acr_nav.FDb.ind_field  arg:acr_nav.FField  reftype:Thash  style:field_idx  navigable:Y
+acr_nav.VisibleField  row:10  field:acr_nav.FDb.ns  arg:acr_nav.FNs  reftype:Lary  style:field_pool  navigable:Y
+acr_nav.VisibleField  row:11  field:acr_nav.FDb.ind_ns  arg:acr_nav.FNs  reftype:Thash  style:field_idx  navigable:Y
+acr_nav.VisibleField  row:12  field:acr_nav.FDb.reftype  arg:acr_nav.FReftype  reftype:Lary  style:field_pool  navigable:Y
+acr_nav.VisibleField  row:13  field:acr_nav.FDb.ind_reftype  arg:acr_nav.FReftype  reftype:Thash  style:field_idx  navigable:Y
+acr_nav.VisibleField  row:14  field:acr_nav.FDb.navaction  arg:acr_nav.FNavaction  reftype:Lary  style:field_pool  navigable:Y
+acr_nav.VisibleField  row:15  field:acr_nav.FDb.ind_navaction  arg:acr_nav.FNavaction  reftype:Thash  style:field_idx  navigable:Y
+acr_nav.VisibleField  row:16  field:acr_nav.FDb.keybind  arg:acr_nav.FKeybind  reftype:Lary  style:field_pool  navigable:Y
+acr_nav.VisibleField  row:17  field:acr_nav.FDb.ind_keybind  arg:acr_nav.FKeybind  reftype:Thash  style:field_idx  navigable:Y
+acr_nav.VisibleField  row:18  field:acr_nav.FDb.panel  arg:acr_nav.FPanel  reftype:Lary  style:field_pool  navigable:Y
+acr_nav.VisibleField  row:19  field:acr_nav.FDb.ind_panel  arg:acr_nav.FPanel  reftype:Thash  style:field_idx  navigable:Y
+acr_nav.VisibleField  row:20  field:acr_nav.FDb.navmode  arg:acr_nav.FNavmode  reftype:Lary  style:field_pool  navigable:Y
+acr_nav.VisibleField  row:21  field:acr_nav.FDb.ind_navmode  arg:acr_nav.FNavmode  reftype:Thash  style:field_idx  navigable:Y
+acr_nav.VisibleField  row:22  field:acr_nav.FDb.navstack  arg:acr_nav.Naventry  reftype:Tary  style:field_val  navigable:Y
+acr_nav.VisibleField  row:23  field:acr_nav.FDb.zd_sel_ctype  arg:acr_nav.FCtype  reftype:Llist  style:field_idx  navigable:Y
+acr_nav.VisibleField  row:24  field:acr_nav.FDb.p_cur_panel  arg:acr_nav.FPanel  reftype:Ptr  style:field_val  navigable:Y
+acr_nav.VisibleField  row:25  field:acr_nav.FDb.p_left_panel  arg:acr_nav.FPanel  reftype:Ptr  style:field_val  navigable:Y
+acr_nav.VisibleField  row:26  field:acr_nav.FDb.p_right_panel  arg:acr_nav.FPanel  reftype:Ptr  style:field_val  navigable:Y
+acr_nav.VisibleField  row:27  field:acr_nav.FDb.p_cur_mode  arg:acr_nav.FNavmode  reftype:Ptr  style:field_val  navigable:Y
+acr_nav.VisibleField  row:28  field:acr_nav.FDb.p_filter_mode  arg:acr_nav.FNavmode  reftype:Ptr  style:field_val  navigable:Y
+acr_nav.VisibleField  row:29  field:acr_nav.FDb.filter  arg:algo.cstring  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:30  field:acr_nav.FDb.running  arg:bool  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:31  field:acr_nav.FDb.term_hei  arg:i32  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:32  field:acr_nav.FDb.term_wid  arg:i32  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:33  field:acr_nav.FDb.navstyle  arg:acr_nav.FNavstyle  reftype:Lary  style:field_pool  navigable:Y
+acr_nav.VisibleField  row:34  field:acr_nav.FDb.ind_navstyle  arg:acr_nav.FNavstyle  reftype:Thash  style:field_idx  navigable:Y
+acr_nav.VisibleField  row:35  field:acr_nav.FDb.reftypestyle  arg:acr_nav.FReftypestyle  reftype:Lary  style:field_pool  navigable:Y
+acr_nav.VisibleField  row:36  field:acr_nav.FDb.ind_reftypestyle  arg:acr_nav.FReftypestyle  reftype:Thash  style:field_idx  navigable:Y
+acr_nav.VisibleField  row:37  field:acr_nav.FDb.p_help_viewmode  arg:acr_nav.FViewmode  reftype:Ptr  style:field_val  navigable:Y
+acr_nav.VisibleField  row:38  field:acr_nav.FDb.startup_help  arg:bool  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:39  field:acr_nav.FDb.ssimfile  arg:acr_nav.FSsimfile  reftype:Lary  style:field_pool  navigable:Y
+acr_nav.VisibleField  row:40  field:acr_nav.FDb.ind_ssimfile  arg:acr_nav.FSsimfile  reftype:Thash  style:field_idx  navigable:Y
+acr_nav.VisibleField  row:41  field:acr_nav.FDb.viewmode  arg:acr_nav.FViewmode  reftype:Lary  style:field_pool  navigable:Y
+acr_nav.VisibleField  row:42  field:acr_nav.FDb.ind_viewmode  arg:acr_nav.FViewmode  reftype:Thash  style:field_idx  navigable:Y
+acr_nav.VisibleField  row:43  field:acr_nav.FDb.p_cur_viewmode  arg:acr_nav.FViewmode  reftype:Ptr  style:field_val  navigable:Y
+acr_nav.VisibleField  row:44  field:acr_nav.FDb.viewmode_stack  arg:algo.Smallstr50  reftype:Tary  style:field_val  navigable:Y
+acr_nav.VisibleField  row:45  field:acr_nav.FDb.p_preview_ctype  arg:acr_nav.FCtype  reftype:Ptr  style:field_val  navigable:Y
+acr_nav.VisibleField  row:46  field:acr_nav.FDb.p_default_viewmode  arg:acr_nav.FViewmode  reftype:Ptr  style:field_val  navigable:Y
+acr_nav.VisibleField  row:47  field:acr_nav.FDb.p_detail_field  arg:acr_nav.FField  reftype:Ptr  style:field_val  navigable:Y
+acr_nav.VisibleField  row:48  field:acr_nav.FDb.p_detail_viewmode  arg:acr_nav.FViewmode  reftype:Ptr  style:field_val  navigable:Y
+acr_nav.VisibleField  row:49  field:acr_nav.FDb.p_preview_viewmode  arg:acr_nav.FViewmode  reftype:Ptr  style:field_val  navigable:Y
+acr_nav.VisibleField  row:50  field:acr_nav.FDb.p_xref_viewmode  arg:acr_nav.FViewmode  reftype:Ptr  style:field_val  navigable:Y
+acr_nav.VisibleField  row:51  field:acr_nav.FDb.p_title_focus  arg:acr_nav.FNavstyle  reftype:Ptr  style:field_val  navigable:Y
+acr_nav.VisibleField  row:52  field:acr_nav.FDb.p_title_nofocus  arg:acr_nav.FNavstyle  reftype:Ptr  style:field_val  navigable:Y
+acr_nav.VisibleField  row:53  field:acr_nav.FDb.p_sel_focus  arg:acr_nav.FNavstyle  reftype:Ptr  style:field_val  navigable:Y
+acr_nav.VisibleField  row:54  field:acr_nav.FDb.p_sel_nofocus  arg:acr_nav.FNavstyle  reftype:Ptr  style:field_val  navigable:Y
+acr_nav.VisibleField  row:55  field:acr_nav.FDb.p_statusbar  arg:acr_nav.FNavstyle  reftype:Ptr  style:field_val  navigable:Y
+

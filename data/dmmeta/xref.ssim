@@ -196,6 +196,7 @@ dmmeta.xref  field:acr_in.FDb.ind_ssimfile  inscond:true  via:""
 dmmeta.xref  field:acr_in.FNsssimfile.p_ns  inscond:true  via:acr_in.FDb.ind_ns/acr_in.FNsssimfile.ns
 dmmeta.xref  field:acr_in.FNsssimfile.p_ssimfile  inscond:true  via:acr_in.FDb.ind_ssimfile/acr_in.FNsssimfile.ssimfile
 dmmeta.xref  field:acr_in.FCtype.p_ns  inscond:true  via:acr_in.FDb.ind_ns/dmmeta.Ctype.ns
+dmmeta.xref  field:acr_nav.FDb.ind_detailsrc  inscond:true  via:""
 dmmeta.xref  field:acr_nav.FDb.ind_helpgroup  inscond:true  via:""
 dmmeta.xref  field:acr_nav.FDb.ind_ctype  inscond:true  via:""
 dmmeta.xref  field:acr_nav.FDb.ind_field  inscond:true  via:""

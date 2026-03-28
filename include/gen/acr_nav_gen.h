@@ -46,31 +46,33 @@ enum { acr_nav_FieldIdEnum_N = 3 };
 enum acr_nav_TableIdEnum {                           // acr_nav.TableId.value
      acr_nav_TableId_dmmeta_Ctype             = 0    // dmmeta.Ctype -> acr_nav.FCtype
     ,acr_nav_TableId_dmmeta_ctype             = 0    // dmmeta.ctype -> acr_nav.FCtype
-    ,acr_nav_TableId_dmmeta_Field             = 1    // dmmeta.Field -> acr_nav.FField
-    ,acr_nav_TableId_dmmeta_field             = 1    // dmmeta.field -> acr_nav.FField
-    ,acr_nav_TableId_acr_navdb_Helpgroup      = 2    // acr_navdb.Helpgroup -> acr_nav.FHelpgroup
-    ,acr_nav_TableId_acr_navdb_helpgroup      = 2    // acr_navdb.helpgroup -> acr_nav.FHelpgroup
-    ,acr_nav_TableId_acr_navdb_Keybind        = 3    // acr_navdb.Keybind -> acr_nav.FKeybind
-    ,acr_nav_TableId_acr_navdb_keybind        = 3    // acr_navdb.keybind -> acr_nav.FKeybind
-    ,acr_nav_TableId_acr_navdb_Navmode        = 4    // acr_navdb.Navmode -> acr_nav.FNavmode
-    ,acr_nav_TableId_acr_navdb_navmode        = 4    // acr_navdb.navmode -> acr_nav.FNavmode
-    ,acr_nav_TableId_acr_navdb_Navstyle       = 5    // acr_navdb.Navstyle -> acr_nav.FNavstyle
-    ,acr_nav_TableId_acr_navdb_navstyle       = 5    // acr_navdb.navstyle -> acr_nav.FNavstyle
-    ,acr_nav_TableId_dmmeta_Ns                = 6    // dmmeta.Ns -> acr_nav.FNs
-    ,acr_nav_TableId_dmmeta_ns                = 6    // dmmeta.ns -> acr_nav.FNs
-    ,acr_nav_TableId_acr_navdb_Panel          = 7    // acr_navdb.Panel -> acr_nav.FPanel
-    ,acr_nav_TableId_acr_navdb_panel          = 7    // acr_navdb.panel -> acr_nav.FPanel
-    ,acr_nav_TableId_dmmeta_Reftype           = 8    // dmmeta.Reftype -> acr_nav.FReftype
-    ,acr_nav_TableId_dmmeta_reftype           = 8    // dmmeta.reftype -> acr_nav.FReftype
-    ,acr_nav_TableId_acr_navdb_Reftypestyle   = 9    // acr_navdb.Reftypestyle -> acr_nav.FReftypestyle
-    ,acr_nav_TableId_acr_navdb_reftypestyle   = 9    // acr_navdb.reftypestyle -> acr_nav.FReftypestyle
-    ,acr_nav_TableId_dmmeta_Ssimfile          = 10   // dmmeta.Ssimfile -> acr_nav.FSsimfile
-    ,acr_nav_TableId_dmmeta_ssimfile          = 10   // dmmeta.ssimfile -> acr_nav.FSsimfile
-    ,acr_nav_TableId_acr_navdb_Viewmode       = 11   // acr_navdb.Viewmode -> acr_nav.FViewmode
-    ,acr_nav_TableId_acr_navdb_viewmode       = 11   // acr_navdb.viewmode -> acr_nav.FViewmode
+    ,acr_nav_TableId_acr_navdb_Detailsrc      = 1    // acr_navdb.Detailsrc -> acr_nav.FDetailsrc
+    ,acr_nav_TableId_acr_navdb_detailsrc      = 1    // acr_navdb.detailsrc -> acr_nav.FDetailsrc
+    ,acr_nav_TableId_dmmeta_Field             = 2    // dmmeta.Field -> acr_nav.FField
+    ,acr_nav_TableId_dmmeta_field             = 2    // dmmeta.field -> acr_nav.FField
+    ,acr_nav_TableId_acr_navdb_Helpgroup      = 3    // acr_navdb.Helpgroup -> acr_nav.FHelpgroup
+    ,acr_nav_TableId_acr_navdb_helpgroup      = 3    // acr_navdb.helpgroup -> acr_nav.FHelpgroup
+    ,acr_nav_TableId_acr_navdb_Keybind        = 4    // acr_navdb.Keybind -> acr_nav.FKeybind
+    ,acr_nav_TableId_acr_navdb_keybind        = 4    // acr_navdb.keybind -> acr_nav.FKeybind
+    ,acr_nav_TableId_acr_navdb_Navmode        = 5    // acr_navdb.Navmode -> acr_nav.FNavmode
+    ,acr_nav_TableId_acr_navdb_navmode        = 5    // acr_navdb.navmode -> acr_nav.FNavmode
+    ,acr_nav_TableId_acr_navdb_Navstyle       = 6    // acr_navdb.Navstyle -> acr_nav.FNavstyle
+    ,acr_nav_TableId_acr_navdb_navstyle       = 6    // acr_navdb.navstyle -> acr_nav.FNavstyle
+    ,acr_nav_TableId_dmmeta_Ns                = 7    // dmmeta.Ns -> acr_nav.FNs
+    ,acr_nav_TableId_dmmeta_ns                = 7    // dmmeta.ns -> acr_nav.FNs
+    ,acr_nav_TableId_acr_navdb_Panel          = 8    // acr_navdb.Panel -> acr_nav.FPanel
+    ,acr_nav_TableId_acr_navdb_panel          = 8    // acr_navdb.panel -> acr_nav.FPanel
+    ,acr_nav_TableId_dmmeta_Reftype           = 9    // dmmeta.Reftype -> acr_nav.FReftype
+    ,acr_nav_TableId_dmmeta_reftype           = 9    // dmmeta.reftype -> acr_nav.FReftype
+    ,acr_nav_TableId_acr_navdb_Reftypestyle   = 10   // acr_navdb.Reftypestyle -> acr_nav.FReftypestyle
+    ,acr_nav_TableId_acr_navdb_reftypestyle   = 10   // acr_navdb.reftypestyle -> acr_nav.FReftypestyle
+    ,acr_nav_TableId_dmmeta_Ssimfile          = 11   // dmmeta.Ssimfile -> acr_nav.FSsimfile
+    ,acr_nav_TableId_dmmeta_ssimfile          = 11   // dmmeta.ssimfile -> acr_nav.FSsimfile
+    ,acr_nav_TableId_acr_navdb_Viewmode       = 12   // acr_navdb.Viewmode -> acr_nav.FViewmode
+    ,acr_nav_TableId_acr_navdb_viewmode       = 12   // acr_navdb.viewmode -> acr_nav.FViewmode
 };
 
-enum { acr_nav_TableIdEnum_N = 24 };
+enum { acr_nav_TableIdEnum_N = 26 };
 
 namespace acr_nav { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
@@ -80,6 +82,7 @@ extern const char *acr_nav_help;
 // gen:ns_fwddecl2
 namespace dmmeta { struct Ctype; }
 namespace acr_nav { struct FNs; }
+namespace acr_navdb { struct Detailsrc; }
 namespace dmmeta { struct Field; }
 namespace acr_nav { struct FCtype; }
 namespace acr_nav { struct FReftype; }
@@ -99,6 +102,7 @@ namespace acr_navdb { struct Viewmode; }
 namespace acr_nav { struct ctype_c_field_curs; }
 namespace acr_nav { struct ctype_c_field_arg_curs; }
 namespace acr_nav { struct _db_ctype_curs; }
+namespace acr_nav { struct _db_detailsrc_curs; }
 namespace acr_nav { struct _db_helpgroup_curs; }
 namespace acr_nav { struct _db_field_curs; }
 namespace acr_nav { struct _db_ns_curs; }
@@ -111,12 +115,13 @@ namespace acr_nav { struct _db_navstack_curs; }
 namespace acr_nav { struct _db_zd_sel_ctype_curs; }
 namespace acr_nav { struct _db_navstyle_curs; }
 namespace acr_nav { struct _db_reftypestyle_curs; }
-namespace acr_nav { struct _db_help_line_curs; }
 namespace acr_nav { struct _db_ssimfile_curs; }
 namespace acr_nav { struct _db_viewmode_curs; }
-namespace acr_nav { struct _db_preview_line_curs; }
+namespace acr_nav { struct _db_viewmode_stack_curs; }
+namespace acr_nav { struct viewmode_line_curs; }
 namespace acr_nav { struct trace; }
 namespace acr_nav { struct FDb; }
+namespace acr_nav { struct FDetailsrc; }
 namespace acr_nav { struct FField; }
 namespace acr_nav { struct FHelpgroup; }
 namespace acr_nav { struct FKeybind; }
@@ -333,6 +338,8 @@ struct FDb { // acr_nav.FDb
     command::acr_nav           cmdline;                          //
     acr_nav::FCtype*           ctype_lary[32];                   // level array
     i32                        ctype_n;                          // number of elements in array
+    acr_nav::FDetailsrc*       detailsrc_lary[32];               // level array
+    i32                        detailsrc_n;                      // number of elements in array
     acr_nav::FHelpgroup*       helpgroup_lary[32];               // level array
     i32                        helpgroup_n;                      // number of elements in array
     acr_nav::FHelpgroup**      ind_helpgroup_buckets_elems;      // pointer to bucket array
@@ -341,6 +348,9 @@ struct FDb { // acr_nav.FDb
     acr_nav::FCtype**          ind_ctype_buckets_elems;          // pointer to bucket array
     i32                        ind_ctype_buckets_n;              // number of elements in bucket array
     i32                        ind_ctype_n;                      // number of elements in the hash table
+    acr_nav::FDetailsrc**      ind_detailsrc_buckets_elems;      // pointer to bucket array
+    i32                        ind_detailsrc_buckets_n;          // number of elements in bucket array
+    i32                        ind_detailsrc_n;                  // number of elements in the hash table
     acr_nav::FField*           field_lary[32];                   // level array
     i32                        field_n;                          // number of elements in array
     acr_nav::FField**          ind_field_buckets_elems;          // pointer to bucket array
@@ -401,12 +411,7 @@ struct FDb { // acr_nav.FDb
     acr_nav::FReftypestyle**   ind_reftypestyle_buckets_elems;   // pointer to bucket array
     i32                        ind_reftypestyle_buckets_n;       // number of elements in bucket array
     i32                        ind_reftypestyle_n;               // number of elements in the hash table
-    algo::cstring*             help_line_elems;                  // pointer to elements
-    u32                        help_line_n;                      // number of elements in array
-    u32                        help_line_max;                    // max. capacity of array before realloc
-    algo::cstring              help_header;                      // Help column header line
     acr_nav::FViewmode*        p_help_viewmode;                  // Cached pointer to help viewmode. optional pointer
-    acr_nav::FViewmode*        p_prev_viewmode;                  // Viewmode before entering help (for ? toggle restore). optional pointer
     bool                       startup_help;                     //   false  True on startup; first keypress dismisses help
     acr_nav::FSsimfile*        ssimfile_lary[32];                // level array
     i32                        ssimfile_n;                       // number of elements in array
@@ -419,12 +424,13 @@ struct FDb { // acr_nav.FDb
     i32                        ind_viewmode_buckets_n;           // number of elements in bucket array
     i32                        ind_viewmode_n;                   // number of elements in the hash table
     acr_nav::FViewmode*        p_cur_viewmode;                   // Current right-panel view mode. optional pointer
-    algo::cstring              preview_header;                   // Column header line for preview
-    algo::cstring*             preview_line_elems;               // pointer to elements
-    u32                        preview_line_n;                   // number of elements in array
-    u32                        preview_line_max;                 // max. capacity of array before realloc
+    algo::Smallstr50*          viewmode_stack_elems;             // pointer to elements
+    u32                        viewmode_stack_n;                 // number of elements in array
+    u32                        viewmode_stack_max;               // max. capacity of array before realloc
     acr_nav::FCtype*           p_preview_ctype;                  // Ctype whose preview is cached. optional pointer
     acr_nav::FViewmode*        p_default_viewmode;               // Default viewmode (viewmode:fields). optional pointer
+    acr_nav::FField*           p_detail_field;                   // Field being detailed (non-null in detail mode). optional pointer
+    acr_nav::FViewmode*        p_detail_viewmode;                // Detail viewmode (viewmode:detail). optional pointer
     acr_nav::FViewmode*        p_preview_viewmode;               // Preview viewmode (viewmode:preview). optional pointer
     acr_nav::FViewmode*        p_xref_viewmode;                  // Xref viewmode (viewmode:xref). optional pointer
     acr_nav::FNavstyle*        p_title_focus;                    // Cached pointer to title_focus navstyle. optional pointer
@@ -522,6 +528,46 @@ bool                 ctype_XrefMaybe(acr_nav::FCtype &row);
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
+// func:acr_nav.FDb.detailsrc.Alloc
+acr_nav::FDetailsrc& detailsrc_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:acr_nav.FDb.detailsrc.AllocMaybe
+acr_nav::FDetailsrc* detailsrc_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:acr_nav.FDb.detailsrc.InsertMaybe
+acr_nav::FDetailsrc* detailsrc_InsertMaybe(const acr_navdb::Detailsrc &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:acr_nav.FDb.detailsrc.AllocMem
+void*                detailsrc_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:acr_nav.FDb.detailsrc.EmptyQ
+inline bool          detailsrc_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:acr_nav.FDb.detailsrc.Find
+inline acr_nav::FDetailsrc* detailsrc_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:acr_nav.FDb.detailsrc.Last
+inline acr_nav::FDetailsrc* detailsrc_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:acr_nav.FDb.detailsrc.N
+inline i32           detailsrc_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:acr_nav.FDb.detailsrc.RemoveAll
+void                 detailsrc_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:acr_nav.FDb.detailsrc.RemoveLast
+void                 detailsrc_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:acr_nav.FDb.detailsrc.qFind
+inline acr_nav::FDetailsrc& detailsrc_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:acr_nav.FDb.detailsrc.XrefMaybe
+bool                 detailsrc_XrefMaybe(acr_nav::FDetailsrc &row);
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
 // func:acr_nav.FDb.helpgroup.Alloc
 acr_nav::FHelpgroup& helpgroup_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
@@ -612,6 +658,34 @@ void                 ind_ctype_Reserve(int n) __attribute__((nothrow));
 // Reserve enough room for exacty N elements. Return success code.
 // func:acr_nav.FDb.ind_ctype.AbsReserve
 void                 ind_ctype_AbsReserve(int n) __attribute__((nothrow));
+
+// Return true if hash is empty
+// func:acr_nav.FDb.ind_detailsrc.EmptyQ
+inline bool          ind_detailsrc_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+// func:acr_nav.FDb.ind_detailsrc.Find
+acr_nav::FDetailsrc* ind_detailsrc_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:acr_nav.FDb.ind_detailsrc.FindX
+acr_nav::FDetailsrc& ind_detailsrc_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:acr_nav.FDb.ind_detailsrc.GetOrCreate
+acr_nav::FDetailsrc& ind_detailsrc_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
+// Return number of items in the hash
+// func:acr_nav.FDb.ind_detailsrc.N
+inline i32           ind_detailsrc_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:acr_nav.FDb.ind_detailsrc.InsertMaybe
+bool                 ind_detailsrc_InsertMaybe(acr_nav::FDetailsrc& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+// func:acr_nav.FDb.ind_detailsrc.Remove
+void                 ind_detailsrc_Remove(acr_nav::FDetailsrc& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+// func:acr_nav.FDb.ind_detailsrc.Reserve
+void                 ind_detailsrc_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:acr_nav.FDb.ind_detailsrc.AbsReserve
+void                 ind_detailsrc_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -1323,81 +1397,6 @@ void                 ind_reftypestyle_Reserve(int n) __attribute__((nothrow));
 // func:acr_nav.FDb.ind_reftypestyle.AbsReserve
 void                 ind_reftypestyle_AbsReserve(int n) __attribute__((nothrow));
 
-// Reserve space (this may move memory). Insert N element at the end.
-// Return aryptr to newly inserted block.
-// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-// func:acr_nav.FDb.help_line.Addary
-algo::aryptr<algo::cstring> help_line_Addary(algo::aryptr<algo::cstring> rhs) __attribute__((nothrow));
-// Reserve space. Insert element at the end
-// The new element is initialized to a default value
-// func:acr_nav.FDb.help_line.Alloc
-algo::cstring&       help_line_Alloc() __attribute__((__warn_unused_result__, nothrow));
-// Reserve space for new element, reallocating the array if necessary
-// Insert new element at specified index. Index must be in range or a fatal error occurs.
-// func:acr_nav.FDb.help_line.AllocAt
-algo::cstring&       help_line_AllocAt(int at) __attribute__((__warn_unused_result__, nothrow));
-// Reserve space. Insert N elements at the end of the array, return pointer to array
-// func:acr_nav.FDb.help_line.AllocN
-algo::aryptr<algo::cstring> help_line_AllocN(int n_elems) __attribute__((__warn_unused_result__, nothrow));
-// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
-// Reserve space for new element, reallocating the array if necessary
-// Insert new element at specified index. Index must be in range or a fatal error occurs.
-// func:acr_nav.FDb.help_line.AllocNAt
-algo::aryptr<algo::cstring> help_line_AllocNAt(int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
-// Return true if index is empty
-// func:acr_nav.FDb.help_line.EmptyQ
-inline bool          help_line_EmptyQ() __attribute__((nothrow));
-// Look up row by row id. Return NULL if out of range
-// func:acr_nav.FDb.help_line.Find
-inline algo::cstring* help_line_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
-// Return array pointer by value
-// func:acr_nav.FDb.help_line.Getary
-inline algo::aryptr<algo::cstring> help_line_Getary() __attribute__((nothrow));
-// Return pointer to last element of array, or NULL if array is empty
-// func:acr_nav.FDb.help_line.Last
-inline algo::cstring* help_line_Last() __attribute__((nothrow, pure));
-// Return max. number of items in the array
-// func:acr_nav.FDb.help_line.Max
-inline i32           help_line_Max() __attribute__((nothrow));
-// Return number of items in the array
-// func:acr_nav.FDb.help_line.N
-inline i32           help_line_N() __attribute__((__warn_unused_result__, nothrow, pure));
-// Remove item by index. If index outside of range, do nothing.
-// func:acr_nav.FDb.help_line.Remove
-void                 help_line_Remove(u32 i) __attribute__((nothrow));
-// func:acr_nav.FDb.help_line.RemoveAll
-void                 help_line_RemoveAll() __attribute__((nothrow));
-// Delete last element of array. Do nothing if array is empty.
-// func:acr_nav.FDb.help_line.RemoveLast
-void                 help_line_RemoveLast() __attribute__((nothrow));
-// Make sure N *more* elements will fit in array. Process dies if out of memory
-// func:acr_nav.FDb.help_line.Reserve
-inline void          help_line_Reserve(int n) __attribute__((nothrow));
-// Make sure N elements fit in array. Process dies if out of memory
-// func:acr_nav.FDb.help_line.AbsReserve
-void                 help_line_AbsReserve(int n) __attribute__((nothrow));
-// 'quick' Access row by row id. No bounds checking.
-// func:acr_nav.FDb.help_line.qFind
-inline algo::cstring& help_line_qFind(u64 t) __attribute__((nothrow));
-// Return reference to last element of array. No bounds checking
-// func:acr_nav.FDb.help_line.qLast
-inline algo::cstring& help_line_qLast() __attribute__((nothrow));
-// Return row id of specified element
-// func:acr_nav.FDb.help_line.rowid_Get
-inline u64           help_line_rowid_Get(algo::cstring &elem) __attribute__((nothrow));
-// Reserve space. Insert N elements at the end of the array, return pointer to array
-// func:acr_nav.FDb.help_line.AllocNVal
-algo::aryptr<algo::cstring> help_line_AllocNVal(int n_elems, const algo::cstring& val) __attribute__((nothrow));
-// A single element is read from input string and appended to the array.
-// If the string contains an error, the array is untouched.
-// Function returns success value.
-// func:acr_nav.FDb.help_line.ReadStrptrMaybe
-bool                 help_line_ReadStrptrMaybe(algo::strptr in_str) __attribute__((nothrow));
-// Insert array at specific position
-// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-// func:acr_nav.FDb.help_line.Insary
-void                 help_line_Insary(algo::aryptr<algo::cstring> rhs, int at) __attribute__((nothrow));
-
 // Allocate memory for new default row.
 // If out of memory, process is killed.
 // func:acr_nav.FDb.ssimfile.Alloc
@@ -1534,77 +1533,77 @@ void                 ind_viewmode_AbsReserve(int n) __attribute__((nothrow));
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-// func:acr_nav.FDb.preview_line.Addary
-algo::aryptr<algo::cstring> preview_line_Addary(algo::aryptr<algo::cstring> rhs) __attribute__((nothrow));
+// func:acr_nav.FDb.viewmode_stack.Addary
+algo::aryptr<algo::Smallstr50> viewmode_stack_Addary(algo::aryptr<algo::Smallstr50> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
-// func:acr_nav.FDb.preview_line.Alloc
-algo::cstring&       preview_line_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// func:acr_nav.FDb.viewmode_stack.Alloc
+algo::Smallstr50&    viewmode_stack_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-// func:acr_nav.FDb.preview_line.AllocAt
-algo::cstring&       preview_line_AllocAt(int at) __attribute__((__warn_unused_result__, nothrow));
+// func:acr_nav.FDb.viewmode_stack.AllocAt
+algo::Smallstr50&    viewmode_stack_AllocAt(int at) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-// func:acr_nav.FDb.preview_line.AllocN
-algo::aryptr<algo::cstring> preview_line_AllocN(int n_elems) __attribute__((__warn_unused_result__, nothrow));
+// func:acr_nav.FDb.viewmode_stack.AllocN
+algo::aryptr<algo::Smallstr50> viewmode_stack_AllocN(int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-// func:acr_nav.FDb.preview_line.AllocNAt
-algo::aryptr<algo::cstring> preview_line_AllocNAt(int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
+// func:acr_nav.FDb.viewmode_stack.AllocNAt
+algo::aryptr<algo::Smallstr50> viewmode_stack_AllocNAt(int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
-// func:acr_nav.FDb.preview_line.EmptyQ
-inline bool          preview_line_EmptyQ() __attribute__((nothrow));
+// func:acr_nav.FDb.viewmode_stack.EmptyQ
+inline bool          viewmode_stack_EmptyQ() __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
-// func:acr_nav.FDb.preview_line.Find
-inline algo::cstring* preview_line_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
+// func:acr_nav.FDb.viewmode_stack.Find
+inline algo::Smallstr50* viewmode_stack_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
-// func:acr_nav.FDb.preview_line.Getary
-inline algo::aryptr<algo::cstring> preview_line_Getary() __attribute__((nothrow));
+// func:acr_nav.FDb.viewmode_stack.Getary
+inline algo::aryptr<algo::Smallstr50> viewmode_stack_Getary() __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
-// func:acr_nav.FDb.preview_line.Last
-inline algo::cstring* preview_line_Last() __attribute__((nothrow, pure));
+// func:acr_nav.FDb.viewmode_stack.Last
+inline algo::Smallstr50* viewmode_stack_Last() __attribute__((nothrow, pure));
 // Return max. number of items in the array
-// func:acr_nav.FDb.preview_line.Max
-inline i32           preview_line_Max() __attribute__((nothrow));
+// func:acr_nav.FDb.viewmode_stack.Max
+inline i32           viewmode_stack_Max() __attribute__((nothrow));
 // Return number of items in the array
-// func:acr_nav.FDb.preview_line.N
-inline i32           preview_line_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// func:acr_nav.FDb.viewmode_stack.N
+inline i32           viewmode_stack_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
-// func:acr_nav.FDb.preview_line.Remove
-void                 preview_line_Remove(u32 i) __attribute__((nothrow));
-// func:acr_nav.FDb.preview_line.RemoveAll
-void                 preview_line_RemoveAll() __attribute__((nothrow));
+// func:acr_nav.FDb.viewmode_stack.Remove
+void                 viewmode_stack_Remove(u32 i) __attribute__((nothrow));
+// func:acr_nav.FDb.viewmode_stack.RemoveAll
+inline void          viewmode_stack_RemoveAll() __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
-// func:acr_nav.FDb.preview_line.RemoveLast
-void                 preview_line_RemoveLast() __attribute__((nothrow));
+// func:acr_nav.FDb.viewmode_stack.RemoveLast
+void                 viewmode_stack_RemoveLast() __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-// func:acr_nav.FDb.preview_line.Reserve
-inline void          preview_line_Reserve(int n) __attribute__((nothrow));
+// func:acr_nav.FDb.viewmode_stack.Reserve
+inline void          viewmode_stack_Reserve(int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
-// func:acr_nav.FDb.preview_line.AbsReserve
-void                 preview_line_AbsReserve(int n) __attribute__((nothrow));
+// func:acr_nav.FDb.viewmode_stack.AbsReserve
+void                 viewmode_stack_AbsReserve(int n) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
-// func:acr_nav.FDb.preview_line.qFind
-inline algo::cstring& preview_line_qFind(u64 t) __attribute__((nothrow));
+// func:acr_nav.FDb.viewmode_stack.qFind
+inline algo::Smallstr50& viewmode_stack_qFind(u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
-// func:acr_nav.FDb.preview_line.qLast
-inline algo::cstring& preview_line_qLast() __attribute__((nothrow));
+// func:acr_nav.FDb.viewmode_stack.qLast
+inline algo::Smallstr50& viewmode_stack_qLast() __attribute__((nothrow));
 // Return row id of specified element
-// func:acr_nav.FDb.preview_line.rowid_Get
-inline u64           preview_line_rowid_Get(algo::cstring &elem) __attribute__((nothrow));
+// func:acr_nav.FDb.viewmode_stack.rowid_Get
+inline u64           viewmode_stack_rowid_Get(algo::Smallstr50 &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-// func:acr_nav.FDb.preview_line.AllocNVal
-algo::aryptr<algo::cstring> preview_line_AllocNVal(int n_elems, const algo::cstring& val) __attribute__((nothrow));
+// func:acr_nav.FDb.viewmode_stack.AllocNVal
+algo::aryptr<algo::Smallstr50> viewmode_stack_AllocNVal(int n_elems, const algo::Smallstr50& val) __attribute__((nothrow));
 // A single element is read from input string and appended to the array.
 // If the string contains an error, the array is untouched.
 // Function returns success value.
-// func:acr_nav.FDb.preview_line.ReadStrptrMaybe
-bool                 preview_line_ReadStrptrMaybe(algo::strptr in_str) __attribute__((nothrow));
+// func:acr_nav.FDb.viewmode_stack.ReadStrptrMaybe
+bool                 viewmode_stack_ReadStrptrMaybe(algo::strptr in_str) __attribute__((nothrow));
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-// func:acr_nav.FDb.preview_line.Insary
-void                 preview_line_Insary(algo::aryptr<algo::cstring> rhs, int at) __attribute__((nothrow));
+// func:acr_nav.FDb.viewmode_stack.Insary
+void                 viewmode_stack_Insary(algo::aryptr<algo::Smallstr50> rhs, int at) __attribute__((nothrow));
 
 // cursor points to valid item
 // func:acr_nav.FDb.ctype_curs.Reset
@@ -1618,6 +1617,18 @@ inline void          _db_ctype_curs_Next(_db_ctype_curs &curs) __attribute__((no
 // item access
 // func:acr_nav.FDb.ctype_curs.Access
 inline acr_nav::FCtype& _db_ctype_curs_Access(_db_ctype_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:acr_nav.FDb.detailsrc_curs.Reset
+inline void          _db_detailsrc_curs_Reset(_db_detailsrc_curs &curs, acr_nav::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:acr_nav.FDb.detailsrc_curs.ValidQ
+inline bool          _db_detailsrc_curs_ValidQ(_db_detailsrc_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:acr_nav.FDb.detailsrc_curs.Next
+inline void          _db_detailsrc_curs_Next(_db_detailsrc_curs &curs) __attribute__((nothrow));
+// item access
+// func:acr_nav.FDb.detailsrc_curs.Access
+inline acr_nav::FDetailsrc& _db_detailsrc_curs_Access(_db_detailsrc_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_nav.FDb.helpgroup_curs.Reset
 inline void          _db_helpgroup_curs_Reset(_db_helpgroup_curs &curs, acr_nav::FDb &parent) __attribute__((nothrow));
@@ -1761,17 +1772,6 @@ inline void          _db_reftypestyle_curs_Next(_db_reftypestyle_curs &curs) __a
 // item access
 // func:acr_nav.FDb.reftypestyle_curs.Access
 inline acr_nav::FReftypestyle& _db_reftypestyle_curs_Access(_db_reftypestyle_curs &curs) __attribute__((nothrow));
-// proceed to next item
-// func:acr_nav.FDb.help_line_curs.Next
-inline void          _db_help_line_curs_Next(_db_help_line_curs &curs) __attribute__((nothrow));
-// func:acr_nav.FDb.help_line_curs.Reset
-inline void          _db_help_line_curs_Reset(_db_help_line_curs &curs, acr_nav::FDb &parent) __attribute__((nothrow));
-// cursor points to valid item
-// func:acr_nav.FDb.help_line_curs.ValidQ
-inline bool          _db_help_line_curs_ValidQ(_db_help_line_curs &curs) __attribute__((nothrow));
-// item access
-// func:acr_nav.FDb.help_line_curs.Access
-inline algo::cstring& _db_help_line_curs_Access(_db_help_line_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:acr_nav.FDb.ssimfile_curs.Reset
 inline void          _db_ssimfile_curs_Reset(_db_ssimfile_curs &curs, acr_nav::FDb &parent) __attribute__((nothrow));
@@ -1797,26 +1797,64 @@ inline void          _db_viewmode_curs_Next(_db_viewmode_curs &curs) __attribute
 // func:acr_nav.FDb.viewmode_curs.Access
 inline acr_nav::FViewmode& _db_viewmode_curs_Access(_db_viewmode_curs &curs) __attribute__((nothrow));
 // proceed to next item
-// func:acr_nav.FDb.preview_line_curs.Next
-inline void          _db_preview_line_curs_Next(_db_preview_line_curs &curs) __attribute__((nothrow));
-// func:acr_nav.FDb.preview_line_curs.Reset
-inline void          _db_preview_line_curs_Reset(_db_preview_line_curs &curs, acr_nav::FDb &parent) __attribute__((nothrow));
+// func:acr_nav.FDb.viewmode_stack_curs.Next
+inline void          _db_viewmode_stack_curs_Next(_db_viewmode_stack_curs &curs) __attribute__((nothrow));
+// func:acr_nav.FDb.viewmode_stack_curs.Reset
+inline void          _db_viewmode_stack_curs_Reset(_db_viewmode_stack_curs &curs, acr_nav::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
-// func:acr_nav.FDb.preview_line_curs.ValidQ
-inline bool          _db_preview_line_curs_ValidQ(_db_preview_line_curs &curs) __attribute__((nothrow));
+// func:acr_nav.FDb.viewmode_stack_curs.ValidQ
+inline bool          _db_viewmode_stack_curs_ValidQ(_db_viewmode_stack_curs &curs) __attribute__((nothrow));
 // item access
-// func:acr_nav.FDb.preview_line_curs.Access
-inline algo::cstring& _db_preview_line_curs_Access(_db_preview_line_curs &curs) __attribute__((nothrow));
+// func:acr_nav.FDb.viewmode_stack_curs.Access
+inline algo::Smallstr50& _db_viewmode_stack_curs_Access(_db_viewmode_stack_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:acr_nav.FDb..Init
 void                 FDb_Init();
 // func:acr_nav.FDb..Uninit
 void                 FDb_Uninit() __attribute__((nothrow));
 
+// --- acr_nav.FDetailsrc
+// create: acr_nav.FDb.detailsrc (Lary)
+// global access: detailsrc (Lary, by rowid)
+// global access: ind_detailsrc (Thash, hash field detailsrc)
+struct FDetailsrc { // acr_nav.FDetailsrc
+    acr_nav::FDetailsrc*   ind_detailsrc_next;      // hash next
+    u32                    ind_detailsrc_hashval;   // hash value
+    algo::Smallstr50       detailsrc;               //
+    algo::Comment          comment;                 //
+    // func:acr_nav.FDetailsrc..AssignOp
+    inline acr_nav::FDetailsrc& operator =(const acr_nav::FDetailsrc &rhs) = delete;
+    // func:acr_nav.FDetailsrc..CopyCtor
+    inline               FDetailsrc(const acr_nav::FDetailsrc &rhs) = delete;
+private:
+    // func:acr_nav.FDetailsrc..Ctor
+    inline               FDetailsrc() __attribute__((nothrow));
+    // func:acr_nav.FDetailsrc..Dtor
+    inline               ~FDetailsrc() __attribute__((nothrow));
+    friend acr_nav::FDetailsrc& detailsrc_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend acr_nav::FDetailsrc* detailsrc_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 detailsrc_RemoveAll() __attribute__((nothrow));
+    friend void                 detailsrc_RemoveLast() __attribute__((nothrow));
+};
+
+// Copy fields out of row
+// func:acr_nav.FDetailsrc.base.CopyOut
+void                 detailsrc_CopyOut(acr_nav::FDetailsrc &row, acr_navdb::Detailsrc &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:acr_nav.FDetailsrc.base.CopyIn
+void                 detailsrc_CopyIn(acr_nav::FDetailsrc &row, acr_navdb::Detailsrc &in) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:acr_nav.FDetailsrc..Init
+inline void          FDetailsrc_Init(acr_nav::FDetailsrc& detailsrc);
+// func:acr_nav.FDetailsrc..Uninit
+void                 FDetailsrc_Uninit(acr_nav::FDetailsrc& detailsrc) __attribute__((nothrow));
+
 // --- acr_nav.FField
 // create: acr_nav.FDb.field (Lary)
 // global access: field (Lary, by rowid)
 // global access: ind_field (Thash, hash field field)
+// global access: p_detail_field (Ptr)
 // access: acr_nav.FCtype.c_field (Ptrary)
 // access: acr_nav.FCtype.c_field_arg (Ptrary)
 struct FField { // acr_nav.FField
@@ -2337,11 +2375,11 @@ void                 FSsimfile_Uninit(acr_nav::FSsimfile& ssimfile) __attribute_
 // --- acr_nav.FViewmode
 // create: acr_nav.FDb.viewmode (Lary)
 // global access: p_help_viewmode (Ptr)
-// global access: p_prev_viewmode (Ptr)
 // global access: viewmode (Lary, by rowid)
 // global access: ind_viewmode (Thash, hash field viewmode)
 // global access: p_cur_viewmode (Ptr)
 // global access: p_default_viewmode (Ptr)
+// global access: p_detail_viewmode (Ptr)
 // global access: p_preview_viewmode (Ptr)
 // global access: p_xref_viewmode (Ptr)
 struct FViewmode { // acr_nav.FViewmode
@@ -2353,10 +2391,14 @@ struct FViewmode { // acr_nav.FViewmode
     algo::Smallstr50      empty_msg;              // Message shown when right panel has no items
     bool                  has_fields;             //   false  Y: renders field records; N: renders preformatted lines
     algo::Comment         comment;                //
+    algo::cstring*        line_elems;             // pointer to elements
+    u32                   line_n;                 // number of elements in array
+    u32                   line_max;               // max. capacity of array before realloc
+    algo::cstring         header;                 // Column header line
     // func:acr_nav.FViewmode..AssignOp
-    inline acr_nav::FViewmode& operator =(const acr_nav::FViewmode &rhs) = delete;
+    acr_nav::FViewmode&  operator =(const acr_nav::FViewmode &rhs) = delete;
     // func:acr_nav.FViewmode..CopyCtor
-    inline               FViewmode(const acr_nav::FViewmode &rhs) = delete;
+    FViewmode(const acr_nav::FViewmode &rhs) = delete;
 private:
     // func:acr_nav.FViewmode..Ctor
     inline               FViewmode() __attribute__((nothrow));
@@ -2375,9 +2417,102 @@ void                 viewmode_CopyOut(acr_nav::FViewmode &row, acr_navdb::Viewmo
 // func:acr_nav.FViewmode.base.CopyIn
 void                 viewmode_CopyIn(acr_nav::FViewmode &row, acr_navdb::Viewmode &in) __attribute__((nothrow));
 
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:acr_nav.FViewmode.line.Addary
+algo::aryptr<algo::cstring> line_Addary(acr_nav::FViewmode& viewmode, algo::aryptr<algo::cstring> rhs) __attribute__((nothrow));
+// Reserve space. Insert element at the end
+// The new element is initialized to a default value
+// func:acr_nav.FViewmode.line.Alloc
+algo::cstring&       line_Alloc(acr_nav::FViewmode& viewmode) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:acr_nav.FViewmode.line.AllocAt
+algo::cstring&       line_AllocAt(acr_nav::FViewmode& viewmode, int at) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:acr_nav.FViewmode.line.AllocN
+algo::aryptr<algo::cstring> line_AllocN(acr_nav::FViewmode& viewmode, int n_elems) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:acr_nav.FViewmode.line.AllocNAt
+algo::aryptr<algo::cstring> line_AllocNAt(acr_nav::FViewmode& viewmode, int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:acr_nav.FViewmode.line.EmptyQ
+inline bool          line_EmptyQ(acr_nav::FViewmode& viewmode) __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+// func:acr_nav.FViewmode.line.Find
+inline algo::cstring* line_Find(acr_nav::FViewmode& viewmode, u64 t) __attribute__((__warn_unused_result__, nothrow));
+// Return array pointer by value
+// func:acr_nav.FViewmode.line.Getary
+inline algo::aryptr<algo::cstring> line_Getary(const acr_nav::FViewmode& viewmode) __attribute__((nothrow));
+// Return pointer to last element of array, or NULL if array is empty
+// func:acr_nav.FViewmode.line.Last
+inline algo::cstring* line_Last(acr_nav::FViewmode& viewmode) __attribute__((nothrow, pure));
+// Return max. number of items in the array
+// func:acr_nav.FViewmode.line.Max
+inline i32           line_Max(acr_nav::FViewmode& viewmode) __attribute__((nothrow));
+// Return number of items in the array
+// func:acr_nav.FViewmode.line.N
+inline i32           line_N(const acr_nav::FViewmode& viewmode) __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove item by index. If index outside of range, do nothing.
+// func:acr_nav.FViewmode.line.Remove
+void                 line_Remove(acr_nav::FViewmode& viewmode, u32 i) __attribute__((nothrow));
+// func:acr_nav.FViewmode.line.RemoveAll
+void                 line_RemoveAll(acr_nav::FViewmode& viewmode) __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:acr_nav.FViewmode.line.RemoveLast
+void                 line_RemoveLast(acr_nav::FViewmode& viewmode) __attribute__((nothrow));
+// Make sure N *more* elements will fit in array. Process dies if out of memory
+// func:acr_nav.FViewmode.line.Reserve
+inline void          line_Reserve(acr_nav::FViewmode& viewmode, int n) __attribute__((nothrow));
+// Make sure N elements fit in array. Process dies if out of memory
+// func:acr_nav.FViewmode.line.AbsReserve
+void                 line_AbsReserve(acr_nav::FViewmode& viewmode, int n) __attribute__((nothrow));
+// Copy contents of RHS to PARENT.
+// func:acr_nav.FViewmode.line.Setary
+void                 line_Setary(acr_nav::FViewmode& viewmode, acr_nav::FViewmode &rhs) __attribute__((nothrow));
+// Copy specified array into line, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+// func:acr_nav.FViewmode.line.Setary2
+void                 line_Setary(acr_nav::FViewmode& viewmode, const algo::aryptr<algo::cstring> &rhs) __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:acr_nav.FViewmode.line.qFind
+inline algo::cstring& line_qFind(acr_nav::FViewmode& viewmode, u64 t) __attribute__((nothrow));
+// Return reference to last element of array. No bounds checking
+// func:acr_nav.FViewmode.line.qLast
+inline algo::cstring& line_qLast(acr_nav::FViewmode& viewmode) __attribute__((nothrow));
+// Return row id of specified element
+// func:acr_nav.FViewmode.line.rowid_Get
+inline u64           line_rowid_Get(acr_nav::FViewmode& viewmode, algo::cstring &elem) __attribute__((nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:acr_nav.FViewmode.line.AllocNVal
+algo::aryptr<algo::cstring> line_AllocNVal(acr_nav::FViewmode& viewmode, int n_elems, const algo::cstring& val) __attribute__((nothrow));
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+// func:acr_nav.FViewmode.line.ReadStrptrMaybe
+bool                 line_ReadStrptrMaybe(acr_nav::FViewmode& viewmode, algo::strptr in_str) __attribute__((nothrow));
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:acr_nav.FViewmode.line.Insary
+void                 line_Insary(acr_nav::FViewmode& viewmode, algo::aryptr<algo::cstring> rhs, int at) __attribute__((nothrow));
+
 // Set all fields to initial values.
 // func:acr_nav.FViewmode..Init
 inline void          FViewmode_Init(acr_nav::FViewmode& viewmode);
+// proceed to next item
+// func:acr_nav.FViewmode.line_curs.Next
+inline void          viewmode_line_curs_Next(viewmode_line_curs &curs) __attribute__((nothrow));
+// func:acr_nav.FViewmode.line_curs.Reset
+inline void          viewmode_line_curs_Reset(viewmode_line_curs &curs, acr_nav::FViewmode &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:acr_nav.FViewmode.line_curs.ValidQ
+inline bool          viewmode_line_curs_ValidQ(viewmode_line_curs &curs) __attribute__((nothrow));
+// item access
+// func:acr_nav.FViewmode.line_curs.Access
+inline algo::cstring& viewmode_line_curs_Access(viewmode_line_curs &curs) __attribute__((nothrow));
 // func:acr_nav.FViewmode..Uninit
 void                 FViewmode_Uninit(acr_nav::FViewmode& viewmode) __attribute__((nothrow));
 
@@ -2622,6 +2757,14 @@ struct _db_ctype_curs {// cursor
 };
 
 
+struct _db_detailsrc_curs {// cursor
+    typedef acr_nav::FDetailsrc ChildType;
+    acr_nav::FDb *parent;
+    i64 index;
+    _db_detailsrc_curs(){ parent=NULL; index=0; }
+};
+
+
 struct _db_helpgroup_curs {// cursor
     typedef acr_nav::FHelpgroup ChildType;
     acr_nav::FDb *parent;
@@ -2720,15 +2863,6 @@ struct _db_reftypestyle_curs {// cursor
 };
 
 
-struct _db_help_line_curs {// cursor
-    typedef algo::cstring ChildType;
-    algo::cstring* elems;
-    int n_elems;
-    int index;
-    _db_help_line_curs() { elems=NULL; n_elems=0; index=0; }
-};
-
-
 struct _db_ssimfile_curs {// cursor
     typedef acr_nav::FSsimfile ChildType;
     acr_nav::FDb *parent;
@@ -2745,12 +2879,21 @@ struct _db_viewmode_curs {// cursor
 };
 
 
-struct _db_preview_line_curs {// cursor
+struct _db_viewmode_stack_curs {// cursor
+    typedef algo::Smallstr50 ChildType;
+    algo::Smallstr50* elems;
+    int n_elems;
+    int index;
+    _db_viewmode_stack_curs() { elems=NULL; n_elems=0; index=0; }
+};
+
+
+struct viewmode_line_curs {// cursor
     typedef algo::cstring ChildType;
     algo::cstring* elems;
     int n_elems;
     int index;
-    _db_preview_line_curs() { elems=NULL; n_elems=0; index=0; }
+    viewmode_line_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
 } // gen:ns_curstext
@@ -2815,6 +2958,10 @@ void                 navaction_page_up();
 // func:acr_nav...navaction_quit
 // this function is 'extrn' and implemented by user
 void                 navaction_quit();
+// User-implemented function from gstatic:acr_nav.FDb.navaction
+// func:acr_nav...navaction_show_detail
+// this function is 'extrn' and implemented by user
+void                 navaction_show_detail();
 // User-implemented function from gstatic:acr_nav.FDb.navaction
 // func:acr_nav...navaction_show_help
 // this function is 'extrn' and implemented by user

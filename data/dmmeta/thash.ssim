@@ -67,6 +67,7 @@ dmmeta.thash  field:acr_nav.FDb.ind_navaction  hashfld:acr_navdb.Navaction.navac
 dmmeta.thash  field:acr_nav.FDb.ind_navmode  hashfld:acr_navdb.Navmode.navmode  unique:Y  comment:""
 dmmeta.thash  field:acr_nav.FDb.ind_navstyle  hashfld:acr_navdb.Navstyle.navstyle  unique:Y  comment:""
 dmmeta.thash  field:acr_nav.FDb.ind_ns  hashfld:dmmeta.Ns.ns  unique:Y  comment:""
+dmmeta.thash  field:acr_nav.FDb.ind_detailsrc  hashfld:acr_navdb.Detailsrc.detailsrc  unique:Y  comment:""
 dmmeta.thash  field:acr_nav.FDb.ind_helpgroup  hashfld:acr_navdb.Helpgroup.helpgroup  unique:Y  comment:""
 dmmeta.thash  field:acr_nav.FDb.ind_panel  hashfld:acr_navdb.Panel.panel  unique:Y  comment:""
 dmmeta.thash  field:acr_nav.FDb.ind_reftype  hashfld:dmmeta.Reftype.reftype  unique:Y  comment:""

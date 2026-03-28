@@ -170,6 +170,7 @@ atfdb.targs  comptest:acr_ed.CreateTarget  args:"-create -target xyz"
 atfdb.targs  comptest:acr_in.Reverse  args:"-r dev.targdep"
 atfdb.targs  comptest:acr_in.Simple  args:acr_in
 atfdb.targs  comptest:acr_in.Tree  args:"acr_in -t"
+atfdb.targs  comptest:acr_nav.HeadlessDetail  args:-headless
 atfdb.targs  comptest:acr_nav.HeadlessFilter  args:-headless
 atfdb.targs  comptest:acr_nav.HeadlessFollow  args:-headless
 atfdb.targs  comptest:acr_nav.HeadlessHelp  args:-headless

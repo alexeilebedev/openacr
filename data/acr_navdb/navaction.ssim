@@ -13,6 +13,7 @@ acr_navdb.navaction  navaction:move_up  hint:move  helpgroup:movement  help_sort
 acr_navdb.navaction  navaction:page_down  hint:page  helpgroup:movement  help_sort:13  comment:"Page down"
 acr_navdb.navaction  navaction:page_up  hint:page  helpgroup:movement  help_sort:12  comment:"Page up"
 acr_navdb.navaction  navaction:quit  hint:quit  helpgroup:meta  help_sort:11  comment:"Exit acr_nav"
+acr_navdb.navaction  navaction:show_detail  hint:detail  helpgroup:view  help_sort:12  comment:"Toggle field metadata detail"
 acr_navdb.navaction  navaction:show_help  hint:help  helpgroup:meta  help_sort:10  comment:"Toggle help panel"
 acr_navdb.navaction  navaction:switch_panel_left  hint:""  helpgroup:navigation  help_sort:12  comment:"Move focus to panel on the left"
 acr_navdb.navaction  navaction:switch_panel_right  hint:""  helpgroup:navigation  help_sort:13  comment:"Move focus to panel on the right"

@@ -69,6 +69,8 @@ namespace acr_nav { // gen:ns_print_proto
     static void          InitReflection();
     // func:acr_nav.FDb.ctype.InputMaybe
     static bool          ctype_InputMaybe(dmmeta::Ctype &elem) __attribute__((nothrow));
+    // func:acr_nav.FDb.detailsrc.InputMaybe
+    static bool          detailsrc_InputMaybe(acr_navdb::Detailsrc &elem) __attribute__((nothrow));
     // func:acr_nav.FDb.helpgroup.InputMaybe
     static bool          helpgroup_InputMaybe(acr_navdb::Helpgroup &elem) __attribute__((nothrow));
     // func:acr_nav.FDb.field.InputMaybe
@@ -443,7 +445,7 @@ static void acr_nav::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_nav.Input'  signature:'4046334daf3b1caaa077a937ea4fa755e374401c'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_nav.Input'  signature:'02225f2ff6e453da3d51374bd012b80c53667ba5'");
 }
 
 // --- acr_nav.FDb._db.InsertStrptrMaybe
@@ -458,6 +460,12 @@ bool acr_nav::InsertStrptrMaybe(algo::strptr str) {
             dmmeta::Ctype elem;
             retval = dmmeta::Ctype_ReadStrptrMaybe(elem, str);
             retval = retval && ctype_InputMaybe(elem);
+            break;
+        }
+        case acr_nav_TableId_acr_navdb_Detailsrc: { // finput:acr_nav.FDb.detailsrc
+            acr_navdb::Detailsrc elem;
+            retval = acr_navdb::Detailsrc_ReadStrptrMaybe(elem, str);
+            retval = retval && detailsrc_InputMaybe(elem);
             break;
         }
         case acr_nav_TableId_acr_navdb_Helpgroup: { // finput:acr_nav.FDb.helpgroup
@@ -557,6 +565,7 @@ bool acr_nav::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && acr_nav::LoadTuplesFile(algo::SsimFname(root,"acr_navdb.navmode"),recursive);
         retval = retval && acr_nav::LoadTuplesFile(algo::SsimFname(root,"acr_navdb.helpgroup"),recursive);
         retval = retval && acr_nav::LoadTuplesFile(algo::SsimFname(root,"acr_navdb.keybind"),recursive);
+        retval = retval && acr_nav::LoadTuplesFile(algo::SsimFname(root,"acr_navdb.detailsrc"),recursive);
     } else {
         algo_lib::AppendErrtext("path", root);
         algo_lib::AppendErrtext("comment", "Wrong working directory?");
@@ -737,6 +746,113 @@ bool acr_nav::ctype_XrefMaybe(acr_nav::FCtype &row) {
         if (UNLIKELY(!success)) {
             ch_RemoveAll(algo_lib::_db.errtext);
             algo_lib::_db.errtext << "acr_nav.duplicate_key  xref:acr_nav.FDb.ind_ctype"; // check for duplicate key
+            return false;
+        }
+    }
+    return retval;
+}
+
+// --- acr_nav.FDb.detailsrc.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+acr_nav::FDetailsrc& acr_nav::detailsrc_Alloc() {
+    acr_nav::FDetailsrc* row = detailsrc_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("acr_nav.out_of_mem  field:acr_nav.FDb.detailsrc  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- acr_nav.FDb.detailsrc.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+acr_nav::FDetailsrc* acr_nav::detailsrc_AllocMaybe() {
+    acr_nav::FDetailsrc *row = (acr_nav::FDetailsrc*)detailsrc_AllocMem();
+    if (row) {
+        new (row) acr_nav::FDetailsrc; // call constructor
+    }
+    return row;
+}
+
+// --- acr_nav.FDb.detailsrc.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+acr_nav::FDetailsrc* acr_nav::detailsrc_InsertMaybe(const acr_navdb::Detailsrc &value) {
+    acr_nav::FDetailsrc *row = &detailsrc_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    detailsrc_CopyIn(*row,const_cast<acr_navdb::Detailsrc&>(value));
+    bool ok = detailsrc_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        detailsrc_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- acr_nav.FDb.detailsrc.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* acr_nav::detailsrc_AllocMem() {
+    u64 new_nelems     = _db.detailsrc_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    acr_nav::FDetailsrc*  lev   = NULL;
+    if (bsr < 32) {
+        lev = _db.detailsrc_lary[bsr];
+        if (!lev) {
+            lev=(acr_nav::FDetailsrc*)algo_lib::malloc_AllocMem(sizeof(acr_nav::FDetailsrc) * (u64(1)<<bsr));
+            _db.detailsrc_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.detailsrc_n = i32(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- acr_nav.FDb.detailsrc.RemoveAll
+// Remove all elements from Lary
+void acr_nav::detailsrc_RemoveAll() {
+    for (u64 n = _db.detailsrc_n; n>0; ) {
+        n--;
+        detailsrc_qFind(u64(n)).~FDetailsrc(); // destroy last element
+        _db.detailsrc_n = i32(n);
+    }
+}
+
+// --- acr_nav.FDb.detailsrc.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void acr_nav::detailsrc_RemoveLast() {
+    u64 n = _db.detailsrc_n;
+    if (n > 0) {
+        n -= 1;
+        detailsrc_qFind(u64(n)).~FDetailsrc();
+        _db.detailsrc_n = i32(n);
+    }
+}
+
+// --- acr_nav.FDb.detailsrc.InputMaybe
+static bool acr_nav::detailsrc_InputMaybe(acr_navdb::Detailsrc &elem) {
+    bool retval = true;
+    retval = detailsrc_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- acr_nav.FDb.detailsrc.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool acr_nav::detailsrc_XrefMaybe(acr_nav::FDetailsrc &row) {
+    bool retval = true;
+    (void)row;
+    // insert detailsrc into index ind_detailsrc
+    if (true) { // user-defined insert condition
+        bool success = ind_detailsrc_InsertMaybe(row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "acr_nav.duplicate_key  xref:acr_nav.FDb.ind_detailsrc"; // check for duplicate key
             return false;
         }
     }
@@ -1078,6 +1194,130 @@ void acr_nav::ind_ctype_AbsReserve(int n) {
         algo_lib::malloc_FreeMem(_db.ind_ctype_buckets_elems, old_size);
         _db.ind_ctype_buckets_elems = new_buckets;
         _db.ind_ctype_buckets_n = new_nbuckets;
+    }
+}
+
+// --- acr_nav.FDb.ind_detailsrc.Find
+// Find row by key. Return NULL if not found.
+acr_nav::FDetailsrc* acr_nav::ind_detailsrc_Find(const algo::strptr& key) {
+    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_detailsrc_buckets_n - 1);
+    acr_nav::FDetailsrc *ret = _db.ind_detailsrc_buckets_elems[index];
+    for (; ret && !((*ret).detailsrc == key); ret = ret->ind_detailsrc_next) {
+    }
+    return ret;
+}
+
+// --- acr_nav.FDb.ind_detailsrc.FindX
+// Look up row by key and return reference. Throw exception if not found
+acr_nav::FDetailsrc& acr_nav::ind_detailsrc_FindX(const algo::strptr& key) {
+    acr_nav::FDetailsrc* ret = ind_detailsrc_Find(key);
+    vrfy(ret, tempstr() << "acr_nav.key_error  table:ind_detailsrc  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
+// --- acr_nav.FDb.ind_detailsrc.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+acr_nav::FDetailsrc& acr_nav::ind_detailsrc_GetOrCreate(const algo::strptr& key) {
+    acr_nav::FDetailsrc* ret = ind_detailsrc_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &detailsrc_Alloc();
+        (*ret).detailsrc = key;
+        bool good = detailsrc_XrefMaybe(*ret);
+        if (!good) {
+            detailsrc_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    vrfy(ret, tempstr() << "acr_nav.create_error  table:ind_detailsrc  key:'"<<key<<"'  comment:'bad xref'");
+    return *ret;
+}
+
+// --- acr_nav.FDb.ind_detailsrc.InsertMaybe
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool acr_nav::ind_detailsrc_InsertMaybe(acr_nav::FDetailsrc& row) {
+    bool retval = true; // if already in hash, InsertMaybe returns true
+    if (LIKELY(row.ind_detailsrc_next == (acr_nav::FDetailsrc*)-1)) {// check if in hash already
+        row.ind_detailsrc_hashval = algo::Smallstr50_Hash(0, row.detailsrc);
+        ind_detailsrc_Reserve(1);
+        u32 index = row.ind_detailsrc_hashval & (_db.ind_detailsrc_buckets_n - 1);
+        acr_nav::FDetailsrc* *prev = &_db.ind_detailsrc_buckets_elems[index];
+        do {
+            acr_nav::FDetailsrc* ret = *prev;
+            if (!ret) { // exit condition 1: reached the end of the list
+                break;
+            }
+            if ((*ret).detailsrc == row.detailsrc) { // exit condition 2: found matching key
+                retval = false;
+                break;
+            }
+            prev = &ret->ind_detailsrc_next;
+        } while (true);
+        if (retval) {
+            row.ind_detailsrc_next = *prev;
+            _db.ind_detailsrc_n++;
+            *prev = &row;
+        }
+    }
+    return retval;
+}
+
+// --- acr_nav.FDb.ind_detailsrc.Remove
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void acr_nav::ind_detailsrc_Remove(acr_nav::FDetailsrc& row) {
+    if (LIKELY(row.ind_detailsrc_next != (acr_nav::FDetailsrc*)-1)) {// check if in hash already
+        u32 index = row.ind_detailsrc_hashval & (_db.ind_detailsrc_buckets_n - 1);
+        acr_nav::FDetailsrc* *prev = &_db.ind_detailsrc_buckets_elems[index]; // addr of pointer to current element
+        while (acr_nav::FDetailsrc *next = *prev) {                          // scan the collision chain for our element
+            if (next == &row) {        // found it?
+                *prev = next->ind_detailsrc_next; // unlink (singly linked list)
+                _db.ind_detailsrc_n--;
+                row.ind_detailsrc_next = (acr_nav::FDetailsrc*)-1;// not-in-hash
+                break;
+            }
+            prev = &next->ind_detailsrc_next;
+        }
+    }
+}
+
+// --- acr_nav.FDb.ind_detailsrc.Reserve
+// Reserve enough room in the hash for N more elements. Return success code.
+void acr_nav::ind_detailsrc_Reserve(int n) {
+    ind_detailsrc_AbsReserve(_db.ind_detailsrc_n + n);
+}
+
+// --- acr_nav.FDb.ind_detailsrc.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void acr_nav::ind_detailsrc_AbsReserve(int n) {
+    u32 old_nbuckets = _db.ind_detailsrc_buckets_n;
+    u32 new_nelems   = n;
+    // # of elements has to be roughly equal to the number of buckets
+    if (new_nelems > old_nbuckets) {
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
+        u32 old_size = old_nbuckets * sizeof(acr_nav::FDetailsrc*);
+        u32 new_size = new_nbuckets * sizeof(acr_nav::FDetailsrc*);
+        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
+        // means new memory will have to be allocated anyway
+        acr_nav::FDetailsrc* *new_buckets = (acr_nav::FDetailsrc**)algo_lib::malloc_AllocMem(new_size);
+        if (UNLIKELY(!new_buckets)) {
+            FatalErrorExit("acr_nav.out_of_memory  field:acr_nav.FDb.ind_detailsrc");
+        }
+        memset(new_buckets, 0, new_size); // clear pointers
+        // rehash all entries
+        for (int i = 0; i < _db.ind_detailsrc_buckets_n; i++) {
+            acr_nav::FDetailsrc* elem = _db.ind_detailsrc_buckets_elems[i];
+            while (elem) {
+                acr_nav::FDetailsrc &row        = *elem;
+                acr_nav::FDetailsrc* next       = row.ind_detailsrc_next;
+                u32 index          = row.ind_detailsrc_hashval & (new_nbuckets-1);
+                row.ind_detailsrc_next     = new_buckets[index];
+                new_buckets[index] = &row;
+                elem               = next;
+            }
+        }
+        // free old array
+        algo_lib::malloc_FreeMem(_db.ind_detailsrc_buckets_elems, old_size);
+        _db.ind_detailsrc_buckets_elems = new_buckets;
+        _db.ind_detailsrc_buckets_n = new_nbuckets;
     }
 }
 
@@ -1895,6 +2135,7 @@ static void acr_nav::navaction_LoadStatic() {
         ,{ "acr_navdb.navaction  navaction:page_down  hint:page  helpgroup:movement  help_sort:13  comment:\"Page down\"", acr_nav::navaction_page_down }
         ,{ "acr_navdb.navaction  navaction:page_up  hint:page  helpgroup:movement  help_sort:12  comment:\"Page up\"", acr_nav::navaction_page_up }
         ,{ "acr_navdb.navaction  navaction:quit  hint:quit  helpgroup:meta  help_sort:11  comment:\"Exit acr_nav\"", acr_nav::navaction_quit }
+        ,{ "acr_navdb.navaction  navaction:show_detail  hint:detail  helpgroup:view  help_sort:12  comment:\"Toggle field metadata detail\"", acr_nav::navaction_show_detail }
         ,{ "acr_navdb.navaction  navaction:show_help  hint:help  helpgroup:meta  help_sort:10  comment:\"Toggle help panel\"", acr_nav::navaction_show_help }
         ,{ "acr_navdb.navaction  navaction:switch_panel_left  hint:\"\"  helpgroup:navigation  help_sort:12  comment:\"Move focus to panel on the left\"", acr_nav::navaction_switch_panel_left }
         ,{ "acr_navdb.navaction  navaction:switch_panel_right  hint:\"\"  helpgroup:navigation  help_sort:13  comment:\"Move focus to panel on the right\"", acr_nav::navaction_switch_panel_right }
@@ -3448,187 +3689,6 @@ void acr_nav::ind_reftypestyle_AbsReserve(int n) {
     }
 }
 
-// --- acr_nav.FDb.help_line.Addary
-// Reserve space (this may move memory). Insert N element at the end.
-// Return aryptr to newly inserted block.
-// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-algo::aryptr<algo::cstring> acr_nav::help_line_Addary(algo::aryptr<algo::cstring> rhs) {
-    bool overlaps = rhs.n_elems>0 && rhs.elems >= _db.help_line_elems && rhs.elems < _db.help_line_elems + _db.help_line_max;
-    if (UNLIKELY(overlaps)) {
-        FatalErrorExit("acr_nav.tary_alias  field:acr_nav.FDb.help_line  comment:'alias error: sub-array is being appended to the whole'");
-    }
-    int nnew = rhs.n_elems;
-    help_line_Reserve(nnew); // reserve space
-    int at = _db.help_line_n;
-    for (int i = 0; i < nnew; i++) {
-        new (_db.help_line_elems + at + i) algo::cstring(rhs[i]);
-        _db.help_line_n++;
-    }
-    return algo::aryptr<algo::cstring>(_db.help_line_elems + at, nnew);
-}
-
-// --- acr_nav.FDb.help_line.Alloc
-// Reserve space. Insert element at the end
-// The new element is initialized to a default value
-algo::cstring& acr_nav::help_line_Alloc() {
-    help_line_Reserve(1);
-    int n  = _db.help_line_n;
-    int at = n;
-    algo::cstring *elems = _db.help_line_elems;
-    new (elems + at) algo::cstring(); // construct new element, default initializer
-    _db.help_line_n = n+1;
-    return elems[at];
-}
-
-// --- acr_nav.FDb.help_line.AllocAt
-// Reserve space for new element, reallocating the array if necessary
-// Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::cstring& acr_nav::help_line_AllocAt(int at) {
-    help_line_Reserve(1);
-    int n  = _db.help_line_n;
-    if (UNLIKELY(u64(at) >= u64(n+1))) {
-        FatalErrorExit("acr_nav.bad_alloc_at  field:acr_nav.FDb.help_line  comment:'index out of range'");
-    }
-    algo::cstring *elems = _db.help_line_elems;
-    memmove(elems + at + 1, elems + at, (n - at) * sizeof(algo::cstring));
-    new (elems + at) algo::cstring(); // construct element, default initializer
-    _db.help_line_n = n+1;
-    return elems[at];
-}
-
-// --- acr_nav.FDb.help_line.AllocN
-// Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> acr_nav::help_line_AllocN(int n_elems) {
-    help_line_Reserve(n_elems);
-    int old_n  = _db.help_line_n;
-    int new_n = old_n + n_elems;
-    algo::cstring *elems = _db.help_line_elems;
-    for (int i = old_n; i < new_n; i++) {
-        new (elems + i) algo::cstring(); // construct new element, default initialize
-    }
-    _db.help_line_n = new_n;
-    return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
-}
-
-// --- acr_nav.FDb.help_line.AllocNAt
-// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
-// Reserve space for new element, reallocating the array if necessary
-// Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::aryptr<algo::cstring> acr_nav::help_line_AllocNAt(int n_elems, int at) {
-    help_line_Reserve(n_elems);
-    int n  = _db.help_line_n;
-    if (UNLIKELY(u64(at) > u64(n))) {
-        FatalErrorExit("acr_nav.bad_alloc_n_at  field:acr_nav.FDb.help_line  comment:'index out of range'");
-    }
-    algo::cstring *elems = _db.help_line_elems;
-    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(algo::cstring));
-    for (int i = 0; i < n_elems; i++) {
-        new (elems + at + i) algo::cstring(); // construct new element, default initialize
-    }
-    _db.help_line_n = n+n_elems;
-    return algo::aryptr<algo::cstring>(elems+at,n_elems);
-}
-
-// --- acr_nav.FDb.help_line.Remove
-// Remove item by index. If index outside of range, do nothing.
-void acr_nav::help_line_Remove(u32 i) {
-    u32 lim = _db.help_line_n;
-    algo::cstring *elems = _db.help_line_elems;
-    if (i < lim) {
-        elems[i].~cstring(); // destroy element
-        memmove(elems + i, elems + (i + 1), sizeof(algo::cstring) * (lim - (i + 1)));
-        _db.help_line_n = lim - 1;
-    }
-}
-
-// --- acr_nav.FDb.help_line.RemoveAll
-void acr_nav::help_line_RemoveAll() {
-    u32 n = _db.help_line_n;
-    while (n > 0) {
-        n -= 1;
-        _db.help_line_elems[n].~cstring();
-        _db.help_line_n = n;
-    }
-}
-
-// --- acr_nav.FDb.help_line.RemoveLast
-// Delete last element of array. Do nothing if array is empty.
-void acr_nav::help_line_RemoveLast() {
-    u64 n = _db.help_line_n;
-    if (n > 0) {
-        n -= 1;
-        help_line_qFind(u64(n)).~cstring();
-        _db.help_line_n = n;
-    }
-}
-
-// --- acr_nav.FDb.help_line.AbsReserve
-// Make sure N elements fit in array. Process dies if out of memory
-void acr_nav::help_line_AbsReserve(int n) {
-    u32 old_max  = _db.help_line_max;
-    if (n > i32(old_max)) {
-        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
-        void *new_mem = algo_lib::malloc_ReallocMem(_db.help_line_elems, old_max * sizeof(algo::cstring), new_max * sizeof(algo::cstring));
-        if (UNLIKELY(!new_mem)) {
-            FatalErrorExit("acr_nav.tary_nomem  field:acr_nav.FDb.help_line  comment:'out of memory'");
-        }
-        _db.help_line_elems = (algo::cstring*)new_mem;
-        _db.help_line_max = new_max;
-    }
-}
-
-// --- acr_nav.FDb.help_line.AllocNVal
-// Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> acr_nav::help_line_AllocNVal(int n_elems, const algo::cstring& val) {
-    help_line_Reserve(n_elems);
-    int old_n  = _db.help_line_n;
-    int new_n = old_n + n_elems;
-    algo::cstring *elems = _db.help_line_elems;
-    for (int i = old_n; i < new_n; i++) {
-        new (elems + i) algo::cstring(val);
-    }
-    _db.help_line_n = new_n;
-    return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
-}
-
-// --- acr_nav.FDb.help_line.ReadStrptrMaybe
-// A single element is read from input string and appended to the array.
-// If the string contains an error, the array is untouched.
-// Function returns success value.
-bool acr_nav::help_line_ReadStrptrMaybe(algo::strptr in_str) {
-    bool retval = true;
-    algo::cstring &elem = help_line_Alloc();
-    retval = algo::cstring_ReadStrptrMaybe(elem, in_str);
-    if (!retval) {
-        help_line_RemoveLast();
-    }
-    return retval;
-}
-
-// --- acr_nav.FDb.help_line.Insary
-// Insert array at specific position
-// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-void acr_nav::help_line_Insary(algo::aryptr<algo::cstring> rhs, int at) {
-    bool overlaps = rhs.n_elems>0 && rhs.elems >= _db.help_line_elems && rhs.elems < _db.help_line_elems + _db.help_line_max;
-    if (UNLIKELY(overlaps)) {
-        FatalErrorExit("acr_nav.tary_alias  field:acr_nav.FDb.help_line  comment:'alias error: sub-array is being appended to the whole'");
-    }
-    if (UNLIKELY(u64(at) >= u64(_db.help_line_elems+1))) {
-        FatalErrorExit("acr_nav.bad_insary  field:acr_nav.FDb.help_line  comment:'index out of range'");
-    }
-    int nnew = rhs.n_elems;
-    int nmove = _db.help_line_n - at;
-    help_line_Reserve(nnew); // reserve space
-    for (int i = nmove-1; i >=0 ; --i) {
-        new (_db.help_line_elems + at + nnew + i) algo::cstring(_db.help_line_elems[at + i]);
-        _db.help_line_elems[at + i].~cstring(); // destroy element
-    }
-    for (int i = 0; i < nnew; ++i) {
-        new (_db.help_line_elems + at + i) algo::cstring(rhs[i]);
-    }
-    _db.help_line_n += nnew;
-}
-
 // --- acr_nav.FDb.ssimfile.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -4092,185 +4152,172 @@ void acr_nav::ind_viewmode_AbsReserve(int n) {
     }
 }
 
-// --- acr_nav.FDb.preview_line.Addary
+// --- acr_nav.FDb.viewmode_stack.Addary
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-algo::aryptr<algo::cstring> acr_nav::preview_line_Addary(algo::aryptr<algo::cstring> rhs) {
-    bool overlaps = rhs.n_elems>0 && rhs.elems >= _db.preview_line_elems && rhs.elems < _db.preview_line_elems + _db.preview_line_max;
+algo::aryptr<algo::Smallstr50> acr_nav::viewmode_stack_Addary(algo::aryptr<algo::Smallstr50> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= _db.viewmode_stack_elems && rhs.elems < _db.viewmode_stack_elems + _db.viewmode_stack_max;
     if (UNLIKELY(overlaps)) {
-        FatalErrorExit("acr_nav.tary_alias  field:acr_nav.FDb.preview_line  comment:'alias error: sub-array is being appended to the whole'");
+        FatalErrorExit("acr_nav.tary_alias  field:acr_nav.FDb.viewmode_stack  comment:'alias error: sub-array is being appended to the whole'");
     }
     int nnew = rhs.n_elems;
-    preview_line_Reserve(nnew); // reserve space
-    int at = _db.preview_line_n;
+    viewmode_stack_Reserve(nnew); // reserve space
+    int at = _db.viewmode_stack_n;
     for (int i = 0; i < nnew; i++) {
-        new (_db.preview_line_elems + at + i) algo::cstring(rhs[i]);
-        _db.preview_line_n++;
+        new (_db.viewmode_stack_elems + at + i) algo::Smallstr50(rhs[i]);
+        _db.viewmode_stack_n++;
     }
-    return algo::aryptr<algo::cstring>(_db.preview_line_elems + at, nnew);
+    return algo::aryptr<algo::Smallstr50>(_db.viewmode_stack_elems + at, nnew);
 }
 
-// --- acr_nav.FDb.preview_line.Alloc
+// --- acr_nav.FDb.viewmode_stack.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
-algo::cstring& acr_nav::preview_line_Alloc() {
-    preview_line_Reserve(1);
-    int n  = _db.preview_line_n;
+algo::Smallstr50& acr_nav::viewmode_stack_Alloc() {
+    viewmode_stack_Reserve(1);
+    int n  = _db.viewmode_stack_n;
     int at = n;
-    algo::cstring *elems = _db.preview_line_elems;
-    new (elems + at) algo::cstring(); // construct new element, default initializer
-    _db.preview_line_n = n+1;
+    algo::Smallstr50 *elems = _db.viewmode_stack_elems;
+    new (elems + at) algo::Smallstr50(); // construct new element, default initializer
+    _db.viewmode_stack_n = n+1;
     return elems[at];
 }
 
-// --- acr_nav.FDb.preview_line.AllocAt
+// --- acr_nav.FDb.viewmode_stack.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::cstring& acr_nav::preview_line_AllocAt(int at) {
-    preview_line_Reserve(1);
-    int n  = _db.preview_line_n;
+algo::Smallstr50& acr_nav::viewmode_stack_AllocAt(int at) {
+    viewmode_stack_Reserve(1);
+    int n  = _db.viewmode_stack_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
-        FatalErrorExit("acr_nav.bad_alloc_at  field:acr_nav.FDb.preview_line  comment:'index out of range'");
+        FatalErrorExit("acr_nav.bad_alloc_at  field:acr_nav.FDb.viewmode_stack  comment:'index out of range'");
     }
-    algo::cstring *elems = _db.preview_line_elems;
-    memmove(elems + at + 1, elems + at, (n - at) * sizeof(algo::cstring));
-    new (elems + at) algo::cstring(); // construct element, default initializer
-    _db.preview_line_n = n+1;
+    algo::Smallstr50 *elems = _db.viewmode_stack_elems;
+    memmove(elems + at + 1, elems + at, (n - at) * sizeof(algo::Smallstr50));
+    new (elems + at) algo::Smallstr50(); // construct element, default initializer
+    _db.viewmode_stack_n = n+1;
     return elems[at];
 }
 
-// --- acr_nav.FDb.preview_line.AllocN
+// --- acr_nav.FDb.viewmode_stack.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> acr_nav::preview_line_AllocN(int n_elems) {
-    preview_line_Reserve(n_elems);
-    int old_n  = _db.preview_line_n;
+algo::aryptr<algo::Smallstr50> acr_nav::viewmode_stack_AllocN(int n_elems) {
+    viewmode_stack_Reserve(n_elems);
+    int old_n  = _db.viewmode_stack_n;
     int new_n = old_n + n_elems;
-    algo::cstring *elems = _db.preview_line_elems;
+    algo::Smallstr50 *elems = _db.viewmode_stack_elems;
     for (int i = old_n; i < new_n; i++) {
-        new (elems + i) algo::cstring(); // construct new element, default initialize
+        new (elems + i) algo::Smallstr50(); // construct new element, default initialize
     }
-    _db.preview_line_n = new_n;
-    return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
+    _db.viewmode_stack_n = new_n;
+    return algo::aryptr<algo::Smallstr50>(elems + old_n, n_elems);
 }
 
-// --- acr_nav.FDb.preview_line.AllocNAt
+// --- acr_nav.FDb.viewmode_stack.AllocNAt
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::aryptr<algo::cstring> acr_nav::preview_line_AllocNAt(int n_elems, int at) {
-    preview_line_Reserve(n_elems);
-    int n  = _db.preview_line_n;
+algo::aryptr<algo::Smallstr50> acr_nav::viewmode_stack_AllocNAt(int n_elems, int at) {
+    viewmode_stack_Reserve(n_elems);
+    int n  = _db.viewmode_stack_n;
     if (UNLIKELY(u64(at) > u64(n))) {
-        FatalErrorExit("acr_nav.bad_alloc_n_at  field:acr_nav.FDb.preview_line  comment:'index out of range'");
+        FatalErrorExit("acr_nav.bad_alloc_n_at  field:acr_nav.FDb.viewmode_stack  comment:'index out of range'");
     }
-    algo::cstring *elems = _db.preview_line_elems;
-    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(algo::cstring));
+    algo::Smallstr50 *elems = _db.viewmode_stack_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(algo::Smallstr50));
     for (int i = 0; i < n_elems; i++) {
-        new (elems + at + i) algo::cstring(); // construct new element, default initialize
+        new (elems + at + i) algo::Smallstr50(); // construct new element, default initialize
     }
-    _db.preview_line_n = n+n_elems;
-    return algo::aryptr<algo::cstring>(elems+at,n_elems);
+    _db.viewmode_stack_n = n+n_elems;
+    return algo::aryptr<algo::Smallstr50>(elems+at,n_elems);
 }
 
-// --- acr_nav.FDb.preview_line.Remove
+// --- acr_nav.FDb.viewmode_stack.Remove
 // Remove item by index. If index outside of range, do nothing.
-void acr_nav::preview_line_Remove(u32 i) {
-    u32 lim = _db.preview_line_n;
-    algo::cstring *elems = _db.preview_line_elems;
+void acr_nav::viewmode_stack_Remove(u32 i) {
+    u32 lim = _db.viewmode_stack_n;
+    algo::Smallstr50 *elems = _db.viewmode_stack_elems;
     if (i < lim) {
-        elems[i].~cstring(); // destroy element
-        memmove(elems + i, elems + (i + 1), sizeof(algo::cstring) * (lim - (i + 1)));
-        _db.preview_line_n = lim - 1;
+        memmove(elems + i, elems + (i + 1), sizeof(algo::Smallstr50) * (lim - (i + 1)));
+        _db.viewmode_stack_n = lim - 1;
     }
 }
 
-// --- acr_nav.FDb.preview_line.RemoveAll
-void acr_nav::preview_line_RemoveAll() {
-    u32 n = _db.preview_line_n;
-    while (n > 0) {
-        n -= 1;
-        _db.preview_line_elems[n].~cstring();
-        _db.preview_line_n = n;
-    }
-}
-
-// --- acr_nav.FDb.preview_line.RemoveLast
+// --- acr_nav.FDb.viewmode_stack.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void acr_nav::preview_line_RemoveLast() {
-    u64 n = _db.preview_line_n;
+void acr_nav::viewmode_stack_RemoveLast() {
+    u64 n = _db.viewmode_stack_n;
     if (n > 0) {
         n -= 1;
-        preview_line_qFind(u64(n)).~cstring();
-        _db.preview_line_n = n;
+        _db.viewmode_stack_n = n;
     }
 }
 
-// --- acr_nav.FDb.preview_line.AbsReserve
+// --- acr_nav.FDb.viewmode_stack.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void acr_nav::preview_line_AbsReserve(int n) {
-    u32 old_max  = _db.preview_line_max;
+void acr_nav::viewmode_stack_AbsReserve(int n) {
+    u32 old_max  = _db.viewmode_stack_max;
     if (n > i32(old_max)) {
         u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
-        void *new_mem = algo_lib::malloc_ReallocMem(_db.preview_line_elems, old_max * sizeof(algo::cstring), new_max * sizeof(algo::cstring));
+        void *new_mem = algo_lib::malloc_ReallocMem(_db.viewmode_stack_elems, old_max * sizeof(algo::Smallstr50), new_max * sizeof(algo::Smallstr50));
         if (UNLIKELY(!new_mem)) {
-            FatalErrorExit("acr_nav.tary_nomem  field:acr_nav.FDb.preview_line  comment:'out of memory'");
+            FatalErrorExit("acr_nav.tary_nomem  field:acr_nav.FDb.viewmode_stack  comment:'out of memory'");
         }
-        _db.preview_line_elems = (algo::cstring*)new_mem;
-        _db.preview_line_max = new_max;
+        _db.viewmode_stack_elems = (algo::Smallstr50*)new_mem;
+        _db.viewmode_stack_max = new_max;
     }
 }
 
-// --- acr_nav.FDb.preview_line.AllocNVal
+// --- acr_nav.FDb.viewmode_stack.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> acr_nav::preview_line_AllocNVal(int n_elems, const algo::cstring& val) {
-    preview_line_Reserve(n_elems);
-    int old_n  = _db.preview_line_n;
+algo::aryptr<algo::Smallstr50> acr_nav::viewmode_stack_AllocNVal(int n_elems, const algo::Smallstr50& val) {
+    viewmode_stack_Reserve(n_elems);
+    int old_n  = _db.viewmode_stack_n;
     int new_n = old_n + n_elems;
-    algo::cstring *elems = _db.preview_line_elems;
+    algo::Smallstr50 *elems = _db.viewmode_stack_elems;
     for (int i = old_n; i < new_n; i++) {
-        new (elems + i) algo::cstring(val);
+        new (elems + i) algo::Smallstr50(val);
     }
-    _db.preview_line_n = new_n;
-    return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
+    _db.viewmode_stack_n = new_n;
+    return algo::aryptr<algo::Smallstr50>(elems + old_n, n_elems);
 }
 
-// --- acr_nav.FDb.preview_line.ReadStrptrMaybe
+// --- acr_nav.FDb.viewmode_stack.ReadStrptrMaybe
 // A single element is read from input string and appended to the array.
 // If the string contains an error, the array is untouched.
 // Function returns success value.
-bool acr_nav::preview_line_ReadStrptrMaybe(algo::strptr in_str) {
+bool acr_nav::viewmode_stack_ReadStrptrMaybe(algo::strptr in_str) {
     bool retval = true;
-    algo::cstring &elem = preview_line_Alloc();
-    retval = algo::cstring_ReadStrptrMaybe(elem, in_str);
+    algo::Smallstr50 &elem = viewmode_stack_Alloc();
+    retval = algo::Smallstr50_ReadStrptrMaybe(elem, in_str);
     if (!retval) {
-        preview_line_RemoveLast();
+        viewmode_stack_RemoveLast();
     }
     return retval;
 }
 
-// --- acr_nav.FDb.preview_line.Insary
+// --- acr_nav.FDb.viewmode_stack.Insary
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-void acr_nav::preview_line_Insary(algo::aryptr<algo::cstring> rhs, int at) {
-    bool overlaps = rhs.n_elems>0 && rhs.elems >= _db.preview_line_elems && rhs.elems < _db.preview_line_elems + _db.preview_line_max;
+void acr_nav::viewmode_stack_Insary(algo::aryptr<algo::Smallstr50> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= _db.viewmode_stack_elems && rhs.elems < _db.viewmode_stack_elems + _db.viewmode_stack_max;
     if (UNLIKELY(overlaps)) {
-        FatalErrorExit("acr_nav.tary_alias  field:acr_nav.FDb.preview_line  comment:'alias error: sub-array is being appended to the whole'");
+        FatalErrorExit("acr_nav.tary_alias  field:acr_nav.FDb.viewmode_stack  comment:'alias error: sub-array is being appended to the whole'");
     }
-    if (UNLIKELY(u64(at) >= u64(_db.preview_line_elems+1))) {
-        FatalErrorExit("acr_nav.bad_insary  field:acr_nav.FDb.preview_line  comment:'index out of range'");
+    if (UNLIKELY(u64(at) >= u64(_db.viewmode_stack_elems+1))) {
+        FatalErrorExit("acr_nav.bad_insary  field:acr_nav.FDb.viewmode_stack  comment:'index out of range'");
     }
     int nnew = rhs.n_elems;
-    int nmove = _db.preview_line_n - at;
-    preview_line_Reserve(nnew); // reserve space
+    int nmove = _db.viewmode_stack_n - at;
+    viewmode_stack_Reserve(nnew); // reserve space
     for (int i = nmove-1; i >=0 ; --i) {
-        new (_db.preview_line_elems + at + nnew + i) algo::cstring(_db.preview_line_elems[at + i]);
-        _db.preview_line_elems[at + i].~cstring(); // destroy element
+        new (_db.viewmode_stack_elems + at + nnew + i) algo::Smallstr50(_db.viewmode_stack_elems[at + i]);
     }
     for (int i = 0; i < nnew; ++i) {
-        new (_db.preview_line_elems + at + i) algo::cstring(rhs[i]);
+        new (_db.viewmode_stack_elems + at + i) algo::Smallstr50(rhs[i]);
     }
-    _db.preview_line_n += nnew;
+    _db.viewmode_stack_n += nnew;
 }
 
 // --- acr_nav.FDb.trace.RowidFind
@@ -4299,6 +4346,17 @@ void acr_nav::FDb_Init() {
         _db.ctype_lary[i]  = ctype_first;
         ctype_first    += 1ULL<<i;
     }
+    // initialize LAry detailsrc (acr_nav.FDb.detailsrc)
+    _db.detailsrc_n = 0;
+    memset(_db.detailsrc_lary, 0, sizeof(_db.detailsrc_lary)); // zero out all level pointers
+    acr_nav::FDetailsrc* detailsrc_first = (acr_nav::FDetailsrc*)algo_lib::malloc_AllocMem(sizeof(acr_nav::FDetailsrc) * (u64(1)<<4));
+    if (!detailsrc_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.detailsrc_lary[i]  = detailsrc_first;
+        detailsrc_first    += 1ULL<<i;
+    }
     // initialize LAry helpgroup (acr_nav.FDb.helpgroup)
     _db.helpgroup_n = 0;
     memset(_db.helpgroup_lary, 0, sizeof(_db.helpgroup_lary)); // zero out all level pointers
@@ -4326,6 +4384,14 @@ void acr_nav::FDb_Init() {
         FatalErrorExit("out of memory"); // (acr_nav.FDb.ind_ctype)
     }
     memset(_db.ind_ctype_buckets_elems, 0, sizeof(acr_nav::FCtype*)*_db.ind_ctype_buckets_n); // (acr_nav.FDb.ind_ctype)
+    // initialize hash table for acr_nav::FDetailsrc;
+    _db.ind_detailsrc_n             	= 0; // (acr_nav.FDb.ind_detailsrc)
+    _db.ind_detailsrc_buckets_n     	= 4; // (acr_nav.FDb.ind_detailsrc)
+    _db.ind_detailsrc_buckets_elems 	= (acr_nav::FDetailsrc**)algo_lib::malloc_AllocMem(sizeof(acr_nav::FDetailsrc*)*_db.ind_detailsrc_buckets_n); // initial buckets (acr_nav.FDb.ind_detailsrc)
+    if (!_db.ind_detailsrc_buckets_elems) {
+        FatalErrorExit("out of memory"); // (acr_nav.FDb.ind_detailsrc)
+    }
+    memset(_db.ind_detailsrc_buckets_elems, 0, sizeof(acr_nav::FDetailsrc*)*_db.ind_detailsrc_buckets_n); // (acr_nav.FDb.ind_detailsrc)
     // initialize LAry field (acr_nav.FDb.field)
     _db.field_n = 0;
     memset(_db.field_lary, 0, sizeof(_db.field_lary)); // zero out all level pointers
@@ -4511,11 +4577,7 @@ void acr_nav::FDb_Init() {
         FatalErrorExit("out of memory"); // (acr_nav.FDb.ind_reftypestyle)
     }
     memset(_db.ind_reftypestyle_buckets_elems, 0, sizeof(acr_nav::FReftypestyle*)*_db.ind_reftypestyle_buckets_n); // (acr_nav.FDb.ind_reftypestyle)
-    _db.help_line_elems 	= 0; // (acr_nav.FDb.help_line)
-    _db.help_line_n     	= 0; // (acr_nav.FDb.help_line)
-    _db.help_line_max   	= 0; // (acr_nav.FDb.help_line)
     _db.p_help_viewmode = NULL;
-    _db.p_prev_viewmode = NULL;
     _db.startup_help = bool(false);
     // initialize LAry ssimfile (acr_nav.FDb.ssimfile)
     _db.ssimfile_n = 0;
@@ -4556,11 +4618,13 @@ void acr_nav::FDb_Init() {
     }
     memset(_db.ind_viewmode_buckets_elems, 0, sizeof(acr_nav::FViewmode*)*_db.ind_viewmode_buckets_n); // (acr_nav.FDb.ind_viewmode)
     _db.p_cur_viewmode = NULL;
-    _db.preview_line_elems 	= 0; // (acr_nav.FDb.preview_line)
-    _db.preview_line_n     	= 0; // (acr_nav.FDb.preview_line)
-    _db.preview_line_max   	= 0; // (acr_nav.FDb.preview_line)
+    _db.viewmode_stack_elems 	= 0; // (acr_nav.FDb.viewmode_stack)
+    _db.viewmode_stack_n     	= 0; // (acr_nav.FDb.viewmode_stack)
+    _db.viewmode_stack_max   	= 0; // (acr_nav.FDb.viewmode_stack)
     _db.p_preview_ctype = NULL;
     _db.p_default_viewmode = NULL;
+    _db.p_detail_field = NULL;
+    _db.p_detail_viewmode = NULL;
     _db.p_preview_viewmode = NULL;
     _db.p_xref_viewmode = NULL;
     _db.p_title_focus = NULL;
@@ -4577,11 +4641,11 @@ void acr_nav::FDb_Init() {
 void acr_nav::FDb_Uninit() {
     acr_nav::FDb &row = _db; (void)row;
 
-    // acr_nav.FDb.preview_line.Uninit (Tary)  //Cached preview data lines from ssimfile
-    // remove all elements from acr_nav.FDb.preview_line
-    preview_line_RemoveAll();
-    // free memory for Tary acr_nav.FDb.preview_line
-    algo_lib::malloc_FreeMem(_db.preview_line_elems, sizeof(algo::cstring)*_db.preview_line_max); // (acr_nav.FDb.preview_line)
+    // acr_nav.FDb.viewmode_stack.Uninit (Tary)  //Overlay viewmode save/restore stack
+    // remove all elements from acr_nav.FDb.viewmode_stack
+    viewmode_stack_RemoveAll();
+    // free memory for Tary acr_nav.FDb.viewmode_stack
+    algo_lib::malloc_FreeMem(_db.viewmode_stack_elems, sizeof(algo::Smallstr50)*_db.viewmode_stack_max); // (acr_nav.FDb.viewmode_stack)
 
     // acr_nav.FDb.ind_viewmode.Uninit (Thash)  //
     // skip destruction of ind_viewmode in global scope
@@ -4594,12 +4658,6 @@ void acr_nav::FDb_Uninit() {
 
     // acr_nav.FDb.ssimfile.Uninit (Lary)  //
     // skip destruction in global scope
-
-    // acr_nav.FDb.help_line.Uninit (Tary)  //Preformatted help content lines
-    // remove all elements from acr_nav.FDb.help_line
-    help_line_RemoveAll();
-    // free memory for Tary acr_nav.FDb.help_line
-    algo_lib::malloc_FreeMem(_db.help_line_elems, sizeof(algo::cstring)*_db.help_line_max); // (acr_nav.FDb.help_line)
 
     // acr_nav.FDb.ind_reftypestyle.Uninit (Thash)  //
     // skip destruction of ind_reftypestyle in global scope
@@ -4661,6 +4719,9 @@ void acr_nav::FDb_Uninit() {
     // acr_nav.FDb.field.Uninit (Lary)  //
     // skip destruction in global scope
 
+    // acr_nav.FDb.ind_detailsrc.Uninit (Thash)  //
+    // skip destruction of ind_detailsrc in global scope
+
     // acr_nav.FDb.ind_ctype.Uninit (Thash)  //
     // skip destruction of ind_ctype in global scope
 
@@ -4670,8 +4731,31 @@ void acr_nav::FDb_Uninit() {
     // acr_nav.FDb.helpgroup.Uninit (Lary)  //
     // skip destruction in global scope
 
+    // acr_nav.FDb.detailsrc.Uninit (Lary)  //
+    // skip destruction in global scope
+
     // acr_nav.FDb.ctype.Uninit (Lary)  //
     // skip destruction in global scope
+}
+
+// --- acr_nav.FDetailsrc.base.CopyOut
+// Copy fields out of row
+void acr_nav::detailsrc_CopyOut(acr_nav::FDetailsrc &row, acr_navdb::Detailsrc &out) {
+    out.detailsrc = row.detailsrc;
+    out.comment = row.comment;
+}
+
+// --- acr_nav.FDetailsrc.base.CopyIn
+// Copy fields in to row
+void acr_nav::detailsrc_CopyIn(acr_nav::FDetailsrc &row, acr_navdb::Detailsrc &in) {
+    row.detailsrc = in.detailsrc;
+    row.comment = in.comment;
+}
+
+// --- acr_nav.FDetailsrc..Uninit
+void acr_nav::FDetailsrc_Uninit(acr_nav::FDetailsrc& detailsrc) {
+    acr_nav::FDetailsrc &row = detailsrc; (void)row;
+    ind_detailsrc_Remove(row); // remove detailsrc from index ind_detailsrc
 }
 
 // --- acr_nav.FField.base.CopyOut
@@ -5079,10 +5163,217 @@ void acr_nav::viewmode_CopyIn(acr_nav::FViewmode &row, acr_navdb::Viewmode &in) 
     row.comment = in.comment;
 }
 
+// --- acr_nav.FViewmode.line.Addary
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+algo::aryptr<algo::cstring> acr_nav::line_Addary(acr_nav::FViewmode& viewmode, algo::aryptr<algo::cstring> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= viewmode.line_elems && rhs.elems < viewmode.line_elems + viewmode.line_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("acr_nav.tary_alias  field:acr_nav.FViewmode.line  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    int nnew = rhs.n_elems;
+    line_Reserve(viewmode, nnew); // reserve space
+    int at = viewmode.line_n;
+    for (int i = 0; i < nnew; i++) {
+        new (viewmode.line_elems + at + i) algo::cstring(rhs[i]);
+        viewmode.line_n++;
+    }
+    return algo::aryptr<algo::cstring>(viewmode.line_elems + at, nnew);
+}
+
+// --- acr_nav.FViewmode.line.Alloc
+// Reserve space. Insert element at the end
+// The new element is initialized to a default value
+algo::cstring& acr_nav::line_Alloc(acr_nav::FViewmode& viewmode) {
+    line_Reserve(viewmode, 1);
+    int n  = viewmode.line_n;
+    int at = n;
+    algo::cstring *elems = viewmode.line_elems;
+    new (elems + at) algo::cstring(); // construct new element, default initializer
+    viewmode.line_n = n+1;
+    return elems[at];
+}
+
+// --- acr_nav.FViewmode.line.AllocAt
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::cstring& acr_nav::line_AllocAt(acr_nav::FViewmode& viewmode, int at) {
+    line_Reserve(viewmode, 1);
+    int n  = viewmode.line_n;
+    if (UNLIKELY(u64(at) >= u64(n+1))) {
+        FatalErrorExit("acr_nav.bad_alloc_at  field:acr_nav.FViewmode.line  comment:'index out of range'");
+    }
+    algo::cstring *elems = viewmode.line_elems;
+    memmove(elems + at + 1, elems + at, (n - at) * sizeof(algo::cstring));
+    new (elems + at) algo::cstring(); // construct element, default initializer
+    viewmode.line_n = n+1;
+    return elems[at];
+}
+
+// --- acr_nav.FViewmode.line.AllocN
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo::cstring> acr_nav::line_AllocN(acr_nav::FViewmode& viewmode, int n_elems) {
+    line_Reserve(viewmode, n_elems);
+    int old_n  = viewmode.line_n;
+    int new_n = old_n + n_elems;
+    algo::cstring *elems = viewmode.line_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) algo::cstring(); // construct new element, default initialize
+    }
+    viewmode.line_n = new_n;
+    return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
+}
+
+// --- acr_nav.FViewmode.line.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<algo::cstring> acr_nav::line_AllocNAt(acr_nav::FViewmode& viewmode, int n_elems, int at) {
+    line_Reserve(viewmode, n_elems);
+    int n  = viewmode.line_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("acr_nav.bad_alloc_n_at  field:acr_nav.FViewmode.line  comment:'index out of range'");
+    }
+    algo::cstring *elems = viewmode.line_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(algo::cstring));
+    for (int i = 0; i < n_elems; i++) {
+        new (elems + at + i) algo::cstring(); // construct new element, default initialize
+    }
+    viewmode.line_n = n+n_elems;
+    return algo::aryptr<algo::cstring>(elems+at,n_elems);
+}
+
+// --- acr_nav.FViewmode.line.Remove
+// Remove item by index. If index outside of range, do nothing.
+void acr_nav::line_Remove(acr_nav::FViewmode& viewmode, u32 i) {
+    u32 lim = viewmode.line_n;
+    algo::cstring *elems = viewmode.line_elems;
+    if (i < lim) {
+        elems[i].~cstring(); // destroy element
+        memmove(elems + i, elems + (i + 1), sizeof(algo::cstring) * (lim - (i + 1)));
+        viewmode.line_n = lim - 1;
+    }
+}
+
+// --- acr_nav.FViewmode.line.RemoveAll
+void acr_nav::line_RemoveAll(acr_nav::FViewmode& viewmode) {
+    u32 n = viewmode.line_n;
+    while (n > 0) {
+        n -= 1;
+        viewmode.line_elems[n].~cstring();
+        viewmode.line_n = n;
+    }
+}
+
+// --- acr_nav.FViewmode.line.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void acr_nav::line_RemoveLast(acr_nav::FViewmode& viewmode) {
+    u64 n = viewmode.line_n;
+    if (n > 0) {
+        n -= 1;
+        line_qFind(viewmode, u64(n)).~cstring();
+        viewmode.line_n = n;
+    }
+}
+
+// --- acr_nav.FViewmode.line.AbsReserve
+// Make sure N elements fit in array. Process dies if out of memory
+void acr_nav::line_AbsReserve(acr_nav::FViewmode& viewmode, int n) {
+    u32 old_max  = viewmode.line_max;
+    if (n > i32(old_max)) {
+        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+        void *new_mem = algo_lib::malloc_ReallocMem(viewmode.line_elems, old_max * sizeof(algo::cstring), new_max * sizeof(algo::cstring));
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("acr_nav.tary_nomem  field:acr_nav.FViewmode.line  comment:'out of memory'");
+        }
+        viewmode.line_elems = (algo::cstring*)new_mem;
+        viewmode.line_max = new_max;
+    }
+}
+
+// --- acr_nav.FViewmode.line.Setary
+// Copy contents of RHS to PARENT.
+void acr_nav::line_Setary(acr_nav::FViewmode& viewmode, acr_nav::FViewmode &rhs) {
+    line_RemoveAll(viewmode);
+    int nnew = rhs.line_n;
+    line_Reserve(viewmode, nnew); // reserve space
+    for (int i = 0; i < nnew; i++) { // copy elements over
+        new (viewmode.line_elems + i) algo::cstring(line_qFind(rhs, i));
+        viewmode.line_n = i + 1;
+    }
+}
+
+// --- acr_nav.FViewmode.line.Setary2
+// Copy specified array into line, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+void acr_nav::line_Setary(acr_nav::FViewmode& viewmode, const algo::aryptr<algo::cstring> &rhs) {
+    line_RemoveAll(viewmode);
+    line_Addary(viewmode, rhs);
+}
+
+// --- acr_nav.FViewmode.line.AllocNVal
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo::cstring> acr_nav::line_AllocNVal(acr_nav::FViewmode& viewmode, int n_elems, const algo::cstring& val) {
+    line_Reserve(viewmode, n_elems);
+    int old_n  = viewmode.line_n;
+    int new_n = old_n + n_elems;
+    algo::cstring *elems = viewmode.line_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) algo::cstring(val);
+    }
+    viewmode.line_n = new_n;
+    return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
+}
+
+// --- acr_nav.FViewmode.line.ReadStrptrMaybe
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+bool acr_nav::line_ReadStrptrMaybe(acr_nav::FViewmode& viewmode, algo::strptr in_str) {
+    bool retval = true;
+    algo::cstring &elem = line_Alloc(viewmode);
+    retval = algo::cstring_ReadStrptrMaybe(elem, in_str);
+    if (!retval) {
+        line_RemoveLast(viewmode);
+    }
+    return retval;
+}
+
+// --- acr_nav.FViewmode.line.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void acr_nav::line_Insary(acr_nav::FViewmode& viewmode, algo::aryptr<algo::cstring> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= viewmode.line_elems && rhs.elems < viewmode.line_elems + viewmode.line_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("acr_nav.tary_alias  field:acr_nav.FViewmode.line  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(viewmode.line_elems+1))) {
+        FatalErrorExit("acr_nav.bad_insary  field:acr_nav.FViewmode.line  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = viewmode.line_n - at;
+    line_Reserve(viewmode, nnew); // reserve space
+    for (int i = nmove-1; i >=0 ; --i) {
+        new (viewmode.line_elems + at + nnew + i) algo::cstring(viewmode.line_elems[at + i]);
+        viewmode.line_elems[at + i].~cstring(); // destroy element
+    }
+    for (int i = 0; i < nnew; ++i) {
+        new (viewmode.line_elems + at + i) algo::cstring(rhs[i]);
+    }
+    viewmode.line_n += nnew;
+}
+
 // --- acr_nav.FViewmode..Uninit
 void acr_nav::FViewmode_Uninit(acr_nav::FViewmode& viewmode) {
     acr_nav::FViewmode &row = viewmode; (void)row;
     ind_viewmode_Remove(row); // remove viewmode from index ind_viewmode
+
+    // acr_nav.FViewmode.line.Uninit (Tary)  //Preformatted content lines (has_fields:N modes)
+    // remove all elements from acr_nav.FViewmode.line
+    line_RemoveAll(viewmode);
+    // free memory for Tary acr_nav.FViewmode.line
+    algo_lib::malloc_FreeMem(viewmode.line_elems, sizeof(algo::cstring)*viewmode.line_max); // (acr_nav.FViewmode.line)
 }
 
 // --- acr_nav.FieldId.value.ToCstr
@@ -5309,6 +5600,7 @@ const char* acr_nav::value_ToCstr(const acr_nav::TableId& parent) {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case acr_nav_TableId_dmmeta_Ctype  : ret = "dmmeta.Ctype";  break;
+        case acr_nav_TableId_acr_navdb_Detailsrc: ret = "acr_navdb.Detailsrc";  break;
         case acr_nav_TableId_dmmeta_Field  : ret = "dmmeta.Field";  break;
         case acr_nav_TableId_acr_navdb_Helpgroup: ret = "acr_navdb.Helpgroup";  break;
         case acr_nav_TableId_acr_navdb_Keybind: ret = "acr_navdb.Keybind";  break;
@@ -5435,6 +5727,8 @@ bool acr_nav::value_SetStrptrMaybe(acr_nav::TableId& parent, algo::strptr rhs) {
         case 19: {
             switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('a','c','r','_','n','a','v','d'): {
+                    if (memcmp(rhs.elems+8,"b.Detailsrc",11)==0) { value_SetEnum(parent,acr_nav_TableId_acr_navdb_Detailsrc); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"b.detailsrc",11)==0) { value_SetEnum(parent,acr_nav_TableId_acr_navdb_detailsrc); ret = true; break; }
                     if (memcmp(rhs.elems+8,"b.Helpgroup",11)==0) { value_SetEnum(parent,acr_nav_TableId_acr_navdb_Helpgroup); ret = true; break; }
                     if (memcmp(rhs.elems+8,"b.helpgroup",11)==0) { value_SetEnum(parent,acr_nav_TableId_acr_navdb_helpgroup); ret = true; break; }
                     break;

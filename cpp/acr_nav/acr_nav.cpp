@@ -194,33 +194,47 @@ static acr_nav::FCtype* SelectedCtype(acr_nav::FPanel &left) {
 
 // -----------------------------------------------------------------------------
 
-// IsXrefMode and IsHelpMode are identity checks that should become data on FViewmode.
-// At 2 modes per axis the branching is trivial; refactor when a 3rd mode is added.
-
 // 5 call sites dispatch on IsXrefMode() within the has_fields:Y path.
 // Future: field-source properties on FViewmode would eliminate all 5.
 static bool IsXrefMode() {
     return acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_xref_viewmode;
 }
 
-// 4 call sites dispatch on IsHelpMode() within the !has_fields path (3 helpers + RightPanelItemCount).
-// Future: line-source pointers on FViewmode would eliminate all 4.
+// IsHelpMode: identity check used only for the ? toggle guard in navaction_show_help.
+// IsDetailMode: identity check for d toggle guard and title bar display.
+// 2 overlay viewmodes, each with distinct entry guards (help: unconditional;
+// detail: requires has_fields + selected field) -- an is_overlay data property
+// would not unify the navaction functions at this count. Revisit at 3 overlays.
 static bool IsHelpMode() {
     return acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_help_viewmode;
 }
+
+static bool IsDetailMode() {
+    return acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_detail_viewmode;
+}
+
+// Pop the topmost overlay viewmode from viewmode_stack, restoring p_cur_viewmode.
+// Used by show_help toggle, show_detail toggle, and startup help dismiss.
+static void PopViewmode() {
+    if (!acr_nav::viewmode_stack_EmptyQ()) {
+        acr_nav::FViewmode *prev = acr_nav::ind_viewmode_Find(acr_nav::viewmode_stack_qLast());
+        acr_nav::viewmode_stack_RemoveLast();
+        if (prev) {
+            acr_nav::_db.p_cur_viewmode = prev;
+        }
+    }
+}
+
 static int RightPanelLineCount() {
-    int ret = IsHelpMode() ? acr_nav::help_line_N() : acr_nav::preview_line_N();
-    return ret;
+    return acr_nav::line_N(*acr_nav::_db.p_cur_viewmode);
 }
 
 static algo::strptr RightPanelLineFind(int idx) {
-    algo::strptr ret = IsHelpMode() ? acr_nav::help_line_qFind(idx) : acr_nav::preview_line_qFind(idx);
-    return ret;
+    return acr_nav::line_qFind(*acr_nav::_db.p_cur_viewmode, idx);
 }
 
 static algo::strptr RightPanelLineHeader() {
-    algo::strptr ret = IsHelpMode() ? acr_nav::_db.help_header : acr_nav::_db.preview_header;
-    return ret;
+    return acr_nav::_db.p_cur_viewmode->header;
 }
 
 // Find the ssimfile backing a ctype. If the ctype itself has no ssimfile,
@@ -238,7 +252,7 @@ static acr_nav::FSsimfile* FindSsimfile(acr_nav::FCtype &ctype) {
     return ret;
 }
 
-// Load ssimfile content into preview_line Tary, stripping the tuple head from each line.
+// Load ssimfile content into the preview viewmode's line Tary, stripping the tuple head from each line.
 // Format a single row of attr values into an aligned column string.
 static void FormatPreviewRow(cstring &out, algo::Tuple &tuple, int *col_wid, int n_col) {
     int ci = 0;
@@ -263,8 +277,9 @@ static void FormatPreviewRow(cstring &out, algo::Tuple &tuple, int *col_wid, int
 }
 
 static void LoadPreview(acr_nav::FCtype &ctype) {
-    acr_nav::preview_line_RemoveAll();
-    acr_nav::_db.preview_header = "";
+    acr_nav::FViewmode &vm = *acr_nav::_db.p_preview_viewmode;
+    acr_nav::line_RemoveAll(vm);
+    vm.header = "";
     acr_nav::_db.p_preview_ctype = &ctype;
     acr_nav::FSsimfile *ssimfile = FindSsimfile(ctype);
     if (ssimfile) {
@@ -308,7 +323,7 @@ static void LoadPreview(acr_nav::FCtype &ctype) {
                     hdr << col_name[c];
                     char_PrintNTimes(' ', hdr, col_wid[c] - ch_N(col_name[c]));
                 }
-                acr_nav::_db.preview_header = hdr;
+                vm.header = hdr;
             }
             // Second pass: format data rows directly into preview_line
             ind_beg(Line_curs, line, file.text) {
@@ -316,7 +331,7 @@ static void LoadPreview(acr_nav::FCtype &ctype) {
                 if (algo::Tuple_ReadStrptr(tuple, line, false)) {
                     tempstr row;
                     FormatPreviewRow(row, tuple, col_wid, n_col);
-                    acr_nav::preview_line_Alloc() = row;
+                    acr_nav::line_Alloc(vm) = row;
                 }
             } ind_end;
         }
@@ -329,10 +344,54 @@ static void EnsurePreviewLoaded(acr_nav::FCtype *sel_ct) {
     }
 }
 
+// Load metadata records for a single field from detailsrc ssimfiles.
+// Re-serializes the dmmeta.field record as the first line, then scans each
+// detailsrc file for matching records (first attribute value == field name).
+static void LoadDetail(acr_nav::FField &field) {
+    acr_nav::FViewmode &vm = *acr_nav::_db.p_detail_viewmode;
+    acr_nav::line_RemoveAll(vm);
+    acr_nav::_db.p_detail_field = &field;
+    // First line: the dmmeta.field record itself
+    {
+        dmmeta::Field base;
+        acr_nav::field_CopyOut(field, base);
+        tempstr fld_line;
+        dmmeta::Field_Print(base, fld_line);
+        acr_nav::line_Alloc(vm) = fld_line;
+    }
+    // Scan each detailsrc file for matching records.
+    // Path derived via Pathcomp rather than Ssimfile accessors: detailsrc uses
+    // a Smallstr50 key instead of a Pkey to dmmeta.Ssimfile, avoiding ~5 schema
+    // records (finput, Upptr, xref) for display-only file scanning.
+    algo::strptr field_name(field.field);
+    ind_beg(acr_nav::_db_detailsrc_curs, ds, acr_nav::_db) {
+        algo::strptr dskey(ds.detailsrc);
+        algo::strptr ns = algo::Pathcomp(dskey, ".LL");
+        algo::strptr name = algo::Pathcomp(dskey, ".LR");
+        tempstr path;
+        path << "data/" << ns << "/" << name << ".ssim";
+        algo_lib::MmapFile file;
+        if (algo_lib::MmapFile_Load(file, path)) {
+            ind_beg(Line_curs, line, file.text) {
+                algo::Tuple tuple;
+                if (algo::Tuple_ReadStrptr(tuple, line, false)) {
+                    if (attrs_N(tuple) > 0 && attrs_qFind(tuple, 0).value == field_name) {
+                        acr_nav::line_Alloc(vm) = line;
+                    }
+                }
+            } ind_end;
+        }
+    } ind_end;
+    // Set header
+    tempstr hdr;
+    hdr << field.field << " (" << acr_nav::line_N(vm) << " records)";
+    vm.header = hdr;
+}
+
 static int RightPanelItemCount(acr_nav::FCtype *sel_ct) {
     int ret = 0;
     if (!acr_nav::_db.p_cur_viewmode->has_fields) {
-        if (!IsHelpMode() && sel_ct) {
+        if (acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_preview_viewmode && sel_ct) {
             EnsurePreviewLoaded(sel_ct);
         }
         ret = RightPanelLineCount();
@@ -596,10 +655,29 @@ void acr_nav::navaction_filter_backspace() {
 
 void acr_nav::navaction_show_help() {
     if (IsHelpMode()) {
-        acr_nav::_db.p_cur_viewmode = acr_nav::_db.p_prev_viewmode;
+        PopViewmode();
     } else {
-        acr_nav::_db.p_prev_viewmode = acr_nav::_db.p_cur_viewmode;
+        acr_nav::viewmode_stack_Alloc() = acr_nav::_db.p_cur_viewmode->viewmode;
         acr_nav::_db.p_cur_viewmode = acr_nav::_db.p_help_viewmode;
+    }
+    acr_nav::_db.p_right_panel->sel_row = 0;
+    acr_nav::_db.p_right_panel->scroll_offset = 0;
+}
+
+// -----------------------------------------------------------------------------
+
+void acr_nav::navaction_show_detail() {
+    if (IsDetailMode()) {
+        PopViewmode();
+        acr_nav::_db.p_detail_field = NULL;
+    } else if (acr_nav::_db.p_cur_viewmode->has_fields) {
+        acr_nav::FCtype *sel_ct = SelectedCtype(*acr_nav::_db.p_left_panel);
+        acr_nav::FField *fld = RightPanelFieldFind(sel_ct, acr_nav::_db.p_right_panel->sel_row);
+        if (fld) {
+            acr_nav::viewmode_stack_Alloc() = acr_nav::_db.p_cur_viewmode->viewmode;
+            LoadDetail(*fld);
+            acr_nav::_db.p_cur_viewmode = acr_nav::_db.p_detail_viewmode;
+        }
     }
     acr_nav::_db.p_right_panel->sel_row = 0;
     acr_nav::_db.p_right_panel->scroll_offset = 0;
@@ -717,7 +795,8 @@ static void BuildStatusHint(cstring &out) {
 // Iterates helpgroup records by sort_order, then navactions within each group.
 // Keys split into standard (multi-char names) and shortcut (single letters).
 static void BuildHelpLines() {
-    acr_nav::help_line_RemoveAll();
+    acr_nav::FViewmode &vm = *acr_nav::_db.p_help_viewmode;
+    acr_nav::line_RemoveAll(vm);
     // Collect helpgroups sorted by sort_order
     acr_nav::FHelpgroup *groups[16];
     int n_groups = 0;
@@ -743,12 +822,12 @@ static void BuildHelpLines() {
         hdr << "Shortcut";
         char_PrintNTimes(' ', hdr, i32_Max(1, 28 - ch_N(hdr)));
         hdr << "Action";
-        acr_nav::_db.help_header = hdr;
+        vm.header = hdr;
     }
     // For each group, collect navactions and build lines
     for (int g = 0; g < n_groups; g++) {
         if (g > 0) {
-            acr_nav::help_line_Alloc() = "";
+            acr_nav::line_Alloc(vm) = "";
         }
         // Collect navactions in this group, sorted by help_sort
         acr_nav::FNavaction *actions[32];
@@ -789,7 +868,7 @@ static void BuildHelpLines() {
             line << short_keys;
             char_PrintNTimes(' ', line, i32_Max(1, 28 - ch_N(line)));
             line << actions[a]->comment;
-            acr_nav::help_line_Alloc() = line;
+            acr_nav::line_Alloc(vm) = line;
         }
     }
 }
@@ -807,10 +886,16 @@ static void RenderTitleBar(RenderCtx &ctx) {
         ctx.buf << ltitle << "\x1b[0m";
     }
     ctx.buf << "|";
-    // Right panel
+    // Right panel title: detail mode shows field name instead of ctype name.
+    // At 2 branches a data property (context_source on FViewmode) would add
+    // a generic pointer indirection for no reduction in code. Revisit at 3.
     {
         tempstr rtitle;
-        if (ctx.sel_ct) {
+        if (IsDetailMode() && acr_nav::_db.p_detail_field) {
+            rtitle << " " << acr_nav::_db.p_cur_viewmode->title
+                   << ": " << acr_nav::_db.p_detail_field->field
+                   << " (" << RightPanelItemCount(ctx.sel_ct) << ")";
+        } else if (ctx.sel_ct) {
             rtitle << " " << acr_nav::_db.p_cur_viewmode->title
                    << ": " << ctx.sel_ct->ctype
                    << " (" << RightPanelItemCount(ctx.sel_ct) << ")";
@@ -999,13 +1084,15 @@ static void InitPanels() {
     acr_nav::_db.p_preview_viewmode = acr_nav::ind_viewmode_Find("preview");
     acr_nav::_db.p_xref_viewmode = acr_nav::ind_viewmode_Find("xref");
     acr_nav::_db.p_help_viewmode = acr_nav::ind_viewmode_Find("help");
+    acr_nav::_db.p_detail_viewmode = acr_nav::ind_viewmode_Find("detail");
     vrfy(acr_nav::_db.p_default_viewmode, "viewmode 'fields' not found");
     vrfy(acr_nav::_db.p_preview_viewmode, "viewmode 'preview' not found");
     vrfy(acr_nav::_db.p_xref_viewmode, "viewmode 'xref' not found");
     vrfy(acr_nav::_db.p_help_viewmode, "viewmode 'help' not found");
+    vrfy(acr_nav::_db.p_detail_viewmode, "viewmode 'detail' not found");
     // Start in help mode so new users see keybindings
+    acr_nav::viewmode_stack_Alloc() = acr_nav::_db.p_default_viewmode->viewmode;
     acr_nav::_db.p_cur_viewmode = acr_nav::_db.p_help_viewmode;
-    acr_nav::_db.p_prev_viewmode = acr_nav::_db.p_default_viewmode;
     acr_nav::_db.startup_help = true;
     BuildHelpLines();
     // Resolve well-known navstyle pointers by name
@@ -1031,7 +1118,7 @@ static bool ProcessKey(algo::strptr key_name) {
     // Startup help: first keypress dismisses and falls through to dispatch
     if (acr_nav::_db.startup_help) {
         acr_nav::_db.startup_help = false;
-        acr_nav::_db.p_cur_viewmode = acr_nav::_db.p_default_viewmode;
+        PopViewmode();
     }
     {
         acr_nav::FPanel *left = acr_nav::_db.p_left_panel;
@@ -1053,6 +1140,15 @@ static bool ProcessKey(algo::strptr key_name) {
         if (did_something) {
             acr_nav::FCtype *sel_ct = SelectedCtype(*left);
             if (sel_ct != prev_sel_ct) {
+                // If an overlay viewmode is active, pop all and restore base
+                if (!acr_nav::viewmode_stack_EmptyQ()) {
+                    acr_nav::FViewmode *base = acr_nav::ind_viewmode_Find(acr_nav::viewmode_stack_qFind(0));
+                    acr_nav::viewmode_stack_RemoveAll();
+                    if (base) {
+                        acr_nav::_db.p_cur_viewmode = base;
+                    }
+                    acr_nav::_db.p_detail_field = NULL;
+                }
                 right->sel_row = 0;
                 right->scroll_offset = 0;
             }

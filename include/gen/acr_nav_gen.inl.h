@@ -288,6 +288,48 @@ inline acr_nav::FCtype& acr_nav::ctype_qFind(u64 t) {
     return _db.ctype_lary[bsr][index];
 }
 
+// --- acr_nav.FDb.detailsrc.EmptyQ
+// Return true if index is empty
+inline bool acr_nav::detailsrc_EmptyQ() {
+    return _db.detailsrc_n == 0;
+}
+
+// --- acr_nav.FDb.detailsrc.Find
+// Look up row by row id. Return NULL if out of range
+inline acr_nav::FDetailsrc* acr_nav::detailsrc_Find(u64 t) {
+    acr_nav::FDetailsrc *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.detailsrc_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.detailsrc_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- acr_nav.FDb.detailsrc.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline acr_nav::FDetailsrc* acr_nav::detailsrc_Last() {
+    return detailsrc_Find(u64(_db.detailsrc_n-1));
+}
+
+// --- acr_nav.FDb.detailsrc.N
+// Return number of items in the pool
+inline i32 acr_nav::detailsrc_N() {
+    return _db.detailsrc_n;
+}
+
+// --- acr_nav.FDb.detailsrc.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline acr_nav::FDetailsrc& acr_nav::detailsrc_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.detailsrc_lary[bsr][index];
+}
+
 // --- acr_nav.FDb.helpgroup.EmptyQ
 // Return true if index is empty
 inline bool acr_nav::helpgroup_EmptyQ() {
@@ -352,6 +394,18 @@ inline bool acr_nav::ind_ctype_EmptyQ() {
 // Return number of items in the hash
 inline i32 acr_nav::ind_ctype_N() {
     return _db.ind_ctype_n;
+}
+
+// --- acr_nav.FDb.ind_detailsrc.EmptyQ
+// Return true if hash is empty
+inline bool acr_nav::ind_detailsrc_EmptyQ() {
+    return _db.ind_detailsrc_n == 0;
+}
+
+// --- acr_nav.FDb.ind_detailsrc.N
+// Return number of items in the hash
+inline i32 acr_nav::ind_detailsrc_N() {
+    return _db.ind_detailsrc_n;
 }
 
 // --- acr_nav.FDb.field.EmptyQ
@@ -963,73 +1017,6 @@ inline i32 acr_nav::ind_reftypestyle_N() {
     return _db.ind_reftypestyle_n;
 }
 
-// --- acr_nav.FDb.help_line.EmptyQ
-// Return true if index is empty
-inline bool acr_nav::help_line_EmptyQ() {
-    return _db.help_line_n == 0;
-}
-
-// --- acr_nav.FDb.help_line.Find
-// Look up row by row id. Return NULL if out of range
-inline algo::cstring* acr_nav::help_line_Find(u64 t) {
-    u64 idx = t;
-    u64 lim = _db.help_line_n;
-    if (idx >= lim) return NULL;
-    return _db.help_line_elems + idx;
-}
-
-// --- acr_nav.FDb.help_line.Getary
-// Return array pointer by value
-inline algo::aryptr<algo::cstring> acr_nav::help_line_Getary() {
-    return algo::aryptr<algo::cstring>(_db.help_line_elems, _db.help_line_n);
-}
-
-// --- acr_nav.FDb.help_line.Last
-// Return pointer to last element of array, or NULL if array is empty
-inline algo::cstring* acr_nav::help_line_Last() {
-    return help_line_Find(u64(_db.help_line_n-1));
-}
-
-// --- acr_nav.FDb.help_line.Max
-// Return max. number of items in the array
-inline i32 acr_nav::help_line_Max() {
-    return _db.help_line_max;
-}
-
-// --- acr_nav.FDb.help_line.N
-// Return number of items in the array
-inline i32 acr_nav::help_line_N() {
-    return _db.help_line_n;
-}
-
-// --- acr_nav.FDb.help_line.Reserve
-// Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void acr_nav::help_line_Reserve(int n) {
-    u32 new_n = _db.help_line_n + n;
-    if (UNLIKELY(new_n > _db.help_line_max)) {
-        help_line_AbsReserve(new_n);
-    }
-}
-
-// --- acr_nav.FDb.help_line.qFind
-// 'quick' Access row by row id. No bounds checking.
-inline algo::cstring& acr_nav::help_line_qFind(u64 t) {
-    return _db.help_line_elems[t];
-}
-
-// --- acr_nav.FDb.help_line.qLast
-// Return reference to last element of array. No bounds checking
-inline algo::cstring& acr_nav::help_line_qLast() {
-    return help_line_qFind(u64(_db.help_line_n-1));
-}
-
-// --- acr_nav.FDb.help_line.rowid_Get
-// Return row id of specified element
-inline u64 acr_nav::help_line_rowid_Get(algo::cstring &elem) {
-    u64 id = &elem - _db.help_line_elems;
-    return u64(id);
-}
-
 // --- acr_nav.FDb.ssimfile.EmptyQ
 // Return true if index is empty
 inline bool acr_nav::ssimfile_EmptyQ() {
@@ -1138,70 +1125,75 @@ inline i32 acr_nav::ind_viewmode_N() {
     return _db.ind_viewmode_n;
 }
 
-// --- acr_nav.FDb.preview_line.EmptyQ
+// --- acr_nav.FDb.viewmode_stack.EmptyQ
 // Return true if index is empty
-inline bool acr_nav::preview_line_EmptyQ() {
-    return _db.preview_line_n == 0;
+inline bool acr_nav::viewmode_stack_EmptyQ() {
+    return _db.viewmode_stack_n == 0;
 }
 
-// --- acr_nav.FDb.preview_line.Find
+// --- acr_nav.FDb.viewmode_stack.Find
 // Look up row by row id. Return NULL if out of range
-inline algo::cstring* acr_nav::preview_line_Find(u64 t) {
+inline algo::Smallstr50* acr_nav::viewmode_stack_Find(u64 t) {
     u64 idx = t;
-    u64 lim = _db.preview_line_n;
+    u64 lim = _db.viewmode_stack_n;
     if (idx >= lim) return NULL;
-    return _db.preview_line_elems + idx;
+    return _db.viewmode_stack_elems + idx;
 }
 
-// --- acr_nav.FDb.preview_line.Getary
+// --- acr_nav.FDb.viewmode_stack.Getary
 // Return array pointer by value
-inline algo::aryptr<algo::cstring> acr_nav::preview_line_Getary() {
-    return algo::aryptr<algo::cstring>(_db.preview_line_elems, _db.preview_line_n);
+inline algo::aryptr<algo::Smallstr50> acr_nav::viewmode_stack_Getary() {
+    return algo::aryptr<algo::Smallstr50>(_db.viewmode_stack_elems, _db.viewmode_stack_n);
 }
 
-// --- acr_nav.FDb.preview_line.Last
+// --- acr_nav.FDb.viewmode_stack.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline algo::cstring* acr_nav::preview_line_Last() {
-    return preview_line_Find(u64(_db.preview_line_n-1));
+inline algo::Smallstr50* acr_nav::viewmode_stack_Last() {
+    return viewmode_stack_Find(u64(_db.viewmode_stack_n-1));
 }
 
-// --- acr_nav.FDb.preview_line.Max
+// --- acr_nav.FDb.viewmode_stack.Max
 // Return max. number of items in the array
-inline i32 acr_nav::preview_line_Max() {
-    return _db.preview_line_max;
+inline i32 acr_nav::viewmode_stack_Max() {
+    return _db.viewmode_stack_max;
 }
 
-// --- acr_nav.FDb.preview_line.N
+// --- acr_nav.FDb.viewmode_stack.N
 // Return number of items in the array
-inline i32 acr_nav::preview_line_N() {
-    return _db.preview_line_n;
+inline i32 acr_nav::viewmode_stack_N() {
+    return _db.viewmode_stack_n;
 }
 
-// --- acr_nav.FDb.preview_line.Reserve
+// --- acr_nav.FDb.viewmode_stack.RemoveAll
+inline void acr_nav::viewmode_stack_RemoveAll() {
+    _db.viewmode_stack_n = 0;
+}
+
+// --- acr_nav.FDb.viewmode_stack.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void acr_nav::preview_line_Reserve(int n) {
-    u32 new_n = _db.preview_line_n + n;
-    if (UNLIKELY(new_n > _db.preview_line_max)) {
-        preview_line_AbsReserve(new_n);
+inline void acr_nav::viewmode_stack_Reserve(int n) {
+    u32 new_n = _db.viewmode_stack_n + n;
+    if (UNLIKELY(new_n > _db.viewmode_stack_max)) {
+        viewmode_stack_AbsReserve(new_n);
     }
 }
 
-// --- acr_nav.FDb.preview_line.qFind
+// --- acr_nav.FDb.viewmode_stack.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline algo::cstring& acr_nav::preview_line_qFind(u64 t) {
-    return _db.preview_line_elems[t];
+inline algo::Smallstr50& acr_nav::viewmode_stack_qFind(u64 t) {
+    return _db.viewmode_stack_elems[t];
 }
 
-// --- acr_nav.FDb.preview_line.qLast
+// --- acr_nav.FDb.viewmode_stack.qLast
 // Return reference to last element of array. No bounds checking
-inline algo::cstring& acr_nav::preview_line_qLast() {
-    return preview_line_qFind(u64(_db.preview_line_n-1));
+inline algo::Smallstr50& acr_nav::viewmode_stack_qLast() {
+    return viewmode_stack_qFind(u64(_db.viewmode_stack_n-1));
 }
 
-// --- acr_nav.FDb.preview_line.rowid_Get
+// --- acr_nav.FDb.viewmode_stack.rowid_Get
 // Return row id of specified element
-inline u64 acr_nav::preview_line_rowid_Get(algo::cstring &elem) {
-    u64 id = &elem - _db.preview_line_elems;
+inline u64 acr_nav::viewmode_stack_rowid_Get(algo::Smallstr50 &elem) {
+    u64 id = &elem - _db.viewmode_stack_elems;
     return u64(id);
 }
 
@@ -1228,6 +1220,31 @@ inline void acr_nav::_db_ctype_curs_Next(_db_ctype_curs &curs) {
 // item access
 inline acr_nav::FCtype& acr_nav::_db_ctype_curs_Access(_db_ctype_curs &curs) {
     return ctype_qFind(u64(curs.index));
+}
+
+// --- acr_nav.FDb.detailsrc_curs.Reset
+// cursor points to valid item
+inline void acr_nav::_db_detailsrc_curs_Reset(_db_detailsrc_curs &curs, acr_nav::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- acr_nav.FDb.detailsrc_curs.ValidQ
+// cursor points to valid item
+inline bool acr_nav::_db_detailsrc_curs_ValidQ(_db_detailsrc_curs &curs) {
+    return curs.index < _db.detailsrc_n;
+}
+
+// --- acr_nav.FDb.detailsrc_curs.Next
+// proceed to next item
+inline void acr_nav::_db_detailsrc_curs_Next(_db_detailsrc_curs &curs) {
+    curs.index++;
+}
+
+// --- acr_nav.FDb.detailsrc_curs.Access
+// item access
+inline acr_nav::FDetailsrc& acr_nav::_db_detailsrc_curs_Access(_db_detailsrc_curs &curs) {
+    return detailsrc_qFind(u64(curs.index));
 }
 
 // --- acr_nav.FDb.helpgroup_curs.Reset
@@ -1530,31 +1547,6 @@ inline acr_nav::FReftypestyle& acr_nav::_db_reftypestyle_curs_Access(_db_reftype
     return reftypestyle_qFind(u64(curs.index));
 }
 
-// --- acr_nav.FDb.help_line_curs.Next
-// proceed to next item
-inline void acr_nav::_db_help_line_curs_Next(_db_help_line_curs &curs) {
-    curs.index++;
-}
-
-// --- acr_nav.FDb.help_line_curs.Reset
-inline void acr_nav::_db_help_line_curs_Reset(_db_help_line_curs &curs, acr_nav::FDb &parent) {
-    curs.elems = parent.help_line_elems;
-    curs.n_elems = parent.help_line_n;
-    curs.index = 0;
-}
-
-// --- acr_nav.FDb.help_line_curs.ValidQ
-// cursor points to valid item
-inline bool acr_nav::_db_help_line_curs_ValidQ(_db_help_line_curs &curs) {
-    return curs.index < curs.n_elems;
-}
-
-// --- acr_nav.FDb.help_line_curs.Access
-// item access
-inline algo::cstring& acr_nav::_db_help_line_curs_Access(_db_help_line_curs &curs) {
-    return curs.elems[curs.index];
-}
-
 // --- acr_nav.FDb.ssimfile_curs.Reset
 // cursor points to valid item
 inline void acr_nav::_db_ssimfile_curs_Reset(_db_ssimfile_curs &curs, acr_nav::FDb &parent) {
@@ -1605,29 +1597,46 @@ inline acr_nav::FViewmode& acr_nav::_db_viewmode_curs_Access(_db_viewmode_curs &
     return viewmode_qFind(u64(curs.index));
 }
 
-// --- acr_nav.FDb.preview_line_curs.Next
+// --- acr_nav.FDb.viewmode_stack_curs.Next
 // proceed to next item
-inline void acr_nav::_db_preview_line_curs_Next(_db_preview_line_curs &curs) {
+inline void acr_nav::_db_viewmode_stack_curs_Next(_db_viewmode_stack_curs &curs) {
     curs.index++;
 }
 
-// --- acr_nav.FDb.preview_line_curs.Reset
-inline void acr_nav::_db_preview_line_curs_Reset(_db_preview_line_curs &curs, acr_nav::FDb &parent) {
-    curs.elems = parent.preview_line_elems;
-    curs.n_elems = parent.preview_line_n;
+// --- acr_nav.FDb.viewmode_stack_curs.Reset
+inline void acr_nav::_db_viewmode_stack_curs_Reset(_db_viewmode_stack_curs &curs, acr_nav::FDb &parent) {
+    curs.elems = parent.viewmode_stack_elems;
+    curs.n_elems = parent.viewmode_stack_n;
     curs.index = 0;
 }
 
-// --- acr_nav.FDb.preview_line_curs.ValidQ
+// --- acr_nav.FDb.viewmode_stack_curs.ValidQ
 // cursor points to valid item
-inline bool acr_nav::_db_preview_line_curs_ValidQ(_db_preview_line_curs &curs) {
+inline bool acr_nav::_db_viewmode_stack_curs_ValidQ(_db_viewmode_stack_curs &curs) {
     return curs.index < curs.n_elems;
 }
 
-// --- acr_nav.FDb.preview_line_curs.Access
+// --- acr_nav.FDb.viewmode_stack_curs.Access
 // item access
-inline algo::cstring& acr_nav::_db_preview_line_curs_Access(_db_preview_line_curs &curs) {
+inline algo::Smallstr50& acr_nav::_db_viewmode_stack_curs_Access(_db_viewmode_stack_curs &curs) {
     return curs.elems[curs.index];
+}
+
+// --- acr_nav.FDetailsrc..Init
+// Set all fields to initial values.
+inline void acr_nav::FDetailsrc_Init(acr_nav::FDetailsrc& detailsrc) {
+    detailsrc.ind_detailsrc_next = (acr_nav::FDetailsrc*)-1; // (acr_nav.FDb.ind_detailsrc) not-in-hash
+    detailsrc.ind_detailsrc_hashval = 0; // stored hash value
+}
+
+// --- acr_nav.FDetailsrc..Ctor
+inline  acr_nav::FDetailsrc::FDetailsrc() {
+    acr_nav::FDetailsrc_Init(*this);
+}
+
+// --- acr_nav.FDetailsrc..Dtor
+inline  acr_nav::FDetailsrc::~FDetailsrc() {
+    acr_nav::FDetailsrc_Uninit(*this);
 }
 
 // --- acr_nav.FField..Ctor
@@ -1844,12 +1853,108 @@ inline  acr_nav::FSsimfile::~FSsimfile() {
     acr_nav::FSsimfile_Uninit(*this);
 }
 
+// --- acr_nav.FViewmode.line.EmptyQ
+// Return true if index is empty
+inline bool acr_nav::line_EmptyQ(acr_nav::FViewmode& viewmode) {
+    return viewmode.line_n == 0;
+}
+
+// --- acr_nav.FViewmode.line.Find
+// Look up row by row id. Return NULL if out of range
+inline algo::cstring* acr_nav::line_Find(acr_nav::FViewmode& viewmode, u64 t) {
+    u64 idx = t;
+    u64 lim = viewmode.line_n;
+    if (idx >= lim) return NULL;
+    return viewmode.line_elems + idx;
+}
+
+// --- acr_nav.FViewmode.line.Getary
+// Return array pointer by value
+inline algo::aryptr<algo::cstring> acr_nav::line_Getary(const acr_nav::FViewmode& viewmode) {
+    return algo::aryptr<algo::cstring>(viewmode.line_elems, viewmode.line_n);
+}
+
+// --- acr_nav.FViewmode.line.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline algo::cstring* acr_nav::line_Last(acr_nav::FViewmode& viewmode) {
+    return line_Find(viewmode, u64(viewmode.line_n-1));
+}
+
+// --- acr_nav.FViewmode.line.Max
+// Return max. number of items in the array
+inline i32 acr_nav::line_Max(acr_nav::FViewmode& viewmode) {
+    (void)viewmode;
+    return viewmode.line_max;
+}
+
+// --- acr_nav.FViewmode.line.N
+// Return number of items in the array
+inline i32 acr_nav::line_N(const acr_nav::FViewmode& viewmode) {
+    return viewmode.line_n;
+}
+
+// --- acr_nav.FViewmode.line.Reserve
+// Make sure N *more* elements will fit in array. Process dies if out of memory
+inline void acr_nav::line_Reserve(acr_nav::FViewmode& viewmode, int n) {
+    u32 new_n = viewmode.line_n + n;
+    if (UNLIKELY(new_n > viewmode.line_max)) {
+        line_AbsReserve(viewmode, new_n);
+    }
+}
+
+// --- acr_nav.FViewmode.line.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline algo::cstring& acr_nav::line_qFind(acr_nav::FViewmode& viewmode, u64 t) {
+    return viewmode.line_elems[t];
+}
+
+// --- acr_nav.FViewmode.line.qLast
+// Return reference to last element of array. No bounds checking
+inline algo::cstring& acr_nav::line_qLast(acr_nav::FViewmode& viewmode) {
+    return line_qFind(viewmode, u64(viewmode.line_n-1));
+}
+
+// --- acr_nav.FViewmode.line.rowid_Get
+// Return row id of specified element
+inline u64 acr_nav::line_rowid_Get(acr_nav::FViewmode& viewmode, algo::cstring &elem) {
+    u64 id = &elem - viewmode.line_elems;
+    return u64(id);
+}
+
 // --- acr_nav.FViewmode..Init
 // Set all fields to initial values.
 inline void acr_nav::FViewmode_Init(acr_nav::FViewmode& viewmode) {
     viewmode.has_fields = bool(false);
+    viewmode.line_elems 	= 0; // (acr_nav.FViewmode.line)
+    viewmode.line_n     	= 0; // (acr_nav.FViewmode.line)
+    viewmode.line_max   	= 0; // (acr_nav.FViewmode.line)
     viewmode.ind_viewmode_next = (acr_nav::FViewmode*)-1; // (acr_nav.FDb.ind_viewmode) not-in-hash
     viewmode.ind_viewmode_hashval = 0; // stored hash value
+}
+
+// --- acr_nav.FViewmode.line_curs.Next
+// proceed to next item
+inline void acr_nav::viewmode_line_curs_Next(viewmode_line_curs &curs) {
+    curs.index++;
+}
+
+// --- acr_nav.FViewmode.line_curs.Reset
+inline void acr_nav::viewmode_line_curs_Reset(viewmode_line_curs &curs, acr_nav::FViewmode &parent) {
+    curs.elems = parent.line_elems;
+    curs.n_elems = parent.line_n;
+    curs.index = 0;
+}
+
+// --- acr_nav.FViewmode.line_curs.ValidQ
+// cursor points to valid item
+inline bool acr_nav::viewmode_line_curs_ValidQ(viewmode_line_curs &curs) {
+    return curs.index < curs.n_elems;
+}
+
+// --- acr_nav.FViewmode.line_curs.Access
+// item access
+inline algo::cstring& acr_nav::viewmode_line_curs_Access(viewmode_line_curs &curs) {
+    return curs.elems[curs.index];
 }
 
 // --- acr_nav.FViewmode..Ctor
