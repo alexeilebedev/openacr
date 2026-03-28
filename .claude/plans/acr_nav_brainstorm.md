@@ -28,7 +28,7 @@
 
 ### Hint on Startup
 
-Show help on startup in the right panel (not as a full-screen overlay). Help should always be available as a right panel viewmode via `?`. Simplify the bottom status bar to breadcrumb + minimal hints (1 row).
+Show help on startup in the right panel (not as a full-screen overlay). Help should always be available as a right panel viewmode via `?`. Simplify the bottom status bar to breadcrumb + minimal hints (1 row). Deprecate full-screen overlay help.
 
 **Teaches:** Controlled vocabulary refinement. The existing viewmode system should absorb help naturally.
 **Value:** High. First-launch discoverability without blocking interaction.
@@ -39,7 +39,7 @@ Show help on startup in the right panel (not as a full-screen overlay). Help sho
 **UX requirements from prototyping:**
 - Help auto-dismisses on any keypress (startup help is informational, not blocking)
 - Help is NOT in the Tab cycle — only reachable via `?` toggle
-- Help display should split keys into two columns: standard keys (arrows, Enter, PgDown) and shortcuts (j, k, l) — makes it scannable for both audiences
+- Consider splitting keys into two columns: standard keys (arrows, Enter, PgDown) and shortcuts (j, k, l) — makes it scannable for both audiences
 - Help sort order should be logical (movement, navigation, views, search, meta), not alphabetical by action name
 - Status bar hints should remain data-driven (from keybind/navaction records), not hardcoded strings
 
