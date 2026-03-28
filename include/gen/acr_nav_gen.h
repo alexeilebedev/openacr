@@ -410,6 +410,11 @@ struct FDb { // acr_nav.FDb
     acr_nav::FViewmode*        p_default_viewmode;               // Default viewmode (viewmode:fields). optional pointer
     acr_nav::FViewmode*        p_preview_viewmode;               // Preview viewmode (viewmode:preview). optional pointer
     acr_nav::FViewmode*        p_xref_viewmode;                  // Xref viewmode (viewmode:xref). optional pointer
+    acr_nav::FNavstyle*        p_title_focus;                    // Cached pointer to title_focus navstyle. optional pointer
+    acr_nav::FNavstyle*        p_title_nofocus;                  // Cached pointer to title_nofocus navstyle. optional pointer
+    acr_nav::FNavstyle*        p_sel_focus;                      // Cached pointer to sel_focus navstyle. optional pointer
+    acr_nav::FNavstyle*        p_sel_nofocus;                    // Cached pointer to sel_nofocus navstyle. optional pointer
+    acr_nav::FNavstyle*        p_statusbar;                      // Cached pointer to statusbar navstyle. optional pointer
     acr_nav::trace             trace;                            //
 };
 
@@ -1824,6 +1829,11 @@ void                 FNavmode_Uninit(acr_nav::FNavmode& navmode) __attribute__((
 // create: acr_nav.FDb.navstyle (Lary)
 // global access: navstyle (Lary, by rowid)
 // global access: ind_navstyle (Thash, hash field navstyle)
+// global access: p_title_focus (Ptr)
+// global access: p_title_nofocus (Ptr)
+// global access: p_sel_focus (Ptr)
+// global access: p_sel_nofocus (Ptr)
+// global access: p_statusbar (Ptr)
 // access: acr_nav.FReftypestyle.p_navstyle (Upptr)
 struct FNavstyle { // acr_nav.FNavstyle
     acr_nav::FNavstyle*   ind_navstyle_next;      // hash next

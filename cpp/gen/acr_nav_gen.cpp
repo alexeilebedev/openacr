@@ -4118,6 +4118,11 @@ void acr_nav::FDb_Init() {
     _db.p_default_viewmode = NULL;
     _db.p_preview_viewmode = NULL;
     _db.p_xref_viewmode = NULL;
+    _db.p_title_focus = NULL;
+    _db.p_title_nofocus = NULL;
+    _db.p_sel_focus = NULL;
+    _db.p_sel_nofocus = NULL;
+    _db.p_statusbar = NULL;
 
     acr_nav::InitReflection();
     navaction_LoadStatic(); // gen:ns_gstatic  gstatic:acr_nav.FDb.navaction  load acr_nav.FNavaction records
