@@ -20,20 +20,26 @@
 | M13 | Help overlay, status bar, preview, viewmode, filter UX | Self-describing: docs = data = behavior |
 | M14 | Breadcrumb navigation bar | Naventry ctype name, navstack as UI |
 | M15 | Help as right-panel viewmode | Controlled vocabulary refinement, startup discoverability |
+| M16 | Field detail drilldown + viewmode line-source refactoring | Orthogonal factorization visible; data-driven detailsrc |
 
-**Current:** ~1000 lines C++, 20 navactions, 36 keybinds, 2 modes, 2 panels, 4 viewmodes (fields/xref/preview/help), 9 navstyles, 36 reftypestyles, ~1449 ctypes / ~5804 fields across 89 namespaces.
+**Current:** ~1050 lines C++, 21 navactions, 37 keybinds, 2 modes, 2 panels, 5 viewmodes (fields/xref/preview/help/detail), 9 navstyles, 36 reftypestyles, ~1449 ctypes / ~5804 fields across 89 namespaces.
 
 ---
 
-## Issues
+## Known Issues
 
-- when filter finds no types the types column shrinks to 0 width
-- when I filter and navigate to fields then hit d -> d is appended to the filter instead of showing detail
-    - navigate to fields, hit enter -> nothing happens (apply filter)
-    - probably right arrow / l should accept filter for better UX
-    - need to review these issues systemically
-    - maybe there are more broken flows like this
-- Shows Help: DIR (21) on startup. Should hide Type for Help.
+### I1. Zero-width left panel when filter matches nothing
+When filter text matches no ctypes, the left panel column width shrinks to 0. The panel should maintain a minimum width (at least enough for the "no matches" message or the filter prompt itself).
+
+### I2. Filter mode leaks into other contexts
+Several broken interaction flows when filter is active:
+- **d key captured by filter:** Navigate to fields panel, press `d` — the keystroke appends to filter text instead of triggering `show_detail`. Filter's printable-char capture intercepts keys meant for browse-mode navactions.
+- **Enter does nothing on fields:** With filter active, pressing Enter on a field triggers `filter_accept` (left-panel action) instead of navigating into the field. The keybind dispatches based on mode, not panel focus.
+- **No filter-accept on navigation keys:** Right arrow / `l` should implicitly accept the filter and move to the right panel. Currently they do nothing during filter mode.
+- **Systematic review needed:** These are symptoms of a single root cause — filter mode captures too broadly. There may be more broken flows. The fix should address the capture scope, not patch individual keys.
+
+### I3. Title bar shows ctype name for Help viewmode
+On startup, the title bar displays "Help: DIR (21)" — showing the selected ctype name and field count for a viewmode that has nothing to do with the selected ctype. Help is a `has_fields:N` viewmode; the title should show only the viewmode name, not the ctype context.
 
 ---
 
@@ -82,14 +88,9 @@ When a field is selected, the status bar shows the reftype's comment from `dmmet
 **Value:** High. Removes the single biggest barrier for newcomers.
 **Size:** Very small. The data already exists in `dmmeta.reftype.comment`. Read one field from an already-loaded table, render one line in the status bar.
 
-#### 1B. Field Detail Drilldown
+#### ~~1B. Field Detail Drilldown~~ — Done (M16)
 
-Select a field in the right panel, press Enter, see all its metadata from every table: xref wiring, index config (thash/llist/ptrary), substr decomposition, fprefix, anonfld, comment. Shows how a single field's properties are factored across multiple independent tables.
-
-**Solves:** P4 (field metadata hidden), P3 (tool-switching tax).
-**Teaches:** Orthogonal factorization, made visible. Select `acr_nav.FDb.ind_ctype` and see five records from five tables, each capturing one independent concern about the same field.
-**Value:** High. Currently requires `acr dmmeta.thash:...` in a separate terminal.
-**Size:** Medium. Requires several new finputs and rendering (new panel or viewmode for field detail).
+Implemented: press `d` on a field to see all its dmmeta metadata (thash, xref, llist, ptrary, substr) gathered from across orthogonal tables. Data-driven via `acr_navdb.detailsrc` — adding new metadata sources costs one record, zero code changes. Also included viewmode line-source refactoring (line/header storage moved from FDb to FViewmode) and `PopViewmode()` helper extraction.
 
 #### 1C. Namespace Grouping / Tree View
 
@@ -233,17 +234,15 @@ Full pool scan has a practical obstacle: Tpool loses iteration capability (free-
 
 | Milestone | Idea | Principle Demonstrated |
 |-----------|------|----------------------|
-| M16 | 1A: Inline reftype glossary | Controlled vocab properties surfaced in context |
-| M17 | 1B: Field detail drilldown | Orthogonal factorization, visible |
+| M17 | 1A: Inline reftype glossary | Controlled vocab properties surfaced in context |
 | M18 | 1C: Namespace grouping | Orthogonal axes (left-panel layout independent of right panel) |
 | M19 | 1D: Generated code preview | Schema = code, two views of same thing |
 | Later | Tier 2-3 ideas | As interest dictates |
 
 **Sequencing rationale:**
 
-- **M16 (reftype glossary)** is nearly zero effort -- it surfaces existing data in the status bar. Ships fast, removes the vocabulary cliff immediately. Good warmup.
-- **M17 (field detail)** loads the most new finputs and is best attempted now that viewmode rendering is clean. Teaches the deepest schema concept.
-- **M18 (namespace grouping)** is the biggest usability win but requires more architectural work (left-panel rendering becomes mode-dependent). Better after field detail proves the viewmode pattern further.
-- **M19 (generated code)** builds on the shell-out pattern from preview mode. Natural capstone: after seeing fields (M17) and structure (M18), see the generated code that ties them together.
+- **M17 (reftype glossary)** is nearly zero effort -- it surfaces existing data in the status bar. Ships fast, removes the vocabulary cliff immediately. Good warmup.
+- **M18 (namespace grouping)** is the biggest usability win but requires more architectural work (left-panel rendering becomes mode-dependent). Better now that M16 proved the viewmode pattern.
+- **M19 (generated code)** builds on the shell-out pattern from preview mode. Natural capstone: after seeing fields (M16) and structure (M18), see the generated code that ties them together.
 
 **Future factoring:** IsHelpMode (4 sites) and IsXrefMode (5 sites) are identity checks that should become data on FViewmode. At 2 modes per axis, the branching is trivial. Refactor when a 3rd mode is added to either axis. Documented in code at their definition sites.
