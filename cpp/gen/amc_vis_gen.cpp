@@ -779,7 +779,7 @@ static void amc_vis::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'amc_vis.Input'  signature:'3fd9f00c5d7a2ad359db59975e0c5ca517daced4'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'amc_vis.Input'  signature:'97d3ba207adb5a519b9a36ca88fef090ec9125e4'");
 }
 
 // --- amc_vis.FDb._db.InsertStrptrMaybe
@@ -3971,6 +3971,7 @@ void amc_vis::reftype_CopyOut(amc_vis::FReftype &row, dmmeta::Reftype &out) {
     out.hasalloc = row.hasalloc;
     out.inst = row.inst;
     out.varlen = row.varlen;
+    out.comment = row.comment;
 }
 
 // --- amc_vis.FReftype.msghdr.CopyIn
@@ -3988,6 +3989,7 @@ void amc_vis::reftype_CopyIn(amc_vis::FReftype &row, dmmeta::Reftype &in) {
     row.hasalloc = in.hasalloc;
     row.inst = in.inst;
     row.varlen = in.varlen;
+    row.comment = in.comment;
 }
 
 // --- amc_vis.FReftype..Init

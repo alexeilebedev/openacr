@@ -1995,6 +1995,7 @@ struct FReftype { // amc_vis.FReftype
     bool                 hasalloc;              //   false  Generte Alloc/Delete functions for arg type
     bool                 inst;                  //   false  Field creates an instance of arg type (directly or indirectly)
     bool                 varlen;                //   false  This pool supports varlen allocations
+    algo::Comment        comment;               //
     // func:amc_vis.FReftype..AssignOp
     amc_vis::FReftype&   operator =(const amc_vis::FReftype &rhs) = delete;
     // func:amc_vis.FReftype..CopyCtor

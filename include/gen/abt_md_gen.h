@@ -3716,6 +3716,7 @@ struct FReftype { // abt_md.FReftype
     bool               hasalloc;      //   false  Generte Alloc/Delete functions for arg type
     bool               inst;          //   false  Field creates an instance of arg type (directly or indirectly)
     bool               varlen;        //   false  This pool supports varlen allocations
+    algo::Comment      comment;       //
     abt_md::FTclass*   p_tclass;      // reference to parent row
 private:
     // func:abt_md.FReftype..Ctor

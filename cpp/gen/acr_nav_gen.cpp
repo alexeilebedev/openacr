@@ -445,7 +445,7 @@ static void acr_nav::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_nav.Input'  signature:'b4d02b7bd3e4c890f3610bbe3ef2803ec3d37be3'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_nav.Input'  signature:'0ccaf58ff045f80e3520e8f168e41429988ad2f3'");
 }
 
 // --- acr_nav.FDb._db.InsertStrptrMaybe
@@ -5020,6 +5020,7 @@ void acr_nav::reftype_CopyOut(acr_nav::FReftype &row, dmmeta::Reftype &out) {
     out.hasalloc = row.hasalloc;
     out.inst = row.inst;
     out.varlen = row.varlen;
+    out.comment = row.comment;
 }
 
 // --- acr_nav.FReftype.base.CopyIn
@@ -5037,6 +5038,7 @@ void acr_nav::reftype_CopyIn(acr_nav::FReftype &row, dmmeta::Reftype &in) {
     row.hasalloc = in.hasalloc;
     row.inst = in.inst;
     row.varlen = in.varlen;
+    row.comment = in.comment;
 }
 
 // --- acr_nav.FReftype..Init

@@ -8670,6 +8670,9 @@ bool dmmeta::Reftype_ReadFieldMaybe(dmmeta::Reftype& parent, algo::strptr field,
         case dmmeta_FieldId_varlen: {
             retval = bool_ReadStrptrMaybe(parent.varlen, strval);
         } break;
+        case dmmeta_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+        } break;
         default: {
             retval = false;
             algo_lib::AppendErrtext("comment", "unrecognized attr");
@@ -8752,6 +8755,9 @@ void dmmeta::Reftype_Print(dmmeta::Reftype& row, algo::cstring& str) {
 
     bool_Print(row.varlen, temp);
     PrintAttrSpaceReset(str,"varlen", temp);
+
+    algo::Comment_Print(row.comment, temp);
+    PrintAttrSpaceReset(str,"comment", temp);
 }
 
 // --- dmmeta.ReftypeCase.reftype.ToCstr

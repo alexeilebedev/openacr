@@ -359,6 +359,14 @@ static void LoadDetail(acr_nav::FField &field) {
         dmmeta::Field_Print(base, fld_line);
         acr_nav::line_Alloc(vm) = fld_line;
     }
+    // Second line: the dmmeta.reftype record for this field's reftype
+    if (ch_N(field.p_reftype->comment) > 0) {
+        dmmeta::Reftype base;
+        acr_nav::reftype_CopyOut(*field.p_reftype, base);
+        tempstr rt_line;
+        dmmeta::Reftype_Print(base, rt_line);
+        acr_nav::line_Alloc(vm) = rt_line;
+    }
     // Scan each detailsrc file for matching records.
     // Path derived via Pathcomp rather than Ssimfile accessors: detailsrc uses
     // a Smallstr50 key instead of a Pkey to dmmeta.Ssimfile, avoiding ~5 schema

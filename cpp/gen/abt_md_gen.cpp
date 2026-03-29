@@ -713,7 +713,7 @@ static void abt_md::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'abt_md.Input'  signature:'1d64073c67d090b1a9ec75e09f0de10c7c1bc7d2'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'abt_md.Input'  signature:'755ed1508431c02febab5213c9ff75f751d21ee2'");
 }
 
 // --- abt_md.FDb._db.InsertStrptrMaybe
@@ -7677,6 +7677,7 @@ void abt_md::reftype_CopyOut(abt_md::FReftype &row, dmmeta::Reftype &out) {
     out.hasalloc = row.hasalloc;
     out.inst = row.inst;
     out.varlen = row.varlen;
+    out.comment = row.comment;
 }
 
 // --- abt_md.FReftype.base.CopyIn
@@ -7694,6 +7695,7 @@ void abt_md::reftype_CopyIn(abt_md::FReftype &row, dmmeta::Reftype &in) {
     row.hasalloc = in.hasalloc;
     row.inst = in.inst;
     row.varlen = in.varlen;
+    row.comment = in.comment;
 }
 
 // --- abt_md.FReftype..Init

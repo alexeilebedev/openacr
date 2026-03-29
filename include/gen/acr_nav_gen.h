@@ -2238,6 +2238,7 @@ struct FReftype { // acr_nav.FReftype
     bool                      hasalloc;              //   false  Generte Alloc/Delete functions for arg type
     bool                      inst;                  //   false  Field creates an instance of arg type (directly or indirectly)
     bool                      varlen;                //   false  This pool supports varlen allocations
+    algo::Comment             comment;               //
     acr_nav::FReftypestyle*   c_reftypestyle;        // optional pointer
     // x-reference on acr_nav.FReftype.c_reftypestyle prevents copy
     // func:acr_nav.FReftype..AssignOp

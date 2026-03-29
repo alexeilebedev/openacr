@@ -4076,6 +4076,7 @@ dmmeta.field  field:dmmeta.Reftype.isnew  arg:bool  reftype:Val  dflt:""  commen
 dmmeta.field  field:dmmeta.Reftype.hasalloc  arg:bool  reftype:Val  dflt:""  comment:"Generte Alloc/Delete functions for arg type"
 dmmeta.field  field:dmmeta.Reftype.inst  arg:bool  reftype:Val  dflt:""  comment:"Field creates an instance of arg type (directly or indirectly)"
 dmmeta.field  field:dmmeta.Reftype.varlen  arg:bool  reftype:Val  dflt:""  comment:"This pool supports varlen allocations"
+dmmeta.field  field:dmmeta.Reftype.comment  arg:algo.Comment  reftype:Val  dflt:""  comment:""
 dmmeta.field  field:dmmeta.Rowid.field  arg:dmmeta.Field  reftype:Pkey  dflt:""  comment:""
 dmmeta.field  field:dmmeta.Rowid.comment  arg:algo.Comment  reftype:Val  dflt:""  comment:""
 dmmeta.field  field:dmmeta.Smallstr.field  arg:dmmeta.Field  reftype:Pkey  dflt:""  comment:""

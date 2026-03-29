@@ -6687,41 +6687,41 @@ static void amc::reftype_LoadStatic() {
     static struct _t {
         const char *s;
     } data[] = {
-        { "dmmeta.reftype  reftype:Alias  isval:Y  cascins:N  usebasepool:N  cancopy:N  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N" }
-        ,{ "dmmeta.reftype  reftype:Atree  isval:N  cascins:N  usebasepool:N  cancopy:N  isxref:Y  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N" }
-        ,{ "dmmeta.reftype  reftype:Base  isval:N  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:Y  isnew:N  hasalloc:N  inst:N  varlen:N" }
-        ,{ "dmmeta.reftype  reftype:Bheap  isval:N  cascins:N  usebasepool:Y  cancopy:N  isxref:Y  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N" }
-        ,{ "dmmeta.reftype  reftype:Bitfld  isval:Y  cascins:Y  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N" }
-        ,{ "dmmeta.reftype  reftype:Blkpool  isval:Y  cascins:N  usebasepool:Y  cancopy:N  isxref:N  del:Y  up:N  isnew:N  hasalloc:Y  inst:Y  varlen:Y" }
-        ,{ "dmmeta.reftype  reftype:Charset  isval:Y  cascins:Y  usebasepool:N  cancopy:N  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N" }
-        ,{ "dmmeta.reftype  reftype:Count  isval:N  cascins:N  usebasepool:N  cancopy:N  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N" }
-        ,{ "dmmeta.reftype  reftype:Cppstack  isval:Y  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:Y  hasalloc:N  inst:Y  varlen:N" }
-        ,{ "dmmeta.reftype  reftype:Ctype  isval:N  cascins:N  usebasepool:N  cancopy:N  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N" }
-        ,{ "dmmeta.reftype  reftype:Delptr  isval:N  cascins:N  usebasepool:Y  cancopy:N  isxref:N  del:N  up:N  isnew:Y  hasalloc:N  inst:Y  varlen:N" }
-        ,{ "dmmeta.reftype  reftype:Exec  isval:N  cascins:N  usebasepool:N  cancopy:N  isxref:N  del:N  up:N  isnew:Y  hasalloc:N  inst:N  varlen:N" }
-        ,{ "dmmeta.reftype  reftype:Fbuf  isval:Y  cascins:Y  usebasepool:Y  cancopy:N  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:Y  varlen:N" }
-        ,{ "dmmeta.reftype  reftype:Global  isval:Y  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:Y  varlen:N" }
-        ,{ "dmmeta.reftype  reftype:Hook  isval:N  cascins:N  usebasepool:N  cancopy:N  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N" }
-        ,{ "dmmeta.reftype  reftype:Inlary  isval:Y  cascins:Y  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:Y  varlen:N" }
-        ,{ "dmmeta.reftype  reftype:Lary  isval:Y  cascins:N  usebasepool:Y  cancopy:N  isxref:N  del:N  up:N  isnew:N  hasalloc:Y  inst:Y  varlen:N" }
-        ,{ "dmmeta.reftype  reftype:Llist  isval:N  cascins:N  usebasepool:N  cancopy:N  isxref:Y  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N" }
-        ,{ "dmmeta.reftype  reftype:Lpool  isval:Y  cascins:N  usebasepool:Y  cancopy:N  isxref:N  del:Y  up:N  isnew:N  hasalloc:Y  inst:Y  varlen:Y" }
-        ,{ "dmmeta.reftype  reftype:Malloc  isval:Y  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:Y  up:N  isnew:N  hasalloc:Y  inst:Y  varlen:Y" }
-        ,{ "dmmeta.reftype  reftype:Opt  isval:Y  cascins:Y  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:Y  hasalloc:N  inst:Y  varlen:Y" }
-        ,{ "dmmeta.reftype  reftype:Pkey  isval:N  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:Y  isnew:N  hasalloc:N  inst:N  varlen:N" }
-        ,{ "dmmeta.reftype  reftype:Ptr  isval:N  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N" }
-        ,{ "dmmeta.reftype  reftype:Ptrary  isval:N  cascins:N  usebasepool:Y  cancopy:N  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N" }
-        ,{ "dmmeta.reftype  reftype:Regx  isval:N  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:Y  isnew:N  hasalloc:N  inst:N  varlen:N" }
-        ,{ "dmmeta.reftype  reftype:RegxSql  isval:N  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:Y  isnew:N  hasalloc:N  inst:N  varlen:N" }
-        ,{ "dmmeta.reftype  reftype:Sbrk  isval:Y  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:Y  varlen:N" }
-        ,{ "dmmeta.reftype  reftype:Smallstr  isval:Y  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N" }
-        ,{ "dmmeta.reftype  reftype:Tary  isval:Y  cascins:N  usebasepool:Y  cancopy:N  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N" }
-        ,{ "dmmeta.reftype  reftype:Thash  isval:N  cascins:N  usebasepool:Y  cancopy:N  isxref:Y  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N" }
-        ,{ "dmmeta.reftype  reftype:Tpool  isval:Y  cascins:N  usebasepool:Y  cancopy:N  isxref:N  del:Y  up:N  isnew:N  hasalloc:Y  inst:Y  varlen:N" }
-        ,{ "dmmeta.reftype  reftype:Upptr  isval:N  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:Y  isnew:N  hasalloc:N  inst:N  varlen:N" }
-        ,{ "dmmeta.reftype  reftype:Val  isval:Y  cascins:Y  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:Y  hasalloc:N  inst:N  varlen:N" }
-        ,{ "dmmeta.reftype  reftype:Varlen  isval:Y  cascins:Y  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:Y  hasalloc:N  inst:Y  varlen:Y" }
-        ,{ "dmmeta.reftype  reftype:ZSListMT  isval:N  cascins:N  usebasepool:N  cancopy:N  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N" }
+        { "dmmeta.reftype  reftype:Alias  isval:Y  cascins:N  usebasepool:N  cancopy:N  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N  comment:\"Access another field\"" }
+        ,{ "dmmeta.reftype  reftype:Atree  isval:N  cascins:N  usebasepool:N  cancopy:N  isxref:Y  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N  comment:\"X-reference: AVL tree\"" }
+        ,{ "dmmeta.reftype  reftype:Base  isval:N  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:Y  isnew:N  hasalloc:N  inst:N  varlen:N  comment:\"Incorporate base ctype fields\"" }
+        ,{ "dmmeta.reftype  reftype:Bheap  isval:N  cascins:N  usebasepool:Y  cancopy:N  isxref:Y  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N  comment:\"X-reference: Binary heap built on top of ptrary\"" }
+        ,{ "dmmeta.reftype  reftype:Bitfld  isval:Y  cascins:Y  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N  comment:\"A field whose value is stored in the bits of another field\"" }
+        ,{ "dmmeta.reftype  reftype:Blkpool  isval:Y  cascins:N  usebasepool:Y  cancopy:N  isxref:N  del:Y  up:N  isnew:N  hasalloc:Y  inst:Y  varlen:Y  comment:\"Variable size block-based allocator suitable for fifo use\"" }
+        ,{ "dmmeta.reftype  reftype:Charset  isval:Y  cascins:Y  usebasepool:N  cancopy:N  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N  comment:\"Character set membership bitmap\"" }
+        ,{ "dmmeta.reftype  reftype:Count  isval:N  cascins:N  usebasepool:N  cancopy:N  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N  comment:\"A cross-reference that simply counts # of children\"" }
+        ,{ "dmmeta.reftype  reftype:Cppstack  isval:Y  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:Y  hasalloc:N  inst:Y  varlen:N  comment:\"A pool whose only purpose is to provide a name\"" }
+        ,{ "dmmeta.reftype  reftype:Ctype  isval:N  cascins:N  usebasepool:N  cancopy:N  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N  comment:\"Type reference only, no generated field\"" }
+        ,{ "dmmeta.reftype  reftype:Delptr  isval:N  cascins:N  usebasepool:Y  cancopy:N  isxref:N  del:N  up:N  isnew:Y  hasalloc:N  inst:Y  varlen:N  comment:\"Pointer to a private cascade-delete value (like Val but starts as NULL)\"" }
+        ,{ "dmmeta.reftype  reftype:Exec  isval:N  cascins:N  usebasepool:N  cancopy:N  isxref:N  del:N  up:N  isnew:Y  hasalloc:N  inst:N  varlen:N  comment:Subprocess" }
+        ,{ "dmmeta.reftype  reftype:Fbuf  isval:Y  cascins:Y  usebasepool:Y  cancopy:N  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:Y  varlen:N  comment:\"Byte buffer with epoll integration & message scanning\"" }
+        ,{ "dmmeta.reftype  reftype:Global  isval:Y  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:Y  varlen:N  comment:\"Global variable -- root of all access paths\"" }
+        ,{ "dmmeta.reftype  reftype:Hook  isval:N  cascins:N  usebasepool:N  cancopy:N  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N  comment:\"Pointer to a function\"" }
+        ,{ "dmmeta.reftype  reftype:Inlary  isval:Y  cascins:Y  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:Y  varlen:N  comment:\"Zero to N values, allocated inside the parent struct\"" }
+        ,{ "dmmeta.reftype  reftype:Lary  isval:Y  cascins:N  usebasepool:Y  cancopy:N  isxref:N  del:N  up:N  isnew:N  hasalloc:Y  inst:Y  varlen:N  comment:\"Level array with permanent pointers\"" }
+        ,{ "dmmeta.reftype  reftype:Llist  isval:N  cascins:N  usebasepool:N  cancopy:N  isxref:Y  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N  comment:\"X-reference: any of 32 possible types of linked list\"" }
+        ,{ "dmmeta.reftype  reftype:Lpool  isval:Y  cascins:N  usebasepool:Y  cancopy:N  isxref:N  del:Y  up:N  isnew:N  hasalloc:Y  inst:Y  varlen:Y  comment:\"Varlen pool, implemented as array of 32 Tpools\"" }
+        ,{ "dmmeta.reftype  reftype:Malloc  isval:Y  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:Y  up:N  isnew:N  hasalloc:Y  inst:Y  varlen:Y  comment:\"Pass-through for malloc / free\"" }
+        ,{ "dmmeta.reftype  reftype:Opt  isval:Y  cascins:Y  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:Y  hasalloc:N  inst:Y  varlen:Y  comment:\"Optional trailing struct field occupying rest of space\"" }
+        ,{ "dmmeta.reftype  reftype:Pkey  isval:N  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:Y  isnew:N  hasalloc:N  inst:N  varlen:N  comment:\"Primary key reference\"" }
+        ,{ "dmmeta.reftype  reftype:Ptr  isval:N  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N  comment:\"Cross-reference pointer to a future record\"" }
+        ,{ "dmmeta.reftype  reftype:Ptrary  isval:N  cascins:N  usebasepool:Y  cancopy:N  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N  comment:\"Array of pointers\"" }
+        ,{ "dmmeta.reftype  reftype:Regx  isval:N  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:Y  isnew:N  hasalloc:N  inst:N  varlen:N  comment:\"Regex match on primary key\"" }
+        ,{ "dmmeta.reftype  reftype:RegxSql  isval:N  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:Y  isnew:N  hasalloc:N  inst:N  varlen:N  comment:\"SQL-style regex on primary key\"" }
+        ,{ "dmmeta.reftype  reftype:Sbrk  isval:Y  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:Y  varlen:N  comment:\"Memory allocator via sbrk\"" }
+        ,{ "dmmeta.reftype  reftype:Smallstr  isval:Y  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N  comment:\"Fixed-length string field\"" }
+        ,{ "dmmeta.reftype  reftype:Tary  isval:Y  cascins:N  usebasepool:Y  cancopy:N  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N  comment:\"Flat, reallocatable array of values\"" }
+        ,{ "dmmeta.reftype  reftype:Thash  isval:N  cascins:N  usebasepool:Y  cancopy:N  isxref:Y  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N  comment:\"X-reference; hash built on top of ptrary\"" }
+        ,{ "dmmeta.reftype  reftype:Tpool  isval:Y  cascins:N  usebasepool:Y  cancopy:N  isxref:N  del:Y  up:N  isnew:N  hasalloc:Y  inst:Y  varlen:N  comment:\"Singly linked free-list\"" }
+        ,{ "dmmeta.reftype  reftype:Upptr  isval:N  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:Y  isnew:N  hasalloc:N  inst:N  varlen:N  comment:\"Pointer to a past (pre-existing) record\"" }
+        ,{ "dmmeta.reftype  reftype:Val  isval:Y  cascins:Y  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:Y  hasalloc:N  inst:N  varlen:N  comment:\"Single cascade-insert in-place value\"" }
+        ,{ "dmmeta.reftype  reftype:Varlen  isval:Y  cascins:Y  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:Y  hasalloc:N  inst:Y  varlen:Y  comment:\"Variable-length trailing array\"" }
+        ,{ "dmmeta.reftype  reftype:ZSListMT  isval:N  cascins:N  usebasepool:N  cancopy:N  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N  comment:\"Zero-terminated singly linked list with thread-safe access\"" }
         ,{NULL}
     };
     (void)data;
@@ -16702,10 +16702,10 @@ static void amc::tclass_LoadStatic() {
         { "amcdb.tclass  tclass:Alias  comment:\"Access another field\"", amc::tclass_Alias }
         ,{ "amcdb.tclass  tclass:Atree  comment:\"X-reference: AVL tree\"", amc::tclass_Atree }
         ,{ "amcdb.tclass  tclass:Base  comment:\"Incorporate base ctype fields\"", amc::tclass_Base }
-        ,{ "amcdb.tclass  tclass:Bheap  comment:\"X-reference: Binary heap built on top of ptrary.\"", amc::tclass_Bheap }
+        ,{ "amcdb.tclass  tclass:Bheap  comment:\"X-reference: Binary heap built on top of ptrary\"", amc::tclass_Bheap }
         ,{ "amcdb.tclass  tclass:Bitfld  comment:\"A field whose value is stored in the bits of another field\"", amc::tclass_Bitfld }
         ,{ "amcdb.tclass  tclass:Bitset  comment:\"\"", amc::tclass_Bitset }
-        ,{ "amcdb.tclass  tclass:Blkpool  comment:\"variable size block-based allocator suitable for fifo use\"", amc::tclass_Blkpool }
+        ,{ "amcdb.tclass  tclass:Blkpool  comment:\"Variable size block-based allocator suitable for fifo use\"", amc::tclass_Blkpool }
         ,{ "amcdb.tclass  tclass:Charset  comment:\"\"", amc::tclass_Charset }
         ,{ "amcdb.tclass  tclass:Cmp  comment:Comparison", amc::tclass_Cmp }
         ,{ "amcdb.tclass  tclass:Count  comment:\"A cross-reference that simply counts # of children\"", amc::tclass_Count }
@@ -16714,7 +16714,7 @@ static void amc::tclass_LoadStatic() {
         ,{ "amcdb.tclass  tclass:Ctype  comment:\"Struct functions, first pass\"", amc::tclass_Ctype }
         ,{ "amcdb.tclass  tclass:Ctype2  comment:\"Struct functions, second pass\"", amc::tclass_Ctype2 }
         ,{ "amcdb.tclass  tclass:Dec  comment:\"\"", amc::tclass_Dec }
-        ,{ "amcdb.tclass  tclass:Delptr  comment:\"Pointer to a private cascade-delete value (like Val by starts as NULL)\"", amc::tclass_Delptr }
+        ,{ "amcdb.tclass  tclass:Delptr  comment:\"Pointer to a private cascade-delete value (like Val but starts as NULL)\"", amc::tclass_Delptr }
         ,{ "amcdb.tclass  tclass:Exec  comment:Subprocess", amc::tclass_Exec }
         ,{ "amcdb.tclass  tclass:Fbuf  comment:\"Byte buffer with epoll integration & message scanning\"", amc::tclass_Fbuf }
         ,{ "amcdb.tclass  tclass:Fcast  comment:\"\"", amc::tclass_Fcast }
@@ -16745,12 +16745,12 @@ static void amc::tclass_LoadStatic() {
         ,{ "amcdb.tclass  tclass:Step  comment:\"\"", amc::tclass_Step }
         ,{ "amcdb.tclass  tclass:Substr  comment:\"\"", amc::tclass_Substr }
         ,{ "amcdb.tclass  tclass:Tary  comment:\"Flat, reallocatable array of values\"", amc::tclass_Tary }
-        ,{ "amcdb.tclass  tclass:Thash  comment:\"X-reference; hash built on top of ptrary.\"", amc::tclass_Thash }
-        ,{ "amcdb.tclass  tclass:Tpool  comment:\"Singly linked free-list.\"", amc::tclass_Tpool }
+        ,{ "amcdb.tclass  tclass:Thash  comment:\"X-reference; hash built on top of ptrary\"", amc::tclass_Thash }
+        ,{ "amcdb.tclass  tclass:Tpool  comment:\"Singly linked free-list\"", amc::tclass_Tpool }
         ,{ "amcdb.tclass  tclass:Upptr  comment:\"Pointer to a past (pre-existing) record\"", amc::tclass_Upptr }
-        ,{ "amcdb.tclass  tclass:Val  comment:\"Single cascade-insert in-place value.\"", amc::tclass_Val }
+        ,{ "amcdb.tclass  tclass:Val  comment:\"Single cascade-insert in-place value\"", amc::tclass_Val }
         ,{ "amcdb.tclass  tclass:Varlen  comment:\"variable-length field\"", amc::tclass_Varlen }
-        ,{ "amcdb.tclass  tclass:ZSListMT  comment:\"zero-terminated singly linked list with thread-safe access\"", amc::tclass_ZSListMT }
+        ,{ "amcdb.tclass  tclass:ZSListMT  comment:\"Zero-terminated singly linked list with thread-safe access\"", amc::tclass_ZSListMT }
         ,{NULL, NULL}
     };
     (void)data;
@@ -31435,6 +31435,7 @@ void amc::reftype_CopyOut(amc::FReftype &row, dmmeta::Reftype &out) {
     out.hasalloc = row.hasalloc;
     out.inst = row.inst;
     out.varlen = row.varlen;
+    // comment: field stripped (see dmmeta.fbase:amc.FReftype.msghdr)
 }
 
 // --- amc.FReftype.msghdr.CopyIn
@@ -31452,6 +31453,7 @@ void amc::reftype_CopyIn(amc::FReftype &row, dmmeta::Reftype &in) {
     row.hasalloc = in.hasalloc;
     row.inst = in.inst;
     row.varlen = in.varlen;
+    // comment: field stripped (see dmmeta.fbase:amc.FReftype.msghdr)
 }
 
 // --- amc.FReftype.zs_fprefix.Insert

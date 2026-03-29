@@ -444,42 +444,42 @@ extern const char *  dmmeta_Reftype_reftype_ZSListMT;   // ZSListMT    fconst:dm
 
 // --- dmmeta_ReftypeCaseEnum
 
-enum dmmeta_ReftypeCaseEnum {            // dmmeta.ReftypeCase.reftype
-     dmmeta_ReftypeCase_Alias      = 1
-    ,dmmeta_ReftypeCase_Atree      = 2
-    ,dmmeta_ReftypeCase_Base       = 3
-    ,dmmeta_ReftypeCase_Bheap      = 4
-    ,dmmeta_ReftypeCase_Bitfld     = 5
-    ,dmmeta_ReftypeCase_Blkpool    = 6
-    ,dmmeta_ReftypeCase_Charset    = 7
-    ,dmmeta_ReftypeCase_Count      = 8
-    ,dmmeta_ReftypeCase_Cppstack   = 9
-    ,dmmeta_ReftypeCase_Ctype      = 10
-    ,dmmeta_ReftypeCase_Delptr     = 11
-    ,dmmeta_ReftypeCase_Exec       = 12
-    ,dmmeta_ReftypeCase_Fbuf       = 13
-    ,dmmeta_ReftypeCase_Global     = 14
-    ,dmmeta_ReftypeCase_Hook       = 15
-    ,dmmeta_ReftypeCase_Inlary     = 16
-    ,dmmeta_ReftypeCase_Lary       = 17
-    ,dmmeta_ReftypeCase_Llist      = 18
-    ,dmmeta_ReftypeCase_Lpool      = 19
-    ,dmmeta_ReftypeCase_Malloc     = 20
-    ,dmmeta_ReftypeCase_Opt        = 21
-    ,dmmeta_ReftypeCase_Pkey       = 22
-    ,dmmeta_ReftypeCase_Ptr        = 23
-    ,dmmeta_ReftypeCase_Ptrary     = 24
-    ,dmmeta_ReftypeCase_Regx       = 25
-    ,dmmeta_ReftypeCase_RegxSql    = 26
-    ,dmmeta_ReftypeCase_Sbrk       = 27
-    ,dmmeta_ReftypeCase_Smallstr   = 28
-    ,dmmeta_ReftypeCase_Tary       = 29
-    ,dmmeta_ReftypeCase_Thash      = 30
-    ,dmmeta_ReftypeCase_Tpool      = 31
-    ,dmmeta_ReftypeCase_Upptr      = 32
-    ,dmmeta_ReftypeCase_Val        = 33
-    ,dmmeta_ReftypeCase_Varlen     = 34
-    ,dmmeta_ReftypeCase_ZSListMT   = 35
+enum dmmeta_ReftypeCaseEnum {             // dmmeta.ReftypeCase.reftype
+     dmmeta_ReftypeCase_Alias      = 1    // Access another field
+    ,dmmeta_ReftypeCase_Atree      = 2    // X-reference: AVL tree
+    ,dmmeta_ReftypeCase_Base       = 3    // Incorporate base ctype fields
+    ,dmmeta_ReftypeCase_Bheap      = 4    // X-reference: Binary heap built on top of ptrary
+    ,dmmeta_ReftypeCase_Bitfld     = 5    // A field whose value is stored in the bits of another field
+    ,dmmeta_ReftypeCase_Blkpool    = 6    // Variable size block-based allocator suitable for fifo use
+    ,dmmeta_ReftypeCase_Charset    = 7    // Character set membership bitmap
+    ,dmmeta_ReftypeCase_Count      = 8    // A cross-reference that simply counts # of children
+    ,dmmeta_ReftypeCase_Cppstack   = 9    // A pool whose only purpose is to provide a name
+    ,dmmeta_ReftypeCase_Ctype      = 10   // Type reference only, no generated field
+    ,dmmeta_ReftypeCase_Delptr     = 11   // Pointer to a private cascade-delete value (like Val but starts as NULL)
+    ,dmmeta_ReftypeCase_Exec       = 12   // Subprocess
+    ,dmmeta_ReftypeCase_Fbuf       = 13   // Byte buffer with epoll integration & message scanning
+    ,dmmeta_ReftypeCase_Global     = 14   // Global variable -- root of all access paths
+    ,dmmeta_ReftypeCase_Hook       = 15   // Pointer to a function
+    ,dmmeta_ReftypeCase_Inlary     = 16   // Zero to N values, allocated inside the parent struct
+    ,dmmeta_ReftypeCase_Lary       = 17   // Level array with permanent pointers
+    ,dmmeta_ReftypeCase_Llist      = 18   // X-reference: any of 32 possible types of linked list
+    ,dmmeta_ReftypeCase_Lpool      = 19   // Varlen pool, implemented as array of 32 Tpools
+    ,dmmeta_ReftypeCase_Malloc     = 20   // Pass-through for malloc / free
+    ,dmmeta_ReftypeCase_Opt        = 21   // Optional trailing struct field occupying rest of space
+    ,dmmeta_ReftypeCase_Pkey       = 22   // Primary key reference
+    ,dmmeta_ReftypeCase_Ptr        = 23   // Cross-reference pointer to a future record
+    ,dmmeta_ReftypeCase_Ptrary     = 24   // Array of pointers
+    ,dmmeta_ReftypeCase_Regx       = 25   // Regex match on primary key
+    ,dmmeta_ReftypeCase_RegxSql    = 26   // SQL-style regex on primary key
+    ,dmmeta_ReftypeCase_Sbrk       = 27   // Memory allocator via sbrk
+    ,dmmeta_ReftypeCase_Smallstr   = 28   // Fixed-length string field
+    ,dmmeta_ReftypeCase_Tary       = 29   // Flat, reallocatable array of values
+    ,dmmeta_ReftypeCase_Thash      = 30   // X-reference; hash built on top of ptrary
+    ,dmmeta_ReftypeCase_Tpool      = 31   // Singly linked free-list
+    ,dmmeta_ReftypeCase_Upptr      = 32   // Pointer to a past (pre-existing) record
+    ,dmmeta_ReftypeCase_Val        = 33   // Single cascade-insert in-place value
+    ,dmmeta_ReftypeCase_Varlen     = 34   // Variable-length trailing array
+    ,dmmeta_ReftypeCase_ZSListMT   = 35   // Zero-terminated singly linked list with thread-safe access
 };
 
 enum { dmmeta_ReftypeCaseEnum_N = 35 };
@@ -3802,6 +3802,7 @@ struct Reftype { // dmmeta.Reftype: Field type constructor (e.g. reference type)
     bool               hasalloc;      //   false  Generte Alloc/Delete functions for arg type
     bool               inst;          //   false  Field creates an instance of arg type (directly or indirectly)
     bool               varlen;        //   false  This pool supports varlen allocations
+    algo::Comment      comment;       //
     // func:dmmeta.Reftype..Ctor
     inline               Reftype() __attribute__((nothrow));
 };

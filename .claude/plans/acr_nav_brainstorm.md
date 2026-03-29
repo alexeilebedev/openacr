@@ -21,8 +21,9 @@
 | M14 | Breadcrumb navigation bar | Naventry ctype name, navstack as UI |
 | M15 | Help as right-panel viewmode | Controlled vocabulary refinement, startup discoverability |
 | M16 | Field detail drilldown + viewmode line-source refactoring | Orthogonal factorization visible; data-driven detailsrc |
+| M17 | Inline reftype glossary + detail view enrichment | Controlled vocab properties; on-demand context over always-on noise |
 
-**Current:** ~1050 lines C++, 21 navactions, 37 keybinds, 2 modes, 2 panels, 5 viewmodes (fields/xref/preview/help/detail), 9 navstyles, 36 reftypestyles, ~1449 ctypes / ~5804 fields across 89 namespaces.
+**Current:** ~1050 lines C++, 21 navactions, 37 keybinds, 2 modes, 2 panels, 5 viewmodes (fields/xref/preview/help/detail), 9 navstyles, 36 reftypestyles, ~1449 ctypes / ~5596 fields across 89 namespaces.
 
 ---
 
@@ -64,6 +65,19 @@ Fix: guard `toggle_xref` to either skip when overlay is active, or pop the overl
 
 `acr_navdb.Helpgroup.sort_order` and `acr_navdb.Navaction.help_sort` express the same concept (display ordering for help) at different scopes. Consistent naming would use `sort_order` on both tables.
 
+### I7. Detail view is incomprehensible
+
+The detail view (`d` keybind) renders raw ssimfile records — full `dmmeta.field`, `dmmeta.reftype`, `dmmeta.thash`, `dmmeta.xref` lines with every key:value pair. On a typical terminal (80-120 cols), lines truncate mid-field and look like a wall of noise:
+
+```
+dmmeta.field  field:abt.FDb.ind_arch  arg:abt.FArch  reftype:Thash  dflt:""  comment:""
+dmmeta.reftype  reftype:Thash  isval:N  cascins:N  usebasepool:Y  cancopy:N  isxref:Y  de...
+dmmeta.thash  field:abt.FDb.ind_arch  hashfld:dev.Arch.arch  unique:Y  comment:""
+dmmeta.xref  field:abt.FDb.ind_arch  inscond:true  via:""
+```
+
+A newcomer can't extract meaning from this. Possible fixes: (a) curated projection showing only the most useful fields per record type, (b) vertical key:value layout instead of horizontal ssim, (c) horizontal scrolling, (d) field-level syntax coloring to visually separate keys from values. These aren't mutually exclusive.
+
 ---
 
 ## Pain Points Observed
@@ -73,8 +87,8 @@ These come from hands-on experimentation with the full toolset and reviewing tut
 ### P1. Flat list at scale
 1,449 ctypes in a flat alphabetical list across 89 namespaces. Browsing is like reading a phone book. Filter helps, but you need to already know what you're looking for.
 
-### P2. Vocabulary cliff
-Lary, Thash, Ptrary, Upptr, Tpool, Tary, Llist -- the building blocks are opaque to newcomers. Seeing `|Lary ctype-->/` in an amc_vis diagram means nothing without looking up that "Lary" = "level array (pool allocator)." The reftype records have comments, but they're not visible where you need them -- inside acr_nav.
+### P2. Vocabulary cliff (partially addressed by M17)
+Lary, Thash, Ptrary, Upptr, Tpool, Tary, Llist -- the building blocks are opaque to newcomers. M17 added `comment` to `dmmeta.Reftype` and shows it in the detail view (`d` keybind). This helps on-demand but doesn't solve the "what does this mean at a glance?" problem during normal field browsing.
 
 ### P3. Tool-switching tax
 Typical schema exploration requires five context switches: `acr` to find a type, `amc_vis` for access paths, `acr -t` for xref tree, `src_func` for hand-written code, then an editor. One question ("how does this type work?") scattered across five tools.
@@ -102,14 +116,9 @@ Browsing ctypes in acr_nav, you can't tell which types have 3 records vs 3000. N
 
 These solve the most painful problems, align with OpenACR philosophy, and build on existing architecture.
 
-#### 1A. Inline Reftype Glossary
+#### ~~1A. Inline Reftype Glossary~~ — Done (M17)
 
-When a field is selected, the status bar shows the reftype's comment from `dmmeta.reftype`. Example: selecting a Thash field shows "Hash table, unique keys." One-line definition, always visible, zero keystrokes.
-
-**Solves:** P2 (vocabulary cliff).
-**Teaches:** Controlled vocabularies have queryable properties -- you're seeing data, not hardcoded help text.
-**Value:** High. Removes the single biggest barrier for newcomers.
-**Size:** Very small. The data already exists in `dmmeta.reftype.comment`. Read one field from an already-loaded table, render one line in the status bar.
+Implemented: added `comment` field to `dmmeta.Reftype` (all 35 records populated from `amcdb.tclass.comment` with 6 overrides). Reftype comment shown in detail view (`d` keybind) as the full reftype record — on-demand rather than status bar, to avoid displacing keyboard hints with info that's useful once then becomes noise. Also normalized tclass.ssim comments (trailing periods, capitalization) and fixed Delptr typo.
 
 #### ~~1B. Field Detail Drilldown~~ — Done (M16)
 
@@ -257,14 +266,14 @@ Full pool scan has a practical obstacle: Tpool loses iteration capability (free-
 
 | Milestone | Idea | Principle Demonstrated |
 |-----------|------|----------------------|
-| M17 | 1A: Inline reftype glossary | Controlled vocab properties surfaced in context |
+| ~~M17~~ | ~~1A: Inline reftype glossary~~ | ~~Controlled vocab properties surfaced in context~~ |
 | M18 | 1C: Namespace grouping | Orthogonal axes (left-panel layout independent of right panel) |
 | M19 | 1D: Generated code preview | Schema = code, two views of same thing |
 | Later | Tier 2-3 ideas | As interest dictates |
 
 **Sequencing rationale:**
 
-- **M17 (reftype glossary)** is nearly zero effort -- it surfaces existing data in the status bar. Ships fast, removes the vocabulary cliff immediately. Good warmup.
+- **M17 (reftype glossary)** — Done. Added `dmmeta.Reftype.comment`, surfaced in detail view.
 - **M18 (namespace grouping)** is the biggest usability win but requires more architectural work (left-panel rendering becomes mode-dependent). Better now that M16 proved the viewmode pattern.
 - **M19 (generated code)** builds on the shell-out pattern from preview mode. Natural capstone: after seeing fields (M16) and structure (M18), see the generated code that ties them together.
 

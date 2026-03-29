@@ -1,35 +1,35 @@
-dmmeta.reftype  reftype:Alias  isval:Y  cascins:N  usebasepool:N  cancopy:N  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N
-dmmeta.reftype  reftype:Atree  isval:N  cascins:N  usebasepool:N  cancopy:N  isxref:Y  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N
-dmmeta.reftype  reftype:Base  isval:N  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:Y  isnew:N  hasalloc:N  inst:N  varlen:N
-dmmeta.reftype  reftype:Bheap  isval:N  cascins:N  usebasepool:Y  cancopy:N  isxref:Y  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N
-dmmeta.reftype  reftype:Bitfld  isval:Y  cascins:Y  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N
-dmmeta.reftype  reftype:Blkpool  isval:Y  cascins:N  usebasepool:Y  cancopy:N  isxref:N  del:Y  up:N  isnew:N  hasalloc:Y  inst:Y  varlen:Y
-dmmeta.reftype  reftype:Charset  isval:Y  cascins:Y  usebasepool:N  cancopy:N  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N
-dmmeta.reftype  reftype:Count  isval:N  cascins:N  usebasepool:N  cancopy:N  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N
-dmmeta.reftype  reftype:Cppstack  isval:Y  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:Y  hasalloc:N  inst:Y  varlen:N
-dmmeta.reftype  reftype:Ctype  isval:N  cascins:N  usebasepool:N  cancopy:N  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N
-dmmeta.reftype  reftype:Delptr  isval:N  cascins:N  usebasepool:Y  cancopy:N  isxref:N  del:N  up:N  isnew:Y  hasalloc:N  inst:Y  varlen:N
-dmmeta.reftype  reftype:Exec  isval:N  cascins:N  usebasepool:N  cancopy:N  isxref:N  del:N  up:N  isnew:Y  hasalloc:N  inst:N  varlen:N
-dmmeta.reftype  reftype:Fbuf  isval:Y  cascins:Y  usebasepool:Y  cancopy:N  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:Y  varlen:N
-dmmeta.reftype  reftype:Global  isval:Y  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:Y  varlen:N
-dmmeta.reftype  reftype:Hook  isval:N  cascins:N  usebasepool:N  cancopy:N  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N
-dmmeta.reftype  reftype:Inlary  isval:Y  cascins:Y  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:Y  varlen:N
-dmmeta.reftype  reftype:Lary  isval:Y  cascins:N  usebasepool:Y  cancopy:N  isxref:N  del:N  up:N  isnew:N  hasalloc:Y  inst:Y  varlen:N
-dmmeta.reftype  reftype:Llist  isval:N  cascins:N  usebasepool:N  cancopy:N  isxref:Y  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N
-dmmeta.reftype  reftype:Lpool  isval:Y  cascins:N  usebasepool:Y  cancopy:N  isxref:N  del:Y  up:N  isnew:N  hasalloc:Y  inst:Y  varlen:Y
-dmmeta.reftype  reftype:Malloc  isval:Y  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:Y  up:N  isnew:N  hasalloc:Y  inst:Y  varlen:Y
-dmmeta.reftype  reftype:Opt  isval:Y  cascins:Y  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:Y  hasalloc:N  inst:Y  varlen:Y
-dmmeta.reftype  reftype:Pkey  isval:N  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:Y  isnew:N  hasalloc:N  inst:N  varlen:N
-dmmeta.reftype  reftype:Ptr  isval:N  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N
-dmmeta.reftype  reftype:Ptrary  isval:N  cascins:N  usebasepool:Y  cancopy:N  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N
-dmmeta.reftype  reftype:Regx  isval:N  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:Y  isnew:N  hasalloc:N  inst:N  varlen:N
-dmmeta.reftype  reftype:RegxSql  isval:N  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:Y  isnew:N  hasalloc:N  inst:N  varlen:N
-dmmeta.reftype  reftype:Sbrk  isval:Y  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:Y  varlen:N
-dmmeta.reftype  reftype:Smallstr  isval:Y  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N
-dmmeta.reftype  reftype:Tary  isval:Y  cascins:N  usebasepool:Y  cancopy:N  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N
-dmmeta.reftype  reftype:Thash  isval:N  cascins:N  usebasepool:Y  cancopy:N  isxref:Y  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N
-dmmeta.reftype  reftype:Tpool  isval:Y  cascins:N  usebasepool:Y  cancopy:N  isxref:N  del:Y  up:N  isnew:N  hasalloc:Y  inst:Y  varlen:N
-dmmeta.reftype  reftype:Upptr  isval:N  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:Y  isnew:N  hasalloc:N  inst:N  varlen:N
-dmmeta.reftype  reftype:Val  isval:Y  cascins:Y  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:Y  hasalloc:N  inst:N  varlen:N
-dmmeta.reftype  reftype:Varlen  isval:Y  cascins:Y  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:Y  hasalloc:N  inst:Y  varlen:Y
-dmmeta.reftype  reftype:ZSListMT  isval:N  cascins:N  usebasepool:N  cancopy:N  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N
+dmmeta.reftype  reftype:Alias  isval:Y  cascins:N  usebasepool:N  cancopy:N  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N  comment:"Access another field"
+dmmeta.reftype  reftype:Atree  isval:N  cascins:N  usebasepool:N  cancopy:N  isxref:Y  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N  comment:"X-reference: AVL tree"
+dmmeta.reftype  reftype:Base  isval:N  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:Y  isnew:N  hasalloc:N  inst:N  varlen:N  comment:"Incorporate base ctype fields"
+dmmeta.reftype  reftype:Bheap  isval:N  cascins:N  usebasepool:Y  cancopy:N  isxref:Y  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N  comment:"X-reference: Binary heap built on top of ptrary"
+dmmeta.reftype  reftype:Bitfld  isval:Y  cascins:Y  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N  comment:"A field whose value is stored in the bits of another field"
+dmmeta.reftype  reftype:Blkpool  isval:Y  cascins:N  usebasepool:Y  cancopy:N  isxref:N  del:Y  up:N  isnew:N  hasalloc:Y  inst:Y  varlen:Y  comment:"Variable size block-based allocator suitable for fifo use"
+dmmeta.reftype  reftype:Charset  isval:Y  cascins:Y  usebasepool:N  cancopy:N  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N  comment:"Character set membership bitmap"
+dmmeta.reftype  reftype:Count  isval:N  cascins:N  usebasepool:N  cancopy:N  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N  comment:"A cross-reference that simply counts # of children"
+dmmeta.reftype  reftype:Cppstack  isval:Y  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:Y  hasalloc:N  inst:Y  varlen:N  comment:"A pool whose only purpose is to provide a name"
+dmmeta.reftype  reftype:Ctype  isval:N  cascins:N  usebasepool:N  cancopy:N  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N  comment:"Type reference only, no generated field"
+dmmeta.reftype  reftype:Delptr  isval:N  cascins:N  usebasepool:Y  cancopy:N  isxref:N  del:N  up:N  isnew:Y  hasalloc:N  inst:Y  varlen:N  comment:"Pointer to a private cascade-delete value (like Val but starts as NULL)"
+dmmeta.reftype  reftype:Exec  isval:N  cascins:N  usebasepool:N  cancopy:N  isxref:N  del:N  up:N  isnew:Y  hasalloc:N  inst:N  varlen:N  comment:Subprocess
+dmmeta.reftype  reftype:Fbuf  isval:Y  cascins:Y  usebasepool:Y  cancopy:N  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:Y  varlen:N  comment:"Byte buffer with epoll integration & message scanning"
+dmmeta.reftype  reftype:Global  isval:Y  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:Y  varlen:N  comment:"Global variable -- root of all access paths"
+dmmeta.reftype  reftype:Hook  isval:N  cascins:N  usebasepool:N  cancopy:N  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N  comment:"Pointer to a function"
+dmmeta.reftype  reftype:Inlary  isval:Y  cascins:Y  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:Y  varlen:N  comment:"Zero to N values, allocated inside the parent struct"
+dmmeta.reftype  reftype:Lary  isval:Y  cascins:N  usebasepool:Y  cancopy:N  isxref:N  del:N  up:N  isnew:N  hasalloc:Y  inst:Y  varlen:N  comment:"Level array with permanent pointers"
+dmmeta.reftype  reftype:Llist  isval:N  cascins:N  usebasepool:N  cancopy:N  isxref:Y  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N  comment:"X-reference: any of 32 possible types of linked list"
+dmmeta.reftype  reftype:Lpool  isval:Y  cascins:N  usebasepool:Y  cancopy:N  isxref:N  del:Y  up:N  isnew:N  hasalloc:Y  inst:Y  varlen:Y  comment:"Varlen pool, implemented as array of 32 Tpools"
+dmmeta.reftype  reftype:Malloc  isval:Y  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:Y  up:N  isnew:N  hasalloc:Y  inst:Y  varlen:Y  comment:"Pass-through for malloc / free"
+dmmeta.reftype  reftype:Opt  isval:Y  cascins:Y  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:Y  hasalloc:N  inst:Y  varlen:Y  comment:"Optional trailing struct field occupying rest of space"
+dmmeta.reftype  reftype:Pkey  isval:N  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:Y  isnew:N  hasalloc:N  inst:N  varlen:N  comment:"Primary key reference"
+dmmeta.reftype  reftype:Ptr  isval:N  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N  comment:"Cross-reference pointer to a future record"
+dmmeta.reftype  reftype:Ptrary  isval:N  cascins:N  usebasepool:Y  cancopy:N  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N  comment:"Array of pointers"
+dmmeta.reftype  reftype:Regx  isval:N  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:Y  isnew:N  hasalloc:N  inst:N  varlen:N  comment:"Regex match on primary key"
+dmmeta.reftype  reftype:RegxSql  isval:N  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:Y  isnew:N  hasalloc:N  inst:N  varlen:N  comment:"SQL-style regex on primary key"
+dmmeta.reftype  reftype:Sbrk  isval:Y  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:Y  varlen:N  comment:"Memory allocator via sbrk"
+dmmeta.reftype  reftype:Smallstr  isval:Y  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N  comment:"Fixed-length string field"
+dmmeta.reftype  reftype:Tary  isval:Y  cascins:N  usebasepool:Y  cancopy:N  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N  comment:"Flat, reallocatable array of values"
+dmmeta.reftype  reftype:Thash  isval:N  cascins:N  usebasepool:Y  cancopy:N  isxref:Y  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N  comment:"X-reference; hash built on top of ptrary"
+dmmeta.reftype  reftype:Tpool  isval:Y  cascins:N  usebasepool:Y  cancopy:N  isxref:N  del:Y  up:N  isnew:N  hasalloc:Y  inst:Y  varlen:N  comment:"Singly linked free-list"
+dmmeta.reftype  reftype:Upptr  isval:N  cascins:N  usebasepool:N  cancopy:Y  isxref:N  del:N  up:Y  isnew:N  hasalloc:N  inst:N  varlen:N  comment:"Pointer to a past (pre-existing) record"
+dmmeta.reftype  reftype:Val  isval:Y  cascins:Y  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:Y  hasalloc:N  inst:N  varlen:N  comment:"Single cascade-insert in-place value"
+dmmeta.reftype  reftype:Varlen  isval:Y  cascins:Y  usebasepool:N  cancopy:Y  isxref:N  del:N  up:N  isnew:Y  hasalloc:N  inst:Y  varlen:Y  comment:"Variable-length trailing array"
+dmmeta.reftype  reftype:ZSListMT  isval:N  cascins:N  usebasepool:N  cancopy:N  isxref:N  del:N  up:N  isnew:N  hasalloc:N  inst:N  varlen:N  comment:"Zero-terminated singly linked list with thread-safe access"
