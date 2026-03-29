@@ -394,7 +394,7 @@ struct FDb { // acr_nav.FDb
     acr_nav::FCtype*           zd_sel_ctype_tail;                // pointer to last element
     acr_nav::FPanel*           p_cur_panel;                      // Currently focused panel. optional pointer
     acr_nav::FPanel*           p_left_panel;                     // Left panel (ctype list). Named ptr is deliberate: 2-panel layout is fixed, position-based lookup unnecessary. optional pointer
-    acr_nav::FPanel*           p_right_panel;                    // Right panel (field list). Named ptr is deliberate: 2-panel layout is fixed, position-based lookup unnecessary. optional pointer
+    acr_nav::FPanel*           p_right_panel;                    // Right panel (content). Named ptr is deliberate: 2-panel layout is fixed, position-based lookup unnecessary. optional pointer
     acr_nav::FNavmode*         p_cur_mode;                       // Current UI mode (browse/filter). optional pointer
     acr_nav::FNavmode*         p_filter_mode;                    // Cached pointer to filter navmode for fast comparison. optional pointer
     algo::cstring              filter;                           // Current filter text
@@ -1917,6 +1917,7 @@ void                 FField_Uninit(acr_nav::FField& field) __attribute__((nothro
 // create: acr_nav.FDb.helpgroup (Lary)
 // global access: helpgroup (Lary, by rowid)
 // global access: ind_helpgroup (Thash, hash field helpgroup)
+// access: acr_nav.FNavaction.p_helpgroup (Ptr)
 struct FHelpgroup { // acr_nav.FHelpgroup
     acr_nav::FHelpgroup*   ind_helpgroup_next;      // hash next
     u32                    ind_helpgroup_hashval;   // hash value
@@ -2010,8 +2011,9 @@ struct FNavaction { // acr_nav.FNavaction
     algo::Smallstr50               navaction;               //
     algo::Smallstr50               hint;                    // Short status bar label; empty=hidden
     algo::Smallstr50               helpgroup;               // Help group; empty=hidden from help
-    i32                            help_sort;               //   0  Sort order within help group
+    i32                            sort_order;              //   0  Sort order within help group
     algo::Comment                  comment;                 //
+    acr_nav::FHelpgroup*           p_helpgroup;             // optional pointer
     acr_nav::navaction_step_hook   step;                    //   NULL  Pointer to a function
     // reftype Hook of acr_nav.FNavaction.step prohibits copy
     // func:acr_nav.FNavaction..AssignOp
@@ -2718,7 +2720,7 @@ struct VisibleField { // acr_nav.VisibleField: Headless field output
     algo::Smallstr100   arg;         // Argument ctype
     algo::Smallstr50    reftype;     // Reference type
     algo::Smallstr50    style;       // Visual style name
-    algo::Smallstr10    navigable;   // Y if follow_ref would navigate
+    bool                navigable;   //   false  Whether follow_ref would navigate
     // func:acr_nav.VisibleField..Ctor
     inline               VisibleField() __attribute__((nothrow));
 };
@@ -2981,9 +2983,9 @@ void                 navaction_switch_panel_right();
 // this function is 'extrn' and implemented by user
 void                 navaction_toggle_preview();
 // User-implemented function from gstatic:acr_nav.FDb.navaction
-// func:acr_nav...navaction_toggle_xref
+// func:acr_nav...navaction_cycle_viewmode
 // this function is 'extrn' and implemented by user
-void                 navaction_toggle_xref();
+void                 navaction_cycle_viewmode();
 // func:acr_nav...StaticCheck
 void                 StaticCheck();
 } // gen:ns_func

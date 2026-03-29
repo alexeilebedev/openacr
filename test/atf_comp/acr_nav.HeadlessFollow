@@ -1,13 +1,13 @@
-acr_nav.Screen  mode:browse  focus:field_list  filter:""  navstack_depth:1  n_sel_ctype:1396  n_ctype:1397  n_field:5596  viewmode:fields  breadcrumb:"amc.FDb > amc.FFsort"
+acr_nav.Screen  mode:browse  focus:content  filter:""  navstack_depth:1  n_sel_ctype:1396  n_ctype:1397  n_field:5597  viewmode:fields  breadcrumb:"amc.FDb > amc.FFsort"
 acr_nav.PanelState  panel:ctype_list  sel_row:502  scroll_offset:0  n_items:1396  sel_value:amc.FFsort
-acr_nav.PanelState  panel:field_list  sel_row:0  scroll_offset:0  n_items:3  sel_value:amc.FFsort.msghdr
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:3  sel_value:amc.FFsort.msghdr
 acr_nav.VisibleField  row:0  field:amc.FFsort.msghdr  arg:dmmeta.Fsort  reftype:Base  style:field_upref  navigable:Y
 acr_nav.VisibleField  row:1  field:amc.FFsort.p_field  arg:amc.FField  reftype:Upptr  style:field_upref  navigable:Y
 acr_nav.VisibleField  row:2  field:amc.FFsort.p_sortfld  arg:amc.FField  reftype:Upptr  style:field_upref  navigable:Y
 
-acr_nav.Screen  mode:browse  focus:field_list  filter:""  navstack_depth:1  n_sel_ctype:1396  n_ctype:1397  n_field:5596  viewmode:fields  breadcrumb:"amc.FDb > amc.FFsort"
+acr_nav.Screen  mode:browse  focus:content  filter:""  navstack_depth:1  n_sel_ctype:1396  n_ctype:1397  n_field:5597  viewmode:fields  breadcrumb:"amc.FDb > amc.FFsort"
 acr_nav.PanelState  panel:ctype_list  sel_row:502  scroll_offset:0  n_items:1396  sel_value:amc.FFsort
-acr_nav.PanelState  panel:field_list  sel_row:0  scroll_offset:0  n_items:3  sel_value:amc.FFsort.msghdr
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:3  sel_value:amc.FFsort.msghdr
 acr_nav.VisibleField  row:0  field:amc.FFsort.msghdr  arg:dmmeta.Fsort  reftype:Base  style:field_upref  navigable:Y
 acr_nav.VisibleField  row:1  field:amc.FFsort.p_field  arg:amc.FField  reftype:Upptr  style:field_upref  navigable:Y
 acr_nav.VisibleField  row:2  field:amc.FFsort.p_sortfld  arg:amc.FField  reftype:Upptr  style:field_upref  navigable:Y

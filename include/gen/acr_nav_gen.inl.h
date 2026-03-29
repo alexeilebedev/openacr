@@ -1697,7 +1697,8 @@ inline void acr_nav::step_Call(acr_nav::FNavaction& navaction) {
 // --- acr_nav.FNavaction..Init
 // Set all fields to initial values.
 inline void acr_nav::FNavaction_Init(acr_nav::FNavaction& navaction) {
-    navaction.help_sort = i32(0);
+    navaction.sort_order = i32(0);
+    navaction.p_helpgroup = NULL;
     navaction.ind_navaction_next = (acr_nav::FNavaction*)-1; // (acr_nav.FDb.ind_navaction) not-in-hash
     navaction.ind_navaction_hashval = 0; // stored hash value
     navaction.step = NULL;
@@ -2097,6 +2098,7 @@ inline  acr_nav::TableId::TableId(acr_nav_TableIdEnum arg) {
 // Set all fields to initial values.
 inline void acr_nav::VisibleField_Init(acr_nav::VisibleField& parent) {
     parent.row = i32(0);
+    parent.navigable = bool(false);
 }
 
 // --- acr_nav.VisibleField..Ctor

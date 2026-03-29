@@ -98,7 +98,6 @@ const char* acr_navdb::value_ToCstr(const acr_navdb::FieldId& parent) {
         case acr_navdb_FieldId_hint_order  : ret = "hint_order";  break;
         case acr_navdb_FieldId_key         : ret = "key";  break;
         case acr_navdb_FieldId_hint        : ret = "hint";  break;
-        case acr_navdb_FieldId_help_sort   : ret = "help_sort";  break;
         case acr_navdb_FieldId_navstyle    : ret = "navstyle";  break;
         case acr_navdb_FieldId_bold        : ret = "bold";  break;
         case acr_navdb_FieldId_dim         : ret = "dim";  break;
@@ -222,10 +221,6 @@ bool acr_navdb::value_SetStrptrMaybe(acr_navdb::FieldId& parent, algo::strptr rh
                 }
                 case LE_STR8('e','m','p','t','y','_','m','s'): {
                     if (memcmp(rhs.elems+8,"g",1)==0) { value_SetEnum(parent,acr_navdb_FieldId_empty_msg); ret = true; break; }
-                    break;
-                }
-                case LE_STR8('h','e','l','p','_','s','o','r'): {
-                    if (memcmp(rhs.elems+8,"t",1)==0) { value_SetEnum(parent,acr_navdb_FieldId_help_sort); ret = true; break; }
                     break;
                 }
                 case LE_STR8('h','e','l','p','g','r','o','u'): {
@@ -473,8 +468,8 @@ bool acr_navdb::Navaction_ReadFieldMaybe(acr_navdb::Navaction& parent, algo::str
         case acr_navdb_FieldId_helpgroup: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.helpgroup, strval);
         } break;
-        case acr_navdb_FieldId_help_sort: {
-            retval = i32_ReadStrptrMaybe(parent.help_sort, strval);
+        case acr_navdb_FieldId_sort_order: {
+            retval = i32_ReadStrptrMaybe(parent.sort_order, strval);
         } break;
         case acr_navdb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
@@ -518,8 +513,8 @@ void acr_navdb::Navaction_Print(acr_navdb::Navaction& row, algo::cstring& str) {
     algo::Smallstr50_Print(row.helpgroup, temp);
     PrintAttrSpaceReset(str,"helpgroup", temp);
 
-    i32_Print(row.help_sort, temp);
-    PrintAttrSpaceReset(str,"help_sort", temp);
+    i32_Print(row.sort_order, temp);
+    PrintAttrSpaceReset(str,"sort_order", temp);
 
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);

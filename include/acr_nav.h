@@ -44,7 +44,7 @@ namespace acr_nav { // update-hdr
     // void navaction_go_bottom(); // gstatic/acr_navdb.navaction:go_bottom
     // void navaction_go_back(); // gstatic/acr_navdb.navaction:go_back
     // void navaction_quit(); // gstatic/acr_navdb.navaction:quit
-    // void navaction_toggle_xref(); // gstatic/acr_navdb.navaction:toggle_xref
+    // void navaction_cycle_viewmode(); // gstatic/acr_navdb.navaction:cycle_viewmode
     // void navaction_toggle_preview(); // gstatic/acr_navdb.navaction:toggle_preview
     // void navaction_filter_accept(); // gstatic/acr_navdb.navaction:filter_accept
     // void navaction_filter_start(); // gstatic/acr_navdb.navaction:filter_start

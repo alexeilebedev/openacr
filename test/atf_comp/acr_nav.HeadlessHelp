@@ -1,20 +1,20 @@
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1396  n_ctype:1397  n_field:5596  viewmode:help  breadcrumb:""
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1396  n_ctype:1397  n_field:5597  viewmode:help  breadcrumb:""
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:1396  sel_value:DIR
-acr_nav.PanelState  panel:field_list  sel_row:0  scroll_offset:0  n_items:21  sel_value:"Up                k         Move selection up"
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:21  sel_value:"Up                k         Move selection up"
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1396  n_ctype:1397  n_field:5596  viewmode:fields  breadcrumb:""
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1396  n_ctype:1397  n_field:5597  viewmode:fields  breadcrumb:""
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:1396  sel_value:HANDLE
-acr_nav.PanelState  panel:field_list  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1396  n_ctype:1397  n_field:5596  viewmode:help  breadcrumb:""
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1396  n_ctype:1397  n_field:5597  viewmode:help  breadcrumb:""
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:1396  sel_value:HANDLE
-acr_nav.PanelState  panel:field_list  sel_row:0  scroll_offset:0  n_items:21  sel_value:"Up                k         Move selection up"
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:21  sel_value:"Up                k         Move selection up"
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1396  n_ctype:1397  n_field:5596  viewmode:fields  breadcrumb:""
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1396  n_ctype:1397  n_field:5597  viewmode:fields  breadcrumb:""
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:1396  sel_value:HANDLE
-acr_nav.PanelState  panel:field_list  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1396  n_ctype:1397  n_field:5596  viewmode:fields  breadcrumb:""
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1396  n_ctype:1397  n_field:5597  viewmode:fields  breadcrumb:""
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:1396  sel_value:HANDLE
-acr_nav.PanelState  panel:field_list  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
 

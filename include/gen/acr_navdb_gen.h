@@ -40,26 +40,25 @@ enum acr_navdb_FieldIdEnum {                // acr_navdb.FieldId.value
     ,acr_navdb_FieldId_hint_order     = 7
     ,acr_navdb_FieldId_key            = 8
     ,acr_navdb_FieldId_hint           = 9
-    ,acr_navdb_FieldId_help_sort      = 10
-    ,acr_navdb_FieldId_navstyle       = 11
-    ,acr_navdb_FieldId_bold           = 12
-    ,acr_navdb_FieldId_dim            = 13
-    ,acr_navdb_FieldId_reverse        = 14
-    ,acr_navdb_FieldId_fg_color       = 15
-    ,acr_navdb_FieldId_panel          = 16
-    ,acr_navdb_FieldId_title          = 17
-    ,acr_navdb_FieldId_position       = 18
-    ,acr_navdb_FieldId_min_width      = 19
-    ,acr_navdb_FieldId_reftypestyle   = 20
-    ,acr_navdb_FieldId_reftype        = 21
-    ,acr_navdb_FieldId_viewmode       = 22
-    ,acr_navdb_FieldId_next           = 23
-    ,acr_navdb_FieldId_empty_msg      = 24
-    ,acr_navdb_FieldId_has_fields     = 25
-    ,acr_navdb_FieldId_value          = 26
+    ,acr_navdb_FieldId_navstyle       = 10
+    ,acr_navdb_FieldId_bold           = 11
+    ,acr_navdb_FieldId_dim            = 12
+    ,acr_navdb_FieldId_reverse        = 13
+    ,acr_navdb_FieldId_fg_color       = 14
+    ,acr_navdb_FieldId_panel          = 15
+    ,acr_navdb_FieldId_title          = 16
+    ,acr_navdb_FieldId_position       = 17
+    ,acr_navdb_FieldId_min_width      = 18
+    ,acr_navdb_FieldId_reftypestyle   = 19
+    ,acr_navdb_FieldId_reftype        = 20
+    ,acr_navdb_FieldId_viewmode       = 21
+    ,acr_navdb_FieldId_next           = 22
+    ,acr_navdb_FieldId_empty_msg      = 23
+    ,acr_navdb_FieldId_has_fields     = 24
+    ,acr_navdb_FieldId_value          = 25
 };
 
-enum { acr_navdb_FieldIdEnum_N = 27 };
+enum { acr_navdb_FieldIdEnum_N = 26 };
 
 namespace acr_navdb { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 DetailsrcPkey;
@@ -221,11 +220,11 @@ void                 Keybind_Print(acr_navdb::Keybind& row, algo::cstring& str) 
 
 // --- acr_navdb.Navaction
 struct Navaction { // acr_navdb.Navaction: Controlled vocabulary of navigation actions
-    algo::Smallstr50   navaction;   //
-    algo::Smallstr50   hint;        // Short status bar label; empty=hidden
-    algo::Smallstr50   helpgroup;   // Help group; empty=hidden from help
-    i32                help_sort;   //   0  Sort order within help group
-    algo::Comment      comment;     //
+    algo::Smallstr50   navaction;    //
+    algo::Smallstr50   hint;         // Short status bar label; empty=hidden
+    algo::Smallstr50   helpgroup;    // Help group; empty=hidden from help
+    i32                sort_order;   //   0  Sort order within help group
+    algo::Comment      comment;      //
     // func:acr_navdb.Navaction..Ctor
     inline               Navaction() __attribute__((nothrow));
 };

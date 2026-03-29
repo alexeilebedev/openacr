@@ -598,24 +598,28 @@ void acr_nav::navaction_quit() {
 
 // -----------------------------------------------------------------------------
 
-void acr_nav::navaction_toggle_xref() {
-    acr_nav::FViewmode *next = acr_nav::ind_viewmode_Find(acr_nav::_db.p_cur_viewmode->next);
-    if (next) {
-        acr_nav::_db.p_cur_viewmode = next;
+void acr_nav::navaction_cycle_viewmode() {
+    if (!IsHelpMode() && !IsDetailMode()) {
+        acr_nav::FViewmode *next = acr_nav::ind_viewmode_Find(acr_nav::_db.p_cur_viewmode->next);
+        if (next) {
+            acr_nav::_db.p_cur_viewmode = next;
+        }
+        acr_nav::_db.p_right_panel->sel_row = 0;
+        acr_nav::_db.p_right_panel->scroll_offset = 0;
     }
-    acr_nav::_db.p_right_panel->sel_row = 0;
-    acr_nav::_db.p_right_panel->scroll_offset = 0;
 }
 
 // -----------------------------------------------------------------------------
 
 void acr_nav::navaction_toggle_preview() {
-    acr_nav::FCtype *sel_ct = SelectedCtype(*acr_nav::_db.p_left_panel);
-    bool in_preview = (acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_preview_viewmode);
-    bool go_preview = !in_preview && sel_ct && FindSsimfile(*sel_ct);
-    acr_nav::_db.p_cur_viewmode = go_preview ? acr_nav::_db.p_preview_viewmode : acr_nav::_db.p_default_viewmode;
-    acr_nav::_db.p_right_panel->sel_row = 0;
-    acr_nav::_db.p_right_panel->scroll_offset = 0;
+    if (!IsHelpMode() && !IsDetailMode()) {
+        acr_nav::FCtype *sel_ct = SelectedCtype(*acr_nav::_db.p_left_panel);
+        bool in_preview = (acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_preview_viewmode);
+        bool go_preview = !in_preview && sel_ct && FindSsimfile(*sel_ct);
+        acr_nav::_db.p_cur_viewmode = go_preview ? acr_nav::_db.p_preview_viewmode : acr_nav::_db.p_default_viewmode;
+        acr_nav::_db.p_right_panel->sel_row = 0;
+        acr_nav::_db.p_right_panel->scroll_offset = 0;
+    }
 }
 
 // -----------------------------------------------------------------------------
@@ -841,18 +845,18 @@ static void BuildHelpLines() {
         if (g > 0) {
             acr_nav::line_Alloc(vm) = "";
         }
-        // Collect navactions in this group, sorted by help_sort
+        // Collect navactions in this group, sorted by sort_order
         acr_nav::FNavaction *actions[32];
         int n_actions = 0;
         ind_beg(acr_nav::_db_navaction_curs, na, acr_nav::_db) {
-            if (ch_N(na.helpgroup) > 0 && na.helpgroup == groups[g]->helpgroup && n_actions < 32) {
+            if (na.p_helpgroup == groups[g] && n_actions < 32) {
                 actions[n_actions++] = &na;
             }
         } ind_end;
         for (int i = 1; i < n_actions; i++) {
             acr_nav::FNavaction *tmp = actions[i];
             int j = i;
-            while (j > 0 && actions[j - 1]->help_sort > tmp->help_sort) {
+            while (j > 0 && actions[j - 1]->sort_order > tmp->sort_order) {
                 actions[j] = actions[j - 1];
                 j--;
             }
@@ -1089,9 +1093,9 @@ static void Render(acr_nav::FCtype *sel_ct) {
 
 static void InitPanels() {
     acr_nav::_db.p_left_panel = acr_nav::ind_panel_Find("ctype_list");
-    acr_nav::_db.p_right_panel = acr_nav::ind_panel_Find("field_list");
+    acr_nav::_db.p_right_panel = acr_nav::ind_panel_Find("content");
     vrfy(acr_nav::_db.p_left_panel, "panel 'ctype_list' not found");
-    vrfy(acr_nav::_db.p_right_panel, "panel 'field_list' not found");
+    vrfy(acr_nav::_db.p_right_panel, "panel 'content' not found");
     acr_nav::_db.p_cur_panel = acr_nav::_db.p_left_panel;
     acr_nav::_db.p_filter_mode = acr_nav::ind_navmode_Find("filter");
     vrfy(acr_nav::_db.p_filter_mode, "navmode 'filter' not found");
@@ -1106,6 +1110,12 @@ static void InitPanels() {
     vrfy(acr_nav::_db.p_xref_viewmode, "viewmode 'xref' not found");
     vrfy(acr_nav::_db.p_help_viewmode, "viewmode 'help' not found");
     vrfy(acr_nav::_db.p_detail_viewmode, "viewmode 'detail' not found");
+    // Resolve navaction -> helpgroup pointers (Ptr, not Upptr: 6 navactions have empty helpgroup)
+    ind_beg(acr_nav::_db_navaction_curs, na, acr_nav::_db) {
+        if (ch_N(na.helpgroup) > 0) {
+            na.p_helpgroup = acr_nav::ind_helpgroup_Find(na.helpgroup);
+        }
+    } ind_end;
     // Start in help mode so new users see keybindings
     acr_nav::viewmode_stack_Alloc() = acr_nav::_db.p_default_viewmode->viewmode;
     acr_nav::_db.p_cur_viewmode = acr_nav::_db.p_help_viewmode;
@@ -1239,7 +1249,7 @@ static void HeadlessOutput() {
                 bool navigable = IsXrefMode()
                     ? (field->p_ctype != sel_ct)
                     : (field->p_arg != sel_ct);
-                vf.navigable = navigable ? "Y" : "N";
+                vf.navigable = navigable;
                 prlog(vf);
             }
         }
