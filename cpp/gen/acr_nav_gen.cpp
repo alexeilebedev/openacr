@@ -255,7 +255,10 @@ void acr_nav::c_field_arg_Reserve(acr_nav::FCtype& ctype, u32 n) {
 void acr_nav::FCtype_Uninit(acr_nav::FCtype& ctype) {
     acr_nav::FCtype &row = ctype; (void)row;
     ind_ctype_Remove(row); // remove ctype from index ind_ctype
-    zd_sel_ctype_Remove(row); // remove ctype from index zd_sel_ctype
+    acr_nav::FNs* p_ns = acr_nav::ind_ns_Find(ns_Get(row));
+    if (p_ns)  {
+        c_ctype_Remove(*p_ns, row);// remove ctype from index c_ctype
+    }
 
     // acr_nav.FCtype.c_field_arg.Uninit (Ptrary)  //Fields from other ctypes whose arg is this ctype (reverse xrefs)
     algo_lib::malloc_FreeMem(ctype.c_field_arg_elems, sizeof(acr_nav::FField*)*ctype.c_field_arg_max); // (acr_nav.FCtype.c_field_arg)
@@ -445,7 +448,7 @@ static void acr_nav::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_nav.Input'  signature:'0ccaf58ff045f80e3520e8f168e41429988ad2f3'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_nav.Input'  signature:'36d1aa346adfe8827b8819bc53cf01216f871373'");
 }
 
 // --- acr_nav.FDb._db.InsertStrptrMaybe
@@ -748,6 +751,10 @@ bool acr_nav::ctype_XrefMaybe(acr_nav::FCtype &row) {
             algo_lib::_db.errtext << "acr_nav.duplicate_key  xref:acr_nav.FDb.ind_ctype"; // check for duplicate key
             return false;
         }
+    }
+    // insert ctype into index c_ctype
+    if (true) { // user-defined insert condition
+        c_ctype_Insert(*p_ns, row);
     }
     return retval;
 }
@@ -3149,78 +3156,6 @@ void acr_nav::navstack_Insary(algo::aryptr<acr_nav::Naventry> rhs, int at) {
     _db.navstack_n += nnew;
 }
 
-// --- acr_nav.FDb.zd_sel_ctype.Insert
-// Insert row into linked list. If row is already in linked list, do nothing.
-void acr_nav::zd_sel_ctype_Insert(acr_nav::FCtype& row) {
-    if (!zd_sel_ctype_InLlistQ(row)) {
-        acr_nav::FCtype* old_tail = _db.zd_sel_ctype_tail;
-        row.zd_sel_ctype_next = NULL;
-        row.zd_sel_ctype_prev = old_tail;
-        _db.zd_sel_ctype_tail = &row;
-        acr_nav::FCtype **new_row_a = &old_tail->zd_sel_ctype_next;
-        acr_nav::FCtype **new_row_b = &_db.zd_sel_ctype_head;
-        acr_nav::FCtype **new_row = old_tail ? new_row_a : new_row_b;
-        *new_row = &row;
-        _db.zd_sel_ctype_n++;
-    }
-}
-
-// --- acr_nav.FDb.zd_sel_ctype.Remove
-// Remove element from index. If element is not in index, do nothing.
-void acr_nav::zd_sel_ctype_Remove(acr_nav::FCtype& row) {
-    if (zd_sel_ctype_InLlistQ(row)) {
-        acr_nav::FCtype* old_head       = _db.zd_sel_ctype_head;
-        (void)old_head; // in case it's not used
-        acr_nav::FCtype* prev = row.zd_sel_ctype_prev;
-        acr_nav::FCtype* next = row.zd_sel_ctype_next;
-        // if element is first, adjust list head; otherwise, adjust previous element's next
-        acr_nav::FCtype **new_next_a = &prev->zd_sel_ctype_next;
-        acr_nav::FCtype **new_next_b = &_db.zd_sel_ctype_head;
-        acr_nav::FCtype **new_next = prev ? new_next_a : new_next_b;
-        *new_next = next;
-        // if element is last, adjust list tail; otherwise, adjust next element's prev
-        acr_nav::FCtype **new_prev_a = &next->zd_sel_ctype_prev;
-        acr_nav::FCtype **new_prev_b = &_db.zd_sel_ctype_tail;
-        acr_nav::FCtype **new_prev = next ? new_prev_a : new_prev_b;
-        *new_prev = prev;
-        _db.zd_sel_ctype_n--;
-        row.zd_sel_ctype_next=(acr_nav::FCtype*)-1; // not-in-list
-    }
-}
-
-// --- acr_nav.FDb.zd_sel_ctype.RemoveAll
-// Empty the index. (The rows are not deleted)
-void acr_nav::zd_sel_ctype_RemoveAll() {
-    acr_nav::FCtype* row = _db.zd_sel_ctype_head;
-    _db.zd_sel_ctype_head = NULL;
-    _db.zd_sel_ctype_tail = NULL;
-    _db.zd_sel_ctype_n = 0;
-    while (row) {
-        acr_nav::FCtype* row_next = row->zd_sel_ctype_next;
-        row->zd_sel_ctype_next  = (acr_nav::FCtype*)-1;
-        row->zd_sel_ctype_prev  = NULL;
-        row = row_next;
-    }
-}
-
-// --- acr_nav.FDb.zd_sel_ctype.RemoveFirst
-// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-acr_nav::FCtype* acr_nav::zd_sel_ctype_RemoveFirst() {
-    acr_nav::FCtype *row = NULL;
-    row = _db.zd_sel_ctype_head;
-    if (row) {
-        acr_nav::FCtype *next = row->zd_sel_ctype_next;
-        _db.zd_sel_ctype_head = next;
-        acr_nav::FCtype **new_end_a = &next->zd_sel_ctype_prev;
-        acr_nav::FCtype **new_end_b = &_db.zd_sel_ctype_tail;
-        acr_nav::FCtype **new_end = next ? new_end_a : new_end_b;
-        *new_end = NULL;
-        _db.zd_sel_ctype_n--;
-        row->zd_sel_ctype_next = (acr_nav::FCtype*)-1; // mark as not-in-list
-    }
-    return row;
-}
-
 // --- acr_nav.FDb.navstyle.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -4320,6 +4255,173 @@ void acr_nav::viewmode_stack_Insary(algo::aryptr<algo::Smallstr50> rhs, int at) 
     _db.viewmode_stack_n += nnew;
 }
 
+// --- acr_nav.FDb.left_item.Addary
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+algo::aryptr<acr_nav::LeftItem> acr_nav::left_item_Addary(algo::aryptr<acr_nav::LeftItem> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= _db.left_item_elems && rhs.elems < _db.left_item_elems + _db.left_item_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("acr_nav.tary_alias  field:acr_nav.FDb.left_item  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    int nnew = rhs.n_elems;
+    left_item_Reserve(nnew); // reserve space
+    int at = _db.left_item_n;
+    for (int i = 0; i < nnew; i++) {
+        new (_db.left_item_elems + at + i) acr_nav::LeftItem(rhs[i]);
+        _db.left_item_n++;
+    }
+    return algo::aryptr<acr_nav::LeftItem>(_db.left_item_elems + at, nnew);
+}
+
+// --- acr_nav.FDb.left_item.Alloc
+// Reserve space. Insert element at the end
+// The new element is initialized to a default value
+acr_nav::LeftItem& acr_nav::left_item_Alloc() {
+    left_item_Reserve(1);
+    int n  = _db.left_item_n;
+    int at = n;
+    acr_nav::LeftItem *elems = _db.left_item_elems;
+    new (elems + at) acr_nav::LeftItem(); // construct new element, default initializer
+    _db.left_item_n = n+1;
+    return elems[at];
+}
+
+// --- acr_nav.FDb.left_item.AllocAt
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+acr_nav::LeftItem& acr_nav::left_item_AllocAt(int at) {
+    left_item_Reserve(1);
+    int n  = _db.left_item_n;
+    if (UNLIKELY(u64(at) >= u64(n+1))) {
+        FatalErrorExit("acr_nav.bad_alloc_at  field:acr_nav.FDb.left_item  comment:'index out of range'");
+    }
+    acr_nav::LeftItem *elems = _db.left_item_elems;
+    memmove(elems + at + 1, elems + at, (n - at) * sizeof(acr_nav::LeftItem));
+    new (elems + at) acr_nav::LeftItem(); // construct element, default initializer
+    _db.left_item_n = n+1;
+    return elems[at];
+}
+
+// --- acr_nav.FDb.left_item.AllocN
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<acr_nav::LeftItem> acr_nav::left_item_AllocN(int n_elems) {
+    left_item_Reserve(n_elems);
+    int old_n  = _db.left_item_n;
+    int new_n = old_n + n_elems;
+    acr_nav::LeftItem *elems = _db.left_item_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) acr_nav::LeftItem(); // construct new element, default initialize
+    }
+    _db.left_item_n = new_n;
+    return algo::aryptr<acr_nav::LeftItem>(elems + old_n, n_elems);
+}
+
+// --- acr_nav.FDb.left_item.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<acr_nav::LeftItem> acr_nav::left_item_AllocNAt(int n_elems, int at) {
+    left_item_Reserve(n_elems);
+    int n  = _db.left_item_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("acr_nav.bad_alloc_n_at  field:acr_nav.FDb.left_item  comment:'index out of range'");
+    }
+    acr_nav::LeftItem *elems = _db.left_item_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(acr_nav::LeftItem));
+    for (int i = 0; i < n_elems; i++) {
+        new (elems + at + i) acr_nav::LeftItem(); // construct new element, default initialize
+    }
+    _db.left_item_n = n+n_elems;
+    return algo::aryptr<acr_nav::LeftItem>(elems+at,n_elems);
+}
+
+// --- acr_nav.FDb.left_item.Remove
+// Remove item by index. If index outside of range, do nothing.
+void acr_nav::left_item_Remove(u32 i) {
+    u32 lim = _db.left_item_n;
+    acr_nav::LeftItem *elems = _db.left_item_elems;
+    if (i < lim) {
+        elems[i].~LeftItem(); // destroy element
+        memmove(elems + i, elems + (i + 1), sizeof(acr_nav::LeftItem) * (lim - (i + 1)));
+        _db.left_item_n = lim - 1;
+    }
+}
+
+// --- acr_nav.FDb.left_item.RemoveAll
+void acr_nav::left_item_RemoveAll() {
+    u32 n = _db.left_item_n;
+    while (n > 0) {
+        n -= 1;
+        _db.left_item_elems[n].~LeftItem();
+        _db.left_item_n = n;
+    }
+}
+
+// --- acr_nav.FDb.left_item.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void acr_nav::left_item_RemoveLast() {
+    u64 n = _db.left_item_n;
+    if (n > 0) {
+        n -= 1;
+        left_item_qFind(u64(n)).~LeftItem();
+        _db.left_item_n = n;
+    }
+}
+
+// --- acr_nav.FDb.left_item.AbsReserve
+// Make sure N elements fit in array. Process dies if out of memory
+void acr_nav::left_item_AbsReserve(int n) {
+    u32 old_max  = _db.left_item_max;
+    if (n > i32(old_max)) {
+        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+        void *new_mem = algo_lib::malloc_ReallocMem(_db.left_item_elems, old_max * sizeof(acr_nav::LeftItem), new_max * sizeof(acr_nav::LeftItem));
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("acr_nav.tary_nomem  field:acr_nav.FDb.left_item  comment:'out of memory'");
+        }
+        _db.left_item_elems = (acr_nav::LeftItem*)new_mem;
+        _db.left_item_max = new_max;
+    }
+}
+
+// --- acr_nav.FDb.left_item.AllocNVal
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<acr_nav::LeftItem> acr_nav::left_item_AllocNVal(int n_elems, const acr_nav::LeftItem& val) {
+    left_item_Reserve(n_elems);
+    int old_n  = _db.left_item_n;
+    int new_n = old_n + n_elems;
+    acr_nav::LeftItem *elems = _db.left_item_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) acr_nav::LeftItem(val);
+    }
+    _db.left_item_n = new_n;
+    return algo::aryptr<acr_nav::LeftItem>(elems + old_n, n_elems);
+}
+
+// --- acr_nav.FDb.left_item.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void acr_nav::left_item_Insary(algo::aryptr<acr_nav::LeftItem> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= _db.left_item_elems && rhs.elems < _db.left_item_elems + _db.left_item_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("acr_nav.tary_alias  field:acr_nav.FDb.left_item  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(_db.left_item_elems+1))) {
+        FatalErrorExit("acr_nav.bad_insary  field:acr_nav.FDb.left_item  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = _db.left_item_n - at;
+    left_item_Reserve(nnew); // reserve space
+    for (int i = nmove-1; i >=0 ; --i) {
+        new (_db.left_item_elems + at + nnew + i) acr_nav::LeftItem(_db.left_item_elems[at + i]);
+        _db.left_item_elems[at + i].~LeftItem(); // destroy element
+    }
+    for (int i = 0; i < nnew; ++i) {
+        new (_db.left_item_elems + at + i) acr_nav::LeftItem(rhs[i]);
+    }
+    _db.left_item_n += nnew;
+}
+
 // --- acr_nav.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
 static algo::ImrowPtr acr_nav::trace_RowidFind(int t) {
@@ -4528,9 +4630,6 @@ void acr_nav::FDb_Init() {
     _db.navstack_elems 	= 0; // (acr_nav.FDb.navstack)
     _db.navstack_n     	= 0; // (acr_nav.FDb.navstack)
     _db.navstack_max   	= 0; // (acr_nav.FDb.navstack)
-    _db.zd_sel_ctype_head = NULL; // (acr_nav.FDb.zd_sel_ctype)
-    _db.zd_sel_ctype_n = 0; // (acr_nav.FDb.zd_sel_ctype)
-    _db.zd_sel_ctype_tail = NULL; // (acr_nav.FDb.zd_sel_ctype)
     _db.p_cur_panel = NULL;
     _db.p_left_panel = NULL;
     _db.p_right_panel = NULL;
@@ -4632,6 +4731,10 @@ void acr_nav::FDb_Init() {
     _db.p_sel_focus = NULL;
     _db.p_sel_nofocus = NULL;
     _db.p_statusbar = NULL;
+    _db.left_item_elems 	= 0; // (acr_nav.FDb.left_item)
+    _db.left_item_n     	= 0; // (acr_nav.FDb.left_item)
+    _db.left_item_max   	= 0; // (acr_nav.FDb.left_item)
+    _db.n_visible_ctype = i32(0);
 
     acr_nav::InitReflection();
     navaction_LoadStatic(); // gen:ns_gstatic  gstatic:acr_nav.FDb.navaction  load acr_nav.FNavaction records
@@ -4640,6 +4743,12 @@ void acr_nav::FDb_Init() {
 // --- acr_nav.FDb..Uninit
 void acr_nav::FDb_Uninit() {
     acr_nav::FDb &row = _db; (void)row;
+
+    // acr_nav.FDb.left_item.Uninit (Tary)  //Display list for left panel
+    // remove all elements from acr_nav.FDb.left_item
+    left_item_RemoveAll();
+    // free memory for Tary acr_nav.FDb.left_item
+    algo_lib::malloc_FreeMem(_db.left_item_elems, sizeof(acr_nav::LeftItem)*_db.left_item_max); // (acr_nav.FDb.left_item)
 
     // acr_nav.FDb.viewmode_stack.Uninit (Tary)  //Overlay viewmode save/restore stack
     // remove all elements from acr_nav.FDb.viewmode_stack
@@ -4973,10 +5082,73 @@ void acr_nav::ns_CopyIn(acr_nav::FNs &row, dmmeta::Ns &in) {
     row.comment = in.comment;
 }
 
+// --- acr_nav.FNs.c_ctype.Insert
+// Insert pointer to row into array. Row must not already be in array.
+// If pointer is already in the array, it may be inserted twice.
+void acr_nav::c_ctype_Insert(acr_nav::FNs& ns, acr_nav::FCtype& row) {
+    if (!row.ns_c_ctype_in_ary) {
+        c_ctype_Reserve(ns, 1);
+        u32 n  = ns.c_ctype_n++;
+        ns.c_ctype_elems[n] = &row;
+        row.ns_c_ctype_in_ary = true;
+    }
+}
+
+// --- acr_nav.FNs.c_ctype.InsertMaybe
+// Insert pointer to row in array.
+// If row is already in the array, do nothing.
+// Return value: whether element was inserted into array.
+bool acr_nav::c_ctype_InsertMaybe(acr_nav::FNs& ns, acr_nav::FCtype& row) {
+    bool retval = !ns_c_ctype_InAryQ(row);
+    c_ctype_Insert(ns,row); // check is performed in _Insert again
+    return retval;
+}
+
+// --- acr_nav.FNs.c_ctype.Remove
+// Find element using linear scan. If element is in array, remove, otherwise do nothing
+void acr_nav::c_ctype_Remove(acr_nav::FNs& ns, acr_nav::FCtype& row) {
+    int n = ns.c_ctype_n;
+    if (bool_Update(row.ns_c_ctype_in_ary,false)) {
+        acr_nav::FCtype* *elems = ns.c_ctype_elems;
+        // search backward, so that most recently added element is found first.
+        // if found, shift array.
+        for (int i = n-1; i>=0; i--) {
+            acr_nav::FCtype* elem = elems[i]; // fetch element
+            if (elem == &row) {
+                int j = i + 1;
+                size_t nbytes = sizeof(acr_nav::FCtype*) * (n - j);
+                memmove(elems + i, elems + j, nbytes);
+                ns.c_ctype_n = n - 1;
+                break;
+            }
+        }
+    }
+}
+
+// --- acr_nav.FNs.c_ctype.Reserve
+// Reserve space in index for N more elements;
+void acr_nav::c_ctype_Reserve(acr_nav::FNs& ns, u32 n) {
+    u32 old_max = ns.c_ctype_max;
+    if (UNLIKELY(ns.c_ctype_n + n > old_max)) {
+        u32 new_max  = u32_Max(4, old_max * 2);
+        u32 old_size = old_max * sizeof(acr_nav::FCtype*);
+        u32 new_size = new_max * sizeof(acr_nav::FCtype*);
+        void *new_mem = algo_lib::malloc_ReallocMem(ns.c_ctype_elems, old_size, new_size);
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("acr_nav.out_of_memory  field:acr_nav.FNs.c_ctype");
+        }
+        ns.c_ctype_elems = (acr_nav::FCtype**)new_mem;
+        ns.c_ctype_max = new_max;
+    }
+}
+
 // --- acr_nav.FNs..Uninit
 void acr_nav::FNs_Uninit(acr_nav::FNs& ns) {
     acr_nav::FNs &row = ns; (void)row;
     ind_ns_Remove(row); // remove ns from index ind_ns
+
+    // acr_nav.FNs.c_ctype.Uninit (Ptrary)  //Ctypes in this namespace
+    algo_lib::malloc_FreeMem(ns.c_ctype_elems, sizeof(acr_nav::FCtype*)*ns.c_ctype_max); // (acr_nav.FNs.c_ctype)
 }
 
 // --- acr_nav.FPanel.base.CopyOut

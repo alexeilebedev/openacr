@@ -23,8 +23,9 @@
 | M16 | Field detail drilldown + viewmode line-source refactoring | Orthogonal factorization visible; data-driven detailsrc |
 | M16.1 | Fix I1-I6: stale names, overlay bug, Ptr, type fix | Naming hygiene, overlay guard, pointer comparison |
 | M17 | Inline reftype glossary + detail view enrichment | Controlled vocab properties; on-demand context over always-on noise |
+| M18 | Namespace grouping / tree view | Orthogonal axes: left-panel layout independent of right-panel content |
 
-**Current:** ~1060 lines C++, 21 navactions, 37 keybinds, 2 modes, 2 panels, 5 viewmodes (fields/xref/preview/help/detail), 9 navstyles, 36 reftypestyles, ~1449 ctypes / ~5596 fields across 89 namespaces.
+**Current:** ~1150 lines C++, 21 navactions, 37 keybinds, 2 modes, 2 panels, 5 viewmodes (fields/xref/preview/help/detail), 9 navstyles, 36 reftypestyles, ~1449 ctypes / ~5596 fields across 89 namespaces. Namespace-grouped tree view with collapse/expand.
 
 ---
 
@@ -47,7 +48,7 @@ A newcomer can't extract meaning from this. Possible fixes: (a) curated projecti
 
 ## Pain Points
 
-### P1. Flat list at scale
+### ~~P1. Flat list at scale~~ — Solved (M18: namespace grouping)
 1,449 ctypes in a flat alphabetical list across 89 namespaces. Browsing is like reading a phone book. Filter helps, but you need to already know what you're looking for.
 
 ### P2. Opaque reftype vocabulary (partially addressed by M17)
@@ -87,13 +88,9 @@ Implemented: added `comment` field to `dmmeta.Reftype` (all 35 records populated
 
 Implemented: press `d` on a field to see all its dmmeta metadata (thash, xref, llist, ptrary, substr) gathered from across orthogonal tables. Data-driven via `acr_navdb.detailsrc` — adding new metadata sources costs one record, zero code changes. Also included viewmode line-source refactoring (line/header storage moved from FDb to FViewmode) and `PopViewmode()` helper extraction.
 
-#### 1C. Namespace Grouping / Tree View
+#### ~~1C. Namespace Grouping / Tree View~~ — Done (M18)
 
-Toggle between flat ctype list and tree view grouped by namespace. Expandable/collapsible namespaces. With 89 namespaces averaging ~16 ctypes each, browsing becomes tractable.
-
-**Solves:** P1 (flat list at scale).
-**Value:** High (biggest usability win for large schemas).
-**Size:** Medium. Needs per-namespace collapse state and a different iteration pattern for the left panel.
+Implemented: left panel grouped by namespace with expand/collapse. All namespaces start collapsed (83 headers). Enter on header toggles. LeftItem Tary replaces zd_sel_ctype linked list. FNs.c_ctype Ptrary indexes ctypes by namespace. Extern types (dot-less ctypes like `DIR`, `i32`, `MYSQL`) grouped under "extern" label. Width stable across collapse/expand. Follow-ref auto-expands target namespace. Go-back scans by ctype name (collapse-safe).
 
 #### 1D. Generated Code Preview
 
@@ -221,8 +218,8 @@ Full pool scan has a practical obstacle: Tpool loses iteration capability (free-
 | Milestone | Idea | Rationale |
 |-----------|------|-----------|
 | ~~M17~~ | ~~1A: Inline reftype glossary~~ | ~~Done~~ |
-| M18 | 1E: Record count display | Small, high-value -- immediate sense of scale with minimal effort |
-| M19 | 1C: Namespace grouping | Biggest structural win for navigating large schemas |
+| ~~M18~~ | ~~1C: Namespace grouping~~ | ~~Done~~ |
+| M19 | 1E: Record count display | Small, high-value -- immediate sense of scale with minimal effort |
 | M20 | 1D: Generated code preview | Bridges schema and code; shell-out pattern already proven |
 | M21 | 1F: Field name/comment search | Turns acr_nav into a replacement for `acr` field queries |
 | M22 | 2A: Command mode | Direct-jump efficiency for daily use |
@@ -231,8 +228,8 @@ Full pool scan has a practical obstacle: Tpool loses iteration capability (free-
 **Sequencing rationale:**
 
 - **M17 (reftype glossary)** — Done. Added `dmmeta.Reftype.comment`, surfaced in detail view.
-- **M18 (record counts)** is the cheapest win on the list -- small code change, immediate payoff. Good warmup before the heavier items.
-- **M19 (namespace grouping)** is the biggest usability win but requires more architectural work (left-panel rendering becomes mode-dependent). Better now that M16 proved the viewmode pattern.
+- **M18 (namespace grouping)** — Done. LeftItem Tary, FNs.c_ctype Ptrary, collapse/expand, extern label, stable width.
+- **M19 (record counts)** is the cheapest remaining win -- small code change, immediate payoff.
 - **M20 (generated code)** builds on the shell-out pattern from preview mode. After structure (M19) makes navigation tractable, seeing the generated code for a type completes the schema-to-code loop.
 - **M21 (field search)** adds cross-cutting query capability. Positioned after the structural improvements so the tool already feels capable when search extends it.
 - **M22 (command mode)** is the gateway to power-user efficiency. By this point acr_nav has enough features that direct-jump becomes worthwhile.

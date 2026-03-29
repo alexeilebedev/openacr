@@ -75,8 +75,9 @@ static void SwitchToBrowse() {
 
 // -----------------------------------------------------------------------------
 
-static void ApplyFilter() {
-    acr_nav::zd_sel_ctype_RemoveAll();
+static void BuildLeftItems() {
+    acr_nav::left_item_RemoveAll();
+    acr_nav::_db.n_visible_ctype = 0;
     algo_lib::Regx filter_regx;
     bool has_filter = ch_N(acr_nav::_db.filter) > 0;
     if (has_filter) {
@@ -85,20 +86,68 @@ static void ApplyFilter() {
         algo::MakeLower(pattern);
         algo_lib::Regx_ReadSql(filter_regx, pattern, false);
     }
-    ind_beg(acr_nav::_db_ctype_curs, ctype, acr_nav::_db) {
-        tempstr lower_name(ctype.ctype);
-        algo::MakeLower(lower_name);
-        bool filter_match = !has_filter || algo_lib::Regx_Match(filter_regx, lower_name);
-        if (ch_N(ctype.ctype) > 0 && filter_match) {
-            acr_nav::zd_sel_ctype_Insert(ctype);
+    // Collect namespaces with matching ctypes, sorted alphabetically.
+    // FNs records are loaded from data/ in file order; explicit sort guarantees
+    // stable display regardless of load order.
+    acr_nav::FNs *ns_arr[256];
+    int n_ns = 0;
+    ind_beg(acr_nav::_db_ns_curs, ns, acr_nav::_db) {
+        int n_match = 0;
+        for (int i = 0; i < acr_nav::c_ctype_N(ns); i++) {
+            acr_nav::FCtype *ct = acr_nav::c_ctype_Find(ns, i);
+            if (ct && ch_N(ct->ctype) > 0) {
+                tempstr lower_name(ct->ctype);
+                algo::MakeLower(lower_name);
+                bool match = !has_filter || algo_lib::Regx_Match(filter_regx, lower_name);
+                n_match += match;
+            }
+        }
+        ns.n_match = n_match;
+        if (n_match > 0 && n_ns < 256) {
+            ns_arr[n_ns++] = &ns;
         }
     } ind_end;
+    // Insertion sort by namespace name
+    for (int i = 1; i < n_ns; i++) {
+        acr_nav::FNs *tmp = ns_arr[i];
+        int j = i;
+        while (j > 0 && algo::strptr_Cmp(ns_arr[j - 1]->ns, tmp->ns) > 0) {
+            ns_arr[j] = ns_arr[j - 1];
+            j--;
+        }
+        ns_arr[j] = tmp;
+    }
+    // Build display list
+    for (int ni = 0; ni < n_ns; ni++) {
+        acr_nav::FNs &ns = *ns_arr[ni];
+        // Namespace header
+        acr_nav::LeftItem &hdr = acr_nav::left_item_Alloc();
+        hdr.ctype = "";
+        hdr.ns = ns.ns;
+        acr_nav::_db.n_visible_ctype += ns.n_match;
+        // Ctype rows (if expanded)
+        if (!ns.collapsed) {
+            for (int i = 0; i < acr_nav::c_ctype_N(ns); i++) {
+                acr_nav::FCtype *ct = acr_nav::c_ctype_Find(ns, i);
+                if (ct && ch_N(ct->ctype) > 0) {
+                    tempstr lower_name(ct->ctype);
+                    algo::MakeLower(lower_name);
+                    bool match = !has_filter || algo_lib::Regx_Match(filter_regx, lower_name);
+                    if (match) {
+                        acr_nav::LeftItem &item = acr_nav::left_item_Alloc();
+                        item.ctype = ct->ctype;
+                        item.ns = "";
+                    }
+                }
+            }
+        }
+    }
 }
 
 // -----------------------------------------------------------------------------
 
-static void ApplyFilterReset() {
-    ApplyFilter();
+static void BuildLeftItemsReset() {
+    BuildLeftItems();
     acr_nav::_db.p_left_panel->sel_row = 0;
     acr_nav::_db.p_left_panel->scroll_offset = 0;
 }
@@ -182,13 +231,12 @@ static tempstr ReadKeyName() {
 
 static acr_nav::FCtype* SelectedCtype(acr_nav::FPanel &left) {
     acr_nav::FCtype *ret = NULL;
-    int idx = 0;
-    ind_beg(acr_nav::_db_zd_sel_ctype_curs, ctype, acr_nav::_db) {
-        if (idx == left.sel_row) {
-            ret = &ctype;
+    if (left.sel_row >= 0 && left.sel_row < acr_nav::left_item_N()) {
+        acr_nav::LeftItem &item = acr_nav::left_item_qFind(left.sel_row);
+        if (ch_N(item.ctype) > 0) {
+            ret = acr_nav::ind_ctype_Find(item.ctype);
         }
-        idx++;
-    } ind_end;
+    }
     return ret;
 }
 
@@ -426,7 +474,7 @@ static acr_nav::FField* RightPanelFieldFind(acr_nav::FCtype *sel_ct, int idx) {
 static int PanelItemCount(acr_nav::FPanel &panel, acr_nav::FCtype *sel_ct) {
     int ret = 0;
     if (panel.position == 0) {
-        ret = acr_nav::zd_sel_ctype_N();
+        ret = acr_nav::left_item_N();
     } else if (panel.position == 1) {
         ret = RightPanelItemCount(sel_ct);
     }
@@ -519,7 +567,20 @@ void acr_nav::navaction_follow_ref() {
     acr_nav::FPanel *left = acr_nav::_db.p_left_panel;
     acr_nav::FCtype *sel_ct = SelectedCtype(*left);
     if (panel.position == 0) {
-        acr_nav::_db.p_cur_panel = acr_nav::_db.p_right_panel;
+        int sel = left->sel_row;
+        if (sel >= 0 && sel < acr_nav::left_item_N()) {
+            acr_nav::LeftItem &item = acr_nav::left_item_qFind(sel);
+            if (ch_N(item.ctype) == 0) {
+                // Namespace header: toggle collapse
+                acr_nav::FNs *ns = acr_nav::ind_ns_Find(item.ns);
+                if (ns) {
+                    ns->collapsed = !ns->collapsed;
+                    BuildLeftItems();
+                }
+            } else {
+                acr_nav::_db.p_cur_panel = acr_nav::_db.p_right_panel;
+            }
+        }
     } else if (panel.position == 1 && acr_nav::_db.p_cur_viewmode->has_fields
                && sel_ct && panel.sel_row < RightPanelItemCount(sel_ct)) {
         acr_nav::FField *fld = RightPanelFieldFind(sel_ct, panel.sel_row);
@@ -540,14 +601,13 @@ void acr_nav::navaction_follow_ref() {
             // Switch to browse mode with full ctype list so target is reachable
             acr_nav::_db.filter = "";
             SwitchToBrowse();
-            ApplyFilter();
-            int target_idx = 0;
-            ind_beg(acr_nav::_db_zd_sel_ctype_curs, ct, acr_nav::_db) {
-                if (&ct == target) {
-                    left->sel_row = target_idx;
+            target->p_ns->collapsed = false;  // ensure target namespace is expanded
+            BuildLeftItems();
+            for (int i = 0; i < acr_nav::left_item_N(); i++) {
+                if (algo::strptr(acr_nav::left_item_qFind(i).ctype) == algo::strptr(target->ctype)) {
+                    left->sel_row = i;
                 }
-                target_idx++;
-            } ind_end;
+            }
         }
     }
 }
@@ -583,9 +643,20 @@ void acr_nav::navaction_go_back() {
         if (mode) {
             acr_nav::_db.p_cur_mode = mode;
         }
-        ApplyFilter();
-        acr_nav::_db.p_left_panel->scroll_offset = entry->scroll_offset;
-        acr_nav::_db.p_left_panel->sel_row = entry->sel_row;
+        // Ensure target namespace is expanded so the ctype is findable
+        acr_nav::FCtype *target_ct = acr_nav::ind_ctype_Find(entry->ctype);
+        if (target_ct) {
+            target_ct->p_ns->collapsed = false;
+        }
+        BuildLeftItems();
+        // Scan for the saved ctype -- collapse state may have changed since push
+        acr_nav::_db.p_left_panel->sel_row = 0;
+        acr_nav::_db.p_left_panel->scroll_offset = 0;
+        for (int i = 0; i < acr_nav::left_item_N(); i++) {
+            if (algo::strptr(acr_nav::left_item_qFind(i).ctype) == algo::strptr(entry->ctype)) {
+                acr_nav::_db.p_left_panel->sel_row = i;
+            }
+        }
         acr_nav::navstack_RemoveLast();
     }
 }
@@ -641,21 +712,21 @@ void acr_nav::navaction_filter_start() {
 void acr_nav::navaction_filter_cancel() {
     SwitchToBrowse();
     ch_RemoveAll(acr_nav::_db.filter);
-    ApplyFilterReset();
+    BuildLeftItemsReset();
 }
 
 // -----------------------------------------------------------------------------
 
 void acr_nav::navaction_filter_append_space() {
     acr_nav::_db.filter << " ";
-    ApplyFilterReset();
+    BuildLeftItemsReset();
 }
 
 // -----------------------------------------------------------------------------
 
 void acr_nav::navaction_filter_clear() {
     ch_RemoveAll(acr_nav::_db.filter);
-    ApplyFilterReset();
+    BuildLeftItemsReset();
 }
 
 // -----------------------------------------------------------------------------
@@ -663,7 +734,7 @@ void acr_nav::navaction_filter_clear() {
 void acr_nav::navaction_filter_backspace() {
     if (ch_N(acr_nav::_db.filter) > 0) {
         acr_nav::_db.filter.ch_n = ch_N(acr_nav::_db.filter) - 1;
-        ApplyFilterReset();
+        BuildLeftItemsReset();
     }
 }
 
@@ -896,7 +967,7 @@ static void RenderTitleBar(RenderCtx &ctx) {
     // Left panel
     {
         tempstr ltitle;
-        ltitle << " " << acr_nav::_db.p_left_panel->title << " (" << acr_nav::zd_sel_ctype_N() << ")";
+        ltitle << " " << acr_nav::_db.p_left_panel->title << " (" << acr_nav::_db.n_visible_ctype << ")";
         TruncPad(ltitle, ctx.left_wid - 1);
         EmitStyle(ctx.buf, ctx.left_focused ? *acr_nav::_db.p_title_focus : *acr_nav::_db.p_title_nofocus);
         ctx.buf << ltitle << "\x1b[0m";
@@ -932,22 +1003,16 @@ static void RenderTitleBar(RenderCtx &ctx) {
 
 // Render the content area: dual-panel data rows.
 static void RenderContentArea(RenderCtx &ctx) {
-    // Pre-walk left panel linked list to scroll_offset
-    acr_nav::FCtype *left_ptr = acr_nav::zd_sel_ctype_First();
-    {
-        int skip = 0;
-        while (left_ptr && skip < acr_nav::_db.p_left_panel->scroll_offset) {
-            left_ptr = acr_nav::zd_sel_ctype_Next(*left_ptr);
-            skip++;
-        }
-    }
+    int n_left = acr_nav::left_item_N();
+    int scroll = acr_nav::_db.p_left_panel->scroll_offset;
     int n_right = RightPanelItemCount(ctx.sel_ct);
     bool has_fields = acr_nav::_db.p_cur_viewmode->has_fields;
     bool in_xref = IsXrefMode();
     int visible = ctx.visible;
 
-    // Column header row (all modes)
-    if (ctx.sel_ct || !has_fields) {
+    // Column header row -- always rendered for visual stability
+    // (cursor on namespace header has no sel_ct, but layout must not shift)
+    {
         tempstr left_cell;
         char_PrintNTimes(' ', left_cell, ctx.left_wid - 1);
         ctx.buf << left_cell << "\x1b[0m|";
@@ -974,12 +1039,31 @@ static void RenderContentArea(RenderCtx &ctx) {
         // Left cell
         tempstr left_cell;
         bool left_sel = false;
-        if (left_ptr) {
-            left_sel = (acr_nav::_db.p_left_panel->scroll_offset + row == acr_nav::_db.p_left_panel->sel_row);
-            left_cell << " " << left_ptr->ctype;
-            left_ptr = acr_nav::zd_sel_ctype_Next(*left_ptr);
+        int left_idx = scroll + row;
+        if (left_idx < n_left) {
+            left_sel = (left_idx == acr_nav::_db.p_left_panel->sel_row);
+            acr_nav::LeftItem &item = acr_nav::left_item_qFind(left_idx);
+            if (ch_N(item.ctype) == 0) {
+                // Namespace header row
+                acr_nav::FNs *ns = acr_nav::ind_ns_Find(item.ns);
+                int count = ns ? ns->n_match : 0;
+                left_cell << (ns && ns->collapsed ? " \xe2\x96\xb8 " : " \xe2\x96\xbe ");
+                left_cell << (ch_N(item.ns) > 0 ? algo::strptr(item.ns) : algo::strptr("extern"));
+                left_cell << " (" << count << ")";
+            } else {
+                // Ctype row: indented, namespace prefix stripped
+                algo::strptr full(item.ctype);
+                algo::strptr stripped = algo::Pathcomp(full, ".LR");
+                // Dot-less ctypes (extern types): use full key as name
+                if (elems_N(stripped) == 0) {
+                    stripped = full;
+                }
+                left_cell << "    " << stripped;
+            }
         }
-        TruncPad(left_cell, ctx.left_wid - 1);
+        // +2 for namespace headers: triangle is 3 UTF-8 bytes but 1 display column
+        bool is_header = left_idx < n_left && ch_N(acr_nav::left_item_qFind(left_idx).ctype) == 0;
+        TruncPad(left_cell, ctx.left_wid - 1 + (is_header ? 2 : 0));
         if (left_sel) {
             EmitStyle(ctx.buf, ctx.left_focused ? *acr_nav::_db.p_sel_focus : *acr_nav::_db.p_sel_nofocus);
         }
@@ -1069,10 +1153,25 @@ static void Render(acr_nav::FCtype *sel_ct) {
     tempstr buf;
     buf << "\x1b[H";
     int wid = acr_nav::_db.term_wid;
-    // Left panel width: fits longest visible name, capped at 40% of terminal
+    // Left panel width: fits longest row across all matching namespaces
+    // (regardless of collapse state, so width is stable on expand/collapse)
     int max_name = 0;
-    ind_beg(acr_nav::_db_zd_sel_ctype_curs, ct, acr_nav::_db) {
-        max_name = i32_Max(max_name, ch_N(ct.ctype));
+    ind_beg(acr_nav::_db_ns_curs, ns, acr_nav::_db) {
+        if (ns.n_match > 0) {
+            // Namespace header: " X label (count)"
+            int label_len = ch_N(ns.ns) > 0 ? ch_N(ns.ns) : 6;  // "extern" = 6
+            int count = ns.n_match;
+            int hdr_wid = 4 + label_len + 3 + (count < 10 ? 1 : count < 100 ? 2 : count < 1000 ? 3 : 4);
+            max_name = i32_Max(max_name, hdr_wid);
+            // Ctype rows: "    TypeName" = 4 + stripped name
+            for (int i = 0; i < acr_nav::c_ctype_N(ns); i++) {
+                acr_nav::FCtype *ct = acr_nav::c_ctype_Find(ns, i);
+                if (ct && ch_N(ct->ctype) > 0) {
+                    algo::strptr stripped = algo::Pathcomp(algo::strptr(ct->ctype), ".LR");
+                    max_name = i32_Max(max_name, 4 + elems_N(stripped));
+                }
+            }
+        }
     } ind_end;
     int min_left = i32_Min(acr_nav::_db.p_left_panel->min_width, wid / 2);
     int left_wid = i32_Max(min_left, i32_Min(max_name + 2, wid * 40 / 100));
@@ -1160,7 +1259,7 @@ static bool ProcessKey(algo::strptr key_name) {
         bool in_filter = (acr_nav::_db.p_cur_mode == acr_nav::_db.p_filter_mode);
         if (!keybind && in_filter && elems_N(key_name) == 1 && key_name[0] > 32) {
             acr_nav::_db.filter << key_name;
-            ApplyFilterReset();
+            BuildLeftItemsReset();
             did_something = true;
         }
         if (did_something) {
@@ -1178,7 +1277,7 @@ static bool ProcessKey(algo::strptr key_name) {
                 right->sel_row = 0;
                 right->scroll_offset = 0;
             }
-            AdjustScroll(*left, acr_nav::zd_sel_ctype_N());
+            AdjustScroll(*left, acr_nav::left_item_N());
             AdjustScroll(*right, RightPanelItemCount(sel_ct));
         }
     }
@@ -1197,7 +1296,7 @@ static void HeadlessOutput() {
     screen.focus = acr_nav::_db.p_cur_panel->panel;
     screen.filter = acr_nav::_db.filter;
     screen.navstack_depth = acr_nav::navstack_N();
-    screen.n_sel_ctype = acr_nav::zd_sel_ctype_N();
+    screen.n_sel_ctype = acr_nav::_db.n_visible_ctype;
     screen.n_ctype = acr_nav::ctype_N();
     screen.n_field = acr_nav::field_N();
     screen.viewmode = acr_nav::_db.p_cur_viewmode->viewmode;
@@ -1208,10 +1307,15 @@ static void HeadlessOutput() {
     left_state.panel = left->panel;
     left_state.sel_row = left->sel_row;
     left_state.scroll_offset = left->scroll_offset;
-    left_state.n_items = acr_nav::zd_sel_ctype_N();
+    left_state.n_items = acr_nav::left_item_N();
     left_state.sel_value = "";
-    if (sel_ct) {
-        left_state.sel_value = sel_ct->ctype;
+    if (left->sel_row >= 0 && left->sel_row < acr_nav::left_item_N()) {
+        acr_nav::LeftItem &item = acr_nav::left_item_qFind(left->sel_row);
+        if (ch_N(item.ctype) > 0) {
+            left_state.sel_value = item.ctype;
+        } else {
+            left_state.sel_value = item.ns;
+        }
     }
     prlog(left_state);
     // Right panel state
@@ -1288,7 +1392,7 @@ static void HeadlessMain() {
 // -----------------------------------------------------------------------------
 
 void acr_nav::Main() {
-    ApplyFilter();
+    BuildLeftItems();
     bool headless = _db.cmdline.headless || !isatty(STDOUT_FILENO);
     if (headless) {
         HeadlessMain();

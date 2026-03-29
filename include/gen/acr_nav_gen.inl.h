@@ -226,10 +226,9 @@ inline void acr_nav::FCtype_Init(acr_nav::FCtype& ctype) {
     ctype.c_field_arg_max = 0; // (acr_nav.FCtype.c_field_arg)
     ctype.c_ssimfile = NULL;
     ctype.p_ns = NULL;
+    ctype.ns_c_ctype_in_ary = bool(false);
     ctype.ind_ctype_next = (acr_nav::FCtype*)-1; // (acr_nav.FDb.ind_ctype) not-in-hash
     ctype.ind_ctype_hashval = 0; // stored hash value
-    ctype.zd_sel_ctype_next = (acr_nav::FCtype*)-1; // (acr_nav.FDb.zd_sel_ctype) not-in-list
-    ctype.zd_sel_ctype_prev = NULL; // (acr_nav.FDb.zd_sel_ctype)
 }
 
 // --- acr_nav.FCtype..Ctor
@@ -853,62 +852,6 @@ inline u64 acr_nav::navstack_rowid_Get(acr_nav::Naventry &elem) {
     return u64(id);
 }
 
-// --- acr_nav.FDb.zd_sel_ctype.EmptyQ
-// Return true if index is empty
-inline bool acr_nav::zd_sel_ctype_EmptyQ() {
-    return _db.zd_sel_ctype_head == NULL;
-}
-
-// --- acr_nav.FDb.zd_sel_ctype.First
-// If index empty, return NULL. Otherwise return pointer to first element in index
-inline acr_nav::FCtype* acr_nav::zd_sel_ctype_First() {
-    acr_nav::FCtype *row = NULL;
-    row = _db.zd_sel_ctype_head;
-    return row;
-}
-
-// --- acr_nav.FDb.zd_sel_ctype.InLlistQ
-// Return true if row is in the linked list, false otherwise
-inline bool acr_nav::zd_sel_ctype_InLlistQ(acr_nav::FCtype& row) {
-    bool result = false;
-    result = !(row.zd_sel_ctype_next == (acr_nav::FCtype*)-1);
-    return result;
-}
-
-// --- acr_nav.FDb.zd_sel_ctype.Last
-// If index empty, return NULL. Otherwise return pointer to last element in index
-inline acr_nav::FCtype* acr_nav::zd_sel_ctype_Last() {
-    acr_nav::FCtype *row = NULL;
-    row = _db.zd_sel_ctype_tail;
-    return row;
-}
-
-// --- acr_nav.FDb.zd_sel_ctype.N
-// Return number of items in the linked list
-inline i32 acr_nav::zd_sel_ctype_N() {
-    return _db.zd_sel_ctype_n;
-}
-
-// --- acr_nav.FDb.zd_sel_ctype.Next
-// Return pointer to next element in the list
-inline acr_nav::FCtype* acr_nav::zd_sel_ctype_Next(acr_nav::FCtype &row) {
-    return row.zd_sel_ctype_next;
-}
-
-// --- acr_nav.FDb.zd_sel_ctype.Prev
-// Return pointer to previous element in the list
-inline acr_nav::FCtype* acr_nav::zd_sel_ctype_Prev(acr_nav::FCtype &row) {
-    return row.zd_sel_ctype_prev;
-}
-
-// --- acr_nav.FDb.zd_sel_ctype.qLast
-// Return reference to last element in the index. No bounds checking.
-inline acr_nav::FCtype& acr_nav::zd_sel_ctype_qLast() {
-    acr_nav::FCtype *row = NULL;
-    row = _db.zd_sel_ctype_tail;
-    return *row;
-}
-
 // --- acr_nav.FDb.navstyle.EmptyQ
 // Return true if index is empty
 inline bool acr_nav::navstyle_EmptyQ() {
@@ -1197,6 +1140,73 @@ inline u64 acr_nav::viewmode_stack_rowid_Get(algo::Smallstr50 &elem) {
     return u64(id);
 }
 
+// --- acr_nav.FDb.left_item.EmptyQ
+// Return true if index is empty
+inline bool acr_nav::left_item_EmptyQ() {
+    return _db.left_item_n == 0;
+}
+
+// --- acr_nav.FDb.left_item.Find
+// Look up row by row id. Return NULL if out of range
+inline acr_nav::LeftItem* acr_nav::left_item_Find(u64 t) {
+    u64 idx = t;
+    u64 lim = _db.left_item_n;
+    if (idx >= lim) return NULL;
+    return _db.left_item_elems + idx;
+}
+
+// --- acr_nav.FDb.left_item.Getary
+// Return array pointer by value
+inline algo::aryptr<acr_nav::LeftItem> acr_nav::left_item_Getary() {
+    return algo::aryptr<acr_nav::LeftItem>(_db.left_item_elems, _db.left_item_n);
+}
+
+// --- acr_nav.FDb.left_item.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline acr_nav::LeftItem* acr_nav::left_item_Last() {
+    return left_item_Find(u64(_db.left_item_n-1));
+}
+
+// --- acr_nav.FDb.left_item.Max
+// Return max. number of items in the array
+inline i32 acr_nav::left_item_Max() {
+    return _db.left_item_max;
+}
+
+// --- acr_nav.FDb.left_item.N
+// Return number of items in the array
+inline i32 acr_nav::left_item_N() {
+    return _db.left_item_n;
+}
+
+// --- acr_nav.FDb.left_item.Reserve
+// Make sure N *more* elements will fit in array. Process dies if out of memory
+inline void acr_nav::left_item_Reserve(int n) {
+    u32 new_n = _db.left_item_n + n;
+    if (UNLIKELY(new_n > _db.left_item_max)) {
+        left_item_AbsReserve(new_n);
+    }
+}
+
+// --- acr_nav.FDb.left_item.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline acr_nav::LeftItem& acr_nav::left_item_qFind(u64 t) {
+    return _db.left_item_elems[t];
+}
+
+// --- acr_nav.FDb.left_item.qLast
+// Return reference to last element of array. No bounds checking
+inline acr_nav::LeftItem& acr_nav::left_item_qLast() {
+    return left_item_qFind(u64(_db.left_item_n-1));
+}
+
+// --- acr_nav.FDb.left_item.rowid_Get
+// Return row id of specified element
+inline u64 acr_nav::left_item_rowid_Get(acr_nav::LeftItem &elem) {
+    u64 id = &elem - _db.left_item_elems;
+    return u64(id);
+}
+
 // --- acr_nav.FDb.ctype_curs.Reset
 // cursor points to valid item
 inline void acr_nav::_db_ctype_curs_Reset(_db_ctype_curs &curs, acr_nav::FDb &parent) {
@@ -1472,31 +1482,6 @@ inline acr_nav::Naventry& acr_nav::_db_navstack_curs_Access(_db_navstack_curs &c
     return curs.elems[curs.index];
 }
 
-// --- acr_nav.FDb.zd_sel_ctype_curs.Reset
-// cursor points to valid item
-inline void acr_nav::_db_zd_sel_ctype_curs_Reset(_db_zd_sel_ctype_curs &curs, acr_nav::FDb &parent) {
-    curs.row = parent.zd_sel_ctype_head;
-}
-
-// --- acr_nav.FDb.zd_sel_ctype_curs.ValidQ
-// cursor points to valid item
-inline bool acr_nav::_db_zd_sel_ctype_curs_ValidQ(_db_zd_sel_ctype_curs &curs) {
-    return curs.row != NULL;
-}
-
-// --- acr_nav.FDb.zd_sel_ctype_curs.Next
-// proceed to next item
-inline void acr_nav::_db_zd_sel_ctype_curs_Next(_db_zd_sel_ctype_curs &curs) {
-    acr_nav::FCtype *next = (*curs.row).zd_sel_ctype_next;
-    curs.row = next;
-}
-
-// --- acr_nav.FDb.zd_sel_ctype_curs.Access
-// item access
-inline acr_nav::FCtype& acr_nav::_db_zd_sel_ctype_curs_Access(_db_zd_sel_ctype_curs &curs) {
-    return *curs.row;
-}
-
 // --- acr_nav.FDb.navstyle_curs.Reset
 // cursor points to valid item
 inline void acr_nav::_db_navstyle_curs_Reset(_db_navstyle_curs &curs, acr_nav::FDb &parent) {
@@ -1619,6 +1604,31 @@ inline bool acr_nav::_db_viewmode_stack_curs_ValidQ(_db_viewmode_stack_curs &cur
 // --- acr_nav.FDb.viewmode_stack_curs.Access
 // item access
 inline algo::Smallstr50& acr_nav::_db_viewmode_stack_curs_Access(_db_viewmode_stack_curs &curs) {
+    return curs.elems[curs.index];
+}
+
+// --- acr_nav.FDb.left_item_curs.Next
+// proceed to next item
+inline void acr_nav::_db_left_item_curs_Next(_db_left_item_curs &curs) {
+    curs.index++;
+}
+
+// --- acr_nav.FDb.left_item_curs.Reset
+inline void acr_nav::_db_left_item_curs_Reset(_db_left_item_curs &curs, acr_nav::FDb &parent) {
+    curs.elems = parent.left_item_elems;
+    curs.n_elems = parent.left_item_n;
+    curs.index = 0;
+}
+
+// --- acr_nav.FDb.left_item_curs.ValidQ
+// cursor points to valid item
+inline bool acr_nav::_db_left_item_curs_ValidQ(_db_left_item_curs &curs) {
+    return curs.index < curs.n_elems;
+}
+
+// --- acr_nav.FDb.left_item_curs.Access
+// item access
+inline acr_nav::LeftItem& acr_nav::_db_left_item_curs_Access(_db_left_item_curs &curs) {
     return curs.elems[curs.index];
 }
 
@@ -1751,11 +1761,99 @@ inline  acr_nav::FNavstyle::~FNavstyle() {
     acr_nav::FNavstyle_Uninit(*this);
 }
 
+// --- acr_nav.FNs.c_ctype.EmptyQ
+// Return true if index is empty
+inline bool acr_nav::c_ctype_EmptyQ(acr_nav::FNs& ns) {
+    return ns.c_ctype_n == 0;
+}
+
+// --- acr_nav.FNs.c_ctype.Find
+// Look up row by row id. Return NULL if out of range
+inline acr_nav::FCtype* acr_nav::c_ctype_Find(acr_nav::FNs& ns, u32 t) {
+    acr_nav::FCtype *retval = NULL;
+    u64 idx = t;
+    u64 lim = ns.c_ctype_n;
+    if (idx < lim) {
+        retval = ns.c_ctype_elems[idx];
+    }
+    return retval;
+}
+
+// --- acr_nav.FNs.c_ctype.Getary
+// Return array of pointers
+inline algo::aryptr<acr_nav::FCtype*> acr_nav::c_ctype_Getary(acr_nav::FNs& ns) {
+    return algo::aryptr<acr_nav::FCtype*>(ns.c_ctype_elems, ns.c_ctype_n);
+}
+
+// --- acr_nav.FNs.c_ctype.N
+// Return number of items in the pointer array
+inline i32 acr_nav::c_ctype_N(const acr_nav::FNs& ns) {
+    return ns.c_ctype_n;
+}
+
+// --- acr_nav.FNs.c_ctype.RemoveAll
+// Empty the index. (The rows are not deleted)
+inline void acr_nav::c_ctype_RemoveAll(acr_nav::FNs& ns) {
+    for (u32 i = 0; i < ns.c_ctype_n; i++) {
+        // mark all elements as not-in-array
+        ns.c_ctype_elems[i]->ns_c_ctype_in_ary = false;
+    }
+    ns.c_ctype_n = 0;
+}
+
+// --- acr_nav.FNs.c_ctype.qFind
+// Return reference without bounds checking
+inline acr_nav::FCtype& acr_nav::c_ctype_qFind(acr_nav::FNs& ns, u32 idx) {
+    return *ns.c_ctype_elems[idx];
+}
+
+// --- acr_nav.FNs.c_ctype.InAryQ
+// True if row is in any ptrary instance
+inline bool acr_nav::ns_c_ctype_InAryQ(acr_nav::FCtype& row) {
+    return row.ns_c_ctype_in_ary;
+}
+
+// --- acr_nav.FNs.c_ctype.qLast
+// Reference to last element without bounds checking
+inline acr_nav::FCtype& acr_nav::c_ctype_qLast(acr_nav::FNs& ns) {
+    return *ns.c_ctype_elems[ns.c_ctype_n-1];
+}
+
 // --- acr_nav.FNs..Init
 // Set all fields to initial values.
 inline void acr_nav::FNs_Init(acr_nav::FNs& ns) {
+    ns.collapsed = bool(true);
+    ns.c_ctype_elems = NULL; // (acr_nav.FNs.c_ctype)
+    ns.c_ctype_n = 0; // (acr_nav.FNs.c_ctype)
+    ns.c_ctype_max = 0; // (acr_nav.FNs.c_ctype)
+    ns.n_match = i32(0);
     ns.ind_ns_next = (acr_nav::FNs*)-1; // (acr_nav.FDb.ind_ns) not-in-hash
     ns.ind_ns_hashval = 0; // stored hash value
+}
+
+// --- acr_nav.FNs.c_ctype_curs.Reset
+inline void acr_nav::ns_c_ctype_curs_Reset(ns_c_ctype_curs &curs, acr_nav::FNs &parent) {
+    curs.elems = parent.c_ctype_elems;
+    curs.n_elems = parent.c_ctype_n;
+    curs.index = 0;
+}
+
+// --- acr_nav.FNs.c_ctype_curs.ValidQ
+// cursor points to valid item
+inline bool acr_nav::ns_c_ctype_curs_ValidQ(ns_c_ctype_curs &curs) {
+    return curs.index < curs.n_elems;
+}
+
+// --- acr_nav.FNs.c_ctype_curs.Next
+// proceed to next item
+inline void acr_nav::ns_c_ctype_curs_Next(ns_c_ctype_curs &curs) {
+    curs.index++;
+}
+
+// --- acr_nav.FNs.c_ctype_curs.Access
+// item access
+inline acr_nav::FCtype& acr_nav::ns_c_ctype_curs_Access(ns_c_ctype_curs &curs) {
+    return *curs.elems[curs.index];
 }
 
 // --- acr_nav.FNs..Ctor
@@ -2006,6 +2104,10 @@ inline  acr_nav::FieldId::FieldId(i32 in_value)
 // --- acr_nav.FieldId..EnumCtor
 inline  acr_nav::FieldId::FieldId(acr_nav_FieldIdEnum arg) {
     this->value = i32(arg);
+}
+
+// --- acr_nav.LeftItem..Ctor
+inline  acr_nav::LeftItem::LeftItem() {
 }
 
 // --- acr_nav.Naventry..Init
