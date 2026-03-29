@@ -172,6 +172,21 @@ These areas were tested thoroughly and work correctly:
 
 ---
 
+## Recommended New Tests
+
+Three targeted `atf_comp` tests covering gaps in the existing 11-test suite:
+
+### HeadlessUnknownKey
+Send an unknown key (`key:F13`), screenshot, verify state unchanged. This is the only way to catch Bug 1 (startup_help unconditional pop) and prevent regression after fixing it. No existing test covers "bad input doesn't corrupt state."
+
+### HeadlessFilterEdge
+Filter to zero matches (`zzzznotexist`), verify `n_sel_ctype:0`, navigate on empty list (j, k, Enter, Right), verify no crash and sel_row stays 0. Existing HeadlessFilter tests successful filtering but not the empty-result boundary.
+
+### HeadlessCollapse
+Namespace collapse/expand via Enter on a namespace header. Verify: expand increases `n_items`, collapse restores it, `j` past collapsed namespace skips the group. This is a significant feature (M18) with zero test coverage.
+
+---
+
 ## Recommended Fix Priority
 
 | # | Fix | Closes | Complexity |

@@ -29,6 +29,22 @@
 
 ---
 
+## High Priority: Headless Test Report Findings
+
+See `acr_nav_headless_test_report.md` — comprehensive headless mode testing (60+ tests) found 2 app bugs and 3 critical protocol gaps that should be addressed before further feature work:
+
+- **Bug 1:** Unknown/empty keys dismiss startup help overlay (startup_help guard at line 1243 runs unconditionally before keybind lookup)
+- **Bug 2:** Escape doesn't dismiss overlays (bound to filter_clear, not overlay dismissal)
+- **Gap 1:** No `VisibleLine` output for text-based viewmodes (preview/detail/help) — agent blind to content
+- **Gap 2:** No `LeftItem` output — agent can't verify left panel contents
+- **Gap 3:** `term_hei=100000` makes page-up/down untestable — need `SetTermSize` input record
+
+Three new tests recommended: UnknownKey, FilterEdge, Collapse.
+
+Also: rename all 11 existing `acr_nav.Headless*` tests to drop the `Headless` prefix (e.g. `HeadlessInit` -> `Init`, `HeadlessNav` -> `Nav`). The `-headless` flag in `targs.ssim` already documents the mechanism; test names should describe what's tested, not how.
+
+---
+
 ## Known Issues
 
 ### I7. Detail view is incomprehensible
