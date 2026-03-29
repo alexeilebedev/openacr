@@ -24,48 +24,20 @@
 | M16.1 | Fix I1-I6: stale names, overlay bug, Ptr, type fix | Naming hygiene, overlay guard, pointer comparison |
 | M17 | Inline reftype glossary + detail view enrichment | Controlled vocab properties; on-demand context over always-on noise |
 | M18 | Namespace grouping / tree view | Orthogonal axes: left-panel layout independent of right-panel content |
+| M18.1 | Fix 2 headless bugs, add VisibleLine/SetTermSize, rename tests | Headless protocol maturity; data-driven overlay dismiss |
+| M18.2 | Add VisibleLeftItem + InputError, close protocol gaps | Left panel readable by agents; explicit error feedback |
 
-**Current:** ~1150 lines C++, 21 navactions, 37 keybinds, 2 modes, 2 panels, 5 viewmodes (fields/xref/preview/help/detail), 9 navstyles, 36 reftypestyles, ~1449 ctypes / ~5596 fields across 89 namespaces. Namespace-grouped tree view with collapse/expand.
-
----
-
-## High Priority: Headless Test Report Findings
-
-See `acr_nav_headless_test_report.md` — comprehensive headless mode testing (60+ tests) found 2 app bugs and 3 critical protocol gaps that should be addressed before further feature work:
-
-- **Bug 1:** Unknown/empty keys dismiss startup help overlay (startup_help guard at line 1243 runs unconditionally before keybind lookup)
-- **Bug 2:** Escape doesn't dismiss overlays (bound to filter_clear, not overlay dismissal)
-- **Gap 1:** No `VisibleLine` output for text-based viewmodes (preview/detail/help) — agent blind to content
-- **Gap 2:** No `LeftItem` output — agent can't verify left panel contents
-- **Gap 3:** `term_hei=100000` makes page-up/down untestable — need `SetTermSize` input record
-
-Three new tests recommended: UnknownKey, FilterEdge, Collapse.
-
-Also: rename all 11 existing `acr_nav.Headless*` tests to drop the `Headless` prefix (e.g. `HeadlessInit` -> `Init`, `HeadlessNav` -> `Nav`). The `-headless` flag in `targs.ssim` already documents the mechanism; test names should describe what's tested, not how.
+**Current:** ~1200 lines C++, 22 navactions, 38 keybinds, 2 modes, 2 panels, 5 viewmodes (fields/xref/preview/help/detail), 9 navstyles, 36 reftypestyles, ~1400 ctypes / ~5600 fields across 83 namespaces. Namespace-grouped tree view with collapse/expand. 16 headless tests. Headless protocol: SendKey, Screenshot, SetTermSize (input); Screen, PanelState, VisibleLeftItem, VisibleField, VisibleLine, InputError (output).
 
 ---
 
 ## Known Issues
 
-### I7. Detail view is incomprehensible
-
-The detail view (`d` keybind) renders raw ssimfile records — full `dmmeta.field`, `dmmeta.reftype`, `dmmeta.thash`, `dmmeta.xref` lines with every key:value pair. On a typical terminal (80-120 cols), lines truncate mid-field and look like a wall of noise:
-
-```
-dmmeta.field  field:abt.FDb.ind_arch  arg:abt.FArch  reftype:Thash  dflt:""  comment:""
-dmmeta.reftype  reftype:Thash  isval:N  cascins:N  usebasepool:Y  cancopy:N  isxref:Y  de...
-dmmeta.thash  field:abt.FDb.ind_arch  hashfld:dev.Arch.arch  unique:Y  comment:""
-dmmeta.xref  field:abt.FDb.ind_arch  inscond:true  via:""
-```
-
-A newcomer can't extract meaning from this. Possible fixes: (a) curated projection showing only the most useful fields per record type, (b) vertical key:value layout instead of horizontal ssim, (c) horizontal scrolling, (d) field-level syntax coloring to visually separate keys from values. These aren't mutually exclusive.
+(none)
 
 ---
 
 ## Pain Points
-
-### ~~P1. Flat list at scale~~ — Solved (M18: namespace grouping)
-1,449 ctypes in a flat alphabetical list across 89 namespaces. Browsing is like reading a phone book. Filter helps, but you need to already know what you're looking for.
 
 ### P2. Opaque reftype vocabulary (partially addressed by M17)
 Lary, Thash, Ptrary, Upptr, Tpool, Tary, Llist -- the reftype names are terse and carry no visible meaning. M17 added `comment` to `dmmeta.Reftype` and shows it in the detail view (`d` keybind). This helps on-demand but doesn't solve the "what does this mean at a glance?" problem during normal field browsing.
@@ -95,18 +67,6 @@ Browsing ctypes in acr_nav, you can't tell which types have 3 records vs 3000. N
 ### Tier 1: High Impact, Natural Fit
 
 These solve the most painful problems, align with OpenACR philosophy, and build on existing architecture.
-
-#### ~~1A. Inline Reftype Glossary~~ — Done (M17)
-
-Implemented: added `comment` field to `dmmeta.Reftype` (all 35 records populated from `amcdb.tclass.comment` with 6 overrides). Reftype comment shown in detail view (`d` keybind) as the full reftype record — on-demand rather than status bar, to avoid displacing keyboard hints with info that's useful once then becomes noise. Also normalized tclass.ssim comments (trailing periods, capitalization) and fixed Delptr typo.
-
-#### ~~1B. Field Detail Drilldown~~ — Done (M16)
-
-Implemented: press `d` on a field to see all its dmmeta metadata (thash, xref, llist, ptrary, substr) gathered from across orthogonal tables. Data-driven via `acr_navdb.detailsrc` — adding new metadata sources costs one record, zero code changes. Also included viewmode line-source refactoring (line/header storage moved from FDb to FViewmode) and `PopViewmode()` helper extraction.
-
-#### ~~1C. Namespace Grouping / Tree View~~ — Done (M18)
-
-Implemented: left panel grouped by namespace with expand/collapse. All namespaces start collapsed (83 headers). Enter on header toggles. LeftItem Tary replaces zd_sel_ctype linked list. FNs.c_ctype Ptrary indexes ctypes by namespace. Extern types (dot-less ctypes like `DIR`, `i32`, `MYSQL`) grouped under "extern" label. Width stable across collapse/expand. Follow-ref auto-expands target namespace. Go-back scans by ctype name (collapse-safe).
 
 #### 1D. Generated Code Preview
 
@@ -138,14 +98,6 @@ Filter mode currently searches ctype names. Add a toggle to search field names a
 
 These improve the experience meaningfully but solve less acute pain or require more work.
 
-#### 2A. Command Mode
-
-Press `:` for vim-style command input. `:goto <ctype>`, `:ns <regex>`, `:q`. Command dispatch via the same gstatic Hook pattern as navactions.
-
-**Solves:** Direct jump by name is faster than filtering for known targets.
-**Value:** Medium. Essential for a daily-driver tool -- experienced users don't want to scroll-and-filter to reach a known type.
-**Size:** Medium.
-**Design note:** Both filter mode and command mode need free-text capture. The current code handles filter's printable-char capture as a special case. When command mode is designed, factoring `capture_text` into a mode property should be considered.
 
 #### 2B. Access Path Diagram — Static (Inline amc_vis)
 
@@ -172,36 +124,6 @@ For the selected ctype's namespace, show upstream dependencies (what it imports 
 **Solves:** "What namespaces does acr_nav depend on? What depends on dmmeta?" Currently requires multiple `acr -ndown` queries.
 **Value:** Medium. Useful for understanding the schema's macro structure.
 **Size:** Medium. Needs per-namespace aggregation of field references.
-
-#### 2E. Bookmark / Recent History
-
-Press `m` to bookmark current ctype. Press `'` to see bookmark list. Also show recently-visited types (navstack already tracks history; just needs persistence across sessions or a dedicated view).
-
-**Solves:** Repeatedly navigating to the same handful of types during a dev session.
-**Value:** Medium. Most useful during extended exploration sessions.
-**Size:** Small-Medium.
-
----
-
-### Tier 3: Nice to Have, Larger Scope
-
-These are valuable but either serve narrower use cases or require significant effort.
-
-#### 3A. Integrity Check View
-
-New viewmode: "check". Runs `acr -check` and shows only errors related to the selected ctype or namespace. Green indicator when clean.
-
-**Solves:** `acr -check` reports errors as a flat list; hard to find "which errors affect MY ctype?"
-**Value:** Low-Medium. Schema is currently clean (zero errors). Most useful when actively editing schema.
-**Size:** Medium. Parsing acr -check output, filtering by ctype.
-
-#### 3B. Tutorial / Guided Mode
-
-`:tutorial 1` starts a guided walkthrough inside acr_nav. Highlights specific types, shows explanatory text in the help panel, walks through key concepts interactively.
-
-**Solves:** Tutorials teach concepts but require jumping between docs and terminal.
-**Value:** Low. Narrow use case -- significant content authoring effort for infrequent benefit. Better to make the tool self-explanatory through good structure (1C, 1E) and on-demand context (1A, 1B) than to build a separate guided experience.
-**Size:** Large.
 
 ---
 
@@ -238,7 +160,6 @@ Full pool scan has a practical obstacle: Tpool loses iteration capability (free-
 | M19 | 1E: Record count display | Small, high-value -- immediate sense of scale with minimal effort |
 | M20 | 1D: Generated code preview | Bridges schema and code; shell-out pattern already proven |
 | M21 | 1F: Field name/comment search | Turns acr_nav into a replacement for `acr` field queries |
-| M22 | 2A: Command mode | Direct-jump efficiency for daily use |
 | Later | 2B-2E, Tier 3 | As interest dictates |
 
 **Sequencing rationale:**
@@ -248,6 +169,5 @@ Full pool scan has a practical obstacle: Tpool loses iteration capability (free-
 - **M19 (record counts)** is the cheapest remaining win -- small code change, immediate payoff.
 - **M20 (generated code)** builds on the shell-out pattern from preview mode. After structure (M19) makes navigation tractable, seeing the generated code for a type completes the schema-to-code loop.
 - **M21 (field search)** adds cross-cutting query capability. Positioned after the structural improvements so the tool already feels capable when search extends it.
-- **M22 (command mode)** is the gateway to power-user efficiency. By this point acr_nav has enough features that direct-jump becomes worthwhile.
 
 **Future factoring:** IsHelpMode (4 sites) and IsXrefMode (5 sites) are identity checks that should become data on FViewmode. At 2 modes per axis, the branching is trivial. Refactor when a 3rd mode is added to either axis. Documented in code at their definition sites.
