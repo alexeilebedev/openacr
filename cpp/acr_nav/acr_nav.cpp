@@ -392,34 +392,79 @@ static void EnsurePreviewLoaded(acr_nav::FCtype *sel_ct) {
     }
 }
 
+// Format a single ssim record as a vertical card: section header + one key:value per line.
+// Appends formatted lines to vm.line_elems. Skips primary key attr when its value
+// matches field_name (already shown in the detail header bar).
+static void FormatDetailCard(acr_nav::FViewmode &vm, algo::Tuple &tuple, algo::strptr field_name) {
+    // Compute key column width (max attr name length, excluding redundant pkey)
+    int key_wid = 0;
+    int ai = 0;
+    ind_beg(algo::Tuple_attrs_curs, attr, tuple) {
+        bool is_redundant_pkey = (ai == 0) && (attr.value == field_name);
+        if (!is_redundant_pkey) {
+            key_wid = i32_Max(key_wid, ch_N(attr.name));
+        }
+        ai++;
+    } ind_end;
+    // Section header: "-- dmmeta.thash ------..."
+    tempstr hdr;
+    hdr << "-- " << tuple.head << " ";
+    char_PrintNTimes('-', hdr, i32_Max(0, 36 - ch_N(hdr)));
+    acr_nav::line_Alloc(vm) = hdr;
+    // Key:value rows
+    ai = 0;
+    ind_beg(algo::Tuple_attrs_curs, attr, tuple) {
+        bool is_redundant_pkey = (ai == 0) && (attr.value == field_name);
+        if (!is_redundant_pkey) {
+            tempstr row;
+            row << "  " << attr.name;
+            char_PrintNTimes(' ', row, i32_Max(2, key_wid - ch_N(attr.name) + 4));
+            row << attr.value;
+            acr_nav::line_Alloc(vm) = row;
+        }
+        ai++;
+    } ind_end;
+    // Blank separator between cards
+    acr_nav::line_Alloc(vm) = strptr();
+}
+
 // Load metadata records for a single field from detailsrc ssimfiles.
-// Re-serializes the dmmeta.field record as the first line, then scans each
+// Re-serializes the dmmeta.field record as the first card, then scans each
 // detailsrc file for matching records (first attribute value == field name).
 static void LoadDetail(acr_nav::FField &field) {
     acr_nav::FViewmode &vm = *acr_nav::_db.p_detail_viewmode;
     acr_nav::line_RemoveAll(vm);
     acr_nav::_db.p_detail_field = &field;
-    // First line: the dmmeta.field record itself
+    algo::strptr field_name(field.field);
+    int n_records = 0;
+    // First card: the dmmeta.field record itself
     {
         dmmeta::Field base;
         acr_nav::field_CopyOut(field, base);
         tempstr fld_line;
         dmmeta::Field_Print(base, fld_line);
-        acr_nav::line_Alloc(vm) = fld_line;
+        algo::Tuple fld_tuple;
+        if (algo::Tuple_ReadStrptr(fld_tuple, fld_line, false)) {
+            FormatDetailCard(vm, fld_tuple, field_name);
+            n_records++;
+        }
     }
-    // Second line: the dmmeta.reftype record for this field's reftype
+    // Second card: the dmmeta.reftype record for this field's reftype
     if (ch_N(field.p_reftype->comment) > 0) {
         dmmeta::Reftype base;
         acr_nav::reftype_CopyOut(*field.p_reftype, base);
         tempstr rt_line;
         dmmeta::Reftype_Print(base, rt_line);
-        acr_nav::line_Alloc(vm) = rt_line;
+        algo::Tuple rt_tuple;
+        if (algo::Tuple_ReadStrptr(rt_tuple, rt_line, false)) {
+            FormatDetailCard(vm, rt_tuple, field_name);
+            n_records++;
+        }
     }
     // Scan each detailsrc file for matching records.
     // Path derived via Pathcomp rather than Ssimfile accessors: detailsrc uses
     // a Smallstr50 key instead of a Pkey to dmmeta.Ssimfile, avoiding ~5 schema
     // records (finput, Upptr, xref) for display-only file scanning.
-    algo::strptr field_name(field.field);
     ind_beg(acr_nav::_db_detailsrc_curs, ds, acr_nav::_db) {
         algo::strptr dskey(ds.detailsrc);
         algo::strptr ns = algo::Pathcomp(dskey, ".LL");
@@ -432,7 +477,8 @@ static void LoadDetail(acr_nav::FField &field) {
                 algo::Tuple tuple;
                 if (algo::Tuple_ReadStrptr(tuple, line, false)) {
                     if (attrs_N(tuple) > 0 && attrs_qFind(tuple, 0).value == field_name) {
-                        acr_nav::line_Alloc(vm) = line;
+                        FormatDetailCard(vm, tuple, field_name);
+                        n_records++;
                     }
                 }
             } ind_end;
@@ -440,7 +486,7 @@ static void LoadDetail(acr_nav::FField &field) {
     } ind_end;
     // Set header
     tempstr hdr;
-    hdr << field.field << " (" << acr_nav::line_N(vm) << " records)";
+    hdr << field.field << " (" << n_records << " records)";
     vm.header = hdr;
 }
 
