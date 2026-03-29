@@ -35,10 +35,12 @@
 enum acr_nav_FieldIdEnum {             // acr_nav.FieldId.value
      acr_nav_FieldId_screenshot   = 0
     ,acr_nav_FieldId_key          = 1
-    ,acr_nav_FieldId_value        = 2
+    ,acr_nav_FieldId_term_hei     = 2
+    ,acr_nav_FieldId_term_wid     = 3
+    ,acr_nav_FieldId_value        = 4
 };
 
-enum { acr_nav_FieldIdEnum_N = 3 };
+enum { acr_nav_FieldIdEnum_N = 5 };
 
 
 // --- acr_nav_TableIdEnum
@@ -138,8 +140,10 @@ namespace acr_nav { struct PanelState; }
 namespace acr_nav { struct Screen; }
 namespace acr_nav { struct Screenshot; }
 namespace acr_nav { struct SendKey; }
+namespace acr_nav { struct SetTermSize; }
 namespace acr_nav { struct TableId; }
 namespace acr_nav { struct VisibleField; }
+namespace acr_nav { struct VisibleLine; }
 namespace acr_nav { extern struct acr_nav::FDb _db; }
 namespace acr_nav { // hook_fcn_typedef
     typedef void (*navaction_step_hook)(); // hook:acr_nav.FNavaction.step
@@ -2763,6 +2767,24 @@ bool                 SendKey_ReadFieldMaybe(acr_nav::SendKey& parent, algo::strp
 // func:acr_nav.SendKey..ReadStrptrMaybe
 bool                 SendKey_ReadStrptrMaybe(acr_nav::SendKey &parent, algo::strptr in_str) __attribute__((nothrow));
 
+// --- acr_nav.SetTermSize
+struct SetTermSize { // acr_nav.SetTermSize: Headless command: set terminal dimensions
+    i32   term_hei;   //   0  Terminal height in rows
+    i32   term_wid;   //   0  Terminal width in columns
+    // func:acr_nav.SetTermSize..Ctor
+    inline               SetTermSize() __attribute__((nothrow));
+};
+
+// func:acr_nav.SetTermSize..ReadFieldMaybe
+bool                 SetTermSize_ReadFieldMaybe(acr_nav::SetTermSize& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of acr_nav::SetTermSize from an ascii string.
+// The format of the string is an ssim Tuple
+// func:acr_nav.SetTermSize..ReadStrptrMaybe
+bool                 SetTermSize_ReadStrptrMaybe(acr_nav::SetTermSize &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:acr_nav.SetTermSize..Init
+inline void          SetTermSize_Init(acr_nav::SetTermSize& parent);
+
 // --- acr_nav.TableId
 struct TableId { // acr_nav.TableId: Index of table in this namespace
     i32   value;   //   -1  index of table
@@ -2834,6 +2856,22 @@ inline void          VisibleField_Init(acr_nav::VisibleField& parent);
 // cfmt:acr_nav.VisibleField.String  printfmt:Tuple
 // func:acr_nav.VisibleField..Print
 void                 VisibleField_Print(acr_nav::VisibleField& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- acr_nav.VisibleLine
+struct VisibleLine { // acr_nav.VisibleLine: Headless output: text line for non-field viewmodes
+    i32             row;     //   0  Row index
+    algo::cstring   value;   // Line text
+    // func:acr_nav.VisibleLine..Ctor
+    inline               VisibleLine() __attribute__((nothrow));
+};
+
+// Set all fields to initial values.
+// func:acr_nav.VisibleLine..Init
+inline void          VisibleLine_Init(acr_nav::VisibleLine& parent);
+// print string representation of ROW to string STR
+// cfmt:acr_nav.VisibleLine.String  printfmt:Tuple
+// func:acr_nav.VisibleLine..Print
+void                 VisibleLine_Print(acr_nav::VisibleLine& row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace acr_nav { // gen:ns_curstext
 
@@ -3014,6 +3052,10 @@ struct viewmode_line_curs {// cursor
 } // gen:ns_curstext
 namespace acr_nav { // gen:ns_func
 // User-implemented function from gstatic:acr_nav.FDb.navaction
+// func:acr_nav...navaction_dismiss_or_clear
+// this function is 'extrn' and implemented by user
+void                 navaction_dismiss_or_clear();
+// User-implemented function from gstatic:acr_nav.FDb.navaction
 // func:acr_nav...navaction_filter_accept
 // this function is 'extrn' and implemented by user
 void                 navaction_filter_accept();
@@ -3114,4 +3156,5 @@ inline algo::cstring &operator <<(algo::cstring &str, const acr_nav::PanelState 
 inline algo::cstring &operator <<(algo::cstring &str, const acr_nav::Screen &row);// cfmt:acr_nav.Screen.String
 inline algo::cstring &operator <<(algo::cstring &str, const acr_nav::TableId &row);// cfmt:acr_nav.TableId.String
 inline algo::cstring &operator <<(algo::cstring &str, const acr_nav::VisibleField &row);// cfmt:acr_nav.VisibleField.String
+inline algo::cstring &operator <<(algo::cstring &str, const acr_nav::VisibleLine &row);// cfmt:acr_nav.VisibleLine.String
 }

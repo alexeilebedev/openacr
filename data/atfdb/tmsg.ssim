@@ -103,136 +103,157 @@ atfdb.tmsg  tmsg:acr_compl.Acr12/100290.in  istuple:N  msg:"garden.flower  flowe
 atfdb.tmsg  tmsg:acr_compl.Acr12/100300.in  istuple:N  msg:"garden.fruit  fruit:apple"
 atfdb.tmsg  tmsg:acr_compl.Acr12/100310.in  istuple:N  msg:"garden.fruit  fruit:plum"
 atfdb.tmsg  tmsg:acr_compl.Acr12/100320.in  istuple:N  msg:"garden.fruit  fruit:peach"
-atfdb.tmsg  tmsg:acr_nav.HeadlessBreadcrumb/100000.in  istuple:N  msg:"acr_nav.SendKey  key:j"
-atfdb.tmsg  tmsg:acr_nav.HeadlessBreadcrumb/100010.in  istuple:N  msg:"acr_nav.SendKey  key:j"
-atfdb.tmsg  tmsg:acr_nav.HeadlessBreadcrumb/100020.in  istuple:N  msg:"acr_nav.SendKey  key:j"
-atfdb.tmsg  tmsg:acr_nav.HeadlessBreadcrumb/100030.in  istuple:N  msg:"acr_nav.SendKey  key:r"
-atfdb.tmsg  tmsg:acr_nav.HeadlessBreadcrumb/100040.in  istuple:N  msg:"acr_nav.SendKey  key:Right"
-atfdb.tmsg  tmsg:acr_nav.HeadlessBreadcrumb/100050.in  istuple:N  msg:"acr_nav.SendKey  key:Enter"
-atfdb.tmsg  tmsg:acr_nav.HeadlessBreadcrumb/100060.in  istuple:N  msg:acr_nav.Screenshot
-atfdb.tmsg  tmsg:acr_nav.HeadlessBreadcrumb/100070.in  istuple:N  msg:"acr_nav.SendKey  key:Enter"
-atfdb.tmsg  tmsg:acr_nav.HeadlessBreadcrumb/100080.in  istuple:N  msg:acr_nav.Screenshot
-atfdb.tmsg  tmsg:acr_nav.HeadlessBreadcrumb/100090.in  istuple:N  msg:"acr_nav.SendKey  key:Backspace"
-atfdb.tmsg  tmsg:acr_nav.HeadlessBreadcrumb/100100.in  istuple:N  msg:acr_nav.Screenshot
-atfdb.tmsg  tmsg:acr_nav.HeadlessBreadcrumb/100110.in  istuple:N  msg:"acr_nav.SendKey  key:Backspace"
-atfdb.tmsg  tmsg:acr_nav.HeadlessBreadcrumb/100120.in  istuple:N  msg:acr_nav.Screenshot
-atfdb.tmsg  tmsg:acr_nav.HeadlessDetail/100000.in  istuple:N  msg:"acr_nav.SendKey  key:/"
-atfdb.tmsg  tmsg:acr_nav.HeadlessDetail/100010.in  istuple:N  msg:"acr_nav.SendKey  key:a"
-atfdb.tmsg  tmsg:acr_nav.HeadlessDetail/100020.in  istuple:N  msg:"acr_nav.SendKey  key:c"
-atfdb.tmsg  tmsg:acr_nav.HeadlessDetail/100030.in  istuple:N  msg:"acr_nav.SendKey  key:r"
-atfdb.tmsg  tmsg:acr_nav.HeadlessDetail/100040.in  istuple:N  msg:"acr_nav.SendKey  key:_"
-atfdb.tmsg  tmsg:acr_nav.HeadlessDetail/100050.in  istuple:N  msg:"acr_nav.SendKey  key:n"
-atfdb.tmsg  tmsg:acr_nav.HeadlessDetail/100060.in  istuple:N  msg:"acr_nav.SendKey  key:a"
-atfdb.tmsg  tmsg:acr_nav.HeadlessDetail/100070.in  istuple:N  msg:"acr_nav.SendKey  key:v"
-atfdb.tmsg  tmsg:acr_nav.HeadlessDetail/100080.in  istuple:N  msg:"acr_nav.SendKey  key:."
-atfdb.tmsg  tmsg:acr_nav.HeadlessDetail/100090.in  istuple:N  msg:"acr_nav.SendKey  key:f"
-atfdb.tmsg  tmsg:acr_nav.HeadlessDetail/100100.in  istuple:N  msg:"acr_nav.SendKey  key:d"
-atfdb.tmsg  tmsg:acr_nav.HeadlessDetail/100110.in  istuple:N  msg:"acr_nav.SendKey  key:b"
-atfdb.tmsg  tmsg:acr_nav.HeadlessDetail/100120.in  istuple:N  msg:"acr_nav.SendKey  key:Enter"
-atfdb.tmsg  tmsg:acr_nav.HeadlessDetail/100130.in  istuple:N  msg:"acr_nav.SendKey  key:Right"
-atfdb.tmsg  tmsg:acr_nav.HeadlessDetail/100140.in  istuple:N  msg:"acr_nav.SendKey  key:Down"
-atfdb.tmsg  tmsg:acr_nav.HeadlessDetail/100150.in  istuple:N  msg:"acr_nav.SendKey  key:Down"
-atfdb.tmsg  tmsg:acr_nav.HeadlessDetail/100160.in  istuple:N  msg:"acr_nav.SendKey  key:Down"
-atfdb.tmsg  tmsg:acr_nav.HeadlessDetail/100170.in  istuple:N  msg:"acr_nav.SendKey  key:Down"
-atfdb.tmsg  tmsg:acr_nav.HeadlessDetail/100180.in  istuple:N  msg:"acr_nav.SendKey  key:Down"
-atfdb.tmsg  tmsg:acr_nav.HeadlessDetail/100190.in  istuple:N  msg:"acr_nav.SendKey  key:Down"
-atfdb.tmsg  tmsg:acr_nav.HeadlessDetail/100200.in  istuple:N  msg:"acr_nav.SendKey  key:d"
-atfdb.tmsg  tmsg:acr_nav.HeadlessDetail/100210.in  istuple:N  msg:acr_nav.Screenshot
-atfdb.tmsg  tmsg:acr_nav.HeadlessDetail/100220.in  istuple:N  msg:"acr_nav.SendKey  key:d"
-atfdb.tmsg  tmsg:acr_nav.HeadlessDetail/100230.in  istuple:N  msg:acr_nav.Screenshot
-atfdb.tmsg  tmsg:acr_nav.HeadlessDetail/100240.in  istuple:N  msg:"acr_nav.SendKey  key:d"
-atfdb.tmsg  tmsg:acr_nav.HeadlessDetail/100250.in  istuple:N  msg:"acr_nav.SendKey  key:?"
-atfdb.tmsg  tmsg:acr_nav.HeadlessDetail/100260.in  istuple:N  msg:acr_nav.Screenshot
-atfdb.tmsg  tmsg:acr_nav.HeadlessDetail/100270.in  istuple:N  msg:"acr_nav.SendKey  key:?"
-atfdb.tmsg  tmsg:acr_nav.HeadlessDetail/100280.in  istuple:N  msg:acr_nav.Screenshot
-atfdb.tmsg  tmsg:acr_nav.HeadlessDetail/100290.in  istuple:N  msg:"acr_nav.SendKey  key:d"
-atfdb.tmsg  tmsg:acr_nav.HeadlessDetail/100300.in  istuple:N  msg:acr_nav.Screenshot
-atfdb.tmsg  tmsg:acr_nav.HeadlessFilter/100000.in  istuple:N  msg:"acr_nav.SendKey  key:/"
-atfdb.tmsg  tmsg:acr_nav.HeadlessFilter/100010.in  istuple:N  msg:"acr_nav.SendKey  key:a"
-atfdb.tmsg  tmsg:acr_nav.HeadlessFilter/100020.in  istuple:N  msg:"acr_nav.SendKey  key:m"
-atfdb.tmsg  tmsg:acr_nav.HeadlessFilter/100030.in  istuple:N  msg:"acr_nav.SendKey  key:c"
-atfdb.tmsg  tmsg:acr_nav.HeadlessFilter/100040.in  istuple:N  msg:acr_nav.Screenshot
-atfdb.tmsg  tmsg:acr_nav.HeadlessHelp/100000.in  istuple:N  msg:acr_nav.Screenshot
-atfdb.tmsg  tmsg:acr_nav.HeadlessHelp/100010.in  istuple:N  msg:"acr_nav.SendKey  key:j"
-atfdb.tmsg  tmsg:acr_nav.HeadlessHelp/100020.in  istuple:N  msg:acr_nav.Screenshot
-atfdb.tmsg  tmsg:acr_nav.HeadlessHelp/100030.in  istuple:N  msg:"acr_nav.SendKey  key:?"
-atfdb.tmsg  tmsg:acr_nav.HeadlessHelp/100040.in  istuple:N  msg:acr_nav.Screenshot
-atfdb.tmsg  tmsg:acr_nav.HeadlessHelp/100050.in  istuple:N  msg:"acr_nav.SendKey  key:?"
-atfdb.tmsg  tmsg:acr_nav.HeadlessHelp/100060.in  istuple:N  msg:acr_nav.Screenshot
-atfdb.tmsg  tmsg:acr_nav.HeadlessFollow/100000.in  istuple:N  msg:"acr_nav.SendKey  key:/"
-atfdb.tmsg  tmsg:acr_nav.HeadlessFollow/100010.in  istuple:N  msg:"acr_nav.SendKey  key:a"
-atfdb.tmsg  tmsg:acr_nav.HeadlessFollow/100020.in  istuple:N  msg:"acr_nav.SendKey  key:m"
-atfdb.tmsg  tmsg:acr_nav.HeadlessFollow/100030.in  istuple:N  msg:"acr_nav.SendKey  key:c"
-atfdb.tmsg  tmsg:acr_nav.HeadlessFollow/100040.in  istuple:N  msg:"acr_nav.SendKey  key:."
-atfdb.tmsg  tmsg:acr_nav.HeadlessFollow/100050.in  istuple:N  msg:"acr_nav.SendKey  key:F"
-atfdb.tmsg  tmsg:acr_nav.HeadlessFollow/100060.in  istuple:N  msg:"acr_nav.SendKey  key:D"
-atfdb.tmsg  tmsg:acr_nav.HeadlessFollow/100070.in  istuple:N  msg:"acr_nav.SendKey  key:b"
-atfdb.tmsg  tmsg:acr_nav.HeadlessFollow/100080.in  istuple:N  msg:"acr_nav.SendKey  key:Right"
-atfdb.tmsg  tmsg:acr_nav.HeadlessFollow/100090.in  istuple:N  msg:"acr_nav.SendKey  key:Down"
-atfdb.tmsg  tmsg:acr_nav.HeadlessFollow/100100.in  istuple:N  msg:"acr_nav.SendKey  key:Enter"
-atfdb.tmsg  tmsg:acr_nav.HeadlessFollow/100110.in  istuple:N  msg:acr_nav.Screenshot
-atfdb.tmsg  tmsg:acr_nav.HeadlessNav/100000.in  istuple:N  msg:"acr_nav.SendKey  key:j"
-atfdb.tmsg  tmsg:acr_nav.HeadlessNav/100010.in  istuple:N  msg:"acr_nav.SendKey  key:j"
-atfdb.tmsg  tmsg:acr_nav.HeadlessNav/100020.in  istuple:N  msg:acr_nav.Screenshot
-atfdb.tmsg  tmsg:acr_nav.HeadlessXref/100000.in  istuple:N  msg:"acr_nav.SendKey  key:j"
-atfdb.tmsg  tmsg:acr_nav.HeadlessXref/100010.in  istuple:N  msg:"acr_nav.SendKey  key:j"
-atfdb.tmsg  tmsg:acr_nav.HeadlessXref/100020.in  istuple:N  msg:"acr_nav.SendKey  key:j"
-atfdb.tmsg  tmsg:acr_nav.HeadlessXref/100030.in  istuple:N  msg:"acr_nav.SendKey  key:r"
-atfdb.tmsg  tmsg:acr_nav.HeadlessXref/100040.in  istuple:N  msg:acr_nav.Screenshot
-atfdb.tmsg  tmsg:acr_nav.HeadlessXref/100050.in  istuple:N  msg:"acr_nav.SendKey  key:Right"
-atfdb.tmsg  tmsg:acr_nav.HeadlessXref/100060.in  istuple:N  msg:"acr_nav.SendKey  key:Enter"
-atfdb.tmsg  tmsg:acr_nav.HeadlessXref/100070.in  istuple:N  msg:acr_nav.Screenshot
-atfdb.tmsg  tmsg:acr_nav.HeadlessXref/100080.in  istuple:N  msg:"acr_nav.SendKey  key:Backspace"
-atfdb.tmsg  tmsg:acr_nav.HeadlessXref/100090.in  istuple:N  msg:acr_nav.Screenshot
-atfdb.tmsg  tmsg:acr_nav.HeadlessXrefEmpty/100000.in  istuple:N  msg:"acr_nav.SendKey  key:j"
-atfdb.tmsg  tmsg:acr_nav.HeadlessXrefEmpty/100010.in  istuple:N  msg:"acr_nav.SendKey  key:r"
-atfdb.tmsg  tmsg:acr_nav.HeadlessXrefEmpty/100020.in  istuple:N  msg:acr_nav.Screenshot
-atfdb.tmsg  tmsg:acr_nav.HeadlessXrefEmpty/100030.in  istuple:N  msg:"acr_nav.SendKey  key:r"
-atfdb.tmsg  tmsg:acr_nav.HeadlessXrefEmpty/100040.in  istuple:N  msg:acr_nav.Screenshot
-atfdb.tmsg  tmsg:acr_nav.HeadlessPreview/100000.in  istuple:N  msg:"acr_nav.SendKey  key:/"
-atfdb.tmsg  tmsg:acr_nav.HeadlessPreview/100010.in  istuple:N  msg:"acr_nav.SendKey  key:d"
-atfdb.tmsg  tmsg:acr_nav.HeadlessPreview/100020.in  istuple:N  msg:"acr_nav.SendKey  key:m"
-atfdb.tmsg  tmsg:acr_nav.HeadlessPreview/100030.in  istuple:N  msg:"acr_nav.SendKey  key:m"
-atfdb.tmsg  tmsg:acr_nav.HeadlessPreview/100040.in  istuple:N  msg:"acr_nav.SendKey  key:e"
-atfdb.tmsg  tmsg:acr_nav.HeadlessPreview/100050.in  istuple:N  msg:"acr_nav.SendKey  key:t"
-atfdb.tmsg  tmsg:acr_nav.HeadlessPreview/100060.in  istuple:N  msg:"acr_nav.SendKey  key:a"
-atfdb.tmsg  tmsg:acr_nav.HeadlessPreview/100070.in  istuple:N  msg:"acr_nav.SendKey  key:."
-atfdb.tmsg  tmsg:acr_nav.HeadlessPreview/100080.in  istuple:N  msg:"acr_nav.SendKey  key:R"
-atfdb.tmsg  tmsg:acr_nav.HeadlessPreview/100090.in  istuple:N  msg:"acr_nav.SendKey  key:e"
-atfdb.tmsg  tmsg:acr_nav.HeadlessPreview/100100.in  istuple:N  msg:"acr_nav.SendKey  key:f"
-atfdb.tmsg  tmsg:acr_nav.HeadlessPreview/100110.in  istuple:N  msg:"acr_nav.SendKey  key:t"
-atfdb.tmsg  tmsg:acr_nav.HeadlessPreview/100120.in  istuple:N  msg:"acr_nav.SendKey  key:y"
-atfdb.tmsg  tmsg:acr_nav.HeadlessPreview/100130.in  istuple:N  msg:"acr_nav.SendKey  key:p"
-atfdb.tmsg  tmsg:acr_nav.HeadlessPreview/100140.in  istuple:N  msg:"acr_nav.SendKey  key:e"
-atfdb.tmsg  tmsg:acr_nav.HeadlessPreview/100150.in  istuple:N  msg:"acr_nav.SendKey  key:Enter"
-atfdb.tmsg  tmsg:acr_nav.HeadlessPreview/100160.in  istuple:N  msg:"acr_nav.SendKey  key:p"
-atfdb.tmsg  tmsg:acr_nav.HeadlessPreview/100170.in  istuple:N  msg:acr_nav.Screenshot
-atfdb.tmsg  tmsg:acr_nav.HeadlessPreview/100180.in  istuple:N  msg:"acr_nav.SendKey  key:Right"
-atfdb.tmsg  tmsg:acr_nav.HeadlessPreview/100190.in  istuple:N  msg:"acr_nav.SendKey  key:j"
-atfdb.tmsg  tmsg:acr_nav.HeadlessPreview/100200.in  istuple:N  msg:acr_nav.Screenshot
-atfdb.tmsg  tmsg:acr_nav.HeadlessPreview/100210.in  istuple:N  msg:"acr_nav.SendKey  key:p"
-atfdb.tmsg  tmsg:acr_nav.HeadlessPreview/100220.in  istuple:N  msg:acr_nav.Screenshot
-atfdb.tmsg  tmsg:acr_nav.HeadlessViewCycle/100000.in  istuple:N  msg:"acr_nav.SendKey  key:/"
-atfdb.tmsg  tmsg:acr_nav.HeadlessViewCycle/100010.in  istuple:N  msg:"acr_nav.SendKey  key:d"
-atfdb.tmsg  tmsg:acr_nav.HeadlessViewCycle/100020.in  istuple:N  msg:"acr_nav.SendKey  key:m"
-atfdb.tmsg  tmsg:acr_nav.HeadlessViewCycle/100030.in  istuple:N  msg:"acr_nav.SendKey  key:m"
-atfdb.tmsg  tmsg:acr_nav.HeadlessViewCycle/100040.in  istuple:N  msg:"acr_nav.SendKey  key:e"
-atfdb.tmsg  tmsg:acr_nav.HeadlessViewCycle/100050.in  istuple:N  msg:"acr_nav.SendKey  key:t"
-atfdb.tmsg  tmsg:acr_nav.HeadlessViewCycle/100060.in  istuple:N  msg:"acr_nav.SendKey  key:a"
-atfdb.tmsg  tmsg:acr_nav.HeadlessViewCycle/100070.in  istuple:N  msg:"acr_nav.SendKey  key:."
-atfdb.tmsg  tmsg:acr_nav.HeadlessViewCycle/100080.in  istuple:N  msg:"acr_nav.SendKey  key:F"
-atfdb.tmsg  tmsg:acr_nav.HeadlessViewCycle/100090.in  istuple:N  msg:"acr_nav.SendKey  key:i"
-atfdb.tmsg  tmsg:acr_nav.HeadlessViewCycle/100100.in  istuple:N  msg:"acr_nav.SendKey  key:e"
-atfdb.tmsg  tmsg:acr_nav.HeadlessViewCycle/100110.in  istuple:N  msg:"acr_nav.SendKey  key:l"
-atfdb.tmsg  tmsg:acr_nav.HeadlessViewCycle/100120.in  istuple:N  msg:"acr_nav.SendKey  key:d"
-atfdb.tmsg  tmsg:acr_nav.HeadlessViewCycle/100130.in  istuple:N  msg:"acr_nav.SendKey  key:Enter"
-atfdb.tmsg  tmsg:acr_nav.HeadlessViewCycle/100140.in  istuple:N  msg:acr_nav.Screenshot
-atfdb.tmsg  tmsg:acr_nav.HeadlessViewCycle/100150.in  istuple:N  msg:"acr_nav.SendKey  key:Tab"
-atfdb.tmsg  tmsg:acr_nav.HeadlessViewCycle/100160.in  istuple:N  msg:acr_nav.Screenshot
-atfdb.tmsg  tmsg:acr_nav.HeadlessViewCycle/100170.in  istuple:N  msg:"acr_nav.SendKey  key:Tab"
-atfdb.tmsg  tmsg:acr_nav.HeadlessViewCycle/100180.in  istuple:N  msg:acr_nav.Screenshot
-atfdb.tmsg  tmsg:acr_nav.HeadlessViewCycle/100190.in  istuple:N  msg:"acr_nav.SendKey  key:Tab"
-atfdb.tmsg  tmsg:acr_nav.HeadlessViewCycle/100200.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.Breadcrumb/100000.in  istuple:N  msg:"acr_nav.SendKey  key:j"
+atfdb.tmsg  tmsg:acr_nav.Breadcrumb/100010.in  istuple:N  msg:"acr_nav.SendKey  key:j"
+atfdb.tmsg  tmsg:acr_nav.Breadcrumb/100020.in  istuple:N  msg:"acr_nav.SendKey  key:j"
+atfdb.tmsg  tmsg:acr_nav.Breadcrumb/100030.in  istuple:N  msg:"acr_nav.SendKey  key:r"
+atfdb.tmsg  tmsg:acr_nav.Breadcrumb/100040.in  istuple:N  msg:"acr_nav.SendKey  key:Right"
+atfdb.tmsg  tmsg:acr_nav.Breadcrumb/100050.in  istuple:N  msg:"acr_nav.SendKey  key:Enter"
+atfdb.tmsg  tmsg:acr_nav.Breadcrumb/100060.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.Breadcrumb/100070.in  istuple:N  msg:"acr_nav.SendKey  key:Enter"
+atfdb.tmsg  tmsg:acr_nav.Breadcrumb/100080.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.Breadcrumb/100090.in  istuple:N  msg:"acr_nav.SendKey  key:Backspace"
+atfdb.tmsg  tmsg:acr_nav.Breadcrumb/100100.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.Breadcrumb/100110.in  istuple:N  msg:"acr_nav.SendKey  key:Backspace"
+atfdb.tmsg  tmsg:acr_nav.Breadcrumb/100120.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.Collapse/100000.in  istuple:N  msg:"acr_nav.SendKey  key:j"
+atfdb.tmsg  tmsg:acr_nav.Collapse/100010.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.Collapse/100020.in  istuple:N  msg:"acr_nav.SendKey  key:Home"
+atfdb.tmsg  tmsg:acr_nav.Collapse/100030.in  istuple:N  msg:"acr_nav.SendKey  key:Enter"
+atfdb.tmsg  tmsg:acr_nav.Collapse/100040.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.Collapse/100050.in  istuple:N  msg:"acr_nav.SendKey  key:Enter"
+atfdb.tmsg  tmsg:acr_nav.Collapse/100060.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.Detail/100000.in  istuple:N  msg:"acr_nav.SendKey  key:/"
+atfdb.tmsg  tmsg:acr_nav.Detail/100010.in  istuple:N  msg:"acr_nav.SendKey  key:a"
+atfdb.tmsg  tmsg:acr_nav.Detail/100020.in  istuple:N  msg:"acr_nav.SendKey  key:c"
+atfdb.tmsg  tmsg:acr_nav.Detail/100030.in  istuple:N  msg:"acr_nav.SendKey  key:r"
+atfdb.tmsg  tmsg:acr_nav.Detail/100040.in  istuple:N  msg:"acr_nav.SendKey  key:_"
+atfdb.tmsg  tmsg:acr_nav.Detail/100050.in  istuple:N  msg:"acr_nav.SendKey  key:n"
+atfdb.tmsg  tmsg:acr_nav.Detail/100060.in  istuple:N  msg:"acr_nav.SendKey  key:a"
+atfdb.tmsg  tmsg:acr_nav.Detail/100070.in  istuple:N  msg:"acr_nav.SendKey  key:v"
+atfdb.tmsg  tmsg:acr_nav.Detail/100080.in  istuple:N  msg:"acr_nav.SendKey  key:."
+atfdb.tmsg  tmsg:acr_nav.Detail/100090.in  istuple:N  msg:"acr_nav.SendKey  key:f"
+atfdb.tmsg  tmsg:acr_nav.Detail/100100.in  istuple:N  msg:"acr_nav.SendKey  key:d"
+atfdb.tmsg  tmsg:acr_nav.Detail/100110.in  istuple:N  msg:"acr_nav.SendKey  key:b"
+atfdb.tmsg  tmsg:acr_nav.Detail/100120.in  istuple:N  msg:"acr_nav.SendKey  key:Enter"
+atfdb.tmsg  tmsg:acr_nav.Detail/100130.in  istuple:N  msg:"acr_nav.SendKey  key:Right"
+atfdb.tmsg  tmsg:acr_nav.Detail/100140.in  istuple:N  msg:"acr_nav.SendKey  key:Down"
+atfdb.tmsg  tmsg:acr_nav.Detail/100150.in  istuple:N  msg:"acr_nav.SendKey  key:Down"
+atfdb.tmsg  tmsg:acr_nav.Detail/100160.in  istuple:N  msg:"acr_nav.SendKey  key:Down"
+atfdb.tmsg  tmsg:acr_nav.Detail/100170.in  istuple:N  msg:"acr_nav.SendKey  key:Down"
+atfdb.tmsg  tmsg:acr_nav.Detail/100180.in  istuple:N  msg:"acr_nav.SendKey  key:Down"
+atfdb.tmsg  tmsg:acr_nav.Detail/100190.in  istuple:N  msg:"acr_nav.SendKey  key:Down"
+atfdb.tmsg  tmsg:acr_nav.Detail/100200.in  istuple:N  msg:"acr_nav.SendKey  key:d"
+atfdb.tmsg  tmsg:acr_nav.Detail/100210.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.Detail/100220.in  istuple:N  msg:"acr_nav.SendKey  key:d"
+atfdb.tmsg  tmsg:acr_nav.Detail/100230.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.Detail/100240.in  istuple:N  msg:"acr_nav.SendKey  key:d"
+atfdb.tmsg  tmsg:acr_nav.Detail/100250.in  istuple:N  msg:"acr_nav.SendKey  key:?"
+atfdb.tmsg  tmsg:acr_nav.Detail/100260.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.Detail/100270.in  istuple:N  msg:"acr_nav.SendKey  key:?"
+atfdb.tmsg  tmsg:acr_nav.Detail/100280.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.Detail/100290.in  istuple:N  msg:"acr_nav.SendKey  key:d"
+atfdb.tmsg  tmsg:acr_nav.Detail/100300.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.Filter/100000.in  istuple:N  msg:"acr_nav.SendKey  key:/"
+atfdb.tmsg  tmsg:acr_nav.Filter/100010.in  istuple:N  msg:"acr_nav.SendKey  key:a"
+atfdb.tmsg  tmsg:acr_nav.Filter/100020.in  istuple:N  msg:"acr_nav.SendKey  key:m"
+atfdb.tmsg  tmsg:acr_nav.Filter/100030.in  istuple:N  msg:"acr_nav.SendKey  key:c"
+atfdb.tmsg  tmsg:acr_nav.Filter/100040.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.FilterEdge/100000.in  istuple:N  msg:"acr_nav.SendKey  key:j"
+atfdb.tmsg  tmsg:acr_nav.FilterEdge/100010.in  istuple:N  msg:"acr_nav.SendKey  key:/"
+atfdb.tmsg  tmsg:acr_nav.FilterEdge/100020.in  istuple:N  msg:"acr_nav.SendKey  key:z"
+atfdb.tmsg  tmsg:acr_nav.FilterEdge/100030.in  istuple:N  msg:"acr_nav.SendKey  key:z"
+atfdb.tmsg  tmsg:acr_nav.FilterEdge/100040.in  istuple:N  msg:"acr_nav.SendKey  key:z"
+atfdb.tmsg  tmsg:acr_nav.FilterEdge/100050.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.FilterEdge/100060.in  istuple:N  msg:"acr_nav.SendKey  key:j"
+atfdb.tmsg  tmsg:acr_nav.FilterEdge/100070.in  istuple:N  msg:"acr_nav.SendKey  key:k"
+atfdb.tmsg  tmsg:acr_nav.FilterEdge/100080.in  istuple:N  msg:"acr_nav.SendKey  key:Enter"
+atfdb.tmsg  tmsg:acr_nav.FilterEdge/100090.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.Follow/100000.in  istuple:N  msg:"acr_nav.SendKey  key:/"
+atfdb.tmsg  tmsg:acr_nav.Follow/100010.in  istuple:N  msg:"acr_nav.SendKey  key:a"
+atfdb.tmsg  tmsg:acr_nav.Follow/100020.in  istuple:N  msg:"acr_nav.SendKey  key:m"
+atfdb.tmsg  tmsg:acr_nav.Follow/100030.in  istuple:N  msg:"acr_nav.SendKey  key:c"
+atfdb.tmsg  tmsg:acr_nav.Follow/100040.in  istuple:N  msg:"acr_nav.SendKey  key:."
+atfdb.tmsg  tmsg:acr_nav.Follow/100050.in  istuple:N  msg:"acr_nav.SendKey  key:F"
+atfdb.tmsg  tmsg:acr_nav.Follow/100060.in  istuple:N  msg:"acr_nav.SendKey  key:D"
+atfdb.tmsg  tmsg:acr_nav.Follow/100070.in  istuple:N  msg:"acr_nav.SendKey  key:b"
+atfdb.tmsg  tmsg:acr_nav.Follow/100080.in  istuple:N  msg:"acr_nav.SendKey  key:Right"
+atfdb.tmsg  tmsg:acr_nav.Follow/100090.in  istuple:N  msg:"acr_nav.SendKey  key:Down"
+atfdb.tmsg  tmsg:acr_nav.Follow/100100.in  istuple:N  msg:"acr_nav.SendKey  key:Enter"
+atfdb.tmsg  tmsg:acr_nav.Follow/100110.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.Help/100000.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.Help/100010.in  istuple:N  msg:"acr_nav.SendKey  key:j"
+atfdb.tmsg  tmsg:acr_nav.Help/100020.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.Help/100030.in  istuple:N  msg:"acr_nav.SendKey  key:?"
+atfdb.tmsg  tmsg:acr_nav.Help/100040.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.Help/100050.in  istuple:N  msg:"acr_nav.SendKey  key:?"
+atfdb.tmsg  tmsg:acr_nav.Help/100060.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.Nav/100000.in  istuple:N  msg:"acr_nav.SendKey  key:j"
+atfdb.tmsg  tmsg:acr_nav.Nav/100010.in  istuple:N  msg:"acr_nav.SendKey  key:j"
+atfdb.tmsg  tmsg:acr_nav.Nav/100020.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.Preview/100000.in  istuple:N  msg:"acr_nav.SendKey  key:/"
+atfdb.tmsg  tmsg:acr_nav.Preview/100010.in  istuple:N  msg:"acr_nav.SendKey  key:d"
+atfdb.tmsg  tmsg:acr_nav.Preview/100020.in  istuple:N  msg:"acr_nav.SendKey  key:m"
+atfdb.tmsg  tmsg:acr_nav.Preview/100030.in  istuple:N  msg:"acr_nav.SendKey  key:m"
+atfdb.tmsg  tmsg:acr_nav.Preview/100040.in  istuple:N  msg:"acr_nav.SendKey  key:e"
+atfdb.tmsg  tmsg:acr_nav.Preview/100050.in  istuple:N  msg:"acr_nav.SendKey  key:t"
+atfdb.tmsg  tmsg:acr_nav.Preview/100060.in  istuple:N  msg:"acr_nav.SendKey  key:a"
+atfdb.tmsg  tmsg:acr_nav.Preview/100070.in  istuple:N  msg:"acr_nav.SendKey  key:."
+atfdb.tmsg  tmsg:acr_nav.Preview/100080.in  istuple:N  msg:"acr_nav.SendKey  key:R"
+atfdb.tmsg  tmsg:acr_nav.Preview/100090.in  istuple:N  msg:"acr_nav.SendKey  key:e"
+atfdb.tmsg  tmsg:acr_nav.Preview/100100.in  istuple:N  msg:"acr_nav.SendKey  key:f"
+atfdb.tmsg  tmsg:acr_nav.Preview/100110.in  istuple:N  msg:"acr_nav.SendKey  key:t"
+atfdb.tmsg  tmsg:acr_nav.Preview/100120.in  istuple:N  msg:"acr_nav.SendKey  key:y"
+atfdb.tmsg  tmsg:acr_nav.Preview/100130.in  istuple:N  msg:"acr_nav.SendKey  key:p"
+atfdb.tmsg  tmsg:acr_nav.Preview/100140.in  istuple:N  msg:"acr_nav.SendKey  key:e"
+atfdb.tmsg  tmsg:acr_nav.Preview/100150.in  istuple:N  msg:"acr_nav.SendKey  key:Enter"
+atfdb.tmsg  tmsg:acr_nav.Preview/100160.in  istuple:N  msg:"acr_nav.SendKey  key:p"
+atfdb.tmsg  tmsg:acr_nav.Preview/100170.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.Preview/100180.in  istuple:N  msg:"acr_nav.SendKey  key:Right"
+atfdb.tmsg  tmsg:acr_nav.Preview/100190.in  istuple:N  msg:"acr_nav.SendKey  key:j"
+atfdb.tmsg  tmsg:acr_nav.Preview/100200.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.Preview/100210.in  istuple:N  msg:"acr_nav.SendKey  key:p"
+atfdb.tmsg  tmsg:acr_nav.Preview/100220.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.UnknownKey/100000.in  istuple:N  msg:"acr_nav.SendKey  key:F13"
+atfdb.tmsg  tmsg:acr_nav.UnknownKey/100010.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.UnknownKey/100020.in  istuple:N  msg:"acr_nav.SendKey  key:j"
+atfdb.tmsg  tmsg:acr_nav.UnknownKey/100030.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.ViewCycle/100000.in  istuple:N  msg:"acr_nav.SendKey  key:/"
+atfdb.tmsg  tmsg:acr_nav.ViewCycle/100010.in  istuple:N  msg:"acr_nav.SendKey  key:d"
+atfdb.tmsg  tmsg:acr_nav.ViewCycle/100020.in  istuple:N  msg:"acr_nav.SendKey  key:m"
+atfdb.tmsg  tmsg:acr_nav.ViewCycle/100030.in  istuple:N  msg:"acr_nav.SendKey  key:m"
+atfdb.tmsg  tmsg:acr_nav.ViewCycle/100040.in  istuple:N  msg:"acr_nav.SendKey  key:e"
+atfdb.tmsg  tmsg:acr_nav.ViewCycle/100050.in  istuple:N  msg:"acr_nav.SendKey  key:t"
+atfdb.tmsg  tmsg:acr_nav.ViewCycle/100060.in  istuple:N  msg:"acr_nav.SendKey  key:a"
+atfdb.tmsg  tmsg:acr_nav.ViewCycle/100070.in  istuple:N  msg:"acr_nav.SendKey  key:."
+atfdb.tmsg  tmsg:acr_nav.ViewCycle/100080.in  istuple:N  msg:"acr_nav.SendKey  key:F"
+atfdb.tmsg  tmsg:acr_nav.ViewCycle/100090.in  istuple:N  msg:"acr_nav.SendKey  key:i"
+atfdb.tmsg  tmsg:acr_nav.ViewCycle/100100.in  istuple:N  msg:"acr_nav.SendKey  key:e"
+atfdb.tmsg  tmsg:acr_nav.ViewCycle/100110.in  istuple:N  msg:"acr_nav.SendKey  key:l"
+atfdb.tmsg  tmsg:acr_nav.ViewCycle/100120.in  istuple:N  msg:"acr_nav.SendKey  key:d"
+atfdb.tmsg  tmsg:acr_nav.ViewCycle/100130.in  istuple:N  msg:"acr_nav.SendKey  key:Enter"
+atfdb.tmsg  tmsg:acr_nav.ViewCycle/100140.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.ViewCycle/100150.in  istuple:N  msg:"acr_nav.SendKey  key:Tab"
+atfdb.tmsg  tmsg:acr_nav.ViewCycle/100160.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.ViewCycle/100170.in  istuple:N  msg:"acr_nav.SendKey  key:Tab"
+atfdb.tmsg  tmsg:acr_nav.ViewCycle/100180.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.ViewCycle/100190.in  istuple:N  msg:"acr_nav.SendKey  key:Tab"
+atfdb.tmsg  tmsg:acr_nav.ViewCycle/100200.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.Xref/100000.in  istuple:N  msg:"acr_nav.SendKey  key:j"
+atfdb.tmsg  tmsg:acr_nav.Xref/100010.in  istuple:N  msg:"acr_nav.SendKey  key:j"
+atfdb.tmsg  tmsg:acr_nav.Xref/100020.in  istuple:N  msg:"acr_nav.SendKey  key:j"
+atfdb.tmsg  tmsg:acr_nav.Xref/100030.in  istuple:N  msg:"acr_nav.SendKey  key:r"
+atfdb.tmsg  tmsg:acr_nav.Xref/100040.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.Xref/100050.in  istuple:N  msg:"acr_nav.SendKey  key:Right"
+atfdb.tmsg  tmsg:acr_nav.Xref/100060.in  istuple:N  msg:"acr_nav.SendKey  key:Enter"
+atfdb.tmsg  tmsg:acr_nav.Xref/100070.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.Xref/100080.in  istuple:N  msg:"acr_nav.SendKey  key:Backspace"
+atfdb.tmsg  tmsg:acr_nav.Xref/100090.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.XrefEmpty/100000.in  istuple:N  msg:"acr_nav.SendKey  key:j"
+atfdb.tmsg  tmsg:acr_nav.XrefEmpty/100010.in  istuple:N  msg:"acr_nav.SendKey  key:r"
+atfdb.tmsg  tmsg:acr_nav.XrefEmpty/100020.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.XrefEmpty/100030.in  istuple:N  msg:"acr_nav.SendKey  key:r"
+atfdb.tmsg  tmsg:acr_nav.XrefEmpty/100040.in  istuple:N  msg:acr_nav.Screenshot
 atfdb.tmsg  tmsg:aqlite.Constraints/100000.in  istuple:N  msg:'dmmeta.ctype  ctype:dmmeta.TestConstraint     comment:"Test ctype for constraint combinations"'
 atfdb.tmsg  tmsg:aqlite.Constraints/100010.in  istuple:N  msg:'dmmeta.field  field:dmmeta.TestConstraint.id    arg:i32          reftype:Val   dflt:""  comment:"ID field"'
 atfdb.tmsg  tmsg:aqlite.Constraints/100020.in  istuple:N  msg:'dmmeta.field  field:dmmeta.TestConstraint.name  arg:algo.cstring reftype:Val   dflt:""  comment:"Name"'

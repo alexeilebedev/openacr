@@ -52,6 +52,7 @@ dmmeta.userfunc  userfunc:acr_ed.FDb._db.Main  acrkey:main:acr_ed  cppname:acr_e
 dmmeta.userfunc  userfunc:acr_in.FDb._db.Main  acrkey:main:acr_in  cppname:acr_in.Main  comment:""
 dmmeta.userfunc  userfunc:acr_my.FDb._db.Main  acrkey:main:acr_my  cppname:acr_my.Main  comment:""
 dmmeta.userfunc  userfunc:acr_nav...navaction_cycle_viewmode  acrkey:gstatic/acr_navdb.navaction:cycle_viewmode  cppname:acr_nav.navaction_cycle_viewmode  comment:""
+dmmeta.userfunc  userfunc:acr_nav...navaction_dismiss_or_clear  acrkey:gstatic/acr_navdb.navaction:dismiss_or_clear  cppname:acr_nav.navaction_dismiss_or_clear  comment:""
 dmmeta.userfunc  userfunc:acr_nav...navaction_filter_accept  acrkey:gstatic/acr_navdb.navaction:filter_accept  cppname:acr_nav.navaction_filter_accept  comment:""
 dmmeta.userfunc  userfunc:acr_nav...navaction_filter_append_space  acrkey:gstatic/acr_navdb.navaction:filter_append_space  cppname:acr_nav.navaction_filter_append_space  comment:""
 dmmeta.userfunc  userfunc:acr_nav...navaction_filter_backspace  acrkey:gstatic/acr_navdb.navaction:filter_backspace  cppname:acr_nav.navaction_filter_backspace  comment:""

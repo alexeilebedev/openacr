@@ -2127,7 +2127,8 @@ static void acr_nav::navaction_LoadStatic() {
         const char *s;
         void (*step)();
     } data[] = {
-        { "acr_navdb.navaction  navaction:filter_accept  hint:\"\"  helpgroup:\"\"  sort_order:0  comment:\"Accept filter and return to browse mode\"", acr_nav::navaction_filter_accept }
+        { "acr_navdb.navaction  navaction:dismiss_or_clear  hint:\"\"  helpgroup:search  sort_order:12  comment:\"Dismiss overlay or clear filter\"", acr_nav::navaction_dismiss_or_clear }
+        ,{ "acr_navdb.navaction  navaction:filter_accept  hint:\"\"  helpgroup:\"\"  sort_order:0  comment:\"Accept filter and return to browse mode\"", acr_nav::navaction_filter_accept }
         ,{ "acr_navdb.navaction  navaction:filter_append_space  hint:\"\"  helpgroup:\"\"  sort_order:0  comment:\"Append space to filter text\"", acr_nav::navaction_filter_append_space }
         ,{ "acr_navdb.navaction  navaction:filter_backspace  hint:\"\"  helpgroup:\"\"  sort_order:0  comment:\"Delete last filter character\"", acr_nav::navaction_filter_backspace }
         ,{ "acr_navdb.navaction  navaction:filter_cancel  hint:\"\"  helpgroup:\"\"  sort_order:0  comment:\"Cancel filter input\"", acr_nav::navaction_filter_cancel }
@@ -5560,6 +5561,8 @@ const char* acr_nav::value_ToCstr(const acr_nav::FieldId& parent) {
     switch(value_GetEnum(parent)) {
         case acr_nav_FieldId_screenshot    : ret = "screenshot";  break;
         case acr_nav_FieldId_key           : ret = "key";  break;
+        case acr_nav_FieldId_term_hei      : ret = "term_hei";  break;
+        case acr_nav_FieldId_term_wid      : ret = "term_wid";  break;
         case acr_nav_FieldId_value         : ret = "value";  break;
     }
     return ret;
@@ -5596,6 +5599,17 @@ bool acr_nav::value_SetStrptrMaybe(acr_nav::FieldId& parent, algo::strptr rhs) {
             switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
                 case LE_STR5('v','a','l','u','e'): {
                     value_SetEnum(parent,acr_nav_FieldId_value); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 8: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('t','e','r','m','_','h','e','i'): {
+                    value_SetEnum(parent,acr_nav_FieldId_term_hei); ret = true; break;
+                }
+                case LE_STR8('t','e','r','m','_','w','i','d'): {
+                    value_SetEnum(parent,acr_nav_FieldId_term_wid); ret = true; break;
                 }
             }
             break;
@@ -5765,6 +5779,41 @@ bool acr_nav::SendKey_ReadStrptrMaybe(acr_nav::SendKey &parent, algo::strptr in_
     retval = algo::StripTypeTag(in_str, "acr_nav.SendKey");
     ind_beg(algo::Attr_curs, attr, in_str) {
         retval = retval && SendKey_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- acr_nav.SetTermSize..ReadFieldMaybe
+bool acr_nav::SetTermSize_ReadFieldMaybe(acr_nav::SetTermSize& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    acr_nav::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case acr_nav_FieldId_term_hei: {
+            retval = i32_ReadStrptrMaybe(parent.term_hei, strval);
+        } break;
+        case acr_nav_FieldId_term_wid: {
+            retval = i32_ReadStrptrMaybe(parent.term_wid, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- acr_nav.SetTermSize..ReadStrptrMaybe
+// Read fields of acr_nav::SetTermSize from an ascii string.
+// The format of the string is an ssim Tuple
+bool acr_nav::SetTermSize_ReadStrptrMaybe(acr_nav::SetTermSize &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "acr_nav.SetTermSize");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && SetTermSize_ReadFieldMaybe(parent, attr.name, attr.value);
     }ind_end;
     return retval;
 }
@@ -5984,6 +6033,20 @@ void acr_nav::VisibleField_Print(acr_nav::VisibleField& row, algo::cstring& str)
 
     bool_Print(row.navigable, temp);
     PrintAttrSpaceReset(str,"navigable", temp);
+}
+
+// --- acr_nav.VisibleLine..Print
+// print string representation of ROW to string STR
+// cfmt:acr_nav.VisibleLine.String  printfmt:Tuple
+void acr_nav::VisibleLine_Print(acr_nav::VisibleLine& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "acr_nav.VisibleLine";
+
+    i32_Print(row.row, temp);
+    PrintAttrSpaceReset(str,"row", temp);
+
+    algo::cstring_Print(row.value, temp);
+    PrintAttrSpaceReset(str,"value", temp);
 }
 
 // --- acr_nav...SizeCheck

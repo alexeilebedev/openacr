@@ -777,6 +777,22 @@ void acr_nav::navaction_filter_clear() {
 
 // -----------------------------------------------------------------------------
 
+void acr_nav::navaction_dismiss_or_clear() {
+    if (!acr_nav::viewmode_stack_EmptyQ()) {
+        bool was_detail = IsDetailMode();
+        PopViewmode();
+        if (was_detail) {
+            acr_nav::_db.p_detail_field = NULL;
+        }
+        acr_nav::_db.p_right_panel->sel_row = 0;
+        acr_nav::_db.p_right_panel->scroll_offset = 0;
+    } else {
+        navaction_filter_clear();
+    }
+}
+
+// -----------------------------------------------------------------------------
+
 void acr_nav::navaction_filter_backspace() {
     if (ch_N(acr_nav::_db.filter) > 0) {
         acr_nav::_db.filter.ch_n = ch_N(acr_nav::_db.filter) - 1;
@@ -1286,11 +1302,6 @@ static void InitPanels() {
 
 static bool ProcessKey(algo::strptr key_name) {
     bool did_something = false;
-    // Startup help: first keypress dismisses and falls through to dispatch
-    if (acr_nav::_db.startup_help) {
-        acr_nav::_db.startup_help = false;
-        PopViewmode();
-    }
     {
         acr_nav::FPanel *left = acr_nav::_db.p_left_panel;
         acr_nav::FPanel *right = acr_nav::_db.p_right_panel;
@@ -1307,6 +1318,12 @@ static bool ProcessKey(algo::strptr key_name) {
             acr_nav::_db.filter << key_name;
             BuildLeftItemsReset();
             did_something = true;
+        }
+        // Dismiss startup help on first successful keypress. Safe when Escape pops the
+        // overlay before this check: PopViewmode() is a no-op on empty stack.
+        if (acr_nav::_db.startup_help && did_something) {
+            acr_nav::_db.startup_help = false;
+            PopViewmode();
         }
         if (did_something) {
             acr_nav::FCtype *sel_ct = SelectedCtype(*left);
@@ -1403,6 +1420,15 @@ static void HeadlessOutput() {
                 prlog(vf);
             }
         }
+    } else {
+        // Visible lines (text-based modes: help, preview, detail)
+        int n_lines = RightPanelItemCount(sel_ct);
+        for (int i = 0; i < n_lines; i++) {
+            acr_nav::VisibleLine vl;
+            vl.row = i;
+            vl.value = RightPanelLineFind(i);
+            prlog(vl);
+        }
     }
     // Blank line terminates screenshot block
     prlog("");
@@ -1429,6 +1455,12 @@ static void HeadlessMain() {
                 ProcessKey(send_key.key);
             } else if (acr_nav::Screenshot_ReadStrptrMaybe(screenshot, line)) {
                 HeadlessOutput();
+            } else {
+                acr_nav::SetTermSize set_term_size;
+                if (acr_nav::SetTermSize_ReadStrptrMaybe(set_term_size, line)) {
+                    acr_nav::_db.term_hei = set_term_size.term_hei;
+                    acr_nav::_db.term_wid = set_term_size.term_wid;
+                }
             }
         }
     }

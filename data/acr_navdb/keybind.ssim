@@ -5,7 +5,7 @@ acr_navdb.keybind  keybind:browse.Backspace  navaction:go_back  hint_order:0  co
 acr_navdb.keybind  keybind:browse.Down  navaction:move_down  hint_order:0  comment:""
 acr_navdb.keybind  keybind:browse.End  navaction:go_bottom  hint_order:0  comment:""
 acr_navdb.keybind  keybind:browse.Enter  navaction:follow_ref  hint_order:0  comment:""
-acr_navdb.keybind  keybind:browse.Escape  navaction:filter_clear  hint_order:0  comment:""
+acr_navdb.keybind  keybind:browse.Escape  navaction:dismiss_or_clear  hint_order:0  comment:""
 acr_navdb.keybind  keybind:browse.G  navaction:go_bottom  hint_order:0  comment:""
 acr_navdb.keybind  keybind:browse.Home  navaction:go_top  hint_order:0  comment:""
 acr_navdb.keybind  keybind:browse.Left  navaction:switch_panel_left  hint_order:0  comment:""

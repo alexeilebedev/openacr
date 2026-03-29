@@ -2157,6 +2157,18 @@ inline  acr_nav::Screenshot::Screenshot() {
 inline  acr_nav::SendKey::SendKey() {
 }
 
+// --- acr_nav.SetTermSize..Init
+// Set all fields to initial values.
+inline void acr_nav::SetTermSize_Init(acr_nav::SetTermSize& parent) {
+    parent.term_hei = i32(0);
+    parent.term_wid = i32(0);
+}
+
+// --- acr_nav.SetTermSize..Ctor
+inline  acr_nav::SetTermSize::SetTermSize() {
+    acr_nav::SetTermSize_Init(*this);
+}
+
 // --- acr_nav.TableId.value.GetEnum
 // Get value of field as enum type
 inline acr_nav_TableIdEnum acr_nav::value_GetEnum(const acr_nav::TableId& parent) {
@@ -2208,6 +2220,17 @@ inline  acr_nav::VisibleField::VisibleField() {
     acr_nav::VisibleField_Init(*this);
 }
 
+// --- acr_nav.VisibleLine..Init
+// Set all fields to initial values.
+inline void acr_nav::VisibleLine_Init(acr_nav::VisibleLine& parent) {
+    parent.row = i32(0);
+}
+
+// --- acr_nav.VisibleLine..Ctor
+inline  acr_nav::VisibleLine::VisibleLine() {
+    acr_nav::VisibleLine_Init(*this);
+}
+
 inline algo::cstring &algo::operator <<(algo::cstring &str, const acr_nav::trace &row) {// cfmt:acr_nav.trace.String
     acr_nav::trace_Print(const_cast<acr_nav::trace&>(row), str);
     return str;
@@ -2235,5 +2258,10 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const acr_nav::Table
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const acr_nav::VisibleField &row) {// cfmt:acr_nav.VisibleField.String
     acr_nav::VisibleField_Print(const_cast<acr_nav::VisibleField&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const acr_nav::VisibleLine &row) {// cfmt:acr_nav.VisibleLine.String
+    acr_nav::VisibleLine_Print(const_cast<acr_nav::VisibleLine&>(row), str);
     return str;
 }

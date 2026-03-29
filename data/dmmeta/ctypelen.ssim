@@ -157,7 +157,9 @@ dmmeta.ctypelen  ctype:acr_nav.PanelState  len:80  alignment:8  padbytes:0  plai
 dmmeta.ctypelen  ctype:acr_nav.Screen  len:208  alignment:8  padbytes:4  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.Screenshot  len:52  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:acr_nav.SendKey  len:52  alignment:1  padbytes:0  plaindata:Y
+dmmeta.ctypelen  ctype:acr_nav.SetTermSize  len:8  alignment:4  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:acr_nav.VisibleField  len:316  alignment:4  padbytes:3  plaindata:Y
+dmmeta.ctypelen  ctype:acr_nav.VisibleLine  len:24  alignment:8  padbytes:4  plaindata:N
 dmmeta.ctypelen  ctype:acr_navdb.Detailsrc  len:204  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:acr_navdb.Helpgroup  len:208  alignment:4  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:acr_navdb.Keybind  len:260  alignment:4  padbytes:0  plaindata:Y

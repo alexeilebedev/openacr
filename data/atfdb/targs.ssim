@@ -170,16 +170,20 @@ atfdb.targs  comptest:acr_ed.CreateTarget  args:"-create -target xyz"
 atfdb.targs  comptest:acr_in.Reverse  args:"-r dev.targdep"
 atfdb.targs  comptest:acr_in.Simple  args:acr_in
 atfdb.targs  comptest:acr_in.Tree  args:"acr_in -t"
-atfdb.targs  comptest:acr_nav.HeadlessDetail  args:-headless
-atfdb.targs  comptest:acr_nav.HeadlessFilter  args:-headless
-atfdb.targs  comptest:acr_nav.HeadlessFollow  args:-headless
-atfdb.targs  comptest:acr_nav.HeadlessHelp  args:-headless
-atfdb.targs  comptest:acr_nav.HeadlessInit  args:-headless
-atfdb.targs  comptest:acr_nav.HeadlessNav  args:-headless
-atfdb.targs  comptest:acr_nav.HeadlessXref  args:-headless
-atfdb.targs  comptest:acr_nav.HeadlessXrefEmpty  args:-headless
-atfdb.targs  comptest:acr_nav.HeadlessPreview  args:-headless
-atfdb.targs  comptest:acr_nav.HeadlessViewCycle  args:-headless
+atfdb.targs  comptest:acr_nav.Breadcrumb  args:-headless
+atfdb.targs  comptest:acr_nav.Collapse  args:-headless
+atfdb.targs  comptest:acr_nav.Detail  args:-headless
+atfdb.targs  comptest:acr_nav.Filter  args:-headless
+atfdb.targs  comptest:acr_nav.FilterEdge  args:-headless
+atfdb.targs  comptest:acr_nav.Follow  args:-headless
+atfdb.targs  comptest:acr_nav.Help  args:-headless
+atfdb.targs  comptest:acr_nav.Init  args:-headless
+atfdb.targs  comptest:acr_nav.Nav  args:-headless
+atfdb.targs  comptest:acr_nav.Preview  args:-headless
+atfdb.targs  comptest:acr_nav.UnknownKey  args:-headless
+atfdb.targs  comptest:acr_nav.ViewCycle  args:-headless
+atfdb.targs  comptest:acr_nav.Xref  args:-headless
+atfdb.targs  comptest:acr_nav.XrefEmpty  args:-headless
 atfdb.targs  comptest:aqlite.CompileOptions  args:'-in:- "PRAGMA compile_options;"'
 atfdb.targs  comptest:aqlite.Constraints  args:"-in:- \"select count(*) as or_test from field where ns = 'dmmeta' OR arg like 'algo.cstr%'; select count(*) as and_test from field where ns = 'dmmeta' AND reftype = 'Val'\""
 atfdb.targs  comptest:aqlite.ErrorHandling  args:"-in:- \"select count(*) from field where nonexistent_field = 'test'\""

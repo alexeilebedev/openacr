@@ -1,3 +1,4 @@
+acr_navdb.navaction  navaction:dismiss_or_clear  hint:""  helpgroup:search  sort_order:12  comment:"Dismiss overlay or clear filter"
 acr_navdb.navaction  navaction:filter_accept  hint:""  helpgroup:""  sort_order:0  comment:"Accept filter and return to browse mode"
 acr_navdb.navaction  navaction:filter_append_space  hint:""  helpgroup:""  sort_order:0  comment:"Append space to filter text"
 acr_navdb.navaction  navaction:filter_backspace  hint:""  helpgroup:""  sort_order:0  comment:"Delete last filter character"
