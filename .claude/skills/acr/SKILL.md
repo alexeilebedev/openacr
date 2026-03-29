@@ -163,12 +163,26 @@ The most common design fix. When N hardcoded blocks switch on the same values, t
 |------|---------|
 | `acr <table>` | Query any ssimfile table. `acr dmmeta.field -where:field:amc.FDb.%` |
 | `acr -check` | Verify referential integrity across all `data/` |
-| `acr_ed -create` | Scaffold ctypes, fields, targets, cross-references |
+| `acr_ed -create -field:X -arg:Y -write` | Add fields (preferred over hand-editing field.ssim) |
+| `acr_ed -create -ctype:X -write` | Add ctypes, targets, cross-references |
 | `amc` | Regenerate all C++ from schema |
 | `abt` / `ai` | Build specific target / full build |
-| `normalize` | Full test suite (normalization, component, unit) |
+| `normalize` | Full normalization tests (`cijob:normalize`) |
+| `normalize comp` | Component tests (`cijob:comp`) |
+| `atf_comp <tests> -capture` | Re-capture expected test output after schema changes |
 | `amc_vis` | Visualize access path diagrams |
 | `git diff cpp/gen/` | Review what `amc` changed |
+
+### After adding a field or ctype
+
+Schema changes (adding fields, ctypes) change counts like `n_field` in component test outputs. After `amc` + build, re-capture affected tests before running `normalize`:
+
+```bash
+acr_ed -create -field:ns.Type.name -arg:i32 -comment:"..." -write
+amc && abt -build -install <target>
+atf_comp <target>.% -capture    # update expected outputs
+atf_comp <target>.%             # verify tests pass
+```
 
 ## References
 

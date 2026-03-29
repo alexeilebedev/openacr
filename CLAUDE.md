@@ -28,11 +28,12 @@ make CFG=debug               # Debug build
 abt -build -install <target> # Build specific target
 
 # Test
-normalize                    # All normalization tests
-normalize comp               # Component tests
-normalize coverage           # Coverage tests
-normalize memcheck           # Memory leak checks (valgrind)
-atf_ci -cijob:<job>          # Specific CI job
+normalize                    # All normalization tests (cijob:normalize)
+normalize comp               # Component tests (cijob:comp)
+normalize coverage           # Coverage tests (cijob:coverage)
+normalize memcheck           # Memory leak checks (cijob:memcheck)
+atf_ci -cijob:<job>          # Valid jobs: normalize, comp, coverage, memcheck
+atf_comp <tests> -capture    # Re-capture expected test output after schema changes
 
 # Code Generation
 amc                          # Regenerate cpp/gen/ and include/gen/ from data/
@@ -48,12 +49,17 @@ make clean                   # git clean -dfx build temp
 
 ## The Development Loop
 
-1. Edit ssimfile records in `data/` (meta-schema in `data/dmmeta/`)
+1. Add schema records with `acr_ed` (preferred) or edit ssimfiles in `data/` directly
+   - Add a field: `acr_ed -create -field:<ns>.<Type>.<name> -arg:<type> -comment:"..." -write`
+   - Add a ctype: `acr_ed -create -ctype:<ns>.<Type> -write`
+   - Add a target: `acr_ed -create -target:<name> -write`
+   - See `acr_ed -help` for full usage
 2. Run `amc` to regenerate `cpp/gen/` and `include/gen/`
 3. Build with `ai` or `abt`
-4. Test with `normalize`
-5. `git diff cpp/gen/` — review generated changes
-6. Commit both schema and generated code
+4. Re-capture test outputs if schema changes affect them: `atf_comp <tests> -capture`
+5. Test with `normalize`
+6. `git diff cpp/gen/` — review generated changes
+7. Commit both schema and generated code
 
 **Never hand-edit `cpp/gen/` or `include/gen/`** — overwritten by `amc`.
 
