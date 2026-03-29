@@ -123,6 +123,7 @@ inline  acr_navdb::Navstyle::Navstyle() {
 // Set all fields to initial values.
 inline void acr_navdb::Panel_Init(acr_navdb::Panel& parent) {
     parent.position = i32(0);
+    parent.min_width = i32(0);
 }
 
 // --- acr_navdb.Panel..Ctor

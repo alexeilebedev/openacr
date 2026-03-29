@@ -2186,6 +2186,7 @@ struct FPanel { // acr_nav.FPanel
     algo::Smallstr50   panel;               //
     algo::cstring      title;               // Display title
     i32                position;            //   0  Left-to-right ordering
+    i32                min_width;           //   0  Minimum column width (0 = derived)
     algo::Comment      comment;             //
     i32                scroll_offset;       //   0  Scroll position
     i32                sel_row;             //   0  Selected row

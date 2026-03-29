@@ -146,7 +146,7 @@ dmmeta.ctypelen  ctype:acr_nav.FNavaction  len:336  alignment:8  padbytes:4  pla
 dmmeta.ctypelen  ctype:acr_nav.FNavmode  len:216  alignment:8  padbytes:0  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.FNavstyle  len:224  alignment:8  padbytes:1  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.FNs  len:288  alignment:8  padbytes:2  plaindata:N
-dmmeta.ctypelen  ctype:acr_nav.FPanel  len:248  alignment:8  padbytes:4  plaindata:N
+dmmeta.ctypelen  ctype:acr_nav.FPanel  len:248  alignment:8  padbytes:0  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.FReftype  len:88  alignment:8  padbytes:5  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.FReftypestyle  len:224  alignment:8  padbytes:0  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.FSsimfile  len:176  alignment:8  padbytes:2  plaindata:N
@@ -163,7 +163,7 @@ dmmeta.ctypelen  ctype:acr_navdb.Keybind  len:260  alignment:4  padbytes:0  plai
 dmmeta.ctypelen  ctype:acr_navdb.Navaction  len:312  alignment:4  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:acr_navdb.Navmode  len:204  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:acr_navdb.Navstyle  len:212  alignment:4  padbytes:1  plaindata:Y
-dmmeta.ctypelen  ctype:acr_navdb.Panel  len:232  alignment:8  padbytes:8  plaindata:N
+dmmeta.ctypelen  ctype:acr_navdb.Panel  len:232  alignment:8  padbytes:4  plaindata:N
 dmmeta.ctypelen  ctype:acr_navdb.Reftypestyle  len:204  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:acr_navdb.Viewmode  len:361  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:algo.Attr  len:32  alignment:8  padbytes:0  plaindata:N

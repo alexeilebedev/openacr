@@ -28,18 +28,7 @@
 
 ## Known Issues
 
-### I1. Zero-width left panel when filter matches nothing
-When filter text matches no ctypes, the left panel column width shrinks to 0. The panel should maintain a minimum width (at least enough for the "no matches" message or the filter prompt itself).
-
-### I2. Filter mode leaks into other contexts
-Several broken interaction flows when filter is active:
-- **d key captured by filter:** Navigate to fields panel, press `d` — the keystroke appends to filter text instead of triggering `show_detail`. Filter's printable-char capture intercepts keys meant for browse-mode navactions.
-- **Enter does nothing on fields:** With filter active, pressing Enter on a field triggers `filter_accept` (left-panel action) instead of navigating into the field. The keybind dispatches based on mode, not panel focus.
-- **No filter-accept on navigation keys:** Right arrow / `l` should implicitly accept the filter and move to the right panel. Currently they do nothing during filter mode.
-- **Systematic review needed:** These are symptoms of a single root cause — filter mode captures too broadly. There may be more broken flows. The fix should address the capture scope, not patch individual keys.
-
-### I3. Title bar shows ctype name for Help viewmode
-On startup, the title bar displays "Help: DIR (21)" — showing the selected ctype name and field count for a viewmode that has nothing to do with the selected ctype. Help is a `has_fields:N` viewmode; the title should show only the viewmode name, not the ctype context.
+(none currently)
 
 ---
 

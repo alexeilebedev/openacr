@@ -1771,6 +1771,7 @@ inline  acr_nav::FNs::~FNs() {
 // Set all fields to initial values.
 inline void acr_nav::FPanel_Init(acr_nav::FPanel& panel) {
     panel.position = i32(0);
+    panel.min_width = i32(0);
     panel.scroll_offset = i32(0);
     panel.sel_row = i32(0);
     panel.ind_panel_next = (acr_nav::FPanel*)-1; // (acr_nav.FDb.ind_panel) not-in-hash

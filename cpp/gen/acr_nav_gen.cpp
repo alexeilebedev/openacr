@@ -445,7 +445,7 @@ static void acr_nav::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_nav.Input'  signature:'02225f2ff6e453da3d51374bd012b80c53667ba5'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_nav.Input'  signature:'b4d02b7bd3e4c890f3610bbe3ef2803ec3d37be3'");
 }
 
 // --- acr_nav.FDb._db.InsertStrptrMaybe
@@ -4985,6 +4985,7 @@ void acr_nav::panel_CopyOut(acr_nav::FPanel &row, acr_navdb::Panel &out) {
     out.panel = row.panel;
     out.title = row.title;
     out.position = row.position;
+    out.min_width = row.min_width;
     out.comment = row.comment;
 }
 
@@ -4994,6 +4995,7 @@ void acr_nav::panel_CopyIn(acr_nav::FPanel &row, acr_navdb::Panel &in) {
     row.panel = in.panel;
     row.title = in.title;
     row.position = in.position;
+    row.min_width = in.min_width;
     row.comment = in.comment;
 }
 

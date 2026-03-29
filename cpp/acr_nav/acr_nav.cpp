@@ -496,6 +496,10 @@ void acr_nav::navaction_switch_panel_left() {
 void acr_nav::navaction_switch_panel_right() {
     acr_nav::FPanel &panel = *acr_nav::_db.p_cur_panel;
     if (panel.position < acr_nav::_db.p_right_panel->position) {
+        // Filter is a left-panel concern; leaving left panel accepts the filter
+        if (acr_nav::_db.p_cur_mode == acr_nav::_db.p_filter_mode) {
+            SwitchToBrowse();
+        }
         acr_nav::_db.p_cur_panel = acr_nav::_db.p_right_panel;
     }
 }
@@ -887,20 +891,23 @@ static void RenderTitleBar(RenderCtx &ctx) {
     }
     ctx.buf << "|";
     // Right panel title: detail mode shows field name instead of ctype name.
-    // At 2 branches a data property (context_source on FViewmode) would add
-    // a generic pointer indirection for no reduction in code. Revisit at 3.
+    // Title branches: detail mode, has_fields+selected, has_fields+empty, line-mode.
+    // has_fields on FViewmode is the structural axis separating field/line rendering.
     {
         tempstr rtitle;
         if (IsDetailMode() && acr_nav::_db.p_detail_field) {
             rtitle << " " << acr_nav::_db.p_cur_viewmode->title
                    << ": " << acr_nav::_db.p_detail_field->field
                    << " (" << RightPanelItemCount(ctx.sel_ct) << ")";
-        } else if (ctx.sel_ct) {
+        } else if (acr_nav::_db.p_cur_viewmode->has_fields && ctx.sel_ct) {
             rtitle << " " << acr_nav::_db.p_cur_viewmode->title
                    << ": " << ctx.sel_ct->ctype
                    << " (" << RightPanelItemCount(ctx.sel_ct) << ")";
+        } else if (acr_nav::_db.p_cur_viewmode->has_fields) {
+            rtitle << " " << acr_nav::_db.p_cur_viewmode->title << " (empty)";
         } else {
-            rtitle << " " << acr_nav::_db.p_right_panel->title << " (empty)";
+            rtitle << " " << acr_nav::_db.p_cur_viewmode->title
+                   << " (" << RightPanelItemCount(ctx.sel_ct) << ")";
         }
         TruncPad(rtitle, ctx.right_wid);
         EmitStyle(ctx.buf, !ctx.left_focused ? *acr_nav::_db.p_title_focus : *acr_nav::_db.p_title_nofocus);
@@ -1055,7 +1062,8 @@ static void Render(acr_nav::FCtype *sel_ct) {
     ind_beg(acr_nav::_db_zd_sel_ctype_curs, ct, acr_nav::_db) {
         max_name = i32_Max(max_name, ch_N(ct.ctype));
     } ind_end;
-    int left_wid = i32_Max(2, i32_Min(max_name + 2, wid * 40 / 100));
+    int min_left = i32_Min(acr_nav::_db.p_left_panel->min_width, wid / 2);
+    int left_wid = i32_Max(min_left, i32_Min(max_name + 2, wid * 40 / 100));
     int right_wid = i32_Max(1, wid - left_wid);
     RenderCtx ctx(buf, sel_ct
                   , wid, left_wid, right_wid

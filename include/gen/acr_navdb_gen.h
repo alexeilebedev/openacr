@@ -49,16 +49,17 @@ enum acr_navdb_FieldIdEnum {                // acr_navdb.FieldId.value
     ,acr_navdb_FieldId_panel          = 16
     ,acr_navdb_FieldId_title          = 17
     ,acr_navdb_FieldId_position       = 18
-    ,acr_navdb_FieldId_reftypestyle   = 19
-    ,acr_navdb_FieldId_reftype        = 20
-    ,acr_navdb_FieldId_viewmode       = 21
-    ,acr_navdb_FieldId_next           = 22
-    ,acr_navdb_FieldId_empty_msg      = 23
-    ,acr_navdb_FieldId_has_fields     = 24
-    ,acr_navdb_FieldId_value          = 25
+    ,acr_navdb_FieldId_min_width      = 19
+    ,acr_navdb_FieldId_reftypestyle   = 20
+    ,acr_navdb_FieldId_reftype        = 21
+    ,acr_navdb_FieldId_viewmode       = 22
+    ,acr_navdb_FieldId_next           = 23
+    ,acr_navdb_FieldId_empty_msg      = 24
+    ,acr_navdb_FieldId_has_fields     = 25
+    ,acr_navdb_FieldId_value          = 26
 };
 
-enum { acr_navdb_FieldIdEnum_N = 26 };
+enum { acr_navdb_FieldIdEnum_N = 27 };
 
 namespace acr_navdb { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 DetailsrcPkey;
@@ -290,10 +291,11 @@ void                 Navstyle_Print(acr_navdb::Navstyle& row, algo::cstring& str
 
 // --- acr_navdb.Panel
 struct Panel { // acr_navdb.Panel: Panel definition for acr_nav TUI layout
-    algo::Smallstr50   panel;      //
-    algo::cstring      title;      // Display title
-    i32                position;   //   0  Left-to-right ordering
-    algo::Comment      comment;    //
+    algo::Smallstr50   panel;       //
+    algo::cstring      title;       // Display title
+    i32                position;    //   0  Left-to-right ordering
+    i32                min_width;   //   0  Minimum column width (0 = derived)
+    algo::Comment      comment;     //
     // func:acr_navdb.Panel..Ctor
     inline               Panel() __attribute__((nothrow));
 };

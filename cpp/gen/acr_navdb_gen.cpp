@@ -107,6 +107,7 @@ const char* acr_navdb::value_ToCstr(const acr_navdb::FieldId& parent) {
         case acr_navdb_FieldId_panel       : ret = "panel";  break;
         case acr_navdb_FieldId_title       : ret = "title";  break;
         case acr_navdb_FieldId_position    : ret = "position";  break;
+        case acr_navdb_FieldId_min_width   : ret = "min_width";  break;
         case acr_navdb_FieldId_reftypestyle: ret = "reftypestyle";  break;
         case acr_navdb_FieldId_reftype     : ret = "reftype";  break;
         case acr_navdb_FieldId_viewmode    : ret = "viewmode";  break;
@@ -229,6 +230,10 @@ bool acr_navdb::value_SetStrptrMaybe(acr_navdb::FieldId& parent, algo::strptr rh
                 }
                 case LE_STR8('h','e','l','p','g','r','o','u'): {
                     if (memcmp(rhs.elems+8,"p",1)==0) { value_SetEnum(parent,acr_navdb_FieldId_helpgroup); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('m','i','n','_','w','i','d','t'): {
+                    if (memcmp(rhs.elems+8,"h",1)==0) { value_SetEnum(parent,acr_navdb_FieldId_min_width); ret = true; break; }
                     break;
                 }
                 case LE_STR8('n','a','v','a','c','t','i','o'): {
@@ -657,6 +662,9 @@ bool acr_navdb::Panel_ReadFieldMaybe(acr_navdb::Panel& parent, algo::strptr fiel
         case acr_navdb_FieldId_position: {
             retval = i32_ReadStrptrMaybe(parent.position, strval);
         } break;
+        case acr_navdb_FieldId_min_width: {
+            retval = i32_ReadStrptrMaybe(parent.min_width, strval);
+        } break;
         case acr_navdb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
         } break;
@@ -698,6 +706,9 @@ void acr_navdb::Panel_Print(acr_navdb::Panel& row, algo::cstring& str) {
 
     i32_Print(row.position, temp);
     PrintAttrSpaceReset(str,"position", temp);
+
+    i32_Print(row.min_width, temp);
+    PrintAttrSpaceReset(str,"min_width", temp);
 
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);

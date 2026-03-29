@@ -1,8 +1,8 @@
-acr_nav.Screen  mode:browse  focus:field_list  filter:acr_nav.fdb  navstack_depth:0  n_sel_ctype:1  n_ctype:1397  n_field:5594  viewmode:detail  breadcrumb:""
+acr_nav.Screen  mode:browse  focus:field_list  filter:acr_nav.fdb  navstack_depth:0  n_sel_ctype:1  n_ctype:1397  n_field:5595  viewmode:detail  breadcrumb:""
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:1  sel_value:acr_nav.FDb
 acr_nav.PanelState  panel:field_list  sel_row:0  scroll_offset:0  n_items:3  sel_value:'dmmeta.field  field:acr_nav.FDb.ind_ctype  arg:acr_nav.FCtype  reftype:Thash  dflt:""  comment:""'
 
-acr_nav.Screen  mode:browse  focus:field_list  filter:acr_nav.fdb  navstack_depth:0  n_sel_ctype:1  n_ctype:1397  n_field:5594  viewmode:fields  breadcrumb:""
+acr_nav.Screen  mode:browse  focus:field_list  filter:acr_nav.fdb  navstack_depth:0  n_sel_ctype:1  n_ctype:1397  n_field:5595  viewmode:fields  breadcrumb:""
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:1  sel_value:acr_nav.FDb
 acr_nav.PanelState  panel:field_list  sel_row:0  scroll_offset:0  n_items:56  sel_value:acr_nav.FDb._db
 acr_nav.VisibleField  row:0  field:acr_nav.FDb._db  arg:acr_nav.FDb  reftype:Global  style:field_val  navigable:N
@@ -62,15 +62,15 @@ acr_nav.VisibleField  row:53  field:acr_nav.FDb.p_sel_focus  arg:acr_nav.FNavsty
 acr_nav.VisibleField  row:54  field:acr_nav.FDb.p_sel_nofocus  arg:acr_nav.FNavstyle  reftype:Ptr  style:field_val  navigable:Y
 acr_nav.VisibleField  row:55  field:acr_nav.FDb.p_statusbar  arg:acr_nav.FNavstyle  reftype:Ptr  style:field_val  navigable:Y
 
-acr_nav.Screen  mode:browse  focus:field_list  filter:acr_nav.fdb  navstack_depth:0  n_sel_ctype:1  n_ctype:1397  n_field:5594  viewmode:help  breadcrumb:""
+acr_nav.Screen  mode:browse  focus:field_list  filter:acr_nav.fdb  navstack_depth:0  n_sel_ctype:1  n_ctype:1397  n_field:5595  viewmode:help  breadcrumb:""
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:1  sel_value:acr_nav.FDb
 acr_nav.PanelState  panel:field_list  sel_row:0  scroll_offset:0  n_items:21  sel_value:"Up                k         Move selection up"
 
-acr_nav.Screen  mode:browse  focus:field_list  filter:acr_nav.fdb  navstack_depth:0  n_sel_ctype:1  n_ctype:1397  n_field:5594  viewmode:detail  breadcrumb:""
+acr_nav.Screen  mode:browse  focus:field_list  filter:acr_nav.fdb  navstack_depth:0  n_sel_ctype:1  n_ctype:1397  n_field:5595  viewmode:detail  breadcrumb:""
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:1  sel_value:acr_nav.FDb
 acr_nav.PanelState  panel:field_list  sel_row:0  scroll_offset:0  n_items:1  sel_value:'dmmeta.field  field:acr_nav.FDb._db  arg:acr_nav.FDb  reftype:Global  dflt:""  comment:""'
 
-acr_nav.Screen  mode:browse  focus:field_list  filter:acr_nav.fdb  navstack_depth:0  n_sel_ctype:1  n_ctype:1397  n_field:5594  viewmode:fields  breadcrumb:""
+acr_nav.Screen  mode:browse  focus:field_list  filter:acr_nav.fdb  navstack_depth:0  n_sel_ctype:1  n_ctype:1397  n_field:5595  viewmode:fields  breadcrumb:""
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:1  sel_value:acr_nav.FDb
 acr_nav.PanelState  panel:field_list  sel_row:0  scroll_offset:0  n_items:56  sel_value:acr_nav.FDb._db
 acr_nav.VisibleField  row:0  field:acr_nav.FDb._db  arg:acr_nav.FDb  reftype:Global  style:field_val  navigable:N
@@ -130,7 +130,7 @@ acr_nav.VisibleField  row:53  field:acr_nav.FDb.p_sel_focus  arg:acr_nav.FNavsty
 acr_nav.VisibleField  row:54  field:acr_nav.FDb.p_sel_nofocus  arg:acr_nav.FNavstyle  reftype:Ptr  style:field_val  navigable:Y
 acr_nav.VisibleField  row:55  field:acr_nav.FDb.p_statusbar  arg:acr_nav.FNavstyle  reftype:Ptr  style:field_val  navigable:Y
 
-acr_nav.Screen  mode:browse  focus:field_list  filter:acr_nav.fdb  navstack_depth:0  n_sel_ctype:1  n_ctype:1397  n_field:5594  viewmode:fields  breadcrumb:""
+acr_nav.Screen  mode:browse  focus:field_list  filter:acr_nav.fdb  navstack_depth:0  n_sel_ctype:1  n_ctype:1397  n_field:5595  viewmode:fields  breadcrumb:""
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:1  sel_value:acr_nav.FDb
 acr_nav.PanelState  panel:field_list  sel_row:0  scroll_offset:0  n_items:56  sel_value:acr_nav.FDb._db
 acr_nav.VisibleField  row:0  field:acr_nav.FDb._db  arg:acr_nav.FDb  reftype:Global  style:field_val  navigable:N

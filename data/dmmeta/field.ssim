@@ -829,6 +829,7 @@ dmmeta.field  field:acr_navdb.Navstyle.comment  arg:algo.Comment  reftype:Val  d
 dmmeta.field  field:acr_navdb.Panel.panel  arg:algo.Smallstr50  reftype:Val  dflt:""  comment:""
 dmmeta.field  field:acr_navdb.Panel.title  arg:algo.cstring  reftype:Val  dflt:""  comment:"Display title"
 dmmeta.field  field:acr_navdb.Panel.position  arg:i32  reftype:Val  dflt:""  comment:"Left-to-right ordering"
+dmmeta.field  field:acr_navdb.Panel.min_width  arg:i32  reftype:Val  dflt:""  comment:"Minimum column width (0 = derived)"
 dmmeta.field  field:acr_navdb.Panel.comment  arg:algo.Comment  reftype:Val  dflt:""  comment:""
 dmmeta.field  field:acr_navdb.Reftypestyle.reftypestyle  arg:algo.Smallstr50  reftype:Val  dflt:""  comment:""
 dmmeta.field  field:acr_navdb.Reftypestyle.reftype  arg:dmmeta.Reftype  reftype:Pkey  dflt:""  comment:""
