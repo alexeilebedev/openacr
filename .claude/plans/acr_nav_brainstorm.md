@@ -28,7 +28,41 @@
 
 ## Known Issues
 
-(none currently)
+### I1. Stale panel name: `field_list`
+
+`panel:field_list` in `data/acr_navdb/panel.ssim` names the right panel after its original-only content. The right panel now shows 5 viewmodes (fields, xrefs, preview, help, detail). The name should reflect its actual role — a generic content panel driven by viewmode (e.g. `content`).
+
+Additionally, `field_list.title:"Fields"` is dead data — the right panel title is built from `p_cur_viewmode->title` (lines 898-910 of acr_nav.cpp), never from the panel's own `title` field. Only the left panel reads `panel.title` (line 887).
+
+The field comment on `acr_nav.FDb.p_right_panel` also says "(field list)" — stale.
+
+**Blast radius:** panel.ssim, two `ind_panel_Find` + two `vrfy` in acr_nav.cpp, `focus:` and `panel:` fields across all headless tests, test re-capture.
+
+### I2. Stale navaction name: `toggle_xref`
+
+`navaction:toggle_xref` cycles 3 viewmodes via the `next` chain (fields → xref → preview → fields), not a 2-way toggle. The comment already says "Cycle right panel: fields, xrefs, preview" — the name contradicts the comment. Better name: `cycle_view` or `cycle_viewmode`.
+
+**Blast radius:** navaction.ssim, keybind.ssim (3 bindings reference it), `step_Call` hook registration in gen, test re-capture.
+
+### I3. Tab/r in overlay modes corrupts viewmode_stack
+
+`navaction_toggle_xref` (line 593) unconditionally follows `p_cur_viewmode->next` without checking whether an overlay viewmode (help/detail) is active. Pressing Tab while in help mode follows `help.next:fields`, silently replacing `p_cur_viewmode` without popping the `viewmode_stack`. The stack retains the stale pre-overlay entry.
+
+Consequence: next `?` toggle pushes "fields" (not the original base viewmode) onto the stack, losing the user's pre-help viewmode.
+
+Fix: guard `toggle_xref` to either skip when overlay is active, or pop the overlay first then cycle.
+
+### I4. No `p_helpgroup` Upptr on FNavaction
+
+`acr_navdb.Navaction.helpgroup` is `reftype:Pkey` to `acr_navdb.Helpgroup` (referential integrity at ssimfile level), but `acr_nav.FNavaction` has no Upptr to `FHelpgroup`. `BuildHelpLines()` (line 840) uses string comparison: `na.helpgroup == groups[g]->helpgroup`. Adding `p_helpgroup:Upptr` + xref would enable direct pointer comparison. Low priority — runs once at startup.
+
+### I5. `VisibleField.navigable` type: Smallstr10 → bool
+
+`acr_nav.VisibleField.navigable` is `arg:algo.Smallstr10` but the code (line 1234) writes `"Y"/"N"`. In ssim format, `bool` prints identically as `Y`/`N`. Using `arg:bool` would be more precise.
+
+### I6. Sort field naming inconsistency
+
+`acr_navdb.Helpgroup.sort_order` and `acr_navdb.Navaction.help_sort` express the same concept (display ordering for help) at different scopes. Consistent naming would use `sort_order` on both tables.
 
 ---
 
