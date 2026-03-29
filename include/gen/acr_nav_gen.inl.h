@@ -2106,6 +2106,17 @@ inline  acr_nav::FieldId::FieldId(acr_nav_FieldIdEnum arg) {
     this->value = i32(arg);
 }
 
+// --- acr_nav.InputError..Init
+// Set all fields to initial values.
+inline void acr_nav::InputError_Init(acr_nav::InputError& parent) {
+    parent.lineno = i32(0);
+}
+
+// --- acr_nav.InputError..Ctor
+inline  acr_nav::InputError::InputError() {
+    acr_nav::InputError_Init(*this);
+}
+
 // --- acr_nav.LeftItem..Ctor
 inline  acr_nav::LeftItem::LeftItem() {
 }
@@ -2220,6 +2231,19 @@ inline  acr_nav::VisibleField::VisibleField() {
     acr_nav::VisibleField_Init(*this);
 }
 
+// --- acr_nav.VisibleLeftItem..Init
+// Set all fields to initial values.
+inline void acr_nav::VisibleLeftItem_Init(acr_nav::VisibleLeftItem& parent) {
+    parent.row = i32(0);
+    parent.collapsed = bool(false);
+    parent.n_match = i32(0);
+}
+
+// --- acr_nav.VisibleLeftItem..Ctor
+inline  acr_nav::VisibleLeftItem::VisibleLeftItem() {
+    acr_nav::VisibleLeftItem_Init(*this);
+}
+
 // --- acr_nav.VisibleLine..Init
 // Set all fields to initial values.
 inline void acr_nav::VisibleLine_Init(acr_nav::VisibleLine& parent) {
@@ -2241,6 +2265,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const acr_nav::Field
     return str;
 }
 
+inline algo::cstring &algo::operator <<(algo::cstring &str, const acr_nav::InputError &row) {// cfmt:acr_nav.InputError.String
+    acr_nav::InputError_Print(const_cast<acr_nav::InputError&>(row), str);
+    return str;
+}
+
 inline algo::cstring &algo::operator <<(algo::cstring &str, const acr_nav::PanelState &row) {// cfmt:acr_nav.PanelState.String
     acr_nav::PanelState_Print(const_cast<acr_nav::PanelState&>(row), str);
     return str;
@@ -2258,6 +2287,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const acr_nav::Table
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const acr_nav::VisibleField &row) {// cfmt:acr_nav.VisibleField.String
     acr_nav::VisibleField_Print(const_cast<acr_nav::VisibleField&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const acr_nav::VisibleLeftItem &row) {// cfmt:acr_nav.VisibleLeftItem.String
+    acr_nav::VisibleLeftItem_Print(const_cast<acr_nav::VisibleLeftItem&>(row), str);
     return str;
 }
 

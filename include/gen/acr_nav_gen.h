@@ -134,6 +134,7 @@ namespace acr_nav { struct FReftypestyle; }
 namespace acr_nav { struct FSsimfile; }
 namespace acr_nav { struct FViewmode; }
 namespace acr_nav { struct FieldId; }
+namespace acr_nav { struct InputError; }
 namespace acr_nav { struct LeftItem; }
 namespace acr_nav { struct Naventry; }
 namespace acr_nav { struct PanelState; }
@@ -143,6 +144,7 @@ namespace acr_nav { struct SendKey; }
 namespace acr_nav { struct SetTermSize; }
 namespace acr_nav { struct TableId; }
 namespace acr_nav { struct VisibleField; }
+namespace acr_nav { struct VisibleLeftItem; }
 namespace acr_nav { struct VisibleLine; }
 namespace acr_nav { extern struct acr_nav::FDb _db; }
 namespace acr_nav { // hook_fcn_typedef
@@ -2670,6 +2672,22 @@ inline void          FieldId_Init(acr_nav::FieldId& parent);
 // func:acr_nav.FieldId..Print
 void                 FieldId_Print(acr_nav::FieldId& row, algo::cstring& str) __attribute__((nothrow));
 
+// --- acr_nav.InputError
+struct InputError { // acr_nav.InputError: Headless error output for unrecognized input
+    i32             lineno;   //   0  Input line number (1-based)
+    algo::cstring   msg;      // Error message
+    // func:acr_nav.InputError..Ctor
+    inline               InputError() __attribute__((nothrow));
+};
+
+// Set all fields to initial values.
+// func:acr_nav.InputError..Init
+inline void          InputError_Init(acr_nav::InputError& parent);
+// print string representation of ROW to string STR
+// cfmt:acr_nav.InputError.String  printfmt:Tuple
+// func:acr_nav.InputError..Print
+void                 InputError_Print(acr_nav::InputError& row, algo::cstring& str) __attribute__((nothrow));
+
 // --- acr_nav.LeftItem
 // create: acr_nav.FDb.left_item (Tary)
 struct LeftItem { // acr_nav.LeftItem: One display row in the left panel
@@ -2856,6 +2874,25 @@ inline void          VisibleField_Init(acr_nav::VisibleField& parent);
 // cfmt:acr_nav.VisibleField.String  printfmt:Tuple
 // func:acr_nav.VisibleField..Print
 void                 VisibleField_Print(acr_nav::VisibleField& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- acr_nav.VisibleLeftItem
+struct VisibleLeftItem { // acr_nav.VisibleLeftItem: Headless output: one left panel row
+    i32                 row;         //   0  Row index in left panel (0-based)
+    algo::Smallstr100   value;       // Namespace key or ctype key
+    algo::Smallstr16    kind;        // Row kind: ns or ctype
+    bool                collapsed;   //   false  Whether namespace is collapsed (N for ctype rows)
+    i32                 n_match;     //   0  Matching ctypes in namespace (0 for ctype rows)
+    // func:acr_nav.VisibleLeftItem..Ctor
+    inline               VisibleLeftItem() __attribute__((nothrow));
+};
+
+// Set all fields to initial values.
+// func:acr_nav.VisibleLeftItem..Init
+inline void          VisibleLeftItem_Init(acr_nav::VisibleLeftItem& parent);
+// print string representation of ROW to string STR
+// cfmt:acr_nav.VisibleLeftItem.String  printfmt:Tuple
+// func:acr_nav.VisibleLeftItem..Print
+void                 VisibleLeftItem_Print(acr_nav::VisibleLeftItem& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- acr_nav.VisibleLine
 struct VisibleLine { // acr_nav.VisibleLine: Headless output: text line for non-field viewmodes
@@ -3152,9 +3189,11 @@ int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const acr_nav::trace &row);// cfmt:acr_nav.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const acr_nav::FieldId &row);// cfmt:acr_nav.FieldId.String
+inline algo::cstring &operator <<(algo::cstring &str, const acr_nav::InputError &row);// cfmt:acr_nav.InputError.String
 inline algo::cstring &operator <<(algo::cstring &str, const acr_nav::PanelState &row);// cfmt:acr_nav.PanelState.String
 inline algo::cstring &operator <<(algo::cstring &str, const acr_nav::Screen &row);// cfmt:acr_nav.Screen.String
 inline algo::cstring &operator <<(algo::cstring &str, const acr_nav::TableId &row);// cfmt:acr_nav.TableId.String
 inline algo::cstring &operator <<(algo::cstring &str, const acr_nav::VisibleField &row);// cfmt:acr_nav.VisibleField.String
+inline algo::cstring &operator <<(algo::cstring &str, const acr_nav::VisibleLeftItem &row);// cfmt:acr_nav.VisibleLeftItem.String
 inline algo::cstring &operator <<(algo::cstring &str, const acr_nav::VisibleLine &row);// cfmt:acr_nav.VisibleLine.String
 }

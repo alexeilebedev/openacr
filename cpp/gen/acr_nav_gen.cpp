@@ -5661,6 +5661,20 @@ void acr_nav::FieldId_Print(acr_nav::FieldId& row, algo::cstring& str) {
     acr_nav::value_Print(row, str);
 }
 
+// --- acr_nav.InputError..Print
+// print string representation of ROW to string STR
+// cfmt:acr_nav.InputError.String  printfmt:Tuple
+void acr_nav::InputError_Print(acr_nav::InputError& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "acr_nav.InputError";
+
+    i32_Print(row.lineno, temp);
+    PrintAttrSpaceReset(str,"lineno", temp);
+
+    algo::cstring_Print(row.msg, temp);
+    PrintAttrSpaceReset(str,"msg", temp);
+}
+
 // --- acr_nav.PanelState..Print
 // print string representation of ROW to string STR
 // cfmt:acr_nav.PanelState.String  printfmt:Tuple
@@ -6033,6 +6047,29 @@ void acr_nav::VisibleField_Print(acr_nav::VisibleField& row, algo::cstring& str)
 
     bool_Print(row.navigable, temp);
     PrintAttrSpaceReset(str,"navigable", temp);
+}
+
+// --- acr_nav.VisibleLeftItem..Print
+// print string representation of ROW to string STR
+// cfmt:acr_nav.VisibleLeftItem.String  printfmt:Tuple
+void acr_nav::VisibleLeftItem_Print(acr_nav::VisibleLeftItem& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "acr_nav.VisibleLeftItem";
+
+    i32_Print(row.row, temp);
+    PrintAttrSpaceReset(str,"row", temp);
+
+    algo::Smallstr100_Print(row.value, temp);
+    PrintAttrSpaceReset(str,"value", temp);
+
+    algo::Smallstr16_Print(row.kind, temp);
+    PrintAttrSpaceReset(str,"kind", temp);
+
+    bool_Print(row.collapsed, temp);
+    PrintAttrSpaceReset(str,"collapsed", temp);
+
+    i32_Print(row.n_match, temp);
+    PrintAttrSpaceReset(str,"n_match", temp);
 }
 
 // --- acr_nav.VisibleLine..Print

@@ -1381,6 +1381,25 @@ static void HeadlessOutput() {
         }
     }
     prlog(left_state);
+    // Left panel items
+    for (int i = 0; i < acr_nav::left_item_N(); i++) {
+        acr_nav::LeftItem &item = acr_nav::left_item_qFind(i);
+        acr_nav::VisibleLeftItem vli;
+        vli.row = i;
+        if (ch_N(item.ctype) > 0) {
+            vli.value = item.ctype;
+            vli.kind = "ctype";
+            vli.collapsed = false;
+            vli.n_match = 0;
+        } else {
+            vli.value = item.ns;
+            vli.kind = "ns";
+            acr_nav::FNs *ns = acr_nav::ind_ns_Find(item.ns);
+            vli.collapsed = ns ? ns->collapsed : false;
+            vli.n_match = ns ? ns->n_match : 0;
+        }
+        prlog(vli);
+    }
     // Right panel state
     acr_nav::PanelState right_state;
     right_state.panel = right->panel;
@@ -1442,6 +1461,7 @@ static void HeadlessMain() {
     acr_nav::_db.running = true;
     algo::LineBuf linebuf;
     bool eof = false;
+    int lineno = 0;
     while (acr_nav::_db.running && !eof) {
         char buf[4096];
         ssize_t nr = read(STDIN_FILENO, buf, sizeof(buf));
@@ -1449,18 +1469,24 @@ static void HeadlessMain() {
         algo::LinebufBegin(linebuf, algo::memptr((u8*)buf, eof ? 0 : nr), eof);
         algo::strptr line;
         while (algo::LinebufNext(linebuf, line)) {
+            ++lineno;
             acr_nav::SendKey send_key;
             acr_nav::Screenshot screenshot;
-            if (acr_nav::SendKey_ReadStrptrMaybe(send_key, line)) {
+            acr_nav::SetTermSize set_term_size;
+            if (elems_N(line) == 0) {
+                // empty lines are ssim separators, not errors
+            } else if (acr_nav::SendKey_ReadStrptrMaybe(send_key, line)) {
                 ProcessKey(send_key.key);
             } else if (acr_nav::Screenshot_ReadStrptrMaybe(screenshot, line)) {
                 HeadlessOutput();
+            } else if (acr_nav::SetTermSize_ReadStrptrMaybe(set_term_size, line)) {
+                acr_nav::_db.term_hei = set_term_size.term_hei;
+                acr_nav::_db.term_wid = set_term_size.term_wid;
             } else {
-                acr_nav::SetTermSize set_term_size;
-                if (acr_nav::SetTermSize_ReadStrptrMaybe(set_term_size, line)) {
-                    acr_nav::_db.term_hei = set_term_size.term_hei;
-                    acr_nav::_db.term_wid = set_term_size.term_wid;
-                }
+                acr_nav::InputError err;
+                err.lineno = lineno;
+                err.msg << "unrecognized input: " << line;
+                prlog(err);
             }
         }
     }

@@ -151,6 +151,7 @@ dmmeta.ctypelen  ctype:acr_nav.FReftype  len:240  alignment:8  padbytes:5  plain
 dmmeta.ctypelen  ctype:acr_nav.FReftypestyle  len:224  alignment:8  padbytes:0  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.FSsimfile  len:176  alignment:8  padbytes:2  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.FViewmode  len:408  alignment:8  padbytes:3  plaindata:N
+dmmeta.ctypelen  ctype:acr_nav.InputError  len:24  alignment:8  padbytes:4  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.LeftItem  len:120  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:acr_nav.Naventry  len:232  alignment:8  padbytes:2  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.PanelState  len:80  alignment:8  padbytes:0  plaindata:N
@@ -159,6 +160,7 @@ dmmeta.ctypelen  ctype:acr_nav.Screenshot  len:52  alignment:1  padbytes:0  plai
 dmmeta.ctypelen  ctype:acr_nav.SendKey  len:52  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:acr_nav.SetTermSize  len:8  alignment:4  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:acr_nav.VisibleField  len:316  alignment:4  padbytes:3  plaindata:Y
+dmmeta.ctypelen  ctype:acr_nav.VisibleLeftItem  len:132  alignment:4  padbytes:3  plaindata:Y
 dmmeta.ctypelen  ctype:acr_nav.VisibleLine  len:24  alignment:8  padbytes:4  plaindata:N
 dmmeta.ctypelen  ctype:acr_navdb.Detailsrc  len:204  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:acr_navdb.Helpgroup  len:208  alignment:4  padbytes:0  plaindata:Y
