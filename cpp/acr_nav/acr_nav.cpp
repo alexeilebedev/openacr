@@ -402,6 +402,24 @@ static acr_nav::FSsimfile* FindSsimfile(acr_nav::FCtype &ctype) {
     return ret;
 }
 
+// Clear all line content and color spans from a viewmode.
+static void ClearViewmodeLines(acr_nav::FViewmode &vm) {
+    acr_nav::line_RemoveAll(vm);
+    acr_nav::cspan_RemoveAll(vm);
+}
+
+// Add a color span to a viewmode. Positions are 0-based relative to stored line text.
+// Spans must be emitted in line_idx then col_start order. No overlapping spans.
+static void AddSpan(acr_nav::FViewmode &vm, int line_idx, int col_start, int col_end, acr_nav::FNavstyle *p_style) {
+    if (col_start < col_end && p_style) {
+        acr_nav::LineColorSpan &span = acr_nav::cspan_Alloc(vm);
+        span.line_idx = line_idx;
+        span.col_start = col_start;
+        span.col_end = col_end;
+        span.p_navstyle = p_style;
+    }
+}
+
 // Replace control characters (< 0x20) and DEL (0x7F) with '.' for safe terminal display.
 // 1:1 byte replacement preserves string length for column alignment.
 static void SanitizeForDisplay(cstring &str) {
@@ -441,7 +459,7 @@ static void FormatPreviewRow(cstring &out, algo::Tuple &tuple, int *col_wid, int
 
 static void LoadPreview(acr_nav::FCtype &ctype) {
     acr_nav::FViewmode &vm = *acr_nav::_db.p_preview_viewmode;
-    acr_nav::line_RemoveAll(vm);
+    ClearViewmodeLines(vm);
     vm.header = "";
     acr_nav::_db.p_preview_ctype = &ctype;
     acr_nav::FSsimfile *ssimfile = FindSsimfile(ctype);
@@ -476,6 +494,19 @@ static void LoadPreview(acr_nav::FCtype &ctype) {
                     } ind_end;
                 }
             } ind_end;
+            // Find comment column and compute its start offset
+            int comment_col = -1;
+            int comment_start = 0;
+            for (int c = 0; c < n_col; c++) {
+                if (c > 0) {
+                    comment_start += 2; // separator
+                }
+                if (algo::strptr_Eq(strptr(col_name[c]), "comment")) {
+                    comment_col = c;
+                    break;
+                }
+                comment_start += col_wid[c];
+            }
             // Build header from column names
             if (n_col > 0) {
                 tempstr hdr;
@@ -495,6 +526,15 @@ static void LoadPreview(acr_nav::FCtype &ctype) {
                     tempstr row;
                     FormatPreviewRow(row, tuple, col_wid, n_col);
                     acr_nav::line_Alloc(vm) = row;
+                    int li = acr_nav::line_N(vm) - 1;
+                    // Dim pkey column (column 0)
+                    if (n_col > 0) {
+                        AddSpan(vm, li, 0, col_wid[0], acr_nav::_db.p_line_key);
+                    }
+                    // Highlight comment column
+                    if (comment_col >= 0) {
+                        AddSpan(vm, li, comment_start, ch_N(row), acr_nav::_db.p_line_comment);
+                    }
                 }
             } ind_end;
         }
@@ -507,11 +547,116 @@ static void EnsurePreviewLoaded(acr_nav::FCtype *sel_ct) {
     }
 }
 
+// True if the identifier matches a C++ keyword commonly found in amc-generated output.
+// Linear scan of ~26 entries; adequate for per-line highlighting.
+static bool IsKw(algo::strptr word) {
+    static const algo::strptr kw[] = {
+        "bool", "const", "delete", "enum", "explicit", "extern",
+        "friend", "inline", "namespace", "operator", "static",
+        "struct", "template", "typename", "using", "void", "virtual",
+        "__attribute__",
+        "i8", "i16", "i32", "i64", "u8", "u16", "u32", "u64"
+    };
+    bool ret = false;
+    for (int i = 0; i < (int)(sizeof(kw)/sizeof(kw[0])); i++) {
+        if (algo::strptr_Eq(word, kw[i])) {
+            ret = true;
+            break;
+        }
+    }
+    return ret;
+}
+
+// Tokenize one line of C++ code and emit highlight spans for keywords, strings, comments, and preprocessor directives.
+// Single-pass left-to-right scan. Spans are emitted in col_start order (required by renderer).
+// Handles: // comments (not inside strings), "..." strings (with \" escapes),
+// #include/#pragma/#ifdef/#endif at line start, ~18 C++ keywords with word-boundary checks.
+// Defers: /* */ multi-line comments, raw string literals (not in amc output).
+static void HighlightCppLine(acr_nav::FViewmode &vm, int line_idx, algo::strptr line) {
+    int len = line.n_elems;
+    int pos = 0;
+    // Check for preprocessor directive: # at start of line (after optional whitespace)
+    int pp = 0;
+    while (pp < len && (line.elems[pp] == ' ' || line.elems[pp] == '\t')) {
+        pp++;
+    }
+    if (pp < len && line.elems[pp] == '#') {
+        AddSpan(vm, line_idx, 0, len, acr_nav::_db.p_line_preproc);
+        pos = len; // done with this line
+    }
+    while (pos < len) {
+        char c = line.elems[pos];
+        // Check for // line comment
+        bool is_comment = (c == '/' && pos + 1 < len && line.elems[pos + 1] == '/');
+        if (is_comment) {
+            AddSpan(vm, line_idx, pos, len, acr_nav::_db.p_line_comment);
+            pos = len; // done with this line
+        }
+        // Check for string literal
+        if (pos < len && line.elems[pos] == '"') {
+            int start = pos;
+            pos++; // skip opening quote
+            bool closed = false;
+            while (pos < len && !closed) {
+                char sc = line.elems[pos];
+                if (sc == '\\' && pos + 1 < len) {
+                    pos += 2; // skip escaped character
+                } else if (sc == '"') {
+                    pos++; // skip closing quote
+                    closed = true;
+                } else {
+                    pos++;
+                }
+            }
+            AddSpan(vm, line_idx, start, pos, acr_nav::_db.p_line_string);
+        }
+        // Check for identifier (potential keyword)
+        if (pos < len) {
+            char ic = line.elems[pos];
+            bool is_alpha = (ic >= 'A' && ic <= 'Z') || (ic >= 'a' && ic <= 'z') || ic == '_';
+            if (is_alpha) {
+                int start = pos;
+                while (pos < len) {
+                    char wc = line.elems[pos];
+                    bool is_word = (wc >= 'A' && wc <= 'Z') || (wc >= 'a' && wc <= 'z')
+                        || (wc >= '0' && wc <= '9') || wc == '_';
+                    if (!is_word) {
+                        break;
+                    }
+                    pos++;
+                }
+                // Word boundary check: char before start must be non-word or start of line
+                bool before_ok = (start == 0);
+                if (!before_ok) {
+                    char bc = line.elems[start - 1];
+                    before_ok = !((bc >= 'A' && bc <= 'Z') || (bc >= 'a' && bc <= 'z')
+                        || (bc >= '0' && bc <= '9') || bc == '_');
+                }
+                // Char after end must be non-word or end of line
+                bool after_ok = (pos == len);
+                if (!after_ok) {
+                    char ac = line.elems[pos];
+                    after_ok = !((ac >= 'A' && ac <= 'Z') || (ac >= 'a' && ac <= 'z')
+                        || (ac >= '0' && ac <= '9') || ac == '_');
+                }
+                if (before_ok && after_ok) {
+                    algo::strptr word(line.elems + start, pos - start);
+                    if (IsKw(word)) {
+                        AddSpan(vm, line_idx, start, pos, acr_nav::_db.p_line_keyword);
+                    }
+                }
+            } else {
+                pos++; // advance past non-interesting character
+            }
+        }
+    }
+}
+
 // Load amc-generated C++ struct definition for a ctype into the codegen viewmode.
 // Ctype names come from trusted ssimfile data loaded at startup.
 static void LoadCodegen(acr_nav::FCtype &ctype) {
     acr_nav::FViewmode &vm = *acr_nav::_db.p_codegen_viewmode;
-    acr_nav::line_RemoveAll(vm);
+    ClearViewmodeLines(vm);
     acr_nav::_db.p_codegen_ctype = &ctype;
     tempstr cmd;
     cmd << "amc '" << ctype.ctype << "'";
@@ -520,6 +665,7 @@ static void LoadCodegen(acr_nav::FCtype &ctype) {
     ind_beg(Line_curs, line, output) {
         if (!StartsWithQ(line, "report.")) {
             acr_nav::line_Alloc(vm) = line;
+            HighlightCppLine(vm, acr_nav::line_N(vm) - 1, line);
         }
     } ind_end;
 }
@@ -549,6 +695,7 @@ static void FormatDetailCard(acr_nav::FViewmode &vm, algo::Tuple &tuple, algo::s
     hdr << "-- " << tuple.head << " ";
     char_PrintNTimes('-', hdr, i32_Max(0, 36 - ch_N(hdr)));
     acr_nav::line_Alloc(vm) = hdr;
+    AddSpan(vm, acr_nav::line_N(vm) - 1, 0, ch_N(hdr), acr_nav::_db.p_line_section);
     // Key:value rows
     ai = 0;
     ind_beg(algo::Tuple_attrs_curs, attr, tuple) {
@@ -561,6 +708,7 @@ static void FormatDetailCard(acr_nav::FViewmode &vm, algo::Tuple &tuple, algo::s
             SanitizeForDisplay(safe);
             row << safe;
             acr_nav::line_Alloc(vm) = row;
+            AddSpan(vm, acr_nav::line_N(vm) - 1, 2, 2 + ch_N(attr.name), acr_nav::_db.p_line_key);
         }
         ai++;
     } ind_end;
@@ -573,7 +721,7 @@ static void FormatDetailCard(acr_nav::FViewmode &vm, algo::Tuple &tuple, algo::s
 // detailsrc file for matching records (first attribute value == field name).
 static void LoadDetail(acr_nav::FField &field) {
     acr_nav::FViewmode &vm = *acr_nav::_db.p_detail_viewmode;
-    acr_nav::line_RemoveAll(vm);
+    ClearViewmodeLines(vm);
     acr_nav::_db.p_detail_field = &field;
     algo::strptr field_name(field.field);
     int n_records = 0;
@@ -1198,12 +1346,112 @@ static void BuildStatusHint(cstring &out) {
 
 // -----------------------------------------------------------------------------
 
+// Append key display name, mapping arrow keys to Unicode symbols.
+static void AppendKeyDisplay(cstring &out, algo::strptr key) {
+    if (key == "Up")         { out << "\xe2\x86\x91"; }
+    else if (key == "Down")  { out << "\xe2\x86\x93"; }
+    else if (key == "Left")  { out << "\xe2\x86\x90"; }
+    else if (key == "Right") { out << "\xe2\x86\x92"; }
+    else { out << key; }
+}
+
+// Collect browse-mode keybinds for one action into std_keys and short_keys.
+static void CollectActionKeys(acr_nav::FNavaction *action, cstring &std_keys, cstring &short_keys) {
+    ind_beg(acr_nav::_db_keybind_curs, kb, acr_nav::_db) {
+        if (kb.p_navaction == action && acr_nav::navmode_Get(kb) == "browse") {
+            algo::Smallstr50 key = acr_nav::key_Get(kb);
+            algo::strptr keystr(key);
+            bool is_shortcut = (elems_N(keystr) == 1 && ((keystr[0] >= 'a' && keystr[0] <= 'z') || (keystr[0] >= 'A' && keystr[0] <= 'Z')));
+            cstring &target = is_shortcut ? short_keys : std_keys;
+            if (ch_N(target) > 0) {
+                target << "/";
+            }
+            AppendKeyDisplay(target, keystr);
+        }
+    } ind_end;
+}
+
+// Check if two consecutive navactions form a directional pair (up/down, left/right, top/bottom).
+static bool IsDirPair(acr_nav::FNavaction *a, acr_nav::FNavaction *b) {
+    algo::strptr na(a->navaction);
+    algo::strptr nb(b->navaction);
+    int prefix = 0;
+    while (prefix < na.n_elems && prefix < nb.n_elems && na.elems[prefix] == nb.elems[prefix]) {
+        prefix++;
+    }
+    if (prefix <= 0 || prefix >= na.n_elems || prefix >= nb.n_elems) {
+        return false;
+    }
+    algo::strptr sa(na.elems + prefix, na.n_elems - prefix);
+    algo::strptr sb(nb.elems + prefix, nb.n_elems - prefix);
+    return (sa == "up" && sb == "down")
+        || (sa == "left" && sb == "right")
+        || (sa == "top" && sb == "bottom");
+}
+
+// Merge comments of paired actions: combine first differing word with "/".
+// "Move selection up" + "Move selection down" → "Move selection up/down"
+static tempstr MergePairComments(algo::strptr c1, algo::strptr c2) {
+    // Extract words from both comments
+    tempstr words1[16], words2[16];
+    int nw1 = 0, nw2 = 0;
+    {
+        int i = 0;
+        while (i < c1.n_elems && nw1 < 16) {
+            while (i < c1.n_elems && c1.elems[i] == ' ') i++;
+            int start = i;
+            while (i < c1.n_elems && c1.elems[i] != ' ') i++;
+            if (i > start) { words1[nw1] << algo::strptr(c1.elems + start, i - start); nw1++; }
+        }
+    }
+    {
+        int i = 0;
+        while (i < c2.n_elems && nw2 < 16) {
+            while (i < c2.n_elems && c2.elems[i] == ' ') i++;
+            int start = i;
+            while (i < c2.n_elems && c2.elems[i] != ' ') i++;
+            if (i > start) { words2[nw2] << algo::strptr(c2.elems + start, i - start); nw2++; }
+        }
+    }
+    // Walk words, combine first differing pair with "/"
+    tempstr result;
+    int n = i32_Max(nw1, nw2);
+    for (int w = 0; w < n; w++) {
+        if (w > 0) { result << " "; }
+        algo::strptr s1 = w < nw1 ? strptr(words1[w]) : strptr();
+        algo::strptr s2 = w < nw2 ? strptr(words2[w]) : strptr();
+        if (s1 == s2) {
+            result << s1;
+        } else if (s1.n_elems > 0 && s2.n_elems > 0) {
+            result << s1 << "/" << s2;
+        } else if (s1.n_elems > 0) {
+            result << s1;
+        } else {
+            result << s2;
+        }
+    }
+    return result;
+}
+
+// Count extra bytes from UTF-8 multibyte characters (byte_length - display_width).
+static int Utf8ExtraBytes(algo::strptr s) {
+    int extra = 0;
+    for (int i = 0; i < s.n_elems; i++) {
+        unsigned char c = s.elems[i];
+        if (c >= 0xF0)      { extra += 3; }
+        else if (c >= 0xE0) { extra += 2; }
+        else if (c >= 0xC0) { extra += 1; }
+    }
+    return extra;
+}
+
 // Build preformatted help lines from keybind/navaction data.
 // Iterates helpgroup records by sort_order, then navactions within each group.
-// Keys split into standard (multi-char names) and shortcut (single letters).
+// Directional pairs (up/down, left/right) are merged into single lines.
+// Arrow keys display as Unicode symbols (↑↓←→).
 static void BuildHelpLines() {
     acr_nav::FViewmode &vm = *acr_nav::_db.p_help_viewmode;
-    acr_nav::line_RemoveAll(vm);
+    ClearViewmodeLines(vm);
     // Collect helpgroups sorted by sort_order
     acr_nav::FHelpgroup *groups[16];
     int n_groups = 0;
@@ -1253,49 +1501,41 @@ static void BuildHelpLines() {
             }
             actions[j] = tmp;
         }
-        // Build a line for each navaction
+        // Build a line for each navaction, merging directional pairs
         for (int a = 0; a < n_actions; a++) {
+            bool is_pair = (a + 1 < n_actions) && IsDirPair(actions[a], actions[a + 1]);
+            // Collect keys
             tempstr std_keys;
             tempstr short_keys;
-            // First pass: browse-mode keybinds
-            ind_beg(acr_nav::_db_keybind_curs, kb, acr_nav::_db) {
-                if (kb.p_navaction == actions[a] && acr_nav::navmode_Get(kb) == "browse") {
-                    algo::Smallstr50 key = acr_nav::key_Get(kb);
-                    algo::strptr keystr(key);
-                    bool is_shortcut = (elems_N(keystr) == 1 && ((keystr[0] >= 'a' && keystr[0] <= 'z') || (keystr[0] >= 'A' && keystr[0] <= 'Z')));
-                    cstring &target = is_shortcut ? short_keys : std_keys;
-                    if (ch_N(target) > 0) {
-                        target << "/";
-                    }
-                    target << key;
-                }
-            } ind_end;
-            // Second pass: filter-mode keybinds only if no browse keys found
-            if (ch_N(std_keys) == 0 && ch_N(short_keys) == 0) {
-                ind_beg(acr_nav::_db_keybind_curs, kb, acr_nav::_db) {
-                    if (kb.p_navaction == actions[a] && acr_nav::navmode_Get(kb) == "filter") {
-                        algo::Smallstr50 key = acr_nav::key_Get(kb);
-                        algo::strptr keystr(key);
-                        bool is_shortcut = (elems_N(keystr) == 1 && ((keystr[0] >= 'a' && keystr[0] <= 'z') || (keystr[0] >= 'A' && keystr[0] <= 'Z')));
-                        cstring &target = is_shortcut ? short_keys : std_keys;
-                        if (ch_N(target) > 0) {
-                            target << "/";
-                        }
-                        target << key;
-                    }
-                } ind_end;
+            CollectActionKeys(actions[a], std_keys, short_keys);
+            if (is_pair) {
+                CollectActionKeys(actions[a + 1], std_keys, short_keys);
             }
+            // Build comment
+            tempstr comment;
+            if (is_pair) {
+                comment = MergePairComments(strptr(actions[a]->comment), strptr(actions[a + 1]->comment));
+                a++;
+            } else {
+                comment << actions[a]->comment;
+            }
+            // Build line with display-width-aware padding for UTF-8 arrow symbols
             tempstr line;
             line << std_keys;
-            char_PrintNTimes(' ', line, i32_Max(1, 18 - ch_N(line)));
+            int std_end = ch_N(line);
+            int extra = Utf8ExtraBytes(strptr(std_keys));
+            char_PrintNTimes(' ', line, i32_Max(1, 18 - ch_N(line) + extra));
             line << short_keys;
-            char_PrintNTimes(' ', line, i32_Max(1, 28 - ch_N(line)));
-            line << actions[a]->comment;
+            extra = Utf8ExtraBytes(strptr(line));
+            char_PrintNTimes(' ', line, i32_Max(1, 28 - ch_N(line) + extra));
+            int comment_start = ch_N(line);
+            line << comment;
             acr_nav::line_Alloc(vm) = line;
+            int li = acr_nav::line_N(vm) - 1;
+            AddSpan(vm, li, 0, std_end, acr_nav::_db.p_line_key);           // standard keys: dim
+            AddSpan(vm, li, comment_start, ch_N(line), acr_nav::_db.p_line_comment); // action: green
         }
     }
-    acr_nav::line_Alloc(vm) = "";
-    acr_nav::line_Alloc(vm) = "  \xe2\x86\x91\xe2\x86\x93 Browse    Enter Start    ? Help anytime";
 }
 
 // -----------------------------------------------------------------------------
@@ -1339,6 +1579,52 @@ static void RenderTitleBar(RenderCtx &ctx) {
 
 // -----------------------------------------------------------------------------
 
+// Emit a line with color spans interleaved. Spans reference positions in the stored line text
+// (0-based). right_cell has a leading space prefix, so span positions are adjusted by +1.
+// Uses span-boundary runs for clean SESE flow. span_cursor advances monotonically across
+// visible lines for O(visible) total scan cost.
+static void EmitStyledLine(cstring &buf, algo::strptr right_cell, bool right_sel,
+                           acr_nav::FViewmode &vm, int line_idx, int &span_cursor,
+                           acr_nav::FNavstyle *sel_style) {
+    int cell_n = elems_N(right_cell);
+    int prev_end = 0;
+    // Advance span_cursor to first span for this line
+    int n_spans = acr_nav::cspan_N(vm);
+    while (span_cursor < n_spans && acr_nav::cspan_qFind(vm, span_cursor).line_idx < line_idx) {
+        span_cursor++;
+    }
+    // Process spans for this line
+    int si = span_cursor;
+    while (si < n_spans && acr_nav::cspan_qFind(vm, si).line_idx == line_idx) {
+        acr_nav::LineColorSpan &span = acr_nav::cspan_qFind(vm, si);
+        int adj_start = span.col_start + 1;  // +1 for leading space
+        int adj_end = i32_Min(span.col_end + 1, cell_n);
+        if (adj_start >= cell_n) {
+            si++;
+            continue;  // span fully clipped -- inside while loop, not function-level return
+        }
+        // Emit plain run before this span
+        if (adj_start > prev_end) {
+            buf << algo::strptr(right_cell.elems + prev_end, adj_start - prev_end);
+        }
+        // Emit styled span
+        EmitStyle(buf, *span.p_navstyle);
+        buf << algo::strptr(right_cell.elems + adj_start, adj_end - adj_start);
+        buf << "\x1b[0m";
+        if (right_sel && sel_style) {
+            EmitStyle(buf, *sel_style);
+        }
+        prev_end = adj_end;
+        si++;
+    }
+    // Emit trailing plain run
+    if (prev_end < cell_n) {
+        buf << algo::strptr(right_cell.elems + prev_end, cell_n - prev_end);
+    }
+}
+
+// -----------------------------------------------------------------------------
+
 // Render the content area: dual-panel data rows.
 static void RenderContentArea(RenderCtx &ctx) {
     int n_left = acr_nav::left_item_N();
@@ -1373,6 +1659,7 @@ static void RenderContentArea(RenderCtx &ctx) {
         visible--;
     }
 
+    int span_cursor = 0;
     for (int row = 0; row < visible; row++) {
         // Left cell
         tempstr left_cell;
@@ -1435,8 +1722,8 @@ static void RenderContentArea(RenderCtx &ctx) {
             right_cell << " (" << acr_nav::_db.p_cur_viewmode->empty_msg << ")";
         }
         TruncPad(right_cell, ctx.right_wid);
-        if (right_sel) {
-            EmitStyle(ctx.buf, !ctx.left_focused ? *acr_nav::_db.p_sel_focus : *acr_nav::_db.p_sel_nofocus);
+        if (right_sel && !ctx.left_focused) {
+            EmitStyle(ctx.buf, *acr_nav::_db.p_sel_focus);
         }
         if (fld && fld->p_reftype->c_reftypestyle) {
             EmitStyle(ctx.buf, *fld->p_reftype->c_reftypestyle->p_navstyle);
@@ -1450,7 +1737,13 @@ static void RenderContentArea(RenderCtx &ctx) {
         if (field_match) {
             EmitStyle(ctx.buf, *acr_nav::_db.p_filter_match);
         }
-        ctx.buf << right_cell << "\x1b[0m\x1b[K\r\n";
+        if (!has_fields && acr_nav::cspan_N(*acr_nav::_db.p_cur_viewmode) > 0) {
+            bool right_focused_sel = right_sel && !ctx.left_focused;
+            EmitStyledLine(ctx.buf, strptr(right_cell), right_focused_sel, *acr_nav::_db.p_cur_viewmode, right_data_idx, span_cursor, right_focused_sel ? acr_nav::_db.p_sel_focus : nullptr);
+            ctx.buf << "\x1b[0m\x1b[K\r\n";
+        } else {
+            ctx.buf << right_cell << "\x1b[0m\x1b[K\r\n";
+        }
     }
 }
 
@@ -1583,7 +1876,6 @@ static void InitPanels() {
     acr_nav::viewmode_stack_Alloc() = acr_nav::_db.p_default_viewmode->viewmode;
     acr_nav::_db.p_cur_viewmode = acr_nav::_db.p_help_viewmode;
     acr_nav::_db.startup_help = true;
-    BuildHelpLines();
     // Resolve well-known navstyle pointers by name
     acr_nav::_db.p_title_focus = acr_nav::ind_navstyle_Find("title_focus");
     acr_nav::_db.p_title_nofocus = acr_nav::ind_navstyle_Find("title_nofocus");
@@ -1599,6 +1891,14 @@ static void InitPanels() {
     acr_nav::_db.p_cur_filtertarget = acr_nav::_db.p_default_filtertarget;
     acr_nav::_db.p_filter_match = acr_nav::ind_navstyle_Find("filter_match");
     vrfy(acr_nav::_db.p_filter_match, "navstyle 'filter_match' not found");
+    // Syntax highlight styles (optional -- null degrades to no highlighting via AddSpan guard)
+    acr_nav::_db.p_line_comment = acr_nav::ind_navstyle_Find("line_comment");
+    acr_nav::_db.p_line_keyword = acr_nav::ind_navstyle_Find("line_keyword");
+    acr_nav::_db.p_line_string = acr_nav::ind_navstyle_Find("line_string");
+    acr_nav::_db.p_line_preproc = acr_nav::ind_navstyle_Find("line_preproc");
+    acr_nav::_db.p_line_section = acr_nav::ind_navstyle_Find("line_section");
+    acr_nav::_db.p_line_key = acr_nav::ind_navstyle_Find("line_key");
+    BuildHelpLines();
     SwitchToBrowse();
     acr_nav::_db.p_left_panel->sel_row = 0;
     acr_nav::_db.p_left_panel->scroll_offset = 0;

@@ -127,6 +127,7 @@ namespace acr_nav { struct _db_left_item_curs; }
 namespace acr_nav { struct _db_filtertarget_curs; }
 namespace acr_nav { struct ns_c_ctype_curs; }
 namespace acr_nav { struct viewmode_line_curs; }
+namespace acr_nav { struct viewmode_cspan_curs; }
 namespace acr_nav { struct trace; }
 namespace acr_nav { struct FDb; }
 namespace acr_nav { struct FDetailsrc; }
@@ -142,6 +143,7 @@ namespace acr_nav { struct FViewmode; }
 namespace acr_nav { struct FieldId; }
 namespace acr_nav { struct InputError; }
 namespace acr_nav { struct LeftItem; }
+namespace acr_nav { struct LineColorSpan; }
 namespace acr_nav { struct Naventry; }
 namespace acr_nav { struct PanelState; }
 namespace acr_nav { struct Screen; }
@@ -467,6 +469,12 @@ struct FDb { // acr_nav.FDb
     algo::Smallstr50           pre_filter_target;                // Saved filtertarget before entering filter mode
     i32                        pre_filter_sel_row;               //   0  Saved left panel sel_row before entering filter mode
     i32                        pre_filter_scroll_offset;         //   0  Saved left panel scroll_offset before entering filter mode
+    acr_nav::FNavstyle*        p_line_comment;                   // Cached style: code comments. optional pointer
+    acr_nav::FNavstyle*        p_line_keyword;                   // Cached style: language keywords. optional pointer
+    acr_nav::FNavstyle*        p_line_string;                    // Cached style: string literals. optional pointer
+    acr_nav::FNavstyle*        p_line_preproc;                   // Cached style: preprocessor directives. optional pointer
+    acr_nav::FNavstyle*        p_line_section;                   // Cached style: section headers. optional pointer
+    acr_nav::FNavstyle*        p_line_key;                       // Cached style: attribute keys. optional pointer
     acr_nav::trace             trace;                            //
 };
 
@@ -2295,7 +2303,14 @@ void                 FNavmode_Uninit(acr_nav::FNavmode& navmode) __attribute__((
 // global access: p_sel_nofocus (Ptr)
 // global access: p_statusbar (Ptr)
 // global access: p_filter_match (Ptr)
+// global access: p_line_comment (Ptr)
+// global access: p_line_keyword (Ptr)
+// global access: p_line_string (Ptr)
+// global access: p_line_preproc (Ptr)
+// global access: p_line_section (Ptr)
+// global access: p_line_key (Ptr)
 // access: acr_nav.FReftypestyle.p_navstyle (Upptr)
+// access: acr_nav.LineColorSpan.p_navstyle (Upptr)
 struct FNavstyle { // acr_nav.FNavstyle
     acr_nav::FNavstyle*   ind_navstyle_next;      // hash next
     u32                   ind_navstyle_hashval;   // hash value
@@ -2645,21 +2660,24 @@ void                 FSsimfile_Uninit(acr_nav::FSsimfile& ssimfile) __attribute_
 // global access: p_preview_viewmode (Ptr)
 // global access: p_codegen_viewmode (Ptr)
 struct FViewmode { // acr_nav.FViewmode
-    acr_nav::FViewmode*   ind_viewmode_next;      // hash next
-    u32                   ind_viewmode_hashval;   // hash value
-    algo::Smallstr50      viewmode;               //
-    algo::Smallstr50      title;                  // Right panel title for this viewmode
-    algo::Smallstr50      next;                   // Next viewmode in Tab cycle
-    algo::Smallstr50      empty_msg;              // Message shown when right panel has no items
-    bool                  has_fields;             //   false  Y: renders field records; N: renders preformatted lines
-    bool                  is_overlay;             //   false  Y: overlay viewmode (help, detail); suppresses need_no_overlay hints
-    bool                  need_ssimfile;          //   false  Viewmode requires ssimfile-backed ctype
-    bool                  is_reverse;             //   false  Y=reverse xrefs, N=forward fields
-    algo::Comment         comment;                //
-    algo::cstring*        line_elems;             // pointer to elements
-    u32                   line_n;                 // number of elements in array
-    u32                   line_max;               // max. capacity of array before realloc
-    algo::cstring         header;                 // Column header line
+    acr_nav::FViewmode*       ind_viewmode_next;      // hash next
+    u32                       ind_viewmode_hashval;   // hash value
+    algo::Smallstr50          viewmode;               //
+    algo::Smallstr50          title;                  // Right panel title for this viewmode
+    algo::Smallstr50          next;                   // Next viewmode in Tab cycle
+    algo::Smallstr50          empty_msg;              // Message shown when right panel has no items
+    bool                      has_fields;             //   false  Y: renders field records; N: renders preformatted lines
+    bool                      is_overlay;             //   false  Y: overlay viewmode (help, detail); suppresses need_no_overlay hints
+    bool                      need_ssimfile;          //   false  Viewmode requires ssimfile-backed ctype
+    bool                      is_reverse;             //   false  Y=reverse xrefs, N=forward fields
+    algo::Comment             comment;                //
+    algo::cstring*            line_elems;             // pointer to elements
+    u32                       line_n;                 // number of elements in array
+    u32                       line_max;               // max. capacity of array before realloc
+    algo::cstring             header;                 // Column header line
+    acr_nav::LineColorSpan*   cspan_elems;            // pointer to elements
+    u32                       cspan_n;                // number of elements in array
+    u32                       cspan_max;              // max. capacity of array before realloc
     // func:acr_nav.FViewmode..AssignOp
     acr_nav::FViewmode&  operator =(const acr_nav::FViewmode &rhs) = delete;
     // func:acr_nav.FViewmode..CopyCtor
@@ -2764,6 +2782,83 @@ bool                 line_ReadStrptrMaybe(acr_nav::FViewmode& viewmode, algo::st
 // func:acr_nav.FViewmode.line.Insary
 void                 line_Insary(acr_nav::FViewmode& viewmode, algo::aryptr<algo::cstring> rhs, int at) __attribute__((nothrow));
 
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:acr_nav.FViewmode.cspan.Addary
+algo::aryptr<acr_nav::LineColorSpan> cspan_Addary(acr_nav::FViewmode& viewmode, algo::aryptr<acr_nav::LineColorSpan> rhs) __attribute__((nothrow));
+// Reserve space. Insert element at the end
+// The new element is initialized to a default value
+// func:acr_nav.FViewmode.cspan.Alloc
+acr_nav::LineColorSpan& cspan_Alloc(acr_nav::FViewmode& viewmode) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:acr_nav.FViewmode.cspan.AllocAt
+acr_nav::LineColorSpan& cspan_AllocAt(acr_nav::FViewmode& viewmode, int at) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:acr_nav.FViewmode.cspan.AllocN
+algo::aryptr<acr_nav::LineColorSpan> cspan_AllocN(acr_nav::FViewmode& viewmode, int n_elems) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:acr_nav.FViewmode.cspan.AllocNAt
+algo::aryptr<acr_nav::LineColorSpan> cspan_AllocNAt(acr_nav::FViewmode& viewmode, int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:acr_nav.FViewmode.cspan.EmptyQ
+inline bool          cspan_EmptyQ(acr_nav::FViewmode& viewmode) __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+// func:acr_nav.FViewmode.cspan.Find
+inline acr_nav::LineColorSpan* cspan_Find(acr_nav::FViewmode& viewmode, u64 t) __attribute__((__warn_unused_result__, nothrow));
+// Return array pointer by value
+// func:acr_nav.FViewmode.cspan.Getary
+inline algo::aryptr<acr_nav::LineColorSpan> cspan_Getary(const acr_nav::FViewmode& viewmode) __attribute__((nothrow));
+// Return pointer to last element of array, or NULL if array is empty
+// func:acr_nav.FViewmode.cspan.Last
+inline acr_nav::LineColorSpan* cspan_Last(acr_nav::FViewmode& viewmode) __attribute__((nothrow, pure));
+// Return max. number of items in the array
+// func:acr_nav.FViewmode.cspan.Max
+inline i32           cspan_Max(acr_nav::FViewmode& viewmode) __attribute__((nothrow));
+// Return number of items in the array
+// func:acr_nav.FViewmode.cspan.N
+inline i32           cspan_N(const acr_nav::FViewmode& viewmode) __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove item by index. If index outside of range, do nothing.
+// func:acr_nav.FViewmode.cspan.Remove
+void                 cspan_Remove(acr_nav::FViewmode& viewmode, u32 i) __attribute__((nothrow));
+// func:acr_nav.FViewmode.cspan.RemoveAll
+void                 cspan_RemoveAll(acr_nav::FViewmode& viewmode) __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:acr_nav.FViewmode.cspan.RemoveLast
+void                 cspan_RemoveLast(acr_nav::FViewmode& viewmode) __attribute__((nothrow));
+// Make sure N *more* elements will fit in array. Process dies if out of memory
+// func:acr_nav.FViewmode.cspan.Reserve
+inline void          cspan_Reserve(acr_nav::FViewmode& viewmode, int n) __attribute__((nothrow));
+// Make sure N elements fit in array. Process dies if out of memory
+// func:acr_nav.FViewmode.cspan.AbsReserve
+void                 cspan_AbsReserve(acr_nav::FViewmode& viewmode, int n) __attribute__((nothrow));
+// Copy contents of RHS to PARENT.
+// func:acr_nav.FViewmode.cspan.Setary
+void                 cspan_Setary(acr_nav::FViewmode& viewmode, acr_nav::FViewmode &rhs) __attribute__((nothrow));
+// Copy specified array into cspan, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+// func:acr_nav.FViewmode.cspan.Setary2
+void                 cspan_Setary(acr_nav::FViewmode& viewmode, const algo::aryptr<acr_nav::LineColorSpan> &rhs) __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:acr_nav.FViewmode.cspan.qFind
+inline acr_nav::LineColorSpan& cspan_qFind(acr_nav::FViewmode& viewmode, u64 t) __attribute__((nothrow));
+// Return reference to last element of array. No bounds checking
+// func:acr_nav.FViewmode.cspan.qLast
+inline acr_nav::LineColorSpan& cspan_qLast(acr_nav::FViewmode& viewmode) __attribute__((nothrow));
+// Return row id of specified element
+// func:acr_nav.FViewmode.cspan.rowid_Get
+inline u64           cspan_rowid_Get(acr_nav::FViewmode& viewmode, acr_nav::LineColorSpan &elem) __attribute__((nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:acr_nav.FViewmode.cspan.AllocNVal
+algo::aryptr<acr_nav::LineColorSpan> cspan_AllocNVal(acr_nav::FViewmode& viewmode, int n_elems, const acr_nav::LineColorSpan& val) __attribute__((nothrow));
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:acr_nav.FViewmode.cspan.Insary
+void                 cspan_Insary(acr_nav::FViewmode& viewmode, algo::aryptr<acr_nav::LineColorSpan> rhs, int at) __attribute__((nothrow));
+
 // Set all fields to initial values.
 // func:acr_nav.FViewmode..Init
 void                 FViewmode_Init(acr_nav::FViewmode& viewmode);
@@ -2778,6 +2873,17 @@ inline bool          viewmode_line_curs_ValidQ(viewmode_line_curs &curs) __attri
 // item access
 // func:acr_nav.FViewmode.line_curs.Access
 inline algo::cstring& viewmode_line_curs_Access(viewmode_line_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:acr_nav.FViewmode.cspan_curs.Next
+inline void          viewmode_cspan_curs_Next(viewmode_cspan_curs &curs) __attribute__((nothrow));
+// func:acr_nav.FViewmode.cspan_curs.Reset
+inline void          viewmode_cspan_curs_Reset(viewmode_cspan_curs &curs, acr_nav::FViewmode &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:acr_nav.FViewmode.cspan_curs.ValidQ
+inline bool          viewmode_cspan_curs_ValidQ(viewmode_cspan_curs &curs) __attribute__((nothrow));
+// item access
+// func:acr_nav.FViewmode.cspan_curs.Access
+inline acr_nav::LineColorSpan& viewmode_cspan_curs_Access(viewmode_cspan_curs &curs) __attribute__((nothrow));
 // func:acr_nav.FViewmode..Uninit
 void                 FViewmode_Uninit(acr_nav::FViewmode& viewmode) __attribute__((nothrow));
 
@@ -2860,6 +2966,21 @@ struct LeftItem { // acr_nav.LeftItem: One display row in the left panel
     inline               LeftItem() __attribute__((nothrow));
 };
 
+
+// --- acr_nav.LineColorSpan
+// create: acr_nav.FViewmode.cspan (Tary)
+struct LineColorSpan { // acr_nav.LineColorSpan
+    i32                   line_idx;     //   0  Line index in viewmode line Tary
+    i32                   col_start;    //   0  Start column, 0-based relative to stored line text
+    i32                   col_end;      //   0  End column (exclusive)
+    acr_nav::FNavstyle*   p_navstyle;   // reference to parent row
+    // func:acr_nav.LineColorSpan..Ctor
+    inline               LineColorSpan() __attribute__((nothrow));
+};
+
+// Set all fields to initial values.
+// func:acr_nav.LineColorSpan..Init
+inline void          LineColorSpan_Init(acr_nav::LineColorSpan& parent);
 
 // --- acr_nav.Naventry
 // create: acr_nav.FDb.navstack (Tary)
@@ -3263,6 +3384,15 @@ struct viewmode_line_curs {// cursor
     int n_elems;
     int index;
     viewmode_line_curs() { elems=NULL; n_elems=0; index=0; }
+};
+
+
+struct viewmode_cspan_curs {// cursor
+    typedef acr_nav::LineColorSpan ChildType;
+    acr_nav::LineColorSpan* elems;
+    int n_elems;
+    int index;
+    viewmode_cspan_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
 } // gen:ns_curstext

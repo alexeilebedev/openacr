@@ -1,4 +1,4 @@
-acr_nav.Screen  mode:browse  focus:content  filter:acr_nav.fdb  navstack_depth:0  n_sel_ctype:1  n_ctype:1404  n_field:5658  viewmode:detail  breadcrumb:""  filtertarget:ctype  hints:"d/Escape:dismiss  q:quit  ?:help"
+acr_nav.Screen  mode:browse  focus:content  filter:acr_nav.fdb  navstack_depth:0  n_sel_ctype:1  n_ctype:1405  n_field:5669  viewmode:detail  breadcrumb:""  filtertarget:ctype  hints:"d/Escape:dismiss  q:quit  ?:help"
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:2  sel_value:acr_nav.FDb
 acr_nav.VisibleLeftItem  row:0  value:acr_nav  kind:ns  collapsed:N  n_match:1  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:acr_nav.FDb  kind:ctype  collapsed:N  n_match:0  n_record:0
@@ -34,11 +34,11 @@ acr_nav.VisibleLine  row:27  value:"  inscond    true"
 acr_nav.VisibleLine  row:28  value:"  via        "
 acr_nav.VisibleLine  row:29  value:""
 
-acr_nav.Screen  mode:browse  focus:content  filter:acr_nav.fdb  navstack_depth:0  n_sel_ctype:1  n_ctype:1404  n_field:5658  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  d:detail  q:quit  ?:help"
+acr_nav.Screen  mode:browse  focus:content  filter:acr_nav.fdb  navstack_depth:0  n_sel_ctype:1  n_ctype:1405  n_field:5669  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  d:detail  q:quit  ?:help"
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:2  sel_value:acr_nav.FDb
 acr_nav.VisibleLeftItem  row:0  value:acr_nav  kind:ns  collapsed:N  n_match:1  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:acr_nav.FDb  kind:ctype  collapsed:N  n_match:0  n_record:0
-acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:68  sel_value:acr_nav.FDb._db
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:74  sel_value:acr_nav.FDb._db
 acr_nav.VisibleField  row:0  field:acr_nav.FDb._db  arg:acr_nav.FDb  reftype:Global  style:field_val  navigable:N  match:N
 acr_nav.VisibleField  row:1  field:acr_nav.FDb.cmdline  arg:command.acr_nav  reftype:Val  style:field_val  navigable:Y  match:N
 acr_nav.VisibleField  row:2  field:acr_nav.FDb.ctype  arg:acr_nav.FCtype  reftype:Lary  style:field_pool  navigable:Y  match:N
@@ -107,40 +107,40 @@ acr_nav.VisibleField  row:64  field:acr_nav.FDb.pre_filter_text  arg:algo.cstrin
 acr_nav.VisibleField  row:65  field:acr_nav.FDb.pre_filter_target  arg:algo.Smallstr50  reftype:Val  style:field_val  navigable:Y  match:N
 acr_nav.VisibleField  row:66  field:acr_nav.FDb.pre_filter_sel_row  arg:i32  reftype:Val  style:field_val  navigable:Y  match:N
 acr_nav.VisibleField  row:67  field:acr_nav.FDb.pre_filter_scroll_offset  arg:i32  reftype:Val  style:field_val  navigable:Y  match:N
+acr_nav.VisibleField  row:68  field:acr_nav.FDb.p_line_comment  arg:acr_nav.FNavstyle  reftype:Ptr  style:field_val  navigable:Y  match:N
+acr_nav.VisibleField  row:69  field:acr_nav.FDb.p_line_keyword  arg:acr_nav.FNavstyle  reftype:Ptr  style:field_val  navigable:Y  match:N
+acr_nav.VisibleField  row:70  field:acr_nav.FDb.p_line_string  arg:acr_nav.FNavstyle  reftype:Ptr  style:field_val  navigable:Y  match:N
+acr_nav.VisibleField  row:71  field:acr_nav.FDb.p_line_preproc  arg:acr_nav.FNavstyle  reftype:Ptr  style:field_val  navigable:Y  match:N
+acr_nav.VisibleField  row:72  field:acr_nav.FDb.p_line_section  arg:acr_nav.FNavstyle  reftype:Ptr  style:field_val  navigable:Y  match:N
+acr_nav.VisibleField  row:73  field:acr_nav.FDb.p_line_key  arg:acr_nav.FNavstyle  reftype:Ptr  style:field_val  navigable:Y  match:N
 
-acr_nav.Screen  mode:browse  focus:content  filter:acr_nav.fdb  navstack_depth:0  n_sel_ctype:1  n_ctype:1404  n_field:5658  viewmode:help  breadcrumb:""  filtertarget:ctype  hints:"Escape:dismiss  q:quit  ?:dismiss"
+acr_nav.Screen  mode:browse  focus:content  filter:acr_nav.fdb  navstack_depth:0  n_sel_ctype:1  n_ctype:1405  n_field:5669  viewmode:help  breadcrumb:""  filtertarget:ctype  hints:"Escape:dismiss  q:quit  ?:dismiss"
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:2  sel_value:acr_nav.FDb
 acr_nav.VisibleLeftItem  row:0  value:acr_nav  kind:ns  collapsed:N  n_match:1  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:acr_nav.FDb  kind:ctype  collapsed:N  n_match:0  n_record:0
-acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:26  sel_value:"Up                k         Move selection up"
-acr_nav.VisibleLine  row:0  value:"Up                k         Move selection up"
-acr_nav.VisibleLine  row:1  value:"Down              j         Move selection down"
-acr_nav.VisibleLine  row:2  value:"PgUp              b         Page up"
-acr_nav.VisibleLine  row:3  value:"PgDown/Space                Page down"
-acr_nav.VisibleLine  row:4  value:"Home              g         Jump to first item"
-acr_nav.VisibleLine  row:5  value:"End               G         Jump to last item"
-acr_nav.VisibleLine  row:6  value:""
-acr_nav.VisibleLine  row:7  value:"Enter             l         Follow reference to target ctype"
-acr_nav.VisibleLine  row:8  value:"Backspace                   Return to previous ctype"
-acr_nav.VisibleLine  row:9  value:"Left              h         Move focus to panel on the left"
-acr_nav.VisibleLine  row:10  value:"Right                       Move focus to panel on the right"
-acr_nav.VisibleLine  row:11  value:""
-acr_nav.VisibleLine  row:12  value:"Tab               r         Cycle right panel: fields, xrefs, preview, codegen"
-acr_nav.VisibleLine  row:13  value:"                  p         Toggle ssimfile content preview"
-acr_nav.VisibleLine  row:14  value:"                  d         Toggle field metadata detail"
-acr_nav.VisibleLine  row:15  value:"                  c         Toggle generated code view"
-acr_nav.VisibleLine  row:16  value:""
-acr_nav.VisibleLine  row:17  value:"/                           Enter filter input mode"
-acr_nav.VisibleLine  row:18  value:"Ctrl-U                      Clear filter text"
-acr_nav.VisibleLine  row:19  value:"Escape                      Dismiss overlay or clear filter"
-acr_nav.VisibleLine  row:20  value:"Tab                         Cycle filter target (Tab in filter mode)"
-acr_nav.VisibleLine  row:21  value:""
-acr_nav.VisibleLine  row:22  value:"?                           Toggle help panel"
-acr_nav.VisibleLine  row:23  value:"                  q         Exit acr_nav"
-acr_nav.VisibleLine  row:24  value:""
-acr_nav.VisibleLine  row:25  value:"  ↑↓ Browse    Enter Start    ? Help anytime"
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:20  sel_value:"↑/↓               k/j       Move selection up/down"
+acr_nav.VisibleLine  row:0  value:"↑/↓               k/j       Move selection up/down"
+acr_nav.VisibleLine  row:1  value:"PgUp/PgDown/Space b         Page up/down"
+acr_nav.VisibleLine  row:2  value:"Home/End          g/G       Jump to first/last item"
+acr_nav.VisibleLine  row:3  value:""
+acr_nav.VisibleLine  row:4  value:"Enter             l         Follow reference to target ctype"
+acr_nav.VisibleLine  row:5  value:"Backspace                   Return to previous ctype"
+acr_nav.VisibleLine  row:6  value:"←/→               h         Move focus to panel on the left/right"
+acr_nav.VisibleLine  row:7  value:""
+acr_nav.VisibleLine  row:8  value:"Tab               r         Cycle right panel: fields, xrefs, preview, codegen"
+acr_nav.VisibleLine  row:9  value:"                  p         Toggle ssimfile content preview"
+acr_nav.VisibleLine  row:10  value:"                  d         Toggle field metadata detail"
+acr_nav.VisibleLine  row:11  value:"                  c         Toggle generated code view"
+acr_nav.VisibleLine  row:12  value:""
+acr_nav.VisibleLine  row:13  value:"/                           Enter filter input mode"
+acr_nav.VisibleLine  row:14  value:"                            Clear filter text"
+acr_nav.VisibleLine  row:15  value:"Escape                      Dismiss overlay or clear filter"
+acr_nav.VisibleLine  row:16  value:"                            Cycle filter target (Tab in filter mode)"
+acr_nav.VisibleLine  row:17  value:""
+acr_nav.VisibleLine  row:18  value:"?                           Toggle help panel"
+acr_nav.VisibleLine  row:19  value:"                  q         Exit acr_nav"
 
-acr_nav.Screen  mode:browse  focus:content  filter:acr_nav.fdb  navstack_depth:0  n_sel_ctype:1  n_ctype:1404  n_field:5658  viewmode:detail  breadcrumb:""  filtertarget:ctype  hints:"d/Escape:dismiss  q:quit  ?:help"
+acr_nav.Screen  mode:browse  focus:content  filter:acr_nav.fdb  navstack_depth:0  n_sel_ctype:1  n_ctype:1405  n_field:5669  viewmode:detail  breadcrumb:""  filtertarget:ctype  hints:"d/Escape:dismiss  q:quit  ?:help"
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:2  sel_value:acr_nav.FDb
 acr_nav.VisibleLeftItem  row:0  value:acr_nav  kind:ns  collapsed:N  n_match:1  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:acr_nav.FDb  kind:ctype  collapsed:N  n_match:0  n_record:0
@@ -167,11 +167,11 @@ acr_nav.VisibleLine  row:18  value:"  varlen         N"
 acr_nav.VisibleLine  row:19  value:"  comment        Global variable -- root of all access paths"
 acr_nav.VisibleLine  row:20  value:""
 
-acr_nav.Screen  mode:browse  focus:content  filter:acr_nav.fdb  navstack_depth:0  n_sel_ctype:1  n_ctype:1404  n_field:5658  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  d:detail  q:quit  ?:help"
+acr_nav.Screen  mode:browse  focus:content  filter:acr_nav.fdb  navstack_depth:0  n_sel_ctype:1  n_ctype:1405  n_field:5669  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  d:detail  q:quit  ?:help"
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:2  sel_value:acr_nav.FDb
 acr_nav.VisibleLeftItem  row:0  value:acr_nav  kind:ns  collapsed:N  n_match:1  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:acr_nav.FDb  kind:ctype  collapsed:N  n_match:0  n_record:0
-acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:68  sel_value:acr_nav.FDb._db
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:74  sel_value:acr_nav.FDb._db
 acr_nav.VisibleField  row:0  field:acr_nav.FDb._db  arg:acr_nav.FDb  reftype:Global  style:field_val  navigable:N  match:N
 acr_nav.VisibleField  row:1  field:acr_nav.FDb.cmdline  arg:command.acr_nav  reftype:Val  style:field_val  navigable:Y  match:N
 acr_nav.VisibleField  row:2  field:acr_nav.FDb.ctype  arg:acr_nav.FCtype  reftype:Lary  style:field_pool  navigable:Y  match:N
@@ -240,12 +240,18 @@ acr_nav.VisibleField  row:64  field:acr_nav.FDb.pre_filter_text  arg:algo.cstrin
 acr_nav.VisibleField  row:65  field:acr_nav.FDb.pre_filter_target  arg:algo.Smallstr50  reftype:Val  style:field_val  navigable:Y  match:N
 acr_nav.VisibleField  row:66  field:acr_nav.FDb.pre_filter_sel_row  arg:i32  reftype:Val  style:field_val  navigable:Y  match:N
 acr_nav.VisibleField  row:67  field:acr_nav.FDb.pre_filter_scroll_offset  arg:i32  reftype:Val  style:field_val  navigable:Y  match:N
+acr_nav.VisibleField  row:68  field:acr_nav.FDb.p_line_comment  arg:acr_nav.FNavstyle  reftype:Ptr  style:field_val  navigable:Y  match:N
+acr_nav.VisibleField  row:69  field:acr_nav.FDb.p_line_keyword  arg:acr_nav.FNavstyle  reftype:Ptr  style:field_val  navigable:Y  match:N
+acr_nav.VisibleField  row:70  field:acr_nav.FDb.p_line_string  arg:acr_nav.FNavstyle  reftype:Ptr  style:field_val  navigable:Y  match:N
+acr_nav.VisibleField  row:71  field:acr_nav.FDb.p_line_preproc  arg:acr_nav.FNavstyle  reftype:Ptr  style:field_val  navigable:Y  match:N
+acr_nav.VisibleField  row:72  field:acr_nav.FDb.p_line_section  arg:acr_nav.FNavstyle  reftype:Ptr  style:field_val  navigable:Y  match:N
+acr_nav.VisibleField  row:73  field:acr_nav.FDb.p_line_key  arg:acr_nav.FNavstyle  reftype:Ptr  style:field_val  navigable:Y  match:N
 
-acr_nav.Screen  mode:browse  focus:content  filter:acr_nav.fdb  navstack_depth:0  n_sel_ctype:1  n_ctype:1404  n_field:5658  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  d:detail  q:quit  ?:help"
+acr_nav.Screen  mode:browse  focus:content  filter:acr_nav.fdb  navstack_depth:0  n_sel_ctype:1  n_ctype:1405  n_field:5669  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  d:detail  q:quit  ?:help"
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:2  sel_value:acr_nav.FDb
 acr_nav.VisibleLeftItem  row:0  value:acr_nav  kind:ns  collapsed:N  n_match:1  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:acr_nav.FDb  kind:ctype  collapsed:N  n_match:0  n_record:0
-acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:68  sel_value:acr_nav.FDb._db
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:74  sel_value:acr_nav.FDb._db
 acr_nav.VisibleField  row:0  field:acr_nav.FDb._db  arg:acr_nav.FDb  reftype:Global  style:field_val  navigable:N  match:N
 acr_nav.VisibleField  row:1  field:acr_nav.FDb.cmdline  arg:command.acr_nav  reftype:Val  style:field_val  navigable:Y  match:N
 acr_nav.VisibleField  row:2  field:acr_nav.FDb.ctype  arg:acr_nav.FCtype  reftype:Lary  style:field_pool  navigable:Y  match:N
@@ -314,4 +320,10 @@ acr_nav.VisibleField  row:64  field:acr_nav.FDb.pre_filter_text  arg:algo.cstrin
 acr_nav.VisibleField  row:65  field:acr_nav.FDb.pre_filter_target  arg:algo.Smallstr50  reftype:Val  style:field_val  navigable:Y  match:N
 acr_nav.VisibleField  row:66  field:acr_nav.FDb.pre_filter_sel_row  arg:i32  reftype:Val  style:field_val  navigable:Y  match:N
 acr_nav.VisibleField  row:67  field:acr_nav.FDb.pre_filter_scroll_offset  arg:i32  reftype:Val  style:field_val  navigable:Y  match:N
+acr_nav.VisibleField  row:68  field:acr_nav.FDb.p_line_comment  arg:acr_nav.FNavstyle  reftype:Ptr  style:field_val  navigable:Y  match:N
+acr_nav.VisibleField  row:69  field:acr_nav.FDb.p_line_keyword  arg:acr_nav.FNavstyle  reftype:Ptr  style:field_val  navigable:Y  match:N
+acr_nav.VisibleField  row:70  field:acr_nav.FDb.p_line_string  arg:acr_nav.FNavstyle  reftype:Ptr  style:field_val  navigable:Y  match:N
+acr_nav.VisibleField  row:71  field:acr_nav.FDb.p_line_preproc  arg:acr_nav.FNavstyle  reftype:Ptr  style:field_val  navigable:Y  match:N
+acr_nav.VisibleField  row:72  field:acr_nav.FDb.p_line_section  arg:acr_nav.FNavstyle  reftype:Ptr  style:field_val  navigable:Y  match:N
+acr_nav.VisibleField  row:73  field:acr_nav.FDb.p_line_key  arg:acr_nav.FNavstyle  reftype:Ptr  style:field_val  navigable:Y  match:N
 

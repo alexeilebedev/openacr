@@ -450,7 +450,7 @@ static void acr_nav::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_nav.Input'  signature:'83b6623659c9d8081eb60b8e931a8d044904d0d9'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_nav.Input'  signature:'ce7aab99623f393959ff1ee516ccd1d62d0adea0'");
 }
 
 // --- acr_nav.FDb._db.InsertStrptrMaybe
@@ -5003,6 +5003,12 @@ void acr_nav::FDb_Init() {
     _db.p_filter_match = NULL;
     _db.pre_filter_sel_row = i32(0);
     _db.pre_filter_scroll_offset = i32(0);
+    _db.p_line_comment = NULL;
+    _db.p_line_keyword = NULL;
+    _db.p_line_string = NULL;
+    _db.p_line_preproc = NULL;
+    _db.p_line_section = NULL;
+    _db.p_line_key = NULL;
 
     acr_nav::InitReflection();
     navaction_LoadStatic(); // gen:ns_gstatic  gstatic:acr_nav.FDb.navaction  load acr_nav.FNavaction records
@@ -5903,6 +5909,193 @@ void acr_nav::line_Insary(acr_nav::FViewmode& viewmode, algo::aryptr<algo::cstri
     viewmode.line_n += nnew;
 }
 
+// --- acr_nav.FViewmode.cspan.Addary
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+algo::aryptr<acr_nav::LineColorSpan> acr_nav::cspan_Addary(acr_nav::FViewmode& viewmode, algo::aryptr<acr_nav::LineColorSpan> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= viewmode.cspan_elems && rhs.elems < viewmode.cspan_elems + viewmode.cspan_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("acr_nav.tary_alias  field:acr_nav.FViewmode.cspan  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    int nnew = rhs.n_elems;
+    cspan_Reserve(viewmode, nnew); // reserve space
+    int at = viewmode.cspan_n;
+    for (int i = 0; i < nnew; i++) {
+        new (viewmode.cspan_elems + at + i) acr_nav::LineColorSpan(rhs[i]);
+        viewmode.cspan_n++;
+    }
+    return algo::aryptr<acr_nav::LineColorSpan>(viewmode.cspan_elems + at, nnew);
+}
+
+// --- acr_nav.FViewmode.cspan.Alloc
+// Reserve space. Insert element at the end
+// The new element is initialized to a default value
+acr_nav::LineColorSpan& acr_nav::cspan_Alloc(acr_nav::FViewmode& viewmode) {
+    cspan_Reserve(viewmode, 1);
+    int n  = viewmode.cspan_n;
+    int at = n;
+    acr_nav::LineColorSpan *elems = viewmode.cspan_elems;
+    new (elems + at) acr_nav::LineColorSpan(); // construct new element, default initializer
+    viewmode.cspan_n = n+1;
+    return elems[at];
+}
+
+// --- acr_nav.FViewmode.cspan.AllocAt
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+acr_nav::LineColorSpan& acr_nav::cspan_AllocAt(acr_nav::FViewmode& viewmode, int at) {
+    cspan_Reserve(viewmode, 1);
+    int n  = viewmode.cspan_n;
+    if (UNLIKELY(u64(at) >= u64(n+1))) {
+        FatalErrorExit("acr_nav.bad_alloc_at  field:acr_nav.FViewmode.cspan  comment:'index out of range'");
+    }
+    acr_nav::LineColorSpan *elems = viewmode.cspan_elems;
+    memmove(elems + at + 1, elems + at, (n - at) * sizeof(acr_nav::LineColorSpan));
+    new (elems + at) acr_nav::LineColorSpan(); // construct element, default initializer
+    viewmode.cspan_n = n+1;
+    return elems[at];
+}
+
+// --- acr_nav.FViewmode.cspan.AllocN
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<acr_nav::LineColorSpan> acr_nav::cspan_AllocN(acr_nav::FViewmode& viewmode, int n_elems) {
+    cspan_Reserve(viewmode, n_elems);
+    int old_n  = viewmode.cspan_n;
+    int new_n = old_n + n_elems;
+    acr_nav::LineColorSpan *elems = viewmode.cspan_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) acr_nav::LineColorSpan(); // construct new element, default initialize
+    }
+    viewmode.cspan_n = new_n;
+    return algo::aryptr<acr_nav::LineColorSpan>(elems + old_n, n_elems);
+}
+
+// --- acr_nav.FViewmode.cspan.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<acr_nav::LineColorSpan> acr_nav::cspan_AllocNAt(acr_nav::FViewmode& viewmode, int n_elems, int at) {
+    cspan_Reserve(viewmode, n_elems);
+    int n  = viewmode.cspan_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("acr_nav.bad_alloc_n_at  field:acr_nav.FViewmode.cspan  comment:'index out of range'");
+    }
+    acr_nav::LineColorSpan *elems = viewmode.cspan_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(acr_nav::LineColorSpan));
+    for (int i = 0; i < n_elems; i++) {
+        new (elems + at + i) acr_nav::LineColorSpan(); // construct new element, default initialize
+    }
+    viewmode.cspan_n = n+n_elems;
+    return algo::aryptr<acr_nav::LineColorSpan>(elems+at,n_elems);
+}
+
+// --- acr_nav.FViewmode.cspan.Remove
+// Remove item by index. If index outside of range, do nothing.
+void acr_nav::cspan_Remove(acr_nav::FViewmode& viewmode, u32 i) {
+    u32 lim = viewmode.cspan_n;
+    acr_nav::LineColorSpan *elems = viewmode.cspan_elems;
+    if (i < lim) {
+        elems[i].~LineColorSpan(); // destroy element
+        memmove(elems + i, elems + (i + 1), sizeof(acr_nav::LineColorSpan) * (lim - (i + 1)));
+        viewmode.cspan_n = lim - 1;
+    }
+}
+
+// --- acr_nav.FViewmode.cspan.RemoveAll
+void acr_nav::cspan_RemoveAll(acr_nav::FViewmode& viewmode) {
+    u32 n = viewmode.cspan_n;
+    while (n > 0) {
+        n -= 1;
+        viewmode.cspan_elems[n].~LineColorSpan();
+        viewmode.cspan_n = n;
+    }
+}
+
+// --- acr_nav.FViewmode.cspan.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void acr_nav::cspan_RemoveLast(acr_nav::FViewmode& viewmode) {
+    u64 n = viewmode.cspan_n;
+    if (n > 0) {
+        n -= 1;
+        cspan_qFind(viewmode, u64(n)).~LineColorSpan();
+        viewmode.cspan_n = n;
+    }
+}
+
+// --- acr_nav.FViewmode.cspan.AbsReserve
+// Make sure N elements fit in array. Process dies if out of memory
+void acr_nav::cspan_AbsReserve(acr_nav::FViewmode& viewmode, int n) {
+    u32 old_max  = viewmode.cspan_max;
+    if (n > i32(old_max)) {
+        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+        void *new_mem = algo_lib::malloc_ReallocMem(viewmode.cspan_elems, old_max * sizeof(acr_nav::LineColorSpan), new_max * sizeof(acr_nav::LineColorSpan));
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("acr_nav.tary_nomem  field:acr_nav.FViewmode.cspan  comment:'out of memory'");
+        }
+        viewmode.cspan_elems = (acr_nav::LineColorSpan*)new_mem;
+        viewmode.cspan_max = new_max;
+    }
+}
+
+// --- acr_nav.FViewmode.cspan.Setary
+// Copy contents of RHS to PARENT.
+void acr_nav::cspan_Setary(acr_nav::FViewmode& viewmode, acr_nav::FViewmode &rhs) {
+    cspan_RemoveAll(viewmode);
+    int nnew = rhs.cspan_n;
+    cspan_Reserve(viewmode, nnew); // reserve space
+    for (int i = 0; i < nnew; i++) { // copy elements over
+        new (viewmode.cspan_elems + i) acr_nav::LineColorSpan(cspan_qFind(rhs, i));
+        viewmode.cspan_n = i + 1;
+    }
+}
+
+// --- acr_nav.FViewmode.cspan.Setary2
+// Copy specified array into cspan, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+void acr_nav::cspan_Setary(acr_nav::FViewmode& viewmode, const algo::aryptr<acr_nav::LineColorSpan> &rhs) {
+    cspan_RemoveAll(viewmode);
+    cspan_Addary(viewmode, rhs);
+}
+
+// --- acr_nav.FViewmode.cspan.AllocNVal
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<acr_nav::LineColorSpan> acr_nav::cspan_AllocNVal(acr_nav::FViewmode& viewmode, int n_elems, const acr_nav::LineColorSpan& val) {
+    cspan_Reserve(viewmode, n_elems);
+    int old_n  = viewmode.cspan_n;
+    int new_n = old_n + n_elems;
+    acr_nav::LineColorSpan *elems = viewmode.cspan_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) acr_nav::LineColorSpan(val);
+    }
+    viewmode.cspan_n = new_n;
+    return algo::aryptr<acr_nav::LineColorSpan>(elems + old_n, n_elems);
+}
+
+// --- acr_nav.FViewmode.cspan.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void acr_nav::cspan_Insary(acr_nav::FViewmode& viewmode, algo::aryptr<acr_nav::LineColorSpan> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= viewmode.cspan_elems && rhs.elems < viewmode.cspan_elems + viewmode.cspan_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("acr_nav.tary_alias  field:acr_nav.FViewmode.cspan  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(viewmode.cspan_elems+1))) {
+        FatalErrorExit("acr_nav.bad_insary  field:acr_nav.FViewmode.cspan  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = viewmode.cspan_n - at;
+    cspan_Reserve(viewmode, nnew); // reserve space
+    for (int i = nmove-1; i >=0 ; --i) {
+        new (viewmode.cspan_elems + at + nnew + i) acr_nav::LineColorSpan(viewmode.cspan_elems[at + i]);
+        viewmode.cspan_elems[at + i].~LineColorSpan(); // destroy element
+    }
+    for (int i = 0; i < nnew; ++i) {
+        new (viewmode.cspan_elems + at + i) acr_nav::LineColorSpan(rhs[i]);
+    }
+    viewmode.cspan_n += nnew;
+}
+
 // --- acr_nav.FViewmode..Init
 // Set all fields to initial values.
 void acr_nav::FViewmode_Init(acr_nav::FViewmode& viewmode) {
@@ -5913,6 +6106,9 @@ void acr_nav::FViewmode_Init(acr_nav::FViewmode& viewmode) {
     viewmode.line_elems 	= 0; // (acr_nav.FViewmode.line)
     viewmode.line_n     	= 0; // (acr_nav.FViewmode.line)
     viewmode.line_max   	= 0; // (acr_nav.FViewmode.line)
+    viewmode.cspan_elems 	= 0; // (acr_nav.FViewmode.cspan)
+    viewmode.cspan_n     	= 0; // (acr_nav.FViewmode.cspan)
+    viewmode.cspan_max   	= 0; // (acr_nav.FViewmode.cspan)
     viewmode.ind_viewmode_next = (acr_nav::FViewmode*)-1; // (acr_nav.FDb.ind_viewmode) not-in-hash
     viewmode.ind_viewmode_hashval = 0; // stored hash value
 }
@@ -5921,6 +6117,12 @@ void acr_nav::FViewmode_Init(acr_nav::FViewmode& viewmode) {
 void acr_nav::FViewmode_Uninit(acr_nav::FViewmode& viewmode) {
     acr_nav::FViewmode &row = viewmode; (void)row;
     ind_viewmode_Remove(row); // remove viewmode from index ind_viewmode
+
+    // acr_nav.FViewmode.cspan.Uninit (Tary)  //Color spans for line-mode highlighting
+    // remove all elements from acr_nav.FViewmode.cspan
+    cspan_RemoveAll(viewmode);
+    // free memory for Tary acr_nav.FViewmode.cspan
+    algo_lib::malloc_FreeMem(viewmode.cspan_elems, sizeof(acr_nav::LineColorSpan)*viewmode.cspan_max); // (acr_nav.FViewmode.cspan)
 
     // acr_nav.FViewmode.line.Uninit (Tary)  //Preformatted content lines (has_fields:N modes)
     // remove all elements from acr_nav.FViewmode.line

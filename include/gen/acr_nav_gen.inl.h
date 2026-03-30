@@ -2103,6 +2103,74 @@ inline u64 acr_nav::line_rowid_Get(acr_nav::FViewmode& viewmode, algo::cstring &
     return u64(id);
 }
 
+// --- acr_nav.FViewmode.cspan.EmptyQ
+// Return true if index is empty
+inline bool acr_nav::cspan_EmptyQ(acr_nav::FViewmode& viewmode) {
+    return viewmode.cspan_n == 0;
+}
+
+// --- acr_nav.FViewmode.cspan.Find
+// Look up row by row id. Return NULL if out of range
+inline acr_nav::LineColorSpan* acr_nav::cspan_Find(acr_nav::FViewmode& viewmode, u64 t) {
+    u64 idx = t;
+    u64 lim = viewmode.cspan_n;
+    if (idx >= lim) return NULL;
+    return viewmode.cspan_elems + idx;
+}
+
+// --- acr_nav.FViewmode.cspan.Getary
+// Return array pointer by value
+inline algo::aryptr<acr_nav::LineColorSpan> acr_nav::cspan_Getary(const acr_nav::FViewmode& viewmode) {
+    return algo::aryptr<acr_nav::LineColorSpan>(viewmode.cspan_elems, viewmode.cspan_n);
+}
+
+// --- acr_nav.FViewmode.cspan.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline acr_nav::LineColorSpan* acr_nav::cspan_Last(acr_nav::FViewmode& viewmode) {
+    return cspan_Find(viewmode, u64(viewmode.cspan_n-1));
+}
+
+// --- acr_nav.FViewmode.cspan.Max
+// Return max. number of items in the array
+inline i32 acr_nav::cspan_Max(acr_nav::FViewmode& viewmode) {
+    (void)viewmode;
+    return viewmode.cspan_max;
+}
+
+// --- acr_nav.FViewmode.cspan.N
+// Return number of items in the array
+inline i32 acr_nav::cspan_N(const acr_nav::FViewmode& viewmode) {
+    return viewmode.cspan_n;
+}
+
+// --- acr_nav.FViewmode.cspan.Reserve
+// Make sure N *more* elements will fit in array. Process dies if out of memory
+inline void acr_nav::cspan_Reserve(acr_nav::FViewmode& viewmode, int n) {
+    u32 new_n = viewmode.cspan_n + n;
+    if (UNLIKELY(new_n > viewmode.cspan_max)) {
+        cspan_AbsReserve(viewmode, new_n);
+    }
+}
+
+// --- acr_nav.FViewmode.cspan.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline acr_nav::LineColorSpan& acr_nav::cspan_qFind(acr_nav::FViewmode& viewmode, u64 t) {
+    return viewmode.cspan_elems[t];
+}
+
+// --- acr_nav.FViewmode.cspan.qLast
+// Return reference to last element of array. No bounds checking
+inline acr_nav::LineColorSpan& acr_nav::cspan_qLast(acr_nav::FViewmode& viewmode) {
+    return cspan_qFind(viewmode, u64(viewmode.cspan_n-1));
+}
+
+// --- acr_nav.FViewmode.cspan.rowid_Get
+// Return row id of specified element
+inline u64 acr_nav::cspan_rowid_Get(acr_nav::FViewmode& viewmode, acr_nav::LineColorSpan &elem) {
+    u64 id = &elem - viewmode.cspan_elems;
+    return u64(id);
+}
+
 // --- acr_nav.FViewmode.line_curs.Next
 // proceed to next item
 inline void acr_nav::viewmode_line_curs_Next(viewmode_line_curs &curs) {
@@ -2125,6 +2193,31 @@ inline bool acr_nav::viewmode_line_curs_ValidQ(viewmode_line_curs &curs) {
 // --- acr_nav.FViewmode.line_curs.Access
 // item access
 inline algo::cstring& acr_nav::viewmode_line_curs_Access(viewmode_line_curs &curs) {
+    return curs.elems[curs.index];
+}
+
+// --- acr_nav.FViewmode.cspan_curs.Next
+// proceed to next item
+inline void acr_nav::viewmode_cspan_curs_Next(viewmode_cspan_curs &curs) {
+    curs.index++;
+}
+
+// --- acr_nav.FViewmode.cspan_curs.Reset
+inline void acr_nav::viewmode_cspan_curs_Reset(viewmode_cspan_curs &curs, acr_nav::FViewmode &parent) {
+    curs.elems = parent.cspan_elems;
+    curs.n_elems = parent.cspan_n;
+    curs.index = 0;
+}
+
+// --- acr_nav.FViewmode.cspan_curs.ValidQ
+// cursor points to valid item
+inline bool acr_nav::viewmode_cspan_curs_ValidQ(viewmode_cspan_curs &curs) {
+    return curs.index < curs.n_elems;
+}
+
+// --- acr_nav.FViewmode.cspan_curs.Access
+// item access
+inline acr_nav::LineColorSpan& acr_nav::viewmode_cspan_curs_Access(viewmode_cspan_curs &curs) {
     return curs.elems[curs.index];
 }
 
@@ -2190,6 +2283,20 @@ inline  acr_nav::InputError::InputError() {
 
 // --- acr_nav.LeftItem..Ctor
 inline  acr_nav::LeftItem::LeftItem() {
+}
+
+// --- acr_nav.LineColorSpan..Init
+// Set all fields to initial values.
+inline void acr_nav::LineColorSpan_Init(acr_nav::LineColorSpan& parent) {
+    parent.line_idx = i32(0);
+    parent.col_start = i32(0);
+    parent.col_end = i32(0);
+    parent.p_navstyle = NULL;
+}
+
+// --- acr_nav.LineColorSpan..Ctor
+inline  acr_nav::LineColorSpan::LineColorSpan() {
+    acr_nav::LineColorSpan_Init(*this);
 }
 
 // --- acr_nav.Naventry..Ctor
