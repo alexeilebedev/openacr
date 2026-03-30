@@ -35,6 +35,7 @@
 ## Known Issues
 
 - **I7: Filter keybind not discoverable.** The `/` filter command isn't shown in the status bar, so new users don't know it exists. The status bar should hint at available commands (like vim's bottom line).
+- **I8: Control characters in ssimfile values corrupt display.** Selecting `dmmeta.Charset` in preview or detail mode renders garbled output because the `expr` field contains literal control characters (`\t`, `\r`, `\n`). `FormatPreviewRow` (line 318) and `FormatDetailCard` (line 428) write `attr.value` directly to the terminal. Fix: add a `SanitizeForDisplay` helper (1:1 replacement of bytes < 0x20 and DEL with `.`) at those two entry points. Column width calc (line 364) uses `ch_N()` which stays correct under 1:1 replacement.
 
 ---
 
