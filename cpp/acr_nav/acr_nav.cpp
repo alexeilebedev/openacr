@@ -729,6 +729,7 @@ void acr_nav::navaction_follow_ref() {
             entry.viewmode = acr_nav::_db.p_cur_viewmode->viewmode;
             entry.ctype = sel_ct->ctype;
             entry.filtertarget = acr_nav::_db.p_cur_filtertarget->filtertarget;
+            entry.focus_panel = acr_nav::_db.p_cur_panel->panel;
             // Reset to forward view on navigation -- new ctype starts in its natural view
             acr_nav::_db.p_cur_viewmode = acr_nav::_db.p_default_viewmode;
             // Switch to browse mode with full ctype list so target is reachable
@@ -798,7 +799,12 @@ void acr_nav::navaction_go_back() {
         acr_nav::_db.p_left_panel->scroll_offset = entry->scroll_offset;
         acr_nav::_db.p_right_panel->sel_row = entry->right_sel_row;
         acr_nav::_db.p_right_panel->scroll_offset = entry->right_scroll_offset;
-        acr_nav::_db.p_cur_panel = acr_nav::_db.p_left_panel;
+        acr_nav::FPanel *focus = acr_nav::ind_panel_Find(entry->focus_panel);
+        if (focus) {
+            acr_nav::_db.p_cur_panel = focus;
+        } else {
+            acr_nav::_db.p_cur_panel = acr_nav::_db.p_left_panel;
+        }
         acr_nav::navstack_RemoveLast();
     }
 }
@@ -878,6 +884,10 @@ void acr_nav::navaction_filter_accept() {
 
 void acr_nav::navaction_filter_start() {
     if (!acr_nav::_db.p_cur_viewmode->is_overlay) {
+        acr_nav::_db.pre_filter_text = acr_nav::_db.filter;
+        acr_nav::_db.pre_filter_target = acr_nav::_db.p_cur_filtertarget->filtertarget;
+        acr_nav::_db.pre_filter_sel_row = acr_nav::_db.p_left_panel->sel_row;
+        acr_nav::_db.pre_filter_scroll_offset = acr_nav::_db.p_left_panel->scroll_offset;
         acr_nav::_db.p_cur_mode = acr_nav::_db.p_filter_mode;
         ch_RemoveAll(acr_nav::_db.filter);
         acr_nav::_db.p_cur_filtertarget = acr_nav::_db.p_default_filtertarget;
@@ -890,9 +900,16 @@ void acr_nav::navaction_filter_start() {
 
 void acr_nav::navaction_filter_cancel() {
     SwitchToBrowse();
-    ch_RemoveAll(acr_nav::_db.filter);
-    acr_nav::_db.p_cur_filtertarget = acr_nav::_db.p_default_filtertarget;
-    BuildLeftItemsReset();
+    acr_nav::_db.filter = acr_nav::_db.pre_filter_text;
+    acr_nav::FFiltertarget *ft = acr_nav::ind_filtertarget_Find(acr_nav::_db.pre_filter_target);
+    if (ft) {
+        acr_nav::_db.p_cur_filtertarget = ft;
+    } else {
+        acr_nav::_db.p_cur_filtertarget = acr_nav::_db.p_default_filtertarget;
+    }
+    BuildLeftItems();
+    acr_nav::_db.p_left_panel->sel_row = acr_nav::_db.pre_filter_sel_row;
+    acr_nav::_db.p_left_panel->scroll_offset = acr_nav::_db.pre_filter_scroll_offset;
 }
 
 // -----------------------------------------------------------------------------
@@ -905,8 +922,10 @@ void acr_nav::navaction_filter_append_space() {
 // -----------------------------------------------------------------------------
 
 void acr_nav::navaction_filter_clear() {
-    ch_RemoveAll(acr_nav::_db.filter);
-    BuildLeftItemsReset();
+    if (ch_N(acr_nav::_db.filter) > 0) {
+        ch_RemoveAll(acr_nav::_db.filter);
+        BuildLeftItemsReset();
+    }
 }
 
 // -----------------------------------------------------------------------------
@@ -1712,8 +1731,8 @@ static void HeadlessMain() {
             } else if (acr_nav::Screenshot_ReadStrptrMaybe(screenshot, line)) {
                 HeadlessOutput();
             } else if (acr_nav::SetTermSize_ReadStrptrMaybe(set_term_size, line)) {
-                acr_nav::_db.term_hei = set_term_size.term_hei;
-                acr_nav::_db.term_wid = set_term_size.term_wid;
+                acr_nav::_db.term_hei = i32_Max(1, set_term_size.term_hei);
+                acr_nav::_db.term_wid = i32_Max(1, set_term_size.term_wid);
             } else {
                 acr_nav::InputError err;
                 err.lineno = lineno;

@@ -464,6 +464,10 @@ struct FDb { // acr_nav.FDb
     acr_nav::FFiltertarget*    p_default_filtertarget;           // Cached pointer to ctype filtertarget. optional pointer
     acr_nav::FNavstyle*        p_filter_match;                   // Cached pointer to filter_match navstyle. optional pointer
     algo_lib::Regx             filter_regx;                      // Cached compiled filter regex
+    algo::cstring              pre_filter_text;                  // Saved filter text before entering filter mode
+    algo::Smallstr50           pre_filter_target;                // Saved filtertarget before entering filter mode
+    i32                        pre_filter_sel_row;               //   0  Saved left panel sel_row before entering filter mode
+    i32                        pre_filter_scroll_offset;         //   0  Saved left panel scroll_offset before entering filter mode
     acr_nav::trace             trace;                            //
 };
 
@@ -2860,13 +2864,14 @@ struct Naventry { // acr_nav.Naventry: Navigation stack entry. Uses raw strings 
     algo::Smallstr50    filtertarget;          // Filter target at time of push
     i32                 right_sel_row;         //   0  Right panel selection row
     i32                 right_scroll_offset;   //   0  Right panel scroll offset
+    algo::Smallstr50    focus_panel;           // Panel name that had focus at time of push
     // func:acr_nav.Naventry..Ctor
     inline               Naventry() __attribute__((nothrow));
 };
 
 // Set all fields to initial values.
 // func:acr_nav.Naventry..Init
-inline void          Naventry_Init(acr_nav::Naventry& parent);
+void                 Naventry_Init(acr_nav::Naventry& parent);
 
 // --- acr_nav.PanelState
 struct PanelState { // acr_nav.PanelState: Headless panel state output

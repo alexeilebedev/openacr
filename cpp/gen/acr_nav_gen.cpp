@@ -5002,6 +5002,8 @@ void acr_nav::FDb_Init() {
     _db.p_cur_filtertarget = NULL;
     _db.p_default_filtertarget = NULL;
     _db.p_filter_match = NULL;
+    _db.pre_filter_sel_row = i32(0);
+    _db.pre_filter_scroll_offset = i32(0);
 
     acr_nav::InitReflection();
     navaction_LoadStatic(); // gen:ns_gstatic  gstatic:acr_nav.FDb.navaction  load acr_nav.FNavaction records
@@ -6000,6 +6002,15 @@ void acr_nav::InputError_Print(acr_nav::InputError& row, algo::cstring& str) {
 
     algo::cstring_Print(row.msg, temp);
     PrintAttrSpaceReset(str,"msg", temp);
+}
+
+// --- acr_nav.Naventry..Init
+// Set all fields to initial values.
+void acr_nav::Naventry_Init(acr_nav::Naventry& parent) {
+    parent.scroll_offset = i32(0);
+    parent.sel_row = i32(0);
+    parent.right_sel_row = i32(0);
+    parent.right_scroll_offset = i32(0);
 }
 
 // --- acr_nav.PanelState..Print

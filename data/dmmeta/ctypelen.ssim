@@ -137,7 +137,7 @@ dmmeta.ctypelen  ctype:acr_my.FDb  len:688  alignment:8  padbytes:14  plaindata:
 dmmeta.ctypelen  ctype:acr_my.FNsdb  len:171  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:acr_my.FSsimfile  len:154  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:acr_nav.FCtype  len:328  alignment:8  padbytes:13  plaindata:N
-dmmeta.ctypelen  ctype:acr_nav.FDb  len:4552  alignment:8  padbytes:85  plaindata:N
+dmmeta.ctypelen  ctype:acr_nav.FDb  len:4624  alignment:8  padbytes:81  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.FDetailsrc  len:216  alignment:8  padbytes:0  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.FField  len:704  alignment:8  padbytes:6  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.FFiltertarget  len:288  alignment:8  padbytes:2  plaindata:N
@@ -154,7 +154,7 @@ dmmeta.ctypelen  ctype:acr_nav.FSsimfile  len:184  alignment:8  padbytes:6  plai
 dmmeta.ctypelen  ctype:acr_nav.FViewmode  len:408  alignment:8  padbytes:2  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.InputError  len:24  alignment:8  padbytes:4  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.LeftItem  len:120  alignment:1  padbytes:0  plaindata:Y
-dmmeta.ctypelen  ctype:acr_nav.Naventry  len:296  alignment:8  padbytes:6  plaindata:N
+dmmeta.ctypelen  ctype:acr_nav.Naventry  len:344  alignment:8  padbytes:2  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.PanelState  len:80  alignment:8  padbytes:0  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.Screen  len:280  alignment:8  padbytes:8  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.Screenshot  len:52  alignment:1  padbytes:0  plaindata:Y

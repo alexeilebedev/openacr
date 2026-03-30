@@ -2210,15 +2210,6 @@ inline  acr_nav::InputError::InputError() {
 inline  acr_nav::LeftItem::LeftItem() {
 }
 
-// --- acr_nav.Naventry..Init
-// Set all fields to initial values.
-inline void acr_nav::Naventry_Init(acr_nav::Naventry& parent) {
-    parent.scroll_offset = i32(0);
-    parent.sel_row = i32(0);
-    parent.right_sel_row = i32(0);
-    parent.right_scroll_offset = i32(0);
-}
-
 // --- acr_nav.Naventry..Ctor
 inline  acr_nav::Naventry::Naventry() {
     acr_nav::Naventry_Init(*this);
