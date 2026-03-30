@@ -187,6 +187,7 @@ atfdb.comptest  comptest:acr_nav.LeftItems  timeout:10  memcheck:Y  coverage:Y  
 atfdb.comptest  comptest:acr_nav.MalformedInput  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:"Error output for unrecognized input lines"
 atfdb.comptest  comptest:acr_nav.Nav  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:Navigation
 atfdb.comptest  comptest:acr_nav.Preview  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:"Preview mode with table formatting"
+atfdb.comptest  comptest:acr_nav.PreviewCharset  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:"Preview sanitizes control characters in ssimfile values"
 atfdb.comptest  comptest:acr_nav.RecordCount  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:"Record count display for ctypes with ssimfiles"
 atfdb.comptest  comptest:acr_nav.UnknownKey  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:"Unknown key is no-op, does not dismiss startup help"
 atfdb.comptest  comptest:acr_nav.ViewCycle  timeout:30  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:"Tab cycling through fields, xref, preview, codegen"

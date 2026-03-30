@@ -30,17 +30,16 @@
 | M20 | Generated code preview viewmode | SysEval `amc '<ctype>'`; codegen viewmode; 'c' toggle; per-ctype caching |
 | M21 | Field name/comment search | filtertarget controlled vocabulary; Tab cycles search target; CtypeMatchesFilter + FieldMatchesFilter; bold highlight |
 
-**Current:** ~1340 lines C++, 24 navactions, 39 keybinds, 2 modes, 2 panels, 6 viewmodes (fields/xref/preview/codegen/help/detail), 10 navstyles, 36 reftypestyles, 2 filtertargets, ~1400 ctypes / ~5600 fields across 83 namespaces. Namespace-grouped tree view with collapse/expand, record counts for ssimfile-backed ctypes. 22 headless tests. Headless protocol: SendKey, Screenshot, SetTermSize (input); Screen, PanelState, VisibleLeftItem, VisibleField, VisibleLine, InputError (output).
+**Current:** ~1350 lines C++, 24 navactions, 39 keybinds, 2 modes, 2 panels, 6 viewmodes (fields/xref/preview/codegen/help/detail), 10 navstyles, 36 reftypestyles, 2 filtertargets, ~1400 ctypes / ~5600 fields across 83 namespaces. Namespace-grouped tree view with collapse/expand, record counts for ssimfile-backed ctypes. Status bar hints in both browse and filter modes. SanitizeForDisplay for control characters in preview/detail. 23 headless tests. Headless protocol: SendKey, Screenshot, SetTermSize (input); Screen, PanelState, VisibleLeftItem, VisibleField, VisibleLine, InputError (output).
 
 ---
 
 ## Known Issues
 
-- **I7: Filter keybind not discoverable.** The `/` filter command isn't shown in the status bar, so new users don't know it exists. The status bar should hint at available commands (like vim's bottom line).
-- **I8: Control characters in ssimfile values corrupt display.** Selecting `dmmeta.Charset` in preview or detail mode renders garbled output because the `expr` field contains literal control characters (`\t`, `\r`, `\n`). `FormatPreviewRow` (line 318) and `FormatDetailCard` (line 428) write `attr.value` directly to the terminal. Fix: add a `SanitizeForDisplay` helper (1:1 replacement of bytes < 0x20 and DEL with `.`) at those two entry points. Column width calc (line 364) uses `ch_N()` which stays correct under 1:1 replacement.
-- **I9: Help not shown on startup.** It also shouldn't dismiss on Up/Down. Only on enter/search/etc. So you start navigation and still see help. Once you pick namespace - help auto dissmisses.
+- **I9: Help renders as black screen on startup.** The help overlay is shown but not rendered correctly — appears as a blank/black screen. It also shouldn't dismiss on Up/Down. Only on enter/search/etc. So you start navigation and still see help. Once you pick namespace — help auto-dismisses.
 - **I10: acr_nav not showing (x) counts for ssimfile-backed ctypes.** E.g. FNavstyle preview shows (9) but FNavstyle in the left panel shows nothing.
 - **I11: enter after filter should also navigate additionally to applying the filter.** When you enter a filter and hit enter, nothing visible changes. It is confusing. It should apply the filter AND navigate / open collapsed namespaces.
+- **I12: status bar help hints are not contextual.** E.g. you are in Fields view -> show Enter hint. Just hit enter -> show Backspace hint. Think of all possible flows and confusions.
 
 ---
 
@@ -171,5 +170,4 @@ Full pool scan has a practical obstacle: Tpool loses iteration capability (free-
 - **M19 (record counts)** — Done. FSsimfile.n_record counted at startup, displayed as `(N)` in left panel. DecimalDigits helper also fixed latent 4-digit cap in namespace header width.
 - **M20 (generated code)** — Done. SysEval to `amc '<ctype>'`, codegen viewmode with `has_fields:N`, `c` toggle key, per-ctype caching via `p_codegen_ctype`.
 - **M21 (field search)** — Done. `acr_navdb.filtertarget` table (2 records), Tab cycles in filter mode, `CtypeMatchesFilter`/`FieldMatchesFilter` helpers, bold highlighting, cached regex, navstack save/restore. 4 new tests.
-
 **Future factoring:** IsHelpMode (4 sites) and IsXrefMode (5 sites) are identity checks that should become data on FViewmode. At 2 modes per axis, the branching is trivial. Refactor when a 3rd mode is added to either axis. Documented in code at their definition sites. RightPanelItemCount has per-viewmode lazy-load checks for preview and codegen (2 instances); at 3, refactor to an ensure-content hook on FViewmode.

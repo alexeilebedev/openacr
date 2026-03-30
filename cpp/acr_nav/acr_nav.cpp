@@ -341,6 +341,17 @@ static acr_nav::FSsimfile* FindSsimfile(acr_nav::FCtype &ctype) {
     return ret;
 }
 
+// Replace control characters (< 0x20) and DEL (0x7F) with '.' for safe terminal display.
+// 1:1 byte replacement preserves string length for column alignment.
+static void SanitizeForDisplay(cstring &str) {
+    for (int i = 0; i < ch_N(str); i++) {
+        unsigned char c = (unsigned char)str.ch_elems[i];
+        if (c < 0x20 || c == 0x7F) {
+            str.ch_elems[i] = '.';
+        }
+    }
+}
+
 // Load ssimfile content into the preview viewmode's line Tary, stripping the tuple head from each line.
 // Format a single row of attr values into an aligned column string.
 static void FormatPreviewRow(cstring &out, algo::Tuple &tuple, int *col_wid, int n_col) {
@@ -350,8 +361,10 @@ static void FormatPreviewRow(cstring &out, algo::Tuple &tuple, int *col_wid, int
             if (ci > 0) {
                 out << "  ";
             }
-            out << attr.value;
-            char_PrintNTimes(' ', out, col_wid[ci] - ch_N(attr.value));
+            tempstr safe(attr.value);
+            SanitizeForDisplay(safe);
+            out << safe;
+            char_PrintNTimes(' ', out, col_wid[ci] - ch_N(safe));
             ci++;
         }
     } ind_end;
@@ -483,7 +496,9 @@ static void FormatDetailCard(acr_nav::FViewmode &vm, algo::Tuple &tuple, algo::s
             tempstr row;
             row << "  " << attr.name;
             char_PrintNTimes(' ', row, i32_Max(2, key_wid - ch_N(attr.name) + 4));
-            row << attr.value;
+            tempstr safe(attr.value);
+            SanitizeForDisplay(safe);
+            row << safe;
             acr_nav::line_Alloc(vm) = row;
         }
         ai++;
@@ -838,6 +853,7 @@ void acr_nav::navaction_filter_start() {
     acr_nav::_db.p_cur_mode = acr_nav::_db.p_filter_mode;
     ch_RemoveAll(acr_nav::_db.filter);
     acr_nav::_db.p_cur_filtertarget = acr_nav::_db.p_default_filtertarget;
+    BuildLeftItemsReset();
     acr_nav::_db.p_cur_panel = acr_nav::_db.p_left_panel;
 }
 
@@ -918,6 +934,8 @@ void acr_nav::navaction_show_detail() {
     if (IsDetailMode()) {
         PopViewmode();
         acr_nav::_db.p_detail_field = NULL;
+        acr_nav::_db.p_right_panel->sel_row = 0;
+        acr_nav::_db.p_right_panel->scroll_offset = 0;
     } else if (acr_nav::_db.p_cur_viewmode->has_fields) {
         acr_nav::FCtype *sel_ct = SelectedCtype(*acr_nav::_db.p_left_panel);
         acr_nav::FField *fld = RightPanelFieldFind(sel_ct, acr_nav::_db.p_right_panel->sel_row);
@@ -925,10 +943,10 @@ void acr_nav::navaction_show_detail() {
             acr_nav::viewmode_stack_Alloc() = acr_nav::_db.p_cur_viewmode->viewmode;
             LoadDetail(*fld);
             acr_nav::_db.p_cur_viewmode = acr_nav::_db.p_detail_viewmode;
+            acr_nav::_db.p_right_panel->sel_row = 0;
+            acr_nav::_db.p_right_panel->scroll_offset = 0;
         }
     }
-    acr_nav::_db.p_right_panel->sel_row = 0;
-    acr_nav::_db.p_right_panel->scroll_offset = 0;
 }
 
 // -----------------------------------------------------------------------------
@@ -1305,12 +1323,10 @@ static void RenderStatusBar(RenderCtx &ctx) {
         }
         status << acr_nav::_db.filter;
     }
-    if (!in_filter) {
-        if (has_filter) {
-            status << "  ";
-        }
-        BuildStatusHint(status);
+    if (in_filter || has_filter) {
+        status << "  ";
     }
+    BuildStatusHint(status);
     acr_nav::FPanel &cur = *acr_nav::_db.p_cur_panel;
     int cur_items = PanelItemCount(cur, ctx.sel_ct);
     tempstr pos;

@@ -2137,12 +2137,12 @@ static void acr_nav::navaction_LoadStatic() {
         void (*step)();
     } data[] = {
         { "acr_navdb.navaction  navaction:dismiss_or_clear  hint:\"\"  helpgroup:search  sort_order:12  comment:\"Dismiss overlay or clear filter\"", acr_nav::navaction_dismiss_or_clear }
-        ,{ "acr_navdb.navaction  navaction:filter_accept  hint:\"\"  helpgroup:\"\"  sort_order:0  comment:\"Accept filter and return to browse mode\"", acr_nav::navaction_filter_accept }
+        ,{ "acr_navdb.navaction  navaction:filter_accept  hint:accept  helpgroup:\"\"  sort_order:0  comment:\"Accept filter and return to browse mode\"", acr_nav::navaction_filter_accept }
         ,{ "acr_navdb.navaction  navaction:filter_append_space  hint:\"\"  helpgroup:\"\"  sort_order:0  comment:\"Append space to filter text\"", acr_nav::navaction_filter_append_space }
         ,{ "acr_navdb.navaction  navaction:filter_backspace  hint:\"\"  helpgroup:\"\"  sort_order:0  comment:\"Delete last filter character\"", acr_nav::navaction_filter_backspace }
-        ,{ "acr_navdb.navaction  navaction:filter_cancel  hint:\"\"  helpgroup:\"\"  sort_order:0  comment:\"Cancel filter input\"", acr_nav::navaction_filter_cancel }
+        ,{ "acr_navdb.navaction  navaction:filter_cancel  hint:cancel  helpgroup:\"\"  sort_order:0  comment:\"Cancel filter input\"", acr_nav::navaction_filter_cancel }
         ,{ "acr_navdb.navaction  navaction:filter_clear  hint:\"\"  helpgroup:search  sort_order:11  comment:\"Clear filter text\"", acr_nav::navaction_filter_clear }
-        ,{ "acr_navdb.navaction  navaction:filter_cycle_target  hint:\"\"  helpgroup:search  sort_order:13  comment:\"Cycle filter target (Tab in filter mode)\"", acr_nav::navaction_filter_cycle_target }
+        ,{ "acr_navdb.navaction  navaction:filter_cycle_target  hint:target  helpgroup:search  sort_order:13  comment:\"Cycle filter target (Tab in filter mode)\"", acr_nav::navaction_filter_cycle_target }
         ,{ "acr_navdb.navaction  navaction:filter_start  hint:filter  helpgroup:search  sort_order:10  comment:\"Enter filter input mode\"", acr_nav::navaction_filter_start }
         ,{ "acr_navdb.navaction  navaction:follow_ref  hint:follow  helpgroup:navigation  sort_order:10  comment:\"Follow reference to target ctype\"", acr_nav::navaction_follow_ref }
         ,{ "acr_navdb.navaction  navaction:go_back  hint:back  helpgroup:navigation  sort_order:11  comment:\"Return to previous ctype\"", acr_nav::navaction_go_back }

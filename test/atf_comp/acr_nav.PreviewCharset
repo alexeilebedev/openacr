@@ -1,0 +1,62 @@
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:Charset  navstack_depth:0  n_sel_ctype:3  n_ctype:1404  n_field:5631  viewmode:preview  breadcrumb:""  filtertarget:ctype
+acr_nav.PanelState  panel:ctype_list  sel_row:3  scroll_offset:0  n_items:4  sel_value:dmmeta.Charset
+acr_nav.VisibleLeftItem  row:0  value:algo  kind:ns  collapsed:Y  n_match:1  n_record:0
+acr_nav.VisibleLeftItem  row:1  value:amc  kind:ns  collapsed:Y  n_match:1  n_record:0
+acr_nav.VisibleLeftItem  row:2  value:dmmeta  kind:ns  collapsed:N  n_match:1  n_record:0
+acr_nav.VisibleLeftItem  row:3  value:dmmeta.Charset  kind:ctype  collapsed:N  n_match:0  n_record:23
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:23  sel_value:"algo_lib.FDb.AlphaChar          a-zA-Z                           Y          Y            "
+acr_nav.VisibleLine  row:0  value:"algo_lib.FDb.AlphaChar          a-zA-Z                           Y          Y            "
+acr_nav.VisibleLine  row:1  value:"algo_lib.FDb.ArgvIdent          a-zA-Z0-9_                       Y          N            "
+acr_nav.VisibleLine  row:2  value:"algo_lib.FDb.BashQuotesafe      a-zA-Z0-9_^%@./-                 Y          N            "
+acr_nav.VisibleLine  row:3  value:"algo_lib.FDb.CmdLineNameBreak   []{}(). ..:                      N          Y     wcore  "
+acr_nav.VisibleLine  row:4  value:"algo_lib.FDb.CmdLineValueBreak  []{}(). ..                       N          Y     wcore  "
+acr_nav.VisibleLine  row:5  value:"algo_lib.FDb.DigitChar          0-9                              Y          Y            "
+acr_nav.VisibleLine  row:6  value:"algo_lib.FDb.DirSep             /\\                               N          Y            "
+acr_nav.VisibleLine  row:7  value:"algo_lib.FDb.HexChar            0-9a-fA-F                        Y          Y            "
+acr_nav.VisibleLine  row:8  value:"algo_lib.FDb.IdentChar          a-zA-Z0-9_                       Y          Y            "
+acr_nav.VisibleLine  row:9  value:"algo_lib.FDb.IdentStart         a-zA-Z_                          Y          Y            "
+acr_nav.VisibleLine  row:10  value:"algo_lib.FDb.LowerChar          a-z                              Y          Y            "
+acr_nav.VisibleLine  row:11  value:"algo_lib.FDb.NewLineChar        ..                               N          Y            "
+acr_nav.VisibleLine  row:12  value:"algo_lib.FDb.RegxSqlSpecial     $.|?*+(){}^\\[]#                  N          N            "
+acr_nav.VisibleLine  row:13  value:"algo_lib.FDb.SsimBreakName      []{}(). ..:                      N          N            "
+acr_nav.VisibleLine  row:14  value:"algo_lib.FDb.SsimBreakValue     []{}(). ..                       N          N            "
+acr_nav.VisibleLine  row:15  value:"algo_lib.FDb.SsimQuotesafe      a-zA-Z0-9_;&*^%$@.!:,+/-         Y          N            "
+acr_nav.VisibleLine  row:16  value:"algo_lib.FDb.UpperChar          A-Z                              Y          Y            "
+acr_nav.VisibleLine  row:17  value:"algo_lib.FDb.Urlsafe            0-9a-zA-Z_.~                     Y          N            "
+acr_nav.VisibleLine  row:18  value:"algo_lib.FDb.WhiteChar          ...                              N          Y            "
+acr_nav.VisibleLine  row:19  value:"algo_lib.FDb.WordSeparator      ... []{}(),;~`!@#$%.?'\"=+-/*^&|  N          Y     wcore  "
+acr_nav.VisibleLine  row:20  value:"amc.FDb.ValidRnumPad            0123456789+-.e                   N          N            "
+acr_nav.VisibleLine  row:21  value:"lib_json.FDb.JsonFirstNumChar   0-9-                             Y          Y            "
+acr_nav.VisibleLine  row:22  value:"lib_json.FDb.JsonNumChar        0-9eE.+-                         Y          Y            "
+
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:Charset  navstack_depth:0  n_sel_ctype:3  n_ctype:1404  n_field:5631  viewmode:preview  breadcrumb:""  filtertarget:ctype
+acr_nav.PanelState  panel:ctype_list  sel_row:3  scroll_offset:0  n_items:4  sel_value:dmmeta.Charset
+acr_nav.VisibleLeftItem  row:0  value:algo  kind:ns  collapsed:Y  n_match:1  n_record:0
+acr_nav.VisibleLeftItem  row:1  value:amc  kind:ns  collapsed:Y  n_match:1  n_record:0
+acr_nav.VisibleLeftItem  row:2  value:dmmeta  kind:ns  collapsed:N  n_match:1  n_record:0
+acr_nav.VisibleLeftItem  row:3  value:dmmeta.Charset  kind:ctype  collapsed:N  n_match:0  n_record:23
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:23  sel_value:"algo_lib.FDb.AlphaChar          a-zA-Z                           Y          Y            "
+acr_nav.VisibleLine  row:0  value:"algo_lib.FDb.AlphaChar          a-zA-Z                           Y          Y            "
+acr_nav.VisibleLine  row:1  value:"algo_lib.FDb.ArgvIdent          a-zA-Z0-9_                       Y          N            "
+acr_nav.VisibleLine  row:2  value:"algo_lib.FDb.BashQuotesafe      a-zA-Z0-9_^%@./-                 Y          N            "
+acr_nav.VisibleLine  row:3  value:"algo_lib.FDb.CmdLineNameBreak   []{}(). ..:                      N          Y     wcore  "
+acr_nav.VisibleLine  row:4  value:"algo_lib.FDb.CmdLineValueBreak  []{}(). ..                       N          Y     wcore  "
+acr_nav.VisibleLine  row:5  value:"algo_lib.FDb.DigitChar          0-9                              Y          Y            "
+acr_nav.VisibleLine  row:6  value:"algo_lib.FDb.DirSep             /\\                               N          Y            "
+acr_nav.VisibleLine  row:7  value:"algo_lib.FDb.HexChar            0-9a-fA-F                        Y          Y            "
+acr_nav.VisibleLine  row:8  value:"algo_lib.FDb.IdentChar          a-zA-Z0-9_                       Y          Y            "
+acr_nav.VisibleLine  row:9  value:"algo_lib.FDb.IdentStart         a-zA-Z_                          Y          Y            "
+acr_nav.VisibleLine  row:10  value:"algo_lib.FDb.LowerChar          a-z                              Y          Y            "
+acr_nav.VisibleLine  row:11  value:"algo_lib.FDb.NewLineChar        ..                               N          Y            "
+acr_nav.VisibleLine  row:12  value:"algo_lib.FDb.RegxSqlSpecial     $.|?*+(){}^\\[]#                  N          N            "
+acr_nav.VisibleLine  row:13  value:"algo_lib.FDb.SsimBreakName      []{}(). ..:                      N          N            "
+acr_nav.VisibleLine  row:14  value:"algo_lib.FDb.SsimBreakValue     []{}(). ..                       N          N            "
+acr_nav.VisibleLine  row:15  value:"algo_lib.FDb.SsimQuotesafe      a-zA-Z0-9_;&*^%$@.!:,+/-         Y          N            "
+acr_nav.VisibleLine  row:16  value:"algo_lib.FDb.UpperChar          A-Z                              Y          Y            "
+acr_nav.VisibleLine  row:17  value:"algo_lib.FDb.Urlsafe            0-9a-zA-Z_.~                     Y          N            "
+acr_nav.VisibleLine  row:18  value:"algo_lib.FDb.WhiteChar          ...                              N          Y            "
+acr_nav.VisibleLine  row:19  value:"algo_lib.FDb.WordSeparator      ... []{}(),;~`!@#$%.?'\"=+-/*^&|  N          Y     wcore  "
+acr_nav.VisibleLine  row:20  value:"amc.FDb.ValidRnumPad            0123456789+-.e                   N          N            "
+acr_nav.VisibleLine  row:21  value:"lib_json.FDb.JsonFirstNumChar   0-9-                             Y          Y            "
+acr_nav.VisibleLine  row:22  value:"lib_json.FDb.JsonNumChar        0-9eE.+-                         Y          Y            "
+
