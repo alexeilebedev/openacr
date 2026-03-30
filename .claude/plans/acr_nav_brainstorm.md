@@ -37,7 +37,6 @@
 ## Known Issues
 
 - **I9: Help renders as black screen on startup.** The help overlay is shown but not rendered correctly — appears as a blank/black screen. It also shouldn't dismiss on Up/Down. Only on enter/search/etc. So you start navigation and still see help. Once you pick namespace — help auto-dismisses.
-- **I10: acr_nav not showing (x) counts for ssimfile-backed ctypes.** E.g. FNavstyle preview shows (9) but FNavstyle in the left panel shows nothing.
 - **I11: enter after filter should also navigate additionally to applying the filter.** When you enter a filter and hit enter, nothing visible changes. It is confusing. It should apply the filter AND navigate / open collapsed namespaces.
 - **I12: status bar help hints are not contextual.** E.g. you are in Fields view -> show Enter hint. Just hit enter -> show Backspace hint. Think of all possible flows and confusions.
 

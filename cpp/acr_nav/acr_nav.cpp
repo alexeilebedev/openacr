@@ -1239,8 +1239,9 @@ static void RenderContentArea(RenderCtx &ctx) {
                 }
                 left_cell << "    " << stripped;
                 acr_nav::FCtype *ct = acr_nav::ind_ctype_Find(item.ctype);
-                if (ct && ct->c_ssimfile && ct->c_ssimfile->n_record > 0) {
-                    left_cell << " (" << ct->c_ssimfile->n_record << ")";
+                acr_nav::FSsimfile *ssf = ct ? FindSsimfile(*ct) : nullptr;
+                if (ssf && ssf->n_record > 0) {
+                    left_cell << " (" << ssf->n_record << ")";
                 }
             }
         }
