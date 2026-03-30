@@ -27,8 +27,9 @@
 | M18.1 | Fix 2 headless bugs, add VisibleLine/SetTermSize, rename tests | Headless protocol maturity; data-driven overlay dismiss |
 | M18.2 | Add VisibleLeftItem + InputError, close protocol gaps | Left panel readable by agents; explicit error feedback |
 | M19 | Record count display in left panel | Ssimfile line counts at startup; DecimalDigits helper; RecordCount test |
+| M20 | Generated code preview viewmode | SysEval `amc '<ctype>'`; codegen viewmode; 'c' toggle; per-ctype caching |
 
-**Current:** ~1250 lines C++, 22 navactions, 38 keybinds, 2 modes, 2 panels, 5 viewmodes (fields/xref/preview/help/detail), 9 navstyles, 36 reftypestyles, ~1400 ctypes / ~5600 fields across 83 namespaces. Namespace-grouped tree view with collapse/expand, record counts for ssimfile-backed ctypes. 17 headless tests. Headless protocol: SendKey, Screenshot, SetTermSize (input); Screen, PanelState, VisibleLeftItem, VisibleField, VisibleLine, InputError (output).
+**Current:** ~1290 lines C++, 23 navactions, 39 keybinds, 2 modes, 2 panels, 6 viewmodes (fields/xref/preview/codegen/help/detail), 9 navstyles, 36 reftypestyles, ~1400 ctypes / ~5600 fields across 83 namespaces. Namespace-grouped tree view with collapse/expand, record counts for ssimfile-backed ctypes. 18 headless tests. Headless protocol: SendKey, Screenshot, SetTermSize (input); Screen, PanelState, VisibleLeftItem, VisibleField, VisibleLine, InputError (output).
 
 ---
 
@@ -59,9 +60,6 @@ Understanding a single field (its xref wiring, index config, substr decompositio
 ### P6. The F-prefix gap
 Generated C++ uses `acr_nav::FNaventry`. Querying `acr dmmeta.field:acr_nav.FNaventry.%` returns nothing -- the real name is `acr_nav.Naventry`. No hint. Trips up everyone who reads generated code first.
 
-### P8. Schema-to-code gap
-"What C++ did amc generate for this type?" requires leaving acr_nav. The connection between schema definition and generated code is invisible inside the tool meant to browse the schema.
-
 ---
 
 ## Ideas by Tier
@@ -70,13 +68,7 @@ Generated C++ uses `acr_nav::FNaventry`. Querying `acr dmmeta.field:acr_nav.FNav
 
 These solve the most painful problems, align with OpenACR philosophy, and build on existing architecture.
 
-#### 1D. Generated Code Preview
-
-New viewmode: "generated". Shows the amc-generated C++ for the selected ctype -- struct definition, access functions, constructors, pool operations. Shell out to `amc <ctype>` and render inline, same pattern as preview mode loading ssimfiles.
-
-**Solves:** P8 (schema-to-code gap), P3 (tool-switching tax).
-**Value:** High. Schema and generated code are two views of the same thing -- this makes that visible.
-**Size:** Small-Medium. Same architecture as preview mode (shell out, capture output, render in right panel). One new viewmode record.
+#### ~~1D. Generated Code Preview~~ (done — M20)
 
 #### ~~1E. Record Count Display~~ (done — M19)
 
@@ -94,6 +86,7 @@ Filter mode currently searches ctype names. Add a toggle to search field names a
 
 These improve the experience meaningfully but solve less acute pain or require more work.
 
+#### 2A. Syntax highlighting for ssimfiles and codegen
 
 #### 2B. Access Path Diagram — Static (Inline amc_vis)
 
@@ -154,7 +147,7 @@ Full pool scan has a practical obstacle: Tpool loses iteration capability (free-
 | ~~M17~~ | ~~1A: Inline reftype glossary~~ | ~~Done~~ |
 | ~~M18~~ | ~~1C: Namespace grouping~~ | ~~Done~~ |
 | ~~M19~~ | ~~1E: Record count display~~ | ~~Done~~ |
-| M20 | 1D: Generated code preview | Bridges schema and code; shell-out pattern already proven |
+| ~~M20~~ | ~~1D: Generated code preview~~ | ~~Done~~ |
 | M21 | 1F: Field name/comment search | Turns acr_nav into a replacement for `acr` field queries |
 | Later | 2B-2E, Tier 3 | As interest dictates |
 
@@ -163,7 +156,7 @@ Full pool scan has a practical obstacle: Tpool loses iteration capability (free-
 - **M17 (reftype glossary)** — Done. Added `dmmeta.Reftype.comment`, surfaced in detail view.
 - **M18 (namespace grouping)** — Done. LeftItem Tary, FNs.c_ctype Ptrary, collapse/expand, extern label, stable width.
 - **M19 (record counts)** — Done. FSsimfile.n_record counted at startup, displayed as `(N)` in left panel. DecimalDigits helper also fixed latent 4-digit cap in namespace header width.
-- **M20 (generated code)** builds on the shell-out pattern from preview mode. Seeing the generated code for a type completes the schema-to-code loop.
+- **M20 (generated code)** — Done. SysEval to `amc '<ctype>'`, codegen viewmode with `has_fields:N`, `c` toggle key, per-ctype caching via `p_codegen_ctype`.
 - **M21 (field search)** adds cross-cutting query capability. Positioned after the structural improvements so the tool already feels capable when search extends it.
 
-**Future factoring:** IsHelpMode (4 sites) and IsXrefMode (5 sites) are identity checks that should become data on FViewmode. At 2 modes per axis, the branching is trivial. Refactor when a 3rd mode is added to either axis. Documented in code at their definition sites.
+**Future factoring:** IsHelpMode (4 sites) and IsXrefMode (5 sites) are identity checks that should become data on FViewmode. At 2 modes per axis, the branching is trivial. Refactor when a 3rd mode is added to either axis. Documented in code at their definition sites. RightPanelItemCount has per-viewmode lazy-load checks for preview and codegen (2 instances); at 3, refactor to an ensure-content hook on FViewmode.
