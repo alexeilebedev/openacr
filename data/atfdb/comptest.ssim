@@ -192,6 +192,7 @@ atfdb.comptest  comptest:acr_nav.PreviewCharset  timeout:10  memcheck:Y  coverag
 atfdb.comptest  comptest:acr_nav.RecordCount  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:"Record count display for ctypes with ssimfiles"
 atfdb.comptest  comptest:acr_nav.UnknownKey  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:"Unknown key is no-op, does not dismiss startup help"
 atfdb.comptest  comptest:acr_nav.ViewCycle  timeout:30  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:"Tab cycling through fields, xref, preview, codegen"
+atfdb.comptest  comptest:acr_nav.ViewportClip  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:"Visible* records clipped to terminal viewport"
 atfdb.comptest  comptest:acr_nav.Xref  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:"Reverse xref toggle, follow, and go back"
 atfdb.comptest  comptest:acr_nav.XrefEmpty  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:"Reverse xref on ctype with no reverse refs"
 atfdb.comptest  comptest:aqlite.CompileOptions  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:""

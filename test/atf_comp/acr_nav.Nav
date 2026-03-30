@@ -1,4 +1,4 @@
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1403  n_ctype:1404  n_field:5649  viewmode:help  breadcrumb:""  filtertarget:ctype  hints:"Escape:dismiss  q:quit  ?:dismiss"
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1403  n_ctype:1404  n_field:5650  viewmode:help  breadcrumb:""  filtertarget:ctype  hints:"Escape:dismiss  q:quit  ?:dismiss"
 acr_nav.PanelState  panel:ctype_list  sel_row:2  scroll_offset:0  n_items:83  sel_value:abt_md
 acr_nav.VisibleLeftItem  row:0  value:""  kind:ns  collapsed:Y  n_match:44  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:abt  kind:ns  collapsed:Y  n_match:19  n_record:0
@@ -102,16 +102,16 @@ acr_nav.VisibleLine  row:14  value:"                  d         Toggle field met
 acr_nav.VisibleLine  row:15  value:"                  c         Toggle generated code view"
 acr_nav.VisibleLine  row:16  value:""
 acr_nav.VisibleLine  row:17  value:"/                           Enter filter input mode"
-acr_nav.VisibleLine  row:18  value:"                            Clear filter text"
+acr_nav.VisibleLine  row:18  value:"Ctrl-U                      Clear filter text"
 acr_nav.VisibleLine  row:19  value:"Escape                      Dismiss overlay or clear filter"
-acr_nav.VisibleLine  row:20  value:"                            Cycle filter target (Tab in filter mode)"
+acr_nav.VisibleLine  row:20  value:"Tab                         Cycle filter target (Tab in filter mode)"
 acr_nav.VisibleLine  row:21  value:""
 acr_nav.VisibleLine  row:22  value:"?                           Toggle help panel"
 acr_nav.VisibleLine  row:23  value:"                  q         Exit acr_nav"
 acr_nav.VisibleLine  row:24  value:""
 acr_nav.VisibleLine  row:25  value:"  ↑↓ Browse    Enter Start    ? Help anytime"
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1403  n_ctype:1404  n_field:5649  viewmode:help  breadcrumb:""  filtertarget:ctype  hints:"Escape:dismiss  q:quit  ?:dismiss"
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1403  n_ctype:1404  n_field:5650  viewmode:help  breadcrumb:""  filtertarget:ctype  hints:"Escape:dismiss  q:quit  ?:dismiss"
 acr_nav.PanelState  panel:ctype_list  sel_row:2  scroll_offset:0  n_items:83  sel_value:abt_md
 acr_nav.VisibleLeftItem  row:0  value:""  kind:ns  collapsed:Y  n_match:44  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:abt  kind:ns  collapsed:Y  n_match:19  n_record:0
@@ -215,9 +215,9 @@ acr_nav.VisibleLine  row:14  value:"                  d         Toggle field met
 acr_nav.VisibleLine  row:15  value:"                  c         Toggle generated code view"
 acr_nav.VisibleLine  row:16  value:""
 acr_nav.VisibleLine  row:17  value:"/                           Enter filter input mode"
-acr_nav.VisibleLine  row:18  value:"                            Clear filter text"
+acr_nav.VisibleLine  row:18  value:"Ctrl-U                      Clear filter text"
 acr_nav.VisibleLine  row:19  value:"Escape                      Dismiss overlay or clear filter"
-acr_nav.VisibleLine  row:20  value:"                            Cycle filter target (Tab in filter mode)"
+acr_nav.VisibleLine  row:20  value:"Tab                         Cycle filter target (Tab in filter mode)"
 acr_nav.VisibleLine  row:21  value:""
 acr_nav.VisibleLine  row:22  value:"?                           Toggle help panel"
 acr_nav.VisibleLine  row:23  value:"                  q         Exit acr_nav"

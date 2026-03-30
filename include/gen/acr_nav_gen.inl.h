@@ -2285,6 +2285,7 @@ inline  acr_nav::TableId::TableId(acr_nav_TableIdEnum arg) {
 inline void acr_nav::VisibleField_Init(acr_nav::VisibleField& parent) {
     parent.row = i32(0);
     parent.navigable = bool(false);
+    parent.match = bool(false);
 }
 
 // --- acr_nav.VisibleField..Ctor

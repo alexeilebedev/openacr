@@ -6421,6 +6421,9 @@ void acr_nav::VisibleField_Print(acr_nav::VisibleField& row, algo::cstring& str)
 
     bool_Print(row.navigable, temp);
     PrintAttrSpaceReset(str,"navigable", temp);
+
+    bool_Print(row.match, temp);
+    PrintAttrSpaceReset(str,"match", temp);
 }
 
 // --- acr_nav.VisibleLeftItem..Print

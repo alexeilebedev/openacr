@@ -3025,6 +3025,7 @@ struct VisibleField { // acr_nav.VisibleField: Headless field output
     algo::Smallstr50    reftype;     // Reference type
     algo::Smallstr50    style;       // Visual style name
     bool                navigable;   //   false  Whether follow_ref would navigate
+    bool                match;       //   false  Field matches active filter (filtertarget:field)
     // func:acr_nav.VisibleField..Ctor
     inline               VisibleField() __attribute__((nothrow));
 };

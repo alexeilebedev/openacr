@@ -188,6 +188,7 @@ atfdb.targs  comptest:acr_nav.Nav  args:-headless
 atfdb.targs  comptest:acr_nav.Preview  args:-headless
 atfdb.targs  comptest:acr_nav.UnknownKey  args:-headless
 atfdb.targs  comptest:acr_nav.ViewCycle  args:-headless
+atfdb.targs  comptest:acr_nav.ViewportClip  args:-headless
 atfdb.targs  comptest:acr_nav.Xref  args:-headless
 atfdb.targs  comptest:acr_nav.XrefEmpty  args:-headless
 atfdb.targs  comptest:aqlite.CompileOptions  args:'-in:- "PRAGMA compile_options;"'

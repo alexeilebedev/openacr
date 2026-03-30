@@ -833,6 +833,7 @@ dmmeta.field  field:acr_nav.VisibleField.arg  arg:algo.Smallstr100  reftype:Val 
 dmmeta.field  field:acr_nav.VisibleField.reftype  arg:algo.Smallstr50  reftype:Val  dflt:""  comment:"Reference type"
 dmmeta.field  field:acr_nav.VisibleField.style  arg:algo.Smallstr50  reftype:Val  dflt:""  comment:"Visual style name"
 dmmeta.field  field:acr_nav.VisibleField.navigable  arg:bool  reftype:Val  dflt:""  comment:"Whether follow_ref would navigate"
+dmmeta.field  field:acr_nav.VisibleField.match  arg:bool  reftype:Val  dflt:""  comment:"Field matches active filter (filtertarget:field)"
 dmmeta.field  field:acr_nav.VisibleLeftItem.row  arg:i32  reftype:Val  dflt:""  comment:"Row index in left panel (0-based)"
 dmmeta.field  field:acr_nav.VisibleLeftItem.value  arg:algo.Smallstr100  reftype:Val  dflt:""  comment:"Namespace key or ctype key"
 dmmeta.field  field:acr_nav.VisibleLeftItem.kind  arg:algo.Smallstr16  reftype:Val  dflt:""  comment:"Row kind: ns or ctype"

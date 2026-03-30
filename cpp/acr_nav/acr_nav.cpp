@@ -1213,6 +1213,7 @@ static void BuildHelpLines() {
         for (int a = 0; a < n_actions; a++) {
             tempstr std_keys;
             tempstr short_keys;
+            // First pass: browse-mode keybinds
             ind_beg(acr_nav::_db_keybind_curs, kb, acr_nav::_db) {
                 if (kb.p_navaction == actions[a] && acr_nav::navmode_Get(kb) == "browse") {
                     algo::Smallstr50 key = acr_nav::key_Get(kb);
@@ -1225,6 +1226,21 @@ static void BuildHelpLines() {
                     target << key;
                 }
             } ind_end;
+            // Second pass: filter-mode keybinds only if no browse keys found
+            if (ch_N(std_keys) == 0 && ch_N(short_keys) == 0) {
+                ind_beg(acr_nav::_db_keybind_curs, kb, acr_nav::_db) {
+                    if (kb.p_navaction == actions[a] && acr_nav::navmode_Get(kb) == "filter") {
+                        algo::Smallstr50 key = acr_nav::key_Get(kb);
+                        algo::strptr keystr(key);
+                        bool is_shortcut = (elems_N(keystr) == 1 && ((keystr[0] >= 'a' && keystr[0] <= 'z') || (keystr[0] >= 'A' && keystr[0] <= 'Z')));
+                        cstring &target = is_shortcut ? short_keys : std_keys;
+                        if (ch_N(target) > 0) {
+                            target << "/";
+                        }
+                        target << key;
+                    }
+                } ind_end;
+            }
             tempstr line;
             line << std_keys;
             char_PrintNTimes(' ', line, i32_Max(1, 18 - ch_N(line)));
@@ -1633,8 +1649,10 @@ static void HeadlessOutput() {
         }
     }
     prlog(left_state);
-    // Left panel items
-    for (int i = 0; i < acr_nav::left_item_N(); i++) {
+    // Left panel items (clipped to viewport)
+    int first_left = left->scroll_offset;
+    int last_left = i32_Min(first_left + VisibleRows(), acr_nav::left_item_N());
+    for (int i = first_left; i < last_left; i++) {
         acr_nav::LeftItem &item = acr_nav::left_item_qFind(i);
         acr_nav::VisibleLeftItem vli;
         vli.row = i;
@@ -1673,10 +1691,12 @@ static void HeadlessOutput() {
         }
     }
     prlog(right_state);
-    // Visible fields (field-based modes only)
+    // Visible fields (field-based modes only, clipped to viewport)
     if (sel_ct && acr_nav::_db.p_cur_viewmode->has_fields) {
         int n_vis = RightPanelItemCount(sel_ct);
-        for (int i = 0; i < n_vis; i++) {
+        int first_right = right->scroll_offset;
+        int last_right = i32_Min(first_right + VisibleRows(), n_vis);
+        for (int i = first_right; i < last_right; i++) {
             acr_nav::FField *field = RightPanelFieldFind(sel_ct, i);
             if (field) {
                 acr_nav::VisibleField vf;
@@ -1691,13 +1711,22 @@ static void HeadlessOutput() {
                     ? (field->p_ctype != sel_ct)
                     : (field->p_arg != sel_ct);
                 vf.navigable = navigable;
+                bool field_match = false;
+                if (!IsXrefMode()
+                    && acr_nav::_db.p_cur_filtertarget != acr_nav::_db.p_default_filtertarget
+                    && ch_N(acr_nav::_db.filter) > 0) {
+                    field_match = FieldMatchesFilter(*field, acr_nav::_db.filter_regx);
+                }
+                vf.match = field_match;
                 prlog(vf);
             }
         }
     } else {
-        // Visible lines (text-based modes: help, preview, detail)
+        // Visible lines (text-based modes: help, preview, detail, clipped to viewport)
         int n_lines = RightPanelItemCount(sel_ct);
-        for (int i = 0; i < n_lines; i++) {
+        int first_line = right->scroll_offset;
+        int last_line = i32_Min(first_line + VisibleRows(), n_lines);
+        for (int i = first_line; i < last_line; i++) {
             acr_nav::VisibleLine vl;
             vl.row = i;
             vl.value = RightPanelLineFind(i);
