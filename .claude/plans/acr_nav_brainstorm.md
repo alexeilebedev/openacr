@@ -74,11 +74,29 @@ These solve the most painful problems, align with OpenACR philosophy, and build 
 
 #### 1F. Field Name / Comment Search
 
-Filter mode currently searches ctype names. Add a toggle to search field names and comments instead. Results show ctypes containing matching fields, with matches highlighted in the right panel.
+Filter mode currently searches ctype names. A `filtertarget` controlled vocabulary table adds a second axis: what the filter matches against. V1 has two targets: `ctype` (default, current behavior) and `field` (matches field name + comment text). Tab in filter mode cycles through targets. Status bar shows a prefix: `/text` for ctype, `/f:text` for field.
+
+Results show ctypes containing matching fields, with matches highlighted (bold) in the right panel's forward fields viewmode. Filtertarget saved/restored in navstack. `/` resets to ctype target; Tab to switch.
 
 **Solves:** Part of P3 (tool-switching tax). "Which ctypes have a field called 'comment'?" currently requires `acr dmmeta.field -where:...`.
 **Value:** High. Turns acr_nav into a tool you reach for instead of `acr` for cross-cutting field queries.
-**Size:** Medium. Needs a second filter index over fields.
+**Size:** Medium. New `acr_navdb.filtertarget` table (2 records), one branch in BuildLeftItems, highlight pass in renderer, Tab keybind change in filter mode.
+
+**Future filtertarget extensions** (one record + one match branch each):
+
+| Target | Label | Searches against | Use case |
+|--------|-------|-----------------|----------|
+| `ctype` | (none) | ctype name | Default. "Find types named FDb" |
+| `field` | `f:` | field name + comment | V1. "Which types have a `comment` field?" |
+| `arg` | `a:` | field argument type | "Which types have `algo.cstring` fields?" |
+| `reftype` | `r:` | field reftype | "Which types use Thash indexes?" |
+| `all` | `*:` | name + field + comment + arg | Kitchen sink — "find anything mentioning X" |
+
+At 3+ targets, Tab cycling becomes tedious. Two possible evolutions:
+- **Prefix typing:** user types `/f:comment` directly; filter parser detects known prefix and sets filtertarget. Tab still works as fallback.
+- **Picker popup:** Tab opens a brief target selector instead of blind cycling. Heavier UI but scales to any count.
+
+The `filtertarget` table with `next` cycling chain supports both — the table is the source of truth; the input mechanism is independent.
 
 ---
 
