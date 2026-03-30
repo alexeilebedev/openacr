@@ -1,2 +1,2 @@
-acr_navdb.panel  panel:ctype_list  title:Types   position:0  min_width:15  comment:""
-acr_navdb.panel  panel:content  title:Content  position:1  min_width:0   comment:""
+acr_navdb.panel  panel:content  title:Content  position:1  min_width:0  comment:""
+acr_navdb.panel  panel:ctype_list  title:Types  position:0  min_width:15  comment:""

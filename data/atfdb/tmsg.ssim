@@ -219,6 +219,12 @@ atfdb.tmsg  tmsg:acr_nav.Filter/100010.in  istuple:N  msg:"acr_nav.SendKey  key:
 atfdb.tmsg  tmsg:acr_nav.Filter/100020.in  istuple:N  msg:"acr_nav.SendKey  key:m"
 atfdb.tmsg  tmsg:acr_nav.Filter/100030.in  istuple:N  msg:"acr_nav.SendKey  key:c"
 atfdb.tmsg  tmsg:acr_nav.Filter/100040.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.FilterAccept/100000.in  istuple:N  msg:"acr_nav.SendKey  key:/"
+atfdb.tmsg  tmsg:acr_nav.FilterAccept/100010.in  istuple:N  msg:"acr_nav.SendKey  key:a"
+atfdb.tmsg  tmsg:acr_nav.FilterAccept/100020.in  istuple:N  msg:"acr_nav.SendKey  key:m"
+atfdb.tmsg  tmsg:acr_nav.FilterAccept/100030.in  istuple:N  msg:"acr_nav.SendKey  key:c"
+atfdb.tmsg  tmsg:acr_nav.FilterAccept/100040.in  istuple:N  msg:"acr_nav.SendKey  key:Enter"
+atfdb.tmsg  tmsg:acr_nav.FilterAccept/100050.in  istuple:N  msg:acr_nav.Screenshot
 atfdb.tmsg  tmsg:acr_nav.FilterEdge/100000.in  istuple:N  msg:"acr_nav.SendKey  key:j"
 atfdb.tmsg  tmsg:acr_nav.FilterEdge/100010.in  istuple:N  msg:"acr_nav.SendKey  key:/"
 atfdb.tmsg  tmsg:acr_nav.FilterEdge/100020.in  istuple:N  msg:"acr_nav.SendKey  key:z"

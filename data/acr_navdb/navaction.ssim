@@ -1,3 +1,4 @@
+acr_navdb.navaction  navaction:cycle_viewmode  hint:view  helpgroup:view  sort_order:10  comment:"Cycle right panel: fields, xrefs, preview, codegen"
 acr_navdb.navaction  navaction:dismiss_or_clear  hint:""  helpgroup:search  sort_order:12  comment:"Dismiss overlay or clear filter"
 acr_navdb.navaction  navaction:filter_accept  hint:accept  helpgroup:""  sort_order:0  comment:"Accept filter and return to browse mode"
 acr_navdb.navaction  navaction:filter_append_space  hint:""  helpgroup:""  sort_order:0  comment:"Append space to filter text"
@@ -21,4 +22,3 @@ acr_navdb.navaction  navaction:switch_panel_left  hint:""  helpgroup:navigation 
 acr_navdb.navaction  navaction:switch_panel_right  hint:""  helpgroup:navigation  sort_order:13  comment:"Move focus to panel on the right"
 acr_navdb.navaction  navaction:toggle_codegen  hint:codegen  helpgroup:view  sort_order:13  comment:"Toggle generated code view"
 acr_navdb.navaction  navaction:toggle_preview  hint:preview  helpgroup:view  sort_order:11  comment:"Toggle ssimfile content preview"
-acr_navdb.navaction  navaction:cycle_viewmode  hint:view  helpgroup:view  sort_order:10  comment:"Cycle right panel: fields, xrefs, preview, codegen"

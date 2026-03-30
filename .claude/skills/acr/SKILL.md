@@ -151,6 +151,7 @@ The most common design fix. When N hardcoded blocks switch on the same values, t
 | Generator doing file I/O | Write to buffer; separate writer handles I/O |
 | Different generator signatures | Uniform contract; variation is a data field |
 | Hand-editing cpp/gen/ or include/gen/ | Run `amc`; generated files are overwritten |
+| Hand-editing data/**/*.ssim | Use `acr -insert -write`; acr enforces sort order per `dmmeta.ssimsort` |
 | Code branch in dispatcher | Add record to `amcdb.gen` |
 | Hardcoded allowed values | Controlled vocabulary table |
 | IR/AST between generator and output | Build strings directly via `<<` |
@@ -163,6 +164,9 @@ The most common design fix. When N hardcoded blocks switch on the same values, t
 |------|---------|
 | `acr <table>` | Query any ssimfile table. `acr dmmeta.field -where:field:amc.FDb.%` |
 | `acr -check` | Verify referential integrity across all `data/` |
+| `echo 'record' \| acr -insert -write` | Insert records into ssimfiles (auto-sorts, validates) |
+| `echo 'record' \| acr -merge -write` | Upsert: insert if new, update if existing |
+| `acr <query> -del -write` | Delete records from ssimfiles |
 | `acr_ed -create -field:X -arg:Y -write` | Add fields (preferred over hand-editing field.ssim) |
 | `acr_ed -create -ctype:X -write` | Add ctypes, targets, cross-references |
 | `amc` | Regenerate all C++ from schema |

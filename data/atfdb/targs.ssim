@@ -179,6 +179,7 @@ atfdb.targs  comptest:acr_nav.FieldFilterCancel  args:-headless
 atfdb.targs  comptest:acr_nav.FieldFilterNavstack  args:-headless
 atfdb.targs  comptest:acr_nav.FieldFilterScreen  args:-headless
 atfdb.targs  comptest:acr_nav.Filter  args:-headless
+atfdb.targs  comptest:acr_nav.FilterAccept  args:-headless
 atfdb.targs  comptest:acr_nav.FilterEdge  args:-headless
 atfdb.targs  comptest:acr_nav.Follow  args:-headless
 atfdb.targs  comptest:acr_nav.Help  args:-headless

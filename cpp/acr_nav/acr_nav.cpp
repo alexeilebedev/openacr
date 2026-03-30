@@ -844,6 +844,26 @@ void acr_nav::navaction_toggle_codegen() {
 // -----------------------------------------------------------------------------
 
 void acr_nav::navaction_filter_accept() {
+    bool has_filter = ch_N(acr_nav::_db.filter) > 0;
+    if (has_filter) {
+        // Expand all namespaces that have matching ctypes so results are visible
+        ind_beg(acr_nav::_db_ns_curs, ns, acr_nav::_db) {
+            if (ns.n_match > 0) {
+                ns.collapsed = false;
+            }
+        } ind_end;
+        BuildLeftItems();
+        // Navigate cursor to first matching ctype (skip namespace headers)
+        acr_nav::FPanel *left = acr_nav::_db.p_left_panel;
+        left->sel_row = 0;
+        left->scroll_offset = 0;
+        for (int i = 0; i < acr_nav::left_item_N(); i++) {
+            if (ch_N(acr_nav::left_item_qFind(i).ctype) > 0) {
+                left->sel_row = i;
+                break;
+            }
+        }
+    }
     SwitchToBrowse();
 }
 

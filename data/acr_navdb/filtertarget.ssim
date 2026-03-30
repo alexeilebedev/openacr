@@ -1,2 +1,2 @@
 acr_navdb.filtertarget  filtertarget:ctype  label:""  next:field  comment:"Match against ctype names (default)"
-acr_navdb.filtertarget  filtertarget:field  label:"f:"  next:ctype  comment:"Match against field names and comments"
+acr_navdb.filtertarget  filtertarget:field  label:f:  next:ctype  comment:"Match against field names and comments"

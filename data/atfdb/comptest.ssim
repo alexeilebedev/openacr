@@ -179,6 +179,7 @@ atfdb.comptest  comptest:acr_nav.FieldFilterCancel  timeout:10  memcheck:Y  cove
 atfdb.comptest  comptest:acr_nav.FieldFilterNavstack  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:"Field search accept preserves filtertarget, Escape clears it"
 atfdb.comptest  comptest:acr_nav.FieldFilterScreen  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:"Field search filtertarget appears in headless Screen output"
 atfdb.comptest  comptest:acr_nav.Filter  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:"Filter mode"
+atfdb.comptest  comptest:acr_nav.FilterAccept  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:"Filter accept expands namespaces and navigates to first match"
 atfdb.comptest  comptest:acr_nav.FilterEdge  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:"Filter to zero matches and empty list navigation"
 atfdb.comptest  comptest:acr_nav.Follow  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:"Follow reference"
 atfdb.comptest  comptest:acr_nav.Help  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:"Help overlay toggle"

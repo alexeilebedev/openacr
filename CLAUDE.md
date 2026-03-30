@@ -49,11 +49,14 @@ make clean                   # git clean -dfx build temp
 
 ## The Development Loop
 
-1. Add schema records with `acr_ed` (preferred) or edit ssimfiles in `data/` directly
+1. Add schema records with `acr_ed` (preferred) or `acr` — **never hand-edit ssimfiles**
    - Add a field: `acr_ed -create -field:<ns>.<Type>.<name> -arg:<type> -comment:"..." -write`
    - Add a ctype: `acr_ed -create -ctype:<ns>.<Type> -write`
    - Add a target: `acr_ed -create -target:<name> -write`
-   - See `acr_ed -help` for full usage
+   - Add any record: `echo '<record>' | acr -insert -write`
+   - Update a record: `echo '<record>' | acr -merge -write`
+   - Delete a record: `acr <query> -del -write`
+   - See `acr_ed -help` and `acr -help` for full usage
 2. Run `amc` to regenerate `cpp/gen/` and `include/gen/`
 3. Build with `ai` or `abt`
 4. Re-capture test outputs if schema changes affect them: `atf_comp <tests> -capture`
@@ -62,6 +65,8 @@ make clean                   # git clean -dfx build temp
 7. Commit both schema and generated code
 
 **Never hand-edit `cpp/gen/` or `include/gen/`** — overwritten by `amc`.
+
+**Never hand-edit `data/**/*.ssim`** — use `acr -insert -write` or `acr_ed`. `acr` enforces sort order (per `dmmeta.ssimsort`) and referential integrity. Hand-editing risks breaking deterministic ordering.
 
 **When modifying amc itself**, use `sandbox amc -reset -diff -- amc` to test safely. A broken amc can prevent itself from being fixed.
 
