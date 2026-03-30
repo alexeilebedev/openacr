@@ -140,7 +140,7 @@ dmmeta.ctypelen  ctype:acr_nav.FCtype  len:328  alignment:8  padbytes:13  plaind
 dmmeta.ctypelen  ctype:acr_nav.FDb  len:4616  alignment:8  padbytes:81  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.FDetailsrc  len:216  alignment:8  padbytes:0  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.FField  len:704  alignment:8  padbytes:6  plaindata:N
-dmmeta.ctypelen  ctype:acr_nav.FFiltertarget  len:288  alignment:8  padbytes:2  plaindata:N
+dmmeta.ctypelen  ctype:acr_nav.FFiltertarget  len:344  alignment:8  padbytes:0  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.FHelpgroup  len:224  alignment:8  padbytes:4  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.FKeybind  len:280  alignment:8  padbytes:0  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.FNavaction  len:456  alignment:8  padbytes:6  plaindata:N
@@ -164,7 +164,7 @@ dmmeta.ctypelen  ctype:acr_nav.VisibleField  len:316  alignment:4  padbytes:2  p
 dmmeta.ctypelen  ctype:acr_nav.VisibleLeftItem  len:136  alignment:4  padbytes:3  plaindata:Y
 dmmeta.ctypelen  ctype:acr_nav.VisibleLine  len:24  alignment:8  padbytes:4  plaindata:N
 dmmeta.ctypelen  ctype:acr_navdb.Detailsrc  len:204  alignment:1  padbytes:0  plaindata:Y
-dmmeta.ctypelen  ctype:acr_navdb.Filtertarget  len:274  alignment:1  padbytes:0  plaindata:Y
+dmmeta.ctypelen  ctype:acr_navdb.Filtertarget  len:332  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:acr_navdb.Helpgroup  len:208  alignment:4  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:acr_navdb.Keybind  len:260  alignment:4  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:acr_navdb.Navaction  len:424  alignment:4  padbytes:2  plaindata:Y

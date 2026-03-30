@@ -170,6 +170,9 @@ atfdb.targs  comptest:acr_ed.CreateTarget  args:"-create -target xyz"
 atfdb.targs  comptest:acr_in.Reverse  args:"-r dev.targdep"
 atfdb.targs  comptest:acr_in.Simple  args:acr_in
 atfdb.targs  comptest:acr_in.Tree  args:"acr_in -t"
+atfdb.targs  comptest:acr_nav.AllFilter  args:-headless
+atfdb.targs  comptest:acr_nav.ArgFilter  args:-headless
+atfdb.targs  comptest:acr_nav.ArgFilterNavstack  args:-headless
 atfdb.targs  comptest:acr_nav.Breadcrumb  args:-headless
 atfdb.targs  comptest:acr_nav.Codegen  args:-headless
 atfdb.targs  comptest:acr_nav.Collapse  args:-headless
@@ -180,12 +183,15 @@ atfdb.targs  comptest:acr_nav.FieldFilterNavstack  args:-headless
 atfdb.targs  comptest:acr_nav.FieldFilterScreen  args:-headless
 atfdb.targs  comptest:acr_nav.Filter  args:-headless
 atfdb.targs  comptest:acr_nav.FilterAccept  args:-headless
+atfdb.targs  comptest:acr_nav.FilterCycleComplete  args:-headless
+atfdb.targs  comptest:acr_nav.FilterDescription  args:-headless
 atfdb.targs  comptest:acr_nav.FilterEdge  args:-headless
 atfdb.targs  comptest:acr_nav.Follow  args:-headless
 atfdb.targs  comptest:acr_nav.Help  args:-headless
 atfdb.targs  comptest:acr_nav.Init  args:-headless
 atfdb.targs  comptest:acr_nav.Nav  args:-headless
 atfdb.targs  comptest:acr_nav.Preview  args:-headless
+atfdb.targs  comptest:acr_nav.ReftypeFilter  args:-headless
 atfdb.targs  comptest:acr_nav.UnknownKey  args:-headless
 atfdb.targs  comptest:acr_nav.ViewCycle  args:-headless
 atfdb.targs  comptest:acr_nav.ViewportClip  args:-headless

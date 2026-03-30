@@ -71,6 +71,7 @@ inline  acr_navdb::FieldId::FieldId(acr_navdb_FieldIdEnum arg) {
 
 // --- acr_navdb.Filtertarget..Ctor
 inline  acr_navdb::Filtertarget::Filtertarget() {
+    acr_navdb::Filtertarget_Init(*this);
 }
 
 // --- acr_navdb.Helpgroup..Init

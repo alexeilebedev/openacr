@@ -1739,13 +1739,6 @@ inline  acr_nav::FField::~FField() {
     acr_nav::FField_Uninit(*this);
 }
 
-// --- acr_nav.FFiltertarget..Init
-// Set all fields to initial values.
-inline void acr_nav::FFiltertarget_Init(acr_nav::FFiltertarget& filtertarget) {
-    filtertarget.ind_filtertarget_next = (acr_nav::FFiltertarget*)-1; // (acr_nav.FDb.ind_filtertarget) not-in-hash
-    filtertarget.ind_filtertarget_hashval = 0; // stored hash value
-}
-
 // --- acr_nav.FFiltertarget..Ctor
 inline  acr_nav::FFiltertarget::FFiltertarget() {
     acr_nav::FFiltertarget_Init(*this);

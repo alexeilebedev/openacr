@@ -29,49 +29,56 @@
 
 // --- acr_navdb_FieldIdEnum
 
-enum acr_navdb_FieldIdEnum {                    // acr_navdb.FieldId.value
-     acr_navdb_FieldId_detailsrc          = 0
-    ,acr_navdb_FieldId_comment            = 1
-    ,acr_navdb_FieldId_filtertarget       = 2
-    ,acr_navdb_FieldId_label              = 3
-    ,acr_navdb_FieldId_next               = 4
-    ,acr_navdb_FieldId_helpgroup          = 5
-    ,acr_navdb_FieldId_sort_order         = 6
-    ,acr_navdb_FieldId_keybind            = 7
-    ,acr_navdb_FieldId_navaction          = 8
-    ,acr_navdb_FieldId_navmode            = 9
-    ,acr_navdb_FieldId_hint_order         = 10
-    ,acr_navdb_FieldId_key                = 11
-    ,acr_navdb_FieldId_hint               = 12
-    ,acr_navdb_FieldId_passive            = 13
-    ,acr_navdb_FieldId_need_no_overlay    = 14
-    ,acr_navdb_FieldId_need_has_fields    = 15
-    ,acr_navdb_FieldId_need_navstack      = 16
-    ,acr_navdb_FieldId_need_right_panel   = 17
-    ,acr_navdb_FieldId_dismiss_hint       = 18
-    ,acr_navdb_FieldId_dismiss_viewmode   = 19
-    ,acr_navdb_FieldId_need_left_panel    = 20
-    ,acr_navdb_FieldId_navstyle           = 21
-    ,acr_navdb_FieldId_bold               = 22
-    ,acr_navdb_FieldId_dim                = 23
-    ,acr_navdb_FieldId_reverse            = 24
-    ,acr_navdb_FieldId_fg_color           = 25
-    ,acr_navdb_FieldId_panel              = 26
-    ,acr_navdb_FieldId_title              = 27
-    ,acr_navdb_FieldId_position           = 28
-    ,acr_navdb_FieldId_min_width          = 29
-    ,acr_navdb_FieldId_reftypestyle       = 30
-    ,acr_navdb_FieldId_reftype            = 31
-    ,acr_navdb_FieldId_viewmode           = 32
-    ,acr_navdb_FieldId_empty_msg          = 33
-    ,acr_navdb_FieldId_has_fields         = 34
-    ,acr_navdb_FieldId_is_overlay         = 35
-    ,acr_navdb_FieldId_need_ssimfile      = 36
-    ,acr_navdb_FieldId_is_reverse         = 37
-    ,acr_navdb_FieldId_value              = 38
+enum acr_navdb_FieldIdEnum {                      // acr_navdb.FieldId.value
+     acr_navdb_FieldId_detailsrc            = 0
+    ,acr_navdb_FieldId_comment              = 1
+    ,acr_navdb_FieldId_filtertarget         = 2
+    ,acr_navdb_FieldId_label                = 3
+    ,acr_navdb_FieldId_next                 = 4
+    ,acr_navdb_FieldId_description          = 5
+    ,acr_navdb_FieldId_match_ctype_name     = 6
+    ,acr_navdb_FieldId_match_field_name     = 7
+    ,acr_navdb_FieldId_match_comment        = 8
+    ,acr_navdb_FieldId_match_arg            = 9
+    ,acr_navdb_FieldId_match_reftype        = 10
+    ,acr_navdb_FieldId_has_field_criteria   = 11
+    ,acr_navdb_FieldId_helpgroup            = 12
+    ,acr_navdb_FieldId_sort_order           = 13
+    ,acr_navdb_FieldId_keybind              = 14
+    ,acr_navdb_FieldId_navaction            = 15
+    ,acr_navdb_FieldId_navmode              = 16
+    ,acr_navdb_FieldId_hint_order           = 17
+    ,acr_navdb_FieldId_key                  = 18
+    ,acr_navdb_FieldId_hint                 = 19
+    ,acr_navdb_FieldId_passive              = 20
+    ,acr_navdb_FieldId_need_no_overlay      = 21
+    ,acr_navdb_FieldId_need_has_fields      = 22
+    ,acr_navdb_FieldId_need_navstack        = 23
+    ,acr_navdb_FieldId_need_right_panel     = 24
+    ,acr_navdb_FieldId_dismiss_hint         = 25
+    ,acr_navdb_FieldId_dismiss_viewmode     = 26
+    ,acr_navdb_FieldId_need_left_panel      = 27
+    ,acr_navdb_FieldId_navstyle             = 28
+    ,acr_navdb_FieldId_bold                 = 29
+    ,acr_navdb_FieldId_dim                  = 30
+    ,acr_navdb_FieldId_reverse              = 31
+    ,acr_navdb_FieldId_fg_color             = 32
+    ,acr_navdb_FieldId_panel                = 33
+    ,acr_navdb_FieldId_title                = 34
+    ,acr_navdb_FieldId_position             = 35
+    ,acr_navdb_FieldId_min_width            = 36
+    ,acr_navdb_FieldId_reftypestyle         = 37
+    ,acr_navdb_FieldId_reftype              = 38
+    ,acr_navdb_FieldId_viewmode             = 39
+    ,acr_navdb_FieldId_empty_msg            = 40
+    ,acr_navdb_FieldId_has_fields           = 41
+    ,acr_navdb_FieldId_is_overlay           = 42
+    ,acr_navdb_FieldId_need_ssimfile        = 43
+    ,acr_navdb_FieldId_is_reverse           = 44
+    ,acr_navdb_FieldId_value                = 45
 };
 
-enum { acr_navdb_FieldIdEnum_N = 39 };
+enum { acr_navdb_FieldIdEnum_N = 46 };
 
 namespace acr_navdb { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 DetailsrcPkey;
@@ -176,10 +183,17 @@ void                 FieldId_Print(acr_navdb::FieldId& row, algo::cstring& str) 
 
 // --- acr_navdb.Filtertarget
 struct Filtertarget { // acr_navdb.Filtertarget
-    algo::Smallstr50   filtertarget;   //
-    algo::Smallstr16   label;          // Status bar indicator prefix
-    algo::Smallstr50   next;           // Next filtertarget in Tab cycle
-    algo::Comment      comment;        //
+    algo::Smallstr50   filtertarget;         //
+    algo::Smallstr16   label;                // Status bar indicator prefix
+    algo::Smallstr50   next;                 // Next filtertarget in Tab cycle
+    algo::Smallstr50   description;          // Hint shown in filter mode status bar
+    bool               match_ctype_name;     //   false  Match against ctype name
+    bool               match_field_name;     //   false  Match against field name
+    bool               match_comment;        //   false  Match against field comment
+    bool               match_arg;            //   false  Match against field argument type
+    bool               match_reftype;        //   false  Match against field reftype
+    bool               has_field_criteria;   //   false  Target searches field-level properties (enables right-panel highlighting)
+    algo::Comment      comment;              //
     // func:acr_navdb.Filtertarget..Ctor
     inline               Filtertarget() __attribute__((nothrow));
 };
@@ -190,6 +204,9 @@ bool                 Filtertarget_ReadFieldMaybe(acr_navdb::Filtertarget& parent
 // The format of the string is an ssim Tuple
 // func:acr_navdb.Filtertarget..ReadStrptrMaybe
 bool                 Filtertarget_ReadStrptrMaybe(acr_navdb::Filtertarget &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:acr_navdb.Filtertarget..Init
+void                 Filtertarget_Init(acr_navdb::Filtertarget& parent);
 // print string representation of ROW to string STR
 // cfmt:acr_navdb.Filtertarget.String  printfmt:Tuple
 // func:acr_navdb.Filtertarget..Print

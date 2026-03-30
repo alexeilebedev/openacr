@@ -1,2 +1,5 @@
-acr_navdb.filtertarget  filtertarget:ctype  label:""  next:field  comment:"Match against ctype names (default)"
-acr_navdb.filtertarget  filtertarget:field  label:f:  next:ctype  comment:"Match against field names and comments"
+acr_navdb.filtertarget  filtertarget:all  label:all:  next:ctype  description:"all properties"  match_ctype_name:Y  match_field_name:Y  match_comment:Y  match_arg:Y  match_reftype:Y  has_field_criteria:Y  comment:"Match against all searchable properties"
+acr_navdb.filtertarget  filtertarget:arg  label:arg:  next:reftype  description:"argument types"  match_ctype_name:N  match_field_name:N  match_comment:N  match_arg:Y  match_reftype:N  has_field_criteria:Y  comment:"Match against field argument types"
+acr_navdb.filtertarget  filtertarget:ctype  label:""  next:field  description:"type names"  match_ctype_name:Y  match_field_name:N  match_comment:N  match_arg:N  match_reftype:N  has_field_criteria:N  comment:"Match against ctype names (default)"
+acr_navdb.filtertarget  filtertarget:field  label:field:  next:arg  description:"names & comments"  match_ctype_name:N  match_field_name:Y  match_comment:Y  match_arg:N  match_reftype:N  has_field_criteria:Y  comment:"Match against field names and comments"
+acr_navdb.filtertarget  filtertarget:reftype  label:reftype:  next:all  description:reftypes  match_ctype_name:N  match_field_name:N  match_comment:N  match_arg:N  match_reftype:Y  has_field_criteria:Y  comment:"Match against field reftypes"

@@ -2066,11 +2066,18 @@ struct FFiltertarget { // acr_nav.FFiltertarget
     algo::Smallstr50          filtertarget;               //
     algo::Smallstr16          label;                      // Status bar indicator prefix
     algo::Smallstr50          next;                       // Next filtertarget in Tab cycle
+    algo::Smallstr50          description;                // Hint shown in filter mode status bar
+    bool                      match_ctype_name;           //   false  Match against ctype name
+    bool                      match_field_name;           //   false  Match against field name
+    bool                      match_comment;              //   false  Match against field comment
+    bool                      match_arg;                  //   false  Match against field argument type
+    bool                      match_reftype;              //   false  Match against field reftype
+    bool                      has_field_criteria;         //   false  Target searches field-level properties (enables right-panel highlighting)
     algo::Comment             comment;                    //
     // func:acr_nav.FFiltertarget..AssignOp
-    inline acr_nav::FFiltertarget& operator =(const acr_nav::FFiltertarget &rhs) = delete;
+    acr_nav::FFiltertarget& operator =(const acr_nav::FFiltertarget &rhs) = delete;
     // func:acr_nav.FFiltertarget..CopyCtor
-    inline               FFiltertarget(const acr_nav::FFiltertarget &rhs) = delete;
+    FFiltertarget(const acr_nav::FFiltertarget &rhs) = delete;
 private:
     // func:acr_nav.FFiltertarget..Ctor
     inline               FFiltertarget() __attribute__((nothrow));
@@ -2091,7 +2098,7 @@ void                 filtertarget_CopyIn(acr_nav::FFiltertarget &row, acr_navdb:
 
 // Set all fields to initial values.
 // func:acr_nav.FFiltertarget..Init
-inline void          FFiltertarget_Init(acr_nav::FFiltertarget& filtertarget);
+void                 FFiltertarget_Init(acr_nav::FFiltertarget& filtertarget);
 // func:acr_nav.FFiltertarget..Uninit
 void                 FFiltertarget_Uninit(acr_nav::FFiltertarget& filtertarget) __attribute__((nothrow));
 

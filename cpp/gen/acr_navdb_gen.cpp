@@ -93,6 +93,13 @@ const char* acr_navdb::value_ToCstr(const acr_navdb::FieldId& parent) {
         case acr_navdb_FieldId_filtertarget: ret = "filtertarget";  break;
         case acr_navdb_FieldId_label       : ret = "label";  break;
         case acr_navdb_FieldId_next        : ret = "next";  break;
+        case acr_navdb_FieldId_description : ret = "description";  break;
+        case acr_navdb_FieldId_match_ctype_name: ret = "match_ctype_name";  break;
+        case acr_navdb_FieldId_match_field_name: ret = "match_field_name";  break;
+        case acr_navdb_FieldId_match_comment: ret = "match_comment";  break;
+        case acr_navdb_FieldId_match_arg   : ret = "match_arg";  break;
+        case acr_navdb_FieldId_match_reftype: ret = "match_reftype";  break;
+        case acr_navdb_FieldId_has_field_criteria: ret = "has_field_criteria";  break;
         case acr_navdb_FieldId_helpgroup   : ret = "helpgroup";  break;
         case acr_navdb_FieldId_sort_order  : ret = "sort_order";  break;
         case acr_navdb_FieldId_keybind     : ret = "keybind";  break;
@@ -246,6 +253,10 @@ bool acr_navdb::value_SetStrptrMaybe(acr_navdb::FieldId& parent, algo::strptr rh
                     if (memcmp(rhs.elems+8,"p",1)==0) { value_SetEnum(parent,acr_navdb_FieldId_helpgroup); ret = true; break; }
                     break;
                 }
+                case LE_STR8('m','a','t','c','h','_','a','r'): {
+                    if (memcmp(rhs.elems+8,"g",1)==0) { value_SetEnum(parent,acr_navdb_FieldId_match_arg); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('m','i','n','_','w','i','d','t'): {
                     if (memcmp(rhs.elems+8,"h",1)==0) { value_SetEnum(parent,acr_navdb_FieldId_min_width); ret = true; break; }
                     break;
@@ -282,6 +293,15 @@ bool acr_navdb::value_SetStrptrMaybe(acr_navdb::FieldId& parent, algo::strptr rh
             }
             break;
         }
+        case 11: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('d','e','s','c','r','i','p','t'): {
+                    if (memcmp(rhs.elems+8,"ion",3)==0) { value_SetEnum(parent,acr_navdb_FieldId_description); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
         case 12: {
             switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('d','i','s','m','i','s','s','_'): {
@@ -301,6 +321,14 @@ bool acr_navdb::value_SetStrptrMaybe(acr_navdb::FieldId& parent, algo::strptr rh
         }
         case 13: {
             switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('m','a','t','c','h','_','c','o'): {
+                    if (memcmp(rhs.elems+8,"mment",5)==0) { value_SetEnum(parent,acr_navdb_FieldId_match_comment); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('m','a','t','c','h','_','r','e'): {
+                    if (memcmp(rhs.elems+8,"ftype",5)==0) { value_SetEnum(parent,acr_navdb_FieldId_match_reftype); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('n','e','e','d','_','n','a','v'): {
                     if (memcmp(rhs.elems+8,"stack",5)==0) { value_SetEnum(parent,acr_navdb_FieldId_need_navstack); ret = true; break; }
                     break;
@@ -335,8 +363,25 @@ bool acr_navdb::value_SetStrptrMaybe(acr_navdb::FieldId& parent, algo::strptr rh
                     if (memcmp(rhs.elems+8,"viewmode",8)==0) { value_SetEnum(parent,acr_navdb_FieldId_dismiss_viewmode); ret = true; break; }
                     break;
                 }
+                case LE_STR8('m','a','t','c','h','_','c','t'): {
+                    if (memcmp(rhs.elems+8,"ype_name",8)==0) { value_SetEnum(parent,acr_navdb_FieldId_match_ctype_name); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('m','a','t','c','h','_','f','i'): {
+                    if (memcmp(rhs.elems+8,"eld_name",8)==0) { value_SetEnum(parent,acr_navdb_FieldId_match_field_name); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('n','e','e','d','_','r','i','g'): {
                     if (memcmp(rhs.elems+8,"ht_panel",8)==0) { value_SetEnum(parent,acr_navdb_FieldId_need_right_panel); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 18: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('h','a','s','_','f','i','e','l'): {
+                    if (memcmp(rhs.elems+8,"d_criteria",10)==0) { value_SetEnum(parent,acr_navdb_FieldId_has_field_criteria); ret = true; break; }
                     break;
                 }
             }
@@ -395,6 +440,27 @@ bool acr_navdb::Filtertarget_ReadFieldMaybe(acr_navdb::Filtertarget& parent, alg
         case acr_navdb_FieldId_next: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.next, strval);
         } break;
+        case acr_navdb_FieldId_description: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.description, strval);
+        } break;
+        case acr_navdb_FieldId_match_ctype_name: {
+            retval = bool_ReadStrptrMaybe(parent.match_ctype_name, strval);
+        } break;
+        case acr_navdb_FieldId_match_field_name: {
+            retval = bool_ReadStrptrMaybe(parent.match_field_name, strval);
+        } break;
+        case acr_navdb_FieldId_match_comment: {
+            retval = bool_ReadStrptrMaybe(parent.match_comment, strval);
+        } break;
+        case acr_navdb_FieldId_match_arg: {
+            retval = bool_ReadStrptrMaybe(parent.match_arg, strval);
+        } break;
+        case acr_navdb_FieldId_match_reftype: {
+            retval = bool_ReadStrptrMaybe(parent.match_reftype, strval);
+        } break;
+        case acr_navdb_FieldId_has_field_criteria: {
+            retval = bool_ReadStrptrMaybe(parent.has_field_criteria, strval);
+        } break;
         case acr_navdb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
         } break;
@@ -421,6 +487,17 @@ bool acr_navdb::Filtertarget_ReadStrptrMaybe(acr_navdb::Filtertarget &parent, al
     return retval;
 }
 
+// --- acr_navdb.Filtertarget..Init
+// Set all fields to initial values.
+void acr_navdb::Filtertarget_Init(acr_navdb::Filtertarget& parent) {
+    parent.match_ctype_name = bool(false);
+    parent.match_field_name = bool(false);
+    parent.match_comment = bool(false);
+    parent.match_arg = bool(false);
+    parent.match_reftype = bool(false);
+    parent.has_field_criteria = bool(false);
+}
+
 // --- acr_navdb.Filtertarget..Print
 // print string representation of ROW to string STR
 // cfmt:acr_navdb.Filtertarget.String  printfmt:Tuple
@@ -436,6 +513,27 @@ void acr_navdb::Filtertarget_Print(acr_navdb::Filtertarget& row, algo::cstring& 
 
     algo::Smallstr50_Print(row.next, temp);
     PrintAttrSpaceReset(str,"next", temp);
+
+    algo::Smallstr50_Print(row.description, temp);
+    PrintAttrSpaceReset(str,"description", temp);
+
+    bool_Print(row.match_ctype_name, temp);
+    PrintAttrSpaceReset(str,"match_ctype_name", temp);
+
+    bool_Print(row.match_field_name, temp);
+    PrintAttrSpaceReset(str,"match_field_name", temp);
+
+    bool_Print(row.match_comment, temp);
+    PrintAttrSpaceReset(str,"match_comment", temp);
+
+    bool_Print(row.match_arg, temp);
+    PrintAttrSpaceReset(str,"match_arg", temp);
+
+    bool_Print(row.match_reftype, temp);
+    PrintAttrSpaceReset(str,"match_reftype", temp);
+
+    bool_Print(row.has_field_criteria, temp);
+    PrintAttrSpaceReset(str,"has_field_criteria", temp);
 
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);

@@ -450,7 +450,7 @@ static void acr_nav::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_nav.Input'  signature:'bba92fdfd024c39380a22e546f4f749e97dc5912'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_nav.Input'  signature:'83b6623659c9d8081eb60b8e931a8d044904d0d9'");
 }
 
 // --- acr_nav.FDb._db.InsertStrptrMaybe
@@ -5212,6 +5212,13 @@ void acr_nav::filtertarget_CopyOut(acr_nav::FFiltertarget &row, acr_navdb::Filte
     out.filtertarget = row.filtertarget;
     out.label = row.label;
     out.next = row.next;
+    out.description = row.description;
+    out.match_ctype_name = row.match_ctype_name;
+    out.match_field_name = row.match_field_name;
+    out.match_comment = row.match_comment;
+    out.match_arg = row.match_arg;
+    out.match_reftype = row.match_reftype;
+    out.has_field_criteria = row.has_field_criteria;
     out.comment = row.comment;
 }
 
@@ -5221,7 +5228,27 @@ void acr_nav::filtertarget_CopyIn(acr_nav::FFiltertarget &row, acr_navdb::Filter
     row.filtertarget = in.filtertarget;
     row.label = in.label;
     row.next = in.next;
+    row.description = in.description;
+    row.match_ctype_name = in.match_ctype_name;
+    row.match_field_name = in.match_field_name;
+    row.match_comment = in.match_comment;
+    row.match_arg = in.match_arg;
+    row.match_reftype = in.match_reftype;
+    row.has_field_criteria = in.has_field_criteria;
     row.comment = in.comment;
+}
+
+// --- acr_nav.FFiltertarget..Init
+// Set all fields to initial values.
+void acr_nav::FFiltertarget_Init(acr_nav::FFiltertarget& filtertarget) {
+    filtertarget.match_ctype_name = bool(false);
+    filtertarget.match_field_name = bool(false);
+    filtertarget.match_comment = bool(false);
+    filtertarget.match_arg = bool(false);
+    filtertarget.match_reftype = bool(false);
+    filtertarget.has_field_criteria = bool(false);
+    filtertarget.ind_filtertarget_next = (acr_nav::FFiltertarget*)-1; // (acr_nav.FDb.ind_filtertarget) not-in-hash
+    filtertarget.ind_filtertarget_hashval = 0; // stored hash value
 }
 
 // --- acr_nav.FFiltertarget..Uninit

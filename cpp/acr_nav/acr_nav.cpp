@@ -88,35 +88,51 @@ static int DecimalDigits(int n) {
     return d;
 }
 
-// True if field name or comment matches regex.
-static bool FieldMatchesFilter(acr_nav::FField &fld, algo_lib::Regx &regx) {
-    tempstr lower_name(name_Get(fld));
-    algo::MakeLower(lower_name);
-    bool match = algo_lib::Regx_Match(regx, lower_name);
-    if (!match) {
-        tempstr lower_comment(fld.comment);
-        algo::MakeLower(lower_comment);
-        match = algo_lib::Regx_Match(regx, lower_comment);
+// True if field matches regex under the current filtertarget's boolean flags.
+static bool FieldMatchesFilter(acr_nav::FField &fld, algo_lib::Regx &regx,
+                               acr_nav::FFiltertarget &ft) {
+    bool match = false;
+    if (!match && ft.match_field_name) {
+        tempstr lower(name_Get(fld));
+        algo::MakeLower(lower);
+        match = algo_lib::Regx_Match(regx, lower);
+    }
+    if (!match && ft.match_comment) {
+        tempstr lower(fld.comment);
+        algo::MakeLower(lower);
+        match = algo_lib::Regx_Match(regx, lower);
+    }
+    if (!match && ft.match_arg) {
+        tempstr lower(fld.p_arg->ctype);
+        algo::MakeLower(lower);
+        match = algo_lib::Regx_Match(regx, lower);
+    }
+    if (!match && ft.match_reftype) {
+        tempstr lower(fld.p_reftype->reftype);
+        algo::MakeLower(lower);
+        match = algo_lib::Regx_Match(regx, lower);
     }
     return match;
 }
 
 // -----------------------------------------------------------------------------
 
-// True if ctype passes the current filter.  When is_field_target is false,
-// matches against the ctype name; when true, matches against any field's
-// name or comment via FieldMatchesFilter.
-static bool CtypeMatchesFilter(acr_nav::FCtype &ct, algo_lib::Regx &regx, bool is_field_target) {
+// True if ctype passes the current filter.  Dispatches on filtertarget's
+// boolean flags: match_ctype_name checks the ctype name directly,
+// has_field_criteria iterates fields via FieldMatchesFilter.
+static bool CtypeMatchesFilter(acr_nav::FCtype &ct, algo_lib::Regx &regx,
+                               acr_nav::FFiltertarget &ft) {
     bool match = false;
-    if (!is_field_target) {
-        tempstr lower_name(ct.ctype);
-        algo::MakeLower(lower_name);
-        match = algo_lib::Regx_Match(regx, lower_name);
-    } else {
+    if (!match && ft.match_ctype_name) {
+        tempstr lower(ct.ctype);
+        algo::MakeLower(lower);
+        match = algo_lib::Regx_Match(regx, lower);
+    }
+    if (!match && ft.has_field_criteria) {
         for (int f = 0; f < acr_nav::c_field_N(ct) && !match; f++) {
             acr_nav::FField *fld = acr_nav::c_field_Find(ct, f);
             if (fld) {
-                match = FieldMatchesFilter(*fld, regx);
+                match = FieldMatchesFilter(*fld, regx, ft);
             }
         }
     }
@@ -137,7 +153,7 @@ static void BuildLeftItems() {
         algo_lib::Regx_ReadSql(filter_regx, pattern, false);
     }
     acr_nav::_db.filter_regx = filter_regx;
-    bool is_field_target = (acr_nav::_db.p_cur_filtertarget != acr_nav::_db.p_default_filtertarget);
+    acr_nav::FFiltertarget &ft = *acr_nav::_db.p_cur_filtertarget;
     // Collect namespaces with matching ctypes, sorted alphabetically.
     // FNs records are loaded from data/ in file order; explicit sort guarantees
     // stable display regardless of load order.
@@ -148,7 +164,7 @@ static void BuildLeftItems() {
         for (int i = 0; i < acr_nav::c_ctype_N(ns); i++) {
             acr_nav::FCtype *ct = acr_nav::c_ctype_Find(ns, i);
             if (ct && ch_N(ct->ctype) > 0) {
-                bool match = !has_filter || CtypeMatchesFilter(*ct, filter_regx, is_field_target);
+                bool match = !has_filter || CtypeMatchesFilter(*ct, filter_regx, ft);
                 n_match += match;
             }
         }
@@ -180,7 +196,7 @@ static void BuildLeftItems() {
             for (int i = 0; i < acr_nav::c_ctype_N(ns); i++) {
                 acr_nav::FCtype *ct = acr_nav::c_ctype_Find(ns, i);
                 if (ct && ch_N(ct->ctype) > 0) {
-                    bool match = !has_filter || CtypeMatchesFilter(*ct, filter_regx, is_field_target);
+                    bool match = !has_filter || CtypeMatchesFilter(*ct, filter_regx, ft);
                     if (match) {
                         acr_nav::LeftItem &item = acr_nav::left_item_Alloc();
                         item.ctype = ct->ctype;
@@ -1427,9 +1443,9 @@ static void RenderContentArea(RenderCtx &ctx) {
         }
         bool field_match = false;
         if (fld && !in_xref
-            && acr_nav::_db.p_cur_filtertarget != acr_nav::_db.p_default_filtertarget
+            && acr_nav::_db.p_cur_filtertarget->has_field_criteria
             && ch_N(acr_nav::_db.filter) > 0) {
-            field_match = FieldMatchesFilter(*fld, acr_nav::_db.filter_regx);
+            field_match = FieldMatchesFilter(*fld, acr_nav::_db.filter_regx, *acr_nav::_db.p_cur_filtertarget);
         }
         if (field_match) {
             EmitStyle(ctx.buf, *acr_nav::_db.p_filter_match);
@@ -1466,6 +1482,9 @@ static void RenderStatusBar(RenderCtx &ctx) {
             status << acr_nav::_db.p_cur_filtertarget->label;
         }
         status << acr_nav::_db.filter;
+    }
+    if (in_filter && ch_N(acr_nav::_db.p_cur_filtertarget->description) > 0) {
+        status << "  (" << acr_nav::_db.p_cur_filtertarget->description << ")";
     }
     if (in_filter || has_filter) {
         status << "  ";
@@ -1743,9 +1762,9 @@ static void HeadlessOutput() {
                 vf.navigable = navigable;
                 bool field_match = false;
                 if (!reverse
-                    && acr_nav::_db.p_cur_filtertarget != acr_nav::_db.p_default_filtertarget
+                    && acr_nav::_db.p_cur_filtertarget->has_field_criteria
                     && ch_N(acr_nav::_db.filter) > 0) {
-                    field_match = FieldMatchesFilter(*field, acr_nav::_db.filter_regx);
+                    field_match = FieldMatchesFilter(*field, acr_nav::_db.filter_regx, *acr_nav::_db.p_cur_filtertarget);
                 }
                 vf.match = field_match;
                 prlog(vf);

@@ -103,6 +103,52 @@ atfdb.tmsg  tmsg:acr_compl.Acr12/100290.in  istuple:N  msg:"garden.flower  flowe
 atfdb.tmsg  tmsg:acr_compl.Acr12/100300.in  istuple:N  msg:"garden.fruit  fruit:apple"
 atfdb.tmsg  tmsg:acr_compl.Acr12/100310.in  istuple:N  msg:"garden.fruit  fruit:plum"
 atfdb.tmsg  tmsg:acr_compl.Acr12/100320.in  istuple:N  msg:"garden.fruit  fruit:peach"
+atfdb.tmsg  tmsg:acr_nav.AllFilter/100000.in  istuple:N  msg:"acr_nav.SendKey  key:j"
+atfdb.tmsg  tmsg:acr_nav.AllFilter/100010.in  istuple:N  msg:"acr_nav.SendKey  key:/"
+atfdb.tmsg  tmsg:acr_nav.AllFilter/100020.in  istuple:N  msg:"acr_nav.SendKey  key:Tab"
+atfdb.tmsg  tmsg:acr_nav.AllFilter/100030.in  istuple:N  msg:"acr_nav.SendKey  key:Tab"
+atfdb.tmsg  tmsg:acr_nav.AllFilter/100040.in  istuple:N  msg:"acr_nav.SendKey  key:Tab"
+atfdb.tmsg  tmsg:acr_nav.AllFilter/100050.in  istuple:N  msg:"acr_nav.SendKey  key:Tab"
+atfdb.tmsg  tmsg:acr_nav.AllFilter/100060.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.AllFilter/100070.in  istuple:N  msg:"acr_nav.SendKey  key:c"
+atfdb.tmsg  tmsg:acr_nav.AllFilter/100080.in  istuple:N  msg:"acr_nav.SendKey  key:o"
+atfdb.tmsg  tmsg:acr_nav.AllFilter/100090.in  istuple:N  msg:"acr_nav.SendKey  key:m"
+atfdb.tmsg  tmsg:acr_nav.AllFilter/100100.in  istuple:N  msg:"acr_nav.SendKey  key:m"
+atfdb.tmsg  tmsg:acr_nav.AllFilter/100110.in  istuple:N  msg:"acr_nav.SendKey  key:e"
+atfdb.tmsg  tmsg:acr_nav.AllFilter/100120.in  istuple:N  msg:"acr_nav.SendKey  key:n"
+atfdb.tmsg  tmsg:acr_nav.AllFilter/100130.in  istuple:N  msg:"acr_nav.SendKey  key:t"
+atfdb.tmsg  tmsg:acr_nav.AllFilter/100140.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.ArgFilter/100000.in  istuple:N  msg:"acr_nav.SendKey  key:j"
+atfdb.tmsg  tmsg:acr_nav.ArgFilter/100010.in  istuple:N  msg:"acr_nav.SendKey  key:/"
+atfdb.tmsg  tmsg:acr_nav.ArgFilter/100020.in  istuple:N  msg:"acr_nav.SendKey  key:Tab"
+atfdb.tmsg  tmsg:acr_nav.ArgFilter/100030.in  istuple:N  msg:"acr_nav.SendKey  key:Tab"
+atfdb.tmsg  tmsg:acr_nav.ArgFilter/100040.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.ArgFilter/100050.in  istuple:N  msg:"acr_nav.SendKey  key:c"
+atfdb.tmsg  tmsg:acr_nav.ArgFilter/100060.in  istuple:N  msg:"acr_nav.SendKey  key:s"
+atfdb.tmsg  tmsg:acr_nav.ArgFilter/100070.in  istuple:N  msg:"acr_nav.SendKey  key:t"
+atfdb.tmsg  tmsg:acr_nav.ArgFilter/100080.in  istuple:N  msg:"acr_nav.SendKey  key:r"
+atfdb.tmsg  tmsg:acr_nav.ArgFilter/100090.in  istuple:N  msg:"acr_nav.SendKey  key:i"
+atfdb.tmsg  tmsg:acr_nav.ArgFilter/100100.in  istuple:N  msg:"acr_nav.SendKey  key:n"
+atfdb.tmsg  tmsg:acr_nav.ArgFilter/100110.in  istuple:N  msg:"acr_nav.SendKey  key:g"
+atfdb.tmsg  tmsg:acr_nav.ArgFilter/100120.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.ArgFilterNavstack/100000.in  istuple:N  msg:"acr_nav.SendKey  key:j"
+atfdb.tmsg  tmsg:acr_nav.ArgFilterNavstack/100010.in  istuple:N  msg:"acr_nav.SendKey  key:/"
+atfdb.tmsg  tmsg:acr_nav.ArgFilterNavstack/100020.in  istuple:N  msg:"acr_nav.SendKey  key:Tab"
+atfdb.tmsg  tmsg:acr_nav.ArgFilterNavstack/100030.in  istuple:N  msg:"acr_nav.SendKey  key:Tab"
+atfdb.tmsg  tmsg:acr_nav.ArgFilterNavstack/100040.in  istuple:N  msg:"acr_nav.SendKey  key:c"
+atfdb.tmsg  tmsg:acr_nav.ArgFilterNavstack/100050.in  istuple:N  msg:"acr_nav.SendKey  key:s"
+atfdb.tmsg  tmsg:acr_nav.ArgFilterNavstack/100060.in  istuple:N  msg:"acr_nav.SendKey  key:t"
+atfdb.tmsg  tmsg:acr_nav.ArgFilterNavstack/100070.in  istuple:N  msg:"acr_nav.SendKey  key:r"
+atfdb.tmsg  tmsg:acr_nav.ArgFilterNavstack/100080.in  istuple:N  msg:"acr_nav.SendKey  key:i"
+atfdb.tmsg  tmsg:acr_nav.ArgFilterNavstack/100090.in  istuple:N  msg:"acr_nav.SendKey  key:n"
+atfdb.tmsg  tmsg:acr_nav.ArgFilterNavstack/100100.in  istuple:N  msg:"acr_nav.SendKey  key:g"
+atfdb.tmsg  tmsg:acr_nav.ArgFilterNavstack/100110.in  istuple:N  msg:"acr_nav.SendKey  key:Enter"
+atfdb.tmsg  tmsg:acr_nav.ArgFilterNavstack/100120.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.ArgFilterNavstack/100130.in  istuple:N  msg:"acr_nav.SendKey  key:Right"
+atfdb.tmsg  tmsg:acr_nav.ArgFilterNavstack/100140.in  istuple:N  msg:"acr_nav.SendKey  key:Enter"
+atfdb.tmsg  tmsg:acr_nav.ArgFilterNavstack/100150.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.ArgFilterNavstack/100160.in  istuple:N  msg:"acr_nav.SendKey  key:Backspace"
+atfdb.tmsg  tmsg:acr_nav.ArgFilterNavstack/100170.in  istuple:N  msg:acr_nav.Screenshot
 atfdb.tmsg  tmsg:acr_nav.Breadcrumb/100000.in  istuple:N  msg:"acr_nav.SendKey  key:j"
 atfdb.tmsg  tmsg:acr_nav.Breadcrumb/100010.in  istuple:N  msg:"acr_nav.SendKey  key:j"
 atfdb.tmsg  tmsg:acr_nav.Breadcrumb/100020.in  istuple:N  msg:"acr_nav.SendKey  key:j"
@@ -225,6 +271,24 @@ atfdb.tmsg  tmsg:acr_nav.FilterAccept/100020.in  istuple:N  msg:"acr_nav.SendKey
 atfdb.tmsg  tmsg:acr_nav.FilterAccept/100030.in  istuple:N  msg:"acr_nav.SendKey  key:c"
 atfdb.tmsg  tmsg:acr_nav.FilterAccept/100040.in  istuple:N  msg:"acr_nav.SendKey  key:Enter"
 atfdb.tmsg  tmsg:acr_nav.FilterAccept/100050.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.FilterCycleComplete/100000.in  istuple:N  msg:"acr_nav.SendKey  key:/"
+atfdb.tmsg  tmsg:acr_nav.FilterCycleComplete/100010.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.FilterCycleComplete/100020.in  istuple:N  msg:"acr_nav.SendKey  key:Tab"
+atfdb.tmsg  tmsg:acr_nav.FilterCycleComplete/100030.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.FilterCycleComplete/100040.in  istuple:N  msg:"acr_nav.SendKey  key:Tab"
+atfdb.tmsg  tmsg:acr_nav.FilterCycleComplete/100050.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.FilterCycleComplete/100060.in  istuple:N  msg:"acr_nav.SendKey  key:Tab"
+atfdb.tmsg  tmsg:acr_nav.FilterCycleComplete/100070.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.FilterCycleComplete/100080.in  istuple:N  msg:"acr_nav.SendKey  key:Tab"
+atfdb.tmsg  tmsg:acr_nav.FilterCycleComplete/100090.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.FilterCycleComplete/100100.in  istuple:N  msg:"acr_nav.SendKey  key:Tab"
+atfdb.tmsg  tmsg:acr_nav.FilterCycleComplete/100110.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.FilterDescription/100000.in  istuple:N  msg:"acr_nav.SendKey  key:/"
+atfdb.tmsg  tmsg:acr_nav.FilterDescription/100010.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.FilterDescription/100020.in  istuple:N  msg:"acr_nav.SendKey  key:Tab"
+atfdb.tmsg  tmsg:acr_nav.FilterDescription/100030.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.FilterDescription/100040.in  istuple:N  msg:"acr_nav.SendKey  key:Escape"
+atfdb.tmsg  tmsg:acr_nav.FilterDescription/100050.in  istuple:N  msg:acr_nav.Screenshot
 atfdb.tmsg  tmsg:acr_nav.FilterEdge/100000.in  istuple:N  msg:"acr_nav.SendKey  key:j"
 atfdb.tmsg  tmsg:acr_nav.FilterEdge/100010.in  istuple:N  msg:"acr_nav.SendKey  key:/"
 atfdb.tmsg  tmsg:acr_nav.FilterEdge/100020.in  istuple:N  msg:"acr_nav.SendKey  key:z"
@@ -324,6 +388,18 @@ atfdb.tmsg  tmsg:acr_nav.RecordCount/100080.in  istuple:N  msg:"acr_nav.SendKey 
 atfdb.tmsg  tmsg:acr_nav.RecordCount/100090.in  istuple:N  msg:"acr_nav.SendKey  key:j"
 atfdb.tmsg  tmsg:acr_nav.RecordCount/100100.in  istuple:N  msg:"acr_nav.SendKey  key:Enter"
 atfdb.tmsg  tmsg:acr_nav.RecordCount/100110.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.ReftypeFilter/100000.in  istuple:N  msg:"acr_nav.SendKey  key:j"
+atfdb.tmsg  tmsg:acr_nav.ReftypeFilter/100010.in  istuple:N  msg:"acr_nav.SendKey  key:/"
+atfdb.tmsg  tmsg:acr_nav.ReftypeFilter/100020.in  istuple:N  msg:"acr_nav.SendKey  key:Tab"
+atfdb.tmsg  tmsg:acr_nav.ReftypeFilter/100030.in  istuple:N  msg:"acr_nav.SendKey  key:Tab"
+atfdb.tmsg  tmsg:acr_nav.ReftypeFilter/100040.in  istuple:N  msg:"acr_nav.SendKey  key:Tab"
+atfdb.tmsg  tmsg:acr_nav.ReftypeFilter/100050.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.ReftypeFilter/100060.in  istuple:N  msg:"acr_nav.SendKey  key:T"
+atfdb.tmsg  tmsg:acr_nav.ReftypeFilter/100070.in  istuple:N  msg:"acr_nav.SendKey  key:h"
+atfdb.tmsg  tmsg:acr_nav.ReftypeFilter/100080.in  istuple:N  msg:"acr_nav.SendKey  key:a"
+atfdb.tmsg  tmsg:acr_nav.ReftypeFilter/100090.in  istuple:N  msg:"acr_nav.SendKey  key:s"
+atfdb.tmsg  tmsg:acr_nav.ReftypeFilter/100100.in  istuple:N  msg:"acr_nav.SendKey  key:h"
+atfdb.tmsg  tmsg:acr_nav.ReftypeFilter/100110.in  istuple:N  msg:acr_nav.Screenshot
 atfdb.tmsg  tmsg:acr_nav.SetTermSizeShrink/100000.in  istuple:N  msg:"acr_nav.SetTermSize  term_hei:30  term_wid:120"
 atfdb.tmsg  tmsg:acr_nav.SetTermSizeShrink/100010.in  istuple:N  msg:"acr_nav.SendKey  key:Escape"
 atfdb.tmsg  tmsg:acr_nav.SetTermSizeShrink/100020.in  istuple:N  msg:"acr_nav.SendKey  key:j"

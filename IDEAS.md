@@ -51,36 +51,6 @@ Generated C++ uses `acr_nav::FNaventry`. Querying `acr dmmeta.field:acr_nav.FNav
 
 ## Ideas by Tier
 
-### Tier 1: High Impact, Natural Fit
-
-These solve the most painful problems, align with OpenACR philosophy, and build on existing architecture.
-
-#### ~~1D. Generated Code Preview~~ (done — M20)
-
-#### ~~1E. Record Count Display~~ (done — M19)
-
-#### ~~1F. Field Name / Comment Search~~ (done — M21)
-
-`acr_navdb.filtertarget` controlled vocabulary table with 2 records: `ctype` (default) and `field` (name + comment). Tab in filter mode cycles targets. Status bar: `/text` vs `/f:text`. Matching fields bold-highlighted in right panel. `CtypeMatchesFilter` + `FieldMatchesFilter` helpers; cached `filter_regx` on FDb. Filtertarget saved/restored in navstack. 4 new tests (FieldFilter, FieldFilterCancel, FieldFilterNavstack, FieldFilterScreen).
-
-**Future filtertarget extensions** (one record + one match branch each):
-
-| Target | Label | Searches against | Use case |
-|--------|-------|-----------------|----------|
-| `ctype` | (none) | ctype name | Default. "Find types named FDb" |
-| `field` | `f:` | field name + comment | V1. "Which types have a `comment` field?" |
-| `arg` | `a:` | field argument type | "Which types have `algo.cstring` fields?" |
-| `reftype` | `r:` | field reftype | "Which types use Thash indexes?" |
-| `all` | `*:` | name + field + comment + arg | Kitchen sink — "find anything mentioning X" |
-
-At 3+ targets, Tab cycling becomes tedious. Two possible evolutions:
-- **Prefix typing:** user types `/f:comment` directly; filter parser detects known prefix and sets filtertarget. Tab still works as fallback.
-- **Picker popup:** Tab opens a brief target selector instead of blind cycling. Heavier UI but scales to any count.
-
-The `filtertarget` table with `next` cycling chain supports both — the table is the source of truth; the input mechanism is independent.
-
----
-
 ### Tier 2: Solid Value, Moderate Effort
 
 These improve the experience meaningfully but solve less acute pain or require more work.
