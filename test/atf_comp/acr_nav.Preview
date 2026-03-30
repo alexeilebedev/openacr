@@ -1,20 +1,120 @@
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:dmmeta.Reftype  navstack_depth:0  n_sel_ctype:1  n_ctype:1404  n_field:5631  viewmode:fields  breadcrumb:""  filtertarget:ctype
-acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:1  sel_value:dmmeta
-acr_nav.VisibleLeftItem  row:0  value:dmmeta  kind:ns  collapsed:Y  n_match:1  n_record:0
-acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:dmmeta.Reftype  navstack_depth:0  n_sel_ctype:1  n_ctype:1404  n_field:5631  viewmode:preview  breadcrumb:""  filtertarget:ctype
+acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:2  sel_value:dmmeta.Reftype
+acr_nav.VisibleLeftItem  row:0  value:dmmeta  kind:ns  collapsed:N  n_match:1  n_record:0
+acr_nav.VisibleLeftItem  row:1  value:dmmeta.Reftype  kind:ctype  collapsed:N  n_match:0  n_record:35
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:35  sel_value:"Alias     Y      N        N            N        N       N    N   N      N         N     N       Access another field                                                   "
+acr_nav.VisibleLine  row:0  value:"Alias     Y      N        N            N        N       N    N   N      N         N     N       Access another field                                                   "
+acr_nav.VisibleLine  row:1  value:"Atree     N      N        N            N        Y       N    N   N      N         N     N       X-reference: AVL tree                                                  "
+acr_nav.VisibleLine  row:2  value:"Base      N      N        N            Y        N       N    Y   N      N         N     N       Incorporate base ctype fields                                          "
+acr_nav.VisibleLine  row:3  value:"Bheap     N      N        Y            N        Y       N    N   N      N         N     N       X-reference: Binary heap built on top of ptrary                        "
+acr_nav.VisibleLine  row:4  value:"Bitfld    Y      Y        N            Y        N       N    N   N      N         N     N       A field whose value is stored in the bits of another field             "
+acr_nav.VisibleLine  row:5  value:"Blkpool   Y      N        Y            N        N       Y    N   N      Y         Y     Y       Variable size block-based allocator suitable for fifo use              "
+acr_nav.VisibleLine  row:6  value:"Charset   Y      Y        N            N        N       N    N   N      N         N     N       Character set membership bitmap                                        "
+acr_nav.VisibleLine  row:7  value:"Count     N      N        N            N        N       N    N   N      N         N     N       A cross-reference that simply counts # of children                     "
+acr_nav.VisibleLine  row:8  value:"Cppstack  Y      N        N            Y        N       N    N   Y      N         Y     N       A pool whose only purpose is to provide a name                         "
+acr_nav.VisibleLine  row:9  value:"Ctype     N      N        N            N        N       N    N   N      N         N     N       Type reference only, no generated field                                "
+acr_nav.VisibleLine  row:10  value:"Delptr    N      N        Y            N        N       N    N   Y      N         Y     N       Pointer to a private cascade-delete value (like Val but starts as NULL)"
+acr_nav.VisibleLine  row:11  value:"Exec      N      N        N            N        N       N    N   Y      N         N     N       Subprocess                                                             "
+acr_nav.VisibleLine  row:12  value:"Fbuf      Y      Y        Y            N        N       N    N   N      N         Y     N       Byte buffer with epoll integration & message scanning                  "
+acr_nav.VisibleLine  row:13  value:"Global    Y      N        N            Y        N       N    N   N      N         Y     N       Global variable -- root of all access paths                            "
+acr_nav.VisibleLine  row:14  value:"Hook      N      N        N            N        N       N    N   N      N         N     N       Pointer to a function                                                  "
+acr_nav.VisibleLine  row:15  value:"Inlary    Y      Y        N            Y        N       N    N   N      N         Y     N       Zero to N values, allocated inside the parent struct                   "
+acr_nav.VisibleLine  row:16  value:"Lary      Y      N        Y            N        N       N    N   N      Y         Y     N       Level array with permanent pointers                                    "
+acr_nav.VisibleLine  row:17  value:"Llist     N      N        N            N        Y       N    N   N      N         N     N       X-reference: any of 32 possible types of linked list                   "
+acr_nav.VisibleLine  row:18  value:"Lpool     Y      N        Y            N        N       Y    N   N      Y         Y     Y       Varlen pool, implemented as array of 32 Tpools                         "
+acr_nav.VisibleLine  row:19  value:"Malloc    Y      N        N            Y        N       Y    N   N      Y         Y     Y       Pass-through for malloc / free                                         "
+acr_nav.VisibleLine  row:20  value:"Opt       Y      Y        N            Y        N       N    N   Y      N         Y     Y       Optional trailing struct field occupying rest of space                 "
+acr_nav.VisibleLine  row:21  value:"Pkey      N      N        N            Y        N       N    Y   N      N         N     N       Primary key reference                                                  "
+acr_nav.VisibleLine  row:22  value:"Ptr       N      N        N            Y        N       N    N   N      N         N     N       Cross-reference pointer to a future record                             "
+acr_nav.VisibleLine  row:23  value:"Ptrary    N      N        Y            N        N       N    N   N      N         N     N       Array of pointers                                                      "
+acr_nav.VisibleLine  row:24  value:"Regx      N      N        N            Y        N       N    Y   N      N         N     N       Regex match on primary key                                             "
+acr_nav.VisibleLine  row:25  value:"RegxSql   N      N        N            Y        N       N    Y   N      N         N     N       SQL-style regex on primary key                                         "
+acr_nav.VisibleLine  row:26  value:"Sbrk      Y      N        N            Y        N       N    N   N      N         Y     N       Memory allocator via sbrk                                              "
+acr_nav.VisibleLine  row:27  value:"Smallstr  Y      N        N            Y        N       N    N   N      N         N     N       Fixed-length string field                                              "
+acr_nav.VisibleLine  row:28  value:"Tary      Y      N        Y            N        N       N    N   N      N         N     N       Flat, reallocatable array of values                                    "
+acr_nav.VisibleLine  row:29  value:"Thash     N      N        Y            N        Y       N    N   N      N         N     N       X-reference; hash built on top of ptrary                               "
+acr_nav.VisibleLine  row:30  value:"Tpool     Y      N        Y            N        N       Y    N   N      Y         Y     N       Singly linked free-list                                                "
+acr_nav.VisibleLine  row:31  value:"Upptr     N      N        N            Y        N       N    Y   N      N         N     N       Pointer to a past (pre-existing) record                                "
+acr_nav.VisibleLine  row:32  value:"Val       Y      Y        N            Y        N       N    N   Y      N         N     N       Single cascade-insert in-place value                                   "
+acr_nav.VisibleLine  row:33  value:"Varlen    Y      Y        N            Y        N       N    N   Y      N         Y     Y       Variable-length trailing array                                         "
+acr_nav.VisibleLine  row:34  value:"ZSListMT  N      N        N            N        N       N    N   N      N         N     N       Zero-terminated singly linked list with thread-safe access             "
+
+acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Reftype  navstack_depth:0  n_sel_ctype:1  n_ctype:1404  n_field:5631  viewmode:preview  breadcrumb:""  filtertarget:ctype
+acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:2  sel_value:dmmeta.Reftype
+acr_nav.VisibleLeftItem  row:0  value:dmmeta  kind:ns  collapsed:N  n_match:1  n_record:0
+acr_nav.VisibleLeftItem  row:1  value:dmmeta.Reftype  kind:ctype  collapsed:N  n_match:0  n_record:35
+acr_nav.PanelState  panel:content  sel_row:1  scroll_offset:0  n_items:35  sel_value:"Atree     N      N        N            N        Y       N    N   N      N         N     N       X-reference: AVL tree                                                  "
+acr_nav.VisibleLine  row:0  value:"Alias     Y      N        N            N        N       N    N   N      N         N     N       Access another field                                                   "
+acr_nav.VisibleLine  row:1  value:"Atree     N      N        N            N        Y       N    N   N      N         N     N       X-reference: AVL tree                                                  "
+acr_nav.VisibleLine  row:2  value:"Base      N      N        N            Y        N       N    Y   N      N         N     N       Incorporate base ctype fields                                          "
+acr_nav.VisibleLine  row:3  value:"Bheap     N      N        Y            N        Y       N    N   N      N         N     N       X-reference: Binary heap built on top of ptrary                        "
+acr_nav.VisibleLine  row:4  value:"Bitfld    Y      Y        N            Y        N       N    N   N      N         N     N       A field whose value is stored in the bits of another field             "
+acr_nav.VisibleLine  row:5  value:"Blkpool   Y      N        Y            N        N       Y    N   N      Y         Y     Y       Variable size block-based allocator suitable for fifo use              "
+acr_nav.VisibleLine  row:6  value:"Charset   Y      Y        N            N        N       N    N   N      N         N     N       Character set membership bitmap                                        "
+acr_nav.VisibleLine  row:7  value:"Count     N      N        N            N        N       N    N   N      N         N     N       A cross-reference that simply counts # of children                     "
+acr_nav.VisibleLine  row:8  value:"Cppstack  Y      N        N            Y        N       N    N   Y      N         Y     N       A pool whose only purpose is to provide a name                         "
+acr_nav.VisibleLine  row:9  value:"Ctype     N      N        N            N        N       N    N   N      N         N     N       Type reference only, no generated field                                "
+acr_nav.VisibleLine  row:10  value:"Delptr    N      N        Y            N        N       N    N   Y      N         Y     N       Pointer to a private cascade-delete value (like Val but starts as NULL)"
+acr_nav.VisibleLine  row:11  value:"Exec      N      N        N            N        N       N    N   Y      N         N     N       Subprocess                                                             "
+acr_nav.VisibleLine  row:12  value:"Fbuf      Y      Y        Y            N        N       N    N   N      N         Y     N       Byte buffer with epoll integration & message scanning                  "
+acr_nav.VisibleLine  row:13  value:"Global    Y      N        N            Y        N       N    N   N      N         Y     N       Global variable -- root of all access paths                            "
+acr_nav.VisibleLine  row:14  value:"Hook      N      N        N            N        N       N    N   N      N         N     N       Pointer to a function                                                  "
+acr_nav.VisibleLine  row:15  value:"Inlary    Y      Y        N            Y        N       N    N   N      N         Y     N       Zero to N values, allocated inside the parent struct                   "
+acr_nav.VisibleLine  row:16  value:"Lary      Y      N        Y            N        N       N    N   N      Y         Y     N       Level array with permanent pointers                                    "
+acr_nav.VisibleLine  row:17  value:"Llist     N      N        N            N        Y       N    N   N      N         N     N       X-reference: any of 32 possible types of linked list                   "
+acr_nav.VisibleLine  row:18  value:"Lpool     Y      N        Y            N        N       Y    N   N      Y         Y     Y       Varlen pool, implemented as array of 32 Tpools                         "
+acr_nav.VisibleLine  row:19  value:"Malloc    Y      N        N            Y        N       Y    N   N      Y         Y     Y       Pass-through for malloc / free                                         "
+acr_nav.VisibleLine  row:20  value:"Opt       Y      Y        N            Y        N       N    N   Y      N         Y     Y       Optional trailing struct field occupying rest of space                 "
+acr_nav.VisibleLine  row:21  value:"Pkey      N      N        N            Y        N       N    Y   N      N         N     N       Primary key reference                                                  "
+acr_nav.VisibleLine  row:22  value:"Ptr       N      N        N            Y        N       N    N   N      N         N     N       Cross-reference pointer to a future record                             "
+acr_nav.VisibleLine  row:23  value:"Ptrary    N      N        Y            N        N       N    N   N      N         N     N       Array of pointers                                                      "
+acr_nav.VisibleLine  row:24  value:"Regx      N      N        N            Y        N       N    Y   N      N         N     N       Regex match on primary key                                             "
+acr_nav.VisibleLine  row:25  value:"RegxSql   N      N        N            Y        N       N    Y   N      N         N     N       SQL-style regex on primary key                                         "
+acr_nav.VisibleLine  row:26  value:"Sbrk      Y      N        N            Y        N       N    N   N      N         Y     N       Memory allocator via sbrk                                              "
+acr_nav.VisibleLine  row:27  value:"Smallstr  Y      N        N            Y        N       N    N   N      N         N     N       Fixed-length string field                                              "
+acr_nav.VisibleLine  row:28  value:"Tary      Y      N        Y            N        N       N    N   N      N         N     N       Flat, reallocatable array of values                                    "
+acr_nav.VisibleLine  row:29  value:"Thash     N      N        Y            N        Y       N    N   N      N         N     N       X-reference; hash built on top of ptrary                               "
+acr_nav.VisibleLine  row:30  value:"Tpool     Y      N        Y            N        N       Y    N   N      Y         Y     N       Singly linked free-list                                                "
+acr_nav.VisibleLine  row:31  value:"Upptr     N      N        N            Y        N       N    Y   N      N         N     N       Pointer to a past (pre-existing) record                                "
+acr_nav.VisibleLine  row:32  value:"Val       Y      Y        N            Y        N       N    N   Y      N         N     N       Single cascade-insert in-place value                                   "
+acr_nav.VisibleLine  row:33  value:"Varlen    Y      Y        N            Y        N       N    N   Y      N         Y     Y       Variable-length trailing array                                         "
+acr_nav.VisibleLine  row:34  value:"ZSListMT  N      N        N            N        N       N    N   N      N         N     N       Zero-terminated singly linked list with thread-safe access             "
 
 acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Reftype  navstack_depth:0  n_sel_ctype:1  n_ctype:1404  n_field:5631  viewmode:fields  breadcrumb:""  filtertarget:ctype
-acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:1  sel_value:dmmeta
-acr_nav.VisibleLeftItem  row:0  value:dmmeta  kind:ns  collapsed:Y  n_match:1  n_record:0
-acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
+acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:2  sel_value:dmmeta.Reftype
+acr_nav.VisibleLeftItem  row:0  value:dmmeta  kind:ns  collapsed:N  n_match:1  n_record:0
+acr_nav.VisibleLeftItem  row:1  value:dmmeta.Reftype  kind:ctype  collapsed:N  n_match:0  n_record:35
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:13  sel_value:dmmeta.Reftype.reftype
+acr_nav.VisibleField  row:0  field:dmmeta.Reftype.reftype  arg:amcdb.Tclass  reftype:Pkey  style:field_upref  navigable:Y
+acr_nav.VisibleField  row:1  field:dmmeta.Reftype.isval  arg:bool  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:2  field:dmmeta.Reftype.cascins  arg:bool  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:3  field:dmmeta.Reftype.usebasepool  arg:bool  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:4  field:dmmeta.Reftype.cancopy  arg:bool  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:5  field:dmmeta.Reftype.isxref  arg:bool  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:6  field:dmmeta.Reftype.del  arg:bool  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:7  field:dmmeta.Reftype.up  arg:bool  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:8  field:dmmeta.Reftype.isnew  arg:bool  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:9  field:dmmeta.Reftype.hasalloc  arg:bool  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:10  field:dmmeta.Reftype.inst  arg:bool  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:11  field:dmmeta.Reftype.varlen  arg:bool  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:12  field:dmmeta.Reftype.comment  arg:algo.Comment  reftype:Val  style:field_val  navigable:Y
 
 acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Reftype  navstack_depth:0  n_sel_ctype:1  n_ctype:1404  n_field:5631  viewmode:fields  breadcrumb:""  filtertarget:ctype
-acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:1  sel_value:dmmeta
-acr_nav.VisibleLeftItem  row:0  value:dmmeta  kind:ns  collapsed:Y  n_match:1  n_record:0
-acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
-
-acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Reftype  navstack_depth:0  n_sel_ctype:1  n_ctype:1404  n_field:5631  viewmode:fields  breadcrumb:""  filtertarget:ctype
-acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:1  sel_value:dmmeta
-acr_nav.VisibleLeftItem  row:0  value:dmmeta  kind:ns  collapsed:Y  n_match:1  n_record:0
-acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
+acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:2  sel_value:dmmeta.Reftype
+acr_nav.VisibleLeftItem  row:0  value:dmmeta  kind:ns  collapsed:N  n_match:1  n_record:0
+acr_nav.VisibleLeftItem  row:1  value:dmmeta.Reftype  kind:ctype  collapsed:N  n_match:0  n_record:35
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:13  sel_value:dmmeta.Reftype.reftype
+acr_nav.VisibleField  row:0  field:dmmeta.Reftype.reftype  arg:amcdb.Tclass  reftype:Pkey  style:field_upref  navigable:Y
+acr_nav.VisibleField  row:1  field:dmmeta.Reftype.isval  arg:bool  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:2  field:dmmeta.Reftype.cascins  arg:bool  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:3  field:dmmeta.Reftype.usebasepool  arg:bool  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:4  field:dmmeta.Reftype.cancopy  arg:bool  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:5  field:dmmeta.Reftype.isxref  arg:bool  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:6  field:dmmeta.Reftype.del  arg:bool  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:7  field:dmmeta.Reftype.up  arg:bool  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:8  field:dmmeta.Reftype.isnew  arg:bool  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:9  field:dmmeta.Reftype.hasalloc  arg:bool  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:10  field:dmmeta.Reftype.inst  arg:bool  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:11  field:dmmeta.Reftype.varlen  arg:bool  reftype:Val  style:field_val  navigable:Y
+acr_nav.VisibleField  row:12  field:dmmeta.Reftype.comment  arg:algo.Comment  reftype:Val  style:field_val  navigable:Y
 

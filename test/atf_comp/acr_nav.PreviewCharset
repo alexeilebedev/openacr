@@ -1,9 +1,11 @@
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:Charset  navstack_depth:0  n_sel_ctype:3  n_ctype:1404  n_field:5631  viewmode:preview  breadcrumb:""  filtertarget:ctype
-acr_nav.PanelState  panel:ctype_list  sel_row:3  scroll_offset:0  n_items:4  sel_value:dmmeta.Charset
-acr_nav.VisibleLeftItem  row:0  value:algo  kind:ns  collapsed:Y  n_match:1  n_record:0
-acr_nav.VisibleLeftItem  row:1  value:amc  kind:ns  collapsed:Y  n_match:1  n_record:0
-acr_nav.VisibleLeftItem  row:2  value:dmmeta  kind:ns  collapsed:N  n_match:1  n_record:0
-acr_nav.VisibleLeftItem  row:3  value:dmmeta.Charset  kind:ctype  collapsed:N  n_match:0  n_record:23
+acr_nav.Screen  mode:browse  focus:content  filter:Charset  navstack_depth:0  n_sel_ctype:3  n_ctype:1404  n_field:5631  viewmode:preview  breadcrumb:""  filtertarget:ctype
+acr_nav.PanelState  panel:ctype_list  sel_row:3  scroll_offset:0  n_items:6  sel_value:amc.FCharset
+acr_nav.VisibleLeftItem  row:0  value:algo  kind:ns  collapsed:N  n_match:1  n_record:0
+acr_nav.VisibleLeftItem  row:1  value:algo.Charset  kind:ctype  collapsed:N  n_match:0  n_record:0
+acr_nav.VisibleLeftItem  row:2  value:amc  kind:ns  collapsed:N  n_match:1  n_record:0
+acr_nav.VisibleLeftItem  row:3  value:amc.FCharset  kind:ctype  collapsed:N  n_match:0  n_record:0
+acr_nav.VisibleLeftItem  row:4  value:dmmeta  kind:ns  collapsed:N  n_match:1  n_record:0
+acr_nav.VisibleLeftItem  row:5  value:dmmeta.Charset  kind:ctype  collapsed:N  n_match:0  n_record:23
 acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:23  sel_value:"algo_lib.FDb.AlphaChar          a-zA-Z                           Y          Y            "
 acr_nav.VisibleLine  row:0  value:"algo_lib.FDb.AlphaChar          a-zA-Z                           Y          Y            "
 acr_nav.VisibleLine  row:1  value:"algo_lib.FDb.ArgvIdent          a-zA-Z0-9_                       Y          N            "
@@ -29,12 +31,14 @@ acr_nav.VisibleLine  row:20  value:"amc.FDb.ValidRnumPad            0123456789+-
 acr_nav.VisibleLine  row:21  value:"lib_json.FDb.JsonFirstNumChar   0-9-                             Y          Y            "
 acr_nav.VisibleLine  row:22  value:"lib_json.FDb.JsonNumChar        0-9eE.+-                         Y          Y            "
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:Charset  navstack_depth:0  n_sel_ctype:3  n_ctype:1404  n_field:5631  viewmode:preview  breadcrumb:""  filtertarget:ctype
-acr_nav.PanelState  panel:ctype_list  sel_row:3  scroll_offset:0  n_items:4  sel_value:dmmeta.Charset
-acr_nav.VisibleLeftItem  row:0  value:algo  kind:ns  collapsed:Y  n_match:1  n_record:0
-acr_nav.VisibleLeftItem  row:1  value:amc  kind:ns  collapsed:Y  n_match:1  n_record:0
-acr_nav.VisibleLeftItem  row:2  value:dmmeta  kind:ns  collapsed:N  n_match:1  n_record:0
-acr_nav.VisibleLeftItem  row:3  value:dmmeta.Charset  kind:ctype  collapsed:N  n_match:0  n_record:23
+acr_nav.Screen  mode:browse  focus:content  filter:Charset  navstack_depth:0  n_sel_ctype:3  n_ctype:1404  n_field:5631  viewmode:preview  breadcrumb:""  filtertarget:ctype
+acr_nav.PanelState  panel:ctype_list  sel_row:3  scroll_offset:0  n_items:6  sel_value:amc.FCharset
+acr_nav.VisibleLeftItem  row:0  value:algo  kind:ns  collapsed:N  n_match:1  n_record:0
+acr_nav.VisibleLeftItem  row:1  value:algo.Charset  kind:ctype  collapsed:N  n_match:0  n_record:0
+acr_nav.VisibleLeftItem  row:2  value:amc  kind:ns  collapsed:N  n_match:1  n_record:0
+acr_nav.VisibleLeftItem  row:3  value:amc.FCharset  kind:ctype  collapsed:N  n_match:0  n_record:0
+acr_nav.VisibleLeftItem  row:4  value:dmmeta  kind:ns  collapsed:N  n_match:1  n_record:0
+acr_nav.VisibleLeftItem  row:5  value:dmmeta.Charset  kind:ctype  collapsed:N  n_match:0  n_record:23
 acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:23  sel_value:"algo_lib.FDb.AlphaChar          a-zA-Z                           Y          Y            "
 acr_nav.VisibleLine  row:0  value:"algo_lib.FDb.AlphaChar          a-zA-Z                           Y          Y            "
 acr_nav.VisibleLine  row:1  value:"algo_lib.FDb.ArgvIdent          a-zA-Z0-9_                       Y          N            "
