@@ -87,7 +87,7 @@ static bool FieldMatchesFilter(acr_nav::FField &fld, algo_lib::Regx &regx) {
     algo::MakeLower(lower_name);
     bool match = algo_lib::Regx_Match(regx, lower_name);
     if (!match) {
-        tempstr lower_comment(algo::strptr(fld.comment));
+        tempstr lower_comment(fld.comment);
         algo::MakeLower(lower_comment);
         match = algo_lib::Regx_Match(regx, lower_comment);
     }
@@ -283,11 +283,7 @@ static acr_nav::FCtype* SelectedCtype(acr_nav::FPanel &left) {
 
 // -----------------------------------------------------------------------------
 
-// 5 call sites dispatch on IsXrefMode() within the has_fields:Y path.
-// Future: field-source properties on FViewmode would eliminate all 5.
-static bool IsXrefMode() {
-    return acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_xref_viewmode;
-}
+// field_source on FViewmode drives forward/reverse dispatch — no identity checks needed.
 
 // IsHelpMode: identity check used only for the ? toggle guard in navaction_show_help.
 // IsDetailMode: identity check for d toggle guard and title bar display.
@@ -362,7 +358,7 @@ static acr_nav::FSsimfile* FindSsimfile(acr_nav::FCtype &ctype) {
     if (!ret) {
         for (int i = 0; i < c_field_N(ctype) && !ret; i++) {
             acr_nav::FField *fld = c_field_Find(ctype, i);
-            if (fld && algo::strptr(fld->p_reftype->reftype) == "Base") {
+            if (fld && fld->p_reftype->reftype == "Base") {
                 ret = fld->p_arg->c_ssimfile;
             }
         }
@@ -610,7 +606,8 @@ static int RightPanelItemCount(acr_nav::FCtype *sel_ct) {
         }
         ret = RightPanelLineCount();
     } else if (sel_ct) {
-        ret = IsXrefMode() ? c_field_arg_N(*sel_ct) : c_field_N(*sel_ct);
+        bool reverse = acr_nav::_db.p_cur_viewmode->field_source == "reverse";
+        ret = reverse ? c_field_arg_N(*sel_ct) : c_field_N(*sel_ct);
     }
     return ret;
 }
@@ -618,7 +615,8 @@ static int RightPanelItemCount(acr_nav::FCtype *sel_ct) {
 static acr_nav::FField* RightPanelFieldFind(acr_nav::FCtype *sel_ct, int idx) {
     acr_nav::FField *ret = NULL;
     if (sel_ct && acr_nav::_db.p_cur_viewmode->has_fields) {
-        ret = IsXrefMode() ? c_field_arg_Find(*sel_ct, idx) : c_field_Find(*sel_ct, idx);
+        bool reverse = acr_nav::_db.p_cur_viewmode->field_source == "reverse";
+        ret = reverse ? c_field_arg_Find(*sel_ct, idx) : c_field_Find(*sel_ct, idx);
     }
     return ret;
 }
@@ -744,7 +742,8 @@ void acr_nav::navaction_follow_ref() {
         acr_nav::FField *fld = RightPanelFieldFind(sel_ct, panel.sel_row);
         acr_nav::FCtype *target = NULL;
         if (fld) {
-            target = IsXrefMode() ? fld->p_ctype : fld->p_arg;
+            bool reverse = acr_nav::_db.p_cur_viewmode->field_source == "reverse";
+            target = reverse ? fld->p_ctype : fld->p_arg;
         }
         if (fld && target != sel_ct) {
             acr_nav::Naventry &entry = acr_nav::navstack_Alloc();
@@ -767,7 +766,7 @@ void acr_nav::navaction_follow_ref() {
             target->p_ns->collapsed = false;  // ensure target namespace is expanded
             BuildLeftItems();
             for (int i = 0; i < acr_nav::left_item_N(); i++) {
-                if (algo::strptr(acr_nav::left_item_qFind(i).ctype) == algo::strptr(target->ctype)) {
+                if (acr_nav::left_item_qFind(i).ctype == target->ctype) {
                     left->sel_row = i;
                 }
             }
@@ -820,7 +819,7 @@ void acr_nav::navaction_go_back() {
         acr_nav::_db.p_left_panel->sel_row = 0;
         acr_nav::_db.p_left_panel->scroll_offset = 0;
         for (int i = 0; i < acr_nav::left_item_N(); i++) {
-            if (algo::strptr(acr_nav::left_item_qFind(i).ctype) == algo::strptr(entry->ctype)) {
+            if (acr_nav::left_item_qFind(i).ctype == entry->ctype) {
                 acr_nav::_db.p_left_panel->sel_row = i;
             }
         }
@@ -1095,7 +1094,7 @@ static void BuildStatusHint(cstring &out) {
         // bypass need_* checks -- the dismiss action is always available.
         bool is_dismiss = is_overlay && ch_N(na.dismiss_hint) > 0
             && (ch_N(na.dismiss_viewmode) == 0
-                || algo::strptr(na.dismiss_viewmode) == cur_vm);
+                || na.dismiss_viewmode == cur_vm);
         if (is_dismiss) {
             hint = na.dismiss_hint;
         } else {
@@ -1301,7 +1300,7 @@ static void RenderContentArea(RenderCtx &ctx) {
     int scroll = acr_nav::_db.p_left_panel->scroll_offset;
     int n_right = RightPanelItemCount(ctx.sel_ct);
     bool has_fields = acr_nav::_db.p_cur_viewmode->has_fields;
-    bool in_xref = IsXrefMode();
+    bool in_xref = acr_nav::_db.p_cur_viewmode->field_source == "reverse";
     int visible = ctx.visible;
 
     // Column header row -- always rendered for visual stability
@@ -1477,7 +1476,7 @@ static void Render(acr_nav::FCtype *sel_ct) {
             for (int i = 0; i < acr_nav::c_ctype_N(ns); i++) {
                 acr_nav::FCtype *ct = acr_nav::c_ctype_Find(ns, i);
                 if (ct && ch_N(ct->ctype) > 0) {
-                    algo::strptr stripped = algo::Pathcomp(algo::strptr(ct->ctype), ".LR");
+                    algo::strptr stripped = algo::Pathcomp(ct->ctype, ".LR");
                     int count_wid = 0;
                     if (ct->c_ssimfile && ct->c_ssimfile->n_record > 0) {
                         count_wid = 3 + DecimalDigits(ct->c_ssimfile->n_record);
@@ -1515,13 +1514,11 @@ static void InitPanels() {
     // Resolve well-known viewmode pointers by name
     acr_nav::_db.p_default_viewmode = acr_nav::ind_viewmode_Find("fields");
     acr_nav::_db.p_preview_viewmode = acr_nav::ind_viewmode_Find("preview");
-    acr_nav::_db.p_xref_viewmode = acr_nav::ind_viewmode_Find("xref");
     acr_nav::_db.p_help_viewmode = acr_nav::ind_viewmode_Find("help");
     acr_nav::_db.p_detail_viewmode = acr_nav::ind_viewmode_Find("detail");
     acr_nav::_db.p_codegen_viewmode = acr_nav::ind_viewmode_Find("codegen");
     vrfy(acr_nav::_db.p_default_viewmode, "viewmode 'fields' not found");
     vrfy(acr_nav::_db.p_preview_viewmode, "viewmode 'preview' not found");
-    vrfy(acr_nav::_db.p_xref_viewmode, "viewmode 'xref' not found");
     vrfy(acr_nav::_db.p_help_viewmode, "viewmode 'help' not found");
     vrfy(acr_nav::_db.p_detail_viewmode, "viewmode 'detail' not found");
     vrfy(acr_nav::_db.p_codegen_viewmode, "viewmode 'codegen' not found");
@@ -1581,7 +1578,7 @@ static bool ProcessKey(algo::strptr key_name) {
                 blocked = false;
             }
             if (blocked && ch_N(na.dismiss_viewmode) > 0
-                && algo::strptr(na.dismiss_viewmode) == algo::strptr(acr_nav::_db.p_cur_viewmode->viewmode)) {
+                && na.dismiss_viewmode == acr_nav::_db.p_cur_viewmode->viewmode) {
                 blocked = false;
             }
             if (!blocked) {
@@ -1693,6 +1690,7 @@ static void HeadlessOutput() {
     prlog(right_state);
     // Visible fields (field-based modes only, clipped to viewport)
     if (sel_ct && acr_nav::_db.p_cur_viewmode->has_fields) {
+        bool reverse = acr_nav::_db.p_cur_viewmode->field_source == "reverse";
         int n_vis = RightPanelItemCount(sel_ct);
         int first_right = right->scroll_offset;
         int last_right = i32_Min(first_right + VisibleRows(), n_vis);
@@ -1702,17 +1700,17 @@ static void HeadlessOutput() {
                 acr_nav::VisibleField vf;
                 vf.row = i;
                 vf.field = field->field;
-                vf.arg = field->p_arg->ctype;
+                vf.arg = reverse ? field->p_ctype->ctype : field->p_arg->ctype;
                 vf.reftype = field->p_reftype->reftype;
                 if (field->p_reftype->c_reftypestyle) {
                     vf.style = field->p_reftype->c_reftypestyle->p_navstyle->navstyle;
                 }
-                bool navigable = IsXrefMode()
+                bool navigable = reverse
                     ? (field->p_ctype != sel_ct)
                     : (field->p_arg != sel_ct);
                 vf.navigable = navigable;
                 bool field_match = false;
-                if (!IsXrefMode()
+                if (!reverse
                     && acr_nav::_db.p_cur_filtertarget != acr_nav::_db.p_default_filtertarget
                     && ch_N(acr_nav::_db.filter) > 0) {
                     field_match = FieldMatchesFilter(*field, acr_nav::_db.filter_regx);

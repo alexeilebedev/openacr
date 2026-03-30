@@ -443,7 +443,6 @@ struct FDb { // acr_nav.FDb
     acr_nav::FField*           p_detail_field;                   // Field being detailed (non-null in detail mode). optional pointer
     acr_nav::FViewmode*        p_detail_viewmode;                // Detail viewmode (viewmode:detail). optional pointer
     acr_nav::FViewmode*        p_preview_viewmode;               // Preview viewmode (viewmode:preview). optional pointer
-    acr_nav::FViewmode*        p_xref_viewmode;                  // Xref viewmode (viewmode:xref). optional pointer
     acr_nav::FNavstyle*        p_title_focus;                    // Cached pointer to title_focus navstyle. optional pointer
     acr_nav::FNavstyle*        p_title_nofocus;                  // Cached pointer to title_nofocus navstyle. optional pointer
     acr_nav::FNavstyle*        p_sel_focus;                      // Cached pointer to sel_focus navstyle. optional pointer
@@ -2636,7 +2635,6 @@ void                 FSsimfile_Uninit(acr_nav::FSsimfile& ssimfile) __attribute_
 // global access: p_default_viewmode (Ptr)
 // global access: p_detail_viewmode (Ptr)
 // global access: p_preview_viewmode (Ptr)
-// global access: p_xref_viewmode (Ptr)
 // global access: p_codegen_viewmode (Ptr)
 struct FViewmode { // acr_nav.FViewmode
     acr_nav::FViewmode*   ind_viewmode_next;      // hash next
@@ -2648,6 +2646,7 @@ struct FViewmode { // acr_nav.FViewmode
     bool                  has_fields;             //   false  Y: renders field records; N: renders preformatted lines
     bool                  is_overlay;             //   false  Y: overlay viewmode (help, detail); suppresses need_no_overlay hints
     bool                  need_ssimfile;          //   false  Viewmode requires ssimfile-backed ctype
+    algo::Smallstr50      field_source;           //   ""  Field access path: forward (c_field) or reverse (c_field_arg)
     algo::Comment         comment;                //
     algo::cstring*        line_elems;             // pointer to elements
     u32                   line_n;                 // number of elements in array

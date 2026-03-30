@@ -125,6 +125,7 @@ const char* acr_navdb::value_ToCstr(const acr_navdb::FieldId& parent) {
         case acr_navdb_FieldId_has_fields  : ret = "has_fields";  break;
         case acr_navdb_FieldId_is_overlay  : ret = "is_overlay";  break;
         case acr_navdb_FieldId_need_ssimfile: ret = "need_ssimfile";  break;
+        case acr_navdb_FieldId_field_source: ret = "field_source";  break;
         case acr_navdb_FieldId_value       : ret = "value";  break;
     }
     return ret;
@@ -281,6 +282,10 @@ bool acr_navdb::value_SetStrptrMaybe(acr_navdb::FieldId& parent, algo::strptr rh
             switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('d','i','s','m','i','s','s','_'): {
                     if (memcmp(rhs.elems+8,"hint",4)==0) { value_SetEnum(parent,acr_navdb_FieldId_dismiss_hint); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('f','i','e','l','d','_','s','o'): {
+                    if (memcmp(rhs.elems+8,"urce",4)==0) { value_SetEnum(parent,acr_navdb_FieldId_field_source); ret = true; break; }
                     break;
                 }
                 case LE_STR8('f','i','l','t','e','r','t','a'): {
@@ -1014,6 +1019,9 @@ bool acr_navdb::Viewmode_ReadFieldMaybe(acr_navdb::Viewmode& parent, algo::strpt
         case acr_navdb_FieldId_need_ssimfile: {
             retval = bool_ReadStrptrMaybe(parent.need_ssimfile, strval);
         } break;
+        case acr_navdb_FieldId_field_source: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.field_source, strval);
+        } break;
         case acr_navdb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
         } break;
@@ -1067,6 +1075,9 @@ void acr_navdb::Viewmode_Print(acr_navdb::Viewmode& row, algo::cstring& str) {
 
     bool_Print(row.need_ssimfile, temp);
     PrintAttrSpaceReset(str,"need_ssimfile", temp);
+
+    algo::Smallstr50_Print(row.field_source, temp);
+    PrintAttrSpaceReset(str,"field_source", temp);
 
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);

@@ -52,16 +52,6 @@ Generated C++ uses `acr_nav::FNaventry`. Querying `acr dmmeta.field:acr_nav.FNav
 
 ---
 
-## Simplification Opportunities
-
-#### S5. Eliminate IsXrefMode via field_source on Viewmode
-5 call sites dispatch on `IsXrefMode()` identity check to switch between `c_field` (forward) and `c_field_arg` (reverse xrefs). Add `field_source` property to viewmode record. Makes forward/xref distinction data-driven. Removes ~20 lines + 3 identity-check functions. Adding new field-based viewmodes (e.g., "inherited fields") becomes a record, not code.
-
-#### S6. Extract SaveNavstate/RestoreNavstate helpers
-13 fields manually copied between FDb and Naventry in follow_ref/go_back (was 9; grew with right_sel_row, right_scroll_offset, focus_panel). Helpers centralize the copy so adding a 14th field requires editing 1 place per direction. Insurance against future bugs, not urgent.
-
----
-
 ## Ideas by Tier
 
 ### Tier 1: High Impact, Natural Fit

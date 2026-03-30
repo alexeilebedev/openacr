@@ -137,7 +137,7 @@ dmmeta.ctypelen  ctype:acr_my.FDb  len:688  alignment:8  padbytes:14  plaindata:
 dmmeta.ctypelen  ctype:acr_my.FNsdb  len:171  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:acr_my.FSsimfile  len:154  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:acr_nav.FCtype  len:328  alignment:8  padbytes:13  plaindata:N
-dmmeta.ctypelen  ctype:acr_nav.FDb  len:4624  alignment:8  padbytes:81  plaindata:N
+dmmeta.ctypelen  ctype:acr_nav.FDb  len:4616  alignment:8  padbytes:81  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.FDetailsrc  len:216  alignment:8  padbytes:0  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.FField  len:704  alignment:8  padbytes:6  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.FFiltertarget  len:288  alignment:8  padbytes:2  plaindata:N
@@ -151,7 +151,7 @@ dmmeta.ctypelen  ctype:acr_nav.FPanel  len:248  alignment:8  padbytes:0  plainda
 dmmeta.ctypelen  ctype:acr_nav.FReftype  len:240  alignment:8  padbytes:5  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.FReftypestyle  len:224  alignment:8  padbytes:0  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.FSsimfile  len:184  alignment:8  padbytes:6  plaindata:N
-dmmeta.ctypelen  ctype:acr_nav.FViewmode  len:408  alignment:8  padbytes:1  plaindata:N
+dmmeta.ctypelen  ctype:acr_nav.FViewmode  len:464  alignment:8  padbytes:5  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.InputError  len:24  alignment:8  padbytes:4  plaindata:N
 dmmeta.ctypelen  ctype:acr_nav.LeftItem  len:120  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:acr_nav.Naventry  len:344  alignment:8  padbytes:2  plaindata:N
@@ -172,7 +172,7 @@ dmmeta.ctypelen  ctype:acr_navdb.Navmode  len:204  alignment:1  padbytes:0  plai
 dmmeta.ctypelen  ctype:acr_navdb.Navstyle  len:212  alignment:4  padbytes:1  plaindata:Y
 dmmeta.ctypelen  ctype:acr_navdb.Panel  len:232  alignment:8  padbytes:4  plaindata:N
 dmmeta.ctypelen  ctype:acr_navdb.Reftypestyle  len:204  alignment:1  padbytes:0  plaindata:Y
-dmmeta.ctypelen  ctype:acr_navdb.Viewmode  len:363  alignment:1  padbytes:0  plaindata:Y
+dmmeta.ctypelen  ctype:acr_navdb.Viewmode  len:415  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:algo.Attr  len:32  alignment:8  padbytes:0  plaindata:N
 dmmeta.ctypelen  ctype:algo.Bool  len:1  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:algo.ByteAry  len:16  alignment:8  padbytes:0  plaindata:N
