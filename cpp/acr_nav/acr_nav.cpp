@@ -195,6 +195,17 @@ static void BuildLeftItemsReset() {
 
 // -----------------------------------------------------------------------------
 
+static void RecollapseAutoExpanded() {
+    ind_beg(acr_nav::_db_ns_curs, ns, acr_nav::_db) {
+        if (ns.auto_expanded) {
+            ns.collapsed = true;
+            ns.auto_expanded = false;
+        }
+    } ind_end;
+}
+
+// -----------------------------------------------------------------------------
+
 static bool ByteAvailable() {
     struct pollfd pfd;
     pfd.fd = STDIN_FILENO;
@@ -283,7 +294,7 @@ static acr_nav::FCtype* SelectedCtype(acr_nav::FPanel &left) {
 
 // -----------------------------------------------------------------------------
 
-// field_source on FViewmode drives forward/reverse dispatch — no identity checks needed.
+// is_reverse on FViewmode drives forward/reverse dispatch — no identity checks needed.
 
 // IsHelpMode: identity check used only for the ? toggle guard in navaction_show_help.
 // IsDetailMode: identity check for d toggle guard and title bar display.
@@ -606,7 +617,7 @@ static int RightPanelItemCount(acr_nav::FCtype *sel_ct) {
         }
         ret = RightPanelLineCount();
     } else if (sel_ct) {
-        bool reverse = acr_nav::_db.p_cur_viewmode->field_source == "reverse";
+        bool reverse = acr_nav::_db.p_cur_viewmode->is_reverse;
         ret = reverse ? c_field_arg_N(*sel_ct) : c_field_N(*sel_ct);
     }
     return ret;
@@ -615,7 +626,7 @@ static int RightPanelItemCount(acr_nav::FCtype *sel_ct) {
 static acr_nav::FField* RightPanelFieldFind(acr_nav::FCtype *sel_ct, int idx) {
     acr_nav::FField *ret = NULL;
     if (sel_ct && acr_nav::_db.p_cur_viewmode->has_fields) {
-        bool reverse = acr_nav::_db.p_cur_viewmode->field_source == "reverse";
+        bool reverse = acr_nav::_db.p_cur_viewmode->is_reverse;
         ret = reverse ? c_field_arg_Find(*sel_ct, idx) : c_field_Find(*sel_ct, idx);
     }
     return ret;
@@ -731,6 +742,9 @@ void acr_nav::navaction_follow_ref() {
                 acr_nav::FNs *ns = acr_nav::ind_ns_Find(item.ns);
                 if (ns) {
                     ns->collapsed = !ns->collapsed;
+                    if (ns->collapsed) {
+                        ns->auto_expanded = false;
+                    }
                     BuildLeftItems();
                 }
             } else {
@@ -742,7 +756,7 @@ void acr_nav::navaction_follow_ref() {
         acr_nav::FField *fld = RightPanelFieldFind(sel_ct, panel.sel_row);
         acr_nav::FCtype *target = NULL;
         if (fld) {
-            bool reverse = acr_nav::_db.p_cur_viewmode->field_source == "reverse";
+            bool reverse = acr_nav::_db.p_cur_viewmode->is_reverse;
             target = reverse ? fld->p_ctype : fld->p_arg;
         }
         if (fld && target != sel_ct) {
@@ -768,6 +782,7 @@ void acr_nav::navaction_follow_ref() {
             for (int i = 0; i < acr_nav::left_item_N(); i++) {
                 if (acr_nav::left_item_qFind(i).ctype == target->ctype) {
                     left->sel_row = i;
+                    break;
                 }
             }
         }
@@ -821,6 +836,7 @@ void acr_nav::navaction_go_back() {
         for (int i = 0; i < acr_nav::left_item_N(); i++) {
             if (acr_nav::left_item_qFind(i).ctype == entry->ctype) {
                 acr_nav::_db.p_left_panel->sel_row = i;
+                break;
             }
         }
         acr_nav::_db.p_left_panel->scroll_offset = entry->scroll_offset;
@@ -874,9 +890,12 @@ void acr_nav::navaction_toggle_codegen() { ToggleViewmode(acr_nav::_db.p_codegen
 void acr_nav::navaction_filter_accept() {
     bool has_filter = ch_N(acr_nav::_db.filter) > 0;
     if (has_filter) {
+        // Recollapse previous session's auto-expanded before setting new ones
+        RecollapseAutoExpanded();
         // Expand all namespaces that have matching ctypes so results are visible
         ind_beg(acr_nav::_db_ns_curs, ns, acr_nav::_db) {
-            if (ns.n_match > 0) {
+            if (ns.n_match > 0 && ns.collapsed) {
+                ns.auto_expanded = true;
                 ns.collapsed = false;
             }
         } ind_end;
@@ -937,6 +956,7 @@ void acr_nav::navaction_filter_append_space() {
 void acr_nav::navaction_filter_clear() {
     if (ch_N(acr_nav::_db.filter) > 0) {
         ch_RemoveAll(acr_nav::_db.filter);
+        RecollapseAutoExpanded();
         BuildLeftItemsReset();
     }
 }
@@ -1300,7 +1320,7 @@ static void RenderContentArea(RenderCtx &ctx) {
     int scroll = acr_nav::_db.p_left_panel->scroll_offset;
     int n_right = RightPanelItemCount(ctx.sel_ct);
     bool has_fields = acr_nav::_db.p_cur_viewmode->has_fields;
-    bool in_xref = acr_nav::_db.p_cur_viewmode->field_source == "reverse";
+    bool in_xref = acr_nav::_db.p_cur_viewmode->is_reverse;
     int visible = ctx.visible;
 
     // Column header row -- always rendered for visual stability
@@ -1377,36 +1397,36 @@ static void RenderContentArea(RenderCtx &ctx) {
             if (!has_fields) {
                 right_cell << " " << RightPanelLineFind(right_data_idx);
             } else {
-                    fld = RightPanelFieldFind(ctx.sel_ct, right_data_idx);
-                    if (fld) {
-                        right_cell << " " << name_Get(*fld);
-                        char_PrintNTimes(' ', right_cell, i32_Max(1, 24 - ch_N(right_cell)));
-                        right_cell << (in_xref ? fld->p_ctype->ctype : fld->p_arg->ctype);
-                        char_PrintNTimes(' ', right_cell, i32_Max(1, 48 - ch_N(right_cell)));
-                        right_cell << fld->p_reftype->reftype;
-                    }
+                fld = RightPanelFieldFind(ctx.sel_ct, right_data_idx);
+                if (fld) {
+                    right_cell << " " << name_Get(*fld);
+                    char_PrintNTimes(' ', right_cell, i32_Max(1, 24 - ch_N(right_cell)));
+                    right_cell << (in_xref ? fld->p_ctype->ctype : fld->p_arg->ctype);
+                    char_PrintNTimes(' ', right_cell, i32_Max(1, 48 - ch_N(right_cell)));
+                    right_cell << fld->p_reftype->reftype;
                 }
-            } else if ((ctx.sel_ct || !has_fields) && n_right == 0 && right_data_idx == 0) {
-                right_cell << " (" << acr_nav::_db.p_cur_viewmode->empty_msg << ")";
             }
-            TruncPad(right_cell, ctx.right_wid);
-            if (right_sel) {
-                EmitStyle(ctx.buf, !ctx.left_focused ? *acr_nav::_db.p_sel_focus : *acr_nav::_db.p_sel_nofocus);
-            }
-            if (fld && fld->p_reftype->c_reftypestyle) {
-                EmitStyle(ctx.buf, *fld->p_reftype->c_reftypestyle->p_navstyle);
-            }
-            bool field_match = false;
-            if (fld && !in_xref
-                && acr_nav::_db.p_cur_filtertarget != acr_nav::_db.p_default_filtertarget
-                && ch_N(acr_nav::_db.filter) > 0) {
-                field_match = FieldMatchesFilter(*fld, acr_nav::_db.filter_regx);
-            }
-            if (field_match) {
-                EmitStyle(ctx.buf, *acr_nav::_db.p_filter_match);
-            }
-            ctx.buf << right_cell << "\x1b[0m\x1b[K\r\n";
+        } else if ((ctx.sel_ct || !has_fields) && n_right == 0 && right_data_idx == 0) {
+            right_cell << " (" << acr_nav::_db.p_cur_viewmode->empty_msg << ")";
         }
+        TruncPad(right_cell, ctx.right_wid);
+        if (right_sel) {
+            EmitStyle(ctx.buf, !ctx.left_focused ? *acr_nav::_db.p_sel_focus : *acr_nav::_db.p_sel_nofocus);
+        }
+        if (fld && fld->p_reftype->c_reftypestyle) {
+            EmitStyle(ctx.buf, *fld->p_reftype->c_reftypestyle->p_navstyle);
+        }
+        bool field_match = false;
+        if (fld && !in_xref
+            && acr_nav::_db.p_cur_filtertarget != acr_nav::_db.p_default_filtertarget
+            && ch_N(acr_nav::_db.filter) > 0) {
+            field_match = FieldMatchesFilter(*fld, acr_nav::_db.filter_regx);
+        }
+        if (field_match) {
+            EmitStyle(ctx.buf, *acr_nav::_db.p_filter_match);
+        }
+        ctx.buf << right_cell << "\x1b[0m\x1b[K\r\n";
+    }
 }
 
 // -----------------------------------------------------------------------------
@@ -1690,7 +1710,7 @@ static void HeadlessOutput() {
     prlog(right_state);
     // Visible fields (field-based modes only, clipped to viewport)
     if (sel_ct && acr_nav::_db.p_cur_viewmode->has_fields) {
-        bool reverse = acr_nav::_db.p_cur_viewmode->field_source == "reverse";
+        bool reverse = acr_nav::_db.p_cur_viewmode->is_reverse;
         int n_vis = RightPanelItemCount(sel_ct);
         int first_right = right->scroll_offset;
         int last_right = i32_Min(first_right + VisibleRows(), n_vis);

@@ -1914,6 +1914,7 @@ inline void acr_nav::FNs_Init(acr_nav::FNs& ns) {
     ns.c_ctype_n = 0; // (acr_nav.FNs.c_ctype)
     ns.c_ctype_max = 0; // (acr_nav.FNs.c_ctype)
     ns.n_match = i32(0);
+    ns.auto_expanded = bool(false);
     ns.ind_ns_next = (acr_nav::FNs*)-1; // (acr_nav.FDb.ind_ns) not-in-hash
     ns.ind_ns_hashval = 0; // stored hash value
 }

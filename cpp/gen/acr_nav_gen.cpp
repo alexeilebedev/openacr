@@ -450,7 +450,7 @@ static void acr_nav::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_nav.Input'  signature:'6539984afe484bc1b4d09635cfdfa182cc92fb10'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_nav.Input'  signature:'bba92fdfd024c39380a22e546f4f749e97dc5912'");
 }
 
 // --- acr_nav.FDb._db.InsertStrptrMaybe
@@ -5657,7 +5657,7 @@ void acr_nav::viewmode_CopyOut(acr_nav::FViewmode &row, acr_navdb::Viewmode &out
     out.has_fields = row.has_fields;
     out.is_overlay = row.is_overlay;
     out.need_ssimfile = row.need_ssimfile;
-    out.field_source = row.field_source;
+    out.is_reverse = row.is_reverse;
     out.comment = row.comment;
 }
 
@@ -5671,7 +5671,7 @@ void acr_nav::viewmode_CopyIn(acr_nav::FViewmode &row, acr_navdb::Viewmode &in) 
     row.has_fields = in.has_fields;
     row.is_overlay = in.is_overlay;
     row.need_ssimfile = in.need_ssimfile;
-    row.field_source = in.field_source;
+    row.is_reverse = in.is_reverse;
     row.comment = in.comment;
 }
 
@@ -5882,7 +5882,7 @@ void acr_nav::FViewmode_Init(acr_nav::FViewmode& viewmode) {
     viewmode.has_fields = bool(false);
     viewmode.is_overlay = bool(false);
     viewmode.need_ssimfile = bool(false);
-    viewmode.field_source = algo::strptr("");
+    viewmode.is_reverse = bool(false);
     viewmode.line_elems 	= 0; // (acr_nav.FViewmode.line)
     viewmode.line_n     	= 0; // (acr_nav.FViewmode.line)
     viewmode.line_max   	= 0; // (acr_nav.FViewmode.line)

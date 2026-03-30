@@ -31,8 +31,8 @@
 
 ## Known Issues
 
-### I1. Filter clear does not restore namespace collapse state
-When a filter is applied, namespaces containing matching ctypes are auto-expanded. Clearing the filter (Escape) does not restore the pre-filter collapse state — all auto-expanded namespaces remain expanded. Pre-existing; found via exploratory testing 2026-03-30.
+### I2. SetTermSize shrink does not recalculate scroll_offset
+When the terminal is shrunk via `SetTermSize` and the selected row is already scrolled past the new visible area, `scroll_offset` is not recalculated. The selected item becomes invisible until the next navigation keypress forces `AdjustScroll` to correct it. Visual-only — `sel_row` and `sel_value` remain correct. Fix: call `AdjustScroll` for both panels after processing `SetTermSize`. Found via exploratory testing 2026-03-30.
 
 ---
 

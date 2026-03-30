@@ -2343,6 +2343,7 @@ struct FNs { // acr_nav.FNs
     u32                 c_ctype_n;        // array of pointers
     u32                 c_ctype_max;      // capacity of allocated array
     i32                 n_match;          //   0  Matching ctypes under current filter
+    bool                auto_expanded;    //   false  Set when filter-accept auto-expands a collapsed namespace
     // reftype Ptrary of acr_nav.FNs.c_ctype prohibits copy
     // func:acr_nav.FNs..AssignOp
     inline acr_nav::FNs& operator =(const acr_nav::FNs &rhs) = delete;
@@ -2646,7 +2647,7 @@ struct FViewmode { // acr_nav.FViewmode
     bool                  has_fields;             //   false  Y: renders field records; N: renders preformatted lines
     bool                  is_overlay;             //   false  Y: overlay viewmode (help, detail); suppresses need_no_overlay hints
     bool                  need_ssimfile;          //   false  Viewmode requires ssimfile-backed ctype
-    algo::Smallstr50      field_source;           //   ""  Field access path: forward (c_field) or reverse (c_field_arg)
+    bool                  is_reverse;             //   false  Y=reverse xrefs, N=forward fields
     algo::Comment         comment;                //
     algo::cstring*        line_elems;             // pointer to elements
     u32                   line_n;                 // number of elements in array

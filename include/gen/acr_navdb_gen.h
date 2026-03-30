@@ -67,7 +67,7 @@ enum acr_navdb_FieldIdEnum {                    // acr_navdb.FieldId.value
     ,acr_navdb_FieldId_has_fields         = 34
     ,acr_navdb_FieldId_is_overlay         = 35
     ,acr_navdb_FieldId_need_ssimfile      = 36
-    ,acr_navdb_FieldId_field_source       = 37
+    ,acr_navdb_FieldId_is_reverse         = 37
     ,acr_navdb_FieldId_value              = 38
 };
 
@@ -397,7 +397,7 @@ struct Viewmode { // acr_navdb.Viewmode: Right-panel view mode for acr_nav
     bool               has_fields;      //   false  Y: renders field records; N: renders preformatted lines
     bool               is_overlay;      //   false  Y: overlay viewmode (help, detail); suppresses need_no_overlay hints
     bool               need_ssimfile;   //   false  Viewmode requires ssimfile-backed ctype
-    algo::Smallstr50   field_source;    //   ""  Field access path: forward (c_field) or reverse (c_field_arg)
+    bool               is_reverse;      //   false  Y=reverse xrefs, N=forward fields
     algo::Comment      comment;         //
     // func:acr_navdb.Viewmode..Ctor
     inline               Viewmode() __attribute__((nothrow));
