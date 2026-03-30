@@ -852,6 +852,7 @@ dmmeta.field  field:acr_navdb.Navaction.navaction  arg:algo.Smallstr50  reftype:
 dmmeta.field  field:acr_navdb.Navaction.hint  arg:algo.Smallstr50  reftype:Val  dflt:""  comment:"Short status bar label; empty=hidden"
 dmmeta.field  field:acr_navdb.Navaction.helpgroup  arg:acr_navdb.Helpgroup  reftype:Pkey  dflt:""  comment:"Help group; empty=hidden from help"
 dmmeta.field  field:acr_navdb.Navaction.sort_order  arg:i32  reftype:Val  dflt:""  comment:"Sort order within help group"
+dmmeta.field  field:acr_navdb.Navaction.passive  arg:bool  reftype:Val  dflt:false  comment:"Movement-only action; does not dismiss startup help"
 dmmeta.field  field:acr_navdb.Navaction.comment  arg:algo.Comment  reftype:Val  dflt:""  comment:""
 dmmeta.field  field:acr_navdb.Navmode.navmode  arg:algo.Smallstr50  reftype:Val  dflt:""  comment:""
 dmmeta.field  field:acr_navdb.Navmode.comment  arg:algo.Comment  reftype:Val  dflt:""  comment:""

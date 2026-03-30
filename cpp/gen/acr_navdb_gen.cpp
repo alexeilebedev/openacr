@@ -101,6 +101,7 @@ const char* acr_navdb::value_ToCstr(const acr_navdb::FieldId& parent) {
         case acr_navdb_FieldId_hint_order  : ret = "hint_order";  break;
         case acr_navdb_FieldId_key         : ret = "key";  break;
         case acr_navdb_FieldId_hint        : ret = "hint";  break;
+        case acr_navdb_FieldId_passive     : ret = "passive";  break;
         case acr_navdb_FieldId_navstyle    : ret = "navstyle";  break;
         case acr_navdb_FieldId_bold        : ret = "bold";  break;
         case acr_navdb_FieldId_dim         : ret = "dim";  break;
@@ -191,6 +192,9 @@ bool acr_navdb::value_SetStrptrMaybe(acr_navdb::FieldId& parent, algo::strptr rh
                 }
                 case LE_STR7('n','a','v','m','o','d','e'): {
                     value_SetEnum(parent,acr_navdb_FieldId_navmode); ret = true; break;
+                }
+                case LE_STR7('p','a','s','s','i','v','e'): {
+                    value_SetEnum(parent,acr_navdb_FieldId_passive); ret = true; break;
                 }
                 case LE_STR7('r','e','f','t','y','p','e'): {
                     value_SetEnum(parent,acr_navdb_FieldId_reftype); ret = true; break;
@@ -541,6 +545,9 @@ bool acr_navdb::Navaction_ReadFieldMaybe(acr_navdb::Navaction& parent, algo::str
         case acr_navdb_FieldId_sort_order: {
             retval = i32_ReadStrptrMaybe(parent.sort_order, strval);
         } break;
+        case acr_navdb_FieldId_passive: {
+            retval = bool_ReadStrptrMaybe(parent.passive, strval);
+        } break;
         case acr_navdb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
         } break;
@@ -585,6 +592,9 @@ void acr_navdb::Navaction_Print(acr_navdb::Navaction& row, algo::cstring& str) {
 
     i32_Print(row.sort_order, temp);
     PrintAttrSpaceReset(str,"sort_order", temp);
+
+    bool_Print(row.passive, temp);
+    PrintAttrSpaceReset(str,"passive", temp);
 
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);

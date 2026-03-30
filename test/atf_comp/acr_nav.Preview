@@ -1,4 +1,4 @@
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:dmmeta.Reftype  navstack_depth:0  n_sel_ctype:1  n_ctype:1404  n_field:5631  viewmode:preview  breadcrumb:""  filtertarget:ctype
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:dmmeta.Reftype  navstack_depth:0  n_sel_ctype:1  n_ctype:1404  n_field:5632  viewmode:preview  breadcrumb:""  filtertarget:ctype
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:2  sel_value:dmmeta.Reftype
 acr_nav.VisibleLeftItem  row:0  value:dmmeta  kind:ns  collapsed:N  n_match:1  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:dmmeta.Reftype  kind:ctype  collapsed:N  n_match:0  n_record:35
@@ -39,7 +39,7 @@ acr_nav.VisibleLine  row:32  value:"Val       Y      Y        N            Y    
 acr_nav.VisibleLine  row:33  value:"Varlen    Y      Y        N            Y        N       N    N   Y      N         Y     Y       Variable-length trailing array                                         "
 acr_nav.VisibleLine  row:34  value:"ZSListMT  N      N        N            N        N       N    N   N      N         N     N       Zero-terminated singly linked list with thread-safe access             "
 
-acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Reftype  navstack_depth:0  n_sel_ctype:1  n_ctype:1404  n_field:5631  viewmode:preview  breadcrumb:""  filtertarget:ctype
+acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Reftype  navstack_depth:0  n_sel_ctype:1  n_ctype:1404  n_field:5632  viewmode:preview  breadcrumb:""  filtertarget:ctype
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:2  sel_value:dmmeta.Reftype
 acr_nav.VisibleLeftItem  row:0  value:dmmeta  kind:ns  collapsed:N  n_match:1  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:dmmeta.Reftype  kind:ctype  collapsed:N  n_match:0  n_record:35
@@ -80,7 +80,7 @@ acr_nav.VisibleLine  row:32  value:"Val       Y      Y        N            Y    
 acr_nav.VisibleLine  row:33  value:"Varlen    Y      Y        N            Y        N       N    N   Y      N         Y     Y       Variable-length trailing array                                         "
 acr_nav.VisibleLine  row:34  value:"ZSListMT  N      N        N            N        N       N    N   N      N         N     N       Zero-terminated singly linked list with thread-safe access             "
 
-acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Reftype  navstack_depth:0  n_sel_ctype:1  n_ctype:1404  n_field:5631  viewmode:fields  breadcrumb:""  filtertarget:ctype
+acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Reftype  navstack_depth:0  n_sel_ctype:1  n_ctype:1404  n_field:5632  viewmode:fields  breadcrumb:""  filtertarget:ctype
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:2  sel_value:dmmeta.Reftype
 acr_nav.VisibleLeftItem  row:0  value:dmmeta  kind:ns  collapsed:N  n_match:1  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:dmmeta.Reftype  kind:ctype  collapsed:N  n_match:0  n_record:35
@@ -99,7 +99,7 @@ acr_nav.VisibleField  row:10  field:dmmeta.Reftype.inst  arg:bool  reftype:Val  
 acr_nav.VisibleField  row:11  field:dmmeta.Reftype.varlen  arg:bool  reftype:Val  style:field_val  navigable:Y
 acr_nav.VisibleField  row:12  field:dmmeta.Reftype.comment  arg:algo.Comment  reftype:Val  style:field_val  navigable:Y
 
-acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Reftype  navstack_depth:0  n_sel_ctype:1  n_ctype:1404  n_field:5631  viewmode:fields  breadcrumb:""  filtertarget:ctype
+acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Reftype  navstack_depth:0  n_sel_ctype:1  n_ctype:1404  n_field:5632  viewmode:fields  breadcrumb:""  filtertarget:ctype
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:2  sel_value:dmmeta.Reftype
 acr_nav.VisibleLeftItem  row:0  value:dmmeta  kind:ns  collapsed:N  n_match:1  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:dmmeta.Reftype  kind:ctype  collapsed:N  n_match:0  n_record:35

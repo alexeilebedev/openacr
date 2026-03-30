@@ -1,4 +1,4 @@
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1403  n_ctype:1404  n_field:5631  viewmode:help  breadcrumb:""  filtertarget:ctype
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1403  n_ctype:1404  n_field:5632  viewmode:help  breadcrumb:""  filtertarget:ctype
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:83  sel_value:""
 acr_nav.VisibleLeftItem  row:0  value:""  kind:ns  collapsed:Y  n_match:44  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:abt  kind:ns  collapsed:Y  n_match:19  n_record:0
@@ -83,7 +83,7 @@ acr_nav.VisibleLeftItem  row:79  value:strconv  kind:ns  collapsed:Y  n_match:1 
 acr_nav.VisibleLeftItem  row:80  value:sv2ssim  kind:ns  collapsed:Y  n_match:4  n_record:0
 acr_nav.VisibleLeftItem  row:81  value:ws  kind:ns  collapsed:Y  n_match:16  n_record:0
 acr_nav.VisibleLeftItem  row:82  value:wsdb  kind:ns  collapsed:Y  n_match:1  n_record:0
-acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:24  sel_value:"Up                k         Move selection up"
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:26  sel_value:"Up                k         Move selection up"
 acr_nav.VisibleLine  row:0  value:"Up                k         Move selection up"
 acr_nav.VisibleLine  row:1  value:"Down              j         Move selection down"
 acr_nav.VisibleLine  row:2  value:"PgUp              b         Page up"
@@ -108,4 +108,6 @@ acr_nav.VisibleLine  row:20  value:"                            Cycle filter tar
 acr_nav.VisibleLine  row:21  value:""
 acr_nav.VisibleLine  row:22  value:"?                           Toggle help panel"
 acr_nav.VisibleLine  row:23  value:"                  q         Exit acr_nav"
+acr_nav.VisibleLine  row:24  value:""
+acr_nav.VisibleLine  row:25  value:"  ↑↓ Browse    Enter Start    ? Help anytime"
 

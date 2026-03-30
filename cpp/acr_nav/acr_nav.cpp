@@ -1157,6 +1157,8 @@ static void BuildHelpLines() {
             acr_nav::line_Alloc(vm) = line;
         }
     }
+    acr_nav::line_Alloc(vm) = "";
+    acr_nav::line_Alloc(vm) = "  \xe2\x86\x91\xe2\x86\x93 Browse    Enter Start    ? Help anytime";
 }
 
 // -----------------------------------------------------------------------------
@@ -1278,7 +1280,7 @@ static void RenderContentArea(RenderCtx &ctx) {
         bool right_sel = false;
         int right_data_idx = acr_nav::_db.p_right_panel->scroll_offset + row;
         acr_nav::FField *fld = nullptr;
-        if (ctx.sel_ct && right_data_idx < n_right) {
+        if ((ctx.sel_ct || !has_fields) && right_data_idx < n_right) {
             right_sel = (right_data_idx == acr_nav::_db.p_right_panel->sel_row);
             if (!has_fields) {
                 right_cell << " " << RightPanelLineFind(right_data_idx);
@@ -1292,7 +1294,7 @@ static void RenderContentArea(RenderCtx &ctx) {
                         right_cell << fld->p_reftype->reftype;
                     }
                 }
-            } else if (ctx.sel_ct && n_right == 0 && right_data_idx == 0) {
+            } else if ((ctx.sel_ct || !has_fields) && n_right == 0 && right_data_idx == 0) {
                 right_cell << " (" << acr_nav::_db.p_cur_viewmode->empty_msg << ")";
             }
             TruncPad(right_cell, ctx.right_wid);
@@ -1484,17 +1486,23 @@ static bool ProcessKey(algo::strptr key_name) {
             BuildLeftItemsReset();
             did_something = true;
         }
-        // Dismiss startup help on first successful keypress. Safe when Escape pops the
-        // overlay before this check: PopViewmode() is a no-op on empty stack.
+        // Dismiss startup help on any non-passive action (not movement/panel switch).
+        // Escape/? pop the overlay directly; detected here via !IsHelpMode().
         if (acr_nav::_db.startup_help && did_something) {
-            acr_nav::_db.startup_help = false;
-            PopViewmode();
+            bool is_action = keybind && !keybind->p_navaction->passive;
+            if (is_action || !IsHelpMode()) {
+                acr_nav::_db.startup_help = false;
+                if (IsHelpMode()) {
+                    PopViewmode();
+                }
+            }
         }
         if (did_something) {
             acr_nav::FCtype *sel_ct = SelectedCtype(*left);
             if (sel_ct != prev_sel_ct) {
-                // If an overlay viewmode is active, pop all and restore base
-                if (!acr_nav::viewmode_stack_EmptyQ()) {
+                // If an overlay viewmode is active, pop all and restore base.
+                // During startup help, preserve the overlay so movement doesn't dismiss it.
+                if (!acr_nav::viewmode_stack_EmptyQ() && !acr_nav::_db.startup_help) {
                     acr_nav::FViewmode *base = acr_nav::ind_viewmode_Find(acr_nav::viewmode_stack_qFind(0));
                     acr_nav::viewmode_stack_RemoveAll();
                     if (base) {

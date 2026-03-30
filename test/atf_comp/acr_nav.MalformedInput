@@ -1,6 +1,6 @@
 acr_nav.InputError  lineno:2  msg:"unrecognized input: garbage input line"
 acr_nav.InputError  lineno:4  msg:"unrecognized input: another bad line"
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1403  n_ctype:1404  n_field:5631  viewmode:fields  breadcrumb:""  filtertarget:ctype
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1403  n_ctype:1404  n_field:5632  viewmode:help  breadcrumb:""  filtertarget:ctype
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:83  sel_value:abt
 acr_nav.VisibleLeftItem  row:0  value:""  kind:ns  collapsed:Y  n_match:44  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:abt  kind:ns  collapsed:Y  n_match:19  n_record:0
@@ -85,9 +85,35 @@ acr_nav.VisibleLeftItem  row:79  value:strconv  kind:ns  collapsed:Y  n_match:1 
 acr_nav.VisibleLeftItem  row:80  value:sv2ssim  kind:ns  collapsed:Y  n_match:4  n_record:0
 acr_nav.VisibleLeftItem  row:81  value:ws  kind:ns  collapsed:Y  n_match:16  n_record:0
 acr_nav.VisibleLeftItem  row:82  value:wsdb  kind:ns  collapsed:Y  n_match:1  n_record:0
-acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:26  sel_value:"Up                k         Move selection up"
+acr_nav.VisibleLine  row:0  value:"Up                k         Move selection up"
+acr_nav.VisibleLine  row:1  value:"Down              j         Move selection down"
+acr_nav.VisibleLine  row:2  value:"PgUp              b         Page up"
+acr_nav.VisibleLine  row:3  value:"PgDown/Space                Page down"
+acr_nav.VisibleLine  row:4  value:"Home              g         Jump to first item"
+acr_nav.VisibleLine  row:5  value:"End               G         Jump to last item"
+acr_nav.VisibleLine  row:6  value:""
+acr_nav.VisibleLine  row:7  value:"Enter             l         Follow reference to target ctype"
+acr_nav.VisibleLine  row:8  value:"Backspace                   Return to previous ctype"
+acr_nav.VisibleLine  row:9  value:"Left              h         Move focus to panel on the left"
+acr_nav.VisibleLine  row:10  value:"Right                       Move focus to panel on the right"
+acr_nav.VisibleLine  row:11  value:""
+acr_nav.VisibleLine  row:12  value:"Tab               r         Cycle right panel: fields, xrefs, preview, codegen"
+acr_nav.VisibleLine  row:13  value:"                  p         Toggle ssimfile content preview"
+acr_nav.VisibleLine  row:14  value:"                  d         Toggle field metadata detail"
+acr_nav.VisibleLine  row:15  value:"                  c         Toggle generated code view"
+acr_nav.VisibleLine  row:16  value:""
+acr_nav.VisibleLine  row:17  value:"/                           Enter filter input mode"
+acr_nav.VisibleLine  row:18  value:"                            Clear filter text"
+acr_nav.VisibleLine  row:19  value:"Escape                      Dismiss overlay or clear filter"
+acr_nav.VisibleLine  row:20  value:"                            Cycle filter target (Tab in filter mode)"
+acr_nav.VisibleLine  row:21  value:""
+acr_nav.VisibleLine  row:22  value:"?                           Toggle help panel"
+acr_nav.VisibleLine  row:23  value:"                  q         Exit acr_nav"
+acr_nav.VisibleLine  row:24  value:""
+acr_nav.VisibleLine  row:25  value:"  ↑↓ Browse    Enter Start    ? Help anytime"
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1403  n_ctype:1404  n_field:5631  viewmode:fields  breadcrumb:""  filtertarget:ctype
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1403  n_ctype:1404  n_field:5632  viewmode:help  breadcrumb:""  filtertarget:ctype
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:83  sel_value:abt
 acr_nav.VisibleLeftItem  row:0  value:""  kind:ns  collapsed:Y  n_match:44  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:abt  kind:ns  collapsed:Y  n_match:19  n_record:0
@@ -172,5 +198,31 @@ acr_nav.VisibleLeftItem  row:79  value:strconv  kind:ns  collapsed:Y  n_match:1 
 acr_nav.VisibleLeftItem  row:80  value:sv2ssim  kind:ns  collapsed:Y  n_match:4  n_record:0
 acr_nav.VisibleLeftItem  row:81  value:ws  kind:ns  collapsed:Y  n_match:16  n_record:0
 acr_nav.VisibleLeftItem  row:82  value:wsdb  kind:ns  collapsed:Y  n_match:1  n_record:0
-acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:26  sel_value:"Up                k         Move selection up"
+acr_nav.VisibleLine  row:0  value:"Up                k         Move selection up"
+acr_nav.VisibleLine  row:1  value:"Down              j         Move selection down"
+acr_nav.VisibleLine  row:2  value:"PgUp              b         Page up"
+acr_nav.VisibleLine  row:3  value:"PgDown/Space                Page down"
+acr_nav.VisibleLine  row:4  value:"Home              g         Jump to first item"
+acr_nav.VisibleLine  row:5  value:"End               G         Jump to last item"
+acr_nav.VisibleLine  row:6  value:""
+acr_nav.VisibleLine  row:7  value:"Enter             l         Follow reference to target ctype"
+acr_nav.VisibleLine  row:8  value:"Backspace                   Return to previous ctype"
+acr_nav.VisibleLine  row:9  value:"Left              h         Move focus to panel on the left"
+acr_nav.VisibleLine  row:10  value:"Right                       Move focus to panel on the right"
+acr_nav.VisibleLine  row:11  value:""
+acr_nav.VisibleLine  row:12  value:"Tab               r         Cycle right panel: fields, xrefs, preview, codegen"
+acr_nav.VisibleLine  row:13  value:"                  p         Toggle ssimfile content preview"
+acr_nav.VisibleLine  row:14  value:"                  d         Toggle field metadata detail"
+acr_nav.VisibleLine  row:15  value:"                  c         Toggle generated code view"
+acr_nav.VisibleLine  row:16  value:""
+acr_nav.VisibleLine  row:17  value:"/                           Enter filter input mode"
+acr_nav.VisibleLine  row:18  value:"                            Clear filter text"
+acr_nav.VisibleLine  row:19  value:"Escape                      Dismiss overlay or clear filter"
+acr_nav.VisibleLine  row:20  value:"                            Cycle filter target (Tab in filter mode)"
+acr_nav.VisibleLine  row:21  value:""
+acr_nav.VisibleLine  row:22  value:"?                           Toggle help panel"
+acr_nav.VisibleLine  row:23  value:"                  q         Exit acr_nav"
+acr_nav.VisibleLine  row:24  value:""
+acr_nav.VisibleLine  row:25  value:"  ↑↓ Browse    Enter Start    ? Help anytime"
 

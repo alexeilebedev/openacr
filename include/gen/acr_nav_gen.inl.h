@@ -1805,6 +1805,7 @@ inline void acr_nav::step_Call(acr_nav::FNavaction& navaction) {
 // Set all fields to initial values.
 inline void acr_nav::FNavaction_Init(acr_nav::FNavaction& navaction) {
     navaction.sort_order = i32(0);
+    navaction.passive = bool(false);
     navaction.p_helpgroup = NULL;
     navaction.ind_navaction_next = (acr_nav::FNavaction*)-1; // (acr_nav.FDb.ind_navaction) not-in-hash
     navaction.ind_navaction_hashval = 0; // stored hash value

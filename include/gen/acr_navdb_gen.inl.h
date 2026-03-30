@@ -99,6 +99,7 @@ inline  acr_navdb::Keybind::Keybind() {
 // Set all fields to initial values.
 inline void acr_navdb::Navaction_Init(acr_navdb::Navaction& parent) {
     parent.sort_order = i32(0);
+    parent.passive = bool(false);
 }
 
 // --- acr_navdb.Navaction..Ctor

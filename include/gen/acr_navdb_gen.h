@@ -43,24 +43,25 @@ enum acr_navdb_FieldIdEnum {                // acr_navdb.FieldId.value
     ,acr_navdb_FieldId_hint_order     = 10
     ,acr_navdb_FieldId_key            = 11
     ,acr_navdb_FieldId_hint           = 12
-    ,acr_navdb_FieldId_navstyle       = 13
-    ,acr_navdb_FieldId_bold           = 14
-    ,acr_navdb_FieldId_dim            = 15
-    ,acr_navdb_FieldId_reverse        = 16
-    ,acr_navdb_FieldId_fg_color       = 17
-    ,acr_navdb_FieldId_panel          = 18
-    ,acr_navdb_FieldId_title          = 19
-    ,acr_navdb_FieldId_position       = 20
-    ,acr_navdb_FieldId_min_width      = 21
-    ,acr_navdb_FieldId_reftypestyle   = 22
-    ,acr_navdb_FieldId_reftype        = 23
-    ,acr_navdb_FieldId_viewmode       = 24
-    ,acr_navdb_FieldId_empty_msg      = 25
-    ,acr_navdb_FieldId_has_fields     = 26
-    ,acr_navdb_FieldId_value          = 27
+    ,acr_navdb_FieldId_passive        = 13
+    ,acr_navdb_FieldId_navstyle       = 14
+    ,acr_navdb_FieldId_bold           = 15
+    ,acr_navdb_FieldId_dim            = 16
+    ,acr_navdb_FieldId_reverse        = 17
+    ,acr_navdb_FieldId_fg_color       = 18
+    ,acr_navdb_FieldId_panel          = 19
+    ,acr_navdb_FieldId_title          = 20
+    ,acr_navdb_FieldId_position       = 21
+    ,acr_navdb_FieldId_min_width      = 22
+    ,acr_navdb_FieldId_reftypestyle   = 23
+    ,acr_navdb_FieldId_reftype        = 24
+    ,acr_navdb_FieldId_viewmode       = 25
+    ,acr_navdb_FieldId_empty_msg      = 26
+    ,acr_navdb_FieldId_has_fields     = 27
+    ,acr_navdb_FieldId_value          = 28
 };
 
-enum { acr_navdb_FieldIdEnum_N = 28 };
+enum { acr_navdb_FieldIdEnum_N = 29 };
 
 namespace acr_navdb { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 DetailsrcPkey;
@@ -249,6 +250,7 @@ struct Navaction { // acr_navdb.Navaction: Controlled vocabulary of navigation a
     algo::Smallstr50   hint;         // Short status bar label; empty=hidden
     algo::Smallstr50   helpgroup;    // Help group; empty=hidden from help
     i32                sort_order;   //   0  Sort order within help group
+    bool               passive;      //   false  Movement-only action; does not dismiss startup help
     algo::Comment      comment;      //
     // func:acr_navdb.Navaction..Ctor
     inline               Navaction() __attribute__((nothrow));

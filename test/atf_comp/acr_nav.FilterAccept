@@ -1,4 +1,4 @@
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:amc  navstack_depth:0  n_sel_ctype:255  n_ctype:1404  n_field:5631  viewmode:fields  breadcrumb:""  filtertarget:ctype
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:amc  navstack_depth:0  n_sel_ctype:255  n_ctype:1404  n_field:5632  viewmode:fields  breadcrumb:""  filtertarget:ctype
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:263  sel_value:amc.BltinId
 acr_nav.VisibleLeftItem  row:0  value:amc  kind:ns  collapsed:N  n_match:130  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:amc.BltinId  kind:ctype  collapsed:N  n_match:0  n_record:0
@@ -266,7 +266,7 @@ acr_nav.VisibleLeftItem  row:262  value:report.amc  kind:ctype  collapsed:N  n_m
 acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:1  sel_value:amc.BltinId.value
 acr_nav.VisibleField  row:0  field:amc.BltinId.value  arg:u8  reftype:Val  style:field_val  navigable:Y
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:amc  navstack_depth:0  n_sel_ctype:255  n_ctype:1404  n_field:5631  viewmode:fields  breadcrumb:""  filtertarget:ctype
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:amc  navstack_depth:0  n_sel_ctype:255  n_ctype:1404  n_field:5632  viewmode:fields  breadcrumb:""  filtertarget:ctype
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:263  sel_value:amc.BltinId
 acr_nav.VisibleLeftItem  row:0  value:amc  kind:ns  collapsed:N  n_match:130  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:amc.BltinId  kind:ctype  collapsed:N  n_match:0  n_record:0

@@ -2191,6 +2191,7 @@ struct FNavaction { // acr_nav.FNavaction
     algo::Smallstr50               hint;                    // Short status bar label; empty=hidden
     algo::Smallstr50               helpgroup;               // Help group; empty=hidden from help
     i32                            sort_order;              //   0  Sort order within help group
+    bool                           passive;                 //   false  Movement-only action; does not dismiss startup help
     algo::Comment                  comment;                 //
     acr_nav::FHelpgroup*           p_helpgroup;             // optional pointer
     acr_nav::navaction_step_hook   step;                    //   NULL  Pointer to a function
@@ -3242,6 +3243,10 @@ struct viewmode_line_curs {// cursor
 } // gen:ns_curstext
 namespace acr_nav { // gen:ns_func
 // User-implemented function from gstatic:acr_nav.FDb.navaction
+// func:acr_nav...navaction_cycle_viewmode
+// this function is 'extrn' and implemented by user
+void                 navaction_cycle_viewmode();
+// User-implemented function from gstatic:acr_nav.FDb.navaction
 // func:acr_nav...navaction_dismiss_or_clear
 // this function is 'extrn' and implemented by user
 void                 navaction_dismiss_or_clear();
@@ -3333,10 +3338,6 @@ void                 navaction_toggle_codegen();
 // func:acr_nav...navaction_toggle_preview
 // this function is 'extrn' and implemented by user
 void                 navaction_toggle_preview();
-// User-implemented function from gstatic:acr_nav.FDb.navaction
-// func:acr_nav...navaction_cycle_viewmode
-// this function is 'extrn' and implemented by user
-void                 navaction_cycle_viewmode();
 // func:acr_nav...StaticCheck
 void                 StaticCheck();
 } // gen:ns_func
