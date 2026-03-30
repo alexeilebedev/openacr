@@ -231,6 +231,18 @@ atfdb.tmsg  tmsg:acr_nav.Preview/100190.in  istuple:N  msg:"acr_nav.SendKey  key
 atfdb.tmsg  tmsg:acr_nav.Preview/100200.in  istuple:N  msg:acr_nav.Screenshot
 atfdb.tmsg  tmsg:acr_nav.Preview/100210.in  istuple:N  msg:"acr_nav.SendKey  key:p"
 atfdb.tmsg  tmsg:acr_nav.Preview/100220.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.RecordCount/100000.in  istuple:N  msg:"acr_nav.SendKey  key:j"
+atfdb.tmsg  tmsg:acr_nav.RecordCount/100010.in  istuple:N  msg:"acr_nav.SendKey  key:j"
+atfdb.tmsg  tmsg:acr_nav.RecordCount/100020.in  istuple:N  msg:"acr_nav.SendKey  key:j"
+atfdb.tmsg  tmsg:acr_nav.RecordCount/100030.in  istuple:N  msg:"acr_nav.SendKey  key:j"
+atfdb.tmsg  tmsg:acr_nav.RecordCount/100040.in  istuple:N  msg:"acr_nav.SendKey  key:j"
+atfdb.tmsg  tmsg:acr_nav.RecordCount/100050.in  istuple:N  msg:"acr_nav.SendKey  key:j"
+atfdb.tmsg  tmsg:acr_nav.RecordCount/100060.in  istuple:N  msg:"acr_nav.SendKey  key:j"
+atfdb.tmsg  tmsg:acr_nav.RecordCount/100070.in  istuple:N  msg:"acr_nav.SendKey  key:j"
+atfdb.tmsg  tmsg:acr_nav.RecordCount/100080.in  istuple:N  msg:"acr_nav.SendKey  key:j"
+atfdb.tmsg  tmsg:acr_nav.RecordCount/100090.in  istuple:N  msg:"acr_nav.SendKey  key:j"
+atfdb.tmsg  tmsg:acr_nav.RecordCount/100100.in  istuple:N  msg:"acr_nav.SendKey  key:Enter"
+atfdb.tmsg  tmsg:acr_nav.RecordCount/100110.in  istuple:N  msg:acr_nav.Screenshot
 atfdb.tmsg  tmsg:acr_nav.UnknownKey/100000.in  istuple:N  msg:"acr_nav.SendKey  key:F13"
 atfdb.tmsg  tmsg:acr_nav.UnknownKey/100010.in  istuple:N  msg:acr_nav.Screenshot
 atfdb.tmsg  tmsg:acr_nav.UnknownKey/100020.in  istuple:N  msg:"acr_nav.SendKey  key:j"

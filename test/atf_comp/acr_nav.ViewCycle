@@ -1,25 +1,25 @@
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:dmmeta.Field  navstack_depth:0  n_sel_ctype:1  n_ctype:1402  n_field:5614  viewmode:fields  breadcrumb:""
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:dmmeta.Field  navstack_depth:0  n_sel_ctype:1  n_ctype:1402  n_field:5616  viewmode:fields  breadcrumb:""
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:1  sel_value:dmmeta
-acr_nav.VisibleLeftItem  row:0  value:dmmeta  kind:ns  collapsed:Y  n_match:1
+acr_nav.VisibleLeftItem  row:0  value:dmmeta  kind:ns  collapsed:Y  n_match:1  n_record:0
 acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:dmmeta.Field  navstack_depth:0  n_sel_ctype:1  n_ctype:1402  n_field:5614  viewmode:xref  breadcrumb:""
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:dmmeta.Field  navstack_depth:0  n_sel_ctype:1  n_ctype:1402  n_field:5616  viewmode:xref  breadcrumb:""
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:1  sel_value:dmmeta
-acr_nav.VisibleLeftItem  row:0  value:dmmeta  kind:ns  collapsed:Y  n_match:1
+acr_nav.VisibleLeftItem  row:0  value:dmmeta  kind:ns  collapsed:Y  n_match:1  n_record:0
 acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:dmmeta.Field  navstack_depth:0  n_sel_ctype:1  n_ctype:1402  n_field:5614  viewmode:preview  breadcrumb:""
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:dmmeta.Field  navstack_depth:0  n_sel_ctype:1  n_ctype:1402  n_field:5616  viewmode:preview  breadcrumb:""
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:1  sel_value:dmmeta
-acr_nav.VisibleLeftItem  row:0  value:dmmeta  kind:ns  collapsed:Y  n_match:1
+acr_nav.VisibleLeftItem  row:0  value:dmmeta  kind:ns  collapsed:Y  n_match:1  n_record:0
 acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:dmmeta.Field  navstack_depth:0  n_sel_ctype:1  n_ctype:1402  n_field:5614  viewmode:fields  breadcrumb:""
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:dmmeta.Field  navstack_depth:0  n_sel_ctype:1  n_ctype:1402  n_field:5616  viewmode:fields  breadcrumb:""
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:1  sel_value:dmmeta
-acr_nav.VisibleLeftItem  row:0  value:dmmeta  kind:ns  collapsed:Y  n_match:1
+acr_nav.VisibleLeftItem  row:0  value:dmmeta  kind:ns  collapsed:Y  n_match:1  n_record:0
 acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:dmmeta.Field  navstack_depth:0  n_sel_ctype:1  n_ctype:1402  n_field:5614  viewmode:fields  breadcrumb:""
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:dmmeta.Field  navstack_depth:0  n_sel_ctype:1  n_ctype:1402  n_field:5616  viewmode:fields  breadcrumb:""
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:1  sel_value:dmmeta
-acr_nav.VisibleLeftItem  row:0  value:dmmeta  kind:ns  collapsed:Y  n_match:1
+acr_nav.VisibleLeftItem  row:0  value:dmmeta  kind:ns  collapsed:Y  n_match:1  n_record:0
 acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
 

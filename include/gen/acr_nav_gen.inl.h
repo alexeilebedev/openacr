@@ -1939,6 +1939,7 @@ inline  acr_nav::FReftypestyle::~FReftypestyle() {
 // Set all fields to initial values.
 inline void acr_nav::FSsimfile_Init(acr_nav::FSsimfile& ssimfile) {
     ssimfile.p_ctype = NULL;
+    ssimfile.n_record = i32(0);
     ssimfile.ind_ssimfile_next = (acr_nav::FSsimfile*)-1; // (acr_nav.FDb.ind_ssimfile) not-in-hash
     ssimfile.ind_ssimfile_hashval = 0; // stored hash value
 }
@@ -2237,6 +2238,7 @@ inline void acr_nav::VisibleLeftItem_Init(acr_nav::VisibleLeftItem& parent) {
     parent.row = i32(0);
     parent.collapsed = bool(false);
     parent.n_match = i32(0);
+    parent.n_record = i32(0);
 }
 
 // --- acr_nav.VisibleLeftItem..Ctor

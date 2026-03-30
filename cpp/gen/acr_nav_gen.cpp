@@ -448,7 +448,7 @@ static void acr_nav::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_nav.Input'  signature:'36d1aa346adfe8827b8819bc53cf01216f871373'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_nav.Input'  signature:'401a017f1ad0b115eb18270edb949b4d32ea831a'");
 }
 
 // --- acr_nav.FDb._db.InsertStrptrMaybe
@@ -6070,6 +6070,9 @@ void acr_nav::VisibleLeftItem_Print(acr_nav::VisibleLeftItem& row, algo::cstring
 
     i32_Print(row.n_match, temp);
     PrintAttrSpaceReset(str,"n_match", temp);
+
+    i32_Print(row.n_record, temp);
+    PrintAttrSpaceReset(str,"n_record", temp);
 }
 
 // --- acr_nav.VisibleLine..Print

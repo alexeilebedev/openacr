@@ -2435,6 +2435,7 @@ struct FSsimfile { // acr_nav.FSsimfile
     algo::Smallstr50      ssimfile;               //
     algo::Smallstr100     ctype;                  //
     acr_nav::FCtype*      p_ctype;                // reference to parent row
+    i32                   n_record;               //   0  Number of records (counted at startup)
     // x-reference on acr_nav.FSsimfile.p_ctype prevents copy
     // func:acr_nav.FSsimfile..AssignOp
     inline acr_nav::FSsimfile& operator =(const acr_nav::FSsimfile &rhs) = delete;
@@ -2882,6 +2883,7 @@ struct VisibleLeftItem { // acr_nav.VisibleLeftItem: Headless output: one left p
     algo::Smallstr16    kind;        // Row kind: ns or ctype
     bool                collapsed;   //   false  Whether namespace is collapsed (N for ctype rows)
     i32                 n_match;     //   0  Matching ctypes in namespace (0 for ctype rows)
+    i32                 n_record;    //   0  Record count for ctypes with ssimfiles (0 otherwise)
     // func:acr_nav.VisibleLeftItem..Ctor
     inline               VisibleLeftItem() __attribute__((nothrow));
 };

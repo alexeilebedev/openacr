@@ -75,6 +75,14 @@ static void SwitchToBrowse() {
 
 // -----------------------------------------------------------------------------
 
+static int DecimalDigits(int n) {
+    int d = 1;
+    while (n >= 10) { n /= 10; d++; }
+    return d;
+}
+
+// -----------------------------------------------------------------------------
+
 static void BuildLeftItems() {
     acr_nav::left_item_RemoveAll();
     acr_nav::_db.n_visible_ctype = 0;
@@ -1121,6 +1129,10 @@ static void RenderContentArea(RenderCtx &ctx) {
                     stripped = full;
                 }
                 left_cell << "    " << stripped;
+                acr_nav::FCtype *ct = acr_nav::ind_ctype_Find(item.ctype);
+                if (ct && ct->c_ssimfile && ct->c_ssimfile->n_record > 0) {
+                    left_cell << " (" << ct->c_ssimfile->n_record << ")";
+                }
             }
         }
         // +2 for namespace headers: triangle is 3 UTF-8 bytes but 1 display column
@@ -1223,14 +1235,18 @@ static void Render(acr_nav::FCtype *sel_ct) {
             // Namespace header: " X label (count)"
             int label_len = ch_N(ns.ns) > 0 ? ch_N(ns.ns) : 6;  // "extern" = 6
             int count = ns.n_match;
-            int hdr_wid = 4 + label_len + 3 + (count < 10 ? 1 : count < 100 ? 2 : count < 1000 ? 3 : 4);
+            int hdr_wid = 4 + label_len + 3 + DecimalDigits(count);
             max_name = i32_Max(max_name, hdr_wid);
-            // Ctype rows: "    TypeName" = 4 + stripped name
+            // Ctype rows: "    TypeName (N)" = 4 + stripped name + count width
             for (int i = 0; i < acr_nav::c_ctype_N(ns); i++) {
                 acr_nav::FCtype *ct = acr_nav::c_ctype_Find(ns, i);
                 if (ct && ch_N(ct->ctype) > 0) {
                     algo::strptr stripped = algo::Pathcomp(algo::strptr(ct->ctype), ".LR");
-                    max_name = i32_Max(max_name, 4 + elems_N(stripped));
+                    int count_wid = 0;
+                    if (ct->c_ssimfile && ct->c_ssimfile->n_record > 0) {
+                        count_wid = 3 + DecimalDigits(ct->c_ssimfile->n_record);
+                    }
+                    max_name = i32_Max(max_name, 4 + elems_N(stripped) + count_wid);
                 }
             }
         }
@@ -1391,12 +1407,15 @@ static void HeadlessOutput() {
             vli.kind = "ctype";
             vli.collapsed = false;
             vli.n_match = 0;
+            acr_nav::FCtype *ct = acr_nav::ind_ctype_Find(item.ctype);
+            vli.n_record = (ct && ct->c_ssimfile) ? ct->c_ssimfile->n_record : 0;
         } else {
             vli.value = item.ns;
             vli.kind = "ns";
             acr_nav::FNs *ns = acr_nav::ind_ns_Find(item.ns);
             vli.collapsed = ns ? ns->collapsed : false;
             vli.n_match = ns ? ns->n_match : 0;
+            vli.n_record = 0;
         }
         prlog(vli);
     }
@@ -1495,7 +1514,20 @@ static void HeadlessMain() {
 
 // -----------------------------------------------------------------------------
 
+static void CountSsimfileRecords() {
+    ind_beg(acr_nav::_db_ssimfile_curs, ssimfile, acr_nav::_db) {
+        tempstr fname(SsimFname(acr_nav::_db.cmdline.in, ssimfile.ssimfile));
+        ind_beg(algo::FileLine_curs, line, fname) {
+            (void)line;
+            ssimfile.n_record++;
+        } ind_end;
+    } ind_end;
+}
+
+// -----------------------------------------------------------------------------
+
 void acr_nav::Main() {
+    CountSsimfileRecords();
     BuildLeftItems();
     bool headless = _db.cmdline.headless || !isatty(STDOUT_FILENO);
     if (headless) {
