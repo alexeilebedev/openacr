@@ -23,9 +23,16 @@
 #include "include/acr_nav.h"
 #include <termios.h>
 #include <poll.h>
+#include <signal.h>
 
 static struct termios acr_nav_orig_termios;
 static bool acr_nav_raw_mode = false;
+static volatile sig_atomic_t acr_nav_sigwinch = 0;
+
+static void SigwinchHandler(int) {
+    acr_nav_sigwinch = 1;
+}
+
 
 static void WriteStdout(const char *buf, int len) {
     ssize_t rc = write(STDOUT_FILENO, buf, len);
@@ -222,7 +229,9 @@ static tempstr ReadKeyName() {
     tempstr ret;
     char c = 0;
     int n = read(STDIN_FILENO, &c, 1);
-    if (n <= 0) {
+    if (n <= 0 && errno == EINTR) {
+        // interrupted by signal (e.g. SIGWINCH) — return empty key, caller repaints
+    } else if (n <= 0) {
         acr_nav::_db.running = false;
     } else if (c == 3) {
         acr_nav::_db.running = false;
@@ -1479,6 +1488,9 @@ static void RenderStatusBar(RenderCtx &ctx) {
 
 static void Render(acr_nav::FCtype *sel_ct) {
     DetectTerminal();
+    acr_nav::FPanel *left = acr_nav::_db.p_left_panel;
+    AdjustScroll(*left, acr_nav::left_item_N());
+    AdjustScroll(*acr_nav::_db.p_right_panel, RightPanelItemCount(sel_ct));
     tempstr buf;
     buf << "\x1b[H";
     int wid = acr_nav::_db.term_wid;
@@ -1784,6 +1796,10 @@ static void HeadlessMain() {
             } else if (acr_nav::SetTermSize_ReadStrptrMaybe(set_term_size, line)) {
                 acr_nav::_db.term_hei = i32_Max(1, set_term_size.term_hei);
                 acr_nav::_db.term_wid = i32_Max(1, set_term_size.term_wid);
+                acr_nav::FPanel *left = acr_nav::_db.p_left_panel;
+                acr_nav::FCtype *sel_ct = SelectedCtype(*left);
+                AdjustScroll(*left, acr_nav::left_item_N());
+                AdjustScroll(*acr_nav::_db.p_right_panel, RightPanelItemCount(sel_ct));
             } else {
                 acr_nav::InputError err;
                 err.lineno = lineno;
@@ -1819,16 +1835,26 @@ void acr_nav::Main() {
         InitPanels();
         DetectTerminal();
         EnterRawMode();
+        struct sigaction sa;
+        sa.sa_handler = SigwinchHandler;
+        sigemptyset(&sa.sa_mask);
+        sa.sa_flags = 0; // no SA_RESTART — read() must return EINTR
+        sigaction(SIGWINCH, &sa, NULL);
         acr_nav::FCtype *sel_ct = SelectedCtype(*_db.p_left_panel);
         Render(sel_ct);
         _db.running = true;
         while (_db.running) {
             tempstr key_name = ReadKeyName();
-            if (ProcessKey(key_name)) {
+            bool repaint = acr_nav_sigwinch;
+            acr_nav_sigwinch = 0;
+            repaint = ProcessKey(key_name) || repaint;
+            if (repaint) {
                 sel_ct = SelectedCtype(*_db.p_left_panel);
                 Render(sel_ct);
             }
         }
+        sa.sa_handler = SIG_DFL;
+        sigaction(SIGWINCH, &sa, NULL);
         ExitRawMode();
     }
 }

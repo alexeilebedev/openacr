@@ -1,0 +1,56 @@
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1403  n_ctype:1404  n_field:5651  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  Tab:view  q:quit  ?:help"
+acr_nav.PanelState  panel:ctype_list  sel_row:11  scroll_offset:0  n_items:83  sel_value:algo
+acr_nav.VisibleLeftItem  row:0  value:""  kind:ns  collapsed:Y  n_match:44  n_record:0
+acr_nav.VisibleLeftItem  row:1  value:abt  kind:ns  collapsed:Y  n_match:19  n_record:0
+acr_nav.VisibleLeftItem  row:2  value:abt_md  kind:ns  collapsed:Y  n_match:29  n_record:0
+acr_nav.VisibleLeftItem  row:3  value:acr  kind:ns  collapsed:Y  n_match:34  n_record:0
+acr_nav.VisibleLeftItem  row:4  value:acr_compl  kind:ns  collapsed:Y  n_match:16  n_record:0
+acr_nav.VisibleLeftItem  row:5  value:acr_dm  kind:ns  collapsed:Y  n_match:6  n_record:0
+acr_nav.VisibleLeftItem  row:6  value:acr_ed  kind:ns  collapsed:Y  n_match:19  n_record:0
+acr_nav.VisibleLeftItem  row:7  value:acr_in  kind:ns  collapsed:Y  n_match:12  n_record:0
+acr_nav.VisibleLeftItem  row:8  value:acr_my  kind:ns  collapsed:Y  n_match:3  n_record:0
+acr_nav.VisibleLeftItem  row:9  value:acr_nav  kind:ns  collapsed:Y  n_match:27  n_record:0
+acr_nav.VisibleLeftItem  row:10  value:acr_navdb  kind:ns  collapsed:Y  n_match:10  n_record:0
+acr_nav.VisibleLeftItem  row:11  value:algo  kind:ns  collapsed:Y  n_match:225  n_record:0
+acr_nav.VisibleLeftItem  row:12  value:algo_lib  kind:ns  collapsed:Y  n_match:35  n_record:0
+acr_nav.VisibleLeftItem  row:13  value:amc  kind:ns  collapsed:Y  n_match:130  n_record:0
+acr_nav.VisibleLeftItem  row:14  value:amc_gc  kind:ns  collapsed:Y  n_match:1  n_record:0
+acr_nav.VisibleLeftItem  row:15  value:amc_vis  kind:ns  collapsed:Y  n_match:12  n_record:0
+acr_nav.VisibleLeftItem  row:16  value:amcdb  kind:ns  collapsed:Y  n_match:7  n_record:0
+acr_nav.VisibleLeftItem  row:17  value:ams  kind:ns  collapsed:Y  n_match:23  n_record:0
+acr_nav.VisibleLeftItem  row:18  value:ams_sendtest  kind:ns  collapsed:Y  n_match:3  n_record:0
+acr_nav.VisibleLeftItem  row:19  value:amsdb  kind:ns  collapsed:Y  n_match:2  n_record:0
+acr_nav.VisibleLeftItem  row:20  value:apm  kind:ns  collapsed:Y  n_match:14  n_record:0
+acr_nav.VisibleLeftItem  row:21  value:aqlite  kind:ns  collapsed:Y  n_match:1  n_record:0
+acr_nav.VisibleLeftItem  row:22  value:atf  kind:ns  collapsed:Y  n_match:2  n_record:0
+acr_nav.VisibleLeftItem  row:23  value:atf_amc  kind:ns  collapsed:Y  n_match:99  n_record:0
+acr_nav.VisibleLeftItem  row:24  value:atf_ci  kind:ns  collapsed:Y  n_match:15  n_record:0
+acr_nav.VisibleLeftItem  row:25  value:atf_cmdline  kind:ns  collapsed:Y  n_match:1  n_record:0
+acr_nav.VisibleLeftItem  row:26  value:atf_comp  kind:ns  collapsed:Y  n_match:7  n_record:0
+acr_nav.VisibleLeftItem  row:27  value:atf_cov  kind:ns  collapsed:Y  n_match:9  n_record:0
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
+
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1403  n_ctype:1404  n_field:5651  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  Tab:view  q:quit  ?:help"
+acr_nav.PanelState  panel:ctype_list  sel_row:11  scroll_offset:4  n_items:83  sel_value:algo
+acr_nav.VisibleLeftItem  row:4  value:acr_compl  kind:ns  collapsed:Y  n_match:16  n_record:0
+acr_nav.VisibleLeftItem  row:5  value:acr_dm  kind:ns  collapsed:Y  n_match:6  n_record:0
+acr_nav.VisibleLeftItem  row:6  value:acr_ed  kind:ns  collapsed:Y  n_match:19  n_record:0
+acr_nav.VisibleLeftItem  row:7  value:acr_in  kind:ns  collapsed:Y  n_match:12  n_record:0
+acr_nav.VisibleLeftItem  row:8  value:acr_my  kind:ns  collapsed:Y  n_match:3  n_record:0
+acr_nav.VisibleLeftItem  row:9  value:acr_nav  kind:ns  collapsed:Y  n_match:27  n_record:0
+acr_nav.VisibleLeftItem  row:10  value:acr_navdb  kind:ns  collapsed:Y  n_match:10  n_record:0
+acr_nav.VisibleLeftItem  row:11  value:algo  kind:ns  collapsed:Y  n_match:225  n_record:0
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
+
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1403  n_ctype:1404  n_field:5651  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  Tab:view  q:quit  ?:help"
+acr_nav.PanelState  panel:ctype_list  sel_row:11  scroll_offset:4  n_items:83  sel_value:algo
+acr_nav.VisibleLeftItem  row:4  value:acr_compl  kind:ns  collapsed:Y  n_match:16  n_record:0
+acr_nav.VisibleLeftItem  row:5  value:acr_dm  kind:ns  collapsed:Y  n_match:6  n_record:0
+acr_nav.VisibleLeftItem  row:6  value:acr_ed  kind:ns  collapsed:Y  n_match:19  n_record:0
+acr_nav.VisibleLeftItem  row:7  value:acr_in  kind:ns  collapsed:Y  n_match:12  n_record:0
+acr_nav.VisibleLeftItem  row:8  value:acr_my  kind:ns  collapsed:Y  n_match:3  n_record:0
+acr_nav.VisibleLeftItem  row:9  value:acr_nav  kind:ns  collapsed:Y  n_match:27  n_record:0
+acr_nav.VisibleLeftItem  row:10  value:acr_navdb  kind:ns  collapsed:Y  n_match:10  n_record:0
+acr_nav.VisibleLeftItem  row:11  value:algo  kind:ns  collapsed:Y  n_match:225  n_record:0
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
+

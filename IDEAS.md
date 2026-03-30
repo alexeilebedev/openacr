@@ -31,9 +31,6 @@
 
 ## Known Issues
 
-### I2. SetTermSize shrink does not recalculate scroll_offset
-When the terminal is shrunk via `SetTermSize` and the selected row is already scrolled past the new visible area, `scroll_offset` is not recalculated. The selected item becomes invisible until the next navigation keypress forces `AdjustScroll` to correct it. Visual-only — `sel_row` and `sel_value` remain correct. Fix: call `AdjustScroll` for both panels after processing `SetTermSize`. Found via exploratory testing 2026-03-30.
-
 ---
 
 ## Pain Points

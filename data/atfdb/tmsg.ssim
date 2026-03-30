@@ -324,6 +324,22 @@ atfdb.tmsg  tmsg:acr_nav.RecordCount/100080.in  istuple:N  msg:"acr_nav.SendKey 
 atfdb.tmsg  tmsg:acr_nav.RecordCount/100090.in  istuple:N  msg:"acr_nav.SendKey  key:j"
 atfdb.tmsg  tmsg:acr_nav.RecordCount/100100.in  istuple:N  msg:"acr_nav.SendKey  key:Enter"
 atfdb.tmsg  tmsg:acr_nav.RecordCount/100110.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.SetTermSizeShrink/100000.in  istuple:N  msg:"acr_nav.SetTermSize  term_hei:30  term_wid:120"
+atfdb.tmsg  tmsg:acr_nav.SetTermSizeShrink/100010.in  istuple:N  msg:"acr_nav.SendKey  key:Escape"
+atfdb.tmsg  tmsg:acr_nav.SetTermSizeShrink/100020.in  istuple:N  msg:"acr_nav.SendKey  key:j"
+atfdb.tmsg  tmsg:acr_nav.SetTermSizeShrink/100030.in  istuple:N  msg:"acr_nav.SendKey  key:j"
+atfdb.tmsg  tmsg:acr_nav.SetTermSizeShrink/100040.in  istuple:N  msg:"acr_nav.SendKey  key:j"
+atfdb.tmsg  tmsg:acr_nav.SetTermSizeShrink/100050.in  istuple:N  msg:"acr_nav.SendKey  key:j"
+atfdb.tmsg  tmsg:acr_nav.SetTermSizeShrink/100060.in  istuple:N  msg:"acr_nav.SendKey  key:j"
+atfdb.tmsg  tmsg:acr_nav.SetTermSizeShrink/100070.in  istuple:N  msg:"acr_nav.SendKey  key:j"
+atfdb.tmsg  tmsg:acr_nav.SetTermSizeShrink/100080.in  istuple:N  msg:"acr_nav.SendKey  key:j"
+atfdb.tmsg  tmsg:acr_nav.SetTermSizeShrink/100090.in  istuple:N  msg:"acr_nav.SendKey  key:j"
+atfdb.tmsg  tmsg:acr_nav.SetTermSizeShrink/100100.in  istuple:N  msg:"acr_nav.SendKey  key:j"
+atfdb.tmsg  tmsg:acr_nav.SetTermSizeShrink/100110.in  istuple:N  msg:"acr_nav.SendKey  key:j"
+atfdb.tmsg  tmsg:acr_nav.SetTermSizeShrink/100120.in  istuple:N  msg:"acr_nav.SendKey  key:j"
+atfdb.tmsg  tmsg:acr_nav.SetTermSizeShrink/100130.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.SetTermSizeShrink/100140.in  istuple:N  msg:"acr_nav.SetTermSize  term_hei:10  term_wid:120"
+atfdb.tmsg  tmsg:acr_nav.SetTermSizeShrink/100150.in  istuple:N  msg:acr_nav.Screenshot
 atfdb.tmsg  tmsg:acr_nav.UnknownKey/100000.in  istuple:N  msg:"acr_nav.SendKey  key:F13"
 atfdb.tmsg  tmsg:acr_nav.UnknownKey/100010.in  istuple:N  msg:acr_nav.Screenshot
 atfdb.tmsg  tmsg:acr_nav.UnknownKey/100020.in  istuple:N  msg:"acr_nav.SendKey  key:j"

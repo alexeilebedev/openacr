@@ -36,7 +36,7 @@ acr_nav.VisibleLeftItem  row:32  value:atfdb.Amctest  kind:ctype  collapsed:N  n
 acr_nav.VisibleLeftItem  row:33  value:atfdb.Cijob  kind:ctype  collapsed:N  n_match:0  n_record:4
 acr_nav.VisibleLeftItem  row:34  value:atfdb.Cipackage  kind:ctype  collapsed:N  n_match:0  n_record:2
 acr_nav.VisibleLeftItem  row:35  value:atfdb.Citest  kind:ctype  collapsed:N  n_match:0  n_record:40
-acr_nav.VisibleLeftItem  row:36  value:atfdb.Comptest  kind:ctype  collapsed:N  n_match:0  n_record:251
+acr_nav.VisibleLeftItem  row:36  value:atfdb.Comptest  kind:ctype  collapsed:N  n_match:0  n_record:252
 acr_nav.VisibleLeftItem  row:37  value:atfdb.Fuzzstrat  kind:ctype  collapsed:N  n_match:0  n_record:1
 acr_nav.VisibleLeftItem  row:38  value:atfdb.Msgdir  kind:ctype  collapsed:N  n_match:0  n_record:2
 acr_nav.VisibleLeftItem  row:39  value:atfdb.TestGsymbolChar  kind:ctype  collapsed:N  n_match:0  n_record:1
