@@ -31,12 +31,12 @@
 #include "include/gen/algo_gen.inl.h"
 #include "include/gen/command_gen.h"
 #include "include/gen/command_gen.inl.h"
+#include "include/gen/algo_lib_gen.h"
+#include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/acr_navdb_gen.h"
 #include "include/gen/acr_navdb_gen.inl.h"
 #include "include/gen/lib_json_gen.h"
 #include "include/gen/lib_json_gen.inl.h"
-#include "include/gen/algo_lib_gen.h"
-#include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/lib_prot_gen.h"
 #include "include/gen/lib_prot_gen.inl.h"
 //#pragma endinclude
@@ -95,6 +95,8 @@ namespace acr_nav { // gen:ns_print_proto
     static bool          ssimfile_InputMaybe(dmmeta::Ssimfile &elem) __attribute__((nothrow));
     // func:acr_nav.FDb.viewmode.InputMaybe
     static bool          viewmode_InputMaybe(acr_navdb::Viewmode &elem) __attribute__((nothrow));
+    // func:acr_nav.FDb.filtertarget.InputMaybe
+    static bool          filtertarget_InputMaybe(acr_navdb::Filtertarget &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
     // func:acr_nav.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
@@ -448,7 +450,7 @@ static void acr_nav::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_nav.Input'  signature:'401a017f1ad0b115eb18270edb949b4d32ea831a'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_nav.Input'  signature:'e3b84f4a5140f5398fa83de5c033a2a442efd6e6'");
 }
 
 // --- acr_nav.FDb._db.InsertStrptrMaybe
@@ -537,6 +539,12 @@ bool acr_nav::InsertStrptrMaybe(algo::strptr str) {
             retval = retval && viewmode_InputMaybe(elem);
             break;
         }
+        case acr_nav_TableId_acr_navdb_Filtertarget: { // finput:acr_nav.FDb.filtertarget
+            acr_navdb::Filtertarget elem;
+            retval = acr_navdb::Filtertarget_ReadStrptrMaybe(elem, str);
+            retval = retval && filtertarget_InputMaybe(elem);
+            break;
+        }
         default:
         break;
     } //switch
@@ -568,6 +576,7 @@ bool acr_nav::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && acr_nav::LoadTuplesFile(algo::SsimFname(root,"acr_navdb.navmode"),recursive);
         retval = retval && acr_nav::LoadTuplesFile(algo::SsimFname(root,"acr_navdb.helpgroup"),recursive);
         retval = retval && acr_nav::LoadTuplesFile(algo::SsimFname(root,"acr_navdb.keybind"),recursive);
+        retval = retval && acr_nav::LoadTuplesFile(algo::SsimFname(root,"acr_navdb.filtertarget"),recursive);
         retval = retval && acr_nav::LoadTuplesFile(algo::SsimFname(root,"acr_navdb.detailsrc"),recursive);
     } else {
         algo_lib::AppendErrtext("path", root);
@@ -2133,6 +2142,7 @@ static void acr_nav::navaction_LoadStatic() {
         ,{ "acr_navdb.navaction  navaction:filter_backspace  hint:\"\"  helpgroup:\"\"  sort_order:0  comment:\"Delete last filter character\"", acr_nav::navaction_filter_backspace }
         ,{ "acr_navdb.navaction  navaction:filter_cancel  hint:\"\"  helpgroup:\"\"  sort_order:0  comment:\"Cancel filter input\"", acr_nav::navaction_filter_cancel }
         ,{ "acr_navdb.navaction  navaction:filter_clear  hint:\"\"  helpgroup:search  sort_order:11  comment:\"Clear filter text\"", acr_nav::navaction_filter_clear }
+        ,{ "acr_navdb.navaction  navaction:filter_cycle_target  hint:\"\"  helpgroup:search  sort_order:13  comment:\"Cycle filter target (Tab in filter mode)\"", acr_nav::navaction_filter_cycle_target }
         ,{ "acr_navdb.navaction  navaction:filter_start  hint:filter  helpgroup:search  sort_order:10  comment:\"Enter filter input mode\"", acr_nav::navaction_filter_start }
         ,{ "acr_navdb.navaction  navaction:follow_ref  hint:follow  helpgroup:navigation  sort_order:10  comment:\"Follow reference to target ctype\"", acr_nav::navaction_follow_ref }
         ,{ "acr_navdb.navaction  navaction:go_back  hint:back  helpgroup:navigation  sort_order:11  comment:\"Return to previous ctype\"", acr_nav::navaction_go_back }
@@ -4424,6 +4434,237 @@ void acr_nav::left_item_Insary(algo::aryptr<acr_nav::LeftItem> rhs, int at) {
     _db.left_item_n += nnew;
 }
 
+// --- acr_nav.FDb.filtertarget.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+acr_nav::FFiltertarget& acr_nav::filtertarget_Alloc() {
+    acr_nav::FFiltertarget* row = filtertarget_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("acr_nav.out_of_mem  field:acr_nav.FDb.filtertarget  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- acr_nav.FDb.filtertarget.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+acr_nav::FFiltertarget* acr_nav::filtertarget_AllocMaybe() {
+    acr_nav::FFiltertarget *row = (acr_nav::FFiltertarget*)filtertarget_AllocMem();
+    if (row) {
+        new (row) acr_nav::FFiltertarget; // call constructor
+    }
+    return row;
+}
+
+// --- acr_nav.FDb.filtertarget.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+acr_nav::FFiltertarget* acr_nav::filtertarget_InsertMaybe(const acr_navdb::Filtertarget &value) {
+    acr_nav::FFiltertarget *row = &filtertarget_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    filtertarget_CopyIn(*row,const_cast<acr_navdb::Filtertarget&>(value));
+    bool ok = filtertarget_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        filtertarget_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- acr_nav.FDb.filtertarget.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* acr_nav::filtertarget_AllocMem() {
+    u64 new_nelems     = _db.filtertarget_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    acr_nav::FFiltertarget*  lev   = NULL;
+    if (bsr < 32) {
+        lev = _db.filtertarget_lary[bsr];
+        if (!lev) {
+            lev=(acr_nav::FFiltertarget*)algo_lib::malloc_AllocMem(sizeof(acr_nav::FFiltertarget) * (u64(1)<<bsr));
+            _db.filtertarget_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.filtertarget_n = i32(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- acr_nav.FDb.filtertarget.RemoveAll
+// Remove all elements from Lary
+void acr_nav::filtertarget_RemoveAll() {
+    for (u64 n = _db.filtertarget_n; n>0; ) {
+        n--;
+        filtertarget_qFind(u64(n)).~FFiltertarget(); // destroy last element
+        _db.filtertarget_n = i32(n);
+    }
+}
+
+// --- acr_nav.FDb.filtertarget.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void acr_nav::filtertarget_RemoveLast() {
+    u64 n = _db.filtertarget_n;
+    if (n > 0) {
+        n -= 1;
+        filtertarget_qFind(u64(n)).~FFiltertarget();
+        _db.filtertarget_n = i32(n);
+    }
+}
+
+// --- acr_nav.FDb.filtertarget.InputMaybe
+static bool acr_nav::filtertarget_InputMaybe(acr_navdb::Filtertarget &elem) {
+    bool retval = true;
+    retval = filtertarget_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- acr_nav.FDb.filtertarget.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool acr_nav::filtertarget_XrefMaybe(acr_nav::FFiltertarget &row) {
+    bool retval = true;
+    (void)row;
+    // insert filtertarget into index ind_filtertarget
+    if (true) { // user-defined insert condition
+        bool success = ind_filtertarget_InsertMaybe(row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "acr_nav.duplicate_key  xref:acr_nav.FDb.ind_filtertarget"; // check for duplicate key
+            return false;
+        }
+    }
+    return retval;
+}
+
+// --- acr_nav.FDb.ind_filtertarget.Find
+// Find row by key. Return NULL if not found.
+acr_nav::FFiltertarget* acr_nav::ind_filtertarget_Find(const algo::strptr& key) {
+    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_filtertarget_buckets_n - 1);
+    acr_nav::FFiltertarget *ret = _db.ind_filtertarget_buckets_elems[index];
+    for (; ret && !((*ret).filtertarget == key); ret = ret->ind_filtertarget_next) {
+    }
+    return ret;
+}
+
+// --- acr_nav.FDb.ind_filtertarget.FindX
+// Look up row by key and return reference. Throw exception if not found
+acr_nav::FFiltertarget& acr_nav::ind_filtertarget_FindX(const algo::strptr& key) {
+    acr_nav::FFiltertarget* ret = ind_filtertarget_Find(key);
+    vrfy(ret, tempstr() << "acr_nav.key_error  table:ind_filtertarget  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
+// --- acr_nav.FDb.ind_filtertarget.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+acr_nav::FFiltertarget& acr_nav::ind_filtertarget_GetOrCreate(const algo::strptr& key) {
+    acr_nav::FFiltertarget* ret = ind_filtertarget_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &filtertarget_Alloc();
+        (*ret).filtertarget = key;
+        bool good = filtertarget_XrefMaybe(*ret);
+        if (!good) {
+            filtertarget_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    vrfy(ret, tempstr() << "acr_nav.create_error  table:ind_filtertarget  key:'"<<key<<"'  comment:'bad xref'");
+    return *ret;
+}
+
+// --- acr_nav.FDb.ind_filtertarget.InsertMaybe
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool acr_nav::ind_filtertarget_InsertMaybe(acr_nav::FFiltertarget& row) {
+    bool retval = true; // if already in hash, InsertMaybe returns true
+    if (LIKELY(row.ind_filtertarget_next == (acr_nav::FFiltertarget*)-1)) {// check if in hash already
+        row.ind_filtertarget_hashval = algo::Smallstr50_Hash(0, row.filtertarget);
+        ind_filtertarget_Reserve(1);
+        u32 index = row.ind_filtertarget_hashval & (_db.ind_filtertarget_buckets_n - 1);
+        acr_nav::FFiltertarget* *prev = &_db.ind_filtertarget_buckets_elems[index];
+        do {
+            acr_nav::FFiltertarget* ret = *prev;
+            if (!ret) { // exit condition 1: reached the end of the list
+                break;
+            }
+            if ((*ret).filtertarget == row.filtertarget) { // exit condition 2: found matching key
+                retval = false;
+                break;
+            }
+            prev = &ret->ind_filtertarget_next;
+        } while (true);
+        if (retval) {
+            row.ind_filtertarget_next = *prev;
+            _db.ind_filtertarget_n++;
+            *prev = &row;
+        }
+    }
+    return retval;
+}
+
+// --- acr_nav.FDb.ind_filtertarget.Remove
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void acr_nav::ind_filtertarget_Remove(acr_nav::FFiltertarget& row) {
+    if (LIKELY(row.ind_filtertarget_next != (acr_nav::FFiltertarget*)-1)) {// check if in hash already
+        u32 index = row.ind_filtertarget_hashval & (_db.ind_filtertarget_buckets_n - 1);
+        acr_nav::FFiltertarget* *prev = &_db.ind_filtertarget_buckets_elems[index]; // addr of pointer to current element
+        while (acr_nav::FFiltertarget *next = *prev) {                          // scan the collision chain for our element
+            if (next == &row) {        // found it?
+                *prev = next->ind_filtertarget_next; // unlink (singly linked list)
+                _db.ind_filtertarget_n--;
+                row.ind_filtertarget_next = (acr_nav::FFiltertarget*)-1;// not-in-hash
+                break;
+            }
+            prev = &next->ind_filtertarget_next;
+        }
+    }
+}
+
+// --- acr_nav.FDb.ind_filtertarget.Reserve
+// Reserve enough room in the hash for N more elements. Return success code.
+void acr_nav::ind_filtertarget_Reserve(int n) {
+    ind_filtertarget_AbsReserve(_db.ind_filtertarget_n + n);
+}
+
+// --- acr_nav.FDb.ind_filtertarget.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void acr_nav::ind_filtertarget_AbsReserve(int n) {
+    u32 old_nbuckets = _db.ind_filtertarget_buckets_n;
+    u32 new_nelems   = n;
+    // # of elements has to be roughly equal to the number of buckets
+    if (new_nelems > old_nbuckets) {
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
+        u32 old_size = old_nbuckets * sizeof(acr_nav::FFiltertarget*);
+        u32 new_size = new_nbuckets * sizeof(acr_nav::FFiltertarget*);
+        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
+        // means new memory will have to be allocated anyway
+        acr_nav::FFiltertarget* *new_buckets = (acr_nav::FFiltertarget**)algo_lib::malloc_AllocMem(new_size);
+        if (UNLIKELY(!new_buckets)) {
+            FatalErrorExit("acr_nav.out_of_memory  field:acr_nav.FDb.ind_filtertarget");
+        }
+        memset(new_buckets, 0, new_size); // clear pointers
+        // rehash all entries
+        for (int i = 0; i < _db.ind_filtertarget_buckets_n; i++) {
+            acr_nav::FFiltertarget* elem = _db.ind_filtertarget_buckets_elems[i];
+            while (elem) {
+                acr_nav::FFiltertarget &row        = *elem;
+                acr_nav::FFiltertarget* next       = row.ind_filtertarget_next;
+                u32 index          = row.ind_filtertarget_hashval & (new_nbuckets-1);
+                row.ind_filtertarget_next     = new_buckets[index];
+                new_buckets[index] = &row;
+                elem               = next;
+            }
+        }
+        // free old array
+        algo_lib::malloc_FreeMem(_db.ind_filtertarget_buckets_elems, old_size);
+        _db.ind_filtertarget_buckets_elems = new_buckets;
+        _db.ind_filtertarget_buckets_n = new_nbuckets;
+    }
+}
+
 // --- acr_nav.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
 static algo::ImrowPtr acr_nav::trace_RowidFind(int t) {
@@ -4739,6 +4980,28 @@ void acr_nav::FDb_Init() {
     _db.n_visible_ctype = i32(0);
     _db.p_codegen_viewmode = NULL;
     _db.p_codegen_ctype = NULL;
+    // initialize LAry filtertarget (acr_nav.FDb.filtertarget)
+    _db.filtertarget_n = 0;
+    memset(_db.filtertarget_lary, 0, sizeof(_db.filtertarget_lary)); // zero out all level pointers
+    acr_nav::FFiltertarget* filtertarget_first = (acr_nav::FFiltertarget*)algo_lib::malloc_AllocMem(sizeof(acr_nav::FFiltertarget) * (u64(1)<<4));
+    if (!filtertarget_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.filtertarget_lary[i]  = filtertarget_first;
+        filtertarget_first    += 1ULL<<i;
+    }
+    // initialize hash table for acr_nav::FFiltertarget;
+    _db.ind_filtertarget_n             	= 0; // (acr_nav.FDb.ind_filtertarget)
+    _db.ind_filtertarget_buckets_n     	= 4; // (acr_nav.FDb.ind_filtertarget)
+    _db.ind_filtertarget_buckets_elems 	= (acr_nav::FFiltertarget**)algo_lib::malloc_AllocMem(sizeof(acr_nav::FFiltertarget*)*_db.ind_filtertarget_buckets_n); // initial buckets (acr_nav.FDb.ind_filtertarget)
+    if (!_db.ind_filtertarget_buckets_elems) {
+        FatalErrorExit("out of memory"); // (acr_nav.FDb.ind_filtertarget)
+    }
+    memset(_db.ind_filtertarget_buckets_elems, 0, sizeof(acr_nav::FFiltertarget*)*_db.ind_filtertarget_buckets_n); // (acr_nav.FDb.ind_filtertarget)
+    _db.p_cur_filtertarget = NULL;
+    _db.p_default_filtertarget = NULL;
+    _db.p_filter_match = NULL;
 
     acr_nav::InitReflection();
     navaction_LoadStatic(); // gen:ns_gstatic  gstatic:acr_nav.FDb.navaction  load acr_nav.FNavaction records
@@ -4747,6 +5010,12 @@ void acr_nav::FDb_Init() {
 // --- acr_nav.FDb..Uninit
 void acr_nav::FDb_Uninit() {
     acr_nav::FDb &row = _db; (void)row;
+
+    // acr_nav.FDb.ind_filtertarget.Uninit (Thash)  //
+    // skip destruction of ind_filtertarget in global scope
+
+    // acr_nav.FDb.filtertarget.Uninit (Lary)  //
+    // skip destruction in global scope
 
     // acr_nav.FDb.left_item.Uninit (Tary)  //Display list for left panel
     // remove all elements from acr_nav.FDb.left_item
@@ -4934,6 +5203,30 @@ void acr_nav::FField_Uninit(acr_nav::FField& field) {
     if (p_arg)  {
         c_field_arg_Remove(*p_arg, row);// remove field from index c_field_arg
     }
+}
+
+// --- acr_nav.FFiltertarget.base.CopyOut
+// Copy fields out of row
+void acr_nav::filtertarget_CopyOut(acr_nav::FFiltertarget &row, acr_navdb::Filtertarget &out) {
+    out.filtertarget = row.filtertarget;
+    out.label = row.label;
+    out.next = row.next;
+    out.comment = row.comment;
+}
+
+// --- acr_nav.FFiltertarget.base.CopyIn
+// Copy fields in to row
+void acr_nav::filtertarget_CopyIn(acr_nav::FFiltertarget &row, acr_navdb::Filtertarget &in) {
+    row.filtertarget = in.filtertarget;
+    row.label = in.label;
+    row.next = in.next;
+    row.comment = in.comment;
+}
+
+// --- acr_nav.FFiltertarget..Uninit
+void acr_nav::FFiltertarget_Uninit(acr_nav::FFiltertarget& filtertarget) {
+    acr_nav::FFiltertarget &row = filtertarget; (void)row;
+    ind_filtertarget_Remove(row); // remove filtertarget from index ind_filtertarget
 }
 
 // --- acr_nav.FHelpgroup.base.CopyOut
@@ -5701,6 +5994,15 @@ void acr_nav::PanelState_Print(acr_nav::PanelState& row, algo::cstring& str) {
     PrintAttrSpaceReset(str,"sel_value", temp);
 }
 
+// --- acr_nav.Screen..Init
+// Set all fields to initial values.
+void acr_nav::Screen_Init(acr_nav::Screen& parent) {
+    parent.navstack_depth = i32(0);
+    parent.n_sel_ctype = i32(0);
+    parent.n_ctype = i32(0);
+    parent.n_field = i32(0);
+}
+
 // --- acr_nav.Screen..Print
 // print string representation of ROW to string STR
 // cfmt:acr_nav.Screen.String  printfmt:Tuple
@@ -5734,6 +6036,9 @@ void acr_nav::Screen_Print(acr_nav::Screen& row, algo::cstring& str) {
 
     algo::cstring_Print(row.breadcrumb, temp);
     PrintAttrSpaceReset(str,"breadcrumb", temp);
+
+    algo::Smallstr50_Print(row.filtertarget, temp);
+    PrintAttrSpaceReset(str,"filtertarget", temp);
 }
 
 // --- acr_nav.Screenshot..ReadFieldMaybe
@@ -5844,6 +6149,7 @@ const char* acr_nav::value_ToCstr(const acr_nav::TableId& parent) {
         case acr_nav_TableId_dmmeta_Ctype  : ret = "dmmeta.Ctype";  break;
         case acr_nav_TableId_acr_navdb_Detailsrc: ret = "acr_navdb.Detailsrc";  break;
         case acr_nav_TableId_dmmeta_Field  : ret = "dmmeta.Field";  break;
+        case acr_nav_TableId_acr_navdb_Filtertarget: ret = "acr_navdb.Filtertarget";  break;
         case acr_nav_TableId_acr_navdb_Helpgroup: ret = "acr_navdb.Helpgroup";  break;
         case acr_nav_TableId_acr_navdb_Keybind: ret = "acr_navdb.Keybind";  break;
         case acr_nav_TableId_acr_navdb_Navmode: ret = "acr_navdb.Navmode";  break;
@@ -5981,6 +6287,8 @@ bool acr_nav::value_SetStrptrMaybe(acr_nav::TableId& parent, algo::strptr rhs) {
         case 22: {
             switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('a','c','r','_','n','a','v','d'): {
+                    if (memcmp(rhs.elems+8,"b.Filtertarget",14)==0) { value_SetEnum(parent,acr_nav_TableId_acr_navdb_Filtertarget); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"b.filtertarget",14)==0) { value_SetEnum(parent,acr_nav_TableId_acr_navdb_filtertarget); ret = true; break; }
                     if (memcmp(rhs.elems+8,"b.Reftypestyle",14)==0) { value_SetEnum(parent,acr_nav_TableId_acr_navdb_Reftypestyle); ret = true; break; }
                     if (memcmp(rhs.elems+8,"b.reftypestyle",14)==0) { value_SetEnum(parent,acr_nav_TableId_acr_navdb_reftypestyle); ret = true; break; }
                     break;

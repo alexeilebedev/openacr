@@ -26,6 +26,7 @@
 #include "include/gen/dmmeta_gen.h"
 #include "include/gen/algo_gen.h"
 #include "include/gen/command_gen.h"
+#include "include/gen/algo_lib_gen.h"
 #include "include/gen/acr_navdb_gen.h"
 //#pragma endinclude
 // gen:ns_enums
@@ -52,29 +53,31 @@ enum acr_nav_TableIdEnum {                           // acr_nav.TableId.value
     ,acr_nav_TableId_acr_navdb_detailsrc      = 1    // acr_navdb.detailsrc -> acr_nav.FDetailsrc
     ,acr_nav_TableId_dmmeta_Field             = 2    // dmmeta.Field -> acr_nav.FField
     ,acr_nav_TableId_dmmeta_field             = 2    // dmmeta.field -> acr_nav.FField
-    ,acr_nav_TableId_acr_navdb_Helpgroup      = 3    // acr_navdb.Helpgroup -> acr_nav.FHelpgroup
-    ,acr_nav_TableId_acr_navdb_helpgroup      = 3    // acr_navdb.helpgroup -> acr_nav.FHelpgroup
-    ,acr_nav_TableId_acr_navdb_Keybind        = 4    // acr_navdb.Keybind -> acr_nav.FKeybind
-    ,acr_nav_TableId_acr_navdb_keybind        = 4    // acr_navdb.keybind -> acr_nav.FKeybind
-    ,acr_nav_TableId_acr_navdb_Navmode        = 5    // acr_navdb.Navmode -> acr_nav.FNavmode
-    ,acr_nav_TableId_acr_navdb_navmode        = 5    // acr_navdb.navmode -> acr_nav.FNavmode
-    ,acr_nav_TableId_acr_navdb_Navstyle       = 6    // acr_navdb.Navstyle -> acr_nav.FNavstyle
-    ,acr_nav_TableId_acr_navdb_navstyle       = 6    // acr_navdb.navstyle -> acr_nav.FNavstyle
-    ,acr_nav_TableId_dmmeta_Ns                = 7    // dmmeta.Ns -> acr_nav.FNs
-    ,acr_nav_TableId_dmmeta_ns                = 7    // dmmeta.ns -> acr_nav.FNs
-    ,acr_nav_TableId_acr_navdb_Panel          = 8    // acr_navdb.Panel -> acr_nav.FPanel
-    ,acr_nav_TableId_acr_navdb_panel          = 8    // acr_navdb.panel -> acr_nav.FPanel
-    ,acr_nav_TableId_dmmeta_Reftype           = 9    // dmmeta.Reftype -> acr_nav.FReftype
-    ,acr_nav_TableId_dmmeta_reftype           = 9    // dmmeta.reftype -> acr_nav.FReftype
-    ,acr_nav_TableId_acr_navdb_Reftypestyle   = 10   // acr_navdb.Reftypestyle -> acr_nav.FReftypestyle
-    ,acr_nav_TableId_acr_navdb_reftypestyle   = 10   // acr_navdb.reftypestyle -> acr_nav.FReftypestyle
-    ,acr_nav_TableId_dmmeta_Ssimfile          = 11   // dmmeta.Ssimfile -> acr_nav.FSsimfile
-    ,acr_nav_TableId_dmmeta_ssimfile          = 11   // dmmeta.ssimfile -> acr_nav.FSsimfile
-    ,acr_nav_TableId_acr_navdb_Viewmode       = 12   // acr_navdb.Viewmode -> acr_nav.FViewmode
-    ,acr_nav_TableId_acr_navdb_viewmode       = 12   // acr_navdb.viewmode -> acr_nav.FViewmode
+    ,acr_nav_TableId_acr_navdb_Filtertarget   = 3    // acr_navdb.Filtertarget -> acr_nav.FFiltertarget
+    ,acr_nav_TableId_acr_navdb_filtertarget   = 3    // acr_navdb.filtertarget -> acr_nav.FFiltertarget
+    ,acr_nav_TableId_acr_navdb_Helpgroup      = 4    // acr_navdb.Helpgroup -> acr_nav.FHelpgroup
+    ,acr_nav_TableId_acr_navdb_helpgroup      = 4    // acr_navdb.helpgroup -> acr_nav.FHelpgroup
+    ,acr_nav_TableId_acr_navdb_Keybind        = 5    // acr_navdb.Keybind -> acr_nav.FKeybind
+    ,acr_nav_TableId_acr_navdb_keybind        = 5    // acr_navdb.keybind -> acr_nav.FKeybind
+    ,acr_nav_TableId_acr_navdb_Navmode        = 6    // acr_navdb.Navmode -> acr_nav.FNavmode
+    ,acr_nav_TableId_acr_navdb_navmode        = 6    // acr_navdb.navmode -> acr_nav.FNavmode
+    ,acr_nav_TableId_acr_navdb_Navstyle       = 7    // acr_navdb.Navstyle -> acr_nav.FNavstyle
+    ,acr_nav_TableId_acr_navdb_navstyle       = 7    // acr_navdb.navstyle -> acr_nav.FNavstyle
+    ,acr_nav_TableId_dmmeta_Ns                = 8    // dmmeta.Ns -> acr_nav.FNs
+    ,acr_nav_TableId_dmmeta_ns                = 8    // dmmeta.ns -> acr_nav.FNs
+    ,acr_nav_TableId_acr_navdb_Panel          = 9    // acr_navdb.Panel -> acr_nav.FPanel
+    ,acr_nav_TableId_acr_navdb_panel          = 9    // acr_navdb.panel -> acr_nav.FPanel
+    ,acr_nav_TableId_dmmeta_Reftype           = 10   // dmmeta.Reftype -> acr_nav.FReftype
+    ,acr_nav_TableId_dmmeta_reftype           = 10   // dmmeta.reftype -> acr_nav.FReftype
+    ,acr_nav_TableId_acr_navdb_Reftypestyle   = 11   // acr_navdb.Reftypestyle -> acr_nav.FReftypestyle
+    ,acr_nav_TableId_acr_navdb_reftypestyle   = 11   // acr_navdb.reftypestyle -> acr_nav.FReftypestyle
+    ,acr_nav_TableId_dmmeta_Ssimfile          = 12   // dmmeta.Ssimfile -> acr_nav.FSsimfile
+    ,acr_nav_TableId_dmmeta_ssimfile          = 12   // dmmeta.ssimfile -> acr_nav.FSsimfile
+    ,acr_nav_TableId_acr_navdb_Viewmode       = 13   // acr_navdb.Viewmode -> acr_nav.FViewmode
+    ,acr_nav_TableId_acr_navdb_viewmode       = 13   // acr_navdb.viewmode -> acr_nav.FViewmode
 };
 
-enum { acr_nav_TableIdEnum_N = 26 };
+enum { acr_nav_TableIdEnum_N = 28 };
 
 namespace acr_nav { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
@@ -88,6 +91,7 @@ namespace acr_navdb { struct Detailsrc; }
 namespace dmmeta { struct Field; }
 namespace acr_nav { struct FCtype; }
 namespace acr_nav { struct FReftype; }
+namespace acr_navdb { struct Filtertarget; }
 namespace acr_navdb { struct Helpgroup; }
 namespace acr_navdb { struct Keybind; }
 namespace acr_nav { struct FNavaction; }
@@ -120,12 +124,14 @@ namespace acr_nav { struct _db_ssimfile_curs; }
 namespace acr_nav { struct _db_viewmode_curs; }
 namespace acr_nav { struct _db_viewmode_stack_curs; }
 namespace acr_nav { struct _db_left_item_curs; }
+namespace acr_nav { struct _db_filtertarget_curs; }
 namespace acr_nav { struct ns_c_ctype_curs; }
 namespace acr_nav { struct viewmode_line_curs; }
 namespace acr_nav { struct trace; }
 namespace acr_nav { struct FDb; }
 namespace acr_nav { struct FDetailsrc; }
 namespace acr_nav { struct FField; }
+namespace acr_nav { struct FFiltertarget; }
 namespace acr_nav { struct FHelpgroup; }
 namespace acr_nav { struct FKeybind; }
 namespace acr_nav { struct FNavmode; }
@@ -449,6 +455,15 @@ struct FDb { // acr_nav.FDb
     i32                        n_visible_ctype;                  //   0  Count of visible ctypes (excludes ns headers)
     acr_nav::FViewmode*        p_codegen_viewmode;               // Codegen viewmode pointer. optional pointer
     acr_nav::FCtype*           p_codegen_ctype;                  // Ctype whose generated code is cached. optional pointer
+    acr_nav::FFiltertarget*    filtertarget_lary[32];            // level array
+    i32                        filtertarget_n;                   // number of elements in array
+    acr_nav::FFiltertarget**   ind_filtertarget_buckets_elems;   // pointer to bucket array
+    i32                        ind_filtertarget_buckets_n;       // number of elements in bucket array
+    i32                        ind_filtertarget_n;               // number of elements in the hash table
+    acr_nav::FFiltertarget*    p_cur_filtertarget;               // Current filter target. optional pointer
+    acr_nav::FFiltertarget*    p_default_filtertarget;           // Cached pointer to ctype filtertarget. optional pointer
+    acr_nav::FNavstyle*        p_filter_match;                   // Cached pointer to filter_match navstyle. optional pointer
+    algo_lib::Regx             filter_regx;                      // Cached compiled filter regex
     acr_nav::trace             trace;                            //
 };
 
@@ -1649,6 +1664,74 @@ algo::aryptr<acr_nav::LeftItem> left_item_AllocNVal(int n_elems, const acr_nav::
 // func:acr_nav.FDb.left_item.Insary
 void                 left_item_Insary(algo::aryptr<acr_nav::LeftItem> rhs, int at) __attribute__((nothrow));
 
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:acr_nav.FDb.filtertarget.Alloc
+acr_nav::FFiltertarget& filtertarget_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:acr_nav.FDb.filtertarget.AllocMaybe
+acr_nav::FFiltertarget* filtertarget_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:acr_nav.FDb.filtertarget.InsertMaybe
+acr_nav::FFiltertarget* filtertarget_InsertMaybe(const acr_navdb::Filtertarget &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:acr_nav.FDb.filtertarget.AllocMem
+void*                filtertarget_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:acr_nav.FDb.filtertarget.EmptyQ
+inline bool          filtertarget_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:acr_nav.FDb.filtertarget.Find
+inline acr_nav::FFiltertarget* filtertarget_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:acr_nav.FDb.filtertarget.Last
+inline acr_nav::FFiltertarget* filtertarget_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:acr_nav.FDb.filtertarget.N
+inline i32           filtertarget_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:acr_nav.FDb.filtertarget.RemoveAll
+void                 filtertarget_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:acr_nav.FDb.filtertarget.RemoveLast
+void                 filtertarget_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:acr_nav.FDb.filtertarget.qFind
+inline acr_nav::FFiltertarget& filtertarget_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:acr_nav.FDb.filtertarget.XrefMaybe
+bool                 filtertarget_XrefMaybe(acr_nav::FFiltertarget &row);
+
+// Return true if hash is empty
+// func:acr_nav.FDb.ind_filtertarget.EmptyQ
+inline bool          ind_filtertarget_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+// func:acr_nav.FDb.ind_filtertarget.Find
+acr_nav::FFiltertarget* ind_filtertarget_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:acr_nav.FDb.ind_filtertarget.FindX
+acr_nav::FFiltertarget& ind_filtertarget_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:acr_nav.FDb.ind_filtertarget.GetOrCreate
+acr_nav::FFiltertarget& ind_filtertarget_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
+// Return number of items in the hash
+// func:acr_nav.FDb.ind_filtertarget.N
+inline i32           ind_filtertarget_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:acr_nav.FDb.ind_filtertarget.InsertMaybe
+bool                 ind_filtertarget_InsertMaybe(acr_nav::FFiltertarget& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+// func:acr_nav.FDb.ind_filtertarget.Remove
+void                 ind_filtertarget_Remove(acr_nav::FFiltertarget& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+// func:acr_nav.FDb.ind_filtertarget.Reserve
+void                 ind_filtertarget_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:acr_nav.FDb.ind_filtertarget.AbsReserve
+void                 ind_filtertarget_AbsReserve(int n) __attribute__((nothrow));
+
 // cursor points to valid item
 // func:acr_nav.FDb.ctype_curs.Reset
 inline void          _db_ctype_curs_Reset(_db_ctype_curs &curs, acr_nav::FDb &parent) __attribute__((nothrow));
@@ -1850,6 +1933,18 @@ inline bool          _db_left_item_curs_ValidQ(_db_left_item_curs &curs) __attri
 // item access
 // func:acr_nav.FDb.left_item_curs.Access
 inline acr_nav::LeftItem& _db_left_item_curs_Access(_db_left_item_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:acr_nav.FDb.filtertarget_curs.Reset
+inline void          _db_filtertarget_curs_Reset(_db_filtertarget_curs &curs, acr_nav::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:acr_nav.FDb.filtertarget_curs.ValidQ
+inline bool          _db_filtertarget_curs_ValidQ(_db_filtertarget_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:acr_nav.FDb.filtertarget_curs.Next
+inline void          _db_filtertarget_curs_Next(_db_filtertarget_curs &curs) __attribute__((nothrow));
+// item access
+// func:acr_nav.FDb.filtertarget_curs.Access
+inline acr_nav::FFiltertarget& _db_filtertarget_curs_Access(_db_filtertarget_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:acr_nav.FDb..Init
 void                 FDb_Init();
@@ -1955,6 +2050,47 @@ algo::Smallstr50     name_Get(acr_nav::FField& field) __attribute__((__warn_unus
 void                 FField_Init(acr_nav::FField& field);
 // func:acr_nav.FField..Uninit
 void                 FField_Uninit(acr_nav::FField& field) __attribute__((nothrow));
+
+// --- acr_nav.FFiltertarget
+// create: acr_nav.FDb.filtertarget (Lary)
+// global access: filtertarget (Lary, by rowid)
+// global access: ind_filtertarget (Thash, hash field filtertarget)
+// global access: p_cur_filtertarget (Ptr)
+// global access: p_default_filtertarget (Ptr)
+struct FFiltertarget { // acr_nav.FFiltertarget
+    acr_nav::FFiltertarget*   ind_filtertarget_next;      // hash next
+    u32                       ind_filtertarget_hashval;   // hash value
+    algo::Smallstr50          filtertarget;               //
+    algo::Smallstr16          label;                      // Status bar indicator prefix
+    algo::Smallstr50          next;                       // Next filtertarget in Tab cycle
+    algo::Comment             comment;                    //
+    // func:acr_nav.FFiltertarget..AssignOp
+    inline acr_nav::FFiltertarget& operator =(const acr_nav::FFiltertarget &rhs) = delete;
+    // func:acr_nav.FFiltertarget..CopyCtor
+    inline               FFiltertarget(const acr_nav::FFiltertarget &rhs) = delete;
+private:
+    // func:acr_nav.FFiltertarget..Ctor
+    inline               FFiltertarget() __attribute__((nothrow));
+    // func:acr_nav.FFiltertarget..Dtor
+    inline               ~FFiltertarget() __attribute__((nothrow));
+    friend acr_nav::FFiltertarget& filtertarget_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend acr_nav::FFiltertarget* filtertarget_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 filtertarget_RemoveAll() __attribute__((nothrow));
+    friend void                 filtertarget_RemoveLast() __attribute__((nothrow));
+};
+
+// Copy fields out of row
+// func:acr_nav.FFiltertarget.base.CopyOut
+void                 filtertarget_CopyOut(acr_nav::FFiltertarget &row, acr_navdb::Filtertarget &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:acr_nav.FFiltertarget.base.CopyIn
+void                 filtertarget_CopyIn(acr_nav::FFiltertarget &row, acr_navdb::Filtertarget &in) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:acr_nav.FFiltertarget..Init
+inline void          FFiltertarget_Init(acr_nav::FFiltertarget& filtertarget);
+// func:acr_nav.FFiltertarget..Uninit
+void                 FFiltertarget_Uninit(acr_nav::FFiltertarget& filtertarget) __attribute__((nothrow));
 
 // --- acr_nav.FHelpgroup
 // create: acr_nav.FDb.helpgroup (Lary)
@@ -2140,6 +2276,7 @@ void                 FNavmode_Uninit(acr_nav::FNavmode& navmode) __attribute__((
 // global access: p_sel_focus (Ptr)
 // global access: p_sel_nofocus (Ptr)
 // global access: p_statusbar (Ptr)
+// global access: p_filter_match (Ptr)
 // access: acr_nav.FReftypestyle.p_navstyle (Upptr)
 struct FNavstyle { // acr_nav.FNavstyle
     acr_nav::FNavstyle*   ind_navstyle_next;      // hash next
@@ -2712,6 +2849,7 @@ struct Naventry { // acr_nav.Naventry: Navigation stack entry. Uses raw strings 
     i32                 sel_row;         //   0
     algo::Smallstr50    viewmode;        // Viewmode at time of push
     algo::Smallstr100   ctype;           // Ctype being viewed at time of push
+    algo::Smallstr50    filtertarget;    // Filter target at time of push
     // func:acr_nav.Naventry..Ctor
     inline               Naventry() __attribute__((nothrow));
 };
@@ -2750,13 +2888,14 @@ struct Screen { // acr_nav.Screen: Headless screen state output
     i32                n_field;          //   0  Total number of fields
     algo::Smallstr50   viewmode;         // Current right-panel viewmode
     algo::cstring      breadcrumb;       // Navigation breadcrumb trail (display string)
+    algo::Smallstr50   filtertarget;     // Current filter target (ctype/field)
     // func:acr_nav.Screen..Ctor
     inline               Screen() __attribute__((nothrow));
 };
 
 // Set all fields to initial values.
 // func:acr_nav.Screen..Init
-inline void          Screen_Init(acr_nav::Screen& parent);
+void                 Screen_Init(acr_nav::Screen& parent);
 // print string representation of ROW to string STR
 // cfmt:acr_nav.Screen.String  printfmt:Tuple
 // func:acr_nav.Screen..Print
@@ -3075,6 +3214,14 @@ struct _db_left_item_curs {// cursor
 };
 
 
+struct _db_filtertarget_curs {// cursor
+    typedef acr_nav::FFiltertarget ChildType;
+    acr_nav::FDb *parent;
+    i64 index;
+    _db_filtertarget_curs(){ parent=NULL; index=0; }
+};
+
+
 struct ns_c_ctype_curs {// fcurs:acr_nav.FNs.c_ctype/curs
     typedef acr_nav::FCtype ChildType;
     acr_nav::FCtype** elems;
@@ -3118,6 +3265,10 @@ void                 navaction_filter_cancel();
 // func:acr_nav...navaction_filter_clear
 // this function is 'extrn' and implemented by user
 void                 navaction_filter_clear();
+// User-implemented function from gstatic:acr_nav.FDb.navaction
+// func:acr_nav...navaction_filter_cycle_target
+// this function is 'extrn' and implemented by user
+void                 navaction_filter_cycle_target();
 // User-implemented function from gstatic:acr_nav.FDb.navaction
 // func:acr_nav...navaction_filter_start
 // this function is 'extrn' and implemented by user

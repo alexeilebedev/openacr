@@ -28,8 +28,9 @@
 | M18.2 | Add VisibleLeftItem + InputError, close protocol gaps | Left panel readable by agents; explicit error feedback |
 | M19 | Record count display in left panel | Ssimfile line counts at startup; DecimalDigits helper; RecordCount test |
 | M20 | Generated code preview viewmode | SysEval `amc '<ctype>'`; codegen viewmode; 'c' toggle; per-ctype caching |
+| M21 | Field name/comment search | filtertarget controlled vocabulary; Tab cycles search target; CtypeMatchesFilter + FieldMatchesFilter; bold highlight |
 
-**Current:** ~1290 lines C++, 23 navactions, 39 keybinds, 2 modes, 2 panels, 6 viewmodes (fields/xref/preview/codegen/help/detail), 9 navstyles, 36 reftypestyles, ~1400 ctypes / ~5600 fields across 83 namespaces. Namespace-grouped tree view with collapse/expand, record counts for ssimfile-backed ctypes. 18 headless tests. Headless protocol: SendKey, Screenshot, SetTermSize (input); Screen, PanelState, VisibleLeftItem, VisibleField, VisibleLine, InputError (output).
+**Current:** ~1340 lines C++, 24 navactions, 39 keybinds, 2 modes, 2 panels, 6 viewmodes (fields/xref/preview/codegen/help/detail), 10 navstyles, 36 reftypestyles, 2 filtertargets, ~1400 ctypes / ~5600 fields across 83 namespaces. Namespace-grouped tree view with collapse/expand, record counts for ssimfile-backed ctypes. 22 headless tests. Headless protocol: SendKey, Screenshot, SetTermSize (input); Screen, PanelState, VisibleLeftItem, VisibleField, VisibleLine, InputError (output).
 
 ---
 
@@ -72,15 +73,9 @@ These solve the most painful problems, align with OpenACR philosophy, and build 
 
 #### ~~1E. Record Count Display~~ (done — M19)
 
-#### 1F. Field Name / Comment Search
+#### ~~1F. Field Name / Comment Search~~ (done — M21)
 
-Filter mode currently searches ctype names. A `filtertarget` controlled vocabulary table adds a second axis: what the filter matches against. V1 has two targets: `ctype` (default, current behavior) and `field` (matches field name + comment text). Tab in filter mode cycles through targets. Status bar shows a prefix: `/text` for ctype, `/f:text` for field.
-
-Results show ctypes containing matching fields, with matches highlighted (bold) in the right panel's forward fields viewmode. Filtertarget saved/restored in navstack. `/` resets to ctype target; Tab to switch.
-
-**Solves:** Part of P3 (tool-switching tax). "Which ctypes have a field called 'comment'?" currently requires `acr dmmeta.field -where:...`.
-**Value:** High. Turns acr_nav into a tool you reach for instead of `acr` for cross-cutting field queries.
-**Size:** Medium. New `acr_navdb.filtertarget` table (2 records), one branch in BuildLeftItems, highlight pass in renderer, Tab keybind change in filter mode.
+`acr_navdb.filtertarget` controlled vocabulary table with 2 records: `ctype` (default) and `field` (name + comment). Tab in filter mode cycles targets. Status bar: `/text` vs `/f:text`. Matching fields bold-highlighted in right panel. `CtypeMatchesFilter` + `FieldMatchesFilter` helpers; cached `filter_regx` on FDb. Filtertarget saved/restored in navstack. 4 new tests (FieldFilter, FieldFilterCancel, FieldFilterNavstack, FieldFilterScreen).
 
 **Future filtertarget extensions** (one record + one match branch each):
 
@@ -166,8 +161,8 @@ Full pool scan has a practical obstacle: Tpool loses iteration capability (free-
 | ~~M18~~ | ~~1C: Namespace grouping~~ | ~~Done~~ |
 | ~~M19~~ | ~~1E: Record count display~~ | ~~Done~~ |
 | ~~M20~~ | ~~1D: Generated code preview~~ | ~~Done~~ |
-| M21 | 1F: Field name/comment search | Turns acr_nav into a replacement for `acr` field queries |
-| Later | 2B-2E, Tier 3 | As interest dictates |
+| ~~M21~~ | ~~1F: Field name/comment search~~ | ~~Done~~ |
+| Later | 2A-2E, Tier 3 | As interest dictates |
 
 **Sequencing rationale:**
 
@@ -175,6 +170,6 @@ Full pool scan has a practical obstacle: Tpool loses iteration capability (free-
 - **M18 (namespace grouping)** — Done. LeftItem Tary, FNs.c_ctype Ptrary, collapse/expand, extern label, stable width.
 - **M19 (record counts)** — Done. FSsimfile.n_record counted at startup, displayed as `(N)` in left panel. DecimalDigits helper also fixed latent 4-digit cap in namespace header width.
 - **M20 (generated code)** — Done. SysEval to `amc '<ctype>'`, codegen viewmode with `has_fields:N`, `c` toggle key, per-ctype caching via `p_codegen_ctype`.
-- **M21 (field search)** adds cross-cutting query capability. Positioned after the structural improvements so the tool already feels capable when search extends it.
+- **M21 (field search)** — Done. `acr_navdb.filtertarget` table (2 records), Tab cycles in filter mode, `CtypeMatchesFilter`/`FieldMatchesFilter` helpers, bold highlighting, cached regex, navstack save/restore. 4 new tests.
 
 **Future factoring:** IsHelpMode (4 sites) and IsXrefMode (5 sites) are identity checks that should become data on FViewmode. At 2 modes per axis, the branching is trivial. Refactor when a 3rd mode is added to either axis. Documented in code at their definition sites. RightPanelItemCount has per-viewmode lazy-load checks for preview and codegen (2 instances); at 3, refactor to an ensure-content hook on FViewmode.

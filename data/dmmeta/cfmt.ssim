@@ -27,6 +27,7 @@ dmmeta.cfmt  cfmt:acr_nav.VisibleField.String  printfmt:Tuple  read:N  print:Y  
 dmmeta.cfmt  cfmt:acr_nav.VisibleLeftItem.String  printfmt:Tuple  read:N  print:Y  sep:""  genop:Y  comment:""
 dmmeta.cfmt  cfmt:acr_nav.VisibleLine.String  printfmt:Tuple  read:N  print:Y  sep:""  genop:Y  comment:""
 dmmeta.cfmt  cfmt:acr_navdb.Detailsrc.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+dmmeta.cfmt  cfmt:acr_navdb.Filtertarget.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
 dmmeta.cfmt  cfmt:acr_navdb.Helpgroup.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
 dmmeta.cfmt  cfmt:acr_navdb.Keybind.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
 dmmeta.cfmt  cfmt:acr_navdb.Navaction.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""

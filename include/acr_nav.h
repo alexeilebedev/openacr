@@ -46,6 +46,7 @@ namespace acr_nav { // update-hdr
     // void navaction_quit(); // gstatic/acr_navdb.navaction:quit
     // void navaction_cycle_viewmode(); // gstatic/acr_navdb.navaction:cycle_viewmode
     // void navaction_toggle_preview(); // gstatic/acr_navdb.navaction:toggle_preview
+    // void navaction_toggle_codegen(); // gstatic/acr_navdb.navaction:toggle_codegen
     // void navaction_filter_accept(); // gstatic/acr_navdb.navaction:filter_accept
     // void navaction_filter_start(); // gstatic/acr_navdb.navaction:filter_start
     // void navaction_filter_cancel(); // gstatic/acr_navdb.navaction:filter_cancel
@@ -53,6 +54,7 @@ namespace acr_nav { // update-hdr
     // void navaction_filter_clear(); // gstatic/acr_navdb.navaction:filter_clear
     // void navaction_dismiss_or_clear(); // gstatic/acr_navdb.navaction:dismiss_or_clear
     // void navaction_filter_backspace(); // gstatic/acr_navdb.navaction:filter_backspace
+    // void navaction_filter_cycle_target(); // gstatic/acr_navdb.navaction:filter_cycle_target
     // void navaction_show_help(); // gstatic/acr_navdb.navaction:show_help
     // void navaction_show_detail(); // gstatic/acr_navdb.navaction:show_detail
     // void Main(); // main:acr_nav

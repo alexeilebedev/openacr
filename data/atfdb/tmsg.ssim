@@ -175,6 +175,45 @@ atfdb.tmsg  tmsg:acr_nav.Detail/100270.in  istuple:N  msg:"acr_nav.SendKey  key:
 atfdb.tmsg  tmsg:acr_nav.Detail/100280.in  istuple:N  msg:acr_nav.Screenshot
 atfdb.tmsg  tmsg:acr_nav.Detail/100290.in  istuple:N  msg:"acr_nav.SendKey  key:d"
 atfdb.tmsg  tmsg:acr_nav.Detail/100300.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.FieldFilter/100000.in  istuple:N  msg:"acr_nav.SendKey  key:j"
+atfdb.tmsg  tmsg:acr_nav.FieldFilter/100010.in  istuple:N  msg:"acr_nav.SendKey  key:/"
+atfdb.tmsg  tmsg:acr_nav.FieldFilter/100020.in  istuple:N  msg:"acr_nav.SendKey  key:Tab"
+atfdb.tmsg  tmsg:acr_nav.FieldFilter/100030.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.FieldFilter/100040.in  istuple:N  msg:"acr_nav.SendKey  key:c"
+atfdb.tmsg  tmsg:acr_nav.FieldFilter/100050.in  istuple:N  msg:"acr_nav.SendKey  key:o"
+atfdb.tmsg  tmsg:acr_nav.FieldFilter/100060.in  istuple:N  msg:"acr_nav.SendKey  key:m"
+atfdb.tmsg  tmsg:acr_nav.FieldFilter/100070.in  istuple:N  msg:"acr_nav.SendKey  key:m"
+atfdb.tmsg  tmsg:acr_nav.FieldFilter/100080.in  istuple:N  msg:"acr_nav.SendKey  key:e"
+atfdb.tmsg  tmsg:acr_nav.FieldFilter/100090.in  istuple:N  msg:"acr_nav.SendKey  key:n"
+atfdb.tmsg  tmsg:acr_nav.FieldFilter/100100.in  istuple:N  msg:"acr_nav.SendKey  key:t"
+atfdb.tmsg  tmsg:acr_nav.FieldFilter/100110.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.FieldFilterCancel/100000.in  istuple:N  msg:"acr_nav.SendKey  key:j"
+atfdb.tmsg  tmsg:acr_nav.FieldFilterCancel/100010.in  istuple:N  msg:"acr_nav.SendKey  key:/"
+atfdb.tmsg  tmsg:acr_nav.FieldFilterCancel/100020.in  istuple:N  msg:"acr_nav.SendKey  key:Tab"
+atfdb.tmsg  tmsg:acr_nav.FieldFilterCancel/100030.in  istuple:N  msg:"acr_nav.SendKey  key:x"
+atfdb.tmsg  tmsg:acr_nav.FieldFilterCancel/100040.in  istuple:N  msg:"acr_nav.SendKey  key:y"
+atfdb.tmsg  tmsg:acr_nav.FieldFilterCancel/100050.in  istuple:N  msg:"acr_nav.SendKey  key:z"
+atfdb.tmsg  tmsg:acr_nav.FieldFilterCancel/100060.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.FieldFilterCancel/100070.in  istuple:N  msg:"acr_nav.SendKey  key:Escape"
+atfdb.tmsg  tmsg:acr_nav.FieldFilterCancel/100080.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.FieldFilterNavstack/100000.in  istuple:N  msg:"acr_nav.SendKey  key:j"
+atfdb.tmsg  tmsg:acr_nav.FieldFilterNavstack/100010.in  istuple:N  msg:"acr_nav.SendKey  key:/"
+atfdb.tmsg  tmsg:acr_nav.FieldFilterNavstack/100020.in  istuple:N  msg:"acr_nav.SendKey  key:Tab"
+atfdb.tmsg  tmsg:acr_nav.FieldFilterNavstack/100030.in  istuple:N  msg:"acr_nav.SendKey  key:c"
+atfdb.tmsg  tmsg:acr_nav.FieldFilterNavstack/100040.in  istuple:N  msg:"acr_nav.SendKey  key:o"
+atfdb.tmsg  tmsg:acr_nav.FieldFilterNavstack/100050.in  istuple:N  msg:"acr_nav.SendKey  key:m"
+atfdb.tmsg  tmsg:acr_nav.FieldFilterNavstack/100060.in  istuple:N  msg:"acr_nav.SendKey  key:m"
+atfdb.tmsg  tmsg:acr_nav.FieldFilterNavstack/100070.in  istuple:N  msg:"acr_nav.SendKey  key:e"
+atfdb.tmsg  tmsg:acr_nav.FieldFilterNavstack/100080.in  istuple:N  msg:"acr_nav.SendKey  key:n"
+atfdb.tmsg  tmsg:acr_nav.FieldFilterNavstack/100090.in  istuple:N  msg:"acr_nav.SendKey  key:t"
+atfdb.tmsg  tmsg:acr_nav.FieldFilterNavstack/100100.in  istuple:N  msg:"acr_nav.SendKey  key:Enter"
+atfdb.tmsg  tmsg:acr_nav.FieldFilterNavstack/100110.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.FieldFilterNavstack/100120.in  istuple:N  msg:"acr_nav.SendKey  key:Escape"
+atfdb.tmsg  tmsg:acr_nav.FieldFilterNavstack/100130.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.FieldFilterScreen/100000.in  istuple:N  msg:"acr_nav.SendKey  key:j"
+atfdb.tmsg  tmsg:acr_nav.FieldFilterScreen/100010.in  istuple:N  msg:"acr_nav.SendKey  key:/"
+atfdb.tmsg  tmsg:acr_nav.FieldFilterScreen/100020.in  istuple:N  msg:"acr_nav.SendKey  key:Tab"
+atfdb.tmsg  tmsg:acr_nav.FieldFilterScreen/100030.in  istuple:N  msg:acr_nav.Screenshot
 atfdb.tmsg  tmsg:acr_nav.Filter/100000.in  istuple:N  msg:"acr_nav.SendKey  key:/"
 atfdb.tmsg  tmsg:acr_nav.Filter/100010.in  istuple:N  msg:"acr_nav.SendKey  key:a"
 atfdb.tmsg  tmsg:acr_nav.Filter/100020.in  istuple:N  msg:"acr_nav.SendKey  key:m"

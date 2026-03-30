@@ -525,6 +525,7 @@ dev.gitfile  gitfile:cpp/ssim2mysql.cpp
 dev.gitfile  gitfile:cpp/ssimfilt.cpp
 dev.gitfile  gitfile:cpp/strconv/strconv.cpp
 dev.gitfile  gitfile:cpp/sv2ssim.cpp
+dev.gitfile  gitfile:data/acr_navdb/filtertarget.ssim
 dev.gitfile  gitfile:data/acr_navdb/keybind.ssim
 dev.gitfile  gitfile:data/acr_navdb/navaction.ssim
 dev.gitfile  gitfile:data/acr_navdb/navmode.ssim
@@ -1521,6 +1522,7 @@ dev.gitfile  gitfile:txt/setup.md
 dev.gitfile  gitfile:txt/ssim.md
 dev.gitfile  gitfile:txt/ssimdb/README.md
 dev.gitfile  gitfile:txt/ssimdb/acr_navdb/README.md
+dev.gitfile  gitfile:txt/ssimdb/acr_navdb/filtertarget.md
 dev.gitfile  gitfile:txt/ssimdb/acr_navdb/keybind.md
 dev.gitfile  gitfile:txt/ssimdb/acr_navdb/navaction.md
 dev.gitfile  gitfile:txt/ssimdb/acr_navdb/navmode.md

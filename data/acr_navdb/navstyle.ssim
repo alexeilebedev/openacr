@@ -1,4 +1,5 @@
 acr_navdb.navstyle  navstyle:field_idx       bold:N  dim:N  reverse:N  fg_color:yellow   comment:"Access path indexes (yellow)"
+acr_navdb.navstyle  navstyle:filter_match    bold:Y  dim:N  reverse:N  fg_color:default  comment:"Matched field in field-search mode"
 acr_navdb.navstyle  navstyle:field_pool      bold:N  dim:N  reverse:N  fg_color:green    comment:"Memory pools (green)"
 acr_navdb.navstyle  navstyle:field_upref     bold:N  dim:N  reverse:N  fg_color:cyan     comment:"Upward references (cyan)"
 acr_navdb.navstyle  navstyle:field_val       bold:N  dim:N  reverse:N  fg_color:default  comment:"Plain values (default)"

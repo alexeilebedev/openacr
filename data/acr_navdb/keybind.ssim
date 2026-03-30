@@ -35,5 +35,5 @@ acr_navdb.keybind  keybind:filter.PgDown  navaction:page_down  hint_order:0  com
 acr_navdb.keybind  keybind:filter.PgUp  navaction:page_up  hint_order:0  comment:""
 acr_navdb.keybind  keybind:filter.Right  navaction:switch_panel_right  hint_order:0  comment:""
 acr_navdb.keybind  keybind:filter.Space  navaction:filter_append_space  hint_order:0  comment:""
-acr_navdb.keybind  keybind:filter.Tab  navaction:cycle_viewmode  hint_order:0  comment:""
+acr_navdb.keybind  keybind:filter.Tab  navaction:filter_cycle_target  hint_order:0  comment:""
 acr_navdb.keybind  keybind:filter.Up  navaction:move_up  hint_order:0  comment:""

@@ -4,6 +4,7 @@ acr_navdb.navaction  navaction:filter_append_space  hint:""  helpgroup:""  sort_
 acr_navdb.navaction  navaction:filter_backspace  hint:""  helpgroup:""  sort_order:0  comment:"Delete last filter character"
 acr_navdb.navaction  navaction:filter_cancel  hint:""  helpgroup:""  sort_order:0  comment:"Cancel filter input"
 acr_navdb.navaction  navaction:filter_clear  hint:""  helpgroup:search  sort_order:11  comment:"Clear filter text"
+acr_navdb.navaction  navaction:filter_cycle_target  hint:""  helpgroup:search  sort_order:13  comment:"Cycle filter target (Tab in filter mode)"
 acr_navdb.navaction  navaction:filter_start  hint:filter  helpgroup:search  sort_order:10  comment:"Enter filter input mode"
 acr_navdb.navaction  navaction:follow_ref  hint:follow  helpgroup:navigation  sort_order:10  comment:"Follow reference to target ctype"
 acr_navdb.navaction  navaction:go_back  hint:back  helpgroup:navigation  sort_order:11  comment:"Return to previous ctype"

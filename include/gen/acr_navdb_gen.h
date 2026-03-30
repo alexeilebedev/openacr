@@ -32,36 +32,39 @@
 enum acr_navdb_FieldIdEnum {                // acr_navdb.FieldId.value
      acr_navdb_FieldId_detailsrc      = 0
     ,acr_navdb_FieldId_comment        = 1
-    ,acr_navdb_FieldId_helpgroup      = 2
-    ,acr_navdb_FieldId_sort_order     = 3
-    ,acr_navdb_FieldId_keybind        = 4
-    ,acr_navdb_FieldId_navaction      = 5
-    ,acr_navdb_FieldId_navmode        = 6
-    ,acr_navdb_FieldId_hint_order     = 7
-    ,acr_navdb_FieldId_key            = 8
-    ,acr_navdb_FieldId_hint           = 9
-    ,acr_navdb_FieldId_navstyle       = 10
-    ,acr_navdb_FieldId_bold           = 11
-    ,acr_navdb_FieldId_dim            = 12
-    ,acr_navdb_FieldId_reverse        = 13
-    ,acr_navdb_FieldId_fg_color       = 14
-    ,acr_navdb_FieldId_panel          = 15
-    ,acr_navdb_FieldId_title          = 16
-    ,acr_navdb_FieldId_position       = 17
-    ,acr_navdb_FieldId_min_width      = 18
-    ,acr_navdb_FieldId_reftypestyle   = 19
-    ,acr_navdb_FieldId_reftype        = 20
-    ,acr_navdb_FieldId_viewmode       = 21
-    ,acr_navdb_FieldId_next           = 22
-    ,acr_navdb_FieldId_empty_msg      = 23
-    ,acr_navdb_FieldId_has_fields     = 24
-    ,acr_navdb_FieldId_value          = 25
+    ,acr_navdb_FieldId_filtertarget   = 2
+    ,acr_navdb_FieldId_label          = 3
+    ,acr_navdb_FieldId_next           = 4
+    ,acr_navdb_FieldId_helpgroup      = 5
+    ,acr_navdb_FieldId_sort_order     = 6
+    ,acr_navdb_FieldId_keybind        = 7
+    ,acr_navdb_FieldId_navaction      = 8
+    ,acr_navdb_FieldId_navmode        = 9
+    ,acr_navdb_FieldId_hint_order     = 10
+    ,acr_navdb_FieldId_key            = 11
+    ,acr_navdb_FieldId_hint           = 12
+    ,acr_navdb_FieldId_navstyle       = 13
+    ,acr_navdb_FieldId_bold           = 14
+    ,acr_navdb_FieldId_dim            = 15
+    ,acr_navdb_FieldId_reverse        = 16
+    ,acr_navdb_FieldId_fg_color       = 17
+    ,acr_navdb_FieldId_panel          = 18
+    ,acr_navdb_FieldId_title          = 19
+    ,acr_navdb_FieldId_position       = 20
+    ,acr_navdb_FieldId_min_width      = 21
+    ,acr_navdb_FieldId_reftypestyle   = 22
+    ,acr_navdb_FieldId_reftype        = 23
+    ,acr_navdb_FieldId_viewmode       = 24
+    ,acr_navdb_FieldId_empty_msg      = 25
+    ,acr_navdb_FieldId_has_fields     = 26
+    ,acr_navdb_FieldId_value          = 27
 };
 
-enum { acr_navdb_FieldIdEnum_N = 26 };
+enum { acr_navdb_FieldIdEnum_N = 28 };
 
 namespace acr_navdb { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 DetailsrcPkey;
+    typedef algo::Smallstr50 FiltertargetPkey;
     typedef algo::Smallstr50 HelpgroupPkey;
     typedef algo::Smallstr50 KeybindPkey;
     typedef algo::Smallstr50 NavactionPkey;
@@ -76,6 +79,7 @@ namespace acr_navdb { // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace acr_navdb { struct Detailsrc; }
 namespace acr_navdb { struct FieldId; }
+namespace acr_navdb { struct Filtertarget; }
 namespace acr_navdb { struct Helpgroup; }
 namespace acr_navdb { struct Keybind; }
 namespace acr_navdb { struct Navaction; }
@@ -158,6 +162,27 @@ inline void          FieldId_Init(acr_navdb::FieldId& parent);
 // cfmt:acr_navdb.FieldId.String  printfmt:Raw
 // func:acr_navdb.FieldId..Print
 void                 FieldId_Print(acr_navdb::FieldId& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- acr_navdb.Filtertarget
+struct Filtertarget { // acr_navdb.Filtertarget
+    algo::Smallstr50   filtertarget;   //
+    algo::Smallstr16   label;          // Status bar indicator prefix
+    algo::Smallstr50   next;           // Next filtertarget in Tab cycle
+    algo::Comment      comment;        //
+    // func:acr_navdb.Filtertarget..Ctor
+    inline               Filtertarget() __attribute__((nothrow));
+};
+
+// func:acr_navdb.Filtertarget..ReadFieldMaybe
+bool                 Filtertarget_ReadFieldMaybe(acr_navdb::Filtertarget& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of acr_navdb::Filtertarget from an ascii string.
+// The format of the string is an ssim Tuple
+// func:acr_navdb.Filtertarget..ReadStrptrMaybe
+bool                 Filtertarget_ReadStrptrMaybe(acr_navdb::Filtertarget &parent, algo::strptr in_str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:acr_navdb.Filtertarget.String  printfmt:Tuple
+// func:acr_navdb.Filtertarget..Print
+void                 Filtertarget_Print(acr_navdb::Filtertarget& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- acr_navdb.Helpgroup
 struct Helpgroup { // acr_navdb.Helpgroup: Help panel group category
@@ -376,6 +401,7 @@ namespace acr_navdb { // gen:ns_func
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const acr_navdb::Detailsrc &row);// cfmt:acr_navdb.Detailsrc.String
 inline algo::cstring &operator <<(algo::cstring &str, const acr_navdb::FieldId &row);// cfmt:acr_navdb.FieldId.String
+inline algo::cstring &operator <<(algo::cstring &str, const acr_navdb::Filtertarget &row);// cfmt:acr_navdb.Filtertarget.String
 inline algo::cstring &operator <<(algo::cstring &str, const acr_navdb::Helpgroup &row);// cfmt:acr_navdb.Helpgroup.String
 inline algo::cstring &operator <<(algo::cstring &str, const acr_navdb::Keybind &row);// cfmt:acr_navdb.Keybind.String
 inline algo::cstring &operator <<(algo::cstring &str, const acr_navdb::Navaction &row);// cfmt:acr_navdb.Navaction.String

@@ -488,6 +488,7 @@ extern const char *  dmmeta_Sorttype_sorttype_QuickSort;       // QuickSort     
 extern const char *  dmmeta_Sorttype_sorttype_InsertionSort;   // InsertionSort    fconst:dmmeta.Sorttype.sorttype/InsertionSort
 extern const char *  dmmeta_Sorttype_sorttype_HeapSort;        // HeapSort         fconst:dmmeta.Sorttype.sorttype/HeapSort
 extern const char *  dmmeta_Ssimfile_ssimfile_acr_navdb_detailsrc;         // acr_navdb.detailsrc          fconst:dmmeta.Ssimfile.ssimfile/acr_navdb.detailsrc
+extern const char *  dmmeta_Ssimfile_ssimfile_acr_navdb_filtertarget;      // acr_navdb.filtertarget       fconst:dmmeta.Ssimfile.ssimfile/acr_navdb.filtertarget
 extern const char *  dmmeta_Ssimfile_ssimfile_acr_navdb_helpgroup;         // acr_navdb.helpgroup          fconst:dmmeta.Ssimfile.ssimfile/acr_navdb.helpgroup
 extern const char *  dmmeta_Ssimfile_ssimfile_acr_navdb_keybind;           // acr_navdb.keybind            fconst:dmmeta.Ssimfile.ssimfile/acr_navdb.keybind
 extern const char *  dmmeta_Ssimfile_ssimfile_acr_navdb_navaction;         // acr_navdb.navaction          fconst:dmmeta.Ssimfile.ssimfile/acr_navdb.navaction

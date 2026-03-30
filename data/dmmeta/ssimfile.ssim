@@ -1,4 +1,5 @@
 dmmeta.ssimfile  ssimfile:acr_navdb.detailsrc  ctype:acr_navdb.Detailsrc
+dmmeta.ssimfile  ssimfile:acr_navdb.filtertarget  ctype:acr_navdb.Filtertarget
 dmmeta.ssimfile  ssimfile:acr_navdb.helpgroup  ctype:acr_navdb.Helpgroup
 dmmeta.ssimfile  ssimfile:acr_navdb.keybind  ctype:acr_navdb.Keybind
 dmmeta.ssimfile  ssimfile:acr_navdb.navaction  ctype:acr_navdb.Navaction

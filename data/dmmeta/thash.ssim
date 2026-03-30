@@ -63,6 +63,7 @@ dmmeta.thash  field:acr_in.FDb.ind_tuple  hashfld:acr_in.FTuple.key  unique:Y  c
 dmmeta.thash  field:acr_nav.FDb.ind_ctype  hashfld:dmmeta.Ctype.ctype  unique:Y  comment:""
 dmmeta.thash  field:acr_nav.FDb.ind_detailsrc  hashfld:acr_navdb.Detailsrc.detailsrc  unique:Y  comment:""
 dmmeta.thash  field:acr_nav.FDb.ind_field  hashfld:dmmeta.Field.field  unique:Y  comment:""
+dmmeta.thash  field:acr_nav.FDb.ind_filtertarget  hashfld:acr_navdb.Filtertarget.filtertarget  unique:Y  comment:""
 dmmeta.thash  field:acr_nav.FDb.ind_helpgroup  hashfld:acr_navdb.Helpgroup.helpgroup  unique:Y  comment:""
 dmmeta.thash  field:acr_nav.FDb.ind_keybind  hashfld:acr_navdb.Keybind.keybind  unique:Y  comment:""
 dmmeta.thash  field:acr_nav.FDb.ind_navaction  hashfld:acr_navdb.Navaction.navaction  unique:Y  comment:""

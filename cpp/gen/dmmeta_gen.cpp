@@ -233,11 +233,12 @@ const char *dmmeta_Sorttype_sorttype_InsertionSort   = "InsertionSort";
 const char *dmmeta_Sorttype_sorttype_HeapSort        = "HeapSort";
 
 // compile-time string constants for dmmeta.Ssimfile.ssimfile
-const char *dmmeta_Ssimfile_ssimfile_acr_navdb_detailsrc   = "acr_navdb.detailsrc";
-const char *dmmeta_Ssimfile_ssimfile_acr_navdb_helpgroup   = "acr_navdb.helpgroup";
-const char *dmmeta_Ssimfile_ssimfile_acr_navdb_keybind     = "acr_navdb.keybind";
-const char *dmmeta_Ssimfile_ssimfile_acr_navdb_navaction   = "acr_navdb.navaction";
-const char *dmmeta_Ssimfile_ssimfile_acr_navdb_navmode     = "acr_navdb.navmode";
+const char *dmmeta_Ssimfile_ssimfile_acr_navdb_detailsrc      = "acr_navdb.detailsrc";
+const char *dmmeta_Ssimfile_ssimfile_acr_navdb_filtertarget   = "acr_navdb.filtertarget";
+const char *dmmeta_Ssimfile_ssimfile_acr_navdb_helpgroup      = "acr_navdb.helpgroup";
+const char *dmmeta_Ssimfile_ssimfile_acr_navdb_keybind        = "acr_navdb.keybind";
+const char *dmmeta_Ssimfile_ssimfile_acr_navdb_navaction      = "acr_navdb.navaction";
+const char *dmmeta_Ssimfile_ssimfile_acr_navdb_navmode        = "acr_navdb.navmode";
 
 const char *dmmeta_Ssimfile_ssimfile_acr_navdb_navstyle       = "acr_navdb.navstyle";
 const char *dmmeta_Ssimfile_ssimfile_acr_navdb_panel          = "acr_navdb.panel";

@@ -69,6 +69,10 @@ inline  acr_navdb::FieldId::FieldId(acr_navdb_FieldIdEnum arg) {
     this->value = i32(arg);
 }
 
+// --- acr_navdb.Filtertarget..Ctor
+inline  acr_navdb::Filtertarget::Filtertarget() {
+}
+
 // --- acr_navdb.Helpgroup..Init
 // Set all fields to initial values.
 inline void acr_navdb::Helpgroup_Init(acr_navdb::Helpgroup& parent) {
@@ -153,6 +157,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const acr_navdb::Det
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const acr_navdb::FieldId &row) {// cfmt:acr_navdb.FieldId.String
     acr_navdb::FieldId_Print(const_cast<acr_navdb::FieldId&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const acr_navdb::Filtertarget &row) {// cfmt:acr_navdb.Filtertarget.String
+    acr_navdb::Filtertarget_Print(const_cast<acr_navdb::Filtertarget&>(row), str);
     return str;
 }
 

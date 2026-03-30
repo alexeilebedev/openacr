@@ -1,17 +1,17 @@
-acr_nav.Screen  mode:browse  focus:content  filter:acr_nav.fdb  navstack_depth:0  n_sel_ctype:1  n_ctype:1402  n_field:5618  viewmode:fields  breadcrumb:""
+acr_nav.Screen  mode:browse  focus:content  filter:acr_nav.fdb  navstack_depth:0  n_sel_ctype:1  n_ctype:1404  n_field:5631  viewmode:fields  breadcrumb:""  filtertarget:ctype
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:1  sel_value:acr_nav
 acr_nav.VisibleLeftItem  row:0  value:acr_nav  kind:ns  collapsed:Y  n_match:1  n_record:0
 acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
 
-acr_nav.Screen  mode:browse  focus:content  filter:acr_nav.fdb  navstack_depth:0  n_sel_ctype:1  n_ctype:1402  n_field:5618  viewmode:fields  breadcrumb:""
+acr_nav.Screen  mode:browse  focus:content  filter:acr_nav.fdb  navstack_depth:0  n_sel_ctype:1  n_ctype:1404  n_field:5631  viewmode:fields  breadcrumb:""  filtertarget:ctype
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:1  sel_value:acr_nav
 acr_nav.VisibleLeftItem  row:0  value:acr_nav  kind:ns  collapsed:Y  n_match:1  n_record:0
 acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
 
-acr_nav.Screen  mode:browse  focus:content  filter:acr_nav.fdb  navstack_depth:0  n_sel_ctype:1  n_ctype:1402  n_field:5618  viewmode:help  breadcrumb:""
+acr_nav.Screen  mode:browse  focus:content  filter:acr_nav.fdb  navstack_depth:0  n_sel_ctype:1  n_ctype:1404  n_field:5631  viewmode:help  breadcrumb:""  filtertarget:ctype
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:1  sel_value:acr_nav
 acr_nav.VisibleLeftItem  row:0  value:acr_nav  kind:ns  collapsed:Y  n_match:1  n_record:0
-acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:23  sel_value:"Up                k         Move selection up"
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:24  sel_value:"Up                k         Move selection up"
 acr_nav.VisibleLine  row:0  value:"Up                k         Move selection up"
 acr_nav.VisibleLine  row:1  value:"Down              j         Move selection down"
 acr_nav.VisibleLine  row:2  value:"PgUp              b         Page up"
@@ -32,21 +32,22 @@ acr_nav.VisibleLine  row:16  value:""
 acr_nav.VisibleLine  row:17  value:"/                           Enter filter input mode"
 acr_nav.VisibleLine  row:18  value:"                            Clear filter text"
 acr_nav.VisibleLine  row:19  value:"Escape                      Dismiss overlay or clear filter"
-acr_nav.VisibleLine  row:20  value:""
-acr_nav.VisibleLine  row:21  value:"?                           Toggle help panel"
-acr_nav.VisibleLine  row:22  value:"                  q         Exit acr_nav"
+acr_nav.VisibleLine  row:20  value:"                            Cycle filter target (Tab in filter mode)"
+acr_nav.VisibleLine  row:21  value:""
+acr_nav.VisibleLine  row:22  value:"?                           Toggle help panel"
+acr_nav.VisibleLine  row:23  value:"                  q         Exit acr_nav"
 
-acr_nav.Screen  mode:browse  focus:content  filter:acr_nav.fdb  navstack_depth:0  n_sel_ctype:1  n_ctype:1402  n_field:5618  viewmode:fields  breadcrumb:""
+acr_nav.Screen  mode:browse  focus:content  filter:acr_nav.fdb  navstack_depth:0  n_sel_ctype:1  n_ctype:1404  n_field:5631  viewmode:fields  breadcrumb:""  filtertarget:ctype
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:1  sel_value:acr_nav
 acr_nav.VisibleLeftItem  row:0  value:acr_nav  kind:ns  collapsed:Y  n_match:1  n_record:0
 acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
 
-acr_nav.Screen  mode:browse  focus:content  filter:acr_nav.fdb  navstack_depth:0  n_sel_ctype:1  n_ctype:1402  n_field:5618  viewmode:fields  breadcrumb:""
+acr_nav.Screen  mode:browse  focus:content  filter:acr_nav.fdb  navstack_depth:0  n_sel_ctype:1  n_ctype:1404  n_field:5631  viewmode:fields  breadcrumb:""  filtertarget:ctype
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:1  sel_value:acr_nav
 acr_nav.VisibleLeftItem  row:0  value:acr_nav  kind:ns  collapsed:Y  n_match:1  n_record:0
 acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
 
-acr_nav.Screen  mode:browse  focus:content  filter:acr_nav.fdb  navstack_depth:0  n_sel_ctype:1  n_ctype:1402  n_field:5618  viewmode:fields  breadcrumb:""
+acr_nav.Screen  mode:browse  focus:content  filter:acr_nav.fdb  navstack_depth:0  n_sel_ctype:1  n_ctype:1404  n_field:5631  viewmode:fields  breadcrumb:""  filtertarget:ctype
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:1  sel_value:acr_nav
 acr_nav.VisibleLeftItem  row:0  value:acr_nav  kind:ns  collapsed:Y  n_match:1  n_record:0
 acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:0  sel_value:""

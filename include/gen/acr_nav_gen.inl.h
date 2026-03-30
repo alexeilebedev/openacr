@@ -26,6 +26,7 @@
 #include "include/gen/dmmeta_gen.inl.h"
 #include "include/gen/algo_gen.inl.h"
 #include "include/gen/command_gen.inl.h"
+#include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/acr_navdb_gen.inl.h"
 //#pragma endinclude
 
@@ -1207,6 +1208,60 @@ inline u64 acr_nav::left_item_rowid_Get(acr_nav::LeftItem &elem) {
     return u64(id);
 }
 
+// --- acr_nav.FDb.filtertarget.EmptyQ
+// Return true if index is empty
+inline bool acr_nav::filtertarget_EmptyQ() {
+    return _db.filtertarget_n == 0;
+}
+
+// --- acr_nav.FDb.filtertarget.Find
+// Look up row by row id. Return NULL if out of range
+inline acr_nav::FFiltertarget* acr_nav::filtertarget_Find(u64 t) {
+    acr_nav::FFiltertarget *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.filtertarget_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.filtertarget_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- acr_nav.FDb.filtertarget.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline acr_nav::FFiltertarget* acr_nav::filtertarget_Last() {
+    return filtertarget_Find(u64(_db.filtertarget_n-1));
+}
+
+// --- acr_nav.FDb.filtertarget.N
+// Return number of items in the pool
+inline i32 acr_nav::filtertarget_N() {
+    return _db.filtertarget_n;
+}
+
+// --- acr_nav.FDb.filtertarget.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline acr_nav::FFiltertarget& acr_nav::filtertarget_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.filtertarget_lary[bsr][index];
+}
+
+// --- acr_nav.FDb.ind_filtertarget.EmptyQ
+// Return true if hash is empty
+inline bool acr_nav::ind_filtertarget_EmptyQ() {
+    return _db.ind_filtertarget_n == 0;
+}
+
+// --- acr_nav.FDb.ind_filtertarget.N
+// Return number of items in the hash
+inline i32 acr_nav::ind_filtertarget_N() {
+    return _db.ind_filtertarget_n;
+}
+
 // --- acr_nav.FDb.ctype_curs.Reset
 // cursor points to valid item
 inline void acr_nav::_db_ctype_curs_Reset(_db_ctype_curs &curs, acr_nav::FDb &parent) {
@@ -1632,6 +1687,31 @@ inline acr_nav::LeftItem& acr_nav::_db_left_item_curs_Access(_db_left_item_curs 
     return curs.elems[curs.index];
 }
 
+// --- acr_nav.FDb.filtertarget_curs.Reset
+// cursor points to valid item
+inline void acr_nav::_db_filtertarget_curs_Reset(_db_filtertarget_curs &curs, acr_nav::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- acr_nav.FDb.filtertarget_curs.ValidQ
+// cursor points to valid item
+inline bool acr_nav::_db_filtertarget_curs_ValidQ(_db_filtertarget_curs &curs) {
+    return curs.index < _db.filtertarget_n;
+}
+
+// --- acr_nav.FDb.filtertarget_curs.Next
+// proceed to next item
+inline void acr_nav::_db_filtertarget_curs_Next(_db_filtertarget_curs &curs) {
+    curs.index++;
+}
+
+// --- acr_nav.FDb.filtertarget_curs.Access
+// item access
+inline acr_nav::FFiltertarget& acr_nav::_db_filtertarget_curs_Access(_db_filtertarget_curs &curs) {
+    return filtertarget_qFind(u64(curs.index));
+}
+
 // --- acr_nav.FDetailsrc..Init
 // Set all fields to initial values.
 inline void acr_nav::FDetailsrc_Init(acr_nav::FDetailsrc& detailsrc) {
@@ -1657,6 +1737,23 @@ inline  acr_nav::FField::FField() {
 // --- acr_nav.FField..Dtor
 inline  acr_nav::FField::~FField() {
     acr_nav::FField_Uninit(*this);
+}
+
+// --- acr_nav.FFiltertarget..Init
+// Set all fields to initial values.
+inline void acr_nav::FFiltertarget_Init(acr_nav::FFiltertarget& filtertarget) {
+    filtertarget.ind_filtertarget_next = (acr_nav::FFiltertarget*)-1; // (acr_nav.FDb.ind_filtertarget) not-in-hash
+    filtertarget.ind_filtertarget_hashval = 0; // stored hash value
+}
+
+// --- acr_nav.FFiltertarget..Ctor
+inline  acr_nav::FFiltertarget::FFiltertarget() {
+    acr_nav::FFiltertarget_Init(*this);
+}
+
+// --- acr_nav.FFiltertarget..Dtor
+inline  acr_nav::FFiltertarget::~FFiltertarget() {
+    acr_nav::FFiltertarget_Uninit(*this);
 }
 
 // --- acr_nav.FHelpgroup..Init
@@ -2145,15 +2242,6 @@ inline void acr_nav::PanelState_Init(acr_nav::PanelState& parent) {
 // --- acr_nav.PanelState..Ctor
 inline  acr_nav::PanelState::PanelState() {
     acr_nav::PanelState_Init(*this);
-}
-
-// --- acr_nav.Screen..Init
-// Set all fields to initial values.
-inline void acr_nav::Screen_Init(acr_nav::Screen& parent) {
-    parent.navstack_depth = i32(0);
-    parent.n_sel_ctype = i32(0);
-    parent.n_ctype = i32(0);
-    parent.n_field = i32(0);
 }
 
 // --- acr_nav.Screen..Ctor

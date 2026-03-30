@@ -81,6 +81,41 @@ static int DecimalDigits(int n) {
     return d;
 }
 
+// True if field name or comment matches regex.
+static bool FieldMatchesFilter(acr_nav::FField &fld, algo_lib::Regx &regx) {
+    tempstr lower_name(name_Get(fld));
+    algo::MakeLower(lower_name);
+    bool match = algo_lib::Regx_Match(regx, lower_name);
+    if (!match) {
+        tempstr lower_comment(algo::strptr(fld.comment));
+        algo::MakeLower(lower_comment);
+        match = algo_lib::Regx_Match(regx, lower_comment);
+    }
+    return match;
+}
+
+// -----------------------------------------------------------------------------
+
+// True if ctype passes the current filter.  When is_field_target is false,
+// matches against the ctype name; when true, matches against any field's
+// name or comment via FieldMatchesFilter.
+static bool CtypeMatchesFilter(acr_nav::FCtype &ct, algo_lib::Regx &regx, bool is_field_target) {
+    bool match = false;
+    if (!is_field_target) {
+        tempstr lower_name(ct.ctype);
+        algo::MakeLower(lower_name);
+        match = algo_lib::Regx_Match(regx, lower_name);
+    } else {
+        for (int f = 0; f < acr_nav::c_field_N(ct) && !match; f++) {
+            acr_nav::FField *fld = acr_nav::c_field_Find(ct, f);
+            if (fld) {
+                match = FieldMatchesFilter(*fld, regx);
+            }
+        }
+    }
+    return match;
+}
+
 // -----------------------------------------------------------------------------
 
 static void BuildLeftItems() {
@@ -94,6 +129,8 @@ static void BuildLeftItems() {
         algo::MakeLower(pattern);
         algo_lib::Regx_ReadSql(filter_regx, pattern, false);
     }
+    acr_nav::_db.filter_regx = filter_regx;
+    bool is_field_target = (acr_nav::_db.p_cur_filtertarget != acr_nav::_db.p_default_filtertarget);
     // Collect namespaces with matching ctypes, sorted alphabetically.
     // FNs records are loaded from data/ in file order; explicit sort guarantees
     // stable display regardless of load order.
@@ -104,9 +141,7 @@ static void BuildLeftItems() {
         for (int i = 0; i < acr_nav::c_ctype_N(ns); i++) {
             acr_nav::FCtype *ct = acr_nav::c_ctype_Find(ns, i);
             if (ct && ch_N(ct->ctype) > 0) {
-                tempstr lower_name(ct->ctype);
-                algo::MakeLower(lower_name);
-                bool match = !has_filter || algo_lib::Regx_Match(filter_regx, lower_name);
+                bool match = !has_filter || CtypeMatchesFilter(*ct, filter_regx, is_field_target);
                 n_match += match;
             }
         }
@@ -138,9 +173,7 @@ static void BuildLeftItems() {
             for (int i = 0; i < acr_nav::c_ctype_N(ns); i++) {
                 acr_nav::FCtype *ct = acr_nav::c_ctype_Find(ns, i);
                 if (ct && ch_N(ct->ctype) > 0) {
-                    tempstr lower_name(ct->ctype);
-                    algo::MakeLower(lower_name);
-                    bool match = !has_filter || algo_lib::Regx_Match(filter_regx, lower_name);
+                    bool match = !has_filter || CtypeMatchesFilter(*ct, filter_regx, is_field_target);
                     if (match) {
                         acr_nav::LeftItem &item = acr_nav::left_item_Alloc();
                         item.ctype = ct->ctype;
@@ -677,10 +710,12 @@ void acr_nav::navaction_follow_ref() {
             entry.sel_row = left->sel_row;
             entry.viewmode = acr_nav::_db.p_cur_viewmode->viewmode;
             entry.ctype = sel_ct->ctype;
+            entry.filtertarget = acr_nav::_db.p_cur_filtertarget->filtertarget;
             // Reset to forward view on navigation -- new ctype starts in its natural view
             acr_nav::_db.p_cur_viewmode = acr_nav::_db.p_default_viewmode;
             // Switch to browse mode with full ctype list so target is reachable
             acr_nav::_db.filter = "";
+            acr_nav::_db.p_cur_filtertarget = acr_nav::_db.p_default_filtertarget;
             SwitchToBrowse();
             target->p_ns->collapsed = false;  // ensure target namespace is expanded
             BuildLeftItems();
@@ -723,6 +758,10 @@ void acr_nav::navaction_go_back() {
         acr_nav::FNavmode *mode = acr_nav::ind_navmode_Find(entry->navmode);
         if (mode) {
             acr_nav::_db.p_cur_mode = mode;
+        }
+        acr_nav::FFiltertarget *ft = acr_nav::ind_filtertarget_Find(entry->filtertarget);
+        if (ft) {
+            acr_nav::_db.p_cur_filtertarget = ft;
         }
         // Ensure target namespace is expanded so the ctype is findable
         acr_nav::FCtype *target_ct = acr_nav::ind_ctype_Find(entry->ctype);
@@ -798,6 +837,7 @@ void acr_nav::navaction_filter_accept() {
 void acr_nav::navaction_filter_start() {
     acr_nav::_db.p_cur_mode = acr_nav::_db.p_filter_mode;
     ch_RemoveAll(acr_nav::_db.filter);
+    acr_nav::_db.p_cur_filtertarget = acr_nav::_db.p_default_filtertarget;
     acr_nav::_db.p_cur_panel = acr_nav::_db.p_left_panel;
 }
 
@@ -806,6 +846,7 @@ void acr_nav::navaction_filter_start() {
 void acr_nav::navaction_filter_cancel() {
     SwitchToBrowse();
     ch_RemoveAll(acr_nav::_db.filter);
+    acr_nav::_db.p_cur_filtertarget = acr_nav::_db.p_default_filtertarget;
     BuildLeftItemsReset();
 }
 
@@ -846,6 +887,16 @@ void acr_nav::navaction_filter_backspace() {
         acr_nav::_db.filter.ch_n = ch_N(acr_nav::_db.filter) - 1;
         BuildLeftItemsReset();
     }
+}
+
+// -----------------------------------------------------------------------------
+
+void acr_nav::navaction_filter_cycle_target() {
+    acr_nav::FFiltertarget *next = acr_nav::ind_filtertarget_Find(acr_nav::_db.p_cur_filtertarget->next);
+    if (next) {
+        acr_nav::_db.p_cur_filtertarget = next;
+    }
+    BuildLeftItemsReset();
 }
 
 // -----------------------------------------------------------------------------
@@ -1212,6 +1263,15 @@ static void RenderContentArea(RenderCtx &ctx) {
             if (fld && fld->p_reftype->c_reftypestyle) {
                 EmitStyle(ctx.buf, *fld->p_reftype->c_reftypestyle->p_navstyle);
             }
+            bool field_match = false;
+            if (fld && !in_xref
+                && acr_nav::_db.p_cur_filtertarget != acr_nav::_db.p_default_filtertarget
+                && ch_N(acr_nav::_db.filter) > 0) {
+                field_match = FieldMatchesFilter(*fld, acr_nav::_db.filter_regx);
+            }
+            if (field_match) {
+                EmitStyle(ctx.buf, *acr_nav::_db.p_filter_match);
+            }
             ctx.buf << right_cell << "\x1b[0m\x1b[K\r\n";
         }
 }
@@ -1239,7 +1299,11 @@ static void RenderStatusBar(RenderCtx &ctx) {
     bool has_filter = ch_N(acr_nav::_db.filter) > 0;
     status << " ";
     if (in_filter || has_filter) {
-        status << "/" << acr_nav::_db.filter;
+        status << "/";
+        if (ch_N(acr_nav::_db.p_cur_filtertarget->label) > 0) {
+            status << acr_nav::_db.p_cur_filtertarget->label;
+        }
+        status << acr_nav::_db.filter;
     }
     if (!in_filter) {
         if (has_filter) {
@@ -1349,6 +1413,12 @@ static void InitPanels() {
     vrfy(acr_nav::_db.p_title_focus && acr_nav::_db.p_title_nofocus
          && acr_nav::_db.p_sel_focus && acr_nav::_db.p_sel_nofocus
          && acr_nav::_db.p_statusbar, "required navstyle records missing");
+    // Resolve well-known filtertarget pointers
+    acr_nav::_db.p_default_filtertarget = acr_nav::ind_filtertarget_Find("ctype");
+    vrfy(acr_nav::_db.p_default_filtertarget, "filtertarget 'ctype' not found");
+    acr_nav::_db.p_cur_filtertarget = acr_nav::_db.p_default_filtertarget;
+    acr_nav::_db.p_filter_match = acr_nav::ind_navstyle_Find("filter_match");
+    vrfy(acr_nav::_db.p_filter_match, "navstyle 'filter_match' not found");
     SwitchToBrowse();
     acr_nav::_db.p_left_panel->sel_row = 0;
     acr_nav::_db.p_left_panel->scroll_offset = 0;
@@ -1422,6 +1492,7 @@ static void HeadlessOutput() {
     screen.n_field = acr_nav::field_N();
     screen.viewmode = acr_nav::_db.p_cur_viewmode->viewmode;
     screen.breadcrumb = BuildBreadcrumb(sel_ct);
+    screen.filtertarget = acr_nav::_db.p_cur_filtertarget->filtertarget;
     prlog(screen);
     // Left panel state
     acr_nav::PanelState left_state;

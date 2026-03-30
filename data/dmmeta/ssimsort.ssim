@@ -1,3 +1,4 @@
+dmmeta.ssimsort  ssimfile:acr_navdb.filtertarget  sortfld:acr_navdb.Filtertarget.filtertarget  comment:""
 dmmeta.ssimsort  ssimfile:acr_navdb.keybind  sortfld:acr_navdb.Keybind.keybind  comment:""
 dmmeta.ssimsort  ssimfile:acr_navdb.navaction  sortfld:acr_navdb.Navaction.navaction  comment:""
 dmmeta.ssimsort  ssimfile:acr_navdb.navmode  sortfld:acr_navdb.Navmode.navmode  comment:""
