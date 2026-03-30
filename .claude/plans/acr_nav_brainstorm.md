@@ -30,7 +30,7 @@
 | M20 | Generated code preview viewmode | SysEval `amc '<ctype>'`; codegen viewmode; 'c' toggle; per-ctype caching |
 | M21 | Field name/comment search | filtertarget controlled vocabulary; Tab cycles search target; CtypeMatchesFilter + FieldMatchesFilter; bold highlight |
 
-**Current:** ~1350 lines C++, 24 navactions, 39 keybinds, 2 modes, 2 panels, 6 viewmodes (fields/xref/preview/codegen/help/detail), 10 navstyles, 36 reftypestyles, 2 filtertargets, ~1400 ctypes / ~5600 fields across 83 namespaces. Namespace-grouped tree view with collapse/expand, record counts for ssimfile-backed ctypes. Status bar hints in both browse and filter modes. SanitizeForDisplay for control characters in preview/detail. 23 headless tests. Headless protocol: SendKey, Screenshot, SetTermSize (input); Screen, PanelState, VisibleLeftItem, VisibleField, VisibleLine, InputError (output).
+**Current:** ~1780 lines C++, 24 navactions, 39 keybinds, 2 modes, 2 panels, 6 viewmodes (fields/xref/preview/codegen/help/detail), 10 navstyles, 36 reftypestyles, 2 filtertargets, ~1400 ctypes / ~5650 fields across 83 namespaces. Namespace-grouped tree view with collapse/expand, record counts for ssimfile-backed ctypes. Context-sensitive status bar hints (data-driven via need_* predicates and dismiss fields on navaction). SanitizeForDisplay for control characters in preview/detail. 24 headless tests. Headless protocol: SendKey, Screenshot, SetTermSize (input); Screen (with hints), PanelState, VisibleLeftItem, VisibleField, VisibleLine, InputError (output).
 
 ---
 
@@ -38,7 +38,11 @@
 
 - **I9: Help renders as black screen on startup.** The help overlay is shown but not rendered correctly — appears as a blank/black screen. It also shouldn't dismiss on Up/Down. Only on enter/search/etc. So you start navigation and still see help. Once you pick namespace — help auto-dismisses.
 - **I11: enter after filter should also navigate additionally to applying the filter.** When you enter a filter and hit enter, nothing visible changes. It is confusing. It should apply the filter AND navigate / open collapsed namespaces.
-- **I12: status bar help hints are not contextual.** E.g. you are in Fields view -> show Enter hint. Just hit enter -> show Backspace hint. Think of all possible flows and confusions.
+- ~~**I12: status bar help hints are not contextual.** E.g. you are in Fields view -> show Enter hint. Just hit enter -> show Backspace hint. Think of all possible flows and confusions.~~ (done)
+- ~~**I14: filter_cancel destroys previous filter.** Pressing `/` clears filter on entry; Escape clears again. No save/restore of previous filter text and filtertarget. User loses carefully typed filter on cancel.~~ (done — pre_filter_text/target/sel_row/scroll_offset saved in filter_start, restored in filter_cancel)
+- ~~**I15: Escape at navstack depth>0 with no overlay/filter resets sel_row.** `dismiss_or_clear` calls `filter_clear` which invokes `BuildLeftItemsReset` even when filter is already empty, destroying the current left panel position.~~ (done — guard on non-empty filter in filter_clear)
+- ~~**I16: SetTermSize accepts zero/negative values.** `term_hei:0`, `term_wid:-1` silently accepted. No crash (page_size clamped to 1) but degenerate state.~~ (done — clamp to minimum 1 via i32_Max)
+- ~~**I17: Focus panel not restored on navstack backtrack.** go_back always sets p_cur_panel to p_left_panel. User loses content panel focus after follow_ref + backtrack.~~ (done — focus_panel field on Naventry, saved in follow_ref, restored via ind_panel_Find in go_back)
 
 ---
 
@@ -58,6 +62,32 @@ Understanding a single field (its xref wiring, index config, substr decompositio
 
 ### P6. The F-prefix gap
 Generated C++ uses `acr_nav::FNaventry`. Querying `acr dmmeta.field:acr_nav.FNaventry.%` returns nothing -- the real name is `acr_nav.Naventry`. No hint. Trips up everyone who reads generated code first.
+
+---
+
+## Simplification Opportunities
+
+Code complexity audit after I12 identified these refactoring opportunities, ranked by impact/effort.
+
+#### S1. Lift overlay guards into ProcessKey dispatcher
+`need_no_overlay` exists in data but 4 navaction functions (cycle_viewmode, toggle_preview, toggle_codegen, filter_start) duplicate the check in C++. Move to ProcessKey before `step_Call`: if `need_no_overlay && is_overlay`, skip dispatch. Eliminates 4 identical guard blocks (~12 lines), prevents "forgot the guard" bugs. The data already exists — the code just doesn't trust it.
+
+#### S2. Centralize right-panel reset on viewmode change
+`sel_row=0; scroll_offset=0` is copy-pasted in 7 navaction functions. Detect viewmode change in ProcessKey (compare before/after `step_Call`) and reset automatically. Eliminates ~14 lines of duplication. Must preserve go_back's navstack restore (existing depth check handles this).
+
+#### S3. Unify toggle_preview and toggle_codegen
+Nearly identical functions — check overlay, check current viewmode, toggle in/out, reset right panel. Add `toggle_target` field on navaction pointing to the target viewmode. One generic `navaction_toggle_viewmode` replaces 2 functions (~20 lines). Preview's ssimfile check becomes `need_ssimfile` on navaction or viewmode.
+
+#### S4. Decompose ProcessKey post-action block
+3 independent policies tangled in one 60-line block: startup help dismiss, overlay pop on ctype change, right panel reset. Extract into named helpers. Prerequisite for S1/S2 — makes each policy independently readable and testable.
+
+#### S5. Eliminate IsXrefMode via field_source on Viewmode
+5 call sites dispatch on `IsXrefMode()` identity check to switch between `c_field` (forward) and `c_field_arg` (reverse xrefs). Add `field_source` property to viewmode record. Makes forward/xref distinction data-driven. Removes ~20 lines + 3 identity-check functions. Adding new field-based viewmodes (e.g., "inherited fields") becomes a record, not code.
+
+#### S6. Extract SaveNavstate/RestoreNavstate helpers
+9 fields manually copied between FDb and Naventry in follow_ref/go_back. Helpers centralize the copy so adding a 10th field requires editing 1 place per direction. Insurance against future bugs, not urgent.
+
+**Recommended grouping:** S1+S2+S4 together (shared implementation site in ProcessKey), then S3, then S5. S6 opportunistically.
 
 ---
 
@@ -169,4 +199,4 @@ Full pool scan has a practical obstacle: Tpool loses iteration capability (free-
 - **M19 (record counts)** — Done. FSsimfile.n_record counted at startup, displayed as `(N)` in left panel. DecimalDigits helper also fixed latent 4-digit cap in namespace header width.
 - **M20 (generated code)** — Done. SysEval to `amc '<ctype>'`, codegen viewmode with `has_fields:N`, `c` toggle key, per-ctype caching via `p_codegen_ctype`.
 - **M21 (field search)** — Done. `acr_navdb.filtertarget` table (2 records), Tab cycles in filter mode, `CtypeMatchesFilter`/`FieldMatchesFilter` helpers, bold highlighting, cached regex, navstack save/restore. 4 new tests.
-**Future factoring:** IsHelpMode (4 sites) and IsXrefMode (5 sites) are identity checks that should become data on FViewmode. At 2 modes per axis, the branching is trivial. Refactor when a 3rd mode is added to either axis. Documented in code at their definition sites. RightPanelItemCount has per-viewmode lazy-load checks for preview and codegen (2 instances); at 3, refactor to an ensure-content hook on FViewmode.
+**Future factoring:** IsHelpMode (4 sites) and IsXrefMode (5 sites) are identity checks that should become data on FViewmode — see S5 above. `is_overlay` on viewmode now captures the help/detail distinction for hints and guards; the remaining IsHelpMode/IsDetailMode uses are toggle guards in show_help/show_detail. RightPanelItemCount has per-viewmode lazy-load checks for preview and codegen (2 instances); at 3, refactor to an ensure-content hook on FViewmode.
