@@ -30,8 +30,6 @@
 | M20 | Generated code preview viewmode | SysEval `amc '<ctype>'`; codegen viewmode; 'c' toggle; per-ctype caching |
 | M21 | Field name/comment search | filtertarget controlled vocabulary; Tab cycles search target; CtypeMatchesFilter + FieldMatchesFilter; bold highlight |
 
-**Current:** ~1777 lines C++, 25 navactions, 41 keybinds, 2 modes, 2 panels, 6 viewmodes (fields/xref/preview/codegen/help/detail), 10 navstyles, 36 reftypestyles, 2 filtertargets, ~1400 ctypes / ~5650 fields across 83 namespaces. Namespace-grouped tree view with collapse/expand, record counts for ssimfile-backed ctypes. Context-sensitive status bar hints (data-driven via need_* predicates and dismiss fields on navaction). Data-driven overlay guard dispatch (need_no_overlay checked centrally in ProcessKey). Centralized right-panel reset on viewmode/ctype change. Unified ToggleViewmode with need_ssimfile on viewmode. SanitizeForDisplay for control characters in preview/detail. 24 headless tests. Headless protocol: SendKey, Screenshot, SetTermSize (input); Screen (with hints), PanelState, VisibleLeftItem, VisibleField, VisibleLine, InputError (output).
-
 ---
 
 ## Known Issues
