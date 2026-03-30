@@ -400,6 +400,29 @@ static void EnsurePreviewLoaded(acr_nav::FCtype *sel_ct) {
     }
 }
 
+// Load amc-generated C++ struct definition for a ctype into the codegen viewmode.
+// Ctype names come from trusted ssimfile data loaded at startup.
+static void LoadCodegen(acr_nav::FCtype &ctype) {
+    acr_nav::FViewmode &vm = *acr_nav::_db.p_codegen_viewmode;
+    acr_nav::line_RemoveAll(vm);
+    acr_nav::_db.p_codegen_ctype = &ctype;
+    tempstr cmd;
+    cmd << "amc '" << ctype.ctype << "'";
+    vm.header = cmd;
+    tempstr output = SysEval(cmd, FailokQ(true), 64*1024);
+    ind_beg(Line_curs, line, output) {
+        if (!StartsWithQ(line, "report.")) {
+            acr_nav::line_Alloc(vm) = line;
+        }
+    } ind_end;
+}
+
+static void EnsureCodegenLoaded(acr_nav::FCtype *sel_ct) {
+    if (sel_ct && acr_nav::_db.p_codegen_ctype != sel_ct) {
+        LoadCodegen(*sel_ct);
+    }
+}
+
 // Format a single ssim record as a vertical card: section header + one key:value per line.
 // Appends formatted lines to vm.line_elems. Skips primary key attr when its value
 // matches field_name (already shown in the detail header bar).
@@ -503,6 +526,10 @@ static int RightPanelItemCount(acr_nav::FCtype *sel_ct) {
     if (!acr_nav::_db.p_cur_viewmode->has_fields) {
         if (acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_preview_viewmode && sel_ct) {
             EnsurePreviewLoaded(sel_ct);
+        }
+        // Future: an ensure-content hook on FViewmode would eliminate per-viewmode checks here
+        if (acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_codegen_viewmode && sel_ct) {
+            EnsureCodegenLoaded(sel_ct);
         }
         ret = RightPanelLineCount();
     } else if (sel_ct) {
@@ -742,6 +769,19 @@ void acr_nav::navaction_toggle_preview() {
         bool in_preview = (acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_preview_viewmode);
         bool go_preview = !in_preview && sel_ct && FindSsimfile(*sel_ct);
         acr_nav::_db.p_cur_viewmode = go_preview ? acr_nav::_db.p_preview_viewmode : acr_nav::_db.p_default_viewmode;
+        acr_nav::_db.p_right_panel->sel_row = 0;
+        acr_nav::_db.p_right_panel->scroll_offset = 0;
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+void acr_nav::navaction_toggle_codegen() {
+    if (!IsHelpMode() && !IsDetailMode()) {
+        acr_nav::FCtype *sel_ct = SelectedCtype(*acr_nav::_db.p_left_panel);
+        bool in_codegen = (acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_codegen_viewmode);
+        bool go_codegen = !in_codegen && sel_ct;
+        acr_nav::_db.p_cur_viewmode = go_codegen ? acr_nav::_db.p_codegen_viewmode : acr_nav::_db.p_default_viewmode;
         acr_nav::_db.p_right_panel->sel_row = 0;
         acr_nav::_db.p_right_panel->scroll_offset = 0;
     }
@@ -1282,11 +1322,13 @@ static void InitPanels() {
     acr_nav::_db.p_xref_viewmode = acr_nav::ind_viewmode_Find("xref");
     acr_nav::_db.p_help_viewmode = acr_nav::ind_viewmode_Find("help");
     acr_nav::_db.p_detail_viewmode = acr_nav::ind_viewmode_Find("detail");
+    acr_nav::_db.p_codegen_viewmode = acr_nav::ind_viewmode_Find("codegen");
     vrfy(acr_nav::_db.p_default_viewmode, "viewmode 'fields' not found");
     vrfy(acr_nav::_db.p_preview_viewmode, "viewmode 'preview' not found");
     vrfy(acr_nav::_db.p_xref_viewmode, "viewmode 'xref' not found");
     vrfy(acr_nav::_db.p_help_viewmode, "viewmode 'help' not found");
     vrfy(acr_nav::_db.p_detail_viewmode, "viewmode 'detail' not found");
+    vrfy(acr_nav::_db.p_codegen_viewmode, "viewmode 'codegen' not found");
     // Resolve navaction -> helpgroup pointers (Ptr, not Upptr: 6 navactions have empty helpgroup)
     ind_beg(acr_nav::_db_navaction_curs, na, acr_nav::_db) {
         if (ch_N(na.helpgroup) > 0) {

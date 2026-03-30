@@ -2147,8 +2147,9 @@ static void acr_nav::navaction_LoadStatic() {
         ,{ "acr_navdb.navaction  navaction:show_help  hint:help  helpgroup:meta  sort_order:10  comment:\"Toggle help panel\"", acr_nav::navaction_show_help }
         ,{ "acr_navdb.navaction  navaction:switch_panel_left  hint:\"\"  helpgroup:navigation  sort_order:12  comment:\"Move focus to panel on the left\"", acr_nav::navaction_switch_panel_left }
         ,{ "acr_navdb.navaction  navaction:switch_panel_right  hint:\"\"  helpgroup:navigation  sort_order:13  comment:\"Move focus to panel on the right\"", acr_nav::navaction_switch_panel_right }
+        ,{ "acr_navdb.navaction  navaction:toggle_codegen  hint:codegen  helpgroup:view  sort_order:13  comment:\"Toggle generated code view\"", acr_nav::navaction_toggle_codegen }
         ,{ "acr_navdb.navaction  navaction:toggle_preview  hint:preview  helpgroup:view  sort_order:11  comment:\"Toggle ssimfile content preview\"", acr_nav::navaction_toggle_preview }
-        ,{ "acr_navdb.navaction  navaction:cycle_viewmode  hint:view  helpgroup:view  sort_order:10  comment:\"Cycle right panel: fields, xrefs, preview\"", acr_nav::navaction_cycle_viewmode }
+        ,{ "acr_navdb.navaction  navaction:cycle_viewmode  hint:view  helpgroup:view  sort_order:10  comment:\"Cycle right panel: fields, xrefs, preview, codegen\"", acr_nav::navaction_cycle_viewmode }
         ,{NULL, NULL}
     };
     (void)data;
@@ -4736,6 +4737,8 @@ void acr_nav::FDb_Init() {
     _db.left_item_n     	= 0; // (acr_nav.FDb.left_item)
     _db.left_item_max   	= 0; // (acr_nav.FDb.left_item)
     _db.n_visible_ctype = i32(0);
+    _db.p_codegen_viewmode = NULL;
+    _db.p_codegen_ctype = NULL;
 
     acr_nav::InitReflection();
     navaction_LoadStatic(); // gen:ns_gstatic  gstatic:acr_nav.FDb.navaction  load acr_nav.FNavaction records

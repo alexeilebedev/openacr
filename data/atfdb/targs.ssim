@@ -171,6 +171,7 @@ atfdb.targs  comptest:acr_in.Reverse  args:"-r dev.targdep"
 atfdb.targs  comptest:acr_in.Simple  args:acr_in
 atfdb.targs  comptest:acr_in.Tree  args:"acr_in -t"
 atfdb.targs  comptest:acr_nav.Breadcrumb  args:-headless
+atfdb.targs  comptest:acr_nav.Codegen  args:-headless
 atfdb.targs  comptest:acr_nav.Collapse  args:-headless
 atfdb.targs  comptest:acr_nav.Detail  args:-headless
 atfdb.targs  comptest:acr_nav.Filter  args:-headless

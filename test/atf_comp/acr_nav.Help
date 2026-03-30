@@ -1,4 +1,4 @@
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1401  n_ctype:1402  n_field:5616  viewmode:help  breadcrumb:""
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1401  n_ctype:1402  n_field:5618  viewmode:help  breadcrumb:""
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:83  sel_value:""
 acr_nav.VisibleLeftItem  row:0  value:""  kind:ns  collapsed:Y  n_match:44  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:abt  kind:ns  collapsed:Y  n_match:19  n_record:0
@@ -83,7 +83,7 @@ acr_nav.VisibleLeftItem  row:79  value:strconv  kind:ns  collapsed:Y  n_match:1 
 acr_nav.VisibleLeftItem  row:80  value:sv2ssim  kind:ns  collapsed:Y  n_match:4  n_record:0
 acr_nav.VisibleLeftItem  row:81  value:ws  kind:ns  collapsed:Y  n_match:16  n_record:0
 acr_nav.VisibleLeftItem  row:82  value:wsdb  kind:ns  collapsed:Y  n_match:1  n_record:0
-acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:22  sel_value:"Up                k         Move selection up"
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:23  sel_value:"Up                k         Move selection up"
 acr_nav.VisibleLine  row:0  value:"Up                k         Move selection up"
 acr_nav.VisibleLine  row:1  value:"Down              j         Move selection down"
 acr_nav.VisibleLine  row:2  value:"PgUp              b         Page up"
@@ -96,18 +96,19 @@ acr_nav.VisibleLine  row:8  value:"Backspace                   Return to previou
 acr_nav.VisibleLine  row:9  value:"Left              h         Move focus to panel on the left"
 acr_nav.VisibleLine  row:10  value:"Right                       Move focus to panel on the right"
 acr_nav.VisibleLine  row:11  value:""
-acr_nav.VisibleLine  row:12  value:"Tab               r         Cycle right panel: fields, xrefs, preview"
+acr_nav.VisibleLine  row:12  value:"Tab               r         Cycle right panel: fields, xrefs, preview, codegen"
 acr_nav.VisibleLine  row:13  value:"                  p         Toggle ssimfile content preview"
 acr_nav.VisibleLine  row:14  value:"                  d         Toggle field metadata detail"
-acr_nav.VisibleLine  row:15  value:""
-acr_nav.VisibleLine  row:16  value:"/                           Enter filter input mode"
-acr_nav.VisibleLine  row:17  value:"                            Clear filter text"
-acr_nav.VisibleLine  row:18  value:"Escape                      Dismiss overlay or clear filter"
-acr_nav.VisibleLine  row:19  value:""
-acr_nav.VisibleLine  row:20  value:"?                           Toggle help panel"
-acr_nav.VisibleLine  row:21  value:"                  q         Exit acr_nav"
+acr_nav.VisibleLine  row:15  value:"                  c         Toggle generated code view"
+acr_nav.VisibleLine  row:16  value:""
+acr_nav.VisibleLine  row:17  value:"/                           Enter filter input mode"
+acr_nav.VisibleLine  row:18  value:"                            Clear filter text"
+acr_nav.VisibleLine  row:19  value:"Escape                      Dismiss overlay or clear filter"
+acr_nav.VisibleLine  row:20  value:""
+acr_nav.VisibleLine  row:21  value:"?                           Toggle help panel"
+acr_nav.VisibleLine  row:22  value:"                  q         Exit acr_nav"
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1401  n_ctype:1402  n_field:5616  viewmode:fields  breadcrumb:""
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1401  n_ctype:1402  n_field:5618  viewmode:fields  breadcrumb:""
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:83  sel_value:abt
 acr_nav.VisibleLeftItem  row:0  value:""  kind:ns  collapsed:Y  n_match:44  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:abt  kind:ns  collapsed:Y  n_match:19  n_record:0
@@ -194,7 +195,7 @@ acr_nav.VisibleLeftItem  row:81  value:ws  kind:ns  collapsed:Y  n_match:16  n_r
 acr_nav.VisibleLeftItem  row:82  value:wsdb  kind:ns  collapsed:Y  n_match:1  n_record:0
 acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1401  n_ctype:1402  n_field:5616  viewmode:help  breadcrumb:""
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1401  n_ctype:1402  n_field:5618  viewmode:help  breadcrumb:""
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:83  sel_value:abt
 acr_nav.VisibleLeftItem  row:0  value:""  kind:ns  collapsed:Y  n_match:44  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:abt  kind:ns  collapsed:Y  n_match:19  n_record:0
@@ -279,7 +280,7 @@ acr_nav.VisibleLeftItem  row:79  value:strconv  kind:ns  collapsed:Y  n_match:1 
 acr_nav.VisibleLeftItem  row:80  value:sv2ssim  kind:ns  collapsed:Y  n_match:4  n_record:0
 acr_nav.VisibleLeftItem  row:81  value:ws  kind:ns  collapsed:Y  n_match:16  n_record:0
 acr_nav.VisibleLeftItem  row:82  value:wsdb  kind:ns  collapsed:Y  n_match:1  n_record:0
-acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:22  sel_value:"Up                k         Move selection up"
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:23  sel_value:"Up                k         Move selection up"
 acr_nav.VisibleLine  row:0  value:"Up                k         Move selection up"
 acr_nav.VisibleLine  row:1  value:"Down              j         Move selection down"
 acr_nav.VisibleLine  row:2  value:"PgUp              b         Page up"
@@ -292,18 +293,19 @@ acr_nav.VisibleLine  row:8  value:"Backspace                   Return to previou
 acr_nav.VisibleLine  row:9  value:"Left              h         Move focus to panel on the left"
 acr_nav.VisibleLine  row:10  value:"Right                       Move focus to panel on the right"
 acr_nav.VisibleLine  row:11  value:""
-acr_nav.VisibleLine  row:12  value:"Tab               r         Cycle right panel: fields, xrefs, preview"
+acr_nav.VisibleLine  row:12  value:"Tab               r         Cycle right panel: fields, xrefs, preview, codegen"
 acr_nav.VisibleLine  row:13  value:"                  p         Toggle ssimfile content preview"
 acr_nav.VisibleLine  row:14  value:"                  d         Toggle field metadata detail"
-acr_nav.VisibleLine  row:15  value:""
-acr_nav.VisibleLine  row:16  value:"/                           Enter filter input mode"
-acr_nav.VisibleLine  row:17  value:"                            Clear filter text"
-acr_nav.VisibleLine  row:18  value:"Escape                      Dismiss overlay or clear filter"
-acr_nav.VisibleLine  row:19  value:""
-acr_nav.VisibleLine  row:20  value:"?                           Toggle help panel"
-acr_nav.VisibleLine  row:21  value:"                  q         Exit acr_nav"
+acr_nav.VisibleLine  row:15  value:"                  c         Toggle generated code view"
+acr_nav.VisibleLine  row:16  value:""
+acr_nav.VisibleLine  row:17  value:"/                           Enter filter input mode"
+acr_nav.VisibleLine  row:18  value:"                            Clear filter text"
+acr_nav.VisibleLine  row:19  value:"Escape                      Dismiss overlay or clear filter"
+acr_nav.VisibleLine  row:20  value:""
+acr_nav.VisibleLine  row:21  value:"?                           Toggle help panel"
+acr_nav.VisibleLine  row:22  value:"                  q         Exit acr_nav"
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1401  n_ctype:1402  n_field:5616  viewmode:fields  breadcrumb:""
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1401  n_ctype:1402  n_field:5618  viewmode:fields  breadcrumb:""
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:83  sel_value:abt
 acr_nav.VisibleLeftItem  row:0  value:""  kind:ns  collapsed:Y  n_match:44  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:abt  kind:ns  collapsed:Y  n_match:19  n_record:0
@@ -390,7 +392,7 @@ acr_nav.VisibleLeftItem  row:81  value:ws  kind:ns  collapsed:Y  n_match:16  n_r
 acr_nav.VisibleLeftItem  row:82  value:wsdb  kind:ns  collapsed:Y  n_match:1  n_record:0
 acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1401  n_ctype:1402  n_field:5616  viewmode:fields  breadcrumb:""
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1401  n_ctype:1402  n_field:5618  viewmode:fields  breadcrumb:""
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:83  sel_value:abt
 acr_nav.VisibleLeftItem  row:0  value:""  kind:ns  collapsed:Y  n_match:44  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:abt  kind:ns  collapsed:Y  n_match:19  n_record:0

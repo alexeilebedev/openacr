@@ -157,6 +157,7 @@ namespace acr_nav { // gen:ns_print_struct
 // global access: ctype (Lary, by rowid)
 // global access: ind_ctype (Thash, hash field ctype)
 // global access: p_preview_ctype (Ptr)
+// global access: p_codegen_ctype (Ptr)
 // access: acr_nav.FField.p_ctype (Upptr)
 // access: acr_nav.FField.p_arg (Upptr)
 // access: acr_nav.FNs.c_ctype (Ptrary)
@@ -446,6 +447,8 @@ struct FDb { // acr_nav.FDb
     u32                        left_item_n;                      // number of elements in array
     u32                        left_item_max;                    // max. capacity of array before realloc
     i32                        n_visible_ctype;                  //   0  Count of visible ctypes (excludes ns headers)
+    acr_nav::FViewmode*        p_codegen_viewmode;               // Codegen viewmode pointer. optional pointer
+    acr_nav::FCtype*           p_codegen_ctype;                  // Ctype whose generated code is cached. optional pointer
     acr_nav::trace             trace;                            //
 };
 
@@ -2485,6 +2488,7 @@ void                 FSsimfile_Uninit(acr_nav::FSsimfile& ssimfile) __attribute_
 // global access: p_detail_viewmode (Ptr)
 // global access: p_preview_viewmode (Ptr)
 // global access: p_xref_viewmode (Ptr)
+// global access: p_codegen_viewmode (Ptr)
 struct FViewmode { // acr_nav.FViewmode
     acr_nav::FViewmode*   ind_viewmode_next;      // hash next
     u32                   ind_viewmode_hashval;   // hash value
@@ -3170,6 +3174,10 @@ void                 navaction_switch_panel_left();
 // func:acr_nav...navaction_switch_panel_right
 // this function is 'extrn' and implemented by user
 void                 navaction_switch_panel_right();
+// User-implemented function from gstatic:acr_nav.FDb.navaction
+// func:acr_nav...navaction_toggle_codegen
+// this function is 'extrn' and implemented by user
+void                 navaction_toggle_codegen();
 // User-implemented function from gstatic:acr_nav.FDb.navaction
 // func:acr_nav...navaction_toggle_preview
 // this function is 'extrn' and implemented by user

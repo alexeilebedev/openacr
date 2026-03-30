@@ -1,5 +1,6 @@
+acr_navdb.viewmode  viewmode:codegen  title:Generated  next:fields  empty_msg:"no generated code"  has_fields:N  comment:"amc-generated C++ struct for selected ctype"
 acr_navdb.viewmode  viewmode:detail   title:Detail   next:fields   empty_msg:"press d on a field"  has_fields:N  comment:"Per-field metadata from across dmmeta tables"
 acr_navdb.viewmode  viewmode:fields   title:Fields   next:xref     empty_msg:"no fields"        has_fields:Y  comment:"Forward fields of selected ctype"
 acr_navdb.viewmode  viewmode:help     title:Help     next:fields   empty_msg:""                  has_fields:N  comment:"Keybinding help"
-acr_navdb.viewmode  viewmode:preview  title:Preview  next:fields   empty_msg:"no ssimfile"       has_fields:N  comment:"Ssimfile record content preview"
+acr_navdb.viewmode  viewmode:preview  title:Preview  next:codegen  empty_msg:"no ssimfile"       has_fields:N  comment:"Ssimfile record content preview"
 acr_navdb.viewmode  viewmode:xref     title:Xrefs    next:preview  empty_msg:"no xrefs"          has_fields:Y  comment:"Reverse cross-references to selected ctype"

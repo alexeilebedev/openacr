@@ -16,6 +16,7 @@ acr_navdb.keybind  keybind:browse.Space  navaction:page_down  hint_order:0  comm
 acr_navdb.keybind  keybind:browse.Tab  navaction:cycle_viewmode  hint_order:0  comment:""
 acr_navdb.keybind  keybind:browse.Up  navaction:move_up  hint_order:0  comment:""
 acr_navdb.keybind  keybind:browse.b  navaction:page_up  hint_order:0  comment:""
+acr_navdb.keybind  keybind:browse.c  navaction:toggle_codegen  hint_order:0  comment:""
 acr_navdb.keybind  keybind:browse.g  navaction:go_top  hint_order:0  comment:""
 acr_navdb.keybind  keybind:browse.h  navaction:switch_panel_left  hint_order:0  comment:""
 acr_navdb.keybind  keybind:browse.j  navaction:move_down  hint_order:0  comment:""

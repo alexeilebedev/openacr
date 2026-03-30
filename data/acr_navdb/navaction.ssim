@@ -18,5 +18,6 @@ acr_navdb.navaction  navaction:show_detail  hint:detail  helpgroup:view  sort_or
 acr_navdb.navaction  navaction:show_help  hint:help  helpgroup:meta  sort_order:10  comment:"Toggle help panel"
 acr_navdb.navaction  navaction:switch_panel_left  hint:""  helpgroup:navigation  sort_order:12  comment:"Move focus to panel on the left"
 acr_navdb.navaction  navaction:switch_panel_right  hint:""  helpgroup:navigation  sort_order:13  comment:"Move focus to panel on the right"
+acr_navdb.navaction  navaction:toggle_codegen  hint:codegen  helpgroup:view  sort_order:13  comment:"Toggle generated code view"
 acr_navdb.navaction  navaction:toggle_preview  hint:preview  helpgroup:view  sort_order:11  comment:"Toggle ssimfile content preview"
-acr_navdb.navaction  navaction:cycle_viewmode  hint:view  helpgroup:view  sort_order:10  comment:"Cycle right panel: fields, xrefs, preview"
+acr_navdb.navaction  navaction:cycle_viewmode  hint:view  helpgroup:view  sort_order:10  comment:"Cycle right panel: fields, xrefs, preview, codegen"
