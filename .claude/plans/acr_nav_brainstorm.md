@@ -46,6 +46,19 @@
 
 ---
 
+## Headless Protocol Gaps
+
+Found via exploratory testing (2026-03-30). These are observability/control limitations, not bugs.
+
+- **G1: Visible\* records not clipped to terminal viewport.** (medium) SetTermSize affects pagination but all VisibleLeftItem/VisibleField/VisibleLine records are emitted regardless of term_hei. Consumers must compute the visible window from scroll_offset + term_hei. Fix: add optional viewport clipping, or document that Visible\* means "in the data set" not "on screen."
+- **G2: term_wid has no observable effect in headless output.** (low) Width affects only the TUI rendering layer (truncation, layout split), not reflected in protocol output.
+- **G3: No field-level match indicator in VisibleField during field filter.** (low) When filtertarget:field is active, VisibleField records don't indicate which fields matched. TUI highlights them, headless consumers can't tell.
+- **G4: No feedback when toggle operations are silently no-op.** (low) `p` on ctype with no ssimfile, `d` when content is empty — silently ignored with no indication.
+- **G5: Help overlay shows blank key name for Ctrl-U and filter Tab.** (low, cosmetic) Help VisibleLine entries for these keys have blank key name columns.
+- **G6: Field filter "%" matches 1307 ctypes instead of expected 1309.** (low) Minor count discrepancy — 2 ctypes with fields missed by the glob. Possibly ctypes where all field names/comments are empty strings.
+
+---
+
 ## Pain Points
 
 ### P2. Opaque reftype vocabulary (partially addressed by M17)
