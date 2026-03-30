@@ -34,13 +34,7 @@
 
 ## Known Issues
 
-- **I9: Help renders as black screen on startup.** The help overlay is shown but not rendered correctly — appears as a blank/black screen. It also shouldn't dismiss on Up/Down. Only on enter/search/etc. So you start navigation and still see help. Once you pick namespace — help auto-dismisses.
-- **I11: enter after filter should also navigate additionally to applying the filter.** When you enter a filter and hit enter, nothing visible changes. It is confusing. It should apply the filter AND navigate / open collapsed namespaces.
-- ~~**I12: status bar help hints are not contextual.** E.g. you are in Fields view -> show Enter hint. Just hit enter -> show Backspace hint. Think of all possible flows and confusions.~~ (done)
-- ~~**I14: filter_cancel destroys previous filter.** Pressing `/` clears filter on entry; Escape clears again. No save/restore of previous filter text and filtertarget. User loses carefully typed filter on cancel.~~ (done — pre_filter_text/target/sel_row/scroll_offset saved in filter_start, restored in filter_cancel)
-- ~~**I15: Escape at navstack depth>0 with no overlay/filter resets sel_row.** `dismiss_or_clear` calls `filter_clear` which invokes `BuildLeftItemsReset` even when filter is already empty, destroying the current left panel position.~~ (done — guard on non-empty filter in filter_clear)
-- ~~**I16: SetTermSize accepts zero/negative values.** `term_hei:0`, `term_wid:-1` silently accepted. No crash (page_size clamped to 1) but degenerate state.~~ (done — clamp to minimum 1 via i32_Max)
-- ~~**I17: Focus panel not restored on navstack backtrack.** go_back always sets p_cur_panel to p_left_panel. User loses content panel focus after follow_ref + backtrack.~~ (done — focus_panel field on Naventry, saved in follow_ref, restored via ind_panel_Find in go_back)
+(none)
 
 ---
 
@@ -49,11 +43,8 @@
 Found via exploratory testing (2026-03-30). These are observability/control limitations, not bugs.
 
 - **G1: Visible\* records not clipped to terminal viewport.** (medium) SetTermSize affects pagination but all VisibleLeftItem/VisibleField/VisibleLine records are emitted regardless of term_hei. Consumers must compute the visible window from scroll_offset + term_hei. Fix: add optional viewport clipping, or document that Visible\* means "in the data set" not "on screen."
-- **G2: term_wid has no observable effect in headless output.** (low) Width affects only the TUI rendering layer (truncation, layout split), not reflected in protocol output.
 - **G3: No field-level match indicator in VisibleField during field filter.** (low) When filtertarget:field is active, VisibleField records don't indicate which fields matched. TUI highlights them, headless consumers can't tell.
-- **G4: No feedback when toggle operations are silently no-op.** (low) `p` on ctype with no ssimfile, `d` when content is empty — silently ignored with no indication.
 - **G5: Help overlay shows blank key name for Ctrl-U and filter Tab.** (low, cosmetic) Help VisibleLine entries for these keys have blank key name columns.
-- **G6: Field filter "%" matches 1307 ctypes instead of expected 1309.** (low) Minor count discrepancy — 2 ctypes with fields missed by the glob. Possibly ctypes where all field names/comments are empty strings.
 
 ---
 
@@ -65,9 +56,6 @@ Lary, Thash, Ptrary, Upptr, Tpool, Tary, Llist -- the reftype names are terse an
 ### P3. Tool-switching tax
 Typical schema exploration requires five context switches: `acr` to find a type, `amc_vis` for access paths, `acr -t` for xref tree, `src_func` for hand-written code, then an editor. One question ("how does this type work?") scattered across five tools.
 
-### P4. Field metadata hidden
-Understanding a single field (its xref wiring, index config, substr decomposition) requires running `acr dmmeta.thash:...`, `acr dmmeta.substr:...`, etc. in separate terminals. The orthogonal factorization that makes the schema elegant also means a field's full story is spread across 5+ tables.
-
 ### P5. Silent failures across tools
 `acr dmmeta.ctype:nonexistent.Foo` returns empty output, exit 0. Same for `amc_vis nonexistent.Foo`. No "did you mean?", no error. Can't distinguish typo from empty result.
 
@@ -78,27 +66,11 @@ Generated C++ uses `acr_nav::FNaventry`. Querying `acr dmmeta.field:acr_nav.FNav
 
 ## Simplification Opportunities
 
-Code complexity audit after I12 identified these refactoring opportunities, ranked by impact/effort.
-
-#### ~~S1. Lift overlay guards into ProcessKey dispatcher~~ (done)
-`need_no_overlay` checked centrally in ProcessKey before `step_Call`. 4 per-function guards removed. Data-code mismatch fixed (toggle_preview/toggle_codegen now `need_no_overlay:Y`).
-
-#### ~~S2. Centralize right-panel reset on viewmode change~~ (done)
-ProcessKey detects viewmode/ctype change (before/after `step_Call`) and resets right panel. 7 per-function reset pairs removed. go_back navstack restore preserved via forward-nav depth check.
-
-#### ~~S3. Unify toggle_preview and toggle_codegen~~ (done)
-Shared `ToggleViewmode(FViewmode*)` with `need_ssimfile` on viewmode. 1-line wrappers pass existing FDb viewmode pointers. Adding a toggle viewmode = 1 navaction + 1 keybind + 1 wrapper.
-
-#### ~~S4. Decompose ProcessKey post-action block~~ (done)
-Extracted `DismissStartupHelp` and `PopOverlayOnCtypeChange` helpers. ProcessKey is now a flat sequence of named policies.
-
 #### S5. Eliminate IsXrefMode via field_source on Viewmode
 5 call sites dispatch on `IsXrefMode()` identity check to switch between `c_field` (forward) and `c_field_arg` (reverse xrefs). Add `field_source` property to viewmode record. Makes forward/xref distinction data-driven. Removes ~20 lines + 3 identity-check functions. Adding new field-based viewmodes (e.g., "inherited fields") becomes a record, not code.
 
 #### S6. Extract SaveNavstate/RestoreNavstate helpers
-9 fields manually copied between FDb and Naventry in follow_ref/go_back. Helpers centralize the copy so adding a 10th field requires editing 1 place per direction. Insurance against future bugs, not urgent.
-
-**Remaining:** S5 (IsXrefMode → field_source), S6 (SaveNavstate/RestoreNavstate helpers). Both low urgency.
+13 fields manually copied between FDb and Naventry in follow_ref/go_back (was 9; grew with right_sel_row, right_scroll_offset, focus_panel). Helpers centralize the copy so adding a 14th field requires editing 1 place per direction. Insurance against future bugs, not urgent.
 
 ---
 
@@ -189,25 +161,3 @@ amc already generates `Print` for every ctype and knows every pool in FDb. A new
 Raw pool dumps are the truth -- curated views are opinions that drift. But raw dumps of a real program (thousands of records, runtime artifacts like file descriptors and computed caches) are a firehose. ACR answer: generate the raw dump (free from schema), let programs also define curated views as additional ctypes. Both, not either/or. The curated views are just more records -- they pass the factorization test.
 
 Full pool scan has a practical obstacle: Tpool loses iteration capability (free-list allocator, no scan without a separate access path). The right approach: **dump everything reachable**, not everything allocated. Follow access paths from `_db`, not scan pools. Output as untyped tuples with regex filtering. This is essentially a built-in `acr` for runtime state -- a pretty printer for the entire program. Sidesteps the Tpool problem elegantly because you traverse what's reachable, not what's allocated. Consider forking this for `acr_vis`.
-
----
-
-## Recommended Sequence
-
-| Milestone | Idea | Rationale |
-|-----------|------|-----------|
-| ~~M17~~ | ~~1A: Inline reftype glossary~~ | ~~Done~~ |
-| ~~M18~~ | ~~1C: Namespace grouping~~ | ~~Done~~ |
-| ~~M19~~ | ~~1E: Record count display~~ | ~~Done~~ |
-| ~~M20~~ | ~~1D: Generated code preview~~ | ~~Done~~ |
-| ~~M21~~ | ~~1F: Field name/comment search~~ | ~~Done~~ |
-| Later | 2A-2E, Tier 3 | As interest dictates |
-
-**Sequencing rationale:**
-
-- **M17 (reftype glossary)** — Done. Added `dmmeta.Reftype.comment`, surfaced in detail view.
-- **M18 (namespace grouping)** — Done. LeftItem Tary, FNs.c_ctype Ptrary, collapse/expand, extern label, stable width.
-- **M19 (record counts)** — Done. FSsimfile.n_record counted at startup, displayed as `(N)` in left panel. DecimalDigits helper also fixed latent 4-digit cap in namespace header width.
-- **M20 (generated code)** — Done. SysEval to `amc '<ctype>'`, codegen viewmode with `has_fields:N`, `c` toggle key, per-ctype caching via `p_codegen_ctype`.
-- **M21 (field search)** — Done. `acr_navdb.filtertarget` table (2 records), Tab cycles in filter mode, `CtypeMatchesFilter`/`FieldMatchesFilter` helpers, bold highlighting, cached regex, navstack save/restore. 4 new tests.
-**Future factoring:** IsXrefMode (5 sites) is the biggest remaining identity-check pattern — see S5. IsHelpMode/IsDetailMode remain only as toggle guards in show_help/show_detail (overlay dispatch via need_no_overlay + dismiss_viewmode handles all other uses). RightPanelItemCount has per-viewmode lazy-load checks for preview and codegen (2 instances); at 3, refactor to an ensure-content hook on FViewmode.
