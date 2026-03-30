@@ -26,14 +26,15 @@
 | M18 | Namespace grouping / tree view | Orthogonal axes: left-panel layout independent of right-panel content |
 | M18.1 | Fix 2 headless bugs, add VisibleLine/SetTermSize, rename tests | Headless protocol maturity; data-driven overlay dismiss |
 | M18.2 | Add VisibleLeftItem + InputError, close protocol gaps | Left panel readable by agents; explicit error feedback |
+| M19 | Record count display in left panel | Ssimfile line counts at startup; DecimalDigits helper; RecordCount test |
 
-**Current:** ~1200 lines C++, 22 navactions, 38 keybinds, 2 modes, 2 panels, 5 viewmodes (fields/xref/preview/help/detail), 9 navstyles, 36 reftypestyles, ~1400 ctypes / ~5600 fields across 83 namespaces. Namespace-grouped tree view with collapse/expand. 16 headless tests. Headless protocol: SendKey, Screenshot, SetTermSize (input); Screen, PanelState, VisibleLeftItem, VisibleField, VisibleLine, InputError (output).
+**Current:** ~1250 lines C++, 22 navactions, 38 keybinds, 2 modes, 2 panels, 5 viewmodes (fields/xref/preview/help/detail), 9 navstyles, 36 reftypestyles, ~1400 ctypes / ~5600 fields across 83 namespaces. Namespace-grouped tree view with collapse/expand, record counts for ssimfile-backed ctypes. 17 headless tests. Headless protocol: SendKey, Screenshot, SetTermSize (input); Screen, PanelState, VisibleLeftItem, VisibleField, VisibleLine, InputError (output).
 
 ---
 
 ## Known Issues
 
-(none)
+- **I7: Filter keybind not discoverable.** The `/` filter command isn't shown in the status bar, so new users don't know it exists. The status bar should hint at available commands (like vim's bottom line).
 
 ---
 
@@ -54,9 +55,6 @@ Understanding a single field (its xref wiring, index config, substr decompositio
 ### P6. The F-prefix gap
 Generated C++ uses `acr_nav::FNaventry`. Querying `acr dmmeta.field:acr_nav.FNaventry.%` returns nothing -- the real name is `acr_nav.Naventry`. No hint. Trips up everyone who reads generated code first.
 
-### P7. No sense of scale
-Browsing ctypes in acr_nav, you can't tell which types have 3 records vs 3000. No record counts, no indication of which tables are the big ones.
-
 ### P8. Schema-to-code gap
 "What C++ did amc generate for this type?" requires leaving acr_nav. The connection between schema definition and generated code is invisible inside the tool meant to browse the schema.
 
@@ -76,13 +74,7 @@ New viewmode: "generated". Shows the amc-generated C++ for the selected ctype --
 **Value:** High. Schema and generated code are two views of the same thing -- this makes that visible.
 **Size:** Small-Medium. Same architecture as preview mode (shell out, capture output, render in right panel). One new viewmode record.
 
-#### 1E. Record Count Display
-
-For ctypes that have ssimfiles, show the record count next to the ctype name in the left panel. `dmmeta.Ctype (1449)`, `dmmeta.Field (5596)`, `acr_navdb.Keybind (37)`.
-
-**Solves:** P7 (no sense of scale).
-**Value:** High ratio of usefulness to effort. Immediate sense of scale -- distinguishes configuration tables (37 keybinds) from data tables (5596 fields) at a glance.
-**Size:** Small. Count lines in ssimfiles at startup (or lazily). Only ctypes with a corresponding ssimfile get counts.
+#### ~~1E. Record Count Display~~ (done — M19)
 
 #### 1F. Field Name / Comment Search
 
@@ -157,7 +149,7 @@ Full pool scan has a practical obstacle: Tpool loses iteration capability (free-
 |-----------|------|-----------|
 | ~~M17~~ | ~~1A: Inline reftype glossary~~ | ~~Done~~ |
 | ~~M18~~ | ~~1C: Namespace grouping~~ | ~~Done~~ |
-| M19 | 1E: Record count display | Small, high-value -- immediate sense of scale with minimal effort |
+| ~~M19~~ | ~~1E: Record count display~~ | ~~Done~~ |
 | M20 | 1D: Generated code preview | Bridges schema and code; shell-out pattern already proven |
 | M21 | 1F: Field name/comment search | Turns acr_nav into a replacement for `acr` field queries |
 | Later | 2B-2E, Tier 3 | As interest dictates |
@@ -166,8 +158,8 @@ Full pool scan has a practical obstacle: Tpool loses iteration capability (free-
 
 - **M17 (reftype glossary)** — Done. Added `dmmeta.Reftype.comment`, surfaced in detail view.
 - **M18 (namespace grouping)** — Done. LeftItem Tary, FNs.c_ctype Ptrary, collapse/expand, extern label, stable width.
-- **M19 (record counts)** is the cheapest remaining win -- small code change, immediate payoff.
-- **M20 (generated code)** builds on the shell-out pattern from preview mode. After structure (M19) makes navigation tractable, seeing the generated code for a type completes the schema-to-code loop.
+- **M19 (record counts)** — Done. FSsimfile.n_record counted at startup, displayed as `(N)` in left panel. DecimalDigits helper also fixed latent 4-digit cap in namespace header width.
+- **M20 (generated code)** builds on the shell-out pattern from preview mode. Seeing the generated code for a type completes the schema-to-code loop.
 - **M21 (field search)** adds cross-cutting query capability. Positioned after the structural improvements so the tool already feels capable when search extends it.
 
 **Future factoring:** IsHelpMode (4 sites) and IsXrefMode (5 sites) are identity checks that should become data on FViewmode. At 2 modes per axis, the branching is trivial. Refactor when a 3rd mode is added to either axis. Documented in code at their definition sites.
