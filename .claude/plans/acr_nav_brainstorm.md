@@ -30,7 +30,7 @@
 | M20 | Generated code preview viewmode | SysEval `amc '<ctype>'`; codegen viewmode; 'c' toggle; per-ctype caching |
 | M21 | Field name/comment search | filtertarget controlled vocabulary; Tab cycles search target; CtypeMatchesFilter + FieldMatchesFilter; bold highlight |
 
-**Current:** ~1780 lines C++, 24 navactions, 39 keybinds, 2 modes, 2 panels, 6 viewmodes (fields/xref/preview/codegen/help/detail), 10 navstyles, 36 reftypestyles, 2 filtertargets, ~1400 ctypes / ~5650 fields across 83 namespaces. Namespace-grouped tree view with collapse/expand, record counts for ssimfile-backed ctypes. Context-sensitive status bar hints (data-driven via need_* predicates and dismiss fields on navaction). SanitizeForDisplay for control characters in preview/detail. 24 headless tests. Headless protocol: SendKey, Screenshot, SetTermSize (input); Screen (with hints), PanelState, VisibleLeftItem, VisibleField, VisibleLine, InputError (output).
+**Current:** ~1777 lines C++, 25 navactions, 41 keybinds, 2 modes, 2 panels, 6 viewmodes (fields/xref/preview/codegen/help/detail), 10 navstyles, 36 reftypestyles, 2 filtertargets, ~1400 ctypes / ~5650 fields across 83 namespaces. Namespace-grouped tree view with collapse/expand, record counts for ssimfile-backed ctypes. Context-sensitive status bar hints (data-driven via need_* predicates and dismiss fields on navaction). Data-driven overlay guard dispatch (need_no_overlay checked centrally in ProcessKey). Centralized right-panel reset on viewmode/ctype change. Unified ToggleViewmode with need_ssimfile on viewmode. SanitizeForDisplay for control characters in preview/detail. 24 headless tests. Headless protocol: SendKey, Screenshot, SetTermSize (input); Screen (with hints), PanelState, VisibleLeftItem, VisibleField, VisibleLine, InputError (output).
 
 ---
 
@@ -82,17 +82,17 @@ Generated C++ uses `acr_nav::FNaventry`. Querying `acr dmmeta.field:acr_nav.FNav
 
 Code complexity audit after I12 identified these refactoring opportunities, ranked by impact/effort.
 
-#### S1. Lift overlay guards into ProcessKey dispatcher
-`need_no_overlay` exists in data but 4 navaction functions (cycle_viewmode, toggle_preview, toggle_codegen, filter_start) duplicate the check in C++. Move to ProcessKey before `step_Call`: if `need_no_overlay && is_overlay`, skip dispatch. Eliminates 4 identical guard blocks (~12 lines), prevents "forgot the guard" bugs. The data already exists — the code just doesn't trust it.
+#### ~~S1. Lift overlay guards into ProcessKey dispatcher~~ (done)
+`need_no_overlay` checked centrally in ProcessKey before `step_Call`. 4 per-function guards removed. Data-code mismatch fixed (toggle_preview/toggle_codegen now `need_no_overlay:Y`).
 
-#### S2. Centralize right-panel reset on viewmode change
-`sel_row=0; scroll_offset=0` is copy-pasted in 7 navaction functions. Detect viewmode change in ProcessKey (compare before/after `step_Call`) and reset automatically. Eliminates ~14 lines of duplication. Must preserve go_back's navstack restore (existing depth check handles this).
+#### ~~S2. Centralize right-panel reset on viewmode change~~ (done)
+ProcessKey detects viewmode/ctype change (before/after `step_Call`) and resets right panel. 7 per-function reset pairs removed. go_back navstack restore preserved via forward-nav depth check.
 
-#### S3. Unify toggle_preview and toggle_codegen
-Nearly identical functions — check overlay, check current viewmode, toggle in/out, reset right panel. Add `toggle_target` field on navaction pointing to the target viewmode. One generic `navaction_toggle_viewmode` replaces 2 functions (~20 lines). Preview's ssimfile check becomes `need_ssimfile` on navaction or viewmode.
+#### ~~S3. Unify toggle_preview and toggle_codegen~~ (done)
+Shared `ToggleViewmode(FViewmode*)` with `need_ssimfile` on viewmode. 1-line wrappers pass existing FDb viewmode pointers. Adding a toggle viewmode = 1 navaction + 1 keybind + 1 wrapper.
 
-#### S4. Decompose ProcessKey post-action block
-3 independent policies tangled in one 60-line block: startup help dismiss, overlay pop on ctype change, right panel reset. Extract into named helpers. Prerequisite for S1/S2 — makes each policy independently readable and testable.
+#### ~~S4. Decompose ProcessKey post-action block~~ (done)
+Extracted `DismissStartupHelp` and `PopOverlayOnCtypeChange` helpers. ProcessKey is now a flat sequence of named policies.
 
 #### S5. Eliminate IsXrefMode via field_source on Viewmode
 5 call sites dispatch on `IsXrefMode()` identity check to switch between `c_field` (forward) and `c_field_arg` (reverse xrefs). Add `field_source` property to viewmode record. Makes forward/xref distinction data-driven. Removes ~20 lines + 3 identity-check functions. Adding new field-based viewmodes (e.g., "inherited fields") becomes a record, not code.
@@ -100,7 +100,7 @@ Nearly identical functions — check overlay, check current viewmode, toggle in/
 #### S6. Extract SaveNavstate/RestoreNavstate helpers
 9 fields manually copied between FDb and Naventry in follow_ref/go_back. Helpers centralize the copy so adding a 10th field requires editing 1 place per direction. Insurance against future bugs, not urgent.
 
-**Recommended grouping:** S1+S2+S4 together (shared implementation site in ProcessKey), then S3, then S5. S6 opportunistically.
+**Remaining:** S5 (IsXrefMode → field_source), S6 (SaveNavstate/RestoreNavstate helpers). Both low urgency.
 
 ---
 
@@ -212,4 +212,4 @@ Full pool scan has a practical obstacle: Tpool loses iteration capability (free-
 - **M19 (record counts)** — Done. FSsimfile.n_record counted at startup, displayed as `(N)` in left panel. DecimalDigits helper also fixed latent 4-digit cap in namespace header width.
 - **M20 (generated code)** — Done. SysEval to `amc '<ctype>'`, codegen viewmode with `has_fields:N`, `c` toggle key, per-ctype caching via `p_codegen_ctype`.
 - **M21 (field search)** — Done. `acr_navdb.filtertarget` table (2 records), Tab cycles in filter mode, `CtypeMatchesFilter`/`FieldMatchesFilter` helpers, bold highlighting, cached regex, navstack save/restore. 4 new tests.
-**Future factoring:** IsHelpMode (4 sites) and IsXrefMode (5 sites) are identity checks that should become data on FViewmode — see S5 above. `is_overlay` on viewmode now captures the help/detail distinction for hints and guards; the remaining IsHelpMode/IsDetailMode uses are toggle guards in show_help/show_detail. RightPanelItemCount has per-viewmode lazy-load checks for preview and codegen (2 instances); at 3, refactor to an ensure-content hook on FViewmode.
+**Future factoring:** IsXrefMode (5 sites) is the biggest remaining identity-check pattern — see S5. IsHelpMode/IsDetailMode remain only as toggle guards in show_help/show_detail (overlay dispatch via need_no_overlay + dismiss_viewmode handles all other uses). RightPanelItemCount has per-viewmode lazy-load checks for preview and codegen (2 instances); at 3, refactor to an ensure-content hook on FViewmode.

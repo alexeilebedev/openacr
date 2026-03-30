@@ -108,6 +108,7 @@ const char* acr_navdb::value_ToCstr(const acr_navdb::FieldId& parent) {
         case acr_navdb_FieldId_need_right_panel: ret = "need_right_panel";  break;
         case acr_navdb_FieldId_dismiss_hint: ret = "dismiss_hint";  break;
         case acr_navdb_FieldId_dismiss_viewmode: ret = "dismiss_viewmode";  break;
+        case acr_navdb_FieldId_need_left_panel: ret = "need_left_panel";  break;
         case acr_navdb_FieldId_navstyle    : ret = "navstyle";  break;
         case acr_navdb_FieldId_bold        : ret = "bold";  break;
         case acr_navdb_FieldId_dim         : ret = "dim";  break;
@@ -123,6 +124,7 @@ const char* acr_navdb::value_ToCstr(const acr_navdb::FieldId& parent) {
         case acr_navdb_FieldId_empty_msg   : ret = "empty_msg";  break;
         case acr_navdb_FieldId_has_fields  : ret = "has_fields";  break;
         case acr_navdb_FieldId_is_overlay  : ret = "is_overlay";  break;
+        case acr_navdb_FieldId_need_ssimfile: ret = "need_ssimfile";  break;
         case acr_navdb_FieldId_value       : ret = "value";  break;
     }
     return ret;
@@ -298,6 +300,10 @@ bool acr_navdb::value_SetStrptrMaybe(acr_navdb::FieldId& parent, algo::strptr rh
                     if (memcmp(rhs.elems+8,"stack",5)==0) { value_SetEnum(parent,acr_navdb_FieldId_need_navstack); ret = true; break; }
                     break;
                 }
+                case LE_STR8('n','e','e','d','_','s','s','i'): {
+                    if (memcmp(rhs.elems+8,"mfile",5)==0) { value_SetEnum(parent,acr_navdb_FieldId_need_ssimfile); ret = true; break; }
+                    break;
+                }
             }
             break;
         }
@@ -305,6 +311,10 @@ bool acr_navdb::value_SetStrptrMaybe(acr_navdb::FieldId& parent, algo::strptr rh
             switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('n','e','e','d','_','h','a','s'): {
                     if (memcmp(rhs.elems+8,"_fields",7)==0) { value_SetEnum(parent,acr_navdb_FieldId_need_has_fields); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('n','e','e','d','_','l','e','f'): {
+                    if (memcmp(rhs.elems+8,"t_panel",7)==0) { value_SetEnum(parent,acr_navdb_FieldId_need_left_panel); ret = true; break; }
                     break;
                 }
                 case LE_STR8('n','e','e','d','_','n','o','_'): {
@@ -616,6 +626,9 @@ bool acr_navdb::Navaction_ReadFieldMaybe(acr_navdb::Navaction& parent, algo::str
         case acr_navdb_FieldId_dismiss_viewmode: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.dismiss_viewmode, strval);
         } break;
+        case acr_navdb_FieldId_need_left_panel: {
+            retval = bool_ReadStrptrMaybe(parent.need_left_panel, strval);
+        } break;
         case acr_navdb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
         } break;
@@ -651,6 +664,7 @@ void acr_navdb::Navaction_Init(acr_navdb::Navaction& parent) {
     parent.need_has_fields = bool(false);
     parent.need_navstack = bool(false);
     parent.need_right_panel = bool(false);
+    parent.need_left_panel = bool(false);
 }
 
 // --- acr_navdb.Navaction..Print
@@ -692,6 +706,9 @@ void acr_navdb::Navaction_Print(acr_navdb::Navaction& row, algo::cstring& str) {
 
     algo::Smallstr50_Print(row.dismiss_viewmode, temp);
     PrintAttrSpaceReset(str,"dismiss_viewmode", temp);
+
+    bool_Print(row.need_left_panel, temp);
+    PrintAttrSpaceReset(str,"need_left_panel", temp);
 
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);
@@ -994,6 +1011,9 @@ bool acr_navdb::Viewmode_ReadFieldMaybe(acr_navdb::Viewmode& parent, algo::strpt
         case acr_navdb_FieldId_is_overlay: {
             retval = bool_ReadStrptrMaybe(parent.is_overlay, strval);
         } break;
+        case acr_navdb_FieldId_need_ssimfile: {
+            retval = bool_ReadStrptrMaybe(parent.need_ssimfile, strval);
+        } break;
         case acr_navdb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
         } break;
@@ -1044,6 +1064,9 @@ void acr_navdb::Viewmode_Print(acr_navdb::Viewmode& row, algo::cstring& str) {
 
     bool_Print(row.is_overlay, temp);
     PrintAttrSpaceReset(str,"is_overlay", temp);
+
+    bool_Print(row.need_ssimfile, temp);
+    PrintAttrSpaceReset(str,"need_ssimfile", temp);
 
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);

@@ -315,6 +315,34 @@ static void PopViewmode() {
     }
 }
 
+// Dismiss startup help on any non-passive action (not movement/panel switch).
+// Escape/? pop the overlay directly; detected here via !IsHelpMode().
+static void DismissStartupHelp(acr_nav::FKeybind *keybind) {
+    if (acr_nav::_db.startup_help) {
+        bool is_action = keybind && !keybind->p_navaction->passive;
+        if (is_action || !IsHelpMode()) {
+            acr_nav::_db.startup_help = false;
+            if (IsHelpMode()) {
+                PopViewmode();
+            }
+        }
+    }
+}
+
+// If an overlay viewmode is active and the selected ctype changed, pop all
+// overlays and restore the base viewmode.  During startup help, preserve the
+// overlay so movement doesn't dismiss it.
+static void PopOverlayOnCtypeChange(acr_nav::FCtype *prev_sel_ct, acr_nav::FCtype *sel_ct) {
+    if (sel_ct != prev_sel_ct && !acr_nav::viewmode_stack_EmptyQ() && !acr_nav::_db.startup_help) {
+        acr_nav::FViewmode *base = acr_nav::ind_viewmode_Find(acr_nav::viewmode_stack_qFind(0));
+        acr_nav::viewmode_stack_RemoveAll();
+        if (base) {
+            acr_nav::_db.p_cur_viewmode = base;
+        }
+        acr_nav::_db.p_detail_field = NULL;
+    }
+}
+
 static int RightPanelLineCount() {
     return acr_nav::line_N(*acr_nav::_db.p_cur_viewmode);
 }
@@ -818,41 +846,29 @@ void acr_nav::navaction_quit() {
 // -----------------------------------------------------------------------------
 
 void acr_nav::navaction_cycle_viewmode() {
-    if (!acr_nav::_db.p_cur_viewmode->is_overlay) {
-        acr_nav::FViewmode *next = acr_nav::ind_viewmode_Find(acr_nav::_db.p_cur_viewmode->next);
-        if (next) {
-            acr_nav::_db.p_cur_viewmode = next;
-        }
-        acr_nav::_db.p_right_panel->sel_row = 0;
-        acr_nav::_db.p_right_panel->scroll_offset = 0;
+    acr_nav::FViewmode *next = acr_nav::ind_viewmode_Find(acr_nav::_db.p_cur_viewmode->next);
+    if (next) {
+        acr_nav::_db.p_cur_viewmode = next;
     }
 }
 
 // -----------------------------------------------------------------------------
 
-void acr_nav::navaction_toggle_preview() {
-    if (!acr_nav::_db.p_cur_viewmode->is_overlay) {
+static void ToggleViewmode(acr_nav::FViewmode *target) {
+    bool in_target = (acr_nav::_db.p_cur_viewmode == target);
+    bool can_enter = !in_target;
+    if (can_enter && target->need_ssimfile) {
         acr_nav::FCtype *sel_ct = SelectedCtype(*acr_nav::_db.p_left_panel);
-        bool in_preview = (acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_preview_viewmode);
-        bool go_preview = !in_preview && sel_ct && FindSsimfile(*sel_ct);
-        acr_nav::_db.p_cur_viewmode = go_preview ? acr_nav::_db.p_preview_viewmode : acr_nav::_db.p_default_viewmode;
-        acr_nav::_db.p_right_panel->sel_row = 0;
-        acr_nav::_db.p_right_panel->scroll_offset = 0;
+        can_enter = sel_ct && FindSsimfile(*sel_ct);
     }
+    acr_nav::_db.p_cur_viewmode = can_enter ? target : acr_nav::_db.p_default_viewmode;
 }
+
+void acr_nav::navaction_toggle_preview() { ToggleViewmode(acr_nav::_db.p_preview_viewmode); }
 
 // -----------------------------------------------------------------------------
 
-void acr_nav::navaction_toggle_codegen() {
-    if (!acr_nav::_db.p_cur_viewmode->is_overlay) {
-        acr_nav::FCtype *sel_ct = SelectedCtype(*acr_nav::_db.p_left_panel);
-        bool in_codegen = (acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_codegen_viewmode);
-        bool go_codegen = !in_codegen && sel_ct;
-        acr_nav::_db.p_cur_viewmode = go_codegen ? acr_nav::_db.p_codegen_viewmode : acr_nav::_db.p_default_viewmode;
-        acr_nav::_db.p_right_panel->sel_row = 0;
-        acr_nav::_db.p_right_panel->scroll_offset = 0;
-    }
-}
+void acr_nav::navaction_toggle_codegen() { ToggleViewmode(acr_nav::_db.p_codegen_viewmode); }
 
 // -----------------------------------------------------------------------------
 
@@ -883,17 +899,15 @@ void acr_nav::navaction_filter_accept() {
 // -----------------------------------------------------------------------------
 
 void acr_nav::navaction_filter_start() {
-    if (!acr_nav::_db.p_cur_viewmode->is_overlay) {
-        acr_nav::_db.pre_filter_text = acr_nav::_db.filter;
-        acr_nav::_db.pre_filter_target = acr_nav::_db.p_cur_filtertarget->filtertarget;
-        acr_nav::_db.pre_filter_sel_row = acr_nav::_db.p_left_panel->sel_row;
-        acr_nav::_db.pre_filter_scroll_offset = acr_nav::_db.p_left_panel->scroll_offset;
-        acr_nav::_db.p_cur_mode = acr_nav::_db.p_filter_mode;
-        ch_RemoveAll(acr_nav::_db.filter);
-        acr_nav::_db.p_cur_filtertarget = acr_nav::_db.p_default_filtertarget;
-        BuildLeftItemsReset();
-        acr_nav::_db.p_cur_panel = acr_nav::_db.p_left_panel;
-    }
+    acr_nav::_db.pre_filter_text = acr_nav::_db.filter;
+    acr_nav::_db.pre_filter_target = acr_nav::_db.p_cur_filtertarget->filtertarget;
+    acr_nav::_db.pre_filter_sel_row = acr_nav::_db.p_left_panel->sel_row;
+    acr_nav::_db.pre_filter_scroll_offset = acr_nav::_db.p_left_panel->scroll_offset;
+    acr_nav::_db.p_cur_mode = acr_nav::_db.p_filter_mode;
+    ch_RemoveAll(acr_nav::_db.filter);
+    acr_nav::_db.p_cur_filtertarget = acr_nav::_db.p_default_filtertarget;
+    BuildLeftItemsReset();
+    acr_nav::_db.p_cur_panel = acr_nav::_db.p_left_panel;
 }
 
 // -----------------------------------------------------------------------------
@@ -937,8 +951,6 @@ void acr_nav::navaction_dismiss_or_clear() {
         if (was_detail) {
             acr_nav::_db.p_detail_field = NULL;
         }
-        acr_nav::_db.p_right_panel->sel_row = 0;
-        acr_nav::_db.p_right_panel->scroll_offset = 0;
     } else {
         navaction_filter_clear();
     }
@@ -972,8 +984,6 @@ void acr_nav::navaction_show_help() {
         acr_nav::viewmode_stack_Alloc() = acr_nav::_db.p_cur_viewmode->viewmode;
         acr_nav::_db.p_cur_viewmode = acr_nav::_db.p_help_viewmode;
     }
-    acr_nav::_db.p_right_panel->sel_row = 0;
-    acr_nav::_db.p_right_panel->scroll_offset = 0;
 }
 
 // -----------------------------------------------------------------------------
@@ -982,8 +992,6 @@ void acr_nav::navaction_show_detail() {
     if (IsDetailMode()) {
         PopViewmode();
         acr_nav::_db.p_detail_field = NULL;
-        acr_nav::_db.p_right_panel->sel_row = 0;
-        acr_nav::_db.p_right_panel->scroll_offset = 0;
     } else if (acr_nav::_db.p_cur_viewmode->has_fields) {
         acr_nav::FCtype *sel_ct = SelectedCtype(*acr_nav::_db.p_left_panel);
         acr_nav::FField *fld = RightPanelFieldFind(sel_ct, acr_nav::_db.p_right_panel->sel_row);
@@ -991,8 +999,6 @@ void acr_nav::navaction_show_detail() {
             acr_nav::viewmode_stack_Alloc() = acr_nav::_db.p_cur_viewmode->viewmode;
             LoadDetail(*fld);
             acr_nav::_db.p_cur_viewmode = acr_nav::_db.p_detail_viewmode;
-            acr_nav::_db.p_right_panel->sel_row = 0;
-            acr_nav::_db.p_right_panel->scroll_offset = 0;
         }
     }
 }
@@ -1064,7 +1070,7 @@ static tempstr BuildBreadcrumb(acr_nav::FCtype *sel_ct) {
 
 // Build context-aware status bar hint string from keybind records.
 // Checks navaction visibility conditions (need_no_overlay, need_has_fields,
-// need_navstack, need_right_panel) and overlay dismiss_hint against runtime state.
+// need_navstack, need_right_panel, need_left_panel) and overlay dismiss_hint against runtime state.
 // Groups keys by effective hint label, ordered by hint_order.
 static void BuildStatusHint(cstring &out) {
     struct HintEntry {
@@ -1094,9 +1100,12 @@ static void BuildStatusHint(cstring &out) {
             hint = na.dismiss_hint;
         } else {
             if (na.need_no_overlay && is_overlay) continue;
+            // Symbol-only hints (arrow indicators) suppressed during overlays
+            if (is_overlay && ch_N(na.hint) > 0 && (algo::strptr(na.hint)[0] & 0x80)) continue;
             if (na.need_has_fields && !has_fld) continue;
             if (na.need_navstack && !has_nav) continue;
             if (na.need_right_panel && !on_right) continue;
+            if (na.need_left_panel && on_right) continue;
             hint = na.hint;
         }
         if (ch_N(hint) == 0) continue;
@@ -1116,7 +1125,8 @@ static void BuildStatusHint(cstring &out) {
         }
         entries[j] = tmp;
     }
-    // Group by effective hint label, format as "key1/key2:hint"
+    // Group by effective hint label, format as "key1/key2:hint".
+    // Symbol-only hints (non-ASCII first byte, e.g. ↑↓←→) render without key prefix.
     int i = 0;
     while (i < n_entries) {
         algo::strptr hint = entries[i].hint;
@@ -1124,14 +1134,20 @@ static void BuildStatusHint(cstring &out) {
             out << "  ";
         }
         int j = i;
-        while (j < n_entries && entries[j].hint == hint) {
-            if (j > i) {
-                out << "/";
+        bool symbol_hint = ch_N(hint) > 0 && (hint[0] & 0x80);
+        if (symbol_hint) {
+            out << hint;
+            while (j < n_entries && entries[j].hint == hint) j++;
+        } else {
+            while (j < n_entries && entries[j].hint == hint) {
+                if (j > i) {
+                    out << "/";
+                }
+                out << acr_nav::key_Get(*entries[j].kb);
+                j++;
             }
-            out << acr_nav::key_Get(*entries[j].kb);
-            j++;
+            out << ":" << hint;
         }
-        out << ":" << hint;
         i = j;
     }
 }
@@ -1534,20 +1550,28 @@ static bool ProcessKey(algo::strptr key_name) {
         acr_nav::FPanel *left = acr_nav::_db.p_left_panel;
         acr_nav::FPanel *right = acr_nav::_db.p_right_panel;
         acr_nav::FCtype *prev_sel_ct = SelectedCtype(*left);
+        acr_nav::FViewmode *prev_viewmode = acr_nav::_db.p_cur_viewmode;
         int prev_depth = acr_nav::navstack_N();
         tempstr composite;
         composite << acr_nav::_db.p_cur_mode->navmode << "." << key_name;
         acr_nav::FKeybind *keybind = acr_nav::ind_keybind_Find(composite);
         if (keybind) {
-            // For overlay-blocked actions during startup help, dismiss the overlay
-            // before dispatch so the action runs in the non-overlay context.
-            if (acr_nav::_db.startup_help && keybind->p_navaction->need_no_overlay
-                && acr_nav::_db.p_cur_viewmode->is_overlay) {
+            acr_nav::FNavaction &na = *keybind->p_navaction;
+            bool is_overlay = acr_nav::_db.p_cur_viewmode->is_overlay;
+            bool blocked = na.need_no_overlay && is_overlay;
+            if (blocked && acr_nav::_db.startup_help) {
                 acr_nav::_db.startup_help = false;
                 PopViewmode();
+                blocked = false;
             }
-            step_Call(*keybind->p_navaction);
-            did_something = true;
+            if (blocked && ch_N(na.dismiss_viewmode) > 0
+                && algo::strptr(na.dismiss_viewmode) == algo::strptr(acr_nav::_db.p_cur_viewmode->viewmode)) {
+                blocked = false;
+            }
+            if (!blocked) {
+                step_Call(na);
+                did_something = true;
+            }
         }
         bool in_filter = (acr_nav::_db.p_cur_mode == acr_nav::_db.p_filter_mode);
         if (!keybind && in_filter && elems_N(key_name) == 1 && key_name[0] > 32) {
@@ -1555,36 +1579,16 @@ static bool ProcessKey(algo::strptr key_name) {
             BuildLeftItemsReset();
             did_something = true;
         }
-        // Dismiss startup help on any non-passive action (not movement/panel switch).
-        // Escape/? pop the overlay directly; detected here via !IsHelpMode().
-        if (acr_nav::_db.startup_help && did_something) {
-            bool is_action = keybind && !keybind->p_navaction->passive;
-            if (is_action || !IsHelpMode()) {
-                acr_nav::_db.startup_help = false;
-                if (IsHelpMode()) {
-                    PopViewmode();
-                }
-            }
-        }
         if (did_something) {
+            DismissStartupHelp(keybind);
             acr_nav::FCtype *sel_ct = SelectedCtype(*left);
-            if (sel_ct != prev_sel_ct) {
-                // If an overlay viewmode is active, pop all and restore base.
-                // During startup help, preserve the overlay so movement doesn't dismiss it.
-                if (!acr_nav::viewmode_stack_EmptyQ() && !acr_nav::_db.startup_help) {
-                    acr_nav::FViewmode *base = acr_nav::ind_viewmode_Find(acr_nav::viewmode_stack_qFind(0));
-                    acr_nav::viewmode_stack_RemoveAll();
-                    if (base) {
-                        acr_nav::_db.p_cur_viewmode = base;
-                    }
-                    acr_nav::_db.p_detail_field = NULL;
-                }
-                // Only reset right panel when navigating forward (follow_ref).
-                // go_back restores right panel state from navstack — don't clobber it.
-                if (acr_nav::navstack_N() >= prev_depth) {
-                    right->sel_row = 0;
-                    right->scroll_offset = 0;
-                }
+            PopOverlayOnCtypeChange(prev_sel_ct, sel_ct);
+            bool forward = (acr_nav::navstack_N() >= prev_depth);
+            bool vm_changed = (acr_nav::_db.p_cur_viewmode != prev_viewmode);
+            bool ct_changed = (sel_ct != prev_sel_ct);
+            if (forward && (vm_changed || ct_changed)) {
+                right->sel_row = 0;
+                right->scroll_offset = 0;
             }
             AdjustScroll(*left, acr_nav::left_item_N());
             AdjustScroll(*right, RightPanelItemCount(sel_ct));

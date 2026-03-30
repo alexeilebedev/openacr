@@ -138,6 +138,7 @@ inline  acr_navdb::Reftypestyle::Reftypestyle() {
 inline void acr_navdb::Viewmode_Init(acr_navdb::Viewmode& parent) {
     parent.has_fields = bool(false);
     parent.is_overlay = bool(false);
+    parent.need_ssimfile = bool(false);
 }
 
 // --- acr_navdb.Viewmode..Ctor

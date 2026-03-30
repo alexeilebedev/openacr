@@ -2202,6 +2202,7 @@ struct FNavaction { // acr_nav.FNavaction
     bool                           need_right_panel;        //   false  Hint hidden when focus is on left panel
     algo::Smallstr50               dismiss_hint;            // Hint text when action dismisses an overlay
     algo::Smallstr50               dismiss_viewmode;        // Viewmode this action dismisses; empty means any overlay
+    bool                           need_left_panel;         //   false  Hint hidden when focus is on right panel
     algo::Comment                  comment;                 //
     acr_nav::FHelpgroup*           p_helpgroup;             // optional pointer
     acr_nav::navaction_step_hook   step;                    //   NULL  Pointer to a function
@@ -2646,6 +2647,7 @@ struct FViewmode { // acr_nav.FViewmode
     algo::Smallstr50      empty_msg;              // Message shown when right panel has no items
     bool                  has_fields;             //   false  Y: renders field records; N: renders preformatted lines
     bool                  is_overlay;             //   false  Y: overlay viewmode (help, detail); suppresses need_no_overlay hints
+    bool                  need_ssimfile;          //   false  Viewmode requires ssimfile-backed ctype
     algo::Comment         comment;                //
     algo::cstring*        line_elems;             // pointer to elements
     u32                   line_n;                 // number of elements in array
@@ -2757,7 +2759,7 @@ void                 line_Insary(acr_nav::FViewmode& viewmode, algo::aryptr<algo
 
 // Set all fields to initial values.
 // func:acr_nav.FViewmode..Init
-inline void          FViewmode_Init(acr_nav::FViewmode& viewmode);
+void                 FViewmode_Init(acr_nav::FViewmode& viewmode);
 // proceed to next item
 // func:acr_nav.FViewmode.line_curs.Next
 inline void          viewmode_line_curs_Next(viewmode_line_curs &curs) __attribute__((nothrow));

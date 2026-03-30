@@ -50,25 +50,27 @@ enum acr_navdb_FieldIdEnum {                    // acr_navdb.FieldId.value
     ,acr_navdb_FieldId_need_right_panel   = 17
     ,acr_navdb_FieldId_dismiss_hint       = 18
     ,acr_navdb_FieldId_dismiss_viewmode   = 19
-    ,acr_navdb_FieldId_navstyle           = 20
-    ,acr_navdb_FieldId_bold               = 21
-    ,acr_navdb_FieldId_dim                = 22
-    ,acr_navdb_FieldId_reverse            = 23
-    ,acr_navdb_FieldId_fg_color           = 24
-    ,acr_navdb_FieldId_panel              = 25
-    ,acr_navdb_FieldId_title              = 26
-    ,acr_navdb_FieldId_position           = 27
-    ,acr_navdb_FieldId_min_width          = 28
-    ,acr_navdb_FieldId_reftypestyle       = 29
-    ,acr_navdb_FieldId_reftype            = 30
-    ,acr_navdb_FieldId_viewmode           = 31
-    ,acr_navdb_FieldId_empty_msg          = 32
-    ,acr_navdb_FieldId_has_fields         = 33
-    ,acr_navdb_FieldId_is_overlay         = 34
-    ,acr_navdb_FieldId_value              = 35
+    ,acr_navdb_FieldId_need_left_panel    = 20
+    ,acr_navdb_FieldId_navstyle           = 21
+    ,acr_navdb_FieldId_bold               = 22
+    ,acr_navdb_FieldId_dim                = 23
+    ,acr_navdb_FieldId_reverse            = 24
+    ,acr_navdb_FieldId_fg_color           = 25
+    ,acr_navdb_FieldId_panel              = 26
+    ,acr_navdb_FieldId_title              = 27
+    ,acr_navdb_FieldId_position           = 28
+    ,acr_navdb_FieldId_min_width          = 29
+    ,acr_navdb_FieldId_reftypestyle       = 30
+    ,acr_navdb_FieldId_reftype            = 31
+    ,acr_navdb_FieldId_viewmode           = 32
+    ,acr_navdb_FieldId_empty_msg          = 33
+    ,acr_navdb_FieldId_has_fields         = 34
+    ,acr_navdb_FieldId_is_overlay         = 35
+    ,acr_navdb_FieldId_need_ssimfile      = 36
+    ,acr_navdb_FieldId_value              = 37
 };
 
-enum { acr_navdb_FieldIdEnum_N = 36 };
+enum { acr_navdb_FieldIdEnum_N = 38 };
 
 namespace acr_navdb { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 DetailsrcPkey;
@@ -264,6 +266,7 @@ struct Navaction { // acr_navdb.Navaction: Controlled vocabulary of navigation a
     bool               need_right_panel;   //   false  Hint hidden when focus is on left panel
     algo::Smallstr50   dismiss_hint;       // Hint text when action dismisses an overlay
     algo::Smallstr50   dismiss_viewmode;   // Viewmode this action dismisses; empty means any overlay
+    bool               need_left_panel;    //   false  Hint hidden when focus is on right panel
     algo::Comment      comment;            //
     // func:acr_navdb.Navaction..Ctor
     inline               Navaction() __attribute__((nothrow));
@@ -386,13 +389,14 @@ void                 Reftypestyle_Print(acr_navdb::Reftypestyle& row, algo::cstr
 
 // --- acr_navdb.Viewmode
 struct Viewmode { // acr_navdb.Viewmode: Right-panel view mode for acr_nav
-    algo::Smallstr50   viewmode;     //
-    algo::Smallstr50   title;        // Right panel title for this viewmode
-    algo::Smallstr50   next;         // Next viewmode in Tab cycle
-    algo::Smallstr50   empty_msg;    // Message shown when right panel has no items
-    bool               has_fields;   //   false  Y: renders field records; N: renders preformatted lines
-    bool               is_overlay;   //   false  Y: overlay viewmode (help, detail); suppresses need_no_overlay hints
-    algo::Comment      comment;      //
+    algo::Smallstr50   viewmode;        //
+    algo::Smallstr50   title;           // Right panel title for this viewmode
+    algo::Smallstr50   next;            // Next viewmode in Tab cycle
+    algo::Smallstr50   empty_msg;       // Message shown when right panel has no items
+    bool               has_fields;      //   false  Y: renders field records; N: renders preformatted lines
+    bool               is_overlay;      //   false  Y: overlay viewmode (help, detail); suppresses need_no_overlay hints
+    bool               need_ssimfile;   //   false  Viewmode requires ssimfile-backed ctype
+    algo::Comment      comment;         //
     // func:acr_navdb.Viewmode..Ctor
     inline               Viewmode() __attribute__((nothrow));
 };

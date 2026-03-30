@@ -2109,18 +2109,6 @@ inline u64 acr_nav::line_rowid_Get(acr_nav::FViewmode& viewmode, algo::cstring &
     return u64(id);
 }
 
-// --- acr_nav.FViewmode..Init
-// Set all fields to initial values.
-inline void acr_nav::FViewmode_Init(acr_nav::FViewmode& viewmode) {
-    viewmode.has_fields = bool(false);
-    viewmode.is_overlay = bool(false);
-    viewmode.line_elems 	= 0; // (acr_nav.FViewmode.line)
-    viewmode.line_n     	= 0; // (acr_nav.FViewmode.line)
-    viewmode.line_max   	= 0; // (acr_nav.FViewmode.line)
-    viewmode.ind_viewmode_next = (acr_nav::FViewmode*)-1; // (acr_nav.FDb.ind_viewmode) not-in-hash
-    viewmode.ind_viewmode_hashval = 0; // stored hash value
-}
-
 // --- acr_nav.FViewmode.line_curs.Next
 // proceed to next item
 inline void acr_nav::viewmode_line_curs_Next(viewmode_line_curs &curs) {
