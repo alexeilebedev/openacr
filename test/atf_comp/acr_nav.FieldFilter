@@ -1,4 +1,4 @@
-acr_nav.Screen  mode:filter  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1403  n_ctype:1404  n_field:5632  viewmode:fields  breadcrumb:""  filtertarget:field
+acr_nav.Screen  mode:filter  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1403  n_ctype:1404  n_field:5642  viewmode:fields  breadcrumb:""  filtertarget:field  hints:"Enter:accept  Tab:target  Escape:cancel"
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:83  sel_value:""
 acr_nav.VisibleLeftItem  row:0  value:""  kind:ns  collapsed:Y  n_match:44  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:abt  kind:ns  collapsed:Y  n_match:19  n_record:0
@@ -85,7 +85,7 @@ acr_nav.VisibleLeftItem  row:81  value:ws  kind:ns  collapsed:Y  n_match:16  n_r
 acr_nav.VisibleLeftItem  row:82  value:wsdb  kind:ns  collapsed:Y  n_match:1  n_record:0
 acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
 
-acr_nav.Screen  mode:filter  focus:ctype_list  filter:comment  navstack_depth:0  n_sel_ctype:218  n_ctype:1404  n_field:5632  viewmode:fields  breadcrumb:""  filtertarget:field
+acr_nav.Screen  mode:filter  focus:ctype_list  filter:comment  navstack_depth:0  n_sel_ctype:218  n_ctype:1404  n_field:5642  viewmode:fields  breadcrumb:""  filtertarget:field  hints:"Enter:accept  Tab:target  Escape:cancel"
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:20  sel_value:acr
 acr_nav.VisibleLeftItem  row:0  value:acr  kind:ns  collapsed:Y  n_match:1  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:acr_navdb  kind:ns  collapsed:Y  n_match:10  n_record:0
@@ -109,7 +109,7 @@ acr_nav.VisibleLeftItem  row:18  value:src_hdr  kind:ns  collapsed:Y  n_match:1 
 acr_nav.VisibleLeftItem  row:19  value:wsdb  kind:ns  collapsed:Y  n_match:1  n_record:0
 acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
 
-acr_nav.Screen  mode:filter  focus:ctype_list  filter:comment  navstack_depth:0  n_sel_ctype:218  n_ctype:1404  n_field:5632  viewmode:fields  breadcrumb:""  filtertarget:field
+acr_nav.Screen  mode:filter  focus:ctype_list  filter:comment  navstack_depth:0  n_sel_ctype:218  n_ctype:1404  n_field:5642  viewmode:fields  breadcrumb:""  filtertarget:field  hints:"Enter:accept  Tab:target  Escape:cancel"
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:20  sel_value:acr
 acr_nav.VisibleLeftItem  row:0  value:acr  kind:ns  collapsed:Y  n_match:1  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:acr_navdb  kind:ns  collapsed:Y  n_match:10  n_record:0

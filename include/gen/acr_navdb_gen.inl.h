@@ -95,13 +95,6 @@ inline  acr_navdb::Keybind::Keybind() {
     acr_navdb::Keybind_Init(*this);
 }
 
-// --- acr_navdb.Navaction..Init
-// Set all fields to initial values.
-inline void acr_navdb::Navaction_Init(acr_navdb::Navaction& parent) {
-    parent.sort_order = i32(0);
-    parent.passive = bool(false);
-}
-
 // --- acr_navdb.Navaction..Ctor
 inline  acr_navdb::Navaction::Navaction() {
     acr_navdb::Navaction_Init(*this);
@@ -144,6 +137,7 @@ inline  acr_navdb::Reftypestyle::Reftypestyle() {
 // Set all fields to initial values.
 inline void acr_navdb::Viewmode_Init(acr_navdb::Viewmode& parent) {
     parent.has_fields = bool(false);
+    parent.is_overlay = bool(false);
 }
 
 // --- acr_navdb.Viewmode..Ctor

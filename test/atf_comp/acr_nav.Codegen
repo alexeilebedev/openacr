@@ -1,4 +1,4 @@
-acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Ctype  navstack_depth:0  n_sel_ctype:2  n_ctype:1404  n_field:5632  viewmode:fields  breadcrumb:""  filtertarget:ctype
+acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Ctype  navstack_depth:0  n_sel_ctype:2  n_ctype:1404  n_field:5642  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"Enter:follow  /:filter  q:quit  Tab:view  d:detail  ?:help"
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:3  sel_value:dmmeta.Ctype
 acr_nav.VisibleLeftItem  row:0  value:dmmeta  kind:ns  collapsed:N  n_match:2  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:dmmeta.Ctype  kind:ctype  collapsed:N  n_match:0  n_record:1404
@@ -9,7 +9,7 @@ acr_nav.VisibleField  row:1  field:dmmeta.Ctype.ns  arg:dmmeta.Ns  reftype:Pkey 
 acr_nav.VisibleField  row:2  field:dmmeta.Ctype.name  arg:algo.Smallstr100  reftype:Val  style:field_val  navigable:Y
 acr_nav.VisibleField  row:3  field:dmmeta.Ctype.comment  arg:algo.Comment  reftype:Val  style:field_val  navigable:Y
 
-acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Ctype  navstack_depth:0  n_sel_ctype:2  n_ctype:1404  n_field:5632  viewmode:codegen  breadcrumb:""  filtertarget:ctype
+acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Ctype  navstack_depth:0  n_sel_ctype:2  n_ctype:1404  n_field:5642  viewmode:codegen  breadcrumb:""  filtertarget:ctype  hints:"/:filter  q:quit  Tab:view  ?:help"
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:3  sel_value:dmmeta.Ctype
 acr_nav.VisibleLeftItem  row:0  value:dmmeta  kind:ns  collapsed:N  n_match:2  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:dmmeta.Ctype  kind:ctype  collapsed:N  n_match:0  n_record:1404
@@ -28,7 +28,7 @@ acr_nav.VisibleLine  row:9  value:"};"
 acr_nav.VisibleLine  row:10  value:""
 acr_nav.VisibleLine  row:11  value:""
 
-acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Ctype  navstack_depth:0  n_sel_ctype:2  n_ctype:1404  n_field:5632  viewmode:fields  breadcrumb:""  filtertarget:ctype
+acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Ctype  navstack_depth:0  n_sel_ctype:2  n_ctype:1404  n_field:5642  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"Enter:follow  /:filter  q:quit  Tab:view  d:detail  ?:help"
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:3  sel_value:dmmeta.Ctype
 acr_nav.VisibleLeftItem  row:0  value:dmmeta  kind:ns  collapsed:N  n_match:2  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:dmmeta.Ctype  kind:ctype  collapsed:N  n_match:0  n_record:1404
@@ -39,7 +39,7 @@ acr_nav.VisibleField  row:1  field:dmmeta.Ctype.ns  arg:dmmeta.Ns  reftype:Pkey 
 acr_nav.VisibleField  row:2  field:dmmeta.Ctype.name  arg:algo.Smallstr100  reftype:Val  style:field_val  navigable:Y
 acr_nav.VisibleField  row:3  field:dmmeta.Ctype.comment  arg:algo.Comment  reftype:Val  style:field_val  navigable:Y
 
-acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Ctype  navstack_depth:0  n_sel_ctype:2  n_ctype:1404  n_field:5632  viewmode:fields  breadcrumb:""  filtertarget:ctype
+acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Ctype  navstack_depth:0  n_sel_ctype:2  n_ctype:1404  n_field:5642  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"Enter:follow  /:filter  q:quit  Tab:view  d:detail  ?:help"
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:3  sel_value:dmmeta.Ctype
 acr_nav.VisibleLeftItem  row:0  value:dmmeta  kind:ns  collapsed:N  n_match:2  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:dmmeta.Ctype  kind:ctype  collapsed:N  n_match:0  n_record:1404

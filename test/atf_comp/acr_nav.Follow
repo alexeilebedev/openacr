@@ -1,10 +1,10 @@
-acr_nav.Screen  mode:browse  focus:content  filter:amc.FDb  navstack_depth:0  n_sel_ctype:2  n_ctype:1404  n_field:5632  viewmode:fields  breadcrumb:""  filtertarget:ctype
+acr_nav.Screen  mode:browse  focus:content  filter:amc.FDb  navstack_depth:0  n_sel_ctype:2  n_ctype:1404  n_field:5642  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"Enter:follow  /:filter  q:quit  Tab:view  d:detail  ?:help"
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:2  sel_value:amc
 acr_nav.VisibleLeftItem  row:0  value:amc  kind:ns  collapsed:Y  n_match:1  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:atf_amc  kind:ns  collapsed:Y  n_match:1  n_record:0
 acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
 
-acr_nav.Screen  mode:browse  focus:content  filter:amc.FDb  navstack_depth:0  n_sel_ctype:2  n_ctype:1404  n_field:5632  viewmode:fields  breadcrumb:""  filtertarget:ctype
+acr_nav.Screen  mode:browse  focus:content  filter:amc.FDb  navstack_depth:0  n_sel_ctype:2  n_ctype:1404  n_field:5642  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"Enter:follow  /:filter  q:quit  Tab:view  d:detail  ?:help"
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:2  sel_value:amc
 acr_nav.VisibleLeftItem  row:0  value:amc  kind:ns  collapsed:Y  n_match:1  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:atf_amc  kind:ns  collapsed:Y  n_match:1  n_record:0

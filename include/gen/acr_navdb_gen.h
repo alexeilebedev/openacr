@@ -29,39 +29,46 @@
 
 // --- acr_navdb_FieldIdEnum
 
-enum acr_navdb_FieldIdEnum {                // acr_navdb.FieldId.value
-     acr_navdb_FieldId_detailsrc      = 0
-    ,acr_navdb_FieldId_comment        = 1
-    ,acr_navdb_FieldId_filtertarget   = 2
-    ,acr_navdb_FieldId_label          = 3
-    ,acr_navdb_FieldId_next           = 4
-    ,acr_navdb_FieldId_helpgroup      = 5
-    ,acr_navdb_FieldId_sort_order     = 6
-    ,acr_navdb_FieldId_keybind        = 7
-    ,acr_navdb_FieldId_navaction      = 8
-    ,acr_navdb_FieldId_navmode        = 9
-    ,acr_navdb_FieldId_hint_order     = 10
-    ,acr_navdb_FieldId_key            = 11
-    ,acr_navdb_FieldId_hint           = 12
-    ,acr_navdb_FieldId_passive        = 13
-    ,acr_navdb_FieldId_navstyle       = 14
-    ,acr_navdb_FieldId_bold           = 15
-    ,acr_navdb_FieldId_dim            = 16
-    ,acr_navdb_FieldId_reverse        = 17
-    ,acr_navdb_FieldId_fg_color       = 18
-    ,acr_navdb_FieldId_panel          = 19
-    ,acr_navdb_FieldId_title          = 20
-    ,acr_navdb_FieldId_position       = 21
-    ,acr_navdb_FieldId_min_width      = 22
-    ,acr_navdb_FieldId_reftypestyle   = 23
-    ,acr_navdb_FieldId_reftype        = 24
-    ,acr_navdb_FieldId_viewmode       = 25
-    ,acr_navdb_FieldId_empty_msg      = 26
-    ,acr_navdb_FieldId_has_fields     = 27
-    ,acr_navdb_FieldId_value          = 28
+enum acr_navdb_FieldIdEnum {                    // acr_navdb.FieldId.value
+     acr_navdb_FieldId_detailsrc          = 0
+    ,acr_navdb_FieldId_comment            = 1
+    ,acr_navdb_FieldId_filtertarget       = 2
+    ,acr_navdb_FieldId_label              = 3
+    ,acr_navdb_FieldId_next               = 4
+    ,acr_navdb_FieldId_helpgroup          = 5
+    ,acr_navdb_FieldId_sort_order         = 6
+    ,acr_navdb_FieldId_keybind            = 7
+    ,acr_navdb_FieldId_navaction          = 8
+    ,acr_navdb_FieldId_navmode            = 9
+    ,acr_navdb_FieldId_hint_order         = 10
+    ,acr_navdb_FieldId_key                = 11
+    ,acr_navdb_FieldId_hint               = 12
+    ,acr_navdb_FieldId_passive            = 13
+    ,acr_navdb_FieldId_need_no_overlay    = 14
+    ,acr_navdb_FieldId_need_has_fields    = 15
+    ,acr_navdb_FieldId_need_navstack      = 16
+    ,acr_navdb_FieldId_need_right_panel   = 17
+    ,acr_navdb_FieldId_dismiss_hint       = 18
+    ,acr_navdb_FieldId_dismiss_viewmode   = 19
+    ,acr_navdb_FieldId_navstyle           = 20
+    ,acr_navdb_FieldId_bold               = 21
+    ,acr_navdb_FieldId_dim                = 22
+    ,acr_navdb_FieldId_reverse            = 23
+    ,acr_navdb_FieldId_fg_color           = 24
+    ,acr_navdb_FieldId_panel              = 25
+    ,acr_navdb_FieldId_title              = 26
+    ,acr_navdb_FieldId_position           = 27
+    ,acr_navdb_FieldId_min_width          = 28
+    ,acr_navdb_FieldId_reftypestyle       = 29
+    ,acr_navdb_FieldId_reftype            = 30
+    ,acr_navdb_FieldId_viewmode           = 31
+    ,acr_navdb_FieldId_empty_msg          = 32
+    ,acr_navdb_FieldId_has_fields         = 33
+    ,acr_navdb_FieldId_is_overlay         = 34
+    ,acr_navdb_FieldId_value              = 35
 };
 
-enum { acr_navdb_FieldIdEnum_N = 29 };
+enum { acr_navdb_FieldIdEnum_N = 36 };
 
 namespace acr_navdb { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 DetailsrcPkey;
@@ -246,12 +253,18 @@ void                 Keybind_Print(acr_navdb::Keybind& row, algo::cstring& str) 
 
 // --- acr_navdb.Navaction
 struct Navaction { // acr_navdb.Navaction: Controlled vocabulary of navigation actions
-    algo::Smallstr50   navaction;    //
-    algo::Smallstr50   hint;         // Short status bar label; empty=hidden
-    algo::Smallstr50   helpgroup;    // Help group; empty=hidden from help
-    i32                sort_order;   //   0  Sort order within help group
-    bool               passive;      //   false  Movement-only action; does not dismiss startup help
-    algo::Comment      comment;      //
+    algo::Smallstr50   navaction;          //
+    algo::Smallstr50   hint;               // Short status bar label; empty=hidden
+    algo::Smallstr50   helpgroup;          // Help group; empty=hidden from help
+    i32                sort_order;         //   0  Sort order within help group
+    bool               passive;            //   false  Movement-only action; does not dismiss startup help
+    bool               need_no_overlay;    //   false  Hint hidden when viewmode.is_overlay is Y
+    bool               need_has_fields;    //   false  Hint hidden when viewmode.has_fields is N
+    bool               need_navstack;      //   false  Hint hidden when navigation stack is empty
+    bool               need_right_panel;   //   false  Hint hidden when focus is on left panel
+    algo::Smallstr50   dismiss_hint;       // Hint text when action dismisses an overlay
+    algo::Smallstr50   dismiss_viewmode;   // Viewmode this action dismisses; empty means any overlay
+    algo::Comment      comment;            //
     // func:acr_navdb.Navaction..Ctor
     inline               Navaction() __attribute__((nothrow));
 };
@@ -264,7 +277,7 @@ bool                 Navaction_ReadFieldMaybe(acr_navdb::Navaction& parent, algo
 bool                 Navaction_ReadStrptrMaybe(acr_navdb::Navaction &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:acr_navdb.Navaction..Init
-inline void          Navaction_Init(acr_navdb::Navaction& parent);
+void                 Navaction_Init(acr_navdb::Navaction& parent);
 // print string representation of ROW to string STR
 // cfmt:acr_navdb.Navaction.String  printfmt:Tuple
 // func:acr_navdb.Navaction..Print
@@ -378,6 +391,7 @@ struct Viewmode { // acr_navdb.Viewmode: Right-panel view mode for acr_nav
     algo::Smallstr50   next;         // Next viewmode in Tab cycle
     algo::Smallstr50   empty_msg;    // Message shown when right panel has no items
     bool               has_fields;   //   false  Y: renders field records; N: renders preformatted lines
+    bool               is_overlay;   //   false  Y: overlay viewmode (help, detail); suppresses need_no_overlay hints
     algo::Comment      comment;      //
     // func:acr_navdb.Viewmode..Ctor
     inline               Viewmode() __attribute__((nothrow));

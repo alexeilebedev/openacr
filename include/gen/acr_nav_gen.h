@@ -2192,15 +2192,21 @@ struct FNavaction { // acr_nav.FNavaction
     algo::Smallstr50               helpgroup;               // Help group; empty=hidden from help
     i32                            sort_order;              //   0  Sort order within help group
     bool                           passive;                 //   false  Movement-only action; does not dismiss startup help
+    bool                           need_no_overlay;         //   false  Hint hidden when viewmode.is_overlay is Y
+    bool                           need_has_fields;         //   false  Hint hidden when viewmode.has_fields is N
+    bool                           need_navstack;           //   false  Hint hidden when navigation stack is empty
+    bool                           need_right_panel;        //   false  Hint hidden when focus is on left panel
+    algo::Smallstr50               dismiss_hint;            // Hint text when action dismisses an overlay
+    algo::Smallstr50               dismiss_viewmode;        // Viewmode this action dismisses; empty means any overlay
     algo::Comment                  comment;                 //
     acr_nav::FHelpgroup*           p_helpgroup;             // optional pointer
     acr_nav::navaction_step_hook   step;                    //   NULL  Pointer to a function
     // reftype Hook of acr_nav.FNavaction.step prohibits copy
     // func:acr_nav.FNavaction..AssignOp
-    inline acr_nav::FNavaction& operator =(const acr_nav::FNavaction &rhs) = delete;
+    acr_nav::FNavaction& operator =(const acr_nav::FNavaction &rhs) = delete;
     // reftype Hook of acr_nav.FNavaction.step prohibits copy
     // func:acr_nav.FNavaction..CopyCtor
-    inline               FNavaction(const acr_nav::FNavaction &rhs) = delete;
+    FNavaction(const acr_nav::FNavaction &rhs) = delete;
 private:
     // func:acr_nav.FNavaction..Ctor
     inline               FNavaction() __attribute__((nothrow));
@@ -2225,7 +2231,7 @@ inline void          step_Call(acr_nav::FNavaction& navaction) __attribute__((no
 
 // Set all fields to initial values.
 // func:acr_nav.FNavaction..Init
-inline void          FNavaction_Init(acr_nav::FNavaction& navaction);
+void                 FNavaction_Init(acr_nav::FNavaction& navaction);
 // func:acr_nav.FNavaction..Uninit
 void                 FNavaction_Uninit(acr_nav::FNavaction& navaction) __attribute__((nothrow));
 
@@ -2635,6 +2641,7 @@ struct FViewmode { // acr_nav.FViewmode
     algo::Smallstr50      next;                   // Next viewmode in Tab cycle
     algo::Smallstr50      empty_msg;              // Message shown when right panel has no items
     bool                  has_fields;             //   false  Y: renders field records; N: renders preformatted lines
+    bool                  is_overlay;             //   false  Y: overlay viewmode (help, detail); suppresses need_no_overlay hints
     algo::Comment         comment;                //
     algo::cstring*        line_elems;             // pointer to elements
     u32                   line_n;                 // number of elements in array
@@ -2844,13 +2851,15 @@ struct LeftItem { // acr_nav.LeftItem: One display row in the left panel
 // --- acr_nav.Naventry
 // create: acr_nav.FDb.navstack (Tary)
 struct Naventry { // acr_nav.Naventry: Navigation stack entry. Uses raw strings not Pkeys: value type in Tary, stores snapshots not live references
-    algo::cstring       filter;          // Filter text at time of push
-    algo::Smallstr50    navmode;         // Navigation mode at time of push
-    i32                 scroll_offset;   //   0
-    i32                 sel_row;         //   0
-    algo::Smallstr50    viewmode;        // Viewmode at time of push
-    algo::Smallstr100   ctype;           // Ctype being viewed at time of push
-    algo::Smallstr50    filtertarget;    // Filter target at time of push
+    algo::cstring       filter;                // Filter text at time of push
+    algo::Smallstr50    navmode;               // Navigation mode at time of push
+    i32                 scroll_offset;         //   0
+    i32                 sel_row;               //   0
+    algo::Smallstr50    viewmode;              // Viewmode at time of push
+    algo::Smallstr100   ctype;                 // Ctype being viewed at time of push
+    algo::Smallstr50    filtertarget;          // Filter target at time of push
+    i32                 right_sel_row;         //   0  Right panel selection row
+    i32                 right_scroll_offset;   //   0  Right panel scroll offset
     // func:acr_nav.Naventry..Ctor
     inline               Naventry() __attribute__((nothrow));
 };
@@ -2890,6 +2899,7 @@ struct Screen { // acr_nav.Screen: Headless screen state output
     algo::Smallstr50   viewmode;         // Current right-panel viewmode
     algo::cstring      breadcrumb;       // Navigation breadcrumb trail (display string)
     algo::Smallstr50   filtertarget;     // Current filter target (ctype/field)
+    algo::cstring      hints;            // Status bar hint string
     // func:acr_nav.Screen..Ctor
     inline               Screen() __attribute__((nothrow));
 };

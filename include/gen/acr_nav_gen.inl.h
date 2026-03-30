@@ -1801,17 +1801,6 @@ inline void acr_nav::step_Call(acr_nav::FNavaction& navaction) {
     }
 }
 
-// --- acr_nav.FNavaction..Init
-// Set all fields to initial values.
-inline void acr_nav::FNavaction_Init(acr_nav::FNavaction& navaction) {
-    navaction.sort_order = i32(0);
-    navaction.passive = bool(false);
-    navaction.p_helpgroup = NULL;
-    navaction.ind_navaction_next = (acr_nav::FNavaction*)-1; // (acr_nav.FDb.ind_navaction) not-in-hash
-    navaction.ind_navaction_hashval = 0; // stored hash value
-    navaction.step = NULL;
-}
-
 // --- acr_nav.FNavaction..Ctor
 inline  acr_nav::FNavaction::FNavaction() {
     acr_nav::FNavaction_Init(*this);
@@ -2124,6 +2113,7 @@ inline u64 acr_nav::line_rowid_Get(acr_nav::FViewmode& viewmode, algo::cstring &
 // Set all fields to initial values.
 inline void acr_nav::FViewmode_Init(acr_nav::FViewmode& viewmode) {
     viewmode.has_fields = bool(false);
+    viewmode.is_overlay = bool(false);
     viewmode.line_elems 	= 0; // (acr_nav.FViewmode.line)
     viewmode.line_n     	= 0; // (acr_nav.FViewmode.line)
     viewmode.line_max   	= 0; // (acr_nav.FViewmode.line)
@@ -2225,6 +2215,8 @@ inline  acr_nav::LeftItem::LeftItem() {
 inline void acr_nav::Naventry_Init(acr_nav::Naventry& parent) {
     parent.scroll_offset = i32(0);
     parent.sel_row = i32(0);
+    parent.right_sel_row = i32(0);
+    parent.right_scroll_offset = i32(0);
 }
 
 // --- acr_nav.Naventry..Ctor

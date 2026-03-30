@@ -1,4 +1,4 @@
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1403  n_ctype:1404  n_field:5632  viewmode:help  breadcrumb:""  filtertarget:ctype
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1403  n_ctype:1404  n_field:5642  viewmode:help  breadcrumb:""  filtertarget:ctype  hints:"q:quit  Escape/?:dismiss"
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:83  sel_value:""
 acr_nav.VisibleLeftItem  row:0  value:""  kind:ns  collapsed:Y  n_match:44  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:abt  kind:ns  collapsed:Y  n_match:19  n_record:0
@@ -111,7 +111,7 @@ acr_nav.VisibleLine  row:23  value:"                  q         Exit acr_nav"
 acr_nav.VisibleLine  row:24  value:""
 acr_nav.VisibleLine  row:25  value:"  ↑↓ Browse    Enter Start    ? Help anytime"
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1403  n_ctype:1404  n_field:5632  viewmode:help  breadcrumb:""  filtertarget:ctype
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1403  n_ctype:1404  n_field:5642  viewmode:help  breadcrumb:""  filtertarget:ctype  hints:"q:quit  Escape/?:dismiss"
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:83  sel_value:abt
 acr_nav.VisibleLeftItem  row:0  value:""  kind:ns  collapsed:Y  n_match:44  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:abt  kind:ns  collapsed:Y  n_match:19  n_record:0
@@ -224,7 +224,7 @@ acr_nav.VisibleLine  row:23  value:"                  q         Exit acr_nav"
 acr_nav.VisibleLine  row:24  value:""
 acr_nav.VisibleLine  row:25  value:"  ↑↓ Browse    Enter Start    ? Help anytime"
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1403  n_ctype:1404  n_field:5632  viewmode:help  breadcrumb:""  filtertarget:ctype
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1403  n_ctype:1404  n_field:5642  viewmode:help  breadcrumb:""  filtertarget:ctype  hints:"q:quit  Escape/?:dismiss"
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:83  sel_value:abt
 acr_nav.VisibleLeftItem  row:0  value:""  kind:ns  collapsed:Y  n_match:44  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:abt  kind:ns  collapsed:Y  n_match:19  n_record:0
