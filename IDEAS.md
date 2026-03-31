@@ -40,17 +40,14 @@
 
 ## Pain Points
 
-### P2. Opaque reftype vocabulary (partially addressed by M17)
-Lary, Thash, Ptrary, Upptr, Tpool, Tary, Llist -- the reftype names are terse and carry no visible meaning. M17 added `comment` to `dmmeta.Reftype` and shows it in the detail view (`d` keybind). This helps on-demand but doesn't solve the "what does this mean at a glance?" problem during normal field browsing.
+### P2. Opaque reftype vocabulary — MOSTLY ADDRESSED
+Lary, Thash, Ptrary, Upptr, Tpool, Tary, Llist -- the reftype names are terse and carry no visible meaning. **Addressed by:** M9/M10 color categories (pools=green, indexes=yellow, uprefs=cyan, values=default) give at-a-glance structural role. M17 added `comment` to `dmmeta.Reftype` visible via detail view (`d` keybind). Remaining gap is narrow: you must press `d` to see the prose explanation.
 
-### P3. Tool-switching tax
-Typical schema exploration requires five context switches: `acr` to find a type, `amc_vis` for access paths, `acr -t` for xref tree, `src_func` for hand-written code, then an editor. One question ("how does this type work?") scattered across five tools.
+### P3. Tool-switching tax — PARTIALLY ADDRESSED
+Original 5-step workflow: `acr` → `amc_vis` → `acr -t` → `src_func` → editor. **Addressed by:** step 1 replaced (left panel + filter), step 2 replaced (graph viewmode, M26), step 3 partially replaced (xref view is 1-deep, no transitive closure). **Remaining:** step 4 (src_func — blocked on userfunc data quality, see Blocked section) and step 5 (editor — out of scope). Current tax: ~1.5 context switches, down from 5. Further reduction depends on 1A (record browser) and 1B (transitive closure).
 
-### P5. Silent failures across tools
-`acr dmmeta.ctype:nonexistent.Foo` returns empty output, exit 0. Same for `amc_vis nonexistent.Foo`. No "did you mean?", no error. Can't distinguish typo from empty result.
-
-### P6. The F-prefix gap
-Generated C++ uses `acr_nav::FNaventry`. Querying `acr dmmeta.field:acr_nav.FNaventry.%` returns nothing -- the real name is `acr_nav.Naventry`. No hint. Trips up everyone who reads generated code first.
+### P6. The F-prefix gap — FIX PROPOSED (1C)
+Generated C++ uses `acr_nav::FNaventry`. Querying `acr dmmeta.field:acr_nav.FNaventry.%` returns nothing -- the real name is `acr_nav.Naventry`. No hint. Trips up everyone who reads generated code first. **Proposed fix:** Tier 1 idea 1C — ~10 lines in `CtypeMatchesFilter` to strip leading F when followed by uppercase.
 
 ---
 
