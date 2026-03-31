@@ -436,6 +436,19 @@ static acr_nav::FSsimfile* FindSsimfile(acr_nav::FCtype &ctype) {
     return ret;
 }
 
+// Append " (N)" record count suffix for the ctype's ssimfile.
+// Returns number of characters appended (0 if no ssimfile or no records).
+static int PrintRecordCount(cstring &out, acr_nav::FCtype &ctype) {
+    int ret = 0;
+    acr_nav::FSsimfile *ssf = FindSsimfile(ctype);
+    if (ssf && ssf->n_record > 0) {
+        int before = ch_N(out);
+        out << " (" << ssf->n_record << ")";
+        ret = ch_N(out) - before;
+    }
+    return ret;
+}
+
 // Clear all line content and color spans from a viewmode.
 static void ClearViewmodeLines(acr_nav::FViewmode &vm) {
     acr_nav::line_RemoveAll(vm);
@@ -913,14 +926,15 @@ static int CollectGraphEdges(acr_nav::FCtype &center, GraphEdgeGroup *groups, in
     return n_group;
 }
 
-// Given the center ctype and a line index in the graph viewmode,
-// return the neighbor FCtype* that owns that line, or NULL for center lines.
-// Re-runs the layout logic without rendering.
-static acr_nav::FCtype *GraphNodeAtLine(acr_nav::FCtype &center, int line_idx) {
-    acr_nav::FCtype *ret = NULL;
+// Map a graph line index to the neighbor ctype and (optionally) the field on that line.
+// Returns neighbor ctype via p_node_out, field via p_field_out (both nullable).
+// Center open/close lines return NULL for both. Neighbor open/close lines return node but NULL field.
+static void GraphInfoAtLine(acr_nav::FCtype &center, int line_idx,
+                            acr_nav::FCtype **p_node_out, acr_nav::FField **p_field_out) {
+    acr_nav::FCtype *node = NULL;
+    acr_nav::FField *field = NULL;
     GraphEdgeGroup groups[64];
     int n_group = CollectGraphEdges(center, groups, 64);
-    // Separate right and left groups in iteration order
     int right_groups[64], n_right = 0;
     int left_groups[64], n_left = 0;
     for (int i = 0; i < n_group; i++) {
@@ -930,32 +944,37 @@ static acr_nav::FCtype *GraphNodeAtLine(acr_nav::FCtype &center, int line_idx) {
             right_groups[n_right++] = i;
         }
     }
-    // Line 0 is center open -> NULL; start scanning from line 1
-    int cur_line = 1;
+    int cur_line = 1;  // line 0 is center open
     // Right-column blocks
     for (int ri = 0; ri < n_right; ri++) {
         GraphEdgeGroup &g = groups[right_groups[ri]];
         int block_lines = g.n_field + 1;
         if (line_idx >= cur_line && line_idx < cur_line + block_lines) {
-            ret = g.p_neighbor;
+            node = g.p_neighbor;
+            int fi = line_idx - cur_line;
+            if (fi < g.n_field) {
+                field = g.fields[fi];
+            }
         }
         cur_line += block_lines;
     }
     // Left-column blocks
     for (int li = 0; li < n_left; li++) {
         GraphEdgeGroup &g = groups[left_groups[li]];
-        // Non-last: open + edges + close = n_field + 2
-        // Last: open + edges + center_close + left_close = n_field + 3
         int block_lines = g.n_field + 2 + (li == n_left - 1 ? 1 : 0);
-        // Center close line in last block maps to NULL (already default)
         if (li == n_left - 1 && line_idx == cur_line + 1 + g.n_field) {
-            // center close -- ret stays NULL
+            // center close -- node stays NULL
         } else if (line_idx >= cur_line && line_idx < cur_line + block_lines) {
-            ret = g.p_neighbor;
+            node = g.p_neighbor;
+            int fi = line_idx - cur_line - 1;
+            if (fi >= 0 && fi < g.n_field) {
+                field = g.fields[fi];
+            }
         }
         cur_line += block_lines;
     }
-    return ret;
+    if (p_node_out) *p_node_out = node;
+    if (p_field_out) *p_field_out = field;
 }
 
 // Build amc_vis-style graph lines for the given ctype.
@@ -986,11 +1005,15 @@ static void LoadGraph(acr_nav::FCtype &ctype) {
         int max_right_label = 0;
         for (int i = 0; i < n_group; i++) {
             GraphEdgeGroup &g = groups[i];
-            int name_len = ch_N(g.p_neighbor->ctype);
             for (int fi = 0; fi < g.n_field; fi++) {
                 acr_nav::FField &fld = *g.fields[fi];
                 int label_len = ch_N(fld.reftype) + 1 + ch_N(name_Get(fld));
                 if (g.is_left) {
+                    int name_len = ch_N(g.p_neighbor->ctype);
+                    {
+                        tempstr tmp;
+                        name_len += PrintRecordCount(tmp, *g.p_neighbor);
+                    }
                     max_left_name = i32_Max(max_left_name, name_len);
                     max_left_label = i32_Max(max_left_label, label_len);
                 } else {
@@ -1024,10 +1047,15 @@ static void LoadGraph(acr_nav::FCtype &ctype) {
                 char_PrintNTimes('-', line, arrow_pad);
                 if (fi == 0) {
                     line << ">/ " << g.p_neighbor->ctype;
+                    PrintRecordCount(line, *g.p_neighbor);
                 } else {
                     line << ">|";
                 }
                 acr_nav::line_Alloc(vm) = line;
+                if (fld.p_reftype->c_reftypestyle) {
+                    AddSpan(vm, acr_nav::line_N(vm) - 1, center_x + 1, center_x + 1 + ch_N(label),
+                            fld.p_reftype->c_reftypestyle->p_navstyle);
+                }
             }
             // Close line for right neighbor
             {
@@ -1044,7 +1072,12 @@ static void LoadGraph(acr_nav::FCtype &ctype) {
         for (int li = 0; li < n_left; li++) {
             GraphEdgeGroup &g = groups[left_groups[li]];
             int left_x = center_x - max_left_label - 3;
-            int name_x = left_x - ch_N(g.p_neighbor->ctype) - 2;
+            int neighbor_display_len = ch_N(g.p_neighbor->ctype);
+            {
+                tempstr tmp;
+                neighbor_display_len += PrintRecordCount(tmp, *g.p_neighbor);
+            }
+            int name_x = left_x - neighbor_display_len - 2;
             if (name_x < 0) {
                 name_x = 0;
             }
@@ -1053,6 +1086,7 @@ static void LoadGraph(acr_nav::FCtype &ctype) {
                 tempstr line;
                 char_PrintNTimes(' ', line, name_x);
                 line << "/ " << g.p_neighbor->ctype;
+                PrintRecordCount(line, *g.p_neighbor);
                 int cur_len = ch_N(line);
                 if (cur_len < center_x) {
                     char_PrintNTimes(' ', line, center_x - cur_len);
@@ -1072,6 +1106,11 @@ static void LoadGraph(acr_nav::FCtype &ctype) {
                 char_PrintNTimes('-', line, dash_len);
                 line << "|" << label;
                 acr_nav::line_Alloc(vm) = line;
+                if (fld.p_reftype->c_reftypestyle) {
+                    int label_start = center_x + 1;
+                    AddSpan(vm, acr_nav::line_N(vm) - 1, label_start, label_start + ch_N(label),
+                            fld.p_reftype->c_reftypestyle->p_navstyle);
+                }
             }
             // Center close: inside last left block; otherwise left-close + center bar
             if (li == n_left - 1) {
@@ -1407,7 +1446,8 @@ void acr_nav::navaction_follow_ref() {
     } else if (panel.position == 1 && sel_ct
                && acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_graph_viewmode) {
         // Graph mode: navigate to the neighbor ctype on the selected line
-        acr_nav::FCtype *target = GraphNodeAtLine(*sel_ct, panel.sel_row);
+        acr_nav::FCtype *target = NULL;
+        GraphInfoAtLine(*sel_ct, panel.sel_row, &target, NULL);
         if (target && target != sel_ct) {
             NavigateToTarget(sel_ct, target, acr_nav::_db.p_graph_viewmode);
         }
@@ -2173,9 +2213,8 @@ static void RenderContentArea(RenderCtx &ctx) {
                 }
                 left_cell << "    " << stripped;
                 acr_nav::FCtype *ct = acr_nav::ind_ctype_Find(item.ctype);
-                acr_nav::FSsimfile *ssf = ct ? FindSsimfile(*ct) : nullptr;
-                if (ssf && ssf->n_record > 0) {
-                    left_cell << " (" << ssf->n_record << ")";
+                if (ct) {
+                    PrintRecordCount(left_cell, *ct);
                 }
             }
         }
@@ -2272,6 +2311,15 @@ static void RenderStatusBar(RenderCtx &ctx) {
     }
     BuildStatusHint(status);
     acr_nav::FPanel &cur = *acr_nav::_db.p_cur_panel;
+    if (acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_graph_viewmode
+        && acr_nav::_db.p_graph_ctype
+        && cur.position == 1) {
+        acr_nav::FField *fld = NULL;
+        GraphInfoAtLine(*acr_nav::_db.p_graph_ctype, cur.sel_row, NULL, &fld);
+        if (fld && ch_N(fld->p_reftype->comment) > 0) {
+            status << "  " << fld->p_reftype->comment;
+        }
+    }
     int cur_items = PanelItemCount(cur, ctx.sel_ct);
     tempstr pos;
     if (cur_items > 0) {
