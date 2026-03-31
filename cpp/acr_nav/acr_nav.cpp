@@ -841,6 +841,284 @@ static void NsDepEnsureContent(void *, acr_nav::FCtype &ct) {
     }
 }
 
+// --- Graph viewmode: Interactive access path diagram ---
+
+// Return true if a field should be excluded from the graph diagram.
+// Matches amc_vis::DepRefQ exclusions: self-ref, Base, Regx, RegxSql, Hook.
+static bool GraphSkipQ(acr_nav::FField &field) {
+    return field.p_arg == field.p_ctype
+        || field.reftype == dmmeta_Reftype_reftype_Base
+        || field.reftype == dmmeta_Reftype_reftype_Regx
+        || field.reftype == dmmeta_Reftype_reftype_RegxSql
+        || field.reftype == dmmeta_Reftype_reftype_Hook;
+}
+
+// Edge group: one neighbor ctype with one or more connecting fields.
+struct GraphEdgeGroup {
+    acr_nav::FCtype *p_neighbor;
+    acr_nav::FField *fields[64];
+    int n_field;
+    bool is_left;  // true = left column (up:Y dep), false = right column
+};
+
+// Collect edge groups from center ctype's c_field.
+// Returns the number of groups written into 'groups' (max 64).
+static int CollectGraphEdges(acr_nav::FCtype &center, GraphEdgeGroup *groups, int max_groups) {
+    int n_group = 0;
+    // Track Val creation targets for first-wins dedup
+    acr_nav::FCtype *val_targets[64];
+    int n_val_target = 0;
+    ind_beg(acr_nav::ctype_c_field_curs, field, center) {
+        if (GraphSkipQ(field)) {
+            // skip
+        } else if (field.p_reftype->isval) {
+            // Val creation path: right column, first-wins dedup per target
+            bool seen = false;
+            for (int i = 0; i < n_val_target; i++) {
+                if (val_targets[i] == field.p_arg) {
+                    seen = true;
+                    break;
+                }
+            }
+            if (!seen && n_val_target < 64 && n_group < max_groups) {
+                val_targets[n_val_target++] = field.p_arg;
+                // Val creation path: always a new group (one edge per target, matching amc_vis)
+                int gi = n_group++;
+                groups[gi].p_neighbor = field.p_arg;
+                groups[gi].n_field = 1;
+                groups[gi].fields[0] = &field;
+                groups[gi].is_left = false;
+            }
+        } else {
+            // Dep access path: column based on 'up' flag
+            bool is_left = field.p_reftype->up;
+            int gi = -1;
+            for (int i = 0; i < n_group; i++) {
+                if (groups[i].p_neighbor == field.p_arg && groups[i].is_left == is_left) {
+                    gi = i;
+                    break;
+                }
+            }
+            if (gi < 0 && n_group < max_groups) {
+                gi = n_group++;
+                groups[gi].p_neighbor = field.p_arg;
+                groups[gi].n_field = 0;
+                groups[gi].is_left = is_left;
+            }
+            if (gi >= 0 && groups[gi].n_field < 64) {
+                groups[gi].fields[groups[gi].n_field++] = &field;
+            }
+        }
+    } ind_end;
+    return n_group;
+}
+
+// Given the center ctype and a line index in the graph viewmode,
+// return the neighbor FCtype* that owns that line, or NULL for center lines.
+// Re-runs the layout logic without rendering.
+static acr_nav::FCtype *GraphNodeAtLine(acr_nav::FCtype &center, int line_idx) {
+    acr_nav::FCtype *ret = NULL;
+    GraphEdgeGroup groups[64];
+    int n_group = CollectGraphEdges(center, groups, 64);
+    // Separate right and left groups in iteration order
+    int right_groups[64], n_right = 0;
+    int left_groups[64], n_left = 0;
+    for (int i = 0; i < n_group; i++) {
+        if (groups[i].is_left) {
+            left_groups[n_left++] = i;
+        } else {
+            right_groups[n_right++] = i;
+        }
+    }
+    // Line 0 is center open -> NULL; start scanning from line 1
+    int cur_line = 1;
+    // Right-column blocks
+    for (int ri = 0; ri < n_right; ri++) {
+        GraphEdgeGroup &g = groups[right_groups[ri]];
+        int block_lines = g.n_field + 1;
+        if (line_idx >= cur_line && line_idx < cur_line + block_lines) {
+            ret = g.p_neighbor;
+        }
+        cur_line += block_lines;
+    }
+    // Left-column blocks
+    for (int li = 0; li < n_left; li++) {
+        GraphEdgeGroup &g = groups[left_groups[li]];
+        // Non-last: open + edges + close = n_field + 2
+        // Last: open + edges + center_close + left_close = n_field + 3
+        int block_lines = g.n_field + 2 + (li == n_left - 1 ? 1 : 0);
+        // Center close line in last block maps to NULL (already default)
+        if (li == n_left - 1 && line_idx == cur_line + 1 + g.n_field) {
+            // center close -- ret stays NULL
+        } else if (line_idx >= cur_line && line_idx < cur_line + block_lines) {
+            ret = g.p_neighbor;
+        }
+        cur_line += block_lines;
+    }
+    return ret;
+}
+
+// Build amc_vis-style graph lines for the given ctype.
+// Populates the graph viewmode's line_elems array.
+static void LoadGraph(acr_nav::FCtype &ctype) {
+    acr_nav::FViewmode &vm = *acr_nav::_db.p_graph_viewmode;
+    ClearViewmodeLines(vm);
+    vm.header = ctype.ctype;
+    acr_nav::_db.p_graph_ctype = &ctype;
+    // Collect edge groups
+    GraphEdgeGroup groups[64];
+    int n_group = CollectGraphEdges(ctype, groups, 64);
+    // Zero groups: emit nothing, let empty_msg render "no access paths"
+    if (n_group > 0) {
+        // Separate right and left groups
+        int right_groups[64], n_right = 0;
+        int left_groups[64], n_left = 0;
+        for (int i = 0; i < n_group; i++) {
+            if (groups[i].is_left) {
+                left_groups[n_left++] = i;
+            } else {
+                right_groups[n_right++] = i;
+            }
+        }
+        // Measure widths for column positioning
+        int max_left_name = 0;
+        int max_left_label = 0;
+        int max_right_label = 0;
+        for (int i = 0; i < n_group; i++) {
+            GraphEdgeGroup &g = groups[i];
+            int name_len = ch_N(g.p_neighbor->ctype);
+            for (int fi = 0; fi < g.n_field; fi++) {
+                acr_nav::FField &fld = *g.fields[fi];
+                int label_len = ch_N(fld.reftype) + 1 + ch_N(name_Get(fld));
+                if (g.is_left) {
+                    max_left_name = i32_Max(max_left_name, name_len);
+                    max_left_label = i32_Max(max_left_label, label_len);
+                } else {
+                    max_right_label = i32_Max(max_right_label, label_len);
+                }
+            }
+        }
+        // Column positions
+        int center_x = 0;
+        if (n_left > 0) {
+            center_x = max_left_name + 2 + max_left_label + 3;
+        }
+        // Line 0: center open
+        {
+            tempstr line;
+            char_PrintNTimes(' ', line, center_x);
+            line << "/ " << ctype.ctype;
+            acr_nav::line_Alloc(vm) = line;
+        }
+        // Right-column blocks
+        for (int ri = 0; ri < n_right; ri++) {
+            GraphEdgeGroup &g = groups[right_groups[ri]];
+            for (int fi = 0; fi < g.n_field; fi++) {
+                acr_nav::FField &fld = *g.fields[fi];
+                tempstr label;
+                label << fld.reftype << " " << name_Get(fld);
+                tempstr line;
+                char_PrintNTimes(' ', line, center_x);
+                line << "|" << label;
+                int arrow_pad = max_right_label - ch_N(label) + 1;
+                char_PrintNTimes('-', line, arrow_pad);
+                if (fi == 0) {
+                    line << ">/ " << g.p_neighbor->ctype;
+                } else {
+                    line << ">|";
+                }
+                acr_nav::line_Alloc(vm) = line;
+            }
+            // Close line for right neighbor
+            {
+                tempstr line;
+                char_PrintNTimes(' ', line, center_x);
+                line << "|";
+                int right_x = center_x + max_right_label + 2;
+                char_PrintNTimes(' ', line, right_x - center_x - 1);
+                line << "-";
+                acr_nav::line_Alloc(vm) = line;
+            }
+        }
+        // Left-column blocks
+        for (int li = 0; li < n_left; li++) {
+            GraphEdgeGroup &g = groups[left_groups[li]];
+            int left_x = center_x - max_left_label - 3;
+            int name_x = left_x - ch_N(g.p_neighbor->ctype) - 2;
+            if (name_x < 0) {
+                name_x = 0;
+            }
+            // Open line: neighbor name
+            {
+                tempstr line;
+                char_PrintNTimes(' ', line, name_x);
+                line << "/ " << g.p_neighbor->ctype;
+                int cur_len = ch_N(line);
+                if (cur_len < center_x) {
+                    char_PrintNTimes(' ', line, center_x - cur_len);
+                }
+                line << "|";
+                acr_nav::line_Alloc(vm) = line;
+            }
+            // Edge lines
+            for (int fi = 0; fi < g.n_field; fi++) {
+                acr_nav::FField &fld = *g.fields[fi];
+                tempstr label;
+                label << fld.reftype << " " << name_Get(fld);
+                tempstr line;
+                char_PrintNTimes(' ', line, name_x);
+                line << "|<";
+                int dash_len = center_x - name_x - 2;
+                char_PrintNTimes('-', line, dash_len);
+                line << "|" << label;
+                acr_nav::line_Alloc(vm) = line;
+            }
+            // Center close: inside last left block; otherwise left-close + center bar
+            if (li == n_left - 1) {
+                tempstr line;
+                char_PrintNTimes(' ', line, name_x);
+                line << "|";
+                int cur_len = ch_N(line);
+                if (cur_len < center_x) {
+                    char_PrintNTimes(' ', line, center_x - cur_len);
+                }
+                line << "-";
+                acr_nav::line_Alloc(vm) = line;
+            } else {
+                tempstr line;
+                char_PrintNTimes(' ', line, name_x);
+                line << "-";
+                int cur_len = ch_N(line);
+                if (cur_len < center_x) {
+                    char_PrintNTimes(' ', line, center_x - cur_len);
+                }
+                line << "|";
+                acr_nav::line_Alloc(vm) = line;
+            }
+            // Left neighbor close after center close (last block only)
+            if (li == n_left - 1) {
+                tempstr line;
+                char_PrintNTimes(' ', line, name_x);
+                line << "-";
+                acr_nav::line_Alloc(vm) = line;
+            }
+        }
+        // If no left blocks, close center with standalone line
+        if (n_left == 0) {
+            tempstr line;
+            char_PrintNTimes(' ', line, center_x);
+            line << "-";
+            acr_nav::line_Alloc(vm) = line;
+        }
+    }
+}
+
+static void GraphEnsureContent(void *, acr_nav::FCtype &ct) {
+    if (acr_nav::_db.p_graph_ctype != &ct) {
+        LoadGraph(ct);
+    }
+}
+
 // Format a single ssim record as a vertical card: section header + one key:value per line.
 // Appends formatted lines to vm.line_elems. Skips primary key attr when its value
 // matches field_name (already shown in the detail header bar).
@@ -1071,6 +1349,35 @@ void acr_nav::navaction_switch_panel_right() {
 
 // -----------------------------------------------------------------------------
 
+// Push navstack, navigate to target ctype, set dest_viewmode.
+// Shared by field/xref follow and graph follow.
+static void NavigateToTarget(acr_nav::FCtype *sel_ct, acr_nav::FCtype *target, acr_nav::FViewmode *dest_viewmode) {
+    acr_nav::FPanel *left = acr_nav::_db.p_left_panel;
+    acr_nav::Naventry &entry = acr_nav::navstack_Alloc();
+    entry.filter = acr_nav::_db.filter;
+    entry.navmode = acr_nav::_db.p_cur_mode->navmode;
+    entry.scroll_offset = left->scroll_offset;
+    entry.sel_row = left->sel_row;
+    entry.right_sel_row = acr_nav::_db.p_right_panel->sel_row;
+    entry.right_scroll_offset = acr_nav::_db.p_right_panel->scroll_offset;
+    entry.viewmode = acr_nav::_db.p_cur_viewmode->viewmode;
+    entry.ctype = sel_ct->ctype;
+    entry.filtertarget = acr_nav::_db.p_cur_filtertarget->filtertarget;
+    entry.focus_panel = acr_nav::_db.p_cur_panel->panel;
+    acr_nav::_db.p_cur_viewmode = dest_viewmode;
+    acr_nav::_db.filter = "";
+    acr_nav::_db.p_cur_filtertarget = acr_nav::_db.p_default_filtertarget;
+    SwitchToBrowse();
+    target->p_ns->collapsed = false;
+    BuildLeftItems();
+    for (int i = 0; i < acr_nav::left_item_N(); i++) {
+        if (acr_nav::left_item_qFind(i).ctype == target->ctype) {
+            left->sel_row = i;
+            break;
+        }
+    }
+}
+
 void acr_nav::navaction_follow_ref() {
     acr_nav::FPanel &panel = *acr_nav::_db.p_cur_panel;
     acr_nav::FPanel *left = acr_nav::_db.p_left_panel;
@@ -1097,6 +1404,13 @@ void acr_nav::navaction_follow_ref() {
                 acr_nav::_db.p_cur_panel = acr_nav::_db.p_right_panel;
             }
         }
+    } else if (panel.position == 1 && sel_ct
+               && acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_graph_viewmode) {
+        // Graph mode: navigate to the neighbor ctype on the selected line
+        acr_nav::FCtype *target = GraphNodeAtLine(*sel_ct, panel.sel_row);
+        if (target && target != sel_ct) {
+            NavigateToTarget(sel_ct, target, acr_nav::_db.p_graph_viewmode);
+        }
     } else if (panel.position == 1 && acr_nav::_db.p_cur_viewmode->has_fields
                && sel_ct && panel.sel_row < RightPanelItemCount(sel_ct)) {
         acr_nav::FField *fld = RightPanelFieldFind(sel_ct, panel.sel_row);
@@ -1106,31 +1420,7 @@ void acr_nav::navaction_follow_ref() {
             target = reverse ? fld->p_ctype : fld->p_arg;
         }
         if (fld && target != sel_ct) {
-            acr_nav::Naventry &entry = acr_nav::navstack_Alloc();
-            entry.filter = acr_nav::_db.filter;
-            entry.navmode = acr_nav::_db.p_cur_mode->navmode;
-            entry.scroll_offset = left->scroll_offset;
-            entry.sel_row = left->sel_row;
-            entry.right_sel_row = acr_nav::_db.p_right_panel->sel_row;
-            entry.right_scroll_offset = acr_nav::_db.p_right_panel->scroll_offset;
-            entry.viewmode = acr_nav::_db.p_cur_viewmode->viewmode;
-            entry.ctype = sel_ct->ctype;
-            entry.filtertarget = acr_nav::_db.p_cur_filtertarget->filtertarget;
-            entry.focus_panel = acr_nav::_db.p_cur_panel->panel;
-            // Reset to forward view on navigation -- new ctype starts in its natural view
-            acr_nav::_db.p_cur_viewmode = acr_nav::_db.p_default_viewmode;
-            // Switch to browse mode with full ctype list so target is reachable
-            acr_nav::_db.filter = "";
-            acr_nav::_db.p_cur_filtertarget = acr_nav::_db.p_default_filtertarget;
-            SwitchToBrowse();
-            target->p_ns->collapsed = false;  // ensure target namespace is expanded
-            BuildLeftItems();
-            for (int i = 0; i < acr_nav::left_item_N(); i++) {
-                if (acr_nav::left_item_qFind(i).ctype == target->ctype) {
-                    left->sel_row = i;
-                    break;
-                }
-            }
+            NavigateToTarget(sel_ct, target, acr_nav::_db.p_default_viewmode);
         }
     }
 }
@@ -1238,6 +1528,10 @@ void acr_nav::navaction_toggle_fields() { ToggleViewmode(acr_nav::_db.p_default_
 // -----------------------------------------------------------------------------
 
 void acr_nav::navaction_toggle_xref() { ToggleViewmode(acr_nav::_db.p_xref_viewmode); }
+
+// -----------------------------------------------------------------------------
+
+void acr_nav::navaction_toggle_graph() { ToggleViewmode(acr_nav::_db.p_graph_viewmode); }
 
 // -----------------------------------------------------------------------------
 
@@ -2057,6 +2351,7 @@ static void InitPanels() {
     acr_nav::_db.p_codegen_viewmode = acr_nav::ind_viewmode_Find("codegen");
     acr_nav::_db.p_nsdep_viewmode = acr_nav::ind_viewmode_Find("nsdep");
     acr_nav::_db.p_xref_viewmode = acr_nav::ind_viewmode_Find("xref");
+    acr_nav::_db.p_graph_viewmode = acr_nav::ind_viewmode_Find("graph");
     vrfy(acr_nav::_db.p_default_viewmode, "viewmode 'fields' not found");
     vrfy(acr_nav::_db.p_preview_viewmode, "viewmode 'preview' not found");
     vrfy(acr_nav::_db.p_help_viewmode, "viewmode 'help' not found");
@@ -2064,10 +2359,12 @@ static void InitPanels() {
     vrfy(acr_nav::_db.p_codegen_viewmode, "viewmode 'codegen' not found");
     vrfy(acr_nav::_db.p_nsdep_viewmode, "viewmode 'nsdep' not found");
     vrfy(acr_nav::_db.p_xref_viewmode, "viewmode 'xref' not found");
+    vrfy(acr_nav::_db.p_graph_viewmode, "viewmode 'graph' not found");
     // Set ensure-content hooks for lazy-loading viewmodes
     acr_nav::_db.p_preview_viewmode->ensure_content = PreviewEnsureContent;
     acr_nav::_db.p_codegen_viewmode->ensure_content = CodegenEnsureContent;
     acr_nav::_db.p_nsdep_viewmode->ensure_content = NsDepEnsureContent;
+    acr_nav::_db.p_graph_viewmode->ensure_content = GraphEnsureContent;
     // Resolve navaction -> helpgroup pointers (Ptr, not Upptr: 6 navactions have empty helpgroup)
     ind_beg(acr_nav::_db_navaction_curs, na, acr_nav::_db) {
         if (ch_N(na.helpgroup) > 0) {

@@ -26,6 +26,7 @@ acr_navdb.keybind  keybind:browse.l  navaction:switch_panel_right  hint_order:0 
 acr_navdb.keybind  keybind:browse.n  navaction:show_nsdep  hint_order:22  comment:""
 acr_navdb.keybind  keybind:browse.p  navaction:toggle_preview  hint_order:0  comment:""
 acr_navdb.keybind  keybind:browse.q  navaction:quit  hint_order:29  comment:""
+acr_navdb.keybind  keybind:browse.v  navaction:toggle_graph  hint_order:0  comment:""
 acr_navdb.keybind  keybind:browse.x  navaction:toggle_xref  hint_order:0  comment:""
 acr_navdb.keybind  keybind:filter.Backspace  navaction:filter_backspace  hint_order:0  comment:""
 acr_navdb.keybind  keybind:filter.Ctrl-U  navaction:filter_clear  hint_order:0  comment:""

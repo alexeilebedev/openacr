@@ -167,6 +167,7 @@ namespace acr_nav { // gen:ns_print_struct
 // global access: ind_ctype (Thash, hash field ctype)
 // global access: p_preview_ctype (Ptr)
 // global access: p_codegen_ctype (Ptr)
+// global access: p_graph_ctype (Ptr)
 // access: acr_nav.FField.p_ctype (Upptr)
 // access: acr_nav.FField.p_arg (Upptr)
 // access: acr_nav.FNs.c_ctype (Ptrary)
@@ -480,6 +481,8 @@ struct FDb { // acr_nav.FDb
     acr_nav::FViewmode*        p_nsdep_viewmode;                 // Cached nsdep viewmode pointer. optional pointer
     acr_nav::FNs*              p_nsdep_ns;                       // Namespace whose deps are currently cached in nsdep view. optional pointer
     acr_nav::FViewmode*        p_xref_viewmode;                  // Xref viewmode pointer. optional pointer
+    acr_nav::FViewmode*        p_graph_viewmode;                 // Cached graph viewmode pointer. optional pointer
+    acr_nav::FCtype*           p_graph_ctype;                    // Ctype whose graph is cached. optional pointer
     acr_nav::trace             trace;                            //
 };
 
@@ -2667,6 +2670,7 @@ void                 FSsimfile_Uninit(acr_nav::FSsimfile& ssimfile) __attribute_
 // global access: p_codegen_viewmode (Ptr)
 // global access: p_nsdep_viewmode (Ptr)
 // global access: p_xref_viewmode (Ptr)
+// global access: p_graph_viewmode (Ptr)
 struct FViewmode { // acr_nav.FViewmode
     acr_nav::FViewmode*                     ind_viewmode_next;      // hash next
     u32                                     ind_viewmode_hashval;   // hash value
@@ -3522,6 +3526,10 @@ void                 navaction_toggle_codegen();
 // func:acr_nav...navaction_toggle_fields
 // this function is 'extrn' and implemented by user
 void                 navaction_toggle_fields();
+// User-implemented function from gstatic:acr_nav.FDb.navaction
+// func:acr_nav...navaction_toggle_graph
+// this function is 'extrn' and implemented by user
+void                 navaction_toggle_graph();
 // User-implemented function from gstatic:acr_nav.FDb.navaction
 // func:acr_nav...navaction_toggle_preview
 // this function is 'extrn' and implemented by user

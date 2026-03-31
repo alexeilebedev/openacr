@@ -770,6 +770,8 @@ dmmeta.field  field:acr_nav.FDb.p_line_key  arg:acr_nav.FNavstyle  reftype:Ptr  
 dmmeta.field  field:acr_nav.FDb.p_nsdep_viewmode  arg:acr_nav.FViewmode  reftype:Ptr  dflt:""  comment:"Cached nsdep viewmode pointer"
 dmmeta.field  field:acr_nav.FDb.p_nsdep_ns  arg:acr_nav.FNs  reftype:Ptr  dflt:""  comment:"Namespace whose deps are currently cached in nsdep view"
 dmmeta.field  field:acr_nav.FDb.p_xref_viewmode  arg:acr_nav.FViewmode  reftype:Ptr  dflt:""  comment:"Xref viewmode pointer"
+dmmeta.field  field:acr_nav.FDb.p_graph_viewmode  arg:acr_nav.FViewmode  reftype:Ptr  dflt:""  comment:"Cached graph viewmode pointer"
+dmmeta.field  field:acr_nav.FDb.p_graph_ctype  arg:acr_nav.FCtype  reftype:Ptr  dflt:""  comment:"Ctype whose graph is cached"
 dmmeta.field  field:acr_nav.FDetailsrc.base  arg:acr_navdb.Detailsrc  reftype:Base  dflt:""  comment:""
 dmmeta.field  field:acr_nav.FField.base  arg:dmmeta.Field  reftype:Base  dflt:""  comment:""
 dmmeta.field  field:acr_nav.FField.p_ctype  arg:acr_nav.FCtype  reftype:Upptr  dflt:""  comment:""
