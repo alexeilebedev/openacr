@@ -157,6 +157,7 @@ namespace acr_nav { struct VisibleLine; }
 namespace acr_nav { extern struct acr_nav::FDb _db; }
 namespace acr_nav { // hook_fcn_typedef
     typedef void (*navaction_step_hook)(); // hook:acr_nav.FNavaction.step
+    typedef void (*viewmode_ensure_content_hook)(void* userctx, acr_nav::FCtype& arg); // hook:acr_nav.FViewmode.ensure_content
 } // hook_decl
 namespace acr_nav { // gen:ns_print_struct
 
@@ -170,6 +171,7 @@ namespace acr_nav { // gen:ns_print_struct
 // access: acr_nav.FField.p_arg (Upptr)
 // access: acr_nav.FNs.c_ctype (Ptrary)
 // access: acr_nav.FSsimfile.p_ctype (Upptr)
+// access: acr_nav.FViewmode.ensure_content (Hook)
 struct FCtype { // acr_nav.FCtype
     algo::Smallstr100     ctype;               // Identifier. must be ns.typename
     algo::Comment         comment;             //
@@ -475,6 +477,8 @@ struct FDb { // acr_nav.FDb
     acr_nav::FNavstyle*        p_line_preproc;                   // Cached style: preprocessor directives. optional pointer
     acr_nav::FNavstyle*        p_line_section;                   // Cached style: section headers. optional pointer
     acr_nav::FNavstyle*        p_line_key;                       // Cached style: attribute keys. optional pointer
+    acr_nav::FViewmode*        p_nsdep_viewmode;                 // Cached nsdep viewmode pointer. optional pointer
+    acr_nav::FNs*              p_nsdep_ns;                       // Namespace whose deps are currently cached in nsdep view. optional pointer
     acr_nav::trace             trace;                            //
 };
 
@@ -2352,6 +2356,7 @@ void                 FNavstyle_Uninit(acr_nav::FNavstyle& navstyle) __attribute_
 // create: acr_nav.FDb.ns (Lary)
 // global access: ns (Lary, by rowid)
 // global access: ind_ns (Thash, hash field ns)
+// global access: p_nsdep_ns (Ptr)
 // access: acr_nav.FCtype.p_ns (Upptr)
 struct FNs { // acr_nav.FNs
     acr_nav::FNs*       ind_ns_next;      // hash next
@@ -2659,27 +2664,32 @@ void                 FSsimfile_Uninit(acr_nav::FSsimfile& ssimfile) __attribute_
 // global access: p_detail_viewmode (Ptr)
 // global access: p_preview_viewmode (Ptr)
 // global access: p_codegen_viewmode (Ptr)
+// global access: p_nsdep_viewmode (Ptr)
 struct FViewmode { // acr_nav.FViewmode
-    acr_nav::FViewmode*       ind_viewmode_next;      // hash next
-    u32                       ind_viewmode_hashval;   // hash value
-    algo::Smallstr50          viewmode;               //
-    algo::Smallstr50          title;                  // Right panel title for this viewmode
-    algo::Smallstr50          next;                   // Next viewmode in Tab cycle
-    algo::Smallstr50          empty_msg;              // Message shown when right panel has no items
-    bool                      has_fields;             //   false  Y: renders field records; N: renders preformatted lines
-    bool                      is_overlay;             //   false  Y: overlay viewmode (help, detail); suppresses need_no_overlay hints
-    bool                      need_ssimfile;          //   false  Viewmode requires ssimfile-backed ctype
-    bool                      is_reverse;             //   false  Y=reverse xrefs, N=forward fields
-    algo::Comment             comment;                //
-    algo::cstring*            line_elems;             // pointer to elements
-    u32                       line_n;                 // number of elements in array
-    u32                       line_max;               // max. capacity of array before realloc
-    algo::cstring             header;                 // Column header line
-    acr_nav::LineColorSpan*   cspan_elems;            // pointer to elements
-    u32                       cspan_n;                // number of elements in array
-    u32                       cspan_max;              // max. capacity of array before realloc
+    acr_nav::FViewmode*                     ind_viewmode_next;      // hash next
+    u32                                     ind_viewmode_hashval;   // hash value
+    algo::Smallstr50                        viewmode;               //
+    algo::Smallstr50                        title;                  // Right panel title for this viewmode
+    algo::Smallstr50                        next;                   // Next viewmode in Tab cycle
+    algo::Smallstr50                        empty_msg;              // Message shown when right panel has no items
+    bool                                    has_fields;             //   false  Y: renders field records; N: renders preformatted lines
+    bool                                    is_overlay;             //   false  Y: overlay viewmode (help, detail); suppresses need_no_overlay hints
+    bool                                    need_ssimfile;          //   false  Viewmode requires ssimfile-backed ctype
+    bool                                    is_reverse;             //   false  Y=reverse xrefs, N=forward fields
+    algo::Comment                           comment;                //
+    algo::cstring*                          line_elems;             // pointer to elements
+    u32                                     line_n;                 // number of elements in array
+    u32                                     line_max;               // max. capacity of array before realloc
+    algo::cstring                           header;                 // Column header line
+    acr_nav::LineColorSpan*                 cspan_elems;            // pointer to elements
+    u32                                     cspan_n;                // number of elements in array
+    u32                                     cspan_max;              // max. capacity of array before realloc
+    acr_nav::viewmode_ensure_content_hook   ensure_content;         //   NULL  Pointer to a function
+    u64                                     ensure_content_ctx;     //   0  Callback context
+    // reftype Hook of acr_nav.FViewmode.ensure_content prohibits copy
     // func:acr_nav.FViewmode..AssignOp
     acr_nav::FViewmode&  operator =(const acr_nav::FViewmode &rhs) = delete;
+    // reftype Hook of acr_nav.FViewmode.ensure_content prohibits copy
     // func:acr_nav.FViewmode..CopyCtor
     FViewmode(const acr_nav::FViewmode &rhs) = delete;
 private:
@@ -2858,6 +2868,19 @@ algo::aryptr<acr_nav::LineColorSpan> cspan_AllocNVal(acr_nav::FViewmode& viewmod
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
 // func:acr_nav.FViewmode.cspan.Insary
 void                 cspan_Insary(acr_nav::FViewmode& viewmode, algo::aryptr<acr_nav::LineColorSpan> rhs, int at) __attribute__((nothrow));
+
+// Invoke function by pointer
+// func:acr_nav.FViewmode.ensure_content.Call
+inline void          ensure_content_Call(acr_nav::FViewmode& viewmode, acr_nav::FCtype& arg) __attribute__((nothrow));
+// Assign 0-argument hook with no context pointer
+// func:acr_nav.FViewmode.ensure_content.Set0
+inline void          ensure_content_Set0(acr_nav::FViewmode& viewmode, void (*fcn)() ) __attribute__((nothrow));
+// Assign 1-argument hook with context pointer
+// func:acr_nav.FViewmode.ensure_content.Set1
+template<class T> inline void ensure_content_Set1(acr_nav::FViewmode& viewmode, T& ctx, void (*fcn)(T&) ) __attribute__((nothrow));
+// Assign 2-argument hook with context pointer
+// func:acr_nav.FViewmode.ensure_content.Set2
+template<class T> inline void ensure_content_Set2(acr_nav::FViewmode& viewmode, T& ctx, void (*fcn)(T&, acr_nav::FCtype& arg) ) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:acr_nav.FViewmode..Init
@@ -3477,6 +3500,10 @@ void                 navaction_show_detail();
 // func:acr_nav...navaction_show_help
 // this function is 'extrn' and implemented by user
 void                 navaction_show_help();
+// User-implemented function from gstatic:acr_nav.FDb.navaction
+// func:acr_nav...navaction_show_nsdep
+// this function is 'extrn' and implemented by user
+void                 navaction_show_nsdep();
 // User-implemented function from gstatic:acr_nav.FDb.navaction
 // func:acr_nav...navaction_switch_panel_left
 // this function is 'extrn' and implemented by user

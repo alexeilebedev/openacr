@@ -317,6 +317,20 @@ static acr_nav::FCtype* SelectedCtype(acr_nav::FPanel &left) {
     return ret;
 }
 
+// Extract the namespace from the current left panel selection.
+// Works for both ctype rows (via ctype's p_ns) and namespace headers (via LeftItem.ns).
+static acr_nav::FNs* SelectedNs() {
+    acr_nav::FPanel &left = *acr_nav::_db.p_left_panel;
+    acr_nav::FCtype *ct = SelectedCtype(left);
+    acr_nav::FNs *ret = NULL;
+    if (ct) {
+        ret = ct->p_ns;
+    } else if (left.sel_row >= 0 && left.sel_row < acr_nav::left_item_N()) {
+        ret = acr_nav::ind_ns_Find(acr_nav::left_item_qFind(left.sel_row).ns);
+    }
+    return ret;
+}
+
 // -----------------------------------------------------------------------------
 
 // is_reverse on FViewmode drives forward/reverse dispatch — no identity checks needed.
@@ -333,6 +347,10 @@ static bool IsHelpMode() {
 
 static bool IsDetailMode() {
     return acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_detail_viewmode;
+}
+
+static bool IsNsDepMode() {
+    return acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_nsdep_viewmode;
 }
 
 // Pop the topmost overlay viewmode from viewmode_stack, restoring p_cur_viewmode.
@@ -361,11 +379,26 @@ static void DismissStartupHelp(acr_nav::FKeybind *keybind) {
     }
 }
 
+static void LoadNsDep(acr_nav::FNs &ns);
+
 // If an overlay viewmode is active and the selected ctype changed, pop all
 // overlays and restore the base viewmode.  During startup help, preserve the
 // overlay so movement doesn't dismiss it.
-static void PopOverlayOnCtypeChange(acr_nav::FCtype *prev_sel_ct, acr_nav::FCtype *sel_ct) {
-    if (sel_ct != prev_sel_ct && !acr_nav::viewmode_stack_EmptyQ() && !acr_nav::_db.startup_help) {
+// nsdep overlay is special: it stays open and reloads on namespace change.
+static bool PopOverlayOnCtypeChange(acr_nav::FCtype *prev_sel_ct, acr_nav::FCtype *sel_ct) {
+    bool keep_nsdep = false;
+    bool nsdep_ns_changed = false;
+    if (IsNsDepMode()) {
+        // nsdep stays open across all navigation; reload on namespace change
+        acr_nav::FNs *cur_ns = sel_ct ? sel_ct->p_ns : SelectedNs();
+        keep_nsdep = (cur_ns != NULL);
+        nsdep_ns_changed = keep_nsdep && cur_ns != acr_nav::_db.p_nsdep_ns;
+        if (nsdep_ns_changed) {
+            LoadNsDep(*cur_ns);
+        }
+    }
+    bool changed = sel_ct != prev_sel_ct || nsdep_ns_changed;
+    if (changed && !acr_nav::viewmode_stack_EmptyQ() && !acr_nav::_db.startup_help && !keep_nsdep) {
         acr_nav::FViewmode *base = acr_nav::ind_viewmode_Find(acr_nav::viewmode_stack_qFind(0));
         acr_nav::viewmode_stack_RemoveAll();
         if (base) {
@@ -373,6 +406,7 @@ static void PopOverlayOnCtypeChange(acr_nav::FCtype *prev_sel_ct, acr_nav::FCtyp
         }
         acr_nav::_db.p_detail_field = NULL;
     }
+    return nsdep_ns_changed;
 }
 
 static int RightPanelLineCount() {
@@ -541,12 +575,6 @@ static void LoadPreview(acr_nav::FCtype &ctype) {
     }
 }
 
-static void EnsurePreviewLoaded(acr_nav::FCtype *sel_ct) {
-    if (sel_ct && acr_nav::_db.p_preview_ctype != sel_ct) {
-        LoadPreview(*sel_ct);
-    }
-}
-
 // True if the identifier matches a C++ keyword commonly found in amc-generated output.
 // Linear scan of ~26 entries; adequate for per-line highlighting.
 static bool IsKw(algo::strptr word) {
@@ -670,9 +698,146 @@ static void LoadCodegen(acr_nav::FCtype &ctype) {
     } ind_end;
 }
 
-static void EnsureCodegenLoaded(acr_nav::FCtype *sel_ct) {
-    if (sel_ct && acr_nav::_db.p_codegen_ctype != sel_ct) {
-        LoadCodegen(*sel_ct);
+static algo::strptr NsDisplayName(acr_nav::FNs &ns) {
+    return ch_N(ns.ns) > 0 ? algo::strptr(ns.ns) : algo::strptr("other");
+}
+
+// Per-namespace dependency count for LoadNsDep accumulation.
+struct NsDep { acr_nav::FNs *ns; int count; };
+
+// Format a sorted section of namespace dependency counts as highlighted text lines.
+// Sorts deps[0..n) by count descending, emits a header line and one row per dep.
+static void FormatNsDepSection(acr_nav::FViewmode &vm, algo::strptr header,
+                               NsDep *deps, int n) {
+    // Sort by count descending (insertion sort)
+    for (int i = 1; i < n; i++) {
+        NsDep tmp = deps[i];
+        int j = i - 1;
+        while (j >= 0 && deps[j].count < tmp.count) {
+            deps[j + 1] = deps[j];
+            j--;
+        }
+        deps[j + 1] = tmp;
+    }
+    // Section header
+    {
+        tempstr hdr;
+        hdr << header;
+        acr_nav::line_Alloc(vm) = hdr;
+        AddSpan(vm, acr_nav::line_N(vm) - 1, 0, ch_N(hdr), acr_nav::_db.p_line_section);
+    }
+    if (n == 0) {
+        acr_nav::line_Alloc(vm) = "  (none)";
+    }
+    // Find max ns name width for alignment
+    int max_wid = 0;
+    for (int i = 0; i < n; i++) {
+        int name_wid = ch_N(NsDisplayName(*deps[i].ns));
+        max_wid = i32_Max(max_wid, name_wid);
+    }
+    // Format each row
+    for (int i = 0; i < n; i++) {
+        algo::strptr name = NsDisplayName(*deps[i].ns);
+        tempstr row;
+        row << "  ";
+        char_PrintNTimes(' ', row, max_wid - ch_N(name));
+        int ns_start = ch_N(row);
+        row << name;
+        int ns_end = ch_N(row);
+        row << "  ";
+        int cnt = deps[i].count;
+        int digs = DecimalDigits(cnt);
+        char_PrintNTimes(' ', row, i32_Max(0, 5 - digs));
+        row << cnt;
+        row << (cnt == 1 ? " field" : " fields");
+        acr_nav::line_Alloc(vm) = row;
+        AddSpan(vm, acr_nav::line_N(vm) - 1, ns_start, ns_end, acr_nav::_db.p_line_key);
+    }
+}
+
+// Find-or-insert namespace in accumulator array, increment count.
+static void AccumNsDep(NsDep *deps, int &n, int max_n, acr_nav::FNs *ns) {
+    bool found = false;
+    for (int i = 0; i < n && !found; i++) {
+        if (deps[i].ns == ns) {
+            deps[i].count++;
+            found = true;
+        }
+    }
+    if (!found && n < max_n) {
+        deps[n].ns = ns;
+        deps[n].count = 1;
+        n++;
+    }
+}
+
+// Compute and display cross-namespace field dependencies for a given namespace.
+// Upstream: namespaces this ns imports from (via field arg references).
+// Downstream: namespaces that import from this ns (via field_arg back-references).
+static void LoadNsDep(acr_nav::FNs &ns) {
+    acr_nav::FViewmode &vm = *acr_nav::_db.p_nsdep_viewmode;
+    ClearViewmodeLines(vm);
+    acr_nav::_db.p_nsdep_ns = &ns;
+    // Fixed-size accumulator for per-namespace counts
+    NsDep deps[256];
+    if (acr_nav::ns_N() > 256) {
+        acr_nav::line_Alloc(vm) = "(too many namespaces)";
+    } else {
+        // --- Upstream: fields in this ns whose arg is in another ns ---
+        int n_up = 0;
+        ind_beg(acr_nav::ns_c_ctype_curs, ct, ns) {
+            ind_beg(acr_nav::ctype_c_field_curs, fld, ct) {
+                if (fld.p_arg && fld.p_arg->p_ns != &ns) {
+                    AccumNsDep(deps, n_up, 256, fld.p_arg->p_ns);
+                }
+            } ind_end;
+        } ind_end;
+        algo::strptr display_name = NsDisplayName(ns);
+        // Format upstream section
+        {
+            tempstr hdr;
+            hdr << "Upstream (" << display_name << " imports from):";
+            FormatNsDepSection(vm, hdr, deps, n_up);
+        }
+        // --- Downstream: fields from OTHER ns whose arg points to ctypes in this ns ---
+        NsDep down[256];
+        int n_down = 0;
+        ind_beg(acr_nav::ns_c_ctype_curs, ct, ns) {
+            ind_beg(acr_nav::ctype_c_field_arg_curs, fld, ct) {
+                if (fld.p_ctype->p_ns != &ns) {
+                    AccumNsDep(down, n_down, 256, fld.p_ctype->p_ns);
+                }
+            } ind_end;
+        } ind_end;
+        // Blank separator
+        acr_nav::line_Alloc(vm) = "";
+        // Format downstream section
+        {
+            tempstr hdr;
+            hdr << "Downstream (imports from " << display_name << "):";
+            FormatNsDepSection(vm, hdr, down, n_down);
+        }
+    }
+    vm.header = NsDisplayName(ns);
+}
+
+// Ensure-content wrappers for hook dispatch.
+// Each normalizes the lazy-load check to the ensure_content hook signature.
+static void PreviewEnsureContent(void *, acr_nav::FCtype &ct) {
+    if (acr_nav::_db.p_preview_ctype != &ct) {
+        LoadPreview(ct);
+    }
+}
+
+static void CodegenEnsureContent(void *, acr_nav::FCtype &ct) {
+    if (acr_nav::_db.p_codegen_ctype != &ct) {
+        LoadCodegen(ct);
+    }
+}
+
+static void NsDepEnsureContent(void *, acr_nav::FCtype &ct) {
+    if (acr_nav::_db.p_nsdep_ns != ct.p_ns) {
+        LoadNsDep(*ct.p_ns);
     }
 }
 
@@ -781,12 +946,16 @@ static void LoadDetail(acr_nav::FField &field) {
 static int RightPanelItemCount(acr_nav::FCtype *sel_ct) {
     int ret = 0;
     if (!acr_nav::_db.p_cur_viewmode->has_fields) {
-        if (acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_preview_viewmode && sel_ct) {
-            EnsurePreviewLoaded(sel_ct);
+        if (sel_ct && acr_nav::_db.p_cur_viewmode->ensure_content) {
+            acr_nav::ensure_content_Call(*acr_nav::_db.p_cur_viewmode, *sel_ct);
         }
-        // Future: an ensure-content hook on FViewmode would eliminate per-viewmode checks here
-        if (acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_codegen_viewmode && sel_ct) {
-            EnsureCodegenLoaded(sel_ct);
+        // Fallback for nsdep namespace-header rows where sel_ct is NULL --
+        // the hook path above handles the ctype case via NsDepEnsureContent.
+        if (!sel_ct && IsNsDepMode()) {
+            acr_nav::FNs *ns = SelectedNs();
+            if (ns && acr_nav::_db.p_nsdep_ns != ns) {
+                LoadNsDep(*ns);
+            }
         }
         ret = RightPanelLineCount();
     } else if (sel_ct) {
@@ -921,6 +1090,10 @@ void acr_nav::navaction_follow_ref() {
                     BuildLeftItems();
                 }
             } else {
+                // Dismiss nsdep overlay so right panel returns to fields view
+                if (IsNsDepMode()) {
+                    PopViewmode();
+                }
                 acr_nav::_db.p_cur_panel = acr_nav::_db.p_right_panel;
             }
         }
@@ -1191,6 +1364,22 @@ void acr_nav::navaction_show_detail() {
             acr_nav::viewmode_stack_Alloc() = acr_nav::_db.p_cur_viewmode->viewmode;
             LoadDetail(*fld);
             acr_nav::_db.p_cur_viewmode = acr_nav::_db.p_detail_viewmode;
+        }
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+void acr_nav::navaction_show_nsdep() {
+    if (IsNsDepMode()) {
+        PopViewmode();
+    } else {
+        acr_nav::FCtype *sel_ct = SelectedCtype(*acr_nav::_db.p_left_panel);
+        acr_nav::FNs *ns = sel_ct ? sel_ct->p_ns : SelectedNs();
+        if (ns) {
+            acr_nav::viewmode_stack_Alloc() = acr_nav::_db.p_cur_viewmode->viewmode;
+            LoadNsDep(*ns);
+            acr_nav::_db.p_cur_viewmode = acr_nav::_db.p_nsdep_viewmode;
         }
     }
 }
@@ -1673,7 +1862,7 @@ static void RenderContentArea(RenderCtx &ctx) {
                 acr_nav::FNs *ns = acr_nav::ind_ns_Find(item.ns);
                 int count = ns ? ns->n_match : 0;
                 left_cell << (ns && ns->collapsed ? " \xe2\x96\xb8 " : " \xe2\x96\xbe ");
-                left_cell << (ch_N(item.ns) > 0 ? algo::strptr(item.ns) : algo::strptr("extern"));
+                left_cell << (ns ? NsDisplayName(*ns) : algo::strptr("other"));
                 left_cell << " (" << count << ")";
             } else {
                 // Ctype row: indented, namespace prefix stripped
@@ -1812,7 +2001,7 @@ static void Render(acr_nav::FCtype *sel_ct) {
     ind_beg(acr_nav::_db_ns_curs, ns, acr_nav::_db) {
         if (ns.n_match > 0) {
             // Namespace header: " X label (count)"
-            int label_len = ch_N(ns.ns) > 0 ? ch_N(ns.ns) : 6;  // "extern" = 6
+            int label_len = ch_N(NsDisplayName(ns));
             int count = ns.n_match;
             int hdr_wid = 4 + label_len + 3 + DecimalDigits(count);
             max_name = i32_Max(max_name, hdr_wid);
@@ -1861,11 +2050,17 @@ static void InitPanels() {
     acr_nav::_db.p_help_viewmode = acr_nav::ind_viewmode_Find("help");
     acr_nav::_db.p_detail_viewmode = acr_nav::ind_viewmode_Find("detail");
     acr_nav::_db.p_codegen_viewmode = acr_nav::ind_viewmode_Find("codegen");
+    acr_nav::_db.p_nsdep_viewmode = acr_nav::ind_viewmode_Find("nsdep");
     vrfy(acr_nav::_db.p_default_viewmode, "viewmode 'fields' not found");
     vrfy(acr_nav::_db.p_preview_viewmode, "viewmode 'preview' not found");
     vrfy(acr_nav::_db.p_help_viewmode, "viewmode 'help' not found");
     vrfy(acr_nav::_db.p_detail_viewmode, "viewmode 'detail' not found");
     vrfy(acr_nav::_db.p_codegen_viewmode, "viewmode 'codegen' not found");
+    vrfy(acr_nav::_db.p_nsdep_viewmode, "viewmode 'nsdep' not found");
+    // Set ensure-content hooks for lazy-loading viewmodes
+    acr_nav::_db.p_preview_viewmode->ensure_content = PreviewEnsureContent;
+    acr_nav::_db.p_codegen_viewmode->ensure_content = CodegenEnsureContent;
+    acr_nav::_db.p_nsdep_viewmode->ensure_content = NsDepEnsureContent;
     // Resolve navaction -> helpgroup pointers (Ptr, not Upptr: 6 navactions have empty helpgroup)
     ind_beg(acr_nav::_db_navaction_curs, na, acr_nav::_db) {
         if (ch_N(na.helpgroup) > 0) {
@@ -1946,10 +2141,10 @@ static bool ProcessKey(algo::strptr key_name) {
         if (did_something) {
             DismissStartupHelp(keybind);
             acr_nav::FCtype *sel_ct = SelectedCtype(*left);
-            PopOverlayOnCtypeChange(prev_sel_ct, sel_ct);
+            bool nsdep_ns_changed = PopOverlayOnCtypeChange(prev_sel_ct, sel_ct);
             bool forward = (acr_nav::navstack_N() >= prev_depth);
             bool vm_changed = (acr_nav::_db.p_cur_viewmode != prev_viewmode);
-            bool ct_changed = (sel_ct != prev_sel_ct);
+            bool ct_changed = (sel_ct != prev_sel_ct) || nsdep_ns_changed;
             if (forward && (vm_changed || ct_changed)) {
                 right->sel_row = 0;
                 right->scroll_offset = 0;

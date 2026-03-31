@@ -22,6 +22,7 @@ acr_navdb.keybind  keybind:browse.h  navaction:switch_panel_left  hint_order:0  
 acr_navdb.keybind  keybind:browse.j  navaction:move_down  hint_order:0  comment:""
 acr_navdb.keybind  keybind:browse.k  navaction:move_up  hint_order:0  comment:""
 acr_navdb.keybind  keybind:browse.l  navaction:follow_ref  hint_order:0  comment:""
+acr_navdb.keybind  keybind:browse.n  navaction:show_nsdep  hint_order:22  comment:""
 acr_navdb.keybind  keybind:browse.p  navaction:toggle_preview  hint_order:0  comment:""
 acr_navdb.keybind  keybind:browse.q  navaction:quit  hint_order:29  comment:""
 acr_navdb.keybind  keybind:browse.r  navaction:cycle_viewmode  hint_order:0  comment:""

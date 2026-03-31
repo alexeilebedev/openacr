@@ -2171,6 +2171,35 @@ inline u64 acr_nav::cspan_rowid_Get(acr_nav::FViewmode& viewmode, acr_nav::LineC
     return u64(id);
 }
 
+// --- acr_nav.FViewmode.ensure_content.Call
+// Invoke function by pointer
+inline void acr_nav::ensure_content_Call(acr_nav::FViewmode& viewmode, acr_nav::FCtype& arg) {
+    if (viewmode.ensure_content) {
+        viewmode.ensure_content((void*)viewmode.ensure_content_ctx, arg);
+    }
+}
+
+// --- acr_nav.FViewmode.ensure_content.Set0
+// Assign 0-argument hook with no context pointer
+inline void acr_nav::ensure_content_Set0(acr_nav::FViewmode& viewmode, void (*fcn)() ) {
+    viewmode.ensure_content_ctx = 0;
+    viewmode.ensure_content = (acr_nav::viewmode_ensure_content_hook)fcn;
+}
+
+// --- acr_nav.FViewmode.ensure_content.Set1
+// Assign 1-argument hook with context pointer
+template<class T> inline void acr_nav::ensure_content_Set1(acr_nav::FViewmode& viewmode, T& ctx, void (*fcn)(T&) ) {
+    viewmode.ensure_content_ctx = (u64)&ctx;
+    viewmode.ensure_content = (acr_nav::viewmode_ensure_content_hook)fcn;
+}
+
+// --- acr_nav.FViewmode.ensure_content.Set2
+// Assign 2-argument hook with context pointer
+template<class T> inline void acr_nav::ensure_content_Set2(acr_nav::FViewmode& viewmode, T& ctx, void (*fcn)(T&, acr_nav::FCtype& arg) ) {
+    viewmode.ensure_content_ctx = (u64)&ctx;
+    viewmode.ensure_content = (acr_nav::viewmode_ensure_content_hook)fcn;
+}
+
 // --- acr_nav.FViewmode.line_curs.Next
 // proceed to next item
 inline void acr_nav::viewmode_line_curs_Next(viewmode_line_curs &curs) {

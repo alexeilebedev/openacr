@@ -71,6 +71,7 @@ dmmeta.userfunc  userfunc:acr_nav...navaction_page_up  acrkey:gstatic/acr_navdb.
 dmmeta.userfunc  userfunc:acr_nav...navaction_quit  acrkey:gstatic/acr_navdb.navaction:quit  cppname:acr_nav.navaction_quit  comment:""
 dmmeta.userfunc  userfunc:acr_nav...navaction_show_detail  acrkey:gstatic/acr_navdb.navaction:show_detail  cppname:acr_nav.navaction_show_detail  comment:""
 dmmeta.userfunc  userfunc:acr_nav...navaction_show_help  acrkey:gstatic/acr_navdb.navaction:show_help  cppname:acr_nav.navaction_show_help  comment:""
+dmmeta.userfunc  userfunc:acr_nav...navaction_show_nsdep  acrkey:gstatic/acr_navdb.navaction:show_nsdep  cppname:acr_nav.navaction_show_nsdep  comment:""
 dmmeta.userfunc  userfunc:acr_nav...navaction_switch_panel_left  acrkey:gstatic/acr_navdb.navaction:switch_panel_left  cppname:acr_nav.navaction_switch_panel_left  comment:""
 dmmeta.userfunc  userfunc:acr_nav...navaction_switch_panel_right  acrkey:gstatic/acr_navdb.navaction:switch_panel_right  cppname:acr_nav.navaction_switch_panel_right  comment:""
 dmmeta.userfunc  userfunc:acr_nav...navaction_toggle_codegen  acrkey:gstatic/acr_navdb.navaction:toggle_codegen  cppname:acr_nav.navaction_toggle_codegen  comment:""

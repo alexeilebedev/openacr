@@ -1,4 +1,4 @@
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1404  n_ctype:1405  n_field:5669  viewmode:help  breadcrumb:""  filtertarget:ctype  hints:"Escape:dismiss  q:quit  ?:dismiss"
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1404  n_ctype:1405  n_field:5672  viewmode:help  breadcrumb:""  filtertarget:ctype  hints:"Escape:dismiss  q:quit  ?:dismiss"
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:83  sel_value:""
 acr_nav.VisibleLeftItem  row:0  value:""  kind:ns  collapsed:Y  n_match:44  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:abt  kind:ns  collapsed:Y  n_match:19  n_record:0
@@ -83,7 +83,7 @@ acr_nav.VisibleLeftItem  row:79  value:strconv  kind:ns  collapsed:Y  n_match:1 
 acr_nav.VisibleLeftItem  row:80  value:sv2ssim  kind:ns  collapsed:Y  n_match:4  n_record:0
 acr_nav.VisibleLeftItem  row:81  value:ws  kind:ns  collapsed:Y  n_match:16  n_record:0
 acr_nav.VisibleLeftItem  row:82  value:wsdb  kind:ns  collapsed:Y  n_match:1  n_record:0
-acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:20  sel_value:"↑/↓               k/j       Move selection up/down"
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:21  sel_value:"↑/↓               k/j       Move selection up/down"
 acr_nav.VisibleLine  row:0  value:"↑/↓               k/j       Move selection up/down"
 acr_nav.VisibleLine  row:1  value:"PgUp/PgDown/Space b         Page up/down"
 acr_nav.VisibleLine  row:2  value:"Home/End          g/G       Jump to first/last item"
@@ -96,16 +96,17 @@ acr_nav.VisibleLine  row:8  value:"Tab               r         Cycle right panel
 acr_nav.VisibleLine  row:9  value:"                  p         Toggle ssimfile content preview"
 acr_nav.VisibleLine  row:10  value:"                  d         Toggle field metadata detail"
 acr_nav.VisibleLine  row:11  value:"                  c         Toggle generated code view"
-acr_nav.VisibleLine  row:12  value:""
-acr_nav.VisibleLine  row:13  value:"/                           Enter filter input mode"
-acr_nav.VisibleLine  row:14  value:"                            Clear filter text"
-acr_nav.VisibleLine  row:15  value:"Escape                      Dismiss overlay or clear filter"
-acr_nav.VisibleLine  row:16  value:"                            Cycle filter target (Tab in filter mode)"
-acr_nav.VisibleLine  row:17  value:""
-acr_nav.VisibleLine  row:18  value:"?                           Toggle help panel"
-acr_nav.VisibleLine  row:19  value:"                  q         Exit acr_nav"
+acr_nav.VisibleLine  row:12  value:"                  n         Toggle namespace dependency view"
+acr_nav.VisibleLine  row:13  value:""
+acr_nav.VisibleLine  row:14  value:"/                           Enter filter input mode"
+acr_nav.VisibleLine  row:15  value:"                            Clear filter text"
+acr_nav.VisibleLine  row:16  value:"Escape                      Dismiss overlay or clear filter"
+acr_nav.VisibleLine  row:17  value:"                            Cycle filter target (Tab in filter mode)"
+acr_nav.VisibleLine  row:18  value:""
+acr_nav.VisibleLine  row:19  value:"?                           Toggle help panel"
+acr_nav.VisibleLine  row:20  value:"                  q         Exit acr_nav"
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1404  n_ctype:1405  n_field:5669  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  Tab:view  q:quit  ?:help"
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1404  n_ctype:1405  n_field:5672  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  Tab:view  n:ns-deps  q:quit  ?:help"
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:127  sel_value:""
 acr_nav.VisibleLeftItem  row:0  value:""  kind:ns  collapsed:N  n_match:44  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:DIR  kind:ctype  collapsed:N  n_match:0  n_record:0
@@ -236,7 +237,7 @@ acr_nav.VisibleLeftItem  row:125  value:ws  kind:ns  collapsed:Y  n_match:16  n_
 acr_nav.VisibleLeftItem  row:126  value:wsdb  kind:ns  collapsed:Y  n_match:1  n_record:0
 acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1404  n_ctype:1405  n_field:5669  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  Tab:view  q:quit  ?:help"
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1404  n_ctype:1405  n_field:5672  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  Tab:view  n:ns-deps  q:quit  ?:help"
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:83  sel_value:""
 acr_nav.VisibleLeftItem  row:0  value:""  kind:ns  collapsed:Y  n_match:44  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:abt  kind:ns  collapsed:Y  n_match:19  n_record:0
@@ -323,7 +324,7 @@ acr_nav.VisibleLeftItem  row:81  value:ws  kind:ns  collapsed:Y  n_match:16  n_r
 acr_nav.VisibleLeftItem  row:82  value:wsdb  kind:ns  collapsed:Y  n_match:1  n_record:0
 acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:amc  navstack_depth:0  n_sel_ctype:255  n_ctype:1405  n_field:5669  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  Tab:view  q:quit  ?:help"
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:amc  navstack_depth:0  n_sel_ctype:255  n_ctype:1405  n_field:5672  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  Tab:view  n:ns-deps  q:quit  ?:help"
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:263  sel_value:amc.BltinId
 acr_nav.VisibleLeftItem  row:0  value:amc  kind:ns  collapsed:N  n_match:130  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:amc.BltinId  kind:ctype  collapsed:N  n_match:0  n_record:0
@@ -591,7 +592,7 @@ acr_nav.VisibleLeftItem  row:262  value:report.amc  kind:ctype  collapsed:N  n_m
 acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:1  sel_value:amc.BltinId.value
 acr_nav.VisibleField  row:0  field:amc.BltinId.value  arg:u8  reftype:Val  style:field_val  navigable:Y  match:N
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:amc  navstack_depth:0  n_sel_ctype:255  n_ctype:1405  n_field:5669  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  Tab:view  q:quit  ?:help"
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:amc  navstack_depth:0  n_sel_ctype:255  n_ctype:1405  n_field:5672  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  Tab:view  n:ns-deps  q:quit  ?:help"
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:263  sel_value:amc.BltinId
 acr_nav.VisibleLeftItem  row:0  value:amc  kind:ns  collapsed:N  n_match:130  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:amc.BltinId  kind:ctype  collapsed:N  n_match:0  n_record:0

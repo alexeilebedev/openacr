@@ -450,7 +450,7 @@ static void acr_nav::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_nav.Input'  signature:'ce7aab99623f393959ff1ee516ccd1d62d0adea0'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_nav.Input'  signature:'4d09ca1b019e5167804de0a6c901d64ce2c10c14'");
 }
 
 // --- acr_nav.FDb._db.InsertStrptrMaybe
@@ -2145,7 +2145,7 @@ static void acr_nav::navaction_LoadStatic() {
         ,{ "acr_navdb.navaction  navaction:filter_clear  hint:\"\"  helpgroup:search  sort_order:11  passive:N  need_no_overlay:N  need_has_fields:N  need_navstack:N  need_right_panel:N  dismiss_hint:\"\"  dismiss_viewmode:\"\"  need_left_panel:N  comment:\"Clear filter text\"", acr_nav::navaction_filter_clear }
         ,{ "acr_navdb.navaction  navaction:filter_cycle_target  hint:target  helpgroup:search  sort_order:13  passive:N  need_no_overlay:N  need_has_fields:N  need_navstack:N  need_right_panel:N  dismiss_hint:\"\"  dismiss_viewmode:\"\"  need_left_panel:N  comment:\"Cycle filter target (Tab in filter mode)\"", acr_nav::navaction_filter_cycle_target }
         ,{ "acr_navdb.navaction  navaction:filter_start  hint:filter  helpgroup:search  sort_order:10  passive:N  need_no_overlay:Y  need_has_fields:N  need_navstack:N  need_right_panel:N  dismiss_hint:\"\"  dismiss_viewmode:\"\"  need_left_panel:Y  comment:\"Enter filter input mode\"", acr_nav::navaction_filter_start }
-        ,{ "acr_navdb.navaction  navaction:follow_ref  hint:follow  helpgroup:navigation  sort_order:10  passive:N  need_no_overlay:Y  need_has_fields:Y  need_navstack:N  need_right_panel:Y  dismiss_hint:\"\"  dismiss_viewmode:\"\"  need_left_panel:N  comment:\"Follow reference to target ctype\"", acr_nav::navaction_follow_ref }
+        ,{ "acr_navdb.navaction  navaction:follow_ref  hint:follow  helpgroup:navigation  sort_order:10  passive:N  need_no_overlay:Y  need_has_fields:Y  need_navstack:N  need_right_panel:Y  dismiss_hint:\"\"  dismiss_viewmode:nsdep  need_left_panel:N  comment:\"Follow reference to target ctype\"", acr_nav::navaction_follow_ref }
         ,{ "acr_navdb.navaction  navaction:go_back  hint:back  helpgroup:navigation  sort_order:11  passive:N  need_no_overlay:N  need_has_fields:N  need_navstack:Y  need_right_panel:N  dismiss_hint:\"\"  dismiss_viewmode:\"\"  need_left_panel:N  comment:\"Return to previous ctype\"", acr_nav::navaction_go_back }
         ,{ "acr_navdb.navaction  navaction:go_bottom  hint:\"\"  helpgroup:movement  sort_order:15  passive:Y  need_no_overlay:N  need_has_fields:N  need_navstack:N  need_right_panel:N  dismiss_hint:\"\"  dismiss_viewmode:\"\"  need_left_panel:N  comment:\"Jump to last item\"", acr_nav::navaction_go_bottom }
         ,{ "acr_navdb.navaction  navaction:go_top  hint:\"\"  helpgroup:movement  sort_order:14  passive:Y  need_no_overlay:N  need_has_fields:N  need_navstack:N  need_right_panel:N  dismiss_hint:\"\"  dismiss_viewmode:\"\"  need_left_panel:N  comment:\"Jump to first item\"", acr_nav::navaction_go_top }
@@ -2156,6 +2156,7 @@ static void acr_nav::navaction_LoadStatic() {
         ,{ "acr_navdb.navaction  navaction:quit  hint:quit  helpgroup:meta  sort_order:11  passive:N  need_no_overlay:N  need_has_fields:N  need_navstack:N  need_right_panel:N  dismiss_hint:\"\"  dismiss_viewmode:\"\"  need_left_panel:N  comment:\"Exit acr_nav\"", acr_nav::navaction_quit }
         ,{ "acr_navdb.navaction  navaction:show_detail  hint:detail  helpgroup:view  sort_order:12  passive:N  need_no_overlay:Y  need_has_fields:Y  need_navstack:N  need_right_panel:Y  dismiss_hint:dismiss  dismiss_viewmode:detail  need_left_panel:N  comment:\"Toggle field metadata detail\"", acr_nav::navaction_show_detail }
         ,{ "acr_navdb.navaction  navaction:show_help  hint:help  helpgroup:meta  sort_order:10  passive:N  need_no_overlay:N  need_has_fields:N  need_navstack:N  need_right_panel:N  dismiss_hint:dismiss  dismiss_viewmode:help  need_left_panel:N  comment:\"Toggle help panel\"", acr_nav::navaction_show_help }
+        ,{ "acr_navdb.navaction  navaction:show_nsdep  hint:ns-deps  helpgroup:view  sort_order:14  passive:N  need_no_overlay:Y  need_has_fields:N  need_navstack:N  need_right_panel:N  dismiss_hint:dismiss  dismiss_viewmode:nsdep  need_left_panel:N  comment:\"Toggle namespace dependency view\"", acr_nav::navaction_show_nsdep }
         ,{ "acr_navdb.navaction  navaction:switch_panel_left  hint:\"\"  helpgroup:navigation  sort_order:12  passive:Y  need_no_overlay:N  need_has_fields:N  need_navstack:N  need_right_panel:N  dismiss_hint:\"\"  dismiss_viewmode:\"\"  need_left_panel:N  comment:\"Move focus to panel on the left\"", acr_nav::navaction_switch_panel_left }
         ,{ "acr_navdb.navaction  navaction:switch_panel_right  hint:\"\"  helpgroup:navigation  sort_order:13  passive:Y  need_no_overlay:N  need_has_fields:N  need_navstack:N  need_right_panel:N  dismiss_hint:\"\"  dismiss_viewmode:\"\"  need_left_panel:N  comment:\"Move focus to panel on the right\"", acr_nav::navaction_switch_panel_right }
         ,{ "acr_navdb.navaction  navaction:toggle_codegen  hint:codegen  helpgroup:view  sort_order:13  passive:N  need_no_overlay:Y  need_has_fields:N  need_navstack:N  need_right_panel:N  dismiss_hint:\"\"  dismiss_viewmode:\"\"  need_left_panel:N  comment:\"Toggle generated code view\"", acr_nav::navaction_toggle_codegen }
@@ -5009,6 +5010,8 @@ void acr_nav::FDb_Init() {
     _db.p_line_preproc = NULL;
     _db.p_line_section = NULL;
     _db.p_line_key = NULL;
+    _db.p_nsdep_viewmode = NULL;
+    _db.p_nsdep_ns = NULL;
 
     acr_nav::InitReflection();
     navaction_LoadStatic(); // gen:ns_gstatic  gstatic:acr_nav.FDb.navaction  load acr_nav.FNavaction records
@@ -6111,6 +6114,8 @@ void acr_nav::FViewmode_Init(acr_nav::FViewmode& viewmode) {
     viewmode.cspan_max   	= 0; // (acr_nav.FViewmode.cspan)
     viewmode.ind_viewmode_next = (acr_nav::FViewmode*)-1; // (acr_nav.FDb.ind_viewmode) not-in-hash
     viewmode.ind_viewmode_hashval = 0; // stored hash value
+    viewmode.ensure_content = NULL;
+    viewmode.ensure_content_ctx = 0;
 }
 
 // --- acr_nav.FViewmode..Uninit
@@ -6704,6 +6709,7 @@ inline static void acr_nav::SizeCheck() {
 // --- acr_nav...StaticCheck
 void acr_nav::StaticCheck() {
     algo_assert(sizeof(acr_nav::navaction_step_hook) == 8); // csize:acr_nav.navaction_step_hook
+    algo_assert(sizeof(acr_nav::viewmode_ensure_content_hook) == 8); // csize:acr_nav.viewmode_ensure_content_hook
     algo_assert(_offset_of(acr_nav::FieldId, value) + sizeof(((acr_nav::FieldId*)0)->value) == sizeof(acr_nav::FieldId));
 }
 
