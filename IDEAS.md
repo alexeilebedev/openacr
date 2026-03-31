@@ -26,6 +26,11 @@
 | 19 | **Record count display.** Show ssimfile record counts next to ctype names (e.g., "Keybind (38)") for immediate sense of scale. Counts computed at startup via FileLine_curs. DecimalDigits helper fixes latent 4-digit cap in namespace header width formula. |
 | 20 | **Generated code preview viewmode.** New "codegen" viewmode shows amc-generated C++ struct definition for selected ctype inline in right panel. Press 'c' to toggle or Tab to cycle. SysEval captures `amc '<ctype>'` output with per-ctype caching. |
 | 21 | **Field name and comment search.** New filtertarget controlled vocabulary table with Tab cycling in filter mode. Press / then Tab to switch from ctype name search to field name+comment search. Status bar shows `/f:` prefix in field mode. Matching fields highlighted bold in right panel. Filtertarget saved/restored in navstack. CtypeMatchesFilter + FieldMatchesFilter helpers with cached regex on FDb. |
+| 22 | **Instant terminal resize.** SIGWINCH handler sets flag, main loop repaints. AdjustScroll clamps selection on shrink. |
+| 23 | **Expanded filter targets.** Add arg, reftype, and all filter targets with data-driven match logic. |
+| 24 | **Syntax highlighting for line-mode views.** Codegen (C++ keywords, types, strings), detail (ssim keys/values), preview (ssim columns), help (keybind/section styles). Uses existing AddSpan + navstyle infrastructure. |
+| 25 | **Cross-namespace dependency overlay.** nsdep viewmode (n key) shows upstream/downstream namespace dependencies for selected ctype's namespace. Overlay on viewmode_stack, data-driven from cross-namespace field references. |
+| 26 | **Interactive access path graph viewmode.** New `graph` viewmode (v key) renders amc_vis-style ASCII access path diagram in right panel. Three-column layout: left (Pkey/Upptr parents), center (selected ctype), right (Val creation + Ptr/Ptrary children). Edge labels show "reftype fieldname". Enter walks into neighbor ctype staying in graph mode; Backspace returns via navstack. Edge collection matches amc_vis exactly: GraphSkipQ mirrors DepRefQ, Val fields use first-wins dedup, dep fields use reftype `up` flag for column placement. NavigateToTarget helper extracted from follow_ref eliminates navstack push duplication. Tab cycle: fields→xref→preview→codegen→graph→fields. |
 
 ---
 
@@ -55,24 +60,43 @@ Generated C++ uses `acr_nav::FNaventry`. Querying `acr dmmeta.field:acr_nav.FNav
 
 These improve the experience meaningfully but solve less acute pain or require more work.
 
-#### 2A. Syntax highlighting for ssimfiles and codegen
+#### 2A. Syntax highlighting for ssimfiles and codegen -- DONE (M24)
 
-#### 2B. Interactive Access Path Diagram
+#### 2B. Interactive Access Path Diagram -- DONE (M26)
 
-Interactive graph navigation inside acr_nav. Selected ctype rendered as center node, direct neighbors (field arg ctypes) as surrounding boxes connected by labeled edges (reftype + field name). Tab/Shift-Tab moves between nodes, Enter navigates into a node (push navstack, re-center graph on new ctype), Backspace returns.
+Implemented as graph viewmode with amc_vis-style three-column ASCII layout, interactive Enter/Backspace navigation, and exact DepRefQ edge matching. See M26 in Story So Far.
 
-**Solves:** P3 (tool-switching tax) — you can **walk** the access path graph, not just look at a snapshot.
-**Value:** High. This is `amc_vis` as an interactive experience, not a batch tool. Combined with headless mode, an agent could navigate the graph programmatically.
-**Size:** Medium. What already exists: raw terminal, colors, navstack, viewmode system. What's new: ASCII box drawing (unicode `┌─┐│└─┘` + arrows), simple layout algorithm (center + ring of neighbors, not full amc_vis topological sort), node-to-node cursor movement (Tab order over nodes, no true 2D cursor needed).
-**Design note:** Keep layout simple — local neighborhood only (selected ctype + its direct references, 5-15 nodes). Full graph is amc_vis's job. The value is interactivity, not completeness. Borrow ideas and code from `amc_vis` (box drawing, layout) as a starting point.
+#### 2B+. Graph Viewmode Extensions
 
-#### 2C. Cross-Namespace Dependency View
+Ideas for extending the graph viewmode, roughly ordered by feasibility:
 
-For the selected ctype's namespace, show upstream dependencies (what it imports via field references) and downstream dependents (what references it). Based on cross-namespace field arg references.
+**Quick wins:**
 
-**Solves:** "What namespaces does acr_nav depend on? What depends on dmmeta?" Currently requires multiple `acr -ndown` queries.
-**Value:** Medium. Useful for understanding the schema's macro structure.
-**Size:** Medium. Needs per-namespace aggregation of field references.
+1. **Color edges by reftype.** Call `AddSpan` in `LoadGraph` using existing `reftypestyle` -> `navstyle` color mappings. Pool edges green, index edges yellow, upward refs cyan. Infrastructure fully in place -- just never called. Low complexity.
+
+2. **Reftype comment on selected edge.** Show `dmmeta.Reftype.comment` in status bar when cursor highlights an edge line. Extend `GraphNodeAtLine` to also return the FField pointer. Low complexity. Partially addresses P2.
+
+3. **Record count on neighbor nodes.** Append `(N)` after neighbor ctype names, reusing counts already computed at startup. Low complexity.
+
+**Solid additions:**
+
+4. **Depth-2 expansion toggle.** Press `+` to expand selected neighbor inline showing its depth-1 edges indented. `-` collapses. One node at a time. Medium complexity.
+
+5. **Reverse xref edges.** Include `c_field_arg` back-references ("who points at me") as a fourth section. Unifies graph and xref views. Medium complexity.
+
+6. **Node cycling.** Tab/Shift-Tab jumps cursor to next/previous neighbor opener line, skipping close/border lines. Medium complexity.
+
+7. **Horizontal scroll.** Left/Right keys pan wide graphs via `scroll_x` offset. Medium complexity.
+
+**Ambitious:**
+
+8. **Full namespace topology.** Port amc_vis's topological sort layout (`Main_ColLayout` + `Main_RowLayout` with binary heaps) to show all ctypes in a namespace. The complete `amc_vis` inside acr_nav. High complexity, depends on idea 7.
+
+**Not worth pursuing:** Unicode box drawing (compatibility risk, breaks amc_vis parity), 2D spatial cursor (fights line-oriented model; node cycling gives 90% of value at 10% cost).
+
+#### 2C. Cross-Namespace Dependency View -- DONE (M25)
+
+Implemented as nsdep overlay viewmode showing upstream/downstream namespace dependencies.
 
 ---
 
