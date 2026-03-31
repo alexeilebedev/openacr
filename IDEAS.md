@@ -32,11 +32,14 @@
 | 24  | **Syntax highlighting for line-mode views.** Codegen (C++ keywords, types, strings), detail (ssim keys/values), preview (ssim columns), help (keybind/section styles). Uses existing AddSpan + navstyle infrastructure.                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | 25  | **Cross-namespace dependency overlay.** nsdep viewmode (n key) shows upstream/downstream namespace dependencies for selected ctype's namespace. Overlay on viewmode_stack, data-driven from cross-namespace field references.                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
 | 26  | **Interactive access path graph viewmode.** New `graph` viewmode (v key) renders amc_vis-style ASCII access path diagram in right panel. Three-column layout: left (Pkey/Upptr parents), center (selected ctype), right (Val creation + Ptr/Ptrary children). Edge labels show "reftype fieldname". Enter walks into neighbor ctype staying in graph mode; Backspace returns via navstack. Edge collection matches amc_vis exactly: GraphSkipQ mirrors DepRefQ, Val fields use first-wins dedup, dep fields use reftype `up` flag for column placement. NavigateToTarget helper extracted from follow_ref eliminates navstack push duplication. Tab cycle: fields→xref→preview→codegen→graph→fields. |
+| 27  | **Graph viewmode extensions.** Edge labels colored by reftype using existing reftypestyle→navstyle mappings (pools green, indexes yellow, uprefs cyan). Neighbor nodes show ssimfile record counts. Status bar displays reftype comment when cursor is on an edge line (partially addresses P2). GraphNodeAtLine unified into GraphInfoAtLine returning both neighbor ctype and field pointer. PrintRecordCount helper extracted and shared with left panel. |
 
 
 ---
 
 ## Known Issues
+
+- Hints in status bar are suboptimal. Need closer review and fine-tuning.
 
 ---
 
@@ -58,7 +61,7 @@
 
 ### Mostly addressed
 
-**P2. Opaque reftype vocabulary.** M9/M10 color categories (pools=green, indexes=yellow, uprefs=cyan). M17 added reftype comments visible via `d`. **Remaining gap:** must press `d` to see explanation. Could show reftype comment in status bar when field is selected (zero-press context).
+**P2. Opaque reftype vocabulary.** M9/M10 color categories (pools=green, indexes=yellow, uprefs=cyan). M17 added reftype comments visible via `d`. M27 shows reftype comment in graph status bar on edge selection (zero-press context). **Remaining gap:** field list viewmode still requires `d` to see reftype explanation.
 
 **P3. Tool-switching tax.** Down from 5 switches to ~1.5. Steps 1-2 fully replaced, step 3 partial. **Remaining:** step 4 (src_func — blocked on userfunc data, see Blocked section), step 5 (editor — out of scope). Further reduction via 1A (record browser) and 1B (transitive closure).
 
@@ -169,11 +172,11 @@ Implemented as graph viewmode with amc_vis-style three-column ASCII layout, inte
 
 Ideas for extending the graph viewmode, roughly ordered by feasibility:
 
-**Quick wins:**
+**Quick wins — DONE (M27):**
 
 1. **Color edges by reftype.** Call `AddSpan` in `LoadGraph` using existing `reftypestyle` -> `navstyle` color mappings. Pool edges green, index edges yellow, upward refs cyan. Infrastructure fully in place -- just never called. Low complexity.
-2. **Reftype comment on selected edge.** Show `dmmeta.Reftype.comment` in status bar when cursor highlights an edge line. Extend `GraphNodeAtLine` to also return the FField pointer. Low complexity. Partially addresses P2.
-3. **Record count on neighbor nodes.** Append `(N)` after neighbor ctype names, reusing counts already computed at startup. Low complexity.
+2. **Reftype comment on selected edge.** Show `dmmeta.Reftype.comment` in status bar when cursor highlights an edge line. Unified `GraphNodeAtLine` into `GraphInfoAtLine` returning both node and field. Low complexity. Partially addresses P2.
+3. **Record count on neighbor nodes.** Append `(N)` after neighbor ctype names via `PrintRecordCount` helper shared with left panel. Low complexity.
 
 **Solid additions:**
 
