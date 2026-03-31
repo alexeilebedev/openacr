@@ -56,9 +56,80 @@ Generated C++ uses `acr_nav::FNaventry`. Querying `acr dmmeta.field:acr_nav.FNav
 
 ## Ideas by Tier
 
-### Tier 2: Solid Value, Moderate Effort
+All ideas below were validated by critical review against the actual codebase, architecture, and data quality. Problems found are noted inline. Effort estimates are post-validation.
 
-These improve the experience meaningfully but solve less acute pain or require more work.
+### Tier 1: High Impact, Validated
+
+These fill the biggest remaining gaps in acr_nav's coverage of the tool ecosystem.
+
+#### 1A. Navigable Record Browser (enhanced preview)
+
+The biggest gap. acr_nav browses *schema* (ctypes, fields) but not *data* (actual ssim records). Preview shows records as inert text. Enhancing it with column-level navigation and data-level follow-ref closes the loop: schema -> data -> follow reference -> data at target -> back.
+
+**What it does:**
+- Column-level cursor in preview: Left/Right moves between fields within a record row
+- Follow-ref at the data level: Enter on a Pkey attribute value navigates to the referenced record in its target ssimfile (e.g., from `arg:dmmeta.Ns` in a field record, jump to `ns:dmmeta` in ns.ssim)
+- Status bar shows current column's field name and reftype
+
+**What it replaces:** `acr <table>:<pattern>`, `acr -where key:value`, the common "let me check the actual records" terminal switch.
+
+**Validated problems to address:**
+- LoadPreview (line ~494) parses tuples twice but stores only formatted strings. Column boundaries (`col_wid` array) are local variables discarded after formatting. Must persist column boundaries for cursor navigation.
+- Column cursor is entirely new UI. `FPanel` has only `sel_row`/`scroll_offset`. Need new `sel_col` state on FDb or FPanel.
+- Ssimfile columns don't match 1:1 with `c_field` list -- fldfunc/Substr fields appear in schema but not as ssimfile columns. Solution: match column header names against field names.
+- Works for 18% of ctypes (258/1405 have ssimfiles). Same limitation as preview -- acceptable since users primarily browse schema-definition namespaces (dmmeta, dev, atfdb).
+- Enhance preview rather than add a separate viewmode. Same data, same rendering, avoids Tab cycle clutter.
+
+**Size:** 250-350 lines C++. Schema change for sel_col. ~3 ssim records.
+
+#### 1B. Interactive Transitive Closure (via acr subprocess)
+
+The most powerful `acr` capability with no acr_nav equivalent. `acr -ndown 2 -t` shows everything reachable within 2 hops.
+
+**What it does:**
+- In preview/data mode, select a record. Press `u` (upstream/nup) or `w` (downstream/ndown)
+- Shells out to `acr '<ctype>:<pkey>' -ndown:1 -t` and displays results as a line-array overlay
+- Each press re-runs with deeper `-ndown`/`-nup` level
+- Follow-ref works on any record in the results
+
+**What it replaces:** `acr <record> -nup N`, `acr <record> -ndown N`, `acr <record> -xref -tree`.
+
+**Design note:** In-process reimplementation would require acr's `c_child` index, `EvalAttr`, and lazy record loading (500-800 lines). Shelling out to `acr` via SysEval (same pattern as codegen's `amc` call) gives 80% of the value for 20% of the effort. ~50-100ms per invocation.
+
+**Depends on:** 1A (record-level identity -- knowing the selected record's pkey value).
+**Size:** ~80 lines C++ (using SysEval), 3 ssim records.
+
+#### 1C. F-Prefix Resolution (P6)
+
+Tiny change, daily annoyance eliminated. `acr_nav::FNaventry` in generated code -> user types `FNaventry` in filter -> finds `acr_nav.Naventry`.
+
+**What it does:**
+- In `CtypeMatchesFilter`, when filter starts with `F` + uppercase letter, also match with the F stripped
+- Optionally: show "C++: FNaventry" in the right panel title
+
+**Validated:** Filter uses SQL-style `%pattern%` regex (line ~149). Modification is straightforward. False positive risk is negligible -- no ctype names collide after F-stripping. The F-prefix is a universal amc convention (every ctype gets F-prefixed in generated C++), so the rule applies consistently.
+
+**Size:** ~10 lines C++, 0 ssim records. The most honest estimate in this document.
+
+#### 1D. Clipboard/Yank
+
+Every session ends with transferring a name. Copy to clipboard with one key.
+
+**What it does:**
+- `y` key copies context-dependent text via OSC 52 escape sequence
+- Left panel: copies ctype name. Right panel fields: copies field path. Other viewmodes: copies ctype name
+- Status bar flash: "Copied: dmmeta.Ctype" (needs new `flash_msg` field on FDb)
+
+**Caveats:**
+- OSC 52 is blocked by default in tmux, screen, and some terminal setups. VS Code terminal requires explicit `terminal.integrated.allowClipboardAccess`. Will silently fail for some users. No clean cross-platform fallback.
+- Context dispatch is 5+ cases (left panel ctype vs namespace header, right panel per-viewmode).
+- `flash_msg` infrastructure doesn't exist yet -- needs field, write/read/clear paths in render loop.
+
+**Size:** 40-50 lines C++, 3 ssim records.
+
+---
+
+### Tier 2: Solid Value, Moderate Effort
 
 #### 2A. Syntax highlighting for ssimfiles and codegen -- DONE (M24)
 
@@ -98,6 +169,36 @@ Ideas for extending the graph viewmode, roughly ordered by feasibility:
 
 Implemented as nsdep overlay viewmode showing upstream/downstream namespace dependencies.
 
+#### 2D. Path Finder ("How do I get from A to B?")
+
+No existing tool answers this. Confirmed: amc_vis shows local neighborhoods, acr -nup/-ndown shows closure from one point, neither finds the route between two arbitrary types.
+
+**What it does:**
+- "Path from previous navstack ctype to current ctype" (natural UX -- user navigates to ctype B, presses a key to see path from the ctype they came from)
+- BFS over field references using bidirectional Pkey/Upptr edges
+- Display: `acr.FCtype -> .p_ns -> acr.FNs -> .ns -> dmmeta.Ns`. Each step navigable via Enter.
+
+**Validated caveats:**
+- Graph is sparse with Pkey/Upptr-only edges (~580 edges, 1405 nodes, average degree <0.5). Many cross-namespace queries return "no path found."
+- Must use bidirectional edges (if A has Pkey->B, also traverse B->A). Without this, leaf types (Reftype, Nstype) are unreachable.
+- Including all reftypes makes the graph dense but produces semantically meaningless paths.
+- BFS on 1405 nodes is trivially fast (microseconds).
+
+**Size:** ~60 lines BFS + display. Unique capability, cheap to implement.
+
+#### 2E. Bookmarks / Jump List
+
+The navstack is LIFO -- consumed on pop. No way to return to a "home base" after exploring.
+
+**What it does:**
+- `m` to bookmark current ctype, `'` to show bookmarks overlay (both keys currently unbound -- verified)
+- Up to 10 bookmarks, session-persistent
+- Enter on bookmark navigates there
+
+**Caveat:** Session-only persistence limits value for short sessions. Cross-session persistence would require writing to disk (acr_nav is currently read-only).
+
+**Size:** ~50 lines C++, 4 ssim records.
+
 ---
 
 ### Standalone: Generalized Headless (_db Pool Dump)
@@ -121,3 +222,40 @@ amc already generates `Print` for every ctype and knows every pool in FDb. A new
 Raw pool dumps are the truth -- curated views are opinions that drift. But raw dumps of a real program (thousands of records, runtime artifacts like file descriptors and computed caches) are a firehose. ACR answer: generate the raw dump (free from schema), let programs also define curated views as additional ctypes. Both, not either/or. The curated views are just more records -- they pass the factorization test.
 
 Full pool scan has a practical obstacle: Tpool loses iteration capability (free-list allocator, no scan without a separate access path). The right approach: **dump everything reachable**, not everything allocated. Follow access paths from `_db`, not scan pools. Output as untyped tuples with regex filtering. This is essentially a built-in `acr` for runtime state -- a pretty printer for the entire program. Sidesteps the Tpool problem elegantly because you traverse what's reachable, not what's allocated. Consider forking this for `acr_vis`.
+
+---
+
+### Blocked / Deferred
+
+These ideas have merit but are blocked on prerequisites or require more groundwork than initially estimated.
+
+#### Source Function View (blocked on userfunc data quality)
+
+Would eliminate step 4 of the 5-tool workflow (P3). Show hand-written functions for the selected ctype.
+
+**Blocking issue:** 85% of `dmmeta.userfunc` records (1244/1461) have truncated primary keys due to `Smallstr50` field limit. Keys like `acr_nav...navaction_cycle_viewmode` have the ctype portion destroyed by truncation. Only ~217 records have parseable key structure. Only ~129 distinct ctypes are covered (9% of 1405 total). Zero dmmeta ctypes have userfuncs.
+
+**Prerequisites:**
+1. Fix the schema: change `Userfunc.userfunc` from `Smallstr50` to a larger type. Regenerate all records via `src_func -updateproto`.
+2. Or bypass userfunc entirely: shell out to `src_func <ns>.% -proto` and post-filter by ctype name pattern. Slower, no ctype-level filtering in src_func.
+
+#### Computed Field Colors (requires new finput + schema)
+
+Show fldfunc/Substr fields in a distinct color in the field list.
+
+**Why the original "zero code" claim was wrong:** Substr is NOT a reftype -- it's a separate table (`dmmeta.substr`). The rendering pipeline traverses `field -> reftype -> reftypestyle -> navstyle`. You cannot add a `reftypestyle` record for Substr because Substr isn't a reftype. To color Substr fields: (1) add `dmmeta.substr` as a finput, (2) add cross-reference from FField to substr, (3) check `fld->c_substr` in the render path.
+
+**Size:** 3-4 ssim records + schema changes + amc regeneration + render code.
+
+#### Input Dependency View (finput viewmode)
+
+Show `dmmeta.finput` records for a namespace's target -- "what data does this program consume?"
+
+**Issues:** acr_nav doesn't load finput data (needs new finput + FFinput ctype + cross-references). Only meaningful for `exe`/`lib` namespace types -- `ssimdb`/`protocol` namespaces have no finput records. Libraries often have just 1 finput record. Meaningfully different from nsdep (runtime data deps vs schema-level deps) but narrow audience.
+
+---
+
+### Dropped (validated as not worth pursuing)
+
+#### Referential Integrity Overlay
+Visual `acr -check` for the current context. **Dropped because:** acr_nav is read-only -- it never modifies records. If integrity issues exist, they're in on-disk ssimfiles and the user should run `acr -check` directly. Implementing this in acr_nav means either reimplementing acr -check's core loop or shelling out and parsing results -- high effort for a problem that barely exists in a read-only browser.
