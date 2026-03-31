@@ -40,14 +40,35 @@
 
 ## Pain Points
 
-### P2. Opaque reftype vocabulary — MOSTLY ADDRESSED
-Lary, Thash, Ptrary, Upptr, Tpool, Tary, Llist -- the reftype names are terse and carry no visible meaning. **Addressed by:** M9/M10 color categories (pools=green, indexes=yellow, uprefs=cyan, values=default) give at-a-glance structural role. M17 added `comment` to `dmmeta.Reftype` visible via detail view (`d` keybind). Remaining gap is narrow: you must press `d` to see the prose explanation.
+### Solved by TUI (CLI problems that vanish with interactive browsing)
 
-### P3. Tool-switching tax — PARTIALLY ADDRESSED
-Original 5-step workflow: `acr` → `amc_vis` → `acr -t` → `src_func` → editor. **Addressed by:** step 1 replaced (left panel + filter), step 2 replaced (graph viewmode, M26), step 3 partially replaced (xref view is 1-deep, no transitive closure). **Remaining:** step 4 (src_func — blocked on userfunc data quality, see Blocked section) and step 5 (editor — out of scope). Current tax: ~1.5 context switches, down from 5. Further reduction depends on 1A (record browser) and 1B (transitive closure).
+| Pain | How acr_nav solves it |
+|---|---|
+| **Query syntax** — `%` wildcards, `-where`, regex construction | Live filter as you type, no syntax to learn |
+| **Silent failures** — typo in `acr ctpe:%` returns 0, exit 0, no hint | Empty filter result is visually obvious and immediate |
+| **Output overload** — `acr dmmeta.field` dumps 5894 lines | Shows fields for one ctype at a time |
+| **Context loss** — no state between `acr` invocations | Persistent left panel + breadcrumb bar + navstack |
+| **Reference chaining** — new command per hop | Enter follows ref, Backspace returns |
+| **Flag overload** — `-pretty -cmt -fldfunc -tree` to get useful output | All views enabled by default |
+| **Discoverability** — must know table names like `ssimfile`, `reftype` exist | Browsable namespace tree with record counts |
 
-### P6. The F-prefix gap — FIX PROPOSED (1C)
-Generated C++ uses `acr_nav::FNaventry`. Querying `acr dmmeta.field:acr_nav.FNaventry.%` returns nothing -- the real name is `acr_nav.Naventry`. No hint. Trips up everyone who reads generated code first. **Proposed fix:** Tier 1 idea 1C — ~10 lines in `CtypeMatchesFilter` to strip leading F when followed by uppercase.
+### Mostly addressed
+
+**P2. Opaque reftype vocabulary.** M9/M10 color categories (pools=green, indexes=yellow, uprefs=cyan). M17 added reftype comments visible via `d`. **Remaining gap:** must press `d` to see explanation. Could show reftype comment in status bar when field is selected (zero-press context).
+
+**P3. Tool-switching tax.** Down from 5 switches to ~1.5. Steps 1-2 fully replaced, step 3 partial. **Remaining:** step 4 (src_func — blocked on userfunc data, see Blocked section), step 5 (editor — out of scope). Further reduction via 1A (record browser) and 1B (transitive closure).
+
+### Open
+
+**P6. F-prefix gap.** `dmmeta.Ctype` becomes `dmmeta::FCtype` in C++. The convention is documented *nowhere* — not in README, tutorials, or guides. Users reading generated code can't find the schema type. **Fix proposed:** idea 1C (~10 lines in filter) + show "C++: FCtype" in panel title.
+
+**P7. Field prefix conventions invisible.** `c_field` = Ptrary, `ind_ns` = Thash, `p_ctype` = Upptr, `zd_inst` = Llist. These prefixes encode the reftype (light Hungarian Notation from `dmmeta.fprefix`), but acr_nav shows the prefix without decoding it. **Idea:** show fprefix meaning in status bar or detail view. Data already exists in `dmmeta.fprefix` — just not loaded.
+
+**P8. Xref via: syntax opaque.** Detail view shows `via:abt.FDb.ind_target/dev.Targsrc.target` as raw text. Should parse into: "look up `Targsrc.target` in global `ind_target` hash." **Idea:** decompose via: path into human-readable steps in detail view.
+
+**P9. "Where do I start?" problem.** 1405 ctypes across 83 namespaces with no guided entry point. No "start here" indicator, no learning progression. Newcomer opens acr_nav and faces an alphabetical wall. **Idea:** startup hint pointing to essentials (dmmeta.Ns → Ctype → Field → Reftype). Or a curated "tour" overlay showing the 5-table bootstrap path.
+
+**P10. Meta-schema circularity.** `dmmeta.Ctype` is a ctype, `dmmeta.Field` describes its fields, but Field is itself a Ctype... The bootstrapping is navigable in acr_nav (Enter/Backspace through the circle) but never explained. Newcomers don't know which table to read first. Related to P9.
 
 ---
 
