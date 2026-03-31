@@ -1,4 +1,4 @@
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1404  n_ctype:1405  n_field:5672  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  Tab:view  n:ns-deps  q:quit  ?:help"
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1404  n_ctype:1405  n_field:5673  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  Tab:view  n:ns-deps  q:quit  ?:help"
 acr_nav.PanelState  panel:ctype_list  sel_row:10  scroll_offset:0  n_items:93  sel_value:acr_navdb
 acr_nav.VisibleLeftItem  row:0  value:""  kind:ns  collapsed:Y  n_match:44  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:abt  kind:ns  collapsed:Y  n_match:19  n_record:0
@@ -14,8 +14,8 @@ acr_nav.VisibleLeftItem  row:10  value:acr_navdb  kind:ns  collapsed:N  n_match:
 acr_nav.VisibleLeftItem  row:11  value:acr_navdb.Detailsrc  kind:ctype  collapsed:N  n_match:0  n_record:5
 acr_nav.VisibleLeftItem  row:12  value:acr_navdb.Filtertarget  kind:ctype  collapsed:N  n_match:0  n_record:5
 acr_nav.VisibleLeftItem  row:13  value:acr_navdb.Helpgroup  kind:ctype  collapsed:N  n_match:0  n_record:5
-acr_nav.VisibleLeftItem  row:14  value:acr_navdb.Keybind  kind:ctype  collapsed:N  n_match:0  n_record:40
-acr_nav.VisibleLeftItem  row:15  value:acr_navdb.Navaction  kind:ctype  collapsed:N  n_match:0  n_record:25
+acr_nav.VisibleLeftItem  row:14  value:acr_navdb.Keybind  kind:ctype  collapsed:N  n_match:0  n_record:41
+acr_nav.VisibleLeftItem  row:15  value:acr_navdb.Navaction  kind:ctype  collapsed:N  n_match:0  n_record:27
 acr_nav.VisibleLeftItem  row:16  value:acr_navdb.Navmode  kind:ctype  collapsed:N  n_match:0  n_record:2
 acr_nav.VisibleLeftItem  row:17  value:acr_navdb.Navstyle  kind:ctype  collapsed:N  n_match:0  n_record:16
 acr_nav.VisibleLeftItem  row:18  value:acr_navdb.Panel  kind:ctype  collapsed:N  n_match:0  n_record:2
@@ -95,7 +95,7 @@ acr_nav.VisibleLeftItem  row:91  value:ws  kind:ns  collapsed:Y  n_match:16  n_r
 acr_nav.VisibleLeftItem  row:92  value:wsdb  kind:ns  collapsed:Y  n_match:1  n_record:0
 acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1404  n_ctype:1405  n_field:5672  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  Tab:view  n:ns-deps  q:quit  ?:help"
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1404  n_ctype:1405  n_field:5673  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  Tab:view  n:ns-deps  q:quit  ?:help"
 acr_nav.PanelState  panel:ctype_list  sel_row:10  scroll_offset:0  n_items:93  sel_value:acr_navdb
 acr_nav.VisibleLeftItem  row:0  value:""  kind:ns  collapsed:Y  n_match:44  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:abt  kind:ns  collapsed:Y  n_match:19  n_record:0
@@ -111,8 +111,8 @@ acr_nav.VisibleLeftItem  row:10  value:acr_navdb  kind:ns  collapsed:N  n_match:
 acr_nav.VisibleLeftItem  row:11  value:acr_navdb.Detailsrc  kind:ctype  collapsed:N  n_match:0  n_record:5
 acr_nav.VisibleLeftItem  row:12  value:acr_navdb.Filtertarget  kind:ctype  collapsed:N  n_match:0  n_record:5
 acr_nav.VisibleLeftItem  row:13  value:acr_navdb.Helpgroup  kind:ctype  collapsed:N  n_match:0  n_record:5
-acr_nav.VisibleLeftItem  row:14  value:acr_navdb.Keybind  kind:ctype  collapsed:N  n_match:0  n_record:40
-acr_nav.VisibleLeftItem  row:15  value:acr_navdb.Navaction  kind:ctype  collapsed:N  n_match:0  n_record:25
+acr_nav.VisibleLeftItem  row:14  value:acr_navdb.Keybind  kind:ctype  collapsed:N  n_match:0  n_record:41
+acr_nav.VisibleLeftItem  row:15  value:acr_navdb.Navaction  kind:ctype  collapsed:N  n_match:0  n_record:27
 acr_nav.VisibleLeftItem  row:16  value:acr_navdb.Navmode  kind:ctype  collapsed:N  n_match:0  n_record:2
 acr_nav.VisibleLeftItem  row:17  value:acr_navdb.Navstyle  kind:ctype  collapsed:N  n_match:0  n_record:16
 acr_nav.VisibleLeftItem  row:18  value:acr_navdb.Panel  kind:ctype  collapsed:N  n_match:0  n_record:2

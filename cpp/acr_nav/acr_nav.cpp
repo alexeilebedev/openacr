@@ -1233,6 +1233,14 @@ void acr_nav::navaction_toggle_codegen() { ToggleViewmode(acr_nav::_db.p_codegen
 
 // -----------------------------------------------------------------------------
 
+void acr_nav::navaction_toggle_fields() { ToggleViewmode(acr_nav::_db.p_default_viewmode); }
+
+// -----------------------------------------------------------------------------
+
+void acr_nav::navaction_toggle_xref() { ToggleViewmode(acr_nav::_db.p_xref_viewmode); }
+
+// -----------------------------------------------------------------------------
+
 void acr_nav::navaction_filter_accept() {
     bool has_filter = ch_N(acr_nav::_db.filter) > 0;
     if (has_filter) {
@@ -1544,20 +1552,25 @@ static void AppendKeyDisplay(cstring &out, algo::strptr key) {
     else { out << key; }
 }
 
-// Collect browse-mode keybinds for one action into std_keys and short_keys.
-static void CollectActionKeys(acr_nav::FNavaction *action, cstring &std_keys, cstring &short_keys) {
-    ind_beg(acr_nav::_db_keybind_curs, kb, acr_nav::_db) {
-        if (kb.p_navaction == action && acr_nav::navmode_Get(kb) == "browse") {
-            algo::Smallstr50 key = acr_nav::key_Get(kb);
-            algo::strptr keystr(key);
-            bool is_shortcut = (elems_N(keystr) == 1 && ((keystr[0] >= 'a' && keystr[0] <= 'z') || (keystr[0] >= 'A' && keystr[0] <= 'Z')));
-            cstring &target = is_shortcut ? short_keys : std_keys;
-            if (ch_N(target) > 0) {
-                target << "/";
+// Collect browse-mode keybinds for one action into a single key string.
+// Standard keys (arrows, Enter, etc.) come first, then letter aliases.
+static void CollectActionKeys(acr_nav::FNavaction *action, cstring &keys) {
+    // Two passes: first non-letter keys, then letter keys
+    for (int pass = 0; pass < 2; pass++) {
+        ind_beg(acr_nav::_db_keybind_curs, kb, acr_nav::_db) {
+            if (kb.p_navaction == action && acr_nav::navmode_Get(kb) == "browse") {
+                algo::Smallstr50 key = acr_nav::key_Get(kb);
+                algo::strptr keystr(key);
+                bool is_letter = (elems_N(keystr) == 1 && ((keystr[0] >= 'a' && keystr[0] <= 'z') || (keystr[0] >= 'A' && keystr[0] <= 'Z')));
+                if ((pass == 0 && !is_letter) || (pass == 1 && is_letter)) {
+                    if (ch_N(keys) > 0) {
+                        keys << "/";
+                    }
+                    AppendKeyDisplay(keys, keystr);
+                }
             }
-            AppendKeyDisplay(target, keystr);
-        }
-    } ind_end;
+        } ind_end;
+    }
 }
 
 // Check if two consecutive navactions form a directional pair (up/down, left/right, top/bottom).
@@ -1635,12 +1648,13 @@ static int Utf8ExtraBytes(algo::strptr s) {
 }
 
 // Build preformatted help lines from keybind/navaction data.
-// Iterates helpgroup records by sort_order, then navactions within each group.
+// Single-column layout with section headers styled like the detail view.
 // Directional pairs (up/down, left/right) are merged into single lines.
 // Arrow keys display as Unicode symbols (↑↓←→).
 static void BuildHelpLines() {
     acr_nav::FViewmode &vm = *acr_nav::_db.p_help_viewmode;
     ClearViewmodeLines(vm);
+    vm.header = "Keyboard Shortcuts";
     // Collect helpgroups sorted by sort_order
     acr_nav::FHelpgroup *groups[16];
     int n_groups = 0;
@@ -1658,20 +1672,15 @@ static void BuildHelpLines() {
         }
         groups[j] = tmp;
     }
-    // Build header
-    {
-        tempstr hdr;
-        hdr << "Standard";
-        char_PrintNTimes(' ', hdr, i32_Max(1, 18 - ch_N(hdr)));
-        hdr << "Shortcut";
-        char_PrintNTimes(' ', hdr, i32_Max(1, 28 - ch_N(hdr)));
-        hdr << "Action";
-        vm.header = hdr;
-    }
-    // For each group, collect navactions and build lines
+    // For each group, emit section header + action lines
     for (int g = 0; g < n_groups; g++) {
-        if (g > 0) {
-            acr_nav::line_Alloc(vm) = "";
+        // Section header: "-- Movement ------..."
+        {
+            tempstr hdr;
+            hdr << "-- " << groups[g]->comment << " ";
+            char_PrintNTimes('-', hdr, i32_Max(0, 36 - ch_N(hdr)));
+            acr_nav::line_Alloc(vm) = hdr;
+            AddSpan(vm, acr_nav::line_N(vm) - 1, 0, ch_N(hdr), acr_nav::_db.p_line_section);
         }
         // Collect navactions in this group, sorted by sort_order
         acr_nav::FNavaction *actions[32];
@@ -1693,12 +1702,11 @@ static void BuildHelpLines() {
         // Build a line for each navaction, merging directional pairs
         for (int a = 0; a < n_actions; a++) {
             bool is_pair = (a + 1 < n_actions) && IsDirPair(actions[a], actions[a + 1]);
-            // Collect keys
-            tempstr std_keys;
-            tempstr short_keys;
-            CollectActionKeys(actions[a], std_keys, short_keys);
+            // Collect keys into single string
+            tempstr keys;
+            CollectActionKeys(actions[a], keys);
             if (is_pair) {
-                CollectActionKeys(actions[a + 1], std_keys, short_keys);
+                CollectActionKeys(actions[a + 1], keys);
             }
             // Build comment
             tempstr comment;
@@ -1708,21 +1716,18 @@ static void BuildHelpLines() {
             } else {
                 comment << actions[a]->comment;
             }
-            // Build line with display-width-aware padding for UTF-8 arrow symbols
+            // Build line: "  keys          comment"
             tempstr line;
-            line << std_keys;
-            int std_end = ch_N(line);
-            int extra = Utf8ExtraBytes(strptr(std_keys));
-            char_PrintNTimes(' ', line, i32_Max(1, 18 - ch_N(line) + extra));
-            line << short_keys;
-            extra = Utf8ExtraBytes(strptr(line));
-            char_PrintNTimes(' ', line, i32_Max(1, 28 - ch_N(line) + extra));
+            line << "  " << keys;
+            int keys_end = ch_N(line);
+            int extra = Utf8ExtraBytes(strptr(keys));
+            char_PrintNTimes(' ', line, i32_Max(2, 22 - ch_N(line) + extra));
             int comment_start = ch_N(line);
             line << comment;
             acr_nav::line_Alloc(vm) = line;
             int li = acr_nav::line_N(vm) - 1;
-            AddSpan(vm, li, 0, std_end, acr_nav::_db.p_line_key);           // standard keys: dim
-            AddSpan(vm, li, comment_start, ch_N(line), acr_nav::_db.p_line_comment); // action: green
+            AddSpan(vm, li, 2, keys_end, acr_nav::_db.p_line_key);
+            AddSpan(vm, li, comment_start, ch_N(line), acr_nav::_db.p_line_comment);
         }
     }
 }
@@ -2051,12 +2056,14 @@ static void InitPanels() {
     acr_nav::_db.p_detail_viewmode = acr_nav::ind_viewmode_Find("detail");
     acr_nav::_db.p_codegen_viewmode = acr_nav::ind_viewmode_Find("codegen");
     acr_nav::_db.p_nsdep_viewmode = acr_nav::ind_viewmode_Find("nsdep");
+    acr_nav::_db.p_xref_viewmode = acr_nav::ind_viewmode_Find("xref");
     vrfy(acr_nav::_db.p_default_viewmode, "viewmode 'fields' not found");
     vrfy(acr_nav::_db.p_preview_viewmode, "viewmode 'preview' not found");
     vrfy(acr_nav::_db.p_help_viewmode, "viewmode 'help' not found");
     vrfy(acr_nav::_db.p_detail_viewmode, "viewmode 'detail' not found");
     vrfy(acr_nav::_db.p_codegen_viewmode, "viewmode 'codegen' not found");
     vrfy(acr_nav::_db.p_nsdep_viewmode, "viewmode 'nsdep' not found");
+    vrfy(acr_nav::_db.p_xref_viewmode, "viewmode 'xref' not found");
     // Set ensure-content hooks for lazy-loading viewmodes
     acr_nav::_db.p_preview_viewmode->ensure_content = PreviewEnsureContent;
     acr_nav::_db.p_codegen_viewmode->ensure_content = CodegenEnsureContent;

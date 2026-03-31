@@ -479,6 +479,7 @@ struct FDb { // acr_nav.FDb
     acr_nav::FNavstyle*        p_line_key;                       // Cached style: attribute keys. optional pointer
     acr_nav::FViewmode*        p_nsdep_viewmode;                 // Cached nsdep viewmode pointer. optional pointer
     acr_nav::FNs*              p_nsdep_ns;                       // Namespace whose deps are currently cached in nsdep view. optional pointer
+    acr_nav::FViewmode*        p_xref_viewmode;                  // Xref viewmode pointer. optional pointer
     acr_nav::trace             trace;                            //
 };
 
@@ -2665,6 +2666,7 @@ void                 FSsimfile_Uninit(acr_nav::FSsimfile& ssimfile) __attribute_
 // global access: p_preview_viewmode (Ptr)
 // global access: p_codegen_viewmode (Ptr)
 // global access: p_nsdep_viewmode (Ptr)
+// global access: p_xref_viewmode (Ptr)
 struct FViewmode { // acr_nav.FViewmode
     acr_nav::FViewmode*                     ind_viewmode_next;      // hash next
     u32                                     ind_viewmode_hashval;   // hash value
@@ -3517,9 +3519,17 @@ void                 navaction_switch_panel_right();
 // this function is 'extrn' and implemented by user
 void                 navaction_toggle_codegen();
 // User-implemented function from gstatic:acr_nav.FDb.navaction
+// func:acr_nav...navaction_toggle_fields
+// this function is 'extrn' and implemented by user
+void                 navaction_toggle_fields();
+// User-implemented function from gstatic:acr_nav.FDb.navaction
 // func:acr_nav...navaction_toggle_preview
 // this function is 'extrn' and implemented by user
 void                 navaction_toggle_preview();
+// User-implemented function from gstatic:acr_nav.FDb.navaction
+// func:acr_nav...navaction_toggle_xref
+// this function is 'extrn' and implemented by user
+void                 navaction_toggle_xref();
 // func:acr_nav...StaticCheck
 void                 StaticCheck();
 } // gen:ns_func
