@@ -36,9 +36,6 @@
 | 30   | **Unicode graph.** Box-drawing characters (╔║╚╟╢╭╰─▶◀), UTF-8-aware column alignment.                                                                                                 |
 | 31   | **Preview horizontal scroll.** All columns navigable via Left/Right. Auto-scroll keeps selected column visible with column-boundary snapping. FK columns cyan, non-FK default.         |
 | 32   | **Ns-deps auto-view.** Context-sensitive: activates on namespace headers, restores on ctype rows. Enter jumps to dep namespace. No keybind needed.                                     |
-| 33   | **Overlay state preservation.** PushOverlay/PopViewmode save and restore right-panel selection and scroll position across help/detail overlays.                                         |
-| 34   | **Unicode polish.** │ panel dividers, ── section headers, › breadcrumb separators. EmitSectionHeader shared helper.                                                                    |
-| 35   | **Cache invalidation.** Preview/codegen/graph content cleared when cursor moves to namespace header. Overlay-pop no longer resets right-panel position.                                 |
 
 
 ---
