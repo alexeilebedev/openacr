@@ -353,16 +353,29 @@ static bool IsNsDepMode() {
     return acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_nsdep_viewmode;
 }
 
-// Pop the topmost overlay viewmode from viewmode_stack, restoring p_cur_viewmode.
+// Pop the topmost overlay viewmode from viewmode_stack, restoring p_cur_viewmode
+// and the right-panel selection that was active before the overlay was pushed.
 // Used by show_help toggle, show_detail toggle, and startup help dismiss.
 static void PopViewmode() {
     if (!acr_nav::viewmode_stack_EmptyQ()) {
-        acr_nav::FViewmode *prev = acr_nav::ind_viewmode_Find(acr_nav::viewmode_stack_qLast());
-        acr_nav::viewmode_stack_RemoveLast();
+        acr_nav::OverlayEntry &entry = acr_nav::viewmode_stack_qLast();
+        acr_nav::FViewmode *prev = acr_nav::ind_viewmode_Find(entry.viewmode);
         if (prev) {
             acr_nav::_db.p_cur_viewmode = prev;
+            acr_nav::_db.p_right_panel->sel_row = entry.saved_sel_row;
+            acr_nav::_db.p_right_panel->scroll_offset = entry.saved_scroll_offset;
         }
+        acr_nav::viewmode_stack_RemoveLast();
     }
+}
+
+// Push current viewmode + right-panel state onto overlay stack, switch to target.
+static void PushOverlay(acr_nav::FViewmode *target) {
+    acr_nav::OverlayEntry &entry = acr_nav::viewmode_stack_Alloc();
+    entry.viewmode = acr_nav::_db.p_cur_viewmode->viewmode;
+    entry.saved_sel_row = acr_nav::_db.p_right_panel->sel_row;
+    entry.saved_scroll_offset = acr_nav::_db.p_right_panel->scroll_offset;
+    acr_nav::_db.p_cur_viewmode = target;
 }
 
 // Dismiss startup help on any non-passive action (not movement/panel switch).
@@ -384,29 +397,62 @@ static void LoadNsDep(acr_nav::FNs &ns);
 // If an overlay viewmode is active and the selected ctype changed, pop all
 // overlays and restore the base viewmode.  During startup help, preserve the
 // overlay so movement doesn't dismiss it.
-// nsdep overlay is special: it stays open and reloads on namespace change.
+// nsdep is a context-sensitive view: auto-activates on namespace headers,
+// restores the previous viewmode when leaving.
 static bool PopOverlayOnCtypeChange(acr_nav::FCtype *prev_sel_ct, acr_nav::FCtype *sel_ct) {
-    bool keep_nsdep = false;
-    bool nsdep_ns_changed = false;
+    bool nsdep_changed = false;
+    // nsdep context: activate on ns headers, deactivate on ctype rows, reload on ns change
     if (IsNsDepMode()) {
-        // nsdep stays open across all navigation; reload on namespace change
-        acr_nav::FNs *cur_ns = sel_ct ? sel_ct->p_ns : SelectedNs();
-        keep_nsdep = (cur_ns != NULL);
-        nsdep_ns_changed = keep_nsdep && cur_ns != acr_nav::_db.p_nsdep_ns;
-        if (nsdep_ns_changed) {
-            LoadNsDep(*cur_ns);
+        if (sel_ct) {
+            // Leaving ns header for ctype row — restore saved viewmode
+            acr_nav::_db.p_cur_viewmode = acr_nav::_db.p_pre_nsdep_viewmode
+                ? acr_nav::_db.p_pre_nsdep_viewmode : acr_nav::_db.p_default_viewmode;
+            acr_nav::_db.p_pre_nsdep_viewmode = NULL;
+            nsdep_changed = true;
+        } else {
+            acr_nav::FNs *ns = SelectedNs();
+            if (ns && ns != acr_nav::_db.p_nsdep_ns) {
+                LoadNsDep(*ns);
+                nsdep_changed = true;
+            }
         }
     }
-    bool changed = sel_ct != prev_sel_ct || nsdep_ns_changed;
-    if (changed && !acr_nav::viewmode_stack_EmptyQ() && !acr_nav::_db.startup_help && !keep_nsdep) {
-        acr_nav::FViewmode *base = acr_nav::ind_viewmode_Find(acr_nav::viewmode_stack_qFind(0));
+    bool changed = sel_ct != prev_sel_ct || nsdep_changed;
+    if (changed && !acr_nav::viewmode_stack_EmptyQ() && !acr_nav::_db.startup_help) {
+        acr_nav::FViewmode *base = acr_nav::ind_viewmode_Find(acr_nav::viewmode_stack_qFind(0).viewmode);
+        // RemoveAll intentionally bypasses PopViewmode — saved panel state is
+        // discarded because ct_changed triggers a reset in ProcessKey.
         acr_nav::viewmode_stack_RemoveAll();
         if (base) {
             acr_nav::_db.p_cur_viewmode = base;
         }
         acr_nav::_db.p_detail_field = NULL;
+        // If overlay-pop restored nsdep as base but we landed on a ctype row,
+        // deactivate nsdep immediately (same logic as the IsNsDepMode block above).
+        if (IsNsDepMode() && sel_ct) {
+            acr_nav::_db.p_cur_viewmode = acr_nav::_db.p_pre_nsdep_viewmode
+                ? acr_nav::_db.p_pre_nsdep_viewmode : acr_nav::_db.p_default_viewmode;
+            acr_nav::_db.p_pre_nsdep_viewmode = NULL;
+            nsdep_changed = true;
+        }
     }
-    return nsdep_ns_changed;
+    // Auto-activate nsdep when landing on a namespace-header row
+    if (!IsNsDepMode() && !sel_ct) {
+        acr_nav::FNs *ns = SelectedNs();
+        if (ns) {
+            if (acr_nav::_db.startup_help) {
+                acr_nav::_db.startup_help = false;
+                if (IsHelpMode()) {
+                    PopViewmode();
+                }
+            }
+            acr_nav::_db.p_pre_nsdep_viewmode = acr_nav::_db.p_cur_viewmode;
+            LoadNsDep(*ns);
+            acr_nav::_db.p_cur_viewmode = acr_nav::_db.p_nsdep_viewmode;
+            nsdep_changed = true;
+        }
+    }
+    return nsdep_changed;
 }
 
 static int RightPanelLineCount() {
@@ -454,6 +500,26 @@ static void ClearViewmodeLines(acr_nav::FViewmode &vm) {
     acr_nav::line_RemoveAll(vm);
     acr_nav::cspan_RemoveAll(vm);
     acr_nav::preview_nav_RemoveAll(vm);
+}
+
+// Reset a viewmode to empty: clear lines, spans, nav columns, header, and h-scroll.
+static void ResetViewmodeContent(acr_nav::FViewmode &vm) {
+    ClearViewmodeLines(vm);
+    vm.header = "";
+    vm.preview_h_scroll = 0;
+}
+
+// Invalidate cached content for content-loading viewmodes (preview, codegen, graph).
+// Called when the selected ctype becomes NULL (namespace header row), so stale
+// content from the previous ctype is not displayed.
+// nsdep excluded: caches by namespace, handles NULL selection in RightPanelItemCount.
+static void InvalidateContentCaches() {
+    ResetViewmodeContent(*acr_nav::_db.p_preview_viewmode);
+    ResetViewmodeContent(*acr_nav::_db.p_codegen_viewmode);
+    ResetViewmodeContent(*acr_nav::_db.p_graph_viewmode);
+    acr_nav::_db.p_preview_ctype = NULL;
+    acr_nav::_db.p_codegen_ctype = NULL;
+    acr_nav::_db.p_graph_ctype = NULL;
 }
 
 // True if the byte range [byte_start, byte_end) in line contains at least one non-space character.
@@ -552,6 +618,7 @@ static void LoadPreview(acr_nav::FCtype &ctype) {
     acr_nav::_db.preview_nav_pending = "";
     ClearViewmodeLines(vm);
     vm.header = "";
+    vm.preview_h_scroll = 0;
     acr_nav::_db.p_preview_ctype = &ctype;
     acr_nav::FSsimfile *ssimfile = FindSsimfile(ctype);
     if (ssimfile) {
@@ -593,19 +660,20 @@ static void LoadPreview(acr_nav::FCtype &ctype) {
                     if (c > 0) {
                         col_pos += 2; // separator
                     }
+                    acr_nav::PreviewNavCol &nc = acr_nav::preview_nav_Alloc(vm);
+                    nc.col_start = col_pos;
+                    nc.col_wid = display_wid[c];
+                    nc.name_len = ch_N(col_name[c]);
+                    nc.col_name = col_name[c];
                     tempstr qname;
                     qname << field_base->ctype << "." << col_name[c];
                     acr_nav::FField *fld = acr_nav::ind_field_Find(qname);
                     if (fld && fld->p_reftype->up && FindSsimfile(*fld->p_arg)) {
-                        acr_nav::PreviewNavCol &nc = acr_nav::preview_nav_Alloc(vm);
-                        nc.col_start = col_pos;
-                        nc.col_wid = display_wid[c];
-                        nc.name_len = ch_N(col_name[c]);
-                        nc.col_name = col_name[c];
                         nc.target_ctype = fld->p_arg->ctype;
                     }
                     col_pos += display_wid[c];
                 }
+                vm.total_content_wid = col_pos;
             }
             vm.pkey_wid = (n_col > 0) ? display_wid[0] : 0;
             // Find comment column
@@ -665,7 +733,12 @@ static void LoadPreview(acr_nav::FCtype &ctype) {
             }
         }
     }
-    acr_nav::_db.sel_nav_col = 0;
+    if (acr_nav::_db.sel_nav_col_pending >= 0) {
+        acr_nav::_db.sel_nav_col = acr_nav::_db.sel_nav_col_pending;
+        acr_nav::_db.sel_nav_col_pending = -1;
+    } else {
+        acr_nav::_db.sel_nav_col = 0;
+    }
 }
 
 // True if the identifier matches a C++ keyword commonly found in amc-generated output.
@@ -848,6 +921,32 @@ static void FormatNsDepSection(acr_nav::FViewmode &vm, algo::strptr header,
     }
 }
 
+// Extract namespace pointer from a nsdep viewmode line by finding the line_key
+// color span (which highlights the namespace name) and looking up the namespace.
+// Returns NULL for header, separator, or "(none)" lines.
+static acr_nav::FNs* NsDepNsAtLine(acr_nav::FViewmode &vm, int line_idx) {
+    acr_nav::FNs *ret = NULL;
+    if (line_idx >= 0 && line_idx < acr_nav::line_N(vm)) {
+        algo::strptr line_text = acr_nav::line_qFind(vm, line_idx);
+        bool found = false;
+        for (int si = 0; si < acr_nav::cspan_N(vm) && !found; si++) {
+            acr_nav::LineColorSpan &span = acr_nav::cspan_qFind(vm, si);
+            if (span.line_idx == line_idx && span.p_navstyle == acr_nav::_db.p_line_key) {
+                int end = i32_Min(span.col_end, elems_N(line_text));
+                if (span.col_start < end) {
+                    algo::strptr name(line_text.elems + span.col_start, end - span.col_start);
+                    ret = acr_nav::ind_ns_Find(name);
+                    if (!ret && algo::strptr_Cmp(name, "other") == 0) {
+                        ret = acr_nav::ind_ns_Find("");
+                    }
+                }
+                found = true;
+            }
+        }
+    }
+    return ret;
+}
+
 // Find-or-insert namespace in accumulator array, increment count.
 static void AccumNsDep(NsDep *deps, int &n, int max_n, acr_nav::FNs *ns) {
     bool found = false;
@@ -947,6 +1046,7 @@ static const char* G_ROUND_TL  = "\xe2\x95\xad";  // ╭  rounded top-left (neig
 static const char* G_ROUND_BL  = "\xe2\x95\xb0";  // ╰  rounded bottom-left (neighbor close)
 static const char* G_ARR_R     = "\xe2\x96\xb6";  // ▶  right arrow
 static const char* G_ARR_L     = "\xe2\x97\x80";  // ◀  left arrow
+static const char* G_CHEVRON   = "\xe2\x80\xba";  // ›  breadcrumb separator
 
 // Line builder that tracks byte position vs display column for Unicode output.
 // Spaces are 1 byte = 1 column; box-drawing chars are 3 bytes = 1 column.
@@ -1352,6 +1452,17 @@ static void GraphEnsureContent(void *, acr_nav::FCtype &ct) {
     }
 }
 
+// Emit a section header line: "── title ──────..." with line_section highlight.
+static void EmitSectionHeader(acr_nav::FViewmode &vm, algo::strptr title) {
+    tempstr hdr;
+    hdr << G_HORIZ << G_HORIZ << " " << title << " ";
+    int display_width = ch_N(hdr) - Utf8ExtraBytes(strptr(hdr));
+    int fill = i32_Max(0, 36 - display_width);
+    for (int i = 0; i < fill; i++) hdr << G_HORIZ;
+    acr_nav::line_Alloc(vm) = hdr;
+    AddSpan(vm, acr_nav::line_N(vm) - 1, 0, ch_N(hdr), acr_nav::_db.p_line_section);
+}
+
 // Format a single ssim record as a vertical card: section header + one key:value per line.
 // Appends formatted lines to vm.line_elems. Skips primary key attr when its value
 // matches field_name (already shown in the detail header bar).
@@ -1366,12 +1477,9 @@ static void FormatDetailCard(acr_nav::FViewmode &vm, algo::Tuple &tuple, algo::s
         }
         ai++;
     } ind_end;
-    // Section header: "-- dmmeta.thash ------..."
-    tempstr hdr;
-    hdr << "-- " << tuple.head << " ";
-    char_PrintNTimes('-', hdr, i32_Max(0, 36 - ch_N(hdr)));
-    acr_nav::line_Alloc(vm) = hdr;
-    AddSpan(vm, acr_nav::line_N(vm) - 1, 0, ch_N(hdr), acr_nav::_db.p_line_section);
+    tempstr head_str;
+    head_str << tuple.head;
+    EmitSectionHeader(vm, strptr(head_str));
     // Key:value rows
     ai = 0;
     ind_beg(algo::Tuple_attrs_curs, attr, tuple) {
@@ -1591,8 +1699,8 @@ void acr_nav::navaction_switch_panel_right() {
     } else if (acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_preview_viewmode) {
         acr_nav::FViewmode &pvm = *acr_nav::_db.p_preview_viewmode;
         int n_nav = acr_nav::preview_nav_N(pvm);
-        if (n_nav > 0) {
-            acr_nav::_db.sel_nav_col = (acr_nav::_db.sel_nav_col + 1) % n_nav;
+        if (n_nav > 0 && acr_nav::_db.sel_nav_col < n_nav - 1) {
+            acr_nav::_db.sel_nav_col = acr_nav::_db.sel_nav_col + 1;
         }
     }
 }
@@ -1614,6 +1722,7 @@ static void NavigateToTarget(acr_nav::FCtype *sel_ct, acr_nav::FCtype *target, a
     entry.ctype = sel_ct->ctype;
     entry.filtertarget = acr_nav::_db.p_cur_filtertarget->filtertarget;
     entry.focus_panel = acr_nav::_db.p_cur_panel->panel;
+    entry.sel_nav_col = acr_nav::_db.sel_nav_col;
     acr_nav::_db.p_cur_viewmode = dest_viewmode;
     acr_nav::_db.filter = "";
     acr_nav::_db.p_cur_filtertarget = acr_nav::_db.p_default_filtertarget;
@@ -1647,9 +1756,11 @@ void acr_nav::navaction_follow_ref() {
                     BuildLeftItems();
                 }
             } else {
-                // Dismiss nsdep overlay so right panel returns to fields view
+                // Leave nsdep context so right panel returns to fields view
                 if (IsNsDepMode()) {
-                    PopViewmode();
+                    acr_nav::_db.p_cur_viewmode = acr_nav::_db.p_pre_nsdep_viewmode
+                        ? acr_nav::_db.p_pre_nsdep_viewmode : acr_nav::_db.p_default_viewmode;
+                    acr_nav::_db.p_pre_nsdep_viewmode = NULL;
                 }
                 acr_nav::_db.p_cur_panel = acr_nav::_db.p_right_panel;
             }
@@ -1661,6 +1772,41 @@ void acr_nav::navaction_follow_ref() {
         GraphInfoAtLine(*sel_ct, panel.sel_row, &target, NULL);
         if (target && target != sel_ct) {
             NavigateToTarget(sel_ct, target, acr_nav::_db.p_graph_viewmode);
+        }
+    } else if (panel.position == 1 && IsNsDepMode()) {
+        // NsDep mode: jump to the namespace on the selected line.
+        // Unlike other follow_ref paths, keep the target namespace collapsed
+        // and select its header row (the user is browsing namespace-level deps,
+        // not drilling into a specific ctype).
+        acr_nav::FViewmode &vm = *acr_nav::_db.p_nsdep_viewmode;
+        acr_nav::FNs *target_ns = NsDepNsAtLine(vm, panel.sel_row);
+        if (target_ns) {
+            acr_nav::Naventry &entry = acr_nav::navstack_Alloc();
+            entry.filter = acr_nav::_db.filter;
+            entry.navmode = acr_nav::_db.p_cur_mode->navmode;
+            entry.scroll_offset = left->scroll_offset;
+            entry.sel_row = left->sel_row;
+            entry.right_sel_row = panel.sel_row;
+            entry.right_scroll_offset = panel.scroll_offset;
+            entry.viewmode = acr_nav::_db.p_cur_viewmode->viewmode;
+            entry.ctype = sel_ct ? algo::strptr(sel_ct->ctype)
+                : (acr_nav::_db.p_nsdep_ns ? NsDisplayName(*acr_nav::_db.p_nsdep_ns)
+                                           : algo::strptr(""));
+            entry.filtertarget = acr_nav::_db.p_cur_filtertarget->filtertarget;
+            entry.focus_panel = acr_nav::_db.p_cur_panel->panel;
+            entry.sel_nav_col = acr_nav::_db.sel_nav_col;
+            acr_nav::_db.filter = "";
+            acr_nav::_db.p_cur_filtertarget = acr_nav::_db.p_default_filtertarget;
+            SwitchToBrowse();
+            BuildLeftItems();
+            // Select the target namespace header row
+            for (int i = 0; i < acr_nav::left_item_N(); i++) {
+                if (acr_nav::left_item_qFind(i).ns == target_ns->ns
+                    && ch_N(acr_nav::left_item_qFind(i).ctype) == 0) {
+                    left->sel_row = i;
+                    break;
+                }
+            }
         }
     } else if (panel.position == 1 && sel_ct
                && acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_preview_viewmode) {
@@ -1678,7 +1824,8 @@ void acr_nav::navaction_follow_ref() {
                 algo::strptr raw_cell(row_text.elems + start, end - start);
                 cell_value << algo::TrimmedRight(raw_cell);
             }
-            acr_nav::FCtype *target = acr_nav::ind_ctype_Find(nc.target_ctype);
+            acr_nav::FCtype *target = ch_N(nc.target_ctype) > 0
+                ? acr_nav::ind_ctype_Find(nc.target_ctype) : nullptr;
             if (target && target != sel_ct && ch_N(cell_value) > 0) {
                 acr_nav::_db.preview_nav_pending = cell_value;
                 NavigateToTarget(sel_ct, target, acr_nav::_db.p_preview_viewmode);
@@ -1742,15 +1889,30 @@ void acr_nav::navaction_go_back() {
         // Scan for the saved ctype -- collapse state may have changed since push
         acr_nav::_db.p_left_panel->sel_row = 0;
         acr_nav::_db.p_left_panel->scroll_offset = 0;
-        for (int i = 0; i < acr_nav::left_item_N(); i++) {
-            if (acr_nav::left_item_qFind(i).ctype == entry->ctype) {
-                acr_nav::_db.p_left_panel->sel_row = i;
-                break;
+        if (target_ct) {
+            for (int i = 0; i < acr_nav::left_item_N(); i++) {
+                if (acr_nav::left_item_qFind(i).ctype == entry->ctype) {
+                    acr_nav::_db.p_left_panel->sel_row = i;
+                    break;
+                }
+            }
+        } else {
+            // No ctype match (nsdep namespace jump) — scan for namespace header
+            // entry->ctype holds NsDisplayName: "other" for empty ns, else the ns key
+            algo::strptr saved_name(entry->ctype);
+            algo::strptr ns_key = (saved_name == "other") ? algo::strptr("") : saved_name;
+            for (int i = 0; i < acr_nav::left_item_N(); i++) {
+                if (acr_nav::left_item_qFind(i).ns == ns_key
+                    && ch_N(acr_nav::left_item_qFind(i).ctype) == 0) {
+                    acr_nav::_db.p_left_panel->sel_row = i;
+                    break;
+                }
             }
         }
         acr_nav::_db.p_left_panel->scroll_offset = entry->scroll_offset;
         acr_nav::_db.p_right_panel->sel_row = entry->right_sel_row;
         acr_nav::_db.p_right_panel->scroll_offset = entry->right_scroll_offset;
+        acr_nav::_db.sel_nav_col_pending = entry->sel_nav_col;
         acr_nav::FPanel *focus = acr_nav::ind_panel_Find(entry->focus_panel);
         if (focus) {
             acr_nav::_db.p_cur_panel = focus;
@@ -1921,8 +2083,7 @@ void acr_nav::navaction_show_help() {
     if (IsHelpMode()) {
         PopViewmode();
     } else {
-        acr_nav::viewmode_stack_Alloc() = acr_nav::_db.p_cur_viewmode->viewmode;
-        acr_nav::_db.p_cur_viewmode = acr_nav::_db.p_help_viewmode;
+        PushOverlay(acr_nav::_db.p_help_viewmode);
     }
 }
 
@@ -1936,25 +2097,8 @@ void acr_nav::navaction_show_detail() {
         acr_nav::FCtype *sel_ct = SelectedCtype(*acr_nav::_db.p_left_panel);
         acr_nav::FField *fld = RightPanelFieldFind(sel_ct, acr_nav::_db.p_right_panel->sel_row);
         if (fld) {
-            acr_nav::viewmode_stack_Alloc() = acr_nav::_db.p_cur_viewmode->viewmode;
             LoadDetail(*fld);
-            acr_nav::_db.p_cur_viewmode = acr_nav::_db.p_detail_viewmode;
-        }
-    }
-}
-
-// -----------------------------------------------------------------------------
-
-void acr_nav::navaction_show_nsdep() {
-    if (IsNsDepMode()) {
-        PopViewmode();
-    } else {
-        acr_nav::FCtype *sel_ct = SelectedCtype(*acr_nav::_db.p_left_panel);
-        acr_nav::FNs *ns = sel_ct ? sel_ct->p_ns : SelectedNs();
-        if (ns) {
-            acr_nav::viewmode_stack_Alloc() = acr_nav::_db.p_cur_viewmode->viewmode;
-            LoadNsDep(*ns);
-            acr_nav::_db.p_cur_viewmode = acr_nav::_db.p_nsdep_viewmode;
+            PushOverlay(acr_nav::_db.p_detail_viewmode);
         }
     }
 }
@@ -2012,17 +2156,24 @@ struct RenderCtx {
 // -----------------------------------------------------------------------------
 
 // Build breadcrumb trail from navigation stack.
-// Returns empty string at depth 0, or "A > B > C" showing the path of ctypes visited.
+// Returns empty string at depth 0, or "A › B › C" showing the path of ctypes visited.
 static tempstr BuildBreadcrumb(acr_nav::FCtype *sel_ct) {
     tempstr bc;
     for (int i = 0; i < acr_nav::navstack_N(); i++) {
         if (i > 0) {
-            bc << " > ";
+            bc << " " << G_CHEVRON << " ";
         }
         bc << acr_nav::navstack_qFind(i).ctype;
     }
-    if (acr_nav::navstack_N() > 0 && sel_ct) {
-        bc << " > " << sel_ct->ctype;
+    if (acr_nav::navstack_N() > 0) {
+        if (sel_ct) {
+            bc << " " << G_CHEVRON << " " << sel_ct->ctype;
+        } else {
+            acr_nav::FNs *ns = SelectedNs();
+            if (ns) {
+                bc << " " << G_CHEVRON << " " << NsDisplayName(*ns);
+            }
+        }
     }
     return bc;
 }
@@ -2086,20 +2237,21 @@ static void CollectActionKeys(acr_nav::FNavaction *action, cstring &keys) {
 
 // Check if two consecutive navactions form a directional pair (up/down, left/right, top/bottom).
 static bool IsDirPair(acr_nav::FNavaction *a, acr_nav::FNavaction *b) {
+    bool ret = false;
     algo::strptr na(a->navaction);
     algo::strptr nb(b->navaction);
     int prefix = 0;
     while (prefix < na.n_elems && prefix < nb.n_elems && na.elems[prefix] == nb.elems[prefix]) {
         prefix++;
     }
-    if (prefix <= 0 || prefix >= na.n_elems || prefix >= nb.n_elems) {
-        return false;
+    if (prefix > 0 && prefix < na.n_elems && prefix < nb.n_elems) {
+        algo::strptr sa(na.elems + prefix, na.n_elems - prefix);
+        algo::strptr sb(nb.elems + prefix, nb.n_elems - prefix);
+        ret = (sa == "up" && sb == "down")
+            || (sa == "left" && sb == "right")
+            || (sa == "top" && sb == "bottom");
     }
-    algo::strptr sa(na.elems + prefix, na.n_elems - prefix);
-    algo::strptr sb(nb.elems + prefix, nb.n_elems - prefix);
-    return (sa == "up" && sb == "down")
-        || (sa == "left" && sb == "right")
-        || (sa == "top" && sb == "bottom");
+    return ret;
 }
 
 // Merge comments of paired actions: combine first differing word with "/".
@@ -2173,14 +2325,7 @@ static void BuildHelpLines() {
     }
     // For each group, emit section header + action lines
     for (int g = 0; g < n_groups; g++) {
-        // Section header: "-- Movement ------..."
-        {
-            tempstr hdr;
-            hdr << "-- " << groups[g]->comment << " ";
-            char_PrintNTimes('-', hdr, i32_Max(0, 36 - ch_N(hdr)));
-            acr_nav::line_Alloc(vm) = hdr;
-            AddSpan(vm, acr_nav::line_N(vm) - 1, 0, ch_N(hdr), acr_nav::_db.p_line_section);
-        }
+        EmitSectionHeader(vm, groups[g]->comment);
         // Collect navactions in this group, sorted by sort_order
         acr_nav::FNavaction *actions[32];
         int n_actions = 0;
@@ -2233,7 +2378,7 @@ static void BuildHelpLines() {
 
 // -----------------------------------------------------------------------------
 
-// Render the title bar: left panel title | right panel title.
+// Render the title bar: left panel title │ right panel title.
 static void RenderTitleBar(RenderCtx &ctx) {
     // Left panel
     {
@@ -2243,7 +2388,7 @@ static void RenderTitleBar(RenderCtx &ctx) {
         EmitStyle(ctx.buf, ctx.left_focused ? *acr_nav::_db.p_title_focus : *acr_nav::_db.p_title_nofocus);
         ctx.buf << ltitle << "\x1b[0m";
     }
-    ctx.buf << "|";
+    ctx.buf << G_VERT;
     // Right panel title: detail mode shows field name instead of ctype name.
     // Title branches: detail mode, has_fields+selected, has_fields+empty, line-mode.
     // has_fields on FViewmode is the structural axis separating field/line rendering.
@@ -2272,16 +2417,26 @@ static void RenderTitleBar(RenderCtx &ctx) {
 
 // -----------------------------------------------------------------------------
 
-// Emit preview header with cyan-highlighted navigable column names.
+// Emit preview header with cyan-highlighted navigable (FK) column names.
 // nav_col entries provide column positions; non-nav regions get base_style.
-static void EmitStyledPreviewHeader(cstring &buf, algo::strptr hdr, acr_nav::FViewmode &vm, acr_nav::FNavstyle &base_style) {
+// h_scroll shifts column positions left for horizontal scrolling.
+static void EmitStyledPreviewHeader(cstring &buf, algo::strptr hdr, acr_nav::FViewmode &vm, acr_nav::FNavstyle &base_style, int h_scroll = 0) {
     int prev_end = 0;
     int hdr_n = elems_N(hdr);
     int n_nav = acr_nav::preview_nav_N(vm);
     for (int ni = 0; ni < n_nav; ni++) {
         acr_nav::PreviewNavCol &nc = acr_nav::preview_nav_qFind(vm, ni);
-        int adj_start = nc.col_start + 1;  // +1 for leading space in right_cell
+        if (ch_N(nc.target_ctype) == 0) {
+            continue;  // non-FK column, no highlight -- inside loop, not function return
+        }
+        int adj_start = nc.col_start - h_scroll + 1;  // +1 for leading space in right_cell
         int adj_end = i32_Min(adj_start + nc.name_len, hdr_n);
+        if (adj_end <= 1) {
+            continue;  // entirely off-screen left -- inside loop, not function return
+        }
+        if (adj_start < 1) {
+            adj_start = 1;
+        }
         if (adj_start >= hdr_n) {
             continue;  // inside loop, not function return
         }
@@ -2364,7 +2519,8 @@ static void EmitStyledLine(cstring &buf, algo::strptr right_cell, bool right_sel
                            acr_nav::FViewmode &vm, int line_idx, int &span_cursor,
                            acr_nav::FNavstyle *sel_style,
                            int overlay_start, int overlay_end,
-                           acr_nav::FNavstyle *overlay_style) {
+                           acr_nav::FNavstyle *overlay_style,
+                           int skip_bytes = 0) {
     int cell_n = elems_N(right_cell);
     int prev_end = 0;
     int ov_start = (overlay_start >= 0 && overlay_style) ? overlay_start + 1 : cell_n + 1;
@@ -2378,8 +2534,15 @@ static void EmitStyledLine(cstring &buf, algo::strptr right_cell, bool right_sel
     int si = span_cursor;
     while (si < n_spans && acr_nav::cspan_qFind(vm, si).line_idx == line_idx) {
         acr_nav::LineColorSpan &span = acr_nav::cspan_qFind(vm, si);
-        int adj_start = span.col_start + 1;
-        int adj_end = i32_Min(span.col_end + 1, cell_n);
+        int adj_start = span.col_start - skip_bytes + 1;
+        int adj_end = i32_Min(span.col_end - skip_bytes + 1, cell_n);
+        if (adj_end <= 1) {
+            si++;
+            continue;  // span entirely off-screen left -- inside while loop, not function-level return
+        }
+        if (adj_start < 1) {
+            adj_start = 1;
+        }
         if (adj_start >= cell_n) {
             si++;
             continue;  // span fully clipped -- inside while loop, not function-level return
@@ -2410,18 +2573,32 @@ static void RenderContentArea(RenderCtx &ctx) {
     bool in_xref = acr_nav::_db.p_cur_viewmode->is_reverse;
     int visible = ctx.visible;
 
+    int preview_h_scroll = 0;
+    bool is_hscroll_preview = (!has_fields
+        && acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_preview_viewmode
+        && acr_nav::_db.p_preview_viewmode->preview_h_scroll > 0);
+    if (is_hscroll_preview) {
+        preview_h_scroll = acr_nav::_db.p_preview_viewmode->preview_h_scroll;
+    }
+
     // Column header row -- rendered when content exists for visual stability
     // (cursor on namespace header has no sel_ct, but layout must not shift).
     // Suppressed when no ctype is selected (all namespace-level browsing).
     {
         tempstr left_cell;
         char_PrintNTimes(' ', left_cell, ctx.left_wid - 1);
-        ctx.buf << left_cell << "\x1b[0m|";
+        ctx.buf << left_cell << "\x1b[0m" << G_VERT;
         tempstr hdr;
         if (!has_fields) {
             algo::strptr line_header = RightPanelLineHeader();
             if (ch_N(line_header) > 0) {
-                hdr << " " << line_header;
+                if (is_hscroll_preview) {
+                    int hdr_skip = DisplayToByte(line_header, preview_h_scroll);
+                    hdr << " " << algo::strptr(line_header.elems + hdr_skip,
+                                                line_header.n_elems - hdr_skip);
+                } else {
+                    hdr << " " << line_header;
+                }
             }
         } else if (ctx.sel_ct) {
             hdr << " field";
@@ -2435,7 +2612,7 @@ static void RenderContentArea(RenderCtx &ctx) {
         EmitStyle(ctx.buf, base_hdr_style);
         if (!has_fields && acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_preview_viewmode
             && acr_nav::preview_nav_N(*acr_nav::_db.p_cur_viewmode) > 0) {
-            EmitStyledPreviewHeader(ctx.buf, strptr(hdr), *acr_nav::_db.p_cur_viewmode, base_hdr_style);
+            EmitStyledPreviewHeader(ctx.buf, strptr(hdr), *acr_nav::_db.p_cur_viewmode, base_hdr_style, preview_h_scroll);
         } else {
             ctx.buf << hdr;
         }
@@ -2478,17 +2655,25 @@ static void RenderContentArea(RenderCtx &ctx) {
         if (left_sel) {
             EmitStyle(ctx.buf, ctx.left_focused ? *acr_nav::_db.p_sel_focus : *acr_nav::_db.p_sel_nofocus);
         }
-        ctx.buf << left_cell << "\x1b[0m|";
+        ctx.buf << left_cell << "\x1b[0m" << G_VERT;
 
         // Right cell
         tempstr right_cell;
         bool right_sel = false;
         int right_data_idx = acr_nav::_db.p_right_panel->scroll_offset + row;
+        int skip_bytes = 0;
         acr_nav::FField *fld = nullptr;
         if ((ctx.sel_ct || !has_fields) && right_data_idx < n_right) {
             right_sel = (right_data_idx == acr_nav::_db.p_right_panel->sel_row);
             if (!has_fields) {
-                right_cell << " " << RightPanelLineFind(right_data_idx);
+                algo::strptr orig_line = RightPanelLineFind(right_data_idx);
+                if (is_hscroll_preview) {
+                    skip_bytes = DisplayToByte(orig_line, preview_h_scroll);
+                    right_cell << " " << algo::strptr(orig_line.elems + skip_bytes,
+                                                       orig_line.n_elems - skip_bytes);
+                } else {
+                    right_cell << " " << orig_line;
+                }
             } else {
                 fld = RightPanelFieldFind(ctx.sel_ct, right_data_idx);
                 if (fld) {
@@ -2529,16 +2714,16 @@ static void RenderContentArea(RenderCtx &ctx) {
                 if (n_nav > 0 && acr_nav::_db.sel_nav_col < n_nav) {
                     acr_nav::PreviewNavCol &nc = acr_nav::preview_nav_qFind(pvm, acr_nav::_db.sel_nav_col);
                     algo::strptr data_line = RightPanelLineFind(right_data_idx);
-                    int ov_s = DisplayToByte(data_line, nc.col_start);
-                    int ov_e = DisplayToByte(data_line, nc.col_start + nc.col_wid);
-                    if (RegionHasContent(data_line, ov_s, ov_e)) {
-                        ov_start = ov_s;
-                        ov_end = ov_e;
-                        ov_style = acr_nav::_db.p_line_nav_cell;
-                    }
+                    int ov_raw_s = DisplayToByte(data_line, nc.col_start);
+                    int ov_raw_e = DisplayToByte(data_line, nc.col_start + nc.col_wid);
+                    ov_start = ov_raw_s - skip_bytes;
+                    ov_end = ov_raw_e - skip_bytes;
+                    ov_style = ch_N(nc.target_ctype) > 0
+                        ? acr_nav::_db.p_line_nav_cell
+                        : acr_nav::_db.p_line_nav_cell_nofk;
                 }
             }
-            EmitStyledLine(ctx.buf, strptr(right_cell), right_focused_sel, *acr_nav::_db.p_cur_viewmode, right_data_idx, span_cursor, right_focused_sel ? acr_nav::_db.p_sel_focus : nullptr, ov_start, ov_end, ov_style);
+            EmitStyledLine(ctx.buf, strptr(right_cell), right_focused_sel, *acr_nav::_db.p_cur_viewmode, right_data_idx, span_cursor, right_focused_sel ? acr_nav::_db.p_sel_focus : nullptr, ov_start, ov_end, ov_style, skip_bytes);
             ctx.buf << "\x1b[0m\x1b[K\r\n";
         } else {
             ctx.buf << right_cell << "\x1b[0m\x1b[K\r\n";
@@ -2604,6 +2789,45 @@ static void RenderStatusBar(RenderCtx &ctx) {
     ctx.buf << status << "\x1b[0m";
 }
 
+// Adjust horizontal scroll offset to keep the selected preview column visible.
+// Scroll offset always lands on a column boundary: the leftmost visible column
+// starts at position 0 with no partial-column whitespace on the left.
+// h only changes when the selected column is not fully visible.
+static void AdjustPreviewHScroll(int right_wid) {
+    acr_nav::FViewmode &pvm = *acr_nav::_db.p_preview_viewmode;
+    int h = pvm.preview_h_scroll;
+    if (acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_preview_viewmode) {
+        int avail = right_wid - 1;  // -1 for leading space in right_cell
+        int n_nav = acr_nav::preview_nav_N(pvm);
+        if (pvm.total_content_wid > avail && avail > 0 && n_nav > 0) {
+            int sel = i32_Min(acr_nav::_db.sel_nav_col, n_nav - 1);
+            acr_nav::PreviewNavCol &nc = acr_nav::preview_nav_qFind(pvm, sel);
+            // Selected column off-screen left: snap to its start
+            if (nc.col_start < h) {
+                h = nc.col_start;
+            }
+            // Selected column off-screen right: find the smallest column
+            // boundary that makes the selected column's right edge visible
+            if (nc.col_start + nc.col_wid > h + avail) {
+                int min_start = nc.col_start + nc.col_wid - avail;
+                h = nc.col_start;  // fallback: start at selected column
+                for (int i = 0; i < n_nav; i++) {
+                    int cs = acr_nav::preview_nav_qFind(pvm, i).col_start;
+                    if (cs >= min_start) {
+                        h = i32_Min(cs, nc.col_start);
+                        break;
+                    }
+                }
+            }
+            int max_scroll = pvm.total_content_wid - avail;
+            h = i32_Max(0, i32_Min(h, max_scroll));
+        } else {
+            h = 0;
+        }
+    }
+    pvm.preview_h_scroll = h;
+}
+
 // -----------------------------------------------------------------------------
 
 static void Render(acr_nav::FCtype *sel_ct) {
@@ -2641,6 +2865,7 @@ static void Render(acr_nav::FCtype *sel_ct) {
     int min_left = i32_Min(acr_nav::_db.p_left_panel->min_width, wid / 2);
     int left_wid = i32_Max(min_left, i32_Min(max_name + 2, wid * 40 / 100));
     int right_wid = i32_Max(1, wid - left_wid);
+    AdjustPreviewHScroll(right_wid);
     RenderCtx ctx(buf, sel_ct
                   , wid, left_wid, right_wid
                   , /*left_focused=*/(acr_nav::_db.p_cur_panel == acr_nav::_db.p_left_panel)
@@ -2692,8 +2917,8 @@ static void InitPanels() {
         }
     } ind_end;
     // Start in help mode so new users see keybindings
-    acr_nav::viewmode_stack_Alloc() = acr_nav::_db.p_default_viewmode->viewmode;
-    acr_nav::_db.p_cur_viewmode = acr_nav::_db.p_help_viewmode;
+    acr_nav::_db.p_cur_viewmode = acr_nav::_db.p_default_viewmode;
+    PushOverlay(acr_nav::_db.p_help_viewmode);
     acr_nav::_db.startup_help = true;
     // Resolve well-known navstyle pointers by name
     acr_nav::_db.p_title_focus = acr_nav::ind_navstyle_Find("title_focus");
@@ -2724,6 +2949,7 @@ static void InitPanels() {
     // Preview follow-ref styles (optional)
     acr_nav::_db.p_line_nav_header = acr_nav::ind_navstyle_Find("line_nav_header");
     acr_nav::_db.p_line_nav_cell = acr_nav::ind_navstyle_Find("line_nav_cell");
+    acr_nav::_db.p_line_nav_cell_nofk = acr_nav::ind_navstyle_Find("line_nav_cell_nofk");
     BuildHelpLines();
     SwitchToBrowse();
     acr_nav::_db.p_left_panel->sel_row = 0;
@@ -2742,6 +2968,7 @@ static bool ProcessKey(algo::strptr key_name) {
         acr_nav::FCtype *prev_sel_ct = SelectedCtype(*left);
         acr_nav::FViewmode *prev_viewmode = acr_nav::_db.p_cur_viewmode;
         int prev_depth = acr_nav::navstack_N();
+        int prev_overlay_depth = acr_nav::viewmode_stack_N();
         tempstr composite;
         composite << acr_nav::_db.p_cur_mode->navmode << "." << key_name;
         acr_nav::FKeybind *keybind = acr_nav::ind_keybind_Find(composite);
@@ -2776,7 +3003,11 @@ static bool ProcessKey(algo::strptr key_name) {
             bool forward = (acr_nav::navstack_N() >= prev_depth);
             bool vm_changed = (acr_nav::_db.p_cur_viewmode != prev_viewmode);
             bool ct_changed = (sel_ct != prev_sel_ct) || nsdep_ns_changed;
-            if (forward && (vm_changed || ct_changed)) {
+            if (ct_changed && !sel_ct) {
+                InvalidateContentCaches();
+            }
+            bool overlay_pop = vm_changed && (acr_nav::viewmode_stack_N() < prev_overlay_depth);
+            if (forward && ((vm_changed && !overlay_pop) || ct_changed)) {
                 right->sel_row = 0;
                 right->scroll_offset = 0;
             }

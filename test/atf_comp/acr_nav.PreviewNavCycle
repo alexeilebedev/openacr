@@ -1,4 +1,4 @@
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:dmmeta.Ns  navstack_depth:0  n_sel_ctype:10  n_ctype:1406  n_field:5685  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  n:ns-deps  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:dmmeta.Ns  navstack_depth:0  n_sel_ctype:10  n_ctype:1407  n_field:5694  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:11  sel_value:dmmeta.Ns
 acr_nav.VisibleLeftItem  row:0  value:dmmeta  kind:ns  collapsed:N  n_match:10  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:dmmeta.Ns  kind:ctype  collapsed:N  n_match:0  n_record:85
@@ -98,7 +98,7 @@ acr_nav.VisibleLine  row:82  value:"sv2ssim       exe       GPL      sv2ssim - S
 acr_nav.VisibleLine  row:83  value:"ws            protocol  GPL      WebSocket binary protocol                                               "
 acr_nav.VisibleLine  row:84  value:"wsdb          ssimdb    GPL      WebSocket db                                                            "
 
-acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Ns  navstack_depth:0  n_sel_ctype:10  n_ctype:1406  n_field:5685  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:1
+acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Ns  navstack_depth:0  n_sel_ctype:10  n_ctype:1407  n_field:5694  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:1
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:11  sel_value:dmmeta.Ns
 acr_nav.VisibleLeftItem  row:0  value:dmmeta  kind:ns  collapsed:N  n_match:10  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:dmmeta.Ns  kind:ctype  collapsed:N  n_match:0  n_record:85
@@ -198,7 +198,7 @@ acr_nav.VisibleLine  row:82  value:"sv2ssim       exe       GPL      sv2ssim - S
 acr_nav.VisibleLine  row:83  value:"ws            protocol  GPL      WebSocket binary protocol                                               "
 acr_nav.VisibleLine  row:84  value:"wsdb          ssimdb    GPL      WebSocket db                                                            "
 
-acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Ns  navstack_depth:0  n_sel_ctype:10  n_ctype:1406  n_field:5685  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Ns  navstack_depth:0  n_sel_ctype:10  n_ctype:1407  n_field:5694  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:2
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:11  sel_value:dmmeta.Ns
 acr_nav.VisibleLeftItem  row:0  value:dmmeta  kind:ns  collapsed:N  n_match:10  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:dmmeta.Ns  kind:ctype  collapsed:N  n_match:0  n_record:85
@@ -298,7 +298,7 @@ acr_nav.VisibleLine  row:82  value:"sv2ssim       exe       GPL      sv2ssim - S
 acr_nav.VisibleLine  row:83  value:"ws            protocol  GPL      WebSocket binary protocol                                               "
 acr_nav.VisibleLine  row:84  value:"wsdb          ssimdb    GPL      WebSocket db                                                            "
 
-acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Ns  navstack_depth:0  n_sel_ctype:10  n_ctype:1406  n_field:5685  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Ns  navstack_depth:0  n_sel_ctype:10  n_ctype:1407  n_field:5694  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:2
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:11  sel_value:dmmeta.Ns
 acr_nav.VisibleLeftItem  row:0  value:dmmeta  kind:ns  collapsed:N  n_match:10  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:dmmeta.Ns  kind:ctype  collapsed:N  n_match:0  n_record:85
@@ -398,7 +398,7 @@ acr_nav.VisibleLine  row:82  value:"sv2ssim       exe       GPL      sv2ssim - S
 acr_nav.VisibleLine  row:83  value:"ws            protocol  GPL      WebSocket binary protocol                                               "
 acr_nav.VisibleLine  row:84  value:"wsdb          ssimdb    GPL      WebSocket db                                                            "
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:dmmeta.Ns  navstack_depth:0  n_sel_ctype:10  n_ctype:1406  n_field:5685  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  n:ns-deps  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Ns  navstack_depth:0  n_sel_ctype:10  n_ctype:1407  n_field:5694  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:1
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:11  sel_value:dmmeta.Ns
 acr_nav.VisibleLeftItem  row:0  value:dmmeta  kind:ns  collapsed:N  n_match:10  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:dmmeta.Ns  kind:ctype  collapsed:N  n_match:0  n_record:85
@@ -498,7 +498,7 @@ acr_nav.VisibleLine  row:82  value:"sv2ssim       exe       GPL      sv2ssim - S
 acr_nav.VisibleLine  row:83  value:"ws            protocol  GPL      WebSocket binary protocol                                               "
 acr_nav.VisibleLine  row:84  value:"wsdb          ssimdb    GPL      WebSocket db                                                            "
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:dmmeta.Ns  navstack_depth:0  n_sel_ctype:10  n_ctype:1406  n_field:5685  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  n:ns-deps  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Ns  navstack_depth:0  n_sel_ctype:10  n_ctype:1407  n_field:5694  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:1
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:11  sel_value:dmmeta.Ns
 acr_nav.VisibleLeftItem  row:0  value:dmmeta  kind:ns  collapsed:N  n_match:10  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:dmmeta.Ns  kind:ctype  collapsed:N  n_match:0  n_record:85

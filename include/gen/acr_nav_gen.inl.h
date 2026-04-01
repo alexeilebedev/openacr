@@ -1077,7 +1077,7 @@ inline bool acr_nav::viewmode_stack_EmptyQ() {
 
 // --- acr_nav.FDb.viewmode_stack.Find
 // Look up row by row id. Return NULL if out of range
-inline algo::Smallstr50* acr_nav::viewmode_stack_Find(u64 t) {
+inline acr_nav::OverlayEntry* acr_nav::viewmode_stack_Find(u64 t) {
     u64 idx = t;
     u64 lim = _db.viewmode_stack_n;
     if (idx >= lim) return NULL;
@@ -1086,13 +1086,13 @@ inline algo::Smallstr50* acr_nav::viewmode_stack_Find(u64 t) {
 
 // --- acr_nav.FDb.viewmode_stack.Getary
 // Return array pointer by value
-inline algo::aryptr<algo::Smallstr50> acr_nav::viewmode_stack_Getary() {
-    return algo::aryptr<algo::Smallstr50>(_db.viewmode_stack_elems, _db.viewmode_stack_n);
+inline algo::aryptr<acr_nav::OverlayEntry> acr_nav::viewmode_stack_Getary() {
+    return algo::aryptr<acr_nav::OverlayEntry>(_db.viewmode_stack_elems, _db.viewmode_stack_n);
 }
 
 // --- acr_nav.FDb.viewmode_stack.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline algo::Smallstr50* acr_nav::viewmode_stack_Last() {
+inline acr_nav::OverlayEntry* acr_nav::viewmode_stack_Last() {
     return viewmode_stack_Find(u64(_db.viewmode_stack_n-1));
 }
 
@@ -1108,11 +1108,6 @@ inline i32 acr_nav::viewmode_stack_N() {
     return _db.viewmode_stack_n;
 }
 
-// --- acr_nav.FDb.viewmode_stack.RemoveAll
-inline void acr_nav::viewmode_stack_RemoveAll() {
-    _db.viewmode_stack_n = 0;
-}
-
 // --- acr_nav.FDb.viewmode_stack.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
 inline void acr_nav::viewmode_stack_Reserve(int n) {
@@ -1124,19 +1119,19 @@ inline void acr_nav::viewmode_stack_Reserve(int n) {
 
 // --- acr_nav.FDb.viewmode_stack.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline algo::Smallstr50& acr_nav::viewmode_stack_qFind(u64 t) {
+inline acr_nav::OverlayEntry& acr_nav::viewmode_stack_qFind(u64 t) {
     return _db.viewmode_stack_elems[t];
 }
 
 // --- acr_nav.FDb.viewmode_stack.qLast
 // Return reference to last element of array. No bounds checking
-inline algo::Smallstr50& acr_nav::viewmode_stack_qLast() {
+inline acr_nav::OverlayEntry& acr_nav::viewmode_stack_qLast() {
     return viewmode_stack_qFind(u64(_db.viewmode_stack_n-1));
 }
 
 // --- acr_nav.FDb.viewmode_stack.rowid_Get
 // Return row id of specified element
-inline u64 acr_nav::viewmode_stack_rowid_Get(algo::Smallstr50 &elem) {
+inline u64 acr_nav::viewmode_stack_rowid_Get(acr_nav::OverlayEntry &elem) {
     u64 id = &elem - _db.viewmode_stack_elems;
     return u64(id);
 }
@@ -1658,7 +1653,7 @@ inline bool acr_nav::_db_viewmode_stack_curs_ValidQ(_db_viewmode_stack_curs &cur
 
 // --- acr_nav.FDb.viewmode_stack_curs.Access
 // item access
-inline algo::Smallstr50& acr_nav::_db_viewmode_stack_curs_Access(_db_viewmode_stack_curs &curs) {
+inline acr_nav::OverlayEntry& acr_nav::_db_viewmode_stack_curs_Access(_db_viewmode_stack_curs &curs) {
     return curs.elems[curs.index];
 }
 
@@ -2436,6 +2431,18 @@ inline  acr_nav::LineColorSpan::LineColorSpan() {
 // --- acr_nav.Naventry..Ctor
 inline  acr_nav::Naventry::Naventry() {
     acr_nav::Naventry_Init(*this);
+}
+
+// --- acr_nav.OverlayEntry..Init
+// Set all fields to initial values.
+inline void acr_nav::OverlayEntry_Init(acr_nav::OverlayEntry& parent) {
+    parent.saved_sel_row = i32(0);
+    parent.saved_scroll_offset = i32(0);
+}
+
+// --- acr_nav.OverlayEntry..Ctor
+inline  acr_nav::OverlayEntry::OverlayEntry() {
+    acr_nav::OverlayEntry_Init(*this);
 }
 
 // --- acr_nav.PanelState..Init

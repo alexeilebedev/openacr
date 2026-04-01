@@ -1,4 +1,4 @@
-acr_nav.Screen  mode:filter  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1405  n_ctype:1406  n_field:5685  viewmode:fields  breadcrumb:""  filtertarget:arg  hints:"Enter:accept  Tab:target  Esc:cancel"  sel_nav_col:0
+acr_nav.Screen  mode:filter  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1406  n_ctype:1407  n_field:5694  viewmode:nsdep  breadcrumb:""  filtertarget:arg  hints:"Enter:accept  Tab:target  Esc:cancel"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:83  sel_value:""
 acr_nav.VisibleLeftItem  row:0  value:""  kind:ns  collapsed:Y  n_match:44  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:abt  kind:ns  collapsed:Y  n_match:19  n_record:0
@@ -9,7 +9,7 @@ acr_nav.VisibleLeftItem  row:5  value:acr_dm  kind:ns  collapsed:Y  n_match:6  n
 acr_nav.VisibleLeftItem  row:6  value:acr_ed  kind:ns  collapsed:Y  n_match:19  n_record:0
 acr_nav.VisibleLeftItem  row:7  value:acr_in  kind:ns  collapsed:Y  n_match:12  n_record:0
 acr_nav.VisibleLeftItem  row:8  value:acr_my  kind:ns  collapsed:Y  n_match:3  n_record:0
-acr_nav.VisibleLeftItem  row:9  value:acr_nav  kind:ns  collapsed:Y  n_match:29  n_record:0
+acr_nav.VisibleLeftItem  row:9  value:acr_nav  kind:ns  collapsed:Y  n_match:30  n_record:0
 acr_nav.VisibleLeftItem  row:10  value:acr_navdb  kind:ns  collapsed:Y  n_match:10  n_record:0
 acr_nav.VisibleLeftItem  row:11  value:algo  kind:ns  collapsed:Y  n_match:225  n_record:0
 acr_nav.VisibleLeftItem  row:12  value:algo_lib  kind:ns  collapsed:Y  n_match:35  n_record:0
@@ -83,9 +83,83 @@ acr_nav.VisibleLeftItem  row:79  value:strconv  kind:ns  collapsed:Y  n_match:1 
 acr_nav.VisibleLeftItem  row:80  value:sv2ssim  kind:ns  collapsed:Y  n_match:4  n_record:0
 acr_nav.VisibleLeftItem  row:81  value:ws  kind:ns  collapsed:Y  n_match:16  n_record:0
 acr_nav.VisibleLeftItem  row:82  value:wsdb  kind:ns  collapsed:Y  n_match:1  n_record:0
-acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:74  sel_value:"Upstream (other imports from):"
+acr_nav.VisibleLine  row:0  value:"Upstream (other imports from):"
+acr_nav.VisibleLine  row:1  value:"  (none)"
+acr_nav.VisibleLine  row:2  value:""
+acr_nav.VisibleLine  row:3  value:"Downstream (imports from other):"
+acr_nav.VisibleLine  row:4  value:"       command    301 fields"
+acr_nav.VisibleLine  row:5  value:"          algo    240 fields"
+acr_nav.VisibleLine  row:6  value:"       atf_amc    208 fields"
+acr_nav.VisibleLine  row:7  value:"        dmmeta    109 fields"
+acr_nav.VisibleLine  row:8  value:"      algo_lib     79 fields"
+acr_nav.VisibleLine  row:9  value:"           amc     78 fields"
+acr_nav.VisibleLine  row:10  value:"           acr     62 fields"
+acr_nav.VisibleLine  row:11  value:"         kafka     53 fields"
+acr_nav.VisibleLine  row:12  value:"       acr_nav     51 fields"
+acr_nav.VisibleLine  row:13  value:"        report     43 fields"
+acr_nav.VisibleLine  row:14  value:"           ams     38 fields"
+acr_nav.VisibleLine  row:15  value:"       lib_ams     38 fields"
+acr_nav.VisibleLine  row:16  value:"           dev     37 fields"
+acr_nav.VisibleLine  row:17  value:"            ws     27 fields"
+acr_nav.VisibleLine  row:18  value:"       amc_vis     26 fields"
+acr_nav.VisibleLine  row:19  value:"          gcli     25 fields"
+acr_nav.VisibleLine  row:20  value:"     samp_meng     25 fields"
+acr_nav.VisibleLine  row:21  value:"           abt     23 fields"
+acr_nav.VisibleLine  row:22  value:"      atf_unit     21 fields"
+acr_nav.VisibleLine  row:23  value:"     acr_navdb     19 fields"
+acr_nav.VisibleLine  row:24  value:"       sv2ssim     14 fields"
+acr_nav.VisibleLine  row:25  value:"        gcache     13 fields"
+acr_nav.VisibleLine  row:26  value:"        gclidb     13 fields"
+acr_nav.VisibleLine  row:27  value:"         amcdb     12 fields"
+acr_nav.VisibleLine  row:28  value:"         atfdb     11 fields"
+acr_nav.VisibleLine  row:29  value:"      lib_json     11 fields"
+acr_nav.VisibleLine  row:30  value:"    lib_sqlite     11 fields"
+acr_nav.VisibleLine  row:31  value:"     acr_compl     10 fields"
+acr_nav.VisibleLine  row:32  value:"      lib_exec     10 fields"
+acr_nav.VisibleLine  row:33  value:"      src_func     10 fields"
+acr_nav.VisibleLine  row:34  value:"            fm      9 fields"
+acr_nav.VisibleLine  row:35  value:"        abt_md      8 fields"
+acr_nav.VisibleLine  row:36  value:"        acr_in      8 fields"
+acr_nav.VisibleLine  row:37  value:"     lib_ctype      8 fields"
+acr_nav.VisibleLine  row:38  value:"    ssim2mysql      8 fields"
+acr_nav.VisibleLine  row:39  value:"      atf_comp      7 fields"
+acr_nav.VisibleLine  row:40  value:"  ams_sendtest      7 fields"
+acr_nav.VisibleLine  row:41  value:"        atf_ci      6 fields"
+acr_nav.VisibleLine  row:42  value:"           apm      6 fields"
+acr_nav.VisibleLine  row:43  value:"       atf_exp      6 fields"
+acr_nav.VisibleLine  row:44  value:"      atf_gcli      6 fields"
+acr_nav.VisibleLine  row:45  value:"        lib_rl      6 fields"
+acr_nav.VisibleLine  row:46  value:"        acr_ed      5 fields"
+acr_nav.VisibleLine  row:47  value:"      lib_curl      5 fields"
+acr_nav.VisibleLine  row:48  value:"        sampdb      5 fields"
+acr_nav.VisibleLine  row:49  value:"        amc_gc      5 fields"
+acr_nav.VisibleLine  row:50  value:"        acr_dm      4 fields"
+acr_nav.VisibleLine  row:51  value:"          http      4 fields"
+acr_nav.VisibleLine  row:52  value:"          mdbg      3 fields"
+acr_nav.VisibleLine  row:53  value:"       src_hdr      3 fields"
+acr_nav.VisibleLine  row:54  value:"          ietf      3 fields"
+acr_nav.VisibleLine  row:55  value:"           atf      3 fields"
+acr_nav.VisibleLine  row:56  value:"     lib_mysql      2 fields"
+acr_nav.VisibleLine  row:57  value:"        acr_my      2 fields"
+acr_nav.VisibleLine  row:58  value:"         amsdb      2 fields"
+acr_nav.VisibleLine  row:59  value:"    mysql2ssim      2 fields"
+acr_nav.VisibleLine  row:60  value:"       src_lim      2 fields"
+acr_nav.VisibleLine  row:61  value:"      ssimfilt      2 fields"
+acr_nav.VisibleLine  row:62  value:"          wsdb      2 fields"
+acr_nav.VisibleLine  row:63  value:"        httpdb      2 fields"
+acr_nav.VisibleLine  row:64  value:"      atf_fuzz      1 field"
+acr_nav.VisibleLine  row:65  value:"       lib_sql      1 field"
+acr_nav.VisibleLine  row:66  value:"     samp_make      1 field"
+acr_nav.VisibleLine  row:67  value:"       sandbox      1 field"
+acr_nav.VisibleLine  row:68  value:"        aqlite      1 field"
+acr_nav.VisibleLine  row:69  value:"      atf_nrun      1 field"
+acr_nav.VisibleLine  row:70  value:"          fmdb      1 field"
+acr_nav.VisibleLine  row:71  value:"     lib_iconv      1 field"
+acr_nav.VisibleLine  row:72  value:"        lib_ws      1 field"
+acr_nav.VisibleLine  row:73  value:"       atf_cov      1 field"
 
-acr_nav.Screen  mode:filter  focus:ctype_list  filter:cstring  navstack_depth:0  n_sel_ctype:252  n_ctype:1406  n_field:5685  viewmode:fields  breadcrumb:""  filtertarget:arg  hints:"Enter:accept  Tab:target  Esc:cancel"  sel_nav_col:0
+acr_nav.Screen  mode:filter  focus:ctype_list  filter:cstring  navstack_depth:0  n_sel_ctype:252  n_ctype:1407  n_field:5694  viewmode:nsdep  breadcrumb:""  filtertarget:arg  hints:"Enter:accept  Tab:target  Esc:cancel"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:59  sel_value:abt
 acr_nav.VisibleLeftItem  row:0  value:abt  kind:ns  collapsed:Y  n_match:6  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:abt_md  kind:ns  collapsed:Y  n_match:8  n_record:0
@@ -146,9 +220,20 @@ acr_nav.VisibleLeftItem  row:55  value:ssim2csv  kind:ns  collapsed:Y  n_match:4
 acr_nav.VisibleLeftItem  row:56  value:ssim2mysql  kind:ns  collapsed:Y  n_match:3  n_record:0
 acr_nav.VisibleLeftItem  row:57  value:ssimfilt  kind:ns  collapsed:Y  n_match:1  n_record:0
 acr_nav.VisibleLeftItem  row:58  value:sv2ssim  kind:ns  collapsed:Y  n_match:2  n_record:0
-acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:11  sel_value:"Upstream (abt imports from):"
+acr_nav.VisibleLine  row:0  value:"Upstream (abt imports from):"
+acr_nav.VisibleLine  row:1  value:"     other     23 fields"
+acr_nav.VisibleLine  row:2  value:"       dev     16 fields"
+acr_nav.VisibleLine  row:3  value:"      algo     15 fields"
+acr_nav.VisibleLine  row:4  value:"  algo_lib      4 fields"
+acr_nav.VisibleLine  row:5  value:"   command      1 field"
+acr_nav.VisibleLine  row:6  value:"    report      1 field"
+acr_nav.VisibleLine  row:7  value:"    dmmeta      1 field"
+acr_nav.VisibleLine  row:8  value:""
+acr_nav.VisibleLine  row:9  value:"Downstream (imports from abt):"
+acr_nav.VisibleLine  row:10  value:"  (none)"
 
-acr_nav.Screen  mode:filter  focus:ctype_list  filter:cstring  navstack_depth:0  n_sel_ctype:252  n_ctype:1406  n_field:5685  viewmode:fields  breadcrumb:""  filtertarget:arg  hints:"Enter:accept  Tab:target  Esc:cancel"  sel_nav_col:0
+acr_nav.Screen  mode:filter  focus:ctype_list  filter:cstring  navstack_depth:0  n_sel_ctype:252  n_ctype:1407  n_field:5694  viewmode:nsdep  breadcrumb:""  filtertarget:arg  hints:"Enter:accept  Tab:target  Esc:cancel"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:59  sel_value:abt
 acr_nav.VisibleLeftItem  row:0  value:abt  kind:ns  collapsed:Y  n_match:6  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:abt_md  kind:ns  collapsed:Y  n_match:8  n_record:0
@@ -209,5 +294,16 @@ acr_nav.VisibleLeftItem  row:55  value:ssim2csv  kind:ns  collapsed:Y  n_match:4
 acr_nav.VisibleLeftItem  row:56  value:ssim2mysql  kind:ns  collapsed:Y  n_match:3  n_record:0
 acr_nav.VisibleLeftItem  row:57  value:ssimfilt  kind:ns  collapsed:Y  n_match:1  n_record:0
 acr_nav.VisibleLeftItem  row:58  value:sv2ssim  kind:ns  collapsed:Y  n_match:2  n_record:0
-acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:11  sel_value:"Upstream (abt imports from):"
+acr_nav.VisibleLine  row:0  value:"Upstream (abt imports from):"
+acr_nav.VisibleLine  row:1  value:"     other     23 fields"
+acr_nav.VisibleLine  row:2  value:"       dev     16 fields"
+acr_nav.VisibleLine  row:3  value:"      algo     15 fields"
+acr_nav.VisibleLine  row:4  value:"  algo_lib      4 fields"
+acr_nav.VisibleLine  row:5  value:"   command      1 field"
+acr_nav.VisibleLine  row:6  value:"    report      1 field"
+acr_nav.VisibleLine  row:7  value:"    dmmeta      1 field"
+acr_nav.VisibleLine  row:8  value:""
+acr_nav.VisibleLine  row:9  value:"Downstream (imports from abt):"
+acr_nav.VisibleLine  row:10  value:"  (none)"
 

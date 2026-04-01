@@ -1,4 +1,4 @@
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1405  n_ctype:1406  n_field:5685  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  n:ns-deps  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1406  n_ctype:1407  n_field:5694  viewmode:nsdep  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:10  scroll_offset:0  n_items:93  sel_value:acr_navdb
 acr_nav.VisibleLeftItem  row:0  value:""  kind:ns  collapsed:Y  n_match:44  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:abt  kind:ns  collapsed:Y  n_match:19  n_record:0
@@ -9,15 +9,15 @@ acr_nav.VisibleLeftItem  row:5  value:acr_dm  kind:ns  collapsed:Y  n_match:6  n
 acr_nav.VisibleLeftItem  row:6  value:acr_ed  kind:ns  collapsed:Y  n_match:19  n_record:0
 acr_nav.VisibleLeftItem  row:7  value:acr_in  kind:ns  collapsed:Y  n_match:12  n_record:0
 acr_nav.VisibleLeftItem  row:8  value:acr_my  kind:ns  collapsed:Y  n_match:3  n_record:0
-acr_nav.VisibleLeftItem  row:9  value:acr_nav  kind:ns  collapsed:Y  n_match:29  n_record:0
+acr_nav.VisibleLeftItem  row:9  value:acr_nav  kind:ns  collapsed:Y  n_match:30  n_record:0
 acr_nav.VisibleLeftItem  row:10  value:acr_navdb  kind:ns  collapsed:N  n_match:10  n_record:0
 acr_nav.VisibleLeftItem  row:11  value:acr_navdb.Detailsrc  kind:ctype  collapsed:N  n_match:0  n_record:5
 acr_nav.VisibleLeftItem  row:12  value:acr_navdb.Filtertarget  kind:ctype  collapsed:N  n_match:0  n_record:5
 acr_nav.VisibleLeftItem  row:13  value:acr_navdb.Helpgroup  kind:ctype  collapsed:N  n_match:0  n_record:5
-acr_nav.VisibleLeftItem  row:14  value:acr_navdb.Keybind  kind:ctype  collapsed:N  n_match:0  n_record:42
-acr_nav.VisibleLeftItem  row:15  value:acr_navdb.Navaction  kind:ctype  collapsed:N  n_match:0  n_record:28
+acr_nav.VisibleLeftItem  row:14  value:acr_navdb.Keybind  kind:ctype  collapsed:N  n_match:0  n_record:41
+acr_nav.VisibleLeftItem  row:15  value:acr_navdb.Navaction  kind:ctype  collapsed:N  n_match:0  n_record:27
 acr_nav.VisibleLeftItem  row:16  value:acr_navdb.Navmode  kind:ctype  collapsed:N  n_match:0  n_record:2
-acr_nav.VisibleLeftItem  row:17  value:acr_navdb.Navstyle  kind:ctype  collapsed:N  n_match:0  n_record:21
+acr_nav.VisibleLeftItem  row:17  value:acr_navdb.Navstyle  kind:ctype  collapsed:N  n_match:0  n_record:22
 acr_nav.VisibleLeftItem  row:18  value:acr_navdb.Panel  kind:ctype  collapsed:N  n_match:0  n_record:2
 acr_nav.VisibleLeftItem  row:19  value:acr_navdb.Reftypestyle  kind:ctype  collapsed:N  n_match:0  n_record:35
 acr_nav.VisibleLeftItem  row:20  value:acr_navdb.Viewmode  kind:ctype  collapsed:N  n_match:0  n_record:8
@@ -93,9 +93,16 @@ acr_nav.VisibleLeftItem  row:89  value:strconv  kind:ns  collapsed:Y  n_match:1 
 acr_nav.VisibleLeftItem  row:90  value:sv2ssim  kind:ns  collapsed:Y  n_match:4  n_record:0
 acr_nav.VisibleLeftItem  row:91  value:ws  kind:ns  collapsed:Y  n_match:16  n_record:0
 acr_nav.VisibleLeftItem  row:92  value:wsdb  kind:ns  collapsed:Y  n_match:1  n_record:0
-acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:7  sel_value:"Upstream (acr_navdb imports from):"
+acr_nav.VisibleLine  row:0  value:"Upstream (acr_navdb imports from):"
+acr_nav.VisibleLine  row:1  value:"    algo     30 fields"
+acr_nav.VisibleLine  row:2  value:"   other     19 fields"
+acr_nav.VisibleLine  row:3  value:"  dmmeta      1 field"
+acr_nav.VisibleLine  row:4  value:""
+acr_nav.VisibleLine  row:5  value:"Downstream (imports from acr_navdb):"
+acr_nav.VisibleLine  row:6  value:"  acr_nav     12 fields"
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1405  n_ctype:1406  n_field:5685  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  n:ns-deps  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1406  n_ctype:1407  n_field:5694  viewmode:nsdep  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:10  scroll_offset:0  n_items:93  sel_value:acr_navdb
 acr_nav.VisibleLeftItem  row:0  value:""  kind:ns  collapsed:Y  n_match:44  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:abt  kind:ns  collapsed:Y  n_match:19  n_record:0
@@ -106,15 +113,15 @@ acr_nav.VisibleLeftItem  row:5  value:acr_dm  kind:ns  collapsed:Y  n_match:6  n
 acr_nav.VisibleLeftItem  row:6  value:acr_ed  kind:ns  collapsed:Y  n_match:19  n_record:0
 acr_nav.VisibleLeftItem  row:7  value:acr_in  kind:ns  collapsed:Y  n_match:12  n_record:0
 acr_nav.VisibleLeftItem  row:8  value:acr_my  kind:ns  collapsed:Y  n_match:3  n_record:0
-acr_nav.VisibleLeftItem  row:9  value:acr_nav  kind:ns  collapsed:Y  n_match:29  n_record:0
+acr_nav.VisibleLeftItem  row:9  value:acr_nav  kind:ns  collapsed:Y  n_match:30  n_record:0
 acr_nav.VisibleLeftItem  row:10  value:acr_navdb  kind:ns  collapsed:N  n_match:10  n_record:0
 acr_nav.VisibleLeftItem  row:11  value:acr_navdb.Detailsrc  kind:ctype  collapsed:N  n_match:0  n_record:5
 acr_nav.VisibleLeftItem  row:12  value:acr_navdb.Filtertarget  kind:ctype  collapsed:N  n_match:0  n_record:5
 acr_nav.VisibleLeftItem  row:13  value:acr_navdb.Helpgroup  kind:ctype  collapsed:N  n_match:0  n_record:5
-acr_nav.VisibleLeftItem  row:14  value:acr_navdb.Keybind  kind:ctype  collapsed:N  n_match:0  n_record:42
-acr_nav.VisibleLeftItem  row:15  value:acr_navdb.Navaction  kind:ctype  collapsed:N  n_match:0  n_record:28
+acr_nav.VisibleLeftItem  row:14  value:acr_navdb.Keybind  kind:ctype  collapsed:N  n_match:0  n_record:41
+acr_nav.VisibleLeftItem  row:15  value:acr_navdb.Navaction  kind:ctype  collapsed:N  n_match:0  n_record:27
 acr_nav.VisibleLeftItem  row:16  value:acr_navdb.Navmode  kind:ctype  collapsed:N  n_match:0  n_record:2
-acr_nav.VisibleLeftItem  row:17  value:acr_navdb.Navstyle  kind:ctype  collapsed:N  n_match:0  n_record:21
+acr_nav.VisibleLeftItem  row:17  value:acr_navdb.Navstyle  kind:ctype  collapsed:N  n_match:0  n_record:22
 acr_nav.VisibleLeftItem  row:18  value:acr_navdb.Panel  kind:ctype  collapsed:N  n_match:0  n_record:2
 acr_nav.VisibleLeftItem  row:19  value:acr_navdb.Reftypestyle  kind:ctype  collapsed:N  n_match:0  n_record:35
 acr_nav.VisibleLeftItem  row:20  value:acr_navdb.Viewmode  kind:ctype  collapsed:N  n_match:0  n_record:8
@@ -190,5 +197,12 @@ acr_nav.VisibleLeftItem  row:89  value:strconv  kind:ns  collapsed:Y  n_match:1 
 acr_nav.VisibleLeftItem  row:90  value:sv2ssim  kind:ns  collapsed:Y  n_match:4  n_record:0
 acr_nav.VisibleLeftItem  row:91  value:ws  kind:ns  collapsed:Y  n_match:16  n_record:0
 acr_nav.VisibleLeftItem  row:92  value:wsdb  kind:ns  collapsed:Y  n_match:1  n_record:0
-acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:7  sel_value:"Upstream (acr_navdb imports from):"
+acr_nav.VisibleLine  row:0  value:"Upstream (acr_navdb imports from):"
+acr_nav.VisibleLine  row:1  value:"    algo     30 fields"
+acr_nav.VisibleLine  row:2  value:"   other     19 fields"
+acr_nav.VisibleLine  row:3  value:"  dmmeta      1 field"
+acr_nav.VisibleLine  row:4  value:""
+acr_nav.VisibleLine  row:5  value:"Downstream (imports from acr_navdb):"
+acr_nav.VisibleLine  row:6  value:"  acr_nav     12 fields"
 

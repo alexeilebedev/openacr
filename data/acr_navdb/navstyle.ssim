@@ -10,6 +10,7 @@ acr_navdb.navstyle  navstyle:line_comment  bold:N  dim:Y  reverse:N  fg_color:gr
 acr_navdb.navstyle  navstyle:line_key  bold:N  dim:Y  reverse:N  fg_color:default  comment:"Attribute keys"
 acr_navdb.navstyle  navstyle:line_keyword  bold:N  dim:N  reverse:N  fg_color:cyan  comment:"Language keywords"
 acr_navdb.navstyle  navstyle:line_nav_cell  bold:Y  dim:N  reverse:Y  fg_color:cyan  comment:"Selected navigable cell highlight"
+acr_navdb.navstyle  navstyle:line_nav_cell_nofk  bold:Y  dim:N  reverse:Y  fg_color:default  comment:"Selected non-FK column highlight"
 acr_navdb.navstyle  navstyle:line_nav_header  bold:N  dim:N  reverse:N  fg_color:cyan  comment:"Navigable column header in preview"
 acr_navdb.navstyle  navstyle:line_preproc  bold:N  dim:N  reverse:N  fg_color:magenta  comment:"Preprocessor directives"
 acr_navdb.navstyle  navstyle:line_section  bold:Y  dim:N  reverse:N  fg_color:default  comment:"Section headers"

@@ -450,7 +450,7 @@ static void acr_nav::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_nav.Input'  signature:'562002b168164fbc6cdf1fcbb73c7311d3d0073c'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_nav.Input'  signature:'860ae449439804684506fa96db3d89ebbf4e4ec1'");
 }
 
 // --- acr_nav.FDb._db.InsertStrptrMaybe
@@ -2145,7 +2145,7 @@ static void acr_nav::navaction_LoadStatic() {
         ,{ "acr_navdb.navaction  navaction:filter_clear  helpgroup:\"\"  sort_order:11  passive:N  need_no_overlay:N  dismiss_viewmode:\"\"  comment:\"Clear filter text\"", acr_nav::navaction_filter_clear }
         ,{ "acr_navdb.navaction  navaction:filter_cycle_target  helpgroup:\"\"  sort_order:13  passive:N  need_no_overlay:N  dismiss_viewmode:\"\"  comment:\"Cycle filter target (Tab in filter mode)\"", acr_nav::navaction_filter_cycle_target }
         ,{ "acr_navdb.navaction  navaction:filter_start  helpgroup:search  sort_order:10  passive:N  need_no_overlay:Y  dismiss_viewmode:\"\"  comment:\"Enter filter input mode\"", acr_nav::navaction_filter_start }
-        ,{ "acr_navdb.navaction  navaction:follow_ref  helpgroup:navigation  sort_order:10  passive:N  need_no_overlay:Y  dismiss_viewmode:nsdep  comment:\"Follow reference to target ctype\"", acr_nav::navaction_follow_ref }
+        ,{ "acr_navdb.navaction  navaction:follow_ref  helpgroup:navigation  sort_order:10  passive:N  need_no_overlay:Y  dismiss_viewmode:\"\"  comment:\"Follow reference to target ctype\"", acr_nav::navaction_follow_ref }
         ,{ "acr_navdb.navaction  navaction:go_back  helpgroup:navigation  sort_order:11  passive:N  need_no_overlay:N  dismiss_viewmode:\"\"  comment:\"Return to previous ctype\"", acr_nav::navaction_go_back }
         ,{ "acr_navdb.navaction  navaction:go_bottom  helpgroup:movement  sort_order:15  passive:Y  need_no_overlay:N  dismiss_viewmode:\"\"  comment:\"Jump to last item\"", acr_nav::navaction_go_bottom }
         ,{ "acr_navdb.navaction  navaction:go_top  helpgroup:movement  sort_order:14  passive:Y  need_no_overlay:N  dismiss_viewmode:\"\"  comment:\"Jump to first item\"", acr_nav::navaction_go_top }
@@ -2156,7 +2156,6 @@ static void acr_nav::navaction_LoadStatic() {
         ,{ "acr_navdb.navaction  navaction:quit  helpgroup:meta  sort_order:11  passive:N  need_no_overlay:N  dismiss_viewmode:\"\"  comment:\"Exit acr_nav\"", acr_nav::navaction_quit }
         ,{ "acr_navdb.navaction  navaction:show_detail  helpgroup:view  sort_order:12  passive:N  need_no_overlay:Y  dismiss_viewmode:detail  comment:\"Toggle field metadata detail\"", acr_nav::navaction_show_detail }
         ,{ "acr_navdb.navaction  navaction:show_help  helpgroup:meta  sort_order:10  passive:N  need_no_overlay:N  dismiss_viewmode:help  comment:\"Toggle help panel\"", acr_nav::navaction_show_help }
-        ,{ "acr_navdb.navaction  navaction:show_nsdep  helpgroup:view  sort_order:14  passive:N  need_no_overlay:Y  dismiss_viewmode:nsdep  comment:\"Toggle namespace dependency view\"", acr_nav::navaction_show_nsdep }
         ,{ "acr_navdb.navaction  navaction:switch_panel_left  helpgroup:navigation  sort_order:12  passive:Y  need_no_overlay:N  dismiss_viewmode:\"\"  comment:\"Move focus to panel on the left\"", acr_nav::navaction_switch_panel_left }
         ,{ "acr_navdb.navaction  navaction:switch_panel_right  helpgroup:navigation  sort_order:13  passive:Y  need_no_overlay:N  dismiss_viewmode:\"\"  comment:\"Move focus to panel on the right\"", acr_nav::navaction_switch_panel_right }
         ,{ "acr_navdb.navaction  navaction:toggle_codegen  helpgroup:view  sort_order:13  passive:N  need_no_overlay:Y  dismiss_viewmode:\"\"  comment:\"Toggle generated code view\"", acr_nav::navaction_toggle_codegen }
@@ -4107,7 +4106,7 @@ void acr_nav::ind_viewmode_AbsReserve(int n) {
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-algo::aryptr<algo::Smallstr50> acr_nav::viewmode_stack_Addary(algo::aryptr<algo::Smallstr50> rhs) {
+algo::aryptr<acr_nav::OverlayEntry> acr_nav::viewmode_stack_Addary(algo::aryptr<acr_nav::OverlayEntry> rhs) {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= _db.viewmode_stack_elems && rhs.elems < _db.viewmode_stack_elems + _db.viewmode_stack_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("acr_nav.tary_alias  field:acr_nav.FDb.viewmode_stack  comment:'alias error: sub-array is being appended to the whole'");
@@ -4116,21 +4115,21 @@ algo::aryptr<algo::Smallstr50> acr_nav::viewmode_stack_Addary(algo::aryptr<algo:
     viewmode_stack_Reserve(nnew); // reserve space
     int at = _db.viewmode_stack_n;
     for (int i = 0; i < nnew; i++) {
-        new (_db.viewmode_stack_elems + at + i) algo::Smallstr50(rhs[i]);
+        new (_db.viewmode_stack_elems + at + i) acr_nav::OverlayEntry(rhs[i]);
         _db.viewmode_stack_n++;
     }
-    return algo::aryptr<algo::Smallstr50>(_db.viewmode_stack_elems + at, nnew);
+    return algo::aryptr<acr_nav::OverlayEntry>(_db.viewmode_stack_elems + at, nnew);
 }
 
 // --- acr_nav.FDb.viewmode_stack.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
-algo::Smallstr50& acr_nav::viewmode_stack_Alloc() {
+acr_nav::OverlayEntry& acr_nav::viewmode_stack_Alloc() {
     viewmode_stack_Reserve(1);
     int n  = _db.viewmode_stack_n;
     int at = n;
-    algo::Smallstr50 *elems = _db.viewmode_stack_elems;
-    new (elems + at) algo::Smallstr50(); // construct new element, default initializer
+    acr_nav::OverlayEntry *elems = _db.viewmode_stack_elems;
+    new (elems + at) acr_nav::OverlayEntry(); // construct new element, default initializer
     _db.viewmode_stack_n = n+1;
     return elems[at];
 }
@@ -4138,60 +4137,71 @@ algo::Smallstr50& acr_nav::viewmode_stack_Alloc() {
 // --- acr_nav.FDb.viewmode_stack.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::Smallstr50& acr_nav::viewmode_stack_AllocAt(int at) {
+acr_nav::OverlayEntry& acr_nav::viewmode_stack_AllocAt(int at) {
     viewmode_stack_Reserve(1);
     int n  = _db.viewmode_stack_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
         FatalErrorExit("acr_nav.bad_alloc_at  field:acr_nav.FDb.viewmode_stack  comment:'index out of range'");
     }
-    algo::Smallstr50 *elems = _db.viewmode_stack_elems;
-    memmove(elems + at + 1, elems + at, (n - at) * sizeof(algo::Smallstr50));
-    new (elems + at) algo::Smallstr50(); // construct element, default initializer
+    acr_nav::OverlayEntry *elems = _db.viewmode_stack_elems;
+    memmove(elems + at + 1, elems + at, (n - at) * sizeof(acr_nav::OverlayEntry));
+    new (elems + at) acr_nav::OverlayEntry(); // construct element, default initializer
     _db.viewmode_stack_n = n+1;
     return elems[at];
 }
 
 // --- acr_nav.FDb.viewmode_stack.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::Smallstr50> acr_nav::viewmode_stack_AllocN(int n_elems) {
+algo::aryptr<acr_nav::OverlayEntry> acr_nav::viewmode_stack_AllocN(int n_elems) {
     viewmode_stack_Reserve(n_elems);
     int old_n  = _db.viewmode_stack_n;
     int new_n = old_n + n_elems;
-    algo::Smallstr50 *elems = _db.viewmode_stack_elems;
+    acr_nav::OverlayEntry *elems = _db.viewmode_stack_elems;
     for (int i = old_n; i < new_n; i++) {
-        new (elems + i) algo::Smallstr50(); // construct new element, default initialize
+        new (elems + i) acr_nav::OverlayEntry(); // construct new element, default initialize
     }
     _db.viewmode_stack_n = new_n;
-    return algo::aryptr<algo::Smallstr50>(elems + old_n, n_elems);
+    return algo::aryptr<acr_nav::OverlayEntry>(elems + old_n, n_elems);
 }
 
 // --- acr_nav.FDb.viewmode_stack.AllocNAt
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::aryptr<algo::Smallstr50> acr_nav::viewmode_stack_AllocNAt(int n_elems, int at) {
+algo::aryptr<acr_nav::OverlayEntry> acr_nav::viewmode_stack_AllocNAt(int n_elems, int at) {
     viewmode_stack_Reserve(n_elems);
     int n  = _db.viewmode_stack_n;
     if (UNLIKELY(u64(at) > u64(n))) {
         FatalErrorExit("acr_nav.bad_alloc_n_at  field:acr_nav.FDb.viewmode_stack  comment:'index out of range'");
     }
-    algo::Smallstr50 *elems = _db.viewmode_stack_elems;
-    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(algo::Smallstr50));
+    acr_nav::OverlayEntry *elems = _db.viewmode_stack_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(acr_nav::OverlayEntry));
     for (int i = 0; i < n_elems; i++) {
-        new (elems + at + i) algo::Smallstr50(); // construct new element, default initialize
+        new (elems + at + i) acr_nav::OverlayEntry(); // construct new element, default initialize
     }
     _db.viewmode_stack_n = n+n_elems;
-    return algo::aryptr<algo::Smallstr50>(elems+at,n_elems);
+    return algo::aryptr<acr_nav::OverlayEntry>(elems+at,n_elems);
 }
 
 // --- acr_nav.FDb.viewmode_stack.Remove
 // Remove item by index. If index outside of range, do nothing.
 void acr_nav::viewmode_stack_Remove(u32 i) {
     u32 lim = _db.viewmode_stack_n;
-    algo::Smallstr50 *elems = _db.viewmode_stack_elems;
+    acr_nav::OverlayEntry *elems = _db.viewmode_stack_elems;
     if (i < lim) {
-        memmove(elems + i, elems + (i + 1), sizeof(algo::Smallstr50) * (lim - (i + 1)));
+        elems[i].~OverlayEntry(); // destroy element
+        memmove(elems + i, elems + (i + 1), sizeof(acr_nav::OverlayEntry) * (lim - (i + 1)));
         _db.viewmode_stack_n = lim - 1;
+    }
+}
+
+// --- acr_nav.FDb.viewmode_stack.RemoveAll
+void acr_nav::viewmode_stack_RemoveAll() {
+    u32 n = _db.viewmode_stack_n;
+    while (n > 0) {
+        n -= 1;
+        _db.viewmode_stack_elems[n].~OverlayEntry();
+        _db.viewmode_stack_n = n;
     }
 }
 
@@ -4201,6 +4211,7 @@ void acr_nav::viewmode_stack_RemoveLast() {
     u64 n = _db.viewmode_stack_n;
     if (n > 0) {
         n -= 1;
+        viewmode_stack_qFind(u64(n)).~OverlayEntry();
         _db.viewmode_stack_n = n;
     }
 }
@@ -4211,47 +4222,33 @@ void acr_nav::viewmode_stack_AbsReserve(int n) {
     u32 old_max  = _db.viewmode_stack_max;
     if (n > i32(old_max)) {
         u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
-        void *new_mem = algo_lib::malloc_ReallocMem(_db.viewmode_stack_elems, old_max * sizeof(algo::Smallstr50), new_max * sizeof(algo::Smallstr50));
+        void *new_mem = algo_lib::malloc_ReallocMem(_db.viewmode_stack_elems, old_max * sizeof(acr_nav::OverlayEntry), new_max * sizeof(acr_nav::OverlayEntry));
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("acr_nav.tary_nomem  field:acr_nav.FDb.viewmode_stack  comment:'out of memory'");
         }
-        _db.viewmode_stack_elems = (algo::Smallstr50*)new_mem;
+        _db.viewmode_stack_elems = (acr_nav::OverlayEntry*)new_mem;
         _db.viewmode_stack_max = new_max;
     }
 }
 
 // --- acr_nav.FDb.viewmode_stack.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::Smallstr50> acr_nav::viewmode_stack_AllocNVal(int n_elems, const algo::Smallstr50& val) {
+algo::aryptr<acr_nav::OverlayEntry> acr_nav::viewmode_stack_AllocNVal(int n_elems, const acr_nav::OverlayEntry& val) {
     viewmode_stack_Reserve(n_elems);
     int old_n  = _db.viewmode_stack_n;
     int new_n = old_n + n_elems;
-    algo::Smallstr50 *elems = _db.viewmode_stack_elems;
+    acr_nav::OverlayEntry *elems = _db.viewmode_stack_elems;
     for (int i = old_n; i < new_n; i++) {
-        new (elems + i) algo::Smallstr50(val);
+        new (elems + i) acr_nav::OverlayEntry(val);
     }
     _db.viewmode_stack_n = new_n;
-    return algo::aryptr<algo::Smallstr50>(elems + old_n, n_elems);
-}
-
-// --- acr_nav.FDb.viewmode_stack.ReadStrptrMaybe
-// A single element is read from input string and appended to the array.
-// If the string contains an error, the array is untouched.
-// Function returns success value.
-bool acr_nav::viewmode_stack_ReadStrptrMaybe(algo::strptr in_str) {
-    bool retval = true;
-    algo::Smallstr50 &elem = viewmode_stack_Alloc();
-    retval = algo::Smallstr50_ReadStrptrMaybe(elem, in_str);
-    if (!retval) {
-        viewmode_stack_RemoveLast();
-    }
-    return retval;
+    return algo::aryptr<acr_nav::OverlayEntry>(elems + old_n, n_elems);
 }
 
 // --- acr_nav.FDb.viewmode_stack.Insary
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-void acr_nav::viewmode_stack_Insary(algo::aryptr<algo::Smallstr50> rhs, int at) {
+void acr_nav::viewmode_stack_Insary(algo::aryptr<acr_nav::OverlayEntry> rhs, int at) {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= _db.viewmode_stack_elems && rhs.elems < _db.viewmode_stack_elems + _db.viewmode_stack_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("acr_nav.tary_alias  field:acr_nav.FDb.viewmode_stack  comment:'alias error: sub-array is being appended to the whole'");
@@ -4263,10 +4260,11 @@ void acr_nav::viewmode_stack_Insary(algo::aryptr<algo::Smallstr50> rhs, int at) 
     int nmove = _db.viewmode_stack_n - at;
     viewmode_stack_Reserve(nnew); // reserve space
     for (int i = nmove-1; i >=0 ; --i) {
-        new (_db.viewmode_stack_elems + at + nnew + i) algo::Smallstr50(_db.viewmode_stack_elems[at + i]);
+        new (_db.viewmode_stack_elems + at + nnew + i) acr_nav::OverlayEntry(_db.viewmode_stack_elems[at + i]);
+        _db.viewmode_stack_elems[at + i].~OverlayEntry(); // destroy element
     }
     for (int i = 0; i < nnew; ++i) {
-        new (_db.viewmode_stack_elems + at + i) algo::Smallstr50(rhs[i]);
+        new (_db.viewmode_stack_elems + at + i) acr_nav::OverlayEntry(rhs[i]);
     }
     _db.viewmode_stack_n += nnew;
 }
@@ -5024,6 +5022,9 @@ void acr_nav::FDb_Init() {
     _db.sel_nav_col = i32(0);
     _db.p_line_nav_header = NULL;
     _db.p_line_nav_cell = NULL;
+    _db.sel_nav_col_pending = i32(-1);
+    _db.p_pre_nsdep_viewmode = NULL;
+    _db.p_line_nav_cell_nofk = NULL;
 
     acr_nav::InitReflection();
     navaction_LoadStatic(); // gen:ns_gstatic  gstatic:acr_nav.FDb.navaction  load acr_nav.FNavaction records
@@ -5049,7 +5050,7 @@ void acr_nav::FDb_Uninit() {
     // remove all elements from acr_nav.FDb.viewmode_stack
     viewmode_stack_RemoveAll();
     // free memory for Tary acr_nav.FDb.viewmode_stack
-    algo_lib::malloc_FreeMem(_db.viewmode_stack_elems, sizeof(algo::Smallstr50)*_db.viewmode_stack_max); // (acr_nav.FDb.viewmode_stack)
+    algo_lib::malloc_FreeMem(_db.viewmode_stack_elems, sizeof(acr_nav::OverlayEntry)*_db.viewmode_stack_max); // (acr_nav.FDb.viewmode_stack)
 
     // acr_nav.FDb.ind_viewmode.Uninit (Thash)  //
     // skip destruction of ind_viewmode in global scope
@@ -6290,6 +6291,8 @@ void acr_nav::FViewmode_Init(acr_nav::FViewmode& viewmode) {
     viewmode.preview_nav_n     	= 0; // (acr_nav.FViewmode.preview_nav)
     viewmode.preview_nav_max   	= 0; // (acr_nav.FViewmode.preview_nav)
     viewmode.pkey_wid = i32(0);
+    viewmode.preview_h_scroll = i32(0);
+    viewmode.total_content_wid = i32(0);
     viewmode.ind_viewmode_next = (acr_nav::FViewmode*)-1; // (acr_nav.FDb.ind_viewmode) not-in-hash
     viewmode.ind_viewmode_hashval = 0; // stored hash value
     viewmode.ensure_content = NULL;
@@ -6449,6 +6452,7 @@ void acr_nav::Naventry_Init(acr_nav::Naventry& parent) {
     parent.sel_row = i32(0);
     parent.right_sel_row = i32(0);
     parent.right_scroll_offset = i32(0);
+    parent.sel_nav_col = i32(0);
 }
 
 // --- acr_nav.PanelState..Print

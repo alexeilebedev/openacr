@@ -1,4 +1,4 @@
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1405  n_ctype:1406  n_field:5685  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  n:ns-deps  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1406  n_ctype:1407  n_field:5694  viewmode:nsdep  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:11  scroll_offset:0  n_items:83  sel_value:algo
 acr_nav.VisibleLeftItem  row:0  value:""  kind:ns  collapsed:Y  n_match:44  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:abt  kind:ns  collapsed:Y  n_match:19  n_record:0
@@ -9,7 +9,7 @@ acr_nav.VisibleLeftItem  row:5  value:acr_dm  kind:ns  collapsed:Y  n_match:6  n
 acr_nav.VisibleLeftItem  row:6  value:acr_ed  kind:ns  collapsed:Y  n_match:19  n_record:0
 acr_nav.VisibleLeftItem  row:7  value:acr_in  kind:ns  collapsed:Y  n_match:12  n_record:0
 acr_nav.VisibleLeftItem  row:8  value:acr_my  kind:ns  collapsed:Y  n_match:3  n_record:0
-acr_nav.VisibleLeftItem  row:9  value:acr_nav  kind:ns  collapsed:Y  n_match:29  n_record:0
+acr_nav.VisibleLeftItem  row:9  value:acr_nav  kind:ns  collapsed:Y  n_match:30  n_record:0
 acr_nav.VisibleLeftItem  row:10  value:acr_navdb  kind:ns  collapsed:Y  n_match:10  n_record:0
 acr_nav.VisibleLeftItem  row:11  value:algo  kind:ns  collapsed:Y  n_match:225  n_record:0
 acr_nav.VisibleLeftItem  row:12  value:algo_lib  kind:ns  collapsed:Y  n_match:35  n_record:0
@@ -27,27 +27,68 @@ acr_nav.VisibleLeftItem  row:23  value:atf_amc  kind:ns  collapsed:Y  n_match:99
 acr_nav.VisibleLeftItem  row:24  value:atf_ci  kind:ns  collapsed:Y  n_match:15  n_record:0
 acr_nav.VisibleLeftItem  row:25  value:atf_cmdline  kind:ns  collapsed:Y  n_match:1  n_record:0
 acr_nav.VisibleLeftItem  row:26  value:atf_comp  kind:ns  collapsed:Y  n_match:7  n_record:0
-acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:73  sel_value:"Upstream (algo imports from):"
+acr_nav.VisibleLine  row:0  value:"Upstream (algo imports from):"
+acr_nav.VisibleLine  row:1  value:"   other    240 fields"
+acr_nav.VisibleLine  row:2  value:"  dmmeta      2 fields"
+acr_nav.VisibleLine  row:3  value:""
+acr_nav.VisibleLine  row:4  value:"Downstream (imports from algo):"
+acr_nav.VisibleLine  row:5  value:"      dmmeta    199 fields"
+acr_nav.VisibleLine  row:6  value:"     command    155 fields"
+acr_nav.VisibleLine  row:7  value:"      gclidb    122 fields"
+acr_nav.VisibleLine  row:8  value:"         dev    121 fields"
+acr_nav.VisibleLine  row:9  value:"        http     79 fields"
+acr_nav.VisibleLine  row:10  value:"    algo_lib     69 fields"
+acr_nav.VisibleLine  row:11  value:"         amc     49 fields"
+acr_nav.VisibleLine  row:12  value:"        gcli     49 fields"
+acr_nav.VisibleLine  row:13  value:"       atfdb     34 fields"
+acr_nav.VisibleLine  row:14  value:"     acr_nav     34 fields"
+acr_nav.VisibleLine  row:15  value:"   acr_navdb     30 fields"
+acr_nav.VisibleLine  row:16  value:"         acr     22 fields"
+acr_nav.VisibleLine  row:17  value:"     atf_amc     16 fields"
+acr_nav.VisibleLine  row:18  value:"         apm     16 fields"
+acr_nav.VisibleLine  row:19  value:"     lib_ams     15 fields"
+acr_nav.VisibleLine  row:20  value:"    atf_comp     15 fields"
+acr_nav.VisibleLine  row:21  value:"         abt     15 fields"
+acr_nav.VisibleLine  row:22  value:"      abt_md     15 fields"
+acr_nav.VisibleLine  row:23  value:"       amcdb     13 fields"
+acr_nav.VisibleLine  row:24  value:"      report     11 fields"
+acr_nav.VisibleLine  row:25  value:"     src_hdr     11 fields"
+acr_nav.VisibleLine  row:26  value:"      httpdb     10 fields"
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1405  n_ctype:1406  n_field:5685  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  n:ns-deps  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1406  n_ctype:1407  n_field:5694  viewmode:nsdep  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:11  scroll_offset:5  n_items:83  sel_value:algo
 acr_nav.VisibleLeftItem  row:5  value:acr_dm  kind:ns  collapsed:Y  n_match:6  n_record:0
 acr_nav.VisibleLeftItem  row:6  value:acr_ed  kind:ns  collapsed:Y  n_match:19  n_record:0
 acr_nav.VisibleLeftItem  row:7  value:acr_in  kind:ns  collapsed:Y  n_match:12  n_record:0
 acr_nav.VisibleLeftItem  row:8  value:acr_my  kind:ns  collapsed:Y  n_match:3  n_record:0
-acr_nav.VisibleLeftItem  row:9  value:acr_nav  kind:ns  collapsed:Y  n_match:29  n_record:0
+acr_nav.VisibleLeftItem  row:9  value:acr_nav  kind:ns  collapsed:Y  n_match:30  n_record:0
 acr_nav.VisibleLeftItem  row:10  value:acr_navdb  kind:ns  collapsed:Y  n_match:10  n_record:0
 acr_nav.VisibleLeftItem  row:11  value:algo  kind:ns  collapsed:Y  n_match:225  n_record:0
-acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:73  sel_value:"Upstream (algo imports from):"
+acr_nav.VisibleLine  row:0  value:"Upstream (algo imports from):"
+acr_nav.VisibleLine  row:1  value:"   other    240 fields"
+acr_nav.VisibleLine  row:2  value:"  dmmeta      2 fields"
+acr_nav.VisibleLine  row:3  value:""
+acr_nav.VisibleLine  row:4  value:"Downstream (imports from algo):"
+acr_nav.VisibleLine  row:5  value:"      dmmeta    199 fields"
+acr_nav.VisibleLine  row:6  value:"     command    155 fields"
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1405  n_ctype:1406  n_field:5685  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  n:ns-deps  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1406  n_ctype:1407  n_field:5694  viewmode:nsdep  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:11  scroll_offset:5  n_items:83  sel_value:algo
 acr_nav.VisibleLeftItem  row:5  value:acr_dm  kind:ns  collapsed:Y  n_match:6  n_record:0
 acr_nav.VisibleLeftItem  row:6  value:acr_ed  kind:ns  collapsed:Y  n_match:19  n_record:0
 acr_nav.VisibleLeftItem  row:7  value:acr_in  kind:ns  collapsed:Y  n_match:12  n_record:0
 acr_nav.VisibleLeftItem  row:8  value:acr_my  kind:ns  collapsed:Y  n_match:3  n_record:0
-acr_nav.VisibleLeftItem  row:9  value:acr_nav  kind:ns  collapsed:Y  n_match:29  n_record:0
+acr_nav.VisibleLeftItem  row:9  value:acr_nav  kind:ns  collapsed:Y  n_match:30  n_record:0
 acr_nav.VisibleLeftItem  row:10  value:acr_navdb  kind:ns  collapsed:Y  n_match:10  n_record:0
 acr_nav.VisibleLeftItem  row:11  value:algo  kind:ns  collapsed:Y  n_match:225  n_record:0
-acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:73  sel_value:"Upstream (algo imports from):"
+acr_nav.VisibleLine  row:0  value:"Upstream (algo imports from):"
+acr_nav.VisibleLine  row:1  value:"   other    240 fields"
+acr_nav.VisibleLine  row:2  value:"  dmmeta      2 fields"
+acr_nav.VisibleLine  row:3  value:""
+acr_nav.VisibleLine  row:4  value:"Downstream (imports from algo):"
+acr_nav.VisibleLine  row:5  value:"      dmmeta    199 fields"
+acr_nav.VisibleLine  row:6  value:"     command    155 fields"
 

@@ -146,6 +146,7 @@ namespace acr_nav { struct InputError; }
 namespace acr_nav { struct LeftItem; }
 namespace acr_nav { struct LineColorSpan; }
 namespace acr_nav { struct Naventry; }
+namespace acr_nav { struct OverlayEntry; }
 namespace acr_nav { struct PanelState; }
 namespace acr_nav { struct PreviewNavCol; }
 namespace acr_nav { struct Screen; }
@@ -442,7 +443,7 @@ struct FDb { // acr_nav.FDb
     i32                        ind_viewmode_buckets_n;           // number of elements in bucket array
     i32                        ind_viewmode_n;                   // number of elements in the hash table
     acr_nav::FViewmode*        p_cur_viewmode;                   // Current right-panel view mode. optional pointer
-    algo::Smallstr50*          viewmode_stack_elems;             // pointer to elements
+    acr_nav::OverlayEntry*     viewmode_stack_elems;             // pointer to elements
     u32                        viewmode_stack_n;                 // number of elements in array
     u32                        viewmode_stack_max;               // max. capacity of array before realloc
     acr_nav::FCtype*           p_preview_ctype;                  // Ctype whose preview is cached. optional pointer
@@ -492,6 +493,9 @@ struct FDb { // acr_nav.FDb
     algo::cstring              preview_nav_pending;              // Pending pkey match after preview follow-ref navigation
     acr_nav::FNavstyle*        p_line_nav_header;                // Cached: navigable column header style. optional pointer
     acr_nav::FNavstyle*        p_line_nav_cell;                  // Cached: selected navigable cell style. optional pointer
+    i32                        sel_nav_col_pending;              //   -1  Pending sel_nav_col for navstack restore (-1 = none)
+    acr_nav::FViewmode*        p_pre_nsdep_viewmode;             // Viewmode saved before nsdep context switch. optional pointer
+    acr_nav::FNavstyle*        p_line_nav_cell_nofk;             // Non-FK column cell highlight. optional pointer
     acr_nav::trace             trace;                            //
 };
 
@@ -1551,35 +1555,35 @@ void                 ind_viewmode_AbsReserve(int n) __attribute__((nothrow));
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
 // func:acr_nav.FDb.viewmode_stack.Addary
-algo::aryptr<algo::Smallstr50> viewmode_stack_Addary(algo::aryptr<algo::Smallstr50> rhs) __attribute__((nothrow));
+algo::aryptr<acr_nav::OverlayEntry> viewmode_stack_Addary(algo::aryptr<acr_nav::OverlayEntry> rhs) __attribute__((nothrow));
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
 // func:acr_nav.FDb.viewmode_stack.Alloc
-algo::Smallstr50&    viewmode_stack_Alloc() __attribute__((__warn_unused_result__, nothrow));
+acr_nav::OverlayEntry& viewmode_stack_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
 // func:acr_nav.FDb.viewmode_stack.AllocAt
-algo::Smallstr50&    viewmode_stack_AllocAt(int at) __attribute__((__warn_unused_result__, nothrow));
+acr_nav::OverlayEntry& viewmode_stack_AllocAt(int at) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:acr_nav.FDb.viewmode_stack.AllocN
-algo::aryptr<algo::Smallstr50> viewmode_stack_AllocN(int n_elems) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<acr_nav::OverlayEntry> viewmode_stack_AllocN(int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
 // func:acr_nav.FDb.viewmode_stack.AllocNAt
-algo::aryptr<algo::Smallstr50> viewmode_stack_AllocNAt(int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
+algo::aryptr<acr_nav::OverlayEntry> viewmode_stack_AllocNAt(int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:acr_nav.FDb.viewmode_stack.EmptyQ
 inline bool          viewmode_stack_EmptyQ() __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:acr_nav.FDb.viewmode_stack.Find
-inline algo::Smallstr50* viewmode_stack_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline acr_nav::OverlayEntry* viewmode_stack_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:acr_nav.FDb.viewmode_stack.Getary
-inline algo::aryptr<algo::Smallstr50> viewmode_stack_Getary() __attribute__((nothrow));
+inline algo::aryptr<acr_nav::OverlayEntry> viewmode_stack_Getary() __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:acr_nav.FDb.viewmode_stack.Last
-inline algo::Smallstr50* viewmode_stack_Last() __attribute__((nothrow, pure));
+inline acr_nav::OverlayEntry* viewmode_stack_Last() __attribute__((nothrow, pure));
 // Return max. number of items in the array
 // func:acr_nav.FDb.viewmode_stack.Max
 inline i32           viewmode_stack_Max() __attribute__((nothrow));
@@ -1590,7 +1594,7 @@ inline i32           viewmode_stack_N() __attribute__((__warn_unused_result__, n
 // func:acr_nav.FDb.viewmode_stack.Remove
 void                 viewmode_stack_Remove(u32 i) __attribute__((nothrow));
 // func:acr_nav.FDb.viewmode_stack.RemoveAll
-inline void          viewmode_stack_RemoveAll() __attribute__((nothrow));
+void                 viewmode_stack_RemoveAll() __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
 // func:acr_nav.FDb.viewmode_stack.RemoveLast
 void                 viewmode_stack_RemoveLast() __attribute__((nothrow));
@@ -1602,25 +1606,20 @@ inline void          viewmode_stack_Reserve(int n) __attribute__((nothrow));
 void                 viewmode_stack_AbsReserve(int n) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:acr_nav.FDb.viewmode_stack.qFind
-inline algo::Smallstr50& viewmode_stack_qFind(u64 t) __attribute__((nothrow));
+inline acr_nav::OverlayEntry& viewmode_stack_qFind(u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
 // func:acr_nav.FDb.viewmode_stack.qLast
-inline algo::Smallstr50& viewmode_stack_qLast() __attribute__((nothrow));
+inline acr_nav::OverlayEntry& viewmode_stack_qLast() __attribute__((nothrow));
 // Return row id of specified element
 // func:acr_nav.FDb.viewmode_stack.rowid_Get
-inline u64           viewmode_stack_rowid_Get(algo::Smallstr50 &elem) __attribute__((nothrow));
+inline u64           viewmode_stack_rowid_Get(acr_nav::OverlayEntry &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:acr_nav.FDb.viewmode_stack.AllocNVal
-algo::aryptr<algo::Smallstr50> viewmode_stack_AllocNVal(int n_elems, const algo::Smallstr50& val) __attribute__((nothrow));
-// A single element is read from input string and appended to the array.
-// If the string contains an error, the array is untouched.
-// Function returns success value.
-// func:acr_nav.FDb.viewmode_stack.ReadStrptrMaybe
-bool                 viewmode_stack_ReadStrptrMaybe(algo::strptr in_str) __attribute__((nothrow));
+algo::aryptr<acr_nav::OverlayEntry> viewmode_stack_AllocNVal(int n_elems, const acr_nav::OverlayEntry& val) __attribute__((nothrow));
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
 // func:acr_nav.FDb.viewmode_stack.Insary
-void                 viewmode_stack_Insary(algo::aryptr<algo::Smallstr50> rhs, int at) __attribute__((nothrow));
+void                 viewmode_stack_Insary(algo::aryptr<acr_nav::OverlayEntry> rhs, int at) __attribute__((nothrow));
 
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
@@ -1949,7 +1948,7 @@ inline void          _db_viewmode_stack_curs_Reset(_db_viewmode_stack_curs &curs
 inline bool          _db_viewmode_stack_curs_ValidQ(_db_viewmode_stack_curs &curs) __attribute__((nothrow));
 // item access
 // func:acr_nav.FDb.viewmode_stack_curs.Access
-inline algo::Smallstr50& _db_viewmode_stack_curs_Access(_db_viewmode_stack_curs &curs) __attribute__((nothrow));
+inline acr_nav::OverlayEntry& _db_viewmode_stack_curs_Access(_db_viewmode_stack_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:acr_nav.FDb.left_item_curs.Next
 inline void          _db_left_item_curs_Next(_db_left_item_curs &curs) __attribute__((nothrow));
@@ -2325,6 +2324,7 @@ void                 FNavmode_Uninit(acr_nav::FNavmode& navmode) __attribute__((
 // global access: p_graph_arrow (Ptr)
 // global access: p_line_nav_header (Ptr)
 // global access: p_line_nav_cell (Ptr)
+// global access: p_line_nav_cell_nofk (Ptr)
 // access: acr_nav.FReftypestyle.p_navstyle (Upptr)
 // access: acr_nav.LineColorSpan.p_navstyle (Upptr)
 struct FNavstyle { // acr_nav.FNavstyle
@@ -2679,6 +2679,7 @@ void                 FSsimfile_Uninit(acr_nav::FSsimfile& ssimfile) __attribute_
 // global access: p_nsdep_viewmode (Ptr)
 // global access: p_xref_viewmode (Ptr)
 // global access: p_graph_viewmode (Ptr)
+// global access: p_pre_nsdep_viewmode (Ptr)
 struct FViewmode { // acr_nav.FViewmode
     acr_nav::FViewmode*                     ind_viewmode_next;      // hash next
     u32                                     ind_viewmode_hashval;   // hash value
@@ -2705,6 +2706,8 @@ struct FViewmode { // acr_nav.FViewmode
     u32                                     preview_nav_n;          // number of elements in array
     u32                                     preview_nav_max;        // max. capacity of array before realloc
     i32                                     pkey_wid;               //   0  Column 0 (pkey) width for target row matching
+    i32                                     preview_h_scroll;       //   0  Horizontal scroll offset (display columns)
+    i32                                     total_content_wid;      //   0  Total formatted content width (display columns)
     // reftype Hook of acr_nav.FViewmode.ensure_content prohibits copy
     // func:acr_nav.FViewmode..AssignOp
     acr_nav::FViewmode&  operator =(const acr_nav::FViewmode &rhs) = delete;
@@ -3125,6 +3128,7 @@ struct Naventry { // acr_nav.Naventry: Navigation stack entry. Uses raw strings 
     i32                 right_sel_row;         //   0  Right panel selection row
     i32                 right_scroll_offset;   //   0  Right panel scroll offset
     algo::Smallstr50    focus_panel;           // Panel name that had focus at time of push
+    i32                 sel_nav_col;           //   0  Selected navigable column at time of push
     // func:acr_nav.Naventry..Ctor
     inline               Naventry() __attribute__((nothrow));
 };
@@ -3132,6 +3136,20 @@ struct Naventry { // acr_nav.Naventry: Navigation stack entry. Uses raw strings 
 // Set all fields to initial values.
 // func:acr_nav.Naventry..Init
 void                 Naventry_Init(acr_nav::Naventry& parent);
+
+// --- acr_nav.OverlayEntry
+// create: acr_nav.FDb.viewmode_stack (Tary)
+struct OverlayEntry { // acr_nav.OverlayEntry: Overlay stack entry: viewmode name + saved right-panel state
+    algo::Smallstr50   viewmode;              // Viewmode name to restore
+    i32                saved_sel_row;         //   0  Right-panel sel_row at time of push
+    i32                saved_scroll_offset;   //   0  Right-panel scroll_offset at time of push
+    // func:acr_nav.OverlayEntry..Ctor
+    inline               OverlayEntry() __attribute__((nothrow));
+};
+
+// Set all fields to initial values.
+// func:acr_nav.OverlayEntry..Init
+inline void          OverlayEntry_Init(acr_nav::OverlayEntry& parent);
 
 // --- acr_nav.PanelState
 struct PanelState { // acr_nav.PanelState: Headless panel state output
@@ -3491,8 +3509,8 @@ struct _db_viewmode_curs {// cursor
 
 
 struct _db_viewmode_stack_curs {// cursor
-    typedef algo::Smallstr50 ChildType;
-    algo::Smallstr50* elems;
+    typedef acr_nav::OverlayEntry ChildType;
+    acr_nav::OverlayEntry* elems;
     int n_elems;
     int index;
     _db_viewmode_stack_curs() { elems=NULL; n_elems=0; index=0; }
@@ -3633,10 +3651,6 @@ void                 navaction_show_detail();
 // func:acr_nav...navaction_show_help
 // this function is 'extrn' and implemented by user
 void                 navaction_show_help();
-// User-implemented function from gstatic:acr_nav.FDb.navaction
-// func:acr_nav...navaction_show_nsdep
-// this function is 'extrn' and implemented by user
-void                 navaction_show_nsdep();
 // User-implemented function from gstatic:acr_nav.FDb.navaction
 // func:acr_nav...navaction_switch_panel_left
 // this function is 'extrn' and implemented by user

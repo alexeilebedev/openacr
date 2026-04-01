@@ -1,15 +1,15 @@
-acr_nav.Screen  mode:browse  focus:content  filter:acr_nav.fdb  navstack_depth:0  n_sel_ctype:1  n_ctype:1406  n_field:5685  viewmode:detail  breadcrumb:""  filtertarget:ctype  hints:"d/Esc:dismiss  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:content  filter:acr_nav.fdb  navstack_depth:0  n_sel_ctype:1  n_ctype:1407  n_field:5694  viewmode:detail  breadcrumb:""  filtertarget:ctype  hints:"d/Esc:dismiss  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:2  sel_value:acr_nav.FDb
 acr_nav.VisibleLeftItem  row:0  value:acr_nav  kind:ns  collapsed:N  n_match:1  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:acr_nav.FDb  kind:ctype  collapsed:N  n_match:0  n_record:0
-acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:30  sel_value:"-- dmmeta.field --------------------"
-acr_nav.VisibleLine  row:0  value:"-- dmmeta.field --------------------"
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:30  sel_value:"── dmmeta.field ────────────────────"
+acr_nav.VisibleLine  row:0  value:"── dmmeta.field ────────────────────"
 acr_nav.VisibleLine  row:1  value:"  arg        acr_nav.FCtype"
 acr_nav.VisibleLine  row:2  value:"  reftype    Thash"
 acr_nav.VisibleLine  row:3  value:"  dflt       "
 acr_nav.VisibleLine  row:4  value:"  comment    "
 acr_nav.VisibleLine  row:5  value:""
-acr_nav.VisibleLine  row:6  value:"-- dmmeta.reftype ------------------"
+acr_nav.VisibleLine  row:6  value:"── dmmeta.reftype ──────────────────"
 acr_nav.VisibleLine  row:7  value:"  reftype        Thash"
 acr_nav.VisibleLine  row:8  value:"  isval          N"
 acr_nav.VisibleLine  row:9  value:"  cascins        N"
@@ -24,21 +24,21 @@ acr_nav.VisibleLine  row:17  value:"  inst           N"
 acr_nav.VisibleLine  row:18  value:"  varlen         N"
 acr_nav.VisibleLine  row:19  value:"  comment        X-reference; hash built on top of ptrary"
 acr_nav.VisibleLine  row:20  value:""
-acr_nav.VisibleLine  row:21  value:"-- dmmeta.thash --------------------"
+acr_nav.VisibleLine  row:21  value:"── dmmeta.thash ────────────────────"
 acr_nav.VisibleLine  row:22  value:"  hashfld    dmmeta.Ctype.ctype"
 acr_nav.VisibleLine  row:23  value:"  unique     Y"
 acr_nav.VisibleLine  row:24  value:"  comment    "
 acr_nav.VisibleLine  row:25  value:""
-acr_nav.VisibleLine  row:26  value:"-- dmmeta.xref ---------------------"
+acr_nav.VisibleLine  row:26  value:"── dmmeta.xref ─────────────────────"
 acr_nav.VisibleLine  row:27  value:"  inscond    true"
 acr_nav.VisibleLine  row:28  value:"  via        "
 acr_nav.VisibleLine  row:29  value:""
 
-acr_nav.Screen  mode:browse  focus:content  filter:acr_nav.fdb  navstack_depth:0  n_sel_ctype:1  n_ctype:1406  n_field:5685  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  d:detail  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:content  filter:acr_nav.fdb  navstack_depth:0  n_sel_ctype:1  n_ctype:1407  n_field:5694  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  d:detail  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:2  sel_value:acr_nav.FDb
 acr_nav.VisibleLeftItem  row:0  value:acr_nav  kind:ns  collapsed:N  n_match:1  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:acr_nav.FDb  kind:ctype  collapsed:N  n_match:0  n_record:0
-acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:86  sel_value:acr_nav.FDb._db
+acr_nav.PanelState  panel:content  sel_row:6  scroll_offset:0  n_items:89  sel_value:acr_nav.FDb.ind_ctype
 acr_nav.VisibleField  row:0  field:acr_nav.FDb._db  arg:acr_nav.FDb  reftype:Global  style:field_val  navigable:N  match:N
 acr_nav.VisibleField  row:1  field:acr_nav.FDb.cmdline  arg:command.acr_nav  reftype:Val  style:field_val  navigable:Y  match:N
 acr_nav.VisibleField  row:2  field:acr_nav.FDb.ctype  arg:acr_nav.FCtype  reftype:Lary  style:field_pool  navigable:Y  match:N
@@ -82,7 +82,7 @@ acr_nav.VisibleField  row:39  field:acr_nav.FDb.ind_ssimfile  arg:acr_nav.FSsimf
 acr_nav.VisibleField  row:40  field:acr_nav.FDb.viewmode  arg:acr_nav.FViewmode  reftype:Lary  style:field_pool  navigable:Y  match:N
 acr_nav.VisibleField  row:41  field:acr_nav.FDb.ind_viewmode  arg:acr_nav.FViewmode  reftype:Thash  style:field_idx  navigable:Y  match:N
 acr_nav.VisibleField  row:42  field:acr_nav.FDb.p_cur_viewmode  arg:acr_nav.FViewmode  reftype:Ptr  style:field_val  navigable:Y  match:N
-acr_nav.VisibleField  row:43  field:acr_nav.FDb.viewmode_stack  arg:algo.Smallstr50  reftype:Tary  style:field_val  navigable:Y  match:N
+acr_nav.VisibleField  row:43  field:acr_nav.FDb.viewmode_stack  arg:acr_nav.OverlayEntry  reftype:Tary  style:field_val  navigable:Y  match:N
 acr_nav.VisibleField  row:44  field:acr_nav.FDb.p_preview_ctype  arg:acr_nav.FCtype  reftype:Ptr  style:field_val  navigable:Y  match:N
 acr_nav.VisibleField  row:45  field:acr_nav.FDb.p_default_viewmode  arg:acr_nav.FViewmode  reftype:Ptr  style:field_val  navigable:Y  match:N
 acr_nav.VisibleField  row:46  field:acr_nav.FDb.p_detail_field  arg:acr_nav.FField  reftype:Ptr  style:field_val  navigable:Y  match:N
@@ -125,68 +125,79 @@ acr_nav.VisibleField  row:82  field:acr_nav.FDb.sel_nav_col  arg:i32  reftype:Va
 acr_nav.VisibleField  row:83  field:acr_nav.FDb.preview_nav_pending  arg:algo.cstring  reftype:Val  style:field_val  navigable:Y  match:N
 acr_nav.VisibleField  row:84  field:acr_nav.FDb.p_line_nav_header  arg:acr_nav.FNavstyle  reftype:Ptr  style:field_val  navigable:Y  match:N
 acr_nav.VisibleField  row:85  field:acr_nav.FDb.p_line_nav_cell  arg:acr_nav.FNavstyle  reftype:Ptr  style:field_val  navigable:Y  match:N
+acr_nav.VisibleField  row:86  field:acr_nav.FDb.sel_nav_col_pending  arg:i32  reftype:Val  style:field_val  navigable:Y  match:N
+acr_nav.VisibleField  row:87  field:acr_nav.FDb.p_pre_nsdep_viewmode  arg:acr_nav.FViewmode  reftype:Ptr  style:field_val  navigable:Y  match:N
+acr_nav.VisibleField  row:88  field:acr_nav.FDb.p_line_nav_cell_nofk  arg:acr_nav.FNavstyle  reftype:Ptr  style:field_val  navigable:Y  match:N
 
-acr_nav.Screen  mode:browse  focus:content  filter:acr_nav.fdb  navstack_depth:0  n_sel_ctype:1  n_ctype:1406  n_field:5685  viewmode:help  breadcrumb:""  filtertarget:ctype  hints:"Esc/?:dismiss  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:content  filter:acr_nav.fdb  navstack_depth:0  n_sel_ctype:1  n_ctype:1407  n_field:5694  viewmode:help  breadcrumb:""  filtertarget:ctype  hints:"Esc/?:dismiss  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:2  sel_value:acr_nav.FDb
 acr_nav.VisibleLeftItem  row:0  value:acr_nav  kind:ns  collapsed:N  n_match:1  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:acr_nav.FDb  kind:ctype  collapsed:N  n_match:0  n_record:0
-acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:23  sel_value:"-- Movement keys -------------------"
-acr_nav.VisibleLine  row:0  value:"-- Movement keys -------------------"
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:22  sel_value:"── Movement keys ───────────────────"
+acr_nav.VisibleLine  row:0  value:"── Movement keys ───────────────────"
 acr_nav.VisibleLine  row:1  value:"  ↑/k/↓/j             Move selection up/down"
 acr_nav.VisibleLine  row:2  value:"  PgUp/b/PgDown/Space  Page up/down"
 acr_nav.VisibleLine  row:3  value:"  Home/g/End/G        Jump to first/last item"
-acr_nav.VisibleLine  row:4  value:"-- Navigation keys -----------------"
+acr_nav.VisibleLine  row:4  value:"── Navigation keys ─────────────────"
 acr_nav.VisibleLine  row:5  value:"  Enter               Follow reference to target ctype"
 acr_nav.VisibleLine  row:6  value:"  Backspace           Return to previous ctype"
 acr_nav.VisibleLine  row:7  value:"  ←/h/→/l             Move focus to panel on the left/right"
-acr_nav.VisibleLine  row:8  value:"-- View mode keys ------------------"
+acr_nav.VisibleLine  row:8  value:"── View mode keys ──────────────────"
 acr_nav.VisibleLine  row:9  value:"  Tab                 Cycle right panel: fields, xrefs, preview, codegen"
 acr_nav.VisibleLine  row:10  value:"  p                   Toggle ssimfile content preview"
 acr_nav.VisibleLine  row:11  value:"  d                   Toggle field metadata detail"
 acr_nav.VisibleLine  row:12  value:"  c                   Toggle generated code view"
-acr_nav.VisibleLine  row:13  value:"  n                   Toggle namespace dependency view"
-acr_nav.VisibleLine  row:14  value:"  f                   Toggle fields view"
-acr_nav.VisibleLine  row:15  value:"  v                   Toggle access path graph view"
-acr_nav.VisibleLine  row:16  value:"  x                   Toggle cross-reference view"
-acr_nav.VisibleLine  row:17  value:"-- Search and filter keys ----------"
-acr_nav.VisibleLine  row:18  value:"  /                   Enter filter input mode"
-acr_nav.VisibleLine  row:19  value:"  Escape              Dismiss overlay or clear filter"
-acr_nav.VisibleLine  row:20  value:"-- Help and quit -------------------"
-acr_nav.VisibleLine  row:21  value:"  ?                   Toggle help panel"
-acr_nav.VisibleLine  row:22  value:"  q                   Exit acr_nav"
+acr_nav.VisibleLine  row:13  value:"  f                   Toggle fields view"
+acr_nav.VisibleLine  row:14  value:"  v                   Toggle access path graph view"
+acr_nav.VisibleLine  row:15  value:"  x                   Toggle cross-reference view"
+acr_nav.VisibleLine  row:16  value:"── Search and filter keys ──────────"
+acr_nav.VisibleLine  row:17  value:"  /                   Enter filter input mode"
+acr_nav.VisibleLine  row:18  value:"  Escape              Dismiss overlay or clear filter"
+acr_nav.VisibleLine  row:19  value:"── Help and quit ───────────────────"
+acr_nav.VisibleLine  row:20  value:"  ?                   Toggle help panel"
+acr_nav.VisibleLine  row:21  value:"  q                   Exit acr_nav"
 
-acr_nav.Screen  mode:browse  focus:content  filter:acr_nav.fdb  navstack_depth:0  n_sel_ctype:1  n_ctype:1406  n_field:5685  viewmode:detail  breadcrumb:""  filtertarget:ctype  hints:"d/Esc:dismiss  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:content  filter:acr_nav.fdb  navstack_depth:0  n_sel_ctype:1  n_ctype:1407  n_field:5694  viewmode:detail  breadcrumb:""  filtertarget:ctype  hints:"d/Esc:dismiss  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:2  sel_value:acr_nav.FDb
 acr_nav.VisibleLeftItem  row:0  value:acr_nav  kind:ns  collapsed:N  n_match:1  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:acr_nav.FDb  kind:ctype  collapsed:N  n_match:0  n_record:0
-acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:21  sel_value:"-- dmmeta.field --------------------"
-acr_nav.VisibleLine  row:0  value:"-- dmmeta.field --------------------"
-acr_nav.VisibleLine  row:1  value:"  arg        acr_nav.FDb"
-acr_nav.VisibleLine  row:2  value:"  reftype    Global"
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:30  sel_value:"── dmmeta.field ────────────────────"
+acr_nav.VisibleLine  row:0  value:"── dmmeta.field ────────────────────"
+acr_nav.VisibleLine  row:1  value:"  arg        acr_nav.FCtype"
+acr_nav.VisibleLine  row:2  value:"  reftype    Thash"
 acr_nav.VisibleLine  row:3  value:"  dflt       "
 acr_nav.VisibleLine  row:4  value:"  comment    "
 acr_nav.VisibleLine  row:5  value:""
-acr_nav.VisibleLine  row:6  value:"-- dmmeta.reftype ------------------"
-acr_nav.VisibleLine  row:7  value:"  reftype        Global"
-acr_nav.VisibleLine  row:8  value:"  isval          Y"
+acr_nav.VisibleLine  row:6  value:"── dmmeta.reftype ──────────────────"
+acr_nav.VisibleLine  row:7  value:"  reftype        Thash"
+acr_nav.VisibleLine  row:8  value:"  isval          N"
 acr_nav.VisibleLine  row:9  value:"  cascins        N"
-acr_nav.VisibleLine  row:10  value:"  usebasepool    N"
-acr_nav.VisibleLine  row:11  value:"  cancopy        Y"
-acr_nav.VisibleLine  row:12  value:"  isxref         N"
+acr_nav.VisibleLine  row:10  value:"  usebasepool    Y"
+acr_nav.VisibleLine  row:11  value:"  cancopy        N"
+acr_nav.VisibleLine  row:12  value:"  isxref         Y"
 acr_nav.VisibleLine  row:13  value:"  del            N"
 acr_nav.VisibleLine  row:14  value:"  up             N"
 acr_nav.VisibleLine  row:15  value:"  isnew          N"
 acr_nav.VisibleLine  row:16  value:"  hasalloc       N"
-acr_nav.VisibleLine  row:17  value:"  inst           Y"
+acr_nav.VisibleLine  row:17  value:"  inst           N"
 acr_nav.VisibleLine  row:18  value:"  varlen         N"
-acr_nav.VisibleLine  row:19  value:"  comment        Global variable -- root of all access paths"
+acr_nav.VisibleLine  row:19  value:"  comment        X-reference; hash built on top of ptrary"
 acr_nav.VisibleLine  row:20  value:""
+acr_nav.VisibleLine  row:21  value:"── dmmeta.thash ────────────────────"
+acr_nav.VisibleLine  row:22  value:"  hashfld    dmmeta.Ctype.ctype"
+acr_nav.VisibleLine  row:23  value:"  unique     Y"
+acr_nav.VisibleLine  row:24  value:"  comment    "
+acr_nav.VisibleLine  row:25  value:""
+acr_nav.VisibleLine  row:26  value:"── dmmeta.xref ─────────────────────"
+acr_nav.VisibleLine  row:27  value:"  inscond    true"
+acr_nav.VisibleLine  row:28  value:"  via        "
+acr_nav.VisibleLine  row:29  value:""
 
-acr_nav.Screen  mode:browse  focus:content  filter:acr_nav.fdb  navstack_depth:0  n_sel_ctype:1  n_ctype:1406  n_field:5685  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  d:detail  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:content  filter:acr_nav.fdb  navstack_depth:0  n_sel_ctype:1  n_ctype:1407  n_field:5694  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  d:detail  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:2  sel_value:acr_nav.FDb
 acr_nav.VisibleLeftItem  row:0  value:acr_nav  kind:ns  collapsed:N  n_match:1  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:acr_nav.FDb  kind:ctype  collapsed:N  n_match:0  n_record:0
-acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:86  sel_value:acr_nav.FDb._db
+acr_nav.PanelState  panel:content  sel_row:6  scroll_offset:0  n_items:89  sel_value:acr_nav.FDb.ind_ctype
 acr_nav.VisibleField  row:0  field:acr_nav.FDb._db  arg:acr_nav.FDb  reftype:Global  style:field_val  navigable:N  match:N
 acr_nav.VisibleField  row:1  field:acr_nav.FDb.cmdline  arg:command.acr_nav  reftype:Val  style:field_val  navigable:Y  match:N
 acr_nav.VisibleField  row:2  field:acr_nav.FDb.ctype  arg:acr_nav.FCtype  reftype:Lary  style:field_pool  navigable:Y  match:N
@@ -230,7 +241,7 @@ acr_nav.VisibleField  row:39  field:acr_nav.FDb.ind_ssimfile  arg:acr_nav.FSsimf
 acr_nav.VisibleField  row:40  field:acr_nav.FDb.viewmode  arg:acr_nav.FViewmode  reftype:Lary  style:field_pool  navigable:Y  match:N
 acr_nav.VisibleField  row:41  field:acr_nav.FDb.ind_viewmode  arg:acr_nav.FViewmode  reftype:Thash  style:field_idx  navigable:Y  match:N
 acr_nav.VisibleField  row:42  field:acr_nav.FDb.p_cur_viewmode  arg:acr_nav.FViewmode  reftype:Ptr  style:field_val  navigable:Y  match:N
-acr_nav.VisibleField  row:43  field:acr_nav.FDb.viewmode_stack  arg:algo.Smallstr50  reftype:Tary  style:field_val  navigable:Y  match:N
+acr_nav.VisibleField  row:43  field:acr_nav.FDb.viewmode_stack  arg:acr_nav.OverlayEntry  reftype:Tary  style:field_val  navigable:Y  match:N
 acr_nav.VisibleField  row:44  field:acr_nav.FDb.p_preview_ctype  arg:acr_nav.FCtype  reftype:Ptr  style:field_val  navigable:Y  match:N
 acr_nav.VisibleField  row:45  field:acr_nav.FDb.p_default_viewmode  arg:acr_nav.FViewmode  reftype:Ptr  style:field_val  navigable:Y  match:N
 acr_nav.VisibleField  row:46  field:acr_nav.FDb.p_detail_field  arg:acr_nav.FField  reftype:Ptr  style:field_val  navigable:Y  match:N
@@ -273,12 +284,15 @@ acr_nav.VisibleField  row:82  field:acr_nav.FDb.sel_nav_col  arg:i32  reftype:Va
 acr_nav.VisibleField  row:83  field:acr_nav.FDb.preview_nav_pending  arg:algo.cstring  reftype:Val  style:field_val  navigable:Y  match:N
 acr_nav.VisibleField  row:84  field:acr_nav.FDb.p_line_nav_header  arg:acr_nav.FNavstyle  reftype:Ptr  style:field_val  navigable:Y  match:N
 acr_nav.VisibleField  row:85  field:acr_nav.FDb.p_line_nav_cell  arg:acr_nav.FNavstyle  reftype:Ptr  style:field_val  navigable:Y  match:N
+acr_nav.VisibleField  row:86  field:acr_nav.FDb.sel_nav_col_pending  arg:i32  reftype:Val  style:field_val  navigable:Y  match:N
+acr_nav.VisibleField  row:87  field:acr_nav.FDb.p_pre_nsdep_viewmode  arg:acr_nav.FViewmode  reftype:Ptr  style:field_val  navigable:Y  match:N
+acr_nav.VisibleField  row:88  field:acr_nav.FDb.p_line_nav_cell_nofk  arg:acr_nav.FNavstyle  reftype:Ptr  style:field_val  navigable:Y  match:N
 
-acr_nav.Screen  mode:browse  focus:content  filter:acr_nav.fdb  navstack_depth:0  n_sel_ctype:1  n_ctype:1406  n_field:5685  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  d:detail  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:content  filter:acr_nav.fdb  navstack_depth:0  n_sel_ctype:1  n_ctype:1407  n_field:5694  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  d:detail  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:2  sel_value:acr_nav.FDb
 acr_nav.VisibleLeftItem  row:0  value:acr_nav  kind:ns  collapsed:N  n_match:1  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:acr_nav.FDb  kind:ctype  collapsed:N  n_match:0  n_record:0
-acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:86  sel_value:acr_nav.FDb._db
+acr_nav.PanelState  panel:content  sel_row:6  scroll_offset:0  n_items:89  sel_value:acr_nav.FDb.ind_ctype
 acr_nav.VisibleField  row:0  field:acr_nav.FDb._db  arg:acr_nav.FDb  reftype:Global  style:field_val  navigable:N  match:N
 acr_nav.VisibleField  row:1  field:acr_nav.FDb.cmdline  arg:command.acr_nav  reftype:Val  style:field_val  navigable:Y  match:N
 acr_nav.VisibleField  row:2  field:acr_nav.FDb.ctype  arg:acr_nav.FCtype  reftype:Lary  style:field_pool  navigable:Y  match:N
@@ -322,7 +336,7 @@ acr_nav.VisibleField  row:39  field:acr_nav.FDb.ind_ssimfile  arg:acr_nav.FSsimf
 acr_nav.VisibleField  row:40  field:acr_nav.FDb.viewmode  arg:acr_nav.FViewmode  reftype:Lary  style:field_pool  navigable:Y  match:N
 acr_nav.VisibleField  row:41  field:acr_nav.FDb.ind_viewmode  arg:acr_nav.FViewmode  reftype:Thash  style:field_idx  navigable:Y  match:N
 acr_nav.VisibleField  row:42  field:acr_nav.FDb.p_cur_viewmode  arg:acr_nav.FViewmode  reftype:Ptr  style:field_val  navigable:Y  match:N
-acr_nav.VisibleField  row:43  field:acr_nav.FDb.viewmode_stack  arg:algo.Smallstr50  reftype:Tary  style:field_val  navigable:Y  match:N
+acr_nav.VisibleField  row:43  field:acr_nav.FDb.viewmode_stack  arg:acr_nav.OverlayEntry  reftype:Tary  style:field_val  navigable:Y  match:N
 acr_nav.VisibleField  row:44  field:acr_nav.FDb.p_preview_ctype  arg:acr_nav.FCtype  reftype:Ptr  style:field_val  navigable:Y  match:N
 acr_nav.VisibleField  row:45  field:acr_nav.FDb.p_default_viewmode  arg:acr_nav.FViewmode  reftype:Ptr  style:field_val  navigable:Y  match:N
 acr_nav.VisibleField  row:46  field:acr_nav.FDb.p_detail_field  arg:acr_nav.FField  reftype:Ptr  style:field_val  navigable:Y  match:N
@@ -365,4 +379,7 @@ acr_nav.VisibleField  row:82  field:acr_nav.FDb.sel_nav_col  arg:i32  reftype:Va
 acr_nav.VisibleField  row:83  field:acr_nav.FDb.preview_nav_pending  arg:algo.cstring  reftype:Val  style:field_val  navigable:Y  match:N
 acr_nav.VisibleField  row:84  field:acr_nav.FDb.p_line_nav_header  arg:acr_nav.FNavstyle  reftype:Ptr  style:field_val  navigable:Y  match:N
 acr_nav.VisibleField  row:85  field:acr_nav.FDb.p_line_nav_cell  arg:acr_nav.FNavstyle  reftype:Ptr  style:field_val  navigable:Y  match:N
+acr_nav.VisibleField  row:86  field:acr_nav.FDb.sel_nav_col_pending  arg:i32  reftype:Val  style:field_val  navigable:Y  match:N
+acr_nav.VisibleField  row:87  field:acr_nav.FDb.p_pre_nsdep_viewmode  arg:acr_nav.FViewmode  reftype:Ptr  style:field_val  navigable:Y  match:N
+acr_nav.VisibleField  row:88  field:acr_nav.FDb.p_line_nav_cell_nofk  arg:acr_nav.FNavstyle  reftype:Ptr  style:field_val  navigable:Y  match:N
 

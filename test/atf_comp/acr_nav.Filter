@@ -1,4 +1,4 @@
-acr_nav.Screen  mode:filter  focus:ctype_list  filter:amc  navstack_depth:0  n_sel_ctype:255  n_ctype:1406  n_field:5685  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"Enter:accept  Tab:target  Esc:cancel"  sel_nav_col:0
+acr_nav.Screen  mode:filter  focus:ctype_list  filter:amc  navstack_depth:0  n_sel_ctype:255  n_ctype:1407  n_field:5694  viewmode:nsdep  breadcrumb:""  filtertarget:ctype  hints:"Enter:accept  Tab:target  Esc:cancel"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:8  sel_value:amc
 acr_nav.VisibleLeftItem  row:0  value:amc  kind:ns  collapsed:Y  n_match:130  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:amc_gc  kind:ns  collapsed:Y  n_match:1  n_record:0
@@ -8,9 +8,21 @@ acr_nav.VisibleLeftItem  row:4  value:atf_amc  kind:ns  collapsed:Y  n_match:99 
 acr_nav.VisibleLeftItem  row:5  value:atfdb  kind:ns  collapsed:Y  n_match:1  n_record:0
 acr_nav.VisibleLeftItem  row:6  value:command  kind:ns  collapsed:Y  n_match:4  n_record:0
 acr_nav.VisibleLeftItem  row:7  value:report  kind:ns  collapsed:Y  n_match:1  n_record:0
-acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:12  sel_value:"Upstream (amc imports from):"
+acr_nav.VisibleLine  row:0  value:"Upstream (amc imports from):"
+acr_nav.VisibleLine  row:1  value:"    dmmeta    110 fields"
+acr_nav.VisibleLine  row:2  value:"     other     78 fields"
+acr_nav.VisibleLine  row:3  value:"      algo     49 fields"
+acr_nav.VisibleLine  row:4  value:"     amcdb      5 fields"
+acr_nav.VisibleLine  row:5  value:"       dev      4 fields"
+acr_nav.VisibleLine  row:6  value:"  algo_lib      3 fields"
+acr_nav.VisibleLine  row:7  value:"   command      1 field"
+acr_nav.VisibleLine  row:8  value:"    report      1 field"
+acr_nav.VisibleLine  row:9  value:""
+acr_nav.VisibleLine  row:10  value:"Downstream (imports from amc):"
+acr_nav.VisibleLine  row:11  value:"  (none)"
 
-acr_nav.Screen  mode:filter  focus:ctype_list  filter:amc  navstack_depth:0  n_sel_ctype:255  n_ctype:1406  n_field:5685  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"Enter:accept  Tab:target  Esc:cancel"  sel_nav_col:0
+acr_nav.Screen  mode:filter  focus:ctype_list  filter:amc  navstack_depth:0  n_sel_ctype:255  n_ctype:1407  n_field:5694  viewmode:nsdep  breadcrumb:""  filtertarget:ctype  hints:"Enter:accept  Tab:target  Esc:cancel"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:8  sel_value:amc
 acr_nav.VisibleLeftItem  row:0  value:amc  kind:ns  collapsed:Y  n_match:130  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:amc_gc  kind:ns  collapsed:Y  n_match:1  n_record:0
@@ -20,5 +32,17 @@ acr_nav.VisibleLeftItem  row:4  value:atf_amc  kind:ns  collapsed:Y  n_match:99 
 acr_nav.VisibleLeftItem  row:5  value:atfdb  kind:ns  collapsed:Y  n_match:1  n_record:0
 acr_nav.VisibleLeftItem  row:6  value:command  kind:ns  collapsed:Y  n_match:4  n_record:0
 acr_nav.VisibleLeftItem  row:7  value:report  kind:ns  collapsed:Y  n_match:1  n_record:0
-acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:12  sel_value:"Upstream (amc imports from):"
+acr_nav.VisibleLine  row:0  value:"Upstream (amc imports from):"
+acr_nav.VisibleLine  row:1  value:"    dmmeta    110 fields"
+acr_nav.VisibleLine  row:2  value:"     other     78 fields"
+acr_nav.VisibleLine  row:3  value:"      algo     49 fields"
+acr_nav.VisibleLine  row:4  value:"     amcdb      5 fields"
+acr_nav.VisibleLine  row:5  value:"       dev      4 fields"
+acr_nav.VisibleLine  row:6  value:"  algo_lib      3 fields"
+acr_nav.VisibleLine  row:7  value:"   command      1 field"
+acr_nav.VisibleLine  row:8  value:"    report      1 field"
+acr_nav.VisibleLine  row:9  value:""
+acr_nav.VisibleLine  row:10  value:"Downstream (imports from amc):"
+acr_nav.VisibleLine  row:11  value:"  (none)"
 

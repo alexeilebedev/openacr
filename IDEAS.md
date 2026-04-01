@@ -28,21 +28,24 @@
 | 22   | **Terminal resize.** SIGWINCH-driven repaint with scroll clamping.                                                                                                                    |
 | 23   | **Expanded filters.** Filter by arg, reftype, or all targets.                                                                                                                         |
 | 24   | **Syntax highlighting.** C++ keywords in codegen, ssim keys in detail/preview, keybind styles in help.                                                                                |
-| 25   | **Namespace dependencies.** nsdep overlay (n key) shows upstream/downstream ns deps.                                                                                                  |
+| 25   | **Namespace dependencies.** nsdep view shows upstream/downstream ns deps. Context-sensitive: auto-activates on namespace headers.                                                     |
 | 26   | **Access path graph.** Interactive amc_vis-style diagram (v key). Parents left, children right, navigable.                                                                            |
 | 27   | **Graph polish.** Reftype-colored edges, record counts on nodes, edge tooltips in status bar.                                                                                         |
 | 28   | **Graph reverse edges.** Bidirectional access paths (forward fields + reverse xrefs), graph syntax highlighting.                                                                      |
 | 29   | **Preview follow-ref.** Arrow keys cycle navigable columns in preview, Enter follows to target record.                                                                                |
 | 30   | **Unicode graph.** Box-drawing characters (╔║╚╟╢╭╰─▶◀), UTF-8-aware column alignment.                                                                                                 |
+| 31   | **Preview horizontal scroll.** All columns navigable via Left/Right. Auto-scroll keeps selected column visible with column-boundary snapping. FK columns cyan, non-FK default.         |
+| 32   | **Ns-deps auto-view.** Context-sensitive: activates on namespace headers, restores on ctype rows. Enter jumps to dep namespace. No keybind needed.                                     |
+| 33   | **Overlay state preservation.** PushOverlay/PopViewmode save and restore right-panel selection and scroll position across help/detail overlays.                                         |
+| 34   | **Unicode polish.** │ panel dividers, ── section headers, › breadcrumb separators. EmitSectionHeader shared helper.                                                                    |
+| 35   | **Cache invalidation.** Preview/codegen/graph content cleared when cursor moves to namespace header. Overlay-pop no longer resets right-panel position.                                 |
 
 
 ---
 
 ## Known Issues
 
-- When I leave details view the selected row is reset
-- In ns-deps view I'd like an ability to jump to the namespace on enter
-- When I get to some type, cycle through views, then get to ns on the left pane and start cycling - it starts to show me some earlier selected type preview/code/graph (but fields and xrefs are clean)
+(none)
 
 ---
 
@@ -66,7 +69,7 @@
 
 ---
 
-## Ideas by Tier
+## Ideas
 
 ### Standalone: Generalized Headless (_db Pool Dump)
 
