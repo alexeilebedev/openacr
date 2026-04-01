@@ -126,25 +126,6 @@ Remaining ideas for extending the graph viewmode:
 1. **Depth-2 expansion toggle.** Press `+` to expand selected neighbor inline showing its depth-1 edges indented. `-` collapses. One node at a time. Medium complexity.
 2. **Reverse xref edges.** Include `c_field_arg` back-references ("who points at me") as a fourth section. Unifies graph and xref views. Medium complexity.
 
-#### 2D. Path Finder ("How do I get from A to B?")
-
-No existing tool answers this. Confirmed: amc_vis shows local neighborhoods, acr -nup/-ndown shows closure from one point, neither finds the route between two arbitrary types.
-
-**What it does:**
-
-- "Path from previous navstack ctype to current ctype" (natural UX -- user navigates to ctype B, presses a key to see path from the ctype they came from)
-- BFS over field references using bidirectional Pkey/Upptr edges
-- Display: `acr.FCtype -> .p_ns -> acr.FNs -> .ns -> dmmeta.Ns`. Each step navigable via Enter.
-
-**Validated caveats:**
-
-- Graph is sparse with Pkey/Upptr-only edges (~580 edges, 1405 nodes, average degree <0.5). Many cross-namespace queries return "no path found."
-- Must use bidirectional edges (if A has Pkey->B, also traverse B->A). Without this, leaf types (Reftype, Nstype) are unreachable.
-- Including all reftypes makes the graph dense but produces semantically meaningless paths.
-- BFS on 1405 nodes is trivially fast (microseconds).
-
-**Size:** ~60 lines BFS + display. Unique capability, cheap to implement.
-
 ---
 
 ### Standalone: Generalized Headless (_db Pool Dump)
