@@ -40,6 +40,7 @@
 ## Known Issues
 
 - Hints in status bar are suboptimal. Need closer review and fine-tuning.
+- Top bar shows: Xrefs: acr_nav.FDb (C++: acr_nav::FDb) (1)  - the C++ part duplicates info
 
 ---
 
@@ -67,53 +68,46 @@
 
 ### Tier 1: High Impact
 
-#### 1A. Navigable Record Browser (enhanced preview)
+#### 1A. Preview Follow-Ref (navigable columns)
 
-The biggest gap. acr_nav browses *schema* (ctypes, fields) but not *data* (actual ssim records). Preview shows records as inert text. Enhancing it with column-level navigation and data-level follow-ref closes the loop: schema -> data -> follow reference -> data at target -> back.
+Preview is already interactive (vertical scroll, formatted columns, syntax highlighting) but references in data are not followable. Adding data-level follow-ref on navigable columns closes the loop: schema -> data -> follow reference -> land on exact target record.
 
 **What it does:**
 
-- Column-level cursor in preview: Left/Right moves between fields within a record row
-- Follow-ref at the data level: Enter on a Pkey attribute value navigates to the referenced record in its target ssimfile (e.g., from `arg:dmmeta.Ns` in a field record, jump to `ns:dmmeta` in ns.ssim)
-- Status bar shows current column's field name and reftype
+- Identify navigable columns: Pkey/Upptr fields whose arg has a backing ssimfile
+- Highlight navigable column headers in cyan (existing reftypestyle -> navstyle, Pkey/Upptr are both cyan)
+- Right arrow (on right panel, in preview) cycles between navigable columns. Most tables have 1-2.
+- Selected navigable column's cell value highlighted (bold/reverse) on the current row
+- Enter follows: extract cell value, find target ssimfile, navigate there, scroll to exact matching row
+- Left arrow goes back to left panel as usual
 
-**What it replaces:** `acr <table>:<pattern>`, `acr -where key:value`, the common "let me check the actual records" terminal switch.
+**Example:** On FKeybind preview, `navaction` column is navigable (Pkey -> Navaction). Right arrow selects it, Enter on `move_down` jumps to navaction.ssim scrolled to the `move_down` record.
+
+**What it replaces:** Manual workflow of going back to left panel, finding target ctype, pressing p, scrolling to find the record.
 
 **Problems to address:**
 
-- LoadPreview (line ~494) parses tuples twice but stores only formatted strings. Column boundaries (`col_wid` array) are local variables discarded after formatting. Must persist column boundaries for cursor navigation.
-- Column cursor is entirely new UI. `FPanel` has only `sel_row`/`scroll_offset`. Need new `sel_col` state on FDb or FPanel.
-- Ssimfile columns don't match 1:1 with `c_field` list -- fldfunc/Substr fields appear in schema but not as ssimfile columns. Solution: match column header names against field names.
-- Works for 18% of ctypes (258/1405 have ssimfiles). Same limitation as preview -- acceptable since users primarily browse schema-definition namespaces (dmmeta, dev, atfdb).
-- Enhance preview rather than add a separate viewmode. Same data, same rendering, avoids Tab cycle clutter.
-
-#### 1B. Interactive Transitive Closure (via acr subprocess)
-
-The most powerful `acr` capability with no acr_nav equivalent. `acr -ndown 2 -t` shows everything reachable within 2 hops.
-
-**What it does:**
-
-- In preview/data mode, select a record. Press `u` (upstream/nup) or `w` (downstream/ndown)
-- Shells out to `acr '<ctype>:<pkey>' -ndown:1 -t` and displays results as a line-array overlay
-- Each press re-runs with deeper `-ndown`/`-nup` level
-- Follow-ref works on any record in the results
-
-**What it replaces:** `acr <record> -nup N`, `acr <record> -ndown N`, `acr <record> -xref -tree`.
-
-**Design note:** In-process reimplementation would require acr's `c_child` index, `EvalAttr`, and lazy record loading (500-800 lines). Shelling out to `acr` via SysEval (same pattern as codegen's `amc` call) gives 80% of the value for 20% of the effort. ~50-100ms per invocation.
-
-**Depends on:** 1A (record-level identity -- knowing the selected record's pkey value).
+- LoadPreview discards column boundaries (`col_wid` array) after formatting. Must persist boundaries for navigable columns to extract cell values.
+- Need `sel_nav_col` state (index into navigable columns, not all columns).
+- Match column header names against field records to determine which are navigable.
+- Works for 18% of ctypes (258/1405 have ssimfiles). Same limitation as preview.
 
 ---
 
 ### Tier 2: Solid Value, Moderate Effort
 
-#### 2B+. Graph Viewmode Extensions
+#### 2B+. Graph Reverse Xref Edges
 
-Remaining ideas for extending the graph viewmode:
+The graph currently only iterates `c_field` (the center ctype's own fields). Types like FNavstyle and Naventry that are primarily *referenced by others* show "no access paths" — missing their parent/owner relationships entirely. This is a data completeness issue: `c_field_arg` is the other half of the access path picture.
 
-1. **Depth-2 expansion toggle.** Press `+` to expand selected neighbor inline showing its depth-1 edges indented. `-` collapses. One node at a time. Medium complexity.
-2. **Reverse xref edges.** Include `c_field_arg` back-references ("who points at me") as a fourth section. Unifies graph and xref views. Medium complexity.
+**What it does:**
+
+- In `CollectGraphEdges`, also iterate `c_field_arg` to collect fields from other ctypes whose arg is the center ctype
+- FDb's `Lary keybind`, `Thash ind_keybind` appear on FKeybind's graph as left-side parents
+- FNavstyle goes from "no access paths" to showing all 12 Ptr + Lary + Thash references from FDb
+- Same edge grouping, same rendering, same left/right placement via reftype `up` flag — just a second data source through the existing pipeline
+
+**What it matches:** amc_vis, which already shows both directions.
 
 ---
 
