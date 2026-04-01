@@ -61,10 +61,6 @@
 | **Tool-switching tax** — 5 tools per workflow (acr, acr -t, acr data, src_func, editor) | Down to ~1.5: schema/fields/xref/preview/codegen inline. src_func and editor are outside schema-browser scope |
 
 
-### Open
-
-**P7. Field prefix conventions invisible.** `c_field` = Ptrary, `ind_ns` = Thash, `p_ctype` = Upptr, `zd_inst` = Llist. These prefixes encode the reftype (light Hungarian Notation from `dmmeta.fprefix`), but acr_nav shows the prefix without decoding it. **Idea:** show fprefix meaning in status bar or detail view. Data already exists in `dmmeta.fprefix` — just not loaded.
-
 ---
 
 ## Ideas by Tier
