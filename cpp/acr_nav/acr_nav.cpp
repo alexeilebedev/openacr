@@ -479,19 +479,46 @@ static void SanitizeForDisplay(cstring &str) {
     }
 }
 
+// Count extra bytes from UTF-8 multibyte characters (byte_length - display_width).
+static int Utf8ExtraBytes(algo::strptr s) {
+    int extra = 0;
+    for (int i = 0; i < s.n_elems; i++) {
+        unsigned char c = s.elems[i];
+        if (c >= 0xF0)      { extra += 3; }
+        else if (c >= 0xE0) { extra += 2; }
+        else if (c >= 0xC0) { extra += 1; }
+    }
+    return extra;
+}
+
+// Convert a display-column offset to a byte offset within a UTF-8 string.
+// Each multi-byte lead byte counts as 1 display column; continuation bytes are skipped.
+static int DisplayToByte(algo::strptr s, int display_col) {
+    int dcol = 0, i = 0;
+    while (i < s.n_elems && dcol < display_col) {
+        unsigned char c = s.elems[i];
+        int char_bytes = (c >= 0xF0) ? 4 : (c >= 0xE0) ? 3 : (c >= 0xC0) ? 2 : 1;
+        dcol++;
+        i = i32_Min(i + char_bytes, s.n_elems);
+    }
+    return i;
+}
+
 // Load ssimfile content into the preview viewmode's line Tary, stripping the tuple head from each line.
 // Format a single row of attr values into an aligned column string.
-static void FormatPreviewRow(cstring &out, algo::Tuple &tuple, int *col_wid, int n_col) {
+static void FormatPreviewRow(cstring &out, algo::Tuple &tuple, int *display_wid, int n_col, int *col_byte_pos) {
     int ci = 0;
     ind_beg(algo::Tuple_attrs_curs, attr, tuple) {
         if (ci < n_col) {
             if (ci > 0) {
                 out << "  ";
             }
+            if (col_byte_pos) col_byte_pos[ci] = ch_N(out);
             tempstr safe(attr.value);
             SanitizeForDisplay(safe);
             out << safe;
-            char_PrintNTimes(' ', out, col_wid[ci] - ch_N(safe));
+            int disp_len = i32_Max(0, ch_N(safe) - Utf8ExtraBytes(strptr(safe)));
+            char_PrintNTimes(' ', out, display_wid[ci] - disp_len);
             ci++;
         }
     } ind_end;
@@ -500,7 +527,8 @@ static void FormatPreviewRow(cstring &out, algo::Tuple &tuple, int *col_wid, int
         if (ci > 0) {
             out << "  ";
         }
-        char_PrintNTimes(' ', out, col_wid[ci]);
+        if (col_byte_pos) col_byte_pos[ci] = ch_N(out);
+        char_PrintNTimes(' ', out, display_wid[ci]);
         ci++;
     }
 }
@@ -519,9 +547,9 @@ static void LoadPreview(acr_nav::FCtype &ctype) {
              << name_Get(*ssimfile) << ".ssim";
         algo_lib::MmapFile file;
         if (algo_lib::MmapFile_Load(file, path)) {
-            // First pass: determine columns and widths
+            // First pass: determine columns and display widths
             int n_col = 0;
-            int col_wid[64];
+            int display_wid[64];
             algo::cstring col_name[64];
             ind_beg(Line_curs, line, file.text) {
                 algo::Tuple tuple;
@@ -530,7 +558,7 @@ static void LoadPreview(acr_nav::FCtype &ctype) {
                         ind_beg(algo::Tuple_attrs_curs, attr, tuple) {
                             if (n_col < 64) {
                                 col_name[n_col] = attr.name;
-                                col_wid[n_col] = ch_N(attr.name);
+                                display_wid[n_col] = ch_N(attr.name);
                                 n_col++;
                             }
                         } ind_end;
@@ -538,7 +566,7 @@ static void LoadPreview(acr_nav::FCtype &ctype) {
                     int ci = 0;
                     ind_beg(algo::Tuple_attrs_curs, attr, tuple) {
                         if (ci < n_col) {
-                            col_wid[ci] = i32_Max(col_wid[ci], ch_N(attr.value));
+                            display_wid[ci] = i32_Max(display_wid[ci], ch_N(attr.value) - Utf8ExtraBytes(strptr(attr.value)));
                             ci++;
                         }
                     } ind_end;
@@ -558,27 +586,22 @@ static void LoadPreview(acr_nav::FCtype &ctype) {
                     if (fld && fld->p_reftype->up && FindSsimfile(*fld->p_arg)) {
                         acr_nav::PreviewNavCol &nc = acr_nav::preview_nav_Alloc(vm);
                         nc.col_start = col_pos;
-                        nc.col_wid = col_wid[c];
+                        nc.col_wid = display_wid[c];
                         nc.name_len = ch_N(col_name[c]);
                         nc.col_name = col_name[c];
                         nc.target_ctype = fld->p_arg->ctype;
                     }
-                    col_pos += col_wid[c];
+                    col_pos += display_wid[c];
                 }
             }
-            vm.pkey_wid = (n_col > 0) ? col_wid[0] : 0;
-            // Find comment column and compute its start offset
+            vm.pkey_wid = (n_col > 0) ? display_wid[0] : 0;
+            // Find comment column
             int comment_col = -1;
-            int comment_start = 0;
             for (int c = 0; c < n_col; c++) {
-                if (c > 0) {
-                    comment_start += 2; // separator
-                }
                 if (algo::strptr_Eq(strptr(col_name[c]), "comment")) {
                     comment_col = c;
                     break;
                 }
-                comment_start += col_wid[c];
             }
             // Build header from column names
             if (n_col > 0) {
@@ -588,7 +611,7 @@ static void LoadPreview(acr_nav::FCtype &ctype) {
                         hdr << "  ";
                     }
                     hdr << col_name[c];
-                    char_PrintNTimes(' ', hdr, col_wid[c] - ch_N(col_name[c]));
+                    char_PrintNTimes(' ', hdr, display_wid[c] - ch_N(col_name[c]));
                 }
                 vm.header = hdr;
             }
@@ -597,16 +620,29 @@ static void LoadPreview(acr_nav::FCtype &ctype) {
                 algo::Tuple tuple;
                 if (algo::Tuple_ReadStrptr(tuple, line, false)) {
                     tempstr row;
-                    FormatPreviewRow(row, tuple, col_wid, n_col);
+                    int col_byte_pos[64];
+                    FormatPreviewRow(row, tuple, display_wid, n_col, col_byte_pos);
                     acr_nav::line_Alloc(vm) = row;
                     int li = acr_nav::line_N(vm) - 1;
                     // Dim pkey column (column 0)
                     if (n_col > 0) {
-                        AddSpan(vm, li, 0, col_wid[0], acr_nav::_db.p_line_key);
+                        int pkey_end = (n_col > 1) ? col_byte_pos[1] - 2 : ch_N(row);
+                        AddSpan(vm, li, 0, pkey_end, acr_nav::_db.p_line_key);
                     }
-                    // Highlight comment column
+                    // Highlight comment column (only if non-empty)
                     if (comment_col >= 0) {
-                        AddSpan(vm, li, comment_start, ch_N(row), acr_nav::_db.p_line_comment);
+                        int cci = 0;
+                        bool has_comment = false;
+                        ind_beg(algo::Tuple_attrs_curs, cattr, tuple) {
+                            if (cci == comment_col) {
+                                has_comment = ch_N(cattr.value) > 0;
+                                break;
+                            }
+                            cci++;
+                        } ind_end;
+                        if (has_comment) {
+                            AddSpan(vm, li, col_byte_pos[comment_col], ch_N(row), acr_nav::_db.p_line_comment);
+                        }
                     }
                 }
             } ind_end;
@@ -615,7 +651,7 @@ static void LoadPreview(acr_nav::FCtype &ctype) {
                 int n_lines = acr_nav::line_N(vm);
                 for (int i = 0; i < n_lines; i++) {
                     algo::strptr row = acr_nav::line_qFind(vm, i);
-                    int end = i32_Min(vm.pkey_wid, elems_N(row));
+                    int end = i32_Min(DisplayToByte(row, vm.pkey_wid), elems_N(row));
                     algo::strptr pkey_raw(row.elems, end);
                     tempstr pkey;
                     pkey << algo::TrimmedRight(pkey_raw);
@@ -1435,8 +1471,13 @@ static int VisibleRows() {
     return i32_Max(1, acr_nav::_db.term_hei - chrome);
 }
 
+// Number of data rows visible in each panel (VisibleRows minus the column header row).
+static int DataRows() {
+    return VisibleRows() - 1;
+}
+
 static void AdjustScroll(acr_nav::FPanel &panel, int n_items) {
-    int visible = VisibleRows();
+    int visible = DataRows();
     int last = i32_Max(0, n_items - 1);
     panel.sel_row = i32_Max(0, i32_Min(panel.sel_row, last));
     if (panel.sel_row >= panel.scroll_offset + visible) {
@@ -1468,7 +1509,7 @@ void acr_nav::navaction_move_down() {
 
 void acr_nav::navaction_page_up() {
     acr_nav::FPanel &panel = *acr_nav::_db.p_cur_panel;
-    int page = VisibleRows();
+    int page = DataRows();
     panel.sel_row = i32_Max(0, panel.sel_row - page);
 }
 
@@ -1479,7 +1520,7 @@ void acr_nav::navaction_page_down() {
     acr_nav::FCtype *sel_ct = SelectedCtype(*acr_nav::_db.p_left_panel);
     int n_items = PanelItemCount(panel, sel_ct);
     int last = i32_Max(0, n_items - 1);
-    int page = VisibleRows();
+    int page = DataRows();
     panel.sel_row = i32_Min(last, panel.sel_row + page);
 }
 
@@ -1585,8 +1626,8 @@ void acr_nav::navaction_follow_ref() {
             acr_nav::PreviewNavCol &nc = acr_nav::preview_nav_qFind(pvm, acr_nav::_db.sel_nav_col);
             // Extract cell value from formatted preview line
             algo::strptr row_text = RightPanelLineFind(panel.sel_row);
-            int start = nc.col_start;
-            int end = i32_Min(start + nc.col_wid, elems_N(row_text));
+            int start = DisplayToByte(row_text, nc.col_start);
+            int end = i32_Min(DisplayToByte(row_text, nc.col_start + nc.col_wid), elems_N(row_text));
             tempstr cell_value;
             if (start < elems_N(row_text)) {
                 algo::strptr raw_cell(row_text.elems + start, end - start);
@@ -2116,18 +2157,6 @@ static tempstr MergePairComments(algo::strptr c1, algo::strptr c2) {
     return result;
 }
 
-// Count extra bytes from UTF-8 multibyte characters (byte_length - display_width).
-static int Utf8ExtraBytes(algo::strptr s) {
-    int extra = 0;
-    for (int i = 0; i < s.n_elems; i++) {
-        unsigned char c = s.elems[i];
-        if (c >= 0xF0)      { extra += 3; }
-        else if (c >= 0xE0) { extra += 2; }
-        else if (c >= 0xC0) { extra += 1; }
-    }
-    return extra;
-}
-
 // Build preformatted help lines from keybind/navaction data.
 // Single-column layout with section headers styled like the detail view.
 // Directional pairs (up/down, left/right) are merged into single lines.
@@ -2511,8 +2540,9 @@ static void RenderContentArea(RenderCtx &ctx) {
                 int n_nav = acr_nav::preview_nav_N(pvm);
                 if (n_nav > 0 && acr_nav::_db.sel_nav_col < n_nav) {
                     acr_nav::PreviewNavCol &nc = acr_nav::preview_nav_qFind(pvm, acr_nav::_db.sel_nav_col);
-                    ov_start = nc.col_start;
-                    ov_end = nc.col_start + nc.col_wid;
+                    algo::strptr data_line = RightPanelLineFind(right_data_idx);
+                    ov_start = DisplayToByte(data_line, nc.col_start);
+                    ov_end = DisplayToByte(data_line, nc.col_start + nc.col_wid);
                     ov_style = acr_nav::_db.p_line_nav_cell;
                 }
             }
@@ -2812,7 +2842,7 @@ static void HeadlessOutput() {
     prlog(left_state);
     // Left panel items (clipped to viewport)
     int first_left = left->scroll_offset;
-    int last_left = i32_Min(first_left + VisibleRows(), acr_nav::left_item_N());
+    int last_left = i32_Min(first_left + DataRows(), acr_nav::left_item_N());
     for (int i = first_left; i < last_left; i++) {
         acr_nav::LeftItem &item = acr_nav::left_item_qFind(i);
         acr_nav::VisibleLeftItem vli;
@@ -2857,7 +2887,7 @@ static void HeadlessOutput() {
         bool reverse = acr_nav::_db.p_cur_viewmode->is_reverse;
         int n_vis = RightPanelItemCount(sel_ct);
         int first_right = right->scroll_offset;
-        int last_right = i32_Min(first_right + VisibleRows(), n_vis);
+        int last_right = i32_Min(first_right + DataRows(), n_vis);
         for (int i = first_right; i < last_right; i++) {
             acr_nav::FField *field = RightPanelFieldFind(sel_ct, i);
             if (field) {
@@ -2887,7 +2917,7 @@ static void HeadlessOutput() {
         // Visible lines (text-based modes: help, preview, detail, clipped to viewport)
         int n_lines = RightPanelItemCount(sel_ct);
         int first_line = right->scroll_offset;
-        int last_line = i32_Min(first_line + VisibleRows(), n_lines);
+        int last_line = i32_Min(first_line + DataRows(), n_lines);
         for (int i = first_line; i < last_line; i++) {
             acr_nav::VisibleLine vl;
             vl.row = i;

@@ -42,11 +42,7 @@
 ## Known Issues
 
 - Hints in status bar are suboptimal. Need closer review and fine-tuning.
-- Top bar shows: Xrefs: acr_nav.FDb (C++: acr_nav::FDb) (1)  - the C++ part duplicates info
-- Preview follow-ref: after jump, selected row in left pane can be hidden under the breadcrumb bar
 - Preview mode: left arrow is used intuitively to cycle to prev nav col, but it leads to left pane
-- FNavaction move_up row inproper formatting in Preview
-- Empty comments still get green highlights when traversing them (might be true for other things as well)
 
 ---
 

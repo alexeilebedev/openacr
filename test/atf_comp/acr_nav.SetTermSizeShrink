@@ -27,12 +27,10 @@ acr_nav.VisibleLeftItem  row:23  value:atf_amc  kind:ns  collapsed:Y  n_match:99
 acr_nav.VisibleLeftItem  row:24  value:atf_ci  kind:ns  collapsed:Y  n_match:15  n_record:0
 acr_nav.VisibleLeftItem  row:25  value:atf_cmdline  kind:ns  collapsed:Y  n_match:1  n_record:0
 acr_nav.VisibleLeftItem  row:26  value:atf_comp  kind:ns  collapsed:Y  n_match:7  n_record:0
-acr_nav.VisibleLeftItem  row:27  value:atf_cov  kind:ns  collapsed:Y  n_match:9  n_record:0
 acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
 
 acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1405  n_ctype:1406  n_field:5690  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  Tab:view  n:ns-deps  q:quit  ?:help"  sel_nav_col:0
-acr_nav.PanelState  panel:ctype_list  sel_row:11  scroll_offset:4  n_items:83  sel_value:algo
-acr_nav.VisibleLeftItem  row:4  value:acr_compl  kind:ns  collapsed:Y  n_match:16  n_record:0
+acr_nav.PanelState  panel:ctype_list  sel_row:11  scroll_offset:5  n_items:83  sel_value:algo
 acr_nav.VisibleLeftItem  row:5  value:acr_dm  kind:ns  collapsed:Y  n_match:6  n_record:0
 acr_nav.VisibleLeftItem  row:6  value:acr_ed  kind:ns  collapsed:Y  n_match:19  n_record:0
 acr_nav.VisibleLeftItem  row:7  value:acr_in  kind:ns  collapsed:Y  n_match:12  n_record:0
@@ -43,8 +41,7 @@ acr_nav.VisibleLeftItem  row:11  value:algo  kind:ns  collapsed:Y  n_match:225  
 acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
 
 acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1405  n_ctype:1406  n_field:5690  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  Tab:view  n:ns-deps  q:quit  ?:help"  sel_nav_col:0
-acr_nav.PanelState  panel:ctype_list  sel_row:11  scroll_offset:4  n_items:83  sel_value:algo
-acr_nav.VisibleLeftItem  row:4  value:acr_compl  kind:ns  collapsed:Y  n_match:16  n_record:0
+acr_nav.PanelState  panel:ctype_list  sel_row:11  scroll_offset:5  n_items:83  sel_value:algo
 acr_nav.VisibleLeftItem  row:5  value:acr_dm  kind:ns  collapsed:Y  n_match:6  n_record:0
 acr_nav.VisibleLeftItem  row:6  value:acr_ed  kind:ns  collapsed:Y  n_match:19  n_record:0
 acr_nav.VisibleLeftItem  row:7  value:acr_in  kind:ns  collapsed:Y  n_match:12  n_record:0
