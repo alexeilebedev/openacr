@@ -394,6 +394,11 @@ atfdb.tmsg  tmsg:acr_nav.PreviewNavCycle/100140.in  istuple:N  msg:"acr_nav.Send
 atfdb.tmsg  tmsg:acr_nav.PreviewNavCycle/100150.in  istuple:N  msg:acr_nav.Screenshot
 atfdb.tmsg  tmsg:acr_nav.PreviewNavCycle/100160.in  istuple:N  msg:"acr_nav.SendKey  key:Right"
 atfdb.tmsg  tmsg:acr_nav.PreviewNavCycle/100170.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.PreviewNavCycle/100180.in  istuple:N  msg:"acr_nav.SendKey  key:Right"
+atfdb.tmsg  tmsg:acr_nav.PreviewNavCycle/100190.in  istuple:N  msg:"acr_nav.SendKey  key:Left"
+atfdb.tmsg  tmsg:acr_nav.PreviewNavCycle/100200.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.PreviewNavCycle/100210.in  istuple:N  msg:"acr_nav.SendKey  key:Left"
+atfdb.tmsg  tmsg:acr_nav.PreviewNavCycle/100220.in  istuple:N  msg:acr_nav.Screenshot
 atfdb.tmsg  tmsg:acr_nav.PreviewNavFollow/100000.in  istuple:N  msg:"acr_nav.SendKey  key:/"
 atfdb.tmsg  tmsg:acr_nav.PreviewNavFollow/100010.in  istuple:N  msg:"acr_nav.SendKey  key:d"
 atfdb.tmsg  tmsg:acr_nav.PreviewNavFollow/100020.in  istuple:N  msg:"acr_nav.SendKey  key:m"

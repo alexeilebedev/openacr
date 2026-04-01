@@ -1529,7 +1529,13 @@ void acr_nav::navaction_page_down() {
 void acr_nav::navaction_switch_panel_left() {
     acr_nav::FPanel &panel = *acr_nav::_db.p_cur_panel;
     if (panel.position > acr_nav::_db.p_left_panel->position) {
-        acr_nav::_db.p_cur_panel = acr_nav::_db.p_left_panel;
+        acr_nav::FViewmode &pvm = *acr_nav::_db.p_cur_viewmode;
+        int n_nav = acr_nav::preview_nav_N(pvm);
+        if (n_nav > 0 && acr_nav::_db.sel_nav_col > 0) {
+            acr_nav::_db.sel_nav_col = acr_nav::_db.sel_nav_col - 1;
+        } else {
+            acr_nav::_db.p_cur_panel = acr_nav::_db.p_left_panel;
+        }
     }
 }
 

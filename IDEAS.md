@@ -41,8 +41,7 @@
 
 ## Known Issues
 
-- Hints in status bar are suboptimal. Need closer review and fine-tuning.
-- Preview mode: left arrow is used intuitively to cycle to prev nav col, but it leads to left pane
+- Hints in status bar are suboptimal. Need closer review and fine-tuning
 
 ---
 
