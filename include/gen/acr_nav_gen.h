@@ -483,6 +483,9 @@ struct FDb { // acr_nav.FDb
     acr_nav::FViewmode*        p_xref_viewmode;                  // Xref viewmode pointer. optional pointer
     acr_nav::FViewmode*        p_graph_viewmode;                 // Cached graph viewmode pointer. optional pointer
     acr_nav::FCtype*           p_graph_ctype;                    // Ctype whose graph is cached. optional pointer
+    acr_nav::FNavstyle*        p_graph_ctype_style;              // Cached style: graph center type. optional pointer
+    acr_nav::FNavstyle*        p_graph_neighbor;                 // Cached style: graph neighbor types. optional pointer
+    acr_nav::FNavstyle*        p_graph_arrow;                    // Cached style: graph arrows. optional pointer
     acr_nav::trace             trace;                            //
 };
 
@@ -2317,6 +2320,9 @@ void                 FNavmode_Uninit(acr_nav::FNavmode& navmode) __attribute__((
 // global access: p_line_preproc (Ptr)
 // global access: p_line_section (Ptr)
 // global access: p_line_key (Ptr)
+// global access: p_graph_ctype_style (Ptr)
+// global access: p_graph_neighbor (Ptr)
+// global access: p_graph_arrow (Ptr)
 // access: acr_nav.FReftypestyle.p_navstyle (Upptr)
 // access: acr_nav.LineColorSpan.p_navstyle (Upptr)
 struct FNavstyle { // acr_nav.FNavstyle

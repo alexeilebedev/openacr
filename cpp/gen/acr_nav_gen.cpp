@@ -5018,6 +5018,9 @@ void acr_nav::FDb_Init() {
     _db.p_xref_viewmode = NULL;
     _db.p_graph_viewmode = NULL;
     _db.p_graph_ctype = NULL;
+    _db.p_graph_ctype_style = NULL;
+    _db.p_graph_neighbor = NULL;
+    _db.p_graph_arrow = NULL;
 
     acr_nav::InitReflection();
     navaction_LoadStatic(); // gen:ns_gstatic  gstatic:acr_nav.FDb.navaction  load acr_nav.FNavaction records

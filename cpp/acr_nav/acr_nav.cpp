@@ -874,7 +874,29 @@ struct GraphEdgeGroup {
     bool is_left;  // true = left column (up:Y dep), false = right column
 };
 
-// Collect edge groups from center ctype's c_field.
+// Add a field to the dep-path edge group matching (neighbor, is_left).
+// Creates a new group if none exists and capacity allows.
+static void AddDepEdge(GraphEdgeGroup *groups, int &n_group, int max_groups,
+                       acr_nav::FCtype *neighbor, bool is_left, acr_nav::FField &field) {
+    int gi = -1;
+    for (int i = 0; i < n_group; i++) {
+        if (groups[i].p_neighbor == neighbor && groups[i].is_left == is_left) {
+            gi = i;
+            break;
+        }
+    }
+    if (gi < 0 && n_group < max_groups) {
+        gi = n_group++;
+        groups[gi].p_neighbor = neighbor;
+        groups[gi].n_field = 0;
+        groups[gi].is_left = is_left;
+    }
+    if (gi >= 0 && groups[gi].n_field < 64) {
+        groups[gi].fields[groups[gi].n_field++] = &field;
+    }
+}
+
+// Collect edge groups from c_field (forward) and c_field_arg (reverse).
 // Returns the number of groups written into 'groups' (max 64).
 static int CollectGraphEdges(acr_nav::FCtype &center, GraphEdgeGroup *groups, int max_groups) {
     int n_group = 0;
@@ -903,24 +925,17 @@ static int CollectGraphEdges(acr_nav::FCtype &center, GraphEdgeGroup *groups, in
                 groups[gi].is_left = false;
             }
         } else {
-            // Dep access path: column based on 'up' flag
-            bool is_left = field.p_reftype->up;
-            int gi = -1;
-            for (int i = 0; i < n_group; i++) {
-                if (groups[i].p_neighbor == field.p_arg && groups[i].is_left == is_left) {
-                    gi = i;
-                    break;
-                }
-            }
-            if (gi < 0 && n_group < max_groups) {
-                gi = n_group++;
-                groups[gi].p_neighbor = field.p_arg;
-                groups[gi].n_field = 0;
-                groups[gi].is_left = is_left;
-            }
-            if (gi >= 0 && groups[gi].n_field < 64) {
-                groups[gi].fields[groups[gi].n_field++] = &field;
-            }
+            AddDepEdge(groups, n_group, max_groups, field.p_arg, field.p_reftype->up, field);
+        }
+    } ind_end;
+    // Reverse edges: fields from other ctypes whose arg is center.
+    // Skip value embeddings (isval && !hasalloc) to avoid flooding from
+    // primitive types -- but keep allocators (Lary, Tpool, Lpool).
+    ind_beg(acr_nav::ctype_c_field_arg_curs, field, center) {
+        if (GraphSkipQ(field) || (field.p_reftype->isval && !field.p_reftype->hasalloc)) {
+            // skip
+        } else {
+            AddDepEdge(groups, n_group, max_groups, field.p_ctype, !field.p_reftype->up, field);
         }
     } ind_end;
     return n_group;
@@ -1032,6 +1047,8 @@ static void LoadGraph(acr_nav::FCtype &ctype) {
             char_PrintNTimes(' ', line, center_x);
             line << "/ " << ctype.ctype;
             acr_nav::line_Alloc(vm) = line;
+            AddSpan(vm, acr_nav::line_N(vm) - 1, center_x + 2, center_x + 2 + ch_N(ctype.ctype),
+                    acr_nav::_db.p_graph_ctype_style);
         }
         // Right-column blocks
         for (int ri = 0; ri < n_right; ri++) {
@@ -1043,18 +1060,33 @@ static void LoadGraph(acr_nav::FCtype &ctype) {
                 tempstr line;
                 char_PrintNTimes(' ', line, center_x);
                 line << "|" << label;
+                int arrow_start = ch_N(line);
                 int arrow_pad = max_right_label - ch_N(label) + 1;
                 char_PrintNTimes('-', line, arrow_pad);
+                line << ">";
+                int arrow_end = ch_N(line);
+                int name_start = 0, name_end = 0;
                 if (fi == 0) {
-                    line << ">/ " << g.p_neighbor->ctype;
+                    line << "/ ";
+                    name_start = ch_N(line);
+                    line << g.p_neighbor->ctype;
+                    name_end = ch_N(line);
                     PrintRecordCount(line, *g.p_neighbor);
                 } else {
-                    line << ">|";
+                    line << "|";
                 }
                 acr_nav::line_Alloc(vm) = line;
+                int line_idx = acr_nav::line_N(vm) - 1;
+                // Spans in col_start order: label, arrow, neighbor name
                 if (fld.p_reftype->c_reftypestyle) {
-                    AddSpan(vm, acr_nav::line_N(vm) - 1, center_x + 1, center_x + 1 + ch_N(label),
+                    AddSpan(vm, line_idx, center_x + 1, center_x + 1 + ch_N(label),
                             fld.p_reftype->c_reftypestyle->p_navstyle);
+                }
+                AddSpan(vm, line_idx, arrow_start, arrow_end,
+                        acr_nav::_db.p_graph_arrow);
+                if (fi == 0) {
+                    AddSpan(vm, line_idx, name_start, name_end,
+                            acr_nav::_db.p_graph_neighbor);
                 }
             }
             // Close line for right neighbor
@@ -1085,7 +1117,10 @@ static void LoadGraph(acr_nav::FCtype &ctype) {
             {
                 tempstr line;
                 char_PrintNTimes(' ', line, name_x);
-                line << "/ " << g.p_neighbor->ctype;
+                line << "/ ";
+                int nb_start = ch_N(line);
+                line << g.p_neighbor->ctype;
+                int nb_end = ch_N(line);
                 PrintRecordCount(line, *g.p_neighbor);
                 int cur_len = ch_N(line);
                 if (cur_len < center_x) {
@@ -1093,6 +1128,8 @@ static void LoadGraph(acr_nav::FCtype &ctype) {
                 }
                 line << "|";
                 acr_nav::line_Alloc(vm) = line;
+                AddSpan(vm, acr_nav::line_N(vm) - 1, nb_start, nb_end,
+                        acr_nav::_db.p_graph_neighbor);
             }
             // Edge lines
             for (int fi = 0; fi < g.n_field; fi++) {
@@ -1101,14 +1138,21 @@ static void LoadGraph(acr_nav::FCtype &ctype) {
                 label << fld.reftype << " " << name_Get(fld);
                 tempstr line;
                 char_PrintNTimes(' ', line, name_x);
-                line << "|<";
+                line << "|";
+                int arrow_start = ch_N(line);
+                line << "<";
                 int dash_len = center_x - name_x - 2;
                 char_PrintNTimes('-', line, dash_len);
+                int arrow_end = ch_N(line);
                 line << "|" << label;
                 acr_nav::line_Alloc(vm) = line;
+                int line_idx = acr_nav::line_N(vm) - 1;
+                // Spans in col_start order: arrow, label
+                AddSpan(vm, line_idx, arrow_start, arrow_end,
+                        acr_nav::_db.p_graph_arrow);
                 if (fld.p_reftype->c_reftypestyle) {
                     int label_start = center_x + 1;
-                    AddSpan(vm, acr_nav::line_N(vm) - 1, label_start, label_start + ch_N(label),
+                    AddSpan(vm, line_idx, label_start, label_start + ch_N(label),
                             fld.p_reftype->c_reftypestyle->p_navstyle);
                 }
             }
@@ -2445,6 +2489,10 @@ static void InitPanels() {
     acr_nav::_db.p_line_preproc = acr_nav::ind_navstyle_Find("line_preproc");
     acr_nav::_db.p_line_section = acr_nav::ind_navstyle_Find("line_section");
     acr_nav::_db.p_line_key = acr_nav::ind_navstyle_Find("line_key");
+    // Graph view styles (optional)
+    acr_nav::_db.p_graph_ctype_style = acr_nav::ind_navstyle_Find("graph_ctype");
+    acr_nav::_db.p_graph_neighbor = acr_nav::ind_navstyle_Find("graph_neighbor");
+    acr_nav::_db.p_graph_arrow = acr_nav::ind_navstyle_Find("graph_arrow");
     BuildHelpLines();
     SwitchToBrowse();
     acr_nav::_db.p_left_panel->sel_row = 0;

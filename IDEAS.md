@@ -41,6 +41,7 @@
 
 - Hints in status bar are suboptimal. Need closer review and fine-tuning.
 - Top bar shows: Xrefs: acr_nav.FDb (C++: acr_nav::FDb) (1)  - the C++ part duplicates info
+- Graph jumps should be to the selected type, now the selected row is just row 0
 
 ---
 
