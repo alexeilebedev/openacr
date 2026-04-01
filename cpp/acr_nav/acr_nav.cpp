@@ -456,10 +456,23 @@ static void ClearViewmodeLines(acr_nav::FViewmode &vm) {
     acr_nav::preview_nav_RemoveAll(vm);
 }
 
+// True if the byte range [byte_start, byte_end) in line contains at least one non-space character.
+static bool RegionHasContent(algo::strptr line, int byte_start, int byte_end) {
+    bool ret = false;
+    int end = i32_Min(byte_end, elems_N(line));
+    for (int i = i32_Max(byte_start, 0); i < end && !ret; i++) {
+        ret = line.elems[i] != ' ';
+    }
+    return ret;
+}
+
 // Add a color span to a viewmode. Positions are 0-based relative to stored line text.
 // Spans must be emitted in line_idx then col_start order. No overlapping spans.
+// Caller must ensure line_idx < line_N(vm).
+// Whitespace-only regions are silently skipped.
 static void AddSpan(acr_nav::FViewmode &vm, int line_idx, int col_start, int col_end, acr_nav::FNavstyle *p_style) {
-    if (col_start < col_end && p_style) {
+    if (col_start < col_end && p_style
+        && RegionHasContent(acr_nav::line_qFind(vm, line_idx), col_start, col_end)) {
         acr_nav::LineColorSpan &span = acr_nav::cspan_Alloc(vm);
         span.line_idx = line_idx;
         span.col_start = col_start;
@@ -629,20 +642,9 @@ static void LoadPreview(acr_nav::FCtype &ctype) {
                         int pkey_end = (n_col > 1) ? col_byte_pos[1] - 2 : ch_N(row);
                         AddSpan(vm, li, 0, pkey_end, acr_nav::_db.p_line_key);
                     }
-                    // Highlight comment column (only if non-empty)
+                    // Highlight comment column
                     if (comment_col >= 0) {
-                        int cci = 0;
-                        bool has_comment = false;
-                        ind_beg(algo::Tuple_attrs_curs, cattr, tuple) {
-                            if (cci == comment_col) {
-                                has_comment = ch_N(cattr.value) > 0;
-                                break;
-                            }
-                            cci++;
-                        } ind_end;
-                        if (has_comment) {
-                            AddSpan(vm, li, col_byte_pos[comment_col], ch_N(row), acr_nav::_db.p_line_comment);
-                        }
+                        AddSpan(vm, li, col_byte_pos[comment_col], ch_N(row), acr_nav::_db.p_line_comment);
                     }
                 }
             } ind_end;
@@ -934,6 +936,45 @@ static void NsDepEnsureContent(void *, acr_nav::FCtype &ct) {
 
 // --- Graph viewmode: Interactive access path diagram ---
 
+static const char* G_DBL_VERT  = "\xe2\x95\x91";  // ║  double vertical (spine)
+static const char* G_DBL_TL    = "\xe2\x95\x94";  // ╔  double top-left (spine start)
+static const char* G_DBL_BL    = "\xe2\x95\x9a";  // ╚  double bottom-left (spine end)
+static const char* G_DBL_TEE_R = "\xe2\x95\x9f";  // ╟  double vert + single right
+static const char* G_DBL_TEE_L = "\xe2\x95\xa2";  // ╢  double vert + single left
+static const char* G_VERT      = "\xe2\x94\x82";  // │  single vertical
+static const char* G_HORIZ     = "\xe2\x94\x80";  // ─  single horizontal
+static const char* G_ROUND_TL  = "\xe2\x95\xad";  // ╭  rounded top-left (neighbor open)
+static const char* G_ROUND_BL  = "\xe2\x95\xb0";  // ╰  rounded bottom-left (neighbor close)
+static const char* G_ARR_R     = "\xe2\x96\xb6";  // ▶  right arrow
+static const char* G_ARR_L     = "\xe2\x97\x80";  // ◀  left arrow
+
+// Line builder that tracks byte position vs display column for Unicode output.
+// Spaces are 1 byte = 1 column; box-drawing chars are 3 bytes = 1 column.
+struct GLine {
+    cstring str;
+    int extra;  // accumulated extra bytes (byte_count - display_width)
+    GLine() : extra(0) {}
+    void PadTo(int col) {
+        int need = col - (ch_N(str) - extra);
+        if (need > 0) {
+            char_PrintNTimes(' ', str, need);
+        }
+    }
+    void Ascii(const char *s) { str << s; }
+    void Ascii(algo::strptr s) { str << s; }
+    // Single-display-column UTF-8 character (box-drawing, arrows).
+    void Utf8(const char *s) { int n = strlen(s); str << s; extra += (n - 1); }
+    void RepeatUtf8(const char *s, int cnt) {
+        int n = strlen(s);
+        for (int i = 0; i < cnt; i++) {
+            str << s;
+        }
+        extra += (n - 1) * cnt;
+    }
+    int DisplayCol() { return ch_N(str) - extra; }
+    int BytePos() { return ch_N(str); }
+};
+
 // Return true if a field should be excluded from the graph diagram.
 // Matches amc_vis::DepRefQ exclusions: self-ref, Base, Regx, RegxSql, Hook.
 static bool GraphSkipQ(acr_nav::FField &field) {
@@ -1054,9 +1095,9 @@ static void GraphInfoAtLine(acr_nav::FCtype &center, int line_idx,
     // Left-column blocks
     for (int li = 0; li < n_left; li++) {
         GraphEdgeGroup &g = groups[left_groups[li]];
-        int block_lines = g.n_field + 2 + (li == n_left - 1 ? 1 : 0);
+        int block_lines = g.n_field + 2;
         if (li == n_left - 1 && line_idx == cur_line + 1 + g.n_field) {
-            // center close -- node stays NULL
+            // combined close -- node stays NULL
         } else if (line_idx >= cur_line && line_idx < cur_line + block_lines) {
             node = g.p_neighbor;
             int fi = line_idx - cur_line - 1;
@@ -1098,7 +1139,7 @@ static int GraphFindCtypeLine(acr_nav::FCtype &center, acr_nav::FCtype *target) 
         if (g.p_neighbor == target) {
             result = cur_line;
         }
-        cur_line += g.n_field + 2 + (li == n_left - 1 ? 1 : 0);
+        cur_line += g.n_field + 2;
     }
     return result;
 }
@@ -1154,11 +1195,15 @@ static void LoadGraph(acr_nav::FCtype &ctype) {
         }
         // Line 0: center open
         {
-            tempstr line;
-            char_PrintNTimes(' ', line, center_x);
-            line << "/ " << ctype.ctype;
-            acr_nav::line_Alloc(vm) = line;
-            AddSpan(vm, acr_nav::line_N(vm) - 1, center_x + 2, center_x + 2 + ch_N(ctype.ctype),
+            GLine gl;
+            gl.PadTo(center_x);
+            gl.Utf8(G_DBL_TL);
+            gl.Ascii(" ");
+            int name_start = gl.BytePos();
+            gl.Ascii(ctype.ctype);
+            int name_end = gl.BytePos();
+            acr_nav::line_Alloc(vm) = gl.str;
+            AddSpan(vm, acr_nav::line_N(vm) - 1, name_start, name_end,
                     acr_nav::_db.p_graph_ctype_style);
         }
         // Right-column blocks
@@ -1168,29 +1213,33 @@ static void LoadGraph(acr_nav::FCtype &ctype) {
                 acr_nav::FField &fld = *g.fields[fi];
                 tempstr label;
                 label << fld.reftype << " " << name_Get(fld);
-                tempstr line;
-                char_PrintNTimes(' ', line, center_x);
-                line << "|" << label;
-                int arrow_start = ch_N(line);
-                int arrow_pad = max_right_label - ch_N(label) + 1;
-                char_PrintNTimes('-', line, arrow_pad);
-                line << ">";
-                int arrow_end = ch_N(line);
+                GLine gl;
+                gl.PadTo(center_x);
+                gl.Utf8(G_DBL_TEE_R);
+                gl.Ascii(" ");
+                int label_start = gl.BytePos();
+                gl.Ascii(label);
+                int label_end = gl.BytePos();
+                gl.Ascii(" ");
+                int arrow_start = gl.BytePos();
+                int arrow_pad = max_right_label - ch_N(label);
+                gl.RepeatUtf8(G_HORIZ, arrow_pad);
+                gl.Utf8(G_ARR_R);
+                int arrow_end = gl.BytePos();
                 int name_start = 0, name_end = 0;
                 if (fi == 0) {
-                    line << "/ ";
-                    name_start = ch_N(line);
-                    line << g.p_neighbor->ctype;
-                    name_end = ch_N(line);
-                    PrintRecordCount(line, *g.p_neighbor);
+                    gl.Ascii(" ");
+                    name_start = gl.BytePos();
+                    gl.Ascii(g.p_neighbor->ctype);
+                    name_end = gl.BytePos();
+                    PrintRecordCount(gl.str, *g.p_neighbor);
                 } else {
-                    line << "|";
+                    gl.Utf8(G_VERT);
                 }
-                acr_nav::line_Alloc(vm) = line;
+                acr_nav::line_Alloc(vm) = gl.str;
                 int line_idx = acr_nav::line_N(vm) - 1;
-                // Spans in col_start order: label, arrow, neighbor name
                 if (fld.p_reftype->c_reftypestyle) {
-                    AddSpan(vm, line_idx, center_x + 1, center_x + 1 + ch_N(label),
+                    AddSpan(vm, line_idx, label_start, label_end,
                             fld.p_reftype->c_reftypestyle->p_navstyle);
                 }
                 AddSpan(vm, line_idx, arrow_start, arrow_end,
@@ -1200,15 +1249,12 @@ static void LoadGraph(acr_nav::FCtype &ctype) {
                             acr_nav::_db.p_graph_neighbor);
                 }
             }
-            // Close line for right neighbor
+            // Close line: just spine (clean separator)
             {
-                tempstr line;
-                char_PrintNTimes(' ', line, center_x);
-                line << "|";
-                int right_x = center_x + max_right_label + 2;
-                char_PrintNTimes(' ', line, right_x - center_x - 1);
-                line << "-";
-                acr_nav::line_Alloc(vm) = line;
+                GLine gl;
+                gl.PadTo(center_x);
+                gl.Utf8(G_DBL_VERT);
+                acr_nav::line_Alloc(vm) = gl.str;
             }
         }
         // Left-column blocks
@@ -1226,19 +1272,17 @@ static void LoadGraph(acr_nav::FCtype &ctype) {
             }
             // Open line: neighbor name
             {
-                tempstr line;
-                char_PrintNTimes(' ', line, name_x);
-                line << "/ ";
-                int nb_start = ch_N(line);
-                line << g.p_neighbor->ctype;
-                int nb_end = ch_N(line);
-                PrintRecordCount(line, *g.p_neighbor);
-                int cur_len = ch_N(line);
-                if (cur_len < center_x) {
-                    char_PrintNTimes(' ', line, center_x - cur_len);
-                }
-                line << "|";
-                acr_nav::line_Alloc(vm) = line;
+                GLine gl;
+                gl.PadTo(name_x);
+                gl.Utf8(G_ROUND_TL);
+                gl.Ascii(" ");
+                int nb_start = gl.BytePos();
+                gl.Ascii(g.p_neighbor->ctype);
+                int nb_end = gl.BytePos();
+                PrintRecordCount(gl.str, *g.p_neighbor);
+                gl.PadTo(center_x);
+                gl.Utf8(G_DBL_TEE_L);
+                acr_nav::line_Alloc(vm) = gl.str;
                 AddSpan(vm, acr_nav::line_N(vm) - 1, nb_start, nb_end,
                         acr_nav::_db.p_graph_neighbor);
             }
@@ -1247,62 +1291,57 @@ static void LoadGraph(acr_nav::FCtype &ctype) {
                 acr_nav::FField &fld = *g.fields[fi];
                 tempstr label;
                 label << fld.reftype << " " << name_Get(fld);
-                tempstr line;
-                char_PrintNTimes(' ', line, name_x);
-                line << "|";
-                int arrow_start = ch_N(line);
-                line << "<";
+                GLine gl;
+                gl.PadTo(name_x);
+                gl.Utf8(G_VERT);
+                int arrow_start = gl.BytePos();
+                gl.Utf8(G_ARR_L);
                 int dash_len = center_x - name_x - 2;
-                char_PrintNTimes('-', line, dash_len);
-                int arrow_end = ch_N(line);
-                line << "|" << label;
-                acr_nav::line_Alloc(vm) = line;
+                gl.RepeatUtf8(G_HORIZ, dash_len);
+                int arrow_end = gl.BytePos();
+                gl.Utf8(G_DBL_TEE_L);
+                gl.Ascii(" ");
+                int label_start = gl.BytePos();
+                gl.Ascii(label);
+                int label_end = gl.BytePos();
+                acr_nav::line_Alloc(vm) = gl.str;
                 int line_idx = acr_nav::line_N(vm) - 1;
-                // Spans in col_start order: arrow, label
                 AddSpan(vm, line_idx, arrow_start, arrow_end,
                         acr_nav::_db.p_graph_arrow);
                 if (fld.p_reftype->c_reftypestyle) {
-                    int label_start = center_x + 1;
-                    AddSpan(vm, line_idx, label_start, label_start + ch_N(label),
+                    AddSpan(vm, line_idx, label_start, label_end,
                             fld.p_reftype->c_reftypestyle->p_navstyle);
                 }
             }
-            // Center close: inside last left block; otherwise left-close + center bar
+            // Close lines
             if (li == n_left - 1) {
-                tempstr line;
-                char_PrintNTimes(' ', line, name_x);
-                line << "|";
-                int cur_len = ch_N(line);
-                if (cur_len < center_x) {
-                    char_PrintNTimes(' ', line, center_x - cur_len);
+                // Combined close: neighbor ends + spine ends on same line
+                {
+                    GLine gl;
+                    gl.PadTo(name_x);
+                    gl.Utf8(G_ROUND_BL);
+                    gl.PadTo(center_x);
+                    gl.Utf8(G_DBL_BL);
+                    acr_nav::line_Alloc(vm) = gl.str;
                 }
-                line << "-";
-                acr_nav::line_Alloc(vm) = line;
             } else {
-                tempstr line;
-                char_PrintNTimes(' ', line, name_x);
-                line << "-";
-                int cur_len = ch_N(line);
-                if (cur_len < center_x) {
-                    char_PrintNTimes(' ', line, center_x - cur_len);
+                // Non-last left close: neighbor ends, spine continues
+                {
+                    GLine gl;
+                    gl.PadTo(name_x);
+                    gl.Utf8(G_ROUND_BL);
+                    gl.PadTo(center_x);
+                    gl.Utf8(G_DBL_VERT);
+                    acr_nav::line_Alloc(vm) = gl.str;
                 }
-                line << "|";
-                acr_nav::line_Alloc(vm) = line;
-            }
-            // Left neighbor close after center close (last block only)
-            if (li == n_left - 1) {
-                tempstr line;
-                char_PrintNTimes(' ', line, name_x);
-                line << "-";
-                acr_nav::line_Alloc(vm) = line;
             }
         }
         // If no left blocks, close center with standalone line
         if (n_left == 0) {
-            tempstr line;
-            char_PrintNTimes(' ', line, center_x);
-            line << "-";
-            acr_nav::line_Alloc(vm) = line;
+            GLine gl;
+            gl.PadTo(center_x);
+            gl.Utf8(G_DBL_BL);
+            acr_nav::line_Alloc(vm) = gl.str;
         }
     }
 }
@@ -1933,12 +1972,15 @@ static void EmitStyle(cstring &out, acr_nav::FNavstyle &style) {
     }
 }
 
-// Truncate str to max_width characters, then right-pad with spaces to max_width.
+// Truncate str to max_width display columns, then right-pad with spaces to max_width.
+// UTF-8-aware: does not split multi-byte characters.
 static void TruncPad(cstring &str, int max_width) {
-    if (ch_N(str) > max_width) {
-        str.ch_n = max_width;
+    int display_width = ch_N(str) - Utf8ExtraBytes(strptr(str));
+    if (display_width > max_width) {
+        str.ch_n = DisplayToByte(strptr(str), max_width);
+        display_width = max_width;
     }
-    char_PrintNTimes(' ', str, i32_Max(0, max_width - ch_N(str)));
+    char_PrintNTimes(' ', str, i32_Max(0, max_width - display_width));
 }
 
 // -----------------------------------------------------------------------------
@@ -2490,9 +2532,7 @@ static void RenderContentArea(RenderCtx &ctx) {
                 }
             }
         }
-        // +2 for namespace headers: triangle is 3 UTF-8 bytes but 1 display column
-        bool is_header = left_idx < n_left && ch_N(acr_nav::left_item_qFind(left_idx).ctype) == 0;
-        TruncPad(left_cell, ctx.left_wid - 1 + (is_header ? 2 : 0));
+        TruncPad(left_cell, ctx.left_wid - 1);
         if (left_sel) {
             EmitStyle(ctx.buf, ctx.left_focused ? *acr_nav::_db.p_sel_focus : *acr_nav::_db.p_sel_nofocus);
         }
@@ -2547,9 +2587,13 @@ static void RenderContentArea(RenderCtx &ctx) {
                 if (n_nav > 0 && acr_nav::_db.sel_nav_col < n_nav) {
                     acr_nav::PreviewNavCol &nc = acr_nav::preview_nav_qFind(pvm, acr_nav::_db.sel_nav_col);
                     algo::strptr data_line = RightPanelLineFind(right_data_idx);
-                    ov_start = DisplayToByte(data_line, nc.col_start);
-                    ov_end = DisplayToByte(data_line, nc.col_start + nc.col_wid);
-                    ov_style = acr_nav::_db.p_line_nav_cell;
+                    int ov_s = DisplayToByte(data_line, nc.col_start);
+                    int ov_e = DisplayToByte(data_line, nc.col_start + nc.col_wid);
+                    if (RegionHasContent(data_line, ov_s, ov_e)) {
+                        ov_start = ov_s;
+                        ov_end = ov_e;
+                        ov_style = acr_nav::_db.p_line_nav_cell;
+                    }
                 }
             }
             EmitStyledLine(ctx.buf, strptr(right_cell), right_focused_sel, *acr_nav::_db.p_cur_viewmode, right_data_idx, span_cursor, right_focused_sel ? acr_nav::_db.p_sel_focus : nullptr, ov_start, ov_end, ov_style);
