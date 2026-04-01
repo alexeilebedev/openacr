@@ -33,7 +33,8 @@
 | 25  | **Cross-namespace dependency overlay.** nsdep viewmode (n key) shows upstream/downstream namespace dependencies for selected ctype's namespace. Overlay on viewmode_stack, data-driven from cross-namespace field references.                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
 | 26  | **Interactive access path graph viewmode.** New `graph` viewmode (v key) renders amc_vis-style ASCII access path diagram in right panel. Three-column layout: left (Pkey/Upptr parents), center (selected ctype), right (Val creation + Ptr/Ptrary children). Edge labels show "reftype fieldname". Enter walks into neighbor ctype staying in graph mode; Backspace returns via navstack. Edge collection matches amc_vis exactly: GraphSkipQ mirrors DepRefQ, Val fields use first-wins dedup, dep fields use reftype `up` flag for column placement. NavigateToTarget helper extracted from follow_ref eliminates navstack push duplication. Tab cycle: fields→xref→preview→codegen→graph→fields. |
 | 27  | **Graph viewmode extensions.** Edge labels colored by reftype using existing reftypestyle→navstyle mappings (pools green, indexes yellow, uprefs cyan). Neighbor nodes show ssimfile record counts. Status bar displays reftype comment when cursor is on an edge line (partially addresses P2). GraphNodeAtLine unified into GraphInfoAtLine returning both neighbor ctype and field pointer. PrintRecordCount helper extracted and shared with left panel.                                                                                                                                                                                                                                         |
-| 28  | **Graph reverse xref edges and syntax highlighting.** CollectGraphEdges now iterates both c_field (forward) and c_field_arg (reverse), completing the access path picture. Types like FNavstyle go from "no access paths" to showing all parent/owner relationships. AddDepEdge helper factors grouping logic shared by both loops. Reverse filter (isval && !hasalloc) keeps allocators (Lary/Tpool) while preventing flooding from primitive value types. Three new navstyles: graph_ctype (bold magenta center type), graph_neighbor (cyan neighbor names), graph_arrow (dim dashes). Matches amc_vis's bidirectional display.                                                                   |
+| 28  | **Graph reverse xref edges and syntax highlighting.** CollectGraphEdges now iterates both c_field (forward) and c_field_arg (reverse), completing the access path picture. Types like FNavstyle go from "no access paths" to showing all parent/owner relationships. AddDepEdge helper factors grouping logic shared by both loops. Reverse filter (isval && !hasalloc) keeps allocators (Lary/Tpool) while preventing flooding from primitive value types. Three new navstyles: graph_ctype (bold magenta center type), graph_neighbor (cyan neighbor names), graph_arrow (dim dashes). Matches amc_vis's bidirectional display.                                                                    |
+| 29  | **Preview follow-ref (navigable columns).** Right arrow cycles between navigable columns (Pkey/Upptr fields whose arg has a backing ssimfile), Enter follows the reference to the target ssimfile and scrolls to the matching record. PreviewNavCol ctype stores column geometry; deferred match via preview_nav_pending handles ProcessKey's sel_row reset. Header names cyan-highlighted, selected cell bold+reverse+cyan via EmitStyledLine overlay. Two new navstyles (line_nav_header, line_nav_cell). 3 new component tests.                                                                                                                                                                  |
 
 
 ---
@@ -43,6 +44,9 @@
 - Hints in status bar are suboptimal. Need closer review and fine-tuning.
 - Top bar shows: Xrefs: acr_nav.FDb (C++: acr_nav::FDb) (1)  - the C++ part duplicates info
 - Graph jumps should be to the selected type, now the selected row is just row 0
+- Preview follow-ref: after jump, selected row in left pane can be hidden under the breadcrumb bar
+- Preview mode: left arrow is used intuitively to cycle to prev nav col, but it leads to left pane
+- FNavaction move_up row inproper formatting in Preview
 
 ---
 
@@ -67,34 +71,6 @@
 ---
 
 ## Ideas by Tier
-
-### Tier 1: High Impact
-
-#### 1A. Preview Follow-Ref (navigable columns)
-
-Preview is already interactive (vertical scroll, formatted columns, syntax highlighting) but references in data are not followable. Adding data-level follow-ref on navigable columns closes the loop: schema -> data -> follow reference -> land on exact target record.
-
-**What it does:**
-
-- Identify navigable columns: Pkey/Upptr fields whose arg has a backing ssimfile
-- Highlight navigable column headers in cyan (existing reftypestyle -> navstyle, Pkey/Upptr are both cyan)
-- Right arrow (on right panel, in preview) cycles between navigable columns. Most tables have 1-2.
-- Selected navigable column's cell value highlighted (bold/reverse) on the current row
-- Enter follows: extract cell value, find target ssimfile, navigate there, scroll to exact matching row
-- Left arrow goes back to left panel as usual
-
-**Example:** On FKeybind preview, `navaction` column is navigable (Pkey -> Navaction). Right arrow selects it, Enter on `move_down` jumps to navaction.ssim scrolled to the `move_down` record.
-
-**What it replaces:** Manual workflow of going back to left panel, finding target ctype, pressing p, scrolling to find the record.
-
-**Problems to address:**
-
-- LoadPreview discards column boundaries (`col_wid` array) after formatting. Must persist boundaries for navigable columns to extract cell values.
-- Need `sel_nav_col` state (index into navigable columns, not all columns).
-- Match column header names against field records to determine which are navigable.
-- Works for 18% of ctypes (258/1405 have ssimfiles). Same limitation as preview.
-
----
 
 ### Standalone: Generalized Headless (_db Pool Dump)
 
