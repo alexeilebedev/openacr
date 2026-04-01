@@ -63,8 +63,6 @@
 
 ### Open
 
-**P6. F-prefix gap.** `dmmeta.Ctype` becomes `dmmeta::FCtype` in C++. The convention is documented *nowhere* — not in README, tutorials, or guides. Users reading generated code can't find the schema type. **Fix proposed:** idea 1C (~10 lines in filter) + show "C++: FCtype" in panel title.
-
 **P7. Field prefix conventions invisible.** `c_field` = Ptrary, `ind_ns` = Thash, `p_ctype` = Upptr, `zd_inst` = Llist. These prefixes encode the reftype (light Hungarian Notation from `dmmeta.fprefix`), but acr_nav shows the prefix without decoding it. **Idea:** show fprefix meaning in status bar or detail view. Data already exists in `dmmeta.fprefix` — just not loaded.
 
 ---
@@ -116,19 +114,6 @@ The most powerful `acr` capability with no acr_nav equivalent. `acr -ndown 2 -t`
 
 **Depends on:** 1A (record-level identity -- knowing the selected record's pkey value).
 **Size:** ~80 lines C++ (using SysEval), 3 ssim records.
-
-#### 1C. F-Prefix Resolution (P6)
-
-Tiny change, daily annoyance eliminated. `acr_nav::FNaventry` in generated code -> user types `FNaventry` in filter -> finds `acr_nav.Naventry`.
-
-**What it does:**
-
-- In `CtypeMatchesFilter`, when filter starts with `F` + uppercase letter, also match with the F stripped
-- Optionally: show "C++: FNaventry" in the right panel title
-
-**Validated:** Filter uses SQL-style `%pattern%` regex (line ~149). Modification is straightforward. False positive risk is negligible -- no ctype names collide after F-stripping. The F-prefix is a universal amc convention (every ctype gets F-prefixed in generated C++), so the rule applies consistently.
-
-**Size:** ~10 lines C++, 0 ssim records. The most honest estimate in this document.
 
 ---
 
