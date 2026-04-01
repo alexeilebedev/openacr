@@ -43,7 +43,6 @@
 
 - Hints in status bar are suboptimal. Need closer review and fine-tuning.
 - Top bar shows: Xrefs: acr_nav.FDb (C++: acr_nav::FDb) (1)  - the C++ part duplicates info
-- Graph jumps should be to the selected type, now the selected row is just row 0
 - Preview follow-ref: after jump, selected row in left pane can be hidden under the breadcrumb bar
 - Preview mode: left arrow is used intuitively to cycle to prev nav col, but it leads to left pane
 - FNavaction move_up row inproper formatting in Preview

@@ -1034,6 +1034,39 @@ static void GraphInfoAtLine(acr_nav::FCtype &center, int line_idx,
     if (p_field_out) *p_field_out = field;
 }
 
+// Reverse of GraphInfoAtLine: given a neighbor ctype, return its first line in the graph.
+// Returns -1 if not found.
+static int GraphFindCtypeLine(acr_nav::FCtype &center, acr_nav::FCtype *target) {
+    int result = -1;
+    GraphEdgeGroup groups[64];
+    int n_group = CollectGraphEdges(center, groups, 64);
+    int right_groups[64], n_right = 0;
+    int left_groups[64], n_left = 0;
+    for (int i = 0; i < n_group; i++) {
+        if (groups[i].is_left) {
+            left_groups[n_left++] = i;
+        } else {
+            right_groups[n_right++] = i;
+        }
+    }
+    int cur_line = 1; // line 0 is center open
+    for (int ri = 0; ri < n_right && result < 0; ri++) {
+        GraphEdgeGroup &g = groups[right_groups[ri]];
+        if (g.p_neighbor == target) {
+            result = cur_line;
+        }
+        cur_line += g.n_field + 1;
+    }
+    for (int li = 0; li < n_left && result < 0; li++) {
+        GraphEdgeGroup &g = groups[left_groups[li]];
+        if (g.p_neighbor == target) {
+            result = cur_line;
+        }
+        cur_line += g.n_field + 2 + (li == n_left - 1 ? 1 : 0);
+    }
+    return result;
+}
+
 // Build amc_vis-style graph lines for the given ctype.
 // Populates the graph viewmode's line_elems array.
 static void LoadGraph(acr_nav::FCtype &ctype) {
@@ -2724,6 +2757,14 @@ static bool ProcessKey(algo::strptr key_name) {
             if (forward && (vm_changed || ct_changed)) {
                 right->sel_row = 0;
                 right->scroll_offset = 0;
+            }
+            if (forward && ct_changed
+                && acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_graph_viewmode
+                && sel_ct && prev_sel_ct && sel_ct != prev_sel_ct) {
+                int line = GraphFindCtypeLine(*sel_ct, prev_sel_ct);
+                if (line >= 0) {
+                    right->sel_row = line;
+                }
             }
             AdjustScroll(*left, acr_nav::left_item_N());
             AdjustScroll(*right, RightPanelItemCount(sel_ct));
