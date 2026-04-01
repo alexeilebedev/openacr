@@ -170,6 +170,7 @@ dmmeta.ctype  ctype:acr_nav.LeftItem  comment:"One display row in the left panel
 dmmeta.ctype  ctype:acr_nav.LineColorSpan  comment:""
 dmmeta.ctype  ctype:acr_nav.Naventry  comment:"Navigation stack entry. Uses raw strings not Pkeys: value type in Tary, stores snapshots not live references"
 dmmeta.ctype  ctype:acr_nav.PanelState  comment:"Headless panel state output"
+dmmeta.ctype  ctype:acr_nav.PreviewNavCol  comment:"Navigable column metadata for preview follow-ref"
 dmmeta.ctype  ctype:acr_nav.Screen  comment:"Headless screen state output"
 dmmeta.ctype  ctype:acr_nav.Screenshot  comment:"Headless command: emit screen state"
 dmmeta.ctype  ctype:acr_nav.SendKey  comment:"Headless command: send keystroke"

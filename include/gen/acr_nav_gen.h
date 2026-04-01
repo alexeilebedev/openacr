@@ -128,6 +128,7 @@ namespace acr_nav { struct _db_filtertarget_curs; }
 namespace acr_nav { struct ns_c_ctype_curs; }
 namespace acr_nav { struct viewmode_line_curs; }
 namespace acr_nav { struct viewmode_cspan_curs; }
+namespace acr_nav { struct viewmode_preview_nav_curs; }
 namespace acr_nav { struct trace; }
 namespace acr_nav { struct FDb; }
 namespace acr_nav { struct FDetailsrc; }
@@ -146,6 +147,7 @@ namespace acr_nav { struct LeftItem; }
 namespace acr_nav { struct LineColorSpan; }
 namespace acr_nav { struct Naventry; }
 namespace acr_nav { struct PanelState; }
+namespace acr_nav { struct PreviewNavCol; }
 namespace acr_nav { struct Screen; }
 namespace acr_nav { struct Screenshot; }
 namespace acr_nav { struct SendKey; }
@@ -486,6 +488,10 @@ struct FDb { // acr_nav.FDb
     acr_nav::FNavstyle*        p_graph_ctype_style;              // Cached style: graph center type. optional pointer
     acr_nav::FNavstyle*        p_graph_neighbor;                 // Cached style: graph neighbor types. optional pointer
     acr_nav::FNavstyle*        p_graph_arrow;                    // Cached style: graph arrows. optional pointer
+    i32                        sel_nav_col;                      //   0  Selected navigable column index (into preview_nav)
+    algo::cstring              preview_nav_pending;              // Pending pkey match after preview follow-ref navigation
+    acr_nav::FNavstyle*        p_line_nav_header;                // Cached: navigable column header style. optional pointer
+    acr_nav::FNavstyle*        p_line_nav_cell;                  // Cached: selected navigable cell style. optional pointer
     acr_nav::trace             trace;                            //
 };
 
@@ -2323,6 +2329,8 @@ void                 FNavmode_Uninit(acr_nav::FNavmode& navmode) __attribute__((
 // global access: p_graph_ctype_style (Ptr)
 // global access: p_graph_neighbor (Ptr)
 // global access: p_graph_arrow (Ptr)
+// global access: p_line_nav_header (Ptr)
+// global access: p_line_nav_cell (Ptr)
 // access: acr_nav.FReftypestyle.p_navstyle (Upptr)
 // access: acr_nav.LineColorSpan.p_navstyle (Upptr)
 struct FNavstyle { // acr_nav.FNavstyle
@@ -2698,6 +2706,10 @@ struct FViewmode { // acr_nav.FViewmode
     u32                                     cspan_max;              // max. capacity of array before realloc
     acr_nav::viewmode_ensure_content_hook   ensure_content;         //   NULL  Pointer to a function
     u64                                     ensure_content_ctx;     //   0  Callback context
+    acr_nav::PreviewNavCol*                 preview_nav_elems;      // pointer to elements
+    u32                                     preview_nav_n;          // number of elements in array
+    u32                                     preview_nav_max;        // max. capacity of array before realloc
+    i32                                     pkey_wid;               //   0  Column 0 (pkey) width for target row matching
     // reftype Hook of acr_nav.FViewmode.ensure_content prohibits copy
     // func:acr_nav.FViewmode..AssignOp
     acr_nav::FViewmode&  operator =(const acr_nav::FViewmode &rhs) = delete;
@@ -2894,6 +2906,83 @@ template<class T> inline void ensure_content_Set1(acr_nav::FViewmode& viewmode, 
 // func:acr_nav.FViewmode.ensure_content.Set2
 template<class T> inline void ensure_content_Set2(acr_nav::FViewmode& viewmode, T& ctx, void (*fcn)(T&, acr_nav::FCtype& arg) ) __attribute__((nothrow));
 
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:acr_nav.FViewmode.preview_nav.Addary
+algo::aryptr<acr_nav::PreviewNavCol> preview_nav_Addary(acr_nav::FViewmode& viewmode, algo::aryptr<acr_nav::PreviewNavCol> rhs) __attribute__((nothrow));
+// Reserve space. Insert element at the end
+// The new element is initialized to a default value
+// func:acr_nav.FViewmode.preview_nav.Alloc
+acr_nav::PreviewNavCol& preview_nav_Alloc(acr_nav::FViewmode& viewmode) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:acr_nav.FViewmode.preview_nav.AllocAt
+acr_nav::PreviewNavCol& preview_nav_AllocAt(acr_nav::FViewmode& viewmode, int at) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:acr_nav.FViewmode.preview_nav.AllocN
+algo::aryptr<acr_nav::PreviewNavCol> preview_nav_AllocN(acr_nav::FViewmode& viewmode, int n_elems) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:acr_nav.FViewmode.preview_nav.AllocNAt
+algo::aryptr<acr_nav::PreviewNavCol> preview_nav_AllocNAt(acr_nav::FViewmode& viewmode, int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:acr_nav.FViewmode.preview_nav.EmptyQ
+inline bool          preview_nav_EmptyQ(acr_nav::FViewmode& viewmode) __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+// func:acr_nav.FViewmode.preview_nav.Find
+inline acr_nav::PreviewNavCol* preview_nav_Find(acr_nav::FViewmode& viewmode, u64 t) __attribute__((__warn_unused_result__, nothrow));
+// Return array pointer by value
+// func:acr_nav.FViewmode.preview_nav.Getary
+inline algo::aryptr<acr_nav::PreviewNavCol> preview_nav_Getary(const acr_nav::FViewmode& viewmode) __attribute__((nothrow));
+// Return pointer to last element of array, or NULL if array is empty
+// func:acr_nav.FViewmode.preview_nav.Last
+inline acr_nav::PreviewNavCol* preview_nav_Last(acr_nav::FViewmode& viewmode) __attribute__((nothrow, pure));
+// Return max. number of items in the array
+// func:acr_nav.FViewmode.preview_nav.Max
+inline i32           preview_nav_Max(acr_nav::FViewmode& viewmode) __attribute__((nothrow));
+// Return number of items in the array
+// func:acr_nav.FViewmode.preview_nav.N
+inline i32           preview_nav_N(const acr_nav::FViewmode& viewmode) __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove item by index. If index outside of range, do nothing.
+// func:acr_nav.FViewmode.preview_nav.Remove
+void                 preview_nav_Remove(acr_nav::FViewmode& viewmode, u32 i) __attribute__((nothrow));
+// func:acr_nav.FViewmode.preview_nav.RemoveAll
+void                 preview_nav_RemoveAll(acr_nav::FViewmode& viewmode) __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:acr_nav.FViewmode.preview_nav.RemoveLast
+void                 preview_nav_RemoveLast(acr_nav::FViewmode& viewmode) __attribute__((nothrow));
+// Make sure N *more* elements will fit in array. Process dies if out of memory
+// func:acr_nav.FViewmode.preview_nav.Reserve
+inline void          preview_nav_Reserve(acr_nav::FViewmode& viewmode, int n) __attribute__((nothrow));
+// Make sure N elements fit in array. Process dies if out of memory
+// func:acr_nav.FViewmode.preview_nav.AbsReserve
+void                 preview_nav_AbsReserve(acr_nav::FViewmode& viewmode, int n) __attribute__((nothrow));
+// Copy contents of RHS to PARENT.
+// func:acr_nav.FViewmode.preview_nav.Setary
+void                 preview_nav_Setary(acr_nav::FViewmode& viewmode, acr_nav::FViewmode &rhs) __attribute__((nothrow));
+// Copy specified array into preview_nav, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+// func:acr_nav.FViewmode.preview_nav.Setary2
+void                 preview_nav_Setary(acr_nav::FViewmode& viewmode, const algo::aryptr<acr_nav::PreviewNavCol> &rhs) __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:acr_nav.FViewmode.preview_nav.qFind
+inline acr_nav::PreviewNavCol& preview_nav_qFind(acr_nav::FViewmode& viewmode, u64 t) __attribute__((nothrow));
+// Return reference to last element of array. No bounds checking
+// func:acr_nav.FViewmode.preview_nav.qLast
+inline acr_nav::PreviewNavCol& preview_nav_qLast(acr_nav::FViewmode& viewmode) __attribute__((nothrow));
+// Return row id of specified element
+// func:acr_nav.FViewmode.preview_nav.rowid_Get
+inline u64           preview_nav_rowid_Get(acr_nav::FViewmode& viewmode, acr_nav::PreviewNavCol &elem) __attribute__((nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:acr_nav.FViewmode.preview_nav.AllocNVal
+algo::aryptr<acr_nav::PreviewNavCol> preview_nav_AllocNVal(acr_nav::FViewmode& viewmode, int n_elems, const acr_nav::PreviewNavCol& val) __attribute__((nothrow));
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:acr_nav.FViewmode.preview_nav.Insary
+void                 preview_nav_Insary(acr_nav::FViewmode& viewmode, algo::aryptr<acr_nav::PreviewNavCol> rhs, int at) __attribute__((nothrow));
+
 // Set all fields to initial values.
 // func:acr_nav.FViewmode..Init
 void                 FViewmode_Init(acr_nav::FViewmode& viewmode);
@@ -2919,6 +3008,17 @@ inline bool          viewmode_cspan_curs_ValidQ(viewmode_cspan_curs &curs) __att
 // item access
 // func:acr_nav.FViewmode.cspan_curs.Access
 inline acr_nav::LineColorSpan& viewmode_cspan_curs_Access(viewmode_cspan_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:acr_nav.FViewmode.preview_nav_curs.Next
+inline void          viewmode_preview_nav_curs_Next(viewmode_preview_nav_curs &curs) __attribute__((nothrow));
+// func:acr_nav.FViewmode.preview_nav_curs.Reset
+inline void          viewmode_preview_nav_curs_Reset(viewmode_preview_nav_curs &curs, acr_nav::FViewmode &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:acr_nav.FViewmode.preview_nav_curs.ValidQ
+inline bool          viewmode_preview_nav_curs_ValidQ(viewmode_preview_nav_curs &curs) __attribute__((nothrow));
+// item access
+// func:acr_nav.FViewmode.preview_nav_curs.Access
+inline acr_nav::PreviewNavCol& viewmode_preview_nav_curs_Access(viewmode_preview_nav_curs &curs) __attribute__((nothrow));
 // func:acr_nav.FViewmode..Uninit
 void                 FViewmode_Uninit(acr_nav::FViewmode& viewmode) __attribute__((nothrow));
 
@@ -3057,6 +3157,22 @@ inline void          PanelState_Init(acr_nav::PanelState& parent);
 // func:acr_nav.PanelState..Print
 void                 PanelState_Print(acr_nav::PanelState& row, algo::cstring& str) __attribute__((nothrow));
 
+// --- acr_nav.PreviewNavCol
+// create: acr_nav.FViewmode.preview_nav (Tary)
+struct PreviewNavCol { // acr_nav.PreviewNavCol: Navigable column metadata for preview follow-ref
+    i32                 col_start;      //   0  Character start position in formatted line
+    i32                 col_wid;        //   0  Column width (for cell value extraction)
+    i32                 name_len;       //   0  Length of column name in header
+    algo::Smallstr50    col_name;       // Column/attribute name
+    algo::Smallstr100   target_ctype;   // Target ctype key for navigation
+    // func:acr_nav.PreviewNavCol..Ctor
+    inline               PreviewNavCol() __attribute__((nothrow));
+};
+
+// Set all fields to initial values.
+// func:acr_nav.PreviewNavCol..Init
+inline void          PreviewNavCol_Init(acr_nav::PreviewNavCol& parent);
+
 // --- acr_nav.Screen
 struct Screen { // acr_nav.Screen: Headless screen state output
     algo::Smallstr50   mode;             // Current UI mode (browse/filter)
@@ -3070,6 +3186,7 @@ struct Screen { // acr_nav.Screen: Headless screen state output
     algo::cstring      breadcrumb;       // Navigation breadcrumb trail (display string)
     algo::Smallstr50   filtertarget;     // Current filter target (ctype/field)
     algo::cstring      hints;            // Status bar hint string
+    i32                sel_nav_col;      //   0  Selected navigable column index in preview mode
     // func:acr_nav.Screen..Ctor
     inline               Screen() __attribute__((nothrow));
 };
@@ -3428,6 +3545,15 @@ struct viewmode_cspan_curs {// cursor
     int n_elems;
     int index;
     viewmode_cspan_curs() { elems=NULL; n_elems=0; index=0; }
+};
+
+
+struct viewmode_preview_nav_curs {// cursor
+    typedef acr_nav::PreviewNavCol ChildType;
+    acr_nav::PreviewNavCol* elems;
+    int n_elems;
+    int index;
+    viewmode_preview_nav_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
 } // gen:ns_curstext

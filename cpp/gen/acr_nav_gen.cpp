@@ -450,7 +450,7 @@ static void acr_nav::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_nav.Input'  signature:'4d09ca1b019e5167804de0a6c901d64ce2c10c14'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'acr_nav.Input'  signature:'464d8ffefe87d6d7981deb5c6626597324de0dfb'");
 }
 
 // --- acr_nav.FDb._db.InsertStrptrMaybe
@@ -5021,6 +5021,9 @@ void acr_nav::FDb_Init() {
     _db.p_graph_ctype_style = NULL;
     _db.p_graph_neighbor = NULL;
     _db.p_graph_arrow = NULL;
+    _db.sel_nav_col = i32(0);
+    _db.p_line_nav_header = NULL;
+    _db.p_line_nav_cell = NULL;
 
     acr_nav::InitReflection();
     navaction_LoadStatic(); // gen:ns_gstatic  gstatic:acr_nav.FDb.navaction  load acr_nav.FNavaction records
@@ -6108,6 +6111,193 @@ void acr_nav::cspan_Insary(acr_nav::FViewmode& viewmode, algo::aryptr<acr_nav::L
     viewmode.cspan_n += nnew;
 }
 
+// --- acr_nav.FViewmode.preview_nav.Addary
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+algo::aryptr<acr_nav::PreviewNavCol> acr_nav::preview_nav_Addary(acr_nav::FViewmode& viewmode, algo::aryptr<acr_nav::PreviewNavCol> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= viewmode.preview_nav_elems && rhs.elems < viewmode.preview_nav_elems + viewmode.preview_nav_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("acr_nav.tary_alias  field:acr_nav.FViewmode.preview_nav  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    int nnew = rhs.n_elems;
+    preview_nav_Reserve(viewmode, nnew); // reserve space
+    int at = viewmode.preview_nav_n;
+    for (int i = 0; i < nnew; i++) {
+        new (viewmode.preview_nav_elems + at + i) acr_nav::PreviewNavCol(rhs[i]);
+        viewmode.preview_nav_n++;
+    }
+    return algo::aryptr<acr_nav::PreviewNavCol>(viewmode.preview_nav_elems + at, nnew);
+}
+
+// --- acr_nav.FViewmode.preview_nav.Alloc
+// Reserve space. Insert element at the end
+// The new element is initialized to a default value
+acr_nav::PreviewNavCol& acr_nav::preview_nav_Alloc(acr_nav::FViewmode& viewmode) {
+    preview_nav_Reserve(viewmode, 1);
+    int n  = viewmode.preview_nav_n;
+    int at = n;
+    acr_nav::PreviewNavCol *elems = viewmode.preview_nav_elems;
+    new (elems + at) acr_nav::PreviewNavCol(); // construct new element, default initializer
+    viewmode.preview_nav_n = n+1;
+    return elems[at];
+}
+
+// --- acr_nav.FViewmode.preview_nav.AllocAt
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+acr_nav::PreviewNavCol& acr_nav::preview_nav_AllocAt(acr_nav::FViewmode& viewmode, int at) {
+    preview_nav_Reserve(viewmode, 1);
+    int n  = viewmode.preview_nav_n;
+    if (UNLIKELY(u64(at) >= u64(n+1))) {
+        FatalErrorExit("acr_nav.bad_alloc_at  field:acr_nav.FViewmode.preview_nav  comment:'index out of range'");
+    }
+    acr_nav::PreviewNavCol *elems = viewmode.preview_nav_elems;
+    memmove(elems + at + 1, elems + at, (n - at) * sizeof(acr_nav::PreviewNavCol));
+    new (elems + at) acr_nav::PreviewNavCol(); // construct element, default initializer
+    viewmode.preview_nav_n = n+1;
+    return elems[at];
+}
+
+// --- acr_nav.FViewmode.preview_nav.AllocN
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<acr_nav::PreviewNavCol> acr_nav::preview_nav_AllocN(acr_nav::FViewmode& viewmode, int n_elems) {
+    preview_nav_Reserve(viewmode, n_elems);
+    int old_n  = viewmode.preview_nav_n;
+    int new_n = old_n + n_elems;
+    acr_nav::PreviewNavCol *elems = viewmode.preview_nav_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) acr_nav::PreviewNavCol(); // construct new element, default initialize
+    }
+    viewmode.preview_nav_n = new_n;
+    return algo::aryptr<acr_nav::PreviewNavCol>(elems + old_n, n_elems);
+}
+
+// --- acr_nav.FViewmode.preview_nav.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<acr_nav::PreviewNavCol> acr_nav::preview_nav_AllocNAt(acr_nav::FViewmode& viewmode, int n_elems, int at) {
+    preview_nav_Reserve(viewmode, n_elems);
+    int n  = viewmode.preview_nav_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("acr_nav.bad_alloc_n_at  field:acr_nav.FViewmode.preview_nav  comment:'index out of range'");
+    }
+    acr_nav::PreviewNavCol *elems = viewmode.preview_nav_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(acr_nav::PreviewNavCol));
+    for (int i = 0; i < n_elems; i++) {
+        new (elems + at + i) acr_nav::PreviewNavCol(); // construct new element, default initialize
+    }
+    viewmode.preview_nav_n = n+n_elems;
+    return algo::aryptr<acr_nav::PreviewNavCol>(elems+at,n_elems);
+}
+
+// --- acr_nav.FViewmode.preview_nav.Remove
+// Remove item by index. If index outside of range, do nothing.
+void acr_nav::preview_nav_Remove(acr_nav::FViewmode& viewmode, u32 i) {
+    u32 lim = viewmode.preview_nav_n;
+    acr_nav::PreviewNavCol *elems = viewmode.preview_nav_elems;
+    if (i < lim) {
+        elems[i].~PreviewNavCol(); // destroy element
+        memmove(elems + i, elems + (i + 1), sizeof(acr_nav::PreviewNavCol) * (lim - (i + 1)));
+        viewmode.preview_nav_n = lim - 1;
+    }
+}
+
+// --- acr_nav.FViewmode.preview_nav.RemoveAll
+void acr_nav::preview_nav_RemoveAll(acr_nav::FViewmode& viewmode) {
+    u32 n = viewmode.preview_nav_n;
+    while (n > 0) {
+        n -= 1;
+        viewmode.preview_nav_elems[n].~PreviewNavCol();
+        viewmode.preview_nav_n = n;
+    }
+}
+
+// --- acr_nav.FViewmode.preview_nav.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void acr_nav::preview_nav_RemoveLast(acr_nav::FViewmode& viewmode) {
+    u64 n = viewmode.preview_nav_n;
+    if (n > 0) {
+        n -= 1;
+        preview_nav_qFind(viewmode, u64(n)).~PreviewNavCol();
+        viewmode.preview_nav_n = n;
+    }
+}
+
+// --- acr_nav.FViewmode.preview_nav.AbsReserve
+// Make sure N elements fit in array. Process dies if out of memory
+void acr_nav::preview_nav_AbsReserve(acr_nav::FViewmode& viewmode, int n) {
+    u32 old_max  = viewmode.preview_nav_max;
+    if (n > i32(old_max)) {
+        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+        void *new_mem = algo_lib::malloc_ReallocMem(viewmode.preview_nav_elems, old_max * sizeof(acr_nav::PreviewNavCol), new_max * sizeof(acr_nav::PreviewNavCol));
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("acr_nav.tary_nomem  field:acr_nav.FViewmode.preview_nav  comment:'out of memory'");
+        }
+        viewmode.preview_nav_elems = (acr_nav::PreviewNavCol*)new_mem;
+        viewmode.preview_nav_max = new_max;
+    }
+}
+
+// --- acr_nav.FViewmode.preview_nav.Setary
+// Copy contents of RHS to PARENT.
+void acr_nav::preview_nav_Setary(acr_nav::FViewmode& viewmode, acr_nav::FViewmode &rhs) {
+    preview_nav_RemoveAll(viewmode);
+    int nnew = rhs.preview_nav_n;
+    preview_nav_Reserve(viewmode, nnew); // reserve space
+    for (int i = 0; i < nnew; i++) { // copy elements over
+        new (viewmode.preview_nav_elems + i) acr_nav::PreviewNavCol(preview_nav_qFind(rhs, i));
+        viewmode.preview_nav_n = i + 1;
+    }
+}
+
+// --- acr_nav.FViewmode.preview_nav.Setary2
+// Copy specified array into preview_nav, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+void acr_nav::preview_nav_Setary(acr_nav::FViewmode& viewmode, const algo::aryptr<acr_nav::PreviewNavCol> &rhs) {
+    preview_nav_RemoveAll(viewmode);
+    preview_nav_Addary(viewmode, rhs);
+}
+
+// --- acr_nav.FViewmode.preview_nav.AllocNVal
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<acr_nav::PreviewNavCol> acr_nav::preview_nav_AllocNVal(acr_nav::FViewmode& viewmode, int n_elems, const acr_nav::PreviewNavCol& val) {
+    preview_nav_Reserve(viewmode, n_elems);
+    int old_n  = viewmode.preview_nav_n;
+    int new_n = old_n + n_elems;
+    acr_nav::PreviewNavCol *elems = viewmode.preview_nav_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) acr_nav::PreviewNavCol(val);
+    }
+    viewmode.preview_nav_n = new_n;
+    return algo::aryptr<acr_nav::PreviewNavCol>(elems + old_n, n_elems);
+}
+
+// --- acr_nav.FViewmode.preview_nav.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void acr_nav::preview_nav_Insary(acr_nav::FViewmode& viewmode, algo::aryptr<acr_nav::PreviewNavCol> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= viewmode.preview_nav_elems && rhs.elems < viewmode.preview_nav_elems + viewmode.preview_nav_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("acr_nav.tary_alias  field:acr_nav.FViewmode.preview_nav  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(viewmode.preview_nav_elems+1))) {
+        FatalErrorExit("acr_nav.bad_insary  field:acr_nav.FViewmode.preview_nav  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = viewmode.preview_nav_n - at;
+    preview_nav_Reserve(viewmode, nnew); // reserve space
+    for (int i = nmove-1; i >=0 ; --i) {
+        new (viewmode.preview_nav_elems + at + nnew + i) acr_nav::PreviewNavCol(viewmode.preview_nav_elems[at + i]);
+        viewmode.preview_nav_elems[at + i].~PreviewNavCol(); // destroy element
+    }
+    for (int i = 0; i < nnew; ++i) {
+        new (viewmode.preview_nav_elems + at + i) acr_nav::PreviewNavCol(rhs[i]);
+    }
+    viewmode.preview_nav_n += nnew;
+}
+
 // --- acr_nav.FViewmode..Init
 // Set all fields to initial values.
 void acr_nav::FViewmode_Init(acr_nav::FViewmode& viewmode) {
@@ -6121,6 +6311,10 @@ void acr_nav::FViewmode_Init(acr_nav::FViewmode& viewmode) {
     viewmode.cspan_elems 	= 0; // (acr_nav.FViewmode.cspan)
     viewmode.cspan_n     	= 0; // (acr_nav.FViewmode.cspan)
     viewmode.cspan_max   	= 0; // (acr_nav.FViewmode.cspan)
+    viewmode.preview_nav_elems 	= 0; // (acr_nav.FViewmode.preview_nav)
+    viewmode.preview_nav_n     	= 0; // (acr_nav.FViewmode.preview_nav)
+    viewmode.preview_nav_max   	= 0; // (acr_nav.FViewmode.preview_nav)
+    viewmode.pkey_wid = i32(0);
     viewmode.ind_viewmode_next = (acr_nav::FViewmode*)-1; // (acr_nav.FDb.ind_viewmode) not-in-hash
     viewmode.ind_viewmode_hashval = 0; // stored hash value
     viewmode.ensure_content = NULL;
@@ -6131,6 +6325,12 @@ void acr_nav::FViewmode_Init(acr_nav::FViewmode& viewmode) {
 void acr_nav::FViewmode_Uninit(acr_nav::FViewmode& viewmode) {
     acr_nav::FViewmode &row = viewmode; (void)row;
     ind_viewmode_Remove(row); // remove viewmode from index ind_viewmode
+
+    // acr_nav.FViewmode.preview_nav.Uninit (Tary)  //Navigable columns in current preview
+    // remove all elements from acr_nav.FViewmode.preview_nav
+    preview_nav_RemoveAll(viewmode);
+    // free memory for Tary acr_nav.FViewmode.preview_nav
+    algo_lib::malloc_FreeMem(viewmode.preview_nav_elems, sizeof(acr_nav::PreviewNavCol)*viewmode.preview_nav_max); // (acr_nav.FViewmode.preview_nav)
 
     // acr_nav.FViewmode.cspan.Uninit (Tary)  //Color spans for line-mode highlighting
     // remove all elements from acr_nav.FViewmode.cspan
@@ -6306,6 +6506,7 @@ void acr_nav::Screen_Init(acr_nav::Screen& parent) {
     parent.n_sel_ctype = i32(0);
     parent.n_ctype = i32(0);
     parent.n_field = i32(0);
+    parent.sel_nav_col = i32(0);
 }
 
 // --- acr_nav.Screen..Print
@@ -6347,6 +6548,9 @@ void acr_nav::Screen_Print(acr_nav::Screen& row, algo::cstring& str) {
 
     algo::cstring_Print(row.hints, temp);
     PrintAttrSpaceReset(str,"hints", temp);
+
+    i32_Print(row.sel_nav_col, temp);
+    PrintAttrSpaceReset(str,"sel_nav_col", temp);
 }
 
 // --- acr_nav.Screenshot..ReadFieldMaybe

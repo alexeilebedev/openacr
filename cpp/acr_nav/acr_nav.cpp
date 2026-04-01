@@ -453,6 +453,7 @@ static int PrintRecordCount(cstring &out, acr_nav::FCtype &ctype) {
 static void ClearViewmodeLines(acr_nav::FViewmode &vm) {
     acr_nav::line_RemoveAll(vm);
     acr_nav::cspan_RemoveAll(vm);
+    acr_nav::preview_nav_RemoveAll(vm);
 }
 
 // Add a color span to a viewmode. Positions are 0-based relative to stored line text.
@@ -506,6 +507,8 @@ static void FormatPreviewRow(cstring &out, algo::Tuple &tuple, int *col_wid, int
 
 static void LoadPreview(acr_nav::FCtype &ctype) {
     acr_nav::FViewmode &vm = *acr_nav::_db.p_preview_viewmode;
+    tempstr pending(acr_nav::_db.preview_nav_pending);
+    acr_nav::_db.preview_nav_pending = "";
     ClearViewmodeLines(vm);
     vm.header = "";
     acr_nav::_db.p_preview_ctype = &ctype;
@@ -541,6 +544,29 @@ static void LoadPreview(acr_nav::FCtype &ctype) {
                     } ind_end;
                 }
             } ind_end;
+            // Detect navigable columns (already cleared by ClearViewmodeLines above)
+            acr_nav::FCtype *field_base = ssimfile->p_ctype;
+            {
+                int col_pos = 0;
+                for (int c = 0; c < n_col; c++) {
+                    if (c > 0) {
+                        col_pos += 2; // separator
+                    }
+                    tempstr qname;
+                    qname << field_base->ctype << "." << col_name[c];
+                    acr_nav::FField *fld = acr_nav::ind_field_Find(qname);
+                    if (fld && fld->p_reftype->up && FindSsimfile(*fld->p_arg)) {
+                        acr_nav::PreviewNavCol &nc = acr_nav::preview_nav_Alloc(vm);
+                        nc.col_start = col_pos;
+                        nc.col_wid = col_wid[c];
+                        nc.name_len = ch_N(col_name[c]);
+                        nc.col_name = col_name[c];
+                        nc.target_ctype = fld->p_arg->ctype;
+                    }
+                    col_pos += col_wid[c];
+                }
+            }
+            vm.pkey_wid = (n_col > 0) ? col_wid[0] : 0;
             // Find comment column and compute its start offset
             int comment_col = -1;
             int comment_start = 0;
@@ -584,8 +610,24 @@ static void LoadPreview(acr_nav::FCtype &ctype) {
                     }
                 }
             } ind_end;
+            // Apply deferred follow-ref match
+            if (ch_N(pending) > 0 && vm.pkey_wid > 0) {
+                int n_lines = acr_nav::line_N(vm);
+                for (int i = 0; i < n_lines; i++) {
+                    algo::strptr row = acr_nav::line_qFind(vm, i);
+                    int end = i32_Min(vm.pkey_wid, elems_N(row));
+                    algo::strptr pkey_raw(row.elems, end);
+                    tempstr pkey;
+                    pkey << algo::TrimmedRight(pkey_raw);
+                    if (algo::strptr_Eq(strptr(pkey), algo::TrimmedRight(strptr(pending)))) {
+                        acr_nav::_db.p_right_panel->sel_row = i;
+                        break;
+                    }
+                }
+            }
         }
     }
+    acr_nav::_db.sel_nav_col = 0;
 }
 
 // True if the identifier matches a C++ keyword commonly found in amc-generated output.
@@ -1427,6 +1469,12 @@ void acr_nav::navaction_switch_panel_right() {
             SwitchToBrowse();
         }
         acr_nav::_db.p_cur_panel = acr_nav::_db.p_right_panel;
+    } else if (acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_preview_viewmode) {
+        acr_nav::FViewmode &pvm = *acr_nav::_db.p_preview_viewmode;
+        int n_nav = acr_nav::preview_nav_N(pvm);
+        if (n_nav > 0) {
+            acr_nav::_db.sel_nav_col = (acr_nav::_db.sel_nav_col + 1) % n_nav;
+        }
     }
 }
 
@@ -1494,6 +1542,28 @@ void acr_nav::navaction_follow_ref() {
         GraphInfoAtLine(*sel_ct, panel.sel_row, &target, NULL);
         if (target && target != sel_ct) {
             NavigateToTarget(sel_ct, target, acr_nav::_db.p_graph_viewmode);
+        }
+    } else if (panel.position == 1 && sel_ct
+               && acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_preview_viewmode) {
+        acr_nav::FViewmode &pvm = *acr_nav::_db.p_preview_viewmode;
+        int n_nav = acr_nav::preview_nav_N(pvm);
+        if (n_nav > 0 && acr_nav::_db.sel_nav_col < n_nav
+            && panel.sel_row < acr_nav::line_N(pvm)) {
+            acr_nav::PreviewNavCol &nc = acr_nav::preview_nav_qFind(pvm, acr_nav::_db.sel_nav_col);
+            // Extract cell value from formatted preview line
+            algo::strptr row_text = RightPanelLineFind(panel.sel_row);
+            int start = nc.col_start;
+            int end = i32_Min(start + nc.col_wid, elems_N(row_text));
+            tempstr cell_value;
+            if (start < elems_N(row_text)) {
+                algo::strptr raw_cell(row_text.elems + start, end - start);
+                cell_value << algo::TrimmedRight(raw_cell);
+            }
+            acr_nav::FCtype *target = acr_nav::ind_ctype_Find(nc.target_ctype);
+            if (target && target != sel_ct && ch_N(cell_value) > 0) {
+                acr_nav::_db.preview_nav_pending = cell_value;
+                NavigateToTarget(sel_ct, target, acr_nav::_db.p_preview_viewmode);
+            }
         }
     } else if (panel.position == 1 && acr_nav::_db.p_cur_viewmode->has_fields
                && sel_ct && panel.sel_row < RightPanelItemCount(sel_ct)) {
@@ -2151,15 +2221,103 @@ static void RenderTitleBar(RenderCtx &ctx) {
 
 // -----------------------------------------------------------------------------
 
+// Emit preview header with cyan-highlighted navigable column names.
+// nav_col entries provide column positions; non-nav regions get base_style.
+static void EmitStyledPreviewHeader(cstring &buf, algo::strptr hdr, acr_nav::FViewmode &vm, acr_nav::FNavstyle &base_style) {
+    int prev_end = 0;
+    int hdr_n = elems_N(hdr);
+    int n_nav = acr_nav::preview_nav_N(vm);
+    for (int ni = 0; ni < n_nav; ni++) {
+        acr_nav::PreviewNavCol &nc = acr_nav::preview_nav_qFind(vm, ni);
+        int adj_start = nc.col_start + 1;  // +1 for leading space in right_cell
+        int adj_end = i32_Min(adj_start + nc.name_len, hdr_n);
+        if (adj_start >= hdr_n) {
+            continue;  // inside loop, not function return
+        }
+        // Plain run before this nav column
+        if (adj_start > prev_end) {
+            buf << algo::strptr(hdr.elems + prev_end, adj_start - prev_end);
+        }
+        // Cyan-styled nav column name
+        if (acr_nav::_db.p_line_nav_header) {
+            EmitStyle(buf, *acr_nav::_db.p_line_nav_header);
+        }
+        buf << algo::strptr(hdr.elems + adj_start, adj_end - adj_start);
+        buf << "\x1b[0m";
+        EmitStyle(buf, base_style);
+        prev_end = adj_end;
+    }
+    // Trailing plain run
+    if (prev_end < hdr_n) {
+        buf << algo::strptr(hdr.elems + prev_end, hdr_n - prev_end);
+    }
+}
+
+// Emit a text region [rs, re) from right_cell, splitting at overlay boundaries.
+// base_style is applied to non-overlay portions (NULL for plain text).
+// overlay_style replaces base_style inside [ov_start, ov_end).
+static void EmitRegionWithOverlay(cstring &buf, algo::strptr right_cell,
+                                   int rs, int re, bool right_sel,
+                                   acr_nav::FNavstyle *sel_style,
+                                   acr_nav::FNavstyle *base_style,
+                                   int ov_start, int ov_end,
+                                   acr_nav::FNavstyle *overlay_style) {
+    // Before overlay
+    if (rs < ov_start && rs < re) {
+        int seg_end = i32_Min(ov_start, re);
+        if (base_style) {
+            EmitStyle(buf, *base_style);
+        }
+        buf << algo::strptr(right_cell.elems + rs, seg_end - rs);
+        if (base_style) {
+            buf << "\x1b[0m";
+            if (right_sel && sel_style) {
+                EmitStyle(buf, *sel_style);
+            }
+        }
+        rs = seg_end;
+    }
+    // Inside overlay
+    if (rs >= ov_start && rs < ov_end && rs < re) {
+        int seg_end = i32_Min(ov_end, re);
+        buf << "\x1b[0m";
+        EmitStyle(buf, *overlay_style);
+        buf << algo::strptr(right_cell.elems + rs, seg_end - rs);
+        buf << "\x1b[0m";
+        if (right_sel && sel_style) {
+            EmitStyle(buf, *sel_style);
+        }
+        rs = seg_end;
+    }
+    // After overlay
+    if (rs < re) {
+        if (base_style) {
+            EmitStyle(buf, *base_style);
+        }
+        buf << algo::strptr(right_cell.elems + rs, re - rs);
+        if (base_style) {
+            buf << "\x1b[0m";
+            if (right_sel && sel_style) {
+                EmitStyle(buf, *sel_style);
+            }
+        }
+    }
+}
+
 // Emit a line with color spans interleaved. Spans reference positions in the stored line text
 // (0-based). right_cell has a leading space prefix, so span positions are adjusted by +1.
 // Uses span-boundary runs for clean SESE flow. span_cursor advances monotonically across
 // visible lines for O(visible) total scan cost.
+// overlay_start/overlay_end define a region where overlay_style replaces base styles.
 static void EmitStyledLine(cstring &buf, algo::strptr right_cell, bool right_sel,
                            acr_nav::FViewmode &vm, int line_idx, int &span_cursor,
-                           acr_nav::FNavstyle *sel_style) {
+                           acr_nav::FNavstyle *sel_style,
+                           int overlay_start, int overlay_end,
+                           acr_nav::FNavstyle *overlay_style) {
     int cell_n = elems_N(right_cell);
     int prev_end = 0;
+    int ov_start = (overlay_start >= 0 && overlay_style) ? overlay_start + 1 : cell_n + 1;
+    int ov_end = (overlay_end >= 0 && overlay_style) ? i32_Min(overlay_end + 1, cell_n) : cell_n + 1;
     // Advance span_cursor to first span for this line
     int n_spans = acr_nav::cspan_N(vm);
     while (span_cursor < n_spans && acr_nav::cspan_qFind(vm, span_cursor).line_idx < line_idx) {
@@ -2169,7 +2327,7 @@ static void EmitStyledLine(cstring &buf, algo::strptr right_cell, bool right_sel
     int si = span_cursor;
     while (si < n_spans && acr_nav::cspan_qFind(vm, si).line_idx == line_idx) {
         acr_nav::LineColorSpan &span = acr_nav::cspan_qFind(vm, si);
-        int adj_start = span.col_start + 1;  // +1 for leading space
+        int adj_start = span.col_start + 1;
         int adj_end = i32_Min(span.col_end + 1, cell_n);
         if (adj_start >= cell_n) {
             si++;
@@ -2177,21 +2335,16 @@ static void EmitStyledLine(cstring &buf, algo::strptr right_cell, bool right_sel
         }
         // Emit plain run before this span
         if (adj_start > prev_end) {
-            buf << algo::strptr(right_cell.elems + prev_end, adj_start - prev_end);
+            EmitRegionWithOverlay(buf, right_cell, prev_end, adj_start, right_sel, sel_style, nullptr, ov_start, ov_end, overlay_style);
         }
         // Emit styled span
-        EmitStyle(buf, *span.p_navstyle);
-        buf << algo::strptr(right_cell.elems + adj_start, adj_end - adj_start);
-        buf << "\x1b[0m";
-        if (right_sel && sel_style) {
-            EmitStyle(buf, *sel_style);
-        }
+        EmitRegionWithOverlay(buf, right_cell, adj_start, adj_end, right_sel, sel_style, span.p_navstyle, ov_start, ov_end, overlay_style);
         prev_end = adj_end;
         si++;
     }
     // Emit trailing plain run
     if (prev_end < cell_n) {
-        buf << algo::strptr(right_cell.elems + prev_end, cell_n - prev_end);
+        EmitRegionWithOverlay(buf, right_cell, prev_end, cell_n, right_sel, sel_style, nullptr, ov_start, ov_end, overlay_style);
     }
 }
 
@@ -2226,8 +2379,15 @@ static void RenderContentArea(RenderCtx &ctx) {
             hdr << "reftype";
         }
         TruncPad(hdr, ctx.right_wid);
-        EmitStyle(ctx.buf, !ctx.left_focused ? *acr_nav::_db.p_title_focus : *acr_nav::_db.p_title_nofocus);
-        ctx.buf << hdr << "\x1b[0m\x1b[K\r\n";
+        acr_nav::FNavstyle &base_hdr_style = !ctx.left_focused ? *acr_nav::_db.p_title_focus : *acr_nav::_db.p_title_nofocus;
+        EmitStyle(ctx.buf, base_hdr_style);
+        if (!has_fields && acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_preview_viewmode
+            && acr_nav::preview_nav_N(*acr_nav::_db.p_cur_viewmode) > 0) {
+            EmitStyledPreviewHeader(ctx.buf, strptr(hdr), *acr_nav::_db.p_cur_viewmode, base_hdr_style);
+        } else {
+            ctx.buf << hdr;
+        }
+        ctx.buf << "\x1b[0m\x1b[K\r\n";
         visible--;
     }
 
@@ -2310,7 +2470,20 @@ static void RenderContentArea(RenderCtx &ctx) {
         }
         if (!has_fields && acr_nav::cspan_N(*acr_nav::_db.p_cur_viewmode) > 0) {
             bool right_focused_sel = right_sel && !ctx.left_focused;
-            EmitStyledLine(ctx.buf, strptr(right_cell), right_focused_sel, *acr_nav::_db.p_cur_viewmode, right_data_idx, span_cursor, right_focused_sel ? acr_nav::_db.p_sel_focus : nullptr);
+            int ov_start = -1;
+            int ov_end = -1;
+            acr_nav::FNavstyle *ov_style = nullptr;
+            if (right_focused_sel && acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_preview_viewmode) {
+                acr_nav::FViewmode &pvm = *acr_nav::_db.p_preview_viewmode;
+                int n_nav = acr_nav::preview_nav_N(pvm);
+                if (n_nav > 0 && acr_nav::_db.sel_nav_col < n_nav) {
+                    acr_nav::PreviewNavCol &nc = acr_nav::preview_nav_qFind(pvm, acr_nav::_db.sel_nav_col);
+                    ov_start = nc.col_start;
+                    ov_end = nc.col_start + nc.col_wid;
+                    ov_style = acr_nav::_db.p_line_nav_cell;
+                }
+            }
+            EmitStyledLine(ctx.buf, strptr(right_cell), right_focused_sel, *acr_nav::_db.p_cur_viewmode, right_data_idx, span_cursor, right_focused_sel ? acr_nav::_db.p_sel_focus : nullptr, ov_start, ov_end, ov_style);
             ctx.buf << "\x1b[0m\x1b[K\r\n";
         } else {
             ctx.buf << right_cell << "\x1b[0m\x1b[K\r\n";
@@ -2493,6 +2666,9 @@ static void InitPanels() {
     acr_nav::_db.p_graph_ctype_style = acr_nav::ind_navstyle_Find("graph_ctype");
     acr_nav::_db.p_graph_neighbor = acr_nav::ind_navstyle_Find("graph_neighbor");
     acr_nav::_db.p_graph_arrow = acr_nav::ind_navstyle_Find("graph_arrow");
+    // Preview follow-ref styles (optional)
+    acr_nav::_db.p_line_nav_header = acr_nav::ind_navstyle_Find("line_nav_header");
+    acr_nav::_db.p_line_nav_cell = acr_nav::ind_navstyle_Find("line_nav_cell");
     BuildHelpLines();
     SwitchToBrowse();
     acr_nav::_db.p_left_panel->sel_row = 0;
@@ -2572,6 +2748,7 @@ static void HeadlessOutput() {
     screen.n_ctype = acr_nav::ctype_N();
     screen.n_field = acr_nav::field_N();
     screen.viewmode = acr_nav::_db.p_cur_viewmode->viewmode;
+    screen.sel_nav_col = acr_nav::_db.sel_nav_col;
     screen.breadcrumb = BuildBreadcrumb(sel_ct);
     screen.filtertarget = acr_nav::_db.p_cur_filtertarget->filtertarget;
     BuildStatusHint(screen.hints);

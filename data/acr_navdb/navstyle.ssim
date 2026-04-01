@@ -9,6 +9,8 @@ acr_navdb.navstyle  navstyle:graph_neighbor  bold:N  dim:N  reverse:N  fg_color:
 acr_navdb.navstyle  navstyle:line_comment  bold:N  dim:Y  reverse:N  fg_color:green  comment:"Code comments"
 acr_navdb.navstyle  navstyle:line_key  bold:N  dim:Y  reverse:N  fg_color:default  comment:"Attribute keys"
 acr_navdb.navstyle  navstyle:line_keyword  bold:N  dim:N  reverse:N  fg_color:cyan  comment:"Language keywords"
+acr_navdb.navstyle  navstyle:line_nav_cell  bold:Y  dim:N  reverse:Y  fg_color:cyan  comment:"Selected navigable cell highlight"
+acr_navdb.navstyle  navstyle:line_nav_header  bold:N  dim:N  reverse:N  fg_color:cyan  comment:"Navigable column header in preview"
 acr_navdb.navstyle  navstyle:line_preproc  bold:N  dim:N  reverse:N  fg_color:magenta  comment:"Preprocessor directives"
 acr_navdb.navstyle  navstyle:line_section  bold:Y  dim:N  reverse:N  fg_color:default  comment:"Section headers"
 acr_navdb.navstyle  navstyle:line_string  bold:N  dim:N  reverse:N  fg_color:yellow  comment:"String literals"

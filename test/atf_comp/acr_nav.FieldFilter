@@ -1,4 +1,4 @@
-acr_nav.Screen  mode:filter  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1404  n_ctype:1405  n_field:5678  viewmode:fields  breadcrumb:""  filtertarget:field  hints:"Enter:accept  Tab:target  Escape:cancel"
+acr_nav.Screen  mode:filter  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1405  n_ctype:1406  n_field:5690  viewmode:fields  breadcrumb:""  filtertarget:field  hints:"Enter:accept  Tab:target  Escape:cancel"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:83  sel_value:""
 acr_nav.VisibleLeftItem  row:0  value:""  kind:ns  collapsed:Y  n_match:44  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:abt  kind:ns  collapsed:Y  n_match:19  n_record:0
@@ -9,7 +9,7 @@ acr_nav.VisibleLeftItem  row:5  value:acr_dm  kind:ns  collapsed:Y  n_match:6  n
 acr_nav.VisibleLeftItem  row:6  value:acr_ed  kind:ns  collapsed:Y  n_match:19  n_record:0
 acr_nav.VisibleLeftItem  row:7  value:acr_in  kind:ns  collapsed:Y  n_match:12  n_record:0
 acr_nav.VisibleLeftItem  row:8  value:acr_my  kind:ns  collapsed:Y  n_match:3  n_record:0
-acr_nav.VisibleLeftItem  row:9  value:acr_nav  kind:ns  collapsed:Y  n_match:28  n_record:0
+acr_nav.VisibleLeftItem  row:9  value:acr_nav  kind:ns  collapsed:Y  n_match:29  n_record:0
 acr_nav.VisibleLeftItem  row:10  value:acr_navdb  kind:ns  collapsed:Y  n_match:10  n_record:0
 acr_nav.VisibleLeftItem  row:11  value:algo  kind:ns  collapsed:Y  n_match:225  n_record:0
 acr_nav.VisibleLeftItem  row:12  value:algo_lib  kind:ns  collapsed:Y  n_match:35  n_record:0
@@ -85,7 +85,7 @@ acr_nav.VisibleLeftItem  row:81  value:ws  kind:ns  collapsed:Y  n_match:16  n_r
 acr_nav.VisibleLeftItem  row:82  value:wsdb  kind:ns  collapsed:Y  n_match:1  n_record:0
 acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
 
-acr_nav.Screen  mode:filter  focus:ctype_list  filter:comment  navstack_depth:0  n_sel_ctype:219  n_ctype:1405  n_field:5678  viewmode:fields  breadcrumb:""  filtertarget:field  hints:"Enter:accept  Tab:target  Escape:cancel"
+acr_nav.Screen  mode:filter  focus:ctype_list  filter:comment  navstack_depth:0  n_sel_ctype:219  n_ctype:1406  n_field:5690  viewmode:fields  breadcrumb:""  filtertarget:field  hints:"Enter:accept  Tab:target  Escape:cancel"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:21  sel_value:acr
 acr_nav.VisibleLeftItem  row:0  value:acr  kind:ns  collapsed:Y  n_match:1  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:acr_nav  kind:ns  collapsed:Y  n_match:1  n_record:0
@@ -110,7 +110,7 @@ acr_nav.VisibleLeftItem  row:19  value:src_hdr  kind:ns  collapsed:Y  n_match:1 
 acr_nav.VisibleLeftItem  row:20  value:wsdb  kind:ns  collapsed:Y  n_match:1  n_record:0
 acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
 
-acr_nav.Screen  mode:filter  focus:ctype_list  filter:comment  navstack_depth:0  n_sel_ctype:219  n_ctype:1405  n_field:5678  viewmode:fields  breadcrumb:""  filtertarget:field  hints:"Enter:accept  Tab:target  Escape:cancel"
+acr_nav.Screen  mode:filter  focus:ctype_list  filter:comment  navstack_depth:0  n_sel_ctype:219  n_ctype:1406  n_field:5690  viewmode:fields  breadcrumb:""  filtertarget:field  hints:"Enter:accept  Tab:target  Escape:cancel"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:21  sel_value:acr
 acr_nav.VisibleLeftItem  row:0  value:acr  kind:ns  collapsed:Y  n_match:1  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:acr_nav  kind:ns  collapsed:Y  n_match:1  n_record:0
