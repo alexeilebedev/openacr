@@ -32,7 +32,7 @@
 | 24  | **Syntax highlighting for line-mode views.** Codegen (C++ keywords, types, strings), detail (ssim keys/values), preview (ssim columns), help (keybind/section styles). Uses existing AddSpan + navstyle infrastructure.                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | 25  | **Cross-namespace dependency overlay.** nsdep viewmode (n key) shows upstream/downstream namespace dependencies for selected ctype's namespace. Overlay on viewmode_stack, data-driven from cross-namespace field references.                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
 | 26  | **Interactive access path graph viewmode.** New `graph` viewmode (v key) renders amc_vis-style ASCII access path diagram in right panel. Three-column layout: left (Pkey/Upptr parents), center (selected ctype), right (Val creation + Ptr/Ptrary children). Edge labels show "reftype fieldname". Enter walks into neighbor ctype staying in graph mode; Backspace returns via navstack. Edge collection matches amc_vis exactly: GraphSkipQ mirrors DepRefQ, Val fields use first-wins dedup, dep fields use reftype `up` flag for column placement. NavigateToTarget helper extracted from follow_ref eliminates navstack push duplication. Tab cycle: fields→xref→preview→codegen→graph→fields. |
-| 27  | **Graph viewmode extensions.** Edge labels colored by reftype using existing reftypestyle→navstyle mappings (pools green, indexes yellow, uprefs cyan). Neighbor nodes show ssimfile record counts. Status bar displays reftype comment when cursor is on an edge line (partially addresses P2). GraphNodeAtLine unified into GraphInfoAtLine returning both neighbor ctype and field pointer. PrintRecordCount helper extracted and shared with left panel. |
+| 27  | **Graph viewmode extensions.** Edge labels colored by reftype using existing reftypestyle→navstyle mappings (pools green, indexes yellow, uprefs cyan). Neighbor nodes show ssimfile record counts. Status bar displays reftype comment when cursor is on an edge line (partially addresses P2). GraphNodeAtLine unified into GraphInfoAtLine returning both neighbor ctype and field pointer. PrintRecordCount helper extracted and shared with left panel.                                                                                                                                                                                                                                         |
 
 
 ---
@@ -48,34 +48,24 @@
 ### Solved by TUI (CLI problems that vanish with interactive browsing)
 
 
-| Pain                                                                         | How acr_nav solves it                                 |
-| ---------------------------------------------------------------------------- | ----------------------------------------------------- |
-| **Query syntax** — `%` wildcards, `-where`, regex construction               | Live filter as you type, no syntax to learn           |
-| **Silent failures** — typo in `acr ctpe:%` returns 0, exit 0, no hint        | Empty filter result is visually obvious and immediate |
-| **Output overload** — `acr dmmeta.field` dumps 5894 lines                    | Shows fields for one ctype at a time                  |
-| **Context loss** — no state between `acr` invocations                        | Persistent left panel + breadcrumb bar + navstack     |
-| **Reference chaining** — new command per hop                                 | Enter follows ref, Backspace returns                  |
-| **Flag overload** — `-pretty -cmt -fldfunc -tree` to get useful output       | All views enabled by default                          |
-| **Discoverability** — must know table names like `ssimfile`, `reftype` exist | Browsable namespace tree with record counts           |
+| Pain                                                                                    | How acr_nav solves it                                                                                         |
+| --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| **Query syntax** — `%` wildcards, `-where`, regex construction                          | Live filter as you type, no syntax to learn                                                                   |
+| **Silent failures** — typo in `acr ctpe:%` returns 0, exit 0, no hint                   | Empty filter result is visually obvious and immediate                                                         |
+| **Output overload** — `acr dmmeta.field` dumps 5894 lines                               | Shows fields for one ctype at a time                                                                          |
+| **Context loss** — no state between `acr` invocations                                   | Persistent left panel + breadcrumb bar + navstack                                                             |
+| **Reference chaining** — new command per hop                                            | Enter follows ref, Backspace returns                                                                          |
+| **Flag overload** — `-pretty -cmt -fldfunc -tree` to get useful output                  | All views enabled by default                                                                                  |
+| **Discoverability** — must know table names like `ssimfile`, `reftype` exist            | Browsable namespace tree with record counts                                                                   |
+| **Opaque reftype vocabulary** — Thash, Ptrary, Upptr mean nothing to newcomers          | Color categories (pool/index/upref/value), `d` for detail, graph edge tooltips                                |
+| **Tool-switching tax** — 5 tools per workflow (acr, acr -t, acr data, src_func, editor) | Down to ~1.5: schema/fields/xref/preview/codegen inline. src_func and editor are outside schema-browser scope |
 
-
-### Mostly addressed
-
-**P2. Opaque reftype vocabulary.** M9/M10 color categories (pools=green, indexes=yellow, uprefs=cyan). M17 added reftype comments visible via `d`. M27 shows reftype comment in graph status bar on edge selection (zero-press context). **Remaining gap:** field list viewmode still requires `d` to see reftype explanation.
-
-**P3. Tool-switching tax.** Down from 5 switches to ~1.5. Steps 1-2 fully replaced, step 3 partial. **Remaining:** step 4 (src_func — blocked on userfunc data, see Blocked section), step 5 (editor — out of scope). Further reduction via 1A (record browser) and 1B (transitive closure).
 
 ### Open
 
 **P6. F-prefix gap.** `dmmeta.Ctype` becomes `dmmeta::FCtype` in C++. The convention is documented *nowhere* — not in README, tutorials, or guides. Users reading generated code can't find the schema type. **Fix proposed:** idea 1C (~10 lines in filter) + show "C++: FCtype" in panel title.
 
 **P7. Field prefix conventions invisible.** `c_field` = Ptrary, `ind_ns` = Thash, `p_ctype` = Upptr, `zd_inst` = Llist. These prefixes encode the reftype (light Hungarian Notation from `dmmeta.fprefix`), but acr_nav shows the prefix without decoding it. **Idea:** show fprefix meaning in status bar or detail view. Data already exists in `dmmeta.fprefix` — just not loaded.
-
-**P8. Xref via: syntax opaque.** Detail view shows `via:abt.FDb.ind_target/dev.Targsrc.target` as raw text. Should parse into: "look up `Targsrc.target` in global `ind_target` hash." **Idea:** decompose via: path into human-readable steps in detail view.
-
-**P9. "Where do I start?" problem.** 1405 ctypes across 83 namespaces with no guided entry point. No "start here" indicator, no learning progression. Newcomer opens acr_nav and faces an alphabetical wall. **Idea:** startup hint pointing to essentials (dmmeta.Ns → Ctype → Field → Reftype). Or a curated "tour" overlay showing the 5-table bootstrap path.
-
-**P10. Meta-schema circularity.** `dmmeta.Ctype` is a ctype, `dmmeta.Field` describes its fields, but Field is itself a Ctype... The bootstrapping is navigable in acr_nav (Enter/Backspace through the circle) but never explained. Newcomers don't know which table to read first. Related to P9.
 
 ---
 
@@ -140,60 +130,16 @@ Tiny change, daily annoyance eliminated. `acr_nav::FNaventry` in generated code 
 
 **Size:** ~10 lines C++, 0 ssim records. The most honest estimate in this document.
 
-#### 1D. Clipboard/Yank
-
-Every session ends with transferring a name. Copy to clipboard with one key.
-
-**What it does:**
-
-- `y` key copies context-dependent text via OSC 52 escape sequence
-- Left panel: copies ctype name. Right panel fields: copies field path. Other viewmodes: copies ctype name
-- Status bar flash: "Copied: dmmeta.Ctype" (needs new `flash_msg` field on FDb)
-
-**Caveats:**
-
-- OSC 52 is blocked by default in tmux, screen, and some terminal setups. VS Code terminal requires explicit `terminal.integrated.allowClipboardAccess`. Will silently fail for some users. No clean cross-platform fallback.
-- Context dispatch is 5+ cases (left panel ctype vs namespace header, right panel per-viewmode).
-- `flash_msg` infrastructure doesn't exist yet -- needs field, write/read/clear paths in render loop.
-
-**Size:** 40-50 lines C++, 3 ssim records.
-
 ---
 
 ### Tier 2: Solid Value, Moderate Effort
 
-#### 2A. Syntax highlighting for ssimfiles and codegen -- DONE (M24)
-
-#### 2B. Interactive Access Path Diagram -- DONE (M26)
-
-Implemented as graph viewmode with amc_vis-style three-column ASCII layout, interactive Enter/Backspace navigation, and exact DepRefQ edge matching. See M26 in Story So Far.
-
 #### 2B+. Graph Viewmode Extensions
 
-Ideas for extending the graph viewmode, roughly ordered by feasibility:
-
-**Quick wins — DONE (M27):**
-
-1. **Color edges by reftype.** Call `AddSpan` in `LoadGraph` using existing `reftypestyle` -> `navstyle` color mappings. Pool edges green, index edges yellow, upward refs cyan. Infrastructure fully in place -- just never called. Low complexity.
-2. **Reftype comment on selected edge.** Show `dmmeta.Reftype.comment` in status bar when cursor highlights an edge line. Unified `GraphNodeAtLine` into `GraphInfoAtLine` returning both node and field. Low complexity. Partially addresses P2.
-3. **Record count on neighbor nodes.** Append `(N)` after neighbor ctype names via `PrintRecordCount` helper shared with left panel. Low complexity.
-
-**Solid additions:**
+Remaining ideas for extending the graph viewmode:
 
 1. **Depth-2 expansion toggle.** Press `+` to expand selected neighbor inline showing its depth-1 edges indented. `-` collapses. One node at a time. Medium complexity.
 2. **Reverse xref edges.** Include `c_field_arg` back-references ("who points at me") as a fourth section. Unifies graph and xref views. Medium complexity.
-3. **Node cycling.** Tab/Shift-Tab jumps cursor to next/previous neighbor opener line, skipping close/border lines. Medium complexity.
-4. **Horizontal scroll.** Left/Right keys pan wide graphs via `scroll_x` offset. Medium complexity.
-
-**Ambitious:**
-
-1. **Full namespace topology.** Port amc_vis's topological sort layout (`Main_ColLayout` + `Main_RowLayout` with binary heaps) to show all ctypes in a namespace. The complete `amc_vis` inside acr_nav. High complexity, depends on idea 7.
-
-**Not worth pursuing:** Unicode box drawing (compatibility risk, breaks amc_vis parity), 2D spatial cursor (fights line-oriented model; node cycling gives 90% of value at 10% cost).
-
-#### 2C. Cross-Namespace Dependency View -- DONE (M25)
-
-Implemented as nsdep overlay viewmode showing upstream/downstream namespace dependencies.
 
 #### 2D. Path Finder ("How do I get from A to B?")
 
@@ -213,20 +159,6 @@ No existing tool answers this. Confirmed: amc_vis shows local neighborhoods, acr
 - BFS on 1405 nodes is trivially fast (microseconds).
 
 **Size:** ~60 lines BFS + display. Unique capability, cheap to implement.
-
-#### 2E. Bookmarks / Jump List
-
-The navstack is LIFO -- consumed on pop. No way to return to a "home base" after exploring.
-
-**What it does:**
-
-- `m` to bookmark current ctype, `'` to show bookmarks overlay (both keys currently unbound -- verified)
-- Up to 10 bookmarks, session-persistent
-- Enter on bookmark navigates there
-
-**Caveat:** Session-only persistence limits value for short sessions. Cross-session persistence would require writing to disk (acr_nav is currently read-only).
-
-**Size:** ~50 lines C++, 4 ssim records.
 
 ---
 
@@ -252,33 +184,3 @@ Raw pool dumps are the truth -- curated views are opinions that drift. But raw d
 
 Full pool scan has a practical obstacle: Tpool loses iteration capability (free-list allocator, no scan without a separate access path). The right approach: **dump everything reachable**, not everything allocated. Follow access paths from `_db`, not scan pools. Output as untyped tuples with regex filtering. This is essentially a built-in `acr` for runtime state -- a pretty printer for the entire program. Sidesteps the Tpool problem elegantly because you traverse what's reachable, not what's allocated. Consider forking this for `acr_vis`.
 
----
-
-### Blocked / Deferred
-
-These ideas have merit but are blocked on prerequisites or require more groundwork than initially estimated.
-
-#### Source Function View (blocked on userfunc data quality)
-
-Would eliminate step 4 of the 5-tool workflow (P3). Show hand-written functions for the selected ctype.
-
-**Blocking issue:** 85% of `dmmeta.userfunc` records (1244/1461) have truncated primary keys due to `Smallstr50` field limit. Keys like `acr_nav...navaction_cycle_viewmode` have the ctype portion destroyed by truncation. Only ~217 records have parseable key structure. Only ~129 distinct ctypes are covered (9% of 1405 total). Zero dmmeta ctypes have userfuncs.
-
-**Prerequisites:**
-
-1. Fix the schema: change `Userfunc.userfunc` from `Smallstr50` to a larger type. Regenerate all records via `src_func -updateproto`.
-2. Or bypass userfunc entirely: shell out to `src_func <ns>.% -proto` and post-filter by ctype name pattern. Slower, no ctype-level filtering in src_func.
-
-#### Computed Field Colors (requires new finput + schema)
-
-Show fldfunc/Substr fields in a distinct color in the field list.
-
-**Why the original "zero code" claim was wrong:** Substr is NOT a reftype -- it's a separate table (`dmmeta.substr`). The rendering pipeline traverses `field -> reftype -> reftypestyle -> navstyle`. You cannot add a `reftypestyle` record for Substr because Substr isn't a reftype. To color Substr fields: (1) add `dmmeta.substr` as a finput, (2) add cross-reference from FField to substr, (3) check `fld->c_substr` in the render path.
-
-**Size:** 3-4 ssim records + schema changes + amc regeneration + render code.
-
-#### Input Dependency View (finput viewmode)
-
-Show `dmmeta.finput` records for a namespace's target -- "what data does this program consume?"
-
-**Issues:** acr_nav doesn't load finput data (needs new finput + FFinput ctype + cross-references). Only meaningful for `exe`/`lib` namespace types -- `ssimdb`/`protocol` namespaces have no finput records. Libraries often have just 1 finput record. Meaningfully different from nsdep (runtime data deps vs schema-level deps) but narrow audience.
