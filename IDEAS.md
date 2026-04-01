@@ -33,6 +33,7 @@
 | 25  | **Cross-namespace dependency overlay.** nsdep viewmode (n key) shows upstream/downstream namespace dependencies for selected ctype's namespace. Overlay on viewmode_stack, data-driven from cross-namespace field references.                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
 | 26  | **Interactive access path graph viewmode.** New `graph` viewmode (v key) renders amc_vis-style ASCII access path diagram in right panel. Three-column layout: left (Pkey/Upptr parents), center (selected ctype), right (Val creation + Ptr/Ptrary children). Edge labels show "reftype fieldname". Enter walks into neighbor ctype staying in graph mode; Backspace returns via navstack. Edge collection matches amc_vis exactly: GraphSkipQ mirrors DepRefQ, Val fields use first-wins dedup, dep fields use reftype `up` flag for column placement. NavigateToTarget helper extracted from follow_ref eliminates navstack push duplication. Tab cycle: fields→xref→preview→codegen→graph→fields. |
 | 27  | **Graph viewmode extensions.** Edge labels colored by reftype using existing reftypestyle→navstyle mappings (pools green, indexes yellow, uprefs cyan). Neighbor nodes show ssimfile record counts. Status bar displays reftype comment when cursor is on an edge line (partially addresses P2). GraphNodeAtLine unified into GraphInfoAtLine returning both neighbor ctype and field pointer. PrintRecordCount helper extracted and shared with left panel.                                                                                                                                                                                                                                         |
+| 28  | **Graph reverse xref edges and syntax highlighting.** CollectGraphEdges now iterates both c_field (forward) and c_field_arg (reverse), completing the access path picture. Types like FNavstyle go from "no access paths" to showing all parent/owner relationships. AddDepEdge helper factors grouping logic shared by both loops. Reverse filter (isval && !hasalloc) keeps allocators (Lary/Tpool) while preventing flooding from primitive value types. Three new navstyles: graph_ctype (bold magenta center type), graph_neighbor (cyan neighbor names), graph_arrow (dim dashes). Matches amc_vis's bidirectional display.                                                                   |
 
 
 ---
@@ -92,23 +93,6 @@ Preview is already interactive (vertical scroll, formatted columns, syntax highl
 - Need `sel_nav_col` state (index into navigable columns, not all columns).
 - Match column header names against field records to determine which are navigable.
 - Works for 18% of ctypes (258/1405 have ssimfiles). Same limitation as preview.
-
----
-
-### Tier 2: Solid Value, Moderate Effort
-
-#### 2B+. Graph Reverse Xref Edges
-
-The graph currently only iterates `c_field` (the center ctype's own fields). Types like FNavstyle and Naventry that are primarily *referenced by others* show "no access paths" — missing their parent/owner relationships entirely. This is a data completeness issue: `c_field_arg` is the other half of the access path picture.
-
-**What it does:**
-
-- In `CollectGraphEdges`, also iterate `c_field_arg` to collect fields from other ctypes whose arg is the center ctype
-- FDb's `Lary keybind`, `Thash ind_keybind` appear on FKeybind's graph as left-side parents
-- FNavstyle goes from "no access paths" to showing all 12 Ptr + Lary + Thash references from FDb
-- Same edge grouping, same rendering, same left/right placement via reftype `up` flag — just a second data source through the existing pipeline
-
-**What it matches:** amc_vis, which already shows both directions.
 
 ---
 
