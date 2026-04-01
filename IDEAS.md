@@ -65,11 +65,7 @@
 
 ## Ideas by Tier
 
-All ideas below were validated by critical review against the actual codebase, architecture, and data quality. Problems found are noted inline. Effort estimates are post-validation.
-
-### Tier 1: High Impact, Validated
-
-These fill the biggest remaining gaps in acr_nav's coverage of the tool ecosystem.
+### Tier 1: High Impact
 
 #### 1A. Navigable Record Browser (enhanced preview)
 
@@ -83,15 +79,13 @@ The biggest gap. acr_nav browses *schema* (ctypes, fields) but not *data* (actua
 
 **What it replaces:** `acr <table>:<pattern>`, `acr -where key:value`, the common "let me check the actual records" terminal switch.
 
-**Validated problems to address:**
+**Problems to address:**
 
 - LoadPreview (line ~494) parses tuples twice but stores only formatted strings. Column boundaries (`col_wid` array) are local variables discarded after formatting. Must persist column boundaries for cursor navigation.
 - Column cursor is entirely new UI. `FPanel` has only `sel_row`/`scroll_offset`. Need new `sel_col` state on FDb or FPanel.
 - Ssimfile columns don't match 1:1 with `c_field` list -- fldfunc/Substr fields appear in schema but not as ssimfile columns. Solution: match column header names against field names.
 - Works for 18% of ctypes (258/1405 have ssimfiles). Same limitation as preview -- acceptable since users primarily browse schema-definition namespaces (dmmeta, dev, atfdb).
 - Enhance preview rather than add a separate viewmode. Same data, same rendering, avoids Tab cycle clutter.
-
-**Size:** 250-350 lines C++. Schema change for sel_col. ~3 ssim records.
 
 #### 1B. Interactive Transitive Closure (via acr subprocess)
 
@@ -109,7 +103,6 @@ The most powerful `acr` capability with no acr_nav equivalent. `acr -ndown 2 -t`
 **Design note:** In-process reimplementation would require acr's `c_child` index, `EvalAttr`, and lazy record loading (500-800 lines). Shelling out to `acr` via SysEval (same pattern as codegen's `amc` call) gives 80% of the value for 20% of the effort. ~50-100ms per invocation.
 
 **Depends on:** 1A (record-level identity -- knowing the selected record's pkey value).
-**Size:** ~80 lines C++ (using SysEval), 3 ssim records.
 
 ---
 
@@ -145,4 +138,3 @@ amc already generates `Print` for every ctype and knows every pool in FDb. A new
 Raw pool dumps are the truth -- curated views are opinions that drift. But raw dumps of a real program (thousands of records, runtime artifacts like file descriptors and computed caches) are a firehose. ACR answer: generate the raw dump (free from schema), let programs also define curated views as additional ctypes. Both, not either/or. The curated views are just more records -- they pass the factorization test.
 
 Full pool scan has a practical obstacle: Tpool loses iteration capability (free-list allocator, no scan without a separate access path). The right approach: **dump everything reachable**, not everything allocated. Follow access paths from `_db`, not scan pools. Output as untyped tuples with regex filtering. This is essentially a built-in `acr` for runtime state -- a pretty printer for the entire program. Sidesteps the Tpool problem elegantly because you traverse what's reachable, not what's allocated. Consider forking this for `acr_vis`.
-
