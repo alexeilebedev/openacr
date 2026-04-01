@@ -1,4 +1,4 @@
-acr_nav.Screen  mode:browse  focus:content  filter:""  navstack_depth:1  n_sel_ctype:1405  n_ctype:1406  n_field:5690  viewmode:preview  breadcrumb:"dmmeta.Ns > dmmeta.Nstype"  filtertarget:ctype  hints:"↑↓←→  Backspace:back  Enter:follow  Tab:view  n:ns-deps  q:quit  ?:help"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:content  filter:""  navstack_depth:1  n_sel_ctype:1405  n_ctype:1406  n_field:5685  viewmode:preview  breadcrumb:"dmmeta.Ns > dmmeta.Nstype"  filtertarget:ctype  hints:"↑↓←→  Backspace:back  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:133  scroll_offset:0  n_items:211  sel_value:dmmeta.Nstype
 acr_nav.VisibleLeftItem  row:0  value:""  kind:ns  collapsed:Y  n_match:44  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:abt  kind:ns  collapsed:Y  n_match:19  n_record:0
@@ -91,7 +91,7 @@ acr_nav.VisibleLeftItem  row:87  value:dmmeta.Fdec  kind:ctype  collapsed:N  n_m
 acr_nav.VisibleLeftItem  row:88  value:dmmeta.Fdelay  kind:ctype  collapsed:N  n_match:0  n_record:4
 acr_nav.VisibleLeftItem  row:89  value:dmmeta.Ffast  kind:ctype  collapsed:N  n_match:0  n_record:0
 acr_nav.VisibleLeftItem  row:90  value:dmmeta.Fflag  kind:ctype  collapsed:N  n_match:0  n_record:2
-acr_nav.VisibleLeftItem  row:91  value:dmmeta.Field  kind:ctype  collapsed:N  n_match:0  n_record:5690
+acr_nav.VisibleLeftItem  row:91  value:dmmeta.Field  kind:ctype  collapsed:N  n_match:0  n_record:5685
 acr_nav.VisibleLeftItem  row:92  value:dmmeta.Findrem  kind:ctype  collapsed:N  n_match:0  n_record:2
 acr_nav.VisibleLeftItem  row:93  value:dmmeta.Finput  kind:ctype  collapsed:N  n_match:0  n_record:317
 acr_nav.VisibleLeftItem  row:94  value:dmmeta.Fkafka  kind:ctype  collapsed:N  n_match:0  n_record:0
@@ -219,7 +219,7 @@ acr_nav.VisibleLine  row:3  value:"objlist   Object files are added to dependent
 acr_nav.VisibleLine  row:4  value:"protocol  Protocol (not a target)                        "
 acr_nav.VisibleLine  row:5  value:"ssimdb    Ssim database (not a target)                   "
 
-acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Ns  navstack_depth:0  n_sel_ctype:10  n_ctype:1406  n_field:5690  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  n:ns-deps  q:quit  ?:help"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Ns  navstack_depth:0  n_sel_ctype:10  n_ctype:1406  n_field:5685  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:11  sel_value:dmmeta.Ns
 acr_nav.VisibleLeftItem  row:0  value:dmmeta  kind:ns  collapsed:N  n_match:10  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:dmmeta.Ns  kind:ctype  collapsed:N  n_match:0  n_record:85
@@ -319,7 +319,7 @@ acr_nav.VisibleLine  row:82  value:"sv2ssim       exe       GPL      sv2ssim - S
 acr_nav.VisibleLine  row:83  value:"ws            protocol  GPL      WebSocket binary protocol                                               "
 acr_nav.VisibleLine  row:84  value:"wsdb          ssimdb    GPL      WebSocket db                                                            "
 
-acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Ns  navstack_depth:0  n_sel_ctype:10  n_ctype:1406  n_field:5690  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  n:ns-deps  q:quit  ?:help"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Ns  navstack_depth:0  n_sel_ctype:10  n_ctype:1406  n_field:5685  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:11  sel_value:dmmeta.Ns
 acr_nav.VisibleLeftItem  row:0  value:dmmeta  kind:ns  collapsed:N  n_match:10  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:dmmeta.Ns  kind:ctype  collapsed:N  n_match:0  n_record:85

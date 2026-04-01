@@ -85,15 +85,16 @@ inline  acr_navdb::Helpgroup::Helpgroup() {
     acr_navdb::Helpgroup_Init(*this);
 }
 
-// --- acr_navdb.Keybind..Init
-// Set all fields to initial values.
-inline void acr_navdb::Keybind_Init(acr_navdb::Keybind& parent) {
-    parent.hint_order = i32(0);
-}
-
 // --- acr_navdb.Keybind..Ctor
 inline  acr_navdb::Keybind::Keybind() {
-    acr_navdb::Keybind_Init(*this);
+}
+
+// --- acr_navdb.Navaction..Init
+// Set all fields to initial values.
+inline void acr_navdb::Navaction_Init(acr_navdb::Navaction& parent) {
+    parent.sort_order = i32(0);
+    parent.passive = bool(false);
+    parent.need_no_overlay = bool(false);
 }
 
 // --- acr_navdb.Navaction..Ctor
@@ -101,8 +102,15 @@ inline  acr_navdb::Navaction::Navaction() {
     acr_navdb::Navaction_Init(*this);
 }
 
+// --- acr_navdb.Navmode..Init
+// Set all fields to initial values.
+inline void acr_navdb::Navmode_Init(acr_navdb::Navmode& parent) {
+    parent.status_hint = algo::strptr("");
+}
+
 // --- acr_navdb.Navmode..Ctor
 inline  acr_navdb::Navmode::Navmode() {
+    acr_navdb::Navmode_Init(*this);
 }
 
 // --- acr_navdb.Navstyle..Init
@@ -132,15 +140,6 @@ inline  acr_navdb::Panel::Panel() {
 
 // --- acr_navdb.Reftypestyle..Ctor
 inline  acr_navdb::Reftypestyle::Reftypestyle() {
-}
-
-// --- acr_navdb.Viewmode..Init
-// Set all fields to initial values.
-inline void acr_navdb::Viewmode_Init(acr_navdb::Viewmode& parent) {
-    parent.has_fields = bool(false);
-    parent.is_overlay = bool(false);
-    parent.need_ssimfile = bool(false);
-    parent.is_reverse = bool(false);
 }
 
 // --- acr_navdb.Viewmode..Ctor

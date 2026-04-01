@@ -2027,87 +2027,28 @@ static tempstr BuildBreadcrumb(acr_nav::FCtype *sel_ct) {
     return bc;
 }
 
-// Build context-aware status bar hint string from keybind records.
-// Checks navaction visibility conditions (need_no_overlay, need_has_fields,
-// need_navstack, need_right_panel, need_left_panel) and overlay dismiss_hint against runtime state.
-// Groups keys by effective hint label, ordered by hint_order.
+// Build status bar hint from explicit strings on navmode/viewmode.
+// Filter: navmode.status_hint. Overlay: viewmode.status_hint.
+// Non-overlay browse: arrow indicators + optional "Backspace:back" +
+// viewmode.status_hint (right panel) or navmode.status_hint (left panel).
 static void BuildStatusHint(cstring &out) {
-    struct HintEntry {
-        acr_nav::FKeybind *kb;
-        algo::strptr hint;
-    };
-    HintEntry entries[64];
-    int n_entries = 0;
-    algo::strptr cur_mode = acr_nav::_db.p_cur_mode->navmode;
-    bool is_overlay = acr_nav::_db.p_cur_viewmode->is_overlay;
-    bool has_fld = acr_nav::_db.p_cur_viewmode->has_fields;
-    bool has_nav = !acr_nav::navstack_EmptyQ();
-    bool on_right = (acr_nav::_db.p_cur_panel->position == 1);
-    algo::strptr cur_vm = acr_nav::_db.p_cur_viewmode->viewmode;
-    ind_beg(acr_nav::_db_keybind_curs, kb, acr_nav::_db) {
-        if (kb.hint_order <= 0 || !(acr_nav::navmode_Get(kb) == cur_mode)) {
-            continue;
+    bool in_filter = (acr_nav::_db.p_cur_mode == acr_nav::_db.p_filter_mode);
+    acr_nav::FViewmode &vm = *acr_nav::_db.p_cur_viewmode;
+    if (in_filter) {
+        out << acr_nav::_db.p_cur_mode->status_hint;
+    } else if (vm.is_overlay) {
+        out << vm.status_hint;
+    } else {
+        bool on_right = (acr_nav::_db.p_cur_panel->position == 1);
+        out << "\xe2\x86\x91\xe2\x86\x93\xe2\x86\x90\xe2\x86\x92"; // ↑↓←→
+        if (!acr_nav::navstack_EmptyQ()) {
+            out << "  Backspace:back";
         }
-        acr_nav::FNavaction &na = *kb.p_navaction;
-        algo::strptr hint;
-        // When a keybind dismisses the current overlay, use dismiss_hint and
-        // bypass need_* checks -- the dismiss action is always available.
-        bool is_dismiss = is_overlay && ch_N(na.dismiss_hint) > 0
-            && (ch_N(na.dismiss_viewmode) == 0
-                || na.dismiss_viewmode == cur_vm);
-        if (is_dismiss) {
-            hint = na.dismiss_hint;
-        } else {
-            if (na.need_no_overlay && is_overlay) continue;
-            // Symbol-only hints (arrow indicators) suppressed during overlays
-            if (is_overlay && ch_N(na.hint) > 0 && (algo::strptr(na.hint)[0] & 0x80)) continue;
-            if (na.need_has_fields && !has_fld) continue;
-            if (na.need_navstack && !has_nav) continue;
-            if (na.need_right_panel && !on_right) continue;
-            if (na.need_left_panel && on_right) continue;
-            hint = na.hint;
+        algo::strptr body = on_right ? algo::strptr(vm.status_hint)
+                                     : algo::strptr(acr_nav::_db.p_cur_mode->status_hint);
+        if (ch_N(body) > 0) {
+            out << "  " << body;
         }
-        if (ch_N(hint) == 0) continue;
-        if (n_entries < 64) {
-            entries[n_entries].kb = &kb;
-            entries[n_entries].hint = hint;
-            n_entries++;
-        }
-    } ind_end;
-    // Sort by hint_order (insertion sort -- small array)
-    for (int i = 1; i < n_entries; i++) {
-        HintEntry tmp = entries[i];
-        int j = i;
-        while (j > 0 && entries[j - 1].kb->hint_order > tmp.kb->hint_order) {
-            entries[j] = entries[j - 1];
-            j--;
-        }
-        entries[j] = tmp;
-    }
-    // Group by effective hint label, format as "key1/key2:hint".
-    // Symbol-only hints (non-ASCII first byte, e.g. ↑↓←→) render without key prefix.
-    int i = 0;
-    while (i < n_entries) {
-        algo::strptr hint = entries[i].hint;
-        if (ch_N(out) > 0) {
-            out << "  ";
-        }
-        int j = i;
-        bool symbol_hint = ch_N(hint) > 0 && (hint[0] & 0x80);
-        if (symbol_hint) {
-            out << hint;
-            while (j < n_entries && entries[j].hint == hint) j++;
-        } else {
-            while (j < n_entries && entries[j].hint == hint) {
-                if (j > i) {
-                    out << "/";
-                }
-                out << acr_nav::key_Get(*entries[j].kb);
-                j++;
-            }
-            out << ":" << hint;
-        }
-        i = j;
     }
 }
 
@@ -2317,7 +2258,7 @@ static void RenderTitleBar(RenderCtx &ctx) {
                    << ": " << ctx.sel_ct->ctype
                    << " (" << RightPanelItemCount(ctx.sel_ct) << ")";
         } else if (acr_nav::_db.p_cur_viewmode->has_fields) {
-            rtitle << " " << acr_nav::_db.p_cur_viewmode->title << " (empty)";
+            rtitle << " " << acr_nav::_db.p_cur_viewmode->title;
         } else {
             rtitle << " " << acr_nav::_db.p_cur_viewmode->title
                    << " (" << RightPanelItemCount(ctx.sel_ct) << ")";
@@ -2469,8 +2410,9 @@ static void RenderContentArea(RenderCtx &ctx) {
     bool in_xref = acr_nav::_db.p_cur_viewmode->is_reverse;
     int visible = ctx.visible;
 
-    // Column header row -- always rendered for visual stability
-    // (cursor on namespace header has no sel_ct, but layout must not shift)
+    // Column header row -- rendered when content exists for visual stability
+    // (cursor on namespace header has no sel_ct, but layout must not shift).
+    // Suppressed when no ctype is selected (all namespace-level browsing).
     {
         tempstr left_cell;
         char_PrintNTimes(' ', left_cell, ctx.left_wid - 1);
@@ -2481,7 +2423,7 @@ static void RenderContentArea(RenderCtx &ctx) {
             if (ch_N(line_header) > 0) {
                 hdr << " " << line_header;
             }
-        } else {
+        } else if (ctx.sel_ct) {
             hdr << " field";
             char_PrintNTimes(' ', hdr, i32_Max(1, 24 - ch_N(hdr)));
             hdr << (in_xref ? "ctype" : "arg");

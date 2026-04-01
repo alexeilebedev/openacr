@@ -47,38 +47,32 @@ enum acr_navdb_FieldIdEnum {                      // acr_navdb.FieldId.value
     ,acr_navdb_FieldId_keybind              = 14
     ,acr_navdb_FieldId_navaction            = 15
     ,acr_navdb_FieldId_navmode              = 16
-    ,acr_navdb_FieldId_hint_order           = 17
-    ,acr_navdb_FieldId_key                  = 18
-    ,acr_navdb_FieldId_hint                 = 19
-    ,acr_navdb_FieldId_passive              = 20
-    ,acr_navdb_FieldId_need_no_overlay      = 21
-    ,acr_navdb_FieldId_need_has_fields      = 22
-    ,acr_navdb_FieldId_need_navstack        = 23
-    ,acr_navdb_FieldId_need_right_panel     = 24
-    ,acr_navdb_FieldId_dismiss_hint         = 25
-    ,acr_navdb_FieldId_dismiss_viewmode     = 26
-    ,acr_navdb_FieldId_need_left_panel      = 27
-    ,acr_navdb_FieldId_navstyle             = 28
-    ,acr_navdb_FieldId_bold                 = 29
-    ,acr_navdb_FieldId_dim                  = 30
-    ,acr_navdb_FieldId_reverse              = 31
-    ,acr_navdb_FieldId_fg_color             = 32
-    ,acr_navdb_FieldId_panel                = 33
-    ,acr_navdb_FieldId_title                = 34
-    ,acr_navdb_FieldId_position             = 35
-    ,acr_navdb_FieldId_min_width            = 36
-    ,acr_navdb_FieldId_reftypestyle         = 37
-    ,acr_navdb_FieldId_reftype              = 38
-    ,acr_navdb_FieldId_viewmode             = 39
-    ,acr_navdb_FieldId_empty_msg            = 40
-    ,acr_navdb_FieldId_has_fields           = 41
-    ,acr_navdb_FieldId_is_overlay           = 42
-    ,acr_navdb_FieldId_need_ssimfile        = 43
-    ,acr_navdb_FieldId_is_reverse           = 44
-    ,acr_navdb_FieldId_value                = 45
+    ,acr_navdb_FieldId_key                  = 17
+    ,acr_navdb_FieldId_passive              = 18
+    ,acr_navdb_FieldId_need_no_overlay      = 19
+    ,acr_navdb_FieldId_dismiss_viewmode     = 20
+    ,acr_navdb_FieldId_status_hint          = 21
+    ,acr_navdb_FieldId_navstyle             = 22
+    ,acr_navdb_FieldId_bold                 = 23
+    ,acr_navdb_FieldId_dim                  = 24
+    ,acr_navdb_FieldId_reverse              = 25
+    ,acr_navdb_FieldId_fg_color             = 26
+    ,acr_navdb_FieldId_panel                = 27
+    ,acr_navdb_FieldId_title                = 28
+    ,acr_navdb_FieldId_position             = 29
+    ,acr_navdb_FieldId_min_width            = 30
+    ,acr_navdb_FieldId_reftypestyle         = 31
+    ,acr_navdb_FieldId_reftype              = 32
+    ,acr_navdb_FieldId_viewmode             = 33
+    ,acr_navdb_FieldId_empty_msg            = 34
+    ,acr_navdb_FieldId_has_fields           = 35
+    ,acr_navdb_FieldId_is_overlay           = 36
+    ,acr_navdb_FieldId_need_ssimfile        = 37
+    ,acr_navdb_FieldId_is_reverse           = 38
+    ,acr_navdb_FieldId_value                = 39
 };
 
-enum { acr_navdb_FieldIdEnum_N = 46 };
+enum { acr_navdb_FieldIdEnum_N = 40 };
 
 namespace acr_navdb { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 DetailsrcPkey;
@@ -237,10 +231,9 @@ void                 Helpgroup_Print(acr_navdb::Helpgroup& row, algo::cstring& s
 
 // --- acr_navdb.Keybind
 struct Keybind { // acr_navdb.Keybind: Key-to-action mapping for acr_nav
-    algo::Smallstr50   keybind;      //
-    algo::Smallstr50   navaction;    // Navigation action
-    i32                hint_order;   //   0  Status bar position; 0=hidden
-    algo::Comment      comment;      //
+    algo::Smallstr50   keybind;     //
+    algo::Smallstr50   navaction;   // Navigation action
+    algo::Comment      comment;     //
     // func:acr_navdb.Keybind..Ctor
     inline               Keybind() __attribute__((nothrow));
 };
@@ -263,9 +256,6 @@ bool                 Keybind_ReadFieldMaybe(acr_navdb::Keybind& parent, algo::st
 // The format of the string is an ssim Tuple
 // func:acr_navdb.Keybind..ReadStrptrMaybe
 bool                 Keybind_ReadStrptrMaybe(acr_navdb::Keybind &parent, algo::strptr in_str) __attribute__((nothrow));
-// Set all fields to initial values.
-// func:acr_navdb.Keybind..Init
-inline void          Keybind_Init(acr_navdb::Keybind& parent);
 // print string representation of ROW to string STR
 // cfmt:acr_navdb.Keybind.String  printfmt:Tuple
 // func:acr_navdb.Keybind..Print
@@ -274,17 +264,11 @@ void                 Keybind_Print(acr_navdb::Keybind& row, algo::cstring& str) 
 // --- acr_navdb.Navaction
 struct Navaction { // acr_navdb.Navaction: Controlled vocabulary of navigation actions
     algo::Smallstr50   navaction;          //
-    algo::Smallstr50   hint;               // Short status bar label; empty=hidden
     algo::Smallstr50   helpgroup;          // Help group; empty=hidden from help
     i32                sort_order;         //   0  Sort order within help group
     bool               passive;            //   false  Movement-only action; does not dismiss startup help
     bool               need_no_overlay;    //   false  Hint hidden when viewmode.is_overlay is Y
-    bool               need_has_fields;    //   false  Hint hidden when viewmode.has_fields is N
-    bool               need_navstack;      //   false  Hint hidden when navigation stack is empty
-    bool               need_right_panel;   //   false  Hint hidden when focus is on left panel
-    algo::Smallstr50   dismiss_hint;       // Hint text when action dismisses an overlay
     algo::Smallstr50   dismiss_viewmode;   // Viewmode this action dismisses; empty means any overlay
-    bool               need_left_panel;    //   false  Hint hidden when focus is on right panel
     algo::Comment      comment;            //
     // func:acr_navdb.Navaction..Ctor
     inline               Navaction() __attribute__((nothrow));
@@ -298,7 +282,7 @@ bool                 Navaction_ReadFieldMaybe(acr_navdb::Navaction& parent, algo
 bool                 Navaction_ReadStrptrMaybe(acr_navdb::Navaction &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:acr_navdb.Navaction..Init
-void                 Navaction_Init(acr_navdb::Navaction& parent);
+inline void          Navaction_Init(acr_navdb::Navaction& parent);
 // print string representation of ROW to string STR
 // cfmt:acr_navdb.Navaction.String  printfmt:Tuple
 // func:acr_navdb.Navaction..Print
@@ -306,8 +290,9 @@ void                 Navaction_Print(acr_navdb::Navaction& row, algo::cstring& s
 
 // --- acr_navdb.Navmode
 struct Navmode { // acr_navdb.Navmode: UI mode for acr_nav
-    algo::Smallstr50   navmode;   //
-    algo::Comment      comment;   //
+    algo::Smallstr50    navmode;       //
+    algo::Smallstr200   status_hint;   //   ""  Status bar hint for this mode
+    algo::Comment       comment;       //
     // func:acr_navdb.Navmode..Ctor
     inline               Navmode() __attribute__((nothrow));
 };
@@ -318,6 +303,9 @@ bool                 Navmode_ReadFieldMaybe(acr_navdb::Navmode& parent, algo::st
 // The format of the string is an ssim Tuple
 // func:acr_navdb.Navmode..ReadStrptrMaybe
 bool                 Navmode_ReadStrptrMaybe(acr_navdb::Navmode &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:acr_navdb.Navmode..Init
+inline void          Navmode_Init(acr_navdb::Navmode& parent);
 // print string representation of ROW to string STR
 // cfmt:acr_navdb.Navmode.String  printfmt:Tuple
 // func:acr_navdb.Navmode..Print
@@ -407,15 +395,16 @@ void                 Reftypestyle_Print(acr_navdb::Reftypestyle& row, algo::cstr
 
 // --- acr_navdb.Viewmode
 struct Viewmode { // acr_navdb.Viewmode: Right-panel view mode for acr_nav
-    algo::Smallstr50   viewmode;        //
-    algo::Smallstr50   title;           // Right panel title for this viewmode
-    algo::Smallstr50   next;            // Next viewmode in Tab cycle
-    algo::Smallstr50   empty_msg;       // Message shown when right panel has no items
-    bool               has_fields;      //   false  Y: renders field records; N: renders preformatted lines
-    bool               is_overlay;      //   false  Y: overlay viewmode (help, detail); suppresses need_no_overlay hints
-    bool               need_ssimfile;   //   false  Viewmode requires ssimfile-backed ctype
-    bool               is_reverse;      //   false  Y=reverse xrefs, N=forward fields
-    algo::Comment      comment;         //
+    algo::Smallstr50    viewmode;        //
+    algo::Smallstr50    title;           // Right panel title for this viewmode
+    algo::Smallstr50    next;            // Next viewmode in Tab cycle
+    algo::Smallstr50    empty_msg;       // Message shown when right panel has no items
+    bool                has_fields;      //   false  Y: renders field records; N: renders preformatted lines
+    bool                is_overlay;      //   false  Y: overlay viewmode (help, detail); suppresses need_no_overlay hints
+    bool                need_ssimfile;   //   false  Viewmode requires ssimfile-backed ctype
+    bool                is_reverse;      //   false  Y=reverse xrefs, N=forward fields
+    algo::Smallstr200   status_hint;     //   ""  Status bar hint (right panel for views, full hint for overlays)
+    algo::Comment       comment;         //
     // func:acr_navdb.Viewmode..Ctor
     inline               Viewmode() __attribute__((nothrow));
 };
@@ -428,7 +417,7 @@ bool                 Viewmode_ReadFieldMaybe(acr_navdb::Viewmode& parent, algo::
 bool                 Viewmode_ReadStrptrMaybe(acr_navdb::Viewmode &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:acr_navdb.Viewmode..Init
-inline void          Viewmode_Init(acr_navdb::Viewmode& parent);
+void                 Viewmode_Init(acr_navdb::Viewmode& parent);
 // print string representation of ROW to string STR
 // cfmt:acr_navdb.Viewmode.String  printfmt:Tuple
 // func:acr_navdb.Viewmode..Print

@@ -1770,7 +1770,6 @@ inline  acr_nav::FHelpgroup::~FHelpgroup() {
 // --- acr_nav.FKeybind..Init
 // Set all fields to initial values.
 inline void acr_nav::FKeybind_Init(acr_nav::FKeybind& keybind) {
-    keybind.hint_order = i32(0);
     keybind.p_navaction = NULL;
     keybind.ind_keybind_next = (acr_nav::FKeybind*)-1; // (acr_nav.FDb.ind_keybind) not-in-hash
     keybind.ind_keybind_hashval = 0; // stored hash value
@@ -1794,6 +1793,18 @@ inline void acr_nav::step_Call(acr_nav::FNavaction& navaction) {
     }
 }
 
+// --- acr_nav.FNavaction..Init
+// Set all fields to initial values.
+inline void acr_nav::FNavaction_Init(acr_nav::FNavaction& navaction) {
+    navaction.sort_order = i32(0);
+    navaction.passive = bool(false);
+    navaction.need_no_overlay = bool(false);
+    navaction.p_helpgroup = NULL;
+    navaction.ind_navaction_next = (acr_nav::FNavaction*)-1; // (acr_nav.FDb.ind_navaction) not-in-hash
+    navaction.ind_navaction_hashval = 0; // stored hash value
+    navaction.step = NULL;
+}
+
 // --- acr_nav.FNavaction..Ctor
 inline  acr_nav::FNavaction::FNavaction() {
     acr_nav::FNavaction_Init(*this);
@@ -1807,6 +1818,7 @@ inline  acr_nav::FNavaction::~FNavaction() {
 // --- acr_nav.FNavmode..Init
 // Set all fields to initial values.
 inline void acr_nav::FNavmode_Init(acr_nav::FNavmode& navmode) {
+    navmode.status_hint = algo::strptr("");
     navmode.ind_navmode_next = (acr_nav::FNavmode*)-1; // (acr_nav.FDb.ind_navmode) not-in-hash
     navmode.ind_navmode_hashval = 0; // stored hash value
 }

@@ -105,17 +105,11 @@ const char* acr_navdb::value_ToCstr(const acr_navdb::FieldId& parent) {
         case acr_navdb_FieldId_keybind     : ret = "keybind";  break;
         case acr_navdb_FieldId_navaction   : ret = "navaction";  break;
         case acr_navdb_FieldId_navmode     : ret = "navmode";  break;
-        case acr_navdb_FieldId_hint_order  : ret = "hint_order";  break;
         case acr_navdb_FieldId_key         : ret = "key";  break;
-        case acr_navdb_FieldId_hint        : ret = "hint";  break;
         case acr_navdb_FieldId_passive     : ret = "passive";  break;
         case acr_navdb_FieldId_need_no_overlay: ret = "need_no_overlay";  break;
-        case acr_navdb_FieldId_need_has_fields: ret = "need_has_fields";  break;
-        case acr_navdb_FieldId_need_navstack: ret = "need_navstack";  break;
-        case acr_navdb_FieldId_need_right_panel: ret = "need_right_panel";  break;
-        case acr_navdb_FieldId_dismiss_hint: ret = "dismiss_hint";  break;
         case acr_navdb_FieldId_dismiss_viewmode: ret = "dismiss_viewmode";  break;
-        case acr_navdb_FieldId_need_left_panel: ret = "need_left_panel";  break;
+        case acr_navdb_FieldId_status_hint : ret = "status_hint";  break;
         case acr_navdb_FieldId_navstyle    : ret = "navstyle";  break;
         case acr_navdb_FieldId_bold        : ret = "bold";  break;
         case acr_navdb_FieldId_dim         : ret = "dim";  break;
@@ -172,9 +166,6 @@ bool acr_navdb::value_SetStrptrMaybe(acr_navdb::FieldId& parent, algo::strptr rh
             switch (u64(algo::ReadLE32(rhs.elems))) {
                 case LE_STR4('b','o','l','d'): {
                     value_SetEnum(parent,acr_navdb_FieldId_bold); ret = true; break;
-                }
-                case LE_STR4('h','i','n','t'): {
-                    value_SetEnum(parent,acr_navdb_FieldId_hint); ret = true; break;
                 }
                 case LE_STR4('n','e','x','t'): {
                     value_SetEnum(parent,acr_navdb_FieldId_next); ret = true; break;
@@ -274,10 +265,6 @@ bool acr_navdb::value_SetStrptrMaybe(acr_navdb::FieldId& parent, algo::strptr rh
                     if (memcmp(rhs.elems+8,"ds",2)==0) { value_SetEnum(parent,acr_navdb_FieldId_has_fields); ret = true; break; }
                     break;
                 }
-                case LE_STR8('h','i','n','t','_','o','r','d'): {
-                    if (memcmp(rhs.elems+8,"er",2)==0) { value_SetEnum(parent,acr_navdb_FieldId_hint_order); ret = true; break; }
-                    break;
-                }
                 case LE_STR8('i','s','_','o','v','e','r','l'): {
                     if (memcmp(rhs.elems+8,"ay",2)==0) { value_SetEnum(parent,acr_navdb_FieldId_is_overlay); ret = true; break; }
                     break;
@@ -299,15 +286,15 @@ bool acr_navdb::value_SetStrptrMaybe(acr_navdb::FieldId& parent, algo::strptr rh
                     if (memcmp(rhs.elems+8,"ion",3)==0) { value_SetEnum(parent,acr_navdb_FieldId_description); ret = true; break; }
                     break;
                 }
+                case LE_STR8('s','t','a','t','u','s','_','h'): {
+                    if (memcmp(rhs.elems+8,"int",3)==0) { value_SetEnum(parent,acr_navdb_FieldId_status_hint); ret = true; break; }
+                    break;
+                }
             }
             break;
         }
         case 12: {
             switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('d','i','s','m','i','s','s','_'): {
-                    if (memcmp(rhs.elems+8,"hint",4)==0) { value_SetEnum(parent,acr_navdb_FieldId_dismiss_hint); ret = true; break; }
-                    break;
-                }
                 case LE_STR8('f','i','l','t','e','r','t','a'): {
                     if (memcmp(rhs.elems+8,"rget",4)==0) { value_SetEnum(parent,acr_navdb_FieldId_filtertarget); ret = true; break; }
                     break;
@@ -329,10 +316,6 @@ bool acr_navdb::value_SetStrptrMaybe(acr_navdb::FieldId& parent, algo::strptr rh
                     if (memcmp(rhs.elems+8,"ftype",5)==0) { value_SetEnum(parent,acr_navdb_FieldId_match_reftype); ret = true; break; }
                     break;
                 }
-                case LE_STR8('n','e','e','d','_','n','a','v'): {
-                    if (memcmp(rhs.elems+8,"stack",5)==0) { value_SetEnum(parent,acr_navdb_FieldId_need_navstack); ret = true; break; }
-                    break;
-                }
                 case LE_STR8('n','e','e','d','_','s','s','i'): {
                     if (memcmp(rhs.elems+8,"mfile",5)==0) { value_SetEnum(parent,acr_navdb_FieldId_need_ssimfile); ret = true; break; }
                     break;
@@ -342,14 +325,6 @@ bool acr_navdb::value_SetStrptrMaybe(acr_navdb::FieldId& parent, algo::strptr rh
         }
         case 15: {
             switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('n','e','e','d','_','h','a','s'): {
-                    if (memcmp(rhs.elems+8,"_fields",7)==0) { value_SetEnum(parent,acr_navdb_FieldId_need_has_fields); ret = true; break; }
-                    break;
-                }
-                case LE_STR8('n','e','e','d','_','l','e','f'): {
-                    if (memcmp(rhs.elems+8,"t_panel",7)==0) { value_SetEnum(parent,acr_navdb_FieldId_need_left_panel); ret = true; break; }
-                    break;
-                }
                 case LE_STR8('n','e','e','d','_','n','o','_'): {
                     if (memcmp(rhs.elems+8,"overlay",7)==0) { value_SetEnum(parent,acr_navdb_FieldId_need_no_overlay); ret = true; break; }
                     break;
@@ -369,10 +344,6 @@ bool acr_navdb::value_SetStrptrMaybe(acr_navdb::FieldId& parent, algo::strptr rh
                 }
                 case LE_STR8('m','a','t','c','h','_','f','i'): {
                     if (memcmp(rhs.elems+8,"eld_name",8)==0) { value_SetEnum(parent,acr_navdb_FieldId_match_field_name); ret = true; break; }
-                    break;
-                }
-                case LE_STR8('n','e','e','d','_','r','i','g'): {
-                    if (memcmp(rhs.elems+8,"ht_panel",8)==0) { value_SetEnum(parent,acr_navdb_FieldId_need_right_panel); ret = true; break; }
                     break;
                 }
             }
@@ -638,9 +609,6 @@ bool acr_navdb::Keybind_ReadFieldMaybe(acr_navdb::Keybind& parent, algo::strptr 
         case acr_navdb_FieldId_navmode: {
             retval = false;
         } break;
-        case acr_navdb_FieldId_hint_order: {
-            retval = i32_ReadStrptrMaybe(parent.hint_order, strval);
-        } break;
         case acr_navdb_FieldId_key: {
             retval = false;
         } break;
@@ -683,9 +651,6 @@ void acr_navdb::Keybind_Print(acr_navdb::Keybind& row, algo::cstring& str) {
     algo::Smallstr50_Print(row.navaction, temp);
     PrintAttrSpaceReset(str,"navaction", temp);
 
-    i32_Print(row.hint_order, temp);
-    PrintAttrSpaceReset(str,"hint_order", temp);
-
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);
 }
@@ -699,9 +664,6 @@ bool acr_navdb::Navaction_ReadFieldMaybe(acr_navdb::Navaction& parent, algo::str
         case acr_navdb_FieldId_navaction: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.navaction, strval);
         } break;
-        case acr_navdb_FieldId_hint: {
-            retval = algo::Smallstr50_ReadStrptrMaybe(parent.hint, strval);
-        } break;
         case acr_navdb_FieldId_helpgroup: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.helpgroup, strval);
         } break;
@@ -714,23 +676,8 @@ bool acr_navdb::Navaction_ReadFieldMaybe(acr_navdb::Navaction& parent, algo::str
         case acr_navdb_FieldId_need_no_overlay: {
             retval = bool_ReadStrptrMaybe(parent.need_no_overlay, strval);
         } break;
-        case acr_navdb_FieldId_need_has_fields: {
-            retval = bool_ReadStrptrMaybe(parent.need_has_fields, strval);
-        } break;
-        case acr_navdb_FieldId_need_navstack: {
-            retval = bool_ReadStrptrMaybe(parent.need_navstack, strval);
-        } break;
-        case acr_navdb_FieldId_need_right_panel: {
-            retval = bool_ReadStrptrMaybe(parent.need_right_panel, strval);
-        } break;
-        case acr_navdb_FieldId_dismiss_hint: {
-            retval = algo::Smallstr50_ReadStrptrMaybe(parent.dismiss_hint, strval);
-        } break;
         case acr_navdb_FieldId_dismiss_viewmode: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.dismiss_viewmode, strval);
-        } break;
-        case acr_navdb_FieldId_need_left_panel: {
-            retval = bool_ReadStrptrMaybe(parent.need_left_panel, strval);
         } break;
         case acr_navdb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
@@ -758,18 +705,6 @@ bool acr_navdb::Navaction_ReadStrptrMaybe(acr_navdb::Navaction &parent, algo::st
     return retval;
 }
 
-// --- acr_navdb.Navaction..Init
-// Set all fields to initial values.
-void acr_navdb::Navaction_Init(acr_navdb::Navaction& parent) {
-    parent.sort_order = i32(0);
-    parent.passive = bool(false);
-    parent.need_no_overlay = bool(false);
-    parent.need_has_fields = bool(false);
-    parent.need_navstack = bool(false);
-    parent.need_right_panel = bool(false);
-    parent.need_left_panel = bool(false);
-}
-
 // --- acr_navdb.Navaction..Print
 // print string representation of ROW to string STR
 // cfmt:acr_navdb.Navaction.String  printfmt:Tuple
@@ -779,9 +714,6 @@ void acr_navdb::Navaction_Print(acr_navdb::Navaction& row, algo::cstring& str) {
 
     algo::Smallstr50_Print(row.navaction, temp);
     PrintAttrSpaceReset(str,"navaction", temp);
-
-    algo::Smallstr50_Print(row.hint, temp);
-    PrintAttrSpaceReset(str,"hint", temp);
 
     algo::Smallstr50_Print(row.helpgroup, temp);
     PrintAttrSpaceReset(str,"helpgroup", temp);
@@ -795,23 +727,8 @@ void acr_navdb::Navaction_Print(acr_navdb::Navaction& row, algo::cstring& str) {
     bool_Print(row.need_no_overlay, temp);
     PrintAttrSpaceReset(str,"need_no_overlay", temp);
 
-    bool_Print(row.need_has_fields, temp);
-    PrintAttrSpaceReset(str,"need_has_fields", temp);
-
-    bool_Print(row.need_navstack, temp);
-    PrintAttrSpaceReset(str,"need_navstack", temp);
-
-    bool_Print(row.need_right_panel, temp);
-    PrintAttrSpaceReset(str,"need_right_panel", temp);
-
-    algo::Smallstr50_Print(row.dismiss_hint, temp);
-    PrintAttrSpaceReset(str,"dismiss_hint", temp);
-
     algo::Smallstr50_Print(row.dismiss_viewmode, temp);
     PrintAttrSpaceReset(str,"dismiss_viewmode", temp);
-
-    bool_Print(row.need_left_panel, temp);
-    PrintAttrSpaceReset(str,"need_left_panel", temp);
 
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);
@@ -825,6 +742,9 @@ bool acr_navdb::Navmode_ReadFieldMaybe(acr_navdb::Navmode& parent, algo::strptr 
     switch(field_id) {
         case acr_navdb_FieldId_navmode: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.navmode, strval);
+        } break;
+        case acr_navdb_FieldId_status_hint: {
+            retval = algo::Smallstr200_ReadStrptrMaybe(parent.status_hint, strval);
         } break;
         case acr_navdb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
@@ -861,6 +781,9 @@ void acr_navdb::Navmode_Print(acr_navdb::Navmode& row, algo::cstring& str) {
 
     algo::Smallstr50_Print(row.navmode, temp);
     PrintAttrSpaceReset(str,"navmode", temp);
+
+    algo::Smallstr200_Print(row.status_hint, temp);
+    PrintAttrSpaceReset(str,"status_hint", temp);
 
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);
@@ -1120,6 +1043,9 @@ bool acr_navdb::Viewmode_ReadFieldMaybe(acr_navdb::Viewmode& parent, algo::strpt
         case acr_navdb_FieldId_is_reverse: {
             retval = bool_ReadStrptrMaybe(parent.is_reverse, strval);
         } break;
+        case acr_navdb_FieldId_status_hint: {
+            retval = algo::Smallstr200_ReadStrptrMaybe(parent.status_hint, strval);
+        } break;
         case acr_navdb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
         } break;
@@ -1144,6 +1070,16 @@ bool acr_navdb::Viewmode_ReadStrptrMaybe(acr_navdb::Viewmode &parent, algo::strp
         retval = retval && Viewmode_ReadFieldMaybe(parent, attr.name, attr.value);
     }ind_end;
     return retval;
+}
+
+// --- acr_navdb.Viewmode..Init
+// Set all fields to initial values.
+void acr_navdb::Viewmode_Init(acr_navdb::Viewmode& parent) {
+    parent.has_fields = bool(false);
+    parent.is_overlay = bool(false);
+    parent.need_ssimfile = bool(false);
+    parent.is_reverse = bool(false);
+    parent.status_hint = algo::strptr("");
 }
 
 // --- acr_navdb.Viewmode..Print
@@ -1176,6 +1112,9 @@ void acr_navdb::Viewmode_Print(acr_navdb::Viewmode& row, algo::cstring& str) {
 
     bool_Print(row.is_reverse, temp);
     PrintAttrSpaceReset(str,"is_reverse", temp);
+
+    algo::Smallstr200_Print(row.status_hint, temp);
+    PrintAttrSpaceReset(str,"status_hint", temp);
 
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);

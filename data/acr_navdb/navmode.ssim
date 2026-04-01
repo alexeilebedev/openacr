@@ -1,2 +1,2 @@
-acr_navdb.navmode  navmode:browse  comment:"Normal navigation mode"
-acr_navdb.navmode  navmode:filter  comment:"Filter input mode"
+acr_navdb.navmode  navmode:browse  status_hint:"/:filter  n:ns-deps  ?:help  q:quit"  comment:"Normal navigation mode"
+acr_navdb.navmode  navmode:filter  status_hint:"Enter:accept  Tab:target  Esc:cancel"  comment:"Filter input mode"

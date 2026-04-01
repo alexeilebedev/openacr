@@ -2175,7 +2175,6 @@ struct FKeybind { // acr_nav.FKeybind
     u32                    ind_keybind_hashval;   // hash value
     algo::Smallstr50       keybind;               //
     algo::Smallstr50       navaction;             // Navigation action
-    i32                    hint_order;            //   0  Status bar position; 0=hidden
     algo::Comment          comment;               //
     acr_nav::FNavaction*   p_navaction;           // reference to parent row
     // x-reference on acr_nav.FKeybind.p_navaction prevents copy
@@ -2223,17 +2222,11 @@ struct FNavaction { // acr_nav.FNavaction
     acr_nav::FNavaction*           ind_navaction_next;      // hash next
     u32                            ind_navaction_hashval;   // hash value
     algo::Smallstr50               navaction;               //
-    algo::Smallstr50               hint;                    // Short status bar label; empty=hidden
     algo::Smallstr50               helpgroup;               // Help group; empty=hidden from help
     i32                            sort_order;              //   0  Sort order within help group
     bool                           passive;                 //   false  Movement-only action; does not dismiss startup help
     bool                           need_no_overlay;         //   false  Hint hidden when viewmode.is_overlay is Y
-    bool                           need_has_fields;         //   false  Hint hidden when viewmode.has_fields is N
-    bool                           need_navstack;           //   false  Hint hidden when navigation stack is empty
-    bool                           need_right_panel;        //   false  Hint hidden when focus is on left panel
-    algo::Smallstr50               dismiss_hint;            // Hint text when action dismisses an overlay
     algo::Smallstr50               dismiss_viewmode;        // Viewmode this action dismisses; empty means any overlay
-    bool                           need_left_panel;         //   false  Hint hidden when focus is on right panel
     algo::Comment                  comment;                 //
     acr_nav::FHelpgroup*           p_helpgroup;             // optional pointer
     acr_nav::navaction_step_hook   step;                    //   NULL  Pointer to a function
@@ -2267,7 +2260,7 @@ inline void          step_Call(acr_nav::FNavaction& navaction) __attribute__((no
 
 // Set all fields to initial values.
 // func:acr_nav.FNavaction..Init
-void                 FNavaction_Init(acr_nav::FNavaction& navaction);
+inline void          FNavaction_Init(acr_nav::FNavaction& navaction);
 // func:acr_nav.FNavaction..Uninit
 void                 FNavaction_Uninit(acr_nav::FNavaction& navaction) __attribute__((nothrow));
 
@@ -2281,6 +2274,7 @@ struct FNavmode { // acr_nav.FNavmode
     acr_nav::FNavmode*   ind_navmode_next;      // hash next
     u32                  ind_navmode_hashval;   // hash value
     algo::Smallstr50     navmode;               //
+    algo::Smallstr200    status_hint;           //   ""  Status bar hint for this mode
     algo::Comment        comment;               //
     // func:acr_nav.FNavmode..AssignOp
     inline acr_nav::FNavmode& operator =(const acr_nav::FNavmode &rhs) = delete;
@@ -2696,6 +2690,7 @@ struct FViewmode { // acr_nav.FViewmode
     bool                                    is_overlay;             //   false  Y: overlay viewmode (help, detail); suppresses need_no_overlay hints
     bool                                    need_ssimfile;          //   false  Viewmode requires ssimfile-backed ctype
     bool                                    is_reverse;             //   false  Y=reverse xrefs, N=forward fields
+    algo::Smallstr200                       status_hint;            //   ""  Status bar hint (right panel for views, full hint for overlays)
     algo::Comment                           comment;                //
     algo::cstring*                          line_elems;             // pointer to elements
     u32                                     line_n;                 // number of elements in array

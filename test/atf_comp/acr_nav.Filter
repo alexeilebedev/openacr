@@ -1,4 +1,4 @@
-acr_nav.Screen  mode:filter  focus:ctype_list  filter:amc  navstack_depth:0  n_sel_ctype:255  n_ctype:1406  n_field:5690  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"Enter:accept  Tab:target  Escape:cancel"  sel_nav_col:0
+acr_nav.Screen  mode:filter  focus:ctype_list  filter:amc  navstack_depth:0  n_sel_ctype:255  n_ctype:1406  n_field:5685  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"Enter:accept  Tab:target  Esc:cancel"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:8  sel_value:amc
 acr_nav.VisibleLeftItem  row:0  value:amc  kind:ns  collapsed:Y  n_match:130  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:amc_gc  kind:ns  collapsed:Y  n_match:1  n_record:0
@@ -10,7 +10,7 @@ acr_nav.VisibleLeftItem  row:6  value:command  kind:ns  collapsed:Y  n_match:4  
 acr_nav.VisibleLeftItem  row:7  value:report  kind:ns  collapsed:Y  n_match:1  n_record:0
 acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
 
-acr_nav.Screen  mode:filter  focus:ctype_list  filter:amc  navstack_depth:0  n_sel_ctype:255  n_ctype:1406  n_field:5690  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"Enter:accept  Tab:target  Escape:cancel"  sel_nav_col:0
+acr_nav.Screen  mode:filter  focus:ctype_list  filter:amc  navstack_depth:0  n_sel_ctype:255  n_ctype:1406  n_field:5685  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"Enter:accept  Tab:target  Esc:cancel"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:8  sel_value:amc
 acr_nav.VisibleLeftItem  row:0  value:amc  kind:ns  collapsed:Y  n_match:130  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:amc_gc  kind:ns  collapsed:Y  n_match:1  n_record:0
