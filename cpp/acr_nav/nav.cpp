@@ -218,7 +218,7 @@ bool acr_nav::PopOverlayOnCtypeChange(acr_nav::FCtype *prev_sel_ct, acr_nav::FCt
         }
     }
     // Auto-activate nsdep when landing on a namespace-header row
-    if (!IsNsDepMode() && !sel_ct) {
+    if (!IsNsDepMode() && !sel_ct && !acr_nav::_db.p_cur_viewmode->is_overlay) {
         acr_nav::FNs *ns = SelectedNs();
         if (ns) {
             if (acr_nav::_db.startup_help) {

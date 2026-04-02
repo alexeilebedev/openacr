@@ -8,16 +8,16 @@
 
 | Area | Tests | Bugs | Gaps | Status |
 |------|-------|------|------|--------|
-| Graph view & nsdep | 22 | 1 | 1 | Mostly solid |
+| Graph view & nsdep | 22 | 1 | 2 | Mostly solid |
 | Deep navstack & state | 14 | 0 | 0 | Rock solid |
-| Filter interactions | 17 | 1 | 2 | Good |
+| Filter interactions | 17 | 0 | 2 | Good |
 | Preview nav & sel_nav_col | 12 | 0 | 2 | Clean |
-| Overlay stacking & detail | 15 | 3 | 1 | Needs fixes |
+| Overlay stacking & detail | 15 | 2 | 1 | Needs fixes |
 | Namespace collapse & left panel | 14 | 0 | 0 | Rock solid |
 | Pagination & SetTermSize | 15 | 1 | 2 | One real bug |
 | Protocol robustness | 28 | 2 | 3 | Solid |
-| Xref & cross-validation | 12 | 1 | 0 | Accurate |
-| **Total** | **149** | **8** | **11** | |
+| Xref & cross-validation | 12 | 0 | 1 | Accurate |
+| **Total** | **149** | **5** | **13** | |
 
 ## Bugs Found
 
@@ -59,36 +59,24 @@ printf 'acr_nav.SendKey  key:Escape\nacr_nav.SendKey  key:q\nacr_nav.SendKey  ke
 **Area:** Protocol
 Lines containing only spaces/tabs produce InputError instead of being silently ignored like empty lines. The check at line 3175 uses `elems_N(line) == 0` which doesn't match whitespace-only lines.
 
-### Bug 6: / key bypasses need_no_overlay:Y during help overlay
-**Severity:** Low (design question)
-**Area:** Filter + overlay
-Pressing `/` during startup help both dismisses help AND enters filter mode in one keypress. This is intentional for startup help (lines 2979-2982 detect startup_help and pop the overlay), but means need_no_overlay:Y is not enforced for startup help. Consistent with "any action dismisses startup help" design.
-
-### Bug 7: Empty graph shows no empty_msg in headless output
-**Severity:** Low
-**Area:** Graph view + protocol
-When a ctype has zero access paths, graph view reports n_items:0 but no VisibleLine with the "no access paths" message. The TUI renders empty_msg visually, but the headless path doesn't emit it. Same issue affects all viewmode empty messages.
-
-### Bug 8: No "no xrefs" empty message for ctypes with zero incoming references
-**Severity:** Low
-**Area:** Xref view
-When a ctype has no xrefs, the content panel shows n_items:0 with a completely blank panel. No "no xrefs" indication visible.
 
 ## Protocol Gaps Found
 
 | # | Gap | Impact |
 |---|-----|--------|
-| 1 | Empty content `empty_msg` not surfaced in headless output | Low |
-| 2 | Filter field in Screen has no target prefix label | Low |
-| 3 | VisibleField `match:Y/N` not emitted during active filter mode | Low |
-| 4 | No column navigability indicator for preview nav columns | Low |
-| 5 | No total column count (`n_nav_col`) in Screen record | Low |
-| 6 | `viewmode_stack` depth not exposed in headless output | Low |
-| 7 | Key names case-sensitive but near-misses silently ignored | Low |
-| 8 | SetTermSize zero/negative silently clamped without warning | Low |
-| 9 | Smallstr50 overflow gives generic error, not specific message | Low |
-| 10 | `term_wid` doesn't affect VisibleLine content (no truncation) | Low |
-| 11 | Duplicate screenshot output per Screenshot command (explicit + EOF) | Low |
+| 1 | Empty graph shows no `empty_msg` in headless output (n_items:0 but no VisibleLine) | Low |
+| 2 | No "no xrefs" empty message for ctypes with zero incoming references | Low |
+| 3 | Empty content `empty_msg` not surfaced in headless output | Low |
+| 4 | Filter field in Screen has no target prefix label | Low |
+| 5 | VisibleField `match:Y/N` not emitted during active filter mode | Low |
+| 6 | No column navigability indicator for preview nav columns | Low |
+| 7 | No total column count (`n_nav_col`) in Screen record | Low |
+| 8 | `viewmode_stack` depth not exposed in headless output | Low |
+| 9 | Key names case-sensitive but near-misses silently ignored | Low |
+| 10 | SetTermSize zero/negative silently clamped without warning | Low |
+| 11 | Smallstr50 overflow gives generic error, not specific message | Low |
+| 12 | `term_wid` doesn't affect VisibleLine content (no truncation) | Low |
+| 13 | Duplicate screenshot output per Screenshot command (explicit + EOF) | Low |
 
 ## Verified Working (Highlights)
 

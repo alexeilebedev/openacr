@@ -453,12 +453,12 @@ static void HeadlessMain() {
         eof = (nr <= 0);
         algo::LinebufBegin(linebuf, algo::memptr((u8*)buf, eof ? 0 : nr), eof);
         algo::strptr line;
-        while (algo::LinebufNext(linebuf, line)) {
+        while (acr_nav::_db.running && algo::LinebufNext(linebuf, line)) {
             ++lineno;
             acr_nav::SendKey send_key;
             acr_nav::Screenshot screenshot;
             acr_nav::SetTermSize set_term_size;
-            if (elems_N(line) == 0) {
+            if (elems_N(algo::Trimmed(line)) == 0) {
                 // empty lines are ssim separators, not errors
             } else if (acr_nav::SendKey_ReadStrptrMaybe(send_key, line)) {
                 ProcessKey(send_key.key);

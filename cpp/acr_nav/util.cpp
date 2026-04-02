@@ -320,4 +320,6 @@ void acr_nav::AdjustScroll(acr_nav::FPanel &panel, int n_items) {
     if (panel.sel_row < panel.scroll_offset) {
         panel.scroll_offset = panel.sel_row;
     }
+    int max_offset = i32_Max(0, n_items - visible);
+    panel.scroll_offset = i32_Min(panel.scroll_offset, max_offset);
 }
