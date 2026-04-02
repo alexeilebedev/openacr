@@ -16,7 +16,7 @@
 //
 // Target: acr_nav (exe) -- TUI schema explorer for browsing ctypes, fields, and cross-references
 // Exceptions: yes
-// Source: cpp/acr_nav/nav.cpp -- Navigation actions, left panel, viewmode stack
+// Source: cpp/acr_nav/nav.cpp
 //
 
 #include "include/algo.h"
@@ -66,7 +66,7 @@ void acr_nav::BuildLeftItems() {
     // Collect namespaces with matching ctypes, sorted alphabetically.
     // FNs records are loaded from data/ in file order; explicit sort guarantees
     // stable display regardless of load order.
-    acr_nav::FNs *ns_arr[256];
+    acr_nav::FNs *ns_arr[256]; // fixed capacity; silently truncates if exceeded
     int n_ns = 0;
     ind_beg(acr_nav::_db_ns_curs, ns, acr_nav::_db) {
         int n_match = 0;
@@ -382,100 +382,129 @@ void acr_nav::navaction_switch_panel_right() {
 
 // -----------------------------------------------------------------------------
 
+// Left panel Enter: toggle namespace collapse or switch to right panel.
+static void FollowRefLeftPanel(acr_nav::FPanel *left) {
+    int sel = left->sel_row;
+    if (sel >= 0 && sel < acr_nav::left_item_N()) {
+        acr_nav::LeftItem &item = acr_nav::left_item_qFind(sel);
+        if (ch_N(item.ctype) == 0) {
+            acr_nav::FNs *ns = acr_nav::ind_ns_Find(item.ns);
+            if (ns) {
+                ns->collapsed = !ns->collapsed;
+                if (ns->collapsed) {
+                    ns->auto_expanded = false;
+                }
+                BuildLeftItems();
+            }
+        } else {
+            // Leave nsdep context so right panel returns to fields view
+            if (IsNsDepMode()) {
+                acr_nav::_db.p_cur_viewmode = acr_nav::_db.p_pre_nsdep_viewmode
+                    ? acr_nav::_db.p_pre_nsdep_viewmode : acr_nav::_db.p_default_viewmode;
+                acr_nav::_db.p_pre_nsdep_viewmode = NULL;
+            }
+            acr_nav::_db.p_cur_panel = acr_nav::_db.p_right_panel;
+        }
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+// Graph mode Enter: navigate to the neighbor ctype on the selected line.
+static void FollowRefGraph(acr_nav::FPanel &panel, acr_nav::FCtype *sel_ct) {
+    acr_nav::FCtype *target = NULL;
+    GraphInfoAtLine(*sel_ct, panel.sel_row, &target, NULL);
+    if (target && target != sel_ct) {
+        NavigateToTarget(sel_ct, target, acr_nav::_db.p_graph_viewmode);
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+// NsDep mode Enter: jump to the namespace on the selected line.
+// Keeps the target namespace collapsed and selects its header row.
+static void FollowRefNsDep(acr_nav::FPanel &panel, acr_nav::FPanel *left, acr_nav::FCtype *sel_ct) {
+    acr_nav::FViewmode &vm = *acr_nav::_db.p_nsdep_viewmode;
+    acr_nav::FNs *target_ns = NsDepNsAtLine(vm, panel.sel_row);
+    if (target_ns) {
+        PushNaventry(sel_ct ? algo::strptr(sel_ct->ctype)
+            : (acr_nav::_db.p_nsdep_ns ? NsDisplayName(*acr_nav::_db.p_nsdep_ns)
+                                       : algo::strptr("")));
+        acr_nav::_db.filter = "";
+        acr_nav::_db.p_cur_filtertarget = acr_nav::_db.p_default_filtertarget;
+        SwitchToBrowse();
+        BuildLeftItems();
+        for (int i = 0; i < acr_nav::left_item_N(); i++) {
+            if (acr_nav::left_item_qFind(i).ns == target_ns->ns
+                && ch_N(acr_nav::left_item_qFind(i).ctype) == 0) {
+                left->sel_row = i;
+                break;
+            }
+        }
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+// Preview mode Enter: extract cell value from the selected navigable column
+// and follow the foreign-key reference to the target ctype.
+static void FollowRefPreview(acr_nav::FPanel &panel, acr_nav::FCtype *sel_ct) {
+    acr_nav::FViewmode &pvm = *acr_nav::_db.p_preview_viewmode;
+    int n_nav = acr_nav::preview_nav_N(pvm);
+    if (n_nav > 0 && acr_nav::_db.sel_nav_col < n_nav
+        && panel.sel_row < acr_nav::line_N(pvm)) {
+        acr_nav::PreviewNavCol &nc = acr_nav::preview_nav_qFind(pvm, acr_nav::_db.sel_nav_col);
+        algo::strptr row_text = RightPanelLineFind(panel.sel_row);
+        int start = DisplayToByte(row_text, nc.col_start);
+        int end = i32_Min(DisplayToByte(row_text, nc.col_start + nc.col_wid), elems_N(row_text));
+        tempstr cell_value;
+        if (start < elems_N(row_text)) {
+            algo::strptr raw_cell(row_text.elems + start, end - start);
+            cell_value << algo::TrimmedRight(raw_cell);
+        }
+        acr_nav::FCtype *target = ch_N(nc.target_ctype) > 0
+            ? acr_nav::ind_ctype_Find(nc.target_ctype) : nullptr;
+        if (target && target != sel_ct && ch_N(cell_value) > 0) {
+            acr_nav::_db.preview_nav_pending = cell_value;
+            NavigateToTarget(sel_ct, target, acr_nav::_db.p_preview_viewmode);
+        }
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+// Fields/xref mode Enter: follow the field reference (forward or reverse).
+static void FollowRefFields(acr_nav::FPanel &panel, acr_nav::FCtype *sel_ct) {
+    acr_nav::FField *fld = RightPanelFieldFind(sel_ct, panel.sel_row);
+    acr_nav::FCtype *target = NULL;
+    if (fld) {
+        bool reverse = acr_nav::_db.p_cur_viewmode->is_reverse;
+        target = reverse ? fld->p_ctype : fld->p_arg;
+    }
+    if (fld && target != sel_ct) {
+        NavigateToTarget(sel_ct, target, acr_nav::_db.p_default_viewmode);
+    }
+}
+
+// -----------------------------------------------------------------------------
+
 void acr_nav::navaction_follow_ref() {
     acr_nav::FPanel &panel = *acr_nav::_db.p_cur_panel;
     acr_nav::FPanel *left = acr_nav::_db.p_left_panel;
     acr_nav::FCtype *sel_ct = SelectedCtype(*left);
     if (panel.position == 0) {
-        int sel = left->sel_row;
-        if (sel >= 0 && sel < acr_nav::left_item_N()) {
-            acr_nav::LeftItem &item = acr_nav::left_item_qFind(sel);
-            if (ch_N(item.ctype) == 0) {
-                // Namespace header: toggle collapse
-                acr_nav::FNs *ns = acr_nav::ind_ns_Find(item.ns);
-                if (ns) {
-                    ns->collapsed = !ns->collapsed;
-                    if (ns->collapsed) {
-                        ns->auto_expanded = false;
-                    }
-                    BuildLeftItems();
-                }
-            } else {
-                // Leave nsdep context so right panel returns to fields view
-                if (IsNsDepMode()) {
-                    acr_nav::_db.p_cur_viewmode = acr_nav::_db.p_pre_nsdep_viewmode
-                        ? acr_nav::_db.p_pre_nsdep_viewmode : acr_nav::_db.p_default_viewmode;
-                    acr_nav::_db.p_pre_nsdep_viewmode = NULL;
-                }
-                acr_nav::_db.p_cur_panel = acr_nav::_db.p_right_panel;
-            }
-        }
+        FollowRefLeftPanel(left);
     } else if (panel.position == 1 && sel_ct
                && acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_graph_viewmode) {
-        // Graph mode: navigate to the neighbor ctype on the selected line
-        acr_nav::FCtype *target = NULL;
-        GraphInfoAtLine(*sel_ct, panel.sel_row, &target, NULL);
-        if (target && target != sel_ct) {
-            NavigateToTarget(sel_ct, target, acr_nav::_db.p_graph_viewmode);
-        }
+        FollowRefGraph(panel, sel_ct);
     } else if (panel.position == 1 && IsNsDepMode()) {
-        // NsDep mode: jump to the namespace on the selected line.
-        // Unlike other follow_ref paths, keep the target namespace collapsed
-        // and select its header row (the user is browsing namespace-level deps,
-        // not drilling into a specific ctype).
-        acr_nav::FViewmode &vm = *acr_nav::_db.p_nsdep_viewmode;
-        acr_nav::FNs *target_ns = NsDepNsAtLine(vm, panel.sel_row);
-        if (target_ns) {
-            PushNaventry(sel_ct ? algo::strptr(sel_ct->ctype)
-                : (acr_nav::_db.p_nsdep_ns ? NsDisplayName(*acr_nav::_db.p_nsdep_ns)
-                                           : algo::strptr("")));
-            acr_nav::_db.filter = "";
-            acr_nav::_db.p_cur_filtertarget = acr_nav::_db.p_default_filtertarget;
-            SwitchToBrowse();
-            BuildLeftItems();
-            // Select the target namespace header row
-            for (int i = 0; i < acr_nav::left_item_N(); i++) {
-                if (acr_nav::left_item_qFind(i).ns == target_ns->ns
-                    && ch_N(acr_nav::left_item_qFind(i).ctype) == 0) {
-                    left->sel_row = i;
-                    break;
-                }
-            }
-        }
+        FollowRefNsDep(panel, left, sel_ct);
     } else if (panel.position == 1 && sel_ct
                && acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_preview_viewmode) {
-        acr_nav::FViewmode &pvm = *acr_nav::_db.p_preview_viewmode;
-        int n_nav = acr_nav::preview_nav_N(pvm);
-        if (n_nav > 0 && acr_nav::_db.sel_nav_col < n_nav
-            && panel.sel_row < acr_nav::line_N(pvm)) {
-            acr_nav::PreviewNavCol &nc = acr_nav::preview_nav_qFind(pvm, acr_nav::_db.sel_nav_col);
-            // Extract cell value from formatted preview line
-            algo::strptr row_text = RightPanelLineFind(panel.sel_row);
-            int start = DisplayToByte(row_text, nc.col_start);
-            int end = i32_Min(DisplayToByte(row_text, nc.col_start + nc.col_wid), elems_N(row_text));
-            tempstr cell_value;
-            if (start < elems_N(row_text)) {
-                algo::strptr raw_cell(row_text.elems + start, end - start);
-                cell_value << algo::TrimmedRight(raw_cell);
-            }
-            acr_nav::FCtype *target = ch_N(nc.target_ctype) > 0
-                ? acr_nav::ind_ctype_Find(nc.target_ctype) : nullptr;
-            if (target && target != sel_ct && ch_N(cell_value) > 0) {
-                acr_nav::_db.preview_nav_pending = cell_value;
-                NavigateToTarget(sel_ct, target, acr_nav::_db.p_preview_viewmode);
-            }
-        }
+        FollowRefPreview(panel, sel_ct);
     } else if (panel.position == 1 && acr_nav::_db.p_cur_viewmode->has_fields
                && sel_ct && panel.sel_row < RightPanelItemCount(sel_ct)) {
-        acr_nav::FField *fld = RightPanelFieldFind(sel_ct, panel.sel_row);
-        acr_nav::FCtype *target = NULL;
-        if (fld) {
-            bool reverse = acr_nav::_db.p_cur_viewmode->is_reverse;
-            target = reverse ? fld->p_ctype : fld->p_arg;
-        }
-        if (fld && target != sel_ct) {
-            NavigateToTarget(sel_ct, target, acr_nav::_db.p_default_viewmode);
-        }
+        FollowRefFields(panel, sel_ct);
     }
 }
 

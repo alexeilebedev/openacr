@@ -16,7 +16,7 @@
 //
 // Target: acr_nav (exe) -- TUI schema explorer for browsing ctypes, fields, and cross-references
 // Exceptions: yes
-// Source: cpp/acr_nav/graph.cpp -- Access path graph diagram
+// Source: cpp/acr_nav/graph.cpp
 //
 
 #include "include/algo.h"

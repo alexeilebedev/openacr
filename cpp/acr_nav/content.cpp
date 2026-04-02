@@ -16,7 +16,7 @@
 //
 // Target: acr_nav (exe) -- TUI schema explorer for browsing ctypes, fields, and cross-references
 // Exceptions: yes
-// Source: cpp/acr_nav/content.cpp -- Content loading for viewmodes
+// Source: cpp/acr_nav/content.cpp
 //
 
 #include "include/algo.h"
@@ -734,7 +734,7 @@ void acr_nav::BuildHelpLines() {
     ClearViewmodeLines(vm);
     vm.header = "Keyboard Shortcuts";
     // Collect helpgroups sorted by sort_order
-    acr_nav::FHelpgroup *groups[16];
+    acr_nav::FHelpgroup *groups[16]; // fixed capacity; silently truncates if exceeded
     int n_groups = 0;
     ind_beg(acr_nav::_db_helpgroup_curs, hg, acr_nav::_db) {
         if (n_groups < 16) {
@@ -754,7 +754,7 @@ void acr_nav::BuildHelpLines() {
     for (int g = 0; g < n_groups; g++) {
         EmitSectionHeader(vm, groups[g]->comment);
         // Collect navactions in this group, sorted by sort_order
-        acr_nav::FNavaction *actions[32];
+        acr_nav::FNavaction *actions[32]; // fixed capacity; silently truncates if exceeded
         int n_actions = 0;
         ind_beg(acr_nav::_db_navaction_curs, na, acr_nav::_db) {
             if (na.p_helpgroup == groups[g] && n_actions < 32) {

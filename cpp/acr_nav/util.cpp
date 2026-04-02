@@ -16,7 +16,7 @@
 //
 // Target: acr_nav (exe) -- TUI schema explorer for browsing ctypes, fields, and cross-references
 // Exceptions: yes
-// Source: cpp/acr_nav/util.cpp -- Shared utility functions
+// Source: cpp/acr_nav/util.cpp
 //
 
 #include "include/algo.h"
@@ -51,29 +51,25 @@ int acr_nav::DecimalDigits(int n) {
     return d;
 }
 
+// Try matching value against regex (case-insensitive). Sets match to true on hit.
+// Short-circuits: skips work if match is already true or flag is false.
+static void TryMatchLower(bool &match, bool flag, algo::strptr value, algo_lib::Regx &regx) {
+    if (!match && flag) {
+        tempstr lower(value);
+        algo::MakeLower(lower);
+        match = algo_lib::Regx_Match(regx, lower);
+    }
+}
+
+// -----------------------------------------------------------------------------
+
 // True if field matches regex under the current filtertarget's boolean flags.
 bool acr_nav::FieldMatchesFilter(acr_nav::FField &fld, algo_lib::Regx &regx, acr_nav::FFiltertarget &ft) {
     bool match = false;
-    if (!match && ft.match_field_name) {
-        tempstr lower(name_Get(fld));
-        algo::MakeLower(lower);
-        match = algo_lib::Regx_Match(regx, lower);
-    }
-    if (!match && ft.match_comment) {
-        tempstr lower(fld.comment);
-        algo::MakeLower(lower);
-        match = algo_lib::Regx_Match(regx, lower);
-    }
-    if (!match && ft.match_arg) {
-        tempstr lower(fld.p_arg->ctype);
-        algo::MakeLower(lower);
-        match = algo_lib::Regx_Match(regx, lower);
-    }
-    if (!match && ft.match_reftype) {
-        tempstr lower(fld.p_reftype->reftype);
-        algo::MakeLower(lower);
-        match = algo_lib::Regx_Match(regx, lower);
-    }
+    TryMatchLower(match, ft.match_field_name, name_Get(fld), regx);
+    TryMatchLower(match, ft.match_comment, fld.comment, regx);
+    TryMatchLower(match, ft.match_arg, fld.p_arg->ctype, regx);
+    TryMatchLower(match, ft.match_reftype, fld.p_reftype->reftype, regx);
     return match;
 }
 
@@ -84,11 +80,7 @@ bool acr_nav::FieldMatchesFilter(acr_nav::FField &fld, algo_lib::Regx &regx, acr
 // has_field_criteria iterates fields via FieldMatchesFilter.
 bool acr_nav::CtypeMatchesFilter(acr_nav::FCtype &ct, algo_lib::Regx &regx, acr_nav::FFiltertarget &ft) {
     bool match = false;
-    if (!match && ft.match_ctype_name) {
-        tempstr lower(ct.ctype);
-        algo::MakeLower(lower);
-        match = algo_lib::Regx_Match(regx, lower);
-    }
+    TryMatchLower(match, ft.match_ctype_name, ct.ctype, regx);
     if (!match && ft.has_field_criteria) {
         for (int f = 0; f < acr_nav::c_field_N(ct) && !match; f++) {
             acr_nav::FField *fld = acr_nav::c_field_Find(ct, f);
