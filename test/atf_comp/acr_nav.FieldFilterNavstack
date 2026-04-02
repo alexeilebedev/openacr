@@ -38,7 +38,7 @@ acr_nav.VisibleLeftItem  row:34  value:atfdb.Amctest  kind:ctype  collapsed:N  n
 acr_nav.VisibleLeftItem  row:35  value:atfdb.Cijob  kind:ctype  collapsed:N  n_match:0  n_record:4
 acr_nav.VisibleLeftItem  row:36  value:atfdb.Cipackage  kind:ctype  collapsed:N  n_match:0  n_record:2
 acr_nav.VisibleLeftItem  row:37  value:atfdb.Citest  kind:ctype  collapsed:N  n_match:0  n_record:40
-acr_nav.VisibleLeftItem  row:38  value:atfdb.Comptest  kind:ctype  collapsed:N  n_match:0  n_record:272
+acr_nav.VisibleLeftItem  row:38  value:atfdb.Comptest  kind:ctype  collapsed:N  n_match:0  n_record:273
 acr_nav.VisibleLeftItem  row:39  value:atfdb.Fuzzstrat  kind:ctype  collapsed:N  n_match:0  n_record:1
 acr_nav.VisibleLeftItem  row:40  value:atfdb.Msgdir  kind:ctype  collapsed:N  n_match:0  n_record:2
 acr_nav.VisibleLeftItem  row:41  value:atfdb.TestGsymbolChar  kind:ctype  collapsed:N  n_match:0  n_record:1
@@ -102,7 +102,7 @@ acr_nav.VisibleLeftItem  row:98  value:dmmeta.Cascdel  kind:ctype  collapsed:N  
 acr_nav.VisibleLeftItem  row:99  value:dmmeta.Ccmp  kind:ctype  collapsed:N  n_match:0  n_record:223
 acr_nav.VisibleLeftItem  row:100  value:dmmeta.Cdflt  kind:ctype  collapsed:N  n_match:0  n_record:22
 acr_nav.VisibleLeftItem  row:101  value:dmmeta.Cfast  kind:ctype  collapsed:N  n_match:0  n_record:0
-acr_nav.VisibleLeftItem  row:102  value:dmmeta.Cfmt  kind:ctype  collapsed:N  n_match:0  n_record:816
+acr_nav.VisibleLeftItem  row:102  value:dmmeta.Cfmt  kind:ctype  collapsed:N  n_match:0  n_record:817
 acr_nav.VisibleLeftItem  row:103  value:dmmeta.Cget  kind:ctype  collapsed:N  n_match:0  n_record:0
 acr_nav.VisibleLeftItem  row:104  value:dmmeta.Charset  kind:ctype  collapsed:N  n_match:0  n_record:23
 acr_nav.VisibleLeftItem  row:105  value:dmmeta.Chash  kind:ctype  collapsed:N  n_match:0  n_record:240

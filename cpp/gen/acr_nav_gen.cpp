@@ -6621,6 +6621,29 @@ void acr_nav::PanelState_Print(acr_nav::PanelState& row, algo::cstring& str) {
     PrintAttrSpaceReset(str,"sel_value", temp);
 }
 
+// --- acr_nav.PreviewNavCol..Print
+// print string representation of ROW to string STR
+// cfmt:acr_nav.PreviewNavCol.String  printfmt:Tuple
+void acr_nav::PreviewNavCol_Print(acr_nav::PreviewNavCol& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "acr_nav.PreviewNavCol";
+
+    i32_Print(row.col_start, temp);
+    PrintAttrSpaceReset(str,"col_start", temp);
+
+    i32_Print(row.col_wid, temp);
+    PrintAttrSpaceReset(str,"col_wid", temp);
+
+    i32_Print(row.name_len, temp);
+    PrintAttrSpaceReset(str,"name_len", temp);
+
+    algo::Smallstr50_Print(row.col_name, temp);
+    PrintAttrSpaceReset(str,"col_name", temp);
+
+    algo::Smallstr100_Print(row.target_ctype, temp);
+    PrintAttrSpaceReset(str,"target_ctype", temp);
+}
+
 // --- acr_nav.Screen..Init
 // Set all fields to initial values.
 void acr_nav::Screen_Init(acr_nav::Screen& parent) {

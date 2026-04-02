@@ -2637,6 +2637,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const acr_nav::Panel
     return str;
 }
 
+inline algo::cstring &algo::operator <<(algo::cstring &str, const acr_nav::PreviewNavCol &row) {// cfmt:acr_nav.PreviewNavCol.String
+    acr_nav::PreviewNavCol_Print(const_cast<acr_nav::PreviewNavCol&>(row), str);
+    return str;
+}
+
 inline algo::cstring &algo::operator <<(algo::cstring &str, const acr_nav::Screen &row) {// cfmt:acr_nav.Screen.String
     acr_nav::Screen_Print(const_cast<acr_nav::Screen&>(row), str);
     return str;

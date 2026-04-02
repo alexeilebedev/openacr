@@ -1,11 +1,7 @@
-acr_nav.Ack  ack:acr_nav.Navigate  ok:Y  ctype:dmmeta.Ctype  viewmode:fields  navstack_depth:0  msg:""
+acr_nav.Ack  ack:acr_nav.Navigate  ok:Y  ctype:dmmeta.Ns  viewmode:preview  navstack_depth:0  msg:""
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1412  n_ctype:1413  n_field:5710  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
-acr_nav.PanelState  panel:ctype_list  sel_row:59  scroll_offset:0  n_items:211  sel_value:dmmeta.Ctype
-acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:4  sel_value:dmmeta.Ctype.ctype
-
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1412  n_ctype:1413  n_field:5710  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
-acr_nav.PanelState  panel:ctype_list  sel_row:59  scroll_offset:0  n_items:211  sel_value:dmmeta.Ctype
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1412  n_ctype:1413  n_field:5710  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
+acr_nav.PanelState  panel:ctype_list  sel_row:126  scroll_offset:0  n_items:211  sel_value:dmmeta.Ns
 acr_nav.VisibleLeftItem  row:0  value:""  kind:ns  collapsed:Y  n_match:44  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:abt  kind:ns  collapsed:Y  n_match:19  n_record:0
 acr_nav.VisibleLeftItem  row:2  value:abt_md  kind:ns  collapsed:Y  n_match:29  n_record:0
@@ -217,14 +213,99 @@ acr_nav.VisibleLeftItem  row:207  value:strconv  kind:ns  collapsed:Y  n_match:1
 acr_nav.VisibleLeftItem  row:208  value:sv2ssim  kind:ns  collapsed:Y  n_match:4  n_record:0
 acr_nav.VisibleLeftItem  row:209  value:ws  kind:ns  collapsed:Y  n_match:16  n_record:0
 acr_nav.VisibleLeftItem  row:210  value:wsdb  kind:ns  collapsed:Y  n_match:1  n_record:0
-acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:4  sel_value:dmmeta.Ctype.ctype
-acr_nav.VisibleField  row:0  field:dmmeta.Ctype.ctype  arg:algo.Smallstr100  reftype:Val  style:field_val  navigable:Y  match:N
-acr_nav.VisibleField  row:1  field:dmmeta.Ctype.ns  arg:dmmeta.Ns  reftype:Pkey  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:2  field:dmmeta.Ctype.name  arg:algo.Smallstr100  reftype:Val  style:field_val  navigable:Y  match:N
-acr_nav.VisibleField  row:3  field:dmmeta.Ctype.comment  arg:algo.Comment  reftype:Val  style:field_val  navigable:Y  match:N
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:85  sel_value:"              protocol  GPL                                                                              "
+acr_nav.VisibleLine  row:0  value:"              protocol  GPL                                                                              "
+acr_nav.VisibleLine  row:1  value:"abt           exe       GPL      Algo Build Tool - build & link C++ targets                              "
+acr_nav.VisibleLine  row:2  value:"abt_md        exe       GPL      Tool to generate markdown documentation                                 "
+acr_nav.VisibleLine  row:3  value:"acr           exe       GPL      Algo Cross-Reference - ssimfile database & update tool                  "
+acr_nav.VisibleLine  row:4  value:"acr_compl     exe       GPL      ACR shell auto-complete for all targets                                 "
+acr_nav.VisibleLine  row:5  value:"acr_dm        exe       GPL      ACR Diff/Merge                                                          "
+acr_nav.VisibleLine  row:6  value:"acr_ed        exe       GPL      Script generator for common dev tasks                                   "
+acr_nav.VisibleLine  row:7  value:"acr_in        exe       GPL      ACR Input - compute set of ssimfiles or tuples used by a specific target"
+acr_nav.VisibleLine  row:8  value:"acr_my        exe       GPL      ACR <-> MariaDB adaptor                                                 "
+acr_nav.VisibleLine  row:9  value:"acr_nav       exe       GPL      TUI schema explorer for browsing ctypes, fields, and cross-references   "
+acr_nav.VisibleLine  row:10  value:"acr_navdb     ssimdb    GPL      Configuration tables for acr_nav TUI schema explorer                    "
+acr_nav.VisibleLine  row:11  value:"algo          protocol  GPL      Basic types and functions                                               "
+acr_nav.VisibleLine  row:12  value:"algo_lib      lib       GPL      Support library for all executables                                     "
+acr_nav.VisibleLine  row:13  value:"amc           exe       GPL      Algo Model Compiler: generate code under include/gen and cpp/gen        "
+acr_nav.VisibleLine  row:14  value:"amc_gc        exe       GPL      Garbage collector for in-memory databases                               "
+acr_nav.VisibleLine  row:15  value:"amc_vis       exe       GPL      Draw access path diagrams                                               "
+acr_nav.VisibleLine  row:16  value:"amcdb         ssimdb    GPL      Algo Model Compiler support tables                                      "
+acr_nav.VisibleLine  row:17  value:"ams           protocol  GPL      Algo Messaging System protocol                                          "
+acr_nav.VisibleLine  row:18  value:"ams_sendtest  exe       GPL      Algo Messaging System test tool                                         "
+acr_nav.VisibleLine  row:19  value:"amsdb         ssimdb    GPL      AMS configuration (ssim database)                                       "
+acr_nav.VisibleLine  row:20  value:"apm           exe       GPL      Algo Package Manager                                                    "
+acr_nav.VisibleLine  row:21  value:"aqlite        exe       GPL      Runs sqlite queries against ssim files                                  "
+acr_nav.VisibleLine  row:22  value:"atf           protocol  GPL      Algo Testing Framework                                                  "
+acr_nav.VisibleLine  row:23  value:"atf_amc       exe       GPL      Unit tests for amc (see amctest table)                                  "
+acr_nav.VisibleLine  row:24  value:"atf_ci        exe       GPL      Normalization tests (see citest table)                                  "
+acr_nav.VisibleLine  row:25  value:"atf_cmdline   exe       GPL      Test tool for command line parsing                                      "
+acr_nav.VisibleLine  row:26  value:"atf_comp      exe       GPL      Algo Test Framework - Component test execution                          "
+acr_nav.VisibleLine  row:27  value:"atf_cov       exe       GPL      Line coverage                                                           "
+acr_nav.VisibleLine  row:28  value:"atf_exp       exe       GPL      ATF expect                                                              "
+acr_nav.VisibleLine  row:29  value:"atf_fuzz      exe       GPL      Generator of bad inputs for targets                                     "
+acr_nav.VisibleLine  row:30  value:"atf_gcli      exe       GPL      test harness for gcli                                                   "
+acr_nav.VisibleLine  row:31  value:"atf_nrun      exe       GPL      Run N subprocesses in parallel                                          "
+acr_nav.VisibleLine  row:32  value:"atf_unit      exe       GPL      Unit tests (see unittest table)                                         "
+acr_nav.VisibleLine  row:33  value:"atfdb         ssimdb    GPL      Support tables for testing                                              "
+acr_nav.VisibleLine  row:34  value:"bash2html     exe       GPL      Convert bash output and colours to html                                 "
+acr_nav.VisibleLine  row:35  value:"command       protocol  GPL      Command line descriptions                                               "
+acr_nav.VisibleLine  row:36  value:"dev           ssimdb    GPL      Tables supporting compilation of programs                               "
+acr_nav.VisibleLine  row:37  value:"dmmeta        ssimdb    GPL      Tables holding metadata (data model meta)                               "
+acr_nav.VisibleLine  row:38  value:"fm            protocol  GPL      Fault management types                                                  "
+acr_nav.VisibleLine  row:39  value:"fmdb          ssimdb    GPL      Fault management tables (ssim database)                                 "
+acr_nav.VisibleLine  row:40  value:"gcache        exe       GPL      Compiler cache                                                          "
+acr_nav.VisibleLine  row:41  value:"gcli          exe       GPL      Gcli - gitlab/github command-line client                                "
+acr_nav.VisibleLine  row:42  value:"gclidb        ssimdb    GPL      gcli db                                                                 "
+acr_nav.VisibleLine  row:43  value:"http          protocol  GPL                                                                              "
+acr_nav.VisibleLine  row:44  value:"httpdb        ssimdb    GPL                                                                              "
+acr_nav.VisibleLine  row:45  value:"ietf          protocol  GPL      Some IETF structs                                                       "
+acr_nav.VisibleLine  row:46  value:"jkv           exe       GPL      JSON <-> key-value mapping tool                                         "
+acr_nav.VisibleLine  row:47  value:"js            protocol  GPL      Reserved for JavaScript builtin types                                   "
+acr_nav.VisibleLine  row:48  value:"kafka         protocol  GPL      Kafka protocol                                                          "
+acr_nav.VisibleLine  row:49  value:"lib_amcdb     lib       GPL      Library used by amc                                                     "
+acr_nav.VisibleLine  row:50  value:"lib_ams       lib       GPL      Library for AMS middleware, supporting file format & messaging          "
+acr_nav.VisibleLine  row:51  value:"lib_ctype     lib       GPL      Helpful library for reading/writing ctypes as text tuples               "
+acr_nav.VisibleLine  row:52  value:"lib_curl      lib       GPL      covers curl_easy                                                        "
+acr_nav.VisibleLine  row:53  value:"lib_exec      lib       GPL      Build and run a dag of subprocesses with N parallel jobs                "
+acr_nav.VisibleLine  row:54  value:"lib_fm        lib       GPL      Library for dynamic alarm management                                    "
+acr_nav.VisibleLine  row:55  value:"lib_git       lib       GPL      Helpful git wrappers                                                    "
+acr_nav.VisibleLine  row:56  value:"lib_http      lib       GPL      Library for HTTP support                                                "
+acr_nav.VisibleLine  row:57  value:"lib_iconv     lib       GPL      Iconv wrapper                                                           "
+acr_nav.VisibleLine  row:58  value:"lib_json      lib       GPL      Full json support library                                               "
+acr_nav.VisibleLine  row:59  value:"lib_mysql     lib       GPL      Mysql adaptor                                                           "
+acr_nav.VisibleLine  row:60  value:"lib_netio     lib       GPL      Network I/O library                                                     "
+acr_nav.VisibleLine  row:61  value:"lib_prot      lib       GPL      Library covering all protocols                                          "
+acr_nav.VisibleLine  row:62  value:"lib_rl        lib       GPL      GNU readline support library                                            "
+acr_nav.VisibleLine  row:63  value:"lib_sql       lib       GPL      SQL formatting functions                                                "
+acr_nav.VisibleLine  row:64  value:"lib_sqlite    lib       GPL                                                                              "
+acr_nav.VisibleLine  row:65  value:"lib_ws        lib       GPL      WebSocket library                                                       "
+acr_nav.VisibleLine  row:66  value:"mdbg          exe       GPL      Gdb front-end                                                           "
+acr_nav.VisibleLine  row:67  value:"mysql2ssim    exe       GPL      mysql -> ssim conversion tool                                           "
+acr_nav.VisibleLine  row:68  value:"orgfile       exe       GPL      Organize and deduplicate files by timestamp and by contents             "
+acr_nav.VisibleLine  row:69  value:"report        protocol  GPL      Command reports                                                         "
+acr_nav.VisibleLine  row:70  value:"samp_make     exe       GPL      sample program for Makefile management                                  "
+acr_nav.VisibleLine  row:71  value:"samp_meng     exe       GPL      Sample matching engine                                                  "
+acr_nav.VisibleLine  row:72  value:"samp_regx     exe       GPL      Test tool for regular expressions                                       "
+acr_nav.VisibleLine  row:73  value:"sampdb        ssimdb    GPL      ssimdb for tutorials and recipes                                        "
+acr_nav.VisibleLine  row:74  value:"sandbox       exe       GPL      Sandbox - sandbox management tool                                       "
+acr_nav.VisibleLine  row:75  value:"src_func      exe       GPL      Access / edit functions                                                 "
+acr_nav.VisibleLine  row:76  value:"src_hdr       exe       GPL      Manage source copyright+license header in source files and scripts      "
+acr_nav.VisibleLine  row:77  value:"src_lim       exe       GPL      Enforce line length, function length, and indentation limits            "
+acr_nav.VisibleLine  row:78  value:"ssim2csv      exe       GPL      Ssim -> csv conversion tool                                             "
+acr_nav.VisibleLine  row:79  value:"ssim2mysql    exe       GPL      Ssim -> mysql                                                           "
+acr_nav.VisibleLine  row:80  value:"ssimfilt      exe       GPL      Tuple utility                                                           "
+acr_nav.VisibleLine  row:81  value:"strconv       exe       GPL      A simple string utility                                                 "
+acr_nav.VisibleLine  row:82  value:"sv2ssim       exe       GPL      sv2ssim - Separated Value file processor                                "
+acr_nav.VisibleLine  row:83  value:"ws            protocol  GPL      WebSocket binary protocol                                               "
+acr_nav.VisibleLine  row:84  value:"wsdb          ssimdb    GPL      WebSocket db                                                            "
+acr_nav.PreviewNavCol  col_start:0  col_wid:12  name_len:2  col_name:ns  target_ctype:""
+acr_nav.PreviewNavCol  col_start:14  col_wid:8  name_len:6  col_name:nstype  target_ctype:dmmeta.Nstype
+acr_nav.PreviewNavCol  col_start:24  col_wid:7  name_len:7  col_name:license  target_ctype:dev.License
+acr_nav.PreviewNavCol  col_start:33  col_wid:72  name_len:7  col_name:comment  target_ctype:""
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1412  n_ctype:1413  n_field:5710  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
-acr_nav.PanelState  panel:ctype_list  sel_row:59  scroll_offset:0  n_items:211  sel_value:dmmeta.Ctype
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1412  n_ctype:1413  n_field:5710  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
+acr_nav.PanelState  panel:ctype_list  sel_row:126  scroll_offset:0  n_items:211  sel_value:dmmeta.Ns
 acr_nav.VisibleLeftItem  row:0  value:""  kind:ns  collapsed:Y  n_match:44  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:abt  kind:ns  collapsed:Y  n_match:19  n_record:0
 acr_nav.VisibleLeftItem  row:2  value:abt_md  kind:ns  collapsed:Y  n_match:29  n_record:0
@@ -436,9 +517,94 @@ acr_nav.VisibleLeftItem  row:207  value:strconv  kind:ns  collapsed:Y  n_match:1
 acr_nav.VisibleLeftItem  row:208  value:sv2ssim  kind:ns  collapsed:Y  n_match:4  n_record:0
 acr_nav.VisibleLeftItem  row:209  value:ws  kind:ns  collapsed:Y  n_match:16  n_record:0
 acr_nav.VisibleLeftItem  row:210  value:wsdb  kind:ns  collapsed:Y  n_match:1  n_record:0
-acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:4  sel_value:dmmeta.Ctype.ctype
-acr_nav.VisibleField  row:0  field:dmmeta.Ctype.ctype  arg:algo.Smallstr100  reftype:Val  style:field_val  navigable:Y  match:N
-acr_nav.VisibleField  row:1  field:dmmeta.Ctype.ns  arg:dmmeta.Ns  reftype:Pkey  style:field_upref  navigable:Y  match:N
-acr_nav.VisibleField  row:2  field:dmmeta.Ctype.name  arg:algo.Smallstr100  reftype:Val  style:field_val  navigable:Y  match:N
-acr_nav.VisibleField  row:3  field:dmmeta.Ctype.comment  arg:algo.Comment  reftype:Val  style:field_val  navigable:Y  match:N
+acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:85  sel_value:"              protocol  GPL                                                                              "
+acr_nav.VisibleLine  row:0  value:"              protocol  GPL                                                                              "
+acr_nav.VisibleLine  row:1  value:"abt           exe       GPL      Algo Build Tool - build & link C++ targets                              "
+acr_nav.VisibleLine  row:2  value:"abt_md        exe       GPL      Tool to generate markdown documentation                                 "
+acr_nav.VisibleLine  row:3  value:"acr           exe       GPL      Algo Cross-Reference - ssimfile database & update tool                  "
+acr_nav.VisibleLine  row:4  value:"acr_compl     exe       GPL      ACR shell auto-complete for all targets                                 "
+acr_nav.VisibleLine  row:5  value:"acr_dm        exe       GPL      ACR Diff/Merge                                                          "
+acr_nav.VisibleLine  row:6  value:"acr_ed        exe       GPL      Script generator for common dev tasks                                   "
+acr_nav.VisibleLine  row:7  value:"acr_in        exe       GPL      ACR Input - compute set of ssimfiles or tuples used by a specific target"
+acr_nav.VisibleLine  row:8  value:"acr_my        exe       GPL      ACR <-> MariaDB adaptor                                                 "
+acr_nav.VisibleLine  row:9  value:"acr_nav       exe       GPL      TUI schema explorer for browsing ctypes, fields, and cross-references   "
+acr_nav.VisibleLine  row:10  value:"acr_navdb     ssimdb    GPL      Configuration tables for acr_nav TUI schema explorer                    "
+acr_nav.VisibleLine  row:11  value:"algo          protocol  GPL      Basic types and functions                                               "
+acr_nav.VisibleLine  row:12  value:"algo_lib      lib       GPL      Support library for all executables                                     "
+acr_nav.VisibleLine  row:13  value:"amc           exe       GPL      Algo Model Compiler: generate code under include/gen and cpp/gen        "
+acr_nav.VisibleLine  row:14  value:"amc_gc        exe       GPL      Garbage collector for in-memory databases                               "
+acr_nav.VisibleLine  row:15  value:"amc_vis       exe       GPL      Draw access path diagrams                                               "
+acr_nav.VisibleLine  row:16  value:"amcdb         ssimdb    GPL      Algo Model Compiler support tables                                      "
+acr_nav.VisibleLine  row:17  value:"ams           protocol  GPL      Algo Messaging System protocol                                          "
+acr_nav.VisibleLine  row:18  value:"ams_sendtest  exe       GPL      Algo Messaging System test tool                                         "
+acr_nav.VisibleLine  row:19  value:"amsdb         ssimdb    GPL      AMS configuration (ssim database)                                       "
+acr_nav.VisibleLine  row:20  value:"apm           exe       GPL      Algo Package Manager                                                    "
+acr_nav.VisibleLine  row:21  value:"aqlite        exe       GPL      Runs sqlite queries against ssim files                                  "
+acr_nav.VisibleLine  row:22  value:"atf           protocol  GPL      Algo Testing Framework                                                  "
+acr_nav.VisibleLine  row:23  value:"atf_amc       exe       GPL      Unit tests for amc (see amctest table)                                  "
+acr_nav.VisibleLine  row:24  value:"atf_ci        exe       GPL      Normalization tests (see citest table)                                  "
+acr_nav.VisibleLine  row:25  value:"atf_cmdline   exe       GPL      Test tool for command line parsing                                      "
+acr_nav.VisibleLine  row:26  value:"atf_comp      exe       GPL      Algo Test Framework - Component test execution                          "
+acr_nav.VisibleLine  row:27  value:"atf_cov       exe       GPL      Line coverage                                                           "
+acr_nav.VisibleLine  row:28  value:"atf_exp       exe       GPL      ATF expect                                                              "
+acr_nav.VisibleLine  row:29  value:"atf_fuzz      exe       GPL      Generator of bad inputs for targets                                     "
+acr_nav.VisibleLine  row:30  value:"atf_gcli      exe       GPL      test harness for gcli                                                   "
+acr_nav.VisibleLine  row:31  value:"atf_nrun      exe       GPL      Run N subprocesses in parallel                                          "
+acr_nav.VisibleLine  row:32  value:"atf_unit      exe       GPL      Unit tests (see unittest table)                                         "
+acr_nav.VisibleLine  row:33  value:"atfdb         ssimdb    GPL      Support tables for testing                                              "
+acr_nav.VisibleLine  row:34  value:"bash2html     exe       GPL      Convert bash output and colours to html                                 "
+acr_nav.VisibleLine  row:35  value:"command       protocol  GPL      Command line descriptions                                               "
+acr_nav.VisibleLine  row:36  value:"dev           ssimdb    GPL      Tables supporting compilation of programs                               "
+acr_nav.VisibleLine  row:37  value:"dmmeta        ssimdb    GPL      Tables holding metadata (data model meta)                               "
+acr_nav.VisibleLine  row:38  value:"fm            protocol  GPL      Fault management types                                                  "
+acr_nav.VisibleLine  row:39  value:"fmdb          ssimdb    GPL      Fault management tables (ssim database)                                 "
+acr_nav.VisibleLine  row:40  value:"gcache        exe       GPL      Compiler cache                                                          "
+acr_nav.VisibleLine  row:41  value:"gcli          exe       GPL      Gcli - gitlab/github command-line client                                "
+acr_nav.VisibleLine  row:42  value:"gclidb        ssimdb    GPL      gcli db                                                                 "
+acr_nav.VisibleLine  row:43  value:"http          protocol  GPL                                                                              "
+acr_nav.VisibleLine  row:44  value:"httpdb        ssimdb    GPL                                                                              "
+acr_nav.VisibleLine  row:45  value:"ietf          protocol  GPL      Some IETF structs                                                       "
+acr_nav.VisibleLine  row:46  value:"jkv           exe       GPL      JSON <-> key-value mapping tool                                         "
+acr_nav.VisibleLine  row:47  value:"js            protocol  GPL      Reserved for JavaScript builtin types                                   "
+acr_nav.VisibleLine  row:48  value:"kafka         protocol  GPL      Kafka protocol                                                          "
+acr_nav.VisibleLine  row:49  value:"lib_amcdb     lib       GPL      Library used by amc                                                     "
+acr_nav.VisibleLine  row:50  value:"lib_ams       lib       GPL      Library for AMS middleware, supporting file format & messaging          "
+acr_nav.VisibleLine  row:51  value:"lib_ctype     lib       GPL      Helpful library for reading/writing ctypes as text tuples               "
+acr_nav.VisibleLine  row:52  value:"lib_curl      lib       GPL      covers curl_easy                                                        "
+acr_nav.VisibleLine  row:53  value:"lib_exec      lib       GPL      Build and run a dag of subprocesses with N parallel jobs                "
+acr_nav.VisibleLine  row:54  value:"lib_fm        lib       GPL      Library for dynamic alarm management                                    "
+acr_nav.VisibleLine  row:55  value:"lib_git       lib       GPL      Helpful git wrappers                                                    "
+acr_nav.VisibleLine  row:56  value:"lib_http      lib       GPL      Library for HTTP support                                                "
+acr_nav.VisibleLine  row:57  value:"lib_iconv     lib       GPL      Iconv wrapper                                                           "
+acr_nav.VisibleLine  row:58  value:"lib_json      lib       GPL      Full json support library                                               "
+acr_nav.VisibleLine  row:59  value:"lib_mysql     lib       GPL      Mysql adaptor                                                           "
+acr_nav.VisibleLine  row:60  value:"lib_netio     lib       GPL      Network I/O library                                                     "
+acr_nav.VisibleLine  row:61  value:"lib_prot      lib       GPL      Library covering all protocols                                          "
+acr_nav.VisibleLine  row:62  value:"lib_rl        lib       GPL      GNU readline support library                                            "
+acr_nav.VisibleLine  row:63  value:"lib_sql       lib       GPL      SQL formatting functions                                                "
+acr_nav.VisibleLine  row:64  value:"lib_sqlite    lib       GPL                                                                              "
+acr_nav.VisibleLine  row:65  value:"lib_ws        lib       GPL      WebSocket library                                                       "
+acr_nav.VisibleLine  row:66  value:"mdbg          exe       GPL      Gdb front-end                                                           "
+acr_nav.VisibleLine  row:67  value:"mysql2ssim    exe       GPL      mysql -> ssim conversion tool                                           "
+acr_nav.VisibleLine  row:68  value:"orgfile       exe       GPL      Organize and deduplicate files by timestamp and by contents             "
+acr_nav.VisibleLine  row:69  value:"report        protocol  GPL      Command reports                                                         "
+acr_nav.VisibleLine  row:70  value:"samp_make     exe       GPL      sample program for Makefile management                                  "
+acr_nav.VisibleLine  row:71  value:"samp_meng     exe       GPL      Sample matching engine                                                  "
+acr_nav.VisibleLine  row:72  value:"samp_regx     exe       GPL      Test tool for regular expressions                                       "
+acr_nav.VisibleLine  row:73  value:"sampdb        ssimdb    GPL      ssimdb for tutorials and recipes                                        "
+acr_nav.VisibleLine  row:74  value:"sandbox       exe       GPL      Sandbox - sandbox management tool                                       "
+acr_nav.VisibleLine  row:75  value:"src_func      exe       GPL      Access / edit functions                                                 "
+acr_nav.VisibleLine  row:76  value:"src_hdr       exe       GPL      Manage source copyright+license header in source files and scripts      "
+acr_nav.VisibleLine  row:77  value:"src_lim       exe       GPL      Enforce line length, function length, and indentation limits            "
+acr_nav.VisibleLine  row:78  value:"ssim2csv      exe       GPL      Ssim -> csv conversion tool                                             "
+acr_nav.VisibleLine  row:79  value:"ssim2mysql    exe       GPL      Ssim -> mysql                                                           "
+acr_nav.VisibleLine  row:80  value:"ssimfilt      exe       GPL      Tuple utility                                                           "
+acr_nav.VisibleLine  row:81  value:"strconv       exe       GPL      A simple string utility                                                 "
+acr_nav.VisibleLine  row:82  value:"sv2ssim       exe       GPL      sv2ssim - Separated Value file processor                                "
+acr_nav.VisibleLine  row:83  value:"ws            protocol  GPL      WebSocket binary protocol                                               "
+acr_nav.VisibleLine  row:84  value:"wsdb          ssimdb    GPL      WebSocket db                                                            "
+acr_nav.PreviewNavCol  col_start:0  col_wid:12  name_len:2  col_name:ns  target_ctype:""
+acr_nav.PreviewNavCol  col_start:14  col_wid:8  name_len:6  col_name:nstype  target_ctype:dmmeta.Nstype
+acr_nav.PreviewNavCol  col_start:24  col_wid:7  name_len:7  col_name:license  target_ctype:dev.License
+acr_nav.PreviewNavCol  col_start:33  col_wid:72  name_len:7  col_name:comment  target_ctype:""
 

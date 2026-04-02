@@ -199,6 +199,7 @@ atfdb.comptest  comptest:acr_nav.NavigateNotFound  timeout:10  memcheck:Y  cover
 atfdb.comptest  comptest:acr_nav.NavigateWithView  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:"Navigate with viewmode parameter"
 atfdb.comptest  comptest:acr_nav.Preview  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:"Preview mode with table formatting"
 atfdb.comptest  comptest:acr_nav.PreviewCharset  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:"Preview sanitizes control characters in ssimfile values"
+atfdb.comptest  comptest:acr_nav.PreviewNavCol  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:"Preview mode emits PreviewNavCol column metadata"
 atfdb.comptest  comptest:acr_nav.PreviewNavCycle  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:"Preview nav: Right arrow cycles navigable columns"
 atfdb.comptest  comptest:acr_nav.PreviewNavFollow  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:"Preview nav: Enter follows reference to target ssimfile"
 atfdb.comptest  comptest:acr_nav.PreviewNavNone  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:"Preview nav: no cycling on tables without navigable columns"

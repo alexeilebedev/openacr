@@ -1373,6 +1373,11 @@ acr_nav.VisibleLine  row:1322  value:"ws.ServerStopMsg               33     1   
 acr_nav.VisibleLine  row:1323  value:"ws.Side                        1      1          0         Y        "
 acr_nav.VisibleLine  row:1324  value:"ws.StatusCode                  2      1          0         Y        "
 acr_nav.VisibleLine  row:1325  value:"wsdb.Status                    192    4          1         Y        "
+acr_nav.PreviewNavCol  col_start:0  col_wid:29  name_len:5  col_name:ctype  target_ctype:dmmeta.Ctype
+acr_nav.PreviewNavCol  col_start:31  col_wid:5  name_len:3  col_name:len  target_ctype:""
+acr_nav.PreviewNavCol  col_start:38  col_wid:9  name_len:9  col_name:alignment  target_ctype:""
+acr_nav.PreviewNavCol  col_start:49  col_wid:8  name_len:8  col_name:padbytes  target_ctype:""
+acr_nav.PreviewNavCol  col_start:59  col_wid:9  name_len:9  col_name:plaindata  target_ctype:""
 
 acr_nav.Screen  mode:browse  focus:ctype_list  filter:dmmeta.Ctype  navstack_depth:0  n_sel_ctype:2  n_ctype:1413  n_field:5710  viewmode:xref  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:2  scroll_offset:0  n_items:3  sel_value:dmmeta.Ctypelen

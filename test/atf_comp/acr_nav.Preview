@@ -38,6 +38,19 @@ acr_nav.VisibleLine  row:31  value:"Upptr     N      N        N            Y    
 acr_nav.VisibleLine  row:32  value:"Val       Y      Y        N            Y        N       N    N   Y      N         N     N       Single cascade-insert in-place value                                   "
 acr_nav.VisibleLine  row:33  value:"Varlen    Y      Y        N            Y        N       N    N   Y      N         Y     Y       Variable-length trailing array                                         "
 acr_nav.VisibleLine  row:34  value:"ZSListMT  N      N        N            N        N       N    N   N      N         N     N       Zero-terminated singly linked list with thread-safe access             "
+acr_nav.PreviewNavCol  col_start:0  col_wid:8  name_len:7  col_name:reftype  target_ctype:amcdb.Tclass
+acr_nav.PreviewNavCol  col_start:10  col_wid:5  name_len:5  col_name:isval  target_ctype:""
+acr_nav.PreviewNavCol  col_start:17  col_wid:7  name_len:7  col_name:cascins  target_ctype:""
+acr_nav.PreviewNavCol  col_start:26  col_wid:11  name_len:11  col_name:usebasepool  target_ctype:""
+acr_nav.PreviewNavCol  col_start:39  col_wid:7  name_len:7  col_name:cancopy  target_ctype:""
+acr_nav.PreviewNavCol  col_start:48  col_wid:6  name_len:6  col_name:isxref  target_ctype:""
+acr_nav.PreviewNavCol  col_start:56  col_wid:3  name_len:3  col_name:del  target_ctype:""
+acr_nav.PreviewNavCol  col_start:61  col_wid:2  name_len:2  col_name:up  target_ctype:""
+acr_nav.PreviewNavCol  col_start:65  col_wid:5  name_len:5  col_name:isnew  target_ctype:""
+acr_nav.PreviewNavCol  col_start:72  col_wid:8  name_len:8  col_name:hasalloc  target_ctype:""
+acr_nav.PreviewNavCol  col_start:82  col_wid:4  name_len:4  col_name:inst  target_ctype:""
+acr_nav.PreviewNavCol  col_start:88  col_wid:6  name_len:6  col_name:varlen  target_ctype:""
+acr_nav.PreviewNavCol  col_start:96  col_wid:71  name_len:7  col_name:comment  target_ctype:""
 
 acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Reftype  navstack_depth:0  n_sel_ctype:1  n_ctype:1413  n_field:5710  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:2  sel_value:dmmeta.Reftype
@@ -79,6 +92,19 @@ acr_nav.VisibleLine  row:31  value:"Upptr     N      N        N            Y    
 acr_nav.VisibleLine  row:32  value:"Val       Y      Y        N            Y        N       N    N   Y      N         N     N       Single cascade-insert in-place value                                   "
 acr_nav.VisibleLine  row:33  value:"Varlen    Y      Y        N            Y        N       N    N   Y      N         Y     Y       Variable-length trailing array                                         "
 acr_nav.VisibleLine  row:34  value:"ZSListMT  N      N        N            N        N       N    N   N      N         N     N       Zero-terminated singly linked list with thread-safe access             "
+acr_nav.PreviewNavCol  col_start:0  col_wid:8  name_len:7  col_name:reftype  target_ctype:amcdb.Tclass
+acr_nav.PreviewNavCol  col_start:10  col_wid:5  name_len:5  col_name:isval  target_ctype:""
+acr_nav.PreviewNavCol  col_start:17  col_wid:7  name_len:7  col_name:cascins  target_ctype:""
+acr_nav.PreviewNavCol  col_start:26  col_wid:11  name_len:11  col_name:usebasepool  target_ctype:""
+acr_nav.PreviewNavCol  col_start:39  col_wid:7  name_len:7  col_name:cancopy  target_ctype:""
+acr_nav.PreviewNavCol  col_start:48  col_wid:6  name_len:6  col_name:isxref  target_ctype:""
+acr_nav.PreviewNavCol  col_start:56  col_wid:3  name_len:3  col_name:del  target_ctype:""
+acr_nav.PreviewNavCol  col_start:61  col_wid:2  name_len:2  col_name:up  target_ctype:""
+acr_nav.PreviewNavCol  col_start:65  col_wid:5  name_len:5  col_name:isnew  target_ctype:""
+acr_nav.PreviewNavCol  col_start:72  col_wid:8  name_len:8  col_name:hasalloc  target_ctype:""
+acr_nav.PreviewNavCol  col_start:82  col_wid:4  name_len:4  col_name:inst  target_ctype:""
+acr_nav.PreviewNavCol  col_start:88  col_wid:6  name_len:6  col_name:varlen  target_ctype:""
+acr_nav.PreviewNavCol  col_start:96  col_wid:71  name_len:7  col_name:comment  target_ctype:""
 
 acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Reftype  navstack_depth:0  n_sel_ctype:1  n_ctype:1413  n_field:5710  viewmode:fields  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  d:detail  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:2  sel_value:dmmeta.Reftype

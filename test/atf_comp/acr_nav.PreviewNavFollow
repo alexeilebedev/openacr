@@ -97,6 +97,10 @@ acr_nav.VisibleLine  row:81  value:"strconv       exe       GPL      A simple st
 acr_nav.VisibleLine  row:82  value:"sv2ssim       exe       GPL      sv2ssim - Separated Value file processor                                "
 acr_nav.VisibleLine  row:83  value:"ws            protocol  GPL      WebSocket binary protocol                                               "
 acr_nav.VisibleLine  row:84  value:"wsdb          ssimdb    GPL      WebSocket db                                                            "
+acr_nav.PreviewNavCol  col_start:0  col_wid:12  name_len:2  col_name:ns  target_ctype:""
+acr_nav.PreviewNavCol  col_start:14  col_wid:8  name_len:6  col_name:nstype  target_ctype:dmmeta.Nstype
+acr_nav.PreviewNavCol  col_start:24  col_wid:7  name_len:7  col_name:license  target_ctype:dev.License
+acr_nav.PreviewNavCol  col_start:33  col_wid:72  name_len:7  col_name:comment  target_ctype:""
 
 acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Ns  navstack_depth:0  n_sel_ctype:10  n_ctype:1413  n_field:5710  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:11  sel_value:dmmeta.Ns
@@ -197,6 +201,10 @@ acr_nav.VisibleLine  row:81  value:"strconv       exe       GPL      A simple st
 acr_nav.VisibleLine  row:82  value:"sv2ssim       exe       GPL      sv2ssim - Separated Value file processor                                "
 acr_nav.VisibleLine  row:83  value:"ws            protocol  GPL      WebSocket binary protocol                                               "
 acr_nav.VisibleLine  row:84  value:"wsdb          ssimdb    GPL      WebSocket db                                                            "
+acr_nav.PreviewNavCol  col_start:0  col_wid:12  name_len:2  col_name:ns  target_ctype:""
+acr_nav.PreviewNavCol  col_start:14  col_wid:8  name_len:6  col_name:nstype  target_ctype:dmmeta.Nstype
+acr_nav.PreviewNavCol  col_start:24  col_wid:7  name_len:7  col_name:license  target_ctype:dev.License
+acr_nav.PreviewNavCol  col_start:33  col_wid:72  name_len:7  col_name:comment  target_ctype:""
 
 acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Ns  navstack_depth:0  n_sel_ctype:10  n_ctype:1413  n_field:5710  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:11  sel_value:dmmeta.Ns
@@ -297,4 +305,8 @@ acr_nav.VisibleLine  row:81  value:"strconv       exe       GPL      A simple st
 acr_nav.VisibleLine  row:82  value:"sv2ssim       exe       GPL      sv2ssim - Separated Value file processor                                "
 acr_nav.VisibleLine  row:83  value:"ws            protocol  GPL      WebSocket binary protocol                                               "
 acr_nav.VisibleLine  row:84  value:"wsdb          ssimdb    GPL      WebSocket db                                                            "
+acr_nav.PreviewNavCol  col_start:0  col_wid:12  name_len:2  col_name:ns  target_ctype:""
+acr_nav.PreviewNavCol  col_start:14  col_wid:8  name_len:6  col_name:nstype  target_ctype:dmmeta.Nstype
+acr_nav.PreviewNavCol  col_start:24  col_wid:7  name_len:7  col_name:license  target_ctype:dev.License
+acr_nav.PreviewNavCol  col_start:33  col_wid:72  name_len:7  col_name:comment  target_ctype:""
 

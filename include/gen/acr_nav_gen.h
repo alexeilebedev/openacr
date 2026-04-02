@@ -3250,6 +3250,10 @@ struct PreviewNavCol { // acr_nav.PreviewNavCol: Navigable column metadata for p
 // Set all fields to initial values.
 // func:acr_nav.PreviewNavCol..Init
 inline void          PreviewNavCol_Init(acr_nav::PreviewNavCol& parent);
+// print string representation of ROW to string STR
+// cfmt:acr_nav.PreviewNavCol.String  printfmt:Tuple
+// func:acr_nav.PreviewNavCol..Print
+void                 PreviewNavCol_Print(acr_nav::PreviewNavCol& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- acr_nav.Screen
 struct Screen { // acr_nav.Screen: Headless screen state output
@@ -3808,6 +3812,7 @@ inline algo::cstring &operator <<(algo::cstring &str, const acr_nav::trace &row)
 inline algo::cstring &operator <<(algo::cstring &str, const acr_nav::FieldId &row);// cfmt:acr_nav.FieldId.String
 inline algo::cstring &operator <<(algo::cstring &str, const acr_nav::InputError &row);// cfmt:acr_nav.InputError.String
 inline algo::cstring &operator <<(algo::cstring &str, const acr_nav::PanelState &row);// cfmt:acr_nav.PanelState.String
+inline algo::cstring &operator <<(algo::cstring &str, const acr_nav::PreviewNavCol &row);// cfmt:acr_nav.PreviewNavCol.String
 inline algo::cstring &operator <<(algo::cstring &str, const acr_nav::Screen &row);// cfmt:acr_nav.Screen.String
 inline algo::cstring &operator <<(algo::cstring &str, const acr_nav::TableId &row);// cfmt:acr_nav.TableId.String
 inline algo::cstring &operator <<(algo::cstring &str, const acr_nav::VisibleField &row);// cfmt:acr_nav.VisibleField.String

@@ -9,6 +9,8 @@ acr_nav.VisibleLine  row:2  value:"none      Skip building                      
 acr_nav.VisibleLine  row:3  value:"objlist   Object files are added to dependents' link line"
 acr_nav.VisibleLine  row:4  value:"protocol  Protocol (not a target)                        "
 acr_nav.VisibleLine  row:5  value:"ssimdb    Ssim database (not a target)                   "
+acr_nav.PreviewNavCol  col_start:0  col_wid:8  name_len:6  col_name:nstype  target_ctype:""
+acr_nav.PreviewNavCol  col_start:10  col_wid:47  name_len:7  col_name:comment  target_ctype:""
 
 acr_nav.Screen  mode:browse  focus:content  filter:dmmeta.Nstype  navstack_depth:0  n_sel_ctype:1  n_ctype:1413  n_field:5710  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:1
 acr_nav.PanelState  panel:ctype_list  sel_row:1  scroll_offset:0  n_items:2  sel_value:dmmeta.Nstype
@@ -21,4 +23,6 @@ acr_nav.VisibleLine  row:2  value:"none      Skip building                      
 acr_nav.VisibleLine  row:3  value:"objlist   Object files are added to dependents' link line"
 acr_nav.VisibleLine  row:4  value:"protocol  Protocol (not a target)                        "
 acr_nav.VisibleLine  row:5  value:"ssimdb    Ssim database (not a target)                   "
+acr_nav.PreviewNavCol  col_start:0  col_wid:8  name_len:6  col_name:nstype  target_ctype:""
+acr_nav.PreviewNavCol  col_start:10  col_wid:47  name_len:7  col_name:comment  target_ctype:""
 

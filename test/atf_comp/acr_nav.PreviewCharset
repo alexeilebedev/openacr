@@ -30,6 +30,11 @@ acr_nav.VisibleLine  row:19  value:"algo_lib.FDb.WordSeparator      ... []{}(),;
 acr_nav.VisibleLine  row:20  value:"amc.FDb.ValidRnumPad            0123456789+-.e                   N          N            "
 acr_nav.VisibleLine  row:21  value:"lib_json.FDb.JsonFirstNumChar   0-9-                             Y          Y            "
 acr_nav.VisibleLine  row:22  value:"lib_json.FDb.JsonNumChar        0-9eE.+-                         Y          Y            "
+acr_nav.PreviewNavCol  col_start:0  col_wid:30  name_len:5  col_name:field  target_ctype:dmmeta.Field
+acr_nav.PreviewNavCol  col_start:32  col_wid:31  name_len:4  col_name:expr  target_ctype:""
+acr_nav.PreviewNavCol  col_start:65  col_wid:9  name_len:9  col_name:charrange  target_ctype:""
+acr_nav.PreviewNavCol  col_start:76  col_wid:4  name_len:4  col_name:calc  target_ctype:""
+acr_nav.PreviewNavCol  col_start:82  col_wid:7  name_len:7  col_name:comment  target_ctype:""
 
 acr_nav.Screen  mode:browse  focus:content  filter:Charset  navstack_depth:0  n_sel_ctype:3  n_ctype:1413  n_field:5710  viewmode:preview  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  Enter:follow  Tab:view  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:3  scroll_offset:0  n_items:6  sel_value:amc.FCharset
@@ -63,4 +68,9 @@ acr_nav.VisibleLine  row:19  value:"algo_lib.FDb.WordSeparator      ... []{}(),;
 acr_nav.VisibleLine  row:20  value:"amc.FDb.ValidRnumPad            0123456789+-.e                   N          N            "
 acr_nav.VisibleLine  row:21  value:"lib_json.FDb.JsonFirstNumChar   0-9-                             Y          Y            "
 acr_nav.VisibleLine  row:22  value:"lib_json.FDb.JsonNumChar        0-9eE.+-                         Y          Y            "
+acr_nav.PreviewNavCol  col_start:0  col_wid:30  name_len:5  col_name:field  target_ctype:dmmeta.Field
+acr_nav.PreviewNavCol  col_start:32  col_wid:31  name_len:4  col_name:expr  target_ctype:""
+acr_nav.PreviewNavCol  col_start:65  col_wid:9  name_len:9  col_name:charrange  target_ctype:""
+acr_nav.PreviewNavCol  col_start:76  col_wid:4  name_len:4  col_name:calc  target_ctype:""
+acr_nav.PreviewNavCol  col_start:82  col_wid:7  name_len:7  col_name:comment  target_ctype:""
 

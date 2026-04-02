@@ -388,6 +388,8 @@ atfdb.tmsg  tmsg:acr_nav.PreviewCharset/100110.in  istuple:N  msg:"acr_nav.SendK
 atfdb.tmsg  tmsg:acr_nav.PreviewCharset/100120.in  istuple:N  msg:"acr_nav.SendKey  key:Down"
 atfdb.tmsg  tmsg:acr_nav.PreviewCharset/100130.in  istuple:N  msg:"acr_nav.SendKey  key:p"
 atfdb.tmsg  tmsg:acr_nav.PreviewCharset/100140.in  istuple:N  msg:acr_nav.Screenshot
+atfdb.tmsg  tmsg:acr_nav.PreviewNavCol/100000.in  istuple:N  msg:"acr_nav.Navigate  ctype:dmmeta.Ns  viewmode:preview"
+atfdb.tmsg  tmsg:acr_nav.PreviewNavCol/100010.in  istuple:N  msg:acr_nav.Screenshot
 atfdb.tmsg  tmsg:acr_nav.PreviewNavCycle/100000.in  istuple:N  msg:"acr_nav.SendKey  key:/"
 atfdb.tmsg  tmsg:acr_nav.PreviewNavCycle/100010.in  istuple:N  msg:"acr_nav.SendKey  key:d"
 atfdb.tmsg  tmsg:acr_nav.PreviewNavCycle/100020.in  istuple:N  msg:"acr_nav.SendKey  key:m"

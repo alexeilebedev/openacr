@@ -457,6 +457,14 @@ static void HeadlessOutput() {
             vl.value = RightPanelLineFind(i);
             prlog(vl);
         }
+        // Emit navigable column metadata for preview mode
+        if (acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_preview_viewmode) {
+            acr_nav::FViewmode &pvm = *acr_nav::_db.p_preview_viewmode;
+            int n_nav = acr_nav::preview_nav_N(pvm);
+            for (int i = 0; i < n_nav; i++) {
+                prlog(acr_nav::preview_nav_qFind(pvm, i));
+            }
+        }
     }
     // Blank line terminates screenshot block
     prlog("");
