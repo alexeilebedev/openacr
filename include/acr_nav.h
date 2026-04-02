@@ -109,6 +109,12 @@ namespace acr_nav { // update-hdr
     // nsdep is a context-sensitive view: auto-activates on namespace headers,
     // restores the previous viewmode when leaving.
     bool PopOverlayOnCtypeChange(acr_nav::FCtype *prev_sel_ct, acr_nav::FCtype *sel_ct);
+
+    // Navigate directly to a ctype by key. Used by headless Navigate command.
+    // If sel_ct is non-null (already viewing a ctype), pushes navstack via NavigateToTarget.
+    // If sel_ct is null (initial state on namespace header), navigates without pushing navstack.
+    // Returns the target FCtype, or nullptr if not found.
+    acr_nav::FCtype* GoToCtype(algo::strptr ctype_key, acr_nav::FViewmode *dest_viewmode);
     //     (user-implemented function, prototype is in amc-generated header)
     // void navaction_move_up(); // gstatic/acr_navdb.navaction:move_up
     // void navaction_move_down(); // gstatic/acr_navdb.navaction:move_down

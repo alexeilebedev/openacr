@@ -42,8 +42,6 @@
 
 ## Known Issues
 
-- Toggle functions data-driven: 5 one-liner navaction_toggle_* could collapse via toggle_viewmode field on FNavaction. Good structural win but separate scope.
-
 ---
 
 ## Pain Points

@@ -1,4 +1,4 @@
-acr_nav.Screen  mode:filter  focus:ctype_list  filter:amc  navstack_depth:0  n_sel_ctype:255  n_ctype:1407  n_field:5694  viewmode:nsdep  breadcrumb:""  filtertarget:ctype  hints:"Enter:accept  Tab:target  Esc:cancel"  sel_nav_col:0
+acr_nav.Screen  mode:filter  focus:ctype_list  filter:amc  navstack_depth:0  n_sel_ctype:255  n_ctype:1413  n_field:5710  viewmode:nsdep  breadcrumb:""  filtertarget:ctype  hints:"Enter:accept  Tab:target  Esc:cancel"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:8  sel_value:amc
 acr_nav.VisibleLeftItem  row:0  value:amc  kind:ns  collapsed:Y  n_match:130  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:amc_gc  kind:ns  collapsed:Y  n_match:1  n_record:0
@@ -22,7 +22,7 @@ acr_nav.VisibleLine  row:9  value:""
 acr_nav.VisibleLine  row:10  value:"Downstream (imports from amc):"
 acr_nav.VisibleLine  row:11  value:"  (none)"
 
-acr_nav.Screen  mode:filter  focus:ctype_list  filter:amc  navstack_depth:0  n_sel_ctype:255  n_ctype:1407  n_field:5694  viewmode:nsdep  breadcrumb:""  filtertarget:ctype  hints:"Enter:accept  Tab:target  Esc:cancel"  sel_nav_col:0
+acr_nav.Screen  mode:filter  focus:ctype_list  filter:amc  navstack_depth:0  n_sel_ctype:255  n_ctype:1413  n_field:5710  viewmode:nsdep  breadcrumb:""  filtertarget:ctype  hints:"Enter:accept  Tab:target  Esc:cancel"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:8  sel_value:amc
 acr_nav.VisibleLeftItem  row:0  value:amc  kind:ns  collapsed:Y  n_match:130  n_record:0
 acr_nav.VisibleLeftItem  row:1  value:amc_gc  kind:ns  collapsed:Y  n_match:1  n_record:0

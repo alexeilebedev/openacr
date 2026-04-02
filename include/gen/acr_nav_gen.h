@@ -23,8 +23,8 @@
 
 
 #pragma once
-#include "include/gen/dmmeta_gen.h"
 #include "include/gen/algo_gen.h"
+#include "include/gen/dmmeta_gen.h"
 #include "include/gen/command_gen.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/acr_navdb_gen.h"
@@ -33,15 +33,24 @@
 
 // --- acr_nav_FieldIdEnum
 
-enum acr_nav_FieldIdEnum {             // acr_nav.FieldId.value
-     acr_nav_FieldId_screenshot   = 0
-    ,acr_nav_FieldId_key          = 1
-    ,acr_nav_FieldId_term_hei     = 2
-    ,acr_nav_FieldId_term_wid     = 3
-    ,acr_nav_FieldId_value        = 4
+enum acr_nav_FieldIdEnum {              // acr_nav.FieldId.value
+     acr_nav_FieldId_go_back      = 0
+    ,acr_nav_FieldId_navigate     = 1
+    ,acr_nav_FieldId_ctype        = 2
+    ,acr_nav_FieldId_viewmode     = 3
+    ,acr_nav_FieldId_screenshot   = 4
+    ,acr_nav_FieldId_key          = 5
+    ,acr_nav_FieldId_set_filter   = 6
+    ,acr_nav_FieldId_filter       = 7
+    ,acr_nav_FieldId_target       = 8
+    ,acr_nav_FieldId_term_hei     = 9
+    ,acr_nav_FieldId_term_wid     = 10
+    ,acr_nav_FieldId_set_view     = 11
+    ,acr_nav_FieldId_summary      = 12
+    ,acr_nav_FieldId_value        = 13
 };
 
-enum { acr_nav_FieldIdEnum_N = 5 };
+enum { acr_nav_FieldIdEnum_N = 14 };
 
 
 // --- acr_nav_TableIdEnum
@@ -129,6 +138,7 @@ namespace acr_nav { struct ns_c_ctype_curs; }
 namespace acr_nav { struct viewmode_line_curs; }
 namespace acr_nav { struct viewmode_cspan_curs; }
 namespace acr_nav { struct viewmode_preview_nav_curs; }
+namespace acr_nav { struct Ack; }
 namespace acr_nav { struct trace; }
 namespace acr_nav { struct FDb; }
 namespace acr_nav { struct FDetailsrc; }
@@ -142,17 +152,22 @@ namespace acr_nav { struct FReftypestyle; }
 namespace acr_nav { struct FSsimfile; }
 namespace acr_nav { struct FViewmode; }
 namespace acr_nav { struct FieldId; }
+namespace acr_nav { struct GoBack; }
 namespace acr_nav { struct InputError; }
 namespace acr_nav { struct LeftItem; }
 namespace acr_nav { struct LineColorSpan; }
 namespace acr_nav { struct Naventry; }
+namespace acr_nav { struct Navigate; }
 namespace acr_nav { struct OverlayEntry; }
 namespace acr_nav { struct PanelState; }
 namespace acr_nav { struct PreviewNavCol; }
 namespace acr_nav { struct Screen; }
 namespace acr_nav { struct Screenshot; }
 namespace acr_nav { struct SendKey; }
+namespace acr_nav { struct SetFilter; }
 namespace acr_nav { struct SetTermSize; }
+namespace acr_nav { struct SetView; }
+namespace acr_nav { struct Summary; }
 namespace acr_nav { struct TableId; }
 namespace acr_nav { struct VisibleField; }
 namespace acr_nav { struct VisibleLeftItem; }
@@ -163,6 +178,26 @@ namespace acr_nav { // hook_fcn_typedef
     typedef void (*viewmode_ensure_content_hook)(void* userctx, acr_nav::FCtype& arg); // hook:acr_nav.FViewmode.ensure_content
 } // hook_decl
 namespace acr_nav { // gen:ns_print_struct
+
+// --- acr_nav.Ack
+struct Ack { // acr_nav.Ack: Headless output: command acknowledgment
+    algo::Smallstr50    ack;              // Command type tag
+    bool                ok;               //   false  Success
+    algo::Smallstr100   ctype;            // Selected ctype
+    algo::Smallstr50    viewmode;         // Current viewmode
+    i32                 navstack_depth;   //   0  Navstack depth
+    algo::cstring       msg;              // Error message
+    // func:acr_nav.Ack..Ctor
+    inline               Ack() __attribute__((nothrow));
+};
+
+// Set all fields to initial values.
+// func:acr_nav.Ack..Init
+inline void          Ack_Init(acr_nav::Ack& parent);
+// print string representation of ROW to string STR
+// cfmt:acr_nav.Ack.String  printfmt:Tuple
+// func:acr_nav.Ack..Print
+void                 Ack_Print(acr_nav::Ack& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- acr_nav.FCtype
 // create: acr_nav.FDb.ctype (Lary)
@@ -3074,6 +3109,20 @@ inline void          FieldId_Init(acr_nav::FieldId& parent);
 // func:acr_nav.FieldId..Print
 void                 FieldId_Print(acr_nav::FieldId& row, algo::cstring& str) __attribute__((nothrow));
 
+// --- acr_nav.GoBack
+struct GoBack { // acr_nav.GoBack: Headless command: pop navigation stack
+    algo::Smallstr50   go_back;   //
+    // func:acr_nav.GoBack..Ctor
+    inline               GoBack() __attribute__((nothrow));
+};
+
+// func:acr_nav.GoBack..ReadFieldMaybe
+bool                 GoBack_ReadFieldMaybe(acr_nav::GoBack& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of acr_nav::GoBack from an ascii string.
+// The format of the string is an ssim Tuple
+// func:acr_nav.GoBack..ReadStrptrMaybe
+bool                 GoBack_ReadStrptrMaybe(acr_nav::GoBack &parent, algo::strptr in_str) __attribute__((nothrow));
+
 // --- acr_nav.InputError
 struct InputError { // acr_nav.InputError: Headless error output for unrecognized input
     i32             lineno;   //   0  Input line number (1-based)
@@ -3136,6 +3185,22 @@ struct Naventry { // acr_nav.Naventry: Navigation stack entry. Uses raw strings 
 // Set all fields to initial values.
 // func:acr_nav.Naventry..Init
 void                 Naventry_Init(acr_nav::Naventry& parent);
+
+// --- acr_nav.Navigate
+struct Navigate { // acr_nav.Navigate: Headless command: navigate to a ctype by name
+    algo::Smallstr50    navigate;   //
+    algo::Smallstr100   ctype;      // Target ctype
+    algo::Smallstr50    viewmode;   // Optional viewmode
+    // func:acr_nav.Navigate..Ctor
+    inline               Navigate() __attribute__((nothrow));
+};
+
+// func:acr_nav.Navigate..ReadFieldMaybe
+bool                 Navigate_ReadFieldMaybe(acr_nav::Navigate& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of acr_nav::Navigate from an ascii string.
+// The format of the string is an ssim Tuple
+// func:acr_nav.Navigate..ReadStrptrMaybe
+bool                 Navigate_ReadStrptrMaybe(acr_nav::Navigate &parent, algo::strptr in_str) __attribute__((nothrow));
 
 // --- acr_nav.OverlayEntry
 // create: acr_nav.FDb.viewmode_stack (Tary)
@@ -3240,6 +3305,25 @@ bool                 SendKey_ReadFieldMaybe(acr_nav::SendKey& parent, algo::strp
 // func:acr_nav.SendKey..ReadStrptrMaybe
 bool                 SendKey_ReadStrptrMaybe(acr_nav::SendKey &parent, algo::strptr in_str) __attribute__((nothrow));
 
+// --- acr_nav.SetFilter
+struct SetFilter { // acr_nav.SetFilter: Headless command: apply filter atomically
+    algo::Smallstr50   set_filter;   //
+    algo::cstring      filter;       // Filter text
+    algo::Smallstr50   target;       //   "ctype"  Filter target
+    // func:acr_nav.SetFilter..Ctor
+    inline               SetFilter() __attribute__((nothrow));
+};
+
+// func:acr_nav.SetFilter..ReadFieldMaybe
+bool                 SetFilter_ReadFieldMaybe(acr_nav::SetFilter& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of acr_nav::SetFilter from an ascii string.
+// The format of the string is an ssim Tuple
+// func:acr_nav.SetFilter..ReadStrptrMaybe
+bool                 SetFilter_ReadStrptrMaybe(acr_nav::SetFilter &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:acr_nav.SetFilter..Init
+inline void          SetFilter_Init(acr_nav::SetFilter& parent);
+
 // --- acr_nav.SetTermSize
 struct SetTermSize { // acr_nav.SetTermSize: Headless command: set terminal dimensions
     i32   term_hei;   //   0  Terminal height in rows
@@ -3257,6 +3341,35 @@ bool                 SetTermSize_ReadStrptrMaybe(acr_nav::SetTermSize &parent, a
 // Set all fields to initial values.
 // func:acr_nav.SetTermSize..Init
 inline void          SetTermSize_Init(acr_nav::SetTermSize& parent);
+
+// --- acr_nav.SetView
+struct SetView { // acr_nav.SetView: Headless command: switch viewmode directly
+    algo::Smallstr50   set_view;   //
+    algo::Smallstr50   viewmode;   // Target viewmode
+    // func:acr_nav.SetView..Ctor
+    inline               SetView() __attribute__((nothrow));
+};
+
+// func:acr_nav.SetView..ReadFieldMaybe
+bool                 SetView_ReadFieldMaybe(acr_nav::SetView& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of acr_nav::SetView from an ascii string.
+// The format of the string is an ssim Tuple
+// func:acr_nav.SetView..ReadStrptrMaybe
+bool                 SetView_ReadStrptrMaybe(acr_nav::SetView &parent, algo::strptr in_str) __attribute__((nothrow));
+
+// --- acr_nav.Summary
+struct Summary { // acr_nav.Summary: Headless command: emit lightweight state summary
+    algo::Smallstr50   summary;   //
+    // func:acr_nav.Summary..Ctor
+    inline               Summary() __attribute__((nothrow));
+};
+
+// func:acr_nav.Summary..ReadFieldMaybe
+bool                 Summary_ReadFieldMaybe(acr_nav::Summary& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of acr_nav::Summary from an ascii string.
+// The format of the string is an ssim Tuple
+// func:acr_nav.Summary..ReadStrptrMaybe
+bool                 Summary_ReadStrptrMaybe(acr_nav::Summary &parent, algo::strptr in_str) __attribute__((nothrow));
 
 // --- acr_nav.TableId
 struct TableId { // acr_nav.TableId: Index of table in this namespace
@@ -3690,6 +3803,7 @@ int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
 #endif
 // gen:ns_operators
 namespace algo {
+inline algo::cstring &operator <<(algo::cstring &str, const acr_nav::Ack &row);// cfmt:acr_nav.Ack.String
 inline algo::cstring &operator <<(algo::cstring &str, const acr_nav::trace &row);// cfmt:acr_nav.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const acr_nav::FieldId &row);// cfmt:acr_nav.FieldId.String
 inline algo::cstring &operator <<(algo::cstring &str, const acr_nav::InputError &row);// cfmt:acr_nav.InputError.String

@@ -1,4 +1,4 @@
-acr_nav.Screen  mode:filter  focus:ctype_list  filter:zzz  navstack_depth:0  n_sel_ctype:0  n_ctype:1407  n_field:5694  viewmode:nsdep  breadcrumb:""  filtertarget:ctype  hints:"Enter:accept  Tab:target  Esc:cancel"  sel_nav_col:0
+acr_nav.Screen  mode:filter  focus:ctype_list  filter:zzz  navstack_depth:0  n_sel_ctype:0  n_ctype:1413  n_field:5710  viewmode:nsdep  breadcrumb:""  filtertarget:ctype  hints:"Enter:accept  Tab:target  Esc:cancel"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
 acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:8  sel_value:"Upstream (atf_fuzz imports from):"
 acr_nav.VisibleLine  row:0  value:"Upstream (atf_fuzz imports from):"
@@ -10,7 +10,7 @@ acr_nav.VisibleLine  row:5  value:""
 acr_nav.VisibleLine  row:6  value:"Downstream (imports from atf_fuzz):"
 acr_nav.VisibleLine  row:7  value:"  (none)"
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:zzzjk  navstack_depth:0  n_sel_ctype:0  n_ctype:1407  n_field:5694  viewmode:nsdep  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:zzzjk  navstack_depth:0  n_sel_ctype:0  n_ctype:1413  n_field:5710  viewmode:nsdep  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
 acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:8  sel_value:"Upstream (atf_fuzz imports from):"
 acr_nav.VisibleLine  row:0  value:"Upstream (atf_fuzz imports from):"
@@ -22,7 +22,7 @@ acr_nav.VisibleLine  row:5  value:""
 acr_nav.VisibleLine  row:6  value:"Downstream (imports from atf_fuzz):"
 acr_nav.VisibleLine  row:7  value:"  (none)"
 
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:zzzjk  navstack_depth:0  n_sel_ctype:0  n_ctype:1407  n_field:5694  viewmode:nsdep  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
+acr_nav.Screen  mode:browse  focus:ctype_list  filter:zzzjk  navstack_depth:0  n_sel_ctype:0  n_ctype:1413  n_field:5710  viewmode:nsdep  breadcrumb:""  filtertarget:ctype  hints:"↑↓←→  /:filter  ?:help  q:quit"  sel_nav_col:0
 acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
 acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:8  sel_value:"Upstream (atf_fuzz imports from):"
 acr_nav.VisibleLine  row:0  value:"Upstream (atf_fuzz imports from):"

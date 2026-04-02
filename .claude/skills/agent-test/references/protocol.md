@@ -20,11 +20,12 @@ Keybinds are mode-qualified. `ProcessKey` composes `"{navmode}.{key}"` and looks
 - `fields` (has_fields:Y) — forward fields of selected ctype. Tab next: xref.
 - `xref` (has_fields:Y) — reverse cross-references. Tab next: preview.
 - `preview` (has_fields:N) — ssimfile record content. Tab next: codegen.
-- `codegen` (has_fields:N) — amc-generated C++ struct. Tab next: fields.
+- `codegen` (has_fields:N) — amc-generated C++ struct. Tab next: graph.
+- `graph` (has_fields:N) — interactive access path diagram (amc_vis-style). Tab next: fields.
 - `help` (has_fields:N) — keybinding help. Overlay, toggled by `?`.
 - `detail` (has_fields:N) — per-field metadata cards. Overlay, toggled by `d`.
 
-`has_fields:Y` viewmodes emit `VisibleField` records. `has_fields:N` emit `VisibleLine` records. Tab cycles the non-overlay chain: fields -> xref -> preview -> codegen -> fields. Help and detail are overlays pushed/popped on `viewmode_stack` (stacking is possible: `d` during help pushes detail on top).
+`has_fields:Y` viewmodes emit `VisibleField` records. `has_fields:N` emit `VisibleLine` records. Tab cycles the non-overlay chain: fields -> xref -> preview -> codegen -> graph -> fields. Help and detail are overlays pushed/popped on `viewmode_stack` (stacking is possible: `d` during help pushes detail on top).
 
 ## Input Records
 
@@ -38,6 +39,26 @@ acr_nav.Screenshot
 # Set terminal dimensions (affects pagination)
 acr_nav.SetTermSize  term_hei:<i32>  term_wid:<i32>
 ```
+
+## v2 Semantic Commands
+
+Semantic commands return `acr_nav.Ack` followed by a blank line. Use alongside v1 commands.
+
+```
+acr_nav.Navigate  ctype:<key>                    # Navigate to ctype (dismisses help, expands ns)
+acr_nav.Navigate  ctype:<key>  viewmode:<name>   # Navigate + set viewmode (rejects nsdep, overlays)
+acr_nav.SetFilter  filter:<text>  target:<name>  # Apply filter (empty filter clears; target default: ctype)
+acr_nav.SetView  viewmode:<name>                 # Switch viewmode (rejects nsdep, detail; accepts help)
+acr_nav.GoBack                                   # Pop navstack (Ack ok:N if empty)
+acr_nav.Summary                                  # Lightweight state: Screen + 2x PanelState only
+```
+
+**Ack output record** (1 per semantic command, terminated by blank line):
+```
+acr_nav.Ack  ack:<cmd_type_tag>  ok:<Y|N>  ctype:<key>  viewmode:<name>
+    navstack_depth:<i32>  msg:<text>
+```
+Fields after `ok` report current state. `msg` is empty on success, error message on failure.
 
 ## Output Records
 
@@ -123,6 +144,35 @@ Left      switch_panel_left     Right     switch_panel_right
 - **Filter matching**: SQL glob (`%filter%`), case-insensitive. Not regex.
 - **Navstack**: follow_ref pushes state (filter, selection, viewmode, scroll). Backspace pops and restores all state.
 - **Namespace headers**: Enter on a namespace header toggles collapse/expand (not follow_ref). Collapsed namespaces are skipped by j/k.
+- **v2 commands dismiss startup help**: All semantic commands (except Summary) clear the startup help overlay
+- **v2 commands cancel filter mode**: If filter mode is active when a semantic command runs, filter is cancelled first
+- **Navigate pushes navstack unconditionally**: Navigating to the same ctype you're already on pushes a new navstack entry (consistent with v1 follow_ref)
+- **Summary output**: Screen + left PanelState + right PanelState + blank line (4 lines total, ~400 bytes)
+
+## Common Patterns
+
+```
+# Navigate and check state (minimal tokens):
+acr_nav.Navigate  ctype:dmmeta.Ctype
+acr_nav.Summary
+# -> Ack shows ok:Y, Summary shows 3 state records
+
+# v1/v2 equivalence test:
+# v2: Navigate + Summary -> extract Screen line
+# v1: / + type filter + Enter + Screenshot -> extract Screen line
+# Compare: viewmode, sel_value, n_sel_ctype must match
+
+# Error handling:
+acr_nav.Navigate  ctype:bad.Name
+# -> Ack ok:N msg:"ctype not found: bad.Name"
+
+# Full workflow:
+acr_nav.Navigate  ctype:dmmeta.Ctype
+acr_nav.SetView  viewmode:xref
+acr_nav.Navigate  ctype:dmmeta.Field
+acr_nav.GoBack
+acr_nav.Summary
+```
 
 ## Cross-Validation
 
@@ -138,21 +188,3 @@ acr dmmeta.field -where:arg:dmmeta.Ctype 2>/dev/null | wc -l
 acr acr_navdb.% 2>/dev/null
 ```
 
-## Sample Session
-
-A simple test sending an unknown key and verifying it doesn't change state (first 5 lines of output):
-
-Input: `acr_nav.SendKey  key:F13` then EOF.
-
-Output:
-```
-acr_nav.Screen  mode:browse  focus:ctype_list  filter:""  navstack_depth:0  n_sel_ctype:1403  n_ctype:1404  n_field:5631  viewmode:help  breadcrumb:""  filtertarget:ctype
-acr_nav.PanelState  panel:ctype_list  sel_row:0  scroll_offset:0  n_items:83  sel_value:""
-acr_nav.VisibleLeftItem  row:0  value:""  kind:ns  collapsed:Y  n_match:44  n_record:0
-acr_nav.VisibleLeftItem  row:1  value:abt  kind:ns  collapsed:Y  n_match:19  n_record:0
-...83 VisibleLeftItem rows (one per namespace, all collapsed)...
-acr_nav.PanelState  panel:content  sel_row:0  scroll_offset:0  n_items:0  sel_value:""
-(blank line)
-```
-
-Key observation: `viewmode:help` is preserved — the unknown key did not dismiss the startup help.

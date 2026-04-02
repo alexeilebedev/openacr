@@ -25,10 +25,10 @@
 #include "include/algo.h"  // hard-coded include
 #include "include/gen/acr_nav_gen.h"
 #include "include/gen/acr_nav_gen.inl.h"
-#include "include/gen/dmmeta_gen.h"
-#include "include/gen/dmmeta_gen.inl.h"
 #include "include/gen/algo_gen.h"
 #include "include/gen/algo_gen.inl.h"
+#include "include/gen/dmmeta_gen.h"
+#include "include/gen/dmmeta_gen.inl.h"
 #include "include/gen/command_gen.h"
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
@@ -106,6 +106,32 @@ namespace acr_nav { // gen:ns_print_proto
     // func:acr_nav...SizeCheck
     inline static void   SizeCheck();
 } // gen:ns_print_proto
+
+// --- acr_nav.Ack..Print
+// print string representation of ROW to string STR
+// cfmt:acr_nav.Ack.String  printfmt:Tuple
+void acr_nav::Ack_Print(acr_nav::Ack& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "acr_nav.Ack";
+
+    algo::Smallstr50_Print(row.ack, temp);
+    PrintAttrSpaceReset(str,"ack", temp);
+
+    bool_Print(row.ok, temp);
+    PrintAttrSpaceReset(str,"ok", temp);
+
+    algo::Smallstr100_Print(row.ctype, temp);
+    PrintAttrSpaceReset(str,"ctype", temp);
+
+    algo::Smallstr50_Print(row.viewmode, temp);
+    PrintAttrSpaceReset(str,"viewmode", temp);
+
+    i32_Print(row.navstack_depth, temp);
+    PrintAttrSpaceReset(str,"navstack_depth", temp);
+
+    algo::cstring_Print(row.msg, temp);
+    PrintAttrSpaceReset(str,"msg", temp);
+}
 
 // --- acr_nav.FCtype.base.CopyOut
 // Copy fields out of row
@@ -6329,10 +6355,19 @@ void acr_nav::FViewmode_Uninit(acr_nav::FViewmode& viewmode) {
 const char* acr_nav::value_ToCstr(const acr_nav::FieldId& parent) {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
+        case acr_nav_FieldId_go_back       : ret = "go_back";  break;
+        case acr_nav_FieldId_navigate      : ret = "navigate";  break;
+        case acr_nav_FieldId_ctype         : ret = "ctype";  break;
+        case acr_nav_FieldId_viewmode      : ret = "viewmode";  break;
         case acr_nav_FieldId_screenshot    : ret = "screenshot";  break;
         case acr_nav_FieldId_key           : ret = "key";  break;
+        case acr_nav_FieldId_set_filter    : ret = "set_filter";  break;
+        case acr_nav_FieldId_filter        : ret = "filter";  break;
+        case acr_nav_FieldId_target        : ret = "target";  break;
         case acr_nav_FieldId_term_hei      : ret = "term_hei";  break;
         case acr_nav_FieldId_term_wid      : ret = "term_wid";  break;
+        case acr_nav_FieldId_set_view      : ret = "set_view";  break;
+        case acr_nav_FieldId_summary       : ret = "summary";  break;
         case acr_nav_FieldId_value         : ret = "value";  break;
     }
     return ret;
@@ -6367,19 +6402,53 @@ bool acr_nav::value_SetStrptrMaybe(acr_nav::FieldId& parent, algo::strptr rhs) {
         }
         case 5: {
             switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+                case LE_STR5('c','t','y','p','e'): {
+                    value_SetEnum(parent,acr_nav_FieldId_ctype); ret = true; break;
+                }
                 case LE_STR5('v','a','l','u','e'): {
                     value_SetEnum(parent,acr_nav_FieldId_value); ret = true; break;
                 }
             }
             break;
         }
+        case 6: {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)) {
+                case LE_STR6('f','i','l','t','e','r'): {
+                    value_SetEnum(parent,acr_nav_FieldId_filter); ret = true; break;
+                }
+                case LE_STR6('t','a','r','g','e','t'): {
+                    value_SetEnum(parent,acr_nav_FieldId_target); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 7: {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
+                case LE_STR7('g','o','_','b','a','c','k'): {
+                    value_SetEnum(parent,acr_nav_FieldId_go_back); ret = true; break;
+                }
+                case LE_STR7('s','u','m','m','a','r','y'): {
+                    value_SetEnum(parent,acr_nav_FieldId_summary); ret = true; break;
+                }
+            }
+            break;
+        }
         case 8: {
             switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('n','a','v','i','g','a','t','e'): {
+                    value_SetEnum(parent,acr_nav_FieldId_navigate); ret = true; break;
+                }
+                case LE_STR8('s','e','t','_','v','i','e','w'): {
+                    value_SetEnum(parent,acr_nav_FieldId_set_view); ret = true; break;
+                }
                 case LE_STR8('t','e','r','m','_','h','e','i'): {
                     value_SetEnum(parent,acr_nav_FieldId_term_hei); ret = true; break;
                 }
                 case LE_STR8('t','e','r','m','_','w','i','d'): {
                     value_SetEnum(parent,acr_nav_FieldId_term_wid); ret = true; break;
+                }
+                case LE_STR8('v','i','e','w','m','o','d','e'): {
+                    value_SetEnum(parent,acr_nav_FieldId_viewmode); ret = true; break;
                 }
             }
             break;
@@ -6388,6 +6457,10 @@ bool acr_nav::value_SetStrptrMaybe(acr_nav::FieldId& parent, algo::strptr rhs) {
             switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('s','c','r','e','e','n','s','h'): {
                     if (memcmp(rhs.elems+8,"ot",2)==0) { value_SetEnum(parent,acr_nav_FieldId_screenshot); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('s','e','t','_','f','i','l','t'): {
+                    if (memcmp(rhs.elems+8,"er",2)==0) { value_SetEnum(parent,acr_nav_FieldId_set_filter); ret = true; break; }
                     break;
                 }
             }
@@ -6431,6 +6504,38 @@ void acr_nav::FieldId_Print(acr_nav::FieldId& row, algo::cstring& str) {
     acr_nav::value_Print(row, str);
 }
 
+// --- acr_nav.GoBack..ReadFieldMaybe
+bool acr_nav::GoBack_ReadFieldMaybe(acr_nav::GoBack& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    acr_nav::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case acr_nav_FieldId_go_back: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.go_back, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- acr_nav.GoBack..ReadStrptrMaybe
+// Read fields of acr_nav::GoBack from an ascii string.
+// The format of the string is an ssim Tuple
+bool acr_nav::GoBack_ReadStrptrMaybe(acr_nav::GoBack &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "acr_nav.GoBack");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && GoBack_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
 // --- acr_nav.InputError..Print
 // print string representation of ROW to string STR
 // cfmt:acr_nav.InputError.String  printfmt:Tuple
@@ -6453,6 +6558,44 @@ void acr_nav::Naventry_Init(acr_nav::Naventry& parent) {
     parent.right_sel_row = i32(0);
     parent.right_scroll_offset = i32(0);
     parent.sel_nav_col = i32(0);
+}
+
+// --- acr_nav.Navigate..ReadFieldMaybe
+bool acr_nav::Navigate_ReadFieldMaybe(acr_nav::Navigate& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    acr_nav::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case acr_nav_FieldId_navigate: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.navigate, strval);
+        } break;
+        case acr_nav_FieldId_ctype: {
+            retval = algo::Smallstr100_ReadStrptrMaybe(parent.ctype, strval);
+        } break;
+        case acr_nav_FieldId_viewmode: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.viewmode, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- acr_nav.Navigate..ReadStrptrMaybe
+// Read fields of acr_nav::Navigate from an ascii string.
+// The format of the string is an ssim Tuple
+bool acr_nav::Navigate_ReadStrptrMaybe(acr_nav::Navigate &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "acr_nav.Navigate");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && Navigate_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
 }
 
 // --- acr_nav.PanelState..Print
@@ -6596,6 +6739,44 @@ bool acr_nav::SendKey_ReadStrptrMaybe(acr_nav::SendKey &parent, algo::strptr in_
     return retval;
 }
 
+// --- acr_nav.SetFilter..ReadFieldMaybe
+bool acr_nav::SetFilter_ReadFieldMaybe(acr_nav::SetFilter& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    acr_nav::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case acr_nav_FieldId_set_filter: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.set_filter, strval);
+        } break;
+        case acr_nav_FieldId_filter: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.filter, strval);
+        } break;
+        case acr_nav_FieldId_target: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.target, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- acr_nav.SetFilter..ReadStrptrMaybe
+// Read fields of acr_nav::SetFilter from an ascii string.
+// The format of the string is an ssim Tuple
+bool acr_nav::SetFilter_ReadStrptrMaybe(acr_nav::SetFilter &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "acr_nav.SetFilter");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && SetFilter_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
 // --- acr_nav.SetTermSize..ReadFieldMaybe
 bool acr_nav::SetTermSize_ReadFieldMaybe(acr_nav::SetTermSize& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
@@ -6627,6 +6808,73 @@ bool acr_nav::SetTermSize_ReadStrptrMaybe(acr_nav::SetTermSize &parent, algo::st
     retval = algo::StripTypeTag(in_str, "acr_nav.SetTermSize");
     ind_beg(algo::Attr_curs, attr, in_str) {
         retval = retval && SetTermSize_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- acr_nav.SetView..ReadFieldMaybe
+bool acr_nav::SetView_ReadFieldMaybe(acr_nav::SetView& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    acr_nav::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case acr_nav_FieldId_set_view: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.set_view, strval);
+        } break;
+        case acr_nav_FieldId_viewmode: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.viewmode, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- acr_nav.SetView..ReadStrptrMaybe
+// Read fields of acr_nav::SetView from an ascii string.
+// The format of the string is an ssim Tuple
+bool acr_nav::SetView_ReadStrptrMaybe(acr_nav::SetView &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "acr_nav.SetView");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && SetView_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- acr_nav.Summary..ReadFieldMaybe
+bool acr_nav::Summary_ReadFieldMaybe(acr_nav::Summary& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    acr_nav::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case acr_nav_FieldId_summary: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.summary, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- acr_nav.Summary..ReadStrptrMaybe
+// Read fields of acr_nav::Summary from an ascii string.
+// The format of the string is an ssim Tuple
+bool acr_nav::Summary_ReadStrptrMaybe(acr_nav::Summary &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "acr_nav.Summary");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && Summary_ReadFieldMaybe(parent, attr.name, attr.value);
     }ind_end;
     return retval;
 }

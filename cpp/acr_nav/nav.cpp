@@ -270,6 +270,39 @@ static void NavigateToTarget(acr_nav::FCtype *sel_ct, acr_nav::FCtype *target, a
 
 // -----------------------------------------------------------------------------
 
+// Navigate directly to a ctype by key. Used by headless Navigate command.
+// If sel_ct is non-null (already viewing a ctype), pushes navstack via NavigateToTarget.
+// If sel_ct is null (initial state on namespace header), navigates without pushing navstack.
+// Returns the target FCtype, or nullptr if not found.
+acr_nav::FCtype* acr_nav::GoToCtype(algo::strptr ctype_key, acr_nav::FViewmode *dest_viewmode) {
+    acr_nav::FCtype *target = acr_nav::ind_ctype_Find(ctype_key);
+    if (target) {
+        acr_nav::FPanel *left = acr_nav::_db.p_left_panel;
+        acr_nav::FCtype *sel_ct = SelectedCtype(*left);
+        if (sel_ct) {
+            // Already viewing a ctype — push navstack and navigate
+            NavigateToTarget(sel_ct, target, dest_viewmode);
+        } else {
+            // Initial state (cursor on namespace header) — navigate without pushing navstack
+            target->p_ns->collapsed = false;
+            acr_nav::_db.filter = "";
+            acr_nav::_db.p_cur_filtertarget = acr_nav::_db.p_default_filtertarget;
+            SwitchToBrowse();
+            BuildLeftItems();
+            for (int i = 0; i < acr_nav::left_item_N(); i++) {
+                if (acr_nav::left_item_qFind(i).ctype == target->ctype) {
+                    left->sel_row = i;
+                    break;
+                }
+            }
+            acr_nav::_db.p_cur_viewmode = dest_viewmode;
+        }
+    }
+    return target;
+}
+
+// -----------------------------------------------------------------------------
+
 void acr_nav::navaction_move_up() {
     acr_nav::FPanel &panel = *acr_nav::_db.p_cur_panel;
     panel.sel_row = i32_Max(0, panel.sel_row - 1);

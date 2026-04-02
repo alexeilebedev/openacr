@@ -67,6 +67,10 @@ Suggestions — combine, split, skip, or invent areas based on what regression t
 - **Xref & deep navigation** — deep navstack, breadcrumb accuracy, xref count cross-validation with `acr`
 - **Protocol robustness** — malformed input, InputError output, SetTermSize edge values, unknown keys, EOF behavior
 - **State combinations** — the most valuable territory. Pick 3+ axes, set them to non-default values, then perform an operation. Does all state remain consistent?
+- **v1/v2 equivalence** — the most valuable new territory. Run the same logical operation via v1 keystrokes AND v2 semantic commands, compare final state. Divergences are bugs.
+- **Semantic command edge cases** — Navigate to invalid ctype, Navigate with nsdep viewmode, SetView to detail, SetFilter with empty string, GoBack with empty navstack, Navigate while in filter mode
+- **Mixed v1/v2 sequences** — Navigate + SendKey j + Summary, SetFilter via v2 + manual key navigation, interleave freely
+- **Ack field accuracy** — cross-validate Ack.ctype against Summary's PanelState.sel_value, Ack.viewmode against Screen.viewmode
 
 ## Subagent Guidelines
 
@@ -75,6 +79,7 @@ Suggestions — combine, split, skip, or invent areas based on what regression t
 - **Run `acr acr_navdb.%`** to discover the full capability surface (keybinds, viewmodes, navactions, navstyles).
 - **Follow surprises.** When something unexpected happens, send more commands and investigate. The most valuable findings come from following anomalies.
 - **Cross-validate with `acr`.** Verify field counts, xref counts, and record counts against `acr dmmeta.field -where:...` queries.
+- **Prefer Summary over Screenshot** for state checks. Summary returns 4 lines (~400 bytes) vs Screenshot's 100+ lines (~10KB). Use Screenshot only when you need item-level details (VisibleField, VisibleLine content).
 
 ## Synthesis
 

@@ -51,6 +51,8 @@ using acr_nav::FieldMatchesFilter;
 using acr_nav::RightPanelLineFind;
 using acr_nav::BuildBreadcrumb;
 using acr_nav::BuildStatusHint;
+using acr_nav::FindSsimfile;
+using acr_nav::GoToCtype;
 
 static struct termios acr_nav_orig_termios;
 static bool acr_nav_raw_mode = false;
@@ -246,11 +248,40 @@ static void InitPanels() {
 
 // -----------------------------------------------------------------------------
 
+static void PostAction(acr_nav::FCtype *prev_sel_ct, acr_nav::FViewmode *prev_viewmode, int prev_depth, int prev_overlay_depth) {
+    acr_nav::FPanel *left = acr_nav::_db.p_left_panel;
+    acr_nav::FPanel *right = acr_nav::_db.p_right_panel;
+    acr_nav::FCtype *sel_ct = SelectedCtype(*left);
+    bool nsdep_ns_changed = PopOverlayOnCtypeChange(prev_sel_ct, sel_ct);
+    bool forward = (acr_nav::navstack_N() >= prev_depth);
+    bool vm_changed = (acr_nav::_db.p_cur_viewmode != prev_viewmode);
+    bool ct_changed = (sel_ct != prev_sel_ct) || nsdep_ns_changed;
+    if (ct_changed && !sel_ct) {
+        InvalidateContentCaches();
+    }
+    bool overlay_pop = vm_changed && (acr_nav::viewmode_stack_N() < prev_overlay_depth);
+    if (forward && ((vm_changed && !overlay_pop) || ct_changed)) {
+        right->sel_row = 0;
+        right->scroll_offset = 0;
+    }
+    if (forward && ct_changed
+        && acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_graph_viewmode
+        && sel_ct && prev_sel_ct && sel_ct != prev_sel_ct) {
+        int line = GraphFindCtypeLine(*sel_ct, prev_sel_ct);
+        if (line >= 0) {
+            right->sel_row = line;
+        }
+    }
+    AdjustScroll(*left, acr_nav::left_item_N());
+    AdjustScroll(*right, RightPanelItemCount(sel_ct));
+}
+
+// -----------------------------------------------------------------------------
+
 static bool ProcessKey(algo::strptr key_name) {
     bool did_something = false;
     {
         acr_nav::FPanel *left = acr_nav::_db.p_left_panel;
-        acr_nav::FPanel *right = acr_nav::_db.p_right_panel;
         acr_nav::FCtype *prev_sel_ct = SelectedCtype(*left);
         acr_nav::FViewmode *prev_viewmode = acr_nav::_db.p_cur_viewmode;
         int prev_depth = acr_nav::navstack_N();
@@ -284,29 +315,7 @@ static bool ProcessKey(algo::strptr key_name) {
         }
         if (did_something) {
             DismissStartupHelp(keybind);
-            acr_nav::FCtype *sel_ct = SelectedCtype(*left);
-            bool nsdep_ns_changed = PopOverlayOnCtypeChange(prev_sel_ct, sel_ct);
-            bool forward = (acr_nav::navstack_N() >= prev_depth);
-            bool vm_changed = (acr_nav::_db.p_cur_viewmode != prev_viewmode);
-            bool ct_changed = (sel_ct != prev_sel_ct) || nsdep_ns_changed;
-            if (ct_changed && !sel_ct) {
-                InvalidateContentCaches();
-            }
-            bool overlay_pop = vm_changed && (acr_nav::viewmode_stack_N() < prev_overlay_depth);
-            if (forward && ((vm_changed && !overlay_pop) || ct_changed)) {
-                right->sel_row = 0;
-                right->scroll_offset = 0;
-            }
-            if (forward && ct_changed
-                && acr_nav::_db.p_cur_viewmode == acr_nav::_db.p_graph_viewmode
-                && sel_ct && prev_sel_ct && sel_ct != prev_sel_ct) {
-                int line = GraphFindCtypeLine(*sel_ct, prev_sel_ct);
-                if (line >= 0) {
-                    right->sel_row = line;
-                }
-            }
-            AdjustScroll(*left, acr_nav::left_item_N());
-            AdjustScroll(*right, RightPanelItemCount(sel_ct));
+            PostAction(prev_sel_ct, prev_viewmode, prev_depth, prev_overlay_depth);
         }
     }
     return did_something;
@@ -314,11 +323,7 @@ static bool ProcessKey(algo::strptr key_name) {
 
 // -----------------------------------------------------------------------------
 
-static void HeadlessOutput() {
-    acr_nav::FPanel *left = acr_nav::_db.p_left_panel;
-    acr_nav::FPanel *right = acr_nav::_db.p_right_panel;
-    acr_nav::FCtype *sel_ct = SelectedCtype(*left);
-    // Screen record
+static acr_nav::Screen BuildScreenRecord(acr_nav::FCtype *sel_ct) {
     acr_nav::Screen screen;
     screen.mode = acr_nav::_db.p_cur_mode->navmode;
     screen.focus = acr_nav::_db.p_cur_panel->panel;
@@ -332,23 +337,59 @@ static void HeadlessOutput() {
     screen.breadcrumb = BuildBreadcrumb(sel_ct);
     screen.filtertarget = acr_nav::_db.p_cur_filtertarget->filtertarget;
     BuildStatusHint(screen.hints);
-    prlog(screen);
-    // Left panel state
-    acr_nav::PanelState left_state;
-    left_state.panel = left->panel;
-    left_state.sel_row = left->sel_row;
-    left_state.scroll_offset = left->scroll_offset;
-    left_state.n_items = acr_nav::left_item_N();
-    left_state.sel_value = "";
+    return screen;
+}
+
+// -----------------------------------------------------------------------------
+
+static acr_nav::PanelState BuildLeftPanelState(acr_nav::FPanel *left) {
+    acr_nav::PanelState state;
+    state.panel = left->panel;
+    state.sel_row = left->sel_row;
+    state.scroll_offset = left->scroll_offset;
+    state.n_items = acr_nav::left_item_N();
+    state.sel_value = "";
     if (left->sel_row >= 0 && left->sel_row < acr_nav::left_item_N()) {
         acr_nav::LeftItem &item = acr_nav::left_item_qFind(left->sel_row);
         if (ch_N(item.ctype) > 0) {
-            left_state.sel_value = item.ctype;
+            state.sel_value = item.ctype;
         } else {
-            left_state.sel_value = item.ns;
+            state.sel_value = item.ns;
         }
     }
-    prlog(left_state);
+    return state;
+}
+
+// -----------------------------------------------------------------------------
+
+static acr_nav::PanelState BuildRightPanelState(acr_nav::FPanel *right, acr_nav::FCtype *sel_ct) {
+    acr_nav::PanelState state;
+    state.panel = right->panel;
+    state.sel_row = right->sel_row;
+    state.scroll_offset = right->scroll_offset;
+    state.n_items = RightPanelItemCount(sel_ct);
+    state.sel_value = "";
+    if (right->sel_row < RightPanelItemCount(sel_ct)) {
+        if (!acr_nav::_db.p_cur_viewmode->has_fields) {
+            state.sel_value = RightPanelLineFind(right->sel_row);
+        } else if (sel_ct) {
+            acr_nav::FField *fld = RightPanelFieldFind(sel_ct, right->sel_row);
+            if (fld) {
+                state.sel_value = fld->field;
+            }
+        }
+    }
+    return state;
+}
+
+// -----------------------------------------------------------------------------
+
+static void HeadlessOutput() {
+    acr_nav::FPanel *left = acr_nav::_db.p_left_panel;
+    acr_nav::FPanel *right = acr_nav::_db.p_right_panel;
+    acr_nav::FCtype *sel_ct = SelectedCtype(*left);
+    prlog(BuildScreenRecord(sel_ct));
+    prlog(BuildLeftPanelState(left));
     // Left panel items (clipped to viewport)
     int first_left = left->scroll_offset;
     int last_left = i32_Min(first_left + DataRows(), acr_nav::left_item_N());
@@ -373,24 +414,7 @@ static void HeadlessOutput() {
         }
         prlog(vli);
     }
-    // Right panel state
-    acr_nav::PanelState right_state;
-    right_state.panel = right->panel;
-    right_state.sel_row = right->sel_row;
-    right_state.scroll_offset = right->scroll_offset;
-    right_state.n_items = RightPanelItemCount(sel_ct);
-    right_state.sel_value = "";
-    if (right->sel_row < RightPanelItemCount(sel_ct)) {
-        if (!acr_nav::_db.p_cur_viewmode->has_fields) {
-            right_state.sel_value = RightPanelLineFind(right->sel_row);
-        } else if (sel_ct) {
-            acr_nav::FField *fld = RightPanelFieldFind(sel_ct, right->sel_row);
-            if (fld) {
-                right_state.sel_value = fld->field;
-            }
-        }
-    }
-    prlog(right_state);
+    prlog(BuildRightPanelState(right, sel_ct));
     // Visible fields (field-based modes only, clipped to viewport)
     if (sel_ct && acr_nav::_db.p_cur_viewmode->has_fields) {
         bool reverse = acr_nav::_db.p_cur_viewmode->is_reverse;
@@ -440,6 +464,187 @@ static void HeadlessOutput() {
 
 // -----------------------------------------------------------------------------
 
+static void EmitAck(algo::strptr cmd_tag, bool ok, algo::strptr msg) {
+    acr_nav::Ack ack;
+    ack.ack = cmd_tag;
+    ack.ok = ok;
+    acr_nav::FPanel *left = acr_nav::_db.p_left_panel;
+    acr_nav::FCtype *sel_ct = SelectedCtype(*left);
+    if (sel_ct) {
+        ack.ctype = sel_ct->ctype;
+    }
+    ack.viewmode = acr_nav::_db.p_cur_viewmode->viewmode;
+    ack.navstack_depth = acr_nav::navstack_N();
+    ack.msg << msg;
+    prlog(ack);
+    prlog("");
+}
+
+// -----------------------------------------------------------------------------
+
+static void EmitSummary() {
+    acr_nav::FPanel *left = acr_nav::_db.p_left_panel;
+    acr_nav::FPanel *right = acr_nav::_db.p_right_panel;
+    acr_nav::FCtype *sel_ct = SelectedCtype(*left);
+    prlog(BuildScreenRecord(sel_ct));
+    prlog(BuildLeftPanelState(left));
+    prlog(BuildRightPanelState(right, sel_ct));
+    prlog("");
+}
+
+// -----------------------------------------------------------------------------
+
+static void HeadlessGoBack() {
+    acr_nav::_db.startup_help = false;
+    bool ok = !acr_nav::navstack_EmptyQ();
+    if (ok) {
+        acr_nav::FPanel *left = acr_nav::_db.p_left_panel;
+        acr_nav::FCtype *prev_sel_ct = SelectedCtype(*left);
+        acr_nav::FViewmode *prev_viewmode = acr_nav::_db.p_cur_viewmode;
+        int prev_depth = acr_nav::navstack_N();
+        int prev_overlay_depth = acr_nav::viewmode_stack_N();
+        acr_nav::navaction_go_back();
+        PostAction(prev_sel_ct, prev_viewmode, prev_depth, prev_overlay_depth);
+    }
+    EmitAck("acr_nav.GoBack", ok, ok ? "" : "navstack is empty");
+}
+
+// -----------------------------------------------------------------------------
+
+static void HeadlessSetView(acr_nav::SetView &cmd) {
+    acr_nav::_db.startup_help = false;
+    acr_nav::FViewmode *vm = acr_nav::ind_viewmode_Find(cmd.viewmode);
+    if (!vm) {
+        EmitAck("acr_nav.SetView", false, tempstr() << "viewmode not found: " << cmd.viewmode);
+    } else if (vm == acr_nav::_db.p_nsdep_viewmode) {
+        EmitAck("acr_nav.SetView", false, "nsdep is context-sensitive");
+    } else if (vm == acr_nav::_db.p_detail_viewmode) {
+        EmitAck("acr_nav.SetView", false, "use SendKey key:d on a field");
+    } else {
+        // Cancel filter mode if active
+        bool in_filter = (acr_nav::_db.p_cur_mode == acr_nav::_db.p_filter_mode);
+        if (in_filter) {
+            acr_nav::navaction_filter_cancel();
+        }
+        acr_nav::FPanel *left = acr_nav::_db.p_left_panel;
+        acr_nav::FCtype *prev_sel_ct = SelectedCtype(*left);
+        acr_nav::FViewmode *prev_viewmode = acr_nav::_db.p_cur_viewmode;
+        int prev_depth = acr_nav::navstack_N();
+        int prev_overlay_depth = acr_nav::viewmode_stack_N();
+        if (vm->is_overlay) {
+            PushOverlay(vm);
+        } else {
+            // Pop any active overlays first
+            while (!acr_nav::viewmode_stack_EmptyQ()) {
+                PopViewmode();
+            }
+            acr_nav::_db.p_cur_viewmode = vm;
+        }
+        PostAction(prev_sel_ct, prev_viewmode, prev_depth, prev_overlay_depth);
+        EmitAck("acr_nav.SetView", true, "");
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+static void HeadlessSetFilter(acr_nav::SetFilter &cmd) {
+    acr_nav::_db.startup_help = false;
+    acr_nav::FFiltertarget *ft = acr_nav::ind_filtertarget_Find(cmd.target);
+    bool ok = (ft != nullptr);
+    tempstr err_msg;
+    if (!ok) {
+        err_msg << "invalid target: " << cmd.target;
+    }
+    if (ok) {
+        bool in_filter = (acr_nav::_db.p_cur_mode == acr_nav::_db.p_filter_mode);
+        if (in_filter) {
+            acr_nav::navaction_filter_cancel();
+        }
+        acr_nav::FPanel *left = acr_nav::_db.p_left_panel;
+        acr_nav::FCtype *prev_sel_ct = SelectedCtype(*left);
+        acr_nav::FViewmode *prev_viewmode = acr_nav::_db.p_cur_viewmode;
+        int prev_depth = acr_nav::navstack_N();
+        int prev_overlay_depth = acr_nav::viewmode_stack_N();
+        bool clearing = (elems_N(algo::Trimmed(cmd.filter)) == 0);
+        if (clearing) {
+            // Empty filter clears the active filter without pushing navstack
+            acr_nav::_db.filter = "";
+            acr_nav::_db.p_cur_filtertarget = acr_nav::_db.p_default_filtertarget;
+            BuildLeftItemsReset();
+        } else {
+            // Full filter workflow: start saves pre-filter state for backtrack
+            acr_nav::navaction_filter_start();
+            acr_nav::_db.filter = cmd.filter;
+            acr_nav::_db.p_cur_filtertarget = ft;
+            BuildLeftItemsReset();
+            acr_nav::navaction_filter_accept();
+        }
+        PostAction(prev_sel_ct, prev_viewmode, prev_depth, prev_overlay_depth);
+    }
+    EmitAck("acr_nav.SetFilter", ok, err_msg);
+}
+
+// -----------------------------------------------------------------------------
+
+static void HeadlessNavigate(acr_nav::Navigate &cmd) {
+    acr_nav::_db.startup_help = false;
+    bool ok = true;
+    tempstr err_msg;
+    acr_nav::FViewmode *dest_viewmode = acr_nav::_db.p_cur_viewmode;
+    if (ch_N(cmd.ctype) == 0) {
+        ok = false;
+        err_msg << "ctype is empty";
+    }
+    acr_nav::FCtype *target = ok ? acr_nav::ind_ctype_Find(cmd.ctype) : nullptr;
+    if (ok && !target) {
+        ok = false;
+        err_msg << "ctype not found: " << cmd.ctype;
+    }
+    // If overlay is current, use fields as default destination
+    if (ok && acr_nav::_db.p_cur_viewmode->is_overlay) {
+        dest_viewmode = acr_nav::_db.p_default_viewmode;
+    }
+    // Validate viewmode if specified
+    if (ok && ch_N(cmd.viewmode) > 0) {
+        acr_nav::FViewmode *vm = acr_nav::ind_viewmode_Find(cmd.viewmode);
+        if (!vm) {
+            ok = false;
+            err_msg << "viewmode not found: " << cmd.viewmode;
+        } else if (vm == acr_nav::_db.p_nsdep_viewmode) {
+            ok = false;
+            err_msg << "nsdep is context-sensitive";
+        } else if (vm->is_overlay) {
+            ok = false;
+            err_msg << "overlay viewmodes not supported in Navigate";
+        } else if (vm->need_ssimfile && !FindSsimfile(*target)) {
+            ok = false;
+            err_msg << "viewmode " << cmd.viewmode << " requires ssimfile for " << cmd.ctype;
+        } else {
+            dest_viewmode = vm;
+        }
+    }
+    if (ok) {
+        bool in_filter = (acr_nav::_db.p_cur_mode == acr_nav::_db.p_filter_mode);
+        if (in_filter) {
+            acr_nav::navaction_filter_cancel();
+        }
+        // Pop overlays before navigation so GoToCtype's viewmode sticks
+        while (!acr_nav::viewmode_stack_EmptyQ()) {
+            PopViewmode();
+        }
+        acr_nav::FPanel *left = acr_nav::_db.p_left_panel;
+        acr_nav::FCtype *prev_sel_ct = SelectedCtype(*left);
+        acr_nav::FViewmode *prev_viewmode = acr_nav::_db.p_cur_viewmode;
+        int prev_depth = acr_nav::navstack_N();
+        int prev_overlay_depth = acr_nav::viewmode_stack_N();
+        acr_nav::GoToCtype(cmd.ctype, dest_viewmode);
+        PostAction(prev_sel_ct, prev_viewmode, prev_depth, prev_overlay_depth);
+    }
+    EmitAck("acr_nav.Navigate", ok, err_msg);
+}
+
+// -----------------------------------------------------------------------------
+
 static void HeadlessMain() {
     InitPanels();
     acr_nav::_db.term_hei = 100000;
@@ -458,6 +663,11 @@ static void HeadlessMain() {
             acr_nav::SendKey send_key;
             acr_nav::Screenshot screenshot;
             acr_nav::SetTermSize set_term_size;
+            acr_nav::Navigate navigate_cmd;
+            acr_nav::SetFilter setfilter_cmd;
+            acr_nav::SetView setview_cmd;
+            acr_nav::GoBack goback_cmd;
+            acr_nav::Summary summary_cmd;
             if (elems_N(algo::Trimmed(line)) == 0) {
                 // empty lines are ssim separators, not errors
             } else if (acr_nav::SendKey_ReadStrptrMaybe(send_key, line)) {
@@ -471,6 +681,16 @@ static void HeadlessMain() {
                 acr_nav::FCtype *sel_ct = SelectedCtype(*left);
                 AdjustScroll(*left, acr_nav::left_item_N());
                 AdjustScroll(*acr_nav::_db.p_right_panel, RightPanelItemCount(sel_ct));
+            } else if (acr_nav::Navigate_ReadStrptrMaybe(navigate_cmd, line)) {
+                HeadlessNavigate(navigate_cmd);
+            } else if (acr_nav::SetFilter_ReadStrptrMaybe(setfilter_cmd, line)) {
+                HeadlessSetFilter(setfilter_cmd);
+            } else if (acr_nav::SetView_ReadStrptrMaybe(setview_cmd, line)) {
+                HeadlessSetView(setview_cmd);
+            } else if (acr_nav::GoBack_ReadStrptrMaybe(goback_cmd, line)) {
+                HeadlessGoBack();
+            } else if (acr_nav::Summary_ReadStrptrMaybe(summary_cmd, line)) {
+                EmitSummary();
             } else {
                 acr_nav::InputError err;
                 err.lineno = lineno;

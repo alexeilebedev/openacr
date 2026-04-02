@@ -23,12 +23,24 @@
 
 
 #pragma once
-#include "include/gen/dmmeta_gen.inl.h"
 #include "include/gen/algo_gen.inl.h"
+#include "include/gen/dmmeta_gen.inl.h"
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/acr_navdb_gen.inl.h"
 //#pragma endinclude
+
+// --- acr_nav.Ack..Init
+// Set all fields to initial values.
+inline void acr_nav::Ack_Init(acr_nav::Ack& parent) {
+    parent.ok = bool(false);
+    parent.navstack_depth = i32(0);
+}
+
+// --- acr_nav.Ack..Ctor
+inline  acr_nav::Ack::Ack() {
+    acr_nav::Ack_Init(*this);
+}
 
 // --- acr_nav.FCtype.c_field.EmptyQ
 // Return true if index is empty
@@ -2399,6 +2411,10 @@ inline  acr_nav::FieldId::FieldId(acr_nav_FieldIdEnum arg) {
     this->value = i32(arg);
 }
 
+// --- acr_nav.GoBack..Ctor
+inline  acr_nav::GoBack::GoBack() {
+}
+
 // --- acr_nav.InputError..Init
 // Set all fields to initial values.
 inline void acr_nav::InputError_Init(acr_nav::InputError& parent) {
@@ -2431,6 +2447,10 @@ inline  acr_nav::LineColorSpan::LineColorSpan() {
 // --- acr_nav.Naventry..Ctor
 inline  acr_nav::Naventry::Naventry() {
     acr_nav::Naventry_Init(*this);
+}
+
+// --- acr_nav.Navigate..Ctor
+inline  acr_nav::Navigate::Navigate() {
 }
 
 // --- acr_nav.OverlayEntry..Init
@@ -2484,6 +2504,17 @@ inline  acr_nav::Screenshot::Screenshot() {
 inline  acr_nav::SendKey::SendKey() {
 }
 
+// --- acr_nav.SetFilter..Init
+// Set all fields to initial values.
+inline void acr_nav::SetFilter_Init(acr_nav::SetFilter& parent) {
+    parent.target = algo::strptr("ctype");
+}
+
+// --- acr_nav.SetFilter..Ctor
+inline  acr_nav::SetFilter::SetFilter() {
+    acr_nav::SetFilter_Init(*this);
+}
+
 // --- acr_nav.SetTermSize..Init
 // Set all fields to initial values.
 inline void acr_nav::SetTermSize_Init(acr_nav::SetTermSize& parent) {
@@ -2494,6 +2525,14 @@ inline void acr_nav::SetTermSize_Init(acr_nav::SetTermSize& parent) {
 // --- acr_nav.SetTermSize..Ctor
 inline  acr_nav::SetTermSize::SetTermSize() {
     acr_nav::SetTermSize_Init(*this);
+}
+
+// --- acr_nav.SetView..Ctor
+inline  acr_nav::SetView::SetView() {
+}
+
+// --- acr_nav.Summary..Ctor
+inline  acr_nav::Summary::Summary() {
 }
 
 // --- acr_nav.TableId.value.GetEnum
@@ -2571,6 +2610,11 @@ inline void acr_nav::VisibleLine_Init(acr_nav::VisibleLine& parent) {
 // --- acr_nav.VisibleLine..Ctor
 inline  acr_nav::VisibleLine::VisibleLine() {
     acr_nav::VisibleLine_Init(*this);
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const acr_nav::Ack &row) {// cfmt:acr_nav.Ack.String
+    acr_nav::Ack_Print(const_cast<acr_nav::Ack&>(row), str);
+    return str;
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const acr_nav::trace &row) {// cfmt:acr_nav.trace.String
