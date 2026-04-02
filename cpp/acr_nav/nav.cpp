@@ -238,9 +238,9 @@ bool acr_nav::PopOverlayOnCtypeChange(acr_nav::FCtype *prev_sel_ct, acr_nav::FCt
 
 // -----------------------------------------------------------------------------
 
-// Push navstack, navigate to target ctype, set dest_viewmode.
-// Shared by field/xref follow and graph follow.
-static void NavigateToTarget(acr_nav::FCtype *sel_ct, acr_nav::FCtype *target, acr_nav::FViewmode *dest_viewmode) {
+// Push a snapshot of the current navigation state onto the navstack.
+// entry_ctype: the ctype key (or namespace display name for nsdep) to record.
+static void PushNaventry(algo::strptr entry_ctype) {
     acr_nav::FPanel *left = acr_nav::_db.p_left_panel;
     acr_nav::Naventry &entry = acr_nav::navstack_Alloc();
     entry.filter = acr_nav::_db.filter;
@@ -250,10 +250,19 @@ static void NavigateToTarget(acr_nav::FCtype *sel_ct, acr_nav::FCtype *target, a
     entry.right_sel_row = acr_nav::_db.p_right_panel->sel_row;
     entry.right_scroll_offset = acr_nav::_db.p_right_panel->scroll_offset;
     entry.viewmode = acr_nav::_db.p_cur_viewmode->viewmode;
-    entry.ctype = sel_ct->ctype;
+    entry.ctype = entry_ctype;
     entry.filtertarget = acr_nav::_db.p_cur_filtertarget->filtertarget;
     entry.focus_panel = acr_nav::_db.p_cur_panel->panel;
     entry.sel_nav_col = acr_nav::_db.sel_nav_col;
+}
+
+// -----------------------------------------------------------------------------
+
+// Push navstack, navigate to target ctype, set dest_viewmode.
+// Shared by field/xref follow and graph follow.
+static void NavigateToTarget(acr_nav::FCtype *sel_ct, acr_nav::FCtype *target, acr_nav::FViewmode *dest_viewmode) {
+    acr_nav::FPanel *left = acr_nav::_db.p_left_panel;
+    PushNaventry(sel_ct->ctype);
     acr_nav::_db.p_cur_viewmode = dest_viewmode;
     acr_nav::_db.filter = "";
     acr_nav::_db.p_cur_filtertarget = acr_nav::_db.p_default_filtertarget;
@@ -417,20 +426,9 @@ void acr_nav::navaction_follow_ref() {
         acr_nav::FViewmode &vm = *acr_nav::_db.p_nsdep_viewmode;
         acr_nav::FNs *target_ns = NsDepNsAtLine(vm, panel.sel_row);
         if (target_ns) {
-            acr_nav::Naventry &entry = acr_nav::navstack_Alloc();
-            entry.filter = acr_nav::_db.filter;
-            entry.navmode = acr_nav::_db.p_cur_mode->navmode;
-            entry.scroll_offset = left->scroll_offset;
-            entry.sel_row = left->sel_row;
-            entry.right_sel_row = panel.sel_row;
-            entry.right_scroll_offset = panel.scroll_offset;
-            entry.viewmode = acr_nav::_db.p_cur_viewmode->viewmode;
-            entry.ctype = sel_ct ? algo::strptr(sel_ct->ctype)
+            PushNaventry(sel_ct ? algo::strptr(sel_ct->ctype)
                 : (acr_nav::_db.p_nsdep_ns ? NsDisplayName(*acr_nav::_db.p_nsdep_ns)
-                                           : algo::strptr(""));
-            entry.filtertarget = acr_nav::_db.p_cur_filtertarget->filtertarget;
-            entry.focus_panel = acr_nav::_db.p_cur_panel->panel;
-            entry.sel_nav_col = acr_nav::_db.sel_nav_col;
+                                           : algo::strptr("")));
             acr_nav::_db.filter = "";
             acr_nav::_db.p_cur_filtertarget = acr_nav::_db.p_default_filtertarget;
             SwitchToBrowse();
