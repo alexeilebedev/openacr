@@ -20,7 +20,6 @@ dmmeta.nsx  ns:atf_ci  genthrow:Y  correct_getorcreate:Y  pool:algo_lib.FDb.mall
 dmmeta.nsx  ns:atf_cmdline  genthrow:Y  correct_getorcreate:Y  pool:algo_lib.FDb.malloc  sortxref:Y  pack:N  comment:""
 dmmeta.nsx  ns:atf_comp  genthrow:Y  correct_getorcreate:Y  pool:algo_lib.FDb.malloc  sortxref:Y  pack:N  comment:""
 dmmeta.nsx  ns:atf_cov  genthrow:Y  correct_getorcreate:Y  pool:algo_lib.FDb.malloc  sortxref:Y  pack:N  comment:""
-dmmeta.nsx  ns:atf_exp  genthrow:Y  correct_getorcreate:Y  pool:algo_lib.FDb.malloc  sortxref:Y  pack:N  comment:""
 dmmeta.nsx  ns:atf_fuzz  genthrow:Y  correct_getorcreate:Y  pool:algo_lib.FDb.malloc  sortxref:Y  pack:N  comment:""
 dmmeta.nsx  ns:atf_gcli  genthrow:Y  correct_getorcreate:Y  pool:algo_lib.FDb.malloc  sortxref:Y  pack:N  comment:""
 dmmeta.nsx  ns:atf_nrun  genthrow:Y  correct_getorcreate:Y  pool:algo_lib.FDb.malloc  sortxref:Y  pack:N  comment:""

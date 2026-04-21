@@ -1,4 +1,7 @@
--query:dmmeta.ctype:
--query:dmmeta.ssimfile:
--query:garden.flower:
--query:garden.fruit:
+# start acr_compl cmd:"$bindir/acr_compl -schema:test/acr_compl.schema.ssim -data:test/acr_compl.data.ssim -line:'acr '"
+# eof acr_compl
+acr_compl -> -query:dmmeta.ctype:
+acr_compl -> -query:dmmeta.ssimfile:
+acr_compl -> -query:garden.flower:
+acr_compl -> -query:garden.fruit:
+# exit acr_compl code:0

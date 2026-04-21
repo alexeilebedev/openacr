@@ -58,8 +58,6 @@
 &#128196; [atf_comp - Internals](/txt/exe/atf_comp/internals.md)<br/>
 &#128196; [atf_cov - Line coverage](/txt/exe/atf_cov/README.md)<br/>
 &#128196; [atf_cov - Internals](/txt/exe/atf_cov/internals.md)<br/>
-&#128196; [atf_exp - ATF expect](/txt/exe/atf_exp/README.md)<br/>
-&#128196; [atf_exp - Internals](/txt/exe/atf_exp/internals.md)<br/>
 &#128196; [atf_fuzz - Generator of bad inputs for targets](/txt/exe/atf_fuzz/README.md)<br/>
 &#128196; [atf_fuzz - Internals](/txt/exe/atf_fuzz/internals.md)<br/>
 &#128196; [atf_gcli - test harness for gcli](/txt/exe/atf_gcli/README.md)<br/>

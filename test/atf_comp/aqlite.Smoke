@@ -1,9 +1,8 @@
-ROWID  CTYPE  COMMENT
-0      i16
-1      i32
+CTYPE  COMMENT
+i16
+i32
 
-ROWID  FIELD                 ARG           REFTYPE  DFLT  COMMENT
-0      abt.FArch.msghdr      dev.Arch      Base
-1      abt.FCfg.msghdr       dev.Cfg       Base
-2      abt.FCompiler.msghdr  dev.Compiler  Base
-
+FIELD                 ARG           REFTYPE  DFLT  COMMENT
+abt.FArch.msghdr      dev.Arch      Base
+abt.FCfg.msghdr       dev.Cfg       Base
+abt.FCompiler.msghdr  dev.Compiler  Base

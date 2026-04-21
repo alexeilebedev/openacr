@@ -1,2 +1,5 @@
-<astr:string>
-value type
+# start acr_compl cmd:"$bindir/acr_compl -line:'atf_cmdline -- ' -type:63"
+# eof acr_compl
+acr_compl -> <astr:string>
+acr_compl -> value type
+# exit acr_compl code:0

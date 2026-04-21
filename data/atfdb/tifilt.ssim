@@ -1,1 +1,0 @@
-atfdb.tifilt  comptest:atf_comp.Smoke  ifilter:"mkdir -p $tempdir/$comptest/test; (echo b; echo a) > $tempdir/$comptest/test/cat.Hello; cat"  comment:""

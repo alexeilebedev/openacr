@@ -1,3 +1,10 @@
-stmt1  cstring_fields:1
-stmt2  i32_fields:2
-stmt3  comment_with_test:3
+# start aqlite cmd:"$bindir/aqlite -in:- \"select count(*) as cstring_fields from field where arg like '%cstring%'; select count(*) as i32_fields from field where arg like '%i32%'; select count(*) as comment_with_test from field where comment like '%test%'\""
+aqlite <- dmmeta.ctype  ctype:dmmeta.PatternTest    comment:"Test ctype for pattern matching"
+aqlite <- dmmeta.field  field:dmmeta.PatternTest.id      arg:i32          reftype:Val   dflt:""      comment:"Test identifier"
+aqlite <- dmmeta.field  field:dmmeta.PatternTest.desc    arg:algo.cstring reftype:Val   dflt:""      comment:"Test description field"
+aqlite <- dmmeta.field  field:dmmeta.PatternTest.flags   arg:i32          reftype:Val   dflt:"0"     comment:"Test flags value"
+# eof aqlite
+aqlite -> stmt1  cstring_fields:0
+aqlite -> stmt2  i32_fields:0
+aqlite -> stmt3  comment_with_test:0
+# exit aqlite code:0

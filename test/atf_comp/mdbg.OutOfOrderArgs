@@ -1,1 +1,4 @@
-mdbg: error at -args:x: must be preceded by [-target]
+# start mdbg cmd:"$bindir/mdbg -args:x y"
+# eof mdbg
+mdbg -> mdbg: error at -args:x: must be preceded by [-target]
+# exit mdbg code:1

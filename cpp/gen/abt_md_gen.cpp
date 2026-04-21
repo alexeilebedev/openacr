@@ -188,8 +188,7 @@ void abt_md::comptest_CopyOut(abt_md::FComptest &row, atfdb::Comptest &out) {
     out.memcheck = row.memcheck;
     out.coverage = row.coverage;
     out.exit_code = row.exit_code;
-    out.ncore = row.ncore;
-    out.repeat = row.repeat;
+    out.stablefld = row.stablefld;
     out.comment = row.comment;
 }
 
@@ -201,8 +200,7 @@ void abt_md::comptest_CopyIn(abt_md::FComptest &row, atfdb::Comptest &in) {
     row.memcheck = in.memcheck;
     row.coverage = in.coverage;
     row.exit_code = in.exit_code;
-    row.ncore = in.ncore;
-    row.repeat = in.repeat;
+    row.stablefld = in.stablefld;
     row.comment = in.comment;
 }
 
@@ -225,8 +223,7 @@ void abt_md::FComptest_Init(abt_md::FComptest& comptest) {
     comptest.memcheck = bool(true);
     comptest.coverage = bool(true);
     comptest.exit_code = u8(0);
-    comptest.ncore = i32(1);
-    comptest.repeat = i32(1);
+    comptest.stablefld = bool(false);
     comptest.ns_c_comptest_in_ary = bool(false);
 }
 
@@ -713,7 +710,7 @@ static void abt_md::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'abt_md.Input'  signature:'1d64073c67d090b1a9ec75e09f0de10c7c1bc7d2'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'abt_md.Input'  signature:'6963c499b278c1a14c46e8d5b1c85cfb73ddd9a5'");
 }
 
 // --- abt_md.FDb._db.InsertStrptrMaybe

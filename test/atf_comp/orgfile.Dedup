@@ -1,0 +1,4 @@
+# start bash cmd:"bash -c 'for X in a b c; do echo test/orgfile/$X.txt; done | bin/orgfile -dedup:%'"
+# eof bash
+bash -> orgfile.dedup  original:test/orgfile/a.txt  duplicate:test/orgfile/b.txt  comment:"contents are identical (based on hash)"
+# exit bash code:0

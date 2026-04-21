@@ -1,0 +1,4 @@
+# start find cmd:"find test/orgfile -name 'PSX_*' | bin/orgfile -move:test/orgfile/%Y/%m/%d/"
+# eof find
+find -> orgfile.move  pathname:test/orgfile/PSX_20200101.txt  tgtfile:test/orgfile/2020/01/01/PSX_20200101.txt  comment:"move file"
+# exit find code:0

@@ -1,13 +1,16 @@
-January
-February
-March
-May
-July
-November
-October
-June
-April
-None
-September
-August
-December
+# start acr_compl cmd:"$bindir/acr_compl -line:'atf_cmdline -cconst ' -type:63"
+# eof acr_compl
+acr_compl -> January
+acr_compl -> February
+acr_compl -> March
+acr_compl -> May
+acr_compl -> July
+acr_compl -> November
+acr_compl -> October
+acr_compl -> June
+acr_compl -> April
+acr_compl -> None
+acr_compl -> September
+acr_compl -> August
+acr_compl -> December
+# exit acr_compl code:0

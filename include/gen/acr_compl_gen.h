@@ -586,6 +586,8 @@ struct FDb { // acr_compl.FDb: In-memory database for acr_compl
     acr_compl::FComplsource*   complsource_lary[32];               // level array
     i32                        complsource_n;                      // number of elements in array
     bool                       is_data_dir;                        //   false  Input is a directory of ssimfiles
+    algo::cstring              parse_error;                        //   ""  Error from command line parsing
+    algo::cstring              compl_output;                       //   ""  Collected completion output
     acr_compl::trace           trace;                              //
 };
 

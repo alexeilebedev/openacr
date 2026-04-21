@@ -1,15 +1,27 @@
-{
-    "A": {
-        "B": "C",
-        "D": true,
-        "E": false,
-        "F": null,
-        "G": [
-            0.1,
-            0.2,
-            0.3
-        ],
-        "H": {},
-        "I": 0.33
-    }
-}
+# start jkv cmd:"$bindir/jkv - -r"
+jkv <- A.B::C
+jkv <- A.D:true
+jkv <- A.E:false
+jkv <- A.F:null
+jkv <- A.G-0:0.1
+jkv <- A.G-1:0.2
+jkv <- A.G-2:0.3
+jkv <- A.H:{}
+jkv <- A.I:0.33
+# eof jkv
+jkv -> {
+jkv ->     "A": {
+jkv ->         "B": "C",
+jkv ->         "D": true,
+jkv ->         "E": false,
+jkv ->         "F": null,
+jkv ->         "G": [
+jkv ->             0.1,
+jkv ->             0.2,
+jkv ->             0.3
+jkv ->         ],
+jkv ->         "H": {},
+jkv ->         "I": 0.33
+jkv ->     }
+jkv -> }
+# exit jkv code:0

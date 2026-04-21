@@ -1,1 +1,37 @@
-peach 
+# start acr_compl cmd:"$bindir/acr_compl -schema:- -data:- -line:'acr garden.fruit:pe'"
+acr_compl <- dmmeta.ns  ns:''
+acr_compl <- dmmeta.ns  ns:acr
+acr_compl <- dmmeta.ns  ns:algo_lib
+acr_compl <- dmmeta.ns  ns:algo
+acr_compl <- dmmeta.ns  ns:command
+acr_compl <- dmmeta.ns  ns:dmmeta
+acr_compl <- dmmeta.ns  ns:garden
+acr_compl <- dmmeta.ctype  ctype:''
+acr_compl <- dmmeta.ctype  ctype:algo.Smallstr50
+acr_compl <- dmmeta.ctype  ctype:algo.cstring
+acr_compl <- dmmeta.ctype  ctype:algo_lib.Cmdline
+acr_compl <- dmmeta.ctype  ctype:algo_lib.FDb
+acr_compl <- dmmeta.ctype  ctype:acr.FDb
+acr_compl <- dmmeta.ctype  ctype:command.acr
+acr_compl <- dmmeta.ctype  ctype:dmmeta.Ssimfile
+acr_compl <- dmmeta.ctype  ctype:garden.Flower
+acr_compl <- dmmeta.ctype  ctype:garden.Fruit
+acr_compl <- dmmeta.field  field:''
+acr_compl <- dmmeta.field  field:acr.FDb.cmdline  arg:command.acr
+acr_compl <- dmmeta.field  field:dmmeta.Ssimfile.ssimfile  arg:algo.Smallstr50
+acr_compl <- dmmeta.field  field:algo_lib.FDb.cmdline  arg:algo_lib.Cmdline
+acr_compl <- dmmeta.field  field:command.acr.query arg:algo.cstring
+acr_compl <- dmmeta.field  field:garden.Flower.flower arg:algo.Smallstr50
+acr_compl <- dmmeta.field  field:garden.Fruit.fruit arg:algo.Smallstr50
+acr_compl <- dmmeta.ssimfile ssimfile:dmmeta.ssimfile  ctype:dmmeta.Ssimfile
+acr_compl <- dmmeta.ssimfile ssimfile:garden.flower  ctype:garden.Flower
+acr_compl <- dmmeta.ssimfile ssimfile:garden.fruit  ctype:garden.Fruit
+acr_compl <- dmmeta.fcmdline  field:acr.FDb.cmdline  basecmdline:''
+acr_compl <- garden.flower  flower:rose
+acr_compl <- garden.flower  flower:tulip
+acr_compl <- garden.fruit  fruit:apple
+acr_compl <- garden.fruit  fruit:plum
+acr_compl <- garden.fruit  fruit:peach
+# eof acr_compl
+acr_compl -> peach 
+# exit acr_compl code:0

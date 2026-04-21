@@ -1,1 +1,4 @@
-stmt1  field:dev.Syscmd.maxtime  arg:i32  reftype:Val  dflt:0  comment:"Optional max running time (used to use SIGALRM)"
+# start aqlite cmd:"$bindir/aqlite \"select * from field where dflt = 0 and ns = 'dev'\""
+# eof aqlite
+aqlite -> stmt1  field:dev.Syscmd.maxtime  arg:i32  reftype:Val  dflt:0  comment:"Optional max running time (used to use SIGALRM)"
+# exit aqlite code:0

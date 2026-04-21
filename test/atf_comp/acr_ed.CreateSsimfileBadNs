@@ -1,1 +1,4 @@
-acr_ed.createssimfile_bad_ssimns  comment:"specified namespace is not registered in dmmeta.nsdb table"
+# start acr_ed cmd:"$bindir/acr_ed --create -ssimfile ams.test -subset algo.Smallstr10"
+# eof acr_ed
+acr_ed -> acr_ed.createssimfile_bad_ssimns  comment:"specified namespace is not registered in dmmeta.nsdb table"
+# exit acr_ed code:1

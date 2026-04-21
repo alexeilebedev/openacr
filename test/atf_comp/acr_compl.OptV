@@ -1,3 +1,6 @@
--v 
--verbose 
--version 
+# start acr_compl cmd:"$bindir/acr_compl -line:'atf_cmdline -v'"
+# eof acr_compl
+acr_compl -> -v 
+acr_compl -> -verbose 
+acr_compl -> -version 
+# exit acr_compl code:0

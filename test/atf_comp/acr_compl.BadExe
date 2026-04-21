@@ -1,0 +1,3 @@
+# start acr_compl cmd:"$bindir/acr_compl -schema:test/acr_compl.schema.ssim -data:test/acr_compl.data.ssim -line:'blah'"
+# eof acr_compl
+# exit acr_compl code:0

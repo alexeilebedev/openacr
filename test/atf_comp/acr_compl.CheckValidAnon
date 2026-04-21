@@ -1,0 +1,3 @@
+# start acr_compl cmd:"$bindir/acr_compl -check -line:'acr %'"
+# eof acr_compl
+# exit acr_compl code:0

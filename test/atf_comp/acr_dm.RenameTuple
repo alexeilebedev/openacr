@@ -1,3 +1,6 @@
-a.b  key:1
-a.b  key:2.5
-a.b  key:3
+# start acr_dm cmd:"$bindir/acr_dm test/acr_dm/renametuple1.ssim test/acr_dm/renametuple2.ssim test/acr_dm/renametuple3.ssim"
+# eof acr_dm
+acr_dm -> a.b  key:1
+acr_dm -> a.b  key:2.5
+acr_dm -> a.b  key:3
+# exit acr_dm code:0

@@ -1,19 +1,22 @@
-bin/atf_cmdline  -astr:blah -anum:0 -adbl:0 -aflag:N -str:blah -cconst:None
-astr:blah
-anum:0
-adbl:0
-aflag:N
-str:blah
-num:0
-dbl:0
-flag:N
-dstr:blah
-dnum:-33
-ddbl:0.0001
-dflag:Y
-fconst:high
-cconst:None
-dregx.expr:%
-dpkey:
-verbose:0
-debug:0
+# start atf_cmdline cmd:"$bindir/atf_cmdline -exec blah -str blah"
+# eof atf_cmdline
+atf_cmdline -> bin/atf_cmdline  -astr:blah -anum:0 -adbl:0 -aflag:N -str:blah -cconst:None
+atf_cmdline -> astr:blah
+atf_cmdline -> anum:0
+atf_cmdline -> adbl:0
+atf_cmdline -> aflag:N
+atf_cmdline -> str:blah
+atf_cmdline -> num:0
+atf_cmdline -> dbl:0
+atf_cmdline -> flag:N
+atf_cmdline -> dstr:blah
+atf_cmdline -> dnum:-33
+atf_cmdline -> ddbl:0.0001
+atf_cmdline -> dflag:Y
+atf_cmdline -> fconst:high
+atf_cmdline -> cconst:None
+atf_cmdline -> dregx.expr:%
+atf_cmdline -> dpkey:
+atf_cmdline -> verbose:0
+atf_cmdline -> debug:0
+# exit atf_cmdline code:0

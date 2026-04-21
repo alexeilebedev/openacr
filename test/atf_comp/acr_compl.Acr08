@@ -1,3 +1,6 @@
-apple 
-peach 
-plum 
+# start acr_compl cmd:"$bindir/acr_compl -schema:test/acr_compl.schema.ssim -data:test/acr_compl.data.ssim -line:'acr garden.fruit:'"
+# eof acr_compl
+acr_compl -> apple 
+acr_compl -> peach 
+acr_compl -> plum 
+# exit acr_compl code:0

@@ -1,14 +1,17 @@
-dmmeta.dispsigcheck  dispsig:acr_in.Input  signature:d48a6dc1b049c2717480bd82d5da16a9d765c724
-dmmeta.dispsigcheck  dispsig:algo_lib.Input  signature:ddc07e859e7056e1a824df1ad0e6d08e12e89849
-acr_in:
-    dmmeta.ssimfile  ssimfile:dmmeta.ctype  ctype:dmmeta.Ctype
-    dmmeta.ssimfile  ssimfile:dmmeta.dispsig  ctype:dmmeta.Dispsig
-    dmmeta.ssimfile  ssimfile:dmmeta.field  ctype:dmmeta.Field
-    dmmeta.ssimfile  ssimfile:dmmeta.finput  ctype:dmmeta.Finput
-    dmmeta.ssimfile  ssimfile:dmmeta.ns  ctype:dmmeta.Ns
-    dmmeta.ssimfile  ssimfile:dmmeta.ssimfile  ctype:dmmeta.Ssimfile
-    dmmeta.ssimfile  ssimfile:dmmeta.substr  ctype:dmmeta.Substr
-    dmmeta.ssimfile  ssimfile:dev.targdep  ctype:dev.Targdep
-    dmmeta.ssimfile  ssimfile:dev.target  ctype:dev.Target
-algo_lib:
-    dmmeta.ssimfile  ssimfile:dmmeta.dispsigcheck  ctype:dmmeta.Dispsigcheck
+# start acr_in cmd:"$bindir/acr_in acr_in -t"
+# eof acr_in
+acr_in -> dmmeta.dispsigcheck  dispsig:acr_in.Input  signature:d48a6dc1b049c2717480bd82d5da16a9d765c724
+acr_in -> dmmeta.dispsigcheck  dispsig:algo_lib.Input  signature:ddc07e859e7056e1a824df1ad0e6d08e12e89849
+acr_in -> acr_in:
+acr_in ->     dmmeta.ssimfile  ssimfile:dmmeta.ctype  ctype:dmmeta.Ctype
+acr_in ->     dmmeta.ssimfile  ssimfile:dmmeta.dispsig  ctype:dmmeta.Dispsig
+acr_in ->     dmmeta.ssimfile  ssimfile:dmmeta.field  ctype:dmmeta.Field
+acr_in ->     dmmeta.ssimfile  ssimfile:dmmeta.finput  ctype:dmmeta.Finput
+acr_in ->     dmmeta.ssimfile  ssimfile:dmmeta.ns  ctype:dmmeta.Ns
+acr_in ->     dmmeta.ssimfile  ssimfile:dmmeta.ssimfile  ctype:dmmeta.Ssimfile
+acr_in ->     dmmeta.ssimfile  ssimfile:dmmeta.substr  ctype:dmmeta.Substr
+acr_in ->     dmmeta.ssimfile  ssimfile:dev.targdep  ctype:dev.Targdep
+acr_in ->     dmmeta.ssimfile  ssimfile:dev.target  ctype:dev.Target
+acr_in -> algo_lib:
+acr_in ->     dmmeta.ssimfile  ssimfile:dmmeta.dispsigcheck  ctype:dmmeta.Dispsigcheck
+# exit acr_in code:0

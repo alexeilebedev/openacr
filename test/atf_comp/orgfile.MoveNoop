@@ -1,0 +1,3 @@
+# start find cmd:"find test/orgfile -name 'PSX_*' | bin/orgfile -move:test/orgfile/"
+# eof find
+# exit find code:0

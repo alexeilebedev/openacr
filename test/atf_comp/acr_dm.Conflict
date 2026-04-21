@@ -1,10 +1,13 @@
-garden.flower  flower:rose  color:yellow  language:romance  leaf:compound
-garden.flower  flower:tulip  color:red  language:friendship  leaf:strap
-garden.flower  flower:orchid  color:white  language:happiness  leaf:oblong
-<<<<<<< test/acr_dm/file2.ssim
-garden.flower  flower:lily  color:white  language:sweet
-=======
-garden.flower  flower:lily  color:pink  leaf:bowl
->>>>>>> test/acr_dm/file4.ssim
-garden.flower  flower:iris  color:blue  language:luck  leaf:sword
-garden.flower  flower:daisy  color:orange  leaf:spatula
+# start acr_dm cmd:"$bindir/acr_dm test/acr_dm/file1.ssim test/acr_dm/file2.ssim test/acr_dm/file4.ssim"
+# eof acr_dm
+acr_dm -> garden.flower  flower:rose  color:yellow  language:romance  leaf:compound
+acr_dm -> garden.flower  flower:tulip  color:red  language:friendship  leaf:strap
+acr_dm -> garden.flower  flower:orchid  color:white  language:happiness  leaf:oblong
+acr_dm -> <<<<<<< test/acr_dm/file2.ssim
+acr_dm -> garden.flower  flower:lily  color:white  language:sweet
+acr_dm -> =======
+acr_dm -> garden.flower  flower:lily  color:pink  leaf:bowl
+acr_dm -> >>>>>>> test/acr_dm/file4.ssim
+acr_dm -> garden.flower  flower:iris  color:blue  language:luck  leaf:sword
+acr_dm -> garden.flower  flower:daisy  color:orange  leaf:spatula
+# exit acr_dm code:1

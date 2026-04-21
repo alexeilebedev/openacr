@@ -58,6 +58,16 @@ inline  atfdb::Citest::Citest() {
     atfdb::Citest_Init(*this);
 }
 
+// --- atfdb.Comptest..Init
+// Set all fields to initial values.
+inline void atfdb::Comptest_Init(atfdb::Comptest& parent) {
+    parent.timeout = i32(10);
+    parent.memcheck = bool(true);
+    parent.coverage = bool(true);
+    parent.exit_code = u8(0);
+    parent.stablefld = bool(false);
+}
+
 // --- atfdb.Comptest..Ctor
 inline  atfdb::Comptest::Comptest() {
     atfdb::Comptest_Init(*this);
@@ -110,10 +120,6 @@ inline  atfdb::Fuzzstrat::Fuzzstrat() {
 inline  atfdb::Msgdir::Msgdir() {
 }
 
-// --- atfdb.Targs..Ctor
-inline  atfdb::Targs::Targs() {
-}
-
 // --- atfdb.TestGsymbolChar..Ctor
 inline  atfdb::TestGsymbolChar::TestGsymbolChar() {
 }
@@ -130,23 +136,12 @@ inline  atfdb::TestGsymbolStrptr::TestGsymbolStrptr() {
 inline  atfdb::Tfilt::Tfilt() {
 }
 
-// --- atfdb.Tifilt..Ctor
-inline  atfdb::Tifilt::Tifilt() {
-}
-
-// --- atfdb.Tmsg..Init
-// Set all fields to initial values.
-inline void atfdb::Tmsg_Init(atfdb::Tmsg& parent) {
-    parent.istuple = bool(false);
-}
-
-// --- atfdb.Tmsg..Ctor
-inline  atfdb::Tmsg::Tmsg() {
-    atfdb::Tmsg_Init(*this);
-}
-
 // --- atfdb.Unittest..Ctor
 inline  atfdb::Unittest::Unittest() {
+}
+
+// --- atfdb.Unstableattr..Ctor
+inline  atfdb::Unstableattr::Unstableattr() {
 }
 
 // --- atfdb.Var..Ctor
@@ -188,11 +183,6 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const atfdb::Msgdir 
     return str;
 }
 
-inline algo::cstring &algo::operator <<(algo::cstring &str, const atfdb::Targs &row) {// cfmt:atfdb.Targs.String
-    atfdb::Targs_Print(const_cast<atfdb::Targs&>(row), str);
-    return str;
-}
-
 inline algo::cstring &algo::operator <<(algo::cstring &str, const atfdb::TestGsymbolChar &row) {// cfmt:atfdb.TestGsymbolChar.String
     atfdb::TestGsymbolChar_Print(const_cast<atfdb::TestGsymbolChar&>(row), str);
     return str;
@@ -213,13 +203,8 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const atfdb::Tfilt &
     return str;
 }
 
-inline algo::cstring &algo::operator <<(algo::cstring &str, const atfdb::Tifilt &row) {// cfmt:atfdb.Tifilt.String
-    atfdb::Tifilt_Print(const_cast<atfdb::Tifilt&>(row), str);
-    return str;
-}
-
-inline algo::cstring &algo::operator <<(algo::cstring &str, const atfdb::Tmsg &row) {// cfmt:atfdb.Tmsg.String
-    atfdb::Tmsg_Print(const_cast<atfdb::Tmsg&>(row), str);
+inline algo::cstring &algo::operator <<(algo::cstring &str, const atfdb::Unstableattr &row) {// cfmt:atfdb.Unstableattr.String
+    atfdb::Unstableattr_Print(const_cast<atfdb::Unstableattr&>(row), str);
     return str;
 }
 

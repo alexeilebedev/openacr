@@ -1,0 +1,4 @@
+# start bash cmd:'bash -c \'(echo test/orgfile/b.txt; find test/orgfile -name "*.txt") | bin/orgfile -dedup:"%/a.txt"\''
+# eof bash
+bash -> orgfile.dedup  original:test/orgfile/b.txt  duplicate:test/orgfile/a.txt  comment:"contents are identical (based on hash)"
+# exit bash code:0

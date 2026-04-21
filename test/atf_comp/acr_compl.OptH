@@ -1,2 +1,5 @@
--h 
--help 
+# start acr_compl cmd:"$bindir/acr_compl -line:'atf_cmdline -h'"
+# eof acr_compl
+acr_compl -> -h 
+acr_compl -> -help 
+# exit acr_compl code:0

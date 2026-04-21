@@ -28,3 +28,7 @@ compile_flags.txt
 .ccls-cache/
 
 *.gcov
+
+# direnv
+.env
+.direnv/

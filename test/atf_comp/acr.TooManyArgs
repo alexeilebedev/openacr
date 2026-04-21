@@ -1,1 +1,4 @@
-acr: too many arguments. error at y
+# start acr cmd:"$bindir/acr x y"
+# eof acr
+acr -> acr: too many arguments. error at y
+# exit acr code:1

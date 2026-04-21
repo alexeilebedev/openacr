@@ -30,7 +30,7 @@ These ssimfiles reference dev.cfg
 <!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:CmdlineUses -->
 
 * [abt -cfg](/txt/exe/abt/README.md) - Set config 
-* [atf_comp -cfg](/txt/exe/atf_comp/README.md) - Set config 
+* [atf_comp -cfg](/txt/exe/atf_comp/README.md) - Configuration (determines bindir) 
 * [mdbg -cfg](/txt/exe/mdbg/README.md) - Configuration to use 
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:CmdlineUses -->

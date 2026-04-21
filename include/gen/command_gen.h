@@ -224,144 +224,145 @@ enum command_FieldIdEnum {                             // command.FieldId.value
     ,command_FieldId_dregx                      = 190
     ,command_FieldId_dpkey                      = 191
     ,command_FieldId_comptest                   = 192
-    ,command_FieldId_mdbg                       = 193
-    ,command_FieldId_run                        = 194
-    ,command_FieldId_printinput                 = 195
-    ,command_FieldId_normalize                  = 196
-    ,command_FieldId_covcapture                 = 197
-    ,command_FieldId_covcheck                   = 198
-    ,command_FieldId_bindir                     = 199
-    ,command_FieldId_tempdir                    = 200
-    ,command_FieldId_testdir                    = 201
-    ,command_FieldId_check_untracked            = 202
-    ,command_FieldId_memcheck                   = 203
-    ,command_FieldId_callgrind                  = 204
-    ,command_FieldId_stream                     = 205
-    ,command_FieldId_i                          = 206
-    ,command_FieldId_b                          = 207
-    ,command_FieldId_covfast                    = 208
-    ,command_FieldId_minrepeat                  = 209
-    ,command_FieldId_maxrepeat                  = 210
-    ,command_FieldId_covdir                     = 211
-    ,command_FieldId_logfile                    = 212
-    ,command_FieldId_runcmd                     = 213
-    ,command_FieldId_exclude                    = 214
-    ,command_FieldId_mergepath                  = 215
-    ,command_FieldId_gcov                       = 216
-    ,command_FieldId_ssim                       = 217
-    ,command_FieldId_xmlpretty                  = 218
-    ,command_FieldId_summary                    = 219
-    ,command_FieldId_incremental                = 220
-    ,command_FieldId_dbgshell                   = 221
-    ,command_FieldId_reprofile                  = 222
-    ,command_FieldId_args                       = 223
-    ,command_FieldId_inputfile                  = 224
-    ,command_FieldId_fuzzstrat                  = 225
-    ,command_FieldId_seed                       = 226
-    ,command_FieldId_testprob                   = 227
-    ,command_FieldId_gtblacttst                 = 228
-    ,command_FieldId_mr                         = 229
-    ,command_FieldId_note                       = 230
-    ,command_FieldId_skip_init                  = 231
-    ,command_FieldId_skip_git_init              = 232
-    ,command_FieldId_ncmd                       = 233
-    ,command_FieldId_nofork                     = 234
-    ,command_FieldId_perf_secs                  = 235
-    ,command_FieldId_pertest_timeout            = 236
-    ,command_FieldId_stats                      = 237
-    ,command_FieldId_enable                     = 238
-    ,command_FieldId_disable                    = 239
-    ,command_FieldId_gc                         = 240
-    ,command_FieldId_dir                        = 241
-    ,command_FieldId_hitrate                    = 242
-    ,command_FieldId_after                      = 243
-    ,command_FieldId_selector                   = 244
-    ,command_FieldId_fields                     = 245
-    ,command_FieldId_accept                     = 246
-    ,command_FieldId_approve                    = 247
-    ,command_FieldId_needs_work                 = 248
-    ,command_FieldId_authdir                    = 249
-    ,command_FieldId_gitdir                     = 250
-    ,command_FieldId_show_gitlab_system_notes   = 251
-    ,command_FieldId_file                       = 252
-    ,command_FieldId_kv                         = 253
-    ,command_FieldId_output                     = 254
-    ,command_FieldId_attach                     = 255
-    ,command_FieldId_pid                        = 256
-    ,command_FieldId_catchthrow                 = 257
-    ,command_FieldId_tui                        = 258
-    ,command_FieldId_bcmd                       = 259
-    ,command_FieldId_emacs                      = 260
-    ,command_FieldId_manywin                    = 261
-    ,command_FieldId_follow_child               = 262
-    ,command_FieldId_py                         = 263
-    ,command_FieldId_mp                         = 264
-    ,command_FieldId_writessimfile              = 265
-    ,command_FieldId_url                        = 266
-    ,command_FieldId_tables                     = 267
-    ,command_FieldId_nologo                     = 268
-    ,command_FieldId_baddbok                    = 269
-    ,command_FieldId_move                       = 270
-    ,command_FieldId_dedup                      = 271
-    ,command_FieldId_commit                     = 272
-    ,command_FieldId_undo                       = 273
-    ,command_FieldId_hash                       = 274
-    ,command_FieldId_parse_make                 = 275
-    ,command_FieldId_makefile                   = 276
-    ,command_FieldId_expr                       = 277
-    ,command_FieldId_style                      = 278
-    ,command_FieldId_full                       = 279
-    ,command_FieldId_f                          = 280
-    ,command_FieldId_match                      = 281
-    ,command_FieldId_string                     = 282
-    ,command_FieldId_name                       = 283
-    ,command_FieldId_files                      = 284
-    ,command_FieldId_refs                       = 285
-    ,command_FieldId_pull                       = 286
-    ,command_FieldId_targsrc                    = 287
-    ,command_FieldId_acrkey                     = 288
-    ,command_FieldId_func                       = 289
-    ,command_FieldId_nextfile                   = 290
-    ,command_FieldId_other                      = 291
-    ,command_FieldId_updateproto                = 292
-    ,command_FieldId_createmissing              = 293
-    ,command_FieldId_iffy                       = 294
-    ,command_FieldId_gen                        = 295
-    ,command_FieldId_showloc                    = 296
-    ,command_FieldId_showstatic                 = 297
-    ,command_FieldId_matchproto                 = 298
-    ,command_FieldId_matchbody                  = 299
-    ,command_FieldId_matchcomment               = 300
-    ,command_FieldId_showsortkey                = 301
-    ,command_FieldId_showbody                   = 302
-    ,command_FieldId_sortname                   = 303
-    ,command_FieldId_printssim                  = 304
-    ,command_FieldId_baddecl                    = 305
-    ,command_FieldId_indent                     = 306
-    ,command_FieldId_update_copyright           = 307
-    ,command_FieldId_scriptfile                 = 308
-    ,command_FieldId_linelim                    = 309
-    ,command_FieldId_strayfile                  = 310
-    ,command_FieldId_badchar                    = 311
-    ,command_FieldId_badline                    = 312
-    ,command_FieldId_expand                     = 313
-    ,command_FieldId_ignoreQuote                = 314
-    ,command_FieldId_maxpacket                  = 315
-    ,command_FieldId_db                         = 316
-    ,command_FieldId_createdb                   = 317
-    ,command_FieldId_typetag                    = 318
-    ,command_FieldId_format                     = 319
-    ,command_FieldId_tocamelcase                = 320
-    ,command_FieldId_tolowerunder               = 321
-    ,command_FieldId_pathcomp                   = 322
-    ,command_FieldId_fname                      = 323
-    ,command_FieldId_outseparator               = 324
-    ,command_FieldId_header                     = 325
-    ,command_FieldId_prefer_signed              = 326
-    ,command_FieldId_value                      = 327
+    ,command_FieldId_mode                       = 193
+    ,command_FieldId_mdbg                       = 194
+    ,command_FieldId_run                        = 195
+    ,command_FieldId_ee                         = 196
+    ,command_FieldId_printinput                 = 197
+    ,command_FieldId_normalize                  = 198
+    ,command_FieldId_covcapture                 = 199
+    ,command_FieldId_covcheck                   = 200
+    ,command_FieldId_bindir                     = 201
+    ,command_FieldId_tempdir                    = 202
+    ,command_FieldId_testdir                    = 203
+    ,command_FieldId_check_untracked            = 204
+    ,command_FieldId_memcheck                   = 205
+    ,command_FieldId_callgrind                  = 206
+    ,command_FieldId_stream                     = 207
+    ,command_FieldId_i                          = 208
+    ,command_FieldId_b                          = 209
+    ,command_FieldId_covfast                    = 210
+    ,command_FieldId_minrepeat                  = 211
+    ,command_FieldId_maxrepeat                  = 212
+    ,command_FieldId_covdir                     = 213
+    ,command_FieldId_logfile                    = 214
+    ,command_FieldId_runcmd                     = 215
+    ,command_FieldId_exclude                    = 216
+    ,command_FieldId_mergepath                  = 217
+    ,command_FieldId_gcov                       = 218
+    ,command_FieldId_ssim                       = 219
+    ,command_FieldId_xmlpretty                  = 220
+    ,command_FieldId_summary                    = 221
+    ,command_FieldId_incremental                = 222
+    ,command_FieldId_reprofile                  = 223
+    ,command_FieldId_args                       = 224
+    ,command_FieldId_inputfile                  = 225
+    ,command_FieldId_fuzzstrat                  = 226
+    ,command_FieldId_seed                       = 227
+    ,command_FieldId_testprob                   = 228
+    ,command_FieldId_gtblacttst                 = 229
+    ,command_FieldId_mr                         = 230
+    ,command_FieldId_note                       = 231
+    ,command_FieldId_skip_init                  = 232
+    ,command_FieldId_skip_git_init              = 233
+    ,command_FieldId_ncmd                       = 234
+    ,command_FieldId_nofork                     = 235
+    ,command_FieldId_perf_secs                  = 236
+    ,command_FieldId_pertest_timeout            = 237
+    ,command_FieldId_stats                      = 238
+    ,command_FieldId_enable                     = 239
+    ,command_FieldId_disable                    = 240
+    ,command_FieldId_gc                         = 241
+    ,command_FieldId_dir                        = 242
+    ,command_FieldId_hitrate                    = 243
+    ,command_FieldId_after                      = 244
+    ,command_FieldId_selector                   = 245
+    ,command_FieldId_fields                     = 246
+    ,command_FieldId_accept                     = 247
+    ,command_FieldId_approve                    = 248
+    ,command_FieldId_needs_work                 = 249
+    ,command_FieldId_authdir                    = 250
+    ,command_FieldId_gitdir                     = 251
+    ,command_FieldId_show_gitlab_system_notes   = 252
+    ,command_FieldId_file                       = 253
+    ,command_FieldId_kv                         = 254
+    ,command_FieldId_output                     = 255
+    ,command_FieldId_attach                     = 256
+    ,command_FieldId_pid                        = 257
+    ,command_FieldId_catchthrow                 = 258
+    ,command_FieldId_tui                        = 259
+    ,command_FieldId_bcmd                       = 260
+    ,command_FieldId_emacs                      = 261
+    ,command_FieldId_manywin                    = 262
+    ,command_FieldId_follow_child               = 263
+    ,command_FieldId_py                         = 264
+    ,command_FieldId_mp                         = 265
+    ,command_FieldId_writessimfile              = 266
+    ,command_FieldId_url                        = 267
+    ,command_FieldId_tables                     = 268
+    ,command_FieldId_nologo                     = 269
+    ,command_FieldId_baddbok                    = 270
+    ,command_FieldId_move                       = 271
+    ,command_FieldId_dedup                      = 272
+    ,command_FieldId_commit                     = 273
+    ,command_FieldId_undo                       = 274
+    ,command_FieldId_hash                       = 275
+    ,command_FieldId_parse_make                 = 276
+    ,command_FieldId_makefile                   = 277
+    ,command_FieldId_expr                       = 278
+    ,command_FieldId_style                      = 279
+    ,command_FieldId_full                       = 280
+    ,command_FieldId_f                          = 281
+    ,command_FieldId_match                      = 282
+    ,command_FieldId_string                     = 283
+    ,command_FieldId_name                       = 284
+    ,command_FieldId_files                      = 285
+    ,command_FieldId_refs                       = 286
+    ,command_FieldId_pull                       = 287
+    ,command_FieldId_targsrc                    = 288
+    ,command_FieldId_acrkey                     = 289
+    ,command_FieldId_func                       = 290
+    ,command_FieldId_nextfile                   = 291
+    ,command_FieldId_other                      = 292
+    ,command_FieldId_updateproto                = 293
+    ,command_FieldId_createmissing              = 294
+    ,command_FieldId_iffy                       = 295
+    ,command_FieldId_gen                        = 296
+    ,command_FieldId_showloc                    = 297
+    ,command_FieldId_showstatic                 = 298
+    ,command_FieldId_matchproto                 = 299
+    ,command_FieldId_matchbody                  = 300
+    ,command_FieldId_matchcomment               = 301
+    ,command_FieldId_showsortkey                = 302
+    ,command_FieldId_showbody                   = 303
+    ,command_FieldId_sortname                   = 304
+    ,command_FieldId_printssim                  = 305
+    ,command_FieldId_baddecl                    = 306
+    ,command_FieldId_indent                     = 307
+    ,command_FieldId_update_copyright           = 308
+    ,command_FieldId_scriptfile                 = 309
+    ,command_FieldId_linelim                    = 310
+    ,command_FieldId_strayfile                  = 311
+    ,command_FieldId_badchar                    = 312
+    ,command_FieldId_badline                    = 313
+    ,command_FieldId_expand                     = 314
+    ,command_FieldId_ignoreQuote                = 315
+    ,command_FieldId_maxpacket                  = 316
+    ,command_FieldId_db                         = 317
+    ,command_FieldId_createdb                   = 318
+    ,command_FieldId_typetag                    = 319
+    ,command_FieldId_format                     = 320
+    ,command_FieldId_tocamelcase                = 321
+    ,command_FieldId_tolowerunder               = 322
+    ,command_FieldId_pathcomp                   = 323
+    ,command_FieldId_fname                      = 324
+    ,command_FieldId_outseparator               = 325
+    ,command_FieldId_header                     = 326
+    ,command_FieldId_prefer_signed              = 327
+    ,command_FieldId_value                      = 328
 };
 
-enum { command_FieldIdEnum_N = 328 };
+enum { command_FieldIdEnum_N = 329 };
 
 
 // --- command_abt_cache_Enum
@@ -386,6 +387,26 @@ enum command_atf_cmdline_fconst_Enum {         // command.atf_cmdline.fconst
 };
 
 enum { command_atf_cmdline_fconst_Enum_N = 3 };
+
+
+// --- command_atf_comp_mode_Enum
+
+enum command_atf_comp_mode_Enum {              // command.atf_comp.mode
+     command_atf_comp_mode_run          = 0    // Run tests and compare output
+    ,command_atf_comp_mode_capture      = 1    // Re-capture test results
+    ,command_atf_comp_mode_covcheck     = 2    // Check coverage against tgtcov
+    ,command_atf_comp_mode_covcapture   = 3    // Capture new coverage percentages
+    ,command_atf_comp_mode_memcheck     = 4    // Run under valgrind memcheck
+    ,command_atf_comp_mode_valgrind     = 5    // Run under valgrind (general)
+    ,command_atf_comp_mode_mdbg         = 6    // Debug single test under mdbg
+    ,command_atf_comp_mode_edit         = 7    // Edit test definition (acr -t -e)
+    ,command_atf_comp_mode_editsource   = 8    // Edit test function source code
+    ,command_atf_comp_mode_print        = 9    // Print reference output
+    ,command_atf_comp_mode_printinput   = 10   // Print test input lines
+    ,command_atf_comp_mode_del          = 12   // Delete selected comptests
+};
+
+enum { command_atf_comp_mode_Enum_N = 12 };
 
 
 // --- command_jkv_output_Enum
@@ -474,8 +495,6 @@ namespace command { struct atf_comp; }
 namespace command { struct atf_comp_proc; }
 namespace command { struct atf_cov; }
 namespace command { struct atf_cov_proc; }
-namespace command { struct atf_exp; }
-namespace command { struct atf_exp_proc; }
 namespace command { struct atf_fuzz; }
 namespace command { struct atf_fuzz_proc; }
 namespace command { struct atf_gcli; }
@@ -1149,6 +1168,7 @@ struct acr_compl { // command.acr_compl
     algo::cstring   type;        //   "9"  Simulates COMP_TYPE (debug)
     bool            install;     //   false  Produce bash commands to install the handler
     algo::cstring   debug_log;   //   ""  Log file for debug information, overrides ACR_COMPL_DEBUG_LOG
+    bool            check;       //   false  Check command line validity
     // func:command.acr_compl..Ctor
     inline               acr_compl() __attribute__((nothrow));
 };
@@ -3195,21 +3215,23 @@ void                 atf_cmdline_proc_Uninit(command::atf_cmdline_proc& parent) 
 struct atf_comp { // command.atf_comp
     algo::cstring      in;                //   "data"  Input directory or filename, - for stdin
     algo_lib::Regx     comptest;          //   "%"  Sql Regx of atfdb::Comptest
+    u8                 mode;              //   0  Test mode
     bool               mdbg;              //   false  (action) Run component test under debugger
     bool               run;               //   true  (action) Run selected component tests
-    bool               capture;           //   false  (action) Re-capture test results
+    bool               capture;           //   false  Alias for -mode:capture
+    bool               ee;                //   false  Alias for -mode:editsource
+    bool               e;                 //   false  Alias for -mode:edit
     bool               print;             //   false  (action) Print testcase
+    algo::Smallstr50   cfg;               //   "release"  Configuration (determines bindir)
     bool               printinput;        //   false  (action) Print input of test case
-    bool               e;                 //   false  (action) Open selected testcases in an editor
+    i32                maxerr;            //   3  Exit after this many errors
     bool               normalize;         //   false  (action) Renumber and normalize tmsgs
     bool               covcapture;        //   false  (action) Capture new coverage percentages and save back
     bool               covcheck;          //   false  (action) Check coverage percentages against tgtcov table
     algo::cstring      bindir;            //   ""  Directory with binaries (default: build/cfg)
     algo::cstring      tempdir;           //   "temp/atf_comp"  Temp directory
     algo::cstring      testdir;           //   "test/atf_comp"  Test data directory
-    algo::Smallstr50   cfg;               //   "release"  Set config
     bool               check_untracked;   //   true  Check for untracked file before allowing test to run
-    i32                maxerr;            //   3  Exit after this many errors
     bool               build;             //   false  Build given cfg before test
     bool               memcheck;          //   false  Run under memory checker (valgrind)
     bool               force;             //   false  (With -memcheck) run suppressed memcheck
@@ -3234,6 +3256,33 @@ void                 comptest_Print(command::atf_comp& parent, algo::cstring &ou
 // Convert string to field. Return success value
 // func:command.atf_comp.comptest.ReadStrptrMaybe
 bool                 comptest_ReadStrptrMaybe(command::atf_comp& parent, algo::strptr in) __attribute__((nothrow));
+
+// Get value of field as enum type
+// func:command.atf_comp.mode.GetEnum
+inline command_atf_comp_mode_Enum mode_GetEnum(const command::atf_comp& parent) __attribute__((nothrow));
+// Set value of field from enum type.
+// func:command.atf_comp.mode.SetEnum
+inline void          mode_SetEnum(command::atf_comp& parent, command_atf_comp_mode_Enum rhs) __attribute__((nothrow));
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+// func:command.atf_comp.mode.ToCstr
+const char*          mode_ToCstr(const command::atf_comp& parent) __attribute__((nothrow));
+// Convert mode to a string. First, attempt conversion to a known string.
+// If no string matches, print mode as a numeric value.
+// func:command.atf_comp.mode.Print
+void                 mode_Print(const command::atf_comp& parent, algo::cstring &lhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+// func:command.atf_comp.mode.SetStrptrMaybe
+bool                 mode_SetStrptrMaybe(command::atf_comp& parent, algo::strptr rhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+// func:command.atf_comp.mode.SetStrptr
+void                 mode_SetStrptr(command::atf_comp& parent, algo::strptr rhs, command_atf_comp_mode_Enum dflt) __attribute__((nothrow));
+// Convert string to field. Return success value
+// func:command.atf_comp.mode.ReadStrptrMaybe
+bool                 mode_ReadStrptrMaybe(command::atf_comp& parent, algo::strptr rhs) __attribute__((nothrow));
 
 // func:command.atf_comp..ReadFieldMaybe
 bool                 atf_comp_ReadFieldMaybe(command::atf_comp& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
@@ -3415,95 +3464,6 @@ void                 atf_cov_ToArgv(command::atf_cov_proc& parent, algo::StringA
 inline void          atf_cov_proc_Init(command::atf_cov_proc& parent);
 // func:command.atf_cov_proc..Uninit
 void                 atf_cov_proc_Uninit(command::atf_cov_proc& parent) __attribute__((nothrow));
-
-// --- command.atf_exp
-// access: command.atf_exp_proc.atf_exp (Exec)
-struct atf_exp { // command.atf_exp
-    algo::cstring      in;         //   "data"  Input directory or filename, - for stdin
-    algo::cstring      trace;      //   ""  Regx of things to trace
-    algo::cstring      bindir;     //   "bin"  Directory with binaries
-    algo::Smallstr50   comptest;   //   ""  Component test name
-    algo::cstring      tempdir;    //   ""  Temporary directory for the component test
-    double             timeout;    //   8.0  Timeout in seconds for a step
-    bool               dbgshell;   //   false  Invoke bash with curr envs in case of timeout
-    // func:command.atf_exp..Ctor
-    inline               atf_exp() __attribute__((nothrow));
-};
-
-// func:command.atf_exp..ReadFieldMaybe
-bool                 atf_exp_ReadFieldMaybe(command::atf_exp& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of command::atf_exp from attributes of ascii tuple TUPLE
-// func:command.atf_exp..ReadTupleMaybe
-bool                 atf_exp_ReadTupleMaybe(command::atf_exp &parent, algo::Tuple &tuple) __attribute__((nothrow));
-// Set all fields to initial values.
-// func:command.atf_exp..Init
-inline void          atf_exp_Init(command::atf_exp& parent);
-// Convenience function that returns a full command line
-// Assume command is in a directory called bin
-// func:command.atf_exp..ToCmdline
-tempstr              atf_exp_ToCmdline(command::atf_exp& row) __attribute__((nothrow));
-// print string representation of ROW to string STR
-// cfmt:command.atf_exp.Argv  printfmt:Tuple
-// func:command.atf_exp..PrintArgv
-void                 atf_exp_PrintArgv(command::atf_exp& row, algo::cstring& str) __attribute__((nothrow));
-// Used with command lines
-// Return # of command-line arguments that must follow this argument
-// If FIELD is invalid, return -1
-// func:command.atf_exp..NArgs
-i32                  atf_exp_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
-
-// --- command.atf_exp_proc
-struct atf_exp_proc { // command.atf_exp_proc: Subprocess: ATF expect
-    algo::cstring      path;      //   "bin/atf_exp"  path for executable
-    command::atf_exp   cmd;       // command line for child process
-    algo::cstring      fstdin;    // redirect for stdin
-    algo::cstring      fstdout;   // redirect for stdout
-    algo::cstring      fstderr;   // redirect for stderr
-    pid_t              pid;       //   0  pid of running child process
-    i32                timeout;   //   0  optional timeout for child process
-    i32                status;    //   0  last exit status of child process
-    // func:command.atf_exp_proc..Ctor
-    inline               atf_exp_proc() __attribute__((nothrow));
-    // func:command.atf_exp_proc..Dtor
-    inline               ~atf_exp_proc() __attribute__((nothrow));
-};
-
-// Start subprocess
-// If subprocess already running, do nothing. Otherwise, start it
-// func:command.atf_exp_proc.atf_exp.Start
-int                  atf_exp_Start(command::atf_exp_proc& parent) __attribute__((nothrow));
-// Start subprocess & Read output
-// func:command.atf_exp_proc.atf_exp.StartRead
-algo::Fildes         atf_exp_StartRead(command::atf_exp_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
-// Kill subprocess and wait
-// func:command.atf_exp_proc.atf_exp.Kill
-void                 atf_exp_Kill(command::atf_exp_proc& parent);
-// Wait for subprocess to return
-// func:command.atf_exp_proc.atf_exp.Wait
-void                 atf_exp_Wait(command::atf_exp_proc& parent) __attribute__((nothrow));
-// Start + Wait
-// Execute subprocess and return exit code
-// func:command.atf_exp_proc.atf_exp.Exec
-int                  atf_exp_Exec(command::atf_exp_proc& parent) __attribute__((nothrow));
-// Start + Wait, throw exception on error
-// Execute subprocess; throw human-readable exception on error
-// func:command.atf_exp_proc.atf_exp.ExecX
-void                 atf_exp_ExecX(command::atf_exp_proc& parent);
-// Call execv()
-// Call execv with specified parameters
-// func:command.atf_exp_proc.atf_exp.Execv
-int                  atf_exp_Execv(command::atf_exp_proc& parent) __attribute__((nothrow));
-// func:command.atf_exp_proc.atf_exp.ToCmdline
-algo::tempstr        atf_exp_ToCmdline(command::atf_exp_proc& parent) __attribute__((nothrow));
-// Form array from the command line
-// func:command.atf_exp_proc.atf_exp.ToArgv
-void                 atf_exp_ToArgv(command::atf_exp_proc& parent, algo::StringAry& args) __attribute__((nothrow));
-
-// Set all fields to initial values.
-// func:command.atf_exp_proc..Init
-inline void          atf_exp_proc_Init(command::atf_exp_proc& parent);
-// func:command.atf_exp_proc..Uninit
-void                 atf_exp_proc_Uninit(command::atf_exp_proc& parent) __attribute__((nothrow));
 
 // --- command.atf_fuzz
 // access: command.atf_fuzz_proc.atf_fuzz (Exec)

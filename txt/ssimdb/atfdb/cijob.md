@@ -1,4 +1,4 @@
-## atfdb.cijob -
+## atfdb.cijob - CI job - set of tests that run in one invocation of atf_ci
 
 
 ### Attributes

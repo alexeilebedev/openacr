@@ -1,1 +1,4 @@
--aflag 
+# start acr_compl cmd:"$bindir/acr_compl -line:'atf_cmdline -astr: -anum: -adbl: -str: -num: -dbl: '"
+# eof acr_compl
+acr_compl -> -aflag 
+# exit acr_compl code:0

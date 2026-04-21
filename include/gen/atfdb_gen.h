@@ -46,28 +46,21 @@ enum atfdb_FieldIdEnum {                       // atfdb.FieldId.value
     ,atfdb_FieldId_memcheck              = 13
     ,atfdb_FieldId_coverage              = 14
     ,atfdb_FieldId_exit_code             = 15
-    ,atfdb_FieldId_ncore                 = 16
-    ,atfdb_FieldId_repeat                = 17
-    ,atfdb_FieldId_fuzzstrat             = 18
-    ,atfdb_FieldId_msgdir                = 19
-    ,atfdb_FieldId_args                  = 20
-    ,atfdb_FieldId_test_gsymbol_char     = 21
-    ,atfdb_FieldId_test_gsymbol_pkey     = 22
-    ,atfdb_FieldId_test_gsymbol_strptr   = 23
-    ,atfdb_FieldId_filter                = 24
-    ,atfdb_FieldId_ifilter               = 25
-    ,atfdb_FieldId_tmsg                  = 26
-    ,atfdb_FieldId_rank                  = 27
-    ,atfdb_FieldId_dir                   = 28
-    ,atfdb_FieldId_istuple               = 29
-    ,atfdb_FieldId_msg                   = 30
-    ,atfdb_FieldId_unittest              = 31
-    ,atfdb_FieldId_ns                    = 32
-    ,atfdb_FieldId_var                   = 33
-    ,atfdb_FieldId_value                 = 34
+    ,atfdb_FieldId_stablefld             = 16
+    ,atfdb_FieldId_fuzzstrat             = 17
+    ,atfdb_FieldId_msgdir                = 18
+    ,atfdb_FieldId_test_gsymbol_char     = 19
+    ,atfdb_FieldId_test_gsymbol_pkey     = 20
+    ,atfdb_FieldId_test_gsymbol_strptr   = 21
+    ,atfdb_FieldId_filter                = 22
+    ,atfdb_FieldId_unittest              = 23
+    ,atfdb_FieldId_ns                    = 24
+    ,atfdb_FieldId_unstableattr          = 25
+    ,atfdb_FieldId_var                   = 26
+    ,atfdb_FieldId_value                 = 27
 };
 
-enum { atfdb_FieldIdEnum_N = 35 };
+enum { atfdb_FieldIdEnum_N = 28 };
 
 extern const char *  atfdb_Msgdir_msgdir_exp;   // exp    fconst:atfdb.Msgdir.msgdir/exp
 extern const char *  atfdb_Msgdir_msgdir_in;    // in     fconst:atfdb.Msgdir.msgdir/in
@@ -81,8 +74,8 @@ namespace atfdb { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 TestGsymbolCharPkey;
     typedef algo::Smallstr50 TestGsymbolPkeyPkey;
     typedef algo::Smallstr50 TestGsymbolStrptrPkey;
-    typedef algo::Smallstr50 TmsgPkey;
     typedef algo::Smallstr50 UnittestPkey;
+    typedef algo::Smallstr100 UnstableattrPkey;
     typedef algo::Smallstr50 VarPkey;
 } // gen:ns_pkeytypedef
 namespace atfdb { // gen:ns_tclass_field
@@ -96,14 +89,12 @@ namespace atfdb { struct Comptest; }
 namespace atfdb { struct FieldId; }
 namespace atfdb { struct Fuzzstrat; }
 namespace atfdb { struct Msgdir; }
-namespace atfdb { struct Targs; }
 namespace atfdb { struct TestGsymbolChar; }
 namespace atfdb { struct TestGsymbolPkey; }
 namespace atfdb { struct TestGsymbolStrptr; }
 namespace atfdb { struct Tfilt; }
-namespace atfdb { struct Tifilt; }
-namespace atfdb { struct Tmsg; }
 namespace atfdb { struct Unittest; }
+namespace atfdb { struct Unstableattr; }
 namespace atfdb { struct Var; }
 namespace atfdb { // gen:ns_print_struct
 
@@ -127,7 +118,7 @@ bool                 Amctest_ReadStrptrMaybe(atfdb::Amctest &parent, algo::strpt
 void                 Amctest_Print(atfdb::Amctest& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atfdb.Cijob
-struct Cijob { // atfdb.Cijob
+struct Cijob { // atfdb.Cijob: CI job - set of tests that run in one invocation of atf_ci
     algo::Smallstr50   cijob;     //
     algo::Comment      comment;   //
     // func:atfdb.Cijob..Ctor
@@ -195,14 +186,13 @@ inline void          Citest_Init(atfdb::Citest& parent);
 void                 Citest_Print(atfdb::Citest& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atfdb.Comptest
-struct Comptest { // atfdb.Comptest
+struct Comptest { // atfdb.Comptest: A component test
     algo::Smallstr50   comptest;    //
     i32                timeout;     //   10
     bool               memcheck;    //   true
     bool               coverage;    //   true
     u8                 exit_code;   //   0  Exit code to check
-    i32                ncore;       //   1
-    i32                repeat;      //   1  Number of times to repeat the test
+    bool               stablefld;   //   false  Replace unstable fields with ***
     algo::Comment      comment;     //
     // func:atfdb.Comptest..Ctor
     inline               Comptest() __attribute__((nothrow));
@@ -228,7 +218,7 @@ bool                 Comptest_ReadFieldMaybe(atfdb::Comptest& parent, algo::strp
 bool                 Comptest_ReadStrptrMaybe(atfdb::Comptest &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atfdb.Comptest..Init
-void                 Comptest_Init(atfdb::Comptest& parent);
+inline void          Comptest_Init(atfdb::Comptest& parent);
 // print string representation of ROW to string STR
 // cfmt:atfdb.Comptest.String  printfmt:Tuple
 // func:atfdb.Comptest..Print
@@ -326,25 +316,6 @@ bool                 Msgdir_ReadStrptrMaybe(atfdb::Msgdir &parent, algo::strptr 
 // func:atfdb.Msgdir..Print
 void                 Msgdir_Print(atfdb::Msgdir& row, algo::cstring& str) __attribute__((nothrow));
 
-// --- atfdb.Targs
-struct Targs { // atfdb.Targs
-    algo::Smallstr50   comptest;   //
-    algo::cstring      args;       //
-    // func:atfdb.Targs..Ctor
-    inline               Targs() __attribute__((nothrow));
-};
-
-// func:atfdb.Targs..ReadFieldMaybe
-bool                 Targs_ReadFieldMaybe(atfdb::Targs& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of atfdb::Targs from an ascii string.
-// The format of the string is an ssim Tuple
-// func:atfdb.Targs..ReadStrptrMaybe
-bool                 Targs_ReadStrptrMaybe(atfdb::Targs &parent, algo::strptr in_str) __attribute__((nothrow));
-// print string representation of ROW to string STR
-// cfmt:atfdb.Targs.String  printfmt:Tuple
-// func:atfdb.Targs..Print
-void                 Targs_Print(atfdb::Targs& row, algo::cstring& str) __attribute__((nothrow));
-
 // --- atfdb.TestGsymbolChar
 struct TestGsymbolChar { // atfdb.TestGsymbolChar
     algo::Smallstr50   test_gsymbol_char;   //
@@ -422,66 +393,6 @@ bool                 Tfilt_ReadStrptrMaybe(atfdb::Tfilt &parent, algo::strptr in
 // func:atfdb.Tfilt..Print
 void                 Tfilt_Print(atfdb::Tfilt& row, algo::cstring& str) __attribute__((nothrow));
 
-// --- atfdb.Tifilt
-struct Tifilt { // atfdb.Tifilt: Input filter for component test
-    algo::Smallstr50   comptest;   //
-    algo::cstring      ifilter;    // Command to preprocess input
-    algo::Comment      comment;    //
-    // func:atfdb.Tifilt..Ctor
-    inline               Tifilt() __attribute__((nothrow));
-};
-
-// func:atfdb.Tifilt..ReadFieldMaybe
-bool                 Tifilt_ReadFieldMaybe(atfdb::Tifilt& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of atfdb::Tifilt from an ascii string.
-// The format of the string is an ssim Tuple
-// func:atfdb.Tifilt..ReadStrptrMaybe
-bool                 Tifilt_ReadStrptrMaybe(atfdb::Tifilt &parent, algo::strptr in_str) __attribute__((nothrow));
-// print string representation of ROW to string STR
-// cfmt:atfdb.Tifilt.String  printfmt:Tuple
-// func:atfdb.Tifilt..Print
-void                 Tifilt_Print(atfdb::Tifilt& row, algo::cstring& str) __attribute__((nothrow));
-
-// --- atfdb.Tmsg
-struct Tmsg { // atfdb.Tmsg
-    algo::Smallstr50   tmsg;      //
-    bool               istuple;   //   false
-    algo::cstring      msg;       //
-    // func:atfdb.Tmsg..Ctor
-    inline               Tmsg() __attribute__((nothrow));
-};
-
-// func:atfdb.Tmsg.comptest.Get
-algo::Smallstr50     comptest_Get(atfdb::Tmsg& parent) __attribute__((__warn_unused_result__, nothrow));
-// func:atfdb.Tmsg.comptest.Get2
-algo::Smallstr50     Tmsg_comptest_Get(algo::strptr arg) __attribute__((nothrow));
-
-// func:atfdb.Tmsg.rank.Get
-i32                  rank_Get(atfdb::Tmsg& parent) __attribute__((__warn_unused_result__, nothrow));
-// func:atfdb.Tmsg.rank.Get2
-i32                  Tmsg_rank_Get(algo::strptr arg) __attribute__((nothrow));
-
-// func:atfdb.Tmsg.dir.Get
-algo::Smallstr50     dir_Get(atfdb::Tmsg& parent) __attribute__((__warn_unused_result__, nothrow));
-// func:atfdb.Tmsg.dir.Get2
-algo::Smallstr50     Tmsg_dir_Get(algo::strptr arg) __attribute__((nothrow));
-
-// func:atfdb.Tmsg..Concat_comptest_rank_dir
-tempstr              Tmsg_Concat_comptest_rank_dir( const algo::strptr& comptest ,i32 rank ,const algo::strptr& dir );
-// func:atfdb.Tmsg..ReadFieldMaybe
-bool                 Tmsg_ReadFieldMaybe(atfdb::Tmsg& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of atfdb::Tmsg from an ascii string.
-// The format of the string is an ssim Tuple
-// func:atfdb.Tmsg..ReadStrptrMaybe
-bool                 Tmsg_ReadStrptrMaybe(atfdb::Tmsg &parent, algo::strptr in_str) __attribute__((nothrow));
-// Set all fields to initial values.
-// func:atfdb.Tmsg..Init
-inline void          Tmsg_Init(atfdb::Tmsg& parent);
-// print string representation of ROW to string STR
-// cfmt:atfdb.Tmsg.String  printfmt:Tuple
-// func:atfdb.Tmsg..Print
-void                 Tmsg_Print(atfdb::Tmsg& row, algo::cstring& str) __attribute__((nothrow));
-
 // --- atfdb.Unittest
 struct Unittest { // atfdb.Unittest
     algo::Smallstr50   unittest;   //
@@ -516,6 +427,25 @@ bool                 Unittest_ReadTupleMaybe(atfdb::Unittest &parent, algo::Tupl
 // func:atfdb.Unittest..Print
 void                 Unittest_Print(atfdb::Unittest& row, algo::cstring& str) __attribute__((nothrow));
 
+// --- atfdb.Unstableattr
+struct Unstableattr { // atfdb.Unstableattr
+    algo::Smallstr100   unstableattr;   //
+    algo::Comment       comment;        //
+    // func:atfdb.Unstableattr..Ctor
+    inline               Unstableattr() __attribute__((nothrow));
+};
+
+// func:atfdb.Unstableattr..ReadFieldMaybe
+bool                 Unstableattr_ReadFieldMaybe(atfdb::Unstableattr& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of atfdb::Unstableattr from an ascii string.
+// The format of the string is an ssim Tuple
+// func:atfdb.Unstableattr..ReadStrptrMaybe
+bool                 Unstableattr_ReadStrptrMaybe(atfdb::Unstableattr &parent, algo::strptr in_str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:atfdb.Unstableattr.String  printfmt:Tuple
+// func:atfdb.Unstableattr..Print
+void                 Unstableattr_Print(atfdb::Unstableattr& row, algo::cstring& str) __attribute__((nothrow));
+
 // --- atfdb.Var
 struct Var { // atfdb.Var
     algo::Smallstr50    var;       //
@@ -547,12 +477,10 @@ inline algo::cstring &operator <<(algo::cstring &str, const atfdb::Comptest &row
 inline algo::cstring &operator <<(algo::cstring &str, const atfdb::FieldId &row);// cfmt:atfdb.FieldId.String
 inline algo::cstring &operator <<(algo::cstring &str, const atfdb::Fuzzstrat &row);// cfmt:atfdb.Fuzzstrat.String
 inline algo::cstring &operator <<(algo::cstring &str, const atfdb::Msgdir &row);// cfmt:atfdb.Msgdir.String
-inline algo::cstring &operator <<(algo::cstring &str, const atfdb::Targs &row);// cfmt:atfdb.Targs.String
 inline algo::cstring &operator <<(algo::cstring &str, const atfdb::TestGsymbolChar &row);// cfmt:atfdb.TestGsymbolChar.String
 inline algo::cstring &operator <<(algo::cstring &str, const atfdb::TestGsymbolPkey &row);// cfmt:atfdb.TestGsymbolPkey.String
 inline algo::cstring &operator <<(algo::cstring &str, const atfdb::TestGsymbolStrptr &row);// cfmt:atfdb.TestGsymbolStrptr.String
 inline algo::cstring &operator <<(algo::cstring &str, const atfdb::Tfilt &row);// cfmt:atfdb.Tfilt.String
-inline algo::cstring &operator <<(algo::cstring &str, const atfdb::Tifilt &row);// cfmt:atfdb.Tifilt.String
-inline algo::cstring &operator <<(algo::cstring &str, const atfdb::Tmsg &row);// cfmt:atfdb.Tmsg.String
+inline algo::cstring &operator <<(algo::cstring &str, const atfdb::Unstableattr &row);// cfmt:atfdb.Unstableattr.String
 inline algo::cstring &operator <<(algo::cstring &str, const atfdb::Var &row);// cfmt:atfdb.Var.String
 }

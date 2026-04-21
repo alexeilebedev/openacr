@@ -1,8 +1,18 @@
-comment
-Executable
-Library
-"Skip building"
-"Object files are added to dependents' link line"
-"Precompiled header"
-"Protocol (not a target)"
-"Ssim database (not a target)"
+# start ssimfilt cmd:"$bindir/ssimfilt -format:csv -field:comment"
+ssimfilt <- dmmeta.nstype  nstype:exe       comment:Executable
+ssimfilt <- dmmeta.nstype  nstype:lib       comment:Library
+ssimfilt <- dmmeta.nstype  nstype:none      comment:"Skip building"
+ssimfilt <- dmmeta.nstype  nstype:objlist   comment:"Object files are added to dependents' link line"
+ssimfilt <- dmmeta.nstype  nstype:pch       comment:"Precompiled header"
+ssimfilt <- dmmeta.nstype  nstype:protocol  comment:"Protocol (not a target)"
+ssimfilt <- dmmeta.nstype  nstype:ssimdb    comment:"Ssim database (not a target)"
+# eof ssimfilt
+ssimfilt -> comment
+ssimfilt -> Executable
+ssimfilt -> Library
+ssimfilt -> "Skip building"
+ssimfilt -> "Object files are added to dependents' link line"
+ssimfilt -> "Precompiled header"
+ssimfilt -> "Protocol (not a target)"
+ssimfilt -> "Ssim database (not a target)"
+# exit ssimfilt code:0

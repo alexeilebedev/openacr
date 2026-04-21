@@ -1,9 +1,12 @@
--d 
--dbl 
--ddbl 
--debug 
--dflag:N 
--dnum 
--dpkey 
--dregx 
--dstr 
+# start acr_compl cmd:"$bindir/acr_compl -line:'atf_cmdline -d'"
+# eof acr_compl
+acr_compl -> -d 
+acr_compl -> -dbl 
+acr_compl -> -ddbl 
+acr_compl -> -debug 
+acr_compl -> -dflag:N 
+acr_compl -> -dnum 
+acr_compl -> -dpkey 
+acr_compl -> -dregx 
+acr_compl -> -dstr 
+# exit acr_compl code:0

@@ -334,7 +334,6 @@ extern const char *  dmmeta_Ns_ns_atf_ci;         // atf_ci          fconst:dmme
 extern const char *  dmmeta_Ns_ns_atf_cmdline;    // atf_cmdline     fconst:dmmeta.Ns.ns/atf_cmdline
 extern const char *  dmmeta_Ns_ns_atf_comp;       // atf_comp        fconst:dmmeta.Ns.ns/atf_comp
 extern const char *  dmmeta_Ns_ns_atf_cov;        // atf_cov         fconst:dmmeta.Ns.ns/atf_cov
-extern const char *  dmmeta_Ns_ns_atf_exp;        // atf_exp         fconst:dmmeta.Ns.ns/atf_exp
 extern const char *  dmmeta_Ns_ns_atf_fuzz;       // atf_fuzz        fconst:dmmeta.Ns.ns/atf_fuzz
 extern const char *  dmmeta_Ns_ns_atf_gcli;       // atf_gcli        fconst:dmmeta.Ns.ns/atf_gcli
 extern const char *  dmmeta_Ns_ns_atf_nrun;       // atf_nrun        fconst:dmmeta.Ns.ns/atf_nrun
@@ -501,14 +500,12 @@ extern const char *  dmmeta_Ssimfile_ssimfile_atfdb_citest;                // at
 extern const char *  dmmeta_Ssimfile_ssimfile_atfdb_comptest;              // atfdb.comptest               fconst:dmmeta.Ssimfile.ssimfile/atfdb.comptest
 extern const char *  dmmeta_Ssimfile_ssimfile_atfdb_fuzzstrat;             // atfdb.fuzzstrat              fconst:dmmeta.Ssimfile.ssimfile/atfdb.fuzzstrat
 extern const char *  dmmeta_Ssimfile_ssimfile_atfdb_msgdir;                // atfdb.msgdir                 fconst:dmmeta.Ssimfile.ssimfile/atfdb.msgdir
-extern const char *  dmmeta_Ssimfile_ssimfile_atfdb_targs;                 // atfdb.targs                  fconst:dmmeta.Ssimfile.ssimfile/atfdb.targs
 extern const char *  dmmeta_Ssimfile_ssimfile_atfdb_test_gsymbol_char;     // atfdb.test_gsymbol_char      fconst:dmmeta.Ssimfile.ssimfile/atfdb.test_gsymbol_char
 extern const char *  dmmeta_Ssimfile_ssimfile_atfdb_test_gsymbol_pkey;     // atfdb.test_gsymbol_pkey      fconst:dmmeta.Ssimfile.ssimfile/atfdb.test_gsymbol_pkey
 extern const char *  dmmeta_Ssimfile_ssimfile_atfdb_test_gsymbol_strptr;   // atfdb.test_gsymbol_strptr    fconst:dmmeta.Ssimfile.ssimfile/atfdb.test_gsymbol_strptr
 extern const char *  dmmeta_Ssimfile_ssimfile_atfdb_tfilt;                 // atfdb.tfilt                  fconst:dmmeta.Ssimfile.ssimfile/atfdb.tfilt
-extern const char *  dmmeta_Ssimfile_ssimfile_atfdb_tifilt;                // atfdb.tifilt                 fconst:dmmeta.Ssimfile.ssimfile/atfdb.tifilt
-extern const char *  dmmeta_Ssimfile_ssimfile_atfdb_tmsg;                  // atfdb.tmsg                   fconst:dmmeta.Ssimfile.ssimfile/atfdb.tmsg
 extern const char *  dmmeta_Ssimfile_ssimfile_atfdb_unittest;              // atfdb.unittest               fconst:dmmeta.Ssimfile.ssimfile/atfdb.unittest
+extern const char *  dmmeta_Ssimfile_ssimfile_atfdb_unstableattr;          // atfdb.unstableattr           fconst:dmmeta.Ssimfile.ssimfile/atfdb.unstableattr
 extern const char *  dmmeta_Ssimfile_ssimfile_atfdb_var;                   // atfdb.var                    fconst:dmmeta.Ssimfile.ssimfile/atfdb.var
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_arch;                    // dev.arch                     fconst:dmmeta.Ssimfile.ssimfile/dev.arch
 extern const char *  dmmeta_Ssimfile_ssimfile_dev_badline;                 // dev.badline                  fconst:dmmeta.Ssimfile.ssimfile/dev.badline

@@ -1,0 +1,4 @@
+# start acr_compl cmd:"$bindir/acr_compl -check -line:'atf_cmdline -blah'"
+# eof acr_compl
+acr_compl -> acr_compl.check  error:"unknown option"  value:blah  command:atf_cmdline
+# exit acr_compl code:1

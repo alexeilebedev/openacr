@@ -1,7 +1,13 @@
-acr.update  dmmeta.ns  ns:ns1  blah:exe       license:GPL  comment:""
-acr.update  dmmeta.ns  ns:ns2  blah:ssimdb    license:GPL  comment:""
-acr.update  dmmeta.ns  ns:ns3  blah:protocol  license:GPL  comment:""
-
-acr.delete  dmmeta.field  field:dmmeta.Ns.nstype
-acr.insert  dmmeta.field  field:dmmeta.Ns.blah  arg:dmmeta.Nstype  reftype:Pkey  dflt:""  comment:"Namespace type"
-report.acr  n_select:4  n_insert:0  n_delete:0  n_ignore:0  n_update:4  n_file_mod:0
+# start acr cmd:"$bindir/acr -in:- field:dmmeta.Ns.nstype -rename dmmeta.Ns.blah"
+acr <- dmmeta.field  field:dmmeta.Ns.nstype  arg:dmmeta.Nstype  reftype:Pkey  dflt:""  comment:"Namespace type"
+acr <- dmmeta.ns  ns:ns1        nstype:exe      license:GPL   comment:""
+acr <- dmmeta.ns  ns:ns2      nstype:ssimdb    license:GPL  comment:""
+acr <- dmmeta.ns  ns:ns3         nstype:protocol    license:GPL   comment:""
+# eof acr
+acr -> acr.update  dmmeta.ns  ns:ns1  blah:exe       license:GPL  comment:""
+acr -> acr.update  dmmeta.ns  ns:ns2  blah:ssimdb    license:GPL  comment:""
+acr -> acr.update  dmmeta.ns  ns:ns3  blah:protocol  license:GPL  comment:""
+acr -> acr.delete  dmmeta.field  field:dmmeta.Ns.nstype
+acr -> acr.insert  dmmeta.field  field:dmmeta.Ns.blah  arg:dmmeta.Nstype  reftype:Pkey  dflt:""  comment:"Namespace type"
+acr -> report.acr  n_select:4  n_insert:0  n_delete:0  n_ignore:0  n_update:4  n_file_mod:0
+# exit acr code:0

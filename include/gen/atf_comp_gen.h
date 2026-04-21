@@ -27,7 +27,7 @@
 #include "include/gen/algo_gen.h"
 #include "include/gen/command_gen.h"
 #include "include/gen/algo_lib_gen.h"
-#include "include/gen/report_gen.h"
+#include "include/gen/dev_gen.h"
 //#pragma endinclude
 // gen:ns_enums
 
@@ -42,20 +42,14 @@ enum { atf_comp_FieldIdEnum_N = 1 };
 
 // --- atf_comp_TableIdEnum
 
-enum atf_comp_TableIdEnum {                  // atf_comp.TableId.value
-     atf_comp_TableId_atfdb_Comptest   = 0   // atfdb.Comptest -> atf_comp.FComptest
-    ,atf_comp_TableId_atfdb_comptest   = 0   // atfdb.comptest -> atf_comp.FComptest
-    ,atf_comp_TableId_atfdb_Targs      = 1   // atfdb.Targs -> atf_comp.FTargs
-    ,atf_comp_TableId_atfdb_targs      = 1   // atfdb.targs -> atf_comp.FTargs
-    ,atf_comp_TableId_atfdb_Tfilt      = 2   // atfdb.Tfilt -> atf_comp.FTfilt
-    ,atf_comp_TableId_atfdb_tfilt      = 2   // atfdb.tfilt -> atf_comp.FTfilt
-    ,atf_comp_TableId_atfdb_Tifilt     = 3   // atfdb.Tifilt -> atf_comp.FTifilt
-    ,atf_comp_TableId_atfdb_tifilt     = 3   // atfdb.tifilt -> atf_comp.FTifilt
-    ,atf_comp_TableId_atfdb_Tmsg       = 4   // atfdb.Tmsg -> atf_comp.FTmsg
-    ,atf_comp_TableId_atfdb_tmsg       = 4   // atfdb.tmsg -> atf_comp.FTmsg
+enum atf_comp_TableIdEnum {                      // atf_comp.TableId.value
+     atf_comp_TableId_atfdb_Tfilt          = 0   // atfdb.Tfilt -> atf_comp.FTfilt
+    ,atf_comp_TableId_atfdb_tfilt          = 0   // atfdb.tfilt -> atf_comp.FTfilt
+    ,atf_comp_TableId_atfdb_Unstableattr   = 1   // atfdb.Unstableattr -> atf_comp.FUnstableattr
+    ,atf_comp_TableId_atfdb_unstableattr   = 1   // atfdb.unstableattr -> atf_comp.FUnstableattr
 };
 
-enum { atf_comp_TableIdEnum_N = 10 };
+enum { atf_comp_TableIdEnum_N = 4 };
 
 namespace atf_comp { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
@@ -64,102 +58,55 @@ extern const char *atf_comp_help;
 } // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace atfdb { struct Comptest; }
-namespace atfdb { struct Targs; }
 namespace atfdb { struct Tfilt; }
-namespace atfdb { struct Tifilt; }
-namespace atfdb { struct Tmsg; }
-namespace atf_comp { struct comptest_zd_tmsg_curs; }
+namespace atfdb { struct Unstableattr; }
+namespace dev { struct Unstablefld; }
 namespace atf_comp { struct _db_comptest_curs; }
-namespace atf_comp { struct _db_zd_sel_comptest_curs; }
-namespace atf_comp { struct _db_zd_run_comptest_curs; }
-namespace atf_comp { struct _db_zd_out_tmsg_curs; }
-namespace atf_comp { struct _db_zd_out_comptest_curs; }
-namespace atf_comp { struct _db_zd_out_tfilt_curs; }
-namespace atf_comp { struct _db_zd_out_targs_curs; }
-namespace atf_comp { struct _db_zd_out_tifilt_curs; }
-namespace atf_comp { struct _db_covdir_curs; }
-namespace atf_comp { struct _db_zd_covdir_free_curs; }
+namespace atf_comp { struct _db_tfilt_curs; }
+namespace atf_comp { struct _db_proc_curs; }
+namespace atf_comp { struct _db_unstableattr_curs; }
+namespace atf_comp { struct _db_zd_select_curs; }
 namespace atf_comp { struct FComptest; }
-namespace atf_comp { struct FCovdir; }
 namespace atf_comp { struct trace; }
 namespace atf_comp { struct FDb; }
-namespace atf_comp { struct FTargs; }
+namespace atf_comp { struct FProc; }
 namespace atf_comp { struct FTfilt; }
-namespace atf_comp { struct FTifilt; }
-namespace atf_comp { struct FTmsg; }
+namespace atf_comp { struct FUnstableattr; }
+namespace atf_comp { struct FUnstablefld; }
 namespace atf_comp { struct FieldId; }
 namespace atf_comp { struct TableId; }
 namespace atf_comp { extern struct atf_comp::FDb _db; }
+namespace atf_comp { // hook_fcn_typedef
+    typedef void (*comptest_step_hook)(); // hook:atf_comp.FComptest.step
+} // hook_decl
 namespace atf_comp { // gen:ns_print_struct
 
 // --- atf_comp.FComptest
 // create: atf_comp.FDb.comptest (Lary)
 // global access: comptest (Lary, by rowid)
 // global access: ind_comptest (Thash, hash field comptest)
-// global access: zd_sel_comptest (Llist)
-// global access: zd_run_comptest (Llist)
-// global access: zd_out_comptest (Llist)
+// global access: c_cur_comptest (Ptr)
+// global access: zd_select (Llist)
 struct FComptest { // atf_comp.FComptest
-    algo::Smallstr50       comptest;               //
-    i32                    timeout;                //   10
-    bool                   memcheck;               //   true
-    bool                   coverage;               //   true
-    u8                     exit_code;              //   0  Exit code to check
-    i32                    ncore;                  //   1
-    i32                    repeat;                 //   1  Number of times to repeat the test
-    algo::Comment          comment;                //
-    algo::cstring          file_test_out;          //
-    algo::cstring          file_test_out_raw;      // Path to raw target output before filter
-    algo::cstring          file_test_in;           //
-    algo::cstring          file_test_in_raw;       // Path to raw tmsg input file
-    command::bash_proc     bash;                   //
-    atf_comp::FTargs*      c_targs;                // optional pointer
-    i32                    msg_index;              //   0
-    atf_comp::FTfilt*      c_tfilt;                // optional pointer
-    algo::SchedTime        start;                  //
-    algo::SchedTime        finish;                 //
-    double                 elapsed;                //   0.0
-    algo_lib::FTimehook    thook;                  //
-    bool                   success;                //   false  Success so far
-    i32                    nrun;                   //   0  Number of times the test ran
-    algo::cstring          file_memcheck;          //
-    algo::cstring          file_callgrind_log;     //
-    algo::cstring          file_callgrind_out;     //
-    atf_comp::FTmsg*       zd_tmsg_head;           // zero-terminated doubly linked list
-    i32                    zd_tmsg_n;              // zero-terminated doubly linked list
-    atf_comp::FTmsg*       zd_tmsg_tail;           // pointer to last element
-    bool                   need_write;             //   false  Component test modified during runtime, needs to be written back
-    algo::cstring          err;                    // Error string
-    atf_comp::FTifilt*     c_tifilt;               // optional pointer
-    algo::cstring          file_run;               // Path to run script
-    algo::cstring          script;                 // Run script content
-    algo_lib::Replscope    R;                      // Variable substitution scope
-    atf_comp::FCovdir*     c_covdir;               // optional pointer
-    algo::cstring          dir;                    //
-    atf_comp::FComptest*   ind_comptest_next;      // hash next
-    u32                    ind_comptest_hashval;   // hash value
-    atf_comp::FComptest*   zd_sel_comptest_next;   // zslist link; -1 means not-in-list
-    atf_comp::FComptest*   zd_sel_comptest_prev;   // previous element
-    atf_comp::FComptest*   zd_run_comptest_next;   // zslist link; -1 means not-in-list
-    atf_comp::FComptest*   zd_run_comptest_prev;   // previous element
-    atf_comp::FComptest*   zd_out_comptest_next;   // zslist link; -1 means not-in-list
-    atf_comp::FComptest*   zd_out_comptest_prev;   // previous element
-    // value field atf_comp.FComptest.bash is not copiable
-    // x-reference on atf_comp.FComptest.c_targs prevents copy
+    algo::Smallstr50               comptest;               //
+    i32                            timeout;                //   10
+    bool                           memcheck;               //   true
+    bool                           coverage;               //   true
+    u8                             exit_code;              //   0  Exit code to check
+    bool                           stablefld;              //   false  Replace unstable fields with ***
+    algo::Comment                  comment;                //
+    atf_comp::comptest_step_hook   step;                   //   NULL  Pointer to a function
+    atf_comp::FTfilt*              c_tfilt;                // Optional output filter. optional pointer
+    atf_comp::FComptest*           ind_comptest_next;      // hash next
+    u32                            ind_comptest_hashval;   // hash value
+    atf_comp::FComptest*           zd_select_next;         // zslist link; -1 means not-in-list
+    atf_comp::FComptest*           zd_select_prev;         // previous element
+    // reftype Hook of atf_comp.FComptest.step prohibits copy
     // x-reference on atf_comp.FComptest.c_tfilt prevents copy
-    // value field atf_comp.FComptest.thook is not copiable
-    // reftype Llist of atf_comp.FComptest.zd_tmsg prohibits copy
-    // x-reference on atf_comp.FComptest.c_tifilt prevents copy
-    // value field atf_comp.FComptest.R is not copiable
     // func:atf_comp.FComptest..AssignOp
     atf_comp::FComptest& operator =(const atf_comp::FComptest &rhs) = delete;
-    // value field atf_comp.FComptest.bash is not copiable
-    // x-reference on atf_comp.FComptest.c_targs prevents copy
+    // reftype Hook of atf_comp.FComptest.step prohibits copy
     // x-reference on atf_comp.FComptest.c_tfilt prevents copy
-    // value field atf_comp.FComptest.thook is not copiable
-    // reftype Llist of atf_comp.FComptest.zd_tmsg prohibits copy
-    // x-reference on atf_comp.FComptest.c_tifilt prevents copy
-    // value field atf_comp.FComptest.R is not copiable
     // func:atf_comp.FComptest..CopyCtor
     FComptest(const atf_comp::FComptest &rhs) = delete;
 private:
@@ -186,21 +133,10 @@ algo::Smallstr16     target_Get(atf_comp::FComptest& comptest) __attribute__((__
 // func:atf_comp.FComptest.testname.Get
 algo::Smallstr50     testname_Get(atf_comp::FComptest& comptest) __attribute__((__warn_unused_result__, nothrow));
 
-// Delete referred-to items.
-// Deleted pointed-to item.
-// func:atf_comp.FComptest.c_targs.Cascdel
-void                 c_targs_Cascdel(atf_comp::FComptest& comptest) __attribute__((nothrow));
-// Insert row into pointer index. Return final membership status.
-// func:atf_comp.FComptest.c_targs.InsertMaybe
-inline bool          c_targs_InsertMaybe(atf_comp::FComptest& comptest, atf_comp::FTargs& row) __attribute__((nothrow));
-// Remove element from index. If element is not in index, do nothing.
-// func:atf_comp.FComptest.c_targs.Remove
-inline void          c_targs_Remove(atf_comp::FComptest& comptest, atf_comp::FTargs& row) __attribute__((nothrow));
+// Invoke function by pointer
+// func:atf_comp.FComptest.step.Call
+inline void          step_Call(atf_comp::FComptest& comptest) __attribute__((nothrow));
 
-// Delete referred-to items.
-// Deleted pointed-to item.
-// func:atf_comp.FComptest.c_tfilt.Cascdel
-void                 c_tfilt_Cascdel(atf_comp::FComptest& comptest) __attribute__((nothrow));
 // Insert row into pointer index. Return final membership status.
 // func:atf_comp.FComptest.c_tfilt.InsertMaybe
 inline bool          c_tfilt_InsertMaybe(atf_comp::FComptest& comptest, atf_comp::FTfilt& row) __attribute__((nothrow));
@@ -208,104 +144,11 @@ inline bool          c_tfilt_InsertMaybe(atf_comp::FComptest& comptest, atf_comp
 // func:atf_comp.FComptest.c_tfilt.Remove
 inline void          c_tfilt_Remove(atf_comp::FComptest& comptest, atf_comp::FTfilt& row) __attribute__((nothrow));
 
-// Delete all elements in the linked list.
-// func:atf_comp.FComptest.zd_tmsg.Cascdel
-void                 zd_tmsg_Cascdel(atf_comp::FComptest& comptest) __attribute__((nothrow));
-// Return true if index is empty
-// func:atf_comp.FComptest.zd_tmsg.EmptyQ
-inline bool          zd_tmsg_EmptyQ(atf_comp::FComptest& comptest) __attribute__((__warn_unused_result__, nothrow, pure));
-// If index empty, return NULL. Otherwise return pointer to first element in index
-// func:atf_comp.FComptest.zd_tmsg.First
-inline atf_comp::FTmsg* zd_tmsg_First(atf_comp::FComptest& comptest) __attribute__((__warn_unused_result__, nothrow, pure));
-// Return true if row is in the linked list, false otherwise
-// func:atf_comp.FComptest.zd_tmsg.InLlistQ
-inline bool          comptest_zd_tmsg_InLlistQ(atf_comp::FTmsg& row) __attribute__((__warn_unused_result__, nothrow));
-// Insert row into linked list. If row is already in linked list, do nothing.
-// func:atf_comp.FComptest.zd_tmsg.Insert
-void                 zd_tmsg_Insert(atf_comp::FComptest& comptest, atf_comp::FTmsg& row) __attribute__((nothrow));
-// If index empty, return NULL. Otherwise return pointer to last element in index
-// func:atf_comp.FComptest.zd_tmsg.Last
-inline atf_comp::FTmsg* zd_tmsg_Last(atf_comp::FComptest& comptest) __attribute__((__warn_unused_result__, nothrow, pure));
-// Return number of items in the linked list
-// func:atf_comp.FComptest.zd_tmsg.N
-inline i32           zd_tmsg_N(const atf_comp::FComptest& comptest) __attribute__((__warn_unused_result__, nothrow, pure));
-// Return pointer to next element in the list
-// func:atf_comp.FComptest.zd_tmsg.Next
-inline atf_comp::FTmsg* comptest_zd_tmsg_Next(atf_comp::FTmsg &row) __attribute__((__warn_unused_result__, nothrow));
-// Return pointer to previous element in the list
-// func:atf_comp.FComptest.zd_tmsg.Prev
-inline atf_comp::FTmsg* comptest_zd_tmsg_Prev(atf_comp::FTmsg &row) __attribute__((__warn_unused_result__, nothrow));
-// Remove element from index. If element is not in index, do nothing.
-// func:atf_comp.FComptest.zd_tmsg.Remove
-void                 zd_tmsg_Remove(atf_comp::FComptest& comptest, atf_comp::FTmsg& row) __attribute__((nothrow));
-// Empty the index. (The rows are not deleted)
-// func:atf_comp.FComptest.zd_tmsg.RemoveAll
-void                 zd_tmsg_RemoveAll(atf_comp::FComptest& comptest) __attribute__((nothrow));
-// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-// func:atf_comp.FComptest.zd_tmsg.RemoveFirst
-atf_comp::FTmsg*     zd_tmsg_RemoveFirst(atf_comp::FComptest& comptest) __attribute__((nothrow));
-// Return reference to last element in the index. No bounds checking.
-// func:atf_comp.FComptest.zd_tmsg.qLast
-inline atf_comp::FTmsg& zd_tmsg_qLast(atf_comp::FComptest& comptest) __attribute__((__warn_unused_result__, nothrow));
-
-// Delete referred-to items.
-// Deleted pointed-to item.
-// func:atf_comp.FComptest.c_tifilt.Cascdel
-void                 c_tifilt_Cascdel(atf_comp::FComptest& comptest) __attribute__((nothrow));
-// Insert row into pointer index. Return final membership status.
-// func:atf_comp.FComptest.c_tifilt.InsertMaybe
-inline bool          c_tifilt_InsertMaybe(atf_comp::FComptest& comptest, atf_comp::FTifilt& row) __attribute__((nothrow));
-// Remove element from index. If element is not in index, do nothing.
-// func:atf_comp.FComptest.c_tifilt.Remove
-inline void          c_tifilt_Remove(atf_comp::FComptest& comptest, atf_comp::FTifilt& row) __attribute__((nothrow));
-
-// cursor points to valid item
-// func:atf_comp.FComptest.zd_tmsg_curs.Reset
-inline void          comptest_zd_tmsg_curs_Reset(comptest_zd_tmsg_curs &curs, atf_comp::FComptest &parent) __attribute__((nothrow));
-// cursor points to valid item
-// func:atf_comp.FComptest.zd_tmsg_curs.ValidQ
-inline bool          comptest_zd_tmsg_curs_ValidQ(comptest_zd_tmsg_curs &curs) __attribute__((nothrow));
-// proceed to next item
-// func:atf_comp.FComptest.zd_tmsg_curs.Next
-inline void          comptest_zd_tmsg_curs_Next(comptest_zd_tmsg_curs &curs) __attribute__((nothrow));
-// item access
-// func:atf_comp.FComptest.zd_tmsg_curs.Access
-inline atf_comp::FTmsg& comptest_zd_tmsg_curs_Access(comptest_zd_tmsg_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_comp.FComptest..Init
 void                 FComptest_Init(atf_comp::FComptest& comptest);
 // func:atf_comp.FComptest..Uninit
 void                 FComptest_Uninit(atf_comp::FComptest& comptest) __attribute__((nothrow));
-
-// --- atf_comp.FCovdir
-// create: atf_comp.FDb.covdir (Lary)
-// global access: covdir (Lary, by rowid)
-// global access: zd_covdir_free (Llist)
-// access: atf_comp.FComptest.c_covdir (Ptr)
-struct FCovdir { // atf_comp.FCovdir
-    algo::cstring        covdir;                //
-    atf_comp::FCovdir*   zd_covdir_free_next;   // zslist link; -1 means not-in-list
-    atf_comp::FCovdir*   zd_covdir_free_prev;   // previous element
-    // func:atf_comp.FCovdir..AssignOp
-    inline atf_comp::FCovdir& operator =(const atf_comp::FCovdir &rhs) = delete;
-    // func:atf_comp.FCovdir..CopyCtor
-    inline               FCovdir(const atf_comp::FCovdir &rhs) = delete;
-private:
-    // func:atf_comp.FCovdir..Ctor
-    inline               FCovdir() __attribute__((nothrow));
-    // func:atf_comp.FCovdir..Dtor
-    inline               ~FCovdir() __attribute__((nothrow));
-    friend atf_comp::FCovdir&   covdir_Alloc() __attribute__((__warn_unused_result__, nothrow));
-    friend atf_comp::FCovdir*   covdir_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
-    friend void                 covdir_RemoveAll() __attribute__((nothrow));
-    friend void                 covdir_RemoveLast() __attribute__((nothrow));
-};
-
-// Set all fields to initial values.
-// func:atf_comp.FCovdir..Init
-inline void          FCovdir_Init(atf_comp::FCovdir& covdir);
-// func:atf_comp.FCovdir..Uninit
-void                 FCovdir_Uninit(atf_comp::FCovdir& covdir) __attribute__((nothrow));
 
 // --- atf_comp.trace
 #pragma pack(push,1)
@@ -322,58 +165,35 @@ void                 trace_Print(atf_comp::trace& row, algo::cstring& str) __att
 
 // --- atf_comp.FDb
 // create: atf_comp.FDb._db (Global)
-struct FDb { // atf_comp.FDb: In-memory database for atf_comp
-    command::atf_comp       cmdline;                      //
-    atf_comp::FComptest*    comptest_lary[32];            // level array
-    i32                     comptest_n;                   // number of elements in array
-    atf_comp::FComptest**   ind_comptest_buckets_elems;   // pointer to bucket array
-    i32                     ind_comptest_buckets_n;       // number of elements in bucket array
-    i32                     ind_comptest_n;               // number of elements in the hash table
-    algo::cstring           bindir;                       // Directory with binaries
-    report::atf_comp        report;                       // Final report
-    atf_comp::FComptest*    zd_sel_comptest_head;         // zero-terminated doubly linked list
-    i32                     zd_sel_comptest_n;            // zero-terminated doubly linked list
-    atf_comp::FComptest*    zd_sel_comptest_tail;         // pointer to last element
-    u64                     targs_blocksize;              // # bytes per block
-    atf_comp::FTargs*       targs_free;                   //
-    u64                     tmsg_blocksize;               // # bytes per block
-    atf_comp::FTmsg*        tmsg_free;                    //
-    u64                     tfilt_blocksize;              // # bytes per block
-    atf_comp::FTfilt*       tfilt_free;                   //
-    atf_comp::FComptest*    zd_run_comptest_head;         // zero-terminated doubly linked list
-    i32                     zd_run_comptest_n;            // zero-terminated doubly linked list
-    atf_comp::FComptest*    zd_run_comptest_tail;         // pointer to last element
-    algo::SchedTime         zd_run_comptest_next;         // atf_comp.FDb.zd_run_comptest                        Next invocation time
-    algo::SchedTime         zd_run_comptest_delay;        // atf_comp.FDb.zd_run_comptest                        Delay between invocations
-    atf_comp::FTmsg*        zd_out_tmsg_head;             // zero-terminated doubly linked list
-    i32                     zd_out_tmsg_n;                // zero-terminated doubly linked list
-    atf_comp::FTmsg*        zd_out_tmsg_tail;             // pointer to last element
-    atf_comp::FComptest*    zd_out_comptest_head;         // zero-terminated doubly linked list
-    i32                     zd_out_comptest_n;            // zero-terminated doubly linked list
-    atf_comp::FComptest*    zd_out_comptest_tail;         // pointer to last element
-    i32                     nchange;                      //   0
-    atf_comp::FTfilt*       zd_out_tfilt_head;            // zero-terminated doubly linked list
-    i32                     zd_out_tfilt_n;               // zero-terminated doubly linked list
-    atf_comp::FTfilt*       zd_out_tfilt_tail;            // pointer to last element
-    atf_comp::FTargs*       zd_out_targs_head;            // zero-terminated doubly linked list
-    i32                     zd_out_targs_n;               // zero-terminated doubly linked list
-    atf_comp::FTargs*       zd_out_targs_tail;            // pointer to last element
-    u64                     tifilt_blocksize;             // # bytes per block
-    atf_comp::FTifilt*      tifilt_free;                  //
-    atf_comp::FTifilt*      zd_out_tifilt_head;           // zero-terminated doubly linked list
-    i32                     zd_out_tifilt_n;              // zero-terminated doubly linked list
-    atf_comp::FTifilt*      zd_out_tifilt_tail;           // pointer to last element
-    atf_comp::FCovdir*      covdir_lary[32];              // level array
-    i32                     covdir_n;                     // number of elements in array
-    atf_comp::FCovdir*      zd_covdir_free_head;          // zero-terminated doubly linked list
-    i32                     zd_covdir_free_n;             // zero-terminated doubly linked list
-    atf_comp::FCovdir*      zd_covdir_free_tail;          // pointer to last element
-    i32                     ncore_used;                   //   0  Number of cores 'used' by running child tests
-    atf_comp::FTfilt**      ind_tfilt_buckets_elems;      // pointer to bucket array
-    i32                     ind_tfilt_buckets_n;          // number of elements in bucket array
-    i32                     ind_tfilt_n;                  // number of elements in the hash table
-    algo_lib::FTimehook     th_runtest;                   //
-    atf_comp::trace         trace;                        //
+struct FDb { // atf_comp.FDb
+    command::atf_comp           cmdline;                          //
+    atf_comp::FComptest*        comptest_lary[32];                // level array
+    i32                         comptest_n;                       // number of elements in array
+    atf_comp::FComptest**       ind_comptest_buckets_elems;       // pointer to bucket array
+    i32                         ind_comptest_buckets_n;           // number of elements in bucket array
+    i32                         ind_comptest_n;                   // number of elements in the hash table
+    atf_comp::FProc**           ind_proc_buckets_elems;           // pointer to bucket array
+    i32                         ind_proc_buckets_n;               // number of elements in bucket array
+    i32                         ind_proc_n;                       // number of elements in the hash table
+    atf_comp::FTfilt*           tfilt_lary[32];                   // level array
+    i32                         tfilt_n;                          // number of elements in array
+    atf_comp::FProc*            proc_lary[32];                    // level array
+    i32                         proc_n;                           // number of elements in array
+    algo_lib::Replscope         R;                                // Variable substitution scope
+    algo::cstring               log;                              //   ""  Formatted test log for reference comparison
+    atf_comp::FComptest*        c_cur_comptest;                   // Currently running comptest. optional pointer
+    algo::SchedTime             t0;                               // Test start time
+    algo::cstring               fail_summary;                     //   ""  Summary of failed tests
+    atf_comp::FUnstableattr*    unstableattr_lary[32];            // level array
+    i32                         unstableattr_n;                   // number of elements in array
+    atf_comp::FUnstableattr**   ind_unstableattr_buckets_elems;   // pointer to bucket array
+    i32                         ind_unstableattr_buckets_n;       // number of elements in bucket array
+    i32                         ind_unstableattr_n;               // number of elements in the hash table
+    atf_comp::FComptest*        zd_select_head;                   // zero-terminated doubly linked list
+    i32                         zd_select_n;                      // zero-terminated doubly linked list
+    atf_comp::FComptest*        zd_select_tail;                   // pointer to last element
+    i32                         n_capture;                        //   0  Number of files captured
+    atf_comp::trace             trace;                            //
 };
 
 // Read argc,argv directly into the fields of the command line(s)
@@ -410,9 +230,6 @@ bool                 LoadTuplesFile(algo::strptr fname, bool recursive) __attrib
 // Load all finputs from given file descriptor.
 // func:atf_comp.FDb._db.LoadTuplesFd
 bool                 LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) __attribute__((nothrow));
-// Save ssim data to given directory.
-// func:atf_comp.FDb._db.SaveTuples
-u32                  SaveTuples(algo::strptr root) __attribute__((nothrow));
 // Load specified ssimfile.
 // func:atf_comp.FDb._db.LoadSsimfileMaybe
 bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __attribute__((nothrow));
@@ -492,110 +309,33 @@ void                 ind_comptest_Reserve(int n) __attribute__((nothrow));
 // func:atf_comp.FDb.ind_comptest.AbsReserve
 void                 ind_comptest_AbsReserve(int n) __attribute__((nothrow));
 
-// Return true if index is empty
-// func:atf_comp.FDb.zd_sel_comptest.EmptyQ
-inline bool          zd_sel_comptest_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
-// If index empty, return NULL. Otherwise return pointer to first element in index
-// func:atf_comp.FDb.zd_sel_comptest.First
-inline atf_comp::FComptest* zd_sel_comptest_First() __attribute__((__warn_unused_result__, nothrow, pure));
-// Return true if row is in the linked list, false otherwise
-// func:atf_comp.FDb.zd_sel_comptest.InLlistQ
-inline bool          zd_sel_comptest_InLlistQ(atf_comp::FComptest& row) __attribute__((__warn_unused_result__, nothrow));
-// Insert row into linked list. If row is already in linked list, do nothing.
-// func:atf_comp.FDb.zd_sel_comptest.Insert
-void                 zd_sel_comptest_Insert(atf_comp::FComptest& row) __attribute__((nothrow));
-// If index empty, return NULL. Otherwise return pointer to last element in index
-// func:atf_comp.FDb.zd_sel_comptest.Last
-inline atf_comp::FComptest* zd_sel_comptest_Last() __attribute__((__warn_unused_result__, nothrow, pure));
-// Return number of items in the linked list
-// func:atf_comp.FDb.zd_sel_comptest.N
-inline i32           zd_sel_comptest_N() __attribute__((__warn_unused_result__, nothrow, pure));
-// Return pointer to next element in the list
-// func:atf_comp.FDb.zd_sel_comptest.Next
-inline atf_comp::FComptest* zd_sel_comptest_Next(atf_comp::FComptest &row) __attribute__((__warn_unused_result__, nothrow));
-// Return pointer to previous element in the list
-// func:atf_comp.FDb.zd_sel_comptest.Prev
-inline atf_comp::FComptest* zd_sel_comptest_Prev(atf_comp::FComptest &row) __attribute__((__warn_unused_result__, nothrow));
-// Remove element from index. If element is not in index, do nothing.
-// func:atf_comp.FDb.zd_sel_comptest.Remove
-void                 zd_sel_comptest_Remove(atf_comp::FComptest& row) __attribute__((nothrow));
-// Empty the index. (The rows are not deleted)
-// func:atf_comp.FDb.zd_sel_comptest.RemoveAll
-void                 zd_sel_comptest_RemoveAll() __attribute__((nothrow));
-// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-// func:atf_comp.FDb.zd_sel_comptest.RemoveFirst
-atf_comp::FComptest* zd_sel_comptest_RemoveFirst() __attribute__((nothrow));
-// Return reference to last element in the index. No bounds checking.
-// func:atf_comp.FDb.zd_sel_comptest.qLast
-inline atf_comp::FComptest& zd_sel_comptest_qLast() __attribute__((__warn_unused_result__, nothrow));
-
-// Allocate memory for new default row.
-// If out of memory, process is killed.
-// func:atf_comp.FDb.targs.Alloc
-atf_comp::FTargs&    targs_Alloc() __attribute__((__warn_unused_result__, nothrow));
-// Allocate memory for new element. If out of memory, return NULL.
-// func:atf_comp.FDb.targs.AllocMaybe
-atf_comp::FTargs*    targs_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
-// Create new row from struct.
-// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-// func:atf_comp.FDb.targs.InsertMaybe
-atf_comp::FTargs*    targs_InsertMaybe(const atfdb::Targs &value) __attribute__((nothrow));
-// Remove row from all global and cross indices, then deallocate row
-// func:atf_comp.FDb.targs.Delete
-void                 targs_Delete(atf_comp::FTargs &row) __attribute__((nothrow));
-// Allocate space for one element
-// If no memory available, return NULL.
-// func:atf_comp.FDb.targs.AllocMem
-void*                targs_AllocMem() __attribute__((__warn_unused_result__, nothrow));
-// Remove mem from all global and cross indices, then deallocate mem
-// func:atf_comp.FDb.targs.FreeMem
-void                 targs_FreeMem(atf_comp::FTargs &row) __attribute__((nothrow));
-// Preallocate memory for N more elements
-// Return number of elements actually reserved.
-// func:atf_comp.FDb.targs.Reserve
-u64                  targs_Reserve(u64 n_elems) __attribute__((nothrow));
-// Allocate block of given size, break up into small elements and append to free list.
-// Return number of elements reserved.
-// func:atf_comp.FDb.targs.ReserveMem
-u64                  targs_ReserveMem(u64 size) __attribute__((nothrow));
-// Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-// func:atf_comp.FDb.targs.XrefMaybe
-bool                 targs_XrefMaybe(atf_comp::FTargs &row);
-
-// Allocate memory for new default row.
-// If out of memory, process is killed.
-// func:atf_comp.FDb.tmsg.Alloc
-atf_comp::FTmsg&     tmsg_Alloc() __attribute__((__warn_unused_result__, nothrow));
-// Allocate memory for new element. If out of memory, return NULL.
-// func:atf_comp.FDb.tmsg.AllocMaybe
-atf_comp::FTmsg*     tmsg_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
-// Create new row from struct.
-// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-// func:atf_comp.FDb.tmsg.InsertMaybe
-atf_comp::FTmsg*     tmsg_InsertMaybe(const atfdb::Tmsg &value) __attribute__((nothrow));
-// Remove row from all global and cross indices, then deallocate row
-// func:atf_comp.FDb.tmsg.Delete
-void                 tmsg_Delete(atf_comp::FTmsg &row) __attribute__((nothrow));
-// Allocate space for one element
-// If no memory available, return NULL.
-// func:atf_comp.FDb.tmsg.AllocMem
-void*                tmsg_AllocMem() __attribute__((__warn_unused_result__, nothrow));
-// Remove mem from all global and cross indices, then deallocate mem
-// func:atf_comp.FDb.tmsg.FreeMem
-void                 tmsg_FreeMem(atf_comp::FTmsg &row) __attribute__((nothrow));
-// Preallocate memory for N more elements
-// Return number of elements actually reserved.
-// func:atf_comp.FDb.tmsg.Reserve
-u64                  tmsg_Reserve(u64 n_elems) __attribute__((nothrow));
-// Allocate block of given size, break up into small elements and append to free list.
-// Return number of elements reserved.
-// func:atf_comp.FDb.tmsg.ReserveMem
-u64                  tmsg_ReserveMem(u64 size) __attribute__((nothrow));
-// Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-// func:atf_comp.FDb.tmsg.XrefMaybe
-bool                 tmsg_XrefMaybe(atf_comp::FTmsg &row);
+// Return true if hash is empty
+// func:atf_comp.FDb.ind_proc.EmptyQ
+inline bool          ind_proc_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+// func:atf_comp.FDb.ind_proc.Find
+atf_comp::FProc*     ind_proc_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:atf_comp.FDb.ind_proc.FindX
+atf_comp::FProc&     ind_proc_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:atf_comp.FDb.ind_proc.GetOrCreate
+atf_comp::FProc&     ind_proc_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
+// Return number of items in the hash
+// func:atf_comp.FDb.ind_proc.N
+inline i32           ind_proc_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:atf_comp.FDb.ind_proc.InsertMaybe
+bool                 ind_proc_InsertMaybe(atf_comp::FProc& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+// func:atf_comp.FDb.ind_proc.Remove
+void                 ind_proc_Remove(atf_comp::FProc& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+// func:atf_comp.FDb.ind_proc.Reserve
+void                 ind_proc_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:atf_comp.FDb.ind_proc.AbsReserve
+void                 ind_proc_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -608,408 +348,175 @@ atf_comp::FTfilt*    tfilt_AllocMaybe() __attribute__((__warn_unused_result__, n
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
 // func:atf_comp.FDb.tfilt.InsertMaybe
 atf_comp::FTfilt*    tfilt_InsertMaybe(const atfdb::Tfilt &value) __attribute__((nothrow));
-// Remove row from all global and cross indices, then deallocate row
-// func:atf_comp.FDb.tfilt.Delete
-void                 tfilt_Delete(atf_comp::FTfilt &row) __attribute__((nothrow));
-// Allocate space for one element
-// If no memory available, return NULL.
+// Allocate space for one element. If no memory available, return NULL.
 // func:atf_comp.FDb.tfilt.AllocMem
 void*                tfilt_AllocMem() __attribute__((__warn_unused_result__, nothrow));
-// Remove mem from all global and cross indices, then deallocate mem
-// func:atf_comp.FDb.tfilt.FreeMem
-void                 tfilt_FreeMem(atf_comp::FTfilt &row) __attribute__((nothrow));
-// Preallocate memory for N more elements
-// Return number of elements actually reserved.
-// func:atf_comp.FDb.tfilt.Reserve
-u64                  tfilt_Reserve(u64 n_elems) __attribute__((nothrow));
-// Allocate block of given size, break up into small elements and append to free list.
-// Return number of elements reserved.
-// func:atf_comp.FDb.tfilt.ReserveMem
-u64                  tfilt_ReserveMem(u64 size) __attribute__((nothrow));
+// Return true if index is empty
+// func:atf_comp.FDb.tfilt.EmptyQ
+inline bool          tfilt_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:atf_comp.FDb.tfilt.Find
+inline atf_comp::FTfilt* tfilt_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:atf_comp.FDb.tfilt.Last
+inline atf_comp::FTfilt* tfilt_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:atf_comp.FDb.tfilt.N
+inline i32           tfilt_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:atf_comp.FDb.tfilt.RemoveAll
+void                 tfilt_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:atf_comp.FDb.tfilt.RemoveLast
+void                 tfilt_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:atf_comp.FDb.tfilt.qFind
+inline atf_comp::FTfilt& tfilt_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:atf_comp.FDb.tfilt.XrefMaybe
 bool                 tfilt_XrefMaybe(atf_comp::FTfilt &row);
 
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:atf_comp.FDb.proc.Alloc
+atf_comp::FProc&     proc_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:atf_comp.FDb.proc.AllocMaybe
+atf_comp::FProc*     proc_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:atf_comp.FDb.proc.AllocMem
+void*                proc_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
-// func:atf_comp.FDb.zd_run_comptest.EmptyQ
-inline bool          zd_run_comptest_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
-// If index empty, return NULL. Otherwise return pointer to first element in index
-// func:atf_comp.FDb.zd_run_comptest.First
-inline atf_comp::FComptest* zd_run_comptest_First() __attribute__((__warn_unused_result__, nothrow, pure));
-// Return true if row is in the linked list, false otherwise
-// func:atf_comp.FDb.zd_run_comptest.InLlistQ
-inline bool          zd_run_comptest_InLlistQ(atf_comp::FComptest& row) __attribute__((__warn_unused_result__, nothrow));
-// Insert row into linked list. If row is already in linked list, do nothing.
-// func:atf_comp.FDb.zd_run_comptest.Insert
-void                 zd_run_comptest_Insert(atf_comp::FComptest& row) __attribute__((nothrow));
-// If index empty, return NULL. Otherwise return pointer to last element in index
-// func:atf_comp.FDb.zd_run_comptest.Last
-inline atf_comp::FComptest* zd_run_comptest_Last() __attribute__((__warn_unused_result__, nothrow, pure));
-// Return number of items in the linked list
-// func:atf_comp.FDb.zd_run_comptest.N
-inline i32           zd_run_comptest_N() __attribute__((__warn_unused_result__, nothrow, pure));
-// Return pointer to next element in the list
-// func:atf_comp.FDb.zd_run_comptest.Next
-inline atf_comp::FComptest* zd_run_comptest_Next(atf_comp::FComptest &row) __attribute__((__warn_unused_result__, nothrow));
-// Return pointer to previous element in the list
-// func:atf_comp.FDb.zd_run_comptest.Prev
-inline atf_comp::FComptest* zd_run_comptest_Prev(atf_comp::FComptest &row) __attribute__((__warn_unused_result__, nothrow));
-// Remove element from index. If element is not in index, do nothing.
-// func:atf_comp.FDb.zd_run_comptest.Remove
-void                 zd_run_comptest_Remove(atf_comp::FComptest& row) __attribute__((nothrow));
-// Empty the index. (The rows are not deleted)
-// func:atf_comp.FDb.zd_run_comptest.RemoveAll
-void                 zd_run_comptest_RemoveAll() __attribute__((nothrow));
-// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-// Call FirstChanged trigger.
-// func:atf_comp.FDb.zd_run_comptest.RemoveFirst
-atf_comp::FComptest* zd_run_comptest_RemoveFirst() __attribute__((nothrow));
-// Return reference to last element in the index. No bounds checking.
-// func:atf_comp.FDb.zd_run_comptest.qLast
-inline atf_comp::FComptest& zd_run_comptest_qLast() __attribute__((__warn_unused_result__, nothrow));
-// First element of index changed.
-// func:atf_comp.FDb.zd_run_comptest.FirstChanged
-void                 zd_run_comptest_FirstChanged() __attribute__((nothrow));
-// func:atf_comp.FDb.zd_run_comptest.Step
-// this function is 'extrn' and implemented by user
-void                 zd_run_comptest_Step() __attribute__((nothrow));
-// Set inter-step delay to specified value.
-// The difference between new delay and current delay is added to the next scheduled time.
-// func:atf_comp.FDb.zd_run_comptest.SetDelay
-void                 zd_run_comptest_SetDelay(algo::SchedTime delay) __attribute__((nothrow));
-
-// Return true if index is empty
-// func:atf_comp.FDb.zd_out_tmsg.EmptyQ
-inline bool          zd_out_tmsg_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
-// If index empty, return NULL. Otherwise return pointer to first element in index
-// func:atf_comp.FDb.zd_out_tmsg.First
-inline atf_comp::FTmsg* zd_out_tmsg_First() __attribute__((__warn_unused_result__, nothrow, pure));
-// Return true if row is in the linked list, false otherwise
-// func:atf_comp.FDb.zd_out_tmsg.InLlistQ
-inline bool          zd_out_tmsg_InLlistQ(atf_comp::FTmsg& row) __attribute__((__warn_unused_result__, nothrow));
-// Insert row into linked list. If row is already in linked list, do nothing.
-// func:atf_comp.FDb.zd_out_tmsg.Insert
-void                 zd_out_tmsg_Insert(atf_comp::FTmsg& row) __attribute__((nothrow));
-// If index empty, return NULL. Otherwise return pointer to last element in index
-// func:atf_comp.FDb.zd_out_tmsg.Last
-inline atf_comp::FTmsg* zd_out_tmsg_Last() __attribute__((__warn_unused_result__, nothrow, pure));
-// Return number of items in the linked list
-// func:atf_comp.FDb.zd_out_tmsg.N
-inline i32           zd_out_tmsg_N() __attribute__((__warn_unused_result__, nothrow, pure));
-// Return pointer to next element in the list
-// func:atf_comp.FDb.zd_out_tmsg.Next
-inline atf_comp::FTmsg* zd_out_tmsg_Next(atf_comp::FTmsg &row) __attribute__((__warn_unused_result__, nothrow));
-// Return pointer to previous element in the list
-// func:atf_comp.FDb.zd_out_tmsg.Prev
-inline atf_comp::FTmsg* zd_out_tmsg_Prev(atf_comp::FTmsg &row) __attribute__((__warn_unused_result__, nothrow));
-// Remove element from index. If element is not in index, do nothing.
-// func:atf_comp.FDb.zd_out_tmsg.Remove
-void                 zd_out_tmsg_Remove(atf_comp::FTmsg& row) __attribute__((nothrow));
-// Empty the index. (The rows are not deleted)
-// func:atf_comp.FDb.zd_out_tmsg.RemoveAll
-void                 zd_out_tmsg_RemoveAll() __attribute__((nothrow));
-// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-// func:atf_comp.FDb.zd_out_tmsg.RemoveFirst
-atf_comp::FTmsg*     zd_out_tmsg_RemoveFirst() __attribute__((nothrow));
-// Return reference to last element in the index. No bounds checking.
-// func:atf_comp.FDb.zd_out_tmsg.qLast
-inline atf_comp::FTmsg& zd_out_tmsg_qLast() __attribute__((__warn_unused_result__, nothrow));
-// Save table to ssimfile
-// func:atf_comp.FDb.zd_out_tmsg.SaveSsimfile
-bool                 zd_out_tmsg_SaveSsimfile(algo::strptr fname) __attribute__((nothrow));
-
-// Return true if index is empty
-// func:atf_comp.FDb.zd_out_comptest.EmptyQ
-inline bool          zd_out_comptest_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
-// If index empty, return NULL. Otherwise return pointer to first element in index
-// func:atf_comp.FDb.zd_out_comptest.First
-inline atf_comp::FComptest* zd_out_comptest_First() __attribute__((__warn_unused_result__, nothrow, pure));
-// Return true if row is in the linked list, false otherwise
-// func:atf_comp.FDb.zd_out_comptest.InLlistQ
-inline bool          zd_out_comptest_InLlistQ(atf_comp::FComptest& row) __attribute__((__warn_unused_result__, nothrow));
-// Insert row into linked list. If row is already in linked list, do nothing.
-// func:atf_comp.FDb.zd_out_comptest.Insert
-void                 zd_out_comptest_Insert(atf_comp::FComptest& row) __attribute__((nothrow));
-// If index empty, return NULL. Otherwise return pointer to last element in index
-// func:atf_comp.FDb.zd_out_comptest.Last
-inline atf_comp::FComptest* zd_out_comptest_Last() __attribute__((__warn_unused_result__, nothrow, pure));
-// Return number of items in the linked list
-// func:atf_comp.FDb.zd_out_comptest.N
-inline i32           zd_out_comptest_N() __attribute__((__warn_unused_result__, nothrow, pure));
-// Return pointer to next element in the list
-// func:atf_comp.FDb.zd_out_comptest.Next
-inline atf_comp::FComptest* zd_out_comptest_Next(atf_comp::FComptest &row) __attribute__((__warn_unused_result__, nothrow));
-// Return pointer to previous element in the list
-// func:atf_comp.FDb.zd_out_comptest.Prev
-inline atf_comp::FComptest* zd_out_comptest_Prev(atf_comp::FComptest &row) __attribute__((__warn_unused_result__, nothrow));
-// Remove element from index. If element is not in index, do nothing.
-// func:atf_comp.FDb.zd_out_comptest.Remove
-void                 zd_out_comptest_Remove(atf_comp::FComptest& row) __attribute__((nothrow));
-// Empty the index. (The rows are not deleted)
-// func:atf_comp.FDb.zd_out_comptest.RemoveAll
-void                 zd_out_comptest_RemoveAll() __attribute__((nothrow));
-// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-// func:atf_comp.FDb.zd_out_comptest.RemoveFirst
-atf_comp::FComptest* zd_out_comptest_RemoveFirst() __attribute__((nothrow));
-// Return reference to last element in the index. No bounds checking.
-// func:atf_comp.FDb.zd_out_comptest.qLast
-inline atf_comp::FComptest& zd_out_comptest_qLast() __attribute__((__warn_unused_result__, nothrow));
-// Save table to ssimfile
-// func:atf_comp.FDb.zd_out_comptest.SaveSsimfile
-bool                 zd_out_comptest_SaveSsimfile(algo::strptr fname) __attribute__((nothrow));
-
-// Return true if index is empty
-// func:atf_comp.FDb.zd_out_tfilt.EmptyQ
-inline bool          zd_out_tfilt_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
-// If index empty, return NULL. Otherwise return pointer to first element in index
-// func:atf_comp.FDb.zd_out_tfilt.First
-inline atf_comp::FTfilt* zd_out_tfilt_First() __attribute__((__warn_unused_result__, nothrow, pure));
-// Return true if row is in the linked list, false otherwise
-// func:atf_comp.FDb.zd_out_tfilt.InLlistQ
-inline bool          zd_out_tfilt_InLlistQ(atf_comp::FTfilt& row) __attribute__((__warn_unused_result__, nothrow));
-// Insert row into linked list. If row is already in linked list, do nothing.
-// func:atf_comp.FDb.zd_out_tfilt.Insert
-void                 zd_out_tfilt_Insert(atf_comp::FTfilt& row) __attribute__((nothrow));
-// If index empty, return NULL. Otherwise return pointer to last element in index
-// func:atf_comp.FDb.zd_out_tfilt.Last
-inline atf_comp::FTfilt* zd_out_tfilt_Last() __attribute__((__warn_unused_result__, nothrow, pure));
-// Return number of items in the linked list
-// func:atf_comp.FDb.zd_out_tfilt.N
-inline i32           zd_out_tfilt_N() __attribute__((__warn_unused_result__, nothrow, pure));
-// Return pointer to next element in the list
-// func:atf_comp.FDb.zd_out_tfilt.Next
-inline atf_comp::FTfilt* zd_out_tfilt_Next(atf_comp::FTfilt &row) __attribute__((__warn_unused_result__, nothrow));
-// Return pointer to previous element in the list
-// func:atf_comp.FDb.zd_out_tfilt.Prev
-inline atf_comp::FTfilt* zd_out_tfilt_Prev(atf_comp::FTfilt &row) __attribute__((__warn_unused_result__, nothrow));
-// Remove element from index. If element is not in index, do nothing.
-// func:atf_comp.FDb.zd_out_tfilt.Remove
-void                 zd_out_tfilt_Remove(atf_comp::FTfilt& row) __attribute__((nothrow));
-// Empty the index. (The rows are not deleted)
-// func:atf_comp.FDb.zd_out_tfilt.RemoveAll
-void                 zd_out_tfilt_RemoveAll() __attribute__((nothrow));
-// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-// func:atf_comp.FDb.zd_out_tfilt.RemoveFirst
-atf_comp::FTfilt*    zd_out_tfilt_RemoveFirst() __attribute__((nothrow));
-// Return reference to last element in the index. No bounds checking.
-// func:atf_comp.FDb.zd_out_tfilt.qLast
-inline atf_comp::FTfilt& zd_out_tfilt_qLast() __attribute__((__warn_unused_result__, nothrow));
-// Save table to ssimfile
-// func:atf_comp.FDb.zd_out_tfilt.SaveSsimfile
-bool                 zd_out_tfilt_SaveSsimfile(algo::strptr fname) __attribute__((nothrow));
-
-// Return true if index is empty
-// func:atf_comp.FDb.zd_out_targs.EmptyQ
-inline bool          zd_out_targs_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
-// If index empty, return NULL. Otherwise return pointer to first element in index
-// func:atf_comp.FDb.zd_out_targs.First
-inline atf_comp::FTargs* zd_out_targs_First() __attribute__((__warn_unused_result__, nothrow, pure));
-// Return true if row is in the linked list, false otherwise
-// func:atf_comp.FDb.zd_out_targs.InLlistQ
-inline bool          zd_out_targs_InLlistQ(atf_comp::FTargs& row) __attribute__((__warn_unused_result__, nothrow));
-// Insert row into linked list. If row is already in linked list, do nothing.
-// func:atf_comp.FDb.zd_out_targs.Insert
-void                 zd_out_targs_Insert(atf_comp::FTargs& row) __attribute__((nothrow));
-// If index empty, return NULL. Otherwise return pointer to last element in index
-// func:atf_comp.FDb.zd_out_targs.Last
-inline atf_comp::FTargs* zd_out_targs_Last() __attribute__((__warn_unused_result__, nothrow, pure));
-// Return number of items in the linked list
-// func:atf_comp.FDb.zd_out_targs.N
-inline i32           zd_out_targs_N() __attribute__((__warn_unused_result__, nothrow, pure));
-// Return pointer to next element in the list
-// func:atf_comp.FDb.zd_out_targs.Next
-inline atf_comp::FTargs* zd_out_targs_Next(atf_comp::FTargs &row) __attribute__((__warn_unused_result__, nothrow));
-// Return pointer to previous element in the list
-// func:atf_comp.FDb.zd_out_targs.Prev
-inline atf_comp::FTargs* zd_out_targs_Prev(atf_comp::FTargs &row) __attribute__((__warn_unused_result__, nothrow));
-// Remove element from index. If element is not in index, do nothing.
-// func:atf_comp.FDb.zd_out_targs.Remove
-void                 zd_out_targs_Remove(atf_comp::FTargs& row) __attribute__((nothrow));
-// Empty the index. (The rows are not deleted)
-// func:atf_comp.FDb.zd_out_targs.RemoveAll
-void                 zd_out_targs_RemoveAll() __attribute__((nothrow));
-// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-// func:atf_comp.FDb.zd_out_targs.RemoveFirst
-atf_comp::FTargs*    zd_out_targs_RemoveFirst() __attribute__((nothrow));
-// Return reference to last element in the index. No bounds checking.
-// func:atf_comp.FDb.zd_out_targs.qLast
-inline atf_comp::FTargs& zd_out_targs_qLast() __attribute__((__warn_unused_result__, nothrow));
-// Save table to ssimfile
-// func:atf_comp.FDb.zd_out_targs.SaveSsimfile
-bool                 zd_out_targs_SaveSsimfile(algo::strptr fname) __attribute__((nothrow));
+// func:atf_comp.FDb.proc.EmptyQ
+inline bool          proc_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:atf_comp.FDb.proc.Find
+inline atf_comp::FProc* proc_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:atf_comp.FDb.proc.Last
+inline atf_comp::FProc* proc_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:atf_comp.FDb.proc.N
+inline i32           proc_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:atf_comp.FDb.proc.RemoveAll
+void                 proc_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:atf_comp.FDb.proc.RemoveLast
+void                 proc_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:atf_comp.FDb.proc.qFind
+inline atf_comp::FProc& proc_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_comp.FDb.proc.XrefMaybe
+bool                 proc_XrefMaybe(atf_comp::FProc &row);
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-// func:atf_comp.FDb.tifilt.Alloc
-atf_comp::FTifilt&   tifilt_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// func:atf_comp.FDb.unstableattr.Alloc
+atf_comp::FUnstableattr& unstableattr_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
-// func:atf_comp.FDb.tifilt.AllocMaybe
-atf_comp::FTifilt*   tifilt_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// func:atf_comp.FDb.unstableattr.AllocMaybe
+atf_comp::FUnstableattr* unstableattr_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-// func:atf_comp.FDb.tifilt.InsertMaybe
-atf_comp::FTifilt*   tifilt_InsertMaybe(const atfdb::Tifilt &value) __attribute__((nothrow));
-// Remove row from all global and cross indices, then deallocate row
-// func:atf_comp.FDb.tifilt.Delete
-void                 tifilt_Delete(atf_comp::FTifilt &row) __attribute__((nothrow));
-// Allocate space for one element
-// If no memory available, return NULL.
-// func:atf_comp.FDb.tifilt.AllocMem
-void*                tifilt_AllocMem() __attribute__((__warn_unused_result__, nothrow));
-// Remove mem from all global and cross indices, then deallocate mem
-// func:atf_comp.FDb.tifilt.FreeMem
-void                 tifilt_FreeMem(atf_comp::FTifilt &row) __attribute__((nothrow));
-// Preallocate memory for N more elements
-// Return number of elements actually reserved.
-// func:atf_comp.FDb.tifilt.Reserve
-u64                  tifilt_Reserve(u64 n_elems) __attribute__((nothrow));
-// Allocate block of given size, break up into small elements and append to free list.
-// Return number of elements reserved.
-// func:atf_comp.FDb.tifilt.ReserveMem
-u64                  tifilt_ReserveMem(u64 size) __attribute__((nothrow));
-// Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-// func:atf_comp.FDb.tifilt.XrefMaybe
-bool                 tifilt_XrefMaybe(atf_comp::FTifilt &row);
-
-// Return true if index is empty
-// func:atf_comp.FDb.zd_out_tifilt.EmptyQ
-inline bool          zd_out_tifilt_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
-// If index empty, return NULL. Otherwise return pointer to first element in index
-// func:atf_comp.FDb.zd_out_tifilt.First
-inline atf_comp::FTifilt* zd_out_tifilt_First() __attribute__((__warn_unused_result__, nothrow, pure));
-// Return true if row is in the linked list, false otherwise
-// func:atf_comp.FDb.zd_out_tifilt.InLlistQ
-inline bool          zd_out_tifilt_InLlistQ(atf_comp::FTifilt& row) __attribute__((__warn_unused_result__, nothrow));
-// Insert row into linked list. If row is already in linked list, do nothing.
-// func:atf_comp.FDb.zd_out_tifilt.Insert
-void                 zd_out_tifilt_Insert(atf_comp::FTifilt& row) __attribute__((nothrow));
-// If index empty, return NULL. Otherwise return pointer to last element in index
-// func:atf_comp.FDb.zd_out_tifilt.Last
-inline atf_comp::FTifilt* zd_out_tifilt_Last() __attribute__((__warn_unused_result__, nothrow, pure));
-// Return number of items in the linked list
-// func:atf_comp.FDb.zd_out_tifilt.N
-inline i32           zd_out_tifilt_N() __attribute__((__warn_unused_result__, nothrow, pure));
-// Return pointer to next element in the list
-// func:atf_comp.FDb.zd_out_tifilt.Next
-inline atf_comp::FTifilt* zd_out_tifilt_Next(atf_comp::FTifilt &row) __attribute__((__warn_unused_result__, nothrow));
-// Return pointer to previous element in the list
-// func:atf_comp.FDb.zd_out_tifilt.Prev
-inline atf_comp::FTifilt* zd_out_tifilt_Prev(atf_comp::FTifilt &row) __attribute__((__warn_unused_result__, nothrow));
-// Remove element from index. If element is not in index, do nothing.
-// func:atf_comp.FDb.zd_out_tifilt.Remove
-void                 zd_out_tifilt_Remove(atf_comp::FTifilt& row) __attribute__((nothrow));
-// Empty the index. (The rows are not deleted)
-// func:atf_comp.FDb.zd_out_tifilt.RemoveAll
-void                 zd_out_tifilt_RemoveAll() __attribute__((nothrow));
-// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-// func:atf_comp.FDb.zd_out_tifilt.RemoveFirst
-atf_comp::FTifilt*   zd_out_tifilt_RemoveFirst() __attribute__((nothrow));
-// Return reference to last element in the index. No bounds checking.
-// func:atf_comp.FDb.zd_out_tifilt.qLast
-inline atf_comp::FTifilt& zd_out_tifilt_qLast() __attribute__((__warn_unused_result__, nothrow));
-// Save table to ssimfile
-// func:atf_comp.FDb.zd_out_tifilt.SaveSsimfile
-bool                 zd_out_tifilt_SaveSsimfile(algo::strptr fname) __attribute__((nothrow));
-
-// Allocate memory for new default row.
-// If out of memory, process is killed.
-// func:atf_comp.FDb.covdir.Alloc
-atf_comp::FCovdir&   covdir_Alloc() __attribute__((__warn_unused_result__, nothrow));
-// Allocate memory for new element. If out of memory, return NULL.
-// func:atf_comp.FDb.covdir.AllocMaybe
-atf_comp::FCovdir*   covdir_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// func:atf_comp.FDb.unstableattr.InsertMaybe
+atf_comp::FUnstableattr* unstableattr_InsertMaybe(const atfdb::Unstableattr &value) __attribute__((nothrow));
 // Allocate space for one element. If no memory available, return NULL.
-// func:atf_comp.FDb.covdir.AllocMem
-void*                covdir_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// func:atf_comp.FDb.unstableattr.AllocMem
+void*                unstableattr_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
-// func:atf_comp.FDb.covdir.EmptyQ
-inline bool          covdir_EmptyQ() __attribute__((nothrow, pure));
+// func:atf_comp.FDb.unstableattr.EmptyQ
+inline bool          unstableattr_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
-// func:atf_comp.FDb.covdir.Find
-inline atf_comp::FCovdir* covdir_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// func:atf_comp.FDb.unstableattr.Find
+inline atf_comp::FUnstableattr* unstableattr_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
-// func:atf_comp.FDb.covdir.Last
-inline atf_comp::FCovdir* covdir_Last() __attribute__((nothrow, pure));
+// func:atf_comp.FDb.unstableattr.Last
+inline atf_comp::FUnstableattr* unstableattr_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
-// func:atf_comp.FDb.covdir.N
-inline i32           covdir_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// func:atf_comp.FDb.unstableattr.N
+inline i32           unstableattr_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
-// func:atf_comp.FDb.covdir.RemoveAll
-void                 covdir_RemoveAll() __attribute__((nothrow));
+// func:atf_comp.FDb.unstableattr.RemoveAll
+void                 unstableattr_RemoveAll() __attribute__((nothrow));
 // Delete last element of array. Do nothing if array is empty.
-// func:atf_comp.FDb.covdir.RemoveLast
-void                 covdir_RemoveLast() __attribute__((nothrow));
+// func:atf_comp.FDb.unstableattr.RemoveLast
+void                 unstableattr_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
-// func:atf_comp.FDb.covdir.qFind
-inline atf_comp::FCovdir& covdir_qFind(u64 t) __attribute__((nothrow, pure));
+// func:atf_comp.FDb.unstableattr.qFind
+inline atf_comp::FUnstableattr& unstableattr_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-// func:atf_comp.FDb.covdir.XrefMaybe
-bool                 covdir_XrefMaybe(atf_comp::FCovdir &row);
-
-// Return true if index is empty
-// func:atf_comp.FDb.zd_covdir_free.EmptyQ
-inline bool          zd_covdir_free_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
-// If index empty, return NULL. Otherwise return pointer to first element in index
-// func:atf_comp.FDb.zd_covdir_free.First
-inline atf_comp::FCovdir* zd_covdir_free_First() __attribute__((__warn_unused_result__, nothrow, pure));
-// Return true if row is in the linked list, false otherwise
-// func:atf_comp.FDb.zd_covdir_free.InLlistQ
-inline bool          zd_covdir_free_InLlistQ(atf_comp::FCovdir& row) __attribute__((__warn_unused_result__, nothrow));
-// Insert row into linked list. If row is already in linked list, do nothing.
-// func:atf_comp.FDb.zd_covdir_free.Insert
-void                 zd_covdir_free_Insert(atf_comp::FCovdir& row) __attribute__((nothrow));
-// If index empty, return NULL. Otherwise return pointer to last element in index
-// func:atf_comp.FDb.zd_covdir_free.Last
-inline atf_comp::FCovdir* zd_covdir_free_Last() __attribute__((__warn_unused_result__, nothrow, pure));
-// Return number of items in the linked list
-// func:atf_comp.FDb.zd_covdir_free.N
-inline i32           zd_covdir_free_N() __attribute__((__warn_unused_result__, nothrow, pure));
-// Return pointer to next element in the list
-// func:atf_comp.FDb.zd_covdir_free.Next
-inline atf_comp::FCovdir* zd_covdir_free_Next(atf_comp::FCovdir &row) __attribute__((__warn_unused_result__, nothrow));
-// Return pointer to previous element in the list
-// func:atf_comp.FDb.zd_covdir_free.Prev
-inline atf_comp::FCovdir* zd_covdir_free_Prev(atf_comp::FCovdir &row) __attribute__((__warn_unused_result__, nothrow));
-// Remove element from index. If element is not in index, do nothing.
-// func:atf_comp.FDb.zd_covdir_free.Remove
-void                 zd_covdir_free_Remove(atf_comp::FCovdir& row) __attribute__((nothrow));
-// Empty the index. (The rows are not deleted)
-// func:atf_comp.FDb.zd_covdir_free.RemoveAll
-void                 zd_covdir_free_RemoveAll() __attribute__((nothrow));
-// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-// func:atf_comp.FDb.zd_covdir_free.RemoveFirst
-atf_comp::FCovdir*   zd_covdir_free_RemoveFirst() __attribute__((nothrow));
-// Return reference to last element in the index. No bounds checking.
-// func:atf_comp.FDb.zd_covdir_free.qLast
-inline atf_comp::FCovdir& zd_covdir_free_qLast() __attribute__((__warn_unused_result__, nothrow));
+// func:atf_comp.FDb.unstableattr.XrefMaybe
+bool                 unstableattr_XrefMaybe(atf_comp::FUnstableattr &row);
 
 // Return true if hash is empty
-// func:atf_comp.FDb.ind_tfilt.EmptyQ
-inline bool          ind_tfilt_EmptyQ() __attribute__((nothrow));
+// func:atf_comp.FDb.ind_unstableattr.EmptyQ
+inline bool          ind_unstableattr_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
-// func:atf_comp.FDb.ind_tfilt.Find
-atf_comp::FTfilt*    ind_tfilt_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// func:atf_comp.FDb.ind_unstableattr.Find
+atf_comp::FUnstableattr* ind_unstableattr_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
 // Look up row by key and return reference. Throw exception if not found
-// func:atf_comp.FDb.ind_tfilt.FindX
-atf_comp::FTfilt&    ind_tfilt_FindX(const algo::strptr& key);
+// func:atf_comp.FDb.ind_unstableattr.FindX
+atf_comp::FUnstableattr& ind_unstableattr_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:atf_comp.FDb.ind_unstableattr.GetOrCreate
+atf_comp::FUnstableattr& ind_unstableattr_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
-// func:atf_comp.FDb.ind_tfilt.N
-inline i32           ind_tfilt_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// func:atf_comp.FDb.ind_unstableattr.N
+inline i32           ind_unstableattr_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-// func:atf_comp.FDb.ind_tfilt.InsertMaybe
-bool                 ind_tfilt_InsertMaybe(atf_comp::FTfilt& row) __attribute__((nothrow));
+// func:atf_comp.FDb.ind_unstableattr.InsertMaybe
+bool                 ind_unstableattr_InsertMaybe(atf_comp::FUnstableattr& row) __attribute__((nothrow));
 // Remove reference to element from hash index. If element is not in hash, do nothing
-// func:atf_comp.FDb.ind_tfilt.Remove
-void                 ind_tfilt_Remove(atf_comp::FTfilt& row) __attribute__((nothrow));
+// func:atf_comp.FDb.ind_unstableattr.Remove
+void                 ind_unstableattr_Remove(atf_comp::FUnstableattr& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
-// func:atf_comp.FDb.ind_tfilt.Reserve
-void                 ind_tfilt_Reserve(int n) __attribute__((nothrow));
+// func:atf_comp.FDb.ind_unstableattr.Reserve
+void                 ind_unstableattr_Reserve(int n) __attribute__((nothrow));
 // Reserve enough room for exacty N elements. Return success code.
-// func:atf_comp.FDb.ind_tfilt.AbsReserve
-void                 ind_tfilt_AbsReserve(int n) __attribute__((nothrow));
+// func:atf_comp.FDb.ind_unstableattr.AbsReserve
+void                 ind_unstableattr_AbsReserve(int n) __attribute__((nothrow));
+
+// Return true if index is empty
+// func:atf_comp.FDb.zd_select.EmptyQ
+inline bool          zd_select_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
+// If index empty, return NULL. Otherwise return pointer to first element in index
+// func:atf_comp.FDb.zd_select.First
+inline atf_comp::FComptest* zd_select_First() __attribute__((__warn_unused_result__, nothrow, pure));
+// Return true if row is in the linked list, false otherwise
+// func:atf_comp.FDb.zd_select.InLlistQ
+inline bool          zd_select_InLlistQ(atf_comp::FComptest& row) __attribute__((__warn_unused_result__, nothrow));
+// Insert row into linked list. If row is already in linked list, do nothing.
+// func:atf_comp.FDb.zd_select.Insert
+void                 zd_select_Insert(atf_comp::FComptest& row) __attribute__((nothrow));
+// If index empty, return NULL. Otherwise return pointer to last element in index
+// func:atf_comp.FDb.zd_select.Last
+inline atf_comp::FComptest* zd_select_Last() __attribute__((__warn_unused_result__, nothrow, pure));
+// Return number of items in the linked list
+// func:atf_comp.FDb.zd_select.N
+inline i32           zd_select_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to next element in the list
+// func:atf_comp.FDb.zd_select.Next
+inline atf_comp::FComptest* zd_select_Next(atf_comp::FComptest &row) __attribute__((__warn_unused_result__, nothrow));
+// Return pointer to previous element in the list
+// func:atf_comp.FDb.zd_select.Prev
+inline atf_comp::FComptest* zd_select_Prev(atf_comp::FComptest &row) __attribute__((__warn_unused_result__, nothrow));
+// Remove element from index. If element is not in index, do nothing.
+// func:atf_comp.FDb.zd_select.Remove
+void                 zd_select_Remove(atf_comp::FComptest& row) __attribute__((nothrow));
+// Empty the index. (The rows are not deleted)
+// func:atf_comp.FDb.zd_select.RemoveAll
+void                 zd_select_RemoveAll() __attribute__((nothrow));
+// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+// func:atf_comp.FDb.zd_select.RemoveFirst
+atf_comp::FComptest* zd_select_RemoveFirst() __attribute__((nothrow));
+// Return reference to last element in the index. No bounds checking.
+// func:atf_comp.FDb.zd_select.qLast
+inline atf_comp::FComptest& zd_select_qLast() __attribute__((__warn_unused_result__, nothrow));
 
 // cursor points to valid item
 // func:atf_comp.FDb.comptest_curs.Reset
@@ -1024,170 +531,176 @@ inline void          _db_comptest_curs_Next(_db_comptest_curs &curs) __attribute
 // func:atf_comp.FDb.comptest_curs.Access
 inline atf_comp::FComptest& _db_comptest_curs_Access(_db_comptest_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
-// func:atf_comp.FDb.zd_sel_comptest_curs.Reset
-inline void          _db_zd_sel_comptest_curs_Reset(_db_zd_sel_comptest_curs &curs, atf_comp::FDb &parent) __attribute__((nothrow));
+// func:atf_comp.FDb.tfilt_curs.Reset
+inline void          _db_tfilt_curs_Reset(_db_tfilt_curs &curs, atf_comp::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
-// func:atf_comp.FDb.zd_sel_comptest_curs.ValidQ
-inline bool          _db_zd_sel_comptest_curs_ValidQ(_db_zd_sel_comptest_curs &curs) __attribute__((nothrow));
+// func:atf_comp.FDb.tfilt_curs.ValidQ
+inline bool          _db_tfilt_curs_ValidQ(_db_tfilt_curs &curs) __attribute__((nothrow));
 // proceed to next item
-// func:atf_comp.FDb.zd_sel_comptest_curs.Next
-inline void          _db_zd_sel_comptest_curs_Next(_db_zd_sel_comptest_curs &curs) __attribute__((nothrow));
+// func:atf_comp.FDb.tfilt_curs.Next
+inline void          _db_tfilt_curs_Next(_db_tfilt_curs &curs) __attribute__((nothrow));
 // item access
-// func:atf_comp.FDb.zd_sel_comptest_curs.Access
-inline atf_comp::FComptest& _db_zd_sel_comptest_curs_Access(_db_zd_sel_comptest_curs &curs) __attribute__((nothrow));
+// func:atf_comp.FDb.tfilt_curs.Access
+inline atf_comp::FTfilt& _db_tfilt_curs_Access(_db_tfilt_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
-// func:atf_comp.FDb.zd_run_comptest_curs.Reset
-inline void          _db_zd_run_comptest_curs_Reset(_db_zd_run_comptest_curs &curs, atf_comp::FDb &parent) __attribute__((nothrow));
+// func:atf_comp.FDb.proc_curs.Reset
+inline void          _db_proc_curs_Reset(_db_proc_curs &curs, atf_comp::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
-// func:atf_comp.FDb.zd_run_comptest_curs.ValidQ
-inline bool          _db_zd_run_comptest_curs_ValidQ(_db_zd_run_comptest_curs &curs) __attribute__((nothrow));
+// func:atf_comp.FDb.proc_curs.ValidQ
+inline bool          _db_proc_curs_ValidQ(_db_proc_curs &curs) __attribute__((nothrow));
 // proceed to next item
-// func:atf_comp.FDb.zd_run_comptest_curs.Next
-inline void          _db_zd_run_comptest_curs_Next(_db_zd_run_comptest_curs &curs) __attribute__((nothrow));
+// func:atf_comp.FDb.proc_curs.Next
+inline void          _db_proc_curs_Next(_db_proc_curs &curs) __attribute__((nothrow));
 // item access
-// func:atf_comp.FDb.zd_run_comptest_curs.Access
-inline atf_comp::FComptest& _db_zd_run_comptest_curs_Access(_db_zd_run_comptest_curs &curs) __attribute__((nothrow));
+// func:atf_comp.FDb.proc_curs.Access
+inline atf_comp::FProc& _db_proc_curs_Access(_db_proc_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
-// func:atf_comp.FDb.zd_out_tmsg_curs.Reset
-inline void          _db_zd_out_tmsg_curs_Reset(_db_zd_out_tmsg_curs &curs, atf_comp::FDb &parent) __attribute__((nothrow));
+// func:atf_comp.FDb.unstableattr_curs.Reset
+inline void          _db_unstableattr_curs_Reset(_db_unstableattr_curs &curs, atf_comp::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
-// func:atf_comp.FDb.zd_out_tmsg_curs.ValidQ
-inline bool          _db_zd_out_tmsg_curs_ValidQ(_db_zd_out_tmsg_curs &curs) __attribute__((nothrow));
+// func:atf_comp.FDb.unstableattr_curs.ValidQ
+inline bool          _db_unstableattr_curs_ValidQ(_db_unstableattr_curs &curs) __attribute__((nothrow));
 // proceed to next item
-// func:atf_comp.FDb.zd_out_tmsg_curs.Next
-inline void          _db_zd_out_tmsg_curs_Next(_db_zd_out_tmsg_curs &curs) __attribute__((nothrow));
+// func:atf_comp.FDb.unstableattr_curs.Next
+inline void          _db_unstableattr_curs_Next(_db_unstableattr_curs &curs) __attribute__((nothrow));
 // item access
-// func:atf_comp.FDb.zd_out_tmsg_curs.Access
-inline atf_comp::FTmsg& _db_zd_out_tmsg_curs_Access(_db_zd_out_tmsg_curs &curs) __attribute__((nothrow));
+// func:atf_comp.FDb.unstableattr_curs.Access
+inline atf_comp::FUnstableattr& _db_unstableattr_curs_Access(_db_unstableattr_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
-// func:atf_comp.FDb.zd_out_comptest_curs.Reset
-inline void          _db_zd_out_comptest_curs_Reset(_db_zd_out_comptest_curs &curs, atf_comp::FDb &parent) __attribute__((nothrow));
+// func:atf_comp.FDb.zd_select_curs.Reset
+inline void          _db_zd_select_curs_Reset(_db_zd_select_curs &curs, atf_comp::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
-// func:atf_comp.FDb.zd_out_comptest_curs.ValidQ
-inline bool          _db_zd_out_comptest_curs_ValidQ(_db_zd_out_comptest_curs &curs) __attribute__((nothrow));
+// func:atf_comp.FDb.zd_select_curs.ValidQ
+inline bool          _db_zd_select_curs_ValidQ(_db_zd_select_curs &curs) __attribute__((nothrow));
 // proceed to next item
-// func:atf_comp.FDb.zd_out_comptest_curs.Next
-inline void          _db_zd_out_comptest_curs_Next(_db_zd_out_comptest_curs &curs) __attribute__((nothrow));
+// func:atf_comp.FDb.zd_select_curs.Next
+inline void          _db_zd_select_curs_Next(_db_zd_select_curs &curs) __attribute__((nothrow));
 // item access
-// func:atf_comp.FDb.zd_out_comptest_curs.Access
-inline atf_comp::FComptest& _db_zd_out_comptest_curs_Access(_db_zd_out_comptest_curs &curs) __attribute__((nothrow));
-// cursor points to valid item
-// func:atf_comp.FDb.zd_out_tfilt_curs.Reset
-inline void          _db_zd_out_tfilt_curs_Reset(_db_zd_out_tfilt_curs &curs, atf_comp::FDb &parent) __attribute__((nothrow));
-// cursor points to valid item
-// func:atf_comp.FDb.zd_out_tfilt_curs.ValidQ
-inline bool          _db_zd_out_tfilt_curs_ValidQ(_db_zd_out_tfilt_curs &curs) __attribute__((nothrow));
-// proceed to next item
-// func:atf_comp.FDb.zd_out_tfilt_curs.Next
-inline void          _db_zd_out_tfilt_curs_Next(_db_zd_out_tfilt_curs &curs) __attribute__((nothrow));
-// item access
-// func:atf_comp.FDb.zd_out_tfilt_curs.Access
-inline atf_comp::FTfilt& _db_zd_out_tfilt_curs_Access(_db_zd_out_tfilt_curs &curs) __attribute__((nothrow));
-// cursor points to valid item
-// func:atf_comp.FDb.zd_out_targs_curs.Reset
-inline void          _db_zd_out_targs_curs_Reset(_db_zd_out_targs_curs &curs, atf_comp::FDb &parent) __attribute__((nothrow));
-// cursor points to valid item
-// func:atf_comp.FDb.zd_out_targs_curs.ValidQ
-inline bool          _db_zd_out_targs_curs_ValidQ(_db_zd_out_targs_curs &curs) __attribute__((nothrow));
-// proceed to next item
-// func:atf_comp.FDb.zd_out_targs_curs.Next
-inline void          _db_zd_out_targs_curs_Next(_db_zd_out_targs_curs &curs) __attribute__((nothrow));
-// item access
-// func:atf_comp.FDb.zd_out_targs_curs.Access
-inline atf_comp::FTargs& _db_zd_out_targs_curs_Access(_db_zd_out_targs_curs &curs) __attribute__((nothrow));
-// cursor points to valid item
-// func:atf_comp.FDb.zd_out_tifilt_curs.Reset
-inline void          _db_zd_out_tifilt_curs_Reset(_db_zd_out_tifilt_curs &curs, atf_comp::FDb &parent) __attribute__((nothrow));
-// cursor points to valid item
-// func:atf_comp.FDb.zd_out_tifilt_curs.ValidQ
-inline bool          _db_zd_out_tifilt_curs_ValidQ(_db_zd_out_tifilt_curs &curs) __attribute__((nothrow));
-// proceed to next item
-// func:atf_comp.FDb.zd_out_tifilt_curs.Next
-inline void          _db_zd_out_tifilt_curs_Next(_db_zd_out_tifilt_curs &curs) __attribute__((nothrow));
-// item access
-// func:atf_comp.FDb.zd_out_tifilt_curs.Access
-inline atf_comp::FTifilt& _db_zd_out_tifilt_curs_Access(_db_zd_out_tifilt_curs &curs) __attribute__((nothrow));
-// cursor points to valid item
-// func:atf_comp.FDb.covdir_curs.Reset
-inline void          _db_covdir_curs_Reset(_db_covdir_curs &curs, atf_comp::FDb &parent) __attribute__((nothrow));
-// cursor points to valid item
-// func:atf_comp.FDb.covdir_curs.ValidQ
-inline bool          _db_covdir_curs_ValidQ(_db_covdir_curs &curs) __attribute__((nothrow));
-// proceed to next item
-// func:atf_comp.FDb.covdir_curs.Next
-inline void          _db_covdir_curs_Next(_db_covdir_curs &curs) __attribute__((nothrow));
-// item access
-// func:atf_comp.FDb.covdir_curs.Access
-inline atf_comp::FCovdir& _db_covdir_curs_Access(_db_covdir_curs &curs) __attribute__((nothrow));
-// cursor points to valid item
-// func:atf_comp.FDb.zd_covdir_free_curs.Reset
-inline void          _db_zd_covdir_free_curs_Reset(_db_zd_covdir_free_curs &curs, atf_comp::FDb &parent) __attribute__((nothrow));
-// cursor points to valid item
-// func:atf_comp.FDb.zd_covdir_free_curs.ValidQ
-inline bool          _db_zd_covdir_free_curs_ValidQ(_db_zd_covdir_free_curs &curs) __attribute__((nothrow));
-// proceed to next item
-// func:atf_comp.FDb.zd_covdir_free_curs.Next
-inline void          _db_zd_covdir_free_curs_Next(_db_zd_covdir_free_curs &curs) __attribute__((nothrow));
-// item access
-// func:atf_comp.FDb.zd_covdir_free_curs.Access
-inline atf_comp::FCovdir& _db_zd_covdir_free_curs_Access(_db_zd_covdir_free_curs &curs) __attribute__((nothrow));
+// func:atf_comp.FDb.zd_select_curs.Access
+inline atf_comp::FComptest& _db_zd_select_curs_Access(_db_zd_select_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_comp.FDb..Init
 void                 FDb_Init();
 // func:atf_comp.FDb..Uninit
 void                 FDb_Uninit() __attribute__((nothrow));
 
-// --- atf_comp.FTargs
-// create: atf_comp.FDb.targs (Tpool)
-// global access: zd_out_targs (Llist)
-// access: atf_comp.FComptest.c_targs (Ptr)
-struct FTargs { // atf_comp.FTargs
-    atf_comp::FTargs*   targs_next;          // Pointer to next free element int tpool
-    atf_comp::FTargs*   zd_out_targs_next;   // zslist link; -1 means not-in-list
-    atf_comp::FTargs*   zd_out_targs_prev;   // previous element
-    algo::Smallstr50    comptest;            //
-    algo::cstring       args;                //
-    // func:atf_comp.FTargs..AssignOp
-    inline atf_comp::FTargs& operator =(const atf_comp::FTargs &rhs) = delete;
-    // func:atf_comp.FTargs..CopyCtor
-    inline               FTargs(const atf_comp::FTargs &rhs) = delete;
+// --- atf_comp.FProc
+// create: atf_comp.FDb.proc (Lary)
+// global access: ind_proc (Thash, hash field proc)
+// global access: proc (Lary, by rowid)
+struct FProc { // atf_comp.FProc
+    atf_comp::FProc*     ind_proc_next;      // hash next
+    u32                  ind_proc_hashval;   // hash value
+    algo::Smallstr50     proc;               //
+    i32                  status;             //   -1  Exit status (-1=running)
+    algo::cstring        memcheck_log;       //   ""  Valgrind memcheck log path
+    command::bash_proc   bash;               // Subprocess
+    algo::Fildes         stdin_fd;           // Stdin pipe write end
+    u8*                  in_elems;           //   NULL  pointer to elements of indirect array
+    u32                  in_max;             //   0  current length of allocated array
+    i32                  in_start;           // beginning of valid bytes (in bytes)
+    i32                  in_end;             // end of valid bytes (in bytes)
+    i32                  in_msglen;          // current message length
+    algo::Errcode        in_err;             // system error code
+    algo_lib::FIohook    in_iohook;          // edge-triggered hook for the buffer
+    bool                 in_eof;             // no more data will be written to buffer
+    bool                 in_msgvalid;        // current message is valid
+    bool                 in_epoll_enable;    // use epoll?
+    bool                 killed;             //   false  ProcKill was called
+    // value field atf_comp.FProc.bash is not copiable
+    // field atf_comp.FProc.in prevents copy
+    // func:atf_comp.FProc..AssignOp
+    inline atf_comp::FProc& operator =(const atf_comp::FProc &rhs) = delete;
+    // value field atf_comp.FProc.bash is not copiable
+    // field atf_comp.FProc.in prevents copy
+    // func:atf_comp.FProc..CopyCtor
+    inline               FProc(const atf_comp::FProc &rhs) = delete;
 private:
-    // func:atf_comp.FTargs..Ctor
-    inline               FTargs() __attribute__((nothrow));
-    // func:atf_comp.FTargs..Dtor
-    inline               ~FTargs() __attribute__((nothrow));
-    friend atf_comp::FTargs&    targs_Alloc() __attribute__((__warn_unused_result__, nothrow));
-    friend atf_comp::FTargs*    targs_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
-    friend void                 targs_Delete(atf_comp::FTargs &row) __attribute__((nothrow));
+    // func:atf_comp.FProc..Ctor
+    inline               FProc() __attribute__((nothrow));
+    // func:atf_comp.FProc..Dtor
+    inline               ~FProc() __attribute__((nothrow));
+    friend atf_comp::FProc&     proc_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend atf_comp::FProc*     proc_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 proc_RemoveAll() __attribute__((nothrow));
+    friend void                 proc_RemoveLast() __attribute__((nothrow));
 };
 
-// Copy fields out of row
-// func:atf_comp.FTargs.base.CopyOut
-void                 targs_CopyOut(atf_comp::FTargs &row, atfdb::Targs &out) __attribute__((nothrow));
-// Copy fields in to row
-// func:atf_comp.FTargs.base.CopyIn
-void                 targs_CopyIn(atf_comp::FTargs &row, atfdb::Targs &in) __attribute__((nothrow));
+// Attach fbuf to Iohook for reading
+// Attach file descriptor and begin reading using edge-triggered epoll.
+// File descriptor becomes owned by atf_comp::FProc.in via FIohook field.
+// func:atf_comp.FProc.in.BeginRead
+void                 in_BeginRead(atf_comp::FProc& proc, algo::Fildes fd) __attribute__((nothrow));
+// Set EOF flag
+// func:atf_comp.FProc.in.EndRead
+void                 in_EndRead(atf_comp::FProc& proc) __attribute__((nothrow));
+// Detect incoming message in buffer and return it
+// Look for valid message at current position in the buffer.
+// If message is already there, return a pointer to it. Do not skip message (call SkipMsg to do that).
+// If there is no message, read once from underlying file descriptor and try again.
+// The message is found by looking for delimiter '\n'.
+// The return value is an aryptr. If ret.elems is non-NULL, the message is valid (possibly empty).
+// If ret.elems is NULL, no message can be extracted from buffer.
+// The returned aryptr excludes the trailing deliminter.
+// SkipMsg will skip both the line and the deliminter.
+// A partial line at the end of input is NOT returned (TODO?)
+//
+// func:atf_comp.FProc.in.GetMsg
+algo::aryptr<char>   in_GetMsg(atf_comp::FProc& proc) __attribute__((nothrow));
+// Set buffer size.
+// Unconditionally reallocate buffer to have size NEW_MAX
+// If the buffer has data in it, NEW_MAX is adjusted so that the data is not lost
+// (best to call this before filling the buffer)
+// func:atf_comp.FProc.in.Realloc
+void                 in_Realloc(atf_comp::FProc& proc, int new_max) __attribute__((nothrow));
+// Return max. number of bytes in the buffer.
+// func:atf_comp.FProc.in.Max
+inline i32           in_Max(atf_comp::FProc& proc) __attribute__((nothrow));
+// Return number of bytes in the buffer.
+// func:atf_comp.FProc.in.N
+inline i32           in_N(atf_comp::FProc& proc) __attribute__((__warn_unused_result__, nothrow, pure));
+// Refill buffer. Return false if no further refill possible (input buffer exhausted)
+// func:atf_comp.FProc.in.Refill
+bool                 in_Refill(atf_comp::FProc& proc) __attribute__((nothrow));
+// Empty bfufer
+// Discard contents of the buffer.
+// func:atf_comp.FProc.in.RemoveAll
+void                 in_RemoveAll(atf_comp::FProc& proc) __attribute__((nothrow));
+// Skip N bytes when reading
+// Mark some buffer contents as read.
+//
+// func:atf_comp.FProc.in.SkipBytes
+void                 in_SkipBytes(atf_comp::FProc& proc, int n) __attribute__((nothrow));
+// Skip current message, if any
+// Skip current message, if any.
+// func:atf_comp.FProc.in.SkipMsg
+void                 in_SkipMsg(atf_comp::FProc& proc) __attribute__((nothrow));
+// Attempt to write buffer contents to fbuf, return success
+// Write bytes to the buffer. If the entire block is written, return true,
+// Otherwise return false.
+// Bytes in the buffer are potentially shifted left to make room for the message.
+//
+// func:atf_comp.FProc.in.WriteAll
+bool                 in_WriteAll(atf_comp::FProc& proc, u8 *in, i32 in_n) __attribute__((nothrow));
+// Write buffer contents to fbuf, reallocate as needed
+// Write bytes to the buffer. The entire block is always written
+// func:atf_comp.FProc.in.WriteReserve
+void                 in_WriteReserve(atf_comp::FProc& proc, u8 *in, i32 in_n) __attribute__((nothrow));
 
 // Set all fields to initial values.
-// func:atf_comp.FTargs..Init
-inline void          FTargs_Init(atf_comp::FTargs& targs);
-// func:atf_comp.FTargs..Uninit
-void                 FTargs_Uninit(atf_comp::FTargs& targs) __attribute__((nothrow));
+// func:atf_comp.FProc..Init
+void                 FProc_Init(atf_comp::FProc& proc);
+// func:atf_comp.FProc..Uninit
+void                 FProc_Uninit(atf_comp::FProc& proc) __attribute__((nothrow));
 
 // --- atf_comp.FTfilt
-// create: atf_comp.FDb.tfilt (Tpool)
-// global access: zd_out_tfilt (Llist)
-// global access: ind_tfilt (Thash, hash field comptest)
+// create: atf_comp.FDb.tfilt (Lary)
+// global access: tfilt (Lary, by rowid)
 // access: atf_comp.FComptest.c_tfilt (Ptr)
 struct FTfilt { // atf_comp.FTfilt
-    atf_comp::FTfilt*   tfilt_next;          // Pointer to next free element int tpool
-    atf_comp::FTfilt*   zd_out_tfilt_next;   // zslist link; -1 means not-in-list
-    atf_comp::FTfilt*   zd_out_tfilt_prev;   // previous element
-    atf_comp::FTfilt*   ind_tfilt_next;      // hash next
-    u32                 ind_tfilt_hashval;   // hash value
-    algo::Smallstr50    comptest;            //
-    algo::cstring       filter;              //
-    algo::Comment       comment;             //
+    algo::Smallstr50   comptest;   //
+    algo::cstring      filter;     //
+    algo::Comment      comment;    //
     // func:atf_comp.FTfilt..AssignOp
     inline atf_comp::FTfilt& operator =(const atf_comp::FTfilt &rhs) = delete;
     // func:atf_comp.FTfilt..CopyCtor
@@ -1199,7 +712,8 @@ private:
     inline               ~FTfilt() __attribute__((nothrow));
     friend atf_comp::FTfilt&    tfilt_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend atf_comp::FTfilt*    tfilt_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
-    friend void                 tfilt_Delete(atf_comp::FTfilt &row) __attribute__((nothrow));
+    friend void                 tfilt_RemoveAll() __attribute__((nothrow));
+    friend void                 tfilt_RemoveLast() __attribute__((nothrow));
 };
 
 // Copy fields out of row
@@ -1209,98 +723,60 @@ void                 tfilt_CopyOut(atf_comp::FTfilt &row, atfdb::Tfilt &out) __a
 // func:atf_comp.FTfilt.base.CopyIn
 void                 tfilt_CopyIn(atf_comp::FTfilt &row, atfdb::Tfilt &in) __attribute__((nothrow));
 
-// Set all fields to initial values.
-// func:atf_comp.FTfilt..Init
-inline void          FTfilt_Init(atf_comp::FTfilt& tfilt);
 // func:atf_comp.FTfilt..Uninit
 void                 FTfilt_Uninit(atf_comp::FTfilt& tfilt) __attribute__((nothrow));
 
-// --- atf_comp.FTifilt
-// create: atf_comp.FDb.tifilt (Tpool)
-// global access: zd_out_tifilt (Llist)
-// access: atf_comp.FComptest.c_tifilt (Ptr)
-struct FTifilt { // atf_comp.FTifilt
-    atf_comp::FTifilt*   tifilt_next;          // Pointer to next free element int tpool
-    atf_comp::FTifilt*   zd_out_tifilt_next;   // zslist link; -1 means not-in-list
-    atf_comp::FTifilt*   zd_out_tifilt_prev;   // previous element
-    algo::Smallstr50     comptest;             //
-    algo::cstring        ifilter;              // Command to preprocess input
-    algo::Comment        comment;              //
-    // func:atf_comp.FTifilt..AssignOp
-    inline atf_comp::FTifilt& operator =(const atf_comp::FTifilt &rhs) = delete;
-    // func:atf_comp.FTifilt..CopyCtor
-    inline               FTifilt(const atf_comp::FTifilt &rhs) = delete;
+// --- atf_comp.FUnstableattr
+// create: atf_comp.FDb.unstableattr (Lary)
+// global access: unstableattr (Lary, by rowid)
+// global access: ind_unstableattr (Thash, hash field unstableattr)
+struct FUnstableattr { // atf_comp.FUnstableattr
+    atf_comp::FUnstableattr*   ind_unstableattr_next;      // hash next
+    u32                        ind_unstableattr_hashval;   // hash value
+    algo::Smallstr100          unstableattr;               //
+    algo::Comment              comment;                    //
+    // func:atf_comp.FUnstableattr..AssignOp
+    inline atf_comp::FUnstableattr& operator =(const atf_comp::FUnstableattr &rhs) = delete;
+    // func:atf_comp.FUnstableattr..CopyCtor
+    inline               FUnstableattr(const atf_comp::FUnstableattr &rhs) = delete;
 private:
-    // func:atf_comp.FTifilt..Ctor
-    inline               FTifilt() __attribute__((nothrow));
-    // func:atf_comp.FTifilt..Dtor
-    inline               ~FTifilt() __attribute__((nothrow));
-    friend atf_comp::FTifilt&   tifilt_Alloc() __attribute__((__warn_unused_result__, nothrow));
-    friend atf_comp::FTifilt*   tifilt_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
-    friend void                 tifilt_Delete(atf_comp::FTifilt &row) __attribute__((nothrow));
+    // func:atf_comp.FUnstableattr..Ctor
+    inline               FUnstableattr() __attribute__((nothrow));
+    // func:atf_comp.FUnstableattr..Dtor
+    inline               ~FUnstableattr() __attribute__((nothrow));
+    friend atf_comp::FUnstableattr& unstableattr_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend atf_comp::FUnstableattr* unstableattr_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 unstableattr_RemoveAll() __attribute__((nothrow));
+    friend void                 unstableattr_RemoveLast() __attribute__((nothrow));
 };
 
 // Copy fields out of row
-// func:atf_comp.FTifilt.base.CopyOut
-void                 tifilt_CopyOut(atf_comp::FTifilt &row, atfdb::Tifilt &out) __attribute__((nothrow));
+// func:atf_comp.FUnstableattr.base.CopyOut
+void                 unstableattr_CopyOut(atf_comp::FUnstableattr &row, atfdb::Unstableattr &out) __attribute__((nothrow));
 // Copy fields in to row
-// func:atf_comp.FTifilt.base.CopyIn
-void                 tifilt_CopyIn(atf_comp::FTifilt &row, atfdb::Tifilt &in) __attribute__((nothrow));
+// func:atf_comp.FUnstableattr.base.CopyIn
+void                 unstableattr_CopyIn(atf_comp::FUnstableattr &row, atfdb::Unstableattr &in) __attribute__((nothrow));
 
 // Set all fields to initial values.
-// func:atf_comp.FTifilt..Init
-inline void          FTifilt_Init(atf_comp::FTifilt& tifilt);
-// func:atf_comp.FTifilt..Uninit
-void                 FTifilt_Uninit(atf_comp::FTifilt& tifilt) __attribute__((nothrow));
+// func:atf_comp.FUnstableattr..Init
+inline void          FUnstableattr_Init(atf_comp::FUnstableattr& unstableattr);
+// func:atf_comp.FUnstableattr..Uninit
+void                 FUnstableattr_Uninit(atf_comp::FUnstableattr& unstableattr) __attribute__((nothrow));
 
-// --- atf_comp.FTmsg
-// create: atf_comp.FDb.tmsg (Tpool)
-// global access: zd_out_tmsg (Llist)
-// access: atf_comp.FComptest.zd_tmsg (Llist)
-struct FTmsg { // atf_comp.FTmsg
-    atf_comp::FTmsg*   comptest_zd_tmsg_next;   // zslist link; -1 means not-in-list
-    atf_comp::FTmsg*   comptest_zd_tmsg_prev;   // previous element
-    atf_comp::FTmsg*   tmsg_next;               // Pointer to next free element int tpool
-    atf_comp::FTmsg*   zd_out_tmsg_next;        // zslist link; -1 means not-in-list
-    atf_comp::FTmsg*   zd_out_tmsg_prev;        // previous element
-    algo::Smallstr50   tmsg;                    //
-    bool               istuple;                 //   false
-    algo::cstring      msg;                     //
-    // func:atf_comp.FTmsg..AssignOp
-    inline atf_comp::FTmsg& operator =(const atf_comp::FTmsg &rhs) = delete;
-    // func:atf_comp.FTmsg..CopyCtor
-    inline               FTmsg(const atf_comp::FTmsg &rhs) = delete;
-private:
-    // func:atf_comp.FTmsg..Ctor
-    inline               FTmsg() __attribute__((nothrow));
-    // func:atf_comp.FTmsg..Dtor
-    inline               ~FTmsg() __attribute__((nothrow));
-    friend atf_comp::FTmsg&     tmsg_Alloc() __attribute__((__warn_unused_result__, nothrow));
-    friend atf_comp::FTmsg*     tmsg_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
-    friend void                 tmsg_Delete(atf_comp::FTmsg &row) __attribute__((nothrow));
+// --- atf_comp.FUnstablefld
+struct FUnstablefld { // atf_comp.FUnstablefld
+    algo::Smallstr100   field;     //
+    algo::Comment       comment;   //
+    // func:atf_comp.FUnstablefld..Ctor
+    inline               FUnstablefld() __attribute__((nothrow));
 };
 
 // Copy fields out of row
-// func:atf_comp.FTmsg.base.CopyOut
-void                 tmsg_CopyOut(atf_comp::FTmsg &row, atfdb::Tmsg &out) __attribute__((nothrow));
-// Copy fields in to row
-// func:atf_comp.FTmsg.base.CopyIn
-void                 tmsg_CopyIn(atf_comp::FTmsg &row, atfdb::Tmsg &in) __attribute__((nothrow));
+// func:atf_comp.FUnstablefld.base.CopyOut
+void                 parent_CopyOut(atf_comp::FUnstablefld &row, dev::Unstablefld &out) __attribute__((nothrow));
+// func:atf_comp.FUnstablefld.base.Castbase
+inline dev::Unstablefld& Castbase(atf_comp::FUnstablefld& parent);
 
-// func:atf_comp.FTmsg.comptest.Get
-algo::Smallstr50     comptest_Get(atf_comp::FTmsg& tmsg) __attribute__((__warn_unused_result__, nothrow));
-
-// func:atf_comp.FTmsg.rank.Get
-i32                  rank_Get(atf_comp::FTmsg& tmsg) __attribute__((__warn_unused_result__, nothrow));
-
-// func:atf_comp.FTmsg.dir.Get
-algo::Smallstr50     dir_Get(atf_comp::FTmsg& tmsg) __attribute__((__warn_unused_result__, nothrow));
-
-// Set all fields to initial values.
-// func:atf_comp.FTmsg..Init
-inline void          FTmsg_Init(atf_comp::FTmsg& tmsg);
-// func:atf_comp.FTmsg..Uninit
-void                 FTmsg_Uninit(atf_comp::FTmsg& tmsg) __attribute__((nothrow));
 
 // --- atf_comp.FieldId
 #pragma pack(push,1)
@@ -1410,15 +886,6 @@ void                 TableId_Print(atf_comp::TableId& row, algo::cstring& str) _
 } // gen:ns_print_struct
 namespace atf_comp { // gen:ns_curstext
 
-struct comptest_zd_tmsg_curs {// fcurs:atf_comp.FComptest.zd_tmsg/curs
-    typedef atf_comp::FTmsg ChildType;
-    atf_comp::FTmsg* row;
-    comptest_zd_tmsg_curs() {
-        row = NULL;
-    }
-};
-
-
 struct _db_comptest_curs {// cursor
     typedef atf_comp::FComptest ChildType;
     atf_comp::FDb *parent;
@@ -1427,87 +894,988 @@ struct _db_comptest_curs {// cursor
 };
 
 
-struct _db_zd_sel_comptest_curs {// fcurs:atf_comp.FDb.zd_sel_comptest/curs
-    typedef atf_comp::FComptest ChildType;
-    atf_comp::FComptest* row;
-    _db_zd_sel_comptest_curs() {
-        row = NULL;
-    }
-};
-
-
-struct _db_zd_run_comptest_curs {// fcurs:atf_comp.FDb.zd_run_comptest/curs
-    typedef atf_comp::FComptest ChildType;
-    atf_comp::FComptest* row;
-    _db_zd_run_comptest_curs() {
-        row = NULL;
-    }
-};
-
-
-struct _db_zd_out_tmsg_curs {// fcurs:atf_comp.FDb.zd_out_tmsg/curs
-    typedef atf_comp::FTmsg ChildType;
-    atf_comp::FTmsg* row;
-    _db_zd_out_tmsg_curs() {
-        row = NULL;
-    }
-};
-
-
-struct _db_zd_out_comptest_curs {// fcurs:atf_comp.FDb.zd_out_comptest/curs
-    typedef atf_comp::FComptest ChildType;
-    atf_comp::FComptest* row;
-    _db_zd_out_comptest_curs() {
-        row = NULL;
-    }
-};
-
-
-struct _db_zd_out_tfilt_curs {// fcurs:atf_comp.FDb.zd_out_tfilt/curs
+struct _db_tfilt_curs {// cursor
     typedef atf_comp::FTfilt ChildType;
-    atf_comp::FTfilt* row;
-    _db_zd_out_tfilt_curs() {
-        row = NULL;
-    }
-};
-
-
-struct _db_zd_out_targs_curs {// fcurs:atf_comp.FDb.zd_out_targs/curs
-    typedef atf_comp::FTargs ChildType;
-    atf_comp::FTargs* row;
-    _db_zd_out_targs_curs() {
-        row = NULL;
-    }
-};
-
-
-struct _db_zd_out_tifilt_curs {// fcurs:atf_comp.FDb.zd_out_tifilt/curs
-    typedef atf_comp::FTifilt ChildType;
-    atf_comp::FTifilt* row;
-    _db_zd_out_tifilt_curs() {
-        row = NULL;
-    }
-};
-
-
-struct _db_covdir_curs {// cursor
-    typedef atf_comp::FCovdir ChildType;
     atf_comp::FDb *parent;
     i64 index;
-    _db_covdir_curs(){ parent=NULL; index=0; }
+    _db_tfilt_curs(){ parent=NULL; index=0; }
 };
 
 
-struct _db_zd_covdir_free_curs {// fcurs:atf_comp.FDb.zd_covdir_free/curs
-    typedef atf_comp::FCovdir ChildType;
-    atf_comp::FCovdir* row;
-    _db_zd_covdir_free_curs() {
+struct _db_proc_curs {// cursor
+    typedef atf_comp::FProc ChildType;
+    atf_comp::FDb *parent;
+    i64 index;
+    _db_proc_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_unstableattr_curs {// cursor
+    typedef atf_comp::FUnstableattr ChildType;
+    atf_comp::FDb *parent;
+    i64 index;
+    _db_unstableattr_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_zd_select_curs {// fcurs:atf_comp.FDb.zd_select/curs
+    typedef atf_comp::FComptest ChildType;
+    atf_comp::FComptest* row;
+    _db_zd_select_curs() {
         row = NULL;
     }
 };
 
 } // gen:ns_curstext
 namespace atf_comp { // gen:ns_func
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_BadInsert
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_BadInsert();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_BadNs
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_BadNs();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_BadPkey
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_BadPkey();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_BadReftype
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_BadReftype();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_CascDel
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_CascDel();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_CascDel2
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_CascDel2();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_CascDel3
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_CascDel3();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_DelField
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_DelField();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_DelRecord
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_DelRecord();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_DeleteReinsert
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_DeleteReinsert();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_Fields
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_Fields();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_FieldsComma
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_FieldsComma();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_GitTrigger1
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_GitTrigger1();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_Insert
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_Insert();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_InsertDelete
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_InsertDelete();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_Merge
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_Merge();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_Meta1
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_Meta1();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_Meta2
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_Meta2();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_Meta3
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_Meta3();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_NullTrunc
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_NullTrunc();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_QueryCtype
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_QueryCtype();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_RenameCollision
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_RenameCollision();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_RenameField
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_RenameField();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_RenameRecord
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_RenameRecord();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_Replace
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_Replace();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_Select
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_Select();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_SelectStdin
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_SelectStdin();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_SelectTree
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_SelectTree();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_TooManyArgs
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_TooManyArgs();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_Trunc
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_Trunc();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_UpdateBad
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_UpdateBad();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_UpdateGood
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_UpdateGood();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_Where
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_Where();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_A01a
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_A01a();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_A01b
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_A01b();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_A01c
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_A01c();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_A02a
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_A02a();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_A02b
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_A02b();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_A02c
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_A02c();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_A03a
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_A03a();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_A03b
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_A03b();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_A03c
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_A03c();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_A04a
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_A04a();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_A04b
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_A04b();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_A04c
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_A04c();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_A05a
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_A05a();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_A05b
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_A05b();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_A05c
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_A05c();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_A06a
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_A06a();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_A06b
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_A06b();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_A06c
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_A06c();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_A07a
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_A07a();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_A07b
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_A07b();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_A07c
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_A07c();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_Acr01
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_Acr01();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_Acr02
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_Acr02();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_Acr03
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_Acr03();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_Acr04
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_Acr04();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_Acr05
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_Acr05();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_Acr06
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_Acr06();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_Acr07
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_Acr07();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_Acr08
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_Acr08();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_Acr09
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_Acr09();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_Acr10
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_Acr10();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_Acr11
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_Acr11();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_Acr12
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_Acr12();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_Acr13
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_Acr13();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_BadExe
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_BadExe();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_BadOpt
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_BadOpt();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_BadOptColon
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_BadOptColon();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_BadOptColonSpace
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_BadOptColonSpace();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_BadOptSpace
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_BadOptSpace();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_Bare
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_Bare();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_CheckMultiOpt
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_CheckMultiOpt();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_CheckUnknownCmd
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_CheckUnknownCmd();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_CheckUnknownOpt
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_CheckUnknownOpt();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_CheckValid
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_CheckValid();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_CheckValidAnon
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_CheckValidAnon();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_CheckValidFlag
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_CheckValidFlag();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_DblColon
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_DblColon();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_DblColonList
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_DblColonList();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_DblSpace
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_DblSpace();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_DblSpaceList
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_DblSpaceList();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_EnumCtypeColon
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_EnumCtypeColon();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_EnumCtypeColonList
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_EnumCtypeColonList();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_EnumCtypeSpace
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_EnumCtypeSpace();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_EnumCtypeSpaceList
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_EnumCtypeSpaceList();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_EnumFieldColon
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_EnumFieldColon();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_EnumFieldColonList
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_EnumFieldColonList();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_EnumFieldSpace
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_EnumFieldSpace();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_EnumFieldSpaceList
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_EnumFieldSpaceList();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_FlagColon
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_FlagColon();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_FlagColonList
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_FlagColonList();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_FlagSpace
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_FlagSpace();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_FlagSpaceList
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_FlagSpaceList();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_Install
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_Install();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_NumColon
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_NumColon();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_NumColonList
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_NumColonList();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_NumSpace
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_NumSpace();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_NumSpaceList
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_NumSpaceList();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_OptCumul
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_OptCumul();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_OptCumulAlias
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_OptCumulAlias();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_OptD
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_OptD();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_OptDList
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_OptDList();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_OptH
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_OptH();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_OptHList
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_OptHList();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_OptNonCumul
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_OptNonCumul();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_OptNonCumulAlias
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_OptNonCumulAlias();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_OptPkeyColon
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_OptPkeyColon();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_OptPkeyColonFull
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_OptPkeyColonFull();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_OptPkeyColonFullList
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_OptPkeyColonFullList();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_OptPkeyColonList
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_OptPkeyColonList();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_OptPkeyColonPrefix
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_OptPkeyColonPrefix();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_OptPkeyColonPrefixList
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_OptPkeyColonPrefixList();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_OptPkeyColonSubstr
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_OptPkeyColonSubstr();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_OptPkeyColonSubstrList
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_OptPkeyColonSubstrList();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_OptPkeySpace
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_OptPkeySpace();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_OptPkeySpaceFull
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_OptPkeySpaceFull();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_OptPkeySpaceFullList
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_OptPkeySpaceFullList();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_OptPkeySpaceList
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_OptPkeySpaceList();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_OptPkeySpacePrefix
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_OptPkeySpacePrefix();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_OptPkeySpacePrefixList
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_OptPkeySpacePrefixList();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_OptPkeySpaceSubstr
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_OptPkeySpaceSubstr();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_OptPkeySpaceSubstrList
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_OptPkeySpaceSubstrList();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_OptRegxColon
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_OptRegxColon();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_OptRegxColonFull
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_OptRegxColonFull();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_OptRegxColonFullList
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_OptRegxColonFullList();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_OptRegxColonList
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_OptRegxColonList();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_OptRegxColonPrefix
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_OptRegxColonPrefix();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_OptRegxColonPrefixList
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_OptRegxColonPrefixList();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_OptRegxColonSubstr
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_OptRegxColonSubstr();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_OptRegxColonSubstrList
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_OptRegxColonSubstrList();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_OptRegxSpace
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_OptRegxSpace();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_OptRegxSpaceFull
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_OptRegxSpaceFull();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_OptRegxSpaceFullList
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_OptRegxSpaceFullList();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_OptRegxSpaceList
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_OptRegxSpaceList();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_OptRegxSpacePrefix
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_OptRegxSpacePrefix();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_OptRegxSpacePrefixList
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_OptRegxSpacePrefixList();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_OptRegxSpaceSubstr
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_OptRegxSpaceSubstr();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_OptRegxSpaceSubstrList
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_OptRegxSpaceSubstrList();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_OptSig
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_OptSig();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_OptSigList
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_OptSigList();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_OptV
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_OptV();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_OptVList
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_OptVList();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_R01a
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_R01a();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_R01b
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_R01b();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_R01c
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_R01c();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_R01d
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_R01d();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_R02a
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_R02a();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_R02b
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_R02b();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_R02c
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_R02c();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_R02d
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_R02d();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_StrColon
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_StrColon();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_StrColonList
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_StrColonList();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_StrSpace
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_StrSpace();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_StrSpaceList
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_StrSpaceList();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_T01
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_T01();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_T02
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_T02();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_T03
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_T03();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_T04
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_T04();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_T05
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_T05();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_T06
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_T06();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_T07
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_T07();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_T08
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_T08();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_T09
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_T09();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_compl_T10
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_compl_T10();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_dm_Conflict
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_dm_Conflict();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_dm_Merge
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_dm_Merge();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_dm_RenameTuple
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_dm_RenameTuple();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_ed_CreateCtype
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_ed_CreateCtype();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_ed_CreateMsg
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_ed_CreateMsg();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_ed_CreateSrcfileTarget
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_ed_CreateSrcfileTarget();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_ed_CreateSsimfile
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_ed_CreateSsimfile();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_ed_CreateSsimfileBadNs
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_ed_CreateSsimfileBadNs();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_ed_CreateTarget
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_ed_CreateTarget();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_in_Reverse
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_in_Reverse();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_in_Simple
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_in_Simple();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_acr_in_Tree
+// this function is 'extrn' and implemented by user
+void                 comptest_acr_in_Tree();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_aqlite_CompileOptions
+// this function is 'extrn' and implemented by user
+void                 comptest_aqlite_CompileOptions();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_aqlite_Constraints
+// this function is 'extrn' and implemented by user
+void                 comptest_aqlite_Constraints();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_aqlite_ErrorHandling
+// this function is 'extrn' and implemented by user
+void                 comptest_aqlite_ErrorHandling();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_aqlite_Joins
+// this function is 'extrn' and implemented by user
+void                 comptest_aqlite_Joins();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_aqlite_Number
+// this function is 'extrn' and implemented by user
+void                 comptest_aqlite_Number();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_aqlite_PatternMatching
+// this function is 'extrn' and implemented by user
+void                 comptest_aqlite_PatternMatching();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_aqlite_Performance
+// this function is 'extrn' and implemented by user
+void                 comptest_aqlite_Performance();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_aqlite_Smoke
+// this function is 'extrn' and implemented by user
+void                 comptest_aqlite_Smoke();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_atf_cmdline_Bare
+// this function is 'extrn' and implemented by user
+void                 comptest_atf_cmdline_Bare();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_atf_cmdline_Debug
+// this function is 'extrn' and implemented by user
+void                 comptest_atf_cmdline_Debug();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_atf_cmdline_Help
+// this function is 'extrn' and implemented by user
+void                 comptest_atf_cmdline_Help();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_atf_cmdline_Minimal
+// this function is 'extrn' and implemented by user
+void                 comptest_atf_cmdline_Minimal();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_atf_cmdline_MinimalExec
+// this function is 'extrn' and implemented by user
+void                 comptest_atf_cmdline_MinimalExec();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_atf_cmdline_Rich
+// this function is 'extrn' and implemented by user
+void                 comptest_atf_cmdline_Rich();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_atf_cmdline_RichExec
+// this function is 'extrn' and implemented by user
+void                 comptest_atf_cmdline_RichExec();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_atf_cmdline_Sig
+// this function is 'extrn' and implemented by user
+void                 comptest_atf_cmdline_Sig();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_atf_cmdline_Verbose
+// this function is 'extrn' and implemented by user
+void                 comptest_atf_cmdline_Verbose();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_atf_cmdline_Version
+// this function is 'extrn' and implemented by user
+void                 comptest_atf_cmdline_Version();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_jkv_ArrayFill
+// this function is 'extrn' and implemented by user
+void                 comptest_jkv_ArrayFill();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_jkv_ReverseSmoke
+// this function is 'extrn' and implemented by user
+void                 comptest_jkv_ReverseSmoke();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_jkv_Smoke
+// this function is 'extrn' and implemented by user
+void                 comptest_jkv_Smoke();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_mdbg_OutOfOrderArgs
+// this function is 'extrn' and implemented by user
+void                 comptest_mdbg_OutOfOrderArgs();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_mdbg_Smoke
+// this function is 'extrn' and implemented by user
+void                 comptest_mdbg_Smoke();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_mdbg_SmokeBreak
+// this function is 'extrn' and implemented by user
+void                 comptest_mdbg_SmokeBreak();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_mdbg_SmokeBreak2
+// this function is 'extrn' and implemented by user
+void                 comptest_mdbg_SmokeBreak2();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_orgfile_ConsumeInput
+// this function is 'extrn' and implemented by user
+void                 comptest_orgfile_ConsumeInput();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_orgfile_Dedup
+// this function is 'extrn' and implemented by user
+void                 comptest_orgfile_Dedup();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_orgfile_DedupPathregx
+// this function is 'extrn' and implemented by user
+void                 comptest_orgfile_DedupPathregx();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_orgfile_Hash
+// this function is 'extrn' and implemented by user
+void                 comptest_orgfile_Hash();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_orgfile_MoveByDate
+// this function is 'extrn' and implemented by user
+void                 comptest_orgfile_MoveByDate();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_orgfile_MoveDot
+// this function is 'extrn' and implemented by user
+void                 comptest_orgfile_MoveDot();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_orgfile_MoveNoop
+// this function is 'extrn' and implemented by user
+void                 comptest_orgfile_MoveNoop();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_samp_meng_Smoke
+// this function is 'extrn' and implemented by user
+void                 comptest_samp_meng_Smoke();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_sandbox_Anon
+// this function is 'extrn' and implemented by user
+void                 comptest_sandbox_Anon();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_sandbox_Clean
+// this function is 'extrn' and implemented by user
+void                 comptest_sandbox_Clean();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_sandbox_Command
+// this function is 'extrn' and implemented by user
+void                 comptest_sandbox_Command();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_sandbox_Create
+// this function is 'extrn' and implemented by user
+void                 comptest_sandbox_Create();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_sandbox_Del
+// this function is 'extrn' and implemented by user
+void                 comptest_sandbox_Del();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_sandbox_Diff
+// this function is 'extrn' and implemented by user
+void                 comptest_sandbox_Diff();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_sandbox_Gc
+// this function is 'extrn' and implemented by user
+void                 comptest_sandbox_Gc();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_sandbox_List
+// this function is 'extrn' and implemented by user
+void                 comptest_sandbox_List();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_sandbox_Pull
+// this function is 'extrn' and implemented by user
+void                 comptest_sandbox_Pull();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_sandbox_Reset
+// this function is 'extrn' and implemented by user
+void                 comptest_sandbox_Reset();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_sandbox_StdinMulti
+// this function is 'extrn' and implemented by user
+void                 comptest_sandbox_StdinMulti();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_ssimfilt_Csv
+// this function is 'extrn' and implemented by user
+void                 comptest_ssimfilt_Csv();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_ssimfilt_CsvField
+// this function is 'extrn' and implemented by user
+void                 comptest_ssimfilt_CsvField();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_ssimfilt_FirstTag
+// this function is 'extrn' and implemented by user
+void                 comptest_ssimfilt_FirstTag();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_ssimfilt_Json
+// this function is 'extrn' and implemented by user
+void                 comptest_ssimfilt_Json();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_ssimfilt_JsonRecursive
+// this function is 'extrn' and implemented by user
+void                 comptest_ssimfilt_JsonRecursive();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_ssimfilt_MatchField
+// this function is 'extrn' and implemented by user
+void                 comptest_ssimfilt_MatchField();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_ssimfilt_MatchTag
+// this function is 'extrn' and implemented by user
+void                 comptest_ssimfilt_MatchTag();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_ssimfilt_SelectField
+// this function is 'extrn' and implemented by user
+void                 comptest_ssimfilt_SelectField();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_ssimfilt_Stable
+// this function is 'extrn' and implemented by user
+void                 comptest_ssimfilt_Stable();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_ssimfilt_Table
+// this function is 'extrn' and implemented by user
+void                 comptest_ssimfilt_Table();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_sv2ssim_Convert1
+// this function is 'extrn' and implemented by user
+void                 comptest_sv2ssim_Convert1();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_sv2ssim_Convert1Signed
+// this function is 'extrn' and implemented by user
+void                 comptest_sv2ssim_Convert1Signed();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_sv2ssim_Convert2
+// this function is 'extrn' and implemented by user
+void                 comptest_sv2ssim_Convert2();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_sv2ssim_Convert2Tsv
+// this function is 'extrn' and implemented by user
+void                 comptest_sv2ssim_Convert2Tsv();
+// User-implemented function from gstatic:atf_comp.FDb.comptest
+// func:atf_comp...comptest_sv2ssim_UniqueFieldName
+// this function is 'extrn' and implemented by user
+void                 comptest_sv2ssim_UniqueFieldName();
 // func:atf_comp...StaticCheck
 void                 StaticCheck();
 } // gen:ns_func

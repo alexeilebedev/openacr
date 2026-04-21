@@ -119,7 +119,7 @@ errlist abt_md -check
 |Ssimfile|Comment|
 |---|---|
 |[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
-|[atfdb.comptest](/txt/ssimdb/atfdb/comptest.md)||
+|[atfdb.comptest](/txt/ssimdb/atfdb/comptest.md)|A component test|
 |[dmmeta.ctype](/txt/ssimdb/dmmeta/ctype.md)|Struct|
 |[dmmeta.dispatch](/txt/ssimdb/dmmeta/dispatch.md)|Generate code for a multi-way branch|
 |[dmmeta.dispatch_msg](/txt/ssimdb/dmmeta/dispatch_msg.md)|Add message to a dispatch|
