@@ -1,2 +1,8 @@
-dmmeta.ns  ns:blah
-dmmeta.ctype  ctype:blah.Y
+# start ssimfilt cmd:"$bindir/ssimfilt dmmeta.%"
+ssimfilt <- dmmeta.ns ns:blah
+ssimfilt <- dmmeta.ctype ctype:blah.Y
+ssimfilt <- dev.target target:ssimfilt
+# eof ssimfilt
+ssimfilt -> dmmeta.ns  ns:blah
+ssimfilt -> dmmeta.ctype  ctype:blah.Y
+# exit ssimfilt code:0

@@ -1,22 +1,25 @@
--amnum 
--cconst 
--d 
--ddbl 
--debug 
--dflag:N 
--dnum 
--dpkey 
--dregx 
--dstr 
--exec 
--fconst 
--flag 
--in 
--mdbl 
--mnum 
--mstr 
--sig 
--signature 
--v 
--verbose 
--version 
+# start acr_compl cmd:"$bindir/acr_compl -line:'atf_cmdline -astr: -anum: -adbl: -str: -num: -dbl: -aflag -h -'"
+# eof acr_compl
+acr_compl -> -amnum 
+acr_compl -> -cconst 
+acr_compl -> -d 
+acr_compl -> -ddbl 
+acr_compl -> -debug 
+acr_compl -> -dflag:N 
+acr_compl -> -dnum 
+acr_compl -> -dpkey 
+acr_compl -> -dregx 
+acr_compl -> -dstr 
+acr_compl -> -exec 
+acr_compl -> -fconst 
+acr_compl -> -flag 
+acr_compl -> -in 
+acr_compl -> -mdbl 
+acr_compl -> -mnum 
+acr_compl -> -mstr 
+acr_compl -> -sig 
+acr_compl -> -signature 
+acr_compl -> -v 
+acr_compl -> -verbose 
+acr_compl -> -version 
+# exit acr_compl code:0

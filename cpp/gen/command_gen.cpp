@@ -234,8 +234,10 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_dregx         : ret = "dregx";  break;
         case command_FieldId_dpkey         : ret = "dpkey";  break;
         case command_FieldId_comptest      : ret = "comptest";  break;
+        case command_FieldId_mode          : ret = "mode";  break;
         case command_FieldId_mdbg          : ret = "mdbg";  break;
         case command_FieldId_run           : ret = "run";  break;
+        case command_FieldId_ee            : ret = "ee";  break;
         case command_FieldId_printinput    : ret = "printinput";  break;
         case command_FieldId_normalize     : ret = "normalize";  break;
         case command_FieldId_covcapture    : ret = "covcapture";  break;
@@ -262,7 +264,6 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_xmlpretty     : ret = "xmlpretty";  break;
         case command_FieldId_summary       : ret = "summary";  break;
         case command_FieldId_incremental   : ret = "incremental";  break;
-        case command_FieldId_dbgshell      : ret = "dbgshell";  break;
         case command_FieldId_reprofile     : ret = "reprofile";  break;
         case command_FieldId_args          : ret = "args";  break;
         case command_FieldId_inputfile     : ret = "inputfile";  break;
@@ -434,6 +435,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
             switch (u64(algo::ReadLE16(rhs.elems))) {
                 case LE_STR2('d','b'): {
                     value_SetEnum(parent,command_FieldId_db); ret = true; break;
+                }
+                case LE_STR2('e','e'): {
+                    value_SetEnum(parent,command_FieldId_ee); ret = true; break;
                 }
                 case LE_STR2('g','c'): {
                     value_SetEnum(parent,command_FieldId_gc); ret = true; break;
@@ -633,6 +637,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR4('m','n','u','m'): {
                     value_SetEnum(parent,command_FieldId_mnum); ret = true; break;
+                }
+                case LE_STR4('m','o','d','e'): {
+                    value_SetEnum(parent,command_FieldId_mode); ret = true; break;
                 }
                 case LE_STR4('m','o','v','e'): {
                     value_SetEnum(parent,command_FieldId_move); ret = true; break;
@@ -1184,9 +1191,6 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('d','a','t','a','_','d','i','r'): {
                     value_SetEnum(parent,command_FieldId_data_dir); ret = true; break;
-                }
-                case LE_STR8('d','b','g','s','h','e','l','l'): {
-                    value_SetEnum(parent,command_FieldId_dbgshell); ret = true; break;
                 }
                 case LE_STR8('e','x','t','e','r','n','a','l'): {
                     value_SetEnum(parent,command_FieldId_external); ret = true; break;
@@ -4163,6 +4167,9 @@ bool command::acr_compl_ReadFieldMaybe(command::acr_compl& parent, algo::strptr 
         case command_FieldId_debug_log: {
             retval = algo::cstring_ReadStrptrMaybe(parent.debug_log, strval);
         } break;
+        case command_FieldId_check: {
+            retval = bool_ReadStrptrMaybe(parent.check, strval);
+        } break;
         default: {
             retval = false;
             algo_lib::AppendErrtext("comment", "unrecognized attr");
@@ -4265,6 +4272,12 @@ void command::acr_compl_PrintArgv(command::acr_compl& row, algo::cstring& str) {
         str << " -debug_log:";
         strptr_PrintBash(temp,str);
     }
+    if (!(row.check == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.check, temp);
+        str << " -check:";
+        strptr_PrintBash(temp,str);
+    }
 }
 
 // --- command.acr_compl..Print
@@ -4294,6 +4307,9 @@ void command::acr_compl_Print(command::acr_compl& row, algo::cstring& str) {
 
     algo::cstring_Print(row.debug_log, temp);
     PrintAttrSpaceReset(str,"debug_log", temp);
+
+    bool_Print(row.check, temp);
+    PrintAttrSpaceReset(str,"check", temp);
 }
 
 // --- command.acr_compl..NArgs
@@ -4325,6 +4341,11 @@ i32 command::acr_compl_NArgs(command::FieldId field, algo::strptr& out_dflt, boo
         } break;
         case command_FieldId_debug_log: { //
             *out_anon = false;
+        } break;
+        case command_FieldId_check: { // bool: no argument required but value may be specified as check:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
         } break;
         default:
         retval=-1; // unrecognized
@@ -4510,6 +4531,12 @@ void command::acr_compl_ToArgv(command::acr_compl_proc& parent, algo::StringAry&
         cstring *arg = &ary_Alloc(args);
         *arg << "-debug_log:";
         cstring_Print(parent.cmd.debug_log, *arg);
+    }
+
+    if (parent.cmd.check != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-check:";
+        bool_Print(parent.cmd.check, *arg);
     }
     for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
         ary_Alloc(args) << "-verbose";
@@ -12671,6 +12698,138 @@ bool command::comptest_ReadStrptrMaybe(command::atf_comp& parent, algo::strptr i
     return retval;
 }
 
+// --- command.atf_comp.mode.ToCstr
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+const char* command::mode_ToCstr(const command::atf_comp& parent) {
+    const char *ret = NULL;
+    switch(mode_GetEnum(parent)) {
+        case command_atf_comp_mode_run     : ret = "run";  break;
+        case command_atf_comp_mode_capture : ret = "capture";  break;
+        case command_atf_comp_mode_covcheck: ret = "covcheck";  break;
+        case command_atf_comp_mode_covcapture: ret = "covcapture";  break;
+        case command_atf_comp_mode_memcheck: ret = "memcheck";  break;
+        case command_atf_comp_mode_valgrind: ret = "valgrind";  break;
+        case command_atf_comp_mode_mdbg    : ret = "mdbg";  break;
+        case command_atf_comp_mode_edit    : ret = "edit";  break;
+        case command_atf_comp_mode_editsource: ret = "editsource";  break;
+        case command_atf_comp_mode_print   : ret = "print";  break;
+        case command_atf_comp_mode_printinput: ret = "printinput";  break;
+        case command_atf_comp_mode_del     : ret = "del";  break;
+    }
+    return ret;
+}
+
+// --- command.atf_comp.mode.Print
+// Convert mode to a string. First, attempt conversion to a known string.
+// If no string matches, print mode as a numeric value.
+void command::mode_Print(const command::atf_comp& parent, algo::cstring &lhs) {
+    const char *strval = mode_ToCstr(parent);
+    if (strval) {
+        lhs << strval;
+    } else {
+        lhs << parent.mode;
+    }
+}
+
+// --- command.atf_comp.mode.SetStrptrMaybe
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+bool command::mode_SetStrptrMaybe(command::atf_comp& parent, algo::strptr rhs) {
+    bool ret = false;
+    switch (elems_N(rhs)) {
+        case 3: {
+            switch (u64(algo::ReadLE16(rhs.elems))|(u64(rhs[2])<<16)) {
+                case LE_STR3('d','e','l'): {
+                    mode_SetEnum(parent,command_atf_comp_mode_del); ret = true; break;
+                }
+                case LE_STR3('r','u','n'): {
+                    mode_SetEnum(parent,command_atf_comp_mode_run); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 4: {
+            switch (u64(algo::ReadLE32(rhs.elems))) {
+                case LE_STR4('e','d','i','t'): {
+                    mode_SetEnum(parent,command_atf_comp_mode_edit); ret = true; break;
+                }
+                case LE_STR4('m','d','b','g'): {
+                    mode_SetEnum(parent,command_atf_comp_mode_mdbg); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 5: {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+                case LE_STR5('p','r','i','n','t'): {
+                    mode_SetEnum(parent,command_atf_comp_mode_print); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 7: {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
+                case LE_STR7('c','a','p','t','u','r','e'): {
+                    mode_SetEnum(parent,command_atf_comp_mode_capture); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 8: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('c','o','v','c','h','e','c','k'): {
+                    mode_SetEnum(parent,command_atf_comp_mode_covcheck); ret = true; break;
+                }
+                case LE_STR8('m','e','m','c','h','e','c','k'): {
+                    mode_SetEnum(parent,command_atf_comp_mode_memcheck); ret = true; break;
+                }
+                case LE_STR8('v','a','l','g','r','i','n','d'): {
+                    mode_SetEnum(parent,command_atf_comp_mode_valgrind); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 10: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('c','o','v','c','a','p','t','u'): {
+                    if (memcmp(rhs.elems+8,"re",2)==0) { mode_SetEnum(parent,command_atf_comp_mode_covcapture); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('e','d','i','t','s','o','u','r'): {
+                    if (memcmp(rhs.elems+8,"ce",2)==0) { mode_SetEnum(parent,command_atf_comp_mode_editsource); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('p','r','i','n','t','i','n','p'): {
+                    if (memcmp(rhs.elems+8,"ut",2)==0) { mode_SetEnum(parent,command_atf_comp_mode_printinput); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+    }
+    return ret;
+}
+
+// --- command.atf_comp.mode.SetStrptr
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+void command::mode_SetStrptr(command::atf_comp& parent, algo::strptr rhs, command_atf_comp_mode_Enum dflt) {
+    if (!mode_SetStrptrMaybe(parent,rhs)) mode_SetEnum(parent,dflt);
+}
+
+// --- command.atf_comp.mode.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool command::mode_ReadStrptrMaybe(command::atf_comp& parent, algo::strptr rhs) {
+    bool retval = false;
+    retval = mode_SetStrptrMaybe(parent,rhs); // try symbol conversion
+    if (!retval) { // didn't work? try reading as underlying type
+        retval = u8_ReadStrptrMaybe(parent.mode,rhs);
+    }
+    return retval;
+}
+
 // --- command.atf_comp..ReadFieldMaybe
 bool command::atf_comp_ReadFieldMaybe(command::atf_comp& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
@@ -12683,6 +12842,9 @@ bool command::atf_comp_ReadFieldMaybe(command::atf_comp& parent, algo::strptr fi
         case command_FieldId_comptest: {
             retval = comptest_ReadStrptrMaybe(parent, strval);
         } break;
+        case command_FieldId_mode: {
+            retval = mode_ReadStrptrMaybe(parent, strval);
+        } break;
         case command_FieldId_mdbg: {
             retval = bool_ReadStrptrMaybe(parent.mdbg, strval);
         } break;
@@ -12692,14 +12854,23 @@ bool command::atf_comp_ReadFieldMaybe(command::atf_comp& parent, algo::strptr fi
         case command_FieldId_capture: {
             retval = bool_ReadStrptrMaybe(parent.capture, strval);
         } break;
+        case command_FieldId_ee: {
+            retval = bool_ReadStrptrMaybe(parent.ee, strval);
+        } break;
+        case command_FieldId_e: {
+            retval = bool_ReadStrptrMaybe(parent.e, strval);
+        } break;
         case command_FieldId_print: {
             retval = bool_ReadStrptrMaybe(parent.print, strval);
+        } break;
+        case command_FieldId_cfg: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.cfg, strval);
         } break;
         case command_FieldId_printinput: {
             retval = bool_ReadStrptrMaybe(parent.printinput, strval);
         } break;
-        case command_FieldId_e: {
-            retval = bool_ReadStrptrMaybe(parent.e, strval);
+        case command_FieldId_maxerr: {
+            retval = i32_ReadStrptrMaybe(parent.maxerr, strval);
         } break;
         case command_FieldId_normalize: {
             retval = bool_ReadStrptrMaybe(parent.normalize, strval);
@@ -12719,14 +12890,8 @@ bool command::atf_comp_ReadFieldMaybe(command::atf_comp& parent, algo::strptr fi
         case command_FieldId_testdir: {
             retval = algo::cstring_ReadStrptrMaybe(parent.testdir, strval);
         } break;
-        case command_FieldId_cfg: {
-            retval = algo::Smallstr50_ReadStrptrMaybe(parent.cfg, strval);
-        } break;
         case command_FieldId_check_untracked: {
             retval = bool_ReadStrptrMaybe(parent.check_untracked, strval);
-        } break;
-        case command_FieldId_maxerr: {
-            retval = i32_ReadStrptrMaybe(parent.maxerr, strval);
         } break;
         case command_FieldId_build: {
             retval = bool_ReadStrptrMaybe(parent.build, strval);
@@ -12800,21 +12965,23 @@ bool command::atf_comp_ReadTupleMaybe(command::atf_comp &parent, algo::Tuple &tu
 void command::atf_comp_Init(command::atf_comp& parent) {
     parent.in = algo::strptr("data");
     Regx_ReadSql(parent.comptest, "%", true);
+    parent.mode = u8(0);
     parent.mdbg = bool(false);
     parent.run = bool(true);
     parent.capture = bool(false);
-    parent.print = bool(false);
-    parent.printinput = bool(false);
+    parent.ee = bool(false);
     parent.e = bool(false);
+    parent.print = bool(false);
+    parent.cfg = algo::strptr("release");
+    parent.printinput = bool(false);
+    parent.maxerr = i32(3);
     parent.normalize = bool(false);
     parent.covcapture = bool(false);
     parent.covcheck = bool(false);
     parent.bindir = algo::strptr("");
     parent.tempdir = algo::strptr("temp/atf_comp");
     parent.testdir = algo::strptr("test/atf_comp");
-    parent.cfg = algo::strptr("release");
     parent.check_untracked = bool(true);
-    parent.maxerr = i32(3);
     parent.build = bool(false);
     parent.memcheck = bool(false);
     parent.force = bool(false);
@@ -12864,6 +13031,12 @@ void command::atf_comp_PrintArgv(command::atf_comp& row, algo::cstring& str) {
     command::comptest_Print(const_cast<command::atf_comp&>(row), temp);
     str << " -comptest:";
     strptr_PrintBash(temp,str);
+    if (!(row.mode == 0)) {
+        ch_RemoveAll(temp);
+        command::mode_Print(const_cast<command::atf_comp&>(row), temp);
+        str << " -mode:";
+        strptr_PrintBash(temp,str);
+    }
     if (!(row.mdbg == false)) {
         ch_RemoveAll(temp);
         bool_Print(row.mdbg, temp);
@@ -12882,10 +13055,28 @@ void command::atf_comp_PrintArgv(command::atf_comp& row, algo::cstring& str) {
         str << " -capture:";
         strptr_PrintBash(temp,str);
     }
+    if (!(row.ee == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.ee, temp);
+        str << " -ee:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.e == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.e, temp);
+        str << " -e:";
+        strptr_PrintBash(temp,str);
+    }
     if (!(row.print == false)) {
         ch_RemoveAll(temp);
         bool_Print(row.print, temp);
         str << " -print:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.cfg == "release")) {
+        ch_RemoveAll(temp);
+        Smallstr50_Print(row.cfg, temp);
+        str << " -cfg:";
         strptr_PrintBash(temp,str);
     }
     if (!(row.printinput == false)) {
@@ -12894,10 +13085,10 @@ void command::atf_comp_PrintArgv(command::atf_comp& row, algo::cstring& str) {
         str << " -printinput:";
         strptr_PrintBash(temp,str);
     }
-    if (!(row.e == false)) {
+    if (!(row.maxerr == 3)) {
         ch_RemoveAll(temp);
-        bool_Print(row.e, temp);
-        str << " -e:";
+        i32_Print(row.maxerr, temp);
+        str << " -maxerr:";
         strptr_PrintBash(temp,str);
     }
     if (!(row.normalize == false)) {
@@ -12936,22 +13127,10 @@ void command::atf_comp_PrintArgv(command::atf_comp& row, algo::cstring& str) {
         str << " -testdir:";
         strptr_PrintBash(temp,str);
     }
-    if (!(row.cfg == "release")) {
-        ch_RemoveAll(temp);
-        Smallstr50_Print(row.cfg, temp);
-        str << " -cfg:";
-        strptr_PrintBash(temp,str);
-    }
     if (!(row.check_untracked == true)) {
         ch_RemoveAll(temp);
         bool_Print(row.check_untracked, temp);
         str << " -check_untracked:";
-        strptr_PrintBash(temp,str);
-    }
-    if (!(row.maxerr == 3)) {
-        ch_RemoveAll(temp);
-        i32_Print(row.maxerr, temp);
-        str << " -maxerr:";
         strptr_PrintBash(temp,str);
     }
     if (!(row.build == false)) {
@@ -13056,6 +13235,9 @@ i32 command::atf_comp_NArgs(command::FieldId field, algo::strptr& out_dflt, bool
         case command_FieldId_comptest: { //
             *out_anon = true;
         } break;
+        case command_FieldId_mode: { //
+            *out_anon = false;
+        } break;
         case command_FieldId_mdbg: { // bool: no argument required but value may be specified as mdbg:Y
             *out_anon = false;
             retval=0;
@@ -13071,12 +13253,7 @@ i32 command::atf_comp_NArgs(command::FieldId field, algo::strptr& out_dflt, bool
             retval=0;
             out_dflt="Y";
         } break;
-        case command_FieldId_print: { // bool: no argument required but value may be specified as print:Y
-            *out_anon = false;
-            retval=0;
-            out_dflt="Y";
-        } break;
-        case command_FieldId_printinput: { // bool: no argument required but value may be specified as printinput:Y
+        case command_FieldId_ee: { // bool: no argument required but value may be specified as ee:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
@@ -13085,6 +13262,22 @@ i32 command::atf_comp_NArgs(command::FieldId field, algo::strptr& out_dflt, bool
             *out_anon = false;
             retval=0;
             out_dflt="Y";
+        } break;
+        case command_FieldId_print: { // bool: no argument required but value may be specified as print:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_cfg: { //
+            *out_anon = false;
+        } break;
+        case command_FieldId_printinput: { // bool: no argument required but value may be specified as printinput:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_maxerr: { //
+            *out_anon = false;
         } break;
         case command_FieldId_normalize: { // bool: no argument required but value may be specified as normalize:Y
             *out_anon = false;
@@ -13110,16 +13303,10 @@ i32 command::atf_comp_NArgs(command::FieldId field, algo::strptr& out_dflt, bool
         case command_FieldId_testdir: { //
             *out_anon = false;
         } break;
-        case command_FieldId_cfg: { //
-            *out_anon = false;
-        } break;
         case command_FieldId_check_untracked: { // bool: no argument required but value may be specified as check_untracked:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
-        } break;
-        case command_FieldId_maxerr: { //
-            *out_anon = false;
         } break;
         case command_FieldId_build: { // bool: no argument required but value may be specified as build:Y
             *out_anon = false;
@@ -13334,6 +13521,12 @@ void command::atf_comp_ToArgv(command::atf_comp_proc& parent, algo::StringAry& a
         command::comptest_Print(parent.cmd, *arg);
     }
 
+    if (parent.cmd.mode != 0) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-mode:";
+        command::mode_Print(parent.cmd, *arg);
+    }
+
     if (parent.cmd.mdbg != false) {
         cstring *arg = &ary_Alloc(args);
         *arg << "-mdbg:";
@@ -13352,10 +13545,28 @@ void command::atf_comp_ToArgv(command::atf_comp_proc& parent, algo::StringAry& a
         bool_Print(parent.cmd.capture, *arg);
     }
 
+    if (parent.cmd.ee != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-ee:";
+        bool_Print(parent.cmd.ee, *arg);
+    }
+
+    if (parent.cmd.e != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-e:";
+        bool_Print(parent.cmd.e, *arg);
+    }
+
     if (parent.cmd.print != false) {
         cstring *arg = &ary_Alloc(args);
         *arg << "-print:";
         bool_Print(parent.cmd.print, *arg);
+    }
+
+    if (parent.cmd.cfg != "release") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-cfg:";
+        Smallstr50_Print(parent.cmd.cfg, *arg);
     }
 
     if (parent.cmd.printinput != false) {
@@ -13364,10 +13575,10 @@ void command::atf_comp_ToArgv(command::atf_comp_proc& parent, algo::StringAry& a
         bool_Print(parent.cmd.printinput, *arg);
     }
 
-    if (parent.cmd.e != false) {
+    if (parent.cmd.maxerr != 3) {
         cstring *arg = &ary_Alloc(args);
-        *arg << "-e:";
-        bool_Print(parent.cmd.e, *arg);
+        *arg << "-maxerr:";
+        i32_Print(parent.cmd.maxerr, *arg);
     }
 
     if (parent.cmd.normalize != false) {
@@ -13406,22 +13617,10 @@ void command::atf_comp_ToArgv(command::atf_comp_proc& parent, algo::StringAry& a
         cstring_Print(parent.cmd.testdir, *arg);
     }
 
-    if (parent.cmd.cfg != "release") {
-        cstring *arg = &ary_Alloc(args);
-        *arg << "-cfg:";
-        Smallstr50_Print(parent.cmd.cfg, *arg);
-    }
-
     if (parent.cmd.check_untracked != true) {
         cstring *arg = &ary_Alloc(args);
         *arg << "-check_untracked:";
         bool_Print(parent.cmd.check_untracked, *arg);
-    }
-
-    if (parent.cmd.maxerr != 3) {
-        cstring *arg = &ary_Alloc(args);
-        *arg << "-maxerr:";
-        i32_Print(parent.cmd.maxerr, *arg);
     }
 
     if (parent.cmd.build != false) {
@@ -14033,353 +14232,6 @@ void command::atf_cov_proc_Uninit(command::atf_cov_proc& parent) {
 
     // command.atf_cov_proc.atf_cov.Uninit (Exec)  //
     atf_cov_Kill(parent); // kill child, ensure forward progress
-}
-
-// --- command.atf_exp..ReadFieldMaybe
-bool command::atf_exp_ReadFieldMaybe(command::atf_exp& parent, algo::strptr field, algo::strptr strval) {
-    bool retval = true;
-    command::FieldId field_id;
-    (void)value_SetStrptrMaybe(field_id,field);
-    switch(field_id) {
-        case command_FieldId_in: {
-            retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
-        } break;
-        case command_FieldId_trace: {
-            retval = algo::cstring_ReadStrptrMaybe(parent.trace, strval);
-        } break;
-        case command_FieldId_bindir: {
-            retval = algo::cstring_ReadStrptrMaybe(parent.bindir, strval);
-        } break;
-        case command_FieldId_comptest: {
-            retval = algo::Smallstr50_ReadStrptrMaybe(parent.comptest, strval);
-        } break;
-        case command_FieldId_tempdir: {
-            retval = algo::cstring_ReadStrptrMaybe(parent.tempdir, strval);
-        } break;
-        case command_FieldId_timeout: {
-            retval = double_ReadStrptrMaybe(parent.timeout, strval);
-        } break;
-        case command_FieldId_dbgshell: {
-            retval = bool_ReadStrptrMaybe(parent.dbgshell, strval);
-        } break;
-        default: {
-            retval = false;
-            algo_lib::AppendErrtext("comment", "unrecognized attr");
-        } break;
-    }
-    if (!retval) {
-        algo_lib::AppendErrtext("attr",field);
-    }
-    return retval;
-}
-
-// --- command.atf_exp..ReadTupleMaybe
-// Read fields of command::atf_exp from attributes of ascii tuple TUPLE
-bool command::atf_exp_ReadTupleMaybe(command::atf_exp &parent, algo::Tuple &tuple) {
-    bool retval = true;
-    ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
-        retval = atf_exp_ReadFieldMaybe(parent, attr.name, attr.value);
-        if (!retval) {
-            break;
-        }
-    }ind_end;
-    return retval;
-}
-
-// --- command.atf_exp..ToCmdline
-// Convenience function that returns a full command line
-// Assume command is in a directory called bin
-tempstr command::atf_exp_ToCmdline(command::atf_exp& row) {
-    tempstr ret;
-    ret << "bin/atf_exp ";
-    atf_exp_PrintArgv(row, ret);
-    // inherit less intense verbose, debug options
-    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
-        ret << " -verbose";
-    }
-    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
-        ret << " -debug";
-    }
-    return ret;
-}
-
-// --- command.atf_exp..PrintArgv
-// print string representation of ROW to string STR
-// cfmt:command.atf_exp.Argv  printfmt:Tuple
-void command::atf_exp_PrintArgv(command::atf_exp& row, algo::cstring& str) {
-    algo::tempstr temp;
-    (void)temp;
-    (void)str;
-    if (!(row.in == "data")) {
-        ch_RemoveAll(temp);
-        cstring_Print(row.in, temp);
-        str << " -in:";
-        strptr_PrintBash(temp,str);
-    }
-    if (!(row.trace == "")) {
-        ch_RemoveAll(temp);
-        cstring_Print(row.trace, temp);
-        str << " -trace:";
-        strptr_PrintBash(temp,str);
-    }
-    if (!(row.bindir == "bin")) {
-        ch_RemoveAll(temp);
-        cstring_Print(row.bindir, temp);
-        str << " -bindir:";
-        strptr_PrintBash(temp,str);
-    }
-    if (!(row.comptest == "")) {
-        ch_RemoveAll(temp);
-        Smallstr50_Print(row.comptest, temp);
-        str << " -comptest:";
-        strptr_PrintBash(temp,str);
-    }
-    if (!(row.tempdir == "")) {
-        ch_RemoveAll(temp);
-        cstring_Print(row.tempdir, temp);
-        str << " -tempdir:";
-        strptr_PrintBash(temp,str);
-    }
-    if (!(row.timeout == 8.0)) {
-        ch_RemoveAll(temp);
-        double_Print(row.timeout, temp);
-        str << " -timeout:";
-        strptr_PrintBash(temp,str);
-    }
-    if (!(row.dbgshell == false)) {
-        ch_RemoveAll(temp);
-        bool_Print(row.dbgshell, temp);
-        str << " -dbgshell:";
-        strptr_PrintBash(temp,str);
-    }
-}
-
-// --- command.atf_exp..NArgs
-// Used with command lines
-// Return # of command-line arguments that must follow this argument
-// If FIELD is invalid, return -1
-i32 command::atf_exp_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
-    i32 retval = 1;
-    switch (field) {
-        case command_FieldId_in: { //
-            *out_anon = false;
-        } break;
-        case command_FieldId_trace: { //
-            *out_anon = false;
-        } break;
-        case command_FieldId_bindir: { //
-            *out_anon = false;
-        } break;
-        case command_FieldId_comptest: { //
-            *out_anon = false;
-        } break;
-        case command_FieldId_tempdir: { //
-            *out_anon = false;
-        } break;
-        case command_FieldId_timeout: { //
-            *out_anon = false;
-        } break;
-        case command_FieldId_dbgshell: { // bool: no argument required but value may be specified as dbgshell:Y
-            *out_anon = false;
-            retval=0;
-            out_dflt="Y";
-        } break;
-        default:
-        retval=-1; // unrecognized
-    }
-    return retval;
-}
-
-// --- command.atf_exp_proc.atf_exp.Start
-// Start subprocess
-// If subprocess already running, do nothing. Otherwise, start it
-int command::atf_exp_Start(command::atf_exp_proc& parent) {
-    int retval = 0;
-    if (parent.pid == 0) {
-        verblog(atf_exp_ToCmdline(parent)); // maybe print command
-#ifdef WIN32
-        algo_lib::ResolveExecFname(parent.path);
-        tempstr cmdline(atf_exp_ToCmdline(parent));
-        parent.pid = dospawn(Zeroterm(parent.path),Zeroterm(cmdline),parent.timeout,parent.fstdin,parent.fstdout,parent.fstderr);
-#else
-        parent.pid = fork();
-        if (parent.pid == 0) { // child
-            algo_lib::DieWithParent();
-            if (parent.timeout > 0) {
-                alarm(parent.timeout);
-            }
-            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdin , 0);
-            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdout, 1);
-            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstderr, 2);
-            if (retval==0) retval= atf_exp_Execv(parent);
-            if (retval != 0) { // if start fails, print error
-                int err=errno;
-                prerr("command.atf_exp_execv"
-                <<Keyval("errno",err)
-                <<Keyval("errstr",strerror(err))
-                <<Keyval("comment","Execv failed"));
-            }
-            _exit(127); // if failed to start, exit anyway
-        } else if (parent.pid == -1) {
-            retval = errno; // failed to fork
-        }
-#endif
-    }
-    parent.status = parent.pid > 0 ? 0 : -1; // if didn't start, set error status
-    return retval;
-}
-
-// --- command.atf_exp_proc.atf_exp.StartRead
-// Start subprocess & Read output
-algo::Fildes command::atf_exp_StartRead(command::atf_exp_proc& parent, algo_lib::FFildes &read) {
-    int pipefd[2];
-    int rc=pipe(pipefd);
-    (void)rc;
-    read.fd.value = pipefd[0];
-    parent.fstdout  << ">&" << pipefd[1];
-    atf_exp_Start(parent);
-    (void)close(pipefd[1]);
-    return read.fd;
-}
-
-// --- command.atf_exp_proc.atf_exp.Kill
-// Kill subprocess and wait
-void command::atf_exp_Kill(command::atf_exp_proc& parent) {
-    if (parent.pid > 0) {
-        kill(parent.pid,9);
-        atf_exp_Wait(parent);
-    }
-}
-
-// --- command.atf_exp_proc.atf_exp.Wait
-// Wait for subprocess to return
-void command::atf_exp_Wait(command::atf_exp_proc& parent) {
-    if (parent.pid > 0) {
-        int wait_flags = 0;
-        int wait_status = 0;
-        int rc = -1;
-        do {
-            // really wait for subprocess to exit
-            rc = waitpid(parent.pid,&wait_status,wait_flags);
-        } while (rc==-1 && errno==EINTR);
-        if (rc == parent.pid) {
-            parent.status = wait_status;
-            parent.pid = 0;
-        }
-    }
-}
-
-// --- command.atf_exp_proc.atf_exp.Exec
-// Start + Wait
-// Execute subprocess and return exit code
-int command::atf_exp_Exec(command::atf_exp_proc& parent) {
-    atf_exp_Start(parent);
-    atf_exp_Wait(parent);
-    return parent.status;
-}
-
-// --- command.atf_exp_proc.atf_exp.ExecX
-// Start + Wait, throw exception on error
-// Execute subprocess; throw human-readable exception on error
-void command::atf_exp_ExecX(command::atf_exp_proc& parent) {
-    int rc = atf_exp_Exec(parent);
-    vrfy(rc==0, tempstr() << "algo_lib.exec" << Keyval("cmd",atf_exp_ToCmdline(parent))
-    << Keyval("comment",algo::DescribeWaitStatus(parent.status)));
-}
-
-// --- command.atf_exp_proc.atf_exp.Execv
-// Call execv()
-// Call execv with specified parameters
-int command::atf_exp_Execv(command::atf_exp_proc& parent) {
-    int ret = 0;
-    algo::StringAry args;
-    atf_exp_ToArgv(parent, args);
-    char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
-    ind_beg(algo::StringAry_ary_curs,arg,args) {
-        argv[ind_curs(arg).index] = Zeroterm(arg);
-    }ind_end;
-    argv[ary_N(args)] = NULL;
-    // if parent.path is relative, search for it in PATH
-    algo_lib::ResolveExecFname(parent.path);
-    ret = execv(Zeroterm(parent.path),argv);
-    return ret;
-}
-
-// --- command.atf_exp_proc.atf_exp.ToCmdline
-algo::tempstr command::atf_exp_ToCmdline(command::atf_exp_proc& parent) {
-    algo::tempstr retval;
-    retval << parent.path << " ";
-    command::atf_exp_PrintArgv(parent.cmd,retval);
-    if (ch_N(parent.fstdin)) {
-        retval << " " << parent.fstdin;
-    }
-    if (ch_N(parent.fstdout)) {
-        retval << " " << parent.fstdout;
-    }
-    if (ch_N(parent.fstderr)) {
-        retval << " 2" << parent.fstderr;
-    }
-    return retval;
-}
-
-// --- command.atf_exp_proc.atf_exp.ToArgv
-// Form array from the command line
-void command::atf_exp_ToArgv(command::atf_exp_proc& parent, algo::StringAry& args) {
-    ary_RemoveAll(args);
-    ary_Alloc(args) << parent.path;
-
-    if (parent.cmd.in != "data") {
-        cstring *arg = &ary_Alloc(args);
-        *arg << "-in:";
-        cstring_Print(parent.cmd.in, *arg);
-    }
-
-    if (parent.cmd.trace != "") {
-        cstring *arg = &ary_Alloc(args);
-        *arg << "-trace:";
-        cstring_Print(parent.cmd.trace, *arg);
-    }
-
-    if (parent.cmd.bindir != "bin") {
-        cstring *arg = &ary_Alloc(args);
-        *arg << "-bindir:";
-        cstring_Print(parent.cmd.bindir, *arg);
-    }
-
-    if (parent.cmd.comptest != "") {
-        cstring *arg = &ary_Alloc(args);
-        *arg << "-comptest:";
-        Smallstr50_Print(parent.cmd.comptest, *arg);
-    }
-
-    if (parent.cmd.tempdir != "") {
-        cstring *arg = &ary_Alloc(args);
-        *arg << "-tempdir:";
-        cstring_Print(parent.cmd.tempdir, *arg);
-    }
-
-    if (parent.cmd.timeout != 8.0) {
-        cstring *arg = &ary_Alloc(args);
-        *arg << "-timeout:";
-        double_Print(parent.cmd.timeout, *arg);
-    }
-
-    if (parent.cmd.dbgshell != false) {
-        cstring *arg = &ary_Alloc(args);
-        *arg << "-dbgshell:";
-        bool_Print(parent.cmd.dbgshell, *arg);
-    }
-    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
-        ary_Alloc(args) << "-verbose";
-    }
-}
-
-// --- command.atf_exp_proc..Uninit
-void command::atf_exp_proc_Uninit(command::atf_exp_proc& parent) {
-    command::atf_exp_proc &row = parent; (void)row;
-
-    // command.atf_exp_proc.atf_exp.Uninit (Exec)  //
-    atf_exp_Kill(parent); // kill child, ensure forward progress
 }
 
 // --- command.atf_fuzz.fuzzstrat.Print

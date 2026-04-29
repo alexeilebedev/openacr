@@ -1,34 +1,36 @@
-atf_cmdline: Test tool for command line parsing
-Usage: atf_cmdline [-astr:]<string> [[-anum:]<int>] [[-adbl:]<double>] -str:<string> [[-amnum:]<int>] [options]
-    OPTION      TYPE    DFLT    COMMENT
-    -in         string  "data"  Input directory or filename, - for stdin
-    -exec                       Execv itself
-    [astr]      string          Required anon string
-    [anum]      int     0       Anon number
-    [adbl]      double  0.0     Anon double
-    [aflag]                     Anon flag
-    -str        string          Required string
-    -num        int     0       Required Number
-    -dbl        double  0.0     Required double
-    -flag                       Required flag
-    -dstr       string  "blah"  Predefined string
-    -dnum       int     -33     Predefined number
-    -ddbl       double  0.0001  Predefined double
-    -dflag              Y       Predefined flag
-    -mstr...    string          String array
-    -mnum...    int             Number array
-    -mdbl...    double          Double array
-    [amnum]...  int             Anon number array
-    -fconst     enum    high    Fconst for field (high|medium|low)
-                                    high  Cool
-                                    medium  So-so
-                                    low  Bad
-    -cconst     enum    None    Fconst for arg ctype (January|February|March|April|May|June|July|August|September|October|November|December|None)
-    -dregx      regx    "%"     Predefined regx
-    -dpkey      string  ""      Predefined pkey
-    -verbose    flag            Verbosity level (0..255); alias -v; cumulative
-    -debug      flag            Debug level (0..255); alias -d; cumulative
-    -help                       Print help and exit; alias -h
-    -version                    Print version and exit
-    -signature                  Show signatures and exit; alias -sig
-
+# start atf_cmdline cmd:"$bindir/atf_cmdline -help"
+# eof atf_cmdline
+atf_cmdline -> atf_cmdline: Test tool for command line parsing
+atf_cmdline -> Usage: atf_cmdline [-astr:]<string> [[-anum:]<int>] [[-adbl:]<double>] -str:<string> [[-amnum:]<int>] [options]
+atf_cmdline ->     OPTION      TYPE    DFLT    COMMENT
+atf_cmdline ->     -in         string  "data"  Input directory or filename, - for stdin
+atf_cmdline ->     -exec                       Execv itself
+atf_cmdline ->     [astr]      string          Required anon string
+atf_cmdline ->     [anum]      int     0       Anon number
+atf_cmdline ->     [adbl]      double  0.0     Anon double
+atf_cmdline ->     [aflag]                     Anon flag
+atf_cmdline ->     -str        string          Required string
+atf_cmdline ->     -num        int     0       Required Number
+atf_cmdline ->     -dbl        double  0.0     Required double
+atf_cmdline ->     -flag                       Required flag
+atf_cmdline ->     -dstr       string  "blah"  Predefined string
+atf_cmdline ->     -dnum       int     -33     Predefined number
+atf_cmdline ->     -ddbl       double  0.0001  Predefined double
+atf_cmdline ->     -dflag              Y       Predefined flag
+atf_cmdline ->     -mstr...    string          String array
+atf_cmdline ->     -mnum...    int             Number array
+atf_cmdline ->     -mdbl...    double          Double array
+atf_cmdline ->     [amnum]...  int             Anon number array
+atf_cmdline ->     -fconst     enum    high    Fconst for field (high|medium|low)
+atf_cmdline ->                                     high  Cool
+atf_cmdline ->                                     medium  So-so
+atf_cmdline ->                                     low  Bad
+atf_cmdline ->     -cconst     enum    None    Fconst for arg ctype (January|February|March|April|May|June|July|August|September|October|November|December|None)
+atf_cmdline ->     -dregx      regx    "%"     Predefined regx
+atf_cmdline ->     -dpkey      string  ""      Predefined pkey
+atf_cmdline ->     -verbose    flag            Verbosity level (0..255); alias -v; cumulative
+atf_cmdline ->     -debug      flag            Debug level (0..255); alias -d; cumulative
+atf_cmdline ->     -help                       Print help and exit; alias -h
+atf_cmdline ->     -version                    Print version and exit
+atf_cmdline ->     -signature                  Show signatures and exit; alias -sig
+# exit atf_cmdline code:1

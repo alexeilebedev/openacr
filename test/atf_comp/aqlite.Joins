@@ -1,2 +1,10 @@
-stmt1  basic_join:4
-stmt2  self_join:12
+# start aqlite cmd:"$bindir/aqlite -in:- \"select count(*) as basic_join from field f join ctype c using (ctype) where f.ns = 'dmmeta'; select count(*) as self_join from field f1 join field f2 on f1.ctype = f2.ctype where f1.ns = 'dmmeta' and f1.field <> f2.field\""
+aqlite <- dmmeta.ctype  ctype:dmmeta.TestJoin    comment:"Test ctype for JOIN operations"
+aqlite <- dmmeta.field  field:dmmeta.TestJoin.id       arg:i32          reftype:Val   dflt:""   comment:"Primary key"
+aqlite <- dmmeta.field  field:dmmeta.TestJoin.name     arg:algo.cstring reftype:Val   dflt:""   comment:"Name field"
+aqlite <- dmmeta.field  field:dmmeta.TestJoin.value    arg:i32          reftype:Val   dflt:"0"  comment:"Value field"
+aqlite <- dmmeta.field  field:dmmeta.TestJoin.extra    arg:algo.cstring reftype:Val   dflt:""   comment:"Extra field"
+# eof aqlite
+aqlite -> stmt1  basic_join:0
+aqlite -> stmt2  self_join:0
+# exit aqlite code:0

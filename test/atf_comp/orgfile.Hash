@@ -1,0 +1,4 @@
+# start sha1 cmd:"sha1 < test/orgfile/a.txt | awk '{print $1}'"
+# eof sha1
+sha1 -> 96eebd6d7ef91bc42afb9bd168cb82ab643da052
+# exit sha1 code:0

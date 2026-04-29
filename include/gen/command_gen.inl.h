@@ -332,6 +332,7 @@ inline void command::acr_compl_Init(command::acr_compl& parent) {
     parent.type = algo::strptr("9");
     parent.install = bool(false);
     parent.debug_log = algo::strptr("");
+    parent.check = bool(false);
 }
 
 // --- command.acr_compl..Ctor
@@ -1203,6 +1204,18 @@ inline  command::atf_cmdline_proc::~atf_cmdline_proc() {
     command::atf_cmdline_proc_Uninit(*this);
 }
 
+// --- command.atf_comp.mode.GetEnum
+// Get value of field as enum type
+inline command_atf_comp_mode_Enum command::mode_GetEnum(const command::atf_comp& parent) {
+    return command_atf_comp_mode_Enum(parent.mode);
+}
+
+// --- command.atf_comp.mode.SetEnum
+// Set value of field from enum type.
+inline void command::mode_SetEnum(command::atf_comp& parent, command_atf_comp_mode_Enum rhs) {
+    parent.mode = u8(rhs);
+}
+
 // --- command.atf_comp..Ctor
 inline  command::atf_comp::atf_comp() {
     command::atf_comp_Init(*this);
@@ -1249,42 +1262,6 @@ inline  command::atf_cov_proc::atf_cov_proc() {
 // --- command.atf_cov_proc..Dtor
 inline  command::atf_cov_proc::~atf_cov_proc() {
     command::atf_cov_proc_Uninit(*this);
-}
-
-// --- command.atf_exp..Init
-// Set all fields to initial values.
-inline void command::atf_exp_Init(command::atf_exp& parent) {
-    parent.in = algo::strptr("data");
-    parent.trace = algo::strptr("");
-    parent.bindir = algo::strptr("bin");
-    parent.comptest = algo::strptr("");
-    parent.tempdir = algo::strptr("");
-    parent.timeout = double(8.0);
-    parent.dbgshell = bool(false);
-}
-
-// --- command.atf_exp..Ctor
-inline  command::atf_exp::atf_exp() {
-    command::atf_exp_Init(*this);
-}
-
-// --- command.atf_exp_proc..Init
-// Set all fields to initial values.
-inline void command::atf_exp_proc_Init(command::atf_exp_proc& parent) {
-    parent.path = algo::strptr("bin/atf_exp");
-    parent.pid = pid_t(0);
-    parent.timeout = i32(0);
-    parent.status = i32(0);
-}
-
-// --- command.atf_exp_proc..Ctor
-inline  command::atf_exp_proc::atf_exp_proc() {
-    command::atf_exp_proc_Init(*this);
-}
-
-// --- command.atf_exp_proc..Dtor
-inline  command::atf_exp_proc::~atf_exp_proc() {
-    command::atf_exp_proc_Uninit(*this);
 }
 
 // --- command.atf_fuzz..Ctor

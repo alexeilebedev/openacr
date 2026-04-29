@@ -27,26 +27,14 @@
 #include "include/gen/algo_gen.inl.h"
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/algo_lib_gen.inl.h"
-#include "include/gen/report_gen.inl.h"
+#include "include/gen/dev_gen.inl.h"
 //#pragma endinclude
 
-// --- atf_comp.FComptest.c_targs.InsertMaybe
-// Insert row into pointer index. Return final membership status.
-inline bool atf_comp::c_targs_InsertMaybe(atf_comp::FComptest& comptest, atf_comp::FTargs& row) {
-    atf_comp::FTargs* ptr = comptest.c_targs;
-    bool retval = (ptr == NULL) | (ptr == &row);
-    if (retval) {
-        comptest.c_targs = &row;
-    }
-    return retval;
-}
-
-// --- atf_comp.FComptest.c_targs.Remove
-// Remove element from index. If element is not in index, do nothing.
-inline void atf_comp::c_targs_Remove(atf_comp::FComptest& comptest, atf_comp::FTargs& row) {
-    atf_comp::FTargs *ptr = comptest.c_targs;
-    if (LIKELY(ptr == &row)) {
-        comptest.c_targs = NULL;
+// --- atf_comp.FComptest.step.Call
+// Invoke function by pointer
+inline void atf_comp::step_Call(atf_comp::FComptest& comptest) {
+    if (comptest.step) {
+        comptest.step();
     }
 }
 
@@ -70,107 +58,6 @@ inline void atf_comp::c_tfilt_Remove(atf_comp::FComptest& comptest, atf_comp::FT
     }
 }
 
-// --- atf_comp.FComptest.zd_tmsg.EmptyQ
-// Return true if index is empty
-inline bool atf_comp::zd_tmsg_EmptyQ(atf_comp::FComptest& comptest) {
-    return comptest.zd_tmsg_head == NULL;
-}
-
-// --- atf_comp.FComptest.zd_tmsg.First
-// If index empty, return NULL. Otherwise return pointer to first element in index
-inline atf_comp::FTmsg* atf_comp::zd_tmsg_First(atf_comp::FComptest& comptest) {
-    atf_comp::FTmsg *row = NULL;
-    row = comptest.zd_tmsg_head;
-    return row;
-}
-
-// --- atf_comp.FComptest.zd_tmsg.InLlistQ
-// Return true if row is in the linked list, false otherwise
-inline bool atf_comp::comptest_zd_tmsg_InLlistQ(atf_comp::FTmsg& row) {
-    bool result = false;
-    result = !(row.comptest_zd_tmsg_next == (atf_comp::FTmsg*)-1);
-    return result;
-}
-
-// --- atf_comp.FComptest.zd_tmsg.Last
-// If index empty, return NULL. Otherwise return pointer to last element in index
-inline atf_comp::FTmsg* atf_comp::zd_tmsg_Last(atf_comp::FComptest& comptest) {
-    atf_comp::FTmsg *row = NULL;
-    row = comptest.zd_tmsg_tail;
-    return row;
-}
-
-// --- atf_comp.FComptest.zd_tmsg.N
-// Return number of items in the linked list
-inline i32 atf_comp::zd_tmsg_N(const atf_comp::FComptest& comptest) {
-    return comptest.zd_tmsg_n;
-}
-
-// --- atf_comp.FComptest.zd_tmsg.Next
-// Return pointer to next element in the list
-inline atf_comp::FTmsg* atf_comp::comptest_zd_tmsg_Next(atf_comp::FTmsg &row) {
-    return row.comptest_zd_tmsg_next;
-}
-
-// --- atf_comp.FComptest.zd_tmsg.Prev
-// Return pointer to previous element in the list
-inline atf_comp::FTmsg* atf_comp::comptest_zd_tmsg_Prev(atf_comp::FTmsg &row) {
-    return row.comptest_zd_tmsg_prev;
-}
-
-// --- atf_comp.FComptest.zd_tmsg.qLast
-// Return reference to last element in the index. No bounds checking.
-inline atf_comp::FTmsg& atf_comp::zd_tmsg_qLast(atf_comp::FComptest& comptest) {
-    atf_comp::FTmsg *row = NULL;
-    row = comptest.zd_tmsg_tail;
-    return *row;
-}
-
-// --- atf_comp.FComptest.c_tifilt.InsertMaybe
-// Insert row into pointer index. Return final membership status.
-inline bool atf_comp::c_tifilt_InsertMaybe(atf_comp::FComptest& comptest, atf_comp::FTifilt& row) {
-    atf_comp::FTifilt* ptr = comptest.c_tifilt;
-    bool retval = (ptr == NULL) | (ptr == &row);
-    if (retval) {
-        comptest.c_tifilt = &row;
-    }
-    return retval;
-}
-
-// --- atf_comp.FComptest.c_tifilt.Remove
-// Remove element from index. If element is not in index, do nothing.
-inline void atf_comp::c_tifilt_Remove(atf_comp::FComptest& comptest, atf_comp::FTifilt& row) {
-    atf_comp::FTifilt *ptr = comptest.c_tifilt;
-    if (LIKELY(ptr == &row)) {
-        comptest.c_tifilt = NULL;
-    }
-}
-
-// --- atf_comp.FComptest.zd_tmsg_curs.Reset
-// cursor points to valid item
-inline void atf_comp::comptest_zd_tmsg_curs_Reset(comptest_zd_tmsg_curs &curs, atf_comp::FComptest &parent) {
-    curs.row = parent.zd_tmsg_head;
-}
-
-// --- atf_comp.FComptest.zd_tmsg_curs.ValidQ
-// cursor points to valid item
-inline bool atf_comp::comptest_zd_tmsg_curs_ValidQ(comptest_zd_tmsg_curs &curs) {
-    return curs.row != NULL;
-}
-
-// --- atf_comp.FComptest.zd_tmsg_curs.Next
-// proceed to next item
-inline void atf_comp::comptest_zd_tmsg_curs_Next(comptest_zd_tmsg_curs &curs) {
-    atf_comp::FTmsg *next = (*curs.row).comptest_zd_tmsg_next;
-    curs.row = next;
-}
-
-// --- atf_comp.FComptest.zd_tmsg_curs.Access
-// item access
-inline atf_comp::FTmsg& atf_comp::comptest_zd_tmsg_curs_Access(comptest_zd_tmsg_curs &curs) {
-    return *curs.row;
-}
-
 // --- atf_comp.FComptest..Ctor
 inline  atf_comp::FComptest::FComptest() {
     atf_comp::FComptest_Init(*this);
@@ -179,23 +66,6 @@ inline  atf_comp::FComptest::FComptest() {
 // --- atf_comp.FComptest..Dtor
 inline  atf_comp::FComptest::~FComptest() {
     atf_comp::FComptest_Uninit(*this);
-}
-
-// --- atf_comp.FCovdir..Init
-// Set all fields to initial values.
-inline void atf_comp::FCovdir_Init(atf_comp::FCovdir& covdir) {
-    covdir.zd_covdir_free_next = (atf_comp::FCovdir*)-1; // (atf_comp.FDb.zd_covdir_free) not-in-list
-    covdir.zd_covdir_free_prev = NULL; // (atf_comp.FDb.zd_covdir_free)
-}
-
-// --- atf_comp.FCovdir..Ctor
-inline  atf_comp::FCovdir::FCovdir() {
-    atf_comp::FCovdir_Init(*this);
-}
-
-// --- atf_comp.FCovdir..Dtor
-inline  atf_comp::FCovdir::~FCovdir() {
-    atf_comp::FCovdir_Uninit(*this);
 }
 
 // --- atf_comp.trace..Ctor
@@ -256,506 +126,210 @@ inline i32 atf_comp::ind_comptest_N() {
     return _db.ind_comptest_n;
 }
 
-// --- atf_comp.FDb.zd_sel_comptest.EmptyQ
+// --- atf_comp.FDb.ind_proc.EmptyQ
+// Return true if hash is empty
+inline bool atf_comp::ind_proc_EmptyQ() {
+    return _db.ind_proc_n == 0;
+}
+
+// --- atf_comp.FDb.ind_proc.N
+// Return number of items in the hash
+inline i32 atf_comp::ind_proc_N() {
+    return _db.ind_proc_n;
+}
+
+// --- atf_comp.FDb.tfilt.EmptyQ
 // Return true if index is empty
-inline bool atf_comp::zd_sel_comptest_EmptyQ() {
-    return _db.zd_sel_comptest_head == NULL;
+inline bool atf_comp::tfilt_EmptyQ() {
+    return _db.tfilt_n == 0;
 }
 
-// --- atf_comp.FDb.zd_sel_comptest.First
-// If index empty, return NULL. Otherwise return pointer to first element in index
-inline atf_comp::FComptest* atf_comp::zd_sel_comptest_First() {
-    atf_comp::FComptest *row = NULL;
-    row = _db.zd_sel_comptest_head;
-    return row;
-}
-
-// --- atf_comp.FDb.zd_sel_comptest.InLlistQ
-// Return true if row is in the linked list, false otherwise
-inline bool atf_comp::zd_sel_comptest_InLlistQ(atf_comp::FComptest& row) {
-    bool result = false;
-    result = !(row.zd_sel_comptest_next == (atf_comp::FComptest*)-1);
-    return result;
-}
-
-// --- atf_comp.FDb.zd_sel_comptest.Last
-// If index empty, return NULL. Otherwise return pointer to last element in index
-inline atf_comp::FComptest* atf_comp::zd_sel_comptest_Last() {
-    atf_comp::FComptest *row = NULL;
-    row = _db.zd_sel_comptest_tail;
-    return row;
-}
-
-// --- atf_comp.FDb.zd_sel_comptest.N
-// Return number of items in the linked list
-inline i32 atf_comp::zd_sel_comptest_N() {
-    return _db.zd_sel_comptest_n;
-}
-
-// --- atf_comp.FDb.zd_sel_comptest.Next
-// Return pointer to next element in the list
-inline atf_comp::FComptest* atf_comp::zd_sel_comptest_Next(atf_comp::FComptest &row) {
-    return row.zd_sel_comptest_next;
-}
-
-// --- atf_comp.FDb.zd_sel_comptest.Prev
-// Return pointer to previous element in the list
-inline atf_comp::FComptest* atf_comp::zd_sel_comptest_Prev(atf_comp::FComptest &row) {
-    return row.zd_sel_comptest_prev;
-}
-
-// --- atf_comp.FDb.zd_sel_comptest.qLast
-// Return reference to last element in the index. No bounds checking.
-inline atf_comp::FComptest& atf_comp::zd_sel_comptest_qLast() {
-    atf_comp::FComptest *row = NULL;
-    row = _db.zd_sel_comptest_tail;
-    return *row;
-}
-
-// --- atf_comp.FDb.zd_run_comptest.EmptyQ
-// Return true if index is empty
-inline bool atf_comp::zd_run_comptest_EmptyQ() {
-    return _db.zd_run_comptest_head == NULL;
-}
-
-// --- atf_comp.FDb.zd_run_comptest.First
-// If index empty, return NULL. Otherwise return pointer to first element in index
-inline atf_comp::FComptest* atf_comp::zd_run_comptest_First() {
-    atf_comp::FComptest *row = NULL;
-    row = _db.zd_run_comptest_head;
-    return row;
-}
-
-// --- atf_comp.FDb.zd_run_comptest.InLlistQ
-// Return true if row is in the linked list, false otherwise
-inline bool atf_comp::zd_run_comptest_InLlistQ(atf_comp::FComptest& row) {
-    bool result = false;
-    result = !(row.zd_run_comptest_next == (atf_comp::FComptest*)-1);
-    return result;
-}
-
-// --- atf_comp.FDb.zd_run_comptest.Last
-// If index empty, return NULL. Otherwise return pointer to last element in index
-inline atf_comp::FComptest* atf_comp::zd_run_comptest_Last() {
-    atf_comp::FComptest *row = NULL;
-    row = _db.zd_run_comptest_tail;
-    return row;
-}
-
-// --- atf_comp.FDb.zd_run_comptest.N
-// Return number of items in the linked list
-inline i32 atf_comp::zd_run_comptest_N() {
-    return _db.zd_run_comptest_n;
-}
-
-// --- atf_comp.FDb.zd_run_comptest.Next
-// Return pointer to next element in the list
-inline atf_comp::FComptest* atf_comp::zd_run_comptest_Next(atf_comp::FComptest &row) {
-    return row.zd_run_comptest_next;
-}
-
-// --- atf_comp.FDb.zd_run_comptest.Prev
-// Return pointer to previous element in the list
-inline atf_comp::FComptest* atf_comp::zd_run_comptest_Prev(atf_comp::FComptest &row) {
-    return row.zd_run_comptest_prev;
-}
-
-// --- atf_comp.FDb.zd_run_comptest.qLast
-// Return reference to last element in the index. No bounds checking.
-inline atf_comp::FComptest& atf_comp::zd_run_comptest_qLast() {
-    atf_comp::FComptest *row = NULL;
-    row = _db.zd_run_comptest_tail;
-    return *row;
-}
-
-// --- atf_comp.FDb.zd_out_tmsg.EmptyQ
-// Return true if index is empty
-inline bool atf_comp::zd_out_tmsg_EmptyQ() {
-    return _db.zd_out_tmsg_head == NULL;
-}
-
-// --- atf_comp.FDb.zd_out_tmsg.First
-// If index empty, return NULL. Otherwise return pointer to first element in index
-inline atf_comp::FTmsg* atf_comp::zd_out_tmsg_First() {
-    atf_comp::FTmsg *row = NULL;
-    row = _db.zd_out_tmsg_head;
-    return row;
-}
-
-// --- atf_comp.FDb.zd_out_tmsg.InLlistQ
-// Return true if row is in the linked list, false otherwise
-inline bool atf_comp::zd_out_tmsg_InLlistQ(atf_comp::FTmsg& row) {
-    bool result = false;
-    result = !(row.zd_out_tmsg_next == (atf_comp::FTmsg*)-1);
-    return result;
-}
-
-// --- atf_comp.FDb.zd_out_tmsg.Last
-// If index empty, return NULL. Otherwise return pointer to last element in index
-inline atf_comp::FTmsg* atf_comp::zd_out_tmsg_Last() {
-    atf_comp::FTmsg *row = NULL;
-    row = _db.zd_out_tmsg_tail;
-    return row;
-}
-
-// --- atf_comp.FDb.zd_out_tmsg.N
-// Return number of items in the linked list
-inline i32 atf_comp::zd_out_tmsg_N() {
-    return _db.zd_out_tmsg_n;
-}
-
-// --- atf_comp.FDb.zd_out_tmsg.Next
-// Return pointer to next element in the list
-inline atf_comp::FTmsg* atf_comp::zd_out_tmsg_Next(atf_comp::FTmsg &row) {
-    return row.zd_out_tmsg_next;
-}
-
-// --- atf_comp.FDb.zd_out_tmsg.Prev
-// Return pointer to previous element in the list
-inline atf_comp::FTmsg* atf_comp::zd_out_tmsg_Prev(atf_comp::FTmsg &row) {
-    return row.zd_out_tmsg_prev;
-}
-
-// --- atf_comp.FDb.zd_out_tmsg.qLast
-// Return reference to last element in the index. No bounds checking.
-inline atf_comp::FTmsg& atf_comp::zd_out_tmsg_qLast() {
-    atf_comp::FTmsg *row = NULL;
-    row = _db.zd_out_tmsg_tail;
-    return *row;
-}
-
-// --- atf_comp.FDb.zd_out_comptest.EmptyQ
-// Return true if index is empty
-inline bool atf_comp::zd_out_comptest_EmptyQ() {
-    return _db.zd_out_comptest_head == NULL;
-}
-
-// --- atf_comp.FDb.zd_out_comptest.First
-// If index empty, return NULL. Otherwise return pointer to first element in index
-inline atf_comp::FComptest* atf_comp::zd_out_comptest_First() {
-    atf_comp::FComptest *row = NULL;
-    row = _db.zd_out_comptest_head;
-    return row;
-}
-
-// --- atf_comp.FDb.zd_out_comptest.InLlistQ
-// Return true if row is in the linked list, false otherwise
-inline bool atf_comp::zd_out_comptest_InLlistQ(atf_comp::FComptest& row) {
-    bool result = false;
-    result = !(row.zd_out_comptest_next == (atf_comp::FComptest*)-1);
-    return result;
-}
-
-// --- atf_comp.FDb.zd_out_comptest.Last
-// If index empty, return NULL. Otherwise return pointer to last element in index
-inline atf_comp::FComptest* atf_comp::zd_out_comptest_Last() {
-    atf_comp::FComptest *row = NULL;
-    row = _db.zd_out_comptest_tail;
-    return row;
-}
-
-// --- atf_comp.FDb.zd_out_comptest.N
-// Return number of items in the linked list
-inline i32 atf_comp::zd_out_comptest_N() {
-    return _db.zd_out_comptest_n;
-}
-
-// --- atf_comp.FDb.zd_out_comptest.Next
-// Return pointer to next element in the list
-inline atf_comp::FComptest* atf_comp::zd_out_comptest_Next(atf_comp::FComptest &row) {
-    return row.zd_out_comptest_next;
-}
-
-// --- atf_comp.FDb.zd_out_comptest.Prev
-// Return pointer to previous element in the list
-inline atf_comp::FComptest* atf_comp::zd_out_comptest_Prev(atf_comp::FComptest &row) {
-    return row.zd_out_comptest_prev;
-}
-
-// --- atf_comp.FDb.zd_out_comptest.qLast
-// Return reference to last element in the index. No bounds checking.
-inline atf_comp::FComptest& atf_comp::zd_out_comptest_qLast() {
-    atf_comp::FComptest *row = NULL;
-    row = _db.zd_out_comptest_tail;
-    return *row;
-}
-
-// --- atf_comp.FDb.zd_out_tfilt.EmptyQ
-// Return true if index is empty
-inline bool atf_comp::zd_out_tfilt_EmptyQ() {
-    return _db.zd_out_tfilt_head == NULL;
-}
-
-// --- atf_comp.FDb.zd_out_tfilt.First
-// If index empty, return NULL. Otherwise return pointer to first element in index
-inline atf_comp::FTfilt* atf_comp::zd_out_tfilt_First() {
-    atf_comp::FTfilt *row = NULL;
-    row = _db.zd_out_tfilt_head;
-    return row;
-}
-
-// --- atf_comp.FDb.zd_out_tfilt.InLlistQ
-// Return true if row is in the linked list, false otherwise
-inline bool atf_comp::zd_out_tfilt_InLlistQ(atf_comp::FTfilt& row) {
-    bool result = false;
-    result = !(row.zd_out_tfilt_next == (atf_comp::FTfilt*)-1);
-    return result;
-}
-
-// --- atf_comp.FDb.zd_out_tfilt.Last
-// If index empty, return NULL. Otherwise return pointer to last element in index
-inline atf_comp::FTfilt* atf_comp::zd_out_tfilt_Last() {
-    atf_comp::FTfilt *row = NULL;
-    row = _db.zd_out_tfilt_tail;
-    return row;
-}
-
-// --- atf_comp.FDb.zd_out_tfilt.N
-// Return number of items in the linked list
-inline i32 atf_comp::zd_out_tfilt_N() {
-    return _db.zd_out_tfilt_n;
-}
-
-// --- atf_comp.FDb.zd_out_tfilt.Next
-// Return pointer to next element in the list
-inline atf_comp::FTfilt* atf_comp::zd_out_tfilt_Next(atf_comp::FTfilt &row) {
-    return row.zd_out_tfilt_next;
-}
-
-// --- atf_comp.FDb.zd_out_tfilt.Prev
-// Return pointer to previous element in the list
-inline atf_comp::FTfilt* atf_comp::zd_out_tfilt_Prev(atf_comp::FTfilt &row) {
-    return row.zd_out_tfilt_prev;
-}
-
-// --- atf_comp.FDb.zd_out_tfilt.qLast
-// Return reference to last element in the index. No bounds checking.
-inline atf_comp::FTfilt& atf_comp::zd_out_tfilt_qLast() {
-    atf_comp::FTfilt *row = NULL;
-    row = _db.zd_out_tfilt_tail;
-    return *row;
-}
-
-// --- atf_comp.FDb.zd_out_targs.EmptyQ
-// Return true if index is empty
-inline bool atf_comp::zd_out_targs_EmptyQ() {
-    return _db.zd_out_targs_head == NULL;
-}
-
-// --- atf_comp.FDb.zd_out_targs.First
-// If index empty, return NULL. Otherwise return pointer to first element in index
-inline atf_comp::FTargs* atf_comp::zd_out_targs_First() {
-    atf_comp::FTargs *row = NULL;
-    row = _db.zd_out_targs_head;
-    return row;
-}
-
-// --- atf_comp.FDb.zd_out_targs.InLlistQ
-// Return true if row is in the linked list, false otherwise
-inline bool atf_comp::zd_out_targs_InLlistQ(atf_comp::FTargs& row) {
-    bool result = false;
-    result = !(row.zd_out_targs_next == (atf_comp::FTargs*)-1);
-    return result;
-}
-
-// --- atf_comp.FDb.zd_out_targs.Last
-// If index empty, return NULL. Otherwise return pointer to last element in index
-inline atf_comp::FTargs* atf_comp::zd_out_targs_Last() {
-    atf_comp::FTargs *row = NULL;
-    row = _db.zd_out_targs_tail;
-    return row;
-}
-
-// --- atf_comp.FDb.zd_out_targs.N
-// Return number of items in the linked list
-inline i32 atf_comp::zd_out_targs_N() {
-    return _db.zd_out_targs_n;
-}
-
-// --- atf_comp.FDb.zd_out_targs.Next
-// Return pointer to next element in the list
-inline atf_comp::FTargs* atf_comp::zd_out_targs_Next(atf_comp::FTargs &row) {
-    return row.zd_out_targs_next;
-}
-
-// --- atf_comp.FDb.zd_out_targs.Prev
-// Return pointer to previous element in the list
-inline atf_comp::FTargs* atf_comp::zd_out_targs_Prev(atf_comp::FTargs &row) {
-    return row.zd_out_targs_prev;
-}
-
-// --- atf_comp.FDb.zd_out_targs.qLast
-// Return reference to last element in the index. No bounds checking.
-inline atf_comp::FTargs& atf_comp::zd_out_targs_qLast() {
-    atf_comp::FTargs *row = NULL;
-    row = _db.zd_out_targs_tail;
-    return *row;
-}
-
-// --- atf_comp.FDb.zd_out_tifilt.EmptyQ
-// Return true if index is empty
-inline bool atf_comp::zd_out_tifilt_EmptyQ() {
-    return _db.zd_out_tifilt_head == NULL;
-}
-
-// --- atf_comp.FDb.zd_out_tifilt.First
-// If index empty, return NULL. Otherwise return pointer to first element in index
-inline atf_comp::FTifilt* atf_comp::zd_out_tifilt_First() {
-    atf_comp::FTifilt *row = NULL;
-    row = _db.zd_out_tifilt_head;
-    return row;
-}
-
-// --- atf_comp.FDb.zd_out_tifilt.InLlistQ
-// Return true if row is in the linked list, false otherwise
-inline bool atf_comp::zd_out_tifilt_InLlistQ(atf_comp::FTifilt& row) {
-    bool result = false;
-    result = !(row.zd_out_tifilt_next == (atf_comp::FTifilt*)-1);
-    return result;
-}
-
-// --- atf_comp.FDb.zd_out_tifilt.Last
-// If index empty, return NULL. Otherwise return pointer to last element in index
-inline atf_comp::FTifilt* atf_comp::zd_out_tifilt_Last() {
-    atf_comp::FTifilt *row = NULL;
-    row = _db.zd_out_tifilt_tail;
-    return row;
-}
-
-// --- atf_comp.FDb.zd_out_tifilt.N
-// Return number of items in the linked list
-inline i32 atf_comp::zd_out_tifilt_N() {
-    return _db.zd_out_tifilt_n;
-}
-
-// --- atf_comp.FDb.zd_out_tifilt.Next
-// Return pointer to next element in the list
-inline atf_comp::FTifilt* atf_comp::zd_out_tifilt_Next(atf_comp::FTifilt &row) {
-    return row.zd_out_tifilt_next;
-}
-
-// --- atf_comp.FDb.zd_out_tifilt.Prev
-// Return pointer to previous element in the list
-inline atf_comp::FTifilt* atf_comp::zd_out_tifilt_Prev(atf_comp::FTifilt &row) {
-    return row.zd_out_tifilt_prev;
-}
-
-// --- atf_comp.FDb.zd_out_tifilt.qLast
-// Return reference to last element in the index. No bounds checking.
-inline atf_comp::FTifilt& atf_comp::zd_out_tifilt_qLast() {
-    atf_comp::FTifilt *row = NULL;
-    row = _db.zd_out_tifilt_tail;
-    return *row;
-}
-
-// --- atf_comp.FDb.covdir.EmptyQ
-// Return true if index is empty
-inline bool atf_comp::covdir_EmptyQ() {
-    return _db.covdir_n == 0;
-}
-
-// --- atf_comp.FDb.covdir.Find
+// --- atf_comp.FDb.tfilt.Find
 // Look up row by row id. Return NULL if out of range
-inline atf_comp::FCovdir* atf_comp::covdir_Find(u64 t) {
-    atf_comp::FCovdir *retval = NULL;
-    if (LIKELY(u64(t) < u64(_db.covdir_n))) {
+inline atf_comp::FTfilt* atf_comp::tfilt_Find(u64 t) {
+    atf_comp::FTfilt *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.tfilt_n))) {
         u64 x = t + 1;
         u64 bsr   = algo::u64_BitScanReverse(x);
         u64 base  = u64(1)<<bsr;
         u64 index = x-base;
-        retval = &_db.covdir_lary[bsr][index];
+        retval = &_db.tfilt_lary[bsr][index];
     }
     return retval;
 }
 
-// --- atf_comp.FDb.covdir.Last
+// --- atf_comp.FDb.tfilt.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline atf_comp::FCovdir* atf_comp::covdir_Last() {
-    return covdir_Find(u64(_db.covdir_n-1));
+inline atf_comp::FTfilt* atf_comp::tfilt_Last() {
+    return tfilt_Find(u64(_db.tfilt_n-1));
 }
 
-// --- atf_comp.FDb.covdir.N
+// --- atf_comp.FDb.tfilt.N
 // Return number of items in the pool
-inline i32 atf_comp::covdir_N() {
-    return _db.covdir_n;
+inline i32 atf_comp::tfilt_N() {
+    return _db.tfilt_n;
 }
 
-// --- atf_comp.FDb.covdir.qFind
+// --- atf_comp.FDb.tfilt.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline atf_comp::FCovdir& atf_comp::covdir_qFind(u64 t) {
+inline atf_comp::FTfilt& atf_comp::tfilt_qFind(u64 t) {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
-    return _db.covdir_lary[bsr][index];
+    return _db.tfilt_lary[bsr][index];
 }
 
-// --- atf_comp.FDb.zd_covdir_free.EmptyQ
+// --- atf_comp.FDb.proc.EmptyQ
 // Return true if index is empty
-inline bool atf_comp::zd_covdir_free_EmptyQ() {
-    return _db.zd_covdir_free_head == NULL;
+inline bool atf_comp::proc_EmptyQ() {
+    return _db.proc_n == 0;
 }
 
-// --- atf_comp.FDb.zd_covdir_free.First
+// --- atf_comp.FDb.proc.Find
+// Look up row by row id. Return NULL if out of range
+inline atf_comp::FProc* atf_comp::proc_Find(u64 t) {
+    atf_comp::FProc *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.proc_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.proc_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- atf_comp.FDb.proc.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline atf_comp::FProc* atf_comp::proc_Last() {
+    return proc_Find(u64(_db.proc_n-1));
+}
+
+// --- atf_comp.FDb.proc.N
+// Return number of items in the pool
+inline i32 atf_comp::proc_N() {
+    return _db.proc_n;
+}
+
+// --- atf_comp.FDb.proc.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline atf_comp::FProc& atf_comp::proc_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.proc_lary[bsr][index];
+}
+
+// --- atf_comp.FDb.unstableattr.EmptyQ
+// Return true if index is empty
+inline bool atf_comp::unstableattr_EmptyQ() {
+    return _db.unstableattr_n == 0;
+}
+
+// --- atf_comp.FDb.unstableattr.Find
+// Look up row by row id. Return NULL if out of range
+inline atf_comp::FUnstableattr* atf_comp::unstableattr_Find(u64 t) {
+    atf_comp::FUnstableattr *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.unstableattr_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.unstableattr_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- atf_comp.FDb.unstableattr.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline atf_comp::FUnstableattr* atf_comp::unstableattr_Last() {
+    return unstableattr_Find(u64(_db.unstableattr_n-1));
+}
+
+// --- atf_comp.FDb.unstableattr.N
+// Return number of items in the pool
+inline i32 atf_comp::unstableattr_N() {
+    return _db.unstableattr_n;
+}
+
+// --- atf_comp.FDb.unstableattr.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline atf_comp::FUnstableattr& atf_comp::unstableattr_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.unstableattr_lary[bsr][index];
+}
+
+// --- atf_comp.FDb.ind_unstableattr.EmptyQ
+// Return true if hash is empty
+inline bool atf_comp::ind_unstableattr_EmptyQ() {
+    return _db.ind_unstableattr_n == 0;
+}
+
+// --- atf_comp.FDb.ind_unstableattr.N
+// Return number of items in the hash
+inline i32 atf_comp::ind_unstableattr_N() {
+    return _db.ind_unstableattr_n;
+}
+
+// --- atf_comp.FDb.zd_select.EmptyQ
+// Return true if index is empty
+inline bool atf_comp::zd_select_EmptyQ() {
+    return _db.zd_select_head == NULL;
+}
+
+// --- atf_comp.FDb.zd_select.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline atf_comp::FCovdir* atf_comp::zd_covdir_free_First() {
-    atf_comp::FCovdir *row = NULL;
-    row = _db.zd_covdir_free_head;
+inline atf_comp::FComptest* atf_comp::zd_select_First() {
+    atf_comp::FComptest *row = NULL;
+    row = _db.zd_select_head;
     return row;
 }
 
-// --- atf_comp.FDb.zd_covdir_free.InLlistQ
+// --- atf_comp.FDb.zd_select.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool atf_comp::zd_covdir_free_InLlistQ(atf_comp::FCovdir& row) {
+inline bool atf_comp::zd_select_InLlistQ(atf_comp::FComptest& row) {
     bool result = false;
-    result = !(row.zd_covdir_free_next == (atf_comp::FCovdir*)-1);
+    result = !(row.zd_select_next == (atf_comp::FComptest*)-1);
     return result;
 }
 
-// --- atf_comp.FDb.zd_covdir_free.Last
+// --- atf_comp.FDb.zd_select.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline atf_comp::FCovdir* atf_comp::zd_covdir_free_Last() {
-    atf_comp::FCovdir *row = NULL;
-    row = _db.zd_covdir_free_tail;
+inline atf_comp::FComptest* atf_comp::zd_select_Last() {
+    atf_comp::FComptest *row = NULL;
+    row = _db.zd_select_tail;
     return row;
 }
 
-// --- atf_comp.FDb.zd_covdir_free.N
+// --- atf_comp.FDb.zd_select.N
 // Return number of items in the linked list
-inline i32 atf_comp::zd_covdir_free_N() {
-    return _db.zd_covdir_free_n;
+inline i32 atf_comp::zd_select_N() {
+    return _db.zd_select_n;
 }
 
-// --- atf_comp.FDb.zd_covdir_free.Next
+// --- atf_comp.FDb.zd_select.Next
 // Return pointer to next element in the list
-inline atf_comp::FCovdir* atf_comp::zd_covdir_free_Next(atf_comp::FCovdir &row) {
-    return row.zd_covdir_free_next;
+inline atf_comp::FComptest* atf_comp::zd_select_Next(atf_comp::FComptest &row) {
+    return row.zd_select_next;
 }
 
-// --- atf_comp.FDb.zd_covdir_free.Prev
+// --- atf_comp.FDb.zd_select.Prev
 // Return pointer to previous element in the list
-inline atf_comp::FCovdir* atf_comp::zd_covdir_free_Prev(atf_comp::FCovdir &row) {
-    return row.zd_covdir_free_prev;
+inline atf_comp::FComptest* atf_comp::zd_select_Prev(atf_comp::FComptest &row) {
+    return row.zd_select_prev;
 }
 
-// --- atf_comp.FDb.zd_covdir_free.qLast
+// --- atf_comp.FDb.zd_select.qLast
 // Return reference to last element in the index. No bounds checking.
-inline atf_comp::FCovdir& atf_comp::zd_covdir_free_qLast() {
-    atf_comp::FCovdir *row = NULL;
-    row = _db.zd_covdir_free_tail;
+inline atf_comp::FComptest& atf_comp::zd_select_qLast() {
+    atf_comp::FComptest *row = NULL;
+    row = _db.zd_select_tail;
     return *row;
-}
-
-// --- atf_comp.FDb.ind_tfilt.EmptyQ
-// Return true if hash is empty
-inline bool atf_comp::ind_tfilt_EmptyQ() {
-    return _db.ind_tfilt_n == 0;
-}
-
-// --- atf_comp.FDb.ind_tfilt.N
-// Return number of items in the hash
-inline i32 atf_comp::ind_tfilt_N() {
-    return _db.ind_tfilt_n;
 }
 
 // --- atf_comp.FDb.comptest_curs.Reset
@@ -783,262 +357,132 @@ inline atf_comp::FComptest& atf_comp::_db_comptest_curs_Access(_db_comptest_curs
     return comptest_qFind(u64(curs.index));
 }
 
-// --- atf_comp.FDb.zd_sel_comptest_curs.Reset
+// --- atf_comp.FDb.tfilt_curs.Reset
 // cursor points to valid item
-inline void atf_comp::_db_zd_sel_comptest_curs_Reset(_db_zd_sel_comptest_curs &curs, atf_comp::FDb &parent) {
-    curs.row = parent.zd_sel_comptest_head;
-}
-
-// --- atf_comp.FDb.zd_sel_comptest_curs.ValidQ
-// cursor points to valid item
-inline bool atf_comp::_db_zd_sel_comptest_curs_ValidQ(_db_zd_sel_comptest_curs &curs) {
-    return curs.row != NULL;
-}
-
-// --- atf_comp.FDb.zd_sel_comptest_curs.Next
-// proceed to next item
-inline void atf_comp::_db_zd_sel_comptest_curs_Next(_db_zd_sel_comptest_curs &curs) {
-    atf_comp::FComptest *next = (*curs.row).zd_sel_comptest_next;
-    curs.row = next;
-}
-
-// --- atf_comp.FDb.zd_sel_comptest_curs.Access
-// item access
-inline atf_comp::FComptest& atf_comp::_db_zd_sel_comptest_curs_Access(_db_zd_sel_comptest_curs &curs) {
-    return *curs.row;
-}
-
-// --- atf_comp.FDb.zd_run_comptest_curs.Reset
-// cursor points to valid item
-inline void atf_comp::_db_zd_run_comptest_curs_Reset(_db_zd_run_comptest_curs &curs, atf_comp::FDb &parent) {
-    curs.row = parent.zd_run_comptest_head;
-}
-
-// --- atf_comp.FDb.zd_run_comptest_curs.ValidQ
-// cursor points to valid item
-inline bool atf_comp::_db_zd_run_comptest_curs_ValidQ(_db_zd_run_comptest_curs &curs) {
-    return curs.row != NULL;
-}
-
-// --- atf_comp.FDb.zd_run_comptest_curs.Next
-// proceed to next item
-inline void atf_comp::_db_zd_run_comptest_curs_Next(_db_zd_run_comptest_curs &curs) {
-    atf_comp::FComptest *next = (*curs.row).zd_run_comptest_next;
-    curs.row = next;
-}
-
-// --- atf_comp.FDb.zd_run_comptest_curs.Access
-// item access
-inline atf_comp::FComptest& atf_comp::_db_zd_run_comptest_curs_Access(_db_zd_run_comptest_curs &curs) {
-    return *curs.row;
-}
-
-// --- atf_comp.FDb.zd_out_tmsg_curs.Reset
-// cursor points to valid item
-inline void atf_comp::_db_zd_out_tmsg_curs_Reset(_db_zd_out_tmsg_curs &curs, atf_comp::FDb &parent) {
-    curs.row = parent.zd_out_tmsg_head;
-}
-
-// --- atf_comp.FDb.zd_out_tmsg_curs.ValidQ
-// cursor points to valid item
-inline bool atf_comp::_db_zd_out_tmsg_curs_ValidQ(_db_zd_out_tmsg_curs &curs) {
-    return curs.row != NULL;
-}
-
-// --- atf_comp.FDb.zd_out_tmsg_curs.Next
-// proceed to next item
-inline void atf_comp::_db_zd_out_tmsg_curs_Next(_db_zd_out_tmsg_curs &curs) {
-    atf_comp::FTmsg *next = (*curs.row).zd_out_tmsg_next;
-    curs.row = next;
-}
-
-// --- atf_comp.FDb.zd_out_tmsg_curs.Access
-// item access
-inline atf_comp::FTmsg& atf_comp::_db_zd_out_tmsg_curs_Access(_db_zd_out_tmsg_curs &curs) {
-    return *curs.row;
-}
-
-// --- atf_comp.FDb.zd_out_comptest_curs.Reset
-// cursor points to valid item
-inline void atf_comp::_db_zd_out_comptest_curs_Reset(_db_zd_out_comptest_curs &curs, atf_comp::FDb &parent) {
-    curs.row = parent.zd_out_comptest_head;
-}
-
-// --- atf_comp.FDb.zd_out_comptest_curs.ValidQ
-// cursor points to valid item
-inline bool atf_comp::_db_zd_out_comptest_curs_ValidQ(_db_zd_out_comptest_curs &curs) {
-    return curs.row != NULL;
-}
-
-// --- atf_comp.FDb.zd_out_comptest_curs.Next
-// proceed to next item
-inline void atf_comp::_db_zd_out_comptest_curs_Next(_db_zd_out_comptest_curs &curs) {
-    atf_comp::FComptest *next = (*curs.row).zd_out_comptest_next;
-    curs.row = next;
-}
-
-// --- atf_comp.FDb.zd_out_comptest_curs.Access
-// item access
-inline atf_comp::FComptest& atf_comp::_db_zd_out_comptest_curs_Access(_db_zd_out_comptest_curs &curs) {
-    return *curs.row;
-}
-
-// --- atf_comp.FDb.zd_out_tfilt_curs.Reset
-// cursor points to valid item
-inline void atf_comp::_db_zd_out_tfilt_curs_Reset(_db_zd_out_tfilt_curs &curs, atf_comp::FDb &parent) {
-    curs.row = parent.zd_out_tfilt_head;
-}
-
-// --- atf_comp.FDb.zd_out_tfilt_curs.ValidQ
-// cursor points to valid item
-inline bool atf_comp::_db_zd_out_tfilt_curs_ValidQ(_db_zd_out_tfilt_curs &curs) {
-    return curs.row != NULL;
-}
-
-// --- atf_comp.FDb.zd_out_tfilt_curs.Next
-// proceed to next item
-inline void atf_comp::_db_zd_out_tfilt_curs_Next(_db_zd_out_tfilt_curs &curs) {
-    atf_comp::FTfilt *next = (*curs.row).zd_out_tfilt_next;
-    curs.row = next;
-}
-
-// --- atf_comp.FDb.zd_out_tfilt_curs.Access
-// item access
-inline atf_comp::FTfilt& atf_comp::_db_zd_out_tfilt_curs_Access(_db_zd_out_tfilt_curs &curs) {
-    return *curs.row;
-}
-
-// --- atf_comp.FDb.zd_out_targs_curs.Reset
-// cursor points to valid item
-inline void atf_comp::_db_zd_out_targs_curs_Reset(_db_zd_out_targs_curs &curs, atf_comp::FDb &parent) {
-    curs.row = parent.zd_out_targs_head;
-}
-
-// --- atf_comp.FDb.zd_out_targs_curs.ValidQ
-// cursor points to valid item
-inline bool atf_comp::_db_zd_out_targs_curs_ValidQ(_db_zd_out_targs_curs &curs) {
-    return curs.row != NULL;
-}
-
-// --- atf_comp.FDb.zd_out_targs_curs.Next
-// proceed to next item
-inline void atf_comp::_db_zd_out_targs_curs_Next(_db_zd_out_targs_curs &curs) {
-    atf_comp::FTargs *next = (*curs.row).zd_out_targs_next;
-    curs.row = next;
-}
-
-// --- atf_comp.FDb.zd_out_targs_curs.Access
-// item access
-inline atf_comp::FTargs& atf_comp::_db_zd_out_targs_curs_Access(_db_zd_out_targs_curs &curs) {
-    return *curs.row;
-}
-
-// --- atf_comp.FDb.zd_out_tifilt_curs.Reset
-// cursor points to valid item
-inline void atf_comp::_db_zd_out_tifilt_curs_Reset(_db_zd_out_tifilt_curs &curs, atf_comp::FDb &parent) {
-    curs.row = parent.zd_out_tifilt_head;
-}
-
-// --- atf_comp.FDb.zd_out_tifilt_curs.ValidQ
-// cursor points to valid item
-inline bool atf_comp::_db_zd_out_tifilt_curs_ValidQ(_db_zd_out_tifilt_curs &curs) {
-    return curs.row != NULL;
-}
-
-// --- atf_comp.FDb.zd_out_tifilt_curs.Next
-// proceed to next item
-inline void atf_comp::_db_zd_out_tifilt_curs_Next(_db_zd_out_tifilt_curs &curs) {
-    atf_comp::FTifilt *next = (*curs.row).zd_out_tifilt_next;
-    curs.row = next;
-}
-
-// --- atf_comp.FDb.zd_out_tifilt_curs.Access
-// item access
-inline atf_comp::FTifilt& atf_comp::_db_zd_out_tifilt_curs_Access(_db_zd_out_tifilt_curs &curs) {
-    return *curs.row;
-}
-
-// --- atf_comp.FDb.covdir_curs.Reset
-// cursor points to valid item
-inline void atf_comp::_db_covdir_curs_Reset(_db_covdir_curs &curs, atf_comp::FDb &parent) {
+inline void atf_comp::_db_tfilt_curs_Reset(_db_tfilt_curs &curs, atf_comp::FDb &parent) {
     curs.parent = &parent;
     curs.index = 0;
 }
 
-// --- atf_comp.FDb.covdir_curs.ValidQ
+// --- atf_comp.FDb.tfilt_curs.ValidQ
 // cursor points to valid item
-inline bool atf_comp::_db_covdir_curs_ValidQ(_db_covdir_curs &curs) {
-    return curs.index < _db.covdir_n;
+inline bool atf_comp::_db_tfilt_curs_ValidQ(_db_tfilt_curs &curs) {
+    return curs.index < _db.tfilt_n;
 }
 
-// --- atf_comp.FDb.covdir_curs.Next
+// --- atf_comp.FDb.tfilt_curs.Next
 // proceed to next item
-inline void atf_comp::_db_covdir_curs_Next(_db_covdir_curs &curs) {
+inline void atf_comp::_db_tfilt_curs_Next(_db_tfilt_curs &curs) {
     curs.index++;
 }
 
-// --- atf_comp.FDb.covdir_curs.Access
+// --- atf_comp.FDb.tfilt_curs.Access
 // item access
-inline atf_comp::FCovdir& atf_comp::_db_covdir_curs_Access(_db_covdir_curs &curs) {
-    return covdir_qFind(u64(curs.index));
+inline atf_comp::FTfilt& atf_comp::_db_tfilt_curs_Access(_db_tfilt_curs &curs) {
+    return tfilt_qFind(u64(curs.index));
 }
 
-// --- atf_comp.FDb.zd_covdir_free_curs.Reset
+// --- atf_comp.FDb.proc_curs.Reset
 // cursor points to valid item
-inline void atf_comp::_db_zd_covdir_free_curs_Reset(_db_zd_covdir_free_curs &curs, atf_comp::FDb &parent) {
-    curs.row = parent.zd_covdir_free_head;
+inline void atf_comp::_db_proc_curs_Reset(_db_proc_curs &curs, atf_comp::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
 }
 
-// --- atf_comp.FDb.zd_covdir_free_curs.ValidQ
+// --- atf_comp.FDb.proc_curs.ValidQ
 // cursor points to valid item
-inline bool atf_comp::_db_zd_covdir_free_curs_ValidQ(_db_zd_covdir_free_curs &curs) {
+inline bool atf_comp::_db_proc_curs_ValidQ(_db_proc_curs &curs) {
+    return curs.index < _db.proc_n;
+}
+
+// --- atf_comp.FDb.proc_curs.Next
+// proceed to next item
+inline void atf_comp::_db_proc_curs_Next(_db_proc_curs &curs) {
+    curs.index++;
+}
+
+// --- atf_comp.FDb.proc_curs.Access
+// item access
+inline atf_comp::FProc& atf_comp::_db_proc_curs_Access(_db_proc_curs &curs) {
+    return proc_qFind(u64(curs.index));
+}
+
+// --- atf_comp.FDb.unstableattr_curs.Reset
+// cursor points to valid item
+inline void atf_comp::_db_unstableattr_curs_Reset(_db_unstableattr_curs &curs, atf_comp::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- atf_comp.FDb.unstableattr_curs.ValidQ
+// cursor points to valid item
+inline bool atf_comp::_db_unstableattr_curs_ValidQ(_db_unstableattr_curs &curs) {
+    return curs.index < _db.unstableattr_n;
+}
+
+// --- atf_comp.FDb.unstableattr_curs.Next
+// proceed to next item
+inline void atf_comp::_db_unstableattr_curs_Next(_db_unstableattr_curs &curs) {
+    curs.index++;
+}
+
+// --- atf_comp.FDb.unstableattr_curs.Access
+// item access
+inline atf_comp::FUnstableattr& atf_comp::_db_unstableattr_curs_Access(_db_unstableattr_curs &curs) {
+    return unstableattr_qFind(u64(curs.index));
+}
+
+// --- atf_comp.FDb.zd_select_curs.Reset
+// cursor points to valid item
+inline void atf_comp::_db_zd_select_curs_Reset(_db_zd_select_curs &curs, atf_comp::FDb &parent) {
+    curs.row = parent.zd_select_head;
+}
+
+// --- atf_comp.FDb.zd_select_curs.ValidQ
+// cursor points to valid item
+inline bool atf_comp::_db_zd_select_curs_ValidQ(_db_zd_select_curs &curs) {
     return curs.row != NULL;
 }
 
-// --- atf_comp.FDb.zd_covdir_free_curs.Next
+// --- atf_comp.FDb.zd_select_curs.Next
 // proceed to next item
-inline void atf_comp::_db_zd_covdir_free_curs_Next(_db_zd_covdir_free_curs &curs) {
-    atf_comp::FCovdir *next = (*curs.row).zd_covdir_free_next;
+inline void atf_comp::_db_zd_select_curs_Next(_db_zd_select_curs &curs) {
+    atf_comp::FComptest *next = (*curs.row).zd_select_next;
     curs.row = next;
 }
 
-// --- atf_comp.FDb.zd_covdir_free_curs.Access
+// --- atf_comp.FDb.zd_select_curs.Access
 // item access
-inline atf_comp::FCovdir& atf_comp::_db_zd_covdir_free_curs_Access(_db_zd_covdir_free_curs &curs) {
+inline atf_comp::FComptest& atf_comp::_db_zd_select_curs_Access(_db_zd_select_curs &curs) {
     return *curs.row;
 }
 
-// --- atf_comp.FTargs..Init
-// Set all fields to initial values.
-inline void atf_comp::FTargs_Init(atf_comp::FTargs& targs) {
-    targs.targs_next = (atf_comp::FTargs*)-1; // (atf_comp.FDb.targs) not-in-tpool's freelist
-    targs.zd_out_targs_next = (atf_comp::FTargs*)-1; // (atf_comp.FDb.zd_out_targs) not-in-list
-    targs.zd_out_targs_prev = NULL; // (atf_comp.FDb.zd_out_targs)
+// --- atf_comp.FProc.in.Max
+// Return max. number of bytes in the buffer.
+inline i32 atf_comp::in_Max(atf_comp::FProc& proc) {
+    return proc.in_max;
 }
 
-// --- atf_comp.FTargs..Ctor
-inline  atf_comp::FTargs::FTargs() {
-    atf_comp::FTargs_Init(*this);
+// --- atf_comp.FProc.in.N
+// Return number of bytes in the buffer.
+inline i32 atf_comp::in_N(atf_comp::FProc& proc) {
+    return proc.in_end - proc.in_start;
 }
 
-// --- atf_comp.FTargs..Dtor
-inline  atf_comp::FTargs::~FTargs() {
-    atf_comp::FTargs_Uninit(*this);
+// --- atf_comp.FProc..Ctor
+inline  atf_comp::FProc::FProc() {
+    atf_comp::FProc_Init(*this);
+    // added because atf_comp.FProc.in (Fbuf) does not need initialization
+    // coverity[uninit_member]
 }
 
-// --- atf_comp.FTfilt..Init
-// Set all fields to initial values.
-inline void atf_comp::FTfilt_Init(atf_comp::FTfilt& tfilt) {
-    tfilt.tfilt_next = (atf_comp::FTfilt*)-1; // (atf_comp.FDb.tfilt) not-in-tpool's freelist
-    tfilt.zd_out_tfilt_next = (atf_comp::FTfilt*)-1; // (atf_comp.FDb.zd_out_tfilt) not-in-list
-    tfilt.zd_out_tfilt_prev = NULL; // (atf_comp.FDb.zd_out_tfilt)
-    tfilt.ind_tfilt_next = (atf_comp::FTfilt*)-1; // (atf_comp.FDb.ind_tfilt) not-in-hash
-    tfilt.ind_tfilt_hashval = 0; // stored hash value
+// --- atf_comp.FProc..Dtor
+inline  atf_comp::FProc::~FProc() {
+    atf_comp::FProc_Uninit(*this);
 }
 
 // --- atf_comp.FTfilt..Ctor
 inline  atf_comp::FTfilt::FTfilt() {
-    atf_comp::FTfilt_Init(*this);
 }
 
 // --- atf_comp.FTfilt..Dtor
@@ -1046,43 +490,30 @@ inline  atf_comp::FTfilt::~FTfilt() {
     atf_comp::FTfilt_Uninit(*this);
 }
 
-// --- atf_comp.FTifilt..Init
+// --- atf_comp.FUnstableattr..Init
 // Set all fields to initial values.
-inline void atf_comp::FTifilt_Init(atf_comp::FTifilt& tifilt) {
-    tifilt.tifilt_next = (atf_comp::FTifilt*)-1; // (atf_comp.FDb.tifilt) not-in-tpool's freelist
-    tifilt.zd_out_tifilt_next = (atf_comp::FTifilt*)-1; // (atf_comp.FDb.zd_out_tifilt) not-in-list
-    tifilt.zd_out_tifilt_prev = NULL; // (atf_comp.FDb.zd_out_tifilt)
+inline void atf_comp::FUnstableattr_Init(atf_comp::FUnstableattr& unstableattr) {
+    unstableattr.ind_unstableattr_next = (atf_comp::FUnstableattr*)-1; // (atf_comp.FDb.ind_unstableattr) not-in-hash
+    unstableattr.ind_unstableattr_hashval = 0; // stored hash value
 }
 
-// --- atf_comp.FTifilt..Ctor
-inline  atf_comp::FTifilt::FTifilt() {
-    atf_comp::FTifilt_Init(*this);
+// --- atf_comp.FUnstableattr..Ctor
+inline  atf_comp::FUnstableattr::FUnstableattr() {
+    atf_comp::FUnstableattr_Init(*this);
 }
 
-// --- atf_comp.FTifilt..Dtor
-inline  atf_comp::FTifilt::~FTifilt() {
-    atf_comp::FTifilt_Uninit(*this);
+// --- atf_comp.FUnstableattr..Dtor
+inline  atf_comp::FUnstableattr::~FUnstableattr() {
+    atf_comp::FUnstableattr_Uninit(*this);
 }
 
-// --- atf_comp.FTmsg..Init
-// Set all fields to initial values.
-inline void atf_comp::FTmsg_Init(atf_comp::FTmsg& tmsg) {
-    tmsg.istuple = bool(false);
-    tmsg.comptest_zd_tmsg_next = (atf_comp::FTmsg*)-1; // (atf_comp.FComptest.zd_tmsg) not-in-list
-    tmsg.comptest_zd_tmsg_prev = NULL; // (atf_comp.FComptest.zd_tmsg)
-    tmsg.tmsg_next = (atf_comp::FTmsg*)-1; // (atf_comp.FDb.tmsg) not-in-tpool's freelist
-    tmsg.zd_out_tmsg_next = (atf_comp::FTmsg*)-1; // (atf_comp.FDb.zd_out_tmsg) not-in-list
-    tmsg.zd_out_tmsg_prev = NULL; // (atf_comp.FDb.zd_out_tmsg)
+// --- atf_comp.FUnstablefld.base.Castbase
+inline dev::Unstablefld& atf_comp::Castbase(atf_comp::FUnstablefld& parent) {
+    return reinterpret_cast<dev::Unstablefld&>(parent);
 }
 
-// --- atf_comp.FTmsg..Ctor
-inline  atf_comp::FTmsg::FTmsg() {
-    atf_comp::FTmsg_Init(*this);
-}
-
-// --- atf_comp.FTmsg..Dtor
-inline  atf_comp::FTmsg::~FTmsg() {
-    atf_comp::FTmsg_Uninit(*this);
+// --- atf_comp.FUnstablefld..Ctor
+inline  atf_comp::FUnstablefld::FUnstablefld() {
 }
 
 // --- atf_comp.FieldId.value.GetEnum

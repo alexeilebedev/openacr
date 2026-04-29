@@ -19,6 +19,7 @@
 <a href="#used-in-executables"></a>
 <!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:ImdbUses -->
 
+* [atf_comp](/txt/exe/atf_comp/internals.md) as [atf_comp.FUnstablefld](/txt/exe/atf_comp/internals.md#atf_comp-funstablefld)
 * [lib_ctype](/txt/lib/lib_ctype/README.md) as [lib_ctype.FUnstablefld](/txt/lib/lib_ctype/README.md#lib_ctype-funstablefld)
 * [ssimfilt](/txt/exe/ssimfilt/internals.md) as [ssimfilt.FUnstablefld](/txt/exe/ssimfilt/internals.md#ssimfilt-funstablefld)
 

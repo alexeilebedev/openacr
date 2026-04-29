@@ -1,11 +1,13 @@
-set -e
-bin/acr  -query:'' -replace:Y -check:Y -selerr:N -write:Y -t:Y << EOF
-dmmeta.ctype  ctype:ams.ChildTypeMsg  comment:""
-dmmeta.field  field:ams.ChildTypeMsg.base  arg:ams.MsgHeader  reftype:Base  dflt:""  comment:""
-dmmeta.pack  ctype:ams.ChildTypeMsg  comment:""
-dmmeta.msgtype  ctype:ams.ChildTypeMsg  type:400
-dmmeta.cpptype  ctype:ams.ChildTypeMsg  ctor:N  dtor:N  cheap_copy:N
-dmmeta.cfmt  cfmt:ams.ChildTypeMsg.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
-EOF
-
-bin/amc
+# start acr_ed cmd:"$bindir/acr_ed -create -ctype ams.ChildTypeMsg -subset ams.MsgHeader -msgtype:400 -reftype:Base"
+# eof acr_ed
+acr_ed -> set -e
+acr_ed -> bin/acr  -query:'' -replace:Y -check:Y -selerr:N -write:Y -t:Y << EOF
+acr_ed -> dmmeta.ctype  ctype:ams.ChildTypeMsg  comment:""
+acr_ed -> dmmeta.field  field:ams.ChildTypeMsg.base  arg:ams.MsgHeader  reftype:Base  dflt:""  comment:""
+acr_ed -> dmmeta.pack  ctype:ams.ChildTypeMsg  comment:""
+acr_ed -> dmmeta.msgtype  ctype:ams.ChildTypeMsg  type:400
+acr_ed -> dmmeta.cpptype  ctype:ams.ChildTypeMsg  ctor:N  dtor:N  cheap_copy:N
+acr_ed -> dmmeta.cfmt  cfmt:ams.ChildTypeMsg.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+acr_ed -> EOF
+acr_ed -> bin/amc
+# exit acr_ed code:0

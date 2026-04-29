@@ -1,1 +1,5 @@
-{"@type":"report.acr","n_select":4741,"n_insert":0,"n_delete":0,"n_ignore":0,"n_update":0,"n_file_mod":0}
+# start ssimfilt cmd:"$bindir/ssimfilt -format:json"
+ssimfilt <- report.acr  n_select:4741  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0
+# eof ssimfilt
+ssimfilt -> {"@type":"report.acr","n_select":4741,"n_insert":0,"n_delete":0,"n_ignore":0,"n_update":0,"n_file_mod":0}
+# exit ssimfilt code:0

@@ -116,6 +116,7 @@ Other ctypes in this namespace which don't have own readme files
 |type|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|"9"|Simulates COMP_TYPE (debug)|
 |install|bool|[Val](/txt/exe/amc/reftypes.md#val)||Produce bash commands to install the handler|
 |debug_log|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|""|Log file for debug information, overrides ACR_COMPL_DEBUG_LOG|
+|check|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|Check command line validity|
 
 #### command.acr_dm - Command line for [acr_dm](/txt/exe/acr_dm/README.md)
 <a href="#command-acr_dm"></a>
@@ -371,21 +372,23 @@ Other ctypes in this namespace which don't have own readme files
 |---|---|---|---|---|
 |in|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|"data"|Input directory or filename, - for stdin|
 |comptest|[atfdb.Comptest](/txt/ssimdb/atfdb/comptest.md)|[RegxSql](/txt/exe/amc/reftypes.md#regxsql)|"%"|Select comptest (SQL regex)|
+|mode|u8|[Val](/txt/exe/amc/reftypes.md#val)|0|Test mode|
 |mdbg|bool|[Val](/txt/exe/amc/reftypes.md#val)||(action) Run component test under debugger|
 |run|bool|[Val](/txt/exe/amc/reftypes.md#val)|true|(action) Run selected component tests|
-|capture|bool|[Val](/txt/exe/amc/reftypes.md#val)||(action) Re-capture test results|
+|capture|bool|[Val](/txt/exe/amc/reftypes.md#val)||Alias for -mode:capture|
+|ee|bool|[Val](/txt/exe/amc/reftypes.md#val)||Alias for -mode:editsource|
+|e|bool|[Val](/txt/exe/amc/reftypes.md#val)||Alias for -mode:edit|
 |print|bool|[Val](/txt/exe/amc/reftypes.md#val)||(action) Print testcase|
+|cfg|[dev.Cfg](/txt/ssimdb/dev/cfg.md)|[Pkey](/txt/exe/amc/reftypes.md#pkey)|"release"|Configuration (determines bindir)|
 |printinput|bool|[Val](/txt/exe/amc/reftypes.md#val)||(action) Print input of test case|
-|e|bool|[Val](/txt/exe/amc/reftypes.md#val)||(action) Open selected testcases in an editor|
+|maxerr|i32|[Val](/txt/exe/amc/reftypes.md#val)|3|Exit after this many errors|
 |normalize|bool|[Val](/txt/exe/amc/reftypes.md#val)||(action) Renumber and normalize tmsgs|
 |covcapture|bool|[Val](/txt/exe/amc/reftypes.md#val)||(action) Capture new coverage percentages and save back|
 |covcheck|bool|[Val](/txt/exe/amc/reftypes.md#val)||(action) Check coverage percentages against tgtcov table|
 |bindir|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|""|Directory with binaries (default: build/cfg)|
 |tempdir|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|"temp/atf_comp"|Temp directory|
 |testdir|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|"test/atf_comp"|Test data directory|
-|cfg|[dev.Cfg](/txt/ssimdb/dev/cfg.md)|[Pkey](/txt/exe/amc/reftypes.md#pkey)|"release"|Set config|
 |check_untracked|bool|[Val](/txt/exe/amc/reftypes.md#val)|true|Check for untracked file before allowing test to run|
-|maxerr|i32|[Val](/txt/exe/amc/reftypes.md#val)|3|Exit after this many errors|
 |build|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|Build given cfg before test|
 |memcheck|bool|[Val](/txt/exe/amc/reftypes.md#val)||Run under memory checker (valgrind)|
 |force|bool|[Val](/txt/exe/amc/reftypes.md#val)||(With -memcheck) run suppressed memcheck|
@@ -419,19 +422,6 @@ Other ctypes in this namespace which don't have own readme files
 |summary|bool|[Val](/txt/exe/amc/reftypes.md#val)|true|Show summary figures|
 |check|bool|[Val](/txt/exe/amc/reftypes.md#val)||Check coverage information against tgtcov table|
 |incremental|bool|[Val](/txt/exe/amc/reftypes.md#val)||Keep *.gcda files from previous run|
-
-#### command.atf_exp - Command line for [atf_exp](/txt/exe/atf_exp/README.md)
-<a href="#command-atf_exp"></a>
-
-|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|in|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|"data"|Input directory or filename, - for stdin|
-|trace|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|""|Regx of things to trace|
-|bindir|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|"bin"|Directory with binaries|
-|comptest|[atfdb.Comptest](/txt/ssimdb/atfdb/comptest.md)|[Pkey](/txt/exe/amc/reftypes.md#pkey)|""|Component test name|
-|tempdir|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|""|Temporary directory for the component test|
-|timeout|double|[Val](/txt/exe/amc/reftypes.md#val)|8.0|Timeout in seconds for a step|
-|dbgshell|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|Invoke bash with curr envs in case of timeout|
 
 #### command.atf_fuzz - Command line for [atf_fuzz](/txt/exe/atf_fuzz/README.md)
 <a href="#command-atf_fuzz"></a>

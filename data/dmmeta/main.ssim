@@ -17,7 +17,6 @@ dmmeta.main  ns:atf_ci  ismodule:N
 dmmeta.main  ns:atf_cmdline  ismodule:N
 dmmeta.main  ns:atf_comp  ismodule:N
 dmmeta.main  ns:atf_cov  ismodule:N
-dmmeta.main  ns:atf_exp  ismodule:N
 dmmeta.main  ns:atf_fuzz  ismodule:N
 dmmeta.main  ns:atf_gcli  ismodule:N
 dmmeta.main  ns:atf_nrun  ismodule:N

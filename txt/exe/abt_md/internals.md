@@ -152,7 +152,7 @@ private:
 };
 ```
 
-#### abt_md.FComptest - 
+#### abt_md.FComptest - A component test
 <a href="#abt_md-fcomptest"></a>
 
 #### abt_md.FComptest Fields
@@ -173,8 +173,7 @@ struct FComptest { // abt_md.FComptest
     bool               memcheck;               //   true
     bool               coverage;               //   true
     u8                 exit_code;              //   0  Exit code to check
-    i32                ncore;                  //   1
-    i32                repeat;                 //   1  Number of times to repeat the test
+    bool               stablefld;              //   false  Replace unstable fields with ***
     algo::Comment      comment;                //
     bool               ns_c_comptest_in_ary;   //   false  membership flag
     // func:abt_md.FComptest..AssignOp

@@ -1,1 +1,5 @@
-no such column: nonexistent_field
+# start aqlite cmd:"$bindir/aqlite -in:- \"select count(*) from field where nonexistent_field = 'test'\""
+aqlite <- dmmeta.field  field:dmmeta.ErrorTest.id  arg:i32  reftype:Val  dflt:""  comment:"Error test field"
+# eof aqlite
+aqlite -> no such column: nonexistent_field
+# exit aqlite code:1

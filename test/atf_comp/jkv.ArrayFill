@@ -1,19 +1,22 @@
-{
-    "a": {
-        "b": {
-            "c": [
-                true,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                false
-            ]
-        }
-    }
-}
+# start jkv cmd:"$bindir/jkv /dev/null -r -- a.b.c-0:true -10:false"
+# eof jkv
+jkv -> {
+jkv ->     "a": {
+jkv ->         "b": {
+jkv ->             "c": [
+jkv ->                 true,
+jkv ->                 null,
+jkv ->                 null,
+jkv ->                 null,
+jkv ->                 null,
+jkv ->                 null,
+jkv ->                 null,
+jkv ->                 null,
+jkv ->                 null,
+jkv ->                 null,
+jkv ->                 false
+jkv ->             ]
+jkv ->         }
+jkv ->     }
+jkv -> }
+# exit jkv code:0

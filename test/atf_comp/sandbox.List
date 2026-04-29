@@ -1,24 +1,26 @@
-dry_run: set -eu -o pipefail
-(printf 'Sandbox\tSize\tClean\tPath\tComment\n'
-
-if pushd "temp/sandbox.test1" >/dev/null 2>&1; then
-  size=$(du -sh . 2>/dev/null | awk '{print $1}')
-  clean=$(git diff --quiet 2>/dev/null && echo Y || echo N)
-  popd >/dev/null || exit 1
-else
-  size=N/A
-  clean=Y
-fi
-printf '%s\t%s\t%s\t%s\t%s\n' "test1" "$size" "$clean" "temp/sandbox.test1" "Test sandbox 1"
-
-if pushd "temp/sandbox.test2" >/dev/null 2>&1; then
-  size=$(du -sh . 2>/dev/null | awk '{print $1}')
-  clean=$(git diff --quiet 2>/dev/null && echo Y || echo N)
-  popd >/dev/null || exit 1
-else
-  size=N/A
-  clean=Y
-fi
-printf '%s\t%s\t%s\t%s\t%s\n' "test2" "$size" "$clean" "temp/sandbox.test2" "Test sandbox 2"
-) | column -t -s '	'
-
+# start sandbox cmd:"$bindir/sandbox -in:- -list -dry_run test%"
+sandbox <- dev.sandbox  sandbox:test1  comment:"Test sandbox 1"
+sandbox <- dev.sandbox  sandbox:test2  comment:"Test sandbox 2"
+# eof sandbox
+sandbox -> dry_run: set -eu -o pipefail
+sandbox -> (printf 'Sandbox\tSize\tClean\tPath\tComment\n'
+sandbox -> if pushd "temp/sandbox.test1" >/dev/null 2>&1; then
+sandbox ->   size=$(du -sh . 2>/dev/null | awk '{print $1}')
+sandbox ->   clean=$(git diff --quiet 2>/dev/null && echo Y || echo N)
+sandbox ->   popd >/dev/null || exit 1
+sandbox -> else
+sandbox ->   size=N/A
+sandbox ->   clean=Y
+sandbox -> fi
+sandbox -> printf '%s\t%s\t%s\t%s\t%s\n' "test1" "$size" "$clean" "temp/sandbox.test1" "Test sandbox 1"
+sandbox -> if pushd "temp/sandbox.test2" >/dev/null 2>&1; then
+sandbox ->   size=$(du -sh . 2>/dev/null | awk '{print $1}')
+sandbox ->   clean=$(git diff --quiet 2>/dev/null && echo Y || echo N)
+sandbox ->   popd >/dev/null || exit 1
+sandbox -> else
+sandbox ->   size=N/A
+sandbox ->   clean=Y
+sandbox -> fi
+sandbox -> printf '%s\t%s\t%s\t%s\t%s\n' "test2" "$size" "$clean" "temp/sandbox.test2" "Test sandbox 2"
+sandbox -> ) | column -t -s '	'
+# exit sandbox code:0

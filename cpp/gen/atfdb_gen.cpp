@@ -319,11 +319,8 @@ bool atfdb::Comptest_ReadFieldMaybe(atfdb::Comptest& parent, algo::strptr field,
         case atfdb_FieldId_exit_code: {
             retval = u8_ReadStrptrMaybe(parent.exit_code, strval);
         } break;
-        case atfdb_FieldId_ncore: {
-            retval = i32_ReadStrptrMaybe(parent.ncore, strval);
-        } break;
-        case atfdb_FieldId_repeat: {
-            retval = i32_ReadStrptrMaybe(parent.repeat, strval);
+        case atfdb_FieldId_stablefld: {
+            retval = bool_ReadStrptrMaybe(parent.stablefld, strval);
         } break;
         case atfdb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
@@ -351,17 +348,6 @@ bool atfdb::Comptest_ReadStrptrMaybe(atfdb::Comptest &parent, algo::strptr in_st
     return retval;
 }
 
-// --- atfdb.Comptest..Init
-// Set all fields to initial values.
-void atfdb::Comptest_Init(atfdb::Comptest& parent) {
-    parent.timeout = i32(10);
-    parent.memcheck = bool(true);
-    parent.coverage = bool(true);
-    parent.exit_code = u8(0);
-    parent.ncore = i32(1);
-    parent.repeat = i32(1);
-}
-
 // --- atfdb.Comptest..Print
 // print string representation of ROW to string STR
 // cfmt:atfdb.Comptest.String  printfmt:Tuple
@@ -384,11 +370,8 @@ void atfdb::Comptest_Print(atfdb::Comptest& row, algo::cstring& str) {
     u8_Print(row.exit_code, temp);
     PrintAttrSpaceReset(str,"exit_code", temp);
 
-    i32_Print(row.ncore, temp);
-    PrintAttrSpaceReset(str,"ncore", temp);
-
-    i32_Print(row.repeat, temp);
-    PrintAttrSpaceReset(str,"repeat", temp);
+    bool_Print(row.stablefld, temp);
+    PrintAttrSpaceReset(str,"stablefld", temp);
 
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);
@@ -416,23 +399,16 @@ const char* atfdb::value_ToCstr(const atfdb::FieldId& parent) {
         case atfdb_FieldId_memcheck        : ret = "memcheck";  break;
         case atfdb_FieldId_coverage        : ret = "coverage";  break;
         case atfdb_FieldId_exit_code       : ret = "exit_code";  break;
-        case atfdb_FieldId_ncore           : ret = "ncore";  break;
-        case atfdb_FieldId_repeat          : ret = "repeat";  break;
+        case atfdb_FieldId_stablefld       : ret = "stablefld";  break;
         case atfdb_FieldId_fuzzstrat       : ret = "fuzzstrat";  break;
         case atfdb_FieldId_msgdir          : ret = "msgdir";  break;
-        case atfdb_FieldId_args            : ret = "args";  break;
         case atfdb_FieldId_test_gsymbol_char: ret = "test_gsymbol_char";  break;
         case atfdb_FieldId_test_gsymbol_pkey: ret = "test_gsymbol_pkey";  break;
         case atfdb_FieldId_test_gsymbol_strptr: ret = "test_gsymbol_strptr";  break;
         case atfdb_FieldId_filter          : ret = "filter";  break;
-        case atfdb_FieldId_ifilter         : ret = "ifilter";  break;
-        case atfdb_FieldId_tmsg            : ret = "tmsg";  break;
-        case atfdb_FieldId_rank            : ret = "rank";  break;
-        case atfdb_FieldId_dir             : ret = "dir";  break;
-        case atfdb_FieldId_istuple         : ret = "istuple";  break;
-        case atfdb_FieldId_msg             : ret = "msg";  break;
         case atfdb_FieldId_unittest        : ret = "unittest";  break;
         case atfdb_FieldId_ns              : ret = "ns";  break;
+        case atfdb_FieldId_unstableattr    : ret = "unstableattr";  break;
         case atfdb_FieldId_var             : ret = "var";  break;
         case atfdb_FieldId_value           : ret = "value";  break;
     }
@@ -468,28 +444,8 @@ bool atfdb::value_SetStrptrMaybe(atfdb::FieldId& parent, algo::strptr rhs) {
         }
         case 3: {
             switch (u64(algo::ReadLE16(rhs.elems))|(u64(rhs[2])<<16)) {
-                case LE_STR3('d','i','r'): {
-                    value_SetEnum(parent,atfdb_FieldId_dir); ret = true; break;
-                }
-                case LE_STR3('m','s','g'): {
-                    value_SetEnum(parent,atfdb_FieldId_msg); ret = true; break;
-                }
                 case LE_STR3('v','a','r'): {
                     value_SetEnum(parent,atfdb_FieldId_var); ret = true; break;
-                }
-            }
-            break;
-        }
-        case 4: {
-            switch (u64(algo::ReadLE32(rhs.elems))) {
-                case LE_STR4('a','r','g','s'): {
-                    value_SetEnum(parent,atfdb_FieldId_args); ret = true; break;
-                }
-                case LE_STR4('r','a','n','k'): {
-                    value_SetEnum(parent,atfdb_FieldId_rank); ret = true; break;
-                }
-                case LE_STR4('t','m','s','g'): {
-                    value_SetEnum(parent,atfdb_FieldId_tmsg); ret = true; break;
                 }
             }
             break;
@@ -501,9 +457,6 @@ bool atfdb::value_SetStrptrMaybe(atfdb::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR5('c','i','j','o','b'): {
                     value_SetEnum(parent,atfdb_FieldId_cijob); ret = true; break;
-                }
-                case LE_STR5('n','c','o','r','e'): {
-                    value_SetEnum(parent,atfdb_FieldId_ncore); ret = true; break;
                 }
                 case LE_STR5('v','a','l','u','e'): {
                     value_SetEnum(parent,atfdb_FieldId_value); ret = true; break;
@@ -525,9 +478,6 @@ bool atfdb::value_SetStrptrMaybe(atfdb::FieldId& parent, algo::strptr rhs) {
                 case LE_STR6('r','e','m','o','v','e'): {
                     value_SetEnum(parent,atfdb_FieldId_remove); ret = true; break;
                 }
-                case LE_STR6('r','e','p','e','a','t'): {
-                    value_SetEnum(parent,atfdb_FieldId_repeat); ret = true; break;
-                }
                 case LE_STR6('t','a','r','g','e','t'): {
                     value_SetEnum(parent,atfdb_FieldId_target); ret = true; break;
                 }
@@ -541,12 +491,6 @@ bool atfdb::value_SetStrptrMaybe(atfdb::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR7('c','o','m','m','e','n','t'): {
                     value_SetEnum(parent,atfdb_FieldId_comment); ret = true; break;
-                }
-                case LE_STR7('i','f','i','l','t','e','r'): {
-                    value_SetEnum(parent,atfdb_FieldId_ifilter); ret = true; break;
-                }
-                case LE_STR7('i','s','t','u','p','l','e'): {
-                    value_SetEnum(parent,atfdb_FieldId_istuple); ret = true; break;
                 }
                 case LE_STR7('p','a','c','k','a','g','e'): {
                     value_SetEnum(parent,atfdb_FieldId_package); ret = true; break;
@@ -592,6 +536,19 @@ bool atfdb::value_SetStrptrMaybe(atfdb::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('r','e','i','n','s','t','a','l'): {
                     if (memcmp(rhs.elems+8,"l",1)==0) { value_SetEnum(parent,atfdb_FieldId_reinstall); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('s','t','a','b','l','e','f','l'): {
+                    if (memcmp(rhs.elems+8,"d",1)==0) { value_SetEnum(parent,atfdb_FieldId_stablefld); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 12: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('u','n','s','t','a','b','l','e'): {
+                    if (memcmp(rhs.elems+8,"attr",4)==0) { value_SetEnum(parent,atfdb_FieldId_unstableattr); ret = true; break; }
                     break;
                 }
             }
@@ -750,55 +707,6 @@ void atfdb::Msgdir_Print(atfdb::Msgdir& row, algo::cstring& str) {
 
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);
-}
-
-// --- atfdb.Targs..ReadFieldMaybe
-bool atfdb::Targs_ReadFieldMaybe(atfdb::Targs& parent, algo::strptr field, algo::strptr strval) {
-    bool retval = true;
-    atfdb::FieldId field_id;
-    (void)value_SetStrptrMaybe(field_id,field);
-    switch(field_id) {
-        case atfdb_FieldId_comptest: {
-            retval = algo::Smallstr50_ReadStrptrMaybe(parent.comptest, strval);
-        } break;
-        case atfdb_FieldId_args: {
-            retval = algo::cstring_ReadStrptrMaybe(parent.args, strval);
-        } break;
-        default: {
-            retval = false;
-            algo_lib::AppendErrtext("comment", "unrecognized attr");
-        } break;
-    }
-    if (!retval) {
-        algo_lib::AppendErrtext("attr",field);
-    }
-    return retval;
-}
-
-// --- atfdb.Targs..ReadStrptrMaybe
-// Read fields of atfdb::Targs from an ascii string.
-// The format of the string is an ssim Tuple
-bool atfdb::Targs_ReadStrptrMaybe(atfdb::Targs &parent, algo::strptr in_str) {
-    bool retval = true;
-    retval = algo::StripTypeTag(in_str, "atfdb.targs") || algo::StripTypeTag(in_str, "atfdb.Targs");
-    ind_beg(algo::Attr_curs, attr, in_str) {
-        retval = retval && Targs_ReadFieldMaybe(parent, attr.name, attr.value);
-    }ind_end;
-    return retval;
-}
-
-// --- atfdb.Targs..Print
-// print string representation of ROW to string STR
-// cfmt:atfdb.Targs.String  printfmt:Tuple
-void atfdb::Targs_Print(atfdb::Targs& row, algo::cstring& str) {
-    algo::tempstr temp;
-    str << "atfdb.targs";
-
-    algo::Smallstr50_Print(row.comptest, temp);
-    PrintAttrSpaceReset(str,"comptest", temp);
-
-    algo::cstring_Print(row.args, temp);
-    PrintAttrSpaceReset(str,"args", temp);
 }
 
 // --- atfdb.TestGsymbolChar..ReadFieldMaybe
@@ -1003,170 +911,6 @@ void atfdb::Tfilt_Print(atfdb::Tfilt& row, algo::cstring& str) {
     PrintAttrSpaceReset(str,"comment", temp);
 }
 
-// --- atfdb.Tifilt..ReadFieldMaybe
-bool atfdb::Tifilt_ReadFieldMaybe(atfdb::Tifilt& parent, algo::strptr field, algo::strptr strval) {
-    bool retval = true;
-    atfdb::FieldId field_id;
-    (void)value_SetStrptrMaybe(field_id,field);
-    switch(field_id) {
-        case atfdb_FieldId_comptest: {
-            retval = algo::Smallstr50_ReadStrptrMaybe(parent.comptest, strval);
-        } break;
-        case atfdb_FieldId_ifilter: {
-            retval = algo::cstring_ReadStrptrMaybe(parent.ifilter, strval);
-        } break;
-        case atfdb_FieldId_comment: {
-            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-        } break;
-        default: {
-            retval = false;
-            algo_lib::AppendErrtext("comment", "unrecognized attr");
-        } break;
-    }
-    if (!retval) {
-        algo_lib::AppendErrtext("attr",field);
-    }
-    return retval;
-}
-
-// --- atfdb.Tifilt..ReadStrptrMaybe
-// Read fields of atfdb::Tifilt from an ascii string.
-// The format of the string is an ssim Tuple
-bool atfdb::Tifilt_ReadStrptrMaybe(atfdb::Tifilt &parent, algo::strptr in_str) {
-    bool retval = true;
-    retval = algo::StripTypeTag(in_str, "atfdb.tifilt") || algo::StripTypeTag(in_str, "atfdb.Tifilt");
-    ind_beg(algo::Attr_curs, attr, in_str) {
-        retval = retval && Tifilt_ReadFieldMaybe(parent, attr.name, attr.value);
-    }ind_end;
-    return retval;
-}
-
-// --- atfdb.Tifilt..Print
-// print string representation of ROW to string STR
-// cfmt:atfdb.Tifilt.String  printfmt:Tuple
-void atfdb::Tifilt_Print(atfdb::Tifilt& row, algo::cstring& str) {
-    algo::tempstr temp;
-    str << "atfdb.tifilt";
-
-    algo::Smallstr50_Print(row.comptest, temp);
-    PrintAttrSpaceReset(str,"comptest", temp);
-
-    algo::cstring_Print(row.ifilter, temp);
-    PrintAttrSpaceReset(str,"ifilter", temp);
-
-    algo::Comment_Print(row.comment, temp);
-    PrintAttrSpaceReset(str,"comment", temp);
-}
-
-// --- atfdb.Tmsg.comptest.Get
-algo::Smallstr50 atfdb::comptest_Get(atfdb::Tmsg& parent) {
-    algo::Smallstr50 ret(algo::Pathcomp(parent.tmsg, "/LL"));
-    return ret;
-}
-
-// --- atfdb.Tmsg.comptest.Get2
-algo::Smallstr50 atfdb::Tmsg_comptest_Get(algo::strptr arg) {
-    algo::Smallstr50 ret(algo::Pathcomp(arg, "/LL"));
-    return ret;
-}
-
-// --- atfdb.Tmsg.rank.Get
-i32 atfdb::rank_Get(atfdb::Tmsg& parent) {
-    i32 ret;
-    ret = 0; // default value
-    (void)i32_ReadStrptrMaybe(ret, algo::Pathcomp(parent.tmsg, "/LR.LL"));
-    return ret;
-}
-
-// --- atfdb.Tmsg.rank.Get2
-i32 atfdb::Tmsg_rank_Get(algo::strptr arg) {
-    i32 ret;
-    ret = 0; // default value
-    (void)i32_ReadStrptrMaybe(ret, algo::Pathcomp(arg, "/LR.LL"));
-    return ret;
-}
-
-// --- atfdb.Tmsg.dir.Get
-algo::Smallstr50 atfdb::dir_Get(atfdb::Tmsg& parent) {
-    algo::Smallstr50 ret(algo::Pathcomp(parent.tmsg, "/LR.LR"));
-    return ret;
-}
-
-// --- atfdb.Tmsg.dir.Get2
-algo::Smallstr50 atfdb::Tmsg_dir_Get(algo::strptr arg) {
-    algo::Smallstr50 ret(algo::Pathcomp(arg, "/LR.LR"));
-    return ret;
-}
-
-// --- atfdb.Tmsg..Concat_comptest_rank_dir
-tempstr atfdb::Tmsg_Concat_comptest_rank_dir( const algo::strptr& comptest ,i32 rank ,const algo::strptr& dir ) {
-    return tempstr() << comptest <<'/'<< rank <<'.'<< dir ;
-}
-
-// --- atfdb.Tmsg..ReadFieldMaybe
-bool atfdb::Tmsg_ReadFieldMaybe(atfdb::Tmsg& parent, algo::strptr field, algo::strptr strval) {
-    bool retval = true;
-    atfdb::FieldId field_id;
-    (void)value_SetStrptrMaybe(field_id,field);
-    switch(field_id) {
-        case atfdb_FieldId_tmsg: {
-            retval = algo::Smallstr50_ReadStrptrMaybe(parent.tmsg, strval);
-        } break;
-        case atfdb_FieldId_comptest: {
-            retval = false;
-        } break;
-        case atfdb_FieldId_rank: {
-            retval = false;
-        } break;
-        case atfdb_FieldId_dir: {
-            retval = false;
-        } break;
-        case atfdb_FieldId_istuple: {
-            retval = bool_ReadStrptrMaybe(parent.istuple, strval);
-        } break;
-        case atfdb_FieldId_msg: {
-            retval = algo::cstring_ReadStrptrMaybe(parent.msg, strval);
-        } break;
-        default: {
-            retval = false;
-            algo_lib::AppendErrtext("comment", "unrecognized attr");
-        } break;
-    }
-    if (!retval) {
-        algo_lib::AppendErrtext("attr",field);
-    }
-    return retval;
-}
-
-// --- atfdb.Tmsg..ReadStrptrMaybe
-// Read fields of atfdb::Tmsg from an ascii string.
-// The format of the string is an ssim Tuple
-bool atfdb::Tmsg_ReadStrptrMaybe(atfdb::Tmsg &parent, algo::strptr in_str) {
-    bool retval = true;
-    retval = algo::StripTypeTag(in_str, "atfdb.tmsg") || algo::StripTypeTag(in_str, "atfdb.Tmsg");
-    ind_beg(algo::Attr_curs, attr, in_str) {
-        retval = retval && Tmsg_ReadFieldMaybe(parent, attr.name, attr.value);
-    }ind_end;
-    return retval;
-}
-
-// --- atfdb.Tmsg..Print
-// print string representation of ROW to string STR
-// cfmt:atfdb.Tmsg.String  printfmt:Tuple
-void atfdb::Tmsg_Print(atfdb::Tmsg& row, algo::cstring& str) {
-    algo::tempstr temp;
-    str << "atfdb.tmsg";
-
-    algo::Smallstr50_Print(row.tmsg, temp);
-    PrintAttrSpaceReset(str,"tmsg", temp);
-
-    bool_Print(row.istuple, temp);
-    PrintAttrSpaceReset(str,"istuple", temp);
-
-    algo::cstring_Print(row.msg, temp);
-    PrintAttrSpaceReset(str,"msg", temp);
-}
-
 // --- atfdb.Unittest.ns.Get
 algo::Smallstr16 atfdb::ns_Get(atfdb::Unittest& parent) {
     algo::Smallstr16 ret(algo::Pathcomp(parent.unittest, ".RL"));
@@ -1259,6 +1003,55 @@ void atfdb::Unittest_Print(atfdb::Unittest& row, algo::cstring& str) {
 
     algo::Smallstr50_Print(row.unittest, temp);
     PrintAttrSpaceReset(str,"unittest", temp);
+
+    algo::Comment_Print(row.comment, temp);
+    PrintAttrSpaceReset(str,"comment", temp);
+}
+
+// --- atfdb.Unstableattr..ReadFieldMaybe
+bool atfdb::Unstableattr_ReadFieldMaybe(atfdb::Unstableattr& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    atfdb::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case atfdb_FieldId_unstableattr: {
+            retval = algo::Smallstr100_ReadStrptrMaybe(parent.unstableattr, strval);
+        } break;
+        case atfdb_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- atfdb.Unstableattr..ReadStrptrMaybe
+// Read fields of atfdb::Unstableattr from an ascii string.
+// The format of the string is an ssim Tuple
+bool atfdb::Unstableattr_ReadStrptrMaybe(atfdb::Unstableattr &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "atfdb.unstableattr") || algo::StripTypeTag(in_str, "atfdb.Unstableattr");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && Unstableattr_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- atfdb.Unstableattr..Print
+// print string representation of ROW to string STR
+// cfmt:atfdb.Unstableattr.String  printfmt:Tuple
+void atfdb::Unstableattr_Print(atfdb::Unstableattr& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "atfdb.unstableattr";
+
+    algo::Smallstr100_Print(row.unstableattr, temp);
+    PrintAttrSpaceReset(str,"unstableattr", temp);
 
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);

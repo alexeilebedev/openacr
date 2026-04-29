@@ -1,3 +1,7 @@
-acr.delete  dev.timefmt  timefmt:PSX_%Y%m%d        dirname:N   comment:"photoshop express format"
-acr.delete  dev.timefmt  timefmt:signal-%Y-%m-%d-  dirname:N   comment:"signal app format"
-acr.insert  dev.timefmt  timefmt:xyz               dirname:N   comment:""
+# start acr cmd:"$bindir/acr -insert -trunc -report:N"
+acr <- dev.timefmt timefmt:xyz
+# eof acr
+acr -> acr.delete  dev.timefmt  timefmt:PSX_%Y%m%d        dirname:N   comment:"photoshop express format"
+acr -> acr.delete  dev.timefmt  timefmt:signal-%Y-%m-%d-  dirname:N   comment:"signal app format"
+acr -> acr.insert  dev.timefmt  timefmt:xyz               dirname:N   comment:""
+# exit acr code:0

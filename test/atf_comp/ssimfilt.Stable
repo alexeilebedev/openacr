@@ -1,2 +1,7 @@
-report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
-dev.uname  uname:Linux    comment:"Ubuntu 17, CentOS 7.6, Debian"
+# start ssimfilt cmd:"$bindir/ssimfilt -format:stablefld"
+ssimfilt <- report.acr  n_select:0  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0
+ssimfilt <- dev.uname  uname:Linux    comment:"Ubuntu 17, CentOS 7.6, Debian"
+# eof ssimfilt
+ssimfilt -> report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
+ssimfilt -> dev.uname  uname:Linux    comment:"Ubuntu 17, CentOS 7.6, Debian"
+# exit ssimfilt code:0

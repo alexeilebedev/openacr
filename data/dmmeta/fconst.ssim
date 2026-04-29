@@ -107,6 +107,18 @@ dmmeta.fconst  fconst:command.abt.cache/ccache  value:4  comment:"Select ccache 
 dmmeta.fconst  fconst:command.atf_cmdline.fconst/high  value:0  comment:Cool
 dmmeta.fconst  fconst:command.atf_cmdline.fconst/medium  value:1  comment:So-so
 dmmeta.fconst  fconst:command.atf_cmdline.fconst/low  value:2  comment:Bad
+dmmeta.fconst  fconst:command.atf_comp.mode/run  value:0  comment:"Run tests and compare output"
+dmmeta.fconst  fconst:command.atf_comp.mode/capture  value:1  comment:"Re-capture test results"
+dmmeta.fconst  fconst:command.atf_comp.mode/covcheck  value:2  comment:"Check coverage against tgtcov"
+dmmeta.fconst  fconst:command.atf_comp.mode/covcapture  value:3  comment:"Capture new coverage percentages"
+dmmeta.fconst  fconst:command.atf_comp.mode/memcheck  value:4  comment:"Run under valgrind memcheck"
+dmmeta.fconst  fconst:command.atf_comp.mode/valgrind  value:5  comment:"Run under valgrind (general)"
+dmmeta.fconst  fconst:command.atf_comp.mode/mdbg  value:6  comment:"Debug single test under mdbg"
+dmmeta.fconst  fconst:command.atf_comp.mode/edit  value:7  comment:"Edit test definition (acr -t -e)"
+dmmeta.fconst  fconst:command.atf_comp.mode/editsource  value:8  comment:"Edit test function source code"
+dmmeta.fconst  fconst:command.atf_comp.mode/print  value:9  comment:"Print reference output"
+dmmeta.fconst  fconst:command.atf_comp.mode/printinput  value:10  comment:"Print test input lines"
+dmmeta.fconst  fconst:command.atf_comp.mode/del  value:12  comment:"Delete selected comptests"
 dmmeta.fconst  fconst:command.jkv.output/auto  value:0  comment:Automatic
 dmmeta.fconst  fconst:command.jkv.output/json  value:1  comment:"Json only"
 dmmeta.fconst  fconst:command.jkv.output/kv  value:2  comment:"Key-value only"

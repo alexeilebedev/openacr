@@ -351,7 +351,7 @@ void acr_compl::Main_Line() {
     _db.line = ch_FirstN(_db.cmdline.line,_db.point);
     // split to argv
     if (!Main_SplitLineToArgv()) {
-        prcat(debug,"Unfinished io redirect");
+        _db.parse_error << "acr_compl.check"<<Keyval("error","unfinished io redirect");
         return;
     };
 
@@ -362,7 +362,7 @@ void acr_compl::Main_Line() {
 
     // can't do anything without command
     if (word_EmptyQ()) {
-        prcat(debug,"Empty line"); // should never happen (command line test only)
+        _db.parse_error << "acr_compl.check"<<Keyval("error","empty line");
         return;
     }
     strptr cmd = StripDirName(word_qFind(0));
@@ -370,7 +370,7 @@ void acr_compl::Main_Line() {
     FFcmdline *fcmdline = ns ? ns->c_fcmdline : NULL;
     FCtype *ctype = fcmdline ? fcmdline->p_field->p_arg : NULL;
     if (!ctype) {
-        prcat(debug,"Unknown command"); // may happen if outdated completion exists on bash
+        _db.parse_error << "acr_compl.check"<<Keyval("error","unknown command")<<Keyval("value",cmd);
         return;
     }
 
@@ -426,7 +426,7 @@ void acr_compl::Main_Line() {
                     tempstr field_key = dmmeta::Field_Concat_ctype_name(ctype->ctype,_db.name);
                     FField *field = ind_cmd_field_name_Find(_db.name);
                     if (!field) {
-                        prcat(debug,"Unknown option: "<<_db.name);
+                        _db.parse_error << "acr_compl.check"<<Keyval("error","unknown option")<<Keyval("value",_db.name)<<Keyval("command",cmd);
                         return;
                     }
                     _db.need_value = !_db.exact && CmdArgValueRequiredQ(*field); // check for extra arg, only if no colon
@@ -634,15 +634,21 @@ void acr_compl::Main_Line() {
         // In most cases, unnamed parameters have regex or very specific structure,
         // so that they have to be specified by the user explicitly,
         // or they have reasonable default, so better to do not to specify them at all.
-        prlog(out);
+        _db.compl_output << out << "\n";
         prcat(debug,out);
     }ind_end;
     // Ugly hack: In some unpredictable situations bash readline treats list completion that yields
     // sole value as normal completion, i.e. completes instead of just display.
     // We add second completion for ambuiguity, so it will not have a chance to complete on its own.
     if (n_type == 1) {
-        prlog("value type");
+        _db.compl_output << "value type\n";
         prcat(debug,"value type");
+    }
+    if (!_db.cmdline.check) {
+        // print each completion on its own line, preserving trailing spaces
+        ind_beg(algo::Line_curs, l, _db.compl_output) {
+            prlog(l);
+        }ind_end;
     }
 }
 
@@ -658,6 +664,21 @@ void acr_compl::Main_Install(strptr prog) {
         }
     }ind_end;
     prlog(out);
+}
+
+// -----------------------------------------------------------------------------
+
+// Check command line validity.
+// Call Main_Line with -check mode; report any error from _db.parse_error.
+void acr_compl::Main_Check() {
+    _db.cmdline.line << " "; // trailing space so the last real word is fully validated
+    ch_RemoveAll(_db.cmdline.point);
+    _db.cmdline.point << ch_N(_db.cmdline.line);
+    Main_Line();
+    if (ch_N(_db.parse_error)) {
+        prerr(_db.parse_error);
+        algo_lib::_db.exit_code = 1;
+    }
 }
 
 // -----------------------------------------------------------------------------
@@ -724,10 +745,11 @@ void acr_compl::Main() {
     if (_db.cmdline.install) {
         Main_Install(algo_lib::_db.argv[0]);
     }
-    if (ch_N(_db.cmdline.line)) {
+    if (_db.cmdline.check) {
+        Main_Check();
+    } else if (ch_N(_db.cmdline.line)) {
         Main_Line();
-    }
-    if (!_db.cmdline.install && !ch_N(_db.cmdline.line)) {
+    } else if (!_db.cmdline.install) {
         prerr("You seem to be calling acr_compl interactively.");
         prerr("Normally, acr_compl is invoked implicitly by bash,");
         prerr("with COMP_LINE or COMP_POINT environment variables set.");

@@ -41,7 +41,7 @@ These ssimfiles are subsets of dmmeta.ns
 These ssimfiles reference dmmeta.ns
 
 * [amsdb.proctype via ns](/txt/ssimdb/amsdb/proctype.md) -  
-* [atfdb.comptest via target](/txt/ssimdb/atfdb/comptest.md) -  
+* [atfdb.comptest via target](/txt/ssimdb/atfdb/comptest.md) - A component test 
 * [atfdb.unittest via ns](/txt/ssimdb/atfdb/unittest.md) -  
 * [dmmeta.ctype via ns](/txt/ssimdb/dmmeta/ctype.md) - Parent namespace 
 * [dmmeta.dispatch via ns](/txt/ssimdb/dmmeta/dispatch.md) - Parent namespace 

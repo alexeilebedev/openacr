@@ -19,7 +19,6 @@ dev.target  target:atf_ci
 dev.target  target:atf_cmdline
 dev.target  target:atf_comp
 dev.target  target:atf_cov
-dev.target  target:atf_exp
 dev.target  target:atf_fuzz
 dev.target  target:atf_gcli
 dev.target  target:atf_nrun

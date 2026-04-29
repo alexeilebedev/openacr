@@ -1,27 +1,19 @@
 ## atf_comp - Algo Test Framework - Component test execution
+<a href="#atf_comp"></a>
 
+Procedural component test runner. Each component test is a C++ function
+loaded via gstatic from the `atfdb.comptest` table. Test functions use
+a process API to spawn subprocesses, feed them input, and capture output
+into a log. The log is compared against a reference file stored in
+`test/atf_comp/<testname>`.
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
 <!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
 &nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Running tests](#running-tests)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Managing executable path](#managing-executable-path)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Keeping target executables up to date](#keeping-target-executables-up-to-date)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Capturing test output](#capturing-test-output)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Checking untracked files](#checking-untracked-files)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Continue testing after failure](#continue-testing-after-failure)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Run tests under memory checker](#run-tests-under-memory-checker)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Run tests under profiler](#run-tests-under-profiler)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Measuring test coverage](#measuring-test-coverage)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Finding artifacts from last run](#finding-artifacts-from-last-run)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Printing testcase](#printing-testcase)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Editing testcase](#editing-testcase)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Inserting testcases](#inserting-testcases)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Normalizing testcases](#normalizing-testcases)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Debugging testcases](#debugging-testcases)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Examples](#examples)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Process API](#process-api)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Output filtering](#output-filtering)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Modes](#modes)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
 &#128196; [atf_comp - Internals](/txt/exe/atf_comp/internals.md)<br/>
@@ -37,21 +29,35 @@ Usage: atf_comp [[-comptest:]<regx>] [options]
     OPTION            TYPE    DFLT             COMMENT
     -in               string  "data"           Input directory or filename, - for stdin
     [comptest]        regx    "%"              Select comptest (SQL regex)
+    -mode             enum    run              Test mode (run|capture|covcheck|covcapture|memcheck|valgrind|mdbg|edit|editsource|print|printinput|del)
+                                                   run  Run tests and compare output
+                                                   capture  Re-capture test results
+                                                   covcheck  Check coverage against tgtcov
+                                                   covcapture  Capture new coverage percentages
+                                                   memcheck  Run under valgrind memcheck
+                                                   valgrind  Run under valgrind (general)
+                                                   mdbg  Debug single test under mdbg
+                                                   edit  Edit test definition (acr -t -e)
+                                                   editsource  Edit test function source code
+                                                   print  Print reference output
+                                                   printinput  Print test input lines
+                                                   del  Delete selected comptests
     -mdbg                                      (action) Run component test under debugger
     -run                      Y                (action) Run selected component tests
-    -capture                                   (action) Re-capture test results
+    -capture                                   Alias for -mode:capture
+    -ee                                        Alias for -mode:editsource
+    -e                                         Alias for -mode:edit
     -print                                     (action) Print testcase
+    -cfg              string  "release"        Configuration (determines bindir)
     -printinput                                (action) Print input of test case
-    -e                                         (action) Open selected testcases in an editor
+    -maxerr           int     3                Exit after this many errors
     -normalize                                 (action) Renumber and normalize tmsgs
     -covcapture                                (action) Capture new coverage percentages and save back
     -covcheck                                  (action) Check coverage percentages against tgtcov table
     -bindir           string  ""               Directory with binaries (default: build/cfg)
     -tempdir          string  "temp/atf_comp"  Temp directory
     -testdir          string  "test/atf_comp"  Test data directory
-    -cfg              string  "release"        Set config
     -check_untracked          Y                Check for untracked file before allowing test to run
-    -maxerr           int     3                Exit after this many errors
     -build                                     Build given cfg before test
     -memcheck                                  Run under memory checker (valgrind)
     -force                                     (With -memcheck) run suppressed memcheck
@@ -75,245 +81,58 @@ Usage: atf_comp [[-comptest:]<regx>] [options]
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Syntax -->
 
-### Description
-<a href="#description"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Description -->
-
-Unlike unit test, which deals with source code testing,
-component test deals with black-box testing of ready-made
-software component, which is an executable target.
-
-Atf_comp is a test driver, which runs target executable,
-feeds it with input, and gathers output to a file,
-then compares file content with canned one.
-
-ams targets support expect-like interactive mode, waiting for specific
-output before accepting additional input. This is achieved with t2.ExpectMsg message.
-
-Atf_comp facilitates various development activities
-running tests in companion with other tools (NOT YET ALL IMPLEMENTED):
-- debugging;
-- memory checking;
-- profiling;
-- coverage measurement;
-- automatic fuzzing.
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Description -->
-
-### Running tests
-<a href="#running-tests"></a>
-
-To run all tests, simply do:
-```
-atf_comp
-```
-
-To run specific test use SQL pattern for comptest, for example, run all tests for target *target*:
-
-```
-atf_comp target.%
-```
-
-### Managing executable path
-<a href="#managing-executable-path"></a>
-
-Without arguments, atf_comp always runs release targets under `build/release` directory.
-In order to change configuration use `-cfg` option,
-e.g. to test debug executables under `build/debug`, use:
-
-```
-atf_comp -cfg:debug
-```
-
-In order to specify completely different directory use `-bindir` option, e.g.:
-```
-atf_comp -bindir:other_dir
-```
-
-### Keeping target executables up to date
-<a href="#keeping-target-executables-up-to-date"></a>
-
-In order to ensure that target executabes are up-to-date, use `-ood` and/or `-build` options.
-Once specified, atf_comp runs abt with given options and configuration selected with `-cfg`.
-
-### Capturing test output
-<a href="#capturing-test-output"></a>
-
-For first run of newly developed testcase or rewriting existing expected output file
-(to be compared with) from actual run, use `-capture`.
-Outputs are kept in files named `test/atf_comp/<COMPTEST>.out`.
-The first line of each output file is a command that can be used to reproduce the rest of the file.
-
-### Checking untracked files
-<a href="#checking-untracked-files"></a>
-
-By default, atf_comp check untracked files before runing tests.
-This can be avoided with `-check-untracked:N`.
-
-### Continue testing after failure
-<a href="#continue-testing-after-failure"></a>
-
-By default, Atf_comp stops testing after first failed test.
-In order to continue testing up to N failed tests,
-specify it with `-maxerr`, e.g.: `-maxerr:10` - stop after 10 test failures.
-
-### Run tests under memory checker
-<a href="#run-tests-under-memory-checker"></a>
-
-Atf_cov supports valgrind memory checker, use `-memcheck`:
-
-```
-atf_cov -memcheck
-```
-
-Once memory errors have been detected, they are displayed, and test failed.
-
-To suppress memcheck for particular comptest, set `memcheck:N`.
-To run suppresed memcheck, use `-memcheck -force`.
-
-### Run tests under profiler
-<a href="#run-tests-under-profiler"></a>
-
-Atf_cov supports callgrind profiler, use `-callgrind`:
-
-```
-atf_cov -callgrind
-```
-
-In this mode, callgrind output file is generated. To open callgrind file,
-use GUI analyzer.
-
-On Linux, run **KCacheGrind**:
-
-```
-kcachegrind temp/atf_comp/comptest.callgrind.out
-```
-
-On MacOS, download output file and run **QCacheGrind**
-
-```
-qcachegrind path_to/comptest.callgrind.out
-```
-
-Replace *comptest* with comptest id.
-Replace *path_to* with the actual file location.
-
-### Measuring test coverage
-<a href="#measuring-test-coverage"></a>
-
-When specified `-cfg coverage`, atf_comp automatically runs tests under atf_cov,
-with dedicated coverage directory for each comtest.
-After all tests have been run, it merges data from all runs, and generates results on `temp/cov.d`.
-
-For details refer to atf_cov section.
-
-### Finding artifacts from last run
-<a href="#finding-artifacts-from-last-run"></a>
-
-One may find test artifacts from last run under directory `temp/atf_comp/`.
-This is useful for debugging, and for achiving CI job results.
-
-Files are:
-- *comptest*.in - test input file (unfiltered)
-- *comptest*.out - test output file (unfiltered)
-- *comptest*.out.filt - test output file (filtered)
-- *comptest*.memcheck.log - valgrind memcheck log
-- *comptest*.callgrind.log - callgrind log
-- *comptest*.callgrind.out - callgrind output file (to be loaded by analyzer)
-- *comptest*.cov.d - coverage data directory (comptest)
-- cov.d - coverage data directory (merged)
-
-File names are prefixed with test case name (*comptest*).
-
-**NOTE:**
-
-It is not possible to combine several tools in singe run, and thus not all files may be present.
-
-### Printing testcase
-<a href="#printing-testcase"></a>
-
-Use `-print` to print a testcase to stdout in a human-readable way (display format).
-Use `-printinput` to print testcase input,
-which can be fed directly to the target process using bash pipe.
-
-### Editing testcase
-<a href="#editing-testcase"></a>
-
-Use `-e` to open selected testcases in an editor, using `atf_comp` display format.
-Any changes made in the editor are read, applied and saved back to the source dataset.
-
-### Inserting testcases
-<a href="#inserting-testcases"></a>
-
-New testcases in display format can be inserted into the dataset with `atf_comp -i`.
-
-### Normalizing testcases
-<a href="#normalizing-testcases"></a>
-
-Testcases can be renumbered, and all messages read back (using `lib_ctype`), and written
-back in normalized field order, using `atf_comp -normalize`.
-This runs in `atf_ci comptest` to ensure typos, unknown fields, unknown messages
-don't make it into the comptest database.
-
-### Debugging testcases
-<a href="#debugging-testcases"></a>
-
-Testcases can be debugged by running the target command under `gdb`.
-To do this, invoked `atf_comp` with `-mdbg` option. 
-
-The command line produced by atf_comp can be used for stand-alone testing,
-omitting atf_comp altogether.
-Use `-v` to see the command line being generated.
-
-### Examples
-<a href="#examples"></a>
-
-#### Testcase
-<a href="#testcase"></a>
-
-Testcases are described on `atfdb.comptest` table.
-
-Test id format is:
-
-*target*.*testname*
-
-where *target* is the name of the target (executable) to test, *testname* is the name of test case for this target.
-
-One record corresponds to one run of target executable.
-
-Positive value for *timeout* parameter sets the timeout for this test.
-If target executable does not finish in time, it will be killed and test failed then.
-
-*memcheck* parameter allows suppressing memory checker for this test case.
-
-**NOTE:**
-
-For stability, recommended timeout value shall be set to 2x..3x from elapsed time
-for typical run of release target without any tool.
-Running instrumented target or running in companion with tool may greatly increase elapsed time,
-for example, debug executable slows down by factor of 3..4, memory checker - 20..30.
-Atf_comp will adjust timeout automatically depending on selected configuration and selected tool.
-
-#### Command line arguments for target executable
-<a href="#command-line-arguments-for-target-executable"></a>
-
-Command line arguments for target executable being run are placed on the table `atfdb.targs`
-
-#### Test script
-<a href="#test-script"></a>
-
-Test script is described on `atf.tmsg` table.
-
-Messages are ordered with integer rank.
-
-#### Filtering output
-<a href="#filtering-output"></a>
-
-Test output may contain time-dependent or uninitersting data, such as clock values or heartbeats.
-One may filter it out with `atfdb.tfilt` record. Filter expression is runnable OS command,
-which accepts unfilterred data on stdin, and puts filtered data on stdout.
-Unix commands like sed, awk, grep and cat fit.
-For complex filter, dedicated executable is possible.
+### Process API
+<a href="#process-api"></a>
+
+Each test function uses these calls to manage child processes:
+
+- `ProcStart(cmd)` -- spawn a subprocess via `bash -c`. Apply $-substitution
+  for variables like `$bindir`, `$tempdir`. Derive a unique process
+  name from the command basename. Return a reference to FProc.
+- `ProcWrite(proc, msg)` -- write a line to the process stdin.
+- `ProcWriteEof(proc)` -- close stdin (signal EOF to the child).
+- `ProcRead(proc, until)` -- read stdout until `until` appears (or EOF if empty).
+  Use poll with 1-second timeout; fail the test if the comptest timeout is exceeded.
+  Save data past the match line into a readahead buffer for the next ProcRead.
+- `ProcWait(proc)` -- close stdin, drain stdout, waitpid.
+- `ProcKill(proc, signal)` -- send signal to the child process.
+
+All process output is logged as `<procname> -> <line>`, input as `<procname> <- <line>`.
+FProc holds a `command::bash_proc` field; destroying FProc kills the subprocess.
+
+### Output filtering
+<a href="#output-filtering"></a>
+
+Two mechanisms stabilize non-deterministic output before comparison:
+
+**unstableattr** (`atfdb.unstableattr`): mask ssim tuple attributes whose values
+vary between runs (timestamps, random ports, UUIDs). When `stablefld:Y` is set
+on a comptest, each output line is parsed as an ssim tuple and matching attributes
+are replaced with `***`. Entries can be exact (`samp_meng.NewOrderMsg.time`) or
+wildcard (`%.timestamp`, `%.port`). The lookup check both `<head>.<attr>` and
+`%.<attr>`.
+
+**tfilt** (`atfdb.tfilt`): per-test output filter applied once on the complete log.
+Specify a shell command that reads stdin and write stdout, e.g.
+`sed -E -f test/filt.sed`. Use for non-ssim patterns (free-text timestamps,
+IP:port in log messages, line deletions). The filter runs in both capture and
+run modes.
+
+### Modes
+<a href="#modes"></a>
+
+    atf_comp 'acr.%'                  # run all acr tests, compare with reference
+    atf_comp acr.BadInsert -capture   # re-capture reference output
+    atf_comp acr.BadInsert -v         # verbose: print log as it's generated
+    atf_comp acr.BadInsert -e         # edit test definition (acr comptest -t -e)
+    atf_comp acr.BadInsert -ee        # edit test function source (src_func -e)
+    atf_comp acr.BadInsert -mode:mdbg # debug single test under mdbg
+    atf_comp -mode:print 'acr.%'     # print reference files
+    atf_comp -mode:printinput 'acr.%' # print input lines only
+    atf_comp -mode:memcheck           # run under valgrind memcheck
+    atf_comp -mode:valgrind           # run under valgrind (general)
+    atf_comp -mode:covcheck           # check coverage against tgtcov
+    atf_comp -mode:covcapture         # capture new coverage percentages
 
 ### Options
 <a href="#options"></a>
@@ -325,23 +144,35 @@ For complex filter, dedicated executable is possible.
 #### -comptest -- Select comptest (SQL regex)
 <a href="#-comptest"></a>
 
+#### -mode -- Test mode
+<a href="#-mode"></a>
+
 #### -mdbg -- (action) Run component test under debugger
 <a href="#-mdbg"></a>
 
 #### -run -- (action) Run selected component tests
 <a href="#-run"></a>
 
-#### -capture -- (action) Re-capture test results
+#### -capture -- Alias for -mode:capture
 <a href="#-capture"></a>
+
+#### -ee -- Alias for -mode:editsource
+<a href="#-ee"></a>
+
+#### -e -- Alias for -mode:edit
+<a href="#-e"></a>
 
 #### -print -- (action) Print testcase
 <a href="#-print"></a>
 
+#### -cfg -- Configuration (determines bindir)
+<a href="#-cfg"></a>
+
 #### -printinput -- (action) Print input of test case
 <a href="#-printinput"></a>
 
-#### -e -- (action) Open selected testcases in an editor
-<a href="#-e"></a>
+#### -maxerr -- Exit after this many errors
+<a href="#-maxerr"></a>
 
 #### -normalize -- (action) Renumber and normalize tmsgs
 <a href="#-normalize"></a>
@@ -361,14 +192,8 @@ For complex filter, dedicated executable is possible.
 #### -testdir -- Test data directory
 <a href="#-testdir"></a>
 
-#### -cfg -- Set config
-<a href="#-cfg"></a>
-
 #### -check_untracked -- Check for untracked file before allowing test to run
 <a href="#-check_untracked"></a>
-
-#### -maxerr -- Exit after this many errors
-<a href="#-maxerr"></a>
 
 #### -build -- Build given cfg before test
 <a href="#-build"></a>
@@ -418,23 +243,8 @@ For complex filter, dedicated executable is possible.
 |Ssimfile|Comment|
 |---|---|
 |[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
-|[amcdb.bltin](/txt/ssimdb/amcdb/bltin.md)|Specify properties of a C built-in type|
-|[dmmeta.cdflt](/txt/ssimdb/dmmeta/cdflt.md)|Specify default value for single-value types that lack fields|
-|[dmmeta.cfmt](/txt/ssimdb/dmmeta/cfmt.md)|Specify options for printing/reading ctypes into multiple formats|
-|[dmmeta.cppfunc](/txt/ssimdb/dmmeta/cppfunc.md)|Value of field provided by this expression|
-|[dmmeta.ctype](/txt/ssimdb/dmmeta/ctype.md)|Struct|
-|[dmmeta.fconst](/txt/ssimdb/dmmeta/fconst.md)|Specify enum value (integer + string constant) for a field|
-|[dmmeta.field](/txt/ssimdb/dmmeta/field.md)|Specify field of a struct|
-|[dmmeta.ftuple](/txt/ssimdb/dmmeta/ftuple.md)||
-|[dmmeta.sqltype](/txt/ssimdb/dmmeta/sqltype.md)|Mapping of ctype -> SQL expression|
-|[dmmeta.ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|File with ssim tuples|
-|[dmmeta.substr](/txt/ssimdb/dmmeta/substr.md)|Specify that the field value is computed from a substring of another field|
-|[dev.unstablefld](/txt/ssimdb/dev/unstablefld.md)|Fields that should be stripped from component test output because they contain timestamps etc.|
-|[atfdb.comptest](/txt/ssimdb/atfdb/comptest.md)||
-|[atfdb.targs](/txt/ssimdb/atfdb/targs.md)||
 |[atfdb.tfilt](/txt/ssimdb/atfdb/tfilt.md)||
-|[atfdb.tifilt](/txt/ssimdb/atfdb/tifilt.md)|Input filter for component test|
-|[atfdb.tmsg](/txt/ssimdb/atfdb/tmsg.md)||
+|[atfdb.unstableattr](/txt/ssimdb/atfdb/unstableattr.md)||
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
 

@@ -1,1 +1,4 @@
--adbl:
+# start acr_compl cmd:"$bindir/acr_compl -line:'atf_cmdline -astr: -anum: '"
+# eof acr_compl
+acr_compl -> -adbl:
+# exit acr_compl code:0

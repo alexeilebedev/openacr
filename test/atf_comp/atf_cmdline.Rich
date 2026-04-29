@@ -1,30 +1,33 @@
-astr:-ASTR
-anum:-200
-adbl:0.0002
-aflag:Y
-str:-STR
-num:12
-dbl:-0.0003
-flag:Y
-dstr:-DSTR
-dnum:-45
-ddbl:-0.123
-dflag:N
-mstr.0:-MSTR1
-mstr.1:-MSTR2
-mstr.2:-MSTR3
-mnum.0:-1
-mnum.1:-2
-mnum.2:-3
-mdbl.0:-1.1
-mdbl.1:-2.2
-mdbl.2:-3.2
-amnum.0:-100
-amnum.1:-200
-amnum.2:-300
-fconst:medium
-cconst:May
-dregx.expr:%
-dpkey:
-verbose:0
-debug:0
+# start atf_cmdline cmd:"$bindir/atf_cmdline -str -STR -num 12 -dbl -0.0003 -flag -dstr -DSTR -dnum -45 -ddbl -0.123 -dflag:N -mstr -MSTR1 -mstr -MSTR2 -mstr -MSTR3 -mnum -1 -mnum -2 -mnum -3 -mdbl -1.1 -mdbl -2.2 -mdbl -3.2 -fconst medium -cconst May -- -ASTR -200 0.0002 Y -100 -200 -300"
+# eof atf_cmdline
+atf_cmdline -> astr:-ASTR
+atf_cmdline -> anum:-200
+atf_cmdline -> adbl:0.0002
+atf_cmdline -> aflag:Y
+atf_cmdline -> str:-STR
+atf_cmdline -> num:12
+atf_cmdline -> dbl:-0.0003
+atf_cmdline -> flag:Y
+atf_cmdline -> dstr:-DSTR
+atf_cmdline -> dnum:-45
+atf_cmdline -> ddbl:-0.123
+atf_cmdline -> dflag:N
+atf_cmdline -> mstr.0:-MSTR1
+atf_cmdline -> mstr.1:-MSTR2
+atf_cmdline -> mstr.2:-MSTR3
+atf_cmdline -> mnum.0:-1
+atf_cmdline -> mnum.1:-2
+atf_cmdline -> mnum.2:-3
+atf_cmdline -> mdbl.0:-1.1
+atf_cmdline -> mdbl.1:-2.2
+atf_cmdline -> mdbl.2:-3.2
+atf_cmdline -> amnum.0:-100
+atf_cmdline -> amnum.1:-200
+atf_cmdline -> amnum.2:-300
+atf_cmdline -> fconst:medium
+atf_cmdline -> cconst:May
+atf_cmdline -> dregx.expr:%
+atf_cmdline -> dpkey:
+atf_cmdline -> verbose:0
+atf_cmdline -> debug:0
+# exit atf_cmdline code:0

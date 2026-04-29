@@ -255,3 +255,20 @@ struct move { // orgfile.move
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Imdb -->
 
+### Tests
+<a href="#tests"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Tests -->
+The following component tests are defined for `orgfile`.
+These can be executed with `atf_comp <comptest> -v`
+|Comptest|Comment|
+|---|---|
+|[orgfile.ConsumeInput](/test/atf_comp/orgfile.ConsumeInput)|Consume ssim input|
+|[orgfile.Dedup](/test/atf_comp/orgfile.Dedup)|Dedup identical files|
+|[orgfile.DedupPathregx](/test/atf_comp/orgfile.DedupPathregx)|Dedup with path regex preference|
+|[orgfile.Hash](/test/atf_comp/orgfile.Hash)|Check sha1 hashing|
+|[orgfile.MoveByDate](/test/atf_comp/orgfile.MoveByDate)|Detect target path by date parsed from filename|
+|[orgfile.MoveDot](/test/atf_comp/orgfile.MoveDot)|Move to . detects directory by filesystem|
+|[orgfile.MoveNoop](/test/atf_comp/orgfile.MoveNoop)|Move to same dir is a no-op|
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Tests -->
+

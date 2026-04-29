@@ -25,6 +25,7 @@ Usage: acr_compl [options]
     -type       string  "9"     Simulates COMP_TYPE (debug)
     -install                    Produce bash commands to install the handler
     -debug_log  string  ""      Log file for debug information, overrides ACR_COMPL_DEBUG_LOG
+    -check                      Check command line validity
     -verbose    flag            Verbosity level (0..255); alias -v; cumulative
     -debug      flag            Debug level (0..255); alias -d; cumulative
     -help                       Print help and exit; alias -h
@@ -59,6 +60,9 @@ Usage: acr_compl [options]
 
 #### -debug_log -- Log file for debug information, overrides ACR_COMPL_DEBUG_LOG
 <a href="#-debug_log"></a>
+
+#### -check -- Check command line validity
+<a href="#-check"></a>
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
 

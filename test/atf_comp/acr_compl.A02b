@@ -1,0 +1,3 @@
+# start acr_compl cmd:"$bindir/acr_compl -line:'atf_cmdline -- -STR '"
+# eof acr_compl
+# exit acr_compl code:0

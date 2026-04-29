@@ -1,2 +1,5 @@
-garden.flower:
-garden.fruit:
+# start acr_compl cmd:"$bindir/acr_compl -schema:test/acr_compl.schema.ssim -data:test/acr_compl.data.ssim -line:'acr f'"
+# eof acr_compl
+acr_compl -> garden.flower:
+acr_compl -> garden.fruit:
+# exit acr_compl code:0

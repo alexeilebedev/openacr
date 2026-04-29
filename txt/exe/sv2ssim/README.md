@@ -87,11 +87,11 @@ dmmeta.svtype  ctype:u64               maxwid:64          fixedwid1:0  fixedwid2
 
 ```
 inline-command: acr comptest:sv2ssim.%
-atfdb.comptest  comptest:sv2ssim.Convert1         timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:""
-atfdb.comptest  comptest:sv2ssim.Convert1Signed   timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:""
-atfdb.comptest  comptest:sv2ssim.Convert2         timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:""
-atfdb.comptest  comptest:sv2ssim.Convert2Tsv      timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:""
-atfdb.comptest  comptest:sv2ssim.UniqueFieldName  timeout:10  memcheck:Y  coverage:Y  exit_code:0  ncore:1  repeat:1  comment:""
+atfdb.comptest  comptest:sv2ssim.Convert1         timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:""
+atfdb.comptest  comptest:sv2ssim.Convert1Signed   timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:""
+atfdb.comptest  comptest:sv2ssim.Convert2         timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:""
+atfdb.comptest  comptest:sv2ssim.Convert2Tsv      timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:""
+atfdb.comptest  comptest:sv2ssim.UniqueFieldName  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:""
 report.acr  n_select:5  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0
 ```
 

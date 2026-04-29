@@ -1,3 +1,7 @@
-stdin:1: acr.insert  ctype:dmmeta.Ctype  attr:ctype  warning:"missing primary key attribute"
-report.acr_check  records:0  errors:0
-report.acr  n_select:0  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0
+# start acr cmd:"$bindir/acr -insert -check"
+acr <- dmmeta.ctype
+# eof acr
+acr -> stdin:1: acr.insert  ctype:dmmeta.Ctype  attr:ctype  warning:"missing primary key attribute"
+acr -> report.acr_check  records:0  errors:0
+acr -> report.acr  n_select:0  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0
+# exit acr code:0

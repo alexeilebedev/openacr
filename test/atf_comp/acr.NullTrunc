@@ -1,1 +1,4 @@
-report.acr  n_select:0  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0
+# start acr cmd:"$bindir/acr ns -report:N | $bindir/acr -trunc -insert"
+# eof acr
+acr -> report.acr  n_select:0  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0
+# exit acr code:0

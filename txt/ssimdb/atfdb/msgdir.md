@@ -15,12 +15,3 @@
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Attributes -->
 
-### Related
-<a href="#related"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Related -->
-These ssimfiles reference atfdb.msgdir
-
-* [atfdb.tmsg via dir](/txt/ssimdb/atfdb/tmsg.md) -  
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Related -->
-

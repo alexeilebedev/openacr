@@ -55,6 +55,7 @@ const char *acr_compl_help =
 "    -type       string  \"9\"     Simulates COMP_TYPE (debug)\n"
 "    -install                    Produce bash commands to install the handler\n"
 "    -debug_log  string  \"\"      Log file for debug information, overrides ACR_COMPL_DEBUG_LOG\n"
+"    -check                      Check command line validity\n"
 "    -verbose    flag            Verbosity level (0..255); alias -v; cumulative\n"
 "    -debug      flag            Debug level (0..255); alias -d; cumulative\n"
 "    -help                       Print help and exit; alias -h\n"
@@ -3448,6 +3449,8 @@ void acr_compl::FDb_Init() {
         complsource_first    += 1ULL<<i;
     }
     _db.is_data_dir = bool(false);
+    _db.parse_error = algo::strptr("");
+    _db.compl_output = algo::strptr("");
 
     acr_compl::InitReflection();
 }

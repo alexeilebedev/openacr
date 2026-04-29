@@ -1,7 +1,8 @@
-acr.delete  dev.gitfile  gitfile:cpp/acr/git.cpp
-
-acr.delete  dev.targsrc  targsrc:acr/cpp/acr/git.cpp  comment:"Git triggers"
-# acr output script
-git rm --force cpp/acr/git.cpp
-
-report.acr  n_select:2  n_insert:0  n_delete:2  n_ignore:0  n_update:0  n_file_mod:0
+# start acr cmd:"$bindir/acr gitfile:cpp/acr/git.cpp -del -g"
+# eof acr
+acr -> acr.delete  dev.gitfile  gitfile:cpp/acr/git.cpp
+acr -> acr.delete  dev.targsrc  targsrc:acr/cpp/acr/git.cpp  comment:"Git triggers"
+acr -> # acr output script
+acr -> git rm --force cpp/acr/git.cpp
+acr -> report.acr  n_select:2  n_insert:0  n_delete:2  n_ignore:0  n_update:0  n_file_mod:0
+# exit acr code:0

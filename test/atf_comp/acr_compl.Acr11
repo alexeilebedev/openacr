@@ -1,1 +1,9 @@
-peach 
+# start acr_compl cmd:"$bindir/acr_compl -schema:test/acr_compl.schema.ssim -data:- -line:'acr garden.fruit:pe'"
+acr_compl <- garden.flower  flower:rose
+acr_compl <- garden.flower  flower:tulip
+acr_compl <- garden.fruit  fruit:apple
+acr_compl <- garden.fruit  fruit:plum
+acr_compl <- garden.fruit  fruit:peach
+# eof acr_compl
+acr_compl -> peach 
+# exit acr_compl code:0

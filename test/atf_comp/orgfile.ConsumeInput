@@ -1,0 +1,4 @@
+# start echo cmd:"echo 'orgfile.move pathname:xxx/yyy tgtfile:y' | orgfile"
+# eof echo
+echo -> orgfile.move  pathname:xxx/yyy  tgtfile:y  comment:"original not found"
+# exit echo code:0

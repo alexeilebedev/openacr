@@ -1,13 +1,16 @@
-<EMPTY>
-acr.FDb
-algo.Smallstr50
-algo.cstring
-algo_lib.Cmdline
-algo_lib.FDb
-atf_cmdline.FDb
-command.acr
-command.atf_cmdline
-dmmeta.Ctype
-dmmeta.Ssimfile
-garden.Flower
-garden.Fruit
+# start acr_compl cmd:"$bindir/acr_compl -schema:test/acr_compl.schema.ssim -data:test/acr_compl.schema.ssim -line:'atf_cmdline -dregx ' -type:63"
+# eof acr_compl
+acr_compl -> <EMPTY>
+acr_compl -> acr.FDb
+acr_compl -> algo.Smallstr50
+acr_compl -> algo.cstring
+acr_compl -> algo_lib.Cmdline
+acr_compl -> algo_lib.FDb
+acr_compl -> atf_cmdline.FDb
+acr_compl -> command.acr
+acr_compl -> command.atf_cmdline
+acr_compl -> dmmeta.Ctype
+acr_compl -> dmmeta.Ssimfile
+acr_compl -> garden.Flower
+acr_compl -> garden.Fruit
+# exit acr_compl code:0

@@ -18,7 +18,6 @@ dmmeta.fcmdline  field:atf_ci.FDb.cmdline  read:Y  basecmdline:algo_lib.FDb.cmdl
 dmmeta.fcmdline  field:atf_cmdline.FDb.cmdline  read:Y  basecmdline:algo_lib.FDb.cmdline  comment:""
 dmmeta.fcmdline  field:atf_comp.FDb.cmdline  read:Y  basecmdline:algo_lib.FDb.cmdline  comment:""
 dmmeta.fcmdline  field:atf_cov.FDb.cmdline  read:Y  basecmdline:algo_lib.FDb.cmdline  comment:""
-dmmeta.fcmdline  field:atf_exp.FDb.cmdline  read:Y  basecmdline:algo_lib.FDb.cmdline  comment:""
 dmmeta.fcmdline  field:atf_fuzz.FDb.cmdline  read:Y  basecmdline:algo_lib.FDb.cmdline  comment:""
 dmmeta.fcmdline  field:atf_gcli.FDb.cmdline  read:Y  basecmdline:algo_lib.FDb.cmdline  comment:""
 dmmeta.fcmdline  field:atf_nrun.FDb.cmdline  read:Y  basecmdline:algo_lib.FDb.cmdline  comment:""

@@ -1,2 +1,9 @@
-stmt1  or_test:3
-stmt2  and_test:3
+# start aqlite cmd:"$bindir/aqlite -in:- \"select count(*) as or_test from field where ns = 'dmmeta' OR arg like 'algo.cstr%'; select count(*) as and_test from field where ns = 'dmmeta' AND reftype = 'Val'\""
+aqlite <- dmmeta.ctype  ctype:dmmeta.TestConstraint     comment:"Test ctype for constraint combinations"
+aqlite <- dmmeta.field  field:dmmeta.TestConstraint.id    arg:i32          reftype:Val   dflt:""  comment:"ID field"
+aqlite <- dmmeta.field  field:dmmeta.TestConstraint.name  arg:algo.cstring reftype:Val   dflt:""  comment:"Name"
+aqlite <- dmmeta.field  field:dmmeta.TestConstraint.flag  arg:i32          reftype:Val   dflt:"0" comment:"Flag"
+# eof aqlite
+aqlite -> stmt1  or_test:0
+aqlite -> stmt2  and_test:0
+# exit aqlite code:0

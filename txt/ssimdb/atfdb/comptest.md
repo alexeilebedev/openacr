@@ -1,4 +1,4 @@
-## atfdb.comptest -
+## atfdb.comptest - A component test
 
 
 ### Attributes
@@ -19,8 +19,7 @@ italicised fields: *target, testname* are [**fldfunc**](/txt/ssim.md#fldfunc) fi
 |memcheck|bool|[Val](/txt/exe/amc/reftypes.md#val)|true||
 |coverage|bool|[Val](/txt/exe/amc/reftypes.md#val)|true||
 |exit_code|u8|[Val](/txt/exe/amc/reftypes.md#val)||Exit code to check|
-|ncore|i32|[Val](/txt/exe/amc/reftypes.md#val)|1||
-|repeat|i32|[Val](/txt/exe/amc/reftypes.md#val)|1|Number of times to repeat the test|
+|stablefld|bool|[Val](/txt/exe/amc/reftypes.md#val)||Replace unstable fields with ***|
 |comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Attributes -->
@@ -30,27 +29,15 @@ italicised fields: *target, testname* are [**fldfunc**](/txt/ssim.md#fldfunc) fi
 <!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Subsets -->
 These ssimfiles are subsets of atfdb.comptest
 
-* [atfdb.Targs](/txt/ssimdb/atfdb/targs.md) -  
 * [atfdb.Tfilt](/txt/ssimdb/atfdb/tfilt.md) -  
-* [atfdb.Tifilt](/txt/ssimdb/atfdb/tifilt.md) - Input filter for component test 
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Subsets -->
-
-### Related
-<a href="#related"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Related -->
-These ssimfiles reference atfdb.comptest
-
-* [atfdb.tmsg via comptest](/txt/ssimdb/atfdb/tmsg.md) -  
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Related -->
 
 ### Used In Commands
 <a href="#used-in-commands"></a>
 <!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:CmdlineUses -->
 
 * [atf_comp -comptest](/txt/exe/atf_comp/README.md) - Select comptest (SQL regex) 
-* [atf_exp -comptest](/txt/exe/atf_exp/README.md) - Component test name 
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:CmdlineUses -->
 

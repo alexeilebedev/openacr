@@ -1,9 +1,0 @@
-ams.ProcStartMsg  proc:acr  pty:N  cmd:"$bindir/acr -in:- %"
-ams.ProcMsg  proc:acr  payload:'dmmeta.ns  ns:testns  nstype:exe  license:GPL  comment:"test namespace"'
-ams.ProcEofMsg  proc:acr
-ams.ProcReadMsg  proc:acr  until:""
-ams.ProcStatusMsg  proc:acr  status:Running
-ams.ProcMsg  proc:acr  payload:'dmmeta.ns  ns:testns  nstype:exe  license:GPL  comment:"test namespace"'
-ams.ProcMsg  proc:acr  payload:"report.acr  n_select:1  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0"
-ams.ProcStatusMsg  proc:acr  status:"Exited: 0"
-ams.TerminateMsg

@@ -371,6 +371,8 @@ private:
 |acr_compl.FDb.falias|[acr_compl.FFalias](/txt/exe/acr_compl/internals.md#acr_compl-ffalias)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
 |acr_compl.FDb.complsource|[acr_compl.FComplsource](/txt/exe/acr_compl/internals.md#acr_compl-fcomplsource)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
 |acr_compl.FDb.is_data_dir|bool|[Val](/txt/exe/amc/reftypes.md#val)||Input is a directory of ssimfiles|
+|acr_compl.FDb.parse_error|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|""|Error from command line parsing|
+|acr_compl.FDb.compl_output|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|""|Collected completion output|
 
 #### Struct FDb
 <a href="#struct-fdb"></a>
@@ -435,6 +437,8 @@ struct FDb { // acr_compl.FDb: In-memory database for acr_compl
     acr_compl::FComplsource*   complsource_lary[32];               // level array
     i32                        complsource_n;                      // number of elements in array
     bool                       is_data_dir;                        //   false  Input is a directory of ssimfiles
+    algo::cstring              parse_error;                        //   ""  Error from command line parsing
+    algo::cstring              compl_output;                       //   ""  Collected completion output
     acr_compl::trace           trace;                              //
 };
 ```
@@ -829,6 +833,12 @@ These can be executed with `atf_comp <comptest> -v`
 |[acr_compl.BadOptColonSpace](/test/atf_comp/acr_compl.BadOptColonSpace)||
 |[acr_compl.BadOptSpace](/test/atf_comp/acr_compl.BadOptSpace)||
 |[acr_compl.Bare](/test/atf_comp/acr_compl.Bare)||
+|[acr_compl.CheckMultiOpt](/test/atf_comp/acr_compl.CheckMultiOpt)||
+|[acr_compl.CheckUnknownCmd](/test/atf_comp/acr_compl.CheckUnknownCmd)||
+|[acr_compl.CheckUnknownOpt](/test/atf_comp/acr_compl.CheckUnknownOpt)||
+|[acr_compl.CheckValid](/test/atf_comp/acr_compl.CheckValid)||
+|[acr_compl.CheckValidAnon](/test/atf_comp/acr_compl.CheckValidAnon)||
+|[acr_compl.CheckValidFlag](/test/atf_comp/acr_compl.CheckValidFlag)||
 |[acr_compl.DblColon](/test/atf_comp/acr_compl.DblColon)||
 |[acr_compl.DblColonList](/test/atf_comp/acr_compl.DblColonList)||
 |[acr_compl.DblSpace](/test/atf_comp/acr_compl.DblSpace)||

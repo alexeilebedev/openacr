@@ -24,7 +24,6 @@ dmmeta.ns  ns:atf_ci  nstype:exe  license:GPL  comment:"Normalization tests (see
 dmmeta.ns  ns:atf_cmdline  nstype:exe  license:GPL  comment:"Test tool for command line parsing"
 dmmeta.ns  ns:atf_comp  nstype:exe  license:GPL  comment:"Algo Test Framework - Component test execution"
 dmmeta.ns  ns:atf_cov  nstype:exe  license:GPL  comment:"Line coverage"
-dmmeta.ns  ns:atf_exp  nstype:exe  license:GPL  comment:"ATF expect"
 dmmeta.ns  ns:atf_fuzz  nstype:exe  license:GPL  comment:"Generator of bad inputs for targets"
 dmmeta.ns  ns:atf_gcli  nstype:exe  license:GPL  comment:"test harness for gcli"
 dmmeta.ns  ns:atf_nrun  nstype:exe  license:GPL  comment:"Run N subprocesses in parallel"

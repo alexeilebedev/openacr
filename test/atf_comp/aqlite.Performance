@@ -1,1 +1,4 @@
-stmt1  "'test'":test
+# start aqlite cmd:"$bindir/aqlite \"select distinct 'test' from field join ctype using(ctype)\""
+# eof aqlite
+aqlite -> stmt1  "'test'":test
+# exit aqlite code:0

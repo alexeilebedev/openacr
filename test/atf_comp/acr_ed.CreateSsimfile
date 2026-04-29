@@ -1,20 +1,22 @@
-set -e
-bin/acr  -query:'' -replace:Y -check:Y -selerr:N -write:Y -t:Y << EOF
-dmmeta.ctype  ctype:dmmeta.Xyz  comment:""
-dmmeta.field  field:dmmeta.Xyz.xyz  arg:algo.Smallstr50  reftype:Val  dflt:""  comment:""
-dmmeta.ssimfile  ssimfile:dmmeta.xyz  ctype:dmmeta.Xyz
-dmmeta.ssimsort  ssimfile:dmmeta.xyz  sortfld:dmmeta.Xyz.xyz  comment:""
-dmmeta.field  field:dmmeta.Xyz.comment  arg:algo.Comment  reftype:Val  dflt:""  comment:""
-dev.gitfile  gitfile:data/dmmeta/xyz.ssim
-dev.gitfile  gitfile:txt/ssimdb/dmmeta/xyz.md
-dev.readmefile  gitfile:txt/ssimdb/dmmeta/xyz.md  inl:N  sandbox:N  filter:""  comment:""
-dmmeta.cfmt  cfmt:dmmeta.Xyz.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
-EOF
-
-mkdir -p data/dmmeta/
-touch data/dmmeta/xyz.ssim
-git add data/dmmeta/xyz.ssim
-mkdir -p txt/ssimdb/dmmeta/
-touch txt/ssimdb/dmmeta/xyz.md
-git add txt/ssimdb/dmmeta/xyz.md
-bin/amc
+# start acr_ed cmd:"$bindir/acr_ed -create -ssimfile dmmeta.xyz"
+# eof acr_ed
+acr_ed -> set -e
+acr_ed -> bin/acr  -query:'' -replace:Y -check:Y -selerr:N -write:Y -t:Y << EOF
+acr_ed -> dmmeta.ctype  ctype:dmmeta.Xyz  comment:""
+acr_ed -> dmmeta.field  field:dmmeta.Xyz.xyz  arg:algo.Smallstr50  reftype:Val  dflt:""  comment:""
+acr_ed -> dmmeta.ssimfile  ssimfile:dmmeta.xyz  ctype:dmmeta.Xyz
+acr_ed -> dmmeta.ssimsort  ssimfile:dmmeta.xyz  sortfld:dmmeta.Xyz.xyz  comment:""
+acr_ed -> dmmeta.field  field:dmmeta.Xyz.comment  arg:algo.Comment  reftype:Val  dflt:""  comment:""
+acr_ed -> dev.gitfile  gitfile:data/dmmeta/xyz.ssim
+acr_ed -> dev.gitfile  gitfile:txt/ssimdb/dmmeta/xyz.md
+acr_ed -> dev.readmefile  gitfile:txt/ssimdb/dmmeta/xyz.md  inl:N  sandbox:N  filter:""  comment:""
+acr_ed -> dmmeta.cfmt  cfmt:dmmeta.Xyz.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+acr_ed -> EOF
+acr_ed -> mkdir -p data/dmmeta/
+acr_ed -> touch data/dmmeta/xyz.ssim
+acr_ed -> git add data/dmmeta/xyz.ssim
+acr_ed -> mkdir -p txt/ssimdb/dmmeta/
+acr_ed -> touch txt/ssimdb/dmmeta/xyz.md
+acr_ed -> git add txt/ssimdb/dmmeta/xyz.md
+acr_ed -> bin/amc
+# exit acr_ed code:0

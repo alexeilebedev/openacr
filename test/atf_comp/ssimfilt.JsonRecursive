@@ -1,3 +1,9 @@
-{"@type":"atf_amc.TypeTVal","j":33,"types":{"@type":"atf_amc.TypeS","types":1,"comment":"lkjljk"}}
-{"@type":"atf_amc.TypeTVal","j":22,"types":{"@type":"atf_amc.TypeS","types":2,"comment":"eryerty"}}
-{"@type":"atf_amc.TypeTVal","j":11,"types":{"@type":"atf_amc.TypeS","types":3,"comment":"asdf"}}
+# start ssimfilt cmd:"$bindir/ssimfilt -format json"
+ssimfilt <- atf_amc.TypeTVal j:33 types:'atf_amc.TypeS types:1 comment:"lkjljk"'
+ssimfilt <- atf_amc.TypeTVal j:22 types:'atf_amc.TypeS types:2 comment:"eryerty"'
+ssimfilt <- atf_amc.TypeTVal j:11 types:'atf_amc.TypeS types:3 comment:"asdf"'
+# eof ssimfilt
+ssimfilt -> {"@type":"atf_amc.TypeTVal","j":33,"types":{"@type":"atf_amc.TypeS","types":1,"comment":"lkjljk"}}
+ssimfilt -> {"@type":"atf_amc.TypeTVal","j":22,"types":{"@type":"atf_amc.TypeS","types":2,"comment":"eryerty"}}
+ssimfilt -> {"@type":"atf_amc.TypeTVal","j":11,"types":{"@type":"atf_amc.TypeS","types":3,"comment":"asdf"}}
+# exit ssimfilt code:0

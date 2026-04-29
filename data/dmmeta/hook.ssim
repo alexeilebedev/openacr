@@ -11,6 +11,7 @@ dmmeta.hook  field:atf_amc.FAmctest.step
 dmmeta.hook  field:atf_amc.FListtype.step
 dmmeta.hook  field:atf_amc.Hooktype.callback
 dmmeta.hook  field:atf_ci.FCitest.step
+dmmeta.hook  field:atf_comp.FComptest.step
 dmmeta.hook  field:atf_fuzz.FFuzzstrat.step
 dmmeta.hook  field:atf_unit.FUnittest.step
 dmmeta.hook  field:gcli.FGclicmd.step

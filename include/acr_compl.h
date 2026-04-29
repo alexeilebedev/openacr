@@ -76,6 +76,10 @@ namespace acr_compl { // update-hdr
     // Generate a script to install completion handler
     void Main_Install(strptr prog);
 
+    // Check command line validity.
+    // Call Main_Line with -check mode; report any error from _db.parse_error.
+    void Main_Check();
+
     // main routine
     //     (user-implemented function, prototype is in amc-generated header)
     // void Main(); // main:acr_compl
