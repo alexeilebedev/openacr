@@ -1,0 +1,4 @@
+dev.limittype  limittype:concentration  comment:"Maximum percentage in single instrument"
+dev.limittype  limittype:daily_pnl_loss  comment:"Maximum daily PnL loss (absolute value)"
+dev.limittype  limittype:gross_exposure  comment:"Maximum gross market value of positions"
+dev.limittype  limittype:net_exposure  comment:"Maximum net market value of positions"

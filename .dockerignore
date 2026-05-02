@@ -1,0 +1,12 @@
+build/
+temp/
+lock/
+.git
+.cache/
+.ccls-cache/
+.clangd
+.vscode/
+.openacr/
+*.o
+*.swp
+*~

@@ -97,6 +97,7 @@ dev.gitfile  gitfile:bin/normalize_loop
 dev.gitfile  gitfile:bin/open-link
 dev.gitfile  gitfile:bin/orgfile
 dev.gitfile  gitfile:bin/revert-executable
+dev.gitfile  gitfile:bin/risk_engine
 dev.gitfile  gitfile:bin/samp_make
 dev.gitfile  gitfile:bin/samp_meng
 dev.gitfile  gitfile:bin/samp_regx
@@ -447,6 +448,7 @@ dev.gitfile  gitfile:cpp/gen/mdbg_gen.cpp
 dev.gitfile  gitfile:cpp/gen/mysql2ssim_gen.cpp
 dev.gitfile  gitfile:cpp/gen/orgfile_gen.cpp
 dev.gitfile  gitfile:cpp/gen/report_gen.cpp
+dev.gitfile  gitfile:cpp/gen/risk_engine_gen.cpp
 dev.gitfile  gitfile:cpp/gen/samp_make_gen.cpp
 dev.gitfile  gitfile:cpp/gen/samp_meng_gen.cpp
 dev.gitfile  gitfile:cpp/gen/samp_regx_gen.cpp
@@ -514,6 +516,7 @@ dev.gitfile  gitfile:cpp/lib_ws/lib_ws.cpp
 dev.gitfile  gitfile:cpp/mdbg/mdbg.cpp
 dev.gitfile  gitfile:cpp/mysql2ssim.cpp
 dev.gitfile  gitfile:cpp/orgfile.cpp
+dev.gitfile  gitfile:cpp/risk_engine/risk_engine.cpp
 dev.gitfile  gitfile:cpp/samp_make/samp_make.cpp
 dev.gitfile  gitfile:cpp/samp_meng/samp_meng.cpp
 dev.gitfile  gitfile:cpp/samp_regx/samp_regx.cpp
@@ -565,6 +568,7 @@ dev.gitfile  gitfile:data/dev/copyright.ssim
 dev.gitfile  gitfile:data/dev/covfile.ssim
 dev.gitfile  gitfile:data/dev/covline.ssim
 dev.gitfile  gitfile:data/dev/covtarget.ssim
+dev.gitfile  gitfile:data/dev/cpty.ssim
 dev.gitfile  gitfile:data/dev/edaction.ssim
 dev.gitfile  gitfile:data/dev/edacttype.ssim
 dev.gitfile  gitfile:data/dev/gitfile.ssim
@@ -572,7 +576,10 @@ dev.gitfile  gitfile:data/dev/gitinfo.ssim
 dev.gitfile  gitfile:data/dev/hilite.ssim
 dev.gitfile  gitfile:data/dev/htmlentity.ssim
 dev.gitfile  gitfile:data/dev/include.ssim
+dev.gitfile  gitfile:data/dev/instrtype.ssim
+dev.gitfile  gitfile:data/dev/instrument.ssim
 dev.gitfile  gitfile:data/dev/license.ssim
+dev.gitfile  gitfile:data/dev/limittype.ssim
 dev.gitfile  gitfile:data/dev/linelim.ssim
 dev.gitfile  gitfile:data/dev/mdmark.ssim
 dev.gitfile  gitfile:data/dev/mdsection.ssim
@@ -583,9 +590,11 @@ dev.gitfile  gitfile:data/dev/opt_type.ssim
 dev.gitfile  gitfile:data/dev/package.ssim
 dev.gitfile  gitfile:data/dev/pkgdep.ssim
 dev.gitfile  gitfile:data/dev/pkgkey.ssim
+dev.gitfile  gitfile:data/dev/position.ssim
 dev.gitfile  gitfile:data/dev/prototransport.ssim
 dev.gitfile  gitfile:data/dev/readmefile.ssim
 dev.gitfile  gitfile:data/dev/readmesort.ssim
+dev.gitfile  gitfile:data/dev/risklimit.ssim
 dev.gitfile  gitfile:data/dev/rpm.ssim
 dev.gitfile  gitfile:data/dev/sandbox.ssim
 dev.gitfile  gitfile:data/dev/sbpath.ssim
@@ -943,6 +952,8 @@ dev.gitfile  gitfile:include/gen/orgfile_gen.h
 dev.gitfile  gitfile:include/gen/orgfile_gen.inl.h
 dev.gitfile  gitfile:include/gen/report_gen.h
 dev.gitfile  gitfile:include/gen/report_gen.inl.h
+dev.gitfile  gitfile:include/gen/risk_engine_gen.h
+dev.gitfile  gitfile:include/gen/risk_engine_gen.inl.h
 dev.gitfile  gitfile:include/gen/samp_make_gen.h
 dev.gitfile  gitfile:include/gen/samp_make_gen.inl.h
 dev.gitfile  gitfile:include/gen/samp_meng_gen.h
@@ -995,6 +1006,7 @@ dev.gitfile  gitfile:include/lib_sqlite.h
 dev.gitfile  gitfile:include/lib_ws.h
 dev.gitfile  gitfile:include/mdbg.h
 dev.gitfile  gitfile:include/orgfile.h
+dev.gitfile  gitfile:include/risk_engine.h
 dev.gitfile  gitfile:include/samp_make.h
 dev.gitfile  gitfile:include/samp_meng.h
 dev.gitfile  gitfile:include/samp_regx.h
@@ -1352,6 +1364,8 @@ dev.gitfile  gitfile:txt/exe/mysql2ssim/README.md
 dev.gitfile  gitfile:txt/exe/mysql2ssim/internals.md
 dev.gitfile  gitfile:txt/exe/orgfile/README.md
 dev.gitfile  gitfile:txt/exe/orgfile/internals.md
+dev.gitfile  gitfile:txt/exe/risk_engine/README.md
+dev.gitfile  gitfile:txt/exe/risk_engine/internals.md
 dev.gitfile  gitfile:txt/exe/samp_make/README.md
 dev.gitfile  gitfile:txt/exe/samp_make/internals.md
 dev.gitfile  gitfile:txt/exe/samp_meng/README.md
@@ -1555,6 +1569,7 @@ dev.gitfile  gitfile:txt/ssimdb/dev/copyright.md
 dev.gitfile  gitfile:txt/ssimdb/dev/covfile.md
 dev.gitfile  gitfile:txt/ssimdb/dev/covline.md
 dev.gitfile  gitfile:txt/ssimdb/dev/covtarget.md
+dev.gitfile  gitfile:txt/ssimdb/dev/cpty.md
 dev.gitfile  gitfile:txt/ssimdb/dev/edaction.md
 dev.gitfile  gitfile:txt/ssimdb/dev/edacttype.md
 dev.gitfile  gitfile:txt/ssimdb/dev/gitfile.md
@@ -1562,7 +1577,10 @@ dev.gitfile  gitfile:txt/ssimdb/dev/gitinfo.md
 dev.gitfile  gitfile:txt/ssimdb/dev/hilite.md
 dev.gitfile  gitfile:txt/ssimdb/dev/htmlentity.md
 dev.gitfile  gitfile:txt/ssimdb/dev/include.md
+dev.gitfile  gitfile:txt/ssimdb/dev/instrtype.md
+dev.gitfile  gitfile:txt/ssimdb/dev/instrument.md
 dev.gitfile  gitfile:txt/ssimdb/dev/license.md
+dev.gitfile  gitfile:txt/ssimdb/dev/limittype.md
 dev.gitfile  gitfile:txt/ssimdb/dev/linelim.md
 dev.gitfile  gitfile:txt/ssimdb/dev/mdmark.md
 dev.gitfile  gitfile:txt/ssimdb/dev/mdsection.md
@@ -1573,9 +1591,11 @@ dev.gitfile  gitfile:txt/ssimdb/dev/opt_type.md
 dev.gitfile  gitfile:txt/ssimdb/dev/package.md
 dev.gitfile  gitfile:txt/ssimdb/dev/pkgdep.md
 dev.gitfile  gitfile:txt/ssimdb/dev/pkgkey.md
+dev.gitfile  gitfile:txt/ssimdb/dev/position.md
 dev.gitfile  gitfile:txt/ssimdb/dev/prototransport.md
 dev.gitfile  gitfile:txt/ssimdb/dev/readmefile.md
 dev.gitfile  gitfile:txt/ssimdb/dev/readmesort.md
+dev.gitfile  gitfile:txt/ssimdb/dev/risklimit.md
 dev.gitfile  gitfile:txt/ssimdb/dev/rpm.md
 dev.gitfile  gitfile:txt/ssimdb/dev/sandbox.md
 dev.gitfile  gitfile:txt/ssimdb/dev/sbpath.md

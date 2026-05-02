@@ -17,6 +17,35 @@ The MariaDB and OpenSSL packages are the main external dependencies.
 MariaDB (formerly MySQL) is not really required, but it's used by `acr_my`, `ssim2mysql` and
 `mysql2ssim` utilities. OpenSSL provides `libcrypto` which is for SHA1 functions.
 
+### Docker (recommended for macOS and non-Linux systems)
+<a href="#docker"></a>
+Since this project is only actively tested with g++ on Linux, Docker is the
+recommended approach for macOS, Windows, and other non-Linux systems. It is
+also useful on Linux for a clean, reproducible build environment.
+
+**Quick start** (build the image and run a shell):
+
+    docker build --platform linux/amd64 -t openacr .
+    docker run --platform linux/amd64 -it openacr
+
+This gives you a shell at `/root/openacr` with all tools built and on
+your PATH. The build step takes 5-10 minutes on Apple Silicon (x86_64
+emulation) or 1-2 minutes on a native x86_64 host.
+
+**Development workflow** (mount your local repo for live editing):
+
+    docker run --platform linux/amd64 -it \
+      -v "$PWD":/root/openacr \
+      openacr
+
+This mounts the repo from your host into the container so edits made
+on either side are visible to the other. Note that binaries compiled
+inside the container are Linux ELF files and will not run on your host.
+
+The `--platform linux/amd64` flag is required on Apple Silicon Macs
+because the bootstrap binaries are x86_64 only. On native x86_64 Linux
+it can be omitted.
+
 ### Pre-requisites: CentOS:
 <a href="#pre-requisites-centos"></a>
     yum install -y mariadb mariadb-devel mariadb-server
