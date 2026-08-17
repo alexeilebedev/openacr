@@ -1,0 +1,5 @@
+# start wt-scratch cmd:"test/wt-scratch $bindir/wt test.del.none -del"
+# eof wt-scratch
+wt-scratch -> wt.anon  sandbox:test.del.none  dir:wt/test.del.none
+wt-scratch -> report.acr  n_select:0  n_insert:0  n_delete:0  n_ignore:1  n_update:0  n_file_mod:0  n_badline:0
+# exit wt-scratch code:0

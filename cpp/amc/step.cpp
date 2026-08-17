@@ -32,7 +32,10 @@
 // of how soon any of the steps will need cpu time. This is controlled by algo_lib::_db.next_loop variable.
 // At the beginning of the scheduling cycle, next_loop is set to infinity. Each step has a next_loop variable
 // associated with it, which lowers the global value. At the end, all the time until next_loop is given up to the OS.
-// The following field types can be used with step: Llist, Atree, Bheap, Tary, Inlary, Ptrary, Ptr, Upptr, and Val of type bool.
+// A step is declared on a global field whose reftype offers a loop condition: an index with an
+// emptiness test (Atree, Bheap, Blkhash, Lary, Llist, Ptrary, Tary, Thash, or a variable Inlary),
+// a value read directly (Val of type bool, Ptr, Upptr), ZSListMT (tested through DestructiveFirst,
+// steptype Inline or InlineRecur only), or Global (unconditional).
 // The step function is called if the index is non-empty, or the bool value is true.
 // With the simplest step type Inline, the function is called on every scheduler cycle until the index becomes empty
 // or the controlling variable becomes false.
@@ -47,7 +50,8 @@
 // records in 1 unit of time, at uniform intervals. This is useful for sending heartbeats etc.
 // TimeHookRecur step type is like InlineRecur, but callback to the step function occurs through a TimeHook, which adds tiny overhead to
 // scheduling/descheduling, and some scheduling non-determinism, but in return this doesn't waste any precious scheduler
-// cycles on every loop.
+// cycles on every loop. The hook is armed by the index's FirstChanged calls, which only the Llist and
+// Bheap generators emit, so a TimeHookRecur step field must be an Llist or a Bheap.
 // TimeHookOnce is similar to InlineOnce - a global TimeHook is created which is responsible for calling the
 // step function; the time hook is scheduled for the time given by the first element of the fstep's index
 // (usually a Bheap).
@@ -57,10 +61,128 @@
 
 #include "include/amc.h"
 
+// Validate the fstep against the contract stated at the top of this file
+// and add the step's state fields (next/delay for InlineRecur, the time
+// hook for TimeHook steps); every schema shape the Step tfuncs cannot
+// serve is reported here as a generation error, and the run continues so
+// one pass names every defect -- the error count withholds all output
 void amc::tclass_Step() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;
     amc::FFstep &fstep = *field.c_fstep;
+    // Every generated step accesses its field through the namespace global
+    // ($ns::_db.$name), so an fstep on a field of a non-global ctype names a
+    // member the FDb struct does not have; enforce the FDb-field contract
+    // stated at the top of this file
+    if (!GlobalQ(*field.p_ctype)) {
+        prerr("amc.fstep_global"
+              <<Keyval("fstep",fstep.fstep)
+              <<Keyval("ctype",field.p_ctype->ctype)
+              <<Keyval("comment","fstep requires a global field (a field of the namespace FDb)"));
+        algo_lib::_db.exit_code++;
+    }
+    // The step's loop condition tests the field for pending work
+    // (GetStepCond): an index is tested with its EmptyQ, a Val/Ptr/Upptr
+    // with its value, ZSListMT with DestructiveFirst. A reftype outside
+    // this set -- Count, Fbuf, Smallstr, a memory pool -- has no such
+    // test, and the generated condition calls an EmptyQ that does not
+    // exist; reject the schema instead of shipping the compile error.
+    // An Inlary counts only when variable: a fixed Inlary always holds
+    // max elements and generates no EmptyQ.
+    bool steppable = field.reftype == dmmeta_Reftype_reftype_Val
+        || field.reftype == dmmeta_Reftype_reftype_Ptr
+        || field.reftype == dmmeta_Reftype_reftype_Upptr
+        || field.reftype == dmmeta_Reftype_reftype_Global
+        || field.reftype == dmmeta_Reftype_reftype_ZSListMT
+        || (field.reftype == dmmeta_Reftype_reftype_Inlary && !amc::FixaryQ(field))
+        || field.reftype == dmmeta_Reftype_reftype_Atree
+        || field.reftype == dmmeta_Reftype_reftype_Bheap
+        || field.reftype == dmmeta_Reftype_reftype_Blkhash
+        || field.reftype == dmmeta_Reftype_reftype_Lary
+        || field.reftype == dmmeta_Reftype_reftype_Llist
+        || field.reftype == dmmeta_Reftype_reftype_Ptrary
+        || field.reftype == dmmeta_Reftype_reftype_Tary
+        || field.reftype == dmmeta_Reftype_reftype_Thash;
+    if (!steppable) {
+        prerr("amc.fstep_reftype"
+              <<Keyval("fstep",fstep.fstep)
+              <<Keyval("reftype",field.reftype)
+              <<Keyval("comment","fstep needs an emptiness test for the loop condition; use an index with EmptyQ (for Inlary: min<max), a Val/Ptr/Upptr, or ZSListMT"));
+        algo_lib::_db.exit_code++;
+    }
+    // InlineOnce and TimeHookOnce both read the expiration time from the first row's
+    // sort field, which only a Bheap step field provides; checked here in the tclass
+    // function so the rejection precedes every Step tfunc
+    vrfy(!(fstep.steptype == dmmeta_Steptype_steptype_InlineOnce || fstep.steptype == dmmeta_Steptype_steptype_TimeHookOnce)
+         || field.reftype == dmmeta_Reftype_reftype_Bheap
+         , tempstr()<<"amc.fstep_bheap"
+         <<Keyval("fstep",fstep.fstep)
+         <<Keyval("steptype",fstep.steptype)
+         <<Keyval("reftype",field.reftype)
+         <<Keyval("comment","steptype InlineOnce/TimeHookOnce requires the step field to be a Bheap"));
+    // TimeHookRecur arms and disarms its time hook from the index's first row:
+    // $name_FirstChanged reheaps or removes the hook, and only the Llist and
+    // Bheap generators call $name_FirstChanged from their inserts and removes.
+    // On a step field of any other shape nothing ever arms the hook, and the
+    // step compiles but never fires
+    if (fstep.steptype == dmmeta_Steptype_steptype_TimeHookRecur
+        && field.reftype != dmmeta_Reftype_reftype_Llist
+        && field.reftype != dmmeta_Reftype_reftype_Bheap) {
+        prerr("amc.fstep_first"
+              <<Keyval("fstep",fstep.fstep)
+              <<Keyval("steptype",fstep.steptype)
+              <<Keyval("reftype",field.reftype)
+              <<Keyval("comment","steptype TimeHookRecur requires an Llist or Bheap step field"));
+        algo_lib::_db.exit_code++;
+    }
+    // ZSListMT has no EmptyQ (the list is concurrent); its loop condition
+    // tests DestructiveFirst, which only the Inline and InlineRecur call
+    // shapes embed
+    if (field.reftype == dmmeta_Reftype_reftype_ZSListMT
+        && fstep.steptype != dmmeta_Steptype_steptype_Inline
+        && fstep.steptype != dmmeta_Steptype_steptype_InlineRecur) {
+        prerr("amc.fstep_zslistmt"
+              <<Keyval("fstep",fstep.fstep)
+              <<Keyval("steptype",fstep.steptype)
+              <<Keyval("comment","a ZSListMT step field requires steptype Inline or InlineRecur"));
+        algo_lib::_db.exit_code++;
+    }
+    // fdelay names the delay between invocations, which only the InlineRecur
+    // and TimeHookRecur call shapes read; on any other steptype the row
+    // configures nothing
+    if (fstep.c_fdelay
+        && fstep.steptype != dmmeta_Steptype_steptype_InlineRecur
+        && fstep.steptype != dmmeta_Steptype_steptype_TimeHookRecur) {
+        prerr("amc.fstep_fdelay"
+              <<Keyval("fstep",fstep.fstep)
+              <<Keyval("steptype",fstep.steptype)
+              <<Keyval("comment","fdelay applies only to steptype InlineRecur and TimeHookRecur"));
+        algo_lib::_db.exit_code++;
+    }
+    // fdelay scale:Y divides the delay by the number of rows in the step
+    // index ($name_N), spreading a full sweep over one delay unit; only the
+    // InlineRecur call shape computes the scaled delay, and on a step field
+    // with no row count the generated code calls an N function that does
+    // not exist. The countable set is every step-field reftype whose N
+    // function amc generates unconditionally, plus Llist, whose N exists
+    // only with havecount.
+    bool countable = field.reftype == dmmeta_Reftype_reftype_Bheap
+        || field.reftype == dmmeta_Reftype_reftype_Blkhash
+        || field.reftype == dmmeta_Reftype_reftype_Thash
+        || field.reftype == dmmeta_Reftype_reftype_Tary
+        || field.reftype == dmmeta_Reftype_reftype_Lary
+        || field.reftype == dmmeta_Reftype_reftype_Ptrary
+        || field.reftype == dmmeta_Reftype_reftype_Inlary
+        || (field.reftype == dmmeta_Reftype_reftype_Llist && field.c_llist && field.c_llist->havecount);
+    if (fstep.c_fdelay && fstep.c_fdelay->scale
+        && !(fstep.steptype == dmmeta_Steptype_steptype_InlineRecur && countable)) {
+        prerr("amc.fstep_scale"
+              <<Keyval("fstep",fstep.fstep)
+              <<Keyval("steptype",fstep.steptype)
+              <<Keyval("reftype",field.reftype)
+              <<Keyval("comment","fdelay scale:Y requires steptype InlineRecur and a counted step field (Bheap, Blkhash, Thash, Tary, Lary, Ptrary, Inlary, or Llist with havecount)"));
+        algo_lib::_db.exit_code++;
+    }
     if (fstep.steptype == dmmeta_Steptype_steptype_InlineRecur) {
         InsVar(R, field.p_ctype, "algo::SchedTime", "$name_next", "", "$field \tNext invocation time");
         InsVar(R, field.p_ctype, "algo::SchedTime", "$name_delay", "", "$field \tDelay between invocations");
@@ -102,6 +224,9 @@ void amc::tfunc_Step_Step() {
 
 // -----------------------------------------------------------------------------
 
+// Generate the step's Init statements: the delay variable for
+// InlineRecur, the time-hook setup (and its delay) for the TimeHook
+// steptypes
 void amc::tfunc_Step_Init() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& init = amc::CreateCurFunc();
@@ -120,28 +245,22 @@ void amc::tfunc_Step_Init() {
         Ins(&R, init.body, "hook_Set0($parname.th_$name, $ns::$name_Call);");
         Ins(&R, init.body, "ThInitRecur($parname.th_$name, algo::SchedTime());");
         if (fstep.c_fdelay) {
-            vrfy(!fstep.c_fdelay->scale, "Scalable delay is only supported for InlineRecur step");
             Set(R, "$delay", tempstr()<< fstep.c_fdelay->delay);
             Ins(&R, init.body, "$ns::_db.th_$name.delay = algo::ToSchedTime($delay); // initialize fstep delay ($field)");
         }
     } else if (fstep.steptype == dmmeta_Steptype_steptype_TimeHookOnce) {
         Ins(&R, init.body, "// initialize fstep timehook ($field)");
         Ins(&R, init.body, "hook_Set0($parname.th_$name, $ns::$name_Call);");
-        vrfy(!fstep.c_fdelay, tempstr()
-             <<"fdelay is not applicable to Once steps");
     }
 }
 
 // -----------------------------------------------------------------------------
 
-static tempstr GetStepCond(amc::FField &field, amc::FFstep &fstep) {
+static tempstr GetStepCond(amc::FField &field) {
     tempstr ret;
     // special work-around for ZSListMT -- EmptyQ  cannot be defined, DestructiveFirst must be used.
     if (field.reftype == dmmeta_Reftype_reftype_ZSListMT) {
         ret="$ns::$name_DestructiveFirst() != NULL";
-        vrfy(fstep.steptype == dmmeta_Steptype_steptype_Inline
-             || fstep.steptype == dmmeta_Steptype_steptype_InlineRecur
-             , "ZSListMT can only be used with fstep of type Inline or InlineRecur");
     } else if (field.reftype == dmmeta_Reftype_reftype_Inlary) {
         ret= "!$ns::$name_EmptyQ()";
     } else if (ValQ(field)
@@ -158,6 +277,10 @@ static tempstr GetStepCond(amc::FField &field, amc::FFstep &fstep) {
 
 // -----------------------------------------------------------------------------
 
+// Generate $name_Call: invoke $name_Step on the steptype's schedule --
+// delay-gated for InlineRecur, expiration-driven off the first row's
+// sort field for the Once steptypes, every pass for Inline, bare for
+// the hook- and caller-driven steptypes
 void amc::tfunc_Step_Call() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;
@@ -168,13 +291,7 @@ void amc::tfunc_Step_Call() {
     Ins(&R, call.ret  , "void",false);
     call.inl = amc::DirectStepQ(fstep);
     call.priv = !amc::ExternStepQ(fstep);
-    Set(R, "$LoopCond", GetStepCond(field,fstep));
-
-    vrfy(!(fstep.steptype == dmmeta_Steptype_steptype_InlineOnce)
-         || field.reftype == dmmeta_Reftype_reftype_Bheap, "InlineOnce requires bheap");
-    vrfy(!fstep.c_fdelay || (fstep.steptype == dmmeta_Steptype_steptype_InlineRecur
-                             || fstep.steptype == dmmeta_Steptype_steptype_TimeHookRecur)
-         , "fdelay only applies to step type InlineRecur and TimeHookRecur");
+    Set(R, "$LoopCond", GetStepCond(field));
 
     if (fstep.steptype == dmmeta_Steptype_steptype_InlineRecur) {
         if (fstep.c_fdelay) {

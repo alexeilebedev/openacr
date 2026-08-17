@@ -60,7 +60,7 @@ static void WriteFile(acr::FWrite &write, acr::FFile &file) {
     if (acr::_db.cmdline.write && dowrite) {
         // attempt to create up to 1 level of directories
         // this supports use such as
-        // acr $key -t | acr -data_dir $dir -write
+        // acr $key -t | acr -in:$dir -insert -write
         // where the number of ssim namespaces under $key doesn't have
         // to be known in advance
         tempstr dirname(GetDirName(file.file));
@@ -72,7 +72,12 @@ static void WriteFile(acr::FWrite &write, acr::FFile &file) {
                         <<Keyval("rc", rc));
             }
         }
-        (void)SafeStringToFile(out, file.file);
+        // a failed write (missing directory, permission) fails the run:
+        // exiting 0 with the records silently unwritten would leave the
+        // caller trusting a dataset that was never updated
+        if (!algo::SaveFile(out, file.file, "acr.file_write", "output file could not be written")) {
+            algo_lib::_db.exit_code++;
+        }
     }
 }
 
@@ -95,7 +100,10 @@ static void SaveSingleFile() {
     print.showstatus = false;
     print.loose    = false;     // full referential integrity required when saving
     Print(print);
-    (void)SafeStringToFile(print.out, acr::_db.cmdline.in);
+    // a failed write fails the run, same as the dataset-mode write above
+    if (!algo::SaveFile(print.out, acr::_db.cmdline.in, "acr.file_write", "output file could not be written")) {
+        algo_lib::_db.exit_code++;
+    }
 }
 
 // -----------------------------------------------------------------------------
@@ -114,5 +122,5 @@ void acr::WriteFiles() {
             }
         }ind_end;
     }
-    acr::_db.report.n_file_mod += algo_lib::_db.stringtofile_nwrite > nbefore;
+    acr::_db.report.n_file_mod += algo_lib::_db.stringtofile_nwrite - nbefore;
 }

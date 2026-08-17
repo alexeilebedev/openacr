@@ -3,8 +3,7 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
-<!-- dev.mdmark  mdmark:TOC  state:BEG_AUTO  param:Toc -->
+<!-- abt_md.toc_beg -->
 &#128196; [gclidb.gact - Action that may be performed on a table](/txt/ssimdb/gclidb/gact.md)<br/>
 &#128196; [gclidb.gatv -](/txt/ssimdb/gclidb/gatv.md)<br/>
 &#128196; [gclidb.gclicmd - table of static gcli commands](/txt/ssimdb/gclidb/gclicmd.md)<br/>
@@ -36,9 +35,6 @@
 &#128196; [gclidb.mrjob - Mr job](/txt/ssimdb/gclidb/mrjob.md)<br/>
 &#128196; [gclidb.mrnote - Issue note](/txt/ssimdb/gclidb/mrnote.md)<br/>
 &#128196; [gclidb.project - Gitlab project mr](/txt/ssimdb/gclidb/project.md)<br/>
+&#128196; [gclidb.token -](/txt/ssimdb/gclidb/token.md)<br/>
 &#128196; [gclidb.user -](/txt/ssimdb/gclidb/user.md)<br/>
-
-<!-- dev.mdmark  mdmark:TOC  state:END_AUTO  param:Toc -->
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
-
+<!-- abt_md.toc_end -->

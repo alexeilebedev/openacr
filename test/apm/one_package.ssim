@@ -1,0 +1,3 @@
+dev.package  package:apm  baseref:HEAD  origin:.  comment:""
+dev.pkgkey  pkgkey:apm/dev.package:apm  up:N  down:N  exclude:N  comment:""
+dev.pkgkey  pkgkey:apm/dmmeta.ns:apm  up:N  down:N  exclude:N  comment:""

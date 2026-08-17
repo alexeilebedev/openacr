@@ -3,44 +3,18 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
-&nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Internals](#internals)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
-&#128196; [samp_regx - Internals](/txt/exe/samp_regx/internals.md)<br/>
+<!-- abt_md.toc_end -->
 
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
-
-### Syntax
-<a href="#syntax"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Syntax -->
-```
-samp_regx: Test tool for regular expressions
-Usage: samp_regx [-expr:]<string> [[-string:]<string>] [options]
-    OPTION      TYPE    DFLT    COMMENT
-    -in         string  "data"  Input directory or filename, - for stdin
-    [expr]      string          Expression
-    -style      enum    acr     Regx style (default|sql|acr|shell|literal)
-    -trace                      Trace regx innards
-    -capture                    Use capture groups
-    -full               Y       Match full string
-    -f                          <string> is a filename, grep the lines
-    -match                      Match a string, exit code represnts success
-    [string]    string  ""      String to match
-    -verbose    flag            Verbosity level (0..255); alias -v; cumulative
-    -debug      flag            Debug level (0..255); alias -d; cumulative
-    -help                       Print help and exit; alias -h
-    -version                    Print version and exit
-    -signature                  Show signatures and exit; alias -sig
-
-```
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Syntax -->
+### Internals
+<a href="#internals"></a>
+&#128196; [samp_regx - Internals](/txt/gen/samp_regx/samp_regx.md)<br/>
 
 ### Options
 <a href="#options"></a>
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Options -->
 #### -in -- Input directory or filename, - for stdin
 <a href="#-in"></a>
 
@@ -68,15 +42,9 @@ Usage: samp_regx [-expr:]<string> [[-string:]<string>] [options]
 #### -string -- String to match
 <a href="#-string"></a>
 
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
-
 ### Inputs
 <a href="#inputs"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
 `samp_regx` takes the following tables on input:
 |Ssimfile|Comment|
 |---|---|
 |[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
-

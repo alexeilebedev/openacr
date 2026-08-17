@@ -29,8 +29,8 @@
 
 // --- lib_sql_FieldIdEnum
 
-enum lib_sql_FieldIdEnum {        // lib_sql.FieldId.value
-     lib_sql_FieldId_value   = 0
+enum lib_sql_FieldIdEnum {    // lib_sql.FieldId.value
+     lib_sql_FieldId_value
 };
 
 enum { lib_sql_FieldIdEnum_N = 1 };
@@ -71,7 +71,6 @@ private:
     friend void                 attr_RemoveAll() __attribute__((nothrow));
     friend void                 attr_RemoveLast() __attribute__((nothrow));
 };
-
 // Set all fields to initial values.
 // func:lib_sql.FAttr..Init
 inline void          FAttr_Init(lib_sql::FAttr& attr);
@@ -85,7 +84,6 @@ struct trace { // lib_sql.trace
     inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // print string representation of ROW to string STR
 // cfmt:lib_sql.trace.String  printfmt:Tuple
 // func:lib_sql.trace..Print
@@ -94,14 +92,13 @@ void                 trace_Print(lib_sql::trace& row, algo::cstring& str) __attr
 // --- lib_sql.FDb
 // create: lib_sql.FDb._db (Global)
 struct FDb { // lib_sql.FDb: In-memory database for lib_sql
-    lib_sql::FAttr*    attr_lary[32];            // level array
-    i32                attr_n;                   // number of elements in array
+    lib_sql::FAttr*    attr_lary[36];            // level array
+    i64                attr_n;                   // number of elements in array
     lib_sql::FAttr**   ind_attr_buckets_elems;   // pointer to bucket array
     i32                ind_attr_buckets_n;       // number of elements in bucket array
     i32                ind_attr_n;               // number of elements in the hash table
     lib_sql::trace     trace;                    //
 };
-
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 // func:lib_sql.FDb._db.InsertStrptrMaybe
@@ -126,6 +123,10 @@ bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __att
 // Calls Step function of dependencies
 // func:lib_sql.FDb._db.Steps
 void                 Steps();
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+// func:lib_sql.FDb._db.RemoveStrptrMaybe
+bool                 RemoveStrptrMaybe(algo::strptr str);
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:lib_sql.FDb._db.XrefMaybe
@@ -152,7 +153,7 @@ inline lib_sql::FAttr* attr_Find(u64 t) __attribute__((__warn_unused_result__, n
 inline lib_sql::FAttr* attr_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:lib_sql.FDb.attr.N
-inline i32           attr_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           attr_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:lib_sql.FDb.attr.RemoveAll
 void                 attr_RemoveAll() __attribute__((nothrow));
@@ -227,7 +228,6 @@ struct FieldId { // lib_sql.FieldId: Field read helper
     inline               FieldId(lib_sql_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:lib_sql.FieldId.value.GetEnum
 inline lib_sql_FieldIdEnum value_GetEnum(const lib_sql::FieldId& parent) __attribute__((nothrow));
@@ -265,7 +265,7 @@ inline void          FieldId_Init(lib_sql::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:lib_sql.FieldId.String  printfmt:Raw
 // func:lib_sql.FieldId..Print
-void                 FieldId_Print(lib_sql::FieldId& row, algo::cstring& str) __attribute__((nothrow));
+void                 FieldId_Print(lib_sql::FieldId row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace lib_sql { // gen:ns_curstext
 

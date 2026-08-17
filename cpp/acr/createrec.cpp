@@ -82,9 +82,18 @@ acr::FRec* acr::ReadTuple(Tuple &tuple, acr::FFile &file, acr::ReadMode read_mod
             ret = ReadTuple(tuple, file, read_mode);
         }
     } else {
-        // unknown ctype
+        // A tuple whose head names no known ctype cannot be attributed to any
+        // table, so a -write would rewrite its file without it.  An empty head
+        // is a blank or comment-only line and stays accepted.  A pipe is never
+        // rewritten, and piping a mixed-namespace dump into acr is a working
+        // idiom (a fixture materializing the rows acr knows), so an unknown
+        // ctype on stdin stays a counted ignore instead of an error.
         if (tuple.head.value != "") {
-            _db.report.n_ignore++;
+            if (file.stdin) {
+                _db.report.n_ignore++;
+            } else {
+                acr::ReportBadLine(file, tempstr() << tuple, "unknown ctype");
+            }
         }
     }
     return ret;

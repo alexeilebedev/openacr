@@ -1,0 +1,5 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/global_inst.ssim -out_dir: -report:N zzz"
+# eof amc
+amc -> amc.global_inst  ctype:algo_lib.FRow  n_inst:2  comment:"a Global instance must be the ctype's only instance: field accessors take no parent and read the global"
+amc -> amc.no_output  comment:"no files were modified"
+# exit amc code:1

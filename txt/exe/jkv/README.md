@@ -9,18 +9,20 @@ Default output format can be overridden with `-output`.
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Internals](#internals)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Examples](#examples)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
-&#128196; [jkv - Internals](/txt/exe/jkv/internals.md)<br/>
+<!-- abt_md.toc_end -->
 
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
+### Internals
+<a href="#internals"></a>
+&#128196; [jkv - Internals](/txt/gen/jkv/jkv.md)<br/>
 
 ### Syntax
 <a href="#syntax"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Syntax -->
 ```
 jkv: JSON <-> key-value mapping tool
 Usage: jkv [-file:]<string> [[-kv:]<string>] [options]
@@ -31,19 +33,13 @@ Usage: jkv [-file:]<string> [[-kv:]<string>] [options]
     -r                          Reverse (json keyvals -> JSON) mapping
     -write                      Write the modified file back
     -output     enum    auto    Output format (auto|json|kv)
-                                    auto  Automatic
-                                    json  Json only
-                                    kv  Key-value only
     -pretty     int     2       Pretty-printer (0-compact; 1=algo style; 2=jq style)
     -verbose    flag            Verbosity level (0..255); alias -v; cumulative
     -debug      flag            Debug level (0..255); alias -d; cumulative
     -help                       Print help and exit; alias -h
     -version                    Print version and exit
     -signature                  Show signatures and exit; alias -sig
-
 ```
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Syntax -->
 
 ### Examples
 <a href="#examples"></a>
@@ -109,8 +105,6 @@ inline-command: jkv /dev/null -r -pretty:0 -- a.b.c-0:true -10:false
 
 ### Options
 <a href="#options"></a>
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Options -->
 #### -in -- Input directory or filename, - for stdin
 <a href="#-in"></a>
 
@@ -156,15 +150,9 @@ Default value (2) uses jq-style pretty printer.
 Value 0 means compact output with no newlines.
 Value 1 is algo-style pretty printer (comma at the beginning of the new line)
 
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
-
 ### Inputs
 <a href="#inputs"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
 `jkv` takes the following tables on input:
 |Ssimfile|Comment|
 |---|---|
 |[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
-

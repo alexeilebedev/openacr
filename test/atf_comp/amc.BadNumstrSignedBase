@@ -1,0 +1,7 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/bad_numstr_signedbase.ssim -out_dir: -report:N zzz"
+# eof amc
+amc -> amc.bad_numstr  field:algo_lib.LspaceStr4_I32_Base256.ch  base:256  comment:"signed numstr cannot use a base where '-' is a digit"
+amc -> amc.bad_numstr  field:algo_lib.LspaceStr4_I32_Base256.ch  pad:"' '"  base:256  comment:"left-pad that is a nonzero digit of the base corrupts values on read"
+amc -> amc.bad_numstr  field:algo_lib.LspaceStr5_I32_Base95.ch  base:95  comment:"signed numstr cannot use a base where '-' is a digit"
+amc -> amc.no_output  comment:"no files were modified"
+# exit amc code:3

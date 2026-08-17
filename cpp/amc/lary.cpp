@@ -31,14 +31,14 @@ void amc::tclass_Lary() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;
 
-    int nlevels = 32;
+    int nlevels = 36;
     Set(R, "$prealloc", "4");
     Set(R, "$nlevels", tempstr() << nlevels);
     Set(R, "$Rowid"  , EvalRowid(*field.p_arg));
 
     GenTclass(amc_tclass_Pool);
     InsVar(R, field.p_ctype, "$Cpptype*", "$name_lary[$nlevels]", "", "level array");
-    InsVar(R, field.p_ctype, "i32", "$name_n", "", "number of elements in array");
+    InsVar(R, field.p_ctype, "i64", "$name_n", "", "number of elements in array");
     vrfy(field.p_ctype->p_ns->c_globfld != NULL
          , tempstr()<<"Lary "<<field.arg<<" requires global FDb._db in namespace "<<ns_Get(*field.p_ctype));
 }
@@ -66,7 +66,7 @@ void amc::tfunc_Lary_AllocMem() {
     Ins(&R, alloc.body, "}");
     Ins(&R, alloc.body, "// allocate element from this level");
     Ins(&R, alloc.body, "if (lev) {");
-    Ins(&R, alloc.body, "    $parname.$name_n = i32(new_nelems);");
+    Ins(&R, alloc.body, "    $parname.$name_n = i64(new_nelems);");
     Ins(&R, alloc.body, "    ret = lev + index;");
     Ins(&R, alloc.body, "}");
     Ins(&R, alloc.body, "return ret;");
@@ -131,7 +131,7 @@ void amc::tfunc_Lary_N() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
 
     amc::FFunc& nitems = amc::CreateCurFunc();
-    Ins(&R, nitems.ret  , "i32", false);
+    Ins(&R, nitems.ret  , "i64", false);
     Ins(&R, nitems.proto, "$name_N($Cparent)", false);
     Ins(&R, nitems.body, "return $parname.$name_n;");
 }
@@ -139,7 +139,7 @@ void amc::tfunc_Lary_N() {
 void amc::tfunc_Lary_RemoveAll() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;
-    bool dtor = (field.p_arg->c_cpptype && field.p_arg->c_cpptype->dtor)||!field.p_arg->c_cpptype;
+    bool dtor = HasDtorQ(*field.p_arg);
 
     if (!field.c_fnoremove) {
         amc::FFunc& removelast = amc::CreateCurFunc();
@@ -155,7 +155,7 @@ void amc::tfunc_Lary_RemoveAll() {
             Ins(&R, removelast.body, "for (u64 n = $parname.$name_n; n>0; ) {");
             Ins(&R, removelast.body, "    n--;");
             Ins(&R, removelast.body, "    $name_qFind($pararg, $Rowid(n)).~$Ctype(); // destroy last element");
-            Ins(&R, removelast.body, "    $parname.$name_n = i32(n);");
+            Ins(&R, removelast.body, "    $parname.$name_n = i64(n);");
             Ins(&R, removelast.body, "}");
         }
     }
@@ -164,7 +164,7 @@ void amc::tfunc_Lary_RemoveAll() {
 void amc::tfunc_Lary_RemoveLast() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;
-    bool dtor = (field.p_arg->c_cpptype && field.p_arg->c_cpptype->dtor)||!field.p_arg->c_cpptype;
+    bool dtor = HasDtorQ(*field.p_arg);
 
     amc::FFunc& remlast = amc::CreateCurFunc();
     Set(R, "$partrace", Refname(*field.p_ctype));
@@ -179,7 +179,7 @@ void amc::tfunc_Lary_RemoveLast() {
     if (field.do_trace) {
         Ins(&R, remlast.body, "    ++$ns::_db.trace.del_$partrace_$name;");
     }
-    Ins(&R, remlast.body    , "    $parname.$name_n = i32(n);");
+    Ins(&R, remlast.body    , "    $parname.$name_n = i64(n);");
     Ins(&R, remlast.body    , "}");
 }
 
@@ -190,7 +190,7 @@ void amc::tfunc_Lary_RowidFind() {
         amc::FFunc& rowid_findx = amc::CreateCurFunc();
         rowid_findx.priv=true;
         Ins(&R, rowid_findx.ret  , "algo::ImrowPtr", false);
-        Ins(&R, rowid_findx.proto, "$name_RowidFind(int t)", false);
+        Ins(&R, rowid_findx.proto, "$name_RowidFind(i64 t)", false);
         Ins(&R, rowid_findx.body, "return algo::ImrowPtr(u64($name_Find($pararg, $Rowid(t))));");
     }
 }
@@ -226,16 +226,6 @@ void amc::tfunc_Lary_qFind() {
     Ins(&R, qfind.body, "u64 base  = u64(1)<<bsr;");
     Ins(&R, qfind.body, "u64 index = x-base;");
     Ins(&R, qfind.body, "return $parname.$name_lary[bsr][index];");
-}
-
-void amc::tfunc_Lary_qLast() {
-    // algo_lib::Replscope &R = amc::_db.genctx.R;
-
-    // amc::FFunc& qlast = amc::CreateCurFunc();
-    // qlast.inl = true;
-    // Ins(&R, qlast.ret  , "$Cpptype&", false);
-    // Ins(&R, qlast.proto, "$name_qLast($Parent)", false);
-    // Ins(&R, qlast.body, "return $name_qFind($pararg, $Rowid($parname.$name_n-1));");
 }
 
 void amc::tfunc_Lary_curs() {

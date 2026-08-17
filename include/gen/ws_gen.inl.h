@@ -7,18 +7,9 @@
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2023 AlgoRND
 //
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// This source code constitutes confidential information and trade secrets
+// of AlgoRND. Unauthorized copying, distribution or sharing of this file,
+// via any medium, is strictly prohibited.
 //
 
 
@@ -174,7 +165,7 @@ inline algo::memptr ws::GetMsgMemptr(const ws::CloseMsg& row) {
 // Set all fields to initial values.
 inline void ws::CloseMsg_Init(ws::CloseMsg& parent) {
     parent.type = u32(504);
-    parent.length = u32(ssizeof(parent) + (0));
+    parent.length = u32(ssizeof(parent));
 }
 
 // --- ws.CloseMsg..Ctor
@@ -214,7 +205,7 @@ inline algo::memptr ws::GetMsgMemptr(const ws::ConnectMsg& row) {
 // Set all fields to initial values.
 inline void ws::ConnectMsg_Init(ws::ConnectMsg& parent) {
     parent.type = u32(502);
-    parent.length = u32(ssizeof(parent) + (0));
+    parent.length = u32(ssizeof(parent));
 }
 
 // --- ws.ConnectMsg..Ctor
@@ -325,7 +316,7 @@ inline algo::memptr ws::GetMsgMemptr(const ws::DataMsg& row) {
 // Set all fields to initial values.
 inline void ws::DataMsg_Init(ws::DataMsg& parent) {
     parent.type = u32(503);
-    parent.length = u32(ssizeof(parent) + (0));
+    parent.length = u32(ssizeof(parent));
 }
 
 // --- ws.DataMsg..Ctor
@@ -1845,7 +1836,7 @@ inline algo::memptr ws::GetMsgMemptr(const ws::ServerStartMsg& row) {
 // Set all fields to initial values.
 inline void ws::ServerStartMsg_Init(ws::ServerStartMsg& parent) {
     parent.type = u32(500);
-    parent.length = u32(ssizeof(parent) + (0));
+    parent.length = u32(ssizeof(parent));
 }
 
 // --- ws.ServerStartMsg..Ctor
@@ -1885,7 +1876,7 @@ inline algo::memptr ws::GetMsgMemptr(const ws::ServerStopMsg& row) {
 // Set all fields to initial values.
 inline void ws::ServerStopMsg_Init(ws::ServerStopMsg& parent) {
     parent.type = u32(501);
-    parent.length = u32(ssizeof(parent) + (0));
+    parent.length = u32(ssizeof(parent));
 }
 
 // --- ws.ServerStopMsg..Ctor

@@ -139,6 +139,10 @@ inline  dev::Covtarget::Covtarget() {
     dev::Covtarget_Init(*this);
 }
 
+// --- dev.Dbgtarget..Ctor
+inline  dev::Dbgtarget::Dbgtarget() {
+}
+
 // --- dev.Edaction..Init
 // Set all fields to initial values.
 inline void dev::Edaction_Init(dev::Edaction& parent) {
@@ -208,12 +212,11 @@ inline  dev::Gitinfo::Gitinfo() {
 }
 
 // --- dev.Gitinfo..FieldwiseCtor
-inline  dev::Gitinfo::Gitinfo(const algo::strptr& in_gitinfo, const algo::strptr& in_author, const algo::strptr& in_cfg, const algo::strptr& in_compver, const algo::strptr& in_package, const algo::Comment& in_comment)
+inline  dev::Gitinfo::Gitinfo(const algo::strptr& in_gitinfo, const algo::strptr& in_package, const algo::strptr& in_gitref, algo::UnTime in_builddate, const algo::Comment& in_comment)
     : gitinfo(in_gitinfo)
-    , author(in_author)
-    , cfg(in_cfg)
-    , compver(in_compver)
     , package(in_package)
+    , gitref(in_gitref)
+    , builddate(in_builddate)
     , comment(in_comment)
  {
 }
@@ -265,49 +268,6 @@ inline  dev::Linelim::Linelim() {
     dev::Linelim_Init(*this);
 }
 
-// --- dev.Mdmark..Ctor
-inline  dev::Mdmark::Mdmark() {
-}
-
-// --- dev.MdmarkCase.mdmark.GetEnum
-// Get value of field as enum type
-inline dev_MdmarkCaseEnum dev::mdmark_GetEnum(const dev::MdmarkCase& parent) {
-    return dev_MdmarkCaseEnum(parent.mdmark);
-}
-
-// --- dev.MdmarkCase.mdmark.SetEnum
-// Set value of field from enum type.
-inline void dev::mdmark_SetEnum(dev::MdmarkCase& parent, dev_MdmarkCaseEnum rhs) {
-    parent.mdmark = u8(rhs);
-}
-
-// --- dev.MdmarkCase.mdmark.Cast
-inline  dev::MdmarkCase::operator dev_MdmarkCaseEnum() const {
-    return dev_MdmarkCaseEnum((*this).mdmark);
-}
-
-// --- dev.MdmarkCase..Init
-// Set all fields to initial values.
-inline void dev::MdmarkCase_Init(dev::MdmarkCase& parent) {
-    parent.mdmark = u8(0);
-}
-
-// --- dev.MdmarkCase..Ctor
-inline  dev::MdmarkCase::MdmarkCase() {
-    dev::MdmarkCase_Init(*this);
-}
-
-// --- dev.MdmarkCase..FieldwiseCtor
-inline  dev::MdmarkCase::MdmarkCase(u8 in_mdmark)
-    : mdmark(in_mdmark)
- {
-}
-
-// --- dev.MdmarkCase..EnumCtor
-inline  dev::MdmarkCase::MdmarkCase(dev_MdmarkCaseEnum arg) {
-    this->mdmark = u8(arg);
-}
-
 // --- dev.Mdsection..Ctor
 inline  dev::Mdsection::Mdsection() {
 }
@@ -355,10 +315,11 @@ inline  dev::Package::Package() {
 }
 
 // --- dev.Package..FieldwiseCtor
-inline  dev::Package::Package(const algo::strptr& in_package, const algo::strptr& in_baseref, const algo::strptr& in_origin, const algo::Comment& in_comment)
+inline  dev::Package::Package(const algo::strptr& in_package, const algo::strptr& in_baseref, const algo::strptr& in_origin, const algo::strptr& in_nomention, const algo::Comment& in_comment)
     : package(in_package)
     , baseref(in_baseref)
     , origin(in_origin)
+    , nomention(in_nomention)
     , comment(in_comment)
  {
 }
@@ -382,13 +343,29 @@ inline  dev::Pkgdep::Pkgdep(const algo::strptr& in_pkgdep, bool in_soft, const a
  {
 }
 
+// --- dev.Pkggen..Ctor
+inline  dev::Pkggen::Pkggen() {
+}
+
+// --- dev.Pkgkey..Init
+// Set all fields to initial values.
+inline void dev::Pkgkey_Init(dev::Pkgkey& parent) {
+    parent.up = bool(false);
+    parent.down = bool(false);
+    parent.exclude = bool(false);
+}
+
 // --- dev.Pkgkey..Ctor
 inline  dev::Pkgkey::Pkgkey() {
+    dev::Pkgkey_Init(*this);
 }
 
 // --- dev.Pkgkey..FieldwiseCtor
-inline  dev::Pkgkey::Pkgkey(const algo::strptr& in_pkgkey, const algo::Comment& in_comment)
+inline  dev::Pkgkey::Pkgkey(const algo::strptr& in_pkgkey, bool in_up, bool in_down, bool in_exclude, const algo::Comment& in_comment)
     : pkgkey(in_pkgkey)
+    , up(in_up)
+    , down(in_down)
+    , exclude(in_exclude)
     , comment(in_comment)
  {
 }
@@ -427,8 +404,15 @@ inline  dev::Readmesort::Readmesort() {
 inline  dev::Rpm::Rpm() {
 }
 
+// --- dev.Sandbox..Init
+// Set all fields to initial values.
+inline void dev::Sandbox_Init(dev::Sandbox& parent) {
+    parent.cow = bool(false);
+}
+
 // --- dev.Sandbox..Ctor
 inline  dev::Sandbox::Sandbox() {
+    dev::Sandbox_Init(*this);
 }
 
 // --- dev.Sbpath..Ctor
@@ -580,6 +564,10 @@ inline  dev::Uname::Uname(const algo::strptr& in_uname, const algo::Comment& in_
  {
 }
 
+// --- dev.Uncovfunc..Ctor
+inline  dev::Uncovfunc::Uncovfunc() {
+}
+
 // --- dev.Unstablefld..Ctor
 inline  dev::Unstablefld::Unstablefld() {
 }
@@ -606,6 +594,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Covline &
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Covtarget &row) {// cfmt:dev.Covtarget.String
     dev::Covtarget_Print(const_cast<dev::Covtarget&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Dbgtarget &row) {// cfmt:dev.Dbgtarget.String
+    dev::Dbgtarget_Print(const_cast<dev::Dbgtarget&>(row), str);
     return str;
 }
 
@@ -654,11 +647,6 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Linelim &
     return str;
 }
 
-inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Mdmark &row) {// cfmt:dev.Mdmark.String
-    dev::Mdmark_Print(const_cast<dev::Mdmark&>(row), str);
-    return str;
-}
-
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Mdsection &row) {// cfmt:dev.Mdsection.String
     dev::Mdsection_Print(const_cast<dev::Mdsection&>(row), str);
     return str;
@@ -686,6 +674,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Package &
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Pkgdep &row) {// cfmt:dev.Pkgdep.String
     dev::Pkgdep_Print(const_cast<dev::Pkgdep&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Pkggen &row) {// cfmt:dev.Pkggen.String
+    dev::Pkggen_Print(const_cast<dev::Pkggen&>(row), str);
     return str;
 }
 
@@ -791,6 +784,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Transport
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Uname &row) {// cfmt:dev.Uname.String
     dev::Uname_Print(const_cast<dev::Uname&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Uncovfunc &row) {// cfmt:dev.Uncovfunc.String
+    dev::Uncovfunc_Print(const_cast<dev::Uncovfunc&>(row), str);
     return str;
 }
 

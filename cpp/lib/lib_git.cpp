@@ -58,23 +58,12 @@ tempstr lib_git::LastCommitLog() {
 // -----------------------------------------------------------------------------
 
 // Check that specified DIR is free of any git modifications.
-// Return a string describing modified files, or an empty string if none
+// Returns the raw newline-separated output of `git ls-files -m`, or
+// an empty string if the tree is clean.  No truncation — callers
+// (e.g. atf_ci's modfiles tracking) need every line to compute deltas
+// across many tests.
 tempstr lib_git::GitModifiedFiles(strptr dir) {
-    tempstr modfiles(SysEval(tempstr()<<"git ls-files -m "<<dir, FailokQ(false), 1024*1024));
-    tempstr ret;
-    bool clean = modfiles == strptr();
-    if (!clean) {
-        algo::ListSep ls(", ");
-        int n = 0;
-        ind_beg(Line_curs,line,modfiles) {
-            ret << ls << line;
-            if (n++ >= 20) {
-                ret << " ...";
-                break;
-            }
-        }ind_end;
-    }
-    return ret;
+    return tempstr(SysEval(tempstr()<<"git ls-files -m "<<dir, FailokQ(false), 1024*1024));
 }
 
 // -----------------------------------------------------------------------------

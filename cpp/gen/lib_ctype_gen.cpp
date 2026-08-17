@@ -77,6 +77,9 @@ namespace lib_ctype { // gen:ns_print_proto
     // func:lib_ctype...SizeCheck
     inline static void   SizeCheck();
 } // gen:ns_print_proto
+const char *lib_ctype::Cmdline_help = "Usage: Cmdline [options]\n"
+"    OPTION  TYPE    DFLT    COMMENT\n"
+"    -in     string  \"data\"  Input directory or filename, - for stdin\n";
 
 // --- lib_ctype.Cmdline..ReadFieldMaybe
 bool lib_ctype::Cmdline_ReadFieldMaybe(lib_ctype::Cmdline& parent, algo::strptr field, algo::strptr strval) {
@@ -95,19 +98,6 @@ bool lib_ctype::Cmdline_ReadFieldMaybe(lib_ctype::Cmdline& parent, algo::strptr 
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
     }
-    return retval;
-}
-
-// --- lib_ctype.Cmdline..ReadTupleMaybe
-// Read fields of lib_ctype::Cmdline from attributes of ascii tuple TUPLE
-bool lib_ctype::Cmdline_ReadTupleMaybe(lib_ctype::Cmdline &parent, algo::Tuple &tuple) {
-    bool retval = true;
-    ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
-        retval = Cmdline_ReadFieldMaybe(parent, attr.name, attr.value);
-        if (!retval) {
-            break;
-        }
-    }ind_end;
     return retval;
 }
 
@@ -143,6 +133,21 @@ void lib_ctype::Cmdline_PrintArgv(lib_ctype::Cmdline& row, algo::cstring& str) {
     }
 }
 
+// --- lib_ctype.Cmdline..ToArgv
+// Build argv from ROW into ARGS; args[0] is the command name
+// cfmt:lib_ctype.Cmdline.Argv  printfmt:Tuple
+void lib_ctype::Cmdline_ToArgv(lib_ctype::Cmdline& row, algo::StringAry& args) {
+    algo::tempstr temp;
+    (void)temp;
+    ary_RemoveAll(args);
+    ary_Alloc(args) << "bin/Cmdline"; // command path
+    if (!(row.in == "data")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.in, temp);
+        ary_Alloc(args) << "-in:" << temp;
+    }
+}
+
 // --- lib_ctype.Cmdline..NArgs
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
@@ -160,6 +165,78 @@ i32 lib_ctype::Cmdline_NArgs(lib_ctype::FieldId field, algo::strptr& out_dflt, b
     return retval;
 }
 
+// --- lib_ctype.Cmdline..ReadArgv
+// Field-aware command-line reader over a word array
+// Read command-line ARGS (already split into words) into the fields of PARENT.
+// Field-aware: a value-taking option consumes the next word; errors go to ERR.
+bool lib_ctype::Cmdline_ReadArgv(lib_ctype::Cmdline &parent, algo::StringAry &args, algo::cstring &err) {
+    bool retval = true;
+    int needarg=-1;// how many args the current option still wants
+    algo::strptr attrname;
+    bool isanon=false; // true if attrname is anonfld (positional)
+    lib_ctype::FieldId attrid;
+    bool endopt=false;
+    int whichns=0;// 0=base, 1=leaf
+    for (int argidx=0; argidx < ary_N(args); argidx++) {
+        algo::strptr arg = ary_qFind(args, argidx);
+        algo::strptr attrval;
+        algo::strptr dfltval;
+        bool haveval=false;
+        bool dash=elems_N(arg)>1 && arg.elems[0]=='-'; // a single dash is not an option
+        if (endopt || needarg>0 || !dash) {
+            attrval=arg;
+            haveval=true;
+        } else {
+            bool dashdash = elems_N(arg) >= 2 && arg.elems[1]=='-';
+            int skip = int(dash) + dashdash;
+            attrname=ch_RestFrom(arg,skip);
+            if (skip==2 && elems_N(arg)==2) {
+                endopt=true;
+                continue;
+            }
+            algo::i32_Range colon = TFind(attrname,':');
+            if (colon.beg < colon.end) {
+                attrval=ch_RestFrom(attrname,colon.end);
+                attrname=ch_FirstN(attrname,colon.beg);
+                haveval=true;
+            }
+            whichns=0;
+            needarg=-1;
+            if (needarg<0) {
+                whichns=1;
+                if (lib_ctype::FieldId_ReadStrptrMaybe(attrid,attrname)) {
+                    needarg = lib_ctype::Cmdline_NArgs(attrid,dfltval,&isanon);
+                }
+            }
+            if (attrval == "" && dfltval != "") {
+                attrval=dfltval;
+                haveval=true;
+            }
+            if (needarg<0) {
+                err<<"Cmdline: unknown option "<<Keyval("value",arg)<<eol;
+            } else {
+            }
+        }
+        if (ch_N(attrname) == 0) {
+            err << "Cmdline: too many arguments. error at "<<algo::strptr_ToSsim(arg)<<eol;
+        } else if (haveval) {
+            bool ret=false;
+            if (whichns==1) {
+                ret=lib_ctype::Cmdline_ReadFieldMaybe(parent, attrname, attrval);
+            }
+            if (!ret) {
+                err<<"Cmdline: error in "<<Keyval("option",attrname)<<Keyval("value",attrval)<<eol;
+            }
+            needarg--;
+            if (needarg <= 0) {
+                attrname="";// forget which argument was being filled
+            }
+        }
+    }
+    retval = (ch_N(err) == 0);
+    return retval;
+}
+
 // --- lib_ctype.FBltin.base.CopyOut
 // Copy fields out of row
 void lib_ctype::bltin_CopyOut(lib_ctype::FBltin &row, amcdb::Bltin &out) {
@@ -167,7 +244,7 @@ void lib_ctype::bltin_CopyOut(lib_ctype::FBltin &row, amcdb::Bltin &out) {
     out.likeu64 = row.likeu64;
     out.bigendok = row.bigendok;
     out.issigned = row.issigned;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- lib_ctype.FBltin.base.CopyIn
@@ -196,8 +273,7 @@ void lib_ctype::cdflt_CopyOut(lib_ctype::FCdflt &row, dmmeta::Cdflt &out) {
     out.dflt = row.dflt;
     out.cppdflt = row.cppdflt;
     out.ssimdflt = row.ssimdflt;
-    out.jsdflt = row.jsdflt;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- lib_ctype.FCdflt.base.CopyIn
@@ -207,7 +283,6 @@ void lib_ctype::cdflt_CopyIn(lib_ctype::FCdflt &row, dmmeta::Cdflt &in) {
     row.dflt = in.dflt;
     row.cppdflt = in.cppdflt;
     row.ssimdflt = in.ssimdflt;
-    row.jsdflt = in.jsdflt;
     row.comment = in.comment;
 }
 
@@ -229,7 +304,7 @@ void lib_ctype::cfmt_CopyOut(lib_ctype::FCfmt &row, dmmeta::Cfmt &out) {
     out.print = row.print;
     out.sep = row.sep;
     out.genop = row.genop;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- lib_ctype.FCfmt.msghdr.CopyIn
@@ -245,15 +320,13 @@ void lib_ctype::cfmt_CopyIn(lib_ctype::FCfmt &row, dmmeta::Cfmt &in) {
 }
 
 // --- lib_ctype.FCfmt.ctype.Get
-algo::Smallstr100 lib_ctype::ctype_Get(lib_ctype::FCfmt& cfmt) {
-    algo::Smallstr100 ret(algo::Pathcomp(cfmt.cfmt, ".RL"));
-    return ret;
+algo::strptr lib_ctype::ctype_Get(lib_ctype::FCfmt& cfmt) {
+    return algo::Pathcomp(cfmt.cfmt, ".RL");
 }
 
 // --- lib_ctype.FCfmt.strfmt.Get
-algo::Smallstr50 lib_ctype::strfmt_Get(lib_ctype::FCfmt& cfmt) {
-    algo::Smallstr50 ret(algo::Pathcomp(cfmt.cfmt, ".RR"));
-    return ret;
+algo::strptr lib_ctype::strfmt_Get(lib_ctype::FCfmt& cfmt) {
+    return algo::Pathcomp(cfmt.cfmt, ".RR");
 }
 
 // --- lib_ctype.FCfmt..Init
@@ -302,7 +375,7 @@ void lib_ctype::FCfmt_Print(lib_ctype::FCfmt& row, algo::cstring& str) {
     bool_Print(row.genop, temp);
     PrintAttrSpaceReset(str,"genop", temp);
 
-    algo::Comment_Print(row.comment, temp);
+    algo::cstring_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);
 
     bool_Print(row.ctype_c_cfmt_in_ary, temp);
@@ -340,7 +413,7 @@ void lib_ctype::FCppfunc_Uninit(lib_ctype::FCppfunc& cppfunc) {
 // Copy fields out of row
 void lib_ctype::ctype_CopyOut(lib_ctype::FCtype &row, dmmeta::Ctype &out) {
     out.ctype = row.ctype;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- lib_ctype.FCtype.msghdr.CopyIn
@@ -351,24 +424,22 @@ void lib_ctype::ctype_CopyIn(lib_ctype::FCtype &row, dmmeta::Ctype &in) {
 }
 
 // --- lib_ctype.FCtype.ns.Get
-algo::Smallstr16 lib_ctype::ns_Get(lib_ctype::FCtype& ctype) {
-    algo::Smallstr16 ret(algo::Pathcomp(ctype.ctype, ".RL"));
-    return ret;
+algo::strptr lib_ctype::ns_Get(lib_ctype::FCtype& ctype) {
+    return algo::Pathcomp(ctype.ctype, ".RL");
 }
 
 // --- lib_ctype.FCtype.name.Get
-algo::Smallstr100 lib_ctype::name_Get(lib_ctype::FCtype& ctype) {
-    algo::Smallstr100 ret(algo::Pathcomp(ctype.ctype, ".RR"));
-    return ret;
+algo::strptr lib_ctype::name_Get(lib_ctype::FCtype& ctype) {
+    return algo::Pathcomp(ctype.ctype, ".RR");
 }
 
 // --- lib_ctype.FCtype.c_field.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 void lib_ctype::c_field_Insert(lib_ctype::FCtype& ctype, lib_ctype::FField& row) {
     if (!row.ctype_c_field_in_ary) {
         c_field_Reserve(ctype, 1);
-        u32 n  = ctype.c_field_n++;
+        u64 n  = ctype.c_field_n++;
         ctype.c_field_elems[n] = &row;
         row.ctype_c_field_in_ary = true;
     }
@@ -387,15 +458,15 @@ bool lib_ctype::c_field_InsertMaybe(lib_ctype::FCtype& ctype, lib_ctype::FField&
 // --- lib_ctype.FCtype.c_field.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void lib_ctype::c_field_Remove(lib_ctype::FCtype& ctype, lib_ctype::FField& row) {
-    int n = ctype.c_field_n;
+    i64 n = ctype.c_field_n;
     if (bool_Update(row.ctype_c_field_in_ary,false)) {
         lib_ctype::FField* *elems = ctype.c_field_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = n-1; i>=0; i--) {
+        for (i64 i = n-1; i>=0; i--) {
             lib_ctype::FField* elem = elems[i]; // fetch element
             if (elem == &row) {
-                int j = i + 1;
+                i64 j = i + 1;
                 size_t nbytes = sizeof(lib_ctype::FField*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
                 ctype.c_field_n = n - 1;
@@ -407,12 +478,12 @@ void lib_ctype::c_field_Remove(lib_ctype::FCtype& ctype, lib_ctype::FField& row)
 
 // --- lib_ctype.FCtype.c_field.Reserve
 // Reserve space in index for N more elements;
-void lib_ctype::c_field_Reserve(lib_ctype::FCtype& ctype, u32 n) {
-    u32 old_max = ctype.c_field_max;
+void lib_ctype::c_field_Reserve(lib_ctype::FCtype& ctype, u64 n) {
+    u64 old_max = ctype.c_field_max;
     if (UNLIKELY(ctype.c_field_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(lib_ctype::FField*);
-        u32 new_size = new_max * sizeof(lib_ctype::FField*);
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, ctype.c_field_n + n), 4);
+        u64 old_size = old_max * sizeof(lib_ctype::FField*);
+        u64 new_size = new_max * sizeof(lib_ctype::FField*);
         void *new_mem = algo_lib::malloc_ReallocMem(ctype.c_field_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("lib_ctype.out_of_memory  field:lib_ctype.FCtype.c_field");
@@ -423,12 +494,12 @@ void lib_ctype::c_field_Reserve(lib_ctype::FCtype& ctype, u32 n) {
 }
 
 // --- lib_ctype.FCtype.c_cfmt.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 void lib_ctype::c_cfmt_Insert(lib_ctype::FCtype& ctype, lib_ctype::FCfmt& row) {
     if (!row.ctype_c_cfmt_in_ary) {
         c_cfmt_Reserve(ctype, 1);
-        u32 n  = ctype.c_cfmt_n++;
+        u64 n  = ctype.c_cfmt_n++;
         ctype.c_cfmt_elems[n] = &row;
         row.ctype_c_cfmt_in_ary = true;
     }
@@ -447,15 +518,15 @@ bool lib_ctype::c_cfmt_InsertMaybe(lib_ctype::FCtype& ctype, lib_ctype::FCfmt& r
 // --- lib_ctype.FCtype.c_cfmt.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void lib_ctype::c_cfmt_Remove(lib_ctype::FCtype& ctype, lib_ctype::FCfmt& row) {
-    int n = ctype.c_cfmt_n;
+    i64 n = ctype.c_cfmt_n;
     if (bool_Update(row.ctype_c_cfmt_in_ary,false)) {
         lib_ctype::FCfmt* *elems = ctype.c_cfmt_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = n-1; i>=0; i--) {
+        for (i64 i = n-1; i>=0; i--) {
             lib_ctype::FCfmt* elem = elems[i]; // fetch element
             if (elem == &row) {
-                int j = i + 1;
+                i64 j = i + 1;
                 size_t nbytes = sizeof(lib_ctype::FCfmt*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
                 ctype.c_cfmt_n = n - 1;
@@ -467,12 +538,12 @@ void lib_ctype::c_cfmt_Remove(lib_ctype::FCtype& ctype, lib_ctype::FCfmt& row) {
 
 // --- lib_ctype.FCtype.c_cfmt.Reserve
 // Reserve space in index for N more elements;
-void lib_ctype::c_cfmt_Reserve(lib_ctype::FCtype& ctype, u32 n) {
-    u32 old_max = ctype.c_cfmt_max;
+void lib_ctype::c_cfmt_Reserve(lib_ctype::FCtype& ctype, u64 n) {
+    u64 old_max = ctype.c_cfmt_max;
     if (UNLIKELY(ctype.c_cfmt_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(lib_ctype::FCfmt*);
-        u32 new_size = new_max * sizeof(lib_ctype::FCfmt*);
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, ctype.c_cfmt_n + n), 4);
+        u64 old_size = old_max * sizeof(lib_ctype::FCfmt*);
+        u64 new_size = new_max * sizeof(lib_ctype::FCfmt*);
         void *new_mem = algo_lib::malloc_ReallocMem(ctype.c_cfmt_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("lib_ctype.out_of_memory  field:lib_ctype.FCtype.c_cfmt");
@@ -565,7 +636,7 @@ void* lib_ctype::fconst_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     lib_ctype::FFconst*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.fconst_lary[bsr];
         if (!lev) {
             lev=(lib_ctype::FFconst*)algo_lib::malloc_AllocMem(sizeof(lib_ctype::FFconst) * (u64(1)<<bsr));
@@ -574,7 +645,7 @@ void* lib_ctype::fconst_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.fconst_n = i32(new_nelems);
+        _db.fconst_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -587,7 +658,7 @@ void lib_ctype::fconst_RemoveLast() {
     if (n > 0) {
         n -= 1;
         fconst_qFind(u64(n)).~FFconst();
-        _db.fconst_n = i32(n);
+        _db.fconst_n = i64(n);
     }
 }
 
@@ -641,6 +712,22 @@ lib_ctype::FFconst& lib_ctype::ind_fconst_key_FindX(const algo::strptr& key) {
     lib_ctype::FFconst* ret = ind_fconst_key_Find(key);
     vrfy(ret, tempstr() << "lib_ctype.key_error  table:ind_fconst_key  key:'"<<key<<"'  comment:'key not found'");
     return *ret;
+}
+
+// --- lib_ctype.FDb.ind_fconst_key.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+lib_ctype::FFconst* lib_ctype::ind_fconst_key_GetOrCreate(const algo::strptr& key) {
+    lib_ctype::FFconst* ret = ind_fconst_key_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &fconst_Alloc();
+        (*ret).key = key;
+        bool good = fconst_XrefMaybe(*ret);
+        if (!good) {
+            fconst_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    return ret;
 }
 
 // --- lib_ctype.FDb.ind_fconst_key.InsertMaybe
@@ -735,7 +822,7 @@ void lib_ctype::ind_fconst_key_AbsReserve(int n) {
 // --- lib_ctype.FDb.ind_fconst.Find
 // Find row by key. Return NULL if not found.
 lib_ctype::FFconst* lib_ctype::ind_fconst_Find(const algo::strptr& key) {
-    u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_fconst_buckets_n - 1);
+    u32 index = algo::Smallstr150_Hash(0, key) & (_db.ind_fconst_buckets_n - 1);
     lib_ctype::FFconst *ret = _db.ind_fconst_buckets_elems[index];
     for (; ret && !((*ret).fconst == key); ret = ret->ind_fconst_next) {
     }
@@ -750,12 +837,28 @@ lib_ctype::FFconst& lib_ctype::ind_fconst_FindX(const algo::strptr& key) {
     return *ret;
 }
 
+// --- lib_ctype.FDb.ind_fconst.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+lib_ctype::FFconst* lib_ctype::ind_fconst_GetOrCreate(const algo::strptr& key) {
+    lib_ctype::FFconst* ret = ind_fconst_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &fconst_Alloc();
+        (*ret).fconst = key;
+        bool good = fconst_XrefMaybe(*ret);
+        if (!good) {
+            fconst_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    return ret;
+}
+
 // --- lib_ctype.FDb.ind_fconst.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool lib_ctype::ind_fconst_InsertMaybe(lib_ctype::FFconst& row) {
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_fconst_next == (lib_ctype::FFconst*)-1)) {// check if in hash already
-        row.ind_fconst_hashval = algo::Smallstr100_Hash(0, row.fconst);
+        row.ind_fconst_hashval = algo::Smallstr150_Hash(0, row.fconst);
         ind_fconst_Reserve(1);
         u32 index = row.ind_fconst_hashval & (_db.ind_fconst_buckets_n - 1);
         lib_ctype::FFconst* *prev = &_db.ind_fconst_buckets_elems[index];
@@ -885,7 +988,7 @@ void* lib_ctype::ssimfile_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     lib_ctype::FSsimfile*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.ssimfile_lary[bsr];
         if (!lev) {
             lev=(lib_ctype::FSsimfile*)algo_lib::malloc_AllocMem(sizeof(lib_ctype::FSsimfile) * (u64(1)<<bsr));
@@ -894,7 +997,7 @@ void* lib_ctype::ssimfile_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.ssimfile_n = i32(new_nelems);
+        _db.ssimfile_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -907,7 +1010,7 @@ void lib_ctype::ssimfile_RemoveLast() {
     if (n > 0) {
         n -= 1;
         ssimfile_qFind(u64(n)).~FSsimfile();
-        _db.ssimfile_n = i32(n);
+        _db.ssimfile_n = i64(n);
     }
 }
 
@@ -961,6 +1064,22 @@ lib_ctype::FSsimfile& lib_ctype::ind_ssimfile_FindX(const algo::strptr& key) {
     lib_ctype::FSsimfile* ret = ind_ssimfile_Find(key);
     vrfy(ret, tempstr() << "lib_ctype.key_error  table:ind_ssimfile  key:'"<<key<<"'  comment:'key not found'");
     return *ret;
+}
+
+// --- lib_ctype.FDb.ind_ssimfile.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+lib_ctype::FSsimfile* lib_ctype::ind_ssimfile_GetOrCreate(const algo::strptr& key) {
+    lib_ctype::FSsimfile* ret = ind_ssimfile_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &ssimfile_Alloc();
+        (*ret).ssimfile = key;
+        bool good = ssimfile_XrefMaybe(*ret);
+        if (!good) {
+            ssimfile_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    return ret;
 }
 
 // --- lib_ctype.FDb.ind_ssimfile.InsertMaybe
@@ -1098,7 +1217,7 @@ void* lib_ctype::ftuple_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     lib_ctype::FFtuple*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.ftuple_lary[bsr];
         if (!lev) {
             lev=(lib_ctype::FFtuple*)algo_lib::malloc_AllocMem(sizeof(lib_ctype::FFtuple) * (u64(1)<<bsr));
@@ -1107,7 +1226,7 @@ void* lib_ctype::ftuple_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.ftuple_n = i32(new_nelems);
+        _db.ftuple_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1120,7 +1239,7 @@ void lib_ctype::ftuple_RemoveLast() {
     if (n > 0) {
         n -= 1;
         ftuple_qFind(u64(n)).~FFtuple();
-        _db.ftuple_n = i32(n);
+        _db.ftuple_n = i64(n);
     }
 }
 
@@ -1200,7 +1319,7 @@ void* lib_ctype::ctype_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     lib_ctype::FCtype*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.ctype_lary[bsr];
         if (!lev) {
             lev=(lib_ctype::FCtype*)algo_lib::malloc_AllocMem(sizeof(lib_ctype::FCtype) * (u64(1)<<bsr));
@@ -1209,7 +1328,7 @@ void* lib_ctype::ctype_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.ctype_n = i32(new_nelems);
+        _db.ctype_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1222,7 +1341,7 @@ void lib_ctype::ctype_RemoveLast() {
     if (n > 0) {
         n -= 1;
         ctype_qFind(u64(n)).~FCtype();
-        _db.ctype_n = i32(n);
+        _db.ctype_n = i64(n);
     }
 }
 
@@ -1421,7 +1540,7 @@ void* lib_ctype::field_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     lib_ctype::FField*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.field_lary[bsr];
         if (!lev) {
             lev=(lib_ctype::FField*)algo_lib::malloc_AllocMem(sizeof(lib_ctype::FField) * (u64(1)<<bsr));
@@ -1430,7 +1549,7 @@ void* lib_ctype::field_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.field_n = i32(new_nelems);
+        _db.field_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1443,7 +1562,7 @@ void lib_ctype::field_RemoveLast() {
     if (n > 0) {
         n -= 1;
         field_qFind(u64(n)).~FField();
-        _db.field_n = i32(n);
+        _db.field_n = i64(n);
     }
 }
 
@@ -1493,7 +1612,7 @@ bool lib_ctype::field_XrefMaybe(lib_ctype::FField &row) {
 // --- lib_ctype.FDb.ind_field.Find
 // Find row by key. Return NULL if not found.
 lib_ctype::FField* lib_ctype::ind_field_Find(const algo::strptr& key) {
-    u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_field_buckets_n - 1);
+    u32 index = algo::Smallstr150_Hash(0, key) & (_db.ind_field_buckets_n - 1);
     lib_ctype::FField *ret = _db.ind_field_buckets_elems[index];
     for (; ret && !((*ret).field == key); ret = ret->ind_field_next) {
     }
@@ -1508,12 +1627,28 @@ lib_ctype::FField& lib_ctype::ind_field_FindX(const algo::strptr& key) {
     return *ret;
 }
 
+// --- lib_ctype.FDb.ind_field.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+lib_ctype::FField* lib_ctype::ind_field_GetOrCreate(const algo::strptr& key) {
+    lib_ctype::FField* ret = ind_field_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &field_Alloc();
+        (*ret).field = key;
+        bool good = field_XrefMaybe(*ret);
+        if (!good) {
+            field_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    return ret;
+}
+
 // --- lib_ctype.FDb.ind_field.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool lib_ctype::ind_field_InsertMaybe(lib_ctype::FField& row) {
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_field_next == (lib_ctype::FField*)-1)) {// check if in hash already
-        row.ind_field_hashval = algo::Smallstr100_Hash(0, row.field);
+        row.ind_field_hashval = algo::Smallstr150_Hash(0, row.field);
         ind_field_Reserve(1);
         u32 index = row.ind_field_hashval & (_db.ind_field_buckets_n - 1);
         lib_ctype::FField* *prev = &_db.ind_field_buckets_elems[index];
@@ -1643,7 +1778,7 @@ void* lib_ctype::cdflt_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     lib_ctype::FCdflt*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.cdflt_lary[bsr];
         if (!lev) {
             lev=(lib_ctype::FCdflt*)algo_lib::malloc_AllocMem(sizeof(lib_ctype::FCdflt) * (u64(1)<<bsr));
@@ -1652,7 +1787,7 @@ void* lib_ctype::cdflt_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.cdflt_n = i32(new_nelems);
+        _db.cdflt_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1665,7 +1800,7 @@ void lib_ctype::cdflt_RemoveLast() {
     if (n > 0) {
         n -= 1;
         cdflt_qFind(u64(n)).~FCdflt();
-        _db.cdflt_n = i32(n);
+        _db.cdflt_n = i64(n);
     }
 }
 
@@ -1702,7 +1837,13 @@ bool lib_ctype::cdflt_XrefMaybe(lib_ctype::FCdflt &row) {
 // --- lib_ctype.FDb._db.InitReflection
 // Load statically available data into tables, register tables and database.
 static void lib_ctype::InitReflection() {
-    algo_lib::imdb_InsertMaybe(algo::Imdb("lib_ctype", lib_ctype::InsertStrptrMaybe, NULL, NULL, NULL, algo::Comment()));
+    algo_lib::FImdb &row = algo_lib::imdb_Alloc();
+    row.imdb               = "lib_ctype";
+    row.InsertStrptrMaybe  = lib_ctype::InsertStrptrMaybe;
+    row.RemoveStrptrMaybe  = lib_ctype::RemoveStrptrMaybe;
+    row.Step               = NULL;
+    row.MainLoop           = NULL;
+    algo_lib::imdb_XrefMaybe(row);
 
     algo::Imtable t_trace;
     t_trace.imtable         = "lib_ctype.trace";
@@ -1716,7 +1857,7 @@ static void lib_ctype::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'lib_ctype.Input'  signature:'9f2e90c5e54c166080039493e7b06fd0cc60d63e'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'lib_ctype.Input'  signature:'a7c24d3093aa4687d3aa44dcadf80809337999c3'");
 }
 
 // --- lib_ctype.FDb._db.InsertStrptrMaybe
@@ -1892,6 +2033,93 @@ void lib_ctype::Steps() {
     algo_lib::Step(); // dependent namespace specified via (dev.targdep)
 }
 
+// --- lib_ctype.FDb._db.RemoveStrptrMaybe
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+bool lib_ctype::RemoveStrptrMaybe(algo::strptr str) {
+    bool retval = true;
+    lib_ctype::TableId table_id(-1);
+    value_SetStrptrMaybe(table_id, algo::GetTypeTag(str));
+    switch (value_GetEnum(table_id)) {
+        case lib_ctype_TableId_dmmeta_Fconst: { // finput:lib_ctype.FDb.fconst
+            // finput lib_ctype.FDb.fconst: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case lib_ctype_TableId_dmmeta_Ssimfile: { // finput:lib_ctype.FDb.ssimfile
+            // finput lib_ctype.FDb.ssimfile: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case lib_ctype_TableId_dmmeta_Ftuple: { // finput:lib_ctype.FDb.ftuple
+            // finput lib_ctype.FDb.ftuple: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case lib_ctype_TableId_dmmeta_Ctype: { // finput:lib_ctype.FDb.ctype
+            // finput lib_ctype.FDb.ctype: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case lib_ctype_TableId_dmmeta_Field: { // finput:lib_ctype.FDb.field
+            // finput lib_ctype.FDb.field: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case lib_ctype_TableId_dmmeta_Cdflt: { // finput:lib_ctype.FDb.cdflt
+            // finput lib_ctype.FDb.cdflt: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case lib_ctype_TableId_dmmeta_Cfmt: { // finput:lib_ctype.FDb.cfmt
+            // finput lib_ctype.FDb.cfmt: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case lib_ctype_TableId_dmmeta_Cppfunc: { // finput:lib_ctype.FDb.cppfunc
+            // finput lib_ctype.FDb.cppfunc: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case lib_ctype_TableId_dmmeta_Substr: { // finput:lib_ctype.FDb.substr
+            // finput lib_ctype.FDb.substr: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case lib_ctype_TableId_dev_Unstablefld: { // finput:lib_ctype.FDb.unstablefld
+            // finput lib_ctype.FDb.unstablefld: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case lib_ctype_TableId_amcdb_Bltin: { // finput:lib_ctype.FDb.bltin
+            // finput lib_ctype.FDb.bltin: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case lib_ctype_TableId_dmmeta_Sqltype: { // finput:lib_ctype.FDb.sqltype
+            // finput lib_ctype.FDb.sqltype: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        default:
+        retval = false;
+        break;
+    } //switch
+    return retval;
+}
+
 // --- lib_ctype.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
@@ -1946,7 +2174,7 @@ void* lib_ctype::cfmt_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     lib_ctype::FCfmt*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.cfmt_lary[bsr];
         if (!lev) {
             lev=(lib_ctype::FCfmt*)algo_lib::malloc_AllocMem(sizeof(lib_ctype::FCfmt) * (u64(1)<<bsr));
@@ -1955,7 +2183,7 @@ void* lib_ctype::cfmt_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.cfmt_n = i32(new_nelems);
+        _db.cfmt_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1968,7 +2196,7 @@ void lib_ctype::cfmt_RemoveLast() {
     if (n > 0) {
         n -= 1;
         cfmt_qFind(u64(n)).~FCfmt();
-        _db.cfmt_n = i32(n);
+        _db.cfmt_n = i64(n);
     }
 }
 
@@ -2022,6 +2250,22 @@ lib_ctype::FCfmt& lib_ctype::ind_cfmt_FindX(const algo::strptr& key) {
     lib_ctype::FCfmt* ret = ind_cfmt_Find(key);
     vrfy(ret, tempstr() << "lib_ctype.key_error  table:ind_cfmt  key:'"<<key<<"'  comment:'key not found'");
     return *ret;
+}
+
+// --- lib_ctype.FDb.ind_cfmt.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+lib_ctype::FCfmt* lib_ctype::ind_cfmt_GetOrCreate(const algo::strptr& key) {
+    lib_ctype::FCfmt* ret = ind_cfmt_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &cfmt_Alloc();
+        (*ret).cfmt = key;
+        bool good = cfmt_XrefMaybe(*ret);
+        if (!good) {
+            cfmt_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    return ret;
 }
 
 // --- lib_ctype.FDb.ind_cfmt.InsertMaybe
@@ -2159,7 +2403,7 @@ void* lib_ctype::cppfunc_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     lib_ctype::FCppfunc*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.cppfunc_lary[bsr];
         if (!lev) {
             lev=(lib_ctype::FCppfunc*)algo_lib::malloc_AllocMem(sizeof(lib_ctype::FCppfunc) * (u64(1)<<bsr));
@@ -2168,7 +2412,7 @@ void* lib_ctype::cppfunc_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.cppfunc_n = i32(new_nelems);
+        _db.cppfunc_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -2180,7 +2424,7 @@ void lib_ctype::cppfunc_RemoveAll() {
     for (u64 n = _db.cppfunc_n; n>0; ) {
         n--;
         cppfunc_qFind(u64(n)).~FCppfunc(); // destroy last element
-        _db.cppfunc_n = i32(n);
+        _db.cppfunc_n = i64(n);
     }
 }
 
@@ -2191,7 +2435,7 @@ void lib_ctype::cppfunc_RemoveLast() {
     if (n > 0) {
         n -= 1;
         cppfunc_qFind(u64(n)).~FCppfunc();
-        _db.cppfunc_n = i32(n);
+        _db.cppfunc_n = i64(n);
     }
 }
 
@@ -2271,7 +2515,7 @@ void* lib_ctype::substr_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     lib_ctype::FSubstr*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.substr_lary[bsr];
         if (!lev) {
             lev=(lib_ctype::FSubstr*)algo_lib::malloc_AllocMem(sizeof(lib_ctype::FSubstr) * (u64(1)<<bsr));
@@ -2280,7 +2524,7 @@ void* lib_ctype::substr_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.substr_n = i32(new_nelems);
+        _db.substr_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -2292,7 +2536,7 @@ void lib_ctype::substr_RemoveAll() {
     for (u64 n = _db.substr_n; n>0; ) {
         n--;
         substr_qFind(u64(n)).~FSubstr(); // destroy last element
-        _db.substr_n = i32(n);
+        _db.substr_n = i64(n);
     }
 }
 
@@ -2303,7 +2547,7 @@ void lib_ctype::substr_RemoveLast() {
     if (n > 0) {
         n -= 1;
         substr_qFind(u64(n)).~FSubstr();
-        _db.substr_n = i32(n);
+        _db.substr_n = i64(n);
     }
 }
 
@@ -2396,7 +2640,7 @@ void* lib_ctype::unstablefld_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     lib_ctype::FUnstablefld*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.unstablefld_lary[bsr];
         if (!lev) {
             lev=(lib_ctype::FUnstablefld*)algo_lib::malloc_AllocMem(sizeof(lib_ctype::FUnstablefld) * (u64(1)<<bsr));
@@ -2405,7 +2649,7 @@ void* lib_ctype::unstablefld_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.unstablefld_n = i32(new_nelems);
+        _db.unstablefld_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -2417,7 +2661,7 @@ void lib_ctype::unstablefld_RemoveAll() {
     for (u64 n = _db.unstablefld_n; n>0; ) {
         n--;
         unstablefld_qFind(u64(n)).~FUnstablefld(); // destroy last element
-        _db.unstablefld_n = i32(n);
+        _db.unstablefld_n = i64(n);
     }
 }
 
@@ -2428,7 +2672,7 @@ void lib_ctype::unstablefld_RemoveLast() {
     if (n > 0) {
         n -= 1;
         unstablefld_qFind(u64(n)).~FUnstablefld();
-        _db.unstablefld_n = i32(n);
+        _db.unstablefld_n = i64(n);
     }
 }
 
@@ -2508,7 +2752,7 @@ void* lib_ctype::bltin_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     lib_ctype::FBltin*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.bltin_lary[bsr];
         if (!lev) {
             lev=(lib_ctype::FBltin*)algo_lib::malloc_AllocMem(sizeof(lib_ctype::FBltin) * (u64(1)<<bsr));
@@ -2517,7 +2761,7 @@ void* lib_ctype::bltin_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.bltin_n = i32(new_nelems);
+        _db.bltin_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -2529,7 +2773,7 @@ void lib_ctype::bltin_RemoveAll() {
     for (u64 n = _db.bltin_n; n>0; ) {
         n--;
         bltin_qFind(u64(n)).~FBltin(); // destroy last element
-        _db.bltin_n = i32(n);
+        _db.bltin_n = i64(n);
     }
 }
 
@@ -2540,7 +2784,7 @@ void lib_ctype::bltin_RemoveLast() {
     if (n > 0) {
         n -= 1;
         bltin_qFind(u64(n)).~FBltin();
-        _db.bltin_n = i32(n);
+        _db.bltin_n = i64(n);
     }
 }
 
@@ -2620,7 +2864,7 @@ void* lib_ctype::sqltype_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     lib_ctype::FSqltype*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.sqltype_lary[bsr];
         if (!lev) {
             lev=(lib_ctype::FSqltype*)algo_lib::malloc_AllocMem(sizeof(lib_ctype::FSqltype) * (u64(1)<<bsr));
@@ -2629,7 +2873,7 @@ void* lib_ctype::sqltype_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.sqltype_n = i32(new_nelems);
+        _db.sqltype_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -2641,7 +2885,7 @@ void lib_ctype::sqltype_RemoveAll() {
     for (u64 n = _db.sqltype_n; n>0; ) {
         n--;
         sqltype_qFind(u64(n)).~FSqltype(); // destroy last element
-        _db.sqltype_n = i32(n);
+        _db.sqltype_n = i64(n);
     }
 }
 
@@ -2652,7 +2896,7 @@ void lib_ctype::sqltype_RemoveLast() {
     if (n > 0) {
         n -= 1;
         sqltype_qFind(u64(n)).~FSqltype();
-        _db.sqltype_n = i32(n);
+        _db.sqltype_n = i64(n);
     }
 }
 
@@ -2952,7 +3196,7 @@ void lib_ctype::FDb_Uninit() {
 void lib_ctype::fconst_CopyOut(lib_ctype::FFconst &row, dmmeta::Fconst &out) {
     out.fconst = row.fconst;
     out.value = row.value;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- lib_ctype.FFconst.msghdr.CopyIn
@@ -2964,15 +3208,13 @@ void lib_ctype::fconst_CopyIn(lib_ctype::FFconst &row, dmmeta::Fconst &in) {
 }
 
 // --- lib_ctype.FFconst.field.Get
-algo::Smallstr100 lib_ctype::field_Get(lib_ctype::FFconst& fconst) {
-    algo::Smallstr100 ret(algo::Pathcomp(fconst.fconst, "/LL"));
-    return ret;
+algo::strptr lib_ctype::field_Get(lib_ctype::FFconst& fconst) {
+    return algo::Pathcomp(fconst.fconst, "/LL");
 }
 
 // --- lib_ctype.FFconst.name.Get
-algo::Smallstr100 lib_ctype::name_Get(lib_ctype::FFconst& fconst) {
-    algo::Smallstr100 ret(algo::Pathcomp(fconst.fconst, "/LR"));
-    return ret;
+algo::strptr lib_ctype::name_Get(lib_ctype::FFconst& fconst) {
+    return algo::Pathcomp(fconst.fconst, "/LR");
 }
 
 // --- lib_ctype.FFconst..Uninit
@@ -2993,13 +3235,13 @@ void lib_ctype::FFconst_Print(lib_ctype::FFconst& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "lib_ctype.FFconst";
 
-    algo::Smallstr100_Print(row.fconst, temp);
+    algo::Smallstr150_Print(row.fconst, temp);
     PrintAttrSpaceReset(str,"fconst", temp);
 
     algo::CppExpr_Print(row.value, temp);
     PrintAttrSpaceReset(str,"value", temp);
 
-    algo::Comment_Print(row.comment, temp);
+    algo::cstring_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);
 
     algo::cstring_Print(row.key, temp);
@@ -3013,7 +3255,7 @@ void lib_ctype::field_CopyOut(lib_ctype::FField &row, dmmeta::Field &out) {
     out.arg = row.arg;
     out.reftype = row.reftype;
     out.dflt = row.dflt;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- lib_ctype.FField.msghdr.CopyIn
@@ -3027,21 +3269,18 @@ void lib_ctype::field_CopyIn(lib_ctype::FField &row, dmmeta::Field &in) {
 }
 
 // --- lib_ctype.FField.ctype.Get
-algo::Smallstr100 lib_ctype::ctype_Get(lib_ctype::FField& field) {
-    algo::Smallstr100 ret(algo::Pathcomp(field.field, ".RL"));
-    return ret;
+algo::strptr lib_ctype::ctype_Get(lib_ctype::FField& field) {
+    return algo::Pathcomp(field.field, ".RL");
 }
 
 // --- lib_ctype.FField.ns.Get
-algo::Smallstr16 lib_ctype::ns_Get(lib_ctype::FField& field) {
-    algo::Smallstr16 ret(algo::Pathcomp(field.field, ".RL.RL"));
-    return ret;
+algo::strptr lib_ctype::ns_Get(lib_ctype::FField& field) {
+    return algo::Pathcomp(field.field, ".RL.RL");
 }
 
 // --- lib_ctype.FField.name.Get
-algo::Smallstr50 lib_ctype::name_Get(lib_ctype::FField& field) {
-    algo::Smallstr50 ret(algo::Pathcomp(field.field, ".RR"));
-    return ret;
+algo::strptr lib_ctype::name_Get(lib_ctype::FField& field) {
+    return algo::Pathcomp(field.field, ".RR");
 }
 
 // --- lib_ctype.FField.zd_fconst.Insert
@@ -3116,13 +3355,31 @@ lib_ctype::FFconst* lib_ctype::zd_fconst_RemoveFirst(lib_ctype::FField& field) {
     return row;
 }
 
+// --- lib_ctype.FField.zd_fconst.InsertBefore
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+void lib_ctype::zd_fconst_InsertBefore(lib_ctype::FField& field, lib_ctype::FFconst& row, lib_ctype::FFconst* before) {
+    if (!field_zd_fconst_InLlistQ(row) && &row != before) {
+        lib_ctype::FFconst* next = before;
+        lib_ctype::FFconst* prev = next ? next->field_zd_fconst_prev : field.zd_fconst_tail;
+        row.field_zd_fconst_next = next;
+        row.field_zd_fconst_prev = prev;
+        lib_ctype::FFconst **prev_link_a = &prev->field_zd_fconst_next;
+        lib_ctype::FFconst **prev_link_b = &field.zd_fconst_head;
+        *(prev ? prev_link_a : prev_link_b) = &row;
+        lib_ctype::FFconst **next_link_a = &next->field_zd_fconst_prev;
+        lib_ctype::FFconst **next_link_b = &field.zd_fconst_tail;
+        *(next ? next_link_a : next_link_b) = &row;
+        field.zd_fconst_n++;
+    }
+}
+
 // --- lib_ctype.FField.c_substr_srcfield.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 void lib_ctype::c_substr_srcfield_Insert(lib_ctype::FField& field, lib_ctype::FSubstr& row) {
     if (!row.field_c_substr_srcfield_in_ary) {
         c_substr_srcfield_Reserve(field, 1);
-        u32 n  = field.c_substr_srcfield_n++;
+        u64 n  = field.c_substr_srcfield_n++;
         field.c_substr_srcfield_elems[n] = &row;
         row.field_c_substr_srcfield_in_ary = true;
     }
@@ -3141,15 +3398,15 @@ bool lib_ctype::c_substr_srcfield_InsertMaybe(lib_ctype::FField& field, lib_ctyp
 // --- lib_ctype.FField.c_substr_srcfield.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void lib_ctype::c_substr_srcfield_Remove(lib_ctype::FField& field, lib_ctype::FSubstr& row) {
-    int n = field.c_substr_srcfield_n;
+    i64 n = field.c_substr_srcfield_n;
     if (bool_Update(row.field_c_substr_srcfield_in_ary,false)) {
         lib_ctype::FSubstr* *elems = field.c_substr_srcfield_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = n-1; i>=0; i--) {
+        for (i64 i = n-1; i>=0; i--) {
             lib_ctype::FSubstr* elem = elems[i]; // fetch element
             if (elem == &row) {
-                int j = i + 1;
+                i64 j = i + 1;
                 size_t nbytes = sizeof(lib_ctype::FSubstr*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
                 field.c_substr_srcfield_n = n - 1;
@@ -3161,12 +3418,12 @@ void lib_ctype::c_substr_srcfield_Remove(lib_ctype::FField& field, lib_ctype::FS
 
 // --- lib_ctype.FField.c_substr_srcfield.Reserve
 // Reserve space in index for N more elements;
-void lib_ctype::c_substr_srcfield_Reserve(lib_ctype::FField& field, u32 n) {
-    u32 old_max = field.c_substr_srcfield_max;
+void lib_ctype::c_substr_srcfield_Reserve(lib_ctype::FField& field, u64 n) {
+    u64 old_max = field.c_substr_srcfield_max;
     if (UNLIKELY(field.c_substr_srcfield_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(lib_ctype::FSubstr*);
-        u32 new_size = new_max * sizeof(lib_ctype::FSubstr*);
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, field.c_substr_srcfield_n + n), 4);
+        u64 old_size = old_max * sizeof(lib_ctype::FSubstr*);
+        u64 new_size = new_max * sizeof(lib_ctype::FSubstr*);
         void *new_mem = algo_lib::malloc_ReallocMem(field.c_substr_srcfield_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("lib_ctype.out_of_memory  field:lib_ctype.FField.c_substr_srcfield");
@@ -3219,7 +3476,7 @@ void lib_ctype::FField_Print(lib_ctype::FField& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "lib_ctype.FField";
 
-    algo::Smallstr100_Print(row.field, temp);
+    algo::Smallstr150_Print(row.field, temp);
     PrintAttrSpaceReset(str,"field", temp);
 
     algo::Smallstr100_Print(row.arg, temp);
@@ -3231,7 +3488,7 @@ void lib_ctype::FField_Print(lib_ctype::FField& row, algo::cstring& str) {
     algo::CppExpr_Print(row.dflt, temp);
     PrintAttrSpaceReset(str,"dflt", temp);
 
-    algo::Comment_Print(row.comment, temp);
+    algo::cstring_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);
 
     bool_Print(row.istuple_computed, temp);
@@ -3263,7 +3520,7 @@ void lib_ctype::FField_Print(lib_ctype::FField& row, algo::cstring& str) {
 // Copy fields out of row
 void lib_ctype::ftuple_CopyOut(lib_ctype::FFtuple &row, dmmeta::Ftuple &out) {
     out.field = row.field;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- lib_ctype.FFtuple.msghdr.CopyIn
@@ -3287,7 +3544,7 @@ void lib_ctype::FFtuple_Uninit(lib_ctype::FFtuple& ftuple) {
 void lib_ctype::sqltype_CopyOut(lib_ctype::FSqltype &row, dmmeta::Sqltype &out) {
     out.ctype = row.ctype;
     out.expr = row.expr;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- lib_ctype.FSqltype.base.CopyIn
@@ -3322,21 +3579,18 @@ void lib_ctype::ssimfile_CopyIn(lib_ctype::FSsimfile &row, dmmeta::Ssimfile &in)
 }
 
 // --- lib_ctype.FSsimfile.ssimns.Get
-algo::Smallstr16 lib_ctype::ssimns_Get(lib_ctype::FSsimfile& ssimfile) {
-    algo::Smallstr16 ret(algo::Pathcomp(ssimfile.ssimfile, ".LL"));
-    return ret;
+algo::strptr lib_ctype::ssimns_Get(lib_ctype::FSsimfile& ssimfile) {
+    return algo::Pathcomp(ssimfile.ssimfile, ".LL");
 }
 
 // --- lib_ctype.FSsimfile.ns.Get
-algo::Smallstr16 lib_ctype::ns_Get(lib_ctype::FSsimfile& ssimfile) {
-    algo::Smallstr16 ret(algo::Pathcomp(ssimfile.ssimfile, ".LL"));
-    return ret;
+algo::strptr lib_ctype::ns_Get(lib_ctype::FSsimfile& ssimfile) {
+    return algo::Pathcomp(ssimfile.ssimfile, ".LL");
 }
 
 // --- lib_ctype.FSsimfile.name.Get
-algo::Smallstr50 lib_ctype::name_Get(lib_ctype::FSsimfile& ssimfile) {
-    algo::Smallstr50 ret(algo::Pathcomp(ssimfile.ssimfile, ".RR"));
-    return ret;
+algo::strptr lib_ctype::name_Get(lib_ctype::FSsimfile& ssimfile) {
+    return algo::Pathcomp(ssimfile.ssimfile, ".RR");
 }
 
 // --- lib_ctype.FSsimfile..Uninit
@@ -3378,7 +3632,7 @@ void lib_ctype::FSubstr_Uninit(lib_ctype::FSubstr& substr) {
 // Copy fields out of row
 void lib_ctype::unstablefld_CopyOut(lib_ctype::FUnstablefld &row, dev::Unstablefld &out) {
     out.field = row.field;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- lib_ctype.FUnstablefld.base.CopyIn
@@ -3478,7 +3732,7 @@ bool lib_ctype::FieldId_ReadStrptrMaybe(lib_ctype::FieldId &parent, algo::strptr
 // --- lib_ctype.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:lib_ctype.FieldId.String  printfmt:Raw
-void lib_ctype::FieldId_Print(lib_ctype::FieldId& row, algo::cstring& str) {
+void lib_ctype::FieldId_Print(lib_ctype::FieldId row, algo::cstring& str) {
     lib_ctype::value_Print(row, str);
 }
 
@@ -3666,7 +3920,7 @@ bool lib_ctype::TableId_ReadStrptrMaybe(lib_ctype::TableId &parent, algo::strptr
 // --- lib_ctype.TableId..Print
 // print string representation of ROW to string STR
 // cfmt:lib_ctype.TableId.String  printfmt:Raw
-void lib_ctype::TableId_Print(lib_ctype::TableId& row, algo::cstring& str) {
+void lib_ctype::TableId_Print(lib_ctype::TableId row, algo::cstring& str) {
     lib_ctype::value_Print(row, str);
 }
 

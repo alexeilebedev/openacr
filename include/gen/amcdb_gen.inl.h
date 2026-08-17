@@ -49,6 +49,10 @@ inline  amcdb::Bltin::Bltin(const algo::strptr& in_ctype, bool in_likeu64, bool 
  {
 }
 
+// --- amcdb.Cbtype..Ctor
+inline  amcdb::Cbtype::Cbtype() {
+}
+
 // --- amcdb.Curstype..Ctor
 inline  amcdb::Curstype::Curstype() {
 }
@@ -103,12 +107,28 @@ inline  amcdb::Gen::Gen() {
     amcdb::Gen_Init(*this);
 }
 
+// --- amcdb.Pbtype..Init
+// Set all fields to initial values.
+inline void amcdb::Pbtype_Init(amcdb::Pbtype& parent) {
+    parent.wire_type = u8(0);
+    parent.argtype = algo::strptr("");
+}
+
+// --- amcdb.Pbtype..Ctor
+inline  amcdb::Pbtype::Pbtype() {
+    amcdb::Pbtype_Init(*this);
+}
+
 // --- amcdb.Regxtype..Ctor
 inline  amcdb::Regxtype::Regxtype() {
 }
 
 // --- amcdb.Tclass..Ctor
 inline  amcdb::Tclass::Tclass() {
+}
+
+// --- amcdb.Tcond..Ctor
+inline  amcdb::Tcond::Tcond() {
 }
 
 // --- amcdb.Tcurs..Init
@@ -127,8 +147,18 @@ inline  amcdb::Tfunc::Tfunc() {
     amcdb::Tfunc_Init(*this);
 }
 
+inline algo::cstring &algo::operator <<(algo::cstring &str, const amcdb::Cbtype &row) {// cfmt:amcdb.Cbtype.String
+    amcdb::Cbtype_Print(const_cast<amcdb::Cbtype&>(row), str);
+    return str;
+}
+
 inline algo::cstring &algo::operator <<(algo::cstring &str, const amcdb::FieldId &row) {// cfmt:amcdb.FieldId.String
     amcdb::FieldId_Print(const_cast<amcdb::FieldId&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const amcdb::Pbtype &row) {// cfmt:amcdb.Pbtype.String
+    amcdb::Pbtype_Print(const_cast<amcdb::Pbtype&>(row), str);
     return str;
 }
 

@@ -27,6 +27,32 @@
 
 // -----------------------------------------------------------------------------
 
+// Look up the conventional <ns>.FDb.cmdline field. Returns NULL if absent.
+static amc::FField *FindCmdlineField(amc::FNs &ns) {
+    return amc::ind_field_Find(
+                               dmmeta::Field_Concat_ctype_name(
+                                                               dmmeta::Ctype_Concat_ns_name(ns.ns, "FDb"), "cmdline"));
+}
+
+// Resolve the ccmdline for a given namespace via its cmdline field.
+// Returns NULL if the namespace has no cmdline.
+static amc::FCcmdline *FindCcmdline(amc::FNs &ns) {
+    amc::FField *cmdfield = FindCmdlineField(ns);
+    amc::FCcmdline *ret = NULL;
+    if (cmdfield && cmdfield->p_arg) {
+        ret = cmdfield->p_arg->c_ccmdline;
+    }
+    return ret;
+}
+
+// True if the namespace has a cmdline that should be auto-parsed at startup.
+static bool CmdlineQ(amc::FNs &ns) {
+    amc::FCcmdline *cm = FindCcmdline(ns);
+    return cm && cm->read;
+}
+
+// -----------------------------------------------------------------------------
+
 void amc::tclass_Global() {
 }
 
@@ -210,6 +236,98 @@ void amc::tfunc_Global_InsertStrptrMaybe() {
 
 // -----------------------------------------------------------------------------
 
+// Look up the Thash on the FDb pool field whose hashfld matches the basetype's
+// pkey.  Returns NULL if no such Thash exists.
+static amc::FField *PkeyIndex(amc::FField &finput, amc::FCtype &basetype) {
+    amc::FField *ret = NULL;
+    amc::FField *pkey = c_field_Find(basetype, 0);
+    if (pkey) {
+        ind_beg(amc::ctype_c_field_curs, hashfld, *finput.p_ctype) {
+            if (hashfld.reftype == dmmeta_Reftype_reftype_Thash
+                && hashfld.p_arg == finput.p_arg
+                && hashfld.c_thash
+                && hashfld.c_thash->hashfld == pkey->field) {
+                ret = &hashfld;
+                break;
+            }
+        }ind_end;
+    }
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// RemoveStrptrMaybe can generate a delete branch for this finput when:
+//  - the FDb pool's reftype supports random delete (Tpool/Lpool/Malloc — del:Y);
+//    Lary/Tary/Inlary lack <pool>_Delete and can't participate.
+//  - the basetype has a Thash on its pkey, so the parsed pkey can be looked up
+//    in O(1) and the matching record deleted.
+static bool CanRemoveStrptrMaybeQ(amc::FField &finput, amc::FCtype &basetype) {
+    return finput.p_reftype->del && PkeyIndex(finput, basetype) != NULL;
+}
+
+// -----------------------------------------------------------------------------
+
+// Generate <ns>::RemoveStrptrMaybe(strptr str): mirror of InsertStrptrMaybe
+// for the delete branch of Syscmd_SsimMsg.  Switches on the type-tag, parses
+// the tuple, finds the record by pkey via the basetype's Thash, calls
+// <finput-name>_Delete.  Finputs without a pkey-Thash are skipped (the
+// generated case logs a verblog and returns true so unrelated tables don't
+// cause errors).
+void amc::tfunc_Global_RemoveStrptrMaybe() {
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
+
+    bool has_inputs = amc::HasFinputsQ(*field.p_ctype->p_ns);
+    amc::FFunc& fcn = amc::CreateCurFunc(true); {
+        AddProtoArg(fcn, "algo::strptr", "str");
+        AddRetval(fcn, "bool", "retval", "true");
+    }
+    Ins(&R, fcn.comment, "Parse strptr into known type and remove matching record from database.");
+    Ins(&R, fcn.comment, "Return value is true if the record was found and removed, false otherwise.");
+    if (has_inputs) {
+        Ins(&R, fcn.body   , "$ns::TableId table_id(-1);");
+        Ins(&R, fcn.body   , "value_SetStrptrMaybe(table_id, algo::GetTypeTag(str));");
+        Ins(&R, fcn.body   , "switch (value_GetEnum(table_id)) {");
+        ind_beg(amc::ctype_c_field_curs, inst, *field.p_ctype) if (inst.c_finput) {
+            amc::FCtype *base = GetBaseType(*inst.p_arg, inst.p_arg);
+            Set(R, "$basens"   , ns_Get(*base));
+            Set(R, "$basename" , name_Get(*base));
+            Set(R, "$instname" , name_Get(inst));
+            Set(R, "$finput"   , inst.field);
+            Set(R, "$Elemtype" , amc::NsToCpp(base->ctype));
+            Ins(&R, fcn.body, "case $ns_TableId_$basens_$basename: { // finput:$finput");
+            if (CanRemoveStrptrMaybeQ(inst, *base)) {
+                amc::FField *thash = PkeyIndex(inst, *base);
+                amc::FField *pkey  = c_field_Find(*base, 0);
+                Set(R, "$thashname", name_Get(*thash));
+                Set(R, "$pkeyname" , name_Get(*pkey));
+                Ins(&R, fcn.body, "    $Elemtype elem;");
+                Ins(&R, fcn.body, "    retval = $Elemtype_ReadStrptrMaybe(elem, str);");
+                Ins(&R, fcn.body, "    if (retval) {");
+                Ins(&R, fcn.body, "        if (auto *rec = $thashname_Find(elem.$pkeyname)) {");
+                Ins(&R, fcn.body, "            $instname_Delete(*rec);");
+                Ins(&R, fcn.body, "        } else {");
+                Ins(&R, fcn.body, "            retval = false; // not found");
+                Ins(&R, fcn.body, "        }");
+                Ins(&R, fcn.body, "    }");
+            } else {
+                Ins(&R, fcn.body, "    // finput $finput: random delete unsupported");
+                Ins(&R, fcn.body, "    // (need reftype del:Y plus a Thash on the pkey)");
+                Ins(&R, fcn.body, "    retval = false;");
+            }
+            Ins(&R, fcn.body, "    break;");
+            Ins(&R, fcn.body, "}");
+        }ind_end;
+        Ins(&R, fcn.body, "default:");
+        Ins(&R, fcn.body, "    retval = false;");
+        Ins(&R, fcn.body, "    break;");
+        Ins(&R, fcn.body, "} //switch");
+    }
+}
+
+// -----------------------------------------------------------------------------
+
 void amc::tfunc_Global_InitReflection() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;
@@ -223,9 +341,16 @@ void amc::tfunc_Global_InitReflection() {
     bool has_inputs = amc::HasFinputsQ(*field.p_ctype->p_ns);
     tempstr text;// register own database
     Set(R, "$InsertStrptrMaybe", has_inputs ? "$ns::InsertStrptrMaybe" : "NULL");
+    Set(R, "$RemoveStrptrMaybe", has_inputs ? "$ns::RemoveStrptrMaybe" : "NULL");
     Set(R, "$Step", c_fstep_N(ns) ? "$ns::Step" : "NULL");
     Set(R, "$MainLoop", ns.c_main ? "$ns::MainLoop" : "NULL");
-    Ins(&R, initrefl.body,"algo_lib::imdb_InsertMaybe(algo::Imdb(\"$ns\", $InsertStrptrMaybe, $Step, $MainLoop, NULL, algo::Comment()));");
+    Ins(&R, initrefl.body,"algo_lib::FImdb &row = algo_lib::imdb_Alloc();");
+    Ins(&R, initrefl.body,"row.imdb               = \"$ns\";");
+    Ins(&R, initrefl.body,"row.InsertStrptrMaybe  = $InsertStrptrMaybe;");
+    Ins(&R, initrefl.body,"row.RemoveStrptrMaybe  = $RemoveStrptrMaybe;");
+    Ins(&R, initrefl.body,"row.Step               = $Step;");
+    Ins(&R, initrefl.body,"row.MainLoop           = $MainLoop;");
+    Ins(&R, initrefl.body,"algo_lib::imdb_XrefMaybe(row);");
     Ins(&R, initrefl.body,"");
     // register each table in this database in the algo_lib.FImtable table
     // only values are registered.
@@ -298,7 +423,7 @@ void amc::tfunc_Global_main() {
         prerr("amc.no_main"
               <<Keyval("ns",ns.ns)
               <<Keyval("comment","Add dmmeta.main record for this namespace"));
-        algo_lib::_db.exit_code=1;
+        algo_lib::_db.exit_code++;
     }
     // generate main() function
     if (ns.c_main && ExeQ(ns)) {
@@ -318,12 +443,11 @@ void amc::tfunc_Global_main() {
         Ins(&R, main.body    , "    algo_lib::_db.clock = algo::CurrSchedTime(); // initialize clock");
 
         // call last non-module main, followed by all module mains
-        // #AL# this must be cleaned up -- only used for lib_m2
         for (int i=c_parentns_N(ns)-1; i>=0; i--) {// call first non-module main
             amc::FNs &parentns=*c_parentns_Find(ns,i);
             if (parentns.c_main && !parentns.c_main->ismodule) {
                 Set(R, "$parentns", parentns.ns);
-                if (parentns.c_fcmdline && parentns.c_fcmdline->read) {
+                if (CmdlineQ(parentns)) {
                     Ins(&R, main.body, "$parentns::ReadArgv(); // dmmeta.main:$parentns");
                 }
                 Ins(&R, main.body, "$parentns::Main(); // user-defined main");
@@ -333,7 +457,7 @@ void amc::tfunc_Global_main() {
 
         ind_beg(amc::ns_c_parentns_curs,parentns,ns) if (parentns.c_main && parentns.c_main->ismodule) {// call all ismodule mains
             Set(R, "$parentns", parentns.ns);
-            if (parentns.c_fcmdline && parentns.c_fcmdline->read) {
+            if (CmdlineQ(parentns)) {
                 Ins(&R, main.body, "$parentns::ReadArgv(); // dmmeta.main:$parentns  ismodule:Y");
             }
             Ins(&R, main.body, "$parentns::Main(); // call through to user-defined main");
@@ -468,263 +592,6 @@ void amc::tfunc_Global_Main() {
 
 // -----------------------------------------------------------------------------
 
-static tempstr CmdargName(amc::FField *fld) {
-    tempstr ret;
-    algo::Smallstr50 name = name_Get(*fld);
-    if (fld->c_anonfld) ret << "[";
-    ret << name;
-    if (fld->c_anonfld) ret << "]";
-    if (fld->reftype == dmmeta_Reftype_reftype_Tary) {
-        ret << "...";
-    }
-    return ret;
-}
-
-// print rhs as a multiline c++ string
-// Example:
-// FmtCppStr(lhs, "ab\tcd\nefg");
-// output:
-// "ab\tcd\n"
-// "efg"
-// Note in the above example '\t' was converted to a tab by c++ compiler,
-// and escaped again by FmtCppStr.
-static void FmtCppStr(cstring &lhs, strptr rhs) {
-    int start = 0;
-    do {
-        int end = FindFrom(rhs, '\n', start);
-        if (end==-1) end=rhs.n_elems; else end++;
-        strptr_PrintCpp(GetRegion(rhs,start,end-start), lhs);
-        start=end;
-        lhs << eol;
-    } while (start < rhs.n_elems);
-    lhs << ";\n";
-}
-
-// Generate help strings for command-line tools.
-//
-// Example Output:
-//
-// const char *dmsess_help =
-// "Usage: dmsess [sess] [options]\n"
-// "  sess          session name\n"
-// "  -list         list processes in session"
-// "  -cfg:string   (with -create) debug or release. default: debug"
-// ;
-//
-// generate help string
-// "Usage: <stripped name> <non-optional args> <options>\n"
-// <non-optional args>: any arg without default value (whether named or not), excluding bool
-// <options> true if any options defined
-// <table of non-optional args>
-// Options
-// <list of optional args>
-// table: compute width or largest name
-// prepend - to field names which are not bracketed.
-// append ". default: XXXX" to options which have a default
-//
-
-static tempstr GetCmdArgType(amc::FField& field) {
-    tempstr ret("string");// default
-    amc::FArgvtype *argvtype = field.p_arg->c_argvtype;
-    // amc rewrites all pkey fields so they become Vals
-    // so this first line can never execute
-    if (c_fconst_N(*GetEnumField(field))) {
-        ret = "enum";
-    } else if (field.c_fflag) {
-        ret = "flag";
-    } else if (field.reftype == dmmeta_Reftype_reftype_Pkey) {
-        ret = "pkey";
-    } else if (field.reftype == dmmeta_Reftype_reftype_Regx) {
-        ret = "regx";
-    } else {
-        if (!argvtype && c_field_N(*field.p_arg) == 1) {
-            argvtype = c_field_Find(*field.p_arg,0)->p_ctype->c_argvtype;
-        }
-        if (argvtype) {
-            ret=argvtype->argvtype;
-        }
-    }
-    return ret;
-}
-
-// -----------------------------------------------------------------------------
-
-// Return TRUE if FIELD (in command line context) requires no argument
-// This is true for bool fields or fields with "emptyval" provided
-bool amc::CmdArgValueRequiredQ(amc::FField &field) {
-    return !(field.p_arg->ctype == "bool" || (field.c_fflag && field.c_fflag->emptyval != "\"\""));
-}
-
-// -----------------------------------------------------------------------------
-
-// True if field is a required command-line argument
-bool amc::CmdArgRequiredQ(amc::FField &field) {
-    return field.dflt.value=="" // no default provided...
-        && !(field.arg == "algo.UnTime" || field.arg == "algo.UnDiff") // these can't be mandatory
-        && !field.c_tary // not an array
-        && !c_fconst_N(*amc::GetEnumField(field)) // not an enum (these are always initialized)
-        && CmdArgValueRequiredQ(field); // does require an arg
-}
-
-// -----------------------------------------------------------------------------
-
-// Pick a field to extract enums from.
-// Handle the case of a single-field ctype with enums in it
-amc::FField *amc::GetEnumField(amc::FField &field) {
-    return c_field_N(*field.p_arg)==1
-        && c_fconst_N(*c_field_Find(*field.p_arg,0))
-        ? c_field_Find(*field.p_arg,0)
-        : &field;
-}
-
-// -----------------------------------------------------------------------------
-
-// Adjust displayed default
-// Translate true/false into "Y"/<empty string>
-static tempstr GetCmdArgDflt(amc::FField &field) {
-    tempstr ret(field.dflt.value);
-    if (field.c_fflag) {
-        // no default for flags (even if they can take a value)
-        ret="";
-    } else if (field.c_tary) {
-        // no default for arrays -- since they can be empty
-        ret="";
-    } else if (field.arg=="bool") {
-        if (field.dflt.value=="true") {
-            ret="Y";
-        } else if (field.dflt.value=="false") {
-            ret="";// do not show
-        }
-    } else {
-        // scan enums for the field and translate back from the
-        // numeric value to the symbolic
-        tempstr enum_dflt;
-        // scan enums...
-        ind_beg(amc::field_c_fconst_curs,fconst,*GetEnumField(field)) {
-            if (fconst.value.value == field.dflt.value
-                || (!ch_N(field.dflt.value) && (fconst.value.value=="0" || fconst.value.value=="'\\0'"))) {
-                enum_dflt = name_Get(fconst);
-            }
-        }ind_end;
-        if (ch_N(enum_dflt) && enum_dflt != "\"\"") {
-            ret = enum_dflt;
-        }
-    }
-    return ret;
-}
-
-// -----------------------------------------------------------------------------
-
-tempstr amc::GetUsageString(amc::FNs &ns, amc::FFcmdline &cmdline) {
-    amc::FCtype &ctype = *cmdline.p_field->p_arg;
-    tempstr cmd_format(name_Get(ctype));
-    bool has_opts = false;
-    ind_beg(amc::ctype_c_field_curs, field, ctype) if (!field.c_falias) {
-        if (CmdArgRequiredQ(field)) {
-            if (CmdArgValueRequiredQ(field)) {
-                if (field.c_anonfld) {
-                    // [-str:]<string>   -- CmdArgRequired, anon, value required
-                    cmd_format << " [-"<<name_Get(field)<<":]<"<<GetCmdArgType(field)<<">";
-                } else {
-                    // -astr:<string>    -- CmdArgRequired, named, value required
-                    cmd_format << " -"<<name_Get(field)<<":<"<<GetCmdArgType(field)<<">";
-                }
-            }
-        } else {
-            if (CmdArgValueRequiredQ(field)) {
-                if (field.c_anonfld) {
-                    // [[-str:]<string>] -- !CmdArgRequired, anon, value required
-                    cmd_format << " [[-"<<name_Get(field)<<":]<"<<GetCmdArgType(field)<<">]";
-                } else {
-                    //                   -- !CmdArgRequired, named, value not required -- skipped
-                    has_opts = true;
-                }
-            }
-        }
-    }ind_end;
-    if (has_opts) {
-        cmd_format << " [options]";
-    }
-    tempstr ret;
-    if (ch_N(ns.comment.value)) {
-        ret << name_Get(ctype) << ": "<<ns.comment<<eol;
-    }
-    ret << "Usage: "<< cmd_format<<eol;
-    return ret;
-}
-
-// -----------------------------------------------------------------------------
-
-// CTYPE: type of command line
-// NS: target namespace (actual executable)
-static void GenHelpSyntax(amc::FNs &ns, amc::FFcmdline &cmdline) {
-    amc::FCtype &ctype = *cmdline.p_field->p_arg;
-    tempstr name(name_Get(ctype));
-    // help message
-    *ns.hdr << "extern const char *"<<name<<"_help;" << eol;
-    *ns.cpp << "namespace "<<ns.ns<<" {"<<eol;
-    *ns.cpp << "const char *"<<name<<"_help =" << eol;
-    tempstr table;
-    tempstr usage = GetUsageString(ns,cmdline);
-    table << "    OPTION\tTYPE\tDFLT\tCOMMENT\n";
-    // loop over fields of this command line, and its base command line
-    for (int i=0; i<2; i++) {
-        amc::FCtype *thisctype=i==0 ? &ctype : cmdline.p_basecmdline->p_arg;
-        if (thisctype) {
-            ind_beg(amc::ctype_c_field_curs, field, *thisctype) if (!field.c_falias) {
-                table << "    ";
-                table << (field.c_anonfld ? "" : "-");
-                table << CmdargName(&field);
-                table << "\t";
-                table << GetCmdArgType(field);
-                table << "\t";
-                table << GetCmdArgDflt(field);
-                table << "\t";
-                table << field.comment;
-                // list aliases
-                ind_beg(amc::ctype_c_field_curs, aliasfield, *thisctype) {
-                    if (aliasfield.c_falias && aliasfield.c_falias->p_srcfield == &field) {
-                        table << "; alias -"<<name_Get(aliasfield);
-                    }
-                }ind_end;
-                // explain cumulative flag
-                if (field.c_fflag && field.c_fflag->cumulative) {
-                    table << "; cumulative";
-                }
-                // provide single-line enum choice
-                // and explain enum values (with comments)
-                tempstr fconst_values;
-                tempstr fconst_choice;
-                algo::ListSep ls("|");
-                if (!field.c_tary) {
-                    ind_beg(amc::field_c_fconst_curs,fconst,*GetEnumField(field)) {
-                        fconst_choice << ls << name_Get(fconst);
-                        if (ch_N(fconst.comment)) {
-                            fconst_values << "\t\t\t    " << name_Get(fconst) << "  " << fconst.comment << eol;
-                        }
-                    }ind_end;
-                }
-                // fconst choice
-                if (ch_N(fconst_choice)) {
-                    table << " (" << fconst_choice << ")";
-                }
-                table << eol;
-                table << fconst_values; // fconst values
-            }ind_end;
-        }
-    }
-    usage << Tabulated(table, "\t", "lll",2);
-
-    tempstr lc;
-    lc << name;
-    MakeLower(lc);
-    FmtCppStr(*ns.cpp, usage);
-    *ns.cpp << eol << eol;
-    *ns.cpp << "} // namespace "<<ns.ns << eol;
-}
-
-// -----------------------------------------------------------------------------
-
 // Return expression
 //   $cpptype &NAME = $ns::$_db.$fieldname
 // where
@@ -740,28 +607,305 @@ tempstr amc::VarRefToGlobal(amc::FField &field, strptr name) {
 
 // -----------------------------------------------------------------------------
 
-static void CheckBaseCmdline(amc::FFcmdline &cmdline) {
+static void CheckBaseCmdline(amc::FCcmdline &cmdline, amc::FField &cmdfield) {
     amc::FField *basecmdline=cmdline.p_basecmdline;
-    vrfy(basecmdline != cmdline.p_field,
+    vrfy(basecmdline != &cmdfield,
          tempstr()<<"amc.circularline"
-         <<Keyval("field",cmdline.field)
+         <<Keyval("ctype",cmdline.ctype)
          <<Keyval("basecmdline",basecmdline->field)
          <<Keyval("comment","Base command line cannot be the same as the command line itself"));
     vrfy(basecmdline->field=="" || GlobalQ(*basecmdline->p_ctype)
          ,tempstr()<<"amc.baseglob"
          <<Keyval("field",basecmdline->field)
-         <<Keyval("used_in",cmdline.field)
+         <<Keyval("used_in",cmdline.ctype)
          <<Keyval("comment","Base command line must be global"));
     // disallow base command line to have anon fields
     ind_beg(amc::ctype_c_field_curs,checkfield,*basecmdline->p_arg) {
         if (checkfield.c_anonfld) {
             prerr("amc.badanon"
                   <<Keyval("field",checkfield.field)
-                  <<Keyval("used_in",cmdline.field)
+                  <<Keyval("used_in",cmdline.ctype)
                   <<Keyval("comment","Base commandline cannot have anon fields"));
-            algo_lib::_db.exit_code=1;
+            algo_lib::_db.exit_code++;
         }
     }ind_end;
+}
+
+// -----------------------------------------------------------------------------
+
+// Per-ctype field-aware command-line reader.  Parses ARGS -- a word array
+// already split (from real argv, or from a tokenized command string) -- into
+// the fields of PARENT, accumulating diagnostics in ERR.  This is the single
+// intelligent parser: it consults $Name_NArgs so a bare "-opt" consumes the
+// following word as its value, and it splits "-opt:value".  When the ctype
+// carries a basecmdline (a tool's algo_lib.Cmdline), those base options are
+// read into that global in the same pass.
+void amc::GenReadArgvFunc(amc::FCtype &ctype) {
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    int n_anon = c_anonfld_N(ctype);
+    Set(R, "$Cpptype", ctype.cpp_type);
+    amc::FCcmdline *ccmdline = ctype.c_ccmdline;
+    amc::FField *basecmdline = ccmdline ? ccmdline->p_basecmdline : NULL;
+    if (basecmdline && basecmdline->field == "") {
+        basecmdline = NULL;
+    }
+    amc::FFunc &func = amc::CreateCurFunc();
+    AddRetval(func, "bool", "retval", "true");
+    Ins(&R, func.proto, "$Name_ReadArgv()", false);
+    AddProtoArg(func, Subst(R,"$Cpptype &"), "parent");
+    AddProtoArg(func, "algo::StringAry &", "args");
+    AddProtoArg(func, "algo::cstring &", "err");
+    func.glob = true;
+    Ins(&R, func.comment, "Read command-line ARGS (already split into words) into the fields of PARENT.");
+    Ins(&R, func.comment, "Field-aware: a value-taking option consumes the next word; errors go to ERR.");
+    if (basecmdline) {
+        Set(R,"$basecmdlinetypens", ns_Get(*basecmdline->p_arg));
+        Set(R,"$basecmdlinectypename", name_Get(*basecmdline->p_arg));
+        Ins(&R, func.body, tempstr()<<VarRefToGlobal(*basecmdline, "base")<<";");
+    }
+    Ins(&R, func.body, "int needarg=-1;// how many args the current option still wants");
+    if (n_anon > 0) {
+        Ins(&R, func.body, "int anonidx=0;");
+        Ins(&R, func.body, "algo::strptr nextanon = $ns::$Name_GetAnon(parent, anonidx);");
+    }
+    Ins(&R, func.body, "algo::strptr attrname;");
+    Ins(&R, func.body, "bool isanon=false; // true if attrname is anonfld (positional)");
+    if (basecmdline) {
+        Ins(&R, func.body, "$basecmdlinetypens::FieldId baseattrid;");
+    }
+    Ins(&R, func.body, "$ns::FieldId attrid;");
+    Ins(&R, func.body, "bool endopt=false;");
+    Ins(&R, func.body, "int whichns=0;// 0=base, 1=leaf");
+    // Required-arg tracking is emitted only for tools (basecmdline); cluster
+    // commands are lenient (see the required-check gate below).
+    if (basecmdline) {
+        ind_beg(ctype_c_field_curs,reqfield,ctype) if (CmdArgRequiredQ(reqfield)) {
+            Set(R,"$reqfieldname",name_Get(reqfield));
+            Ins(&R, func.body, "bool $reqfieldname_present = false;");
+        }ind_end;
+    }
+    Ins(&R, func.body, "for (int argidx=0; argidx < ary_N(args); argidx++) {");
+    Ins(&R, func.body, "    algo::strptr arg = ary_qFind(args, argidx);");
+    Ins(&R, func.body, "    algo::strptr attrval;");
+    Ins(&R, func.body, "    algo::strptr dfltval;");
+    Ins(&R, func.body, "    bool haveval=false;");
+    Ins(&R, func.body, "    bool dash=elems_N(arg)>1 && arg.elems[0]=='-'; // a single dash is not an option");
+    Ins(&R, func.body, "    if (endopt || needarg>0 || !dash) {");
+    Ins(&R, func.body, "        attrval=arg;");
+    Ins(&R, func.body, "        haveval=true;");
+    Ins(&R, func.body, "    } else {");
+    Ins(&R, func.body, "        bool dashdash = elems_N(arg) >= 2 && arg.elems[1]=='-';");
+    Ins(&R, func.body, "        int skip = int(dash) + dashdash;");
+    Ins(&R, func.body, "        attrname=ch_RestFrom(arg,skip);");
+    Ins(&R, func.body, "        if (skip==2 && elems_N(arg)==2) {");
+    Ins(&R, func.body, "            endopt=true;");
+    Ins(&R, func.body, "            continue;");
+    Ins(&R, func.body, "        }");
+    Ins(&R, func.body, "        algo::i32_Range colon = TFind(attrname,':');");
+    Ins(&R, func.body, "        if (colon.beg < colon.end) {");
+    Ins(&R, func.body, "            attrval=ch_RestFrom(attrname,colon.end);");
+    Ins(&R, func.body, "            attrname=ch_FirstN(attrname,colon.beg);");
+    Ins(&R, func.body, "            haveval=true;");
+    Ins(&R, func.body, "        }");
+    Ins(&R, func.body, "        whichns=0;");
+    Ins(&R, func.body, "        needarg=-1;");
+    if (basecmdline) {
+        Ins(&R, func.body, "        if ($basecmdlinetypens::FieldId_ReadStrptrMaybe(baseattrid,attrname)) {");
+        Ins(&R, func.body, "            needarg = $basecmdlinetypens::$basecmdlinectypename_NArgs(baseattrid,dfltval,&isanon);");
+        Ins(&R, func.body, "        }");
+    }
+    Ins(&R, func.body, "        if (needarg<0) {");
+    Ins(&R, func.body, "            whichns=1;");
+    Ins(&R, func.body, "            if ($ns::FieldId_ReadStrptrMaybe(attrid,attrname)) {");
+    Ins(&R, func.body, "                needarg = $ns::$Name_NArgs(attrid,dfltval,&isanon);");
+    Ins(&R, func.body, "            }");
+    Ins(&R, func.body, "        }");
+    Ins(&R, func.body, "        if (attrval == \"\" && dfltval != \"\") {");
+    Ins(&R, func.body, "            attrval=dfltval;");
+    Ins(&R, func.body, "            haveval=true;");
+    Ins(&R, func.body, "        }");
+    Ins(&R, func.body, "        if (needarg<0) {");
+    Ins(&R, func.body, "            err<<\"$Name: unknown option \"<<Keyval(\"value\",arg)<<eol;");
+    Ins(&R, func.body, "        } else {");
+    if (n_anon > 0) {
+        Ins(&R, func.body, "            if (isanon) {");
+        Ins(&R, func.body, "                if (attrname == nextanon) { // named positional given as -name: treat as unnamed");
+        Ins(&R, func.body, "                    attrname = \"\";");
+        Ins(&R, func.body, "                } else if (nextanon != \"\") { // disallow out-of-order positional");
+        Ins(&R, func.body, "                    err<<\"$Name: error at \"<<algo::strptr_ToSsim(arg)<<\": must be preceded by [-\"<<nextanon<<\"]\"<<eol;");
+        Ins(&R, func.body, "                }");
+        Ins(&R, func.body, "            }");
+    }
+    Ins(&R, func.body, "        }");
+    Ins(&R, func.body, "    }");
+    if (n_anon > 0) {
+        Ins(&R, func.body, "    if (ch_N(attrname) == 0) { // positional: assign to the next anonfld");
+        Ins(&R, func.body, "        attrname = nextanon;");
+        Ins(&R, func.body, "        nextanon = $ns::$Name_GetAnon(parent, ++anonidx);");
+        Ins(&R, func.body, "        $ns::FieldId_ReadStrptrMaybe(attrid,attrname);");
+        Ins(&R, func.body, "        whichns=1;");
+        Ins(&R, func.body, "    }");
+    }
+    Ins(&R, func.body, "    if (ch_N(attrname) == 0) {");
+    Ins(&R, func.body, "        err << \"$Name: too many arguments. error at \"<<algo::strptr_ToSsim(arg)<<eol;");
+    Ins(&R, func.body, "    } else if (haveval) {");
+    Ins(&R, func.body, "        bool ret=false;");
+    if (basecmdline) {
+        Ins(&R, func.body, "        if (whichns == 0) {");
+        Ins(&R, func.body, "            ret=$basecmdlinetypens::$basecmdlinectypename_ReadFieldMaybe(base, attrname, attrval);");
+        Ins(&R, func.body, "        }");
+    }
+    Ins(&R, func.body, "        if (whichns==1) {");
+    Ins(&R, func.body, "            ret=$ns::$Name_ReadFieldMaybe(parent, attrname, attrval);");
+    if (basecmdline) {
+        Ins(&R, func.body, "            switch(attrid.value) {");
+        ind_beg(ctype_c_field_curs,reqfield,ctype) if (CmdArgRequiredQ(reqfield)) {
+            Set(R,"$reqfieldname",name_Get(reqfield));
+            Ins(&R, func.body, "            case $ns_FieldId_$reqfieldname: $reqfieldname_present=true; break;");
+        }ind_end;
+        Ins(&R, func.body, "                default:break;");
+        Ins(&R, func.body, "            }");
+    }
+    Ins(&R, func.body, "        }");
+    Ins(&R, func.body, "        if (!ret) {");
+    Ins(&R, func.body, "            err<<\"$Name: error in \"<<Keyval(\"option\",attrname)<<Keyval(\"value\",attrval)<<eol;");
+    Ins(&R, func.body, "        }");
+    Ins(&R, func.body, "        needarg--;");
+    Ins(&R, func.body, "        if (needarg <= 0) {");
+    Ins(&R, func.body, "            attrname=\"\";// forget which argument was being filled");
+    Ins(&R, func.body, "        }");
+    Ins(&R, func.body, "    }");
+    Ins(&R, func.body, "}");
+    bool has_required = false;
+    bool has_help = false;
+    ind_beg(ctype_c_field_curs,reqfield,ctype) {
+        if (CmdArgRequiredQ(reqfield)) {
+            has_required=true;
+        }
+        if (name_Get(reqfield) == "help") {
+            has_help=true;
+        }
+    }ind_end;
+    // Required-arg enforcement applies only to tools (which carry a basecmdline);
+    // cluster commands are lenient -- their optional fields use dflt:"" and the
+    // handler treats an empty value as "not given", matching the prior behavior.
+    if (has_required && basecmdline) {
+        // -help suppresses the missing-required diagnostic, where a help flag exists
+        bool gate = basecmdline || has_help;
+        if (gate) {
+            Set(R, "$helpexpr", basecmdline ? "base.help" : "parent.help");
+            Ins(&R, func.body, "if (!$helpexpr) {");
+        }
+        ind_beg(ctype_c_field_curs,reqfield,ctype) if (CmdArgRequiredQ(reqfield)) {
+            Set(R,"$reqfieldname",name_Get(reqfield));
+            Ins(&R, func.body, "    if (!$reqfieldname_present) {");
+            Ins(&R, func.body, "        err << \"$Name: Missing value for required argument -$reqfieldname (see -help)\" << eol;");
+            Ins(&R, func.body, "    }");
+        }ind_end;
+        if (gate) {
+            Ins(&R, func.body, "}");
+        }
+    }
+    Ins(&R, func.body, "retval = (ch_N(err) == 0);");
+}
+
+// Report one function the generated argv reader READER calls that amc does not
+// emit, and fail the run.
+//
+// A reader is assembled from companion functions -- $Name_NArgs for how many
+// words an option takes, $Name_GetAnon for the next positional, $Name_ReadFieldMaybe
+// for the store, and the base command line's NArgs and ReadFieldMaybe when the
+// ctype carries a basecmdline -- and the namespace-level ReadArgv is a call to
+// the cmdline ctype's reader.  Each of those has an emit gate of its own, and
+// the gates read different rows: a reader and its NArgs come from a read cfmt
+// with strfmt:Argv, while ReadFieldMaybe and GetAnon come from a read cfmt whose
+// printfmt is neither Raw nor Extern.  A ctype that satisfies one gate and not
+// the other yields a reader calling a function amc never emits, which nothing
+// but the C++ link reports.  This is that report.
+static void ReportArgvCall(strptr reader, strptr callee, strptr comment) {
+    prerr("amc.badargvread"
+          <<Keyval("reader",reader)
+          <<Keyval("callee",callee)
+          <<Keyval("comment",comment));
+    algo_lib::_db.exit_code++;
+}
+
+// True when CTYPE has a field-name reader ($Name_ReadFieldMaybe, and
+// $Name_GetAnon with it).  A printfmt of Raw or Extern says the ctype's read is
+// written by hand, so neither function is generated for it.  This is narrower
+// than amc::HasReadQ, which answers only whether some cfmt reads at all.
+static bool HasFieldReadQ(amc::FCtype &ctype) {
+    bool ret = false;
+    ind_beg(amc::ctype_zs_cfmt_curs, cfmt, ctype) if (cfmt.read) {
+        if (cfmt.printfmt != dmmeta_Printfmt_printfmt_Raw
+            && cfmt.printfmt != dmmeta_Printfmt_printfmt_Extern) {
+            ret = true;
+            break;
+        }
+    }ind_end;
+    return ret;
+}
+
+// Report every companion of CTYPE's argv reader that amc does not emit.
+static void CheckArgvRead(amc::FCtype &ctype) {
+    amc::FCcmdline *ccmdline = ctype.c_ccmdline;
+    amc::FField *basecmdline = ccmdline ? ccmdline->p_basecmdline : NULL;
+    amc::FCtype *basectype = (basecmdline && basecmdline->field != "") ? basecmdline->p_arg : NULL;
+    bool fieldread = HasFieldReadQ(ctype);
+    tempstr reader;
+    reader << ns_Get(ctype) << "::" << name_Get(ctype) << "_ReadArgv";
+    if (!fieldread && c_anonfld_N(ctype) > 0) {
+        ReportArgvCall(reader, tempstr()<<name_Get(ctype)<<"_GetAnon"
+                       ,"ctype needs a read cfmt whose printfmt is neither Raw nor Extern");
+    }
+    if (!fieldread) {
+        ReportArgvCall(reader, tempstr()<<name_Get(ctype)<<"_ReadFieldMaybe"
+                       ,"ctype needs a read cfmt whose printfmt is neither Raw nor Extern");
+    }
+    if (basectype && !amc::HasArgvReadQ(*basectype)) {
+        ReportArgvCall(reader, tempstr()<<name_Get(*basectype)<<"_NArgs"
+                       ,"basecmdline ctype needs a cfmt with strfmt:Argv and read:Y");
+    }
+    if (basectype && !HasFieldReadQ(*basectype)) {
+        ReportArgvCall(reader, tempstr()<<name_Get(*basectype)<<"_ReadFieldMaybe"
+                       ,"basecmdline ctype needs a read cfmt whose printfmt is neither Raw nor Extern");
+    }
+}
+
+// Emit $Name_ReadArgv only for ctypes that declare a readable strfmt:Argv
+// cfmt (command lines), the same gate tfunc_Ctype_NArgs uses.
+void amc::tfunc_Ctype_ReadArgv() {
+    amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
+    if (amc::HasArgvReadQ(ctype)) {
+        CheckArgvRead(ctype);
+        GenReadArgvFunc(ctype);
+    }
+}
+
+// Emit the load of one tuple source into the command's ReadArgv function.
+//
+// A command names its sources as dmmeta.floadtuples rows, and each row becomes one
+// LoadTuplesMaybe call here.  A source that names nothing is a hard error for the primary
+// root: a command run from the wrong directory finds no data/ and has to say so rather
+// than run against an empty database.  A layer is the opposite case, because a checkout
+// with no inventory attached names a directory that is not there and is meant to proceed
+// with the rows the primary root already gave it.  That is what the row's optional flag
+// selects, by putting an existence test in front of the load.
+static void GenLoadTuples(algo_lib::Replscope &R, amc::FFunc &func, amc::FFloadtuples &floadtuples) {
+    Set(R,"$loadtuplesfield",floadtuples.field);
+    Set(R,"$loadtuplesname",name_Get(*floadtuples.p_field));
+    tempstr cond("!dohelp && err==\"\"");
+    if (floadtuples.optional) {
+        cond << Subst(R," && (DirectoryQ(cmd.$loadtuplesname) || FileQ(cmd.$loadtuplesname))");
+    }
+    Set(R,"$loadtuplescond",cond);
+    Ins(&R, func.body, "// dmmeta.floadtuples:$loadtuplesfield");
+    Ins(&R, func.body, "if ($loadtuplescond) {");
+    Ins(&R, func.body, "    algo_lib::ResetErrtext();");
+    Ins(&R, func.body, "    if (!$ns::LoadTuplesMaybe(cmd.$loadtuplesname,true)) {");
+    Ins(&R, func.body, "        err << \"$ns.load_input  \"<<algo_lib::DetachBadTags()<<eol;");
+    Ins(&R, func.body, "    }");
+    Ins(&R, func.body, "}");
 }
 
 // -----------------------------------------------------------------------------
@@ -771,163 +915,35 @@ void amc::tfunc_Global_ReadArgv() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field; // atf_amc_cmd.FDb._db
     amc::FNs &ns = *field.p_ctype->p_ns; // atf_amc_cmd
-    amc::FFcmdline *fcmdline = ns.c_fcmdline; // atf_amc_cmd.FDb.cmdline
-    if (ns.c_main && fcmdline) {
-        amc::FCtype *cmdline_ctype = fcmdline->p_field->p_arg;
-        if (cmdline_ctype) {
-            GenHelpSyntax(*field.p_ctype->p_ns, *fcmdline);
-        }
+    amc::FField *cmdfield = FindCmdlineField(ns); // atf_amc_cmd.FDb.cmdline
+    amc::FCcmdline *ccmdline = FindCcmdline(ns);
+    if (ns.c_main && ccmdline) {
+        amc::FCtype *cmdline_ctype = ccmdline->p_ctype;
         amc::FFunc& func = amc::CreateCurFunc(true);
         Ins(&R, func.ret    , "void",false);
-        int n_anon = c_anonfld_N(*cmdline_ctype);
-        Set(R,"$cmdlinefield"  , fcmdline->field); // atf_amc_cmd.FDb.cmdline
-        Set(R,"$cmdlinetypens"  , ns_Get(*fcmdline->p_field->p_arg));// command
-        Set(R,"$cmdlinectypename", name_Get(*fcmdline->p_field->p_arg));// atf_amc_cmd
-        Set(R,"$cmdlinecpptype", fcmdline->p_field->p_arg->cpp_type);// command::atf_amc_cmd
-        amc::FField *basecmdline=fcmdline->p_basecmdline;
-        Set(R,"$basecmdlinefield"  , basecmdline->field);// algo_lib.FDb.cmdline
-        Set(R,"$basecmdlinetypens"  , ns_Get(*basecmdline->p_arg));// algo_lib
-        Set(R,"$basecmdlinectypename", name_Get(*basecmdline->p_arg));//Cmdline
-        CheckBaseCmdline(*fcmdline);
+        Set(R,"$cmdlinefield"  , cmdfield->field);
+        Set(R,"$cmdlinetypens"  , ns_Get(*cmdline_ctype));
+        Set(R,"$cmdlinectypename", name_Get(*cmdline_ctype));
+        Set(R,"$cmdlinecpptype", cmdline_ctype->cpp_type);
+        amc::FField *basecmdline=ccmdline->p_basecmdline;
+        Set(R,"$basecmdlinefield"  , basecmdline->field);
+        CheckBaseCmdline(*ccmdline, *cmdfield);
+        if (!amc::HasArgvReadQ(*cmdline_ctype)) {
+            ReportArgvCall(Subst(R,"$ns::ReadArgv"), Subst(R,"$cmdlinectypename_ReadArgv")
+                           ,"cmdline ctype needs a cfmt with strfmt:Argv and read:Y");
+        }
         if (basecmdline->field == "") {
             basecmdline = NULL;
         }
-        Ins(&R, func.comment, "Read argc,argv directly into the fields of the command line(s)");
-        Ins(&R, func.comment, "The following fields are updated:");
-        Ins(&R, func.comment, "    $cmdlinefield");
-        if (basecmdline) {
-            Ins(&R, func.comment, "    $basecmdlinefield");
-        }
-        Ins(&R, func.body, tempstr()<<VarRefToGlobal(*fcmdline->p_field, "cmd")<<";");
-        if (basecmdline) {
-            Ins(&R, func.body, tempstr()<<VarRefToGlobal(*basecmdline, "base")<<";");
-        }
-        Ins(&R, func.body, "    int needarg=-1;// unknown");
-        Ins(&R, func.body, "    int argidx=1;// skip process name");
-        if (n_anon > 0) {
-            Ins(&R, func.body, "int anonidx=0;");
-            Ins(&R, func.body, "algo::strptr nextanon = command::$ns_GetAnon(cmd, anonidx);");
-        }
-        Ins(&R, func.body, "    tempstr err;");
-        Ins(&R, func.body, "    algo::strptr attrname;");
-        Ins(&R, func.body, "    bool isanon=false; // true if attrname is anonfld (positional)");
-        if (basecmdline) {
-            Ins(&R, func.body, "$basecmdlinetypens::FieldId baseattrid;");
-        }
-        Ins(&R, func.body, "    $cmdlinetypens::FieldId attrid;");
-        Ins(&R, func.body, "    bool endopt=false;");
-        Ins(&R, func.body, "    int whichns=0;// which namespace does the current attribute belong to");
-        ind_beg(ctype_c_field_curs,reqfield,*cmdline_ctype) if (CmdArgRequiredQ(reqfield)) {
-            Set(R,"$reqfieldname",name_Get(reqfield));
-            Ins(&R, func.body, "    bool $reqfieldname_present = false;");
-        }ind_end;
-        Ins(&R, func.body, "    for (; argidx < algo_lib::_db.argc; argidx++) {");
-        Ins(&R, func.body, "        algo::strptr arg = algo_lib::_db.argv[argidx];");
-        Ins(&R, func.body, "        algo::strptr attrval;");
-        Ins(&R, func.body, "        algo::strptr dfltval;");
-        Ins(&R, func.body, "        bool haveval=false;");
-        Ins(&R, func.body, "        bool dash=elems_N(arg)>1 && arg.elems[0]=='-'; // a single dash is not an option");
-        Ins(&R, func.body, "        // this attribute is a value");
-        Ins(&R, func.body, "        if (endopt || needarg>0 || !dash) {");
-        Ins(&R, func.body, "            attrval=arg;");
-        Ins(&R, func.body, "            haveval=true;");
-        Ins(&R, func.body, "        } else {");
-        Ins(&R, func.body, "            // this attribute is a field name (with - or --)");
-        Ins(&R, func.body, "            // or a -- by itself");
-        Ins(&R, func.body, "            bool dashdash = elems_N(arg) >= 2 && arg.elems[1]=='-';");
-        Ins(&R, func.body, "            int skip = int(dash) + dashdash;");
-        Ins(&R, func.body, "            attrname=ch_RestFrom(arg,skip);");
-        Ins(&R, func.body, "            if (skip==2 && elems_N(arg)==2) {");
-        Ins(&R, func.body, "                endopt=true;");
-        Ins(&R, func.body, "                continue;// nothing else to do here");
-        Ins(&R, func.body, "            }");
-        Ins(&R, func.body, "            // parse \"-a:B\" arg into attrname,attrvalue");
-        Ins(&R, func.body, "            algo::i32_Range colon = TFind(attrname,':');");
-        Ins(&R, func.body, "            if (colon.beg < colon.end) {");
-        Ins(&R, func.body, "                attrval=ch_RestFrom(attrname,colon.end);");
-        Ins(&R, func.body, "                attrname=ch_FirstN(attrname,colon.beg);");
-        Ins(&R, func.body, "                haveval=true;");
-        Ins(&R, func.body, "            }");
-        Ins(&R, func.body, "            // look up which command (this one or the base) contains the field");
-        Ins(&R, func.body, "            whichns=0;");
-        Ins(&R, func.body, "            needarg=-1;");
-        if (basecmdline) {
-            Ins(&R, func.body, "        // look up parameter information in base namespace (needarg will be -1 if lookup fails)");
-            Ins(&R, func.body, "        if ($basecmdlinetypens::FieldId_ReadStrptrMaybe(baseattrid,attrname)) {");
-            Ins(&R, func.body, "            needarg = $basecmdlinetypens::$basecmdlinectypename_NArgs(baseattrid,dfltval,&isanon);");
-            Ins(&R, func.body, "        }");
-        }
-        Ins(&R, func.body, "            if (needarg<0) {");
-        Ins(&R, func.body, "                whichns=1;");
-        Ins(&R, func.body, "                // look up parameter information in this namespace (needarg will be -1 if lookup fails)");
-        Ins(&R, func.body, "                if ($cmdlinetypens::FieldId_ReadStrptrMaybe(attrid,attrname)) {");
-        Ins(&R, func.body, "                    needarg = $cmdlinetypens::$cmdlinectypename_NArgs(attrid,dfltval,&isanon);");
-        Ins(&R, func.body, "                }");
-        Ins(&R, func.body, "            }");
-        Ins(&R, func.body, "            if (attrval == \"\" && dfltval != \"\") {");
-        Ins(&R, func.body, "                attrval=dfltval;");
-        Ins(&R, func.body, "                haveval=true;");
-        Ins(&R, func.body, "            }");
-        Ins(&R, func.body, "            if (needarg<0) {");
-        Ins(&R, func.body, "                err<<\"$ns: unknown option \"<<Keyval(\"value\",arg)<<eol;");
-        Ins(&R, func.body, "            } else {");
-        if (n_anon>0) {
-            Ins(&R, func.body, "            if (isanon) {");
-            Ins(&R, func.body, "                if (attrname == nextanon) { // treat named anon (positional) argument as unnamed");
-            Ins(&R, func.body, "                    attrname = \"\"; // treat it as unnamed");
-            Ins(&R, func.body, "                } else if (nextanon != \"\") { // disallow out-of-order anon (positional) args");
-            Ins(&R, func.body, "                    err<<\"$ns: error at \"<<algo::strptr_ToSsim(arg)<<\": must be preceded by [-\"<<nextanon<<\"]\"<<eol;");
-            Ins(&R, func.body, "                }");
-            Ins(&R, func.body, "            }");
-        }
-        Ins(&R, func.body, "            }");
-        Ins(&R, func.body, "        }");
-        if (n_anon>0) {
-            Ins(&R, func.body, "        // look up anon field name based on index");
-            Ins(&R, func.body, "        // anon fields are only allowed in the leaf ns, never base");
-            Ins(&R, func.body, "        if (ch_N(attrname) == 0) {");
-            Ins(&R, func.body, "            attrname = nextanon;");
-            Ins(&R, func.body, "            nextanon = command::$ns_GetAnon(cmd, ++anonidx);");
-            Ins(&R, func.body, "            $cmdlinetypens::FieldId_ReadStrptrMaybe(attrid,attrname);");
-            Ins(&R, func.body, "            whichns=1;");
-            Ins(&R, func.body, "        }");
-        }
-        Ins(&R, func.body, "        if (ch_N(attrname) == 0) {");
-        Ins(&R, func.body, "            err << \"$ns: too many arguments. error at \"<<algo::strptr_ToSsim(arg)<<eol;");
-        Ins(&R, func.body, "        } else if (haveval) {");
-        Ins(&R, func.body, "            // read value into currently selected arg");
-        Ins(&R, func.body, "            bool ret=false;");
-        Ins(&R, func.body, "            // it's already known which namespace is consuming the args,");
-        Ins(&R, func.body, "            // so directly go there");
-        if (basecmdline) {
-            Ins(&R, func.body, "        if (whichns == 0) {");
-            Ins(&R, func.body, "            ret=$basecmdlinetypens::$basecmdlinectypename_ReadFieldMaybe(base, attrname, attrval);");
-            Ins(&R, func.body, "        }");
-        }
-        // mark required fields as present
-        Ins(&R, func.body, "            if (whichns==1) {");
-        Ins(&R, func.body, "                ret=$cmdlinetypens::$cmdlinectypename_ReadFieldMaybe(cmd, attrname, attrval);");
-        Ins(&R, func.body, "                switch(attrid.value) {");
-        ind_beg(ctype_c_field_curs,reqfield,*cmdline_ctype) if (CmdArgRequiredQ(reqfield)) {
-            Set(R,"$reqfieldname",name_Get(reqfield));
-            Ins(&R, func.body, "                case $cmdlinetypens_FieldId_$reqfieldname: $reqfieldname_present=true; break;");
-        }ind_end;
-        Ins(&R, func.body, "                    default:break;");
-        Ins(&R, func.body, "                }");
-        Ins(&R, func.body, "            }");
-
-        Ins(&R, func.body, "            if (!ret) {");
-        Ins(&R, func.body, "                err<<\"$ns: error in \"");
-        Ins(&R, func.body, "                    <<Keyval(\"option\",attrname)");
-        Ins(&R, func.body, "                    <<Keyval(\"value\",attrval)<<eol;");
-        Ins(&R, func.body, "            }");
-        Ins(&R, func.body, "            needarg--;");
-        Ins(&R, func.body, "            if (needarg <= 0) {");
-        Ins(&R, func.body, "                attrname=\"\";// forget which argument was being filled");
-        Ins(&R, func.body, "            }");
-        Ins(&R, func.body, "        }");
-        Ins(&R, func.body, "    }");
-
+        Ins(&R, func.comment, "Read argc,argv into the fields of $cmdlinefield (and any base command line)");
+        Ins(&R, func.comment, "via $cmdlinectypename_ReadArgv; then apply -help/-version and load floadtuples input.");
+        Ins(&R, func.body, tempstr()<<VarRefToGlobal(*cmdfield, "cmd")<<";");
+        Ins(&R, func.body, "algo::cstring err;");
+        Ins(&R, func.body, "algo::StringAry args;");
+        Ins(&R, func.body, "for (int argidx=1; argidx < algo_lib::_db.argc; argidx++) {// skip process name");
+        Ins(&R, func.body, "    ary_Alloc(args) = algo_lib::_db.argv[argidx];");
+        Ins(&R, func.body, "}");
+        Ins(&R, func.body, "$cmdlinetypens::$cmdlinectypename_ReadArgv(cmd, args, err);");
         Ins(&R, func.body, "bool dohelp = false;");
 
         Ins(&R, func.body, "bool doexit=false;");
@@ -956,28 +972,19 @@ void amc::tfunc_Global_ReadArgv() {
             Ins(&R, func.body, "algo_lib_logcat_verbose2.enabled = algo_lib::_db.cmdline.verbose > 1;");
         }
 
-        Ins(&R, func.body, "if (!dohelp) {");
-        ind_beg(ctype_c_field_curs,reqfield,*cmdline_ctype) if (CmdArgRequiredQ(reqfield)) {
-            Set(R,"$reqfieldname",name_Get(reqfield));
-            Ins(&R, func.body, "if (!$reqfieldname_present) {");
-            Ins(&R, func.body, "    err << \"$ns: Missing value for required argument -$reqfieldname (see -help)\" << eol;");
-            Ins(&R, func.body, "    doexit = true;");
-            Ins(&R, func.body, "}");
-        }ind_end;
-        Ins(&R, func.body, "}");
+        // missing-required diagnostics are emitted inside $cmdlinectypename_ReadArgv
 
-
-        // post-processing steps:
-        amc::FFloadtuples *floadtuples = fcmdline->p_field->p_arg->c_floadtuples;
-        if (floadtuples) {
-            Ins(&R, func.body, "// dmmeta.floadtuples:$cmdlinefield");
-            Ins(&R, func.body, "if (!dohelp && err==\"\") {");
-            Set(R,"$loadtuplesname",name_Get(*floadtuples->p_field));
-            Ins(&R, func.body, "    algo_lib::ResetErrtext();");
-            Ins(&R, func.body, "    if (!$ns::LoadTuplesMaybe(cmd.$loadtuplesname,true)) {");
-            Ins(&R, func.body, "        err << \"$ns.load_input  \"<<algo_lib::DetachBadTags()<<eol;");
-            Ins(&R, func.body, "    }");
-            Ins(&R, func.body, "}");
+        // post-processing steps: one load per tuple source the command declares.
+        // Pass 0 emits the primary roots and pass 1 the layers, so a row a layer supplies
+        // resolves its references against what the primary root has already inserted.  The
+        // reverse order fails on the first child whose parent has not arrived yet.
+        for (int pass = 0; pass <= 1; pass++) {
+            bool layer = pass == 1;
+            ind_beg(amc::ctype_c_floadtuples_curs, floadtuples, *cmdline_ctype) {
+                if (floadtuples.optional == layer) {
+                    GenLoadTuples(R, func, floadtuples);
+                }
+            }ind_end;
         }
 
         Ins(&R, func.body, "if (err != \"\") {");
@@ -987,7 +994,7 @@ void amc::tfunc_Global_ReadArgv() {
         Ins(&R, func.body, "}");
 
         Ins(&R, func.body, "if (dohelp) {");
-        Ins(&R, func.body, "    prlog($cmdlinectypename_help);");
+        Ins(&R, func.body, "    prlog($cmdlinecpptype_help);");
         Ins(&R, func.body, "}");
 
         Ins(&R, func.body, "if (doexit) {");

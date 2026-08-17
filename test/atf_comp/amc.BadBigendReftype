@@ -1,0 +1,5 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/bad_bigend_reftype.ssim -out_dir: -report:N zzz"
+# eof amc
+amc -> amc.bad_bigend  field:algo_lib.Rec.big  reftype:Inlary  comment:"big-endian storage requires reftype Val"
+amc -> amc.no_output  comment:"no files were modified"
+# exit amc code:1

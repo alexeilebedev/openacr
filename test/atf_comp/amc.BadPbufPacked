@@ -1,0 +1,6 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/bad_pbuf_packed.ssim -out_dir: -report:N zzz"
+# eof amc
+amc -> amc.pbuf_packed  field:pbt.Msg.a  reftype:Val  pb_type:uint32  comment:"packed applies only to a repeated field of a varint or fixed pb_type"
+amc -> amc.pbuf_packed  field:pbt.Msg.b  reftype:Tary  pb_type:message  comment:"packed applies only to a repeated field of a varint or fixed pb_type"
+amc -> amc.no_output  comment:"no files were modified"
+# exit amc code:2

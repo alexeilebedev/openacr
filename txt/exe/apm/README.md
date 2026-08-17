@@ -33,7 +33,8 @@ in the package repo corresponding to the last synchronization point.
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Internals](#internals)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Limitations](#limitations)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Package definition](#package-definition)<br/>
@@ -42,12 +43,14 @@ in the package repo corresponding to the last synchronization point.
 &nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
 &#128196; [apm - Internals](/txt/exe/apm/internals.md)<br/>
+<!-- abt_md.toc_end -->
 
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
+### Internals
+<a href="#internals"></a>
+&#128196; [apm - Internals](/txt/gen/apm/apm.md)<br/>
 
 ### Syntax
 <a href="#syntax"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Syntax -->
 ```
 apm: Algo Package Manager
 Usage: apm [[-package:]<regx>] [options]
@@ -68,6 +71,7 @@ Usage: apm [[-package:]<regx>] [options]
     -dry_run                     Do not execute transaction
     -showrec                     Show records belonging to package
     -showfile                    List package files (gitfile records)
+    -generate                    Generate package records into apm/gen/<package>.ssim
     -R                           reverse the diff direction
     -l                           Use local package definition on the remote side
     -reset                       Reset package baseref/origin to those provided by the command line
@@ -83,10 +87,7 @@ Usage: apm [[-package:]<regx>] [options]
     -help                        Print help and exit; alias -h
     -version                     Print version and exit
     -signature                   Show signatures and exit; alias -sig
-
 ```
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Syntax -->
 
 ### Limitations
 <a href="#limitations"></a>
@@ -221,10 +222,7 @@ installation source for other projects.
 Each pkgkey record is an acr regex, and apm expands it to the full set of records
 from `data_in` dataset when it is invoked. This is done in two stages. First, apm evaluates the regex to
 a set of records. Then it finds all references to this set of records.
-A given ssim record can end up "belonging" to more than one package. In this case, it is taken to belong to the
-"last" package that claims it, in topological order by package dependency. So, if package "openacr" selects files
-"cpp/amc/%" and another package X extends amc by adding an extra source file to it and selects "cpp/amc/xyz.cpp",
-then the file xyz.cpp will belong to package X and not openacr.
+A given ssim record can end up "belonging" to more than one package.
 
 You can examine which packages any record belongs to by streaming these records to `apm -annotate -`.
 E.g. `acr citest | apm -annotate -`.
@@ -241,7 +239,7 @@ to packages.
 
 `apm` attempts to invoke `apm` in the package directory to get a list of files and records
 comprising a package. That's because the package directory has its own definition of the package
-file and over times files/records may be added or removed from it. 
+file and over times files/records may be added or removed from it.
 
 But `apm` can also work with any unrelated repo that doesn't have apm, even if that repo is not openacr based
 or has no concept of ssimfiles. Running `apm <package> -diff -origin:<URL> -ref:<baseref>` will use the local
@@ -253,7 +251,7 @@ Thus, apm works as a generic tool for managing submodules.
 
 Apm works with files and with records. When merging changes, `apm` uses git command `git merge-file`
 to perform a 3-way merge on files, and the `acr_dm` command to perform attribute-level 3-way merge
-on tuples. 
+on tuples.
 
 Any conflicts in regular files are dealt with using usual git methods -- just edit the
 conflict markers and commit.
@@ -270,7 +268,7 @@ to be a conflict.
 ### Sandboxes
 <a href="#sandboxes"></a>
 
-apm uses [sandboxes](txt/sandbox.md) to hold intermediate state.
+apm uses [sandboxes](/txt/ssimdb/dev/sandbox.md) to hold intermediate state.
 The new package is always fetched into the `apm-theirs` sandbox, and the common ancestor is instantiated
 in `apm-base` sandbox.
 
@@ -282,8 +280,6 @@ The `-install` command is essentially the same as `-update` with current commit 
 
 ### Options
 <a href="#options"></a>
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Options -->
 #### -in -- Input directory or filename, - for stdin
 <a href="#-in"></a>
 
@@ -348,6 +344,9 @@ to override package's `origin` attribute when invoked with `-diff`, `-push`, or 
 #### -showfile -- List package files (gitfile records)
 <a href="#-showfile"></a>
 
+#### -generate -- Generate package records into apm/gen/<package>.ssim
+<a href="#-generate"></a>
+
 #### -R -- reverse the diff direction
 <a href="#-r"></a>
 
@@ -394,8 +393,7 @@ dev.gitfile  gitfile:README.md  pkgkey:openacr/dev.%:%  pkgkey:openacr/dev.gitfi
 ```
 
 Apm will print each input line, appending all the pkgkeys which capture the record.
-The last pkgkey determines which package the record belongs to. To check files,
-simply use the `gitfile` table.
+To check files, simply use the `gitfile` table.
 
 #### -data_in -- Dataset from which package records are loaded
 <a href="#-data_in"></a>
@@ -406,11 +404,8 @@ simply use the `gitfile` table.
 #### -binpath -- (internal use)
 <a href="#-binpath"></a>
 
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
-
 ### Inputs
 <a href="#inputs"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
 `apm` takes the following tables on input:
 |Ssimfile|Comment|
 |---|---|
@@ -427,6 +422,7 @@ simply use the `gitfile` table.
 |[dmmeta.ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|File with ssim tuples|
 |[dmmeta.substr](/txt/ssimdb/dmmeta/substr.md)|Specify that the field value is computed from a substring of another field|
 |[dev.unstablefld](/txt/ssimdb/dev/unstablefld.md)|Fields that should be stripped from component test output because they contain timestamps etc.|
+|[amcdb.bltin](/txt/ssimdb/amcdb/bltin.md)|Specify properties of a C built-in type|
 |[dmmeta.ctype](/txt/ssimdb/dmmeta/ctype.md)|Struct|
 |[dmmeta.field](/txt/ssimdb/dmmeta/field.md)|Specify field of a struct|
 |[dmmeta.ns](/txt/ssimdb/dmmeta/ns.md)|Namespace (for in-memory database, protocol, etc)|
@@ -435,7 +431,5 @@ simply use the `gitfile` table.
 |[dev.pkgkey](/txt/ssimdb/dev/pkgkey.md)|Keys belonging to the OpenACR package|
 |[dmmeta.ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|File with ssim tuples|
 |[dmmeta.ssimreq](/txt/ssimdb/dmmeta/ssimreq.md)|Extended constraints for ssim records|
+|[dmmeta.ssimsort](/txt/ssimdb/dmmeta/ssimsort.md)|Define sort order for ssimfile|
 |[dmmeta.substr](/txt/ssimdb/dmmeta/substr.md)|Specify that the field value is computed from a substring of another field|
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
-

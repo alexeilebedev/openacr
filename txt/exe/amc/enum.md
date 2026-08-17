@@ -176,4 +176,3 @@ bool                 value_ReadStrptrMaybe(ws::StatusCode& parent, algo::strptr 
 ```
 
 The `gconst` record can also be used when `idfld` (id field) refers to a non-numeric value.
-

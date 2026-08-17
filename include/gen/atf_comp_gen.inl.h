@@ -100,7 +100,7 @@ inline atf_comp::FComptest* atf_comp::comptest_Last() {
 
 // --- atf_comp.FDb.comptest.N
 // Return number of items in the pool
-inline i32 atf_comp::comptest_N() {
+inline i64 atf_comp::comptest_N() {
     return _db.comptest_n;
 }
 
@@ -166,7 +166,7 @@ inline atf_comp::FTfilt* atf_comp::tfilt_Last() {
 
 // --- atf_comp.FDb.tfilt.N
 // Return number of items in the pool
-inline i32 atf_comp::tfilt_N() {
+inline i64 atf_comp::tfilt_N() {
     return _db.tfilt_n;
 }
 
@@ -208,7 +208,7 @@ inline atf_comp::FProc* atf_comp::proc_Last() {
 
 // --- atf_comp.FDb.proc.N
 // Return number of items in the pool
-inline i32 atf_comp::proc_N() {
+inline i64 atf_comp::proc_N() {
     return _db.proc_n;
 }
 
@@ -250,7 +250,7 @@ inline atf_comp::FUnstableattr* atf_comp::unstableattr_Last() {
 
 // --- atf_comp.FDb.unstableattr.N
 // Return number of items in the pool
-inline i32 atf_comp::unstableattr_N() {
+inline i64 atf_comp::unstableattr_N() {
     return _db.unstableattr_n;
 }
 
@@ -330,6 +330,48 @@ inline atf_comp::FComptest& atf_comp::zd_select_qLast() {
     atf_comp::FComptest *row = NULL;
     row = _db.zd_select_tail;
     return *row;
+}
+
+// --- atf_comp.FDb.testenv.EmptyQ
+// Return true if index is empty
+inline bool atf_comp::testenv_EmptyQ() {
+    return _db.testenv_n == 0;
+}
+
+// --- atf_comp.FDb.testenv.Find
+// Look up row by row id. Return NULL if out of range
+inline atf_comp::FTestenv* atf_comp::testenv_Find(u64 t) {
+    atf_comp::FTestenv *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.testenv_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.testenv_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- atf_comp.FDb.testenv.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline atf_comp::FTestenv* atf_comp::testenv_Last() {
+    return testenv_Find(u64(_db.testenv_n-1));
+}
+
+// --- atf_comp.FDb.testenv.N
+// Return number of items in the pool
+inline i64 atf_comp::testenv_N() {
+    return _db.testenv_n;
+}
+
+// --- atf_comp.FDb.testenv.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline atf_comp::FTestenv& atf_comp::testenv_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.testenv_lary[bsr][index];
 }
 
 // --- atf_comp.FDb.comptest_curs.Reset
@@ -457,6 +499,31 @@ inline atf_comp::FComptest& atf_comp::_db_zd_select_curs_Access(_db_zd_select_cu
     return *curs.row;
 }
 
+// --- atf_comp.FDb.testenv_curs.Reset
+// cursor points to valid item
+inline void atf_comp::_db_testenv_curs_Reset(_db_testenv_curs &curs, atf_comp::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- atf_comp.FDb.testenv_curs.ValidQ
+// cursor points to valid item
+inline bool atf_comp::_db_testenv_curs_ValidQ(_db_testenv_curs &curs) {
+    return curs.index < _db.testenv_n;
+}
+
+// --- atf_comp.FDb.testenv_curs.Next
+// proceed to next item
+inline void atf_comp::_db_testenv_curs_Next(_db_testenv_curs &curs) {
+    curs.index++;
+}
+
+// --- atf_comp.FDb.testenv_curs.Access
+// item access
+inline atf_comp::FTestenv& atf_comp::_db_testenv_curs_Access(_db_testenv_curs &curs) {
+    return testenv_qFind(u64(curs.index));
+}
+
 // --- atf_comp.FProc.in.Max
 // Return max. number of bytes in the buffer.
 inline i32 atf_comp::in_Max(atf_comp::FProc& proc) {
@@ -479,6 +546,18 @@ inline  atf_comp::FProc::FProc() {
 // --- atf_comp.FProc..Dtor
 inline  atf_comp::FProc::~FProc() {
     atf_comp::FProc_Uninit(*this);
+}
+
+// --- atf_comp.FTestenv..Init
+// Set all fields to initial values.
+inline void atf_comp::FTestenv_Init(atf_comp::FTestenv& testenv) {
+    testenv.slowonly = bool(false);
+    testenv.vardir = bool(false);
+}
+
+// --- atf_comp.FTestenv..Ctor
+inline  atf_comp::FTestenv::FTestenv() {
+    atf_comp::FTestenv_Init(*this);
 }
 
 // --- atf_comp.FTfilt..Ctor
@@ -505,11 +584,6 @@ inline  atf_comp::FUnstableattr::FUnstableattr() {
 // --- atf_comp.FUnstableattr..Dtor
 inline  atf_comp::FUnstableattr::~FUnstableattr() {
     atf_comp::FUnstableattr_Uninit(*this);
-}
-
-// --- atf_comp.FUnstablefld.base.Castbase
-inline dev::Unstablefld& atf_comp::Castbase(atf_comp::FUnstablefld& parent) {
-    return reinterpret_cast<dev::Unstablefld&>(parent);
 }
 
 // --- atf_comp.FUnstablefld..Ctor

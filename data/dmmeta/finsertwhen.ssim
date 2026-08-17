@@ -1,0 +1,6 @@
+dmmeta.finsertwhen  finsertwhen:command.acr_ed.ctype  when:command.acr_ed.create  comment:""
+dmmeta.finsertwhen  finsertwhen:command.acr_ed.dispatch_msg  when:command.acr_ed.create  comment:""
+dmmeta.finsertwhen  finsertwhen:command.acr_ed.fcurs  when:command.acr_ed.create  comment:""
+dmmeta.finsertwhen  finsertwhen:command.acr_ed.field  when:command.acr_ed.create  comment:""
+dmmeta.finsertwhen  finsertwhen:command.acr_ed.ssimfile  when:command.acr_ed.create  comment:""
+dmmeta.finsertwhen  finsertwhen:command.acr_ed.target  when:command.acr_ed.create  comment:""

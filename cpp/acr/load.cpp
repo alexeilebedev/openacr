@@ -27,8 +27,36 @@
 
 // -----------------------------------------------------------------------------
 
-// Load records for this ctype from the appropriate ssimfile
-// This does nothing if acr is operating in file mode, or if the ssimfile doesn't exist
+// Report input line TEXT (at FILE's current lineno) that cannot be loaded,
+// for REASON: a parse failure or a ctype acr does not know.  A dropped line
+// would not survive a -write -- the file is rewritten from the rows that
+// loaded, so an unloadable row silently vanishes, possibly weeks later via
+// an -insert into an unrelated row of the same file.  Recording the load
+// failure and a nonzero exit blocks the rewrite (main.cpp gates -write on
+// exit_code==0, and editor mode on !load_failed), so the file keeps every
+// line it held.  Blank and comment-only lines parse into an empty tuple and
+// never reach this path.
+void acr::ReportBadLine(acr::FFile &file, algo::strptr text, algo::strptr reason) {
+    prerr(file.file<<":"<<file.lineno<<": acr.badline"
+          <<Keyval("reason",reason)
+          <<Keyval("text",text));
+    _db.report.n_badline++;
+    if (!_db.load_failed) {
+        _db.load_failed = true;
+        algo_lib::_db.exit_code++;
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+// Load records for this ctype from the appropriate ssimfile.
+// This does nothing if acr is operating in file mode.
+// A dataset holds only the ssimfiles it needs, so an ssimfile whose path
+// resolves to nothing loads as an empty table. Any other read failure -- a
+// permission problem, an i/o error, a mapping that did not succeed -- fails the
+// run instead: the query would otherwise answer from a table missing every row
+// of that file, and a -write would rewrite the file from the rows that did
+// load, dropping the rest. acr.DsetFileReadDeny pins both halves.
 void acr::LoadRecords(acr::FCtype &ctype) {
     if (acr::FSsimfile *ssimfile = ctype.c_ssimfile) {
         acr::FFile *file = ctype.c_ssimfile->c_file;
@@ -43,11 +71,19 @@ void acr::LoadRecords(acr::FCtype &ctype) {
                 verblog("acr.load"<<Keyval("fname",file->file));
                 Tuple tuple;
                 ind_beg(Line_curs,line,in.text) {
+                    ssimfile->c_file->lineno = ind_curs(line).i+1;
                     if (Tuple_ReadStrptrMaybe(tuple, line)) {
-                        ssimfile->c_file->lineno = ind_curs(line).i+1;
                         ReadTuple(tuple, *ssimfile->c_file, acr_ReadMode_acr_insert);
+                    } else {
+                        ReportBadLine(*ssimfile->c_file, line, "cannot parse line");
                     }
                 }ind_end;
+            } else if (errno==ENOENT || errno==ENOTDIR) {
+                // the path names no file, so the table stays empty
+            } else {
+                algo::PrerrFileFail("acr.file_read", file->file, "ssimfile could not be read");
+                acr::_db.load_failed = true;
+                algo_lib::_db.exit_code++;
             }
         }
     }
@@ -82,6 +118,8 @@ void acr::ReadLines(acr::FFile &file, algo::Fildes in, acr::ReadMode read_mode) 
         if (Tuple_ReadStrptrMaybe(tuple,line)) {
             acr::FRec *rec = acr::ReadTuple(tuple, file, read_mode);
             (void)rec;
+        } else {
+            ReportBadLine(file, line, "cannot parse line");
         }
         file.lineno++;
     }ind_end;
@@ -98,18 +136,48 @@ void acr::Main_ReadIn() {
         algo_lib::FFildes in;
         in.fd = OpenRead(acr::_db.cmdline.in, algo::FileFlags());
         file.filename = acr::_db.cmdline.in;
-        file.modtime = FdModTime(in.fd);
-        ReadLines(file,in.fd,acr::DefaultReadMode());
+        if (!ValidQ(in.fd)) {
+            // the path exists (that is how file mode was selected) but cannot
+            // be opened, e.g. a permission problem; answering from nothing
+            // would pass the bad input off as a true empty result
+            algo::PrerrFileFail("acr.file_read", acr::_db.cmdline.in, "input file could not be read");
+            acr::_db.load_failed = true;
+            algo_lib::_db.exit_code++;
+        } else {
+            file.modtime = FdModTime(in.fd);
+            ReadLines(file,in.fd,acr::DefaultReadMode());
+        }
     } else if (acr::_db.cmdline.in == "-") {
         acr::FFile &file = acr::ind_file_GetOrCreate(acr::_db.cmdline.in);
         file.autoloaded = true;// not new data
+        file.stdin = true;
         ReadLines(file,Fildes(0),acr::DefaultReadMode());
+    } else if (DirectoryQ(acr::_db.cmdline.in)) {
+        // a dataset directory hands over its ssimfiles one at a time, as the
+        // query reaches each table, so a directory acr cannot search fails one
+        // read per table touched and never names the directory itself. Probe it
+        // once here instead. Missing individual ssimfiles inside a searchable
+        // directory stay tolerated (LoadRecords).
+        if (!DirSearchableQ(acr::_db.cmdline.in)) {
+            algo::PrerrFileFail("acr.file_read", acr::_db.cmdline.in, "dataset directory could not be searched");
+            acr::_db.load_failed = true;
+            algo_lib::_db.exit_code++;
+        }
+    } else {
+        // -in names neither a readable file, nor stdin, nor a dataset
+        // directory. Loading an empty dataset and exiting 0 would let a
+        // mistyped -in (or a wrong working directory) pass as a true empty
+        // result; fail the run naming the path.
+        algo::PrerrFileFail("acr.file_read", acr::_db.cmdline.in, "input directory or file could not be read");
+        acr::_db.load_failed = true;
+        algo_lib::_db.exit_code++;
     }
     // Read data from stdin, insert/replace/update/merge into in-memory store
     // If stdio mode is selected, the incoming records form a background
     // for the query(i.e. they are not considered "new")
     if (_db.cmdline.sel || _db.cmdline.insert || _db.cmdline.replace || _db.cmdline.update || _db.cmdline.merge) {
         acr::FFile &file = acr::ind_file_GetOrCreate("stdin");
+        file.stdin = true;
         ReadLines(file,Fildes(0),acr::DefaultReadMode());
     }
 }

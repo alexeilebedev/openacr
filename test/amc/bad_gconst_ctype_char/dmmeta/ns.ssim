@@ -1,0 +1,3 @@
+dmmeta.ns  ns:""  nstype:protocol  license:GPL  comment:""
+dmmeta.ns  ns:algo_lib  nstype:lib  license:GPL  comment:""
+dmmeta.ns  ns:dev  nstype:ssimdb  license:GPL  comment:""

@@ -1,0 +1,6 @@
+curl -k 'https://192.168.1.45:1010/api/graphql' -X POST -H "Authorization: Bearer glpat-EXAMPLE0000000000000" -H "Content-Type: application/json" --data \
+'{"query":"query{project(fullPath:\"algornd/glpat\"){issues(state:closed,sort:created_asc,first:100, after:\"\"){edges{node{title,iid,state}} pageInfo{endCursor,hasNextPage}}}}"}' \
+| jq
+
+
+

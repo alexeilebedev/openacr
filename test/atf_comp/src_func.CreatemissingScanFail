@@ -1,0 +1,5 @@
+# start bash cmd:"bash -c 'cd $tempdir && mkdir src && printf \"void xx::ExistingFunc() {\\n}\\n\" > src/y.cpp && cp src/y.cpp orig && $$OLDPWD/$bindir/src_func -in:$$OLDPWD/test/src_func/createmissing_readfail.ssim -createmissing; test $$? = 1 && cmp src/y.cpp orig && echo source_unchanged'"
+# eof bash
+bash -> src_func.file_read  file:missing_dir/x.cpp  err:"No such file or directory"  comment:"source file could not be read"
+bash -> source_unchanged
+# exit bash code:0

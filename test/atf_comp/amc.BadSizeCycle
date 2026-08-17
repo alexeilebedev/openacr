@@ -1,0 +1,12 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/bad_size_cycle.ssim -out_dir: -report:N zzz"
+# eof amc
+amc -> amc.bad_numtype  field:algo_lib.CycA.b  arg:algo_lib.CycB  comment:"fdec arg must resolve to an integer builtin"
+amc -> amc.bad_numtype  field:algo_lib.CycSelf.self  arg:algo_lib.CycSelf  comment:"fdec arg must resolve to an integer builtin"
+amc -> amc.size_cycle  ctype:algo_lib.CycB  comment:"ctype contains itself by value; size cannot be computed"
+amc -> amc.size_unknown_recursive  ctype:algo_lib.CycA  field:b  fieldtype:algo_lib.CycB  field_is_extern:N  comment:"size of field unknown, recursively propagated to the type"
+amc -> amc.size_unknown_recursive  ctype:algo_lib.CycB  field:a  fieldtype:algo_lib.CycA  field_is_extern:N  comment:"size of field unknown, recursively propagated to the type"
+amc -> amc.size_cycle  ctype:algo_lib.CycSelf  comment:"ctype contains itself by value; size cannot be computed"
+amc -> amc.size_unknown_recursive  ctype:algo_lib.CycSelf  field:self  fieldtype:algo_lib.CycSelf  field_is_extern:N  comment:"size of field unknown, recursively propagated to the type"
+amc -> amc.size_unknown_recursive  ctype:algo_lib.CycBitSrc  field:word  fieldtype:algo_lib.CycSelf  field_is_extern:N  comment:"size of field unknown, recursively propagated to the type"
+amc -> amc.error  circular type definition in algo_lib.CycA
+# exit amc code:1

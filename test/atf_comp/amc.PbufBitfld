@@ -1,0 +1,46 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/pbuf_bitfld.ssim -out_dir: -report:N 'pbt.Msg..PbufEncode|pbt.Msg..PbufDecode|pbt.Msg.val.Set'"
+# eof amc
+amc -> // --- pbt.Msg.val.Set
+amc -> // Set bitfield in value of field 'flags'
+amc -> //    8 bits starting at bit 0.
+amc -> inline void pbt::val_Set(pbt::Msg& parent, u32 rhs) {
+amc ->     u32 t1    = u32(0xff) << 0;
+amc ->     u32 t2    = (u32(rhs) & 0xff) << 0;
+amc ->     flags_Set(parent, u32((parent.flags & ~t1) | t2));
+amc -> }
+amc -> // --- pbt.Msg..PbufEncode
+amc -> void pbt::Msg_PbufEncode(algo::ByteAry& buf, pbt::Msg& parent) {
+amc ->     if (val_PresentQ(parent)) {
+amc ->         lib_pb::EncodeTag(buf,1,0);
+amc ->         lib_pb::EncodeVarintU32(buf,val_Get(parent));
+amc ->     }
+amc -> }
+amc -> // --- pbt.Msg..PbufDecode
+amc -> bool pbt::Msg_PbufDecode(algo::memptr& buf, pbt::Msg& parent) {
+amc ->     bool ok = true;
+amc ->     while (ok && elems_N(buf) > 0) {
+amc ->         u32 pb_field_number(0);
+amc ->         u8 pb_wire_type(0);
+amc ->         ok = lib_pb::DecodeTag(buf,pb_field_number,pb_wire_type);
+amc ->         if (!ok) {
+amc ->             break;
+amc ->         }
+amc ->         switch (pb_field_number) {
+amc ->             case 1: {
+amc ->                 if (pb_wire_type == 0) {
+amc ->                     u32 val_tmp = u32();
+amc ->                     ok = ok && lib_pb::DecodeVarintU32(buf,val_tmp);
+amc ->                     val_Set(parent, val_tmp);
+amc ->                     val_SetPresent(parent);
+amc ->                 } else {
+amc ->                     ok = lib_pb::SkipField(buf,pb_wire_type);
+amc ->                 }
+amc ->             } break;
+amc ->             default:
+amc ->             ok = lib_pb::SkipField(buf,pb_wire_type);
+amc ->             break;
+amc ->         }
+amc ->     }
+amc ->     return ok;
+amc -> }
+# exit amc code:0

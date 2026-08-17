@@ -1,0 +1,80 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/fdec_global_bitfld.ssim -out_dir: -report:N 'algo_lib.FDb.decfrac.GetDouble|algo_lib.FDb.decfrac.qSetDouble|algo_lib.FDb.decnarrow.SetDoubleMaybe|algo_lib.FDb.decnarrow.ReadStrptrMaybe'"
+# eof amc
+amc -> // --- algo_lib.FDb.decfrac.qSetDouble
+amc -> // Set value of field decfrac.
+amc -> // The value is rounded to the nearest integer.
+amc -> // This ensures that truncation of a near-integer value does not occur.
+amc -> // Example: 1.3 cannot be represented exactly as a double, the actual
+amc -> // stored value will be 1.29999999. when we apply C truncation,
+amc -> // we want to end up with 1.3, not 1.2.
+amc -> inline void algo_lib::decfrac_qSetDouble(double val) {
+amc ->     double intval = val * 100 + (val > 0 ? 0.5 : -0.5);
+amc ->     // set underlying field.
+amc ->     decfrac_Set(u32(intval));
+amc -> }
+amc -> // --- algo_lib.FDb.decfrac.GetDouble
+amc -> inline double algo_lib::decfrac_GetDouble() {
+amc ->     double ret;
+amc ->     ret = decfrac_Get() / double(100);
+amc ->     return ret;
+amc -> }
+amc -> // --- algo_lib.FDb.decnarrow.SetDoubleMaybe
+amc -> // Set value of field decnarrow, using rounding.
+amc -> // If value is out of range for the target type, return false.
+amc -> bool algo_lib::decnarrow_SetDoubleMaybe(double val) {
+amc ->     double intval = val * 100;
+amc ->     u32 minval = u32(0ULL);
+amc ->     u32 maxval = u32(1023ULL);
+amc ->     bool retval = intval > double(minval) - 0.5;// minval rounds in, minval-1 rounds out
+amc ->     retval &= intval < double(maxval) + 0.5;// maxval rounds in, maxval+1 rounds out
+amc ->     if (retval) {
+amc ->         intval = intval + (val > 0 ? 0.5 : -0.5);
+amc ->         decnarrow_Set(u32(intval)); // set underlying field.
+amc ->     }
+amc ->     return retval;
+amc -> }
+amc -> // --- algo_lib.FDb.decnarrow.ReadStrptrMaybe
+amc -> bool algo_lib::decnarrow_ReadStrptrMaybe(algo::strptr in) {
+amc ->     int index = 0;
+amc ->     int neg = false;
+amc ->     // skip leading sign
+amc ->     if (index < in.n_elems && (in.elems[index] == '+' || in.elems[index] == '-')) {
+amc ->         neg = in.elems[index]=='-';
+amc ->         index++;
+amc ->     };
+amc ->     // parse digits
+amc ->     u64 val = 0;
+amc ->     int ndot = 0; // number of . encountered
+amc ->     int nfrac = 0; // read up to NFRAC digits after .; if not found, fill in
+amc ->     bool ok = true;// overflow or bad char
+amc ->     u64 limdiv = 102ULL;// largest magnitude the field holds for this sign, over 10
+amc ->     u64 limmod = 3ULL;// and that magnitude's last digit
+amc ->     for (; index < in.n_elems; index++) {
+amc ->         char c = in.elems[index];
+amc ->         if (c == '.') {
+amc ->             ok &= ndot == 0; // max 1 dot
+amc ->             ndot++;
+amc ->         } else if (algo_lib::DigitCharQ(c)) {
+amc ->             if (nfrac < 2) { // ignore digits after 2'th
+amc ->                 u64 digit = c - '0';
+amc ->                 ok &= val < limdiv || (val == limdiv && digit <= limmod);// val*10+digit must fit the field
+amc ->                 val = val*10 + digit;
+amc ->                 nfrac += ndot>0;
+amc ->             }
+amc ->         } else {
+amc ->             ok = false; // unknown char
+amc ->         }
+amc ->     }
+amc ->     while (nfrac < 2) {// insert missing
+amc ->         ok &= val <= limdiv;// val*10 must fit the field
+amc ->         val = val*10;
+amc ->         nfrac++;
+amc ->     }
+amc ->     u64 final_val = val;
+amc ->     ok &= !neg;
+amc ->     if (ok) {
+amc ->         decnarrow_Set(u32(final_val));// store value
+amc ->     }
+amc ->     return ok;
+amc -> }
+# exit amc code:0

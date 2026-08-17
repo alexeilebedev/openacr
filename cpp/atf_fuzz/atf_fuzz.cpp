@@ -45,12 +45,12 @@ void atf_fuzz::fuzzstrat_skip_inputs() {
     DeleteFile(_db.cmdline.reprofile);
     int ncrash=0;
     {
-        command::sandbox_proc sandbox;
-        sandbox.cmd.name.expr = dev_Sandbox_sandbox_atf_fuzz;
-        sandbox.cmd.reset = true;
-        sandbox_ExecX(sandbox);
+        command::wt_proc wt;
+        wt.cmd.name.expr = dev_Sandbox_sandbox_atf_fuzz;
+        wt.cmd.reset = true;
+        wt_ExecX(wt);
     }
-    tempstr sbpath = algo_lib::SandboxDir(dev_Sandbox_sandbox_atf_fuzz);
+    tempstr sbpath = algo_lib::WtDir(dev_Sandbox_sandbox_atf_fuzz);
     int iter=0;
     ind_beg(Line_curs,line,inputs) {
         if (algo::double_WeakRandom(1) <= _db.cmdline.testprob) {
@@ -74,10 +74,10 @@ void atf_fuzz::fuzzstrat_skip_inputs() {
                 prlog("CRASH "<<sh.cmd.c);
                 StringToFile(sh.cmd.c,_db.cmdline.reprofile,algo_FileFlags_append);
             }
-            command::sandbox_proc cleanup;
-            cleanup.cmd.name.expr = dev_Sandbox_sandbox_atf_fuzz;
-            cleanup.cmd.clean = true;
-            sandbox_ExecX(cleanup);
+            command::wt_proc wt;
+            wt.cmd.name.expr = dev_Sandbox_sandbox_atf_fuzz;
+            wt.cmd.clean = true;
+            wt_ExecX(wt);
         }
         iter++;
     }ind_end;

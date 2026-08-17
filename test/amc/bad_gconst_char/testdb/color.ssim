@@ -1,0 +1,3 @@
+testdb.color  color:red  val:r  comment:""
+testdb.color  color:green  val:abc  comment:""
+testdb.color  color:blue  val:xy  comment:""

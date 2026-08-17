@@ -252,7 +252,7 @@ lib_ctype::FFconst *lib_ctype::FindFconst(lib_ctype::FField *field, cstring& att
         fconst = lib_ctype::ind_fconst_Find(fconstkey);
         if ((fconst == NULL) && (fconst_field->arg == "char")) {
             // add single quote
-            fconstkey = tempstr() << fconst_field->field << "/'" << attr_value<<"'";
+            fconstkey = tempstr() << fconst_field->field << "/'" << attr_value<<"'"; // ignore:hand_quote
             fconst = lib_ctype::ind_fconst_key_Find(fconstkey);
         }
     }

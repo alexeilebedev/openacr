@@ -1,0 +1,21 @@
+# start bash cmd:"bash -c 'cd $tempdir && bash $$OLDPWD/test/apm/update_fate.sh $$OLDPWD $bindir'"
+# eof bash
+bash -> apm.update_fate  step:none  exit:0  delete:2  replace:2
+bash -> apm.update_fate  step:loadrec  exit:1  delete:0  replace:0
+bash -> apm.sandbox_create  sandbox:apm-base  baseref:HEAD  status:"exit code 1"  comment:"package sandbox could not be checked out"
+bash -> apm.update_fate  step:sandbox1  exit:1  delete:0  replace:0
+bash -> apm.pkgrec_read  dir:wt/apm-base  recfile:temp/apm.base.ssim  status:"exit code 1"  comment:"package records could not be read from the directory"
+bash -> apm.update_fate  step:showrec1  exit:1  delete:0  replace:0
+bash -> apm.sandbox_create  sandbox:apm-theirs  baseref:HEAD  status:"exit code 1"  comment:"package sandbox could not be checked out"
+bash -> apm.update_fate  step:sandbox2  exit:1  delete:0  replace:0
+bash -> apm.pkgrec_read  dir:wt/apm-theirs  recfile:temp/apm.theirs.ssim  status:"exit code 1"  comment:"package records could not be read from the directory"
+bash -> apm.update_fate  step:showrec2  exit:1  delete:0  replace:0
+bash -> apm.recmerge  recfile:temp/apm.merged.ssim  status:"exit code 1"  comment:"package records could not be merged"
+bash -> apm.update_fate  step:merge  exit:1  delete:0  replace:0
+bash -> apm.pkgfile_read  dir:""  status:"exit code 1"  comment:"package file list could not be read from the directory"
+bash -> apm.update_fate  step:showfile1  exit:1  delete:0  replace:0
+bash -> apm.pkgfile_read  dir:wt/apm-base  status:"exit code 1"  comment:"package file list could not be read from the directory"
+bash -> apm.update_fate  step:showfile2  exit:1  delete:0  replace:0
+bash -> apm.pkgfile_read  dir:wt/apm-theirs  status:"exit code 1"  comment:"package file list could not be read from the directory"
+bash -> apm.update_fate  step:showfile3  exit:1  delete:0  replace:0
+# exit bash code:0

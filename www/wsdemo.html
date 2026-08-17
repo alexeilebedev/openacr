@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Websocket Demo</title>
+  </head>
+  <body>
+    <script defer type="module">
+      // https://github.com/nats-io/nats.ws
+      import { connect, StringCodec } from "https://cdn.jsdelivr.net/npm/nats.ws@1.10.0/esm/nats.js";
+
+      const protocol = location.protocol == "https:" ? "wss:" : "ws:"
+      const url = protocol + "//" + location.host + "/"
+
+      // to create a connection to a nats-server:
+      const nc = await connect({ servers: [url] });
+
+      // create a codec
+      const sc = StringCodec();
+      // create a simple subscriber and iterate over messages
+      // matching the subscription
+      const subject = "public.anon";
+      const sub = nc.subscribe(subject);
+      document.write(`publish some messages to ${subject}, they will appear here<br>`);
+
+      (async () => {
+        for await (const m of sub) {
+          document.write(`[${sub.getProcessed()}]: ${sc.decode(m.data)}<br>`);
+        }
+        document.write("subscription closed<br>");
+      })();
+
+      nc.publish(subject, sc.encode("Hello"));
+      nc.publish(subject, sc.encode("World!"));
+
+      // we want to insure that messages that are in flight
+      // get processed, so we are going to drain the
+      // connection. Drain is the same as close, but makes
+      // sure that all messages in flight get seen
+      // by the iterator. After calling drain on the connection
+      // the connection closes.
+      // await nc.drain();
+    </script>
+  </body>
+</html>

@@ -58,7 +58,7 @@ namespace acr_ed { // update-hdr
     // Example 1:
     // acr_ed -create -ctype acmdb.Devos -subset1 acmdb.Device -subset2 acmdb.Os -separator /
     // Example 2:
-    // acr_ed -create -ctype atf_tmsg.FOrder -pooltype Tpool -indexed
+    // acr_ed -create -ctype atf_tmsg.FOrder -reftype Tpool -indexed
     //     (user-implemented function, prototype is in amc-generated header)
     // void edaction_Create_Ctype(); // gstatic/dev.edaction:Create_Ctype
 
@@ -67,6 +67,15 @@ namespace acr_ed { // update-hdr
 
     // acr_ed -ctype:X -rename:Y -write
     // void edaction_Rename_Ctype(); // gstatic/dev.edaction:Rename_Ctype
+
+    // -------------------------------------------------------------------
+    // cpp/acr_ed/dispatch_msg.cpp -- Create dispatch_msg record
+    //
+
+    // Add a dmmeta.dispatch_msg record routing a message ctype to a dispatch.
+    // Pkey form: "<dispatch>/<msgtype-ctype>", e.g. "lib_prot.Client/ams.LogMsg".
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void edaction_Create_DispatchMsg(); // gstatic/dev.edaction:Create_DispatchMsg
 
     // -------------------------------------------------------------------
     // cpp/acr_ed/field.cpp -- Create, delete, rename field
@@ -89,6 +98,15 @@ namespace acr_ed { // update-hdr
     // Trivial function to make a field indexed by a hash.
     // This is equivalent to creating an FDb.ind_<name>
     void CreateHashIndex(dmmeta::Field &field);
+
+    // Add a dmmeta.fstep record on an existing field with the chosen steptype
+    // (default Inline).
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void edaction_Create_Fstep(); // gstatic/dev.edaction:Create_Fstep
+
+    // Add a dmmeta.fcurs record for a custom cursor on an existing field.
+    // The fcurs pkey is "<field>/<curstype-name>", e.g. "ns.FDb.ind_x/curs".
+    // void edaction_Create_Fcurs(); // gstatic/dev.edaction:Create_Fcurs
 
     // -------------------------------------------------------------------
     // cpp/acr_ed/finput.cpp
@@ -119,7 +137,6 @@ namespace acr_ed { // update-hdr
     // Convert string to CamelCase format: some_string -> SomeString
     tempstr ToCamelCase(strptr str);
     void InsertSrcfileInclude(algo_lib::Replscope &R, bool mainheader);
-    void BuildTest();
     void ScriptEditFile(algo_lib::Replscope &R, strptr fname);
     void ProcessAction();
     //     (user-implemented function, prototype is in amc-generated header)

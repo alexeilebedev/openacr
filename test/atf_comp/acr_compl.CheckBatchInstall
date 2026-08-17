@@ -1,0 +1,5 @@
+# start acr_compl cmd:"$bindir/acr_compl -check_batch -install"
+acr_compl <- acr_compl.checkreq  id:1  line:'acr -nosuch_flag'
+# eof acr_compl
+acr_compl -> acr_compl.badcmdline  comment:"-check_batch writes responses to stdout and cannot be combined with -install"
+# exit acr_compl code:1

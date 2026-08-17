@@ -30,6 +30,7 @@ inline-command: acr tcurs -where dflt:N | ssimfilt ^ -t
 TFUNC            DFLT  COMMENT
 Bheap.unordcurs  N
 Bitset.bitcurs   N
+Blkhash.curs     N
 Llist.delcurs    N
 Ptrary.oncecurs  N
 Thash.curs       N
@@ -38,28 +39,24 @@ Thash.curs       N
 
 ### Attributes
 <a href="#attributes"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Attributes -->
 * [ctype:](/txt/ssimdb/dmmeta/ctype.md)dmmeta.Fcurs
 
 * file:[data/dmmeta/fcurs.ssim](/data/dmmeta/fcurs.ssim)
 
-italicised fields: *field, ctype, curstype* are [**fldfunc**](/txt/ssim.md#fldfunc) fields
+italicised fields: *field, ctype, curstype* are [**fldfunc**](/txt/openacr/ssim.md#fldfunc) fields
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|fcurs|[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)|[Val](/txt/exe/amc/reftypes.md#val)|||
-|*field*|*[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)*|*[Pkey](/txt/exe/amc/reftypes.md#pkey)*||*<br>/RL of fcurs*|
-|*ctype*|*[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)*|*[Pkey](/txt/exe/amc/reftypes.md#pkey)*||*<br>/RL.RL of fcurs*|
-|*curstype*|*[amcdb.Curstype](/txt/ssimdb/amcdb/curstype.md)*|*[Pkey](/txt/exe/amc/reftypes.md#pkey)*||*<br>/RR of fcurs*|
-|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|fcurs|[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)|[Val](/txt/exe/amc/reftype.md#val)|||
+|*field*|*[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)*|*[Pkey](/txt/exe/amc/reftype.md#pkey)*||*<br>/RL of fcurs*|
+|*ctype*|*[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)*|*[Pkey](/txt/exe/amc/reftype.md#pkey)*||*<br>/RL.RL of fcurs*|
+|*curstype*|*[amcdb.Curstype](/txt/ssimdb/amcdb/curstype.md)*|*[Pkey](/txt/exe/amc/reftype.md#pkey)*||*<br>/RR of fcurs*|
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype.md#val)|||
 
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Attributes -->
+### Used In Commands
+<a href="#used-in-commands"></a>
+* [acr_ed -fcurs](/txt/exe/acr_ed/README.md) - Add fcurs record (-create); pkey is <field>/<curstype-name>
 
 ### Used In Executables
 <a href="#used-in-executables"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:ImdbUses -->
-
-* [amc](/txt/exe/amc/internals.md) as [amc.FFcurs](/txt/exe/amc/internals.md#amc-ffcurs)
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:ImdbUses -->
-
+* [amc](/txt/gen/amc/amc.md) as [amc.FFcurs](/txt/gen/amc/amc.md#amc-ffcurs)

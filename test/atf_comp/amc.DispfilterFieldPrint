@@ -1,0 +1,25 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/dispfilter_fldprint.ssim -out_dir: -report:N algo_lib.DispFilter..MatchEv"
+# eof amc
+amc -> // --- algo_lib.DispFilter..MatchEv
+amc -> bool algo_lib::DispFilter_MatchEv(algo_lib::DispFilter &parent, algo_lib::Ev &msg) {
+amc ->     bool ret = true;
+amc ->     tempstr fieldstr;
+amc ->     if (state_PresentQ(parent) && !(msg.state == parent.state)) {
+amc ->         return false;
+amc ->     }
+amc ->     if (state_regx_PresentQ(parent)) {
+amc ->         ch_RemoveAll(fieldstr);
+amc ->         algo_lib::state_Print(msg, fieldstr);
+amc ->         if (!algo_lib::Regx_Match(parent.state_regx, fieldstr)) {
+amc ->             return false;
+amc ->         }
+amc ->     }
+amc ->     if (start_state_PresentQ(parent) && msg.state < parent.start_state) {
+amc ->         return false;
+amc ->     }
+amc ->     if (end_state_PresentQ(parent) && parent.end_state < msg.state) {
+amc ->         return false;
+amc ->     }
+amc ->     return ret;
+amc -> }
+# exit amc code:0

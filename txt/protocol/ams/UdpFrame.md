@@ -3,7 +3,6 @@
 
 ### Attributes
 <a href="#attributes"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Attributes -->
 * [ctype:](/txt/ssimdb/dmmeta/ctype.md)ams.UdpFrame
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
@@ -15,6 +14,3 @@
 |src_port|u16|Val||Source UDP port|
 |dst_port|u16|Val||Destination UDP port|
 |payload|u8|Varlen||Payload|
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Attributes -->
-

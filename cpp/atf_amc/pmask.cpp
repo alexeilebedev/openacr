@@ -113,3 +113,21 @@ void atf_amc::amctest_PmaskMultiple() {
     prlog(p);
     vrfyeq_(tempstr()<<p, "atf_amc.PmaskMultiple  value1:1  value2:2  value4:0  value6:0  value7:0");
 }
+
+// Presence tracking on a global (FDb) pmask: the accessors take no parent
+// argument and mark bits directly on _db.
+void atf_amc::amctest_PmaskGlobal() {
+    vrfyeq_(atf_amc::gpval_GpmaskQ(), false);
+    vrfyeq_(atf_amc::gpval2_GpmaskQ(), false);
+    vrfyeq_(atf_amc::gpval_Gpmask_GetBit(), 0);
+    vrfyeq_(atf_amc::gpval2_Gpmask_GetBit(), 1);
+    // Set marks presence as a side effect
+    atf_amc::gpval_Set(5);
+    vrfyeq_(atf_amc::_db.gpval, 5);
+    vrfyeq_(atf_amc::gpval_GpmaskQ(), true);
+    vrfyeq_(atf_amc::gpval2_GpmaskQ(), false);
+    // presence can also be marked without touching the value
+    atf_amc::gpval2_SetGpmask();
+    vrfyeq_(atf_amc::gpval2_GpmaskQ(), true);
+    vrfyeq_(atf_amc::_db.gpval2, 0);
+}

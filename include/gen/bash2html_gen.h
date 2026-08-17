@@ -29,8 +29,8 @@
 
 // --- bash2html_FieldIdEnum
 
-enum bash2html_FieldIdEnum {        // bash2html.FieldId.value
-     bash2html_FieldId_value   = 0
+enum bash2html_FieldIdEnum {    // bash2html.FieldId.value
+     bash2html_FieldId_value
 };
 
 enum { bash2html_FieldIdEnum_N = 1 };
@@ -38,7 +38,6 @@ enum { bash2html_FieldIdEnum_N = 1 };
 namespace bash2html { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
 namespace bash2html { // gen:ns_tclass_field
-extern const char *bash2html_help;
 } // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace bash2html { struct trace; }
@@ -54,7 +53,6 @@ struct trace { // bash2html.trace
     inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // print string representation of ROW to string STR
 // cfmt:bash2html.trace.String  printfmt:Tuple
 // func:bash2html.trace..Print
@@ -66,11 +64,8 @@ struct FDb { // bash2html.FDb: In-memory database for bash2html
     command::bash2html   cmdline;   //
     bash2html::trace     trace;     //
 };
-
-// Read argc,argv directly into the fields of the command line(s)
-// The following fields are updated:
-//     bash2html.FDb.cmdline
-//     algo_lib.FDb.cmdline
+// Read argc,argv into the fields of bash2html.FDb.cmdline (and any base command line)
+// via bash2html_ReadArgv; then apply -help/-version and load floadtuples input.
 // func:bash2html.FDb._db.ReadArgv
 void                 ReadArgv() __attribute__((nothrow));
 // Main loop.
@@ -107,6 +102,10 @@ bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __att
 // Calls Step function of dependencies
 // func:bash2html.FDb._db.Steps
 void                 Steps();
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+// func:bash2html.FDb._db.RemoveStrptrMaybe
+bool                 RemoveStrptrMaybe(algo::strptr str);
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:bash2html.FDb._db.XrefMaybe
@@ -132,7 +131,6 @@ struct FieldId { // bash2html.FieldId: Field read helper
     inline               FieldId(bash2html_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:bash2html.FieldId.value.GetEnum
 inline bash2html_FieldIdEnum value_GetEnum(const bash2html::FieldId& parent) __attribute__((nothrow));
@@ -170,7 +168,7 @@ inline void          FieldId_Init(bash2html::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:bash2html.FieldId.String  printfmt:Raw
 // func:bash2html.FieldId..Print
-void                 FieldId_Print(bash2html::FieldId& row, algo::cstring& str) __attribute__((nothrow));
+void                 FieldId_Print(bash2html::FieldId row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace bash2html { // gen:ns_func
 // func:bash2html...StaticCheck

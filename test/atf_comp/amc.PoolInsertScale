@@ -1,0 +1,394 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/pool_insert_scale.ssim -out_dir: -report:N 'algo_lib.FDb.msg%.(InsertMaybe|AllocExtraMaybe)'"
+# eof amc
+amc -> // --- algo_lib.FDb.msgu32.AllocExtraMaybe
+amc -> // Allocate memory for new element. If out of memory, return NULL.
+amc -> algo_lib::FMsgU32* algo_lib::msgu32_AllocExtraMaybe(void *extra, i32 nbyte_extra) {
+amc ->     algo_lib::FMsgU32 *row = NULL;
+amc ->     if (nbyte_extra >= 0 && nbyte_extra % 4 == 0 && nbyte_extra <= 0x7fffffff - ssizeof(algo_lib::FMsgU32)) { // a negative count would underallocate the fixed portion; only a multiple of scale is representable in the length field; a larger total does not fit the i32 a frame length is read back through
+amc ->         row = (algo_lib::FMsgU32*)msgu32_AllocMem(sizeof(algo_lib::FMsgU32) + nbyte_extra);
+amc ->     }
+amc ->     if (row) {
+amc ->         new (row) algo_lib::FMsgU32; // call constructor
+amc ->         row->len = u32((sizeof(algo_lib::FMsgU32) + nbyte_extra) / 4);
+amc ->         if (extra) {
+amc ->             memcpy((u8*)row + sizeof(algo_lib::FMsgU32), extra, nbyte_extra);
+amc ->         }
+amc ->     }
+amc ->     return row;
+amc -> }
+amc -> // --- algo_lib.FDb.msgu32.InsertMaybe
+amc -> // Create new row from struct.
+amc -> // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+amc -> algo_lib::FMsgU32* algo_lib::msgu32_InsertMaybe(const algo_lib::MsgU32 &value) {
+amc ->     u8 *addon_addr = (u8*)&value + ssizeof(algo_lib::MsgU32);
+amc ->     i64 addon_len = i64(value.len) * 4 - ssizeof(algo_lib::MsgU32);
+amc ->     if (!(addon_len >= 0 && addon_len % 4 == 0 && addon_len <= 0x7fffffff - ssizeof(algo_lib::FMsgU32))) { // a negative count would underallocate the fixed portion; only a multiple of scale is representable in the length field; a larger total does not fit the i32 a frame length is read back through
+amc ->         return NULL; // the addon count is not one the allocation accepts
+amc ->     }
+amc ->     algo_lib::FMsgU32 *row = &msgu32_AllocExtra(addon_addr, i32(addon_len));
+amc ->     msgu32_CopyIn(*row,const_cast<algo_lib::MsgU32&>(value));
+amc ->     bool ok = msgu32_XrefMaybe(*row); // this may return false
+amc ->     if (!ok) {
+amc ->         msgu32_Delete(*row); // delete offending row, any existing xrefs are cleared
+amc ->         row = NULL; // forget this ever happened
+amc ->     }
+amc ->     return row;
+amc -> }
+amc -> // --- algo_lib.FDb.msgi32.AllocExtraMaybe
+amc -> // Allocate memory for new element. If out of memory, return NULL.
+amc -> algo_lib::FMsgI32* algo_lib::msgi32_AllocExtraMaybe(void *extra, i32 nbyte_extra) {
+amc ->     algo_lib::FMsgI32 *row = NULL;
+amc ->     if (nbyte_extra >= 0 && nbyte_extra <= 2147483647 - ssizeof(algo_lib::FMsgI32)) { // a negative count would underallocate the fixed portion; larger totals do not fit the length field
+amc ->         row = (algo_lib::FMsgI32*)msgi32_AllocMem(sizeof(algo_lib::FMsgI32) + nbyte_extra);
+amc ->     }
+amc ->     if (row) {
+amc ->         new (row) algo_lib::FMsgI32; // call constructor
+amc ->         row->len = i32(sizeof(algo_lib::FMsgI32) + nbyte_extra);
+amc ->         if (extra) {
+amc ->             memcpy((u8*)row + sizeof(algo_lib::FMsgI32), extra, nbyte_extra);
+amc ->         }
+amc ->     }
+amc ->     return row;
+amc -> }
+amc -> // --- algo_lib.FDb.msgi32.InsertMaybe
+amc -> // Create new row from struct.
+amc -> // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+amc -> algo_lib::FMsgI32* algo_lib::msgi32_InsertMaybe(const algo_lib::MsgI32 &value) {
+amc ->     u8 *addon_addr = (u8*)&value + ssizeof(algo_lib::MsgI32);
+amc ->     i64 addon_len = i64(value.len) - ssizeof(algo_lib::MsgI32);
+amc ->     if (!(addon_len >= 0 && addon_len <= 2147483647 - ssizeof(algo_lib::FMsgI32))) { // a negative count would underallocate the fixed portion; larger totals do not fit the length field
+amc ->         return NULL; // the addon count is not one the allocation accepts
+amc ->     }
+amc ->     algo_lib::FMsgI32 *row = &msgi32_AllocExtra(addon_addr, i32(addon_len));
+amc ->     msgi32_CopyIn(*row,const_cast<algo_lib::MsgI32&>(value));
+amc ->     bool ok = msgi32_XrefMaybe(*row); // this may return false
+amc ->     if (!ok) {
+amc ->         msgi32_Delete(*row); // delete offending row, any existing xrefs are cleared
+amc ->         row = NULL; // forget this ever happened
+amc ->     }
+amc ->     return row;
+amc -> }
+amc -> // --- algo_lib.FDb.msgbit32.AllocExtraMaybe
+amc -> // Allocate memory for new element. If out of memory, return NULL.
+amc -> algo_lib::FMsgBit32* algo_lib::msgbit32_AllocExtraMaybe(void *extra, i32 nbyte_extra) {
+amc ->     algo_lib::FMsgBit32 *row = NULL;
+amc ->     if (nbyte_extra >= 0 && nbyte_extra <= 0x7fffffff - ssizeof(algo_lib::FMsgBit32)) { // a negative count would underallocate the fixed portion; a larger total does not fit the i32 a frame length is read back through
+amc ->         row = (algo_lib::FMsgBit32*)msgbit32_AllocMem(sizeof(algo_lib::FMsgBit32) + nbyte_extra);
+amc ->     }
+amc ->     if (row) {
+amc ->         new (row) algo_lib::FMsgBit32; // call constructor
+amc ->         len_Set(*row, u64(sizeof(algo_lib::FMsgBit32) + nbyte_extra));
+amc ->         if (extra) {
+amc ->             memcpy((u8*)row + sizeof(algo_lib::FMsgBit32), extra, nbyte_extra);
+amc ->         }
+amc ->     }
+amc ->     return row;
+amc -> }
+amc -> // --- algo_lib.FDb.msgbit32.InsertMaybe
+amc -> // Create new row from struct.
+amc -> // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+amc -> algo_lib::FMsgBit32* algo_lib::msgbit32_InsertMaybe(const algo_lib::MsgBit32 &value) {
+amc ->     u8 *addon_addr = (u8*)&value + ssizeof(algo_lib::MsgBit32);
+amc ->     i64 addon_len = i64(len_Get(value)) - ssizeof(algo_lib::MsgBit32);
+amc ->     if (!(addon_len >= 0 && addon_len <= 0x7fffffff - ssizeof(algo_lib::FMsgBit32))) { // a negative count would underallocate the fixed portion; a larger total does not fit the i32 a frame length is read back through
+amc ->         return NULL; // the addon count is not one the allocation accepts
+amc ->     }
+amc ->     algo_lib::FMsgBit32 *row = &msgbit32_AllocExtra(addon_addr, i32(addon_len));
+amc ->     msgbit32_CopyIn(*row,const_cast<algo_lib::MsgBit32&>(value));
+amc ->     bool ok = msgbit32_XrefMaybe(*row); // this may return false
+amc ->     if (!ok) {
+amc ->         msgbit32_Delete(*row); // delete offending row, any existing xrefs are cleared
+amc ->         row = NULL; // forget this ever happened
+amc ->     }
+amc ->     return row;
+amc -> }
+amc -> // --- algo_lib.FDb.msgbit33.AllocExtraMaybe
+amc -> // Allocate memory for new element. If out of memory, return NULL.
+amc -> algo_lib::FMsgBit33* algo_lib::msgbit33_AllocExtraMaybe(void *extra, i32 nbyte_extra) {
+amc ->     algo_lib::FMsgBit33 *row = NULL;
+amc ->     if (nbyte_extra >= 0 && nbyte_extra <= 0x7fffffff - ssizeof(algo_lib::FMsgBit33)) { // a negative count would underallocate the fixed portion; a larger total does not fit the i32 a frame length is read back through
+amc ->         row = (algo_lib::FMsgBit33*)msgbit33_AllocMem(sizeof(algo_lib::FMsgBit33) + nbyte_extra);
+amc ->     }
+amc ->     if (row) {
+amc ->         new (row) algo_lib::FMsgBit33; // call constructor
+amc ->         len_Set(*row, u64(sizeof(algo_lib::FMsgBit33) + nbyte_extra));
+amc ->         if (extra) {
+amc ->             memcpy((u8*)row + sizeof(algo_lib::FMsgBit33), extra, nbyte_extra);
+amc ->         }
+amc ->     }
+amc ->     return row;
+amc -> }
+amc -> // --- algo_lib.FDb.msgbit33.InsertMaybe
+amc -> // Create new row from struct.
+amc -> // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+amc -> algo_lib::FMsgBit33* algo_lib::msgbit33_InsertMaybe(const algo_lib::MsgBit33 &value) {
+amc ->     u8 *addon_addr = (u8*)&value + ssizeof(algo_lib::MsgBit33);
+amc ->     if (u64(len_Get(value)) > 2147483647ULL) {
+amc ->         return NULL; // length word beyond any storable total; reject before the i64 expansion can overflow
+amc ->     }
+amc ->     i64 addon_len = i64(len_Get(value)) - ssizeof(algo_lib::MsgBit33);
+amc ->     if (!(addon_len >= 0 && addon_len <= 0x7fffffff - ssizeof(algo_lib::FMsgBit33))) { // a negative count would underallocate the fixed portion; a larger total does not fit the i32 a frame length is read back through
+amc ->         return NULL; // the addon count is not one the allocation accepts
+amc ->     }
+amc ->     algo_lib::FMsgBit33 *row = &msgbit33_AllocExtra(addon_addr, i32(addon_len));
+amc ->     msgbit33_CopyIn(*row,const_cast<algo_lib::MsgBit33&>(value));
+amc ->     bool ok = msgbit33_XrefMaybe(*row); // this may return false
+amc ->     if (!ok) {
+amc ->         msgbit33_Delete(*row); // delete offending row, any existing xrefs are cleared
+amc ->         row = NULL; // forget this ever happened
+amc ->     }
+amc ->     return row;
+amc -> }
+amc -> // --- algo_lib.FDb.msgu64.AllocExtraMaybe
+amc -> // Allocate memory for new element. If out of memory, return NULL.
+amc -> algo_lib::FMsgU64* algo_lib::msgu64_AllocExtraMaybe(void *extra, i32 nbyte_extra) {
+amc ->     algo_lib::FMsgU64 *row = NULL;
+amc ->     if (nbyte_extra >= 0 && nbyte_extra % 2 == 0 && nbyte_extra <= 0x7fffffff - ssizeof(algo_lib::FMsgU64)) { // a negative count would underallocate the fixed portion; only a multiple of scale is representable in the length field; a larger total does not fit the i32 a frame length is read back through
+amc ->         row = (algo_lib::FMsgU64*)msgu64_AllocMem(sizeof(algo_lib::FMsgU64) + nbyte_extra);
+amc ->     }
+amc ->     if (row) {
+amc ->         new (row) algo_lib::FMsgU64; // call constructor
+amc ->         row->len = u64((sizeof(algo_lib::FMsgU64) + nbyte_extra) / 2);
+amc ->         if (extra) {
+amc ->             memcpy((u8*)row + sizeof(algo_lib::FMsgU64), extra, nbyte_extra);
+amc ->         }
+amc ->     }
+amc ->     return row;
+amc -> }
+amc -> // --- algo_lib.FDb.msgu64.InsertMaybe
+amc -> // Create new row from struct.
+amc -> // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+amc -> algo_lib::FMsgU64* algo_lib::msgu64_InsertMaybe(const algo_lib::MsgU64 &value) {
+amc ->     u8 *addon_addr = (u8*)&value + ssizeof(algo_lib::MsgU64);
+amc ->     if (u64(value.len) > 1073741823ULL) {
+amc ->         return NULL; // length word beyond any storable total; reject before the i64 expansion can overflow
+amc ->     }
+amc ->     i64 addon_len = i64(value.len) * 2 - ssizeof(algo_lib::MsgU64);
+amc ->     if (!(addon_len >= 0 && addon_len % 2 == 0 && addon_len <= 0x7fffffff - ssizeof(algo_lib::FMsgU64))) { // a negative count would underallocate the fixed portion; only a multiple of scale is representable in the length field; a larger total does not fit the i32 a frame length is read back through
+amc ->         return NULL; // the addon count is not one the allocation accepts
+amc ->     }
+amc ->     algo_lib::FMsgU64 *row = &msgu64_AllocExtra(addon_addr, i32(addon_len));
+amc ->     msgu64_CopyIn(*row,const_cast<algo_lib::MsgU64&>(value));
+amc ->     bool ok = msgu64_XrefMaybe(*row); // this may return false
+amc ->     if (!ok) {
+amc ->         msgu64_Delete(*row); // delete offending row, any existing xrefs are cleared
+amc ->         row = NULL; // forget this ever happened
+amc ->     }
+amc ->     return row;
+amc -> }
+amc -> // --- algo_lib.FDb.msgi64.AllocExtraMaybe
+amc -> // Allocate memory for new element. If out of memory, return NULL.
+amc -> algo_lib::FMsgI64* algo_lib::msgi64_AllocExtraMaybe(void *extra, i32 nbyte_extra) {
+amc ->     algo_lib::FMsgI64 *row = NULL;
+amc ->     if (nbyte_extra >= 0 && nbyte_extra % 8 == 0 && nbyte_extra <= 0x7fffffff - ssizeof(algo_lib::FMsgI64)) { // a negative count would underallocate the fixed portion; only a multiple of scale is representable in the length field; a larger total does not fit the i32 a frame length is read back through
+amc ->         row = (algo_lib::FMsgI64*)msgi64_AllocMem(sizeof(algo_lib::FMsgI64) + nbyte_extra);
+amc ->     }
+amc ->     if (row) {
+amc ->         new (row) algo_lib::FMsgI64; // call constructor
+amc ->         row->len = i64((sizeof(algo_lib::FMsgI64) + nbyte_extra) / 8);
+amc ->         if (extra) {
+amc ->             memcpy((u8*)row + sizeof(algo_lib::FMsgI64), extra, nbyte_extra);
+amc ->         }
+amc ->     }
+amc ->     return row;
+amc -> }
+amc -> // --- algo_lib.FDb.msgi64.InsertMaybe
+amc -> // Create new row from struct.
+amc -> // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+amc -> algo_lib::FMsgI64* algo_lib::msgi64_InsertMaybe(const algo_lib::MsgI64 &value) {
+amc ->     u8 *addon_addr = (u8*)&value + ssizeof(algo_lib::MsgI64);
+amc ->     if (u64(value.len) > 268435455ULL) {
+amc ->         return NULL; // length word beyond any storable total; reject before the i64 expansion can overflow
+amc ->     }
+amc ->     i64 addon_len = i64(value.len) * 8 - ssizeof(algo_lib::MsgI64);
+amc ->     if (!(addon_len >= 0 && addon_len % 8 == 0 && addon_len <= 0x7fffffff - ssizeof(algo_lib::FMsgI64))) { // a negative count would underallocate the fixed portion; only a multiple of scale is representable in the length field; a larger total does not fit the i32 a frame length is read back through
+amc ->         return NULL; // the addon count is not one the allocation accepts
+amc ->     }
+amc ->     algo_lib::FMsgI64 *row = &msgi64_AllocExtra(addon_addr, i32(addon_len));
+amc ->     msgi64_CopyIn(*row,const_cast<algo_lib::MsgI64&>(value));
+amc ->     bool ok = msgi64_XrefMaybe(*row); // this may return false
+amc ->     if (!ok) {
+amc ->         msgi64_Delete(*row); // delete offending row, any existing xrefs are cleared
+amc ->         row = NULL; // forget this ever happened
+amc ->     }
+amc ->     return row;
+amc -> }
+amc -> // --- algo_lib.FDb.msgneg.AllocExtraMaybe
+amc -> // Allocate memory for new element. If out of memory, return NULL.
+amc -> algo_lib::FMsgNeg* algo_lib::msgneg_AllocExtraMaybe(void *extra, i32 nbyte_extra) {
+amc ->     algo_lib::FMsgNeg *row = NULL;
+amc ->     if (nbyte_extra >= 0 && nbyte_extra <= 0x7fffffff - ssizeof(algo_lib::FMsgNeg)) { // a negative count would underallocate the fixed portion; a larger total does not fit the i32 a frame length is read back through
+amc ->         row = (algo_lib::FMsgNeg*)msgneg_AllocMem(sizeof(algo_lib::FMsgNeg) + nbyte_extra);
+amc ->     }
+amc ->     if (row) {
+amc ->         new (row) algo_lib::FMsgNeg; // call constructor
+amc ->         row->len = u64(sizeof(algo_lib::FMsgNeg) + nbyte_extra-2);
+amc ->         if (extra) {
+amc ->             memcpy((u8*)row + sizeof(algo_lib::FMsgNeg), extra, nbyte_extra);
+amc ->         }
+amc ->     }
+amc ->     return row;
+amc -> }
+amc -> // --- algo_lib.FDb.msgneg.InsertMaybe
+amc -> // Create new row from struct.
+amc -> // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+amc -> algo_lib::FMsgNeg* algo_lib::msgneg_InsertMaybe(const algo_lib::MsgNeg &value) {
+amc ->     u8 *addon_addr = (u8*)&value + ssizeof(algo_lib::MsgNeg);
+amc ->     if (u64(value.len) > 2147483645ULL) {
+amc ->         return NULL; // length word beyond any storable total; reject before the i64 expansion can overflow
+amc ->     }
+amc ->     i64 addon_len = i64(value.len) + 2 - ssizeof(algo_lib::MsgNeg);
+amc ->     if (!(addon_len >= 0 && addon_len <= 0x7fffffff - ssizeof(algo_lib::FMsgNeg))) { // a negative count would underallocate the fixed portion; a larger total does not fit the i32 a frame length is read back through
+amc ->         return NULL; // the addon count is not one the allocation accepts
+amc ->     }
+amc ->     algo_lib::FMsgNeg *row = &msgneg_AllocExtra(addon_addr, i32(addon_len));
+amc ->     msgneg_CopyIn(*row,const_cast<algo_lib::MsgNeg&>(value));
+amc ->     bool ok = msgneg_XrefMaybe(*row); // this may return false
+amc ->     if (!ok) {
+amc ->         msgneg_Delete(*row); // delete offending row, any existing xrefs are cleared
+amc ->         row = NULL; // forget this ever happened
+amc ->     }
+amc ->     return row;
+amc -> }
+amc -> // --- algo_lib.FDb.msgpos.AllocExtraMaybe
+amc -> // Allocate memory for new element. If out of memory, return NULL.
+amc -> algo_lib::FMsgPos* algo_lib::msgpos_AllocExtraMaybe(void *extra, i32 nbyte_extra) {
+amc ->     algo_lib::FMsgPos *row = NULL;
+amc ->     if (nbyte_extra >= 0 && nbyte_extra <= 0x7fffffff - ssizeof(algo_lib::FMsgPos)) { // a negative count would underallocate the fixed portion; a larger total does not fit the i32 a frame length is read back through
+amc ->         row = (algo_lib::FMsgPos*)msgpos_AllocMem(sizeof(algo_lib::FMsgPos) + nbyte_extra);
+amc ->     }
+amc ->     if (row) {
+amc ->         new (row) algo_lib::FMsgPos; // call constructor
+amc ->         row->len = u64(sizeof(algo_lib::FMsgPos) + nbyte_extra+4);
+amc ->         if (extra) {
+amc ->             memcpy((u8*)row + sizeof(algo_lib::FMsgPos), extra, nbyte_extra);
+amc ->         }
+amc ->     }
+amc ->     return row;
+amc -> }
+amc -> // --- algo_lib.FDb.msgpos.InsertMaybe
+amc -> // Create new row from struct.
+amc -> // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+amc -> algo_lib::FMsgPos* algo_lib::msgpos_InsertMaybe(const algo_lib::MsgPos &value) {
+amc ->     u8 *addon_addr = (u8*)&value + ssizeof(algo_lib::MsgPos);
+amc ->     if (u64(value.len) > 2147483651ULL) {
+amc ->         return NULL; // length word beyond any storable total; reject before the i64 expansion can overflow
+amc ->     }
+amc ->     i64 addon_len = i64(value.len) - 4 - ssizeof(algo_lib::MsgPos);
+amc ->     if (!(addon_len >= 0 && addon_len <= 0x7fffffff - ssizeof(algo_lib::FMsgPos))) { // a negative count would underallocate the fixed portion; a larger total does not fit the i32 a frame length is read back through
+amc ->         return NULL; // the addon count is not one the allocation accepts
+amc ->     }
+amc ->     algo_lib::FMsgPos *row = &msgpos_AllocExtra(addon_addr, i32(addon_len));
+amc ->     msgpos_CopyIn(*row,const_cast<algo_lib::MsgPos&>(value));
+amc ->     bool ok = msgpos_XrefMaybe(*row); // this may return false
+amc ->     if (!ok) {
+amc ->         msgpos_Delete(*row); // delete offending row, any existing xrefs are cleared
+amc ->         row = NULL; // forget this ever happened
+amc ->     }
+amc ->     return row;
+amc -> }
+amc -> // --- algo_lib.FDb.msg3.AllocExtraMaybe
+amc -> // Allocate memory for new element. If out of memory, return NULL.
+amc -> algo_lib::FMsg3* algo_lib::msg3_AllocExtraMaybe(void *extra, i32 nbyte_extra) {
+amc ->     algo_lib::FMsg3 *row = NULL;
+amc ->     if (nbyte_extra >= 0 && nbyte_extra <= 2147483647 - ssizeof(algo_lib::FMsg3)) { // a negative count would underallocate the fixed portion; larger totals do not fit the length field
+amc ->         row = (algo_lib::FMsg3*)msg3_AllocMem(sizeof(algo_lib::FMsg3) + nbyte_extra);
+amc ->     }
+amc ->     if (row) {
+amc ->         new (row) algo_lib::FMsg3; // call constructor
+amc ->         row->len = i32(sizeof(algo_lib::FMsg3) + nbyte_extra);
+amc ->         if (extra) {
+amc ->             memcpy((u8*)row + sizeof(algo_lib::FMsg3), extra, nbyte_extra);
+amc ->         }
+amc ->     }
+amc ->     return row;
+amc -> }
+amc -> // --- algo_lib.FDb.msg3.InsertMaybe
+amc -> // Create new row from struct.
+amc -> // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+amc -> algo_lib::FMsg3* algo_lib::msg3_InsertMaybe(const algo_lib::Msg3 &value) {
+amc ->     u8 *addon_addr = (u8*)&value + ssizeof(algo_lib::Msg3);
+amc ->     i64 addon_len = i64(value.len) - ssizeof(algo_lib::Msg3);
+amc ->     if (!(addon_len >= 0 && addon_len <= 2147483647 - ssizeof(algo_lib::FMsg3))) { // a negative count would underallocate the fixed portion; larger totals do not fit the length field
+amc ->         return NULL; // the addon count is not one the allocation accepts
+amc ->     }
+amc ->     algo_lib::FMsg3 *row = &msg3_AllocExtra(addon_addr, i32(addon_len));
+amc ->     msg3_CopyIn(*row,const_cast<algo_lib::Msg3&>(value));
+amc ->     bool ok = msg3_XrefMaybe(*row); // this may return false
+amc ->     if (!ok) {
+amc ->         msg3_Delete(*row); // delete offending row, any existing xrefs are cleared
+amc ->         row = NULL; // forget this ever happened
+amc ->     }
+amc ->     return row;
+amc -> }
+amc -> // --- algo_lib.FDb.msg6.AllocExtraMaybe
+amc -> // Allocate memory for new element. If out of memory, return NULL.
+amc -> algo_lib::FMsg6* algo_lib::msg6_AllocExtraMaybe(void *extra, i32 nbyte_extra) {
+amc ->     algo_lib::FMsg6 *row = NULL;
+amc ->     if (nbyte_extra >= 0 && nbyte_extra <= 65535 - ssizeof(algo_lib::FMsg6)) { // a negative count would underallocate the fixed portion; larger totals do not fit the length field
+amc ->         row = (algo_lib::FMsg6*)msg6_AllocMem(sizeof(algo_lib::FMsg6) + nbyte_extra);
+amc ->     }
+amc ->     if (row) {
+amc ->         new (row) algo_lib::FMsg6; // call constructor
+amc ->         row->msg6_buf = _db.msg6_cur;
+amc ->         row->len = u16(sizeof(algo_lib::FMsg6) + nbyte_extra);
+amc ->         if (extra) {
+amc ->             memcpy((u8*)row + sizeof(algo_lib::FMsg6), extra, nbyte_extra);
+amc ->         }
+amc ->     }
+amc ->     return row;
+amc -> }
+amc -> // --- algo_lib.FDb.msg6.InsertMaybe
+amc -> // Create new row from struct.
+amc -> // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+amc -> algo_lib::FMsg6* algo_lib::msg6_InsertMaybe(const algo_lib::Msg6 &value) {
+amc ->     u8 *addon_addr = (u8*)&value + ssizeof(algo_lib::Msg6);
+amc ->     i64 addon_len = i64(value.len) - ssizeof(algo_lib::Msg6);
+amc ->     if (!(addon_len >= 0 && addon_len <= 65535 - ssizeof(algo_lib::FMsg6))) { // a negative count would underallocate the fixed portion; larger totals do not fit the length field
+amc ->         return NULL; // the addon count is not one the allocation accepts
+amc ->     }
+amc ->     algo_lib::FMsg6 *row = &msg6_AllocExtra(addon_addr, i32(addon_len));
+amc ->     msg6_CopyIn(*row,const_cast<algo_lib::Msg6&>(value));
+amc ->     bool ok = msg6_XrefMaybe(*row); // this may return false
+amc ->     if (!ok) {
+amc ->         msg6_Delete(*row); // delete offending row, any existing xrefs are cleared
+amc ->         row = NULL; // forget this ever happened
+amc ->     }
+amc ->     return row;
+amc -> }
+amc -> // --- algo_lib.FDb.msg5.AllocExtraMaybe
+amc -> // Allocate memory for new element. If out of memory, return NULL.
+amc -> algo_lib::FMsg5* algo_lib::msg5_AllocExtraMaybe(void *extra, i32 nbyte_extra) {
+amc ->     algo_lib::FMsg5 *row = NULL;
+amc ->     if (nbyte_extra >= 0 && nbyte_extra % 4 == 0 && nbyte_extra <= 262140 - ssizeof(algo_lib::FMsg5)) { // a negative count would underallocate the fixed portion; only a multiple of scale is representable in the length field; larger totals do not fit the length field
+amc ->         row = (algo_lib::FMsg5*)msg5_AllocMem(sizeof(algo_lib::FMsg5) + nbyte_extra);
+amc ->     }
+amc ->     if (row) {
+amc ->         new (row) algo_lib::FMsg5; // call constructor
+amc ->         row->msg5_buf = _db.msg5_cur;
+amc ->         row->len = u16((sizeof(algo_lib::FMsg5) + nbyte_extra) / 4);
+amc ->         if (extra) {
+amc ->             memcpy((u8*)row + sizeof(algo_lib::FMsg5), extra, nbyte_extra);
+amc ->         }
+amc ->     }
+amc ->     return row;
+amc -> }
+amc -> // --- algo_lib.FDb.msg5.InsertMaybe
+amc -> // Create new row from struct.
+amc -> // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+amc -> algo_lib::FMsg5* algo_lib::msg5_InsertMaybe(const algo_lib::Msg5 &value) {
+amc ->     u8 *addon_addr = (u8*)&value + ssizeof(algo_lib::Msg5);
+amc ->     i64 addon_len = i64(value.len) * 4 - ssizeof(algo_lib::Msg5);
+amc ->     if (!(addon_len >= 0 && addon_len % 4 == 0 && addon_len <= 262140 - ssizeof(algo_lib::FMsg5))) { // a negative count would underallocate the fixed portion; only a multiple of scale is representable in the length field; larger totals do not fit the length field
+amc ->         return NULL; // the addon count is not one the allocation accepts
+amc ->     }
+amc ->     algo_lib::FMsg5 *row = &msg5_AllocExtra(addon_addr, i32(addon_len));
+amc ->     msg5_CopyIn(*row,const_cast<algo_lib::Msg5&>(value));
+amc ->     bool ok = msg5_XrefMaybe(*row); // this may return false
+amc ->     if (!ok) {
+amc ->         msg5_Delete(*row); // delete offending row, any existing xrefs are cleared
+amc ->         row = NULL; // forget this ever happened
+amc ->     }
+amc ->     return row;
+amc -> }
+# exit amc code:0

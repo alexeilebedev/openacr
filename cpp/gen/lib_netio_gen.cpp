@@ -7,18 +7,9 @@
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2023 AlgoRND
 //
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// This source code constitutes confidential information and trade secrets
+// of AlgoRND. Unauthorized copying, distribution or sharing of this file,
+// via any medium, is strictly prohibited.
 //
 
 
@@ -58,7 +49,13 @@ void lib_netio::trace_Print(lib_netio::trace& row, algo::cstring& str) {
 // --- lib_netio.FDb._db.InitReflection
 // Load statically available data into tables, register tables and database.
 static void lib_netio::InitReflection() {
-    algo_lib::imdb_InsertMaybe(algo::Imdb("lib_netio", NULL, NULL, NULL, NULL, algo::Comment()));
+    algo_lib::FImdb &row = algo_lib::imdb_Alloc();
+    row.imdb               = "lib_netio";
+    row.InsertStrptrMaybe  = NULL;
+    row.RemoveStrptrMaybe  = NULL;
+    row.Step               = NULL;
+    row.MainLoop           = NULL;
+    algo_lib::imdb_XrefMaybe(row);
 
     algo::Imtable t_trace;
     t_trace.imtable         = "lib_netio.trace";
@@ -154,6 +151,15 @@ void lib_netio::Steps() {
     algo_lib::Step(); // dependent namespace specified via (dev.targdep)
 }
 
+// --- lib_netio.FDb._db.RemoveStrptrMaybe
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+bool lib_netio::RemoveStrptrMaybe(algo::strptr str) {
+    bool retval = true;
+    (void)str;//only to avoid -Wunused-parameter
+    return retval;
+}
+
 // --- lib_netio.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
@@ -194,7 +200,7 @@ void* lib_netio::var_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     lib_netio::FVar*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.var_lary[bsr];
         if (!lev) {
             lev=(lib_netio::FVar*)algo_lib::malloc_AllocMem(sizeof(lib_netio::FVar) * (u64(1)<<bsr));
@@ -203,7 +209,7 @@ void* lib_netio::var_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.var_n = i32(new_nelems);
+        _db.var_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -215,7 +221,7 @@ void lib_netio::var_RemoveAll() {
     for (u64 n = _db.var_n; n>0; ) {
         n--;
         var_qFind(u64(n)).~FVar(); // destroy last element
-        _db.var_n = i32(n);
+        _db.var_n = i64(n);
     }
 }
 
@@ -226,7 +232,7 @@ void lib_netio::var_RemoveLast() {
     if (n > 0) {
         n -= 1;
         var_qFind(u64(n)).~FVar();
-        _db.var_n = i32(n);
+        _db.var_n = i64(n);
     }
 }
 
@@ -499,7 +505,7 @@ bool lib_netio::FieldId_ReadStrptrMaybe(lib_netio::FieldId &parent, algo::strptr
 // --- lib_netio.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:lib_netio.FieldId.String  printfmt:Raw
-void lib_netio::FieldId_Print(lib_netio::FieldId& row, algo::cstring& str) {
+void lib_netio::FieldId_Print(lib_netio::FieldId row, algo::cstring& str) {
     lib_netio::value_Print(row, str);
 }
 

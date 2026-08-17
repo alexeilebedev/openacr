@@ -7,18 +7,9 @@
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2023 AlgoRND
 //
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// This source code constitutes confidential information and trade secrets
+// of AlgoRND. Unauthorized copying, distribution or sharing of this file,
+// via any medium, is strictly prohibited.
 //
 
 
@@ -62,7 +53,13 @@ void lib_ws::trace_Print(lib_ws::trace& row, algo::cstring& str) {
 // --- lib_ws.FDb._db.InitReflection
 // Load statically available data into tables, register tables and database.
 static void lib_ws::InitReflection() {
-    algo_lib::imdb_InsertMaybe(algo::Imdb("lib_ws", NULL, NULL, NULL, NULL, algo::Comment()));
+    algo_lib::FImdb &row = algo_lib::imdb_Alloc();
+    row.imdb               = "lib_ws";
+    row.InsertStrptrMaybe  = NULL;
+    row.RemoveStrptrMaybe  = NULL;
+    row.Step               = NULL;
+    row.MainLoop           = NULL;
+    algo_lib::imdb_XrefMaybe(row);
 
     algo::Imtable t_trace;
     t_trace.imtable         = "lib_ws.trace";
@@ -76,8 +73,8 @@ static void lib_ws::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'lib_ws.FrameIdx'  signature:'16e074d027eb2e98445e4bdbaad025f92c98e679'");
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'lib_ws.FrameLen'  signature:'16e074d027eb2e98445e4bdbaad025f92c98e679'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'lib_ws.FrameIdx'  signature:'f0999e497ae479ed8ad818c6e238862060e30d25'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'lib_ws.FrameLen'  signature:'f0999e497ae479ed8ad818c6e238862060e30d25'");
 }
 
 // --- lib_ws.FDb._db.InsertStrptrMaybe
@@ -158,6 +155,15 @@ bool lib_ws::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
 // Calls Step function of dependencies
 void lib_ws::Steps() {
     algo_lib::Step(); // dependent namespace specified via (dev.targdep)
+}
+
+// --- lib_ws.FDb._db.RemoveStrptrMaybe
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+bool lib_ws::RemoveStrptrMaybe(algo::strptr str) {
+    bool retval = true;
+    (void)str;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- lib_ws.FDb._db.XrefMaybe
@@ -259,7 +265,7 @@ bool lib_ws::FieldId_ReadStrptrMaybe(lib_ws::FieldId &parent, algo::strptr in_st
 // --- lib_ws.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:lib_ws.FieldId.String  printfmt:Raw
-void lib_ws::FieldId_Print(lib_ws::FieldId& row, algo::cstring& str) {
+void lib_ws::FieldId_Print(lib_ws::FieldId row, algo::cstring& str) {
     lib_ws::value_Print(row, str);
 }
 
@@ -518,12 +524,15 @@ void lib_ws::vFrameLenDispatch(i32 &ctx, ws::FrameHeader& msg, u32 msg_len) {
 
 // --- lib_ws...Frame_FmtByteAry
 // Construct a new ws::Frame in the space provided by BUF.
-// If BUF doesn't have enough space available, throw exception.
+// A total beyond the i32 frame length domain constructs nothing and returns NULL.
 ws::Frame * lib_ws::Frame_FmtByteAry(algo::ByteAry &buf, u8 byte0, u8 byte1, algo::aryptr<char > payload) {
     ws::Frame  *msg = NULL;
     size_t len = sizeof(ws::Frame);
-    u32 payload_ary_len = elems_N(payload) * sizeof(char);
+    u64 payload_ary_len = u64(elems_N(payload)) * sizeof(char);
     len += payload_ary_len;
+    if (len > 0x7fffffff) {
+        return NULL; // a frame length is an i32, and so is every buffer size argument
+    }
     ary_RemoveAll(buf);
     msg = (ws::Frame*)ary_AllocN(buf,len).elems;
     msg->byte0 = byte0;
@@ -534,46 +543,55 @@ ws::Frame * lib_ws::Frame_FmtByteAry(algo::ByteAry &buf, u8 byte0, u8 byte1, alg
 
 // --- lib_ws...Frame16_FmtByteAry
 // Construct a new ws::Frame16 in the space provided by BUF.
-// If BUF doesn't have enough space available, throw exception.
+// A total the length field cannot store constructs nothing and returns NULL.
 ws::Frame16 * lib_ws::Frame16_FmtByteAry(algo::ByteAry &buf, u8 byte0, algo::aryptr<char > payload) {
     ws::Frame16  *msg = NULL;
     size_t len = sizeof(ws::Frame16);
-    u32 payload_ary_len = elems_N(payload) * sizeof(char);
+    u64 payload_ary_len = u64(elems_N(payload)) * sizeof(char);
     len += payload_ary_len;
+    if (!((len) <= 65539)) {
+        return NULL; // total not representable in the length field
+    }
     ary_RemoveAll(buf);
     msg = (ws::Frame16*)ary_AllocN(buf,len).elems;
     msg->byte0 = byte0;
     msg->byte1 = u8(126);
-    ext_payload_len_Set(*msg, u16((len + (-4)) / (1)));
+    ext_payload_len_Set(*msg, u16(len-4));
     memcpy(payload_Addr(*msg), payload.elems, payload_ary_len);
     return msg;
 }
 
 // --- lib_ws...Frame64_FmtByteAry
 // Construct a new ws::Frame64 in the space provided by BUF.
-// If BUF doesn't have enough space available, throw exception.
+// A total beyond the i32 frame length domain constructs nothing and returns NULL.
 ws::Frame64 * lib_ws::Frame64_FmtByteAry(algo::ByteAry &buf, u8 byte0, algo::aryptr<char > payload) {
     ws::Frame64  *msg = NULL;
     size_t len = sizeof(ws::Frame64);
-    u32 payload_ary_len = elems_N(payload) * sizeof(char);
+    u64 payload_ary_len = u64(elems_N(payload)) * sizeof(char);
     len += payload_ary_len;
+    if (len > 0x7fffffff) {
+        return NULL; // a frame length is an i32, and so is every buffer size argument
+    }
     ary_RemoveAll(buf);
     msg = (ws::Frame64*)ary_AllocN(buf,len).elems;
     msg->byte0 = byte0;
     msg->byte1 = u8(127);
-    ext_payload_len_Set(*msg, u64((len + (-10)) / (1)));
+    ext_payload_len_Set(*msg, u64(len-10));
     memcpy(payload_Addr(*msg), payload.elems, payload_ary_len);
     return msg;
 }
 
 // --- lib_ws...FrameMasked_FmtByteAry
 // Construct a new ws::FrameMasked in the space provided by BUF.
-// If BUF doesn't have enough space available, throw exception.
+// A total beyond the i32 frame length domain constructs nothing and returns NULL.
 ws::FrameMasked * lib_ws::FrameMasked_FmtByteAry(algo::ByteAry &buf, u8 byte0, u8 byte1, u32 masking_key, algo::aryptr<char > payload) {
     ws::FrameMasked  *msg = NULL;
     size_t len = sizeof(ws::FrameMasked);
-    u32 payload_ary_len = elems_N(payload) * sizeof(char);
+    u64 payload_ary_len = u64(elems_N(payload)) * sizeof(char);
     len += payload_ary_len;
+    if (len > 0x7fffffff) {
+        return NULL; // a frame length is an i32, and so is every buffer size argument
+    }
     ary_RemoveAll(buf);
     msg = (ws::FrameMasked*)ary_AllocN(buf,len).elems;
     msg->byte0 = byte0;
@@ -585,17 +603,20 @@ ws::FrameMasked * lib_ws::FrameMasked_FmtByteAry(algo::ByteAry &buf, u8 byte0, u
 
 // --- lib_ws...FrameMasked16_FmtByteAry
 // Construct a new ws::FrameMasked16 in the space provided by BUF.
-// If BUF doesn't have enough space available, throw exception.
+// A total the length field cannot store constructs nothing and returns NULL.
 ws::FrameMasked16 * lib_ws::FrameMasked16_FmtByteAry(algo::ByteAry &buf, u8 byte0, u32 masking_key, algo::aryptr<char > payload) {
     ws::FrameMasked16  *msg = NULL;
     size_t len = sizeof(ws::FrameMasked16);
-    u32 payload_ary_len = elems_N(payload) * sizeof(char);
+    u64 payload_ary_len = u64(elems_N(payload)) * sizeof(char);
     len += payload_ary_len;
+    if (!((len) <= 65543)) {
+        return NULL; // total not representable in the length field
+    }
     ary_RemoveAll(buf);
     msg = (ws::FrameMasked16*)ary_AllocN(buf,len).elems;
     msg->byte0 = byte0;
     msg->byte1 = u8(254);
-    ext_payload_len_Set(*msg, u16((len + (-8)) / (1)));
+    ext_payload_len_Set(*msg, u16(len-8));
     msg->masking_key = masking_key;
     memcpy(payload_Addr(*msg), payload.elems, payload_ary_len);
     return msg;
@@ -603,17 +624,20 @@ ws::FrameMasked16 * lib_ws::FrameMasked16_FmtByteAry(algo::ByteAry &buf, u8 byte
 
 // --- lib_ws...FrameMasked64_FmtByteAry
 // Construct a new ws::FrameMasked64 in the space provided by BUF.
-// If BUF doesn't have enough space available, throw exception.
+// A total beyond the i32 frame length domain constructs nothing and returns NULL.
 ws::FrameMasked64 * lib_ws::FrameMasked64_FmtByteAry(algo::ByteAry &buf, u8 byte0, u32 masking_key, algo::aryptr<char > payload) {
     ws::FrameMasked64  *msg = NULL;
     size_t len = sizeof(ws::FrameMasked64);
-    u32 payload_ary_len = elems_N(payload) * sizeof(char);
+    u64 payload_ary_len = u64(elems_N(payload)) * sizeof(char);
     len += payload_ary_len;
+    if (len > 0x7fffffff) {
+        return NULL; // a frame length is an i32, and so is every buffer size argument
+    }
     ary_RemoveAll(buf);
     msg = (ws::FrameMasked64*)ary_AllocN(buf,len).elems;
     msg->byte0 = byte0;
     msg->byte1 = u8(255);
-    ext_payload_len_Set(*msg, u64((len + (-14)) / (1)));
+    ext_payload_len_Set(*msg, u64(len-14));
     msg->masking_key = masking_key;
     memcpy(payload_Addr(*msg), payload.elems, payload_ary_len);
     return msg;

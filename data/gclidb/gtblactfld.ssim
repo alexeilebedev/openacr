@@ -30,6 +30,7 @@ gclidb.gtblactfld  gtblactfld:mr_list.title  dflt:""  field_name_dflt:N  optiona
 gclidb.gtblactfld  gtblactfld:mr_update.reviewer  dflt:""  field_name_dflt:N  optional:Y  regx:N  comment:"update mr for an reviewer, 'none' to clear"
 gclidb.gtblactfld  gtblactfld:mr_update.title  dflt:""  field_name_dflt:N  optional:Y  regx:N  comment:"update mr title"
 gclidb.gtblactfld  gtblactfld:mr_update.description  dflt:""  field_name_dflt:N  optional:Y  regx:N  comment:"update mr description"
+gclidb.gtblactfld  gtblactfld:mrjob_list.errors  dflt:""  field_name_dflt:N  optional:Y  regx:N  comment:"show only error-looking trace lines"
 gclidb.gtblactfld  gtblactfld:mrnote_create.note  dflt:""  field_name_dflt:Y  optional:N  regx:N  comment:"note for the specified mr"
 gclidb.gtblactfld  gtblactfld:mrnote_update.note  dflt:""  field_name_dflt:Y  optional:Y  regx:N  comment:"note to overwrite the existing note"
 gclidb.gtblactfld  gtblactfld:repo_create.default_repo  dflt:""  field_name_dflt:N  optional:Y  regx:N  comment:"set default repo in local repo records"
@@ -42,4 +43,5 @@ gclidb.gtblactfld  gtblactfld:repo_update.default_repo  dflt:""  field_name_dflt
 gclidb.gtblactfld  gtblactfld:reporemote_list.host  dflt:""  field_name_dflt:N  optional:Y  regx:N  comment:"set host for repo"
 gclidb.gtblactfld  gtblactfld:reporemote_list.repo  dflt:""  field_name_dflt:N  optional:Y  regx:Y  comment:"select only repos matching regex"
 gclidb.gtblactfld  gtblactfld:reporemote_list.token  dflt:""  field_name_dflt:N  optional:N  regx:N  comment:"set token for repo"
+gclidb.gtblactfld  gtblactfld:token_create.name  dflt:gcli_temp  field_name_dflt:Y  optional:Y  regx:N  comment:"name of the temporary project access token"
 gclidb.gtblactfld  gtblactfld:user_list.name  dflt:%  field_name_dflt:Y  optional:Y  regx:Y  comment:"user regex on the user list"

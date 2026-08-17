@@ -1,0 +1,7 @@
+# start wt-scratch cmd:"test/wt-scratch $bindir/wt test.create.xyz -create -cow -q -del true"
+# eof wt-scratch
+wt-scratch -> acr.insert  dev.sandbox  sandbox:test.create.xyz  cow:Y  comment:""
+wt-scratch -> report.acr  n_select:1  n_insert:1  n_delete:0  n_ignore:0  n_update:0  n_file_mod:1  n_badline:0
+wt-scratch -> acr.delete  dev.sandbox  sandbox:test.create.xyz  cow:Y  comment:""
+wt-scratch -> report.acr  n_select:1  n_insert:0  n_delete:1  n_ignore:0  n_update:0  n_file_mod:1  n_badline:0
+# exit wt-scratch code:0

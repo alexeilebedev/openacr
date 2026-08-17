@@ -29,59 +29,70 @@
 
 // --- report_FieldIdEnum
 
-enum report_FieldIdEnum {                   // report.FieldId.value
-     report_FieldId_n_target          = 0
-    ,report_FieldId_time              = 1
-    ,report_FieldId_hitrate           = 2
-    ,report_FieldId_pch_hitrate       = 3
-    ,report_FieldId_n_warn            = 4
-    ,report_FieldId_n_err             = 5
-    ,report_FieldId_n_install         = 6
-    ,report_FieldId_n_select          = 7
-    ,report_FieldId_n_insert          = 8
-    ,report_FieldId_n_delete          = 9
-    ,report_FieldId_n_ignore          = 10
-    ,report_FieldId_n_update          = 11
-    ,report_FieldId_n_file_mod        = 12
-    ,report_FieldId_records           = 13
-    ,report_FieldId_errors            = 14
-    ,report_FieldId_n_cppfile         = 15
-    ,report_FieldId_n_cppline         = 16
-    ,report_FieldId_n_ctype           = 17
-    ,report_FieldId_n_func            = 18
-    ,report_FieldId_n_xref            = 19
-    ,report_FieldId_n_filemod         = 20
-    ,report_FieldId_ntest             = 21
-    ,report_FieldId_nselect           = 22
-    ,report_FieldId_npass             = 23
-    ,report_FieldId_nskip             = 24
-    ,report_FieldId_nrun              = 25
-    ,report_FieldId_nwrite            = 26
-    ,report_FieldId_nerr              = 27
-    ,report_FieldId_ninsert           = 28
-    ,report_FieldId_success           = 29
-    ,report_FieldId_n_test_total      = 30
-    ,report_FieldId_n_test_run        = 31
-    ,report_FieldId_starttime         = 32
-    ,report_FieldId_elapsed_sec       = 33
-    ,report_FieldId_preproc_size      = 34
-    ,report_FieldId_hit               = 35
-    ,report_FieldId_cached_file       = 36
-    ,report_FieldId_copy_file_range   = 37
-    ,report_FieldId_pch_hit           = 38
-    ,report_FieldId_pch_file          = 39
-    ,report_FieldId_source            = 40
-    ,report_FieldId_pch_source        = 41
-    ,report_FieldId_n_line            = 42
-    ,report_FieldId_n_static          = 43
-    ,report_FieldId_n_inline          = 44
-    ,report_FieldId_n_mysteryfunc     = 45
-    ,report_FieldId_n_baddecl         = 46
-    ,report_FieldId_comment           = 47
-    ,report_FieldId_value             = 48
+enum report_FieldIdEnum {    // report.FieldId.value
+     report_FieldId_n_target
+    ,report_FieldId_time
+    ,report_FieldId_hitrate
+    ,report_FieldId_pch_hitrate
+    ,report_FieldId_n_warn
+    ,report_FieldId_n_err
+    ,report_FieldId_n_install
+    ,report_FieldId_n_select
+    ,report_FieldId_n_insert
+    ,report_FieldId_n_delete
+    ,report_FieldId_n_ignore
+    ,report_FieldId_n_update
+    ,report_FieldId_n_file_mod
+    ,report_FieldId_n_badline
+    ,report_FieldId_records
+    ,report_FieldId_n_cppfile
+    ,report_FieldId_n_cppline
+    ,report_FieldId_n_ctype
+    ,report_FieldId_n_func
+    ,report_FieldId_n_xref
+    ,report_FieldId_n_filemod
+    ,report_FieldId_proc
+    ,report_FieldId_n_msg
+    ,report_FieldId_n_msg_send
+    ,report_FieldId_n_msg_recv
+    ,report_FieldId_n_write_wait
+    ,report_FieldId_woff
+    ,report_FieldId_roff
+    ,report_FieldId_latency_ns
+    ,report_FieldId_success
+    ,report_FieldId_n_covtarget
+    ,report_FieldId_n_tgtcov
+    ,report_FieldId_exe
+    ,report_FieldId_hit
+    ,report_FieldId_n_test_total
+    ,report_FieldId_n_test_run
+    ,report_FieldId_starttime
+    ,report_FieldId_elapsed_sec
+    ,report_FieldId_preproc_size
+    ,report_FieldId_cached_file
+    ,report_FieldId_copy_file_range
+    ,report_FieldId_pch_hit
+    ,report_FieldId_pch_file
+    ,report_FieldId_source
+    ,report_FieldId_pch_source
+    ,report_FieldId_model
+    ,report_FieldId_n_request
+    ,report_FieldId_input
+    ,report_FieldId_output
+    ,report_FieldId_cache_read
+    ,report_FieldId_cache_write
+    ,report_FieldId_usd
+    ,report_FieldId_priced
+    ,report_FieldId_n_line
+    ,report_FieldId_n_static
+    ,report_FieldId_n_inline
+    ,report_FieldId_n_mysteryfunc
+    ,report_FieldId_n_baddecl
+    ,report_FieldId_comment
+    ,report_FieldId_value
 };
 
-enum { report_FieldIdEnum_N = 49 };
+enum { report_FieldIdEnum_N = 60 };
 
 namespace report { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
@@ -93,10 +104,12 @@ namespace report { struct abt; }
 namespace report { struct acr; }
 namespace report { struct acr_check; }
 namespace report { struct amc; }
-namespace report { struct atf_comp; }
+namespace report { struct ams_sendtest; }
+namespace report { struct atf_cov; }
 namespace report { struct atf_unit; }
 namespace report { struct gcache; }
 namespace report { struct gcache_hitrate; }
+namespace report { struct llmtool_model; }
 namespace report { struct src_func; }
 namespace report { // gen:ns_print_struct
 
@@ -114,7 +127,6 @@ struct FieldId { // report.FieldId: Field read helper
     inline               FieldId(report_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:report.FieldId.value.GetEnum
 inline report_FieldIdEnum value_GetEnum(const report::FieldId& parent) __attribute__((nothrow));
@@ -152,7 +164,7 @@ inline void          FieldId_Init(report::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:report.FieldId.String  printfmt:Raw
 // func:report.FieldId..Print
-void                 FieldId_Print(report::FieldId& row, algo::cstring& str) __attribute__((nothrow));
+void                 FieldId_Print(report::FieldId row, algo::cstring& str) __attribute__((nothrow));
 
 // --- report.abt
 struct abt { // report.abt
@@ -168,7 +180,6 @@ struct abt { // report.abt
     // func:report.abt..FieldwiseCtor
     explicit inline               abt(u16 in_n_target, algo::UnDiff in_time, const algo::strptr& in_hitrate, const algo::strptr& in_pch_hitrate, u32 in_n_warn, u32 in_n_err, u16 in_n_install) __attribute__((nothrow));
 };
-
 // func:report.abt..ReadFieldMaybe
 bool                 abt_ReadFieldMaybe(report::abt& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of report::abt from an ascii string.
@@ -191,10 +202,10 @@ struct acr { // report.acr
     u32   n_ignore;     //   0  Number of input records ignored
     u32   n_update;     //   0  Number of records updated
     u32   n_file_mod;   //   0  Number of files modified
+    u32   n_badline;    //   0  Input lines dropped: parse failure or unknown ctype
     // func:report.acr..Ctor
     inline               acr() __attribute__((nothrow));
 };
-
 // func:report.acr..ReadFieldMaybe
 bool                 acr_ReadFieldMaybe(report::acr& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of report::acr from an ascii string.
@@ -212,13 +223,12 @@ void                 acr_Print(report::acr& row, algo::cstring& str) __attribute
 // --- report.acr_check
 struct acr_check { // report.acr_check
     u32   records;   //   0  Number of records checked
-    u32   errors;    //   0  Number of errors reported
+    u32   n_err;     //   0  Number of errors reported
     // func:report.acr_check..Ctor
     inline               acr_check() __attribute__((nothrow));
     // func:report.acr_check..FieldwiseCtor
-    explicit inline               acr_check(u32 in_records, u32 in_errors) __attribute__((nothrow));
+    explicit inline               acr_check(u32 in_records, u32 in_n_err) __attribute__((nothrow));
 };
-
 // func:report.acr_check..ReadFieldMaybe
 bool                 acr_check_ReadFieldMaybe(report::acr_check& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of report::acr_check from an ascii string.
@@ -231,7 +241,7 @@ inline void          acr_check_Init(report::acr_check& parent);
 // print string representation of ROW to string STR
 // cfmt:report.acr_check.String  printfmt:Tuple
 // func:report.acr_check..Print
-void                 acr_check_Print(report::acr_check& row, algo::cstring& str) __attribute__((nothrow));
+void                 acr_check_Print(report::acr_check row, algo::cstring& str) __attribute__((nothrow));
 
 // --- report.amc
 struct amc { // report.amc
@@ -244,7 +254,6 @@ struct amc { // report.amc
     // func:report.amc..Ctor
     inline               amc() __attribute__((nothrow));
 };
-
 // func:report.amc..ReadFieldMaybe
 bool                 amc_ReadFieldMaybe(report::amc& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of report::amc from an ascii string.
@@ -259,34 +268,56 @@ inline void          amc_Init(report::amc& parent);
 // func:report.amc..Print
 void                 amc_Print(report::amc& row, algo::cstring& str) __attribute__((nothrow));
 
-// --- report.atf_comp
-struct atf_comp { // report.atf_comp
-    i32    ntest;     //   0  Total number of tests
-    i32    nselect;   //   0  Number of tests selected for execution
-    i32    npass;     //   0  Number of tests succeeded
-    i32    nskip;     //   0  Number of tests not selected
-    i32    nrun;      //   0  Number of tests run
-    i32    nwrite;    //   0  Number of files written
-    i32    nerr;      //   0  Number of errors
-    i32    ninsert;   //   0  Number of tests inserted
-    bool   success;   //   false  Success flag
-    // func:report.atf_comp..Ctor
-    inline               atf_comp() __attribute__((nothrow));
+// --- report.ams_sendtest
+struct ams_sendtest { // report.ams_sendtest: Verdict of one ams_sendtest run, one row per process
+    algo::cstring   proc;           // Process this row reports on
+    u64             n_msg;          //   0  Messages the run is to move
+    u64             n_msg_send;     //   0  Messages sent
+    u64             n_msg_recv;     //   0  Messages received
+    u64             n_write_wait;   //   0  Sends the lane or board refused
+    u64             woff;           //   0  Lane write offset at exit
+    u64             roff;           //   0  Lane read offset at exit
+    double          latency_ns;     //   0.0  Average receive latency, nanoseconds
+    bool            success;        //   false  Process moved every message it was given
+    // func:report.ams_sendtest..Ctor
+    inline               ams_sendtest() __attribute__((nothrow));
 };
-
-// func:report.atf_comp..ReadFieldMaybe
-bool                 atf_comp_ReadFieldMaybe(report::atf_comp& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of report::atf_comp from an ascii string.
+// func:report.ams_sendtest..ReadFieldMaybe
+bool                 ams_sendtest_ReadFieldMaybe(report::ams_sendtest& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of report::ams_sendtest from an ascii string.
 // The format of the string is an ssim Tuple
-// func:report.atf_comp..ReadStrptrMaybe
-bool                 atf_comp_ReadStrptrMaybe(report::atf_comp &parent, algo::strptr in_str) __attribute__((nothrow));
+// func:report.ams_sendtest..ReadStrptrMaybe
+bool                 ams_sendtest_ReadStrptrMaybe(report::ams_sendtest &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
-// func:report.atf_comp..Init
-inline void          atf_comp_Init(report::atf_comp& parent);
+// func:report.ams_sendtest..Init
+inline void          ams_sendtest_Init(report::ams_sendtest& parent);
 // print string representation of ROW to string STR
-// cfmt:report.atf_comp.String  printfmt:Tuple
-// func:report.atf_comp..Print
-void                 atf_comp_Print(report::atf_comp& row, algo::cstring& str) __attribute__((nothrow));
+// cfmt:report.ams_sendtest.String  printfmt:Tuple
+// func:report.ams_sendtest..Print
+void                 ams_sendtest_Print(report::ams_sendtest& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- report.atf_cov
+struct atf_cov { // report.atf_cov: Extent of one coverage measurement
+    u32   n_covtarget;   //   0  Number of targets measured
+    u32   n_tgtcov;      //   0  Number of targets carrying a coverage floor
+    u32   exe;           //   0  Executable lines measured
+    u32   hit;           //   0  Exercised lines measured
+    // func:report.atf_cov..Ctor
+    inline               atf_cov() __attribute__((nothrow));
+};
+// func:report.atf_cov..ReadFieldMaybe
+bool                 atf_cov_ReadFieldMaybe(report::atf_cov& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of report::atf_cov from an ascii string.
+// The format of the string is an ssim Tuple
+// func:report.atf_cov..ReadStrptrMaybe
+bool                 atf_cov_ReadStrptrMaybe(report::atf_cov &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:report.atf_cov..Init
+inline void          atf_cov_Init(report::atf_cov& parent);
+// print string representation of ROW to string STR
+// cfmt:report.atf_cov.String  printfmt:Tuple
+// func:report.atf_cov..Print
+void                 atf_cov_Print(report::atf_cov row, algo::cstring& str) __attribute__((nothrow));
 
 // --- report.atf_unit
 struct atf_unit { // report.atf_unit
@@ -297,7 +328,6 @@ struct atf_unit { // report.atf_unit
     // func:report.atf_unit..Ctor
     inline               atf_unit() __attribute__((nothrow));
 };
-
 // func:report.atf_unit..ReadFieldMaybe
 bool                 atf_unit_ReadFieldMaybe(report::atf_unit& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of report::atf_unit from an ascii string.
@@ -329,7 +359,6 @@ struct gcache { // report.gcache
     // func:report.gcache..FieldwiseCtor
     explicit inline               gcache(algo::UnTime in_starttime, double in_elapsed_sec, i32 in_preproc_size, bool in_hit, const algo::strptr& in_cached_file, bool in_copy_file_range, bool in_pch_hit, const algo::strptr& in_pch_file, const algo::strptr& in_source, const algo::strptr& in_pch_source) __attribute__((nothrow));
 };
-
 // func:report.gcache..ReadFieldMaybe
 bool                 gcache_ReadFieldMaybe(report::gcache& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of report::gcache from an ascii string.
@@ -353,7 +382,6 @@ struct gcache_hitrate { // report.gcache_hitrate
     // func:report.gcache_hitrate..FieldwiseCtor
     explicit inline               gcache_hitrate(const algo::strptr& in_hitrate, const algo::strptr& in_pch_hitrate) __attribute__((nothrow));
 };
-
 // func:report.gcache_hitrate..ReadFieldMaybe
 bool                 gcache_hitrate_ReadFieldMaybe(report::gcache_hitrate& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of report::gcache_hitrate from an ascii string.
@@ -364,6 +392,33 @@ bool                 gcache_hitrate_ReadStrptrMaybe(report::gcache_hitrate &pare
 // cfmt:report.gcache_hitrate.String  printfmt:Tuple
 // func:report.gcache_hitrate..Print
 void                 gcache_hitrate_Print(report::gcache_hitrate& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- report.llmtool_model
+struct llmtool_model { // report.llmtool_model: Cost of llm work charged to one model
+    algo::Smallstr50   model;         // Model id as the transcript spells it
+    u32                n_request;     //   0  Requests charged to this model
+    u64                input;         //   0  Fresh input tokens
+    u64                output;        //   0  Output tokens
+    u64                cache_read;    //   0  Tokens read from cache
+    u64                cache_write;   //   0  Tokens written to cache, every duration together
+    algo::I64Dec4      usd;           // Dollars charged to this model
+    bool               priced;        //   false  The price list has a row for this model; when N the dollars read zero
+    // func:report.llmtool_model..Ctor
+    inline               llmtool_model() __attribute__((nothrow));
+};
+// func:report.llmtool_model..ReadFieldMaybe
+bool                 llmtool_model_ReadFieldMaybe(report::llmtool_model& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of report::llmtool_model from an ascii string.
+// The format of the string is an ssim Tuple
+// func:report.llmtool_model..ReadStrptrMaybe
+bool                 llmtool_model_ReadStrptrMaybe(report::llmtool_model &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:report.llmtool_model..Init
+inline void          llmtool_model_Init(report::llmtool_model& parent);
+// print string representation of ROW to string STR
+// cfmt:report.llmtool_model.String  printfmt:Tuple
+// func:report.llmtool_model..Print
+void                 llmtool_model_Print(report::llmtool_model& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- report.src_func
 struct src_func { // report.src_func
@@ -378,7 +433,6 @@ struct src_func { // report.src_func
     // func:report.src_func..Ctor
     inline               src_func() __attribute__((nothrow));
 };
-
 // func:report.src_func..ReadFieldMaybe
 bool                 src_func_ReadFieldMaybe(report::src_func& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of report::src_func from an ascii string.
@@ -404,9 +458,11 @@ inline algo::cstring &operator <<(algo::cstring &str, const report::abt &row);//
 inline algo::cstring &operator <<(algo::cstring &str, const report::acr &row);// cfmt:report.acr.String
 inline algo::cstring &operator <<(algo::cstring &str, const report::acr_check &row);// cfmt:report.acr_check.String
 inline algo::cstring &operator <<(algo::cstring &str, const report::amc &row);// cfmt:report.amc.String
-inline algo::cstring &operator <<(algo::cstring &str, const report::atf_comp &row);// cfmt:report.atf_comp.String
+inline algo::cstring &operator <<(algo::cstring &str, const report::ams_sendtest &row);// cfmt:report.ams_sendtest.String
+inline algo::cstring &operator <<(algo::cstring &str, const report::atf_cov &row);// cfmt:report.atf_cov.String
 inline algo::cstring &operator <<(algo::cstring &str, const report::atf_unit &row);// cfmt:report.atf_unit.String
 inline algo::cstring &operator <<(algo::cstring &str, const report::gcache &row);// cfmt:report.gcache.String
 inline algo::cstring &operator <<(algo::cstring &str, const report::gcache_hitrate &row);// cfmt:report.gcache_hitrate.String
+inline algo::cstring &operator <<(algo::cstring &str, const report::llmtool_model &row);// cfmt:report.llmtool_model.String
 inline algo::cstring &operator <<(algo::cstring &str, const report::src_func &row);// cfmt:report.src_func.String
 }

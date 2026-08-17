@@ -1,0 +1,4 @@
+# start amc cmd:"$bindir/amc -in_dir:- -out_dir: -report:N < <($bindir/acr_in amc -data)"
+# eof amc
+amc -> amc.sideload  root:data  file:data/amcdb/bltin.ssim  comment:"-in_dir is not a directory; side table data loads from the default root"
+# exit amc code:0

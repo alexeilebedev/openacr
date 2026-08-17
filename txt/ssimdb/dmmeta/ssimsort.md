@@ -10,25 +10,18 @@ in a structure is not lexicographical.
 
 ### Attributes
 <a href="#attributes"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Attributes -->
 * [ctype:](/txt/ssimdb/dmmeta/ctype.md)dmmeta.Ssimsort
 
 * file:[data/dmmeta/ssimsort.ssim](/data/dmmeta/ssimsort.ssim)
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ssimfile|[dmmeta.Ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|[Pkey](/txt/exe/amc/reftypes.md#pkey)|||
-|sortfld|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftypes.md#pkey)|||
-|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Attributes -->
+|ssimfile|[dmmeta.Ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)|||
+|sortfld|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)|||
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype.md#val)|||
 
 ### Used In Executables
 <a href="#used-in-executables"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:ImdbUses -->
-
-* [acr](/txt/exe/acr/internals.md) as [acr.FSsimsort](/txt/exe/acr/internals.md#acr-fssimsort)
-* [amc](/txt/exe/amc/internals.md) as [amc.FSsimsort](/txt/exe/amc/internals.md#amc-fssimsort)
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:ImdbUses -->
-
+* [acr](/txt/gen/acr/acr.md) as [acr.FSsimsort](/txt/gen/acr/acr.md#acr-fssimsort)
+* [amc](/txt/gen/amc/amc.md) as [amc.FSsimsort](/txt/gen/amc/amc.md#amc-fssimsort)
+* [apm](/txt/gen/apm/apm.md) as [apm.FSsimsort](/txt/gen/apm/apm.md#apm-fssimsort)

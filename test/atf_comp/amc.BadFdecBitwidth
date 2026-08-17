@@ -1,0 +1,5 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/bad_fdec_bitwidth.ssim -out_dir: -report:N zzz"
+# eof amc
+amc -> amc.bitfield_bounds  bitfld:algo_lib.DecBitW0.value  offset:0  width:0  comment:"bitfield offset must be 0..127 and width must be 1..64"
+amc -> amc.error  amc.bitfield_width  field:algo_lib.DecBitW0.value  comment:'bitfield width must be 1..64 bits'
+# exit amc code:1

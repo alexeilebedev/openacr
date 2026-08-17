@@ -22,8 +22,6 @@
 // Exceptions: NO
 // Source: cpp/amc/sort.cpp -- Comparison & Sorting routines
 //
-// TODO: investigate 3-way partitioning, or dual-pivot partitioning.
-// http://www.sorting-algorithms.com/static/QuicksortIsOptimal.pdf
 
 #include "include/amc.h"
 

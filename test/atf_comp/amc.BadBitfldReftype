@@ -1,0 +1,6 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/bad_bitfld_reftype.ssim -out_dir: -report:N zzz"
+# eof amc
+amc -> amc.missing_record  field:algo_lib.FDb.flag  comment:"Missing dmmeta.bitfld record"
+amc -> amc.missing_record  field:algo_lib.FDb.notbitfld  comment:"Field reftype must be a Bitfld"
+amc -> amc.error  reftype errors prevent code generation
+# exit amc code:1

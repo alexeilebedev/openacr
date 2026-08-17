@@ -29,15 +29,15 @@
 
 // --- lib_json_FNode_type_Enum
 
-enum lib_json_FNode_type_Enum {        // lib_json.FNode.type
-     lib_json_FNode_type_null     = 0
-    ,lib_json_FNode_type_false    = 1
-    ,lib_json_FNode_type_true     = 2
-    ,lib_json_FNode_type_string   = 3
-    ,lib_json_FNode_type_number   = 4
-    ,lib_json_FNode_type_array    = 5
-    ,lib_json_FNode_type_object   = 6
-    ,lib_json_FNode_type_field    = 7
+enum lib_json_FNode_type_Enum {    // lib_json.FNode.type
+     lib_json_FNode_type_null
+    ,lib_json_FNode_type_false
+    ,lib_json_FNode_type_true
+    ,lib_json_FNode_type_string
+    ,lib_json_FNode_type_number
+    ,lib_json_FNode_type_array
+    ,lib_json_FNode_type_object
+    ,lib_json_FNode_type_field
 };
 
 enum { lib_json_FNode_type_Enum_N = 8 };
@@ -64,8 +64,8 @@ enum { lib_json_FParser_state_Enum_N = 11 };
 
 // --- lib_json_FieldIdEnum
 
-enum lib_json_FieldIdEnum {        // lib_json.FieldId.value
-     lib_json_FieldId_value   = 0
+enum lib_json_FieldIdEnum {    // lib_json.FieldId.value
+     lib_json_FieldId_value
 };
 
 enum { lib_json_FieldIdEnum_N = 1 };
@@ -75,6 +75,16 @@ namespace lib_json { // gen:ns_pkeytypedef
 namespace lib_json { // gen:ns_tclass_field
 struct lpool_Lpblock {
     lpool_Lpblock* next;
+};
+
+struct lpool_Lpblk { // blk: block dedicated to one size class
+    lpool_Lpblk*   next;    // next blk of the class with free space
+    lpool_Lpblk**  pprev;   // back link; NULL = not on the class list
+    lpool_Lpblock* freerec; // freed records of this blk, LIFO
+    u32            rsize;   // record size (class size)
+    u32            live;    // records in use
+    u32            tip;     // offset of the next never-allocated record
+    u32            cell;    // class index of rsize
 };
 } // gen:ns_tclass_field
 // gen:ns_fwddecl2
@@ -96,19 +106,19 @@ struct trace { // lib_json.trace
     inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Set all fields to initial values.
 // func:lib_json.trace..Init
 inline void          trace_Init(lib_json::trace& parent);
 // print string representation of ROW to string STR
 // cfmt:lib_json.trace.String  printfmt:Tuple
 // func:lib_json.trace..Print
-void                 trace_Print(lib_json::trace& row, algo::cstring& str) __attribute__((nothrow));
+void                 trace_Print(lib_json::trace row, algo::cstring& str) __attribute__((nothrow));
 
 // --- lib_json.FDb
 // create: lib_json.FDb._db (Global)
 struct FDb { // lib_json.FDb: In-memory database for lib_json
     lpool_Lpblock*      lpool_free[36];             // Lpool levels
+    lpool_Lpblk*        lpool_blk[11];              // Dedicated blks with free space, per class
     u64                 node_blocksize;             // # bytes per block
     lib_json::FNode*    node_free;                  //
     lib_json::FNode**   ind_objfld_buckets_elems;   // pointer to bucket array
@@ -116,8 +126,8 @@ struct FDb { // lib_json.FDb: In-memory database for lib_json
     i32                 ind_objfld_n;               // number of elements in the hash table
     lib_json::trace     trace;                      //
 };
-
 // Free block of memory previously returned by Lpool.
+// SIZE must be of the same class the memory was allocated with.
 // func:lib_json.FDb.lpool.FreeMem
 void                 lpool_FreeMem(void* mem, u64 size) __attribute__((nothrow));
 // Allocate new piece of memory at least SIZE bytes long.
@@ -127,7 +137,8 @@ void                 lpool_FreeMem(void* mem, u64 size) __attribute__((nothrow))
 // func:lib_json.FDb.lpool.AllocMem
 void*                lpool_AllocMem(u64 size) __attribute__((__warn_unused_result__, nothrow));
 // Add N buffers of some size to the free store
-// Reserve NBUF buffers of size BUFSIZE from the base pool (algo_lib::sbrk)
+// Stock the free store with NBUF buffers of size BUFSIZE:
+// allocate them all, then free them all, chaining through the buffers
 // func:lib_json.FDb.lpool.ReserveBuffers
 bool                 lpool_ReserveBuffers(u64 nbuf, u64 bufsize) __attribute__((nothrow));
 // Allocate new block, copy old to new, delete old.
@@ -171,6 +182,10 @@ bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __att
 // Calls Step function of dependencies
 // func:lib_json.FDb._db.Steps
 void                 Steps();
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+// func:lib_json.FDb._db.RemoveStrptrMaybe
+bool                 RemoveStrptrMaybe(algo::strptr str);
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:lib_json.FDb._db.XrefMaybe
@@ -261,7 +276,6 @@ struct FldKey { // lib_json.FldKey
     // func:lib_json.FldKey..FieldwiseCtor
     explicit inline               FldKey(lib_json::FNode* in_p_object, algo::strptr in_field) __attribute__((nothrow));
 };
-
 // func:lib_json.FldKey..Hash
 inline u32           FldKey_Hash(u32 prev, const lib_json::FldKey& rhs) __attribute__((nothrow));
 // func:lib_json.FldKey..Lt
@@ -295,8 +309,8 @@ struct FNode { // lib_json.FNode
     u32                 ind_objfld_hashval;    // hash value
     lib_json::FNode*    p_parent;              // reference to parent row
     lib_json::FNode**   c_child_elems;         // array of pointers
-    u32                 c_child_n;             // array of pointers
-    u32                 c_child_max;           // capacity of allocated array
+    u64                 c_child_n;             // current size
+    u64                 c_child_max;           // capacity of allocated array
     u32                 type;                  //   0
     algo::cstring       value;                 //
     bool                node_c_child_in_ary;   //   false  membership flag
@@ -315,7 +329,6 @@ private:
     friend lib_json::FNode*     node_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 node_Delete(lib_json::FNode &row) __attribute__((nothrow));
 };
-
 // Delete all elements pointed to by the index.
 // func:lib_json.FNode.c_child.Cascdel
 void                 c_child_Cascdel(lib_json::FNode& node) __attribute__((nothrow));
@@ -324,12 +337,12 @@ void                 c_child_Cascdel(lib_json::FNode& node) __attribute__((nothr
 inline bool          c_child_EmptyQ(lib_json::FNode& node) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:lib_json.FNode.c_child.Find
-inline lib_json::FNode* c_child_Find(lib_json::FNode& node, u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline lib_json::FNode* c_child_Find(lib_json::FNode& node, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:lib_json.FNode.c_child.Getary
 inline algo::aryptr<lib_json::FNode*> c_child_Getary(lib_json::FNode& node) __attribute__((nothrow));
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:lib_json.FNode.c_child.Insert
 void                 c_child_Insert(lib_json::FNode& node, lib_json::FNode& row) __attribute__((nothrow));
 // Insert pointer to row in array.
@@ -339,7 +352,7 @@ void                 c_child_Insert(lib_json::FNode& node, lib_json::FNode& row)
 bool                 c_child_InsertMaybe(lib_json::FNode& node, lib_json::FNode& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:lib_json.FNode.c_child.N
-inline i32           c_child_N(const lib_json::FNode& node) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_child_N(const lib_json::FNode& node) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:lib_json.FNode.c_child.Remove
 void                 c_child_Remove(lib_json::FNode& node, lib_json::FNode& row) __attribute__((nothrow));
@@ -348,10 +361,10 @@ void                 c_child_Remove(lib_json::FNode& node, lib_json::FNode& row)
 inline void          c_child_RemoveAll(lib_json::FNode& node) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:lib_json.FNode.c_child.Reserve
-void                 c_child_Reserve(lib_json::FNode& node, u32 n) __attribute__((nothrow));
+void                 c_child_Reserve(lib_json::FNode& node, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:lib_json.FNode.c_child.qFind
-inline lib_json::FNode& c_child_qFind(lib_json::FNode& node, u32 idx) __attribute__((nothrow));
+inline lib_json::FNode& c_child_qFind(lib_json::FNode& node, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:lib_json.FNode.c_child.InAryQ
 inline bool          node_c_child_InAryQ(lib_json::FNode& row) __attribute__((nothrow));
@@ -429,7 +442,6 @@ struct FParser { // lib_json.FParser
     // func:lib_json.FParser..Dtor
     inline               ~FParser() __attribute__((nothrow));
 };
-
 // Declaration for user-defined cleanup function
 // User-defined cleanup function invoked for field root_node of lib_json::FParser
 // func:lib_json.FParser.root_node.Cleanup
@@ -484,7 +496,6 @@ struct FieldId { // lib_json.FieldId: Field read helper
     inline               FieldId(lib_json_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:lib_json.FieldId.value.GetEnum
 inline lib_json_FieldIdEnum value_GetEnum(const lib_json::FieldId& parent) __attribute__((nothrow));
@@ -522,15 +533,15 @@ inline void          FieldId_Init(lib_json::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:lib_json.FieldId.String  printfmt:Raw
 // func:lib_json.FieldId..Print
-void                 FieldId_Print(lib_json::FieldId& row, algo::cstring& str) __attribute__((nothrow));
+void                 FieldId_Print(lib_json::FieldId row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace lib_json { // gen:ns_curstext
 
 struct node_c_child_curs {// fcurs:lib_json.FNode.c_child/curs
     typedef lib_json::FNode ChildType;
     lib_json::FNode** elems;
-    u32 n_elems;
-    u32 index;
+    u64 n_elems;
+    u64 index;
     node_c_child_curs() { elems=NULL; n_elems=0; index=0; }
 };
 

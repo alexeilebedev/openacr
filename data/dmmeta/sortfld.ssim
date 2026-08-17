@@ -1,10 +1,8 @@
 dmmeta.sortfld  field:abt.FDb.bh_syscmd  sortfld:dev.Syscmd.execkey
-dmmeta.sortfld  field:abt_md.FDb.bh_file_section  sortfld:abt_md.FFileSection.sortkey
-dmmeta.sortfld  field:abt_md.FDirscan.bh_dirent  sortfld:abt_md.FDirent.sortfld
 dmmeta.sortfld  field:acr.FDb.bh_ctype_topo  sortfld:acr.FCtype.topokey
 dmmeta.sortfld  field:acr.FDb.bh_pline  sortfld:acr.FPline.key
 dmmeta.sortfld  field:acr_compl.FDb.bh_completion  sortfld:acr_compl.FCompletion.badness
-dmmeta.sortfld  field:acr_dm.FDb.bh_tuple  sortfld:acr_dm.FTuple.rowid
+dmmeta.sortfld  field:acr_dm.FTuple.bh_child  sortfld:acr_dm.FTuple.sortkey
 dmmeta.sortfld  field:algo_lib.FDb.bh_timehook  sortfld:algo_lib.FTimehook.time
 dmmeta.sortfld  field:amc.FDb.bh_enumstr_len  sortfld:amc.FEnumstrLen.len
 dmmeta.sortfld  field:amc.FEnumstrLen.bh_enumstr  sortfld:amc.Enumstr.str
@@ -17,8 +15,7 @@ dmmeta.sortfld  field:atf_amc.FDb.bh_time_entry  sortfld:atf_amc.FTimeEntry.time
 dmmeta.sortfld  field:atf_amc.FDb.bh_typec  sortfld:atf_amc.TypeC.typec
 dmmeta.sortfld  field:atf_amc.FDb.tr_avl  sortfld:atf_amc.FAvl.n
 dmmeta.sortfld  field:atf_amc.FTypeA.bh_typeb  sortfld:atf_amc.TypeB.j
-dmmeta.sortfld  field:atf_unit.FDb.tr_number  sortfld:atf_unit.FNumber.num
-dmmeta.sortfld  field:lib_ams.FDb.bh_shmember_read  sortfld:lib_ams.FShmember.sortkey
+dmmeta.sortfld  field:gcache.FDb.bh_cachefile  sortfld:gcache.FCachefile.mtime
 dmmeta.sortfld  field:lib_exec.FDb.bh_syscmd  sortfld:dev.Syscmd.execkey
 dmmeta.sortfld  field:samp_meng.FOrdq.bh_order  sortfld:samp_meng.FOrder.ordkey
 dmmeta.sortfld  field:src_func.FDb.bh_func  sortfld:src_func.FFunc.sortkey

@@ -36,13 +36,17 @@ static void Main_ManageEnv() {
     gcli::_db.home = getenv("HOME");
     gcli::_db.editor = getenv("EDITOR");
 
+    vrfy(gcli::_db.unix_user.ch_n,"Your USER environment variable has not been set");
+    vrfy(gcli::_db.home.ch_n,"Your HOME environment variable has not been set");
+}
+// -----------------------------------------------------------------------------
+// Require EDITOR when a selected table/action combination uses -e
+static void Main_NeedEditor() {
     bool need_editor(false);
     ind_beg(gcli::_db_zd_gtblact_curs,gtblact,gcli::_db){
         need_editor|=(gtblact.e && gcli::_db.cmdline.e);
     }ind_end;
 
-    vrfy(gcli::_db.unix_user.ch_n,"Your USER environment variable has not been set");
-    vrfy(gcli::_db.home.ch_n,"Your HOME environment variable has not been set");
     vrfy(!need_editor || gcli::_db.editor.ch_n, "Your environment variable EDITOR has not been set");
 }
 // -----------------------------------------------------------------------------
@@ -99,7 +103,7 @@ static void Main_Setopts(){
         }
     }ind_end;
 
-    Main_ManageEnv();
+    Main_NeedEditor();
     gcli::Main_ManageAuth();
 
     SetHeaderToken(gcli::_db.grepo_sel.token);
@@ -124,10 +128,18 @@ void gcli::AddGclicmdArg(strptr gclicmd_key, strptr arg){
     }
 }
 // -----------------------------------------------------------------------------
+// Selector token for the current git branch: an mr review branch maps to the
+// mr table (mr_X -> mr:X); a branch bound to an issue (by name or by the
+// seed-commit footer) maps to the issue key; any other branch passes through.
 static tempstr GitBranch(){
     tempstr ret(gcli::GetCurrentGitBranch());
     if (StartsWithQ(ret,"mr_")){
         Replace(ret,"mr_","mr:");
+    } else {
+        tempstr branch_issue(gcli::BranchIssue(ret));
+        if (branch_issue!=""){
+            ret=branch_issue;
+        }
     }
     return ret;
 }
@@ -146,6 +158,7 @@ static void Main_Shortcuts(){
 }
 // -----------------------------------------------------------------------------
 void gcli::Main() {
+    Main_ManageEnv();
     Main_Shortcuts();
     Main_Setopts();
 
@@ -161,7 +174,7 @@ void gcli::Main() {
 // TODO: Maybe convert gcli to GraphQL?
 // Examples are below
 // Github mutations
-//curl -k 'https://api.github.com/graphql' -X POST -H "Authorization: Bearer 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"
+//curl -k 'https://api.github.com/graphql' -X POST -H "Authorization: Bearer github_pat_11EXAMPLE0000000000000_EXAMPLE0000000000000000000000000000000000000000000000000000"
 //
 //{"query":"mutation {markPullRequestReadyForReview(input:{pullRequestId:\"PR_kwDOKLbbec5a7JY4\"}){pullRequest{isDraft}}}"}
 //{"query":"mutation {convertPullRequestToDraft(input:{pullRequestId:\"PR_kwDOKLbbec5a7JY4\"}){pullRequest{isDraft}}}"}
@@ -172,7 +185,7 @@ void gcli::Main() {
 //{"query":"query{repository(owner:\"vparizhs\",name:\"ghp\"){pullRequest(number:461){state,title,number,isDraft,headRefName,updatedAt,id}}}"}
 
 // Gitlab mutations
-//curl -k 'https://192.168.1.45:1010/api/graphql' -X POST -H "Authorization: Bearer glpat-Hf38RB2J9GUZRhc54FCs" -H "Content-Type: application/json" --data
+//curl -k 'https://192.168.1.45:1010/api/graphql' -X POST -H "Authorization: Bearer glpat-EXAMPLE0000000000000" -H "Content-Type: application/json" --data
 //
 //{"query":"mutation {mergeRequestSetDraft(input:{iid:\"9\",projectPath:\"algornd/glpat\",draft:true}){mergeRequest{title,draft}}}"}
 

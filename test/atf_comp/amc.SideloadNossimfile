@@ -1,0 +1,8 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/sideload_nossimfile.ssim -out_dir: -report:N zzz"
+# eof amc
+amc -> amc.gconst_nossimfile  gconst:algo_lib.FreeId.value  namefld:algo_lib.Free.name  comment:"the namefld's ctype reaches no ssimfile, so there is no value table"
+amc -> amc.gconst_nossimfile  gconst:algo_lib.DerivedId.value  namefld:algo_lib.Derived.dname  comment:"the namefld's ctype reaches no ssimfile, so there is no value table"
+amc -> amc.gstatic_nossimfile  field:algo_lib.FDb.free  basetype:algo_lib.Free  comment:"the element type reaches no ssimfile, so there is no table to load"
+amc -> amc.gstatic_nossimfile  field:algo_lib.FDb.derived  basetype:algo_lib.Free  comment:"the element type reaches no ssimfile, so there is no table to load"
+amc -> amc.no_output  comment:"no files were modified"
+# exit amc code:4

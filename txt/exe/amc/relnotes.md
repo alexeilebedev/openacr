@@ -790,7 +790,7 @@ commit 3b72020af3ea26b81c46146e357e3c3ddc4b77c5
 Author: Alexei Lebedev <alexei.lebedev@theice.com>
 Date:   Thu Mar 3 13:21:28 2016 -0500
 
-    amc: add fcmdline table, annotate all command lines.
+    amc: add ccmdline table, annotate all command lines.
 
 commit 57a6d11585df0b6dd35c7754bd6ee1f0fcbda144
 Author: Alexei Lebedev <alexei.lebedev@theice.com>
@@ -2381,4 +2381,3 @@ Date:   Sat Feb 22 11:25:39 2014 -0500
 
     amc: fix "unused variable" warning in FreeMem in release.
     amc: fix "dereferencing of type-punned pointer will break strict aliasing rules"
-

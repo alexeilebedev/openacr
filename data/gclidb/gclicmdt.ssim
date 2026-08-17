@@ -9,12 +9,13 @@ gclidb.gclicmdt  gclicmdt:issuemod.glpat  gmethod:PUT  uri:api/v4/projects/$KEYI
 gclidb.gclicmdt  gclicmdt:issuenote.ghp  gmethod:GET  uri:"repos/$KEYID/issues/$ISSUE/comments?sort=created&direction=asc"  comment:github
 gclidb.gclicmdt  gclicmdt:issuenote.glpat  gmethod:GET  uri:"api/v4/projects/$KEYID/issues/$ISSUE/notes?sort=asc&order_by=updated_at"  comment:gitlab
 gclidb.gclicmdt  gclicmdt:issuesearch.ghp  gmethod:GET  uri:"search/issues?q=is:issue+repo:$KEYID$COND"  comment:github
+gclidb.gclicmdt  gclicmdt:jobretry.glpat  gmethod:POST  uri:api/v4/projects/$KEYID/jobs/$ISSUE/retry  comment:gitlab
 gclidb.gclicmdt  gclicmdt:mraccept.ghp  gmethod:PUT  uri:repos/$KEYID/pulls/$ISSUE/merge  comment:github
 gclidb.gclicmdt  gclicmdt:mraccept.glpat  gmethod:PUT  uri:api/v4/projects/$KEYID/merge_requests/$ISSUE/merge  comment:gitlab
 gclidb.gclicmdt  gclicmdt:mrlist.ghp  gmethod:GET  uri:repos/$KEYID/pulls$ISSUE  comment:github
 gclidb.gclicmdt  gclicmdt:mrlist.glpat  gmethod:GET  uri:"api/v4/projects/$KEYID/merge_requests$ISSUE?$COND"  comment:gitlab
 gclidb.gclicmdt  gclicmdt:mrlistdet.ghp  gmethod:GET  uri:repos/$KEYID/pulls/$ISSUE  comment:github
-gclidb.gclicmdt  gclicmdt:mrlistdet.glpat  gmethod:GET  uri:api/v4/projects/$KEYID/merge_requests/$ISSUE  comment:gitlab
+gclidb.gclicmdt  gclicmdt:mrlistdet.glpat  gmethod:GET  uri:"api/v4/projects/$KEYID/merge_requests/$ISSUE?include_diverged_commits_count=true"  comment:gitlab
 gclidb.gclicmdt  gclicmdt:mrmod.ghp  gmethod:POST  uri:repos/$KEYID/pulls/$ISSUE  comment:github
 gclidb.gclicmdt  gclicmdt:mrmod.glpat  gmethod:PUT  uri:api/v4/projects/$KEYID/merge_requests/$ISSUE  comment:gitlab
 gclidb.gclicmdt  gclicmdt:mrnote.ghp  gmethod:GET  uri:"repos/$KEYID/issues/$ISSUE/comments?sort=created&direction=asc"  comment:github
@@ -38,6 +39,9 @@ gclidb.gclicmdt  gclicmdt:repojob.glpat  gmethod:GET  uri:api/v4/projects/$KEYID
 gclidb.gclicmdt  gclicmdt:repojobtrace.glpat  gmethod:GET  uri:api/v4/projects/$KEYID/jobs/$ISSUE/trace  comment:gitlab
 gclidb.gclicmdt  gclicmdt:token2repos.ghp  gmethod:GET  uri:user/repos  comment:github
 gclidb.gclicmdt  gclicmdt:token2repos.glpat  gmethod:GET  uri:api/v4/projects  comment:gitlab
+gclidb.gclicmdt  gclicmdt:tokenadd.glpat  gmethod:POST  uri:api/v4/projects/$KEYID/access_tokens  comment:gitlab
+gclidb.gclicmdt  gclicmdt:tokendel.glpat  gmethod:DELETE  uri:api/v4/projects/$KEYID/access_tokens/$ISSUE  comment:gitlab
+gclidb.gclicmdt  gclicmdt:tokenlist.glpat  gmethod:GET  uri:api/v4/projects/$KEYID/access_tokens  comment:gitlab
 gclidb.gclicmdt  gclicmdt:user.ghp  gmethod:GET  uri:user  comment:github
 gclidb.gclicmdt  gclicmdt:user.glpat  gmethod:GET  uri:api/v4/user  comment:gitlab
 gclidb.gclicmdt  gclicmdt:userdet.ghp  gmethod:GET  uri:users/$ISSUE  comment:github

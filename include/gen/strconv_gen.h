@@ -29,8 +29,8 @@
 
 // --- strconv_FieldIdEnum
 
-enum strconv_FieldIdEnum {        // strconv.FieldId.value
-     strconv_FieldId_value   = 0
+enum strconv_FieldIdEnum {    // strconv.FieldId.value
+     strconv_FieldId_value
 };
 
 enum { strconv_FieldIdEnum_N = 1 };
@@ -38,7 +38,6 @@ enum { strconv_FieldIdEnum_N = 1 };
 namespace strconv { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
 namespace strconv { // gen:ns_tclass_field
-extern const char *strconv_help;
 } // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace strconv { struct trace; }
@@ -54,7 +53,6 @@ struct trace { // strconv.trace
     inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // print string representation of ROW to string STR
 // cfmt:strconv.trace.String  printfmt:Tuple
 // func:strconv.trace..Print
@@ -66,11 +64,8 @@ struct FDb { // strconv.FDb: In-memory database for strconv
     command::strconv   cmdline;   //
     strconv::trace     trace;     //
 };
-
-// Read argc,argv directly into the fields of the command line(s)
-// The following fields are updated:
-//     strconv.FDb.cmdline
-//     algo_lib.FDb.cmdline
+// Read argc,argv into the fields of strconv.FDb.cmdline (and any base command line)
+// via strconv_ReadArgv; then apply -help/-version and load floadtuples input.
 // func:strconv.FDb._db.ReadArgv
 void                 ReadArgv() __attribute__((nothrow));
 // Main loop.
@@ -107,6 +102,10 @@ bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __att
 // Calls Step function of dependencies
 // func:strconv.FDb._db.Steps
 void                 Steps();
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+// func:strconv.FDb._db.RemoveStrptrMaybe
+bool                 RemoveStrptrMaybe(algo::strptr str);
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:strconv.FDb._db.XrefMaybe
@@ -132,7 +131,6 @@ struct FieldId { // strconv.FieldId: Field read helper
     inline               FieldId(strconv_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:strconv.FieldId.value.GetEnum
 inline strconv_FieldIdEnum value_GetEnum(const strconv::FieldId& parent) __attribute__((nothrow));
@@ -170,7 +168,7 @@ inline void          FieldId_Init(strconv::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:strconv.FieldId.String  printfmt:Raw
 // func:strconv.FieldId..Print
-void                 FieldId_Print(strconv::FieldId& row, algo::cstring& str) __attribute__((nothrow));
+void                 FieldId_Print(strconv::FieldId row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace strconv { // gen:ns_func
 // func:strconv...StaticCheck

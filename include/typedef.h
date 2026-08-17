@@ -73,29 +73,33 @@ namespace algo {
     struct StringDesc;
     struct ImrowPtr;
     struct Tuple;
+    struct Alloc;
     struct SchedTime;
     typedef void(*InitFcn)(void* str);
     typedef bool(*SetnumFcn)(void* str, i64 num);
     typedef i64(*Geti64Fcn)(void* str, bool &out_ok);
     typedef algo::aryptr<char>(*GetaryFcn)(void* str);
     typedef bool (*ImdbInsertStrptrMaybeFcn)(strptr str);
+    typedef bool (*ImdbRemoveStrptrMaybeFcn)(strptr str);
     typedef void (*PrlogFcn)(algo_lib::FLogcat *logcat, algo::SchedTime tstamp, strptr str);
     typedef void (*ImdbStepFcn)();
     typedef void (*ImdbMainLoopFcn)();
     typedef void (*ImdbGetTraceFcn)(cstring &str);
     typedef void (*ImrowXrefXFcn)(algo::ImrowPtr);
     typedef int (*ImrowNItemsFcn)();
+    typedef void *(*BeginAllocFcn)(void *ctx, i32 len);
+    typedef void (*EndAllocFcn)(void *ctx, void *ptr, i32 len);
     typedef void (*ImrowPrintFcn)(algo::ImrowPtr data, algo::cstring &lhs);
     typedef algo::ImrowPtr (*ImrowRowidFindFcn)(int i);
 
     template<class T> struct  aryptr {
         typedef T ValueType;
         T    *elems;
-        i32 n_elems;
+        i64 n_elems;
 
-        aryptr(const T *e, i32 in_n);
+        aryptr(const T *e, i64 in_n);
         aryptr();
-        T &operator [](u32 idx) const;
+        T &operator [](u64 idx) const;
     };
     // specialization for char
     template<> struct aryptr<char> {
@@ -105,8 +109,8 @@ namespace algo {
 
         aryptr() : elems(NULL), n_elems(0) {}
         aryptr(const char *e) { elems=(char*)e; n_elems=e ? strlen(e) : 0; }
-        aryptr(const char *e, i32 n) : elems((char*)e), n_elems(n) {}
-        char &operator [](u32 idx) const { return elems[idx]; }
+        aryptr(const char *e, i64 n) : elems((char*)e), n_elems(n) {}
+        char &operator [](u64 idx) const { return elems[idx]; }
     };
 }
 using algo::strptr;

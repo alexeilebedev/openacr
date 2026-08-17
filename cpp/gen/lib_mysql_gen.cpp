@@ -61,7 +61,13 @@ bool lib_mysql::res_XrefMaybe(lib_mysql::Res &row) {
 // --- lib_mysql.FDb._db.InitReflection
 // Load statically available data into tables, register tables and database.
 static void lib_mysql::InitReflection() {
-    algo_lib::imdb_InsertMaybe(algo::Imdb("lib_mysql", NULL, NULL, NULL, NULL, algo::Comment()));
+    algo_lib::FImdb &row = algo_lib::imdb_Alloc();
+    row.imdb               = "lib_mysql";
+    row.InsertStrptrMaybe  = NULL;
+    row.RemoveStrptrMaybe  = NULL;
+    row.Step               = NULL;
+    row.MainLoop           = NULL;
+    algo_lib::imdb_XrefMaybe(row);
 
     algo::Imtable t_trace;
     t_trace.imtable         = "lib_mysql.trace";
@@ -152,6 +158,15 @@ bool lib_mysql::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
 // --- lib_mysql.FDb._db.Steps
 // Calls Step function of dependencies
 void lib_mysql::Steps() {
+}
+
+// --- lib_mysql.FDb._db.RemoveStrptrMaybe
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+bool lib_mysql::RemoveStrptrMaybe(algo::strptr str) {
+    bool retval = true;
+    (void)str;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- lib_mysql.FDb._db.XrefMaybe
@@ -254,7 +269,7 @@ bool lib_mysql::FieldId_ReadStrptrMaybe(lib_mysql::FieldId &parent, algo::strptr
 // --- lib_mysql.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:lib_mysql.FieldId.String  printfmt:Raw
-void lib_mysql::FieldId_Print(lib_mysql::FieldId& row, algo::cstring& str) {
+void lib_mysql::FieldId_Print(lib_mysql::FieldId row, algo::cstring& str) {
     lib_mysql::value_Print(row, str);
 }
 

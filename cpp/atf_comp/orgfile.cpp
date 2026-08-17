@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
-// Target: atf_comp (exe) -- Algo Test Framework - Component test execution
+// Target: atf_comp (exe) -- Component test runner: spawn processes and diff the log against a reference
 // Exceptions: yes
 // Source: cpp/atf_comp/orgfile.cpp
 //

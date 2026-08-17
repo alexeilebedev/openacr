@@ -3,17 +3,19 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Internals](#internals)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
-&#128196; [strconv - Internals](/txt/exe/strconv/internals.md)<br/>
+<!-- abt_md.toc_end -->
 
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
+### Internals
+<a href="#internals"></a>
+&#128196; [strconv - Internals](/txt/gen/strconv/strconv.md)<br/>
 
 ### Syntax
 <a href="#syntax"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Syntax -->
 ```
 strconv: A simple string utility
 Usage: strconv [-str:]<string> [options]
@@ -28,15 +30,10 @@ Usage: strconv [-str:]<string> [options]
     -help                          Print help and exit; alias -h
     -version                       Print version and exit
     -signature                     Show signatures and exit; alias -sig
-
 ```
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Syntax -->
 
 ### Options
 <a href="#options"></a>
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Options -->
 #### -str -- String parameter
 <a href="#-str"></a>
 
@@ -52,15 +49,9 @@ Usage: strconv [-str:]<string> [options]
 #### -pathcomp -- Extract path component from string
 <a href="#-pathcomp"></a>
 
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
-
 ### Inputs
 <a href="#inputs"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
 `strconv` takes the following tables on input:
 |Ssimfile|Comment|
 |---|---|
 |[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
-

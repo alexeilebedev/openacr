@@ -164,7 +164,7 @@ static void PrintFieldComments(acr::FPrint &print) {
 static int GetAttrWidth(acr::FPrint &print, acr::FField &field) {
     int ret = 0;
     if (print.pretty) {
-        algo::Smallstr50 name = name_Get(field);
+        algo::Smallstr100 name = name_Get(field);
         acr::FPrintAttr *printattr = acr::ind_printattr_Find(print, name);
         if (printattr) {
             ret = printattr->width;
@@ -316,7 +316,7 @@ static void UpdateAttrWidth(acr::FPline &pline, acr::FPrint &print) {
     ind_beg(acr::ctype_c_field_curs, field, *rec.p_ctype) {
         if (!field.isfldfunc || (field.c_substr && print.fldfunc)) {
             ch_RemoveAll(line);
-            algo::Smallstr50 name = name_Get(field);
+            algo::Smallstr100 name = name_Get(field);
             acr::FPrintAttr *printattr = acr::ind_printattr_Find(print, name);
             if (!printattr) {
                 printattr = &acr::printattr_Alloc();

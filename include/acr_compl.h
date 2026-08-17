@@ -67,11 +67,24 @@ namespace acr_compl { // update-hdr
     void Main_Line_Ctype(acr_compl::FCtype *ctype, strptr value, strptr compl_prefix, bool exact);
     void Main_Line_Ctype(acr_compl::FCtype *ctype, strptr value, strptr compl_prefix);
 
+    // Insert-mode completion for composite-pkey flags annotated via
+    // dmmeta.finsertwhen.  Walks the pkey's dmmeta.substr decomposition: at the
+    // cursor position, count the separators already typed and offer values for
+    // the corresponding component from its own pkey-source ssimfile.
+    //
+    // Limitation: handles 2-component pkeys (fcurs <field>/<curstype>,
+    // dispatch_msg <dispatch>/<msgtype>, fstep <field>/<curstype>).  Pkeys with
+    // 3+ components fall through to the caller's default lookup.
+    //
+    // Returns true if at least one completion candidate was emitted.
+    bool Main_Line_Insert(acr_compl::FField *cur_field, strptr value, strptr compl_prefix);
+
     // process ACR query attribute
     void Main_Line_Acr(acr_compl::FField *, strptr value, cstring &compl_prefix);
 
     // perform completion
     void Main_Line();
+    void LoadCmds();
 
     // Generate a script to install completion handler
     void Main_Install(strptr prog);
@@ -79,6 +92,18 @@ namespace acr_compl { // update-hdr
     // Check command line validity.
     // Call Main_Line with -check mode; report any error from _db.parse_error.
     void Main_Check();
+
+    // Batch mode: read acr_compl.checkreq rows from stdin, validate each line,
+    // emit acr_compl.checkerr rows for failures only. The id field is echoed
+    // from request to response so the caller can correlate errors with sources.
+    // A row this build cannot parse -- a type tag that is not acr_compl.checkreq,
+    // or an attr a newer producer added -- fails the run instead of disappearing:
+    // silence on stdout means "every request validated clean", so a dropped
+    // request would report a documentation corpus as checked when nothing in it
+    // was. The request carries no usable id at that point, so the report goes to
+    // stderr rather than to a checkerr row, and the rest of the batch is still
+    // validated. An empty line carries no request and is not an error.
+    void Main_CheckBatch();
 
     // main routine
     //     (user-implemented function, prototype is in amc-generated header)

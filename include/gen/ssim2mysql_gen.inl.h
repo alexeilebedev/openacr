@@ -66,6 +66,24 @@ inline  ssim2mysql::FColumn::~FColumn() {
     ssim2mysql::FColumn_Uninit(*this);
 }
 
+// --- ssim2mysql.FCppfunc..Init
+// Set all fields to initial values.
+inline void ssim2mysql::FCppfunc_Init(ssim2mysql::FCppfunc& cppfunc) {
+    cppfunc.print = bool(false);
+    cppfunc.set = bool(false);
+    cppfunc.p_field = NULL;
+}
+
+// --- ssim2mysql.FCppfunc..Ctor
+inline  ssim2mysql::FCppfunc::FCppfunc() {
+    ssim2mysql::FCppfunc_Init(*this);
+}
+
+// --- ssim2mysql.FCppfunc..Dtor
+inline  ssim2mysql::FCppfunc::~FCppfunc() {
+    ssim2mysql::FCppfunc_Uninit(*this);
+}
+
 // --- ssim2mysql.FCtype.c_sqltype.InsertMaybe
 // Insert row into pointer index. Return final membership status.
 inline bool ssim2mysql::c_sqltype_InsertMaybe(ssim2mysql::FCtype& ctype, ssim2mysql::FSqltype& row) {
@@ -94,7 +112,7 @@ inline bool ssim2mysql::c_field_EmptyQ(ssim2mysql::FCtype& ctype) {
 
 // --- ssim2mysql.FCtype.c_field.Find
 // Look up row by row id. Return NULL if out of range
-inline ssim2mysql::FField* ssim2mysql::c_field_Find(ssim2mysql::FCtype& ctype, u32 t) {
+inline ssim2mysql::FField* ssim2mysql::c_field_Find(ssim2mysql::FCtype& ctype, u64 t) {
     ssim2mysql::FField *retval = NULL;
     u64 idx = t;
     u64 lim = ctype.c_field_n;
@@ -112,14 +130,14 @@ inline algo::aryptr<ssim2mysql::FField*> ssim2mysql::c_field_Getary(ssim2mysql::
 
 // --- ssim2mysql.FCtype.c_field.N
 // Return number of items in the pointer array
-inline i32 ssim2mysql::c_field_N(const ssim2mysql::FCtype& ctype) {
+inline i64 ssim2mysql::c_field_N(const ssim2mysql::FCtype& ctype) {
     return ctype.c_field_n;
 }
 
 // --- ssim2mysql.FCtype.c_field.RemoveAll
 // Empty the index. (The rows are not deleted)
 inline void ssim2mysql::c_field_RemoveAll(ssim2mysql::FCtype& ctype) {
-    for (u32 i = 0; i < ctype.c_field_n; i++) {
+    for (u64 i = 0; i < ctype.c_field_n; i++) {
         // mark all elements as not-in-array
         ctype.c_field_elems[i]->ctype_c_field_in_ary = false;
     }
@@ -128,7 +146,7 @@ inline void ssim2mysql::c_field_RemoveAll(ssim2mysql::FCtype& ctype) {
 
 // --- ssim2mysql.FCtype.c_field.qFind
 // Return reference without bounds checking
-inline ssim2mysql::FField& ssim2mysql::c_field_qFind(ssim2mysql::FCtype& ctype, u32 idx) {
+inline ssim2mysql::FField& ssim2mysql::c_field_qFind(ssim2mysql::FCtype& ctype, u64 idx) {
     return *ctype.c_field_elems[idx];
 }
 
@@ -266,7 +284,7 @@ inline ssim2mysql::FNs* ssim2mysql::ns_Last() {
 
 // --- ssim2mysql.FDb.ns.N
 // Return number of items in the pool
-inline i32 ssim2mysql::ns_N() {
+inline i64 ssim2mysql::ns_N() {
     return _db.ns_n;
 }
 
@@ -308,7 +326,7 @@ inline ssim2mysql::FCtype* ssim2mysql::ctype_Last() {
 
 // --- ssim2mysql.FDb.ctype.N
 // Return number of items in the pool
-inline i32 ssim2mysql::ctype_N() {
+inline i64 ssim2mysql::ctype_N() {
     return _db.ctype_n;
 }
 
@@ -350,7 +368,7 @@ inline ssim2mysql::FField* ssim2mysql::field_Last() {
 
 // --- ssim2mysql.FDb.field.N
 // Return number of items in the pool
-inline i32 ssim2mysql::field_N() {
+inline i64 ssim2mysql::field_N() {
     return _db.field_n;
 }
 
@@ -392,7 +410,7 @@ inline ssim2mysql::FSqltype* ssim2mysql::sqltype_Last() {
 
 // --- ssim2mysql.FDb.sqltype.N
 // Return number of items in the pool
-inline i32 ssim2mysql::sqltype_N() {
+inline i64 ssim2mysql::sqltype_N() {
     return _db.sqltype_n;
 }
 
@@ -434,7 +452,7 @@ inline ssim2mysql::FColumn* ssim2mysql::column_Last() {
 
 // --- ssim2mysql.FDb.column.N
 // Return number of items in the pool
-inline i32 ssim2mysql::column_N() {
+inline i64 ssim2mysql::column_N() {
     return _db.column_n;
 }
 
@@ -512,7 +530,7 @@ inline ssim2mysql::FSubstr* ssim2mysql::substr_Last() {
 
 // --- ssim2mysql.FDb.substr.N
 // Return number of items in the pool
-inline i32 ssim2mysql::substr_N() {
+inline i64 ssim2mysql::substr_N() {
     return _db.substr_n;
 }
 
@@ -524,6 +542,48 @@ inline ssim2mysql::FSubstr& ssim2mysql::substr_qFind(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     return _db.substr_lary[bsr][index];
+}
+
+// --- ssim2mysql.FDb.cppfunc.EmptyQ
+// Return true if index is empty
+inline bool ssim2mysql::cppfunc_EmptyQ() {
+    return _db.cppfunc_n == 0;
+}
+
+// --- ssim2mysql.FDb.cppfunc.Find
+// Look up row by row id. Return NULL if out of range
+inline ssim2mysql::FCppfunc* ssim2mysql::cppfunc_Find(u64 t) {
+    ssim2mysql::FCppfunc *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.cppfunc_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.cppfunc_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- ssim2mysql.FDb.cppfunc.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline ssim2mysql::FCppfunc* ssim2mysql::cppfunc_Last() {
+    return cppfunc_Find(u64(_db.cppfunc_n-1));
+}
+
+// --- ssim2mysql.FDb.cppfunc.N
+// Return number of items in the pool
+inline i64 ssim2mysql::cppfunc_N() {
+    return _db.cppfunc_n;
+}
+
+// --- ssim2mysql.FDb.cppfunc.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline ssim2mysql::FCppfunc& ssim2mysql::cppfunc_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.cppfunc_lary[bsr][index];
 }
 
 // --- ssim2mysql.FDb.ssimfile.EmptyQ
@@ -554,7 +614,7 @@ inline ssim2mysql::FSsimfile* ssim2mysql::ssimfile_Last() {
 
 // --- ssim2mysql.FDb.ssimfile.N
 // Return number of items in the pool
-inline i32 ssim2mysql::ssimfile_N() {
+inline i64 ssim2mysql::ssimfile_N() {
     return _db.ssimfile_n;
 }
 
@@ -874,6 +934,31 @@ inline ssim2mysql::FSubstr& ssim2mysql::_db_substr_curs_Access(_db_substr_curs &
     return substr_qFind(u64(curs.index));
 }
 
+// --- ssim2mysql.FDb.cppfunc_curs.Reset
+// cursor points to valid item
+inline void ssim2mysql::_db_cppfunc_curs_Reset(_db_cppfunc_curs &curs, ssim2mysql::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- ssim2mysql.FDb.cppfunc_curs.ValidQ
+// cursor points to valid item
+inline bool ssim2mysql::_db_cppfunc_curs_ValidQ(_db_cppfunc_curs &curs) {
+    return curs.index < _db.cppfunc_n;
+}
+
+// --- ssim2mysql.FDb.cppfunc_curs.Next
+// proceed to next item
+inline void ssim2mysql::_db_cppfunc_curs_Next(_db_cppfunc_curs &curs) {
+    curs.index++;
+}
+
+// --- ssim2mysql.FDb.cppfunc_curs.Access
+// item access
+inline ssim2mysql::FCppfunc& ssim2mysql::_db_cppfunc_curs_Access(_db_cppfunc_curs &curs) {
+    return cppfunc_qFind(u64(curs.index));
+}
+
 // --- ssim2mysql.FDb.ssimfile_curs.Reset
 // cursor points to valid item
 inline void ssim2mysql::_db_ssimfile_curs_Reset(_db_ssimfile_curs &curs, ssim2mysql::FDb &parent) {
@@ -978,6 +1063,26 @@ inline ssim2mysql::FInput& ssim2mysql::_db_cd_input_line_curs_Access(_db_cd_inpu
     return *curs.row;
 }
 
+// --- ssim2mysql.FField.c_cppfunc.InsertMaybe
+// Insert row into pointer index. Return final membership status.
+inline bool ssim2mysql::c_cppfunc_InsertMaybe(ssim2mysql::FField& field, ssim2mysql::FCppfunc& row) {
+    ssim2mysql::FCppfunc* ptr = field.c_cppfunc;
+    bool retval = (ptr == NULL) | (ptr == &row);
+    if (retval) {
+        field.c_cppfunc = &row;
+    }
+    return retval;
+}
+
+// --- ssim2mysql.FField.c_cppfunc.Remove
+// Remove element from index. If element is not in index, do nothing.
+inline void ssim2mysql::c_cppfunc_Remove(ssim2mysql::FField& field, ssim2mysql::FCppfunc& row) {
+    ssim2mysql::FCppfunc *ptr = field.c_cppfunc;
+    if (LIKELY(ptr == &row)) {
+        field.c_cppfunc = NULL;
+    }
+}
+
 // --- ssim2mysql.FField.c_substr.InsertMaybe
 // Insert row into pointer index. Return final membership status.
 inline bool ssim2mysql::c_substr_InsertMaybe(ssim2mysql::FField& field, ssim2mysql::FSubstr& row) {
@@ -1040,7 +1145,7 @@ inline bool ssim2mysql::c_ssimfile_EmptyQ(ssim2mysql::FNs& ns) {
 
 // --- ssim2mysql.FNs.c_ssimfile.Find
 // Look up row by row id. Return NULL if out of range
-inline ssim2mysql::FSsimfile* ssim2mysql::c_ssimfile_Find(ssim2mysql::FNs& ns, u32 t) {
+inline ssim2mysql::FSsimfile* ssim2mysql::c_ssimfile_Find(ssim2mysql::FNs& ns, u64 t) {
     ssim2mysql::FSsimfile *retval = NULL;
     u64 idx = t;
     u64 lim = ns.c_ssimfile_n;
@@ -1058,14 +1163,14 @@ inline algo::aryptr<ssim2mysql::FSsimfile*> ssim2mysql::c_ssimfile_Getary(ssim2m
 
 // --- ssim2mysql.FNs.c_ssimfile.N
 // Return number of items in the pointer array
-inline i32 ssim2mysql::c_ssimfile_N(const ssim2mysql::FNs& ns) {
+inline i64 ssim2mysql::c_ssimfile_N(const ssim2mysql::FNs& ns) {
     return ns.c_ssimfile_n;
 }
 
 // --- ssim2mysql.FNs.c_ssimfile.RemoveAll
 // Empty the index. (The rows are not deleted)
 inline void ssim2mysql::c_ssimfile_RemoveAll(ssim2mysql::FNs& ns) {
-    for (u32 i = 0; i < ns.c_ssimfile_n; i++) {
+    for (u64 i = 0; i < ns.c_ssimfile_n; i++) {
         // mark all elements as not-in-array
         ns.c_ssimfile_elems[i]->ns_c_ssimfile_in_ary = false;
     }
@@ -1074,7 +1179,7 @@ inline void ssim2mysql::c_ssimfile_RemoveAll(ssim2mysql::FNs& ns) {
 
 // --- ssim2mysql.FNs.c_ssimfile.qFind
 // Return reference without bounds checking
-inline ssim2mysql::FSsimfile& ssim2mysql::c_ssimfile_qFind(ssim2mysql::FNs& ns, u32 idx) {
+inline ssim2mysql::FSsimfile& ssim2mysql::c_ssimfile_qFind(ssim2mysql::FNs& ns, u64 idx) {
     return *ns.c_ssimfile_elems[idx];
 }
 
@@ -1152,7 +1257,7 @@ inline bool ssim2mysql::c_column_EmptyQ(ssim2mysql::FSsimfile& ssimfile) {
 
 // --- ssim2mysql.FSsimfile.c_column.Find
 // Look up row by row id. Return NULL if out of range
-inline ssim2mysql::FColumn* ssim2mysql::c_column_Find(ssim2mysql::FSsimfile& ssimfile, u32 t) {
+inline ssim2mysql::FColumn* ssim2mysql::c_column_Find(ssim2mysql::FSsimfile& ssimfile, u64 t) {
     ssim2mysql::FColumn *retval = NULL;
     u64 idx = t;
     u64 lim = ssimfile.c_column_n;
@@ -1170,14 +1275,14 @@ inline algo::aryptr<ssim2mysql::FColumn*> ssim2mysql::c_column_Getary(ssim2mysql
 
 // --- ssim2mysql.FSsimfile.c_column.N
 // Return number of items in the pointer array
-inline i32 ssim2mysql::c_column_N(const ssim2mysql::FSsimfile& ssimfile) {
+inline i64 ssim2mysql::c_column_N(const ssim2mysql::FSsimfile& ssimfile) {
     return ssimfile.c_column_n;
 }
 
 // --- ssim2mysql.FSsimfile.c_column.RemoveAll
 // Empty the index. (The rows are not deleted)
 inline void ssim2mysql::c_column_RemoveAll(ssim2mysql::FSsimfile& ssimfile) {
-    for (u32 i = 0; i < ssimfile.c_column_n; i++) {
+    for (u64 i = 0; i < ssimfile.c_column_n; i++) {
         // mark all elements as not-in-array
         ssimfile.c_column_elems[i]->ssimfile_c_column_in_ary = false;
     }
@@ -1186,7 +1291,7 @@ inline void ssim2mysql::c_column_RemoveAll(ssim2mysql::FSsimfile& ssimfile) {
 
 // --- ssim2mysql.FSsimfile.c_column.qFind
 // Return reference without bounds checking
-inline ssim2mysql::FColumn& ssim2mysql::c_column_qFind(ssim2mysql::FSsimfile& ssimfile, u32 idx) {
+inline ssim2mysql::FColumn& ssim2mysql::c_column_qFind(ssim2mysql::FSsimfile& ssimfile, u64 idx) {
     return *ssimfile.c_column_elems[idx];
 }
 
@@ -1338,6 +1443,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const ssim2mysql::FC
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const ssim2mysql::FColumn &row) {// cfmt:ssim2mysql.FColumn.String
     ssim2mysql::FColumn_Print(const_cast<ssim2mysql::FColumn&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const ssim2mysql::FCppfunc &row) {// cfmt:ssim2mysql.FCppfunc.String
+    ssim2mysql::FCppfunc_Print(const_cast<ssim2mysql::FCppfunc&>(row), str);
     return str;
 }
 

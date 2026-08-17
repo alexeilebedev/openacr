@@ -1,0 +1,11 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/bad_fbuf_elem.ssim -out_dir: -report:N zzz"
+# eof amc
+amc -> amc.fbuf_elem  fbuf:algo_lib.FDb.in_wide  fbuftype:Bytebuf  arg:u16  nbyte:2  comment:"Bytebuf/Linebuf count length in bytes; the element type must be one byte wide"
+amc -> amc.fbuf_elem  fbuf:algo_lib.FDb.in_word  fbuftype:Bytebuf  arg:u64  nbyte:8  comment:"Bytebuf/Linebuf count length in bytes; the element type must be one byte wide"
+amc -> amc.fbuf_elem  fbuf:algo_lib.FDb.in_rec  fbuftype:Bytebuf  arg:algo_lib.FRow  nbyte:8  comment:"Bytebuf/Linebuf count length in bytes; the element type must be one byte wide"
+amc -> amc.fbuf_elem  fbuf:algo_lib.FDb.in_lwide  fbuftype:Linebuf  arg:u32  nbyte:4  comment:"Bytebuf/Linebuf count length in bytes; the element type must be one byte wide"
+amc -> amc.fbuf_elem  fbuf:algo_lib.FDb.in_eline  fbuftype:Linebuf  arg:algo_lib.Elem  nbyte:1  comment:"Linebuf scans for the delimiter with ==; the element type needs an equality operator: a builtin type, or a ccmp with genop:Y or extrn:Y"
+amc -> amc.fbuf_elem  fbuf:algo_lib.FDb.in_cmpline  fbuftype:Linebuf  arg:algo_lib.Cmpelem  nbyte:1  comment:"Linebuf scans for the delimiter with ==; the element type needs an equality operator: a builtin type, or a ccmp with genop:Y or extrn:Y"
+amc -> amc.fbuf_elem  fbuf:algo_lib.FDb.in_opaque  fbuftype:Bytebuf  arg:algo_lib.Opaque  nbyte:0  comment:"the element type's width is not known in this run, so it cannot be shown to be one byte"
+amc -> amc.no_output  comment:"no files were modified"
+# exit amc code:7

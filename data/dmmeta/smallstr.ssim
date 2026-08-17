@@ -29,7 +29,7 @@ dmmeta.smallstr  field:algo.LspaceStr3.ch  length:3  strtype:leftpad  pad:"' '" 
 dmmeta.smallstr  field:algo.LspaceStr3_I16.ch  length:3  strtype:leftpad  pad:"' '"  strict:Y
 dmmeta.smallstr  field:algo.LspaceStr4.ch  length:4  strtype:leftpad  pad:"' '"  strict:Y
 dmmeta.smallstr  field:algo.LspaceStr5.ch  length:5  strtype:leftpad  pad:"' '"  strict:Y
-dmmeta.smallstr  field:algo.LspaceStr5_I16.ch  length:5  strtype:leftpad  pad:"' '"  strict:Y
+dmmeta.smallstr  field:algo.LspaceStr5_U16.ch  length:5  strtype:leftpad  pad:"' '"  strict:Y
 dmmeta.smallstr  field:algo.LspaceStr6.ch  length:6  strtype:leftpad  pad:"' '"  strict:Y
 dmmeta.smallstr  field:algo.LspaceStr6_U32.ch  length:6  strtype:leftpad  pad:"' '"  strict:Y
 dmmeta.smallstr  field:algo.LspaceStr7_I32_Base36.ch  length:7  strtype:leftpad  pad:"' '"  strict:Y
@@ -130,11 +130,16 @@ dmmeta.smallstr  field:algo.Smallstr4.ch  length:4  strtype:rpascal  pad:""  str
 dmmeta.smallstr  field:algo.Smallstr40.ch  length:40  strtype:rpascal  pad:""  strict:Y
 dmmeta.smallstr  field:algo.Smallstr5.ch  length:5  strtype:rpascal  pad:""  strict:Y
 dmmeta.smallstr  field:algo.Smallstr50.ch  length:50  strtype:rpascal  pad:""  strict:Y
+dmmeta.smallstr  field:atf_amc.LnullStr4_U32_Base256.ch  length:4  strtype:leftpad  pad:0  strict:Y
+dmmeta.smallstr  field:atf_amc.LspaceStr5_U32_Base95.ch  length:5  strtype:leftpad  pad:"' '"  strict:Y
+dmmeta.smallstr  field:atf_amc.LspaceStr7_I32.ch  length:7  strtype:leftpad  pad:"' '"  strict:Y
+dmmeta.smallstr  field:atf_amc.NovsStr9.ch  length:9  strtype:rpascal  pad:""  strict:N
 dmmeta.smallstr  field:atf_amc.RnullStr6_U32.ch  length:6  strtype:rightpad  pad:0  strict:Y
 dmmeta.smallstr  field:atf_amc.RpasU32Str6.ch  length:6  strtype:rpascal  pad:""  strict:N
+dmmeta.smallstr  field:atf_amc.RspaceStr9.ch  length:9  strtype:rightpad  pad:"' '"  strict:N
+dmmeta.smallstr  field:atf_amc.VsortStr9.ch  length:9  strtype:rpascal  pad:""  strict:N
 dmmeta.smallstr  field:fm.Code.ch  length:32  strtype:rightpad  pad:"' '"  strict:Y
 dmmeta.smallstr  field:fm.Description.ch  length:128  strtype:rightpad  pad:"' '"  strict:Y
 dmmeta.smallstr  field:fm.Objinst.ch  length:79  strtype:rightpad  pad:"' '"  strict:Y
 dmmeta.smallstr  field:fm.Objtype.ch  length:15  strtype:rightpad  pad:"' '"  strict:Y
-dmmeta.smallstr  field:fm.Source.ch  length:32  strtype:rightpad  pad:"' '"  strict:Y
 dmmeta.smallstr  field:fm.Summary.ch  length:64  strtype:rightpad  pad:"' '"  strict:Y

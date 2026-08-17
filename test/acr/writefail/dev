@@ -1,0 +1,3 @@
+This file occupies the dev path inside the acr.FileWriteFail dataset:
+acr resolves the inserted dev.gitfile record to dev/gitfile.ssim under -in,
+and the write fails with ENOTDIR because this path component is a file.

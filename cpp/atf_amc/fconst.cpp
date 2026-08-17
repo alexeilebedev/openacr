@@ -154,3 +154,21 @@ void atf_amc::amctest_Fconst() {
         vrfy_(x.value == 3);
     }
 }
+
+// --------------------------------------------------------------------------------
+
+// An fconst with a zero-length name is the enum's sentinel member:
+// the empty string converts to it and it prints back as the empty string
+void atf_amc::amctest_FconstEmptyName() {
+    atf_amc::SentinelEnum sentinel_enum;
+    sentinel_enum.value = 1;
+    vrfy_(atf_amc::value_SetStrptrMaybe(sentinel_enum, ""));
+    vrfyeq_(sentinel_enum.value, 0);
+    cstring str;
+    atf_amc::value_Print(sentinel_enum, str);
+    vrfyeq_(str, "");
+    vrfy_(atf_amc::value_SetStrptrMaybe(sentinel_enum, "full"));
+    vrfyeq_(sentinel_enum.value, 1);
+    vrfy_(!atf_amc::value_SetStrptrMaybe(sentinel_enum, "zzz"));
+    vrfyeq_(sentinel_enum.value, 1);
+}

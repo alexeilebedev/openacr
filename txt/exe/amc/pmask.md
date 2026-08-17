@@ -69,4 +69,3 @@ The function `<field>_Set` sets the presence bit in all presence masks in which 
 It may be useful to ignore an auxiliary presence mask for the purpose of printing a struct.
 Set `filter_print` to 'N' in the `pmaskfld` record if you don't want that presence
 mask to omit fields when printing.
-

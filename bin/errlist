@@ -27,6 +27,8 @@ else
     cat > temp/errlist.el <<EOF
 (setq compile-command "sh temp/errlist.cmd 2>&1 | break-long-lines")
 (compile compile-command)
+(add-hook 'compilation-finish-functions
+          (lambda (buf status) (with-current-buffer buf (goto-char (point-min)) (next-error))))
 EOF
     emacs -nw --load temp/errlist.el
 fi

@@ -1,0 +1,88 @@
+# start bash cmd:"bash -c 'cd $tempdir && mkdir hdr src && cp $$OLDPWD/test/src_func/sectionopen.hdr hdr/x.h && printf \"void requoted::Requoted() {\\n}\\n\" > src/y.cpp && $$OLDPWD/$bindir/src_func -in:$$OLDPWD/test/src_func/sectionns.ssim -updateproto && cat hdr/x.h'"
+# eof bash
+bash -> // A header whose lines cover every shape the section-open rule has to judge. A
+bash -> // line opens an update-hdr section only when the compiler reads the namespace
+bash -> // and the marker tag as code. The markers of namespace requoted and namespace
+bash -> // real are the only ones here that do, so their two sections are the only ones
+bash -> // rewritten; every other line, including the ones the look-alike markers
+bash -> // enclose, is hand-written and must come back byte for byte.
+bash -> // Two more look-alikes stand inside a `//` comment continued by a backslash, which
+bash -> // splices the line below it into the comment: namespace incontcomment stands one
+bash -> // line below such a comment, and namespace inchain two lines below one, since the
+bash -> // line between them ends in a backslash of its own. The marker of namespace
+bash -> // contmarker is the accepting side of that rule -- its own trailing comment ends in
+bash -> // a backslash, and the namespace and the tag before it are still code -- so its
+bash -> // section is rewritten and the commented line below it is dropped as section body.
+bash -> // The marker of namespace requoted carries the tag twice, and each occurrence names
+bash -> // a source of its own. The section is filled from the source the live tag names,
+bash -> // src/y.cpp, and not from the one quoted in the remark before it.
+bash -> /*
+bash -> namespace incomment { // update-hdr
+bash -> void KeptInComment();
+bash -> */
+bash -> // namespace inlinecomment { // update-hdr
+bash -> namespace quoted { /* // update-hdr */
+bash -> void KeptQuoted();
+bash -> }
+bash -> namespace requoted { /* was: // update-hdr srcfile:hdr/x.h */ // update-hdr srcfile:src/y.cpp
+bash ->     // Dear human:
+bash ->     //     Text from here to the closing curly brace was produced by scanning
+bash ->     //     source files. Editing this text is futile.
+bash ->     //     To refresh the contents of this section, run 'update-hdr'.
+bash ->     //     To convert this section to a hand-written section, remove the word 'update-hdr' from namespace line.
+bash ->     // -------------------------------------------------------------------
+bash ->     // src/y.cpp
+bash ->     //
+bash ->     void Requoted();
+bash -> }
+bash -> namespace unclosed { /* disabled: // update-hdr
+bash -> void KeptUnclosed();
+bash -> */
+bash -> void KeptAfterUnclosed();
+bash -> }
+bash -> namespace literal { const char *marker = "// update-hdr";
+bash -> void KeptLiteral();
+bash -> }
+bash -> namespace rawline { const char *marker = R"(// update-hdr)";
+bash -> void KeptRawline();
+bash -> }
+bash -> namespace rawdelim { const char *marker = R"tag(// update-hdr)tag";
+bash -> void KeptRawdelim();
+bash -> }
+bash -> namespace rawspan { const char *marker = R"(
+bash -> namespace inraw { // update-hdr
+bash -> void KeptInRaw();
+bash -> )";
+bash -> void KeptAfterRawspan();
+bash -> }
+bash -> namespace rawtagspan { const char *marker = R"(// update-hdr
+bash -> )";
+bash -> void KeptRawtagspan();
+bash -> }
+bash -> namespace contcomment { // disabled: \
+bash -> namespace incontcomment { // update-hdr
+bash -> void KeptInContComment();
+bash -> }
+bash -> namespace contchain { // disabled: \
+bash -> namespace inchain { // update-hdr \
+bash -> void KeptInChain();
+bash -> }
+bash -> namespace contmarker { // update-hdr \
+bash ->     // Dear human:
+bash ->     //     Text from here to the closing curly brace was produced by scanning
+bash ->     //     source files. Editing this text is futile.
+bash ->     //     To refresh the contents of this section, run 'update-hdr'.
+bash ->     //     To convert this section to a hand-written section, remove the word 'update-hdr' from namespace line.
+bash -> }
+bash -> namespace real { // update-hdr
+bash ->     // Dear human:
+bash ->     //     Text from here to the closing curly brace was produced by scanning
+bash ->     //     source files. Editing this text is futile.
+bash ->     //     To refresh the contents of this section, run 'update-hdr'.
+bash ->     //     To convert this section to a hand-written section, remove the word 'update-hdr' from namespace line.
+bash -> }
+bash -> struct KeptBelow {
+bash ->     int c;
+bash -> };
+bash -> void KeptAtEnd();
+# exit bash code:0

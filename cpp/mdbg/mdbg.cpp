@@ -235,6 +235,10 @@ void mdbg::Main_Gdb(algo_lib::Replscope &R) {
         // in dry run, GetCurDir() is a full path that differs in CI
         Ins(&R, mdbg::_db.gdbscript, tempstr()<<"cd "<< algo::GetCurDir());
     }
+    if (mdbg::_db.cmdline.nonstop) {
+        // the pretty-printers make a process tree readable
+        mdbg::_db.cmdline.py = true;
+    }
     Ins(&R, mdbg::_db.gdbscript, "set history filename temp/gdb.history");
     Ins(&R, mdbg::_db.gdbscript, "set history save on");
     // disable debug info daemon, we don't use it
@@ -264,7 +268,7 @@ void mdbg::Main_Gdb(algo_lib::Replscope &R) {
     }
     // Configure convenient multi-process debugging
     // We must keep all spawned processes under debugging, and allow them to run as much as possible.
-    if (mdbg::_db.cmdline.mp) {
+    if (mdbg::_db.cmdline.nonstop) {
         Ins(&R, mdbg::_db.gdbscript, "set schedule-multiple on");
         Ins(&R, mdbg::_db.gdbscript, "set detach-on-fork off");
         Ins(&R, mdbg::_db.gdbscript, "set non-stop on");
@@ -335,12 +339,36 @@ void mdbg::Main() {
     if (_db.cmdline.tui) {
         _db.cmdline.emacs=false;
     }
-    if (b_N(_db.cmdline)==0 && !_db.cmdline.mp) {
+    // A breakpoint on main stops the first process and never reaches the tree
+    // below it, so -nonstop leaves the run unbroken and lets the caller name
+    // whatever it wants to stop on.
+    if (b_N(_db.cmdline)==0 && !_db.cmdline.nonstop) {
         b_Alloc(_db.cmdline) = "main";
     }
-    if (_db.cmdline.mp) {
-        // setup buildtarget as appropriate
+    // Debugging a process that starts other processes is not the same job as
+    // debugging one program, and what the difference is belongs to the platform
+    // being debugged rather than to mdbg.  A dev.dbgtarget row names a target by
+    // regx and says two things about it: arguments the process needs when a
+    // debugger rather than its usual supervisor is starting it -- a watchdog
+    // turned off, a path pointed at this build -- and the command that names
+    // every target to rebuild first, because a tree whose modules talk to each
+    // other is only debuggable when they were all built together.  Rows
+    // accumulate their arguments; the first one that names a build command wins,
+    // and a tree with no such rows debugs the one target it was given.
+    if (_db.cmdline.nonstop) {
+        ind_beg(mdbg::_db_dbgtarget_curs,dbgtarget,mdbg::_db) {
+            algo_lib::Regx regx;
+            if (Regx_ReadStrptrMaybe(regx, dbgtarget.dbgtarget) && Regx_Match(regx, _db.cmdline.target)) {
+                ind_beg(algo::Word_curs,arg,dbgtarget.args) {
+                    args_Alloc(_db.cmdline) = Subst(R,arg);
+                }ind_end;
+                if (ch_N(dbgtarget.buildcmd) && buildtarget == _db.cmdline.target) {
+                    buildtarget = Trimmed(SysEval(dbgtarget.buildcmd, FailokQ(true), 10240));
+                }
+            }
+        }ind_end;
     }
+
     Set(R, "$buildtarget", buildtarget, false);// what to rebuild
 
     // compile executable first to avoid embarrassment

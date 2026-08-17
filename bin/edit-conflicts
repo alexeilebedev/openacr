@@ -16,4 +16,4 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-$EDITOR `git-conflicts`
+$EDITOR `git-conflicts | grep -v /gen/`

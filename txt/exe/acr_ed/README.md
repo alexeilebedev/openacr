@@ -3,120 +3,114 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
-&nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Internals](#internals)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Quick reference](#quick-reference)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
-&#128196; [acr_ed - Internals](/txt/exe/acr_ed/internals.md)<br/>
+<!-- abt_md.toc_end -->
 
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
-
-### Syntax
-<a href="#syntax"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Syntax -->
-```
-acr_ed: Script generator for common dev tasks
-Usage: acr_ed [options]
-    OPTION      TYPE    DFLT    COMMENT
-    -in         string  "data"  Input directory or filename, - for stdin
-    -create                     Create new entity (-finput, -target, -ctype, -field)
-    -del                        Delete mode
-    -rename     string  ""      Rename to something else
-    -finput                     Create in-memory table based on ssimfile
-    -foutput                    Declare field as an output
-    -srcfile    string  ""      Create/Rename/Delete a source file
-    -gstatic                    Like -finput, but data is loaded at compile time
-    -indexed                    (with -finput) Add hash index
-    -target     string  ""      Create/Rename/Delete target
-    -nstype     string  "exe"   (with -create -target): exe,lib,etc.
-    -ctype      string  ""      Create/Rename/Delete ctype
-    -pooltype   string  ""       Pool reftype (Lary,Lpool etc) for finput/ctype
-    -ssimfile   string  ""        Ssimfile for new ctype
-    -subset     string  ""        Primary key is a subset of this ctype
-    -subset2    string  ""        Primary key is also a subset of this ctype
-    -separator  string  "."         Key separator
-    -field      string  ""      Create field
-    -arg        string  ""        Field type (e.g. u32, etc), (with -ctype) add the base field
-    -dflt       string  ""        Field default value
-    -anon                         Anonymous field (use with command lines)
-    -bigend                       Big-endian field
-    -cascdel                      Field is cascdel
-    -before     string  ""        Place field before this one
-    -substr     string  ""        New field is a substring
-    -alias                      Create alias field (requires -srcfield)
-    -srcfield   string  ""        Source field for bitfld/substr
-    -fstep      string  ""        Add fstep record
-    -inscond    string  "true"    Insert condition (for xref)
-    -reftype    string  ""        Reftype (e.g. Val, Thash, Llist, etc)
-    -hashfld    string  ""          (-reftype:Thash) Hash field
-    -sortfld    string  ""          (-reftype:Bheap) Sort field
-    -unittest   string  ""      Create unit test, <ns>.<functionname>
-    -citest     string  ""      Create CI test
-    -cppfunc    string  ""      Field is a cppfunc, pass c++ expression as argument
-    -xref                           X-ref with field type
-    -via        string  ""            X-ref argument (index, pointer, or index/key)
-    -write                      Commit output to disk
-    -e                           (with -create -unittest) Edit new testcase
-    -comment    string  ""      Comment for new entity
-    -sandbox                    Make changes in sandbox
-    -test                       Build resulting changes, run tests
-    -showcpp                    (With -sandbox), show resulting diff
-    -msgtype    string  ""      (with -ctype) use this msgtype as type
-    -anonfld                    Create anonfld
-    -amc                Y       Run amc if needed
-    -verbose    flag            Verbosity level (0..255); alias -v; cumulative
-    -debug      flag            Debug level (0..255); alias -d; cumulative
-    -help                       Print help and exit; alias -h
-    -version                    Print version and exit
-    -signature                  Show signatures and exit; alias -sig
-
-```
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Syntax -->
+### Internals
+<a href="#internals"></a>
+&#128196; [acr_ed - Internals](/txt/gen/acr_ed/acr_ed.md)<br/>
 
 ### Description
 <a href="#description"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Description -->
 
-`Acr_ed` is a script generator for common tasks such as creating,
-deleting, and renaming targets, ctypes, ssimfiles, xrefs, and source files.
+`acr_ed` is a standalone script generator for common schema tasks such as
+creating, deleting, and renaming targets, ctypes, ssimfiles, xrefs, and
+source files.  When invoked, `acr_ed` prints an executable script to
+stdout.  With `-write`, it executes that script immediately (equivalent to
+piping it through `bash`).
 
-When invoked, `acr_ed` spits out an executable script to stdout. With
-`-write`, the script is executed (this has the same effect as piping output
-through bash).
+The generated scripts call `acr` with `-insert`, `-del` or `-rename` and
+`-write` to modify the ssimfiles, then run `amc` to regenerate C++ from
+the new schema.  `acr` itself has no dependency on `acr_ed` — `acr_ed` is
+a convenience wrapper around the same `acr` + `amc` calls you could do by
+hand.  Use `acr_ed` when modifying the schema; use `acr` directly for data
+queries, bulk edits, and anything that doesn't require a schema change.
 
 The following is the full list of actions acr_ed supports
 ```
 inline-command: acr edaction -report:N | ssimfilt -t -field:edaction -field:comment
-EDACTION         COMMENT
-Create_Citest    -create -citest <citest>
-Create_Ctype     -create -ctype <ctype> [-subset <ctype> [-subset2 <ctype2> -separator <char>]] [-pooltype <pooltype>] [-indexed]
-Create_Field     -create -field <field> -arg <ctype> -reftype <reftype> [-xref [-via <via>]] [-anonfld] [-fbigend] ...
-Create_Finput    -create -finput -target <target> -ssimfile <ssimfile>
-Create_Srcfile   -create -srcfile <filename.(h|md|cpp)>
-Create_Ssimfile  -create -ssimfile <ssimfile> [-subset <ctype> [-subset2 <ctype2> -separator <char>]]
-Create_Target    -create -target <target>
-Create_Unittest  -create -unittest <unittest>
-Delete_Ctype     -del -ctype <ctype>
-Delete_Field     -del -field <field>
-Delete_Srcfile   -del -srcfile <srcfile>
-Delete_Ssimfile  -del -ssimfile <ssimfile
-Delete_Target    -del -target <target>
-Rename_Ctype     -ctype <ctype> -rename <newname>
-Rename_Field     -field <field> -rename <newname>
-Rename_Srcfile   -srcfile <srcfile> -rename <newname>
-Rename_Ssimfile  -ssimfile <ssimfile> -rename <newname>
-Rename_Target    -target <target> -rename <newtarget>
+EDACTION            COMMENT
+Create_Citest       -create -citest <citest>
+Create_Ctype        -create -ctype <ctype> [-subset <ctype> [-subset2 <ctype2> -separator <char>]] [-reftype <reftype>] [-indexed]
+Create_DispatchMsg  -create -dispatch_msg <dispatch>/<msgtype>
+Create_Fcurs        -create -fcurs <field>/<curstype>
+Create_Field        -create -field <field> -arg <ctype> -reftype <reftype> [-xref [-via <via>]] [-anonfld] [-fbigend] ...
+Create_Finput       -create -finput -target <target> -ssimfile <ssimfile>
+Create_Fstep        -create -fstep <field> [-steptype:<type>]
+Create_Srcfile      -create -srcfile <filename.(h|md|cpp)>
+Create_Ssimfile     -create -ssimfile <ssimfile> [-subset <ctype> [-subset2 <ctype2> -separator <char>]]
+Create_Target       -create -target <target>
+Create_Unittest     -create -unittest <unittest>
+Delete_Ctype        -del -ctype <ctype>
+Delete_Field        -del -field <field>
+Delete_Srcfile      -del -srcfile <srcfile>
+Delete_Ssimfile     -del -ssimfile <ssimfile
+Delete_Target       -del -target <target>
+Rename_Ctype        -ctype <ctype> -rename <newname>
+Rename_Field        -field <field> -rename <newname>
+Rename_Srcfile      -srcfile <srcfile> -rename <newname>
+Rename_Ssimfile     -ssimfile <ssimfile> -rename <newname>
+Rename_Target       -target <target> -rename <newtarget>
 
 ```
 
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Description -->
+### Quick reference
+<a href="#quick-reference"></a>
+
+```bash
+# New build target
+acr_ed -create -target <target> -write
+
+# New ssimfile input for a target
+acr_ed -create -finput -target <target> -ssimfile <ns>.<name> -write
+acr_ed -create -finput -target <target> -ssimfile <ns>.<name> -indexed -write
+
+# Add a command-line option (accessible in C++ as _db.cmdline.<name>)
+acr_ed -create -field command.<proc>.<name> -arg <ctype> -dflt '""' -comment "..." -write
+
+# Add a plain field to a ctype
+acr_ed -create -field <ns>.FCtype.<name> -arg <ctype> -write
+
+# New ctype with a pool
+acr_ed -create -ctype <ns>.FName -reftype Lary -write
+acr_ed -create -ctype <ns>.FName -reftype Tpool -indexed -write
+
+# Hash-index cross-reference
+acr_ed -create -field <ns>.FParent.ind_child -arg <ns>.FChild \
+       -reftype Thash -hashfld <ns>.FChild.key \
+       -xref -via <ns>.FChild.p_parent -write
+
+# Wire-protocol message (subset of a header ctype)
+acr_ed -create -ctype ams.MyMsg -subset ams.MsgHeader -write
+
+# Markdown source files
+acr_ed -create -srcfile txt/.../xyz.md -write
+acr_ed -del    -srcfile txt/.../xyz.md -write
+```
+
+Notes:
+- `-reftype` is auto-inferred from the field-name prefix: `ind_` → Thash,
+  `cd_` → Llist, `p_` → Upptr, `c_` → Ptrary.  See `acr fprefix`.
+- String defaults require inner quotes: `'""'` for empty, `'"value"'` for
+  a non-empty default.
+- `-xref` creates both the field row and its `dmmeta.xref` record.
+- Never hand-edit `cpp/gen/` or `include/gen/` — always go through
+  `acr_ed` / `amc`.
+
+Inspect the schema with acr:
+```bash
+acr field:<ctype>.%              # all fields of a ctype
+acr field:command.<proc>.%       # command-line fields for a process
+acr fprefix                      # field-name prefix → reftype mapping
+```
 
 ### Options
 <a href="#options"></a>
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Options -->
 #### -in -- Input directory or filename, - for stdin
 <a href="#-in"></a>
 
@@ -171,7 +165,7 @@ Example:
     ...
     
 * With `-indexed` option, a hash index is thrown in
-* With `-pooltype` option, the allocator for the new type can be specified.
+* With `-reftype` option, the allocator for the new type can be specified.
 
 #### -foutput -- Declare field as an output
 <a href="#-foutput"></a>
@@ -214,12 +208,12 @@ To rename a source file, use
 #### -ctype -- Create/Rename/Delete ctype
 <a href="#-ctype"></a>
 
-To create a new record type in a program, use `-create -ctype:<ctype> -pooltype:<pooltype>`.
+To create a new record type in a program, use `-create -ctype:<ctype> -reftype:<reftype>`.
 This adds a pool of a given type (typically `Tpool` or `Lary`).
 To throw in a hash index, specify `-indexed`.
 Example:
 
-    $ acr_ed -create -ctype sample.FTable -subset u32 -pooltype Tpool -indexed
+    $ acr_ed -create -ctype sample.FTable -subset u32 -reftype Tpool -indexed
     bin/acr  '' -insert:Y -check:Y -write:Y -t:Y -rowid:Y << EOF
     dmmeta.ctype  ctype:sample.FTable  comment:""
     dmmeta.field  field:sample.FTable.table  arg:u32  reftype:Val  dflt:""  comment:""
@@ -236,9 +230,6 @@ acr_ed -create -field sample.FTable.table -arg i32 -write
 acr_ed -create -field sample.FDb.table -arg sample.FTable -reftype Tpool -write
 acr_ed -create -field sample.FDb.ind_table -arg sample.FTable -hashfld sample.FTable.table -xref -inscond:true -write
 ```
-
-#### -pooltype --  Pool reftype (Lary,Lpool etc) for finput/ctype
-<a href="#-pooltype"></a>
 
 #### -ssimfile --   Ssimfile for new ctype
 <a href="#-ssimfile"></a>
@@ -283,21 +274,26 @@ The following mappings are defined:
 
 ```
 inline-command: acr fprefix -report:N | ssimfilt -t
-FPREFIX  REFTYPE  COMMENT
-bh       Bheap    Binary heap
-c        Ptrary   Pointer array
-cd       Llist    Circular doubly linked list
-cdl      Llist    Circular doubly linked LIFO list
-cnt      Count    Count of items
-cs       Llist    Circular singly linked list
-csl      Llist    Circular singly linked LIFO list
-ind      Thash    Hash table (index)
-p        Upptr    Up-pointer: equivalent of Pkey reference for in-memory model
-tr       Atree    AVL tree
-zd       Llist    Zero-terminated doubly linked list
-zdl      Llist    Zero-terminated doubly linked LIFO list
-zs       Llist    Zero-terminated singly linked list
-zsl      Llist    Zero-terminated singly linked LIFO list
+FPREFIX      REQUIRE  DFLT  COMMENT
+bh.Bheap     Y        Y     Binary heap
+c.Delptr     N        N     Owned pointer; c_ allowed but Delptr fields may use any name
+c.Ptr        N        N     Pointer; c_ allowed but Ptr fields may use any name
+c.Ptrary     Y        Y     Pointer array
+cd.Llist     Y        Y     Circular doubly linked list
+cdl.Llist    Y        Y     Circular doubly linked LIFO list
+cnt.Count    Y        Y     Count of items
+cs.Llist     Y        Y     Circular singly linked list
+csl.Llist    Y        Y     Circular singly linked LIFO list
+ind.Blkhash  Y        N     Block hash index for keys with a dense component
+ind.Thash    Y        Y     Hash table (index)
+p.Ptr        N        N     Pointer; p_ allowed but Ptr fields may use any name
+p.Upptr      Y        Y     Up-pointer: equivalent of Pkey reference for in-memory model
+tr.Atree     Y        Y     AVL tree
+zd.Llist     Y        Y     Zero-terminated doubly linked list
+zdl.Llist    Y        Y     Zero-terminated doubly linked LIFO list
+zs.Llist     Y        Y     Zero-terminated singly linked list
+zs.ZSListMT  Y        N     Zero-terminated singly linked list with atomic head (multithreaded)
+zsl.Llist    Y        Y     Zero-terminated singly linked LIFO list
 
 ```
 
@@ -375,9 +371,6 @@ use `-substr:<pathcomp> -srcfield:<field>:
 
 #### -srcfield --   Source field for bitfld/substr
 <a href="#-srcfield"></a>
-
-#### -fstep --   Add fstep record
-<a href="#-fstep"></a>
 
 #### -inscond --   Insert condition (for xref)
 <a href="#-inscond"></a>
@@ -571,11 +564,6 @@ Applies to `-field`, `-ctype`, or `-target`.
 
 Make all changes in a sandbox, showing the diff between current and new versions.
 
-#### -test -- Build resulting changes, run tests
-<a href="#-test"></a>
-
-Build all main executables and runs tests. Use with `-sandbox`.
-
 #### -showcpp -- (With -sandbox), show resulting diff
 <a href="#-showcpp"></a>
 
@@ -588,35 +576,42 @@ transaction in sandbox.
 #### -anonfld -- Create anonfld
 <a href="#-anonfld"></a>
 
-#### -amc -- Run amc if needed
-<a href="#-amc"></a>
+#### -license -- License for new source/script file
+<a href="#-license"></a>
 
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
+#### -fstep -- Add fstep record on existing field (use with -create)
+<a href="#-fstep"></a>
+
+#### -steptype -- Steptype for -create -fstep
+<a href="#-steptype"></a>
+
+#### -fcurs -- Add fcurs record (-create); pkey is <field>/<curstype-name>
+<a href="#-fcurs"></a>
+
+#### -dispatch_msg -- Add dispatch_msg record (-create); pkey is <dispatch>/<msgtype>
+<a href="#-dispatch_msg"></a>
 
 ### Inputs
 <a href="#inputs"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
 `acr_ed` takes the following tables on input:
 |Ssimfile|Comment|
 |---|---|
 |[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
 |[dmmeta.cfmt](/txt/ssimdb/dmmeta/cfmt.md)|Specify options for printing/reading ctypes into multiple formats|
-|[dmmeta.cpptype](/txt/ssimdb/dmmeta/cpptype.md)|Specify whether a ctype can be passed by value, and other c++ options|
+|[dmmeta.cpptype](/txt/ssimdb/dmmeta/cpptype.md)|Ask amc for a fieldwise constructor|
 |[dmmeta.cstr](/txt/ssimdb/dmmeta/cstr.md)|Specify that type behaves like a string|
 |[dmmeta.ctype](/txt/ssimdb/dmmeta/ctype.md)|Struct|
 |[dmmeta.field](/txt/ssimdb/dmmeta/field.md)|Specify field of a struct|
-|[dmmeta.fprefix](/txt/ssimdb/dmmeta/fprefix.md)|Mapping between field prefix and Reftype|
+|[dmmeta.fprefix](/txt/ssimdb/dmmeta/fprefix.md)|Allowed pairing of field-name prefix and reftype|
 |[dev.gitfile](/txt/ssimdb/dev/gitfile.md)|File managed by git|
 |[dmmeta.listtype](/txt/ssimdb/dmmeta/listtype.md)|Specify structure of linked list based on field prefix|
 |[dmmeta.msgtype](/txt/ssimdb/dmmeta/msgtype.md)|Specify message type for each eligible message, controls dispatch|
 |[dmmeta.ns](/txt/ssimdb/dmmeta/ns.md)|Namespace (for in-memory database, protocol, etc)|
 |[dmmeta.nsdb](/txt/ssimdb/dmmeta/nsdb.md)|Annotate ssimdb namespaces|
 |[dmmeta.pack](/txt/ssimdb/dmmeta/pack.md)|Request byte-packing of structure fields|
+|[dmmeta.reftype](/txt/ssimdb/dmmeta/reftype.md)|Field type constructor (e.g. reference type)|
 |[dev.sbpath](/txt/ssimdb/dev/sbpath.md)|Extra files to copy into the sandbox|
 |[dmmeta.ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|File with ssim tuples|
 |[dev.target](/txt/ssimdb/dev/target.md)|Build target|
 |[dev.targsrc](/txt/ssimdb/dev/targsrc.md)|List of sources for target|
 |[dmmeta.typefld](/txt/ssimdb/dmmeta/typefld.md)|Specifies which field of a message carries the type|
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
-

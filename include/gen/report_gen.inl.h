@@ -100,6 +100,7 @@ inline void report::acr_Init(report::acr& parent) {
     parent.n_ignore = u32(0);
     parent.n_update = u32(0);
     parent.n_file_mod = u32(0);
+    parent.n_badline = u32(0);
 }
 
 // --- report.acr..Ctor
@@ -111,7 +112,7 @@ inline  report::acr::acr() {
 // Set all fields to initial values.
 inline void report::acr_check_Init(report::acr_check& parent) {
     parent.records = u32(0);
-    parent.errors = u32(0);
+    parent.n_err = u32(0);
 }
 
 // --- report.acr_check..Ctor
@@ -120,9 +121,9 @@ inline  report::acr_check::acr_check() {
 }
 
 // --- report.acr_check..FieldwiseCtor
-inline  report::acr_check::acr_check(u32 in_records, u32 in_errors)
+inline  report::acr_check::acr_check(u32 in_records, u32 in_n_err)
     : records(in_records)
-    , errors(in_errors)
+    , n_err(in_n_err)
  {
 }
 
@@ -142,23 +143,36 @@ inline  report::amc::amc() {
     report::amc_Init(*this);
 }
 
-// --- report.atf_comp..Init
+// --- report.ams_sendtest..Init
 // Set all fields to initial values.
-inline void report::atf_comp_Init(report::atf_comp& parent) {
-    parent.ntest = i32(0);
-    parent.nselect = i32(0);
-    parent.npass = i32(0);
-    parent.nskip = i32(0);
-    parent.nrun = i32(0);
-    parent.nwrite = i32(0);
-    parent.nerr = i32(0);
-    parent.ninsert = i32(0);
+inline void report::ams_sendtest_Init(report::ams_sendtest& parent) {
+    parent.n_msg = u64(0);
+    parent.n_msg_send = u64(0);
+    parent.n_msg_recv = u64(0);
+    parent.n_write_wait = u64(0);
+    parent.woff = u64(0);
+    parent.roff = u64(0);
+    parent.latency_ns = double(0.0);
     parent.success = bool(false);
 }
 
-// --- report.atf_comp..Ctor
-inline  report::atf_comp::atf_comp() {
-    report::atf_comp_Init(*this);
+// --- report.ams_sendtest..Ctor
+inline  report::ams_sendtest::ams_sendtest() {
+    report::ams_sendtest_Init(*this);
+}
+
+// --- report.atf_cov..Init
+// Set all fields to initial values.
+inline void report::atf_cov_Init(report::atf_cov& parent) {
+    parent.n_covtarget = u32(0);
+    parent.n_tgtcov = u32(0);
+    parent.exe = u32(0);
+    parent.hit = u32(0);
+}
+
+// --- report.atf_cov..Ctor
+inline  report::atf_cov::atf_cov() {
+    report::atf_cov_Init(*this);
 }
 
 // --- report.atf_unit..Init
@@ -206,6 +220,22 @@ inline  report::gcache_hitrate::gcache_hitrate(const algo::strptr& in_hitrate, c
  {
 }
 
+// --- report.llmtool_model..Init
+// Set all fields to initial values.
+inline void report::llmtool_model_Init(report::llmtool_model& parent) {
+    parent.n_request = u32(0);
+    parent.input = u64(0);
+    parent.output = u64(0);
+    parent.cache_read = u64(0);
+    parent.cache_write = u64(0);
+    parent.priced = bool(false);
+}
+
+// --- report.llmtool_model..Ctor
+inline  report::llmtool_model::llmtool_model() {
+    report::llmtool_model_Init(*this);
+}
+
 // --- report.src_func..Init
 // Set all fields to initial values.
 inline void report::src_func_Init(report::src_func& parent) {
@@ -248,8 +278,13 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const report::amc &r
     return str;
 }
 
-inline algo::cstring &algo::operator <<(algo::cstring &str, const report::atf_comp &row) {// cfmt:report.atf_comp.String
-    report::atf_comp_Print(const_cast<report::atf_comp&>(row), str);
+inline algo::cstring &algo::operator <<(algo::cstring &str, const report::ams_sendtest &row) {// cfmt:report.ams_sendtest.String
+    report::ams_sendtest_Print(const_cast<report::ams_sendtest&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const report::atf_cov &row) {// cfmt:report.atf_cov.String
+    report::atf_cov_Print(const_cast<report::atf_cov&>(row), str);
     return str;
 }
 
@@ -265,6 +300,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const report::gcache
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const report::gcache_hitrate &row) {// cfmt:report.gcache_hitrate.String
     report::gcache_hitrate_Print(const_cast<report::gcache_hitrate&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const report::llmtool_model &row) {// cfmt:report.llmtool_model.String
+    report::llmtool_model_Print(const_cast<report::llmtool_model&>(row), str);
     return str;
 }
 

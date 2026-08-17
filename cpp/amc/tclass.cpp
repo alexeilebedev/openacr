@@ -68,7 +68,8 @@ void amc::ResetVars(amc::Genctx &ctx) {
 // - genctx.p_tfunc   --- pointer to tfunc, never NULL
 // First, the tclass function is called
 // Then, for each tfunc, its function is called
-// The tfunc may be a cursor generator (as indicated by tcurs table)
+// The tfunc may be a cursor generator (indicated by its tcurs row, or by
+// its name when the row is absent from the input set).
 // If it's a cursor generator, then a forward-declaration for the cursor is created.
 // In this case, variables $fcurs (cursor key) and $curstype (cursor type) are set.
 void amc::GenTclass(amc::FTclass &tclass) {
@@ -77,26 +78,59 @@ void amc::GenTclass(amc::FTclass &tclass) {
     ind_beg(amc::tclass_c_tfunc_curs,tfunc,tclass) {
         amc::_db.genctx.p_tfunc = &tfunc;
         bool skip = tfunc.hasthrow && !GenThrowQ(ns);
-        // cursor:
-        // Set variables $curs (cursor name), $fcurs (key)
-        // skip cursor generation if it's non-default and not explicitly requested
-        if (tfunc.c_tcurs) {
-            tempstr key=tempstr()<<amc::_db.genctx.p_field->field<<"/"<<curstype_Get(*tfunc.c_tcurs);
-            amc::FFcurs *fcurs = amc::ind_fcurs_Find(key);
-            if (!tfunc.c_tcurs->dflt && fcurs == NULL) {
-                skip=true;
-            }
-            algo_lib::Replscope &R = amc::_db.genctx.R;
-            Set(R,"$fcurs",key);
-            Set(R,"$curstype",curstype_Get(*tfunc.c_tcurs));
-            if (!skip) {
-                amc::ind_fwddecl_GetOrCreate(Subst(R,"$ns.$ns.$Parname_$name_$curstype"));
+        // Cursor generator: skip unless the cursor generates by default or
+        // an explicit dmmeta.fcurs row requests it. The amcdb.tcurs row is
+        // the only carrier of the dflt flag, and a universe that omits the
+        // row (a single-file fixture) must not receive every index cursor
+        // unconditionally, so the tfunc is recognized by its name as well
+        // and defaults to request-only. Tcurs.curstype is a substring of
+        // the tfunc key, so the cursor key and type derive from the name
+        // alike. Cursors walk a field; a cursor tfunc reached without a
+        // field context (a ctype- or ns-level tclass) generates nothing.
+        // (The Ptrary/Llist generators require the tcurs row itself when
+        // they run -- see RequireTcurs.)
+        if (tfunc.c_tcurs || EndsWithQ(name_Get(tfunc),"curs")) {
+            amc::FField *field = amc::_db.genctx.p_field;
+            bool dflt = tfunc.c_tcurs && tfunc.c_tcurs->dflt;
+            if (!field) {
+                skip = true;
+            } else {
+                tempstr key(dmmeta::Fcurs_Concat_field_curstype(field->field,name_Get(tfunc)));
+                if (!dflt && amc::ind_fcurs_Find(key) == NULL) {
+                    skip = true;
+                }
+                algo_lib::Replscope &R = amc::_db.genctx.R;
+                Set(R,"$fcurs",key);
+                Set(R,"$curstype",name_Get(tfunc));
+                if (!skip) {
+                    amc::ind_fwddecl_GetOrCreate(Subst(R,"$ns.$ns.$Parname_$name_$curstype"));
+                }
             }
         }
         if (!skip) {
             tfunc.step();
         }
     }ind_end;
+}
+
+// -----------------------------------------------------------------------------
+
+// A cursor generator's amcdb.tcurs row is part of its input set: a universe
+// that reaches the generator without the row is incomplete, so the missing
+// row is reported as a generation error naming the tfunc and the field.
+// Generation continues -- the cursor name derives from the tfunc name, so
+// the emitted cursor is the same one the complete universe produces -- and
+// the error count withholds all output. Called by the generators that
+// consume $curstype (Ptrary, Llist) before they emit anything.
+void amc::RequireTcurs() {
+    amc::FTfunc &tfunc = *amc::_db.genctx.p_tfunc;
+    if (!tfunc.c_tcurs) {
+        prerr("amc.missing_tcurs"
+              <<Keyval("tfunc",tfunc.tfunc)
+              <<Keyval("field",amc::_db.genctx.p_field->field)
+              <<Keyval("comment","cursor generator without its amcdb.tcurs row; add the row to the input set"));
+        algo_lib::_db.exit_code++;
+    }
 }
 
 // -----------------------------------------------------------------------------

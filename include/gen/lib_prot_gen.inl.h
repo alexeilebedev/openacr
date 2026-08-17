@@ -25,6 +25,28 @@
 #pragma once
 //#pragma endinclude
 
+// --- lib_prot.ClientCase.value.Cast
+inline  lib_prot::ClientCase::operator u32() const {
+    return u32((*this).value);
+}
+
+// --- lib_prot.ClientCase..Init
+// Set all fields to initial values.
+inline void lib_prot::ClientCase_Init(lib_prot::ClientCase& parent) {
+    parent.value = u32(0);
+}
+
+// --- lib_prot.ClientCase..Ctor
+inline  lib_prot::ClientCase::ClientCase() {
+    lib_prot::ClientCase_Init(*this);
+}
+
+// --- lib_prot.ClientCase..FieldwiseCtor
+inline  lib_prot::ClientCase::ClientCase(u32 in_value)
+    : value(in_value)
+ {
+}
+
 // --- lib_prot.FieldId.value.GetEnum
 // Get value of field as enum type
 inline lib_prot_FieldIdEnum lib_prot::value_GetEnum(const lib_prot::FieldId& parent) {

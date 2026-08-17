@@ -60,7 +60,7 @@ inline samp_make::FGitfile* samp_make::gitfile_Last() {
 
 // --- samp_make.FDb.gitfile.N
 // Return number of items in the pool
-inline i32 samp_make::gitfile_N() {
+inline i64 samp_make::gitfile_N() {
     return _db.gitfile_n;
 }
 
@@ -114,7 +114,7 @@ inline samp_make::FTarget* samp_make::target_Last() {
 
 // --- samp_make.FDb.target.N
 // Return number of items in the pool
-inline i32 samp_make::target_N() {
+inline i64 samp_make::target_N() {
     return _db.target_n;
 }
 
@@ -168,7 +168,7 @@ inline samp_make::FTargdep* samp_make::targdep_Last() {
 
 // --- samp_make.FDb.targdep.N
 // Return number of items in the pool
-inline i32 samp_make::targdep_N() {
+inline i64 samp_make::targdep_N() {
     return _db.targdep_n;
 }
 
@@ -222,7 +222,7 @@ inline samp_make::FTargsrc* samp_make::targsrc_Last() {
 
 // --- samp_make.FDb.targsrc.N
 // Return number of items in the pool
-inline i32 samp_make::targsrc_N() {
+inline i64 samp_make::targsrc_N() {
     return _db.targsrc_n;
 }
 
@@ -276,7 +276,7 @@ inline samp_make::FTargrec* samp_make::targrec_Last() {
 
 // --- samp_make.FDb.targrec.N
 // Return number of items in the pool
-inline i32 samp_make::targrec_N() {
+inline i64 samp_make::targrec_N() {
     return _db.targrec_n;
 }
 
@@ -310,7 +310,7 @@ inline bool samp_make::c_target_EmptyQ() {
 
 // --- samp_make.FDb.c_target.Find
 // Look up row by row id. Return NULL if out of range
-inline samp_make::FTarget* samp_make::c_target_Find(u32 t) {
+inline samp_make::FTarget* samp_make::c_target_Find(u64 t) {
     samp_make::FTarget *retval = NULL;
     u64 idx = t;
     u64 lim = _db.c_target_n;
@@ -328,14 +328,14 @@ inline algo::aryptr<samp_make::FTarget*> samp_make::c_target_Getary() {
 
 // --- samp_make.FDb.c_target.N
 // Return number of items in the pointer array
-inline i32 samp_make::c_target_N() {
+inline i64 samp_make::c_target_N() {
     return _db.c_target_n;
 }
 
 // --- samp_make.FDb.c_target.RemoveAll
 // Empty the index. (The rows are not deleted)
 inline void samp_make::c_target_RemoveAll() {
-    for (u32 i = 0; i < _db.c_target_n; i++) {
+    for (u64 i = 0; i < _db.c_target_n; i++) {
         // mark all elements as not-in-array
         _db.c_target_elems[i]->c_target_in_ary = false;
     }
@@ -344,7 +344,7 @@ inline void samp_make::c_target_RemoveAll() {
 
 // --- samp_make.FDb.c_target.qFind
 // Return reference without bounds checking
-inline samp_make::FTarget& samp_make::c_target_qFind(u32 idx) {
+inline samp_make::FTarget& samp_make::c_target_qFind(u64 idx) {
     return *_db.c_target_elems[idx];
 }
 
@@ -557,7 +557,7 @@ inline bool samp_make::c_targsrc_EmptyQ(samp_make::FTarget& target) {
 
 // --- samp_make.FTarget.c_targsrc.Find
 // Look up row by row id. Return NULL if out of range
-inline samp_make::FTargsrc* samp_make::c_targsrc_Find(samp_make::FTarget& target, u32 t) {
+inline samp_make::FTargsrc* samp_make::c_targsrc_Find(samp_make::FTarget& target, u64 t) {
     samp_make::FTargsrc *retval = NULL;
     u64 idx = t;
     u64 lim = target.c_targsrc_n;
@@ -575,14 +575,14 @@ inline algo::aryptr<samp_make::FTargsrc*> samp_make::c_targsrc_Getary(samp_make:
 
 // --- samp_make.FTarget.c_targsrc.N
 // Return number of items in the pointer array
-inline i32 samp_make::c_targsrc_N(const samp_make::FTarget& target) {
+inline i64 samp_make::c_targsrc_N(const samp_make::FTarget& target) {
     return target.c_targsrc_n;
 }
 
 // --- samp_make.FTarget.c_targsrc.RemoveAll
 // Empty the index. (The rows are not deleted)
 inline void samp_make::c_targsrc_RemoveAll(samp_make::FTarget& target) {
-    for (u32 i = 0; i < target.c_targsrc_n; i++) {
+    for (u64 i = 0; i < target.c_targsrc_n; i++) {
         // mark all elements as not-in-array
         target.c_targsrc_elems[i]->target_c_targsrc_in_ary = false;
     }
@@ -591,7 +591,7 @@ inline void samp_make::c_targsrc_RemoveAll(samp_make::FTarget& target) {
 
 // --- samp_make.FTarget.c_targsrc.qFind
 // Return reference without bounds checking
-inline samp_make::FTargsrc& samp_make::c_targsrc_qFind(samp_make::FTarget& target, u32 idx) {
+inline samp_make::FTargsrc& samp_make::c_targsrc_qFind(samp_make::FTarget& target, u64 idx) {
     return *target.c_targsrc_elems[idx];
 }
 
@@ -615,7 +615,7 @@ inline bool samp_make::c_targdep_EmptyQ(samp_make::FTarget& target) {
 
 // --- samp_make.FTarget.c_targdep.Find
 // Look up row by row id. Return NULL if out of range
-inline samp_make::FTargdep* samp_make::c_targdep_Find(samp_make::FTarget& target, u32 t) {
+inline samp_make::FTargdep* samp_make::c_targdep_Find(samp_make::FTarget& target, u64 t) {
     samp_make::FTargdep *retval = NULL;
     u64 idx = t;
     u64 lim = target.c_targdep_n;
@@ -633,14 +633,14 @@ inline algo::aryptr<samp_make::FTargdep*> samp_make::c_targdep_Getary(samp_make:
 
 // --- samp_make.FTarget.c_targdep.N
 // Return number of items in the pointer array
-inline i32 samp_make::c_targdep_N(const samp_make::FTarget& target) {
+inline i64 samp_make::c_targdep_N(const samp_make::FTarget& target) {
     return target.c_targdep_n;
 }
 
 // --- samp_make.FTarget.c_targdep.RemoveAll
 // Empty the index. (The rows are not deleted)
 inline void samp_make::c_targdep_RemoveAll(samp_make::FTarget& target) {
-    for (u32 i = 0; i < target.c_targdep_n; i++) {
+    for (u64 i = 0; i < target.c_targdep_n; i++) {
         // mark all elements as not-in-array
         target.c_targdep_elems[i]->target_c_targdep_in_ary = false;
     }
@@ -649,7 +649,7 @@ inline void samp_make::c_targdep_RemoveAll(samp_make::FTarget& target) {
 
 // --- samp_make.FTarget.c_targdep.qFind
 // Return reference without bounds checking
-inline samp_make::FTargdep& samp_make::c_targdep_qFind(samp_make::FTarget& target, u32 idx) {
+inline samp_make::FTargdep& samp_make::c_targdep_qFind(samp_make::FTarget& target, u64 idx) {
     return *target.c_targdep_elems[idx];
 }
 

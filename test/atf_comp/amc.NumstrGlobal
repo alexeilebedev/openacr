@@ -1,0 +1,40 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/numstr_global.ssim -out_dir: -report:N 'algo_lib.FDb.gnumstr.Geti64|algo_lib.FDb.gnumstr.GetnumDflt|algo_lib.FDb.gnumsigned.Geti64|algo_lib.FDb.gnumsigned.GetnumDflt'"
+# eof amc
+amc -> // --- algo_lib.FDb.gnumstr.GetnumDflt
+amc -> // Convert field to numeric value. If the value is too large
+amc -> // for the target type, or the string is invalid, return default value.
+amc -> // Empty string is evaluated to zero.
+amc -> u64 algo_lib::gnumstr_GetnumDflt(u64 dflt) {
+amc ->     bool ok = true;
+amc ->     u64 result = gnumstr_Getnum(ok);
+amc ->     return ok ? result : dflt;
+amc -> }
+amc -> // --- algo_lib.FDb.gnumstr.Geti64
+amc -> // Convert field to numeric value. If the value is too large
+amc -> // for the target type, or the string is invalid, throw an exception.
+amc -> // Empty string is evaluated to zero.
+amc -> i64 algo_lib::gnumstr_Geti64(bool &out_ok) {
+amc ->     out_ok = true;
+amc ->     u64 num = gnumstr_Getnum(out_ok);
+amc ->     out_ok &= num <= 0x7fffffffffffffffULL;
+amc ->     return i64(num);
+amc -> }
+amc -> // --- algo_lib.FDb.gnumsigned.GetnumDflt
+amc -> // Convert field to numeric value. If the value is too large
+amc -> // for the target type, or the string is invalid, return default value.
+amc -> // Empty string is evaluated to zero.
+amc -> i64 algo_lib::gnumsigned_GetnumDflt(i64 dflt) {
+amc ->     bool ok = true;
+amc ->     i64 result = gnumsigned_Getnum(ok);
+amc ->     return ok ? result : dflt;
+amc -> }
+amc -> // --- algo_lib.FDb.gnumsigned.Geti64
+amc -> // Convert field to numeric value. If the value is too large
+amc -> // for the target type, or the string is invalid, throw an exception.
+amc -> // Empty string is evaluated to zero.
+amc -> i64 algo_lib::gnumsigned_Geti64(bool &out_ok) {
+amc ->     out_ok = true;
+amc ->     i64 result = gnumsigned_Getnum(out_ok);
+amc ->     return result;
+amc -> }
+# exit amc code:0

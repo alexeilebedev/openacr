@@ -29,13 +29,13 @@
 
 // --- atf_FieldIdEnum
 
-enum atf_FieldIdEnum {             // atf.FieldId.value
-     atf_FieldId_value        = 0
-    ,atf_FieldId_testrun      = 1
-    ,atf_FieldId_testresult   = 2
-    ,atf_FieldId_n_step       = 3
-    ,atf_FieldId_n_cmp        = 4
-    ,atf_FieldId_comment      = 5
+enum atf_FieldIdEnum {    // atf.FieldId.value
+     atf_FieldId_value
+    ,atf_FieldId_testrun
+    ,atf_FieldId_testresult
+    ,atf_FieldId_n_step
+    ,atf_FieldId_n_cmp
+    ,atf_FieldId_comment
 };
 
 enum { atf_FieldIdEnum_N = 6 };
@@ -78,7 +78,6 @@ struct FieldId { // atf.FieldId: Field read helper
     inline               FieldId(atf_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:atf.FieldId.value.GetEnum
 inline atf_FieldIdEnum value_GetEnum(const atf::FieldId& parent) __attribute__((nothrow));
@@ -116,7 +115,7 @@ inline void          FieldId_Init(atf::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:atf.FieldId.String  printfmt:Raw
 // func:atf.FieldId..Print
-void                 FieldId_Print(atf::FieldId& row, algo::cstring& str) __attribute__((nothrow));
+void                 FieldId_Print(atf::FieldId row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf.Testresult
 struct Testresult { // atf.Testresult
@@ -130,7 +129,6 @@ struct Testresult { // atf.Testresult
     // func:atf.Testresult..EnumCtor
     inline               Testresult(atf_TestresultEnum arg) __attribute__((nothrow));
 };
-
 // Get value of field as enum type
 // func:atf.Testresult.value.GetEnum
 inline atf_TestresultEnum value_GetEnum(const atf::Testresult& parent) __attribute__((nothrow));
@@ -168,7 +166,7 @@ inline void          Testresult_Init(atf::Testresult& parent);
 // print string representation of ROW to string STR
 // cfmt:atf.Testresult.String  printfmt:Raw
 // func:atf.Testresult..Print
-void                 Testresult_Print(atf::Testresult& row, algo::cstring& str) __attribute__((nothrow));
+void                 Testresult_Print(atf::Testresult row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf.Testrun
 struct Testrun { // atf.Testrun
@@ -180,9 +178,8 @@ struct Testrun { // atf.Testrun
     // func:atf.Testrun..Ctor
     inline               Testrun() __attribute__((nothrow));
     // func:atf.Testrun..FieldwiseCtor
-    explicit inline               Testrun(const algo::strptr& in_testrun, const atf::Testresult& in_testresult, u64 in_n_step, u64 in_n_cmp, const algo::strptr& in_comment) __attribute__((nothrow));
+    explicit inline               Testrun(const algo::strptr& in_testrun, atf::Testresult in_testresult, u64 in_n_step, u64 in_n_cmp, const algo::strptr& in_comment) __attribute__((nothrow));
 };
-
 // func:atf.Testrun..ReadFieldMaybe
 bool                 Testrun_ReadFieldMaybe(atf::Testrun& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of atf::Testrun from an ascii string.

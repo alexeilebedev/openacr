@@ -1,0 +1,3 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/pmask_giant_field.ssim -out_dir: -report:N zzz"
+# eof amc
+# exit amc code:0

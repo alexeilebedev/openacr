@@ -1,0 +1,61 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/fconst_global.ssim -out_dir: -report:N 'algo_lib.FDb.state.ToCstr|algo_lib.FDb.state.Print|algo_lib.FDb.state.SetStrptrMaybe|algo_lib.FDb.mode.GetEnum'"
+# eof amc
+amc -> // --- algo_lib.FDb.state.ToCstr
+amc -> // Convert numeric value of field to one of predefined string constants.
+amc -> // If string is found, return a static C string. Otherwise, return NULL.
+amc -> const char* algo_lib::state_ToCstr() {
+amc ->     const char *ret = NULL;
+amc ->     switch(state_GetEnum()) {
+amc ->         case algo_lib_FDb_state_idle       : ret = "idle";  break;
+amc ->         case algo_lib_FDb_state_busy       : ret = "busy";  break;
+amc ->         case algo_lib_FDb_state_quiescing  : ret = "quiescing";  break;
+amc ->     }
+amc ->     return ret;
+amc -> }
+amc -> // --- algo_lib.FDb.state.Print
+amc -> // Convert state to a string. First, attempt conversion to a known string.
+amc -> // If no string matches, print state as a numeric value.
+amc -> void algo_lib::state_Print(algo::cstring &lhs) {
+amc ->     const char *strval = state_ToCstr();
+amc ->     if (strval) {
+amc ->         lhs << strval;
+amc ->     } else {
+amc ->         lhs << _db.state;
+amc ->     }
+amc -> }
+amc -> // --- algo_lib.FDb.state.SetStrptrMaybe
+amc -> // Convert string to field.
+amc -> // If the string is invalid, do not modify field and return false.
+amc -> // In case of success, return true
+amc -> bool algo_lib::state_SetStrptrMaybe(algo::strptr rhs) {
+amc ->     bool ret = false;
+amc ->     switch (elems_N(rhs)) {
+amc ->         case 4: {
+amc ->             switch (u64(algo::ReadLE32(rhs.elems))) {
+amc ->                 case LE_STR4('b','u','s','y'): {
+amc ->                     state_SetEnum(algo_lib_FDb_state_busy); ret = true; break;
+amc ->                 }
+amc ->                 case LE_STR4('i','d','l','e'): {
+amc ->                     state_SetEnum(algo_lib_FDb_state_idle); ret = true; break;
+amc ->                 }
+amc ->             }
+amc ->             break;
+amc ->         }
+amc ->         case 9: {
+amc ->             switch (algo::ReadLE64(rhs.elems)) {
+amc ->                 case LE_STR8('q','u','i','e','s','c','i','n'): {
+amc ->                     if (memcmp(rhs.elems+8,"g",1)==0) { state_SetEnum(algo_lib_FDb_state_quiescing); ret = true; break; }
+amc ->                     break;
+amc ->                 }
+amc ->             }
+amc ->             break;
+amc ->         }
+amc ->     }
+amc ->     return ret;
+amc -> }
+amc -> // --- algo_lib.FDb.mode.GetEnum
+amc -> // Get value of field as enum type
+amc -> inline algo_lib_FDb_mode_Enum algo_lib::mode_GetEnum() {
+amc ->     return algo_lib_FDb_mode_Enum(mode_Get());
+amc -> }
+# exit amc code:0

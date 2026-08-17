@@ -230,7 +230,13 @@ void amc::tfunc_Ctype_ReadFieldMaybe() {
         Set(R, "$ns", ns_Get(ctype));
         Set(R, "$Name", name_Get(ctype));
         Set(R, "$Cpptype", ctype.cpp_type);
-        amc::FFunc& fcn = amc::CreateCurFunc(true);
+        // the proto is spelled out because CreateCurFunc(true) drops the
+        // ctype-name prefix for a global ctype, while every caller
+        // ($Name_ReadStrptrMaybe, $Name_ReadTupleMaybe) links against the
+        // prefixed name; like Print, the function keeps its explicit row
+        // argument even for a global
+        amc::FFunc& fcn = amc::CreateCurFunc();
+        Ins(&R, fcn.proto, "$Name_ReadFieldMaybe()", false);
         fcn.glob = true;
         fcn.extrn = false;
         AddRetval(fcn, "bool", "retval", "true");
@@ -261,6 +267,9 @@ void amc::tfunc_Ctype_ReadFieldMaybe() {
         Ins(&R, fcn.body, "if (!retval) {");
         Ins(&R, fcn.body, "    algo_lib::AppendErrtext(\"attr\",field);");
         Ins(&R, fcn.body, "}");
+        // a global's field readers collapse the parent argument away, which
+        // can leave the row argument of this dispatcher unused
+        MaybeUnused(fcn, "parent");
     }
 }
 
@@ -268,6 +277,7 @@ void amc::tfunc_Ctype_ReadFieldMaybe() {
 
 void amc::GenRead(amc::FCtype &ctype, amc::FCfmt &cfmt) {
     algo_lib::Replscope R;
+    bool good = true;
     Set(R, "$ctype", ctype.ctype);
     Set(R, "$Name", name_Get(ctype));
     Set(R, "$Cpptype", ctype.cpp_type);
@@ -277,7 +287,7 @@ void amc::GenRead(amc::FCtype &ctype, amc::FCfmt &cfmt) {
         AddProtoArg(func,Subst(R,"$Cpptype &"),"parent");
         AddProtoArg(func,"algo::strptr", "in_str");
         AddRetval(func, "bool", "retval", "true");
-        if (VarlenQ(ctype)) {
+        if (amc::RuntimeFrameLenQ(ctype)) {
             Ins(&R, func.comment, "Any varlen fields are returned in algo_lib::_db.varlenbuf if set");
         }
         Ins(&R, func.comment, "Read fields of $Cpptype from an ascii string.");
@@ -288,17 +298,22 @@ void amc::GenRead(amc::FCtype &ctype, amc::FCfmt &cfmt) {
             Ctype_ReadStrptrMaybe_Sep(R, ctype, func, cfmt.sep);
         } else if (cfmt.printfmt == dmmeta_Printfmt_printfmt_Raw) {
             Ctype_ReadStrptrMaybe_Raw(R, ctype, func);
-        } else if (cfmt.printfmt == dmmeta_Printfmt_printfmt_Tuple) {
+        } else if (cfmt.printfmt == dmmeta_Printfmt_printfmt_Tuple || cfmt.printfmt == dmmeta_Printfmt_printfmt_Auto) {
             Ctype_ReadStrptrMaybe_Ssim(R, ctype, func);
         } else if (cfmt.printfmt == dmmeta_Printfmt_printfmt_Bitset) {
             Ctype_ReadStrptrMaybe_Bitset(R, ctype, cfmt, func);
         } else {
-            vrfy("amc.badcfmt",tempstr()
-                 <<Keyval("cfmt",cfmt.cfmt)
-                 <<Keyval("printfmt",cfmt.printfmt)
-                 <<Keyval("comment","unsupported strfmt for reading"));
+            good = false;
         }
     } else if (strfmt_Get(cfmt) == dmmeta_Strfmt_strfmt_Tuple) {
         GenRead_Tuple(R,ctype,cfmt);
+    }
+    if (!good) {
+        prerr("amc.badcfmt"
+              <<Keyval("cfmt",cfmt.cfmt)
+              <<Keyval("strfmt",strfmt_Get(cfmt))
+              <<Keyval("printfmt",cfmt.printfmt)
+              <<Keyval("comment","no read path for this strfmt and printfmt"));
+        algo_lib::_db.exit_code++;
     }
 }

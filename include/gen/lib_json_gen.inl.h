@@ -169,7 +169,7 @@ inline bool lib_json::c_child_EmptyQ(lib_json::FNode& node) {
 
 // --- lib_json.FNode.c_child.Find
 // Look up row by row id. Return NULL if out of range
-inline lib_json::FNode* lib_json::c_child_Find(lib_json::FNode& node, u32 t) {
+inline lib_json::FNode* lib_json::c_child_Find(lib_json::FNode& node, u64 t) {
     lib_json::FNode *retval = NULL;
     u64 idx = t;
     u64 lim = node.c_child_n;
@@ -187,14 +187,14 @@ inline algo::aryptr<lib_json::FNode*> lib_json::c_child_Getary(lib_json::FNode& 
 
 // --- lib_json.FNode.c_child.N
 // Return number of items in the pointer array
-inline i32 lib_json::c_child_N(const lib_json::FNode& node) {
+inline i64 lib_json::c_child_N(const lib_json::FNode& node) {
     return node.c_child_n;
 }
 
 // --- lib_json.FNode.c_child.RemoveAll
 // Empty the index. (The rows are not deleted)
 inline void lib_json::c_child_RemoveAll(lib_json::FNode& node) {
-    for (u32 i = 0; i < node.c_child_n; i++) {
+    for (u64 i = 0; i < node.c_child_n; i++) {
         // mark all elements as not-in-array
         node.c_child_elems[i]->node_c_child_in_ary = false;
     }
@@ -203,7 +203,7 @@ inline void lib_json::c_child_RemoveAll(lib_json::FNode& node) {
 
 // --- lib_json.FNode.c_child.qFind
 // Return reference without bounds checking
-inline lib_json::FNode& lib_json::c_child_qFind(lib_json::FNode& node, u32 idx) {
+inline lib_json::FNode& lib_json::c_child_qFind(lib_json::FNode& node, u64 idx) {
     return *node.c_child_elems[idx];
 }
 

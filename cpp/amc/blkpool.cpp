@@ -47,6 +47,8 @@ void amc::tclass_Blkpool() {
     InsVar(R, field.p_ctype, "$name_Bpbuf*", "$name_cur", "", "current buffer");
     InsVar(R, field.p_ctype, "u32", "$name_pos", "", "position inside curbuf");
     InsVar(R, field.p_ctype, "u32", "$name_buf_dflt_size", "", "size of next buffer");
+    InsVar(R, field.p_ctype, "u64", "$name_reserved_bytes", "", "total buffer bytes taken from the base pool");
+    InsVar(R, field.p_ctype, "u64", "$name_free_bytes", "", "buffer bytes sitting on the free list");
 }
 
 void amc::tfunc_Blkpool_AllocMem() {
@@ -72,6 +74,7 @@ void amc::tfunc_Blkpool_AllocMem() {
     Ins(&R, allocmem.body, "    }");
     Ins(&R, allocmem.body, "    if (curbuf) {");
     Ins(&R, allocmem.body, "        $parname.$name_free = curbuf->next;");
+    Ins(&R, allocmem.body, "        $parname.$name_free_bytes -= curbuf->size;");
     Ins(&R, allocmem.body, "        curbuf->next = NULL;");
     Ins(&R, allocmem.body, "        pos = ssizeof($name_Bpbuf);");
     Ins(&R, allocmem.body, "        fits = pos + size <= curbuf->size;");
@@ -113,6 +116,8 @@ void amc::tfunc_Blkpool_ReserveBuffers() {
     Ins(&R, reserve.body, "        buf->size = size;");
     Ins(&R, reserve.body, "        buf->next = $parname.$name_free;");
     Ins(&R, reserve.body, "        $parname.$name_free = buf;");
+    Ins(&R, reserve.body, "        $parname.$name_reserved_bytes += size;");
+    Ins(&R, reserve.body, "        $parname.$name_free_bytes += size;");
     Ins(&R, reserve.body, "    } else {");
     Ins(&R, reserve.body, "        retval = false;");
     Ins(&R, reserve.body, "        break;");
@@ -125,10 +130,10 @@ void amc::tfunc_Blkpool_FreeMem() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& freemem = amc::CreateCurFunc();
     Ins(&R, freemem.ret  , "void", false);
-    Ins(&R, freemem.proto, "$name_FreeMem($Parent, $Cpptype *row, size_t size)", false);
-    Ins(&R, freemem.body, "(void)size;");
-    Ins(&R, freemem.body, "$name_Bpbuf *buf = row->$name_buf;");
-    Ins(&R, freemem.body, "row->$name_buf = NULL;");
+    Ins(&R, freemem.proto, "$name_FreeMem($Parent, $ns::$name_Bpbuf* buf)", false);
+    Ins(&R, freemem.body, "if (UNLIKELY(buf == ($name_Bpbuf*)-1)) {");
+    Ins(&R, freemem.body, "    FatalErrorExit(\"$ns.blkpool_double_delete  pool:$field  comment:'double deletion caught'\");");
+    Ins(&R, freemem.body, "}");
     Ins(&R, freemem.body, "u32 rc = buf->refcount;");
     Ins(&R, freemem.body, "if (UNLIKELY(rc == 0)) {");
     Ins(&R, freemem.body, "    FatalErrorExit(\"$ns.blkpool_double_free  pool:$field  comment:'access to freed buffer'\");");
@@ -141,8 +146,20 @@ void amc::tfunc_Blkpool_FreeMem() {
     Ins(&R, freemem.body, "    } else {");
     Ins(&R, freemem.body, "        buf->next = $parname.$name_free;");
     Ins(&R, freemem.body, "        $parname.$name_free = buf;");
+    Ins(&R, freemem.body, "        $parname.$name_free_bytes += buf->size;");
     Ins(&R, freemem.body, "    }");
     Ins(&R, freemem.body, "}");
+}
+
+void amc::tfunc_Blkpool_UsedBytes() {
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FFunc& usedbytes = amc::CreateCurFunc();
+    Ins(&R, usedbytes.comment, "Buffer bytes not reusable by Alloc: reserved from the base pool, minus the free list.");
+    Ins(&R, usedbytes.comment, "Counts whole buffers -- a buffer pinned by one live element counts in full, so this");
+    Ins(&R, usedbytes.comment, "is the pool's true address-space cost, which live-byte accounting understates.");
+    Ins(&R, usedbytes.ret  , "u64", false);
+    Ins(&R, usedbytes.proto, "$name_UsedBytes($Parent)", false);
+    Ins(&R, usedbytes.body, "return $parname.$name_reserved_bytes - $parname.$name_free_bytes;");
 }
 
 void amc::tfunc_Blkpool_Init() {
@@ -153,4 +170,6 @@ void amc::tfunc_Blkpool_Init() {
     Ins(&R, init.body, "$parname.$name_pos             = 0; // past the end");
     Ins(&R, init.body, "$parname.$name_free = NULL;");
     Ins(&R, init.body, "$parname.$name_cur = NULL;");
+    Ins(&R, init.body, "$parname.$name_reserved_bytes = 0;");
+    Ins(&R, init.body, "$parname.$name_free_bytes = 0;");
 }

@@ -1,6 +1,6 @@
 dmmeta.charset  field:algo_lib.FDb.AlphaChar  expr:a-zA-Z  charrange:Y  calc:Y  comment:""
 dmmeta.charset  field:algo_lib.FDb.ArgvIdent  expr:a-zA-Z0-9_  charrange:Y  calc:N  comment:""
-dmmeta.charset  field:algo_lib.FDb.BashQuotesafe  expr:a-zA-Z0-9_^%@./-  charrange:Y  calc:N  comment:""
+dmmeta.charset  field:algo_lib.FDb.BashQuotesafe  expr:a-zA-Z0-9_^%@:./-  charrange:Y  calc:N  comment:""
 dmmeta.charset  field:algo_lib.FDb.CmdLineNameBreak  expr:"[]{}()\t \r\n:"  charrange:N  calc:Y  comment:wcore
 dmmeta.charset  field:algo_lib.FDb.CmdLineValueBreak  expr:"[]{}()\t \r\n"  charrange:N  calc:Y  comment:wcore
 dmmeta.charset  field:algo_lib.FDb.DigitChar  expr:0-9  charrange:Y  calc:Y  comment:""

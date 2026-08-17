@@ -39,45 +39,6 @@ lib_json::FDb      lib_json::_db;       // dependency found via dev.targdep
 algo_lib::FDb      algo_lib::_db;       // dependency found via dev.targdep
 atf_cmdline::FDb   atf_cmdline::_db;    // dependency found via dev.targdep
 
-namespace atf_cmdline {
-const char *atf_cmdline_help =
-"atf_cmdline: Test tool for command line parsing\n"
-"Usage: atf_cmdline [-astr:]<string> [[-anum:]<int>] [[-adbl:]<double>] -str:<string> [[-amnum:]<int>] [options]\n"
-"    OPTION      TYPE    DFLT    COMMENT\n"
-"    -in         string  \"data\"  Input directory or filename, - for stdin\n"
-"    -exec                       Execv itself\n"
-"    [astr]      string          Required anon string\n"
-"    [anum]      int     0       Anon number\n"
-"    [adbl]      double  0.0     Anon double\n"
-"    [aflag]                     Anon flag\n"
-"    -str        string          Required string\n"
-"    -num        int     0       Required Number\n"
-"    -dbl        double  0.0     Required double\n"
-"    -flag                       Required flag\n"
-"    -dstr       string  \"blah\"  Predefined string\n"
-"    -dnum       int     -33     Predefined number\n"
-"    -ddbl       double  0.0001  Predefined double\n"
-"    -dflag              Y       Predefined flag\n"
-"    -mstr...    string          String array\n"
-"    -mnum...    int             Number array\n"
-"    -mdbl...    double          Double array\n"
-"    [amnum]...  int             Anon number array\n"
-"    -fconst     enum    high    Fconst for field (high|medium|low)\n"
-"                                    high  Cool\n"
-"                                    medium  So-so\n"
-"                                    low  Bad\n"
-"    -cconst     enum    None    Fconst for arg ctype (January|February|March|April|May|June|July|August|September|October|November|December|None)\n"
-"    -dregx      regx    \"%\"     Predefined regx\n"
-"    -dpkey      string  \"\"      Predefined pkey\n"
-"    -verbose    flag            Verbosity level (0..255); alias -v; cumulative\n"
-"    -debug      flag            Debug level (0..255); alias -d; cumulative\n"
-"    -help                       Print help and exit; alias -h\n"
-"    -version                    Print version and exit\n"
-"    -signature                  Show signatures and exit; alias -sig\n"
-;
-
-
-} // namespace atf_cmdline
 namespace atf_cmdline { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
     // func:atf_cmdline.FDb._db.InitReflection
@@ -102,120 +63,16 @@ void atf_cmdline::trace_Print(atf_cmdline::trace& row, algo::cstring& str) {
 }
 
 // --- atf_cmdline.FDb._db.ReadArgv
-// Read argc,argv directly into the fields of the command line(s)
-// The following fields are updated:
-//     atf_cmdline.FDb.cmdline
-//     algo_lib.FDb.cmdline
+// Read argc,argv into the fields of atf_cmdline.FDb.cmdline (and any base command line)
+// via atf_cmdline_ReadArgv; then apply -help/-version and load floadtuples input.
 void atf_cmdline::ReadArgv() {
     command::atf_cmdline &cmd = atf_cmdline::_db.cmdline;
-    algo_lib::Cmdline &base = algo_lib::_db.cmdline;
-    int needarg=-1;// unknown
-    int argidx=1;// skip process name
-    int anonidx=0;
-    algo::strptr nextanon = command::atf_cmdline_GetAnon(cmd, anonidx);
-    tempstr err;
-    algo::strptr attrname;
-    bool isanon=false; // true if attrname is anonfld (positional)
-    algo_lib::FieldId baseattrid;
-    command::FieldId attrid;
-    bool endopt=false;
-    int whichns=0;// which namespace does the current attribute belong to
-    bool astr_present = false;
-    bool str_present = false;
-    for (; argidx < algo_lib::_db.argc; argidx++) {
-        algo::strptr arg = algo_lib::_db.argv[argidx];
-        algo::strptr attrval;
-        algo::strptr dfltval;
-        bool haveval=false;
-        bool dash=elems_N(arg)>1 && arg.elems[0]=='-'; // a single dash is not an option
-        // this attribute is a value
-        if (endopt || needarg>0 || !dash) {
-            attrval=arg;
-            haveval=true;
-        } else {
-            // this attribute is a field name (with - or --)
-            // or a -- by itself
-            bool dashdash = elems_N(arg) >= 2 && arg.elems[1]=='-';
-            int skip = int(dash) + dashdash;
-            attrname=ch_RestFrom(arg,skip);
-            if (skip==2 && elems_N(arg)==2) {
-                endopt=true;
-                continue;// nothing else to do here
-            }
-            // parse "-a:B" arg into attrname,attrvalue
-            algo::i32_Range colon = TFind(attrname,':');
-            if (colon.beg < colon.end) {
-                attrval=ch_RestFrom(attrname,colon.end);
-                attrname=ch_FirstN(attrname,colon.beg);
-                haveval=true;
-            }
-            // look up which command (this one or the base) contains the field
-            whichns=0;
-            needarg=-1;
-            // look up parameter information in base namespace (needarg will be -1 if lookup fails)
-            if (algo_lib::FieldId_ReadStrptrMaybe(baseattrid,attrname)) {
-                needarg = algo_lib::Cmdline_NArgs(baseattrid,dfltval,&isanon);
-            }
-            if (needarg<0) {
-                whichns=1;
-                // look up parameter information in this namespace (needarg will be -1 if lookup fails)
-                if (command::FieldId_ReadStrptrMaybe(attrid,attrname)) {
-                    needarg = command::atf_cmdline_NArgs(attrid,dfltval,&isanon);
-                }
-            }
-            if (attrval == "" && dfltval != "") {
-                attrval=dfltval;
-                haveval=true;
-            }
-            if (needarg<0) {
-                err<<"atf_cmdline: unknown option "<<Keyval("value",arg)<<eol;
-            } else {
-                if (isanon) {
-                    if (attrname == nextanon) { // treat named anon (positional) argument as unnamed
-                        attrname = ""; // treat it as unnamed
-                    } else if (nextanon != "") { // disallow out-of-order anon (positional) args
-                        err<<"atf_cmdline: error at "<<algo::strptr_ToSsim(arg)<<": must be preceded by [-"<<nextanon<<"]"<<eol;
-                    }
-                }
-            }
-        }
-        // look up anon field name based on index
-        // anon fields are only allowed in the leaf ns, never base
-        if (ch_N(attrname) == 0) {
-            attrname = nextanon;
-            nextanon = command::atf_cmdline_GetAnon(cmd, ++anonidx);
-            command::FieldId_ReadStrptrMaybe(attrid,attrname);
-            whichns=1;
-        }
-        if (ch_N(attrname) == 0) {
-            err << "atf_cmdline: too many arguments. error at "<<algo::strptr_ToSsim(arg)<<eol;
-        } else if (haveval) {
-            // read value into currently selected arg
-            bool ret=false;
-            // it's already known which namespace is consuming the args,
-            // so directly go there
-            if (whichns == 0) {
-                ret=algo_lib::Cmdline_ReadFieldMaybe(base, attrname, attrval);
-            }
-            if (whichns==1) {
-                ret=command::atf_cmdline_ReadFieldMaybe(cmd, attrname, attrval);
-                switch(attrid.value) {
-                    case command_FieldId_astr: astr_present=true; break;
-                    case command_FieldId_str: str_present=true; break;
-                    default:break;
-                }
-            }
-            if (!ret) {
-                err<<"atf_cmdline: error in "
-                <<Keyval("option",attrname)
-                <<Keyval("value",attrval)<<eol;
-            }
-            needarg--;
-            if (needarg <= 0) {
-                attrname="";// forget which argument was being filled
-            }
-        }
+    algo::cstring err;
+    algo::StringAry args;
+    for (int argidx=1; argidx < algo_lib::_db.argc; argidx++) {// skip process name
+        ary_Alloc(args) = algo_lib::_db.argv[argidx];
     }
+    command::atf_cmdline_ReadArgv(cmd, args, err);
     bool dohelp = false;
     bool doexit=false;
     if (algo_lib::_db.cmdline.help) {
@@ -238,17 +95,7 @@ void atf_cmdline::ReadArgv() {
     algo_lib_logcat_debug.enabled = algo_lib::_db.cmdline.debug;
     algo_lib_logcat_verbose.enabled = algo_lib::_db.cmdline.verbose > 0;
     algo_lib_logcat_verbose2.enabled = algo_lib::_db.cmdline.verbose > 1;
-    if (!dohelp) {
-        if (!astr_present) {
-            err << "atf_cmdline: Missing value for required argument -astr (see -help)" << eol;
-            doexit = true;
-        }
-        if (!str_present) {
-            err << "atf_cmdline: Missing value for required argument -str (see -help)" << eol;
-            doexit = true;
-        }
-    }
-    // dmmeta.floadtuples:atf_cmdline.FDb.cmdline
+    // dmmeta.floadtuples:command.atf_cmdline.in
     if (!dohelp && err=="") {
         algo_lib::ResetErrtext();
         if (!atf_cmdline::LoadTuplesMaybe(cmd.in,true)) {
@@ -261,7 +108,7 @@ void atf_cmdline::ReadArgv() {
         doexit=true;
     }
     if (dohelp) {
-        prlog(atf_cmdline_help);
+        prlog(command::atf_cmdline_help);
     }
     if (doexit) {
         _exit(algo_lib::_db.exit_code);
@@ -288,7 +135,13 @@ void atf_cmdline::Step() {
 // --- atf_cmdline.FDb._db.InitReflection
 // Load statically available data into tables, register tables and database.
 static void atf_cmdline::InitReflection() {
-    algo_lib::imdb_InsertMaybe(algo::Imdb("atf_cmdline", NULL, NULL, atf_cmdline::MainLoop, NULL, algo::Comment()));
+    algo_lib::FImdb &row = algo_lib::imdb_Alloc();
+    row.imdb               = "atf_cmdline";
+    row.InsertStrptrMaybe  = NULL;
+    row.RemoveStrptrMaybe  = NULL;
+    row.Step               = NULL;
+    row.MainLoop           = atf_cmdline::MainLoop;
+    algo_lib::imdb_XrefMaybe(row);
 
     algo::Imtable t_trace;
     t_trace.imtable         = "atf_cmdline.trace";
@@ -382,6 +235,15 @@ bool atf_cmdline::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
 // Calls Step function of dependencies
 void atf_cmdline::Steps() {
     algo_lib::Step(); // dependent namespace specified via (dev.targdep)
+}
+
+// --- atf_cmdline.FDb._db.RemoveStrptrMaybe
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+bool atf_cmdline::RemoveStrptrMaybe(algo::strptr str) {
+    bool retval = true;
+    (void)str;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- atf_cmdline.FDb._db.XrefMaybe
@@ -483,7 +345,7 @@ bool atf_cmdline::FieldId_ReadStrptrMaybe(atf_cmdline::FieldId &parent, algo::st
 // --- atf_cmdline.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:atf_cmdline.FieldId.String  printfmt:Raw
-void atf_cmdline::FieldId_Print(atf_cmdline::FieldId& row, algo::cstring& str) {
+void atf_cmdline::FieldId_Print(atf_cmdline::FieldId row, algo::cstring& str) {
     atf_cmdline::value_Print(row, str);
 }
 

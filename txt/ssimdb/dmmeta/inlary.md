@@ -102,25 +102,17 @@ bool                 typec_XrefMaybe(atf_amc::FTypeC &row);
 
 ### Attributes
 <a href="#attributes"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Attributes -->
 * [ctype:](/txt/ssimdb/dmmeta/ctype.md)dmmeta.Inlary
 
 * file:[data/dmmeta/inlary.ssim](/data/dmmeta/inlary.ssim)
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|field|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftypes.md#pkey)|||
-|min|i32|[Val](/txt/exe/amc/reftypes.md#val)||Min. elements to preallocate|
-|max|i32|[Val](/txt/exe/amc/reftypes.md#val)||Max. elements|
-|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Attributes -->
+|field|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)|||
+|min|i32|[Val](/txt/exe/amc/reftype.md#val)||Min. elements to preallocate|
+|max|i32|[Val](/txt/exe/amc/reftype.md#val)||Max. elements|
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype.md#val)|||
 
 ### Used In Executables
 <a href="#used-in-executables"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:ImdbUses -->
-
-* [amc](/txt/exe/amc/internals.md) as [amc.FInlary](/txt/exe/amc/internals.md#amc-finlary)
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:ImdbUses -->
-
+* [amc](/txt/gen/amc/amc.md) as [amc.FInlary](/txt/gen/amc/amc.md#amc-finlary)

@@ -72,9 +72,14 @@ namespace apm { // update-hdr
     void Main_SelectPackage();
 
     // Check out package contents into a sandbox
+    // Return the wait status of the checkout, zero on success
     // This is the pristine version of the package (as specified with the gitref)
     // If BASEREF is an empty string, then the entire current directory, with whatever
     // local changes, is copied to the sandbox instead
+    // A checkout that fails leaves the sandbox directory absent or holding the wrong
+    // commit, and every reader of that directory afterwards reads a version of the
+    // package nobody asked for. The failure is reported here, naming the sandbox and
+    // the ref, and the status is returned for the caller to act on.
     int CreatePackageSandbox(algo::strptr sandbox_name, algo::strptr baseref);
     tempstr FetchPackageOrigin(algo::strptr origin, algo::strptr ref);
 
@@ -82,6 +87,21 @@ namespace apm { // update-hdr
     // if -dry_run, print it to the screen
     // Script is reset after the run
     void Main_Transaction();
+
+    // Return the apm binary that evaluates a package inside directory DIR.
+    // Evaluating a package means loading that directory's dmmeta tables, and a
+    // directory under sync holds tables of a different vintage than ours.  Openacr
+    // carries dmmeta.Cdflt.jsdflt, a field this tree does not have, so our binary
+    // stops on the first line of its cdflt.ssim and reads nothing at all.  A tree's
+    // own apm is compiled against that tree's schema, which makes it the one binary
+    // guaranteed to read it, so prefer it wherever DIR has one.  Ours answers for
+    // the two cases that leaves: a directory carrying package files but no openacr
+    // tooling, which is how apm serves a plain submodule, and a run under -l, where
+    // the package definition being evaluated is ours and only our binary parses it.
+    // Command line field BINPATH names the subdirectory the binaries sit in.
+    tempstr GetApmPath(algo::strptr dir);
+
+    // Return the mode bits of FILENAME, which are zero when it cannot be stat'ed.
     int GetFileMode(algo::strptr filename);
 
     // Retrun regx of selected packages
@@ -116,10 +136,6 @@ namespace apm { // update-hdr
     // cpp/apm/rec.cpp
     //
 
-    // return TRUE if the field is a valid edge for transitive closure.
-    // The field is chosen if it's the pkey, or a leftmost subtring of pkey
-    bool LeftCheckQ(apm::FField &field);
-
     // Load all records (FRec) from dataset _db.cmdline.data_in)
     // For each record (FRec), compute p_ssimfile, pkey, tuple
     // Populate global zd_rec index
@@ -134,9 +150,8 @@ namespace apm { // update-hdr
     // This structure allows full analysis of package composition and checking
     void LoadRecs();
 
-    // Select records belonging to package PACKAGE by adding them to zd_selrec
-    // These are all the records that the package references via zd_pkgrec,
-    // minus any records claimed by packages that depend on PACKAGE
+    // Select records belonging to package PACKAGE by adding them to zd_selrec.
+    // These are all the records that the package references via zd_pkgrec.
     void SelectPkgRecs(apm::FPackage &package);
 
     // -------------------------------------------------------------------
@@ -162,14 +177,31 @@ namespace apm { // update-hdr
 
     // Topologically sort selected records and save them to file RECFILE
     // Return success code
+    // Every apm action that needs these records reads them back from RECFILE rather
+    // than from the selection they were written from, so a write that fails leaves
+    // the file absent and every reader after it sees an empty record set. The
+    // failure is reported here, at the one place that performs the write, naming the
+    // file and the decoded errno; what a failed write means for the run is the
+    // caller's to decide.
     bool SaveSelrecToFile(algo::strptr recfile);
 
     // Save local package definitions to file
     void SavePackageDefs(algo::strptr filename);
 
     // Collect package records from directory DIR into RECFILE
+    // Return success code
     // We run our executable in the remote directory to get predictable results
-    void CollectPkgrecFromDir(algo::strptr package, algo::strptr recfile, algo::strptr dir);
+    // The caller reads the records back from RECFILE, and the child's stdout
+    // redirect truncates RECFILE before the child runs. A child that fails
+    // therefore leaves an empty file, which reads exactly like a directory whose
+    // copy of the package holds no record at all -- and a merge given that empty
+    // side concludes the package's records were all deleted. The wait status is the
+    // only thing that tells the two apart, so it is reported here, at the one place
+    // that runs the child; what an unread side means for the run is the caller's to
+    // decide.
+    // The child is started inside DIR and waited for after the current directory is
+    // restored, so nothing that reports the failure runs while DIR is pushed.
+    bool CollectPkgrecFromDir(algo::strptr package, algo::strptr recfile, algo::strptr dir);
 
     // Collect package records (dev.gitfile and other keys) into file RECFILE
     // Return success code;
@@ -181,6 +213,9 @@ namespace apm { // update-hdr
     // Show selected package's files
     // Throw exception on error
     void Main_Showfile();
+
+    // Save package records into apm/gen/<package>.ssim
+    void Main_Generate();
 
     // List packages in topological order
     void Main_List();
@@ -198,7 +233,12 @@ namespace apm { // update-hdr
     // but if THEIRS_DIR is specified, then BASE_DIR must also be specified
     // The list of package file is evaluated in each directory independently.
     // But if the directory doesn't have apm, the local package definition is used.
-    void CreateMergeFiles(algo::strptr regx_package, algo::strptr base_dir, algo::strptr theirs_dir);
+    // Return success code
+    // Each list comes from a child whose output this function reads, so a child that
+    // fails contributes no file rather than an error, and a file the child never
+    // named is a file the merge leaves at the version it already had. The failure is
+    // reported per directory and the caller decides what an incomplete table means.
+    bool CreateMergeFiles(algo::strptr regx_package, algo::strptr base_dir, algo::strptr theirs_dir);
 
     // Scan mergefile table and perform per-file 3-way non-history-aware merge
     // each file may be existent or non-existent; each file has a mode
@@ -234,5 +274,16 @@ namespace apm { // update-hdr
     // insert conflicts into ssimfiles in appropriate places
     // user continues with `git add ...`, `git commit` or `git reset --hard` to abort
     // This function handles installation as well (the case where package.baseref = empty string)
+    //
+    // Each step below produces one of the inputs the next steps read: a sandbox
+    // directory, one of the three sides of the record merge, the merged records, or
+    // the table of files to merge. Every one of those inputs is a file or a
+    // directory, so a step that fails leaves its input empty rather than missing,
+    // and an empty input is a legitimate value everywhere it is read -- an empty
+    // "theirs" says the incoming version deleted every record of the package, and
+    // the plan built from it deletes the package's records with nothing to put back.
+    // So a step that fails stops the update: the plan is not composed at all, and
+    // the nonzero exit keeps the transaction from running. The steps, and what apm
+    // does when each of them fails, are pinned by comptest apm.UpdateFate.
     void Main_Update();
 }

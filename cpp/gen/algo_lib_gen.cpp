@@ -39,21 +39,21 @@ algo_lib::_db_bh_timehook_curs::~_db_bh_timehook_curs() {
 
 namespace algo_lib { // gen:ns_print_proto
     // func:algo_lib.Cmdline.verbose.ReadStrptrMaybe
-    inline static bool   verbose_ReadStrptrMaybe(algo_lib::Cmdline &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   verbose_ReadStrptrMaybe(algo_lib::Cmdline& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:algo_lib.Cmdline.debug.ReadStrptrMaybe
-    inline static bool   debug_ReadStrptrMaybe(algo_lib::Cmdline &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   debug_ReadStrptrMaybe(algo_lib::Cmdline& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:algo_lib.RegxFlags.trace.ReadStrptrMaybe
-    inline static bool   trace_ReadStrptrMaybe(algo_lib::RegxFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   trace_ReadStrptrMaybe(algo_lib::RegxFlags& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:algo_lib.RegxFlags.capture.ReadStrptrMaybe
-    inline static bool   capture_ReadStrptrMaybe(algo_lib::RegxFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   capture_ReadStrptrMaybe(algo_lib::RegxFlags& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:algo_lib.RegxFlags.valid.ReadStrptrMaybe
-    inline static bool   valid_ReadStrptrMaybe(algo_lib::RegxFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   valid_ReadStrptrMaybe(algo_lib::RegxFlags& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:algo_lib.RegxFlags.literal.ReadStrptrMaybe
-    inline static bool   literal_ReadStrptrMaybe(algo_lib::RegxFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   literal_ReadStrptrMaybe(algo_lib::RegxFlags& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:algo_lib.RegxFlags.accepts_all.ReadStrptrMaybe
-    inline static bool   accepts_all_ReadStrptrMaybe(algo_lib::RegxFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   accepts_all_ReadStrptrMaybe(algo_lib::RegxFlags& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:algo_lib.RegxFlags.fullmatch.ReadStrptrMaybe
-    inline static bool   fullmatch_ReadStrptrMaybe(algo_lib::RegxFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   fullmatch_ReadStrptrMaybe(algo_lib::RegxFlags& parent, algo::strptr in_str) __attribute__((nothrow));
     // Load statically available data into tables, register tables and database.
     // func:algo_lib.FDb._db.InitReflection
     static void          InitReflection();
@@ -137,9 +137,9 @@ algo::aryptr<u64> algo_lib::ary_Addary(algo_lib::Bitset& parent, algo::aryptr<u6
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("algo_lib.tary_alias  field:algo_lib.Bitset.ary  comment:'alias error: sub-array is being appended to the whole'");
     }
-    int nnew = rhs.n_elems;
+    i64 nnew = rhs.n_elems;
     ary_Reserve(parent, nnew); // reserve space
-    int at = parent.ary_n;
+    i64 at = parent.ary_n;
     memcpy(parent.ary_elems + at, rhs.elems, nnew * sizeof(u64));
     parent.ary_n += nnew;
     return algo::aryptr<u64>(parent.ary_elems + at, nnew);
@@ -150,8 +150,8 @@ algo::aryptr<u64> algo_lib::ary_Addary(algo_lib::Bitset& parent, algo::aryptr<u6
 // The new element is initialized to a default value
 u64& algo_lib::ary_Alloc(algo_lib::Bitset& parent) {
     ary_Reserve(parent, 1);
-    int n  = parent.ary_n;
-    int at = n;
+    i64 n  = parent.ary_n;
+    i64 at = n;
     u64 *elems = parent.ary_elems;
     new (elems + at) u64(0); // construct new element, default initializer
     parent.ary_n = n+1;
@@ -161,9 +161,9 @@ u64& algo_lib::ary_Alloc(algo_lib::Bitset& parent) {
 // --- algo_lib.Bitset.ary.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-u64& algo_lib::ary_AllocAt(algo_lib::Bitset& parent, int at) {
+u64& algo_lib::ary_AllocAt(algo_lib::Bitset& parent, i64 at) {
     ary_Reserve(parent, 1);
-    int n  = parent.ary_n;
+    i64 n  = parent.ary_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
         FatalErrorExit("algo_lib.bad_alloc_at  field:algo_lib.Bitset.ary  comment:'index out of range'");
     }
@@ -176,12 +176,12 @@ u64& algo_lib::ary_AllocAt(algo_lib::Bitset& parent, int at) {
 
 // --- algo_lib.Bitset.ary.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<u64> algo_lib::ary_AllocN(algo_lib::Bitset& parent, int n_elems) {
+algo::aryptr<u64> algo_lib::ary_AllocN(algo_lib::Bitset& parent, i64 n_elems) {
     ary_Reserve(parent, n_elems);
-    int old_n  = parent.ary_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = parent.ary_n;
+    i64 new_n = old_n + n_elems;
     u64 *elems = parent.ary_elems;
-    for (int i = old_n; i < new_n; i++) {
+    for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) u64(0); // construct new element, default initialize
     }
     parent.ary_n = new_n;
@@ -192,15 +192,15 @@ algo::aryptr<u64> algo_lib::ary_AllocN(algo_lib::Bitset& parent, int n_elems) {
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::aryptr<u64> algo_lib::ary_AllocNAt(algo_lib::Bitset& parent, int n_elems, int at) {
+algo::aryptr<u64> algo_lib::ary_AllocNAt(algo_lib::Bitset& parent, i64 n_elems, i64 at) {
     ary_Reserve(parent, n_elems);
-    int n  = parent.ary_n;
+    i64 n  = parent.ary_n;
     if (UNLIKELY(u64(at) > u64(n))) {
         FatalErrorExit("algo_lib.bad_alloc_n_at  field:algo_lib.Bitset.ary  comment:'index out of range'");
     }
     u64 *elems = parent.ary_elems;
     memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(u64));
-    for (int i = 0; i < n_elems; i++) {
+    for (i64 i = 0; i < n_elems; i++) {
         new (elems + at + i) u64(0); // construct new element, default initialize
     }
     parent.ary_n = n+n_elems;
@@ -209,8 +209,8 @@ algo::aryptr<u64> algo_lib::ary_AllocNAt(algo_lib::Bitset& parent, int n_elems, 
 
 // --- algo_lib.Bitset.ary.Remove
 // Remove item by index. If index outside of range, do nothing.
-void algo_lib::ary_Remove(algo_lib::Bitset& parent, u32 i) {
-    u32 lim = parent.ary_n;
+void algo_lib::ary_Remove(algo_lib::Bitset& parent, u64 i) {
+    u64 lim = parent.ary_n;
     u64 *elems = parent.ary_elems;
     if (i < lim) {
         memmove(elems + i, elems + (i + 1), sizeof(u64) * (lim - (i + 1)));
@@ -230,10 +230,10 @@ void algo_lib::ary_RemoveLast(algo_lib::Bitset& parent) {
 
 // --- algo_lib.Bitset.ary.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void algo_lib::ary_AbsReserve(algo_lib::Bitset& parent, int n) {
-    u32 old_max  = parent.ary_max;
-    if (n > i32(old_max)) {
-        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+void algo_lib::ary_AbsReserve(algo_lib::Bitset& parent, i64 n) {
+    u64 old_max  = parent.ary_max;
+    if (n > i64(old_max)) {
+        u64 new_max  = i64_Max(i64_Max(old_max * 2, n), 4);
         void *new_mem = algo_lib::lpool_ReallocMem(parent.ary_elems, old_max * sizeof(u64), new_max * sizeof(u64));
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("algo_lib.tary_nomem  field:algo_lib.Bitset.ary  comment:'out of memory'");
@@ -247,9 +247,9 @@ void algo_lib::ary_AbsReserve(algo_lib::Bitset& parent, int n) {
 // Copy contents of RHS to PARENT.
 void algo_lib::ary_Setary(algo_lib::Bitset& parent, algo_lib::Bitset &rhs) {
     ary_RemoveAll(parent);
-    int nnew = rhs.ary_n;
+    i64 nnew = rhs.ary_n;
     ary_Reserve(parent, nnew); // reserve space
-    for (int i = 0; i < nnew; i++) { // copy elements over
+    for (i64 i = 0; i < nnew; i++) { // copy elements over
         new (parent.ary_elems + i) u64(ary_qFind(rhs, i));
         parent.ary_n = i + 1;
     }
@@ -265,12 +265,12 @@ void algo_lib::ary_Setary(algo_lib::Bitset& parent, const algo::aryptr<u64> &rhs
 
 // --- algo_lib.Bitset.ary.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<u64> algo_lib::ary_AllocNVal(algo_lib::Bitset& parent, int n_elems, const u64& val) {
+algo::aryptr<u64> algo_lib::ary_AllocNVal(algo_lib::Bitset& parent, i64 n_elems, const u64& val) {
     ary_Reserve(parent, n_elems);
-    int old_n  = parent.ary_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = parent.ary_n;
+    i64 new_n = old_n + n_elems;
     u64 *elems = parent.ary_elems;
-    for (int i = old_n; i < new_n; i++) {
+    for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) u64(val);
     }
     parent.ary_n = new_n;
@@ -294,20 +294,35 @@ bool algo_lib::ary_ReadStrptrMaybe(algo_lib::Bitset& parent, algo::strptr in_str
 // --- algo_lib.Bitset.ary.Insary
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-void algo_lib::ary_Insary(algo_lib::Bitset& parent, algo::aryptr<u64> rhs, int at) {
+void algo_lib::ary_Insary(algo_lib::Bitset& parent, algo::aryptr<u64> rhs, i64 at) {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.ary_elems && rhs.elems < parent.ary_elems + parent.ary_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("algo_lib.tary_alias  field:algo_lib.Bitset.ary  comment:'alias error: sub-array is being appended to the whole'");
     }
-    if (UNLIKELY(u64(at) >= u64(parent.ary_elems+1))) {
+    if (UNLIKELY(u64(at) >= u64(parent.ary_n+1))) {
         FatalErrorExit("algo_lib.bad_insary  field:algo_lib.Bitset.ary  comment:'index out of range'");
     }
-    int nnew = rhs.n_elems;
-    int nmove = parent.ary_n - at;
+    i64 nnew = rhs.n_elems;
+    i64 nmove = parent.ary_n - at;
     ary_Reserve(parent, nnew); // reserve space
     memmove(parent.ary_elems + at + nnew, parent.ary_elems + at, nmove * sizeof(u64));
     memcpy(parent.ary_elems + at, rhs.elems, nnew * sizeof(u64));
     parent.ary_n += nnew;
+}
+
+// --- algo_lib.Bitset.ary.RemRegion
+// Delete a range of elements
+// Remove region from the middle of the array
+// The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
+// If N is negative, nothing is removed.
+void algo_lib::ary_RemRegion(algo_lib::Bitset& parent, i64 beg, i64 n) {
+    i64 end = i64_Min(beg+n, parent.ary_n);
+    beg = i64_Max(beg,0);
+    n = end-beg;
+    if (n>0) {
+        memmove(parent.ary_elems+beg, parent.ary_elems+end, sizeof(u64) * (parent.ary_n-end));
+        parent.ary_n -= n;
+    }
 }
 
 // --- algo_lib.Bitset.ary_bitcurs.Next
@@ -367,9 +382,17 @@ algo_lib::Bitset& algo_lib::Bitset::operator =(const algo_lib::Bitset &rhs) {
     ary_max   	= 0; // (algo_lib.Bitset.ary)
     ary_Setary(*this, ary_Getary(const_cast<algo_lib::Bitset&>(rhs)));
 }
+const char *algo_lib::Cmdline_help = "Cmdline: *can't move this to command namespace because of circular dependency*\n"
+"Usage: Cmdline\n"
+"    OPTION      TYPE  DFLT  COMMENT\n"
+"    -verbose    flag        Verbosity level (0..255); alias -v; cumulative\n"
+"    -debug      flag        Debug level (0..255); alias -d; cumulative\n"
+"    -help                   Print help and exit; alias -h\n"
+"    -version                Print version and exit\n"
+"    -signature              Show signatures and exit; alias -sig\n";
 
 // --- algo_lib.Cmdline.verbose.ReadStrptrMaybe
-inline static bool algo_lib::verbose_ReadStrptrMaybe(algo_lib::Cmdline &parent, algo::strptr in_str) {
+inline static bool algo_lib::verbose_ReadStrptrMaybe(algo_lib::Cmdline& parent, algo::strptr in_str) {
     bool retval = true;
     if (in_str == "") {
         in_str = "1"; // fflag:algo_lib.Cmdline.verbose - empty input string
@@ -383,7 +406,7 @@ inline static bool algo_lib::verbose_ReadStrptrMaybe(algo_lib::Cmdline &parent, 
 }
 
 // --- algo_lib.Cmdline.debug.ReadStrptrMaybe
-inline static bool algo_lib::debug_ReadStrptrMaybe(algo_lib::Cmdline &parent, algo::strptr in_str) {
+inline static bool algo_lib::debug_ReadStrptrMaybe(algo_lib::Cmdline& parent, algo::strptr in_str) {
     bool retval = true;
     if (in_str == "") {
         in_str = "1"; // fflag:algo_lib.Cmdline.debug - empty input string
@@ -563,6 +586,78 @@ i32 algo_lib::Cmdline_NArgs(algo_lib::FieldId field, algo::strptr& out_dflt, boo
     return retval;
 }
 
+// --- algo_lib.Cmdline..ReadArgv
+// Field-aware command-line reader over a word array
+// Read command-line ARGS (already split into words) into the fields of PARENT.
+// Field-aware: a value-taking option consumes the next word; errors go to ERR.
+bool algo_lib::Cmdline_ReadArgv(algo_lib::Cmdline &parent, algo::StringAry &args, algo::cstring &err) {
+    bool retval = true;
+    int needarg=-1;// how many args the current option still wants
+    algo::strptr attrname;
+    bool isanon=false; // true if attrname is anonfld (positional)
+    algo_lib::FieldId attrid;
+    bool endopt=false;
+    int whichns=0;// 0=base, 1=leaf
+    for (int argidx=0; argidx < ary_N(args); argidx++) {
+        algo::strptr arg = ary_qFind(args, argidx);
+        algo::strptr attrval;
+        algo::strptr dfltval;
+        bool haveval=false;
+        bool dash=elems_N(arg)>1 && arg.elems[0]=='-'; // a single dash is not an option
+        if (endopt || needarg>0 || !dash) {
+            attrval=arg;
+            haveval=true;
+        } else {
+            bool dashdash = elems_N(arg) >= 2 && arg.elems[1]=='-';
+            int skip = int(dash) + dashdash;
+            attrname=ch_RestFrom(arg,skip);
+            if (skip==2 && elems_N(arg)==2) {
+                endopt=true;
+                continue;
+            }
+            algo::i32_Range colon = TFind(attrname,':');
+            if (colon.beg < colon.end) {
+                attrval=ch_RestFrom(attrname,colon.end);
+                attrname=ch_FirstN(attrname,colon.beg);
+                haveval=true;
+            }
+            whichns=0;
+            needarg=-1;
+            if (needarg<0) {
+                whichns=1;
+                if (algo_lib::FieldId_ReadStrptrMaybe(attrid,attrname)) {
+                    needarg = algo_lib::Cmdline_NArgs(attrid,dfltval,&isanon);
+                }
+            }
+            if (attrval == "" && dfltval != "") {
+                attrval=dfltval;
+                haveval=true;
+            }
+            if (needarg<0) {
+                err<<"Cmdline: unknown option "<<Keyval("value",arg)<<eol;
+            } else {
+            }
+        }
+        if (ch_N(attrname) == 0) {
+            err << "Cmdline: too many arguments. error at "<<algo::strptr_ToSsim(arg)<<eol;
+        } else if (haveval) {
+            bool ret=false;
+            if (whichns==1) {
+                ret=algo_lib::Cmdline_ReadFieldMaybe(parent, attrname, attrval);
+            }
+            if (!ret) {
+                err<<"Cmdline: error in "<<Keyval("option",attrname)<<Keyval("value",attrval)<<eol;
+            }
+            needarg--;
+            if (needarg <= 0) {
+                attrname="";// forget which argument was being filled
+            }
+        }
+    }
+    retval = (ch_N(err) == 0);
+    return retval;
+}
+
 // --- algo_lib.CsvParse.ary_tok.Addary
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
@@ -572,10 +667,10 @@ algo::aryptr<algo::cstring> algo_lib::ary_tok_Addary(algo_lib::CsvParse& csvpars
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("algo_lib.tary_alias  field:algo_lib.CsvParse.ary_tok  comment:'alias error: sub-array is being appended to the whole'");
     }
-    int nnew = rhs.n_elems;
+    i64 nnew = rhs.n_elems;
     ary_tok_Reserve(csvparse, nnew); // reserve space
-    int at = csvparse.ary_tok_n;
-    for (int i = 0; i < nnew; i++) {
+    i64 at = csvparse.ary_tok_n;
+    for (i64 i = 0; i < nnew; i++) {
         new (csvparse.ary_tok_elems + at + i) algo::cstring(rhs[i]);
         csvparse.ary_tok_n++;
     }
@@ -587,8 +682,8 @@ algo::aryptr<algo::cstring> algo_lib::ary_tok_Addary(algo_lib::CsvParse& csvpars
 // The new element is initialized to a default value
 algo::cstring& algo_lib::ary_tok_Alloc(algo_lib::CsvParse& csvparse) {
     ary_tok_Reserve(csvparse, 1);
-    int n  = csvparse.ary_tok_n;
-    int at = n;
+    i64 n  = csvparse.ary_tok_n;
+    i64 at = n;
     algo::cstring *elems = csvparse.ary_tok_elems;
     new (elems + at) algo::cstring(); // construct new element, default initializer
     csvparse.ary_tok_n = n+1;
@@ -598,9 +693,9 @@ algo::cstring& algo_lib::ary_tok_Alloc(algo_lib::CsvParse& csvparse) {
 // --- algo_lib.CsvParse.ary_tok.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::cstring& algo_lib::ary_tok_AllocAt(algo_lib::CsvParse& csvparse, int at) {
+algo::cstring& algo_lib::ary_tok_AllocAt(algo_lib::CsvParse& csvparse, i64 at) {
     ary_tok_Reserve(csvparse, 1);
-    int n  = csvparse.ary_tok_n;
+    i64 n  = csvparse.ary_tok_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
         FatalErrorExit("algo_lib.bad_alloc_at  field:algo_lib.CsvParse.ary_tok  comment:'index out of range'");
     }
@@ -613,12 +708,12 @@ algo::cstring& algo_lib::ary_tok_AllocAt(algo_lib::CsvParse& csvparse, int at) {
 
 // --- algo_lib.CsvParse.ary_tok.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> algo_lib::ary_tok_AllocN(algo_lib::CsvParse& csvparse, int n_elems) {
+algo::aryptr<algo::cstring> algo_lib::ary_tok_AllocN(algo_lib::CsvParse& csvparse, i64 n_elems) {
     ary_tok_Reserve(csvparse, n_elems);
-    int old_n  = csvparse.ary_tok_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = csvparse.ary_tok_n;
+    i64 new_n = old_n + n_elems;
     algo::cstring *elems = csvparse.ary_tok_elems;
-    for (int i = old_n; i < new_n; i++) {
+    for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) algo::cstring(); // construct new element, default initialize
     }
     csvparse.ary_tok_n = new_n;
@@ -629,15 +724,15 @@ algo::aryptr<algo::cstring> algo_lib::ary_tok_AllocN(algo_lib::CsvParse& csvpars
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::aryptr<algo::cstring> algo_lib::ary_tok_AllocNAt(algo_lib::CsvParse& csvparse, int n_elems, int at) {
+algo::aryptr<algo::cstring> algo_lib::ary_tok_AllocNAt(algo_lib::CsvParse& csvparse, i64 n_elems, i64 at) {
     ary_tok_Reserve(csvparse, n_elems);
-    int n  = csvparse.ary_tok_n;
+    i64 n  = csvparse.ary_tok_n;
     if (UNLIKELY(u64(at) > u64(n))) {
         FatalErrorExit("algo_lib.bad_alloc_n_at  field:algo_lib.CsvParse.ary_tok  comment:'index out of range'");
     }
     algo::cstring *elems = csvparse.ary_tok_elems;
     memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(algo::cstring));
-    for (int i = 0; i < n_elems; i++) {
+    for (i64 i = 0; i < n_elems; i++) {
         new (elems + at + i) algo::cstring(); // construct new element, default initialize
     }
     csvparse.ary_tok_n = n+n_elems;
@@ -646,8 +741,8 @@ algo::aryptr<algo::cstring> algo_lib::ary_tok_AllocNAt(algo_lib::CsvParse& csvpa
 
 // --- algo_lib.CsvParse.ary_tok.Remove
 // Remove item by index. If index outside of range, do nothing.
-void algo_lib::ary_tok_Remove(algo_lib::CsvParse& csvparse, u32 i) {
-    u32 lim = csvparse.ary_tok_n;
+void algo_lib::ary_tok_Remove(algo_lib::CsvParse& csvparse, u64 i) {
+    u64 lim = csvparse.ary_tok_n;
     algo::cstring *elems = csvparse.ary_tok_elems;
     if (i < lim) {
         elems[i].~cstring(); // destroy element
@@ -658,12 +753,11 @@ void algo_lib::ary_tok_Remove(algo_lib::CsvParse& csvparse, u32 i) {
 
 // --- algo_lib.CsvParse.ary_tok.RemoveAll
 void algo_lib::ary_tok_RemoveAll(algo_lib::CsvParse& csvparse) {
-    u32 n = csvparse.ary_tok_n;
-    while (n > 0) {
-        n -= 1;
-        csvparse.ary_tok_elems[n].~cstring();
-        csvparse.ary_tok_n = n;
+    u64 n = csvparse.ary_tok_n;
+    for (u64 i=0; i<n; i++) {
+        csvparse.ary_tok_elems[i].~cstring();
     }
+    csvparse.ary_tok_n = 0;
 }
 
 // --- algo_lib.CsvParse.ary_tok.RemoveLast
@@ -679,10 +773,10 @@ void algo_lib::ary_tok_RemoveLast(algo_lib::CsvParse& csvparse) {
 
 // --- algo_lib.CsvParse.ary_tok.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void algo_lib::ary_tok_AbsReserve(algo_lib::CsvParse& csvparse, int n) {
-    u32 old_max  = csvparse.ary_tok_max;
-    if (n > i32(old_max)) {
-        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+void algo_lib::ary_tok_AbsReserve(algo_lib::CsvParse& csvparse, i64 n) {
+    u64 old_max  = csvparse.ary_tok_max;
+    if (n > i64(old_max)) {
+        u64 new_max  = i64_Max(i64_Max(old_max * 2, n), 4);
         void *new_mem = algo_lib::lpool_ReallocMem(csvparse.ary_tok_elems, old_max * sizeof(algo::cstring), new_max * sizeof(algo::cstring));
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("algo_lib.tary_nomem  field:algo_lib.CsvParse.ary_tok  comment:'out of memory'");
@@ -696,9 +790,9 @@ void algo_lib::ary_tok_AbsReserve(algo_lib::CsvParse& csvparse, int n) {
 // Copy contents of RHS to PARENT.
 void algo_lib::ary_tok_Setary(algo_lib::CsvParse& csvparse, algo_lib::CsvParse &rhs) {
     ary_tok_RemoveAll(csvparse);
-    int nnew = rhs.ary_tok_n;
+    i64 nnew = rhs.ary_tok_n;
     ary_tok_Reserve(csvparse, nnew); // reserve space
-    for (int i = 0; i < nnew; i++) { // copy elements over
+    for (i64 i = 0; i < nnew; i++) { // copy elements over
         new (csvparse.ary_tok_elems + i) algo::cstring(ary_tok_qFind(rhs, i));
         csvparse.ary_tok_n = i + 1;
     }
@@ -714,12 +808,12 @@ void algo_lib::ary_tok_Setary(algo_lib::CsvParse& csvparse, const algo::aryptr<a
 
 // --- algo_lib.CsvParse.ary_tok.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> algo_lib::ary_tok_AllocNVal(algo_lib::CsvParse& csvparse, int n_elems, const algo::cstring& val) {
+algo::aryptr<algo::cstring> algo_lib::ary_tok_AllocNVal(algo_lib::CsvParse& csvparse, i64 n_elems, const algo::cstring& val) {
     ary_tok_Reserve(csvparse, n_elems);
-    int old_n  = csvparse.ary_tok_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = csvparse.ary_tok_n;
+    i64 new_n = old_n + n_elems;
     algo::cstring *elems = csvparse.ary_tok_elems;
-    for (int i = old_n; i < new_n; i++) {
+    for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) algo::cstring(val);
     }
     csvparse.ary_tok_n = new_n;
@@ -743,25 +837,43 @@ bool algo_lib::ary_tok_ReadStrptrMaybe(algo_lib::CsvParse& csvparse, algo::strpt
 // --- algo_lib.CsvParse.ary_tok.Insary
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-void algo_lib::ary_tok_Insary(algo_lib::CsvParse& csvparse, algo::aryptr<algo::cstring> rhs, int at) {
+void algo_lib::ary_tok_Insary(algo_lib::CsvParse& csvparse, algo::aryptr<algo::cstring> rhs, i64 at) {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= csvparse.ary_tok_elems && rhs.elems < csvparse.ary_tok_elems + csvparse.ary_tok_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("algo_lib.tary_alias  field:algo_lib.CsvParse.ary_tok  comment:'alias error: sub-array is being appended to the whole'");
     }
-    if (UNLIKELY(u64(at) >= u64(csvparse.ary_tok_elems+1))) {
+    if (UNLIKELY(u64(at) >= u64(csvparse.ary_tok_n+1))) {
         FatalErrorExit("algo_lib.bad_insary  field:algo_lib.CsvParse.ary_tok  comment:'index out of range'");
     }
-    int nnew = rhs.n_elems;
-    int nmove = csvparse.ary_tok_n - at;
+    i64 nnew = rhs.n_elems;
+    i64 nmove = csvparse.ary_tok_n - at;
     ary_tok_Reserve(csvparse, nnew); // reserve space
-    for (int i = nmove-1; i >=0 ; --i) {
+    for (i64 i = nmove-1; i >=0 ; --i) {
         new (csvparse.ary_tok_elems + at + nnew + i) algo::cstring(csvparse.ary_tok_elems[at + i]);
         csvparse.ary_tok_elems[at + i].~cstring(); // destroy element
     }
-    for (int i = 0; i < nnew; ++i) {
+    for (i64 i = 0; i < nnew; ++i) {
         new (csvparse.ary_tok_elems + at + i) algo::cstring(rhs[i]);
     }
     csvparse.ary_tok_n += nnew;
+}
+
+// --- algo_lib.CsvParse.ary_tok.RemRegion
+// Delete a range of elements
+// Remove region from the middle of the array
+// The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
+// If N is negative, nothing is removed.
+void algo_lib::ary_tok_RemRegion(algo_lib::CsvParse& csvparse, i64 beg, i64 n) {
+    i64 end = i64_Min(beg+n, csvparse.ary_tok_n);
+    beg = i64_Max(beg,0);
+    n = end-beg;
+    if (n>0) {
+        for (i64 i=beg; i<end; i++) {
+            csvparse.ary_tok_elems[i].~cstring();
+        }
+        memmove(csvparse.ary_tok_elems+beg, csvparse.ary_tok_elems+end, sizeof(algo::cstring) * (csvparse.ary_tok_n-end));
+        csvparse.ary_tok_n -= n;
+    }
 }
 
 // --- algo_lib.CsvParse..Uninit
@@ -907,10 +1019,11 @@ void algo_lib::FTimehook_Print(algo_lib::FTimehook& row, algo::cstring& str) {
 void algo_lib::imdb_CopyOut(algo_lib::FImdb &row, algo::Imdb &out) {
     out.imdb = row.imdb;
     out.InsertStrptrMaybe = row.InsertStrptrMaybe;
+    out.RemoveStrptrMaybe = row.RemoveStrptrMaybe;
     out.Step = row.Step;
     out.MainLoop = row.MainLoop;
     out.GetTrace = row.GetTrace;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- algo_lib.FImdb.msghdr.CopyIn
@@ -918,6 +1031,7 @@ void algo_lib::imdb_CopyOut(algo_lib::FImdb &row, algo::Imdb &out) {
 void algo_lib::imdb_CopyIn(algo_lib::FImdb &row, algo::Imdb &in) {
     row.imdb = in.imdb;
     row.InsertStrptrMaybe = in.InsertStrptrMaybe;
+    row.RemoveStrptrMaybe = in.RemoveStrptrMaybe;
     row.Step = in.Step;
     row.MainLoop = in.MainLoop;
     row.GetTrace = in.GetTrace;
@@ -931,7 +1045,7 @@ void algo_lib::FImdb_Uninit(algo_lib::FImdb& imdb) {
 }
 
 // --- algo_lib.RegxFlags.trace.ReadStrptrMaybe
-inline static bool algo_lib::trace_ReadStrptrMaybe(algo_lib::RegxFlags &parent, algo::strptr in_str) {
+inline static bool algo_lib::trace_ReadStrptrMaybe(algo_lib::RegxFlags& parent, algo::strptr in_str) {
     bool retval = true;
     bool trace_tmp;
     retval = bool_ReadStrptrMaybe(trace_tmp, in_str);
@@ -942,7 +1056,7 @@ inline static bool algo_lib::trace_ReadStrptrMaybe(algo_lib::RegxFlags &parent, 
 }
 
 // --- algo_lib.RegxFlags.capture.ReadStrptrMaybe
-inline static bool algo_lib::capture_ReadStrptrMaybe(algo_lib::RegxFlags &parent, algo::strptr in_str) {
+inline static bool algo_lib::capture_ReadStrptrMaybe(algo_lib::RegxFlags& parent, algo::strptr in_str) {
     bool retval = true;
     bool capture_tmp;
     retval = bool_ReadStrptrMaybe(capture_tmp, in_str);
@@ -953,7 +1067,7 @@ inline static bool algo_lib::capture_ReadStrptrMaybe(algo_lib::RegxFlags &parent
 }
 
 // --- algo_lib.RegxFlags.valid.ReadStrptrMaybe
-inline static bool algo_lib::valid_ReadStrptrMaybe(algo_lib::RegxFlags &parent, algo::strptr in_str) {
+inline static bool algo_lib::valid_ReadStrptrMaybe(algo_lib::RegxFlags& parent, algo::strptr in_str) {
     bool retval = true;
     bool valid_tmp;
     retval = bool_ReadStrptrMaybe(valid_tmp, in_str);
@@ -964,7 +1078,7 @@ inline static bool algo_lib::valid_ReadStrptrMaybe(algo_lib::RegxFlags &parent, 
 }
 
 // --- algo_lib.RegxFlags.literal.ReadStrptrMaybe
-inline static bool algo_lib::literal_ReadStrptrMaybe(algo_lib::RegxFlags &parent, algo::strptr in_str) {
+inline static bool algo_lib::literal_ReadStrptrMaybe(algo_lib::RegxFlags& parent, algo::strptr in_str) {
     bool retval = true;
     bool literal_tmp;
     retval = bool_ReadStrptrMaybe(literal_tmp, in_str);
@@ -975,7 +1089,7 @@ inline static bool algo_lib::literal_ReadStrptrMaybe(algo_lib::RegxFlags &parent
 }
 
 // --- algo_lib.RegxFlags.accepts_all.ReadStrptrMaybe
-inline static bool algo_lib::accepts_all_ReadStrptrMaybe(algo_lib::RegxFlags &parent, algo::strptr in_str) {
+inline static bool algo_lib::accepts_all_ReadStrptrMaybe(algo_lib::RegxFlags& parent, algo::strptr in_str) {
     bool retval = true;
     bool accepts_all_tmp;
     retval = bool_ReadStrptrMaybe(accepts_all_tmp, in_str);
@@ -986,7 +1100,7 @@ inline static bool algo_lib::accepts_all_ReadStrptrMaybe(algo_lib::RegxFlags &pa
 }
 
 // --- algo_lib.RegxFlags.fullmatch.ReadStrptrMaybe
-inline static bool algo_lib::fullmatch_ReadStrptrMaybe(algo_lib::RegxFlags &parent, algo::strptr in_str) {
+inline static bool algo_lib::fullmatch_ReadStrptrMaybe(algo_lib::RegxFlags& parent, algo::strptr in_str) {
     bool retval = true;
     bool fullmatch_tmp;
     retval = bool_ReadStrptrMaybe(fullmatch_tmp, in_str);
@@ -1217,7 +1331,7 @@ bool algo_lib::RegxStyle_ReadStrptrMaybe(algo_lib::RegxStyle &parent, algo::strp
 // --- algo_lib.RegxStyle..Print
 // print string representation of ROW to string STR
 // cfmt:algo_lib.RegxStyle.String  printfmt:Raw
-void algo_lib::RegxStyle_Print(algo_lib::RegxStyle& row, algo::cstring& str) {
+void algo_lib::RegxStyle_Print(algo_lib::RegxStyle row, algo::cstring& str) {
     algo_lib::value_Print(row, str);
 }
 
@@ -1230,10 +1344,10 @@ algo::aryptr<algo_lib::RegxState> algo_lib::state_Addary(algo_lib::Regx& regx, a
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("algo_lib.tary_alias  field:algo_lib.Regx.state  comment:'alias error: sub-array is being appended to the whole'");
     }
-    int nnew = rhs.n_elems;
+    i64 nnew = rhs.n_elems;
     state_Reserve(regx, nnew); // reserve space
-    int at = regx.state_n;
-    for (int i = 0; i < nnew; i++) {
+    i64 at = regx.state_n;
+    for (i64 i = 0; i < nnew; i++) {
         new (regx.state_elems + at + i) algo_lib::RegxState(rhs[i]);
         regx.state_n++;
     }
@@ -1245,8 +1359,8 @@ algo::aryptr<algo_lib::RegxState> algo_lib::state_Addary(algo_lib::Regx& regx, a
 // The new element is initialized to a default value
 algo_lib::RegxState& algo_lib::state_Alloc(algo_lib::Regx& regx) {
     state_Reserve(regx, 1);
-    int n  = regx.state_n;
-    int at = n;
+    i64 n  = regx.state_n;
+    i64 at = n;
     algo_lib::RegxState *elems = regx.state_elems;
     new (elems + at) algo_lib::RegxState(); // construct new element, default initializer
     regx.state_n = n+1;
@@ -1256,9 +1370,9 @@ algo_lib::RegxState& algo_lib::state_Alloc(algo_lib::Regx& regx) {
 // --- algo_lib.Regx.state.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo_lib::RegxState& algo_lib::state_AllocAt(algo_lib::Regx& regx, int at) {
+algo_lib::RegxState& algo_lib::state_AllocAt(algo_lib::Regx& regx, i64 at) {
     state_Reserve(regx, 1);
-    int n  = regx.state_n;
+    i64 n  = regx.state_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
         FatalErrorExit("algo_lib.bad_alloc_at  field:algo_lib.Regx.state  comment:'index out of range'");
     }
@@ -1271,12 +1385,12 @@ algo_lib::RegxState& algo_lib::state_AllocAt(algo_lib::Regx& regx, int at) {
 
 // --- algo_lib.Regx.state.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo_lib::RegxState> algo_lib::state_AllocN(algo_lib::Regx& regx, int n_elems) {
+algo::aryptr<algo_lib::RegxState> algo_lib::state_AllocN(algo_lib::Regx& regx, i64 n_elems) {
     state_Reserve(regx, n_elems);
-    int old_n  = regx.state_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = regx.state_n;
+    i64 new_n = old_n + n_elems;
     algo_lib::RegxState *elems = regx.state_elems;
-    for (int i = old_n; i < new_n; i++) {
+    for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) algo_lib::RegxState(); // construct new element, default initialize
     }
     regx.state_n = new_n;
@@ -1287,15 +1401,15 @@ algo::aryptr<algo_lib::RegxState> algo_lib::state_AllocN(algo_lib::Regx& regx, i
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::aryptr<algo_lib::RegxState> algo_lib::state_AllocNAt(algo_lib::Regx& regx, int n_elems, int at) {
+algo::aryptr<algo_lib::RegxState> algo_lib::state_AllocNAt(algo_lib::Regx& regx, i64 n_elems, i64 at) {
     state_Reserve(regx, n_elems);
-    int n  = regx.state_n;
+    i64 n  = regx.state_n;
     if (UNLIKELY(u64(at) > u64(n))) {
         FatalErrorExit("algo_lib.bad_alloc_n_at  field:algo_lib.Regx.state  comment:'index out of range'");
     }
     algo_lib::RegxState *elems = regx.state_elems;
     memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(algo_lib::RegxState));
-    for (int i = 0; i < n_elems; i++) {
+    for (i64 i = 0; i < n_elems; i++) {
         new (elems + at + i) algo_lib::RegxState(); // construct new element, default initialize
     }
     regx.state_n = n+n_elems;
@@ -1304,8 +1418,8 @@ algo::aryptr<algo_lib::RegxState> algo_lib::state_AllocNAt(algo_lib::Regx& regx,
 
 // --- algo_lib.Regx.state.Remove
 // Remove item by index. If index outside of range, do nothing.
-void algo_lib::state_Remove(algo_lib::Regx& regx, u32 i) {
-    u32 lim = regx.state_n;
+void algo_lib::state_Remove(algo_lib::Regx& regx, u64 i) {
+    u64 lim = regx.state_n;
     algo_lib::RegxState *elems = regx.state_elems;
     if (i < lim) {
         elems[i].~RegxState(); // destroy element
@@ -1316,12 +1430,11 @@ void algo_lib::state_Remove(algo_lib::Regx& regx, u32 i) {
 
 // --- algo_lib.Regx.state.RemoveAll
 void algo_lib::state_RemoveAll(algo_lib::Regx& regx) {
-    u32 n = regx.state_n;
-    while (n > 0) {
-        n -= 1;
-        regx.state_elems[n].~RegxState();
-        regx.state_n = n;
+    u64 n = regx.state_n;
+    for (u64 i=0; i<n; i++) {
+        regx.state_elems[i].~RegxState();
     }
+    regx.state_n = 0;
 }
 
 // --- algo_lib.Regx.state.RemoveLast
@@ -1337,10 +1450,10 @@ void algo_lib::state_RemoveLast(algo_lib::Regx& regx) {
 
 // --- algo_lib.Regx.state.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void algo_lib::state_AbsReserve(algo_lib::Regx& regx, int n) {
-    u32 old_max  = regx.state_max;
-    if (n > i32(old_max)) {
-        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+void algo_lib::state_AbsReserve(algo_lib::Regx& regx, i64 n) {
+    u64 old_max  = regx.state_max;
+    if (n > i64(old_max)) {
+        u64 new_max  = i64_Max(i64_Max(old_max * 2, n), 4);
         void *new_mem = algo_lib::lpool_ReallocMem(regx.state_elems, old_max * sizeof(algo_lib::RegxState), new_max * sizeof(algo_lib::RegxState));
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("algo_lib.tary_nomem  field:algo_lib.Regx.state  comment:'out of memory'");
@@ -1354,9 +1467,9 @@ void algo_lib::state_AbsReserve(algo_lib::Regx& regx, int n) {
 // Copy contents of RHS to PARENT.
 void algo_lib::state_Setary(algo_lib::Regx& regx, algo_lib::Regx &rhs) {
     state_RemoveAll(regx);
-    int nnew = rhs.state_n;
+    i64 nnew = rhs.state_n;
     state_Reserve(regx, nnew); // reserve space
-    for (int i = 0; i < nnew; i++) { // copy elements over
+    for (i64 i = 0; i < nnew; i++) { // copy elements over
         new (regx.state_elems + i) algo_lib::RegxState(state_qFind(rhs, i));
         regx.state_n = i + 1;
     }
@@ -1372,12 +1485,12 @@ void algo_lib::state_Setary(algo_lib::Regx& regx, const algo::aryptr<algo_lib::R
 
 // --- algo_lib.Regx.state.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo_lib::RegxState> algo_lib::state_AllocNVal(algo_lib::Regx& regx, int n_elems, const algo_lib::RegxState& val) {
+algo::aryptr<algo_lib::RegxState> algo_lib::state_AllocNVal(algo_lib::Regx& regx, i64 n_elems, const algo_lib::RegxState& val) {
     state_Reserve(regx, n_elems);
-    int old_n  = regx.state_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = regx.state_n;
+    i64 new_n = old_n + n_elems;
     algo_lib::RegxState *elems = regx.state_elems;
-    for (int i = old_n; i < new_n; i++) {
+    for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) algo_lib::RegxState(val);
     }
     regx.state_n = new_n;
@@ -1387,25 +1500,43 @@ algo::aryptr<algo_lib::RegxState> algo_lib::state_AllocNVal(algo_lib::Regx& regx
 // --- algo_lib.Regx.state.Insary
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-void algo_lib::state_Insary(algo_lib::Regx& regx, algo::aryptr<algo_lib::RegxState> rhs, int at) {
+void algo_lib::state_Insary(algo_lib::Regx& regx, algo::aryptr<algo_lib::RegxState> rhs, i64 at) {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= regx.state_elems && rhs.elems < regx.state_elems + regx.state_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("algo_lib.tary_alias  field:algo_lib.Regx.state  comment:'alias error: sub-array is being appended to the whole'");
     }
-    if (UNLIKELY(u64(at) >= u64(regx.state_elems+1))) {
+    if (UNLIKELY(u64(at) >= u64(regx.state_n+1))) {
         FatalErrorExit("algo_lib.bad_insary  field:algo_lib.Regx.state  comment:'index out of range'");
     }
-    int nnew = rhs.n_elems;
-    int nmove = regx.state_n - at;
+    i64 nnew = rhs.n_elems;
+    i64 nmove = regx.state_n - at;
     state_Reserve(regx, nnew); // reserve space
-    for (int i = nmove-1; i >=0 ; --i) {
+    for (i64 i = nmove-1; i >=0 ; --i) {
         new (regx.state_elems + at + nnew + i) algo_lib::RegxState(regx.state_elems[at + i]);
         regx.state_elems[at + i].~RegxState(); // destroy element
     }
-    for (int i = 0; i < nnew; ++i) {
+    for (i64 i = 0; i < nnew; ++i) {
         new (regx.state_elems + at + i) algo_lib::RegxState(rhs[i]);
     }
     regx.state_n += nnew;
+}
+
+// --- algo_lib.Regx.state.RemRegion
+// Delete a range of elements
+// Remove region from the middle of the array
+// The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
+// If N is negative, nothing is removed.
+void algo_lib::state_RemRegion(algo_lib::Regx& regx, i64 beg, i64 n) {
+    i64 end = i64_Min(beg+n, regx.state_n);
+    beg = i64_Max(beg,0);
+    n = end-beg;
+    if (n>0) {
+        for (i64 i=beg; i<end; i++) {
+            regx.state_elems[i].~RegxState();
+        }
+        memmove(regx.state_elems+beg, regx.state_elems+end, sizeof(algo_lib::RegxState) * (regx.state_n-end));
+        regx.state_n -= n;
+    }
 }
 
 // --- algo_lib.Regx..Uninit
@@ -1449,7 +1580,8 @@ void algo_lib::logcat_CopyOut(algo_lib::FLogcat &row, dmmeta::Logcat &out) {
     out.stdout = row.stdout;
     out.maxmsg = row.maxmsg;
     out.window = row.window;
-    out.comment = row.comment;
+    out.suppress = row.suppress;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- algo_lib.FLogcat.base.CopyIn
@@ -1461,6 +1593,7 @@ void algo_lib::logcat_CopyIn(algo_lib::FLogcat &row, dmmeta::Logcat &in) {
     row.stdout = in.stdout;
     row.maxmsg = in.maxmsg;
     row.window = in.window;
+    row.suppress = in.suppress;
     row.comment = in.comment;
 }
 
@@ -1472,7 +1605,9 @@ void algo_lib::FLogcat_Init(algo_lib::FLogcat& logcat) {
     logcat.stdout = bool(false);
     logcat.maxmsg = i32(0);
     logcat.window = i32(0);
+    logcat.suppress = bool(false);
     logcat.nmsg = i64(0);
+    logcat.totmsg = u64(0);
     logcat.ind_logcat_next = (algo_lib::FLogcat*)-1; // (algo_lib.FDb.ind_logcat) not-in-hash
     logcat.ind_logcat_hashval = 0; // stored hash value
 }
@@ -1544,20 +1679,34 @@ void algo_lib::trace_Print(algo_lib::trace& row, algo::cstring& str) {
 // Allocate a new piece of memory at least SIZE bytes long.
 // If out of memory, return NULL
 // Newly allocated memory is initialized to zeros
-void* algo_lib::sbrk_AllocMem(u32 size) {
+// Blocks of the 2MB granule size and larger are granule-aligned;
+// Lpool relies on this to locate a record's blk by address mask.
+void* algo_lib::sbrk_AllocMem(u64 size) {
     void *ret;
 #if defined(__MACH__) || __FreeBSD__>0 || __CYGWIN__>0 || defined(WIN32)
-    ret = malloc(size);
+    u64 bigsize = 1024*2048;
+    if (size >= bigsize) { // big block: granule-aligned
+        #if defined(WIN32)
+        ret = _aligned_malloc(size, bigsize);
+        #else
+        ret = NULL;
+        if (posix_memalign(&ret, bigsize, size) != 0) {
+            ret = NULL;
+        }
+        #endif
+    } else {
+        ret = malloc(size);
+    }
 #else
     ret = MAP_FAILED;
-    u32 bigsize = 1024*2048;
+    u64 bigsize = 1024*2048;
     if (size >= bigsize) { // big block -- will be registered
         size = (size + bigsize - 1) / bigsize * bigsize;
         int prot = PROT_READ | PROT_WRITE;
         int flags = MAP_PRIVATE | MAP_ANONYMOUS | MAP_POPULATE;
         bool use_huge = _db.sbrk_huge_alloc + size < _db.sbrk_huge_limit;
         if (use_huge) {
-            ret = mmap(0x0, size, prot, flags | MAP_HUGETLB, 0, 0); // try huge pages
+            ret = mmap(0x0, size, prot, flags | MAP_HUGETLB, 0, 0); // try huge pages; granule-aligned by the kernel
         }
         // linux huge page handling is buggy -- MAP_POPULATE doesn't guarantee
         // that pages are there. subsequent page fault may cause a SIGBUS.
@@ -1571,12 +1720,27 @@ void* algo_lib::sbrk_AllocMem(u32 size) {
                 _db.sbrk_huge_alloc += size;
             }
         }
-        if (ret == MAP_FAILED) { // try regular mmap
-            _db.sbrk_huge_limit = 0; // don't try huge pages again
-            ret = mmap(0x0, size, prot, flags, 0, 0);
-        } else {
-            ++algo_lib::_db.trace.n_mmap; // mmap counter
+        if (ret == MAP_FAILED) { // regular mmap, trimmed to a granule-aligned block:
+            // over-map by one granule and unmap the unaligned head and the tail,
+            // so the block costs exactly SIZE bytes of address space, and a
+            // granule-aligned region remains eligible for transparent huge pages
+            if (use_huge) { // the kernel refused the huge route, so stop asking for it
+                _db.sbrk_huge_limit = 0;
+            }
+            u8 *base = (u8*)mmap(0x0, size + bigsize, prot, flags, 0, 0);
+            if (base != MAP_FAILED) {
+                u64 pad = ((u64)base + bigsize - 1) / bigsize * bigsize - (u64)base;
+                if (pad) {
+                    munmap(base, pad);
+                }
+                munmap(base + pad + size, bigsize - pad);
+                ret = base + pad;
+            }
         }
+        // Count the block by whichever route mapped it.  A process that cannot
+        // get huge pages takes the ordinary route for every block it ever asks
+        // for, so a counter that sees only the huge route reads zero for it.
+        algo_lib::_db.trace.n_mmap += ret != MAP_FAILED;
     } else {
         if (ret == MAP_FAILED) { // default method
             ret = sbrk(size);
@@ -1594,12 +1758,18 @@ void* algo_lib::sbrk_AllocMem(u32 size) {
 }
 
 // --- algo_lib.FDb.sbrk.FreeMem
-void algo_lib::sbrk_FreeMem(void *mem, u32 size) {
-#if defined(__MACH__) || __FreeBSD__>0 || defined(WIN32)
+void algo_lib::sbrk_FreeMem(void *mem, u64 size) {
+#if defined(WIN32)
+    if (size >= 1024*2048) { // big blocks come from _aligned_malloc
+        _aligned_free(mem);
+    } else {
+        free(mem);
+    }
+#elif defined(__MACH__) || __FreeBSD__>0
     free(mem);
     (void)size;
 #else
-    u32 bigsize = 1024*2048;
+    u64 bigsize = 1024*2048;
     if (size >= bigsize) {
         munmap((void*)mem, size);
     }
@@ -1608,10 +1778,39 @@ void algo_lib::sbrk_FreeMem(void *mem, u32 size) {
 
 // --- algo_lib.FDb.lpool.FreeMem
 // Free block of memory previously returned by Lpool.
+// SIZE must be of the same class the memory was allocated with.
 void algo_lib::lpool_FreeMem(void* mem, u64 size) {
     size = u64_Max(size,1ULL<<4);
     u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
-    if (mem && cell < 36) {
+    if (mem && cell < 11) {
+        // a blk-class record returns to its blk, found by address mask
+        lpool_Lpblk *blk = (lpool_Lpblk*)((u64)mem & ~(u64)65535);
+        lpool_Lpblock *rec = (lpool_Lpblock*)mem;
+        rec->next = blk->freerec;
+        blk->freerec = rec;
+        blk->live--;
+        if (blk->pprev == NULL) { // regained space: rejoin the class list
+            blk->next = _db.lpool_blk[blk->cell];
+            blk->pprev = &_db.lpool_blk[blk->cell];
+            if (blk->next) {
+                blk->next->pprev = &blk->next;
+            }
+            _db.lpool_blk[blk->cell] = blk;
+        }
+        // drained blk reverts to an ordinary block on the blk-size level,
+        // reusable by any class; the last blk of a class is kept dedicated
+        // so a lone alloc/free cycle does not thrash dedication
+        bool sole = _db.lpool_blk[blk->cell] == blk && blk->next == NULL;
+        if (blk->live == 0 && !sole) {
+            *blk->pprev = blk->next;
+            if (blk->next) {
+                blk->next->pprev = blk->pprev;
+            }
+            lpool_Lpblock *raw = (lpool_Lpblock*)blk;
+            raw->next = _db.lpool_free[12];
+            _db.lpool_free[12] = raw;
+        }
+    } else if (mem && cell < 36) {
         lpool_Lpblock *temp = (lpool_Lpblock*)mem; // push  singly linked list
         temp->next = _db.lpool_free[cell];
         _db.lpool_free[cell] = temp;
@@ -1625,36 +1824,76 @@ void algo_lib::lpool_FreeMem(void* mem, u64 size) {
 // The maximum allocation size is at most 1<<(36+4)
 void* algo_lib::lpool_AllocMem(u64 size) {
     void *retval = NULL;
-    size     = u64_Max(size,1<<4); // enforce alignment
+    size     = u64_Max(size,1ULL<<4); // enforce alignment
     u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
-    if (cell < 36) {
-        u64 i    = cell;
-        // try to find a block that's at least as large as required.
-        // if found, remove from free list
+    lpool_Lpblk *blk = cell < 11 ? _db.lpool_blk[cell] : NULL;
+    if (cell < 36 && blk == NULL) {
+        // acquire a raw block: for a blk class, a blk-size block to dedicate;
+        // otherwise the requested level. Serve from the lowest populated
+        // level at or above it, splitting the upper halves back down.
+        u64 rawcell = cell < 11 ? (u64)12 : cell;
+        void *rawmem = NULL;
+        u64 i = rawcell;
         for (; i < 36; i++) {
-            lpool_Lpblock *blk = _db.lpool_free[i];
-            if (blk) {
-                _db.lpool_free[i] = blk->next;
-                retval = blk;
+            lpool_Lpblock *rawblk = _db.lpool_free[i];
+            if (rawblk) {
+                _db.lpool_free[i] = rawblk->next;
+                rawmem = rawblk;
                 break;
             }
         }
-        // if suitable size block is not found, create a new one
-        // by requesting a block from the base allocator.
-        if (UNLIKELY(!retval)) {
-            i = u64_Max(cell, 21-4); // 2MB min -- allow huge page to be used
-            retval = algo_lib::sbrk_AllocMem(1ULL<<(i+4));
+        // if no suitable block, refill from the base allocator with exactly
+        // the level size, a whole number of base granules; the base pool
+        // returns big blocks granule-aligned, so every carved block of blk
+        // size and up is blk-aligned (FreeMem locates a record's blk by
+        // address mask)
+        if (UNLIKELY(!rawmem)) {
+            i = u64_Max(rawcell, 21-4); // 2MB min -- allow huge page to be used
+            rawmem = algo_lib::sbrk_AllocMem(1ULL<<(i+4));
         }
-        if (LIKELY(retval)) {
+        if (LIKELY(rawmem)) {
             // if block is more than 2x as large as needed, return the upper half to the free
-            // list (repeatedly). meanwhile, retval doesn't change.
-            while (i > cell) {
+            // list (repeatedly). meanwhile, rawmem doesn't change.
+            while (i > rawcell) {
                 i--;
-                int half = 1ULL<<(i+4);
-                lpool_Lpblock *blk = (lpool_Lpblock*)((u8*)retval + half);
-                blk->next = _db.lpool_free[i];
-                _db.lpool_free[i] = blk;
+                u64 half = 1ULL<<(i+4);
+                lpool_Lpblock *shed = (lpool_Lpblock*)((u8*)rawmem + half);
+                shed->next = _db.lpool_free[i];
+                _db.lpool_free[i] = shed;
             }
+            if (cell < 11) { // stamp a fresh blk dedicated to this class
+                blk = (lpool_Lpblk*)rawmem;
+                blk->freerec = NULL;
+                blk->rsize = 1u<<(cell+4);
+                blk->live = 0;
+                blk->tip = 64;
+                blk->cell = (u32)cell;
+                blk->next = NULL;
+                blk->pprev = &_db.lpool_blk[cell];
+                _db.lpool_blk[cell] = blk;
+            } else {
+                retval = rawmem;
+            }
+        }
+    }
+    if (blk) { // serve one record: a freed record first, else bump the tip
+        lpool_Lpblock *rec = blk->freerec;
+        if (rec) {
+            blk->freerec = rec->next;
+            retval = rec;
+        } else {
+            retval = (u8*)blk + blk->tip;
+            blk->tip += blk->rsize;
+        }
+        blk->live++;
+        if (blk->freerec == NULL && blk->tip + blk->rsize > 65536) {
+            // full: leave the class list until a record comes back
+            *blk->pprev = blk->next;
+            if (blk->next) {
+                blk->next->pprev = blk->pprev;
+            }
+            blk->pprev = NULL;
+            blk->next = NULL;
         }
     }
     return retval;
@@ -1662,23 +1901,25 @@ void* algo_lib::lpool_AllocMem(u64 size) {
 
 // --- algo_lib.FDb.lpool.ReserveBuffers
 // Add N buffers of some size to the free store
-// Reserve NBUF buffers of size BUFSIZE from the base pool (algo_lib::sbrk)
+// Stock the free store with NBUF buffers of size BUFSIZE:
+// allocate them all, then free them all, chaining through the buffers
 bool algo_lib::lpool_ReserveBuffers(u64 nbuf, u64 bufsize) {
     bool retval = true;
-    bufsize = u64_Max(bufsize, 1<<4);
-    u64 cell = algo::u64_BitScanReverse(bufsize-1) + 1 - 4;
-    if (cell < 36) {
-        for (u64 i = 0; i < nbuf; i++) {
-            u64 size = 1ULL<<(cell+4);
-            lpool_Lpblock *temp = (lpool_Lpblock*)algo_lib::sbrk_AllocMem(size);
-            if (temp == NULL) {
-                retval = false;
-                break;// why continue?
-            } else {
-                temp->next = _db.lpool_free[cell];
-                _db.lpool_free[cell] = temp;
-            }
+    lpool_Lpblock *head = NULL;
+    for (u64 i = 0; i < nbuf; i++) {
+        lpool_Lpblock *temp = (lpool_Lpblock*)lpool_AllocMem(bufsize);
+        if (temp == NULL) {
+            retval = false;// an unservable bufsize or an exhausted base pool reserves nothing further
+            break;
+        } else {
+            temp->next = head;
+            head = temp;
         }
+    }
+    while (head) {
+        lpool_Lpblock *next = head->next;
+        lpool_FreeMem(head, bufsize);
+        head = next;
     }
     return retval;
 }
@@ -1758,7 +1999,13 @@ void algo_lib::Step() {
 // --- algo_lib.FDb._db.InitReflection
 // Load statically available data into tables, register tables and database.
 static void algo_lib::InitReflection() {
-    algo_lib::imdb_InsertMaybe(algo::Imdb("algo_lib", algo_lib::InsertStrptrMaybe, algo_lib::Step, NULL, NULL, algo::Comment()));
+    algo_lib::FImdb &row = algo_lib::imdb_Alloc();
+    row.imdb               = "algo_lib";
+    row.InsertStrptrMaybe  = algo_lib::InsertStrptrMaybe;
+    row.RemoveStrptrMaybe  = algo_lib::RemoveStrptrMaybe;
+    row.Step               = algo_lib::Step;
+    row.MainLoop           = NULL;
+    algo_lib::imdb_XrefMaybe(row);
 
     algo::Imtable t_trace;
     t_trace.imtable         = "algo_lib.trace";
@@ -1869,6 +2116,27 @@ void algo_lib::Steps() {
     algo_lib::Step(); // dependent namespace specified via (dev.targdep)
 }
 
+// --- algo_lib.FDb._db.RemoveStrptrMaybe
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+bool algo_lib::RemoveStrptrMaybe(algo::strptr str) {
+    bool retval = true;
+    algo_lib::TableId table_id(-1);
+    value_SetStrptrMaybe(table_id, algo::GetTypeTag(str));
+    switch (value_GetEnum(table_id)) {
+        case algo_lib_TableId_dmmeta_Dispsigcheck: { // finput:algo_lib.FDb.dispsigcheck
+            // finput algo_lib.FDb.dispsigcheck: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        default:
+        retval = false;
+        break;
+    } //switch
+    return retval;
+}
+
 // --- algo_lib.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
@@ -1923,7 +2191,7 @@ void* algo_lib::imtable_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     algo_lib::FImtable*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.imtable_lary[bsr];
         if (!lev) {
             lev=(algo_lib::FImtable*)algo_lib::lpool_AllocMem(sizeof(algo_lib::FImtable) * (u64(1)<<bsr));
@@ -1932,7 +2200,7 @@ void* algo_lib::imtable_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.imtable_n = i32(new_nelems);
+        _db.imtable_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1944,7 +2212,7 @@ void algo_lib::imtable_RemoveAll() {
     for (u64 n = _db.imtable_n; n>0; ) {
         n--;
         imtable_qFind(u64(n)).~FImtable(); // destroy last element
-        _db.imtable_n = i32(n);
+        _db.imtable_n = i64(n);
     }
 }
 
@@ -1955,7 +2223,7 @@ void algo_lib::imtable_RemoveLast() {
     if (n > 0) {
         n -= 1;
         imtable_qFind(u64(n)).~FImtable();
-        _db.imtable_n = i32(n);
+        _db.imtable_n = i64(n);
     }
 }
 
@@ -2439,7 +2707,7 @@ void* algo_lib::dispsigcheck_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     algo_lib::FDispsigcheck*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.dispsigcheck_lary[bsr];
         if (!lev) {
             lev=(algo_lib::FDispsigcheck*)algo_lib::lpool_AllocMem(sizeof(algo_lib::FDispsigcheck) * (u64(1)<<bsr));
@@ -2448,7 +2716,7 @@ void* algo_lib::dispsigcheck_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.dispsigcheck_n = i32(new_nelems);
+        _db.dispsigcheck_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -2461,7 +2729,7 @@ void algo_lib::dispsigcheck_RemoveLast() {
     if (n > 0) {
         n -= 1;
         dispsigcheck_qFind(u64(n)).~FDispsigcheck();
-        _db.dispsigcheck_n = i32(n);
+        _db.dispsigcheck_n = i64(n);
     }
 }
 
@@ -3226,21 +3494,23 @@ static void algo_lib::logcat_LoadStatic() {
     static struct _t {
         const char *s;
     } data[] = {
-        { "dmmeta.logcat  logcat:ams  enabled:N  builtin:N  stdout:Y  maxmsg:0  window:0  comment:\"Trace ams bus\"" }
-        ,{ "dmmeta.logcat  logcat:debug  enabled:N  builtin:N  stdout:N  maxmsg:0  window:0  comment:\"Debug messages\"" }
-        ,{ "dmmeta.logcat  logcat:inserr  enabled:N  builtin:Y  stdout:N  maxmsg:10  window:10  comment:\"In-memory db insert error\"" }
-        ,{ "dmmeta.logcat  logcat:slowness  enabled:N  builtin:N  stdout:Y  maxmsg:10  window:5  comment:\"Debug slowness\"" }
-        ,{ "dmmeta.logcat  logcat:stderr  enabled:Y  builtin:Y  stdout:N  maxmsg:0  window:0  comment:\"Standard error (cannot be disabled)\"" }
-        ,{ "dmmeta.logcat  logcat:stdout  enabled:Y  builtin:Y  stdout:Y  maxmsg:0  window:0  comment:\"Standard output (cannot be disabled)\"" }
-        ,{ "dmmeta.logcat  logcat:timestamps  enabled:N  builtin:N  stdout:Y  maxmsg:0  window:0  comment:\"Show timestamps\"" }
-        ,{ "dmmeta.logcat  logcat:verbose  enabled:N  builtin:N  stdout:N  maxmsg:0  window:0  comment:\"Verbose messages go here\"" }
-        ,{ "dmmeta.logcat  logcat:verbose2  enabled:N  builtin:N  stdout:N  maxmsg:0  window:0  comment:\"Extra verbose messages go here\"" }
-        ,{ "dmmeta.logcat  logcat:warn  enabled:Y  builtin:N  stdout:N  maxmsg:100  window:5  comment:Warnings" }
+        { "dmmeta.logcat  logcat:amsread  enabled:N  builtin:N  stdout:Y  maxmsg:1000  window:1  suppress:N  comment:\"Trace ams bus reads\"" }
+        ,{ "dmmeta.logcat  logcat:amswrite  enabled:N  builtin:N  stdout:Y  maxmsg:1000  window:1  suppress:N  comment:\"Trace ams bus writes\"" }
+        ,{ "dmmeta.logcat  logcat:debug  enabled:N  builtin:N  stdout:N  maxmsg:0  window:0  suppress:N  comment:\"Debug messages\"" }
+        ,{ "dmmeta.logcat  logcat:inserr  enabled:N  builtin:Y  stdout:N  maxmsg:100  window:1  suppress:N  comment:\"In-memory db insert error\"" }
+        ,{ "dmmeta.logcat  logcat:plain  enabled:Y  builtin:Y  stdout:Y  maxmsg:0  window:0  suppress:N  comment:\"Plain text bypass for rendering\"" }
+        ,{ "dmmeta.logcat  logcat:slowness  enabled:N  builtin:N  stdout:Y  maxmsg:100  window:5  suppress:N  comment:\"Debug slowness\"" }
+        ,{ "dmmeta.logcat  logcat:stderr  enabled:Y  builtin:Y  stdout:N  maxmsg:0  window:0  suppress:N  comment:\"Standard error\"" }
+        ,{ "dmmeta.logcat  logcat:stdout  enabled:Y  builtin:Y  stdout:Y  maxmsg:0  window:0  suppress:N  comment:\"Standard output\"" }
+        ,{ "dmmeta.logcat  logcat:timestamps  enabled:N  builtin:N  stdout:Y  maxmsg:0  window:0  suppress:N  comment:\"Show timestamps\"" }
+        ,{ "dmmeta.logcat  logcat:verbose  enabled:N  builtin:N  stdout:N  maxmsg:0  window:0  suppress:N  comment:\"Verbose messages go here\"" }
+        ,{ "dmmeta.logcat  logcat:verbose2  enabled:N  builtin:N  stdout:N  maxmsg:0  window:0  suppress:N  comment:\"Extra verbose messages go here\"" }
+        ,{ "dmmeta.logcat  logcat:warn  enabled:Y  builtin:N  stdout:N  maxmsg:100  window:5  suppress:N  comment:\"Warning-level messages\"" }
         ,{NULL}
     };
     (void)data;
-    dmmeta::Logcat logcat;
     for (int i=0; data[i].s; i++) {
+        dmmeta::Logcat logcat;
         (void)dmmeta::Logcat_ReadStrptrMaybe(logcat, algo::strptr(data[i].s));
         algo_lib::FLogcat *elem = logcat_InsertMaybe(logcat);
         vrfy(elem, tempstr("algo_lib.static_insert_fatal_error")
@@ -3392,10 +3662,10 @@ algo::aryptr<algo::cstring> algo_lib::exec_args_Addary(algo::aryptr<algo::cstrin
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("algo_lib.tary_alias  field:algo_lib.FDb.exec_args  comment:'alias error: sub-array is being appended to the whole'");
     }
-    int nnew = rhs.n_elems;
+    i64 nnew = rhs.n_elems;
     exec_args_Reserve(nnew); // reserve space
-    int at = _db.exec_args_n;
-    for (int i = 0; i < nnew; i++) {
+    i64 at = _db.exec_args_n;
+    for (i64 i = 0; i < nnew; i++) {
         new (_db.exec_args_elems + at + i) algo::cstring(rhs[i]);
         _db.exec_args_n++;
     }
@@ -3407,8 +3677,8 @@ algo::aryptr<algo::cstring> algo_lib::exec_args_Addary(algo::aryptr<algo::cstrin
 // The new element is initialized to a default value
 algo::cstring& algo_lib::exec_args_Alloc() {
     exec_args_Reserve(1);
-    int n  = _db.exec_args_n;
-    int at = n;
+    i64 n  = _db.exec_args_n;
+    i64 at = n;
     algo::cstring *elems = _db.exec_args_elems;
     new (elems + at) algo::cstring(); // construct new element, default initializer
     _db.exec_args_n = n+1;
@@ -3418,9 +3688,9 @@ algo::cstring& algo_lib::exec_args_Alloc() {
 // --- algo_lib.FDb.exec_args.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::cstring& algo_lib::exec_args_AllocAt(int at) {
+algo::cstring& algo_lib::exec_args_AllocAt(i64 at) {
     exec_args_Reserve(1);
-    int n  = _db.exec_args_n;
+    i64 n  = _db.exec_args_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
         FatalErrorExit("algo_lib.bad_alloc_at  field:algo_lib.FDb.exec_args  comment:'index out of range'");
     }
@@ -3433,12 +3703,12 @@ algo::cstring& algo_lib::exec_args_AllocAt(int at) {
 
 // --- algo_lib.FDb.exec_args.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> algo_lib::exec_args_AllocN(int n_elems) {
+algo::aryptr<algo::cstring> algo_lib::exec_args_AllocN(i64 n_elems) {
     exec_args_Reserve(n_elems);
-    int old_n  = _db.exec_args_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = _db.exec_args_n;
+    i64 new_n = old_n + n_elems;
     algo::cstring *elems = _db.exec_args_elems;
-    for (int i = old_n; i < new_n; i++) {
+    for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) algo::cstring(); // construct new element, default initialize
     }
     _db.exec_args_n = new_n;
@@ -3449,15 +3719,15 @@ algo::aryptr<algo::cstring> algo_lib::exec_args_AllocN(int n_elems) {
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::aryptr<algo::cstring> algo_lib::exec_args_AllocNAt(int n_elems, int at) {
+algo::aryptr<algo::cstring> algo_lib::exec_args_AllocNAt(i64 n_elems, i64 at) {
     exec_args_Reserve(n_elems);
-    int n  = _db.exec_args_n;
+    i64 n  = _db.exec_args_n;
     if (UNLIKELY(u64(at) > u64(n))) {
         FatalErrorExit("algo_lib.bad_alloc_n_at  field:algo_lib.FDb.exec_args  comment:'index out of range'");
     }
     algo::cstring *elems = _db.exec_args_elems;
     memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(algo::cstring));
-    for (int i = 0; i < n_elems; i++) {
+    for (i64 i = 0; i < n_elems; i++) {
         new (elems + at + i) algo::cstring(); // construct new element, default initialize
     }
     _db.exec_args_n = n+n_elems;
@@ -3466,8 +3736,8 @@ algo::aryptr<algo::cstring> algo_lib::exec_args_AllocNAt(int n_elems, int at) {
 
 // --- algo_lib.FDb.exec_args.Remove
 // Remove item by index. If index outside of range, do nothing.
-void algo_lib::exec_args_Remove(u32 i) {
-    u32 lim = _db.exec_args_n;
+void algo_lib::exec_args_Remove(u64 i) {
+    u64 lim = _db.exec_args_n;
     algo::cstring *elems = _db.exec_args_elems;
     if (i < lim) {
         elems[i].~cstring(); // destroy element
@@ -3478,12 +3748,11 @@ void algo_lib::exec_args_Remove(u32 i) {
 
 // --- algo_lib.FDb.exec_args.RemoveAll
 void algo_lib::exec_args_RemoveAll() {
-    u32 n = _db.exec_args_n;
-    while (n > 0) {
-        n -= 1;
-        _db.exec_args_elems[n].~cstring();
-        _db.exec_args_n = n;
+    u64 n = _db.exec_args_n;
+    for (u64 i=0; i<n; i++) {
+        _db.exec_args_elems[i].~cstring();
     }
+    _db.exec_args_n = 0;
 }
 
 // --- algo_lib.FDb.exec_args.RemoveLast
@@ -3499,10 +3768,10 @@ void algo_lib::exec_args_RemoveLast() {
 
 // --- algo_lib.FDb.exec_args.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void algo_lib::exec_args_AbsReserve(int n) {
-    u32 old_max  = _db.exec_args_max;
-    if (n > i32(old_max)) {
-        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+void algo_lib::exec_args_AbsReserve(i64 n) {
+    u64 old_max  = _db.exec_args_max;
+    if (n > i64(old_max)) {
+        u64 new_max  = i64_Max(i64_Max(old_max * 2, n), 4);
         void *new_mem = algo_lib::lpool_ReallocMem(_db.exec_args_elems, old_max * sizeof(algo::cstring), new_max * sizeof(algo::cstring));
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("algo_lib.tary_nomem  field:algo_lib.FDb.exec_args  comment:'out of memory'");
@@ -3514,12 +3783,12 @@ void algo_lib::exec_args_AbsReserve(int n) {
 
 // --- algo_lib.FDb.exec_args.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> algo_lib::exec_args_AllocNVal(int n_elems, const algo::cstring& val) {
+algo::aryptr<algo::cstring> algo_lib::exec_args_AllocNVal(i64 n_elems, const algo::cstring& val) {
     exec_args_Reserve(n_elems);
-    int old_n  = _db.exec_args_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = _db.exec_args_n;
+    i64 new_n = old_n + n_elems;
     algo::cstring *elems = _db.exec_args_elems;
-    for (int i = old_n; i < new_n; i++) {
+    for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) algo::cstring(val);
     }
     _db.exec_args_n = new_n;
@@ -3543,25 +3812,43 @@ bool algo_lib::exec_args_ReadStrptrMaybe(algo::strptr in_str) {
 // --- algo_lib.FDb.exec_args.Insary
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-void algo_lib::exec_args_Insary(algo::aryptr<algo::cstring> rhs, int at) {
+void algo_lib::exec_args_Insary(algo::aryptr<algo::cstring> rhs, i64 at) {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= _db.exec_args_elems && rhs.elems < _db.exec_args_elems + _db.exec_args_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("algo_lib.tary_alias  field:algo_lib.FDb.exec_args  comment:'alias error: sub-array is being appended to the whole'");
     }
-    if (UNLIKELY(u64(at) >= u64(_db.exec_args_elems+1))) {
+    if (UNLIKELY(u64(at) >= u64(_db.exec_args_n+1))) {
         FatalErrorExit("algo_lib.bad_insary  field:algo_lib.FDb.exec_args  comment:'index out of range'");
     }
-    int nnew = rhs.n_elems;
-    int nmove = _db.exec_args_n - at;
+    i64 nnew = rhs.n_elems;
+    i64 nmove = _db.exec_args_n - at;
     exec_args_Reserve(nnew); // reserve space
-    for (int i = nmove-1; i >=0 ; --i) {
+    for (i64 i = nmove-1; i >=0 ; --i) {
         new (_db.exec_args_elems + at + nnew + i) algo::cstring(_db.exec_args_elems[at + i]);
         _db.exec_args_elems[at + i].~cstring(); // destroy element
     }
-    for (int i = 0; i < nnew; ++i) {
+    for (i64 i = 0; i < nnew; ++i) {
         new (_db.exec_args_elems + at + i) algo::cstring(rhs[i]);
     }
     _db.exec_args_n += nnew;
+}
+
+// --- algo_lib.FDb.exec_args.RemRegion
+// Delete a range of elements
+// Remove region from the middle of the array
+// The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
+// If N is negative, nothing is removed.
+void algo_lib::exec_args_RemRegion(i64 beg, i64 n) {
+    i64 end = i64_Min(beg+n, _db.exec_args_n);
+    beg = i64_Max(beg,0);
+    n = end-beg;
+    if (n>0) {
+        for (i64 i=beg; i<end; i++) {
+            _db.exec_args_elems[i].~cstring();
+        }
+        memmove(_db.exec_args_elems+beg, _db.exec_args_elems+end, sizeof(algo::cstring) * (_db.exec_args_n-end));
+        _db.exec_args_n -= n;
+    }
 }
 
 // --- algo_lib.FDb.dirstack.Addary
@@ -3573,10 +3860,10 @@ algo::aryptr<algo::cstring> algo_lib::dirstack_Addary(algo::aryptr<algo::cstring
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("algo_lib.tary_alias  field:algo_lib.FDb.dirstack  comment:'alias error: sub-array is being appended to the whole'");
     }
-    int nnew = rhs.n_elems;
+    i64 nnew = rhs.n_elems;
     dirstack_Reserve(nnew); // reserve space
-    int at = _db.dirstack_n;
-    for (int i = 0; i < nnew; i++) {
+    i64 at = _db.dirstack_n;
+    for (i64 i = 0; i < nnew; i++) {
         new (_db.dirstack_elems + at + i) algo::cstring(rhs[i]);
         _db.dirstack_n++;
     }
@@ -3588,8 +3875,8 @@ algo::aryptr<algo::cstring> algo_lib::dirstack_Addary(algo::aryptr<algo::cstring
 // The new element is initialized to a default value
 algo::cstring& algo_lib::dirstack_Alloc() {
     dirstack_Reserve(1);
-    int n  = _db.dirstack_n;
-    int at = n;
+    i64 n  = _db.dirstack_n;
+    i64 at = n;
     algo::cstring *elems = _db.dirstack_elems;
     new (elems + at) algo::cstring(); // construct new element, default initializer
     _db.dirstack_n = n+1;
@@ -3599,9 +3886,9 @@ algo::cstring& algo_lib::dirstack_Alloc() {
 // --- algo_lib.FDb.dirstack.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::cstring& algo_lib::dirstack_AllocAt(int at) {
+algo::cstring& algo_lib::dirstack_AllocAt(i64 at) {
     dirstack_Reserve(1);
-    int n  = _db.dirstack_n;
+    i64 n  = _db.dirstack_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
         FatalErrorExit("algo_lib.bad_alloc_at  field:algo_lib.FDb.dirstack  comment:'index out of range'");
     }
@@ -3614,12 +3901,12 @@ algo::cstring& algo_lib::dirstack_AllocAt(int at) {
 
 // --- algo_lib.FDb.dirstack.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> algo_lib::dirstack_AllocN(int n_elems) {
+algo::aryptr<algo::cstring> algo_lib::dirstack_AllocN(i64 n_elems) {
     dirstack_Reserve(n_elems);
-    int old_n  = _db.dirstack_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = _db.dirstack_n;
+    i64 new_n = old_n + n_elems;
     algo::cstring *elems = _db.dirstack_elems;
-    for (int i = old_n; i < new_n; i++) {
+    for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) algo::cstring(); // construct new element, default initialize
     }
     _db.dirstack_n = new_n;
@@ -3630,15 +3917,15 @@ algo::aryptr<algo::cstring> algo_lib::dirstack_AllocN(int n_elems) {
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::aryptr<algo::cstring> algo_lib::dirstack_AllocNAt(int n_elems, int at) {
+algo::aryptr<algo::cstring> algo_lib::dirstack_AllocNAt(i64 n_elems, i64 at) {
     dirstack_Reserve(n_elems);
-    int n  = _db.dirstack_n;
+    i64 n  = _db.dirstack_n;
     if (UNLIKELY(u64(at) > u64(n))) {
         FatalErrorExit("algo_lib.bad_alloc_n_at  field:algo_lib.FDb.dirstack  comment:'index out of range'");
     }
     algo::cstring *elems = _db.dirstack_elems;
     memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(algo::cstring));
-    for (int i = 0; i < n_elems; i++) {
+    for (i64 i = 0; i < n_elems; i++) {
         new (elems + at + i) algo::cstring(); // construct new element, default initialize
     }
     _db.dirstack_n = n+n_elems;
@@ -3647,8 +3934,8 @@ algo::aryptr<algo::cstring> algo_lib::dirstack_AllocNAt(int n_elems, int at) {
 
 // --- algo_lib.FDb.dirstack.Remove
 // Remove item by index. If index outside of range, do nothing.
-void algo_lib::dirstack_Remove(u32 i) {
-    u32 lim = _db.dirstack_n;
+void algo_lib::dirstack_Remove(u64 i) {
+    u64 lim = _db.dirstack_n;
     algo::cstring *elems = _db.dirstack_elems;
     if (i < lim) {
         elems[i].~cstring(); // destroy element
@@ -3659,12 +3946,11 @@ void algo_lib::dirstack_Remove(u32 i) {
 
 // --- algo_lib.FDb.dirstack.RemoveAll
 void algo_lib::dirstack_RemoveAll() {
-    u32 n = _db.dirstack_n;
-    while (n > 0) {
-        n -= 1;
-        _db.dirstack_elems[n].~cstring();
-        _db.dirstack_n = n;
+    u64 n = _db.dirstack_n;
+    for (u64 i=0; i<n; i++) {
+        _db.dirstack_elems[i].~cstring();
     }
+    _db.dirstack_n = 0;
 }
 
 // --- algo_lib.FDb.dirstack.RemoveLast
@@ -3680,10 +3966,10 @@ void algo_lib::dirstack_RemoveLast() {
 
 // --- algo_lib.FDb.dirstack.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void algo_lib::dirstack_AbsReserve(int n) {
-    u32 old_max  = _db.dirstack_max;
-    if (n > i32(old_max)) {
-        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+void algo_lib::dirstack_AbsReserve(i64 n) {
+    u64 old_max  = _db.dirstack_max;
+    if (n > i64(old_max)) {
+        u64 new_max  = i64_Max(i64_Max(old_max * 2, n), 4);
         void *new_mem = algo_lib::lpool_ReallocMem(_db.dirstack_elems, old_max * sizeof(algo::cstring), new_max * sizeof(algo::cstring));
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("algo_lib.tary_nomem  field:algo_lib.FDb.dirstack  comment:'out of memory'");
@@ -3695,12 +3981,12 @@ void algo_lib::dirstack_AbsReserve(int n) {
 
 // --- algo_lib.FDb.dirstack.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> algo_lib::dirstack_AllocNVal(int n_elems, const algo::cstring& val) {
+algo::aryptr<algo::cstring> algo_lib::dirstack_AllocNVal(i64 n_elems, const algo::cstring& val) {
     dirstack_Reserve(n_elems);
-    int old_n  = _db.dirstack_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = _db.dirstack_n;
+    i64 new_n = old_n + n_elems;
     algo::cstring *elems = _db.dirstack_elems;
-    for (int i = old_n; i < new_n; i++) {
+    for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) algo::cstring(val);
     }
     _db.dirstack_n = new_n;
@@ -3724,25 +4010,43 @@ bool algo_lib::dirstack_ReadStrptrMaybe(algo::strptr in_str) {
 // --- algo_lib.FDb.dirstack.Insary
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-void algo_lib::dirstack_Insary(algo::aryptr<algo::cstring> rhs, int at) {
+void algo_lib::dirstack_Insary(algo::aryptr<algo::cstring> rhs, i64 at) {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= _db.dirstack_elems && rhs.elems < _db.dirstack_elems + _db.dirstack_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("algo_lib.tary_alias  field:algo_lib.FDb.dirstack  comment:'alias error: sub-array is being appended to the whole'");
     }
-    if (UNLIKELY(u64(at) >= u64(_db.dirstack_elems+1))) {
+    if (UNLIKELY(u64(at) >= u64(_db.dirstack_n+1))) {
         FatalErrorExit("algo_lib.bad_insary  field:algo_lib.FDb.dirstack  comment:'index out of range'");
     }
-    int nnew = rhs.n_elems;
-    int nmove = _db.dirstack_n - at;
+    i64 nnew = rhs.n_elems;
+    i64 nmove = _db.dirstack_n - at;
     dirstack_Reserve(nnew); // reserve space
-    for (int i = nmove-1; i >=0 ; --i) {
+    for (i64 i = nmove-1; i >=0 ; --i) {
         new (_db.dirstack_elems + at + nnew + i) algo::cstring(_db.dirstack_elems[at + i]);
         _db.dirstack_elems[at + i].~cstring(); // destroy element
     }
-    for (int i = 0; i < nnew; ++i) {
+    for (i64 i = 0; i < nnew; ++i) {
         new (_db.dirstack_elems + at + i) algo::cstring(rhs[i]);
     }
     _db.dirstack_n += nnew;
+}
+
+// --- algo_lib.FDb.dirstack.RemRegion
+// Delete a range of elements
+// Remove region from the middle of the array
+// The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
+// If N is negative, nothing is removed.
+void algo_lib::dirstack_RemRegion(i64 beg, i64 n) {
+    i64 end = i64_Min(beg+n, _db.dirstack_n);
+    beg = i64_Max(beg,0);
+    n = end-beg;
+    if (n>0) {
+        for (i64 i=beg; i<end; i++) {
+            _db.dirstack_elems[i].~cstring();
+        }
+        memmove(_db.dirstack_elems+beg, _db.dirstack_elems+end, sizeof(algo::cstring) * (_db.dirstack_n-end));
+        _db.dirstack_n -= n;
+    }
 }
 
 // --- algo_lib.FDb.errns.XrefMaybe
@@ -3871,6 +4175,7 @@ void algo_lib::FDb_Init() {
     _db.sbrk_huge_alloc = 0;
     _db.sbrk_zeromem = false;
     memset(_db.lpool_free, 0, sizeof(_db.lpool_free));
+    memset(_db.lpool_blk, 0, sizeof(_db.lpool_blk));
     _db.limit = algo::SchedTime(0x7fffffffffffffff);
     _db.clocks_to_ms = double(0.0);
     _db.n_iohook = u32(0);
@@ -3881,12 +4186,12 @@ void algo_lib::FDb_Init() {
     _db.last_signal = u32(0);
     _db.cpu_hz = u64(0);
     (void)Charset_ReadStrptrMaybe(_db.ArgvIdent, "a-zA-Z0-9_");
-    (void)Charset_ReadStrptrMaybe(_db.BashQuotesafe, "a-zA-Z0-9_^%@./-");
+    (void)Charset_ReadStrptrMaybe(_db.BashQuotesafe, "a-zA-Z0-9_^%@:./-");
     (void)Charset_ReadStrptrPlain(_db.RegxSqlSpecial, "$.|?*+(){}^\\[]#");
     (void)Charset_ReadStrptrPlain(_db.SsimBreakName, "[]{}()\t \r\n:");
     (void)Charset_ReadStrptrPlain(_db.SsimBreakValue, "[]{}()\t \r\n");
     (void)Charset_ReadStrptrMaybe(_db.SsimQuotesafe, "a-zA-Z0-9_;&*^%$@.!:,+/-");
-    Userinit(); // dmmeta.fuserinit:algo_lib.FDb._db
+    Userinit(); // dmmeta.ffunc:algo_lib.FDb._db/Userinit
     // initialize LAry imtable (algo_lib.FDb.imtable)
     _db.imtable_n = 0;
     memset(_db.imtable_lary, 0, sizeof(_db.imtable_lary)); // zero out all level pointers
@@ -3973,11 +4278,13 @@ void algo_lib::FDb_Init() {
     _db.dirstack_elems 	= 0; // (algo_lib.FDb.dirstack)
     _db.dirstack_n     	= 0; // (algo_lib.FDb.dirstack)
     _db.dirstack_max   	= 0; // (algo_lib.FDb.dirstack)
-    errns_Userinit(); // dmmeta.fuserinit:algo_lib.FDb.errns
+    errns_Userinit(); // dmmeta.ffunc:algo_lib.FDb.errns/Userinit
     _db.use_epoll_pwait2 = bool(false);
     _db.pending_eol = bool(false);
     _db.giveup_time = bool(true);
     _db.show_tstamp = bool(false);
+    _db.exit_signal = i32(0);
+    _db.in_fatalerr = bool(false);
 
     algo_lib::InitReflection();
     _db.h_fatalerror = NULL;
@@ -4074,7 +4381,7 @@ void algo_lib::imtable_CopyOut(algo_lib::FImtable &row, algo::Imtable &out) {
     out.Print = row.Print;
     out.size = row.size;
     out.ssimfile = row.ssimfile;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- algo_lib.FImtable.msghdr.CopyIn
@@ -4095,6 +4402,22 @@ void algo_lib::imtable_CopyIn(algo_lib::FImtable &row, algo::Imtable &in) {
 void algo_lib::FImtable_Uninit(algo_lib::FImtable& imtable) {
     algo_lib::FImtable &row = imtable; (void)row;
     ind_imtable_Remove(row); // remove imtable from index ind_imtable
+}
+
+// --- algo_lib.FProc..Init
+// Set all fields to initial values.
+void algo_lib::FProc_Init(algo_lib::FProc& parent) {
+    parent.pid = pid_t(0);
+    parent.timeout = i32(0);
+    parent.status = i32(0);
+    parent.cloexec = bool(true);
+    parent.pgroup = bool(false);
+}
+
+// --- algo_lib.FProc..Uninit
+void algo_lib::FProc_Uninit(algo_lib::FProc& parent) {
+    algo_lib::FProc &row = parent; (void)row;
+    pid_Cleanup(parent); // dmmeta.ffunc:algo_lib.FProc.pid/Cleanup
 }
 
 // --- algo_lib.FReplvar..Uninit
@@ -4171,25 +4494,22 @@ i32 algo_lib::sortkey_Cmp(algo_lib::FTxtrow& txtrow, algo_lib::FTxtrow &rhs) {
 // --- algo_lib.FTxtrow.c_txtcell.Cascdel
 // Delete all elements pointed to by the index.
 void algo_lib::c_txtcell_Cascdel(algo_lib::FTxtrow& txtrow) {
-    // Clear c_txtcell_n so that calls to algo_lib.FTxtrow.c_txtcell.Remove do not have to scan
-    // the array for pointers or shift anything.
-    // This is somewhat of a hack.
-    i32 n = txtrow.c_txtcell_n;
-    txtrow.c_txtcell_n = 0;
-    for (i32 i = n - 1; i >= 0; i--) {
-        algo_lib::FTxtcell &row = *txtrow.c_txtcell_elems[i];
-        row.txtrow_c_txtcell_in_ary = false;
-        txtcell_Delete(row);
+    // Each row's delete removes it from this array (heaplike: O(1) swap;
+    // unique: the backward scan finds the last element first), and a cascade
+    // that deletes other members keeps the array consistent, so re-reading
+    // c_txtcell_n each iteration visits every remaining row exactly once.
+    while (txtrow.c_txtcell_n > 0) {
+        txtcell_Delete(*txtrow.c_txtcell_elems[txtrow.c_txtcell_n - 1]);
     }
 }
 
 // --- algo_lib.FTxtrow.c_txtcell.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 void algo_lib::c_txtcell_Insert(algo_lib::FTxtrow& txtrow, algo_lib::FTxtcell& row) {
     if (!row.txtrow_c_txtcell_in_ary) {
         c_txtcell_Reserve(txtrow, 1);
-        u32 n  = txtrow.c_txtcell_n++;
+        u64 n  = txtrow.c_txtcell_n++;
         txtrow.c_txtcell_elems[n] = &row;
         row.txtrow_c_txtcell_in_ary = true;
     }
@@ -4208,15 +4528,15 @@ bool algo_lib::c_txtcell_InsertMaybe(algo_lib::FTxtrow& txtrow, algo_lib::FTxtce
 // --- algo_lib.FTxtrow.c_txtcell.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void algo_lib::c_txtcell_Remove(algo_lib::FTxtrow& txtrow, algo_lib::FTxtcell& row) {
-    int n = txtrow.c_txtcell_n;
+    i64 n = txtrow.c_txtcell_n;
     if (bool_Update(row.txtrow_c_txtcell_in_ary,false)) {
         algo_lib::FTxtcell* *elems = txtrow.c_txtcell_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = n-1; i>=0; i--) {
+        for (i64 i = n-1; i>=0; i--) {
             algo_lib::FTxtcell* elem = elems[i]; // fetch element
             if (elem == &row) {
-                int j = i + 1;
+                i64 j = i + 1;
                 size_t nbytes = sizeof(algo_lib::FTxtcell*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
                 txtrow.c_txtcell_n = n - 1;
@@ -4228,12 +4548,12 @@ void algo_lib::c_txtcell_Remove(algo_lib::FTxtrow& txtrow, algo_lib::FTxtcell& r
 
 // --- algo_lib.FTxtrow.c_txtcell.Reserve
 // Reserve space in index for N more elements;
-void algo_lib::c_txtcell_Reserve(algo_lib::FTxtrow& txtrow, u32 n) {
-    u32 old_max = txtrow.c_txtcell_max;
+void algo_lib::c_txtcell_Reserve(algo_lib::FTxtrow& txtrow, u64 n) {
+    u64 old_max = txtrow.c_txtcell_max;
     if (UNLIKELY(txtrow.c_txtcell_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(algo_lib::FTxtcell*);
-        u32 new_size = new_max * sizeof(algo_lib::FTxtcell*);
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, txtrow.c_txtcell_n + n), 4);
+        u64 old_size = old_max * sizeof(algo_lib::FTxtcell*);
+        u64 new_size = new_max * sizeof(algo_lib::FTxtcell*);
         void *new_mem = algo_lib::lpool_ReallocMem(txtrow.c_txtcell_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("algo_lib.out_of_memory  field:algo_lib.FTxtrow.c_txtcell");
@@ -4259,25 +4579,22 @@ void algo_lib::FTxtrow_Uninit(algo_lib::FTxtrow& txtrow) {
 // --- algo_lib.FTxttbl.c_txtrow.Cascdel
 // Delete all elements pointed to by the index.
 void algo_lib::c_txtrow_Cascdel(algo_lib::FTxttbl& txttbl) {
-    // Clear c_txtrow_n so that calls to algo_lib.FTxttbl.c_txtrow.Remove do not have to scan
-    // the array for pointers or shift anything.
-    // This is somewhat of a hack.
-    i32 n = txttbl.c_txtrow_n;
-    txttbl.c_txtrow_n = 0;
-    for (i32 i = n - 1; i >= 0; i--) {
-        algo_lib::FTxtrow &row = *txttbl.c_txtrow_elems[i];
-        row.txttbl_c_txtrow_in_ary = false;
-        txtrow_Delete(row);
+    // Each row's delete removes it from this array (heaplike: O(1) swap;
+    // unique: the backward scan finds the last element first), and a cascade
+    // that deletes other members keeps the array consistent, so re-reading
+    // c_txtrow_n each iteration visits every remaining row exactly once.
+    while (txttbl.c_txtrow_n > 0) {
+        txtrow_Delete(*txttbl.c_txtrow_elems[txttbl.c_txtrow_n - 1]);
     }
 }
 
 // --- algo_lib.FTxttbl.c_txtrow.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 void algo_lib::c_txtrow_Insert(algo_lib::FTxttbl& txttbl, algo_lib::FTxtrow& row) {
     if (!row.txttbl_c_txtrow_in_ary) {
         c_txtrow_Reserve(txttbl, 1);
-        u32 n  = txttbl.c_txtrow_n++;
+        u64 n  = txttbl.c_txtrow_n++;
         txttbl.c_txtrow_elems[n] = &row;
         row.txttbl_c_txtrow_in_ary = true;
     }
@@ -4296,15 +4613,15 @@ bool algo_lib::c_txtrow_InsertMaybe(algo_lib::FTxttbl& txttbl, algo_lib::FTxtrow
 // --- algo_lib.FTxttbl.c_txtrow.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void algo_lib::c_txtrow_Remove(algo_lib::FTxttbl& txttbl, algo_lib::FTxtrow& row) {
-    int n = txttbl.c_txtrow_n;
+    i64 n = txttbl.c_txtrow_n;
     if (bool_Update(row.txttbl_c_txtrow_in_ary,false)) {
         algo_lib::FTxtrow* *elems = txttbl.c_txtrow_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = n-1; i>=0; i--) {
+        for (i64 i = n-1; i>=0; i--) {
             algo_lib::FTxtrow* elem = elems[i]; // fetch element
             if (elem == &row) {
-                int j = i + 1;
+                i64 j = i + 1;
                 size_t nbytes = sizeof(algo_lib::FTxtrow*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
                 txttbl.c_txtrow_n = n - 1;
@@ -4316,12 +4633,12 @@ void algo_lib::c_txtrow_Remove(algo_lib::FTxttbl& txttbl, algo_lib::FTxtrow& row
 
 // --- algo_lib.FTxttbl.c_txtrow.Reserve
 // Reserve space in index for N more elements;
-void algo_lib::c_txtrow_Reserve(algo_lib::FTxttbl& txttbl, u32 n) {
-    u32 old_max = txttbl.c_txtrow_max;
+void algo_lib::c_txtrow_Reserve(algo_lib::FTxttbl& txttbl, u64 n) {
+    u64 old_max = txttbl.c_txtrow_max;
     if (UNLIKELY(txttbl.c_txtrow_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(algo_lib::FTxtrow*);
-        u32 new_size = new_max * sizeof(algo_lib::FTxtrow*);
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, txttbl.c_txtrow_n + n), 4);
+        u64 old_size = old_max * sizeof(algo_lib::FTxtrow*);
+        u64 new_size = new_max * sizeof(algo_lib::FTxtrow*);
         void *new_mem = algo_lib::lpool_ReallocMem(txttbl.c_txtrow_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("algo_lib.out_of_memory  field:algo_lib.FTxttbl.c_txtrow");
@@ -4737,7 +5054,7 @@ bool algo_lib::FieldId_ReadStrptrMaybe(algo_lib::FieldId &parent, algo::strptr i
 // --- algo_lib.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:algo_lib.FieldId.String  printfmt:Raw
-void algo_lib::FieldId_Print(algo_lib::FieldId& row, algo::cstring& str) {
+void algo_lib::FieldId_Print(algo_lib::FieldId row, algo::cstring& str) {
     algo_lib::value_Print(row, str);
 }
 
@@ -4806,10 +5123,68 @@ void algo_lib::InTextFile_Init(algo_lib::InTextFile& parent) {
 // --- algo_lib.InTextFile..Uninit
 void algo_lib::InTextFile_Uninit(algo_lib::InTextFile& parent) {
     algo_lib::InTextFile &row = parent; (void)row;
-    file_Cleanup(parent); // dmmeta.fcleanup:algo_lib.InTextFile.file
+    file_Cleanup(parent); // dmmeta.ffunc:algo_lib.InTextFile.file/Cleanup
 
     // algo_lib.InTextFile.temp_buf.Uninit (Inlary)  //
     temp_buf_RemoveAll(parent);
+}
+
+// --- algo_lib.RecSortkey..Cmp
+i32 algo_lib::RecSortkey_Cmp(algo_lib::RecSortkey& lhs, algo_lib::RecSortkey& rhs) {
+    i32 retval = 0;
+    retval = algo::Smallstr150_Cmp(lhs.ctype, rhs.ctype);
+    if (retval != 0) {
+        return retval;
+    }
+    retval = double_Cmp(lhs.num, rhs.num);
+    if (retval != 0) {
+        return retval;
+    }
+    retval = algo::cstring_Cmp(lhs.str, rhs.str);
+    if (retval != 0) {
+        return retval;
+    }
+    retval = float_Cmp(lhs.rowid, rhs.rowid);
+    return retval;
+}
+
+// --- algo_lib.RecSortkey..Eq
+bool algo_lib::RecSortkey_Eq(algo_lib::RecSortkey& lhs, algo_lib::RecSortkey& rhs) {
+    bool retval = true;
+    retval = algo::Smallstr150_Eq(lhs.ctype, rhs.ctype);
+    if (!retval) {
+        return false;
+    }
+    retval = double_Eq(lhs.num, rhs.num);
+    if (!retval) {
+        return false;
+    }
+    retval = algo::cstring_Eq(lhs.str, rhs.str);
+    if (!retval) {
+        return false;
+    }
+    retval = float_Eq(lhs.rowid, rhs.rowid);
+    return retval;
+}
+
+// --- algo_lib.RecSortkey..Print
+// print string representation of ROW to string STR
+// cfmt:algo_lib.RecSortkey.String  printfmt:Tuple
+void algo_lib::RecSortkey_Print(algo_lib::RecSortkey& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "algo_lib.RecSortkey";
+
+    algo::Smallstr150_Print(row.ctype, temp);
+    PrintAttrSpaceReset(str,"ctype", temp);
+
+    double_Print(row.num, temp);
+    PrintAttrSpaceReset(str,"num", temp);
+
+    algo::cstring_Print(row.str, temp);
+    PrintAttrSpaceReset(str,"str", temp);
+
+    float_Print(row.rowid, temp);
+    PrintAttrSpaceReset(str,"rowid", temp);
 }
 
 // --- algo_lib.RegxToken.type.ToCstr
@@ -4915,7 +5290,7 @@ bool algo_lib::RegxToken_ReadStrptrMaybe(algo_lib::RegxToken &parent, algo::strp
 // --- algo_lib.RegxToken..Print
 // print string representation of ROW to string STR
 // cfmt:algo_lib.RegxToken.String  printfmt:Raw
-void algo_lib::RegxToken_Print(algo_lib::RegxToken& row, algo::cstring& str) {
+void algo_lib::RegxToken_Print(algo_lib::RegxToken row, algo::cstring& str) {
     algo_lib::type_Print(row, str);
 }
 
@@ -5126,7 +5501,7 @@ bool algo_lib::RegxOp_ReadStrptrMaybe(algo_lib::RegxOp &parent, algo::strptr in_
 // --- algo_lib.RegxOp..Print
 // print string representation of ROW to string STR
 // cfmt:algo_lib.RegxOp.String  printfmt:Sep
-void algo_lib::RegxOp_Print(algo_lib::RegxOp& row, algo::cstring& str) {
+void algo_lib::RegxOp_Print(algo_lib::RegxOp row, algo::cstring& str) {
     algo_lib::op_Print(row, str);
     str << ',';
     u8_Print(row.consume, str);
@@ -5152,10 +5527,10 @@ algo::aryptr<algo_lib::RegxExpr> algo_lib::ary_expr_Addary(algo_lib::RegxParse& 
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("algo_lib.tary_alias  field:algo_lib.RegxParse.ary_expr  comment:'alias error: sub-array is being appended to the whole'");
     }
-    int nnew = rhs.n_elems;
+    i64 nnew = rhs.n_elems;
     ary_expr_Reserve(regxparse, nnew); // reserve space
-    int at = regxparse.ary_expr_n;
-    for (int i = 0; i < nnew; i++) {
+    i64 at = regxparse.ary_expr_n;
+    for (i64 i = 0; i < nnew; i++) {
         new (regxparse.ary_expr_elems + at + i) algo_lib::RegxExpr(rhs[i]);
         regxparse.ary_expr_n++;
     }
@@ -5167,8 +5542,8 @@ algo::aryptr<algo_lib::RegxExpr> algo_lib::ary_expr_Addary(algo_lib::RegxParse& 
 // The new element is initialized to a default value
 algo_lib::RegxExpr& algo_lib::ary_expr_Alloc(algo_lib::RegxParse& regxparse) {
     ary_expr_Reserve(regxparse, 1);
-    int n  = regxparse.ary_expr_n;
-    int at = n;
+    i64 n  = regxparse.ary_expr_n;
+    i64 at = n;
     algo_lib::RegxExpr *elems = regxparse.ary_expr_elems;
     new (elems + at) algo_lib::RegxExpr(); // construct new element, default initializer
     regxparse.ary_expr_n = n+1;
@@ -5178,9 +5553,9 @@ algo_lib::RegxExpr& algo_lib::ary_expr_Alloc(algo_lib::RegxParse& regxparse) {
 // --- algo_lib.RegxParse.ary_expr.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo_lib::RegxExpr& algo_lib::ary_expr_AllocAt(algo_lib::RegxParse& regxparse, int at) {
+algo_lib::RegxExpr& algo_lib::ary_expr_AllocAt(algo_lib::RegxParse& regxparse, i64 at) {
     ary_expr_Reserve(regxparse, 1);
-    int n  = regxparse.ary_expr_n;
+    i64 n  = regxparse.ary_expr_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
         FatalErrorExit("algo_lib.bad_alloc_at  field:algo_lib.RegxParse.ary_expr  comment:'index out of range'");
     }
@@ -5193,12 +5568,12 @@ algo_lib::RegxExpr& algo_lib::ary_expr_AllocAt(algo_lib::RegxParse& regxparse, i
 
 // --- algo_lib.RegxParse.ary_expr.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo_lib::RegxExpr> algo_lib::ary_expr_AllocN(algo_lib::RegxParse& regxparse, int n_elems) {
+algo::aryptr<algo_lib::RegxExpr> algo_lib::ary_expr_AllocN(algo_lib::RegxParse& regxparse, i64 n_elems) {
     ary_expr_Reserve(regxparse, n_elems);
-    int old_n  = regxparse.ary_expr_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = regxparse.ary_expr_n;
+    i64 new_n = old_n + n_elems;
     algo_lib::RegxExpr *elems = regxparse.ary_expr_elems;
-    for (int i = old_n; i < new_n; i++) {
+    for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) algo_lib::RegxExpr(); // construct new element, default initialize
     }
     regxparse.ary_expr_n = new_n;
@@ -5209,15 +5584,15 @@ algo::aryptr<algo_lib::RegxExpr> algo_lib::ary_expr_AllocN(algo_lib::RegxParse& 
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::aryptr<algo_lib::RegxExpr> algo_lib::ary_expr_AllocNAt(algo_lib::RegxParse& regxparse, int n_elems, int at) {
+algo::aryptr<algo_lib::RegxExpr> algo_lib::ary_expr_AllocNAt(algo_lib::RegxParse& regxparse, i64 n_elems, i64 at) {
     ary_expr_Reserve(regxparse, n_elems);
-    int n  = regxparse.ary_expr_n;
+    i64 n  = regxparse.ary_expr_n;
     if (UNLIKELY(u64(at) > u64(n))) {
         FatalErrorExit("algo_lib.bad_alloc_n_at  field:algo_lib.RegxParse.ary_expr  comment:'index out of range'");
     }
     algo_lib::RegxExpr *elems = regxparse.ary_expr_elems;
     memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(algo_lib::RegxExpr));
-    for (int i = 0; i < n_elems; i++) {
+    for (i64 i = 0; i < n_elems; i++) {
         new (elems + at + i) algo_lib::RegxExpr(); // construct new element, default initialize
     }
     regxparse.ary_expr_n = n+n_elems;
@@ -5226,8 +5601,8 @@ algo::aryptr<algo_lib::RegxExpr> algo_lib::ary_expr_AllocNAt(algo_lib::RegxParse
 
 // --- algo_lib.RegxParse.ary_expr.Remove
 // Remove item by index. If index outside of range, do nothing.
-void algo_lib::ary_expr_Remove(algo_lib::RegxParse& regxparse, u32 i) {
-    u32 lim = regxparse.ary_expr_n;
+void algo_lib::ary_expr_Remove(algo_lib::RegxParse& regxparse, u64 i) {
+    u64 lim = regxparse.ary_expr_n;
     algo_lib::RegxExpr *elems = regxparse.ary_expr_elems;
     if (i < lim) {
         elems[i].~RegxExpr(); // destroy element
@@ -5238,12 +5613,11 @@ void algo_lib::ary_expr_Remove(algo_lib::RegxParse& regxparse, u32 i) {
 
 // --- algo_lib.RegxParse.ary_expr.RemoveAll
 void algo_lib::ary_expr_RemoveAll(algo_lib::RegxParse& regxparse) {
-    u32 n = regxparse.ary_expr_n;
-    while (n > 0) {
-        n -= 1;
-        regxparse.ary_expr_elems[n].~RegxExpr();
-        regxparse.ary_expr_n = n;
+    u64 n = regxparse.ary_expr_n;
+    for (u64 i=0; i<n; i++) {
+        regxparse.ary_expr_elems[i].~RegxExpr();
     }
+    regxparse.ary_expr_n = 0;
 }
 
 // --- algo_lib.RegxParse.ary_expr.RemoveLast
@@ -5259,10 +5633,10 @@ void algo_lib::ary_expr_RemoveLast(algo_lib::RegxParse& regxparse) {
 
 // --- algo_lib.RegxParse.ary_expr.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void algo_lib::ary_expr_AbsReserve(algo_lib::RegxParse& regxparse, int n) {
-    u32 old_max  = regxparse.ary_expr_max;
-    if (n > i32(old_max)) {
-        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+void algo_lib::ary_expr_AbsReserve(algo_lib::RegxParse& regxparse, i64 n) {
+    u64 old_max  = regxparse.ary_expr_max;
+    if (n > i64(old_max)) {
+        u64 new_max  = i64_Max(i64_Max(old_max * 2, n), 4);
         void *new_mem = algo_lib::lpool_ReallocMem(regxparse.ary_expr_elems, old_max * sizeof(algo_lib::RegxExpr), new_max * sizeof(algo_lib::RegxExpr));
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("algo_lib.tary_nomem  field:algo_lib.RegxParse.ary_expr  comment:'out of memory'");
@@ -5276,9 +5650,9 @@ void algo_lib::ary_expr_AbsReserve(algo_lib::RegxParse& regxparse, int n) {
 // Copy contents of RHS to PARENT.
 void algo_lib::ary_expr_Setary(algo_lib::RegxParse& regxparse, algo_lib::RegxParse &rhs) {
     ary_expr_RemoveAll(regxparse);
-    int nnew = rhs.ary_expr_n;
+    i64 nnew = rhs.ary_expr_n;
     ary_expr_Reserve(regxparse, nnew); // reserve space
-    for (int i = 0; i < nnew; i++) { // copy elements over
+    for (i64 i = 0; i < nnew; i++) { // copy elements over
         new (regxparse.ary_expr_elems + i) algo_lib::RegxExpr(ary_expr_qFind(rhs, i));
         regxparse.ary_expr_n = i + 1;
     }
@@ -5294,12 +5668,12 @@ void algo_lib::ary_expr_Setary(algo_lib::RegxParse& regxparse, const algo::arypt
 
 // --- algo_lib.RegxParse.ary_expr.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo_lib::RegxExpr> algo_lib::ary_expr_AllocNVal(algo_lib::RegxParse& regxparse, int n_elems, const algo_lib::RegxExpr& val) {
+algo::aryptr<algo_lib::RegxExpr> algo_lib::ary_expr_AllocNVal(algo_lib::RegxParse& regxparse, i64 n_elems, const algo_lib::RegxExpr& val) {
     ary_expr_Reserve(regxparse, n_elems);
-    int old_n  = regxparse.ary_expr_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = regxparse.ary_expr_n;
+    i64 new_n = old_n + n_elems;
     algo_lib::RegxExpr *elems = regxparse.ary_expr_elems;
-    for (int i = old_n; i < new_n; i++) {
+    for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) algo_lib::RegxExpr(val);
     }
     regxparse.ary_expr_n = new_n;
@@ -5323,25 +5697,43 @@ bool algo_lib::ary_expr_ReadStrptrMaybe(algo_lib::RegxParse& regxparse, algo::st
 // --- algo_lib.RegxParse.ary_expr.Insary
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-void algo_lib::ary_expr_Insary(algo_lib::RegxParse& regxparse, algo::aryptr<algo_lib::RegxExpr> rhs, int at) {
+void algo_lib::ary_expr_Insary(algo_lib::RegxParse& regxparse, algo::aryptr<algo_lib::RegxExpr> rhs, i64 at) {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= regxparse.ary_expr_elems && rhs.elems < regxparse.ary_expr_elems + regxparse.ary_expr_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("algo_lib.tary_alias  field:algo_lib.RegxParse.ary_expr  comment:'alias error: sub-array is being appended to the whole'");
     }
-    if (UNLIKELY(u64(at) >= u64(regxparse.ary_expr_elems+1))) {
+    if (UNLIKELY(u64(at) >= u64(regxparse.ary_expr_n+1))) {
         FatalErrorExit("algo_lib.bad_insary  field:algo_lib.RegxParse.ary_expr  comment:'index out of range'");
     }
-    int nnew = rhs.n_elems;
-    int nmove = regxparse.ary_expr_n - at;
+    i64 nnew = rhs.n_elems;
+    i64 nmove = regxparse.ary_expr_n - at;
     ary_expr_Reserve(regxparse, nnew); // reserve space
-    for (int i = nmove-1; i >=0 ; --i) {
+    for (i64 i = nmove-1; i >=0 ; --i) {
         new (regxparse.ary_expr_elems + at + nnew + i) algo_lib::RegxExpr(regxparse.ary_expr_elems[at + i]);
         regxparse.ary_expr_elems[at + i].~RegxExpr(); // destroy element
     }
-    for (int i = 0; i < nnew; ++i) {
+    for (i64 i = 0; i < nnew; ++i) {
         new (regxparse.ary_expr_elems + at + i) algo_lib::RegxExpr(rhs[i]);
     }
     regxparse.ary_expr_n += nnew;
+}
+
+// --- algo_lib.RegxParse.ary_expr.RemRegion
+// Delete a range of elements
+// Remove region from the middle of the array
+// The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
+// If N is negative, nothing is removed.
+void algo_lib::ary_expr_RemRegion(algo_lib::RegxParse& regxparse, i64 beg, i64 n) {
+    i64 end = i64_Min(beg+n, regxparse.ary_expr_n);
+    beg = i64_Max(beg,0);
+    n = end-beg;
+    if (n>0) {
+        for (i64 i=beg; i<end; i++) {
+            regxparse.ary_expr_elems[i].~RegxExpr();
+        }
+        memmove(regxparse.ary_expr_elems+beg, regxparse.ary_expr_elems+end, sizeof(algo_lib::RegxExpr) * (regxparse.ary_expr_n-end));
+        regxparse.ary_expr_n -= n;
+    }
 }
 
 // --- algo_lib.RegxParse..Uninit
@@ -5419,6 +5811,22 @@ algo_lib::FReplvar* algo_lib::ind_replvar_Find(algo_lib::Replscope& replscope, c
     u32 index = algo::cstring_Hash(0, key) & (replscope.ind_replvar_buckets_n - 1);
     algo_lib::FReplvar *ret = replscope.ind_replvar_buckets_elems[index];
     for (; ret && !((*ret).key == key); ret = ret->replscope_ind_replvar_next) {
+    }
+    return ret;
+}
+
+// --- algo_lib.Replscope.ind_replvar.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+algo_lib::FReplvar* algo_lib::ind_replvar_GetOrCreate(algo_lib::Replscope& replscope, const algo::strptr& key) {
+    algo_lib::FReplvar* ret = ind_replvar_Find(replscope, key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &replvar_Alloc();
+        (*ret).key = key;
+        bool good = replvar_XrefMaybe(*ret);
+        if (!good) {
+            replvar_Delete(*ret); // delete offending row, any existin xrefs are cleared
+            ret = NULL;
+        }
     }
     return ret;
 }
@@ -5639,7 +6047,7 @@ bool algo_lib::TableId_ReadStrptrMaybe(algo_lib::TableId &parent, algo::strptr i
 // --- algo_lib.TableId..Print
 // print string representation of ROW to string STR
 // cfmt:algo_lib.TableId.String  printfmt:Raw
-void algo_lib::TableId_Print(algo_lib::TableId& row, algo::cstring& str) {
+void algo_lib::TableId_Print(algo_lib::TableId row, algo::cstring& str) {
     algo_lib::value_Print(row, str);
 }
 
@@ -5652,9 +6060,9 @@ algo::aryptr<i32> algo_lib::width_Addary(algo_lib::Tabulate& tabulate, algo::ary
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("algo_lib.tary_alias  field:algo_lib.Tabulate.width  comment:'alias error: sub-array is being appended to the whole'");
     }
-    int nnew = rhs.n_elems;
+    i64 nnew = rhs.n_elems;
     width_Reserve(tabulate, nnew); // reserve space
-    int at = tabulate.width_n;
+    i64 at = tabulate.width_n;
     memcpy(tabulate.width_elems + at, rhs.elems, nnew * sizeof(i32));
     tabulate.width_n += nnew;
     return algo::aryptr<i32>(tabulate.width_elems + at, nnew);
@@ -5665,8 +6073,8 @@ algo::aryptr<i32> algo_lib::width_Addary(algo_lib::Tabulate& tabulate, algo::ary
 // The new element is initialized to a default value
 i32& algo_lib::width_Alloc(algo_lib::Tabulate& tabulate) {
     width_Reserve(tabulate, 1);
-    int n  = tabulate.width_n;
-    int at = n;
+    i64 n  = tabulate.width_n;
+    i64 at = n;
     i32 *elems = tabulate.width_elems;
     new (elems + at) i32(0); // construct new element, default initializer
     tabulate.width_n = n+1;
@@ -5676,9 +6084,9 @@ i32& algo_lib::width_Alloc(algo_lib::Tabulate& tabulate) {
 // --- algo_lib.Tabulate.width.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-i32& algo_lib::width_AllocAt(algo_lib::Tabulate& tabulate, int at) {
+i32& algo_lib::width_AllocAt(algo_lib::Tabulate& tabulate, i64 at) {
     width_Reserve(tabulate, 1);
-    int n  = tabulate.width_n;
+    i64 n  = tabulate.width_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
         FatalErrorExit("algo_lib.bad_alloc_at  field:algo_lib.Tabulate.width  comment:'index out of range'");
     }
@@ -5691,12 +6099,12 @@ i32& algo_lib::width_AllocAt(algo_lib::Tabulate& tabulate, int at) {
 
 // --- algo_lib.Tabulate.width.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<i32> algo_lib::width_AllocN(algo_lib::Tabulate& tabulate, int n_elems) {
+algo::aryptr<i32> algo_lib::width_AllocN(algo_lib::Tabulate& tabulate, i64 n_elems) {
     width_Reserve(tabulate, n_elems);
-    int old_n  = tabulate.width_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = tabulate.width_n;
+    i64 new_n = old_n + n_elems;
     i32 *elems = tabulate.width_elems;
-    for (int i = old_n; i < new_n; i++) {
+    for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) i32(0); // construct new element, default initialize
     }
     tabulate.width_n = new_n;
@@ -5707,15 +6115,15 @@ algo::aryptr<i32> algo_lib::width_AllocN(algo_lib::Tabulate& tabulate, int n_ele
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::aryptr<i32> algo_lib::width_AllocNAt(algo_lib::Tabulate& tabulate, int n_elems, int at) {
+algo::aryptr<i32> algo_lib::width_AllocNAt(algo_lib::Tabulate& tabulate, i64 n_elems, i64 at) {
     width_Reserve(tabulate, n_elems);
-    int n  = tabulate.width_n;
+    i64 n  = tabulate.width_n;
     if (UNLIKELY(u64(at) > u64(n))) {
         FatalErrorExit("algo_lib.bad_alloc_n_at  field:algo_lib.Tabulate.width  comment:'index out of range'");
     }
     i32 *elems = tabulate.width_elems;
     memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(i32));
-    for (int i = 0; i < n_elems; i++) {
+    for (i64 i = 0; i < n_elems; i++) {
         new (elems + at + i) i32(0); // construct new element, default initialize
     }
     tabulate.width_n = n+n_elems;
@@ -5724,8 +6132,8 @@ algo::aryptr<i32> algo_lib::width_AllocNAt(algo_lib::Tabulate& tabulate, int n_e
 
 // --- algo_lib.Tabulate.width.Remove
 // Remove item by index. If index outside of range, do nothing.
-void algo_lib::width_Remove(algo_lib::Tabulate& tabulate, u32 i) {
-    u32 lim = tabulate.width_n;
+void algo_lib::width_Remove(algo_lib::Tabulate& tabulate, u64 i) {
+    u64 lim = tabulate.width_n;
     i32 *elems = tabulate.width_elems;
     if (i < lim) {
         memmove(elems + i, elems + (i + 1), sizeof(i32) * (lim - (i + 1)));
@@ -5745,10 +6153,10 @@ void algo_lib::width_RemoveLast(algo_lib::Tabulate& tabulate) {
 
 // --- algo_lib.Tabulate.width.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void algo_lib::width_AbsReserve(algo_lib::Tabulate& tabulate, int n) {
-    u32 old_max  = tabulate.width_max;
-    if (n > i32(old_max)) {
-        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+void algo_lib::width_AbsReserve(algo_lib::Tabulate& tabulate, i64 n) {
+    u64 old_max  = tabulate.width_max;
+    if (n > i64(old_max)) {
+        u64 new_max  = i64_Max(i64_Max(old_max * 2, n), 4);
         void *new_mem = algo_lib::lpool_ReallocMem(tabulate.width_elems, old_max * sizeof(i32), new_max * sizeof(i32));
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("algo_lib.tary_nomem  field:algo_lib.Tabulate.width  comment:'out of memory'");
@@ -5762,9 +6170,9 @@ void algo_lib::width_AbsReserve(algo_lib::Tabulate& tabulate, int n) {
 // Copy contents of RHS to PARENT.
 void algo_lib::width_Setary(algo_lib::Tabulate& tabulate, algo_lib::Tabulate &rhs) {
     width_RemoveAll(tabulate);
-    int nnew = rhs.width_n;
+    i64 nnew = rhs.width_n;
     width_Reserve(tabulate, nnew); // reserve space
-    for (int i = 0; i < nnew; i++) { // copy elements over
+    for (i64 i = 0; i < nnew; i++) { // copy elements over
         new (tabulate.width_elems + i) i32(width_qFind(rhs, i));
         tabulate.width_n = i + 1;
     }
@@ -5780,12 +6188,12 @@ void algo_lib::width_Setary(algo_lib::Tabulate& tabulate, const algo::aryptr<i32
 
 // --- algo_lib.Tabulate.width.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<i32> algo_lib::width_AllocNVal(algo_lib::Tabulate& tabulate, int n_elems, const i32& val) {
+algo::aryptr<i32> algo_lib::width_AllocNVal(algo_lib::Tabulate& tabulate, i64 n_elems, const i32& val) {
     width_Reserve(tabulate, n_elems);
-    int old_n  = tabulate.width_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = tabulate.width_n;
+    i64 new_n = old_n + n_elems;
     i32 *elems = tabulate.width_elems;
-    for (int i = old_n; i < new_n; i++) {
+    for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) i32(val);
     }
     tabulate.width_n = new_n;
@@ -5809,20 +6217,35 @@ bool algo_lib::width_ReadStrptrMaybe(algo_lib::Tabulate& tabulate, algo::strptr 
 // --- algo_lib.Tabulate.width.Insary
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-void algo_lib::width_Insary(algo_lib::Tabulate& tabulate, algo::aryptr<i32> rhs, int at) {
+void algo_lib::width_Insary(algo_lib::Tabulate& tabulate, algo::aryptr<i32> rhs, i64 at) {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= tabulate.width_elems && rhs.elems < tabulate.width_elems + tabulate.width_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("algo_lib.tary_alias  field:algo_lib.Tabulate.width  comment:'alias error: sub-array is being appended to the whole'");
     }
-    if (UNLIKELY(u64(at) >= u64(tabulate.width_elems+1))) {
+    if (UNLIKELY(u64(at) >= u64(tabulate.width_n+1))) {
         FatalErrorExit("algo_lib.bad_insary  field:algo_lib.Tabulate.width  comment:'index out of range'");
     }
-    int nnew = rhs.n_elems;
-    int nmove = tabulate.width_n - at;
+    i64 nnew = rhs.n_elems;
+    i64 nmove = tabulate.width_n - at;
     width_Reserve(tabulate, nnew); // reserve space
     memmove(tabulate.width_elems + at + nnew, tabulate.width_elems + at, nmove * sizeof(i32));
     memcpy(tabulate.width_elems + at, rhs.elems, nnew * sizeof(i32));
     tabulate.width_n += nnew;
+}
+
+// --- algo_lib.Tabulate.width.RemRegion
+// Delete a range of elements
+// Remove region from the middle of the array
+// The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
+// If N is negative, nothing is removed.
+void algo_lib::width_RemRegion(algo_lib::Tabulate& tabulate, i64 beg, i64 n) {
+    i64 end = i64_Min(beg+n, tabulate.width_n);
+    beg = i64_Max(beg,0);
+    n = end-beg;
+    if (n>0) {
+        memmove(tabulate.width_elems+beg, tabulate.width_elems+end, sizeof(i32) * (tabulate.width_n-end));
+        tabulate.width_n -= n;
+    }
 }
 
 // --- algo_lib.Tabulate..Uninit

@@ -4,6 +4,7 @@ amcdb.tclass  tclass:Base  comment:"Incorporate base ctype fields"
 amcdb.tclass  tclass:Bheap  comment:"X-reference: Binary heap built on top of ptrary."
 amcdb.tclass  tclass:Bitfld  comment:"A field whose value is stored in the bits of another field"
 amcdb.tclass  tclass:Bitset  comment:""
+amcdb.tclass  tclass:Blkhash  comment:"X-reference; hash of blocks, 2^linbits direct slots per block"
 amcdb.tclass  tclass:Blkpool  comment:"variable size block-based allocator suitable for fifo use"
 amcdb.tclass  tclass:Charset  comment:""
 amcdb.tclass  tclass:Cmp  comment:Comparison

@@ -1,0 +1,47 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/kafka_pmask_name.ssim -out_dir: -report:N 'ktst.Rec..KafkaEncode|ktst.Rec..KafkaDecode|ktst.Rec.val.FieldMaskQ|ktst.Rec.val.SetFieldMask'"
+# eof amc
+amc -> // --- ktst.Rec.val.FieldMaskQ
+amc -> // Return true if the field is marked in the presence mask
+amc -> inline bool ktst::val_FieldMaskQ(ktst::Rec& parent) {
+amc ->     return field_mask_qGetBit(parent, 0);
+amc -> }
+amc -> // --- ktst.Rec.val.SetFieldMask
+amc -> // Set presence bit for this field in the pmask
+amc -> inline void ktst::val_SetFieldMask(ktst::Rec& parent) {
+amc ->     field_mask_qSetBit(parent, 0); // mark presence in pmask
+amc -> }
+amc -> // --- ktst.Rec..KafkaEncode
+amc -> void ktst::Rec_KafkaEncode(algo::ByteAry& buf, ktst::Rec& parent, i16 version) {
+amc ->     if (version>=0) {
+amc ->         bool flexible(false);
+amc ->         (void)flexible; // avoid unused variable
+amc ->         lib_kafka::EncodeArrayLen(buf,val_N(parent),val_FieldMaskQ(parent),true,flexible);
+amc ->         if (val_FieldMaskQ(parent)) {
+amc ->             ind_beg(ktst::Rec_val_curs,val,parent) {
+amc ->                 lib_kafka::EncodeI32(buf,val);
+amc ->             }
+amc ->         }ind_end;
+amc ->     }
+amc -> }
+amc -> // --- ktst.Rec..KafkaDecode
+amc -> bool ktst::Rec_KafkaDecode(algo::memptr& buf, ktst::Rec& parent, i16 version) {
+amc ->     bool ok = true;
+amc ->     bool present(false);
+amc ->     (void)present; // avoid unused variable
+amc ->     u32 len(0);
+amc ->     (void)len; // avoid unused variable
+amc ->     ok = version>=0;
+amc ->     if (ok) {
+amc ->         bool flexible(false);
+amc ->         (void)flexible; // avoid unused variable
+amc ->         ok = ok && lib_kafka::DecodeArrayLen(buf,len,present,true,flexible);
+amc ->         for (u32 i=0; ok && i<len; ++i) {
+amc ->             ok = ok && lib_kafka::DecodeI32(buf,val_Alloc(parent));
+amc ->         }
+amc ->         if (present) {
+amc ->             val_SetFieldMask(parent);
+amc ->         }
+amc ->     }
+amc ->     return ok;
+amc -> }
+# exit amc code:0

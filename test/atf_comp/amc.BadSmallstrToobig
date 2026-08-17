@@ -1,0 +1,6 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/bad_smallstr_toobig.ssim -out_dir: -report:N zzz"
+# eof amc
+amc -> smallstr.toobig  field:algo_lib.Smallstr256.ch  length:256  comment:"smallstr length too large (must be <= 255)"
+amc -> smallstr.toobig  field:algo_lib.Smallstr300.ch  length:300  comment:"smallstr length too large (must be <= 255)"
+amc -> amc.no_output  comment:"no files were modified"
+# exit amc code:2

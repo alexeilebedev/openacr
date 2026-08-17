@@ -32,9 +32,9 @@
 
 // --- lib_ctype_FieldIdEnum
 
-enum lib_ctype_FieldIdEnum {        // lib_ctype.FieldId.value
-     lib_ctype_FieldId_in      = 0
-    ,lib_ctype_FieldId_value   = 1
+enum lib_ctype_FieldIdEnum {    // lib_ctype.FieldId.value
+     lib_ctype_FieldId_in
+    ,lib_ctype_FieldId_value
 };
 
 enum { lib_ctype_FieldIdEnum_N = 2 };
@@ -119,12 +119,9 @@ struct Cmdline { // lib_ctype.Cmdline
     // func:lib_ctype.Cmdline..Ctor
     inline               Cmdline() __attribute__((nothrow));
 };
-
+extern const char *Cmdline_help;
 // func:lib_ctype.Cmdline..ReadFieldMaybe
 bool                 Cmdline_ReadFieldMaybe(lib_ctype::Cmdline& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of lib_ctype::Cmdline from attributes of ascii tuple TUPLE
-// func:lib_ctype.Cmdline..ReadTupleMaybe
-bool                 Cmdline_ReadTupleMaybe(lib_ctype::Cmdline &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:lib_ctype.Cmdline..Init
 inline void          Cmdline_Init(lib_ctype::Cmdline& parent);
@@ -136,11 +133,20 @@ tempstr              Cmdline_ToCmdline(lib_ctype::Cmdline& row) __attribute__((n
 // cfmt:lib_ctype.Cmdline.Argv  printfmt:Tuple
 // func:lib_ctype.Cmdline..PrintArgv
 void                 Cmdline_PrintArgv(lib_ctype::Cmdline& row, algo::cstring& str) __attribute__((nothrow));
+// Build argv from ROW into ARGS; args[0] is the command name
+// cfmt:lib_ctype.Cmdline.Argv  printfmt:Tuple
+// func:lib_ctype.Cmdline..ToArgv
+void                 Cmdline_ToArgv(lib_ctype::Cmdline& row, algo::StringAry& args) __attribute__((nothrow));
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
 // func:lib_ctype.Cmdline..NArgs
 i32                  Cmdline_NArgs(lib_ctype::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
+// Field-aware command-line reader over a word array
+// Read command-line ARGS (already split into words) into the fields of PARENT.
+// Field-aware: a value-taking option consumes the next word; errors go to ERR.
+// func:lib_ctype.Cmdline..ReadArgv
+bool                 Cmdline_ReadArgv(lib_ctype::Cmdline &parent, algo::StringAry &args, algo::cstring &err) __attribute__((nothrow));
 
 // --- lib_ctype.FBltin
 // create: lib_ctype.FDb.bltin (Lary)
@@ -151,7 +157,7 @@ struct FBltin { // lib_ctype.FBltin
     bool                likeu64;    //   false
     bool                bigendok;   //   false
     bool                issigned;   //   false
-    algo::Comment       comment;    //
+    algo::cstring       comment;    //
     // func:lib_ctype.FBltin..AssignOp
     inline lib_ctype::FBltin& operator =(const lib_ctype::FBltin &rhs) = delete;
     // func:lib_ctype.FBltin..CopyCtor
@@ -166,7 +172,6 @@ private:
     friend void                 bltin_RemoveAll() __attribute__((nothrow));
     friend void                 bltin_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:lib_ctype.FBltin.base.CopyOut
 void                 bltin_CopyOut(lib_ctype::FBltin &row, amcdb::Bltin &out) __attribute__((nothrow));
@@ -189,8 +194,7 @@ struct FCdflt { // lib_ctype.FCdflt
     algo::CppExpr       dflt;       //
     algo::CppExpr       cppdflt;    //
     algo::Smallstr50    ssimdflt;   //
-    algo::Smallstr50    jsdflt;     //
-    algo::Comment       comment;    //
+    algo::cstring       comment;    //
     // func:lib_ctype.FCdflt..AssignOp
     inline lib_ctype::FCdflt& operator =(const lib_ctype::FCdflt &rhs) = delete;
     // func:lib_ctype.FCdflt..CopyCtor
@@ -204,7 +208,6 @@ private:
     friend lib_ctype::FCdflt*   cdflt_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 cdflt_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:lib_ctype.FCdflt.base.CopyOut
 void                 cdflt_CopyOut(lib_ctype::FCdflt &row, dmmeta::Cdflt &out) __attribute__((nothrow));
@@ -227,7 +230,7 @@ struct FCfmt { // lib_ctype.FCfmt
     bool                print;                 //   false
     algo::Smallstr20    sep;                   //
     bool                genop;                 //   false
-    algo::Comment       comment;               //
+    algo::cstring       comment;               //
     bool                ctype_c_cfmt_in_ary;   //   false  membership flag
     lib_ctype::FCfmt*   ind_cfmt_next;         // hash next
     u32                 ind_cfmt_hashval;      // hash value
@@ -244,7 +247,6 @@ private:
     friend lib_ctype::FCfmt*    cfmt_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 cfmt_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:lib_ctype.FCfmt.msghdr.CopyOut
 void                 cfmt_CopyOut(lib_ctype::FCfmt &row, dmmeta::Cfmt &out) __attribute__((nothrow));
@@ -253,10 +255,10 @@ void                 cfmt_CopyOut(lib_ctype::FCfmt &row, dmmeta::Cfmt &out) __at
 void                 cfmt_CopyIn(lib_ctype::FCfmt &row, dmmeta::Cfmt &in) __attribute__((nothrow));
 
 // func:lib_ctype.FCfmt.ctype.Get
-algo::Smallstr100    ctype_Get(lib_ctype::FCfmt& cfmt) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ctype_Get(lib_ctype::FCfmt& cfmt) __attribute__((__warn_unused_result__, nothrow));
 
 // func:lib_ctype.FCfmt.strfmt.Get
-algo::Smallstr50     strfmt_Get(lib_ctype::FCfmt& cfmt) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         strfmt_Get(lib_ctype::FCfmt& cfmt) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:lib_ctype.FCfmt..Init
@@ -273,7 +275,7 @@ void                 FCfmt_Print(lib_ctype::FCfmt& row, algo::cstring& str) __at
 // global access: cppfunc (Lary, by rowid)
 // access: lib_ctype.FField.c_cppfunc (Ptr)
 struct FCppfunc { // lib_ctype.FCppfunc
-    algo::Smallstr100   field;   //
+    algo::Smallstr150   field;   //
     algo::CppExpr       expr;    //
     bool                print;   //   false
     bool                set;     //   false
@@ -291,7 +293,6 @@ private:
     friend void                 cppfunc_RemoveAll() __attribute__((nothrow));
     friend void                 cppfunc_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:lib_ctype.FCppfunc.base.CopyOut
 void                 cppfunc_CopyOut(lib_ctype::FCppfunc &row, dmmeta::Cppfunc &out) __attribute__((nothrow));
@@ -315,15 +316,15 @@ void                 FCppfunc_Uninit(lib_ctype::FCppfunc& cppfunc) __attribute__
 // access: lib_ctype.FSsimfile.p_ctype (Upptr)
 struct FCtype { // lib_ctype.FCtype
     algo::Smallstr100      ctype;               // Identifier. must be ns.typename
-    algo::Comment          comment;             //
+    algo::cstring          comment;             //
     lib_ctype::FField**    c_field_elems;       // array of pointers
-    u32                    c_field_n;           // array of pointers
-    u32                    c_field_max;         // capacity of allocated array
+    u64                    c_field_n;           // current size
+    u64                    c_field_max;         // capacity of allocated array
     algo::Smallstr50       printfmt;            //
     lib_ctype::FCdflt*     c_cdflt;             // optional pointer
     lib_ctype::FCfmt**     c_cfmt_elems;        // array of pointers
-    u32                    c_cfmt_n;            // array of pointers
-    u32                    c_cfmt_max;          // capacity of allocated array
+    u64                    c_cfmt_n;            // current size
+    u64                    c_cfmt_max;          // capacity of allocated array
     lib_ctype::FBltin*     c_bltin;             // optional pointer
     lib_ctype::FSqltype*   c_sqltype;           // optional pointer
     lib_ctype::FCtype*     ind_ctype_next;      // hash next
@@ -351,7 +352,6 @@ private:
     friend lib_ctype::FCtype*   ctype_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 ctype_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:lib_ctype.FCtype.msghdr.CopyOut
 void                 ctype_CopyOut(lib_ctype::FCtype &row, dmmeta::Ctype &out) __attribute__((nothrow));
@@ -360,22 +360,22 @@ void                 ctype_CopyOut(lib_ctype::FCtype &row, dmmeta::Ctype &out) _
 void                 ctype_CopyIn(lib_ctype::FCtype &row, dmmeta::Ctype &in) __attribute__((nothrow));
 
 // func:lib_ctype.FCtype.ns.Get
-algo::Smallstr16     ns_Get(lib_ctype::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ns_Get(lib_ctype::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow));
 
 // func:lib_ctype.FCtype.name.Get
-algo::Smallstr100    name_Get(lib_ctype::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(lib_ctype::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow));
 
 // Return true if index is empty
 // func:lib_ctype.FCtype.c_field.EmptyQ
 inline bool          c_field_EmptyQ(lib_ctype::FCtype& ctype) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:lib_ctype.FCtype.c_field.Find
-inline lib_ctype::FField* c_field_Find(lib_ctype::FCtype& ctype, u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline lib_ctype::FField* c_field_Find(lib_ctype::FCtype& ctype, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:lib_ctype.FCtype.c_field.Getary
 inline algo::aryptr<lib_ctype::FField*> c_field_Getary(lib_ctype::FCtype& ctype) __attribute__((nothrow));
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:lib_ctype.FCtype.c_field.Insert
 void                 c_field_Insert(lib_ctype::FCtype& ctype, lib_ctype::FField& row) __attribute__((nothrow));
 // Insert pointer to row in array.
@@ -385,7 +385,7 @@ void                 c_field_Insert(lib_ctype::FCtype& ctype, lib_ctype::FField&
 bool                 c_field_InsertMaybe(lib_ctype::FCtype& ctype, lib_ctype::FField& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:lib_ctype.FCtype.c_field.N
-inline i32           c_field_N(const lib_ctype::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_field_N(const lib_ctype::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:lib_ctype.FCtype.c_field.Remove
 void                 c_field_Remove(lib_ctype::FCtype& ctype, lib_ctype::FField& row) __attribute__((nothrow));
@@ -394,10 +394,10 @@ void                 c_field_Remove(lib_ctype::FCtype& ctype, lib_ctype::FField&
 inline void          c_field_RemoveAll(lib_ctype::FCtype& ctype) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:lib_ctype.FCtype.c_field.Reserve
-void                 c_field_Reserve(lib_ctype::FCtype& ctype, u32 n) __attribute__((nothrow));
+void                 c_field_Reserve(lib_ctype::FCtype& ctype, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:lib_ctype.FCtype.c_field.qFind
-inline lib_ctype::FField& c_field_qFind(lib_ctype::FCtype& ctype, u32 idx) __attribute__((nothrow));
+inline lib_ctype::FField& c_field_qFind(lib_ctype::FCtype& ctype, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:lib_ctype.FCtype.c_field.InAryQ
 inline bool          ctype_c_field_InAryQ(lib_ctype::FField& row) __attribute__((nothrow));
@@ -417,12 +417,12 @@ inline void          c_cdflt_Remove(lib_ctype::FCtype& ctype, lib_ctype::FCdflt&
 inline bool          c_cfmt_EmptyQ(lib_ctype::FCtype& ctype) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:lib_ctype.FCtype.c_cfmt.Find
-inline lib_ctype::FCfmt* c_cfmt_Find(lib_ctype::FCtype& ctype, u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline lib_ctype::FCfmt* c_cfmt_Find(lib_ctype::FCtype& ctype, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:lib_ctype.FCtype.c_cfmt.Getary
 inline algo::aryptr<lib_ctype::FCfmt*> c_cfmt_Getary(lib_ctype::FCtype& ctype) __attribute__((nothrow));
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:lib_ctype.FCtype.c_cfmt.Insert
 void                 c_cfmt_Insert(lib_ctype::FCtype& ctype, lib_ctype::FCfmt& row) __attribute__((nothrow));
 // Insert pointer to row in array.
@@ -432,7 +432,7 @@ void                 c_cfmt_Insert(lib_ctype::FCtype& ctype, lib_ctype::FCfmt& r
 bool                 c_cfmt_InsertMaybe(lib_ctype::FCtype& ctype, lib_ctype::FCfmt& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:lib_ctype.FCtype.c_cfmt.N
-inline i32           c_cfmt_N(const lib_ctype::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_cfmt_N(const lib_ctype::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:lib_ctype.FCtype.c_cfmt.Remove
 void                 c_cfmt_Remove(lib_ctype::FCtype& ctype, lib_ctype::FCfmt& row) __attribute__((nothrow));
@@ -441,10 +441,10 @@ void                 c_cfmt_Remove(lib_ctype::FCtype& ctype, lib_ctype::FCfmt& r
 inline void          c_cfmt_RemoveAll(lib_ctype::FCtype& ctype) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:lib_ctype.FCtype.c_cfmt.Reserve
-void                 c_cfmt_Reserve(lib_ctype::FCtype& ctype, u32 n) __attribute__((nothrow));
+void                 c_cfmt_Reserve(lib_ctype::FCtype& ctype, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:lib_ctype.FCtype.c_cfmt.qFind
-inline lib_ctype::FCfmt& c_cfmt_qFind(lib_ctype::FCtype& ctype, u32 idx) __attribute__((nothrow));
+inline lib_ctype::FCfmt& c_cfmt_qFind(lib_ctype::FCtype& ctype, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:lib_ctype.FCtype.c_cfmt.InAryQ
 inline bool          ctype_c_cfmt_InAryQ(lib_ctype::FCfmt& row) __attribute__((nothrow));
@@ -501,7 +501,6 @@ struct trace { // lib_ctype.trace
     inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // print string representation of ROW to string STR
 // cfmt:lib_ctype.trace.String  printfmt:Tuple
 // func:lib_ctype.trace..Print
@@ -510,54 +509,53 @@ void                 trace_Print(lib_ctype::trace& row, algo::cstring& str) __at
 // --- lib_ctype.FDb
 // create: lib_ctype.FDb._db (Global)
 struct FDb { // lib_ctype.FDb: In-memory database for lib_ctype
-    lib_ctype::FFconst*        fconst_lary[32];                // level array
-    i32                        fconst_n;                       // number of elements in array
+    lib_ctype::FFconst*        fconst_lary[36];                // level array
+    i64                        fconst_n;                       // number of elements in array
     lib_ctype::FFconst**       ind_fconst_key_buckets_elems;   // pointer to bucket array
     i32                        ind_fconst_key_buckets_n;       // number of elements in bucket array
     i32                        ind_fconst_key_n;               // number of elements in the hash table
     lib_ctype::FFconst**       ind_fconst_buckets_elems;       // pointer to bucket array
     i32                        ind_fconst_buckets_n;           // number of elements in bucket array
     i32                        ind_fconst_n;                   // number of elements in the hash table
-    lib_ctype::FSsimfile*      ssimfile_lary[32];              // level array
-    i32                        ssimfile_n;                     // number of elements in array
+    lib_ctype::FSsimfile*      ssimfile_lary[36];              // level array
+    i64                        ssimfile_n;                     // number of elements in array
     lib_ctype::FSsimfile**     ind_ssimfile_buckets_elems;     // pointer to bucket array
     i32                        ind_ssimfile_buckets_n;         // number of elements in bucket array
     i32                        ind_ssimfile_n;                 // number of elements in the hash table
-    lib_ctype::FFtuple*        ftuple_lary[32];                // level array
-    i32                        ftuple_n;                       // number of elements in array
-    lib_ctype::FCtype*         ctype_lary[32];                 // level array
-    i32                        ctype_n;                        // number of elements in array
+    lib_ctype::FFtuple*        ftuple_lary[36];                // level array
+    i64                        ftuple_n;                       // number of elements in array
+    lib_ctype::FCtype*         ctype_lary[36];                 // level array
+    i64                        ctype_n;                        // number of elements in array
     lib_ctype::FCtype**        ind_ctype_buckets_elems;        // pointer to bucket array
     i32                        ind_ctype_buckets_n;            // number of elements in bucket array
     i32                        ind_ctype_n;                    // number of elements in the hash table
-    lib_ctype::FField*         field_lary[32];                 // level array
-    i32                        field_n;                        // number of elements in array
+    lib_ctype::FField*         field_lary[36];                 // level array
+    i64                        field_n;                        // number of elements in array
     lib_ctype::FField**        ind_field_buckets_elems;        // pointer to bucket array
     i32                        ind_field_buckets_n;            // number of elements in bucket array
     i32                        ind_field_n;                    // number of elements in the hash table
-    lib_ctype::FCdflt*         cdflt_lary[32];                 // level array
-    i32                        cdflt_n;                        // number of elements in array
-    lib_ctype::FCfmt*          cfmt_lary[32];                  // level array
-    i32                        cfmt_n;                         // number of elements in array
+    lib_ctype::FCdflt*         cdflt_lary[36];                 // level array
+    i64                        cdflt_n;                        // number of elements in array
+    lib_ctype::FCfmt*          cfmt_lary[36];                  // level array
+    i64                        cfmt_n;                         // number of elements in array
     lib_ctype::FCfmt**         ind_cfmt_buckets_elems;         // pointer to bucket array
     i32                        ind_cfmt_buckets_n;             // number of elements in bucket array
     i32                        ind_cfmt_n;                     // number of elements in the hash table
-    lib_ctype::FCppfunc*       cppfunc_lary[32];               // level array
-    i32                        cppfunc_n;                      // number of elements in array
-    lib_ctype::FSubstr*        substr_lary[32];                // level array
-    i32                        substr_n;                       // number of elements in array
+    lib_ctype::FCppfunc*       cppfunc_lary[36];               // level array
+    i64                        cppfunc_n;                      // number of elements in array
+    lib_ctype::FSubstr*        substr_lary[36];                // level array
+    i64                        substr_n;                       // number of elements in array
     lib_ctype::FCtype*         c_axprice;                      // optional pointer
     lib_ctype::FField*         c_fixmsg;                       // optional pointer
     lib_ctype::FCtype*         c_bool;                         // optional pointer
-    lib_ctype::FUnstablefld*   unstablefld_lary[32];           // level array
-    i32                        unstablefld_n;                  // number of elements in array
-    lib_ctype::FBltin*         bltin_lary[32];                 // level array
-    i32                        bltin_n;                        // number of elements in array
-    lib_ctype::FSqltype*       sqltype_lary[32];               // level array
-    i32                        sqltype_n;                      // number of elements in array
+    lib_ctype::FUnstablefld*   unstablefld_lary[36];           // level array
+    i64                        unstablefld_n;                  // number of elements in array
+    lib_ctype::FBltin*         bltin_lary[36];                 // level array
+    i64                        bltin_n;                        // number of elements in array
+    lib_ctype::FSqltype*       sqltype_lary[36];               // level array
+    i64                        sqltype_n;                      // number of elements in array
     lib_ctype::trace           trace;                          //
 };
-
 // Allocate memory for new default row.
 // If out of memory, process is killed.
 // func:lib_ctype.FDb.fconst.Alloc
@@ -583,7 +581,7 @@ inline lib_ctype::FFconst* fconst_Find(u64 t) __attribute__((__warn_unused_resul
 inline lib_ctype::FFconst* fconst_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:lib_ctype.FDb.fconst.N
-inline i32           fconst_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           fconst_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
 // func:lib_ctype.FDb.fconst.RemoveLast
 void                 fconst_RemoveLast() __attribute__((nothrow));
@@ -604,6 +602,9 @@ lib_ctype::FFconst*  ind_fconst_key_Find(const algo::strptr& key) __attribute__(
 // Look up row by key and return reference. Throw exception if not found
 // func:lib_ctype.FDb.ind_fconst_key.FindX
 lib_ctype::FFconst&  ind_fconst_key_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:lib_ctype.FDb.ind_fconst_key.GetOrCreate
+lib_ctype::FFconst*  ind_fconst_key_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:lib_ctype.FDb.ind_fconst_key.N
 inline i32           ind_fconst_key_N() __attribute__((__warn_unused_result__, nothrow, pure));
@@ -629,6 +630,9 @@ lib_ctype::FFconst*  ind_fconst_Find(const algo::strptr& key) __attribute__((__w
 // Look up row by key and return reference. Throw exception if not found
 // func:lib_ctype.FDb.ind_fconst.FindX
 lib_ctype::FFconst&  ind_fconst_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:lib_ctype.FDb.ind_fconst.GetOrCreate
+lib_ctype::FFconst*  ind_fconst_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:lib_ctype.FDb.ind_fconst.N
 inline i32           ind_fconst_N() __attribute__((__warn_unused_result__, nothrow, pure));
@@ -670,7 +674,7 @@ inline lib_ctype::FSsimfile* ssimfile_Find(u64 t) __attribute__((__warn_unused_r
 inline lib_ctype::FSsimfile* ssimfile_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:lib_ctype.FDb.ssimfile.N
-inline i32           ssimfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           ssimfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
 // func:lib_ctype.FDb.ssimfile.RemoveLast
 void                 ssimfile_RemoveLast() __attribute__((nothrow));
@@ -691,6 +695,9 @@ lib_ctype::FSsimfile* ind_ssimfile_Find(const algo::strptr& key) __attribute__((
 // Look up row by key and return reference. Throw exception if not found
 // func:lib_ctype.FDb.ind_ssimfile.FindX
 lib_ctype::FSsimfile& ind_ssimfile_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:lib_ctype.FDb.ind_ssimfile.GetOrCreate
+lib_ctype::FSsimfile* ind_ssimfile_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:lib_ctype.FDb.ind_ssimfile.N
 inline i32           ind_ssimfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
@@ -732,7 +739,7 @@ inline lib_ctype::FFtuple* ftuple_Find(u64 t) __attribute__((__warn_unused_resul
 inline lib_ctype::FFtuple* ftuple_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:lib_ctype.FDb.ftuple.N
-inline i32           ftuple_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           ftuple_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
 // func:lib_ctype.FDb.ftuple.RemoveLast
 void                 ftuple_RemoveLast() __attribute__((nothrow));
@@ -769,7 +776,7 @@ inline lib_ctype::FCtype* ctype_Find(u64 t) __attribute__((__warn_unused_result_
 inline lib_ctype::FCtype* ctype_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:lib_ctype.FDb.ctype.N
-inline i32           ctype_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           ctype_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
 // func:lib_ctype.FDb.ctype.RemoveLast
 void                 ctype_RemoveLast() __attribute__((nothrow));
@@ -834,7 +841,7 @@ inline lib_ctype::FField* field_Find(u64 t) __attribute__((__warn_unused_result_
 inline lib_ctype::FField* field_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:lib_ctype.FDb.field.N
-inline i32           field_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           field_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
 // func:lib_ctype.FDb.field.RemoveLast
 void                 field_RemoveLast() __attribute__((nothrow));
@@ -855,6 +862,9 @@ lib_ctype::FField*   ind_field_Find(const algo::strptr& key) __attribute__((__wa
 // Look up row by key and return reference. Throw exception if not found
 // func:lib_ctype.FDb.ind_field.FindX
 lib_ctype::FField&   ind_field_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:lib_ctype.FDb.ind_field.GetOrCreate
+lib_ctype::FField*   ind_field_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:lib_ctype.FDb.ind_field.N
 inline i32           ind_field_N() __attribute__((__warn_unused_result__, nothrow, pure));
@@ -896,7 +906,7 @@ inline lib_ctype::FCdflt* cdflt_Find(u64 t) __attribute__((__warn_unused_result_
 inline lib_ctype::FCdflt* cdflt_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:lib_ctype.FDb.cdflt.N
-inline i32           cdflt_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           cdflt_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
 // func:lib_ctype.FDb.cdflt.RemoveLast
 void                 cdflt_RemoveLast() __attribute__((nothrow));
@@ -932,6 +942,10 @@ bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __att
 // Calls Step function of dependencies
 // func:lib_ctype.FDb._db.Steps
 void                 Steps();
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+// func:lib_ctype.FDb._db.RemoveStrptrMaybe
+bool                 RemoveStrptrMaybe(algo::strptr str);
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:lib_ctype.FDb._db.XrefMaybe
@@ -962,7 +976,7 @@ inline lib_ctype::FCfmt* cfmt_Find(u64 t) __attribute__((__warn_unused_result__,
 inline lib_ctype::FCfmt* cfmt_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:lib_ctype.FDb.cfmt.N
-inline i32           cfmt_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           cfmt_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
 // func:lib_ctype.FDb.cfmt.RemoveLast
 void                 cfmt_RemoveLast() __attribute__((nothrow));
@@ -983,6 +997,9 @@ lib_ctype::FCfmt*    ind_cfmt_Find(const algo::strptr& key) __attribute__((__war
 // Look up row by key and return reference. Throw exception if not found
 // func:lib_ctype.FDb.ind_cfmt.FindX
 lib_ctype::FCfmt&    ind_cfmt_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:lib_ctype.FDb.ind_cfmt.GetOrCreate
+lib_ctype::FCfmt*    ind_cfmt_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:lib_ctype.FDb.ind_cfmt.N
 inline i32           ind_cfmt_N() __attribute__((__warn_unused_result__, nothrow, pure));
@@ -1024,7 +1041,7 @@ inline lib_ctype::FCppfunc* cppfunc_Find(u64 t) __attribute__((__warn_unused_res
 inline lib_ctype::FCppfunc* cppfunc_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:lib_ctype.FDb.cppfunc.N
-inline i32           cppfunc_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           cppfunc_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:lib_ctype.FDb.cppfunc.RemoveAll
 void                 cppfunc_RemoveAll() __attribute__((nothrow));
@@ -1064,7 +1081,7 @@ inline lib_ctype::FSubstr* substr_Find(u64 t) __attribute__((__warn_unused_resul
 inline lib_ctype::FSubstr* substr_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:lib_ctype.FDb.substr.N
-inline i32           substr_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           substr_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:lib_ctype.FDb.substr.RemoveAll
 void                 substr_RemoveAll() __attribute__((nothrow));
@@ -1104,7 +1121,7 @@ inline lib_ctype::FUnstablefld* unstablefld_Find(u64 t) __attribute__((__warn_un
 inline lib_ctype::FUnstablefld* unstablefld_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:lib_ctype.FDb.unstablefld.N
-inline i32           unstablefld_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           unstablefld_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:lib_ctype.FDb.unstablefld.RemoveAll
 void                 unstablefld_RemoveAll() __attribute__((nothrow));
@@ -1144,7 +1161,7 @@ inline lib_ctype::FBltin* bltin_Find(u64 t) __attribute__((__warn_unused_result_
 inline lib_ctype::FBltin* bltin_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:lib_ctype.FDb.bltin.N
-inline i32           bltin_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           bltin_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:lib_ctype.FDb.bltin.RemoveAll
 void                 bltin_RemoveAll() __attribute__((nothrow));
@@ -1184,7 +1201,7 @@ inline lib_ctype::FSqltype* sqltype_Find(u64 t) __attribute__((__warn_unused_res
 inline lib_ctype::FSqltype* sqltype_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:lib_ctype.FDb.sqltype.N
-inline i32           sqltype_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           sqltype_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:lib_ctype.FDb.sqltype.RemoveAll
 void                 sqltype_RemoveAll() __attribute__((nothrow));
@@ -1360,9 +1377,9 @@ struct FFconst { // lib_ctype.FFconst
     u32                   ind_fconst_key_hashval;   // hash value
     lib_ctype::FFconst*   ind_fconst_next;          // hash next
     u32                   ind_fconst_hashval;       // hash value
-    algo::Smallstr100     fconst;                   //
+    algo::Smallstr150     fconst;                   //
     algo::CppExpr         value;                    //
-    algo::Comment         comment;                  //
+    algo::cstring         comment;                  //
     algo::cstring         key;                      //
     lib_ctype::FFconst*   field_zd_fconst_next;     // zslist link; -1 means not-in-list
     lib_ctype::FFconst*   field_zd_fconst_prev;     // previous element
@@ -1379,7 +1396,6 @@ private:
     friend lib_ctype::FFconst*  fconst_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 fconst_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:lib_ctype.FFconst.msghdr.CopyOut
 void                 fconst_CopyOut(lib_ctype::FFconst &row, dmmeta::Fconst &out) __attribute__((nothrow));
@@ -1388,10 +1404,10 @@ void                 fconst_CopyOut(lib_ctype::FFconst &row, dmmeta::Fconst &out
 void                 fconst_CopyIn(lib_ctype::FFconst &row, dmmeta::Fconst &in) __attribute__((nothrow));
 
 // func:lib_ctype.FFconst.field.Get
-algo::Smallstr100    field_Get(lib_ctype::FFconst& fconst) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         field_Get(lib_ctype::FFconst& fconst) __attribute__((__warn_unused_result__, nothrow));
 
 // func:lib_ctype.FFconst.name.Get
-algo::Smallstr100    name_Get(lib_ctype::FFconst& fconst) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(lib_ctype::FFconst& fconst) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:lib_ctype.FFconst..Init
@@ -1413,11 +1429,11 @@ void                 FFconst_Print(lib_ctype::FFconst& row, algo::cstring& str) 
 struct FField { // lib_ctype.FField
     lib_ctype::FField*         ind_field_next;            // hash next
     u32                        ind_field_hashval;         // hash value
-    algo::Smallstr100          field;                     // Primary key, as ctype.name
+    algo::Smallstr150          field;                     // Primary key, as ctype.name
     algo::Smallstr100          arg;                       // Type of field
     algo::Smallstr50           reftype;                   //   "Val"  Type constructor
     algo::CppExpr              dflt;                      // Default value (c++ expression)
-    algo::Comment              comment;                   //
+    algo::cstring              comment;                   //
     bool                       istuple_computed;          //   false
     lib_ctype::FFtuple*        c_ftuple;                  // optional pointer
     lib_ctype::FCtype*         p_arg;                     // reference to parent row
@@ -1430,8 +1446,8 @@ struct FField { // lib_ctype.FField
     lib_ctype::FSubstr*        c_substr;                  // optional pointer
     lib_ctype::FUnstablefld*   c_unstablefld;             // optional pointer
     lib_ctype::FSubstr**       c_substr_srcfield_elems;   // array of pointers
-    u32                        c_substr_srcfield_n;       // array of pointers
-    u32                        c_substr_srcfield_max;     // capacity of allocated array
+    u64                        c_substr_srcfield_n;       // current size
+    u64                        c_substr_srcfield_max;     // capacity of allocated array
     bool                       ctype_c_field_in_ary;      //   false  membership flag
     // x-reference on lib_ctype.FField.c_ftuple prevents copy
     // x-reference on lib_ctype.FField.p_arg prevents copy
@@ -1460,7 +1476,6 @@ private:
     friend lib_ctype::FField*   field_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 field_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:lib_ctype.FField.msghdr.CopyOut
 void                 field_CopyOut(lib_ctype::FField &row, dmmeta::Field &out) __attribute__((nothrow));
@@ -1469,13 +1484,13 @@ void                 field_CopyOut(lib_ctype::FField &row, dmmeta::Field &out) _
 void                 field_CopyIn(lib_ctype::FField &row, dmmeta::Field &in) __attribute__((nothrow));
 
 // func:lib_ctype.FField.ctype.Get
-algo::Smallstr100    ctype_Get(lib_ctype::FField& field) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ctype_Get(lib_ctype::FField& field) __attribute__((__warn_unused_result__, nothrow));
 
 // func:lib_ctype.FField.ns.Get
-algo::Smallstr16     ns_Get(lib_ctype::FField& field) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ns_Get(lib_ctype::FField& field) __attribute__((__warn_unused_result__, nothrow));
 
 // func:lib_ctype.FField.name.Get
-algo::Smallstr50     name_Get(lib_ctype::FField& field) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(lib_ctype::FField& field) __attribute__((__warn_unused_result__, nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:lib_ctype.FField.c_ftuple.InsertMaybe
@@ -1520,6 +1535,9 @@ lib_ctype::FFconst*  zd_fconst_RemoveFirst(lib_ctype::FField& field) __attribute
 // Return reference to last element in the index. No bounds checking.
 // func:lib_ctype.FField.zd_fconst.qLast
 inline lib_ctype::FFconst& zd_fconst_qLast(lib_ctype::FField& field) __attribute__((__warn_unused_result__, nothrow));
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+// func:lib_ctype.FField.zd_fconst.InsertBefore
+void                 zd_fconst_InsertBefore(lib_ctype::FField& field, lib_ctype::FFconst& row, lib_ctype::FFconst* before) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:lib_ctype.FField.c_cppfunc.InsertMaybe
@@ -1547,12 +1565,12 @@ inline void          c_unstablefld_Remove(lib_ctype::FField& field, lib_ctype::F
 inline bool          c_substr_srcfield_EmptyQ(lib_ctype::FField& field) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:lib_ctype.FField.c_substr_srcfield.Find
-inline lib_ctype::FSubstr* c_substr_srcfield_Find(lib_ctype::FField& field, u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline lib_ctype::FSubstr* c_substr_srcfield_Find(lib_ctype::FField& field, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:lib_ctype.FField.c_substr_srcfield.Getary
 inline algo::aryptr<lib_ctype::FSubstr*> c_substr_srcfield_Getary(lib_ctype::FField& field) __attribute__((nothrow));
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:lib_ctype.FField.c_substr_srcfield.Insert
 void                 c_substr_srcfield_Insert(lib_ctype::FField& field, lib_ctype::FSubstr& row) __attribute__((nothrow));
 // Insert pointer to row in array.
@@ -1562,7 +1580,7 @@ void                 c_substr_srcfield_Insert(lib_ctype::FField& field, lib_ctyp
 bool                 c_substr_srcfield_InsertMaybe(lib_ctype::FField& field, lib_ctype::FSubstr& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:lib_ctype.FField.c_substr_srcfield.N
-inline i32           c_substr_srcfield_N(const lib_ctype::FField& field) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_substr_srcfield_N(const lib_ctype::FField& field) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:lib_ctype.FField.c_substr_srcfield.Remove
 void                 c_substr_srcfield_Remove(lib_ctype::FField& field, lib_ctype::FSubstr& row) __attribute__((nothrow));
@@ -1571,10 +1589,10 @@ void                 c_substr_srcfield_Remove(lib_ctype::FField& field, lib_ctyp
 inline void          c_substr_srcfield_RemoveAll(lib_ctype::FField& field) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:lib_ctype.FField.c_substr_srcfield.Reserve
-void                 c_substr_srcfield_Reserve(lib_ctype::FField& field, u32 n) __attribute__((nothrow));
+void                 c_substr_srcfield_Reserve(lib_ctype::FField& field, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:lib_ctype.FField.c_substr_srcfield.qFind
-inline lib_ctype::FSubstr& c_substr_srcfield_qFind(lib_ctype::FField& field, u32 idx) __attribute__((nothrow));
+inline lib_ctype::FSubstr& c_substr_srcfield_qFind(lib_ctype::FField& field, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:lib_ctype.FField.c_substr_srcfield.InAryQ
 inline bool          field_c_substr_srcfield_InAryQ(lib_ctype::FSubstr& row) __attribute__((nothrow));
@@ -1620,8 +1638,8 @@ void                 FField_Print(lib_ctype::FField& row, algo::cstring& str) __
 // global access: ftuple (Lary, by rowid)
 // access: lib_ctype.FField.c_ftuple (Ptr)
 struct FFtuple { // lib_ctype.FFtuple
-    algo::Smallstr100   field;     //
-    algo::Comment       comment;   //
+    algo::Smallstr150   field;     //
+    algo::cstring       comment;   //
     // func:lib_ctype.FFtuple..AssignOp
     inline lib_ctype::FFtuple& operator =(const lib_ctype::FFtuple &rhs) = delete;
     // func:lib_ctype.FFtuple..CopyCtor
@@ -1635,7 +1653,6 @@ private:
     friend lib_ctype::FFtuple*  ftuple_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 ftuple_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:lib_ctype.FFtuple.msghdr.CopyOut
 void                 ftuple_CopyOut(lib_ctype::FFtuple &row, dmmeta::Ftuple &out) __attribute__((nothrow));
@@ -1653,7 +1670,7 @@ void                 FFtuple_Uninit(lib_ctype::FFtuple& ftuple) __attribute__((n
 struct FSqltype { // lib_ctype.FSqltype
     algo::Smallstr100   ctype;     //
     algo::Smallstr100   expr;      //
-    algo::Comment       comment;   //
+    algo::cstring       comment;   //
     // func:lib_ctype.FSqltype..AssignOp
     inline lib_ctype::FSqltype& operator =(const lib_ctype::FSqltype &rhs) = delete;
     // func:lib_ctype.FSqltype..CopyCtor
@@ -1668,7 +1685,6 @@ private:
     friend void                 sqltype_RemoveAll() __attribute__((nothrow));
     friend void                 sqltype_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:lib_ctype.FSqltype.base.CopyOut
 void                 sqltype_CopyOut(lib_ctype::FSqltype &row, dmmeta::Sqltype &out) __attribute__((nothrow));
@@ -1704,7 +1720,6 @@ private:
     friend lib_ctype::FSsimfile* ssimfile_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 ssimfile_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:lib_ctype.FSsimfile.msghdr.CopyOut
 void                 ssimfile_CopyOut(lib_ctype::FSsimfile &row, dmmeta::Ssimfile &out) __attribute__((nothrow));
@@ -1713,13 +1728,13 @@ void                 ssimfile_CopyOut(lib_ctype::FSsimfile &row, dmmeta::Ssimfil
 void                 ssimfile_CopyIn(lib_ctype::FSsimfile &row, dmmeta::Ssimfile &in) __attribute__((nothrow));
 
 // func:lib_ctype.FSsimfile.ssimns.Get
-algo::Smallstr16     ssimns_Get(lib_ctype::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ssimns_Get(lib_ctype::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
 
 // func:lib_ctype.FSsimfile.ns.Get
-algo::Smallstr16     ns_Get(lib_ctype::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ns_Get(lib_ctype::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
 
 // func:lib_ctype.FSsimfile.name.Get
-algo::Smallstr50     name_Get(lib_ctype::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(lib_ctype::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:lib_ctype.FSsimfile..Init
@@ -1733,9 +1748,9 @@ void                 FSsimfile_Uninit(lib_ctype::FSsimfile& ssimfile) __attribut
 // access: lib_ctype.FField.c_substr (Ptr)
 // access: lib_ctype.FField.c_substr_srcfield (Ptrary)
 struct FSubstr { // lib_ctype.FSubstr
-    algo::Smallstr100    field;                            //
+    algo::Smallstr150    field;                            //
     algo::CppExpr        expr;                             //
-    algo::Smallstr100    srcfield;                         //
+    algo::Smallstr150    srcfield;                         //
     lib_ctype::FField*   p_field;                          // reference to parent row
     bool                 field_c_substr_srcfield_in_ary;   //   false  membership flag
     // x-reference on lib_ctype.FSubstr.p_field prevents copy
@@ -1754,7 +1769,6 @@ private:
     friend void                 substr_RemoveAll() __attribute__((nothrow));
     friend void                 substr_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:lib_ctype.FSubstr.base.CopyOut
 void                 substr_CopyOut(lib_ctype::FSubstr &row, dmmeta::Substr &out) __attribute__((nothrow));
@@ -1773,8 +1787,8 @@ void                 FSubstr_Uninit(lib_ctype::FSubstr& substr) __attribute__((n
 // global access: unstablefld (Lary, by rowid)
 // access: lib_ctype.FField.c_unstablefld (Ptr)
 struct FUnstablefld { // lib_ctype.FUnstablefld
-    algo::Smallstr100   field;     //
-    algo::Comment       comment;   //
+    algo::Smallstr150   field;     //
+    algo::cstring       comment;   //
     // func:lib_ctype.FUnstablefld..AssignOp
     inline lib_ctype::FUnstablefld& operator =(const lib_ctype::FUnstablefld &rhs) = delete;
     // func:lib_ctype.FUnstablefld..CopyCtor
@@ -1789,7 +1803,6 @@ private:
     friend void                 unstablefld_RemoveAll() __attribute__((nothrow));
     friend void                 unstablefld_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:lib_ctype.FUnstablefld.base.CopyOut
 void                 unstablefld_CopyOut(lib_ctype::FUnstablefld &row, dev::Unstablefld &out) __attribute__((nothrow));
@@ -1814,7 +1827,6 @@ struct FieldId { // lib_ctype.FieldId: Field read helper
     inline               FieldId(lib_ctype_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:lib_ctype.FieldId.value.GetEnum
 inline lib_ctype_FieldIdEnum value_GetEnum(const lib_ctype::FieldId& parent) __attribute__((nothrow));
@@ -1852,7 +1864,7 @@ inline void          FieldId_Init(lib_ctype::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:lib_ctype.FieldId.String  printfmt:Raw
 // func:lib_ctype.FieldId..Print
-void                 FieldId_Print(lib_ctype::FieldId& row, algo::cstring& str) __attribute__((nothrow));
+void                 FieldId_Print(lib_ctype::FieldId row, algo::cstring& str) __attribute__((nothrow));
 
 // --- lib_ctype.Match
 struct Match { // lib_ctype.Match
@@ -1865,7 +1877,6 @@ struct Match { // lib_ctype.Match
     // func:lib_ctype.Match..Ctor
     inline               Match() __attribute__((nothrow));
 };
-
 // Set all fields to initial values.
 // func:lib_ctype.Match..Init
 inline void          Match_Init(lib_ctype::Match& parent);
@@ -1882,7 +1893,6 @@ struct TableId { // lib_ctype.TableId: Index of table in this namespace
     // func:lib_ctype.TableId..EnumCtor
     inline               TableId(lib_ctype_TableIdEnum arg) __attribute__((nothrow));
 };
-
 // Get value of field as enum type
 // func:lib_ctype.TableId.value.GetEnum
 inline lib_ctype_TableIdEnum value_GetEnum(const lib_ctype::TableId& parent) __attribute__((nothrow));
@@ -1920,15 +1930,15 @@ inline void          TableId_Init(lib_ctype::TableId& parent);
 // print string representation of ROW to string STR
 // cfmt:lib_ctype.TableId.String  printfmt:Raw
 // func:lib_ctype.TableId..Print
-void                 TableId_Print(lib_ctype::TableId& row, algo::cstring& str) __attribute__((nothrow));
+void                 TableId_Print(lib_ctype::TableId row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace lib_ctype { // gen:ns_curstext
 
 struct ctype_c_field_curs {// fcurs:lib_ctype.FCtype.c_field/curs
     typedef lib_ctype::FField ChildType;
     lib_ctype::FField** elems;
-    u32 n_elems;
-    u32 index;
+    u64 n_elems;
+    u64 index;
     ctype_c_field_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
@@ -1936,8 +1946,8 @@ struct ctype_c_field_curs {// fcurs:lib_ctype.FCtype.c_field/curs
 struct ctype_c_cfmt_curs {// fcurs:lib_ctype.FCtype.c_cfmt/curs
     typedef lib_ctype::FCfmt ChildType;
     lib_ctype::FCfmt** elems;
-    u32 n_elems;
-    u32 index;
+    u64 n_elems;
+    u64 index;
     ctype_c_cfmt_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
@@ -2050,8 +2060,8 @@ struct field_zd_fconst_curs {// fcurs:lib_ctype.FField.zd_fconst/curs
 struct field_c_substr_srcfield_curs {// fcurs:lib_ctype.FField.c_substr_srcfield/curs
     typedef lib_ctype::FSubstr ChildType;
     lib_ctype::FSubstr** elems;
-    u32 n_elems;
-    u32 index;
+    u64 n_elems;
+    u64 index;
     field_c_substr_srcfield_curs() { elems=NULL; n_elems=0; index=0; }
 };
 

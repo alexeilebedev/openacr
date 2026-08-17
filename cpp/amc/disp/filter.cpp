@@ -91,8 +91,13 @@ static void Filter_Full(algo_lib::Replscope &R, amc::FDispatchmsg &dispatch_msg,
             continue;
         }
         Set(R,"$Fieldname",name_Get(field));
-        Set(R,"$Getfield",amc::FieldvalExpr(field.p_ctype,field,"msg"));
         if (amc::FField *childfield = amc::ind_field_Find(Subst(R,"$Msgns.$Msgname.$Fieldname"))) {
+            // Every message-side expression is built from the message's own field, never from
+            // the filter's like-named copy: the filter ctype's fields are synthesized as plain
+            // Vals, so a message field reached through a Get function (bigendian, bitfld, cppfunc)
+            // would otherwise be spelled as a direct member and a regx would be matched against
+            // the printed regex instead of the message.  Pinned by amc.DispfilterMatchAll.
+            Set(R,"$Getfield",amc::FieldvalExpr(childfield->p_ctype,*childfield,"msg"));
             if (field.arg != childfield->arg) {// make sure types match
                 verblog("amc.gen_dispatch"
                         <<Keyval("dispatch_msg",dispatch_msg.dispatch_msg)
@@ -103,11 +108,11 @@ static void Filter_Full(algo_lib::Replscope &R, amc::FDispatchmsg &dispatch_msg,
                 Ins(&R, filter.body, "if ($Fieldname_PresentQ(parent) && !($Getfield == parent.$Fieldname)) {");
                 Ins(&R, filter.body, "    return false;");
                 Ins(&R, filter.body, "}");
-                if (amc::FField *filterfield = amc::ind_field_Find(Subst(R,"$ns.$DispnameFilter.$Fieldname_regx"))) {
+                if (amc::ind_field_Find(Subst(R,"$ns.$DispnameFilter.$Fieldname_regx"))) {
                     Ins(&R, filter.body, "if ($Fieldname_regx_PresentQ(parent)) {");
                     Ins(&R, filter.body, "    ch_RemoveAll(fieldstr);");
                     filter.body << "    ";
-                    GenPrintStmt(filter.body, *filterfield->p_ctype, *filterfield, "fieldstr", "parent");
+                    GenPrintStmt(filter.body, *childfield->p_ctype, *childfield, "fieldstr", "msg");
                     Ins(&R, filter.body, "    if (!algo_lib::Regx_Match(parent.$Fieldname_regx, fieldstr)) {");
                     Ins(&R, filter.body, "        return false;");
                     Ins(&R, filter.body, "    }");

@@ -1,0 +1,6 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/bad_copyctor_init.ssim -out_dir: -report:N zzz"
+# eof amc
+amc -> amc.copyctor_init  field:algo_lib.Rec.fix  name:parent  comment:"field Init names the record in a shape the copy constructor cannot inline; rewrite the field default"
+amc -> amc.copyctor_init  field:algo_lib.Rec.mem  name:parent  comment:"field Init names the record in a shape the copy constructor cannot inline; rewrite the field default"
+amc -> amc.no_output  comment:"no files were modified"
+# exit amc code:2

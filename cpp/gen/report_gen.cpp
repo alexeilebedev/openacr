@@ -52,35 +52,46 @@ const char* report::value_ToCstr(const report::FieldId& parent) {
         case report_FieldId_n_ignore       : ret = "n_ignore";  break;
         case report_FieldId_n_update       : ret = "n_update";  break;
         case report_FieldId_n_file_mod     : ret = "n_file_mod";  break;
+        case report_FieldId_n_badline      : ret = "n_badline";  break;
         case report_FieldId_records        : ret = "records";  break;
-        case report_FieldId_errors         : ret = "errors";  break;
         case report_FieldId_n_cppfile      : ret = "n_cppfile";  break;
         case report_FieldId_n_cppline      : ret = "n_cppline";  break;
         case report_FieldId_n_ctype        : ret = "n_ctype";  break;
         case report_FieldId_n_func         : ret = "n_func";  break;
         case report_FieldId_n_xref         : ret = "n_xref";  break;
         case report_FieldId_n_filemod      : ret = "n_filemod";  break;
-        case report_FieldId_ntest          : ret = "ntest";  break;
-        case report_FieldId_nselect        : ret = "nselect";  break;
-        case report_FieldId_npass          : ret = "npass";  break;
-        case report_FieldId_nskip          : ret = "nskip";  break;
-        case report_FieldId_nrun           : ret = "nrun";  break;
-        case report_FieldId_nwrite         : ret = "nwrite";  break;
-        case report_FieldId_nerr           : ret = "nerr";  break;
-        case report_FieldId_ninsert        : ret = "ninsert";  break;
+        case report_FieldId_proc           : ret = "proc";  break;
+        case report_FieldId_n_msg          : ret = "n_msg";  break;
+        case report_FieldId_n_msg_send     : ret = "n_msg_send";  break;
+        case report_FieldId_n_msg_recv     : ret = "n_msg_recv";  break;
+        case report_FieldId_n_write_wait   : ret = "n_write_wait";  break;
+        case report_FieldId_woff           : ret = "woff";  break;
+        case report_FieldId_roff           : ret = "roff";  break;
+        case report_FieldId_latency_ns     : ret = "latency_ns";  break;
         case report_FieldId_success        : ret = "success";  break;
+        case report_FieldId_n_covtarget    : ret = "n_covtarget";  break;
+        case report_FieldId_n_tgtcov       : ret = "n_tgtcov";  break;
+        case report_FieldId_exe            : ret = "exe";  break;
+        case report_FieldId_hit            : ret = "hit";  break;
         case report_FieldId_n_test_total   : ret = "n_test_total";  break;
         case report_FieldId_n_test_run     : ret = "n_test_run";  break;
         case report_FieldId_starttime      : ret = "starttime";  break;
         case report_FieldId_elapsed_sec    : ret = "elapsed_sec";  break;
         case report_FieldId_preproc_size   : ret = "preproc_size";  break;
-        case report_FieldId_hit            : ret = "hit";  break;
         case report_FieldId_cached_file    : ret = "cached_file";  break;
         case report_FieldId_copy_file_range: ret = "copy_file_range";  break;
         case report_FieldId_pch_hit        : ret = "pch_hit";  break;
         case report_FieldId_pch_file       : ret = "pch_file";  break;
         case report_FieldId_source         : ret = "source";  break;
         case report_FieldId_pch_source     : ret = "pch_source";  break;
+        case report_FieldId_model          : ret = "model";  break;
+        case report_FieldId_n_request      : ret = "n_request";  break;
+        case report_FieldId_input          : ret = "input";  break;
+        case report_FieldId_output         : ret = "output";  break;
+        case report_FieldId_cache_read     : ret = "cache_read";  break;
+        case report_FieldId_cache_write    : ret = "cache_write";  break;
+        case report_FieldId_usd            : ret = "usd";  break;
+        case report_FieldId_priced         : ret = "priced";  break;
         case report_FieldId_n_line         : ret = "n_line";  break;
         case report_FieldId_n_static       : ret = "n_static";  break;
         case report_FieldId_n_inline       : ret = "n_inline";  break;
@@ -113,39 +124,48 @@ bool report::value_SetStrptrMaybe(report::FieldId& parent, algo::strptr rhs) {
     switch (elems_N(rhs)) {
         case 3: {
             switch (u64(algo::ReadLE16(rhs.elems))|(u64(rhs[2])<<16)) {
+                case LE_STR3('e','x','e'): {
+                    value_SetEnum(parent,report_FieldId_exe); ret = true; break;
+                }
                 case LE_STR3('h','i','t'): {
                     value_SetEnum(parent,report_FieldId_hit); ret = true; break;
+                }
+                case LE_STR3('u','s','d'): {
+                    value_SetEnum(parent,report_FieldId_usd); ret = true; break;
                 }
             }
             break;
         }
         case 4: {
             switch (u64(algo::ReadLE32(rhs.elems))) {
-                case LE_STR4('n','e','r','r'): {
-                    value_SetEnum(parent,report_FieldId_nerr); ret = true; break;
+                case LE_STR4('p','r','o','c'): {
+                    value_SetEnum(parent,report_FieldId_proc); ret = true; break;
                 }
-                case LE_STR4('n','r','u','n'): {
-                    value_SetEnum(parent,report_FieldId_nrun); ret = true; break;
+                case LE_STR4('r','o','f','f'): {
+                    value_SetEnum(parent,report_FieldId_roff); ret = true; break;
                 }
                 case LE_STR4('t','i','m','e'): {
                     value_SetEnum(parent,report_FieldId_time); ret = true; break;
+                }
+                case LE_STR4('w','o','f','f'): {
+                    value_SetEnum(parent,report_FieldId_woff); ret = true; break;
                 }
             }
             break;
         }
         case 5: {
             switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+                case LE_STR5('i','n','p','u','t'): {
+                    value_SetEnum(parent,report_FieldId_input); ret = true; break;
+                }
+                case LE_STR5('m','o','d','e','l'): {
+                    value_SetEnum(parent,report_FieldId_model); ret = true; break;
+                }
                 case LE_STR5('n','_','e','r','r'): {
                     value_SetEnum(parent,report_FieldId_n_err); ret = true; break;
                 }
-                case LE_STR5('n','p','a','s','s'): {
-                    value_SetEnum(parent,report_FieldId_npass); ret = true; break;
-                }
-                case LE_STR5('n','s','k','i','p'): {
-                    value_SetEnum(parent,report_FieldId_nskip); ret = true; break;
-                }
-                case LE_STR5('n','t','e','s','t'): {
-                    value_SetEnum(parent,report_FieldId_ntest); ret = true; break;
+                case LE_STR5('n','_','m','s','g'): {
+                    value_SetEnum(parent,report_FieldId_n_msg); ret = true; break;
                 }
                 case LE_STR5('v','a','l','u','e'): {
                     value_SetEnum(parent,report_FieldId_value); ret = true; break;
@@ -155,9 +175,6 @@ bool report::value_SetStrptrMaybe(report::FieldId& parent, algo::strptr rhs) {
         }
         case 6: {
             switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)) {
-                case LE_STR6('e','r','r','o','r','s'): {
-                    value_SetEnum(parent,report_FieldId_errors); ret = true; break;
-                }
                 case LE_STR6('n','_','f','u','n','c'): {
                     value_SetEnum(parent,report_FieldId_n_func); ret = true; break;
                 }
@@ -170,8 +187,11 @@ bool report::value_SetStrptrMaybe(report::FieldId& parent, algo::strptr rhs) {
                 case LE_STR6('n','_','x','r','e','f'): {
                     value_SetEnum(parent,report_FieldId_n_xref); ret = true; break;
                 }
-                case LE_STR6('n','w','r','i','t','e'): {
-                    value_SetEnum(parent,report_FieldId_nwrite); ret = true; break;
+                case LE_STR6('o','u','t','p','u','t'): {
+                    value_SetEnum(parent,report_FieldId_output); ret = true; break;
+                }
+                case LE_STR6('p','r','i','c','e','d'): {
+                    value_SetEnum(parent,report_FieldId_priced); ret = true; break;
                 }
                 case LE_STR6('s','o','u','r','c','e'): {
                     value_SetEnum(parent,report_FieldId_source); ret = true; break;
@@ -189,12 +209,6 @@ bool report::value_SetStrptrMaybe(report::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR7('n','_','c','t','y','p','e'): {
                     value_SetEnum(parent,report_FieldId_n_ctype); ret = true; break;
-                }
-                case LE_STR7('n','i','n','s','e','r','t'): {
-                    value_SetEnum(parent,report_FieldId_ninsert); ret = true; break;
-                }
-                case LE_STR7('n','s','e','l','e','c','t'): {
-                    value_SetEnum(parent,report_FieldId_nselect); ret = true; break;
                 }
                 case LE_STR7('p','c','h','_','h','i','t'): {
                     value_SetEnum(parent,report_FieldId_pch_hit); ret = true; break;
@@ -231,6 +245,9 @@ bool report::value_SetStrptrMaybe(report::FieldId& parent, algo::strptr rhs) {
                 case LE_STR8('n','_','t','a','r','g','e','t'): {
                     value_SetEnum(parent,report_FieldId_n_target); ret = true; break;
                 }
+                case LE_STR8('n','_','t','g','t','c','o','v'): {
+                    value_SetEnum(parent,report_FieldId_n_tgtcov); ret = true; break;
+                }
                 case LE_STR8('n','_','u','p','d','a','t','e'): {
                     value_SetEnum(parent,report_FieldId_n_update); ret = true; break;
                 }
@@ -244,6 +261,10 @@ bool report::value_SetStrptrMaybe(report::FieldId& parent, algo::strptr rhs) {
             switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('n','_','b','a','d','d','e','c'): {
                     if (memcmp(rhs.elems+8,"l",1)==0) { value_SetEnum(parent,report_FieldId_n_baddecl); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('n','_','b','a','d','l','i','n'): {
+                    if (memcmp(rhs.elems+8,"e",1)==0) { value_SetEnum(parent,report_FieldId_n_badline); ret = true; break; }
                     break;
                 }
                 case LE_STR8('n','_','c','p','p','f','i','l'): {
@@ -262,6 +283,10 @@ bool report::value_SetStrptrMaybe(report::FieldId& parent, algo::strptr rhs) {
                     if (memcmp(rhs.elems+8,"l",1)==0) { value_SetEnum(parent,report_FieldId_n_install); ret = true; break; }
                     break;
                 }
+                case LE_STR8('n','_','r','e','q','u','e','s'): {
+                    if (memcmp(rhs.elems+8,"t",1)==0) { value_SetEnum(parent,report_FieldId_n_request); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('s','t','a','r','t','t','i','m'): {
                     if (memcmp(rhs.elems+8,"e",1)==0) { value_SetEnum(parent,report_FieldId_starttime); ret = true; break; }
                     break;
@@ -271,8 +296,24 @@ bool report::value_SetStrptrMaybe(report::FieldId& parent, algo::strptr rhs) {
         }
         case 10: {
             switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('c','a','c','h','e','_','r','e'): {
+                    if (memcmp(rhs.elems+8,"ad",2)==0) { value_SetEnum(parent,report_FieldId_cache_read); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('l','a','t','e','n','c','y','_'): {
+                    if (memcmp(rhs.elems+8,"ns",2)==0) { value_SetEnum(parent,report_FieldId_latency_ns); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('n','_','f','i','l','e','_','m'): {
                     if (memcmp(rhs.elems+8,"od",2)==0) { value_SetEnum(parent,report_FieldId_n_file_mod); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('n','_','m','s','g','_','r','e'): {
+                    if (memcmp(rhs.elems+8,"cv",2)==0) { value_SetEnum(parent,report_FieldId_n_msg_recv); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('n','_','m','s','g','_','s','e'): {
+                    if (memcmp(rhs.elems+8,"nd",2)==0) { value_SetEnum(parent,report_FieldId_n_msg_send); ret = true; break; }
                     break;
                 }
                 case LE_STR8('n','_','t','e','s','t','_','r'): {
@@ -288,12 +329,20 @@ bool report::value_SetStrptrMaybe(report::FieldId& parent, algo::strptr rhs) {
         }
         case 11: {
             switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('c','a','c','h','e','_','w','r'): {
+                    if (memcmp(rhs.elems+8,"ite",3)==0) { value_SetEnum(parent,report_FieldId_cache_write); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('c','a','c','h','e','d','_','f'): {
                     if (memcmp(rhs.elems+8,"ile",3)==0) { value_SetEnum(parent,report_FieldId_cached_file); ret = true; break; }
                     break;
                 }
                 case LE_STR8('e','l','a','p','s','e','d','_'): {
                     if (memcmp(rhs.elems+8,"sec",3)==0) { value_SetEnum(parent,report_FieldId_elapsed_sec); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('n','_','c','o','v','t','a','r'): {
+                    if (memcmp(rhs.elems+8,"get",3)==0) { value_SetEnum(parent,report_FieldId_n_covtarget); ret = true; break; }
                     break;
                 }
                 case LE_STR8('p','c','h','_','h','i','t','r'): {
@@ -307,6 +356,10 @@ bool report::value_SetStrptrMaybe(report::FieldId& parent, algo::strptr rhs) {
             switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('n','_','t','e','s','t','_','t'): {
                     if (memcmp(rhs.elems+8,"otal",4)==0) { value_SetEnum(parent,report_FieldId_n_test_total); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('n','_','w','r','i','t','e','_'): {
+                    if (memcmp(rhs.elems+8,"wait",4)==0) { value_SetEnum(parent,report_FieldId_n_write_wait); ret = true; break; }
                     break;
                 }
                 case LE_STR8('p','r','e','p','r','o','c','_'): {
@@ -368,7 +421,7 @@ bool report::FieldId_ReadStrptrMaybe(report::FieldId &parent, algo::strptr in_st
 // --- report.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:report.FieldId.String  printfmt:Raw
-void report::FieldId_Print(report::FieldId& row, algo::cstring& str) {
+void report::FieldId_Print(report::FieldId row, algo::cstring& str) {
     report::value_Print(row, str);
 }
 
@@ -475,6 +528,9 @@ bool report::acr_ReadFieldMaybe(report::acr& parent, algo::strptr field, algo::s
         case report_FieldId_n_file_mod: {
             retval = u32_ReadStrptrMaybe(parent.n_file_mod, strval);
         } break;
+        case report_FieldId_n_badline: {
+            retval = u32_ReadStrptrMaybe(parent.n_badline, strval);
+        } break;
         default: {
             retval = false;
             algo_lib::AppendErrtext("comment", "unrecognized attr");
@@ -522,6 +578,9 @@ void report::acr_Print(report::acr& row, algo::cstring& str) {
 
     u32_Print(row.n_file_mod, temp);
     PrintAttrSpaceReset(str,"n_file_mod", temp);
+
+    u32_Print(row.n_badline, temp);
+    PrintAttrSpaceReset(str,"n_badline", temp);
 }
 
 // --- report.acr_check..ReadFieldMaybe
@@ -533,8 +592,8 @@ bool report::acr_check_ReadFieldMaybe(report::acr_check& parent, algo::strptr fi
         case report_FieldId_records: {
             retval = u32_ReadStrptrMaybe(parent.records, strval);
         } break;
-        case report_FieldId_errors: {
-            retval = u32_ReadStrptrMaybe(parent.errors, strval);
+        case report_FieldId_n_err: {
+            retval = u32_ReadStrptrMaybe(parent.n_err, strval);
         } break;
         default: {
             retval = false;
@@ -562,15 +621,15 @@ bool report::acr_check_ReadStrptrMaybe(report::acr_check &parent, algo::strptr i
 // --- report.acr_check..Print
 // print string representation of ROW to string STR
 // cfmt:report.acr_check.String  printfmt:Tuple
-void report::acr_check_Print(report::acr_check& row, algo::cstring& str) {
+void report::acr_check_Print(report::acr_check row, algo::cstring& str) {
     algo::tempstr temp;
     str << "report.acr_check";
 
     u32_Print(row.records, temp);
     PrintAttrSpaceReset(str,"records", temp);
 
-    u32_Print(row.errors, temp);
-    PrintAttrSpaceReset(str,"errors", temp);
+    u32_Print(row.n_err, temp);
+    PrintAttrSpaceReset(str,"n_err", temp);
 }
 
 // --- report.amc..ReadFieldMaybe
@@ -646,35 +705,35 @@ void report::amc_Print(report::amc& row, algo::cstring& str) {
     PrintAttrSpaceReset(str,"n_filemod", temp);
 }
 
-// --- report.atf_comp..ReadFieldMaybe
-bool report::atf_comp_ReadFieldMaybe(report::atf_comp& parent, algo::strptr field, algo::strptr strval) {
+// --- report.ams_sendtest..ReadFieldMaybe
+bool report::ams_sendtest_ReadFieldMaybe(report::ams_sendtest& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
     report::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
     switch(field_id) {
-        case report_FieldId_ntest: {
-            retval = i32_ReadStrptrMaybe(parent.ntest, strval);
+        case report_FieldId_proc: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.proc, strval);
         } break;
-        case report_FieldId_nselect: {
-            retval = i32_ReadStrptrMaybe(parent.nselect, strval);
+        case report_FieldId_n_msg: {
+            retval = u64_ReadStrptrMaybe(parent.n_msg, strval);
         } break;
-        case report_FieldId_npass: {
-            retval = i32_ReadStrptrMaybe(parent.npass, strval);
+        case report_FieldId_n_msg_send: {
+            retval = u64_ReadStrptrMaybe(parent.n_msg_send, strval);
         } break;
-        case report_FieldId_nskip: {
-            retval = i32_ReadStrptrMaybe(parent.nskip, strval);
+        case report_FieldId_n_msg_recv: {
+            retval = u64_ReadStrptrMaybe(parent.n_msg_recv, strval);
         } break;
-        case report_FieldId_nrun: {
-            retval = i32_ReadStrptrMaybe(parent.nrun, strval);
+        case report_FieldId_n_write_wait: {
+            retval = u64_ReadStrptrMaybe(parent.n_write_wait, strval);
         } break;
-        case report_FieldId_nwrite: {
-            retval = i32_ReadStrptrMaybe(parent.nwrite, strval);
+        case report_FieldId_woff: {
+            retval = u64_ReadStrptrMaybe(parent.woff, strval);
         } break;
-        case report_FieldId_nerr: {
-            retval = i32_ReadStrptrMaybe(parent.nerr, strval);
+        case report_FieldId_roff: {
+            retval = u64_ReadStrptrMaybe(parent.roff, strval);
         } break;
-        case report_FieldId_ninsert: {
-            retval = i32_ReadStrptrMaybe(parent.ninsert, strval);
+        case report_FieldId_latency_ns: {
+            retval = double_ReadStrptrMaybe(parent.latency_ns, strval);
         } break;
         case report_FieldId_success: {
             retval = bool_ReadStrptrMaybe(parent.success, strval);
@@ -690,51 +749,112 @@ bool report::atf_comp_ReadFieldMaybe(report::atf_comp& parent, algo::strptr fiel
     return retval;
 }
 
-// --- report.atf_comp..ReadStrptrMaybe
-// Read fields of report::atf_comp from an ascii string.
+// --- report.ams_sendtest..ReadStrptrMaybe
+// Read fields of report::ams_sendtest from an ascii string.
 // The format of the string is an ssim Tuple
-bool report::atf_comp_ReadStrptrMaybe(report::atf_comp &parent, algo::strptr in_str) {
+bool report::ams_sendtest_ReadStrptrMaybe(report::ams_sendtest &parent, algo::strptr in_str) {
     bool retval = true;
-    retval = algo::StripTypeTag(in_str, "report.atf_comp");
+    retval = algo::StripTypeTag(in_str, "report.ams_sendtest");
     ind_beg(algo::Attr_curs, attr, in_str) {
-        retval = retval && atf_comp_ReadFieldMaybe(parent, attr.name, attr.value);
+        retval = retval && ams_sendtest_ReadFieldMaybe(parent, attr.name, attr.value);
     }ind_end;
     return retval;
 }
 
-// --- report.atf_comp..Print
+// --- report.ams_sendtest..Print
 // print string representation of ROW to string STR
-// cfmt:report.atf_comp.String  printfmt:Tuple
-void report::atf_comp_Print(report::atf_comp& row, algo::cstring& str) {
+// cfmt:report.ams_sendtest.String  printfmt:Tuple
+void report::ams_sendtest_Print(report::ams_sendtest& row, algo::cstring& str) {
     algo::tempstr temp;
-    str << "report.atf_comp";
+    str << "report.ams_sendtest";
 
-    i32_Print(row.ntest, temp);
-    PrintAttrSpaceReset(str,"ntest", temp);
+    algo::cstring_Print(row.proc, temp);
+    PrintAttrSpaceReset(str,"proc", temp);
 
-    i32_Print(row.nselect, temp);
-    PrintAttrSpaceReset(str,"nselect", temp);
+    u64_Print(row.n_msg, temp);
+    PrintAttrSpaceReset(str,"n_msg", temp);
 
-    i32_Print(row.npass, temp);
-    PrintAttrSpaceReset(str,"npass", temp);
+    u64_Print(row.n_msg_send, temp);
+    PrintAttrSpaceReset(str,"n_msg_send", temp);
 
-    i32_Print(row.nskip, temp);
-    PrintAttrSpaceReset(str,"nskip", temp);
+    u64_Print(row.n_msg_recv, temp);
+    PrintAttrSpaceReset(str,"n_msg_recv", temp);
 
-    i32_Print(row.nrun, temp);
-    PrintAttrSpaceReset(str,"nrun", temp);
+    u64_Print(row.n_write_wait, temp);
+    PrintAttrSpaceReset(str,"n_write_wait", temp);
 
-    i32_Print(row.nwrite, temp);
-    PrintAttrSpaceReset(str,"nwrite", temp);
+    u64_Print(row.woff, temp);
+    PrintAttrSpaceReset(str,"woff", temp);
 
-    i32_Print(row.nerr, temp);
-    PrintAttrSpaceReset(str,"nerr", temp);
+    u64_Print(row.roff, temp);
+    PrintAttrSpaceReset(str,"roff", temp);
 
-    i32_Print(row.ninsert, temp);
-    PrintAttrSpaceReset(str,"ninsert", temp);
+    double_Print(row.latency_ns, temp);
+    PrintAttrSpaceReset(str,"latency_ns", temp);
 
     bool_Print(row.success, temp);
     PrintAttrSpaceReset(str,"success", temp);
+}
+
+// --- report.atf_cov..ReadFieldMaybe
+bool report::atf_cov_ReadFieldMaybe(report::atf_cov& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    report::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case report_FieldId_n_covtarget: {
+            retval = u32_ReadStrptrMaybe(parent.n_covtarget, strval);
+        } break;
+        case report_FieldId_n_tgtcov: {
+            retval = u32_ReadStrptrMaybe(parent.n_tgtcov, strval);
+        } break;
+        case report_FieldId_exe: {
+            retval = u32_ReadStrptrMaybe(parent.exe, strval);
+        } break;
+        case report_FieldId_hit: {
+            retval = u32_ReadStrptrMaybe(parent.hit, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- report.atf_cov..ReadStrptrMaybe
+// Read fields of report::atf_cov from an ascii string.
+// The format of the string is an ssim Tuple
+bool report::atf_cov_ReadStrptrMaybe(report::atf_cov &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "report.atf_cov");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && atf_cov_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- report.atf_cov..Print
+// print string representation of ROW to string STR
+// cfmt:report.atf_cov.String  printfmt:Tuple
+void report::atf_cov_Print(report::atf_cov row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "report.atf_cov";
+
+    u32_Print(row.n_covtarget, temp);
+    PrintAttrSpaceReset(str,"n_covtarget", temp);
+
+    u32_Print(row.n_tgtcov, temp);
+    PrintAttrSpaceReset(str,"n_tgtcov", temp);
+
+    u32_Print(row.exe, temp);
+    PrintAttrSpaceReset(str,"exe", temp);
+
+    u32_Print(row.hit, temp);
+    PrintAttrSpaceReset(str,"hit", temp);
 }
 
 // --- report.atf_unit..ReadFieldMaybe
@@ -952,6 +1072,91 @@ void report::gcache_hitrate_Print(report::gcache_hitrate& row, algo::cstring& st
 
     algo::Smallstr20_Print(row.pch_hitrate, temp);
     PrintAttrSpaceReset(str,"pch_hitrate", temp);
+}
+
+// --- report.llmtool_model..ReadFieldMaybe
+bool report::llmtool_model_ReadFieldMaybe(report::llmtool_model& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    report::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case report_FieldId_model: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.model, strval);
+        } break;
+        case report_FieldId_n_request: {
+            retval = u32_ReadStrptrMaybe(parent.n_request, strval);
+        } break;
+        case report_FieldId_input: {
+            retval = u64_ReadStrptrMaybe(parent.input, strval);
+        } break;
+        case report_FieldId_output: {
+            retval = u64_ReadStrptrMaybe(parent.output, strval);
+        } break;
+        case report_FieldId_cache_read: {
+            retval = u64_ReadStrptrMaybe(parent.cache_read, strval);
+        } break;
+        case report_FieldId_cache_write: {
+            retval = u64_ReadStrptrMaybe(parent.cache_write, strval);
+        } break;
+        case report_FieldId_usd: {
+            retval = algo::I64Dec4_ReadStrptrMaybe(parent.usd, strval);
+        } break;
+        case report_FieldId_priced: {
+            retval = bool_ReadStrptrMaybe(parent.priced, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- report.llmtool_model..ReadStrptrMaybe
+// Read fields of report::llmtool_model from an ascii string.
+// The format of the string is an ssim Tuple
+bool report::llmtool_model_ReadStrptrMaybe(report::llmtool_model &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "report.llmtool_model");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && llmtool_model_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- report.llmtool_model..Print
+// print string representation of ROW to string STR
+// cfmt:report.llmtool_model.String  printfmt:Tuple
+void report::llmtool_model_Print(report::llmtool_model& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "report.llmtool_model";
+
+    algo::Smallstr50_Print(row.model, temp);
+    PrintAttrSpaceReset(str,"model", temp);
+
+    u32_Print(row.n_request, temp);
+    PrintAttrSpaceReset(str,"n_request", temp);
+
+    u64_Print(row.input, temp);
+    PrintAttrSpaceReset(str,"input", temp);
+
+    u64_Print(row.output, temp);
+    PrintAttrSpaceReset(str,"output", temp);
+
+    u64_Print(row.cache_read, temp);
+    PrintAttrSpaceReset(str,"cache_read", temp);
+
+    u64_Print(row.cache_write, temp);
+    PrintAttrSpaceReset(str,"cache_write", temp);
+
+    algo::I64Dec4_Print(row.usd, temp);
+    PrintAttrSpaceReset(str,"usd", temp);
+
+    bool_Print(row.priced, temp);
+    PrintAttrSpaceReset(str,"priced", temp);
 }
 
 // --- report.src_func..ReadFieldMaybe

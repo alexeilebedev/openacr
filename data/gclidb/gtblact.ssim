@@ -28,3 +28,7 @@ gclidb.gtblact  gtblact:mr_stop  t:N  e:N  auth:Y
 gclidb.gtblact  gtblact:mrjob_list  t:Y  e:N  auth:Y
 gclidb.gtblact  gtblact:issue_needs_work  t:N  e:N  auth:Y
 gclidb.gtblact  gtblact:issue_stop  t:N  e:N  auth:Y
+gclidb.gtblact  gtblact:token_list  t:N  e:N  auth:Y
+gclidb.gtblact  gtblact:token_create  t:N  e:N  auth:Y
+gclidb.gtblact  gtblact:token_stop  t:N  e:N  auth:Y
+gclidb.gtblact  gtblact:mrjob_retry  t:N  e:N  auth:Y

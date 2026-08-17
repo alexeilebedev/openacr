@@ -1,0 +1,14 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/bad_fconst_range.ssim -out_dir: -report:N zzz"
+# eof amc
+amc -> amc.fconst_range  fconst:algo_lib.Rec.wide/negative  value:-1  min:0  max:4294967295  comment:"fconst value does not fit the field's store and would be stored masked"
+amc -> amc.fconst_range  fconst:algo_lib.Rec.byte/past  value:300  min:0  max:255  comment:"fconst value does not fit the field's store and would be stored masked"
+amc -> amc.fconst_range  fconst:algo_lib.Rec.byte/suffixpast  value:300ull  min:0  max:255  comment:"fconst value does not fit the field's store and would be stored masked"
+amc -> amc.fconst_range  fconst:algo_lib.Rec.byte/octalpast  value:0400  min:0  max:255  comment:"fconst value does not fit the field's store and would be stored masked"
+amc -> amc.fconst_range  fconst:algo_lib.Rec.snum/past  value:2147483648  min:-2147483648  max:2147483647  comment:"fconst value does not fit the field's store and would be stored masked"
+amc -> amc.fconst_range  fconst:algo_lib.Rec.snum/hexpast  value:-0x80000001  min:-2147483648  max:2147483647  comment:"fconst value does not fit the field's store and would be stored masked"
+amc -> amc.fconst_range  fconst:algo_lib.Rec.full/hexwide  value:0x10000000000000001  min:0  max:18446744073709551615  comment:"fconst value does not fit the field's store and would be stored masked"
+amc -> amc.fconst_range  fconst:algo_lib.Rec.full/decwide  value:99999999999999999999999  min:0  max:18446744073709551615  comment:"fconst value does not fit the field's store and would be stored masked"
+amc -> amc.fconst_range  fconst:algo_lib.Rec.narrow/past  value:2000  min:0  max:1023  comment:"fconst value does not fit the field's store and would be stored masked"
+amc -> amc.fconst_range  fconst:algo_lib.Rec.sig_edge/negative  value:-1  min:0  max:127  comment:"fconst value does not fit the field's store and would be stored masked"
+amc -> amc.no_output  comment:"no files were modified"
+# exit amc code:10

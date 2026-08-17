@@ -13,5 +13,5 @@ acr -> acr.delete  dev.targsrc  targsrc:samp/cpp/samp/1.cpp
 acr -> acr.insert  dev.targsrc  targsrc:xyz/cpp/samp/1.cpp  comment:""
 acr -> acr.delete  dev.targsrc  targsrc:samp/cpp/samp/2.cpp
 acr -> acr.insert  dev.targsrc  targsrc:xyz/cpp/samp/2.cpp  comment:""
-acr -> report.acr  n_select:4  n_insert:0  n_delete:0  n_ignore:0  n_update:4  n_file_mod:0
+acr -> report.acr  n_select:4  n_insert:0  n_delete:0  n_ignore:0  n_update:4  n_file_mod:0  n_badline:0
 # exit acr code:0

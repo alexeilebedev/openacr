@@ -82,17 +82,16 @@ void amc::tfunc_Opt_Getary() {
     Ins(&R, getary.body , "return algo::aryptr<u8>(end, $lenexpr - ssizeof($Partype));");
 }
 
+// Generate the print function for an Opt field: append the optional
+// trailing element to OUT when present.
 void amc::tfunc_Opt_Print() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;
 
-    // Provide a print function for the field
     if (HasStringPrintQ(*field.p_ctype) && HasStringPrintQ(*field.p_arg)) {
         amc::FFunc& print = amc::CreateCurFunc();
         Ins(&R, print.ret     , "void", false);
         Ins(&R, print.proto   , "$name_Print($Parent, cstring &out)", false);
-        Ins(&R, print.body    , "(void)out;");
-        Ins(&R, print.body    , "(void)$pararg;");
         Ins(&R, print.body    , "if ($Cpptype *$name = $name_Get($pararg)) {");
         if (field.p_arg->c_typefld) {
             Set(R, "$Fldhdrtype", field.p_arg->c_typefld->p_ctype->cpp_type);
@@ -104,6 +103,12 @@ void amc::tfunc_Opt_Print() {
     }
 }
 
+// Generate the read function for an Opt field: parse the optional trailing
+// element from a string into the active varlen buffer and mark the field
+// in the parent's presence mask, when one covers it. An element whose byte
+// total lands off the scale of its lenfld has no representable length word,
+// and the read reports failure; the buffer holds a truncated length word,
+// and the caller discards it on the false return.
 void amc::tfunc_Opt_ReadStrptrMaybe() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;
@@ -126,16 +131,7 @@ void amc::tfunc_Opt_ReadStrptrMaybe() {
             amc::FLenfld& lenfld = *field.p_arg->c_lenfld;
             Set(R, "$Msgname", name_Get(*field.p_arg));
             Set(R, "$Ctype", amc::NsToCpp(field.p_arg->ctype));
-            cstring lenassign("len");
-            if (lenfld.extra > 0) {
-                lenassign << "+" << lenfld.extra;
-            } else if (lenfld.extra < 0) {
-                lenassign << lenfld.extra;
-            }
-            if (lenfld.scale != 1) {
-                lenassign = tempstr() << "(" << lenassign << ") / " << lenfld.scale;
-            }
-            Set(R, "$assignlen", AssignExpr(*lenfld.p_field, "*ctype", lenassign, true));
+            Set(R, "$assignlen", AssignExpr(*lenfld.p_field, "*ctype", LenfldStoreExpr(lenfld,"len"), true));
             Ins(&R, doread.body, "if (algo::ByteAry* varlenbuf_save = algo_lib::_db.varlenbuf) {");
             Ins(&R, doread.body, "    int len = sizeof($Ctype);");
             Ins(&R, doread.body, "    $Ctype *ctype = new(ary_AllocN(*varlenbuf_save, len).elems) $Ctype; // default values");
@@ -143,6 +139,10 @@ void amc::tfunc_Opt_ReadStrptrMaybe() {
             Ins(&R, doread.body, "    algo_lib::_db.varlenbuf = &varlenbuf;");
             Ins(&R, doread.body, "    retval = $Msgname_ReadStrptrMaybe(*ctype,in_str); // read the type");
             Ins(&R, doread.body, "    len += ary_N(varlenbuf);");
+            if (amc::LenfldGuardNeededQ(lenfld)) {
+                Set(R,"$lenchk",LenfldCheckExpr(lenfld,"len"));
+                Ins(&R, doread.body, "    retval = retval && ($lenchk); // only a total the element's length field can store round-trips");
+            }
             Ins(&R, doread.body, "    $assignlen;");
             Ins(&R, doread.body, "    ary_Addary(*varlenbuf_save, ary_Getary(varlenbuf));");
             Ins(&R, doread.body, "    algo_lib::_db.varlenbuf = varlenbuf_save;");

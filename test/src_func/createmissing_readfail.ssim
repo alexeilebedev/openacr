@@ -1,0 +1,6 @@
+dev.target  target:xx
+dev.gitfile  gitfile:missing_dir/x.cpp
+dev.gitfile  gitfile:src/y.cpp
+dev.targsrc  targsrc:xx/missing_dir/x.cpp  comment:""
+dev.targsrc  targsrc:xx/src/y.cpp  comment:""
+dmmeta.userfunc  userfunc:xx.NewFunc  acrkey:""  cppname:xx.NewFunc  comment:""

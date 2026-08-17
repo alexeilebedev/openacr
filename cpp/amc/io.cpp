@@ -26,6 +26,9 @@
 
 #include "include/amc.h"
 
+// Generate <pool>_InputMaybe for a finput field: parse one row and add it to
+// the pool.  The user can take over via ffunc -- InputMaybe (whole function)
+// or Input (amc wraps it) -- see tclass-tfunc.md#ffunc.
 void amc::tfunc_Io_InputMaybe() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;
@@ -38,17 +41,25 @@ void amc::tfunc_Io_InputMaybe() {
         bool can_read      = GlobalQ(*field.p_ctype);
         amc::FCtype *basetype  = GetBaseType(*field.p_arg,field.p_arg);// always read base class if possible
         Set(R, "$Basetype", basetype->cpp_type);
+        // ffunc:<field>.InputMaybe extrn:Y -> user supplies InputMaybe outright.
+        // ffunc:<field>.Input      extrn:Y -> user supplies Input; amc generates
+        //   InputMaybe to call it (wrapping in try/catch when exceptions are on).
+        // neither -> InputMaybe calls Insert/Update.  The two are independent, so a
+        // user may externalize Input, InputMaybe, neither, or both.
+        amc::FFfunc *ff_inputmaybe = amc::FindFfunc(field, "InputMaybe");
+        amc::FFfunc *ff_input      = amc::FindFfunc(field, "Input");
+        bool extern_inputmaybe = ff_inputmaybe && ff_inputmaybe->extrn;
+        bool extern_input      = ff_input && ff_input->extrn;
         amc::FFunc& input = amc::CreateCurFunc();
         Ins(&R, input.ret, "bool", false);
         Ins(&R, input.proto, "$name_InputMaybe($Parent, $Basetype &elem)", false);
-        // extern + nsx -> inputmaybe implemented by user
-        // extern + exceptions -> inputmaybe calls Input, Input implemented by user
-        // nonextern -> inputmaybe calls InsertMaybe
-        if (finput.extrn) {
-            if (!GenThrowQ(*field.p_ctype->p_ns)) {
-                input.acrkey << "finput:"<<field.field;
-                input.extrn = true;
-            } else {
+        if (extern_inputmaybe) {
+            ff_inputmaybe->used = true;
+            input.acrkey << "ffunc:"<<field.field<<".InputMaybe";
+            input.extrn = true;
+        } else if (extern_input) {
+            input.priv = true;
+            if (GenThrowQ(*field.p_ctype->p_ns)) {
                 Ins(&R, input.body, "bool retval = true;");
                 Ins(&R, input.body, "try {");
                 Ins(&R, input.body, "    $name_Input($pararg, elem);");
@@ -57,6 +68,9 @@ void amc::tfunc_Io_InputMaybe() {
                 Ins(&R, input.body, "    retval = false;");
                 Ins(&R, input.body, "}");
                 Ins(&R, input.body, "return retval;");
+            } else {
+                Ins(&R, input.body, "$name_Input($pararg, elem);");
+                Ins(&R, input.body, "return true;");
             }
         } else {
             input.priv = true;
@@ -75,17 +89,23 @@ void amc::tfunc_Io_InputMaybe() {
     }
 }
 
+// Emit the extern prototype for a user-supplied <pool>_Input when the field
+// declares ffunc:<field>.Input extrn:Y; InputMaybe calls it.
 void amc::tfunc_Io_Input() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;
-    if (field.c_finput && field.c_finput->extrn && GenThrowQ(*field.p_ctype->p_ns)) {
-        amc::FCtype *basetype  = GetBaseType(*field.p_arg,field.p_arg);// always read base class if possible
-        Set(R, "$Basetype", basetype->cpp_type);
-        amc::FFunc& input = amc::CreateCurFunc();
-        Ins(&R, input.ret, "void", false);
-        Ins(&R, input.proto, "$name_Input($Parent, $Basetype &elem)", false);
-        input.acrkey << "finput:"<<field.field;
-        input.extrn = true;
+    if (field.c_finput) {
+        amc::FFfunc *ff_input = amc::FindFfunc(field, "Input");
+        if (ff_input && ff_input->extrn) {
+            ff_input->used = true;
+            amc::FCtype *basetype  = GetBaseType(*field.p_arg,field.p_arg);// always read base class if possible
+            Set(R, "$Basetype", basetype->cpp_type);
+            amc::FFunc& input = amc::CreateCurFunc();
+            Ins(&R, input.ret, "void", false);
+            Ins(&R, input.proto, "$name_Input($Parent, $Basetype &elem)", false);
+            input.acrkey << "ffunc:"<<field.field<<".Input";
+            input.extrn = true;
+        }
     }
 }
 
@@ -205,8 +225,8 @@ static void Gstatic_DataTable(cstring &out, amc::FField &field) {
 static void Gstatic_Insert(amc::FFunc &func, amc::FField &field) {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     Set(R, "$Basetype", GetBaseType(*field.p_arg,field.p_arg)->cpp_type);
-    Ins(&R,func.body     , "$Basetype $name;");
     Ins(&R,func.body     , "for (int i=0; data[i].s; i++) {");
+    Ins(&R,func.body     ,      "$Basetype $name;");
     Ins(&R, func.body    , "    (void)$Basetype_ReadStrptrMaybe($name, algo::strptr(data[i].s));");
     int nhooks = NHooks(field);
     Ins(&R, func.body, "$Cpptype *elem = $name_InsertMaybe($name);");
@@ -255,6 +275,11 @@ static void Gstatic_Globalref(amc::FField &field) {
         Set(R, "$ns", ns.ns);
         Set(R, "$key", amc::PkeyCppident(static_tuple.tuple));
         Set(R, "$idx", tempstr()<<idx);
+        // The initializer names a constant address -- the pool's storage is a
+        // static object -- so the reference is bound before any code runs.  A
+        // call to the pool's own accessor would read better but would not be
+        // constant, and a symbol that is null until its translation unit is
+        // initialized is a symbol that can be read null.
         Ins(&R, gsymbol, "static $ns::$Ctype &$ns_$name_$key \t= (($ns::$Ctype*)$ns::_db.$name_data)[$idx];");
         idx++;
     }ind_end;

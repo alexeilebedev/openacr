@@ -1,0 +1,5 @@
+# start bash cmd:"bash -c 'cd $tempdir && ln -s $$OLDPWD/bin bin && ln -s $$OLDPWD/data data && mkdir temp && EDITOR=false $$OLDPWD/$bindir/amc ctype:amc.FGen -e'"
+# eof bash
+bash -> acr.error  false temp/acr.ssim
+bash -> amc.error  amc.edit  cmd:"bin/acr  -query:ctype:amc.FGen -e:Y -t:Y"  status:"exit code 1"  comment:"edit failed; no code was regenerated"
+# exit bash code:1

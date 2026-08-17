@@ -589,7 +589,17 @@ tempstr abt::GetOutfile(abt::FBuilddir &builddir, abt::FTarget &target) {
 static void Main_ShowReport() {
     abt::_db.report.n_target = abt::zs_sel_target_N();
     ind_beg(abt::_db_zs_sel_target_curs, target,abt::_db) {
-        if (abt::_db.cmdline.install && target.p_ns->nstype != dmmeta_Nstype_nstype_none) {
+        // A target reaches the report with no end command whenever the scan has already
+        // failed: a source that includes a header no target supplies raises the exit
+        // code, the whole build phase is skipped, and Main_CreateCmds -- the only place
+        // syscmd_end is set -- never runs.  The report is printed regardless, because an
+        // operator who asked for a build wants to hear how it went even when it did not
+        // start.  So the absence of an end command is itself the answer, and it means the
+        // target was not installed; asking such a target for its exit status reads
+        // through a pointer that was never set.
+        if (abt::_db.cmdline.install
+            && target.p_ns->nstype != dmmeta_Nstype_nstype_none
+            && target.syscmd_end) {
             // this is inaccurate -- only shows last builddir
             abt::_db.report.n_install += target.syscmd_end->status ==0;
         }
@@ -630,6 +640,10 @@ void abt::Main() {
     ind_beg(abt::_db_zs_sel_target_curs, target,abt::_db) {
         Main_ComputeAlldep(target,target);
     }ind_end;
+
+    // stamp the build identity before the scan: arg.cpp includes the file this
+    // writes, so the scan can only resolve that include once it exists
+    abt::WriteGitinfo();
 
     // scan source files and headers
     abt::ScanSrcfile();

@@ -1,0 +1,5 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/bad_bitset_elem.ssim -out_dir: -report:N zzz"
+# eof amc
+amc -> amc.bitset_elem  fbitset:algo_lib.TestBitset.bits  arg:algo_lib.Str9  comment:"bitset element must be an unsigned builtin. Use u8,u16,u32,u64, or u128"
+amc -> amc.no_output  comment:"no files were modified"
+# exit amc code:1

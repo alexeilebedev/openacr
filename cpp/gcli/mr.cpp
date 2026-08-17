@@ -37,12 +37,18 @@ static tempstr ShowMRNote(gcli::FMr &mr){
     algo_lib::FTxttbl txttbl;
 
     AddRow(txttbl);
-    AddCols(txttbl,"MRNOTE,AUTHOR");
+    AddCols(txttbl,"MRNOTE,AUTHOR,RESOLVED");
 
     ind_beg(gcli::mr_c_mrnote_curs, mrnote, mr) if (mrnote.select){
+        // review threads carry a resolved state; plain notes show nothing
+        tempstr resolved;
+        if (mrnote.resolvable=="true"){
+            resolved = mrnote.resolved=="true" ? "resolved" : "unresolved";
+        }
         AddRow(txttbl);
         AddCol(txttbl,mrnote.mrnote);
         AddCol(txttbl,mrnote.author);
+        AddCol(txttbl,resolved);
 
         AddRow(txttbl);
         AddCol(txttbl,mrnote.note);
@@ -68,7 +74,7 @@ void gcli::Main_ShowMrlist() {
     cstring out;
     algo_lib::FTxttbl txttbl;
     AddRow(txttbl);
-    AddCols(txttbl,"MR,ISSUE,AUTHOR,REVIEWER,PIPELINE,STATE,TITLE");
+    AddCols(txttbl,"MR,ISSUE,AUTHOR,REVIEWER,PIPELINE,MERGE,BEHIND,STATE,TITLE");
     ind_beg(gcli::_db_mr_curs, mr, gcli::_db) if (mr.select) {
         AddRow(txttbl);
         AddCol(txttbl,mr.mr);
@@ -76,6 +82,8 @@ void gcli::Main_ShowMrlist() {
         AddCol(txttbl,mr.author);
         AddCol(txttbl,mr.reviewer);
         AddCol(txttbl,mr.pipeline_status);
+        AddCol(txttbl,mr.merge_status);
+        AddCol(txttbl,mr.behind);
         AddCol(txttbl,tempstr()<<mr.state<<mr.draft);
         AddCol(txttbl,mr.title);
         if (gcli::_db.cmdline.t){
@@ -100,7 +108,79 @@ static tempstr MrjobName(strptr ref, strptr name){
     return gclidb::Mrjob_Concat_mr_job(ref, name);
 }
 // -----------------------------------------------------------------------------
-void gcli::gclicmd_repojobtrace(gcli::FGclicmd&){
+// Strip gitlab-runner decoration from a trace: ANSI escape sequences, and
+// section_start/section_end markers, which embed per-run timestamps
+static tempstr ScrubTrace(strptr text){
+    // drop ANSI escape sequences (ESC [ ... <final alpha byte>)
+    tempstr plain;
+    int i=0;
+    while (i<text.n_elems){
+        char c=text.elems[i];
+        bool csi = c=='\x1b' && i+1<text.n_elems && text.elems[i+1]=='[';
+        if (csi){
+            i+=2;
+            while (i<text.n_elems && !((text.elems[i]>='a' && text.elems[i]<='z') || (text.elems[i]>='A' && text.elems[i]<='Z'))){
+                i++;
+            }
+            i++;
+        } else {
+            plain<<c;
+            i++;
+        }
+    }
+    // a line is \r-separated segments; drop the section markers
+    tempstr ret;
+    ind_beg(algo::Line_curs,line,plain){
+        tempstr scrubbed;
+        ind_beg(algo::Sep_curs,seg,line,'\r'){
+            bool marker = StartsWithQ(seg,"section_start:") || StartsWithQ(seg,"section_end:");
+            if (!marker){
+                scrubbed<<seg;
+            }
+        }ind_end;
+        ret<<scrubbed<<eol;
+    }ind_end;
+    return ret;
+}
+// -----------------------------------------------------------------------------
+// Print a job trace.  -limit tails the trace to its last N lines (0 = full);
+// errors:Y keeps only error-looking lines (capped at 10, same heuristic
+// as gli), for a quick read of why a job failed.
+void gcli::gclicmd_repojobtrace(gcli::FGclicmd &gclicmd){
+    gclicmd.response_text=ScrubTrace(gclicmd.response_text);
+    cstring out;
+    bool show_errors = gcli::GetTblactfld(gclidb_Gtblact_gtblact_mrjob_list,gclidb_Gfld_gfld_errors)=="Y";
+    if (show_errors){
+        algo_lib::Regx noterr_regx;
+        Regx_ReadSql(noterr_regx,"(too many errors|errors occurred|report.atf_ci|report.atf_comp|atf_ci.failed)",false);
+        algo_lib::Regx err_regx;
+        Regx_ReadSql(err_regx,"(success:N|error)",false);
+        int nmatch=0;
+        ind_beg(algo::Line_curs,line,gclicmd.response_text){
+            if (nmatch<=10 && Regx_Match(err_regx,line) && !Regx_Match(noterr_regx,line)){
+                out<<line<<eol;
+                nmatch++;
+            }
+        }ind_end;
+    } else if (gcli::_db.cmdline.limit>0){
+        // count the lines, then keep the tail
+        i32 nline=0;
+        ind_beg(algo::Line_curs,line,gclicmd.response_text){
+            (void)line;
+            nline++;
+        }ind_end;
+        i32 iline=0;
+        ind_beg(algo::Line_curs,line,gclicmd.response_text){
+            if (iline>=nline-gcli::_db.cmdline.limit){
+                out<<line<<eol;
+            }
+            iline++;
+        }ind_end;
+    } else {
+        out<<gclicmd.response_text;
+    }
+    prlog(out);
+    gclicmd.response_text="";
 }
 // -----------------------------------------------------------------------------
 void gcli::gclicmd_repojob(gcli::FGclicmd &gclicmd){
@@ -122,7 +202,14 @@ void gcli::gclicmd_repojob(gcli::FGclicmd &gclicmd){
     }ind_end;
 }
 // -----------------------------------------------------------------------------
+// Normalize the draft flag to "/draft" (display suffix) or "".
+// A title prefix "Draft: " is the authoritative marker -- the draft field of
+// a response can lag a title change, so it only decides when the title
+// carries no prefix (e.g. github drafts)
 static void NormDraft(gcli::FMr &mr){
+    if (StartsWithQ(mr.title,"Draft:")){
+        mr.draft="draft";
+    }
     if (mr.draft!=""){
         if (algo::StartsWithQ(mr.draft,"draft")){
             mr.draft="draft";
@@ -259,10 +346,22 @@ void gcli::gclicmd_mraccept(gcli::FGclicmd &gclicmd){
     gcli::gclicmd_mrlistdet(gclicmd);
 }
 // -----------------------------------------------------------------------------
+static tempstr AddBackticksMaybe(strptr description){
+    tempstr bkt("```");
+    tempstr ret(description);
+    if (!Replace(ret,bkt,bkt)){
+        ret=tempstr()<<bkt<<eol;
+        ret<<description<<eol;
+        ret<<bkt<<eol;
+    }
+    return ret;
+}
+// -----------------------------------------------------------------------------
 void gcli::gtblact_mr_create(gcli::FGtblact &gtblact){
-    // Get branch name
+    // Get branch name; the issue it is bound to is the MR target
     tempstr branch(GetCurrentGitBranch());
-    gtblact.id=branch;
+    tempstr branch_issue(gcli::BranchIssue(branch));
+    gtblact.id = branch_issue=="" ? branch : branch_issue;
     // add mrlist for xref
     // read the issue - it validates its presence
     gcli::FGclicmd &gclicmd_mrlist=AddGclicmd(gclidb_Gclicmd_gclicmd_mrlist,true,"");
@@ -275,12 +374,12 @@ void gcli::gtblact_mr_create(gcli::FGtblact &gtblact){
     AssertGitWorkDirClean();
 
     // Do branch git push - issue exists and matches the branch
-    PushGitBranch(gcli::_db.grepo_sel.name);
+    PushGitBranch(GitRemote());
 
     // Load git comments and parse them into title and description
     tempstr title;
     tempstr description;
-    ParseGitComment(issue.issue,title,description);
+    ParseGitComment(branch,title,description);
 
     // prepare REST request
     // Clear previos mrs
@@ -305,6 +404,7 @@ void gcli::gtblact_mr_create(gcli::FGtblact &gtblact){
         prlog("Merge request is already existing for this branch.");
         prlog("No worry, branch has updated in merge request.");
     }
+    description=AddBackticksMaybe(description);
     lib_json::NewStringNode(&obj,"title",tempstr()<<"Draft: "<<title);
     lib_json::NewStringNode(&obj,"description",description);
     lib_json::NewStringNode(&obj,"body",description);
@@ -434,6 +534,32 @@ void gcli::gtblact_mr_list(gcli::FGtblact &gtblact){
     gcli::Main_ShowMrlist();
 }
 // -----------------------------------------------------------------------------
+// Key of the open MR of the current branch's issue; the issue is resolved
+// from the branch name or the seed-commit footer
+static tempstr CurrentBranchMrKey(){
+    tempstr branch(gcli::GetCurrentGitBranch());
+    tempstr branch_issue(gcli::BranchIssue(branch));
+    gcli::FGtblact *gtblact_issue=gcli::ind_gtblact_Find(gclidb_Gtblact_gtblact_issue_list);
+    gtblact_issue->id = branch_issue=="" ? branch : branch_issue;
+    // add mrlist for xref
+    // read the issue - it validates its presence
+    gcli::AddGclicmd(gclidb_Gclicmd_gclicmd_mrlist,true,"");
+    // Don't wnat ot read multiple issue notes...
+    bool cmdline_t(gcli::_db.cmdline.t);
+    gcli::_db.cmdline.t=false;
+    gcli::FIssue &issue=gcli::ReadSingleIssue(*gtblact_issue);
+    gcli::_db.cmdline.t=cmdline_t;
+
+    vrfy (issue.p_mr_open,tempstr()
+          <<Keyval("issue",issue.issue)
+          <<Keyval("comment","no mrjobs for this issue yet")
+          );
+    tempstr ret;
+    ret<<issue.p_mr_open->mr;
+    gcli::mr_RemoveAll();
+    return ret;
+}
+// -----------------------------------------------------------------------------
 void gcli::gtblact_mrjob_list(gcli::FGtblact &gtblact){
     // read the mr we want to update
     tempstr mr_id(gtblact.id);
@@ -441,28 +567,13 @@ void gcli::gtblact_mrjob_list(gcli::FGtblact &gtblact){
     gtblact.id = SingleIssueQ(new_mr_id) ? new_mr_id : mr_id;
     // identify mrjobs
     if (gtblact.id==""){
-        tempstr branch(GetCurrentGitBranch());
-        gcli::FGtblact *gtblact_issue=gcli::ind_gtblact_Find(gclidb_Gtblact_gtblact_issue_list);
-        gtblact_issue->id=branch;
-        // add mrlist for xref
-        // read the issue - it validates its presence
-        AddGclicmd(gclidb_Gclicmd_gclicmd_mrlist,true,"");
-        // Don't wnat ot read multiple issue notes...
-        bool cmdline_t(gcli::_db.cmdline.t);
-        gcli::_db.cmdline.t=false;
-        gcli::FIssue &issue=ReadSingleIssue(*gtblact_issue);
-        gcli::_db.cmdline.t=cmdline_t;
-
-        vrfy (issue.p_mr_open,tempstr()
-              <<Keyval("issue",issue.issue)
-              <<Keyval("comment","no mrjobs for this issue yet")
-              );
-        mr_id=gcli::_db.cmdline.t ? tempstr()<<issue.p_mr_open->mr<<"/%"
-            : tempstr()<<issue.p_mr_open->mr;
+        mr_id=CurrentBranchMrKey();
+        if (gcli::_db.cmdline.t){
+            mr_id<<"/%";
+        }
         new_mr_id=Pathcomp(mr_id,"/RL");
         gtblact.id = SingleIssueQ(new_mr_id) ? new_mr_id : mr_id;
         mr_id=gtblact.id;
-        mr_RemoveAll();
     }
     gcli::_db.cmdline.t=gtblact.t;
     gcli::FMr &mr=ReadSingleMr(gtblact);
@@ -477,6 +588,52 @@ void gcli::gtblact_mrjob_list(gcli::FGtblact &gtblact){
         gcli::Main_CurlExec();
     } else {
         gcli::Main_ShowMrlist();
+    }
+}
+// -----------------------------------------------------------------------------
+// A retry response carries the replacement job; record it like a job listing
+void gcli::gclicmd_jobretry(gcli::FGclicmd &gclicmd){
+    gcli::gclicmd_repojob(gclicmd);
+}
+// -----------------------------------------------------------------------------
+// Retry CI jobs of the selected MR (gitlab only): the failed and canceled
+// jobs, or with mrjob:<mr>/<regex> the jobs matching the regex regardless of
+// status.  With an empty selector the MR is resolved from the current branch.
+void gcli::gtblact_mrjob_retry(gcli::FGtblact &gtblact){
+    if (gcli::_db.p_gtype->gtype!=gclidb_Gtype_gtype_glpat){
+        prlog("gcli.error  "<<Keyval("comment","mrjob -retry is available for gitlab only"));
+    } else {
+        tempstr mr_id(gtblact.id);
+        if (mr_id==""){
+            mr_id=CurrentBranchMrKey();
+        }
+        tempstr new_mr_id(Pathcomp(mr_id,"/RL"));
+        bool job_selected = SingleIssueQ(new_mr_id);
+        gtblact.id = job_selected ? new_mr_id : mr_id;
+        // load the mr and its jobs
+        bool cmdline_t(gcli::_db.cmdline.t);
+        gcli::_db.cmdline.t=true;
+        gcli::FMr &mr=ReadSingleMr(gtblact);
+        gcli::_db.cmdline.t=cmdline_t;
+        // select the jobs to retry
+        algo_lib::Regx mrjob_regx;
+        Regx_ReadSql(mrjob_regx,mr_id, false);
+        gcli::FGclicmd &gclicmd=AddGclicmd(gclidb_Gclicmd_gclicmd_jobretry,false,"");
+        gclicmd.p_mr=&mr;
+        u32 nretry=0;
+        ind_beg(gcli::mr_c_mrjob_curs,mrjob,mr){
+            bool match = job_selected ? algo_lib::Regx_Match(mrjob_regx,mrjob.mrjob)
+                : (mrjob.status=="failed" || mrjob.status=="canceled");
+            if (match){
+                AddGclicmdArg(gclidb_Gclicmd_gclicmd_jobretry,mrjob.id);
+                nretry++;
+            }
+        }ind_end;
+        if (nretry==0){
+            prlog("gcli.mrjob_retry  "<<Keyval("mr",mr.mr)<<Keyval("comment","no jobs to retry"));
+        }
+        gcli::Main_CurlExec();
+        prlog(ShowMRJob(mr));
     }
 }
 // -----------------------------------------------------------------------------
@@ -575,7 +732,7 @@ void gcli::gtblact_mr_start(gcli::FGtblact &gtblact){
     gcli::FMr &mr=ReadSingleMr(gtblact);
     //    gcli::FMr &mr=ValidateMr(mr_key);
     // Check branch exists
-    tempstr mr_branch(mr.mr);
+    tempstr mr_branch(GitName(mr.mr));
     Replace(mr_branch,":","_");
     vrfy(CheckGitBranchExists(mr_branch), tempstr()
          <<Keyval("branch",mr_branch)
@@ -595,6 +752,6 @@ void gcli::gtblact_mr_stop(gcli::FGtblact &gtblact){
     tempstr id(gtblact.id);
     tempstr mr_key=GetTargetKey(id);
     tempstr mr_branch("mr_");
-    mr_branch<<mr_key;
+    mr_branch<<GitName(mr_key);
     gcli::GitRemoveMrBranch(mr_branch);
 }

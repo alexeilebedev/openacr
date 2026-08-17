@@ -56,7 +56,13 @@ void lib_git::trace_Print(lib_git::trace& row, algo::cstring& str) {
 // --- lib_git.FDb._db.InitReflection
 // Load statically available data into tables, register tables and database.
 static void lib_git::InitReflection() {
-    algo_lib::imdb_InsertMaybe(algo::Imdb("lib_git", NULL, NULL, NULL, NULL, algo::Comment()));
+    algo_lib::FImdb &row = algo_lib::imdb_Alloc();
+    row.imdb               = "lib_git";
+    row.InsertStrptrMaybe  = NULL;
+    row.RemoveStrptrMaybe  = NULL;
+    row.Step               = NULL;
+    row.MainLoop           = NULL;
+    algo_lib::imdb_XrefMaybe(row);
 
     algo::Imtable t_trace;
     t_trace.imtable         = "lib_git.trace";
@@ -150,6 +156,15 @@ bool lib_git::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
 // Calls Step function of dependencies
 void lib_git::Steps() {
     algo_lib::Step(); // dependent namespace specified via (dev.targdep)
+}
+
+// --- lib_git.FDb._db.RemoveStrptrMaybe
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+bool lib_git::RemoveStrptrMaybe(algo::strptr str) {
+    bool retval = true;
+    (void)str;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- lib_git.FDb._db.XrefMaybe
@@ -251,7 +266,7 @@ bool lib_git::FieldId_ReadStrptrMaybe(lib_git::FieldId &parent, algo::strptr in_
 // --- lib_git.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:lib_git.FieldId.String  printfmt:Raw
-void lib_git::FieldId_Print(lib_git::FieldId& row, algo::cstring& str) {
+void lib_git::FieldId_Print(lib_git::FieldId row, algo::cstring& str) {
     lib_git::value_Print(row, str);
 }
 

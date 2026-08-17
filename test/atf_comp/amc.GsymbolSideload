@@ -1,0 +1,4 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/gsymbol_sideload.ssim -out_dir: -report:N zzz"
+# eof amc
+amc -> amc.sideload  root:data  file:data/dmmeta/nstype.ssim  comment:"-in_dir is not a directory; side table data loads from the default root"
+# exit amc code:0

@@ -1,0 +1,41 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/bad_numstr_numtype.ssim -out_dir: -report:N 'algo_lib.LnumStr6_U32.ch.Getnum|algo_lib.LnumStr6_U32.ch.Geti64'"
+# eof amc
+amc -> amc.bad_numtype  field:algo_lib.BadDec.price  arg:double  comment:"fdec arg must resolve to an integer builtin"
+amc -> amc.bad_numcast  field:algo_lib.LnumStr10_U32.ch  numtype:algo_lib.U32Ctor  comment:"ctype needs dmmeta.fcast to read the builtin value out of it"
+amc -> amc.bad_numcast  field:algo_lib.LnumStr11_U32.ch  numtype:algo_lib.U32Cast2  comment:"ctype stands for the builtin only through another ctype; one Val field over the builtin converts"
+amc -> amc.bad_numtype  field:algo_lib.LnumStr4_Float.ch  numtype:float  comment:"numstr numtype must resolve to an integer builtin"
+amc -> amc.numstr_badnumtype  field:algo_lib.LnumStr4_I16.ch  name_token:I16  numtype:algo_lib.U32Cast  comment:"ctype name and numstr numtype disagree"
+amc -> amc.bad_numtype  field:algo_lib.LnumStr4_Padbyte.ch  numtype:pad_byte  comment:"numstr numtype must resolve to an integer builtin"
+amc -> amc.bad_numtype  field:algo_lib.LnumStr4_U128.ch  numtype:u128  comment:"numstr numtype must resolve to an integer builtin"
+amc -> amc.bad_numtype  field:algo_lib.LnumStr5_Fdb.ch  numtype:algo_lib.FDb  comment:"numstr numtype must resolve to an integer builtin"
+amc -> amc.bad_numcast  field:algo_lib.LnumStr5_U32.ch  numtype:algo_lib.U32Val  comment:"ctype needs dmmeta.fcast to read the builtin value out of it and dmmeta.cpptype ctor:Y to construct one from a builtin value"
+amc -> amc.numstr_badnumtype  field:algo_lib.LnumStr6_I32.ch  name_token:I32  numtype:u32  comment:"ctype name and numstr numtype disagree"
+amc -> amc.bad_numtype  field:algo_lib.LnumStr8_F64.ch  numtype:double  comment:"numstr numtype must resolve to an integer builtin"
+amc -> amc.bad_numcast  field:algo_lib.LnumStr8_U32.ch  numtype:algo_lib.U32Fcast  comment:"ctype needs dmmeta.cpptype ctor:Y to construct one from a builtin value"
+amc -> amc.numstr_badnumtype  field:algo_lib.LnumStr9_U64.ch  name_token:U64  numtype:u32  comment:"ctype name and numstr numtype disagree"
+amc -> // --- algo_lib.LnumStr6_U32.ch.Getnum
+amc -> // Convert field to numeric value. If the value is too large
+amc -> // for the target type, or the string is invalid, the result
+amc -> // is undefined, and and_ok is set to false.
+amc -> // Empty string is evaluated to zero.
+amc -> algo_lib::U32Cast algo_lib::ch_Getnum(algo_lib::LnumStr6_U32& parent, bool &and_ok) {
+amc ->     u64 val = 0;
+amc ->     algo::strptr str = ch_Getary(parent);
+amc ->     if (elems_N(str)>0) { // empty string maps to zero
+amc ->         u32 ok = 1;
+amc ->         val = aParseNum8(str, ok);
+amc ->         and_ok &= (ok != 0);
+amc ->     }
+amc ->     return algo_lib::U32Cast(val);
+amc -> }
+amc -> // --- algo_lib.LnumStr6_U32.ch.Geti64
+amc -> // Convert field to numeric value. If the value is too large
+amc -> // for the target type, or the string is invalid, throw an exception.
+amc -> // Empty string is evaluated to zero.
+amc -> i64 algo_lib::ch_Geti64(algo_lib::LnumStr6_U32& parent, bool &out_ok) {
+amc ->     out_ok = true;
+amc ->     i64 result = ch_Getnum(parent, out_ok);
+amc ->     return result;
+amc -> }
+amc -> amc.no_output  comment:"no files were modified"
+# exit amc code:13

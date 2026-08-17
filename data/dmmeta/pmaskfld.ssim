@@ -1,3 +1,4 @@
+dmmeta.pmaskfld  field:atf_amc.FDb.gpmask  filter_print:N  comment:""
 dmmeta.pmaskfld  field:atf_amc.PmaskMultiple.assigned  filter_print:N  comment:""
 dmmeta.pmaskfld  field:atf_amc.PmaskMultiple.nullable  filter_print:Y  comment:""
 dmmeta.pmaskfld  field:atf_amc.PmaskMultiple.present  filter_print:N  comment:""

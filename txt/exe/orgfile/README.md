@@ -3,23 +3,25 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Internals](#internals)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Reading Output As Input](#reading-output-as-input)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Find files with identical contents (but don't do anything with them)](#find-files-with-identical-contents--but-don-t-do-anything-with-them-)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Find files with identical contents (but don't do anything with them)](#find-files-with-identical-contents-but-don-t-do-anything-with-them-)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Same as above but with an additional filter](#same-as-above-but-with-an-additional-filter)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Delete files in secondary backup that already exist in primary backup](#delete-files-in-secondary-backup-that-already-exist-in-primary-backup)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Organize images by year and day](#organize-images-by-year-and-day)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
-&#128196; [orgfile - Internals](/txt/exe/orgfile/internals.md)<br/>
+<!-- abt_md.toc_end -->
 
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
+### Internals
+<a href="#internals"></a>
+&#128196; [orgfile - Internals](/txt/gen/orgfile/orgfile.md)<br/>
 
 ### Syntax
 <a href="#syntax"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Syntax -->
 ```
 orgfile: Organize and deduplicate files by timestamp and by contents
 Usage: orgfile [options]
@@ -35,14 +37,10 @@ Usage: orgfile [options]
     -help                       Print help and exit; alias -h
     -version                    Print version and exit
     -signature                  Show signatures and exit; alias -sig
-
 ```
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Syntax -->
 
 ### Description
 <a href="#description"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Description -->
 
 Orgfile reads a list of filenames from stdin and performs move and dedup operations with
 incoming files. 
@@ -82,8 +80,6 @@ If `-dedup` is specified, then any incoming file is scanned for its hash.
 Any file whose pathname matches the pattern specified by `-dedup`, and the file is proven to be a duplicate,
 is deleted.
 
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Description -->
-
 ### Reading Output As Input
 <a href="#reading-output-as-input"></a>
 
@@ -96,7 +92,7 @@ since deletion cannot be undone.
 For some move operations, `-undo` will move files back to their original locations.
 
 ### Find files with identical contents (but don't do anything with them)
-<a href="#find-files-with-identical-contents--but-don-t-do-anything-with-them-"></a>
+<a href="#find-files-with-identical-contents-but-don-t-do-anything-with-them-"></a>
 
 ```
 find . | orgfile -dedup
@@ -125,8 +121,6 @@ find . -name "*.jpg" | orgfile -move:image/%Y/%Y-%m-%d/ -commit
 
 ### Options
 <a href="#options"></a>
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Options -->
 #### -in -- Input directory or filename, - for stdin
 <a href="#-in"></a>
 
@@ -145,16 +139,10 @@ find . -name "*.jpg" | orgfile -move:image/%Y/%Y-%m-%d/ -commit
 #### -hash -- Hash command to use for deduplication
 <a href="#-hash"></a>
 
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
-
 ### Inputs
 <a href="#inputs"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
 `orgfile` takes the following tables on input:
 |Ssimfile|Comment|
 |---|---|
 |[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
 |[dev.timefmt](/txt/ssimdb/dev/timefmt.md)|Time formats supported by orgfile|
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
-

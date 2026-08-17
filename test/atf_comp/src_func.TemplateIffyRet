@@ -1,0 +1,11 @@
+# start bash cmd:'bash -c \'cd $tempdir && mkdir src && printf "cstring xx::PlainRet() {\\n}\\n" > src/y.cpp && printf "tempstr xx::PlainTempstr() {\\n}\\n" >> src/y.cpp && printf "cstring &xx::PlainRef() {\\n}\\n" >> src/y.cpp && printf "cstring *xx::PlainPtr() {\\n}\\n" >> src/y.cpp && printf "template<class T> cstring xx::TmplRet(T t) {\\n}\\n" >> src/y.cpp && printf "template<typename T, void (*F)(T)> cstring xx::FnptrRet(T t) {\\n}\\n" >> src/y.cpp && printf "template<cstring (*F)(int)> void xx::FnptrCstringParam(int a) {\\n}\\n" >> src/y.cpp && printf "template<class T, int *P> cstring xx::TmplPtrParam(T t) {\\n}\\n" >> src/y.cpp && printf "template<typename T, void (*F)(T)> cstring &xx::FnptrRetRef(T t) {\\n}\\n" >> src/y.cpp && $$OLDPWD/$bindir/src_func -in:$$OLDPWD/test/src_func/template.ssim % -iffy -list\''
+# eof bash
+bash -> src/y.cpp:1: where:retval  error:bigret  comment:"return tempstr instead; to ignore, add ignore:bigret anywhere in function comment"
+bash -> src/y.cpp:9: where:retval  error:bigret  comment:"return tempstr instead; to ignore, add ignore:bigret anywhere in function comment"
+bash -> src/y.cpp:11: where:retval  error:bigret  comment:"return tempstr instead; to ignore, add ignore:bigret anywhere in function comment"
+bash -> src/y.cpp:15: where:retval  error:bigret  comment:"return tempstr instead; to ignore, add ignore:bigret anywhere in function comment"
+bash -> cstring xx::PlainRet() 
+bash -> template<class T> cstring xx::TmplRet(T t) 
+bash -> template<typename T, void (*F)(T)> cstring xx::FnptrRet(T t) 
+bash -> template<class T, int *P> cstring xx::TmplPtrParam(T t) 
+# exit bash code:0

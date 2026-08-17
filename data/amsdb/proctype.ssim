@@ -1,2 +1,5 @@
-amsdb.proctype  proctype:""  id:0  ns:""  comment:"No process"
-amsdb.proctype  proctype:ams_sendtest  id:5  ns:ams_sendtest  comment:"Ams testing"
+amsdb.proctype  proctype:""  id:0  ns:""  overheadmb:0  hugemb:0  pathbyte:0  userbyte:0  openbyte:0  connbyte:0  comment:"No process"  hbtimeout:30
+amsdb.proctype  proctype:ams_sendtest  id:5  ns:ams_sendtest  overheadmb:0  hugemb:4295  pathbyte:0  userbyte:0  openbyte:0  connbyte:0  comment:"Ams testing"  hbtimeout:30
+amsdb.proctype  proctype:ext  id:22  ns:""  overheadmb:0  hugemb:4295  pathbyte:0  userbyte:0  openbyte:0  connbyte:0  comment:"External client connection"  hbtimeout:30
+amsdb.proctype  proctype:samp_meng  id:23  ns:samp_meng  overheadmb:0  hugemb:4295  pathbyte:0  userbyte:0  openbyte:0  connbyte:0  comment:"Matching engine"  hbtimeout:30
+amsdb.proctype  proctype:user  id:21  ns:""  overheadmb:0  hugemb:4295  pathbyte:0  userbyte:0  openbyte:0  connbyte:0  comment:"User process launched via userproc"  hbtimeout:30

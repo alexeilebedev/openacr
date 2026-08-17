@@ -43,26 +43,6 @@ lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 orgfile::FDb    orgfile::_db;     // dependency found via dev.targdep
 
-namespace orgfile {
-const char *orgfile_help =
-"orgfile: Organize and deduplicate files by timestamp and by contents\n"
-"Usage: orgfile [options]\n"
-"    OPTION      TYPE    DFLT    COMMENT\n"
-"    -in         string  \"data\"  Input directory or filename, - for stdin\n"
-"    -move       string  \"\"      Read stdin, rename files based on pattern\n"
-"    -dedup      regx    \"\"      Only allow deleting files that match this regx\n"
-"    -commit                     Apply changes\n"
-"    -undo                       Read previous orgfile output, undoing movement\n"
-"    -hash       string  \"sha1\"  Hash command to use for deduplication\n"
-"    -verbose    flag            Verbosity level (0..255); alias -v; cumulative\n"
-"    -debug      flag            Debug level (0..255); alias -d; cumulative\n"
-"    -help                       Print help and exit; alias -h\n"
-"    -version                    Print version and exit\n"
-"    -signature                  Show signatures and exit; alias -sig\n"
-;
-
-
-} // namespace orgfile
 namespace orgfile { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
     // func:orgfile.FDb._db.InitReflection
@@ -89,99 +69,16 @@ void orgfile::trace_Print(orgfile::trace& row, algo::cstring& str) {
 }
 
 // --- orgfile.FDb._db.ReadArgv
-// Read argc,argv directly into the fields of the command line(s)
-// The following fields are updated:
-//     orgfile.FDb.cmdline
-//     algo_lib.FDb.cmdline
+// Read argc,argv into the fields of orgfile.FDb.cmdline (and any base command line)
+// via orgfile_ReadArgv; then apply -help/-version and load floadtuples input.
 void orgfile::ReadArgv() {
     command::orgfile &cmd = orgfile::_db.cmdline;
-    algo_lib::Cmdline &base = algo_lib::_db.cmdline;
-    int needarg=-1;// unknown
-    int argidx=1;// skip process name
-    tempstr err;
-    algo::strptr attrname;
-    bool isanon=false; // true if attrname is anonfld (positional)
-    algo_lib::FieldId baseattrid;
-    command::FieldId attrid;
-    bool endopt=false;
-    int whichns=0;// which namespace does the current attribute belong to
-    for (; argidx < algo_lib::_db.argc; argidx++) {
-        algo::strptr arg = algo_lib::_db.argv[argidx];
-        algo::strptr attrval;
-        algo::strptr dfltval;
-        bool haveval=false;
-        bool dash=elems_N(arg)>1 && arg.elems[0]=='-'; // a single dash is not an option
-        // this attribute is a value
-        if (endopt || needarg>0 || !dash) {
-            attrval=arg;
-            haveval=true;
-        } else {
-            // this attribute is a field name (with - or --)
-            // or a -- by itself
-            bool dashdash = elems_N(arg) >= 2 && arg.elems[1]=='-';
-            int skip = int(dash) + dashdash;
-            attrname=ch_RestFrom(arg,skip);
-            if (skip==2 && elems_N(arg)==2) {
-                endopt=true;
-                continue;// nothing else to do here
-            }
-            // parse "-a:B" arg into attrname,attrvalue
-            algo::i32_Range colon = TFind(attrname,':');
-            if (colon.beg < colon.end) {
-                attrval=ch_RestFrom(attrname,colon.end);
-                attrname=ch_FirstN(attrname,colon.beg);
-                haveval=true;
-            }
-            // look up which command (this one or the base) contains the field
-            whichns=0;
-            needarg=-1;
-            // look up parameter information in base namespace (needarg will be -1 if lookup fails)
-            if (algo_lib::FieldId_ReadStrptrMaybe(baseattrid,attrname)) {
-                needarg = algo_lib::Cmdline_NArgs(baseattrid,dfltval,&isanon);
-            }
-            if (needarg<0) {
-                whichns=1;
-                // look up parameter information in this namespace (needarg will be -1 if lookup fails)
-                if (command::FieldId_ReadStrptrMaybe(attrid,attrname)) {
-                    needarg = command::orgfile_NArgs(attrid,dfltval,&isanon);
-                }
-            }
-            if (attrval == "" && dfltval != "") {
-                attrval=dfltval;
-                haveval=true;
-            }
-            if (needarg<0) {
-                err<<"orgfile: unknown option "<<Keyval("value",arg)<<eol;
-            } else {
-            }
-        }
-        if (ch_N(attrname) == 0) {
-            err << "orgfile: too many arguments. error at "<<algo::strptr_ToSsim(arg)<<eol;
-        } else if (haveval) {
-            // read value into currently selected arg
-            bool ret=false;
-            // it's already known which namespace is consuming the args,
-            // so directly go there
-            if (whichns == 0) {
-                ret=algo_lib::Cmdline_ReadFieldMaybe(base, attrname, attrval);
-            }
-            if (whichns==1) {
-                ret=command::orgfile_ReadFieldMaybe(cmd, attrname, attrval);
-                switch(attrid.value) {
-                    default:break;
-                }
-            }
-            if (!ret) {
-                err<<"orgfile: error in "
-                <<Keyval("option",attrname)
-                <<Keyval("value",attrval)<<eol;
-            }
-            needarg--;
-            if (needarg <= 0) {
-                attrname="";// forget which argument was being filled
-            }
-        }
+    algo::cstring err;
+    algo::StringAry args;
+    for (int argidx=1; argidx < algo_lib::_db.argc; argidx++) {// skip process name
+        ary_Alloc(args) = algo_lib::_db.argv[argidx];
     }
+    command::orgfile_ReadArgv(cmd, args, err);
     bool dohelp = false;
     bool doexit=false;
     if (algo_lib::_db.cmdline.help) {
@@ -204,9 +101,7 @@ void orgfile::ReadArgv() {
     algo_lib_logcat_debug.enabled = algo_lib::_db.cmdline.debug;
     algo_lib_logcat_verbose.enabled = algo_lib::_db.cmdline.verbose > 0;
     algo_lib_logcat_verbose2.enabled = algo_lib::_db.cmdline.verbose > 1;
-    if (!dohelp) {
-    }
-    // dmmeta.floadtuples:orgfile.FDb.cmdline
+    // dmmeta.floadtuples:command.orgfile.in
     if (!dohelp && err=="") {
         algo_lib::ResetErrtext();
         if (!orgfile::LoadTuplesMaybe(cmd.in,true)) {
@@ -219,7 +114,7 @@ void orgfile::ReadArgv() {
         doexit=true;
     }
     if (dohelp) {
-        prlog(orgfile_help);
+        prlog(command::orgfile_help);
     }
     if (doexit) {
         _exit(algo_lib::_db.exit_code);
@@ -246,7 +141,13 @@ void orgfile::Step() {
 // --- orgfile.FDb._db.InitReflection
 // Load statically available data into tables, register tables and database.
 static void orgfile::InitReflection() {
-    algo_lib::imdb_InsertMaybe(algo::Imdb("orgfile", orgfile::InsertStrptrMaybe, NULL, orgfile::MainLoop, NULL, algo::Comment()));
+    algo_lib::FImdb &row = algo_lib::imdb_Alloc();
+    row.imdb               = "orgfile";
+    row.InsertStrptrMaybe  = orgfile::InsertStrptrMaybe;
+    row.RemoveStrptrMaybe  = orgfile::RemoveStrptrMaybe;
+    row.Step               = NULL;
+    row.MainLoop           = orgfile::MainLoop;
+    algo_lib::imdb_XrefMaybe(row);
 
     algo::Imtable t_trace;
     t_trace.imtable         = "orgfile.trace";
@@ -357,6 +258,27 @@ bool orgfile::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
 // Calls Step function of dependencies
 void orgfile::Steps() {
     algo_lib::Step(); // dependent namespace specified via (dev.targdep)
+}
+
+// --- orgfile.FDb._db.RemoveStrptrMaybe
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+bool orgfile::RemoveStrptrMaybe(algo::strptr str) {
+    bool retval = true;
+    orgfile::TableId table_id(-1);
+    value_SetStrptrMaybe(table_id, algo::GetTypeTag(str));
+    switch (value_GetEnum(table_id)) {
+        case orgfile_TableId_dev_Timefmt: { // finput:orgfile.FDb.timefmt
+            // finput orgfile.FDb.timefmt: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        default:
+        retval = false;
+        break;
+    } //switch
+    return retval;
 }
 
 // --- orgfile.FDb._db.XrefMaybe
@@ -502,6 +424,22 @@ orgfile::FFilename& orgfile::ind_filename_FindX(const algo::strptr& key) {
     return *ret;
 }
 
+// --- orgfile.FDb.ind_filename.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+orgfile::FFilename* orgfile::ind_filename_GetOrCreate(const algo::strptr& key) {
+    orgfile::FFilename* ret = ind_filename_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &filename_Alloc();
+        (*ret).filename = key;
+        bool good = filename_XrefMaybe(*ret);
+        if (!good) {
+            filename_Delete(*ret); // delete offending row, any existin xrefs are cleared
+            ret = NULL;
+        }
+    }
+    return ret;
+}
+
 // --- orgfile.FDb.ind_filename.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool orgfile::ind_filename_InsertMaybe(orgfile::FFilename& row) {
@@ -623,7 +561,7 @@ void* orgfile::filehash_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     orgfile::FFilehash*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.filehash_lary[bsr];
         if (!lev) {
             lev=(orgfile::FFilehash*)algo_lib::malloc_AllocMem(sizeof(orgfile::FFilehash) * (u64(1)<<bsr));
@@ -632,7 +570,7 @@ void* orgfile::filehash_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.filehash_n = i32(new_nelems);
+        _db.filehash_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -644,7 +582,7 @@ void orgfile::filehash_RemoveAll() {
     for (u64 n = _db.filehash_n; n>0; ) {
         n--;
         filehash_qFind(u64(n)).~FFilehash(); // destroy last element
-        _db.filehash_n = i32(n);
+        _db.filehash_n = i64(n);
     }
 }
 
@@ -655,7 +593,7 @@ void orgfile::filehash_RemoveLast() {
     if (n > 0) {
         n -= 1;
         filehash_qFind(u64(n)).~FFilehash();
-        _db.filehash_n = i32(n);
+        _db.filehash_n = i64(n);
     }
 }
 
@@ -847,7 +785,7 @@ void* orgfile::timefmt_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     orgfile::FTimefmt*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.timefmt_lary[bsr];
         if (!lev) {
             lev=(orgfile::FTimefmt*)algo_lib::malloc_AllocMem(sizeof(orgfile::FTimefmt) * (u64(1)<<bsr));
@@ -856,7 +794,7 @@ void* orgfile::timefmt_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.timefmt_n = i32(new_nelems);
+        _db.timefmt_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -868,7 +806,7 @@ void orgfile::timefmt_RemoveAll() {
     for (u64 n = _db.timefmt_n; n>0; ) {
         n--;
         timefmt_qFind(u64(n)).~FTimefmt(); // destroy last element
-        _db.timefmt_n = i32(n);
+        _db.timefmt_n = i64(n);
     }
 }
 
@@ -879,7 +817,7 @@ void orgfile::timefmt_RemoveLast() {
     if (n > 0) {
         n -= 1;
         timefmt_qFind(u64(n)).~FTimefmt();
-        _db.timefmt_n = i32(n);
+        _db.timefmt_n = i64(n);
     }
 }
 
@@ -977,12 +915,12 @@ void orgfile::FDb_Uninit() {
 }
 
 // --- orgfile.FFilehash.c_filename.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 void orgfile::c_filename_Insert(orgfile::FFilehash& filehash, orgfile::FFilename& row) {
     if (!row.filehash_c_filename_in_ary) {
         c_filename_Reserve(filehash, 1);
-        u32 n  = filehash.c_filename_n++;
+        u64 n  = filehash.c_filename_n++;
         filehash.c_filename_elems[n] = &row;
         row.filehash_c_filename_in_ary = true;
     }
@@ -1001,15 +939,15 @@ bool orgfile::c_filename_InsertMaybe(orgfile::FFilehash& filehash, orgfile::FFil
 // --- orgfile.FFilehash.c_filename.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void orgfile::c_filename_Remove(orgfile::FFilehash& filehash, orgfile::FFilename& row) {
-    int n = filehash.c_filename_n;
+    i64 n = filehash.c_filename_n;
     if (bool_Update(row.filehash_c_filename_in_ary,false)) {
         orgfile::FFilename* *elems = filehash.c_filename_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = n-1; i>=0; i--) {
+        for (i64 i = n-1; i>=0; i--) {
             orgfile::FFilename* elem = elems[i]; // fetch element
             if (elem == &row) {
-                int j = i + 1;
+                i64 j = i + 1;
                 size_t nbytes = sizeof(orgfile::FFilename*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
                 filehash.c_filename_n = n - 1;
@@ -1021,12 +959,12 @@ void orgfile::c_filename_Remove(orgfile::FFilehash& filehash, orgfile::FFilename
 
 // --- orgfile.FFilehash.c_filename.Reserve
 // Reserve space in index for N more elements;
-void orgfile::c_filename_Reserve(orgfile::FFilehash& filehash, u32 n) {
-    u32 old_max = filehash.c_filename_max;
+void orgfile::c_filename_Reserve(orgfile::FFilehash& filehash, u64 n) {
+    u64 old_max = filehash.c_filename_max;
     if (UNLIKELY(filehash.c_filename_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(orgfile::FFilename*);
-        u32 new_size = new_max * sizeof(orgfile::FFilename*);
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, filehash.c_filename_n + n), 4);
+        u64 old_size = old_max * sizeof(orgfile::FFilename*);
+        u64 new_size = new_max * sizeof(orgfile::FFilename*);
         void *new_mem = algo_lib::malloc_ReallocMem(filehash.c_filename_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("orgfile.out_of_memory  field:orgfile.FFilehash.c_filename");
@@ -1060,7 +998,7 @@ void orgfile::FFilename_Uninit(orgfile::FFilename& filename) {
 void orgfile::timefmt_CopyOut(orgfile::FTimefmt &row, dev::Timefmt &out) {
     out.timefmt = row.timefmt;
     out.dirname = row.dirname;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- orgfile.FTimefmt.base.CopyIn
@@ -1179,7 +1117,7 @@ bool orgfile::FieldId_ReadStrptrMaybe(orgfile::FieldId &parent, algo::strptr in_
 // --- orgfile.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:orgfile.FieldId.String  printfmt:Raw
-void orgfile::FieldId_Print(orgfile::FieldId& row, algo::cstring& str) {
+void orgfile::FieldId_Print(orgfile::FieldId row, algo::cstring& str) {
     orgfile::value_Print(row, str);
 }
 
@@ -1260,7 +1198,7 @@ bool orgfile::TableId_ReadStrptrMaybe(orgfile::TableId &parent, algo::strptr in_
 // --- orgfile.TableId..Print
 // print string representation of ROW to string STR
 // cfmt:orgfile.TableId.String  printfmt:Raw
-void orgfile::TableId_Print(orgfile::TableId& row, algo::cstring& str) {
+void orgfile::TableId_Print(orgfile::TableId row, algo::cstring& str) {
     orgfile::value_Print(row, str);
 }
 

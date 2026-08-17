@@ -1,5 +1,3 @@
-atfdb.tfilt  comptest:acr.BadNs  filter:"sed -E 's/^Valid values.*$/Valid values ***/'"  comment:""
-atfdb.tfilt  comptest:acr_compl.Install  filter:"sed -E '/^complete/s/[^ ]*(acr_compl ).*$/...\\/\\1.../'"  comment:""
 atfdb.tfilt  comptest:aqlite.CompileOptions  filter:"grep -v COMPILER"  comment:""
 atfdb.tfilt  comptest:aqlite.Smoke  filter:"ssimfilt -t"  comment:""
 atfdb.tfilt  comptest:atf_cmdline.Sig  filter:"sed -E -f test/filt.sed"  comment:""

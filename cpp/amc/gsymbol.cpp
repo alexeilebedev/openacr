@@ -33,7 +33,6 @@ static tempstr ResolveGsymboltype(amc::FGsymbol &gsymbol) {
     } else {
         ret << amc::NsToCpp(gsymbol.p_ssimfile->p_ctype->ctype)<<"Pkey";
     }
-    //prlog(ret);
     return ret;
 }
 
@@ -45,19 +44,46 @@ void amc::gen_ns_gsymbol() {
     amc::_db.genctx.p_field = NULL;
     ind_beg(amc::ns_c_gsymbol_curs, gsymbol,ns) {
         algo_lib::Regx regx;
-        Regx_ReadSql(regx, gsymbol.inc, false);
+        Regx_ReadSql(regx, gsymbol.inc, true);
         algo_lib::MmapFile file;
-        tempstr fname(SsimFname(amc::_db.cmdline.in_dir,ssimfile_Get(gsymbol)));
-        vrfy(MmapFile_Load(file,fname),tempstr()<<"amc.load"<<Keyval("filename",fname));
-        amc::BeginNsBlock(*ns.hdr, ns, "");
-        amc::BeginNsBlock(*ns.cpp, ns, "");
-        cstring symboltype = ResolveGsymboltype(gsymbol);
-        ind_beg(Line_curs,line,file.text) {
-            if (Regx_Match(regx,line)) {
+        tempstr fname(SsimFname(DataRoot(),ssimfile_Get(gsymbol)));
+        // The table's rows are the symbols this namespace exports, so a table
+        // that cannot be read would emit an empty symbol block and exit 0,
+        // leaving every reference to those symbols unresolved at link time.
+        // Report the file, fail the run, and skip this gsymbol, so one run
+        // still reaches every other one.
+        if (!SideloadFile(file,fname)) {
+            algo::PrerrFileFail("amc.load", fname, "gsymbol table could not be read");
+            algo_lib::_db.exit_code++;
+        } else {
+            amc::BeginNsBlock(*ns.hdr, ns, "");
+            amc::BeginNsBlock(*ns.cpp, ns, "");
+            cstring symboltype = ResolveGsymboltype(gsymbol);
+            int nline = 0;
+            ind_beg(Line_curs,line,file.text) {
                 Tuple tuple;
-                Tuple_ReadStrptr(tuple, line, false);
-                if (attrs_N(tuple) > 0) {
-                    tempstr value(attrs_qFind(tuple,0).value);
+                nline++;
+                bool readq = Tuple_ReadStrptrMaybe(tuple, line);
+                bool empty = (attrs_N(tuple) == 0);
+                tempstr value = empty ? tempstr() : tempstr(attrs_qFind(tuple, 0).value);
+                // A line that does not parse as a tuple is an input error the
+                // reader itself cannot describe: an unterminated quoted value
+                // keeps whatever was read before the quote ran out, so the
+                // truncated text becomes a symbol name and value the table
+                // never wrote, and every reference to the intended symbol
+                // fails to link. The tuple reader leaves no error text of its
+                // own, so the diagnostic states its own subject: this file,
+                // this line, this text. The line is skipped and the scan
+                // continues, so every bad line is reported once.
+                if (!readq) {
+                    prerr("amc.bad_gsymbol"
+                          <<Keyval("gsymbol",gsymbol.gsymbol)
+                          <<Keyval("file",fname)
+                          <<Keyval("line",nline)
+                          <<Keyval("text",line)
+                          <<Keyval("comment","gsymbol table line is not a tuple"));
+                    algo_lib::_db.exit_code++;
+                } else if (!empty && Regx_Match(regx, value)) {
                     tempstr name = strptr_ToCppIdent(tempstr()<<ssimfile_Get(gsymbol)<<"_"<<value,true);
                     *ns.hdr << "    extern const "<< symboltype << " " << name;
                     *ns.hdr << "; // ";
@@ -68,9 +94,9 @@ void amc::gen_ns_gsymbol() {
                     strptr_PrintCppQuoted(value, *ns.cpp, '"');
                     *ns.cpp << ");" << eol;
                 }
-            }
-        }ind_end;
-        amc::EndNsBlock(*ns.hdr, ns, "");
-        amc::EndNsBlock(*ns.cpp, ns, "");
+            }ind_end;
+            amc::EndNsBlock(*ns.hdr, ns, "");
+            amc::EndNsBlock(*ns.cpp, ns, "");
+        }
     }ind_end;
 }

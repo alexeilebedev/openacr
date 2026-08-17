@@ -7,18 +7,9 @@
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2023 AlgoRND
 //
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// This source code constitutes confidential information and trade secrets
+// of AlgoRND. Unauthorized copying, distribution or sharing of this file,
+// via any medium, is strictly prohibited.
 //
 
 
@@ -524,7 +515,7 @@ bool http::FieldId_ReadStrptrMaybe(http::FieldId &parent, algo::strptr in_str) {
 // --- http.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:http.FieldId.String  printfmt:Raw
-void http::FieldId_Print(http::FieldId& row, algo::cstring& str) {
+void http::FieldId_Print(http::FieldId row, algo::cstring& str) {
     http::value_Print(row, str);
 }
 
@@ -928,7 +919,7 @@ bool http::HeaderType_ReadStrptrMaybe(http::HeaderType &parent, algo::strptr in_
 // --- http.HeaderType..Print
 // print string representation of ROW to string STR
 // cfmt:http.HeaderType.String  printfmt:Raw
-void http::HeaderType_Print(http::HeaderType& row, algo::cstring& str) {
+void http::HeaderType_Print(http::HeaderType row, algo::cstring& str) {
     http::value_Print(row, str);
 }
 
@@ -1062,7 +1053,7 @@ bool http::Method_ReadStrptrMaybe(http::Method &parent, algo::strptr in_str) {
 // --- http.Method..Print
 // print string representation of ROW to string STR
 // cfmt:http.Method.String  printfmt:Raw
-void http::Method_Print(http::Method& row, algo::cstring& str) {
+void http::Method_Print(http::Method row, algo::cstring& str) {
     http::value_Print(row, str);
 }
 
@@ -1075,10 +1066,10 @@ algo::aryptr<http::ExtensionHeader> http::extension_header_Addary(http::Request&
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("http.tary_alias  field:http.Request.extension_header  comment:'alias error: sub-array is being appended to the whole'");
     }
-    int nnew = rhs.n_elems;
+    i64 nnew = rhs.n_elems;
     extension_header_Reserve(parent, nnew); // reserve space
-    int at = parent.extension_header_n;
-    for (int i = 0; i < nnew; i++) {
+    i64 at = parent.extension_header_n;
+    for (i64 i = 0; i < nnew; i++) {
         new (parent.extension_header_elems + at + i) http::ExtensionHeader(rhs[i]);
         parent.extension_header_n++;
     }
@@ -1090,8 +1081,8 @@ algo::aryptr<http::ExtensionHeader> http::extension_header_Addary(http::Request&
 // The new element is initialized to a default value
 http::ExtensionHeader& http::extension_header_Alloc(http::Request& parent) {
     extension_header_Reserve(parent, 1);
-    int n  = parent.extension_header_n;
-    int at = n;
+    i64 n  = parent.extension_header_n;
+    i64 at = n;
     http::ExtensionHeader *elems = parent.extension_header_elems;
     new (elems + at) http::ExtensionHeader(); // construct new element, default initializer
     parent.extension_header_n = n+1;
@@ -1101,9 +1092,9 @@ http::ExtensionHeader& http::extension_header_Alloc(http::Request& parent) {
 // --- http.Request.extension_header.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-http::ExtensionHeader& http::extension_header_AllocAt(http::Request& parent, int at) {
+http::ExtensionHeader& http::extension_header_AllocAt(http::Request& parent, i64 at) {
     extension_header_Reserve(parent, 1);
-    int n  = parent.extension_header_n;
+    i64 n  = parent.extension_header_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
         FatalErrorExit("http.bad_alloc_at  field:http.Request.extension_header  comment:'index out of range'");
     }
@@ -1116,12 +1107,12 @@ http::ExtensionHeader& http::extension_header_AllocAt(http::Request& parent, int
 
 // --- http.Request.extension_header.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<http::ExtensionHeader> http::extension_header_AllocN(http::Request& parent, int n_elems) {
+algo::aryptr<http::ExtensionHeader> http::extension_header_AllocN(http::Request& parent, i64 n_elems) {
     extension_header_Reserve(parent, n_elems);
-    int old_n  = parent.extension_header_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = parent.extension_header_n;
+    i64 new_n = old_n + n_elems;
     http::ExtensionHeader *elems = parent.extension_header_elems;
-    for (int i = old_n; i < new_n; i++) {
+    for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) http::ExtensionHeader(); // construct new element, default initialize
     }
     parent.extension_header_n = new_n;
@@ -1132,15 +1123,15 @@ algo::aryptr<http::ExtensionHeader> http::extension_header_AllocN(http::Request&
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::aryptr<http::ExtensionHeader> http::extension_header_AllocNAt(http::Request& parent, int n_elems, int at) {
+algo::aryptr<http::ExtensionHeader> http::extension_header_AllocNAt(http::Request& parent, i64 n_elems, i64 at) {
     extension_header_Reserve(parent, n_elems);
-    int n  = parent.extension_header_n;
+    i64 n  = parent.extension_header_n;
     if (UNLIKELY(u64(at) > u64(n))) {
         FatalErrorExit("http.bad_alloc_n_at  field:http.Request.extension_header  comment:'index out of range'");
     }
     http::ExtensionHeader *elems = parent.extension_header_elems;
     memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(http::ExtensionHeader));
-    for (int i = 0; i < n_elems; i++) {
+    for (i64 i = 0; i < n_elems; i++) {
         new (elems + at + i) http::ExtensionHeader(); // construct new element, default initialize
     }
     parent.extension_header_n = n+n_elems;
@@ -1149,8 +1140,8 @@ algo::aryptr<http::ExtensionHeader> http::extension_header_AllocNAt(http::Reques
 
 // --- http.Request.extension_header.Remove
 // Remove item by index. If index outside of range, do nothing.
-void http::extension_header_Remove(http::Request& parent, u32 i) {
-    u32 lim = parent.extension_header_n;
+void http::extension_header_Remove(http::Request& parent, u64 i) {
+    u64 lim = parent.extension_header_n;
     http::ExtensionHeader *elems = parent.extension_header_elems;
     if (i < lim) {
         elems[i].~ExtensionHeader(); // destroy element
@@ -1161,12 +1152,11 @@ void http::extension_header_Remove(http::Request& parent, u32 i) {
 
 // --- http.Request.extension_header.RemoveAll
 void http::extension_header_RemoveAll(http::Request& parent) {
-    u32 n = parent.extension_header_n;
-    while (n > 0) {
-        n -= 1;
-        parent.extension_header_elems[n].~ExtensionHeader();
-        parent.extension_header_n = n;
+    u64 n = parent.extension_header_n;
+    for (u64 i=0; i<n; i++) {
+        parent.extension_header_elems[i].~ExtensionHeader();
     }
+    parent.extension_header_n = 0;
 }
 
 // --- http.Request.extension_header.RemoveLast
@@ -1182,10 +1172,10 @@ void http::extension_header_RemoveLast(http::Request& parent) {
 
 // --- http.Request.extension_header.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void http::extension_header_AbsReserve(http::Request& parent, int n) {
-    u32 old_max  = parent.extension_header_max;
-    if (n > i32(old_max)) {
-        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+void http::extension_header_AbsReserve(http::Request& parent, i64 n) {
+    u64 old_max  = parent.extension_header_max;
+    if (n > i64(old_max)) {
+        u64 new_max  = i64_Max(i64_Max(old_max * 2, n), 4);
         void *new_mem = algo_lib::malloc_ReallocMem(parent.extension_header_elems, old_max * sizeof(http::ExtensionHeader), new_max * sizeof(http::ExtensionHeader));
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("http.tary_nomem  field:http.Request.extension_header  comment:'out of memory'");
@@ -1199,9 +1189,9 @@ void http::extension_header_AbsReserve(http::Request& parent, int n) {
 // Copy contents of RHS to PARENT.
 void http::extension_header_Setary(http::Request& parent, http::Request &rhs) {
     extension_header_RemoveAll(parent);
-    int nnew = rhs.extension_header_n;
+    i64 nnew = rhs.extension_header_n;
     extension_header_Reserve(parent, nnew); // reserve space
-    for (int i = 0; i < nnew; i++) { // copy elements over
+    for (i64 i = 0; i < nnew; i++) { // copy elements over
         new (parent.extension_header_elems + i) http::ExtensionHeader(extension_header_qFind(rhs, i));
         parent.extension_header_n = i + 1;
     }
@@ -1217,12 +1207,12 @@ void http::extension_header_Setary(http::Request& parent, const algo::aryptr<htt
 
 // --- http.Request.extension_header.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<http::ExtensionHeader> http::extension_header_AllocNVal(http::Request& parent, int n_elems, const http::ExtensionHeader& val) {
+algo::aryptr<http::ExtensionHeader> http::extension_header_AllocNVal(http::Request& parent, i64 n_elems, const http::ExtensionHeader& val) {
     extension_header_Reserve(parent, n_elems);
-    int old_n  = parent.extension_header_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = parent.extension_header_n;
+    i64 new_n = old_n + n_elems;
     http::ExtensionHeader *elems = parent.extension_header_elems;
-    for (int i = old_n; i < new_n; i++) {
+    for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) http::ExtensionHeader(val);
     }
     parent.extension_header_n = new_n;
@@ -1246,25 +1236,43 @@ bool http::extension_header_ReadStrptrMaybe(http::Request& parent, algo::strptr 
 // --- http.Request.extension_header.Insary
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-void http::extension_header_Insary(http::Request& parent, algo::aryptr<http::ExtensionHeader> rhs, int at) {
+void http::extension_header_Insary(http::Request& parent, algo::aryptr<http::ExtensionHeader> rhs, i64 at) {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.extension_header_elems && rhs.elems < parent.extension_header_elems + parent.extension_header_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("http.tary_alias  field:http.Request.extension_header  comment:'alias error: sub-array is being appended to the whole'");
     }
-    if (UNLIKELY(u64(at) >= u64(parent.extension_header_elems+1))) {
+    if (UNLIKELY(u64(at) >= u64(parent.extension_header_n+1))) {
         FatalErrorExit("http.bad_insary  field:http.Request.extension_header  comment:'index out of range'");
     }
-    int nnew = rhs.n_elems;
-    int nmove = parent.extension_header_n - at;
+    i64 nnew = rhs.n_elems;
+    i64 nmove = parent.extension_header_n - at;
     extension_header_Reserve(parent, nnew); // reserve space
-    for (int i = nmove-1; i >=0 ; --i) {
+    for (i64 i = nmove-1; i >=0 ; --i) {
         new (parent.extension_header_elems + at + nnew + i) http::ExtensionHeader(parent.extension_header_elems[at + i]);
         parent.extension_header_elems[at + i].~ExtensionHeader(); // destroy element
     }
-    for (int i = 0; i < nnew; ++i) {
+    for (i64 i = 0; i < nnew; ++i) {
         new (parent.extension_header_elems + at + i) http::ExtensionHeader(rhs[i]);
     }
     parent.extension_header_n += nnew;
+}
+
+// --- http.Request.extension_header.RemRegion
+// Delete a range of elements
+// Remove region from the middle of the array
+// The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
+// If N is negative, nothing is removed.
+void http::extension_header_RemRegion(http::Request& parent, i64 beg, i64 n) {
+    i64 end = i64_Min(beg+n, parent.extension_header_n);
+    beg = i64_Max(beg,0);
+    n = end-beg;
+    if (n>0) {
+        for (i64 i=beg; i<end; i++) {
+            parent.extension_header_elems[i].~ExtensionHeader();
+        }
+        memmove(parent.extension_header_elems+beg, parent.extension_header_elems+end, sizeof(http::ExtensionHeader) * (parent.extension_header_n-end));
+        parent.extension_header_n -= n;
+    }
 }
 
 // --- http.Request..ReadFieldMaybe
@@ -1735,10 +1743,10 @@ algo::aryptr<http::ExtensionHeader> http::extension_header_Addary(http::Response
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("http.tary_alias  field:http.Response.extension_header  comment:'alias error: sub-array is being appended to the whole'");
     }
-    int nnew = rhs.n_elems;
+    i64 nnew = rhs.n_elems;
     extension_header_Reserve(parent, nnew); // reserve space
-    int at = parent.extension_header_n;
-    for (int i = 0; i < nnew; i++) {
+    i64 at = parent.extension_header_n;
+    for (i64 i = 0; i < nnew; i++) {
         new (parent.extension_header_elems + at + i) http::ExtensionHeader(rhs[i]);
         parent.extension_header_n++;
     }
@@ -1750,8 +1758,8 @@ algo::aryptr<http::ExtensionHeader> http::extension_header_Addary(http::Response
 // The new element is initialized to a default value
 http::ExtensionHeader& http::extension_header_Alloc(http::Response& parent) {
     extension_header_Reserve(parent, 1);
-    int n  = parent.extension_header_n;
-    int at = n;
+    i64 n  = parent.extension_header_n;
+    i64 at = n;
     http::ExtensionHeader *elems = parent.extension_header_elems;
     new (elems + at) http::ExtensionHeader(); // construct new element, default initializer
     parent.extension_header_n = n+1;
@@ -1761,9 +1769,9 @@ http::ExtensionHeader& http::extension_header_Alloc(http::Response& parent) {
 // --- http.Response.extension_header.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-http::ExtensionHeader& http::extension_header_AllocAt(http::Response& parent, int at) {
+http::ExtensionHeader& http::extension_header_AllocAt(http::Response& parent, i64 at) {
     extension_header_Reserve(parent, 1);
-    int n  = parent.extension_header_n;
+    i64 n  = parent.extension_header_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
         FatalErrorExit("http.bad_alloc_at  field:http.Response.extension_header  comment:'index out of range'");
     }
@@ -1776,12 +1784,12 @@ http::ExtensionHeader& http::extension_header_AllocAt(http::Response& parent, in
 
 // --- http.Response.extension_header.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<http::ExtensionHeader> http::extension_header_AllocN(http::Response& parent, int n_elems) {
+algo::aryptr<http::ExtensionHeader> http::extension_header_AllocN(http::Response& parent, i64 n_elems) {
     extension_header_Reserve(parent, n_elems);
-    int old_n  = parent.extension_header_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = parent.extension_header_n;
+    i64 new_n = old_n + n_elems;
     http::ExtensionHeader *elems = parent.extension_header_elems;
-    for (int i = old_n; i < new_n; i++) {
+    for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) http::ExtensionHeader(); // construct new element, default initialize
     }
     parent.extension_header_n = new_n;
@@ -1792,15 +1800,15 @@ algo::aryptr<http::ExtensionHeader> http::extension_header_AllocN(http::Response
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::aryptr<http::ExtensionHeader> http::extension_header_AllocNAt(http::Response& parent, int n_elems, int at) {
+algo::aryptr<http::ExtensionHeader> http::extension_header_AllocNAt(http::Response& parent, i64 n_elems, i64 at) {
     extension_header_Reserve(parent, n_elems);
-    int n  = parent.extension_header_n;
+    i64 n  = parent.extension_header_n;
     if (UNLIKELY(u64(at) > u64(n))) {
         FatalErrorExit("http.bad_alloc_n_at  field:http.Response.extension_header  comment:'index out of range'");
     }
     http::ExtensionHeader *elems = parent.extension_header_elems;
     memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(http::ExtensionHeader));
-    for (int i = 0; i < n_elems; i++) {
+    for (i64 i = 0; i < n_elems; i++) {
         new (elems + at + i) http::ExtensionHeader(); // construct new element, default initialize
     }
     parent.extension_header_n = n+n_elems;
@@ -1809,8 +1817,8 @@ algo::aryptr<http::ExtensionHeader> http::extension_header_AllocNAt(http::Respon
 
 // --- http.Response.extension_header.Remove
 // Remove item by index. If index outside of range, do nothing.
-void http::extension_header_Remove(http::Response& parent, u32 i) {
-    u32 lim = parent.extension_header_n;
+void http::extension_header_Remove(http::Response& parent, u64 i) {
+    u64 lim = parent.extension_header_n;
     http::ExtensionHeader *elems = parent.extension_header_elems;
     if (i < lim) {
         elems[i].~ExtensionHeader(); // destroy element
@@ -1821,12 +1829,11 @@ void http::extension_header_Remove(http::Response& parent, u32 i) {
 
 // --- http.Response.extension_header.RemoveAll
 void http::extension_header_RemoveAll(http::Response& parent) {
-    u32 n = parent.extension_header_n;
-    while (n > 0) {
-        n -= 1;
-        parent.extension_header_elems[n].~ExtensionHeader();
-        parent.extension_header_n = n;
+    u64 n = parent.extension_header_n;
+    for (u64 i=0; i<n; i++) {
+        parent.extension_header_elems[i].~ExtensionHeader();
     }
+    parent.extension_header_n = 0;
 }
 
 // --- http.Response.extension_header.RemoveLast
@@ -1842,10 +1849,10 @@ void http::extension_header_RemoveLast(http::Response& parent) {
 
 // --- http.Response.extension_header.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void http::extension_header_AbsReserve(http::Response& parent, int n) {
-    u32 old_max  = parent.extension_header_max;
-    if (n > i32(old_max)) {
-        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+void http::extension_header_AbsReserve(http::Response& parent, i64 n) {
+    u64 old_max  = parent.extension_header_max;
+    if (n > i64(old_max)) {
+        u64 new_max  = i64_Max(i64_Max(old_max * 2, n), 4);
         void *new_mem = algo_lib::malloc_ReallocMem(parent.extension_header_elems, old_max * sizeof(http::ExtensionHeader), new_max * sizeof(http::ExtensionHeader));
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("http.tary_nomem  field:http.Response.extension_header  comment:'out of memory'");
@@ -1859,9 +1866,9 @@ void http::extension_header_AbsReserve(http::Response& parent, int n) {
 // Copy contents of RHS to PARENT.
 void http::extension_header_Setary(http::Response& parent, http::Response &rhs) {
     extension_header_RemoveAll(parent);
-    int nnew = rhs.extension_header_n;
+    i64 nnew = rhs.extension_header_n;
     extension_header_Reserve(parent, nnew); // reserve space
-    for (int i = 0; i < nnew; i++) { // copy elements over
+    for (i64 i = 0; i < nnew; i++) { // copy elements over
         new (parent.extension_header_elems + i) http::ExtensionHeader(extension_header_qFind(rhs, i));
         parent.extension_header_n = i + 1;
     }
@@ -1877,12 +1884,12 @@ void http::extension_header_Setary(http::Response& parent, const algo::aryptr<ht
 
 // --- http.Response.extension_header.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<http::ExtensionHeader> http::extension_header_AllocNVal(http::Response& parent, int n_elems, const http::ExtensionHeader& val) {
+algo::aryptr<http::ExtensionHeader> http::extension_header_AllocNVal(http::Response& parent, i64 n_elems, const http::ExtensionHeader& val) {
     extension_header_Reserve(parent, n_elems);
-    int old_n  = parent.extension_header_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = parent.extension_header_n;
+    i64 new_n = old_n + n_elems;
     http::ExtensionHeader *elems = parent.extension_header_elems;
-    for (int i = old_n; i < new_n; i++) {
+    for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) http::ExtensionHeader(val);
     }
     parent.extension_header_n = new_n;
@@ -1906,25 +1913,43 @@ bool http::extension_header_ReadStrptrMaybe(http::Response& parent, algo::strptr
 // --- http.Response.extension_header.Insary
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-void http::extension_header_Insary(http::Response& parent, algo::aryptr<http::ExtensionHeader> rhs, int at) {
+void http::extension_header_Insary(http::Response& parent, algo::aryptr<http::ExtensionHeader> rhs, i64 at) {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.extension_header_elems && rhs.elems < parent.extension_header_elems + parent.extension_header_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("http.tary_alias  field:http.Response.extension_header  comment:'alias error: sub-array is being appended to the whole'");
     }
-    if (UNLIKELY(u64(at) >= u64(parent.extension_header_elems+1))) {
+    if (UNLIKELY(u64(at) >= u64(parent.extension_header_n+1))) {
         FatalErrorExit("http.bad_insary  field:http.Response.extension_header  comment:'index out of range'");
     }
-    int nnew = rhs.n_elems;
-    int nmove = parent.extension_header_n - at;
+    i64 nnew = rhs.n_elems;
+    i64 nmove = parent.extension_header_n - at;
     extension_header_Reserve(parent, nnew); // reserve space
-    for (int i = nmove-1; i >=0 ; --i) {
+    for (i64 i = nmove-1; i >=0 ; --i) {
         new (parent.extension_header_elems + at + nnew + i) http::ExtensionHeader(parent.extension_header_elems[at + i]);
         parent.extension_header_elems[at + i].~ExtensionHeader(); // destroy element
     }
-    for (int i = 0; i < nnew; ++i) {
+    for (i64 i = 0; i < nnew; ++i) {
         new (parent.extension_header_elems + at + i) http::ExtensionHeader(rhs[i]);
     }
     parent.extension_header_n += nnew;
+}
+
+// --- http.Response.extension_header.RemRegion
+// Delete a range of elements
+// Remove region from the middle of the array
+// The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
+// If N is negative, nothing is removed.
+void http::extension_header_RemRegion(http::Response& parent, i64 beg, i64 n) {
+    i64 end = i64_Min(beg+n, parent.extension_header_n);
+    beg = i64_Max(beg,0);
+    n = end-beg;
+    if (n>0) {
+        for (i64 i=beg; i<end; i++) {
+            parent.extension_header_elems[i].~ExtensionHeader();
+        }
+        memmove(parent.extension_header_elems+beg, parent.extension_header_elems+end, sizeof(http::ExtensionHeader) * (parent.extension_header_n-end));
+        parent.extension_header_n -= n;
+    }
 }
 
 // --- http.Response..ReadFieldMaybe

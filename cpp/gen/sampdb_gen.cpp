@@ -169,7 +169,7 @@ bool sampdb::FieldId_ReadStrptrMaybe(sampdb::FieldId &parent, algo::strptr in_st
 // --- sampdb.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:sampdb.FieldId.String  printfmt:Raw
-void sampdb::FieldId_Print(sampdb::FieldId& row, algo::cstring& str) {
+void sampdb::FieldId_Print(sampdb::FieldId row, algo::cstring& str) {
     sampdb::value_Print(row, str);
 }
 
@@ -223,27 +223,23 @@ void sampdb::Gitfile_Print(sampdb::Gitfile& row, algo::cstring& str) {
 }
 
 // --- sampdb.Targdep.target.Get
-algo::Smallstr50 sampdb::target_Get(sampdb::Targdep& parent) {
-    algo::Smallstr50 ret(algo::Pathcomp(parent.targdep, ".LL"));
-    return ret;
+algo::strptr sampdb::target_Get(sampdb::Targdep& parent) {
+    return algo::Pathcomp(parent.targdep, ".LL");
 }
 
 // --- sampdb.Targdep.target.Get2
-algo::Smallstr50 sampdb::Targdep_target_Get(algo::strptr arg) {
-    algo::Smallstr50 ret(algo::Pathcomp(arg, ".LL"));
-    return ret;
+algo::strptr sampdb::Targdep_target_Get(algo::strptr arg) {
+    return algo::Pathcomp(arg, ".LL");
 }
 
 // --- sampdb.Targdep.parent.Get
-algo::Smallstr50 sampdb::parent_Get(sampdb::Targdep& parent) {
-    algo::Smallstr50 ret(algo::Pathcomp(parent.targdep, ".LR"));
-    return ret;
+algo::strptr sampdb::parent_Get(sampdb::Targdep& parent) {
+    return algo::Pathcomp(parent.targdep, ".LR");
 }
 
 // --- sampdb.Targdep.parent.Get2
-algo::Smallstr50 sampdb::Targdep_parent_Get(algo::strptr arg) {
-    algo::Smallstr50 ret(algo::Pathcomp(arg, ".LR"));
-    return ret;
+algo::strptr sampdb::Targdep_parent_Get(algo::strptr arg) {
+    return algo::Pathcomp(arg, ".LR");
 }
 
 // --- sampdb.Targdep..Concat_target_parent
@@ -429,27 +425,23 @@ void sampdb::Targrec_Print(sampdb::Targrec& row, algo::cstring& str) {
 }
 
 // --- sampdb.Targsrc.target.Get
-algo::Smallstr50 sampdb::target_Get(sampdb::Targsrc& parent) {
-    algo::Smallstr50 ret(algo::Pathcomp(parent.targsrc, "/LL"));
-    return ret;
+algo::strptr sampdb::target_Get(sampdb::Targsrc& parent) {
+    return algo::Pathcomp(parent.targsrc, "/LL");
 }
 
 // --- sampdb.Targsrc.target.Get2
-algo::Smallstr50 sampdb::Targsrc_target_Get(algo::strptr arg) {
-    algo::Smallstr50 ret(algo::Pathcomp(arg, "/LL"));
-    return ret;
+algo::strptr sampdb::Targsrc_target_Get(algo::strptr arg) {
+    return algo::Pathcomp(arg, "/LL");
 }
 
 // --- sampdb.Targsrc.src.Get
-algo::Smallstr50 sampdb::src_Get(sampdb::Targsrc& parent) {
-    algo::Smallstr50 ret(algo::Pathcomp(parent.targsrc, "/LR"));
-    return ret;
+algo::strptr sampdb::src_Get(sampdb::Targsrc& parent) {
+    return algo::Pathcomp(parent.targsrc, "/LR");
 }
 
 // --- sampdb.Targsrc.src.Get2
-algo::Smallstr50 sampdb::Targsrc_src_Get(algo::strptr arg) {
-    algo::Smallstr50 ret(algo::Pathcomp(arg, "/LR"));
-    return ret;
+algo::strptr sampdb::Targsrc_src_Get(algo::strptr arg) {
+    return algo::Pathcomp(arg, "/LR");
 }
 
 // --- sampdb.Targsrc..Concat_target_src

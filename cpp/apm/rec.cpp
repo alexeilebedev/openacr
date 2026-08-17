@@ -23,16 +23,51 @@
 #include "include/apm.h"
 #include "include/lib_ctype.h"
 
+static float GetRowId(algo::Tuple& tuple) {
+    float ret = 0;
+    algo::Attr* attr = attr_Find(tuple, "acr.rowid");
+    if (attr) {
+        float_ReadStrptrMaybe(ret, attr->value);
+    }
+    return ret;
+}
+
+static tempstr EvalAttr(algo::Tuple& tuple, apm::FField& field) {
+    tempstr ret;
+    algo::Attr* attr = attr_Find(tuple, name_Get(field.c_substr ? *field.c_substr->p_srcfield : field));
+    if (attr) {
+        ret << (field.c_substr ? Pathcomp(attr->value, field.c_substr->expr.value) : attr->value);
+    }
+    return ret;
+}
+
+static void SetSortkey(apm::FRec& rec) {
+    rec.sortkey.ctype = rec.p_ssimfile->p_ctype->ctype;
+    rec.sortkey.num = 0;
+    if (rec.p_ssimfile->c_ssimsort) {
+        apm::FField* sortfld = apm::ind_field_Find(rec.p_ssimfile->c_ssimsort->sortfld);
+        if (sortfld) {
+            rec.sortkey.str = EvalAttr(rec.tuple, *sortfld);
+        }
+        if (sortfld && sortfld->p_arg->c_bltin) { // numeric check
+            double_ReadStrptrMaybe(rec.sortkey.num, rec.sortkey.str);
+            ch_RemoveAll(rec.sortkey.str);
+        }
+    }
+    rec.sortkey.rowid = GetRowId(rec.tuple);
+}
+
 // Load tuples from FILENAME into REC table
 static void LoadRecsFile(algo::strptr filename) {
-    ind_beg(algo::FileLine_curs,line,filename) {
-        apm::FRec &rec=apm::rec_Alloc();
-        bool good=false;
-        if (Tuple_ReadStrptrMaybe(rec.tuple,line) && attrs_N(rec.tuple)>0) {
-            rec.p_ssimfile=apm::ind_ssimfile_Find(rec.tuple.head.value);
+    ind_beg(algo::FileLine_curs, line, filename) {
+        apm::FRec& rec = apm::rec_Alloc();
+        bool good = false;
+        if (Tuple_ReadStrptrMaybe(rec.tuple, line) && attrs_N(rec.tuple) > 0) {
+            rec.p_ssimfile = apm::ind_ssimfile_Find(rec.tuple.head.value);
             if (rec.p_ssimfile) {
-                rec.rec=tempstr()<<rec.p_ssimfile->ssimfile<<":"<<attrs_Find(rec.tuple,0)->value;
-                good=rec_XrefMaybe(rec);
+                rec.rec = tempstr() << rec.p_ssimfile->ssimfile << ":" << attrs_Find(rec.tuple, 0)->value;
+                SetSortkey(rec);
+                good = rec_XrefMaybe(rec);
             }
         }
         if (!good) {
@@ -62,7 +97,7 @@ static void ChooseRec(apm::FSsimfile &ssimfile, algo_lib::Regx &value_regx) {
 
 // -----------------------------------------------------------------------------
 
-// Evaluate regx in pkgkey, compute transitive closure according to pkgkey.l, pkgkey.ndown
+// Evaluate regx in pkgkey, compute transitive closure according to pkgkey.up, pkgkey.down, pkgkey.exclude
 // and add any selected records to global zd_selrec table
 static void SelectPkgkeyRecs(apm::FPkgkey &pkgkey) {
     tempstr key(key_Get(pkgkey));
@@ -81,23 +116,78 @@ static void SelectPkgkeyRecs(apm::FPkgkey &pkgkey) {
             ChooseRec(ssimfile,value_regx);
         }ind_end;
     }
-    // add referencing records in NDOWN steps
-    // the zd_chooserec list grows as we scan it, each new record is added with level=parent.level+1
-    // When level exceeds pkgkey.ndown, we stop adding, and eventually reach the end of the list
-    ind_beg(apm::_db_zd_chooserec_curs,rec,apm::_db) {
-        ind_beg(apm::rec_c_child_curs,childrec,rec) {
-            if (!zd_chooserec_InLlistQ(childrec)) {
-                prcat(verbose2,pkgkey.pkgkey<<": adding child "<<childrec.rec<<", level "<<rec.level+1);
-                zd_chooserec_Insert(childrec);
-                childrec.level=rec.level+1;
-            }
-        }ind_end;
-    }ind_end;
-    // reset level, and add choosen records to zd_selrec
+
+    // explicit pkgkey selection
     ind_beg(apm::_db_zd_chooserec_curs,rec,apm::_db) {
         zd_selrec_Insert(rec);
-        rec.level=0;
     }ind_end;
+    pkgkey.n_explicit = apm::zd_selrec_N();
+
+    apm::zd_chooserec_RemoveAll();
+
+    // closure down
+    if (pkgkey.down) {
+        // restore original zd_chooserec list
+        apm::FRec* r = apm::zd_selrec_First();
+        for(u32 i = 0; i < pkgkey.n_explicit; ++i) {
+            apm::zd_chooserec_Insert(*r);
+            r = apm::zd_selrec_Next(*r);
+        }
+
+        // add referencing records in steps
+        // the zd_chooserec list grows as we scan it, each new record is added with level=parent.level+1
+        ind_beg(apm::_db_zd_chooserec_curs, rec, apm::_db) {
+            ind_beg(apm::rec_c_child_curs, childrec, rec) {
+                if (!zd_chooserec_InLlistQ(childrec)) {
+                    prcat(verbose2, pkgkey.pkgkey << ": adding child " << childrec.rec << ", level " << rec.level + 1);
+                    zd_chooserec_Insert(childrec);
+                    childrec.level = rec.level + 1;
+                }
+            }ind_end;
+        }ind_end;
+
+        // reset level, and add choosen records to zd_selrec
+        ind_beg(apm::_db_zd_chooserec_curs, rec, apm::_db) {
+            zd_selrec_Insert(rec);
+            rec.level = 0;
+        }ind_end;
+        // clear zd_chooserec
+        apm::zd_chooserec_RemoveAll();
+
+        pkgkey.n_down = apm::zd_selrec_N() - pkgkey.n_explicit;
+    }
+
+    // closure up
+    if (pkgkey.up) {
+        // restore original zd_chooserec list
+        apm::FRec* r = apm::zd_selrec_First();
+        for(u32 i = 0; i < pkgkey.n_explicit; ++i) {
+            apm::zd_chooserec_Insert(*r);
+            r = apm::zd_selrec_Next(*r);
+        }
+
+        // add referenced records in steps
+        ind_beg(apm::_db_zd_chooserec_curs, rec, apm::_db) {
+            ind_beg(apm::rec_c_parent_curs, parentrec, rec) {
+                if (!zd_chooserec_InLlistQ(parentrec)) {
+                    prcat(verbose2, pkgkey.pkgkey << ": adding parent " << parentrec.rec << ", level " << rec.level + 1);
+                    zd_chooserec_Insert(parentrec);
+                    parentrec.level = rec.level + 1;
+                }
+            }ind_end;
+        }ind_end;
+
+        // reset level, and add choosen records to zd_selrec
+        ind_beg(apm::_db_zd_chooserec_curs, rec, apm::_db) {
+            zd_selrec_Insert(rec);
+            rec.level = 0;
+        }ind_end;
+        // clear zd_chooserec
+        apm::zd_chooserec_RemoveAll();
+
+        pkgkey.n_up = apm::zd_selrec_N() - pkgkey.n_explicit - pkgkey.n_down;
+    }
+
     // clear zd_chooserec
     apm::zd_chooserec_RemoveAll();
 }
@@ -106,7 +196,7 @@ static void SelectPkgkeyRecs(apm::FPkgkey &pkgkey) {
 
 // return TRUE if the field is a valid edge for transitive closure.
 // The field is chosen if it's the pkey, or a leftmost subtring of pkey
-bool apm::LeftCheckQ(apm::FField &field) {
+static bool LeftCheckQ(apm::FField &field) {
     apm::FCtype &ctype=*field.p_ctype;
     bool ret=field.reftype == dmmeta_Reftype_reftype_Pkey;
     apm::FField *pkey =c_field_Find(ctype,0);
@@ -142,7 +232,13 @@ void apm::LoadRecs() {
         algo_lib::FTempfile tempfile;
         TempfileInitX(tempfile, "apm.recs");
         acr.fstdout << ">"<<tempfile.filename;
-        acr_Exec(acr);
+        // The file is read back on the next line, and the redirect truncated it
+        // before the child ran, so a child that fails hands the run an empty
+        // database rather than an error. Every action apm can take is computed
+        // from these records, and an action computed from none of them looks
+        // like an action on a package that holds nothing: the checking variant
+        // stops the run instead.
+        acr_ExecX(acr);
         LoadRecsFile(tempfile.filename);
     } else {
         LoadRecsFile(_db.cmdline.data_in);
@@ -150,14 +246,17 @@ void apm::LoadRecs() {
     verblog("loaded "<<ind_rec_N()<<" records");
     // build graph of all records
     // compute c_child, c_leftchild
-    ind_beg(_db_zd_rec_curs,rec,_db) {
-        ind_beg(ctype_c_field_curs,field,*rec.p_ssimfile->p_ctype) if (LeftCheckQ(field)) {
-            algo::Attr *attr=attr_Find(rec.tuple,name_Get(field.c_substr ? *field.c_substr->p_srcfield:field));
+    ind_beg(_db_zd_rec_curs, rec, _db) {
+        ind_beg(ctype_c_field_curs, field, *rec.p_ssimfile->p_ctype) if (field.reftype == dmmeta_Reftype_reftype_Pkey) {
+            algo::Attr *attr = attr_Find(rec.tuple,name_Get(field.c_substr ? *field.c_substr->p_srcfield:field));
             if (attr && field.p_arg->c_ssimfile) {
                 algo::strptr value = field.c_substr ? Pathcomp(attr->value,field.c_substr->expr.value) : attr->value;
                 tempstr parent_key=tempstr()<<field.p_arg->c_ssimfile->ssimfile<<":"<<value;
                 if (apm::FRec *parent = apm::ind_rec_Find(parent_key)) {
-                    c_child_Insert(*parent,rec);
+                    if (LeftCheckQ(field)) {
+                        c_child_Insert(*parent, rec);
+                    }
+                    c_parent_Insert(rec, *parent);
                 }
             }
         }ind_end;
@@ -184,34 +283,42 @@ void apm::LoadRecs() {
     // Evaluate each package's pkgkeys, and create lists
     // package.zd_pkgrec
     // rec.zd_rec_pkgrec
-    // Packages are scanned in topological order, so
-    // we can say the last package to reference a record is the package
-    // that owns it.
-    ind_beg(_db_zd_topo_package_curs,package,_db) {
-        ind_beg(package_zd_pkgkey_curs,pkgkey,package) {
+    ind_beg(_db_zd_topo_package_curs, package, _db) {
+        // included records
+        ind_beg(package_zd_pkgkey_curs, pkgkey, package) if (!pkgkey.exclude) {
             zd_selrec_RemoveAll();
             SelectPkgkeyRecs(pkgkey);
-            ind_beg(_db_zd_selrec_curs,rec,_db) {
-                apm::FPkgrec &pkgrec=pkgrec_Alloc();
-                pkgrec.p_package=&package;
-                pkgrec.p_rec=&rec;
-                pkgrec.p_pkgkey=&pkgkey;
-                vrfy_(pkgrec_XrefMaybe(pkgrec));
+            ind_beg(_db_zd_selrec_curs, rec, _db) {
+                apm::FPkgrec& pkgrec = pkgrec_Alloc();
+                pkgrec.p_package    = &package;
+                pkgrec.p_rec        = &rec;
+                pkgrec.p_pkgkey     = &pkgkey;
+                vrfy(pkgrec_XrefMaybe(pkgrec), algo_lib::_db.errtext);
             }ind_end;
+        }ind_end;
+
+        // excluded records
+        ind_beg(package_zd_pkgkey_curs, pkgkey, package) if (pkgkey.exclude) {
+            zd_selrec_RemoveAll();
+            SelectPkgkeyRecs(pkgkey);
+            apm::FPkgrec* cur = apm::zd_pkgrec_First(package);
+            while (cur) {
+                apm::FPkgrec* next = apm::package_zd_pkgrec_Next(*cur);
+                if (zd_selrec_InLlistQ(*cur->p_rec)) {
+                    pkgrec_Delete(*cur);
+                }
+                cur = next;
+            }
         }ind_end;
     }ind_end;
 }
 
 // -----------------------------------------------------------------------------
 
-// Select records belonging to package PACKAGE by adding them to zd_selrec
-// These are all the records that the package references via zd_pkgrec,
-// minus any records claimed by packages that depend on PACKAGE
+// Select records belonging to package PACKAGE by adding them to zd_selrec.
+// These are all the records that the package references via zd_pkgrec.
 void apm::SelectPkgRecs(apm::FPackage &package) {
-    ind_beg(package_zd_pkgrec_curs,pkgrec,package) {
-        // only select records for which this is the last package to claim it
-        if (&pkgrec == zd_rec_pkgrec_Last(*pkgrec.p_rec)) {
-            zd_selrec_Insert(*pkgrec.p_rec);
-        }
+    ind_beg(package_zd_pkgrec_curs, pkgrec, package) {
+        zd_selrec_Insert(*pkgrec.p_rec);
     }ind_end;
 }

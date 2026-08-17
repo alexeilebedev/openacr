@@ -153,6 +153,8 @@ void gcli::ArgsToTuple() {
             arg=gcli::_db.cmdline.needs_work;
         } else if (gact.gact==gclidb_Gact_gact_stop){
             arg=gcli::_db.cmdline.stop;
+        } else if (gact.gact==gclidb_Gact_gact_retry){
+            arg=gcli::_db.cmdline.retry;
         } else {
             vrfy(0,tempstr()
                  <<Keyval("gact",gact.gact)

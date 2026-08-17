@@ -1,22 +1,20 @@
 ## js - Reserved for JavaScript builtin types
 
 
+### Table Of Contents
+<a href="#table-of-contents"></a>
+<!-- abt_md.toc_beg -->
+<!-- abt_md.toc_end -->
+
 ### Ctypes
 <a href="#ctypes"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Ctypes -->
 Other ctypes in this namespace which don't have own readme files
 
 #### js.AggregateError - Multiple error instances wrapped into one object
 <a href="#js-aggregateerror"></a>
 
-#### js.Array - Array: property name is an array index (+0..2^32-1)
-<a href="#js-array"></a>
-
 #### js.ArrayBuffer - Generic raw binary data buffer
 <a href="#js-arraybuffer"></a>
-
-#### js.BigInt - Arbitrary-precision integer
-<a href="#js-bigint"></a>
 
 #### js.BigInt64Array - TypedArray: 64-bit two's complement signed integer
 <a href="#js-bigint64array"></a>
@@ -24,13 +22,10 @@ Other ctypes in this namespace which don't have own readme files
 #### js.BigUint64Array - TypedArray: 64-bit unsigned integer
 <a href="#js-biguint64array"></a>
 
-#### js.Boolean - Boolean value - `true` and `false`
-<a href="#js-boolean"></a>
-
 #### js.DataView - Reading and writing multiple number types in a binary ArrayBuffer
 <a href="#js-dataview"></a>
 
-#### js.Date - Number - UTC time in milliseconds since start of 1-Jan-1970
+#### js.Date
 <a href="#js-date"></a>
 
 #### js.Error - Thrown when runtime errors occurs
@@ -57,12 +52,6 @@ Other ctypes in this namespace which don't have own readme files
 #### js.Map - Map: collection of key/value pairs
 <a href="#js-map"></a>
 
-#### js.Null - Intentional absence of any value, sole value `null`
-<a href="#js-null"></a>
-
-#### js.Number - IEEE 754-2019 double-precision 64-bit binary
-<a href="#js-number"></a>
-
 #### js.Object - logically a collection of properties
 <a href="#js-object"></a>
 
@@ -80,9 +69,6 @@ Other ctypes in this namespace which don't have own readme files
 
 #### js.SharedArrayBuffer - shared raw binary data buffer
 <a href="#js-sharedarraybuffer"></a>
-
-#### js.String - Zero or more 16-bit unsigned integer values
-<a href="#js-string"></a>
 
 #### js.Symbol - Unique, non-String Object property key
 <a href="#js-symbol"></a>
@@ -111,14 +97,8 @@ Other ctypes in this namespace which don't have own readme files
 #### js.Uint8ClampedArray - TypedArray: 8-bit unsigned integer (clamped conversion)
 <a href="#js-uint8clampedarray"></a>
 
-#### js.Undefined - A variable has not been assigned a value, sole value `undefined`
-<a href="#js-undefined"></a>
-
 #### js.WeakMap - Weak map
 <a href="#js-weakmap"></a>
 
 #### js.WeakSet - Weak set
 <a href="#js-weakset"></a>
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Ctypes -->
-

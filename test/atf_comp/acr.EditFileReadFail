@@ -1,0 +1,6 @@
+# start bash cmd:"bash -c 'cd $tempdir && mkdir temp && EDITOR=\"touch editor_ran\" $$OLDPWD/$bindir/acr -in:missing -schema:$$OLDPWD/data ns:% -e -print:N; rc=$$?; test ! -f editor_ran && echo editor_not_launched; exit $$rc'"
+# eof bash
+bash -> acr.file_read  file:missing  err:"No such file or directory"  comment:"input directory or file could not be read"
+bash -> report.acr  n_select:0  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0  n_badline:0
+bash -> editor_not_launched
+# exit bash code:1

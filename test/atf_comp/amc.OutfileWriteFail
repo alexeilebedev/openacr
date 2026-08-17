@@ -1,0 +1,10 @@
+# start bash cmd:"bash -c 'cd $tempdir && $$OLDPWD/$bindir/amc -in_dir:$$OLDPWD/test/amc/print_global_tuple.ssim -out_dir:out -report:N'"
+# eof bash
+bash -> amc.outfile_write  file:out/include/gen/_gen.h  err:"No such file or directory"  comment:"output file could not be written"
+bash -> amc.outfile_write  file:out/include/gen/_gen.inl.h  err:"No such file or directory"  comment:"output file could not be written"
+bash -> amc.outfile_write  file:out/cpp/gen/_gen.cpp  err:"No such file or directory"  comment:"output file could not be written"
+bash -> amc.outfile_write  file:out/include/gen/algo_lib_gen.h  err:"No such file or directory"  comment:"output file could not be written"
+bash -> amc.outfile_write  file:out/include/gen/algo_lib_gen.inl.h  err:"No such file or directory"  comment:"output file could not be written"
+bash -> amc.outfile_write  file:out/cpp/gen/algo_lib_gen.cpp  err:"No such file or directory"  comment:"output file could not be written"
+bash -> amc.no_output  comment:"no files were modified"
+# exit bash code:6

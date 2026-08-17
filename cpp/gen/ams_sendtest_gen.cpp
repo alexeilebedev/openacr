@@ -25,8 +25,6 @@
 #include "include/algo.h"  // hard-coded include
 #include "include/gen/ams_sendtest_gen.h"
 #include "include/gen/ams_sendtest_gen.inl.h"
-#include "include/gen/algo_lib_gen.h"
-#include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/algo_gen.h"
 #include "include/gen/algo_gen.inl.h"
 #include "include/gen/command_gen.h"
@@ -35,6 +33,10 @@
 #include "include/gen/ams_gen.inl.h"
 #include "include/gen/lib_ams_gen.h"
 #include "include/gen/lib_ams_gen.inl.h"
+#include "include/gen/report_gen.h"
+#include "include/gen/report_gen.inl.h"
+#include "include/gen/algo_lib_gen.h"
+#include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/lib_json_gen.h"
 #include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/lib_prot_gen.h"
@@ -48,34 +50,6 @@ algo_lib::FDb       algo_lib::_db;        // dependency found via dev.targdep
 lib_ams::FDb        lib_ams::_db;         // dependency found via dev.targdep
 ams_sendtest::FDb   ams_sendtest::_db;    // dependency found via dev.targdep
 
-namespace ams_sendtest {
-const char *ams_sendtest_help =
-"ams_sendtest: Algo Messaging System test tool\n"
-"Usage: ams_sendtest [options]\n"
-"    OPTION         TYPE    DFLT    COMMENT\n"
-"    -in            string  \"data\"  Input directory or filename, - for stdin\n"
-"    -id            int     0       Process index (0=parent)\n"
-"    -file_prefix   string  \"\"      Use file_prefix\n"
-"    -nchild        int     1       Number of stream readers\n"
-"    -blocking                      Use blocking send mode\n"
-"    -nmsg          int     1000    Number of messages to send/receive\n"
-"    -trace         regx    \"\"      Regx expression specifying what to trace\n"
-"    -timeout       int     30      Time limit for the send\n"
-"    -recvdelay_ns  int     0       Pause nanoseconds between messages\n"
-"    -senddelay_ns  int     0       Pause nanoseconds between messages\n"
-"    -msgsize_min   int     64      Minimum message length\n"
-"    -msgsize_max   int     1024    Maximum message length\n"
-"    -bufsize       int     32768   Shared memory buffer size\n"
-"    -recvdelay     int     0       Pause nanoseconds between messages\n"
-"    -verbose       flag            Verbosity level (0..255); alias -v; cumulative\n"
-"    -debug         flag            Debug level (0..255); alias -d; cumulative\n"
-"    -help                          Print help and exit; alias -h\n"
-"    -version                       Print version and exit\n"
-"    -signature                     Show signatures and exit; alias -sig\n"
-;
-
-
-} // namespace ams_sendtest
 namespace ams_sendtest { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
     // func:ams_sendtest.FDb._db.InitReflection
@@ -90,38 +64,6 @@ namespace ams_sendtest { // gen:ns_print_proto
     inline static void   SizeCheck();
 } // gen:ns_print_proto
 
-// --- ams_sendtest.AmsSendTest..Print
-// print string representation of ROW to string STR
-// cfmt:ams_sendtest.AmsSendTest.String  printfmt:Tuple
-void ams_sendtest::AmsSendTest_Print(ams_sendtest::AmsSendTest& row, algo::cstring& str) {
-    algo::tempstr temp;
-    str << "ams_sendtest.AmsSendTest";
-
-    u64_Print(row.n_msg_send, temp);
-    PrintAttrSpaceReset(str,"n_msg_send", temp);
-
-    u64_Print(row.off_send, temp);
-    PrintAttrSpaceReset(str,"off_send", temp);
-
-    u64_Print(row.off_recv, temp);
-    PrintAttrSpaceReset(str,"off_recv", temp);
-
-    u64_Print(row.n_msg_recv, temp);
-    PrintAttrSpaceReset(str,"n_msg_recv", temp);
-
-    u64_Print(row.n_write_wait, temp);
-    PrintAttrSpaceReset(str,"n_write_wait", temp);
-
-    u64_Print(row.n_msg_limit, temp);
-    PrintAttrSpaceReset(str,"n_msg_limit", temp);
-
-    algo_lib::FTimehook_Print(row.h_write, temp);
-    PrintAttrSpaceReset(str,"h_write", temp);
-
-    u64_Print(row.sum_recv_latency, temp);
-    PrintAttrSpaceReset(str,"sum_recv_latency", temp);
-}
-
 // --- ams_sendtest.FChild.child.Start
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
@@ -134,15 +76,50 @@ int ams_sendtest::child_Start(ams_sendtest::FChild& child) {
         tempstr cmdline(child_ToCmdline(child));
         child.child_pid = dospawn(Zeroterm(child.child_path),Zeroterm(cmdline),child.child_timeout,child.child_fstdin,child.child_fstdout,child.child_fstderr);
 #else
+        int in_pipe[2]  = {-1,-1}; // [0]=child stdin (read), [1]=child.child_to_stdin (write)
+        int out_pipe[2] = {-1,-1}; // [0]=child.child_from_stdout (read), [1]=child stdout (write)
+        int err_pipe[2] = {-1,-1}; // [0]=child.child_from_stderr (read), [1]=child stderr (write)
+        if (child.child_fstdin  == "|" && pipe(in_pipe)  == 0) { child.child_to_stdin.value    = in_pipe[1];  }
+        if (child.child_fstdout == "|" && pipe(out_pipe) == 0) { child.child_from_stdout.value = out_pipe[0]; }
+        if (child.child_fstderr == "|" && pipe(err_pipe) == 0) { child.child_from_stderr.value = err_pipe[0]; }
         child.child_pid = fork();
         if (child.child_pid == 0) { // child
             algo_lib::DieWithParent();
+            // inherited signal handlers stay live until exec, so a kill aimed at
+            // the child in the fork-to-exec window would run the parent's handler
+            // in the child and be consumed instead of killing; restore the default
+            // dispositions so the signal does what the sender means
+            (void)signal(SIGTERM, SIG_DFL);
+            (void)signal(SIGINT , SIG_DFL);
+            (void)signal(SIGHUP , SIG_DFL);
+            (void)signal(SIGQUIT, SIG_DFL);
+            (void)signal(SIGALRM, SIG_DFL);
+            if (child.child_pgroup) {
+                // own process group: a kill by the child's pid alone would
+                // orphan its descendants alive; the group is one killable unit
+                (void)setpgid(0, 0);
+            }
             if (child.child_timeout > 0) {
                 alarm(child.child_timeout);
             }
-            if (retval==0) retval=algo_lib::ApplyRedirect(child.child_fstdin , 0);
-            if (retval==0) retval=algo_lib::ApplyRedirect(child.child_fstdout, 1);
-            if (retval==0) retval=algo_lib::ApplyRedirect(child.child_fstderr, 2);
+            if (child.child_memlimitmb > 0) {
+                // memory ceiling: soft and hard, so a child that drops
+                // privileges cannot raise it; the child sees allocation
+                // failure at the limit instead of inviting the OOM killer
+                struct rlimit rlim;
+                rlim.rlim_cur = rlim_t(child.child_memlimitmb) * 1000000;
+                rlim.rlim_max = rlim.rlim_cur;
+                (void)setrlimit(RLIMIT_AS, &rlim);
+            }
+            if (retval==0) retval=algo_lib::ApplyRedirect(child.child_fstdin , 0, in_pipe[0]);
+            if (retval==0) retval=algo_lib::ApplyRedirect(child.child_fstdout, 1, out_pipe[1]);
+            if (retval==0) retval=algo_lib::ApplyRedirect(child.child_fstderr, 2, err_pipe[1]);
+            if (in_pipe[0]  >= 0) (void)close(in_pipe[0]);
+            if (in_pipe[1]  >= 0) (void)close(in_pipe[1]);
+            if (out_pipe[0] >= 0) (void)close(out_pipe[0]);
+            if (out_pipe[1] >= 0) (void)close(out_pipe[1]);
+            if (err_pipe[0] >= 0) (void)close(err_pipe[0]);
+            if (err_pipe[1] >= 0) (void)close(err_pipe[1]);
             if (retval==0) retval= child_Execv(child);
             if (retval != 0) { // if start fails, print error
                 int err=errno;
@@ -154,31 +131,28 @@ int ams_sendtest::child_Start(ams_sendtest::FChild& child) {
             _exit(127); // if failed to start, exit anyway
         } else if (child.child_pid == -1) {
             retval = errno; // failed to fork
+        } else if (child.child_pgroup) {
+            // mirror the child's setpgid: the group must exist the moment fork
+            // returns, or a group kill racing the child's first quantum finds no
+            // group, loses the signal, and the unkilled child boots into whatever
+            // the killer already tore down.  EACCES -- the child exec'd first, its
+            // own setpgid won -- is the benign side of the race.
+            (void)setpgid(child.child_pid, child.child_pid);
         }
+        if (in_pipe[0]  >= 0) (void)close(in_pipe[0]);  // parent keeps write end (to_stdin)
+        if (out_pipe[1] >= 0) (void)close(out_pipe[1]); // parent keeps read end (from_stdout)
+        if (err_pipe[1] >= 0) (void)close(err_pipe[1]); // parent keeps read end (from_stderr)
 #endif
     }
     child.child_status = child.child_pid > 0 ? 0 : -1; // if didn't start, set error status
     return retval;
 }
 
-// --- ams_sendtest.FChild.child.StartRead
-// Start subprocess & Read output
-algo::Fildes ams_sendtest::child_StartRead(ams_sendtest::FChild& child, algo_lib::FFildes &read) {
-    int pipefd[2];
-    int rc=pipe(pipefd);
-    (void)rc;
-    read.fd.value = pipefd[0];
-    child.child_fstdout  << ">&" << pipefd[1];
-    child_Start(child);
-    (void)close(pipefd[1]);
-    return read.fd;
-}
-
 // --- ams_sendtest.FChild.child.Kill
 // Kill subprocess and wait
 void ams_sendtest::child_Kill(ams_sendtest::FChild& child) {
     if (child.child_pid > 0) {
-        kill(child.child_pid,9);
+        kill(child.child_pgroup ? -child.child_pid : child.child_pid,9); // pgroup child dies as a whole group
         child_Wait(child);
     }
 }
@@ -186,6 +160,7 @@ void ams_sendtest::child_Kill(ams_sendtest::FChild& child) {
 // --- ams_sendtest.FChild.child.Wait
 // Wait for subprocess to return
 void ams_sendtest::child_Wait(ams_sendtest::FChild& child) {
+    algo_lib::Close(child.child_to_stdin);
     if (child.child_pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
@@ -199,11 +174,13 @@ void ams_sendtest::child_Wait(ams_sendtest::FChild& child) {
             child.child_pid = 0;
         }
     }
+    algo_lib::Close(child.child_from_stdout);
+    algo_lib::Close(child.child_from_stderr);
 }
 
 // --- ams_sendtest.FChild.child.Exec
 // Start + Wait
-// Execute subprocess and return exit code
+// Execute subprocess and return its wait() status; decode with algo::WaitStatusToExitCode
 int ams_sendtest::child_Exec(ams_sendtest::FChild& child) {
     child_Start(child);
     child_Wait(child);
@@ -242,13 +219,13 @@ algo::tempstr ams_sendtest::child_ToCmdline(ams_sendtest::FChild& child) {
     algo::tempstr retval;
     retval << child.child_path << " ";
     command::ams_sendtest_PrintArgv(child.child_cmd,retval);
-    if (ch_N(child.child_fstdin)) {
+    if (algo_lib::RedirectFileQ(child.child_fstdin)) {
         retval << " " << child.child_fstdin;
     }
-    if (ch_N(child.child_fstdout)) {
+    if (algo_lib::RedirectFileQ(child.child_fstdout)) {
         retval << " " << child.child_fstdout;
     }
-    if (ch_N(child.child_fstderr)) {
+    if (algo_lib::RedirectFileQ(child.child_fstderr)) {
         retval << " 2" << child.child_fstderr;
     }
     return retval;
@@ -290,7 +267,7 @@ void ams_sendtest::child_ToArgv(ams_sendtest::FChild& child, algo::StringAry& ar
         bool_Print(child.child_cmd.blocking, *arg);
     }
 
-    if (child.child_cmd.nmsg != 1000) {
+    if (child.child_cmd.nmsg != 100000) {
         cstring *arg = &ary_Alloc(args);
         *arg << "-nmsg:";
         i32_Print(child.child_cmd.nmsg, *arg);
@@ -326,13 +303,13 @@ void ams_sendtest::child_ToArgv(ams_sendtest::FChild& child, algo::StringAry& ar
         i32_Print(child.child_cmd.msgsize_min, *arg);
     }
 
-    if (child.child_cmd.msgsize_max != 1024) {
+    if (child.child_cmd.msgsize_max != 256) {
         cstring *arg = &ary_Alloc(args);
         *arg << "-msgsize_max:";
         i32_Print(child.child_cmd.msgsize_max, *arg);
     }
 
-    if (child.child_cmd.bufsize != 32768) {
+    if (child.child_cmd.bufsize != 655360) {
         cstring *arg = &ary_Alloc(args);
         *arg << "-bufsize:";
         i32_Print(child.child_cmd.bufsize, *arg);
@@ -343,8 +320,35 @@ void ams_sendtest::child_ToArgv(ams_sendtest::FChild& child, algo::StringAry& ar
         *arg << "-recvdelay:";
         i64_Print(child.child_cmd.recvdelay, *arg);
     }
+
+    if (child.child_cmd.signaled != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-signaled:";
+        bool_Print(child.child_cmd.signaled, *arg);
+    }
+
+    if (child.child_cmd.board != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-board:";
+        bool_Print(child.child_cmd.board, *arg);
+    }
+
+    if (child.child_cmd.board_pin != 4) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-board_pin:";
+        i32_Print(child.child_cmd.board_pin, *arg);
+    }
+
+    if (child.child_cmd.uc != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-uc:";
+        bool_Print(child.child_cmd.uc, *arg);
+    }
     for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
         ary_Alloc(args) << "-verbose";
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.debug; ++i) {
+        ary_Alloc(args) << "-debug";
     }
 }
 
@@ -354,7 +358,10 @@ void ams_sendtest::FChild_Init(ams_sendtest::FChild& child) {
     child.child_path = algo::strptr("bin/ams_sendtest");
     child.child_pid = pid_t(0);
     child.child_timeout = i32(0);
+    child.child_memlimitmb = u32(0);
     child.child_status = i32(0);
+    child.child_pgroup = bool(false);
+    child.p_shm = NULL;
 }
 
 // --- ams_sendtest.FChild..Uninit
@@ -363,6 +370,38 @@ void ams_sendtest::FChild_Uninit(ams_sendtest::FChild& child) {
 
     // ams_sendtest.FChild.child.Uninit (Exec)  //
     child_Kill(child); // kill child, ensure forward progress
+}
+
+// --- ams_sendtest.FTest..Print
+// print string representation of ROW to string STR
+// cfmt:ams_sendtest.FTest.String  printfmt:Tuple
+void ams_sendtest::FTest_Print(ams_sendtest::FTest& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "ams_sendtest.FTest";
+
+    u64_Print(row.n_msg_send, temp);
+    PrintAttrSpaceReset(str,"n_msg_send", temp);
+
+    u64_Print(row.off_send, temp);
+    PrintAttrSpaceReset(str,"off_send", temp);
+
+    u64_Print(row.off_recv, temp);
+    PrintAttrSpaceReset(str,"off_recv", temp);
+
+    u64_Print(row.n_msg_recv, temp);
+    PrintAttrSpaceReset(str,"n_msg_recv", temp);
+
+    u64_Print(row.n_write_wait, temp);
+    PrintAttrSpaceReset(str,"n_write_wait", temp);
+
+    u64_Print(row.n_msg_limit, temp);
+    PrintAttrSpaceReset(str,"n_msg_limit", temp);
+
+    algo_lib::FTimehook_Print(row.h_write, temp);
+    PrintAttrSpaceReset(str,"h_write", temp);
+
+    u64_Print(row.sum_recv_latency, temp);
+    PrintAttrSpaceReset(str,"sum_recv_latency", temp);
 }
 
 // --- ams_sendtest.trace..Print
@@ -375,99 +414,16 @@ void ams_sendtest::trace_Print(ams_sendtest::trace& row, algo::cstring& str) {
 }
 
 // --- ams_sendtest.FDb._db.ReadArgv
-// Read argc,argv directly into the fields of the command line(s)
-// The following fields are updated:
-//     ams_sendtest.FDb.cmdline
-//     algo_lib.FDb.cmdline
+// Read argc,argv into the fields of ams_sendtest.FDb.cmdline (and any base command line)
+// via ams_sendtest_ReadArgv; then apply -help/-version and load floadtuples input.
 void ams_sendtest::ReadArgv() {
     command::ams_sendtest &cmd = ams_sendtest::_db.cmdline;
-    algo_lib::Cmdline &base = algo_lib::_db.cmdline;
-    int needarg=-1;// unknown
-    int argidx=1;// skip process name
-    tempstr err;
-    algo::strptr attrname;
-    bool isanon=false; // true if attrname is anonfld (positional)
-    algo_lib::FieldId baseattrid;
-    command::FieldId attrid;
-    bool endopt=false;
-    int whichns=0;// which namespace does the current attribute belong to
-    for (; argidx < algo_lib::_db.argc; argidx++) {
-        algo::strptr arg = algo_lib::_db.argv[argidx];
-        algo::strptr attrval;
-        algo::strptr dfltval;
-        bool haveval=false;
-        bool dash=elems_N(arg)>1 && arg.elems[0]=='-'; // a single dash is not an option
-        // this attribute is a value
-        if (endopt || needarg>0 || !dash) {
-            attrval=arg;
-            haveval=true;
-        } else {
-            // this attribute is a field name (with - or --)
-            // or a -- by itself
-            bool dashdash = elems_N(arg) >= 2 && arg.elems[1]=='-';
-            int skip = int(dash) + dashdash;
-            attrname=ch_RestFrom(arg,skip);
-            if (skip==2 && elems_N(arg)==2) {
-                endopt=true;
-                continue;// nothing else to do here
-            }
-            // parse "-a:B" arg into attrname,attrvalue
-            algo::i32_Range colon = TFind(attrname,':');
-            if (colon.beg < colon.end) {
-                attrval=ch_RestFrom(attrname,colon.end);
-                attrname=ch_FirstN(attrname,colon.beg);
-                haveval=true;
-            }
-            // look up which command (this one or the base) contains the field
-            whichns=0;
-            needarg=-1;
-            // look up parameter information in base namespace (needarg will be -1 if lookup fails)
-            if (algo_lib::FieldId_ReadStrptrMaybe(baseattrid,attrname)) {
-                needarg = algo_lib::Cmdline_NArgs(baseattrid,dfltval,&isanon);
-            }
-            if (needarg<0) {
-                whichns=1;
-                // look up parameter information in this namespace (needarg will be -1 if lookup fails)
-                if (command::FieldId_ReadStrptrMaybe(attrid,attrname)) {
-                    needarg = command::ams_sendtest_NArgs(attrid,dfltval,&isanon);
-                }
-            }
-            if (attrval == "" && dfltval != "") {
-                attrval=dfltval;
-                haveval=true;
-            }
-            if (needarg<0) {
-                err<<"ams_sendtest: unknown option "<<Keyval("value",arg)<<eol;
-            } else {
-            }
-        }
-        if (ch_N(attrname) == 0) {
-            err << "ams_sendtest: too many arguments. error at "<<algo::strptr_ToSsim(arg)<<eol;
-        } else if (haveval) {
-            // read value into currently selected arg
-            bool ret=false;
-            // it's already known which namespace is consuming the args,
-            // so directly go there
-            if (whichns == 0) {
-                ret=algo_lib::Cmdline_ReadFieldMaybe(base, attrname, attrval);
-            }
-            if (whichns==1) {
-                ret=command::ams_sendtest_ReadFieldMaybe(cmd, attrname, attrval);
-                switch(attrid.value) {
-                    default:break;
-                }
-            }
-            if (!ret) {
-                err<<"ams_sendtest: error in "
-                <<Keyval("option",attrname)
-                <<Keyval("value",attrval)<<eol;
-            }
-            needarg--;
-            if (needarg <= 0) {
-                attrname="";// forget which argument was being filled
-            }
-        }
+    algo::cstring err;
+    algo::StringAry args;
+    for (int argidx=1; argidx < algo_lib::_db.argc; argidx++) {// skip process name
+        ary_Alloc(args) = algo_lib::_db.argv[argidx];
     }
+    command::ams_sendtest_ReadArgv(cmd, args, err);
     bool dohelp = false;
     bool doexit=false;
     if (algo_lib::_db.cmdline.help) {
@@ -490,9 +446,7 @@ void ams_sendtest::ReadArgv() {
     algo_lib_logcat_debug.enabled = algo_lib::_db.cmdline.debug;
     algo_lib_logcat_verbose.enabled = algo_lib::_db.cmdline.verbose > 0;
     algo_lib_logcat_verbose2.enabled = algo_lib::_db.cmdline.verbose > 1;
-    if (!dohelp) {
-    }
-    // dmmeta.floadtuples:ams_sendtest.FDb.cmdline
+    // dmmeta.floadtuples:command.ams_sendtest.in
     if (!dohelp && err=="") {
         algo_lib::ResetErrtext();
         if (!ams_sendtest::LoadTuplesMaybe(cmd.in,true)) {
@@ -505,7 +459,7 @@ void ams_sendtest::ReadArgv() {
         doexit=true;
     }
     if (dohelp) {
-        prlog(ams_sendtest_help);
+        prlog(command::ams_sendtest_help);
     }
     if (doexit) {
         _exit(algo_lib::_db.exit_code);
@@ -532,7 +486,13 @@ void ams_sendtest::Step() {
 // --- ams_sendtest.FDb._db.InitReflection
 // Load statically available data into tables, register tables and database.
 static void ams_sendtest::InitReflection() {
-    algo_lib::imdb_InsertMaybe(algo::Imdb("ams_sendtest", NULL, NULL, ams_sendtest::MainLoop, NULL, algo::Comment()));
+    algo_lib::FImdb &row = algo_lib::imdb_Alloc();
+    row.imdb               = "ams_sendtest";
+    row.InsertStrptrMaybe  = NULL;
+    row.RemoveStrptrMaybe  = NULL;
+    row.Step               = NULL;
+    row.MainLoop           = ams_sendtest::MainLoop;
+    algo_lib::imdb_XrefMaybe(row);
 
     algo::Imtable t_trace;
     t_trace.imtable         = "ams_sendtest.trace";
@@ -629,6 +589,15 @@ void ams_sendtest::Steps() {
     algo_lib::Step(); // dependent namespace specified via (dev.targdep)
 }
 
+// --- ams_sendtest.FDb._db.RemoveStrptrMaybe
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+bool ams_sendtest::RemoveStrptrMaybe(algo::strptr str) {
+    bool retval = true;
+    (void)str;//only to avoid -Wunused-parameter
+    return retval;
+}
+
 // --- ams_sendtest.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
@@ -669,7 +638,7 @@ void* ams_sendtest::child_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     ams_sendtest::FChild*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.child_lary[bsr];
         if (!lev) {
             lev=(ams_sendtest::FChild*)algo_lib::lpool_AllocMem(sizeof(ams_sendtest::FChild) * (u64(1)<<bsr));
@@ -678,7 +647,7 @@ void* ams_sendtest::child_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.child_n = i32(new_nelems);
+        _db.child_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -690,7 +659,7 @@ void ams_sendtest::child_RemoveAll() {
     for (u64 n = _db.child_n; n>0; ) {
         n--;
         child_qFind(u64(n)).~FChild(); // destroy last element
-        _db.child_n = i32(n);
+        _db.child_n = i64(n);
     }
 }
 
@@ -701,7 +670,7 @@ void ams_sendtest::child_RemoveLast() {
     if (n > 0) {
         n -= 1;
         child_qFind(u64(n)).~FChild();
-        _db.child_n = i32(n);
+        _db.child_n = i64(n);
     }
 }
 
@@ -741,6 +710,7 @@ void ams_sendtest::FDb_Init() {
         _db.child_lary[i]  = child_first;
         child_first    += 1ULL<<i;
     }
+    _db.nsync = u64(0);
 
     ams_sendtest::InitReflection();
 }
@@ -825,7 +795,7 @@ bool ams_sendtest::FieldId_ReadStrptrMaybe(ams_sendtest::FieldId &parent, algo::
 // --- ams_sendtest.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:ams_sendtest.FieldId.String  printfmt:Raw
-void ams_sendtest::FieldId_Print(ams_sendtest::FieldId& row, algo::cstring& str) {
+void ams_sendtest::FieldId_Print(ams_sendtest::FieldId row, algo::cstring& str) {
     ams_sendtest::value_Print(row, str);
 }
 

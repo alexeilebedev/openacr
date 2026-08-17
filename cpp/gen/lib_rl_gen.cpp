@@ -60,7 +60,13 @@ void lib_rl::trace_Print(lib_rl::trace& row, algo::cstring& str) {
 // --- lib_rl.FDb._db.InitReflection
 // Load statically available data into tables, register tables and database.
 static void lib_rl::InitReflection() {
-    algo_lib::imdb_InsertMaybe(algo::Imdb("lib_rl", NULL, NULL, NULL, NULL, algo::Comment()));
+    algo_lib::FImdb &row = algo_lib::imdb_Alloc();
+    row.imdb               = "lib_rl";
+    row.InsertStrptrMaybe  = NULL;
+    row.RemoveStrptrMaybe  = NULL;
+    row.Step               = NULL;
+    row.MainLoop           = NULL;
+    algo_lib::imdb_XrefMaybe(row);
 
     algo::Imtable t_trace;
     t_trace.imtable         = "lib_rl.trace";
@@ -156,6 +162,15 @@ void lib_rl::Steps() {
     algo_lib::Step(); // dependent namespace specified via (dev.targdep)
 }
 
+// --- lib_rl.FDb._db.RemoveStrptrMaybe
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+bool lib_rl::RemoveStrptrMaybe(algo::strptr str) {
+    bool retval = true;
+    (void)str;//only to avoid -Wunused-parameter
+    return retval;
+}
+
 // --- lib_rl.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
@@ -190,7 +205,7 @@ void lib_rl::FDb_Init() {
 // --- lib_rl.FDb..Uninit
 void lib_rl::FDb_Uninit() {
     lib_rl::FDb &row = _db; (void)row;
-    iohook_Cleanup(); // dmmeta.fcleanup:lib_rl.FDb.iohook
+    iohook_Cleanup(); // dmmeta.ffunc:lib_rl.FDb.iohook/Cleanup
 }
 
 // --- lib_rl.FieldId.value.ToCstr
@@ -265,7 +280,7 @@ bool lib_rl::FieldId_ReadStrptrMaybe(lib_rl::FieldId &parent, algo::strptr in_st
 // --- lib_rl.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:lib_rl.FieldId.String  printfmt:Raw
-void lib_rl::FieldId_Print(lib_rl::FieldId& row, algo::cstring& str) {
+void lib_rl::FieldId_Print(lib_rl::FieldId row, algo::cstring& str) {
     lib_rl::value_Print(row, str);
 }
 

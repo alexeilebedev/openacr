@@ -1,0 +1,7 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/bad_pbuf_oneof.ssim -out_dir: -report:N zzz"
+# eof amc
+amc -> amc.pbuf_oneof  fpbufcase:pbt.NoMask.a/payload  ctype:pbt.NoMask  comment:"every variant of a oneof must be a member of one shared pmask; without it the encoder writes every non-default variant"
+amc -> amc.pbuf_oneof  fpbufcase:pbt.Split.a/payload  ctype:pbt.Split  comment:"every variant of a oneof must be a member of one shared pmask; without it the encoder writes every non-default variant"
+amc -> amc.pbuf_oneof  fpbufcase:pbt.Half.a/payload  ctype:pbt.Half  comment:"every variant of a oneof must be a member of one shared pmask; without it the encoder writes every non-default variant"
+amc -> amc.no_output  comment:"no files were modified"
+# exit amc code:3

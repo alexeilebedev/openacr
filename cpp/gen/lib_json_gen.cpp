@@ -45,7 +45,7 @@ namespace lib_json { // gen:ns_print_proto
 // --- lib_json.trace..Print
 // print string representation of ROW to string STR
 // cfmt:lib_json.trace.String  printfmt:Tuple
-void lib_json::trace_Print(lib_json::trace& row, algo::cstring& str) {
+void lib_json::trace_Print(lib_json::trace row, algo::cstring& str) {
     algo::tempstr temp;
     str << "lib_json.trace";
 
@@ -58,10 +58,39 @@ void lib_json::trace_Print(lib_json::trace& row, algo::cstring& str) {
 
 // --- lib_json.FDb.lpool.FreeMem
 // Free block of memory previously returned by Lpool.
+// SIZE must be of the same class the memory was allocated with.
 void lib_json::lpool_FreeMem(void* mem, u64 size) {
     size = u64_Max(size,1ULL<<4);
     u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
-    if (mem && cell < 36) {
+    if (mem && cell < 11) {
+        // a blk-class record returns to its blk, found by address mask
+        lpool_Lpblk *blk = (lpool_Lpblk*)((u64)mem & ~(u64)65535);
+        lpool_Lpblock *rec = (lpool_Lpblock*)mem;
+        rec->next = blk->freerec;
+        blk->freerec = rec;
+        blk->live--;
+        if (blk->pprev == NULL) { // regained space: rejoin the class list
+            blk->next = _db.lpool_blk[blk->cell];
+            blk->pprev = &_db.lpool_blk[blk->cell];
+            if (blk->next) {
+                blk->next->pprev = &blk->next;
+            }
+            _db.lpool_blk[blk->cell] = blk;
+        }
+        // drained blk reverts to an ordinary block on the blk-size level,
+        // reusable by any class; the last blk of a class is kept dedicated
+        // so a lone alloc/free cycle does not thrash dedication
+        bool sole = _db.lpool_blk[blk->cell] == blk && blk->next == NULL;
+        if (blk->live == 0 && !sole) {
+            *blk->pprev = blk->next;
+            if (blk->next) {
+                blk->next->pprev = blk->pprev;
+            }
+            lpool_Lpblock *raw = (lpool_Lpblock*)blk;
+            raw->next = _db.lpool_free[12];
+            _db.lpool_free[12] = raw;
+        }
+    } else if (mem && cell < 36) {
         lpool_Lpblock *temp = (lpool_Lpblock*)mem; // push  singly linked list
         temp->next = _db.lpool_free[cell];
         _db.lpool_free[cell] = temp;
@@ -75,36 +104,76 @@ void lib_json::lpool_FreeMem(void* mem, u64 size) {
 // The maximum allocation size is at most 1<<(36+4)
 void* lib_json::lpool_AllocMem(u64 size) {
     void *retval = NULL;
-    size     = u64_Max(size,1<<4); // enforce alignment
+    size     = u64_Max(size,1ULL<<4); // enforce alignment
     u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
-    if (cell < 36) {
-        u64 i    = cell;
-        // try to find a block that's at least as large as required.
-        // if found, remove from free list
+    lpool_Lpblk *blk = cell < 11 ? _db.lpool_blk[cell] : NULL;
+    if (cell < 36 && blk == NULL) {
+        // acquire a raw block: for a blk class, a blk-size block to dedicate;
+        // otherwise the requested level. Serve from the lowest populated
+        // level at or above it, splitting the upper halves back down.
+        u64 rawcell = cell < 11 ? (u64)12 : cell;
+        void *rawmem = NULL;
+        u64 i = rawcell;
         for (; i < 36; i++) {
-            lpool_Lpblock *blk = _db.lpool_free[i];
-            if (blk) {
-                _db.lpool_free[i] = blk->next;
-                retval = blk;
+            lpool_Lpblock *rawblk = _db.lpool_free[i];
+            if (rawblk) {
+                _db.lpool_free[i] = rawblk->next;
+                rawmem = rawblk;
                 break;
             }
         }
-        // if suitable size block is not found, create a new one
-        // by requesting a block from the base allocator.
-        if (UNLIKELY(!retval)) {
-            i = u64_Max(cell, 21-4); // 2MB min -- allow huge page to be used
-            retval = algo_lib::sbrk_AllocMem(1ULL<<(i+4));
+        // if no suitable block, refill from the base allocator with exactly
+        // the level size, a whole number of base granules; the base pool
+        // returns big blocks granule-aligned, so every carved block of blk
+        // size and up is blk-aligned (FreeMem locates a record's blk by
+        // address mask)
+        if (UNLIKELY(!rawmem)) {
+            i = u64_Max(rawcell, 21-4); // 2MB min -- allow huge page to be used
+            rawmem = algo_lib::sbrk_AllocMem(1ULL<<(i+4));
         }
-        if (LIKELY(retval)) {
+        if (LIKELY(rawmem)) {
             // if block is more than 2x as large as needed, return the upper half to the free
-            // list (repeatedly). meanwhile, retval doesn't change.
-            while (i > cell) {
+            // list (repeatedly). meanwhile, rawmem doesn't change.
+            while (i > rawcell) {
                 i--;
-                int half = 1ULL<<(i+4);
-                lpool_Lpblock *blk = (lpool_Lpblock*)((u8*)retval + half);
-                blk->next = _db.lpool_free[i];
-                _db.lpool_free[i] = blk;
+                u64 half = 1ULL<<(i+4);
+                lpool_Lpblock *shed = (lpool_Lpblock*)((u8*)rawmem + half);
+                shed->next = _db.lpool_free[i];
+                _db.lpool_free[i] = shed;
             }
+            if (cell < 11) { // stamp a fresh blk dedicated to this class
+                blk = (lpool_Lpblk*)rawmem;
+                blk->freerec = NULL;
+                blk->rsize = 1u<<(cell+4);
+                blk->live = 0;
+                blk->tip = 64;
+                blk->cell = (u32)cell;
+                blk->next = NULL;
+                blk->pprev = &_db.lpool_blk[cell];
+                _db.lpool_blk[cell] = blk;
+            } else {
+                retval = rawmem;
+            }
+        }
+    }
+    if (blk) { // serve one record: a freed record first, else bump the tip
+        lpool_Lpblock *rec = blk->freerec;
+        if (rec) {
+            blk->freerec = rec->next;
+            retval = rec;
+        } else {
+            retval = (u8*)blk + blk->tip;
+            blk->tip += blk->rsize;
+        }
+        blk->live++;
+        if (blk->freerec == NULL && blk->tip + blk->rsize > 65536) {
+            // full: leave the class list until a record comes back
+            *blk->pprev = blk->next;
+            if (blk->next) {
+                blk->next->pprev = blk->pprev;
+            }
+            blk->pprev = NULL;
+            blk->next = NULL;
         }
     }
     return retval;
@@ -112,23 +181,25 @@ void* lib_json::lpool_AllocMem(u64 size) {
 
 // --- lib_json.FDb.lpool.ReserveBuffers
 // Add N buffers of some size to the free store
-// Reserve NBUF buffers of size BUFSIZE from the base pool (algo_lib::sbrk)
+// Stock the free store with NBUF buffers of size BUFSIZE:
+// allocate them all, then free them all, chaining through the buffers
 bool lib_json::lpool_ReserveBuffers(u64 nbuf, u64 bufsize) {
     bool retval = true;
-    bufsize = u64_Max(bufsize, 1<<4);
-    u64 cell = algo::u64_BitScanReverse(bufsize-1) + 1 - 4;
-    if (cell < 36) {
-        for (u64 i = 0; i < nbuf; i++) {
-            u64 size = 1ULL<<(cell+4);
-            lpool_Lpblock *temp = (lpool_Lpblock*)algo_lib::sbrk_AllocMem(size);
-            if (temp == NULL) {
-                retval = false;
-                break;// why continue?
-            } else {
-                temp->next = _db.lpool_free[cell];
-                _db.lpool_free[cell] = temp;
-            }
+    lpool_Lpblock *head = NULL;
+    for (u64 i = 0; i < nbuf; i++) {
+        lpool_Lpblock *temp = (lpool_Lpblock*)lpool_AllocMem(bufsize);
+        if (temp == NULL) {
+            retval = false;// an unservable bufsize or an exhausted base pool reserves nothing further
+            break;
+        } else {
+            temp->next = head;
+            head = temp;
         }
+    }
+    while (head) {
+        lpool_Lpblock *next = head->next;
+        lpool_FreeMem(head, bufsize);
+        head = next;
     }
     return retval;
 }
@@ -181,7 +252,13 @@ void lib_json::lpool_Delete(u8 &row) {
 // --- lib_json.FDb._db.InitReflection
 // Load statically available data into tables, register tables and database.
 static void lib_json::InitReflection() {
-    algo_lib::imdb_InsertMaybe(algo::Imdb("lib_json", NULL, NULL, NULL, NULL, algo::Comment()));
+    algo_lib::FImdb &row = algo_lib::imdb_Alloc();
+    row.imdb               = "lib_json";
+    row.InsertStrptrMaybe  = NULL;
+    row.RemoveStrptrMaybe  = NULL;
+    row.Step               = NULL;
+    row.MainLoop           = NULL;
+    algo_lib::imdb_XrefMaybe(row);
 
     algo::Imtable t_trace;
     t_trace.imtable         = "lib_json.trace";
@@ -272,6 +349,15 @@ bool lib_json::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
 // --- lib_json.FDb._db.Steps
 // Calls Step function of dependencies
 void lib_json::Steps() {
+}
+
+// --- lib_json.FDb._db.RemoveStrptrMaybe
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+bool lib_json::RemoveStrptrMaybe(algo::strptr str) {
+    bool retval = true;
+    (void)str;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- lib_json.FDb._db.XrefMaybe
@@ -512,6 +598,7 @@ inline static i32 lib_json::trace_N() {
 // Set all fields to initial values.
 void lib_json::FDb_Init() {
     memset(_db.lpool_free, 0, sizeof(_db.lpool_free));
+    memset(_db.lpool_blk, 0, sizeof(_db.lpool_blk));
     // node: initialize Tpool
     _db.node_free      = NULL;
     _db.node_blocksize = algo::BumpToPow2(64 * sizeof(lib_json::FNode)); // allocate 64-127 elements at a time
@@ -549,25 +636,22 @@ void lib_json::FldKey_Print(lib_json::FldKey& row, algo::cstring& str) {
 // --- lib_json.FNode.c_child.Cascdel
 // Delete all elements pointed to by the index.
 void lib_json::c_child_Cascdel(lib_json::FNode& node) {
-    // Clear c_child_n so that calls to lib_json.FNode.c_child.Remove do not have to scan
-    // the array for pointers or shift anything.
-    // This is somewhat of a hack.
-    i32 n = node.c_child_n;
-    node.c_child_n = 0;
-    for (i32 i = n - 1; i >= 0; i--) {
-        lib_json::FNode &row = *node.c_child_elems[i];
-        row.node_c_child_in_ary = false;
-        node_Delete(row);
+    // Each row's delete removes it from this array (heaplike: O(1) swap;
+    // unique: the backward scan finds the last element first), and a cascade
+    // that deletes other members keeps the array consistent, so re-reading
+    // c_child_n each iteration visits every remaining row exactly once.
+    while (node.c_child_n > 0) {
+        node_Delete(*node.c_child_elems[node.c_child_n - 1]);
     }
 }
 
 // --- lib_json.FNode.c_child.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 void lib_json::c_child_Insert(lib_json::FNode& node, lib_json::FNode& row) {
     if (!row.node_c_child_in_ary) {
         c_child_Reserve(node, 1);
-        u32 n  = node.c_child_n++;
+        u64 n  = node.c_child_n++;
         node.c_child_elems[n] = &row;
         row.node_c_child_in_ary = true;
     }
@@ -586,15 +670,15 @@ bool lib_json::c_child_InsertMaybe(lib_json::FNode& node, lib_json::FNode& row) 
 // --- lib_json.FNode.c_child.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void lib_json::c_child_Remove(lib_json::FNode& node, lib_json::FNode& row) {
-    int n = node.c_child_n;
+    i64 n = node.c_child_n;
     if (bool_Update(row.node_c_child_in_ary,false)) {
         lib_json::FNode* *elems = node.c_child_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = n-1; i>=0; i--) {
+        for (i64 i = n-1; i>=0; i--) {
             lib_json::FNode* elem = elems[i]; // fetch element
             if (elem == &row) {
-                int j = i + 1;
+                i64 j = i + 1;
                 size_t nbytes = sizeof(lib_json::FNode*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
                 node.c_child_n = n - 1;
@@ -606,12 +690,12 @@ void lib_json::c_child_Remove(lib_json::FNode& node, lib_json::FNode& row) {
 
 // --- lib_json.FNode.c_child.Reserve
 // Reserve space in index for N more elements;
-void lib_json::c_child_Reserve(lib_json::FNode& node, u32 n) {
-    u32 old_max = node.c_child_max;
+void lib_json::c_child_Reserve(lib_json::FNode& node, u64 n) {
+    u64 old_max = node.c_child_max;
     if (UNLIKELY(node.c_child_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(lib_json::FNode*);
-        u32 new_size = new_max * sizeof(lib_json::FNode*);
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, node.c_child_n + n), 4);
+        u64 old_size = old_max * sizeof(lib_json::FNode*);
+        u64 new_size = new_max * sizeof(lib_json::FNode*);
         void *new_mem = lib_json::lpool_ReallocMem(node.c_child_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("lib_json.out_of_memory  field:lib_json.FNode.c_child");
@@ -876,7 +960,7 @@ void lib_json::FParser_Init(lib_json::FParser& parent) {
 // --- lib_json.FParser..Uninit
 void lib_json::FParser_Uninit(lib_json::FParser& parent) {
     lib_json::FParser &row = parent; (void)row;
-    root_node_Cleanup(parent); // dmmeta.fcleanup:lib_json.FParser.root_node
+    root_node_Cleanup(parent); // dmmeta.ffunc:lib_json.FParser.root_node/Cleanup
 }
 
 // --- lib_json.FParser..Print
@@ -1001,7 +1085,7 @@ bool lib_json::FieldId_ReadStrptrMaybe(lib_json::FieldId &parent, algo::strptr i
 // --- lib_json.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:lib_json.FieldId.String  printfmt:Raw
-void lib_json::FieldId_Print(lib_json::FieldId& row, algo::cstring& str) {
+void lib_json::FieldId_Print(lib_json::FieldId row, algo::cstring& str) {
     lib_json::value_Print(row, str);
 }
 

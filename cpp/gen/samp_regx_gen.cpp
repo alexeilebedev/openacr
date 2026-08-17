@@ -39,29 +39,6 @@ lib_json::FDb    lib_json::_db;     // dependency found via dev.targdep
 algo_lib::FDb    algo_lib::_db;     // dependency found via dev.targdep
 samp_regx::FDb   samp_regx::_db;    // dependency found via dev.targdep
 
-namespace samp_regx {
-const char *samp_regx_help =
-"samp_regx: Test tool for regular expressions\n"
-"Usage: samp_regx [-expr:]<string> [[-string:]<string>] [options]\n"
-"    OPTION      TYPE    DFLT    COMMENT\n"
-"    -in         string  \"data\"  Input directory or filename, - for stdin\n"
-"    [expr]      string          Expression\n"
-"    -style      enum    acr     Regx style (default|sql|acr|shell|literal)\n"
-"    -trace                      Trace regx innards\n"
-"    -capture                    Use capture groups\n"
-"    -full               Y       Match full string\n"
-"    -f                          <string> is a filename, grep the lines\n"
-"    -match                      Match a string, exit code represnts success\n"
-"    [string]    string  \"\"      String to match\n"
-"    -verbose    flag            Verbosity level (0..255); alias -v; cumulative\n"
-"    -debug      flag            Debug level (0..255); alias -d; cumulative\n"
-"    -help                       Print help and exit; alias -h\n"
-"    -version                    Print version and exit\n"
-"    -signature                  Show signatures and exit; alias -sig\n"
-;
-
-
-} // namespace samp_regx
 namespace samp_regx { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
     // func:samp_regx.FDb._db.InitReflection
@@ -86,118 +63,16 @@ void samp_regx::trace_Print(samp_regx::trace& row, algo::cstring& str) {
 }
 
 // --- samp_regx.FDb._db.ReadArgv
-// Read argc,argv directly into the fields of the command line(s)
-// The following fields are updated:
-//     samp_regx.FDb.cmdline
-//     algo_lib.FDb.cmdline
+// Read argc,argv into the fields of samp_regx.FDb.cmdline (and any base command line)
+// via samp_regx_ReadArgv; then apply -help/-version and load floadtuples input.
 void samp_regx::ReadArgv() {
     command::samp_regx &cmd = samp_regx::_db.cmdline;
-    algo_lib::Cmdline &base = algo_lib::_db.cmdline;
-    int needarg=-1;// unknown
-    int argidx=1;// skip process name
-    int anonidx=0;
-    algo::strptr nextanon = command::samp_regx_GetAnon(cmd, anonidx);
-    tempstr err;
-    algo::strptr attrname;
-    bool isanon=false; // true if attrname is anonfld (positional)
-    algo_lib::FieldId baseattrid;
-    command::FieldId attrid;
-    bool endopt=false;
-    int whichns=0;// which namespace does the current attribute belong to
-    bool expr_present = false;
-    for (; argidx < algo_lib::_db.argc; argidx++) {
-        algo::strptr arg = algo_lib::_db.argv[argidx];
-        algo::strptr attrval;
-        algo::strptr dfltval;
-        bool haveval=false;
-        bool dash=elems_N(arg)>1 && arg.elems[0]=='-'; // a single dash is not an option
-        // this attribute is a value
-        if (endopt || needarg>0 || !dash) {
-            attrval=arg;
-            haveval=true;
-        } else {
-            // this attribute is a field name (with - or --)
-            // or a -- by itself
-            bool dashdash = elems_N(arg) >= 2 && arg.elems[1]=='-';
-            int skip = int(dash) + dashdash;
-            attrname=ch_RestFrom(arg,skip);
-            if (skip==2 && elems_N(arg)==2) {
-                endopt=true;
-                continue;// nothing else to do here
-            }
-            // parse "-a:B" arg into attrname,attrvalue
-            algo::i32_Range colon = TFind(attrname,':');
-            if (colon.beg < colon.end) {
-                attrval=ch_RestFrom(attrname,colon.end);
-                attrname=ch_FirstN(attrname,colon.beg);
-                haveval=true;
-            }
-            // look up which command (this one or the base) contains the field
-            whichns=0;
-            needarg=-1;
-            // look up parameter information in base namespace (needarg will be -1 if lookup fails)
-            if (algo_lib::FieldId_ReadStrptrMaybe(baseattrid,attrname)) {
-                needarg = algo_lib::Cmdline_NArgs(baseattrid,dfltval,&isanon);
-            }
-            if (needarg<0) {
-                whichns=1;
-                // look up parameter information in this namespace (needarg will be -1 if lookup fails)
-                if (command::FieldId_ReadStrptrMaybe(attrid,attrname)) {
-                    needarg = command::samp_regx_NArgs(attrid,dfltval,&isanon);
-                }
-            }
-            if (attrval == "" && dfltval != "") {
-                attrval=dfltval;
-                haveval=true;
-            }
-            if (needarg<0) {
-                err<<"samp_regx: unknown option "<<Keyval("value",arg)<<eol;
-            } else {
-                if (isanon) {
-                    if (attrname == nextanon) { // treat named anon (positional) argument as unnamed
-                        attrname = ""; // treat it as unnamed
-                    } else if (nextanon != "") { // disallow out-of-order anon (positional) args
-                        err<<"samp_regx: error at "<<algo::strptr_ToSsim(arg)<<": must be preceded by [-"<<nextanon<<"]"<<eol;
-                    }
-                }
-            }
-        }
-        // look up anon field name based on index
-        // anon fields are only allowed in the leaf ns, never base
-        if (ch_N(attrname) == 0) {
-            attrname = nextanon;
-            nextanon = command::samp_regx_GetAnon(cmd, ++anonidx);
-            command::FieldId_ReadStrptrMaybe(attrid,attrname);
-            whichns=1;
-        }
-        if (ch_N(attrname) == 0) {
-            err << "samp_regx: too many arguments. error at "<<algo::strptr_ToSsim(arg)<<eol;
-        } else if (haveval) {
-            // read value into currently selected arg
-            bool ret=false;
-            // it's already known which namespace is consuming the args,
-            // so directly go there
-            if (whichns == 0) {
-                ret=algo_lib::Cmdline_ReadFieldMaybe(base, attrname, attrval);
-            }
-            if (whichns==1) {
-                ret=command::samp_regx_ReadFieldMaybe(cmd, attrname, attrval);
-                switch(attrid.value) {
-                    case command_FieldId_expr: expr_present=true; break;
-                    default:break;
-                }
-            }
-            if (!ret) {
-                err<<"samp_regx: error in "
-                <<Keyval("option",attrname)
-                <<Keyval("value",attrval)<<eol;
-            }
-            needarg--;
-            if (needarg <= 0) {
-                attrname="";// forget which argument was being filled
-            }
-        }
+    algo::cstring err;
+    algo::StringAry args;
+    for (int argidx=1; argidx < algo_lib::_db.argc; argidx++) {// skip process name
+        ary_Alloc(args) = algo_lib::_db.argv[argidx];
     }
+    command::samp_regx_ReadArgv(cmd, args, err);
     bool dohelp = false;
     bool doexit=false;
     if (algo_lib::_db.cmdline.help) {
@@ -220,13 +95,7 @@ void samp_regx::ReadArgv() {
     algo_lib_logcat_debug.enabled = algo_lib::_db.cmdline.debug;
     algo_lib_logcat_verbose.enabled = algo_lib::_db.cmdline.verbose > 0;
     algo_lib_logcat_verbose2.enabled = algo_lib::_db.cmdline.verbose > 1;
-    if (!dohelp) {
-        if (!expr_present) {
-            err << "samp_regx: Missing value for required argument -expr (see -help)" << eol;
-            doexit = true;
-        }
-    }
-    // dmmeta.floadtuples:samp_regx.FDb.cmdline
+    // dmmeta.floadtuples:command.samp_regx.in
     if (!dohelp && err=="") {
         algo_lib::ResetErrtext();
         if (!samp_regx::LoadTuplesMaybe(cmd.in,true)) {
@@ -239,7 +108,7 @@ void samp_regx::ReadArgv() {
         doexit=true;
     }
     if (dohelp) {
-        prlog(samp_regx_help);
+        prlog(command::samp_regx_help);
     }
     if (doexit) {
         _exit(algo_lib::_db.exit_code);
@@ -266,7 +135,13 @@ void samp_regx::Step() {
 // --- samp_regx.FDb._db.InitReflection
 // Load statically available data into tables, register tables and database.
 static void samp_regx::InitReflection() {
-    algo_lib::imdb_InsertMaybe(algo::Imdb("samp_regx", NULL, NULL, samp_regx::MainLoop, NULL, algo::Comment()));
+    algo_lib::FImdb &row = algo_lib::imdb_Alloc();
+    row.imdb               = "samp_regx";
+    row.InsertStrptrMaybe  = NULL;
+    row.RemoveStrptrMaybe  = NULL;
+    row.Step               = NULL;
+    row.MainLoop           = samp_regx::MainLoop;
+    algo_lib::imdb_XrefMaybe(row);
 
     algo::Imtable t_trace;
     t_trace.imtable         = "samp_regx.trace";
@@ -360,6 +235,15 @@ bool samp_regx::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
 // Calls Step function of dependencies
 void samp_regx::Steps() {
     algo_lib::Step(); // dependent namespace specified via (dev.targdep)
+}
+
+// --- samp_regx.FDb._db.RemoveStrptrMaybe
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+bool samp_regx::RemoveStrptrMaybe(algo::strptr str) {
+    bool retval = true;
+    (void)str;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- samp_regx.FDb._db.XrefMaybe
@@ -461,7 +345,7 @@ bool samp_regx::FieldId_ReadStrptrMaybe(samp_regx::FieldId &parent, algo::strptr
 // --- samp_regx.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:samp_regx.FieldId.String  printfmt:Raw
-void samp_regx::FieldId_Print(samp_regx::FieldId& row, algo::cstring& str) {
+void samp_regx::FieldId_Print(samp_regx::FieldId row, algo::cstring& str) {
     samp_regx::value_Print(row, str);
 }
 

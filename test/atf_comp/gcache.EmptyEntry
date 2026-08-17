@@ -1,0 +1,29 @@
+# start bash cmd:'bash -c \'cd $tempdir && ln -s $$OLDPWD/data data && mkdir cache && printf "int f(){return 1;}\\n" > x.cpp && G=$$OLDPWD/$bindir/gcache && $$G -install -dir:cache > /dev/null; ent(){ grep -o "cached_file:[^ ]*" rep.txt | sed "s/cached_file://"; }; stamp(){ if test ! -e $$2; then echo $$1:absent; elif test $$2 -nt marker; then echo $$1:fresh; else echo $$1:stale; fi; }; pub(){ rm -f x.o x.gcno; $$G -report -- g++ $$1 -c x.cpp -o x.o > rep.txt; }; pub ""; E=$$(ent); rm -f $$E; $$G -gc > /dev/null; test -e $$E && echo recreate:present || echo recreate:absent; pub ""; E=$$(ent); touch -d 2020-01-01 $$E; touch marker; $$G -gc > /dev/null; stamp refresh $$E; printf "void __gcache_pragma_pch_preprocess();\\ninline int g(){return 2;}\\n" > h.h; printf "#include <h.h>\\nint f(){return 1;}\\n" > p.cpp; $$G -report -- g++ -I. -c p.cpp -o p.o > rep.txt; P=$$(grep -o "pch_file:[^ ]*" rep.txt | sed "s/pch_file://"); touch -d 2020-01-01 $$P; touch marker; $$G -gc > /dev/null; stamp pchrefresh $$P; pub ""; E=$$(ent); : > $$E; rm -f x.o; $$G -report -- g++ -c x.cpp -o x.o > rep.txt; echo emptyhit_code:$$?; grep -o "\\bhit:[YN]" rep.txt | sed "s/^/emptyhit_/"; test -s x.o && echo emptyhit_o:present || echo emptyhit_o:empty; test -s $$E && echo emptyhit_entry:present || echo emptyhit_entry:empty; pub "--coverage"; E=$$(ent); : > $$E; rm -f x.o x.gcno; $$G -report -- g++ --coverage -c x.cpp -o x.o > rep.txt; echo emptycov_code:$$?; grep -o "\\bhit:[YN]" rep.txt | sed "s/^/emptycov_/"; test -s x.o && echo emptycov_o:present || echo emptycov_o:empty; test -s x.gcno && echo emptycov_gcno:present || echo emptycov_gcno:empty; pub ""; E=$$(ent); rm -f $$E; mkdir $$E; rm -f x.o; $$G -report -- g++ -c x.cpp -o x.o > rep.txt; echo dirbare_code:$$?; grep -o "\\bhit:[YN]" rep.txt | sed "s/^/dirbare_/"; test -s x.o && echo dirbare_o:present || echo dirbare_o:empty; test -f $$E && echo dirbare_entry:file || echo dirbare_entry:dir; rm -f x.o; $$G -report -- g++ -c x.cpp -o x.o > rep.txt; grep -o "\\bhit:[YN]" rep.txt | sed "s/^/dirbare2_/"; pub "--coverage"; E=$$(ent); rm -f $$E; mkdir $$E; rm -f x.o x.gcno; $$G -report -- g++ --coverage -c x.cpp -o x.o > rep.txt; echo dircov_code:$$?; grep -o "\\bhit:[YN]" rep.txt | sed "s/^/dircov_/"; test -s x.gcno && echo dircov_gcno:present || echo dircov_gcno:empty; test -f $$E && echo dircov_entry:file || echo dircov_entry:dir; rm -f e.o; ln -s /dev/null e.o; $$G -report -- g++ -c x.cpp -o e.o > rep.txt; echo nopublish_code:$$?; test -e $$(ent) && echo nopublish_entry:present || echo nopublish_entry:absent; pub ""; rm -f x.o; $$G -report -- g++ -c x.cpp -o x.o > rep.txt; echo control_code:$$?; grep -o "\\bhit:[YN]" rep.txt | sed "s/^/control_/"; test -s x.o && echo control_o:present || echo control_o:empty\''
+# eof bash
+bash -> recreate:absent
+bash -> refresh:fresh
+bash -> pchrefresh:fresh
+bash -> emptyhit_code:0
+bash -> emptyhit_hit:N
+bash -> emptyhit_o:present
+bash -> emptyhit_entry:present
+bash -> emptycov_code:0
+bash -> emptycov_hit:N
+bash -> emptycov_o:present
+bash -> emptycov_gcno:present
+bash -> dirbare_code:0
+bash -> dirbare_hit:N
+bash -> dirbare_o:present
+bash -> dirbare_entry:file
+bash -> dirbare2_hit:Y
+bash -> dircov_code:0
+bash -> dircov_hit:N
+bash -> dircov_gcno:present
+bash -> dircov_entry:file
+bash -> gcache.warning  o_file:e.o  comment:"cache entry not published: an object file of no bytes"
+bash -> nopublish_code:0
+bash -> nopublish_entry:absent
+bash -> control_code:0
+bash -> control_hit:Y
+bash -> control_o:present
+# exit bash code:0

@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
-// Target: lib_sqlite (lib)
+// Target: lib_sqlite (lib) -- SQLite binding: connections and a virtual table over ssimfiles
 // Exceptions: yes
 // Source: cpp/lib_sqlite/lib_sqlite.cpp
 //

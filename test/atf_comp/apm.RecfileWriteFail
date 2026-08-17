@@ -1,0 +1,12 @@
+# start bash cmd:"bash -c 'cd $tempdir && ln -sfn $$OLDPWD/bin bin && ln -sfn $$OLDPWD/data data && rm -rf temp && mkdir -p temp/apm.ours.ssim && { $$OLDPWD/$bindir/apm -in:data -pkgdata:$$OLDPWD/test/apm/one_package.ssim apm -remove -dry_run; echo apm.blocked_exit:$$?; rm -rf temp; mkdir -p temp; $$OLDPWD/$bindir/apm -in:data -pkgdata:$$OLDPWD/test/apm/one_package.ssim apm -remove -dry_run; echo apm.control_exit:$$?; }'"
+# eof bash
+bash -> apm.recfile_write  file:temp/apm.ours.ssim  err:"Is a directory"  comment:"package records could not be written; the records they select were not acted on"
+bash -> apm.blocked_exit:1
+bash -> acr -replace -write -print:N -report:N << EOF
+bash -> acr.delete dev.package  package:apm  baseref:HEAD  origin:.  nomention:""  comment:"Algo Package Manager"
+bash -> acr.delete dmmeta.ns  ns:apm  nstype:exe  license:GPL  comment:"Algo Package Manager"
+bash -> EOF
+bash -> update-gitfile
+bash -> amc -report:N
+bash -> apm.control_exit:0
+# exit bash code:0

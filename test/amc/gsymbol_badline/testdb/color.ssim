@@ -1,0 +1,6 @@
+testdb.color  color:red  comment:"the primary"
+# a comment line carries no row and draws no diagnostic
+
+testdb.color  color:"green
+testdb.color  color:blue  comment:"unterminated
+testdb.color  color:cyan  comment:""

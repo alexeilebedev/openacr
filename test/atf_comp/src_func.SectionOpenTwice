@@ -1,0 +1,5 @@
+# start bash cmd:"bash -c 'cd $tempdir && mkdir hdr && printf \"namespace c1 { // update-hdr\\nvoid Dropped();\\nnamespace c2 { // update-hdr\\n}\\n\" > hdr/x.h && cp hdr/x.h orig && $$OLDPWD/$bindir/src_func -in:$$OLDPWD/test/src_func/sectionclose.ssim -updateproto; test $$? = 1 && cmp hdr/x.h orig && echo header_unchanged'"
+# eof bash
+bash -> src_func.unterminated_section  file:hdr/x.h  ns:c1  comment:"update-hdr section is missing its closing brace; file not rewritten"
+bash -> header_unchanged
+# exit bash code:0

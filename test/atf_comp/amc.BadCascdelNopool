@@ -1,0 +1,5 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/bad_cascdel_nopool.ssim -out_dir: -report:N zzz"
+# eof amc
+amc -> amc.nopool  field:algo_lib.FDb.c_row  ctype:algo_lib.FRow
+amc -> amc.error  cascdel requires a pool to instantiate [algo_lib.FRow]
+# exit amc code:1

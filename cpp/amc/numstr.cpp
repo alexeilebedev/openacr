@@ -25,14 +25,73 @@
 
 #include "include/amc.h"
 
+// The pad budget of the generated SetnumMaybe: its on-stack format buffer is
+// two budgets long, and the digits never occupy more than the top budget (a
+// u64 in base 2 is 64 digits), so at least one budget of pad characters fits
+// below the digits.  A min_len above the budget could need more pad than the
+// buffer holds, silently under-padding -- and the sign, prepended below the
+// pad, would then overwrite a pad character -- so tclass_Numstr rejects it.
+static const i32 numstr_pad_budget = 64;
+
 // -----------------------------------------------------------------------------
 
+// The character encoding digit zero in numstr base BASE: the NUL byte in
+// base 256, ' ' in base 95, '0' in every base with a character alphabet
+static char ZeroDigit(i32 base) {
+    return base == 256 ? '\0' : base == 95 ? ' ' : '0';
+}
+
+// True if CH encodes a digit of numstr base BASE: any byte in base 256,
+// any printable character in base 95, and in bases 2..36 the digit and
+// letter characters Getnum accepts (letters in either case)
+static bool BaseDigitQ(i32 base, char ch) {
+    bool retval = false;
+    if (base == 256) {
+        retval = true;
+    } else if (base == 95) {
+        retval = ch >= ' ' && ch <= '~';
+    } else {
+        retval = ch >= '0' && ch < '0' + i32_Min(base,10);
+        retval |= base > 10 && ch >= 'a' && ch < 'a' + base - 10;
+        retval |= base > 10 && ch >= 'A' && ch < 'A' + base - 10;
+    }
+    return retval;
+}
+
+// -----------------------------------------------------------------------------
+
+// Set up the numeric-range substitution variables shared by the numstr
+// tfuncs, and fail the amc run on a spec whose stored strings could not
+// parse back to the stored value: a pad or a base the sign cannot be told
+// apart from, a pad that reads as a digit, or a min_len wider than the
+// string, the pad budget, or the room the sign needs
 void amc::tclass_Numstr() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;
     amc::FSmallstr &smallstr = *field.c_smallstr;
     amc::FNumstr &numstr = *smallstr.c_numstr;
-    GetMinMax(*numstr.p_numtype, numstr.nummin, numstr.nummax, numstr.issigned);
+    bool numrange = GetMinMax(*numstr.p_numtype, numstr.nummin, numstr.nummax, numstr.issigned);
+    if (!numrange) {
+        algo_lib::_db.exit_code++;
+        prerr("amc.bad_numtype"
+              <<Keyval("field",smallstr.field)
+              <<Keyval("numtype",numstr.numtype)
+              <<Keyval("comment","numstr numtype must resolve to an integer builtin"));
+    }
+    // Getnum hands the parsed digits back as the numtype and Geti64 reads that
+    // result as an i64, so a numtype that stands for the builtin through a
+    // wrapper ctype has the value constructed on the way out of the parse and
+    // read on the way into the i64. A wrapper carrying only one of the two
+    // conversions leaves one of those statements without a way to compile, so
+    // the field is reported here rather than in cpp/gen.
+    tempstr badcast = amc::BadBltinCast(*numstr.p_numtype);
+    if (numrange && ch_N(badcast)) {
+        algo_lib::_db.exit_code++;
+        prerr("amc.bad_numcast"
+              <<Keyval("field",smallstr.field)
+              <<Keyval("numtype",numstr.numtype)
+              <<Keyval("comment",badcast));
+    }
 
     tempstr min_str;
     tempstr max_str;
@@ -46,20 +105,122 @@ void amc::tclass_Numstr() {
         Set(R, "$nummax", "i64($nummax)");
     }
     Set(R,"$Rtype", amc::NsToCpp(numstr.numtype));
-    // signed type can not have '0' as padding
-    if (numstr.issigned && smallstr.pad.value=="0") {
-        algo_lib::_db.exit_code=1;
+    // Every pad rule below judges the byte the generated code pads with, which
+    // is what reading strips, and never the spelling the attr carries. The two
+    // are not the same thing: tclass_Smallstr substitutes the literal 0 for an
+    // empty pad value, so pad:"" and pad:0 both pad with NUL and emit the same
+    // Init, N and SetStrptr, and an escaped spelling such as pad:"'\x30'"
+    // names the digit zero rather than a backslash. A pad written two ways is
+    // one pad and draws one verdict.
+    // Only a padded string has a byte to strip. An rpascal string carries its
+    // own length and reads back exactly the characters that were stored, so
+    // no pad rule applies to it
+    char pad = PadChar(smallstr);
+    bool leftpad = smallstr.strtype == dmmeta_Strtype_strtype_leftpad;
+    bool rightpad = smallstr.strtype == dmmeta_Strtype_strtype_rightpad;
+    // the NUL pad is refused on a signed numstr, in the LnullStr style and the
+    // RnullStr style alike
+    if (numstr.issigned && (leftpad || rightpad) && pad == '\0') {
+        algo_lib::_db.exit_code++;
         prerr("amc.bad_numstr"
               <<Keyval("field",smallstr.field)
-              <<Keyval("comment","Warning: Signed numstr type can not be padded with '0'."));
+              <<Keyval("comment","signed numstr cannot use the NUL pad"));
     }
-    // Don't support base 1 bacause a) it's silly amd b) we use a buffer of size 32 for
-    // formatting numbers.
-    vrfy(numstr.base == 256
-         || numstr.base == 95
-         || (numstr.base >= 2 && numstr.base <= 36), "unsupported base (must be 2..36 or 256)");
+    // in base 95 and base 256 the character '-' is itself a digit (13 and 45),
+    // so a stored digit string can begin with it: SetnumMaybe(13) in base 95
+    // writes the single character '-', which Getnum would strip as a sign and
+    // read back as 0. The encoding is ambiguous, so a signed numstr cannot
+    // use these bases
+    if (numstr.issigned && (numstr.base == 95 || numstr.base == 256)) {
+        algo_lib::_db.exit_code++;
+        prerr("amc.bad_numstr"
+              <<Keyval("field",smallstr.field)
+              <<Keyval("base",numstr.base)
+              <<Keyval("comment","signed numstr cannot use a base where '-' is a digit"));
+    }
+    // reading strips the strtype pad from the stored string, so a pad that
+    // is itself a digit of the base makes the strip ambiguous. On the left
+    // only the zero digit is safe: leading zero digits carry no value. On
+    // the right no digit is safe: a trailing zero digit stripped as pad
+    // divides the value by the base, and a nonzero pad digit strips real
+    // trailing digits
+    if (leftpad && BaseDigitQ(numstr.base, pad) && pad != ZeroDigit(numstr.base)) {
+        algo_lib::_db.exit_code++;
+        prerr("amc.bad_numstr"
+              <<Keyval("field",smallstr.field)
+              <<Keyval("pad",smallstr.pad)
+              <<Keyval("base",numstr.base)
+              <<Keyval("comment","left-pad that is a nonzero digit of the base corrupts values on read"));
+    }
+    if (rightpad && BaseDigitQ(numstr.base, pad)) {
+        algo_lib::_db.exit_code++;
+        prerr("amc.bad_numstr"
+              <<Keyval("field",smallstr.field)
+              <<Keyval("pad",smallstr.pad)
+              <<Keyval("base",numstr.base)
+              <<Keyval("comment","right-pad that is a digit of the base corrupts values on read"));
+    }
+    // a negative value carries its sign as a leading '-', and the left pad is
+    // stripped from that same end: SetnumMaybe(-12) into a five-character
+    // string dash-padded on the left stores "---12", the strip takes all
+    // three leading dashes, and Getnum reads back +12. The right pad is
+    // stripped from the other end and leaves the leading sign alone, and an
+    // unsigned numstr writes no sign for a dash to be confused with
+    if (numstr.issigned && leftpad && pad == '-') {
+        algo_lib::_db.exit_code++;
+        prerr("amc.bad_numstr"
+              <<Keyval("field",smallstr.field)
+              <<Keyval("pad",smallstr.pad)
+              <<Keyval("comment","signed numstr cannot use the sign character as a left pad"));
+    }
+    // a min_len wider than the string can never be stored: the padded digits
+    // always fail SetnumMaybe's length gate
+    if (numstr.min_len > smallstr.length) {
+        algo_lib::_db.exit_code++;
+        prerr("amc.bad_numstr"
+              <<Keyval("field",smallstr.field)
+              <<Keyval("min_len",numstr.min_len)
+              <<Keyval("length",smallstr.length)
+              <<Keyval("comment","numstr min_len cannot exceed the string length"));
+    }
+    // a signed numstr prepends the sign in front of min_len digits: with
+    // min_len == length the sign has no slot and every negative value
+    // fails SetnumMaybe's length gate
+    if (numstr.issigned && numstr.min_len == smallstr.length) {
+        algo_lib::_db.exit_code++;
+        prerr("amc.bad_numstr"
+              <<Keyval("field",smallstr.field)
+              <<Keyval("min_len",numstr.min_len)
+              <<Keyval("length",smallstr.length)
+              <<Keyval("comment","signed numstr min_len leaves no room for the sign"));
+    }
+    // SetnumMaybe pads within a fixed buffer: one pad budget below the digits.
+    // A min_len needing more pad than that silently under-pads, and a sign
+    // would then overwrite the first pad character
+    if (numstr.min_len > numstr_pad_budget) {
+        algo_lib::_db.exit_code++;
+        prerr("amc.bad_numstr"
+              <<Keyval("field",smallstr.field)
+              <<Keyval("min_len",numstr.min_len)
+              <<Keyval("pad_budget",numstr_pad_budget)
+              <<Keyval("comment","numstr min_len exceeds the pad budget"));
+    }
+    // Base 1 is not supported: a unary numeral needs one digit per unit of
+    // value, and SetnumMaybe formats into a fixed buffer -- one pad budget's
+    // worth of digits (64 covers a u64 even in base 2) plus the pad region
+    // checked above.
+    if (!(numstr.base == 256 || numstr.base == 95 || (numstr.base >= 2 && numstr.base <= 36))) {
+        algo_lib::_db.exit_code++;
+        prerr("amc.bad_numstr"
+              <<Keyval("field",smallstr.field)
+              <<Keyval("base",numstr.base)
+              <<Keyval("comment","unsupported base (must be 2..36, 95, or 256)"));
+    }
 }
 
+// Generate $name_Getnum: parse the stored digit string back to the numeric
+// type, clearing and_ok on an invalid digit or a value outside the numtype
+// range; the empty string reads as zero
 void amc::tfunc_Numstr_Getnum() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;
@@ -100,15 +261,15 @@ void amc::tfunc_Numstr_Getnum() {
     } else {
         Ins(&R, qgetnum.body    , "for (int i = 0; i < str.n_elems; i++) {");
         Ins(&R, qgetnum.body    , "    char ch = str.elems[i];");
-        Ins(&R, qgetnum.body    , "    int digit = ch;");
         if (numstr.base >= 2 && numstr.base <= 36) {
+            Ins(&R, qgetnum.body, "    int digit = ch;");
             Ins(&R, qgetnum.body, "    if (ch >= '0' && ch < '0' + $bthresh) {");
             Ins(&R, qgetnum.body, "        digit -= '0';");
         }
         if (numstr.base > 10 && numstr.base <= 36) {
-            Ins(&R, qgetnum.body, "    } else if (ch >= 'a' && ch <= 'a' + $base-10) {");
+            Ins(&R, qgetnum.body, "    } else if (ch >= 'a' && ch < 'a' + $base-10) {");
             Ins(&R, qgetnum.body, "        digit = digit - 'a' + 10;");
-            Ins(&R, qgetnum.body, "    } else if (ch >= 'A' && ch <= 'A' + $base-10) {");
+            Ins(&R, qgetnum.body, "    } else if (ch >= 'A' && ch < 'A' + $base-10) {");
             Ins(&R, qgetnum.body, "        digit = digit - 'A' + 10;");
         }
         if (numstr.base >= 2 && numstr.base <= 36) {
@@ -117,13 +278,21 @@ void amc::tfunc_Numstr_Getnum() {
             Ins(&R, qgetnum.body, "    }");
         }
         if (numstr.base == 95) {
-            Ins(&R, qgetnum.body, "    digit = u8((u8)ch - (u8)' ');");
+            // ' ' is digit zero; the u8 wraparound maps every char below ' ' past 94,
+            // so one comparison rejects everything outside the printable range ' '..'~'
+            Ins(&R, qgetnum.body, "    int digit = u8((u8)ch - (u8)' ');");
+            Ins(&R, qgetnum.body, "    and_ok &= digit < $base;");
+        }
+        if (numstr.base == 256) {
+            // plain char may be signed: a byte >= 0x80 is a large digit, not a negative one
+            Ins(&R, qgetnum.body, "    int digit = u8(ch);");
         }
         if (str_max_may_not_fit_in_u64) {
-            Ins(&R, qgetnum.body, "    // Check for 64-bit overflow inside the loop");
-            Ins(&R, qgetnum.body, "    u64 r1 = val*$base + digit;");
-            Ins(&R, qgetnum.body, "    and_ok &= (val <= r1);");
-            Ins(&R, qgetnum.body, "    val = r1;");
+            Ins(&R, qgetnum.body, "    // Check for 64-bit overflow before multiplying: val*$base + digit fits");
+            Ins(&R, qgetnum.body, "    // in 64 bits exactly when val < q, or val == q and digit <= r, where");
+            Ins(&R, qgetnum.body, "    // q,r split 2^64-1 by $base; the constant divisions fold at compile time");
+            Ins(&R, qgetnum.body, "    and_ok &= (val < 0xffffffffffffffffULL/$base || (val == 0xffffffffffffffffULL/$base && u64(digit) <= 0xffffffffffffffffULL%$base));");
+            Ins(&R, qgetnum.body, "    val = val*$base + digit;");
         } else {
             Ins(&R, qgetnum.body, "    val = val*$base + digit;");
         }
@@ -131,13 +300,16 @@ void amc::tfunc_Numstr_Getnum() {
     }
 
     if (numstr.issigned) {
-        Ins(&R, qgetnum.body    , "i64 ret = is_neg ? -val : val;");
-        if ((str_max >= numstr.nummax) && !str_max_may_not_fit_in_u64) { // 64-bit overflow is already checked
-            Ins(&R, qgetnum.body    , "and_ok &= ret >= $nummin && ret <= $nummax;");// check for overflow
+        // the check is on the unsigned magnitude: a check on the i64 result cannot
+        // see val > i64max (the cast wraps), and the negative bound is one larger
+        if (str_max >= numstr.nummax) {
+            Ins(&R, qgetnum.body    , "and_ok &= val <= u64($nummax) + u64(is_neg);");// check for overflow
         }
+        Ins(&R, qgetnum.body    , "i64 ret = is_neg ? -val : val;");
         Ins(&R, qgetnum.body    , "return $Rtype(ret);");
     } else {
-        if ((str_max >= numstr.nummax) && !str_max_may_not_fit_in_u64) { // 64-bit overflow is already checked
+        // for a u64 numtype the in-loop 64-bit overflow check is the range check
+        if ((str_max >= numstr.nummax) && numstr.nummax < 0xffffffffffffffffULL) {
             Ins(&R, qgetnum.body    , "and_ok &= val <= $nummax;");// check for overflow
         }
         Ins(&R, qgetnum.body    , "return $Rtype(val);");
@@ -145,6 +317,8 @@ void amc::tfunc_Numstr_Getnum() {
 }
 
 
+// Generate $name_GetnumDflt: read the stored value through Getnum,
+// returning DFLT when the string does not parse
 void amc::tfunc_Numstr_GetnumDflt() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;
@@ -160,11 +334,13 @@ void amc::tfunc_Numstr_GetnumDflt() {
     Ins(&R, getnumdflt.ret  , "$Rtype", false);
     Ins(&R, getnumdflt.proto, "$name_GetnumDflt($Parent, $Rtype dflt)", false);
     Ins(&R, getnumdflt.body , "bool ok = true;");
-    Ins(&R, getnumdflt.body , "$Rtype result = $name_Getnum($parname, ok);");
+    Ins(&R, getnumdflt.body , "$Rtype result = $name_Getnum($pararg, ok);");
     Ins(&R, getnumdflt.body , "return ok ? result : dflt;");
 }
 
 
+// Generate $name_Geti64: read the stored value as an i64, failing a value
+// above i64max rather than wrapping it negative through the cast
 void amc::tfunc_Numstr_Geti64() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;
@@ -179,127 +355,176 @@ void amc::tfunc_Numstr_Geti64() {
     Ins(&R, geti64.ret  , "i64", false);
     Ins(&R, geti64.proto, "$name_Geti64($Parent, bool &out_ok)", false);
     Ins(&R, geti64.body , "out_ok = true;");
-    Ins(&R, geti64.body , "i64 result = $name_Getnum($parname, out_ok);");
-    Ins(&R, geti64.body , "return result;");
+    // a u64 numtype holds values above i64max; the plain cast wraps them to
+    // a negative i64, so the value must fail instead
+    if (!numstr.issigned && numstr.nummax > 0x7fffffffffffffffULL) {
+        Ins(&R, geti64.body , "$Rtype num = $name_Getnum($pararg, out_ok);");
+        Ins(&R, geti64.body , "out_ok &= num <= 0x7fffffffffffffffULL;");
+        Ins(&R, geti64.body , "return i64(num);");
+    } else {
+        Ins(&R, geti64.body , "i64 result = $name_Getnum($pararg, out_ok);");
+        Ins(&R, geti64.body , "return result;");
+    }
 }
 
+// Generate $name_SetnumMaybe: format the number into the string through an
+// auxiliary buffer, refusing -- with the stored string left unchanged -- a
+// value outside the numtype range or digits that do not fit the string
 void amc::tfunc_Numstr_SetnumMaybe() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;
     amc::FSmallstr &smallstr = *field.c_smallstr;
     amc::FNumstr &numstr = *smallstr.c_numstr;
 
-    // Setnumx: Set string from number.
-    // Conversion is performed using an auxiliary buffer.
-    //
     amc::FFunc& setnum = amc::CreateCurFunc();
     Set(R, "$base", tempstr() << numstr.base);
+    Set(R, "$budget", tempstr() << numstr_pad_budget);
+    Set(R, "$bufsize", tempstr() << 2*numstr_pad_budget);
     Ins(&R, setnum.comment, "Set string to number specified in RHS performing base-$base conversion.");
-    Ins(&R, setnum.comment, "If the number is too large for the string, return false.");
+    Ins(&R, setnum.comment, "If the number is out of range for the numeric type,");
+    Ins(&R, setnum.comment, "or too large for the string, return false.");
     Ins(&R, setnum.ret  , "bool", false);
     Ins(&R, setnum.proto, "$name_SetnumMaybe($Parent, i64 rhs)", false);
-    Ins(&R, setnum.body        , "char buf[128];");
-    Ins(&R, setnum.body        , "int length = 0;");
-    Ins(&R, setnum.body        , "int charpos = 64;"); // start in the middle
+    // values outside the numtype range must fail rather than store digits of a
+    // different number: the base-10 fast path formats through a u32-parameter
+    // FmtBuf, which wraps rhs mod 2^32 before the string-length gate can see it.
+    // An i64 numtype needs no check (rhs spans it exactly); u64 needs only rhs>=0.
+    tempstr inrange_expr;
     if (numstr.issigned) {
-        Ins(&R, setnum.body    , "u64 val = (rhs < 0 ? -rhs : rhs);");
+        if (numstr.nummax < 0x7fffffffffffffffULL) {
+            inrange_expr << "rhs >= $nummin && rhs <= $nummax";
+        }
     } else {
-        Ins(&R, setnum.body    , "u64 val = rhs;");
+        inrange_expr << "rhs >= 0";
+        if (numstr.nummax < 0xffffffffffffffffULL) {
+            inrange_expr << " && rhs <= $nummax";
+        }
+    }
+    bool gated = ch_N(inrange_expr) > 0;
+    // the conversion, built separately so it can be spliced under the range
+    // gate when one exists: an out-of-range rhs then performs no conversion
+    // and cannot store the digits of a different number
+    cstring conv;
+    Ins(&R, conv        , "char buf[$bufsize];");
+    if (numstr.issigned) {
+        // negate after widening to u64: -rhs in i64 is undefined for i64min,
+        // whose magnitude has no i64 representation
+        Ins(&R, conv    , "u64 val = (rhs < 0 ? 0 - u64(rhs) : u64(rhs));");
+    } else {
+        Ins(&R, conv    , "u64 val = rhs;");
     }
 
     if ((numstr.base == 10) && ((numstr.numtype == "u16") || (numstr.numtype == "i16"))) {
-        Ins(&R, setnum.body    , "length = algo::u16_FmtBuf(val, (u8*)buf + charpos);");
+        Ins(&R, conv    , "int charpos = $budget;");
+        Ins(&R, conv    , "int length = algo::u16_FmtBuf(val, (u8*)buf + charpos);");
     } else if ((numstr.base == 10) && ((numstr.numtype == "u32") || (numstr.numtype == "i32"))) {
-        Ins(&R, setnum.body    , "length = algo::u32_FmtBuf(val, (u8*)buf + charpos);");
+        Ins(&R, conv    , "int charpos = $budget;");
+        Ins(&R, conv    , "int length = algo::u32_FmtBuf(val, (u8*)buf + charpos);");
     } else if ((numstr.base == 10) && ((numstr.numtype == "u64") || (numstr.numtype == "i64"))) {
-        Ins(&R, setnum.body    , "length = algo::u64_FmtBuf(val, (u8*)buf + charpos);");
+        Ins(&R, conv    , "int charpos = $budget;");
+        Ins(&R, conv    , "int length = algo::u64_FmtBuf(val, (u8*)buf + charpos);");
     } else {
-        Ins(&R, setnum.body    , "charpos = sizeof(buf);");
-        Ins(&R, setnum.body    , "do {");
-        Ins(&R, setnum.body    , "    u32 rem = u32(val % $base);");
-        Ins(&R, setnum.body    , "    val = val / $base;");
-        Ins(&R, setnum.body    , "    char ch;");
+        Ins(&R, conv    , "int charpos = sizeof(buf);");
+        Ins(&R, conv    , "do {");
+        Ins(&R, conv    , "    u32 rem = u32(val % $base);");
+        Ins(&R, conv    , "    val = val / $base;");
+        Ins(&R, conv    , "    char ch;");
         if (numstr.base == 256) {
-            Ins(&R, setnum.body, "    ch = char(rem);");
+            Ins(&R, conv, "    ch = char(rem);");
         } else if (numstr.base <= 10) {
-            Ins(&R, setnum.body, "    ch = char('0'+rem);");
+            Ins(&R, conv, "    ch = char('0'+rem);");
         } else if (numstr.base > 10 && numstr.base <= 36) {
-            Ins(&R, setnum.body, "    ch = rem < 10 ? char('0' + rem) : char('A' + rem - 10);");
+            Ins(&R, conv, "    ch = rem < 10 ? char('0' + rem) : char('A' + rem - 10);");
         } else {
-            Ins(&R, setnum.body, "    ch = char(rem + ' ');");
+            Ins(&R, conv, "    ch = char(rem + ' ');");
         }
-        Ins(&R, setnum.body    , "    buf[--charpos] = ch;");
-        Ins(&R, setnum.body    , "} while (val != 0);");
-        Ins(&R, setnum.body    , "length = sizeof(buf) - charpos;");
+        Ins(&R, conv    , "    buf[--charpos] = ch;");
+        Ins(&R, conv    , "} while (val != 0);");
+        Ins(&R, conv    , "int length = sizeof(buf) - charpos;");
     }
     Set(R, "$minlength", tempstr() << numstr.min_len);
     // string is guaranteed to have at least one character written to it
     // because of the do-while above
     if (numstr.min_len > 1) {
-        Ins(&R, setnum.body        , "//pad string with 0s up to min_length");
-        Ins(&R, setnum.body        , "while (charpos > 0 && length < $minlength) {");
-        Ins(&R, setnum.body        , "    buf[--charpos] = '0';");
-        Ins(&R, setnum.body        , "    ++length;");
-        Ins(&R, setnum.body        , "}");
+        // the pad is the base's zero digit, so the padded string parses back
+        // to the same value: '0' is digit 16 in base 95 and digit 48 in base 256
+        Set(R, "$zerodigit", numstr.base == 256 ? "'\\0'" : numstr.base == 95 ? "' '" : "'0'");
+        Ins(&R, conv        , "//pad string with zero digits up to min_length");
+        Ins(&R, conv        , "while (charpos > 0 && length < $minlength) {");
+        Ins(&R, conv        , "    buf[--charpos] = $zerodigit;");
+        Ins(&R, conv        , "    ++length;");
+        Ins(&R, conv        , "}");
     }
+    // the sign is prepended in front of the digits (including any pad zeros),
+    // so the printed string parses back to the same value
     if (numstr.issigned) {
-        Ins(&R, setnum.body    , "if (rhs < 0) {");
-        Ins(&R, setnum.body    , "    if (charpos > 0 && buf[charpos] != '0') {");
-        Ins(&R, setnum.body    , "        --charpos;");
-        Ins(&R, setnum.body    , "        ++length;");
-        Ins(&R, setnum.body    , "    }");
-        Ins(&R, setnum.body    , "    buf[charpos] = '-';");
-        Ins(&R, setnum.body    , "}");
+        Ins(&R, conv    , "if (rhs < 0) {");
+        Ins(&R, conv    , "    if (charpos > 0) {");
+        Ins(&R, conv    , "        --charpos;");
+        Ins(&R, conv    , "        ++length;");
+        Ins(&R, conv    , "    }");
+        Ins(&R, conv    , "    buf[charpos] = '-';");
+        Ins(&R, conv    , "}");
     }
-    Ins(&R, setnum.body        , "bool retval = length <= $max_length;");
-    Ins(&R, setnum.body        , "if (retval) {");
-    Ins(&R, setnum.body        , "    $name_SetStrptr($pararg, algo::strptr(buf + charpos, length));");
-    Ins(&R, setnum.body        , "}");
-    Ins(&R, setnum.body        , "return retval;");
+    Set(R, "$retdecl", gated ? "retval" : "bool retval");
+    Ins(&R, conv        , "$retdecl = length <= $max_length;");
+    Ins(&R, conv        , "if (retval) {");
+    Ins(&R, conv        , "    $name_SetStrptr($pararg, algo::strptr(buf + charpos, length));");
+    Ins(&R, conv        , "}");
+    if (gated) {
+        Ins(&R, setnum.body, "bool retval = false;");
+        Ins(&R, setnum.body, tempstr() << "if (" << inrange_expr << ") {");
+    }
+    setnum.body << conv;// emission re-indents the body from its brace structure
+    if (gated) {
+        Ins(&R, setnum.body, "}");
+    }
+    Ins(&R, setnum.body, "return retval;");
 }
 
 
+// Generate $ns::ForAllStrings: each numstr field appends a block filling
+// a descriptor -- accessor pointers and the shape facts -- and calling
+// the test function on it
 void amc::tfunc_Numstr_ForAllStrings() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;
     amc::FSmallstr &smallstr = *field.c_smallstr;
     amc::FNumstr &numstr = *smallstr.c_numstr;
     Set(R, "$min_length", tempstr() << numstr.min_len);
-    if (numstr.base <= 36) {
-        amc::FFunc& forallstr = amc::ind_func_GetOrCreate(Subst(R,"$ns...ForAllStrings"));
-        Set(R, "$issigned", numstr.issigned ? "true" : "false");
-        Set(R, "$Strtype", tempstr() << "\"" << smallstr.strtype << "\"");
+    amc::FFunc& forallstr = amc::ind_func_GetOrCreate(Subst(R,"$ns...ForAllStrings"));
+    Set(R, "$issigned", numstr.issigned ? "true" : "false");
+    Set(R, "$Strtype", tempstr() << "\"" << smallstr.strtype << "\"");
 
-        if (!ch_N(forallstr.proto)) {
-            Ins(&R, forallstr.comment, "Test string conversion");
-            Ins(&R, forallstr.ret   , "void", false);
-            Ins(&R, forallstr.proto , "ForAllStrings(void (*fcn)(algo::StringDesc&) )", false);
-            Ins(&R, forallstr.body  , "algo::StringDesc desc;");
-            forallstr.glob = true;
-        }
-        Ins(&R, forallstr.body      , "// fill out descriptor for numstr:$field");
-
-        Ins(&R, forallstr.body      , "{");
-        Ins(&R, forallstr.body      , "    desc.Geti64      = "
-            "Geti64Fcn(static_cast<i64(*)($Partype&,bool&)>($name_Geti64));");
-        Ins(&R, forallstr.body      , "    desc.SetnumMaybe = "
-            "SetnumFcn(static_cast<bool(*)($Partype&,i64)>($name_SetnumMaybe));");
-        Ins(&R, forallstr.body      , "    desc.Init        = "
-            "InitFcn(static_cast<void(*)($Partype&)>($name_Init));");
-        Ins(&R, forallstr.body      , "    desc.Getary      = "
-            "GetaryFcn(static_cast<algo::aryptr<char>(*)(const $Partype&)>($name_Getary));");
-        Ins(&R, forallstr.body      , "    desc.smallstr    = \"$field\";");
-        Ins(&R, forallstr.body      , "    desc.strtype     = $Strtype;");
-        Ins(&R, forallstr.body      , "    desc.pad         = $pad;");
-        Ins(&R, forallstr.body      , "    desc.base        = $base;");
-        Ins(&R, forallstr.body      , "    desc.issigned    = $issigned;");
-        Ins(&R, forallstr.body      , "    desc.min_length  = $min_length;");
-        Ins(&R, forallstr.body      , "    desc.max_length  = $max_length;");
-        Ins(&R, forallstr.body      , "    desc.numtype_max = $nummax;");
-        Ins(&R, forallstr.body      , "    desc.numtype_min = $nummin;");
-        Ins(&R, forallstr.body      , "    fcn(desc); // call test function");
-        Ins(&R, forallstr.body      , "}");
+    if (!ch_N(forallstr.proto)) {
+        Ins(&R, forallstr.comment, "Test string conversion");
+        Ins(&R, forallstr.ret   , "void", false);
+        Ins(&R, forallstr.proto , "ForAllStrings(void (*fcn)(algo::StringDesc&) )", false);
+        Ins(&R, forallstr.body  , "algo::StringDesc desc;");
+        forallstr.glob = true;
     }
+    Ins(&R, forallstr.body      , "// fill out descriptor for numstr:$field");
+
+    Ins(&R, forallstr.body      , "{");
+    Ins(&R, forallstr.body      , "    desc.Geti64      = "
+        "Geti64Fcn(static_cast<i64(*)($Partype&,bool&)>($name_Geti64));");
+    Ins(&R, forallstr.body      , "    desc.SetnumMaybe = "
+        "SetnumFcn(static_cast<bool(*)($Partype&,i64)>($name_SetnumMaybe));");
+    Ins(&R, forallstr.body      , "    desc.Init        = "
+        "InitFcn(static_cast<void(*)($Partype&)>($name_Init));");
+    Ins(&R, forallstr.body      , "    desc.Getary      = "
+        "GetaryFcn(static_cast<algo::aryptr<char>(*)(const $Partype&)>($name_Getary));");
+    Ins(&R, forallstr.body      , "    desc.smallstr    = \"$field\";");
+    Ins(&R, forallstr.body      , "    desc.strtype     = $Strtype;");
+    Ins(&R, forallstr.body      , "    desc.pad         = $pad;");
+    Ins(&R, forallstr.body      , "    desc.base        = $base;");
+    Ins(&R, forallstr.body      , "    desc.issigned    = $issigned;");
+    Ins(&R, forallstr.body      , "    desc.min_length  = $min_length;");
+    Ins(&R, forallstr.body      , "    desc.max_length  = $max_length;");
+    Ins(&R, forallstr.body      , "    desc.numtype_max = $nummax;");
+    Ins(&R, forallstr.body      , "    desc.numtype_min = $nummin;");
+    Ins(&R, forallstr.body      , "    fcn(desc); // call test function");
+    Ins(&R, forallstr.body      , "}");
 }
 
 // -----------------------------------------------------------------------------
@@ -316,6 +541,9 @@ static void GenParseNum(strptr type, strptr valtype, bool issigned, strptr maxva
     Set(R, "$valtype", valtype);
     Set(R, "$maxval", maxval);
     Set(R, "$negval", (issigned ? "-num" : "0"));
+    // Two's-complement negative range is one larger than positive: when the
+    // sign is negative, allow magnitude up to MAX+1 so INT_MIN is reachable.
+    Set(R, "$cap", issigned ? "($maxval + $valtype(neg))" : "$maxval");
     Set(R, "$maxdig", tempstr()<<maxdig);
     amc::FFunc *_func = amc::ind_func_Find(Subst(R,"$type..ReadStrptrMaybe"));
     vrfy(_func,tempstr()<<"amc: function "<<Subst(R,"$type..ReadStrptrMaybe")<<" not found, make sure cfmt:$type.String exists");
@@ -323,11 +551,12 @@ static void GenParseNum(strptr type, strptr valtype, bool issigned, strptr maxva
     func.extrn=false;
     Ins(&R, func.comment, "Attempt to parse $type from in_str");
     Ins(&R, func.comment, "Leading whitespace is silently skipped");
-    Ins(&R, func.comment, "Return success value; If false, PARENT is unchanged");
-    Ins(&R, func.comment, "String must be non-empty");
-    Ins(&R, func.comment, "Number may prefixed with + or - (with no space after)");
+    Ins(&R, func.comment, "Return success value; if false, PARENT is unchanged");
+    Ins(&R, func.comment, "An empty string parses as 0; a whitespace-only string fails");
+    Ins(&R, func.comment, "Number may be prefixed with + or - (with no space after)");
+    Ins(&R, func.comment, "Parsing stops at the first non-digit character; trailing text is silently ignored");
     Ins(&R, func.comment, "If the value is outside of valid range for the type, it is clipped to the valid range");
-    Ins(&R, func.comment, "Supported bases: 10, 16 (if string starts with 0x or 0X");
+    Ins(&R, func.comment, "Supported bases: 10, 16 (if string starts with 0x or 0X)");
     Ins(&R, func.comment, "For hex numbers, there is no overflow (just take last N digits that fit the type)");
 
     Ins(&R, func.body, "int index = 0;");
@@ -372,7 +601,12 @@ static void GenParseNum(strptr type, strptr valtype, bool issigned, strptr maxva
     Ins(&R, func.body, "        num = num*16 + val;");
     Ins(&R, func.body, "    }");
     Ins(&R, func.body, "} else {");
-    Ins(&R, func.body, "    int lim = u32_Min(index+$maxdig-1, in_str.n_elems); // 1 digit already in num");
+    Ins(&R, func.body, "    // leading zeros carry no magnitude: skip them so the digit window that");
+    Ins(&R, func.body, "    // bounds overflow detection counts significant digits only");
+    Ins(&R, func.body, "    while (num == 0 && index < in_str.n_elems && in_str.elems[index] == '0') {");
+    Ins(&R, func.body, "        index++;");
+    Ins(&R, func.body, "    }");
+    Ins(&R, func.body, "    int lim = u32_Min(index + $maxdig - (num != 0 ? 1 : 0), in_str.n_elems); // count the digit already in num");
     Ins(&R, func.body, "    for (; index < lim; index++) {");
     Ins(&R, func.body, "        c = in_str.elems[index];");
     Ins(&R, func.body, "        if (!algo_lib::DigitCharQ(c)) {");
@@ -394,15 +628,18 @@ static void GenParseNum(strptr type, strptr valtype, bool issigned, strptr maxva
         Ins(&R, func.body, "        num2 = num2*10 + (c-'0');");
         Ins(&R, func.body, "        div = div*10;");
         Ins(&R, func.body, "    }");
-        Ins(&R, func.body, "    if (num > $maxval/div) {");
-        Ins(&R, func.body, "        num = $maxval;");
+        Ins(&R, func.body, "    // clip: num > cap/div alone misses the boundary batch, where");
+        Ins(&R, func.body, "    // num == cap/div but the second batch pushes past cap");
+        Ins(&R, func.body, "    $valtype cap = $cap;");
+        Ins(&R, func.body, "    if (num > cap/div || (num == cap/div && num2 > cap - num*div)) {");
+        Ins(&R, func.body, "        num = cap;");
         Ins(&R, func.body, "    } else {");
         Ins(&R, func.body, "        num = num*div + num2;");
         Ins(&R, func.body, "    }");
         Ins(&R, func.body, "}");
     } else {
-        Ins(&R, func.body, "if (num > $maxval) {");
-        Ins(&R, func.body, "    num = $maxval;");
+        Ins(&R, func.body, "if (num > $cap) {");
+        Ins(&R, func.body, "    num = $cap;");
         Ins(&R, func.body, "}");
     }
     Ins(&R, func.body, "}");

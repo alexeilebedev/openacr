@@ -36,15 +36,19 @@ void amc::tfunc_Substr_Get() {
         Set(R, "$Fldtype", field.cpp_type);
         Set(R, "$name"   , name_Get(field));
 
+        // A string-typed substring is returned as a view (strptr) into the
+        // source field's storage: copying it into a $Fldtype temporary invites
+        // the caller to bind a strptr to that temporary, which dangles.
+        bool retview = ConstructFromStringQ(*field.p_arg);
         amc::FFunc& get = amc::CreateCurFunc();
-        Ins(&R, get.ret  , "$Fldtype", false);
+        Ins(&R, get.ret  , retview ? strptr("algo::strptr") : strptr("$Fldtype"), false);
         Ins(&R, get.proto, "$name_Get($Parent)", false);
 
         Set(R, "$substrexpr", substr->expr.value);
         Set(R, "$pathexpr", tempstr()<<"algo::Pathcomp("<<FieldvalExpr(field.p_ctype, *substr->p_srcfield,"$parname")<<", \"$substrexpr\")");
 
-        if (ConstructFromStringQ(*field.p_arg)) {
-            Ins(&R, get.body    , "$Fldtype ret($pathexpr);");
+        if (retview) {
+            Ins(&R, get.body    , "return $pathexpr;");
         } else {
             Set(R, "$dflt"   , DfltExprVal(field));
             Ins(&R, get.body    , "$Fldtype ret;");
@@ -52,8 +56,8 @@ void amc::tfunc_Substr_Get() {
                 Ins(&R, get.body, "ret = $dflt; // default value");// hack -- compatibility with bool_ReadStrptr which doesn't throw
             }
             Ins(&R, get.body    , "(void)$Cpptype_ReadStrptrMaybe(ret, $pathexpr);");
+            Ins(&R, get.body    , "return ret;");
         }
-        Ins(&R, get.body        , "return ret;");
     }
 }
 
@@ -69,15 +73,18 @@ void amc::tfunc_Substr_Get2() {
         Set(R, "$name"   , name_Get(field));
         Set(R, "$Substrprefix", name_Get(*field.p_ctype));
 
+        // Same rule as tfunc_Substr_Get: a string-typed substring is a view,
+        // here into the caller's arg, which the caller owns.
+        bool retview = ConstructFromStringQ(*field.p_arg);
         amc::FFunc& get = amc::CreateCurFunc();
-        Ins(&R, get.ret  , "$Fldtype", false);
+        Ins(&R, get.ret  , retview ? strptr("algo::strptr") : strptr("$Fldtype"), false);
         Ins(&R, get.proto, "$Substrprefix_$name_Get(algo::strptr arg)", false);
 
         Set(R, "$substrexpr", substr->expr.value);
         Set(R, "$pathexpr", tempstr()<<"algo::Pathcomp(arg, \"$substrexpr\")");
 
-        if (amc::ConstructFromStringQ(*field.p_arg)) {
-            Ins(&R, get.body    , "$Fldtype ret($pathexpr);");
+        if (retview) {
+            Ins(&R, get.body    , "return $pathexpr;");
         } else {
             Set(R, "$dflt"   , DfltExprVal(field));
             Ins(&R, get.body    , "$Fldtype ret;");
@@ -85,7 +92,7 @@ void amc::tfunc_Substr_Get2() {
                 Ins(&R, get.body, "ret = $dflt; // default value");// hack -- compatibility with bool_ReadStrptr which doesn't throw
             }
             Ins(&R, get.body    , "(void)$Cpptype_ReadStrptrMaybe(ret, $pathexpr);");
+            Ins(&R, get.body    , "return ret;");
         }
-        Ins(&R, get.body        , "return ret;");
     }
 }

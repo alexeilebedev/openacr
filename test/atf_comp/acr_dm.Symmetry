@@ -1,0 +1,10 @@
+# start bash cmd:"bash -c '$bindir/acr_dm test/acr_dm/symmetry1.ssim test/acr_dm/symmetry2.ssim test/acr_dm/symmetry3.ssim > $tempdir/merge.ssim; $bindir/acr_dm test/acr_dm/symmetry1.ssim test/acr_dm/symmetry3.ssim test/acr_dm/symmetry2.ssim > $tempdir/rebase.ssim; cat $tempdir/merge.ssim; cmp -s $tempdir/merge.ssim $tempdir/rebase.ssim && echo rebase_same:Y || echo rebase_same:N'"
+# eof bash
+bash -> dmmeta.field  field:ns.C.a  arg:i32  reftype:Val  dflt:""  comment:""
+bash -> dmmeta.field  field:ns.C.m1  arg:i32  reftype:Val  dflt:""  comment:""
+bash -> dmmeta.field  field:ns.C.m2  arg:i32  reftype:Val  dflt:""  comment:""
+bash -> dmmeta.field  field:ns.C.p1  arg:i32  reftype:Val  dflt:""  comment:""
+bash -> dmmeta.field  field:ns.C.p2  arg:i32  reftype:Val  dflt:""  comment:""
+bash -> dmmeta.field  field:ns.C.z  arg:i32  reftype:Val  dflt:""  comment:""
+bash -> rebase_same:Y
+# exit bash code:0

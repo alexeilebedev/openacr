@@ -313,14 +313,56 @@ void algo::ShowStackTrace(uintptr_t start_ip, cstring &out) {
 
 // -----------------------------------------------------------------------------
 
+// Emit TEXT to stderr, and append it to the fatal-record file when one is
+// named, allocating nothing on either path.
+//
+// A fail-stop most often reports an allocation that failed, and a report of
+// memory exhaustion cannot ask for memory to describe itself.  So the writes
+// are raw ones: the record path was composed and zero-terminated when memory
+// was plentiful (algo_lib::Userinit), and the file is opened for append at the
+// moment of the death, which needs no heap.  Append rather than truncate, so a
+// second failure adds to the account of the first instead of erasing it.
+static void FatalEmit(algo::strptr text) {
+    algo::WriteFile(algo::Fildes(2), (u8*)text.elems, text.n_elems);
+    if (algo_lib::_db.fatalerr_file.ch_n > 0) {
+        int fd = open(algo_lib::_db.fatalerr_file.ch_elems, O_WRONLY | O_CREAT | O_APPEND, 0644);
+        if (fd >= 0) {
+            algo::WriteFile(algo::Fildes(fd), (u8*)text.elems, text.n_elems);
+            (void)close(fd);
+        }
+    }
+}
+
 void algo::FatalErrorExit(const char *a) NORETURN {
-    cstring &out = algo_lib::_db.fatalerr;
-    out << "algo.fatal_error" << eol;
-    out << a << eol;
-    out << " "<<gitinfo_Get()<<eol;
-    ShowStackTrace((uintptr_t)&FatalErrorExit, out);
-    PrintTraces();
-    std::cerr << Zeroterm(out) << "\n";// do not use prerr!
+    // State the cause before attempting anything that could fail to state it.
+    //
+    // Consider the caller that brings most processes here: a container's
+    // grower asked the allocator for a larger block, was refused, and called
+    // this function to say so.  Composing a report appends to a cstring, which
+    // calls the same grower, which is refused for the same reason and calls
+    // this function again -- and the cycle ends as a stack overflow with
+    // nothing printed at all, so the death arrives as a segfault and an
+    // out-of-memory fail-stop is recorded as a crash.
+    //
+    // The general fact is that the report path must not depend on the resource
+    // whose absence it exists to report.  So the cause goes out first, through
+    // writes that allocate nothing, and only then is the enrichment -- the
+    // build, the backtrace, the trace counters -- composed and emitted.  A
+    // second entry means that enrichment is what failed, and it adds its own
+    // cause to a record that already carries the original one.
+    FatalEmit("algo.fatal_error\n");
+    FatalEmit(a);
+    FatalEmit("\n");
+    bool first = !algo_lib::_db.in_fatalerr;
+    algo_lib::_db.in_fatalerr = true;
+    if (first) {
+        cstring &out = algo_lib::_db.fatalerr;
+        ch_RemoveAll(out);
+        out << " "<<gitinfo_Get()<<eol;
+        ShowStackTrace((uintptr_t)&FatalErrorExit, out);
+        PrintTraces();
+        FatalEmit(algo::strptr(out.ch_elems, out.ch_n));
+    }
 #if defined (_WIN32) && defined(_DEBUG)
     DebugBreak();
 #endif
@@ -336,18 +378,43 @@ void algo::FatalErrorExit(const char *a) NORETURN {
 static void Signal(int signal, siginfo_t *_si, void *context) {
     (void)_si;// ignore siginfo
     ucontext_t *uc = (ucontext_t*)context;
-    cstring &out=algo_lib::_db.fatalerr;
-    out << "algo_lib.signal"
-        <<Keyval("local",IpString(uc))
-        <<Keyval("text",strsignal(signal))
-        <<eol;
-    out << algo::gitinfo_Get()<<eol;
-    ShowStackTrace(GetIp(uc),out);
-    PrintTraces();
+    // State the signal and the faulting address before composing anything that
+    // could fail to state them, for the reason FatalErrorExit gives: the report
+    // path must not depend on the resource whose absence it exists to report.
+    // A SIGSEGV raised by a stack overflow is the case that matters here --
+    // composing the report appends to a cstring, and the append needs stack the
+    // handler does not have, so a report composed first is a report never
+    // emitted.  The signal and the address go out through writes that allocate
+    // nothing; the build, the backtrace and the trace counters follow.
+    char ip[32];
+    ip[0] = 0;
+    (void)snprintf(ip, sizeof(ip), "0x%lx", (unsigned long)GetIp(uc));
     // do not use prerr, be safe: this function may be called from a thread
-    // that doesn't support prerr.
-    algo::WriteFile(algo::Fildes(2), (u8*)out.ch_elems, out.ch_n);
-    algo::WriteFile(algo::Fildes(2), (u8*)"\n", 1);
+    // that doesn't support prerr.  A signal death reaches the fatal-record
+    // file by the same writer a fail-stop uses, so one destination carries
+    // both kinds of death.
+    FatalEmit("algo_lib.signal  text:");
+    FatalEmit(strsignal(signal));
+    FatalEmit("  ip:");
+    FatalEmit(ip);
+    FatalEmit("\n");
+    // Compose the enrichment into a buffer emptied first.  A fail-stop leaves
+    // its own report in this buffer, so a signal death that follows one would
+    // otherwise re-emit the fail-stop's account of itself as though it belonged
+    // to the signal.  A second entry means the enrichment is what faulted, and
+    // the cause above is already out.
+    bool first = !algo_lib::_db.in_fatalerr;
+    algo_lib::_db.in_fatalerr = true;
+    if (first) {
+        cstring &out=algo_lib::_db.fatalerr;
+        ch_RemoveAll(out);
+        out << " "<<Keyval("local",IpString(uc))<<eol;
+        out << algo::gitinfo_Get()<<eol;
+        ShowStackTrace(GetIp(uc),out);
+        PrintTraces();
+        FatalEmit(algo::strptr(out.ch_elems, out.ch_n));
+        FatalEmit("\n");
+    }
     // Pass on the signal (so that a core file is produced).
     struct sigaction sa;
     sa.sa_handler = SIG_DFL;
@@ -361,10 +428,30 @@ static void Signal(int signal, siginfo_t *_si, void *context) {
 
 // catch fatal signals and show backtrace
 void algo::SetupFatalSignals() {
+    // Run the handler on a stack of its own.  A recursion that exhausts the
+    // stack faults on the guard page, and a handler entered on the stack that
+    // just ran out has nowhere to execute: it faults again and the kernel
+    // reverts to the default disposition, so the crash whose report is most
+    // wanted is the one that produces none.  A tool given a bad option
+    // recurses until it overflows and, with the handler armed but sharing that
+    // stack, printed nothing at all.  The alternate stack is static because the
+    // arming happens once and the handler must not depend on the allocator.
+#if !defined(WIN32)
+    // 64K, a fixed size rather than SIGSTKSZ: glibc now defines that as a
+    // sysconf call rather than a constant, and this array must be sized at
+    // compile time.  The report composes into a buffer reserved elsewhere, so
+    // the handler's own frames are what this has to hold.
+    static char altstack[64*1024];
+    stack_t ss;
+    ss.ss_sp    = altstack;
+    ss.ss_size  = sizeof(altstack);
+    ss.ss_flags = 0;
+    (void)sigaltstack(&ss, NULL);
+#endif
     struct sigaction sa;
     sa.sa_sigaction = Signal;
     sigemptyset(&sa.sa_mask);
-    sa.sa_flags = SA_SIGINFO;
+    sa.sa_flags = SA_SIGINFO | SA_ONSTACK;
     sigaction(SIGSEGV  ,&sa, NULL);
     sigaction(SIGILL   ,&sa, NULL);
     sigaction(SIGBUS   ,&sa, NULL);

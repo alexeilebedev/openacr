@@ -28,8 +28,8 @@
 
 // --- lib_amcdb_FieldIdEnum
 
-enum lib_amcdb_FieldIdEnum {        // lib_amcdb.FieldId.value
-     lib_amcdb_FieldId_value   = 0
+enum lib_amcdb_FieldIdEnum {    // lib_amcdb.FieldId.value
+     lib_amcdb_FieldId_value
 };
 
 enum { lib_amcdb_FieldIdEnum_N = 1 };
@@ -56,7 +56,6 @@ struct FieldId { // lib_amcdb.FieldId: Field read helper
     inline               FieldId(lib_amcdb_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:lib_amcdb.FieldId.value.GetEnum
 inline lib_amcdb_FieldIdEnum value_GetEnum(const lib_amcdb::FieldId& parent) __attribute__((nothrow));
@@ -94,7 +93,7 @@ inline void          FieldId_Init(lib_amcdb::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:lib_amcdb.FieldId.String  printfmt:Raw
 // func:lib_amcdb.FieldId..Print
-void                 FieldId_Print(lib_amcdb::FieldId& row, algo::cstring& str) __attribute__((nothrow));
+void                 FieldId_Print(lib_amcdb::FieldId row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace lib_amcdb { // gen:ns_func
 } // gen:ns_func

@@ -22,9 +22,6 @@ atf_cmdline ->     -mnum...    int             Number array
 atf_cmdline ->     -mdbl...    double          Double array
 atf_cmdline ->     [amnum]...  int             Anon number array
 atf_cmdline ->     -fconst     enum    high    Fconst for field (high|medium|low)
-atf_cmdline ->                                     high  Cool
-atf_cmdline ->                                     medium  So-so
-atf_cmdline ->                                     low  Bad
 atf_cmdline ->     -cconst     enum    None    Fconst for arg ctype (January|February|March|April|May|June|July|August|September|October|November|December|None)
 atf_cmdline ->     -dregx      regx    "%"     Predefined regx
 atf_cmdline ->     -dpkey      string  ""      Predefined pkey

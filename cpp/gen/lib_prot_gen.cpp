@@ -31,6 +31,15 @@ namespace lib_prot { // gen:ns_print_proto
     inline static void   SizeCheck();
 } // gen:ns_print_proto
 
+// --- lib_prot.ClientCase..ReadStrptrMaybe
+// Read fields of lib_prot::ClientCase from an ascii string.
+// The format of the string is the format of the lib_prot::ClientCase's only field
+bool lib_prot::ClientCase_ReadStrptrMaybe(lib_prot::ClientCase &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = retval && u32_ReadStrptrMaybe(parent.value, in_str);
+    return retval;
+}
+
 // --- lib_prot.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
@@ -103,7 +112,7 @@ bool lib_prot::FieldId_ReadStrptrMaybe(lib_prot::FieldId &parent, algo::strptr i
 // --- lib_prot.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:lib_prot.FieldId.String  printfmt:Raw
-void lib_prot::FieldId_Print(lib_prot::FieldId& row, algo::cstring& str) {
+void lib_prot::FieldId_Print(lib_prot::FieldId row, algo::cstring& str) {
     lib_prot::value_Print(row, str);
 }
 

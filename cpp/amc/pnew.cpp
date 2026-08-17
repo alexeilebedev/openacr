@@ -41,9 +41,10 @@ static bool AcceptFieldQ(amc::FCtype &ctype, amc::FField &field) {
 
 static void PnewMemptr(algo_lib::Replscope &R, amc::Genpnew &pnew) {
     AddProtoArg(*pnew.p_func, "algo::memptr &", "buf");
+    Ins(&R, pnew.p_func->comment, "If BUF has no room for the message, construct nothing and return NULL.");
     Ins(&R, pnew.p_func->comment, "After constructing, advance BUF appropriate number of bytes forward");
 
-    Ins(&R, pnew.preamble, "if (len > u32(elems_N(buf))) {");
+    Ins(&R, pnew.preamble, "if (len > u64(elems_N(buf))) {");
     Ins(&R, pnew.preamble, "    return NULL; // no room.");
     Ins(&R, pnew.preamble, "}");
     Ins(&R, pnew.preamble, "msg = ($Cpptype*)buf.elems;");
@@ -69,6 +70,7 @@ static void PnewAppend(algo_lib::Replscope &R, amc::Genpnew &pnew) {
 
 static void PnewShm(algo_lib::Replscope &R, amc::Genpnew &pnew) {
     AddProtoArg(*pnew.p_func, "lib_ams::FShm &", "shm");
+    Ins(&R, pnew.p_func->comment, "If SHM has no room for the message, construct nothing and return NULL.");
     pnew.req_pack=true;
 
     if (bool_Update(amc::_db.has_ams_fwd_declare,true)) {
@@ -92,6 +94,23 @@ static void PnewShm(algo_lib::Replscope &R, amc::Genpnew &pnew) {
 
 // -----------------------------------------------------------------------------
 
+static void PnewAlloc(algo_lib::Replscope &R, amc::Genpnew &pnew) {
+    AddProtoArg(*pnew.p_func, "const algo::Alloc &", "alloc");
+    Ins(&R, pnew.p_func->comment, "If ALLOC cannot provide the space, construct nothing and return NULL.");
+    pnew.req_pack=true;
+
+    Ins(&R, pnew.preamble, "msg = ($Cpptype*)alloc.begin(alloc.ctx, int(len));");
+    Ins(&R, pnew.preamble, "if (!msg) {");
+    Ins(&R, pnew.preamble, "    return NULL; // no room.");
+    Ins(&R, pnew.preamble, "}");
+
+    Ins(&R, pnew.postamble, "if (alloc.end) {");
+    Ins(&R, pnew.postamble, "    alloc.end(alloc.ctx, msg, int(len)); // finalize");
+    Ins(&R, pnew.postamble, "}");
+}
+
+// -----------------------------------------------------------------------------
+
 static void Pnew_CopyFields(amc::Genpnew &genpnew) {
     algo_lib::Replscope &R=genpnew.R;
     amc::FFunc &func =*genpnew.p_func;
@@ -107,9 +126,7 @@ static void Pnew_CopyFields(amc::Genpnew &genpnew) {
         } else if (FixaryQ(field)) {
             Ins(&R, func.body, "$name_Setary(*msg, $name);");
         } else if (amc::FLenfld *lenfld = GetLenfld(field)) {
-            Set(R, "$extra", tempstr() << lenfld->extra);
-            Set(R, "$scale", tempstr() << lenfld->scale);
-            Ins(&R, func.body, AssignExpr(field, "*msg", "(len + ($extra)) / ($scale)", true)<<";");
+            Ins(&R, func.body, AssignExpr(field, "*msg", LenfldStoreExpr(*lenfld, "len"), true)<<";");
         } else if (field.reftype == dmmeta_Reftype_reftype_Varlen) {
             Ins(&R, func.body, "memcpy($name_Addr(*msg), $name.elems, $name_ary_len);");
             if (ctype_zd_varlenfld_Next(field)) {
@@ -142,7 +159,7 @@ static void HandleLen(amc::Genpnew &genpnew) {
     ind_beg(amc::ctype_zd_varlenfld_curs,varlenfld,ctype) {
         Set(R, "$name", name_Get(varlenfld));
         Set(R, "$Vartype", varlenfld.p_arg->c_lenfld ? strptr("u8") : varlenfld.cpp_type);
-        Ins(&R, func.body, tempstr() << "u32 $name_ary_len = elems_N($name) * sizeof($Vartype);");
+        Ins(&R, func.body, tempstr() << "u64 $name_ary_len = u64(elems_N($name)) * sizeof($Vartype);");
         Ins(&R, func.body, "len += $name_ary_len;");
     }ind_end;
 
@@ -154,7 +171,58 @@ static void HandleLen(amc::Genpnew &genpnew) {
             Set(R, "$optlen", LengthExpr(*ctype.c_optfld->p_arg, "$name[0]"));
             Ins(&R, func.body, "int opt_len = $name ? $optlen : 0;");
         }
+        // The Opt byte count is signed -- passed by the caller, or read off
+        // the payload's own length word, which can be corrupt. A negative
+        // count underallocates the fixed portion (the header stores already
+        // overflow the buffer), and the Opt memcpy (Pnew_CopyFields) converts
+        // it to a huge size_t. Fail construction (NULL) before any buffer
+        // space is taken (GenAllocFunc guards the pool paths the same way).
+        Ins(&R, func.comment, "A negative Opt byte count constructs nothing and returns NULL.");
+        Ins(&R, func.body, "if (opt_len < 0) {");
+        Ins(&R, func.body, "    return NULL; // a negative count would underallocate the fixed portion");
+        Ins(&R, func.body, "}");
         Ins(&R, func.body, "len += opt_len;");
+    }
+
+    // The runtime total (fixed size + varlen/opt bytes) is stored through
+    // the lenfld formula (len + extra) / scale (Pnew_CopyFields); a total
+    // that is not a scale multiple has no representable length word (the
+    // truncated store would make the reader reconstruct less than was
+    // written), and a total beyond the storable range wraps mod 2^N through
+    // the word's own type, framing a shorter message than was written.
+    // Fail construction (NULL) before any buffer space is taken.
+    // A fixed-only total needs no guard: gen_check_lenfld proves it
+    // storable at generation time.
+    amc::FLenfld *lenfld = ctype.c_lenfld;
+    if (amc::RuntimeFrameLenQ(ctype)) {
+        if (lenfld && amc::LenfldGuardNeededQ(*lenfld)) {
+            Set(R, "$lenchk", LenfldCheckExpr(*lenfld, "len"));
+            Ins(&R, func.comment, "A total the length field cannot store constructs nothing and returns NULL.");
+            Ins(&R, func.body, "if (!($lenchk)) {");
+            Ins(&R, func.body, "    return NULL; // total not representable in the length field");
+            Ins(&R, func.body, "}");
+        }
+        // Every buffer expresses its size as an i32: the Alloc and Shm arms
+        // pass int(len) to the allocator, and the reader reconstructs the
+        // total as an i32 (LengthExpr). A varlen element count is an i64 and
+        // the byte total is a u64, so a caller can arrive here with a total
+        // above the frame-length domain -- an aryptr of 2^29 u32 elements is
+        // 2GiB of payload. Such a total takes only its low 32 bits of space
+        // while Pnew_CopyFields copies the whole count, so the frame is
+        // refused (NULL) before any buffer space is taken. This is the
+        // domain's enforcement point on the C++ side; the check appears only
+        // where nothing already bounds the total below it, a lenfld whose
+        // storable range stops short contributing the tighter bound above.
+        bool bounded = lenfld && amc::LenfldMaxLen(*lenfld) < amc::FrameLenMax();
+        if (!bounded) {
+            tempstr framemax;
+            algo::u64_PrintHex(amc::FrameLenMax(), framemax, 1, true, false);
+            Set(R, "$framemax", framemax);
+            Ins(&R, func.comment, "A total beyond the i32 frame length domain constructs nothing and returns NULL.");
+            Ins(&R, func.body, "if (len > $framemax) {");
+            Ins(&R, func.body, "    return NULL; // a frame length is an i32, and so is every buffer size argument");
+            Ins(&R, func.body, "}");
+        }
     }
 }
 
@@ -169,7 +237,8 @@ static void DispatchBuftype(amc::FPnew &pnew, amc::Genpnew &genpnew) {
     case amc_Pnewtype_ByteAry     : PnewByteAry(R, genpnew); break;
     case amc_Pnewtype_Shm         : PnewShm(R, genpnew); break;
     case amc_Pnewtype_Append      : PnewAppend(R, genpnew); break;
-    default                           : vrfy(0, "unsupported buftype"); break;
+    case amc_Pnewtype_Alloc       : PnewAlloc(R, genpnew); break;
+    default                       : vrfy(0, "unsupported buftype"); break;
     }
 }
 
@@ -190,8 +259,9 @@ void amc::GenPnew(amc::FNs& ns, amc::FPnew& pnew, amc::FCtype& ctype) {
     func.glob = true;
     AddRetval(func, Subst(R, "$Cpptype *"), "msg", "NULL");
     func.proto = Subst(R, "$Name_Fmt$Buftype()");
-    Ins(&R, func.comment, "Construct a new $Cpptype in the space provided by BUF.");
-    Ins(&R, func.comment, "If BUF doesn't have enough space available, throw exception.");
+    strptr buftype = buftype_Get(pnew);
+    Set(R, "$Bufarg", buftype == "Shm" ? strptr("SHM") : buftype == "Alloc" ? strptr("ALLOC") : strptr("BUF"));
+    Ins(&R, func.comment, "Construct a new $Cpptype in the space provided by $Bufarg.");
     DispatchBuftype(pnew, genpnew);
 
     // build function arguments

@@ -1,0 +1,3 @@
+dev.gitfile  gitfile:x.md
+dev.readmefile  gitfile:x.md  inl:N  sandbox:N  filter:""  comment:""
+dmmeta.ns  ns:acr  nstype:exe  license:GPL  comment:""

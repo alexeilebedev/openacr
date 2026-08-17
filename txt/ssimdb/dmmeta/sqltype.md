@@ -5,26 +5,18 @@ This table is used when converting OpenACR schema to MariaDB schema.
 
 ### Attributes
 <a href="#attributes"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Attributes -->
 * [ctype:](/txt/ssimdb/dmmeta/ctype.md)dmmeta.Sqltype
 
 * file:[data/dmmeta/sqltype.ssim](/data/dmmeta/sqltype.ssim)
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ctype|[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)|[Pkey](/txt/exe/amc/reftypes.md#pkey)|||
-|expr|[algo.Smallstr100](/txt/protocol/algo/README.md#algo-smallstr100)|[Val](/txt/exe/amc/reftypes.md#val)|||
-|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Attributes -->
+|ctype|[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)|||
+|expr|[algo.Smallstr100](/txt/protocol/algo/README.md#algo-smallstr100)|[Val](/txt/exe/amc/reftype.md#val)|||
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype.md#val)|||
 
 ### Used In Executables
 <a href="#used-in-executables"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:ImdbUses -->
-
-* [lib_ctype](/txt/lib/lib_ctype/README.md) as [lib_ctype.FSqltype](/txt/lib/lib_ctype/README.md#lib_ctype-fsqltype)
-* [lib_sqlite](/txt/lib/lib_sqlite/README.md) as [lib_sqlite.FSqltype](/txt/lib/lib_sqlite/README.md#lib_sqlite-fsqltype)
-* [ssim2mysql](/txt/exe/ssim2mysql/internals.md) as [ssim2mysql.FSqltype](/txt/exe/ssim2mysql/internals.md#ssim2mysql-fsqltype)
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:ImdbUses -->
-
+* [lib_ctype](/txt/gen/lib_ctype/lib_ctype.md) as [lib_ctype.FSqltype](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-fsqltype)
+* [lib_sqlite](/txt/gen/lib_sqlite/lib_sqlite.md) as [lib_sqlite.FSqltype](/txt/gen/lib_sqlite/lib_sqlite.md#lib_sqlite-fsqltype)
+* [ssim2mysql](/txt/gen/ssim2mysql/ssim2mysql.md) as [ssim2mysql.FSqltype](/txt/gen/ssim2mysql/ssim2mysql.md#ssim2mysql-fsqltype)

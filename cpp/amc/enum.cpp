@@ -40,10 +40,28 @@ void amc::Main_GenEnum(amc::FNs& ns, amc::FCtype &ctype) {
             text << " \n";
             text << "enum " << enum_type << " {\t\t// " << field.field << "\n";
             strptr sep(" ");
+            // If the whole enum is the sequence 0,1,2,..., omit every
+            // "= N" suffix and let the C++ compiler auto-number. This
+            // keeps adding/removing one entry from renumbering every
+            // later constant in the diff. Mix-and-match enums (gaps,
+            // duplicates, non-numeric values) print all values
+            // explicitly.
+            bool all_seq = true;
+            {
+                i64 expected = 0;
+                ind_beg(amc::field_c_fconst_curs, fconst, field) {
+                    i64 v = 0;
+                    all_seq &= i64_ReadStrptrMaybe(v, fconst.cpp_value) && v == expected;
+                    expected++;
+                }ind_end;
+            }
+
             ind_beg(amc::field_c_fconst_curs, fconst,field) {
-                text << "    " << sep << fconst.cpp_name
-                     << " \t= " << fconst.cpp_value;
-                if (ch_N(fconst.comment.value)) {
+                text << "    " << sep << fconst.cpp_name;
+                if (!all_seq) {
+                    text << " \t= " << fconst.cpp_value;
+                }
+                if (ch_N(fconst.comment)) {
                     text << " \t// " << fconst.comment;
                 }
                 text << "\n";

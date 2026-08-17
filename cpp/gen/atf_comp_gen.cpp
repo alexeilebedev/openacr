@@ -47,64 +47,6 @@ lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 atf_comp::FDb   atf_comp::_db;    // dependency found via dev.targdep
 
-namespace atf_comp {
-const char *atf_comp_help =
-"atf_comp: Algo Test Framework - Component test execution\n"
-"Usage: atf_comp [[-comptest:]<regx>] [options]\n"
-"    OPTION            TYPE    DFLT             COMMENT\n"
-"    -in               string  \"data\"           Input directory or filename, - for stdin\n"
-"    [comptest]        regx    \"%\"              Select comptest (SQL regex)\n"
-"    -mode             enum    run              Test mode (run|capture|covcheck|covcapture|memcheck|valgrind|mdbg|edit|editsource|print|printinput|del)\n"
-"                                                   run  Run tests and compare output\n"
-"                                                   capture  Re-capture test results\n"
-"                                                   covcheck  Check coverage against tgtcov\n"
-"                                                   covcapture  Capture new coverage percentages\n"
-"                                                   memcheck  Run under valgrind memcheck\n"
-"                                                   valgrind  Run under valgrind (general)\n"
-"                                                   mdbg  Debug single test under mdbg\n"
-"                                                   edit  Edit test definition (acr -t -e)\n"
-"                                                   editsource  Edit test function source code\n"
-"                                                   print  Print reference output\n"
-"                                                   printinput  Print test input lines\n"
-"                                                   del  Delete selected comptests\n"
-"    -mdbg                                      (action) Run component test under debugger\n"
-"    -run                      Y                (action) Run selected component tests\n"
-"    -capture                                   Alias for -mode:capture\n"
-"    -ee                                        Alias for -mode:editsource\n"
-"    -e                                         Alias for -mode:edit\n"
-"    -print                                     (action) Print testcase\n"
-"    -cfg              string  \"release\"        Configuration (determines bindir)\n"
-"    -printinput                                (action) Print input of test case\n"
-"    -maxerr           int     3                Exit after this many errors\n"
-"    -normalize                                 (action) Renumber and normalize tmsgs\n"
-"    -covcapture                                (action) Capture new coverage percentages and save back\n"
-"    -covcheck                                  (action) Check coverage percentages against tgtcov table\n"
-"    -bindir           string  \"\"               Directory with binaries (default: build/cfg)\n"
-"    -tempdir          string  \"temp/atf_comp\"  Temp directory\n"
-"    -testdir          string  \"test/atf_comp\"  Test data directory\n"
-"    -check_untracked          Y                Check for untracked file before allowing test to run\n"
-"    -build                                     Build given cfg before test\n"
-"    -memcheck                                  Run under memory checker (valgrind)\n"
-"    -force                                     (With -memcheck) run suppressed memcheck\n"
-"    -callgrind                                 Run under callgrind profiler (valgrind)\n"
-"    -maxjobs          int     0                Maximum number of tests run in parallel\n"
-"    -stream                                    prints component's output\n"
-"    -i                                         Read and execute testcase from stdin\n"
-"    -write                    Y                (implied with -e) Write any changes back to ssim tables\n"
-"    -report                   Y                Print final report\n"
-"    -b                string  \"\"               Breakpoint passed to mdbg as-is\n"
-"    -covfast                  Y                Speedup coverage processing\n"
-"    -minrepeat        int     0                Execute every comptest at least this many times\n"
-"    -maxrepeat        int     1                Don't repeat any individual comptest more than X times\n"
-"    -verbose          flag                     Verbosity level (0..255); alias -v; cumulative\n"
-"    -debug            flag                     Debug level (0..255); alias -d; cumulative\n"
-"    -help                                      Print help and exit; alias -h\n"
-"    -version                                   Print version and exit\n"
-"    -signature                                 Show signatures and exit; alias -sig\n"
-;
-
-
-} // namespace atf_comp
 namespace atf_comp { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
     // func:atf_comp.FDb._db.InitReflection
@@ -115,6 +57,8 @@ namespace atf_comp { // gen:ns_print_proto
     static bool          tfilt_InputMaybe(atfdb::Tfilt &elem) __attribute__((nothrow));
     // func:atf_comp.FDb.unstableattr.InputMaybe
     static bool          unstableattr_InputMaybe(atfdb::Unstableattr &elem) __attribute__((nothrow));
+    // func:atf_comp.FDb.testenv.InputMaybe
+    static bool          testenv_InputMaybe(atfdb::Testenv &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
     // func:atf_comp.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
@@ -140,9 +84,8 @@ void atf_comp::comptest_CopyOut(atf_comp::FComptest &row, atfdb::Comptest &out) 
     out.timeout = row.timeout;
     out.memcheck = row.memcheck;
     out.coverage = row.coverage;
-    out.exit_code = row.exit_code;
     out.stablefld = row.stablefld;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- atf_comp.FComptest.base.CopyIn
@@ -152,21 +95,18 @@ void atf_comp::comptest_CopyIn(atf_comp::FComptest &row, atfdb::Comptest &in) {
     row.timeout = in.timeout;
     row.memcheck = in.memcheck;
     row.coverage = in.coverage;
-    row.exit_code = in.exit_code;
     row.stablefld = in.stablefld;
     row.comment = in.comment;
 }
 
 // --- atf_comp.FComptest.target.Get
-algo::Smallstr16 atf_comp::target_Get(atf_comp::FComptest& comptest) {
-    algo::Smallstr16 ret(algo::Pathcomp(comptest.comptest, ".LL"));
-    return ret;
+algo::strptr atf_comp::target_Get(atf_comp::FComptest& comptest) {
+    return algo::Pathcomp(comptest.comptest, ".LL");
 }
 
 // --- atf_comp.FComptest.testname.Get
-algo::Smallstr50 atf_comp::testname_Get(atf_comp::FComptest& comptest) {
-    algo::Smallstr50 ret(algo::Pathcomp(comptest.comptest, ".LR"));
-    return ret;
+algo::strptr atf_comp::testname_Get(atf_comp::FComptest& comptest) {
+    return algo::Pathcomp(comptest.comptest, ".LR");
 }
 
 // --- atf_comp.FComptest..Init
@@ -175,7 +115,6 @@ void atf_comp::FComptest_Init(atf_comp::FComptest& comptest) {
     comptest.timeout = i32(10);
     comptest.memcheck = bool(true);
     comptest.coverage = bool(true);
-    comptest.exit_code = u8(0);
     comptest.stablefld = bool(false);
     comptest.c_tfilt = NULL;
     comptest.step = NULL;
@@ -202,116 +141,16 @@ void atf_comp::trace_Print(atf_comp::trace& row, algo::cstring& str) {
 }
 
 // --- atf_comp.FDb._db.ReadArgv
-// Read argc,argv directly into the fields of the command line(s)
-// The following fields are updated:
-//     atf_comp.FDb.cmdline
-//     algo_lib.FDb.cmdline
+// Read argc,argv into the fields of atf_comp.FDb.cmdline (and any base command line)
+// via atf_comp_ReadArgv; then apply -help/-version and load floadtuples input.
 void atf_comp::ReadArgv() {
     command::atf_comp &cmd = atf_comp::_db.cmdline;
-    algo_lib::Cmdline &base = algo_lib::_db.cmdline;
-    int needarg=-1;// unknown
-    int argidx=1;// skip process name
-    int anonidx=0;
-    algo::strptr nextanon = command::atf_comp_GetAnon(cmd, anonidx);
-    tempstr err;
-    algo::strptr attrname;
-    bool isanon=false; // true if attrname is anonfld (positional)
-    algo_lib::FieldId baseattrid;
-    command::FieldId attrid;
-    bool endopt=false;
-    int whichns=0;// which namespace does the current attribute belong to
-    for (; argidx < algo_lib::_db.argc; argidx++) {
-        algo::strptr arg = algo_lib::_db.argv[argidx];
-        algo::strptr attrval;
-        algo::strptr dfltval;
-        bool haveval=false;
-        bool dash=elems_N(arg)>1 && arg.elems[0]=='-'; // a single dash is not an option
-        // this attribute is a value
-        if (endopt || needarg>0 || !dash) {
-            attrval=arg;
-            haveval=true;
-        } else {
-            // this attribute is a field name (with - or --)
-            // or a -- by itself
-            bool dashdash = elems_N(arg) >= 2 && arg.elems[1]=='-';
-            int skip = int(dash) + dashdash;
-            attrname=ch_RestFrom(arg,skip);
-            if (skip==2 && elems_N(arg)==2) {
-                endopt=true;
-                continue;// nothing else to do here
-            }
-            // parse "-a:B" arg into attrname,attrvalue
-            algo::i32_Range colon = TFind(attrname,':');
-            if (colon.beg < colon.end) {
-                attrval=ch_RestFrom(attrname,colon.end);
-                attrname=ch_FirstN(attrname,colon.beg);
-                haveval=true;
-            }
-            // look up which command (this one or the base) contains the field
-            whichns=0;
-            needarg=-1;
-            // look up parameter information in base namespace (needarg will be -1 if lookup fails)
-            if (algo_lib::FieldId_ReadStrptrMaybe(baseattrid,attrname)) {
-                needarg = algo_lib::Cmdline_NArgs(baseattrid,dfltval,&isanon);
-            }
-            if (needarg<0) {
-                whichns=1;
-                // look up parameter information in this namespace (needarg will be -1 if lookup fails)
-                if (command::FieldId_ReadStrptrMaybe(attrid,attrname)) {
-                    needarg = command::atf_comp_NArgs(attrid,dfltval,&isanon);
-                }
-            }
-            if (attrval == "" && dfltval != "") {
-                attrval=dfltval;
-                haveval=true;
-            }
-            if (needarg<0) {
-                err<<"atf_comp: unknown option "<<Keyval("value",arg)<<eol;
-            } else {
-                if (isanon) {
-                    if (attrname == nextanon) { // treat named anon (positional) argument as unnamed
-                        attrname = ""; // treat it as unnamed
-                    } else if (nextanon != "") { // disallow out-of-order anon (positional) args
-                        err<<"atf_comp: error at "<<algo::strptr_ToSsim(arg)<<": must be preceded by [-"<<nextanon<<"]"<<eol;
-                    }
-                }
-            }
-        }
-        // look up anon field name based on index
-        // anon fields are only allowed in the leaf ns, never base
-        if (ch_N(attrname) == 0) {
-            attrname = nextanon;
-            nextanon = command::atf_comp_GetAnon(cmd, ++anonidx);
-            command::FieldId_ReadStrptrMaybe(attrid,attrname);
-            whichns=1;
-        }
-        if (ch_N(attrname) == 0) {
-            err << "atf_comp: too many arguments. error at "<<algo::strptr_ToSsim(arg)<<eol;
-        } else if (haveval) {
-            // read value into currently selected arg
-            bool ret=false;
-            // it's already known which namespace is consuming the args,
-            // so directly go there
-            if (whichns == 0) {
-                ret=algo_lib::Cmdline_ReadFieldMaybe(base, attrname, attrval);
-            }
-            if (whichns==1) {
-                ret=command::atf_comp_ReadFieldMaybe(cmd, attrname, attrval);
-                switch(attrid.value) {
-                    default:break;
-                }
-            }
-            if (!ret) {
-                err<<"atf_comp: error in "
-                <<Keyval("option",attrname)
-                <<Keyval("value",attrval)<<eol;
-            }
-            needarg--;
-            if (needarg <= 0) {
-                attrname="";// forget which argument was being filled
-            }
-        }
+    algo::cstring err;
+    algo::StringAry args;
+    for (int argidx=1; argidx < algo_lib::_db.argc; argidx++) {// skip process name
+        ary_Alloc(args) = algo_lib::_db.argv[argidx];
     }
+    command::atf_comp_ReadArgv(cmd, args, err);
     bool dohelp = false;
     bool doexit=false;
     if (algo_lib::_db.cmdline.help) {
@@ -334,9 +173,7 @@ void atf_comp::ReadArgv() {
     algo_lib_logcat_debug.enabled = algo_lib::_db.cmdline.debug;
     algo_lib_logcat_verbose.enabled = algo_lib::_db.cmdline.verbose > 0;
     algo_lib_logcat_verbose2.enabled = algo_lib::_db.cmdline.verbose > 1;
-    if (!dohelp) {
-    }
-    // dmmeta.floadtuples:atf_comp.FDb.cmdline
+    // dmmeta.floadtuples:command.atf_comp.in
     if (!dohelp && err=="") {
         algo_lib::ResetErrtext();
         if (!atf_comp::LoadTuplesMaybe(cmd.in,true)) {
@@ -349,7 +186,7 @@ void atf_comp::ReadArgv() {
         doexit=true;
     }
     if (dohelp) {
-        prlog(atf_comp_help);
+        prlog(command::atf_comp_help);
     }
     if (doexit) {
         _exit(algo_lib::_db.exit_code);
@@ -376,7 +213,13 @@ void atf_comp::Step() {
 // --- atf_comp.FDb._db.InitReflection
 // Load statically available data into tables, register tables and database.
 static void atf_comp::InitReflection() {
-    algo_lib::imdb_InsertMaybe(algo::Imdb("atf_comp", atf_comp::InsertStrptrMaybe, NULL, atf_comp::MainLoop, NULL, algo::Comment()));
+    algo_lib::FImdb &row = algo_lib::imdb_Alloc();
+    row.imdb               = "atf_comp";
+    row.InsertStrptrMaybe  = atf_comp::InsertStrptrMaybe;
+    row.RemoveStrptrMaybe  = atf_comp::RemoveStrptrMaybe;
+    row.Step               = NULL;
+    row.MainLoop           = atf_comp::MainLoop;
+    algo_lib::imdb_XrefMaybe(row);
 
     algo::Imtable t_trace;
     t_trace.imtable         = "atf_comp.trace";
@@ -390,7 +233,7 @@ static void atf_comp::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_comp.Input'  signature:'c63e9bce671c18dd60df1bb63bcbbe8438f12907'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_comp.Input'  signature:'0b0b294e21c8a9bf8d1eb91c4312963a9f23e6d5'");
 }
 
 // --- atf_comp.FDb._db.InsertStrptrMaybe
@@ -411,6 +254,12 @@ bool atf_comp::InsertStrptrMaybe(algo::strptr str) {
             atfdb::Unstableattr elem;
             retval = atfdb::Unstableattr_ReadStrptrMaybe(elem, str);
             retval = retval && unstableattr_InputMaybe(elem);
+            break;
+        }
+        case atf_comp_TableId_atfdb_Testenv: { // finput:atf_comp.FDb.testenv
+            atfdb::Testenv elem;
+            retval = atfdb::Testenv_ReadStrptrMaybe(elem, str);
+            retval = retval && testenv_InputMaybe(elem);
             break;
         }
         default:
@@ -434,6 +283,7 @@ bool atf_comp::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
         retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"atfdb.unstableattr"),recursive);
         retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"atfdb.tfilt"),recursive);
+        retval = retval && atf_comp::LoadTuplesFile(algo::SsimFname(root,"atfdb.testenv"),recursive);
     } else {
         algo_lib::AppendErrtext("path", root);
         algo_lib::AppendErrtext("comment", "Wrong working directory?");
@@ -496,6 +346,39 @@ void atf_comp::Steps() {
     algo_lib::Step(); // dependent namespace specified via (dev.targdep)
 }
 
+// --- atf_comp.FDb._db.RemoveStrptrMaybe
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+bool atf_comp::RemoveStrptrMaybe(algo::strptr str) {
+    bool retval = true;
+    atf_comp::TableId table_id(-1);
+    value_SetStrptrMaybe(table_id, algo::GetTypeTag(str));
+    switch (value_GetEnum(table_id)) {
+        case atf_comp_TableId_atfdb_Tfilt: { // finput:atf_comp.FDb.tfilt
+            // finput atf_comp.FDb.tfilt: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case atf_comp_TableId_atfdb_Unstableattr: { // finput:atf_comp.FDb.unstableattr
+            // finput atf_comp.FDb.unstableattr: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case atf_comp_TableId_atfdb_Testenv: { // finput:atf_comp.FDb.testenv
+            // finput atf_comp.FDb.testenv: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        default:
+        retval = false;
+        break;
+    } //switch
+    return retval;
+}
+
 // --- atf_comp.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
@@ -550,7 +433,7 @@ void* atf_comp::comptest_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     atf_comp::FComptest*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.comptest_lary[bsr];
         if (!lev) {
             lev=(atf_comp::FComptest*)algo_lib::malloc_AllocMem(sizeof(atf_comp::FComptest) * (u64(1)<<bsr));
@@ -559,7 +442,7 @@ void* atf_comp::comptest_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.comptest_n = i32(new_nelems);
+        _db.comptest_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -571,7 +454,7 @@ void atf_comp::comptest_RemoveAll() {
     for (u64 n = _db.comptest_n; n>0; ) {
         n--;
         comptest_qFind(u64(n)).~FComptest(); // destroy last element
-        _db.comptest_n = i32(n);
+        _db.comptest_n = i64(n);
     }
 }
 
@@ -582,7 +465,7 @@ void atf_comp::comptest_RemoveLast() {
     if (n > 0) {
         n -= 1;
         comptest_qFind(u64(n)).~FComptest();
-        _db.comptest_n = i32(n);
+        _db.comptest_n = i64(n);
     }
 }
 
@@ -592,248 +475,446 @@ static void atf_comp::comptest_LoadStatic() {
         const char *s;
         void (*step)();
     } data[] = {
-        { "atfdb.comptest  comptest:acr.BadInsert  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"Duplicate insert is ignored\"", atf_comp::comptest_acr_BadInsert }
-        ,{ "atfdb.comptest  comptest:acr.BadNs  timeout:10  memcheck:Y  coverage:Y  exit_code:1  stablefld:N  comment:\"Insert a bad record and check that it's detected\"", atf_comp::comptest_acr_BadNs }
-        ,{ "atfdb.comptest  comptest:acr.BadPkey  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"Warning about missing pkey - not error\"", atf_comp::comptest_acr_BadPkey }
-        ,{ "atfdb.comptest  comptest:acr.BadReftype  timeout:10  memcheck:Y  coverage:Y  exit_code:1  stablefld:N  comment:\"Invalid reftype detected\"", atf_comp::comptest_acr_BadReftype }
-        ,{ "atfdb.comptest  comptest:acr.CascDel  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"-del recursively deletes dependent records\"", atf_comp::comptest_acr_CascDel }
-        ,{ "atfdb.comptest  comptest:acr.CascDel2  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"Insert records & cascade delete them -- no change\"", atf_comp::comptest_acr_CascDel2 }
-        ,{ "atfdb.comptest  comptest:acr.CascDel3  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"acr.delete cascade deletes\"", atf_comp::comptest_acr_CascDel3 }
-        ,{ "atfdb.comptest  comptest:acr.DelField  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"A field is deleted\"", atf_comp::comptest_acr_DelField }
-        ,{ "atfdb.comptest  comptest:acr.DelRecord  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"A record is deleted\"", atf_comp::comptest_acr_DelRecord }
-        ,{ "atfdb.comptest  comptest:acr.DeleteReinsert  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"A record is deleted and re-inserted\"", atf_comp::comptest_acr_DeleteReinsert }
-        ,{ "atfdb.comptest  comptest:acr.Fields  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"Select fields\"", atf_comp::comptest_acr_Fields }
-        ,{ "atfdb.comptest  comptest:acr.FieldsComma  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"Select fields with comma separator\"", atf_comp::comptest_acr_FieldsComma }
-        ,{ "atfdb.comptest  comptest:acr.GitTrigger1  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"Test -g option\"", atf_comp::comptest_acr_GitTrigger1 }
-        ,{ "atfdb.comptest  comptest:acr.Insert  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"Insert a few records\"", atf_comp::comptest_acr_Insert }
-        ,{ "atfdb.comptest  comptest:acr.InsertDelete  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"Insert & delete record, nothing happens\"", atf_comp::comptest_acr_InsertDelete }
-        ,{ "atfdb.comptest  comptest:acr.Merge  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:Merging", atf_comp::comptest_acr_Merge }
-        ,{ "atfdb.comptest  comptest:acr.Meta1  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"Select meta-information\"", atf_comp::comptest_acr_Meta1 }
-        ,{ "atfdb.comptest  comptest:acr.Meta2  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"Select meta-information\"", atf_comp::comptest_acr_Meta2 }
-        ,{ "atfdb.comptest  comptest:acr.Meta3  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"Select meta-information\"", atf_comp::comptest_acr_Meta3 }
-        ,{ "atfdb.comptest  comptest:acr.NullTrunc  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"Trunc with reinsertion has no effect\"", atf_comp::comptest_acr_NullTrunc }
-        ,{ "atfdb.comptest  comptest:acr.QueryCtype  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"Select one record\"", atf_comp::comptest_acr_QueryCtype }
-        ,{ "atfdb.comptest  comptest:acr.RenameCollision  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"Rename with collision\"", atf_comp::comptest_acr_RenameCollision }
-        ,{ "atfdb.comptest  comptest:acr.RenameField  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"-rename -field renames affected attributes in dataset\"", atf_comp::comptest_acr_RenameField }
-        ,{ "atfdb.comptest  comptest:acr.RenameRecord  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"Rename field and propagate recursively through structured keys\"", atf_comp::comptest_acr_RenameRecord }
-        ,{ "atfdb.comptest  comptest:acr.Replace  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"A record is replaced\"", atf_comp::comptest_acr_Replace }
-        ,{ "atfdb.comptest  comptest:acr.Select  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"A record is selected\"", atf_comp::comptest_acr_Select }
-        ,{ "atfdb.comptest  comptest:acr.SelectStdin  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"A record is selected by reading stdin\"", atf_comp::comptest_acr_SelectStdin }
-        ,{ "atfdb.comptest  comptest:acr.SelectTree  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"Tree selection\"", atf_comp::comptest_acr_SelectTree }
-        ,{ "atfdb.comptest  comptest:acr.TooManyArgs  timeout:10  memcheck:Y  coverage:Y  exit_code:1  stablefld:N  comment:\"Acr command line input error\"", atf_comp::comptest_acr_TooManyArgs }
-        ,{ "atfdb.comptest  comptest:acr.Trunc  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"Truncate table\"", atf_comp::comptest_acr_Trunc }
-        ,{ "atfdb.comptest  comptest:acr.UpdateBad  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"Update fails\"", atf_comp::comptest_acr_UpdateBad }
-        ,{ "atfdb.comptest  comptest:acr.UpdateGood  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"Update succeeds\"", atf_comp::comptest_acr_UpdateGood }
-        ,{ "atfdb.comptest  comptest:acr.Where  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"Test -where option\"", atf_comp::comptest_acr_Where }
-        ,{ "atfdb.comptest  comptest:acr_compl.A01a  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_A01a }
-        ,{ "atfdb.comptest  comptest:acr_compl.A01b  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_A01b }
-        ,{ "atfdb.comptest  comptest:acr_compl.A01c  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_A01c }
-        ,{ "atfdb.comptest  comptest:acr_compl.A02a  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_A02a }
-        ,{ "atfdb.comptest  comptest:acr_compl.A02b  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_A02b }
-        ,{ "atfdb.comptest  comptest:acr_compl.A02c  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_A02c }
-        ,{ "atfdb.comptest  comptest:acr_compl.A03a  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_A03a }
-        ,{ "atfdb.comptest  comptest:acr_compl.A03b  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_A03b }
-        ,{ "atfdb.comptest  comptest:acr_compl.A03c  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_A03c }
-        ,{ "atfdb.comptest  comptest:acr_compl.A04a  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_A04a }
-        ,{ "atfdb.comptest  comptest:acr_compl.A04b  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_A04b }
-        ,{ "atfdb.comptest  comptest:acr_compl.A04c  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_A04c }
-        ,{ "atfdb.comptest  comptest:acr_compl.A05a  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_A05a }
-        ,{ "atfdb.comptest  comptest:acr_compl.A05b  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_A05b }
-        ,{ "atfdb.comptest  comptest:acr_compl.A05c  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_A05c }
-        ,{ "atfdb.comptest  comptest:acr_compl.A06a  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_A06a }
-        ,{ "atfdb.comptest  comptest:acr_compl.A06b  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_A06b }
-        ,{ "atfdb.comptest  comptest:acr_compl.A06c  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_A06c }
-        ,{ "atfdb.comptest  comptest:acr_compl.A07a  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_A07a }
-        ,{ "atfdb.comptest  comptest:acr_compl.A07b  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_A07b }
-        ,{ "atfdb.comptest  comptest:acr_compl.A07c  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_A07c }
-        ,{ "atfdb.comptest  comptest:acr_compl.Acr01  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_Acr01 }
-        ,{ "atfdb.comptest  comptest:acr_compl.Acr02  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_Acr02 }
-        ,{ "atfdb.comptest  comptest:acr_compl.Acr03  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_Acr03 }
-        ,{ "atfdb.comptest  comptest:acr_compl.Acr04  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_Acr04 }
-        ,{ "atfdb.comptest  comptest:acr_compl.Acr05  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_Acr05 }
-        ,{ "atfdb.comptest  comptest:acr_compl.Acr06  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_Acr06 }
-        ,{ "atfdb.comptest  comptest:acr_compl.Acr07  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_Acr07 }
-        ,{ "atfdb.comptest  comptest:acr_compl.Acr08  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_Acr08 }
-        ,{ "atfdb.comptest  comptest:acr_compl.Acr09  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_Acr09 }
-        ,{ "atfdb.comptest  comptest:acr_compl.Acr10  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_Acr10 }
-        ,{ "atfdb.comptest  comptest:acr_compl.Acr11  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_Acr11 }
-        ,{ "atfdb.comptest  comptest:acr_compl.Acr12  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_Acr12 }
-        ,{ "atfdb.comptest  comptest:acr_compl.Acr13  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_Acr13 }
-        ,{ "atfdb.comptest  comptest:acr_compl.BadExe  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_BadExe }
-        ,{ "atfdb.comptest  comptest:acr_compl.BadOpt  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_BadOpt }
-        ,{ "atfdb.comptest  comptest:acr_compl.BadOptColon  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_BadOptColon }
-        ,{ "atfdb.comptest  comptest:acr_compl.BadOptColonSpace  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_BadOptColonSpace }
-        ,{ "atfdb.comptest  comptest:acr_compl.BadOptSpace  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_BadOptSpace }
-        ,{ "atfdb.comptest  comptest:acr_compl.Bare  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_Bare }
-        ,{ "atfdb.comptest  comptest:acr_compl.CheckMultiOpt  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_CheckMultiOpt }
-        ,{ "atfdb.comptest  comptest:acr_compl.CheckUnknownCmd  timeout:10  memcheck:Y  coverage:Y  exit_code:1  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_CheckUnknownCmd }
-        ,{ "atfdb.comptest  comptest:acr_compl.CheckUnknownOpt  timeout:10  memcheck:Y  coverage:Y  exit_code:1  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_CheckUnknownOpt }
-        ,{ "atfdb.comptest  comptest:acr_compl.CheckValid  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_CheckValid }
-        ,{ "atfdb.comptest  comptest:acr_compl.CheckValidAnon  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_CheckValidAnon }
-        ,{ "atfdb.comptest  comptest:acr_compl.CheckValidFlag  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_CheckValidFlag }
-        ,{ "atfdb.comptest  comptest:acr_compl.DblColon  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_DblColon }
-        ,{ "atfdb.comptest  comptest:acr_compl.DblColonList  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_DblColonList }
-        ,{ "atfdb.comptest  comptest:acr_compl.DblSpace  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_DblSpace }
-        ,{ "atfdb.comptest  comptest:acr_compl.DblSpaceList  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_DblSpaceList }
-        ,{ "atfdb.comptest  comptest:acr_compl.EnumCtypeColon  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_EnumCtypeColon }
-        ,{ "atfdb.comptest  comptest:acr_compl.EnumCtypeColonList  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_EnumCtypeColonList }
-        ,{ "atfdb.comptest  comptest:acr_compl.EnumCtypeSpace  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_EnumCtypeSpace }
-        ,{ "atfdb.comptest  comptest:acr_compl.EnumCtypeSpaceList  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_EnumCtypeSpaceList }
-        ,{ "atfdb.comptest  comptest:acr_compl.EnumFieldColon  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_EnumFieldColon }
-        ,{ "atfdb.comptest  comptest:acr_compl.EnumFieldColonList  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_EnumFieldColonList }
-        ,{ "atfdb.comptest  comptest:acr_compl.EnumFieldSpace  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_EnumFieldSpace }
-        ,{ "atfdb.comptest  comptest:acr_compl.EnumFieldSpaceList  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_EnumFieldSpaceList }
-        ,{ "atfdb.comptest  comptest:acr_compl.FlagColon  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_FlagColon }
-        ,{ "atfdb.comptest  comptest:acr_compl.FlagColonList  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_FlagColonList }
-        ,{ "atfdb.comptest  comptest:acr_compl.FlagSpace  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_FlagSpace }
-        ,{ "atfdb.comptest  comptest:acr_compl.FlagSpaceList  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_FlagSpaceList }
-        ,{ "atfdb.comptest  comptest:acr_compl.Install  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_Install }
-        ,{ "atfdb.comptest  comptest:acr_compl.NumColon  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_NumColon }
-        ,{ "atfdb.comptest  comptest:acr_compl.NumColonList  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_NumColonList }
-        ,{ "atfdb.comptest  comptest:acr_compl.NumSpace  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_NumSpace }
-        ,{ "atfdb.comptest  comptest:acr_compl.NumSpaceList  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_NumSpaceList }
-        ,{ "atfdb.comptest  comptest:acr_compl.OptCumul  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptCumul }
-        ,{ "atfdb.comptest  comptest:acr_compl.OptCumulAlias  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptCumulAlias }
-        ,{ "atfdb.comptest  comptest:acr_compl.OptD  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptD }
-        ,{ "atfdb.comptest  comptest:acr_compl.OptDList  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptDList }
-        ,{ "atfdb.comptest  comptest:acr_compl.OptH  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptH }
-        ,{ "atfdb.comptest  comptest:acr_compl.OptHList  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptHList }
-        ,{ "atfdb.comptest  comptest:acr_compl.OptNonCumul  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptNonCumul }
-        ,{ "atfdb.comptest  comptest:acr_compl.OptNonCumulAlias  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptNonCumulAlias }
-        ,{ "atfdb.comptest  comptest:acr_compl.OptPkeyColon  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptPkeyColon }
-        ,{ "atfdb.comptest  comptest:acr_compl.OptPkeyColonFull  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptPkeyColonFull }
-        ,{ "atfdb.comptest  comptest:acr_compl.OptPkeyColonFullList  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptPkeyColonFullList }
-        ,{ "atfdb.comptest  comptest:acr_compl.OptPkeyColonList  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptPkeyColonList }
-        ,{ "atfdb.comptest  comptest:acr_compl.OptPkeyColonPrefix  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptPkeyColonPrefix }
-        ,{ "atfdb.comptest  comptest:acr_compl.OptPkeyColonPrefixList  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptPkeyColonPrefixList }
-        ,{ "atfdb.comptest  comptest:acr_compl.OptPkeyColonSubstr  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptPkeyColonSubstr }
-        ,{ "atfdb.comptest  comptest:acr_compl.OptPkeyColonSubstrList  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptPkeyColonSubstrList }
-        ,{ "atfdb.comptest  comptest:acr_compl.OptPkeySpace  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptPkeySpace }
-        ,{ "atfdb.comptest  comptest:acr_compl.OptPkeySpaceFull  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptPkeySpaceFull }
-        ,{ "atfdb.comptest  comptest:acr_compl.OptPkeySpaceFullList  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptPkeySpaceFullList }
-        ,{ "atfdb.comptest  comptest:acr_compl.OptPkeySpaceList  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptPkeySpaceList }
-        ,{ "atfdb.comptest  comptest:acr_compl.OptPkeySpacePrefix  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptPkeySpacePrefix }
-        ,{ "atfdb.comptest  comptest:acr_compl.OptPkeySpacePrefixList  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptPkeySpacePrefixList }
-        ,{ "atfdb.comptest  comptest:acr_compl.OptPkeySpaceSubstr  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptPkeySpaceSubstr }
-        ,{ "atfdb.comptest  comptest:acr_compl.OptPkeySpaceSubstrList  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptPkeySpaceSubstrList }
-        ,{ "atfdb.comptest  comptest:acr_compl.OptRegxColon  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptRegxColon }
-        ,{ "atfdb.comptest  comptest:acr_compl.OptRegxColonFull  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptRegxColonFull }
-        ,{ "atfdb.comptest  comptest:acr_compl.OptRegxColonFullList  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptRegxColonFullList }
-        ,{ "atfdb.comptest  comptest:acr_compl.OptRegxColonList  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptRegxColonList }
-        ,{ "atfdb.comptest  comptest:acr_compl.OptRegxColonPrefix  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptRegxColonPrefix }
-        ,{ "atfdb.comptest  comptest:acr_compl.OptRegxColonPrefixList  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptRegxColonPrefixList }
-        ,{ "atfdb.comptest  comptest:acr_compl.OptRegxColonSubstr  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptRegxColonSubstr }
-        ,{ "atfdb.comptest  comptest:acr_compl.OptRegxColonSubstrList  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptRegxColonSubstrList }
-        ,{ "atfdb.comptest  comptest:acr_compl.OptRegxSpace  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptRegxSpace }
-        ,{ "atfdb.comptest  comptest:acr_compl.OptRegxSpaceFull  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptRegxSpaceFull }
-        ,{ "atfdb.comptest  comptest:acr_compl.OptRegxSpaceFullList  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptRegxSpaceFullList }
-        ,{ "atfdb.comptest  comptest:acr_compl.OptRegxSpaceList  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptRegxSpaceList }
-        ,{ "atfdb.comptest  comptest:acr_compl.OptRegxSpacePrefix  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptRegxSpacePrefix }
-        ,{ "atfdb.comptest  comptest:acr_compl.OptRegxSpacePrefixList  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptRegxSpacePrefixList }
-        ,{ "atfdb.comptest  comptest:acr_compl.OptRegxSpaceSubstr  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptRegxSpaceSubstr }
-        ,{ "atfdb.comptest  comptest:acr_compl.OptRegxSpaceSubstrList  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptRegxSpaceSubstrList }
-        ,{ "atfdb.comptest  comptest:acr_compl.OptSig  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptSig }
-        ,{ "atfdb.comptest  comptest:acr_compl.OptSigList  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptSigList }
-        ,{ "atfdb.comptest  comptest:acr_compl.OptV  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptV }
-        ,{ "atfdb.comptest  comptest:acr_compl.OptVList  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptVList }
-        ,{ "atfdb.comptest  comptest:acr_compl.R01a  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_R01a }
-        ,{ "atfdb.comptest  comptest:acr_compl.R01b  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_R01b }
-        ,{ "atfdb.comptest  comptest:acr_compl.R01c  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_R01c }
-        ,{ "atfdb.comptest  comptest:acr_compl.R01d  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_R01d }
-        ,{ "atfdb.comptest  comptest:acr_compl.R02a  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_R02a }
-        ,{ "atfdb.comptest  comptest:acr_compl.R02b  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_R02b }
-        ,{ "atfdb.comptest  comptest:acr_compl.R02c  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_R02c }
-        ,{ "atfdb.comptest  comptest:acr_compl.R02d  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_R02d }
-        ,{ "atfdb.comptest  comptest:acr_compl.StrColon  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_StrColon }
-        ,{ "atfdb.comptest  comptest:acr_compl.StrColonList  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_StrColonList }
-        ,{ "atfdb.comptest  comptest:acr_compl.StrSpace  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_StrSpace }
-        ,{ "atfdb.comptest  comptest:acr_compl.StrSpaceList  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_StrSpaceList }
-        ,{ "atfdb.comptest  comptest:acr_compl.T01  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_T01 }
-        ,{ "atfdb.comptest  comptest:acr_compl.T02  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_T02 }
-        ,{ "atfdb.comptest  comptest:acr_compl.T03  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_T03 }
-        ,{ "atfdb.comptest  comptest:acr_compl.T04  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_T04 }
-        ,{ "atfdb.comptest  comptest:acr_compl.T05  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_T05 }
-        ,{ "atfdb.comptest  comptest:acr_compl.T06  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_T06 }
-        ,{ "atfdb.comptest  comptest:acr_compl.T07  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_T07 }
-        ,{ "atfdb.comptest  comptest:acr_compl.T08  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_T08 }
-        ,{ "atfdb.comptest  comptest:acr_compl.T09  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_T09 }
-        ,{ "atfdb.comptest  comptest:acr_compl.T10  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_T10 }
-        ,{ "atfdb.comptest  comptest:acr_dm.Conflict  timeout:10  memcheck:Y  coverage:Y  exit_code:1  stablefld:N  comment:\"\"", atf_comp::comptest_acr_dm_Conflict }
-        ,{ "atfdb.comptest  comptest:acr_dm.Merge  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_dm_Merge }
-        ,{ "atfdb.comptest  comptest:acr_dm.RenameTuple  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_dm_RenameTuple }
-        ,{ "atfdb.comptest  comptest:acr_ed.CreateCtype  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"Create a regular ctype\"", atf_comp::comptest_acr_ed_CreateCtype }
-        ,{ "atfdb.comptest  comptest:acr_ed.CreateMsg  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"Create a message\"", atf_comp::comptest_acr_ed_CreateMsg }
-        ,{ "atfdb.comptest  comptest:acr_ed.CreateSrcfileTarget  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"Create a source file in a non-standard location for its target\"", atf_comp::comptest_acr_ed_CreateSrcfileTarget }
-        ,{ "atfdb.comptest  comptest:acr_ed.CreateSsimfile  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"Script to create a new ssimfile\"", atf_comp::comptest_acr_ed_CreateSsimfile }
-        ,{ "atfdb.comptest  comptest:acr_ed.CreateSsimfileBadNs  timeout:10  memcheck:Y  coverage:Y  exit_code:1  stablefld:N  comment:\"Create a ssimfile for a non-existence namespace\"", atf_comp::comptest_acr_ed_CreateSsimfileBadNs }
-        ,{ "atfdb.comptest  comptest:acr_ed.CreateTarget  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"Script to create a new target\"", atf_comp::comptest_acr_ed_CreateTarget }
-        ,{ "atfdb.comptest  comptest:acr_in.Reverse  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_in_Reverse }
-        ,{ "atfdb.comptest  comptest:acr_in.Simple  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_in_Simple }
-        ,{ "atfdb.comptest  comptest:acr_in.Tree  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_acr_in_Tree }
-        ,{ "atfdb.comptest  comptest:aqlite.CompileOptions  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_aqlite_CompileOptions }
-        ,{ "atfdb.comptest  comptest:aqlite.Constraints  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_aqlite_Constraints }
-        ,{ "atfdb.comptest  comptest:aqlite.ErrorHandling  timeout:10  memcheck:Y  coverage:Y  exit_code:1  stablefld:N  comment:\"\"", atf_comp::comptest_aqlite_ErrorHandling }
-        ,{ "atfdb.comptest  comptest:aqlite.Joins  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_aqlite_Joins }
-        ,{ "atfdb.comptest  comptest:aqlite.Number  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_aqlite_Number }
-        ,{ "atfdb.comptest  comptest:aqlite.PatternMatching  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_aqlite_PatternMatching }
-        ,{ "atfdb.comptest  comptest:aqlite.Performance  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_aqlite_Performance }
-        ,{ "atfdb.comptest  comptest:aqlite.Smoke  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_aqlite_Smoke }
-        ,{ "atfdb.comptest  comptest:atf_cmdline.Bare  timeout:10  memcheck:Y  coverage:Y  exit_code:1  stablefld:N  comment:\"\"", atf_comp::comptest_atf_cmdline_Bare }
-        ,{ "atfdb.comptest  comptest:atf_cmdline.Debug  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_atf_cmdline_Debug }
-        ,{ "atfdb.comptest  comptest:atf_cmdline.Help  timeout:10  memcheck:Y  coverage:Y  exit_code:1  stablefld:N  comment:\"\"", atf_comp::comptest_atf_cmdline_Help }
-        ,{ "atfdb.comptest  comptest:atf_cmdline.Minimal  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_atf_cmdline_Minimal }
-        ,{ "atfdb.comptest  comptest:atf_cmdline.MinimalExec  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_atf_cmdline_MinimalExec }
-        ,{ "atfdb.comptest  comptest:atf_cmdline.Rich  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_atf_cmdline_Rich }
-        ,{ "atfdb.comptest  comptest:atf_cmdline.RichExec  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_atf_cmdline_RichExec }
-        ,{ "atfdb.comptest  comptest:atf_cmdline.Sig  timeout:10  memcheck:Y  coverage:Y  exit_code:1  stablefld:Y  comment:\"\"", atf_comp::comptest_atf_cmdline_Sig }
-        ,{ "atfdb.comptest  comptest:atf_cmdline.Verbose  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_atf_cmdline_Verbose }
-        ,{ "atfdb.comptest  comptest:atf_cmdline.Version  timeout:10  memcheck:Y  coverage:Y  exit_code:1  stablefld:N  comment:\"\"", atf_comp::comptest_atf_cmdline_Version }
-        ,{ "atfdb.comptest  comptest:jkv.ArrayFill  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_jkv_ArrayFill }
-        ,{ "atfdb.comptest  comptest:jkv.ReverseSmoke  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_jkv_ReverseSmoke }
-        ,{ "atfdb.comptest  comptest:jkv.Smoke  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_jkv_Smoke }
-        ,{ "atfdb.comptest  comptest:mdbg.OutOfOrderArgs  timeout:10  memcheck:Y  coverage:Y  exit_code:1  stablefld:N  comment:\"\"", atf_comp::comptest_mdbg_OutOfOrderArgs }
-        ,{ "atfdb.comptest  comptest:mdbg.Smoke  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_mdbg_Smoke }
-        ,{ "atfdb.comptest  comptest:mdbg.SmokeBreak  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_mdbg_SmokeBreak }
-        ,{ "atfdb.comptest  comptest:mdbg.SmokeBreak2  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_mdbg_SmokeBreak2 }
-        ,{ "atfdb.comptest  comptest:orgfile.ConsumeInput  timeout:10  memcheck:N  coverage:Y  exit_code:0  stablefld:N  comment:\"Consume ssim input\"", atf_comp::comptest_orgfile_ConsumeInput }
-        ,{ "atfdb.comptest  comptest:orgfile.Dedup  timeout:10  memcheck:N  coverage:Y  exit_code:0  stablefld:N  comment:\"Dedup identical files\"", atf_comp::comptest_orgfile_Dedup }
-        ,{ "atfdb.comptest  comptest:orgfile.DedupPathregx  timeout:10  memcheck:N  coverage:Y  exit_code:0  stablefld:N  comment:\"Dedup with path regex preference\"", atf_comp::comptest_orgfile_DedupPathregx }
-        ,{ "atfdb.comptest  comptest:orgfile.Hash  timeout:10  memcheck:N  coverage:Y  exit_code:0  stablefld:N  comment:\"Check sha1 hashing\"", atf_comp::comptest_orgfile_Hash }
-        ,{ "atfdb.comptest  comptest:orgfile.MoveByDate  timeout:10  memcheck:N  coverage:Y  exit_code:0  stablefld:N  comment:\"Detect target path by date parsed from filename\"", atf_comp::comptest_orgfile_MoveByDate }
-        ,{ "atfdb.comptest  comptest:orgfile.MoveDot  timeout:10  memcheck:N  coverage:Y  exit_code:0  stablefld:N  comment:\"Move to . detects directory by filesystem\"", atf_comp::comptest_orgfile_MoveDot }
-        ,{ "atfdb.comptest  comptest:orgfile.MoveNoop  timeout:10  memcheck:N  coverage:Y  exit_code:0  stablefld:N  comment:\"Move to same dir is a no-op\"", atf_comp::comptest_orgfile_MoveNoop }
-        ,{ "atfdb.comptest  comptest:samp_meng.Smoke  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:Y  comment:\"\"", atf_comp::comptest_samp_meng_Smoke }
-        ,{ "atfdb.comptest  comptest:sandbox.Anon  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"Test anonymous sandbox dry_run\"", atf_comp::comptest_sandbox_Anon }
-        ,{ "atfdb.comptest  comptest:sandbox.Clean  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"Test clean with dry_run\"", atf_comp::comptest_sandbox_Clean }
-        ,{ "atfdb.comptest  comptest:sandbox.Command  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"Test command execution with dry_run\"", atf_comp::comptest_sandbox_Command }
-        ,{ "atfdb.comptest  comptest:sandbox.Create  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"Test create with dry_run\"", atf_comp::comptest_sandbox_Create }
-        ,{ "atfdb.comptest  comptest:sandbox.Del  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"Test delete with dry_run\"", atf_comp::comptest_sandbox_Del }
-        ,{ "atfdb.comptest  comptest:sandbox.Diff  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"Test diff flag with dry_run\"", atf_comp::comptest_sandbox_Diff }
-        ,{ "atfdb.comptest  comptest:sandbox.Gc  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"Test gc flag with dry_run\"", atf_comp::comptest_sandbox_Gc }
-        ,{ "atfdb.comptest  comptest:sandbox.List  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"Test list with stdin sandbox data\"", atf_comp::comptest_sandbox_List }
-        ,{ "atfdb.comptest  comptest:sandbox.Pull  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"Test pull flag with dry_run\"", atf_comp::comptest_sandbox_Pull }
-        ,{ "atfdb.comptest  comptest:sandbox.Reset  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"Test reset with dry_run\"", atf_comp::comptest_sandbox_Reset }
-        ,{ "atfdb.comptest  comptest:sandbox.StdinMulti  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"Test multi-line stdin script\"", atf_comp::comptest_sandbox_StdinMulti }
-        ,{ "atfdb.comptest  comptest:ssimfilt.Csv  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_ssimfilt_Csv }
-        ,{ "atfdb.comptest  comptest:ssimfilt.CsvField  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"CSV + field selection\"", atf_comp::comptest_ssimfilt_CsvField }
-        ,{ "atfdb.comptest  comptest:ssimfilt.FirstTag  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"Lock typetag to first input tuple\"", atf_comp::comptest_ssimfilt_FirstTag }
-        ,{ "atfdb.comptest  comptest:ssimfilt.Json  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"Convert test data to json\"", atf_comp::comptest_ssimfilt_Json }
-        ,{ "atfdb.comptest  comptest:ssimfilt.JsonRecursive  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"Print Recursive json object\"", atf_comp::comptest_ssimfilt_JsonRecursive }
-        ,{ "atfdb.comptest  comptest:ssimfilt.MatchField  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"Select fields by value\"", atf_comp::comptest_ssimfilt_MatchField }
-        ,{ "atfdb.comptest  comptest:ssimfilt.MatchTag  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"Match typetag\"", atf_comp::comptest_ssimfilt_MatchTag }
-        ,{ "atfdb.comptest  comptest:ssimfilt.SelectField  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"Select several fields\"", atf_comp::comptest_ssimfilt_SelectField }
-        ,{ "atfdb.comptest  comptest:ssimfilt.Stable  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"Filter unstable fields\"", atf_comp::comptest_ssimfilt_Stable }
-        ,{ "atfdb.comptest  comptest:ssimfilt.Table  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"Tabular output\"", atf_comp::comptest_ssimfilt_Table }
-        ,{ "atfdb.comptest  comptest:sv2ssim.Convert1  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_sv2ssim_Convert1 }
-        ,{ "atfdb.comptest  comptest:sv2ssim.Convert1Signed  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_sv2ssim_Convert1Signed }
-        ,{ "atfdb.comptest  comptest:sv2ssim.Convert2  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_sv2ssim_Convert2 }
-        ,{ "atfdb.comptest  comptest:sv2ssim.Convert2Tsv  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_sv2ssim_Convert2Tsv }
-        ,{ "atfdb.comptest  comptest:sv2ssim.UniqueFieldName  timeout:10  memcheck:Y  coverage:Y  exit_code:0  stablefld:N  comment:\"\"", atf_comp::comptest_sv2ssim_UniqueFieldName }
+        { "atfdb.comptest  comptest:acr.BadInsert  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Duplicate insert is ignored\"", atf_comp::comptest_acr_BadInsert }
+        ,{ "atfdb.comptest  comptest:acr.BadLine  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"A line the tuple parser rejects blocks -write and survives in the file\"", atf_comp::comptest_acr_BadLine }
+        ,{ "atfdb.comptest  comptest:acr.BadNs  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Insert a bad record and check that it's detected\"", atf_comp::comptest_acr_BadNs }
+        ,{ "atfdb.comptest  comptest:acr.BadPbufSyntax  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"A cpbuf row naming an unknown protobuf syntax is rejected\"", atf_comp::comptest_acr_BadPbufSyntax }
+        ,{ "atfdb.comptest  comptest:acr.BadPkey  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Warning about missing pkey - not error\"", atf_comp::comptest_acr_BadPkey }
+        ,{ "atfdb.comptest  comptest:acr.BadReftype  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Invalid reftype detected\"", atf_comp::comptest_acr_BadReftype }
+        ,{ "atfdb.comptest  comptest:acr.CascDel  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"-del recursively deletes dependent records\"", atf_comp::comptest_acr_CascDel }
+        ,{ "atfdb.comptest  comptest:acr.CascDel2  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Insert records & cascade delete them -- no change\"", atf_comp::comptest_acr_CascDel2 }
+        ,{ "atfdb.comptest  comptest:acr.CascDel3  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"acr.delete cascade deletes\"", atf_comp::comptest_acr_CascDel3 }
+        ,{ "atfdb.comptest  comptest:acr.DelField  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"A field is deleted\"", atf_comp::comptest_acr_DelField }
+        ,{ "atfdb.comptest  comptest:acr.DelRecord  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"A record is deleted\"", atf_comp::comptest_acr_DelRecord }
+        ,{ "atfdb.comptest  comptest:acr.DeleteReinsert  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"A record is deleted and re-inserted\"", atf_comp::comptest_acr_DeleteReinsert }
+        ,{ "atfdb.comptest  comptest:acr.DsetDirReadDeny  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"an -in dataset dir acr cannot search fails the run\"", atf_comp::comptest_acr_DsetDirReadDeny }
+        ,{ "atfdb.comptest  comptest:acr.DsetFileReadDeny  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"an unreadable ssimfile in a dataset dir fails the run and is left unchanged\"", atf_comp::comptest_acr_DsetFileReadDeny }
+        ,{ "atfdb.comptest  comptest:acr.EditFileModCount  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a modifying -e edit exits 0; the report carries n_file_mod\"", atf_comp::comptest_acr_EditFileModCount }
+        ,{ "atfdb.comptest  comptest:acr.EditFileReadFail  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a failed -in load skips the editor session and exits nonzero\"", atf_comp::comptest_acr_EditFileReadFail }
+        ,{ "atfdb.comptest  comptest:acr.EditFileWriteFail  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a failed -e write exits nonzero with n_file_mod:0\"", atf_comp::comptest_acr_EditFileWriteFail }
+        ,{ "atfdb.comptest  comptest:acr.Fields  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Select fields\"", atf_comp::comptest_acr_Fields }
+        ,{ "atfdb.comptest  comptest:acr.FieldsComma  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Select fields with comma separator\"", atf_comp::comptest_acr_FieldsComma }
+        ,{ "atfdb.comptest  comptest:acr.FileModCount  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"n_file_mod counts each modified ssimfile\"", atf_comp::comptest_acr_FileModCount }
+        ,{ "atfdb.comptest  comptest:acr.FileReadDeny  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"an unreadable -in file fails the run naming the path\"", atf_comp::comptest_acr_FileReadDeny }
+        ,{ "atfdb.comptest  comptest:acr.FileReadFail  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a missing -in path fails the run naming the path\"", atf_comp::comptest_acr_FileReadFail }
+        ,{ "atfdb.comptest  comptest:acr.FileWriteFail  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a failed ssimfile write fails the run and stands the -g script down\"", atf_comp::comptest_acr_FileWriteFail }
+        ,{ "atfdb.comptest  comptest:acr.GitTrigger1  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Test -g option\"", atf_comp::comptest_acr_GitTrigger1 }
+        ,{ "atfdb.comptest  comptest:acr.Insert  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Insert a few records\"", atf_comp::comptest_acr_Insert }
+        ,{ "atfdb.comptest  comptest:acr.InsertDelete  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Insert & delete record, nothing happens\"", atf_comp::comptest_acr_InsertDelete }
+        ,{ "atfdb.comptest  comptest:acr.Merge  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:Merging", atf_comp::comptest_acr_Merge }
+        ,{ "atfdb.comptest  comptest:acr.Meta1  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Select meta-information\"", atf_comp::comptest_acr_Meta1 }
+        ,{ "atfdb.comptest  comptest:acr.Meta2  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Select meta-information\"", atf_comp::comptest_acr_Meta2 }
+        ,{ "atfdb.comptest  comptest:acr.Meta3  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Select meta-information\"", atf_comp::comptest_acr_Meta3 }
+        ,{ "atfdb.comptest  comptest:acr.NullTrunc  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Trunc with reinsertion has no effect\"", atf_comp::comptest_acr_NullTrunc }
+        ,{ "atfdb.comptest  comptest:acr.QueryCtype  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Select one record\"", atf_comp::comptest_acr_QueryCtype }
+        ,{ "atfdb.comptest  comptest:acr.RenameCollision  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Rename with collision\"", atf_comp::comptest_acr_RenameCollision }
+        ,{ "atfdb.comptest  comptest:acr.RenameField  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"-rename -field renames affected attributes in dataset\"", atf_comp::comptest_acr_RenameField }
+        ,{ "atfdb.comptest  comptest:acr.RenameRecord  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Rename field and propagate recursively through structured keys\"", atf_comp::comptest_acr_RenameRecord }
+        ,{ "atfdb.comptest  comptest:acr.Replace  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"A record is replaced\"", atf_comp::comptest_acr_Replace }
+        ,{ "atfdb.comptest  comptest:acr.Select  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"A record is selected\"", atf_comp::comptest_acr_Select }
+        ,{ "atfdb.comptest  comptest:acr.SelectInProcSubst  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"-in works with bash <(...) process substitution\"", atf_comp::comptest_acr_SelectInProcSubst }
+        ,{ "atfdb.comptest  comptest:acr.SelectStdin  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"A record is selected by reading stdin\"", atf_comp::comptest_acr_SelectStdin }
+        ,{ "atfdb.comptest  comptest:acr.SelectTree  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Tree selection\"", atf_comp::comptest_acr_SelectTree }
+        ,{ "atfdb.comptest  comptest:acr.TooManyArgs  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Acr command line input error\"", atf_comp::comptest_acr_TooManyArgs }
+        ,{ "atfdb.comptest  comptest:acr.Trunc  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Truncate table\"", atf_comp::comptest_acr_Trunc }
+        ,{ "atfdb.comptest  comptest:acr.UnknownCtype  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"A typoed ctype blocks -write; blank and comment lines stay accepted\"", atf_comp::comptest_acr_UnknownCtype }
+        ,{ "atfdb.comptest  comptest:acr.UpdateBad  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Update fails\"", atf_comp::comptest_acr_UpdateBad }
+        ,{ "atfdb.comptest  comptest:acr.UpdateGood  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Update succeeds\"", atf_comp::comptest_acr_UpdateGood }
+        ,{ "atfdb.comptest  comptest:acr.Where  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Test -where option\"", atf_comp::comptest_acr_Where }
+        ,{ "atfdb.comptest  comptest:acr_compl.A01a  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_A01a }
+        ,{ "atfdb.comptest  comptest:acr_compl.A01b  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_A01b }
+        ,{ "atfdb.comptest  comptest:acr_compl.A01c  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_A01c }
+        ,{ "atfdb.comptest  comptest:acr_compl.A02a  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_A02a }
+        ,{ "atfdb.comptest  comptest:acr_compl.A02b  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_A02b }
+        ,{ "atfdb.comptest  comptest:acr_compl.A02c  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_A02c }
+        ,{ "atfdb.comptest  comptest:acr_compl.A03a  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_A03a }
+        ,{ "atfdb.comptest  comptest:acr_compl.A03b  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_A03b }
+        ,{ "atfdb.comptest  comptest:acr_compl.A03c  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_A03c }
+        ,{ "atfdb.comptest  comptest:acr_compl.A04a  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_A04a }
+        ,{ "atfdb.comptest  comptest:acr_compl.A04b  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_A04b }
+        ,{ "atfdb.comptest  comptest:acr_compl.A04c  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_A04c }
+        ,{ "atfdb.comptest  comptest:acr_compl.A05a  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_A05a }
+        ,{ "atfdb.comptest  comptest:acr_compl.A05b  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_A05b }
+        ,{ "atfdb.comptest  comptest:acr_compl.A05c  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_A05c }
+        ,{ "atfdb.comptest  comptest:acr_compl.A06a  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_A06a }
+        ,{ "atfdb.comptest  comptest:acr_compl.A06b  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_A06b }
+        ,{ "atfdb.comptest  comptest:acr_compl.A06c  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_A06c }
+        ,{ "atfdb.comptest  comptest:acr_compl.A07a  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_A07a }
+        ,{ "atfdb.comptest  comptest:acr_compl.A07b  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_A07b }
+        ,{ "atfdb.comptest  comptest:acr_compl.A07c  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_A07c }
+        ,{ "atfdb.comptest  comptest:acr_compl.Acr01  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_Acr01 }
+        ,{ "atfdb.comptest  comptest:acr_compl.Acr02  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_Acr02 }
+        ,{ "atfdb.comptest  comptest:acr_compl.Acr03  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_Acr03 }
+        ,{ "atfdb.comptest  comptest:acr_compl.Acr04  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_Acr04 }
+        ,{ "atfdb.comptest  comptest:acr_compl.Acr05  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_Acr05 }
+        ,{ "atfdb.comptest  comptest:acr_compl.Acr06  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_Acr06 }
+        ,{ "atfdb.comptest  comptest:acr_compl.Acr07  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_Acr07 }
+        ,{ "atfdb.comptest  comptest:acr_compl.Acr08  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_Acr08 }
+        ,{ "atfdb.comptest  comptest:acr_compl.Acr09  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_Acr09 }
+        ,{ "atfdb.comptest  comptest:acr_compl.Acr10  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_Acr10 }
+        ,{ "atfdb.comptest  comptest:acr_compl.Acr11  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_Acr11 }
+        ,{ "atfdb.comptest  comptest:acr_compl.Acr12  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_Acr12 }
+        ,{ "atfdb.comptest  comptest:acr_compl.Acr13  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_Acr13 }
+        ,{ "atfdb.comptest  comptest:acr_compl.BadExe  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_BadExe }
+        ,{ "atfdb.comptest  comptest:acr_compl.BadOpt  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_BadOpt }
+        ,{ "atfdb.comptest  comptest:acr_compl.BadOptColon  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_BadOptColon }
+        ,{ "atfdb.comptest  comptest:acr_compl.BadOptColonSpace  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_BadOptColonSpace }
+        ,{ "atfdb.comptest  comptest:acr_compl.BadOptSpace  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_BadOptSpace }
+        ,{ "atfdb.comptest  comptest:acr_compl.Bare  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_Bare }
+        ,{ "atfdb.comptest  comptest:acr_compl.CheckBatch  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_CheckBatch }
+        ,{ "atfdb.comptest  comptest:acr_compl.CheckBatchAnon  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"each batch line is parsed from scratch; a -- on one line does not disable option checks on the next\"", atf_comp::comptest_acr_compl_CheckBatchAnon }
+        ,{ "atfdb.comptest  comptest:acr_compl.CheckBatchBadReq  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"an unparsed request row is reported and fails the run; an empty line is not a request\"", atf_comp::comptest_acr_compl_CheckBatchBadReq }
+        ,{ "atfdb.comptest  comptest:acr_compl.CheckBatchCheck  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"-check_batch with -check is rejected: only one validation mode runs\"", atf_comp::comptest_acr_compl_CheckBatchCheck }
+        ,{ "atfdb.comptest  comptest:acr_compl.CheckBatchCmd  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"each batch line is checked against its own command; the completion set does not carry over\"", atf_comp::comptest_acr_compl_CheckBatchCmd }
+        ,{ "atfdb.comptest  comptest:acr_compl.CheckBatchCompLine  timeout:10  memcheck:N  coverage:Y  stablefld:N  comment:\"an inherited COMP_LINE does not discard the -check_batch on the command line; env prefix cannot be valgrind-wrapped\"", atf_comp::comptest_acr_compl_CheckBatchCompLine }
+        ,{ "atfdb.comptest  comptest:acr_compl.CheckBatchInstall  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"-check_batch with -install is rejected: two writers of one response stream\"", atf_comp::comptest_acr_compl_CheckBatchInstall }
+        ,{ "atfdb.comptest  comptest:acr_compl.CheckBatchSchemaStdin  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"-check_batch with -schema:- or -data:- is rejected: two readers of one stdin\"", atf_comp::comptest_acr_compl_CheckBatchSchemaStdin }
+        ,{ "atfdb.comptest  comptest:acr_compl.CheckMultiOpt  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_CheckMultiOpt }
+        ,{ "atfdb.comptest  comptest:acr_compl.CheckUnknownCmd  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_CheckUnknownCmd }
+        ,{ "atfdb.comptest  comptest:acr_compl.CheckUnknownOpt  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_CheckUnknownOpt }
+        ,{ "atfdb.comptest  comptest:acr_compl.CheckValid  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_CheckValid }
+        ,{ "atfdb.comptest  comptest:acr_compl.CheckValidAnon  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_CheckValidAnon }
+        ,{ "atfdb.comptest  comptest:acr_compl.CheckValidFlag  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_CheckValidFlag }
+        ,{ "atfdb.comptest  comptest:acr_compl.DblColon  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_DblColon }
+        ,{ "atfdb.comptest  comptest:acr_compl.DblColonList  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_DblColonList }
+        ,{ "atfdb.comptest  comptest:acr_compl.DblSpace  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_DblSpace }
+        ,{ "atfdb.comptest  comptest:acr_compl.DblSpaceList  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_DblSpaceList }
+        ,{ "atfdb.comptest  comptest:acr_compl.EnumCtypeColon  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_EnumCtypeColon }
+        ,{ "atfdb.comptest  comptest:acr_compl.EnumCtypeColonList  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_EnumCtypeColonList }
+        ,{ "atfdb.comptest  comptest:acr_compl.EnumCtypeSpace  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_EnumCtypeSpace }
+        ,{ "atfdb.comptest  comptest:acr_compl.EnumCtypeSpaceList  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_EnumCtypeSpaceList }
+        ,{ "atfdb.comptest  comptest:acr_compl.EnumFieldColon  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_EnumFieldColon }
+        ,{ "atfdb.comptest  comptest:acr_compl.EnumFieldColonList  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_EnumFieldColonList }
+        ,{ "atfdb.comptest  comptest:acr_compl.EnumFieldSpace  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_EnumFieldSpace }
+        ,{ "atfdb.comptest  comptest:acr_compl.EnumFieldSpaceList  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_EnumFieldSpaceList }
+        ,{ "atfdb.comptest  comptest:acr_compl.FlagColon  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_FlagColon }
+        ,{ "atfdb.comptest  comptest:acr_compl.FlagColonList  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_FlagColonList }
+        ,{ "atfdb.comptest  comptest:acr_compl.FlagSpace  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_FlagSpace }
+        ,{ "atfdb.comptest  comptest:acr_compl.FlagSpaceList  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_FlagSpaceList }
+        ,{ "atfdb.comptest  comptest:acr_compl.InsertWhenLeft  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_InsertWhenLeft }
+        ,{ "atfdb.comptest  comptest:acr_compl.InsertWhenLeftPrefix  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_InsertWhenLeftPrefix }
+        ,{ "atfdb.comptest  comptest:acr_compl.InsertWhenLookup  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_InsertWhenLookup }
+        ,{ "atfdb.comptest  comptest:acr_compl.InsertWhenRight  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_InsertWhenRight }
+        ,{ "atfdb.comptest  comptest:acr_compl.Install  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_Install }
+        ,{ "atfdb.comptest  comptest:acr_compl.NumColon  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_NumColon }
+        ,{ "atfdb.comptest  comptest:acr_compl.NumColonList  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_NumColonList }
+        ,{ "atfdb.comptest  comptest:acr_compl.NumSpace  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_NumSpace }
+        ,{ "atfdb.comptest  comptest:acr_compl.NumSpaceList  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_NumSpaceList }
+        ,{ "atfdb.comptest  comptest:acr_compl.OptCumul  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptCumul }
+        ,{ "atfdb.comptest  comptest:acr_compl.OptCumulAlias  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptCumulAlias }
+        ,{ "atfdb.comptest  comptest:acr_compl.OptD  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptD }
+        ,{ "atfdb.comptest  comptest:acr_compl.OptDList  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptDList }
+        ,{ "atfdb.comptest  comptest:acr_compl.OptH  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptH }
+        ,{ "atfdb.comptest  comptest:acr_compl.OptHList  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptHList }
+        ,{ "atfdb.comptest  comptest:acr_compl.OptNonCumul  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptNonCumul }
+        ,{ "atfdb.comptest  comptest:acr_compl.OptNonCumulAlias  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptNonCumulAlias }
+        ,{ "atfdb.comptest  comptest:acr_compl.OptPkeyColon  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptPkeyColon }
+        ,{ "atfdb.comptest  comptest:acr_compl.OptPkeyColonFull  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptPkeyColonFull }
+        ,{ "atfdb.comptest  comptest:acr_compl.OptPkeyColonFullList  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptPkeyColonFullList }
+        ,{ "atfdb.comptest  comptest:acr_compl.OptPkeyColonList  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptPkeyColonList }
+        ,{ "atfdb.comptest  comptest:acr_compl.OptPkeyColonPrefix  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptPkeyColonPrefix }
+        ,{ "atfdb.comptest  comptest:acr_compl.OptPkeyColonPrefixList  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptPkeyColonPrefixList }
+        ,{ "atfdb.comptest  comptest:acr_compl.OptPkeyColonSubstr  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptPkeyColonSubstr }
+        ,{ "atfdb.comptest  comptest:acr_compl.OptPkeyColonSubstrList  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptPkeyColonSubstrList }
+        ,{ "atfdb.comptest  comptest:acr_compl.OptPkeySpace  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptPkeySpace }
+        ,{ "atfdb.comptest  comptest:acr_compl.OptPkeySpaceFull  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptPkeySpaceFull }
+        ,{ "atfdb.comptest  comptest:acr_compl.OptPkeySpaceFullList  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptPkeySpaceFullList }
+        ,{ "atfdb.comptest  comptest:acr_compl.OptPkeySpaceList  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptPkeySpaceList }
+        ,{ "atfdb.comptest  comptest:acr_compl.OptPkeySpacePrefix  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptPkeySpacePrefix }
+        ,{ "atfdb.comptest  comptest:acr_compl.OptPkeySpacePrefixList  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptPkeySpacePrefixList }
+        ,{ "atfdb.comptest  comptest:acr_compl.OptPkeySpaceSubstr  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptPkeySpaceSubstr }
+        ,{ "atfdb.comptest  comptest:acr_compl.OptPkeySpaceSubstrList  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptPkeySpaceSubstrList }
+        ,{ "atfdb.comptest  comptest:acr_compl.OptRegxColon  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptRegxColon }
+        ,{ "atfdb.comptest  comptest:acr_compl.OptRegxColonFull  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptRegxColonFull }
+        ,{ "atfdb.comptest  comptest:acr_compl.OptRegxColonFullList  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptRegxColonFullList }
+        ,{ "atfdb.comptest  comptest:acr_compl.OptRegxColonList  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptRegxColonList }
+        ,{ "atfdb.comptest  comptest:acr_compl.OptRegxColonPrefix  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptRegxColonPrefix }
+        ,{ "atfdb.comptest  comptest:acr_compl.OptRegxColonPrefixList  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptRegxColonPrefixList }
+        ,{ "atfdb.comptest  comptest:acr_compl.OptRegxColonSubstr  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptRegxColonSubstr }
+        ,{ "atfdb.comptest  comptest:acr_compl.OptRegxColonSubstrList  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptRegxColonSubstrList }
+        ,{ "atfdb.comptest  comptest:acr_compl.OptRegxSpace  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptRegxSpace }
+        ,{ "atfdb.comptest  comptest:acr_compl.OptRegxSpaceFull  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptRegxSpaceFull }
+        ,{ "atfdb.comptest  comptest:acr_compl.OptRegxSpaceFullList  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptRegxSpaceFullList }
+        ,{ "atfdb.comptest  comptest:acr_compl.OptRegxSpaceList  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptRegxSpaceList }
+        ,{ "atfdb.comptest  comptest:acr_compl.OptRegxSpacePrefix  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptRegxSpacePrefix }
+        ,{ "atfdb.comptest  comptest:acr_compl.OptRegxSpacePrefixList  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptRegxSpacePrefixList }
+        ,{ "atfdb.comptest  comptest:acr_compl.OptRegxSpaceSubstr  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptRegxSpaceSubstr }
+        ,{ "atfdb.comptest  comptest:acr_compl.OptRegxSpaceSubstrList  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptRegxSpaceSubstrList }
+        ,{ "atfdb.comptest  comptest:acr_compl.OptSig  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptSig }
+        ,{ "atfdb.comptest  comptest:acr_compl.OptSigList  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptSigList }
+        ,{ "atfdb.comptest  comptest:acr_compl.OptV  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptV }
+        ,{ "atfdb.comptest  comptest:acr_compl.OptVList  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_OptVList }
+        ,{ "atfdb.comptest  comptest:acr_compl.R01a  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_R01a }
+        ,{ "atfdb.comptest  comptest:acr_compl.R01b  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_R01b }
+        ,{ "atfdb.comptest  comptest:acr_compl.R01c  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_R01c }
+        ,{ "atfdb.comptest  comptest:acr_compl.R01d  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_R01d }
+        ,{ "atfdb.comptest  comptest:acr_compl.R02a  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_R02a }
+        ,{ "atfdb.comptest  comptest:acr_compl.R02b  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_R02b }
+        ,{ "atfdb.comptest  comptest:acr_compl.R02c  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_R02c }
+        ,{ "atfdb.comptest  comptest:acr_compl.R02d  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_R02d }
+        ,{ "atfdb.comptest  comptest:acr_compl.StrColon  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_StrColon }
+        ,{ "atfdb.comptest  comptest:acr_compl.StrColonList  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_StrColonList }
+        ,{ "atfdb.comptest  comptest:acr_compl.StrSpace  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_StrSpace }
+        ,{ "atfdb.comptest  comptest:acr_compl.StrSpaceList  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_StrSpaceList }
+        ,{ "atfdb.comptest  comptest:acr_compl.T01  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_T01 }
+        ,{ "atfdb.comptest  comptest:acr_compl.T02  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_T02 }
+        ,{ "atfdb.comptest  comptest:acr_compl.T03  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_T03 }
+        ,{ "atfdb.comptest  comptest:acr_compl.T04  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_T04 }
+        ,{ "atfdb.comptest  comptest:acr_compl.T05  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_T05 }
+        ,{ "atfdb.comptest  comptest:acr_compl.T06  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_T06 }
+        ,{ "atfdb.comptest  comptest:acr_compl.T07  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_T07 }
+        ,{ "atfdb.comptest  comptest:acr_compl.T08  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_T08 }
+        ,{ "atfdb.comptest  comptest:acr_compl.T09  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_T09 }
+        ,{ "atfdb.comptest  comptest:acr_compl.T10  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_compl_T10 }
+        ,{ "atfdb.comptest  comptest:acr_dm.Conflict  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_dm_Conflict }
+        ,{ "atfdb.comptest  comptest:acr_dm.DeepRun  timeout:60  memcheck:N  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_dm_DeepRun }
+        ,{ "atfdb.comptest  comptest:acr_dm.FieldOrder  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_dm_FieldOrder }
+        ,{ "atfdb.comptest  comptest:acr_dm.Merge  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_dm_Merge }
+        ,{ "atfdb.comptest  comptest:acr_dm.RenameTuple  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_dm_RenameTuple }
+        ,{ "atfdb.comptest  comptest:acr_dm.Symmetry  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_dm_Symmetry }
+        ,{ "atfdb.comptest  comptest:acr_ed.CreateCtype  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Create a regular ctype\"", atf_comp::comptest_acr_ed_CreateCtype }
+        ,{ "atfdb.comptest  comptest:acr_ed.CreateMsg  timeout:10  memcheck:Y  coverage:Y  stablefld:Y  comment:\"Create a message\"", atf_comp::comptest_acr_ed_CreateMsg }
+        ,{ "atfdb.comptest  comptest:acr_ed.CreateSrcfileTarget  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Create a source file in a non-standard location for its target\"", atf_comp::comptest_acr_ed_CreateSrcfileTarget }
+        ,{ "atfdb.comptest  comptest:acr_ed.CreateSsimfile  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Script to create a new ssimfile\"", atf_comp::comptest_acr_ed_CreateSsimfile }
+        ,{ "atfdb.comptest  comptest:acr_ed.CreateSsimfileBadNs  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Create a ssimfile for a non-existence namespace\"", atf_comp::comptest_acr_ed_CreateSsimfileBadNs }
+        ,{ "atfdb.comptest  comptest:acr_ed.CreateTarget  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Script to create a new target\"", atf_comp::comptest_acr_ed_CreateTarget }
+        ,{ "atfdb.comptest  comptest:acr_in.Reverse  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_in_Reverse }
+        ,{ "atfdb.comptest  comptest:acr_in.Simple  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_in_Simple }
+        ,{ "atfdb.comptest  comptest:acr_in.Tree  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_acr_in_Tree }
+        ,{ "atfdb.comptest  comptest:amc.ArgvAccessor  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"which argv accessors each of the two argv strfmts generates on its print and read side\"", atf_comp::comptest_amc_ArgvAccessor }
+        ,{ "atfdb.comptest  comptest:amc.ArgvField  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Which field of a command ctype draws an argv token, and through which accessor\"", atf_comp::comptest_amc_ArgvField }
+        ,{ "atfdb.comptest  comptest:amc.ArgvGlobal  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"PrintArgv/ToArgv call a field's own Print with the parent argument collapsed for a global\"", atf_comp::comptest_amc_ArgvGlobal }
+        ,{ "atfdb.comptest  comptest:amc.ArgvGnu  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"ArgvGnu tokens: -x for a one-char name, --name plus a separate value\"", atf_comp::comptest_amc_ArgvGnu }
+        ,{ "atfdb.comptest  comptest:amc.BadArgvRead  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"the argv reader and its companions are emitted under gates that must agree\"", atf_comp::comptest_amc_BadArgvRead }
+        ,{ "atfdb.comptest  comptest:amc.BadBigendDeadend  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"fbigend on a type whose bltin row withholds bigendok is rejected\"", atf_comp::comptest_amc_BadBigendDeadend }
+        ,{ "atfdb.comptest  comptest:amc.BadBigendNosize  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"fbigend type missing its csize row: diagnostic names the row\"", atf_comp::comptest_amc_BadBigendNosize }
+        ,{ "atfdb.comptest  comptest:amc.BadBigendReftype  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"non-Val fbigend rejection accumulates; run continues to exit\"", atf_comp::comptest_amc_BadBigendReftype }
+        ,{ "atfdb.comptest  comptest:amc.BadBigendU128  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"No byteswap primitive beyond 64 bits; u128 fbigend rejected\"", atf_comp::comptest_amc_BadBigendU128 }
+        ,{ "atfdb.comptest  comptest:amc.BadBitfldReftype  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Reftype Bitfld and the dmmeta.bitfld record must imply each other\"", atf_comp::comptest_amc_BadBitfldReftype }
+        ,{ "atfdb.comptest  comptest:amc.BadBitsetElem  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Bitset element must be an unsigned integer builtin\"", atf_comp::comptest_amc_BadBitsetElem }
+        ,{ "atfdb.comptest  comptest:amc.BadBitsetNosize  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Bitset element missing its csize row: diagnostic names the row\"", atf_comp::comptest_amc_BadBitsetNosize }
+        ,{ "atfdb.comptest  comptest:amc.BadBitsetSigned  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Signed bitset element compiles but sign-extends; rejected\"", atf_comp::comptest_amc_BadBitsetSigned }
+        ,{ "atfdb.comptest  comptest:amc.BadBitsetWidth  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Bitset element width must be a power of two the accessors can index\"", atf_comp::comptest_amc_BadBitsetWidth }
+        ,{ "atfdb.comptest  comptest:amc.BadCascdelNopool  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"cascdel of a ctype with no instance pool is rejected: nothing can delete the rows\"", atf_comp::comptest_amc_BadCascdelNopool }
+        ,{ "atfdb.comptest  comptest:amc.BadCascdelXref  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"cascdel Ptrary/Llist deletes until empty; requires the field to be an xref\"", atf_comp::comptest_amc_BadCascdelXref }
+        ,{ "atfdb.comptest  comptest:amc.BadCcmpGlobal  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"ccmp on a global ctype is rejected: one instance, nothing to compare\"", atf_comp::comptest_amc_BadCcmpGlobal }
+        ,{ "atfdb.comptest  comptest:amc.BadCfmtPrint  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a print:Y cfmt with an unsupported strfmt would ship an empty Print body\"", atf_comp::comptest_amc_BadCfmtPrint }
+        ,{ "atfdb.comptest  comptest:amc.BadCfmtRead  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a read:Y cfmt with no read path would ship an empty reader that reports success\"", atf_comp::comptest_amc_BadCfmtRead }
+        ,{ "atfdb.comptest  comptest:amc.BadChashGlobal  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"chash on a global ctype is rejected: one instance, nothing to hash\"", atf_comp::comptest_amc_BadChashGlobal }
+        ,{ "atfdb.comptest  comptest:amc.BadCompactSep  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"printfmt:CompactSep has neither a printer nor a reader: both emitters reject it\"", atf_comp::comptest_amc_BadCompactSep }
+        ,{ "atfdb.comptest  comptest:amc.BadCopyctorInit  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Init body naming the record in an uninlinable shape is rejected\"", atf_comp::comptest_amc_BadCopyctorInit }
+        ,{ "atfdb.comptest  comptest:amc.BadCsizeAlignment  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"csize alignment must be a power of two, at most 16\"", atf_comp::comptest_amc_BadCsizeAlignment }
+        ,{ "atfdb.comptest  comptest:amc.BadFbufCondGlobal  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a buffer condition on a global fbuf has no row to insert\"", atf_comp::comptest_amc_BadFbufCondGlobal }
+        ,{ "atfdb.comptest  comptest:amc.BadFbufElem  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Bytebuf/Linebuf take a one-byte element; their length is a byte count\"", atf_comp::comptest_amc_BadFbufElem }
+        ,{ "atfdb.comptest  comptest:amc.BadFcmpGlobal  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"fcmp on a global ctype's field is rejected: one instance, nothing to compare\"", atf_comp::comptest_amc_BadFcmpGlobal }
+        ,{ "atfdb.comptest  comptest:amc.BadFcondIns  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a condition ins index must be an Llist or Bheap: one row in, one row out\"", atf_comp::comptest_amc_BadFcondIns }
+        ,{ "atfdb.comptest  comptest:amc.BadFconstRange  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"an fconst value the field's store cannot hold, over every end of the rule\"", atf_comp::comptest_amc_BadFconstRange }
+        ,{ "atfdb.comptest  comptest:amc.BadFdecBitwidth  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a zero Bitfld width bounds no decimal range\"", atf_comp::comptest_amc_BadFdecBitwidth }
+        ,{ "atfdb.comptest  comptest:amc.BadFdecBitwidthNeg  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a negative Bitfld width bounds no decimal range\"", atf_comp::comptest_amc_BadFdecBitwidthNeg }
+        ,{ "atfdb.comptest  comptest:amc.BadFdecNplace  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"fdec nplace with no consistent decimal arithmetic, and an arg holding no decimal place\"", atf_comp::comptest_amc_BadFdecNplace }
+        ,{ "atfdb.comptest  comptest:amc.BadFstepAtree  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"TimeHookRecur fstep on an Atree would compile and never fire\"", atf_comp::comptest_amc_BadFstepAtree }
+        ,{ "atfdb.comptest  comptest:amc.BadFstepBheap  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"InlineOnce/TimeHookOnce fstep requires a Bheap field\"", atf_comp::comptest_amc_BadFstepBheap }
+        ,{ "atfdb.comptest  comptest:amc.BadFstepFdelay  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"an fdelay row applies only to a recurring fstep\"", atf_comp::comptest_amc_BadFstepFdelay }
+        ,{ "atfdb.comptest  comptest:amc.BadFstepFirst  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"TimeHookRecur fstep requires a First-generating step field\"", atf_comp::comptest_amc_BadFstepFirst }
+        ,{ "atfdb.comptest  comptest:amc.BadFstepGlobal  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"fstep field must be a global (FDb) field\"", atf_comp::comptest_amc_BadFstepGlobal }
+        ,{ "atfdb.comptest  comptest:amc.BadFstepInlary  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"an fstep on a fixed Inlary has no emptiness test\"", atf_comp::comptest_amc_BadFstepInlary }
+        ,{ "atfdb.comptest  comptest:amc.BadFstepReftype  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"an fstep field must offer an emptiness test for the step loop condition\"", atf_comp::comptest_amc_BadFstepReftype }
+        ,{ "atfdb.comptest  comptest:amc.BadFstepScale  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"fdelay scale:Y requires a counted step field\"", atf_comp::comptest_amc_BadFstepScale }
+        ,{ "atfdb.comptest  comptest:amc.BadFstepZslistmt  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a ZSListMT fstep requires steptype Inline or InlineRecur\"", atf_comp::comptest_amc_BadFstepZslistmt }
+        ,{ "atfdb.comptest  comptest:amc.BadGconstBadline  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a gconst value table line that is not a tuple reports the file and line\"", atf_comp::comptest_amc_BadGconstBadline }
+        ,{ "atfdb.comptest  comptest:amc.BadGconstChar  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a gconst char value must be a single character; offenders are reported, the valid row still emits\"", atf_comp::comptest_amc_BadGconstChar }
+        ,{ "atfdb.comptest  comptest:amc.BadGconstCtype  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"gconst idfld must be a field of the namefld ctype\"", atf_comp::comptest_amc_BadGconstCtype }
+        ,{ "atfdb.comptest  comptest:amc.BadGconstCtypeChar  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"one run reports every bad gconst idfld; a char-typed gconst does not abort the scan\"", atf_comp::comptest_amc_BadGconstCtypeChar }
+        ,{ "atfdb.comptest  comptest:amc.BadGconstDup  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"duplicate name in a gconst value table is an error\"", atf_comp::comptest_amc_BadGconstDup }
+        ,{ "atfdb.comptest  comptest:amc.BadGconstHeadonly  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"head-only line in a gconst value table is an error, not a skipped index\"", atf_comp::comptest_amc_BadGconstHeadonly }
+        ,{ "atfdb.comptest  comptest:amc.BadGconstIdfld  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"gconst idfld must resolve to a known field\"", atf_comp::comptest_amc_BadGconstIdfld }
+        ,{ "atfdb.comptest  comptest:amc.BadGlobalInst  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a Global instance must be the ctype's only instance\"", atf_comp::comptest_amc_BadGlobalInst }
+        ,{ "atfdb.comptest  comptest:amc.BadInfinityPool  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a varlen ctype instanced in a fixed-slot pool is rejected\"", atf_comp::comptest_amc_BadInfinityPool }
+        ,{ "atfdb.comptest  comptest:amc.BadInlaryFnoremove  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a variable inlary needs the RemoveAll that fnoremove suppresses\"", atf_comp::comptest_amc_BadInlaryFnoremove }
+        ,{ "atfdb.comptest  comptest:amc.BadInlaryMin  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a variable char/u8 inlary cannot have min>0\"", atf_comp::comptest_amc_BadInlaryMin }
+        ,{ "atfdb.comptest  comptest:amc.BadInlaryMinmax  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"an inlary with min>max cannot preallocate its floor\"", atf_comp::comptest_amc_BadInlaryMinmax }
+        ,{ "atfdb.comptest  comptest:amc.BadJsonFld  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a Json cfmt field no FmtJson branch covers is rejected, not silently dropped\"", atf_comp::comptest_amc_BadJsonFld }
+        ,{ "atfdb.comptest  comptest:amc.BadJstypeWire  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"every field of a packed jstype ctype must have a TypeScript wire form\"", atf_comp::comptest_amc_BadJstypeWire }
+        ,{ "atfdb.comptest  comptest:amc.BadLenfldBitfld  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a Bitfld lenfld stores masked to its width; range checks use the width-limited max\"", atf_comp::comptest_amc_BadLenfldBitfld }
+        ,{ "atfdb.comptest  comptest:amc.BadLenfldExtra  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a positive extra beyond the lenfld type range can frame no message\"", atf_comp::comptest_amc_BadLenfldExtra }
+        ,{ "atfdb.comptest  comptest:amc.BadLenfldJstype  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"the TS Encode is a store site; size+extra must fit the lenfld range\"", atf_comp::comptest_amc_BadLenfldJstype }
+        ,{ "atfdb.comptest  comptest:amc.BadLenfldMinFrame  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a store carrier's fixed size + extra must fit the lenfld range\"", atf_comp::comptest_amc_BadLenfldMinFrame }
+        ,{ "atfdb.comptest  comptest:amc.BadLenfldMsgtype  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a message ctype stores its length; size+extra must divide by scale\"", atf_comp::comptest_amc_BadLenfldMsgtype }
+        ,{ "atfdb.comptest  comptest:amc.BadLenfldPnew  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a fixed-only pnew ctype stores its fixed size as the total; size+extra must divide by scale\"", atf_comp::comptest_amc_BadLenfldPnew }
+        ,{ "atfdb.comptest  comptest:amc.BadLenfldScale  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Pooled ctype fixed size + extra must be a multiple of lenfld scale\"", atf_comp::comptest_amc_BadLenfldScale }
+        ,{ "atfdb.comptest  comptest:amc.BadLenfldType  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a lenfld arg must resolve to an integer type with a numeric range\"", atf_comp::comptest_amc_BadLenfldType }
+        ,{ "atfdb.comptest  comptest:amc.BadLenfldZeroScale  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"all scale:0 lenflds are reported in one run\"", atf_comp::comptest_amc_BadLenfldZeroScale }
+        ,{ "atfdb.comptest  comptest:amc.BadMinmax  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"ccmp minmax:Y requires order:Y and genop:Y or a builtin\"", atf_comp::comptest_amc_BadMinmax }
+        ,{ "atfdb.comptest  comptest:amc.BadMissingTcurs  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a requested cursor whose amcdb.tcurs row is absent is named, not a Replscope throw\"", atf_comp::comptest_amc_BadMissingTcurs }
+        ,{ "atfdb.comptest  comptest:amc.BadNumstrBase  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"numstr base must be 2..36, 95, or 256\"", atf_comp::comptest_amc_BadNumstrBase }
+        ,{ "atfdb.comptest  comptest:amc.BadNumstrMinlen  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"numstr min_len must fit the string, the pad budget, and leave the sign a slot\"", atf_comp::comptest_amc_BadNumstrMinlen }
+        ,{ "atfdb.comptest  comptest:amc.BadNumstrNumtype  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"numstr numtype and fdec arg must resolve to an integer bltin\"", atf_comp::comptest_amc_BadNumstrNumtype }
+        ,{ "atfdb.comptest  comptest:amc.BadNumstrPad  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"numstr pad must not read back as a digit of the base\"", atf_comp::comptest_amc_BadNumstrPad }
+        ,{ "atfdb.comptest  comptest:amc.BadNumstrSignedBase  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"signed numstr cannot use base 95 or 256, where '-' is a digit\"", atf_comp::comptest_amc_BadNumstrSignedBase }
+        ,{ "atfdb.comptest  comptest:amc.BadOptDtor  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a Varlen/Opt element type that owns a destructor is refused at generation time\"", atf_comp::comptest_amc_BadOptDtor }
+        ,{ "atfdb.comptest  comptest:amc.BadPbufArg  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"fpbuf arg and reftype must match what the pb_type codec compiles against\"", atf_comp::comptest_amc_BadPbufArg }
+        ,{ "atfdb.comptest  comptest:amc.BadPbufFieldNumber  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"fpbuf field numbers: no duplicates within a ctype, in [1, 2^29-1]\"", atf_comp::comptest_amc_BadPbufFieldNumber }
+        ,{ "atfdb.comptest  comptest:amc.BadPbufNoCodec  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"an fpbuf row must produce wire code: cpbuf on the ctype, no Base field\"", atf_comp::comptest_amc_BadPbufNoCodec }
+        ,{ "atfdb.comptest  comptest:amc.BadPbufOneof  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"the variants of a oneof must share one presence mask\"", atf_comp::comptest_amc_BadPbufOneof }
+        ,{ "atfdb.comptest  comptest:amc.BadPbufPacked  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"fpbuf packed applies only to a repeated field of a varint or fixed pb_type\"", atf_comp::comptest_amc_BadPbufPacked }
+        ,{ "atfdb.comptest  comptest:amc.BadPbufStore  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"an fpbuf singular field must have a Set the decoder can store through\"", atf_comp::comptest_amc_BadPbufStore }
+        ,{ "atfdb.comptest  comptest:amc.BadPbufSyntax  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"cpbuf syntax must name a dmmeta.pbsyntax row; proto2 and proto3 emit different presence guards\"", atf_comp::comptest_amc_BadPbufSyntax }
+        ,{ "atfdb.comptest  comptest:amc.BadPbufType  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"an fpbuf pb_type must name an amcdb.pbtype row\"", atf_comp::comptest_amc_BadPbufType }
+        ,{ "atfdb.comptest  comptest:amc.BadPmaskMember  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"an explicit pmask member row must name a bit-capable field of the pmask's own ctype\"", atf_comp::comptest_amc_BadPmaskMember }
+        ,{ "atfdb.comptest  comptest:amc.BadPmaskWidth  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"pmask member count must fit the pmask field bit width\"", atf_comp::comptest_amc_BadPmaskWidth }
+        ,{ "atfdb.comptest  comptest:amc.BadSizeCycle  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"By-value ctype cycle reports every defect it finds, and does not hang\"", atf_comp::comptest_amc_BadSizeCycle }
+        ,{ "atfdb.comptest  comptest:amc.BadSizeOverflow  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Inlary total size beyond i32 is a clean error\"", atf_comp::comptest_amc_BadSizeOverflow }
+        ,{ "atfdb.comptest  comptest:amc.BadSmallstrToobig  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"rpascal smallstr length must fit the one-byte length count\"", atf_comp::comptest_amc_BadSmallstrToobig }
+        ,{ "atfdb.comptest  comptest:amc.BadVarlenLast  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a fixed field after a varlen field is rejected: varlen writes would clobber it\"", atf_comp::comptest_amc_BadVarlenLast }
+        ,{ "atfdb.comptest  comptest:amc.BadVarlenOpt  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a ctype may claim the end of its fixed portion once; a second claim is rejected\"", atf_comp::comptest_amc_BadVarlenOpt }
+        ,{ "atfdb.comptest  comptest:amc.BitfldReadRange  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"which bitfield reads carry a store-range condition, by arg type and width\"", atf_comp::comptest_amc_BitfldReadRange }
+        ,{ "atfdb.comptest  comptest:amc.CopyctorInit  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"the copy constructor inlines a field Init macro, retargeting the record it names\"", atf_comp::comptest_amc_CopyctorInit }
+        ,{ "atfdb.comptest  comptest:amc.CursUnrequested  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a cursor tfunc without its tcurs row generates only on an fcurs request\"", atf_comp::comptest_amc_CursUnrequested }
+        ,{ "atfdb.comptest  comptest:amc.DfltRetarget  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"*this in a field default retargets; a this-prefixed identifier survives\"", atf_comp::comptest_amc_DfltRetarget }
+        ,{ "atfdb.comptest  comptest:amc.DispfilterFieldPrint  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"dispatch-filter regx match prints a field through its own Print function\"", atf_comp::comptest_amc_DispfilterFieldPrint }
+        ,{ "atfdb.comptest  comptest:amc.DispfilterMatchAll  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"match_all dispatch filter builds every message-side expression from the message field\"", atf_comp::comptest_amc_DispfilterMatchAll }
+        ,{ "atfdb.comptest  comptest:amc.EditFail  timeout:30  memcheck:Y  coverage:Y  stablefld:N  comment:\"a failed acr -e fails the amc run before codegen\"", atf_comp::comptest_amc_EditFail }
+        ,{ "atfdb.comptest  comptest:amc.FastPmaskName  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"the FAST codec names every presence accessor from the pmask row, not from the word pmask\"", atf_comp::comptest_amc_FastPmaskName }
+        ,{ "atfdb.comptest  comptest:amc.FconstBitfldWidth  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"the bitfield widths an fconst store range is computed from\"", atf_comp::comptest_amc_FconstBitfldWidth }
+        ,{ "atfdb.comptest  comptest:amc.FconstGlobal  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"fconst accessors of a global ctype's field call each other parentless\"", atf_comp::comptest_amc_FconstGlobal }
+        ,{ "atfdb.comptest  comptest:amc.FdecGetScale  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"ctype-named GetScale only for a single-fdec ctype\"", atf_comp::comptest_amc_FdecGetScale }
+        ,{ "atfdb.comptest  comptest:amc.FdecGlobalBitfld  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"fdec accessors of a global bitfld field take no parent argument\"", atf_comp::comptest_amc_FdecGlobalBitfld }
+        ,{ "atfdb.comptest  comptest:amc.FstepScaleBlkhash  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"fdelay scale:Y on a Blkhash or Lary step field generates cleanly\"", atf_comp::comptest_amc_FstepScaleBlkhash }
+        ,{ "atfdb.comptest  comptest:amc.GconstIndir  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"gconst value data side-loads from the -in_dir root\"", atf_comp::comptest_amc_GconstIndir }
+        ,{ "atfdb.comptest  comptest:amc.GconstLoadFail  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a gconst value table that fails to load reports the file and fails the run\"", atf_comp::comptest_amc_GconstLoadFail }
+        ,{ "atfdb.comptest  comptest:amc.GstaticBadLine  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a gstatic input line that is not a tuple reports the file and line\"", atf_comp::comptest_amc_GstaticBadLine }
+        ,{ "atfdb.comptest  comptest:amc.GstaticLoadFail  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a gstatic table that fails to load reports the file and fails the run\"", atf_comp::comptest_amc_GstaticLoadFail }
+        ,{ "atfdb.comptest  comptest:amc.GsymbolBadline  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a gsymbol table line that is not a tuple reports the file and line\"", atf_comp::comptest_amc_GsymbolBadline }
+        ,{ "atfdb.comptest  comptest:amc.GsymbolLoadFail  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a gsymbol table that fails to load reports the file and fails the run\"", atf_comp::comptest_amc_GsymbolLoadFail }
+        ,{ "atfdb.comptest  comptest:amc.GsymbolSideload  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"gsymbol side-load from the data/ fallback root prints the amc.sideload notice\"", atf_comp::comptest_amc_GsymbolSideload }
+        ,{ "atfdb.comptest  comptest:amc.JsFixedFrame  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a fixed-size frame length is a literal: no lenfld range guard is emitted\"", atf_comp::comptest_amc_JsFixedFrame }
+        ,{ "atfdb.comptest  comptest:amc.JsonAry  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"how a JSON field renders: by its type Json cfmt, as a string, as an array, or as the record itself\"", atf_comp::comptest_amc_JsonAry }
+        ,{ "atfdb.comptest  comptest:amc.JsonBaseBitfld  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Base and Bitfld fields pass the JSON-cfmt field check without printing\"", atf_comp::comptest_amc_JsonBaseBitfld }
+        ,{ "atfdb.comptest  comptest:amc.JsonFld  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"How each field of a Json cfmt reaches its node: FmtJson, string print, or an array of either\"", atf_comp::comptest_amc_JsonFld }
+        ,{ "atfdb.comptest  comptest:amc.JsonGlobal  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a Global field carries no data and passes the Json-cfmt field check\"", atf_comp::comptest_amc_JsonGlobal }
+        ,{ "atfdb.comptest  comptest:amc.KafkaBitfld  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"kafka codec routes bitfld access through Get/Set accessors\"", atf_comp::comptest_amc_KafkaBitfld }
+        ,{ "atfdb.comptest  comptest:amc.KafkaPmaskName  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"kafka codec presence checks use the pmask-derived accessor name\"", atf_comp::comptest_amc_KafkaPmaskName }
+        ,{ "atfdb.comptest  comptest:amc.LenfldBitfld  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a Bitfld lenfld has no TS store site; the schema stays legal\"", atf_comp::comptest_amc_LenfldBitfld }
+        ,{ "atfdb.comptest  comptest:amc.LenfldNarrow  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"C++ stores of a runtime total guard the lenfld range like the TS encoder\"", atf_comp::comptest_amc_LenfldNarrow }
+        ,{ "atfdb.comptest  comptest:amc.MinmaxNative  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"ccmp minmax:Y on a builtin or extrn:Y ctype generates cleanly\"", atf_comp::comptest_amc_MinmaxNative }
+        ,{ "atfdb.comptest  comptest:amc.MissingLlist  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Llist field without dmmeta.llist record is a clean error\"", atf_comp::comptest_amc_MissingLlist }
+        ,{ "atfdb.comptest  comptest:amc.MissingPack  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a packed message with an unpacked base header names the pack row to insert\"", atf_comp::comptest_amc_MissingPack }
+        ,{ "atfdb.comptest  comptest:amc.MissingPtrary  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Ptrary field without dmmeta.ptrary record is a clean error\"", atf_comp::comptest_amc_MissingPtrary }
+        ,{ "atfdb.comptest  comptest:amc.NumstrGlobal  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"numstr on a global: Geti64 and GetnumDflt call Getnum parentless\"", atf_comp::comptest_amc_NumstrGlobal }
+        ,{ "atfdb.comptest  comptest:amc.OptGlobalPrint  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Opt on a global: infinity_pool error, no bare (void); in Print\"", atf_comp::comptest_amc_OptGlobalPrint }
+        ,{ "atfdb.comptest  comptest:amc.OutfileWriteFail  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a failed output-file write fails the run naming the path\"", atf_comp::comptest_amc_OutfileWriteFail }
+        ,{ "atfdb.comptest  comptest:amc.PbufBitfld  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"pbuf codec routes bitfld access through Get/Set accessors\"", atf_comp::comptest_amc_PbufBitfld }
+        ,{ "atfdb.comptest  comptest:amc.PbufBitfldNondflt  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"pbuf codec guards a no-pmask bitfld with the proto3 default-value check\"", atf_comp::comptest_amc_PbufBitfldNondflt }
+        ,{ "atfdb.comptest  comptest:amc.PbufPmaskName  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"pbuf codec presence guard uses the pmask-derived accessor name\"", atf_comp::comptest_amc_PbufPmaskName }
+        ,{ "atfdb.comptest  comptest:amc.PbufRepeatedPmask  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"decode of a repeated pmask member marks the field present\"", atf_comp::comptest_amc_PbufRepeatedPmask }
+        ,{ "atfdb.comptest  comptest:amc.PbufStore  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"pbuf decode store path: in place, temporary, or Alloc, per field shape\"", atf_comp::comptest_amc_PbufStore }
+        ,{ "atfdb.comptest  comptest:amc.PmaskGiantField  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"A pmask field wider than i32 bits is legal; bit bookkeeping must not wrap\"", atf_comp::comptest_amc_PmaskGiantField }
+        ,{ "atfdb.comptest  comptest:amc.PmaskGlobal  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"pmask on a global: bitset accessors and print filter take no parent\"", atf_comp::comptest_amc_PmaskGlobal }
+        ,{ "atfdb.comptest  comptest:amc.PoolInsertScale  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"InsertMaybe validates an untrusted length word in i64 domain; no mod-2^N wrap\"", atf_comp::comptest_amc_PoolInsertScale }
+        ,{ "atfdb.comptest  comptest:amc.PoolVarlenExtern  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Delete of a varlen pool arg without lenfld: extern count, well-formed length statement\"", atf_comp::comptest_amc_PoolVarlenExtern }
+        ,{ "atfdb.comptest  comptest:amc.PrintGlobalTuple  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Tuple print of a global ctype reads fields through the row argument\"", atf_comp::comptest_amc_PrintGlobalTuple }
+        ,{ "atfdb.comptest  comptest:amc.QueryNocpp  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"A match in a namespace with no C++ output reports amc.query_nocpp and exits nonzero\"", atf_comp::comptest_amc_QueryNocpp }
+        ,{ "atfdb.comptest  comptest:amc.ReadGlobalTuple  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Tuple read of a global ctype: prefixed dispatcher, parentless field readers\"", atf_comp::comptest_amc_ReadGlobalTuple }
+        ,{ "atfdb.comptest  comptest:amc.SchemaClosure  timeout:10  memcheck:N  coverage:Y  stablefld:N  comment:\"amc generates every namespace from its own schema closure; too heavy under valgrind\"", atf_comp::comptest_amc_SchemaClosure }
+        ,{ "atfdb.comptest  comptest:amc.SideloadNossimfile  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a gconst and a gstatic whose ctype reaches no ssimfile at all\"", atf_comp::comptest_amc_SideloadNossimfile }
+        ,{ "atfdb.comptest  comptest:amc.StdinUniverse  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"universe piped in with -in_dir:- and its default side-load root\"", atf_comp::comptest_amc_StdinUniverse }
+        ,{ "atfdb.comptest  comptest:amc.TableWriteAcrFail  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a failed table-write acr fails the run\"", atf_comp::comptest_amc_TableWriteAcrFail }
+        ,{ "atfdb.comptest  comptest:apm.DryRun  timeout:20  memcheck:Y  coverage:Y  stablefld:N  comment:\"a dry run prints the plan and leaves no transaction script, even where temp/ does not exist\"", atf_comp::comptest_apm_DryRun }
+        ,{ "atfdb.comptest  comptest:apm.RecfileWriteFail  timeout:20  memcheck:N  coverage:Y  stablefld:N  comment:\"a failed records-file write stops the removal instead of emitting a script that deletes nothing\"", atf_comp::comptest_apm_RecfileWriteFail }
+        ,{ "atfdb.comptest  comptest:apm.TransactionExit  timeout:20  memcheck:N  coverage:Y  stablefld:N  comment:\"a failed transaction exits with the script exit code, not the raw wait status\"", atf_comp::comptest_apm_TransactionExit }
+        ,{ "atfdb.comptest  comptest:apm.UpdateFate  timeout:120  memcheck:N  coverage:Y  stablefld:N  comment:\"a step of an update that fails stops the update instead of a plan built from the empty file the step left\"", atf_comp::comptest_apm_UpdateFate }
+        ,{ "atfdb.comptest  comptest:aqlite.CompileOptions  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_aqlite_CompileOptions }
+        ,{ "atfdb.comptest  comptest:aqlite.Constraints  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_aqlite_Constraints }
+        ,{ "atfdb.comptest  comptest:aqlite.ErrorHandling  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_aqlite_ErrorHandling }
+        ,{ "atfdb.comptest  comptest:aqlite.Joins  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_aqlite_Joins }
+        ,{ "atfdb.comptest  comptest:aqlite.Number  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_aqlite_Number }
+        ,{ "atfdb.comptest  comptest:aqlite.PatternMatching  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_aqlite_PatternMatching }
+        ,{ "atfdb.comptest  comptest:aqlite.Performance  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_aqlite_Performance }
+        ,{ "atfdb.comptest  comptest:aqlite.Smoke  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_aqlite_Smoke }
+        ,{ "atfdb.comptest  comptest:atf_cmdline.Bare  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_atf_cmdline_Bare }
+        ,{ "atfdb.comptest  comptest:atf_cmdline.Debug  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_atf_cmdline_Debug }
+        ,{ "atfdb.comptest  comptest:atf_cmdline.Help  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_atf_cmdline_Help }
+        ,{ "atfdb.comptest  comptest:atf_cmdline.Minimal  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_atf_cmdline_Minimal }
+        ,{ "atfdb.comptest  comptest:atf_cmdline.MinimalExec  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_atf_cmdline_MinimalExec }
+        ,{ "atfdb.comptest  comptest:atf_cmdline.Rich  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_atf_cmdline_Rich }
+        ,{ "atfdb.comptest  comptest:atf_cmdline.RichExec  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_atf_cmdline_RichExec }
+        ,{ "atfdb.comptest  comptest:atf_cmdline.Sig  timeout:10  memcheck:Y  coverage:Y  stablefld:Y  comment:\"\"", atf_comp::comptest_atf_cmdline_Sig }
+        ,{ "atfdb.comptest  comptest:atf_cmdline.Verbose  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_atf_cmdline_Verbose }
+        ,{ "atfdb.comptest  comptest:atf_cmdline.Version  timeout:10  memcheck:Y  coverage:Y  stablefld:Y  comment:\"\"", atf_comp::comptest_atf_cmdline_Version }
+        ,{ "atfdb.comptest  comptest:gcache.CacheDirFail  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a cache directory that does not exist must fail the run around a wrapped command that succeeds\"", atf_comp::comptest_gcache_CacheDirFail }
+        ,{ "atfdb.comptest  comptest:gcache.CoverageBlobMiss  timeout:120  memcheck:Y  coverage:Y  stablefld:N  comment:\"a cache entry that is not a whole coverage blob counts as a miss and is republished\"", atf_comp::comptest_gcache_CoverageBlobMiss }
+        ,{ "atfdb.comptest  comptest:gcache.CoverageFlag  timeout:60  memcheck:Y  coverage:Y  stablefld:N  comment:\"which compiler flags select the coverage cache format\"", atf_comp::comptest_gcache_CoverageFlag }
+        ,{ "atfdb.comptest  comptest:gcache.CoverageRestoreFail  timeout:60  memcheck:Y  coverage:Y  stablefld:N  comment:\"a coverage cache hit restores both halves of the blob or leaves neither fresh\"", atf_comp::comptest_gcache_CoverageRestoreFail }
+        ,{ "atfdb.comptest  comptest:gcache.EmptyEntry  timeout:60  memcheck:Y  coverage:Y  stablefld:N  comment:\"an entry a compile cannot be served from -- no bytes, or a directory -- is a miss in both formats\"", atf_comp::comptest_gcache_EmptyEntry }
+        ,{ "atfdb.comptest  comptest:gcache.ExitCodeCount  timeout:60  memcheck:Y  coverage:Y  stablefld:N  comment:\"the exit code sums the wrapped command status and one per failure that costs the object\"", atf_comp::comptest_gcache_ExitCodeCount }
+        ,{ "atfdb.comptest  comptest:gcache.HitMtime  timeout:60  memcheck:Y  coverage:Y  stablefld:N  comment:\"a cache hit leaves every file it writes carrying the time of that hit\"", atf_comp::comptest_gcache_HitMtime }
+        ,{ "atfdb.comptest  comptest:jkv.ArrayFill  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_jkv_ArrayFill }
+        ,{ "atfdb.comptest  comptest:jkv.ReverseSmoke  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_jkv_ReverseSmoke }
+        ,{ "atfdb.comptest  comptest:jkv.Smoke  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_jkv_Smoke }
+        ,{ "atfdb.comptest  comptest:jkv.WriteFail  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"an unwritable output file is reported and exits non-zero\"", atf_comp::comptest_jkv_WriteFail }
+        ,{ "atfdb.comptest  comptest:mdbg.OutOfOrderArgs  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_mdbg_OutOfOrderArgs }
+        ,{ "atfdb.comptest  comptest:mdbg.Smoke  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_mdbg_Smoke }
+        ,{ "atfdb.comptest  comptest:mdbg.SmokeBreak  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_mdbg_SmokeBreak }
+        ,{ "atfdb.comptest  comptest:mdbg.SmokeBreak2  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_mdbg_SmokeBreak2 }
+        ,{ "atfdb.comptest  comptest:orgfile.ConsumeInput  timeout:10  memcheck:N  coverage:Y  stablefld:N  comment:\"Consume ssim input\"", atf_comp::comptest_orgfile_ConsumeInput }
+        ,{ "atfdb.comptest  comptest:orgfile.Dedup  timeout:10  memcheck:N  coverage:Y  stablefld:N  comment:\"Dedup identical files\"", atf_comp::comptest_orgfile_Dedup }
+        ,{ "atfdb.comptest  comptest:orgfile.DedupPathregx  timeout:10  memcheck:N  coverage:Y  stablefld:N  comment:\"Dedup with path regex preference\"", atf_comp::comptest_orgfile_DedupPathregx }
+        ,{ "atfdb.comptest  comptest:orgfile.Hash  timeout:10  memcheck:N  coverage:Y  stablefld:N  comment:\"Check sha1 hashing\"", atf_comp::comptest_orgfile_Hash }
+        ,{ "atfdb.comptest  comptest:orgfile.MoveByDate  timeout:10  memcheck:N  coverage:Y  stablefld:N  comment:\"Detect target path by date parsed from filename\"", atf_comp::comptest_orgfile_MoveByDate }
+        ,{ "atfdb.comptest  comptest:orgfile.MoveDot  timeout:10  memcheck:N  coverage:Y  stablefld:N  comment:\"Move to . detects directory by filesystem\"", atf_comp::comptest_orgfile_MoveDot }
+        ,{ "atfdb.comptest  comptest:orgfile.MoveNoop  timeout:10  memcheck:N  coverage:Y  stablefld:N  comment:\"Move to same dir is a no-op\"", atf_comp::comptest_orgfile_MoveNoop }
+        ,{ "atfdb.comptest  comptest:src_func.CreatemissingScanFail  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a failed scan skips -createmissing leaving sources byte-unchanged\"", atf_comp::comptest_src_func_CreatemissingScanFail }
+        ,{ "atfdb.comptest  comptest:src_func.FileReadFail  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a targsrc file that cannot be read fails the run naming the path\"", atf_comp::comptest_src_func_FileReadFail }
+        ,{ "atfdb.comptest  comptest:src_func.FileWriteFail  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a failed update-hdr block write fails the run naming the path\"", atf_comp::comptest_src_func_FileWriteFail }
+        ,{ "atfdb.comptest  comptest:src_func.Precomment  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a table rule inside a leading comment is not a divider and keeps the lines above it\"", atf_comp::comptest_src_func_Precomment }
+        ,{ "atfdb.comptest  comptest:src_func.SectionBodyless  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a section whose closing brace stands on its own marker line is refused\"", atf_comp::comptest_src_func_SectionBodyless }
+        ,{ "atfdb.comptest  comptest:src_func.SectionClose  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a section ends at the first line that brings the body below the depth its marker opened\"", atf_comp::comptest_src_func_SectionClose }
+        ,{ "atfdb.comptest  comptest:src_func.SectionNs  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"which namespace of a marker line opening several the section receives\"", atf_comp::comptest_src_func_SectionNs }
+        ,{ "atfdb.comptest  comptest:src_func.SectionOpen  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a marker opens a section only when the namespace and the tag are both code\"", atf_comp::comptest_src_func_SectionOpen }
+        ,{ "atfdb.comptest  comptest:src_func.SectionOpenTwice  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a section closed off by the next marker leaves the header byte-unchanged\"", atf_comp::comptest_src_func_SectionOpenTwice }
+        ,{ "atfdb.comptest  comptest:src_func.SectionUneven  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a section ending on a line other than a closing brace, and a file whose braces do not balance\"", atf_comp::comptest_src_func_SectionUneven }
+        ,{ "atfdb.comptest  comptest:src_func.SectionUnnamed  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a marker line naming no namespace is refused\"", atf_comp::comptest_src_func_SectionUnnamed }
+        ,{ "atfdb.comptest  comptest:src_func.TemplateIffyRet  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"the bigret check reads the return type past the template parameter list\"", atf_comp::comptest_src_func_TemplateIffyRet }
+        ,{ "atfdb.comptest  comptest:src_func.TemplateParenDefault  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a parenthesized template default containing > does not end the template-list strip early\"", atf_comp::comptest_src_func_TemplateParenDefault }
+        ,{ "atfdb.comptest  comptest:src_func.UnfinishedFunc  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a source truncated mid-function fails the scan and skips the rewrite\"", atf_comp::comptest_src_func_UnfinishedFunc }
+        ,{ "atfdb.comptest  comptest:src_func.UpdateprotoReadFail  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"an unreadable header fails -updateproto naming the path instead of going stale\"", atf_comp::comptest_src_func_UpdateprotoReadFail }
+        ,{ "atfdb.comptest  comptest:src_func.UpdateprotoScanFail  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a failed scan skips the header rewrite leaving it byte-unchanged\"", atf_comp::comptest_src_func_UpdateprotoScanFail }
+        ,{ "atfdb.comptest  comptest:src_func.UpdateprotoUnterminated  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"an unterminated update-hdr section fails the run byte-unchanged\"", atf_comp::comptest_src_func_UpdateprotoUnterminated }
+        ,{ "atfdb.comptest  comptest:src_func.UserfuncKeyWidth  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"userfunc keys past fifty characters stay distinct; past one hundred are rejected\"", atf_comp::comptest_src_func_UserfuncKeyWidth }
+        ,{ "atfdb.comptest  comptest:src_hdr.Converge  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"the second header rewrite of a headerless script is a no-op\"", atf_comp::comptest_src_hdr_Converge }
+        ,{ "atfdb.comptest  comptest:src_hdr.FileReadFail  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a missing source file fails the run naming the path\"", atf_comp::comptest_src_hdr_FileReadFail }
+        ,{ "atfdb.comptest  comptest:src_hdr.FileWriteFail  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a failed header write fails the run naming the path\"", atf_comp::comptest_src_hdr_FileWriteFail }
+        ,{ "atfdb.comptest  comptest:src_hdr.NoCmtstring  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a scriptfile with no comment syntax fails the run byte-unchanged\"", atf_comp::comptest_src_hdr_NoCmtstring }
+        ,{ "atfdb.comptest  comptest:src_hdr.UpdateprotoFail  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"a failed src_func -updateproto step fails the run\"", atf_comp::comptest_src_hdr_UpdateprotoFail }
+        ,{ "atfdb.comptest  comptest:ssimfilt.Csv  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_ssimfilt_Csv }
+        ,{ "atfdb.comptest  comptest:ssimfilt.CsvField  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"CSV + field selection\"", atf_comp::comptest_ssimfilt_CsvField }
+        ,{ "atfdb.comptest  comptest:ssimfilt.FirstTag  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Lock typetag to first input tuple\"", atf_comp::comptest_ssimfilt_FirstTag }
+        ,{ "atfdb.comptest  comptest:ssimfilt.Json  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Convert test data to json\"", atf_comp::comptest_ssimfilt_Json }
+        ,{ "atfdb.comptest  comptest:ssimfilt.JsonRecursive  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Print Recursive json object\"", atf_comp::comptest_ssimfilt_JsonRecursive }
+        ,{ "atfdb.comptest  comptest:ssimfilt.MatchField  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Select fields by value\"", atf_comp::comptest_ssimfilt_MatchField }
+        ,{ "atfdb.comptest  comptest:ssimfilt.MatchTag  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Match typetag\"", atf_comp::comptest_ssimfilt_MatchTag }
+        ,{ "atfdb.comptest  comptest:ssimfilt.SelectField  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Select several fields\"", atf_comp::comptest_ssimfilt_SelectField }
+        ,{ "atfdb.comptest  comptest:ssimfilt.Stable  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Filter unstable fields\"", atf_comp::comptest_ssimfilt_Stable }
+        ,{ "atfdb.comptest  comptest:ssimfilt.Table  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"Tabular output\"", atf_comp::comptest_ssimfilt_Table }
+        ,{ "atfdb.comptest  comptest:sv2ssim.Convert1  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_sv2ssim_Convert1 }
+        ,{ "atfdb.comptest  comptest:sv2ssim.Convert1Signed  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_sv2ssim_Convert1Signed }
+        ,{ "atfdb.comptest  comptest:sv2ssim.Convert2  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_sv2ssim_Convert2 }
+        ,{ "atfdb.comptest  comptest:sv2ssim.Convert2Tsv  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_sv2ssim_Convert2Tsv }
+        ,{ "atfdb.comptest  comptest:sv2ssim.UniqueFieldName  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"\"", atf_comp::comptest_sv2ssim_UniqueFieldName }
+        ,{ "atfdb.comptest  comptest:wt.Anon  timeout:60  memcheck:Y  coverage:Y  stablefld:N  comment:\"Anonymous cow sandbox in a scratch checkout: create, run, delete\"", atf_comp::comptest_wt_Anon }
+        ,{ "atfdb.comptest  comptest:wt.Clean  timeout:60  memcheck:Y  coverage:Y  stablefld:N  comment:\"Clean removes cow sandbox contents (scratch checkout)\"", atf_comp::comptest_wt_Clean }
+        ,{ "atfdb.comptest  comptest:wt.Command  timeout:60  memcheck:Y  coverage:Y  stablefld:N  comment:\"Multi-argument command in cow sandbox (scratch checkout)\"", atf_comp::comptest_wt_Command }
+        ,{ "atfdb.comptest  comptest:wt.Create  timeout:60  memcheck:Y  coverage:Y  stablefld:N  comment:\"Registry roundtrip in a scratch checkout\"", atf_comp::comptest_wt_Create }
+        ,{ "atfdb.comptest  comptest:wt.Del  timeout:60  memcheck:Y  coverage:Y  stablefld:N  comment:\"Delete a sandbox that was never materialized (scratch checkout)\"", atf_comp::comptest_wt_Del }
+        ,{ "atfdb.comptest  comptest:wt.Diff  timeout:60  memcheck:Y  coverage:Y  stablefld:N  comment:\"Diff is not supported for a cow sandbox (scratch checkout)\"", atf_comp::comptest_wt_Diff }
+        ,{ "atfdb.comptest  comptest:wt.List  timeout:10  memcheck:Y  coverage:Y  stablefld:N  comment:\"List with stdin sandbox data\"", atf_comp::comptest_wt_List }
+        ,{ "atfdb.comptest  comptest:wt.Reset  timeout:60  memcheck:Y  coverage:Y  stablefld:N  comment:\"Explicit reset of cow sandbox, then run (scratch checkout)\"", atf_comp::comptest_wt_Reset }
+        ,{ "atfdb.comptest  comptest:wt.StdinMulti  timeout:60  memcheck:Y  coverage:Y  stablefld:N  comment:\"Multi-line stdin script runs in cow sandbox (scratch checkout)\"", atf_comp::comptest_wt_StdinMulti }
         ,{NULL, NULL}
     };
     (void)data;
-    atfdb::Comptest comptest;
     for (int i=0; data[i].s; i++) {
+        atfdb::Comptest comptest;
         (void)atfdb::Comptest_ReadStrptrMaybe(comptest, algo::strptr(data[i].s));
         atf_comp::FComptest *elem = comptest_InsertMaybe(comptest);
         vrfy(elem, tempstr("atf_comp.static_insert_fatal_error")
@@ -1155,7 +1236,7 @@ void* atf_comp::tfilt_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     atf_comp::FTfilt*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.tfilt_lary[bsr];
         if (!lev) {
             lev=(atf_comp::FTfilt*)algo_lib::malloc_AllocMem(sizeof(atf_comp::FTfilt) * (u64(1)<<bsr));
@@ -1164,7 +1245,7 @@ void* atf_comp::tfilt_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.tfilt_n = i32(new_nelems);
+        _db.tfilt_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1176,7 +1257,7 @@ void atf_comp::tfilt_RemoveAll() {
     for (u64 n = _db.tfilt_n; n>0; ) {
         n--;
         tfilt_qFind(u64(n)).~FTfilt(); // destroy last element
-        _db.tfilt_n = i32(n);
+        _db.tfilt_n = i64(n);
     }
 }
 
@@ -1187,7 +1268,7 @@ void atf_comp::tfilt_RemoveLast() {
     if (n > 0) {
         n -= 1;
         tfilt_qFind(u64(n)).~FTfilt();
-        _db.tfilt_n = i32(n);
+        _db.tfilt_n = i64(n);
     }
 }
 
@@ -1253,7 +1334,7 @@ void* atf_comp::proc_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     atf_comp::FProc*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.proc_lary[bsr];
         if (!lev) {
             lev=(atf_comp::FProc*)algo_lib::malloc_AllocMem(sizeof(atf_comp::FProc) * (u64(1)<<bsr));
@@ -1262,7 +1343,7 @@ void* atf_comp::proc_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.proc_n = i32(new_nelems);
+        _db.proc_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1274,7 +1355,7 @@ void atf_comp::proc_RemoveAll() {
     for (u64 n = _db.proc_n; n>0; ) {
         n--;
         proc_qFind(u64(n)).~FProc(); // destroy last element
-        _db.proc_n = i32(n);
+        _db.proc_n = i64(n);
     }
 }
 
@@ -1285,7 +1366,7 @@ void atf_comp::proc_RemoveLast() {
     if (n > 0) {
         n -= 1;
         proc_qFind(u64(n)).~FProc();
-        _db.proc_n = i32(n);
+        _db.proc_n = i64(n);
     }
 }
 
@@ -1353,7 +1434,7 @@ void* atf_comp::unstableattr_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     atf_comp::FUnstableattr*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.unstableattr_lary[bsr];
         if (!lev) {
             lev=(atf_comp::FUnstableattr*)algo_lib::malloc_AllocMem(sizeof(atf_comp::FUnstableattr) * (u64(1)<<bsr));
@@ -1362,7 +1443,7 @@ void* atf_comp::unstableattr_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.unstableattr_n = i32(new_nelems);
+        _db.unstableattr_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1374,7 +1455,7 @@ void atf_comp::unstableattr_RemoveAll() {
     for (u64 n = _db.unstableattr_n; n>0; ) {
         n--;
         unstableattr_qFind(u64(n)).~FUnstableattr(); // destroy last element
-        _db.unstableattr_n = i32(n);
+        _db.unstableattr_n = i64(n);
     }
 }
 
@@ -1385,7 +1466,7 @@ void atf_comp::unstableattr_RemoveLast() {
     if (n > 0) {
         n -= 1;
         unstableattr_qFind(u64(n)).~FUnstableattr();
-        _db.unstableattr_n = i32(n);
+        _db.unstableattr_n = i64(n);
     }
 }
 
@@ -1610,6 +1691,122 @@ atf_comp::FComptest* atf_comp::zd_select_RemoveFirst() {
     return row;
 }
 
+// --- atf_comp.FDb.zd_select.InsertBefore
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+void atf_comp::zd_select_InsertBefore(atf_comp::FComptest& row, atf_comp::FComptest* before) {
+    if (!zd_select_InLlistQ(row) && &row != before) {
+        atf_comp::FComptest* next = before;
+        atf_comp::FComptest* prev = next ? next->zd_select_prev : _db.zd_select_tail;
+        row.zd_select_next = next;
+        row.zd_select_prev = prev;
+        atf_comp::FComptest **prev_link_a = &prev->zd_select_next;
+        atf_comp::FComptest **prev_link_b = &_db.zd_select_head;
+        *(prev ? prev_link_a : prev_link_b) = &row;
+        atf_comp::FComptest **next_link_a = &next->zd_select_prev;
+        atf_comp::FComptest **next_link_b = &_db.zd_select_tail;
+        *(next ? next_link_a : next_link_b) = &row;
+        _db.zd_select_n++;
+    }
+}
+
+// --- atf_comp.FDb.testenv.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+atf_comp::FTestenv& atf_comp::testenv_Alloc() {
+    atf_comp::FTestenv* row = testenv_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("atf_comp.out_of_mem  field:atf_comp.FDb.testenv  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- atf_comp.FDb.testenv.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+atf_comp::FTestenv* atf_comp::testenv_AllocMaybe() {
+    atf_comp::FTestenv *row = (atf_comp::FTestenv*)testenv_AllocMem();
+    if (row) {
+        new (row) atf_comp::FTestenv; // call constructor
+    }
+    return row;
+}
+
+// --- atf_comp.FDb.testenv.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+atf_comp::FTestenv* atf_comp::testenv_InsertMaybe(const atfdb::Testenv &value) {
+    atf_comp::FTestenv *row = &testenv_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    testenv_CopyIn(*row,const_cast<atfdb::Testenv&>(value));
+    bool ok = testenv_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        testenv_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- atf_comp.FDb.testenv.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* atf_comp::testenv_AllocMem() {
+    u64 new_nelems     = _db.testenv_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    atf_comp::FTestenv*  lev   = NULL;
+    if (bsr < 36) {
+        lev = _db.testenv_lary[bsr];
+        if (!lev) {
+            lev=(atf_comp::FTestenv*)algo_lib::malloc_AllocMem(sizeof(atf_comp::FTestenv) * (u64(1)<<bsr));
+            _db.testenv_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.testenv_n = i64(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- atf_comp.FDb.testenv.RemoveAll
+// Remove all elements from Lary
+void atf_comp::testenv_RemoveAll() {
+    for (u64 n = _db.testenv_n; n>0; ) {
+        n--;
+        testenv_qFind(u64(n)).~FTestenv(); // destroy last element
+        _db.testenv_n = i64(n);
+    }
+}
+
+// --- atf_comp.FDb.testenv.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void atf_comp::testenv_RemoveLast() {
+    u64 n = _db.testenv_n;
+    if (n > 0) {
+        n -= 1;
+        testenv_qFind(u64(n)).~FTestenv();
+        _db.testenv_n = i64(n);
+    }
+}
+
+// --- atf_comp.FDb.testenv.InputMaybe
+static bool atf_comp::testenv_InputMaybe(atfdb::Testenv &elem) {
+    bool retval = true;
+    retval = testenv_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- atf_comp.FDb.testenv.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool atf_comp::testenv_XrefMaybe(atf_comp::FTestenv &row) {
+    bool retval = true;
+    (void)row;
+    return retval;
+}
+
 // --- atf_comp.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
 static algo::ImrowPtr atf_comp::trace_RowidFind(int t) {
@@ -1700,6 +1897,17 @@ void atf_comp::FDb_Init() {
     _db.zd_select_n = 0; // (atf_comp.FDb.zd_select)
     _db.zd_select_tail = NULL; // (atf_comp.FDb.zd_select)
     _db.n_capture = i32(0);
+    // initialize LAry testenv (atf_comp.FDb.testenv)
+    _db.testenv_n = 0;
+    memset(_db.testenv_lary, 0, sizeof(_db.testenv_lary)); // zero out all level pointers
+    atf_comp::FTestenv* testenv_first = (atf_comp::FTestenv*)algo_lib::malloc_AllocMem(sizeof(atf_comp::FTestenv) * (u64(1)<<4));
+    if (!testenv_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.testenv_lary[i]  = testenv_first;
+        testenv_first    += 1ULL<<i;
+    }
 
     atf_comp::InitReflection();
     comptest_LoadStatic(); // gen:ns_gstatic  gstatic:atf_comp.FDb.comptest  load atf_comp.FComptest records
@@ -1708,6 +1916,9 @@ void atf_comp::FDb_Init() {
 // --- atf_comp.FDb..Uninit
 void atf_comp::FDb_Uninit() {
     atf_comp::FDb &row = _db; (void)row;
+
+    // atf_comp.FDb.testenv.Uninit (Lary)  //
+    // skip destruction in global scope
 
     // atf_comp.FDb.ind_unstableattr.Uninit (Thash)  //
     // skip destruction of ind_unstableattr in global scope
@@ -1755,9 +1966,9 @@ void atf_comp::in_EndRead(atf_comp::FProc& proc) {
 // The message is found by looking for delimiter '\n'.
 // The return value is an aryptr. If ret.elems is non-NULL, the message is valid (possibly empty).
 // If ret.elems is NULL, no message can be extracted from buffer.
-// The returned aryptr excludes the trailing deliminter.
-// SkipMsg will skip both the line and the deliminter.
-// A partial line at the end of input is NOT returned (TODO?)
+// The returned aryptr excludes the trailing delimiter.
+// SkipMsg will skip both the line and the delimiter.
+// A partial line at the end of input is NOT returned.
 // 
 algo::aryptr<char> atf_comp::in_GetMsg(atf_comp::FProc& proc) {
     algo::aryptr<char> ret;
@@ -1899,7 +2110,7 @@ void atf_comp::in_SkipMsg(atf_comp::FProc& proc) {
 
 // --- atf_comp.FProc.in.WriteAll
 // Attempt to write buffer contents to fbuf, return success
-// Write bytes to the buffer. If the entire block is written, return true,
+// Write bytes to the buffer. If the entire block is accepted, return true,
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
 // 
@@ -1923,13 +2134,13 @@ bool atf_comp::in_WriteAll(atf_comp::FProc& proc, u8 *in, i32 in_n) {
 
 // --- atf_comp.FProc.in.WriteReserve
 // Write buffer contents to fbuf, reallocate as needed
-// Write bytes to the buffer. The entire block is always written
+// Write bytes to the buffer. The entire block is always written or the program exits.
 void atf_comp::in_WriteReserve(atf_comp::FProc& proc, u8 *in, i32 in_n) {
+    if (proc.in_end - proc.in_start + in_n > in_Max(proc)) {
+        in_Realloc(proc, proc.in_max + i32_Max(proc.in_max, in_n));
+    }
     if (!in_WriteAll(proc, in, in_n)) {
-        in_Realloc(proc, proc.in_max*2);
-        if (!in_WriteAll(proc, in, in_n)) {
-            FatalErrorExit("in: out of memory");
-        }
+        FatalErrorExit("in: out of memory");
     }
 }
 
@@ -1959,10 +2170,30 @@ void atf_comp::FProc_Uninit(atf_comp::FProc& proc) {
 
     // atf_comp.FProc.in.Uninit (Fbuf)  //Line-buffered subprocess stdout
     if (proc.in_elems) {
-        algo_lib::malloc_FreeMem(proc.in_elems, sizeof(char)*proc.in_max); // (atf_comp.FProc.in)
+        algo_lib::malloc_FreeMem(proc.in_elems, proc.in_max); // (atf_comp.FProc.in) in_max is the byte size Realloc allocated
     }
     proc.in_elems = NULL;
     proc.in_max = 0;
+}
+
+// --- atf_comp.FTestenv.base.CopyOut
+// Copy fields out of row
+void atf_comp::testenv_CopyOut(atf_comp::FTestenv &row, atfdb::Testenv &out) {
+    out.testenv = row.testenv;
+    out.value = row.value;
+    out.slowonly = row.slowonly;
+    out.vardir = row.vardir;
+    out.comment = algo::Comment(row.comment);
+}
+
+// --- atf_comp.FTestenv.base.CopyIn
+// Copy fields in to row
+void atf_comp::testenv_CopyIn(atf_comp::FTestenv &row, atfdb::Testenv &in) {
+    row.testenv = in.testenv;
+    row.value = in.value;
+    row.slowonly = in.slowonly;
+    row.vardir = in.vardir;
+    row.comment = in.comment;
 }
 
 // --- atf_comp.FTfilt.base.CopyOut
@@ -1970,7 +2201,7 @@ void atf_comp::FProc_Uninit(atf_comp::FProc& proc) {
 void atf_comp::tfilt_CopyOut(atf_comp::FTfilt &row, atfdb::Tfilt &out) {
     out.comptest = row.comptest;
     out.filter = row.filter;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- atf_comp.FTfilt.base.CopyIn
@@ -1994,7 +2225,7 @@ void atf_comp::FTfilt_Uninit(atf_comp::FTfilt& tfilt) {
 // Copy fields out of row
 void atf_comp::unstableattr_CopyOut(atf_comp::FUnstableattr &row, atfdb::Unstableattr &out) {
     out.unstableattr = row.unstableattr;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- atf_comp.FUnstableattr.base.CopyIn
@@ -2014,7 +2245,7 @@ void atf_comp::FUnstableattr_Uninit(atf_comp::FUnstableattr& unstableattr) {
 // Copy fields out of row
 void atf_comp::parent_CopyOut(atf_comp::FUnstablefld &row, dev::Unstablefld &out) {
     out.field = row.field;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- atf_comp.FieldId.value.ToCstr
@@ -2089,7 +2320,7 @@ bool atf_comp::FieldId_ReadStrptrMaybe(atf_comp::FieldId &parent, algo::strptr i
 // --- atf_comp.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:atf_comp.FieldId.String  printfmt:Raw
-void atf_comp::FieldId_Print(atf_comp::FieldId& row, algo::cstring& str) {
+void atf_comp::FieldId_Print(atf_comp::FieldId row, algo::cstring& str) {
     atf_comp::value_Print(row, str);
 }
 
@@ -2099,6 +2330,7 @@ void atf_comp::FieldId_Print(atf_comp::FieldId& row, algo::cstring& str) {
 const char* atf_comp::value_ToCstr(const atf_comp::TableId& parent) {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
+        case atf_comp_TableId_atfdb_Testenv: ret = "atfdb.Testenv";  break;
         case atf_comp_TableId_atfdb_Tfilt  : ret = "atfdb.Tfilt";  break;
         case atf_comp_TableId_atfdb_Unstableattr: ret = "atfdb.Unstableattr";  break;
     }
@@ -2132,6 +2364,19 @@ bool atf_comp::value_SetStrptrMaybe(atf_comp::TableId& parent, algo::strptr rhs)
                 }
                 case LE_STR8('a','t','f','d','b','.','t','f'): {
                     if (memcmp(rhs.elems+8,"ilt",3)==0) { value_SetEnum(parent,atf_comp_TableId_atfdb_tfilt); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 13: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','t','f','d','b','.','T','e'): {
+                    if (memcmp(rhs.elems+8,"stenv",5)==0) { value_SetEnum(parent,atf_comp_TableId_atfdb_Testenv); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('a','t','f','d','b','.','t','e'): {
+                    if (memcmp(rhs.elems+8,"stenv",5)==0) { value_SetEnum(parent,atf_comp_TableId_atfdb_testenv); ret = true; break; }
                     break;
                 }
             }
@@ -2184,7 +2429,7 @@ bool atf_comp::TableId_ReadStrptrMaybe(atf_comp::TableId &parent, algo::strptr i
 // --- atf_comp.TableId..Print
 // print string representation of ROW to string STR
 // cfmt:atf_comp.TableId.String  printfmt:Raw
-void atf_comp::TableId_Print(atf_comp::TableId& row, algo::cstring& str) {
+void atf_comp::TableId_Print(atf_comp::TableId row, algo::cstring& str) {
     atf_comp::value_Print(row, str);
 }
 

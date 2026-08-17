@@ -1,0 +1,69 @@
+// A header whose lines cover every shape the section-open rule has to judge. A
+// line opens an update-hdr section only when the compiler reads the namespace
+// and the marker tag as code. The markers of namespace requoted and namespace
+// real are the only ones here that do, so their two sections are the only ones
+// rewritten; every other line, including the ones the look-alike markers
+// enclose, is hand-written and must come back byte for byte.
+// Two more look-alikes stand inside a `//` comment continued by a backslash, which
+// splices the line below it into the comment: namespace incontcomment stands one
+// line below such a comment, and namespace inchain two lines below one, since the
+// line between them ends in a backslash of its own. The marker of namespace
+// contmarker is the accepting side of that rule -- its own trailing comment ends in
+// a backslash, and the namespace and the tag before it are still code -- so its
+// section is rewritten and the commented line below it is dropped as section body.
+// The marker of namespace requoted carries the tag twice, and each occurrence names
+// a source of its own. The section is filled from the source the live tag names,
+// src/y.cpp, and not from the one quoted in the remark before it.
+/*
+namespace incomment { // update-hdr
+void KeptInComment();
+*/
+// namespace inlinecomment { // update-hdr
+namespace quoted { /* // update-hdr */
+void KeptQuoted();
+}
+namespace requoted { /* was: // update-hdr srcfile:hdr/x.h */ // update-hdr srcfile:src/y.cpp
+void OldRequoted();
+}
+namespace unclosed { /* disabled: // update-hdr
+void KeptUnclosed();
+*/
+void KeptAfterUnclosed();
+}
+namespace literal { const char *marker = "// update-hdr";
+void KeptLiteral();
+}
+namespace rawline { const char *marker = R"(// update-hdr)";
+void KeptRawline();
+}
+namespace rawdelim { const char *marker = R"tag(// update-hdr)tag";
+void KeptRawdelim();
+}
+namespace rawspan { const char *marker = R"(
+namespace inraw { // update-hdr
+void KeptInRaw();
+)";
+void KeptAfterRawspan();
+}
+namespace rawtagspan { const char *marker = R"(// update-hdr
+)";
+void KeptRawtagspan();
+}
+namespace contcomment { // disabled: \
+namespace incontcomment { // update-hdr
+void KeptInContComment();
+}
+namespace contchain { // disabled: \
+namespace inchain { // update-hdr \
+void KeptInChain();
+}
+namespace contmarker { // update-hdr \
+void OldContmarker();
+}
+namespace real { // update-hdr
+void Old();
+}
+struct KeptBelow {
+    int c;
+};
+void KeptAtEnd();

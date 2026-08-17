@@ -67,7 +67,7 @@ inline bool lib_sqlite::c_field_EmptyQ(lib_sqlite::FCtype& ctype) {
 
 // --- lib_sqlite.FCtype.c_field.Find
 // Look up row by row id. Return NULL if out of range
-inline lib_sqlite::FField* lib_sqlite::c_field_Find(lib_sqlite::FCtype& ctype, u32 t) {
+inline lib_sqlite::FField* lib_sqlite::c_field_Find(lib_sqlite::FCtype& ctype, u64 t) {
     lib_sqlite::FField *retval = NULL;
     u64 idx = t;
     u64 lim = ctype.c_field_n;
@@ -85,14 +85,14 @@ inline algo::aryptr<lib_sqlite::FField*> lib_sqlite::c_field_Getary(lib_sqlite::
 
 // --- lib_sqlite.FCtype.c_field.N
 // Return number of items in the pointer array
-inline i32 lib_sqlite::c_field_N(const lib_sqlite::FCtype& ctype) {
+inline i64 lib_sqlite::c_field_N(const lib_sqlite::FCtype& ctype) {
     return ctype.c_field_n;
 }
 
 // --- lib_sqlite.FCtype.c_field.RemoveAll
 // Empty the index. (The rows are not deleted)
 inline void lib_sqlite::c_field_RemoveAll(lib_sqlite::FCtype& ctype) {
-    for (u32 i = 0; i < ctype.c_field_n; i++) {
+    for (u64 i = 0; i < ctype.c_field_n; i++) {
         // mark all elements as not-in-array
         ctype.c_field_elems[i]->ctype_c_field_in_ary = false;
     }
@@ -101,7 +101,7 @@ inline void lib_sqlite::c_field_RemoveAll(lib_sqlite::FCtype& ctype) {
 
 // --- lib_sqlite.FCtype.c_field.qFind
 // Return reference without bounds checking
-inline lib_sqlite::FField& lib_sqlite::c_field_qFind(lib_sqlite::FCtype& ctype, u32 idx) {
+inline lib_sqlite::FField& lib_sqlite::c_field_qFind(lib_sqlite::FCtype& ctype, u64 idx) {
     return *ctype.c_field_elems[idx];
 }
 
@@ -245,7 +245,7 @@ inline bool lib_sqlite::c_row_EmptyQ(lib_sqlite::FCtype& ctype) {
 
 // --- lib_sqlite.FCtype.c_row.Find
 // Look up row by row id. Return NULL if out of range
-inline lib_sqlite::FRow* lib_sqlite::c_row_Find(lib_sqlite::FCtype& ctype, u32 t) {
+inline lib_sqlite::FRow* lib_sqlite::c_row_Find(lib_sqlite::FCtype& ctype, u64 t) {
     lib_sqlite::FRow *retval = NULL;
     u64 idx = t;
     u64 lim = ctype.c_row_n;
@@ -263,14 +263,14 @@ inline algo::aryptr<lib_sqlite::FRow*> lib_sqlite::c_row_Getary(lib_sqlite::FCty
 
 // --- lib_sqlite.FCtype.c_row.N
 // Return number of items in the pointer array
-inline i32 lib_sqlite::c_row_N(const lib_sqlite::FCtype& ctype) {
+inline i64 lib_sqlite::c_row_N(const lib_sqlite::FCtype& ctype) {
     return ctype.c_row_n;
 }
 
 // --- lib_sqlite.FCtype.c_row.RemoveAll
 // Empty the index. (The rows are not deleted)
 inline void lib_sqlite::c_row_RemoveAll(lib_sqlite::FCtype& ctype) {
-    for (u32 i = 0; i < ctype.c_row_n; i++) {
+    for (u64 i = 0; i < ctype.c_row_n; i++) {
         // mark all elements as not-in-array
         ctype.c_row_elems[i]->ctype_c_row_in_ary = false;
     }
@@ -279,7 +279,7 @@ inline void lib_sqlite::c_row_RemoveAll(lib_sqlite::FCtype& ctype) {
 
 // --- lib_sqlite.FCtype.c_row.qFind
 // Return reference without bounds checking
-inline lib_sqlite::FRow& lib_sqlite::c_row_qFind(lib_sqlite::FCtype& ctype, u32 idx) {
+inline lib_sqlite::FRow& lib_sqlite::c_row_qFind(lib_sqlite::FCtype& ctype, u64 idx) {
     return *ctype.c_row_elems[idx];
 }
 
@@ -424,7 +424,7 @@ inline lib_sqlite::FSubstr* lib_sqlite::substr_Last() {
 
 // --- lib_sqlite.FDb.substr.N
 // Return number of items in the pool
-inline i32 lib_sqlite::substr_N() {
+inline i64 lib_sqlite::substr_N() {
     return _db.substr_n;
 }
 
@@ -466,7 +466,7 @@ inline lib_sqlite::FField* lib_sqlite::field_Last() {
 
 // --- lib_sqlite.FDb.field.N
 // Return number of items in the pool
-inline i32 lib_sqlite::field_N() {
+inline i64 lib_sqlite::field_N() {
     return _db.field_n;
 }
 
@@ -520,7 +520,7 @@ inline lib_sqlite::FCtype* lib_sqlite::ctype_Last() {
 
 // --- lib_sqlite.FDb.ctype.N
 // Return number of items in the pool
-inline i32 lib_sqlite::ctype_N() {
+inline i64 lib_sqlite::ctype_N() {
     return _db.ctype_n;
 }
 
@@ -574,7 +574,7 @@ inline lib_sqlite::FSsimfile* lib_sqlite::ssimfile_Last() {
 
 // --- lib_sqlite.FDb.ssimfile.N
 // Return number of items in the pool
-inline i32 lib_sqlite::ssimfile_N() {
+inline i64 lib_sqlite::ssimfile_N() {
     return _db.ssimfile_n;
 }
 
@@ -628,7 +628,7 @@ inline lib_sqlite::FSqltype* lib_sqlite::sqltype_Last() {
 
 // --- lib_sqlite.FDb.sqltype.N
 // Return number of items in the pool
-inline i32 lib_sqlite::sqltype_N() {
+inline i64 lib_sqlite::sqltype_N() {
     return _db.sqltype_n;
 }
 
@@ -671,20 +671,20 @@ inline lib_sqlite::FIdx* lib_sqlite::bestidx_Last() {
 
 // --- lib_sqlite.FDb.bestidx.Max
 // Return max. number of items in the array
-inline i32 lib_sqlite::bestidx_Max() {
+inline i64 lib_sqlite::bestidx_Max() {
     return _db.bestidx_max;
 }
 
 // --- lib_sqlite.FDb.bestidx.N
 // Return number of items in the array
-inline i32 lib_sqlite::bestidx_N() {
+inline i64 lib_sqlite::bestidx_N() {
     return _db.bestidx_n;
 }
 
 // --- lib_sqlite.FDb.bestidx.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void lib_sqlite::bestidx_Reserve(int n) {
-    u32 new_n = _db.bestidx_n + n;
+inline void lib_sqlite::bestidx_Reserve(i64 n) {
+    u64 new_n = _db.bestidx_n + n;
     if (UNLIKELY(new_n > _db.bestidx_max)) {
         bestidx_AbsReserve(new_n);
     }
@@ -737,7 +737,7 @@ inline lib_sqlite::FRow* lib_sqlite::trow_Last() {
 
 // --- lib_sqlite.FDb.trow.N
 // Return number of items in the pool
-inline i32 lib_sqlite::trow_N() {
+inline i64 lib_sqlite::trow_N() {
     return _db.trow_n;
 }
 
@@ -779,7 +779,7 @@ inline lib_sqlite::FNs* lib_sqlite::ns_Last() {
 
 // --- lib_sqlite.FDb.ns.N
 // Return number of items in the pool
-inline i32 lib_sqlite::ns_N() {
+inline i64 lib_sqlite::ns_N() {
     return _db.ns_n;
 }
 
@@ -1064,21 +1064,21 @@ inline lib_sqlite::Cons* lib_sqlite::cons_Last(lib_sqlite::FIdx& parent) {
 
 // --- lib_sqlite.FIdx.cons.Max
 // Return max. number of items in the array
-inline i32 lib_sqlite::cons_Max(lib_sqlite::FIdx& parent) {
+inline i64 lib_sqlite::cons_Max(lib_sqlite::FIdx& parent) {
     (void)parent;
     return parent.cons_max;
 }
 
 // --- lib_sqlite.FIdx.cons.N
 // Return number of items in the array
-inline i32 lib_sqlite::cons_N(const lib_sqlite::FIdx& parent) {
+inline i64 lib_sqlite::cons_N(const lib_sqlite::FIdx& parent) {
     return parent.cons_n;
 }
 
 // --- lib_sqlite.FIdx.cons.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void lib_sqlite::cons_Reserve(lib_sqlite::FIdx& parent, int n) {
-    u32 new_n = parent.cons_n + n;
+inline void lib_sqlite::cons_Reserve(lib_sqlite::FIdx& parent, i64 n) {
+    u64 new_n = parent.cons_n + n;
     if (UNLIKELY(new_n > parent.cons_max)) {
         cons_AbsReserve(parent, new_n);
     }
@@ -1155,7 +1155,7 @@ inline bool lib_sqlite::c_ssimfile_EmptyQ(lib_sqlite::FNs& ns) {
 
 // --- lib_sqlite.FNs.c_ssimfile.Find
 // Look up row by row id. Return NULL if out of range
-inline lib_sqlite::FSsimfile* lib_sqlite::c_ssimfile_Find(lib_sqlite::FNs& ns, u32 t) {
+inline lib_sqlite::FSsimfile* lib_sqlite::c_ssimfile_Find(lib_sqlite::FNs& ns, u64 t) {
     lib_sqlite::FSsimfile *retval = NULL;
     u64 idx = t;
     u64 lim = ns.c_ssimfile_n;
@@ -1173,14 +1173,14 @@ inline algo::aryptr<lib_sqlite::FSsimfile*> lib_sqlite::c_ssimfile_Getary(lib_sq
 
 // --- lib_sqlite.FNs.c_ssimfile.N
 // Return number of items in the pointer array
-inline i32 lib_sqlite::c_ssimfile_N(const lib_sqlite::FNs& ns) {
+inline i64 lib_sqlite::c_ssimfile_N(const lib_sqlite::FNs& ns) {
     return ns.c_ssimfile_n;
 }
 
 // --- lib_sqlite.FNs.c_ssimfile.RemoveAll
 // Empty the index. (The rows are not deleted)
 inline void lib_sqlite::c_ssimfile_RemoveAll(lib_sqlite::FNs& ns) {
-    for (u32 i = 0; i < ns.c_ssimfile_n; i++) {
+    for (u64 i = 0; i < ns.c_ssimfile_n; i++) {
         // mark all elements as not-in-array
         ns.c_ssimfile_elems[i]->ns_c_ssimfile_in_ary = false;
     }
@@ -1189,7 +1189,7 @@ inline void lib_sqlite::c_ssimfile_RemoveAll(lib_sqlite::FNs& ns) {
 
 // --- lib_sqlite.FNs.c_ssimfile.qFind
 // Return reference without bounds checking
-inline lib_sqlite::FSsimfile& lib_sqlite::c_ssimfile_qFind(lib_sqlite::FNs& ns, u32 idx) {
+inline lib_sqlite::FSsimfile& lib_sqlite::c_ssimfile_qFind(lib_sqlite::FNs& ns, u64 idx) {
     return *ns.c_ssimfile_elems[idx];
 }
 
@@ -1403,7 +1403,7 @@ inline bool lib_sqlite::c_curs_EmptyQ(lib_sqlite::Vtab& parent) {
 
 // --- lib_sqlite.Vtab.c_curs.Find
 // Look up row by row id. Return NULL if out of range
-inline lib_sqlite::VtabCurs* lib_sqlite::c_curs_Find(lib_sqlite::Vtab& parent, u32 t) {
+inline lib_sqlite::VtabCurs* lib_sqlite::c_curs_Find(lib_sqlite::Vtab& parent, u64 t) {
     lib_sqlite::VtabCurs *retval = NULL;
     u64 idx = t;
     u64 lim = parent.c_curs_n;
@@ -1421,14 +1421,14 @@ inline algo::aryptr<lib_sqlite::VtabCurs*> lib_sqlite::c_curs_Getary(lib_sqlite:
 
 // --- lib_sqlite.Vtab.c_curs.N
 // Return number of items in the pointer array
-inline i32 lib_sqlite::c_curs_N(const lib_sqlite::Vtab& parent) {
+inline i64 lib_sqlite::c_curs_N(const lib_sqlite::Vtab& parent) {
     return parent.c_curs_n;
 }
 
 // --- lib_sqlite.Vtab.c_curs.RemoveAll
 // Empty the index. (The rows are not deleted)
 inline void lib_sqlite::c_curs_RemoveAll(lib_sqlite::Vtab& parent) {
-    for (u32 i = 0; i < parent.c_curs_n; i++) {
+    for (u64 i = 0; i < parent.c_curs_n; i++) {
         // mark all elements as not-in-array
         parent.c_curs_elems[i]->parent_c_curs_in_ary = false;
     }
@@ -1437,7 +1437,7 @@ inline void lib_sqlite::c_curs_RemoveAll(lib_sqlite::Vtab& parent) {
 
 // --- lib_sqlite.Vtab.c_curs.qFind
 // Return reference without bounds checking
-inline lib_sqlite::VtabCurs& lib_sqlite::c_curs_qFind(lib_sqlite::Vtab& parent, u32 idx) {
+inline lib_sqlite::VtabCurs& lib_sqlite::c_curs_qFind(lib_sqlite::Vtab& parent, u64 idx) {
     return *parent.c_curs_elems[idx];
 }
 
@@ -1527,21 +1527,21 @@ inline algo::cstring* lib_sqlite::attrs_Last(lib_sqlite::VtabCurs& parent) {
 
 // --- lib_sqlite.VtabCurs.attrs.Max
 // Return max. number of items in the array
-inline i32 lib_sqlite::attrs_Max(lib_sqlite::VtabCurs& parent) {
+inline i64 lib_sqlite::attrs_Max(lib_sqlite::VtabCurs& parent) {
     (void)parent;
     return parent.attrs_max;
 }
 
 // --- lib_sqlite.VtabCurs.attrs.N
 // Return number of items in the array
-inline i32 lib_sqlite::attrs_N(const lib_sqlite::VtabCurs& parent) {
+inline i64 lib_sqlite::attrs_N(const lib_sqlite::VtabCurs& parent) {
     return parent.attrs_n;
 }
 
 // --- lib_sqlite.VtabCurs.attrs.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void lib_sqlite::attrs_Reserve(lib_sqlite::VtabCurs& parent, int n) {
-    u32 new_n = parent.attrs_n + n;
+inline void lib_sqlite::attrs_Reserve(lib_sqlite::VtabCurs& parent, i64 n) {
+    u64 new_n = parent.attrs_n + n;
     if (UNLIKELY(new_n > parent.attrs_max)) {
         attrs_AbsReserve(parent, new_n);
     }

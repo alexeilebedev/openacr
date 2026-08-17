@@ -39,16 +39,17 @@ void apm::Main_Diff() {
         // check out the package into sandbox directory.
         // evaluate symbolic value of baseref into actual git commit
         baseref=FetchPackageOrigin(origin,baseref);
-        CreatePackageSandbox(_db.base_sandbox,baseref);
+        vrfy(CreatePackageSandbox(_db.base_sandbox,baseref)==0,
+             tempstr()<<"failed to check out package "<<package.package<<" at "<<baseref);
     }ind_end;
 
-    cstring base_dir(algo_lib::SandboxDir(_db.base_sandbox));
+    cstring base_dir(algo_lib::WtDir(_db.base_sandbox));
     PushDiff(base_dir);
 
-    _db.script << "sandbox "<<_db.base_sandbox<<" -- git diff "
+    _db.script << "wt "<<_db.base_sandbox<<" -- git diff "
                <<(_db.cmdline.R ? "-R" : "")
                <<(_db.cmdline.stat ? "--stat" : "")
                << eol;
 
-    _db.script << "echo "<<algo::strptr_ToBash("use 'sandbox apm-base -shell' to examine changes") << eol;
+    _db.script << "echo "<<algo::strptr_ToBash("use 'wt apm-base -shell' to examine changes") << eol;
 }

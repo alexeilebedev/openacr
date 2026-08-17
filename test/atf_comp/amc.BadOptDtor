@@ -1,0 +1,6 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/bad_opt_dtor.ssim -out_dir: -report:N zzz"
+# eof amc
+amc -> amc.opt_dtor  field:algo_lib.MsgVarlenDtor.tail  ctype:algo_lib.Opaque  reftype:Varlen  comment:"element type of a Varlen/Opt field must have no destructor"
+amc -> amc.opt_dtor  field:algo_lib.MsgOptDtor.tail  ctype:algo_lib.Opaque  reftype:Opt  comment:"element type of a Varlen/Opt field must have no destructor"
+amc -> amc.no_output  comment:"no files were modified"
+# exit amc code:2

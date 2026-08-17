@@ -59,7 +59,7 @@ static tempstr DemarcatedComment(strptr comment) {
 
 static void DescribeTarget(src_hdr::FSrc &src, src_hdr::FNs &ns, cstring &out) {
     tempstr hdr = Tag("Target", tempstr()<<ns.ns<<" ("<<ns.nstype<<")");
-    if (ch_N(ns.comment.value)) {
+    if (ch_N(ns.comment)) {
         hdr<<" -- "<<ns.comment;
     }
     InsertComment(src,hdr,out);
@@ -115,7 +115,12 @@ static void Save(src_hdr::FSrc &src) {
     out<<src.body;
 
     if (src_hdr::_db.cmdline.write) {
-        (void)SafeStringToFile(out,src.src,algo::FileFlags());
+        // a write that fails (missing directory, permission) fails the run:
+        // exiting 0 with the header silently unwritten would leave the tree
+        // looking up to date
+        if (!algo::SaveFile(out,src.src,"src_hdr.file_write","source file could not be written")) {
+            algo_lib::_db.exit_code++;
+        }
     }
 }
 
@@ -242,9 +247,26 @@ static strptr GuessCmtString(strptr shebang) {
 
 // -----------------------------------------------------------------------------
 
+// Parse the header of SRC into its parts (shebang, copyright, tags, comment),
+// regenerate it, and save the file back.
+// A file that cannot be read (missing, permission) reports the path with
+// errno and fails the run: skipping it silently would let a stale targsrc or
+// scriptfile row pass every -write run unnoticed.
+// A file whose comment string is empty (a .json scriptfile, an extensionless
+// file with no shebang to guess from) cannot carry a comment header: every
+// line would parse as header comment and the rewrite would replace the whole
+// file with a bare separator, so it is reported and left untouched.
 static void RebuildHeader(src_hdr::FSrc &src) {
     algo_lib::MmapFile file;
-    if (MmapFile_Load(file,src.src)) {
+    if (!MmapFile_Load(file,src.src)) {
+        algo::PrerrFileFail("src_hdr.file_read",src.src,"source file could not be read");
+        algo_lib::_db.exit_code++;
+    } else if (src.cmtstring == "" && !StartsWithQ(file.text,"#!")) {
+        prerr("src_hdr.no_cmtstring"
+              <<Keyval("file",src.src)
+              <<Keyval("comment","no comment syntax known for this file; cannot maintain a header"));
+        algo_lib::_db.exit_code++;
+    } else {
         src.text=file.text;
         bool inhdr=true;
         ind_beg(Line_curs,line,src.text) {
@@ -255,11 +277,18 @@ static void RebuildHeader(src_hdr::FSrc &src) {
                     src.cmtstring = GuessCmtString(src.shebang);
                 }
             } else {
+                bool cmtline = StartsWithQ(line,src.cmtstring);
                 // empty lines following header are part of the header
-                inhdr = inhdr && (StartsWithQ(line,src.cmtstring) || !ch_N(Trimmed(line)));
-                if (inhdr) {
+                inhdr = inhdr && (cmtline || !ch_N(Trimmed(line)));
+                // A blank line inside the header is the separator between
+                // header and body, and Save regenerates it. Parsing it into
+                // the header comment would grow the file on every run: the
+                // empty comment line prints as a bare cmtstring line, and the
+                // regenerated separator parses into yet another one next run.
+                // Only commented lines carry header content.
+                if (inhdr && cmtline) {
                     ReadTagLine(src,Trimmed(RestFrom(line,ch_N(src.cmtstring))));
-                } else {
+                } else if (!inhdr) {
                     src.body<<line<<eol;
                 }
             }
@@ -292,6 +321,8 @@ static void LoadLicense() {
 
 // -----------------------------------------------------------------------------
 
+// Rebuild the header of every selected targsrc and scriptfile row, then
+// refresh function prototypes by spawning src_func -updateproto.
 void src_hdr::Main() {
     algo_lib::Regx exclude;
     LoadLicense();
@@ -326,10 +357,18 @@ void src_hdr::Main() {
         }
     }ind_end;
 
-    // Update function prototypes
-    if (src_hdr::_db.cmdline.write) {
+    // Update function prototypes; a run that failed to write a header stops
+    // here instead of mutating the tree further. A failing src_func leaves
+    // the update-hdr blocks stale, so its status fails the run too.
+    if (src_hdr::_db.cmdline.write && algo_lib::_db.exit_code==0) {
         command::src_func src_func;
         src_func.updateproto=true;
-        SysCmd(src_func_ToCmdline(src_func));
+        int rc = SysCmd(src_func_ToCmdline(src_func));
+        if (rc != 0) {
+            prerr("src_hdr.updateproto"
+                  <<Keyval("status",algo::DescribeWaitStatus(rc))
+                  <<Keyval("comment","src_func -updateproto failed; function prototypes were not updated"));
+            algo_lib::_db.exit_code++;
+        }
     }
 }

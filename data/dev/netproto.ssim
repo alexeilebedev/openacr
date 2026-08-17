@@ -1,4 +1,9 @@
 dev.netproto  netproto:http  tls:N  comment:https://datatracker.ietf.org/doc/html/rfc2616
 dev.netproto  netproto:https  tls:Y  comment:""
+dev.netproto  netproto:kafka  tls:N  comment:https://kafka.apache.org/protocol.html
+dev.netproto  netproto:kafkas  tls:Y  comment:"Secure Kafka"
+dev.netproto  netproto:mqtts  tls:Y  comment:"MQTT (TLS-secured) port"
+dev.netproto  netproto:natss  tls:Y  comment:https://docs.nats.io/reference/reference-protocols/nats-protocol
+dev.netproto  netproto:resps  tls:Y  comment:"Secure REDIS port"
 dev.netproto  netproto:smtp  tls:N  comment:""
 dev.netproto  netproto:ssh  tls:Y  comment:https://www.rfc-editor.org/rfc/rfc4253

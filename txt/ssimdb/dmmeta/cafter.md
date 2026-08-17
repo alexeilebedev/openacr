@@ -3,27 +3,19 @@
 
 ### Attributes
 <a href="#attributes"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Attributes -->
 * [ctype:](/txt/ssimdb/dmmeta/ctype.md)dmmeta.Cafter
 
 * file:[data/dmmeta/cafter.ssim](/data/dmmeta/cafter.ssim)
 
-italicised fields: *ctype, after* are [**fldfunc**](/txt/ssim.md#fldfunc) fields
+italicised fields: *ctype, after* are [**fldfunc**](/txt/openacr/ssim.md#fldfunc) fields
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|cafter|[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)|[Val](/txt/exe/amc/reftypes.md#val)|||
-|*ctype*|*[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)*|*[Pkey](/txt/exe/amc/reftypes.md#pkey)*||*<br>/RL of cafter*|
-|*after*|*[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)*|*[Pkey](/txt/exe/amc/reftypes.md#pkey)*||*<br>/RR of cafter*|
-|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Attributes -->
+|cafter|[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)|[Val](/txt/exe/amc/reftype.md#val)|||
+|*ctype*|*[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)*|*[Pkey](/txt/exe/amc/reftype.md#pkey)*||*<br>/RL of cafter*|
+|*after*|*[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)*|*[Pkey](/txt/exe/amc/reftype.md#pkey)*||*<br>/RR of cafter*|
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype.md#val)|||
 
 ### Used In Executables
 <a href="#used-in-executables"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:ImdbUses -->
-
-* [amc](/txt/exe/amc/internals.md) as [amc.FCafter](/txt/exe/amc/internals.md#amc-fcafter)
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:ImdbUses -->
-
+* [amc](/txt/gen/amc/amc.md) as [amc.FCafter](/txt/gen/amc/amc.md#amc-fcafter)

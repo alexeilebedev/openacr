@@ -34,6 +34,7 @@ const char *gclidb_Gact_gact_approve      = "approve";
 const char *gclidb_Gact_gact_create       = "create";
 const char *gclidb_Gact_gact_list         = "list";
 const char *gclidb_Gact_gact_needs_work   = "needs_work";
+const char *gclidb_Gact_gact_retry        = "retry";
 const char *gclidb_Gact_gact_start        = "start";
 const char *gclidb_Gact_gact_stop         = "stop";
 const char *gclidb_Gact_gact_update       = "update";
@@ -46,6 +47,7 @@ const char *gclidb_Gclicmd_gclicmd_issuelist     = "issuelist";
 const char *gclidb_Gclicmd_gclicmd_issuemod      = "issuemod";
 const char *gclidb_Gclicmd_gclicmd_issuenote     = "issuenote";
 const char *gclidb_Gclicmd_gclicmd_issuesearch   = "issuesearch";
+const char *gclidb_Gclicmd_gclicmd_jobretry      = "jobretry";
 const char *gclidb_Gclicmd_gclicmd_mraccept      = "mraccept";
 
 const char *gclidb_Gclicmd_gclicmd_mrlist       = "mrlist";
@@ -65,31 +67,14 @@ const char *gclidb_Gclicmd_gclicmd_notemod        = "notemod";
 const char *gclidb_Gclicmd_gclicmd_repojob        = "repojob";
 const char *gclidb_Gclicmd_gclicmd_repojobtrace   = "repojobtrace";
 const char *gclidb_Gclicmd_gclicmd_token2repos    = "token2repos";
-const char *gclidb_Gclicmd_gclicmd_user           = "user";
-const char *gclidb_Gclicmd_gclicmd_userdet        = "userdet";
-const char *gclidb_Gclicmd_gclicmd_userlist       = "userlist";
+const char *gclidb_Gclicmd_gclicmd_tokenadd       = "tokenadd";
 
-// compile-time string constants for gclidb.Gclienv.gclienv
-const char *gclidb_Gclienv_gclienv_all    = "all";
-const char *gclidb_Gclienv_gclienv_ghub   = "ghub";
-const char *gclidb_Gclienv_gclienv_glab   = "glab";
+const char *gclidb_Gclicmd_gclicmd_tokendel    = "tokendel";
+const char *gclidb_Gclicmd_gclicmd_tokenlist   = "tokenlist";
 
-// compile-time string constants for gclidb.Gclisub.gclisub
-const char *gclidb_Gclisub_gclisub__GITDIR    = "$GITDIR";
-const char *gclidb_Gclisub_gclisub__HOST      = "$HOST";
-const char *gclidb_Gclisub_gclisub__ID_RSA    = "$ID_RSA";
-const char *gclidb_Gclisub_gclisub__IN_AUTH   = "$IN_AUTH";
-const char *gclidb_Gclisub_gclisub__ISSUE     = "$ISSUE";
-const char *gclidb_Gclisub_gclisub__ISSUE_    = "$ISSUE#";
-const char *gclidb_Gclisub_gclisub__MNOTE     = "$MNOTE";
-
-const char *gclidb_Gclisub_gclisub__MR     = "$MR";
-const char *gclidb_Gclisub_gclisub__MR_    = "$MR_";
-const char *gclidb_Gclisub_gclisub__NOTE   = "$NOTE";
-
-const char *gclidb_Gclisub_gclisub__REPO    = "$REPO";
-const char *gclidb_Gclisub_gclisub__TOKEN   = "$TOKEN";
-const char *gclidb_Gclisub_gclisub__USER    = "$USER";
+const char *gclidb_Gclicmd_gclicmd_user       = "user";
+const char *gclidb_Gclicmd_gclicmd_userdet    = "userdet";
+const char *gclidb_Gclicmd_gclicmd_userlist   = "userlist";
 
 // compile-time string constants for gclidb.Gfld.gfld
 const char *gclidb_Gfld_gfld_action         = "action";
@@ -97,6 +82,7 @@ const char *gclidb_Gfld_gfld_assignee       = "assignee";
 const char *gclidb_Gfld_gfld_author         = "author";
 const char *gclidb_Gfld_gfld_default_repo   = "default_repo";
 const char *gclidb_Gfld_gfld_description    = "description";
+const char *gclidb_Gfld_gfld_errors         = "errors";
 const char *gclidb_Gfld_gfld_host           = "host";
 const char *gclidb_Gfld_gfld_labels         = "labels";
 const char *gclidb_Gfld_gfld_milestone      = "milestone";
@@ -134,6 +120,7 @@ const char *gclidb_Gtbl_gtbl_mrjob       = "mrjob";
 const char *gclidb_Gtbl_gtbl_mrnote       = "mrnote";
 const char *gclidb_Gtbl_gtbl_repo         = "repo";
 const char *gclidb_Gtbl_gtbl_reporemote   = "reporemote";
+const char *gclidb_Gtbl_gtbl_token        = "token";
 const char *gclidb_Gtbl_gtbl_user         = "user";
 
 // compile-time string constants for gclidb.Gtblact.gtblact
@@ -171,6 +158,10 @@ const char *gclidb_Gtblact_gtblact_mr_stop            = "mr_stop";
 const char *gclidb_Gtblact_gtblact_mrjob_list         = "mrjob_list";
 const char *gclidb_Gtblact_gtblact_issue_needs_work   = "issue_needs_work";
 const char *gclidb_Gtblact_gtblact_issue_stop         = "issue_stop";
+const char *gclidb_Gtblact_gtblact_token_list         = "token_list";
+const char *gclidb_Gtblact_gtblact_token_create       = "token_create";
+const char *gclidb_Gtblact_gtblact_token_stop         = "token_stop";
+const char *gclidb_Gtblact_gtblact_mrjob_retry        = "mrjob_retry";
 
 // compile-time string constants for gclidb.Gtype.gtype
 const char *gclidb_Gtype_gtype_ghp     = "ghp";
@@ -217,14 +208,6 @@ const char* gclidb::value_ToCstr(const gclidb::FieldId& parent) {
         case gclidb_FieldId_gmethod        : ret = "gmethod";  break;
         case gclidb_FieldId_gtype          : ret = "gtype";  break;
         case gclidb_FieldId_uri            : ret = "uri";  break;
-        case gclidb_FieldId_gclienv        : ret = "gclienv";  break;
-        case gclidb_FieldId_addon          : ret = "addon";  break;
-        case gclidb_FieldId_gclienvsub     : ret = "gclienvsub";  break;
-        case gclidb_FieldId_sub            : ret = "sub";  break;
-        case gclidb_FieldId_fwd            : ret = "fwd";  break;
-        case gclidb_FieldId_rev            : ret = "rev";  break;
-        case gclidb_FieldId_uval           : ret = "uval";  break;
-        case gclidb_FieldId_gclisub        : ret = "gclisub";  break;
         case gclidb_FieldId_gfld           : ret = "gfld";  break;
         case gclidb_FieldId_val            : ret = "val";  break;
         case gclidb_FieldId_grepo          : ret = "grepo";  break;
@@ -253,12 +236,6 @@ const char* gclidb::value_ToCstr(const gclidb::FieldId& parent) {
         case gclidb_FieldId_field_name_dflt: ret = "field_name_dflt";  break;
         case gclidb_FieldId_optional       : ret = "optional";  break;
         case gclidb_FieldId_regx           : ret = "regx";  break;
-        case gclidb_FieldId_gtblacttst     : ret = "gtblacttst";  break;
-        case gclidb_FieldId_working        : ret = "working";  break;
-        case gclidb_FieldId_cmd            : ret = "cmd";  break;
-        case gclidb_FieldId_gtblacttstout  : ret = "gtblacttstout";  break;
-        case gclidb_FieldId_out            : ret = "out";  break;
-        case gclidb_FieldId_text           : ret = "text";  break;
         case gclidb_FieldId_default_url    : ret = "default_url";  break;
         case gclidb_FieldId_gtypeh         : ret = "gtypeh";  break;
         case gclidb_FieldId_header         : ret = "header";  break;
@@ -293,11 +270,19 @@ const char* gclidb::value_ToCstr(const gclidb::FieldId& parent) {
         case gclidb_FieldId_pipeline_id    : ret = "pipeline_id";  break;
         case gclidb_FieldId_draft          : ret = "draft";  break;
         case gclidb_FieldId_node_id        : ret = "node_id";  break;
+        case gclidb_FieldId_merge_status   : ret = "merge_status";  break;
+        case gclidb_FieldId_behind         : ret = "behind";  break;
         case gclidb_FieldId_mrjob          : ret = "mrjob";  break;
         case gclidb_FieldId_job            : ret = "job";  break;
         case gclidb_FieldId_ref            : ret = "ref";  break;
         case gclidb_FieldId_runner         : ret = "runner";  break;
         case gclidb_FieldId_mrnote         : ret = "mrnote";  break;
+        case gclidb_FieldId_resolvable     : ret = "resolvable";  break;
+        case gclidb_FieldId_resolved       : ret = "resolved";  break;
+        case gclidb_FieldId_revoked        : ret = "revoked";  break;
+        case gclidb_FieldId_expires        : ret = "expires";  break;
+        case gclidb_FieldId_scopes         : ret = "scopes";  break;
+        case gclidb_FieldId_secret         : ret = "secret";  break;
         case gclidb_FieldId_user           : ret = "user";  break;
         case gclidb_FieldId_value          : ret = "value";  break;
     }
@@ -350,14 +335,8 @@ bool gclidb::value_SetStrptrMaybe(gclidb::FieldId& parent, algo::strptr rhs) {
         }
         case 3: {
             switch (u64(algo::ReadLE16(rhs.elems))|(u64(rhs[2])<<16)) {
-                case LE_STR3('c','m','d'): {
-                    value_SetEnum(parent,gclidb_FieldId_cmd); ret = true; break;
-                }
                 case LE_STR3('d','u','p'): {
                     value_SetEnum(parent,gclidb_FieldId_dup); ret = true; break;
-                }
-                case LE_STR3('f','w','d'): {
-                    value_SetEnum(parent,gclidb_FieldId_fwd); ret = true; break;
                 }
                 case LE_STR3('i','i','d'): {
                     value_SetEnum(parent,gclidb_FieldId_iid); ret = true; break;
@@ -368,17 +347,8 @@ bool gclidb::value_SetStrptrMaybe(gclidb::FieldId& parent, algo::strptr rhs) {
                 case LE_STR3('n','i','d'): {
                     value_SetEnum(parent,gclidb_FieldId_nid); ret = true; break;
                 }
-                case LE_STR3('o','u','t'): {
-                    value_SetEnum(parent,gclidb_FieldId_out); ret = true; break;
-                }
                 case LE_STR3('r','e','f'): {
                     value_SetEnum(parent,gclidb_FieldId_ref); ret = true; break;
-                }
-                case LE_STR3('r','e','v'): {
-                    value_SetEnum(parent,gclidb_FieldId_rev); ret = true; break;
-                }
-                case LE_STR3('s','u','b'): {
-                    value_SetEnum(parent,gclidb_FieldId_sub); ret = true; break;
                 }
                 case LE_STR3('u','r','i'): {
                     value_SetEnum(parent,gclidb_FieldId_uri); ret = true; break;
@@ -430,23 +400,14 @@ bool gclidb::value_SetStrptrMaybe(gclidb::FieldId& parent, algo::strptr rhs) {
                 case LE_STR4('r','e','g','x'): {
                     value_SetEnum(parent,gclidb_FieldId_regx); ret = true; break;
                 }
-                case LE_STR4('t','e','x','t'): {
-                    value_SetEnum(parent,gclidb_FieldId_text); ret = true; break;
-                }
                 case LE_STR4('u','s','e','r'): {
                     value_SetEnum(parent,gclidb_FieldId_user); ret = true; break;
-                }
-                case LE_STR4('u','v','a','l'): {
-                    value_SetEnum(parent,gclidb_FieldId_uval); ret = true; break;
                 }
             }
             break;
         }
         case 5: {
             switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
-                case LE_STR5('a','d','d','o','n'): {
-                    value_SetEnum(parent,gclidb_FieldId_addon); ret = true; break;
-                }
                 case LE_STR5('d','e','s','c','r'): {
                     value_SetEnum(parent,gclidb_FieldId_descr); ret = true; break;
                 }
@@ -503,6 +464,9 @@ bool gclidb::value_SetStrptrMaybe(gclidb::FieldId& parent, algo::strptr rhs) {
                 case LE_STR6('a','u','t','h','o','r'): {
                     value_SetEnum(parent,gclidb_FieldId_author); ret = true; break;
                 }
+                case LE_STR6('b','e','h','i','n','d'): {
+                    value_SetEnum(parent,gclidb_FieldId_behind); ret = true; break;
+                }
                 case LE_STR6('g','s','t','a','t','e'): {
                     value_SetEnum(parent,gclidb_FieldId_gstate); ret = true; break;
                 }
@@ -524,6 +488,12 @@ bool gclidb::value_SetStrptrMaybe(gclidb::FieldId& parent, algo::strptr rhs) {
                 case LE_STR6('r','u','n','n','e','r'): {
                     value_SetEnum(parent,gclidb_FieldId_runner); ret = true; break;
                 }
+                case LE_STR6('s','c','o','p','e','s'): {
+                    value_SetEnum(parent,gclidb_FieldId_scopes); ret = true; break;
+                }
+                case LE_STR6('s','e','c','r','e','t'): {
+                    value_SetEnum(parent,gclidb_FieldId_secret); ret = true; break;
+                }
                 case LE_STR6('s','t','a','t','u','s'): {
                     value_SetEnum(parent,gclidb_FieldId_status); ret = true; break;
                 }
@@ -538,14 +508,11 @@ bool gclidb::value_SetStrptrMaybe(gclidb::FieldId& parent, algo::strptr rhs) {
                 case LE_STR7('c','o','m','m','e','n','t'): {
                     value_SetEnum(parent,gclidb_FieldId_comment); ret = true; break;
                 }
+                case LE_STR7('e','x','p','i','r','e','s'): {
+                    value_SetEnum(parent,gclidb_FieldId_expires); ret = true; break;
+                }
                 case LE_STR7('g','c','l','i','c','m','d'): {
                     value_SetEnum(parent,gclidb_FieldId_gclicmd); ret = true; break;
-                }
-                case LE_STR7('g','c','l','i','e','n','v'): {
-                    value_SetEnum(parent,gclidb_FieldId_gclienv); ret = true; break;
-                }
-                case LE_STR7('g','c','l','i','s','u','b'): {
-                    value_SetEnum(parent,gclidb_FieldId_gclisub); ret = true; break;
                 }
                 case LE_STR7('g','m','e','t','h','o','d'): {
                     value_SetEnum(parent,gclidb_FieldId_gmethod); ret = true; break;
@@ -562,11 +529,11 @@ bool gclidb::value_SetStrptrMaybe(gclidb::FieldId& parent, algo::strptr rhs) {
                 case LE_STR7('p','r','o','j','e','c','t'): {
                     value_SetEnum(parent,gclidb_FieldId_project); ret = true; break;
                 }
+                case LE_STR7('r','e','v','o','k','e','d'): {
+                    value_SetEnum(parent,gclidb_FieldId_revoked); ret = true; break;
+                }
                 case LE_STR7('w','e','b','_','u','r','l'): {
                     value_SetEnum(parent,gclidb_FieldId_web_url); ret = true; break;
-                }
-                case LE_STR7('w','o','r','k','i','n','g'): {
-                    value_SetEnum(parent,gclidb_FieldId_working); ret = true; break;
                 }
             }
             break;
@@ -584,6 +551,9 @@ bool gclidb::value_SetStrptrMaybe(gclidb::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('o','p','t','i','o','n','a','l'): {
                     value_SetEnum(parent,gclidb_FieldId_optional); ret = true; break;
+                }
+                case LE_STR8('r','e','s','o','l','v','e','d'): {
+                    value_SetEnum(parent,gclidb_FieldId_resolved); ret = true; break;
                 }
                 case LE_STR8('r','e','v','i','e','w','e','r'): {
                     value_SetEnum(parent,gclidb_FieldId_reviewer); ret = true; break;
@@ -613,16 +583,12 @@ bool gclidb::value_SetStrptrMaybe(gclidb::FieldId& parent, algo::strptr rhs) {
                     if (memcmp(rhs.elems+8,"2j",2)==0) { value_SetEnum(parent,gclidb_FieldId_gclicmdf2j); ret = true; break; }
                     break;
                 }
-                case LE_STR8('g','c','l','i','e','n','v','s'): {
-                    if (memcmp(rhs.elems+8,"ub",2)==0) { value_SetEnum(parent,gclidb_FieldId_gclienvsub); ret = true; break; }
-                    break;
-                }
                 case LE_STR8('g','t','b','l','a','c','t','f'): {
                     if (memcmp(rhs.elems+8,"ld",2)==0) { value_SetEnum(parent,gclidb_FieldId_gtblactfld); ret = true; break; }
                     break;
                 }
-                case LE_STR8('g','t','b','l','a','c','t','t'): {
-                    if (memcmp(rhs.elems+8,"st",2)==0) { value_SetEnum(parent,gclidb_FieldId_gtblacttst); ret = true; break; }
+                case LE_STR8('r','e','s','o','l','v','a','b'): {
+                    if (memcmp(rhs.elems+8,"le",2)==0) { value_SetEnum(parent,gclidb_FieldId_resolvable); ret = true; break; }
                     break;
                 }
             }
@@ -653,12 +619,17 @@ bool gclidb::value_SetStrptrMaybe(gclidb::FieldId& parent, algo::strptr rhs) {
             }
             break;
         }
-        case 13: {
+        case 12: {
             switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('g','t','b','l','a','c','t','t'): {
-                    if (memcmp(rhs.elems+8,"stout",5)==0) { value_SetEnum(parent,gclidb_FieldId_gtblacttstout); ret = true; break; }
+                case LE_STR8('m','e','r','g','e','_','s','t'): {
+                    if (memcmp(rhs.elems+8,"atus",4)==0) { value_SetEnum(parent,gclidb_FieldId_merge_status); ret = true; break; }
                     break;
                 }
+            }
+            break;
+        }
+        case 13: {
+            switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('i','s','s','u','e','p','i','p'): {
                     if (memcmp(rhs.elems+8,"eline",5)==0) { value_SetEnum(parent,gclidb_FieldId_issuepipeline); ret = true; break; }
                     break;
@@ -731,7 +702,7 @@ bool gclidb::FieldId_ReadStrptrMaybe(gclidb::FieldId &parent, algo::strptr in_st
 // --- gclidb.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:gclidb.FieldId.String  printfmt:Raw
-void gclidb::FieldId_Print(gclidb::FieldId& row, algo::cstring& str) {
+void gclidb::FieldId_Print(gclidb::FieldId row, algo::cstring& str) {
     gclidb::value_Print(row, str);
 }
 
@@ -889,51 +860,43 @@ void gclidb::Gclicmd_Print(gclidb::Gclicmd& row, algo::cstring& str) {
 }
 
 // --- gclidb.Gclicmdf2j.gclicmdf.Get
-algo::cstring gclidb::gclicmdf_Get(gclidb::Gclicmdf2j& parent) {
-    algo::cstring ret(algo::Pathcomp(parent.gclicmdf2j, "@LL"));
-    return ret;
+algo::strptr gclidb::gclicmdf_Get(gclidb::Gclicmdf2j& parent) {
+    return algo::Pathcomp(parent.gclicmdf2j, "@LL");
 }
 
 // --- gclidb.Gclicmdf2j.gclicmdf.Get2
-algo::cstring gclidb::Gclicmdf2j_gclicmdf_Get(algo::strptr arg) {
-    algo::cstring ret(algo::Pathcomp(arg, "@LL"));
-    return ret;
+algo::strptr gclidb::Gclicmdf2j_gclicmdf_Get(algo::strptr arg) {
+    return algo::Pathcomp(arg, "@LL");
 }
 
 // --- gclidb.Gclicmdf2j.gclicmd.Get
-algo::Smallstr250 gclidb::gclicmd_Get(gclidb::Gclicmdf2j& parent) {
-    algo::Smallstr250 ret(algo::Pathcomp(parent.gclicmdf2j, "/LL"));
-    return ret;
+algo::strptr gclidb::gclicmd_Get(gclidb::Gclicmdf2j& parent) {
+    return algo::Pathcomp(parent.gclicmdf2j, "/LL");
 }
 
 // --- gclidb.Gclicmdf2j.gclicmd.Get2
-algo::Smallstr250 gclidb::Gclicmdf2j_gclicmd_Get(algo::strptr arg) {
-    algo::Smallstr250 ret(algo::Pathcomp(arg, "/LL"));
-    return ret;
+algo::strptr gclidb::Gclicmdf2j_gclicmd_Get(algo::strptr arg) {
+    return algo::Pathcomp(arg, "/LL");
 }
 
 // --- gclidb.Gclicmdf2j.field.Get
-algo::Smallstr100 gclidb::field_Get(gclidb::Gclicmdf2j& parent) {
-    algo::Smallstr100 ret(algo::Pathcomp(parent.gclicmdf2j, "/LR@LL"));
-    return ret;
+algo::strptr gclidb::field_Get(gclidb::Gclicmdf2j& parent) {
+    return algo::Pathcomp(parent.gclicmdf2j, "/LR@LL");
 }
 
 // --- gclidb.Gclicmdf2j.field.Get2
-algo::Smallstr100 gclidb::Gclicmdf2j_field_Get(algo::strptr arg) {
-    algo::Smallstr100 ret(algo::Pathcomp(arg, "/LR@LL"));
-    return ret;
+algo::strptr gclidb::Gclicmdf2j_field_Get(algo::strptr arg) {
+    return algo::Pathcomp(arg, "/LR@LL");
 }
 
 // --- gclidb.Gclicmdf2j.jkey.Get
-algo::cstring gclidb::jkey_Get(gclidb::Gclicmdf2j& parent) {
-    algo::cstring ret(algo::Pathcomp(parent.gclicmdf2j, "/LR@LR"));
-    return ret;
+algo::strptr gclidb::jkey_Get(gclidb::Gclicmdf2j& parent) {
+    return algo::Pathcomp(parent.gclicmdf2j, "/LR@LR");
 }
 
 // --- gclidb.Gclicmdf2j.jkey.Get2
-algo::cstring gclidb::Gclicmdf2j_jkey_Get(algo::strptr arg) {
-    algo::cstring ret(algo::Pathcomp(arg, "/LR@LR"));
-    return ret;
+algo::strptr gclidb::Gclicmdf2j_jkey_Get(algo::strptr arg) {
+    return algo::Pathcomp(arg, "/LR@LR");
 }
 
 // --- gclidb.Gclicmdf2j..Concat_gclicmd_field_jkey
@@ -1009,27 +972,23 @@ void gclidb::Gclicmdf2j_Print(gclidb::Gclicmdf2j& row, algo::cstring& str) {
 }
 
 // --- gclidb.Gclicmdt.gclicmd.Get
-algo::Smallstr250 gclidb::gclicmd_Get(gclidb::Gclicmdt& parent) {
-    algo::Smallstr250 ret(algo::Pathcomp(parent.gclicmdt, ".RL"));
-    return ret;
+algo::strptr gclidb::gclicmd_Get(gclidb::Gclicmdt& parent) {
+    return algo::Pathcomp(parent.gclicmdt, ".RL");
 }
 
 // --- gclidb.Gclicmdt.gclicmd.Get2
-algo::Smallstr250 gclidb::Gclicmdt_gclicmd_Get(algo::strptr arg) {
-    algo::Smallstr250 ret(algo::Pathcomp(arg, ".RL"));
-    return ret;
+algo::strptr gclidb::Gclicmdt_gclicmd_Get(algo::strptr arg) {
+    return algo::Pathcomp(arg, ".RL");
 }
 
 // --- gclidb.Gclicmdt.gtype.Get
-algo::Smallstr50 gclidb::gtype_Get(gclidb::Gclicmdt& parent) {
-    algo::Smallstr50 ret(algo::Pathcomp(parent.gclicmdt, ".RR"));
-    return ret;
+algo::strptr gclidb::gtype_Get(gclidb::Gclicmdt& parent) {
+    return algo::Pathcomp(parent.gclicmdt, ".RR");
 }
 
 // --- gclidb.Gclicmdt.gtype.Get2
-algo::Smallstr50 gclidb::Gclicmdt_gtype_Get(algo::strptr arg) {
-    algo::Smallstr50 ret(algo::Pathcomp(arg, ".RR"));
-    return ret;
+algo::strptr gclidb::Gclicmdt_gtype_Get(algo::strptr arg) {
+    return algo::Pathcomp(arg, ".RR");
 }
 
 // --- gclidb.Gclicmdt..Concat_gclicmd_gtype
@@ -1104,206 +1063,6 @@ void gclidb::Gclicmdt_Print(gclidb::Gclicmdt& row, algo::cstring& str) {
     PrintAttrSpaceReset(str,"comment", temp);
 }
 
-// --- gclidb.Gclienv..ReadFieldMaybe
-bool gclidb::Gclienv_ReadFieldMaybe(gclidb::Gclienv& parent, algo::strptr field, algo::strptr strval) {
-    bool retval = true;
-    gclidb::FieldId field_id;
-    (void)value_SetStrptrMaybe(field_id,field);
-    switch(field_id) {
-        case gclidb_FieldId_gclienv: {
-            retval = algo::Smallstr50_ReadStrptrMaybe(parent.gclienv, strval);
-        } break;
-        case gclidb_FieldId_addon: {
-            retval = algo::cstring_ReadStrptrMaybe(parent.addon, strval);
-        } break;
-        case gclidb_FieldId_comment: {
-            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-        } break;
-        default: {
-            retval = false;
-            algo_lib::AppendErrtext("comment", "unrecognized attr");
-        } break;
-    }
-    if (!retval) {
-        algo_lib::AppendErrtext("attr",field);
-    }
-    return retval;
-}
-
-// --- gclidb.Gclienv..ReadStrptrMaybe
-// Read fields of gclidb::Gclienv from an ascii string.
-// The format of the string is an ssim Tuple
-bool gclidb::Gclienv_ReadStrptrMaybe(gclidb::Gclienv &parent, algo::strptr in_str) {
-    bool retval = true;
-    retval = algo::StripTypeTag(in_str, "gclidb.gclienv") || algo::StripTypeTag(in_str, "gclidb.Gclienv");
-    ind_beg(algo::Attr_curs, attr, in_str) {
-        retval = retval && Gclienv_ReadFieldMaybe(parent, attr.name, attr.value);
-    }ind_end;
-    return retval;
-}
-
-// --- gclidb.Gclienv..Print
-// print string representation of ROW to string STR
-// cfmt:gclidb.Gclienv.String  printfmt:Tuple
-void gclidb::Gclienv_Print(gclidb::Gclienv& row, algo::cstring& str) {
-    algo::tempstr temp;
-    str << "gclidb.gclienv";
-
-    algo::Smallstr50_Print(row.gclienv, temp);
-    PrintAttrSpaceReset(str,"gclienv", temp);
-
-    algo::cstring_Print(row.addon, temp);
-    PrintAttrSpaceReset(str,"addon", temp);
-
-    algo::Comment_Print(row.comment, temp);
-    PrintAttrSpaceReset(str,"comment", temp);
-}
-
-// --- gclidb.Gclienvsub.gclienv.Get
-algo::Smallstr50 gclidb::gclienv_Get(gclidb::Gclienvsub& parent) {
-    algo::Smallstr50 ret(algo::Pathcomp(parent.gclienvsub, ".LL"));
-    return ret;
-}
-
-// --- gclidb.Gclienvsub.gclienv.Get2
-algo::Smallstr50 gclidb::Gclienvsub_gclienv_Get(algo::strptr arg) {
-    algo::Smallstr50 ret(algo::Pathcomp(arg, ".LL"));
-    return ret;
-}
-
-// --- gclidb.Gclienvsub.sub.Get
-algo::Smallstr50 gclidb::sub_Get(gclidb::Gclienvsub& parent) {
-    algo::Smallstr50 ret(algo::Pathcomp(parent.gclienvsub, ".LR"));
-    return ret;
-}
-
-// --- gclidb.Gclienvsub.sub.Get2
-algo::Smallstr50 gclidb::Gclienvsub_sub_Get(algo::strptr arg) {
-    algo::Smallstr50 ret(algo::Pathcomp(arg, ".LR"));
-    return ret;
-}
-
-// --- gclidb.Gclienvsub..Concat_gclienv_sub
-tempstr gclidb::Gclienvsub_Concat_gclienv_sub( const algo::strptr& gclienv ,const algo::strptr& sub ) {
-    return tempstr() << gclienv <<'.'<< sub ;
-}
-
-// --- gclidb.Gclienvsub..ReadFieldMaybe
-bool gclidb::Gclienvsub_ReadFieldMaybe(gclidb::Gclienvsub& parent, algo::strptr field, algo::strptr strval) {
-    bool retval = true;
-    gclidb::FieldId field_id;
-    (void)value_SetStrptrMaybe(field_id,field);
-    switch(field_id) {
-        case gclidb_FieldId_gclienvsub: {
-            retval = algo::Smallstr50_ReadStrptrMaybe(parent.gclienvsub, strval);
-        } break;
-        case gclidb_FieldId_gclienv: {
-            retval = false;
-        } break;
-        case gclidb_FieldId_sub: {
-            retval = false;
-        } break;
-        case gclidb_FieldId_fwd: {
-            retval = bool_ReadStrptrMaybe(parent.fwd, strval);
-        } break;
-        case gclidb_FieldId_rev: {
-            retval = bool_ReadStrptrMaybe(parent.rev, strval);
-        } break;
-        case gclidb_FieldId_uval: {
-            retval = algo::cstring_ReadStrptrMaybe(parent.uval, strval);
-        } break;
-        default: {
-            retval = false;
-            algo_lib::AppendErrtext("comment", "unrecognized attr");
-        } break;
-    }
-    if (!retval) {
-        algo_lib::AppendErrtext("attr",field);
-    }
-    return retval;
-}
-
-// --- gclidb.Gclienvsub..ReadStrptrMaybe
-// Read fields of gclidb::Gclienvsub from an ascii string.
-// The format of the string is an ssim Tuple
-bool gclidb::Gclienvsub_ReadStrptrMaybe(gclidb::Gclienvsub &parent, algo::strptr in_str) {
-    bool retval = true;
-    retval = algo::StripTypeTag(in_str, "gclidb.gclienvsub") || algo::StripTypeTag(in_str, "gclidb.Gclienvsub");
-    ind_beg(algo::Attr_curs, attr, in_str) {
-        retval = retval && Gclienvsub_ReadFieldMaybe(parent, attr.name, attr.value);
-    }ind_end;
-    return retval;
-}
-
-// --- gclidb.Gclienvsub..Print
-// print string representation of ROW to string STR
-// cfmt:gclidb.Gclienvsub.String  printfmt:Tuple
-void gclidb::Gclienvsub_Print(gclidb::Gclienvsub& row, algo::cstring& str) {
-    algo::tempstr temp;
-    str << "gclidb.gclienvsub";
-
-    algo::Smallstr50_Print(row.gclienvsub, temp);
-    PrintAttrSpaceReset(str,"gclienvsub", temp);
-
-    bool_Print(row.fwd, temp);
-    PrintAttrSpaceReset(str,"fwd", temp);
-
-    bool_Print(row.rev, temp);
-    PrintAttrSpaceReset(str,"rev", temp);
-
-    algo::cstring_Print(row.uval, temp);
-    PrintAttrSpaceReset(str,"uval", temp);
-}
-
-// --- gclidb.Gclisub..ReadFieldMaybe
-bool gclidb::Gclisub_ReadFieldMaybe(gclidb::Gclisub& parent, algo::strptr field, algo::strptr strval) {
-    bool retval = true;
-    gclidb::FieldId field_id;
-    (void)value_SetStrptrMaybe(field_id,field);
-    switch(field_id) {
-        case gclidb_FieldId_gclisub: {
-            retval = algo::Smallstr50_ReadStrptrMaybe(parent.gclisub, strval);
-        } break;
-        case gclidb_FieldId_comment: {
-            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-        } break;
-        default: {
-            retval = false;
-            algo_lib::AppendErrtext("comment", "unrecognized attr");
-        } break;
-    }
-    if (!retval) {
-        algo_lib::AppendErrtext("attr",field);
-    }
-    return retval;
-}
-
-// --- gclidb.Gclisub..ReadStrptrMaybe
-// Read fields of gclidb::Gclisub from an ascii string.
-// The format of the string is an ssim Tuple
-bool gclidb::Gclisub_ReadStrptrMaybe(gclidb::Gclisub &parent, algo::strptr in_str) {
-    bool retval = true;
-    retval = algo::StripTypeTag(in_str, "gclidb.gclisub") || algo::StripTypeTag(in_str, "gclidb.Gclisub");
-    ind_beg(algo::Attr_curs, attr, in_str) {
-        retval = retval && Gclisub_ReadFieldMaybe(parent, attr.name, attr.value);
-    }ind_end;
-    return retval;
-}
-
-// --- gclidb.Gclisub..Print
-// print string representation of ROW to string STR
-// cfmt:gclidb.Gclisub.String  printfmt:Tuple
-void gclidb::Gclisub_Print(gclidb::Gclisub& row, algo::cstring& str) {
-    algo::tempstr temp;
-    str << "gclidb.gclisub";
-
-    algo::Smallstr50_Print(row.gclisub, temp);
-    PrintAttrSpaceReset(str,"gclisub", temp);
-
-    algo::Comment_Print(row.comment, temp);
-    PrintAttrSpaceReset(str,"comment", temp);
-}
-
 // --- gclidb.Gfld..ReadFieldMaybe
 bool gclidb::Gfld_ReadFieldMaybe(gclidb::Gfld& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
@@ -1354,39 +1113,33 @@ void gclidb::Gfld_Print(gclidb::Gfld& row, algo::cstring& str) {
 }
 
 // --- gclidb.Githost.git.Get
-algo::cstring gclidb::git_Get(gclidb::Githost& parent) {
-    algo::cstring ret(algo::Pathcomp(parent.githost, "@LL"));
-    return ret;
+algo::strptr gclidb::git_Get(gclidb::Githost& parent) {
+    return algo::Pathcomp(parent.githost, "@LL");
 }
 
 // --- gclidb.Githost.git.Get2
-algo::cstring gclidb::Githost_git_Get(algo::strptr arg) {
-    algo::cstring ret(algo::Pathcomp(arg, "@LL"));
-    return ret;
+algo::strptr gclidb::Githost_git_Get(algo::strptr arg) {
+    return algo::Pathcomp(arg, "@LL");
 }
 
 // --- gclidb.Githost.host.Get
-algo::cstring gclidb::host_Get(gclidb::Githost& parent) {
-    algo::cstring ret(algo::Pathcomp(parent.githost, "@LR:LL"));
-    return ret;
+algo::strptr gclidb::host_Get(gclidb::Githost& parent) {
+    return algo::Pathcomp(parent.githost, "@LR:LL");
 }
 
 // --- gclidb.Githost.host.Get2
-algo::cstring gclidb::Githost_host_Get(algo::strptr arg) {
-    algo::cstring ret(algo::Pathcomp(arg, "@LR:LL"));
-    return ret;
+algo::strptr gclidb::Githost_host_Get(algo::strptr arg) {
+    return algo::Pathcomp(arg, "@LR:LL");
 }
 
 // --- gclidb.Githost.gitrepo.Get
-algo::cstring gclidb::gitrepo_Get(gclidb::Githost& parent) {
-    algo::cstring ret(algo::Pathcomp(parent.githost, "@LR:LR"));
-    return ret;
+algo::strptr gclidb::gitrepo_Get(gclidb::Githost& parent) {
+    return algo::Pathcomp(parent.githost, "@LR:LR");
 }
 
 // --- gclidb.Githost.gitrepo.Get2
-algo::cstring gclidb::Githost_gitrepo_Get(algo::strptr arg) {
-    algo::cstring ret(algo::Pathcomp(arg, "@LR:LR"));
-    return ret;
+algo::strptr gclidb::Githost_gitrepo_Get(algo::strptr arg) {
+    return algo::Pathcomp(arg, "@LR:LR");
 }
 
 // --- gclidb.Githost..Concat_git_host_gitrepo
@@ -1450,27 +1203,23 @@ void gclidb::Gmethod_Print(gclidb::Gmethod& row, algo::cstring& str) {
 }
 
 // --- gclidb.Grepo.host.Get
-algo::cstring gclidb::host_Get(gclidb::Grepo& parent) {
-    algo::cstring ret(algo::Pathcomp(parent.grepo, "@LL"));
-    return ret;
+algo::strptr gclidb::host_Get(gclidb::Grepo& parent) {
+    return algo::Pathcomp(parent.grepo, "@LL");
 }
 
 // --- gclidb.Grepo.host.Get2
-algo::cstring gclidb::Grepo_host_Get(algo::strptr arg) {
-    algo::cstring ret(algo::Pathcomp(arg, "@LL"));
-    return ret;
+algo::strptr gclidb::Grepo_host_Get(algo::strptr arg) {
+    return algo::Pathcomp(arg, "@LL");
 }
 
 // --- gclidb.Grepo.fname.Get
-algo::cstring gclidb::fname_Get(gclidb::Grepo& parent) {
-    algo::cstring ret(algo::Pathcomp(parent.grepo, "@LR"));
-    return ret;
+algo::strptr gclidb::fname_Get(gclidb::Grepo& parent) {
+    return algo::Pathcomp(parent.grepo, "@LR");
 }
 
 // --- gclidb.Grepo.fname.Get2
-algo::cstring gclidb::Grepo_fname_Get(algo::strptr arg) {
-    algo::cstring ret(algo::Pathcomp(arg, "@LR"));
-    return ret;
+algo::strptr gclidb::Grepo_fname_Get(algo::strptr arg) {
+    return algo::Pathcomp(arg, "@LR");
 }
 
 // --- gclidb.Grepo..Concat_host_fname
@@ -1589,27 +1338,23 @@ void gclidb::Grepo_Print(gclidb::Grepo& row, algo::cstring& str) {
 }
 
 // --- gclidb.Gstate.st.Get
-algo::cstring gclidb::st_Get(gclidb::Gstate& parent) {
-    algo::cstring ret(algo::Pathcomp(parent.gstate, "_LL"));
-    return ret;
+algo::strptr gclidb::st_Get(gclidb::Gstate& parent) {
+    return algo::Pathcomp(parent.gstate, "_LL");
 }
 
 // --- gclidb.Gstate.st.Get2
-algo::cstring gclidb::Gstate_st_Get(algo::strptr arg) {
-    algo::cstring ret(algo::Pathcomp(arg, "_LL"));
-    return ret;
+algo::strptr gclidb::Gstate_st_Get(algo::strptr arg) {
+    return algo::Pathcomp(arg, "_LL");
 }
 
 // --- gclidb.Gstate.state.Get
-algo::cstring gclidb::state_Get(gclidb::Gstate& parent) {
-    algo::cstring ret(algo::Pathcomp(parent.gstate, "_LR"));
-    return ret;
+algo::strptr gclidb::state_Get(gclidb::Gstate& parent) {
+    return algo::Pathcomp(parent.gstate, "_LR");
 }
 
 // --- gclidb.Gstate.state.Get2
-algo::cstring gclidb::Gstate_state_Get(algo::strptr arg) {
-    algo::cstring ret(algo::Pathcomp(arg, "_LR"));
-    return ret;
+algo::strptr gclidb::Gstate_state_Get(algo::strptr arg) {
+    return algo::Pathcomp(arg, "_LR");
 }
 
 // --- gclidb.Gstate..Concat_st_state
@@ -1673,27 +1418,23 @@ void gclidb::Gstate_Print(gclidb::Gstate& row, algo::cstring& str) {
 }
 
 // --- gclidb.Gstatet.gtype.Get
-algo::Smallstr50 gclidb::gtype_Get(gclidb::Gstatet& parent) {
-    algo::Smallstr50 ret(algo::Pathcomp(parent.gstatet, ".RR"));
-    return ret;
+algo::strptr gclidb::gtype_Get(gclidb::Gstatet& parent) {
+    return algo::Pathcomp(parent.gstatet, ".RR");
 }
 
 // --- gclidb.Gstatet.gtype.Get2
-algo::Smallstr50 gclidb::Gstatet_gtype_Get(algo::strptr arg) {
-    algo::Smallstr50 ret(algo::Pathcomp(arg, ".RR"));
-    return ret;
+algo::strptr gclidb::Gstatet_gtype_Get(algo::strptr arg) {
+    return algo::Pathcomp(arg, ".RR");
 }
 
 // --- gclidb.Gstatet.gstate.Get
-algo::Smallstr50 gclidb::gstate_Get(gclidb::Gstatet& parent) {
-    algo::Smallstr50 ret(algo::Pathcomp(parent.gstatet, ".RL"));
-    return ret;
+algo::strptr gclidb::gstate_Get(gclidb::Gstatet& parent) {
+    return algo::Pathcomp(parent.gstatet, ".RL");
 }
 
 // --- gclidb.Gstatet.gstate.Get2
-algo::Smallstr50 gclidb::Gstatet_gstate_Get(algo::strptr arg) {
-    algo::Smallstr50 ret(algo::Pathcomp(arg, ".RL"));
-    return ret;
+algo::strptr gclidb::Gstatet_gstate_Get(algo::strptr arg) {
+    return algo::Pathcomp(arg, ".RL");
 }
 
 // --- gclidb.Gstatet..Concat_gstate_gtype
@@ -1806,27 +1547,23 @@ void gclidb::Gtbl_Print(gclidb::Gtbl& row, algo::cstring& str) {
 }
 
 // --- gclidb.Gtblact.gtbl.Get
-algo::Smallstr250 gclidb::gtbl_Get(gclidb::Gtblact& parent) {
-    algo::Smallstr250 ret(algo::Pathcomp(parent.gtblact, "_LL"));
-    return ret;
+algo::strptr gclidb::gtbl_Get(gclidb::Gtblact& parent) {
+    return algo::Pathcomp(parent.gtblact, "_LL");
 }
 
 // --- gclidb.Gtblact.gtbl.Get2
-algo::Smallstr250 gclidb::Gtblact_gtbl_Get(algo::strptr arg) {
-    algo::Smallstr250 ret(algo::Pathcomp(arg, "_LL"));
-    return ret;
+algo::strptr gclidb::Gtblact_gtbl_Get(algo::strptr arg) {
+    return algo::Pathcomp(arg, "_LL");
 }
 
 // --- gclidb.Gtblact.gact.Get
-algo::Smallstr50 gclidb::gact_Get(gclidb::Gtblact& parent) {
-    algo::Smallstr50 ret(algo::Pathcomp(parent.gtblact, "_LR"));
-    return ret;
+algo::strptr gclidb::gact_Get(gclidb::Gtblact& parent) {
+    return algo::Pathcomp(parent.gtblact, "_LR");
 }
 
 // --- gclidb.Gtblact.gact.Get2
-algo::Smallstr50 gclidb::Gtblact_gact_Get(algo::strptr arg) {
-    algo::Smallstr50 ret(algo::Pathcomp(arg, "_LR"));
-    return ret;
+algo::strptr gclidb::Gtblact_gact_Get(algo::strptr arg) {
+    return algo::Pathcomp(arg, "_LR");
 }
 
 // --- gclidb.Gtblact..Concat_gtbl_gact
@@ -1902,27 +1639,23 @@ void gclidb::Gtblact_Print(gclidb::Gtblact& row, algo::cstring& str) {
 }
 
 // --- gclidb.Gtblactfld.gtblact.Get
-algo::Smallstr50 gclidb::gtblact_Get(gclidb::Gtblactfld& parent) {
-    algo::Smallstr50 ret(algo::Pathcomp(parent.gtblactfld, ".RL"));
-    return ret;
+algo::strptr gclidb::gtblact_Get(gclidb::Gtblactfld& parent) {
+    return algo::Pathcomp(parent.gtblactfld, ".RL");
 }
 
 // --- gclidb.Gtblactfld.gtblact.Get2
-algo::Smallstr50 gclidb::Gtblactfld_gtblact_Get(algo::strptr arg) {
-    algo::Smallstr50 ret(algo::Pathcomp(arg, ".RL"));
-    return ret;
+algo::strptr gclidb::Gtblactfld_gtblact_Get(algo::strptr arg) {
+    return algo::Pathcomp(arg, ".RL");
 }
 
 // --- gclidb.Gtblactfld.field.Get
-algo::Smallstr50 gclidb::field_Get(gclidb::Gtblactfld& parent) {
-    algo::Smallstr50 ret(algo::Pathcomp(parent.gtblactfld, ".RR"));
-    return ret;
+algo::strptr gclidb::field_Get(gclidb::Gtblactfld& parent) {
+    return algo::Pathcomp(parent.gtblactfld, ".RR");
 }
 
 // --- gclidb.Gtblactfld.field.Get2
-algo::Smallstr50 gclidb::Gtblactfld_field_Get(algo::strptr arg) {
-    algo::Smallstr50 ret(algo::Pathcomp(arg, ".RR"));
-    return ret;
+algo::strptr gclidb::Gtblactfld_field_Get(algo::strptr arg) {
+    return algo::Pathcomp(arg, ".RR");
 }
 
 // --- gclidb.Gtblactfld..Concat_gtblact_field
@@ -2009,196 +1742,6 @@ void gclidb::Gtblactfld_Print(gclidb::Gtblactfld& row, algo::cstring& str) {
     PrintAttrSpaceReset(str,"comment", temp);
 }
 
-// --- gclidb.Gtblacttst.gtblact.Get
-algo::Smallstr50 gclidb::gtblact_Get(gclidb::Gtblacttst& parent) {
-    algo::Smallstr50 ret(algo::Pathcomp(parent.gtblacttst, ".LL"));
-    return ret;
-}
-
-// --- gclidb.Gtblacttst.gtblact.Get2
-algo::Smallstr50 gclidb::Gtblacttst_gtblact_Get(algo::strptr arg) {
-    algo::Smallstr50 ret(algo::Pathcomp(arg, ".LL"));
-    return ret;
-}
-
-// --- gclidb.Gtblacttst.gclienv.Get
-algo::Smallstr50 gclidb::gclienv_Get(gclidb::Gtblacttst& parent) {
-    algo::Smallstr50 ret(algo::Pathcomp(parent.gtblacttst, ".LR.LL"));
-    return ret;
-}
-
-// --- gclidb.Gtblacttst.gclienv.Get2
-algo::Smallstr50 gclidb::Gtblacttst_gclienv_Get(algo::strptr arg) {
-    algo::Smallstr50 ret(algo::Pathcomp(arg, ".LR.LL"));
-    return ret;
-}
-
-// --- gclidb.Gtblacttst.t.Get
-algo::cstring gclidb::t_Get(gclidb::Gtblacttst& parent) {
-    algo::cstring ret(algo::Pathcomp(parent.gtblacttst, ".RR"));
-    return ret;
-}
-
-// --- gclidb.Gtblacttst.t.Get2
-algo::cstring gclidb::Gtblacttst_t_Get(algo::strptr arg) {
-    algo::cstring ret(algo::Pathcomp(arg, ".RR"));
-    return ret;
-}
-
-// --- gclidb.Gtblacttst..ReadFieldMaybe
-bool gclidb::Gtblacttst_ReadFieldMaybe(gclidb::Gtblacttst& parent, algo::strptr field, algo::strptr strval) {
-    bool retval = true;
-    gclidb::FieldId field_id;
-    (void)value_SetStrptrMaybe(field_id,field);
-    switch(field_id) {
-        case gclidb_FieldId_gtblacttst: {
-            retval = algo::Smallstr250_ReadStrptrMaybe(parent.gtblacttst, strval);
-        } break;
-        case gclidb_FieldId_gtblact: {
-            retval = false;
-        } break;
-        case gclidb_FieldId_gclienv: {
-            retval = false;
-        } break;
-        case gclidb_FieldId_working: {
-            retval = bool_ReadStrptrMaybe(parent.working, strval);
-        } break;
-        case gclidb_FieldId_t: {
-            retval = false;
-        } break;
-        case gclidb_FieldId_cmd: {
-            retval = algo::cstring_ReadStrptrMaybe(parent.cmd, strval);
-        } break;
-        case gclidb_FieldId_comment: {
-            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-        } break;
-        default: {
-            retval = false;
-            algo_lib::AppendErrtext("comment", "unrecognized attr");
-        } break;
-    }
-    if (!retval) {
-        algo_lib::AppendErrtext("attr",field);
-    }
-    return retval;
-}
-
-// --- gclidb.Gtblacttst..ReadStrptrMaybe
-// Read fields of gclidb::Gtblacttst from an ascii string.
-// The format of the string is an ssim Tuple
-bool gclidb::Gtblacttst_ReadStrptrMaybe(gclidb::Gtblacttst &parent, algo::strptr in_str) {
-    bool retval = true;
-    retval = algo::StripTypeTag(in_str, "gclidb.gtblacttst") || algo::StripTypeTag(in_str, "gclidb.Gtblacttst");
-    ind_beg(algo::Attr_curs, attr, in_str) {
-        retval = retval && Gtblacttst_ReadFieldMaybe(parent, attr.name, attr.value);
-    }ind_end;
-    return retval;
-}
-
-// --- gclidb.Gtblacttst..Print
-// print string representation of ROW to string STR
-// cfmt:gclidb.Gtblacttst.String  printfmt:Tuple
-void gclidb::Gtblacttst_Print(gclidb::Gtblacttst& row, algo::cstring& str) {
-    algo::tempstr temp;
-    str << "gclidb.gtblacttst";
-
-    algo::Smallstr250_Print(row.gtblacttst, temp);
-    PrintAttrSpaceReset(str,"gtblacttst", temp);
-
-    bool_Print(row.working, temp);
-    PrintAttrSpaceReset(str,"working", temp);
-
-    algo::cstring_Print(row.cmd, temp);
-    PrintAttrSpaceReset(str,"cmd", temp);
-
-    algo::Comment_Print(row.comment, temp);
-    PrintAttrSpaceReset(str,"comment", temp);
-}
-
-// --- gclidb.Gtblacttstout.gtblacttst.Get
-algo::Smallstr250 gclidb::gtblacttst_Get(gclidb::Gtblacttstout& parent) {
-    algo::Smallstr250 ret(algo::Pathcomp(parent.gtblacttstout, ".RL"));
-    return ret;
-}
-
-// --- gclidb.Gtblacttstout.gtblacttst.Get2
-algo::Smallstr250 gclidb::Gtblacttstout_gtblacttst_Get(algo::strptr arg) {
-    algo::Smallstr250 ret(algo::Pathcomp(arg, ".RL"));
-    return ret;
-}
-
-// --- gclidb.Gtblacttstout.out.Get
-algo::cstring gclidb::out_Get(gclidb::Gtblacttstout& parent) {
-    algo::cstring ret(algo::Pathcomp(parent.gtblacttstout, ".RR"));
-    return ret;
-}
-
-// --- gclidb.Gtblacttstout.out.Get2
-algo::cstring gclidb::Gtblacttstout_out_Get(algo::strptr arg) {
-    algo::cstring ret(algo::Pathcomp(arg, ".RR"));
-    return ret;
-}
-
-// --- gclidb.Gtblacttstout..Concat_gtblacttst_out
-tempstr gclidb::Gtblacttstout_Concat_gtblacttst_out( const algo::strptr& gtblacttst ,const algo::strptr& out ) {
-    return tempstr() << gtblacttst <<'.'<< out ;
-}
-
-// --- gclidb.Gtblacttstout..ReadFieldMaybe
-bool gclidb::Gtblacttstout_ReadFieldMaybe(gclidb::Gtblacttstout& parent, algo::strptr field, algo::strptr strval) {
-    bool retval = true;
-    gclidb::FieldId field_id;
-    (void)value_SetStrptrMaybe(field_id,field);
-    switch(field_id) {
-        case gclidb_FieldId_gtblacttstout: {
-            retval = algo::Smallstr250_ReadStrptrMaybe(parent.gtblacttstout, strval);
-        } break;
-        case gclidb_FieldId_gtblacttst: {
-            retval = false;
-        } break;
-        case gclidb_FieldId_out: {
-            retval = false;
-        } break;
-        case gclidb_FieldId_text: {
-            retval = algo::cstring_ReadStrptrMaybe(parent.text, strval);
-        } break;
-        default: {
-            retval = false;
-            algo_lib::AppendErrtext("comment", "unrecognized attr");
-        } break;
-    }
-    if (!retval) {
-        algo_lib::AppendErrtext("attr",field);
-    }
-    return retval;
-}
-
-// --- gclidb.Gtblacttstout..ReadStrptrMaybe
-// Read fields of gclidb::Gtblacttstout from an ascii string.
-// The format of the string is an ssim Tuple
-bool gclidb::Gtblacttstout_ReadStrptrMaybe(gclidb::Gtblacttstout &parent, algo::strptr in_str) {
-    bool retval = true;
-    retval = algo::StripTypeTag(in_str, "gclidb.gtblacttstout") || algo::StripTypeTag(in_str, "gclidb.Gtblacttstout");
-    ind_beg(algo::Attr_curs, attr, in_str) {
-        retval = retval && Gtblacttstout_ReadFieldMaybe(parent, attr.name, attr.value);
-    }ind_end;
-    return retval;
-}
-
-// --- gclidb.Gtblacttstout..Print
-// print string representation of ROW to string STR
-// cfmt:gclidb.Gtblacttstout.String  printfmt:Tuple
-void gclidb::Gtblacttstout_Print(gclidb::Gtblacttstout& row, algo::cstring& str) {
-    algo::tempstr temp;
-    str << "gclidb.gtblacttstout";
-
-    algo::Smallstr250_Print(row.gtblacttstout, temp);
-    PrintAttrSpaceReset(str,"gtblacttstout", temp);
-
-    algo::cstring_Print(row.text, temp);
-    PrintAttrSpaceReset(str,"text", temp);
-}
-
 // --- gclidb.Gtype..ReadFieldMaybe
 bool gclidb::Gtype_ReadFieldMaybe(gclidb::Gtype& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
@@ -2255,27 +1798,23 @@ void gclidb::Gtype_Print(gclidb::Gtype& row, algo::cstring& str) {
 }
 
 // --- gclidb.Gtypeh.gtype.Get
-algo::Smallstr50 gclidb::gtype_Get(gclidb::Gtypeh& parent) {
-    algo::Smallstr50 ret(algo::Pathcomp(parent.gtypeh, ".RL"));
-    return ret;
+algo::strptr gclidb::gtype_Get(gclidb::Gtypeh& parent) {
+    return algo::Pathcomp(parent.gtypeh, ".RL");
 }
 
 // --- gclidb.Gtypeh.gtype.Get2
-algo::Smallstr50 gclidb::Gtypeh_gtype_Get(algo::strptr arg) {
-    algo::Smallstr50 ret(algo::Pathcomp(arg, ".RL"));
-    return ret;
+algo::strptr gclidb::Gtypeh_gtype_Get(algo::strptr arg) {
+    return algo::Pathcomp(arg, ".RL");
 }
 
 // --- gclidb.Gtypeh.name.Get
-algo::cstring gclidb::name_Get(gclidb::Gtypeh& parent) {
-    algo::cstring ret(algo::Pathcomp(parent.gtypeh, ".RR"));
-    return ret;
+algo::strptr gclidb::name_Get(gclidb::Gtypeh& parent) {
+    return algo::Pathcomp(parent.gtypeh, ".RR");
 }
 
 // --- gclidb.Gtypeh.name.Get2
-algo::cstring gclidb::Gtypeh_name_Get(algo::strptr arg) {
-    algo::cstring ret(algo::Pathcomp(arg, ".RR"));
-    return ret;
+algo::strptr gclidb::Gtypeh_name_Get(algo::strptr arg) {
+    return algo::Pathcomp(arg, ".RR");
 }
 
 // --- gclidb.Gtypeh..Concat_gtype_name
@@ -2339,27 +1878,23 @@ void gclidb::Gtypeh_Print(gclidb::Gtypeh& row, algo::cstring& str) {
 }
 
 // --- gclidb.Gtypeprefix.gtype.Get
-algo::Smallstr50 gclidb::gtype_Get(gclidb::Gtypeprefix& parent) {
-    algo::Smallstr50 ret(algo::Pathcomp(parent.gtypeprefix, ".RL"));
-    return ret;
+algo::strptr gclidb::gtype_Get(gclidb::Gtypeprefix& parent) {
+    return algo::Pathcomp(parent.gtypeprefix, ".RL");
 }
 
 // --- gclidb.Gtypeprefix.gtype.Get2
-algo::Smallstr50 gclidb::Gtypeprefix_gtype_Get(algo::strptr arg) {
-    algo::Smallstr50 ret(algo::Pathcomp(arg, ".RL"));
-    return ret;
+algo::strptr gclidb::Gtypeprefix_gtype_Get(algo::strptr arg) {
+    return algo::Pathcomp(arg, ".RL");
 }
 
 // --- gclidb.Gtypeprefix.prefix.Get
-algo::cstring gclidb::prefix_Get(gclidb::Gtypeprefix& parent) {
-    algo::cstring ret(algo::Pathcomp(parent.gtypeprefix, ".RR"));
-    return ret;
+algo::strptr gclidb::prefix_Get(gclidb::Gtypeprefix& parent) {
+    return algo::Pathcomp(parent.gtypeprefix, ".RR");
 }
 
 // --- gclidb.Gtypeprefix.prefix.Get2
-algo::cstring gclidb::Gtypeprefix_prefix_Get(algo::strptr arg) {
-    algo::cstring ret(algo::Pathcomp(arg, ".RR"));
-    return ret;
+algo::strptr gclidb::Gtypeprefix_prefix_Get(algo::strptr arg) {
+    return algo::Pathcomp(arg, ".RR");
 }
 
 // --- gclidb.Gtypeprefix..Concat_gtype_prefix
@@ -2423,27 +1958,23 @@ void gclidb::Gtypeprefix_Print(gclidb::Gtypeprefix& row, algo::cstring& str) {
 }
 
 // --- gclidb.Issue.project.Get
-algo::Smallstr50 gclidb::project_Get(gclidb::Issue& parent) {
-    algo::Smallstr50 ret(algo::Pathcomp(parent.issue, ".RL"));
-    return ret;
+algo::strptr gclidb::project_Get(gclidb::Issue& parent) {
+    return algo::Pathcomp(parent.issue, ".RL");
 }
 
 // --- gclidb.Issue.project.Get2
-algo::Smallstr50 gclidb::Issue_project_Get(algo::strptr arg) {
-    algo::Smallstr50 ret(algo::Pathcomp(arg, ".RL"));
-    return ret;
+algo::strptr gclidb::Issue_project_Get(algo::strptr arg) {
+    return algo::Pathcomp(arg, ".RL");
 }
 
 // --- gclidb.Issue.iid.Get
-algo::cstring gclidb::iid_Get(gclidb::Issue& parent) {
-    algo::cstring ret(algo::Pathcomp(parent.issue, ".RR"));
-    return ret;
+algo::strptr gclidb::iid_Get(gclidb::Issue& parent) {
+    return algo::Pathcomp(parent.issue, ".RR");
 }
 
 // --- gclidb.Issue.iid.Get2
-algo::cstring gclidb::Issue_iid_Get(algo::strptr arg) {
-    algo::cstring ret(algo::Pathcomp(arg, ".RR"));
-    return ret;
+algo::strptr gclidb::Issue_iid_Get(algo::strptr arg) {
+    return algo::Pathcomp(arg, ".RR");
 }
 
 // --- gclidb.Issue..Concat_project_iid
@@ -2561,27 +2092,23 @@ void gclidb::Issue_Print(gclidb::Issue& row, algo::cstring& str) {
 }
 
 // --- gclidb.Issuenote.issue.Get
-algo::Smallstr50 gclidb::issue_Get(gclidb::Issuenote& parent) {
-    algo::Smallstr50 ret(algo::Pathcomp(parent.issuenote, ".RL"));
-    return ret;
+algo::strptr gclidb::issue_Get(gclidb::Issuenote& parent) {
+    return algo::Pathcomp(parent.issuenote, ".RL");
 }
 
 // --- gclidb.Issuenote.issue.Get2
-algo::Smallstr50 gclidb::Issuenote_issue_Get(algo::strptr arg) {
-    algo::Smallstr50 ret(algo::Pathcomp(arg, ".RL"));
-    return ret;
+algo::strptr gclidb::Issuenote_issue_Get(algo::strptr arg) {
+    return algo::Pathcomp(arg, ".RL");
 }
 
 // --- gclidb.Issuenote.nid.Get
-algo::cstring gclidb::nid_Get(gclidb::Issuenote& parent) {
-    algo::cstring ret(algo::Pathcomp(parent.issuenote, ".RR"));
-    return ret;
+algo::strptr gclidb::nid_Get(gclidb::Issuenote& parent) {
+    return algo::Pathcomp(parent.issuenote, ".RR");
 }
 
 // --- gclidb.Issuenote.nid.Get2
-algo::cstring gclidb::Issuenote_nid_Get(algo::strptr arg) {
-    algo::cstring ret(algo::Pathcomp(arg, ".RR"));
-    return ret;
+algo::strptr gclidb::Issuenote_nid_Get(algo::strptr arg) {
+    return algo::Pathcomp(arg, ".RR");
 }
 
 // --- gclidb.Issuenote..Concat_issue_nid
@@ -2657,27 +2184,23 @@ void gclidb::Issuenote_Print(gclidb::Issuenote& row, algo::cstring& str) {
 }
 
 // --- gclidb.Issuepipeline.issue.Get
-algo::Smallstr50 gclidb::issue_Get(gclidb::Issuepipeline& parent) {
-    algo::Smallstr50 ret(algo::Pathcomp(parent.issuepipeline, ".RL"));
-    return ret;
+algo::strptr gclidb::issue_Get(gclidb::Issuepipeline& parent) {
+    return algo::Pathcomp(parent.issuepipeline, ".RL");
 }
 
 // --- gclidb.Issuepipeline.issue.Get2
-algo::Smallstr50 gclidb::Issuepipeline_issue_Get(algo::strptr arg) {
-    algo::Smallstr50 ret(algo::Pathcomp(arg, ".RL"));
-    return ret;
+algo::strptr gclidb::Issuepipeline_issue_Get(algo::strptr arg) {
+    return algo::Pathcomp(arg, ".RL");
 }
 
 // --- gclidb.Issuepipeline.id.Get
-algo::cstring gclidb::id_Get(gclidb::Issuepipeline& parent) {
-    algo::cstring ret(algo::Pathcomp(parent.issuepipeline, ".RR"));
-    return ret;
+algo::strptr gclidb::id_Get(gclidb::Issuepipeline& parent) {
+    return algo::Pathcomp(parent.issuepipeline, ".RR");
 }
 
 // --- gclidb.Issuepipeline.id.Get2
-algo::cstring gclidb::Issuepipeline_id_Get(algo::strptr arg) {
-    algo::cstring ret(algo::Pathcomp(arg, ".RR"));
-    return ret;
+algo::strptr gclidb::Issuepipeline_id_Get(algo::strptr arg) {
+    return algo::Pathcomp(arg, ".RR");
 }
 
 // --- gclidb.Issuepipeline..Concat_issue_id
@@ -2796,27 +2319,23 @@ void gclidb::Label_Print(gclidb::Label& row, algo::cstring& str) {
 }
 
 // --- gclidb.Milestone.project.Get
-algo::Smallstr50 gclidb::project_Get(gclidb::Milestone& parent) {
-    algo::Smallstr50 ret(algo::Pathcomp(parent.milestone, ".RL"));
-    return ret;
+algo::strptr gclidb::project_Get(gclidb::Milestone& parent) {
+    return algo::Pathcomp(parent.milestone, ".RL");
 }
 
 // --- gclidb.Milestone.project.Get2
-algo::Smallstr50 gclidb::Milestone_project_Get(algo::strptr arg) {
-    algo::Smallstr50 ret(algo::Pathcomp(arg, ".RL"));
-    return ret;
+algo::strptr gclidb::Milestone_project_Get(algo::strptr arg) {
+    return algo::Pathcomp(arg, ".RL");
 }
 
 // --- gclidb.Milestone.iid.Get
-algo::cstring gclidb::iid_Get(gclidb::Milestone& parent) {
-    algo::cstring ret(algo::Pathcomp(parent.milestone, ".RR"));
-    return ret;
+algo::strptr gclidb::iid_Get(gclidb::Milestone& parent) {
+    return algo::Pathcomp(parent.milestone, ".RR");
 }
 
 // --- gclidb.Milestone.iid.Get2
-algo::cstring gclidb::Milestone_iid_Get(algo::strptr arg) {
-    algo::cstring ret(algo::Pathcomp(arg, ".RR"));
-    return ret;
+algo::strptr gclidb::Milestone_iid_Get(algo::strptr arg) {
+    return algo::Pathcomp(arg, ".RR");
 }
 
 // --- gclidb.Milestone..Concat_project_iid
@@ -2886,27 +2405,23 @@ void gclidb::Milestone_Print(gclidb::Milestone& row, algo::cstring& str) {
 }
 
 // --- gclidb.Mr.proj.Get
-algo::Smallstr50 gclidb::proj_Get(gclidb::Mr& parent) {
-    algo::Smallstr50 ret(algo::Pathcomp(parent.mr, ".RL"));
-    return ret;
+algo::strptr gclidb::proj_Get(gclidb::Mr& parent) {
+    return algo::Pathcomp(parent.mr, ".RL");
 }
 
 // --- gclidb.Mr.proj.Get2
-algo::Smallstr50 gclidb::Mr_proj_Get(algo::strptr arg) {
-    algo::Smallstr50 ret(algo::Pathcomp(arg, ".RL"));
-    return ret;
+algo::strptr gclidb::Mr_proj_Get(algo::strptr arg) {
+    return algo::Pathcomp(arg, ".RL");
 }
 
 // --- gclidb.Mr.iid.Get
-algo::cstring gclidb::iid_Get(gclidb::Mr& parent) {
-    algo::cstring ret(algo::Pathcomp(parent.mr, ".RR"));
-    return ret;
+algo::strptr gclidb::iid_Get(gclidb::Mr& parent) {
+    return algo::Pathcomp(parent.mr, ".RR");
 }
 
 // --- gclidb.Mr.iid.Get2
-algo::cstring gclidb::Mr_iid_Get(algo::strptr arg) {
-    algo::cstring ret(algo::Pathcomp(arg, ".RR"));
-    return ret;
+algo::strptr gclidb::Mr_iid_Get(algo::strptr arg) {
+    return algo::Pathcomp(arg, ".RR");
 }
 
 // --- gclidb.Mr..Concat_proj_iid
@@ -2962,6 +2477,12 @@ bool gclidb::Mr_ReadFieldMaybe(gclidb::Mr& parent, algo::strptr field, algo::str
         case gclidb_FieldId_node_id: {
             retval = algo::cstring_ReadStrptrMaybe(parent.node_id, strval);
         } break;
+        case gclidb_FieldId_merge_status: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.merge_status, strval);
+        } break;
+        case gclidb_FieldId_behind: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.behind, strval);
+        } break;
         default: {
             retval = false;
             algo_lib::AppendErrtext("comment", "unrecognized attr");
@@ -2983,6 +2504,13 @@ bool gclidb::Mr_ReadStrptrMaybe(gclidb::Mr &parent, algo::strptr in_str) {
         retval = retval && Mr_ReadFieldMaybe(parent, attr.name, attr.value);
     }ind_end;
     return retval;
+}
+
+// --- gclidb.Mr..Init
+// Set all fields to initial values.
+void gclidb::Mr_Init(gclidb::Mr& parent) {
+    parent.merge_status = algo::strptr("");
+    parent.behind = algo::strptr("");
 }
 
 // --- gclidb.Mr..Print
@@ -3027,30 +2555,32 @@ void gclidb::Mr_Print(gclidb::Mr& row, algo::cstring& str) {
 
     algo::cstring_Print(row.node_id, temp);
     PrintAttrSpaceReset(str,"node_id", temp);
+
+    algo::cstring_Print(row.merge_status, temp);
+    PrintAttrSpaceReset(str,"merge_status", temp);
+
+    algo::cstring_Print(row.behind, temp);
+    PrintAttrSpaceReset(str,"behind", temp);
 }
 
 // --- gclidb.Mrjob.mr.Get
-algo::Smallstr150 gclidb::mr_Get(gclidb::Mrjob& parent) {
-    algo::Smallstr150 ret(algo::Pathcomp(parent.mrjob, "/RL"));
-    return ret;
+algo::strptr gclidb::mr_Get(gclidb::Mrjob& parent) {
+    return algo::Pathcomp(parent.mrjob, "/RL");
 }
 
 // --- gclidb.Mrjob.mr.Get2
-algo::Smallstr150 gclidb::Mrjob_mr_Get(algo::strptr arg) {
-    algo::Smallstr150 ret(algo::Pathcomp(arg, "/RL"));
-    return ret;
+algo::strptr gclidb::Mrjob_mr_Get(algo::strptr arg) {
+    return algo::Pathcomp(arg, "/RL");
 }
 
 // --- gclidb.Mrjob.job.Get
-algo::cstring gclidb::job_Get(gclidb::Mrjob& parent) {
-    algo::cstring ret(algo::Pathcomp(parent.mrjob, "/RR"));
-    return ret;
+algo::strptr gclidb::job_Get(gclidb::Mrjob& parent) {
+    return algo::Pathcomp(parent.mrjob, "/RR");
 }
 
 // --- gclidb.Mrjob.job.Get2
-algo::cstring gclidb::Mrjob_job_Get(algo::strptr arg) {
-    algo::cstring ret(algo::Pathcomp(arg, "/RR"));
-    return ret;
+algo::strptr gclidb::Mrjob_job_Get(algo::strptr arg) {
+    return algo::Pathcomp(arg, "/RR");
 }
 
 // --- gclidb.Mrjob..Concat_mr_job
@@ -3144,27 +2674,23 @@ void gclidb::Mrjob_Print(gclidb::Mrjob& row, algo::cstring& str) {
 }
 
 // --- gclidb.Mrnote.nid.Get
-algo::cstring gclidb::nid_Get(gclidb::Mrnote& parent) {
-    algo::cstring ret(algo::Pathcomp(parent.mrnote, ".RR"));
-    return ret;
+algo::strptr gclidb::nid_Get(gclidb::Mrnote& parent) {
+    return algo::Pathcomp(parent.mrnote, ".RR");
 }
 
 // --- gclidb.Mrnote.nid.Get2
-algo::cstring gclidb::Mrnote_nid_Get(algo::strptr arg) {
-    algo::cstring ret(algo::Pathcomp(arg, ".RR"));
-    return ret;
+algo::strptr gclidb::Mrnote_nid_Get(algo::strptr arg) {
+    return algo::Pathcomp(arg, ".RR");
 }
 
 // --- gclidb.Mrnote.mr.Get
-algo::Smallstr150 gclidb::mr_Get(gclidb::Mrnote& parent) {
-    algo::Smallstr150 ret(algo::Pathcomp(parent.mrnote, ".RL"));
-    return ret;
+algo::strptr gclidb::mr_Get(gclidb::Mrnote& parent) {
+    return algo::Pathcomp(parent.mrnote, ".RL");
 }
 
 // --- gclidb.Mrnote.mr.Get2
-algo::Smallstr150 gclidb::Mrnote_mr_Get(algo::strptr arg) {
-    algo::Smallstr150 ret(algo::Pathcomp(arg, ".RL"));
-    return ret;
+algo::strptr gclidb::Mrnote_mr_Get(algo::strptr arg) {
+    return algo::Pathcomp(arg, ".RL");
 }
 
 // --- gclidb.Mrnote..Concat_mr_nid
@@ -3195,6 +2721,12 @@ bool gclidb::Mrnote_ReadFieldMaybe(gclidb::Mrnote& parent, algo::strptr field, a
         } break;
         case gclidb_FieldId_mr: {
             retval = false;
+        } break;
+        case gclidb_FieldId_resolvable: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.resolvable, strval);
+        } break;
+        case gclidb_FieldId_resolved: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.resolved, strval);
         } break;
         default: {
             retval = false;
@@ -3237,6 +2769,128 @@ void gclidb::Mrnote_Print(gclidb::Mrnote& row, algo::cstring& str) {
 
     algo::cstring_Print(row.author, temp);
     PrintAttrSpaceReset(str,"author", temp);
+
+    algo::cstring_Print(row.resolvable, temp);
+    PrintAttrSpaceReset(str,"resolvable", temp);
+
+    algo::cstring_Print(row.resolved, temp);
+    PrintAttrSpaceReset(str,"resolved", temp);
+}
+
+// --- gclidb.Token.project.Get
+algo::strptr gclidb::project_Get(gclidb::Token& parent) {
+    return algo::Pathcomp(parent.token, ".RL");
+}
+
+// --- gclidb.Token.project.Get2
+algo::strptr gclidb::Token_project_Get(algo::strptr arg) {
+    return algo::Pathcomp(arg, ".RL");
+}
+
+// --- gclidb.Token.iid.Get
+algo::strptr gclidb::iid_Get(gclidb::Token& parent) {
+    return algo::Pathcomp(parent.token, ".RR");
+}
+
+// --- gclidb.Token.iid.Get2
+algo::strptr gclidb::Token_iid_Get(algo::strptr arg) {
+    return algo::Pathcomp(arg, ".RR");
+}
+
+// --- gclidb.Token..Concat_project_iid
+tempstr gclidb::Token_Concat_project_iid( const algo::strptr& project ,const algo::strptr& iid ) {
+    return tempstr() << project <<'.'<< iid ;
+}
+
+// --- gclidb.Token..ReadFieldMaybe
+bool gclidb::Token_ReadFieldMaybe(gclidb::Token& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    gclidb::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case gclidb_FieldId_token: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.token, strval);
+        } break;
+        case gclidb_FieldId_project: {
+            retval = false;
+        } break;
+        case gclidb_FieldId_iid: {
+            retval = false;
+        } break;
+        case gclidb_FieldId_name: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.name, strval);
+        } break;
+        case gclidb_FieldId_active: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.active, strval);
+        } break;
+        case gclidb_FieldId_revoked: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.revoked, strval);
+        } break;
+        case gclidb_FieldId_expires: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.expires, strval);
+        } break;
+        case gclidb_FieldId_scopes: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.scopes, strval);
+        } break;
+        case gclidb_FieldId_secret: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.secret, strval);
+        } break;
+        case gclidb_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- gclidb.Token..ReadStrptrMaybe
+// Read fields of gclidb::Token from an ascii string.
+// The format of the string is an ssim Tuple
+bool gclidb::Token_ReadStrptrMaybe(gclidb::Token &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "gclidb.token") || algo::StripTypeTag(in_str, "gclidb.Token");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && Token_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- gclidb.Token..Print
+// print string representation of ROW to string STR
+// cfmt:gclidb.Token.String  printfmt:Tuple
+void gclidb::Token_Print(gclidb::Token& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "gclidb.token";
+
+    algo::Smallstr50_Print(row.token, temp);
+    PrintAttrSpaceReset(str,"token", temp);
+
+    algo::cstring_Print(row.name, temp);
+    PrintAttrSpaceReset(str,"name", temp);
+
+    algo::cstring_Print(row.active, temp);
+    PrintAttrSpaceReset(str,"active", temp);
+
+    algo::cstring_Print(row.revoked, temp);
+    PrintAttrSpaceReset(str,"revoked", temp);
+
+    algo::cstring_Print(row.expires, temp);
+    PrintAttrSpaceReset(str,"expires", temp);
+
+    algo::cstring_Print(row.scopes, temp);
+    PrintAttrSpaceReset(str,"scopes", temp);
+
+    algo::cstring_Print(row.secret, temp);
+    PrintAttrSpaceReset(str,"secret", temp);
+
+    algo::Comment_Print(row.comment, temp);
+    PrintAttrSpaceReset(str,"comment", temp);
 }
 
 // --- gclidb.User..ReadFieldMaybe

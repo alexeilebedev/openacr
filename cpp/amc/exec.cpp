@@ -74,6 +74,8 @@ void amc::tfunc_Exec_Wait() {
     amc::FFunc& wait = amc::CreateCurFunc();
     Ins(&R, wait.ret  , "void",false);
     Ins(&R, wait.proto, "$name_Wait($Parent)",false);
+    // close the stdin pipe first so the child sees EOF and can exit
+    Ins(&R, wait.body, "algo_lib::Close($_to_stdin);");
     Ins(&R, wait.body, "if ($_pid > 0) {");
     Ins(&R, wait.body, "    int wait_flags = 0;");
     Ins(&R, wait.body, "    int wait_status = 0;");
@@ -87,6 +89,9 @@ void amc::tfunc_Exec_Wait() {
     Ins(&R, wait.body, "        $_pid = 0;");
     Ins(&R, wait.body, "    }");
     Ins(&R, wait.body, "}");
+    // close the read ends; caller must drain them before _Wait to avoid deadlock
+    Ins(&R, wait.body, "algo_lib::Close($_from_stdout);");
+    Ins(&R, wait.body, "algo_lib::Close($_from_stderr);");
 }
 
 
@@ -96,7 +101,7 @@ void amc::tfunc_Exec_Kill() {
     Ins(&R, kill.ret  , "void",false);
     Ins(&R, kill.proto, "$name_Kill($Parent)",false);
     Ins(&R, kill.body, "if ($_pid > 0) {");
-    Ins(&R, kill.body, "    kill($_pid,9);");
+    Ins(&R, kill.body, "    kill($_pgroup ? -$_pid : $_pid,9); // pgroup child dies as a whole group");
     Ins(&R, kill.body, "    $name_Wait($pararg);");
     Ins(&R, kill.body, "}");
 }
@@ -120,16 +125,56 @@ void amc::tfunc_Exec_Start() {
     Ins(&R, start.body, "    tempstr cmdline($name_ToCmdline($pararg));");
     Ins(&R, start.body, "    $_pid = dospawn(Zeroterm($_path),Zeroterm(cmdline),$_timeout,$_fstdin,$_fstdout,$_fstderr);");
     Ins(&R, start.body, "#else");
+    // Create up to 3 pipes before fork (parent keeps one end, child gets the other).
+    // To merge stderr into stdout, set fstdout="|" and fstderr=">&1": stdout is
+    // applied before stderr below, so >&1 duplicates the already-redirected pipe.
+    Ins(&R, start.body, "    int in_pipe[2]  = {-1,-1}; // [0]=child stdin (read), [1]=$_to_stdin (write)");
+    Ins(&R, start.body, "    int out_pipe[2] = {-1,-1}; // [0]=$_from_stdout (read), [1]=child stdout (write)");
+    Ins(&R, start.body, "    int err_pipe[2] = {-1,-1}; // [0]=$_from_stderr (read), [1]=child stderr (write)");
+    Ins(&R, start.body, "    if ($_fstdin  == \"|\" && pipe(in_pipe)  == 0) { $_to_stdin.value    = in_pipe[1];  }");
+    Ins(&R, start.body, "    if ($_fstdout == \"|\" && pipe(out_pipe) == 0) { $_from_stdout.value = out_pipe[0]; }");
+    Ins(&R, start.body, "    if ($_fstderr == \"|\" && pipe(err_pipe) == 0) { $_from_stderr.value = err_pipe[0]; }");
     Ins(&R, start.body, "    $_pid = fork();");
     Ins(&R, start.body, "    if ($_pid == 0) { // child");
     Ins(&R, start.body, "        algo_lib::DieWithParent();");
+    Ins(&R, start.body, "        // inherited signal handlers stay live until exec, so a kill aimed at");
+    Ins(&R, start.body, "        // the child in the fork-to-exec window would run the parent's handler");
+    Ins(&R, start.body, "        // in the child and be consumed instead of killing; restore the default");
+    Ins(&R, start.body, "        // dispositions so the signal does what the sender means");
+    Ins(&R, start.body, "        (void)signal(SIGTERM, SIG_DFL);");
+    Ins(&R, start.body, "        (void)signal(SIGINT , SIG_DFL);");
+    Ins(&R, start.body, "        (void)signal(SIGHUP , SIG_DFL);");
+    Ins(&R, start.body, "        (void)signal(SIGQUIT, SIG_DFL);");
+    Ins(&R, start.body, "        (void)signal(SIGALRM, SIG_DFL);");
+    Ins(&R, start.body, "        if ($_pgroup) {");
+    Ins(&R, start.body, "            // own process group: a kill by the child's pid alone would");
+    Ins(&R, start.body, "            // orphan its descendants alive; the group is one killable unit");
+    Ins(&R, start.body, "            (void)setpgid(0, 0);");
+    Ins(&R, start.body, "        }");
     Ins(&R, start.body, "        if ($_timeout > 0) {");
     Ins(&R, start.body, "            alarm($_timeout);");
     Ins(&R, start.body, "        }");
+    Ins(&R, start.body, "        if ($_memlimitmb > 0) {");
+    Ins(&R, start.body, "            // memory ceiling: soft and hard, so a child that drops");
+    Ins(&R, start.body, "            // privileges cannot raise it; the child sees allocation");
+    Ins(&R, start.body, "            // failure at the limit instead of inviting the OOM killer");
+    Ins(&R, start.body, "            struct rlimit rlim;");
+    Ins(&R, start.body, "            rlim.rlim_cur = rlim_t($_memlimitmb) * 1000000;");
+    Ins(&R, start.body, "            rlim.rlim_max = rlim.rlim_cur;");
+    Ins(&R, start.body, "            (void)setrlimit(RLIMIT_AS, &rlim);");
+    Ins(&R, start.body, "        }");
     // todo: do something smart with ApplyRedirect failures other than cause exec failure?
-    Ins(&R, start.body, "        if (retval==0) retval=algo_lib::ApplyRedirect($_fstdin , 0);");
-    Ins(&R, start.body, "        if (retval==0) retval=algo_lib::ApplyRedirect($_fstdout, 1);");
-    Ins(&R, start.body, "        if (retval==0) retval=algo_lib::ApplyRedirect($_fstderr, 2);");
+    Ins(&R, start.body, "        if (retval==0) retval=algo_lib::ApplyRedirect($_fstdin , 0, in_pipe[0]);");
+    Ins(&R, start.body, "        if (retval==0) retval=algo_lib::ApplyRedirect($_fstdout, 1, out_pipe[1]);");
+    Ins(&R, start.body, "        if (retval==0) retval=algo_lib::ApplyRedirect($_fstderr, 2, err_pipe[1]);");
+    // close every pipe fd in the child; fds 0/1/2 already alias the right ends.
+    // out_pipe[1] may back both fd 1 and fd 2 -- dup2 copied it, so closing it is safe.
+    Ins(&R, start.body, "        if (in_pipe[0]  >= 0) (void)close(in_pipe[0]);");
+    Ins(&R, start.body, "        if (in_pipe[1]  >= 0) (void)close(in_pipe[1]);");
+    Ins(&R, start.body, "        if (out_pipe[0] >= 0) (void)close(out_pipe[0]);");
+    Ins(&R, start.body, "        if (out_pipe[1] >= 0) (void)close(out_pipe[1]);");
+    Ins(&R, start.body, "        if (err_pipe[0] >= 0) (void)close(err_pipe[0]);");
+    Ins(&R, start.body, "        if (err_pipe[1] >= 0) (void)close(err_pipe[1]);");
     Ins(&R, start.body, "        if (retval==0) retval= $name_Execv($pararg);");
     Ins(&R, start.body, "        if (retval != 0) { // if start fails, print error");
     Ins(&R, start.body, "            int err=errno;");
@@ -141,32 +186,28 @@ void amc::tfunc_Exec_Start() {
     Ins(&R, start.body, "        _exit(127); // if failed to start, exit anyway");
     Ins(&R, start.body, "    } else if ($_pid == -1) {");
     Ins(&R, start.body, "        retval = errno; // failed to fork");
+    Ins(&R, start.body, "    } else if ($_pgroup) {");
+    Ins(&R, start.body, "        // mirror the child's setpgid: the group must exist the moment fork");
+    Ins(&R, start.body, "        // returns, or a group kill racing the child's first quantum finds no");
+    Ins(&R, start.body, "        // group, loses the signal, and the unkilled child boots into whatever");
+    Ins(&R, start.body, "        // the killer already tore down.  EACCES -- the child exec'd first, its");
+    Ins(&R, start.body, "        // own setpgid won -- is the benign side of the race.");
+    Ins(&R, start.body, "        (void)setpgid($_pid, $_pid);");
     Ins(&R, start.body, "    }");
+    // parent: close the child-side ends so we hold only our end of each pipe
+    Ins(&R, start.body, "    if (in_pipe[0]  >= 0) (void)close(in_pipe[0]);  // parent keeps write end (to_stdin)");
+    Ins(&R, start.body, "    if (out_pipe[1] >= 0) (void)close(out_pipe[1]); // parent keeps read end (from_stdout)");
+    Ins(&R, start.body, "    if (err_pipe[1] >= 0) (void)close(err_pipe[1]); // parent keeps read end (from_stderr)");
     Ins(&R, start.body, "#endif");
     Ins(&R, start.body, "}");
     Ins(&R, start.body, "$_status = $_pid > 0 ? 0 : -1; // if didn't start, set error status");
     Ins(&R, start.body , "return retval;");
 }
 
-void amc::tfunc_Exec_StartRead() {
-    algo_lib::Replscope &R = amc::_db.genctx.R;
-    amc::FFunc& exec = amc::CreateCurFunc(true);
-    exec.ret = "algo::Fildes";
-    AddArg(exec.proto, "algo_lib::FFildes &read");
-    Ins(&R, exec.body, "int pipefd[2];");
-    Ins(&R, exec.body, "int rc=pipe(pipefd);");
-    Ins(&R, exec.body, "(void)rc;");
-    Ins(&R, exec.body, "read.fd.value = pipefd[0];");
-    Ins(&R, exec.body, "$_fstdout  << \">&\" << pipefd[1];");
-    Ins(&R, exec.body, "$name_Start($pararg);");
-    Ins(&R, exec.body, "(void)close(pipefd[1]);");
-    Ins(&R, exec.body, "return read.fd;");
-}
-
 void amc::tfunc_Exec_Exec() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FFunc& exec = amc::CreateCurFunc();
-    Ins(&R, exec.comment, "Execute subprocess and return exit code");
+    Ins(&R, exec.comment, "Execute subprocess and return its wait() status; decode with algo::WaitStatusToExitCode");
     Ins(&R, exec.ret  , "int",false);
     Ins(&R, exec.proto, "$name_Exec($Parent)",false);
     Ins(&R, exec.body, "$name_Start($pararg);");
@@ -201,13 +242,15 @@ void amc::tfunc_Exec_ToCmdline() {
     Ins(&R, tocmdline.body, "algo::tempstr retval;");
     Ins(&R, tocmdline.body, "retval << $_path << \" \";");
     Ins(&R, tocmdline.body, "command::$cmdname_PrintArgv($_cmd,retval);");
-    Ins(&R, tocmdline.body, "if (ch_N($_fstdin)) {");
+    // Only show file redirects; "|" (pipe) and "<&N"/">&N" (fd dup) are internal
+    // plumbing, not a useful part of the displayed command line.
+    Ins(&R, tocmdline.body, "if (algo_lib::RedirectFileQ($_fstdin)) {");
     Ins(&R, tocmdline.body, "    retval << \" \" << $_fstdin;");
     Ins(&R, tocmdline.body, "}");
-    Ins(&R, tocmdline.body, "if (ch_N($_fstdout)) {");
+    Ins(&R, tocmdline.body, "if (algo_lib::RedirectFileQ($_fstdout)) {");
     Ins(&R, tocmdline.body, "    retval << \" \" << $_fstdout;");
     Ins(&R, tocmdline.body, "}");
-    Ins(&R, tocmdline.body, "if (ch_N($_fstderr)) {");
+    Ins(&R, tocmdline.body, "if (algo_lib::RedirectFileQ($_fstderr)) {");
     Ins(&R, tocmdline.body, "    retval << \" 2\" << $_fstderr;");
     Ins(&R, tocmdline.body, "}");
     Ins(&R, tocmdline.body, "return retval;");
@@ -215,10 +258,11 @@ void amc::tfunc_Exec_ToCmdline() {
 
 void amc::tfunc_Exec_ToArgv() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
-    amc::FField &execfield = *amc::_db.genctx.p_field;
-    bool amc_command = ind_ns_Find(name_Get(*execfield.p_arg)) != NULL;
-
-    amc::FCtype &cmdtype=*amc::_db.genctx.p_field->p_arg;
+    amc::FCtype &cmdtype = *amc::_db.genctx.p_field->p_arg;
+    // True iff the wrapped command struct has a ccmdline record, meaning the
+    // target binary is amc-generated and its ReadArgv understands -name:value.
+    // Otherwise fall back to two-token -name value, which any conventional CLI parses.
+    bool amc_command = cmdtype.c_ccmdline != NULL;
     amc::FFunc& func = CreateCurFunc(true);
     AddRetval(func, "void", "", "");
     AddProtoArg(func, "algo::StringAry&", "args", "");
@@ -281,9 +325,12 @@ void amc::tfunc_Exec_ToArgv() {
     }ind_end;
 
     if (amc_command) {
-        // add verbose flags -- one fewer than current process
+        // add verbose, debug flags -- one fewer than current process
         Ins(&R, func.body,"for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {");
         Ins(&R, func.body,"    ary_Alloc(args) << \"-verbose\";");
+        Ins(&R, func.body,"}");
+        Ins(&R, func.body,"for (int i=1; i < algo_lib::_db.cmdline.debug; ++i) {");
+        Ins(&R, func.body,"    ary_Alloc(args) << \"-debug\";");
         Ins(&R, func.body,"}");
     }
 }
@@ -342,6 +389,24 @@ void amc::NewFieldExec() {
                                             , algo::CppExpr()
                                             , algo::Comment("redirect for stderr")));
 
+        Field_AddChild(field, dmmeta::Field(SubfieldName(field, "to_stdin")
+                                            , "algo.Fildes"
+                                            , dmmeta_Reftype_reftype_Val
+                                            , algo::CppExpr()
+                                            , algo::Comment("write end of stdin pipe when fstdin==\"|\"; closed by _Wait")));
+
+        Field_AddChild(field, dmmeta::Field(SubfieldName(field, "from_stdout")
+                                            , "algo.Fildes"
+                                            , dmmeta_Reftype_reftype_Val
+                                            , algo::CppExpr()
+                                            , algo::Comment("read end of stdout pipe when fstdout==\"|\"; closed by _Wait")));
+
+        Field_AddChild(field, dmmeta::Field(SubfieldName(field, "from_stderr")
+                                            , "algo.Fildes"
+                                            , dmmeta_Reftype_reftype_Val
+                                            , algo::CppExpr()
+                                            , algo::Comment("read end of stderr pipe when fstderr==\"|\"; closed by _Wait")));
+
         Field_AddChild(field, dmmeta::Field(SubfieldName(field, "pid")
                                             , "pid_t"
                                             , dmmeta_Reftype_reftype_Val
@@ -354,10 +419,22 @@ void amc::NewFieldExec() {
                                             , algo::CppExpr("0")
                                             , algo::Comment("optional timeout for child process")));
 
+        Field_AddChild(field, dmmeta::Field(SubfieldName(field, "memlimitmb")
+                                            , "u32"
+                                            , dmmeta_Reftype_reftype_Val
+                                            , algo::CppExpr("0")
+                                            , algo::Comment("optional child memory ceiling MB (10^6): RLIMIT_AS before exec; 0 = leave inherited")));
+
         Field_AddChild(field, dmmeta::Field(SubfieldName(field, "status")
                                             , "i32"
                                             , dmmeta_Reftype_reftype_Val
                                             , algo::CppExpr()
                                             , algo::Comment("last exit status of child process")));
+
+        Field_AddChild(field, dmmeta::Field(SubfieldName(field, "pgroup")
+                                            , "bool"
+                                            , dmmeta_Reftype_reftype_Val
+                                            , algo::CppExpr()
+                                            , algo::Comment("run child in its own process group; _Kill targets the group")));
     }ind_end;
 }

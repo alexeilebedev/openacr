@@ -3,8 +3,7 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
-<!-- dev.mdmark  mdmark:TOC  state:BEG_AUTO  param:Toc -->
+<!-- abt_md.toc_beg -->
 &#128196; [dev.arch - System architecture](/txt/ssimdb/dev/arch.md)<br/>
 &#128196; [dev.badline - Regex of a dubious source code line](/txt/ssimdb/dev/badline.md)<br/>
 &#128196; [dev.builddir - Directory where object files/executables go. Determines compile/link options](/txt/ssimdb/dev/builddir.md)<br/>
@@ -14,6 +13,7 @@
 &#128196; [dev.covfile -](/txt/ssimdb/dev/covfile.md)<br/>
 &#128196; [dev.covline -](/txt/ssimdb/dev/covline.md)<br/>
 &#128196; [dev.covtarget -](/txt/ssimdb/dev/covtarget.md)<br/>
+&#128196; [dev.dbgtarget -](/txt/ssimdb/dev/dbgtarget.md)<br/>
 &#128196; [dev.edaction - acr_ed editing action (only one can exist at a time)](/txt/ssimdb/dev/edaction.md)<br/>
 &#128196; [dev.edacttype - acr_ed editing action type](/txt/ssimdb/dev/edacttype.md)<br/>
 &#128196; [dev.gitfile - File managed by git](/txt/ssimdb/dev/gitfile.md)<br/>
@@ -23,7 +23,6 @@
 &#128196; [dev.include - A site where one file includes another](/txt/ssimdb/dev/include.md)<br/>
 &#128196; [dev.license - Source code license](/txt/ssimdb/dev/license.md)<br/>
 &#128196; [dev.linelim -](/txt/ssimdb/dev/linelim.md)<br/>
-&#128196; [dev.mdmark - invisible markers for markdown files](/txt/ssimdb/dev/mdmark.md)<br/>
 &#128196; [dev.mdsection - Template for updating a markdown file](/txt/ssimdb/dev/mdsection.md)<br/>
 &#128196; [dev.msgfile - File in repo containing messages that should be normalized during CI](/txt/ssimdb/dev/msgfile.md)<br/>
 &#128196; [dev.netproto - Network protocol: add all levels here](/txt/ssimdb/dev/netproto.md)<br/>
@@ -31,12 +30,13 @@
 &#128196; [dev.opt_type - Type of option (used in tool_opt)](/txt/ssimdb/dev/opt_type.md)<br/>
 &#128196; [dev.package - OpenACR package](/txt/ssimdb/dev/package.md)<br/>
 &#128196; [dev.pkgdep - OpenACR Package dependency](/txt/ssimdb/dev/pkgdep.md)<br/>
+&#128196; [dev.pkggen -](/txt/ssimdb/dev/pkggen.md)<br/>
 &#128196; [dev.pkgkey - Keys belonging to the OpenACR package](/txt/ssimdb/dev/pkgkey.md)<br/>
 &#128196; [dev.prototransport - Protocol/transport binding](/txt/ssimdb/dev/prototransport.md)<br/>
 &#128196; [dev.readmefile - File containing documentation](/txt/ssimdb/dev/readmefile.md)<br/>
 &#128196; [dev.readmesort - sorted categories of txt/ *.md files presented in dev.readme](/txt/ssimdb/dev/readmesort.md)<br/>
 &#128196; [dev.rpm -](/txt/ssimdb/dev/rpm.md)<br/>
-&#128196; [dev.sandbox - Registered sandbox](/txt/ssimdb/dev/sandbox.md)<br/>
+&#128196; [dev.sandbox - Registered sandbox: a named, resettable copy of the checkout](/txt/ssimdb/dev/sandbox.md)<br/>
 &#128196; [dev.sbpath - Extra files to copy into the sandbox](/txt/ssimdb/dev/sbpath.md)<br/>
 &#128196; [dev.scriptfile - Known script file](/txt/ssimdb/dev/scriptfile.md)<br/>
 &#128196; [dev.srcfile - Source file or header (key is pathname)](/txt/ssimdb/dev/srcfile.md)<br/>
@@ -52,9 +52,6 @@
 &#128196; [dev.tool_opt - Compiler/linker options to use](/txt/ssimdb/dev/tool_opt.md)<br/>
 &#128196; [dev.transport - Transport layer](/txt/ssimdb/dev/transport.md)<br/>
 &#128196; [dev.uname - List of known unames](/txt/ssimdb/dev/uname.md)<br/>
+&#128196; [dev.uncovfunc - Functions with no test coverage -- every executable line unhit across the suite](/txt/ssimdb/dev/uncovfunc.md)<br/>
 &#128196; [dev.unstablefld - Fields that should be stripped from component test output because they contain timestamps etc.](/txt/ssimdb/dev/unstablefld.md)<br/>
-
-<!-- dev.mdmark  mdmark:TOC  state:END_AUTO  param:Toc -->
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
-
+<!-- abt_md.toc_end -->

@@ -1,0 +1,6 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/bad_csize_alignment.ssim -out_dir: -report:N zzz"
+# eof amc
+amc -> amc.invalid_size  csize:algo_lib.Avx  size:64  alignment:32  comment:"alignment must be a power of 2, at most 16; a larger alignment needs wider NarrowSize headroom"
+amc -> amc.invalid_size  csize:algo_lib.Odd  size:12  alignment:6  comment:"alignment must be a power of 2, at most 16; a larger alignment needs wider NarrowSize headroom"
+amc -> amc.no_output  comment:"no files were modified"
+# exit amc code:1

@@ -1,0 +1,3 @@
+dmmeta.payloadhdr  ctype:ams.MsgHeader  typeoffset:0  typewidth:4  typebig:N  lenoffset:4  lenwidth:4  lenbig:N  lenscale:1  lenextra:0  len:8  comment:""
+dmmeta.payloadhdr  ctype:atf_amc.MsgHdrLT  typeoffset:1  typewidth:1  typebig:N  lenoffset:0  lenwidth:1  lenbig:N  lenscale:1  lenextra:-2  len:2  comment:""
+dmmeta.payloadhdr  ctype:atf_amc.MsgHdrLTScale  typeoffset:1  typewidth:1  typebig:N  lenoffset:0  lenwidth:1  lenbig:N  lenscale:4  lenextra:-2  len:2  comment:""

@@ -43,31 +43,6 @@ lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 acr_my::FDb     acr_my::_db;      // dependency found via dev.targdep
 
-namespace acr_my {
-const char *acr_my_help =
-"acr_my: ACR <-> MariaDB adaptor\n"
-"Usage: acr_my [[-nsdb:]<regx>] [options]\n"
-"    OPTION      TYPE    DFLT    COMMENT\n"
-"    [nsdb]      regx    \"\"      Regx of ssim namespace (dmmeta.nsdb) to select\n"
-"    -in         string  \"data\"  Input directory or filename, - for stdin\n"
-"    -schema     string  \"data\"  Input directory or filename, - for stdin\n"
-"    -fldfunc                    Evaluate fldfunc when printing tuple\n"
-"    -fkey                       Enable foreign key constraints\n"
-"    -e                          Alias for -start -shell -stop\n"
-"    -start                      Start local mysql server\n"
-"    -stop                       Stop local mysql server, saving data\n"
-"    -abort                      Abort local mysql server, losing data\n"
-"    -shell                      Connect to local mysql server\n"
-"    -serv                       Start mysql with TCP/IP service enabled\n"
-"    -verbose    flag            Verbosity level (0..255); alias -v; cumulative\n"
-"    -debug      flag            Debug level (0..255); alias -d; cumulative\n"
-"    -help                       Print help and exit; alias -h\n"
-"    -version                    Print version and exit\n"
-"    -signature                  Show signatures and exit; alias -sig\n"
-;
-
-
-} // namespace acr_my
 namespace acr_my { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
     // func:acr_my.FDb._db.InitReflection
@@ -104,10 +79,10 @@ algo::aryptr<algo::cstring> acr_my::ary_ns_Addary(algo::aryptr<algo::cstring> rh
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("acr_my.tary_alias  field:acr_my.FDb.ary_ns  comment:'alias error: sub-array is being appended to the whole'");
     }
-    int nnew = rhs.n_elems;
+    i64 nnew = rhs.n_elems;
     ary_ns_Reserve(nnew); // reserve space
-    int at = _db.ary_ns_n;
-    for (int i = 0; i < nnew; i++) {
+    i64 at = _db.ary_ns_n;
+    for (i64 i = 0; i < nnew; i++) {
         new (_db.ary_ns_elems + at + i) algo::cstring(rhs[i]);
         _db.ary_ns_n++;
     }
@@ -119,8 +94,8 @@ algo::aryptr<algo::cstring> acr_my::ary_ns_Addary(algo::aryptr<algo::cstring> rh
 // The new element is initialized to a default value
 algo::cstring& acr_my::ary_ns_Alloc() {
     ary_ns_Reserve(1);
-    int n  = _db.ary_ns_n;
-    int at = n;
+    i64 n  = _db.ary_ns_n;
+    i64 at = n;
     algo::cstring *elems = _db.ary_ns_elems;
     new (elems + at) algo::cstring(); // construct new element, default initializer
     _db.ary_ns_n = n+1;
@@ -130,9 +105,9 @@ algo::cstring& acr_my::ary_ns_Alloc() {
 // --- acr_my.FDb.ary_ns.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::cstring& acr_my::ary_ns_AllocAt(int at) {
+algo::cstring& acr_my::ary_ns_AllocAt(i64 at) {
     ary_ns_Reserve(1);
-    int n  = _db.ary_ns_n;
+    i64 n  = _db.ary_ns_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
         FatalErrorExit("acr_my.bad_alloc_at  field:acr_my.FDb.ary_ns  comment:'index out of range'");
     }
@@ -145,12 +120,12 @@ algo::cstring& acr_my::ary_ns_AllocAt(int at) {
 
 // --- acr_my.FDb.ary_ns.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> acr_my::ary_ns_AllocN(int n_elems) {
+algo::aryptr<algo::cstring> acr_my::ary_ns_AllocN(i64 n_elems) {
     ary_ns_Reserve(n_elems);
-    int old_n  = _db.ary_ns_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = _db.ary_ns_n;
+    i64 new_n = old_n + n_elems;
     algo::cstring *elems = _db.ary_ns_elems;
-    for (int i = old_n; i < new_n; i++) {
+    for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) algo::cstring(); // construct new element, default initialize
     }
     _db.ary_ns_n = new_n;
@@ -161,15 +136,15 @@ algo::aryptr<algo::cstring> acr_my::ary_ns_AllocN(int n_elems) {
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::aryptr<algo::cstring> acr_my::ary_ns_AllocNAt(int n_elems, int at) {
+algo::aryptr<algo::cstring> acr_my::ary_ns_AllocNAt(i64 n_elems, i64 at) {
     ary_ns_Reserve(n_elems);
-    int n  = _db.ary_ns_n;
+    i64 n  = _db.ary_ns_n;
     if (UNLIKELY(u64(at) > u64(n))) {
         FatalErrorExit("acr_my.bad_alloc_n_at  field:acr_my.FDb.ary_ns  comment:'index out of range'");
     }
     algo::cstring *elems = _db.ary_ns_elems;
     memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(algo::cstring));
-    for (int i = 0; i < n_elems; i++) {
+    for (i64 i = 0; i < n_elems; i++) {
         new (elems + at + i) algo::cstring(); // construct new element, default initialize
     }
     _db.ary_ns_n = n+n_elems;
@@ -178,8 +153,8 @@ algo::aryptr<algo::cstring> acr_my::ary_ns_AllocNAt(int n_elems, int at) {
 
 // --- acr_my.FDb.ary_ns.Remove
 // Remove item by index. If index outside of range, do nothing.
-void acr_my::ary_ns_Remove(u32 i) {
-    u32 lim = _db.ary_ns_n;
+void acr_my::ary_ns_Remove(u64 i) {
+    u64 lim = _db.ary_ns_n;
     algo::cstring *elems = _db.ary_ns_elems;
     if (i < lim) {
         elems[i].~cstring(); // destroy element
@@ -190,12 +165,11 @@ void acr_my::ary_ns_Remove(u32 i) {
 
 // --- acr_my.FDb.ary_ns.RemoveAll
 void acr_my::ary_ns_RemoveAll() {
-    u32 n = _db.ary_ns_n;
-    while (n > 0) {
-        n -= 1;
-        _db.ary_ns_elems[n].~cstring();
-        _db.ary_ns_n = n;
+    u64 n = _db.ary_ns_n;
+    for (u64 i=0; i<n; i++) {
+        _db.ary_ns_elems[i].~cstring();
     }
+    _db.ary_ns_n = 0;
 }
 
 // --- acr_my.FDb.ary_ns.RemoveLast
@@ -211,10 +185,10 @@ void acr_my::ary_ns_RemoveLast() {
 
 // --- acr_my.FDb.ary_ns.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void acr_my::ary_ns_AbsReserve(int n) {
-    u32 old_max  = _db.ary_ns_max;
-    if (n > i32(old_max)) {
-        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+void acr_my::ary_ns_AbsReserve(i64 n) {
+    u64 old_max  = _db.ary_ns_max;
+    if (n > i64(old_max)) {
+        u64 new_max  = i64_Max(i64_Max(old_max * 2, n), 4);
         void *new_mem = algo_lib::malloc_ReallocMem(_db.ary_ns_elems, old_max * sizeof(algo::cstring), new_max * sizeof(algo::cstring));
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("acr_my.tary_nomem  field:acr_my.FDb.ary_ns  comment:'out of memory'");
@@ -226,12 +200,12 @@ void acr_my::ary_ns_AbsReserve(int n) {
 
 // --- acr_my.FDb.ary_ns.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> acr_my::ary_ns_AllocNVal(int n_elems, const algo::cstring& val) {
+algo::aryptr<algo::cstring> acr_my::ary_ns_AllocNVal(i64 n_elems, const algo::cstring& val) {
     ary_ns_Reserve(n_elems);
-    int old_n  = _db.ary_ns_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = _db.ary_ns_n;
+    i64 new_n = old_n + n_elems;
     algo::cstring *elems = _db.ary_ns_elems;
-    for (int i = old_n; i < new_n; i++) {
+    for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) algo::cstring(val);
     }
     _db.ary_ns_n = new_n;
@@ -255,138 +229,56 @@ bool acr_my::ary_ns_ReadStrptrMaybe(algo::strptr in_str) {
 // --- acr_my.FDb.ary_ns.Insary
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-void acr_my::ary_ns_Insary(algo::aryptr<algo::cstring> rhs, int at) {
+void acr_my::ary_ns_Insary(algo::aryptr<algo::cstring> rhs, i64 at) {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= _db.ary_ns_elems && rhs.elems < _db.ary_ns_elems + _db.ary_ns_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("acr_my.tary_alias  field:acr_my.FDb.ary_ns  comment:'alias error: sub-array is being appended to the whole'");
     }
-    if (UNLIKELY(u64(at) >= u64(_db.ary_ns_elems+1))) {
+    if (UNLIKELY(u64(at) >= u64(_db.ary_ns_n+1))) {
         FatalErrorExit("acr_my.bad_insary  field:acr_my.FDb.ary_ns  comment:'index out of range'");
     }
-    int nnew = rhs.n_elems;
-    int nmove = _db.ary_ns_n - at;
+    i64 nnew = rhs.n_elems;
+    i64 nmove = _db.ary_ns_n - at;
     ary_ns_Reserve(nnew); // reserve space
-    for (int i = nmove-1; i >=0 ; --i) {
+    for (i64 i = nmove-1; i >=0 ; --i) {
         new (_db.ary_ns_elems + at + nnew + i) algo::cstring(_db.ary_ns_elems[at + i]);
         _db.ary_ns_elems[at + i].~cstring(); // destroy element
     }
-    for (int i = 0; i < nnew; ++i) {
+    for (i64 i = 0; i < nnew; ++i) {
         new (_db.ary_ns_elems + at + i) algo::cstring(rhs[i]);
     }
     _db.ary_ns_n += nnew;
 }
 
+// --- acr_my.FDb.ary_ns.RemRegion
+// Delete a range of elements
+// Remove region from the middle of the array
+// The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
+// If N is negative, nothing is removed.
+void acr_my::ary_ns_RemRegion(i64 beg, i64 n) {
+    i64 end = i64_Min(beg+n, _db.ary_ns_n);
+    beg = i64_Max(beg,0);
+    n = end-beg;
+    if (n>0) {
+        for (i64 i=beg; i<end; i++) {
+            _db.ary_ns_elems[i].~cstring();
+        }
+        memmove(_db.ary_ns_elems+beg, _db.ary_ns_elems+end, sizeof(algo::cstring) * (_db.ary_ns_n-end));
+        _db.ary_ns_n -= n;
+    }
+}
+
 // --- acr_my.FDb._db.ReadArgv
-// Read argc,argv directly into the fields of the command line(s)
-// The following fields are updated:
-//     acr_my.FDb.cmdline
-//     algo_lib.FDb.cmdline
+// Read argc,argv into the fields of acr_my.FDb.cmdline (and any base command line)
+// via acr_my_ReadArgv; then apply -help/-version and load floadtuples input.
 void acr_my::ReadArgv() {
     command::acr_my &cmd = acr_my::_db.cmdline;
-    algo_lib::Cmdline &base = algo_lib::_db.cmdline;
-    int needarg=-1;// unknown
-    int argidx=1;// skip process name
-    int anonidx=0;
-    algo::strptr nextanon = command::acr_my_GetAnon(cmd, anonidx);
-    tempstr err;
-    algo::strptr attrname;
-    bool isanon=false; // true if attrname is anonfld (positional)
-    algo_lib::FieldId baseattrid;
-    command::FieldId attrid;
-    bool endopt=false;
-    int whichns=0;// which namespace does the current attribute belong to
-    for (; argidx < algo_lib::_db.argc; argidx++) {
-        algo::strptr arg = algo_lib::_db.argv[argidx];
-        algo::strptr attrval;
-        algo::strptr dfltval;
-        bool haveval=false;
-        bool dash=elems_N(arg)>1 && arg.elems[0]=='-'; // a single dash is not an option
-        // this attribute is a value
-        if (endopt || needarg>0 || !dash) {
-            attrval=arg;
-            haveval=true;
-        } else {
-            // this attribute is a field name (with - or --)
-            // or a -- by itself
-            bool dashdash = elems_N(arg) >= 2 && arg.elems[1]=='-';
-            int skip = int(dash) + dashdash;
-            attrname=ch_RestFrom(arg,skip);
-            if (skip==2 && elems_N(arg)==2) {
-                endopt=true;
-                continue;// nothing else to do here
-            }
-            // parse "-a:B" arg into attrname,attrvalue
-            algo::i32_Range colon = TFind(attrname,':');
-            if (colon.beg < colon.end) {
-                attrval=ch_RestFrom(attrname,colon.end);
-                attrname=ch_FirstN(attrname,colon.beg);
-                haveval=true;
-            }
-            // look up which command (this one or the base) contains the field
-            whichns=0;
-            needarg=-1;
-            // look up parameter information in base namespace (needarg will be -1 if lookup fails)
-            if (algo_lib::FieldId_ReadStrptrMaybe(baseattrid,attrname)) {
-                needarg = algo_lib::Cmdline_NArgs(baseattrid,dfltval,&isanon);
-            }
-            if (needarg<0) {
-                whichns=1;
-                // look up parameter information in this namespace (needarg will be -1 if lookup fails)
-                if (command::FieldId_ReadStrptrMaybe(attrid,attrname)) {
-                    needarg = command::acr_my_NArgs(attrid,dfltval,&isanon);
-                }
-            }
-            if (attrval == "" && dfltval != "") {
-                attrval=dfltval;
-                haveval=true;
-            }
-            if (needarg<0) {
-                err<<"acr_my: unknown option "<<Keyval("value",arg)<<eol;
-            } else {
-                if (isanon) {
-                    if (attrname == nextanon) { // treat named anon (positional) argument as unnamed
-                        attrname = ""; // treat it as unnamed
-                    } else if (nextanon != "") { // disallow out-of-order anon (positional) args
-                        err<<"acr_my: error at "<<algo::strptr_ToSsim(arg)<<": must be preceded by [-"<<nextanon<<"]"<<eol;
-                    }
-                }
-            }
-        }
-        // look up anon field name based on index
-        // anon fields are only allowed in the leaf ns, never base
-        if (ch_N(attrname) == 0) {
-            attrname = nextanon;
-            nextanon = command::acr_my_GetAnon(cmd, ++anonidx);
-            command::FieldId_ReadStrptrMaybe(attrid,attrname);
-            whichns=1;
-        }
-        if (ch_N(attrname) == 0) {
-            err << "acr_my: too many arguments. error at "<<algo::strptr_ToSsim(arg)<<eol;
-        } else if (haveval) {
-            // read value into currently selected arg
-            bool ret=false;
-            // it's already known which namespace is consuming the args,
-            // so directly go there
-            if (whichns == 0) {
-                ret=algo_lib::Cmdline_ReadFieldMaybe(base, attrname, attrval);
-            }
-            if (whichns==1) {
-                ret=command::acr_my_ReadFieldMaybe(cmd, attrname, attrval);
-                switch(attrid.value) {
-                    default:break;
-                }
-            }
-            if (!ret) {
-                err<<"acr_my: error in "
-                <<Keyval("option",attrname)
-                <<Keyval("value",attrval)<<eol;
-            }
-            needarg--;
-            if (needarg <= 0) {
-                attrname="";// forget which argument was being filled
-            }
-        }
+    algo::cstring err;
+    algo::StringAry args;
+    for (int argidx=1; argidx < algo_lib::_db.argc; argidx++) {// skip process name
+        ary_Alloc(args) = algo_lib::_db.argv[argidx];
     }
+    command::acr_my_ReadArgv(cmd, args, err);
     bool dohelp = false;
     bool doexit=false;
     if (algo_lib::_db.cmdline.help) {
@@ -409,9 +301,7 @@ void acr_my::ReadArgv() {
     algo_lib_logcat_debug.enabled = algo_lib::_db.cmdline.debug;
     algo_lib_logcat_verbose.enabled = algo_lib::_db.cmdline.verbose > 0;
     algo_lib_logcat_verbose2.enabled = algo_lib::_db.cmdline.verbose > 1;
-    if (!dohelp) {
-    }
-    // dmmeta.floadtuples:acr_my.FDb.cmdline
+    // dmmeta.floadtuples:command.acr_my.schema
     if (!dohelp && err=="") {
         algo_lib::ResetErrtext();
         if (!acr_my::LoadTuplesMaybe(cmd.schema,true)) {
@@ -424,7 +314,7 @@ void acr_my::ReadArgv() {
         doexit=true;
     }
     if (dohelp) {
-        prlog(acr_my_help);
+        prlog(command::acr_my_help);
     }
     if (doexit) {
         _exit(algo_lib::_db.exit_code);
@@ -451,7 +341,13 @@ void acr_my::Step() {
 // --- acr_my.FDb._db.InitReflection
 // Load statically available data into tables, register tables and database.
 static void acr_my::InitReflection() {
-    algo_lib::imdb_InsertMaybe(algo::Imdb("acr_my", acr_my::InsertStrptrMaybe, NULL, acr_my::MainLoop, NULL, algo::Comment()));
+    algo_lib::FImdb &row = algo_lib::imdb_Alloc();
+    row.imdb               = "acr_my";
+    row.InsertStrptrMaybe  = acr_my::InsertStrptrMaybe;
+    row.RemoveStrptrMaybe  = acr_my::RemoveStrptrMaybe;
+    row.Step               = NULL;
+    row.MainLoop           = acr_my::MainLoop;
+    algo_lib::imdb_XrefMaybe(row);
 
     algo::Imtable t_trace;
     t_trace.imtable         = "acr_my.trace";
@@ -571,6 +467,33 @@ void acr_my::Steps() {
     algo_lib::Step(); // dependent namespace specified via (dev.targdep)
 }
 
+// --- acr_my.FDb._db.RemoveStrptrMaybe
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+bool acr_my::RemoveStrptrMaybe(algo::strptr str) {
+    bool retval = true;
+    acr_my::TableId table_id(-1);
+    value_SetStrptrMaybe(table_id, algo::GetTypeTag(str));
+    switch (value_GetEnum(table_id)) {
+        case acr_my_TableId_dmmeta_Nsdb: { // finput:acr_my.FDb.nsdb
+            // finput acr_my.FDb.nsdb: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case acr_my_TableId_dmmeta_Ssimfile: { // finput:acr_my.FDb.ssimfile
+            // finput acr_my.FDb.ssimfile: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        default:
+        retval = false;
+        break;
+    } //switch
+    return retval;
+}
+
 // --- acr_my.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
@@ -625,7 +548,7 @@ void* acr_my::nsdb_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     acr_my::FNsdb*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.nsdb_lary[bsr];
         if (!lev) {
             lev=(acr_my::FNsdb*)algo_lib::malloc_AllocMem(sizeof(acr_my::FNsdb) * (u64(1)<<bsr));
@@ -634,7 +557,7 @@ void* acr_my::nsdb_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.nsdb_n = i32(new_nelems);
+        _db.nsdb_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -647,7 +570,7 @@ void acr_my::nsdb_RemoveLast() {
     if (n > 0) {
         n -= 1;
         nsdb_qFind(u64(n)).~FNsdb();
-        _db.nsdb_n = i32(n);
+        _db.nsdb_n = i64(n);
     }
 }
 
@@ -713,7 +636,7 @@ void* acr_my::ssimfile_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     acr_my::FSsimfile*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.ssimfile_lary[bsr];
         if (!lev) {
             lev=(acr_my::FSsimfile*)algo_lib::malloc_AllocMem(sizeof(acr_my::FSsimfile) * (u64(1)<<bsr));
@@ -722,7 +645,7 @@ void* acr_my::ssimfile_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.ssimfile_n = i32(new_nelems);
+        _db.ssimfile_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -734,8 +657,7 @@ void acr_my::ssimfile_RemoveLast() {
     u64 n = _db.ssimfile_n;
     if (n > 0) {
         n -= 1;
-        ssimfile_qFind(u64(n)).~FSsimfile();
-        _db.ssimfile_n = i32(n);
+        _db.ssimfile_n = i64(n);
     }
 }
 
@@ -821,7 +743,7 @@ void acr_my::FDb_Uninit() {
 // Copy fields out of row
 void acr_my::nsdb_CopyOut(acr_my::FNsdb &row, dmmeta::Nsdb &out) {
     out.ns = row.ns;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- acr_my.FNsdb.base.CopyIn
@@ -846,21 +768,18 @@ void acr_my::ssimfile_CopyIn(acr_my::FSsimfile &row, dmmeta::Ssimfile &in) {
 }
 
 // --- acr_my.FSsimfile.ssimns.Get
-algo::Smallstr16 acr_my::ssimns_Get(acr_my::FSsimfile& ssimfile) {
-    algo::Smallstr16 ret(algo::Pathcomp(ssimfile.ssimfile, ".LL"));
-    return ret;
+algo::strptr acr_my::ssimns_Get(acr_my::FSsimfile& ssimfile) {
+    return algo::Pathcomp(ssimfile.ssimfile, ".LL");
 }
 
 // --- acr_my.FSsimfile.ns.Get
-algo::Smallstr16 acr_my::ns_Get(acr_my::FSsimfile& ssimfile) {
-    algo::Smallstr16 ret(algo::Pathcomp(ssimfile.ssimfile, ".LL"));
-    return ret;
+algo::strptr acr_my::ns_Get(acr_my::FSsimfile& ssimfile) {
+    return algo::Pathcomp(ssimfile.ssimfile, ".LL");
 }
 
 // --- acr_my.FSsimfile.name.Get
-algo::Smallstr50 acr_my::name_Get(acr_my::FSsimfile& ssimfile) {
-    algo::Smallstr50 ret(algo::Pathcomp(ssimfile.ssimfile, ".RR"));
-    return ret;
+algo::strptr acr_my::name_Get(acr_my::FSsimfile& ssimfile) {
+    return algo::Pathcomp(ssimfile.ssimfile, ".RR");
 }
 
 // --- acr_my.FieldId.value.ToCstr
@@ -935,7 +854,7 @@ bool acr_my::FieldId_ReadStrptrMaybe(acr_my::FieldId &parent, algo::strptr in_st
 // --- acr_my.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:acr_my.FieldId.String  printfmt:Raw
-void acr_my::FieldId_Print(acr_my::FieldId& row, algo::cstring& str) {
+void acr_my::FieldId_Print(acr_my::FieldId row, algo::cstring& str) {
     acr_my::value_Print(row, str);
 }
 
@@ -1030,7 +949,7 @@ bool acr_my::TableId_ReadStrptrMaybe(acr_my::TableId &parent, algo::strptr in_st
 // --- acr_my.TableId..Print
 // print string representation of ROW to string STR
 // cfmt:acr_my.TableId.String  printfmt:Raw
-void acr_my::TableId_Print(acr_my::TableId& row, algo::cstring& str) {
+void acr_my::TableId_Print(acr_my::TableId row, algo::cstring& str) {
     acr_my::value_Print(row, str);
 }
 

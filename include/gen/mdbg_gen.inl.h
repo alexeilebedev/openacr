@@ -52,7 +52,7 @@ inline bool mdbg::c_builddir_EmptyQ(mdbg::FCfg& cfg) {
 
 // --- mdbg.FCfg.c_builddir.Find
 // Look up row by row id. Return NULL if out of range
-inline mdbg::FBuilddir* mdbg::c_builddir_Find(mdbg::FCfg& cfg, u32 t) {
+inline mdbg::FBuilddir* mdbg::c_builddir_Find(mdbg::FCfg& cfg, u64 t) {
     mdbg::FBuilddir *retval = NULL;
     u64 idx = t;
     u64 lim = cfg.c_builddir_n;
@@ -70,14 +70,14 @@ inline algo::aryptr<mdbg::FBuilddir*> mdbg::c_builddir_Getary(mdbg::FCfg& cfg) {
 
 // --- mdbg.FCfg.c_builddir.N
 // Return number of items in the pointer array
-inline i32 mdbg::c_builddir_N(const mdbg::FCfg& cfg) {
+inline i64 mdbg::c_builddir_N(const mdbg::FCfg& cfg) {
     return cfg.c_builddir_n;
 }
 
 // --- mdbg.FCfg.c_builddir.RemoveAll
 // Empty the index. (The rows are not deleted)
 inline void mdbg::c_builddir_RemoveAll(mdbg::FCfg& cfg) {
-    for (u32 i = 0; i < cfg.c_builddir_n; i++) {
+    for (u64 i = 0; i < cfg.c_builddir_n; i++) {
         // mark all elements as not-in-array
         cfg.c_builddir_elems[i]->cfg_c_builddir_in_ary = false;
     }
@@ -86,7 +86,7 @@ inline void mdbg::c_builddir_RemoveAll(mdbg::FCfg& cfg) {
 
 // --- mdbg.FCfg.c_builddir.qFind
 // Return reference without bounds checking
-inline mdbg::FBuilddir& mdbg::c_builddir_qFind(mdbg::FCfg& cfg, u32 idx) {
+inline mdbg::FBuilddir& mdbg::c_builddir_qFind(mdbg::FCfg& cfg, u64 idx) {
     return *cfg.c_builddir_elems[idx];
 }
 
@@ -179,7 +179,7 @@ inline mdbg::FCfg* mdbg::cfg_Last() {
 
 // --- mdbg.FDb.cfg.N
 // Return number of items in the pool
-inline i32 mdbg::cfg_N() {
+inline i64 mdbg::cfg_N() {
     return _db.cfg_n;
 }
 
@@ -233,7 +233,7 @@ inline mdbg::FBuilddir* mdbg::builddir_Last() {
 
 // --- mdbg.FDb.builddir.N
 // Return number of items in the pool
-inline i32 mdbg::builddir_N() {
+inline i64 mdbg::builddir_N() {
     return _db.builddir_n;
 }
 
@@ -245,6 +245,48 @@ inline mdbg::FBuilddir& mdbg::builddir_qFind(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     return _db.builddir_lary[bsr][index];
+}
+
+// --- mdbg.FDb.dbgtarget.EmptyQ
+// Return true if index is empty
+inline bool mdbg::dbgtarget_EmptyQ() {
+    return _db.dbgtarget_n == 0;
+}
+
+// --- mdbg.FDb.dbgtarget.Find
+// Look up row by row id. Return NULL if out of range
+inline mdbg::FDbgtarget* mdbg::dbgtarget_Find(u64 t) {
+    mdbg::FDbgtarget *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.dbgtarget_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.dbgtarget_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- mdbg.FDb.dbgtarget.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline mdbg::FDbgtarget* mdbg::dbgtarget_Last() {
+    return dbgtarget_Find(u64(_db.dbgtarget_n-1));
+}
+
+// --- mdbg.FDb.dbgtarget.N
+// Return number of items in the pool
+inline i64 mdbg::dbgtarget_N() {
+    return _db.dbgtarget_n;
+}
+
+// --- mdbg.FDb.dbgtarget.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline mdbg::FDbgtarget& mdbg::dbgtarget_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.dbgtarget_lary[bsr][index];
 }
 
 // --- mdbg.FDb.cfg_curs.Reset
@@ -295,6 +337,35 @@ inline void mdbg::_db_builddir_curs_Next(_db_builddir_curs &curs) {
 // item access
 inline mdbg::FBuilddir& mdbg::_db_builddir_curs_Access(_db_builddir_curs &curs) {
     return builddir_qFind(u64(curs.index));
+}
+
+// --- mdbg.FDb.dbgtarget_curs.Reset
+// cursor points to valid item
+inline void mdbg::_db_dbgtarget_curs_Reset(_db_dbgtarget_curs &curs, mdbg::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- mdbg.FDb.dbgtarget_curs.ValidQ
+// cursor points to valid item
+inline bool mdbg::_db_dbgtarget_curs_ValidQ(_db_dbgtarget_curs &curs) {
+    return curs.index < _db.dbgtarget_n;
+}
+
+// --- mdbg.FDb.dbgtarget_curs.Next
+// proceed to next item
+inline void mdbg::_db_dbgtarget_curs_Next(_db_dbgtarget_curs &curs) {
+    curs.index++;
+}
+
+// --- mdbg.FDb.dbgtarget_curs.Access
+// item access
+inline mdbg::FDbgtarget& mdbg::_db_dbgtarget_curs_Access(_db_dbgtarget_curs &curs) {
+    return dbgtarget_qFind(u64(curs.index));
+}
+
+// --- mdbg.FDbgtarget..Ctor
+inline  mdbg::FDbgtarget::FDbgtarget() {
 }
 
 // --- mdbg.FieldId.value.GetEnum

@@ -28,8 +28,8 @@
 
 // --- lib_git_FieldIdEnum
 
-enum lib_git_FieldIdEnum {        // lib_git.FieldId.value
-     lib_git_FieldId_value   = 0
+enum lib_git_FieldIdEnum {    // lib_git.FieldId.value
+     lib_git_FieldId_value
 };
 
 enum { lib_git_FieldIdEnum_N = 1 };
@@ -52,7 +52,6 @@ struct trace { // lib_git.trace
     inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // print string representation of ROW to string STR
 // cfmt:lib_git.trace.String  printfmt:Tuple
 // func:lib_git.trace..Print
@@ -63,7 +62,6 @@ void                 trace_Print(lib_git::trace& row, algo::cstring& str) __attr
 struct FDb { // lib_git.FDb: In-memory database for lib_git
     lib_git::trace   trace;   //
 };
-
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 // func:lib_git.FDb._db.InsertStrptrMaybe
@@ -88,6 +86,10 @@ bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __att
 // Calls Step function of dependencies
 // func:lib_git.FDb._db.Steps
 void                 Steps();
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+// func:lib_git.FDb._db.RemoveStrptrMaybe
+bool                 RemoveStrptrMaybe(algo::strptr str);
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:lib_git.FDb._db.XrefMaybe
@@ -113,7 +115,6 @@ struct FieldId { // lib_git.FieldId: Field read helper
     inline               FieldId(lib_git_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:lib_git.FieldId.value.GetEnum
 inline lib_git_FieldIdEnum value_GetEnum(const lib_git::FieldId& parent) __attribute__((nothrow));
@@ -151,7 +152,7 @@ inline void          FieldId_Init(lib_git::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:lib_git.FieldId.String  printfmt:Raw
 // func:lib_git.FieldId..Print
-void                 FieldId_Print(lib_git::FieldId& row, algo::cstring& str) __attribute__((nothrow));
+void                 FieldId_Print(lib_git::FieldId row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace lib_git { // gen:ns_func
 // func:lib_git...StaticCheck

@@ -3,17 +3,21 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Internals](#internals)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Operation](#operation)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Examples](#examples)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
-&#128196; [ssimfilt - Internals](/txt/exe/ssimfilt/internals.md)<br/>
+<!-- abt_md.toc_end -->
 
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
+### Internals
+<a href="#internals"></a>
+&#128196; [ssimfilt - Internals](/txt/gen/ssimfilt/ssimfilt.md)<br/>
 
 ### Syntax
 <a href="#syntax"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Syntax -->
 ```
 ssimfilt: Tuple utility
 Usage: ssimfilt [[-typetag:]<regx>] [[-match:]<string>] [options]
@@ -23,30 +27,86 @@ Usage: ssimfilt [[-typetag:]<regx>] [[-match:]<string>] [options]
     [match]...  string          (filter) Select input tuple if value of key matches value (regx:regx)
     -field...   string          (project) Select fields for output (regx)
     -format     enum    ssim    Output format for selected tuples (ssim|csv|field|cmd|json|stablefld|table|mdtable)
-                                    ssim  Print selected/filtered tuples
-                                    csv  First tuple determines header. CSV quoting is used. Newlines are removed
-                                    field  Print selected fields, one per line
-                                    cmd  Emit command for each tuple (implied if -cmd is set)
-                                    json  Print JSON object for each tuple
-                                    stablefld  Filter unstable fields, leave the rest intact
-                                    table  ASCII table for each group of tuples
-                                    mdtable  ASCII Markdown table with | separators for each group of tuples
     -t                          Alias for -format:table
     -cmd        string  ""      Command to output
+    -f          string  ""      Alias for -field:<f> -format:field
     -verbose    flag            Verbosity level (0..255); alias -v; cumulative
     -debug      flag            Debug level (0..255); alias -d; cumulative
     -help                       Print help and exit; alias -h
     -version                    Print version and exit
     -signature                  Show signatures and exit; alias -sig
+```
+
+### Operation
+<a href="#operation"></a>
+Ssimfilt reads stdin, filtering and outputing tuples. It is schema-less, requiring only ssim encoding
+of attributes on stdin. "Ssimfilt a b:c d:e ..." matches only tuples with typetag "a", and where attribute "b" matches "c"
+and "d" matches "e". a,b,c,d,e are all regular expressions. If typetag is "^", it is locked to the first typetag
+that appears in the input and doesn't change after that.
+
+This is is for input & filtering. For output, user can choose which fields to select for printing with "-field:..."
+and the format. With `-format:ssim` (default), ssim tuples are printed back. With `-format:field`, raw field values are printed.
+With `-cmd:...`, ssimfilt makes all tuple attributes available to the specified command as variables; pipe the output
+of ssimfilt through bash to execute arbitrary command for each tuple.
+
+### Examples
+<a href="#examples"></a>
+#### Example: Format ssim input as table
+<a href="#example-format-ssim-input-as-table"></a>
+
+```
+inline-command: acr field:command.ssimfilt.% | head | ssimfilt ^ -t
+FIELD                     ARG           REFTYPE  DFLT    COMMENT
+command.ssimfilt.in       algo.cstring  Val      "data"  Input directory or filename, - for stdin
+command.ssimfilt.typetag  algo.cstring  RegxSql  "%"     (filter) Match typetag. ^=first encountered typetag
+command.ssimfilt.match    algo.cstring  Tary             (filter) Select input tuple if value of key matches value (regx:regx)
+command.ssimfilt.field    algo.cstring  Tary             (project) Select fields for output (regx)
+command.ssimfilt.format   u8            Val      0       Output format for selected tuples
+command.ssimfilt.t        bool          Val      false   Alias for -format:table
+command.ssimfilt.cmd      algo.cstring  Val      ""      Command to output
+command.ssimfilt.f        algo.cstring  Val      ""      Alias for -field:<f> -format:field
 
 ```
 
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Syntax -->
+#### Example: Extract field
+<a href="#example-extract-field"></a>
+
+```
+inline-command: echo $'blah a:b\nblah a:c' | ssimfilt -field a -format field
+b
+c
+```
+
+#### Example: Convert ssim to Json
+<a href="#example-convert-ssim-to-json"></a>
+
+```
+inline-command: echo $'blah a:b\nblah a:c' | ssimfilt  -format json
+{"@type":"blah","a":"b"}
+{"@type":"blah","a":"c"}
+```
+
+#### Example: Convert ssim to Markdown table
+<a href="#example-convert-ssim-to-markdown-table"></a>
+
+```
+inline-command: echo $'blah a:b\nblah a:c' | ssimfilt  -format mdtable
+|A|
+|---|
+|b|
+|c|
+
+```
+
+#### Example: Find other uses in documentation
+<a href="#example-find-other-uses-in-documentation"></a>
+
+```
+grep -R 'command.*ssimfilt' txt/
+```
 
 ### Options
 <a href="#options"></a>
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Options -->
 #### -in -- Input directory or filename, - for stdin
 <a href="#-in"></a>
 
@@ -92,11 +152,11 @@ E.g.
 acr field | ssimfilt -cmd 'echo $field/$arg' | bash
 ```
 
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
+#### -f -- Alias for -field:<f> -format:field
+<a href="#-f"></a>
 
 ### Inputs
 <a href="#inputs"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
 `ssimfilt` takes the following tables on input:
 |Ssimfile|Comment|
 |---|---|
@@ -114,6 +174,3 @@ acr field | ssimfilt -cmd 'echo $field/$arg' | bash
 |[dmmeta.substr](/txt/ssimdb/dmmeta/substr.md)|Specify that the field value is computed from a substring of another field|
 |[dev.unstablefld](/txt/ssimdb/dev/unstablefld.md)|Fields that should be stripped from component test output because they contain timestamps etc.|
 |[dev.unstablefld](/txt/ssimdb/dev/unstablefld.md)|Fields that should be stripped from component test output because they contain timestamps etc.|
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
-

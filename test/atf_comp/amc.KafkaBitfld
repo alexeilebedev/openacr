@@ -1,0 +1,28 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/kafka_bitfld.ssim -out_dir: -report:N 'ktst.Rec..KafkaEncode|ktst.Rec..KafkaDecode'"
+# eof amc
+amc -> // --- ktst.Rec..KafkaEncode
+amc -> void ktst::Rec_KafkaEncode(algo::ByteAry& buf, ktst::Rec& parent, i16 version) {
+amc ->     if (version>=0) {
+amc ->         bool flexible(false);
+amc ->         (void)flexible; // avoid unused variable
+amc ->         lib_kafka::EncodeU32(buf,val_Get(parent));
+amc ->     }
+amc -> }
+amc -> // --- ktst.Rec..KafkaDecode
+amc -> bool ktst::Rec_KafkaDecode(algo::memptr& buf, ktst::Rec& parent, i16 version) {
+amc ->     bool ok = true;
+amc ->     bool present(false);
+amc ->     (void)present; // avoid unused variable
+amc ->     u32 len(0);
+amc ->     (void)len; // avoid unused variable
+amc ->     ok = version>=0;
+amc ->     if (ok) {
+amc ->         bool flexible(false);
+amc ->         (void)flexible; // avoid unused variable
+amc ->         u32 val_tmp = u32();
+amc ->         ok = ok && lib_kafka::DecodeU32(buf,val_tmp);
+amc ->         val_Set(parent, val_tmp);
+amc ->     }
+amc ->     return ok;
+amc -> }
+# exit amc code:0

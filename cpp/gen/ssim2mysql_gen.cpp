@@ -46,31 +46,6 @@ algo_lib::FDb     algo_lib::_db;      // dependency found via dev.targdep
 lib_mysql::FDb    lib_mysql::_db;     // dependency found via dev.targdep
 ssim2mysql::FDb   ssim2mysql::_db;    // dependency found via dev.targdep
 
-namespace ssim2mysql {
-const char *ssim2mysql_help =
-"ssim2mysql: Ssim -> mysql\n"
-"Usage: ssim2mysql [options]\n"
-"    OPTION      TYPE    DFLT    COMMENT\n"
-"    -url        string  \"\"      URL of mysql server. user:pass@hostb or sock://filename; Empty -> stdout\n"
-"    -data_dir   string  \"data\"  Load dmmeta info from this directory\n"
-"    -maxpacket  int     100000  Max Mysql packet size\n"
-"    -replace            Y       use REPLACE INTO instead of INSERT INTO\n"
-"    -trunc                      Truncate target table\n"
-"    -dry_run                    Print SQL commands to the stdout\n"
-"    -fldfunc                    create columns for fldfuncs\n"
-"    -in         string  \"-\"     Input directory or filename, - for stdin\n"
-"    -db         string  \"\"      Optional database name\n"
-"    -createdb                   Emit CREATE DATABASE code for namespace specified with <db>\n"
-"    -fkey                       Enable foreign key constraints (uses InnoDB storage engine)\n"
-"    -verbose    flag            Verbosity level (0..255); alias -v; cumulative\n"
-"    -debug      flag            Debug level (0..255); alias -d; cumulative\n"
-"    -help                       Print help and exit; alias -h\n"
-"    -version                    Print version and exit\n"
-"    -signature                  Show signatures and exit; alias -sig\n"
-;
-
-
-} // namespace ssim2mysql
 namespace ssim2mysql { // gen:ns_print_proto
     // func:ssim2mysql.FDb.ns.InputMaybe
     static bool          ns_InputMaybe(dmmeta::Ns &elem) __attribute__((nothrow));
@@ -85,6 +60,8 @@ namespace ssim2mysql { // gen:ns_print_proto
     static void          InitReflection();
     // func:ssim2mysql.FDb.substr.InputMaybe
     static bool          substr_InputMaybe(dmmeta::Substr &elem) __attribute__((nothrow));
+    // func:ssim2mysql.FDb.cppfunc.InputMaybe
+    static bool          cppfunc_InputMaybe(dmmeta::Cppfunc &elem) __attribute__((nothrow));
     // func:ssim2mysql.FDb.ssimfile.InputMaybe
     static bool          ssimfile_InputMaybe(dmmeta::Ssimfile &elem) __attribute__((nothrow));
     // First element of index changed.
@@ -135,15 +112,13 @@ void ssim2mysql::FCmd_Print(ssim2mysql::FCmd& row, algo::cstring& str) {
 }
 
 // --- ssim2mysql.FColumn.name.Get
-algo::Smallstr50 ssim2mysql::name_Get(ssim2mysql::FColumn& column) {
-    algo::Smallstr50 ret(algo::Pathcomp(column.column, ".RR"));
-    return ret;
+algo::strptr ssim2mysql::name_Get(ssim2mysql::FColumn& column) {
+    return algo::Pathcomp(column.column, ".RR");
 }
 
 // --- ssim2mysql.FColumn.ssimfile.Get
-algo::Smallstr50 ssim2mysql::ssimfile_Get(ssim2mysql::FColumn& column) {
-    algo::Smallstr50 ret(algo::Pathcomp(column.column, ".RL"));
-    return ret;
+algo::strptr ssim2mysql::ssimfile_Get(ssim2mysql::FColumn& column) {
+    return algo::Pathcomp(column.column, ".RL");
 }
 
 // --- ssim2mysql.FColumn..Concat_ssimfile_name
@@ -184,11 +159,58 @@ void ssim2mysql::FColumn_Print(ssim2mysql::FColumn& row, algo::cstring& str) {
     PrintAttrSpaceReset(str,"ssimfile_c_column_in_ary", temp);
 }
 
+// --- ssim2mysql.FCppfunc.msghdr.CopyOut
+// Copy fields out of row
+void ssim2mysql::cppfunc_CopyOut(ssim2mysql::FCppfunc &row, dmmeta::Cppfunc &out) {
+    out.field = row.field;
+    out.expr = row.expr;
+    out.print = row.print;
+    out.set = row.set;
+}
+
+// --- ssim2mysql.FCppfunc.msghdr.CopyIn
+// Copy fields in to row
+void ssim2mysql::cppfunc_CopyIn(ssim2mysql::FCppfunc &row, dmmeta::Cppfunc &in) {
+    row.field = in.field;
+    row.expr = in.expr;
+    row.print = in.print;
+    row.set = in.set;
+}
+
+// --- ssim2mysql.FCppfunc..Uninit
+void ssim2mysql::FCppfunc_Uninit(ssim2mysql::FCppfunc& cppfunc) {
+    ssim2mysql::FCppfunc &row = cppfunc; (void)row;
+    ssim2mysql::FField* p_field = ssim2mysql::ind_field_Find(row.field);
+    if (p_field)  {
+        c_cppfunc_Remove(*p_field, row);// remove cppfunc from index c_cppfunc
+    }
+}
+
+// --- ssim2mysql.FCppfunc..Print
+// print string representation of ROW to string STR
+// cfmt:ssim2mysql.FCppfunc.String  printfmt:Tuple
+void ssim2mysql::FCppfunc_Print(ssim2mysql::FCppfunc& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "ssim2mysql.FCppfunc";
+
+    algo::Smallstr150_Print(row.field, temp);
+    PrintAttrSpaceReset(str,"field", temp);
+
+    algo::CppExpr_Print(row.expr, temp);
+    PrintAttrSpaceReset(str,"expr", temp);
+
+    bool_Print(row.print, temp);
+    PrintAttrSpaceReset(str,"print", temp);
+
+    bool_Print(row.set, temp);
+    PrintAttrSpaceReset(str,"set", temp);
+}
+
 // --- ssim2mysql.FCtype.msghdr.CopyOut
 // Copy fields out of row
 void ssim2mysql::ctype_CopyOut(ssim2mysql::FCtype &row, dmmeta::Ctype &out) {
     out.ctype = row.ctype;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- ssim2mysql.FCtype.msghdr.CopyIn
@@ -199,24 +221,22 @@ void ssim2mysql::ctype_CopyIn(ssim2mysql::FCtype &row, dmmeta::Ctype &in) {
 }
 
 // --- ssim2mysql.FCtype.ns.Get
-algo::Smallstr16 ssim2mysql::ns_Get(ssim2mysql::FCtype& ctype) {
-    algo::Smallstr16 ret(algo::Pathcomp(ctype.ctype, ".RL"));
-    return ret;
+algo::strptr ssim2mysql::ns_Get(ssim2mysql::FCtype& ctype) {
+    return algo::Pathcomp(ctype.ctype, ".RL");
 }
 
 // --- ssim2mysql.FCtype.name.Get
-algo::Smallstr100 ssim2mysql::name_Get(ssim2mysql::FCtype& ctype) {
-    algo::Smallstr100 ret(algo::Pathcomp(ctype.ctype, ".RR"));
-    return ret;
+algo::strptr ssim2mysql::name_Get(ssim2mysql::FCtype& ctype) {
+    return algo::Pathcomp(ctype.ctype, ".RR");
 }
 
 // --- ssim2mysql.FCtype.c_field.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 void ssim2mysql::c_field_Insert(ssim2mysql::FCtype& ctype, ssim2mysql::FField& row) {
     if (!row.ctype_c_field_in_ary) {
         c_field_Reserve(ctype, 1);
-        u32 n  = ctype.c_field_n++;
+        u64 n  = ctype.c_field_n++;
         ctype.c_field_elems[n] = &row;
         row.ctype_c_field_in_ary = true;
     }
@@ -235,15 +255,15 @@ bool ssim2mysql::c_field_InsertMaybe(ssim2mysql::FCtype& ctype, ssim2mysql::FFie
 // --- ssim2mysql.FCtype.c_field.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void ssim2mysql::c_field_Remove(ssim2mysql::FCtype& ctype, ssim2mysql::FField& row) {
-    int n = ctype.c_field_n;
+    i64 n = ctype.c_field_n;
     if (bool_Update(row.ctype_c_field_in_ary,false)) {
         ssim2mysql::FField* *elems = ctype.c_field_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = n-1; i>=0; i--) {
+        for (i64 i = n-1; i>=0; i--) {
             ssim2mysql::FField* elem = elems[i]; // fetch element
             if (elem == &row) {
-                int j = i + 1;
+                i64 j = i + 1;
                 size_t nbytes = sizeof(ssim2mysql::FField*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
                 ctype.c_field_n = n - 1;
@@ -255,12 +275,12 @@ void ssim2mysql::c_field_Remove(ssim2mysql::FCtype& ctype, ssim2mysql::FField& r
 
 // --- ssim2mysql.FCtype.c_field.Reserve
 // Reserve space in index for N more elements;
-void ssim2mysql::c_field_Reserve(ssim2mysql::FCtype& ctype, u32 n) {
-    u32 old_max = ctype.c_field_max;
+void ssim2mysql::c_field_Reserve(ssim2mysql::FCtype& ctype, u64 n) {
+    u64 old_max = ctype.c_field_max;
     if (UNLIKELY(ctype.c_field_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(ssim2mysql::FField*);
-        u32 new_size = new_max * sizeof(ssim2mysql::FField*);
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, ctype.c_field_n + n), 4);
+        u64 old_size = old_max * sizeof(ssim2mysql::FField*);
+        u64 new_size = new_max * sizeof(ssim2mysql::FField*);
         void *new_mem = algo_lib::malloc_ReallocMem(ctype.c_field_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("ssim2mysql.out_of_memory  field:ssim2mysql.FCtype.c_field");
@@ -289,7 +309,7 @@ void ssim2mysql::FCtype_Print(ssim2mysql::FCtype& row, algo::cstring& str) {
     algo::Smallstr100_Print(row.ctype, temp);
     PrintAttrSpaceReset(str,"ctype", temp);
 
-    algo::Comment_Print(row.comment, temp);
+    algo::cstring_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);
 
     u64_PrintHex(u64(row.c_sqltype), temp, 8, true);
@@ -489,7 +509,7 @@ void* ssim2mysql::ns_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     ssim2mysql::FNs*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.ns_lary[bsr];
         if (!lev) {
             lev=(ssim2mysql::FNs*)algo_lib::malloc_AllocMem(sizeof(ssim2mysql::FNs) * (u64(1)<<bsr));
@@ -498,7 +518,7 @@ void* ssim2mysql::ns_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.ns_n = i32(new_nelems);
+        _db.ns_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -511,7 +531,7 @@ void ssim2mysql::ns_RemoveLast() {
     if (n > 0) {
         n -= 1;
         ns_qFind(u64(n)).~FNs();
-        _db.ns_n = i32(n);
+        _db.ns_n = i64(n);
     }
 }
 
@@ -586,7 +606,7 @@ void* ssim2mysql::ctype_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     ssim2mysql::FCtype*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.ctype_lary[bsr];
         if (!lev) {
             lev=(ssim2mysql::FCtype*)algo_lib::malloc_AllocMem(sizeof(ssim2mysql::FCtype) * (u64(1)<<bsr));
@@ -595,7 +615,7 @@ void* ssim2mysql::ctype_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.ctype_n = i32(new_nelems);
+        _db.ctype_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -608,7 +628,7 @@ void ssim2mysql::ctype_RemoveLast() {
     if (n > 0) {
         n -= 1;
         ctype_qFind(u64(n)).~FCtype();
-        _db.ctype_n = i32(n);
+        _db.ctype_n = i64(n);
     }
 }
 
@@ -692,7 +712,7 @@ void* ssim2mysql::field_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     ssim2mysql::FField*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.field_lary[bsr];
         if (!lev) {
             lev=(ssim2mysql::FField*)algo_lib::malloc_AllocMem(sizeof(ssim2mysql::FField) * (u64(1)<<bsr));
@@ -701,7 +721,7 @@ void* ssim2mysql::field_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.field_n = i32(new_nelems);
+        _db.field_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -714,7 +734,7 @@ void ssim2mysql::field_RemoveLast() {
     if (n > 0) {
         n -= 1;
         field_qFind(u64(n)).~FField();
-        _db.field_n = i32(n);
+        _db.field_n = i64(n);
     }
 }
 
@@ -811,7 +831,7 @@ void* ssim2mysql::sqltype_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     ssim2mysql::FSqltype*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.sqltype_lary[bsr];
         if (!lev) {
             lev=(ssim2mysql::FSqltype*)algo_lib::malloc_AllocMem(sizeof(ssim2mysql::FSqltype) * (u64(1)<<bsr));
@@ -820,7 +840,7 @@ void* ssim2mysql::sqltype_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.sqltype_n = i32(new_nelems);
+        _db.sqltype_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -833,7 +853,7 @@ void ssim2mysql::sqltype_RemoveLast() {
     if (n > 0) {
         n -= 1;
         sqltype_qFind(u64(n)).~FSqltype();
-        _db.sqltype_n = i32(n);
+        _db.sqltype_n = i64(n);
     }
 }
 
@@ -998,7 +1018,7 @@ void* ssim2mysql::column_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     ssim2mysql::FColumn*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.column_lary[bsr];
         if (!lev) {
             lev=(ssim2mysql::FColumn*)algo_lib::malloc_AllocMem(sizeof(ssim2mysql::FColumn) * (u64(1)<<bsr));
@@ -1007,7 +1027,7 @@ void* ssim2mysql::column_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.column_n = i32(new_nelems);
+        _db.column_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1019,7 +1039,7 @@ void ssim2mysql::column_RemoveAll() {
     for (u64 n = _db.column_n; n>0; ) {
         n--;
         column_qFind(u64(n)).~FColumn(); // destroy last element
-        _db.column_n = i32(n);
+        _db.column_n = i64(n);
     }
 }
 
@@ -1030,7 +1050,7 @@ void ssim2mysql::column_RemoveLast() {
     if (n > 0) {
         n -= 1;
         column_qFind(u64(n)).~FColumn();
-        _db.column_n = i32(n);
+        _db.column_n = i64(n);
     }
 }
 
@@ -1062,99 +1082,16 @@ bool ssim2mysql::column_XrefMaybe(ssim2mysql::FColumn &row) {
 }
 
 // --- ssim2mysql.FDb._db.ReadArgv
-// Read argc,argv directly into the fields of the command line(s)
-// The following fields are updated:
-//     ssim2mysql.FDb.cmdline
-//     algo_lib.FDb.cmdline
+// Read argc,argv into the fields of ssim2mysql.FDb.cmdline (and any base command line)
+// via ssim2mysql_ReadArgv; then apply -help/-version and load floadtuples input.
 void ssim2mysql::ReadArgv() {
     command::ssim2mysql &cmd = ssim2mysql::_db.cmdline;
-    algo_lib::Cmdline &base = algo_lib::_db.cmdline;
-    int needarg=-1;// unknown
-    int argidx=1;// skip process name
-    tempstr err;
-    algo::strptr attrname;
-    bool isanon=false; // true if attrname is anonfld (positional)
-    algo_lib::FieldId baseattrid;
-    command::FieldId attrid;
-    bool endopt=false;
-    int whichns=0;// which namespace does the current attribute belong to
-    for (; argidx < algo_lib::_db.argc; argidx++) {
-        algo::strptr arg = algo_lib::_db.argv[argidx];
-        algo::strptr attrval;
-        algo::strptr dfltval;
-        bool haveval=false;
-        bool dash=elems_N(arg)>1 && arg.elems[0]=='-'; // a single dash is not an option
-        // this attribute is a value
-        if (endopt || needarg>0 || !dash) {
-            attrval=arg;
-            haveval=true;
-        } else {
-            // this attribute is a field name (with - or --)
-            // or a -- by itself
-            bool dashdash = elems_N(arg) >= 2 && arg.elems[1]=='-';
-            int skip = int(dash) + dashdash;
-            attrname=ch_RestFrom(arg,skip);
-            if (skip==2 && elems_N(arg)==2) {
-                endopt=true;
-                continue;// nothing else to do here
-            }
-            // parse "-a:B" arg into attrname,attrvalue
-            algo::i32_Range colon = TFind(attrname,':');
-            if (colon.beg < colon.end) {
-                attrval=ch_RestFrom(attrname,colon.end);
-                attrname=ch_FirstN(attrname,colon.beg);
-                haveval=true;
-            }
-            // look up which command (this one or the base) contains the field
-            whichns=0;
-            needarg=-1;
-            // look up parameter information in base namespace (needarg will be -1 if lookup fails)
-            if (algo_lib::FieldId_ReadStrptrMaybe(baseattrid,attrname)) {
-                needarg = algo_lib::Cmdline_NArgs(baseattrid,dfltval,&isanon);
-            }
-            if (needarg<0) {
-                whichns=1;
-                // look up parameter information in this namespace (needarg will be -1 if lookup fails)
-                if (command::FieldId_ReadStrptrMaybe(attrid,attrname)) {
-                    needarg = command::ssim2mysql_NArgs(attrid,dfltval,&isanon);
-                }
-            }
-            if (attrval == "" && dfltval != "") {
-                attrval=dfltval;
-                haveval=true;
-            }
-            if (needarg<0) {
-                err<<"ssim2mysql: unknown option "<<Keyval("value",arg)<<eol;
-            } else {
-            }
-        }
-        if (ch_N(attrname) == 0) {
-            err << "ssim2mysql: too many arguments. error at "<<algo::strptr_ToSsim(arg)<<eol;
-        } else if (haveval) {
-            // read value into currently selected arg
-            bool ret=false;
-            // it's already known which namespace is consuming the args,
-            // so directly go there
-            if (whichns == 0) {
-                ret=algo_lib::Cmdline_ReadFieldMaybe(base, attrname, attrval);
-            }
-            if (whichns==1) {
-                ret=command::ssim2mysql_ReadFieldMaybe(cmd, attrname, attrval);
-                switch(attrid.value) {
-                    default:break;
-                }
-            }
-            if (!ret) {
-                err<<"ssim2mysql: error in "
-                <<Keyval("option",attrname)
-                <<Keyval("value",attrval)<<eol;
-            }
-            needarg--;
-            if (needarg <= 0) {
-                attrname="";// forget which argument was being filled
-            }
-        }
+    algo::cstring err;
+    algo::StringAry args;
+    for (int argidx=1; argidx < algo_lib::_db.argc; argidx++) {// skip process name
+        ary_Alloc(args) = algo_lib::_db.argv[argidx];
     }
+    command::ssim2mysql_ReadArgv(cmd, args, err);
     bool dohelp = false;
     bool doexit=false;
     if (algo_lib::_db.cmdline.help) {
@@ -1177,9 +1114,7 @@ void ssim2mysql::ReadArgv() {
     algo_lib_logcat_debug.enabled = algo_lib::_db.cmdline.debug;
     algo_lib_logcat_verbose.enabled = algo_lib::_db.cmdline.verbose > 0;
     algo_lib_logcat_verbose2.enabled = algo_lib::_db.cmdline.verbose > 1;
-    if (!dohelp) {
-    }
-    // dmmeta.floadtuples:ssim2mysql.FDb.cmdline
+    // dmmeta.floadtuples:command.ssim2mysql.data_dir
     if (!dohelp && err=="") {
         algo_lib::ResetErrtext();
         if (!ssim2mysql::LoadTuplesMaybe(cmd.data_dir,true)) {
@@ -1192,7 +1127,7 @@ void ssim2mysql::ReadArgv() {
         doexit=true;
     }
     if (dohelp) {
-        prlog(ssim2mysql_help);
+        prlog(command::ssim2mysql_help);
     }
     if (doexit) {
         _exit(algo_lib::_db.exit_code);
@@ -1221,7 +1156,13 @@ void ssim2mysql::Step() {
 // --- ssim2mysql.FDb._db.InitReflection
 // Load statically available data into tables, register tables and database.
 static void ssim2mysql::InitReflection() {
-    algo_lib::imdb_InsertMaybe(algo::Imdb("ssim2mysql", ssim2mysql::InsertStrptrMaybe, ssim2mysql::Step, ssim2mysql::MainLoop, NULL, algo::Comment()));
+    algo_lib::FImdb &row = algo_lib::imdb_Alloc();
+    row.imdb               = "ssim2mysql";
+    row.InsertStrptrMaybe  = ssim2mysql::InsertStrptrMaybe;
+    row.RemoveStrptrMaybe  = ssim2mysql::RemoveStrptrMaybe;
+    row.Step               = ssim2mysql::Step;
+    row.MainLoop           = ssim2mysql::MainLoop;
+    algo_lib::imdb_XrefMaybe(row);
 
     algo::Imtable t_trace;
     t_trace.imtable         = "ssim2mysql.trace";
@@ -1235,7 +1176,7 @@ static void ssim2mysql::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'ssim2mysql.Input'  signature:'d41a6705fe7e51637203614b4b01fcef04566513'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'ssim2mysql.Input'  signature:'906d764cfa013a17db141585d7de939510d81943'");
 }
 
 // --- ssim2mysql.FDb._db.InsertStrptrMaybe
@@ -1276,6 +1217,12 @@ bool ssim2mysql::InsertStrptrMaybe(algo::strptr str) {
             retval = retval && substr_InputMaybe(elem);
             break;
         }
+        case ssim2mysql_TableId_dmmeta_Cppfunc: { // finput:ssim2mysql.FDb.cppfunc
+            dmmeta::Cppfunc elem;
+            retval = dmmeta::Cppfunc_ReadStrptrMaybe(elem, str);
+            retval = retval && cppfunc_InputMaybe(elem);
+            break;
+        }
         case ssim2mysql_TableId_dmmeta_Ssimfile: { // finput:ssim2mysql.FDb.ssimfile
             dmmeta::Ssimfile elem;
             retval = dmmeta::Ssimfile_ReadStrptrMaybe(elem, str);
@@ -1307,6 +1254,7 @@ bool ssim2mysql::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && ssim2mysql::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ssimfile"),recursive);
         retval = retval && ssim2mysql::LoadTuplesFile(algo::SsimFname(root,"dmmeta.sqltype"),recursive);
         retval = retval && ssim2mysql::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
+        retval = retval && ssim2mysql::LoadTuplesFile(algo::SsimFname(root,"dmmeta.cppfunc"),recursive);
     } else {
         algo_lib::AppendErrtext("path", root);
         algo_lib::AppendErrtext("comment", "Wrong working directory?");
@@ -1368,6 +1316,63 @@ bool ssim2mysql::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
 void ssim2mysql::Steps() {
     ssim2mysql::Step(); // dependent namespace specified via (dev.targdep)
     algo_lib::Step(); // dependent namespace specified via (dev.targdep)
+}
+
+// --- ssim2mysql.FDb._db.RemoveStrptrMaybe
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+bool ssim2mysql::RemoveStrptrMaybe(algo::strptr str) {
+    bool retval = true;
+    ssim2mysql::TableId table_id(-1);
+    value_SetStrptrMaybe(table_id, algo::GetTypeTag(str));
+    switch (value_GetEnum(table_id)) {
+        case ssim2mysql_TableId_dmmeta_Ns: { // finput:ssim2mysql.FDb.ns
+            // finput ssim2mysql.FDb.ns: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case ssim2mysql_TableId_dmmeta_Ctype: { // finput:ssim2mysql.FDb.ctype
+            // finput ssim2mysql.FDb.ctype: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case ssim2mysql_TableId_dmmeta_Field: { // finput:ssim2mysql.FDb.field
+            // finput ssim2mysql.FDb.field: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case ssim2mysql_TableId_dmmeta_Sqltype: { // finput:ssim2mysql.FDb.sqltype
+            // finput ssim2mysql.FDb.sqltype: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case ssim2mysql_TableId_dmmeta_Substr: { // finput:ssim2mysql.FDb.substr
+            // finput ssim2mysql.FDb.substr: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case ssim2mysql_TableId_dmmeta_Cppfunc: { // finput:ssim2mysql.FDb.cppfunc
+            // finput ssim2mysql.FDb.cppfunc: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case ssim2mysql_TableId_dmmeta_Ssimfile: { // finput:ssim2mysql.FDb.ssimfile
+            // finput ssim2mysql.FDb.ssimfile: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        default:
+        retval = false;
+        break;
+    } //switch
+    return retval;
 }
 
 // --- ssim2mysql.FDb._db.XrefMaybe
@@ -1629,7 +1634,7 @@ void ssim2mysql::ind_ctype_AbsReserve(int n) {
 // --- ssim2mysql.FDb.ind_field.Find
 // Find row by key. Return NULL if not found.
 ssim2mysql::FField* ssim2mysql::ind_field_Find(const algo::strptr& key) {
-    u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_field_buckets_n - 1);
+    u32 index = algo::Smallstr150_Hash(0, key) & (_db.ind_field_buckets_n - 1);
     ssim2mysql::FField *ret = _db.ind_field_buckets_elems[index];
     for (; ret && !((*ret).field == key); ret = ret->ind_field_next) {
     }
@@ -1666,7 +1671,7 @@ ssim2mysql::FField& ssim2mysql::ind_field_GetOrCreate(const algo::strptr& key) {
 bool ssim2mysql::ind_field_InsertMaybe(ssim2mysql::FField& row) {
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_field_next == (ssim2mysql::FField*)-1)) {// check if in hash already
-        row.ind_field_hashval = algo::Smallstr100_Hash(0, row.field);
+        row.ind_field_hashval = algo::Smallstr150_Hash(0, row.field);
         ind_field_Reserve(1);
         u32 index = row.ind_field_hashval & (_db.ind_field_buckets_n - 1);
         ssim2mysql::FField* *prev = &_db.ind_field_buckets_elems[index];
@@ -1796,7 +1801,7 @@ void* ssim2mysql::substr_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     ssim2mysql::FSubstr*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.substr_lary[bsr];
         if (!lev) {
             lev=(ssim2mysql::FSubstr*)algo_lib::malloc_AllocMem(sizeof(ssim2mysql::FSubstr) * (u64(1)<<bsr));
@@ -1805,7 +1810,7 @@ void* ssim2mysql::substr_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.substr_n = i32(new_nelems);
+        _db.substr_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1818,7 +1823,7 @@ void ssim2mysql::substr_RemoveLast() {
     if (n > 0) {
         n -= 1;
         substr_qFind(u64(n)).~FSubstr();
-        _db.substr_n = i32(n);
+        _db.substr_n = i64(n);
     }
 }
 
@@ -1850,6 +1855,112 @@ bool ssim2mysql::substr_XrefMaybe(ssim2mysql::FSubstr &row) {
         }
     }
     // substr: save pointer to field
+    if (true) { // user-defined insert condition
+        row.p_field = p_field;
+    }
+    return retval;
+}
+
+// --- ssim2mysql.FDb.cppfunc.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+ssim2mysql::FCppfunc& ssim2mysql::cppfunc_Alloc() {
+    ssim2mysql::FCppfunc* row = cppfunc_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("ssim2mysql.out_of_mem  field:ssim2mysql.FDb.cppfunc  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- ssim2mysql.FDb.cppfunc.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+ssim2mysql::FCppfunc* ssim2mysql::cppfunc_AllocMaybe() {
+    ssim2mysql::FCppfunc *row = (ssim2mysql::FCppfunc*)cppfunc_AllocMem();
+    if (row) {
+        new (row) ssim2mysql::FCppfunc; // call constructor
+    }
+    return row;
+}
+
+// --- ssim2mysql.FDb.cppfunc.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+ssim2mysql::FCppfunc* ssim2mysql::cppfunc_InsertMaybe(const dmmeta::Cppfunc &value) {
+    ssim2mysql::FCppfunc *row = &cppfunc_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    cppfunc_CopyIn(*row,const_cast<dmmeta::Cppfunc&>(value));
+    bool ok = cppfunc_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        cppfunc_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- ssim2mysql.FDb.cppfunc.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* ssim2mysql::cppfunc_AllocMem() {
+    u64 new_nelems     = _db.cppfunc_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    ssim2mysql::FCppfunc*  lev   = NULL;
+    if (bsr < 36) {
+        lev = _db.cppfunc_lary[bsr];
+        if (!lev) {
+            lev=(ssim2mysql::FCppfunc*)algo_lib::malloc_AllocMem(sizeof(ssim2mysql::FCppfunc) * (u64(1)<<bsr));
+            _db.cppfunc_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.cppfunc_n = i64(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- ssim2mysql.FDb.cppfunc.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void ssim2mysql::cppfunc_RemoveLast() {
+    u64 n = _db.cppfunc_n;
+    if (n > 0) {
+        n -= 1;
+        cppfunc_qFind(u64(n)).~FCppfunc();
+        _db.cppfunc_n = i64(n);
+    }
+}
+
+// --- ssim2mysql.FDb.cppfunc.InputMaybe
+static bool ssim2mysql::cppfunc_InputMaybe(dmmeta::Cppfunc &elem) {
+    bool retval = true;
+    retval = cppfunc_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- ssim2mysql.FDb.cppfunc.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool ssim2mysql::cppfunc_XrefMaybe(ssim2mysql::FCppfunc &row) {
+    bool retval = true;
+    (void)row;
+    ssim2mysql::FField* p_field = ssim2mysql::ind_field_Find(row.field);
+    if (UNLIKELY(!p_field)) {
+        algo_lib::ResetErrtext() << "ssim2mysql.bad_xref  index:ssim2mysql.FDb.ind_field" << Keyval("key", row.field);
+        return false;
+    }
+    // insert cppfunc into index c_cppfunc
+    if (true) { // user-defined insert condition
+        bool success = c_cppfunc_InsertMaybe(*p_field, row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "ssim2mysql.duplicate_key  xref:ssim2mysql.FField.c_cppfunc"; // check for duplicate key
+            return false;
+        }
+    }
+    // cppfunc: save pointer to field
     if (true) { // user-defined insert condition
         row.p_field = p_field;
     }
@@ -1902,7 +2013,7 @@ void* ssim2mysql::ssimfile_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     ssim2mysql::FSsimfile*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.ssimfile_lary[bsr];
         if (!lev) {
             lev=(ssim2mysql::FSsimfile*)algo_lib::malloc_AllocMem(sizeof(ssim2mysql::FSsimfile) * (u64(1)<<bsr));
@@ -1911,7 +2022,7 @@ void* ssim2mysql::ssimfile_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.ssimfile_n = i32(new_nelems);
+        _db.ssimfile_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1924,7 +2035,7 @@ void ssim2mysql::ssimfile_RemoveLast() {
     if (n > 0) {
         n -= 1;
         ssimfile_qFind(u64(n)).~FSsimfile();
-        _db.ssimfile_n = i32(n);
+        _db.ssimfile_n = i64(n);
     }
 }
 
@@ -2378,6 +2489,23 @@ ssim2mysql::FSsimfile* ssim2mysql::zd_ssimfile_RemoveFirst() {
     return row;
 }
 
+// --- ssim2mysql.FDb.zd_ssimfile.InsertBefore
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+void ssim2mysql::zd_ssimfile_InsertBefore(ssim2mysql::FSsimfile& row, ssim2mysql::FSsimfile* before) {
+    if (!zd_ssimfile_InLlistQ(row) && &row != before) {
+        ssim2mysql::FSsimfile* next = before;
+        ssim2mysql::FSsimfile* prev = next ? next->zd_ssimfile_prev : _db.zd_ssimfile_tail;
+        row.zd_ssimfile_next = next;
+        row.zd_ssimfile_prev = prev;
+        ssim2mysql::FSsimfile **prev_link_a = &prev->zd_ssimfile_next;
+        ssim2mysql::FSsimfile **prev_link_b = &_db.zd_ssimfile_head;
+        *(prev ? prev_link_a : prev_link_b) = &row;
+        ssim2mysql::FSsimfile **next_link_a = &next->zd_ssimfile_prev;
+        ssim2mysql::FSsimfile **next_link_b = &_db.zd_ssimfile_tail;
+        *(next ? next_link_a : next_link_b) = &row;
+    }
+}
+
 // --- ssim2mysql.FDb.cd_input_line.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
 void ssim2mysql::cd_input_line_Insert(ssim2mysql::FInput& row) {
@@ -2607,6 +2735,17 @@ void ssim2mysql::FDb_Init() {
         _db.substr_lary[i]  = substr_first;
         substr_first    += 1ULL<<i;
     }
+    // initialize LAry cppfunc (ssim2mysql.FDb.cppfunc)
+    _db.cppfunc_n = 0;
+    memset(_db.cppfunc_lary, 0, sizeof(_db.cppfunc_lary)); // zero out all level pointers
+    ssim2mysql::FCppfunc* cppfunc_first = (ssim2mysql::FCppfunc*)algo_lib::malloc_AllocMem(sizeof(ssim2mysql::FCppfunc) * (u64(1)<<4));
+    if (!cppfunc_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.cppfunc_lary[i]  = cppfunc_first;
+        cppfunc_first    += 1ULL<<i;
+    }
     // initialize LAry ssimfile (ssim2mysql.FDb.ssimfile)
     _db.ssimfile_n = 0;
     memset(_db.ssimfile_lary, 0, sizeof(_db.ssimfile_lary)); // zero out all level pointers
@@ -2651,6 +2790,9 @@ void ssim2mysql::FDb_Uninit() {
     // ssim2mysql.FDb.ssimfile.Uninit (Lary)  //
     // skip destruction in global scope
 
+    // ssim2mysql.FDb.cppfunc.Uninit (Lary)  //
+    // skip destruction in global scope
+
     // ssim2mysql.FDb.substr.Uninit (Lary)  //
     // skip destruction in global scope
 
@@ -2689,7 +2831,7 @@ void ssim2mysql::field_CopyOut(ssim2mysql::FField &row, dmmeta::Field &out) {
     out.arg = row.arg;
     out.reftype = row.reftype;
     out.dflt = row.dflt;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- ssim2mysql.FField.msghdr.CopyIn
@@ -2703,21 +2845,18 @@ void ssim2mysql::field_CopyIn(ssim2mysql::FField &row, dmmeta::Field &in) {
 }
 
 // --- ssim2mysql.FField.ctype.Get
-algo::Smallstr100 ssim2mysql::ctype_Get(ssim2mysql::FField& field) {
-    algo::Smallstr100 ret(algo::Pathcomp(field.field, ".RL"));
-    return ret;
+algo::strptr ssim2mysql::ctype_Get(ssim2mysql::FField& field) {
+    return algo::Pathcomp(field.field, ".RL");
 }
 
 // --- ssim2mysql.FField.ns.Get
-algo::Smallstr16 ssim2mysql::ns_Get(ssim2mysql::FField& field) {
-    algo::Smallstr16 ret(algo::Pathcomp(field.field, ".RL.RL"));
-    return ret;
+algo::strptr ssim2mysql::ns_Get(ssim2mysql::FField& field) {
+    return algo::Pathcomp(field.field, ".RL.RL");
 }
 
 // --- ssim2mysql.FField.name.Get
-algo::Smallstr50 ssim2mysql::name_Get(ssim2mysql::FField& field) {
-    algo::Smallstr50 ret(algo::Pathcomp(field.field, ".RR"));
-    return ret;
+algo::strptr ssim2mysql::name_Get(ssim2mysql::FField& field) {
+    return algo::Pathcomp(field.field, ".RR");
 }
 
 // --- ssim2mysql.FField..Init
@@ -2726,6 +2865,7 @@ void ssim2mysql::FField_Init(ssim2mysql::FField& field) {
     field.reftype = algo::strptr("Val");
     field.p_ctype = NULL;
     field.p_arg = NULL;
+    field.c_cppfunc = NULL;
     field.c_substr = NULL;
     field.select = bool(false);
     field.is_pkeyref = bool(false);
@@ -2751,7 +2891,7 @@ void ssim2mysql::FField_Print(ssim2mysql::FField& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "ssim2mysql.FField";
 
-    algo::Smallstr100_Print(row.field, temp);
+    algo::Smallstr150_Print(row.field, temp);
     PrintAttrSpaceReset(str,"field", temp);
 
     algo::Smallstr100_Print(row.arg, temp);
@@ -2763,8 +2903,11 @@ void ssim2mysql::FField_Print(ssim2mysql::FField& row, algo::cstring& str) {
     algo::CppExpr_Print(row.dflt, temp);
     PrintAttrSpaceReset(str,"dflt", temp);
 
-    algo::Comment_Print(row.comment, temp);
+    algo::cstring_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);
+
+    u64_PrintHex(u64(row.c_cppfunc), temp, 8, true);
+    PrintAttrSpaceReset(str,"c_cppfunc", temp);
 
     u64_PrintHex(u64(row.c_substr), temp, 8, true);
     PrintAttrSpaceReset(str,"c_substr", temp);
@@ -2813,9 +2956,9 @@ void ssim2mysql::in_buf_EndRead(ssim2mysql::FInput& input) {
 // The message is found by looking for delimiter '\n'.
 // The return value is an aryptr. If ret.elems is non-NULL, the message is valid (possibly empty).
 // If ret.elems is NULL, no message can be extracted from buffer.
-// The returned aryptr excludes the trailing deliminter.
-// SkipMsg will skip both the line and the deliminter.
-// A partial line at the end of input is NOT returned (TODO?)
+// The returned aryptr excludes the trailing delimiter.
+// SkipMsg will skip both the line and the delimiter.
+// A partial line at the end of input is NOT returned.
 // 
 algo::aryptr<char> ssim2mysql::in_buf_GetMsg(ssim2mysql::FInput& input) {
     algo::aryptr<char> ret;
@@ -2960,7 +3103,7 @@ void ssim2mysql::in_buf_SkipMsg(ssim2mysql::FInput& input) {
 
 // --- ssim2mysql.FInput.in_buf.WriteAll
 // Attempt to write buffer contents to fbuf, return success
-// Write bytes to the buffer. If the entire block is written, return true,
+// Write bytes to the buffer. If the entire block is accepted, return true,
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
 // 
@@ -2984,13 +3127,13 @@ bool ssim2mysql::in_buf_WriteAll(ssim2mysql::FInput& input, u8 *in, i32 in_n) {
 
 // --- ssim2mysql.FInput.in_buf.WriteReserve
 // Write buffer contents to fbuf, reallocate as needed
-// Write bytes to the buffer. The entire block is always written
+// Write bytes to the buffer. The entire block is always written or the program exits.
 void ssim2mysql::in_buf_WriteReserve(ssim2mysql::FInput& input, u8 *in, i32 in_n) {
+    if (input.in_buf_end - input.in_buf_start + in_n > in_buf_Max(input)) {
+        in_buf_Realloc(input, input.in_buf_max + i32_Max(input.in_buf_max, in_n));
+    }
     if (!in_buf_WriteAll(input, in, in_n)) {
-        in_buf_Realloc(input, input.in_buf_max*2);
-        if (!in_buf_WriteAll(input, in, in_n)) {
-            FatalErrorExit("in_buf: out of memory");
-        }
+        FatalErrorExit("in_buf: out of memory");
     }
 }
 
@@ -3018,7 +3161,7 @@ void ssim2mysql::FInput_Uninit(ssim2mysql::FInput& input) {
 
     // ssim2mysql.FInput.in_buf.Uninit (Fbuf)  //Socket data comes here
     if (input.in_buf_elems) {
-        algo_lib::malloc_FreeMem(input.in_buf_elems, sizeof(char)*input.in_buf_max); // (ssim2mysql.FInput.in_buf)
+        algo_lib::malloc_FreeMem(input.in_buf_elems, input.in_buf_max); // (ssim2mysql.FInput.in_buf) in_buf_max is the byte size Realloc allocated
     }
     input.in_buf_elems = NULL;
     input.in_buf_max = 0;
@@ -3044,7 +3187,7 @@ void ssim2mysql::ns_CopyOut(ssim2mysql::FNs &row, dmmeta::Ns &out) {
     out.ns = row.ns;
     out.nstype = row.nstype;
     out.license = row.license;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- ssim2mysql.FNs.msghdr.CopyIn
@@ -3057,12 +3200,12 @@ void ssim2mysql::ns_CopyIn(ssim2mysql::FNs &row, dmmeta::Ns &in) {
 }
 
 // --- ssim2mysql.FNs.c_ssimfile.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 void ssim2mysql::c_ssimfile_Insert(ssim2mysql::FNs& ns, ssim2mysql::FSsimfile& row) {
     if (!row.ns_c_ssimfile_in_ary) {
         c_ssimfile_Reserve(ns, 1);
-        u32 n  = ns.c_ssimfile_n++;
+        u64 n  = ns.c_ssimfile_n++;
         ns.c_ssimfile_elems[n] = &row;
         row.ns_c_ssimfile_in_ary = true;
     }
@@ -3081,15 +3224,15 @@ bool ssim2mysql::c_ssimfile_InsertMaybe(ssim2mysql::FNs& ns, ssim2mysql::FSsimfi
 // --- ssim2mysql.FNs.c_ssimfile.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void ssim2mysql::c_ssimfile_Remove(ssim2mysql::FNs& ns, ssim2mysql::FSsimfile& row) {
-    int n = ns.c_ssimfile_n;
+    i64 n = ns.c_ssimfile_n;
     if (bool_Update(row.ns_c_ssimfile_in_ary,false)) {
         ssim2mysql::FSsimfile* *elems = ns.c_ssimfile_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = n-1; i>=0; i--) {
+        for (i64 i = n-1; i>=0; i--) {
             ssim2mysql::FSsimfile* elem = elems[i]; // fetch element
             if (elem == &row) {
-                int j = i + 1;
+                i64 j = i + 1;
                 size_t nbytes = sizeof(ssim2mysql::FSsimfile*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
                 ns.c_ssimfile_n = n - 1;
@@ -3101,12 +3244,12 @@ void ssim2mysql::c_ssimfile_Remove(ssim2mysql::FNs& ns, ssim2mysql::FSsimfile& r
 
 // --- ssim2mysql.FNs.c_ssimfile.Reserve
 // Reserve space in index for N more elements;
-void ssim2mysql::c_ssimfile_Reserve(ssim2mysql::FNs& ns, u32 n) {
-    u32 old_max = ns.c_ssimfile_max;
+void ssim2mysql::c_ssimfile_Reserve(ssim2mysql::FNs& ns, u64 n) {
+    u64 old_max = ns.c_ssimfile_max;
     if (UNLIKELY(ns.c_ssimfile_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(ssim2mysql::FSsimfile*);
-        u32 new_size = new_max * sizeof(ssim2mysql::FSsimfile*);
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, ns.c_ssimfile_n + n), 4);
+        u64 old_size = old_max * sizeof(ssim2mysql::FSsimfile*);
+        u64 new_size = new_max * sizeof(ssim2mysql::FSsimfile*);
         void *new_mem = algo_lib::malloc_ReallocMem(ns.c_ssimfile_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("ssim2mysql.out_of_memory  field:ssim2mysql.FNs.c_ssimfile");
@@ -3141,7 +3284,7 @@ void ssim2mysql::FNs_Print(ssim2mysql::FNs& row, algo::cstring& str) {
     algo::Smallstr50_Print(row.license, temp);
     PrintAttrSpaceReset(str,"license", temp);
 
-    algo::Comment_Print(row.comment, temp);
+    algo::cstring_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);
 }
 
@@ -3150,7 +3293,7 @@ void ssim2mysql::FNs_Print(ssim2mysql::FNs& row, algo::cstring& str) {
 void ssim2mysql::sqltype_CopyOut(ssim2mysql::FSqltype &row, dmmeta::Sqltype &out) {
     out.ctype = row.ctype;
     out.expr = row.expr;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- ssim2mysql.FSqltype.msghdr.CopyIn
@@ -3183,7 +3326,7 @@ void ssim2mysql::FSqltype_Print(ssim2mysql::FSqltype& row, algo::cstring& str) {
     algo::Smallstr100_Print(row.expr, temp);
     PrintAttrSpaceReset(str,"expr", temp);
 
-    algo::Comment_Print(row.comment, temp);
+    algo::cstring_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);
 }
 
@@ -3202,30 +3345,27 @@ void ssim2mysql::ssimfile_CopyIn(ssim2mysql::FSsimfile &row, dmmeta::Ssimfile &i
 }
 
 // --- ssim2mysql.FSsimfile.ssimns.Get
-algo::Smallstr16 ssim2mysql::ssimns_Get(ssim2mysql::FSsimfile& ssimfile) {
-    algo::Smallstr16 ret(algo::Pathcomp(ssimfile.ssimfile, ".LL"));
-    return ret;
+algo::strptr ssim2mysql::ssimns_Get(ssim2mysql::FSsimfile& ssimfile) {
+    return algo::Pathcomp(ssimfile.ssimfile, ".LL");
 }
 
 // --- ssim2mysql.FSsimfile.ns.Get
-algo::Smallstr16 ssim2mysql::ns_Get(ssim2mysql::FSsimfile& ssimfile) {
-    algo::Smallstr16 ret(algo::Pathcomp(ssimfile.ssimfile, ".LL"));
-    return ret;
+algo::strptr ssim2mysql::ns_Get(ssim2mysql::FSsimfile& ssimfile) {
+    return algo::Pathcomp(ssimfile.ssimfile, ".LL");
 }
 
 // --- ssim2mysql.FSsimfile.name.Get
-algo::Smallstr50 ssim2mysql::name_Get(ssim2mysql::FSsimfile& ssimfile) {
-    algo::Smallstr50 ret(algo::Pathcomp(ssimfile.ssimfile, ".RR"));
-    return ret;
+algo::strptr ssim2mysql::name_Get(ssim2mysql::FSsimfile& ssimfile) {
+    return algo::Pathcomp(ssimfile.ssimfile, ".RR");
 }
 
 // --- ssim2mysql.FSsimfile.c_column.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 void ssim2mysql::c_column_Insert(ssim2mysql::FSsimfile& ssimfile, ssim2mysql::FColumn& row) {
     if (!row.ssimfile_c_column_in_ary) {
         c_column_Reserve(ssimfile, 1);
-        u32 n  = ssimfile.c_column_n++;
+        u64 n  = ssimfile.c_column_n++;
         ssimfile.c_column_elems[n] = &row;
         row.ssimfile_c_column_in_ary = true;
     }
@@ -3244,15 +3384,15 @@ bool ssim2mysql::c_column_InsertMaybe(ssim2mysql::FSsimfile& ssimfile, ssim2mysq
 // --- ssim2mysql.FSsimfile.c_column.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void ssim2mysql::c_column_Remove(ssim2mysql::FSsimfile& ssimfile, ssim2mysql::FColumn& row) {
-    int n = ssimfile.c_column_n;
+    i64 n = ssimfile.c_column_n;
     if (bool_Update(row.ssimfile_c_column_in_ary,false)) {
         ssim2mysql::FColumn* *elems = ssimfile.c_column_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = n-1; i>=0; i--) {
+        for (i64 i = n-1; i>=0; i--) {
             ssim2mysql::FColumn* elem = elems[i]; // fetch element
             if (elem == &row) {
-                int j = i + 1;
+                i64 j = i + 1;
                 size_t nbytes = sizeof(ssim2mysql::FColumn*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
                 ssimfile.c_column_n = n - 1;
@@ -3264,12 +3404,12 @@ void ssim2mysql::c_column_Remove(ssim2mysql::FSsimfile& ssimfile, ssim2mysql::FC
 
 // --- ssim2mysql.FSsimfile.c_column.Reserve
 // Reserve space in index for N more elements;
-void ssim2mysql::c_column_Reserve(ssim2mysql::FSsimfile& ssimfile, u32 n) {
-    u32 old_max = ssimfile.c_column_max;
+void ssim2mysql::c_column_Reserve(ssim2mysql::FSsimfile& ssimfile, u64 n) {
+    u64 old_max = ssimfile.c_column_max;
     if (UNLIKELY(ssimfile.c_column_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(ssim2mysql::FColumn*);
-        u32 new_size = new_max * sizeof(ssim2mysql::FColumn*);
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, ssimfile.c_column_n + n), 4);
+        u64 old_size = old_max * sizeof(ssim2mysql::FColumn*);
+        u64 new_size = new_max * sizeof(ssim2mysql::FColumn*);
         void *new_mem = algo_lib::malloc_ReallocMem(ssimfile.c_column_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("ssim2mysql.out_of_memory  field:ssim2mysql.FSsimfile.c_column");
@@ -3368,13 +3508,13 @@ void ssim2mysql::FSubstr_Print(ssim2mysql::FSubstr& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "ssim2mysql.FSubstr";
 
-    algo::Smallstr100_Print(row.field, temp);
+    algo::Smallstr150_Print(row.field, temp);
     PrintAttrSpaceReset(str,"field", temp);
 
     algo::CppExpr_Print(row.expr, temp);
     PrintAttrSpaceReset(str,"expr", temp);
 
-    algo::Smallstr100_Print(row.srcfield, temp);
+    algo::Smallstr150_Print(row.srcfield, temp);
     PrintAttrSpaceReset(str,"srcfield", temp);
 }
 
@@ -3450,7 +3590,7 @@ bool ssim2mysql::FieldId_ReadStrptrMaybe(ssim2mysql::FieldId &parent, algo::strp
 // --- ssim2mysql.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:ssim2mysql.FieldId.String  printfmt:Raw
-void ssim2mysql::FieldId_Print(ssim2mysql::FieldId& row, algo::cstring& str) {
+void ssim2mysql::FieldId_Print(ssim2mysql::FieldId row, algo::cstring& str) {
     ssim2mysql::value_Print(row, str);
 }
 
@@ -3460,6 +3600,7 @@ void ssim2mysql::FieldId_Print(ssim2mysql::FieldId& row, algo::cstring& str) {
 const char* ssim2mysql::value_ToCstr(const ssim2mysql::TableId& parent) {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
+        case ssim2mysql_TableId_dmmeta_Cppfunc: ret = "dmmeta.Cppfunc";  break;
         case ssim2mysql_TableId_dmmeta_Ctype: ret = "dmmeta.Ctype";  break;
         case ssim2mysql_TableId_dmmeta_Field: ret = "dmmeta.Field";  break;
         case ssim2mysql_TableId_dmmeta_Ns  : ret = "dmmeta.Ns";  break;
@@ -3538,8 +3679,16 @@ bool ssim2mysql::value_SetStrptrMaybe(ssim2mysql::TableId& parent, algo::strptr 
         }
         case 14: {
             switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('d','m','m','e','t','a','.','C'): {
+                    if (memcmp(rhs.elems+8,"ppfunc",6)==0) { value_SetEnum(parent,ssim2mysql_TableId_dmmeta_Cppfunc); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('d','m','m','e','t','a','.','S'): {
                     if (memcmp(rhs.elems+8,"qltype",6)==0) { value_SetEnum(parent,ssim2mysql_TableId_dmmeta_Sqltype); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('d','m','m','e','t','a','.','c'): {
+                    if (memcmp(rhs.elems+8,"ppfunc",6)==0) { value_SetEnum(parent,ssim2mysql_TableId_dmmeta_cppfunc); ret = true; break; }
                     break;
                 }
                 case LE_STR8('d','m','m','e','t','a','.','s'): {
@@ -3596,7 +3745,7 @@ bool ssim2mysql::TableId_ReadStrptrMaybe(ssim2mysql::TableId &parent, algo::strp
 // --- ssim2mysql.TableId..Print
 // print string representation of ROW to string STR
 // cfmt:ssim2mysql.TableId.String  printfmt:Raw
-void ssim2mysql::TableId_Print(ssim2mysql::TableId& row, algo::cstring& str) {
+void ssim2mysql::TableId_Print(ssim2mysql::TableId row, algo::cstring& str) {
     ssim2mysql::value_Print(row, str);
 }
 

@@ -3,49 +3,18 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
-&nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Internals](#internals)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
-&#128196; [ams_sendtest - Internals](/txt/exe/ams_sendtest/internals.md)<br/>
+<!-- abt_md.toc_end -->
 
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
-
-### Syntax
-<a href="#syntax"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Syntax -->
-```
-ams_sendtest: Algo Messaging System test tool
-Usage: ams_sendtest [options]
-    OPTION         TYPE    DFLT    COMMENT
-    -in            string  "data"  Input directory or filename, - for stdin
-    -id            int     0       Process index (0=parent)
-    -file_prefix   string  ""      Use file_prefix
-    -nchild        int     1       Number of stream readers
-    -blocking                      Use blocking send mode
-    -nmsg          int     1000    Number of messages to send/receive
-    -trace         regx    ""      Regx expression specifying what to trace
-    -timeout       int     30      Time limit for the send
-    -recvdelay_ns  int     0       Pause nanoseconds between messages
-    -senddelay_ns  int     0       Pause nanoseconds between messages
-    -msgsize_min   int     64      Minimum message length
-    -msgsize_max   int     1024    Maximum message length
-    -bufsize       int     32768   Shared memory buffer size
-    -recvdelay     int     0       Pause nanoseconds between messages
-    -verbose       flag            Verbosity level (0..255); alias -v; cumulative
-    -debug         flag            Debug level (0..255); alias -d; cumulative
-    -help                          Print help and exit; alias -h
-    -version                       Print version and exit
-    -signature                     Show signatures and exit; alias -sig
-
-```
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Syntax -->
+### Internals
+<a href="#internals"></a>
+&#128196; [ams_sendtest - Internals](/txt/gen/ams_sendtest/ams_sendtest.md)<br/>
 
 ### Options
 <a href="#options"></a>
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Options -->
 #### -in -- Input directory or filename, - for stdin
 <a href="#-in"></a>
 
@@ -88,15 +57,21 @@ Usage: ams_sendtest [options]
 #### -recvdelay -- Pause nanoseconds between messages
 <a href="#-recvdelay"></a>
 
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
+#### -signaled -- Enable signaled mode
+<a href="#-signaled"></a>
+
+#### -board -- Carry messages too big for the ring on the message board
+<a href="#-board"></a>
+
+#### -board_pin -- Board slots one reader may pin at once (board mode)
+<a href="#-board_pin"></a>
+
+#### -uc -- Unicast: one lane per reader instead of one shared lane
+<a href="#-uc"></a>
 
 ### Inputs
 <a href="#inputs"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
 `ams_sendtest` takes the following tables on input:
 |Ssimfile|Comment|
 |---|---|
 |[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
-

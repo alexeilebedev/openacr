@@ -1,0 +1,137 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/json_fld.ssim -out_dir: -report:N algo_lib.%.FmtJson"
+# eof amc
+amc -> // --- algo_lib.Computed..FmtJson
+amc -> // Create JSON representation of algo_lib::Computed under PARENT node
+amc -> // cfmt:algo_lib.Computed.Json  printfmt:Auto
+amc -> lib_json::FNode * algo_lib::Computed_FmtJson(algo_lib::Computed& row, lib_json::FNode *parent) {
+amc ->     return u32_FmtJson(row.a,parent);
+amc -> }
+amc -> // --- algo_lib.InlAryJson..FmtJson
+amc -> // Create JSON representation of algo_lib::InlAryJson under PARENT node
+amc -> // cfmt:algo_lib.InlAryJson.Json  printfmt:Auto
+amc -> lib_json::FNode * algo_lib::InlAryJson_FmtJson(algo_lib::InlAryJson& row, lib_json::FNode *parent) {
+amc ->     algo::aryptr<u32> v_ary = v_Getary(row);
+amc ->     lib_json::FNode& v_node = lib_json::NewArrayNode(parent);
+amc ->     for (int i = 0; i < v_ary.n_elems; ++i) {
+amc ->         u32_FmtJson(v_ary[i], &v_node);
+amc ->     }
+amc ->     return &v_node;
+amc -> }
+amc -> // --- algo_lib.InlAryPrint..FmtJson
+amc -> // Create JSON representation of algo_lib::InlAryPrint under PARENT node
+amc -> // cfmt:algo_lib.InlAryPrint.Json  printfmt:Auto
+amc -> lib_json::FNode * algo_lib::InlAryPrint_FmtJson(algo_lib::InlAryPrint& row, lib_json::FNode *parent) {
+amc ->     algo::aryptr<algo_lib::Str> v_ary = v_Getary(row);
+amc ->     lib_json::FNode& v_node = lib_json::NewArrayNode(parent);
+amc ->     for (int i = 0; i < v_ary.n_elems; ++i) {
+amc ->         algo_lib::Str_Print(v_ary[i], lib_json::NewStringNode(&v_node).value);
+amc ->     }
+amc ->     return &v_node;
+amc -> }
+amc -> // --- algo_lib.InlJson..FmtJson
+amc -> // Create JSON representation of algo_lib::InlJson under PARENT node
+amc -> // cfmt:algo_lib.InlJson.Json  printfmt:Auto
+amc -> lib_json::FNode * algo_lib::InlJson_FmtJson(algo_lib::InlJson row, lib_json::FNode *parent) {
+amc ->     return u32_FmtJson(row.v,parent);
+amc -> }
+amc -> // --- algo_lib.InlPrint..FmtJson
+amc -> // Create JSON representation of algo_lib::InlPrint under PARENT node
+amc -> // cfmt:algo_lib.InlPrint.Json  printfmt:Auto
+amc -> lib_json::FNode * algo_lib::InlPrint_FmtJson(algo_lib::InlPrint row, lib_json::FNode *parent) {
+amc ->     lib_json::FNode& v_node = lib_json::NewStringNode(parent);
+amc ->     algo_lib::Str_Print(row.v, v_node.value);
+amc ->     return &v_node;
+amc -> }
+amc -> // --- algo_lib.Multi..FmtJson
+amc -> // Create JSON representation of algo_lib::Multi under PARENT node
+amc -> // cfmt:algo_lib.Multi.Json  printfmt:Auto
+amc -> lib_json::FNode * algo_lib::Multi_FmtJson(algo_lib::Multi& row, lib_json::FNode *parent) {
+amc ->     lib_json::FNode *objnode = &lib_json::node_Alloc();
+amc ->     objnode->p_parent = parent?parent:objnode;
+amc ->     objnode->type   = lib_json_FNode_type_object;
+amc ->     node_XrefMaybe(*objnode);
+amc ->     lib_json::FNode *a_node = &lib_json::node_Alloc();
+amc ->     a_node->p_parent = objnode;
+amc ->     a_node->type   = lib_json_FNode_type_field;
+amc ->     a_node->value  = "a";
+amc ->     node_XrefMaybe(*a_node);
+amc ->     u32_FmtJson(row.a,a_node);
+amc ->     algo_lib::Str_Print(row.s, lib_json::NewStringNode(objnode, "s").value);
+amc ->     algo::aryptr<u32> ja_ary = ja_Getary(row);
+amc ->     lib_json::FNode& ja_node = lib_json::NewArrayNode(objnode, "ja");
+amc ->     for (int i = 0; i < ja_ary.n_elems; ++i) {
+amc ->         u32_FmtJson(ja_ary[i], &ja_node);
+amc ->     }
+amc ->     algo::aryptr<algo_lib::Str> sa_ary = sa_Getary(row);
+amc ->     lib_json::FNode& sa_node = lib_json::NewArrayNode(objnode, "sa");
+amc ->     for (int i = 0; i < sa_ary.n_elems; ++i) {
+amc ->         algo_lib::Str_Print(sa_ary[i], lib_json::NewStringNode(&sa_node).value);
+amc ->     }
+amc ->     return objnode;
+amc -> }
+amc -> // --- algo_lib.PmFilter..FmtJson
+amc -> // Create JSON representation of algo_lib::PmFilter under PARENT node
+amc -> // cfmt:algo_lib.PmFilter.Json  printfmt:Auto
+amc -> lib_json::FNode * algo_lib::PmFilter_FmtJson(algo_lib::PmFilter& row, lib_json::FNode *parent) {
+amc ->     lib_json::FNode *objnode = &lib_json::node_Alloc();
+amc ->     objnode->p_parent = parent?parent:objnode;
+amc ->     objnode->type   = lib_json_FNode_type_object;
+amc ->     node_XrefMaybe(*objnode);
+amc ->     if (a_PresentQ(row)) {
+amc ->         lib_json::FNode *a_node = &lib_json::node_Alloc();
+amc ->         a_node->p_parent = objnode;
+amc ->         a_node->type   = lib_json_FNode_type_field;
+amc ->         a_node->value  = "a";
+amc ->         node_XrefMaybe(*a_node);
+amc ->         u32_FmtJson(row.a,a_node);
+amc ->     }
+amc ->     if (s_PresentQ(row)) {
+amc ->         algo_lib::Str_Print(row.s, lib_json::NewStringNode(objnode, "s").value);
+amc ->     }
+amc ->     if (ja_PresentQ(row)) {
+amc ->         algo::aryptr<u32> ja_ary = ja_Getary(row);
+amc ->         lib_json::FNode& ja_node = lib_json::NewArrayNode(objnode, "ja");
+amc ->         for (int i = 0; i < ja_ary.n_elems; ++i) {
+amc ->             u32_FmtJson(ja_ary[i], &ja_node);
+amc ->         }
+amc ->     }
+amc ->     return objnode;
+amc -> }
+amc -> // --- algo_lib.PmInlFree..FmtJson
+amc -> // Create JSON representation of algo_lib::PmInlFree under PARENT node
+amc -> // cfmt:algo_lib.PmInlFree.Json  printfmt:Auto
+amc -> lib_json::FNode * algo_lib::PmInlFree_FmtJson(algo_lib::PmInlFree row, lib_json::FNode *parent) {
+amc ->     return u32_FmtJson(row.word,parent);
+amc -> }
+amc -> // --- algo_lib.PmInlJson..FmtJson
+amc -> // Create JSON representation of algo_lib::PmInlJson under PARENT node
+amc -> // cfmt:algo_lib.PmInlJson.Json  printfmt:Auto
+amc -> lib_json::FNode * algo_lib::PmInlJson_FmtJson(algo_lib::PmInlJson row, lib_json::FNode *parent) {
+amc ->     lib_json::FNode *objnode = &lib_json::node_Alloc();
+amc ->     objnode->p_parent = parent?parent:objnode;
+amc ->     objnode->type   = lib_json_FNode_type_object;
+amc ->     node_XrefMaybe(*objnode);
+amc ->     if (word_PmQ(row)) {
+amc ->         lib_json::FNode *word_node = &lib_json::node_Alloc();
+amc ->         word_node->p_parent = objnode;
+amc ->         word_node->type   = lib_json_FNode_type_field;
+amc ->         word_node->value  = "word";
+amc ->         node_XrefMaybe(*word_node);
+amc ->         u32_FmtJson(row.word,word_node);
+amc ->     }
+amc ->     return objnode;
+amc -> }
+amc -> // --- algo_lib.PmInlPrint..FmtJson
+amc -> // Create JSON representation of algo_lib::PmInlPrint under PARENT node
+amc -> // cfmt:algo_lib.PmInlPrint.Json  printfmt:Auto
+amc -> lib_json::FNode * algo_lib::PmInlPrint_FmtJson(algo_lib::PmInlPrint row, lib_json::FNode *parent) {
+amc ->     lib_json::FNode *objnode = &lib_json::node_Alloc();
+amc ->     objnode->p_parent = parent?parent:objnode;
+amc ->     objnode->type   = lib_json_FNode_type_object;
+amc ->     node_XrefMaybe(*objnode);
+amc ->     if (word_PmQ(row)) {
+amc ->         u64_Print(row.word, lib_json::NewStringNode(objnode, "word").value);
+amc ->     }
+amc ->     return objnode;
+amc -> }
+# exit amc code:0

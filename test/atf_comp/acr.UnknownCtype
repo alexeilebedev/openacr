@@ -1,0 +1,10 @@
+# start bash cmd:"bash -c 'printf \"\\n# comment line\\ndmmeta.nss  nss:foo\\ndmmeta.ns  ns:zzz  nstype:exe  license:GPL\\n\" > $tempdir/t.ssim; $bindir/acr % -write -in:$tempdir/t.ssim; echo acr_exit:$?; cat $tempdir/t.ssim'"
+# eof bash
+bash -> temp/atf_comp/acr.UnknownCtype/t.ssim:3: acr.badline  reason:"unknown ctype"  text:"dmmeta.nss  nss:foo"
+bash -> dmmeta.ns  ns:zzz  nstype:exe  license:GPL  comment:""
+bash -> report.acr  n_select:1  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0  n_badline:1
+bash -> acr_exit:1
+bash -> # comment line
+bash -> dmmeta.nss  nss:foo
+bash -> dmmeta.ns  ns:zzz  nstype:exe  license:GPL
+# exit bash code:0

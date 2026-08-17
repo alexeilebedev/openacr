@@ -1,0 +1,12 @@
+curl -k 'https://192.168.1.45:1010/api/graphql' -X POST -H "Authorization: Bearer glpat-EXAMPLE0000000000000" -H "Content-Type: application/json" --data \
+'{"query":"query {currentUser {name}}"}' \
+| jq
+
+
+
+
+
+
+
+
+

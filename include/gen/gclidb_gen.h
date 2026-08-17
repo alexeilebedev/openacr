@@ -29,112 +29,107 @@
 
 // --- gclidb_FieldIdEnum
 
-enum gclidb_FieldIdEnum {                   // gclidb.FieldId.value
-     gclidb_FieldId_gact              = 0
-    ,gclidb_FieldId_comment           = 1
-    ,gclidb_FieldId_gatv              = 2
-    ,gclidb_FieldId_gclicmd           = 3
-    ,gclidb_FieldId_gclicmdf2j        = 4
-    ,gclidb_FieldId_gclicmdf          = 5
-    ,gclidb_FieldId_field             = 6
-    ,gclidb_FieldId_jkey              = 7
-    ,gclidb_FieldId_dup               = 8
-    ,gclidb_FieldId_gclicmdt          = 9
-    ,gclidb_FieldId_gmethod           = 10
-    ,gclidb_FieldId_gtype             = 11
-    ,gclidb_FieldId_uri               = 12
-    ,gclidb_FieldId_gclienv           = 13
-    ,gclidb_FieldId_addon             = 14
-    ,gclidb_FieldId_gclienvsub        = 15
-    ,gclidb_FieldId_sub               = 16
-    ,gclidb_FieldId_fwd               = 17
-    ,gclidb_FieldId_rev               = 18
-    ,gclidb_FieldId_uval              = 19
-    ,gclidb_FieldId_gclisub           = 20
-    ,gclidb_FieldId_gfld              = 21
-    ,gclidb_FieldId_val               = 22
-    ,gclidb_FieldId_grepo             = 23
-    ,gclidb_FieldId_host              = 24
-    ,gclidb_FieldId_fname             = 25
-    ,gclidb_FieldId_name              = 26
-    ,gclidb_FieldId_token             = 27
-    ,gclidb_FieldId_default_branch    = 28
-    ,gclidb_FieldId_keyid             = 29
-    ,gclidb_FieldId_ssh_repo          = 30
-    ,gclidb_FieldId_web_url           = 31
-    ,gclidb_FieldId_descr             = 32
-    ,gclidb_FieldId_active            = 33
-    ,gclidb_FieldId_priv              = 34
-    ,gclidb_FieldId_gstate            = 35
-    ,gclidb_FieldId_st                = 36
-    ,gclidb_FieldId_state             = 37
-    ,gclidb_FieldId_gstatet           = 38
-    ,gclidb_FieldId_gtbl              = 39
-    ,gclidb_FieldId_gtblact           = 40
-    ,gclidb_FieldId_t                 = 41
-    ,gclidb_FieldId_e                 = 42
-    ,gclidb_FieldId_auth              = 43
-    ,gclidb_FieldId_gtblactfld        = 44
-    ,gclidb_FieldId_dflt              = 45
-    ,gclidb_FieldId_field_name_dflt   = 46
-    ,gclidb_FieldId_optional          = 47
-    ,gclidb_FieldId_regx              = 48
-    ,gclidb_FieldId_gtblacttst        = 49
-    ,gclidb_FieldId_working           = 50
-    ,gclidb_FieldId_cmd               = 51
-    ,gclidb_FieldId_gtblacttstout     = 52
-    ,gclidb_FieldId_out               = 53
-    ,gclidb_FieldId_text              = 54
-    ,gclidb_FieldId_default_url       = 55
-    ,gclidb_FieldId_gtypeh            = 56
-    ,gclidb_FieldId_header            = 57
-    ,gclidb_FieldId_gtypeprefix       = 58
-    ,gclidb_FieldId_prefix            = 59
-    ,gclidb_FieldId_issue             = 60
-    ,gclidb_FieldId_project           = 61
-    ,gclidb_FieldId_iid               = 62
-    ,gclidb_FieldId_assignee          = 63
-    ,gclidb_FieldId_labels            = 64
-    ,gclidb_FieldId_milestone_iid     = 65
-    ,gclidb_FieldId_milestone_num     = 66
-    ,gclidb_FieldId_milestone         = 67
-    ,gclidb_FieldId_title             = 68
-    ,gclidb_FieldId_author            = 69
-    ,gclidb_FieldId_mr                = 70
-    ,gclidb_FieldId_description       = 71
-    ,gclidb_FieldId_issuenote         = 72
-    ,gclidb_FieldId_nid               = 73
-    ,gclidb_FieldId_note              = 74
-    ,gclidb_FieldId_system            = 75
-    ,gclidb_FieldId_issuepipeline     = 76
-    ,gclidb_FieldId_id                = 77
-    ,gclidb_FieldId_id_in             = 78
-    ,gclidb_FieldId_status            = 79
-    ,gclidb_FieldId_label             = 80
-    ,gclidb_FieldId_proj              = 81
-    ,gclidb_FieldId_source_branch     = 82
-    ,gclidb_FieldId_source_repo       = 83
-    ,gclidb_FieldId_reviewer          = 84
-    ,gclidb_FieldId_pipeline_status   = 85
-    ,gclidb_FieldId_pipeline_id       = 86
-    ,gclidb_FieldId_draft             = 87
-    ,gclidb_FieldId_node_id           = 88
-    ,gclidb_FieldId_mrjob             = 89
-    ,gclidb_FieldId_job               = 90
-    ,gclidb_FieldId_ref               = 91
-    ,gclidb_FieldId_runner            = 92
-    ,gclidb_FieldId_mrnote            = 93
-    ,gclidb_FieldId_user              = 94
-    ,gclidb_FieldId_value             = 95
+enum gclidb_FieldIdEnum {    // gclidb.FieldId.value
+     gclidb_FieldId_gact
+    ,gclidb_FieldId_comment
+    ,gclidb_FieldId_gatv
+    ,gclidb_FieldId_gclicmd
+    ,gclidb_FieldId_gclicmdf2j
+    ,gclidb_FieldId_gclicmdf
+    ,gclidb_FieldId_field
+    ,gclidb_FieldId_jkey
+    ,gclidb_FieldId_dup
+    ,gclidb_FieldId_gclicmdt
+    ,gclidb_FieldId_gmethod
+    ,gclidb_FieldId_gtype
+    ,gclidb_FieldId_uri
+    ,gclidb_FieldId_gfld
+    ,gclidb_FieldId_val
+    ,gclidb_FieldId_grepo
+    ,gclidb_FieldId_host
+    ,gclidb_FieldId_fname
+    ,gclidb_FieldId_name
+    ,gclidb_FieldId_token
+    ,gclidb_FieldId_default_branch
+    ,gclidb_FieldId_keyid
+    ,gclidb_FieldId_ssh_repo
+    ,gclidb_FieldId_web_url
+    ,gclidb_FieldId_descr
+    ,gclidb_FieldId_active
+    ,gclidb_FieldId_priv
+    ,gclidb_FieldId_gstate
+    ,gclidb_FieldId_st
+    ,gclidb_FieldId_state
+    ,gclidb_FieldId_gstatet
+    ,gclidb_FieldId_gtbl
+    ,gclidb_FieldId_gtblact
+    ,gclidb_FieldId_t
+    ,gclidb_FieldId_e
+    ,gclidb_FieldId_auth
+    ,gclidb_FieldId_gtblactfld
+    ,gclidb_FieldId_dflt
+    ,gclidb_FieldId_field_name_dflt
+    ,gclidb_FieldId_optional
+    ,gclidb_FieldId_regx
+    ,gclidb_FieldId_default_url
+    ,gclidb_FieldId_gtypeh
+    ,gclidb_FieldId_header
+    ,gclidb_FieldId_gtypeprefix
+    ,gclidb_FieldId_prefix
+    ,gclidb_FieldId_issue
+    ,gclidb_FieldId_project
+    ,gclidb_FieldId_iid
+    ,gclidb_FieldId_assignee
+    ,gclidb_FieldId_labels
+    ,gclidb_FieldId_milestone_iid
+    ,gclidb_FieldId_milestone_num
+    ,gclidb_FieldId_milestone
+    ,gclidb_FieldId_title
+    ,gclidb_FieldId_author
+    ,gclidb_FieldId_mr
+    ,gclidb_FieldId_description
+    ,gclidb_FieldId_issuenote
+    ,gclidb_FieldId_nid
+    ,gclidb_FieldId_note
+    ,gclidb_FieldId_system
+    ,gclidb_FieldId_issuepipeline
+    ,gclidb_FieldId_id
+    ,gclidb_FieldId_id_in
+    ,gclidb_FieldId_status
+    ,gclidb_FieldId_label
+    ,gclidb_FieldId_proj
+    ,gclidb_FieldId_source_branch
+    ,gclidb_FieldId_source_repo
+    ,gclidb_FieldId_reviewer
+    ,gclidb_FieldId_pipeline_status
+    ,gclidb_FieldId_pipeline_id
+    ,gclidb_FieldId_draft
+    ,gclidb_FieldId_node_id
+    ,gclidb_FieldId_merge_status
+    ,gclidb_FieldId_behind
+    ,gclidb_FieldId_mrjob
+    ,gclidb_FieldId_job
+    ,gclidb_FieldId_ref
+    ,gclidb_FieldId_runner
+    ,gclidb_FieldId_mrnote
+    ,gclidb_FieldId_resolvable
+    ,gclidb_FieldId_resolved
+    ,gclidb_FieldId_revoked
+    ,gclidb_FieldId_expires
+    ,gclidb_FieldId_scopes
+    ,gclidb_FieldId_secret
+    ,gclidb_FieldId_user
+    ,gclidb_FieldId_value
 };
 
-enum { gclidb_FieldIdEnum_N = 96 };
+enum { gclidb_FieldIdEnum_N = 90 };
 
 extern const char *  gclidb_Gact_gact_accept;       // accept        fconst:gclidb.Gact.gact/accept
 extern const char *  gclidb_Gact_gact_approve;      // approve       fconst:gclidb.Gact.gact/approve
 extern const char *  gclidb_Gact_gact_create;       // create        fconst:gclidb.Gact.gact/create
 extern const char *  gclidb_Gact_gact_list;         // list          fconst:gclidb.Gact.gact/list
 extern const char *  gclidb_Gact_gact_needs_work;   // needs_work    fconst:gclidb.Gact.gact/needs_work
+extern const char *  gclidb_Gact_gact_retry;        // retry         fconst:gclidb.Gact.gact/retry
 extern const char *  gclidb_Gact_gact_start;        // start         fconst:gclidb.Gact.gact/start
 extern const char *  gclidb_Gact_gact_stop;         // stop          fconst:gclidb.Gact.gact/stop
 extern const char *  gclidb_Gact_gact_update;       // update        fconst:gclidb.Gact.gact/update
@@ -144,6 +139,7 @@ extern const char *  gclidb_Gclicmd_gclicmd_issuelist;      // issuelist       f
 extern const char *  gclidb_Gclicmd_gclicmd_issuemod;       // issuemod        fconst:gclidb.Gclicmd.gclicmd/issuemod
 extern const char *  gclidb_Gclicmd_gclicmd_issuenote;      // issuenote       fconst:gclidb.Gclicmd.gclicmd/issuenote
 extern const char *  gclidb_Gclicmd_gclicmd_issuesearch;    // issuesearch     fconst:gclidb.Gclicmd.gclicmd/issuesearch
+extern const char *  gclidb_Gclicmd_gclicmd_jobretry;       // jobretry        fconst:gclidb.Gclicmd.gclicmd/jobretry
 extern const char *  gclidb_Gclicmd_gclicmd_mraccept;       // mraccept        fconst:gclidb.Gclicmd.gclicmd/mraccept
 extern const char *  gclidb_Gclicmd_gclicmd_mrlist;         // mrlist          fconst:gclidb.Gclicmd.gclicmd/mrlist
 extern const char *  gclidb_Gclicmd_gclicmd_mrlistdet;      // mrlistdet       fconst:gclidb.Gclicmd.gclicmd/mrlistdet
@@ -161,30 +157,18 @@ extern const char *  gclidb_Gclicmd_gclicmd_notemod;        // notemod         f
 extern const char *  gclidb_Gclicmd_gclicmd_repojob;        // repojob         fconst:gclidb.Gclicmd.gclicmd/repojob
 extern const char *  gclidb_Gclicmd_gclicmd_repojobtrace;   // repojobtrace    fconst:gclidb.Gclicmd.gclicmd/repojobtrace
 extern const char *  gclidb_Gclicmd_gclicmd_token2repos;    // token2repos     fconst:gclidb.Gclicmd.gclicmd/token2repos
+extern const char *  gclidb_Gclicmd_gclicmd_tokenadd;       // tokenadd        fconst:gclidb.Gclicmd.gclicmd/tokenadd
+extern const char *  gclidb_Gclicmd_gclicmd_tokendel;       // tokendel        fconst:gclidb.Gclicmd.gclicmd/tokendel
+extern const char *  gclidb_Gclicmd_gclicmd_tokenlist;      // tokenlist       fconst:gclidb.Gclicmd.gclicmd/tokenlist
 extern const char *  gclidb_Gclicmd_gclicmd_user;           // user            fconst:gclidb.Gclicmd.gclicmd/user
 extern const char *  gclidb_Gclicmd_gclicmd_userdet;        // userdet         fconst:gclidb.Gclicmd.gclicmd/userdet
 extern const char *  gclidb_Gclicmd_gclicmd_userlist;       // userlist        fconst:gclidb.Gclicmd.gclicmd/userlist
-extern const char *  gclidb_Gclienv_gclienv_all;    // all     fconst:gclidb.Gclienv.gclienv/all
-extern const char *  gclidb_Gclienv_gclienv_ghub;   // ghub    fconst:gclidb.Gclienv.gclienv/ghub
-extern const char *  gclidb_Gclienv_gclienv_glab;   // glab    fconst:gclidb.Gclienv.gclienv/glab
-extern const char *  gclidb_Gclisub_gclisub__GITDIR;    // $GITDIR     fconst:gclidb.Gclisub.gclisub/$GITDIR
-extern const char *  gclidb_Gclisub_gclisub__HOST;      // $HOST       fconst:gclidb.Gclisub.gclisub/$HOST
-extern const char *  gclidb_Gclisub_gclisub__ID_RSA;    // $ID_RSA     fconst:gclidb.Gclisub.gclisub/$ID_RSA
-extern const char *  gclidb_Gclisub_gclisub__IN_AUTH;   // $IN_AUTH    fconst:gclidb.Gclisub.gclisub/$IN_AUTH
-extern const char *  gclidb_Gclisub_gclisub__ISSUE;     // $ISSUE      fconst:gclidb.Gclisub.gclisub/$ISSUE
-extern const char *  gclidb_Gclisub_gclisub__ISSUE_;    // $ISSUE#     fconst:gclidb.Gclisub.gclisub/$ISSUE#
-extern const char *  gclidb_Gclisub_gclisub__MNOTE;     // $MNOTE      fconst:gclidb.Gclisub.gclisub/$MNOTE
-extern const char *  gclidb_Gclisub_gclisub__MR;        // $MR         fconst:gclidb.Gclisub.gclisub/$MR
-extern const char *  gclidb_Gclisub_gclisub__MR_;       // $MR_        fconst:gclidb.Gclisub.gclisub/$MR_
-extern const char *  gclidb_Gclisub_gclisub__NOTE;      // $NOTE       fconst:gclidb.Gclisub.gclisub/$NOTE
-extern const char *  gclidb_Gclisub_gclisub__REPO;      // $REPO       fconst:gclidb.Gclisub.gclisub/$REPO
-extern const char *  gclidb_Gclisub_gclisub__TOKEN;     // $TOKEN      fconst:gclidb.Gclisub.gclisub/$TOKEN
-extern const char *  gclidb_Gclisub_gclisub__USER;      // $USER       fconst:gclidb.Gclisub.gclisub/$USER
 extern const char *  gclidb_Gfld_gfld_action;         // action          fconst:gclidb.Gfld.gfld/action
 extern const char *  gclidb_Gfld_gfld_assignee;       // assignee        fconst:gclidb.Gfld.gfld/assignee
 extern const char *  gclidb_Gfld_gfld_author;         // author          fconst:gclidb.Gfld.gfld/author
 extern const char *  gclidb_Gfld_gfld_default_repo;   // default_repo    fconst:gclidb.Gfld.gfld/default_repo
 extern const char *  gclidb_Gfld_gfld_description;    // description     fconst:gclidb.Gfld.gfld/description
+extern const char *  gclidb_Gfld_gfld_errors;         // errors          fconst:gclidb.Gfld.gfld/errors
 extern const char *  gclidb_Gfld_gfld_host;           // host            fconst:gclidb.Gfld.gfld/host
 extern const char *  gclidb_Gfld_gfld_labels;         // labels          fconst:gclidb.Gfld.gfld/labels
 extern const char *  gclidb_Gfld_gfld_milestone;      // milestone       fconst:gclidb.Gfld.gfld/milestone
@@ -215,6 +199,7 @@ extern const char *  gclidb_Gtbl_gtbl_mrjob;        // mrjob         fconst:gcli
 extern const char *  gclidb_Gtbl_gtbl_mrnote;       // mrnote        fconst:gclidb.Gtbl.gtbl/mrnote
 extern const char *  gclidb_Gtbl_gtbl_repo;         // repo          fconst:gclidb.Gtbl.gtbl/repo
 extern const char *  gclidb_Gtbl_gtbl_reporemote;   // reporemote    fconst:gclidb.Gtbl.gtbl/reporemote
+extern const char *  gclidb_Gtbl_gtbl_token;        // token         fconst:gclidb.Gtbl.gtbl/token
 extern const char *  gclidb_Gtbl_gtbl_user;         // user          fconst:gclidb.Gtbl.gtbl/user
 extern const char *  gclidb_Gtblact_gtblact_help_list;          // help_list           fconst:gclidb.Gtblact.gtblact/help_list
 extern const char *  gclidb_Gtblact_gtblact_repo_create;        // repo_create         fconst:gclidb.Gtblact.gtblact/repo_create
@@ -246,6 +231,10 @@ extern const char *  gclidb_Gtblact_gtblact_mr_stop;            // mr_stop      
 extern const char *  gclidb_Gtblact_gtblact_mrjob_list;         // mrjob_list          fconst:gclidb.Gtblact.gtblact/mrjob_list
 extern const char *  gclidb_Gtblact_gtblact_issue_needs_work;   // issue_needs_work    fconst:gclidb.Gtblact.gtblact/issue_needs_work
 extern const char *  gclidb_Gtblact_gtblact_issue_stop;         // issue_stop          fconst:gclidb.Gtblact.gtblact/issue_stop
+extern const char *  gclidb_Gtblact_gtblact_token_list;         // token_list          fconst:gclidb.Gtblact.gtblact/token_list
+extern const char *  gclidb_Gtblact_gtblact_token_create;       // token_create        fconst:gclidb.Gtblact.gtblact/token_create
+extern const char *  gclidb_Gtblact_gtblact_token_stop;         // token_stop          fconst:gclidb.Gtblact.gtblact/token_stop
+extern const char *  gclidb_Gtblact_gtblact_mrjob_retry;        // mrjob_retry         fconst:gclidb.Gtblact.gtblact/mrjob_retry
 extern const char *  gclidb_Gtype_gtype_ghp;     // ghp      fconst:gclidb.Gtype.gtype/ghp
 extern const char *  gclidb_Gtype_gtype_glpat;   // glpat    fconst:gclidb.Gtype.gtype/glpat
 extern const char *  gclidb_Label_label_bug;                // bug                 fconst:gclidb.Label.label/bug
@@ -268,9 +257,6 @@ namespace gclidb { // gen:ns_pkeytypedef
     typedef algo::Smallstr250 GclicmdPkey;
     typedef algo::Smallstr250 Gclicmdf2jPkey;
     typedef algo::Smallstr250 GclicmdtPkey;
-    typedef algo::Smallstr50 GclienvPkey;
-    typedef algo::Smallstr50 GclienvsubPkey;
-    typedef algo::Smallstr50 GclisubPkey;
     typedef algo::Smallstr50 GfldPkey;
     typedef algo::Smallstr250 GithostPkey;
     typedef algo::Smallstr50 GmethodPkey;
@@ -280,8 +266,6 @@ namespace gclidb { // gen:ns_pkeytypedef
     typedef algo::Smallstr250 GtblPkey;
     typedef algo::Smallstr50 GtblactPkey;
     typedef algo::Smallstr50 GtblactfldPkey;
-    typedef algo::Smallstr250 GtblacttstPkey;
-    typedef algo::Smallstr250 GtblacttstoutPkey;
     typedef algo::Smallstr50 GtypePkey;
     typedef algo::Smallstr250 GtypehPkey;
     typedef algo::Smallstr50 GtypeprefixPkey;
@@ -294,6 +278,7 @@ namespace gclidb { // gen:ns_pkeytypedef
     typedef algo::Smallstr250 MrjobPkey;
     typedef algo::cstring MrnotePkey;
     typedef algo::Smallstr50 ProjectPkey;
+    typedef algo::Smallstr50 TokenPkey;
     typedef algo::Smallstr50 UserPkey;
 } // gen:ns_pkeytypedef
 namespace gclidb { // gen:ns_tclass_field
@@ -305,9 +290,6 @@ namespace gclidb { struct Gatv; }
 namespace gclidb { struct Gclicmd; }
 namespace gclidb { struct Gclicmdf2j; }
 namespace gclidb { struct Gclicmdt; }
-namespace gclidb { struct Gclienv; }
-namespace gclidb { struct Gclienvsub; }
-namespace gclidb { struct Gclisub; }
 namespace gclidb { struct Gfld; }
 namespace gclidb { struct Githost; }
 namespace gclidb { struct Gmethod; }
@@ -317,8 +299,6 @@ namespace gclidb { struct Gstatet; }
 namespace gclidb { struct Gtbl; }
 namespace gclidb { struct Gtblact; }
 namespace gclidb { struct Gtblactfld; }
-namespace gclidb { struct Gtblacttst; }
-namespace gclidb { struct Gtblacttstout; }
 namespace gclidb { struct Gtype; }
 namespace gclidb { struct Gtypeh; }
 namespace gclidb { struct Gtypeprefix; }
@@ -331,6 +311,7 @@ namespace gclidb { struct Mr; }
 namespace gclidb { struct Mrjob; }
 namespace gclidb { struct Mrnote; }
 namespace gclidb { struct Project; }
+namespace gclidb { struct Token; }
 namespace gclidb { struct User; }
 namespace gclidb { // gen:ns_print_struct
 
@@ -348,7 +329,6 @@ struct FieldId { // gclidb.FieldId: Field read helper
     inline               FieldId(gclidb_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:gclidb.FieldId.value.GetEnum
 inline gclidb_FieldIdEnum value_GetEnum(const gclidb::FieldId& parent) __attribute__((nothrow));
@@ -386,7 +366,7 @@ inline void          FieldId_Init(gclidb::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:gclidb.FieldId.String  printfmt:Raw
 // func:gclidb.FieldId..Print
-void                 FieldId_Print(gclidb::FieldId& row, algo::cstring& str) __attribute__((nothrow));
+void                 FieldId_Print(gclidb::FieldId row, algo::cstring& str) __attribute__((nothrow));
 
 // --- gclidb.Gact
 struct Gact { // gclidb.Gact: Action that may be performed on a table
@@ -395,7 +375,6 @@ struct Gact { // gclidb.Gact: Action that may be performed on a table
     // func:gclidb.Gact..Ctor
     inline               Gact() __attribute__((nothrow));
 };
-
 // func:gclidb.Gact..ReadFieldMaybe
 bool                 Gact_ReadFieldMaybe(gclidb::Gact& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of gclidb::Gact from an ascii string.
@@ -414,7 +393,6 @@ struct Gatv { // gclidb.Gatv
     // func:gclidb.Gatv..Ctor
     inline               Gatv() __attribute__((nothrow));
 };
-
 // func:gclidb.Gatv..ReadFieldMaybe
 bool                 Gatv_ReadFieldMaybe(gclidb::Gatv& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of gclidb::Gatv from an ascii string.
@@ -434,7 +412,6 @@ struct Gclicmd { // gclidb.Gclicmd: table of static gcli commands
     // func:gclidb.Gclicmd..Ctor
     inline               Gclicmd() __attribute__((nothrow));
 };
-
 // func:gclidb.Gclicmd..ReadFieldMaybe
 bool                 Gclicmd_ReadFieldMaybe(gclidb::Gclicmd& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of gclidb::Gclicmd from an ascii string.
@@ -454,26 +431,25 @@ struct Gclicmdf2j { // gclidb.Gclicmdf2j: Mapping of internal fields to JSON fie
     // func:gclidb.Gclicmdf2j..Ctor
     inline               Gclicmdf2j() __attribute__((nothrow));
 };
-
 // func:gclidb.Gclicmdf2j.gclicmdf.Get
-algo::cstring        gclicmdf_Get(gclidb::Gclicmdf2j& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         gclicmdf_Get(gclidb::Gclicmdf2j& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:gclidb.Gclicmdf2j.gclicmdf.Get2
-algo::cstring        Gclicmdf2j_gclicmdf_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Gclicmdf2j_gclicmdf_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:gclidb.Gclicmdf2j.gclicmd.Get
-algo::Smallstr250    gclicmd_Get(gclidb::Gclicmdf2j& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         gclicmd_Get(gclidb::Gclicmdf2j& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:gclidb.Gclicmdf2j.gclicmd.Get2
-algo::Smallstr250    Gclicmdf2j_gclicmd_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Gclicmdf2j_gclicmd_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:gclidb.Gclicmdf2j.field.Get
-algo::Smallstr100    field_Get(gclidb::Gclicmdf2j& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         field_Get(gclidb::Gclicmdf2j& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:gclidb.Gclicmdf2j.field.Get2
-algo::Smallstr100    Gclicmdf2j_field_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Gclicmdf2j_field_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:gclidb.Gclicmdf2j.jkey.Get
-algo::cstring        jkey_Get(gclidb::Gclicmdf2j& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         jkey_Get(gclidb::Gclicmdf2j& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:gclidb.Gclicmdf2j.jkey.Get2
-algo::cstring        Gclicmdf2j_jkey_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Gclicmdf2j_jkey_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:gclidb.Gclicmdf2j..Concat_gclicmd_field_jkey
 tempstr              Gclicmdf2j_Concat_gclicmd_field_jkey( const algo::strptr& gclicmd ,const algo::strptr& field ,const algo::strptr& jkey );
@@ -500,16 +476,15 @@ struct Gclicmdt { // gclidb.Gclicmdt: Internal test
     // func:gclidb.Gclicmdt..Ctor
     inline               Gclicmdt() __attribute__((nothrow));
 };
-
 // func:gclidb.Gclicmdt.gclicmd.Get
-algo::Smallstr250    gclicmd_Get(gclidb::Gclicmdt& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         gclicmd_Get(gclidb::Gclicmdt& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:gclidb.Gclicmdt.gclicmd.Get2
-algo::Smallstr250    Gclicmdt_gclicmd_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Gclicmdt_gclicmd_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:gclidb.Gclicmdt.gtype.Get
-algo::Smallstr50     gtype_Get(gclidb::Gclicmdt& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         gtype_Get(gclidb::Gclicmdt& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:gclidb.Gclicmdt.gtype.Get2
-algo::Smallstr50     Gclicmdt_gtype_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Gclicmdt_gtype_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:gclidb.Gclicmdt..Concat_gclicmd_gtype
 tempstr              Gclicmdt_Concat_gclicmd_gtype( const algo::strptr& gclicmd ,const algo::strptr& gtype );
@@ -527,81 +502,6 @@ inline void          Gclicmdt_Init(gclidb::Gclicmdt& parent);
 // func:gclidb.Gclicmdt..Print
 void                 Gclicmdt_Print(gclidb::Gclicmdt& row, algo::cstring& str) __attribute__((nothrow));
 
-// --- gclidb.Gclienv
-struct Gclienv { // gclidb.Gclienv
-    algo::Smallstr50   gclienv;   //
-    algo::cstring      addon;     //
-    algo::Comment      comment;   //
-    // func:gclidb.Gclienv..Ctor
-    inline               Gclienv() __attribute__((nothrow));
-};
-
-// func:gclidb.Gclienv..ReadFieldMaybe
-bool                 Gclienv_ReadFieldMaybe(gclidb::Gclienv& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of gclidb::Gclienv from an ascii string.
-// The format of the string is an ssim Tuple
-// func:gclidb.Gclienv..ReadStrptrMaybe
-bool                 Gclienv_ReadStrptrMaybe(gclidb::Gclienv &parent, algo::strptr in_str) __attribute__((nothrow));
-// print string representation of ROW to string STR
-// cfmt:gclidb.Gclienv.String  printfmt:Tuple
-// func:gclidb.Gclienv..Print
-void                 Gclienv_Print(gclidb::Gclienv& row, algo::cstring& str) __attribute__((nothrow));
-
-// --- gclidb.Gclienvsub
-struct Gclienvsub { // gclidb.Gclienvsub
-    algo::Smallstr50   gclienvsub;   //
-    bool               fwd;          //   false
-    bool               rev;          //   false
-    algo::cstring      uval;         //
-    // func:gclidb.Gclienvsub..Ctor
-    inline               Gclienvsub() __attribute__((nothrow));
-};
-
-// func:gclidb.Gclienvsub.gclienv.Get
-algo::Smallstr50     gclienv_Get(gclidb::Gclienvsub& parent) __attribute__((__warn_unused_result__, nothrow));
-// func:gclidb.Gclienvsub.gclienv.Get2
-algo::Smallstr50     Gclienvsub_gclienv_Get(algo::strptr arg) __attribute__((nothrow));
-
-// func:gclidb.Gclienvsub.sub.Get
-algo::Smallstr50     sub_Get(gclidb::Gclienvsub& parent) __attribute__((__warn_unused_result__, nothrow));
-// func:gclidb.Gclienvsub.sub.Get2
-algo::Smallstr50     Gclienvsub_sub_Get(algo::strptr arg) __attribute__((nothrow));
-
-// func:gclidb.Gclienvsub..Concat_gclienv_sub
-tempstr              Gclienvsub_Concat_gclienv_sub( const algo::strptr& gclienv ,const algo::strptr& sub );
-// func:gclidb.Gclienvsub..ReadFieldMaybe
-bool                 Gclienvsub_ReadFieldMaybe(gclidb::Gclienvsub& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of gclidb::Gclienvsub from an ascii string.
-// The format of the string is an ssim Tuple
-// func:gclidb.Gclienvsub..ReadStrptrMaybe
-bool                 Gclienvsub_ReadStrptrMaybe(gclidb::Gclienvsub &parent, algo::strptr in_str) __attribute__((nothrow));
-// Set all fields to initial values.
-// func:gclidb.Gclienvsub..Init
-inline void          Gclienvsub_Init(gclidb::Gclienvsub& parent);
-// print string representation of ROW to string STR
-// cfmt:gclidb.Gclienvsub.String  printfmt:Tuple
-// func:gclidb.Gclienvsub..Print
-void                 Gclienvsub_Print(gclidb::Gclienvsub& row, algo::cstring& str) __attribute__((nothrow));
-
-// --- gclidb.Gclisub
-struct Gclisub { // gclidb.Gclisub
-    algo::Smallstr50   gclisub;   //
-    algo::Comment      comment;   //
-    // func:gclidb.Gclisub..Ctor
-    inline               Gclisub() __attribute__((nothrow));
-};
-
-// func:gclidb.Gclisub..ReadFieldMaybe
-bool                 Gclisub_ReadFieldMaybe(gclidb::Gclisub& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of gclidb::Gclisub from an ascii string.
-// The format of the string is an ssim Tuple
-// func:gclidb.Gclisub..ReadStrptrMaybe
-bool                 Gclisub_ReadStrptrMaybe(gclidb::Gclisub &parent, algo::strptr in_str) __attribute__((nothrow));
-// print string representation of ROW to string STR
-// cfmt:gclidb.Gclisub.String  printfmt:Tuple
-// func:gclidb.Gclisub..Print
-void                 Gclisub_Print(gclidb::Gclisub& row, algo::cstring& str) __attribute__((nothrow));
-
 // --- gclidb.Gfld
 struct Gfld { // gclidb.Gfld: Gitlab/github field name
     algo::Smallstr50   gfld;      //
@@ -609,7 +509,6 @@ struct Gfld { // gclidb.Gfld: Gitlab/github field name
     // func:gclidb.Gfld..Ctor
     inline               Gfld() __attribute__((nothrow));
 };
-
 // func:gclidb.Gfld..ReadFieldMaybe
 bool                 Gfld_ReadFieldMaybe(gclidb::Gfld& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of gclidb::Gfld from an ascii string.
@@ -627,21 +526,20 @@ struct Githost { // gclidb.Githost
     // func:gclidb.Githost..Ctor
     inline               Githost() __attribute__((nothrow));
 };
-
 // func:gclidb.Githost.git.Get
-algo::cstring        git_Get(gclidb::Githost& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         git_Get(gclidb::Githost& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:gclidb.Githost.git.Get2
-algo::cstring        Githost_git_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Githost_git_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:gclidb.Githost.host.Get
-algo::cstring        host_Get(gclidb::Githost& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         host_Get(gclidb::Githost& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:gclidb.Githost.host.Get2
-algo::cstring        Githost_host_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Githost_host_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:gclidb.Githost.gitrepo.Get
-algo::cstring        gitrepo_Get(gclidb::Githost& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         gitrepo_Get(gclidb::Githost& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:gclidb.Githost.gitrepo.Get2
-algo::cstring        Githost_gitrepo_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Githost_gitrepo_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:gclidb.Githost..Concat_git_host_gitrepo
 tempstr              Githost_Concat_git_host_gitrepo( const algo::strptr& git ,const algo::strptr& host ,const algo::strptr& gitrepo );
@@ -654,7 +552,6 @@ struct Gmethod { // gclidb.Gmethod: HTTP method list
     // func:gclidb.Gmethod..Ctor
     inline               Gmethod() __attribute__((nothrow));
 };
-
 // func:gclidb.Gmethod..ReadFieldMaybe
 bool                 Gmethod_ReadFieldMaybe(gclidb::Gmethod& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of gclidb::Gmethod from an ascii string.
@@ -684,16 +581,15 @@ struct Grepo { // gclidb.Grepo: Repo table (acr grepo -in ~/.ssim)
     // func:gclidb.Grepo..Ctor
     inline               Grepo() __attribute__((nothrow));
 };
-
 // func:gclidb.Grepo.host.Get
-algo::cstring        host_Get(gclidb::Grepo& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         host_Get(gclidb::Grepo& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:gclidb.Grepo.host.Get2
-algo::cstring        Grepo_host_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Grepo_host_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:gclidb.Grepo.fname.Get
-algo::cstring        fname_Get(gclidb::Grepo& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         fname_Get(gclidb::Grepo& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:gclidb.Grepo.fname.Get2
-algo::cstring        Grepo_fname_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Grepo_fname_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:gclidb.Grepo..Concat_host_fname
 tempstr              Grepo_Concat_host_fname( const algo::strptr& host ,const algo::strptr& fname );
@@ -718,16 +614,15 @@ struct Gstate { // gclidb.Gstate: Issue/MR state list
     // func:gclidb.Gstate..Ctor
     inline               Gstate() __attribute__((nothrow));
 };
-
 // func:gclidb.Gstate.st.Get
-algo::cstring        st_Get(gclidb::Gstate& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         st_Get(gclidb::Gstate& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:gclidb.Gstate.st.Get2
-algo::cstring        Gstate_st_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Gstate_st_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:gclidb.Gstate.state.Get
-algo::cstring        state_Get(gclidb::Gstate& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         state_Get(gclidb::Gstate& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:gclidb.Gstate.state.Get2
-algo::cstring        Gstate_state_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Gstate_state_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:gclidb.Gstate..Concat_st_state
 tempstr              Gstate_Concat_st_state( const algo::strptr& st ,const algo::strptr& state );
@@ -749,16 +644,15 @@ struct Gstatet { // gclidb.Gstatet: Internal
     // func:gclidb.Gstatet..Ctor
     inline               Gstatet() __attribute__((nothrow));
 };
-
 // func:gclidb.Gstatet.gtype.Get
-algo::Smallstr50     gtype_Get(gclidb::Gstatet& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         gtype_Get(gclidb::Gstatet& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:gclidb.Gstatet.gtype.Get2
-algo::Smallstr50     Gstatet_gtype_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Gstatet_gtype_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:gclidb.Gstatet.gstate.Get
-algo::Smallstr50     gstate_Get(gclidb::Gstatet& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         gstate_Get(gclidb::Gstatet& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:gclidb.Gstatet.gstate.Get2
-algo::Smallstr50     Gstatet_gstate_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Gstatet_gstate_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:gclidb.Gstatet..Concat_gstate_gtype
 tempstr              Gstatet_Concat_gstate_gtype( const algo::strptr& gstate ,const algo::strptr& gtype );
@@ -780,7 +674,6 @@ struct Gtbl { // gclidb.Gtbl: Supported gcli tables
     // func:gclidb.Gtbl..Ctor
     inline               Gtbl() __attribute__((nothrow));
 };
-
 // func:gclidb.Gtbl..ReadFieldMaybe
 bool                 Gtbl_ReadFieldMaybe(gclidb::Gtbl& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of gclidb::Gtbl from an ascii string.
@@ -801,16 +694,15 @@ struct Gtblact { // gclidb.Gtblact: static combination of gcli tables and action
     // func:gclidb.Gtblact..Ctor
     inline               Gtblact() __attribute__((nothrow));
 };
-
 // func:gclidb.Gtblact.gtbl.Get
-algo::Smallstr250    gtbl_Get(gclidb::Gtblact& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         gtbl_Get(gclidb::Gtblact& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:gclidb.Gtblact.gtbl.Get2
-algo::Smallstr250    Gtblact_gtbl_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Gtblact_gtbl_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:gclidb.Gtblact.gact.Get
-algo::Smallstr50     gact_Get(gclidb::Gtblact& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         gact_Get(gclidb::Gtblact& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:gclidb.Gtblact.gact.Get2
-algo::Smallstr50     Gtblact_gact_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Gtblact_gact_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:gclidb.Gtblact..Concat_gtbl_gact
 tempstr              Gtblact_Concat_gtbl_gact( const algo::strptr& gtbl ,const algo::strptr& gact );
@@ -839,16 +731,15 @@ struct Gtblactfld { // gclidb.Gtblactfld: List of available for each table & act
     // func:gclidb.Gtblactfld..Ctor
     inline               Gtblactfld() __attribute__((nothrow));
 };
-
 // func:gclidb.Gtblactfld.gtblact.Get
-algo::Smallstr50     gtblact_Get(gclidb::Gtblactfld& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         gtblact_Get(gclidb::Gtblactfld& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:gclidb.Gtblactfld.gtblact.Get2
-algo::Smallstr50     Gtblactfld_gtblact_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Gtblactfld_gtblact_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:gclidb.Gtblactfld.field.Get
-algo::Smallstr50     field_Get(gclidb::Gtblactfld& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         field_Get(gclidb::Gtblactfld& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:gclidb.Gtblactfld.field.Get2
-algo::Smallstr50     Gtblactfld_field_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Gtblactfld_field_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:gclidb.Gtblactfld..Concat_gtblact_field
 tempstr              Gtblactfld_Concat_gtblact_field( const algo::strptr& gtblact ,const algo::strptr& field );
@@ -866,76 +757,6 @@ inline void          Gtblactfld_Init(gclidb::Gtblactfld& parent);
 // func:gclidb.Gtblactfld..Print
 void                 Gtblactfld_Print(gclidb::Gtblactfld& row, algo::cstring& str) __attribute__((nothrow));
 
-// --- gclidb.Gtblacttst
-struct Gtblacttst { // gclidb.Gtblacttst
-    algo::Smallstr250   gtblacttst;   //
-    bool                working;      //   true
-    algo::cstring       cmd;          //
-    algo::Comment       comment;      //
-    // func:gclidb.Gtblacttst..Ctor
-    inline               Gtblacttst() __attribute__((nothrow));
-};
-
-// func:gclidb.Gtblacttst.gtblact.Get
-algo::Smallstr50     gtblact_Get(gclidb::Gtblacttst& parent) __attribute__((__warn_unused_result__, nothrow));
-// func:gclidb.Gtblacttst.gtblact.Get2
-algo::Smallstr50     Gtblacttst_gtblact_Get(algo::strptr arg) __attribute__((nothrow));
-
-// func:gclidb.Gtblacttst.gclienv.Get
-algo::Smallstr50     gclienv_Get(gclidb::Gtblacttst& parent) __attribute__((__warn_unused_result__, nothrow));
-// func:gclidb.Gtblacttst.gclienv.Get2
-algo::Smallstr50     Gtblacttst_gclienv_Get(algo::strptr arg) __attribute__((nothrow));
-
-// func:gclidb.Gtblacttst.t.Get
-algo::cstring        t_Get(gclidb::Gtblacttst& parent) __attribute__((__warn_unused_result__, nothrow));
-// func:gclidb.Gtblacttst.t.Get2
-algo::cstring        Gtblacttst_t_Get(algo::strptr arg) __attribute__((nothrow));
-
-// func:gclidb.Gtblacttst..ReadFieldMaybe
-bool                 Gtblacttst_ReadFieldMaybe(gclidb::Gtblacttst& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of gclidb::Gtblacttst from an ascii string.
-// The format of the string is an ssim Tuple
-// func:gclidb.Gtblacttst..ReadStrptrMaybe
-bool                 Gtblacttst_ReadStrptrMaybe(gclidb::Gtblacttst &parent, algo::strptr in_str) __attribute__((nothrow));
-// Set all fields to initial values.
-// func:gclidb.Gtblacttst..Init
-inline void          Gtblacttst_Init(gclidb::Gtblacttst& parent);
-// print string representation of ROW to string STR
-// cfmt:gclidb.Gtblacttst.String  printfmt:Tuple
-// func:gclidb.Gtblacttst..Print
-void                 Gtblacttst_Print(gclidb::Gtblacttst& row, algo::cstring& str) __attribute__((nothrow));
-
-// --- gclidb.Gtblacttstout
-struct Gtblacttstout { // gclidb.Gtblacttstout
-    algo::Smallstr250   gtblacttstout;   //
-    algo::cstring       text;            //
-    // func:gclidb.Gtblacttstout..Ctor
-    inline               Gtblacttstout() __attribute__((nothrow));
-};
-
-// func:gclidb.Gtblacttstout.gtblacttst.Get
-algo::Smallstr250    gtblacttst_Get(gclidb::Gtblacttstout& parent) __attribute__((__warn_unused_result__, nothrow));
-// func:gclidb.Gtblacttstout.gtblacttst.Get2
-algo::Smallstr250    Gtblacttstout_gtblacttst_Get(algo::strptr arg) __attribute__((nothrow));
-
-// func:gclidb.Gtblacttstout.out.Get
-algo::cstring        out_Get(gclidb::Gtblacttstout& parent) __attribute__((__warn_unused_result__, nothrow));
-// func:gclidb.Gtblacttstout.out.Get2
-algo::cstring        Gtblacttstout_out_Get(algo::strptr arg) __attribute__((nothrow));
-
-// func:gclidb.Gtblacttstout..Concat_gtblacttst_out
-tempstr              Gtblacttstout_Concat_gtblacttst_out( const algo::strptr& gtblacttst ,const algo::strptr& out );
-// func:gclidb.Gtblacttstout..ReadFieldMaybe
-bool                 Gtblacttstout_ReadFieldMaybe(gclidb::Gtblacttstout& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of gclidb::Gtblacttstout from an ascii string.
-// The format of the string is an ssim Tuple
-// func:gclidb.Gtblacttstout..ReadStrptrMaybe
-bool                 Gtblacttstout_ReadStrptrMaybe(gclidb::Gtblacttstout &parent, algo::strptr in_str) __attribute__((nothrow));
-// print string representation of ROW to string STR
-// cfmt:gclidb.Gtblacttstout.String  printfmt:Tuple
-// func:gclidb.Gtblacttstout..Print
-void                 Gtblacttstout_Print(gclidb::Gtblacttstout& row, algo::cstring& str) __attribute__((nothrow));
-
 // --- gclidb.Gtype
 struct Gtype { // gclidb.Gtype: Platform type (ghp=github; glpat=gitlab)
     algo::Smallstr50   gtype;         //
@@ -944,7 +765,6 @@ struct Gtype { // gclidb.Gtype: Platform type (ghp=github; glpat=gitlab)
     // func:gclidb.Gtype..Ctor
     inline               Gtype() __attribute__((nothrow));
 };
-
 // func:gclidb.Gtype..ReadFieldMaybe
 bool                 Gtype_ReadFieldMaybe(gclidb::Gtype& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of gclidb::Gtype from an ascii string.
@@ -963,16 +783,15 @@ struct Gtypeh { // gclidb.Gtypeh: HTTP heaaderes for user with platform
     // func:gclidb.Gtypeh..Ctor
     inline               Gtypeh() __attribute__((nothrow));
 };
-
 // func:gclidb.Gtypeh.gtype.Get
-algo::Smallstr50     gtype_Get(gclidb::Gtypeh& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         gtype_Get(gclidb::Gtypeh& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:gclidb.Gtypeh.gtype.Get2
-algo::Smallstr50     Gtypeh_gtype_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Gtypeh_gtype_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:gclidb.Gtypeh.name.Get
-algo::cstring        name_Get(gclidb::Gtypeh& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(gclidb::Gtypeh& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:gclidb.Gtypeh.name.Get2
-algo::cstring        Gtypeh_name_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Gtypeh_name_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:gclidb.Gtypeh..Concat_gtype_name
 tempstr              Gtypeh_Concat_gtype_name( const algo::strptr& gtype ,const algo::strptr& name );
@@ -994,16 +813,15 @@ struct Gtypeprefix { // gclidb.Gtypeprefix: Token prefix mapping to platform
     // func:gclidb.Gtypeprefix..Ctor
     inline               Gtypeprefix() __attribute__((nothrow));
 };
-
 // func:gclidb.Gtypeprefix.gtype.Get
-algo::Smallstr50     gtype_Get(gclidb::Gtypeprefix& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         gtype_Get(gclidb::Gtypeprefix& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:gclidb.Gtypeprefix.gtype.Get2
-algo::Smallstr50     Gtypeprefix_gtype_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Gtypeprefix_gtype_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:gclidb.Gtypeprefix.prefix.Get
-algo::cstring        prefix_Get(gclidb::Gtypeprefix& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         prefix_Get(gclidb::Gtypeprefix& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:gclidb.Gtypeprefix.prefix.Get2
-algo::cstring        Gtypeprefix_prefix_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Gtypeprefix_prefix_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:gclidb.Gtypeprefix..Concat_gtype_prefix
 tempstr              Gtypeprefix_Concat_gtype_prefix( const algo::strptr& gtype ,const algo::strptr& prefix );
@@ -1034,16 +852,15 @@ struct Issue { // gclidb.Issue: Gitlab project issue
     // func:gclidb.Issue..Ctor
     inline               Issue() __attribute__((nothrow));
 };
-
 // func:gclidb.Issue.project.Get
-algo::Smallstr50     project_Get(gclidb::Issue& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         project_Get(gclidb::Issue& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:gclidb.Issue.project.Get2
-algo::Smallstr50     Issue_project_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Issue_project_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:gclidb.Issue.iid.Get
-algo::cstring        iid_Get(gclidb::Issue& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         iid_Get(gclidb::Issue& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:gclidb.Issue.iid.Get2
-algo::cstring        Issue_iid_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Issue_iid_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:gclidb.Issue..Concat_project_iid
 tempstr              Issue_Concat_project_iid( const algo::strptr& project ,const algo::strptr& iid );
@@ -1067,16 +884,15 @@ struct Issuenote { // gclidb.Issuenote: Issue note
     // func:gclidb.Issuenote..Ctor
     inline               Issuenote() __attribute__((nothrow));
 };
-
 // func:gclidb.Issuenote.issue.Get
-algo::Smallstr50     issue_Get(gclidb::Issuenote& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         issue_Get(gclidb::Issuenote& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:gclidb.Issuenote.issue.Get2
-algo::Smallstr50     Issuenote_issue_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Issuenote_issue_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:gclidb.Issuenote.nid.Get
-algo::cstring        nid_Get(gclidb::Issuenote& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         nid_Get(gclidb::Issuenote& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:gclidb.Issuenote.nid.Get2
-algo::cstring        Issuenote_nid_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Issuenote_nid_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:gclidb.Issuenote..Concat_issue_nid
 tempstr              Issuenote_Concat_issue_nid( const algo::strptr& issue ,const algo::strptr& nid );
@@ -1099,16 +915,15 @@ struct Issuepipeline { // gclidb.Issuepipeline: Issue pipeline
     // func:gclidb.Issuepipeline..Ctor
     inline               Issuepipeline() __attribute__((nothrow));
 };
-
 // func:gclidb.Issuepipeline.issue.Get
-algo::Smallstr50     issue_Get(gclidb::Issuepipeline& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         issue_Get(gclidb::Issuepipeline& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:gclidb.Issuepipeline.issue.Get2
-algo::Smallstr50     Issuepipeline_issue_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Issuepipeline_issue_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:gclidb.Issuepipeline.id.Get
-algo::cstring        id_Get(gclidb::Issuepipeline& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         id_Get(gclidb::Issuepipeline& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:gclidb.Issuepipeline.id.Get2
-algo::cstring        Issuepipeline_id_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Issuepipeline_id_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:gclidb.Issuepipeline..Concat_issue_id
 tempstr              Issuepipeline_Concat_issue_id( const algo::strptr& issue ,const algo::strptr& id );
@@ -1130,7 +945,6 @@ struct Label { // gclidb.Label: List of labels for gitlab/github
     // func:gclidb.Label..Ctor
     inline               Label() __attribute__((nothrow));
 };
-
 // func:gclidb.Label..ReadFieldMaybe
 bool                 Label_ReadFieldMaybe(gclidb::Label& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of gclidb::Label from an ascii string.
@@ -1150,16 +964,15 @@ struct Milestone { // gclidb.Milestone: Gclidb project milestone
     // func:gclidb.Milestone..Ctor
     inline               Milestone() __attribute__((nothrow));
 };
-
 // func:gclidb.Milestone.project.Get
-algo::Smallstr50     project_Get(gclidb::Milestone& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         project_Get(gclidb::Milestone& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:gclidb.Milestone.project.Get2
-algo::Smallstr50     Milestone_project_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Milestone_project_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:gclidb.Milestone.iid.Get
-algo::cstring        iid_Get(gclidb::Milestone& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         iid_Get(gclidb::Milestone& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:gclidb.Milestone.iid.Get2
-algo::cstring        Milestone_iid_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Milestone_iid_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:gclidb.Milestone..Concat_project_iid
 tempstr              Milestone_Concat_project_iid( const algo::strptr& project ,const algo::strptr& iid );
@@ -1188,19 +1001,20 @@ struct Mr { // gclidb.Mr: Gitlab project mr
     algo::cstring       pipeline_id;       // Pipeline id
     algo::cstring       draft;             // Some draft status
     algo::cstring       node_id;           // Node id for graphQL
+    algo::cstring       merge_status;      //   ""  Detailed merge status (single-mr fetch)
+    algo::cstring       behind;            //   ""  Commits the source branch is behind the target
     // func:gclidb.Mr..Ctor
     inline               Mr() __attribute__((nothrow));
 };
-
 // func:gclidb.Mr.proj.Get
-algo::Smallstr50     proj_Get(gclidb::Mr& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         proj_Get(gclidb::Mr& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:gclidb.Mr.proj.Get2
-algo::Smallstr50     Mr_proj_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Mr_proj_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:gclidb.Mr.iid.Get
-algo::cstring        iid_Get(gclidb::Mr& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         iid_Get(gclidb::Mr& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:gclidb.Mr.iid.Get2
-algo::cstring        Mr_iid_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Mr_iid_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:gclidb.Mr..Concat_proj_iid
 tempstr              Mr_Concat_proj_iid( const algo::strptr& proj ,const algo::strptr& iid );
@@ -1210,6 +1024,9 @@ bool                 Mr_ReadFieldMaybe(gclidb::Mr& parent, algo::strptr field, a
 // The format of the string is an ssim Tuple
 // func:gclidb.Mr..ReadStrptrMaybe
 bool                 Mr_ReadStrptrMaybe(gclidb::Mr &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:gclidb.Mr..Init
+void                 Mr_Init(gclidb::Mr& parent);
 // print string representation of ROW to string STR
 // cfmt:gclidb.Mr.String  printfmt:Tuple
 // func:gclidb.Mr..Print
@@ -1227,16 +1044,15 @@ struct Mrjob { // gclidb.Mrjob: Mr job
     // func:gclidb.Mrjob..Ctor
     inline               Mrjob() __attribute__((nothrow));
 };
-
 // func:gclidb.Mrjob.mr.Get
-algo::Smallstr150    mr_Get(gclidb::Mrjob& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         mr_Get(gclidb::Mrjob& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:gclidb.Mrjob.mr.Get2
-algo::Smallstr150    Mrjob_mr_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Mrjob_mr_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:gclidb.Mrjob.job.Get
-algo::cstring        job_Get(gclidb::Mrjob& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         job_Get(gclidb::Mrjob& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:gclidb.Mrjob.job.Get2
-algo::cstring        Mrjob_job_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Mrjob_job_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:gclidb.Mrjob..Concat_mr_job
 tempstr              Mrjob_Concat_mr_job( const algo::strptr& mr ,const algo::strptr& job );
@@ -1253,23 +1069,24 @@ void                 Mrjob_Print(gclidb::Mrjob& row, algo::cstring& str) __attri
 
 // --- gclidb.Mrnote
 struct Mrnote { // gclidb.Mrnote: Issue note
-    algo::cstring       system;   // System or user note (glab only)
-    algo::Smallstr250   mrnote;   // Identifier. must be in form issue.id
-    algo::cstring       note;     // Body of mr note
-    algo::cstring       author;   // Authtor of mr note
+    algo::cstring       system;       // System or user note (glab only)
+    algo::Smallstr250   mrnote;       // Identifier. must be in form issue.id
+    algo::cstring       note;         // Body of mr note
+    algo::cstring       author;       // Authtor of mr note
+    algo::cstring       resolvable;   //   ""  Note is part of a resolvable review thread
+    algo::cstring       resolved;     //   ""  Resolvable note has been resolved
     // func:gclidb.Mrnote..Ctor
     inline               Mrnote() __attribute__((nothrow));
 };
-
 // func:gclidb.Mrnote.nid.Get
-algo::cstring        nid_Get(gclidb::Mrnote& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         nid_Get(gclidb::Mrnote& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:gclidb.Mrnote.nid.Get2
-algo::cstring        Mrnote_nid_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Mrnote_nid_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:gclidb.Mrnote.mr.Get
-algo::Smallstr150    mr_Get(gclidb::Mrnote& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         mr_Get(gclidb::Mrnote& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:gclidb.Mrnote.mr.Get2
-algo::Smallstr150    Mrnote_mr_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Mrnote_mr_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:gclidb.Mrnote..Concat_mr_nid
 tempstr              Mrnote_Concat_mr_nid( const algo::strptr& mr ,const algo::strptr& nid );
@@ -1279,6 +1096,9 @@ bool                 Mrnote_ReadFieldMaybe(gclidb::Mrnote& parent, algo::strptr 
 // The format of the string is an ssim Tuple
 // func:gclidb.Mrnote..ReadStrptrMaybe
 bool                 Mrnote_ReadStrptrMaybe(gclidb::Mrnote &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:gclidb.Mrnote..Init
+inline void          Mrnote_Init(gclidb::Mrnote& parent);
 // print string representation of ROW to string STR
 // cfmt:gclidb.Mrnote.String  printfmt:Tuple
 // func:gclidb.Mrnote..Print
@@ -1291,6 +1111,41 @@ struct Project { // gclidb.Project: Gitlab project mr
     inline               Project() __attribute__((nothrow));
 };
 
+// --- gclidb.Token
+struct Token { // gclidb.Token
+    algo::Smallstr50   token;     //
+    algo::cstring      name;      //
+    algo::cstring      active;    //
+    algo::cstring      revoked;   //
+    algo::cstring      expires;   //
+    algo::cstring      scopes;    //
+    algo::cstring      secret;    //
+    algo::Comment      comment;   //
+    // func:gclidb.Token..Ctor
+    inline               Token() __attribute__((nothrow));
+};
+// func:gclidb.Token.project.Get
+algo::strptr         project_Get(gclidb::Token& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:gclidb.Token.project.Get2
+algo::strptr         Token_project_Get(algo::strptr arg) __attribute__((nothrow));
+
+// func:gclidb.Token.iid.Get
+algo::strptr         iid_Get(gclidb::Token& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:gclidb.Token.iid.Get2
+algo::strptr         Token_iid_Get(algo::strptr arg) __attribute__((nothrow));
+
+// func:gclidb.Token..Concat_project_iid
+tempstr              Token_Concat_project_iid( const algo::strptr& project ,const algo::strptr& iid );
+// func:gclidb.Token..ReadFieldMaybe
+bool                 Token_ReadFieldMaybe(gclidb::Token& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of gclidb::Token from an ascii string.
+// The format of the string is an ssim Tuple
+// func:gclidb.Token..ReadStrptrMaybe
+bool                 Token_ReadStrptrMaybe(gclidb::Token &parent, algo::strptr in_str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:gclidb.Token.String  printfmt:Tuple
+// func:gclidb.Token..Print
+void                 Token_Print(gclidb::Token& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- gclidb.User
 struct User { // gclidb.User
@@ -1300,7 +1155,6 @@ struct User { // gclidb.User
     // func:gclidb.User..Ctor
     inline               User() __attribute__((nothrow));
 };
-
 // func:gclidb.User..ReadFieldMaybe
 bool                 User_ReadFieldMaybe(gclidb::User& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of gclidb::User from an ascii string.
@@ -1325,9 +1179,6 @@ inline algo::cstring &operator <<(algo::cstring &str, const gclidb::Gatv &row);/
 inline algo::cstring &operator <<(algo::cstring &str, const gclidb::Gclicmd &row);// cfmt:gclidb.Gclicmd.String
 inline algo::cstring &operator <<(algo::cstring &str, const gclidb::Gclicmdf2j &row);// cfmt:gclidb.Gclicmdf2j.String
 inline algo::cstring &operator <<(algo::cstring &str, const gclidb::Gclicmdt &row);// cfmt:gclidb.Gclicmdt.String
-inline algo::cstring &operator <<(algo::cstring &str, const gclidb::Gclienv &row);// cfmt:gclidb.Gclienv.String
-inline algo::cstring &operator <<(algo::cstring &str, const gclidb::Gclienvsub &row);// cfmt:gclidb.Gclienvsub.String
-inline algo::cstring &operator <<(algo::cstring &str, const gclidb::Gclisub &row);// cfmt:gclidb.Gclisub.String
 inline algo::cstring &operator <<(algo::cstring &str, const gclidb::Gfld &row);// cfmt:gclidb.Gfld.String
 inline algo::cstring &operator <<(algo::cstring &str, const gclidb::Gmethod &row);// cfmt:gclidb.Gmethod.String
 inline algo::cstring &operator <<(algo::cstring &str, const gclidb::Grepo &row);// cfmt:gclidb.Grepo.String
@@ -1336,8 +1187,6 @@ inline algo::cstring &operator <<(algo::cstring &str, const gclidb::Gstatet &row
 inline algo::cstring &operator <<(algo::cstring &str, const gclidb::Gtbl &row);// cfmt:gclidb.Gtbl.String
 inline algo::cstring &operator <<(algo::cstring &str, const gclidb::Gtblact &row);// cfmt:gclidb.Gtblact.String
 inline algo::cstring &operator <<(algo::cstring &str, const gclidb::Gtblactfld &row);// cfmt:gclidb.Gtblactfld.String
-inline algo::cstring &operator <<(algo::cstring &str, const gclidb::Gtblacttst &row);// cfmt:gclidb.Gtblacttst.String
-inline algo::cstring &operator <<(algo::cstring &str, const gclidb::Gtblacttstout &row);// cfmt:gclidb.Gtblacttstout.String
 inline algo::cstring &operator <<(algo::cstring &str, const gclidb::Gtype &row);// cfmt:gclidb.Gtype.String
 inline algo::cstring &operator <<(algo::cstring &str, const gclidb::Gtypeh &row);// cfmt:gclidb.Gtypeh.String
 inline algo::cstring &operator <<(algo::cstring &str, const gclidb::Gtypeprefix &row);// cfmt:gclidb.Gtypeprefix.String
@@ -1349,5 +1198,6 @@ inline algo::cstring &operator <<(algo::cstring &str, const gclidb::Milestone &r
 inline algo::cstring &operator <<(algo::cstring &str, const gclidb::Mr &row);// cfmt:gclidb.Mr.String
 inline algo::cstring &operator <<(algo::cstring &str, const gclidb::Mrjob &row);// cfmt:gclidb.Mrjob.String
 inline algo::cstring &operator <<(algo::cstring &str, const gclidb::Mrnote &row);// cfmt:gclidb.Mrnote.String
+inline algo::cstring &operator <<(algo::cstring &str, const gclidb::Token &row);// cfmt:gclidb.Token.String
 inline algo::cstring &operator <<(algo::cstring &str, const gclidb::User &row);// cfmt:gclidb.User.String
 }

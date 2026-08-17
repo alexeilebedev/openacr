@@ -39,10 +39,14 @@ static void PrintPrecomment(src_func::FFunc &func, cstring &out) {
 static tempstr FirstLineWithoutNs(src_func::FFunc &func, strptr ns) {
     tempstr proto(GetProto(func)); // void ns::funcname(....)
     // strip namespace by looking for "ns::"
-    // to the left of the first paren
+    // to the left of the function's own paren
     // and excluding it from the prototype;
+    // the paren search starts past any template parameter list,
+    // which can carry parens of its own
     tempstr nsstr = tempstr() << ns << "::";
-    int paren=Find(strptr(proto),'(');
+    strptr stripped = src_func::StripTemplate(proto);
+    int offset = ch_N(proto)-stripped.n_elems;
+    int paren = offset+Find(stripped,'(');
     strptr left=FirstN(strptr(proto),paren);
     algo::i32_Range r=substr_FindLast(left,nsstr);
     return tempstr() << FirstN(strptr(proto),r.beg)
@@ -118,7 +122,7 @@ void src_func::PrintGlobalProtos(src_func::FTarget &target, strptr ns, strptr sr
         if (Regx_Match(regx,src_Get(targsrc))) {
             tempstr funcs;
             ind_beg(src_func::targsrc_zd_func_curs,func,targsrc) {
-                if (!func.isstatic && src_func::GetFuncNs(func) == ns) {
+                if (!func.isstatic && src_func::GetFuncNs(func.func) == ns) {
                     func.p_written_to = &targsrc; // save it
                     PrintGlobalProtos_Decl(func,funcs,ns);
                 }
@@ -143,12 +147,16 @@ void src_func::Main_ListFunc() {
             if (_db.cmdline.printssim) {
                 prlog("src_func.func"
                       <<Keyval("func",func.name)
+                      <<Keyval("args",func.args)
                       <<Keyval("isstatic",func.isstatic)
                       <<Keyval("isinline",func.isinline)
                       <<Keyval("acrkey",func.p_userfunc ? strptr(func.p_userfunc->acrkey) : strptr())
                       <<Keyval("iffy",func.iffy)
                       <<Keyval("mystery",func.mystery)
                       <<Keyval("sortkey",func.sortkey)
+                      <<Keyval("src",src_Get(*func.p_targsrc))
+                      <<Keyval("line",func.line)
+                      <<Keyval("endline",func.endline)
                       <<Keyval("proto",func.func)
                       );
             } else {

@@ -34,31 +34,40 @@ extern const char *  amcdb_Curstype_curstype_unordcurs;   // unordcurs    fconst
 
 // --- amcdb_FieldIdEnum
 
-enum amcdb_FieldIdEnum {            // amcdb.FieldId.value
-     amcdb_FieldId_ctype      = 0
-    ,amcdb_FieldId_likeu64    = 1
-    ,amcdb_FieldId_bigendok   = 2
-    ,amcdb_FieldId_issigned   = 3
-    ,amcdb_FieldId_comment    = 4
-    ,amcdb_FieldId_curstype   = 5
-    ,amcdb_FieldId_gen        = 6
-    ,amcdb_FieldId_perns      = 7
-    ,amcdb_FieldId_regxtype   = 8
-    ,amcdb_FieldId_tclass     = 9
-    ,amcdb_FieldId_tfunc      = 10
-    ,amcdb_FieldId_dflt       = 11
-    ,amcdb_FieldId_name       = 12
-    ,amcdb_FieldId_hasthrow   = 13
-    ,amcdb_FieldId_leaf       = 14
-    ,amcdb_FieldId_poolfunc   = 15
-    ,amcdb_FieldId_inl        = 16
-    ,amcdb_FieldId_wur        = 17
-    ,amcdb_FieldId_pure       = 18
-    ,amcdb_FieldId_ismacro    = 19
-    ,amcdb_FieldId_value      = 20
+enum amcdb_FieldIdEnum {    // amcdb.FieldId.value
+     amcdb_FieldId_ctype
+    ,amcdb_FieldId_likeu64
+    ,amcdb_FieldId_bigendok
+    ,amcdb_FieldId_issigned
+    ,amcdb_FieldId_comment
+    ,amcdb_FieldId_cbtype
+    ,amcdb_FieldId_curstype
+    ,amcdb_FieldId_gen
+    ,amcdb_FieldId_perns
+    ,amcdb_FieldId_pbtype
+    ,amcdb_FieldId_wire_type
+    ,amcdb_FieldId_suffix
+    ,amcdb_FieldId_encval
+    ,amcdb_FieldId_decval
+    ,amcdb_FieldId_nondflt
+    ,amcdb_FieldId_argtype
+    ,amcdb_FieldId_regxtype
+    ,amcdb_FieldId_tclass
+    ,amcdb_FieldId_tcond
+    ,amcdb_FieldId_name
+    ,amcdb_FieldId_tfunc
+    ,amcdb_FieldId_dflt
+    ,amcdb_FieldId_hasthrow
+    ,amcdb_FieldId_leaf
+    ,amcdb_FieldId_poolfunc
+    ,amcdb_FieldId_inl
+    ,amcdb_FieldId_wur
+    ,amcdb_FieldId_pure
+    ,amcdb_FieldId_ismacro
+    ,amcdb_FieldId_value
 };
 
-enum { amcdb_FieldIdEnum_N = 21 };
+enum { amcdb_FieldIdEnum_N = 30 };
 
 extern const char *  amcdb_Tclass_tclass_Alias;      // Alias       fconst:amcdb.Tclass.tclass/Alias
 extern const char *  amcdb_Tclass_tclass_Atree;      // Atree       fconst:amcdb.Tclass.tclass/Atree
@@ -66,6 +75,7 @@ extern const char *  amcdb_Tclass_tclass_Base;       // Base        fconst:amcdb
 extern const char *  amcdb_Tclass_tclass_Bheap;      // Bheap       fconst:amcdb.Tclass.tclass/Bheap
 extern const char *  amcdb_Tclass_tclass_Bitfld;     // Bitfld      fconst:amcdb.Tclass.tclass/Bitfld
 extern const char *  amcdb_Tclass_tclass_Bitset;     // Bitset      fconst:amcdb.Tclass.tclass/Bitset
+extern const char *  amcdb_Tclass_tclass_Blkhash;    // Blkhash     fconst:amcdb.Tclass.tclass/Blkhash
 extern const char *  amcdb_Tclass_tclass_Blkpool;    // Blkpool     fconst:amcdb.Tclass.tclass/Blkpool
 extern const char *  amcdb_Tclass_tclass_Charset;    // Charset     fconst:amcdb.Tclass.tclass/Charset
 extern const char *  amcdb_Tclass_tclass_Cmp;        // Cmp         fconst:amcdb.Tclass.tclass/Cmp
@@ -113,21 +123,27 @@ extern const char *  amcdb_Tclass_tclass_Val;        // Val         fconst:amcdb
 extern const char *  amcdb_Tclass_tclass_Varlen;     // Varlen      fconst:amcdb.Tclass.tclass/Varlen
 extern const char *  amcdb_Tclass_tclass_ZSListMT;   // ZSListMT    fconst:amcdb.Tclass.tclass/ZSListMT
 namespace amcdb { // gen:ns_pkeytypedef
+    typedef algo::Smallstr50 CbtypePkey;
     typedef algo::Smallstr50 CurstypePkey;
     typedef algo::Smallstr50 GenPkey;
+    typedef algo::Smallstr20 PbtypePkey;
     typedef algo::Smallstr50 RegxtypePkey;
     typedef algo::Smallstr50 TclassPkey;
+    typedef algo::Smallstr50 TcondPkey;
     typedef algo::Smallstr50 TfuncPkey;
 } // gen:ns_pkeytypedef
 namespace amcdb { // gen:ns_tclass_field
 } // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace amcdb { struct Bltin; }
+namespace amcdb { struct Cbtype; }
 namespace amcdb { struct Curstype; }
 namespace amcdb { struct FieldId; }
 namespace amcdb { struct Gen; }
+namespace amcdb { struct Pbtype; }
 namespace amcdb { struct Regxtype; }
 namespace amcdb { struct Tclass; }
+namespace amcdb { struct Tcond; }
 namespace amcdb { struct Tcurs; }
 namespace amcdb { struct Tfunc; }
 namespace amcdb { // gen:ns_print_struct
@@ -144,7 +160,6 @@ struct Bltin { // amcdb.Bltin: Specify properties of a C built-in type
     // func:amcdb.Bltin..FieldwiseCtor
     explicit inline               Bltin(const algo::strptr& in_ctype, bool in_likeu64, bool in_bigendok, bool in_issigned, const algo::Comment& in_comment) __attribute__((nothrow));
 };
-
 // func:amcdb.Bltin..ReadFieldMaybe
 bool                 Bltin_ReadFieldMaybe(amcdb::Bltin& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of amcdb::Bltin from an ascii string.
@@ -159,6 +174,24 @@ inline void          Bltin_Init(amcdb::Bltin& parent);
 // func:amcdb.Bltin..Print
 void                 Bltin_Print(amcdb::Bltin& row, algo::cstring& str) __attribute__((nothrow));
 
+// --- amcdb.Cbtype
+struct Cbtype { // amcdb.Cbtype: Callback type: lifecycle event a user function may handle on a field
+    algo::Smallstr50   cbtype;    //
+    algo::Comment      comment;   //
+    // func:amcdb.Cbtype..Ctor
+    inline               Cbtype() __attribute__((nothrow));
+};
+// func:amcdb.Cbtype..ReadFieldMaybe
+bool                 Cbtype_ReadFieldMaybe(amcdb::Cbtype& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of amcdb::Cbtype from an ascii string.
+// The format of the string is an ssim Tuple
+// func:amcdb.Cbtype..ReadStrptrMaybe
+bool                 Cbtype_ReadStrptrMaybe(amcdb::Cbtype &parent, algo::strptr in_str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:amcdb.Cbtype.String  printfmt:Tuple
+// func:amcdb.Cbtype..Print
+void                 Cbtype_Print(amcdb::Cbtype& row, algo::cstring& str) __attribute__((nothrow));
+
 // --- amcdb.Curstype
 struct Curstype { // amcdb.Curstype: Cursor type
     algo::Smallstr50   curstype;   //
@@ -166,7 +199,6 @@ struct Curstype { // amcdb.Curstype: Cursor type
     // func:amcdb.Curstype..Ctor
     inline               Curstype() __attribute__((nothrow));
 };
-
 // func:amcdb.Curstype..ReadFieldMaybe
 bool                 Curstype_ReadFieldMaybe(amcdb::Curstype& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of amcdb::Curstype from an ascii string.
@@ -192,7 +224,6 @@ struct FieldId { // amcdb.FieldId: Field read helper
     inline               FieldId(amcdb_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:amcdb.FieldId.value.GetEnum
 inline amcdb_FieldIdEnum value_GetEnum(const amcdb::FieldId& parent) __attribute__((nothrow));
@@ -230,7 +261,7 @@ inline void          FieldId_Init(amcdb::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:amcdb.FieldId.String  printfmt:Raw
 // func:amcdb.FieldId..Print
-void                 FieldId_Print(amcdb::FieldId& row, algo::cstring& str) __attribute__((nothrow));
+void                 FieldId_Print(amcdb::FieldId row, algo::cstring& str) __attribute__((nothrow));
 
 // --- amcdb.Gen
 struct Gen { // amcdb.Gen
@@ -240,7 +271,6 @@ struct Gen { // amcdb.Gen
     // func:amcdb.Gen..Ctor
     inline               Gen() __attribute__((nothrow));
 };
-
 // func:amcdb.Gen..ReadFieldMaybe
 bool                 Gen_ReadFieldMaybe(amcdb::Gen& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of amcdb::Gen from an ascii string.
@@ -255,6 +285,33 @@ inline void          Gen_Init(amcdb::Gen& parent);
 // func:amcdb.Gen..Print
 void                 Gen_Print(amcdb::Gen& row, algo::cstring& str) __attribute__((nothrow));
 
+// --- amcdb.Pbtype
+struct Pbtype { // amcdb.Pbtype: Protobuf scalar type: wire type and lib_pb codec binding for the pbuf codec
+    algo::Smallstr20   pbtype;      // Protobuf type name as written in dmmeta.fpbuf.pb_type
+    u8                 wire_type;   //   0  Protobuf wire type: 0=varint 1=64-bit 2=length-delimited 5=32-bit
+    algo::Smallstr20   suffix;      // suffix appended to the lib_pb Encode/Decode function names
+    algo::Smallstr50   encval;      // Encoder value expression; $fldval is the field access expression
+    algo::Smallstr50   decval;      // Decoder target expression; $fldval is the field access expression
+    algo::Smallstr50   nondflt;     // C++ expression, true when $fldval differs from the proto3 default
+    algo::Smallstr50   argtype;     //   ""  C++ arg ctype the lib_pb codec functions accept; empty when special-cased (enum, message)
+    algo::Comment      comment;     //
+    // func:amcdb.Pbtype..Ctor
+    inline               Pbtype() __attribute__((nothrow));
+};
+// func:amcdb.Pbtype..ReadFieldMaybe
+bool                 Pbtype_ReadFieldMaybe(amcdb::Pbtype& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of amcdb::Pbtype from an ascii string.
+// The format of the string is an ssim Tuple
+// func:amcdb.Pbtype..ReadStrptrMaybe
+bool                 Pbtype_ReadStrptrMaybe(amcdb::Pbtype &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:amcdb.Pbtype..Init
+inline void          Pbtype_Init(amcdb::Pbtype& parent);
+// print string representation of ROW to string STR
+// cfmt:amcdb.Pbtype.String  printfmt:Tuple
+// func:amcdb.Pbtype..Print
+void                 Pbtype_Print(amcdb::Pbtype& row, algo::cstring& str) __attribute__((nothrow));
+
 // --- amcdb.Regxtype
 struct Regxtype { // amcdb.Regxtype
     algo::Smallstr50   regxtype;   //
@@ -262,7 +319,6 @@ struct Regxtype { // amcdb.Regxtype
     // func:amcdb.Regxtype..Ctor
     inline               Regxtype() __attribute__((nothrow));
 };
-
 // func:amcdb.Regxtype..ReadFieldMaybe
 bool                 Regxtype_ReadFieldMaybe(amcdb::Regxtype& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of amcdb::Regxtype from an ascii string.
@@ -281,7 +337,6 @@ struct Tclass { // amcdb.Tclass: AMC template class
     // func:amcdb.Tclass..Ctor
     inline               Tclass() __attribute__((nothrow));
 };
-
 // func:amcdb.Tclass..ReadFieldMaybe
 bool                 Tclass_ReadFieldMaybe(amcdb::Tclass& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of amcdb::Tclass from an ascii string.
@@ -293,6 +348,36 @@ bool                 Tclass_ReadStrptrMaybe(amcdb::Tclass &parent, algo::strptr 
 // func:amcdb.Tclass..Print
 void                 Tclass_Print(amcdb::Tclass& row, algo::cstring& str) __attribute__((nothrow));
 
+// --- amcdb.Tcond
+struct Tcond { // amcdb.Tcond: Condition a tclass reports, which an fcond binds to an index
+    algo::Smallstr50   tcond;     //
+    algo::Comment      comment;   //
+    // func:amcdb.Tcond..Ctor
+    inline               Tcond() __attribute__((nothrow));
+};
+// func:amcdb.Tcond.tclass.Get
+algo::strptr         tclass_Get(amcdb::Tcond& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:amcdb.Tcond.tclass.Get2
+algo::strptr         Tcond_tclass_Get(algo::strptr arg) __attribute__((nothrow));
+
+// func:amcdb.Tcond.name.Get
+algo::strptr         name_Get(amcdb::Tcond& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:amcdb.Tcond.name.Get2
+algo::strptr         Tcond_name_Get(algo::strptr arg) __attribute__((nothrow));
+
+// func:amcdb.Tcond..Concat_tclass_name
+tempstr              Tcond_Concat_tclass_name( const algo::strptr& tclass ,const algo::strptr& name );
+// func:amcdb.Tcond..ReadFieldMaybe
+bool                 Tcond_ReadFieldMaybe(amcdb::Tcond& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of amcdb::Tcond from an ascii string.
+// The format of the string is an ssim Tuple
+// func:amcdb.Tcond..ReadStrptrMaybe
+bool                 Tcond_ReadStrptrMaybe(amcdb::Tcond &parent, algo::strptr in_str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:amcdb.Tcond.String  printfmt:Tuple
+// func:amcdb.Tcond..Print
+void                 Tcond_Print(amcdb::Tcond& row, algo::cstring& str) __attribute__((nothrow));
+
 // --- amcdb.Tcurs
 struct Tcurs { // amcdb.Tcurs: Cursor template
     algo::Smallstr50   tfunc;     //
@@ -301,11 +386,10 @@ struct Tcurs { // amcdb.Tcurs: Cursor template
     // func:amcdb.Tcurs..Ctor
     inline               Tcurs() __attribute__((nothrow));
 };
-
 // func:amcdb.Tcurs.curstype.Get
-algo::Smallstr50     curstype_Get(amcdb::Tcurs& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         curstype_Get(amcdb::Tcurs& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:amcdb.Tcurs.curstype.Get2
-algo::Smallstr50     Tcurs_curstype_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Tcurs_curstype_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:amcdb.Tcurs..ReadFieldMaybe
 bool                 Tcurs_ReadFieldMaybe(amcdb::Tcurs& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
@@ -335,16 +419,15 @@ struct Tfunc { // amcdb.Tfunc: AMC template function
     // func:amcdb.Tfunc..Ctor
     inline               Tfunc() __attribute__((nothrow));
 };
-
 // func:amcdb.Tfunc.tclass.Get
-algo::Smallstr50     tclass_Get(amcdb::Tfunc& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         tclass_Get(amcdb::Tfunc& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:amcdb.Tfunc.tclass.Get2
-algo::Smallstr50     Tfunc_tclass_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Tfunc_tclass_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:amcdb.Tfunc.name.Get
-algo::Smallstr50     name_Get(amcdb::Tfunc& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(amcdb::Tfunc& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:amcdb.Tfunc.name.Get2
-algo::Smallstr50     Tfunc_name_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Tfunc_name_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:amcdb.Tfunc..Concat_tclass_name
 tempstr              Tfunc_Concat_tclass_name( const algo::strptr& tclass ,const algo::strptr& name );
@@ -366,7 +449,9 @@ namespace amcdb { // gen:ns_func
 } // gen:ns_func
 // gen:ns_operators
 namespace algo {
+inline algo::cstring &operator <<(algo::cstring &str, const amcdb::Cbtype &row);// cfmt:amcdb.Cbtype.String
 inline algo::cstring &operator <<(algo::cstring &str, const amcdb::FieldId &row);// cfmt:amcdb.FieldId.String
+inline algo::cstring &operator <<(algo::cstring &str, const amcdb::Pbtype &row);// cfmt:amcdb.Pbtype.String
 inline algo::cstring &operator <<(algo::cstring &str, const amcdb::Regxtype &row);// cfmt:amcdb.Regxtype.String
 inline algo::cstring &operator <<(algo::cstring &str, const amcdb::Tcurs &row);// cfmt:amcdb.Tcurs.String
 }

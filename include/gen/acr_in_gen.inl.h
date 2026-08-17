@@ -57,7 +57,7 @@ inline bool acr_in::c_field_EmptyQ(acr_in::FCtype& ctype) {
 
 // --- acr_in.FCtype.c_field.Find
 // Look up row by row id. Return NULL if out of range
-inline acr_in::FField* acr_in::c_field_Find(acr_in::FCtype& ctype, u32 t) {
+inline acr_in::FField* acr_in::c_field_Find(acr_in::FCtype& ctype, u64 t) {
     acr_in::FField *retval = NULL;
     u64 idx = t;
     u64 lim = ctype.c_field_n;
@@ -75,14 +75,14 @@ inline algo::aryptr<acr_in::FField*> acr_in::c_field_Getary(acr_in::FCtype& ctyp
 
 // --- acr_in.FCtype.c_field.N
 // Return number of items in the pointer array
-inline i32 acr_in::c_field_N(const acr_in::FCtype& ctype) {
+inline i64 acr_in::c_field_N(const acr_in::FCtype& ctype) {
     return ctype.c_field_n;
 }
 
 // --- acr_in.FCtype.c_field.RemoveAll
 // Empty the index. (The rows are not deleted)
 inline void acr_in::c_field_RemoveAll(acr_in::FCtype& ctype) {
-    for (u32 i = 0; i < ctype.c_field_n; i++) {
+    for (u64 i = 0; i < ctype.c_field_n; i++) {
         // mark all elements as not-in-array
         ctype.c_field_elems[i]->ctype_c_field_in_ary = false;
     }
@@ -91,7 +91,7 @@ inline void acr_in::c_field_RemoveAll(acr_in::FCtype& ctype) {
 
 // --- acr_in.FCtype.c_field.qFind
 // Return reference without bounds checking
-inline acr_in::FField& acr_in::c_field_qFind(acr_in::FCtype& ctype, u32 idx) {
+inline acr_in::FField& acr_in::c_field_qFind(acr_in::FCtype& ctype, u64 idx) {
     return *ctype.c_field_elems[idx];
 }
 
@@ -115,7 +115,7 @@ inline bool acr_in::c_ctype_EmptyQ(acr_in::FCtype& ctype) {
 
 // --- acr_in.FCtype.c_ctype.Find
 // Look up row by row id. Return NULL if out of range
-inline acr_in::FCtype* acr_in::c_ctype_Find(acr_in::FCtype& ctype, u32 t) {
+inline acr_in::FCtype* acr_in::c_ctype_Find(acr_in::FCtype& ctype, u64 t) {
     acr_in::FCtype *retval = NULL;
     u64 idx = t;
     u64 lim = ctype.c_ctype_n;
@@ -133,7 +133,7 @@ inline algo::aryptr<acr_in::FCtype*> acr_in::c_ctype_Getary(acr_in::FCtype& ctyp
 
 // --- acr_in.FCtype.c_ctype.N
 // Return number of items in the pointer array
-inline i32 acr_in::c_ctype_N(const acr_in::FCtype& ctype) {
+inline i64 acr_in::c_ctype_N(const acr_in::FCtype& ctype) {
     return ctype.c_ctype_n;
 }
 
@@ -145,7 +145,7 @@ inline void acr_in::c_ctype_RemoveAll(acr_in::FCtype& ctype) {
 
 // --- acr_in.FCtype.c_ctype.qFind
 // Return reference without bounds checking
-inline acr_in::FCtype& acr_in::c_ctype_qFind(acr_in::FCtype& ctype, u32 idx) {
+inline acr_in::FCtype& acr_in::c_ctype_qFind(acr_in::FCtype& ctype, u64 idx) {
     return *ctype.c_ctype_elems[idx];
 }
 
@@ -247,7 +247,7 @@ inline acr_in::FTuple* acr_in::tuple_Last() {
 
 // --- acr_in.FDb.tuple.N
 // Return number of items in the pool
-inline i32 acr_in::tuple_N() {
+inline i64 acr_in::tuple_N() {
     return _db.tuple_n;
 }
 
@@ -301,7 +301,7 @@ inline acr_in::FFinput* acr_in::finput_Last() {
 
 // --- acr_in.FDb.finput.N
 // Return number of items in the pool
-inline i32 acr_in::finput_N() {
+inline i64 acr_in::finput_N() {
     return _db.finput_n;
 }
 
@@ -343,7 +343,7 @@ inline acr_in::FField* acr_in::field_Last() {
 
 // --- acr_in.FDb.field.N
 // Return number of items in the pool
-inline i32 acr_in::field_N() {
+inline i64 acr_in::field_N() {
     return _db.field_n;
 }
 
@@ -397,7 +397,7 @@ inline acr_in::FCtype* acr_in::ctype_Last() {
 
 // --- acr_in.FDb.ctype.N
 // Return number of items in the pool
-inline i32 acr_in::ctype_N() {
+inline i64 acr_in::ctype_N() {
     return _db.ctype_n;
 }
 
@@ -451,7 +451,7 @@ inline acr_in::FSsimfile* acr_in::ssimfile_Last() {
 
 // --- acr_in.FDb.ssimfile.N
 // Return number of items in the pool
-inline i32 acr_in::ssimfile_N() {
+inline i64 acr_in::ssimfile_N() {
     return _db.ssimfile_n;
 }
 
@@ -493,7 +493,7 @@ inline acr_in::FNs* acr_in::ns_Last() {
 
 // --- acr_in.FDb.ns.N
 // Return number of items in the pool
-inline i32 acr_in::ns_N() {
+inline i64 acr_in::ns_N() {
     return _db.ns_n;
 }
 
@@ -659,7 +659,7 @@ inline acr_in::FSubstr* acr_in::substr_Last() {
 
 // --- acr_in.FDb.substr.N
 // Return number of items in the pool
-inline i32 acr_in::substr_N() {
+inline i64 acr_in::substr_N() {
     return _db.substr_n;
 }
 
@@ -701,7 +701,7 @@ inline acr_in::FDispsig* acr_in::dispsig_Last() {
 
 // --- acr_in.FDb.dispsig.N
 // Return number of items in the pool
-inline i32 acr_in::dispsig_N() {
+inline i64 acr_in::dispsig_N() {
     return _db.dispsig_n;
 }
 
@@ -935,7 +935,7 @@ inline acr_in::FTarget* acr_in::target_Last() {
 
 // --- acr_in.FDb.target.N
 // Return number of items in the pool
-inline i32 acr_in::target_N() {
+inline i64 acr_in::target_N() {
     return _db.target_n;
 }
 
@@ -989,7 +989,7 @@ inline acr_in::FTargdep* acr_in::targdep_Last() {
 
 // --- acr_in.FDb.targdep.N
 // Return number of items in the pool
-inline i32 acr_in::targdep_N() {
+inline i64 acr_in::targdep_N() {
     return _db.targdep_n;
 }
 
@@ -1087,7 +1087,7 @@ inline acr_in::FNsssimfile* acr_in::nsssimfile_Last() {
 
 // --- acr_in.FDb.nsssimfile.N
 // Return number of items in the pool
-inline i32 acr_in::nsssimfile_N() {
+inline i64 acr_in::nsssimfile_N() {
     return _db.nsssimfile_n;
 }
 
@@ -1601,7 +1601,6 @@ inline  acr_in::FField::~FField() {
 // --- acr_in.FFinput..Init
 // Set all fields to initial values.
 inline void acr_in::FFinput_Init(acr_in::FFinput& finput) {
-    finput.extrn = bool(false);
     finput.update = bool(false);
     finput.strict = bool(true);
     finput.p_ns = NULL;
@@ -1907,7 +1906,7 @@ inline bool acr_in::c_targdep_EmptyQ(acr_in::FTarget& target) {
 
 // --- acr_in.FTarget.c_targdep.Find
 // Look up row by row id. Return NULL if out of range
-inline acr_in::FTargdep* acr_in::c_targdep_Find(acr_in::FTarget& target, u32 t) {
+inline acr_in::FTargdep* acr_in::c_targdep_Find(acr_in::FTarget& target, u64 t) {
     acr_in::FTargdep *retval = NULL;
     u64 idx = t;
     u64 lim = target.c_targdep_n;
@@ -1925,14 +1924,14 @@ inline algo::aryptr<acr_in::FTargdep*> acr_in::c_targdep_Getary(acr_in::FTarget&
 
 // --- acr_in.FTarget.c_targdep.N
 // Return number of items in the pointer array
-inline i32 acr_in::c_targdep_N(const acr_in::FTarget& target) {
+inline i64 acr_in::c_targdep_N(const acr_in::FTarget& target) {
     return target.c_targdep_n;
 }
 
 // --- acr_in.FTarget.c_targdep.RemoveAll
 // Empty the index. (The rows are not deleted)
 inline void acr_in::c_targdep_RemoveAll(acr_in::FTarget& target) {
-    for (u32 i = 0; i < target.c_targdep_n; i++) {
+    for (u64 i = 0; i < target.c_targdep_n; i++) {
         // mark all elements as not-in-array
         target.c_targdep_elems[i]->target_c_targdep_in_ary = false;
     }
@@ -1941,7 +1940,7 @@ inline void acr_in::c_targdep_RemoveAll(acr_in::FTarget& target) {
 
 // --- acr_in.FTarget.c_targdep.qFind
 // Return reference without bounds checking
-inline acr_in::FTargdep& acr_in::c_targdep_qFind(acr_in::FTarget& target, u32 idx) {
+inline acr_in::FTargdep& acr_in::c_targdep_qFind(acr_in::FTarget& target, u64 idx) {
     return *target.c_targdep_elems[idx];
 }
 
@@ -1965,7 +1964,7 @@ inline bool acr_in::c_targdep_child_EmptyQ(acr_in::FTarget& target) {
 
 // --- acr_in.FTarget.c_targdep_child.Find
 // Look up row by row id. Return NULL if out of range
-inline acr_in::FTargdep* acr_in::c_targdep_child_Find(acr_in::FTarget& target, u32 t) {
+inline acr_in::FTargdep* acr_in::c_targdep_child_Find(acr_in::FTarget& target, u64 t) {
     acr_in::FTargdep *retval = NULL;
     u64 idx = t;
     u64 lim = target.c_targdep_child_n;
@@ -1983,14 +1982,14 @@ inline algo::aryptr<acr_in::FTargdep*> acr_in::c_targdep_child_Getary(acr_in::FT
 
 // --- acr_in.FTarget.c_targdep_child.N
 // Return number of items in the pointer array
-inline i32 acr_in::c_targdep_child_N(const acr_in::FTarget& target) {
+inline i64 acr_in::c_targdep_child_N(const acr_in::FTarget& target) {
     return target.c_targdep_child_n;
 }
 
 // --- acr_in.FTarget.c_targdep_child.RemoveAll
 // Empty the index. (The rows are not deleted)
 inline void acr_in::c_targdep_child_RemoveAll(acr_in::FTarget& target) {
-    for (u32 i = 0; i < target.c_targdep_child_n; i++) {
+    for (u64 i = 0; i < target.c_targdep_child_n; i++) {
         // mark all elements as not-in-array
         target.c_targdep_child_elems[i]->target_c_targdep_child_in_ary = false;
     }
@@ -1999,7 +1998,7 @@ inline void acr_in::c_targdep_child_RemoveAll(acr_in::FTarget& target) {
 
 // --- acr_in.FTarget.c_targdep_child.qFind
 // Return reference without bounds checking
-inline acr_in::FTargdep& acr_in::c_targdep_child_qFind(acr_in::FTarget& target, u32 idx) {
+inline acr_in::FTargdep& acr_in::c_targdep_child_qFind(acr_in::FTarget& target, u64 idx) {
     return *target.c_targdep_child_elems[idx];
 }
 
@@ -2099,7 +2098,7 @@ inline bool acr_in::c_child_EmptyQ(acr_in::FTuple& tuple) {
 
 // --- acr_in.FTuple.c_child.Find
 // Look up row by row id. Return NULL if out of range
-inline acr_in::FTuple* acr_in::c_child_Find(acr_in::FTuple& tuple, u32 t) {
+inline acr_in::FTuple* acr_in::c_child_Find(acr_in::FTuple& tuple, u64 t) {
     acr_in::FTuple *retval = NULL;
     u64 idx = t;
     u64 lim = tuple.c_child_n;
@@ -2117,7 +2116,7 @@ inline algo::aryptr<acr_in::FTuple*> acr_in::c_child_Getary(acr_in::FTuple& tupl
 
 // --- acr_in.FTuple.c_child.N
 // Return number of items in the pointer array
-inline i32 acr_in::c_child_N(const acr_in::FTuple& tuple) {
+inline i64 acr_in::c_child_N(const acr_in::FTuple& tuple) {
     return tuple.c_child_n;
 }
 
@@ -2129,7 +2128,7 @@ inline void acr_in::c_child_RemoveAll(acr_in::FTuple& tuple) {
 
 // --- acr_in.FTuple.c_child.qFind
 // Return reference without bounds checking
-inline acr_in::FTuple& acr_in::c_child_qFind(acr_in::FTuple& tuple, u32 idx) {
+inline acr_in::FTuple& acr_in::c_child_qFind(acr_in::FTuple& tuple, u64 idx) {
     return *tuple.c_child_elems[idx];
 }
 
@@ -2147,7 +2146,7 @@ inline bool acr_in::c_parent_EmptyQ(acr_in::FTuple& tuple) {
 
 // --- acr_in.FTuple.c_parent.Find
 // Look up row by row id. Return NULL if out of range
-inline acr_in::FTuple* acr_in::c_parent_Find(acr_in::FTuple& tuple, u32 t) {
+inline acr_in::FTuple* acr_in::c_parent_Find(acr_in::FTuple& tuple, u64 t) {
     acr_in::FTuple *retval = NULL;
     u64 idx = t;
     u64 lim = tuple.c_parent_n;
@@ -2165,7 +2164,7 @@ inline algo::aryptr<acr_in::FTuple*> acr_in::c_parent_Getary(acr_in::FTuple& tup
 
 // --- acr_in.FTuple.c_parent.N
 // Return number of items in the pointer array
-inline i32 acr_in::c_parent_N(const acr_in::FTuple& tuple) {
+inline i64 acr_in::c_parent_N(const acr_in::FTuple& tuple) {
     return tuple.c_parent_n;
 }
 
@@ -2177,7 +2176,7 @@ inline void acr_in::c_parent_RemoveAll(acr_in::FTuple& tuple) {
 
 // --- acr_in.FTuple.c_parent.qFind
 // Return reference without bounds checking
-inline acr_in::FTuple& acr_in::c_parent_qFind(acr_in::FTuple& tuple, u32 idx) {
+inline acr_in::FTuple& acr_in::c_parent_qFind(acr_in::FTuple& tuple, u64 idx) {
     return *tuple.c_parent_elems[idx];
 }
 

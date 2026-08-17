@@ -64,6 +64,13 @@ namespace lib_exec { // gen:ns_print_proto
     // func:lib_exec...SizeCheck
     inline static void   SizeCheck();
 } // gen:ns_print_proto
+const char *lib_exec::Cmdline_help = "Usage: Cmdline [options]\n"
+"    OPTION         TYPE  DFLT  COMMENT\n"
+"    -dry_run\n"
+"    -q                   Y     Do not print node name\n"
+"    -maxjobs       int   8     Maximum number of parallel jobs\n"
+"    -complooo                  Allow jobs to complete out-of-order\n"
+"    -merge_output              Merge stderr and stdout from child processes\n";
 
 // --- lib_exec.Cmdline..ReadFieldMaybe
 bool lib_exec::Cmdline_ReadFieldMaybe(lib_exec::Cmdline& parent, algo::strptr field, algo::strptr strval) {
@@ -97,23 +104,10 @@ bool lib_exec::Cmdline_ReadFieldMaybe(lib_exec::Cmdline& parent, algo::strptr fi
     return retval;
 }
 
-// --- lib_exec.Cmdline..ReadTupleMaybe
-// Read fields of lib_exec::Cmdline from attributes of ascii tuple TUPLE
-bool lib_exec::Cmdline_ReadTupleMaybe(lib_exec::Cmdline &parent, algo::Tuple &tuple) {
-    bool retval = true;
-    ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
-        retval = Cmdline_ReadFieldMaybe(parent, attr.name, attr.value);
-        if (!retval) {
-            break;
-        }
-    }ind_end;
-    return retval;
-}
-
 // --- lib_exec.Cmdline..ToCmdline
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr lib_exec::Cmdline_ToCmdline(lib_exec::Cmdline& row) {
+tempstr lib_exec::Cmdline_ToCmdline(lib_exec::Cmdline row) {
     tempstr ret;
     ret << "bin/Cmdline ";
     Cmdline_PrintArgv(row, ret);
@@ -130,7 +124,7 @@ tempstr lib_exec::Cmdline_ToCmdline(lib_exec::Cmdline& row) {
 // --- lib_exec.Cmdline..PrintArgv
 // print string representation of ROW to string STR
 // cfmt:lib_exec.Cmdline.Argv  printfmt:Auto
-void lib_exec::Cmdline_PrintArgv(lib_exec::Cmdline& row, algo::cstring& str) {
+void lib_exec::Cmdline_PrintArgv(lib_exec::Cmdline row, algo::cstring& str) {
     algo::tempstr temp;
     (void)temp;
     (void)str;
@@ -163,6 +157,41 @@ void lib_exec::Cmdline_PrintArgv(lib_exec::Cmdline& row, algo::cstring& str) {
         bool_Print(row.merge_output, temp);
         str << " -merge_output:";
         strptr_PrintBash(temp,str);
+    }
+}
+
+// --- lib_exec.Cmdline..ToArgv
+// Build argv from ROW into ARGS; args[0] is the command name
+// cfmt:lib_exec.Cmdline.Argv  printfmt:Auto
+void lib_exec::Cmdline_ToArgv(lib_exec::Cmdline row, algo::StringAry& args) {
+    algo::tempstr temp;
+    (void)temp;
+    ary_RemoveAll(args);
+    ary_Alloc(args) << "bin/Cmdline"; // command path
+    if (!(row.dry_run == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.dry_run, temp);
+        ary_Alloc(args) << "-dry_run:" << temp;
+    }
+    if (!(row.q == true)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.q, temp);
+        ary_Alloc(args) << "-q:" << temp;
+    }
+    if (!(row.maxjobs == 8)) {
+        ch_RemoveAll(temp);
+        i32_Print(row.maxjobs, temp);
+        ary_Alloc(args) << "-maxjobs:" << temp;
+    }
+    if (!(row.complooo == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.complooo, temp);
+        ary_Alloc(args) << "-complooo:" << temp;
+    }
+    if (!(row.merge_output == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.merge_output, temp);
+        ary_Alloc(args) << "-merge_output:" << temp;
     }
 }
 
@@ -202,6 +231,89 @@ i32 lib_exec::Cmdline_NArgs(lib_exec::FieldId field, algo::strptr& out_dflt, boo
     return retval;
 }
 
+// --- lib_exec.Cmdline..ReadArgv
+// Field-aware command-line reader over a word array
+// Read command-line ARGS (already split into words) into the fields of PARENT.
+// Field-aware: a value-taking option consumes the next word; errors go to ERR.
+bool lib_exec::Cmdline_ReadArgv(lib_exec::Cmdline &parent, algo::StringAry &args, algo::cstring &err) {
+    bool retval = true;
+    algo_lib::Cmdline &base = algo_lib::_db.cmdline;
+    int needarg=-1;// how many args the current option still wants
+    algo::strptr attrname;
+    bool isanon=false; // true if attrname is anonfld (positional)
+    algo_lib::FieldId baseattrid;
+    lib_exec::FieldId attrid;
+    bool endopt=false;
+    int whichns=0;// 0=base, 1=leaf
+    for (int argidx=0; argidx < ary_N(args); argidx++) {
+        algo::strptr arg = ary_qFind(args, argidx);
+        algo::strptr attrval;
+        algo::strptr dfltval;
+        bool haveval=false;
+        bool dash=elems_N(arg)>1 && arg.elems[0]=='-'; // a single dash is not an option
+        if (endopt || needarg>0 || !dash) {
+            attrval=arg;
+            haveval=true;
+        } else {
+            bool dashdash = elems_N(arg) >= 2 && arg.elems[1]=='-';
+            int skip = int(dash) + dashdash;
+            attrname=ch_RestFrom(arg,skip);
+            if (skip==2 && elems_N(arg)==2) {
+                endopt=true;
+                continue;
+            }
+            algo::i32_Range colon = TFind(attrname,':');
+            if (colon.beg < colon.end) {
+                attrval=ch_RestFrom(attrname,colon.end);
+                attrname=ch_FirstN(attrname,colon.beg);
+                haveval=true;
+            }
+            whichns=0;
+            needarg=-1;
+            if (algo_lib::FieldId_ReadStrptrMaybe(baseattrid,attrname)) {
+                needarg = algo_lib::Cmdline_NArgs(baseattrid,dfltval,&isanon);
+            }
+            if (needarg<0) {
+                whichns=1;
+                if (lib_exec::FieldId_ReadStrptrMaybe(attrid,attrname)) {
+                    needarg = lib_exec::Cmdline_NArgs(attrid,dfltval,&isanon);
+                }
+            }
+            if (attrval == "" && dfltval != "") {
+                attrval=dfltval;
+                haveval=true;
+            }
+            if (needarg<0) {
+                err<<"Cmdline: unknown option "<<Keyval("value",arg)<<eol;
+            } else {
+            }
+        }
+        if (ch_N(attrname) == 0) {
+            err << "Cmdline: too many arguments. error at "<<algo::strptr_ToSsim(arg)<<eol;
+        } else if (haveval) {
+            bool ret=false;
+            if (whichns == 0) {
+                ret=algo_lib::Cmdline_ReadFieldMaybe(base, attrname, attrval);
+            }
+            if (whichns==1) {
+                ret=lib_exec::Cmdline_ReadFieldMaybe(parent, attrname, attrval);
+                switch(attrid.value) {
+                    default:break;
+                }
+            }
+            if (!ret) {
+                err<<"Cmdline: error in "<<Keyval("option",attrname)<<Keyval("value",attrval)<<eol;
+            }
+            needarg--;
+            if (needarg <= 0) {
+                attrname="";// forget which argument was being filled
+            }
+        }
+    }
+    retval = (ch_N(err) == 0);
+    return retval;
+}
+
 // --- lib_exec.trace..Print
 // print string representation of ROW to string STR
 // cfmt:lib_exec.trace.String  printfmt:Tuple
@@ -214,7 +326,13 @@ void lib_exec::trace_Print(lib_exec::trace& row, algo::cstring& str) {
 // --- lib_exec.FDb._db.InitReflection
 // Load statically available data into tables, register tables and database.
 static void lib_exec::InitReflection() {
-    algo_lib::imdb_InsertMaybe(algo::Imdb("lib_exec", NULL, NULL, NULL, NULL, algo::Comment()));
+    algo_lib::FImdb &row = algo_lib::imdb_Alloc();
+    row.imdb               = "lib_exec";
+    row.InsertStrptrMaybe  = NULL;
+    row.RemoveStrptrMaybe  = NULL;
+    row.Step               = NULL;
+    row.MainLoop           = NULL;
+    algo_lib::imdb_XrefMaybe(row);
 
     algo::Imtable t_trace;
     t_trace.imtable         = "lib_exec.trace";
@@ -310,6 +428,15 @@ void lib_exec::Steps() {
     algo_lib::Step(); // dependent namespace specified via (dev.targdep)
 }
 
+// --- lib_exec.FDb._db.RemoveStrptrMaybe
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+bool lib_exec::RemoveStrptrMaybe(algo::strptr str) {
+    bool retval = true;
+    (void)str;//only to avoid -Wunused-parameter
+    return retval;
+}
+
 // --- lib_exec.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
@@ -364,7 +491,7 @@ void* lib_exec::syscmddep_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     lib_exec::FSyscmddep*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.syscmddep_lary[bsr];
         if (!lev) {
             lev=(lib_exec::FSyscmddep*)algo_lib::malloc_AllocMem(sizeof(lib_exec::FSyscmddep) * (u64(1)<<bsr));
@@ -373,7 +500,7 @@ void* lib_exec::syscmddep_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.syscmddep_n = i32(new_nelems);
+        _db.syscmddep_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -385,7 +512,7 @@ void lib_exec::syscmddep_RemoveAll() {
     for (u64 n = _db.syscmddep_n; n>0; ) {
         n--;
         syscmddep_qFind(u64(n)).~FSyscmddep(); // destroy last element
-        _db.syscmddep_n = i32(n);
+        _db.syscmddep_n = i64(n);
     }
 }
 
@@ -396,7 +523,7 @@ void lib_exec::syscmddep_RemoveLast() {
     if (n > 0) {
         n -= 1;
         syscmddep_qFind(u64(n)).~FSyscmddep();
-        _db.syscmddep_n = i32(n);
+        _db.syscmddep_n = i64(n);
     }
 }
 
@@ -482,7 +609,7 @@ void* lib_exec::syscmd_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     lib_exec::FSyscmd*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.syscmd_lary[bsr];
         if (!lev) {
             lev=(lib_exec::FSyscmd*)algo_lib::malloc_AllocMem(sizeof(lib_exec::FSyscmd) * (u64(1)<<bsr));
@@ -491,7 +618,7 @@ void* lib_exec::syscmd_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.syscmd_n = i32(new_nelems);
+        _db.syscmd_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -503,7 +630,7 @@ void lib_exec::syscmd_RemoveAll() {
     for (u64 n = _db.syscmd_n; n>0; ) {
         n--;
         syscmd_qFind(i32(n)).~FSyscmd(); // destroy last element
-        _db.syscmd_n = i32(n);
+        _db.syscmd_n = i64(n);
     }
 }
 
@@ -514,7 +641,7 @@ void lib_exec::syscmd_RemoveLast() {
     if (n > 0) {
         n -= 1;
         syscmd_qFind(i32(n)).~FSyscmd();
-        _db.syscmd_n = i32(n);
+        _db.syscmd_n = i64(n);
     }
 }
 
@@ -899,6 +1026,24 @@ lib_exec::FSyscmd* lib_exec::zd_started_RemoveFirst() {
     return row;
 }
 
+// --- lib_exec.FDb.zd_started.InsertBefore
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+void lib_exec::zd_started_InsertBefore(lib_exec::FSyscmd& row, lib_exec::FSyscmd* before) {
+    if (!zd_started_InLlistQ(row) && &row != before) {
+        lib_exec::FSyscmd* next = before;
+        lib_exec::FSyscmd* prev = next ? next->zd_started_prev : _db.zd_started_tail;
+        row.zd_started_next = next;
+        row.zd_started_prev = prev;
+        lib_exec::FSyscmd **prev_link_a = &prev->zd_started_next;
+        lib_exec::FSyscmd **prev_link_b = &_db.zd_started_head;
+        *(prev ? prev_link_a : prev_link_b) = &row;
+        lib_exec::FSyscmd **next_link_a = &next->zd_started_prev;
+        lib_exec::FSyscmd **next_link_b = &_db.zd_started_tail;
+        *(next ? next_link_a : next_link_b) = &row;
+        _db.zd_started_n++;
+    }
+}
+
 // --- lib_exec.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
 static algo::ImrowPtr lib_exec::trace_RowidFind(int t) {
@@ -1087,12 +1232,12 @@ void lib_exec::syscmd_CopyIn(lib_exec::FSyscmd &row, dev::Syscmd &in) {
 }
 
 // --- lib_exec.FSyscmd.c_prior.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 void lib_exec::c_prior_Insert(lib_exec::FSyscmd& syscmd, lib_exec::FSyscmddep& row) {
     if (!row.syscmd_c_prior_in_ary) {
         c_prior_Reserve(syscmd, 1);
-        u32 n  = syscmd.c_prior_n++;
+        u64 n  = syscmd.c_prior_n++;
         syscmd.c_prior_elems[n] = &row;
         row.syscmd_c_prior_in_ary = true;
     }
@@ -1111,15 +1256,15 @@ bool lib_exec::c_prior_InsertMaybe(lib_exec::FSyscmd& syscmd, lib_exec::FSyscmdd
 // --- lib_exec.FSyscmd.c_prior.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void lib_exec::c_prior_Remove(lib_exec::FSyscmd& syscmd, lib_exec::FSyscmddep& row) {
-    int n = syscmd.c_prior_n;
+    i64 n = syscmd.c_prior_n;
     if (bool_Update(row.syscmd_c_prior_in_ary,false)) {
         lib_exec::FSyscmddep* *elems = syscmd.c_prior_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = n-1; i>=0; i--) {
+        for (i64 i = n-1; i>=0; i--) {
             lib_exec::FSyscmddep* elem = elems[i]; // fetch element
             if (elem == &row) {
-                int j = i + 1;
+                i64 j = i + 1;
                 size_t nbytes = sizeof(lib_exec::FSyscmddep*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
                 syscmd.c_prior_n = n - 1;
@@ -1131,12 +1276,12 @@ void lib_exec::c_prior_Remove(lib_exec::FSyscmd& syscmd, lib_exec::FSyscmddep& r
 
 // --- lib_exec.FSyscmd.c_prior.Reserve
 // Reserve space in index for N more elements;
-void lib_exec::c_prior_Reserve(lib_exec::FSyscmd& syscmd, u32 n) {
-    u32 old_max = syscmd.c_prior_max;
+void lib_exec::c_prior_Reserve(lib_exec::FSyscmd& syscmd, u64 n) {
+    u64 old_max = syscmd.c_prior_max;
     if (UNLIKELY(syscmd.c_prior_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(lib_exec::FSyscmddep*);
-        u32 new_size = new_max * sizeof(lib_exec::FSyscmddep*);
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, syscmd.c_prior_n + n), 4);
+        u64 old_size = old_max * sizeof(lib_exec::FSyscmddep*);
+        u64 new_size = new_max * sizeof(lib_exec::FSyscmddep*);
         void *new_mem = algo_lib::malloc_ReallocMem(syscmd.c_prior_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("lib_exec.out_of_memory  field:lib_exec.FSyscmd.c_prior");
@@ -1147,12 +1292,12 @@ void lib_exec::c_prior_Reserve(lib_exec::FSyscmd& syscmd, u32 n) {
 }
 
 // --- lib_exec.FSyscmd.c_next.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 void lib_exec::c_next_Insert(lib_exec::FSyscmd& syscmd, lib_exec::FSyscmddep& row) {
     if (!row.syscmd_c_next_in_ary) {
         c_next_Reserve(syscmd, 1);
-        u32 n  = syscmd.c_next_n++;
+        u64 n  = syscmd.c_next_n++;
         syscmd.c_next_elems[n] = &row;
         row.syscmd_c_next_in_ary = true;
     }
@@ -1171,15 +1316,15 @@ bool lib_exec::c_next_InsertMaybe(lib_exec::FSyscmd& syscmd, lib_exec::FSyscmdde
 // --- lib_exec.FSyscmd.c_next.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void lib_exec::c_next_Remove(lib_exec::FSyscmd& syscmd, lib_exec::FSyscmddep& row) {
-    int n = syscmd.c_next_n;
+    i64 n = syscmd.c_next_n;
     if (bool_Update(row.syscmd_c_next_in_ary,false)) {
         lib_exec::FSyscmddep* *elems = syscmd.c_next_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = n-1; i>=0; i--) {
+        for (i64 i = n-1; i>=0; i--) {
             lib_exec::FSyscmddep* elem = elems[i]; // fetch element
             if (elem == &row) {
-                int j = i + 1;
+                i64 j = i + 1;
                 size_t nbytes = sizeof(lib_exec::FSyscmddep*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
                 syscmd.c_next_n = n - 1;
@@ -1191,12 +1336,12 @@ void lib_exec::c_next_Remove(lib_exec::FSyscmd& syscmd, lib_exec::FSyscmddep& ro
 
 // --- lib_exec.FSyscmd.c_next.Reserve
 // Reserve space in index for N more elements;
-void lib_exec::c_next_Reserve(lib_exec::FSyscmd& syscmd, u32 n) {
-    u32 old_max = syscmd.c_next_max;
+void lib_exec::c_next_Reserve(lib_exec::FSyscmd& syscmd, u64 n) {
+    u64 old_max = syscmd.c_next_max;
     if (UNLIKELY(syscmd.c_next_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(lib_exec::FSyscmddep*);
-        u32 new_size = new_max * sizeof(lib_exec::FSyscmddep*);
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, syscmd.c_next_n + n), 4);
+        u64 old_size = old_max * sizeof(lib_exec::FSyscmddep*);
+        u64 new_size = new_max * sizeof(lib_exec::FSyscmddep*);
         void *new_mem = algo_lib::malloc_ReallocMem(syscmd.c_next_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("lib_exec.out_of_memory  field:lib_exec.FSyscmd.c_next");
@@ -1225,6 +1370,7 @@ void lib_exec::FSyscmd_Init(lib_exec::FSyscmd& syscmd) {
     syscmd.rowid = i32(0);
     syscmd.redir_out = bool(true);
     syscmd.show_out = bool(true);
+    syscmd.pty_in = bool(false);
     syscmd.signal = i32(0);
     syscmd.ind_running_next = (lib_exec::FSyscmd*)-1; // (lib_exec.FDb.ind_running) not-in-hash
     syscmd.ind_running_hashval = 0; // stored hash value
@@ -1295,6 +1441,12 @@ void lib_exec::FSyscmd_Print(lib_exec::FSyscmd& row, algo::cstring& str) {
 
     algo_lib::FFildes_Print(row.stderr_fd, temp);
     PrintAttrSpaceReset(str,"stderr_fd", temp);
+
+    bool_Print(row.pty_in, temp);
+    PrintAttrSpaceReset(str,"pty_in", temp);
+
+    algo_lib::FFildes_Print(row.pty_fd, temp);
+    PrintAttrSpaceReset(str,"pty_fd", temp);
 
     i32_Print(row.signal, temp);
     PrintAttrSpaceReset(str,"signal", temp);
@@ -1463,7 +1615,7 @@ bool lib_exec::FieldId_ReadStrptrMaybe(lib_exec::FieldId &parent, algo::strptr i
 // --- lib_exec.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:lib_exec.FieldId.String  printfmt:Raw
-void lib_exec::FieldId_Print(lib_exec::FieldId& row, algo::cstring& str) {
+void lib_exec::FieldId_Print(lib_exec::FieldId row, algo::cstring& str) {
     lib_exec::value_Print(row, str);
 }
 

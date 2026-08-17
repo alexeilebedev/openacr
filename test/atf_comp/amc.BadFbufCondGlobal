@@ -1,0 +1,4 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/bad_fbuf_cond_global.ssim -out_dir: -report:N zzz"
+# eof amc
+amc -> amc.error  amc.fcond_arg  fcond:algo_lib.FDb.in/ready  ctype:algo_lib.FDb  ins_arg:algo_lib.FRow  comment:"watched ctype must match the ins index's element type (or set via)"
+# exit amc code:1

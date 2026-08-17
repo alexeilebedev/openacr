@@ -311,6 +311,9 @@ void amc::tfunc_Bheap_Insert() {
         Ins(&R, insert.body, "        $name_FirstChanged($pararg);");
         Ins(&R, insert.body, "    }");
     }
+    if (amc::FindFfunc(field, amcdb_cbtype_OnXref, true)) {
+        Ins(&R, insert.body, "    $name_OnXref($pararg, row); // dmmeta.ffunc:$field/OnXref");
+    }
     Ins(&R, insert.body    , "}");
 }
 
@@ -364,6 +367,9 @@ void amc::tfunc_Bheap_Remove() {
         Ins(&R,  remove.body, "        if (old_idx == 0) {");
         Ins(&R,  remove.body, "            $name_FirstChanged($pararg);");
         Ins(&R,  remove.body, "        }");
+    }
+    if (amc::FindFfunc(field, amcdb_cbtype_OnUnref, true)) {
+        Ins(&R,  remove.body, "        $name_OnUnref($pararg, row); // dmmeta.ffunc:$field/OnUnref");
     }
     Ins(&R,  remove.body    , "    }");
     Ins(&R,  remove.body    , "}");

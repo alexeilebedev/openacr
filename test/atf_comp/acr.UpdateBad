@@ -1,5 +1,5 @@
 # start acr cmd:"$bindir/acr -update ns:ns%"
 acr <- dmmeta.ns  ns:ns1        nstype:exe      license:GPL   comment:"Namespace doesn't exist, but not a failure"
 # eof acr
-acr -> report.acr  n_select:0  n_insert:0  n_delete:0  n_ignore:1  n_update:0  n_file_mod:0
+acr -> report.acr  n_select:0  n_insert:0  n_delete:0  n_ignore:1  n_update:0  n_file_mod:0  n_badline:0
 # exit acr code:0

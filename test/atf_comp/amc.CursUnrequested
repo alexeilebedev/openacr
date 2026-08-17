@@ -1,0 +1,9 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/curs_unrequested.ssim -out_dir: -report:N 'algo_lib.TestBitset.bits.NBits|algo_lib.TestBitset.bits_bitcurs.%'"
+# eof amc
+amc -> // --- algo_lib.TestBitset.bits.NBits
+amc -> // Get max # of bits in the bitset
+amc -> // Return max. number of bits supported by array
+amc -> inline int algo_lib::bits_Nbits(algo_lib::TestBitset& parent) {
+amc ->     return bits_N(parent) * 64;
+amc -> }
+# exit amc code:0

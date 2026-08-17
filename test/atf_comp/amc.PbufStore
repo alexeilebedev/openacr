@@ -1,0 +1,136 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/pbuf_store.ssim -out_dir: -report:N 'pbt.Msg..PbufDecode|pbt.Rep..PbufDecode'"
+# eof amc
+amc -> // --- pbt.Msg..PbufDecode
+amc -> bool pbt::Msg_PbufDecode(algo::memptr& buf, pbt::Msg& parent) {
+amc ->     bool ok = true;
+amc ->     while (ok && elems_N(buf) > 0) {
+amc ->         u32 pb_field_number(0);
+amc ->         u8 pb_wire_type(0);
+amc ->         ok = lib_pb::DecodeTag(buf,pb_field_number,pb_wire_type);
+amc ->         if (!ok) {
+amc ->             break;
+amc ->         }
+amc ->         switch (pb_field_number) {
+amc ->             case 1: {
+amc ->                 if (pb_wire_type == 0) {
+amc ->                     ok = ok && lib_pb::DecodeVarintU32(buf,parent.plain);
+amc ->                 } else {
+amc ->                     ok = lib_pb::SkipField(buf,pb_wire_type);
+amc ->                 }
+amc ->             } break;
+amc ->             case 2: {
+amc ->                 if (pb_wire_type == 0) {
+amc ->                     ok = ok && lib_pb::DecodeVarintU32(buf,parent.opt);
+amc ->                     opt_SetPresent(parent);
+amc ->                 } else {
+amc ->                     ok = lib_pb::SkipField(buf,pb_wire_type);
+amc ->                 }
+amc ->             } break;
+amc ->             case 3: {
+amc ->                 if (pb_wire_type == 2) {
+amc ->                     algo::memptr bare_sub;
+amc ->                     ok = ok && lib_pb::DecodeSubmsg(buf,bare_sub);
+amc ->                     ok = ok && pbt::Sub_PbufDecode(bare_sub,parent.bare);
+amc ->                 } else {
+amc ->                     ok = lib_pb::SkipField(buf,pb_wire_type);
+amc ->                 }
+amc ->             } break;
+amc ->             case 4: {
+amc ->                 if (pb_wire_type == 2) {
+amc ->                     algo::memptr sub_sub;
+amc ->                     ok = ok && lib_pb::DecodeSubmsg(buf,sub_sub);
+amc ->                     ok = ok && pbt::Sub_PbufDecode(sub_sub,parent.sub);
+amc ->                     sub_SetPresent(parent);
+amc ->                 } else {
+amc ->                     ok = lib_pb::SkipField(buf,pb_wire_type);
+amc ->                 }
+amc ->             } break;
+amc ->             case 5: {
+amc ->                 if (pb_wire_type == 0) {
+amc ->                     u32 slice_tmp = u32();
+amc ->                     ok = ok && lib_pb::DecodeVarintU32(buf,slice_tmp);
+amc ->                     slice_Set(parent, slice_tmp);
+amc ->                     slice_SetPresent(parent);
+amc ->                 } else {
+amc ->                     ok = lib_pb::SkipField(buf,pb_wire_type);
+amc ->                 }
+amc ->             } break;
+amc ->             case 6: {
+amc ->                 if (pb_wire_type == 0) {
+amc ->                     u32 netval_tmp = u32();
+amc ->                     ok = ok && lib_pb::DecodeVarintU32(buf,netval_tmp);
+amc ->                     netval_Set(parent, netval_tmp);
+amc ->                 } else {
+amc ->                     ok = lib_pb::SkipField(buf,pb_wire_type);
+amc ->                 }
+amc ->             } break;
+amc ->             case 7: {
+amc ->                 if (pb_wire_type == 2) {
+amc ->                     pbt::Sub computed_tmp(computed_Get(parent));
+amc ->                     algo::memptr computed_sub;
+amc ->                     ok = ok && lib_pb::DecodeSubmsg(buf,computed_sub);
+amc ->                     ok = ok && pbt::Sub_PbufDecode(computed_sub,computed_tmp);
+amc ->                     computed_Set(parent, computed_tmp);
+amc ->                 } else {
+amc ->                     ok = lib_pb::SkipField(buf,pb_wire_type);
+amc ->                 }
+amc ->             } break;
+amc ->             case 8: {
+amc ->                 if (pb_wire_type == 0) {
+amc ->                     bool cond_tmp = bool();
+amc ->                     ok = ok && lib_pb::DecodeBool(buf,cond_tmp);
+amc ->                     cond_Set(parent, cond_tmp);
+amc ->                 } else {
+amc ->                     ok = lib_pb::SkipField(buf,pb_wire_type);
+amc ->                 }
+amc ->             } break;
+amc ->             default:
+amc ->             ok = lib_pb::SkipField(buf,pb_wire_type);
+amc ->             break;
+amc ->         }
+amc ->     }
+amc ->     return ok;
+amc -> }
+amc -> // --- pbt.Rep..PbufDecode
+amc -> bool pbt::Rep_PbufDecode(algo::memptr& buf, pbt::Rep& parent) {
+amc ->     bool ok = true;
+amc ->     while (ok && elems_N(buf) > 0) {
+amc ->         u32 pb_field_number(0);
+amc ->         u8 pb_wire_type(0);
+amc ->         ok = lib_pb::DecodeTag(buf,pb_field_number,pb_wire_type);
+amc ->         if (!ok) {
+amc ->             break;
+amc ->         }
+amc ->         switch (pb_field_number) {
+amc ->             case 1: {
+amc ->                 if (pb_wire_type == 2) {
+amc ->                     algo::memptr tag_packed;
+amc ->                     ok = ok && lib_pb::DecodeSubmsg(buf,tag_packed);
+amc ->                     while (ok && elems_N(tag_packed) > 0) {
+amc ->                         ok = ok && lib_pb::DecodeVarintU32(tag_packed,tag_Alloc(parent));
+amc ->                     }
+amc ->                     tag_SetPresent(parent);
+amc ->                 } else if (pb_wire_type == 0) {
+amc ->                     ok = ok && lib_pb::DecodeVarintU32(buf,tag_Alloc(parent));
+amc ->                     tag_SetPresent(parent);
+amc ->                 } else {
+amc ->                     ok = lib_pb::SkipField(buf,pb_wire_type);
+amc ->                 }
+amc ->             } break;
+amc ->             case 2: {
+amc ->                 if (pb_wire_type == 2) {
+amc ->                     algo::memptr item_sub;
+amc ->                     ok = ok && lib_pb::DecodeSubmsg(buf,item_sub);
+amc ->                     ok = ok && pbt::Sub_PbufDecode(item_sub,item_Alloc(parent));
+amc ->                 } else {
+amc ->                     ok = lib_pb::SkipField(buf,pb_wire_type);
+amc ->                 }
+amc ->             } break;
+amc ->             default:
+amc ->             ok = lib_pb::SkipField(buf,pb_wire_type);
+amc ->             break;
+amc ->         }
+amc ->     }
+amc ->     return ok;
+amc -> }
+# exit amc code:0

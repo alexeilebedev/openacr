@@ -1,0 +1,131 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/bad_fdec_nplace.ssim -out_dir: -report:N 'algo_lib.DecPlaceCast.value.%'"
+# eof amc
+amc -> amc.bad_numtype  field:algo_lib.DecBitCharW4P2.value  arg:char  comment:"fdec arg must resolve to an integer builtin"
+amc -> amc.bad_nplace  field:algo_lib.DecBitU32W10P4.value  nplace:4  comment:"fdec nplace must be in 1..3"
+amc -> amc.bad_nplace  field:algo_lib.DecBitU32W3P1.value  nplace:1  comment:"fdec field holds no decimal place: its range stops below ten"
+amc -> amc.bad_nplace  field:algo_lib.DecBitU64W40P13.value  nplace:13  comment:"fdec nplace must be in 1..12"
+amc -> amc.bad_numcast  field:algo_lib.DecBitWrapI32W10P2.value  arg:algo_lib.I32Val  comment:"ctype needs dmmeta.fcast to read the builtin value out of it and dmmeta.cpptype ctor:Y to construct one from a builtin value"
+amc -> amc.bad_nplace  field:algo_lib.DecBitWrapU32W10P4.value  nplace:4  comment:"fdec nplace must be in 1..3"
+amc -> amc.bad_nplace  field:algo_lib.DecPlace0.value  nplace:0  comment:"fdec nplace must be in 1..17"
+amc -> amc.bad_nplace  field:algo_lib.DecPlace12I32.value  nplace:12  comment:"fdec nplace must be in 1..9"
+amc -> amc.bad_nplace  field:algo_lib.DecPlace18.value  nplace:18  comment:"fdec nplace must be in 1..17"
+amc -> amc.bad_nplace  field:algo_lib.DecPlace31.value  nplace:31  comment:"fdec nplace must be in 1..17"
+amc -> amc.bad_numtype  field:algo_lib.DecPlaceBool.value  arg:bool  comment:"fdec arg must resolve to an integer builtin"
+amc -> amc.bad_numcast  field:algo_lib.DecPlaceChain.value  arg:algo_lib.I64Cast2  comment:"ctype stands for the builtin only through another ctype; one Val field over the builtin converts"
+amc -> amc.bad_numtype  field:algo_lib.DecPlaceChar.value  arg:char  comment:"fdec arg must resolve to an integer builtin"
+amc -> amc.bad_nplace  field:algo_lib.DecPlaceChar.value  nplace:0  comment:"fdec nplace must be in 1..17"
+amc -> amc.bad_numcast  field:algo_lib.DecPlaceCtor.value  arg:algo_lib.I64Ctor  comment:"ctype needs dmmeta.fcast to read the builtin value out of it"
+amc -> amc.bad_numtype  field:algo_lib.DecPlaceDouble.value  arg:double  comment:"fdec arg must resolve to an integer builtin"
+amc -> amc.bad_numcast  field:algo_lib.DecPlaceFcast.value  arg:algo_lib.I64Fcast  comment:"ctype needs dmmeta.cpptype ctor:Y to construct one from a builtin value"
+amc -> amc.bad_numtype  field:algo_lib.DecPlaceFloat.value  arg:float  comment:"fdec arg must resolve to an integer builtin"
+amc -> amc.bad_nplace  field:algo_lib.DecPlaceNeg.value  nplace:-1  comment:"fdec nplace must be in 1..17"
+amc -> amc.bad_numtype  field:algo_lib.DecPlacePadbyte.value  arg:pad_byte  comment:"fdec arg must resolve to an integer builtin"
+amc -> amc.bad_numtype  field:algo_lib.DecPlaceStruct.value  arg:algo_lib.FDb  comment:"fdec arg must resolve to an integer builtin"
+amc -> amc.bad_numtype  field:algo_lib.DecPlaceU128.value  arg:u128  comment:"fdec arg must resolve to an integer builtin"
+amc -> amc.bad_nplace  field:algo_lib.DecPlaceU8Over.value  nplace:3  comment:"fdec nplace must be in 1..2"
+amc -> amc.bad_numcast  field:algo_lib.DecPlaceWrap.value  arg:algo_lib.I64Val  comment:"ctype needs dmmeta.fcast to read the builtin value out of it and dmmeta.cpptype ctor:Y to construct one from a builtin value"
+amc -> amc.bitfield_signed_narrow  field:algo_lib.DecBitI32W10P2.value  width:10  argbits:32  comment:"signed bitfield narrower than its arg type does not sign-extend on read; use an unsigned arg or make width span the full arg type"
+amc -> amc.bitfield_signed_narrow  field:algo_lib.DecBitWrapI32W10P2.value  width:10  argbits:32  comment:"signed bitfield narrower than its arg type does not sign-extend on read; use an unsigned arg or make width span the full arg type"
+amc -> amc.bitfield_signed_narrow  field:algo_lib.DecBitI8W7P2.value  width:7  argbits:8  comment:"signed bitfield narrower than its arg type does not sign-extend on read; use an unsigned arg or make width span the full arg type"
+amc -> // --- algo_lib.DecPlaceCast.value.qSetDouble
+amc -> // Set value of field value.
+amc -> // The value is rounded to the nearest integer.
+amc -> // This ensures that truncation of a near-integer value does not occur.
+amc -> // Example: 1.3 cannot be represented exactly as a double, the actual
+amc -> // stored value will be 1.29999999. when we apply C truncation,
+amc -> // we want to end up with 1.3, not 1.2.
+amc -> inline void algo_lib::value_qSetDouble(algo_lib::DecPlaceCast& parent, double val) {
+amc ->     double intval = val * 100 + (val > 0 ? 0.5 : -0.5);
+amc ->     // set underlying field.
+amc ->     parent.value = algo_lib::I64Cast(intval);
+amc -> }
+amc -> // --- algo_lib.DecPlaceCast.value.GetDouble
+amc -> inline double algo_lib::value_GetDouble(const algo_lib::DecPlaceCast& parent) {
+amc ->     double ret;
+amc ->     ret = parent.value / double(100);
+amc ->     return ret;
+amc -> }
+amc -> // --- algo_lib.DecPlaceCast.value.GetInt
+amc -> // Return integer portion (divide number by 100)
+amc -> inline i64 algo_lib::value_GetInt(const algo_lib::DecPlaceCast& parent) {
+amc ->     i64 ret;
+amc ->     ret = parent.value / 100;
+amc ->     return ret;
+amc -> }
+amc -> // --- algo_lib.DecPlaceCast.value.GetScale
+amc -> // Return constant 100
+amc -> inline i64 algo_lib::DecPlaceCast_GetScale() {
+amc ->     return 100;
+amc -> }
+amc -> // --- algo_lib.DecPlaceCast.value.SetDoubleMaybe
+amc -> // Set value of field value, using rounding.
+amc -> // If value is out of range for the target type, return false.
+amc -> bool algo_lib::value_SetDoubleMaybe(algo_lib::DecPlaceCast& parent, double val) {
+amc ->     double intval = val * 100;
+amc ->     i64 minval = i64((-9223372036854775807LL-1));
+amc ->     i64 maxval = i64(9223372036854775807LL);
+amc ->     bool retval = intval > double(minval) - 0.5;// minval rounds in, minval-1 rounds out
+amc ->     retval &= intval < double(maxval) + 0.5;// maxval rounds in, maxval+1 rounds out
+amc ->     if (retval) {
+amc ->         intval = intval + (val > 0 ? 0.5 : -0.5);
+amc ->         parent.value = algo_lib::I64Cast(intval); // set underlying field.
+amc ->     }
+amc ->     return retval;
+amc -> }
+amc -> // --- algo_lib.DecPlaceCast.value.ReadStrptrMaybe
+amc -> bool algo_lib::value_ReadStrptrMaybe(algo_lib::DecPlaceCast& parent, algo::strptr in) {
+amc ->     int index = 0;
+amc ->     int neg = false;
+amc ->     // skip leading sign
+amc ->     if (index < in.n_elems && (in.elems[index] == '+' || in.elems[index] == '-')) {
+amc ->         neg = in.elems[index]=='-';
+amc ->         index++;
+amc ->     };
+amc ->     // parse digits
+amc ->     u64 val = 0;
+amc ->     int ndot = 0; // number of . encountered
+amc ->     int nfrac = 0; // read up to NFRAC digits after .; if not found, fill in
+amc ->     bool ok = true;// overflow or bad char
+amc ->     u64 limdiv = 922337203685477580ULL;// largest magnitude the field holds for this sign, over 10
+amc ->     u64 limmod = neg ? 8ULL : 7ULL;// and that magnitude's last digit
+amc ->     for (; index < in.n_elems; index++) {
+amc ->         char c = in.elems[index];
+amc ->         if (c == '.') {
+amc ->             ok &= ndot == 0; // max 1 dot
+amc ->             ndot++;
+amc ->         } else if (algo_lib::DigitCharQ(c)) {
+amc ->             if (nfrac < 2) { // ignore digits after 2'th
+amc ->                 u64 digit = c - '0';
+amc ->                 ok &= val < limdiv || (val == limdiv && digit <= limmod);// val*10+digit must fit the field
+amc ->                 val = val*10 + digit;
+amc ->                 nfrac += ndot>0;
+amc ->             }
+amc ->         } else {
+amc ->             ok = false; // unknown char
+amc ->         }
+amc ->     }
+amc ->     while (nfrac < 2) {// insert missing
+amc ->         ok &= val <= limdiv;// val*10 must fit the field
+amc ->         val = val*10;
+amc ->         nfrac++;
+amc ->     }
+amc ->     i64 final_val = i64(neg ? 0 - val : val);// negate in u64: -val at the type minimum has no positive form
+amc ->     if (ok) {
+amc ->         parent.value = algo_lib::I64Cast(final_val);// store value
+amc ->     }
+amc ->     return ok;
+amc -> }
+amc -> // --- algo_lib.DecPlaceCast.value.Print
+amc -> void algo_lib::value_Print(algo_lib::DecPlaceCast& parent, cstring &outstr) {
+amc ->     i64 value = parent.value;
+amc ->     ch_Reserve(outstr, 64);
+amc ->     u64 magnitude = u64(value);
+amc ->     if (value < 0) {
+amc ->         ch_Alloc(outstr) = '-';
+amc ->         magnitude = 0 - u64(value);
+amc ->     }
+amc ->     u8 *value_start = (u8*)(outstr.ch_elems + outstr.ch_n);
+amc ->     outstr.ch_n += algo::u64_FmtBufDec(magnitude, 2, value_start, false);
+amc -> }
+amc -> amc.no_output  comment:"no files were modified"
+# exit amc code:27

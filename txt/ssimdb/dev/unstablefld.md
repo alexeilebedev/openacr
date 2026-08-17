@@ -3,25 +3,17 @@
 
 ### Attributes
 <a href="#attributes"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Attributes -->
 * [ctype:](/txt/ssimdb/dmmeta/ctype.md)dev.Unstablefld
 
 * file:[data/dev/unstablefld.ssim](/data/dev/unstablefld.ssim)
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|field|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftypes.md#pkey)|||
-|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Attributes -->
+|field|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)|||
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype.md#val)|||
 
 ### Used In Executables
 <a href="#used-in-executables"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:ImdbUses -->
-
-* [atf_comp](/txt/exe/atf_comp/internals.md) as [atf_comp.FUnstablefld](/txt/exe/atf_comp/internals.md#atf_comp-funstablefld)
-* [lib_ctype](/txt/lib/lib_ctype/README.md) as [lib_ctype.FUnstablefld](/txt/lib/lib_ctype/README.md#lib_ctype-funstablefld)
-* [ssimfilt](/txt/exe/ssimfilt/internals.md) as [ssimfilt.FUnstablefld](/txt/exe/ssimfilt/internals.md#ssimfilt-funstablefld)
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:ImdbUses -->
-
+* [atf_comp](/txt/gen/atf_comp/atf_comp.md) as [atf_comp.FUnstablefld](/txt/gen/atf_comp/atf_comp.md#atf_comp-funstablefld)
+* [lib_ctype](/txt/gen/lib_ctype/lib_ctype.md) as [lib_ctype.FUnstablefld](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-funstablefld)
+* [ssimfilt](/txt/gen/ssimfilt/ssimfilt.md) as [ssimfilt.FUnstablefld](/txt/gen/ssimfilt/ssimfilt.md#ssimfilt-funstablefld)

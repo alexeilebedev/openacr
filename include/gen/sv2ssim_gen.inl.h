@@ -81,7 +81,7 @@ inline sv2ssim::FField* sv2ssim::field_Last() {
 
 // --- sv2ssim.FDb.field.N
 // Return number of items in the pool
-inline i32 sv2ssim::field_N() {
+inline i64 sv2ssim::field_N() {
     return _db.field_n;
 }
 
@@ -124,20 +124,20 @@ inline algo::cstring* sv2ssim::linetok_Last() {
 
 // --- sv2ssim.FDb.linetok.Max
 // Return max. number of items in the array
-inline i32 sv2ssim::linetok_Max() {
+inline i64 sv2ssim::linetok_Max() {
     return _db.linetok_max;
 }
 
 // --- sv2ssim.FDb.linetok.N
 // Return number of items in the array
-inline i32 sv2ssim::linetok_N() {
+inline i64 sv2ssim::linetok_N() {
     return _db.linetok_n;
 }
 
 // --- sv2ssim.FDb.linetok.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void sv2ssim::linetok_Reserve(int n) {
-    u32 new_n = _db.linetok_n + n;
+inline void sv2ssim::linetok_Reserve(i64 n) {
+    u64 new_n = _db.linetok_n + n;
     if (UNLIKELY(new_n > _db.linetok_max)) {
         linetok_AbsReserve(new_n);
     }
@@ -190,7 +190,7 @@ inline sv2ssim::FSvtype* sv2ssim::svtype_Last() {
 
 // --- sv2ssim.FDb.svtype.N
 // Return number of items in the pool
-inline i32 sv2ssim::svtype_N() {
+inline i64 sv2ssim::svtype_N() {
     return _db.svtype_n;
 }
 
@@ -300,7 +300,7 @@ inline sv2ssim::FBltin* sv2ssim::bltin_Last() {
 
 // --- sv2ssim.FDb.bltin.N
 // Return number of items in the pool
-inline i32 sv2ssim::bltin_N() {
+inline i64 sv2ssim::bltin_N() {
     return _db.bltin_n;
 }
 

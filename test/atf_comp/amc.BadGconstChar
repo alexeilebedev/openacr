@@ -1,0 +1,19 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/bad_gconst_char -out_dir: -report:N algo_lib.ColorId"
+# eof amc
+amc -> amc.gconst_char  gconst:algo_lib.ColorId.value  name:green  value:abc  comment:"value must parse as a single character"
+amc -> amc.gconst_char  gconst:algo_lib.ColorId.value  name:blue  value:xy  comment:"value must parse as a single character"
+amc -> // --- algo_lib_ColorId_value_Enum
+amc -> enum algo_lib_ColorId_value_Enum {         // algo_lib.ColorId.value
+amc ->      algo_lib_ColorId_value_red     = 'r'
+amc -> };
+amc -> enum { algo_lib_ColorId_value_Enum_N = 1 };
+amc -> // --- algo_lib.ColorId
+amc -> struct ColorId { // algo_lib.ColorId
+amc ->     char   value;   //
+amc ->     // func:algo_lib.ColorId..Ctor
+amc ->     inline               ColorId() __attribute__((nothrow));
+amc ->     // func:algo_lib.ColorId..EnumCtor
+amc ->     inline               ColorId(algo_lib_ColorId_value_Enum arg) __attribute__((nothrow));
+amc -> };
+amc -> amc.no_output  comment:"no files were modified"
+# exit amc code:2

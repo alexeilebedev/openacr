@@ -8,11 +8,12 @@ Examples are provided below
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Internals](#internals)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Operation](#operation)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Starting](#starting)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Example: Get help (beyond command syntax)](#example-get-help--beyond-command-syntax-)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Example: Get help (beyond command syntax)](#example-get-help-beyond-command-syntax-)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Example: Get detailed help](#example-get-detailed-help)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Example: create access to repository](#example-create-access-to-repository)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Example: list remote repositories](#example-list-remote-repositories)<br/>
@@ -20,7 +21,7 @@ Examples are provided below
 &nbsp;&nbsp;&bull;&nbsp;  [Example: set default remote repo](#example-set-default-remote-repo)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Example: edit list of repos](#example-edit-list-of-repos)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Example: list issues](#example-list-issues)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Example: list a single issue with details (notes etc)](#example-list-a-single-issue-with-details--notes-etc-)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Example: list a single issue with details (notes etc)](#example-list-a-single-issue-with-details-notes-etc-)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Example: create a new issue](#example-create-a-new-issue)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Example: edit an existing issue](#example-edit-an-existing-issue)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Example: reopen an issue](#example-reopen-an-issue)<br/>
@@ -36,15 +37,19 @@ Examples are provided below
 &nbsp;&nbsp;&bull;&nbsp;  [Example: start reviewing merge request](#example-start-reviewing-merge-request)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Example: approve merge request](#example-approve-merge-request)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Example: list remote users](#example-list-remote-users)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Example: babysit a merge request](#example-babysit-a-merge-request)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Example: manage temporary project access tokens](#example-manage-temporary-project-access-tokens)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
 &#128196; [gcli - Internals](/txt/exe/gcli/internals.md)<br/>
+<!-- abt_md.toc_end -->
 
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
+### Internals
+<a href="#internals"></a>
+&#128196; [gcli - Internals](/txt/gen/gcli/gcli.md)<br/>
 
 ### Syntax
 <a href="#syntax"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Syntax -->
 ```
 gcli: Gcli - gitlab/github command-line client
 Usage: gcli [[-selector:]<string>] [[-fields:]<string>] [options]
@@ -60,6 +65,8 @@ Usage: gcli [[-selector:]<string>] [[-fields:]<string>] [options]
     -approve                                      (action) remove draft desiognation from mergereq
     -needs_work                                   (action) reopen an issue or put a draft designation on mergereq
     -stop                                         (action) closes an issue, or remove mr branch after review
+    -retry                                        (action) retry failed CI jobs of a selected mergereq (gitlab)
+    -limit                     int     0          For mrjob traces: tail this many lines per job (0 = full trace)
     -t                                            Tree view: expand issue description
     -e                                            edit the input
     -authdir                   string  ".ssim"    (setup) Input directory for auth data
@@ -71,10 +78,7 @@ Usage: gcli [[-selector:]<string>] [[-fields:]<string>] [options]
     -help                                         Print help and exit; alias -h
     -version                                      Print version and exit
     -signature                                    Show signatures and exit; alias -sig
-
 ```
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Syntax -->
 
 ### Operation
 <a href="#operation"></a>
@@ -95,7 +99,7 @@ After the command is successfully executed, gcli gitconfig -create will populate
 execute these commands with -dry_run option to see what they do.
 
 ### Example: Get help (beyond command syntax)
-<a href="#example-get-help--beyond-command-syntax-"></a>
+<a href="#example-get-help-beyond-command-syntax-"></a>
 
 ```
 inline-command: gcli help
@@ -110,6 +114,7 @@ mrjob                 lists CI jobs triggered by mr, shows jobs "trace"
 mrnote                mr notes/comments
 repo                  repositories configured locally in github/gitlab
 reporemote            repositories in github/gitlab visible for access tokens
+token                 project access tokens (gitlab only)
 user                  users in github/gitlab
 
 use help[:table] -t for more detailed help, ex "help:issue -t" or "help:help -t"
@@ -144,7 +149,9 @@ mr                                  merge requests/pulls in github/gitlab
   -needs_work
   -stop
 mrjob                               lists CI jobs triggered by mr, shows jobs "trace"
-  -list                             [-t]
+  -list                             [-fields:][errors:value] [-t]
+     [errors:value]                 show only error-looking trace lines
+  -retry
 mrnote                              mr notes/comments
   -create                           [-fields:]<[note:]value> [-t] [-e]
      <[note:]value>                 note for the specified mr
@@ -210,7 +217,7 @@ gcli
 ```
 
 ### Example: list a single issue with details (notes etc)
-<a href="#example-list-a-single-issue-with-details--notes-etc-"></a>
+<a href="#example-list-a-single-issue-with-details-notes-etc-"></a>
 
 ```
 gcli <issuekey> -t
@@ -258,10 +265,17 @@ gcli arnd.% author:apolov
 <a href="#example-start-working-on-an-issue"></a>
 
 Gcli will ensure that the current directory is clean (no modifications),
-fetch remote repo, create a local branch with a name matching issue key,
-set issue state to `in_progress`, and switch to the new branch.
+fetch remote repo, create a local branch named by the git-safe issue key
+(`/` flattened to `_`, e.g. issue `algornd/arnd.117` gets branch
+`algornd_arnd.117`), set issue state to `in_progress`, and switch to the
+new branch.  The branch is seeded with an empty commit carrying the issue
+title and description and the footer `closes #<iid> (<branch>)`; the same
+footer shape gli writes, so either tool recognizes the branch, and the
+server closes the issue when the merge request merges.
 
-If the branch already exists, no local changes are performed
+If a local branch bound to the issue already exists -- named by the issue
+key in either form, or carrying the footer -- gcli switches to it instead
+of creating a new one.
 
 ```
 gcli 117 -start
@@ -355,11 +369,9 @@ $ gcli mrjob:mr:arnd.91/% | grep success:N
 <a href="#example-create-merge-request"></a>
 
 Gcli will push current branch to the remote repo and create or update a merge request for it.
-The issue name is determined by looking at the current branch name.
-
-The comment for the most recent git commit must reference the issue and agree
-with current branch name. For instance, if you are on a branch `arnd.117`, the comment
-for HEAD must contain the string `#arnd.117`. Use `git commit --amend` to edit the commit comment.
+The issue is determined from the branch: the trailing `.<iid>` of an
+issue-key-shaped branch name (either form), or the commit footer
+`closes #<iid> (<branch>)` for branches named some other way (e.g. by gli).
 
 If a merge request already exists, it is automatically refreshed.
 By default, merge requests are prefixed with `Draft: ` making them unmergeable.
@@ -395,10 +407,49 @@ gcli mr:arnd.121 -approve
 gcli user
 ```
 
+### Example: babysit a merge request
+<a href="#example-babysit-a-merge-request"></a>
+
+The MR display carries the fields a babysitting loop needs: the `MERGE`
+column shows gitlab's detailed merge status (`mergeable`, `need_rebase`,
+`ci_still_running`, ...), and the `BEHIND` column shows how many commits the
+source branch is behind the target (single-MR fetch).  The note table of
+`mrnote` marks each review thread `resolved` or `unresolved` in the
+`RESOLVED` column, so pending review feedback is visible.  Failed CI jobs
+are retried with `-retry` (gitlab only): with a bare mr it retries the
+failed and canceled jobs; with `mrjob:<mr>/<regex>` the matching jobs
+regardless of status.  A job trace prints in full by default;
+`-limit:<n>` tails it to the last n lines, and `errors:Y` keeps only
+error-looking lines.
+
+```
+gcli mr:algornd/arnd.117               # MERGE/BEHIND columns
+gcli mrjob:mr:algornd/arnd.117 -retry  # re-run failed jobs
+gcli mrjob:mr:algornd/arnd.117/% -limit:50   # tail each job trace
+gcli mrjob:mr:algornd/arnd.117/% errors:Y    # error lines only
+```
+
+### Example: manage temporary project access tokens
+<a href="#example-manage-temporary-project-access-tokens"></a>
+
+GitLab only.  `gcli token` lists the project access tokens of the selected
+repo.  `gcli token:<repo>.% -create name:<name>` mints a token with scope
+`api` that expires in two days, and prints the created record as an ssim
+tuple -- the create response is the only place the secret appears.
+`gcli token:<repo>.<id> -stop` revokes a token.  Actions performed with such
+a token are attributed to a per-token bot account (`project_<n>_bot_<hash>`),
+not to a user.  The gcli comptests (`atf_comp gcli.%`) use these verbs to mint a credential for
+the test repo at the start of a run and revoke it at the end, so no token is
+stored in the source tree.
+
+```
+gcli token:algornd/glpat.% -create name:mykey
+gcli token
+gcli token:algornd/glpat.50 -stop
+```
+
 ### Options
 <a href="#options"></a>
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Options -->
 #### -in -- Input directory or filename, - for stdin
 <a href="#-in"></a>
 
@@ -432,6 +483,12 @@ gcli user
 #### -stop -- (action) closes an issue, or remove mr branch after review
 <a href="#-stop"></a>
 
+#### -retry -- (action) retry failed CI jobs of a selected mergereq (gitlab)
+<a href="#-retry"></a>
+
+#### -limit -- For mrjob traces: tail this many lines per job (0 = full trace)
+<a href="#-limit"></a>
+
 #### -t -- Tree view: expand issue description
 <a href="#-t"></a>
 
@@ -450,11 +507,8 @@ gcli user
 #### -show_gitlab_system_notes -- (misc) Show issue and mr notes created by gitlab
 <a href="#-show_gitlab_system_notes"></a>
 
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
-
 ### Inputs
 <a href="#inputs"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
 `gcli` takes the following tables on input:
 |Ssimfile|Comment|
 |---|---|
@@ -471,6 +525,3 @@ gcli user
 |[gclidb.gtype](/txt/ssimdb/gclidb/gtype.md)|Platform type (ghp=github; glpat=gitlab)|
 |[gclidb.gtypeh](/txt/ssimdb/gclidb/gtypeh.md)|HTTP heaaderes for user with platform|
 |[gclidb.gtypeprefix](/txt/ssimdb/gclidb/gtypeprefix.md)|Token prefix mapping to platform|
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
-

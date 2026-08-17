@@ -48,6 +48,18 @@ namespace abt { // update-hdr
     void Main_Disas();
 
     // -------------------------------------------------------------------
+    // cpp/abt/gitinfo.cpp
+    //
+
+    // Write build/gitinfo.ssim and build/gitinfo.h, the dev.gitinfo tuple that
+    // algo::gitinfo_Get() returns.  Runs before the header scan, so the include
+    // arg.cpp carries always resolves.  The tuple names the commit and the moment
+    // of the build and nothing about the build directory: one pair of files serves
+    // every config, so a per-config value would make alternating configs restamp
+    // each other's builds.
+    void WriteGitinfo();
+
+    // -------------------------------------------------------------------
     // cpp/abt/main.cpp -- Algo Build Tool - Main file
     //
     bool HeaderExtQ(strptr ext);

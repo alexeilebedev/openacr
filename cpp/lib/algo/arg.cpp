@@ -22,13 +22,26 @@
 // Source: cpp/lib/algo/arg.cpp -- Parse command-line
 //
 // Retrieve gitinfo string, e.g.
-// dev.gitinfo  gitinfo:2014-10-06.afa3edc.abt  author:alebedev@nyx.com  cfg:g++/release.Linux-x86_64  compver:4.4.6
+// dev.gitinfo  gitinfo:2014-10-06.afa3edc.abt  gitref:afa3edc...  builddate:2014-10-06T09:14:02
 
 #include "include/algo.h"
 
-#define STRINGIFY(x) #x
+// The build identity is not a source fact -- it names the commit a binary came
+// from and the moment it was compiled -- so abt writes it as build/gitinfo.h at
+// the start of every build (cpp/abt/gitinfo.cpp).  A tree compiled without abt
+// has no such file, which is the case the bootstrap and a hand-run compiler
+// take, and the binary honestly reports itself unversioned.
+#if defined(__has_include)
+#  if __has_include("build/gitinfo.h")
+#    include "build/gitinfo.h"
+#  endif
+#endif
+
+#ifndef ALGO_GITINFO
+#define ALGO_GITINFO "dev.gitinfo  comment:unversioned"
+#endif
 
 strptr algo::gitinfo_Get() {
     // remove trailing \n
-    return Trimmed("dev.gitinfo  comment:unversioned");
+    return Trimmed(ALGO_GITINFO);
 }

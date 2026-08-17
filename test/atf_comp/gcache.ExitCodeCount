@@ -1,0 +1,13 @@
+# start bash cmd:"bash -c 'cd $tempdir && ln -s $$OLDPWD/data data && mkdir cache && printf \"int f(){return 1;}\\n\" > x.cpp && $$OLDPWD/$bindir/gcache -install -dir:cache > /dev/null && $$OLDPWD/$bindir/gcache -- g++ --coverage -c x.cpp -o x.o; echo clean_code:$$?; rm -f cache/.keep; mkdir cache/.keep; $$OLDPWD/$bindir/gcache -install -dir:cache -- true > /dev/null; echo marker_code:$$?; $$OLDPWD/$bindir/gcache -install -dir:cache -- false > /dev/null; echo marker_cmd_code:$$?; rm -f x.o x.gcno; mkdir x.o; $$OLDPWD/$bindir/gcache -install -dir:cache -- g++ --coverage -c x.cpp -o x.o > /dev/null; echo marker_restore_code:$$?; rmdir x.o; rmdir cache/.keep; $$OLDPWD/$bindir/gcache -install -dir:cache -- false > /dev/null; echo cmd_code:$$?; rm -f x.o x.gcno; $$OLDPWD/$bindir/gcache -install -dir:cache -- g++ --coverage -c x.cpp -o x.o > /dev/null; echo hit_code:$$?'"
+# eof bash
+bash -> clean_code:0
+bash -> gcache.error  file:cache/.keep  err:"Is a directory"  comment:"cache directory marker could not be written"
+bash -> marker_code:1
+bash -> gcache.error  file:cache/.keep  err:"Is a directory"  comment:"cache directory marker could not be written"
+bash -> marker_cmd_code:2
+bash -> gcache.error  file:cache/.keep  err:"Is a directory"  comment:"cache directory marker could not be written"
+bash -> gcache.error  file:x.o  err:"Is a directory"  comment:"cached object file could not be restored"
+bash -> marker_restore_code:2
+bash -> cmd_code:1
+bash -> hit_code:0
+# exit bash code:0

@@ -32,8 +32,8 @@
 
 // --- atf_fuzz_FieldIdEnum
 
-enum atf_fuzz_FieldIdEnum {        // atf_fuzz.FieldId.value
-     atf_fuzz_FieldId_value   = 0
+enum atf_fuzz_FieldIdEnum {    // atf_fuzz.FieldId.value
+     atf_fuzz_FieldId_value
 };
 
 enum { atf_fuzz_FieldIdEnum_N = 1 };
@@ -51,7 +51,6 @@ enum { atf_fuzz_TableIdEnum_N = 2 };
 namespace atf_fuzz { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
 namespace atf_fuzz { // gen:ns_tclass_field
-extern const char *atf_fuzz_help;
 } // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace atfdb { struct Fuzzstrat; }
@@ -77,7 +76,6 @@ struct trace { // atf_fuzz.trace
     inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // print string representation of ROW to string STR
 // cfmt:atf_fuzz.trace.String  printfmt:Tuple
 // func:atf_fuzz.trace..Print
@@ -87,21 +85,18 @@ void                 trace_Print(atf_fuzz::trace& row, algo::cstring& str) __att
 // create: atf_fuzz.FDb._db (Global)
 struct FDb { // atf_fuzz.FDb: In-memory database for atf_fuzz
     command::atf_fuzz       cmdline;                    //
-    atf_fuzz::FFuzzstrat*   fuzzstrat_lary[32];         // level array
-    i32                     fuzzstrat_n;                // number of elements in array
-    atf_fuzz::FTarget*      target_lary[32];            // level array
-    i32                     target_n;                   // number of elements in array
+    atf_fuzz::FFuzzstrat*   fuzzstrat_lary[36];         // level array
+    i64                     fuzzstrat_n;                // number of elements in array
+    atf_fuzz::FTarget*      target_lary[36];            // level array
+    i64                     target_n;                   // number of elements in array
     atf_fuzz::FTarget**     ind_target_buckets_elems;   // pointer to bucket array
     i32                     ind_target_buckets_n;       // number of elements in bucket array
     i32                     ind_target_n;               // number of elements in the hash table
     atf_fuzz::FTarget*      c_target;                   // optional pointer
     atf_fuzz::trace         trace;                      //
 };
-
-// Read argc,argv directly into the fields of the command line(s)
-// The following fields are updated:
-//     atf_fuzz.FDb.cmdline
-//     algo_lib.FDb.cmdline
+// Read argc,argv into the fields of atf_fuzz.FDb.cmdline (and any base command line)
+// via atf_fuzz_ReadArgv; then apply -help/-version and load floadtuples input.
 // func:atf_fuzz.FDb._db.ReadArgv
 void                 ReadArgv() __attribute__((nothrow));
 // Main loop.
@@ -138,6 +133,10 @@ bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __att
 // Calls Step function of dependencies
 // func:atf_fuzz.FDb._db.Steps
 void                 Steps();
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+// func:atf_fuzz.FDb._db.RemoveStrptrMaybe
+bool                 RemoveStrptrMaybe(algo::strptr str);
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:atf_fuzz.FDb._db.XrefMaybe
@@ -168,7 +167,7 @@ inline atf_fuzz::FFuzzstrat* fuzzstrat_Find(u64 t) __attribute__((__warn_unused_
 inline atf_fuzz::FFuzzstrat* fuzzstrat_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:atf_fuzz.FDb.fuzzstrat.N
-inline i32           fuzzstrat_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           fuzzstrat_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:atf_fuzz.FDb.fuzzstrat.RemoveAll
 void                 fuzzstrat_RemoveAll() __attribute__((nothrow));
@@ -208,7 +207,7 @@ inline atf_fuzz::FTarget* target_Find(u64 t) __attribute__((__warn_unused_result
 inline atf_fuzz::FTarget* target_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:atf_fuzz.FDb.target.N
-inline i32           target_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           target_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:atf_fuzz.FDb.target.RemoveAll
 void                 target_RemoveAll() __attribute__((nothrow));
@@ -286,7 +285,7 @@ void                 FDb_Uninit() __attribute__((nothrow));
 // global access: fuzzstrat (Lary, by rowid)
 struct FFuzzstrat { // atf_fuzz.FFuzzstrat
     algo::Smallstr50                fuzzstrat;   //
-    algo::Comment                   comment;     //
+    algo::cstring                   comment;     //
     atf_fuzz::fuzzstrat_step_hook   step;        //   NULL  Pointer to a function
 private:
     // func:atf_fuzz.FFuzzstrat..Ctor
@@ -296,7 +295,6 @@ private:
     friend void                 fuzzstrat_RemoveAll() __attribute__((nothrow));
     friend void                 fuzzstrat_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:atf_fuzz.FFuzzstrat.base.CopyOut
 void                 fuzzstrat_CopyOut(atf_fuzz::FFuzzstrat &row, atfdb::Fuzzstrat &out) __attribute__((nothrow));
@@ -335,7 +333,6 @@ private:
     friend void                 target_RemoveAll() __attribute__((nothrow));
     friend void                 target_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:atf_fuzz.FTarget.base.CopyOut
 void                 target_CopyOut(atf_fuzz::FTarget &row, dev::Target &out) __attribute__((nothrow));
@@ -363,7 +360,6 @@ struct FieldId { // atf_fuzz.FieldId: Field read helper
     inline               FieldId(atf_fuzz_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:atf_fuzz.FieldId.value.GetEnum
 inline atf_fuzz_FieldIdEnum value_GetEnum(const atf_fuzz::FieldId& parent) __attribute__((nothrow));
@@ -401,7 +397,7 @@ inline void          FieldId_Init(atf_fuzz::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:atf_fuzz.FieldId.String  printfmt:Raw
 // func:atf_fuzz.FieldId..Print
-void                 FieldId_Print(atf_fuzz::FieldId& row, algo::cstring& str) __attribute__((nothrow));
+void                 FieldId_Print(atf_fuzz::FieldId row, algo::cstring& str) __attribute__((nothrow));
 
 // --- atf_fuzz.TableId
 struct TableId { // atf_fuzz.TableId: Index of table in this namespace
@@ -415,7 +411,6 @@ struct TableId { // atf_fuzz.TableId: Index of table in this namespace
     // func:atf_fuzz.TableId..EnumCtor
     inline               TableId(atf_fuzz_TableIdEnum arg) __attribute__((nothrow));
 };
-
 // Get value of field as enum type
 // func:atf_fuzz.TableId.value.GetEnum
 inline atf_fuzz_TableIdEnum value_GetEnum(const atf_fuzz::TableId& parent) __attribute__((nothrow));
@@ -453,7 +448,7 @@ inline void          TableId_Init(atf_fuzz::TableId& parent);
 // print string representation of ROW to string STR
 // cfmt:atf_fuzz.TableId.String  printfmt:Raw
 // func:atf_fuzz.TableId..Print
-void                 TableId_Print(atf_fuzz::TableId& row, algo::cstring& str) __attribute__((nothrow));
+void                 TableId_Print(atf_fuzz::TableId row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace atf_fuzz { // gen:ns_curstext
 

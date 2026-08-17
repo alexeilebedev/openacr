@@ -1,0 +1,88 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/json_global.ssim -out_dir: -report:N %.FmtJson"
+# eof amc
+amc -> // --- algo_lib.Anchor..FmtJson
+amc -> // Create JSON representation of algo_lib::Anchor under PARENT node
+amc -> // cfmt:algo_lib.Anchor.Json  printfmt:Auto
+amc -> lib_json::FNode * algo_lib::Anchor_FmtJson(algo_lib::Anchor& row, lib_json::FNode *parent) {
+amc ->     lib_json::FNode *objnode = &lib_json::node_Alloc();
+amc ->     objnode->p_parent = parent?parent:objnode;
+amc ->     objnode->type   = lib_json_FNode_type_object;
+amc ->     node_XrefMaybe(*objnode);
+amc ->     return objnode;
+amc ->     (void)row;//only to avoid -Wunused-parameter
+amc -> }
+amc -> // --- algo_lib.Derived..FmtJson
+amc -> // Create JSON representation of algo_lib::Derived under PARENT node
+amc -> // cfmt:algo_lib.Derived.Json  printfmt:Auto
+amc -> lib_json::FNode * algo_lib::Derived_FmtJson(algo_lib::Derived& row, lib_json::FNode *parent) {
+amc ->     lib_json::FNode *objnode = &lib_json::node_Alloc();
+amc ->     objnode->p_parent = parent?parent:objnode;
+amc ->     objnode->type   = lib_json_FNode_type_object;
+amc ->     node_XrefMaybe(*objnode);
+amc ->     return objnode;
+amc ->     (void)row;//only to avoid -Wunused-parameter
+amc -> }
+amc -> // --- algo_lib.Elem..FmtJson
+amc -> // Create JSON representation of algo_lib::Elem under PARENT node
+amc -> // cfmt:algo_lib.Elem.Json  printfmt:Auto
+amc -> lib_json::FNode * algo_lib::Elem_FmtJson(algo_lib::Elem row, lib_json::FNode *parent) {
+amc ->     lib_json::FNode& v_node = lib_json::NewStringNode(parent);
+amc ->     u32_Print(row.v, v_node.value);
+amc ->     return &v_node;
+amc -> }
+amc -> // --- algo_lib.FDb..FmtJson
+amc -> // Create JSON representation of algo_lib::FDb under PARENT node
+amc -> // cfmt:algo_lib.FDb.Json  printfmt:Auto
+amc -> lib_json::FNode * algo_lib::FDb_FmtJson(algo_lib::FDb& row, lib_json::FNode *parent) {
+amc ->     lib_json::FNode *objnode = &lib_json::node_Alloc();
+amc ->     objnode->p_parent = parent?parent:objnode;
+amc ->     objnode->type   = lib_json_FNode_type_object;
+amc ->     node_XrefMaybe(*objnode);
+amc ->     u64_Print(row.malloc, lib_json::NewStringNode(objnode, "malloc").value);
+amc ->     u32_Print(row.val, lib_json::NewStringNode(objnode, "val").value);
+amc ->     algo::aryptr<u32> ja_ary = ja_Getary();
+amc ->     lib_json::FNode& ja_node = lib_json::NewArrayNode(objnode, "ja");
+amc ->     for (int i = 0; i < ja_ary.n_elems; ++i) {
+amc ->         u32_Print(ja_ary[i], lib_json::NewStringNode(&ja_node).value);
+amc ->     }
+amc ->     algo::aryptr<algo_lib::Elem> jb_ary = jb_Getary();
+amc ->     lib_json::FNode& jb_node = lib_json::NewArrayNode(objnode, "jb");
+amc ->     for (int i = 0; i < jb_ary.n_elems; ++i) {
+amc ->         algo_lib::Elem_FmtJson(jb_ary[i], &jb_node);
+amc ->     }
+amc ->     algo::aryptr<u32> jc_ary = jc_Getary();
+amc ->     lib_json::FNode& jc_node = lib_json::NewArrayNode(objnode, "jc");
+amc ->     for (int i = 0; i < jc_ary.n_elems; ++i) {
+amc ->         u32_Print(jc_ary[i], lib_json::NewStringNode(&jc_node).value);
+amc ->     }
+amc ->     algo_lib::trace_Print(row.trace, lib_json::NewStringNode(objnode, "trace").value);
+amc ->     return objnode;
+amc -> }
+amc -> // --- algo_lib.GlobAry..FmtJson
+amc -> // Create JSON representation of algo_lib::GlobAry under PARENT node
+amc -> // cfmt:algo_lib.GlobAry.Json  printfmt:Auto
+amc -> lib_json::FNode * algo_lib::GlobAry_FmtJson(algo_lib::GlobAry& row, lib_json::FNode *parent) {
+amc ->     lib_json::FNode *objnode = &lib_json::node_Alloc();
+amc ->     objnode->p_parent = parent?parent:objnode;
+amc ->     objnode->type   = lib_json_FNode_type_object;
+amc ->     node_XrefMaybe(*objnode);
+amc ->     algo::aryptr<u32> v_ary = v_Getary();
+amc ->     lib_json::FNode& v_node = lib_json::NewArrayNode(objnode, "v");
+amc ->     for (int i = 0; i < v_ary.n_elems; ++i) {
+amc ->         u32_Print(v_ary[i], lib_json::NewStringNode(&v_node).value);
+amc ->     }
+amc ->     return objnode;
+amc ->     (void)row;//only to avoid -Wunused-parameter
+amc -> }
+amc -> // --- algo_lib.Presence..FmtJson
+amc -> // Create JSON representation of algo_lib::Presence under PARENT node
+amc -> // cfmt:algo_lib.Presence.Json  printfmt:Auto
+amc -> lib_json::FNode * algo_lib::Presence_FmtJson(algo_lib::Presence row, lib_json::FNode *parent) {
+amc ->     lib_json::FNode *objnode = &lib_json::node_Alloc();
+amc ->     objnode->p_parent = parent?parent:objnode;
+amc ->     objnode->type   = lib_json_FNode_type_object;
+amc ->     node_XrefMaybe(*objnode);
+amc ->     return objnode;
+amc ->     (void)row;//only to avoid -Wunused-parameter
+amc -> }
+# exit amc code:0

@@ -64,7 +64,13 @@ void lib_sql::trace_Print(lib_sql::trace& row, algo::cstring& str) {
 // --- lib_sql.FDb._db.InitReflection
 // Load statically available data into tables, register tables and database.
 static void lib_sql::InitReflection() {
-    algo_lib::imdb_InsertMaybe(algo::Imdb("lib_sql", NULL, NULL, NULL, NULL, algo::Comment()));
+    algo_lib::FImdb &row = algo_lib::imdb_Alloc();
+    row.imdb               = "lib_sql";
+    row.InsertStrptrMaybe  = NULL;
+    row.RemoveStrptrMaybe  = NULL;
+    row.Step               = NULL;
+    row.MainLoop           = NULL;
+    algo_lib::imdb_XrefMaybe(row);
 
     algo::Imtable t_trace;
     t_trace.imtable         = "lib_sql.trace";
@@ -160,6 +166,15 @@ void lib_sql::Steps() {
     algo_lib::Step(); // dependent namespace specified via (dev.targdep)
 }
 
+// --- lib_sql.FDb._db.RemoveStrptrMaybe
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+bool lib_sql::RemoveStrptrMaybe(algo::strptr str) {
+    bool retval = true;
+    (void)str;//only to avoid -Wunused-parameter
+    return retval;
+}
+
 // --- lib_sql.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
@@ -200,7 +215,7 @@ void* lib_sql::attr_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     lib_sql::FAttr*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.attr_lary[bsr];
         if (!lev) {
             lev=(lib_sql::FAttr*)algo_lib::malloc_AllocMem(sizeof(lib_sql::FAttr) * (u64(1)<<bsr));
@@ -209,7 +224,7 @@ void* lib_sql::attr_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.attr_n = i32(new_nelems);
+        _db.attr_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -221,7 +236,7 @@ void lib_sql::attr_RemoveAll() {
     for (u64 n = _db.attr_n; n>0; ) {
         n--;
         attr_qFind(u64(n)).~FAttr(); // destroy last element
-        _db.attr_n = i32(n);
+        _db.attr_n = i64(n);
     }
 }
 
@@ -232,7 +247,7 @@ void lib_sql::attr_RemoveLast() {
     if (n > 0) {
         n -= 1;
         attr_qFind(u64(n)).~FAttr();
-        _db.attr_n = i32(n);
+        _db.attr_n = i64(n);
     }
 }
 
@@ -499,7 +514,7 @@ bool lib_sql::FieldId_ReadStrptrMaybe(lib_sql::FieldId &parent, algo::strptr in_
 // --- lib_sql.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:lib_sql.FieldId.String  printfmt:Raw
-void lib_sql::FieldId_Print(lib_sql::FieldId& row, algo::cstring& str) {
+void lib_sql::FieldId_Print(lib_sql::FieldId row, algo::cstring& str) {
     lib_sql::value_Print(row, str);
 }
 

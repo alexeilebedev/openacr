@@ -1,4 +1,3 @@
-dmmeta.hook  field:abt_md.FMdsection.step
 dmmeta.hook  field:acr_ed.FEdaction.step
 dmmeta.hook  field:algo_lib.FDb.h_fatalerror
 dmmeta.hook  field:algo_lib.FErrns.decode
@@ -10,13 +9,12 @@ dmmeta.hook  field:amc.FTfunc.step
 dmmeta.hook  field:atf_amc.FAmctest.step
 dmmeta.hook  field:atf_amc.FListtype.step
 dmmeta.hook  field:atf_amc.Hooktype.callback
-dmmeta.hook  field:atf_ci.FCitest.step
 dmmeta.hook  field:atf_comp.FComptest.step
 dmmeta.hook  field:atf_fuzz.FFuzzstrat.step
-dmmeta.hook  field:atf_unit.FUnittest.step
 dmmeta.hook  field:gcli.FGclicmd.step
 dmmeta.hook  field:gcli.FGtblact.step
+dmmeta.hook  field:lib_ams.FDb.h_amsmsg
+dmmeta.hook  field:lib_ams.FDb.h_terminate
 dmmeta.hook  field:lib_ams.FShm.h_amsmsg
-dmmeta.hook  field:lib_ams.FShm.h_msg_orig
 dmmeta.hook  field:lib_ams.MsgFmt.h_convert
-dmmeta.hook  field:lib_fm.FDb.h_alarm
+dmmeta.hook  field:lib_curl.FCall.done

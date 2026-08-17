@@ -1,0 +1,5 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/bad_cfmt_read.ssim -out_dir: -report:N zzz"
+# eof amc
+amc -> amc.badcfmt  cfmt:algo_lib.RCompact.String  strfmt:String  printfmt:CompactSep  comment:"no read path for this strfmt and printfmt"
+amc -> amc.no_output  comment:"no files were modified"
+# exit amc code:1

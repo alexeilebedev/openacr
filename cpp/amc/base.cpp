@@ -26,20 +26,42 @@
 
 // -----------------------------------------------------------------------------
 
-static bool StripCommentQ(amc::FField &field) {
-    return field.c_fbase && field.c_fbase->stripcomment;
+// True when FIELD is the generic comment column that every ssim tuple carries.
+static bool CommentFieldQ(amc::FField &field) {
+    return field.p_arg != NULL && field.p_arg->ctype == "algo.Comment";
 }
 
 // -----------------------------------------------------------------------------
 
+// True when CTYPE carries a comment column, so a child that instantiates CTYPE
+// as its base holds that column under a different type than CTYPE does.
+static bool CommentQ(amc::FCtype &ctype) {
+    bool retval = false;
+    ind_beg(amc::ctype_c_field_curs, field, ctype) {
+        retval = retval || CommentFieldQ(field);
+    }ind_end;
+    return retval;
+}
+
+// -----------------------------------------------------------------------------
+
+// True when the base's columns sit at the same offsets in the child, so a child
+// reference can be reinterpreted as a base reference.
+//
+// A base that carries a comment fails this test.  Consider a base ctype whose
+// last column is the 152-byte algo.Comment every ssim tuple ends with:
+// lib_x2.FStorage instantiates that column as a 24-byte algo.cstring, so the
+// two structs agree up to the comment and disagree from there on.  The overlay
+// is a reinterpret_cast with no conversion step, so it can only be offered
+// where every column of the base is laid out identically in the child.
 static bool AllowCastbaseQ(amc::FField &field) {
     amc::FCtype &ctype = *field.p_ctype;
     amc::FCtype *base = GetBaseType(ctype,NULL);
     bool retval =
         ctype.n_xref==0
         && zd_inst_EmptyQ(ctype)
-        && !StripCommentQ(field)
-        && !(base && (base->c_optfld || !zd_varlenfld_EmptyQ(*base)));
+        && !(base && CommentQ(*base))
+        && !(base && amc::RuntimeFrameLenQ(*base));
     return retval;
 }
 
@@ -61,7 +83,7 @@ void amc::tfunc_Base_CopyOut() {
         Set(R, "$cppname", name_Get(field));
         Set(R, "$reftype", field.reftype);
         if (!FindFieldByName(*fldbase.p_ctype, name_Get(field))) {
-            Ins(&R, copyout.body, "// $cppname: field stripped (see dmmeta.fbase:$field)");
+            Ins(&R, copyout.body, "// $cppname: the child carries no column of this name");
         } else if (field.c_fregx) {
             Set(R, "$Regxtype", field.c_fregx->regxtype);
             Ins(&R, copyout.body, "(void)Regx_Read$Regxtype(out.$cppname, row.$cppname.expr, true);");
@@ -71,8 +93,16 @@ void amc::tfunc_Base_CopyOut() {
             Ins(&R, copyout.body, "// $cppname: field value is computed");
         } else if (field.c_tary) {// tary
             Ins(&R, copyout.body, "$cppname_Setary(out, $cppname_Getary(row));");
+        } else if (CommentFieldQ(field)) {
+            // the child holds the comment as a cstring; the fixed-size string the
+            // base declares takes a strptr through an explicit constructor
+            Set(R, "$Argtype", field.p_arg->cpp_type);
+            Ins(&R, copyout.body, "out.$cppname = $Argtype(row.$cppname);");
         } else if (ValQ(field)) {
-            Ins(&R, copyout.body, "out.$cppname = row.$cppname;");
+            // bigend fields are stored under a _be-suffixed member
+            tempstr membname = tempstr(name_Get(field)) << (field.c_fbigend ? "_be" : "");
+            Set(R, "$membname", membname);
+            Ins(&R, copyout.body, "out.$membname = row.$membname;");
         } else {
             Ins(&R, copyout.body, "// $cppname: unknown field type ($reftype), skipped");
         }
@@ -94,7 +124,7 @@ void amc::tfunc_Base_CopyIn() {
             Set(R, "$reftype", field.reftype);
             Set(R, "$cppname", name_Get(field));
             if (!FindFieldByName(*fldbase.p_ctype, name_Get(field))) {
-                Ins(&R, copyin.body, "// $cppname: field stripped (see dmmeta.fbase:$field)");
+                Ins(&R, copyin.body, "// $cppname: the child carries no column of this name");
             } else if (field.c_fregx) {
                 Set(R, "$Regxtype", field.c_fregx->regxtype);
                 Ins(&R, copyin.body, "(void)Regx_Read$Regxtype(row.$cppname, in.$cppname.expr, true);");
@@ -105,7 +135,10 @@ void amc::tfunc_Base_CopyIn() {
             } else if (field.c_tary) {// tary
                 Ins(&R, copyin.body, "$cppname_Setary(row, $cppname_Getary(in));");
             } else if (ValQ(field)) {
-                Ins(&R, copyin.body, "row.$cppname = in.$cppname;");
+                // bigend fields are stored under a _be-suffixed member
+                tempstr membname = tempstr(name_Get(field)) << (field.c_fbigend ? "_be" : "");
+                Set(R, "$membname", membname);
+                Ins(&R, copyin.body, "row.$membname = in.$membname;");
             } else {
                 Ins(&R, copyin.body, "// $cppname: unknown field reftype ($reftype), skipped");
             }
@@ -164,22 +197,32 @@ double amc::ChildRowid(double rowid) {
 
 // -----------------------------------------------------------------------------
 
-static bool ClonableQ(amc::FField &field, bool stripcomment) {
-    return
-        field.reftype != dmmeta_Reftype_reftype_Base
-        && (!stripcomment || name_Get(field) != "comment");
+static bool ClonableQ(amc::FField &field) {
+    return field.reftype != dmmeta_Reftype_reftype_Base;
 }
 
 // -----------------------------------------------------------------------------
 
-void amc::CloneFields(amc::FCtype &from, amc::FCtype &to, double next_rowid, amc::FField &basefield) {
-    bool stripcomment = StripCommentQ(basefield);
-    ind_beg(amc::ctype_c_field_curs, field,from) if (ClonableQ(field,stripcomment)) {
+void amc::CloneFields(amc::FCtype &from, amc::FCtype &to, double next_rowid) {
+    ind_beg(amc::ctype_c_field_curs, field,from) if (ClonableQ(field)) {
         dmmeta::Field newfield;
         amc::field_CopyOut(field,newfield);
 
         // change name of this field. everything else stays.
         newfield.field = tempstr() << to.ctype << "." << name_Get(field);
+        // A comment is instantiated under algo.cstring rather than under the
+        // base's own algo.Comment.  Consider a table whose rows each
+        // reach a process as a lib_x2.FProc: the comment says "commit" or
+        // "gateway", eight bytes of text, and the fixed-size string spends 152
+        // bytes of every record on it whether or not a comment was ever
+        // written.  A record is a pooled F-ctype with a constructor and a
+        // destructor already, so it can hold the column as a cstring -- 24
+        // bytes, and no allocation at all until a comment is set -- while the
+        // ssim tuple the row was read from keeps the fixed-size column that
+        // makes it a plain-data type.
+        if (CommentFieldQ(field)) {
+            newfield.arg = "algo.cstring";
+        }
         int count=2;
         while (amc::ind_field_Find(newfield.field)) {
             prerr("amc.newfield_cbase"

@@ -8,7 +8,7 @@ Second, `indent-recent` and `cpp-indent` automatically indent
 source files, and run automatically on every commit (via CI), enforcing this style.
 
 ### Spaces, Indentation
-<a href="#spaces--indentation"></a>
+<a href="#spaces-indentation"></a>
 
 Use spaces, use 4 space indent. We use `cpp-indent` to normalize all source files,
 so this policy is enforced automatically.
@@ -122,7 +122,7 @@ and your debug times will be finite. Hoare's
 serve as an inspiration.
 
 ### Use Single Entry, Single Exit (SESE) style
-<a href="#use-single-entry--single-exit--sese--style"></a>
+<a href="#use-single-entry-single-exit-sese-style"></a>
 
 Do not use the continue statement (break is OK, it is sometimes necessary to terminate a search).
 Use return only at the end of a function. SESE has several sound reasons behind it.
@@ -160,4 +160,3 @@ and any other rules for caller/callee not enforceable at the language level.
 
 Given a sufficiently good reason, any rule can be replaced. But let's try to keep a consistent
 whole by following these rules whenever possible.
-

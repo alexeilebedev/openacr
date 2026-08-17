@@ -2,7 +2,7 @@
 
 
 ### Usage: `errlist <command>`
-<a href="#usage--errlist--command--"></a>
+<a href="#usage-errlist-command-"></a>
 The script executes `<command>` as a compilation command in `EDITOR`.
 `emacs` and `vi[m]` are supported as standard editors.
 Any output from the command which contains lines in the form `<filename>:<linenumber>: <text>`
@@ -24,10 +24,6 @@ Errlist can be used with
 
 ### Sources
 <a href="#sources"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Sources -->
 The source code license is GPL
 
 Source file: [bin/errlist](/bin/errlist)
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Sources -->
-

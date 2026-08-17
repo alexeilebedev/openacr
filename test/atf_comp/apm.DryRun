@@ -1,0 +1,5 @@
+# start bash cmd:"bash -c 'cd $tempdir && $$OLDPWD/$bindir/apm -in:$$OLDPWD/data openacr -e -dry_run && test ! -e temp && echo apm.no_script'"
+# eof bash
+bash -> bin/acr  -query:$'dev.package:(openacr)' -e:Y -t:Y
+bash -> apm.no_script
+# exit bash code:0

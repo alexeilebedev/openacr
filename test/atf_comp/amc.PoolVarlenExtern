@@ -1,0 +1,9 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/pool_varlen_extern.ssim -out_dir: -report:N algo_lib.FDb.blob.Delete"
+# eof amc
+amc -> // --- algo_lib.FDb.blob.Delete
+amc -> // Remove row from all global and cross indices, then deallocate row
+amc -> void algo_lib::blob_Delete(algo_lib::Blob &row) {
+amc ->     int length = sizeof(algo_lib::Blob) + data_N(row) * sizeof(u8);
+amc ->     blob_FreeMem(&row, length);
+amc -> }
+# exit amc code:0

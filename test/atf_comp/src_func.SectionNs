@@ -1,0 +1,171 @@
+# start bash cmd:"bash -c 'cd $tempdir && mkdir hdr src && cp $$OLDPWD/test/src_func/sectionns.hdr hdr/x.h && printf \"void solo::Solo() {\\n}\\nvoid outer::Outer() {\\n}\\nvoid inner::Inner() {\\n}\\nvoid deep1::Deep1() {\\n}\\nvoid deep2::Deep2() {\\n}\\nvoid deep3::Deep3() {\\n}\\nvoid twoline::Twoline() {\\n}\\nvoid scope2::Scope2() {\\n}\\nvoid attr::Attr() {\\n}\\nvoid cmt::Cmt() {\\n}\\nvoid attrarg::Attrarg() {\\n}\\nvoid attrqual::Attrqual() {\\n}\\nvoid cmtparen::Cmtparen() {\\n}\\nvoid cmtword::Cmtword() {\\n}\\nvoid lastword::Lastword() {\\n}\\nvoid litword::Litword() {\\n}\\nvoid rawword::Rawword() {\\n}\\nvoid deprecated::Deprecated() {\\n}\\nvoid visibility::Visibility() {\\n}\\nvoid run::Run() {\\n}\\nvoid rest::Rest() {\\n}\\nvoid bar::Bar() {\\n}\\nvoid Global() {\\n}\\n\" > src/y.cpp && $$OLDPWD/$bindir/src_func -in:$$OLDPWD/test/src_func/sectionns.ssim -updateproto && cat hdr/x.h'"
+# eof bash
+bash -> // A header whose update-hdr sections cover the shapes a marker line takes, one
+bash -> // section per shape.
+bash -> // Three sections open one, two and three namespaces on the marker line, and one
+bash -> // opens none there because its brace stands on the line below. Five name their
+bash -> // namespace in a spelling of its own: the C++17 scope operator, an attribute, an
+bash -> // attribute carrying a string argument, an attribute whose own name is qualified,
+bash -> // and a comment standing between the keyword and the name.
+bash -> // The last five carry text after the name that is not code. A comment spells a call
+bash -> // and a semicolon, a line comment mentions another namespace, a line comment ends on
+bash -> // the keyword itself, and a quoted and a raw string literal each spell a namespace
+bash -> // line of their own. The name each of those lines gives its namespace stands outside
+bash -> // that text.
+bash -> namespace solo { // update-hdr
+bash ->     // Dear human:
+bash ->     //     Text from here to the closing curly brace was produced by scanning
+bash ->     //     source files. Editing this text is futile.
+bash ->     //     To refresh the contents of this section, run 'update-hdr'.
+bash ->     //     To convert this section to a hand-written section, remove the word 'update-hdr' from namespace line.
+bash ->     // -------------------------------------------------------------------
+bash ->     // src/y.cpp
+bash ->     //
+bash ->     void Solo();
+bash -> }
+bash -> namespace outer { namespace inner { // update-hdr
+bash ->     // Dear human:
+bash ->     //     Text from here to the closing curly brace was produced by scanning
+bash ->     //     source files. Editing this text is futile.
+bash ->     //     To refresh the contents of this section, run 'update-hdr'.
+bash ->     //     To convert this section to a hand-written section, remove the word 'update-hdr' from namespace line.
+bash ->     // -------------------------------------------------------------------
+bash ->     // src/y.cpp
+bash ->     //
+bash ->     void Inner();
+bash -> }
+bash -> }
+bash -> namespace deep1 { namespace deep2 { namespace deep3 { // update-hdr
+bash ->     // Dear human:
+bash ->     //     Text from here to the closing curly brace was produced by scanning
+bash ->     //     source files. Editing this text is futile.
+bash ->     //     To refresh the contents of this section, run 'update-hdr'.
+bash ->     //     To convert this section to a hand-written section, remove the word 'update-hdr' from namespace line.
+bash ->     // -------------------------------------------------------------------
+bash ->     // src/y.cpp
+bash ->     //
+bash ->     void Deep3();
+bash -> }}}
+bash -> namespace twoline // update-hdr
+bash -> {
+bash ->     // Dear human:
+bash ->     //     Text from here to the closing curly brace was produced by scanning
+bash ->     //     source files. Editing this text is futile.
+bash ->     //     To refresh the contents of this section, run 'update-hdr'.
+bash ->     //     To convert this section to a hand-written section, remove the word 'update-hdr' from namespace line.
+bash ->     // -------------------------------------------------------------------
+bash ->     // src/y.cpp
+bash ->     //
+bash ->     void Twoline();
+bash -> }
+bash -> namespace scope1::scope2 { // update-hdr
+bash ->     // Dear human:
+bash ->     //     Text from here to the closing curly brace was produced by scanning
+bash ->     //     source files. Editing this text is futile.
+bash ->     //     To refresh the contents of this section, run 'update-hdr'.
+bash ->     //     To convert this section to a hand-written section, remove the word 'update-hdr' from namespace line.
+bash ->     // -------------------------------------------------------------------
+bash ->     // src/y.cpp
+bash ->     //
+bash ->     void Scope2();
+bash -> }
+bash -> namespace [[deprecated]] attr { // update-hdr
+bash ->     // Dear human:
+bash ->     //     Text from here to the closing curly brace was produced by scanning
+bash ->     //     source files. Editing this text is futile.
+bash ->     //     To refresh the contents of this section, run 'update-hdr'.
+bash ->     //     To convert this section to a hand-written section, remove the word 'update-hdr' from namespace line.
+bash ->     // -------------------------------------------------------------------
+bash ->     // src/y.cpp
+bash ->     //
+bash ->     void Attr();
+bash -> }
+bash -> namespace/*x*/cmt { // update-hdr
+bash ->     // Dear human:
+bash ->     //     Text from here to the closing curly brace was produced by scanning
+bash ->     //     source files. Editing this text is futile.
+bash ->     //     To refresh the contents of this section, run 'update-hdr'.
+bash ->     //     To convert this section to a hand-written section, remove the word 'update-hdr' from namespace line.
+bash ->     // -------------------------------------------------------------------
+bash ->     // src/y.cpp
+bash ->     //
+bash ->     void Cmt();
+bash -> }
+bash -> namespace [[deprecated("use x")]] attrarg { // update-hdr
+bash ->     // Dear human:
+bash ->     //     Text from here to the closing curly brace was produced by scanning
+bash ->     //     source files. Editing this text is futile.
+bash ->     //     To refresh the contents of this section, run 'update-hdr'.
+bash ->     //     To convert this section to a hand-written section, remove the word 'update-hdr' from namespace line.
+bash ->     // -------------------------------------------------------------------
+bash ->     // src/y.cpp
+bash ->     //
+bash ->     void Attrarg();
+bash -> }
+bash -> namespace [[gnu::visibility("default")]] attrqual { // update-hdr
+bash ->     // Dear human:
+bash ->     //     Text from here to the closing curly brace was produced by scanning
+bash ->     //     source files. Editing this text is futile.
+bash ->     //     To refresh the contents of this section, run 'update-hdr'.
+bash ->     //     To convert this section to a hand-written section, remove the word 'update-hdr' from namespace line.
+bash ->     // -------------------------------------------------------------------
+bash ->     // src/y.cpp
+bash ->     //
+bash ->     void Attrqual();
+bash -> }
+bash -> namespace cmtparen /* see run(); */ { // update-hdr
+bash ->     // Dear human:
+bash ->     //     Text from here to the closing curly brace was produced by scanning
+bash ->     //     source files. Editing this text is futile.
+bash ->     //     To refresh the contents of this section, run 'update-hdr'.
+bash ->     //     To convert this section to a hand-written section, remove the word 'update-hdr' from namespace line.
+bash ->     // -------------------------------------------------------------------
+bash ->     // src/y.cpp
+bash ->     //
+bash ->     void Cmtparen();
+bash -> }
+bash -> namespace cmtword { // see namespace bar for the rest // update-hdr
+bash ->     // Dear human:
+bash ->     //     Text from here to the closing curly brace was produced by scanning
+bash ->     //     source files. Editing this text is futile.
+bash ->     //     To refresh the contents of this section, run 'update-hdr'.
+bash ->     //     To convert this section to a hand-written section, remove the word 'update-hdr' from namespace line.
+bash ->     // -------------------------------------------------------------------
+bash ->     // src/y.cpp
+bash ->     //
+bash ->     void Cmtword();
+bash -> }
+bash -> namespace lastword { // one namespace // update-hdr
+bash ->     // Dear human:
+bash ->     //     Text from here to the closing curly brace was produced by scanning
+bash ->     //     source files. Editing this text is futile.
+bash ->     //     To refresh the contents of this section, run 'update-hdr'.
+bash ->     //     To convert this section to a hand-written section, remove the word 'update-hdr' from namespace line.
+bash ->     // -------------------------------------------------------------------
+bash ->     // src/y.cpp
+bash ->     //
+bash ->     void Lastword();
+bash -> }
+bash -> namespace litword { const char *s = "namespace bar"; // update-hdr
+bash ->     // Dear human:
+bash ->     //     Text from here to the closing curly brace was produced by scanning
+bash ->     //     source files. Editing this text is futile.
+bash ->     //     To refresh the contents of this section, run 'update-hdr'.
+bash ->     //     To convert this section to a hand-written section, remove the word 'update-hdr' from namespace line.
+bash ->     // -------------------------------------------------------------------
+bash ->     // src/y.cpp
+bash ->     //
+bash ->     void Litword();
+bash -> }
+bash -> namespace rawword { const char *r = R"(namespace bar { )"; // update-hdr
+bash ->     // Dear human:
+bash ->     //     Text from here to the closing curly brace was produced by scanning
+bash ->     //     source files. Editing this text is futile.
+bash ->     //     To refresh the contents of this section, run 'update-hdr'.
+bash ->     //     To convert this section to a hand-written section, remove the word 'update-hdr' from namespace line.
+bash ->     // -------------------------------------------------------------------
+bash ->     // src/y.cpp
+bash ->     //
+bash ->     void Rawword();
+bash -> }
+# exit bash code:0

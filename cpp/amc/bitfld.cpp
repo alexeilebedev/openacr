@@ -24,18 +24,23 @@
 
 #include "include/amc.h"
 
+// Validate the bitfield width (1..64) and set up the substitution
+// variables shared by the bitfield accessors: source field, bit offset,
+// width, mask, and the integer type the mask operations run on.
 void amc::tclass_Bitfld() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;
 
     Set(R, "$Fldtype", field.cpp_type);
     Set(R, "$name"   , name_Get(field));
+    // c_bitfld is non-null here: gen_check_reftype pairs reftype Bitfld with
+    // the dmmeta.bitfld row in both directions and ends the run when either
+    // side is missing (comptest amc.BadBitfldReftype pins both rejections)
     amc::FBitfld &bitfld = *field.c_bitfld;
 
-    vrfy(field.c_bitfld, tempstr()<<"amc.where_is_the_bitfld  field:"<<field.field);
-    vrfy(bitfld.width <= 64, tempstr()<<"amc.bitfield_width  field:"<<field.field<<"  comment:'max bitfield width is 64 bits'");
+    vrfy(bitfld.width >= 1 && bitfld.width <= 64, tempstr()<<"amc.bitfield_width  field:"<<field.field<<"  comment:'bitfield width must be 1..64 bits'");
 
-    u64 mask = bitfld.width==64 ? u64(0xffffffffffffffff) : (u64(1) << bitfld.width)-1;
+    u64 mask = amc::FieldStoreMask(field);
     tempstr hexval;
     u64_PrintHex(mask, hexval, 2, true, false);// 0xffffffff for a 32-bit wide field, or 0x3ff for 9-bit wide field
 
@@ -50,16 +55,22 @@ void amc::tclass_Bitfld() {
     Set(R, "$srcfldval" , FieldvalExpr(field.p_ctype, *bitfld.p_srcfield, "$parname"));
 }
 
+// Generate the bitfield's contribution to the parent's Init: a Set call
+// storing the field default, emitted only when a default exists.
 void amc::tfunc_Bitfld_Init() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;
-    Set(R, "$dflt", DfltExprBitfld(field));
+    tempstr dflt = DfltExprBitfld(field);
+    DfltRetarget(dflt, Subst(R,"$parname"));
+    Set(R, "$dflt", dflt);
     if (ch_N(Subst(R,"$dflt")) > 0) {
         amc::FFunc& init = amc::CreateCurFunc();
-        Ins(&R, init.body, "$name_Set($parname, $dflt); // default value");
+        Ins(&R, init.body, "$name_Set($pararg, $dflt); // default value");
     }
 }
 
+// Generate the bitfield getter: shift and mask the source field's value
+// to extract the field's bits.
 void amc::tfunc_Bitfld_Get() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;
@@ -74,10 +85,12 @@ void amc::tfunc_Bitfld_Get() {
         Ins(&R, get.comment, "   The value is obtained by reading bytes from memory and swapping them.");
     }
     Ins(&R, get.ret  , "$Fldtype", false);
-    Ins(&R, get.proto, "$name_Get(const $Parent)", false);
+    Ins(&R, get.proto, "$name_Get($Cparent)", false);
     Ins(&R, get.body, "return $Fldtype(($srcfldval >> $offset) & $mask);");
 }
 
+// Generate the bitfield setter: replace the field's bits within the
+// source field's value, leaving the other bits unchanged.
 void amc::tfunc_Bitfld_Set() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;

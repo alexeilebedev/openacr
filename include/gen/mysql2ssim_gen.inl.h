@@ -60,20 +60,20 @@ inline algo::cstring* mysql2ssim::table_names_Last() {
 
 // --- mysql2ssim.FDb.table_names.Max
 // Return max. number of items in the array
-inline i32 mysql2ssim::table_names_Max() {
+inline i64 mysql2ssim::table_names_Max() {
     return _db.table_names_max;
 }
 
 // --- mysql2ssim.FDb.table_names.N
 // Return number of items in the array
-inline i32 mysql2ssim::table_names_N() {
+inline i64 mysql2ssim::table_names_N() {
     return _db.table_names_n;
 }
 
 // --- mysql2ssim.FDb.table_names.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void mysql2ssim::table_names_Reserve(int n) {
-    u32 new_n = _db.table_names_n + n;
+inline void mysql2ssim::table_names_Reserve(i64 n) {
+    u64 new_n = _db.table_names_n + n;
     if (UNLIKELY(new_n > _db.table_names_max)) {
         table_names_AbsReserve(new_n);
     }
@@ -127,20 +127,20 @@ inline algo::cstring* mysql2ssim::in_tables_Last() {
 
 // --- mysql2ssim.FDb.in_tables.Max
 // Return max. number of items in the array
-inline i32 mysql2ssim::in_tables_Max() {
+inline i64 mysql2ssim::in_tables_Max() {
     return _db.in_tables_max;
 }
 
 // --- mysql2ssim.FDb.in_tables.N
 // Return number of items in the array
-inline i32 mysql2ssim::in_tables_N() {
+inline i64 mysql2ssim::in_tables_N() {
     return _db.in_tables_n;
 }
 
 // --- mysql2ssim.FDb.in_tables.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void mysql2ssim::in_tables_Reserve(int n) {
-    u32 new_n = _db.in_tables_n + n;
+inline void mysql2ssim::in_tables_Reserve(i64 n) {
+    u64 new_n = _db.in_tables_n + n;
     if (UNLIKELY(new_n > _db.in_tables_max)) {
         in_tables_AbsReserve(new_n);
     }
@@ -244,21 +244,21 @@ inline algo::cstring* mysql2ssim::vals_Last(mysql2ssim::FTobltin& parent) {
 
 // --- mysql2ssim.FTobltin.vals.Max
 // Return max. number of items in the array
-inline i32 mysql2ssim::vals_Max(mysql2ssim::FTobltin& parent) {
+inline i64 mysql2ssim::vals_Max(mysql2ssim::FTobltin& parent) {
     (void)parent;
     return parent.vals_max;
 }
 
 // --- mysql2ssim.FTobltin.vals.N
 // Return number of items in the array
-inline i32 mysql2ssim::vals_N(const mysql2ssim::FTobltin& parent) {
+inline i64 mysql2ssim::vals_N(const mysql2ssim::FTobltin& parent) {
     return parent.vals_n;
 }
 
 // --- mysql2ssim.FTobltin.vals.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void mysql2ssim::vals_Reserve(mysql2ssim::FTobltin& parent, int n) {
-    u32 new_n = parent.vals_n + n;
+inline void mysql2ssim::vals_Reserve(mysql2ssim::FTobltin& parent, i64 n) {
+    u64 new_n = parent.vals_n + n;
     if (UNLIKELY(new_n > parent.vals_max)) {
         vals_AbsReserve(parent, new_n);
     }

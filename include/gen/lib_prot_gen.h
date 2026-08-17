@@ -28,8 +28,8 @@
 
 // --- lib_prot_FieldIdEnum
 
-enum lib_prot_FieldIdEnum {        // lib_prot.FieldId.value
-     lib_prot_FieldId_value   = 0
+enum lib_prot_FieldIdEnum {    // lib_prot.FieldId.value
+     lib_prot_FieldId_value
 };
 
 enum { lib_prot_FieldIdEnum_N = 1 };
@@ -39,8 +39,29 @@ namespace lib_prot { // gen:ns_pkeytypedef
 namespace lib_prot { // gen:ns_tclass_field
 } // gen:ns_tclass_field
 // gen:ns_fwddecl2
+namespace lib_prot { struct ClientCase; }
 namespace lib_prot { struct FieldId; }
 namespace lib_prot { // gen:ns_print_struct
+
+// --- lib_prot.ClientCase
+#pragma pack(push,1)
+struct ClientCase { // lib_prot.ClientCase: Enum for dispatch lib_prot.Client
+    u32   value;   //   0
+    // func:lib_prot.ClientCase.value.Cast
+    inline               operator u32() const __attribute__((nothrow));
+    // func:lib_prot.ClientCase..Ctor
+    inline               ClientCase() __attribute__((nothrow));
+    // func:lib_prot.ClientCase..FieldwiseCtor
+    explicit inline               ClientCase(u32 in_value) __attribute__((nothrow));
+};
+#pragma pack(pop)
+// Read fields of lib_prot::ClientCase from an ascii string.
+// The format of the string is the format of the lib_prot::ClientCase's only field
+// func:lib_prot.ClientCase..ReadStrptrMaybe
+bool                 ClientCase_ReadStrptrMaybe(lib_prot::ClientCase &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:lib_prot.ClientCase..Init
+inline void          ClientCase_Init(lib_prot::ClientCase& parent);
 
 // --- lib_prot.FieldId
 #pragma pack(push,1)
@@ -56,7 +77,6 @@ struct FieldId { // lib_prot.FieldId: Field read helper
     inline               FieldId(lib_prot_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:lib_prot.FieldId.value.GetEnum
 inline lib_prot_FieldIdEnum value_GetEnum(const lib_prot::FieldId& parent) __attribute__((nothrow));
@@ -94,7 +114,7 @@ inline void          FieldId_Init(lib_prot::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:lib_prot.FieldId.String  printfmt:Raw
 // func:lib_prot.FieldId..Print
-void                 FieldId_Print(lib_prot::FieldId& row, algo::cstring& str) __attribute__((nothrow));
+void                 FieldId_Print(lib_prot::FieldId row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace lib_prot { // gen:ns_func
 } // gen:ns_func

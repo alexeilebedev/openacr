@@ -1,0 +1,6 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/bad_numstr_base.ssim -out_dir: -report:N zzz"
+# eof amc
+amc -> amc.bad_numstr  field:algo_lib.LnumStr5_U32_Base1.ch  base:1  comment:"unsupported base (must be 2..36, 95, or 256)"
+amc -> amc.bad_numstr  field:algo_lib.LnumStr5_U32_Base37.ch  base:37  comment:"unsupported base (must be 2..36, 95, or 256)"
+amc -> amc.no_output  comment:"no files were modified"
+# exit amc code:2

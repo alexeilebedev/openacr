@@ -1,0 +1,18 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/dflt_retarget.ssim -out_dir: -report:N '(algo_lib.Rec..Init|algo_lib.Msg..Init|algo_lib.Ptr..Init)'"
+# eof amc
+amc -> // --- algo_lib.Msg..Init
+amc -> // Set all fields to initial values.
+amc -> inline void algo_lib::Msg_Init(algo_lib::Msg& parent) {
+amc ->     parent.len = u8(ssizeof(parent));
+amc -> }
+amc -> // --- algo_lib.Ptr..Init
+amc -> // Set all fields to initial values.
+amc -> inline void algo_lib::Ptr_Init(algo_lib::Ptr& parent) {
+amc ->     parent.val = u32(u32(thisvalue + (&parent)->pad));
+amc -> }
+amc -> // --- algo_lib.Rec..Init
+amc -> // Set all fields to initial values.
+amc -> inline void algo_lib::Rec_Init(algo_lib::Rec& parent) {
+amc ->     parent.val = u32(*thisvalue + ssizeof(parent));
+amc -> }
+# exit amc code:0

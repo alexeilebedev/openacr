@@ -60,24 +60,6 @@ atf_amc::_db_bh_typec_curs::~_db_bh_typec_curs() {
 
 }
 
-namespace atf_amc {
-const char *atf_amc_help =
-"atf_amc: Unit tests for amc (see amctest table)\n"
-"Usage: atf_amc [[-amctest:]<regx>] [options]\n"
-"    OPTION      TYPE    DFLT    COMMENT\n"
-"    -in         string  \"data\"  Input directory or filename, - for stdin\n"
-"    [amctest]   regx    \"%\"     SQL regex, selecting test to run\n"
-"    -dofork             Y       Use fork\n"
-"    -q                          Quiet mode\n"
-"    -verbose    flag            Verbosity level (0..255); alias -v; cumulative\n"
-"    -debug      flag            Debug level (0..255); alias -d; cumulative\n"
-"    -help                       Print help and exit; alias -h\n"
-"    -version                    Print version and exit\n"
-"    -signature                  Show signatures and exit; alias -sig\n"
-;
-
-
-} // namespace atf_amc
 atf_amc::_db_bh_time_entry_curs::~_db_bh_time_entry_curs() {
     algo_lib::malloc_FreeMem(temp_elems, sizeof(void*) * temp_max);
 
@@ -99,13 +81,11 @@ namespace atf_amc { // gen:ns_gsymbol
 } // gen:ns_gsymbol
 namespace atf_amc { // gen:ns_print_proto
     // func:atf_amc.BitfldType1.bit1.ReadStrptrMaybe
-    inline static bool   bit1_ReadStrptrMaybe(atf_amc::BitfldType1 &parent, algo::strptr in_str) __attribute__((nothrow));
-    // func:atf_amc.BitfldType1.bits5.ReadStrptrMaybe
-    inline static bool   bits5_ReadStrptrMaybe(atf_amc::BitfldType1 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   bit1_ReadStrptrMaybe(atf_amc::BitfldType1& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.BitfldType2.bit0.ReadStrptrMaybe
-    inline static bool   bit0_ReadStrptrMaybe(atf_amc::BitfldType2 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   bit0_ReadStrptrMaybe(atf_amc::BitfldType2& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.BitfldType2.bit1.ReadStrptrMaybe
-    inline static bool   bit1_ReadStrptrMaybe(atf_amc::BitfldType2 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   bit1_ReadStrptrMaybe(atf_amc::BitfldType2& parent, algo::strptr in_str) __attribute__((nothrow));
     // Internal function to scan for a message
     //
     // func:atf_amc.Bytebuf.in.ScanMsg
@@ -125,26 +105,46 @@ namespace atf_amc { // gen:ns_print_proto
     // Extract next character from STR and advance IDX
     // func:atf_amc.Cstr.val.Nextchar
     inline static int    val_Nextchar(const atf_amc::Cstr& parent, algo::strptr &str, int &idx) __attribute__((nothrow));
+    // func:atf_amc.Disp2Filter.strval.ReadStrptrMaybe
+    inline static bool   strval_ReadStrptrMaybe(atf_amc::Disp2Filter& parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.Disp2Filter.strval_regx.ReadStrptrMaybe
+    inline static bool   strval_regx_ReadStrptrMaybe(atf_amc::Disp2Filter& parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.Disp2Filter.strval2.ReadStrptrMaybe
+    inline static bool   strval2_ReadStrptrMaybe(atf_amc::Disp2Filter& parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.Disp2Filter.strval2_regx.ReadStrptrMaybe
+    inline static bool   strval2_regx_ReadStrptrMaybe(atf_amc::Disp2Filter& parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.Disp2Filter.start_dateval.ReadStrptrMaybe
+    inline static bool   start_dateval_ReadStrptrMaybe(atf_amc::Disp2Filter& parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.Disp2Filter.end_dateval.ReadStrptrMaybe
+    inline static bool   end_dateval_ReadStrptrMaybe(atf_amc::Disp2Filter& parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.Disp2Filter.dateval.ReadStrptrMaybe
+    inline static bool   dateval_ReadStrptrMaybe(atf_amc::Disp2Filter& parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.Disp2Filter.start_intval.ReadStrptrMaybe
+    inline static bool   start_intval_ReadStrptrMaybe(atf_amc::Disp2Filter& parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.Disp2Filter.end_intval.ReadStrptrMaybe
+    inline static bool   end_intval_ReadStrptrMaybe(atf_amc::Disp2Filter& parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.Disp2Filter.intval.ReadStrptrMaybe
+    inline static bool   intval_ReadStrptrMaybe(atf_amc::Disp2Filter& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.DispFilter.strval.ReadStrptrMaybe
-    inline static bool   strval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   strval_ReadStrptrMaybe(atf_amc::DispFilter& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.DispFilter.strval_regx.ReadStrptrMaybe
-    inline static bool   strval_regx_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   strval_regx_ReadStrptrMaybe(atf_amc::DispFilter& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.DispFilter.strval2.ReadStrptrMaybe
-    inline static bool   strval2_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   strval2_ReadStrptrMaybe(atf_amc::DispFilter& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.DispFilter.strval2_regx.ReadStrptrMaybe
-    inline static bool   strval2_regx_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   strval2_regx_ReadStrptrMaybe(atf_amc::DispFilter& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.DispFilter.start_dateval.ReadStrptrMaybe
-    inline static bool   start_dateval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   start_dateval_ReadStrptrMaybe(atf_amc::DispFilter& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.DispFilter.end_dateval.ReadStrptrMaybe
-    inline static bool   end_dateval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   end_dateval_ReadStrptrMaybe(atf_amc::DispFilter& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.DispFilter.dateval.ReadStrptrMaybe
-    inline static bool   dateval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   dateval_ReadStrptrMaybe(atf_amc::DispFilter& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.DispFilter.start_intval.ReadStrptrMaybe
-    inline static bool   start_intval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   start_intval_ReadStrptrMaybe(atf_amc::DispFilter& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.DispFilter.end_intval.ReadStrptrMaybe
-    inline static bool   end_intval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   end_intval_ReadStrptrMaybe(atf_amc::DispFilter& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.DispFilter.intval.ReadStrptrMaybe
-    inline static bool   intval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   intval_ReadStrptrMaybe(atf_amc::DispFilter& parent, algo::strptr in_str) __attribute__((nothrow));
     // Find new location for ROW starting at IDX
     // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
     // func:atf_amc.FCascdel.bh_child_bheap.Downheap
@@ -174,6 +174,12 @@ namespace atf_amc { // gen:ns_print_proto
     static void          tr_child_atree_Turn(atf_amc::FCascdel& from, atf_amc::FCascdel& to) __attribute__((nothrow));
     // func:atf_amc.FCascdel.tr_child_atree.Connect
     inline static void   tr_child_atree_Connect(atf_amc::FCascdel* parent, atf_amc::FCascdel* child, bool left) __attribute__((nothrow));
+    // func:atf_amc.FCondtest.ready.ReadStrptrMaybe
+    inline static bool   ready_ReadStrptrMaybe(atf_amc::FCondtest& condtest, algo::strptr in_str) __attribute__((nothrow));
+    // Internal function to shift data left
+    // Shift existing bytes over to the beginning of the buffer
+    // func:atf_amc.FCondtest.out_buf.Shift
+    static void          out_buf_Shift(atf_amc::FCondtest& condtest) __attribute__((nothrow));
     // Find new location for ROW starting at IDX
     // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
     // func:atf_amc.FDb.bh_typec.Downheap
@@ -242,6 +248,20 @@ namespace atf_amc { // gen:ns_print_proto
     static void          bh_time_entry_UpdateCycles() __attribute__((nothrow));
     // func:atf_amc.FDb.bh_time_entry.Call
     static void          bh_time_entry_Call() __attribute__((nothrow));
+    // Internal function to scan for a message
+    //
+    // func:atf_amc.FDb.in_fb.ScanMsg
+    static void          in_fb_ScanMsg() __attribute__((nothrow));
+    // Internal function to shift data left
+    // Shift existing bytes over to the beginning of the buffer
+    // func:atf_amc.FDb.in_fb.Shift
+    static void          in_fb_Shift() __attribute__((nothrow));
+    // Internal function to shift data left
+    // Shift existing bytes over to the beginning of the buffer
+    // func:atf_amc.FDb.out_fb.Shift
+    static void          out_fb_Shift() __attribute__((nothrow));
+    // func:atf_amc.FDb.typeu.InputMaybe
+    static bool          typeu_InputMaybe(atf_amc::TypeU &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
     // func:atf_amc.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
@@ -290,7 +310,7 @@ namespace atf_amc { // gen:ns_print_proto
     // The comparison function must be anti-symmetric: if a>b, then !(b>a).
     // If not, mayhem results.
     // func:atf_amc.FUnitSort.tary.Lt
-    static bool          tary_Lt(atf_amc::TypeA &elem_a, atf_amc::TypeA &elem_b) __attribute__((nothrow));
+    static bool          tary_Lt(atf_amc::TypeA elem_a, atf_amc::TypeA elem_b) __attribute__((nothrow));
     // Internal insertion sort
     // func:atf_amc.FUnitSort.tary.IntInsertionSort
     static void          tary_IntInsertionSort(atf_amc::TypeA *elems, int n) __attribute__((nothrow));
@@ -310,7 +330,7 @@ namespace atf_amc { // gen:ns_print_proto
     // The comparison function must be anti-symmetric: if a>b, then !(b>a).
     // If not, mayhem results.
     // func:atf_amc.FUnitSort.c_ptrary.Lt
-    static bool          c_ptrary_Lt(atf_amc::TypeA &elem_a, atf_amc::TypeA &elem_b) __attribute__((nothrow));
+    static bool          c_ptrary_Lt(atf_amc::TypeA elem_a, atf_amc::TypeA elem_b) __attribute__((nothrow));
     // Internal insertion sort
     // func:atf_amc.FUnitSort.c_ptrary.IntInsertionSort
     static void          c_ptrary_IntInsertionSort(atf_amc::TypeA* *elems, int n) __attribute__((nothrow));
@@ -330,7 +350,7 @@ namespace atf_amc { // gen:ns_print_proto
     // The comparison function must be anti-symmetric: if a>b, then !(b>a).
     // If not, mayhem results.
     // func:atf_amc.FUnitSort.fixary.Lt
-    static bool          fixary_Lt(atf_amc::TypeA &elem_a, atf_amc::TypeA &elem_b) __attribute__((nothrow));
+    static bool          fixary_Lt(atf_amc::TypeA elem_a, atf_amc::TypeA elem_b) __attribute__((nothrow));
     // Internal insertion sort
     // func:atf_amc.FUnitSort.fixary.IntInsertionSort
     static void          fixary_IntInsertionSort(atf_amc::TypeA *elems, int n) __attribute__((nothrow));
@@ -348,6 +368,14 @@ namespace atf_amc { // gen:ns_print_proto
     // Shift existing bytes over to the beginning of the buffer
     // func:atf_amc.Linebuf.in.Shift
     static void          in_Shift(atf_amc::Linebuf& linebuf) __attribute__((nothrow));
+    // Internal function to scan for a message
+    //
+    // func:atf_amc.Lpoolbuf.in.ScanMsg
+    static void          in_ScanMsg(atf_amc::Lpoolbuf& lpoolbuf) __attribute__((nothrow));
+    // Internal function to shift data left
+    // Shift existing bytes over to the beginning of the buffer
+    // func:atf_amc.Lpoolbuf.in.Shift
+    static void          in_Shift(atf_amc::Lpoolbuf& lpoolbuf) __attribute__((nothrow));
     // Internal function to scan for a message
     //
     // func:atf_amc.Msgbuf.in_buf.ScanMsg
@@ -372,180 +400,196 @@ namespace atf_amc { // gen:ns_print_proto
     // Shift existing bytes over to the beginning of the buffer
     // func:atf_amc.Msgbuf.in_extra.Shift
     static void          in_extra_Shift(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
+    // func:atf_amc.NetEntry.id.ReadStrptrMaybe
+    inline static bool   id_ReadStrptrMaybe(atf_amc::NetEntry& entry, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.NetEntry.val.ReadStrptrMaybe
+    inline static bool   val_ReadStrptrMaybe(atf_amc::NetEntry& entry, algo::strptr in_str) __attribute__((nothrow));
+    // func:atf_amc.NetFrame.word.ReadStrptrMaybe
+    inline static bool   word_ReadStrptrMaybe(atf_amc::NetFrame& parent, algo::strptr in_str) __attribute__((nothrow));
+    // Extract next character from STR and advance IDX
+    // func:atf_amc.NovsStr9.ch.Nextchar
+    inline static u64    ch_Nextchar(const atf_amc::NovsStr9& parent, algo::strptr &str, int &idx) __attribute__((nothrow));
     // func:atf_amc.PmaskMultiple.value1.ReadStrptrMaybe
-    inline static bool   value1_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value1_ReadStrptrMaybe(atf_amc::PmaskMultiple& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskMultiple.value2.ReadStrptrMaybe
-    inline static bool   value2_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value2_ReadStrptrMaybe(atf_amc::PmaskMultiple& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskMultiple.value3.ReadStrptrMaybe
-    inline static bool   value3_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value3_ReadStrptrMaybe(atf_amc::PmaskMultiple& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskMultiple.value4.ReadStrptrMaybe
-    inline static bool   value4_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value4_ReadStrptrMaybe(atf_amc::PmaskMultiple& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskMultiple.value5.ReadStrptrMaybe
-    inline static bool   value5_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value5_ReadStrptrMaybe(atf_amc::PmaskMultiple& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskMultiple.value6.ReadStrptrMaybe
-    inline static bool   value6_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value6_ReadStrptrMaybe(atf_amc::PmaskMultiple& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskMultiple.value7.ReadStrptrMaybe
-    inline static bool   value7_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value7_ReadStrptrMaybe(atf_amc::PmaskMultiple& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value.ReadStrptrMaybe
-    inline static bool   value_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value2.ReadStrptrMaybe
-    inline static bool   value2_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value2_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value3.ReadStrptrMaybe
-    inline static bool   value3_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value3_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value21.ReadStrptrMaybe
-    inline static bool   value21_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value21_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value22.ReadStrptrMaybe
-    inline static bool   value22_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value22_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value23.ReadStrptrMaybe
-    inline static bool   value23_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value23_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value24.ReadStrptrMaybe
-    inline static bool   value24_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value24_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value25.ReadStrptrMaybe
-    inline static bool   value25_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value25_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value26.ReadStrptrMaybe
-    inline static bool   value26_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value26_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value20.ReadStrptrMaybe
-    inline static bool   value20_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value20_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value28.ReadStrptrMaybe
-    inline static bool   value28_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value28_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value29.ReadStrptrMaybe
-    inline static bool   value29_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value29_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value30.ReadStrptrMaybe
-    inline static bool   value30_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value30_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value31.ReadStrptrMaybe
-    inline static bool   value31_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value31_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value32.ReadStrptrMaybe
-    inline static bool   value32_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value32_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value27.ReadStrptrMaybe
-    inline static bool   value27_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value27_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value19.ReadStrptrMaybe
-    inline static bool   value19_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value19_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value18.ReadStrptrMaybe
-    inline static bool   value18_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value18_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value4.ReadStrptrMaybe
-    inline static bool   value4_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value4_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value5.ReadStrptrMaybe
-    inline static bool   value5_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value5_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value6.ReadStrptrMaybe
-    inline static bool   value6_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value6_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value7.ReadStrptrMaybe
-    inline static bool   value7_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value7_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value8.ReadStrptrMaybe
-    inline static bool   value8_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value8_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value9.ReadStrptrMaybe
-    inline static bool   value9_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value9_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value69.ReadStrptrMaybe
-    inline static bool   value69_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value69_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value11.ReadStrptrMaybe
-    inline static bool   value11_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value11_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value12.ReadStrptrMaybe
-    inline static bool   value12_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value12_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value13.ReadStrptrMaybe
-    inline static bool   value13_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value13_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value14.ReadStrptrMaybe
-    inline static bool   value14_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value14_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value15.ReadStrptrMaybe
-    inline static bool   value15_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value15_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value16.ReadStrptrMaybe
-    inline static bool   value16_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value16_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value33.ReadStrptrMaybe
-    inline static bool   value33_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value33_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value10.ReadStrptrMaybe
-    inline static bool   value10_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value10_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value17.ReadStrptrMaybe
-    inline static bool   value17_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value17_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value35.ReadStrptrMaybe
-    inline static bool   value35_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value35_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value55.ReadStrptrMaybe
-    inline static bool   value55_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value55_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value56.ReadStrptrMaybe
-    inline static bool   value56_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value56_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value57.ReadStrptrMaybe
-    inline static bool   value57_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value57_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value58.ReadStrptrMaybe
-    inline static bool   value58_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value58_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value59.ReadStrptrMaybe
-    inline static bool   value59_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value59_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value60.ReadStrptrMaybe
-    inline static bool   value60_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value60_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value54.ReadStrptrMaybe
-    inline static bool   value54_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value54_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value62.ReadStrptrMaybe
-    inline static bool   value62_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value62_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value63.ReadStrptrMaybe
-    inline static bool   value63_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value63_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value64.ReadStrptrMaybe
-    inline static bool   value64_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value64_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value65.ReadStrptrMaybe
-    inline static bool   value65_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value65_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value66.ReadStrptrMaybe
-    inline static bool   value66_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value66_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value67.ReadStrptrMaybe
-    inline static bool   value67_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value67_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value68.ReadStrptrMaybe
-    inline static bool   value68_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value68_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value61.ReadStrptrMaybe
-    inline static bool   value61_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value61_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value34.ReadStrptrMaybe
-    inline static bool   value34_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value34_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value52.ReadStrptrMaybe
-    inline static bool   value52_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value52_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value36.ReadStrptrMaybe
-    inline static bool   value36_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value36_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value37.ReadStrptrMaybe
-    inline static bool   value37_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value37_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value38.ReadStrptrMaybe
-    inline static bool   value38_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value38_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value39.ReadStrptrMaybe
-    inline static bool   value39_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value39_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value40.ReadStrptrMaybe
-    inline static bool   value40_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value40_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value41.ReadStrptrMaybe
-    inline static bool   value41_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value41_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value42.ReadStrptrMaybe
-    inline static bool   value42_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value42_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value53.ReadStrptrMaybe
-    inline static bool   value53_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value53_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value44.ReadStrptrMaybe
-    inline static bool   value44_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value44_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value45.ReadStrptrMaybe
-    inline static bool   value45_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value45_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value46.ReadStrptrMaybe
-    inline static bool   value46_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value46_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value47.ReadStrptrMaybe
-    inline static bool   value47_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value47_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value48.ReadStrptrMaybe
-    inline static bool   value48_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value48_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value49.ReadStrptrMaybe
-    inline static bool   value49_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value49_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value50.ReadStrptrMaybe
-    inline static bool   value50_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value50_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value51.ReadStrptrMaybe
-    inline static bool   value51_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value51_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value43.ReadStrptrMaybe
-    inline static bool   value43_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value43_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value70.ReadStrptrMaybe
-    inline static bool   value70_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value70_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value71.ReadStrptrMaybe
-    inline static bool   value71_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value71_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU32.value.ReadStrptrMaybe
-    inline static bool   value_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value_ReadStrptrMaybe(atf_amc::PmaskU32& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU32.value2.ReadStrptrMaybe
-    inline static bool   value2_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value2_ReadStrptrMaybe(atf_amc::PmaskU32& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU32.value3.ReadStrptrMaybe
-    inline static bool   value3_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value3_ReadStrptrMaybe(atf_amc::PmaskU32& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU32.value4.ReadStrptrMaybe
-    inline static bool   value4_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value4_ReadStrptrMaybe(atf_amc::PmaskU32& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU32.value5.ReadStrptrMaybe
-    inline static bool   value5_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value5_ReadStrptrMaybe(atf_amc::PmaskU32& parent, algo::strptr in_str) __attribute__((nothrow));
+    // Extract next character from STR and advance IDX
+    // func:atf_amc.RspaceStr9.ch.Nextchar
+    inline static u64    ch_Nextchar(const atf_amc::RspaceStr9& parent, algo::strptr &str, int &idx) __attribute__((nothrow));
     // Extract next character from STR and advance IDX
     // func:atf_amc.SortedStr.novs.Nextchar
     inline static int    novs_Nextchar(const atf_amc::SortedStr& parent, algo::strptr &str, int &idx) __attribute__((nothrow));
     // Extract next character from STR and advance IDX
     // func:atf_amc.SortedStr.vs.Nextchar
     inline static u64    vs_Nextchar(const atf_amc::SortedStr& parent, algo::strptr &str, int &idx) __attribute__((nothrow));
+    // Internal function to shift data left
+    // Shift existing bytes over to the beginning of the buffer
+    // func:atf_amc.Sslbuf.out.Shift
+    static void          out_Shift(atf_amc::Sslbuf& sslbuf) __attribute__((nothrow));
     // func:atf_amc.TypeBE64.value.ReadStrptrMaybe
-    inline static bool   value_ReadStrptrMaybe(atf_amc::TypeBE64 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value_ReadStrptrMaybe(atf_amc::TypeBE64& parent, algo::strptr in_str) __attribute__((nothrow));
     // Swap values elem_a and elem_b
     // func:atf_amc.VarlenH.typeh.Swap
     inline static void   typeh_Swap(atf_amc::TypeH &elem_a, atf_amc::TypeH &elem_b) __attribute__((nothrow));
@@ -556,7 +600,7 @@ namespace atf_amc { // gen:ns_print_proto
     // The comparison function must be anti-symmetric: if a>b, then !(b>a).
     // If not, mayhem results.
     // func:atf_amc.VarlenH.typeh.Lt
-    static bool          typeh_Lt(atf_amc::TypeH &elem_a, atf_amc::TypeH &elem_b) __attribute__((nothrow));
+    static bool          typeh_Lt(atf_amc::TypeH elem_a, atf_amc::TypeH elem_b) __attribute__((nothrow));
     // Internal insertion sort
     // func:atf_amc.VarlenH.typeh.IntInsertionSort
     static void          typeh_IntInsertionSort(atf_amc::TypeH *elems, int n) __attribute__((nothrow));
@@ -566,6 +610,9 @@ namespace atf_amc { // gen:ns_print_proto
     // Quick sort engine
     // func:atf_amc.VarlenH.typeh.IntQuickSort
     static void          typeh_IntQuickSort(atf_amc::TypeH *elems, int n, int depth) __attribute__((nothrow));
+    // Extract next character from STR and advance IDX
+    // func:atf_amc.VsortStr9.ch.Nextchar
+    inline static u64    ch_Nextchar(const atf_amc::VsortStr9& parent, algo::strptr &str, int &idx) __attribute__((nothrow));
     // func:atf_amc...SizeCheck
     inline static void   SizeCheck();
 } // gen:ns_print_proto
@@ -587,7 +634,7 @@ i32 atf_amc::intval_Get(atf_amc::AmcSubstr1& parent) {
 }
 
 // --- atf_amc.BitfldType1.bit1.ReadStrptrMaybe
-inline static bool atf_amc::bit1_ReadStrptrMaybe(atf_amc::BitfldType1 &parent, algo::strptr in_str) {
+inline static bool atf_amc::bit1_ReadStrptrMaybe(atf_amc::BitfldType1& parent, algo::strptr in_str) {
     bool retval = true;
     u64 bit1_tmp;
     retval = u64_ReadStrptrMaybe(bit1_tmp, in_str);
@@ -597,13 +644,76 @@ inline static bool atf_amc::bit1_ReadStrptrMaybe(atf_amc::BitfldType1 &parent, a
     return retval;
 }
 
+// --- atf_amc.BitfldType1.bits5.ToCstr
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+const char* atf_amc::bits5_ToCstr(const atf_amc::BitfldType1& parent) {
+    const char *ret = NULL;
+    switch(bits5_GetEnum(parent)) {
+        case atf_amc_BitfldType1_bits5_low : ret = "low";  break;
+        case atf_amc_BitfldType1_bits5_high: ret = "high";  break;
+    }
+    return ret;
+}
+
+// --- atf_amc.BitfldType1.bits5.Print
+// Convert bits5 to a string. First, attempt conversion to a known string.
+// If no string matches, print bits5 as a numeric value.
+void atf_amc::bits5_Print(const atf_amc::BitfldType1& parent, algo::cstring &lhs) {
+    const char *strval = bits5_ToCstr(parent);
+    if (strval) {
+        lhs << strval;
+    } else {
+        lhs << bits5_Get(parent);
+    }
+}
+
+// --- atf_amc.BitfldType1.bits5.SetStrptrMaybe
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+bool atf_amc::bits5_SetStrptrMaybe(atf_amc::BitfldType1& parent, algo::strptr rhs) {
+    bool ret = false;
+    switch (elems_N(rhs)) {
+        case 3: {
+            switch (u64(algo::ReadLE16(rhs.elems))|(u64(rhs[2])<<16)) {
+                case LE_STR3('l','o','w'): {
+                    bits5_SetEnum(parent,atf_amc_BitfldType1_bits5_low); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 4: {
+            switch (u64(algo::ReadLE32(rhs.elems))) {
+                case LE_STR4('h','i','g','h'): {
+                    bits5_SetEnum(parent,atf_amc_BitfldType1_bits5_high); ret = true; break;
+                }
+            }
+            break;
+        }
+    }
+    return ret;
+}
+
+// --- atf_amc.BitfldType1.bits5.SetStrptr
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+void atf_amc::bits5_SetStrptr(atf_amc::BitfldType1& parent, algo::strptr rhs, atf_amc_BitfldType1_bits5_Enum dflt) {
+    if (!bits5_SetStrptrMaybe(parent,rhs)) bits5_SetEnum(parent,dflt);
+}
+
 // --- atf_amc.BitfldType1.bits5.ReadStrptrMaybe
-inline static bool atf_amc::bits5_ReadStrptrMaybe(atf_amc::BitfldType1 &parent, algo::strptr in_str) {
-    bool retval = true;
-    u64 bits5_tmp;
-    retval = u64_ReadStrptrMaybe(bits5_tmp, in_str);
-    if (retval) {
-        bits5_Set(parent, bits5_tmp);
+// Convert string to field. Return success value
+bool atf_amc::bits5_ReadStrptrMaybe(atf_amc::BitfldType1& parent, algo::strptr rhs) {
+    bool retval = false;
+    retval = bits5_SetStrptrMaybe(parent,rhs); // try symbol conversion
+    if (!retval) { // didn't work? try reading as underlying type
+        u64 bits5_tmp;
+        retval = u64_ReadStrptrMaybe(bits5_tmp, rhs);
+        retval = retval && (bits5_tmp <= 0x3ff);// value must fit the field's store
+        if (retval) {
+            bits5_Set(parent, bits5_tmp);
+        }
     }
     return retval;
 }
@@ -649,19 +759,19 @@ bool atf_amc::BitfldType1_ReadStrptrMaybe(atf_amc::BitfldType1 &parent, algo::st
 // --- atf_amc.BitfldType1..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.BitfldType1.String  printfmt:Tuple
-void atf_amc::BitfldType1_Print(atf_amc::BitfldType1& row, algo::cstring& str) {
+void atf_amc::BitfldType1_Print(atf_amc::BitfldType1 row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf_amc.BitfldType1";
 
     u64_Print(bit1_Get(row), temp);
     PrintAttrSpaceReset(str,"bit1", temp);
 
-    u64_Print(bits5_Get(row), temp);
+    atf_amc::bits5_Print(row, temp);
     PrintAttrSpaceReset(str,"bits5", temp);
 }
 
 // --- atf_amc.BitfldType2.bit0.ReadStrptrMaybe
-inline static bool atf_amc::bit0_ReadStrptrMaybe(atf_amc::BitfldType2 &parent, algo::strptr in_str) {
+inline static bool atf_amc::bit0_ReadStrptrMaybe(atf_amc::BitfldType2& parent, algo::strptr in_str) {
     bool retval = true;
     bool bit0_tmp;
     retval = bool_ReadStrptrMaybe(bit0_tmp, in_str);
@@ -672,7 +782,7 @@ inline static bool atf_amc::bit0_ReadStrptrMaybe(atf_amc::BitfldType2 &parent, a
 }
 
 // --- atf_amc.BitfldType2.bit1.ReadStrptrMaybe
-inline static bool atf_amc::bit1_ReadStrptrMaybe(atf_amc::BitfldType2 &parent, algo::strptr in_str) {
+inline static bool atf_amc::bit1_ReadStrptrMaybe(atf_amc::BitfldType2& parent, algo::strptr in_str) {
     bool retval = true;
     bool bit1_tmp;
     retval = bool_ReadStrptrMaybe(bit1_tmp, in_str);
@@ -753,7 +863,7 @@ bool atf_amc::BitfldType2_ReadStrptrMaybe(atf_amc::BitfldType2 &parent, algo::st
 // --- atf_amc.BitfldType2..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.BitfldType2.String  printfmt:Bitset
-void atf_amc::BitfldType2_Print(atf_amc::BitfldType2& row, algo::cstring& str) {
+void atf_amc::BitfldType2_Print(atf_amc::BitfldType2 row, algo::cstring& str) {
     algo::ListSep ls(",");
     if (bit0_Get(row)) {
         str << ls << "bit0";
@@ -823,6 +933,95 @@ void atf_amc::Bitset_fld64_bitcurs_Next(Bitset_fld64_bitcurs &curs) {
         }
     }
     curs.bit = index * 64 + offset;
+}
+
+// --- atf_amc.Bitset.fld128_bitcurs.Next
+// proceed to next item
+void atf_amc::Bitset_fld128_bitcurs_Next(Bitset_fld128_bitcurs &curs) {
+    ++curs.bit;
+    int index = curs.bit / 128;
+    int offset = curs.bit % 128;
+    for (; index < curs.n_elems; ++index, offset = 0) {
+        u128 rest = curs.elems[index] >> offset;
+        if (rest) {
+            offset += algo::u128_BitScanForward(rest);
+            break;
+        }
+    }
+    curs.bit = index * 128 + offset;
+}
+
+// --- atf_amc.BlkKey..ReadFieldMaybe
+bool atf_amc::BlkKey_ReadFieldMaybe(atf_amc::BlkKey& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    atf_amc::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case atf_amc_FieldId_id: {
+            retval = u32_ReadStrptrMaybe(parent.id, strval);
+        } break;
+        case atf_amc_FieldId_seq: {
+            retval = algo::SeqType_ReadStrptrMaybe(parent.seq, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- atf_amc.BlkKey..ReadStrptrMaybe
+// Read fields of atf_amc::BlkKey from an ascii string.
+// The format of the string is a string with separated values
+bool atf_amc::BlkKey_ReadStrptrMaybe(atf_amc::BlkKey &parent, algo::strptr in_str) {
+    bool retval = true;
+    algo::strptr value;
+
+    algo::NextSep(in_str, '@', value);
+    retval = retval && u32_ReadStrptrMaybe(parent.id, value);
+
+    value = in_str;
+    retval = retval && algo::SeqType_ReadStrptrMaybe(parent.seq, value);
+    return retval;
+}
+
+// --- atf_amc.BlkKey..Print
+// print string representation of ROW to string STR
+// cfmt:atf_amc.BlkKey.String  printfmt:Sep
+void atf_amc::BlkKey_Print(atf_amc::BlkKey row, algo::cstring& str) {
+    u32_Print(row.id, str);
+    str << '@';
+    algo::SeqType_Print(row.seq, str);
+}
+
+// --- atf_amc.Bytebuf.in.BeginAlloc
+// // Return pointer to a block of IN_N contiguous bytes in the buffer.
+// // No reallocation is performed. If not possible, return NULL.
+void* atf_amc::in_BeginAlloc(atf_amc::Bytebuf &bytebuf, i32 in_n) {
+    void *ret = NULL;
+    int max = in_Max(bytebuf);
+    if (bytebuf.in_end + in_n > max) {
+        in_Shift(bytebuf);
+    }
+    if (bytebuf.in_end + in_n <= max) {
+        ret = (u8*)bytebuf.in_elems + bytebuf.in_end;
+        bytebuf.in_end += in_n;
+    }
+    return ret;
+}
+
+// --- atf_amc.Bytebuf.in.BeginAllocReserve
+// // Return pointer to a block of IN_N contiguous bytes in the buffer.
+// // Buffer is reallocated as necessary; function always succeeds.
+void* atf_amc::in_BeginAllocReserve(atf_amc::Bytebuf &bytebuf, i32 in_n) {
+    if (bytebuf.in_end - bytebuf.in_start + in_n > in_Max(bytebuf)) {
+        in_Realloc(bytebuf, bytebuf.in_max + i32_Max(bytebuf.in_max, in_n));
+    }
+    return in_BeginAlloc(bytebuf, in_n);
 }
 
 // --- atf_amc.Bytebuf.in.GetMsg
@@ -924,7 +1123,7 @@ void atf_amc::in_SkipMsg(atf_amc::Bytebuf& bytebuf) {
 
 // --- atf_amc.Bytebuf.in.WriteAll
 // Attempt to write buffer contents to fbuf, return success
-// Write bytes to the buffer. If the entire block is written, return true,
+// Write bytes to the buffer. If the entire block is accepted, return true,
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
 // 
@@ -948,13 +1147,13 @@ bool atf_amc::in_WriteAll(atf_amc::Bytebuf& bytebuf, u8 *in, i32 in_n) {
 
 // --- atf_amc.Bytebuf.in.WriteReserve
 // Write buffer contents to fbuf, reallocate as needed
-// Write bytes to the buffer. The entire block is always written
+// Write bytes to the buffer. The entire block is always written or the program exits.
 void atf_amc::in_WriteReserve(atf_amc::Bytebuf& bytebuf, u8 *in, i32 in_n) {
+    if (bytebuf.in_end - bytebuf.in_start + in_n > in_Max(bytebuf)) {
+        in_Realloc(bytebuf, bytebuf.in_max + i32_Max(bytebuf.in_max, in_n));
+    }
     if (!in_WriteAll(bytebuf, in, in_n)) {
-        in_Realloc(bytebuf, bytebuf.in_max*2);
-        if (!in_WriteAll(bytebuf, in, in_n)) {
-            FatalErrorExit("in: out of memory");
-        }
+        FatalErrorExit("in: out of memory");
     }
 }
 
@@ -978,7 +1177,7 @@ void atf_amc::Bytebuf_Uninit(atf_amc::Bytebuf& bytebuf) {
 
     // atf_amc.Bytebuf.in.Uninit (Fbuf)  //Streaming buffer
     if (bytebuf.in_elems) {
-        algo_lib::malloc_FreeMem(bytebuf.in_elems, sizeof(char)*bytebuf.in_max); // (atf_amc.Bytebuf.in)
+        algo_lib::malloc_FreeMem(bytebuf.in_elems, bytebuf.in_max); // (atf_amc.Bytebuf.in) in_max is the byte size Realloc allocated
     }
     bytebuf.in_elems = NULL;
     bytebuf.in_max = 0;
@@ -990,6 +1189,32 @@ void atf_amc::Bytebuf_Uninit(atf_amc::Bytebuf& bytebuf) {
 void atf_amc::Bytebuf_Print(atf_amc::Bytebuf& row, algo::cstring& str) {
     (void)row;//only to avoid -Wunused-parameter
     (void)str;//only to avoid -Wunused-parameter
+}
+
+// --- atf_amc.BytebufDyn.in.BeginAlloc
+// // Return pointer to a block of IN_N contiguous bytes in the buffer.
+// // No reallocation is performed. If not possible, return NULL.
+void* atf_amc::in_BeginAlloc(atf_amc::BytebufDyn &bytebuf_dyn, i32 in_n) {
+    void *ret = NULL;
+    int max = in_Max(bytebuf_dyn);
+    if (bytebuf_dyn.in_end + in_n > max) {
+        in_Shift(bytebuf_dyn);
+    }
+    if (bytebuf_dyn.in_end + in_n <= max) {
+        ret = (u8*)bytebuf_dyn.in_elems + bytebuf_dyn.in_end;
+        bytebuf_dyn.in_end += in_n;
+    }
+    return ret;
+}
+
+// --- atf_amc.BytebufDyn.in.BeginAllocReserve
+// // Return pointer to a block of IN_N contiguous bytes in the buffer.
+// // Buffer is reallocated as necessary; function always succeeds.
+void* atf_amc::in_BeginAllocReserve(atf_amc::BytebufDyn &bytebuf_dyn, i32 in_n) {
+    if (bytebuf_dyn.in_end - bytebuf_dyn.in_start + in_n > in_Max(bytebuf_dyn)) {
+        in_Realloc(bytebuf_dyn, bytebuf_dyn.in_max + i32_Max(bytebuf_dyn.in_max, in_n));
+    }
+    return in_BeginAlloc(bytebuf_dyn, in_n);
 }
 
 // --- atf_amc.BytebufDyn.in.GetMsg
@@ -1091,7 +1316,7 @@ void atf_amc::in_SkipMsg(atf_amc::BytebufDyn& bytebuf_dyn) {
 
 // --- atf_amc.BytebufDyn.in.WriteAll
 // Attempt to write buffer contents to fbuf, return success
-// Write bytes to the buffer. If the entire block is written, return true,
+// Write bytes to the buffer. If the entire block is accepted, return true,
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
 // 
@@ -1115,13 +1340,13 @@ bool atf_amc::in_WriteAll(atf_amc::BytebufDyn& bytebuf_dyn, u8 *in, i32 in_n) {
 
 // --- atf_amc.BytebufDyn.in.WriteReserve
 // Write buffer contents to fbuf, reallocate as needed
-// Write bytes to the buffer. The entire block is always written
+// Write bytes to the buffer. The entire block is always written or the program exits.
 void atf_amc::in_WriteReserve(atf_amc::BytebufDyn& bytebuf_dyn, u8 *in, i32 in_n) {
+    if (bytebuf_dyn.in_end - bytebuf_dyn.in_start + in_n > in_Max(bytebuf_dyn)) {
+        in_Realloc(bytebuf_dyn, bytebuf_dyn.in_max + i32_Max(bytebuf_dyn.in_max, in_n));
+    }
     if (!in_WriteAll(bytebuf_dyn, in, in_n)) {
-        in_Realloc(bytebuf_dyn, bytebuf_dyn.in_max*2);
-        if (!in_WriteAll(bytebuf_dyn, in, in_n)) {
-            FatalErrorExit("in: out of memory");
-        }
+        FatalErrorExit("in: out of memory");
     }
 }
 
@@ -1145,7 +1370,7 @@ void atf_amc::BytebufDyn_Uninit(atf_amc::BytebufDyn& bytebuf_dyn) {
 
     // atf_amc.BytebufDyn.in.Uninit (Fbuf)  //Streaming buffer
     if (bytebuf_dyn.in_elems) {
-        algo_lib::malloc_FreeMem(bytebuf_dyn.in_elems, sizeof(char)*bytebuf_dyn.in_max); // (atf_amc.BytebufDyn.in)
+        algo_lib::malloc_FreeMem(bytebuf_dyn.in_elems, bytebuf_dyn.in_max); // (atf_amc.BytebufDyn.in) in_max is the byte size Realloc allocated
     }
     bytebuf_dyn.in_elems = NULL;
     bytebuf_dyn.in_max = 0;
@@ -1174,7 +1399,7 @@ inline static int atf_amc::val_Nextchar(const atf_amc::Cstr& parent, algo::strpt
 // Create JSON representation of atf_amc::Cstr under PARENT node
 // cfmt:atf_amc.Cstr.Json  printfmt:Auto
 lib_json::FNode * atf_amc::Cstr_FmtJson(atf_amc::Cstr& row, lib_json::FNode *parent) {
-    return algo::cstring_FmtJson(const_cast<atf_amc::Cstr&>(row).val,parent);;
+    return algo::cstring_FmtJson(row.val,parent);
 }
 
 // --- atf_amc.Ctype1Attr..ReadStrptrMaybe
@@ -1189,7 +1414,7 @@ bool atf_amc::Ctype1Attr_ReadStrptrMaybe(atf_amc::Ctype1Attr &parent, algo::strp
 // --- atf_amc.Ctype1Attr..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.Ctype1Attr.String  printfmt:Raw
-void atf_amc::Ctype1Attr_Print(atf_amc::Ctype1Attr& row, algo::cstring& str) {
+void atf_amc::Ctype1Attr_Print(atf_amc::Ctype1Attr row, algo::cstring& str) {
     u32_Print(row.attr1, str);
 }
 
@@ -1244,7 +1469,7 @@ bool atf_amc::Ctype2Attr_ReadTupleMaybe(atf_amc::Ctype2Attr &parent, algo::Tuple
 // --- atf_amc.Ctype2Attr..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.Ctype2Attr.String  printfmt:Tuple
-void atf_amc::Ctype2Attr_Print(atf_amc::Ctype2Attr& row, algo::cstring& str) {
+void atf_amc::Ctype2Attr_Print(atf_amc::Ctype2Attr row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf_amc.Ctype2Attr";
 
@@ -1297,7 +1522,7 @@ bool atf_amc::Ctype2AttrAnon_ReadStrptrMaybe(atf_amc::Ctype2AttrAnon &parent, al
 // --- atf_amc.Ctype2AttrAnon..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.Ctype2AttrAnon.String  printfmt:Tuple
-void atf_amc::Ctype2AttrAnon_Print(atf_amc::Ctype2AttrAnon& row, algo::cstring& str) {
+void atf_amc::Ctype2AttrAnon_Print(atf_amc::Ctype2AttrAnon row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf_amc.Ctype2AttrAnon";
 
@@ -1316,6 +1541,38 @@ algo::strptr atf_amc::Ctype2AttrAnon_GetAnon(atf_amc::Ctype2AttrAnon &parent, i3
         case(1): return strptr("attr2", 5);
         default: return algo::strptr();
     }
+}
+
+// --- atf_amc.DecQuote.bid.SetDoubleMaybe
+// Set value of field bid, using rounding.
+// If value is out of range for the target type, return false.
+bool atf_amc::bid_SetDoubleMaybe(atf_amc::DecQuote& parent, double val) {
+    double intval = val * 100;
+    u64 minval = u64(0ULL);
+    u64 maxval = u64(18446744073709551615ULL);
+    bool retval = intval > double(minval) - 0.5;// minval rounds in, minval-1 rounds out
+    retval &= intval < double(maxval) + 0.5;// maxval rounds in, maxval+1 rounds out
+    if (retval) {
+        intval = intval + (val > 0 ? 0.5 : -0.5);
+        parent.bid = u64(intval); // set underlying field.
+    }
+    return retval;
+}
+
+// --- atf_amc.DecQuote.ask.SetDoubleMaybe
+// Set value of field ask, using rounding.
+// If value is out of range for the target type, return false.
+bool atf_amc::ask_SetDoubleMaybe(atf_amc::DecQuote& parent, double val) {
+    double intval = val * 10000;
+    u64 minval = u64(0ULL);
+    u64 maxval = u64(18446744073709551615ULL);
+    bool retval = intval > double(minval) - 0.5;// minval rounds in, minval-1 rounds out
+    retval &= intval < double(maxval) + 0.5;// maxval rounds in, maxval+1 rounds out
+    if (retval) {
+        intval = intval + (val > 0 ? 0.5 : -0.5);
+        parent.ask = u64(intval); // set underlying field.
+    }
+    return retval;
 }
 
 // --- atf_amc.DelType1.u32val.Access
@@ -1349,6 +1606,437 @@ void atf_amc::DelType1_Uninit(atf_amc::DelType1& parent) {
 
     // atf_amc.DelType1.u32val.Uninit (Delptr)  //
     u32val_Delete(parent);
+}
+
+// --- atf_amc.Disp2Case.value.ToCstr
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+const char* atf_amc::value_ToCstr(const atf_amc::Disp2Case& parent) {
+    const char *ret = NULL;
+    switch(value_GetEnum(parent)) {
+        case atf_amc_Disp2Case_atf_amc_DispType1: ret = "atf_amc.DispType1";  break;
+        case atf_amc_Disp2Case_atf_amc_DispType2: ret = "atf_amc.DispType2";  break;
+        case atf_amc_Disp2Case_atf_amc_DispType3: ret = "atf_amc.DispType3";  break;
+    }
+    return ret;
+}
+
+// --- atf_amc.Disp2Case.value.Print
+// Convert value to a string. First, attempt conversion to a known string.
+// If no string matches, print value as a numeric value.
+void atf_amc::value_Print(const atf_amc::Disp2Case& parent, algo::cstring &lhs) {
+    const char *strval = value_ToCstr(parent);
+    if (strval) {
+        lhs << strval;
+    } else {
+        lhs << parent.value;
+    }
+}
+
+// --- atf_amc.Disp2Case.value.SetStrptrMaybe
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+bool atf_amc::value_SetStrptrMaybe(atf_amc::Disp2Case& parent, algo::strptr rhs) {
+    bool ret = false;
+    switch (elems_N(rhs)) {
+        case 17: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','t','f','_','a','m','c','.'): {
+                    if (memcmp(rhs.elems+8,"DispType1",9)==0) { value_SetEnum(parent,atf_amc_Disp2Case_atf_amc_DispType1); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"DispType2",9)==0) { value_SetEnum(parent,atf_amc_Disp2Case_atf_amc_DispType2); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"DispType3",9)==0) { value_SetEnum(parent,atf_amc_Disp2Case_atf_amc_DispType3); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+    }
+    return ret;
+}
+
+// --- atf_amc.Disp2Case.value.SetStrptr
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+void atf_amc::value_SetStrptr(atf_amc::Disp2Case& parent, algo::strptr rhs, atf_amc_Disp2CaseEnum dflt) {
+    if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
+}
+
+// --- atf_amc.Disp2Case.value.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool atf_amc::value_ReadStrptrMaybe(atf_amc::Disp2Case& parent, algo::strptr rhs) {
+    bool retval = false;
+    retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
+    if (!retval) { // didn't work? try reading as underlying type
+        retval = u32_ReadStrptrMaybe(parent.value,rhs);
+    }
+    return retval;
+}
+
+// --- atf_amc.Disp2Case..ReadStrptrMaybe
+// Read fields of atf_amc::Disp2Case from an ascii string.
+// The format of the string is the format of the atf_amc::Disp2Case's only field
+bool atf_amc::Disp2Case_ReadStrptrMaybe(atf_amc::Disp2Case &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = retval && value_ReadStrptrMaybe(parent, in_str);
+    return retval;
+}
+
+// --- atf_amc.Disp2Filter.pmask.ReadStrptrMaybe
+// Read array from string
+// Convert string to field. Return success value
+bool atf_amc::pmask_ReadStrptrMaybe(atf_amc::Disp2Filter& parent, algo::strptr in_str) {
+    bool retval = true;
+    if (1>0) {
+        retval = u64_ReadStrptrMaybe(parent.pmask_elems[0], in_str);
+    }
+    return retval;
+}
+
+// --- atf_amc.Disp2Filter.strval.ReadStrptrMaybe
+inline static bool atf_amc::strval_ReadStrptrMaybe(atf_amc::Disp2Filter& parent, algo::strptr in_str) {
+    bool retval = true;
+    algo::Smallstr20 strval_tmp;
+    retval = algo::Smallstr20_ReadStrptrMaybe(strval_tmp, in_str);
+    if (retval) {
+        strval_Set(parent, strval_tmp);
+    }
+    return retval;
+}
+
+// --- atf_amc.Disp2Filter.strval_regx.ReadStrptrMaybe
+inline static bool atf_amc::strval_regx_ReadStrptrMaybe(atf_amc::Disp2Filter& parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo_lib::Regx_ReadStrptrMaybe(parent.strval_regx, in_str);
+    strval_regx_SetPresent(parent);
+    return retval;
+}
+
+// --- atf_amc.Disp2Filter.strval2.ReadStrptrMaybe
+inline static bool atf_amc::strval2_ReadStrptrMaybe(atf_amc::Disp2Filter& parent, algo::strptr in_str) {
+    bool retval = true;
+    algo::Smallstr20 strval2_tmp;
+    retval = algo::Smallstr20_ReadStrptrMaybe(strval2_tmp, in_str);
+    if (retval) {
+        strval2_Set(parent, strval2_tmp);
+    }
+    return retval;
+}
+
+// --- atf_amc.Disp2Filter.strval2_regx.ReadStrptrMaybe
+inline static bool atf_amc::strval2_regx_ReadStrptrMaybe(atf_amc::Disp2Filter& parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo_lib::Regx_ReadStrptrMaybe(parent.strval2_regx, in_str);
+    strval2_regx_SetPresent(parent);
+    return retval;
+}
+
+// --- atf_amc.Disp2Filter.start_dateval.ReadStrptrMaybe
+inline static bool atf_amc::start_dateval_ReadStrptrMaybe(atf_amc::Disp2Filter& parent, algo::strptr in_str) {
+    bool retval = true;
+    algo::UnTime start_dateval_tmp;
+    retval = algo::UnTime_ReadStrptrMaybe(start_dateval_tmp, in_str);
+    if (retval) {
+        start_dateval_Set(parent, start_dateval_tmp);
+    }
+    return retval;
+}
+
+// --- atf_amc.Disp2Filter.end_dateval.ReadStrptrMaybe
+inline static bool atf_amc::end_dateval_ReadStrptrMaybe(atf_amc::Disp2Filter& parent, algo::strptr in_str) {
+    bool retval = true;
+    algo::UnTime end_dateval_tmp;
+    retval = algo::UnTime_ReadStrptrMaybe(end_dateval_tmp, in_str);
+    if (retval) {
+        end_dateval_Set(parent, end_dateval_tmp);
+    }
+    return retval;
+}
+
+// --- atf_amc.Disp2Filter.dateval.ReadStrptrMaybe
+inline static bool atf_amc::dateval_ReadStrptrMaybe(atf_amc::Disp2Filter& parent, algo::strptr in_str) {
+    bool retval = true;
+    algo::UnTime dateval_tmp;
+    retval = algo::UnTime_ReadStrptrMaybe(dateval_tmp, in_str);
+    if (retval) {
+        dateval_Set(parent, dateval_tmp);
+    }
+    return retval;
+}
+
+// --- atf_amc.Disp2Filter.start_intval.ReadStrptrMaybe
+inline static bool atf_amc::start_intval_ReadStrptrMaybe(atf_amc::Disp2Filter& parent, algo::strptr in_str) {
+    bool retval = true;
+    u32 start_intval_tmp;
+    retval = u32_ReadStrptrMaybe(start_intval_tmp, in_str);
+    if (retval) {
+        start_intval_Set(parent, start_intval_tmp);
+    }
+    return retval;
+}
+
+// --- atf_amc.Disp2Filter.end_intval.ReadStrptrMaybe
+inline static bool atf_amc::end_intval_ReadStrptrMaybe(atf_amc::Disp2Filter& parent, algo::strptr in_str) {
+    bool retval = true;
+    u32 end_intval_tmp;
+    retval = u32_ReadStrptrMaybe(end_intval_tmp, in_str);
+    if (retval) {
+        end_intval_Set(parent, end_intval_tmp);
+    }
+    return retval;
+}
+
+// --- atf_amc.Disp2Filter.intval.ReadStrptrMaybe
+inline static bool atf_amc::intval_ReadStrptrMaybe(atf_amc::Disp2Filter& parent, algo::strptr in_str) {
+    bool retval = true;
+    u32 intval_tmp;
+    retval = u32_ReadStrptrMaybe(intval_tmp, in_str);
+    if (retval) {
+        intval_Set(parent, intval_tmp);
+    }
+    return retval;
+}
+
+// --- atf_amc.Disp2Filter..ReadFieldMaybe
+bool atf_amc::Disp2Filter_ReadFieldMaybe(atf_amc::Disp2Filter& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    atf_amc::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
+    switch(field_id) {
+        case atf_amc_FieldId_pmask: {
+            retval = pmask_ReadStrptrMaybe(parent, strval);
+        } break;
+        case atf_amc_FieldId_strval: {
+            retval = strval_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 0); // mark presence in pmask
+            }
+        } break;
+        case atf_amc_FieldId_strval_regx: {
+            retval = strval_regx_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 1); // mark presence in pmask
+            }
+        } break;
+        case atf_amc_FieldId_strval2: {
+            retval = strval2_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 2); // mark presence in pmask
+            }
+        } break;
+        case atf_amc_FieldId_strval2_regx: {
+            retval = strval2_regx_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 3); // mark presence in pmask
+            }
+        } break;
+        case atf_amc_FieldId_start_dateval: {
+            retval = start_dateval_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 4); // mark presence in pmask
+            }
+        } break;
+        case atf_amc_FieldId_end_dateval: {
+            retval = end_dateval_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 5); // mark presence in pmask
+            }
+        } break;
+        case atf_amc_FieldId_dateval: {
+            retval = dateval_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 6); // mark presence in pmask
+            }
+        } break;
+        case atf_amc_FieldId_start_intval: {
+            retval = start_intval_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 7); // mark presence in pmask
+            }
+        } break;
+        case atf_amc_FieldId_end_intval: {
+            retval = end_intval_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 8); // mark presence in pmask
+            }
+        } break;
+        case atf_amc_FieldId_intval: {
+            retval = intval_ReadStrptrMaybe(parent, strval);
+            if (retval) {
+                pmask_qSetBit(parent, 9); // mark presence in pmask
+            }
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- atf_amc.Disp2Filter..ReadTupleMaybe
+// Read fields of atf_amc::Disp2Filter from attributes of ascii tuple TUPLE
+bool atf_amc::Disp2Filter_ReadTupleMaybe(atf_amc::Disp2Filter &parent, algo::Tuple &tuple) {
+    bool retval = true;
+    ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
+        retval = Disp2Filter_ReadFieldMaybe(parent, attr.name, attr.value);
+        if (!retval) {
+            break;
+        }
+    }ind_end;
+    return retval;
+}
+
+// --- atf_amc.Disp2Filter..Init
+// Set all fields to initial values.
+void atf_amc::Disp2Filter_Init(atf_amc::Disp2Filter& parent) {
+    for (int i = 0; i < 1; i++) {
+        parent.pmask_elems[i] = 0;
+    }
+    parent.start_intval = u32(0);
+    parent.end_intval = u32(0);
+    parent.intval = u32(0);
+}
+
+// --- atf_amc.Disp2Filter..MatchDispType1
+bool atf_amc::Disp2Filter_MatchDispType1(atf_amc::Disp2Filter &parent, atf_amc::DispType1 &msg) {
+    bool ret = true;
+    tempstr fieldstr;
+    if (strval_PresentQ(parent) && !(msg.strval == parent.strval)) {
+        return false;
+    }
+    if (strval_regx_PresentQ(parent)) {
+        ch_RemoveAll(fieldstr);
+        Smallstr20_Print(msg.strval, fieldstr);
+        if (!algo_lib::Regx_Match(parent.strval_regx, fieldstr)) {
+            return false;
+        }
+    }
+    if (strval2_PresentQ(parent) && !(msg.strval2 == parent.strval2)) {
+        return false;
+    }
+    if (strval2_regx_PresentQ(parent)) {
+        ch_RemoveAll(fieldstr);
+        Smallstr20_Print(msg.strval2, fieldstr);
+        if (!algo_lib::Regx_Match(parent.strval2_regx, fieldstr)) {
+            return false;
+        }
+    }
+    if (dateval_PresentQ(parent) && !(msg.dateval == parent.dateval)) {
+        return false;
+    }
+    if (start_dateval_PresentQ(parent) && msg.dateval < parent.start_dateval) {
+        return false;
+    }
+    if (end_dateval_PresentQ(parent) && parent.end_dateval < msg.dateval) {
+        return false;
+    }
+    // if field present in filter but not a member of ctype, return not filtered
+    if (start_intval_PresentQ(parent)) {
+        return false;
+    }
+    // if field present in filter but not a member of ctype, return not filtered
+    if (end_intval_PresentQ(parent)) {
+        return false;
+    }
+    // if field present in filter but not a member of ctype, return not filtered
+    if (intval_PresentQ(parent)) {
+        return false;
+    }
+    return ret;
+}
+
+// --- atf_amc.Disp2Filter..MatchDispType2
+bool atf_amc::Disp2Filter_MatchDispType2(atf_amc::Disp2Filter &parent, atf_amc::DispType2 &msg) {
+    bool ret = true;
+    tempstr fieldstr;
+    // if field present in filter but not a member of ctype, return not filtered
+    if (strval_PresentQ(parent)) {
+        return false;
+    }
+    // if field present in filter but not a member of ctype, return not filtered
+    if (strval_regx_PresentQ(parent)) {
+        return false;
+    }
+    // if field present in filter but not a member of ctype, return not filtered
+    if (strval2_PresentQ(parent)) {
+        return false;
+    }
+    // if field present in filter but not a member of ctype, return not filtered
+    if (strval2_regx_PresentQ(parent)) {
+        return false;
+    }
+    // if field present in filter but not a member of ctype, return not filtered
+    if (start_dateval_PresentQ(parent)) {
+        return false;
+    }
+    // if field present in filter but not a member of ctype, return not filtered
+    if (end_dateval_PresentQ(parent)) {
+        return false;
+    }
+    // if field present in filter but not a member of ctype, return not filtered
+    if (dateval_PresentQ(parent)) {
+        return false;
+    }
+    if (intval_PresentQ(parent) && !(msg.intval == parent.intval)) {
+        return false;
+    }
+    if (start_intval_PresentQ(parent) && msg.intval < parent.start_intval) {
+        return false;
+    }
+    if (end_intval_PresentQ(parent) && parent.end_intval < msg.intval) {
+        return false;
+    }
+    return ret;
+}
+
+// --- atf_amc.Disp2Filter..MatchDispType3
+bool atf_amc::Disp2Filter_MatchDispType3(atf_amc::Disp2Filter &parent, atf_amc::DispType3 &msg) {
+    bool ret = true;
+    tempstr fieldstr;
+    if (strval_PresentQ(parent) && !(msg.strval == parent.strval)) {
+        return false;
+    }
+    if (strval_regx_PresentQ(parent)) {
+        ch_RemoveAll(fieldstr);
+        Smallstr20_Print(msg.strval, fieldstr);
+        if (!algo_lib::Regx_Match(parent.strval_regx, fieldstr)) {
+            return false;
+        }
+    }
+    // if field present in filter but not a member of ctype, return not filtered
+    if (strval2_PresentQ(parent)) {
+        return false;
+    }
+    // if field present in filter but not a member of ctype, return not filtered
+    if (strval2_regx_PresentQ(parent)) {
+        return false;
+    }
+    // if field present in filter but not a member of ctype, return not filtered
+    if (start_dateval_PresentQ(parent)) {
+        return false;
+    }
+    // if field present in filter but not a member of ctype, return not filtered
+    if (end_dateval_PresentQ(parent)) {
+        return false;
+    }
+    // if field present in filter but not a member of ctype, return not filtered
+    if (dateval_PresentQ(parent)) {
+        return false;
+    }
+    if (intval_PresentQ(parent) && !(msg.intval == parent.intval)) {
+        return false;
+    }
+    if (start_intval_PresentQ(parent) && msg.intval < parent.start_intval) {
+        return false;
+    }
+    if (end_intval_PresentQ(parent) && parent.end_intval < msg.intval) {
+        return false;
+    }
+    return ret;
 }
 
 // --- atf_amc.DispCase.value.ToCstr
@@ -1437,7 +2125,7 @@ bool atf_amc::pmask_ReadStrptrMaybe(atf_amc::DispFilter& parent, algo::strptr in
 }
 
 // --- atf_amc.DispFilter.strval.ReadStrptrMaybe
-inline static bool atf_amc::strval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) {
+inline static bool atf_amc::strval_ReadStrptrMaybe(atf_amc::DispFilter& parent, algo::strptr in_str) {
     bool retval = true;
     algo::Smallstr20 strval_tmp;
     retval = algo::Smallstr20_ReadStrptrMaybe(strval_tmp, in_str);
@@ -1448,7 +2136,7 @@ inline static bool atf_amc::strval_ReadStrptrMaybe(atf_amc::DispFilter &parent, 
 }
 
 // --- atf_amc.DispFilter.strval_regx.ReadStrptrMaybe
-inline static bool atf_amc::strval_regx_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) {
+inline static bool atf_amc::strval_regx_ReadStrptrMaybe(atf_amc::DispFilter& parent, algo::strptr in_str) {
     bool retval = true;
     retval = algo_lib::Regx_ReadStrptrMaybe(parent.strval_regx, in_str);
     strval_regx_SetPresent(parent);
@@ -1456,7 +2144,7 @@ inline static bool atf_amc::strval_regx_ReadStrptrMaybe(atf_amc::DispFilter &par
 }
 
 // --- atf_amc.DispFilter.strval2.ReadStrptrMaybe
-inline static bool atf_amc::strval2_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) {
+inline static bool atf_amc::strval2_ReadStrptrMaybe(atf_amc::DispFilter& parent, algo::strptr in_str) {
     bool retval = true;
     algo::Smallstr20 strval2_tmp;
     retval = algo::Smallstr20_ReadStrptrMaybe(strval2_tmp, in_str);
@@ -1467,7 +2155,7 @@ inline static bool atf_amc::strval2_ReadStrptrMaybe(atf_amc::DispFilter &parent,
 }
 
 // --- atf_amc.DispFilter.strval2_regx.ReadStrptrMaybe
-inline static bool atf_amc::strval2_regx_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) {
+inline static bool atf_amc::strval2_regx_ReadStrptrMaybe(atf_amc::DispFilter& parent, algo::strptr in_str) {
     bool retval = true;
     retval = algo_lib::Regx_ReadStrptrMaybe(parent.strval2_regx, in_str);
     strval2_regx_SetPresent(parent);
@@ -1475,7 +2163,7 @@ inline static bool atf_amc::strval2_regx_ReadStrptrMaybe(atf_amc::DispFilter &pa
 }
 
 // --- atf_amc.DispFilter.start_dateval.ReadStrptrMaybe
-inline static bool atf_amc::start_dateval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) {
+inline static bool atf_amc::start_dateval_ReadStrptrMaybe(atf_amc::DispFilter& parent, algo::strptr in_str) {
     bool retval = true;
     algo::UnTime start_dateval_tmp;
     retval = algo::UnTime_ReadStrptrMaybe(start_dateval_tmp, in_str);
@@ -1486,7 +2174,7 @@ inline static bool atf_amc::start_dateval_ReadStrptrMaybe(atf_amc::DispFilter &p
 }
 
 // --- atf_amc.DispFilter.end_dateval.ReadStrptrMaybe
-inline static bool atf_amc::end_dateval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) {
+inline static bool atf_amc::end_dateval_ReadStrptrMaybe(atf_amc::DispFilter& parent, algo::strptr in_str) {
     bool retval = true;
     algo::UnTime end_dateval_tmp;
     retval = algo::UnTime_ReadStrptrMaybe(end_dateval_tmp, in_str);
@@ -1497,7 +2185,7 @@ inline static bool atf_amc::end_dateval_ReadStrptrMaybe(atf_amc::DispFilter &par
 }
 
 // --- atf_amc.DispFilter.dateval.ReadStrptrMaybe
-inline static bool atf_amc::dateval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) {
+inline static bool atf_amc::dateval_ReadStrptrMaybe(atf_amc::DispFilter& parent, algo::strptr in_str) {
     bool retval = true;
     algo::UnTime dateval_tmp;
     retval = algo::UnTime_ReadStrptrMaybe(dateval_tmp, in_str);
@@ -1508,7 +2196,7 @@ inline static bool atf_amc::dateval_ReadStrptrMaybe(atf_amc::DispFilter &parent,
 }
 
 // --- atf_amc.DispFilter.start_intval.ReadStrptrMaybe
-inline static bool atf_amc::start_intval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) {
+inline static bool atf_amc::start_intval_ReadStrptrMaybe(atf_amc::DispFilter& parent, algo::strptr in_str) {
     bool retval = true;
     u32 start_intval_tmp;
     retval = u32_ReadStrptrMaybe(start_intval_tmp, in_str);
@@ -1519,7 +2207,7 @@ inline static bool atf_amc::start_intval_ReadStrptrMaybe(atf_amc::DispFilter &pa
 }
 
 // --- atf_amc.DispFilter.end_intval.ReadStrptrMaybe
-inline static bool atf_amc::end_intval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) {
+inline static bool atf_amc::end_intval_ReadStrptrMaybe(atf_amc::DispFilter& parent, algo::strptr in_str) {
     bool retval = true;
     u32 end_intval_tmp;
     retval = u32_ReadStrptrMaybe(end_intval_tmp, in_str);
@@ -1530,7 +2218,7 @@ inline static bool atf_amc::end_intval_ReadStrptrMaybe(atf_amc::DispFilter &pare
 }
 
 // --- atf_amc.DispFilter.intval.ReadStrptrMaybe
-inline static bool atf_amc::intval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) {
+inline static bool atf_amc::intval_ReadStrptrMaybe(atf_amc::DispFilter& parent, algo::strptr in_str) {
     bool retval = true;
     u32 intval_tmp;
     retval = u32_ReadStrptrMaybe(intval_tmp, in_str);
@@ -1552,61 +2240,61 @@ bool atf_amc::DispFilter_ReadFieldMaybe(atf_amc::DispFilter& parent, algo::strpt
         case atf_amc_FieldId_strval: {
             retval = strval_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 0);
+                pmask_qSetBit(parent, 0); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_strval_regx: {
             retval = strval_regx_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 1);
+                pmask_qSetBit(parent, 1); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_strval2: {
             retval = strval2_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 2);
+                pmask_qSetBit(parent, 2); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_strval2_regx: {
             retval = strval2_regx_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 3);
+                pmask_qSetBit(parent, 3); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_start_dateval: {
             retval = start_dateval_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 4);
+                pmask_qSetBit(parent, 4); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_end_dateval: {
             retval = end_dateval_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 5);
+                pmask_qSetBit(parent, 5); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_dateval: {
             retval = dateval_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 6);
+                pmask_qSetBit(parent, 6); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_start_intval: {
             retval = start_intval_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 7);
+                pmask_qSetBit(parent, 7); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_end_intval: {
             retval = end_intval_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 8);
+                pmask_qSetBit(parent, 8); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_intval: {
             retval = intval_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 9);
+                pmask_qSetBit(parent, 9); // mark presence in pmask
             }
         } break;
         default: {
@@ -1789,7 +2477,7 @@ bool atf_amc::DispType2_ReadStrptrMaybe(atf_amc::DispType2 &parent, algo::strptr
 // --- atf_amc.DispType2..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.DispType2.String  printfmt:Raw
-void atf_amc::DispType2_Print(atf_amc::DispType2& row, algo::cstring& str) {
+void atf_amc::DispType2_Print(atf_amc::DispType2 row, algo::cstring& str) {
     u32_Print(row.intval, str);
 }
 
@@ -1846,7 +2534,7 @@ void atf_amc::DispType3_Print(atf_amc::DispType3& row, algo::cstring& str) {
 // Copy fields out of row
 void atf_amc::amctest_CopyOut(atf_amc::FAmctest &row, atfdb::Amctest &out) {
     out.amctest = row.amctest;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- atf_amc.FAmctest.msghdr.CopyIn
@@ -1866,7 +2554,7 @@ void atf_amc::FAmctest_Print(atf_amc::FAmctest& row, algo::cstring& str) {
     algo::Smallstr50_Print(row.amctest, temp);
     PrintAttrSpaceReset(str,"amctest", temp);
 
-    algo::Comment_Print(row.comment, temp);
+    algo::cstring_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);
 
     bool_Print(row.select, temp);
@@ -1885,6 +2573,13 @@ void atf_amc::FAvl_Uninit(atf_amc::FAvl& avl) {
     tr_avl_Remove(row); // remove avl from index tr_avl
 }
 
+// --- atf_amc.FBlkhashElem..Uninit
+void atf_amc::FBlkhashElem_Uninit(atf_amc::FBlkhashElem& blkhash_elem) {
+    atf_amc::FBlkhashElem &row = blkhash_elem; (void)row;
+    ind_blkhash_elem_Remove(row); // remove blkhash_elem from index ind_blkhash_elem
+    ind_blkhash_elem_thash_Remove(row); // remove blkhash_elem from index ind_blkhash_elem_thash
+}
+
 // --- atf_amc.FCascdel.type.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
@@ -1897,6 +2592,8 @@ const char* atf_amc::type_ToCstr(const atf_amc::FCascdel& cascdel) {
         case atf_amc_FCascdel_type_thash   : ret = "thash";  break;
         case atf_amc_FCascdel_type_bheap   : ret = "bheap";  break;
         case atf_amc_FCascdel_type_zdlist  : ret = "zdlist";  break;
+        case atf_amc_FCascdel_type_atree   : ret = "atree";  break;
+        case atf_amc_FCascdel_type_heap    : ret = "heap";  break;
     }
     return ret;
 }
@@ -1930,6 +2627,9 @@ bool atf_amc::type_SetStrptrMaybe(atf_amc::FCascdel& cascdel, algo::strptr rhs) 
         }
         case 4: {
             switch (u64(algo::ReadLE32(rhs.elems))) {
+                case LE_STR4('h','e','a','p'): {
+                    type_SetEnum(cascdel,atf_amc_FCascdel_type_heap); ret = true; break;
+                }
                 case LE_STR4('n','o','n','e'): {
                     type_SetEnum(cascdel,atf_amc_FCascdel_type_none); ret = true; break;
                 }
@@ -1986,25 +2686,22 @@ void atf_amc::child_ptr_Cascdel(atf_amc::FCascdel& cascdel) {
 // --- atf_amc.FCascdel.c_child_ptrary.Cascdel
 // Delete all elements pointed to by the index.
 void atf_amc::c_child_ptrary_Cascdel(atf_amc::FCascdel& cascdel) {
-    // Clear c_child_ptrary_n so that calls to atf_amc.FCascdel.c_child_ptrary.Remove do not have to scan
-    // the array for pointers or shift anything.
-    // This is somewhat of a hack.
-    i32 n = cascdel.c_child_ptrary_n;
-    cascdel.c_child_ptrary_n = 0;
-    for (i32 i = n - 1; i >= 0; i--) {
-        atf_amc::FCascdel &row = *cascdel.c_child_ptrary_elems[i];
-        row.cascdel_c_child_ptrary_in_ary = false;
-        cascdel_Delete(row);
+    // Each row's delete removes it from this array (heaplike: O(1) swap;
+    // unique: the backward scan finds the last element first), and a cascade
+    // that deletes other members keeps the array consistent, so re-reading
+    // c_child_ptrary_n each iteration visits every remaining row exactly once.
+    while (cascdel.c_child_ptrary_n > 0) {
+        cascdel_Delete(*cascdel.c_child_ptrary_elems[cascdel.c_child_ptrary_n - 1]);
     }
 }
 
 // --- atf_amc.FCascdel.c_child_ptrary.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 void atf_amc::c_child_ptrary_Insert(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) {
     if (!row.cascdel_c_child_ptrary_in_ary) {
         c_child_ptrary_Reserve(cascdel, 1);
-        u32 n  = cascdel.c_child_ptrary_n++;
+        u64 n  = cascdel.c_child_ptrary_n++;
         cascdel.c_child_ptrary_elems[n] = &row;
         row.cascdel_c_child_ptrary_in_ary = true;
     }
@@ -2023,15 +2720,15 @@ bool atf_amc::c_child_ptrary_InsertMaybe(atf_amc::FCascdel& cascdel, atf_amc::FC
 // --- atf_amc.FCascdel.c_child_ptrary.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void atf_amc::c_child_ptrary_Remove(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) {
-    int n = cascdel.c_child_ptrary_n;
+    i64 n = cascdel.c_child_ptrary_n;
     if (bool_Update(row.cascdel_c_child_ptrary_in_ary,false)) {
         atf_amc::FCascdel* *elems = cascdel.c_child_ptrary_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = n-1; i>=0; i--) {
+        for (i64 i = n-1; i>=0; i--) {
             atf_amc::FCascdel* elem = elems[i]; // fetch element
             if (elem == &row) {
-                int j = i + 1;
+                i64 j = i + 1;
                 size_t nbytes = sizeof(atf_amc::FCascdel*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
                 cascdel.c_child_ptrary_n = n - 1;
@@ -2043,12 +2740,12 @@ void atf_amc::c_child_ptrary_Remove(atf_amc::FCascdel& cascdel, atf_amc::FCascde
 
 // --- atf_amc.FCascdel.c_child_ptrary.Reserve
 // Reserve space in index for N more elements;
-void atf_amc::c_child_ptrary_Reserve(atf_amc::FCascdel& cascdel, u32 n) {
-    u32 old_max = cascdel.c_child_ptrary_max;
+void atf_amc::c_child_ptrary_Reserve(atf_amc::FCascdel& cascdel, u64 n) {
+    u64 old_max = cascdel.c_child_ptrary_max;
     if (UNLIKELY(cascdel.c_child_ptrary_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(atf_amc::FCascdel*);
-        u32 new_size = new_max * sizeof(atf_amc::FCascdel*);
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, cascdel.c_child_ptrary_n + n), 4);
+        u64 old_size = old_max * sizeof(atf_amc::FCascdel*);
+        u64 new_size = new_max * sizeof(atf_amc::FCascdel*);
         void *new_mem = algo_lib::malloc_ReallocMem(cascdel.c_child_ptrary_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("atf_amc.out_of_memory  field:atf_amc.FCascdel.c_child_ptrary");
@@ -2089,6 +2786,22 @@ atf_amc::FCascdel& atf_amc::ind_child_thash_FindX(atf_amc::FCascdel& cascdel, u3
     atf_amc::FCascdel* ret = ind_child_thash_Find(cascdel, key);
     vrfy(ret, tempstr() << "atf_amc.key_error  table:ind_child_thash  key:'"<<key<<"'  comment:'key not found'");
     return *ret;
+}
+
+// --- atf_amc.FCascdel.ind_child_thash.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+atf_amc::FCascdel* atf_amc::ind_child_thash_GetOrCreate(atf_amc::FCascdel& cascdel, u32 key) {
+    atf_amc::FCascdel* ret = ind_child_thash_Find(cascdel, key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &cascdel_Alloc();
+        (*ret).key = key;
+        bool good = cascdel_XrefMaybe(*ret);
+        if (!good) {
+            cascdel_Delete(*ret); // delete offending row, any existin xrefs are cleared
+            ret = NULL;
+        }
+    }
+    return ret;
 }
 
 // --- atf_amc.FCascdel.ind_child_thash.InsertMaybe
@@ -2482,6 +3195,24 @@ atf_amc::FCascdel* atf_amc::zd_childlist_RemoveFirst(atf_amc::FCascdel& cascdel)
     return row;
 }
 
+// --- atf_amc.FCascdel.zd_childlist.InsertBefore
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+void atf_amc::zd_childlist_InsertBefore(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row, atf_amc::FCascdel* before) {
+    if (!cascdel_zd_childlist_InLlistQ(row) && &row != before) {
+        atf_amc::FCascdel* next = before;
+        atf_amc::FCascdel* prev = next ? next->cascdel_zd_childlist_prev : cascdel.zd_childlist_tail;
+        row.cascdel_zd_childlist_next = next;
+        row.cascdel_zd_childlist_prev = prev;
+        atf_amc::FCascdel **prev_link_a = &prev->cascdel_zd_childlist_next;
+        atf_amc::FCascdel **prev_link_b = &cascdel.zd_childlist_head;
+        *(prev ? prev_link_a : prev_link_b) = &row;
+        atf_amc::FCascdel **next_link_a = &next->cascdel_zd_childlist_prev;
+        atf_amc::FCascdel **next_link_b = &cascdel.zd_childlist_tail;
+        *(next ? next_link_a : next_link_b) = &row;
+        cascdel.zd_childlist_n++;
+    }
+}
+
 // --- atf_amc.FCascdel.tr_child_atree.Cascdel
 // Delete all elements in the tree.
 void atf_amc::tr_child_atree_Cascdel(atf_amc::FCascdel& cascdel) {
@@ -2764,6 +3495,101 @@ atf_amc::FCascdel* atf_amc::tr_child_atree_LastLt(atf_amc::FCascdel& cascdel, co
     return result;
 }
 
+// --- atf_amc.FCascdel.c_child_heap.Cascdel
+// Delete all elements pointed to by the index.
+void atf_amc::c_child_heap_Cascdel(atf_amc::FCascdel& cascdel) {
+    // Each row's delete removes it from this array (heaplike: O(1) swap;
+    // unique: the backward scan finds the last element first), and a cascade
+    // that deletes other members keeps the array consistent, so re-reading
+    // c_child_heap_n each iteration visits every remaining row exactly once.
+    while (cascdel.c_child_heap_n > 0) {
+        cascdel_Delete(*cascdel.c_child_heap_elems[cascdel.c_child_heap_n - 1]);
+    }
+}
+
+// --- atf_amc.FCascdel.c_child_heap.Insert
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
+void atf_amc::c_child_heap_Insert(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) {
+    if (row.cascdel_c_child_heap_idx == -1) {
+        c_child_heap_Reserve(cascdel, 1);
+        u64 n  = cascdel.c_child_heap_n++;
+        cascdel.c_child_heap_elems[n] = &row;
+        row.cascdel_c_child_heap_idx = n;
+    }
+}
+
+// --- atf_amc.FCascdel.c_child_heap.InsertMaybe
+// Insert pointer to row in array.
+// If row is already in the array, do nothing.
+// Return value: whether element was inserted into array.
+bool atf_amc::c_child_heap_InsertMaybe(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) {
+    bool retval = !cascdel_c_child_heap_InAryQ(row);
+    c_child_heap_Insert(cascdel,row); // check is performed in _Insert again
+    return retval;
+}
+
+// --- atf_amc.FCascdel.c_child_heap.Remove
+// Find element using linear scan. If element is in array, remove, otherwise do nothing
+void atf_amc::c_child_heap_Remove(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) {
+    i64 n = cascdel.c_child_heap_n;
+    i64 idx = row.cascdel_c_child_heap_idx;
+    if (idx != -1) {
+        atf_amc::FCascdel *last = cascdel.c_child_heap_elems[n-1];
+        last->cascdel_c_child_heap_idx = idx;
+        cascdel.c_child_heap_elems[idx] = last;
+        row.cascdel_c_child_heap_idx = -1;
+        cascdel.c_child_heap_n = n - 1;
+    }
+}
+
+// --- atf_amc.FCascdel.c_child_heap.Reserve
+// Reserve space in index for N more elements;
+void atf_amc::c_child_heap_Reserve(atf_amc::FCascdel& cascdel, u64 n) {
+    u64 old_max = cascdel.c_child_heap_max;
+    if (UNLIKELY(cascdel.c_child_heap_n + n > old_max)) {
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, cascdel.c_child_heap_n + n), 4);
+        u64 old_size = old_max * sizeof(atf_amc::FCascdel*);
+        u64 new_size = new_max * sizeof(atf_amc::FCascdel*);
+        void *new_mem = algo_lib::malloc_ReallocMem(cascdel.c_child_heap_elems, old_size, new_size);
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("atf_amc.out_of_memory  field:atf_amc.FCascdel.c_child_heap");
+        }
+        cascdel.c_child_heap_elems = (atf_amc::FCascdel**)new_mem;
+        cascdel.c_child_heap_max = new_max;
+    }
+}
+
+// --- atf_amc.FCascdel.c_child_heap.RemoveFirst
+// Heap-like Ptrary: remove first element
+// If index is empty, return NULL. Otherwise remove and return first element in index.
+atf_amc::FCascdel* atf_amc::c_child_heap_RemoveFirst(atf_amc::FCascdel& cascdel) {
+    atf_amc::FCascdel *row = NULL;
+    i64 n = cascdel.c_child_heap_n;
+    if (n > 0) {
+        row = cascdel.c_child_heap_elems[0];
+        cascdel.c_child_heap_elems[n-1]->cascdel_c_child_heap_idx=0;
+        row->cascdel_c_child_heap_idx=-1;
+        cascdel.c_child_heap_elems[0]=cascdel.c_child_heap_elems[n-1];
+        cascdel.c_child_heap_n = n-1;
+    }
+    return row;
+}
+
+// --- atf_amc.FCascdel.c_child_heap.RemoveLast
+// Ptrary: remove last element
+// If index is empty, return NULL. Otherwise remove and return last element in index.
+atf_amc::FCascdel* atf_amc::c_child_heap_RemoveLast(atf_amc::FCascdel& cascdel) {
+    atf_amc::FCascdel *row = NULL;
+    i64 n = cascdel.c_child_heap_n;
+    if (n > 0) {
+        row = cascdel.c_child_heap_elems[n-1];
+        row->cascdel_c_child_heap_idx=-1;
+        cascdel.c_child_heap_n = n-1;
+    }
+    return row;
+}
+
 // --- atf_amc.FCascdel..Init
 // Set all fields to initial values.
 void atf_amc::FCascdel_Init(atf_amc::FCascdel& cascdel) {
@@ -2790,6 +3616,10 @@ void atf_amc::FCascdel_Init(atf_amc::FCascdel& cascdel) {
     cascdel.zd_childlist_tail = NULL; // (atf_amc.FCascdel.zd_childlist)
     cascdel.tr_child_atree_root = NULL; // (atf_amc.FCascdel.tr_child_atree)
     cascdel.tr_child_atree_n = 0;
+    cascdel.c_child_heap_elems = NULL; // (atf_amc.FCascdel.c_child_heap)
+    cascdel.c_child_heap_n = 0; // (atf_amc.FCascdel.c_child_heap)
+    cascdel.c_child_heap_max = 0; // (atf_amc.FCascdel.c_child_heap)
+    cascdel.cascdel_c_child_heap_idx = i32(-1);
     cascdel.cascdel_c_child_ptrary_in_ary = bool(false);
     cascdel.cascdel_ind_child_thash_next = (atf_amc::FCascdel*)-1; // (atf_amc.FCascdel.ind_child_thash) not-in-hash
     cascdel.cascdel_ind_child_thash_hashval = 0; // stored hash value
@@ -2894,7 +3724,8 @@ void atf_amc::cascdel_bh_child_bheap_curs_Next(cascdel_bh_child_bheap_curs &curs
 // --- atf_amc.FCascdel..Uninit
 void atf_amc::FCascdel_Uninit(atf_amc::FCascdel& cascdel) {
     atf_amc::FCascdel &row = cascdel; (void)row;
-    key_Cleanup(cascdel); // dmmeta.fcleanup:atf_amc.FCascdel.key
+    key_Cleanup(cascdel); // dmmeta.ffunc:atf_amc.FCascdel.key/Cleanup
+    c_child_heap_Cascdel(cascdel); // dmmeta.cascdel:atf_amc.FCascdel.c_child_heap
     tr_child_atree_Cascdel(cascdel); // dmmeta.cascdel:atf_amc.FCascdel.tr_child_atree
     zd_childlist_Cascdel(cascdel); // dmmeta.cascdel:atf_amc.FCascdel.zd_childlist
     bh_child_bheap_Cascdel(cascdel); // dmmeta.cascdel:atf_amc.FCascdel.bh_child_bheap
@@ -2920,6 +3751,12 @@ void atf_amc::FCascdel_Uninit(atf_amc::FCascdel& cascdel) {
     if (p_p_parent)  {
         tr_child_atree_Remove(*p_p_parent, row);// remove cascdel from index tr_child_atree
     }
+    if (p_p_parent)  {
+        c_child_heap_Remove(*p_p_parent, row);// remove cascdel from index c_child_heap
+    }
+
+    // atf_amc.FCascdel.c_child_heap.Uninit (Ptrary)  //
+    algo_lib::malloc_FreeMem(cascdel.c_child_heap_elems, sizeof(atf_amc::FCascdel*)*cascdel.c_child_heap_max); // (atf_amc.FCascdel.c_child_heap)
 
     // atf_amc.FCascdel.bh_child_bheap.Uninit (Bheap)  //
     algo_lib::malloc_FreeMem((u8*)cascdel.bh_child_bheap_elems, sizeof(atf_amc::FCascdel*)*cascdel.bh_child_bheap_max); // (atf_amc.FCascdel.bh_child_bheap)
@@ -2947,8 +3784,392 @@ void atf_amc::FCascdel_Print(atf_amc::FCascdel& row, algo::cstring& str) {
     u64_PrintHex(u64(row.child_ptr), temp, 8, true);
     PrintAttrSpaceReset(str,"child_ptr", temp);
 
+    i32_Print(row.cascdel_c_child_heap_idx, temp);
+    PrintAttrSpaceReset(str,"cascdel_c_child_heap_idx", temp);
+
     bool_Print(row.cascdel_c_child_ptrary_in_ary, temp);
     PrintAttrSpaceReset(str,"cascdel_c_child_ptrary_in_ary", temp);
+}
+
+// --- atf_amc.FCondpar..Uninit
+void atf_amc::FCondpar_Uninit(atf_amc::FCondpar& condpar) {
+    atf_amc::FCondpar &row = condpar; (void)row;
+    zd_condpar_done_Remove(row); // remove condpar from index zd_condpar_done
+}
+
+// --- atf_amc.FCondtest.state.Set
+void atf_amc::state_Set(atf_amc::FCondtest& condtest, u32 rhs) {
+    if (!(condtest.state == rhs)) {
+        if (condtest.state == atf_amc_FCondtest_state_done && condtest.p_parent) {
+            atf_amc::zd_condpar_done_Remove(*condtest.p_parent);
+        }
+        if (condtest.state == atf_amc_FCondtest_state_idle) {
+            atf_amc::zd_condtest_idle_Remove(condtest);
+        }
+        if (condtest.state == atf_amc_FCondtest_state_run) {
+            atf_amc::zd_condtest_run_Remove(condtest);
+        }
+        condtest.state = rhs;
+        if (rhs == atf_amc_FCondtest_state_done && condtest.p_parent) {
+            atf_amc::zd_condpar_done_Insert(*condtest.p_parent);
+        }
+        if (rhs == atf_amc_FCondtest_state_idle) {
+            atf_amc::zd_condtest_idle_Insert(condtest);
+        }
+        if (rhs == atf_amc_FCondtest_state_run) {
+            atf_amc::zd_condtest_run_Insert(condtest);
+        }
+    }
+}
+
+// --- atf_amc.FCondtest.state.ToCstr
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+const char* atf_amc::state_ToCstr(const atf_amc::FCondtest& condtest) {
+    const char *ret = NULL;
+    switch(state_GetEnum(condtest)) {
+        case atf_amc_FCondtest_state_idle  : ret = "idle";  break;
+        case atf_amc_FCondtest_state_run   : ret = "run";  break;
+        case atf_amc_FCondtest_state_done  : ret = "done";  break;
+    }
+    return ret;
+}
+
+// --- atf_amc.FCondtest.state.Print
+// Convert state to a string. First, attempt conversion to a known string.
+// If no string matches, print state as a numeric value.
+void atf_amc::state_Print(const atf_amc::FCondtest& condtest, algo::cstring &lhs) {
+    const char *strval = state_ToCstr(condtest);
+    if (strval) {
+        lhs << strval;
+    } else {
+        lhs << condtest.state;
+    }
+}
+
+// --- atf_amc.FCondtest.state.SetStrptrMaybe
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+bool atf_amc::state_SetStrptrMaybe(atf_amc::FCondtest& condtest, algo::strptr rhs) {
+    bool ret = false;
+    switch (elems_N(rhs)) {
+        case 3: {
+            switch (u64(algo::ReadLE16(rhs.elems))|(u64(rhs[2])<<16)) {
+                case LE_STR3('r','u','n'): {
+                    state_SetEnum(condtest,atf_amc_FCondtest_state_run); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 4: {
+            switch (u64(algo::ReadLE32(rhs.elems))) {
+                case LE_STR4('d','o','n','e'): {
+                    state_SetEnum(condtest,atf_amc_FCondtest_state_done); ret = true; break;
+                }
+                case LE_STR4('i','d','l','e'): {
+                    state_SetEnum(condtest,atf_amc_FCondtest_state_idle); ret = true; break;
+                }
+            }
+            break;
+        }
+    }
+    return ret;
+}
+
+// --- atf_amc.FCondtest.state.SetStrptr
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+void atf_amc::state_SetStrptr(atf_amc::FCondtest& condtest, algo::strptr rhs, atf_amc_FCondtest_state_Enum dflt) {
+    if (!state_SetStrptrMaybe(condtest,rhs)) state_SetEnum(condtest,dflt);
+}
+
+// --- atf_amc.FCondtest.state.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool atf_amc::state_ReadStrptrMaybe(atf_amc::FCondtest& condtest, algo::strptr rhs) {
+    bool retval = false;
+    retval = state_SetStrptrMaybe(condtest,rhs); // try symbol conversion
+    if (!retval) { // didn't work? try reading as underlying type
+        u32 state_tmp;
+        retval = u32_ReadStrptrMaybe(state_tmp, rhs);
+        if (retval) {
+            state_Set(condtest, state_tmp);
+        }
+    }
+    return retval;
+}
+
+// --- atf_amc.FCondtest.ready.Set
+void atf_amc::ready_Set(atf_amc::FCondtest& condtest, bool rhs) {
+    if (!(condtest.ready == rhs)) {
+        condtest.ready = rhs;
+        if (rhs == true) {
+            atf_amc::cd_condtest_ready_Insert(condtest);
+        }
+    }
+}
+
+// --- atf_amc.FCondtest.ready.ReadStrptrMaybe
+inline static bool atf_amc::ready_ReadStrptrMaybe(atf_amc::FCondtest& condtest, algo::strptr in_str) {
+    bool retval = true;
+    bool ready_tmp;
+    retval = bool_ReadStrptrMaybe(ready_tmp, in_str);
+    if (retval) {
+        ready_Set(condtest, ready_tmp);
+    }
+    return retval;
+}
+
+// --- atf_amc.FCondtest.out_buf.BeginAlloc
+// // Return pointer to a block of IN_N contiguous bytes in the buffer.
+// // No reallocation is performed. If not possible, return NULL.
+void* atf_amc::out_buf_BeginAlloc(atf_amc::FCondtest &condtest, i32 in_n) {
+    void *ret = NULL;
+    int max = out_buf_Max(condtest);
+    if (condtest.out_buf_end + in_n > max) {
+        out_buf_Shift(condtest);
+    }
+    if (condtest.out_buf_end + in_n <= max) {
+        ret = (u8*)condtest.out_buf_elems + condtest.out_buf_end;
+        condtest.out_buf_end += in_n;
+    }
+    return ret;
+}
+
+// --- atf_amc.FCondtest.out_buf.BeginAllocReserve
+// // Return pointer to a block of IN_N contiguous bytes in the buffer.
+// // Buffer is reallocated as necessary; function always succeeds.
+void* atf_amc::out_buf_BeginAllocReserve(atf_amc::FCondtest &condtest, i32 in_n) {
+    if (condtest.out_buf_end - condtest.out_buf_start + in_n > out_buf_Max(condtest)) {
+        out_buf_Realloc(condtest, condtest.out_buf_max + i32_Max(condtest.out_buf_max, in_n));
+    }
+    return out_buf_BeginAlloc(condtest, in_n);
+}
+
+// --- atf_amc.FCondtest.out_buf.Realloc
+// Set buffer size.
+// Unconditionally reallocate buffer to have size NEW_MAX
+// If the buffer has data in it, NEW_MAX is adjusted so that the data is not lost
+// (best to call this before filling the buffer)
+void atf_amc::out_buf_Realloc(atf_amc::FCondtest& condtest, int new_max) {
+    new_max = i32_Max(new_max, condtest.out_buf_end);
+    u8 *new_mem = condtest.out_buf_elems
+    ? (u8*)algo_lib::malloc_ReallocMem(condtest.out_buf_elems, condtest.out_buf_max, new_max)
+    : (u8*)algo_lib::malloc_AllocMem(new_max);
+    if (UNLIKELY(!new_mem)) {
+        FatalErrorExit("atf_amc.fbuf_nomem  field:atf_amc.FCondtest.out_buf  comment:'out of memory'");
+    }
+    condtest.out_buf_elems = new_mem;
+    condtest.out_buf_max = new_max;
+}
+
+// --- atf_amc.FCondtest.out_buf.RemoveAll
+// Empty bfufer
+// Discard contents of the buffer.
+void atf_amc::out_buf_RemoveAll(atf_amc::FCondtest& condtest) {
+    condtest.out_buf_start    = 0;
+    condtest.out_buf_end      = 0;
+    condtest.out_buf_msgvalid = false;
+    // the buffer is now empty, so a congested producer can proceed
+    if (condtest.out_buf_congested) {
+        condtest.out_buf_congested = false;
+        atf_amc::cd_condtest_space_Insert(condtest);
+    }
+}
+
+// --- atf_amc.FCondtest.out_buf.Shift
+// Internal function to shift data left
+// Shift existing bytes over to the beginning of the buffer
+static void atf_amc::out_buf_Shift(atf_amc::FCondtest& condtest) {
+    i32 start = condtest.out_buf_start;
+    i32 bytes_n = condtest.out_buf_end - start;
+    if (bytes_n > 0) {
+        memmove(condtest.out_buf_elems, condtest.out_buf_elems + start, bytes_n);
+    }
+    condtest.out_buf_end = bytes_n;
+    condtest.out_buf_start = 0;
+}
+
+// --- atf_amc.FCondtest.out_buf.SkipBytes
+// Skip N bytes when reading
+// Mark some buffer contents as read.
+// 
+void atf_amc::out_buf_SkipBytes(atf_amc::FCondtest& condtest, int n) {
+    int avail = condtest.out_buf_end - condtest.out_buf_start;
+    n = i32_Min(n,avail);
+    condtest.out_buf_start += n;
+    condtest.out_buf_msgvalid = false;
+    // A congested buffer drained to the low-water mark can take a full
+    // message again, so the producer parked on the space condition is woken
+    // exactly once per congestion episode: this is the only place bytes
+    // leave an out buffer, so it is the only place the room can appear.
+    if (condtest.out_buf_congested && out_buf_N(condtest) * 4 <= out_buf_Max(condtest)) {
+        condtest.out_buf_congested = false;
+        atf_amc::cd_condtest_space_Insert(condtest);
+    }
+}
+
+// --- atf_amc.FCondtest.out_buf.SkipMsg
+// Skip current message, if any
+// Skip current message, if any.
+void atf_amc::out_buf_SkipMsg(atf_amc::FCondtest& condtest) {
+    if (condtest.out_buf_msgvalid) {
+        int skip = condtest.out_buf_msglen;
+        i32 start = condtest.out_buf_start;
+        start += skip;
+        condtest.out_buf_start = start;
+        condtest.out_buf_msgvalid = false;
+        condtest.out_buf_msglen   = 0; // reset message length -- important for delimited streams
+    }
+}
+
+// --- atf_amc.FCondtest.out_buf.WriteAll
+// Attempt to write buffer contents to fbuf, return success
+// Write bytes to the buffer. If the entire block is accepted, return true,
+// Otherwise return false.
+// Bytes in the buffer are potentially shifted left to make room for the message.
+// 
+bool atf_amc::out_buf_WriteAll(atf_amc::FCondtest& condtest, u8 *in, i32 in_n) {
+    int max = out_buf_Max(condtest);
+    // check if message doesn't fit. if so, shift bytes over.
+    if (condtest.out_buf_end + in_n > max) {
+        out_buf_Shift(condtest);
+    }
+    // now try to write the message.
+    i32 end = condtest.out_buf_end;
+    bool fits = end + in_n <= max;
+    if (fits) {
+        if (in_n > 0) {
+            memcpy(condtest.out_buf_elems + end, in, in_n);
+            condtest.out_buf_end = end + in_n;
+        }
+    }
+    // At the high-water mark the buffer is full enough that a producer must
+    // expect refusals, and an actual refusal proves it whatever the occupancy
+    // -- a message larger than a quarter of the buffer can be refused while
+    // the buffer still sits below the mark.  Latching on either fact is what
+    // turns the later drain past the low-water mark into a single wake
+    // (out_buf_SkipBytes), and it guarantees that a producer whose message can
+    // ever fit is woken again; the gap between the marks is what keeps a
+    // producer writing at the drain rate from being woken on every message.
+    // A message longer than the whole buffer can never fit, so it does not
+    // latch -- that caller must resize (out_buf_WriteReserve).
+    int cong_max = out_buf_Max(condtest);
+    bool cong_hi = cong_max > 0 && out_buf_N(condtest) * 4 >= cong_max * 3;
+    bool cong_refused = !fits && in_n <= cong_max;
+    if (cong_hi || cong_refused) {
+        condtest.out_buf_congested = true;
+    }
+    return fits;
+}
+
+// --- atf_amc.FCondtest.out_buf.WriteReserve
+// Write buffer contents to fbuf, reallocate as needed
+// Write bytes to the buffer. The entire block is always written or the program exits.
+void atf_amc::out_buf_WriteReserve(atf_amc::FCondtest& condtest, u8 *in, i32 in_n) {
+    if (condtest.out_buf_end - condtest.out_buf_start + in_n > out_buf_Max(condtest)) {
+        out_buf_Realloc(condtest, condtest.out_buf_max + i32_Max(condtest.out_buf_max, in_n));
+    }
+    if (!out_buf_WriteAll(condtest, in, in_n)) {
+        FatalErrorExit("out_buf: out of memory");
+    }
+}
+
+// --- atf_amc.FCondtest..Init
+// Set all fields to initial values.
+void atf_amc::FCondtest_Init(atf_amc::FCondtest& condtest) {
+    condtest.state = u32(0);
+    condtest.ready = bool(false);
+    condtest.p_parent = NULL;
+    condtest.out_buf_elems = NULL; // out_buf: initialize
+    condtest.out_buf_max = 0; // out_buf: initialize
+    condtest.out_buf_end = 0; // out_buf: initialize
+    condtest.out_buf_start = 0; // out_buf: initialize
+    condtest.out_buf_eof = false; // out_buf: initialize
+    condtest.out_buf_msgvalid = false; // out_buf: initialize
+    condtest.out_buf_msglen = 0; // out_buf: initialize
+    condtest.out_buf_epoll_enable = true; // out_buf: initialize
+    out_buf_Realloc(condtest, 64);
+    condtest.condtest_next = (atf_amc::FCondtest*)-1; // (atf_amc.FDb.condtest) not-in-tpool's freelist
+    condtest.zd_condtest_run_next = (atf_amc::FCondtest*)-1; // (atf_amc.FDb.zd_condtest_run) not-in-list
+    condtest.zd_condtest_run_prev = NULL; // (atf_amc.FDb.zd_condtest_run)
+    condtest.zd_condtest_idle_next = (atf_amc::FCondtest*)-1; // (atf_amc.FDb.zd_condtest_idle) not-in-list
+    condtest.zd_condtest_idle_prev = NULL; // (atf_amc.FDb.zd_condtest_idle)
+    condtest.cd_condtest_ready_next = (atf_amc::FCondtest*)-1; // (atf_amc.FDb.cd_condtest_ready) not-in-list
+    condtest.cd_condtest_ready_prev = NULL; // (atf_amc.FDb.cd_condtest_ready)
+    condtest.cd_condtest_space_next = (atf_amc::FCondtest*)-1; // (atf_amc.FDb.cd_condtest_space) not-in-list
+    condtest.cd_condtest_space_prev = NULL; // (atf_amc.FDb.cd_condtest_space)
+}
+
+// --- atf_amc.FCondtest..ReadFieldMaybe
+bool atf_amc::FCondtest_ReadFieldMaybe(atf_amc::FCondtest& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    atf_amc::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case atf_amc_FieldId_state: {
+            retval = state_ReadStrptrMaybe(parent, strval);
+        } break;
+        case atf_amc_FieldId_ready: {
+            retval = ready_ReadStrptrMaybe(parent, strval);
+        } break;
+        case atf_amc_FieldId_p_parent: {
+            retval = false;
+        } break;
+        case atf_amc_FieldId_out_buf: {
+            retval = false;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- atf_amc.FCondtest..ReadStrptrMaybe
+// Read fields of atf_amc::FCondtest from an ascii string.
+// The format of the string is an ssim Tuple
+bool atf_amc::FCondtest_ReadStrptrMaybe(atf_amc::FCondtest &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "atf_amc.FCondtest");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && FCondtest_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- atf_amc.FCondtest..Uninit
+void atf_amc::FCondtest_Uninit(atf_amc::FCondtest& condtest) {
+    atf_amc::FCondtest &row = condtest; (void)row;
+    zd_condtest_idle_Remove(row); // remove condtest from index zd_condtest_idle
+    zd_condtest_run_Remove(row); // remove condtest from index zd_condtest_run
+    cd_condtest_ready_Remove(row); // remove condtest from index cd_condtest_ready
+    cd_condtest_space_Remove(row); // remove condtest from index cd_condtest_space
+
+    // atf_amc.FCondtest.out_buf.Uninit (Fbuf)  //fcond test: out-direction buffer whose drain arms the space condition
+    if (condtest.out_buf_elems) {
+        algo_lib::malloc_FreeMem(condtest.out_buf_elems, condtest.out_buf_max); // (atf_amc.FCondtest.out_buf) out_buf_max is the byte size Realloc allocated
+    }
+    condtest.out_buf_elems = NULL;
+    condtest.out_buf_max = 0;
+}
+
+// --- atf_amc.FCondtest..Print
+// print string representation of ROW to string STR
+// cfmt:atf_amc.FCondtest.String  printfmt:Tuple
+void atf_amc::FCondtest_Print(atf_amc::FCondtest& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "atf_amc.FCondtest";
+
+    atf_amc::state_Print(row, temp);
+    PrintAttrSpaceReset(str,"state", temp);
+
+    bool_Print(row.ready, temp);
+    PrintAttrSpaceReset(str,"ready", temp);
 }
 
 // --- atf_amc.FCstring.msghdr.CopyOut
@@ -2976,7 +4197,7 @@ void atf_amc::listtype_CopyOut(atf_amc::FListtype &row, dmmeta::Listtype &out) {
     out.circular = row.circular;
     out.haveprev = row.haveprev;
     out.instail = row.instail;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- atf_amc.FListtype.base.CopyIn
@@ -3004,6 +4225,13 @@ void atf_amc::trace_Init(atf_amc::trace& parent) {
     parent.step_cs_t_typec_cycles = u64(0);
     parent.step_cd_in_msg = u64(0);
     parent.step_cd_in_msg_cycles = u64(0);
+    parent.alloc__db_msghdrltscale = u64(0);
+    parent.del__db_msghdrltscale = u64(0);
+    parent._db_in_fb_n_read_byte = u64(0);
+    parent._db_in_fb_n_read_msg = u64(0);
+    parent._db_out_fb_n_eagain = u64(0);
+    parent._db_out_fb_n_write_byte = u64(0);
+    parent._db_out_fb_n_write_msg = u64(0);
 }
 
 // --- atf_amc.trace..Print
@@ -3048,6 +4276,27 @@ void atf_amc::trace_Print(atf_amc::trace& row, algo::cstring& str) {
 
     u64_Print(row.step_cd_in_msg_cycles, temp);
     PrintAttrSpaceReset(str,"step_cd_in_msg_cycles", temp);
+
+    u64_Print(row.alloc__db_msghdrltscale, temp);
+    PrintAttrSpaceReset(str,"alloc__db_msghdrltscale", temp);
+
+    u64_Print(row.del__db_msghdrltscale, temp);
+    PrintAttrSpaceReset(str,"del__db_msghdrltscale", temp);
+
+    u64_Print(row._db_in_fb_n_read_byte, temp);
+    PrintAttrSpaceReset(str,"_db_in_fb_n_read_byte", temp);
+
+    u64_Print(row._db_in_fb_n_read_msg, temp);
+    PrintAttrSpaceReset(str,"_db_in_fb_n_read_msg", temp);
+
+    u64_Print(row._db_out_fb_n_eagain, temp);
+    PrintAttrSpaceReset(str,"_db_out_fb_n_eagain", temp);
+
+    u64_Print(row._db_out_fb_n_write_byte, temp);
+    PrintAttrSpaceReset(str,"_db_out_fb_n_write_byte", temp);
+
+    u64_Print(row._db_out_fb_n_write_msg, temp);
+    PrintAttrSpaceReset(str,"_db_out_fb_n_write_msg", temp);
 }
 
 // --- atf_amc.FDb.bh_typec.Dealloc
@@ -3326,6 +4575,24 @@ atf_amc::FTypeC* atf_amc::zdl_h_typec_RemoveFirst() {
     return row;
 }
 
+// --- atf_amc.FDb.zdl_h_typec.InsertBefore
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+void atf_amc::zdl_h_typec_InsertBefore(atf_amc::FTypeC& row, atf_amc::FTypeC* before) {
+    if (!zdl_h_typec_InLlistQ(row) && &row != before) {
+        atf_amc::FTypeC* next = before;
+        atf_amc::FTypeC* prev = next ? next->zdl_h_typec_prev : _db.zdl_h_typec_tail;
+        row.zdl_h_typec_next = next;
+        row.zdl_h_typec_prev = prev;
+        atf_amc::FTypeC **prev_link_a = &prev->zdl_h_typec_next;
+        atf_amc::FTypeC **prev_link_b = &_db.zdl_h_typec_head;
+        *(prev ? prev_link_a : prev_link_b) = &row;
+        atf_amc::FTypeC **next_link_a = &next->zdl_h_typec_prev;
+        atf_amc::FTypeC **next_link_b = &_db.zdl_h_typec_tail;
+        *(next ? next_link_a : next_link_b) = &row;
+        _db.zdl_h_typec_n++;
+    }
+}
+
 // --- atf_amc.FDb.zd_t_typec.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
 void atf_amc::zd_t_typec_Insert(atf_amc::FTypeC& row) {
@@ -3398,6 +4665,24 @@ atf_amc::FTypeC* atf_amc::zd_t_typec_RemoveFirst() {
     return row;
 }
 
+// --- atf_amc.FDb.zd_t_typec.InsertBefore
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+void atf_amc::zd_t_typec_InsertBefore(atf_amc::FTypeC& row, atf_amc::FTypeC* before) {
+    if (!zd_t_typec_InLlistQ(row) && &row != before) {
+        atf_amc::FTypeC* next = before;
+        atf_amc::FTypeC* prev = next ? next->zd_t_typec_prev : _db.zd_t_typec_tail;
+        row.zd_t_typec_next = next;
+        row.zd_t_typec_prev = prev;
+        atf_amc::FTypeC **prev_link_a = &prev->zd_t_typec_next;
+        atf_amc::FTypeC **prev_link_b = &_db.zd_t_typec_head;
+        *(prev ? prev_link_a : prev_link_b) = &row;
+        atf_amc::FTypeC **next_link_a = &next->zd_t_typec_prev;
+        atf_amc::FTypeC **next_link_b = &_db.zd_t_typec_tail;
+        *(next ? next_link_a : next_link_b) = &row;
+        _db.zd_t_typec_n++;
+    }
+}
+
 // --- atf_amc.FDb.zd_typed.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
 void atf_amc::zd_typed_Insert(atf_amc::FTypeD& row) {
@@ -3468,6 +4753,24 @@ atf_amc::FTypeD* atf_amc::zd_typed_RemoveFirst() {
         row->zd_typed_next = (atf_amc::FTypeD*)-1; // mark as not-in-list
     }
     return row;
+}
+
+// --- atf_amc.FDb.zd_typed.InsertBefore
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+void atf_amc::zd_typed_InsertBefore(atf_amc::FTypeD& row, atf_amc::FTypeD* before) {
+    if (!zd_typed_InLlistQ(row) && &row != before) {
+        atf_amc::FTypeD* next = before;
+        atf_amc::FTypeD* prev = next ? next->zd_typed_prev : _db.zd_typed_tail;
+        row.zd_typed_next = next;
+        row.zd_typed_prev = prev;
+        atf_amc::FTypeD **prev_link_a = &prev->zd_typed_next;
+        atf_amc::FTypeD **prev_link_b = &_db.zd_typed_head;
+        *(prev ? prev_link_a : prev_link_b) = &row;
+        atf_amc::FTypeD **next_link_a = &next->zd_typed_prev;
+        atf_amc::FTypeD **next_link_b = &_db.zd_typed_tail;
+        *(next ? next_link_a : next_link_b) = &row;
+        _db.zd_typed_n++;
+    }
 }
 
 // --- atf_amc.FDb.zs_t_typed.Insert
@@ -4393,7 +5696,7 @@ void* atf_amc::typea_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     atf_amc::FTypeA*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.typea_lary[bsr];
         if (!lev) {
             lev=(atf_amc::FTypeA*)algo_lib::malloc_AllocMem(sizeof(atf_amc::FTypeA) * (u64(1)<<bsr));
@@ -4402,7 +5705,7 @@ void* atf_amc::typea_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.typea_n = i32(new_nelems);
+        _db.typea_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -4414,7 +5717,7 @@ void atf_amc::typea_RemoveAll() {
     for (u64 n = _db.typea_n; n>0; ) {
         n--;
         typea_qFind(i32(n)).~FTypeA(); // destroy last element
-        _db.typea_n = i32(n);
+        _db.typea_n = i64(n);
     }
 }
 
@@ -4425,7 +5728,7 @@ void atf_amc::typea_RemoveLast() {
     if (n > 0) {
         n -= 1;
         typea_qFind(i32(n)).~FTypeA();
-        _db.typea_n = i32(n);
+        _db.typea_n = i64(n);
     }
 }
 
@@ -4493,7 +5796,7 @@ void* atf_amc::types_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     atf_amc::FTypeS*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.types_lary[bsr];
         if (!lev) {
             lev=(atf_amc::FTypeS*)algo_lib::malloc_AllocMem(sizeof(atf_amc::FTypeS) * (u64(1)<<bsr));
@@ -4502,7 +5805,7 @@ void* atf_amc::types_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.types_n = i32(new_nelems);
+        _db.types_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -4514,7 +5817,7 @@ void atf_amc::types_RemoveAll() {
     for (u64 n = _db.types_n; n>0; ) {
         n--;
         types_qFind(u64(n)).~FTypeS(); // destroy last element
-        _db.types_n = i32(n);
+        _db.types_n = i64(n);
     }
 }
 
@@ -4525,7 +5828,7 @@ void atf_amc::types_RemoveLast() {
     if (n > 0) {
         n -= 1;
         types_qFind(u64(n)).~FTypeS();
-        _db.types_n = i32(n);
+        _db.types_n = i64(n);
     }
 }
 
@@ -4803,116 +6106,16 @@ void atf_amc::ind_typea_AbsReserve(int n) {
 }
 
 // --- atf_amc.FDb._db.ReadArgv
-// Read argc,argv directly into the fields of the command line(s)
-// The following fields are updated:
-//     atf_amc.FDb.cmdline
-//     algo_lib.FDb.cmdline
+// Read argc,argv into the fields of atf_amc.FDb.cmdline (and any base command line)
+// via atf_amc_ReadArgv; then apply -help/-version and load floadtuples input.
 void atf_amc::ReadArgv() {
     command::atf_amc &cmd = atf_amc::_db.cmdline;
-    algo_lib::Cmdline &base = algo_lib::_db.cmdline;
-    int needarg=-1;// unknown
-    int argidx=1;// skip process name
-    int anonidx=0;
-    algo::strptr nextanon = command::atf_amc_GetAnon(cmd, anonidx);
-    tempstr err;
-    algo::strptr attrname;
-    bool isanon=false; // true if attrname is anonfld (positional)
-    algo_lib::FieldId baseattrid;
-    command::FieldId attrid;
-    bool endopt=false;
-    int whichns=0;// which namespace does the current attribute belong to
-    for (; argidx < algo_lib::_db.argc; argidx++) {
-        algo::strptr arg = algo_lib::_db.argv[argidx];
-        algo::strptr attrval;
-        algo::strptr dfltval;
-        bool haveval=false;
-        bool dash=elems_N(arg)>1 && arg.elems[0]=='-'; // a single dash is not an option
-        // this attribute is a value
-        if (endopt || needarg>0 || !dash) {
-            attrval=arg;
-            haveval=true;
-        } else {
-            // this attribute is a field name (with - or --)
-            // or a -- by itself
-            bool dashdash = elems_N(arg) >= 2 && arg.elems[1]=='-';
-            int skip = int(dash) + dashdash;
-            attrname=ch_RestFrom(arg,skip);
-            if (skip==2 && elems_N(arg)==2) {
-                endopt=true;
-                continue;// nothing else to do here
-            }
-            // parse "-a:B" arg into attrname,attrvalue
-            algo::i32_Range colon = TFind(attrname,':');
-            if (colon.beg < colon.end) {
-                attrval=ch_RestFrom(attrname,colon.end);
-                attrname=ch_FirstN(attrname,colon.beg);
-                haveval=true;
-            }
-            // look up which command (this one or the base) contains the field
-            whichns=0;
-            needarg=-1;
-            // look up parameter information in base namespace (needarg will be -1 if lookup fails)
-            if (algo_lib::FieldId_ReadStrptrMaybe(baseattrid,attrname)) {
-                needarg = algo_lib::Cmdline_NArgs(baseattrid,dfltval,&isanon);
-            }
-            if (needarg<0) {
-                whichns=1;
-                // look up parameter information in this namespace (needarg will be -1 if lookup fails)
-                if (command::FieldId_ReadStrptrMaybe(attrid,attrname)) {
-                    needarg = command::atf_amc_NArgs(attrid,dfltval,&isanon);
-                }
-            }
-            if (attrval == "" && dfltval != "") {
-                attrval=dfltval;
-                haveval=true;
-            }
-            if (needarg<0) {
-                err<<"atf_amc: unknown option "<<Keyval("value",arg)<<eol;
-            } else {
-                if (isanon) {
-                    if (attrname == nextanon) { // treat named anon (positional) argument as unnamed
-                        attrname = ""; // treat it as unnamed
-                    } else if (nextanon != "") { // disallow out-of-order anon (positional) args
-                        err<<"atf_amc: error at "<<algo::strptr_ToSsim(arg)<<": must be preceded by [-"<<nextanon<<"]"<<eol;
-                    }
-                }
-            }
-        }
-        // look up anon field name based on index
-        // anon fields are only allowed in the leaf ns, never base
-        if (ch_N(attrname) == 0) {
-            attrname = nextanon;
-            nextanon = command::atf_amc_GetAnon(cmd, ++anonidx);
-            command::FieldId_ReadStrptrMaybe(attrid,attrname);
-            whichns=1;
-        }
-        if (ch_N(attrname) == 0) {
-            err << "atf_amc: too many arguments. error at "<<algo::strptr_ToSsim(arg)<<eol;
-        } else if (haveval) {
-            // read value into currently selected arg
-            bool ret=false;
-            // it's already known which namespace is consuming the args,
-            // so directly go there
-            if (whichns == 0) {
-                ret=algo_lib::Cmdline_ReadFieldMaybe(base, attrname, attrval);
-            }
-            if (whichns==1) {
-                ret=command::atf_amc_ReadFieldMaybe(cmd, attrname, attrval);
-                switch(attrid.value) {
-                    default:break;
-                }
-            }
-            if (!ret) {
-                err<<"atf_amc: error in "
-                <<Keyval("option",attrname)
-                <<Keyval("value",attrval)<<eol;
-            }
-            needarg--;
-            if (needarg <= 0) {
-                attrname="";// forget which argument was being filled
-            }
-        }
+    algo::cstring err;
+    algo::StringAry args;
+    for (int argidx=1; argidx < algo_lib::_db.argc; argidx++) {// skip process name
+        ary_Alloc(args) = algo_lib::_db.argv[argidx];
     }
+    command::atf_amc_ReadArgv(cmd, args, err);
     bool dohelp = false;
     bool doexit=false;
     if (algo_lib::_db.cmdline.help) {
@@ -4935,9 +6138,7 @@ void atf_amc::ReadArgv() {
     algo_lib_logcat_debug.enabled = algo_lib::_db.cmdline.debug;
     algo_lib_logcat_verbose.enabled = algo_lib::_db.cmdline.verbose > 0;
     algo_lib_logcat_verbose2.enabled = algo_lib::_db.cmdline.verbose > 1;
-    if (!dohelp) {
-    }
-    // dmmeta.floadtuples:atf_amc.FDb.cmdline
+    // dmmeta.floadtuples:command.atf_amc.in
     if (!dohelp && err=="") {
         algo_lib::ResetErrtext();
         if (!atf_amc::LoadTuplesMaybe(cmd.in,true)) {
@@ -4950,7 +6151,7 @@ void atf_amc::ReadArgv() {
         doexit=true;
     }
     if (dohelp) {
-        prlog(atf_amc_help);
+        prlog(command::atf_amc_help);
     }
     if (doexit) {
         _exit(algo_lib::_db.exit_code);
@@ -4983,7 +6184,13 @@ void atf_amc::Step() {
 // --- atf_amc.FDb._db.InitReflection
 // Load statically available data into tables, register tables and database.
 static void atf_amc::InitReflection() {
-    algo_lib::imdb_InsertMaybe(algo::Imdb("atf_amc", atf_amc::InsertStrptrMaybe, atf_amc::Step, atf_amc::MainLoop, NULL, algo::Comment()));
+    algo_lib::FImdb &row = algo_lib::imdb_Alloc();
+    row.imdb               = "atf_amc";
+    row.InsertStrptrMaybe  = atf_amc::InsertStrptrMaybe;
+    row.RemoveStrptrMaybe  = atf_amc::RemoveStrptrMaybe;
+    row.Step               = atf_amc::Step;
+    row.MainLoop           = atf_amc::MainLoop;
+    algo_lib::imdb_XrefMaybe(row);
 
     algo::Imtable t_trace;
     t_trace.imtable         = "atf_amc.trace";
@@ -4998,9 +6205,10 @@ static void atf_amc::InitReflection() {
 
     // -- load signatures of existing dispatches --
     algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_amc.Disp'  signature:'d11df8e45dfabb45e515398cd71d30a184879014'");
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_amc.Msgs'  signature:'f80a13e46fff2c18de1f4dbbbb11703d07c170d2'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_amc.Disp2'  signature:'d11df8e45dfabb45e515398cd71d30a184879014'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_amc.Msgs'  signature:'b98c58d33ee922a273e2b73b4ac96234dab71c81'");
     algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_amc.Ssimfiles'  signature:'f2409fade5c9373dc13379fe888df9435e3c0987'");
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_amc.Input'  signature:'3b9943558be9b03e79fade60297ec50f1d4702a3'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'atf_amc.Input'  signature:'034a4336d79796339c51bb5934d2f77cfa293b3f'");
 }
 
 // --- atf_amc.FDb._db.InsertStrptrMaybe
@@ -5021,6 +6229,12 @@ bool atf_amc::InsertStrptrMaybe(algo::strptr str) {
             atf_amc::TypeT elem;
             retval = atf_amc::TypeT_ReadStrptrMaybe(elem, str);
             retval = retval && typet_InputMaybe(elem);
+            break;
+        }
+        case atf_amc_TableId_atf_amc_TypeU: { // finput:atf_amc.FDb.typeu
+            atf_amc::TypeU elem;
+            retval = atf_amc::TypeU_ReadStrptrMaybe(elem, str);
+            retval = retval && typeu_InputMaybe(elem);
             break;
         }
         default:
@@ -5105,6 +6319,39 @@ void atf_amc::Steps() {
     algo_lib::Step(); // dependent namespace specified via (dev.targdep)
 }
 
+// --- atf_amc.FDb._db.RemoveStrptrMaybe
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+bool atf_amc::RemoveStrptrMaybe(algo::strptr str) {
+    bool retval = true;
+    atf_amc::TableId table_id(-1);
+    value_SetStrptrMaybe(table_id, algo::GetTypeTag(str));
+    switch (value_GetEnum(table_id)) {
+        case atf_amc_TableId_atf_amc_TypeS: { // finput:atf_amc.FDb.types
+            // finput atf_amc.FDb.types: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case atf_amc_TableId_atf_amc_TypeT: { // finput:atf_amc.FDb.typet
+            // finput atf_amc.FDb.typet: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case atf_amc_TableId_atf_amc_TypeU: { // finput:atf_amc.FDb.typeu
+            // finput atf_amc.FDb.typeu: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        default:
+        retval = false;
+        break;
+    } //switch
+    return retval;
+}
+
 // --- atf_amc.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
@@ -5159,7 +6406,7 @@ void* atf_amc::typet_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     atf_amc::FTypeT*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.typet_lary[bsr];
         if (!lev) {
             lev=(atf_amc::FTypeT*)algo_lib::malloc_AllocMem(sizeof(atf_amc::FTypeT) * (u64(1)<<bsr));
@@ -5168,7 +6415,7 @@ void* atf_amc::typet_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.typet_n = i32(new_nelems);
+        _db.typet_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -5180,7 +6427,7 @@ void atf_amc::typet_RemoveAll() {
     for (u64 n = _db.typet_n; n>0; ) {
         n--;
         typet_qFind(u64(n)).~FTypeT(); // destroy last element
-        _db.typet_n = i32(n);
+        _db.typet_n = i64(n);
     }
 }
 
@@ -5191,7 +6438,7 @@ void atf_amc::typet_RemoveLast() {
     if (n > 0) {
         n -= 1;
         typet_qFind(u64(n)).~FTypeT();
-        _db.typet_n = i32(n);
+        _db.typet_n = i64(n);
     }
 }
 
@@ -5266,7 +6513,7 @@ void* atf_amc::cstring_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     atf_amc::FCstring*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.cstring_lary[bsr];
         if (!lev) {
             lev=(atf_amc::FCstring*)algo_lib::malloc_AllocMem(sizeof(atf_amc::FCstring) * (u64(1)<<bsr));
@@ -5275,7 +6522,7 @@ void* atf_amc::cstring_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.cstring_n = i32(new_nelems);
+        _db.cstring_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -5287,7 +6534,7 @@ void atf_amc::cstring_RemoveAll() {
     for (u64 n = _db.cstring_n; n>0; ) {
         n--;
         cstring_qFind(u64(n)).~FCstring(); // destroy last element
-        _db.cstring_n = i32(n);
+        _db.cstring_n = i64(n);
     }
 }
 
@@ -5298,7 +6545,7 @@ void atf_amc::cstring_RemoveLast() {
     if (n > 0) {
         n -= 1;
         cstring_qFind(u64(n)).~FCstring();
-        _db.cstring_n = i32(n);
+        _db.cstring_n = i64(n);
     }
 }
 
@@ -5726,7 +6973,6 @@ atf_amc::PooledBE64* atf_amc::pooledbe64_AllocMaybe() {
 // --- atf_amc.FDb.pooledbe64.Delete
 // Remove row from all global and cross indices, then deallocate row
 void atf_amc::pooledbe64_Delete(atf_amc::PooledBE64 &row) {
-    row.~PooledBE64();
     pooledbe64_FreeMem(row);
 }
 
@@ -5799,10 +7045,40 @@ bool atf_amc::pooledbe64_XrefMaybe(atf_amc::PooledBE64 &row) {
 
 // --- atf_amc.FDb.varlen_extern.FreeMem
 // Free block of memory previously returned by Lpool.
+// SIZE must be of the same class the memory was allocated with.
 void atf_amc::varlen_extern_FreeMem(void* mem, u64 size) {
     size = u64_Max(size,1ULL<<4);
     u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
-    if (mem && cell < 36) {
+    if (mem && cell < 11) {
+        // a blk-class record returns to its blk, found by address mask
+        varlen_extern_Lpblk *blk = (varlen_extern_Lpblk*)((u64)mem & ~(u64)65535);
+        varlen_extern_Lpblock *rec = (varlen_extern_Lpblock*)mem;
+        rec->next = blk->freerec;
+        blk->freerec = rec;
+        blk->live--;
+        if (blk->pprev == NULL) { // regained space: rejoin the class list
+            blk->next = _db.varlen_extern_blk[blk->cell];
+            blk->pprev = &_db.varlen_extern_blk[blk->cell];
+            if (blk->next) {
+                blk->next->pprev = &blk->next;
+            }
+            _db.varlen_extern_blk[blk->cell] = blk;
+        }
+        // drained blk reverts to an ordinary block on the blk-size level,
+        // reusable by any class; the last blk of a class is kept dedicated
+        // so a lone alloc/free cycle does not thrash dedication
+        bool sole = _db.varlen_extern_blk[blk->cell] == blk && blk->next == NULL;
+        if (blk->live == 0 && !sole) {
+            *blk->pprev = blk->next;
+            if (blk->next) {
+                blk->next->pprev = blk->pprev;
+            }
+            varlen_extern_Lpblock *raw = (varlen_extern_Lpblock*)blk;
+            raw->next = _db.varlen_extern_free[12];
+            _db.varlen_extern_free[12] = raw;
+        }
+        _db.varlen_extern_n--;
+    } else if (mem && cell < 36) {
         varlen_extern_Lpblock *temp = (varlen_extern_Lpblock*)mem; // push  singly linked list
         temp->next = _db.varlen_extern_free[cell];
         _db.varlen_extern_free[cell] = temp;
@@ -5817,61 +7093,103 @@ void atf_amc::varlen_extern_FreeMem(void* mem, u64 size) {
 // The maximum allocation size is at most 1<<(36+4)
 void* atf_amc::varlen_extern_AllocMem(u64 size) {
     void *retval = NULL;
-    size     = u64_Max(size,1<<4); // enforce alignment
+    size     = u64_Max(size,1ULL<<4); // enforce alignment
     u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
-    if (cell < 36) {
-        u64 i    = cell;
-        // try to find a block that's at least as large as required.
-        // if found, remove from free list
+    varlen_extern_Lpblk *blk = cell < 11 ? _db.varlen_extern_blk[cell] : NULL;
+    if (cell < 36 && blk == NULL) {
+        // acquire a raw block: for a blk class, a blk-size block to dedicate;
+        // otherwise the requested level. Serve from the lowest populated
+        // level at or above it, splitting the upper halves back down.
+        u64 rawcell = cell < 11 ? (u64)12 : cell;
+        void *rawmem = NULL;
+        u64 i = rawcell;
         for (; i < 36; i++) {
-            varlen_extern_Lpblock *blk = _db.varlen_extern_free[i];
-            if (blk) {
-                _db.varlen_extern_free[i] = blk->next;
-                retval = blk;
+            varlen_extern_Lpblock *rawblk = _db.varlen_extern_free[i];
+            if (rawblk) {
+                _db.varlen_extern_free[i] = rawblk->next;
+                rawmem = rawblk;
                 break;
             }
         }
-        // if suitable size block is not found, create a new one
-        // by requesting a block from the base allocator.
-        if (UNLIKELY(!retval)) {
-            i = u64_Max(cell, 21-4); // 2MB min -- allow huge page to be used
-            retval = algo_lib::malloc_AllocMem(1ULL<<(i+4));
+        // if no suitable block, refill from the base allocator with exactly
+        // the level size, a whole number of base granules; the base pool
+        // returns big blocks granule-aligned, so every carved block of blk
+        // size and up is blk-aligned (FreeMem locates a record's blk by
+        // address mask)
+        if (UNLIKELY(!rawmem)) {
+            i = u64_Max(rawcell, 21-4); // 2MB min -- allow huge page to be used
+            rawmem = algo_lib::sbrk_AllocMem(1ULL<<(i+4));
         }
-        if (LIKELY(retval)) {
+        if (LIKELY(rawmem)) {
             // if block is more than 2x as large as needed, return the upper half to the free
-            // list (repeatedly). meanwhile, retval doesn't change.
-            while (i > cell) {
+            // list (repeatedly). meanwhile, rawmem doesn't change.
+            while (i > rawcell) {
                 i--;
-                int half = 1ULL<<(i+4);
-                varlen_extern_Lpblock *blk = (varlen_extern_Lpblock*)((u8*)retval + half);
-                blk->next = _db.varlen_extern_free[i];
-                _db.varlen_extern_free[i] = blk;
+                u64 half = 1ULL<<(i+4);
+                varlen_extern_Lpblock *shed = (varlen_extern_Lpblock*)((u8*)rawmem + half);
+                shed->next = _db.varlen_extern_free[i];
+                _db.varlen_extern_free[i] = shed;
+            }
+            if (cell < 11) { // stamp a fresh blk dedicated to this class
+                blk = (varlen_extern_Lpblk*)rawmem;
+                blk->freerec = NULL;
+                blk->rsize = 1u<<(cell+4);
+                blk->live = 0;
+                blk->tip = 64;
+                blk->cell = (u32)cell;
+                blk->next = NULL;
+                blk->pprev = &_db.varlen_extern_blk[cell];
+                _db.varlen_extern_blk[cell] = blk;
+            } else {
+                retval = rawmem;
             }
         }
-        _db.varlen_extern_n += retval != NULL;
     }
+    if (blk) { // serve one record: a freed record first, else bump the tip
+        varlen_extern_Lpblock *rec = blk->freerec;
+        if (rec) {
+            blk->freerec = rec->next;
+            retval = rec;
+        } else {
+            retval = (u8*)blk + blk->tip;
+            blk->tip += blk->rsize;
+        }
+        blk->live++;
+        if (blk->freerec == NULL && blk->tip + blk->rsize > 65536) {
+            // full: leave the class list until a record comes back
+            *blk->pprev = blk->next;
+            if (blk->next) {
+                blk->next->pprev = blk->pprev;
+            }
+            blk->pprev = NULL;
+            blk->next = NULL;
+        }
+    }
+    _db.varlen_extern_n += retval != NULL;
     return retval;
 }
 
 // --- atf_amc.FDb.varlen_extern.ReserveBuffers
 // Add N buffers of some size to the free store
-// Reserve NBUF buffers of size BUFSIZE from the base pool (algo_lib::malloc)
+// Stock the free store with NBUF buffers of size BUFSIZE:
+// allocate them all, then free them all, chaining through the buffers
 bool atf_amc::varlen_extern_ReserveBuffers(u64 nbuf, u64 bufsize) {
     bool retval = true;
-    bufsize = u64_Max(bufsize, 1<<4);
-    u64 cell = algo::u64_BitScanReverse(bufsize-1) + 1 - 4;
-    if (cell < 36) {
-        for (u64 i = 0; i < nbuf; i++) {
-            u64 size = 1ULL<<(cell+4);
-            varlen_extern_Lpblock *temp = (varlen_extern_Lpblock*)algo_lib::malloc_AllocMem(size);
-            if (temp == NULL) {
-                retval = false;
-                break;// why continue?
-            } else {
-                temp->next = _db.varlen_extern_free[cell];
-                _db.varlen_extern_free[cell] = temp;
-            }
+    varlen_extern_Lpblock *head = NULL;
+    for (u64 i = 0; i < nbuf; i++) {
+        varlen_extern_Lpblock *temp = (varlen_extern_Lpblock*)varlen_extern_AllocMem(bufsize);
+        if (temp == NULL) {
+            retval = false;// an unservable bufsize or an exhausted base pool reserves nothing further
+            break;
+        } else {
+            temp->next = head;
+            head = temp;
         }
+    }
+    while (head) {
+        varlen_extern_Lpblock *next = head->next;
+        varlen_extern_FreeMem(head, bufsize);
+        head = next;
     }
     return retval;
 }
@@ -5916,10 +7234,13 @@ atf_amc::VarlenExtern& atf_amc::varlen_extern_AllocExtra(void *extra, i32 nbyte_
 // --- atf_amc.FDb.varlen_extern.AllocExtraMaybe
 // Allocate memory for new element. If out of memory, return NULL.
 atf_amc::VarlenExtern* atf_amc::varlen_extern_AllocExtraMaybe(void *extra, i32 nbyte_extra) {
-    atf_amc::VarlenExtern *row = (atf_amc::VarlenExtern*)varlen_extern_AllocMem(sizeof(atf_amc::VarlenExtern) + nbyte_extra);
+    atf_amc::VarlenExtern *row = NULL;
+    if (nbyte_extra >= 0 && nbyte_extra <= 0x7fffffff - ssizeof(atf_amc::VarlenExtern)) { // a negative count would underallocate the fixed portion; a larger total does not fit the i32 a frame length is read back through
+        row = (atf_amc::VarlenExtern*)varlen_extern_AllocMem(sizeof(atf_amc::VarlenExtern) + nbyte_extra);
+    }
     if (row) {
         new (row) atf_amc::VarlenExtern; // call constructor
-        length_Set(*row, u32((sizeof(atf_amc::VarlenExtern) + nbyte_extra / (1)) - 0));
+        length_Set(*row, u32(sizeof(atf_amc::VarlenExtern) + nbyte_extra));
         if (extra) {
             memcpy((u8*)row + sizeof(atf_amc::VarlenExtern), extra, nbyte_extra);
         }
@@ -5931,7 +7252,6 @@ atf_amc::VarlenExtern* atf_amc::varlen_extern_AllocExtraMaybe(void *extra, i32 n
 // Remove row from all global and cross indices, then deallocate row
 void atf_amc::varlen_extern_Delete(atf_amc::VarlenExtern &row) {
     int length = i32(length_Get(row));
-    row.~VarlenExtern();
     varlen_extern_FreeMem(&row, length);
 }
 
@@ -5990,7 +7310,7 @@ void* atf_amc::amctest_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     atf_amc::FAmctest*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.amctest_lary[bsr];
         if (!lev) {
             lev=(atf_amc::FAmctest*)algo_lib::malloc_AllocMem(sizeof(atf_amc::FAmctest) * (u64(1)<<bsr));
@@ -5999,7 +7319,7 @@ void* atf_amc::amctest_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.amctest_n = i32(new_nelems);
+        _db.amctest_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -6011,7 +7331,7 @@ void atf_amc::amctest_RemoveAll() {
     for (u64 n = _db.amctest_n; n>0; ) {
         n--;
         amctest_qFind(u64(n)).~FAmctest(); // destroy last element
-        _db.amctest_n = i32(n);
+        _db.amctest_n = i64(n);
     }
 }
 
@@ -6022,7 +7342,7 @@ void atf_amc::amctest_RemoveLast() {
     if (n > 0) {
         n -= 1;
         amctest_qFind(u64(n)).~FAmctest();
-        _db.amctest_n = i32(n);
+        _db.amctest_n = i64(n);
     }
 }
 
@@ -6041,6 +7361,8 @@ static void atf_amc::amctest_LoadStatic() {
         ,{ "atfdb.amctest  amctest:BigEndian  comment:\"\"", atf_amc::amctest_BigEndian }
         ,{ "atfdb.amctest  amctest:BigendFconst  comment:\"\"", atf_amc::amctest_BigendFconst }
         ,{ "atfdb.amctest  amctest:BitfldBitset  comment:\"Test bitfield extraction/insertion when reading bitset field\"", atf_amc::amctest_BitfldBitset }
+        ,{ "atfdb.amctest  amctest:BitfldFconst  comment:\"Fconst on a bitfld field reads symbols and numbers via the generated Set\"", atf_amc::amctest_BitfldFconst }
+        ,{ "atfdb.amctest  amctest:BitfldGlobal  comment:\"Bitfld on FDb: default applied at init, Get/Set take no parent\"", atf_amc::amctest_BitfldGlobal }
         ,{ "atfdb.amctest  amctest:BitfldNet  comment:\"Test bitfield extraction/insertion (big-endian storage)\"", atf_amc::amctest_BitfldNet }
         ,{ "atfdb.amctest  amctest:BitfldTuple  comment:\"Test bitfield extraction/insertion when reading tuple\"", atf_amc::amctest_BitfldTuple }
         ,{ "atfdb.amctest  amctest:BitsetBitcurs  comment:\"\"", atf_amc::amctest_BitsetBitcurs }
@@ -6049,18 +7371,24 @@ static void atf_amc::amctest_LoadStatic() {
         ,{ "atfdb.amctest  amctest:BitsetVal128  comment:\"Bitset over single u128\"", atf_amc::amctest_BitsetVal128 }
         ,{ "atfdb.amctest  amctest:BitsetVal64  comment:\"Bitset over single u64\"", atf_amc::amctest_BitsetVal64 }
         ,{ "atfdb.amctest  amctest:BitsetVal8  comment:\"Bitset over single u8\"", atf_amc::amctest_BitsetVal8 }
-        ,{ "atfdb.amctest  amctest:CascdelAtree  comment:\"Test for cascade deletion\"", atf_amc::amctest_CascdelAtree }
-        ,{ "atfdb.amctest  amctest:CascdelBheap  comment:\"Test for cascade deletion\"", atf_amc::amctest_CascdelBheap }
-        ,{ "atfdb.amctest  amctest:CascdelBheapChain  comment:\"Test for cascade deletion\"", atf_amc::amctest_CascdelBheapChain }
-        ,{ "atfdb.amctest  amctest:CascdelPtr  comment:\"Test for cascade deletion\"", atf_amc::amctest_CascdelPtr }
-        ,{ "atfdb.amctest  amctest:CascdelPtrary  comment:\"Test for cascade deletion\"", atf_amc::amctest_CascdelPtrary }
-        ,{ "atfdb.amctest  amctest:CascdelPtraryChain  comment:\"Test for cascade deletion\"", atf_amc::amctest_CascdelPtraryChain }
-        ,{ "atfdb.amctest  amctest:CascdelThash  comment:\"Test for cascade deletion\"", atf_amc::amctest_CascdelThash }
-        ,{ "atfdb.amctest  amctest:CascdelThashChain  comment:\"Test for cascade deletion\"", atf_amc::amctest_CascdelThashChain }
-        ,{ "atfdb.amctest  amctest:CascdelZdlist  comment:\"Test for cascade deletion\"", atf_amc::amctest_CascdelZdlist }
-        ,{ "atfdb.amctest  amctest:CascdelZdlistChain  comment:\"Test for cascade deletion\"", atf_amc::amctest_CascdelZdlistChain }
-        ,{ "atfdb.amctest  amctest:CascdelZslist  comment:\"Test for cascade deletion\"", atf_amc::amctest_CascdelZslist }
-        ,{ "atfdb.amctest  amctest:CascdelZslistChain  comment:\"Test for cascade deletion\"", atf_amc::amctest_CascdelZslistChain }
+        ,{ "atfdb.amctest  amctest:BlkhashCurs  comment:\"\"", atf_amc::amctest_BlkhashCurs }
+        ,{ "atfdb.amctest  amctest:BlkhashInsertMaybe  comment:\"\"", atf_amc::amctest_BlkhashInsertMaybe }
+        ,{ "atfdb.amctest  amctest:BlkhashRemove  comment:\"Block freed on last slot clear, region reusable, bucket growth\"", atf_amc::amctest_BlkhashRemove }
+        ,{ "atfdb.amctest  amctest:BlkhashXref  comment:\"\"", atf_amc::amctest_BlkhashXref }
+        ,{ "atfdb.amctest  amctest:CascdelAtree  comment:\"Deleting the root cascades to all 100 children of an Atree index\"", atf_amc::amctest_CascdelAtree }
+        ,{ "atfdb.amctest  amctest:CascdelAtreeChain  comment:\"Recursive cascade delete down a 100-deep Atree chain\"", atf_amc::amctest_CascdelAtreeChain }
+        ,{ "atfdb.amctest  amctest:CascdelBheap  comment:\"Deleting the root cascades to all 100 children of a Bheap index\"", atf_amc::amctest_CascdelBheap }
+        ,{ "atfdb.amctest  amctest:CascdelBheapChain  comment:\"Recursive cascade delete down a 100-deep Bheap chain\"", atf_amc::amctest_CascdelBheapChain }
+        ,{ "atfdb.amctest  amctest:CascdelPtr  comment:\"Recursive cascade delete down a 100-deep Ptr chain\"", atf_amc::amctest_CascdelPtr }
+        ,{ "atfdb.amctest  amctest:CascdelPtrary  comment:\"Deleting the root cascades to all 100 children of a Ptrary array\"", atf_amc::amctest_CascdelPtrary }
+        ,{ "atfdb.amctest  amctest:CascdelPtraryChain  comment:\"Recursive cascade delete down a 100-deep Ptrary chain\"", atf_amc::amctest_CascdelPtraryChain }
+        ,{ "atfdb.amctest  amctest:CascdelPtraryHeap  comment:\"Cascade delete through a heaplike Ptrary\"", atf_amc::amctest_CascdelPtraryHeap }
+        ,{ "atfdb.amctest  amctest:CascdelPtraryHeapChain  comment:\"Recursive cascade delete through a heaplike Ptrary chain\"", atf_amc::amctest_CascdelPtraryHeapChain }
+        ,{ "atfdb.amctest  amctest:CascdelPtraryHeapSibling  comment:\"Cascade edge between two members of the same heaplike Ptrary\"", atf_amc::amctest_CascdelPtraryHeapSibling }
+        ,{ "atfdb.amctest  amctest:CascdelThash  comment:\"Deleting the root cascades to all 100 children of a Thash index\"", atf_amc::amctest_CascdelThash }
+        ,{ "atfdb.amctest  amctest:CascdelThashChain  comment:\"Recursive cascade delete down a 100-deep Thash chain\"", atf_amc::amctest_CascdelThashChain }
+        ,{ "atfdb.amctest  amctest:CascdelZdlist  comment:\"Deleting the root cascades to all 100 children of a doubly-linked (zd) list\"", atf_amc::amctest_CascdelZdlist }
+        ,{ "atfdb.amctest  amctest:CascdelZdlistChain  comment:\"Recursive cascade delete down a 100-deep doubly-linked (zd) list chain\"", atf_amc::amctest_CascdelZdlistChain }
         ,{ "atfdb.amctest  amctest:CastDown  comment:\"Cast from header to message\"", atf_amc::amctest_CastDown }
         ,{ "atfdb.amctest  amctest:CastDownFail  comment:\"Cast from header to unrelated message type\"", atf_amc::amctest_CastDownFail }
         ,{ "atfdb.amctest  amctest:CastDownTooShort  comment:\"Cast from header to message -- length too short\"", atf_amc::amctest_CastDownTooShort }
@@ -6097,35 +7425,66 @@ static void atf_amc::amctest_LoadStatic() {
         ,{ "atfdb.amctest  amctest:CslistRemove  comment:\"\"", atf_amc::amctest_CslistRemove }
         ,{ "atfdb.amctest  amctest:CslistRemoveFirst  comment:\"\"", atf_amc::amctest_CslistRemoveFirst }
         ,{ "atfdb.amctest  amctest:CslistRotateFirst  comment:\"\"", atf_amc::amctest_CslistRotateFirst }
+        ,{ "atfdb.amctest  amctest:DecGlobal  comment:\"fdec on a global (FDb) field: get/set through _db\"", atf_amc::amctest_DecGlobal }
+        ,{ "atfdb.amctest  amctest:DecPrintMin  comment:\"fdec Print at the type minimum: magnitude widens before negation\"", atf_amc::amctest_DecPrintMin }
+        ,{ "atfdb.amctest  amctest:DecTwoFields  comment:\"Two fdec fields on one ctype: per-field accessors, per-field scale\"", atf_amc::amctest_DecTwoFields }
         ,{ "atfdb.amctest  amctest:Delptr  comment:\"Test Delptr\"", atf_amc::amctest_Delptr }
         ,{ "atfdb.amctest  amctest:DispRead1  comment:\"Read a message containing varlen char field\"", atf_amc::amctest_DispRead1 }
         ,{ "atfdb.amctest  amctest:DispRead2  comment:\"Read a message containing several varlen fields\"", atf_amc::amctest_DispRead2 }
         ,{ "atfdb.amctest  amctest:DispRead3  comment:\"Time reading\"", atf_amc::amctest_DispRead3 }
         ,{ "atfdb.amctest  amctest:DispRead4  comment:\"Read Seqmsg with varlen payload\"", atf_amc::amctest_DispRead4 }
+        ,{ "atfdb.amctest  amctest:DispReadLenfldGuard  comment:\"reading a message from ascii refuses a total its length field cannot store\"", atf_amc::amctest_DispReadLenfldGuard }
         ,{ "atfdb.amctest  amctest:DispReadSsimfile  comment:\"Use a Dispatch to read several tuples\"", atf_amc::amctest_DispReadSsimfile }
+        ,{ "atfdb.amctest  amctest:ErrcodeLtField  comment:\"Field-level Lt for fcmp field whose arg type has Cmp but no Lt\"", atf_amc::amctest_ErrcodeLtField }
+        ,{ "atfdb.amctest  amctest:ErrcodeLtSingleField  comment:\"Lt for ordered ctype with a single field whose type has Cmp but no Lt\"", atf_amc::amctest_ErrcodeLtSingleField }
         ,{ "atfdb.amctest  amctest:ExecSh  comment:\"Execute subshell process\"", atf_amc::amctest_ExecSh }
         ,{ "atfdb.amctest  amctest:ExecVerbose  comment:\"Exec with verbose\"", atf_amc::amctest_ExecVerbose }
         ,{ "atfdb.amctest  amctest:Exec_Status  comment:\"Check return status of waitpid()\"", atf_amc::amctest_Exec_Status }
+        ,{ "atfdb.amctest  amctest:FbufGlobalRead  comment:\"Read-path trace counters of a global fbuf update through _db\"", atf_amc::amctest_FbufGlobalRead }
+        ,{ "atfdb.amctest  amctest:FbufGlobalWrite  comment:\"Write-path trace counters of a global fbuf update through _db\"", atf_amc::amctest_FbufGlobalWrite }
+        ,{ "atfdb.amctest  amctest:FbufSpaceDrain  comment:\"out fbuf flow control: congestion latches on the write, the drain arms space\"", atf_amc::amctest_FbufSpaceDrain }
+        ,{ "atfdb.amctest  amctest:FbufSpaceRemoveAll  comment:\"out fbuf flow control: discarding a congested buffer arms space\"", atf_amc::amctest_FbufSpaceRemoveAll }
         ,{ "atfdb.amctest  amctest:Fcmp  comment:\"Test string comparison functions as generated with fcmp\"", atf_amc::amctest_Fcmp }
+        ,{ "atfdb.amctest  amctest:FcondInit  comment:\"fcond XrefMaybe insert: the initial value decides initial membership\"", atf_amc::amctest_FcondInit }
+        ,{ "atfdb.amctest  amctest:FcondMirror  comment:\"fcond ins:Y del:Y ties membership to field==value\"", atf_amc::amctest_FcondMirror }
+        ,{ "atfdb.amctest  amctest:FcondQueue  comment:\"fcond ins:Y del:N arms on rising edge only\"", atf_amc::amctest_FcondQueue }
+        ,{ "atfdb.amctest  amctest:FcondRead  comment:\"ReadStrptrMaybe dispatches fcond membership for both value spellings\"", atf_amc::amctest_FcondRead }
+        ,{ "atfdb.amctest  amctest:FcondVia  comment:\"fcond via inserts the pointed-to record\"", atf_amc::amctest_FcondVia }
         ,{ "atfdb.amctest  amctest:Fconst  comment:\"Test for fconst\"", atf_amc::amctest_Fconst }
+        ,{ "atfdb.amctest  amctest:FconstEmptyName  comment:\"A zero-length fconst name is the sentinel member: empty string round-trips\"", atf_amc::amctest_FconstEmptyName }
         ,{ "atfdb.amctest  amctest:Gsymbol  comment:\"Check gsymbol constants\"", atf_amc::amctest_Gsymbol }
         ,{ "atfdb.amctest  amctest:Hook1  comment:\"Test Hook functions\"", atf_amc::amctest_Hook1 }
         ,{ "atfdb.amctest  amctest:Hook2  comment:\"Test Hook functions\"", atf_amc::amctest_Hook2 }
         ,{ "atfdb.amctest  amctest:ImdXref  comment:\"\"", atf_amc::amctest_ImdXref }
+        ,{ "atfdb.amctest  amctest:InlaryCharReadGlobal  comment:\"Read string into variable-length char inlary on a global ctype\"", atf_amc::amctest_InlaryCharReadGlobal }
+        ,{ "atfdb.amctest  amctest:InlaryCopyCount  comment:\"Copy of a variable inlary preserves the element count\"", atf_amc::amctest_InlaryCopyCount }
+        ,{ "atfdb.amctest  amctest:InlaryMinRead  comment:\"ReadStrptrMaybe for an inlary with 0<min<max keeps the minimum count\"", atf_amc::amctest_InlaryMinRead }
         ,{ "atfdb.amctest  amctest:Inlary_ReadPrint  comment:\"Check Inlary read/print\"", atf_amc::amctest_Inlary_ReadPrint }
         ,{ "atfdb.amctest  amctest:LaryFind  comment:\"\"", atf_amc::amctest_LaryFind }
         ,{ "atfdb.amctest  amctest:LenfldScale  comment:\"Test lenfld scale attribute\"", atf_amc::amctest_LenfldScale }
         ,{ "atfdb.amctest  amctest:LineIter  comment:\"Iterate over lines\"", atf_amc::amctest_LineIter }
         ,{ "atfdb.amctest  amctest:Lpool  comment:\"\"", atf_amc::amctest_Lpool }
+        ,{ "atfdb.amctest  amctest:LpoolAllocTrace  comment:\"A typed lpool alloc counts once in the alloc trace counter\"", atf_amc::amctest_LpoolAllocTrace }
         ,{ "atfdb.amctest  amctest:LpoolLockMem  comment:\"\"", atf_amc::amctest_LpoolLockMem }
+        ,{ "atfdb.amctest  amctest:LpoolReserveBuffers  comment:\"ReserveBuffers reports failure for an out-of-range bufsize\"", atf_amc::amctest_LpoolReserveBuffers }
         ,{ "atfdb.amctest  amctest:Minmax  comment:\"\"", atf_amc::amctest_Minmax }
         ,{ "atfdb.amctest  amctest:MsgCurs  comment:\"Check message cursor over memptr\"", atf_amc::amctest_MsgCurs }
         ,{ "atfdb.amctest  amctest:MsgCurs2  comment:\"\"", atf_amc::amctest_MsgCurs2 }
         ,{ "atfdb.amctest  amctest:MsgCurs3  comment:\"\"", atf_amc::amctest_MsgCurs3 }
         ,{ "atfdb.amctest  amctest:MsgCurs4  comment:\"\"", atf_amc::amctest_MsgCurs4 }
         ,{ "atfdb.amctest  amctest:MsgLength  comment:\"Check GetMsgLength, GetMsgMemptr functions\"", atf_amc::amctest_MsgLength }
+        ,{ "atfdb.amctest  amctest:NetFrameVarlen  comment:\"Base+fbigend+bitfld+lenfld+typefld ctype with Varlen-of-ctype payload and String (regression: CopyOut/_be, GetEnum/_Get, Init/parent)\"", atf_amc::amctest_NetFrameVarlen }
         ,{ "atfdb.amctest  amctest:Numstr  comment:\"\"", atf_amc::amctest_Numstr }
         ,{ "atfdb.amctest  amctest:NumstrCorruption  comment:\"Check that corruption doesn't occur during numstr formatting.\"", atf_amc::amctest_NumstrCorruption }
+        ,{ "atfdb.amctest  amctest:NumstrDigitHighBase  comment:\"base-256 digits are unsigned bytes; base 95 accepts only the printable range\"", atf_amc::amctest_NumstrDigitHighBase }
+        ,{ "atfdb.amctest  amctest:NumstrGeti64Range  comment:\"Geti64 fails on a stored value above i64max instead of wrapping negative\"", atf_amc::amctest_NumstrGeti64Range }
+        ,{ "atfdb.amctest  amctest:NumstrLetterDigit  comment:\"Letter digit range ends at the base: base-16 rejects g, base-36 rejects the char after z\"", atf_amc::amctest_NumstrLetterDigit }
+        ,{ "atfdb.amctest  amctest:NumstrOverflowSigned  comment:\"Signed Getnum rejects magnitudes beyond the numtype range instead of wrapping through the i64 cast\"", atf_amc::amctest_NumstrOverflowSigned }
+        ,{ "atfdb.amctest  amctest:NumstrOverflowU64  comment:\"Getnum on a >64-bit-capacity numstr rejects values above 2^64-1, boundary parses exactly\"", atf_amc::amctest_NumstrOverflowU64 }
+        ,{ "atfdb.amctest  amctest:NumstrPadHighBase  comment:\"min_len pad is the base's zero digit: ' ' in base 95, NUL in base 256\"", atf_amc::amctest_NumstrPadHighBase }
+        ,{ "atfdb.amctest  amctest:NumstrSetnumI64Min  comment:\"SetnumMaybe negates in u64 space: i64min formats and round-trips exactly\"", atf_amc::amctest_NumstrSetnumI64Min }
+        ,{ "atfdb.amctest  amctest:NumstrSetnumRange  comment:\"SetnumMaybe rejects values outside the numtype range instead of storing truncated digits\"", atf_amc::amctest_NumstrSetnumRange }
+        ,{ "atfdb.amctest  amctest:NumstrSignedMinLen  comment:\"Signed numstr with min_len>1: zero-pad digits, prepend sign\"", atf_amc::amctest_NumstrSignedMinLen }
         ,{ "atfdb.amctest  amctest:OptAlloc  comment:\"\"", atf_amc::amctest_OptAlloc }
         ,{ "atfdb.amctest  amctest:OptG  comment:,", atf_amc::amctest_OptG }
         ,{ "atfdb.amctest  amctest:OptG2  comment:\"Outer length too short\"", atf_amc::amctest_OptG2 }
@@ -6139,15 +7498,31 @@ static void atf_amc::amctest_LoadStatic() {
         ,{ "atfdb.amctest  amctest:OptOptG7  comment:\"Fetch two optional elements\"", atf_amc::amctest_OptOptG7 }
         ,{ "atfdb.amctest  amctest:OptOptG8  comment:\"Construct OptOptG in memptr\"", atf_amc::amctest_OptOptG8 }
         ,{ "atfdb.amctest  amctest:OptOptG9  comment:\"Print struct with Opt member\"", atf_amc::amctest_OptOptG9 }
+        ,{ "atfdb.amctest  amctest:OptScaleGuard  comment:\"Opt element read fails when its byte count has no representable length word\"", atf_amc::amctest_OptScaleGuard }
+        ,{ "atfdb.amctest  amctest:PerfBlkhashRolling  comment:\"10M appends over a 1M rolling window, 3 near-tail lookups per append, vs Thash twin\"", atf_amc::amctest_PerfBlkhashRolling }
         ,{ "atfdb.amctest  amctest:PerfSortString  comment:\"\"", atf_amc::amctest_PerfSortString }
         ,{ "atfdb.amctest  amctest:PerfThashRemove  comment:\"\"", atf_amc::amctest_PerfThashRemove }
+        ,{ "atfdb.amctest  amctest:PmaskGlobal  comment:\"Presence tracking on a global: accessors take no parent argument\"", atf_amc::amctest_PmaskGlobal }
         ,{ "atfdb.amctest  amctest:PmaskMultiple  comment:\"Check Pmask Multiple\"", atf_amc::amctest_PmaskMultiple }
+        ,{ "atfdb.amctest  amctest:PnewLowGuard  comment:\"message constructor returns NULL when the total falls below the length field's low end\"", atf_amc::amctest_PnewLowGuard }
+        ,{ "atfdb.amctest  amctest:PnewOptNegative  comment:\"message constructor refuses a negative Opt byte count instead of underallocating\"", atf_amc::amctest_PnewOptNegative }
+        ,{ "atfdb.amctest  amctest:PnewScaleGuard  comment:\"message constructor returns NULL when the total has no representable length word\"", atf_amc::amctest_PnewScaleGuard }
+        ,{ "atfdb.amctest  amctest:PnewWideLen  comment:\"pnew length arithmetic survives buffers and portions beyond 4GiB, and refuses a total beyond the i32 frame length domain\"", atf_amc::amctest_PnewWideLen }
+        ,{ "atfdb.amctest  amctest:PoolAllocExtraNegative  comment:\"AllocExtra refuses a negative byte count instead of underallocating\"", atf_amc::amctest_PoolAllocExtraNegative }
+        ,{ "atfdb.amctest  amctest:PoolInsertMaybeBound  comment:\"InsertMaybe accepts a zero-addon length word and refuses one outside the storable range\"", atf_amc::amctest_PoolInsertMaybeBound }
+        ,{ "atfdb.amctest  amctest:PoolInsertMaybeWideWord  comment:\"InsertMaybe rejects a length word above the generation-time bound\"", atf_amc::amctest_PoolInsertMaybeWideWord }
+        ,{ "atfdb.amctest  amctest:PoolLenfldScale  comment:\"Pool alloc stores the inverse of the lenfld read formula\"", atf_amc::amctest_PoolLenfldScale }
         ,{ "atfdb.amctest  amctest:PrintBase36  comment:\"\"", atf_amc::amctest_PrintBase36 }
         ,{ "atfdb.amctest  amctest:PrintRawGconst  comment:\"Check that gconst field within tuple is printed as raw\"", atf_amc::amctest_PrintRawGconst }
         ,{ "atfdb.amctest  amctest:PtraryCursor  comment:\"Test Ptrary cursor\"", atf_amc::amctest_PtraryCursor }
         ,{ "atfdb.amctest  amctest:PtraryHeaplike  comment:\"Test heap-like Ptrary\"", atf_amc::amctest_PtraryHeaplike }
         ,{ "atfdb.amctest  amctest:PtraryInsert  comment:\"Insert/Remove invariants for Ptrary\"", atf_amc::amctest_PtraryInsert }
         ,{ "atfdb.amctest  amctest:PtraryNonUnique  comment:\"Test non-unique heap-like\"", atf_amc::amctest_PtraryNonUnique }
+        ,{ "atfdb.amctest  amctest:PtraryNonUniqueOnUnref  comment:\"Remove on a non-unique Ptrary fires OnUnref when occurrences were removed\"", atf_amc::amctest_PtraryNonUniqueOnUnref }
+        ,{ "atfdb.amctest  amctest:PtraryOnceCursEarlyExit  comment:\"An early-exited oncecurs walk leaves no stale membership flag\"", atf_amc::amctest_PtraryOnceCursEarlyExit }
+        ,{ "atfdb.amctest  amctest:PtraryOnceCursHeaplike  comment:\"An early-exited heaplike oncecurs walk leaves no stale index\"", atf_amc::amctest_PtraryOnceCursHeaplike }
+        ,{ "atfdb.amctest  amctest:PtraryReserve  comment:\"Reserve(n) guarantees capacity for n more elements\"", atf_amc::amctest_PtraryReserve }
+        ,{ "atfdb.amctest  amctest:PtraryScanInsertOnXref  comment:\"ScanInsertMaybe fires OnXref when it inserts, like Insert\"", atf_amc::amctest_PtraryScanInsertOnXref }
         ,{ "atfdb.amctest  amctest:ReadProc  comment:\"Read from subprocess\"", atf_amc::amctest_ReadProc }
         ,{ "atfdb.amctest  amctest:ReadTuple1  comment:\"A single field is printed without field name\"", atf_amc::amctest_ReadTuple1 }
         ,{ "atfdb.amctest  amctest:ReadTuple2  comment:\"Two fields are printed as name-value pairs.\"", atf_amc::amctest_ReadTuple2 }
@@ -6155,8 +7530,12 @@ static void atf_amc::amctest_LoadStatic() {
         ,{ "atfdb.amctest  amctest:ReadTuple3  comment:Attr_curs", atf_amc::amctest_ReadTuple3 }
         ,{ "atfdb.amctest  amctest:ReadTuple4  comment:\"Attr_curs -- empty string\"", atf_amc::amctest_ReadTuple4 }
         ,{ "atfdb.amctest  amctest:ReadTuple5  comment:\"Attr_curs -- quoted strings\"", atf_amc::amctest_ReadTuple5 }
+        ,{ "atfdb.amctest  amctest:SbrkHugeCeiling  comment:\"A block over the huge-page ceiling leaves the ceiling in place\"", atf_amc::amctest_SbrkHugeCeiling }
+        ,{ "atfdb.amctest  amctest:SbrkMmapTrace  comment:\"Every big block the base allocator maps is counted, huge pages or not\"", atf_amc::amctest_SbrkMmapTrace }
         ,{ "atfdb.amctest  amctest:Scratch  comment:\"Scratch area for new test development\"", atf_amc::amctest_Scratch }
         ,{ "atfdb.amctest  amctest:SetGetnumBase10  comment:\"\"", atf_amc::amctest_SetGetnumBase10 }
+        ,{ "atfdb.amctest  amctest:SmallstrFcmp  comment:\"fcmp on a Smallstr field: versionsort and case handling via field Cmp/Lt\"", atf_amc::amctest_SmallstrFcmp }
+        ,{ "atfdb.amctest  amctest:SmallstrFcmpPad  comment:\"fcmp on a padded Smallstr field: pad bytes stay out of the comparison\"", atf_amc::amctest_SmallstrFcmpPad }
         ,{ "atfdb.amctest  amctest:SubstrDfltval  comment:\"\"", atf_amc::amctest_SubstrDfltval }
         ,{ "atfdb.amctest  amctest:TaryAllocNAt  comment:\"\"", atf_amc::amctest_TaryAllocNAt }
         ,{ "atfdb.amctest  amctest:TaryHash  comment:\"\"", atf_amc::amctest_TaryHash }
@@ -6165,6 +7544,9 @@ static void atf_amc::amctest_LoadStatic() {
         ,{ "atfdb.amctest  amctest:TaryInit3  comment:\"u8: Add element to Tary, check that it's initialized\"", atf_amc::amctest_TaryInit3 }
         ,{ "atfdb.amctest  amctest:TaryInit4  comment:\"u8: Add N elements to Tary, check that they're initialized\"", atf_amc::amctest_TaryInit4 }
         ,{ "atfdb.amctest  amctest:TaryInsary  comment:\"\"", atf_amc::amctest_TaryInsary }
+        ,{ "atfdb.amctest  amctest:TaryInsaryBadIndex  comment:\"Out-of-range Insary index must FatalErrorExit, not corrupt/crash\"", atf_amc::amctest_TaryInsaryBadIndex }
+        ,{ "atfdb.amctest  amctest:TaryRemove  comment:\"Remove elements from Tary\"", atf_amc::amctest_TaryRemove }
+        ,{ "atfdb.amctest  amctest:TaryRemove2  comment:\"Remove elements from Tary\"", atf_amc::amctest_TaryRemove2 }
         ,{ "atfdb.amctest  amctest:TaryReserve  comment:\"\"", atf_amc::amctest_TaryReserve }
         ,{ "atfdb.amctest  amctest:TestBitfld  comment:\"U16 bitfields: Set values, check that they were set\"", atf_amc::amctest_TestBitfld }
         ,{ "atfdb.amctest  amctest:TestBitfld2  comment:\"U128 bitfields: Set values, check that they were set\"", atf_amc::amctest_TestBitfld2 }
@@ -6174,8 +7556,8 @@ static void atf_amc::amctest_LoadStatic() {
         ,{ "atfdb.amctest  amctest:TestDispFilter2  comment:\"DispFilter Regx\"", atf_amc::amctest_TestDispFilter2 }
         ,{ "atfdb.amctest  amctest:TestDispFilter3  comment:\"DispFilter Explicit int field\"", atf_amc::amctest_TestDispFilter3 }
         ,{ "atfdb.amctest  amctest:TestDispFilter4  comment:\"DispFilter Date\"", atf_amc::amctest_TestDispFilter4 }
-        ,{ "atfdb.amctest  amctest:TestInsertX2  comment:\"Insert instance of TypeT, xrefing with type A\"", atf_amc::amctest_TestInsertX2 }
         ,{ "atfdb.amctest  amctest:TestInsertX3  comment:\"Insert instance of TypeT, invalid xref with type A. Expect rollback\"", atf_amc::amctest_TestInsertX3 }
+        ,{ "atfdb.amctest  amctest:TestInsertXref  comment:\"Insert instance of TypeT, xrefing with type A\"", atf_amc::amctest_TestInsertXref }
         ,{ "atfdb.amctest  amctest:TestPmask1  comment:\"Default ctor, check that pmask field is !PresentQ\"", atf_amc::amctest_TestPmask1 }
         ,{ "atfdb.amctest  amctest:TestPmask2  comment:\"Set field, check that field is PresentQ\"", atf_amc::amctest_TestPmask2 }
         ,{ "atfdb.amctest  amctest:TestPmask3  comment:\"Read ctype from string that doesn't have pmask field. It must be !PresentQ\"", atf_amc::amctest_TestPmask3 }
@@ -6197,6 +7579,9 @@ static void atf_amc::amctest_LoadStatic() {
         ,{ "atfdb.amctest  amctest:ThashStrkey  comment:\"\"", atf_amc::amctest_ThashStrkey }
         ,{ "atfdb.amctest  amctest:ThashXref  comment:\"\"", atf_amc::amctest_ThashXref }
         ,{ "atfdb.amctest  amctest:Typetag  comment:\"\"", atf_amc::amctest_Typetag }
+        ,{ "atfdb.amctest  amctest:UpdateMaybe  comment:\"a pool with finput update:Y replaces a matched row in place and keeps it on every index\"", atf_amc::amctest_UpdateMaybe }
+        ,{ "atfdb.amctest  amctest:UpptrLtSingleField  comment:\"Lt for ordered ctype with a single Upptr field\"", atf_amc::amctest_UpptrLtSingleField }
+        ,{ "atfdb.amctest  amctest:ValGlobalDfltThis  comment:\"Val dflt referencing *this on FDb resolves to _db\"", atf_amc::amctest_ValGlobalDfltThis }
         ,{ "atfdb.amctest  amctest:Varlen2  comment:\"\"", atf_amc::amctest_Varlen2 }
         ,{ "atfdb.amctest  amctest:Varlen2a  comment:\"\"", atf_amc::amctest_Varlen2a }
         ,{ "atfdb.amctest  amctest:Varlen2m  comment:\"\"", atf_amc::amctest_Varlen2m }
@@ -6205,6 +7590,9 @@ static void atf_amc::amctest_LoadStatic() {
         ,{ "atfdb.amctest  amctest:VarlenExternLength  comment:\"\"", atf_amc::amctest_VarlenExternLength }
         ,{ "atfdb.amctest  amctest:VarlenMsgs  comment:\"Variable-length messages (Opt+Varlen)\"", atf_amc::amctest_VarlenMsgs }
         ,{ "atfdb.amctest  amctest:VarlenMsgsPnew  comment:\"Variable-length messages (Opt+Varlen) pnew\"", atf_amc::amctest_VarlenMsgsPnew }
+        ,{ "atfdb.amctest  amctest:VarlenNestScale  comment:\"Nested varlen element's length uses the element's own lenfld\"", atf_amc::amctest_VarlenNestScale }
+        ,{ "atfdb.amctest  amctest:VarlenNestScaleGuard  comment:\"A varlen element byte count that is no scale multiple fails the read\"", atf_amc::amctest_VarlenNestScaleGuard }
+        ,{ "atfdb.amctest  amctest:VarlenShortName  comment:\"One-letter varlen field name keeps the unused-parameter suppression\"", atf_amc::amctest_VarlenShortName }
         ,{ "atfdb.amctest  amctest:ZdlistDelCurs  comment:\"\"", atf_amc::amctest_ZdlistDelCurs }
         ,{ "atfdb.amctest  amctest:ZdlistDfltCtor  comment:\"\"", atf_amc::amctest_ZdlistDfltCtor }
         ,{ "atfdb.amctest  amctest:ZdlistFlush100  comment:\"\"", atf_amc::amctest_ZdlistFlush100 }
@@ -6212,6 +7600,7 @@ static void atf_amc::amctest_LoadStatic() {
         ,{ "atfdb.amctest  amctest:ZdlistInsert1  comment:\"\"", atf_amc::amctest_ZdlistInsert1 }
         ,{ "atfdb.amctest  amctest:ZdlistInsert2  comment:\"\"", atf_amc::amctest_ZdlistInsert2 }
         ,{ "atfdb.amctest  amctest:ZdlistInsert3  comment:\"\"", atf_amc::amctest_ZdlistInsert3 }
+        ,{ "atfdb.amctest  amctest:ZdlistInsertBefore  comment:\"\"", atf_amc::amctest_ZdlistInsertBefore }
         ,{ "atfdb.amctest  amctest:ZdlistInsertHead1  comment:\"\"", atf_amc::amctest_ZdlistInsertHead1 }
         ,{ "atfdb.amctest  amctest:ZdlistInsertHead2  comment:\"\"", atf_amc::amctest_ZdlistInsertHead2 }
         ,{ "atfdb.amctest  amctest:ZdlistInsertHead3  comment:\"\"", atf_amc::amctest_ZdlistInsertHead3 }
@@ -6246,6 +7635,7 @@ static void atf_amc::amctest_LoadStatic() {
         ,{ "atfdb.amctest  amctest:bytebuf_dyn_test1  comment:\"Check buffer sizes\"", atf_amc::amctest_bytebuf_dyn_test1 }
         ,{ "atfdb.amctest  amctest:bytebuf_test1  comment:\"Initial state -- no data\"", atf_amc::amctest_bytebuf_test1 }
         ,{ "atfdb.amctest  amctest:bytebuf_test2  comment:\"Write some bytes, read back\"", atf_amc::amctest_bytebuf_test2 }
+        ,{ "atfdb.amctest  amctest:fbuf_lpool_free  comment:\"Fbuf Uninit returns the buffer to the lpool with the allocated byte size\"", atf_amc::amctest_fbuf_lpool_free }
         ,{ "atfdb.amctest  amctest:fstep_Inline  comment:\"Check step type\"", atf_amc::amctest_fstep_Inline }
         ,{ "atfdb.amctest  amctest:fstep_InlineOnce  comment:\"Check step type\"", atf_amc::amctest_fstep_InlineOnce }
         ,{ "atfdb.amctest  amctest:fstep_InlineRecur  comment:\"Check step type\"", atf_amc::amctest_fstep_InlineRecur }
@@ -6271,11 +7661,13 @@ static void atf_amc::amctest_LoadStatic() {
         ,{ "atfdb.amctest  amctest:msgbuf_test7  comment:\"Write HUGE message to buffer, check that err flag is set\"", atf_amc::amctest_msgbuf_test7 }
         ,{ "atfdb.amctest  amctest:msgbuf_test8  comment:\"Write message to pipe, read it\"", atf_amc::amctest_msgbuf_test8 }
         ,{ "atfdb.amctest  amctest:msgbuf_test9  comment:\"Write 2 messages to temp buffer. Feed them 1 by one through buffer\"", atf_amc::amctest_msgbuf_test9 }
+        ,{ "atfdb.amctest  amctest:sslbuf_outflow_error  comment:\"TLS hard error unschedules the buffer from the outflow ready list\"", atf_amc::amctest_sslbuf_outflow_error }
+        ,{ "atfdb.amctest  amctest:sslbuf_outflow_zero  comment:\"Outflow with an empty buffer does not reach SSL_write, which rejects a zero count\"", atf_amc::amctest_sslbuf_outflow_zero }
         ,{NULL, NULL}
     };
     (void)data;
-    atfdb::Amctest amctest;
     for (int i=0; data[i].s; i++) {
+        atfdb::Amctest amctest;
         (void)atfdb::Amctest_ReadStrptrMaybe(amctest, algo::strptr(data[i].s));
         atf_amc::FAmctest *elem = amctest_InsertMaybe(amctest);
         vrfy(elem, tempstr("atf_amc.static_insert_fatal_error")
@@ -6425,15 +7817,49 @@ bool atf_amc::cascdel_XrefMaybe(atf_amc::FCascdel &row) {
     if (row.p_parent != &row && row.type==atf_amc_FCascdel_type_atree) { // user-defined insert condition
         tr_child_atree_Insert(*p_p_parent, row);
     }
+    // insert cascdel into index c_child_heap
+    if (row.p_parent != &row && row.type==atf_amc_FCascdel_type_heap) { // user-defined insert condition
+        c_child_heap_Insert(*p_p_parent, row);
+    }
     return retval;
 }
 
 // --- atf_amc.FDb.optalloc.FreeMem
 // Free block of memory previously returned by Lpool.
+// SIZE must be of the same class the memory was allocated with.
 void atf_amc::optalloc_FreeMem(void* mem, u64 size) {
     size = u64_Max(size,1ULL<<4);
     u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
-    if (mem && cell < 36) {
+    if (mem && cell < 11) {
+        // a blk-class record returns to its blk, found by address mask
+        optalloc_Lpblk *blk = (optalloc_Lpblk*)((u64)mem & ~(u64)65535);
+        optalloc_Lpblock *rec = (optalloc_Lpblock*)mem;
+        rec->next = blk->freerec;
+        blk->freerec = rec;
+        blk->live--;
+        if (blk->pprev == NULL) { // regained space: rejoin the class list
+            blk->next = _db.optalloc_blk[blk->cell];
+            blk->pprev = &_db.optalloc_blk[blk->cell];
+            if (blk->next) {
+                blk->next->pprev = &blk->next;
+            }
+            _db.optalloc_blk[blk->cell] = blk;
+        }
+        // drained blk reverts to an ordinary block on the blk-size level,
+        // reusable by any class; the last blk of a class is kept dedicated
+        // so a lone alloc/free cycle does not thrash dedication
+        bool sole = _db.optalloc_blk[blk->cell] == blk && blk->next == NULL;
+        if (blk->live == 0 && !sole) {
+            *blk->pprev = blk->next;
+            if (blk->next) {
+                blk->next->pprev = blk->pprev;
+            }
+            optalloc_Lpblock *raw = (optalloc_Lpblock*)blk;
+            raw->next = _db.optalloc_free[12];
+            _db.optalloc_free[12] = raw;
+        }
+        _db.optalloc_n--;
+    } else if (mem && cell < 36) {
         optalloc_Lpblock *temp = (optalloc_Lpblock*)mem; // push  singly linked list
         temp->next = _db.optalloc_free[cell];
         _db.optalloc_free[cell] = temp;
@@ -6448,61 +7874,103 @@ void atf_amc::optalloc_FreeMem(void* mem, u64 size) {
 // The maximum allocation size is at most 1<<(36+4)
 void* atf_amc::optalloc_AllocMem(u64 size) {
     void *retval = NULL;
-    size     = u64_Max(size,1<<4); // enforce alignment
+    size     = u64_Max(size,1ULL<<4); // enforce alignment
     u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
-    if (cell < 36) {
-        u64 i    = cell;
-        // try to find a block that's at least as large as required.
-        // if found, remove from free list
+    optalloc_Lpblk *blk = cell < 11 ? _db.optalloc_blk[cell] : NULL;
+    if (cell < 36 && blk == NULL) {
+        // acquire a raw block: for a blk class, a blk-size block to dedicate;
+        // otherwise the requested level. Serve from the lowest populated
+        // level at or above it, splitting the upper halves back down.
+        u64 rawcell = cell < 11 ? (u64)12 : cell;
+        void *rawmem = NULL;
+        u64 i = rawcell;
         for (; i < 36; i++) {
-            optalloc_Lpblock *blk = _db.optalloc_free[i];
-            if (blk) {
-                _db.optalloc_free[i] = blk->next;
-                retval = blk;
+            optalloc_Lpblock *rawblk = _db.optalloc_free[i];
+            if (rawblk) {
+                _db.optalloc_free[i] = rawblk->next;
+                rawmem = rawblk;
                 break;
             }
         }
-        // if suitable size block is not found, create a new one
-        // by requesting a block from the base allocator.
-        if (UNLIKELY(!retval)) {
-            i = u64_Max(cell, 21-4); // 2MB min -- allow huge page to be used
-            retval = algo_lib::malloc_AllocMem(1ULL<<(i+4));
+        // if no suitable block, refill from the base allocator with exactly
+        // the level size, a whole number of base granules; the base pool
+        // returns big blocks granule-aligned, so every carved block of blk
+        // size and up is blk-aligned (FreeMem locates a record's blk by
+        // address mask)
+        if (UNLIKELY(!rawmem)) {
+            i = u64_Max(rawcell, 21-4); // 2MB min -- allow huge page to be used
+            rawmem = algo_lib::sbrk_AllocMem(1ULL<<(i+4));
         }
-        if (LIKELY(retval)) {
+        if (LIKELY(rawmem)) {
             // if block is more than 2x as large as needed, return the upper half to the free
-            // list (repeatedly). meanwhile, retval doesn't change.
-            while (i > cell) {
+            // list (repeatedly). meanwhile, rawmem doesn't change.
+            while (i > rawcell) {
                 i--;
-                int half = 1ULL<<(i+4);
-                optalloc_Lpblock *blk = (optalloc_Lpblock*)((u8*)retval + half);
-                blk->next = _db.optalloc_free[i];
-                _db.optalloc_free[i] = blk;
+                u64 half = 1ULL<<(i+4);
+                optalloc_Lpblock *shed = (optalloc_Lpblock*)((u8*)rawmem + half);
+                shed->next = _db.optalloc_free[i];
+                _db.optalloc_free[i] = shed;
+            }
+            if (cell < 11) { // stamp a fresh blk dedicated to this class
+                blk = (optalloc_Lpblk*)rawmem;
+                blk->freerec = NULL;
+                blk->rsize = 1u<<(cell+4);
+                blk->live = 0;
+                blk->tip = 64;
+                blk->cell = (u32)cell;
+                blk->next = NULL;
+                blk->pprev = &_db.optalloc_blk[cell];
+                _db.optalloc_blk[cell] = blk;
+            } else {
+                retval = rawmem;
             }
         }
-        _db.optalloc_n += retval != NULL;
     }
+    if (blk) { // serve one record: a freed record first, else bump the tip
+        optalloc_Lpblock *rec = blk->freerec;
+        if (rec) {
+            blk->freerec = rec->next;
+            retval = rec;
+        } else {
+            retval = (u8*)blk + blk->tip;
+            blk->tip += blk->rsize;
+        }
+        blk->live++;
+        if (blk->freerec == NULL && blk->tip + blk->rsize > 65536) {
+            // full: leave the class list until a record comes back
+            *blk->pprev = blk->next;
+            if (blk->next) {
+                blk->next->pprev = blk->pprev;
+            }
+            blk->pprev = NULL;
+            blk->next = NULL;
+        }
+    }
+    _db.optalloc_n += retval != NULL;
     return retval;
 }
 
 // --- atf_amc.FDb.optalloc.ReserveBuffers
 // Add N buffers of some size to the free store
-// Reserve NBUF buffers of size BUFSIZE from the base pool (algo_lib::malloc)
+// Stock the free store with NBUF buffers of size BUFSIZE:
+// allocate them all, then free them all, chaining through the buffers
 bool atf_amc::optalloc_ReserveBuffers(u64 nbuf, u64 bufsize) {
     bool retval = true;
-    bufsize = u64_Max(bufsize, 1<<4);
-    u64 cell = algo::u64_BitScanReverse(bufsize-1) + 1 - 4;
-    if (cell < 36) {
-        for (u64 i = 0; i < nbuf; i++) {
-            u64 size = 1ULL<<(cell+4);
-            optalloc_Lpblock *temp = (optalloc_Lpblock*)algo_lib::malloc_AllocMem(size);
-            if (temp == NULL) {
-                retval = false;
-                break;// why continue?
-            } else {
-                temp->next = _db.optalloc_free[cell];
-                _db.optalloc_free[cell] = temp;
-            }
+    optalloc_Lpblock *head = NULL;
+    for (u64 i = 0; i < nbuf; i++) {
+        optalloc_Lpblock *temp = (optalloc_Lpblock*)optalloc_AllocMem(bufsize);
+        if (temp == NULL) {
+            retval = false;// an unservable bufsize or an exhausted base pool reserves nothing further
+            break;
+        } else {
+            temp->next = head;
+            head = temp;
         }
+    }
+    while (head) {
+        optalloc_Lpblock *next = head->next;
+        optalloc_FreeMem(head, bufsize);
+        head = next;
     }
     return retval;
 }
@@ -6536,10 +8004,13 @@ atf_amc::OptAlloc& atf_amc::optalloc_AllocExtra(void *extra, i32 nbyte_extra) {
 // --- atf_amc.FDb.optalloc.AllocExtraMaybe
 // Allocate memory for new element. If out of memory, return NULL.
 atf_amc::OptAlloc* atf_amc::optalloc_AllocExtraMaybe(void *extra, i32 nbyte_extra) {
-    atf_amc::OptAlloc *row = (atf_amc::OptAlloc*)optalloc_AllocMem(sizeof(atf_amc::OptAlloc) + nbyte_extra);
+    atf_amc::OptAlloc *row = NULL;
+    if (nbyte_extra >= 0 && nbyte_extra <= 0x7fffffff - ssizeof(atf_amc::OptAlloc)) { // a negative count would underallocate the fixed portion; a larger total does not fit the i32 a frame length is read back through
+        row = (atf_amc::OptAlloc*)optalloc_AllocMem(sizeof(atf_amc::OptAlloc) + nbyte_extra);
+    }
     if (row) {
         new (row) atf_amc::OptAlloc; // call constructor
-        row->length = u32((sizeof(atf_amc::OptAlloc) + nbyte_extra / (1)) - 0);
+        row->length = u32(sizeof(atf_amc::OptAlloc) + nbyte_extra);
         if (extra) {
             memcpy((u8*)row + sizeof(atf_amc::OptAlloc), extra, nbyte_extra);
         }
@@ -6551,7 +8022,6 @@ atf_amc::OptAlloc* atf_amc::optalloc_AllocExtraMaybe(void *extra, i32 nbyte_extr
 // Remove row from all global and cross indices, then deallocate row
 void atf_amc::optalloc_Delete(atf_amc::OptAlloc &row) {
     int length = i32(row.length);
-    row.~OptAlloc();
     optalloc_FreeMem(&row, length);
 }
 
@@ -6566,10 +8036,40 @@ bool atf_amc::optalloc_XrefMaybe(atf_amc::OptAlloc &row) {
 
 // --- atf_amc.FDb.varlenalloc.FreeMem
 // Free block of memory previously returned by Lpool.
+// SIZE must be of the same class the memory was allocated with.
 void atf_amc::varlenalloc_FreeMem(void* mem, u64 size) {
     size = u64_Max(size,1ULL<<4);
     u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
-    if (mem && cell < 36) {
+    if (mem && cell < 11) {
+        // a blk-class record returns to its blk, found by address mask
+        varlenalloc_Lpblk *blk = (varlenalloc_Lpblk*)((u64)mem & ~(u64)65535);
+        varlenalloc_Lpblock *rec = (varlenalloc_Lpblock*)mem;
+        rec->next = blk->freerec;
+        blk->freerec = rec;
+        blk->live--;
+        if (blk->pprev == NULL) { // regained space: rejoin the class list
+            blk->next = _db.varlenalloc_blk[blk->cell];
+            blk->pprev = &_db.varlenalloc_blk[blk->cell];
+            if (blk->next) {
+                blk->next->pprev = &blk->next;
+            }
+            _db.varlenalloc_blk[blk->cell] = blk;
+        }
+        // drained blk reverts to an ordinary block on the blk-size level,
+        // reusable by any class; the last blk of a class is kept dedicated
+        // so a lone alloc/free cycle does not thrash dedication
+        bool sole = _db.varlenalloc_blk[blk->cell] == blk && blk->next == NULL;
+        if (blk->live == 0 && !sole) {
+            *blk->pprev = blk->next;
+            if (blk->next) {
+                blk->next->pprev = blk->pprev;
+            }
+            varlenalloc_Lpblock *raw = (varlenalloc_Lpblock*)blk;
+            raw->next = _db.varlenalloc_free[12];
+            _db.varlenalloc_free[12] = raw;
+        }
+        _db.varlenalloc_n--;
+    } else if (mem && cell < 36) {
         varlenalloc_Lpblock *temp = (varlenalloc_Lpblock*)mem; // push  singly linked list
         temp->next = _db.varlenalloc_free[cell];
         _db.varlenalloc_free[cell] = temp;
@@ -6584,61 +8084,103 @@ void atf_amc::varlenalloc_FreeMem(void* mem, u64 size) {
 // The maximum allocation size is at most 1<<(36+4)
 void* atf_amc::varlenalloc_AllocMem(u64 size) {
     void *retval = NULL;
-    size     = u64_Max(size,1<<4); // enforce alignment
+    size     = u64_Max(size,1ULL<<4); // enforce alignment
     u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
-    if (cell < 36) {
-        u64 i    = cell;
-        // try to find a block that's at least as large as required.
-        // if found, remove from free list
+    varlenalloc_Lpblk *blk = cell < 11 ? _db.varlenalloc_blk[cell] : NULL;
+    if (cell < 36 && blk == NULL) {
+        // acquire a raw block: for a blk class, a blk-size block to dedicate;
+        // otherwise the requested level. Serve from the lowest populated
+        // level at or above it, splitting the upper halves back down.
+        u64 rawcell = cell < 11 ? (u64)12 : cell;
+        void *rawmem = NULL;
+        u64 i = rawcell;
         for (; i < 36; i++) {
-            varlenalloc_Lpblock *blk = _db.varlenalloc_free[i];
-            if (blk) {
-                _db.varlenalloc_free[i] = blk->next;
-                retval = blk;
+            varlenalloc_Lpblock *rawblk = _db.varlenalloc_free[i];
+            if (rawblk) {
+                _db.varlenalloc_free[i] = rawblk->next;
+                rawmem = rawblk;
                 break;
             }
         }
-        // if suitable size block is not found, create a new one
-        // by requesting a block from the base allocator.
-        if (UNLIKELY(!retval)) {
-            i = u64_Max(cell, 21-4); // 2MB min -- allow huge page to be used
-            retval = algo_lib::malloc_AllocMem(1ULL<<(i+4));
+        // if no suitable block, refill from the base allocator with exactly
+        // the level size, a whole number of base granules; the base pool
+        // returns big blocks granule-aligned, so every carved block of blk
+        // size and up is blk-aligned (FreeMem locates a record's blk by
+        // address mask)
+        if (UNLIKELY(!rawmem)) {
+            i = u64_Max(rawcell, 21-4); // 2MB min -- allow huge page to be used
+            rawmem = algo_lib::sbrk_AllocMem(1ULL<<(i+4));
         }
-        if (LIKELY(retval)) {
+        if (LIKELY(rawmem)) {
             // if block is more than 2x as large as needed, return the upper half to the free
-            // list (repeatedly). meanwhile, retval doesn't change.
-            while (i > cell) {
+            // list (repeatedly). meanwhile, rawmem doesn't change.
+            while (i > rawcell) {
                 i--;
-                int half = 1ULL<<(i+4);
-                varlenalloc_Lpblock *blk = (varlenalloc_Lpblock*)((u8*)retval + half);
-                blk->next = _db.varlenalloc_free[i];
-                _db.varlenalloc_free[i] = blk;
+                u64 half = 1ULL<<(i+4);
+                varlenalloc_Lpblock *shed = (varlenalloc_Lpblock*)((u8*)rawmem + half);
+                shed->next = _db.varlenalloc_free[i];
+                _db.varlenalloc_free[i] = shed;
+            }
+            if (cell < 11) { // stamp a fresh blk dedicated to this class
+                blk = (varlenalloc_Lpblk*)rawmem;
+                blk->freerec = NULL;
+                blk->rsize = 1u<<(cell+4);
+                blk->live = 0;
+                blk->tip = 64;
+                blk->cell = (u32)cell;
+                blk->next = NULL;
+                blk->pprev = &_db.varlenalloc_blk[cell];
+                _db.varlenalloc_blk[cell] = blk;
+            } else {
+                retval = rawmem;
             }
         }
-        _db.varlenalloc_n += retval != NULL;
     }
+    if (blk) { // serve one record: a freed record first, else bump the tip
+        varlenalloc_Lpblock *rec = blk->freerec;
+        if (rec) {
+            blk->freerec = rec->next;
+            retval = rec;
+        } else {
+            retval = (u8*)blk + blk->tip;
+            blk->tip += blk->rsize;
+        }
+        blk->live++;
+        if (blk->freerec == NULL && blk->tip + blk->rsize > 65536) {
+            // full: leave the class list until a record comes back
+            *blk->pprev = blk->next;
+            if (blk->next) {
+                blk->next->pprev = blk->pprev;
+            }
+            blk->pprev = NULL;
+            blk->next = NULL;
+        }
+    }
+    _db.varlenalloc_n += retval != NULL;
     return retval;
 }
 
 // --- atf_amc.FDb.varlenalloc.ReserveBuffers
 // Add N buffers of some size to the free store
-// Reserve NBUF buffers of size BUFSIZE from the base pool (algo_lib::malloc)
+// Stock the free store with NBUF buffers of size BUFSIZE:
+// allocate them all, then free them all, chaining through the buffers
 bool atf_amc::varlenalloc_ReserveBuffers(u64 nbuf, u64 bufsize) {
     bool retval = true;
-    bufsize = u64_Max(bufsize, 1<<4);
-    u64 cell = algo::u64_BitScanReverse(bufsize-1) + 1 - 4;
-    if (cell < 36) {
-        for (u64 i = 0; i < nbuf; i++) {
-            u64 size = 1ULL<<(cell+4);
-            varlenalloc_Lpblock *temp = (varlenalloc_Lpblock*)algo_lib::malloc_AllocMem(size);
-            if (temp == NULL) {
-                retval = false;
-                break;// why continue?
-            } else {
-                temp->next = _db.varlenalloc_free[cell];
-                _db.varlenalloc_free[cell] = temp;
-            }
+    varlenalloc_Lpblock *head = NULL;
+    for (u64 i = 0; i < nbuf; i++) {
+        varlenalloc_Lpblock *temp = (varlenalloc_Lpblock*)varlenalloc_AllocMem(bufsize);
+        if (temp == NULL) {
+            retval = false;// an unservable bufsize or an exhausted base pool reserves nothing further
+            break;
+        } else {
+            temp->next = head;
+            head = temp;
         }
+    }
+    while (head) {
+        varlenalloc_Lpblock *next = head->next;
+        varlenalloc_FreeMem(head, bufsize);
+        head = next;
     }
     return retval;
 }
@@ -6683,10 +8225,13 @@ atf_amc::VarlenAlloc& atf_amc::varlenalloc_AllocExtra(void *extra, i32 nbyte_ext
 // --- atf_amc.FDb.varlenalloc.AllocExtraMaybe
 // Allocate memory for new element. If out of memory, return NULL.
 atf_amc::VarlenAlloc* atf_amc::varlenalloc_AllocExtraMaybe(void *extra, i32 nbyte_extra) {
-    atf_amc::VarlenAlloc *row = (atf_amc::VarlenAlloc*)varlenalloc_AllocMem(sizeof(atf_amc::VarlenAlloc) + nbyte_extra);
+    atf_amc::VarlenAlloc *row = NULL;
+    if (nbyte_extra >= 0 && nbyte_extra <= 0x7fffffff - ssizeof(atf_amc::VarlenAlloc)) { // a negative count would underallocate the fixed portion; a larger total does not fit the i32 a frame length is read back through
+        row = (atf_amc::VarlenAlloc*)varlenalloc_AllocMem(sizeof(atf_amc::VarlenAlloc) + nbyte_extra);
+    }
     if (row) {
         new (row) atf_amc::VarlenAlloc; // call constructor
-        row->length = u32((sizeof(atf_amc::VarlenAlloc) + nbyte_extra / (1)) - 0);
+        row->length = u32(sizeof(atf_amc::VarlenAlloc) + nbyte_extra);
         if (extra) {
             memcpy((u8*)row + sizeof(atf_amc::VarlenAlloc), extra, nbyte_extra);
         }
@@ -6698,7 +8243,6 @@ atf_amc::VarlenAlloc* atf_amc::varlenalloc_AllocExtraMaybe(void *extra, i32 nbyt
 // Remove row from all global and cross indices, then deallocate row
 void atf_amc::varlenalloc_Delete(atf_amc::VarlenAlloc &row) {
     int length = i32(row.length);
-    row.~VarlenAlloc();
     varlenalloc_FreeMem(&row, length);
 }
 
@@ -6713,10 +8257,40 @@ bool atf_amc::varlenalloc_XrefMaybe(atf_amc::VarlenAlloc &row) {
 
 // --- atf_amc.FDb.optg.FreeMem
 // Free block of memory previously returned by Lpool.
+// SIZE must be of the same class the memory was allocated with.
 void atf_amc::optg_FreeMem(void* mem, u64 size) {
     size = u64_Max(size,1ULL<<4);
     u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
-    if (mem && cell < 36) {
+    if (mem && cell < 11) {
+        // a blk-class record returns to its blk, found by address mask
+        optg_Lpblk *blk = (optg_Lpblk*)((u64)mem & ~(u64)65535);
+        optg_Lpblock *rec = (optg_Lpblock*)mem;
+        rec->next = blk->freerec;
+        blk->freerec = rec;
+        blk->live--;
+        if (blk->pprev == NULL) { // regained space: rejoin the class list
+            blk->next = _db.optg_blk[blk->cell];
+            blk->pprev = &_db.optg_blk[blk->cell];
+            if (blk->next) {
+                blk->next->pprev = &blk->next;
+            }
+            _db.optg_blk[blk->cell] = blk;
+        }
+        // drained blk reverts to an ordinary block on the blk-size level,
+        // reusable by any class; the last blk of a class is kept dedicated
+        // so a lone alloc/free cycle does not thrash dedication
+        bool sole = _db.optg_blk[blk->cell] == blk && blk->next == NULL;
+        if (blk->live == 0 && !sole) {
+            *blk->pprev = blk->next;
+            if (blk->next) {
+                blk->next->pprev = blk->pprev;
+            }
+            optg_Lpblock *raw = (optg_Lpblock*)blk;
+            raw->next = _db.optg_free[12];
+            _db.optg_free[12] = raw;
+        }
+        _db.optg_n--;
+    } else if (mem && cell < 36) {
         optg_Lpblock *temp = (optg_Lpblock*)mem; // push  singly linked list
         temp->next = _db.optg_free[cell];
         _db.optg_free[cell] = temp;
@@ -6731,61 +8305,103 @@ void atf_amc::optg_FreeMem(void* mem, u64 size) {
 // The maximum allocation size is at most 1<<(36+4)
 void* atf_amc::optg_AllocMem(u64 size) {
     void *retval = NULL;
-    size     = u64_Max(size,1<<4); // enforce alignment
+    size     = u64_Max(size,1ULL<<4); // enforce alignment
     u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
-    if (cell < 36) {
-        u64 i    = cell;
-        // try to find a block that's at least as large as required.
-        // if found, remove from free list
+    optg_Lpblk *blk = cell < 11 ? _db.optg_blk[cell] : NULL;
+    if (cell < 36 && blk == NULL) {
+        // acquire a raw block: for a blk class, a blk-size block to dedicate;
+        // otherwise the requested level. Serve from the lowest populated
+        // level at or above it, splitting the upper halves back down.
+        u64 rawcell = cell < 11 ? (u64)12 : cell;
+        void *rawmem = NULL;
+        u64 i = rawcell;
         for (; i < 36; i++) {
-            optg_Lpblock *blk = _db.optg_free[i];
-            if (blk) {
-                _db.optg_free[i] = blk->next;
-                retval = blk;
+            optg_Lpblock *rawblk = _db.optg_free[i];
+            if (rawblk) {
+                _db.optg_free[i] = rawblk->next;
+                rawmem = rawblk;
                 break;
             }
         }
-        // if suitable size block is not found, create a new one
-        // by requesting a block from the base allocator.
-        if (UNLIKELY(!retval)) {
-            i = u64_Max(cell, 21-4); // 2MB min -- allow huge page to be used
-            retval = algo_lib::malloc_AllocMem(1ULL<<(i+4));
+        // if no suitable block, refill from the base allocator with exactly
+        // the level size, a whole number of base granules; the base pool
+        // returns big blocks granule-aligned, so every carved block of blk
+        // size and up is blk-aligned (FreeMem locates a record's blk by
+        // address mask)
+        if (UNLIKELY(!rawmem)) {
+            i = u64_Max(rawcell, 21-4); // 2MB min -- allow huge page to be used
+            rawmem = algo_lib::sbrk_AllocMem(1ULL<<(i+4));
         }
-        if (LIKELY(retval)) {
+        if (LIKELY(rawmem)) {
             // if block is more than 2x as large as needed, return the upper half to the free
-            // list (repeatedly). meanwhile, retval doesn't change.
-            while (i > cell) {
+            // list (repeatedly). meanwhile, rawmem doesn't change.
+            while (i > rawcell) {
                 i--;
-                int half = 1ULL<<(i+4);
-                optg_Lpblock *blk = (optg_Lpblock*)((u8*)retval + half);
-                blk->next = _db.optg_free[i];
-                _db.optg_free[i] = blk;
+                u64 half = 1ULL<<(i+4);
+                optg_Lpblock *shed = (optg_Lpblock*)((u8*)rawmem + half);
+                shed->next = _db.optg_free[i];
+                _db.optg_free[i] = shed;
+            }
+            if (cell < 11) { // stamp a fresh blk dedicated to this class
+                blk = (optg_Lpblk*)rawmem;
+                blk->freerec = NULL;
+                blk->rsize = 1u<<(cell+4);
+                blk->live = 0;
+                blk->tip = 64;
+                blk->cell = (u32)cell;
+                blk->next = NULL;
+                blk->pprev = &_db.optg_blk[cell];
+                _db.optg_blk[cell] = blk;
+            } else {
+                retval = rawmem;
             }
         }
-        _db.optg_n += retval != NULL;
     }
+    if (blk) { // serve one record: a freed record first, else bump the tip
+        optg_Lpblock *rec = blk->freerec;
+        if (rec) {
+            blk->freerec = rec->next;
+            retval = rec;
+        } else {
+            retval = (u8*)blk + blk->tip;
+            blk->tip += blk->rsize;
+        }
+        blk->live++;
+        if (blk->freerec == NULL && blk->tip + blk->rsize > 65536) {
+            // full: leave the class list until a record comes back
+            *blk->pprev = blk->next;
+            if (blk->next) {
+                blk->next->pprev = blk->pprev;
+            }
+            blk->pprev = NULL;
+            blk->next = NULL;
+        }
+    }
+    _db.optg_n += retval != NULL;
     return retval;
 }
 
 // --- atf_amc.FDb.optg.ReserveBuffers
 // Add N buffers of some size to the free store
-// Reserve NBUF buffers of size BUFSIZE from the base pool (algo_lib::malloc)
+// Stock the free store with NBUF buffers of size BUFSIZE:
+// allocate them all, then free them all, chaining through the buffers
 bool atf_amc::optg_ReserveBuffers(u64 nbuf, u64 bufsize) {
     bool retval = true;
-    bufsize = u64_Max(bufsize, 1<<4);
-    u64 cell = algo::u64_BitScanReverse(bufsize-1) + 1 - 4;
-    if (cell < 36) {
-        for (u64 i = 0; i < nbuf; i++) {
-            u64 size = 1ULL<<(cell+4);
-            optg_Lpblock *temp = (optg_Lpblock*)algo_lib::malloc_AllocMem(size);
-            if (temp == NULL) {
-                retval = false;
-                break;// why continue?
-            } else {
-                temp->next = _db.optg_free[cell];
-                _db.optg_free[cell] = temp;
-            }
+    optg_Lpblock *head = NULL;
+    for (u64 i = 0; i < nbuf; i++) {
+        optg_Lpblock *temp = (optg_Lpblock*)optg_AllocMem(bufsize);
+        if (temp == NULL) {
+            retval = false;// an unservable bufsize or an exhausted base pool reserves nothing further
+            break;
+        } else {
+            temp->next = head;
+            head = temp;
         }
+    }
+    while (head) {
+        optg_Lpblock *next = head->next;
+        optg_FreeMem(head, bufsize);
+        head = next;
     }
     return retval;
 }
@@ -6819,10 +8435,13 @@ atf_amc::FOptG& atf_amc::optg_AllocExtra(void *extra, i32 nbyte_extra) {
 // --- atf_amc.FDb.optg.AllocExtraMaybe
 // Allocate memory for new element. If out of memory, return NULL.
 atf_amc::FOptG* atf_amc::optg_AllocExtraMaybe(void *extra, i32 nbyte_extra) {
-    atf_amc::FOptG *row = (atf_amc::FOptG*)optg_AllocMem(sizeof(atf_amc::FOptG) + nbyte_extra);
+    atf_amc::FOptG *row = NULL;
+    if (nbyte_extra >= 0 && nbyte_extra <= 0x7fffffff - ssizeof(atf_amc::FOptG)) { // a negative count would underallocate the fixed portion; a larger total does not fit the i32 a frame length is read back through
+        row = (atf_amc::FOptG*)optg_AllocMem(sizeof(atf_amc::FOptG) + nbyte_extra);
+    }
     if (row) {
         new (row) atf_amc::FOptG; // call constructor
-        row->length = u32((sizeof(atf_amc::FOptG) + nbyte_extra / (1)) - 0);
+        row->length = u32(sizeof(atf_amc::FOptG) + nbyte_extra);
         if (extra) {
             memcpy((u8*)row + sizeof(atf_amc::FOptG), extra, nbyte_extra);
         }
@@ -6835,8 +8454,11 @@ atf_amc::FOptG* atf_amc::optg_AllocExtraMaybe(void *extra, i32 nbyte_extra) {
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
 atf_amc::FOptG* atf_amc::optg_InsertMaybe(const atf_amc::OptG &value) {
     u8 *addon_addr = (u8*)&value + ssizeof(atf_amc::OptG);
-    int addon_len = i32(value.length) - ssizeof(atf_amc::OptG);
-    atf_amc::FOptG *row = &optg_AllocExtra(addon_addr, addon_len);
+    i64 addon_len = i64(value.length) - ssizeof(atf_amc::OptG);
+    if (!(addon_len >= 0 && addon_len <= 0x7fffffff - ssizeof(atf_amc::FOptG))) { // a negative count would underallocate the fixed portion; a larger total does not fit the i32 a frame length is read back through
+        return NULL; // the addon count is not one the allocation accepts
+    }
+    atf_amc::FOptG *row = &optg_AllocExtra(addon_addr, i32(addon_len));
     optg_CopyIn(*row,const_cast<atf_amc::OptG&>(value));
     bool ok = optg_XrefMaybe(*row); // this may return false
     if (!ok) {
@@ -6850,7 +8472,6 @@ atf_amc::FOptG* atf_amc::optg_InsertMaybe(const atf_amc::OptG &value) {
 // Remove row from all global and cross indices, then deallocate row
 void atf_amc::optg_Delete(atf_amc::FOptG &row) {
     int length = i32(row.length);
-    row.~FOptG();
     optg_FreeMem(&row, length);
 }
 
@@ -6864,12 +8485,12 @@ bool atf_amc::optg_XrefMaybe(atf_amc::FOptG &row) {
 }
 
 // --- atf_amc.FDb.c_typek.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 void atf_amc::c_typek_Insert(atf_amc::FTypeK& row) {
     if (!row.c_typek_in_ary) {
         c_typek_Reserve(1);
-        u32 n  = _db.c_typek_n++;
+        u64 n  = _db.c_typek_n++;
         _db.c_typek_elems[n] = &row;
         row.c_typek_in_ary = true;
     }
@@ -6888,15 +8509,15 @@ bool atf_amc::c_typek_InsertMaybe(atf_amc::FTypeK& row) {
 // --- atf_amc.FDb.c_typek.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void atf_amc::c_typek_Remove(atf_amc::FTypeK& row) {
-    int n = _db.c_typek_n;
+    i64 n = _db.c_typek_n;
     if (bool_Update(row.c_typek_in_ary,false)) {
         atf_amc::FTypeK* *elems = _db.c_typek_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = n-1; i>=0; i--) {
+        for (i64 i = n-1; i>=0; i--) {
             atf_amc::FTypeK* elem = elems[i]; // fetch element
             if (elem == &row) {
-                int j = i + 1;
+                i64 j = i + 1;
                 size_t nbytes = sizeof(atf_amc::FTypeK*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
                 _db.c_typek_n = n - 1;
@@ -6908,12 +8529,12 @@ void atf_amc::c_typek_Remove(atf_amc::FTypeK& row) {
 
 // --- atf_amc.FDb.c_typek.Reserve
 // Reserve space in index for N more elements;
-void atf_amc::c_typek_Reserve(u32 n) {
-    u32 old_max = _db.c_typek_max;
+void atf_amc::c_typek_Reserve(u64 n) {
+    u64 old_max = _db.c_typek_max;
     if (UNLIKELY(_db.c_typek_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(atf_amc::FTypeK*);
-        u32 new_size = new_max * sizeof(atf_amc::FTypeK*);
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, _db.c_typek_n + n), 4);
+        u64 old_size = old_max * sizeof(atf_amc::FTypeK*);
+        u64 new_size = new_max * sizeof(atf_amc::FTypeK*);
         void *new_mem = algo_lib::malloc_ReallocMem(_db.c_typek_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("atf_amc.out_of_memory  field:atf_amc.FDb.c_typek");
@@ -6924,12 +8545,12 @@ void atf_amc::c_typek_Reserve(u32 n) {
 }
 
 // --- atf_amc.FDb.c_typel.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 void atf_amc::c_typel_Insert(atf_amc::FTypeL& row) {
     if (row.c_typel_idx == -1) {
         c_typel_Reserve(1);
-        u32 n  = _db.c_typel_n++;
+        u64 n  = _db.c_typel_n++;
         _db.c_typel_elems[n] = &row;
         row.c_typel_idx = n;
     }
@@ -6948,8 +8569,8 @@ bool atf_amc::c_typel_InsertMaybe(atf_amc::FTypeL& row) {
 // --- atf_amc.FDb.c_typel.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void atf_amc::c_typel_Remove(atf_amc::FTypeL& row) {
-    int n = _db.c_typel_n;
-    int idx = row.c_typel_idx;
+    i64 n = _db.c_typel_n;
+    i64 idx = row.c_typel_idx;
     if (idx != -1) {
         atf_amc::FTypeL *last = _db.c_typel_elems[n-1];
         last->c_typel_idx = idx;
@@ -6961,12 +8582,12 @@ void atf_amc::c_typel_Remove(atf_amc::FTypeL& row) {
 
 // --- atf_amc.FDb.c_typel.Reserve
 // Reserve space in index for N more elements;
-void atf_amc::c_typel_Reserve(u32 n) {
-    u32 old_max = _db.c_typel_max;
+void atf_amc::c_typel_Reserve(u64 n) {
+    u64 old_max = _db.c_typel_max;
     if (UNLIKELY(_db.c_typel_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(atf_amc::FTypeL*);
-        u32 new_size = new_max * sizeof(atf_amc::FTypeL*);
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, _db.c_typel_n + n), 4);
+        u64 old_size = old_max * sizeof(atf_amc::FTypeL*);
+        u64 new_size = new_max * sizeof(atf_amc::FTypeL*);
         void *new_mem = algo_lib::malloc_ReallocMem(_db.c_typel_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("atf_amc.out_of_memory  field:atf_amc.FDb.c_typel");
@@ -6981,7 +8602,7 @@ void atf_amc::c_typel_Reserve(u32 n) {
 // If index is empty, return NULL. Otherwise remove and return first element in index.
 atf_amc::FTypeL* atf_amc::c_typel_RemoveFirst() {
     atf_amc::FTypeL *row = NULL;
-    int n = _db.c_typel_n;
+    i64 n = _db.c_typel_n;
     if (n > 0) {
         row = _db.c_typel_elems[0];
         _db.c_typel_elems[n-1]->c_typel_idx=0;
@@ -6997,7 +8618,7 @@ atf_amc::FTypeL* atf_amc::c_typel_RemoveFirst() {
 // If index is empty, return NULL. Otherwise remove and return last element in index.
 atf_amc::FTypeL* atf_amc::c_typel_RemoveLast() {
     atf_amc::FTypeL *row = NULL;
-    int n = _db.c_typel_n;
+    i64 n = _db.c_typel_n;
     if (n > 0) {
         row = _db.c_typel_elems[n-1];
         row->c_typel_idx=-1;
@@ -7007,12 +8628,13 @@ atf_amc::FTypeL* atf_amc::c_typel_RemoveLast() {
 }
 
 // --- atf_amc.FDb.c_typem.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 void atf_amc::c_typem_Insert(atf_amc::FTypeM& row) {
     c_typem_Reserve(1);
-    u32 n  = _db.c_typem_n++;
+    u64 n  = _db.c_typem_n++;
     _db.c_typem_elems[n] = &row;
+    c_typem_OnXref(row); // dmmeta.ffunc:atf_amc.FDb.c_typem/OnXref
 }
 
 // --- atf_amc.FDb.c_typem.ScanInsertMaybe
@@ -7022,18 +8644,15 @@ void atf_amc::c_typem_Insert(atf_amc::FTypeM& row) {
 // Return value: whether element was inserted into array.
 bool atf_amc::c_typem_ScanInsertMaybe(atf_amc::FTypeM& row) {
     bool retval = true;
-    u32 n  = _db.c_typem_n;
-    for (u32 i = 0; i < n; i++) {
+    u64 n  = _db.c_typem_n;
+    for (u64 i = 0; i < n; i++) {
         if (_db.c_typem_elems[i] == &row) {
             retval = false;
             break;
         }
     }
     if (retval) {
-        // reserve space
-        c_typem_Reserve(1);
-        _db.c_typem_elems[n] = &row;
-        _db.c_typem_n = n+1;
+        c_typem_Insert(row); // row known absent; the append is Insert's
     }
     return retval;
 }
@@ -7041,9 +8660,9 @@ bool atf_amc::c_typem_ScanInsertMaybe(atf_amc::FTypeM& row) {
 // --- atf_amc.FDb.c_typem.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void atf_amc::c_typem_Remove(atf_amc::FTypeM& row) {
-    int n = _db.c_typem_n;
-    int j=0;
-    for (int i=0; i<n; i++) {
+    i64 n = _db.c_typem_n;
+    i64 j=0;
+    for (i64 i=0; i<n; i++) {
         if (_db.c_typem_elems[i] == &row) {
         } else {
             if (j != i) {
@@ -7053,16 +8672,19 @@ void atf_amc::c_typem_Remove(atf_amc::FTypeM& row) {
         }
     }
     _db.c_typem_n = j;
+    if (j != n) {
+        c_typem_OnUnref(row); // dmmeta.ffunc:atf_amc.FDb.c_typem/OnUnref
+    }
 }
 
 // --- atf_amc.FDb.c_typem.Reserve
 // Reserve space in index for N more elements;
-void atf_amc::c_typem_Reserve(u32 n) {
-    u32 old_max = _db.c_typem_max;
+void atf_amc::c_typem_Reserve(u64 n) {
+    u64 old_max = _db.c_typem_max;
     if (UNLIKELY(_db.c_typem_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(atf_amc::FTypeM*);
-        u32 new_size = new_max * sizeof(atf_amc::FTypeM*);
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, _db.c_typem_n + n), 4);
+        u64 old_size = old_max * sizeof(atf_amc::FTypeM*);
+        u64 new_size = new_max * sizeof(atf_amc::FTypeM*);
         void *new_mem = algo_lib::malloc_ReallocMem(_db.c_typem_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("atf_amc.out_of_memory  field:atf_amc.FDb.c_typem");
@@ -7104,7 +8726,7 @@ void* atf_amc::avl_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     atf_amc::FAvl*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.avl_lary[bsr];
         if (!lev) {
             lev=(atf_amc::FAvl*)algo_lib::malloc_AllocMem(sizeof(atf_amc::FAvl) * (u64(1)<<bsr));
@@ -7113,7 +8735,7 @@ void* atf_amc::avl_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.avl_n = i32(new_nelems);
+        _db.avl_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -7125,7 +8747,7 @@ void atf_amc::avl_RemoveAll() {
     for (u64 n = _db.avl_n; n>0; ) {
         n--;
         avl_qFind(u64(n)).~FAvl(); // destroy last element
-        _db.avl_n = i32(n);
+        _db.avl_n = i64(n);
     }
 }
 
@@ -7136,7 +8758,7 @@ void atf_amc::avl_RemoveLast() {
     if (n > 0) {
         n -= 1;
         avl_qFind(u64(n)).~FAvl();
-        _db.avl_n = i32(n);
+        _db.avl_n = i64(n);
     }
 }
 
@@ -7493,8 +9115,8 @@ static void atf_amc::listtype_LoadStatic() {
         ,{NULL, NULL}
     };
     (void)data;
-    dmmeta::Listtype listtype;
     for (int i=0; data[i].s; i++) {
+        dmmeta::Listtype listtype;
         (void)dmmeta::Listtype_ReadStrptrMaybe(listtype, algo::strptr(data[i].s));
         atf_amc::FListtype *elem = listtype_InsertMaybe(listtype);
         vrfy(elem, tempstr("atf_amc.static_insert_fatal_error")
@@ -7818,7 +9440,7 @@ void* atf_amc::thash_elem_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     atf_amc::FThashElem*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.thash_elem_lary[bsr];
         if (!lev) {
             lev=(atf_amc::FThashElem*)algo_lib::malloc_AllocMem(sizeof(atf_amc::FThashElem) * (u64(1)<<bsr));
@@ -7827,7 +9449,7 @@ void* atf_amc::thash_elem_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.thash_elem_n = i32(new_nelems);
+        _db.thash_elem_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -7839,7 +9461,7 @@ void atf_amc::thash_elem_RemoveAll() {
     for (u64 n = _db.thash_elem_n; n>0; ) {
         n--;
         thash_elem_qFind(u64(n)).~FThashElem(); // destroy last element
-        _db.thash_elem_n = i32(n);
+        _db.thash_elem_n = i64(n);
     }
 }
 
@@ -7850,7 +9472,7 @@ void atf_amc::thash_elem_RemoveLast() {
     if (n > 0) {
         n -= 1;
         thash_elem_qFind(u64(n)).~FThashElem();
-        _db.thash_elem_n = i32(n);
+        _db.thash_elem_n = i64(n);
     }
 }
 
@@ -8888,6 +10510,2957 @@ void atf_amc::ind_strkey_AbsReserve(int n) {
     }
 }
 
+// --- atf_amc.FDb.blkhash_elem.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+atf_amc::FBlkhashElem& atf_amc::blkhash_elem_Alloc() {
+    atf_amc::FBlkhashElem* row = blkhash_elem_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("atf_amc.out_of_mem  field:atf_amc.FDb.blkhash_elem  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- atf_amc.FDb.blkhash_elem.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+atf_amc::FBlkhashElem* atf_amc::blkhash_elem_AllocMaybe() {
+    atf_amc::FBlkhashElem *row = (atf_amc::FBlkhashElem*)blkhash_elem_AllocMem();
+    if (row) {
+        new (row) atf_amc::FBlkhashElem; // call constructor
+    }
+    return row;
+}
+
+// --- atf_amc.FDb.blkhash_elem.Delete
+// Remove row from all global and cross indices, then deallocate row
+void atf_amc::blkhash_elem_Delete(atf_amc::FBlkhashElem &row) {
+    row.~FBlkhashElem();
+    blkhash_elem_FreeMem(row);
+}
+
+// --- atf_amc.FDb.blkhash_elem.AllocMem
+// Allocate space for one element
+// If no memory available, return NULL.
+void* atf_amc::blkhash_elem_AllocMem() {
+    atf_amc::FBlkhashElem *row = _db.blkhash_elem_free;
+    if (UNLIKELY(!row)) {
+        blkhash_elem_Reserve(1);
+        row = _db.blkhash_elem_free;
+    }
+    if (row) {
+        _db.blkhash_elem_free = row->blkhash_elem_next;
+    }
+    return row;
+}
+
+// --- atf_amc.FDb.blkhash_elem.FreeMem
+// Remove mem from all global and cross indices, then deallocate mem
+void atf_amc::blkhash_elem_FreeMem(atf_amc::FBlkhashElem &row) {
+    if (UNLIKELY(row.blkhash_elem_next != (atf_amc::FBlkhashElem*)-1)) {
+        FatalErrorExit("atf_amc.tpool_double_delete  pool:atf_amc.FDb.blkhash_elem  comment:'double deletion caught'");
+    }
+    row.blkhash_elem_next = _db.blkhash_elem_free; // insert into free list
+    _db.blkhash_elem_free  = &row;
+}
+
+// --- atf_amc.FDb.blkhash_elem.Reserve
+// Preallocate memory for N more elements
+// Return number of elements actually reserved.
+u64 atf_amc::blkhash_elem_Reserve(u64 n_elems) {
+    u64 ret = 0;
+    while (ret < n_elems) {
+        u64 size = _db.blkhash_elem_blocksize; // underlying allocator is probably Lpool
+        u64 reserved = blkhash_elem_ReserveMem(size);
+        ret += reserved;
+        if (reserved == 0) {
+            break;
+        }
+    }
+    return ret;
+}
+
+// --- atf_amc.FDb.blkhash_elem.ReserveMem
+// Allocate block of given size, break up into small elements and append to free list.
+// Return number of elements reserved.
+u64 atf_amc::blkhash_elem_ReserveMem(u64 size) {
+    u64 ret = 0;
+    if (size >= sizeof(atf_amc::FBlkhashElem)) {
+        atf_amc::FBlkhashElem *mem = (atf_amc::FBlkhashElem*)algo_lib::malloc_AllocMem(size);
+        ret = mem ? size / sizeof(atf_amc::FBlkhashElem) : 0;
+        // add newly allocated elements to the free list;
+        for (u64 i=0; i < ret; i++) {
+            mem[i].blkhash_elem_next = _db.blkhash_elem_free;
+            _db.blkhash_elem_free = mem+i;
+        }
+    }
+    return ret;
+}
+
+// --- atf_amc.FDb.blkhash_elem.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool atf_amc::blkhash_elem_XrefMaybe(atf_amc::FBlkhashElem &row) {
+    bool retval = true;
+    (void)row;
+    // insert blkhash_elem into index ind_blkhash_elem
+    if (true) { // user-defined insert condition
+        bool success = ind_blkhash_elem_InsertMaybe(row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "atf_amc.duplicate_key  xref:atf_amc.FDb.ind_blkhash_elem"; // check for duplicate key
+            return false;
+        }
+    }
+    return retval;
+}
+
+// --- atf_amc.FDb.ind_blkhash_elem.Find
+// Find row by key. Return NULL if not found.
+atf_amc::FBlkhashElem* atf_amc::ind_blkhash_elem_Find(atf_amc::BlkKey key) {
+    atf_amc::BlkKey mkey = key;
+    mkey.seq.value &= ~u64(4095);
+    u32 index = atf_amc::BlkKey_Hash(0, mkey) & (_db.ind_blkhash_elem_buckets_n - 1);
+    _db_ind_blkhash_elem_Blk *blk = _db.ind_blkhash_elem_buckets_elems[index];
+    while (blk && !(blk->key == mkey)) {
+        blk = blk->next;
+    }
+    atf_amc::FBlkhashElem *ret = blk ? blk->elem[u64(key.seq.value) & 4095] : NULL;
+    return ret;
+}
+
+// --- atf_amc.FDb.ind_blkhash_elem.FindX
+// Look up row by key and return reference. Throw exception if not found
+atf_amc::FBlkhashElem& atf_amc::ind_blkhash_elem_FindX(atf_amc::BlkKey key) {
+    atf_amc::FBlkhashElem* ret = ind_blkhash_elem_Find(key);
+    vrfy(ret, tempstr() << "atf_amc.key_error  table:ind_blkhash_elem  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
+// --- atf_amc.FDb.ind_blkhash_elem.InsertMaybe
+// Insert row into the index. Return true if row is reachable through the index after the function completes.
+bool atf_amc::ind_blkhash_elem_InsertMaybe(atf_amc::FBlkhashElem& row) {
+    bool retval = true;
+    atf_amc::BlkKey mkey = row.key;
+    u32 slot = u32(u64(mkey.seq.value) & 4095);
+    mkey.seq.value &= ~u64(4095);
+    u32 hashval = atf_amc::BlkKey_Hash(0, mkey);
+    u32 index = hashval & (_db.ind_blkhash_elem_buckets_n - 1);
+    _db_ind_blkhash_elem_Blk *blk = _db.ind_blkhash_elem_buckets_elems[index];
+    while (blk && !(blk->key == mkey)) {
+        blk = blk->next;
+    }
+    if (!blk) {
+        if (_db.ind_blkhash_elem_nblk + 1 > _db.ind_blkhash_elem_buckets_n) {
+            // grow bucket array, re-chain blocks by stored hashval
+            i32 new_nbuckets = _db.ind_blkhash_elem_buckets_n * 2;
+            _db_ind_blkhash_elem_Blk **new_buckets = (_db_ind_blkhash_elem_Blk**)algo_lib::malloc_AllocMem(sizeof(_db_ind_blkhash_elem_Blk*) * new_nbuckets);
+            if (UNLIKELY(!new_buckets)) {
+                FatalErrorExit("atf_amc.out_of_memory  field:atf_amc.FDb.ind_blkhash_elem");
+            }
+            memset(new_buckets, 0, sizeof(_db_ind_blkhash_elem_Blk*) * new_nbuckets);
+            for (i32 i = 0; i < _db.ind_blkhash_elem_buckets_n; i++) {
+                _db_ind_blkhash_elem_Blk *elem = _db.ind_blkhash_elem_buckets_elems[i];
+                while (elem) {
+                    _db_ind_blkhash_elem_Blk *next = elem->next;
+                    u32 bidx   = elem->hashval & (new_nbuckets - 1);
+                    elem->next = new_buckets[bidx];
+                    new_buckets[bidx] = elem;
+                    elem = next;
+                }
+            }
+            algo_lib::malloc_FreeMem(_db.ind_blkhash_elem_buckets_elems, sizeof(_db_ind_blkhash_elem_Blk*) * _db.ind_blkhash_elem_buckets_n);
+            _db.ind_blkhash_elem_buckets_elems = new_buckets;
+            _db.ind_blkhash_elem_buckets_n = new_nbuckets;
+            index = hashval & (_db.ind_blkhash_elem_buckets_n - 1);
+        }
+        atf_amc::FBlkhashElem **elems = (atf_amc::FBlkhashElem**)algo_lib::malloc_AllocMem(sizeof(atf_amc::FBlkhashElem*) * 4096);
+        void *blkmem = algo_lib::malloc_AllocMem(sizeof(_db_ind_blkhash_elem_Blk));
+        if (UNLIKELY(!elems || !blkmem)) {
+            FatalErrorExit("atf_amc.out_of_memory  field:atf_amc.FDb.ind_blkhash_elem");
+        }
+        memset(elems, 0, sizeof(atf_amc::FBlkhashElem*) * 4096);
+        blk = new(blkmem) _db_ind_blkhash_elem_Blk;
+        blk->key = mkey;
+        blk->hashval = hashval;
+        blk->n = 0;
+        blk->elem = elems;
+        blk->next = _db.ind_blkhash_elem_buckets_elems[index];
+        _db.ind_blkhash_elem_buckets_elems[index] = blk;
+        _db.ind_blkhash_elem_nblk++;
+    }
+    if (blk->elem[slot] == &row) {
+        // row already in the index
+    } else if (blk->elem[slot]) {
+        retval = false; // a different row with the same key
+    } else {
+        blk->elem[slot] = &row;
+        blk->n++;
+        _db.ind_blkhash_elem_n++;
+    }
+    return retval;
+}
+
+// --- atf_amc.FDb.ind_blkhash_elem.Remove
+// Remove reference to element from index. If element is not in index, do nothing
+void atf_amc::ind_blkhash_elem_Remove(atf_amc::FBlkhashElem& row) {
+    atf_amc::BlkKey mkey = row.key;
+    u32 slot = u32(u64(mkey.seq.value) & 4095);
+    mkey.seq.value &= ~u64(4095);
+    u32 index = atf_amc::BlkKey_Hash(0, mkey) & (_db.ind_blkhash_elem_buckets_n - 1);
+    _db_ind_blkhash_elem_Blk **prev = &_db.ind_blkhash_elem_buckets_elems[index];
+    while (_db_ind_blkhash_elem_Blk *blk = *prev) {
+        if (blk->key == mkey) {
+            if (blk->elem[slot] == &row) { // ignore requests to remove a row that's not in the index
+                blk->elem[slot] = NULL;
+                blk->n--;
+                _db.ind_blkhash_elem_n--;
+                if (blk->n == 0) { // empty block returns to the pool
+                    *prev = blk->next;
+                    algo_lib::malloc_FreeMem(blk->elem, sizeof(atf_amc::FBlkhashElem*) * 4096);
+                    blk->~_db_ind_blkhash_elem_Blk();
+                    algo_lib::malloc_FreeMem(blk, sizeof(_db_ind_blkhash_elem_Blk));
+                    _db.ind_blkhash_elem_nblk--;
+                }
+            }
+            break;
+        }
+        prev = &blk->next;
+    }
+}
+
+// --- atf_amc.FDb.ind_blkhash_elem_thash.Find
+// Find row by key. Return NULL if not found.
+atf_amc::FBlkhashElem* atf_amc::ind_blkhash_elem_thash_Find(atf_amc::BlkKey key) {
+    u32 index = atf_amc::BlkKey_Hash(0, key) & (_db.ind_blkhash_elem_thash_buckets_n - 1);
+    atf_amc::FBlkhashElem *ret = _db.ind_blkhash_elem_thash_buckets_elems[index];
+    for (; ret && !((*ret).key == key); ret = ret->ind_blkhash_elem_thash_next) {
+    }
+    return ret;
+}
+
+// --- atf_amc.FDb.ind_blkhash_elem_thash.FindX
+// Look up row by key and return reference. Throw exception if not found
+atf_amc::FBlkhashElem& atf_amc::ind_blkhash_elem_thash_FindX(atf_amc::BlkKey key) {
+    atf_amc::FBlkhashElem* ret = ind_blkhash_elem_thash_Find(key);
+    vrfy(ret, tempstr() << "atf_amc.key_error  table:ind_blkhash_elem_thash  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
+// --- atf_amc.FDb.ind_blkhash_elem_thash.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+atf_amc::FBlkhashElem* atf_amc::ind_blkhash_elem_thash_GetOrCreate(atf_amc::BlkKey key) {
+    atf_amc::FBlkhashElem* ret = ind_blkhash_elem_thash_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &blkhash_elem_Alloc();
+        (*ret).key = key;
+        bool good = blkhash_elem_XrefMaybe(*ret);
+        if (!good) {
+            blkhash_elem_Delete(*ret); // delete offending row, any existin xrefs are cleared
+            ret = NULL;
+        }
+    }
+    return ret;
+}
+
+// --- atf_amc.FDb.ind_blkhash_elem_thash.InsertMaybe
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool atf_amc::ind_blkhash_elem_thash_InsertMaybe(atf_amc::FBlkhashElem& row) {
+    bool retval = true; // if already in hash, InsertMaybe returns true
+    if (LIKELY(row.ind_blkhash_elem_thash_next == (atf_amc::FBlkhashElem*)-1)) {// check if in hash already
+        row.ind_blkhash_elem_thash_hashval = atf_amc::BlkKey_Hash(0, row.key);
+        ind_blkhash_elem_thash_Reserve(1);
+        u32 index = row.ind_blkhash_elem_thash_hashval & (_db.ind_blkhash_elem_thash_buckets_n - 1);
+        atf_amc::FBlkhashElem* *prev = &_db.ind_blkhash_elem_thash_buckets_elems[index];
+        do {
+            atf_amc::FBlkhashElem* ret = *prev;
+            if (!ret) { // exit condition 1: reached the end of the list
+                break;
+            }
+            if ((*ret).key == row.key) { // exit condition 2: found matching key
+                retval = false;
+                break;
+            }
+            prev = &ret->ind_blkhash_elem_thash_next;
+        } while (true);
+        if (retval) {
+            row.ind_blkhash_elem_thash_next = *prev;
+            _db.ind_blkhash_elem_thash_n++;
+            *prev = &row;
+        }
+    }
+    return retval;
+}
+
+// --- atf_amc.FDb.ind_blkhash_elem_thash.Remove
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void atf_amc::ind_blkhash_elem_thash_Remove(atf_amc::FBlkhashElem& row) {
+    if (LIKELY(row.ind_blkhash_elem_thash_next != (atf_amc::FBlkhashElem*)-1)) {// check if in hash already
+        u32 index = row.ind_blkhash_elem_thash_hashval & (_db.ind_blkhash_elem_thash_buckets_n - 1);
+        atf_amc::FBlkhashElem* *prev = &_db.ind_blkhash_elem_thash_buckets_elems[index]; // addr of pointer to current element
+        while (atf_amc::FBlkhashElem *next = *prev) {                          // scan the collision chain for our element
+            if (next == &row) {        // found it?
+                *prev = next->ind_blkhash_elem_thash_next; // unlink (singly linked list)
+                _db.ind_blkhash_elem_thash_n--;
+                row.ind_blkhash_elem_thash_next = (atf_amc::FBlkhashElem*)-1;// not-in-hash
+                break;
+            }
+            prev = &next->ind_blkhash_elem_thash_next;
+        }
+    }
+}
+
+// --- atf_amc.FDb.ind_blkhash_elem_thash.Reserve
+// Reserve enough room in the hash for N more elements. Return success code.
+void atf_amc::ind_blkhash_elem_thash_Reserve(int n) {
+    ind_blkhash_elem_thash_AbsReserve(_db.ind_blkhash_elem_thash_n + n);
+}
+
+// --- atf_amc.FDb.ind_blkhash_elem_thash.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void atf_amc::ind_blkhash_elem_thash_AbsReserve(int n) {
+    u32 old_nbuckets = _db.ind_blkhash_elem_thash_buckets_n;
+    u32 new_nelems   = n;
+    // # of elements has to be roughly equal to the number of buckets
+    if (new_nelems > old_nbuckets) {
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
+        u32 old_size = old_nbuckets * sizeof(atf_amc::FBlkhashElem*);
+        u32 new_size = new_nbuckets * sizeof(atf_amc::FBlkhashElem*);
+        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
+        // means new memory will have to be allocated anyway
+        atf_amc::FBlkhashElem* *new_buckets = (atf_amc::FBlkhashElem**)algo_lib::malloc_AllocMem(new_size);
+        if (UNLIKELY(!new_buckets)) {
+            FatalErrorExit("atf_amc.out_of_memory  field:atf_amc.FDb.ind_blkhash_elem_thash");
+        }
+        memset(new_buckets, 0, new_size); // clear pointers
+        // rehash all entries
+        for (int i = 0; i < _db.ind_blkhash_elem_thash_buckets_n; i++) {
+            atf_amc::FBlkhashElem* elem = _db.ind_blkhash_elem_thash_buckets_elems[i];
+            while (elem) {
+                atf_amc::FBlkhashElem &row        = *elem;
+                atf_amc::FBlkhashElem* next       = row.ind_blkhash_elem_thash_next;
+                u32 index          = row.ind_blkhash_elem_thash_hashval & (new_nbuckets-1);
+                row.ind_blkhash_elem_thash_next     = new_buckets[index];
+                new_buckets[index] = &row;
+                elem               = next;
+            }
+        }
+        // free old array
+        algo_lib::malloc_FreeMem(_db.ind_blkhash_elem_thash_buckets_elems, old_size);
+        _db.ind_blkhash_elem_thash_buckets_elems = new_buckets;
+        _db.ind_blkhash_elem_thash_buckets_n = new_nbuckets;
+    }
+}
+
+// --- atf_amc.FDb.varlenallocscale.FreeMem
+// Free block of memory previously returned by Lpool.
+// SIZE must be of the same class the memory was allocated with.
+void atf_amc::varlenallocscale_FreeMem(void* mem, u64 size) {
+    size = u64_Max(size,1ULL<<4);
+    u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
+    if (mem && cell < 11) {
+        // a blk-class record returns to its blk, found by address mask
+        varlenallocscale_Lpblk *blk = (varlenallocscale_Lpblk*)((u64)mem & ~(u64)65535);
+        varlenallocscale_Lpblock *rec = (varlenallocscale_Lpblock*)mem;
+        rec->next = blk->freerec;
+        blk->freerec = rec;
+        blk->live--;
+        if (blk->pprev == NULL) { // regained space: rejoin the class list
+            blk->next = _db.varlenallocscale_blk[blk->cell];
+            blk->pprev = &_db.varlenallocscale_blk[blk->cell];
+            if (blk->next) {
+                blk->next->pprev = &blk->next;
+            }
+            _db.varlenallocscale_blk[blk->cell] = blk;
+        }
+        // drained blk reverts to an ordinary block on the blk-size level,
+        // reusable by any class; the last blk of a class is kept dedicated
+        // so a lone alloc/free cycle does not thrash dedication
+        bool sole = _db.varlenallocscale_blk[blk->cell] == blk && blk->next == NULL;
+        if (blk->live == 0 && !sole) {
+            *blk->pprev = blk->next;
+            if (blk->next) {
+                blk->next->pprev = blk->pprev;
+            }
+            varlenallocscale_Lpblock *raw = (varlenallocscale_Lpblock*)blk;
+            raw->next = _db.varlenallocscale_free[12];
+            _db.varlenallocscale_free[12] = raw;
+        }
+        _db.varlenallocscale_n--;
+    } else if (mem && cell < 36) {
+        varlenallocscale_Lpblock *temp = (varlenallocscale_Lpblock*)mem; // push  singly linked list
+        temp->next = _db.varlenallocscale_free[cell];
+        _db.varlenallocscale_free[cell] = temp;
+        _db.varlenallocscale_n--;
+    }
+}
+
+// --- atf_amc.FDb.varlenallocscale.AllocMem
+// Allocate new piece of memory at least SIZE bytes long.
+// If not successful, return NULL
+// The allocated block is at least 1<<4
+// The maximum allocation size is at most 1<<(36+4)
+void* atf_amc::varlenallocscale_AllocMem(u64 size) {
+    void *retval = NULL;
+    size     = u64_Max(size,1ULL<<4); // enforce alignment
+    u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
+    varlenallocscale_Lpblk *blk = cell < 11 ? _db.varlenallocscale_blk[cell] : NULL;
+    if (cell < 36 && blk == NULL) {
+        // acquire a raw block: for a blk class, a blk-size block to dedicate;
+        // otherwise the requested level. Serve from the lowest populated
+        // level at or above it, splitting the upper halves back down.
+        u64 rawcell = cell < 11 ? (u64)12 : cell;
+        void *rawmem = NULL;
+        u64 i = rawcell;
+        for (; i < 36; i++) {
+            varlenallocscale_Lpblock *rawblk = _db.varlenallocscale_free[i];
+            if (rawblk) {
+                _db.varlenallocscale_free[i] = rawblk->next;
+                rawmem = rawblk;
+                break;
+            }
+        }
+        // if no suitable block, refill from the base allocator with exactly
+        // the level size, a whole number of base granules; the base pool
+        // returns big blocks granule-aligned, so every carved block of blk
+        // size and up is blk-aligned (FreeMem locates a record's blk by
+        // address mask)
+        if (UNLIKELY(!rawmem)) {
+            i = u64_Max(rawcell, 21-4); // 2MB min -- allow huge page to be used
+            rawmem = algo_lib::sbrk_AllocMem(1ULL<<(i+4));
+        }
+        if (LIKELY(rawmem)) {
+            // if block is more than 2x as large as needed, return the upper half to the free
+            // list (repeatedly). meanwhile, rawmem doesn't change.
+            while (i > rawcell) {
+                i--;
+                u64 half = 1ULL<<(i+4);
+                varlenallocscale_Lpblock *shed = (varlenallocscale_Lpblock*)((u8*)rawmem + half);
+                shed->next = _db.varlenallocscale_free[i];
+                _db.varlenallocscale_free[i] = shed;
+            }
+            if (cell < 11) { // stamp a fresh blk dedicated to this class
+                blk = (varlenallocscale_Lpblk*)rawmem;
+                blk->freerec = NULL;
+                blk->rsize = 1u<<(cell+4);
+                blk->live = 0;
+                blk->tip = 64;
+                blk->cell = (u32)cell;
+                blk->next = NULL;
+                blk->pprev = &_db.varlenallocscale_blk[cell];
+                _db.varlenallocscale_blk[cell] = blk;
+            } else {
+                retval = rawmem;
+            }
+        }
+    }
+    if (blk) { // serve one record: a freed record first, else bump the tip
+        varlenallocscale_Lpblock *rec = blk->freerec;
+        if (rec) {
+            blk->freerec = rec->next;
+            retval = rec;
+        } else {
+            retval = (u8*)blk + blk->tip;
+            blk->tip += blk->rsize;
+        }
+        blk->live++;
+        if (blk->freerec == NULL && blk->tip + blk->rsize > 65536) {
+            // full: leave the class list until a record comes back
+            *blk->pprev = blk->next;
+            if (blk->next) {
+                blk->next->pprev = blk->pprev;
+            }
+            blk->pprev = NULL;
+            blk->next = NULL;
+        }
+    }
+    _db.varlenallocscale_n += retval != NULL;
+    return retval;
+}
+
+// --- atf_amc.FDb.varlenallocscale.ReserveBuffers
+// Add N buffers of some size to the free store
+// Stock the free store with NBUF buffers of size BUFSIZE:
+// allocate them all, then free them all, chaining through the buffers
+bool atf_amc::varlenallocscale_ReserveBuffers(u64 nbuf, u64 bufsize) {
+    bool retval = true;
+    varlenallocscale_Lpblock *head = NULL;
+    for (u64 i = 0; i < nbuf; i++) {
+        varlenallocscale_Lpblock *temp = (varlenallocscale_Lpblock*)varlenallocscale_AllocMem(bufsize);
+        if (temp == NULL) {
+            retval = false;// an unservable bufsize or an exhausted base pool reserves nothing further
+            break;
+        } else {
+            temp->next = head;
+            head = temp;
+        }
+    }
+    while (head) {
+        varlenallocscale_Lpblock *next = head->next;
+        varlenallocscale_FreeMem(head, bufsize);
+        head = next;
+    }
+    return retval;
+}
+
+// --- atf_amc.FDb.varlenallocscale.ReallocMem
+// Allocate new block, copy old to new, delete old.
+// If the new size is same as old size, do nothing.
+// In all other cases, new memory is allocated (i.e. size reduction is not a no-op)
+// If no memory, return NULL; old memory remains untouched
+void* atf_amc::varlenallocscale_ReallocMem(void* oldmem, u64 old_size, u64 new_size) {
+    void *ret = oldmem;
+    if (new_size != old_size) {
+        ret = varlenallocscale_AllocMem(new_size);
+        if (ret && oldmem) {
+            memcpy(ret,oldmem,u64_Min(new_size,old_size));
+            varlenallocscale_FreeMem(oldmem, old_size);
+        }
+    }
+    return ret;
+}
+
+// --- atf_amc.FDb.varlenallocscale.Alloc
+// Allocate memory for a new row with N_VARFLD var-len elements
+// If out of memory, process is killed.
+atf_amc::VarlenAllocScale& atf_amc::varlenallocscale_Alloc(i32 n_varfld) {
+    atf_amc::VarlenAllocScale* row = varlenallocscale_AllocMaybe(n_varfld);
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("atf_amc.out_of_mem  field:atf_amc.FDb.varlenallocscale  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- atf_amc.FDb.varlenallocscale.AllocExtra
+atf_amc::VarlenAllocScale& atf_amc::varlenallocscale_AllocExtra(void *extra, i32 nbyte_extra) {
+    atf_amc::VarlenAllocScale *row = varlenallocscale_AllocExtraMaybe(extra, nbyte_extra);
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("atf_amc.out_of_mem  field:atf_amc.FDb.varlenallocscale  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- atf_amc.FDb.varlenallocscale.AllocExtraMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+atf_amc::VarlenAllocScale* atf_amc::varlenallocscale_AllocExtraMaybe(void *extra, i32 nbyte_extra) {
+    atf_amc::VarlenAllocScale *row = NULL;
+    if (nbyte_extra >= 0 && nbyte_extra % 4 == 0 && nbyte_extra <= 0x7fffffff - ssizeof(atf_amc::VarlenAllocScale)) { // a negative count would underallocate the fixed portion; only a multiple of scale is representable in the length field; a larger total does not fit the i32 a frame length is read back through
+        row = (atf_amc::VarlenAllocScale*)varlenallocscale_AllocMem(sizeof(atf_amc::VarlenAllocScale) + nbyte_extra);
+    }
+    if (row) {
+        new (row) atf_amc::VarlenAllocScale; // call constructor
+        row->length = u32((sizeof(atf_amc::VarlenAllocScale) + nbyte_extra-4) / 4);
+        if (extra) {
+            memcpy((u8*)row + sizeof(atf_amc::VarlenAllocScale), extra, nbyte_extra);
+        }
+    }
+    return row;
+}
+
+// --- atf_amc.FDb.varlenallocscale.Delete
+// Remove row from all global and cross indices, then deallocate row
+void atf_amc::varlenallocscale_Delete(atf_amc::VarlenAllocScale &row) {
+    int length = i32(row.length * 4 + 4);
+    varlenallocscale_FreeMem(&row, length);
+}
+
+// --- atf_amc.FDb.varlenallocscale.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool atf_amc::varlenallocscale_XrefMaybe(atf_amc::VarlenAllocScale &row) {
+    bool retval = true;
+    (void)row;
+    return retval;
+}
+
+// --- atf_amc.FDb.msghdrltscale.FreeMem
+// Free block of memory previously returned by Lpool.
+// SIZE must be of the same class the memory was allocated with.
+void atf_amc::msghdrltscale_FreeMem(void* mem, u64 size) {
+    size = u64_Max(size,1ULL<<4);
+    u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
+    if (mem && cell < 11) {
+        // a blk-class record returns to its blk, found by address mask
+        msghdrltscale_Lpblk *blk = (msghdrltscale_Lpblk*)((u64)mem & ~(u64)65535);
+        msghdrltscale_Lpblock *rec = (msghdrltscale_Lpblock*)mem;
+        rec->next = blk->freerec;
+        blk->freerec = rec;
+        blk->live--;
+        if (blk->pprev == NULL) { // regained space: rejoin the class list
+            blk->next = _db.msghdrltscale_blk[blk->cell];
+            blk->pprev = &_db.msghdrltscale_blk[blk->cell];
+            if (blk->next) {
+                blk->next->pprev = &blk->next;
+            }
+            _db.msghdrltscale_blk[blk->cell] = blk;
+        }
+        // drained blk reverts to an ordinary block on the blk-size level,
+        // reusable by any class; the last blk of a class is kept dedicated
+        // so a lone alloc/free cycle does not thrash dedication
+        bool sole = _db.msghdrltscale_blk[blk->cell] == blk && blk->next == NULL;
+        if (blk->live == 0 && !sole) {
+            *blk->pprev = blk->next;
+            if (blk->next) {
+                blk->next->pprev = blk->pprev;
+            }
+            msghdrltscale_Lpblock *raw = (msghdrltscale_Lpblock*)blk;
+            raw->next = _db.msghdrltscale_free[12];
+            _db.msghdrltscale_free[12] = raw;
+        }
+        _db.msghdrltscale_n--;
+    } else if (mem && cell < 36) {
+        msghdrltscale_Lpblock *temp = (msghdrltscale_Lpblock*)mem; // push  singly linked list
+        temp->next = _db.msghdrltscale_free[cell];
+        _db.msghdrltscale_free[cell] = temp;
+        _db.msghdrltscale_n--;
+    }
+}
+
+// --- atf_amc.FDb.msghdrltscale.AllocMem
+// Allocate new piece of memory at least SIZE bytes long.
+// If not successful, return NULL
+// The allocated block is at least 1<<4
+// The maximum allocation size is at most 1<<(36+4)
+void* atf_amc::msghdrltscale_AllocMem(u64 size) {
+    void *retval = NULL;
+    size     = u64_Max(size,1ULL<<4); // enforce alignment
+    u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
+    msghdrltscale_Lpblk *blk = cell < 11 ? _db.msghdrltscale_blk[cell] : NULL;
+    if (cell < 36 && blk == NULL) {
+        // acquire a raw block: for a blk class, a blk-size block to dedicate;
+        // otherwise the requested level. Serve from the lowest populated
+        // level at or above it, splitting the upper halves back down.
+        u64 rawcell = cell < 11 ? (u64)12 : cell;
+        void *rawmem = NULL;
+        u64 i = rawcell;
+        for (; i < 36; i++) {
+            msghdrltscale_Lpblock *rawblk = _db.msghdrltscale_free[i];
+            if (rawblk) {
+                _db.msghdrltscale_free[i] = rawblk->next;
+                rawmem = rawblk;
+                break;
+            }
+        }
+        // if no suitable block, refill from the base allocator with exactly
+        // the level size, a whole number of base granules; the base pool
+        // returns big blocks granule-aligned, so every carved block of blk
+        // size and up is blk-aligned (FreeMem locates a record's blk by
+        // address mask)
+        if (UNLIKELY(!rawmem)) {
+            i = u64_Max(rawcell, 21-4); // 2MB min -- allow huge page to be used
+            rawmem = algo_lib::sbrk_AllocMem(1ULL<<(i+4));
+        }
+        if (LIKELY(rawmem)) {
+            // if block is more than 2x as large as needed, return the upper half to the free
+            // list (repeatedly). meanwhile, rawmem doesn't change.
+            while (i > rawcell) {
+                i--;
+                u64 half = 1ULL<<(i+4);
+                msghdrltscale_Lpblock *shed = (msghdrltscale_Lpblock*)((u8*)rawmem + half);
+                shed->next = _db.msghdrltscale_free[i];
+                _db.msghdrltscale_free[i] = shed;
+            }
+            if (cell < 11) { // stamp a fresh blk dedicated to this class
+                blk = (msghdrltscale_Lpblk*)rawmem;
+                blk->freerec = NULL;
+                blk->rsize = 1u<<(cell+4);
+                blk->live = 0;
+                blk->tip = 64;
+                blk->cell = (u32)cell;
+                blk->next = NULL;
+                blk->pprev = &_db.msghdrltscale_blk[cell];
+                _db.msghdrltscale_blk[cell] = blk;
+            } else {
+                retval = rawmem;
+            }
+        }
+    }
+    if (blk) { // serve one record: a freed record first, else bump the tip
+        msghdrltscale_Lpblock *rec = blk->freerec;
+        if (rec) {
+            blk->freerec = rec->next;
+            retval = rec;
+        } else {
+            retval = (u8*)blk + blk->tip;
+            blk->tip += blk->rsize;
+        }
+        blk->live++;
+        if (blk->freerec == NULL && blk->tip + blk->rsize > 65536) {
+            // full: leave the class list until a record comes back
+            *blk->pprev = blk->next;
+            if (blk->next) {
+                blk->next->pprev = blk->pprev;
+            }
+            blk->pprev = NULL;
+            blk->next = NULL;
+        }
+    }
+    _db.msghdrltscale_n += retval != NULL;
+    return retval;
+}
+
+// --- atf_amc.FDb.msghdrltscale.ReserveBuffers
+// Add N buffers of some size to the free store
+// Stock the free store with NBUF buffers of size BUFSIZE:
+// allocate them all, then free them all, chaining through the buffers
+bool atf_amc::msghdrltscale_ReserveBuffers(u64 nbuf, u64 bufsize) {
+    bool retval = true;
+    msghdrltscale_Lpblock *head = NULL;
+    for (u64 i = 0; i < nbuf; i++) {
+        msghdrltscale_Lpblock *temp = (msghdrltscale_Lpblock*)msghdrltscale_AllocMem(bufsize);
+        if (temp == NULL) {
+            retval = false;// an unservable bufsize or an exhausted base pool reserves nothing further
+            break;
+        } else {
+            temp->next = head;
+            head = temp;
+        }
+    }
+    while (head) {
+        msghdrltscale_Lpblock *next = head->next;
+        msghdrltscale_FreeMem(head, bufsize);
+        head = next;
+    }
+    return retval;
+}
+
+// --- atf_amc.FDb.msghdrltscale.ReallocMem
+// Allocate new block, copy old to new, delete old.
+// If the new size is same as old size, do nothing.
+// In all other cases, new memory is allocated (i.e. size reduction is not a no-op)
+// If no memory, return NULL; old memory remains untouched
+void* atf_amc::msghdrltscale_ReallocMem(void* oldmem, u64 old_size, u64 new_size) {
+    void *ret = oldmem;
+    if (new_size != old_size) {
+        ret = msghdrltscale_AllocMem(new_size);
+        if (ret && oldmem) {
+            memcpy(ret,oldmem,u64_Min(new_size,old_size));
+            msghdrltscale_FreeMem(oldmem, old_size);
+        }
+    }
+    return ret;
+}
+
+// --- atf_amc.FDb.msghdrltscale.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+atf_amc::MsgHdrLTScale& atf_amc::msghdrltscale_Alloc() {
+    atf_amc::MsgHdrLTScale* row = msghdrltscale_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("atf_amc.out_of_mem  field:atf_amc.FDb.msghdrltscale  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- atf_amc.FDb.msghdrltscale.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+atf_amc::MsgHdrLTScale* atf_amc::msghdrltscale_AllocMaybe() {
+    atf_amc::MsgHdrLTScale *row = (atf_amc::MsgHdrLTScale*)msghdrltscale_AllocMem(sizeof(atf_amc::MsgHdrLTScale));
+    if (row) {
+        new (row) atf_amc::MsgHdrLTScale; // call constructor
+        row->len = u8((sizeof(atf_amc::MsgHdrLTScale)-2) / 4);
+        ++atf_amc::_db.trace.alloc__db_msghdrltscale;
+    }
+    return row;
+}
+
+// --- atf_amc.FDb.msghdrltscale.Delete
+// Remove row from all global and cross indices, then deallocate row
+void atf_amc::msghdrltscale_Delete(atf_amc::MsgHdrLTScale &row) {
+    int length = i32(row.len * 4 + 2);
+    msghdrltscale_FreeMem(&row, length);
+    ++atf_amc::_db.trace.del__db_msghdrltscale;
+}
+
+// --- atf_amc.FDb.msghdrltscale.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool atf_amc::msghdrltscale_XrefMaybe(atf_amc::MsgHdrLTScale &row) {
+    bool retval = true;
+    (void)row;
+    return retval;
+}
+
+// --- atf_amc.FDb.charbuf.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+char& atf_amc::charbuf_Alloc() {
+    char* row = charbuf_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("atf_amc.out_of_mem  field:atf_amc.FDb.charbuf  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- atf_amc.FDb.charbuf.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+char* atf_amc::charbuf_AllocMaybe() {
+    char *row = (char*)charbuf_AllocMem();
+    if (row) {
+        new (row) char; // call constructor
+    }
+    return row;
+}
+
+// --- atf_amc.FDb.charbuf.RemoveAll
+// Destroy all elements of Inlary
+void atf_amc::charbuf_RemoveAll() {
+    _db.charbuf_n = 0;
+}
+
+// --- atf_amc.FDb.charbuf.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void atf_amc::charbuf_RemoveLast() {
+    u64 n = _db.charbuf_n;
+    if (n > 0) {
+        n -= 1;
+        _db.charbuf_n = n;
+    }
+}
+
+// --- atf_amc.FDb.charbuf.Print
+// Convert charbuf to a string.
+// Array is printed as a regular string.
+void atf_amc::charbuf_Print(algo::cstring &rhs) {
+    rhs << charbuf_Getary();
+}
+
+// --- atf_amc.FDb.charbuf.ReadStrptrMaybe
+// Read array from string
+// Convert string to field. Return success value
+bool atf_amc::charbuf_ReadStrptrMaybe(algo::strptr in_str) {
+    bool retval = true;
+    i32 newlen = i32_Min(in_str.n_elems, 10);
+    memcpy(reinterpret_cast<char*>(_db.charbuf_data), in_str.elems, newlen);
+    _db.charbuf_n = newlen;
+    return retval;
+}
+
+// --- atf_amc.FDb.in_fb.BeginAlloc
+// // Return pointer to a block of IN_N contiguous bytes in the buffer.
+// // No reallocation is performed. If not possible, return NULL.
+void* atf_amc::in_fb_BeginAlloc(atf_amc::FDb &_db, i32 in_n) {
+    void *ret = NULL;
+    int max = in_fb_Max();
+    if (_db.in_fb_end + in_n > max) {
+        in_fb_Shift();
+    }
+    if (_db.in_fb_end + in_n <= max) {
+        ret = (u8*)_db.in_fb_elems + _db.in_fb_end;
+        _db.in_fb_end += in_n;
+    }
+    return ret;
+}
+
+// --- atf_amc.FDb.in_fb.BeginAllocReserve
+// // Return pointer to a block of IN_N contiguous bytes in the buffer.
+// // Buffer is reallocated as necessary; function always succeeds.
+void* atf_amc::in_fb_BeginAllocReserve(atf_amc::FDb &_db, i32 in_n) {
+    if (_db.in_fb_end - _db.in_fb_start + in_n > in_fb_Max()) {
+        in_fb_Realloc(_db.in_fb_max + i32_Max(_db.in_fb_max, in_n));
+    }
+    return in_fb_BeginAlloc(_db, in_n);
+}
+
+// --- atf_amc.FDb.in_fb.GetMsg
+// Detect incoming message in buffer and return it
+// Look for valid message at current position in the buffer.
+// If message is already there, return a pointer to it. Do not skip message (call SkipMsg to do that).
+// If there is no message, read once from underlying file descriptor and try again.
+// The message is any number of bytes > 0
+// 
+algo::aryptr<char> atf_amc::in_fb_GetMsg() {
+    algo::aryptr<char> ret;
+    if (!_db.in_fb_msgvalid) {
+        in_fb_ScanMsg();
+    }
+    char *hdr = (char*)(_db.in_fb_elems + _db.in_fb_start);
+    if (_db.in_fb_msgvalid) {
+        ret.elems = hdr;
+        ret.n_elems = _db.in_fb_msglen;
+    }
+    return ret;
+}
+
+// --- atf_amc.FDb.in_fb.Realloc
+// Set buffer size.
+// Unconditionally reallocate buffer to have size NEW_MAX
+// If the buffer has data in it, NEW_MAX is adjusted so that the data is not lost
+// (best to call this before filling the buffer)
+void atf_amc::in_fb_Realloc(int new_max) {
+    new_max = i32_Max(new_max, _db.in_fb_end);
+    u8 *new_mem = _db.in_fb_elems
+    ? (u8*)algo_lib::malloc_ReallocMem(_db.in_fb_elems, _db.in_fb_max, new_max)
+    : (u8*)algo_lib::malloc_AllocMem(new_max);
+    if (UNLIKELY(!new_mem)) {
+        FatalErrorExit("atf_amc.fbuf_nomem  field:atf_amc.FDb.in_fb  comment:'out of memory'");
+    }
+    _db.in_fb_elems = new_mem;
+    _db.in_fb_max = new_max;
+}
+
+// --- atf_amc.FDb.in_fb.RemoveAll
+// Empty bfufer
+// Discard contents of the buffer.
+void atf_amc::in_fb_RemoveAll() {
+    _db.in_fb_start    = 0;
+    _db.in_fb_end      = 0;
+    _db.in_fb_msgvalid = false;
+}
+
+// --- atf_amc.FDb.in_fb.ScanMsg
+// Internal function to scan for a message
+// 
+static void atf_amc::in_fb_ScanMsg() {
+    i32 avail = in_fb_N();
+    i32 msglen;
+    bool found = false;
+    found = avail>0;
+    msglen = avail;
+    _db.in_fb_msglen = msglen;
+    _db.in_fb_msgvalid = found;
+}
+
+// --- atf_amc.FDb.in_fb.Shift
+// Internal function to shift data left
+// Shift existing bytes over to the beginning of the buffer
+static void atf_amc::in_fb_Shift() {
+    i32 start = _db.in_fb_start;
+    i32 bytes_n = _db.in_fb_end - start;
+    if (bytes_n > 0) {
+        memmove(_db.in_fb_elems, _db.in_fb_elems + start, bytes_n);
+    }
+    _db.in_fb_end = bytes_n;
+    _db.in_fb_start = 0;
+}
+
+// --- atf_amc.FDb.in_fb.SkipBytes
+// Skip N bytes when reading
+// Mark some buffer contents as read.
+// 
+void atf_amc::in_fb_SkipBytes(int n) {
+    int avail = _db.in_fb_end - _db.in_fb_start;
+    n = i32_Min(n,avail);
+    _db.in_fb_start += n;
+    _db.in_fb_msgvalid = false;
+    if (n) {
+        atf_amc::_db.trace._db_in_fb_n_read_byte+=n;
+        _db.in_fb_n_read_byte+=n;
+        atf_amc::_db.trace._db_in_fb_n_read_msg++;
+        _db.in_fb_n_read_msg++;
+    }
+}
+
+// --- atf_amc.FDb.in_fb.SkipMsg
+// Skip current message, if any
+// Skip current message, if any.
+void atf_amc::in_fb_SkipMsg() {
+    if (_db.in_fb_msgvalid) {
+        int skip = _db.in_fb_msglen;
+        i32 start = _db.in_fb_start;
+        start += skip;
+        _db.in_fb_start = start;
+        _db.in_fb_msgvalid = false;
+        _db.in_fb_msglen   = 0; // reset message length -- important for delimited streams
+        atf_amc::_db.trace._db_in_fb_n_read_byte+=skip;
+        _db.in_fb_n_read_byte+=skip;
+        atf_amc::_db.trace._db_in_fb_n_read_msg++;
+        _db.in_fb_n_read_msg++;
+    }
+}
+
+// --- atf_amc.FDb.in_fb.WriteAll
+// Attempt to write buffer contents to fbuf, return success
+// Write bytes to the buffer. If the entire block is accepted, return true,
+// Otherwise return false.
+// Bytes in the buffer are potentially shifted left to make room for the message.
+// 
+bool atf_amc::in_fb_WriteAll(u8 *in, i32 in_n) {
+    int max = in_fb_Max();
+    // check if message doesn't fit. if so, shift bytes over.
+    if (_db.in_fb_end + in_n > max) {
+        in_fb_Shift();
+    }
+    // now try to write the message.
+    i32 end = _db.in_fb_end;
+    bool fits = end + in_n <= max;
+    if (fits) {
+        if (in_n > 0) {
+            memcpy(_db.in_fb_elems + end, in, in_n);
+            _db.in_fb_end = end + in_n;
+        }
+    }
+    return fits;
+}
+
+// --- atf_amc.FDb.in_fb.WriteReserve
+// Write buffer contents to fbuf, reallocate as needed
+// Write bytes to the buffer. The entire block is always written or the program exits.
+void atf_amc::in_fb_WriteReserve(u8 *in, i32 in_n) {
+    if (_db.in_fb_end - _db.in_fb_start + in_n > in_fb_Max()) {
+        in_fb_Realloc(_db.in_fb_max + i32_Max(_db.in_fb_max, in_n));
+    }
+    if (!in_fb_WriteAll(in, in_n)) {
+        FatalErrorExit("in_fb: out of memory");
+    }
+}
+
+// --- atf_amc.FDb.out_fb.EndWrite
+// Send zero-byte write
+void atf_amc::out_fb_EndWrite() {
+    if (ValidQ(_db.out_fb_iohook.fildes)) {
+        // zero-byte write for remote side
+        ssize_t rc=write(_db.out_fb_iohook.fildes.value, "", 0);
+        (void)rc;
+    }
+}
+
+// --- atf_amc.FDb.out_fb.BeginAlloc
+// // Return pointer to a block of IN_N contiguous bytes in the buffer.
+// // No reallocation is performed. If not possible, return NULL.
+void* atf_amc::out_fb_BeginAlloc(atf_amc::FDb &_db, i32 in_n) {
+    void *ret = NULL;
+    int max = out_fb_Max();
+    if (_db.out_fb_end + in_n > max) {
+        out_fb_Shift();
+    }
+    if (_db.out_fb_end + in_n <= max) {
+        ret = (u8*)_db.out_fb_elems + _db.out_fb_end;
+        _db.out_fb_end += in_n;
+        atf_amc::_db.trace._db_out_fb_n_write_byte+=in_n;
+        atf_amc::_db.trace._db_out_fb_n_write_msg++;
+        _db.out_fb_n_write_byte+=in_n;
+        _db.out_fb_n_write_msg++;
+    }
+    return ret;
+}
+
+// --- atf_amc.FDb.out_fb.BeginAllocReserve
+// // Return pointer to a block of IN_N contiguous bytes in the buffer.
+// // Buffer is reallocated as necessary; function always succeeds.
+void* atf_amc::out_fb_BeginAllocReserve(atf_amc::FDb &_db, i32 in_n) {
+    if (_db.out_fb_end - _db.out_fb_start + in_n > out_fb_Max()) {
+        out_fb_Realloc(_db.out_fb_max + i32_Max(_db.out_fb_max, in_n));
+    }
+    return out_fb_BeginAlloc(_db, in_n);
+}
+
+// --- atf_amc.FDb.out_fb.BeginWrite
+// Attach fbuf to Iohook for writing
+// Attach file descriptor and begin outflowing buffer reading using edge-triggered epoll.
+// User should implement a step function that calls out_fb_Outflow.
+void atf_amc::out_fb_BeginWrite(algo::Fildes fd, bool nodelete) {
+    if (nodelete) {
+        _db.out_fb_epoll_enable    = false; // cannot register fd twice -- disable epoll on shared fd
+        _db.out_fb_iohook.nodelete = true;
+    }
+    _db.out_fb_iohook.fildes    = fd;
+}
+
+// --- atf_amc.FDb.out_fb.Realloc
+// Set buffer size.
+// Unconditionally reallocate buffer to have size NEW_MAX
+// If the buffer has data in it, NEW_MAX is adjusted so that the data is not lost
+// (best to call this before filling the buffer)
+void atf_amc::out_fb_Realloc(int new_max) {
+    new_max = i32_Max(new_max, _db.out_fb_end);
+    u8 *new_mem = _db.out_fb_elems
+    ? (u8*)algo_lib::malloc_ReallocMem(_db.out_fb_elems, _db.out_fb_max, new_max)
+    : (u8*)algo_lib::malloc_AllocMem(new_max);
+    if (UNLIKELY(!new_mem)) {
+        FatalErrorExit("atf_amc.fbuf_nomem  field:atf_amc.FDb.out_fb  comment:'out of memory'");
+    }
+    _db.out_fb_elems = new_mem;
+    _db.out_fb_max = new_max;
+}
+
+// --- atf_amc.FDb.out_fb.Outflow
+// Transfer bytes from buffer to fd using write()
+bool atf_amc::out_fb_Outflow() {
+    int  nwrite   = out_fb_N();
+    int  start    = _db.out_fb_start;
+    int  nwritten;
+    nwritten = nwrite > 0 ? write(_db.out_fb_iohook.fildes.value, _db.out_fb_elems + start, nwrite) : 0;
+    bool good     = nwritten >= 0 || errno == EAGAIN;
+    if(nwritten < 0 && errno == EAGAIN) {
+        atf_amc::_db.trace._db_out_fb_n_eagain++;
+        _db.out_fb_n_eagain++;
+    }
+    if (!good) {
+        _db.out_fb_err = algo::FromErrno(errno); // save error code
+    }
+    if (nwritten > 0) {
+        out_fb_SkipBytes(nwritten); // skip written bytes
+    }
+    return nwritten > 0;
+}
+
+// --- atf_amc.FDb.out_fb.RemoveAll
+// Empty bfufer
+// Discard contents of the buffer.
+void atf_amc::out_fb_RemoveAll() {
+    _db.out_fb_start    = 0;
+    _db.out_fb_end      = 0;
+    _db.out_fb_msgvalid = false;
+}
+
+// --- atf_amc.FDb.out_fb.Shift
+// Internal function to shift data left
+// Shift existing bytes over to the beginning of the buffer
+static void atf_amc::out_fb_Shift() {
+    i32 start = _db.out_fb_start;
+    i32 bytes_n = _db.out_fb_end - start;
+    if (bytes_n > 0) {
+        memmove(_db.out_fb_elems, _db.out_fb_elems + start, bytes_n);
+    }
+    _db.out_fb_end = bytes_n;
+    _db.out_fb_start = 0;
+}
+
+// --- atf_amc.FDb.out_fb.SkipBytes
+// Skip N bytes when reading
+// Mark some buffer contents as read.
+// 
+void atf_amc::out_fb_SkipBytes(int n) {
+    int avail = _db.out_fb_end - _db.out_fb_start;
+    n = i32_Min(n,avail);
+    _db.out_fb_start += n;
+    _db.out_fb_msgvalid = false;
+}
+
+// --- atf_amc.FDb.out_fb.SkipMsg
+// Skip current message, if any
+// Skip current message, if any.
+void atf_amc::out_fb_SkipMsg() {
+    if (_db.out_fb_msgvalid) {
+        int skip = _db.out_fb_msglen;
+        i32 start = _db.out_fb_start;
+        start += skip;
+        _db.out_fb_start = start;
+        _db.out_fb_msgvalid = false;
+        _db.out_fb_msglen   = 0; // reset message length -- important for delimited streams
+    }
+}
+
+// --- atf_amc.FDb.out_fb.WriteAll
+// Attempt to write buffer contents to fbuf, return success
+// Write bytes to the buffer. If the entire block is accepted, return true,
+// Otherwise return false.
+// Bytes in the buffer are potentially shifted left to make room for the message.
+// 
+bool atf_amc::out_fb_WriteAll(u8 *in, i32 in_n) {
+    int max = out_fb_Max();
+    // check if message doesn't fit. if so, shift bytes over.
+    if (_db.out_fb_end + in_n > max) {
+        out_fb_Shift();
+    }
+    // now try to write the message.
+    i32 end = _db.out_fb_end;
+    bool fits = end + in_n <= max;
+    if (fits) {
+        atf_amc::_db.trace._db_out_fb_n_write_byte+=in_n;
+        atf_amc::_db.trace._db_out_fb_n_write_msg++;
+        _db.out_fb_n_write_byte+=in_n;
+        _db.out_fb_n_write_msg++;
+        if (_db.out_fb_zerocopy && out_fb_N()==0) {// in kernel bypass situations this is faster
+            int rc = write(_db.out_fb_iohook.fildes.value, in, in_n);
+            if (rc >= 0) {
+                in += rc;
+                in_n -= rc;
+            }
+        }
+        if (in_n > 0) {
+            memcpy(_db.out_fb_elems + end, in, in_n);
+            _db.out_fb_end = end + in_n;
+        }
+    }
+    return fits;
+}
+
+// --- atf_amc.FDb.out_fb.WriteReserve
+// Write buffer contents to fbuf, reallocate as needed
+// Write bytes to the buffer. The entire block is always written or the program exits.
+void atf_amc::out_fb_WriteReserve(u8 *in, i32 in_n) {
+    if (_db.out_fb_end - _db.out_fb_start + in_n > out_fb_Max()) {
+        out_fb_Realloc(_db.out_fb_max + i32_Max(_db.out_fb_max, in_n));
+    }
+    if (!out_fb_WriteAll(in, in_n)) {
+        FatalErrorExit("out_fb: out of memory");
+    }
+}
+
+// --- atf_amc.FDb.testdec.SetDoubleMaybe
+// Set value of field testdec, using rounding.
+// If value is out of range for the target type, return false.
+bool atf_amc::testdec_SetDoubleMaybe(double val) {
+    double intval = val * 100;
+    i64 minval = i64((-9223372036854775807LL-1));
+    i64 maxval = i64(9223372036854775807LL);
+    bool retval = intval > double(minval) - 0.5;// minval rounds in, minval-1 rounds out
+    retval &= intval < double(maxval) + 0.5;// maxval rounds in, maxval+1 rounds out
+    if (retval) {
+        intval = intval + (val > 0 ? 0.5 : -0.5);
+        _db.testdec = i64(intval); // set underlying field.
+    }
+    return retval;
+}
+
+// --- atf_amc.FDb.condpar.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+atf_amc::FCondpar& atf_amc::condpar_Alloc() {
+    atf_amc::FCondpar* row = condpar_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("atf_amc.out_of_mem  field:atf_amc.FDb.condpar  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- atf_amc.FDb.condpar.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+atf_amc::FCondpar* atf_amc::condpar_AllocMaybe() {
+    atf_amc::FCondpar *row = (atf_amc::FCondpar*)condpar_AllocMem();
+    if (row) {
+        new (row) atf_amc::FCondpar; // call constructor
+    }
+    return row;
+}
+
+// --- atf_amc.FDb.condpar.Delete
+// Remove row from all global and cross indices, then deallocate row
+void atf_amc::condpar_Delete(atf_amc::FCondpar &row) {
+    row.~FCondpar();
+    condpar_FreeMem(row);
+}
+
+// --- atf_amc.FDb.condpar.AllocMem
+// Allocate space for one element
+// If no memory available, return NULL.
+void* atf_amc::condpar_AllocMem() {
+    atf_amc::FCondpar *row = _db.condpar_free;
+    if (UNLIKELY(!row)) {
+        condpar_Reserve(1);
+        row = _db.condpar_free;
+    }
+    if (row) {
+        _db.condpar_free = row->condpar_next;
+    }
+    return row;
+}
+
+// --- atf_amc.FDb.condpar.FreeMem
+// Remove mem from all global and cross indices, then deallocate mem
+void atf_amc::condpar_FreeMem(atf_amc::FCondpar &row) {
+    if (UNLIKELY(row.condpar_next != (atf_amc::FCondpar*)-1)) {
+        FatalErrorExit("atf_amc.tpool_double_delete  pool:atf_amc.FDb.condpar  comment:'double deletion caught'");
+    }
+    row.condpar_next = _db.condpar_free; // insert into free list
+    _db.condpar_free  = &row;
+}
+
+// --- atf_amc.FDb.condpar.Reserve
+// Preallocate memory for N more elements
+// Return number of elements actually reserved.
+u64 atf_amc::condpar_Reserve(u64 n_elems) {
+    u64 ret = 0;
+    while (ret < n_elems) {
+        u64 size = _db.condpar_blocksize; // underlying allocator is probably Lpool
+        u64 reserved = condpar_ReserveMem(size);
+        ret += reserved;
+        if (reserved == 0) {
+            break;
+        }
+    }
+    return ret;
+}
+
+// --- atf_amc.FDb.condpar.ReserveMem
+// Allocate block of given size, break up into small elements and append to free list.
+// Return number of elements reserved.
+u64 atf_amc::condpar_ReserveMem(u64 size) {
+    u64 ret = 0;
+    if (size >= sizeof(atf_amc::FCondpar)) {
+        atf_amc::FCondpar *mem = (atf_amc::FCondpar*)algo_lib::malloc_AllocMem(size);
+        ret = mem ? size / sizeof(atf_amc::FCondpar) : 0;
+        // add newly allocated elements to the free list;
+        for (u64 i=0; i < ret; i++) {
+            mem[i].condpar_next = _db.condpar_free;
+            _db.condpar_free = mem+i;
+        }
+    }
+    return ret;
+}
+
+// --- atf_amc.FDb.condpar.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool atf_amc::condpar_XrefMaybe(atf_amc::FCondpar &row) {
+    bool retval = true;
+    (void)row;
+    return retval;
+}
+
+// --- atf_amc.FDb.condtest.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+atf_amc::FCondtest& atf_amc::condtest_Alloc() {
+    atf_amc::FCondtest* row = condtest_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("atf_amc.out_of_mem  field:atf_amc.FDb.condtest  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- atf_amc.FDb.condtest.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+atf_amc::FCondtest* atf_amc::condtest_AllocMaybe() {
+    atf_amc::FCondtest *row = (atf_amc::FCondtest*)condtest_AllocMem();
+    if (row) {
+        new (row) atf_amc::FCondtest; // call constructor
+    }
+    return row;
+}
+
+// --- atf_amc.FDb.condtest.Delete
+// Remove row from all global and cross indices, then deallocate row
+void atf_amc::condtest_Delete(atf_amc::FCondtest &row) {
+    row.~FCondtest();
+    condtest_FreeMem(row);
+}
+
+// --- atf_amc.FDb.condtest.AllocMem
+// Allocate space for one element
+// If no memory available, return NULL.
+void* atf_amc::condtest_AllocMem() {
+    atf_amc::FCondtest *row = _db.condtest_free;
+    if (UNLIKELY(!row)) {
+        condtest_Reserve(1);
+        row = _db.condtest_free;
+    }
+    if (row) {
+        _db.condtest_free = row->condtest_next;
+    }
+    return row;
+}
+
+// --- atf_amc.FDb.condtest.FreeMem
+// Remove mem from all global and cross indices, then deallocate mem
+void atf_amc::condtest_FreeMem(atf_amc::FCondtest &row) {
+    if (UNLIKELY(row.condtest_next != (atf_amc::FCondtest*)-1)) {
+        FatalErrorExit("atf_amc.tpool_double_delete  pool:atf_amc.FDb.condtest  comment:'double deletion caught'");
+    }
+    row.condtest_next = _db.condtest_free; // insert into free list
+    _db.condtest_free  = &row;
+}
+
+// --- atf_amc.FDb.condtest.Reserve
+// Preallocate memory for N more elements
+// Return number of elements actually reserved.
+u64 atf_amc::condtest_Reserve(u64 n_elems) {
+    u64 ret = 0;
+    while (ret < n_elems) {
+        u64 size = _db.condtest_blocksize; // underlying allocator is probably Lpool
+        u64 reserved = condtest_ReserveMem(size);
+        ret += reserved;
+        if (reserved == 0) {
+            break;
+        }
+    }
+    return ret;
+}
+
+// --- atf_amc.FDb.condtest.ReserveMem
+// Allocate block of given size, break up into small elements and append to free list.
+// Return number of elements reserved.
+u64 atf_amc::condtest_ReserveMem(u64 size) {
+    u64 ret = 0;
+    if (size >= sizeof(atf_amc::FCondtest)) {
+        atf_amc::FCondtest *mem = (atf_amc::FCondtest*)algo_lib::malloc_AllocMem(size);
+        ret = mem ? size / sizeof(atf_amc::FCondtest) : 0;
+        // add newly allocated elements to the free list;
+        for (u64 i=0; i < ret; i++) {
+            mem[i].condtest_next = _db.condtest_free;
+            _db.condtest_free = mem+i;
+        }
+    }
+    return ret;
+}
+
+// --- atf_amc.FDb.condtest.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool atf_amc::condtest_XrefMaybe(atf_amc::FCondtest &row) {
+    bool retval = true;
+    (void)row;
+    // fcond atf_amc.FCondtest.state/done: the initial value decides initial membership
+    if (row.state == atf_amc_FCondtest_state_done && row.p_parent) {
+        atf_amc::zd_condpar_done_Insert(*row.p_parent);
+    }
+    // fcond atf_amc.FCondtest.state/idle: the initial value decides initial membership
+    if (row.state == atf_amc_FCondtest_state_idle) {
+        atf_amc::zd_condtest_idle_Insert(row);
+    }
+    // fcond atf_amc.FCondtest.state/run: the initial value decides initial membership
+    if (row.state == atf_amc_FCondtest_state_run) {
+        atf_amc::zd_condtest_run_Insert(row);
+    }
+    // fcond atf_amc.FCondtest.ready/true: the initial value decides initial membership
+    if (row.ready == true) {
+        atf_amc::cd_condtest_ready_Insert(row);
+    }
+    return retval;
+}
+
+// --- atf_amc.FDb.zd_condtest_run.Insert
+// Insert row into linked list. If row is already in linked list, do nothing.
+void atf_amc::zd_condtest_run_Insert(atf_amc::FCondtest& row) {
+    if (!zd_condtest_run_InLlistQ(row)) {
+        atf_amc::FCondtest* old_tail = _db.zd_condtest_run_tail;
+        row.zd_condtest_run_next = NULL;
+        row.zd_condtest_run_prev = old_tail;
+        _db.zd_condtest_run_tail = &row;
+        atf_amc::FCondtest **new_row_a = &old_tail->zd_condtest_run_next;
+        atf_amc::FCondtest **new_row_b = &_db.zd_condtest_run_head;
+        atf_amc::FCondtest **new_row = old_tail ? new_row_a : new_row_b;
+        *new_row = &row;
+        _db.zd_condtest_run_n++;
+    }
+}
+
+// --- atf_amc.FDb.zd_condtest_run.Remove
+// Remove element from index. If element is not in index, do nothing.
+void atf_amc::zd_condtest_run_Remove(atf_amc::FCondtest& row) {
+    if (zd_condtest_run_InLlistQ(row)) {
+        atf_amc::FCondtest* old_head       = _db.zd_condtest_run_head;
+        (void)old_head; // in case it's not used
+        atf_amc::FCondtest* prev = row.zd_condtest_run_prev;
+        atf_amc::FCondtest* next = row.zd_condtest_run_next;
+        // if element is first, adjust list head; otherwise, adjust previous element's next
+        atf_amc::FCondtest **new_next_a = &prev->zd_condtest_run_next;
+        atf_amc::FCondtest **new_next_b = &_db.zd_condtest_run_head;
+        atf_amc::FCondtest **new_next = prev ? new_next_a : new_next_b;
+        *new_next = next;
+        // if element is last, adjust list tail; otherwise, adjust next element's prev
+        atf_amc::FCondtest **new_prev_a = &next->zd_condtest_run_prev;
+        atf_amc::FCondtest **new_prev_b = &_db.zd_condtest_run_tail;
+        atf_amc::FCondtest **new_prev = next ? new_prev_a : new_prev_b;
+        *new_prev = prev;
+        _db.zd_condtest_run_n--;
+        row.zd_condtest_run_next=(atf_amc::FCondtest*)-1; // not-in-list
+    }
+}
+
+// --- atf_amc.FDb.zd_condtest_run.RemoveAll
+// Empty the index. (The rows are not deleted)
+void atf_amc::zd_condtest_run_RemoveAll() {
+    atf_amc::FCondtest* row = _db.zd_condtest_run_head;
+    _db.zd_condtest_run_head = NULL;
+    _db.zd_condtest_run_tail = NULL;
+    _db.zd_condtest_run_n = 0;
+    while (row) {
+        atf_amc::FCondtest* row_next = row->zd_condtest_run_next;
+        row->zd_condtest_run_next  = (atf_amc::FCondtest*)-1;
+        row->zd_condtest_run_prev  = NULL;
+        row = row_next;
+    }
+}
+
+// --- atf_amc.FDb.zd_condtest_run.RemoveFirst
+// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+atf_amc::FCondtest* atf_amc::zd_condtest_run_RemoveFirst() {
+    atf_amc::FCondtest *row = NULL;
+    row = _db.zd_condtest_run_head;
+    if (row) {
+        atf_amc::FCondtest *next = row->zd_condtest_run_next;
+        _db.zd_condtest_run_head = next;
+        atf_amc::FCondtest **new_end_a = &next->zd_condtest_run_prev;
+        atf_amc::FCondtest **new_end_b = &_db.zd_condtest_run_tail;
+        atf_amc::FCondtest **new_end = next ? new_end_a : new_end_b;
+        *new_end = NULL;
+        _db.zd_condtest_run_n--;
+        row->zd_condtest_run_next = (atf_amc::FCondtest*)-1; // mark as not-in-list
+    }
+    return row;
+}
+
+// --- atf_amc.FDb.zd_condtest_run.InsertBefore
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+void atf_amc::zd_condtest_run_InsertBefore(atf_amc::FCondtest& row, atf_amc::FCondtest* before) {
+    if (!zd_condtest_run_InLlistQ(row) && &row != before) {
+        atf_amc::FCondtest* next = before;
+        atf_amc::FCondtest* prev = next ? next->zd_condtest_run_prev : _db.zd_condtest_run_tail;
+        row.zd_condtest_run_next = next;
+        row.zd_condtest_run_prev = prev;
+        atf_amc::FCondtest **prev_link_a = &prev->zd_condtest_run_next;
+        atf_amc::FCondtest **prev_link_b = &_db.zd_condtest_run_head;
+        *(prev ? prev_link_a : prev_link_b) = &row;
+        atf_amc::FCondtest **next_link_a = &next->zd_condtest_run_prev;
+        atf_amc::FCondtest **next_link_b = &_db.zd_condtest_run_tail;
+        *(next ? next_link_a : next_link_b) = &row;
+        _db.zd_condtest_run_n++;
+    }
+}
+
+// --- atf_amc.FDb.zd_condtest_idle.Insert
+// Insert row into linked list. If row is already in linked list, do nothing.
+void atf_amc::zd_condtest_idle_Insert(atf_amc::FCondtest& row) {
+    if (!zd_condtest_idle_InLlistQ(row)) {
+        atf_amc::FCondtest* old_tail = _db.zd_condtest_idle_tail;
+        row.zd_condtest_idle_next = NULL;
+        row.zd_condtest_idle_prev = old_tail;
+        _db.zd_condtest_idle_tail = &row;
+        atf_amc::FCondtest **new_row_a = &old_tail->zd_condtest_idle_next;
+        atf_amc::FCondtest **new_row_b = &_db.zd_condtest_idle_head;
+        atf_amc::FCondtest **new_row = old_tail ? new_row_a : new_row_b;
+        *new_row = &row;
+        _db.zd_condtest_idle_n++;
+    }
+}
+
+// --- atf_amc.FDb.zd_condtest_idle.Remove
+// Remove element from index. If element is not in index, do nothing.
+void atf_amc::zd_condtest_idle_Remove(atf_amc::FCondtest& row) {
+    if (zd_condtest_idle_InLlistQ(row)) {
+        atf_amc::FCondtest* old_head       = _db.zd_condtest_idle_head;
+        (void)old_head; // in case it's not used
+        atf_amc::FCondtest* prev = row.zd_condtest_idle_prev;
+        atf_amc::FCondtest* next = row.zd_condtest_idle_next;
+        // if element is first, adjust list head; otherwise, adjust previous element's next
+        atf_amc::FCondtest **new_next_a = &prev->zd_condtest_idle_next;
+        atf_amc::FCondtest **new_next_b = &_db.zd_condtest_idle_head;
+        atf_amc::FCondtest **new_next = prev ? new_next_a : new_next_b;
+        *new_next = next;
+        // if element is last, adjust list tail; otherwise, adjust next element's prev
+        atf_amc::FCondtest **new_prev_a = &next->zd_condtest_idle_prev;
+        atf_amc::FCondtest **new_prev_b = &_db.zd_condtest_idle_tail;
+        atf_amc::FCondtest **new_prev = next ? new_prev_a : new_prev_b;
+        *new_prev = prev;
+        _db.zd_condtest_idle_n--;
+        row.zd_condtest_idle_next=(atf_amc::FCondtest*)-1; // not-in-list
+    }
+}
+
+// --- atf_amc.FDb.zd_condtest_idle.RemoveAll
+// Empty the index. (The rows are not deleted)
+void atf_amc::zd_condtest_idle_RemoveAll() {
+    atf_amc::FCondtest* row = _db.zd_condtest_idle_head;
+    _db.zd_condtest_idle_head = NULL;
+    _db.zd_condtest_idle_tail = NULL;
+    _db.zd_condtest_idle_n = 0;
+    while (row) {
+        atf_amc::FCondtest* row_next = row->zd_condtest_idle_next;
+        row->zd_condtest_idle_next  = (atf_amc::FCondtest*)-1;
+        row->zd_condtest_idle_prev  = NULL;
+        row = row_next;
+    }
+}
+
+// --- atf_amc.FDb.zd_condtest_idle.RemoveFirst
+// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+atf_amc::FCondtest* atf_amc::zd_condtest_idle_RemoveFirst() {
+    atf_amc::FCondtest *row = NULL;
+    row = _db.zd_condtest_idle_head;
+    if (row) {
+        atf_amc::FCondtest *next = row->zd_condtest_idle_next;
+        _db.zd_condtest_idle_head = next;
+        atf_amc::FCondtest **new_end_a = &next->zd_condtest_idle_prev;
+        atf_amc::FCondtest **new_end_b = &_db.zd_condtest_idle_tail;
+        atf_amc::FCondtest **new_end = next ? new_end_a : new_end_b;
+        *new_end = NULL;
+        _db.zd_condtest_idle_n--;
+        row->zd_condtest_idle_next = (atf_amc::FCondtest*)-1; // mark as not-in-list
+    }
+    return row;
+}
+
+// --- atf_amc.FDb.zd_condtest_idle.InsertBefore
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+void atf_amc::zd_condtest_idle_InsertBefore(atf_amc::FCondtest& row, atf_amc::FCondtest* before) {
+    if (!zd_condtest_idle_InLlistQ(row) && &row != before) {
+        atf_amc::FCondtest* next = before;
+        atf_amc::FCondtest* prev = next ? next->zd_condtest_idle_prev : _db.zd_condtest_idle_tail;
+        row.zd_condtest_idle_next = next;
+        row.zd_condtest_idle_prev = prev;
+        atf_amc::FCondtest **prev_link_a = &prev->zd_condtest_idle_next;
+        atf_amc::FCondtest **prev_link_b = &_db.zd_condtest_idle_head;
+        *(prev ? prev_link_a : prev_link_b) = &row;
+        atf_amc::FCondtest **next_link_a = &next->zd_condtest_idle_prev;
+        atf_amc::FCondtest **next_link_b = &_db.zd_condtest_idle_tail;
+        *(next ? next_link_a : next_link_b) = &row;
+        _db.zd_condtest_idle_n++;
+    }
+}
+
+// --- atf_amc.FDb.cd_condtest_ready.Insert
+// Insert row into linked list. If row is already in linked list, do nothing.
+void atf_amc::cd_condtest_ready_Insert(atf_amc::FCondtest& row) {
+    if (!cd_condtest_ready_InLlistQ(row)) {
+        if (_db.cd_condtest_ready_head) {
+            row.cd_condtest_ready_next = _db.cd_condtest_ready_head;
+            row.cd_condtest_ready_prev = _db.cd_condtest_ready_head->cd_condtest_ready_prev;
+            row.cd_condtest_ready_prev->cd_condtest_ready_next = &row;
+            row.cd_condtest_ready_next->cd_condtest_ready_prev = &row;
+        } else {
+            row.cd_condtest_ready_next = &row;
+            row.cd_condtest_ready_prev = &row;
+            _db.cd_condtest_ready_head = &row;
+        }
+        _db.cd_condtest_ready_n++;
+    }
+}
+
+// --- atf_amc.FDb.cd_condtest_ready.Remove
+// Remove element from index. If element is not in index, do nothing.
+void atf_amc::cd_condtest_ready_Remove(atf_amc::FCondtest& row) {
+    if (cd_condtest_ready_InLlistQ(row)) {
+        atf_amc::FCondtest* old_head       = _db.cd_condtest_ready_head;
+        (void)old_head; // in case it's not used
+        atf_amc::FCondtest *oldnext = row.cd_condtest_ready_next;
+        atf_amc::FCondtest *oldprev = row.cd_condtest_ready_prev;
+        oldnext->cd_condtest_ready_prev = oldprev; // remove element from list
+        oldprev->cd_condtest_ready_next = oldnext;
+        _db.cd_condtest_ready_n--;  // adjust count
+        if (&row == _db.cd_condtest_ready_head) {
+            _db.cd_condtest_ready_head = oldnext==&row ? NULL : oldnext; // adjust list head
+        }
+        row.cd_condtest_ready_next = (atf_amc::FCondtest*)-1; // mark element as not-in-list);
+        row.cd_condtest_ready_prev = NULL; // clear back-pointer
+    }
+}
+
+// --- atf_amc.FDb.cd_condtest_ready.RemoveAll
+// Empty the index. (The rows are not deleted)
+void atf_amc::cd_condtest_ready_RemoveAll() {
+    atf_amc::FCondtest* row = _db.cd_condtest_ready_head;
+    atf_amc::FCondtest* head = _db.cd_condtest_ready_head;
+    _db.cd_condtest_ready_head = NULL;
+    _db.cd_condtest_ready_n = 0;
+    while (row) {
+        atf_amc::FCondtest* row_next = row->cd_condtest_ready_next;
+        row->cd_condtest_ready_next  = (atf_amc::FCondtest*)-1;
+        row->cd_condtest_ready_prev  = NULL;
+        row = row_next != head  ? row_next : NULL;
+    }
+}
+
+// --- atf_amc.FDb.cd_condtest_ready.RemoveFirst
+// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+atf_amc::FCondtest* atf_amc::cd_condtest_ready_RemoveFirst() {
+    atf_amc::FCondtest *row = NULL;
+    row = _db.cd_condtest_ready_head;
+    if (row) {
+        bool hasmore = row!=row->cd_condtest_ready_next;
+        _db.cd_condtest_ready_head = hasmore ? row->cd_condtest_ready_next : NULL;
+        row->cd_condtest_ready_next->cd_condtest_ready_prev = row->cd_condtest_ready_prev;
+        row->cd_condtest_ready_prev->cd_condtest_ready_next = row->cd_condtest_ready_next;
+        row->cd_condtest_ready_prev = NULL;
+        _db.cd_condtest_ready_n--;
+        row->cd_condtest_ready_next = (atf_amc::FCondtest*)-1; // mark as not-in-list
+    }
+    return row;
+}
+
+// --- atf_amc.FDb.cd_condtest_ready.RotateFirst
+// If linked list is empty, return NULL.
+// Otherwise return head item and advance head to the next item.
+atf_amc::FCondtest* atf_amc::cd_condtest_ready_RotateFirst() {
+    atf_amc::FCondtest *row = NULL;
+    row = _db.cd_condtest_ready_head;
+    if (row) {
+        _db.cd_condtest_ready_head = row->cd_condtest_ready_next;
+    }
+    return row;
+}
+
+// --- atf_amc.FDb.zd_condpar_done.Insert
+// Insert row into linked list. If row is already in linked list, do nothing.
+void atf_amc::zd_condpar_done_Insert(atf_amc::FCondpar& row) {
+    if (!zd_condpar_done_InLlistQ(row)) {
+        atf_amc::FCondpar* old_tail = _db.zd_condpar_done_tail;
+        row.zd_condpar_done_next = NULL;
+        row.zd_condpar_done_prev = old_tail;
+        _db.zd_condpar_done_tail = &row;
+        atf_amc::FCondpar **new_row_a = &old_tail->zd_condpar_done_next;
+        atf_amc::FCondpar **new_row_b = &_db.zd_condpar_done_head;
+        atf_amc::FCondpar **new_row = old_tail ? new_row_a : new_row_b;
+        *new_row = &row;
+        _db.zd_condpar_done_n++;
+    }
+}
+
+// --- atf_amc.FDb.zd_condpar_done.Remove
+// Remove element from index. If element is not in index, do nothing.
+void atf_amc::zd_condpar_done_Remove(atf_amc::FCondpar& row) {
+    if (zd_condpar_done_InLlistQ(row)) {
+        atf_amc::FCondpar* old_head       = _db.zd_condpar_done_head;
+        (void)old_head; // in case it's not used
+        atf_amc::FCondpar* prev = row.zd_condpar_done_prev;
+        atf_amc::FCondpar* next = row.zd_condpar_done_next;
+        // if element is first, adjust list head; otherwise, adjust previous element's next
+        atf_amc::FCondpar **new_next_a = &prev->zd_condpar_done_next;
+        atf_amc::FCondpar **new_next_b = &_db.zd_condpar_done_head;
+        atf_amc::FCondpar **new_next = prev ? new_next_a : new_next_b;
+        *new_next = next;
+        // if element is last, adjust list tail; otherwise, adjust next element's prev
+        atf_amc::FCondpar **new_prev_a = &next->zd_condpar_done_prev;
+        atf_amc::FCondpar **new_prev_b = &_db.zd_condpar_done_tail;
+        atf_amc::FCondpar **new_prev = next ? new_prev_a : new_prev_b;
+        *new_prev = prev;
+        _db.zd_condpar_done_n--;
+        row.zd_condpar_done_next=(atf_amc::FCondpar*)-1; // not-in-list
+    }
+}
+
+// --- atf_amc.FDb.zd_condpar_done.RemoveAll
+// Empty the index. (The rows are not deleted)
+void atf_amc::zd_condpar_done_RemoveAll() {
+    atf_amc::FCondpar* row = _db.zd_condpar_done_head;
+    _db.zd_condpar_done_head = NULL;
+    _db.zd_condpar_done_tail = NULL;
+    _db.zd_condpar_done_n = 0;
+    while (row) {
+        atf_amc::FCondpar* row_next = row->zd_condpar_done_next;
+        row->zd_condpar_done_next  = (atf_amc::FCondpar*)-1;
+        row->zd_condpar_done_prev  = NULL;
+        row = row_next;
+    }
+}
+
+// --- atf_amc.FDb.zd_condpar_done.RemoveFirst
+// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+atf_amc::FCondpar* atf_amc::zd_condpar_done_RemoveFirst() {
+    atf_amc::FCondpar *row = NULL;
+    row = _db.zd_condpar_done_head;
+    if (row) {
+        atf_amc::FCondpar *next = row->zd_condpar_done_next;
+        _db.zd_condpar_done_head = next;
+        atf_amc::FCondpar **new_end_a = &next->zd_condpar_done_prev;
+        atf_amc::FCondpar **new_end_b = &_db.zd_condpar_done_tail;
+        atf_amc::FCondpar **new_end = next ? new_end_a : new_end_b;
+        *new_end = NULL;
+        _db.zd_condpar_done_n--;
+        row->zd_condpar_done_next = (atf_amc::FCondpar*)-1; // mark as not-in-list
+    }
+    return row;
+}
+
+// --- atf_amc.FDb.zd_condpar_done.InsertBefore
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+void atf_amc::zd_condpar_done_InsertBefore(atf_amc::FCondpar& row, atf_amc::FCondpar* before) {
+    if (!zd_condpar_done_InLlistQ(row) && &row != before) {
+        atf_amc::FCondpar* next = before;
+        atf_amc::FCondpar* prev = next ? next->zd_condpar_done_prev : _db.zd_condpar_done_tail;
+        row.zd_condpar_done_next = next;
+        row.zd_condpar_done_prev = prev;
+        atf_amc::FCondpar **prev_link_a = &prev->zd_condpar_done_next;
+        atf_amc::FCondpar **prev_link_b = &_db.zd_condpar_done_head;
+        *(prev ? prev_link_a : prev_link_b) = &row;
+        atf_amc::FCondpar **next_link_a = &next->zd_condpar_done_prev;
+        atf_amc::FCondpar **next_link_b = &_db.zd_condpar_done_tail;
+        *(next ? next_link_a : next_link_b) = &row;
+        _db.zd_condpar_done_n++;
+    }
+}
+
+// --- atf_amc.FDb.cd_condtest_space.Insert
+// Insert row into linked list. If row is already in linked list, do nothing.
+void atf_amc::cd_condtest_space_Insert(atf_amc::FCondtest& row) {
+    if (!cd_condtest_space_InLlistQ(row)) {
+        if (_db.cd_condtest_space_head) {
+            row.cd_condtest_space_next = _db.cd_condtest_space_head;
+            row.cd_condtest_space_prev = _db.cd_condtest_space_head->cd_condtest_space_prev;
+            row.cd_condtest_space_prev->cd_condtest_space_next = &row;
+            row.cd_condtest_space_next->cd_condtest_space_prev = &row;
+        } else {
+            row.cd_condtest_space_next = &row;
+            row.cd_condtest_space_prev = &row;
+            _db.cd_condtest_space_head = &row;
+        }
+        _db.cd_condtest_space_n++;
+    }
+}
+
+// --- atf_amc.FDb.cd_condtest_space.Remove
+// Remove element from index. If element is not in index, do nothing.
+void atf_amc::cd_condtest_space_Remove(atf_amc::FCondtest& row) {
+    if (cd_condtest_space_InLlistQ(row)) {
+        atf_amc::FCondtest* old_head       = _db.cd_condtest_space_head;
+        (void)old_head; // in case it's not used
+        atf_amc::FCondtest *oldnext = row.cd_condtest_space_next;
+        atf_amc::FCondtest *oldprev = row.cd_condtest_space_prev;
+        oldnext->cd_condtest_space_prev = oldprev; // remove element from list
+        oldprev->cd_condtest_space_next = oldnext;
+        _db.cd_condtest_space_n--;  // adjust count
+        if (&row == _db.cd_condtest_space_head) {
+            _db.cd_condtest_space_head = oldnext==&row ? NULL : oldnext; // adjust list head
+        }
+        row.cd_condtest_space_next = (atf_amc::FCondtest*)-1; // mark element as not-in-list);
+        row.cd_condtest_space_prev = NULL; // clear back-pointer
+    }
+}
+
+// --- atf_amc.FDb.cd_condtest_space.RemoveAll
+// Empty the index. (The rows are not deleted)
+void atf_amc::cd_condtest_space_RemoveAll() {
+    atf_amc::FCondtest* row = _db.cd_condtest_space_head;
+    atf_amc::FCondtest* head = _db.cd_condtest_space_head;
+    _db.cd_condtest_space_head = NULL;
+    _db.cd_condtest_space_n = 0;
+    while (row) {
+        atf_amc::FCondtest* row_next = row->cd_condtest_space_next;
+        row->cd_condtest_space_next  = (atf_amc::FCondtest*)-1;
+        row->cd_condtest_space_prev  = NULL;
+        row = row_next != head  ? row_next : NULL;
+    }
+}
+
+// --- atf_amc.FDb.cd_condtest_space.RemoveFirst
+// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+atf_amc::FCondtest* atf_amc::cd_condtest_space_RemoveFirst() {
+    atf_amc::FCondtest *row = NULL;
+    row = _db.cd_condtest_space_head;
+    if (row) {
+        bool hasmore = row!=row->cd_condtest_space_next;
+        _db.cd_condtest_space_head = hasmore ? row->cd_condtest_space_next : NULL;
+        row->cd_condtest_space_next->cd_condtest_space_prev = row->cd_condtest_space_prev;
+        row->cd_condtest_space_prev->cd_condtest_space_next = row->cd_condtest_space_next;
+        row->cd_condtest_space_prev = NULL;
+        _db.cd_condtest_space_n--;
+        row->cd_condtest_space_next = (atf_amc::FCondtest*)-1; // mark as not-in-list
+    }
+    return row;
+}
+
+// --- atf_amc.FDb.cd_condtest_space.RotateFirst
+// If linked list is empty, return NULL.
+// Otherwise return head item and advance head to the next item.
+atf_amc::FCondtest* atf_amc::cd_condtest_space_RotateFirst() {
+    atf_amc::FCondtest *row = NULL;
+    row = _db.cd_condtest_space_head;
+    if (row) {
+        _db.cd_condtest_space_head = row->cd_condtest_space_next;
+    }
+    return row;
+}
+
+// --- atf_amc.FDb.sslbuf.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool atf_amc::sslbuf_XrefMaybe(atf_amc::Sslbuf &row) {
+    bool retval = true;
+    (void)row;
+    return retval;
+}
+
+// --- atf_amc.FDb.cd_sslbuf_out.Insert
+// Insert row into linked list. If row is already in linked list, do nothing.
+void atf_amc::cd_sslbuf_out_Insert(atf_amc::Sslbuf& row) {
+    if (!cd_sslbuf_out_InLlistQ(row)) {
+        if (_db.cd_sslbuf_out_head) {
+            row.cd_sslbuf_out_next = _db.cd_sslbuf_out_head;
+            row.cd_sslbuf_out_prev = _db.cd_sslbuf_out_head->cd_sslbuf_out_prev;
+            row.cd_sslbuf_out_prev->cd_sslbuf_out_next = &row;
+            row.cd_sslbuf_out_next->cd_sslbuf_out_prev = &row;
+        } else {
+            row.cd_sslbuf_out_next = &row;
+            row.cd_sslbuf_out_prev = &row;
+            _db.cd_sslbuf_out_head = &row;
+        }
+    }
+}
+
+// --- atf_amc.FDb.cd_sslbuf_out.Remove
+// Remove element from index. If element is not in index, do nothing.
+void atf_amc::cd_sslbuf_out_Remove(atf_amc::Sslbuf& row) {
+    if (cd_sslbuf_out_InLlistQ(row)) {
+        atf_amc::Sslbuf* old_head       = _db.cd_sslbuf_out_head;
+        (void)old_head; // in case it's not used
+        atf_amc::Sslbuf *oldnext = row.cd_sslbuf_out_next;
+        atf_amc::Sslbuf *oldprev = row.cd_sslbuf_out_prev;
+        oldnext->cd_sslbuf_out_prev = oldprev; // remove element from list
+        oldprev->cd_sslbuf_out_next = oldnext;
+        if (&row == _db.cd_sslbuf_out_head) {
+            _db.cd_sslbuf_out_head = oldnext==&row ? NULL : oldnext; // adjust list head
+        }
+        row.cd_sslbuf_out_next = (atf_amc::Sslbuf*)-1; // mark element as not-in-list);
+        row.cd_sslbuf_out_prev = NULL; // clear back-pointer
+    }
+}
+
+// --- atf_amc.FDb.cd_sslbuf_out.RemoveAll
+// Empty the index. (The rows are not deleted)
+void atf_amc::cd_sslbuf_out_RemoveAll() {
+    atf_amc::Sslbuf* row = _db.cd_sslbuf_out_head;
+    atf_amc::Sslbuf* head = _db.cd_sslbuf_out_head;
+    _db.cd_sslbuf_out_head = NULL;
+    while (row) {
+        atf_amc::Sslbuf* row_next = row->cd_sslbuf_out_next;
+        row->cd_sslbuf_out_next  = (atf_amc::Sslbuf*)-1;
+        row->cd_sslbuf_out_prev  = NULL;
+        row = row_next != head  ? row_next : NULL;
+    }
+}
+
+// --- atf_amc.FDb.cd_sslbuf_out.RemoveFirst
+// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+atf_amc::Sslbuf* atf_amc::cd_sslbuf_out_RemoveFirst() {
+    atf_amc::Sslbuf *row = NULL;
+    row = _db.cd_sslbuf_out_head;
+    if (row) {
+        bool hasmore = row!=row->cd_sslbuf_out_next;
+        _db.cd_sslbuf_out_head = hasmore ? row->cd_sslbuf_out_next : NULL;
+        row->cd_sslbuf_out_next->cd_sslbuf_out_prev = row->cd_sslbuf_out_prev;
+        row->cd_sslbuf_out_prev->cd_sslbuf_out_next = row->cd_sslbuf_out_next;
+        row->cd_sslbuf_out_prev = NULL;
+        row->cd_sslbuf_out_next = (atf_amc::Sslbuf*)-1; // mark as not-in-list
+    }
+    return row;
+}
+
+// --- atf_amc.FDb.cd_sslbuf_out.RotateFirst
+// If linked list is empty, return NULL.
+// Otherwise return head item and advance head to the next item.
+atf_amc::Sslbuf* atf_amc::cd_sslbuf_out_RotateFirst() {
+    atf_amc::Sslbuf *row = NULL;
+    row = _db.cd_sslbuf_out_head;
+    if (row) {
+        _db.cd_sslbuf_out_head = row->cd_sslbuf_out_next;
+    }
+    return row;
+}
+
+// --- atf_amc.FDb.lpool.FreeMem
+// Free block of memory previously returned by Lpool.
+// SIZE must be of the same class the memory was allocated with.
+void atf_amc::lpool_FreeMem(void* mem, u64 size) {
+    size = u64_Max(size,1ULL<<4);
+    u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
+    if (mem && cell < 11) {
+        // a blk-class record returns to its blk, found by address mask
+        lpool_Lpblk *blk = (lpool_Lpblk*)((u64)mem & ~(u64)65535);
+        lpool_Lpblock *rec = (lpool_Lpblock*)mem;
+        rec->next = blk->freerec;
+        blk->freerec = rec;
+        blk->live--;
+        if (blk->pprev == NULL) { // regained space: rejoin the class list
+            blk->next = _db.lpool_blk[blk->cell];
+            blk->pprev = &_db.lpool_blk[blk->cell];
+            if (blk->next) {
+                blk->next->pprev = &blk->next;
+            }
+            _db.lpool_blk[blk->cell] = blk;
+        }
+        // drained blk reverts to an ordinary block on the blk-size level,
+        // reusable by any class; the last blk of a class is kept dedicated
+        // so a lone alloc/free cycle does not thrash dedication
+        bool sole = _db.lpool_blk[blk->cell] == blk && blk->next == NULL;
+        if (blk->live == 0 && !sole) {
+            *blk->pprev = blk->next;
+            if (blk->next) {
+                blk->next->pprev = blk->pprev;
+            }
+            lpool_Lpblock *raw = (lpool_Lpblock*)blk;
+            raw->next = _db.lpool_free[12];
+            _db.lpool_free[12] = raw;
+        }
+    } else if (mem && cell < 36) {
+        lpool_Lpblock *temp = (lpool_Lpblock*)mem; // push  singly linked list
+        temp->next = _db.lpool_free[cell];
+        _db.lpool_free[cell] = temp;
+    }
+}
+
+// --- atf_amc.FDb.lpool.AllocMem
+// Allocate new piece of memory at least SIZE bytes long.
+// If not successful, return NULL
+// The allocated block is at least 1<<4
+// The maximum allocation size is at most 1<<(36+4)
+void* atf_amc::lpool_AllocMem(u64 size) {
+    void *retval = NULL;
+    size     = u64_Max(size,1ULL<<4); // enforce alignment
+    u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
+    lpool_Lpblk *blk = cell < 11 ? _db.lpool_blk[cell] : NULL;
+    if (cell < 36 && blk == NULL) {
+        // acquire a raw block: for a blk class, a blk-size block to dedicate;
+        // otherwise the requested level. Serve from the lowest populated
+        // level at or above it, splitting the upper halves back down.
+        u64 rawcell = cell < 11 ? (u64)12 : cell;
+        void *rawmem = NULL;
+        u64 i = rawcell;
+        for (; i < 36; i++) {
+            lpool_Lpblock *rawblk = _db.lpool_free[i];
+            if (rawblk) {
+                _db.lpool_free[i] = rawblk->next;
+                rawmem = rawblk;
+                break;
+            }
+        }
+        // if no suitable block, refill from the base allocator with exactly
+        // the level size, a whole number of base granules; the base pool
+        // returns big blocks granule-aligned, so every carved block of blk
+        // size and up is blk-aligned (FreeMem locates a record's blk by
+        // address mask)
+        if (UNLIKELY(!rawmem)) {
+            i = u64_Max(rawcell, 21-4); // 2MB min -- allow huge page to be used
+            rawmem = algo_lib::sbrk_AllocMem(1ULL<<(i+4));
+        }
+        if (LIKELY(rawmem)) {
+            // if block is more than 2x as large as needed, return the upper half to the free
+            // list (repeatedly). meanwhile, rawmem doesn't change.
+            while (i > rawcell) {
+                i--;
+                u64 half = 1ULL<<(i+4);
+                lpool_Lpblock *shed = (lpool_Lpblock*)((u8*)rawmem + half);
+                shed->next = _db.lpool_free[i];
+                _db.lpool_free[i] = shed;
+            }
+            if (cell < 11) { // stamp a fresh blk dedicated to this class
+                blk = (lpool_Lpblk*)rawmem;
+                blk->freerec = NULL;
+                blk->rsize = 1u<<(cell+4);
+                blk->live = 0;
+                blk->tip = 64;
+                blk->cell = (u32)cell;
+                blk->next = NULL;
+                blk->pprev = &_db.lpool_blk[cell];
+                _db.lpool_blk[cell] = blk;
+            } else {
+                retval = rawmem;
+            }
+        }
+    }
+    if (blk) { // serve one record: a freed record first, else bump the tip
+        lpool_Lpblock *rec = blk->freerec;
+        if (rec) {
+            blk->freerec = rec->next;
+            retval = rec;
+        } else {
+            retval = (u8*)blk + blk->tip;
+            blk->tip += blk->rsize;
+        }
+        blk->live++;
+        if (blk->freerec == NULL && blk->tip + blk->rsize > 65536) {
+            // full: leave the class list until a record comes back
+            *blk->pprev = blk->next;
+            if (blk->next) {
+                blk->next->pprev = blk->pprev;
+            }
+            blk->pprev = NULL;
+            blk->next = NULL;
+        }
+    }
+    return retval;
+}
+
+// --- atf_amc.FDb.lpool.ReserveBuffers
+// Add N buffers of some size to the free store
+// Stock the free store with NBUF buffers of size BUFSIZE:
+// allocate them all, then free them all, chaining through the buffers
+bool atf_amc::lpool_ReserveBuffers(u64 nbuf, u64 bufsize) {
+    bool retval = true;
+    lpool_Lpblock *head = NULL;
+    for (u64 i = 0; i < nbuf; i++) {
+        lpool_Lpblock *temp = (lpool_Lpblock*)lpool_AllocMem(bufsize);
+        if (temp == NULL) {
+            retval = false;// an unservable bufsize or an exhausted base pool reserves nothing further
+            break;
+        } else {
+            temp->next = head;
+            head = temp;
+        }
+    }
+    while (head) {
+        lpool_Lpblock *next = head->next;
+        lpool_FreeMem(head, bufsize);
+        head = next;
+    }
+    return retval;
+}
+
+// --- atf_amc.FDb.lpool.ReallocMem
+// Allocate new block, copy old to new, delete old.
+// If the new size is same as old size, do nothing.
+// In all other cases, new memory is allocated (i.e. size reduction is not a no-op)
+// If no memory, return NULL; old memory remains untouched
+void* atf_amc::lpool_ReallocMem(void* oldmem, u64 old_size, u64 new_size) {
+    void *ret = oldmem;
+    if (new_size != old_size) {
+        ret = lpool_AllocMem(new_size);
+        if (ret && oldmem) {
+            memcpy(ret,oldmem,u64_Min(new_size,old_size));
+            lpool_FreeMem(oldmem, old_size);
+        }
+    }
+    return ret;
+}
+
+// --- atf_amc.FDb.lpool.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+u8& atf_amc::lpool_Alloc() {
+    u8* row = lpool_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("atf_amc.out_of_mem  field:atf_amc.FDb.lpool  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- atf_amc.FDb.lpool.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+u8* atf_amc::lpool_AllocMaybe() {
+    u8 *row = (u8*)lpool_AllocMem(sizeof(u8));
+    if (row) {
+        new (row) u8; // call constructor
+    }
+    return row;
+}
+
+// --- atf_amc.FDb.lpool.Delete
+// Remove row from all global and cross indices, then deallocate row
+void atf_amc::lpool_Delete(u8 &row) {
+    int length = sizeof(u8);
+    lpool_FreeMem(&row, length);
+}
+
+// --- atf_amc.FDb.lpoolbuf.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool atf_amc::lpoolbuf_XrefMaybe(atf_amc::Lpoolbuf &row) {
+    bool retval = true;
+    (void)row;
+    return retval;
+}
+
+// --- atf_amc.FDb.optwide.FreeMem
+// Free block of memory previously returned by Lpool.
+// SIZE must be of the same class the memory was allocated with.
+void atf_amc::optwide_FreeMem(void* mem, u64 size) {
+    size = u64_Max(size,1ULL<<4);
+    u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
+    if (mem && cell < 11) {
+        // a blk-class record returns to its blk, found by address mask
+        optwide_Lpblk *blk = (optwide_Lpblk*)((u64)mem & ~(u64)65535);
+        optwide_Lpblock *rec = (optwide_Lpblock*)mem;
+        rec->next = blk->freerec;
+        blk->freerec = rec;
+        blk->live--;
+        if (blk->pprev == NULL) { // regained space: rejoin the class list
+            blk->next = _db.optwide_blk[blk->cell];
+            blk->pprev = &_db.optwide_blk[blk->cell];
+            if (blk->next) {
+                blk->next->pprev = &blk->next;
+            }
+            _db.optwide_blk[blk->cell] = blk;
+        }
+        // drained blk reverts to an ordinary block on the blk-size level,
+        // reusable by any class; the last blk of a class is kept dedicated
+        // so a lone alloc/free cycle does not thrash dedication
+        bool sole = _db.optwide_blk[blk->cell] == blk && blk->next == NULL;
+        if (blk->live == 0 && !sole) {
+            *blk->pprev = blk->next;
+            if (blk->next) {
+                blk->next->pprev = blk->pprev;
+            }
+            optwide_Lpblock *raw = (optwide_Lpblock*)blk;
+            raw->next = _db.optwide_free[12];
+            _db.optwide_free[12] = raw;
+        }
+        _db.optwide_n--;
+    } else if (mem && cell < 36) {
+        optwide_Lpblock *temp = (optwide_Lpblock*)mem; // push  singly linked list
+        temp->next = _db.optwide_free[cell];
+        _db.optwide_free[cell] = temp;
+        _db.optwide_n--;
+    }
+}
+
+// --- atf_amc.FDb.optwide.AllocMem
+// Allocate new piece of memory at least SIZE bytes long.
+// If not successful, return NULL
+// The allocated block is at least 1<<4
+// The maximum allocation size is at most 1<<(36+4)
+void* atf_amc::optwide_AllocMem(u64 size) {
+    void *retval = NULL;
+    size     = u64_Max(size,1ULL<<4); // enforce alignment
+    u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
+    optwide_Lpblk *blk = cell < 11 ? _db.optwide_blk[cell] : NULL;
+    if (cell < 36 && blk == NULL) {
+        // acquire a raw block: for a blk class, a blk-size block to dedicate;
+        // otherwise the requested level. Serve from the lowest populated
+        // level at or above it, splitting the upper halves back down.
+        u64 rawcell = cell < 11 ? (u64)12 : cell;
+        void *rawmem = NULL;
+        u64 i = rawcell;
+        for (; i < 36; i++) {
+            optwide_Lpblock *rawblk = _db.optwide_free[i];
+            if (rawblk) {
+                _db.optwide_free[i] = rawblk->next;
+                rawmem = rawblk;
+                break;
+            }
+        }
+        // if no suitable block, refill from the base allocator with exactly
+        // the level size, a whole number of base granules; the base pool
+        // returns big blocks granule-aligned, so every carved block of blk
+        // size and up is blk-aligned (FreeMem locates a record's blk by
+        // address mask)
+        if (UNLIKELY(!rawmem)) {
+            i = u64_Max(rawcell, 21-4); // 2MB min -- allow huge page to be used
+            rawmem = algo_lib::sbrk_AllocMem(1ULL<<(i+4));
+        }
+        if (LIKELY(rawmem)) {
+            // if block is more than 2x as large as needed, return the upper half to the free
+            // list (repeatedly). meanwhile, rawmem doesn't change.
+            while (i > rawcell) {
+                i--;
+                u64 half = 1ULL<<(i+4);
+                optwide_Lpblock *shed = (optwide_Lpblock*)((u8*)rawmem + half);
+                shed->next = _db.optwide_free[i];
+                _db.optwide_free[i] = shed;
+            }
+            if (cell < 11) { // stamp a fresh blk dedicated to this class
+                blk = (optwide_Lpblk*)rawmem;
+                blk->freerec = NULL;
+                blk->rsize = 1u<<(cell+4);
+                blk->live = 0;
+                blk->tip = 64;
+                blk->cell = (u32)cell;
+                blk->next = NULL;
+                blk->pprev = &_db.optwide_blk[cell];
+                _db.optwide_blk[cell] = blk;
+            } else {
+                retval = rawmem;
+            }
+        }
+    }
+    if (blk) { // serve one record: a freed record first, else bump the tip
+        optwide_Lpblock *rec = blk->freerec;
+        if (rec) {
+            blk->freerec = rec->next;
+            retval = rec;
+        } else {
+            retval = (u8*)blk + blk->tip;
+            blk->tip += blk->rsize;
+        }
+        blk->live++;
+        if (blk->freerec == NULL && blk->tip + blk->rsize > 65536) {
+            // full: leave the class list until a record comes back
+            *blk->pprev = blk->next;
+            if (blk->next) {
+                blk->next->pprev = blk->pprev;
+            }
+            blk->pprev = NULL;
+            blk->next = NULL;
+        }
+    }
+    _db.optwide_n += retval != NULL;
+    return retval;
+}
+
+// --- atf_amc.FDb.optwide.ReserveBuffers
+// Add N buffers of some size to the free store
+// Stock the free store with NBUF buffers of size BUFSIZE:
+// allocate them all, then free them all, chaining through the buffers
+bool atf_amc::optwide_ReserveBuffers(u64 nbuf, u64 bufsize) {
+    bool retval = true;
+    optwide_Lpblock *head = NULL;
+    for (u64 i = 0; i < nbuf; i++) {
+        optwide_Lpblock *temp = (optwide_Lpblock*)optwide_AllocMem(bufsize);
+        if (temp == NULL) {
+            retval = false;// an unservable bufsize or an exhausted base pool reserves nothing further
+            break;
+        } else {
+            temp->next = head;
+            head = temp;
+        }
+    }
+    while (head) {
+        optwide_Lpblock *next = head->next;
+        optwide_FreeMem(head, bufsize);
+        head = next;
+    }
+    return retval;
+}
+
+// --- atf_amc.FDb.optwide.ReallocMem
+// Allocate new block, copy old to new, delete old.
+// If the new size is same as old size, do nothing.
+// In all other cases, new memory is allocated (i.e. size reduction is not a no-op)
+// If no memory, return NULL; old memory remains untouched
+void* atf_amc::optwide_ReallocMem(void* oldmem, u64 old_size, u64 new_size) {
+    void *ret = oldmem;
+    if (new_size != old_size) {
+        ret = optwide_AllocMem(new_size);
+        if (ret && oldmem) {
+            memcpy(ret,oldmem,u64_Min(new_size,old_size));
+            optwide_FreeMem(oldmem, old_size);
+        }
+    }
+    return ret;
+}
+
+// --- atf_amc.FDb.optwide.AllocExtra
+atf_amc::FOptWide& atf_amc::optwide_AllocExtra(void *extra, i32 nbyte_extra) {
+    atf_amc::FOptWide *row = optwide_AllocExtraMaybe(extra, nbyte_extra);
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("atf_amc.out_of_mem  field:atf_amc.FDb.optwide  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- atf_amc.FDb.optwide.AllocExtraMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+atf_amc::FOptWide* atf_amc::optwide_AllocExtraMaybe(void *extra, i32 nbyte_extra) {
+    atf_amc::FOptWide *row = NULL;
+    if (nbyte_extra >= 0 && nbyte_extra % 2 == 0 && nbyte_extra <= 0x7fffffff - ssizeof(atf_amc::FOptWide)) { // a negative count would underallocate the fixed portion; only a multiple of scale is representable in the length field; a larger total does not fit the i32 a frame length is read back through
+        row = (atf_amc::FOptWide*)optwide_AllocMem(sizeof(atf_amc::FOptWide) + nbyte_extra);
+    }
+    if (row) {
+        new (row) atf_amc::FOptWide; // call constructor
+        row->length = u64((sizeof(atf_amc::FOptWide) + nbyte_extra-8) / 2);
+        if (extra) {
+            memcpy((u8*)row + sizeof(atf_amc::FOptWide), extra, nbyte_extra);
+        }
+    }
+    return row;
+}
+
+// --- atf_amc.FDb.optwide.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+atf_amc::FOptWide* atf_amc::optwide_InsertMaybe(const atf_amc::OptWide &value) {
+    u8 *addon_addr = (u8*)&value + ssizeof(atf_amc::OptWide);
+    if (u64(value.length) > 1073741819ULL) {
+        return NULL; // length word beyond any storable total; reject before the i64 expansion can overflow
+    }
+    i64 addon_len = i64(value.length) * 2 + 8 - ssizeof(atf_amc::OptWide);
+    if (!(addon_len >= 0 && addon_len % 2 == 0 && addon_len <= 0x7fffffff - ssizeof(atf_amc::FOptWide))) { // a negative count would underallocate the fixed portion; only a multiple of scale is representable in the length field; a larger total does not fit the i32 a frame length is read back through
+        return NULL; // the addon count is not one the allocation accepts
+    }
+    atf_amc::FOptWide *row = &optwide_AllocExtra(addon_addr, i32(addon_len));
+    optwide_CopyIn(*row,const_cast<atf_amc::OptWide&>(value));
+    bool ok = optwide_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        optwide_Delete(*row); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- atf_amc.FDb.optwide.Delete
+// Remove row from all global and cross indices, then deallocate row
+void atf_amc::optwide_Delete(atf_amc::FOptWide &row) {
+    int length = i32(row.length * 2 + 8);
+    optwide_FreeMem(&row, length);
+}
+
+// --- atf_amc.FDb.optwide.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool atf_amc::optwide_XrefMaybe(atf_amc::FOptWide &row) {
+    bool retval = true;
+    (void)row;
+    return retval;
+}
+
+// --- atf_amc.FDb.optsigned.FreeMem
+// Free block of memory previously returned by Lpool.
+// SIZE must be of the same class the memory was allocated with.
+void atf_amc::optsigned_FreeMem(void* mem, u64 size) {
+    size = u64_Max(size,1ULL<<4);
+    u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
+    if (mem && cell < 11) {
+        // a blk-class record returns to its blk, found by address mask
+        optsigned_Lpblk *blk = (optsigned_Lpblk*)((u64)mem & ~(u64)65535);
+        optsigned_Lpblock *rec = (optsigned_Lpblock*)mem;
+        rec->next = blk->freerec;
+        blk->freerec = rec;
+        blk->live--;
+        if (blk->pprev == NULL) { // regained space: rejoin the class list
+            blk->next = _db.optsigned_blk[blk->cell];
+            blk->pprev = &_db.optsigned_blk[blk->cell];
+            if (blk->next) {
+                blk->next->pprev = &blk->next;
+            }
+            _db.optsigned_blk[blk->cell] = blk;
+        }
+        // drained blk reverts to an ordinary block on the blk-size level,
+        // reusable by any class; the last blk of a class is kept dedicated
+        // so a lone alloc/free cycle does not thrash dedication
+        bool sole = _db.optsigned_blk[blk->cell] == blk && blk->next == NULL;
+        if (blk->live == 0 && !sole) {
+            *blk->pprev = blk->next;
+            if (blk->next) {
+                blk->next->pprev = blk->pprev;
+            }
+            optsigned_Lpblock *raw = (optsigned_Lpblock*)blk;
+            raw->next = _db.optsigned_free[12];
+            _db.optsigned_free[12] = raw;
+        }
+        _db.optsigned_n--;
+    } else if (mem && cell < 36) {
+        optsigned_Lpblock *temp = (optsigned_Lpblock*)mem; // push  singly linked list
+        temp->next = _db.optsigned_free[cell];
+        _db.optsigned_free[cell] = temp;
+        _db.optsigned_n--;
+    }
+}
+
+// --- atf_amc.FDb.optsigned.AllocMem
+// Allocate new piece of memory at least SIZE bytes long.
+// If not successful, return NULL
+// The allocated block is at least 1<<4
+// The maximum allocation size is at most 1<<(36+4)
+void* atf_amc::optsigned_AllocMem(u64 size) {
+    void *retval = NULL;
+    size     = u64_Max(size,1ULL<<4); // enforce alignment
+    u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
+    optsigned_Lpblk *blk = cell < 11 ? _db.optsigned_blk[cell] : NULL;
+    if (cell < 36 && blk == NULL) {
+        // acquire a raw block: for a blk class, a blk-size block to dedicate;
+        // otherwise the requested level. Serve from the lowest populated
+        // level at or above it, splitting the upper halves back down.
+        u64 rawcell = cell < 11 ? (u64)12 : cell;
+        void *rawmem = NULL;
+        u64 i = rawcell;
+        for (; i < 36; i++) {
+            optsigned_Lpblock *rawblk = _db.optsigned_free[i];
+            if (rawblk) {
+                _db.optsigned_free[i] = rawblk->next;
+                rawmem = rawblk;
+                break;
+            }
+        }
+        // if no suitable block, refill from the base allocator with exactly
+        // the level size, a whole number of base granules; the base pool
+        // returns big blocks granule-aligned, so every carved block of blk
+        // size and up is blk-aligned (FreeMem locates a record's blk by
+        // address mask)
+        if (UNLIKELY(!rawmem)) {
+            i = u64_Max(rawcell, 21-4); // 2MB min -- allow huge page to be used
+            rawmem = algo_lib::sbrk_AllocMem(1ULL<<(i+4));
+        }
+        if (LIKELY(rawmem)) {
+            // if block is more than 2x as large as needed, return the upper half to the free
+            // list (repeatedly). meanwhile, rawmem doesn't change.
+            while (i > rawcell) {
+                i--;
+                u64 half = 1ULL<<(i+4);
+                optsigned_Lpblock *shed = (optsigned_Lpblock*)((u8*)rawmem + half);
+                shed->next = _db.optsigned_free[i];
+                _db.optsigned_free[i] = shed;
+            }
+            if (cell < 11) { // stamp a fresh blk dedicated to this class
+                blk = (optsigned_Lpblk*)rawmem;
+                blk->freerec = NULL;
+                blk->rsize = 1u<<(cell+4);
+                blk->live = 0;
+                blk->tip = 64;
+                blk->cell = (u32)cell;
+                blk->next = NULL;
+                blk->pprev = &_db.optsigned_blk[cell];
+                _db.optsigned_blk[cell] = blk;
+            } else {
+                retval = rawmem;
+            }
+        }
+    }
+    if (blk) { // serve one record: a freed record first, else bump the tip
+        optsigned_Lpblock *rec = blk->freerec;
+        if (rec) {
+            blk->freerec = rec->next;
+            retval = rec;
+        } else {
+            retval = (u8*)blk + blk->tip;
+            blk->tip += blk->rsize;
+        }
+        blk->live++;
+        if (blk->freerec == NULL && blk->tip + blk->rsize > 65536) {
+            // full: leave the class list until a record comes back
+            *blk->pprev = blk->next;
+            if (blk->next) {
+                blk->next->pprev = blk->pprev;
+            }
+            blk->pprev = NULL;
+            blk->next = NULL;
+        }
+    }
+    _db.optsigned_n += retval != NULL;
+    return retval;
+}
+
+// --- atf_amc.FDb.optsigned.ReserveBuffers
+// Add N buffers of some size to the free store
+// Stock the free store with NBUF buffers of size BUFSIZE:
+// allocate them all, then free them all, chaining through the buffers
+bool atf_amc::optsigned_ReserveBuffers(u64 nbuf, u64 bufsize) {
+    bool retval = true;
+    optsigned_Lpblock *head = NULL;
+    for (u64 i = 0; i < nbuf; i++) {
+        optsigned_Lpblock *temp = (optsigned_Lpblock*)optsigned_AllocMem(bufsize);
+        if (temp == NULL) {
+            retval = false;// an unservable bufsize or an exhausted base pool reserves nothing further
+            break;
+        } else {
+            temp->next = head;
+            head = temp;
+        }
+    }
+    while (head) {
+        optsigned_Lpblock *next = head->next;
+        optsigned_FreeMem(head, bufsize);
+        head = next;
+    }
+    return retval;
+}
+
+// --- atf_amc.FDb.optsigned.ReallocMem
+// Allocate new block, copy old to new, delete old.
+// If the new size is same as old size, do nothing.
+// In all other cases, new memory is allocated (i.e. size reduction is not a no-op)
+// If no memory, return NULL; old memory remains untouched
+void* atf_amc::optsigned_ReallocMem(void* oldmem, u64 old_size, u64 new_size) {
+    void *ret = oldmem;
+    if (new_size != old_size) {
+        ret = optsigned_AllocMem(new_size);
+        if (ret && oldmem) {
+            memcpy(ret,oldmem,u64_Min(new_size,old_size));
+            optsigned_FreeMem(oldmem, old_size);
+        }
+    }
+    return ret;
+}
+
+// --- atf_amc.FDb.optsigned.AllocExtra
+atf_amc::FOptSigned& atf_amc::optsigned_AllocExtra(void *extra, i32 nbyte_extra) {
+    atf_amc::FOptSigned *row = optsigned_AllocExtraMaybe(extra, nbyte_extra);
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("atf_amc.out_of_mem  field:atf_amc.FDb.optsigned  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- atf_amc.FDb.optsigned.AllocExtraMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+atf_amc::FOptSigned* atf_amc::optsigned_AllocExtraMaybe(void *extra, i32 nbyte_extra) {
+    atf_amc::FOptSigned *row = NULL;
+    if (nbyte_extra >= 0 && nbyte_extra <= 0x7fffffff - ssizeof(atf_amc::FOptSigned)) { // a negative count would underallocate the fixed portion; a larger total does not fit the i32 a frame length is read back through
+        row = (atf_amc::FOptSigned*)optsigned_AllocMem(sizeof(atf_amc::FOptSigned) + nbyte_extra);
+    }
+    if (row) {
+        new (row) atf_amc::FOptSigned; // call constructor
+        row->length = i64(sizeof(atf_amc::FOptSigned) + nbyte_extra);
+        if (extra) {
+            memcpy((u8*)row + sizeof(atf_amc::FOptSigned), extra, nbyte_extra);
+        }
+    }
+    return row;
+}
+
+// --- atf_amc.FDb.optsigned.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+atf_amc::FOptSigned* atf_amc::optsigned_InsertMaybe(const atf_amc::OptSigned &value) {
+    u8 *addon_addr = (u8*)&value + ssizeof(atf_amc::OptSigned);
+    if (u64(value.length) > 2147483647ULL) {
+        return NULL; // length word beyond any storable total; reject before the i64 expansion can overflow
+    }
+    i64 addon_len = i64(value.length) - ssizeof(atf_amc::OptSigned);
+    if (!(addon_len >= 0 && addon_len <= 0x7fffffff - ssizeof(atf_amc::FOptSigned))) { // a negative count would underallocate the fixed portion; a larger total does not fit the i32 a frame length is read back through
+        return NULL; // the addon count is not one the allocation accepts
+    }
+    atf_amc::FOptSigned *row = &optsigned_AllocExtra(addon_addr, i32(addon_len));
+    optsigned_CopyIn(*row,const_cast<atf_amc::OptSigned&>(value));
+    bool ok = optsigned_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        optsigned_Delete(*row); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- atf_amc.FDb.optsigned.Delete
+// Remove row from all global and cross indices, then deallocate row
+void atf_amc::optsigned_Delete(atf_amc::FOptSigned &row) {
+    int length = i32(row.length);
+    optsigned_FreeMem(&row, length);
+}
+
+// --- atf_amc.FDb.optsigned.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool atf_amc::optsigned_XrefMaybe(atf_amc::FOptSigned &row) {
+    bool retval = true;
+    (void)row;
+    return retval;
+}
+
+// --- atf_amc.FDb.typeu.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+atf_amc::FTypeU& atf_amc::typeu_Alloc() {
+    atf_amc::FTypeU* row = typeu_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("atf_amc.out_of_mem  field:atf_amc.FDb.typeu  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- atf_amc.FDb.typeu.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+atf_amc::FTypeU* atf_amc::typeu_AllocMaybe() {
+    atf_amc::FTypeU *row = (atf_amc::FTypeU*)typeu_AllocMem();
+    if (row) {
+        new (row) atf_amc::FTypeU; // call constructor
+    }
+    return row;
+}
+
+// --- atf_amc.FDb.typeu.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+atf_amc::FTypeU* atf_amc::typeu_InsertMaybe(const atf_amc::TypeU &value) {
+    atf_amc::FTypeU *row = &typeu_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    typeu_CopyIn(*row,const_cast<atf_amc::TypeU&>(value));
+    bool ok = typeu_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        typeu_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- atf_amc.FDb.typeu.UpdateMaybe
+// Insert new value or update existing value
+atf_amc::FTypeU* atf_amc::typeu_UpdateMaybe(atf_amc::TypeU &value) {
+    atf_amc::FTypeU *row = NULL;
+    row = atf_amc::ind_typeu_Find(value.u);
+    if (row) {
+        ind_typeu_v_Remove(*row);
+        row->u = value.u;
+        row->v = value.v;
+        (void)ind_typeu_v_InsertMaybe(*row);
+    } else {
+        row = typeu_InsertMaybe(value);
+    }
+    return row;
+}
+
+// --- atf_amc.FDb.typeu.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* atf_amc::typeu_AllocMem() {
+    u64 new_nelems     = _db.typeu_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    atf_amc::FTypeU*  lev   = NULL;
+    if (bsr < 36) {
+        lev = _db.typeu_lary[bsr];
+        if (!lev) {
+            lev=(atf_amc::FTypeU*)algo_lib::malloc_AllocMem(sizeof(atf_amc::FTypeU) * (u64(1)<<bsr));
+            _db.typeu_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.typeu_n = i64(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- atf_amc.FDb.typeu.RemoveAll
+// Remove all elements from Lary
+void atf_amc::typeu_RemoveAll() {
+    for (u64 n = _db.typeu_n; n>0; ) {
+        n--;
+        typeu_qFind(u64(n)).~FTypeU(); // destroy last element
+        _db.typeu_n = i64(n);
+    }
+}
+
+// --- atf_amc.FDb.typeu.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void atf_amc::typeu_RemoveLast() {
+    u64 n = _db.typeu_n;
+    if (n > 0) {
+        n -= 1;
+        typeu_qFind(u64(n)).~FTypeU();
+        _db.typeu_n = i64(n);
+    }
+}
+
+// --- atf_amc.FDb.typeu.InputMaybe
+static bool atf_amc::typeu_InputMaybe(atf_amc::TypeU &elem) {
+    bool retval = true;
+    retval = typeu_UpdateMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- atf_amc.FDb.typeu.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool atf_amc::typeu_XrefMaybe(atf_amc::FTypeU &row) {
+    bool retval = true;
+    (void)row;
+    // insert typeu into index ind_typeu
+    if (true) { // user-defined insert condition
+        bool success = ind_typeu_InsertMaybe(row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "atf_amc.duplicate_key  xref:atf_amc.FDb.ind_typeu"; // check for duplicate key
+            return false;
+        }
+    }
+    // insert typeu into index ind_typeu_v
+    if (true) { // user-defined insert condition
+        bool success = ind_typeu_v_InsertMaybe(row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "atf_amc.duplicate_key  xref:atf_amc.FDb.ind_typeu_v"; // check for duplicate key
+            return false;
+        }
+    }
+    return retval;
+}
+
+// --- atf_amc.FDb.ind_typeu.Find
+// Find row by key. Return NULL if not found.
+atf_amc::FTypeU* atf_amc::ind_typeu_Find(i32 key) {
+    u32 index = ::i32_Hash(0, key) & (_db.ind_typeu_buckets_n - 1);
+    atf_amc::FTypeU *ret = _db.ind_typeu_buckets_elems[index];
+    for (; ret && !((*ret).u == key); ret = ret->ind_typeu_next) {
+    }
+    return ret;
+}
+
+// --- atf_amc.FDb.ind_typeu.FindX
+// Look up row by key and return reference. Throw exception if not found
+atf_amc::FTypeU& atf_amc::ind_typeu_FindX(i32 key) {
+    atf_amc::FTypeU* ret = ind_typeu_Find(key);
+    vrfy(ret, tempstr() << "atf_amc.key_error  table:ind_typeu  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
+// --- atf_amc.FDb.ind_typeu.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+atf_amc::FTypeU* atf_amc::ind_typeu_GetOrCreate(i32 key) {
+    atf_amc::FTypeU* ret = ind_typeu_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &typeu_Alloc();
+        (*ret).u = key;
+        bool good = typeu_XrefMaybe(*ret);
+        if (!good) {
+            typeu_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    return ret;
+}
+
+// --- atf_amc.FDb.ind_typeu.InsertMaybe
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool atf_amc::ind_typeu_InsertMaybe(atf_amc::FTypeU& row) {
+    bool retval = true; // if already in hash, InsertMaybe returns true
+    if (LIKELY(row.ind_typeu_next == (atf_amc::FTypeU*)-1)) {// check if in hash already
+        row.ind_typeu_hashval = ::i32_Hash(0, row.u);
+        ind_typeu_Reserve(1);
+        u32 index = row.ind_typeu_hashval & (_db.ind_typeu_buckets_n - 1);
+        atf_amc::FTypeU* *prev = &_db.ind_typeu_buckets_elems[index];
+        do {
+            atf_amc::FTypeU* ret = *prev;
+            if (!ret) { // exit condition 1: reached the end of the list
+                break;
+            }
+            if ((*ret).u == row.u) { // exit condition 2: found matching key
+                retval = false;
+                break;
+            }
+            prev = &ret->ind_typeu_next;
+        } while (true);
+        if (retval) {
+            row.ind_typeu_next = *prev;
+            _db.ind_typeu_n++;
+            *prev = &row;
+        }
+    }
+    return retval;
+}
+
+// --- atf_amc.FDb.ind_typeu.Remove
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void atf_amc::ind_typeu_Remove(atf_amc::FTypeU& row) {
+    if (LIKELY(row.ind_typeu_next != (atf_amc::FTypeU*)-1)) {// check if in hash already
+        u32 index = row.ind_typeu_hashval & (_db.ind_typeu_buckets_n - 1);
+        atf_amc::FTypeU* *prev = &_db.ind_typeu_buckets_elems[index]; // addr of pointer to current element
+        while (atf_amc::FTypeU *next = *prev) {                          // scan the collision chain for our element
+            if (next == &row) {        // found it?
+                *prev = next->ind_typeu_next; // unlink (singly linked list)
+                _db.ind_typeu_n--;
+                row.ind_typeu_next = (atf_amc::FTypeU*)-1;// not-in-hash
+                break;
+            }
+            prev = &next->ind_typeu_next;
+        }
+    }
+}
+
+// --- atf_amc.FDb.ind_typeu.Reserve
+// Reserve enough room in the hash for N more elements. Return success code.
+void atf_amc::ind_typeu_Reserve(int n) {
+    ind_typeu_AbsReserve(_db.ind_typeu_n + n);
+}
+
+// --- atf_amc.FDb.ind_typeu.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void atf_amc::ind_typeu_AbsReserve(int n) {
+    u32 old_nbuckets = _db.ind_typeu_buckets_n;
+    u32 new_nelems   = n;
+    // # of elements has to be roughly equal to the number of buckets
+    if (new_nelems > old_nbuckets) {
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
+        u32 old_size = old_nbuckets * sizeof(atf_amc::FTypeU*);
+        u32 new_size = new_nbuckets * sizeof(atf_amc::FTypeU*);
+        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
+        // means new memory will have to be allocated anyway
+        atf_amc::FTypeU* *new_buckets = (atf_amc::FTypeU**)algo_lib::malloc_AllocMem(new_size);
+        if (UNLIKELY(!new_buckets)) {
+            FatalErrorExit("atf_amc.out_of_memory  field:atf_amc.FDb.ind_typeu");
+        }
+        memset(new_buckets, 0, new_size); // clear pointers
+        // rehash all entries
+        for (int i = 0; i < _db.ind_typeu_buckets_n; i++) {
+            atf_amc::FTypeU* elem = _db.ind_typeu_buckets_elems[i];
+            while (elem) {
+                atf_amc::FTypeU &row        = *elem;
+                atf_amc::FTypeU* next       = row.ind_typeu_next;
+                u32 index          = row.ind_typeu_hashval & (new_nbuckets-1);
+                row.ind_typeu_next     = new_buckets[index];
+                new_buckets[index] = &row;
+                elem               = next;
+            }
+        }
+        // free old array
+        algo_lib::malloc_FreeMem(_db.ind_typeu_buckets_elems, old_size);
+        _db.ind_typeu_buckets_elems = new_buckets;
+        _db.ind_typeu_buckets_n = new_nbuckets;
+    }
+}
+
+// --- atf_amc.FDb.ind_typeu_v.Find
+// Find row by key. Return NULL if not found.
+atf_amc::FTypeU* atf_amc::ind_typeu_v_Find(i32 key) {
+    u32 index = ::i32_Hash(0, key) & (_db.ind_typeu_v_buckets_n - 1);
+    atf_amc::FTypeU *ret = _db.ind_typeu_v_buckets_elems[index];
+    for (; ret && !((*ret).v == key); ret = ret->ind_typeu_v_next) {
+    }
+    return ret;
+}
+
+// --- atf_amc.FDb.ind_typeu_v.FindX
+// Look up row by key and return reference. Throw exception if not found
+atf_amc::FTypeU& atf_amc::ind_typeu_v_FindX(i32 key) {
+    atf_amc::FTypeU* ret = ind_typeu_v_Find(key);
+    vrfy(ret, tempstr() << "atf_amc.key_error  table:ind_typeu_v  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
+// --- atf_amc.FDb.ind_typeu_v.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+atf_amc::FTypeU* atf_amc::ind_typeu_v_GetOrCreate(i32 key) {
+    atf_amc::FTypeU* ret = ind_typeu_v_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &typeu_Alloc();
+        (*ret).v = key;
+        bool good = typeu_XrefMaybe(*ret);
+        if (!good) {
+            typeu_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    return ret;
+}
+
+// --- atf_amc.FDb.ind_typeu_v.InsertMaybe
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool atf_amc::ind_typeu_v_InsertMaybe(atf_amc::FTypeU& row) {
+    bool retval = true; // if already in hash, InsertMaybe returns true
+    if (LIKELY(row.ind_typeu_v_next == (atf_amc::FTypeU*)-1)) {// check if in hash already
+        row.ind_typeu_v_hashval = ::i32_Hash(0, row.v);
+        ind_typeu_v_Reserve(1);
+        u32 index = row.ind_typeu_v_hashval & (_db.ind_typeu_v_buckets_n - 1);
+        atf_amc::FTypeU* *prev = &_db.ind_typeu_v_buckets_elems[index];
+        if (retval) {
+            row.ind_typeu_v_next = *prev;
+            _db.ind_typeu_v_n++;
+            *prev = &row;
+        }
+    }
+    return retval;
+}
+
+// --- atf_amc.FDb.ind_typeu_v.Remove
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void atf_amc::ind_typeu_v_Remove(atf_amc::FTypeU& row) {
+    if (LIKELY(row.ind_typeu_v_next != (atf_amc::FTypeU*)-1)) {// check if in hash already
+        u32 index = row.ind_typeu_v_hashval & (_db.ind_typeu_v_buckets_n - 1);
+        atf_amc::FTypeU* *prev = &_db.ind_typeu_v_buckets_elems[index]; // addr of pointer to current element
+        while (atf_amc::FTypeU *next = *prev) {                          // scan the collision chain for our element
+            if (next == &row) {        // found it?
+                *prev = next->ind_typeu_v_next; // unlink (singly linked list)
+                _db.ind_typeu_v_n--;
+                row.ind_typeu_v_next = (atf_amc::FTypeU*)-1;// not-in-hash
+                break;
+            }
+            prev = &next->ind_typeu_v_next;
+        }
+    }
+}
+
+// --- atf_amc.FDb.ind_typeu_v.Reserve
+// Reserve enough room in the hash for N more elements. Return success code.
+void atf_amc::ind_typeu_v_Reserve(int n) {
+    ind_typeu_v_AbsReserve(_db.ind_typeu_v_n + n);
+}
+
+// --- atf_amc.FDb.ind_typeu_v.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void atf_amc::ind_typeu_v_AbsReserve(int n) {
+    u32 old_nbuckets = _db.ind_typeu_v_buckets_n;
+    u32 new_nelems   = n;
+    // # of elements has to be roughly equal to the number of buckets
+    if (new_nelems > old_nbuckets) {
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
+        u32 old_size = old_nbuckets * sizeof(atf_amc::FTypeU*);
+        u32 new_size = new_nbuckets * sizeof(atf_amc::FTypeU*);
+        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
+        // means new memory will have to be allocated anyway
+        atf_amc::FTypeU* *new_buckets = (atf_amc::FTypeU**)algo_lib::malloc_AllocMem(new_size);
+        if (UNLIKELY(!new_buckets)) {
+            FatalErrorExit("atf_amc.out_of_memory  field:atf_amc.FDb.ind_typeu_v");
+        }
+        memset(new_buckets, 0, new_size); // clear pointers
+        // rehash all entries
+        for (int i = 0; i < _db.ind_typeu_v_buckets_n; i++) {
+            atf_amc::FTypeU* elem = _db.ind_typeu_v_buckets_elems[i];
+            while (elem) {
+                atf_amc::FTypeU &row        = *elem;
+                atf_amc::FTypeU* next       = row.ind_typeu_v_next;
+                u32 index          = row.ind_typeu_v_hashval & (new_nbuckets-1);
+                row.ind_typeu_v_next     = new_buckets[index];
+                new_buckets[index] = &row;
+                elem               = next;
+            }
+        }
+        // free old array
+        algo_lib::malloc_FreeMem(_db.ind_typeu_v_buckets_elems, old_size);
+        _db.ind_typeu_v_buckets_elems = new_buckets;
+        _db.ind_typeu_v_buckets_n = new_nbuckets;
+    }
+}
+
 // --- atf_amc.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
 static algo::ImrowPtr atf_amc::trace_RowidFind(int t) {
@@ -9088,6 +13661,40 @@ void atf_amc::_db_ind_linear_curs_Reset(_db_ind_linear_curs &curs, atf_amc::FDb 
     }
 }
 
+// --- atf_amc.FDb.ind_blkhash_elem_curs.Next
+// proceed to next item
+void atf_amc::_db_ind_blkhash_elem_curs_Next(_db_ind_blkhash_elem_curs &curs) {
+    curs.slot++;
+    bool done = false;
+    while (!done) {
+        if (!curs.blk) {
+            curs.bucket++;
+            if (curs.bucket >= curs.parent->ind_blkhash_elem_buckets_n) {
+                done = true; // end of index: blk stays NULL
+            } else {
+                curs.blk = curs.parent->ind_blkhash_elem_buckets_elems[curs.bucket];
+                curs.slot = 0;
+            }
+        } else if (curs.slot >= 4096) {
+            curs.blk = curs.blk->next;
+            curs.slot = 0;
+        } else if (curs.blk->elem[curs.slot]) {
+            done = true; // resident slot found
+        } else {
+            curs.slot++;
+        }
+    }
+}
+
+// --- atf_amc.FDb.ind_blkhash_elem_curs.Reset
+void atf_amc::_db_ind_blkhash_elem_curs_Reset(_db_ind_blkhash_elem_curs &curs, atf_amc::FDb &parent) {
+    curs.parent = &parent;
+    curs.bucket = 0;
+    curs.blk = parent.ind_blkhash_elem_buckets_elems[0]; // index never has zero buckets
+    curs.slot = -1;
+    _db_ind_blkhash_elem_curs_Next(curs); // advance to first resident slot
+}
+
 // --- atf_amc.FDb..Init
 // Set all fields to initial values.
 void atf_amc::FDb_Init() {
@@ -9210,6 +13817,7 @@ void atf_amc::FDb_Init() {
     _db.pooledbe64_free      = NULL;
     _db.pooledbe64_blocksize = algo::BumpToPow2(64 * sizeof(atf_amc::PooledBE64)); // allocate 64-127 elements at a time
     memset(_db.varlen_extern_free, 0, sizeof(_db.varlen_extern_free));
+    memset(_db.varlen_extern_blk, 0, sizeof(_db.varlen_extern_blk));
     _db.varlen_extern_n = 0;
     // initialize LAry amctest (atf_amc.FDb.amctest)
     _db.amctest_n = 0;
@@ -9227,10 +13835,13 @@ void atf_amc::FDb_Init() {
     _db.cascdel_blocksize = algo::BumpToPow2(64 * sizeof(atf_amc::FCascdel)); // allocate 64-127 elements at a time
     _db.cascdel_next_key = u32(0);
     memset(_db.optalloc_free, 0, sizeof(_db.optalloc_free));
+    memset(_db.optalloc_blk, 0, sizeof(_db.optalloc_blk));
     _db.optalloc_n = 0;
     memset(_db.varlenalloc_free, 0, sizeof(_db.varlenalloc_free));
+    memset(_db.varlenalloc_blk, 0, sizeof(_db.varlenalloc_blk));
     _db.varlenalloc_n = 0;
     memset(_db.optg_free, 0, sizeof(_db.optg_free));
+    memset(_db.optg_blk, 0, sizeof(_db.optg_blk));
     _db.optg_n = 0;
     _db.c_typek_elems = NULL; // (atf_amc.FDb.c_typek)
     _db.c_typek_n = 0; // (atf_amc.FDb.c_typek)
@@ -9321,6 +13932,119 @@ void atf_amc::FDb_Init() {
         FatalErrorExit("out of memory"); // (atf_amc.FDb.ind_strkey)
     }
     memset(_db.ind_strkey_buckets_elems, 0, sizeof(atf_amc::Strkey*)*_db.ind_strkey_buckets_n); // (atf_amc.FDb.ind_strkey)
+    // blkhash_elem: initialize Tpool
+    _db.blkhash_elem_free      = NULL;
+    _db.blkhash_elem_blocksize = algo::BumpToPow2(64 * sizeof(atf_amc::FBlkhashElem)); // allocate 64-127 elements at a time
+    // initialize block hash index for atf_amc::FBlkhashElem;
+    _db.ind_blkhash_elem_n             	= 0; // (atf_amc.FDb.ind_blkhash_elem)
+    _db.ind_blkhash_elem_nblk          	= 0; // (atf_amc.FDb.ind_blkhash_elem)
+    _db.ind_blkhash_elem_buckets_n     	= 4; // (atf_amc.FDb.ind_blkhash_elem)
+    _db.ind_blkhash_elem_buckets_elems 	= (_db_ind_blkhash_elem_Blk**)algo_lib::malloc_AllocMem(sizeof(_db_ind_blkhash_elem_Blk*)*_db.ind_blkhash_elem_buckets_n); // initial buckets (atf_amc.FDb.ind_blkhash_elem)
+    if (!_db.ind_blkhash_elem_buckets_elems) {
+        FatalErrorExit("out of memory"); // (atf_amc.FDb.ind_blkhash_elem)
+    }
+    memset(_db.ind_blkhash_elem_buckets_elems, 0, sizeof(_db_ind_blkhash_elem_Blk*)*_db.ind_blkhash_elem_buckets_n); // (atf_amc.FDb.ind_blkhash_elem)
+    // initialize hash table for atf_amc::FBlkhashElem;
+    _db.ind_blkhash_elem_thash_n             	= 0; // (atf_amc.FDb.ind_blkhash_elem_thash)
+    _db.ind_blkhash_elem_thash_buckets_n     	= 4; // (atf_amc.FDb.ind_blkhash_elem_thash)
+    _db.ind_blkhash_elem_thash_buckets_elems 	= (atf_amc::FBlkhashElem**)algo_lib::malloc_AllocMem(sizeof(atf_amc::FBlkhashElem*)*_db.ind_blkhash_elem_thash_buckets_n); // initial buckets (atf_amc.FDb.ind_blkhash_elem_thash)
+    if (!_db.ind_blkhash_elem_thash_buckets_elems) {
+        FatalErrorExit("out of memory"); // (atf_amc.FDb.ind_blkhash_elem_thash)
+    }
+    memset(_db.ind_blkhash_elem_thash_buckets_elems, 0, sizeof(atf_amc::FBlkhashElem*)*_db.ind_blkhash_elem_thash_buckets_n); // (atf_amc.FDb.ind_blkhash_elem_thash)
+    memset(_db.varlenallocscale_free, 0, sizeof(_db.varlenallocscale_free));
+    memset(_db.varlenallocscale_blk, 0, sizeof(_db.varlenallocscale_blk));
+    _db.varlenallocscale_n = 0;
+    memset(_db.msghdrltscale_free, 0, sizeof(_db.msghdrltscale_free));
+    memset(_db.msghdrltscale_blk, 0, sizeof(_db.msghdrltscale_blk));
+    _db.msghdrltscale_n = 0;
+    _db.charbuf_n = 0; // charbuf: initialize count
+    _db.in_fb_elems = NULL; // in_fb: initialize
+    _db.in_fb_max = 0; // in_fb: initialize
+    _db.in_fb_end = 0; // in_fb: initialize
+    _db.in_fb_start = 0; // in_fb: initialize
+    _db.in_fb_eof = false; // in_fb: initialize
+    _db.in_fb_msgvalid = false; // in_fb: initialize
+    _db.in_fb_msglen = 0; // in_fb: initialize
+    _db.in_fb_epoll_enable = true; // in_fb: initialize
+    in_fb_Realloc(64);
+    _db.in_fb_n_read_byte = 0; // in_fb: initialize
+    _db.in_fb_n_read_msg = 0; // in_fb: initialize
+    _db.out_fb_elems = NULL; // out_fb: initialize
+    _db.out_fb_max = 0; // out_fb: initialize
+    _db.out_fb_end = 0; // out_fb: initialize
+    _db.out_fb_start = 0; // out_fb: initialize
+    _db.out_fb_eof = false; // out_fb: initialize
+    _db.out_fb_zerocopy = false; // out_fb: initialize
+    _db.out_fb_n_eagain = 0; // out_fb: initialize
+    _db.out_fb_msgvalid = false; // out_fb: initialize
+    _db.out_fb_msglen = 0; // out_fb: initialize
+    _db.out_fb_epoll_enable = true; // out_fb: initialize
+    out_fb_Realloc(64);
+    _db.out_fb_n_write_byte = 0; // out_fb: initialize
+    _db.out_fb_n_write_msg = 0; // out_fb: initialize
+    _db.testdec = i64(0);
+    _db.flagbits = u32(0);
+    flaglo_Set(3); // default value
+    _db.fdbsize = u32(ssizeof(_db));
+    _db.gpmask = u32(0);
+    _db.gpval = u32(0);
+    _db.gpval2 = u32(0);
+    // condpar: initialize Tpool
+    _db.condpar_free      = NULL;
+    _db.condpar_blocksize = algo::BumpToPow2(64 * sizeof(atf_amc::FCondpar)); // allocate 64-127 elements at a time
+    // condtest: initialize Tpool
+    _db.condtest_free      = NULL;
+    _db.condtest_blocksize = algo::BumpToPow2(64 * sizeof(atf_amc::FCondtest)); // allocate 64-127 elements at a time
+    _db.zd_condtest_run_head = NULL; // (atf_amc.FDb.zd_condtest_run)
+    _db.zd_condtest_run_n = 0; // (atf_amc.FDb.zd_condtest_run)
+    _db.zd_condtest_run_tail = NULL; // (atf_amc.FDb.zd_condtest_run)
+    _db.zd_condtest_idle_head = NULL; // (atf_amc.FDb.zd_condtest_idle)
+    _db.zd_condtest_idle_n = 0; // (atf_amc.FDb.zd_condtest_idle)
+    _db.zd_condtest_idle_tail = NULL; // (atf_amc.FDb.zd_condtest_idle)
+    _db.cd_condtest_ready_head = NULL; // (atf_amc.FDb.cd_condtest_ready)
+    _db.cd_condtest_ready_n = 0; // (atf_amc.FDb.cd_condtest_ready)
+    _db.zd_condpar_done_head = NULL; // (atf_amc.FDb.zd_condpar_done)
+    _db.zd_condpar_done_n = 0; // (atf_amc.FDb.zd_condpar_done)
+    _db.zd_condpar_done_tail = NULL; // (atf_amc.FDb.zd_condpar_done)
+    _db.cd_condtest_space_head = NULL; // (atf_amc.FDb.cd_condtest_space)
+    _db.cd_condtest_space_n = 0; // (atf_amc.FDb.cd_condtest_space)
+    _db.cd_sslbuf_out_head = NULL; // (atf_amc.FDb.cd_sslbuf_out)
+    memset(_db.lpool_free, 0, sizeof(_db.lpool_free));
+    memset(_db.lpool_blk, 0, sizeof(_db.lpool_blk));
+    memset(_db.optwide_free, 0, sizeof(_db.optwide_free));
+    memset(_db.optwide_blk, 0, sizeof(_db.optwide_blk));
+    _db.optwide_n = 0;
+    memset(_db.optsigned_free, 0, sizeof(_db.optsigned_free));
+    memset(_db.optsigned_blk, 0, sizeof(_db.optsigned_blk));
+    _db.optsigned_n = 0;
+    // initialize LAry typeu (atf_amc.FDb.typeu)
+    _db.typeu_n = 0;
+    memset(_db.typeu_lary, 0, sizeof(_db.typeu_lary)); // zero out all level pointers
+    atf_amc::FTypeU* typeu_first = (atf_amc::FTypeU*)algo_lib::malloc_AllocMem(sizeof(atf_amc::FTypeU) * (u64(1)<<4));
+    if (!typeu_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.typeu_lary[i]  = typeu_first;
+        typeu_first    += 1ULL<<i;
+    }
+    // initialize hash table for atf_amc::FTypeU;
+    _db.ind_typeu_n             	= 0; // (atf_amc.FDb.ind_typeu)
+    _db.ind_typeu_buckets_n     	= 4; // (atf_amc.FDb.ind_typeu)
+    _db.ind_typeu_buckets_elems 	= (atf_amc::FTypeU**)algo_lib::malloc_AllocMem(sizeof(atf_amc::FTypeU*)*_db.ind_typeu_buckets_n); // initial buckets (atf_amc.FDb.ind_typeu)
+    if (!_db.ind_typeu_buckets_elems) {
+        FatalErrorExit("out of memory"); // (atf_amc.FDb.ind_typeu)
+    }
+    memset(_db.ind_typeu_buckets_elems, 0, sizeof(atf_amc::FTypeU*)*_db.ind_typeu_buckets_n); // (atf_amc.FDb.ind_typeu)
+    // initialize hash table for atf_amc::FTypeU;
+    _db.ind_typeu_v_n             	= 0; // (atf_amc.FDb.ind_typeu_v)
+    _db.ind_typeu_v_buckets_n     	= 4; // (atf_amc.FDb.ind_typeu_v)
+    _db.ind_typeu_v_buckets_elems 	= (atf_amc::FTypeU**)algo_lib::malloc_AllocMem(sizeof(atf_amc::FTypeU*)*_db.ind_typeu_v_buckets_n); // initial buckets (atf_amc.FDb.ind_typeu_v)
+    if (!_db.ind_typeu_v_buckets_elems) {
+        FatalErrorExit("out of memory"); // (atf_amc.FDb.ind_typeu_v)
+    }
+    memset(_db.ind_typeu_v_buckets_elems, 0, sizeof(atf_amc::FTypeU*)*_db.ind_typeu_v_buckets_n); // (atf_amc.FDb.ind_typeu_v)
 
     atf_amc::InitReflection();
     amctest_LoadStatic(); // gen:ns_gstatic  gstatic:atf_amc.FDb.amctest  load atf_amc.FAmctest records
@@ -9330,6 +14054,38 @@ void atf_amc::FDb_Init() {
 // --- atf_amc.FDb..Uninit
 void atf_amc::FDb_Uninit() {
     atf_amc::FDb &row = _db; (void)row;
+
+    // atf_amc.FDb.ind_typeu_v.Uninit (Thash)  //Second index, keyed by the value an update changes
+    // skip destruction of ind_typeu_v in global scope
+
+    // atf_amc.FDb.ind_typeu.Uninit (Thash)  //Primary index, keyed by u
+    // skip destruction of ind_typeu in global scope
+
+    // atf_amc.FDb.typeu.Uninit (Lary)  //
+    // skip destruction in global scope
+
+    // atf_amc.FDb.out_fb.Uninit (Fbuf)  //Global write-direction byte stream with trace counters
+    if (_db.out_fb_elems) {
+        algo_lib::malloc_FreeMem(_db.out_fb_elems, _db.out_fb_max); // (atf_amc.FDb.out_fb) out_fb_max is the byte size Realloc allocated
+    }
+    _db.out_fb_elems = NULL;
+    _db.out_fb_max = 0;
+
+    // atf_amc.FDb.in_fb.Uninit (Fbuf)  //Global read-direction byte stream with trace counters
+    if (_db.in_fb_elems) {
+        algo_lib::malloc_FreeMem(_db.in_fb_elems, _db.in_fb_max); // (atf_amc.FDb.in_fb) in_fb_max is the byte size Realloc allocated
+    }
+    _db.in_fb_elems = NULL;
+    _db.in_fb_max = 0;
+
+    // atf_amc.FDb.charbuf.Uninit (Inlary)  //Variable-length inline char buffer
+    // skip destruction in global scope
+
+    // atf_amc.FDb.ind_blkhash_elem_thash.Uninit (Thash)  //Thash twin of ind_blkhash_elem for A/B measurement
+    // skip destruction of ind_blkhash_elem_thash in global scope
+
+    // atf_amc.FDb.ind_blkhash_elem.Uninit (Blkhash)  //
+    // skip destruction of ind_blkhash_elem in global scope
 
     // atf_amc.FDb.ind_strkey.Uninit (Thash)  //
     // skip destruction of ind_strkey in global scope
@@ -9410,7 +14166,7 @@ bool atf_amc::TypeG_ReadStrptrMaybe(atf_amc::TypeG &parent, algo::strptr in_str)
 // --- atf_amc.TypeG..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.TypeG.String  printfmt:Raw
-void atf_amc::TypeG_Print(atf_amc::TypeG& row, algo::cstring& str) {
+void atf_amc::TypeG_Print(atf_amc::TypeG row, algo::cstring& str) {
     i32_Print(row.typeg, str);
 }
 
@@ -9439,6 +14195,56 @@ algo::aryptr<u8> atf_amc::typeg_Getary(atf_amc::FOptG& optg) {
     return algo::aryptr<u8>(end, i32(optg.length) - ssizeof(atf_amc::FOptG));
 }
 
+// --- atf_amc.FOptSigned.optsigned.CopyOut
+// Copy fields out of row
+void atf_amc::optsigned_CopyOut(atf_amc::FOptSigned &row, atf_amc::OptSigned &out) {
+    // length: field value is computed
+    // typeg: unknown field type (Opt), skipped
+    (void)row;//only to avoid -Wunused-parameter
+    (void)out;//only to avoid -Wunused-parameter
+}
+
+// --- atf_amc.FOptSigned.optsigned.CopyIn
+// Copy fields in to row
+void atf_amc::optsigned_CopyIn(atf_amc::FOptSigned &row, atf_amc::OptSigned &in) {
+    // length: field value is computed
+    // typeg: unknown field reftype (Opt), skipped
+    (void)row;//only to avoid -Wunused-parameter
+    (void)in;//only to avoid -Wunused-parameter
+}
+
+// --- atf_amc.FOptSigned.typeg.Getary
+// Access optional portion as an array of bytes
+algo::aryptr<u8> atf_amc::typeg_Getary(atf_amc::FOptSigned& optsigned) {
+    u8 *end = (u8*)&optsigned + sizeof(atf_amc::FOptSigned);
+    return algo::aryptr<u8>(end, i32(optsigned.length) - ssizeof(atf_amc::FOptSigned));
+}
+
+// --- atf_amc.FOptWide.optwide.CopyOut
+// Copy fields out of row
+void atf_amc::optwide_CopyOut(atf_amc::FOptWide &row, atf_amc::OptWide &out) {
+    // length: field value is computed
+    // typeg: unknown field type (Opt), skipped
+    (void)row;//only to avoid -Wunused-parameter
+    (void)out;//only to avoid -Wunused-parameter
+}
+
+// --- atf_amc.FOptWide.optwide.CopyIn
+// Copy fields in to row
+void atf_amc::optwide_CopyIn(atf_amc::FOptWide &row, atf_amc::OptWide &in) {
+    // length: field value is computed
+    // typeg: unknown field reftype (Opt), skipped
+    (void)row;//only to avoid -Wunused-parameter
+    (void)in;//only to avoid -Wunused-parameter
+}
+
+// --- atf_amc.FOptWide.typeg.Getary
+// Access optional portion as an array of bytes
+algo::aryptr<u8> atf_amc::typeg_Getary(atf_amc::FOptWide& optwide) {
+    u8 *end = (u8*)&optwide + sizeof(atf_amc::FOptWide);
+    return algo::aryptr<u8>(end, i32(optwide.length * 2 + 8) - ssizeof(atf_amc::FOptWide));
+}
+
 // --- atf_amc.FPerfSortString.orig.Addary
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
@@ -9448,10 +14254,10 @@ algo::aryptr<atf_amc::Cstr> atf_amc::orig_Addary(atf_amc::FPerfSortString& paren
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("atf_amc.tary_alias  field:atf_amc.FPerfSortString.orig  comment:'alias error: sub-array is being appended to the whole'");
     }
-    int nnew = rhs.n_elems;
+    i64 nnew = rhs.n_elems;
     orig_Reserve(parent, nnew); // reserve space
-    int at = parent.orig_n;
-    for (int i = 0; i < nnew; i++) {
+    i64 at = parent.orig_n;
+    for (i64 i = 0; i < nnew; i++) {
         new (parent.orig_elems + at + i) atf_amc::Cstr(rhs[i]);
         parent.orig_n++;
     }
@@ -9463,8 +14269,8 @@ algo::aryptr<atf_amc::Cstr> atf_amc::orig_Addary(atf_amc::FPerfSortString& paren
 // The new element is initialized to a default value
 atf_amc::Cstr& atf_amc::orig_Alloc(atf_amc::FPerfSortString& parent) {
     orig_Reserve(parent, 1);
-    int n  = parent.orig_n;
-    int at = n;
+    i64 n  = parent.orig_n;
+    i64 at = n;
     atf_amc::Cstr *elems = parent.orig_elems;
     new (elems + at) atf_amc::Cstr(); // construct new element, default initializer
     parent.orig_n = n+1;
@@ -9474,9 +14280,9 @@ atf_amc::Cstr& atf_amc::orig_Alloc(atf_amc::FPerfSortString& parent) {
 // --- atf_amc.FPerfSortString.orig.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-atf_amc::Cstr& atf_amc::orig_AllocAt(atf_amc::FPerfSortString& parent, int at) {
+atf_amc::Cstr& atf_amc::orig_AllocAt(atf_amc::FPerfSortString& parent, i64 at) {
     orig_Reserve(parent, 1);
-    int n  = parent.orig_n;
+    i64 n  = parent.orig_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
         FatalErrorExit("atf_amc.bad_alloc_at  field:atf_amc.FPerfSortString.orig  comment:'index out of range'");
     }
@@ -9489,12 +14295,12 @@ atf_amc::Cstr& atf_amc::orig_AllocAt(atf_amc::FPerfSortString& parent, int at) {
 
 // --- atf_amc.FPerfSortString.orig.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<atf_amc::Cstr> atf_amc::orig_AllocN(atf_amc::FPerfSortString& parent, int n_elems) {
+algo::aryptr<atf_amc::Cstr> atf_amc::orig_AllocN(atf_amc::FPerfSortString& parent, i64 n_elems) {
     orig_Reserve(parent, n_elems);
-    int old_n  = parent.orig_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = parent.orig_n;
+    i64 new_n = old_n + n_elems;
     atf_amc::Cstr *elems = parent.orig_elems;
-    for (int i = old_n; i < new_n; i++) {
+    for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) atf_amc::Cstr(); // construct new element, default initialize
     }
     parent.orig_n = new_n;
@@ -9505,15 +14311,15 @@ algo::aryptr<atf_amc::Cstr> atf_amc::orig_AllocN(atf_amc::FPerfSortString& paren
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::aryptr<atf_amc::Cstr> atf_amc::orig_AllocNAt(atf_amc::FPerfSortString& parent, int n_elems, int at) {
+algo::aryptr<atf_amc::Cstr> atf_amc::orig_AllocNAt(atf_amc::FPerfSortString& parent, i64 n_elems, i64 at) {
     orig_Reserve(parent, n_elems);
-    int n  = parent.orig_n;
+    i64 n  = parent.orig_n;
     if (UNLIKELY(u64(at) > u64(n))) {
         FatalErrorExit("atf_amc.bad_alloc_n_at  field:atf_amc.FPerfSortString.orig  comment:'index out of range'");
     }
     atf_amc::Cstr *elems = parent.orig_elems;
     memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(atf_amc::Cstr));
-    for (int i = 0; i < n_elems; i++) {
+    for (i64 i = 0; i < n_elems; i++) {
         new (elems + at + i) atf_amc::Cstr(); // construct new element, default initialize
     }
     parent.orig_n = n+n_elems;
@@ -9522,8 +14328,8 @@ algo::aryptr<atf_amc::Cstr> atf_amc::orig_AllocNAt(atf_amc::FPerfSortString& par
 
 // --- atf_amc.FPerfSortString.orig.Remove
 // Remove item by index. If index outside of range, do nothing.
-void atf_amc::orig_Remove(atf_amc::FPerfSortString& parent, u32 i) {
-    u32 lim = parent.orig_n;
+void atf_amc::orig_Remove(atf_amc::FPerfSortString& parent, u64 i) {
+    u64 lim = parent.orig_n;
     atf_amc::Cstr *elems = parent.orig_elems;
     if (i < lim) {
         elems[i].~Cstr(); // destroy element
@@ -9534,12 +14340,11 @@ void atf_amc::orig_Remove(atf_amc::FPerfSortString& parent, u32 i) {
 
 // --- atf_amc.FPerfSortString.orig.RemoveAll
 void atf_amc::orig_RemoveAll(atf_amc::FPerfSortString& parent) {
-    u32 n = parent.orig_n;
-    while (n > 0) {
-        n -= 1;
-        parent.orig_elems[n].~Cstr();
-        parent.orig_n = n;
+    u64 n = parent.orig_n;
+    for (u64 i=0; i<n; i++) {
+        parent.orig_elems[i].~Cstr();
     }
+    parent.orig_n = 0;
 }
 
 // --- atf_amc.FPerfSortString.orig.RemoveLast
@@ -9555,10 +14360,10 @@ void atf_amc::orig_RemoveLast(atf_amc::FPerfSortString& parent) {
 
 // --- atf_amc.FPerfSortString.orig.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void atf_amc::orig_AbsReserve(atf_amc::FPerfSortString& parent, int n) {
-    u32 old_max  = parent.orig_max;
-    if (n > i32(old_max)) {
-        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+void atf_amc::orig_AbsReserve(atf_amc::FPerfSortString& parent, i64 n) {
+    u64 old_max  = parent.orig_max;
+    if (n > i64(old_max)) {
+        u64 new_max  = i64_Max(i64_Max(old_max * 2, n), 4);
         void *new_mem = algo_lib::malloc_ReallocMem(parent.orig_elems, old_max * sizeof(atf_amc::Cstr), new_max * sizeof(atf_amc::Cstr));
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("atf_amc.tary_nomem  field:atf_amc.FPerfSortString.orig  comment:'out of memory'");
@@ -9572,9 +14377,9 @@ void atf_amc::orig_AbsReserve(atf_amc::FPerfSortString& parent, int n) {
 // Copy contents of RHS to PARENT.
 void atf_amc::orig_Setary(atf_amc::FPerfSortString& parent, atf_amc::FPerfSortString &rhs) {
     orig_RemoveAll(parent);
-    int nnew = rhs.orig_n;
+    i64 nnew = rhs.orig_n;
     orig_Reserve(parent, nnew); // reserve space
-    for (int i = 0; i < nnew; i++) { // copy elements over
+    for (i64 i = 0; i < nnew; i++) { // copy elements over
         new (parent.orig_elems + i) atf_amc::Cstr(orig_qFind(rhs, i));
         parent.orig_n = i + 1;
     }
@@ -9590,12 +14395,12 @@ void atf_amc::orig_Setary(atf_amc::FPerfSortString& parent, const algo::aryptr<a
 
 // --- atf_amc.FPerfSortString.orig.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<atf_amc::Cstr> atf_amc::orig_AllocNVal(atf_amc::FPerfSortString& parent, int n_elems, const atf_amc::Cstr& val) {
+algo::aryptr<atf_amc::Cstr> atf_amc::orig_AllocNVal(atf_amc::FPerfSortString& parent, i64 n_elems, const atf_amc::Cstr& val) {
     orig_Reserve(parent, n_elems);
-    int old_n  = parent.orig_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = parent.orig_n;
+    i64 new_n = old_n + n_elems;
     atf_amc::Cstr *elems = parent.orig_elems;
-    for (int i = old_n; i < new_n; i++) {
+    for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) atf_amc::Cstr(val);
     }
     parent.orig_n = new_n;
@@ -9605,25 +14410,43 @@ algo::aryptr<atf_amc::Cstr> atf_amc::orig_AllocNVal(atf_amc::FPerfSortString& pa
 // --- atf_amc.FPerfSortString.orig.Insary
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-void atf_amc::orig_Insary(atf_amc::FPerfSortString& parent, algo::aryptr<atf_amc::Cstr> rhs, int at) {
+void atf_amc::orig_Insary(atf_amc::FPerfSortString& parent, algo::aryptr<atf_amc::Cstr> rhs, i64 at) {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.orig_elems && rhs.elems < parent.orig_elems + parent.orig_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("atf_amc.tary_alias  field:atf_amc.FPerfSortString.orig  comment:'alias error: sub-array is being appended to the whole'");
     }
-    if (UNLIKELY(u64(at) >= u64(parent.orig_elems+1))) {
+    if (UNLIKELY(u64(at) >= u64(parent.orig_n+1))) {
         FatalErrorExit("atf_amc.bad_insary  field:atf_amc.FPerfSortString.orig  comment:'index out of range'");
     }
-    int nnew = rhs.n_elems;
-    int nmove = parent.orig_n - at;
+    i64 nnew = rhs.n_elems;
+    i64 nmove = parent.orig_n - at;
     orig_Reserve(parent, nnew); // reserve space
-    for (int i = nmove-1; i >=0 ; --i) {
+    for (i64 i = nmove-1; i >=0 ; --i) {
         new (parent.orig_elems + at + nnew + i) atf_amc::Cstr(parent.orig_elems[at + i]);
         parent.orig_elems[at + i].~Cstr(); // destroy element
     }
-    for (int i = 0; i < nnew; ++i) {
+    for (i64 i = 0; i < nnew; ++i) {
         new (parent.orig_elems + at + i) atf_amc::Cstr(rhs[i]);
     }
     parent.orig_n += nnew;
+}
+
+// --- atf_amc.FPerfSortString.orig.RemRegion
+// Delete a range of elements
+// Remove region from the middle of the array
+// The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
+// If N is negative, nothing is removed.
+void atf_amc::orig_RemRegion(atf_amc::FPerfSortString& parent, i64 beg, i64 n) {
+    i64 end = i64_Min(beg+n, parent.orig_n);
+    beg = i64_Max(beg,0);
+    n = end-beg;
+    if (n>0) {
+        for (i64 i=beg; i<end; i++) {
+            parent.orig_elems[i].~Cstr();
+        }
+        memmove(parent.orig_elems+beg, parent.orig_elems+end, sizeof(atf_amc::Cstr) * (parent.orig_n-end));
+        parent.orig_n -= n;
+    }
 }
 
 // --- atf_amc.FPerfSortString.sorted1.Addary
@@ -9635,10 +14458,10 @@ algo::aryptr<atf_amc::Cstr> atf_amc::sorted1_Addary(atf_amc::FPerfSortString& pa
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("atf_amc.tary_alias  field:atf_amc.FPerfSortString.sorted1  comment:'alias error: sub-array is being appended to the whole'");
     }
-    int nnew = rhs.n_elems;
+    i64 nnew = rhs.n_elems;
     sorted1_Reserve(parent, nnew); // reserve space
-    int at = parent.sorted1_n;
-    for (int i = 0; i < nnew; i++) {
+    i64 at = parent.sorted1_n;
+    for (i64 i = 0; i < nnew; i++) {
         new (parent.sorted1_elems + at + i) atf_amc::Cstr(rhs[i]);
         parent.sorted1_n++;
     }
@@ -9650,8 +14473,8 @@ algo::aryptr<atf_amc::Cstr> atf_amc::sorted1_Addary(atf_amc::FPerfSortString& pa
 // The new element is initialized to a default value
 atf_amc::Cstr& atf_amc::sorted1_Alloc(atf_amc::FPerfSortString& parent) {
     sorted1_Reserve(parent, 1);
-    int n  = parent.sorted1_n;
-    int at = n;
+    i64 n  = parent.sorted1_n;
+    i64 at = n;
     atf_amc::Cstr *elems = parent.sorted1_elems;
     new (elems + at) atf_amc::Cstr(); // construct new element, default initializer
     parent.sorted1_n = n+1;
@@ -9661,9 +14484,9 @@ atf_amc::Cstr& atf_amc::sorted1_Alloc(atf_amc::FPerfSortString& parent) {
 // --- atf_amc.FPerfSortString.sorted1.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-atf_amc::Cstr& atf_amc::sorted1_AllocAt(atf_amc::FPerfSortString& parent, int at) {
+atf_amc::Cstr& atf_amc::sorted1_AllocAt(atf_amc::FPerfSortString& parent, i64 at) {
     sorted1_Reserve(parent, 1);
-    int n  = parent.sorted1_n;
+    i64 n  = parent.sorted1_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
         FatalErrorExit("atf_amc.bad_alloc_at  field:atf_amc.FPerfSortString.sorted1  comment:'index out of range'");
     }
@@ -9676,12 +14499,12 @@ atf_amc::Cstr& atf_amc::sorted1_AllocAt(atf_amc::FPerfSortString& parent, int at
 
 // --- atf_amc.FPerfSortString.sorted1.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<atf_amc::Cstr> atf_amc::sorted1_AllocN(atf_amc::FPerfSortString& parent, int n_elems) {
+algo::aryptr<atf_amc::Cstr> atf_amc::sorted1_AllocN(atf_amc::FPerfSortString& parent, i64 n_elems) {
     sorted1_Reserve(parent, n_elems);
-    int old_n  = parent.sorted1_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = parent.sorted1_n;
+    i64 new_n = old_n + n_elems;
     atf_amc::Cstr *elems = parent.sorted1_elems;
-    for (int i = old_n; i < new_n; i++) {
+    for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) atf_amc::Cstr(); // construct new element, default initialize
     }
     parent.sorted1_n = new_n;
@@ -9692,15 +14515,15 @@ algo::aryptr<atf_amc::Cstr> atf_amc::sorted1_AllocN(atf_amc::FPerfSortString& pa
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::aryptr<atf_amc::Cstr> atf_amc::sorted1_AllocNAt(atf_amc::FPerfSortString& parent, int n_elems, int at) {
+algo::aryptr<atf_amc::Cstr> atf_amc::sorted1_AllocNAt(atf_amc::FPerfSortString& parent, i64 n_elems, i64 at) {
     sorted1_Reserve(parent, n_elems);
-    int n  = parent.sorted1_n;
+    i64 n  = parent.sorted1_n;
     if (UNLIKELY(u64(at) > u64(n))) {
         FatalErrorExit("atf_amc.bad_alloc_n_at  field:atf_amc.FPerfSortString.sorted1  comment:'index out of range'");
     }
     atf_amc::Cstr *elems = parent.sorted1_elems;
     memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(atf_amc::Cstr));
-    for (int i = 0; i < n_elems; i++) {
+    for (i64 i = 0; i < n_elems; i++) {
         new (elems + at + i) atf_amc::Cstr(); // construct new element, default initialize
     }
     parent.sorted1_n = n+n_elems;
@@ -9709,8 +14532,8 @@ algo::aryptr<atf_amc::Cstr> atf_amc::sorted1_AllocNAt(atf_amc::FPerfSortString& 
 
 // --- atf_amc.FPerfSortString.sorted1.Remove
 // Remove item by index. If index outside of range, do nothing.
-void atf_amc::sorted1_Remove(atf_amc::FPerfSortString& parent, u32 i) {
-    u32 lim = parent.sorted1_n;
+void atf_amc::sorted1_Remove(atf_amc::FPerfSortString& parent, u64 i) {
+    u64 lim = parent.sorted1_n;
     atf_amc::Cstr *elems = parent.sorted1_elems;
     if (i < lim) {
         elems[i].~Cstr(); // destroy element
@@ -9721,12 +14544,11 @@ void atf_amc::sorted1_Remove(atf_amc::FPerfSortString& parent, u32 i) {
 
 // --- atf_amc.FPerfSortString.sorted1.RemoveAll
 void atf_amc::sorted1_RemoveAll(atf_amc::FPerfSortString& parent) {
-    u32 n = parent.sorted1_n;
-    while (n > 0) {
-        n -= 1;
-        parent.sorted1_elems[n].~Cstr();
-        parent.sorted1_n = n;
+    u64 n = parent.sorted1_n;
+    for (u64 i=0; i<n; i++) {
+        parent.sorted1_elems[i].~Cstr();
     }
+    parent.sorted1_n = 0;
 }
 
 // --- atf_amc.FPerfSortString.sorted1.RemoveLast
@@ -9742,10 +14564,10 @@ void atf_amc::sorted1_RemoveLast(atf_amc::FPerfSortString& parent) {
 
 // --- atf_amc.FPerfSortString.sorted1.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void atf_amc::sorted1_AbsReserve(atf_amc::FPerfSortString& parent, int n) {
-    u32 old_max  = parent.sorted1_max;
-    if (n > i32(old_max)) {
-        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+void atf_amc::sorted1_AbsReserve(atf_amc::FPerfSortString& parent, i64 n) {
+    u64 old_max  = parent.sorted1_max;
+    if (n > i64(old_max)) {
+        u64 new_max  = i64_Max(i64_Max(old_max * 2, n), 4);
         void *new_mem = algo_lib::malloc_ReallocMem(parent.sorted1_elems, old_max * sizeof(atf_amc::Cstr), new_max * sizeof(atf_amc::Cstr));
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("atf_amc.tary_nomem  field:atf_amc.FPerfSortString.sorted1  comment:'out of memory'");
@@ -9759,9 +14581,9 @@ void atf_amc::sorted1_AbsReserve(atf_amc::FPerfSortString& parent, int n) {
 // Copy contents of RHS to PARENT.
 void atf_amc::sorted1_Setary(atf_amc::FPerfSortString& parent, atf_amc::FPerfSortString &rhs) {
     sorted1_RemoveAll(parent);
-    int nnew = rhs.sorted1_n;
+    i64 nnew = rhs.sorted1_n;
     sorted1_Reserve(parent, nnew); // reserve space
-    for (int i = 0; i < nnew; i++) { // copy elements over
+    for (i64 i = 0; i < nnew; i++) { // copy elements over
         new (parent.sorted1_elems + i) atf_amc::Cstr(sorted1_qFind(rhs, i));
         parent.sorted1_n = i + 1;
     }
@@ -9777,12 +14599,12 @@ void atf_amc::sorted1_Setary(atf_amc::FPerfSortString& parent, const algo::arypt
 
 // --- atf_amc.FPerfSortString.sorted1.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<atf_amc::Cstr> atf_amc::sorted1_AllocNVal(atf_amc::FPerfSortString& parent, int n_elems, const atf_amc::Cstr& val) {
+algo::aryptr<atf_amc::Cstr> atf_amc::sorted1_AllocNVal(atf_amc::FPerfSortString& parent, i64 n_elems, const atf_amc::Cstr& val) {
     sorted1_Reserve(parent, n_elems);
-    int old_n  = parent.sorted1_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = parent.sorted1_n;
+    i64 new_n = old_n + n_elems;
     atf_amc::Cstr *elems = parent.sorted1_elems;
-    for (int i = old_n; i < new_n; i++) {
+    for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) atf_amc::Cstr(val);
     }
     parent.sorted1_n = new_n;
@@ -9792,25 +14614,43 @@ algo::aryptr<atf_amc::Cstr> atf_amc::sorted1_AllocNVal(atf_amc::FPerfSortString&
 // --- atf_amc.FPerfSortString.sorted1.Insary
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-void atf_amc::sorted1_Insary(atf_amc::FPerfSortString& parent, algo::aryptr<atf_amc::Cstr> rhs, int at) {
+void atf_amc::sorted1_Insary(atf_amc::FPerfSortString& parent, algo::aryptr<atf_amc::Cstr> rhs, i64 at) {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.sorted1_elems && rhs.elems < parent.sorted1_elems + parent.sorted1_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("atf_amc.tary_alias  field:atf_amc.FPerfSortString.sorted1  comment:'alias error: sub-array is being appended to the whole'");
     }
-    if (UNLIKELY(u64(at) >= u64(parent.sorted1_elems+1))) {
+    if (UNLIKELY(u64(at) >= u64(parent.sorted1_n+1))) {
         FatalErrorExit("atf_amc.bad_insary  field:atf_amc.FPerfSortString.sorted1  comment:'index out of range'");
     }
-    int nnew = rhs.n_elems;
-    int nmove = parent.sorted1_n - at;
+    i64 nnew = rhs.n_elems;
+    i64 nmove = parent.sorted1_n - at;
     sorted1_Reserve(parent, nnew); // reserve space
-    for (int i = nmove-1; i >=0 ; --i) {
+    for (i64 i = nmove-1; i >=0 ; --i) {
         new (parent.sorted1_elems + at + nnew + i) atf_amc::Cstr(parent.sorted1_elems[at + i]);
         parent.sorted1_elems[at + i].~Cstr(); // destroy element
     }
-    for (int i = 0; i < nnew; ++i) {
+    for (i64 i = 0; i < nnew; ++i) {
         new (parent.sorted1_elems + at + i) atf_amc::Cstr(rhs[i]);
     }
     parent.sorted1_n += nnew;
+}
+
+// --- atf_amc.FPerfSortString.sorted1.RemRegion
+// Delete a range of elements
+// Remove region from the middle of the array
+// The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
+// If N is negative, nothing is removed.
+void atf_amc::sorted1_RemRegion(atf_amc::FPerfSortString& parent, i64 beg, i64 n) {
+    i64 end = i64_Min(beg+n, parent.sorted1_n);
+    beg = i64_Max(beg,0);
+    n = end-beg;
+    if (n>0) {
+        for (i64 i=beg; i<end; i++) {
+            parent.sorted1_elems[i].~Cstr();
+        }
+        memmove(parent.sorted1_elems+beg, parent.sorted1_elems+end, sizeof(atf_amc::Cstr) * (parent.sorted1_n-end));
+        parent.sorted1_n -= n;
+    }
 }
 
 // --- atf_amc.FPerfSortString.sorted1.Swap
@@ -10222,6 +15062,24 @@ atf_amc::FTypeB* atf_amc::zdl_typeb_RemoveFirst(atf_amc::FTypeA& typea) {
     return row;
 }
 
+// --- atf_amc.FTypeA.zdl_typeb.InsertBefore
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+void atf_amc::zdl_typeb_InsertBefore(atf_amc::FTypeA& typea, atf_amc::FTypeB& row, atf_amc::FTypeB* before) {
+    if (!typea_zdl_typeb_InLlistQ(row) && &row != before) {
+        atf_amc::FTypeB* next = before;
+        atf_amc::FTypeB* prev = next ? next->typea_zdl_typeb_prev : typea.zdl_typeb_tail;
+        row.typea_zdl_typeb_next = next;
+        row.typea_zdl_typeb_prev = prev;
+        atf_amc::FTypeB **prev_link_a = &prev->typea_zdl_typeb_next;
+        atf_amc::FTypeB **prev_link_b = &typea.zdl_typeb_head;
+        *(prev ? prev_link_a : prev_link_b) = &row;
+        atf_amc::FTypeB **next_link_a = &next->typea_zdl_typeb_prev;
+        atf_amc::FTypeB **next_link_b = &typea.zdl_typeb_tail;
+        *(next ? next_link_a : next_link_b) = &row;
+        typea.zdl_typeb_n++;
+    }
+}
+
 // --- atf_amc.FTypeA.bh_typeb.Cascdel
 // Delete referred-to items.
 // Delete all elements referenced by the heap.
@@ -10622,7 +15480,7 @@ void atf_amc::FTypeD_Print(atf_amc::FTypeD& row, algo::cstring& str) {
 // Copy fields out of row
 void atf_amc::types_CopyOut(atf_amc::FTypeS &row, atf_amc::TypeS &out) {
     out.types = row.types;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- atf_amc.FTypeS.msghdr.CopyIn
@@ -10704,6 +15562,24 @@ atf_amc::FTypeT* atf_amc::zdl_typet_RemoveFirst(atf_amc::FTypeS& types) {
     return row;
 }
 
+// --- atf_amc.FTypeS.zdl_typet.InsertBefore
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+void atf_amc::zdl_typet_InsertBefore(atf_amc::FTypeS& types, atf_amc::FTypeT& row, atf_amc::FTypeT* before) {
+    if (!types_zdl_typet_InLlistQ(row) && &row != before) {
+        atf_amc::FTypeT* next = before;
+        atf_amc::FTypeT* prev = next ? next->types_zdl_typet_prev : types.zdl_typet_tail;
+        row.types_zdl_typet_next = next;
+        row.types_zdl_typet_prev = prev;
+        atf_amc::FTypeT **prev_link_a = &prev->types_zdl_typet_next;
+        atf_amc::FTypeT **prev_link_b = &types.zdl_typet_head;
+        *(prev ? prev_link_a : prev_link_b) = &row;
+        atf_amc::FTypeT **next_link_a = &next->types_zdl_typet_prev;
+        atf_amc::FTypeT **next_link_b = &types.zdl_typet_tail;
+        *(next ? next_link_a : next_link_b) = &row;
+        types.zdl_typet_n++;
+    }
+}
+
 // --- atf_amc.FTypeS..Uninit
 void atf_amc::FTypeS_Uninit(atf_amc::FTypeS& types) {
     atf_amc::FTypeS &row = types; (void)row;
@@ -10720,7 +15596,7 @@ void atf_amc::FTypeS_Print(atf_amc::FTypeS& row, algo::cstring& str) {
     i32_Print(row.types, temp);
     PrintAttrSpaceReset(str,"types", temp);
 
-    algo::Comment_Print(row.comment, temp);
+    algo::cstring_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);
 }
 
@@ -10761,6 +15637,27 @@ void atf_amc::FTypeT_Print(atf_amc::FTypeT& row, algo::cstring& str) {
     PrintAttrSpaceReset(str,"j", temp);
 }
 
+// --- atf_amc.FTypeU.base.CopyOut
+// Copy fields out of row
+void atf_amc::typeu_CopyOut(atf_amc::FTypeU &row, atf_amc::TypeU &out) {
+    out.u = row.u;
+    out.v = row.v;
+}
+
+// --- atf_amc.FTypeU.base.CopyIn
+// Copy fields in to row
+void atf_amc::typeu_CopyIn(atf_amc::FTypeU &row, atf_amc::TypeU &in) {
+    row.u = in.u;
+    row.v = in.v;
+}
+
+// --- atf_amc.FTypeU..Uninit
+void atf_amc::FTypeU_Uninit(atf_amc::FTypeU& typeu) {
+    atf_amc::FTypeU &row = typeu; (void)row;
+    ind_typeu_Remove(row); // remove typeu from index ind_typeu
+    ind_typeu_v_Remove(row); // remove typeu from index ind_typeu_v
+}
+
 // --- atf_amc.TypeA..ReadStrptrMaybe
 // Read fields of atf_amc::TypeA from an ascii string.
 // The format of the string is the format of the atf_amc::TypeA's only field
@@ -10773,14 +15670,14 @@ bool atf_amc::TypeA_ReadStrptrMaybe(atf_amc::TypeA &parent, algo::strptr in_str)
 // --- atf_amc.TypeA..FmtJson
 // Create JSON representation of atf_amc::TypeA under PARENT node
 // cfmt:atf_amc.TypeA.Json  printfmt:Auto
-lib_json::FNode * atf_amc::TypeA_FmtJson(atf_amc::TypeA& row, lib_json::FNode *parent) {
-    return i32_FmtJson(const_cast<atf_amc::TypeA&>(row).typea,parent);;
+lib_json::FNode * atf_amc::TypeA_FmtJson(atf_amc::TypeA row, lib_json::FNode *parent) {
+    return i32_FmtJson(row.typea,parent);
 }
 
 // --- atf_amc.TypeA..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.TypeA.String  printfmt:Raw
-void atf_amc::TypeA_Print(atf_amc::TypeA& row, algo::cstring& str) {
+void atf_amc::TypeA_Print(atf_amc::TypeA row, algo::cstring& str) {
     i32_Print(row.typea, str);
 }
 
@@ -10793,10 +15690,10 @@ algo::aryptr<atf_amc::TypeA> atf_amc::tary_Addary(atf_amc::FUnitSort& parent, al
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("atf_amc.tary_alias  field:atf_amc.FUnitSort.tary  comment:'alias error: sub-array is being appended to the whole'");
     }
-    int nnew = rhs.n_elems;
+    i64 nnew = rhs.n_elems;
     tary_Reserve(parent, nnew); // reserve space
-    int at = parent.tary_n;
-    for (int i = 0; i < nnew; i++) {
+    i64 at = parent.tary_n;
+    for (i64 i = 0; i < nnew; i++) {
         new (parent.tary_elems + at + i) atf_amc::TypeA(rhs[i]);
         parent.tary_n++;
     }
@@ -10808,8 +15705,8 @@ algo::aryptr<atf_amc::TypeA> atf_amc::tary_Addary(atf_amc::FUnitSort& parent, al
 // The new element is initialized to a default value
 atf_amc::TypeA& atf_amc::tary_Alloc(atf_amc::FUnitSort& parent) {
     tary_Reserve(parent, 1);
-    int n  = parent.tary_n;
-    int at = n;
+    i64 n  = parent.tary_n;
+    i64 at = n;
     atf_amc::TypeA *elems = parent.tary_elems;
     new (elems + at) atf_amc::TypeA(); // construct new element, default initializer
     parent.tary_n = n+1;
@@ -10819,9 +15716,9 @@ atf_amc::TypeA& atf_amc::tary_Alloc(atf_amc::FUnitSort& parent) {
 // --- atf_amc.FUnitSort.tary.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-atf_amc::TypeA& atf_amc::tary_AllocAt(atf_amc::FUnitSort& parent, int at) {
+atf_amc::TypeA& atf_amc::tary_AllocAt(atf_amc::FUnitSort& parent, i64 at) {
     tary_Reserve(parent, 1);
-    int n  = parent.tary_n;
+    i64 n  = parent.tary_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
         FatalErrorExit("atf_amc.bad_alloc_at  field:atf_amc.FUnitSort.tary  comment:'index out of range'");
     }
@@ -10834,12 +15731,12 @@ atf_amc::TypeA& atf_amc::tary_AllocAt(atf_amc::FUnitSort& parent, int at) {
 
 // --- atf_amc.FUnitSort.tary.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<atf_amc::TypeA> atf_amc::tary_AllocN(atf_amc::FUnitSort& parent, int n_elems) {
+algo::aryptr<atf_amc::TypeA> atf_amc::tary_AllocN(atf_amc::FUnitSort& parent, i64 n_elems) {
     tary_Reserve(parent, n_elems);
-    int old_n  = parent.tary_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = parent.tary_n;
+    i64 new_n = old_n + n_elems;
     atf_amc::TypeA *elems = parent.tary_elems;
-    for (int i = old_n; i < new_n; i++) {
+    for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) atf_amc::TypeA(); // construct new element, default initialize
     }
     parent.tary_n = new_n;
@@ -10850,15 +15747,15 @@ algo::aryptr<atf_amc::TypeA> atf_amc::tary_AllocN(atf_amc::FUnitSort& parent, in
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::aryptr<atf_amc::TypeA> atf_amc::tary_AllocNAt(atf_amc::FUnitSort& parent, int n_elems, int at) {
+algo::aryptr<atf_amc::TypeA> atf_amc::tary_AllocNAt(atf_amc::FUnitSort& parent, i64 n_elems, i64 at) {
     tary_Reserve(parent, n_elems);
-    int n  = parent.tary_n;
+    i64 n  = parent.tary_n;
     if (UNLIKELY(u64(at) > u64(n))) {
         FatalErrorExit("atf_amc.bad_alloc_n_at  field:atf_amc.FUnitSort.tary  comment:'index out of range'");
     }
     atf_amc::TypeA *elems = parent.tary_elems;
     memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(atf_amc::TypeA));
-    for (int i = 0; i < n_elems; i++) {
+    for (i64 i = 0; i < n_elems; i++) {
         new (elems + at + i) atf_amc::TypeA(); // construct new element, default initialize
     }
     parent.tary_n = n+n_elems;
@@ -10867,23 +15764,12 @@ algo::aryptr<atf_amc::TypeA> atf_amc::tary_AllocNAt(atf_amc::FUnitSort& parent, 
 
 // --- atf_amc.FUnitSort.tary.Remove
 // Remove item by index. If index outside of range, do nothing.
-void atf_amc::tary_Remove(atf_amc::FUnitSort& parent, u32 i) {
-    u32 lim = parent.tary_n;
+void atf_amc::tary_Remove(atf_amc::FUnitSort& parent, u64 i) {
+    u64 lim = parent.tary_n;
     atf_amc::TypeA *elems = parent.tary_elems;
     if (i < lim) {
-        elems[i].~TypeA(); // destroy element
         memmove(elems + i, elems + (i + 1), sizeof(atf_amc::TypeA) * (lim - (i + 1)));
         parent.tary_n = lim - 1;
-    }
-}
-
-// --- atf_amc.FUnitSort.tary.RemoveAll
-void atf_amc::tary_RemoveAll(atf_amc::FUnitSort& parent) {
-    u32 n = parent.tary_n;
-    while (n > 0) {
-        n -= 1;
-        parent.tary_elems[n].~TypeA();
-        parent.tary_n = n;
     }
 }
 
@@ -10893,17 +15779,16 @@ void atf_amc::tary_RemoveLast(atf_amc::FUnitSort& parent) {
     u64 n = parent.tary_n;
     if (n > 0) {
         n -= 1;
-        tary_qFind(parent, u64(n)).~TypeA();
         parent.tary_n = n;
     }
 }
 
 // --- atf_amc.FUnitSort.tary.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void atf_amc::tary_AbsReserve(atf_amc::FUnitSort& parent, int n) {
-    u32 old_max  = parent.tary_max;
-    if (n > i32(old_max)) {
-        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+void atf_amc::tary_AbsReserve(atf_amc::FUnitSort& parent, i64 n) {
+    u64 old_max  = parent.tary_max;
+    if (n > i64(old_max)) {
+        u64 new_max  = i64_Max(i64_Max(old_max * 2, n), 4);
         void *new_mem = algo_lib::malloc_ReallocMem(parent.tary_elems, old_max * sizeof(atf_amc::TypeA), new_max * sizeof(atf_amc::TypeA));
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("atf_amc.tary_nomem  field:atf_amc.FUnitSort.tary  comment:'out of memory'");
@@ -10917,9 +15802,9 @@ void atf_amc::tary_AbsReserve(atf_amc::FUnitSort& parent, int n) {
 // Copy contents of RHS to PARENT.
 void atf_amc::tary_Setary(atf_amc::FUnitSort& parent, atf_amc::FUnitSort &rhs) {
     tary_RemoveAll(parent);
-    int nnew = rhs.tary_n;
+    i64 nnew = rhs.tary_n;
     tary_Reserve(parent, nnew); // reserve space
-    for (int i = 0; i < nnew; i++) { // copy elements over
+    for (i64 i = 0; i < nnew; i++) { // copy elements over
         new (parent.tary_elems + i) atf_amc::TypeA(tary_qFind(rhs, i));
         parent.tary_n = i + 1;
     }
@@ -10935,12 +15820,12 @@ void atf_amc::tary_Setary(atf_amc::FUnitSort& parent, const algo::aryptr<atf_amc
 
 // --- atf_amc.FUnitSort.tary.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<atf_amc::TypeA> atf_amc::tary_AllocNVal(atf_amc::FUnitSort& parent, int n_elems, const atf_amc::TypeA& val) {
+algo::aryptr<atf_amc::TypeA> atf_amc::tary_AllocNVal(atf_amc::FUnitSort& parent, i64 n_elems, const atf_amc::TypeA& val) {
     tary_Reserve(parent, n_elems);
-    int old_n  = parent.tary_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = parent.tary_n;
+    i64 new_n = old_n + n_elems;
     atf_amc::TypeA *elems = parent.tary_elems;
-    for (int i = old_n; i < new_n; i++) {
+    for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) atf_amc::TypeA(val);
     }
     parent.tary_n = new_n;
@@ -10964,51 +15849,63 @@ bool atf_amc::tary_ReadStrptrMaybe(atf_amc::FUnitSort& parent, algo::strptr in_s
 // --- atf_amc.FUnitSort.tary.Insary
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-void atf_amc::tary_Insary(atf_amc::FUnitSort& parent, algo::aryptr<atf_amc::TypeA> rhs, int at) {
+void atf_amc::tary_Insary(atf_amc::FUnitSort& parent, algo::aryptr<atf_amc::TypeA> rhs, i64 at) {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.tary_elems && rhs.elems < parent.tary_elems + parent.tary_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("atf_amc.tary_alias  field:atf_amc.FUnitSort.tary  comment:'alias error: sub-array is being appended to the whole'");
     }
-    if (UNLIKELY(u64(at) >= u64(parent.tary_elems+1))) {
+    if (UNLIKELY(u64(at) >= u64(parent.tary_n+1))) {
         FatalErrorExit("atf_amc.bad_insary  field:atf_amc.FUnitSort.tary  comment:'index out of range'");
     }
-    int nnew = rhs.n_elems;
-    int nmove = parent.tary_n - at;
+    i64 nnew = rhs.n_elems;
+    i64 nmove = parent.tary_n - at;
     tary_Reserve(parent, nnew); // reserve space
-    for (int i = nmove-1; i >=0 ; --i) {
+    for (i64 i = nmove-1; i >=0 ; --i) {
         new (parent.tary_elems + at + nnew + i) atf_amc::TypeA(parent.tary_elems[at + i]);
-        parent.tary_elems[at + i].~TypeA(); // destroy element
     }
-    for (int i = 0; i < nnew; ++i) {
+    for (i64 i = 0; i < nnew; ++i) {
         new (parent.tary_elems + at + i) atf_amc::TypeA(rhs[i]);
     }
     parent.tary_n += nnew;
 }
 
+// --- atf_amc.FUnitSort.tary.RemRegion
+// Delete a range of elements
+// Remove region from the middle of the array
+// The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
+// If N is negative, nothing is removed.
+void atf_amc::tary_RemRegion(atf_amc::FUnitSort& parent, i64 beg, i64 n) {
+    i64 end = i64_Min(beg+n, parent.tary_n);
+    beg = i64_Max(beg,0);
+    n = end-beg;
+    if (n>0) {
+        memmove(parent.tary_elems+beg, parent.tary_elems+end, sizeof(atf_amc::TypeA) * (parent.tary_n-end));
+        parent.tary_n -= n;
+    }
+}
+
 // --- atf_amc.FUnitSort.tary.Swap
 // Swap values elem_a and elem_b
 inline static void atf_amc::tary_Swap(atf_amc::TypeA &elem_a, atf_amc::TypeA &elem_b) {
-    u8 temp[sizeof(atf_amc::TypeA)];
-    memcpy(&temp  , &elem_a, sizeof(atf_amc::TypeA));
-    memcpy(&elem_a, &elem_b, sizeof(atf_amc::TypeA));
-    memcpy(&elem_b, &temp  , sizeof(atf_amc::TypeA));
+    atf_amc::TypeA temp = elem_a;
+    elem_a = elem_b;
+    elem_b = temp;
 }
 
 // --- atf_amc.FUnitSort.tary.Rotleft
 // Left circular shift of three-tuple
 inline static void atf_amc::tary_Rotleft(atf_amc::TypeA &elem_a, atf_amc::TypeA &elem_b, atf_amc::TypeA &elem_c) {
-    u8 temp[sizeof(atf_amc::TypeA)];
-    memcpy(&temp, &elem_a   , sizeof(atf_amc::TypeA));
-    memcpy(&elem_a   , &elem_b   , sizeof(atf_amc::TypeA));
-    memcpy(&elem_b   , &elem_c   , sizeof(atf_amc::TypeA));
-    memcpy(&elem_c   , &temp, sizeof(atf_amc::TypeA));
+    atf_amc::TypeA temp = elem_a;
+    elem_a = elem_b;
+    elem_b = elem_c;
+    elem_c = temp;
 }
 
 // --- atf_amc.FUnitSort.tary.Lt
 // Compare values elem_a and elem_b
 // The comparison function must be anti-symmetric: if a>b, then !(b>a).
 // If not, mayhem results.
-static bool atf_amc::tary_Lt(atf_amc::TypeA &elem_a, atf_amc::TypeA &elem_b) {
+static bool atf_amc::tary_Lt(atf_amc::TypeA elem_a, atf_amc::TypeA elem_b) {
     bool ret;
     ret = elem_a.typea < elem_b.typea;
     return ret;
@@ -11032,15 +15929,14 @@ bool atf_amc::tary_SortedQ(atf_amc::FUnitSort& parent) {
 static void atf_amc::tary_IntInsertionSort(atf_amc::TypeA *elems, int n) {
     for (int i = 1; i < n; ++i) {
         int j = i;
-        // find the spot for ith element.
-        while (j>0 && tary_Lt(elems[i], elems[j-1])) {
-            j--;
-        }
-        if (j<i) {
-            u8 tmp[sizeof(atf_amc::TypeA)];
-            memcpy (tmp                       , &elems[i], sizeof(atf_amc::TypeA)      );
-            memmove(&elems[j+1], &elems[j], sizeof(atf_amc::TypeA)*(i-j));
-            memcpy (&elems[j]  , tmp                     , sizeof(atf_amc::TypeA)      );
+        atf_amc::TypeA tmp = elems[i];
+        // shift elements up by one
+        if (tary_Lt(tmp, elems[j-1])) {
+            do {
+                elems[j] = elems[j-1];
+                j--;
+            } while (j>0 && tary_Lt(tmp, elems[j-1]));
+            elems[j] = tmp;
         }
     }
 }
@@ -11107,8 +16003,8 @@ static void atf_amc::tary_IntQuickSort(atf_amc::TypeA *elems, int n, int depth) 
         }
         // deposit pivot near the end of the array and skip it.
         tary_Swap(elems[--pj], elems[pp]);
-        // reference to pivot
-        atf_amc::TypeA &pivot = elems[pj];
+        // copy pivot into temporary variable
+        atf_amc::TypeA pivot = elems[pj];
         for(;;){
             while (tary_Lt(elems[++pi], pivot)) {
             }
@@ -11155,11 +16051,11 @@ void atf_amc::tary_QuickSort(atf_amc::FUnitSort& parent) {
 }
 
 // --- atf_amc.FUnitSort.c_ptrary.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 void atf_amc::c_ptrary_Insert(atf_amc::FUnitSort& parent, atf_amc::TypeA& row) {
     c_ptrary_Reserve(parent, 1);
-    u32 n  = parent.c_ptrary_n++;
+    u64 n  = parent.c_ptrary_n++;
     parent.c_ptrary_elems[n] = &row;
 }
 
@@ -11170,18 +16066,15 @@ void atf_amc::c_ptrary_Insert(atf_amc::FUnitSort& parent, atf_amc::TypeA& row) {
 // Return value: whether element was inserted into array.
 bool atf_amc::c_ptrary_ScanInsertMaybe(atf_amc::FUnitSort& parent, atf_amc::TypeA& row) {
     bool retval = true;
-    u32 n  = parent.c_ptrary_n;
-    for (u32 i = 0; i < n; i++) {
+    u64 n  = parent.c_ptrary_n;
+    for (u64 i = 0; i < n; i++) {
         if (parent.c_ptrary_elems[i] == &row) {
             retval = false;
             break;
         }
     }
     if (retval) {
-        // reserve space
-        c_ptrary_Reserve(parent, 1);
-        parent.c_ptrary_elems[n] = &row;
-        parent.c_ptrary_n = n+1;
+        c_ptrary_Insert(parent,row); // row known absent; the append is Insert's
     }
     return retval;
 }
@@ -11189,9 +16082,9 @@ bool atf_amc::c_ptrary_ScanInsertMaybe(atf_amc::FUnitSort& parent, atf_amc::Type
 // --- atf_amc.FUnitSort.c_ptrary.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void atf_amc::c_ptrary_Remove(atf_amc::FUnitSort& parent, atf_amc::TypeA& row) {
-    int n = parent.c_ptrary_n;
-    int j=0;
-    for (int i=0; i<n; i++) {
+    i64 n = parent.c_ptrary_n;
+    i64 j=0;
+    for (i64 i=0; i<n; i++) {
         if (parent.c_ptrary_elems[i] == &row) {
         } else {
             if (j != i) {
@@ -11205,12 +16098,12 @@ void atf_amc::c_ptrary_Remove(atf_amc::FUnitSort& parent, atf_amc::TypeA& row) {
 
 // --- atf_amc.FUnitSort.c_ptrary.Reserve
 // Reserve space in index for N more elements;
-void atf_amc::c_ptrary_Reserve(atf_amc::FUnitSort& parent, u32 n) {
-    u32 old_max = parent.c_ptrary_max;
+void atf_amc::c_ptrary_Reserve(atf_amc::FUnitSort& parent, u64 n) {
+    u64 old_max = parent.c_ptrary_max;
     if (UNLIKELY(parent.c_ptrary_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(atf_amc::TypeA*);
-        u32 new_size = new_max * sizeof(atf_amc::TypeA*);
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, parent.c_ptrary_n + n), 4);
+        u64 old_size = old_max * sizeof(atf_amc::TypeA*);
+        u64 new_size = new_max * sizeof(atf_amc::TypeA*);
         void *new_mem = algo_lib::malloc_ReallocMem(parent.c_ptrary_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("atf_amc.out_of_memory  field:atf_amc.FUnitSort.c_ptrary");
@@ -11241,7 +16134,7 @@ inline static void atf_amc::c_ptrary_Rotleft(atf_amc::TypeA* &elem_a, atf_amc::T
 // Compare values elem_a and elem_b
 // The comparison function must be anti-symmetric: if a>b, then !(b>a).
 // If not, mayhem results.
-static bool atf_amc::c_ptrary_Lt(atf_amc::TypeA &elem_a, atf_amc::TypeA &elem_b) {
+static bool atf_amc::c_ptrary_Lt(atf_amc::TypeA elem_a, atf_amc::TypeA elem_b) {
     bool ret;
     ret = elem_a.typea < elem_b.typea;
     return ret;
@@ -11400,27 +16293,25 @@ bool atf_amc::fixary_ReadStrptrMaybe(atf_amc::FUnitSort& parent, algo::strptr in
 // --- atf_amc.FUnitSort.fixary.Swap
 // Swap values elem_a and elem_b
 inline static void atf_amc::fixary_Swap(atf_amc::TypeA &elem_a, atf_amc::TypeA &elem_b) {
-    u8 temp[sizeof(atf_amc::TypeA)];
-    memcpy(&temp  , &elem_a, sizeof(atf_amc::TypeA));
-    memcpy(&elem_a, &elem_b, sizeof(atf_amc::TypeA));
-    memcpy(&elem_b, &temp  , sizeof(atf_amc::TypeA));
+    atf_amc::TypeA temp = elem_a;
+    elem_a = elem_b;
+    elem_b = temp;
 }
 
 // --- atf_amc.FUnitSort.fixary.Rotleft
 // Left circular shift of three-tuple
 inline static void atf_amc::fixary_Rotleft(atf_amc::TypeA &elem_a, atf_amc::TypeA &elem_b, atf_amc::TypeA &elem_c) {
-    u8 temp[sizeof(atf_amc::TypeA)];
-    memcpy(&temp, &elem_a   , sizeof(atf_amc::TypeA));
-    memcpy(&elem_a   , &elem_b   , sizeof(atf_amc::TypeA));
-    memcpy(&elem_b   , &elem_c   , sizeof(atf_amc::TypeA));
-    memcpy(&elem_c   , &temp, sizeof(atf_amc::TypeA));
+    atf_amc::TypeA temp = elem_a;
+    elem_a = elem_b;
+    elem_b = elem_c;
+    elem_c = temp;
 }
 
 // --- atf_amc.FUnitSort.fixary.Lt
 // Compare values elem_a and elem_b
 // The comparison function must be anti-symmetric: if a>b, then !(b>a).
 // If not, mayhem results.
-static bool atf_amc::fixary_Lt(atf_amc::TypeA &elem_a, atf_amc::TypeA &elem_b) {
+static bool atf_amc::fixary_Lt(atf_amc::TypeA elem_a, atf_amc::TypeA elem_b) {
     bool ret;
     ret = elem_a.typea < elem_b.typea;
     return ret;
@@ -11444,15 +16335,14 @@ bool atf_amc::fixary_SortedQ(atf_amc::FUnitSort& parent) {
 static void atf_amc::fixary_IntInsertionSort(atf_amc::TypeA *elems, int n) {
     for (int i = 1; i < n; ++i) {
         int j = i;
-        // find the spot for ith element.
-        while (j>0 && fixary_Lt(elems[i], elems[j-1])) {
-            j--;
-        }
-        if (j<i) {
-            u8 tmp[sizeof(atf_amc::TypeA)];
-            memcpy (tmp                       , &elems[i], sizeof(atf_amc::TypeA)      );
-            memmove(&elems[j+1], &elems[j], sizeof(atf_amc::TypeA)*(i-j));
-            memcpy (&elems[j]  , tmp                     , sizeof(atf_amc::TypeA)      );
+        atf_amc::TypeA tmp = elems[i];
+        // shift elements up by one
+        if (fixary_Lt(tmp, elems[j-1])) {
+            do {
+                elems[j] = elems[j-1];
+                j--;
+            } while (j>0 && fixary_Lt(tmp, elems[j-1]));
+            elems[j] = tmp;
         }
     }
 }
@@ -11519,8 +16409,8 @@ static void atf_amc::fixary_IntQuickSort(atf_amc::TypeA *elems, int n, int depth
         }
         // deposit pivot near the end of the array and skip it.
         fixary_Swap(elems[--pj], elems[pp]);
-        // reference to pivot
-        atf_amc::TypeA &pivot = elems[pj];
+        // copy pivot into temporary variable
+        atf_amc::TypeA pivot = elems[pj];
         for(;;){
             while (fixary_Lt(elems[++pi], pivot)) {
             }
@@ -11600,12 +16490,19 @@ const char* atf_amc::value_ToCstr(const atf_amc::FieldId& parent) {
         case atf_amc_FieldId_bits5         : ret = "bits5";  break;
         case atf_amc_FieldId_bit0          : ret = "bit0";  break;
         case atf_amc_FieldId_freebool      : ret = "freebool";  break;
+        case atf_amc_FieldId_id            : ret = "id";  break;
+        case atf_amc_FieldId_seq           : ret = "seq";  break;
         case atf_amc_FieldId_attr1         : ret = "attr1";  break;
         case atf_amc_FieldId_attr2         : ret = "attr2";  break;
         case atf_amc_FieldId_strval        : ret = "strval";  break;
         case atf_amc_FieldId_strval2       : ret = "strval2";  break;
         case atf_amc_FieldId_dateval       : ret = "dateval";  break;
         case atf_amc_FieldId_intval        : ret = "intval";  break;
+        case atf_amc_FieldId_state         : ret = "state";  break;
+        case atf_amc_FieldId_ready         : ret = "ready";  break;
+        case atf_amc_FieldId_p_parent      : ret = "p_parent";  break;
+        case atf_amc_FieldId_out_buf       : ret = "out_buf";  break;
+        case atf_amc_FieldId_ary           : ret = "ary";  break;
         case atf_amc_FieldId_fixary        : ret = "fixary";  break;
         case atf_amc_FieldId_inlary        : ret = "inlary";  break;
         case atf_amc_FieldId_len           : ret = "len";  break;
@@ -11616,6 +16513,10 @@ const char* atf_amc::value_ToCstr(const atf_amc::FieldId& parent) {
         case atf_amc_FieldId_b             : ret = "b";  break;
         case atf_amc_FieldId_o             : ret = "o";  break;
         case atf_amc_FieldId_v             : ret = "v";  break;
+        case atf_amc_FieldId_val           : ret = "val";  break;
+        case atf_amc_FieldId_word          : ret = "word";  break;
+        case atf_amc_FieldId_kind          : ret = "kind";  break;
+        case atf_amc_FieldId_entry         : ret = "entry";  break;
         case atf_amc_FieldId_typeg         : ret = "typeg";  break;
         case atf_amc_FieldId_optg          : ret = "optg";  break;
         case atf_amc_FieldId_present       : ret = "present";  break;
@@ -11699,7 +16600,6 @@ const char* atf_amc::value_ToCstr(const atf_amc::FieldId& parent) {
         case atf_amc_FieldId_val3          : ret = "val3";  break;
         case atf_amc_FieldId_msghdr        : ret = "msghdr";  break;
         case atf_amc_FieldId_payload       : ret = "payload";  break;
-        case atf_amc_FieldId_val           : ret = "val";  break;
         case atf_amc_FieldId_text          : ret = "text";  break;
         case atf_amc_FieldId_typea         : ret = "typea";  break;
         case atf_amc_FieldId_j             : ret = "j";  break;
@@ -11707,6 +16607,7 @@ const char* atf_amc::value_ToCstr(const atf_amc::FieldId& parent) {
         case atf_amc_FieldId_typeh         : ret = "typeh";  break;
         case atf_amc_FieldId_types         : ret = "types";  break;
         case atf_amc_FieldId_comment       : ret = "comment";  break;
+        case atf_amc_FieldId_u             : ret = "u";  break;
         case atf_amc_FieldId_s1            : ret = "s1";  break;
         case atf_amc_FieldId_s2            : ret = "s2";  break;
         case atf_amc_FieldId_s3            : ret = "s3";  break;
@@ -11719,8 +16620,10 @@ const char* atf_amc::value_ToCstr(const atf_amc::FieldId& parent) {
         case atf_amc_FieldId_v1            : ret = "v1";  break;
         case atf_amc_FieldId_v2            : ret = "v2";  break;
         case atf_amc_FieldId_v3            : ret = "v3";  break;
+        case atf_amc_FieldId_c             : ret = "c";  break;
         case atf_amc_FieldId_i             : ret = "i";  break;
         case atf_amc_FieldId_k             : ret = "k";  break;
+        case atf_amc_FieldId_w             : ret = "w";  break;
         case atf_amc_FieldId_strval_regx   : ret = "strval_regx";  break;
         case atf_amc_FieldId_strval2_regx  : ret = "strval2_regx";  break;
         case atf_amc_FieldId_start_dateval : ret = "start_dateval";  break;
@@ -11758,6 +16661,9 @@ bool atf_amc::value_SetStrptrMaybe(atf_amc::FieldId& parent, algo::strptr rhs) {
                 case 'b': {
                     value_SetEnum(parent,atf_amc_FieldId_b); ret = true; break;
                 }
+                case 'c': {
+                    value_SetEnum(parent,atf_amc_FieldId_c); ret = true; break;
+                }
                 case 'i': {
                     value_SetEnum(parent,atf_amc_FieldId_i); ret = true; break;
                 }
@@ -11770,8 +16676,14 @@ bool atf_amc::value_SetStrptrMaybe(atf_amc::FieldId& parent, algo::strptr rhs) {
                 case 'o': {
                     value_SetEnum(parent,atf_amc_FieldId_o); ret = true; break;
                 }
+                case 'u': {
+                    value_SetEnum(parent,atf_amc_FieldId_u); ret = true; break;
+                }
                 case 'v': {
                     value_SetEnum(parent,atf_amc_FieldId_v); ret = true; break;
+                }
+                case 'w': {
+                    value_SetEnum(parent,atf_amc_FieldId_w); ret = true; break;
                 }
             }
             break;
@@ -11780,6 +16692,9 @@ bool atf_amc::value_SetStrptrMaybe(atf_amc::FieldId& parent, algo::strptr rhs) {
             switch (u64(algo::ReadLE16(rhs.elems))) {
                 case LE_STR2('c','h'): {
                     value_SetEnum(parent,atf_amc_FieldId_ch); ret = true; break;
+                }
+                case LE_STR2('i','d'): {
+                    value_SetEnum(parent,atf_amc_FieldId_id); ret = true; break;
                 }
                 case LE_STR2('m','1'): {
                     value_SetEnum(parent,atf_amc_FieldId_m1); ret = true; break;
@@ -11822,8 +16737,14 @@ bool atf_amc::value_SetStrptrMaybe(atf_amc::FieldId& parent, algo::strptr rhs) {
         }
         case 3: {
             switch (u64(algo::ReadLE16(rhs.elems))|(u64(rhs[2])<<16)) {
+                case LE_STR3('a','r','y'): {
+                    value_SetEnum(parent,atf_amc_FieldId_ary); ret = true; break;
+                }
                 case LE_STR3('l','e','n'): {
                     value_SetEnum(parent,atf_amc_FieldId_len); ret = true; break;
+                }
+                case LE_STR3('s','e','q'): {
+                    value_SetEnum(parent,atf_amc_FieldId_seq); ret = true; break;
                 }
                 case LE_STR3('v','a','l'): {
                     value_SetEnum(parent,atf_amc_FieldId_val); ret = true; break;
@@ -11841,6 +16762,9 @@ bool atf_amc::value_SetStrptrMaybe(atf_amc::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR4('b','i','t','1'): {
                     value_SetEnum(parent,atf_amc_FieldId_bit1); ret = true; break;
+                }
+                case LE_STR4('k','i','n','d'): {
+                    value_SetEnum(parent,atf_amc_FieldId_kind); ret = true; break;
                 }
                 case LE_STR4('o','p','t','g'): {
                     value_SetEnum(parent,atf_amc_FieldId_optg); ret = true; break;
@@ -11860,6 +16784,9 @@ bool atf_amc::value_SetStrptrMaybe(atf_amc::FieldId& parent, algo::strptr rhs) {
                 case LE_STR4('v','a','l','3'): {
                     value_SetEnum(parent,atf_amc_FieldId_val3); ret = true; break;
                 }
+                case LE_STR4('w','o','r','d'): {
+                    value_SetEnum(parent,atf_amc_FieldId_word); ret = true; break;
+                }
             }
             break;
         }
@@ -11874,8 +16801,17 @@ bool atf_amc::value_SetStrptrMaybe(atf_amc::FieldId& parent, algo::strptr rhs) {
                 case LE_STR5('b','i','t','s','5'): {
                     value_SetEnum(parent,atf_amc_FieldId_bits5); ret = true; break;
                 }
+                case LE_STR5('e','n','t','r','y'): {
+                    value_SetEnum(parent,atf_amc_FieldId_entry); ret = true; break;
+                }
                 case LE_STR5('p','m','a','s','k'): {
                     value_SetEnum(parent,atf_amc_FieldId_pmask); ret = true; break;
+                }
+                case LE_STR5('r','e','a','d','y'): {
+                    value_SetEnum(parent,atf_amc_FieldId_ready); ret = true; break;
+                }
+                case LE_STR5('s','t','a','t','e'): {
+                    value_SetEnum(parent,atf_amc_FieldId_state); ret = true; break;
                 }
                 case LE_STR5('t','y','p','e','a'): {
                     value_SetEnum(parent,atf_amc_FieldId_typea); ret = true; break;
@@ -11955,6 +16891,9 @@ bool atf_amc::value_SetStrptrMaybe(atf_amc::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR7('d','a','t','e','v','a','l'): {
                     value_SetEnum(parent,atf_amc_FieldId_dateval); ret = true; break;
+                }
+                case LE_STR7('o','u','t','_','b','u','f'): {
+                    value_SetEnum(parent,atf_amc_FieldId_out_buf); ret = true; break;
                 }
                 case LE_STR7('p','a','y','l','o','a','d'): {
                     value_SetEnum(parent,atf_amc_FieldId_payload); ret = true; break;
@@ -12165,6 +17104,9 @@ bool atf_amc::value_SetStrptrMaybe(atf_amc::FieldId& parent, algo::strptr rhs) {
                 case LE_STR8('n','u','l','l','a','b','l','e'): {
                     value_SetEnum(parent,atf_amc_FieldId_nullable); ret = true; break;
                 }
+                case LE_STR8('p','_','p','a','r','e','n','t'): {
+                    value_SetEnum(parent,atf_amc_FieldId_p_parent); ret = true; break;
+                }
             }
             break;
         }
@@ -12246,7 +17188,7 @@ bool atf_amc::FieldId_ReadStrptrMaybe(atf_amc::FieldId &parent, algo::strptr in_
 // --- atf_amc.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.FieldId.String  printfmt:Raw
-void atf_amc::FieldId_Print(atf_amc::FieldId& row, algo::cstring& str) {
+void atf_amc::FieldId_Print(atf_amc::FieldId row, algo::cstring& str) {
     atf_amc::value_Print(row, str);
 }
 
@@ -12254,6 +17196,141 @@ void atf_amc::FieldId_Print(atf_amc::FieldId& row, algo::cstring& str) {
 void atf_amc::Hashable_Uninit(atf_amc::Hashable& hashable) {
     atf_amc::Hashable &row = hashable; (void)row;
     ind_hashable_Remove(row); // remove hashable from index ind_hashable
+}
+
+// --- atf_amc.InlaryMin.ary.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+u32& atf_amc::ary_Alloc(atf_amc::InlaryMin& parent) {
+    u32* row = ary_AllocMaybe(parent);
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("atf_amc.out_of_mem  field:atf_amc.InlaryMin.ary  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- atf_amc.InlaryMin.ary.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+u32* atf_amc::ary_AllocMaybe(atf_amc::InlaryMin& parent) {
+    u32 *row = (u32*)ary_AllocMem(parent);
+    if (row) {
+        new (row) u32; // call constructor
+    }
+    return row;
+}
+
+// --- atf_amc.InlaryMin.ary.RemoveAll
+// Destroy all elements of Inlary
+void atf_amc::ary_RemoveAll(atf_amc::InlaryMin& parent) {
+    parent.ary_n = 0;
+}
+
+// --- atf_amc.InlaryMin.ary.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void atf_amc::ary_RemoveLast(atf_amc::InlaryMin& parent) {
+    u64 n = parent.ary_n;
+    if (n > 0) {
+        n -= 1;
+        parent.ary_n = n;
+    }
+}
+
+// --- atf_amc.InlaryMin.ary.Print
+// Convert ary to a string.
+// The separator character is ' '.
+void atf_amc::ary_Print(atf_amc::InlaryMin& parent, algo::cstring &rhs) {
+    ind_beg(InlaryMin_ary_curs,ary_elem,parent) {
+        if (ind_curs(ary_elem).index > 0) {
+            rhs << ' ';
+        }
+        u32_Print(ary_elem, rhs);
+    }ind_end;
+}
+
+// --- atf_amc.InlaryMin.ary.ReadStrptrMaybe
+// Read array from string
+// Convert string to field. Return success value
+bool atf_amc::ary_ReadStrptrMaybe(atf_amc::InlaryMin& parent, algo::strptr in_str) {
+    bool retval = true;
+    ary_RemoveAll(parent);
+    for (int i=0; in_str != "" && i < 5; i++) {
+        algo::strptr token;
+        algo::NextSep(in_str, ' ', token);
+        u32 &elem = ary_Alloc(parent); // will succeed due to the loop bound
+        (void)elem;
+        retval = u32_ReadStrptrMaybe(reinterpret_cast<u32*>(parent.ary_data)[i], token);
+        if (!retval) {
+            ary_RemoveLast(parent);
+            break;
+        }
+    }
+    while (ary_N(parent) < 2) { // restore the floor: slots the input does not cover hold a fresh element's value
+        u32 &elem = ary_Alloc(parent);
+        elem = u32(); // plain data: placement new leaves the value unspecified
+    }
+    return retval;
+}
+
+// --- atf_amc.InlaryMin..ReadFieldMaybe
+bool atf_amc::InlaryMin_ReadFieldMaybe(atf_amc::InlaryMin& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    atf_amc::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
+    switch(field_id) {
+        case atf_amc_FieldId_ary: {
+            retval = ary_ReadStrptrMaybe(parent, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- atf_amc.InlaryMin..ReadStrptrMaybe
+// Read fields of atf_amc::InlaryMin from an ascii string.
+// The format of the string is an ssim Tuple
+bool atf_amc::InlaryMin_ReadStrptrMaybe(atf_amc::InlaryMin &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "atf_amc.InlaryMin");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && InlaryMin_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- atf_amc.InlaryMin..Init
+// Set all fields to initial values.
+void atf_amc::InlaryMin_Init(atf_amc::InlaryMin& parent) {
+    parent.ary_n = 0; // ary: initialize count
+    // min size
+    for (int i = 0; i < 2; i++) {
+        u32 &elem = ary_Alloc(parent);
+        (void)elem; // will succeed -- min <= max
+    }
+}
+
+// --- atf_amc.InlaryMin..Uninit
+void atf_amc::InlaryMin_Uninit(atf_amc::InlaryMin& parent) {
+    atf_amc::InlaryMin &row = parent; (void)row;
+
+    // atf_amc.InlaryMin.ary.Uninit (Inlary)  //
+    ary_RemoveAll(parent);
+}
+
+// --- atf_amc.InlaryMin..Print
+// print string representation of ROW to string STR
+// cfmt:atf_amc.InlaryMin.String  printfmt:Tuple
+void atf_amc::InlaryMin_Print(atf_amc::InlaryMin& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "atf_amc.InlaryMin";
+
+    atf_amc::ary_Print(row, temp);
+    PrintAttrSpaceReset(str,"ary", temp);
 }
 
 // --- atf_amc.InlaryPrint.fixary.Print
@@ -12342,10 +17419,8 @@ bool atf_amc::inlary_ReadStrptrMaybe(atf_amc::InlaryPrint& parent, algo::strptr 
     for (int i=0; in_str != "" && i < 10; i++) {
         algo::strptr token;
         algo::NextSep(in_str, ' ', token);
-        if (i >= 0) { // make room for new element...
-            u32 &elem = inlary_Alloc(parent);
-            (void)elem; // will succeed due to a previous check
-        }
+        u32 &elem = inlary_Alloc(parent); // will succeed due to the loop bound
+        (void)elem;
         retval = u32_ReadStrptrMaybe(reinterpret_cast<u32*>(parent.inlary_data)[i], token);
         if (!retval) {
             inlary_RemoveLast(parent);
@@ -12453,7 +17528,7 @@ void* atf_amc::lary_AllocMem(atf_amc::Lary32& parent) {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     u32*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = parent.lary_lary[bsr];
         if (!lev) {
             lev=(u32*)algo_lib::malloc_AllocMem(sizeof(u32) * (u64(1)<<bsr));
@@ -12462,7 +17537,7 @@ void* atf_amc::lary_AllocMem(atf_amc::Lary32& parent) {
     }
     // allocate element from this level
     if (lev) {
-        parent.lary_n = i32(new_nelems);
+        parent.lary_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -12480,7 +17555,7 @@ void atf_amc::lary_RemoveLast(atf_amc::Lary32& parent) {
     u64 n = parent.lary_n;
     if (n > 0) {
         n -= 1;
-        parent.lary_n = i32(n);
+        parent.lary_n = i64(n);
     }
 }
 
@@ -12510,7 +17585,7 @@ void atf_amc::Lary32_Uninit(atf_amc::Lary32& parent) {
     lary_RemoveAll(parent);
     // destroy all levels. stop when NULL level is found -- there is nothing beyond it
     algo_lib::malloc_FreeMem(parent.lary_lary[0],sizeof(u32) * (u64(1)<<4));
-    for (u64 i = 4; i < 32 && parent.lary_lary[i]; i++) {
+    for (u64 i = 4; i < 36 && parent.lary_lary[i]; i++) {
         algo_lib::malloc_FreeMem(parent.lary_lary[i],sizeof(u32) * (u64(1)<<i));
     }
 }
@@ -12523,9 +17598,9 @@ void atf_amc::Lary32_Uninit(atf_amc::Lary32& parent) {
 // The message is found by looking for delimiter '\n'.
 // The return value is an aryptr. If ret.elems is non-NULL, the message is valid (possibly empty).
 // If ret.elems is NULL, no message can be extracted from buffer.
-// The returned aryptr excludes the trailing deliminter.
-// SkipMsg will skip both the line and the deliminter.
-// A partial line at the end of input is NOT returned (TODO?)
+// The returned aryptr excludes the trailing delimiter.
+// SkipMsg will skip both the line and the delimiter.
+// A partial line at the end of input is NOT returned.
 // 
 algo::aryptr<char> atf_amc::in_GetMsg(atf_amc::Linebuf& linebuf) {
     algo::aryptr<char> ret;
@@ -12633,7 +17708,7 @@ void atf_amc::in_SkipMsg(atf_amc::Linebuf& linebuf) {
 
 // --- atf_amc.Linebuf.in.WriteAll
 // Attempt to write buffer contents to fbuf, return success
-// Write bytes to the buffer. If the entire block is written, return true,
+// Write bytes to the buffer. If the entire block is accepted, return true,
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
 // 
@@ -12657,13 +17732,13 @@ bool atf_amc::in_WriteAll(atf_amc::Linebuf& linebuf, u8 *in, i32 in_n) {
 
 // --- atf_amc.Linebuf.in.WriteReserve
 // Write buffer contents to fbuf, reallocate as needed
-// Write bytes to the buffer. The entire block is always written
+// Write bytes to the buffer. The entire block is always written or the program exits.
 void atf_amc::in_WriteReserve(atf_amc::Linebuf& linebuf, u8 *in, i32 in_n) {
+    if (linebuf.in_end - linebuf.in_start + in_n > in_Max(linebuf)) {
+        in_Realloc(linebuf, linebuf.in_max + i32_Max(linebuf.in_max, in_n));
+    }
     if (!in_WriteAll(linebuf, in, in_n)) {
-        in_Realloc(linebuf, linebuf.in_max*2);
-        if (!in_WriteAll(linebuf, in, in_n)) {
-            FatalErrorExit("in: out of memory");
-        }
+        FatalErrorExit("in: out of memory");
     }
 }
 
@@ -12687,7 +17762,7 @@ void atf_amc::Linebuf_Uninit(atf_amc::Linebuf& linebuf) {
 
     // atf_amc.Linebuf.in.Uninit (Fbuf)  //Delimited buffer
     if (linebuf.in_elems) {
-        algo_lib::malloc_FreeMem(linebuf.in_elems, sizeof(char)*linebuf.in_max); // (atf_amc.Linebuf.in)
+        algo_lib::malloc_FreeMem(linebuf.in_elems, linebuf.in_max); // (atf_amc.Linebuf.in) in_max is the byte size Realloc allocated
     }
     linebuf.in_elems = NULL;
     linebuf.in_max = 0;
@@ -12701,365 +17776,93 @@ void atf_amc::Linebuf_Print(atf_amc::Linebuf& row, algo::cstring& str) {
     (void)str;//only to avoid -Wunused-parameter
 }
 
-// --- atf_amc.MsgHdrLT.type.ToCstr
-// Convert numeric value of field to one of predefined string constants.
-// If string is found, return a static C string. Otherwise, return NULL.
-const char* atf_amc::type_ToCstr(const atf_amc::MsgHdrLT& o) {
-    const char *ret = NULL;
-    switch(type_GetEnum(o)) {
-        case atf_amc_MsgHdrLT_type_atf_amc_MsgLTA: ret = "atf_amc.MsgLTA";  break;
-        case atf_amc_MsgHdrLT_type_atf_amc_MsgLTB: ret = "atf_amc.MsgLTB";  break;
-        case atf_amc_MsgHdrLT_type_atf_amc_MsgLTO: ret = "atf_amc.MsgLTO";  break;
-        case atf_amc_MsgHdrLT_type_atf_amc_MsgLTV: ret = "atf_amc.MsgLTV";  break;
-    }
-    return ret;
+// --- atf_amc.LnullStr4_U32_Base256.ch.Print
+void atf_amc::ch_Print(atf_amc::LnullStr4_U32_Base256& parent, algo::cstring &out) {
+    ch_Addary(out, ch_Getary(parent));
 }
 
-// --- atf_amc.MsgHdrLT.type.Print
-// Convert type to a string. First, attempt conversion to a known string.
-// If no string matches, print type as a numeric value.
-void atf_amc::type_Print(const atf_amc::MsgHdrLT& o, algo::cstring &lhs) {
-    const char *strval = type_ToCstr(o);
-    if (strval) {
-        lhs << strval;
-    } else {
-        lhs << o.type;
+// --- atf_amc.LnullStr4_U32_Base256.ch.SetStrptr
+// Copy from strptr, clipping length
+// Set string to the value provided by RHS.
+// If RHS is too large, it is silently clipped.
+void atf_amc::ch_SetStrptr(atf_amc::LnullStr4_U32_Base256& parent, const algo::strptr& rhs) {
+    int len = i32_Min(rhs.n_elems, 4);
+    char *rhs_elems = rhs.elems;
+    int i = 0;
+    int j = 0;
+    for (; j < 4 - len; j++) {
+        parent.ch[j] = 0;
+    }
+    for (; i < len; i++, j++) {
+        parent.ch[j] = rhs_elems[i];
     }
 }
 
-// --- atf_amc.MsgHdrLT.type.SetStrptrMaybe
-// Convert string to field.
-// If the string is invalid, do not modify field and return false.
-// In case of success, return true
-bool atf_amc::type_SetStrptrMaybe(atf_amc::MsgHdrLT& o, algo::strptr rhs) {
-    bool ret = false;
-    switch (elems_N(rhs)) {
-        case 14: {
-            switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('a','t','f','_','a','m','c','.'): {
-                    if (memcmp(rhs.elems+8,"MsgLTA",6)==0) { type_SetEnum(o,atf_amc_MsgHdrLT_type_atf_amc_MsgLTA); ret = true; break; }
-                    if (memcmp(rhs.elems+8,"MsgLTB",6)==0) { type_SetEnum(o,atf_amc_MsgHdrLT_type_atf_amc_MsgLTB); ret = true; break; }
-                    if (memcmp(rhs.elems+8,"MsgLTO",6)==0) { type_SetEnum(o,atf_amc_MsgHdrLT_type_atf_amc_MsgLTO); ret = true; break; }
-                    if (memcmp(rhs.elems+8,"MsgLTV",6)==0) { type_SetEnum(o,atf_amc_MsgHdrLT_type_atf_amc_MsgLTV); ret = true; break; }
-                    break;
-                }
-            }
-            break;
+// --- atf_amc.LnullStr4_U32_Base256.ch.Getnum
+// Convert field to numeric value. If the value is too large
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+u32 atf_amc::ch_Getnum(atf_amc::LnullStr4_U32_Base256& parent, bool &and_ok) {
+    u64 val = 0;
+    algo::strptr str = ch_Getary(parent);
+    for (int i = 0; i < str.n_elems; i++) {
+        char ch = str.elems[i];
+        int digit = u8(ch);
+        val = val*256 + digit;
+    }
+    and_ok &= val <= 0XFFFFFFFF;
+    return u32(val);
+}
+
+// --- atf_amc.LnullStr4_U32_Base256.ch.GetnumDflt
+// Convert field to numeric value. If the value is too large
+// for the target type, or the string is invalid, return default value.
+// Empty string is evaluated to zero.
+u32 atf_amc::ch_GetnumDflt(atf_amc::LnullStr4_U32_Base256& parent, u32 dflt) {
+    bool ok = true;
+    u32 result = ch_Getnum(parent, ok);
+    return ok ? result : dflt;
+}
+
+// --- atf_amc.LnullStr4_U32_Base256.ch.Geti64
+// Convert field to numeric value. If the value is too large
+// for the target type, or the string is invalid, throw an exception.
+// Empty string is evaluated to zero.
+i64 atf_amc::ch_Geti64(atf_amc::LnullStr4_U32_Base256& parent, bool &out_ok) {
+    out_ok = true;
+    i64 result = ch_Getnum(parent, out_ok);
+    return result;
+}
+
+// --- atf_amc.LnullStr4_U32_Base256.ch.SetnumMaybe
+// Set string to number specified in RHS performing base-256 conversion.
+// If the number is out of range for the numeric type,
+// or too large for the string, return false.
+bool atf_amc::ch_SetnumMaybe(atf_amc::LnullStr4_U32_Base256& parent, i64 rhs) {
+    bool retval = false;
+    if (rhs >= 0 && rhs <= 0XFFFFFFFF) {
+        char buf[128];
+        u64 val = rhs;
+        int charpos = sizeof(buf);
+        do {
+            u32 rem = u32(val % 256);
+            val = val / 256;
+            char ch;
+            ch = char(rem);
+            buf[--charpos] = ch;
+        } while (val != 0);
+        int length = sizeof(buf) - charpos;
+        //pad string with zero digits up to min_length
+        while (charpos > 0 && length < 3) {
+            buf[--charpos] = '\0';
+            ++length;
+        }
+        retval = length <= 4;
+        if (retval) {
+            ch_SetStrptr(parent, algo::strptr(buf + charpos, length));
         }
     }
-    return ret;
-}
-
-// --- atf_amc.MsgHdrLT.type.SetStrptr
-// Convert string to field.
-// If the string is invalid, set numeric value to DFLT
-void atf_amc::type_SetStrptr(atf_amc::MsgHdrLT& o, algo::strptr rhs, atf_amc_MsgHdrLT_type_Enum dflt) {
-    if (!type_SetStrptrMaybe(o,rhs)) type_SetEnum(o,dflt);
-}
-
-// --- atf_amc.MsgHdrLT.type.ReadStrptrMaybe
-// Convert string to field. Return success value
-bool atf_amc::type_ReadStrptrMaybe(atf_amc::MsgHdrLT& o, algo::strptr rhs) {
-    bool retval = false;
-    retval = type_SetStrptrMaybe(o,rhs); // try symbol conversion
-    if (!retval) { // didn't work? try reading as underlying type
-        retval = char_ReadStrptrMaybe(o.type,rhs);
-    }
-    return retval;
-}
-
-// --- atf_amc.MsgHdrLT..ReadFieldMaybe
-bool atf_amc::MsgHdrLT_ReadFieldMaybe(atf_amc::MsgHdrLT& parent, algo::strptr field, algo::strptr strval) {
-    bool retval = true;
-    atf_amc::FieldId field_id;
-    (void)value_SetStrptrMaybe(field_id,field);
-    switch(field_id) {
-        case atf_amc_FieldId_len: {
-            retval = false;
-        } break;
-        case atf_amc_FieldId_type: {
-            retval = type_ReadStrptrMaybe(parent, strval);
-        } break;
-        default: {
-            retval = false;
-            algo_lib::AppendErrtext("comment", "unrecognized attr");
-        } break;
-    }
-    if (!retval) {
-        algo_lib::AppendErrtext("attr",field);
-    }
-    return retval;
-}
-
-// --- atf_amc.MsgHdrLT..ReadStrptrMaybe
-// Read fields of atf_amc::MsgHdrLT from an ascii string.
-// The format of the string is an ssim Tuple
-bool atf_amc::MsgHdrLT_ReadStrptrMaybe(atf_amc::MsgHdrLT &parent, algo::strptr in_str) {
-    bool retval = true;
-    retval = algo::StripTypeTag(in_str, "atf_amc.MsgHdrLT");
-    ind_beg(algo::Attr_curs, attr, in_str) {
-        retval = retval && MsgHdrLT_ReadFieldMaybe(parent, attr.name, attr.value);
-    }ind_end;
-    return retval;
-}
-
-// --- atf_amc.MsgHdrLT..Print
-// print string representation of ROW to string STR
-// cfmt:atf_amc.MsgHdrLT.String  printfmt:Tuple
-void atf_amc::MsgHdrLT_Print(atf_amc::MsgHdrLT& row, algo::cstring& str) {
-    algo::tempstr temp;
-    str << "atf_amc.MsgHdrLT";
-    (void)row;//only to avoid -Wunused-parameter
-}
-
-// --- atf_amc.MsgHdrLTMsgsCase.value.ToCstr
-// Convert numeric value of field to one of predefined string constants.
-// If string is found, return a static C string. Otherwise, return NULL.
-const char* atf_amc::value_ToCstr(const atf_amc::MsgHdrLTMsgsCase& parent) {
-    const char *ret = NULL;
-    switch(value_GetEnum(parent)) {
-        case atf_amc_MsgHdrLTMsgsCase_atf_amc_MsgLTA: ret = "atf_amc.MsgLTA";  break;
-        case atf_amc_MsgHdrLTMsgsCase_atf_amc_MsgLTB: ret = "atf_amc.MsgLTB";  break;
-        case atf_amc_MsgHdrLTMsgsCase_atf_amc_MsgLTO: ret = "atf_amc.MsgLTO";  break;
-        case atf_amc_MsgHdrLTMsgsCase_atf_amc_MsgLTV: ret = "atf_amc.MsgLTV";  break;
-    }
-    return ret;
-}
-
-// --- atf_amc.MsgHdrLTMsgsCase.value.Print
-// Convert value to a string. First, attempt conversion to a known string.
-// If no string matches, print value as a numeric value.
-void atf_amc::value_Print(const atf_amc::MsgHdrLTMsgsCase& parent, algo::cstring &lhs) {
-    const char *strval = value_ToCstr(parent);
-    if (strval) {
-        lhs << strval;
-    } else {
-        lhs << parent.value;
-    }
-}
-
-// --- atf_amc.MsgHdrLTMsgsCase.value.SetStrptrMaybe
-// Convert string to field.
-// If the string is invalid, do not modify field and return false.
-// In case of success, return true
-bool atf_amc::value_SetStrptrMaybe(atf_amc::MsgHdrLTMsgsCase& parent, algo::strptr rhs) {
-    bool ret = false;
-    switch (elems_N(rhs)) {
-        case 14: {
-            switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('a','t','f','_','a','m','c','.'): {
-                    if (memcmp(rhs.elems+8,"MsgLTA",6)==0) { value_SetEnum(parent,atf_amc_MsgHdrLTMsgsCase_atf_amc_MsgLTA); ret = true; break; }
-                    if (memcmp(rhs.elems+8,"MsgLTB",6)==0) { value_SetEnum(parent,atf_amc_MsgHdrLTMsgsCase_atf_amc_MsgLTB); ret = true; break; }
-                    if (memcmp(rhs.elems+8,"MsgLTO",6)==0) { value_SetEnum(parent,atf_amc_MsgHdrLTMsgsCase_atf_amc_MsgLTO); ret = true; break; }
-                    if (memcmp(rhs.elems+8,"MsgLTV",6)==0) { value_SetEnum(parent,atf_amc_MsgHdrLTMsgsCase_atf_amc_MsgLTV); ret = true; break; }
-                    break;
-                }
-            }
-            break;
-        }
-    }
-    return ret;
-}
-
-// --- atf_amc.MsgHdrLTMsgsCase.value.SetStrptr
-// Convert string to field.
-// If the string is invalid, set numeric value to DFLT
-void atf_amc::value_SetStrptr(atf_amc::MsgHdrLTMsgsCase& parent, algo::strptr rhs, atf_amc_MsgHdrLTMsgsCaseEnum dflt) {
-    if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
-}
-
-// --- atf_amc.MsgHdrLTMsgsCase.value.ReadStrptrMaybe
-// Convert string to field. Return success value
-bool atf_amc::value_ReadStrptrMaybe(atf_amc::MsgHdrLTMsgsCase& parent, algo::strptr rhs) {
-    bool retval = false;
-    retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
-    if (!retval) { // didn't work? try reading as underlying type
-        retval = u32_ReadStrptrMaybe(parent.value,rhs);
-    }
-    return retval;
-}
-
-// --- atf_amc.MsgHdrLTMsgsCase..ReadStrptrMaybe
-// Read fields of atf_amc::MsgHdrLTMsgsCase from an ascii string.
-// The format of the string is the format of the atf_amc::MsgHdrLTMsgsCase's only field
-bool atf_amc::MsgHdrLTMsgsCase_ReadStrptrMaybe(atf_amc::MsgHdrLTMsgsCase &parent, algo::strptr in_str) {
-    bool retval = true;
-    retval = retval && value_ReadStrptrMaybe(parent, in_str);
-    return retval;
-}
-
-// --- atf_amc.MsgHdrLTScale.type.ToCstr
-// Convert numeric value of field to one of predefined string constants.
-// If string is found, return a static C string. Otherwise, return NULL.
-const char* atf_amc::type_ToCstr(const atf_amc::MsgHdrLTScale& parent) {
-    const char *ret = NULL;
-    switch(type_GetEnum(parent)) {
-        case atf_amc_MsgHdrLTScale_type_atf_amc_MsgLTScaleA: ret = "atf_amc.MsgLTScaleA";  break;
-    }
-    return ret;
-}
-
-// --- atf_amc.MsgHdrLTScale.type.Print
-// Convert type to a string. First, attempt conversion to a known string.
-// If no string matches, print type as a numeric value.
-void atf_amc::type_Print(const atf_amc::MsgHdrLTScale& parent, algo::cstring &lhs) {
-    const char *strval = type_ToCstr(parent);
-    if (strval) {
-        lhs << strval;
-    } else {
-        lhs << parent.type;
-    }
-}
-
-// --- atf_amc.MsgHdrLTScale.type.SetStrptrMaybe
-// Convert string to field.
-// If the string is invalid, do not modify field and return false.
-// In case of success, return true
-bool atf_amc::type_SetStrptrMaybe(atf_amc::MsgHdrLTScale& parent, algo::strptr rhs) {
-    bool ret = false;
-    switch (elems_N(rhs)) {
-        case 19: {
-            switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('a','t','f','_','a','m','c','.'): {
-                    if (memcmp(rhs.elems+8,"MsgLTScaleA",11)==0) { type_SetEnum(parent,atf_amc_MsgHdrLTScale_type_atf_amc_MsgLTScaleA); ret = true; break; }
-                    break;
-                }
-            }
-            break;
-        }
-    }
-    return ret;
-}
-
-// --- atf_amc.MsgHdrLTScale.type.SetStrptr
-// Convert string to field.
-// If the string is invalid, set numeric value to DFLT
-void atf_amc::type_SetStrptr(atf_amc::MsgHdrLTScale& parent, algo::strptr rhs, atf_amc_MsgHdrLTScale_type_Enum dflt) {
-    if (!type_SetStrptrMaybe(parent,rhs)) type_SetEnum(parent,dflt);
-}
-
-// --- atf_amc.MsgHdrLTScale.type.ReadStrptrMaybe
-// Convert string to field. Return success value
-bool atf_amc::type_ReadStrptrMaybe(atf_amc::MsgHdrLTScale& parent, algo::strptr rhs) {
-    bool retval = false;
-    retval = type_SetStrptrMaybe(parent,rhs); // try symbol conversion
-    if (!retval) { // didn't work? try reading as underlying type
-        retval = char_ReadStrptrMaybe(parent.type,rhs);
-    }
-    return retval;
-}
-
-// --- atf_amc.MsgHdrLTScale..ReadFieldMaybe
-bool atf_amc::MsgHdrLTScale_ReadFieldMaybe(atf_amc::MsgHdrLTScale& parent, algo::strptr field, algo::strptr strval) {
-    bool retval = true;
-    atf_amc::FieldId field_id;
-    (void)value_SetStrptrMaybe(field_id,field);
-    switch(field_id) {
-        case atf_amc_FieldId_len: {
-            retval = false;
-        } break;
-        case atf_amc_FieldId_type: {
-            retval = type_ReadStrptrMaybe(parent, strval);
-        } break;
-        default: {
-            retval = false;
-            algo_lib::AppendErrtext("comment", "unrecognized attr");
-        } break;
-    }
-    if (!retval) {
-        algo_lib::AppendErrtext("attr",field);
-    }
-    return retval;
-}
-
-// --- atf_amc.MsgHdrLTScale..ReadStrptrMaybe
-// Read fields of atf_amc::MsgHdrLTScale from an ascii string.
-// The format of the string is an ssim Tuple
-bool atf_amc::MsgHdrLTScale_ReadStrptrMaybe(atf_amc::MsgHdrLTScale &parent, algo::strptr in_str) {
-    bool retval = true;
-    retval = algo::StripTypeTag(in_str, "atf_amc.MsgHdrLTScale");
-    ind_beg(algo::Attr_curs, attr, in_str) {
-        retval = retval && MsgHdrLTScale_ReadFieldMaybe(parent, attr.name, attr.value);
-    }ind_end;
-    return retval;
-}
-
-// --- atf_amc.MsgHdrLTScale..Print
-// print string representation of ROW to string STR
-// cfmt:atf_amc.MsgHdrLTScale.String  printfmt:Tuple
-void atf_amc::MsgHdrLTScale_Print(atf_amc::MsgHdrLTScale& row, algo::cstring& str) {
-    algo::tempstr temp;
-    str << "atf_amc.MsgHdrLTScale";
-    (void)row;//only to avoid -Wunused-parameter
-}
-
-// --- atf_amc.MsgHdrLTScaleMsgsCase.value.ToCstr
-// Convert numeric value of field to one of predefined string constants.
-// If string is found, return a static C string. Otherwise, return NULL.
-const char* atf_amc::value_ToCstr(const atf_amc::MsgHdrLTScaleMsgsCase& parent) {
-    const char *ret = NULL;
-    switch(value_GetEnum(parent)) {
-        case atf_amc_MsgHdrLTScaleMsgsCase_atf_amc_MsgLTScaleA: ret = "atf_amc.MsgLTScaleA";  break;
-    }
-    return ret;
-}
-
-// --- atf_amc.MsgHdrLTScaleMsgsCase.value.Print
-// Convert value to a string. First, attempt conversion to a known string.
-// If no string matches, print value as a numeric value.
-void atf_amc::value_Print(const atf_amc::MsgHdrLTScaleMsgsCase& parent, algo::cstring &lhs) {
-    const char *strval = value_ToCstr(parent);
-    if (strval) {
-        lhs << strval;
-    } else {
-        lhs << parent.value;
-    }
-}
-
-// --- atf_amc.MsgHdrLTScaleMsgsCase.value.SetStrptrMaybe
-// Convert string to field.
-// If the string is invalid, do not modify field and return false.
-// In case of success, return true
-bool atf_amc::value_SetStrptrMaybe(atf_amc::MsgHdrLTScaleMsgsCase& parent, algo::strptr rhs) {
-    bool ret = false;
-    switch (elems_N(rhs)) {
-        case 19: {
-            switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('a','t','f','_','a','m','c','.'): {
-                    if (memcmp(rhs.elems+8,"MsgLTScaleA",11)==0) { value_SetEnum(parent,atf_amc_MsgHdrLTScaleMsgsCase_atf_amc_MsgLTScaleA); ret = true; break; }
-                    break;
-                }
-            }
-            break;
-        }
-    }
-    return ret;
-}
-
-// --- atf_amc.MsgHdrLTScaleMsgsCase.value.SetStrptr
-// Convert string to field.
-// If the string is invalid, set numeric value to DFLT
-void atf_amc::value_SetStrptr(atf_amc::MsgHdrLTScaleMsgsCase& parent, algo::strptr rhs, atf_amc_MsgHdrLTScaleMsgsCaseEnum dflt) {
-    if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
-}
-
-// --- atf_amc.MsgHdrLTScaleMsgsCase.value.ReadStrptrMaybe
-// Convert string to field. Return success value
-bool atf_amc::value_ReadStrptrMaybe(atf_amc::MsgHdrLTScaleMsgsCase& parent, algo::strptr rhs) {
-    bool retval = false;
-    retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
-    if (!retval) { // didn't work? try reading as underlying type
-        retval = u32_ReadStrptrMaybe(parent.value,rhs);
-    }
-    return retval;
-}
-
-// --- atf_amc.MsgHdrLTScaleMsgsCase..ReadStrptrMaybe
-// Read fields of atf_amc::MsgHdrLTScaleMsgsCase from an ascii string.
-// The format of the string is the format of the atf_amc::MsgHdrLTScaleMsgsCase's only field
-bool atf_amc::MsgHdrLTScaleMsgsCase_ReadStrptrMaybe(atf_amc::MsgHdrLTScaleMsgsCase &parent, algo::strptr in_str) {
-    bool retval = true;
-    retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
 }
 
@@ -13069,13 +17872,17 @@ bool atf_amc::MsgHdrLTScaleMsgsCase_ReadStrptrMaybe(atf_amc::MsgHdrLTScaleMsgsCa
 const char* atf_amc::value_ToCstr(const atf_amc::MsgType& parent) {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
+        case atf_amc_MsgType_atf_amc_OptBMsg: ret = "atf_amc.OptBMsg";  break;
         case atf_amc_MsgType_atf_amc_Seqmsg: ret = "atf_amc.Seqmsg";  break;
         case atf_amc_MsgType_atf_amc_Text  : ret = "atf_amc.Text";  break;
         case atf_amc_MsgType_atf_amc_Varlen2Msg: ret = "atf_amc.Varlen2Msg";  break;
         case atf_amc_MsgType_atf_amc_Varlen2aMsg: ret = "atf_amc.Varlen2aMsg";  break;
         case atf_amc_MsgType_atf_amc_Varlen2mMsg: ret = "atf_amc.Varlen2mMsg";  break;
         case atf_amc_MsgType_atf_amc_Varlen2vMsg: ret = "atf_amc.Varlen2vMsg";  break;
+        case atf_amc_MsgType_atf_amc_VarlenBMsg: ret = "atf_amc.VarlenBMsg";  break;
         case atf_amc_MsgType_atf_amc_VarlenMsg: ret = "atf_amc.VarlenMsg";  break;
+        case atf_amc_MsgType_atf_amc_VarlenVMsg: ret = "atf_amc.VarlenVMsg";  break;
+        case atf_amc_MsgType_atf_amc_VarlenWMsg: ret = "atf_amc.VarlenWMsg";  break;
     }
     return ret;
 }
@@ -13117,6 +17924,15 @@ bool atf_amc::value_SetStrptrMaybe(atf_amc::MsgType& parent, algo::strptr rhs) {
             }
             break;
         }
+        case 15: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','t','f','_','a','m','c','.'): {
+                    if (memcmp(rhs.elems+8,"OptBMsg",7)==0) { value_SetEnum(parent,atf_amc_MsgType_atf_amc_OptBMsg); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
         case 17: {
             switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('a','t','f','_','a','m','c','.'): {
@@ -13130,6 +17946,9 @@ bool atf_amc::value_SetStrptrMaybe(atf_amc::MsgType& parent, algo::strptr rhs) {
             switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('a','t','f','_','a','m','c','.'): {
                     if (memcmp(rhs.elems+8,"Varlen2Msg",10)==0) { value_SetEnum(parent,atf_amc_MsgType_atf_amc_Varlen2Msg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"VarlenBMsg",10)==0) { value_SetEnum(parent,atf_amc_MsgType_atf_amc_VarlenBMsg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"VarlenVMsg",10)==0) { value_SetEnum(parent,atf_amc_MsgType_atf_amc_VarlenVMsg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"VarlenWMsg",10)==0) { value_SetEnum(parent,atf_amc_MsgType_atf_amc_VarlenWMsg); ret = true; break; }
                     break;
                 }
             }
@@ -13240,10 +18059,724 @@ bool atf_amc::MsgHeader_ReadStrptrMaybe(atf_amc::MsgHeader &parent, algo::strptr
 // --- atf_amc.MsgHeader..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.MsgHeader.String  printfmt:Tuple
-void atf_amc::MsgHeader_Print(atf_amc::MsgHeader& row, algo::cstring& str) {
+void atf_amc::MsgHeader_Print(atf_amc::MsgHeader row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf_amc.MsgHeader";
     (void)row;//only to avoid -Wunused-parameter
+}
+
+// --- atf_amc.Lpoolbuf.in.GetMsg
+// Detect incoming message in buffer and return it
+// Look for valid message at current position in the buffer.
+// If message is already there, return a pointer to it. Do not skip message (call SkipMsg to do that).
+// If there is no message, read once from underlying file descriptor and try again.
+// The message is length-delimited based on field length field
+// 
+atf_amc::MsgHeader* atf_amc::in_GetMsg(atf_amc::Lpoolbuf& lpoolbuf) {
+    atf_amc::MsgHeader* ret;
+    if (!lpoolbuf.in_msgvalid) {
+        in_ScanMsg(lpoolbuf);
+    }
+    atf_amc::MsgHeader *hdr = (atf_amc::MsgHeader*)(lpoolbuf.in_elems + lpoolbuf.in_start);
+    ret = lpoolbuf.in_msgvalid ? hdr : NULL;
+    return ret;
+}
+
+// --- atf_amc.Lpoolbuf.in.Realloc
+// Set buffer size.
+// Unconditionally reallocate buffer to have size NEW_MAX
+// If the buffer has data in it, NEW_MAX is adjusted so that the data is not lost
+// (best to call this before filling the buffer)
+void atf_amc::in_Realloc(atf_amc::Lpoolbuf& lpoolbuf, int new_max) {
+    new_max = i32_Max(new_max, lpoolbuf.in_end);
+    u8 *new_mem = lpoolbuf.in_elems
+    ? (u8*)atf_amc::lpool_ReallocMem(lpoolbuf.in_elems, lpoolbuf.in_max, new_max)
+    : (u8*)atf_amc::lpool_AllocMem(new_max);
+    if (UNLIKELY(!new_mem)) {
+        FatalErrorExit("atf_amc.fbuf_nomem  field:atf_amc.Lpoolbuf.in  comment:'out of memory'");
+    }
+    lpoolbuf.in_elems = new_mem;
+    lpoolbuf.in_max = new_max;
+}
+
+// --- atf_amc.Lpoolbuf.in.RemoveAll
+// Empty bfufer
+// Discard contents of the buffer.
+void atf_amc::in_RemoveAll(atf_amc::Lpoolbuf& lpoolbuf) {
+    lpoolbuf.in_start    = 0;
+    lpoolbuf.in_end      = 0;
+    lpoolbuf.in_msgvalid = false;
+}
+
+// --- atf_amc.Lpoolbuf.in.ScanMsg
+// Internal function to scan for a message
+// 
+static void atf_amc::in_ScanMsg(atf_amc::Lpoolbuf& lpoolbuf) {
+    atf_amc::MsgHeader *hdr = (atf_amc::MsgHeader*)(lpoolbuf.in_elems + lpoolbuf.in_start);
+    i32 avail = in_N(lpoolbuf);
+    i32 msglen;
+    bool found = false;
+    msglen = ssizeof(atf_amc::MsgHeader);
+    if (avail >= msglen) {
+        msglen = i32((*hdr).length); // check rest of the message
+    }
+    found = msglen >= ssizeof(atf_amc::MsgHeader) && avail >= msglen;
+    if (msglen < ssizeof(atf_amc::MsgHeader) || msglen > in_Max(lpoolbuf)) {
+        lpoolbuf.in_eof = true; // cause user to detect eof
+        lpoolbuf.in_err = algo::FromErrno(E2BIG); // argument list too big -- closest error code
+    }
+    lpoolbuf.in_msglen = msglen;
+    lpoolbuf.in_msgvalid = found;
+}
+
+// --- atf_amc.Lpoolbuf.in.Shift
+// Internal function to shift data left
+// Shift existing bytes over to the beginning of the buffer
+static void atf_amc::in_Shift(atf_amc::Lpoolbuf& lpoolbuf) {
+    i32 start = lpoolbuf.in_start;
+    i32 bytes_n = lpoolbuf.in_end - start;
+    if (bytes_n > 0) {
+        memmove(lpoolbuf.in_elems, lpoolbuf.in_elems + start, bytes_n);
+    }
+    lpoolbuf.in_end = bytes_n;
+    lpoolbuf.in_start = 0;
+}
+
+// --- atf_amc.Lpoolbuf.in.SkipMsg
+// Skip current message, if any
+// Skip current message, if any.
+void atf_amc::in_SkipMsg(atf_amc::Lpoolbuf& lpoolbuf) {
+    if (lpoolbuf.in_msgvalid) {
+        int skip = lpoolbuf.in_msglen;
+        i32 start = lpoolbuf.in_start;
+        start += skip;
+        lpoolbuf.in_start = start;
+        lpoolbuf.in_msgvalid = false;
+        lpoolbuf.in_msglen   = 0; // reset message length -- important for delimited streams
+    }
+}
+
+// --- atf_amc.Lpoolbuf.in.WriteAll
+// Attempt to write buffer contents to fbuf, return success
+// Write bytes to the buffer. If the entire block is accepted, return true,
+// Otherwise return false.
+// Bytes in the buffer are potentially shifted left to make room for the message.
+// 
+bool atf_amc::in_WriteAll(atf_amc::Lpoolbuf& lpoolbuf, u8 *in, i32 in_n) {
+    int max = in_Max(lpoolbuf);
+    // check if message doesn't fit. if so, shift bytes over.
+    if (lpoolbuf.in_end + in_n > max) {
+        in_Shift(lpoolbuf);
+    }
+    // now try to write the message.
+    i32 end = lpoolbuf.in_end;
+    bool fits = end + in_n <= max;
+    if (fits) {
+        if (in_n > 0) {
+            memcpy(lpoolbuf.in_elems + end, in, in_n);
+            lpoolbuf.in_end = end + in_n;
+        }
+    }
+    return fits;
+}
+
+// --- atf_amc.Lpoolbuf.in.WriteReserve
+// Write buffer contents to fbuf, reallocate as needed
+// Write bytes to the buffer. The entire block is always written or the program exits.
+void atf_amc::in_WriteReserve(atf_amc::Lpoolbuf& lpoolbuf, u8 *in, i32 in_n) {
+    if (lpoolbuf.in_end - lpoolbuf.in_start + in_n > in_Max(lpoolbuf)) {
+        in_Realloc(lpoolbuf, lpoolbuf.in_max + i32_Max(lpoolbuf.in_max, in_n));
+    }
+    if (!in_WriteAll(lpoolbuf, in, in_n)) {
+        FatalErrorExit("in: out of memory");
+    }
+}
+
+// --- atf_amc.Lpoolbuf.in.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool atf_amc::in_XrefMaybe(atf_amc::MsgHeader &row) {
+    bool retval = true;
+    (void)row;
+    return retval;
+}
+
+// --- atf_amc.Lpoolbuf..Init
+// Set all fields to initial values.
+void atf_amc::Lpoolbuf_Init(atf_amc::Lpoolbuf& lpoolbuf) {
+    lpoolbuf.in_elems = NULL; // in: initialize
+    lpoolbuf.in_max = 0; // in: initialize
+    lpoolbuf.in_end = 0; // in: initialize
+    lpoolbuf.in_start = 0; // in: initialize
+    lpoolbuf.in_eof = false; // in: initialize
+    lpoolbuf.in_msgvalid = false; // in: initialize
+    lpoolbuf.in_msglen = 0; // in: initialize
+    lpoolbuf.in_epoll_enable = true; // in: initialize
+    in_Realloc(lpoolbuf, 8192);
+}
+
+// --- atf_amc.Lpoolbuf..Uninit
+void atf_amc::Lpoolbuf_Uninit(atf_amc::Lpoolbuf& lpoolbuf) {
+    atf_amc::Lpoolbuf &row = lpoolbuf; (void)row;
+
+    // atf_amc.Lpoolbuf.in.Uninit (Fbuf)  //Message buffer allocated from the lpool
+    if (lpoolbuf.in_elems) {
+        atf_amc::lpool_FreeMem(lpoolbuf.in_elems, lpoolbuf.in_max); // (atf_amc.Lpoolbuf.in) in_max is the byte size Realloc allocated
+    }
+    lpoolbuf.in_elems = NULL;
+    lpoolbuf.in_max = 0;
+}
+
+// --- atf_amc.LspaceStr5_U32_Base95.ch.Print
+void atf_amc::ch_Print(atf_amc::LspaceStr5_U32_Base95& parent, algo::cstring &out) {
+    ch_Addary(out, ch_Getary(parent));
+}
+
+// --- atf_amc.LspaceStr5_U32_Base95.ch.SetStrptr
+// Copy from strptr, clipping length
+// Set string to the value provided by RHS.
+// If RHS is too large, it is silently clipped.
+void atf_amc::ch_SetStrptr(atf_amc::LspaceStr5_U32_Base95& parent, const algo::strptr& rhs) {
+    int len = i32_Min(rhs.n_elems, 5);
+    char *rhs_elems = rhs.elems;
+    int i = 0;
+    int j = 0;
+    for (; j < 5 - len; j++) {
+        parent.ch[j] = ' ';
+    }
+    for (; i < len; i++, j++) {
+        parent.ch[j] = rhs_elems[i];
+    }
+}
+
+// --- atf_amc.LspaceStr5_U32_Base95.ch.Getnum
+// Convert field to numeric value. If the value is too large
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+u32 atf_amc::ch_Getnum(atf_amc::LspaceStr5_U32_Base95& parent, bool &and_ok) {
+    u64 val = 0;
+    algo::strptr str = ch_Getary(parent);
+    for (int i = 0; i < str.n_elems; i++) {
+        char ch = str.elems[i];
+        int digit = u8((u8)ch - (u8)' ');
+        and_ok &= digit < 95;
+        val = val*95 + digit;
+    }
+    and_ok &= val <= 0XFFFFFFFF;
+    return u32(val);
+}
+
+// --- atf_amc.LspaceStr5_U32_Base95.ch.GetnumDflt
+// Convert field to numeric value. If the value is too large
+// for the target type, or the string is invalid, return default value.
+// Empty string is evaluated to zero.
+u32 atf_amc::ch_GetnumDflt(atf_amc::LspaceStr5_U32_Base95& parent, u32 dflt) {
+    bool ok = true;
+    u32 result = ch_Getnum(parent, ok);
+    return ok ? result : dflt;
+}
+
+// --- atf_amc.LspaceStr5_U32_Base95.ch.Geti64
+// Convert field to numeric value. If the value is too large
+// for the target type, or the string is invalid, throw an exception.
+// Empty string is evaluated to zero.
+i64 atf_amc::ch_Geti64(atf_amc::LspaceStr5_U32_Base95& parent, bool &out_ok) {
+    out_ok = true;
+    i64 result = ch_Getnum(parent, out_ok);
+    return result;
+}
+
+// --- atf_amc.LspaceStr5_U32_Base95.ch.SetnumMaybe
+// Set string to number specified in RHS performing base-95 conversion.
+// If the number is out of range for the numeric type,
+// or too large for the string, return false.
+bool atf_amc::ch_SetnumMaybe(atf_amc::LspaceStr5_U32_Base95& parent, i64 rhs) {
+    bool retval = false;
+    if (rhs >= 0 && rhs <= 0XFFFFFFFF) {
+        char buf[128];
+        u64 val = rhs;
+        int charpos = sizeof(buf);
+        do {
+            u32 rem = u32(val % 95);
+            val = val / 95;
+            char ch;
+            ch = char(rem + ' ');
+            buf[--charpos] = ch;
+        } while (val != 0);
+        int length = sizeof(buf) - charpos;
+        //pad string with zero digits up to min_length
+        while (charpos > 0 && length < 3) {
+            buf[--charpos] = ' ';
+            ++length;
+        }
+        retval = length <= 5;
+        if (retval) {
+            ch_SetStrptr(parent, algo::strptr(buf + charpos, length));
+        }
+    }
+    return retval;
+}
+
+// --- atf_amc.LspaceStr7_I32.ch.Print
+void atf_amc::ch_Print(atf_amc::LspaceStr7_I32& parent, algo::cstring &out) {
+    ch_Addary(out, ch_Getary(parent));
+}
+
+// --- atf_amc.LspaceStr7_I32.ch.SetStrptr
+// Copy from strptr, clipping length
+// Set string to the value provided by RHS.
+// If RHS is too large, it is silently clipped.
+void atf_amc::ch_SetStrptr(atf_amc::LspaceStr7_I32& parent, const algo::strptr& rhs) {
+    int len = i32_Min(rhs.n_elems, 7);
+    char *rhs_elems = rhs.elems;
+    int i = 0;
+    int j = 0;
+    for (; j < 7 - len; j++) {
+        parent.ch[j] = ' ';
+    }
+    for (; i < len; i++, j++) {
+        parent.ch[j] = rhs_elems[i];
+    }
+}
+
+// --- atf_amc.LspaceStr7_I32.ch.Getnum
+// Convert field to numeric value. If the value is too large
+// for the target type, or the string is invalid, the result
+// is undefined, and and_ok is set to false.
+// Empty string is evaluated to zero.
+i32 atf_amc::ch_Getnum(atf_amc::LspaceStr7_I32& parent, bool &and_ok) {
+    u64 val = 0;
+    algo::strptr str = ch_Getary(parent);
+    bool is_neg = (str.n_elems > 0) && (str.elems[0] == '-');
+    if (is_neg) {
+        str.elems++;
+        str.n_elems--;
+    }
+    if (elems_N(str)>0) { // empty string maps to zero
+        u32 ok = 1;
+        val = aParseNum8(str, ok);
+        and_ok &= (ok != 0);
+    }
+    i64 ret = is_neg ? -val : val;
+    return i32(ret);
+}
+
+// --- atf_amc.LspaceStr7_I32.ch.GetnumDflt
+// Convert field to numeric value. If the value is too large
+// for the target type, or the string is invalid, return default value.
+// Empty string is evaluated to zero.
+i32 atf_amc::ch_GetnumDflt(atf_amc::LspaceStr7_I32& parent, i32 dflt) {
+    bool ok = true;
+    i32 result = ch_Getnum(parent, ok);
+    return ok ? result : dflt;
+}
+
+// --- atf_amc.LspaceStr7_I32.ch.Geti64
+// Convert field to numeric value. If the value is too large
+// for the target type, or the string is invalid, throw an exception.
+// Empty string is evaluated to zero.
+i64 atf_amc::ch_Geti64(atf_amc::LspaceStr7_I32& parent, bool &out_ok) {
+    out_ok = true;
+    i64 result = ch_Getnum(parent, out_ok);
+    return result;
+}
+
+// --- atf_amc.LspaceStr7_I32.ch.SetnumMaybe
+// Set string to number specified in RHS performing base-10 conversion.
+// If the number is out of range for the numeric type,
+// or too large for the string, return false.
+bool atf_amc::ch_SetnumMaybe(atf_amc::LspaceStr7_I32& parent, i64 rhs) {
+    bool retval = false;
+    if (rhs >= i64(0XFFFFFFFF80000000) && rhs <= i64(0X7FFFFFFF)) {
+        char buf[128];
+        u64 val = (rhs < 0 ? 0 - u64(rhs) : u64(rhs));
+        int charpos = 64;
+        int length = algo::u32_FmtBuf(val, (u8*)buf + charpos);
+        //pad string with zero digits up to min_length
+        while (charpos > 0 && length < 3) {
+            buf[--charpos] = '0';
+            ++length;
+        }
+        if (rhs < 0) {
+            if (charpos > 0) {
+                --charpos;
+                ++length;
+            }
+            buf[charpos] = '-';
+        }
+        retval = length <= 7;
+        if (retval) {
+            ch_SetStrptr(parent, algo::strptr(buf + charpos, length));
+        }
+    }
+    return retval;
+}
+
+// --- atf_amc.MsgHdrLT.type.ToCstr
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+const char* atf_amc::type_ToCstr(const atf_amc::MsgHdrLT& o) {
+    const char *ret = NULL;
+    switch(type_GetEnum(o)) {
+        case atf_amc_MsgHdrLT_type_atf_amc_MsgLTA: ret = "atf_amc.MsgLTA";  break;
+        case atf_amc_MsgHdrLT_type_atf_amc_MsgLTB: ret = "atf_amc.MsgLTB";  break;
+        case atf_amc_MsgHdrLT_type_atf_amc_MsgLTO: ret = "atf_amc.MsgLTO";  break;
+        case atf_amc_MsgHdrLT_type_atf_amc_MsgLTV: ret = "atf_amc.MsgLTV";  break;
+    }
+    return ret;
+}
+
+// --- atf_amc.MsgHdrLT.type.Print
+// Convert type to a string. First, attempt conversion to a known string.
+// If no string matches, print type as a numeric value.
+void atf_amc::type_Print(const atf_amc::MsgHdrLT& o, algo::cstring &lhs) {
+    const char *strval = type_ToCstr(o);
+    if (strval) {
+        lhs << strval;
+    } else {
+        lhs << o.type;
+    }
+}
+
+// --- atf_amc.MsgHdrLT.type.SetStrptrMaybe
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+bool atf_amc::type_SetStrptrMaybe(atf_amc::MsgHdrLT& o, algo::strptr rhs) {
+    bool ret = false;
+    switch (elems_N(rhs)) {
+        case 14: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','t','f','_','a','m','c','.'): {
+                    if (memcmp(rhs.elems+8,"MsgLTA",6)==0) { type_SetEnum(o,atf_amc_MsgHdrLT_type_atf_amc_MsgLTA); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"MsgLTB",6)==0) { type_SetEnum(o,atf_amc_MsgHdrLT_type_atf_amc_MsgLTB); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"MsgLTO",6)==0) { type_SetEnum(o,atf_amc_MsgHdrLT_type_atf_amc_MsgLTO); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"MsgLTV",6)==0) { type_SetEnum(o,atf_amc_MsgHdrLT_type_atf_amc_MsgLTV); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+    }
+    return ret;
+}
+
+// --- atf_amc.MsgHdrLT.type.SetStrptr
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+void atf_amc::type_SetStrptr(atf_amc::MsgHdrLT& o, algo::strptr rhs, atf_amc_MsgHdrLT_type_Enum dflt) {
+    if (!type_SetStrptrMaybe(o,rhs)) type_SetEnum(o,dflt);
+}
+
+// --- atf_amc.MsgHdrLT.type.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool atf_amc::type_ReadStrptrMaybe(atf_amc::MsgHdrLT& o, algo::strptr rhs) {
+    bool retval = false;
+    retval = type_SetStrptrMaybe(o,rhs); // try symbol conversion
+    if (!retval) { // didn't work? try reading as underlying type
+        retval = char_ReadStrptrMaybe(o.type,rhs);
+    }
+    return retval;
+}
+
+// --- atf_amc.MsgHdrLT..ReadFieldMaybe
+bool atf_amc::MsgHdrLT_ReadFieldMaybe(atf_amc::MsgHdrLT& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    atf_amc::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case atf_amc_FieldId_len: {
+            retval = false;
+        } break;
+        case atf_amc_FieldId_type: {
+            retval = type_ReadStrptrMaybe(parent, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- atf_amc.MsgHdrLT..ReadStrptrMaybe
+// Read fields of atf_amc::MsgHdrLT from an ascii string.
+// The format of the string is an ssim Tuple
+bool atf_amc::MsgHdrLT_ReadStrptrMaybe(atf_amc::MsgHdrLT &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "atf_amc.MsgHdrLT");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && MsgHdrLT_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- atf_amc.MsgHdrLT..Print
+// print string representation of ROW to string STR
+// cfmt:atf_amc.MsgHdrLT.String  printfmt:Tuple
+void atf_amc::MsgHdrLT_Print(atf_amc::MsgHdrLT row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "atf_amc.MsgHdrLT";
+    (void)row;//only to avoid -Wunused-parameter
+}
+
+// --- atf_amc.MsgHdrLTMsgsCase.value.ToCstr
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+const char* atf_amc::value_ToCstr(const atf_amc::MsgHdrLTMsgsCase& parent) {
+    const char *ret = NULL;
+    switch(value_GetEnum(parent)) {
+        case atf_amc_MsgHdrLTMsgsCase_atf_amc_MsgLTA: ret = "atf_amc.MsgLTA";  break;
+        case atf_amc_MsgHdrLTMsgsCase_atf_amc_MsgLTB: ret = "atf_amc.MsgLTB";  break;
+        case atf_amc_MsgHdrLTMsgsCase_atf_amc_MsgLTO: ret = "atf_amc.MsgLTO";  break;
+        case atf_amc_MsgHdrLTMsgsCase_atf_amc_MsgLTV: ret = "atf_amc.MsgLTV";  break;
+    }
+    return ret;
+}
+
+// --- atf_amc.MsgHdrLTMsgsCase.value.Print
+// Convert value to a string. First, attempt conversion to a known string.
+// If no string matches, print value as a numeric value.
+void atf_amc::value_Print(const atf_amc::MsgHdrLTMsgsCase& parent, algo::cstring &lhs) {
+    const char *strval = value_ToCstr(parent);
+    if (strval) {
+        lhs << strval;
+    } else {
+        lhs << parent.value;
+    }
+}
+
+// --- atf_amc.MsgHdrLTMsgsCase.value.SetStrptrMaybe
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+bool atf_amc::value_SetStrptrMaybe(atf_amc::MsgHdrLTMsgsCase& parent, algo::strptr rhs) {
+    bool ret = false;
+    switch (elems_N(rhs)) {
+        case 14: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','t','f','_','a','m','c','.'): {
+                    if (memcmp(rhs.elems+8,"MsgLTA",6)==0) { value_SetEnum(parent,atf_amc_MsgHdrLTMsgsCase_atf_amc_MsgLTA); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"MsgLTB",6)==0) { value_SetEnum(parent,atf_amc_MsgHdrLTMsgsCase_atf_amc_MsgLTB); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"MsgLTO",6)==0) { value_SetEnum(parent,atf_amc_MsgHdrLTMsgsCase_atf_amc_MsgLTO); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"MsgLTV",6)==0) { value_SetEnum(parent,atf_amc_MsgHdrLTMsgsCase_atf_amc_MsgLTV); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+    }
+    return ret;
+}
+
+// --- atf_amc.MsgHdrLTMsgsCase.value.SetStrptr
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+void atf_amc::value_SetStrptr(atf_amc::MsgHdrLTMsgsCase& parent, algo::strptr rhs, atf_amc_MsgHdrLTMsgsCaseEnum dflt) {
+    if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
+}
+
+// --- atf_amc.MsgHdrLTMsgsCase.value.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool atf_amc::value_ReadStrptrMaybe(atf_amc::MsgHdrLTMsgsCase& parent, algo::strptr rhs) {
+    bool retval = false;
+    retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
+    if (!retval) { // didn't work? try reading as underlying type
+        retval = u32_ReadStrptrMaybe(parent.value,rhs);
+    }
+    return retval;
+}
+
+// --- atf_amc.MsgHdrLTMsgsCase..ReadStrptrMaybe
+// Read fields of atf_amc::MsgHdrLTMsgsCase from an ascii string.
+// The format of the string is the format of the atf_amc::MsgHdrLTMsgsCase's only field
+bool atf_amc::MsgHdrLTMsgsCase_ReadStrptrMaybe(atf_amc::MsgHdrLTMsgsCase &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = retval && value_ReadStrptrMaybe(parent, in_str);
+    return retval;
+}
+
+// --- atf_amc.MsgHdrLTScale.type.ToCstr
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+const char* atf_amc::type_ToCstr(const atf_amc::MsgHdrLTScale& msghdrltscale) {
+    const char *ret = NULL;
+    switch(type_GetEnum(msghdrltscale)) {
+        case atf_amc_MsgHdrLTScale_type_atf_amc_MsgLTScaleA: ret = "atf_amc.MsgLTScaleA";  break;
+        case atf_amc_MsgHdrLTScale_type_atf_amc_MsgLTScaleV: ret = "atf_amc.MsgLTScaleV";  break;
+    }
+    return ret;
+}
+
+// --- atf_amc.MsgHdrLTScale.type.Print
+// Convert type to a string. First, attempt conversion to a known string.
+// If no string matches, print type as a numeric value.
+void atf_amc::type_Print(const atf_amc::MsgHdrLTScale& msghdrltscale, algo::cstring &lhs) {
+    const char *strval = type_ToCstr(msghdrltscale);
+    if (strval) {
+        lhs << strval;
+    } else {
+        lhs << msghdrltscale.type;
+    }
+}
+
+// --- atf_amc.MsgHdrLTScale.type.SetStrptrMaybe
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+bool atf_amc::type_SetStrptrMaybe(atf_amc::MsgHdrLTScale& msghdrltscale, algo::strptr rhs) {
+    bool ret = false;
+    switch (elems_N(rhs)) {
+        case 19: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','t','f','_','a','m','c','.'): {
+                    if (memcmp(rhs.elems+8,"MsgLTScaleA",11)==0) { type_SetEnum(msghdrltscale,atf_amc_MsgHdrLTScale_type_atf_amc_MsgLTScaleA); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"MsgLTScaleV",11)==0) { type_SetEnum(msghdrltscale,atf_amc_MsgHdrLTScale_type_atf_amc_MsgLTScaleV); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+    }
+    return ret;
+}
+
+// --- atf_amc.MsgHdrLTScale.type.SetStrptr
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+void atf_amc::type_SetStrptr(atf_amc::MsgHdrLTScale& msghdrltscale, algo::strptr rhs, atf_amc_MsgHdrLTScale_type_Enum dflt) {
+    if (!type_SetStrptrMaybe(msghdrltscale,rhs)) type_SetEnum(msghdrltscale,dflt);
+}
+
+// --- atf_amc.MsgHdrLTScale.type.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool atf_amc::type_ReadStrptrMaybe(atf_amc::MsgHdrLTScale& msghdrltscale, algo::strptr rhs) {
+    bool retval = false;
+    retval = type_SetStrptrMaybe(msghdrltscale,rhs); // try symbol conversion
+    if (!retval) { // didn't work? try reading as underlying type
+        retval = char_ReadStrptrMaybe(msghdrltscale.type,rhs);
+    }
+    return retval;
+}
+
+// --- atf_amc.MsgHdrLTScale..ReadFieldMaybe
+bool atf_amc::MsgHdrLTScale_ReadFieldMaybe(atf_amc::MsgHdrLTScale& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    atf_amc::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case atf_amc_FieldId_len: {
+            retval = false;
+        } break;
+        case atf_amc_FieldId_type: {
+            retval = type_ReadStrptrMaybe(parent, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- atf_amc.MsgHdrLTScale..ReadStrptrMaybe
+// Read fields of atf_amc::MsgHdrLTScale from an ascii string.
+// The format of the string is an ssim Tuple
+bool atf_amc::MsgHdrLTScale_ReadStrptrMaybe(atf_amc::MsgHdrLTScale &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "atf_amc.MsgHdrLTScale");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && MsgHdrLTScale_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- atf_amc.MsgHdrLTScale..Print
+// print string representation of ROW to string STR
+// cfmt:atf_amc.MsgHdrLTScale.String  printfmt:Tuple
+void atf_amc::MsgHdrLTScale_Print(atf_amc::MsgHdrLTScale row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "atf_amc.MsgHdrLTScale";
+    (void)row;//only to avoid -Wunused-parameter
+}
+
+// --- atf_amc.MsgHdrLTScaleMsgsCase.value.ToCstr
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+const char* atf_amc::value_ToCstr(const atf_amc::MsgHdrLTScaleMsgsCase& parent) {
+    const char *ret = NULL;
+    switch(value_GetEnum(parent)) {
+        case atf_amc_MsgHdrLTScaleMsgsCase_atf_amc_MsgLTScaleA: ret = "atf_amc.MsgLTScaleA";  break;
+        case atf_amc_MsgHdrLTScaleMsgsCase_atf_amc_MsgLTScaleV: ret = "atf_amc.MsgLTScaleV";  break;
+    }
+    return ret;
+}
+
+// --- atf_amc.MsgHdrLTScaleMsgsCase.value.Print
+// Convert value to a string. First, attempt conversion to a known string.
+// If no string matches, print value as a numeric value.
+void atf_amc::value_Print(const atf_amc::MsgHdrLTScaleMsgsCase& parent, algo::cstring &lhs) {
+    const char *strval = value_ToCstr(parent);
+    if (strval) {
+        lhs << strval;
+    } else {
+        lhs << parent.value;
+    }
+}
+
+// --- atf_amc.MsgHdrLTScaleMsgsCase.value.SetStrptrMaybe
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+bool atf_amc::value_SetStrptrMaybe(atf_amc::MsgHdrLTScaleMsgsCase& parent, algo::strptr rhs) {
+    bool ret = false;
+    switch (elems_N(rhs)) {
+        case 19: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','t','f','_','a','m','c','.'): {
+                    if (memcmp(rhs.elems+8,"MsgLTScaleA",11)==0) { value_SetEnum(parent,atf_amc_MsgHdrLTScaleMsgsCase_atf_amc_MsgLTScaleA); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"MsgLTScaleV",11)==0) { value_SetEnum(parent,atf_amc_MsgHdrLTScaleMsgsCase_atf_amc_MsgLTScaleV); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+    }
+    return ret;
+}
+
+// --- atf_amc.MsgHdrLTScaleMsgsCase.value.SetStrptr
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+void atf_amc::value_SetStrptr(atf_amc::MsgHdrLTScaleMsgsCase& parent, algo::strptr rhs, atf_amc_MsgHdrLTScaleMsgsCaseEnum dflt) {
+    if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
+}
+
+// --- atf_amc.MsgHdrLTScaleMsgsCase.value.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool atf_amc::value_ReadStrptrMaybe(atf_amc::MsgHdrLTScaleMsgsCase& parent, algo::strptr rhs) {
+    bool retval = false;
+    retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
+    if (!retval) { // didn't work? try reading as underlying type
+        retval = u32_ReadStrptrMaybe(parent.value,rhs);
+    }
+    return retval;
+}
+
+// --- atf_amc.MsgHdrLTScaleMsgsCase..ReadStrptrMaybe
+// Read fields of atf_amc::MsgHdrLTScaleMsgsCase from an ascii string.
+// The format of the string is the format of the atf_amc::MsgHdrLTScaleMsgsCase's only field
+bool atf_amc::MsgHdrLTScaleMsgsCase_ReadStrptrMaybe(atf_amc::MsgHdrLTScaleMsgsCase &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = retval && value_ReadStrptrMaybe(parent, in_str);
+    return retval;
 }
 
 // --- atf_amc.MsgLTA.base.CopyOut
@@ -13386,8 +18919,6 @@ algo::aryptr<u8> atf_amc::o_Getary(atf_amc::MsgLTO& parent) {
 
 // --- atf_amc.MsgLTO.o.Print
 void atf_amc::o_Print(atf_amc::MsgLTO& parent, cstring &out) {
-    (void)out;
-    (void)parent;
     if (atf_amc::MsgHdrLT *o = o_Get(parent)) {
         atf_amc::MsgHdrLTMsgs_Print(out, *o, INT_MAX);
     }
@@ -13522,10 +19053,101 @@ bool atf_amc::MsgLTScaleA_ReadStrptrMaybe(atf_amc::MsgLTScaleA &parent, algo::st
 // --- atf_amc.MsgLTScaleA..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.MsgLTScaleA.String  printfmt:Tuple
-void atf_amc::MsgLTScaleA_Print(atf_amc::MsgLTScaleA& row, algo::cstring& str) {
+void atf_amc::MsgLTScaleA_Print(atf_amc::MsgLTScaleA row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf_amc.MsgLTScaleA";
     (void)row;//only to avoid -Wunused-parameter
+}
+
+// --- atf_amc.MsgLTScaleV.base.CopyOut
+// Copy fields out of row
+void atf_amc::parent_CopyOut(atf_amc::MsgLTScaleV &row, atf_amc::MsgHdrLTScale &out) {
+    // len: field value is computed
+    // type: field value is computed
+    (void)row;//only to avoid -Wunused-parameter
+    (void)out;//only to avoid -Wunused-parameter
+}
+
+// --- atf_amc.MsgLTScaleV.v.Getary
+// Access var-length portion as an aryptr. Length is determined from one of the fields.
+algo::aryptr<char> atf_amc::v_Getary(atf_amc::MsgLTScaleV& parent) {
+    return algo::aryptr<char>(v_Addr(parent), v_N(parent));
+}
+
+// --- atf_amc.MsgLTScaleV.v.Addr
+char* atf_amc::v_Addr(atf_amc::MsgLTScaleV& parent) {
+    return (char*)((u8*)&parent + sizeof(atf_amc::MsgLTScaleV)); // address of varlen portion
+}
+
+// --- atf_amc.MsgLTScaleV.v.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool atf_amc::v_ReadStrptrMaybe(atf_amc::MsgLTScaleV& parent, algo::strptr in_str) {
+    bool retval = true;
+    if (algo_lib::_db.varlenbuf) {
+        ary_Addary(*algo_lib::_db.varlenbuf, strptr_ToMemptr(in_str));
+    }
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
+}
+
+// --- atf_amc.MsgLTScaleV.v.Print
+// Convert v to a string.
+// Array is printed as a regular string.
+void atf_amc::v_Print(atf_amc::MsgLTScaleV& parent, algo::cstring &rhs) {
+    rhs << v_Getary(parent);
+}
+
+// --- atf_amc.MsgLTScaleV..ReadFieldMaybe
+bool atf_amc::MsgLTScaleV_ReadFieldMaybe(atf_amc::MsgLTScaleV& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    atf_amc::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
+    switch(field_id) {
+        case atf_amc_FieldId_base: {
+            retval = false;
+        } break;
+        case atf_amc_FieldId_len: {
+            retval = false;
+        } break;
+        case atf_amc_FieldId_type: {
+            retval = false;
+        } break;
+        case atf_amc_FieldId_v: {
+            retval = v_ReadStrptrMaybe(parent, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- atf_amc.MsgLTScaleV..ReadStrptrMaybe
+// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
+// Read fields of atf_amc::MsgLTScaleV from an ascii string.
+// The format of the string is an ssim Tuple
+bool atf_amc::MsgLTScaleV_ReadStrptrMaybe(atf_amc::MsgLTScaleV &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "atf_amc.MsgLTScaleV");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && MsgLTScaleV_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- atf_amc.MsgLTScaleV..Print
+// print string representation of ROW to string STR
+// cfmt:atf_amc.MsgLTScaleV.String  printfmt:Tuple
+void atf_amc::MsgLTScaleV_Print(atf_amc::MsgLTScaleV& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "atf_amc.MsgLTScaleV";
+
+    atf_amc::v_Print(row, temp);
+    PrintAttrSpaceReset(str,"v", temp);
 }
 
 // --- atf_amc.MsgLTV.base.CopyOut
@@ -13775,7 +19397,7 @@ void atf_amc::in_buf_SkipMsg(atf_amc::Msgbuf& msgbuf) {
 
 // --- atf_amc.Msgbuf.in_buf.WriteAll
 // Attempt to write buffer contents to fbuf, return success
-// Write bytes to the buffer. If the entire block is written, return true,
+// Write bytes to the buffer. If the entire block is accepted, return true,
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
 // 
@@ -13799,23 +19421,14 @@ bool atf_amc::in_buf_WriteAll(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) {
 
 // --- atf_amc.Msgbuf.in_buf.WriteReserve
 // Write buffer contents to fbuf, reallocate as needed
-// Write bytes to the buffer. The entire block is always written
+// Write bytes to the buffer. The entire block is always written or the program exits.
 void atf_amc::in_buf_WriteReserve(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) {
-    if (!in_buf_WriteAll(msgbuf, in, in_n)) {
-        in_buf_Realloc(msgbuf, msgbuf.in_buf_max*2);
-        if (!in_buf_WriteAll(msgbuf, in, in_n)) {
-            FatalErrorExit("in_buf: out of memory");
-        }
+    if (msgbuf.in_buf_end - msgbuf.in_buf_start + in_n > in_buf_Max(msgbuf)) {
+        in_buf_Realloc(msgbuf, msgbuf.in_buf_max + i32_Max(msgbuf.in_buf_max, in_n));
     }
-}
-
-// --- atf_amc.Msgbuf.in_buf.XrefMaybe
-// Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-bool atf_amc::in_buf_XrefMaybe(atf_amc::MsgHeader &row) {
-    bool retval = true;
-    (void)row;
-    return retval;
+    if (!in_buf_WriteAll(msgbuf, in, in_n)) {
+        FatalErrorExit("in_buf: out of memory");
+    }
 }
 
 // --- atf_amc.Msgbuf.in_custom.BeginRead
@@ -13842,6 +19455,32 @@ void atf_amc::in_custom_EndRead(atf_amc::Msgbuf& msgbuf) {
         msgbuf.in_custom_eof = true;
         atf_amc::cd_in_msg_Insert(msgbuf);
     }
+}
+
+// --- atf_amc.Msgbuf.in_custom.BeginAlloc
+// // Return pointer to a block of IN_N contiguous bytes in the buffer.
+// // No reallocation is performed. If not possible, return NULL.
+void* atf_amc::in_custom_BeginAlloc(atf_amc::Msgbuf &msgbuf, i32 in_n) {
+    void *ret = NULL;
+    int max = in_custom_Max(msgbuf);
+    if (msgbuf.in_custom_end + in_n > max) {
+        in_custom_Shift(msgbuf);
+    }
+    if (msgbuf.in_custom_end + in_n <= max) {
+        ret = (u8*)msgbuf.in_custom_elems + msgbuf.in_custom_end;
+        msgbuf.in_custom_end += in_n;
+    }
+    return ret;
+}
+
+// --- atf_amc.Msgbuf.in_custom.BeginAllocReserve
+// // Return pointer to a block of IN_N contiguous bytes in the buffer.
+// // Buffer is reallocated as necessary; function always succeeds.
+void* atf_amc::in_custom_BeginAllocReserve(atf_amc::Msgbuf &msgbuf, i32 in_n) {
+    if (msgbuf.in_custom_end - msgbuf.in_custom_start + in_n > in_custom_Max(msgbuf)) {
+        in_custom_Realloc(msgbuf, msgbuf.in_custom_max + i32_Max(msgbuf.in_custom_max, in_n));
+    }
+    return in_custom_BeginAlloc(msgbuf, in_n);
 }
 
 // --- atf_amc.Msgbuf.in_custom.GetMsg
@@ -13967,7 +19606,7 @@ void atf_amc::in_custom_SkipMsg(atf_amc::Msgbuf& msgbuf) {
 
 // --- atf_amc.Msgbuf.in_custom.WriteAll
 // Attempt to write buffer contents to fbuf, return success
-// Write bytes to the buffer. If the entire block is written, return true,
+// Write bytes to the buffer. If the entire block is accepted, return true,
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
 // 
@@ -13991,13 +19630,13 @@ bool atf_amc::in_custom_WriteAll(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) {
 
 // --- atf_amc.Msgbuf.in_custom.WriteReserve
 // Write buffer contents to fbuf, reallocate as needed
-// Write bytes to the buffer. The entire block is always written
+// Write bytes to the buffer. The entire block is always written or the program exits.
 void atf_amc::in_custom_WriteReserve(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) {
+    if (msgbuf.in_custom_end - msgbuf.in_custom_start + in_n > in_custom_Max(msgbuf)) {
+        in_custom_Realloc(msgbuf, msgbuf.in_custom_max + i32_Max(msgbuf.in_custom_max, in_n));
+    }
     if (!in_custom_WriteAll(msgbuf, in, in_n)) {
-        in_custom_Realloc(msgbuf, msgbuf.in_custom_max*2);
-        if (!in_custom_WriteAll(msgbuf, in, in_n)) {
-            FatalErrorExit("in_custom: out of memory");
-        }
+        FatalErrorExit("in_custom: out of memory");
     }
 }
 
@@ -14067,7 +19706,7 @@ void atf_amc::out_extra_SkipMsg(atf_amc::Msgbuf& msgbuf) {
 
 // --- atf_amc.Msgbuf.out_extra.WriteAll
 // Attempt to write buffer contents to fbuf, return success
-// Write bytes to the buffer. If the entire block is written, return true,
+// Write bytes to the buffer. If the entire block is accepted, return true,
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
 // 
@@ -14091,13 +19730,13 @@ bool atf_amc::out_extra_WriteAll(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) {
 
 // --- atf_amc.Msgbuf.out_extra.WriteReserve
 // Write buffer contents to fbuf, reallocate as needed
-// Write bytes to the buffer. The entire block is always written
+// Write bytes to the buffer. The entire block is always written or the program exits.
 void atf_amc::out_extra_WriteReserve(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) {
+    if (msgbuf.out_extra_end - msgbuf.out_extra_start + in_n > out_extra_Max(msgbuf)) {
+        out_extra_Realloc(msgbuf, msgbuf.out_extra_max + i32_Max(msgbuf.out_extra_max, in_n));
+    }
     if (!out_extra_WriteAll(msgbuf, in, in_n)) {
-        out_extra_Realloc(msgbuf, msgbuf.out_extra_max*2);
-        if (!out_extra_WriteAll(msgbuf, in, in_n)) {
-            FatalErrorExit("out_extra: out of memory");
-        }
+        FatalErrorExit("out_extra: out of memory");
     }
 }
 
@@ -14200,7 +19839,7 @@ void atf_amc::in_extra_SkipMsg(atf_amc::Msgbuf& msgbuf) {
 
 // --- atf_amc.Msgbuf.in_extra.WriteAll
 // Attempt to write buffer contents to fbuf, return success
-// Write bytes to the buffer. If the entire block is written, return true,
+// Write bytes to the buffer. If the entire block is accepted, return true,
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
 // 
@@ -14224,13 +19863,13 @@ bool atf_amc::in_extra_WriteAll(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) {
 
 // --- atf_amc.Msgbuf.in_extra.WriteReserve
 // Write buffer contents to fbuf, reallocate as needed
-// Write bytes to the buffer. The entire block is always written
+// Write bytes to the buffer. The entire block is always written or the program exits.
 void atf_amc::in_extra_WriteReserve(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) {
+    if (msgbuf.in_extra_end - msgbuf.in_extra_start + in_n > in_extra_Max(msgbuf)) {
+        in_extra_Realloc(msgbuf, msgbuf.in_extra_max + i32_Max(msgbuf.in_extra_max, in_n));
+    }
     if (!in_extra_WriteAll(msgbuf, in, in_n)) {
-        in_extra_Realloc(msgbuf, msgbuf.in_extra_max*2);
-        if (!in_extra_WriteAll(msgbuf, in, in_n)) {
-            FatalErrorExit("in_extra: out of memory");
-        }
+        FatalErrorExit("in_extra: out of memory");
     }
 }
 
@@ -14284,28 +19923,28 @@ void atf_amc::Msgbuf_Uninit(atf_amc::Msgbuf& msgbuf) {
 
     // atf_amc.Msgbuf.in_extra.Uninit (Fbuf)  //Message-based buffer
     if (msgbuf.in_extra_elems) {
-        algo_lib::malloc_FreeMem(msgbuf.in_extra_elems, sizeof(atf_amc::MsgHdrLT)*msgbuf.in_extra_max); // (atf_amc.Msgbuf.in_extra)
+        algo_lib::malloc_FreeMem(msgbuf.in_extra_elems, msgbuf.in_extra_max); // (atf_amc.Msgbuf.in_extra) in_extra_max is the byte size Realloc allocated
     }
     msgbuf.in_extra_elems = NULL;
     msgbuf.in_extra_max = 0;
 
     // atf_amc.Msgbuf.out_extra.Uninit (Fbuf)  //Message-based buffer
     if (msgbuf.out_extra_elems) {
-        algo_lib::malloc_FreeMem(msgbuf.out_extra_elems, sizeof(atf_amc::MsgHdrLT)*msgbuf.out_extra_max); // (atf_amc.Msgbuf.out_extra)
+        algo_lib::malloc_FreeMem(msgbuf.out_extra_elems, msgbuf.out_extra_max); // (atf_amc.Msgbuf.out_extra) out_extra_max is the byte size Realloc allocated
     }
     msgbuf.out_extra_elems = NULL;
     msgbuf.out_extra_max = 0;
 
     // atf_amc.Msgbuf.in_custom.Uninit (Fbuf)  //Message-based buffer
     if (msgbuf.in_custom_elems) {
-        algo_lib::malloc_FreeMem(msgbuf.in_custom_elems, sizeof(char)*msgbuf.in_custom_max); // (atf_amc.Msgbuf.in_custom)
+        algo_lib::malloc_FreeMem(msgbuf.in_custom_elems, msgbuf.in_custom_max); // (atf_amc.Msgbuf.in_custom) in_custom_max is the byte size Realloc allocated
     }
     msgbuf.in_custom_elems = NULL;
     msgbuf.in_custom_max = 0;
 
     // atf_amc.Msgbuf.in_buf.Uninit (Fbuf)  //Message-based buffer
     if (msgbuf.in_buf_elems) {
-        algo_lib::malloc_FreeMem(msgbuf.in_buf_elems, sizeof(atf_amc::MsgHeader)*msgbuf.in_buf_max); // (atf_amc.Msgbuf.in_buf)
+        algo_lib::malloc_FreeMem(msgbuf.in_buf_elems, msgbuf.in_buf_max); // (atf_amc.Msgbuf.in_buf) in_buf_max is the byte size Realloc allocated
     }
     msgbuf.in_buf_elems = NULL;
     msgbuf.in_buf_max = 0;
@@ -14325,6 +19964,7 @@ void atf_amc::Msgbuf_Print(atf_amc::Msgbuf& row, algo::cstring& str) {
 const char* atf_amc::value_ToCstr(const atf_amc::MsgsCase& parent) {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
+        case atf_amc_MsgsCase_atf_amc_VarlenB: ret = "atf_amc.VarlenB";  break;
         case atf_amc_MsgsCase_atf_amc_VarlenK: ret = "atf_amc.VarlenK";  break;
     }
     return ret;
@@ -14352,6 +19992,7 @@ bool atf_amc::value_SetStrptrMaybe(atf_amc::MsgsCase& parent, algo::strptr rhs) 
         case 15: {
             switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('a','t','f','_','a','m','c','.'): {
+                    if (memcmp(rhs.elems+8,"VarlenB",7)==0) { value_SetEnum(parent,atf_amc_MsgsCase_atf_amc_VarlenB); ret = true; break; }
                     if (memcmp(rhs.elems+8,"VarlenK",7)==0) { value_SetEnum(parent,atf_amc_MsgsCase_atf_amc_VarlenK); ret = true; break; }
                     break;
                 }
@@ -14392,8 +20033,390 @@ bool atf_amc::MsgsCase_ReadStrptrMaybe(atf_amc::MsgsCase &parent, algo::strptr i
 // --- atf_amc.NetBitfld1..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.NetBitfld1.String  printfmt:Raw
-void atf_amc::NetBitfld1_Print(atf_amc::NetBitfld1& row, algo::cstring& str) {
+void atf_amc::NetBitfld1_Print(atf_amc::NetBitfld1 row, algo::cstring& str) {
     u16_Print(value_Get(row), str);
+}
+
+// --- atf_amc.NetEntry.id.ReadStrptrMaybe
+inline static bool atf_amc::id_ReadStrptrMaybe(atf_amc::NetEntry& entry, algo::strptr in_str) {
+    bool retval = true;
+    u16 id_tmp;
+    retval = u16_ReadStrptrMaybe(id_tmp, in_str);
+    if (retval) {
+        id_Set(entry, id_tmp);
+    }
+    return retval;
+}
+
+// --- atf_amc.NetEntry.val.ReadStrptrMaybe
+inline static bool atf_amc::val_ReadStrptrMaybe(atf_amc::NetEntry& entry, algo::strptr in_str) {
+    bool retval = true;
+    u32 val_tmp;
+    retval = u32_ReadStrptrMaybe(val_tmp, in_str);
+    if (retval) {
+        val_Set(entry, val_tmp);
+    }
+    return retval;
+}
+
+// --- atf_amc.NetEntry..ReadFieldMaybe
+bool atf_amc::NetEntry_ReadFieldMaybe(atf_amc::NetEntry& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    atf_amc::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case atf_amc_FieldId_id: {
+            retval = id_ReadStrptrMaybe(parent, strval);
+        } break;
+        case atf_amc_FieldId_val: {
+            retval = val_ReadStrptrMaybe(parent, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- atf_amc.NetEntry..ReadStrptrMaybe
+// Read fields of atf_amc::NetEntry from an ascii string.
+// The format of the string is an ssim Tuple
+bool atf_amc::NetEntry_ReadStrptrMaybe(atf_amc::NetEntry &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "atf_amc.NetEntry");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && NetEntry_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- atf_amc.NetEntry..Print
+// print string representation of ROW to string STR
+// cfmt:atf_amc.NetEntry.String  printfmt:Tuple
+void atf_amc::NetEntry_Print(atf_amc::NetEntry row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "atf_amc.NetEntry";
+
+    u16_Print(id_Get(row), temp);
+    PrintAttrSpaceReset(str,"id", temp);
+
+    u32_Print(val_Get(row), temp);
+    PrintAttrSpaceReset(str,"val", temp);
+}
+
+// --- atf_amc.NetFrame.base.CopyOut
+// Copy fields out of row
+void atf_amc::parent_CopyOut(atf_amc::NetFrame &row, atf_amc::NetFrameHdr &out) {
+    out.word_be = row.word_be;
+    // kind: field value is computed
+    // len: field value is computed
+}
+
+// --- atf_amc.NetFrame.word.ReadStrptrMaybe
+inline static bool atf_amc::word_ReadStrptrMaybe(atf_amc::NetFrame& parent, algo::strptr in_str) {
+    bool retval = true;
+    u32 word_tmp;
+    retval = u32_ReadStrptrMaybe(word_tmp, in_str);
+    if (retval) {
+        word_Set(parent, word_tmp);
+    }
+    return retval;
+}
+
+// --- atf_amc.NetFrame.entry.Getary
+// Access var-length portion as an aryptr. Length is determined from one of the fields.
+algo::aryptr<atf_amc::NetEntry> atf_amc::entry_Getary(atf_amc::NetFrame& parent) {
+    return algo::aryptr<atf_amc::NetEntry>(entry_Addr(parent), entry_N(parent));
+}
+
+// --- atf_amc.NetFrame.entry.Addr
+atf_amc::NetEntry* atf_amc::entry_Addr(atf_amc::NetFrame& parent) {
+    return (atf_amc::NetEntry*)((u8*)&parent + sizeof(atf_amc::NetFrame)); // address of varlen portion
+}
+
+// --- atf_amc.NetFrame.entry.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool atf_amc::entry_ReadStrptrMaybe(atf_amc::NetFrame& parent, algo::strptr in_str) {
+    bool retval = true;
+    if (algo_lib::_db.varlenbuf) {
+        atf_amc::NetEntry *entry_tmp = new(ary_AllocN(*algo_lib::_db.varlenbuf, sizeof(atf_amc::NetEntry)).elems) atf_amc::NetEntry;
+        retval = atf_amc::NetEntry_ReadStrptrMaybe(*entry_tmp, in_str);
+    }
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
+}
+
+// --- atf_amc.NetFrame.entry.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool atf_amc::entry_XrefMaybe(atf_amc::NetEntry &row) {
+    bool retval = true;
+    (void)row;
+    return retval;
+}
+
+// --- atf_amc.NetFrame..ReadFieldMaybe
+bool atf_amc::NetFrame_ReadFieldMaybe(atf_amc::NetFrame& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    atf_amc::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
+    switch(field_id) {
+        case atf_amc_FieldId_base: {
+            retval = false;
+        } break;
+        case atf_amc_FieldId_word: {
+            retval = word_ReadStrptrMaybe(parent, strval);
+        } break;
+        case atf_amc_FieldId_kind: {
+            retval = false;
+        } break;
+        case atf_amc_FieldId_len: {
+            retval = false;
+        } break;
+        case atf_amc_FieldId_entry: {
+            retval = entry_ReadStrptrMaybe(parent, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- atf_amc.NetFrame..ReadStrptrMaybe
+// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
+// Read fields of atf_amc::NetFrame from an ascii string.
+// The format of the string is an ssim Tuple
+bool atf_amc::NetFrame_ReadStrptrMaybe(atf_amc::NetFrame &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "atf_amc.NetFrame");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && NetFrame_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- atf_amc.NetFrame..Print
+// print string representation of ROW to string STR
+// cfmt:atf_amc.NetFrame.String  printfmt:Tuple
+void atf_amc::NetFrame_Print(atf_amc::NetFrame& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "atf_amc.NetFrame";
+
+    ind_beg(NetFrame_entry_curs,entry,row) {
+        atf_amc::NetEntry_Print(entry, temp);
+        tempstr name;
+        name << "entry.";
+        name << ind_curs(entry).index;
+        PrintAttrSpaceReset(str, name, temp);
+    }ind_end;
+}
+
+// --- atf_amc.NetFrameHdr.kind.ToCstr
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+const char* atf_amc::kind_ToCstr(const atf_amc::NetFrameHdr& parent) {
+    const char *ret = NULL;
+    switch(kind_GetEnum(parent)) {
+        case atf_amc_NetFrameHdr_kind_DATA : ret = "DATA";  break;
+        case atf_amc_NetFrameHdr_kind_HEADERS: ret = "HEADERS";  break;
+        case atf_amc_NetFrameHdr_kind_SETTINGS: ret = "SETTINGS";  break;
+    }
+    return ret;
+}
+
+// --- atf_amc.NetFrameHdr.kind.Print
+// Convert kind to a string. First, attempt conversion to a known string.
+// If no string matches, print kind as a numeric value.
+void atf_amc::kind_Print(const atf_amc::NetFrameHdr& parent, algo::cstring &lhs) {
+    const char *strval = kind_ToCstr(parent);
+    if (strval) {
+        lhs << strval;
+    } else {
+        lhs << kind_Get(parent);
+    }
+}
+
+// --- atf_amc.NetFrameHdr.kind.SetStrptrMaybe
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+bool atf_amc::kind_SetStrptrMaybe(atf_amc::NetFrameHdr& parent, algo::strptr rhs) {
+    bool ret = false;
+    switch (elems_N(rhs)) {
+        case 4: {
+            switch (u64(algo::ReadLE32(rhs.elems))) {
+                case LE_STR4('D','A','T','A'): {
+                    kind_SetEnum(parent,atf_amc_NetFrameHdr_kind_DATA); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 7: {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
+                case LE_STR7('H','E','A','D','E','R','S'): {
+                    kind_SetEnum(parent,atf_amc_NetFrameHdr_kind_HEADERS); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 8: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('S','E','T','T','I','N','G','S'): {
+                    kind_SetEnum(parent,atf_amc_NetFrameHdr_kind_SETTINGS); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 16: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','t','f','_','a','m','c','.'): {
+                    if (memcmp(rhs.elems+8,"NetFrame",8)==0) { kind_SetEnum(parent,atf_amc_NetFrameHdr_kind_atf_amc_NetFrame); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+    }
+    return ret;
+}
+
+// --- atf_amc.NetFrameHdr.kind.SetStrptr
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+void atf_amc::kind_SetStrptr(atf_amc::NetFrameHdr& parent, algo::strptr rhs, atf_amc_NetFrameHdr_kind_Enum dflt) {
+    if (!kind_SetStrptrMaybe(parent,rhs)) kind_SetEnum(parent,dflt);
+}
+
+// --- atf_amc.NetFrameHdrMsgsCase.value.ToCstr
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+const char* atf_amc::value_ToCstr(const atf_amc::NetFrameHdrMsgsCase& parent) {
+    const char *ret = NULL;
+    switch(value_GetEnum(parent)) {
+        case atf_amc_NetFrameHdrMsgsCase_atf_amc_NetFrame: ret = "atf_amc.NetFrame";  break;
+    }
+    return ret;
+}
+
+// --- atf_amc.NetFrameHdrMsgsCase.value.Print
+// Convert value to a string. First, attempt conversion to a known string.
+// If no string matches, print value as a numeric value.
+void atf_amc::value_Print(const atf_amc::NetFrameHdrMsgsCase& parent, algo::cstring &lhs) {
+    const char *strval = value_ToCstr(parent);
+    if (strval) {
+        lhs << strval;
+    } else {
+        lhs << parent.value;
+    }
+}
+
+// --- atf_amc.NetFrameHdrMsgsCase.value.SetStrptrMaybe
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+bool atf_amc::value_SetStrptrMaybe(atf_amc::NetFrameHdrMsgsCase& parent, algo::strptr rhs) {
+    bool ret = false;
+    switch (elems_N(rhs)) {
+        case 16: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','t','f','_','a','m','c','.'): {
+                    if (memcmp(rhs.elems+8,"NetFrame",8)==0) { value_SetEnum(parent,atf_amc_NetFrameHdrMsgsCase_atf_amc_NetFrame); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+    }
+    return ret;
+}
+
+// --- atf_amc.NetFrameHdrMsgsCase.value.SetStrptr
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+void atf_amc::value_SetStrptr(atf_amc::NetFrameHdrMsgsCase& parent, algo::strptr rhs, atf_amc_NetFrameHdrMsgsCaseEnum dflt) {
+    if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
+}
+
+// --- atf_amc.NetFrameHdrMsgsCase.value.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool atf_amc::value_ReadStrptrMaybe(atf_amc::NetFrameHdrMsgsCase& parent, algo::strptr rhs) {
+    bool retval = false;
+    retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
+    if (!retval) { // didn't work? try reading as underlying type
+        retval = u32_ReadStrptrMaybe(parent.value,rhs);
+    }
+    return retval;
+}
+
+// --- atf_amc.NetFrameHdrMsgsCase..ReadStrptrMaybe
+// Read fields of atf_amc::NetFrameHdrMsgsCase from an ascii string.
+// The format of the string is the format of the atf_amc::NetFrameHdrMsgsCase's only field
+bool atf_amc::NetFrameHdrMsgsCase_ReadStrptrMaybe(atf_amc::NetFrameHdrMsgsCase &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = retval && value_ReadStrptrMaybe(parent, in_str);
+    return retval;
+}
+
+// --- atf_amc.NovsStr9.ch.Nextchar
+// Extract next character from STR and advance IDX
+inline static u64 atf_amc::ch_Nextchar(const atf_amc::NovsStr9& parent, algo::strptr &str, int &idx) {
+    (void)parent;
+    int i = idx;
+    u64 ch = str.elems[i];
+    i++;
+    idx = i;
+    return ch;
+}
+
+// --- atf_amc.NovsStr9.ch.Cmp
+// Compare two fields.
+i32 atf_amc::ch_Cmp(atf_amc::NovsStr9& parent, atf_amc::NovsStr9 &rhs) {
+    i32 retval = 0;
+    int idx_a = 0;
+    int idx_b = 0;
+    algo::strptr str_a = ch_Getary(parent);
+    algo::strptr str_b = ch_Getary(rhs);
+    int n_a   = elems_N(str_a);
+    int n_b   = elems_N(str_b);
+    retval    = i32_Cmp(n_a,n_b);
+    while (idx_a < n_a && idx_b < n_b) {
+        u64 ch_a = ch_Nextchar(parent, str_a, idx_a);
+        u64 ch_b = ch_Nextchar(rhs, str_b, idx_b);
+        if (ch_a != ch_b) {
+            retval = (ch_a > ch_b)*2-1;
+            break;
+        }
+    }
+    return retval;
+}
+
+// --- atf_amc.NovsStr9.ch.Print
+void atf_amc::ch_Print(atf_amc::NovsStr9& parent, algo::cstring &out) {
+    ch_Addary(out, ch_Getary(parent));
+}
+
+// --- atf_amc.NovsStr9.ch.SetStrptr
+// Copy from strptr, clipping length
+// Set string to the value provided by RHS.
+// If RHS is too large, it is silently clipped.
+void atf_amc::ch_SetStrptr(atf_amc::NovsStr9& parent, const algo::strptr& rhs) {
+    int len = i32_Min(rhs.n_elems, 9);
+    char *rhs_elems = rhs.elems;
+    int i = 0;
+    int j = 0;
+    for (; i < len; i++, j++) {
+        parent.ch[j] = rhs_elems[i];
+    }
+    parent.n_ch       = u8(len);
 }
 
 // --- atf_amc.OptAlloc.typeg.Getary
@@ -14405,8 +20428,6 @@ algo::aryptr<u8> atf_amc::typeg_Getary(atf_amc::OptAlloc& optalloc) {
 
 // --- atf_amc.OptAlloc.typeg.Print
 void atf_amc::typeg_Print(atf_amc::OptAlloc& optalloc, cstring &out) {
-    (void)out;
-    (void)optalloc;
     if (atf_amc::TypeG *typeg = typeg_Get(optalloc)) {
         out << *typeg;
     }
@@ -14480,6 +20501,189 @@ void atf_amc::OptAlloc_Print(atf_amc::OptAlloc& row, algo::cstring& str) {
     }
 }
 
+// --- atf_amc.VarlenB.c.Getary
+// Access var-length portion as an aryptr. Length is determined from one of the fields.
+algo::aryptr<char> atf_amc::c_Getary(atf_amc::VarlenB& b) {
+    return algo::aryptr<char>(c_Addr(b), c_N(b));
+}
+
+// --- atf_amc.VarlenB.c.Addr
+char* atf_amc::c_Addr(atf_amc::VarlenB& b) {
+    return (char*)((u8*)&b + sizeof(atf_amc::VarlenB)); // address of varlen portion
+}
+
+// --- atf_amc.VarlenB.c.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool atf_amc::c_ReadStrptrMaybe(atf_amc::VarlenB& b, algo::strptr in_str) {
+    bool retval = true;
+    if (algo_lib::_db.varlenbuf) {
+        ary_Addary(*algo_lib::_db.varlenbuf, strptr_ToMemptr(in_str));
+    }
+    (void)b;//only to avoid -Wunused-parameter
+    return retval;
+}
+
+// --- atf_amc.VarlenB.c.Print
+// Convert c to a string.
+// Array is printed as a regular string.
+void atf_amc::c_Print(atf_amc::VarlenB& b, algo::cstring &rhs) {
+    rhs << c_Getary(b);
+}
+
+// --- atf_amc.VarlenB..ReadFieldMaybe
+bool atf_amc::VarlenB_ReadFieldMaybe(atf_amc::VarlenB& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    atf_amc::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
+    switch(field_id) {
+        case atf_amc_FieldId_length: {
+            retval = false;
+        } break;
+        case atf_amc_FieldId_c: {
+            retval = c_ReadStrptrMaybe(parent, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- atf_amc.VarlenB..ReadStrptrMaybe
+// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
+// Read fields of atf_amc::VarlenB from an ascii string.
+// The format of the string is an ssim Tuple
+bool atf_amc::VarlenB_ReadStrptrMaybe(atf_amc::VarlenB &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "atf_amc.VarlenB");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && VarlenB_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- atf_amc.VarlenB..Print
+// print string representation of ROW to string STR
+// cfmt:atf_amc.VarlenB.String  printfmt:Tuple
+void atf_amc::VarlenB_Print(atf_amc::VarlenB& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "atf_amc.VarlenB";
+
+    atf_amc::c_Print(row, temp);
+    PrintAttrSpaceReset(str,"c", temp);
+}
+
+// --- atf_amc.OptBMsg.base.CopyOut
+// Copy fields out of row
+void atf_amc::parent_CopyOut(atf_amc::OptBMsg &row, atf_amc::MsgHeader &out) {
+    // type: field value is computed
+    // length: field value is computed
+    (void)row;//only to avoid -Wunused-parameter
+    (void)out;//only to avoid -Wunused-parameter
+}
+
+// --- atf_amc.OptBMsg.b.Getary
+// Access optional portion as an array of bytes
+algo::aryptr<u8> atf_amc::b_Getary(atf_amc::OptBMsg& parent) {
+    u8 *end = (u8*)&parent + sizeof(atf_amc::OptBMsg);
+    return algo::aryptr<u8>(end, i32(parent.length) - ssizeof(atf_amc::OptBMsg));
+}
+
+// --- atf_amc.OptBMsg.b.Print
+void atf_amc::b_Print(atf_amc::OptBMsg& parent, cstring &out) {
+    if (atf_amc::VarlenB *b = b_Get(parent)) {
+        out << *b;
+    }
+}
+
+// --- atf_amc.OptBMsg.b.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool atf_amc::b_ReadStrptrMaybe(atf_amc::OptBMsg &parent, algo::strptr in_str) {
+    bool retval = false;
+    if (algo::ByteAry* varlenbuf_save = algo_lib::_db.varlenbuf) {
+        int len = sizeof(atf_amc::VarlenB);
+        atf_amc::VarlenB *ctype = new(ary_AllocN(*varlenbuf_save, len).elems) atf_amc::VarlenB; // default values
+        algo::ByteAry varlenbuf; // use for varlen msgs
+        algo_lib::_db.varlenbuf = &varlenbuf;
+        retval = VarlenB_ReadStrptrMaybe(*ctype,in_str); // read the type
+        len += ary_N(varlenbuf);
+        retval = retval && ((len) >= 4 && (len-4) % 4 == 0); // only a total the element's length field can store round-trips
+        ctype->length = u32((len-4) / 4);
+        ary_Addary(*varlenbuf_save, ary_Getary(varlenbuf));
+        algo_lib::_db.varlenbuf = varlenbuf_save;
+    }
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
+}
+
+// --- atf_amc.OptBMsg.b.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool atf_amc::b_XrefMaybe(atf_amc::VarlenB &row) {
+    bool retval = true;
+    (void)row;
+    return retval;
+}
+
+// --- atf_amc.OptBMsg..ReadFieldMaybe
+bool atf_amc::OptBMsg_ReadFieldMaybe(atf_amc::OptBMsg& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    atf_amc::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case atf_amc_FieldId_base: {
+            retval = false;
+        } break;
+        case atf_amc_FieldId_type: {
+            retval = false;
+        } break;
+        case atf_amc_FieldId_length: {
+            retval = false;
+        } break;
+        case atf_amc_FieldId_b: {
+            retval = b_ReadStrptrMaybe(parent, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- atf_amc.OptBMsg..ReadStrptrMaybe
+// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
+// Read fields of atf_amc::OptBMsg from an ascii string.
+// The format of the string is an ssim Tuple
+bool atf_amc::OptBMsg_ReadStrptrMaybe(atf_amc::OptBMsg &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "atf_amc.OptBMsg");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && OptBMsg_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- atf_amc.OptBMsg..Print
+// print string representation of ROW to string STR
+// cfmt:atf_amc.OptBMsg.String  printfmt:Tuple
+void atf_amc::OptBMsg_Print(atf_amc::OptBMsg& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "atf_amc.OptBMsg";
+
+    if (b_Get(row)) {
+        atf_amc::b_Print(row, temp);
+        PrintAttrSpaceReset(str,"b", temp);
+    }
+}
+
 // --- atf_amc.OptG.typeg.Getary
 // Access optional portion as an array of bytes
 algo::aryptr<u8> atf_amc::typeg_Getary(atf_amc::OptG& optg) {
@@ -14489,8 +20693,6 @@ algo::aryptr<u8> atf_amc::typeg_Getary(atf_amc::OptG& optg) {
 
 // --- atf_amc.OptG.typeg.Print
 void atf_amc::typeg_Print(atf_amc::OptG& optg, cstring &out) {
-    (void)out;
-    (void)optg;
     if (atf_amc::TypeG *typeg = typeg_Get(optg)) {
         out << *typeg;
     }
@@ -14564,8 +20766,6 @@ algo::aryptr<u8> atf_amc::optg_Getary(atf_amc::OptOptG& parent) {
 
 // --- atf_amc.OptOptG.optg.Print
 void atf_amc::optg_Print(atf_amc::OptOptG& parent, cstring &out) {
-    (void)out;
-    (void)parent;
     if (atf_amc::OptG *optg = optg_Get(parent)) {
         out << *optg;
     }
@@ -14648,8 +20848,22 @@ void atf_amc::OptOptG_Print(atf_amc::OptOptG& row, algo::cstring& str) {
     }
 }
 
+// --- atf_amc.OptSigned.typeg.Getary
+// Access optional portion as an array of bytes
+algo::aryptr<u8> atf_amc::typeg_Getary(atf_amc::OptSigned& parent) {
+    u8 *end = (u8*)&parent + sizeof(atf_amc::OptSigned);
+    return algo::aryptr<u8>(end, i32(parent.length) - ssizeof(atf_amc::OptSigned));
+}
+
+// --- atf_amc.OptWide.typeg.Getary
+// Access optional portion as an array of bytes
+algo::aryptr<u8> atf_amc::typeg_Getary(atf_amc::OptWide& parent) {
+    u8 *end = (u8*)&parent + sizeof(atf_amc::OptWide);
+    return algo::aryptr<u8>(end, i32(parent.length * 2 + 8) - ssizeof(atf_amc::OptWide));
+}
+
 // --- atf_amc.PmaskMultiple.value1.ReadStrptrMaybe
-inline static bool atf_amc::value1_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) {
+inline static bool atf_amc::value1_ReadStrptrMaybe(atf_amc::PmaskMultiple& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value1_tmp;
     retval = u32_ReadStrptrMaybe(value1_tmp, in_str);
@@ -14660,7 +20874,7 @@ inline static bool atf_amc::value1_ReadStrptrMaybe(atf_amc::PmaskMultiple &paren
 }
 
 // --- atf_amc.PmaskMultiple.value2.ReadStrptrMaybe
-inline static bool atf_amc::value2_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) {
+inline static bool atf_amc::value2_ReadStrptrMaybe(atf_amc::PmaskMultiple& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value2_tmp;
     retval = u32_ReadStrptrMaybe(value2_tmp, in_str);
@@ -14671,7 +20885,7 @@ inline static bool atf_amc::value2_ReadStrptrMaybe(atf_amc::PmaskMultiple &paren
 }
 
 // --- atf_amc.PmaskMultiple.value3.ReadStrptrMaybe
-inline static bool atf_amc::value3_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) {
+inline static bool atf_amc::value3_ReadStrptrMaybe(atf_amc::PmaskMultiple& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value3_tmp;
     retval = u32_ReadStrptrMaybe(value3_tmp, in_str);
@@ -14682,7 +20896,7 @@ inline static bool atf_amc::value3_ReadStrptrMaybe(atf_amc::PmaskMultiple &paren
 }
 
 // --- atf_amc.PmaskMultiple.value4.ReadStrptrMaybe
-inline static bool atf_amc::value4_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) {
+inline static bool atf_amc::value4_ReadStrptrMaybe(atf_amc::PmaskMultiple& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value4_tmp;
     retval = u32_ReadStrptrMaybe(value4_tmp, in_str);
@@ -14693,7 +20907,7 @@ inline static bool atf_amc::value4_ReadStrptrMaybe(atf_amc::PmaskMultiple &paren
 }
 
 // --- atf_amc.PmaskMultiple.value5.ReadStrptrMaybe
-inline static bool atf_amc::value5_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) {
+inline static bool atf_amc::value5_ReadStrptrMaybe(atf_amc::PmaskMultiple& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value5_tmp;
     retval = u32_ReadStrptrMaybe(value5_tmp, in_str);
@@ -14704,7 +20918,7 @@ inline static bool atf_amc::value5_ReadStrptrMaybe(atf_amc::PmaskMultiple &paren
 }
 
 // --- atf_amc.PmaskMultiple.value6.ReadStrptrMaybe
-inline static bool atf_amc::value6_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) {
+inline static bool atf_amc::value6_ReadStrptrMaybe(atf_amc::PmaskMultiple& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value6_tmp;
     retval = u32_ReadStrptrMaybe(value6_tmp, in_str);
@@ -14715,7 +20929,7 @@ inline static bool atf_amc::value6_ReadStrptrMaybe(atf_amc::PmaskMultiple &paren
 }
 
 // --- atf_amc.PmaskMultiple.value7.ReadStrptrMaybe
-inline static bool atf_amc::value7_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) {
+inline static bool atf_amc::value7_ReadStrptrMaybe(atf_amc::PmaskMultiple& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value7_tmp;
     retval = u32_ReadStrptrMaybe(value7_tmp, in_str);
@@ -14743,53 +20957,53 @@ bool atf_amc::PmaskMultiple_ReadFieldMaybe(atf_amc::PmaskMultiple& parent, algo:
         case atf_amc_FieldId_value1: {
             retval = value1_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                nullable_qSetBit(parent, 0);
-                assigned_qSetBit(parent, 0);
-                present_qSetBit(parent, 0);
+                nullable_qSetBit(parent, 0); // mark presence in pmask
+                assigned_qSetBit(parent, 0); // mark presence in pmask
+                present_qSetBit(parent, 0); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value2: {
             retval = value2_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                assigned_qSetBit(parent, 1);
-                present_qSetBit(parent, 1);
+                assigned_qSetBit(parent, 1); // mark presence in pmask
+                present_qSetBit(parent, 1); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value3: {
             retval = value3_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                nullable_qSetBit(parent, 1);
-                assigned_qSetBit(parent, 2);
-                present_qSetBit(parent, 2);
+                nullable_qSetBit(parent, 1); // mark presence in pmask
+                assigned_qSetBit(parent, 2); // mark presence in pmask
+                present_qSetBit(parent, 2); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value4: {
             retval = value4_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                assigned_qSetBit(parent, 3);
-                present_qSetBit(parent, 3);
+                assigned_qSetBit(parent, 3); // mark presence in pmask
+                present_qSetBit(parent, 3); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value5: {
             retval = value5_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                nullable_qSetBit(parent, 2);
-                assigned_qSetBit(parent, 4);
-                present_qSetBit(parent, 4);
+                nullable_qSetBit(parent, 2); // mark presence in pmask
+                assigned_qSetBit(parent, 4); // mark presence in pmask
+                present_qSetBit(parent, 4); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value6: {
             retval = value6_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                assigned_qSetBit(parent, 5);
-                present_qSetBit(parent, 5);
+                assigned_qSetBit(parent, 5); // mark presence in pmask
+                present_qSetBit(parent, 5); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value7: {
             retval = value7_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                assigned_qSetBit(parent, 6);
-                present_qSetBit(parent, 6);
+                assigned_qSetBit(parent, 6); // mark presence in pmask
+                present_qSetBit(parent, 6); // mark presence in pmask
             }
         } break;
         default: {
@@ -14866,7 +21080,7 @@ void atf_amc::PmaskMultiple_Print(atf_amc::PmaskMultiple& row, algo::cstring& st
 }
 
 // --- atf_amc.PmaskU128.value.ReadStrptrMaybe
-inline static bool atf_amc::value_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value_tmp;
     retval = u32_ReadStrptrMaybe(value_tmp, in_str);
@@ -14877,7 +21091,7 @@ inline static bool atf_amc::value_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, al
 }
 
 // --- atf_amc.PmaskU128.value2.ReadStrptrMaybe
-inline static bool atf_amc::value2_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value2_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value2_tmp;
     retval = u32_ReadStrptrMaybe(value2_tmp, in_str);
@@ -14888,7 +21102,7 @@ inline static bool atf_amc::value2_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, a
 }
 
 // --- atf_amc.PmaskU128.value3.ReadStrptrMaybe
-inline static bool atf_amc::value3_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value3_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value3_tmp;
     retval = u32_ReadStrptrMaybe(value3_tmp, in_str);
@@ -14899,7 +21113,7 @@ inline static bool atf_amc::value3_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, a
 }
 
 // --- atf_amc.PmaskU128.value21.ReadStrptrMaybe
-inline static bool atf_amc::value21_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value21_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value21_tmp;
     retval = u32_ReadStrptrMaybe(value21_tmp, in_str);
@@ -14910,7 +21124,7 @@ inline static bool atf_amc::value21_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value22.ReadStrptrMaybe
-inline static bool atf_amc::value22_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value22_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value22_tmp;
     retval = u32_ReadStrptrMaybe(value22_tmp, in_str);
@@ -14921,7 +21135,7 @@ inline static bool atf_amc::value22_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value23.ReadStrptrMaybe
-inline static bool atf_amc::value23_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value23_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value23_tmp;
     retval = u32_ReadStrptrMaybe(value23_tmp, in_str);
@@ -14932,7 +21146,7 @@ inline static bool atf_amc::value23_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value24.ReadStrptrMaybe
-inline static bool atf_amc::value24_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value24_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value24_tmp;
     retval = u32_ReadStrptrMaybe(value24_tmp, in_str);
@@ -14943,7 +21157,7 @@ inline static bool atf_amc::value24_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value25.ReadStrptrMaybe
-inline static bool atf_amc::value25_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value25_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value25_tmp;
     retval = u32_ReadStrptrMaybe(value25_tmp, in_str);
@@ -14954,7 +21168,7 @@ inline static bool atf_amc::value25_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value26.ReadStrptrMaybe
-inline static bool atf_amc::value26_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value26_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value26_tmp;
     retval = u32_ReadStrptrMaybe(value26_tmp, in_str);
@@ -14965,7 +21179,7 @@ inline static bool atf_amc::value26_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value20.ReadStrptrMaybe
-inline static bool atf_amc::value20_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value20_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value20_tmp;
     retval = u32_ReadStrptrMaybe(value20_tmp, in_str);
@@ -14976,7 +21190,7 @@ inline static bool atf_amc::value20_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value28.ReadStrptrMaybe
-inline static bool atf_amc::value28_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value28_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value28_tmp;
     retval = u32_ReadStrptrMaybe(value28_tmp, in_str);
@@ -14987,7 +21201,7 @@ inline static bool atf_amc::value28_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value29.ReadStrptrMaybe
-inline static bool atf_amc::value29_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value29_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value29_tmp;
     retval = u32_ReadStrptrMaybe(value29_tmp, in_str);
@@ -14998,7 +21212,7 @@ inline static bool atf_amc::value29_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value30.ReadStrptrMaybe
-inline static bool atf_amc::value30_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value30_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value30_tmp;
     retval = u32_ReadStrptrMaybe(value30_tmp, in_str);
@@ -15009,7 +21223,7 @@ inline static bool atf_amc::value30_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value31.ReadStrptrMaybe
-inline static bool atf_amc::value31_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value31_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value31_tmp;
     retval = u32_ReadStrptrMaybe(value31_tmp, in_str);
@@ -15020,7 +21234,7 @@ inline static bool atf_amc::value31_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value32.ReadStrptrMaybe
-inline static bool atf_amc::value32_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value32_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value32_tmp;
     retval = u32_ReadStrptrMaybe(value32_tmp, in_str);
@@ -15031,7 +21245,7 @@ inline static bool atf_amc::value32_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value27.ReadStrptrMaybe
-inline static bool atf_amc::value27_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value27_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value27_tmp;
     retval = u32_ReadStrptrMaybe(value27_tmp, in_str);
@@ -15042,7 +21256,7 @@ inline static bool atf_amc::value27_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value19.ReadStrptrMaybe
-inline static bool atf_amc::value19_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value19_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value19_tmp;
     retval = u32_ReadStrptrMaybe(value19_tmp, in_str);
@@ -15053,7 +21267,7 @@ inline static bool atf_amc::value19_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value18.ReadStrptrMaybe
-inline static bool atf_amc::value18_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value18_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value18_tmp;
     retval = u32_ReadStrptrMaybe(value18_tmp, in_str);
@@ -15064,7 +21278,7 @@ inline static bool atf_amc::value18_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value4.ReadStrptrMaybe
-inline static bool atf_amc::value4_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value4_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value4_tmp;
     retval = u32_ReadStrptrMaybe(value4_tmp, in_str);
@@ -15075,7 +21289,7 @@ inline static bool atf_amc::value4_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, a
 }
 
 // --- atf_amc.PmaskU128.value5.ReadStrptrMaybe
-inline static bool atf_amc::value5_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value5_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value5_tmp;
     retval = u32_ReadStrptrMaybe(value5_tmp, in_str);
@@ -15086,7 +21300,7 @@ inline static bool atf_amc::value5_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, a
 }
 
 // --- atf_amc.PmaskU128.value6.ReadStrptrMaybe
-inline static bool atf_amc::value6_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value6_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value6_tmp;
     retval = u32_ReadStrptrMaybe(value6_tmp, in_str);
@@ -15097,7 +21311,7 @@ inline static bool atf_amc::value6_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, a
 }
 
 // --- atf_amc.PmaskU128.value7.ReadStrptrMaybe
-inline static bool atf_amc::value7_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value7_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value7_tmp;
     retval = u32_ReadStrptrMaybe(value7_tmp, in_str);
@@ -15108,7 +21322,7 @@ inline static bool atf_amc::value7_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, a
 }
 
 // --- atf_amc.PmaskU128.value8.ReadStrptrMaybe
-inline static bool atf_amc::value8_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value8_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value8_tmp;
     retval = u32_ReadStrptrMaybe(value8_tmp, in_str);
@@ -15119,7 +21333,7 @@ inline static bool atf_amc::value8_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, a
 }
 
 // --- atf_amc.PmaskU128.value9.ReadStrptrMaybe
-inline static bool atf_amc::value9_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value9_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value9_tmp;
     retval = u32_ReadStrptrMaybe(value9_tmp, in_str);
@@ -15130,7 +21344,7 @@ inline static bool atf_amc::value9_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, a
 }
 
 // --- atf_amc.PmaskU128.value69.ReadStrptrMaybe
-inline static bool atf_amc::value69_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value69_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value69_tmp;
     retval = u32_ReadStrptrMaybe(value69_tmp, in_str);
@@ -15141,7 +21355,7 @@ inline static bool atf_amc::value69_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value11.ReadStrptrMaybe
-inline static bool atf_amc::value11_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value11_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value11_tmp;
     retval = u32_ReadStrptrMaybe(value11_tmp, in_str);
@@ -15152,7 +21366,7 @@ inline static bool atf_amc::value11_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value12.ReadStrptrMaybe
-inline static bool atf_amc::value12_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value12_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value12_tmp;
     retval = u32_ReadStrptrMaybe(value12_tmp, in_str);
@@ -15163,7 +21377,7 @@ inline static bool atf_amc::value12_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value13.ReadStrptrMaybe
-inline static bool atf_amc::value13_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value13_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value13_tmp;
     retval = u32_ReadStrptrMaybe(value13_tmp, in_str);
@@ -15174,7 +21388,7 @@ inline static bool atf_amc::value13_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value14.ReadStrptrMaybe
-inline static bool atf_amc::value14_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value14_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value14_tmp;
     retval = u32_ReadStrptrMaybe(value14_tmp, in_str);
@@ -15185,7 +21399,7 @@ inline static bool atf_amc::value14_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value15.ReadStrptrMaybe
-inline static bool atf_amc::value15_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value15_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value15_tmp;
     retval = u32_ReadStrptrMaybe(value15_tmp, in_str);
@@ -15196,7 +21410,7 @@ inline static bool atf_amc::value15_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value16.ReadStrptrMaybe
-inline static bool atf_amc::value16_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value16_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value16_tmp;
     retval = u32_ReadStrptrMaybe(value16_tmp, in_str);
@@ -15207,7 +21421,7 @@ inline static bool atf_amc::value16_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value33.ReadStrptrMaybe
-inline static bool atf_amc::value33_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value33_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value33_tmp;
     retval = u32_ReadStrptrMaybe(value33_tmp, in_str);
@@ -15218,7 +21432,7 @@ inline static bool atf_amc::value33_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value10.ReadStrptrMaybe
-inline static bool atf_amc::value10_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value10_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value10_tmp;
     retval = u32_ReadStrptrMaybe(value10_tmp, in_str);
@@ -15229,7 +21443,7 @@ inline static bool atf_amc::value10_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value17.ReadStrptrMaybe
-inline static bool atf_amc::value17_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value17_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value17_tmp;
     retval = u32_ReadStrptrMaybe(value17_tmp, in_str);
@@ -15240,7 +21454,7 @@ inline static bool atf_amc::value17_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value35.ReadStrptrMaybe
-inline static bool atf_amc::value35_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value35_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value35_tmp;
     retval = u32_ReadStrptrMaybe(value35_tmp, in_str);
@@ -15251,7 +21465,7 @@ inline static bool atf_amc::value35_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value55.ReadStrptrMaybe
-inline static bool atf_amc::value55_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value55_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value55_tmp;
     retval = u32_ReadStrptrMaybe(value55_tmp, in_str);
@@ -15262,7 +21476,7 @@ inline static bool atf_amc::value55_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value56.ReadStrptrMaybe
-inline static bool atf_amc::value56_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value56_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value56_tmp;
     retval = u32_ReadStrptrMaybe(value56_tmp, in_str);
@@ -15273,7 +21487,7 @@ inline static bool atf_amc::value56_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value57.ReadStrptrMaybe
-inline static bool atf_amc::value57_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value57_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value57_tmp;
     retval = u32_ReadStrptrMaybe(value57_tmp, in_str);
@@ -15284,7 +21498,7 @@ inline static bool atf_amc::value57_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value58.ReadStrptrMaybe
-inline static bool atf_amc::value58_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value58_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value58_tmp;
     retval = u32_ReadStrptrMaybe(value58_tmp, in_str);
@@ -15295,7 +21509,7 @@ inline static bool atf_amc::value58_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value59.ReadStrptrMaybe
-inline static bool atf_amc::value59_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value59_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value59_tmp;
     retval = u32_ReadStrptrMaybe(value59_tmp, in_str);
@@ -15306,7 +21520,7 @@ inline static bool atf_amc::value59_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value60.ReadStrptrMaybe
-inline static bool atf_amc::value60_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value60_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value60_tmp;
     retval = u32_ReadStrptrMaybe(value60_tmp, in_str);
@@ -15317,7 +21531,7 @@ inline static bool atf_amc::value60_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value54.ReadStrptrMaybe
-inline static bool atf_amc::value54_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value54_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value54_tmp;
     retval = u32_ReadStrptrMaybe(value54_tmp, in_str);
@@ -15328,7 +21542,7 @@ inline static bool atf_amc::value54_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value62.ReadStrptrMaybe
-inline static bool atf_amc::value62_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value62_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value62_tmp;
     retval = u32_ReadStrptrMaybe(value62_tmp, in_str);
@@ -15339,7 +21553,7 @@ inline static bool atf_amc::value62_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value63.ReadStrptrMaybe
-inline static bool atf_amc::value63_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value63_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value63_tmp;
     retval = u32_ReadStrptrMaybe(value63_tmp, in_str);
@@ -15350,7 +21564,7 @@ inline static bool atf_amc::value63_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value64.ReadStrptrMaybe
-inline static bool atf_amc::value64_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value64_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value64_tmp;
     retval = u32_ReadStrptrMaybe(value64_tmp, in_str);
@@ -15361,7 +21575,7 @@ inline static bool atf_amc::value64_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value65.ReadStrptrMaybe
-inline static bool atf_amc::value65_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value65_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value65_tmp;
     retval = u32_ReadStrptrMaybe(value65_tmp, in_str);
@@ -15372,7 +21586,7 @@ inline static bool atf_amc::value65_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value66.ReadStrptrMaybe
-inline static bool atf_amc::value66_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value66_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value66_tmp;
     retval = u32_ReadStrptrMaybe(value66_tmp, in_str);
@@ -15383,7 +21597,7 @@ inline static bool atf_amc::value66_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value67.ReadStrptrMaybe
-inline static bool atf_amc::value67_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value67_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value67_tmp;
     retval = u32_ReadStrptrMaybe(value67_tmp, in_str);
@@ -15394,7 +21608,7 @@ inline static bool atf_amc::value67_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value68.ReadStrptrMaybe
-inline static bool atf_amc::value68_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value68_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value68_tmp;
     retval = u32_ReadStrptrMaybe(value68_tmp, in_str);
@@ -15405,7 +21619,7 @@ inline static bool atf_amc::value68_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value61.ReadStrptrMaybe
-inline static bool atf_amc::value61_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value61_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value61_tmp;
     retval = u32_ReadStrptrMaybe(value61_tmp, in_str);
@@ -15416,7 +21630,7 @@ inline static bool atf_amc::value61_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value34.ReadStrptrMaybe
-inline static bool atf_amc::value34_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value34_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value34_tmp;
     retval = u32_ReadStrptrMaybe(value34_tmp, in_str);
@@ -15427,7 +21641,7 @@ inline static bool atf_amc::value34_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value52.ReadStrptrMaybe
-inline static bool atf_amc::value52_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value52_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value52_tmp;
     retval = u32_ReadStrptrMaybe(value52_tmp, in_str);
@@ -15438,7 +21652,7 @@ inline static bool atf_amc::value52_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value36.ReadStrptrMaybe
-inline static bool atf_amc::value36_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value36_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value36_tmp;
     retval = u32_ReadStrptrMaybe(value36_tmp, in_str);
@@ -15449,7 +21663,7 @@ inline static bool atf_amc::value36_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value37.ReadStrptrMaybe
-inline static bool atf_amc::value37_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value37_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value37_tmp;
     retval = u32_ReadStrptrMaybe(value37_tmp, in_str);
@@ -15460,7 +21674,7 @@ inline static bool atf_amc::value37_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value38.ReadStrptrMaybe
-inline static bool atf_amc::value38_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value38_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value38_tmp;
     retval = u32_ReadStrptrMaybe(value38_tmp, in_str);
@@ -15471,7 +21685,7 @@ inline static bool atf_amc::value38_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value39.ReadStrptrMaybe
-inline static bool atf_amc::value39_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value39_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value39_tmp;
     retval = u32_ReadStrptrMaybe(value39_tmp, in_str);
@@ -15482,7 +21696,7 @@ inline static bool atf_amc::value39_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value40.ReadStrptrMaybe
-inline static bool atf_amc::value40_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value40_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value40_tmp;
     retval = u32_ReadStrptrMaybe(value40_tmp, in_str);
@@ -15493,7 +21707,7 @@ inline static bool atf_amc::value40_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value41.ReadStrptrMaybe
-inline static bool atf_amc::value41_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value41_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value41_tmp;
     retval = u32_ReadStrptrMaybe(value41_tmp, in_str);
@@ -15504,7 +21718,7 @@ inline static bool atf_amc::value41_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value42.ReadStrptrMaybe
-inline static bool atf_amc::value42_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value42_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value42_tmp;
     retval = u32_ReadStrptrMaybe(value42_tmp, in_str);
@@ -15515,7 +21729,7 @@ inline static bool atf_amc::value42_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value53.ReadStrptrMaybe
-inline static bool atf_amc::value53_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value53_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value53_tmp;
     retval = u32_ReadStrptrMaybe(value53_tmp, in_str);
@@ -15526,7 +21740,7 @@ inline static bool atf_amc::value53_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value44.ReadStrptrMaybe
-inline static bool atf_amc::value44_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value44_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value44_tmp;
     retval = u32_ReadStrptrMaybe(value44_tmp, in_str);
@@ -15537,7 +21751,7 @@ inline static bool atf_amc::value44_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value45.ReadStrptrMaybe
-inline static bool atf_amc::value45_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value45_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value45_tmp;
     retval = u32_ReadStrptrMaybe(value45_tmp, in_str);
@@ -15548,7 +21762,7 @@ inline static bool atf_amc::value45_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value46.ReadStrptrMaybe
-inline static bool atf_amc::value46_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value46_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value46_tmp;
     retval = u32_ReadStrptrMaybe(value46_tmp, in_str);
@@ -15559,7 +21773,7 @@ inline static bool atf_amc::value46_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value47.ReadStrptrMaybe
-inline static bool atf_amc::value47_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value47_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value47_tmp;
     retval = u32_ReadStrptrMaybe(value47_tmp, in_str);
@@ -15570,7 +21784,7 @@ inline static bool atf_amc::value47_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value48.ReadStrptrMaybe
-inline static bool atf_amc::value48_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value48_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value48_tmp;
     retval = u32_ReadStrptrMaybe(value48_tmp, in_str);
@@ -15581,7 +21795,7 @@ inline static bool atf_amc::value48_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value49.ReadStrptrMaybe
-inline static bool atf_amc::value49_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value49_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value49_tmp;
     retval = u32_ReadStrptrMaybe(value49_tmp, in_str);
@@ -15592,7 +21806,7 @@ inline static bool atf_amc::value49_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value50.ReadStrptrMaybe
-inline static bool atf_amc::value50_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value50_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value50_tmp;
     retval = u32_ReadStrptrMaybe(value50_tmp, in_str);
@@ -15603,7 +21817,7 @@ inline static bool atf_amc::value50_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value51.ReadStrptrMaybe
-inline static bool atf_amc::value51_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value51_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value51_tmp;
     retval = u32_ReadStrptrMaybe(value51_tmp, in_str);
@@ -15614,7 +21828,7 @@ inline static bool atf_amc::value51_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value43.ReadStrptrMaybe
-inline static bool atf_amc::value43_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value43_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value43_tmp;
     retval = u32_ReadStrptrMaybe(value43_tmp, in_str);
@@ -15625,7 +21839,7 @@ inline static bool atf_amc::value43_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value70.ReadStrptrMaybe
-inline static bool atf_amc::value70_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value70_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value70_tmp;
     retval = u32_ReadStrptrMaybe(value70_tmp, in_str);
@@ -15636,7 +21850,7 @@ inline static bool atf_amc::value70_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value71.ReadStrptrMaybe
-inline static bool atf_amc::value71_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value71_ReadStrptrMaybe(atf_amc::PmaskU128& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value71_tmp;
     retval = u32_ReadStrptrMaybe(value71_tmp, in_str);
@@ -15658,427 +21872,427 @@ bool atf_amc::PmaskU128_ReadFieldMaybe(atf_amc::PmaskU128& parent, algo::strptr 
         case atf_amc_FieldId_value: {
             retval = value_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 0);
+                pmask_qSetBit(parent, 0); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value2: {
             retval = value2_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 1);
+                pmask_qSetBit(parent, 1); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value3: {
             retval = value3_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 2);
+                pmask_qSetBit(parent, 2); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value21: {
             retval = value21_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 3);
+                pmask_qSetBit(parent, 3); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value22: {
             retval = value22_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 4);
+                pmask_qSetBit(parent, 4); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value23: {
             retval = value23_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 5);
+                pmask_qSetBit(parent, 5); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value24: {
             retval = value24_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 6);
+                pmask_qSetBit(parent, 6); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value25: {
             retval = value25_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 7);
+                pmask_qSetBit(parent, 7); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value26: {
             retval = value26_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 8);
+                pmask_qSetBit(parent, 8); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value20: {
             retval = value20_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 9);
+                pmask_qSetBit(parent, 9); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value28: {
             retval = value28_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 10);
+                pmask_qSetBit(parent, 10); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value29: {
             retval = value29_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 11);
+                pmask_qSetBit(parent, 11); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value30: {
             retval = value30_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 12);
+                pmask_qSetBit(parent, 12); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value31: {
             retval = value31_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 13);
+                pmask_qSetBit(parent, 13); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value32: {
             retval = value32_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 14);
+                pmask_qSetBit(parent, 14); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value27: {
             retval = value27_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 15);
+                pmask_qSetBit(parent, 15); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value19: {
             retval = value19_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 16);
+                pmask_qSetBit(parent, 16); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value18: {
             retval = value18_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 17);
+                pmask_qSetBit(parent, 17); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value4: {
             retval = value4_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 18);
+                pmask_qSetBit(parent, 18); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value5: {
             retval = value5_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 19);
+                pmask_qSetBit(parent, 19); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value6: {
             retval = value6_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 20);
+                pmask_qSetBit(parent, 20); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value7: {
             retval = value7_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 21);
+                pmask_qSetBit(parent, 21); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value8: {
             retval = value8_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 22);
+                pmask_qSetBit(parent, 22); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value9: {
             retval = value9_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 23);
+                pmask_qSetBit(parent, 23); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value69: {
             retval = value69_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 24);
+                pmask_qSetBit(parent, 24); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value11: {
             retval = value11_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 25);
+                pmask_qSetBit(parent, 25); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value12: {
             retval = value12_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 26);
+                pmask_qSetBit(parent, 26); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value13: {
             retval = value13_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 27);
+                pmask_qSetBit(parent, 27); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value14: {
             retval = value14_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 28);
+                pmask_qSetBit(parent, 28); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value15: {
             retval = value15_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 29);
+                pmask_qSetBit(parent, 29); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value16: {
             retval = value16_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 30);
+                pmask_qSetBit(parent, 30); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value33: {
             retval = value33_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 31);
+                pmask_qSetBit(parent, 31); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value10: {
             retval = value10_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 32);
+                pmask_qSetBit(parent, 32); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value17: {
             retval = value17_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 33);
+                pmask_qSetBit(parent, 33); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value35: {
             retval = value35_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 34);
+                pmask_qSetBit(parent, 34); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value55: {
             retval = value55_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 35);
+                pmask_qSetBit(parent, 35); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value56: {
             retval = value56_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 36);
+                pmask_qSetBit(parent, 36); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value57: {
             retval = value57_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 37);
+                pmask_qSetBit(parent, 37); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value58: {
             retval = value58_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 38);
+                pmask_qSetBit(parent, 38); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value59: {
             retval = value59_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 39);
+                pmask_qSetBit(parent, 39); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value60: {
             retval = value60_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 40);
+                pmask_qSetBit(parent, 40); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value54: {
             retval = value54_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 41);
+                pmask_qSetBit(parent, 41); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value62: {
             retval = value62_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 42);
+                pmask_qSetBit(parent, 42); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value63: {
             retval = value63_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 43);
+                pmask_qSetBit(parent, 43); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value64: {
             retval = value64_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 44);
+                pmask_qSetBit(parent, 44); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value65: {
             retval = value65_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 45);
+                pmask_qSetBit(parent, 45); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value66: {
             retval = value66_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 46);
+                pmask_qSetBit(parent, 46); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value67: {
             retval = value67_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 47);
+                pmask_qSetBit(parent, 47); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value68: {
             retval = value68_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 48);
+                pmask_qSetBit(parent, 48); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value61: {
             retval = value61_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 49);
+                pmask_qSetBit(parent, 49); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value34: {
             retval = value34_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 50);
+                pmask_qSetBit(parent, 50); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value52: {
             retval = value52_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 51);
+                pmask_qSetBit(parent, 51); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value36: {
             retval = value36_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 52);
+                pmask_qSetBit(parent, 52); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value37: {
             retval = value37_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 53);
+                pmask_qSetBit(parent, 53); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value38: {
             retval = value38_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 54);
+                pmask_qSetBit(parent, 54); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value39: {
             retval = value39_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 55);
+                pmask_qSetBit(parent, 55); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value40: {
             retval = value40_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 56);
+                pmask_qSetBit(parent, 56); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value41: {
             retval = value41_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 57);
+                pmask_qSetBit(parent, 57); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value42: {
             retval = value42_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 58);
+                pmask_qSetBit(parent, 58); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value53: {
             retval = value53_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 59);
+                pmask_qSetBit(parent, 59); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value44: {
             retval = value44_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 60);
+                pmask_qSetBit(parent, 60); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value45: {
             retval = value45_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 61);
+                pmask_qSetBit(parent, 61); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value46: {
             retval = value46_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 62);
+                pmask_qSetBit(parent, 62); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value47: {
             retval = value47_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 63);
+                pmask_qSetBit(parent, 63); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value48: {
             retval = value48_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 64);
+                pmask_qSetBit(parent, 64); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value49: {
             retval = value49_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 65);
+                pmask_qSetBit(parent, 65); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value50: {
             retval = value50_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 66);
+                pmask_qSetBit(parent, 66); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value51: {
             retval = value51_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 67);
+                pmask_qSetBit(parent, 67); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value43: {
             retval = value43_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 68);
+                pmask_qSetBit(parent, 68); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value70: {
             retval = value70_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 69);
+                pmask_qSetBit(parent, 69); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value71: {
             retval = value71_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 70);
+                pmask_qSetBit(parent, 70); // mark presence in pmask
             }
         } break;
         default: {
@@ -16403,7 +22617,7 @@ void atf_amc::PmaskU128_Print(atf_amc::PmaskU128& row, algo::cstring& str) {
 }
 
 // --- atf_amc.PmaskU32.value.ReadStrptrMaybe
-inline static bool atf_amc::value_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value_ReadStrptrMaybe(atf_amc::PmaskU32& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value_tmp;
     retval = u32_ReadStrptrMaybe(value_tmp, in_str);
@@ -16414,7 +22628,7 @@ inline static bool atf_amc::value_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, alg
 }
 
 // --- atf_amc.PmaskU32.value2.ReadStrptrMaybe
-inline static bool atf_amc::value2_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value2_ReadStrptrMaybe(atf_amc::PmaskU32& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value2_tmp;
     retval = u32_ReadStrptrMaybe(value2_tmp, in_str);
@@ -16425,7 +22639,7 @@ inline static bool atf_amc::value2_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, al
 }
 
 // --- atf_amc.PmaskU32.value3.ReadStrptrMaybe
-inline static bool atf_amc::value3_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value3_ReadStrptrMaybe(atf_amc::PmaskU32& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value3_tmp;
     retval = u32_ReadStrptrMaybe(value3_tmp, in_str);
@@ -16436,7 +22650,7 @@ inline static bool atf_amc::value3_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, al
 }
 
 // --- atf_amc.PmaskU32.value4.ReadStrptrMaybe
-inline static bool atf_amc::value4_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value4_ReadStrptrMaybe(atf_amc::PmaskU32& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value4_tmp;
     retval = u32_ReadStrptrMaybe(value4_tmp, in_str);
@@ -16447,7 +22661,7 @@ inline static bool atf_amc::value4_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, al
 }
 
 // --- atf_amc.PmaskU32.value5.ReadStrptrMaybe
-inline static bool atf_amc::value5_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value5_ReadStrptrMaybe(atf_amc::PmaskU32& parent, algo::strptr in_str) {
     bool retval = true;
     u32 value5_tmp;
     retval = u32_ReadStrptrMaybe(value5_tmp, in_str);
@@ -16469,31 +22683,31 @@ bool atf_amc::PmaskU32_ReadFieldMaybe(atf_amc::PmaskU32& parent, algo::strptr fi
         case atf_amc_FieldId_value: {
             retval = value_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 0);
+                pmask_qSetBit(parent, 0); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value2: {
             retval = value2_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 1);
+                pmask_qSetBit(parent, 1); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value3: {
             retval = value3_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 2);
+                pmask_qSetBit(parent, 2); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value4: {
             retval = value4_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 3);
+                pmask_qSetBit(parent, 3); // mark presence in pmask
             }
         } break;
         case atf_amc_FieldId_value5: {
             retval = value5_ReadStrptrMaybe(parent, strval);
             if (retval) {
-                pmask_qSetBit(parent, 4);
+                pmask_qSetBit(parent, 4); // mark presence in pmask
             }
         } break;
         default: {
@@ -16656,7 +22870,7 @@ bool atf_amc::PooledBE64_ReadStrptrMaybe(atf_amc::PooledBE64 &parent, algo::strp
 // --- atf_amc.PooledBE64..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.PooledBE64.String  printfmt:Tuple
-void atf_amc::PooledBE64_Print(atf_amc::PooledBE64& row, algo::cstring& str) {
+void atf_amc::PooledBE64_Print(atf_amc::PooledBE64 row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf_amc.PooledBE64";
 
@@ -16737,16 +22951,19 @@ i64 atf_amc::ch_Geti64(atf_amc::RnullStr6_U32& parent, bool &out_ok) {
 
 // --- atf_amc.RnullStr6_U32.ch.SetnumMaybe
 // Set string to number specified in RHS performing base-10 conversion.
-// If the number is too large for the string, return false.
+// If the number is out of range for the numeric type,
+// or too large for the string, return false.
 bool atf_amc::ch_SetnumMaybe(atf_amc::RnullStr6_U32& parent, i64 rhs) {
-    char buf[128];
-    int length = 0;
-    int charpos = 64;
-    u64 val = rhs;
-    length = algo::u32_FmtBuf(val, (u8*)buf + charpos);
-    bool retval = length <= 6;
-    if (retval) {
-        ch_SetStrptr(parent, algo::strptr(buf + charpos, length));
+    bool retval = false;
+    if (rhs >= 0 && rhs <= 0XFFFFFFFF) {
+        char buf[128];
+        u64 val = rhs;
+        int charpos = 64;
+        int length = algo::u32_FmtBuf(val, (u8*)buf + charpos);
+        retval = length <= 6;
+        if (retval) {
+            ch_SetStrptr(parent, algo::strptr(buf + charpos, length));
+        }
     }
     return retval;
 }
@@ -16845,16 +23062,19 @@ i64 atf_amc::ch_Geti64(atf_amc::RpasU32Str6& parent, bool &out_ok) {
 
 // --- atf_amc.RpasU32Str6.ch.SetnumMaybe
 // Set string to number specified in RHS performing base-10 conversion.
-// If the number is too large for the string, return false.
+// If the number is out of range for the numeric type,
+// or too large for the string, return false.
 bool atf_amc::ch_SetnumMaybe(atf_amc::RpasU32Str6& parent, i64 rhs) {
-    char buf[128];
-    int length = 0;
-    int charpos = 64;
-    u64 val = rhs;
-    length = algo::u32_FmtBuf(val, (u8*)buf + charpos);
-    bool retval = length <= 6;
-    if (retval) {
-        ch_SetStrptr(parent, algo::strptr(buf + charpos, length));
+    bool retval = false;
+    if (rhs >= 0 && rhs <= 0XFFFFFFFF) {
+        char buf[128];
+        u64 val = rhs;
+        int charpos = 64;
+        int length = algo::u32_FmtBuf(val, (u8*)buf + charpos);
+        retval = length <= 6;
+        if (retval) {
+            ch_SetStrptr(parent, algo::strptr(buf + charpos, length));
+        }
     }
     return retval;
 }
@@ -16880,6 +23100,131 @@ bool atf_amc::RpasU32Str6_ReadStrptrMaybe(atf_amc::RpasU32Str6 &parent, algo::st
 // cfmt:atf_amc.RpasU32Str6.String  printfmt:Raw
 void atf_amc::RpasU32Str6_Print(atf_amc::RpasU32Str6& row, algo::cstring& str) {
     atf_amc::ch_Print(row, str);
+}
+
+// --- atf_amc.RspaceStr9.ch.Nextchar
+// Extract next character from STR and advance IDX
+inline static u64 atf_amc::ch_Nextchar(const atf_amc::RspaceStr9& parent, algo::strptr &str, int &idx) {
+    (void)parent;
+    int i = idx;
+    u64 ch = str.elems[i];
+    i++;
+    // detect number in string and eat it up into CH.
+    // (this only works for base-10 numbers
+    // Digits are sorted before chars
+    if (unsigned(ch - '0') < 10) {
+        while(i < str.n_elems) { // resulting char sorts before ascii 47
+            unsigned dig = str.elems[i] - '0';
+            if (dig >= 10) break;
+            ch = ch * 10 + dig;
+            i++;
+        }
+    } else if (ch > '9') {
+        // create space between '0'..'9' for 15-digit numbers
+        ch += 1000000000000000LL;
+    }
+    idx = i;
+    return ch;
+}
+
+// --- atf_amc.RspaceStr9.ch.Cmp
+// Compare two fields.
+// Comparison uses version sort (detect embedded integers).
+i32 atf_amc::ch_Cmp(atf_amc::RspaceStr9& parent, atf_amc::RspaceStr9 &rhs) {
+    i32 retval = 0;
+    int idx_a = 0;
+    int idx_b = 0;
+    algo::strptr str_a = ch_Getary(parent);
+    algo::strptr str_b = ch_Getary(rhs);
+    int n_a   = elems_N(str_a);
+    int n_b   = elems_N(str_b);
+    retval    = i32_Cmp(n_a,n_b);
+    while (idx_a < n_a && idx_b < n_b) {
+        u64 ch_a = ch_Nextchar(parent, str_a, idx_a);
+        u64 ch_b = ch_Nextchar(rhs, str_b, idx_b);
+        if (ch_a != ch_b) {
+            retval = (ch_a > ch_b)*2-1;
+            break;
+        }
+    }
+    return retval;
+}
+
+// --- atf_amc.RspaceStr9.ch.Print
+void atf_amc::ch_Print(atf_amc::RspaceStr9& parent, algo::cstring &out) {
+    ch_Addary(out, ch_Getary(parent));
+}
+
+// --- atf_amc.RspaceStr9.ch.SetStrptr
+// Copy from strptr, clipping length
+// Set string to the value provided by RHS.
+// If RHS is too large, it is silently clipped.
+void atf_amc::ch_SetStrptr(atf_amc::RspaceStr9& parent, const algo::strptr& rhs) {
+    int len = i32_Min(rhs.n_elems, 9);
+    char *rhs_elems = rhs.elems;
+    int i = 0;
+    int j = 0;
+    for (; i < len; i++, j++) {
+        parent.ch[j] = rhs_elems[i];
+    }
+    for (; j < 9; j++) {
+        parent.ch[j] = ' ';
+    }
+}
+
+// --- atf_amc.SentinelEnum.value.ToCstr
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+const char* atf_amc::value_ToCstr(const atf_amc::SentinelEnum& parent) {
+    const char *ret = NULL;
+    switch(value_GetEnum(parent)) {
+        case atf_amc_SentinelEnum_value_   : ret = "";  break;
+        case atf_amc_SentinelEnum_value_full: ret = "full";  break;
+    }
+    return ret;
+}
+
+// --- atf_amc.SentinelEnum.value.Print
+// Convert value to a string. First, attempt conversion to a known string.
+// If no string matches, print value as a numeric value.
+void atf_amc::value_Print(const atf_amc::SentinelEnum& parent, algo::cstring &lhs) {
+    const char *strval = value_ToCstr(parent);
+    if (strval) {
+        lhs << strval;
+    } else {
+        lhs << parent.value;
+    }
+}
+
+// --- atf_amc.SentinelEnum.value.SetStrptrMaybe
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+bool atf_amc::value_SetStrptrMaybe(atf_amc::SentinelEnum& parent, algo::strptr rhs) {
+    bool ret = false;
+    switch (elems_N(rhs)) {
+        case 0: {
+            value_SetEnum(parent,atf_amc_SentinelEnum_value_);
+            ret = true;
+            break;
+        }
+        case 4: {
+            switch (u64(algo::ReadLE32(rhs.elems))) {
+                case LE_STR4('f','u','l','l'): {
+                    value_SetEnum(parent,atf_amc_SentinelEnum_value_full); ret = true; break;
+                }
+            }
+            break;
+        }
+    }
+    return ret;
+}
+
+// --- atf_amc.SentinelEnum.value.SetStrptr
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+void atf_amc::value_SetStrptr(atf_amc::SentinelEnum& parent, algo::strptr rhs, atf_amc_SentinelEnum_value_Enum dflt) {
+    if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- atf_amc.Sep1..ReadFieldMaybe
@@ -16929,7 +23274,7 @@ bool atf_amc::Sep1_ReadStrptrMaybe(atf_amc::Sep1 &parent, algo::strptr in_str) {
 // --- atf_amc.Sep1..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.Sep1.String  printfmt:Sep
-void atf_amc::Sep1_Print(atf_amc::Sep1& row, algo::cstring& str) {
+void atf_amc::Sep1_Print(atf_amc::Sep1 row, algo::cstring& str) {
     u32_Print(row.val1, str);
     str << '-';
     u32_Print(row.val2, str);
@@ -16955,8 +23300,6 @@ algo::aryptr<u8> atf_amc::payload_Getary(atf_amc::Seqmsg& parent) {
 
 // --- atf_amc.Seqmsg.payload.Print
 void atf_amc::payload_Print(atf_amc::Seqmsg& parent, cstring &out) {
-    (void)out;
-    (void)parent;
     if (atf_amc::MsgHeader *payload = payload_Get(parent)) {
         atf_amc::MsgHeaderMsgs_Print(out, *payload, INT_MAX);
     }
@@ -17069,7 +23412,6 @@ inline static u64 atf_amc::vs_Nextchar(const atf_amc::SortedStr& parent, algo::s
 // --- atf_amc.SortedStr.vs.Cmp
 // Compare two fields.
 // Comparison uses version sort (detect embedded integers).
-// Comparison is case-insensitive.
 i32 atf_amc::vs_Cmp(atf_amc::SortedStr& parent, atf_amc::SortedStr &rhs) {
     i32 retval = 0;
     int idx_a = 0;
@@ -17164,6 +23506,250 @@ bool atf_amc::SsimfilesCase_ReadStrptrMaybe(atf_amc::SsimfilesCase &parent, algo
     return retval;
 }
 
+// --- atf_amc.Sslbuf.out.EndWrite
+// Send zero-byte write
+void atf_amc::out_EndWrite(atf_amc::Sslbuf& sslbuf) {
+    if (ValidQ(sslbuf.out_iohook.fildes)) {
+        // zero-byte write for remote side
+        ssize_t rc=write(sslbuf.out_iohook.fildes.value, "", 0);
+        (void)rc;
+    }
+}
+
+// --- atf_amc.Sslbuf.out.BeginAlloc
+// // Return pointer to a block of IN_N contiguous bytes in the buffer.
+// // No reallocation is performed. If not possible, return NULL.
+void* atf_amc::out_BeginAlloc(atf_amc::Sslbuf &sslbuf, i32 in_n) {
+    void *ret = NULL;
+    int max = out_Max(sslbuf);
+    if (sslbuf.out_end + in_n > max) {
+        out_Shift(sslbuf);
+    }
+    if (sslbuf.out_end + in_n <= max) {
+        ret = (u8*)sslbuf.out_elems + sslbuf.out_end;
+        sslbuf.out_end += in_n;
+        // schedule outflow
+        atf_amc::cd_sslbuf_out_Insert(sslbuf);
+    }
+    return ret;
+}
+
+// --- atf_amc.Sslbuf.out.BeginAllocReserve
+// // Return pointer to a block of IN_N contiguous bytes in the buffer.
+// // Buffer is reallocated as necessary; function always succeeds.
+void* atf_amc::out_BeginAllocReserve(atf_amc::Sslbuf &sslbuf, i32 in_n) {
+    if (sslbuf.out_end - sslbuf.out_start + in_n > out_Max(sslbuf)) {
+        out_Realloc(sslbuf, sslbuf.out_max + i32_Max(sslbuf.out_max, in_n));
+    }
+    return out_BeginAlloc(sslbuf, in_n);
+}
+
+// --- atf_amc.Sslbuf.out.BeginWrite
+// Attach fbuf to Iohook for writing
+// Attach file descriptor and begin outflowing buffer reading using edge-triggered epoll.
+// Whenever buffer is non-empty and fd is writable, insert sslbuf into cd_sslbuf_out.
+// User should implement a step function that calls out_Outflow.
+void atf_amc::out_BeginWrite(atf_amc::Sslbuf& sslbuf, algo::Fildes fd, bool nodelete) {
+    callback_Set1(sslbuf.out_iohook, sslbuf, atf_amc::cd_sslbuf_out_Insert);
+    if (nodelete) {
+        sslbuf.out_epoll_enable    = false; // cannot register fd twice -- disable epoll on shared fd
+        sslbuf.out_iohook.nodelete = true;
+    }
+    sslbuf.out_iohook.fildes    = fd;
+    IOEvtFlags flags;
+    write_Set(flags, true);
+    if (sslbuf.out_epoll_enable) {
+        algo_lib::IohookAdd(sslbuf.out_iohook, flags);
+    }
+}
+
+// --- atf_amc.Sslbuf.out.Realloc
+// Set buffer size.
+// Unconditionally reallocate buffer to have size NEW_MAX
+// If the buffer has data in it, NEW_MAX is adjusted so that the data is not lost
+// (best to call this before filling the buffer)
+void atf_amc::out_Realloc(atf_amc::Sslbuf& sslbuf, int new_max) {
+    new_max = i32_Max(new_max, sslbuf.out_end);
+    u8 *new_mem = sslbuf.out_elems
+    ? (u8*)algo_lib::malloc_ReallocMem(sslbuf.out_elems, sslbuf.out_max, new_max)
+    : (u8*)algo_lib::malloc_AllocMem(new_max);
+    if (UNLIKELY(!new_mem)) {
+        FatalErrorExit("atf_amc.fbuf_nomem  field:atf_amc.Sslbuf.out  comment:'out of memory'");
+    }
+    sslbuf.out_elems = new_mem;
+    sslbuf.out_max = new_max;
+}
+
+// --- atf_amc.Sslbuf.out.Outflow
+// Transfer bytes from buffer to fd using write()
+// Once all bytes are written or when fd buffer is full, buffer is automatically removed from cd_sslbuf_out list.
+// Edge-triggered epoll will re-insert out into cd_sslbuf_out.
+bool atf_amc::out_Outflow(atf_amc::Sslbuf& sslbuf) {
+    int  nwrite   = out_N(sslbuf);
+    int  start    = sslbuf.out_start;
+    int  nwritten;
+    if (sslbuf.out_ssl) {
+        if (nwrite > 0) {
+            nwritten = SSL_write(sslbuf.out_ssl, sslbuf.out_elems + start, nwrite);
+            int err = SSL_get_error(sslbuf.out_ssl,nwritten);
+            bool fdretry = err == SSL_ERROR_WANT_READ || err == SSL_ERROR_WANT_WRITE;
+            bool sslretry = fdretry || err == SSL_ERROR_WANT_CONNECT || err == SSL_ERROR_WANT_ACCEPT || err == SSL_ERROR_WANT_X509_LOOKUP;
+            bool good = nwritten > 0 || sslretry;
+            // retryable: clamp to 0 (keep polling); hard error: keep negative
+            // (with out_epoll_enable, the exit below then unschedules the buffer; a nodelete writer must handle out_err itself)
+            nwritten = good ? i32_Max(nwritten,0) : -1;
+            if (!good) {
+                sslbuf.out_err = algo::MakeErrcode(algo_Errns_ssl, err); // save error code
+            }
+        } else {
+            nwritten = 0; // nothing to write: SSL_write rejects a zero byte count
+        }
+    } else {
+        nwritten = nwrite > 0 ? write(sslbuf.out_iohook.fildes.value, sslbuf.out_elems + start, nwrite) : 0;
+        bool good     = nwritten >= 0 || errno == EAGAIN;
+        if (!good) {
+            sslbuf.out_err = algo::FromErrno(errno); // save error code
+        }
+    }
+    if (nwritten > 0) {
+        out_SkipBytes(sslbuf,nwritten); // skip written bytes
+    }
+    bool done = out_N(sslbuf)==0;
+    if (sslbuf.out_epoll_enable) {
+        done |= nwritten<0;
+    }
+    if (done) {
+        // done writing
+        atf_amc::cd_sslbuf_out_Remove(sslbuf);
+    }
+    return nwritten > 0;
+}
+
+// --- atf_amc.Sslbuf.out.RemoveAll
+// Empty bfufer
+// Discard contents of the buffer.
+void atf_amc::out_RemoveAll(atf_amc::Sslbuf& sslbuf) {
+    sslbuf.out_start    = 0;
+    sslbuf.out_end      = 0;
+    sslbuf.out_msgvalid = false;
+}
+
+// --- atf_amc.Sslbuf.out.Shift
+// Internal function to shift data left
+// Shift existing bytes over to the beginning of the buffer
+static void atf_amc::out_Shift(atf_amc::Sslbuf& sslbuf) {
+    i32 start = sslbuf.out_start;
+    i32 bytes_n = sslbuf.out_end - start;
+    if (bytes_n > 0) {
+        memmove(sslbuf.out_elems, sslbuf.out_elems + start, bytes_n);
+    }
+    sslbuf.out_end = bytes_n;
+    sslbuf.out_start = 0;
+}
+
+// --- atf_amc.Sslbuf.out.SkipBytes
+// Skip N bytes when reading
+// Mark some buffer contents as read.
+// 
+void atf_amc::out_SkipBytes(atf_amc::Sslbuf& sslbuf, int n) {
+    int avail = sslbuf.out_end - sslbuf.out_start;
+    n = i32_Min(n,avail);
+    sslbuf.out_start += n;
+    sslbuf.out_msgvalid = false;
+}
+
+// --- atf_amc.Sslbuf.out.SkipMsg
+// Skip current message, if any
+// Skip current message, if any.
+void atf_amc::out_SkipMsg(atf_amc::Sslbuf& sslbuf) {
+    if (sslbuf.out_msgvalid) {
+        int skip = sslbuf.out_msglen;
+        i32 start = sslbuf.out_start;
+        start += skip;
+        sslbuf.out_start = start;
+        sslbuf.out_msgvalid = false;
+        sslbuf.out_msglen   = 0; // reset message length -- important for delimited streams
+    }
+}
+
+// --- atf_amc.Sslbuf.out.WriteAll
+// Attempt to write buffer contents to fbuf, return success
+// Write bytes to the buffer. If the entire block is accepted, return true,
+// Otherwise return false.
+// Bytes in the buffer are potentially shifted left to make room for the message.
+// 
+bool atf_amc::out_WriteAll(atf_amc::Sslbuf& sslbuf, u8 *in, i32 in_n) {
+    int max = out_Max(sslbuf);
+    // check if message doesn't fit. if so, shift bytes over.
+    if (sslbuf.out_end + in_n > max) {
+        out_Shift(sslbuf);
+    }
+    // now try to write the message.
+    i32 end = sslbuf.out_end;
+    bool fits = end + in_n <= max;
+    if (fits) {
+        if (sslbuf.out_zerocopy && out_N(sslbuf)==0) {// in kernel bypass situations this is faster
+            int rc = sslbuf.out_ssl ? SSL_write(sslbuf.out_ssl, in, in_n)
+            : write(sslbuf.out_iohook.fildes.value, in, in_n);
+            if (rc >= 0) {
+                in += rc;
+                in_n -= rc;
+            }
+        }
+        if (in_n > 0) {
+            memcpy(sslbuf.out_elems + end, in, in_n);
+            sslbuf.out_end = end + in_n;
+            // schedule outflow
+            atf_amc::cd_sslbuf_out_Insert(sslbuf);
+        }
+    }
+    return fits;
+}
+
+// --- atf_amc.Sslbuf.out.WriteReserve
+// Write buffer contents to fbuf, reallocate as needed
+// Write bytes to the buffer. The entire block is always written or the program exits.
+void atf_amc::out_WriteReserve(atf_amc::Sslbuf& sslbuf, u8 *in, i32 in_n) {
+    if (sslbuf.out_end - sslbuf.out_start + in_n > out_Max(sslbuf)) {
+        out_Realloc(sslbuf, sslbuf.out_max + i32_Max(sslbuf.out_max, in_n));
+    }
+    if (!out_WriteAll(sslbuf, in, in_n)) {
+        FatalErrorExit("out: out of memory");
+    }
+}
+
+// --- atf_amc.Sslbuf..Init
+// Set all fields to initial values.
+void atf_amc::Sslbuf_Init(atf_amc::Sslbuf& sslbuf) {
+    sslbuf.out_elems = NULL; // out: initialize
+    sslbuf.out_max = 0; // out: initialize
+    sslbuf.out_end = 0; // out: initialize
+    sslbuf.out_start = 0; // out: initialize
+    sslbuf.out_eof = false; // out: initialize
+    sslbuf.out_zerocopy = false; // out: initialize
+    sslbuf.out_n_eagain = 0; // out: initialize
+    sslbuf.out_msgvalid = false; // out: initialize
+    sslbuf.out_msglen = 0; // out: initialize
+    sslbuf.out_epoll_enable = true; // out: initialize
+    sslbuf.out_ssl = NULL; // out: initialize
+    out_Realloc(sslbuf, 64);
+    sslbuf.cd_sslbuf_out_next = (atf_amc::Sslbuf*)-1; // (atf_amc.FDb.cd_sslbuf_out) not-in-list
+    sslbuf.cd_sslbuf_out_prev = NULL; // (atf_amc.FDb.cd_sslbuf_out)
+}
+
+// --- atf_amc.Sslbuf..Uninit
+void atf_amc::Sslbuf_Uninit(atf_amc::Sslbuf& sslbuf) {
+    atf_amc::Sslbuf &row = sslbuf; (void)row;
+    cd_sslbuf_out_Remove(row); // remove sslbuf from index cd_sslbuf_out
+
+    // atf_amc.Sslbuf.out.Uninit (Fbuf)  //Outbound byte buffer over TLS
+    if (sslbuf.out_elems) {
+        algo_lib::malloc_FreeMem(sslbuf.out_elems, sslbuf.out_max); // (atf_amc.Sslbuf.out) out_max is the byte size Realloc allocated
+    }
+    sslbuf.out_elems = NULL;
+    sslbuf.out_max = 0;
+}
+
 // --- atf_amc.Strkey..Uninit
 void atf_amc::Strkey_Uninit(atf_amc::Strkey& strkey) {
     atf_amc::Strkey &row = strkey; (void)row;
@@ -17178,6 +23764,7 @@ const char* atf_amc::value_ToCstr(const atf_amc::TableId& parent) {
     switch(value_GetEnum(parent)) {
         case atf_amc_TableId_atf_amc_TypeS : ret = "atf_amc.TypeS";  break;
         case atf_amc_TableId_atf_amc_TypeT : ret = "atf_amc.TypeT";  break;
+        case atf_amc_TableId_atf_amc_TypeU : ret = "atf_amc.TypeU";  break;
     }
     return ret;
 }
@@ -17206,6 +23793,7 @@ bool atf_amc::value_SetStrptrMaybe(atf_amc::TableId& parent, algo::strptr rhs) {
                 case LE_STR8('a','t','f','_','a','m','c','.'): {
                     if (memcmp(rhs.elems+8,"TypeS",5)==0) { value_SetEnum(parent,atf_amc_TableId_atf_amc_TypeS); ret = true; break; }
                     if (memcmp(rhs.elems+8,"TypeT",5)==0) { value_SetEnum(parent,atf_amc_TableId_atf_amc_TypeT); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"TypeU",5)==0) { value_SetEnum(parent,atf_amc_TableId_atf_amc_TypeU); ret = true; break; }
                     break;
                 }
             }
@@ -17245,7 +23833,7 @@ bool atf_amc::TableId_ReadStrptrMaybe(atf_amc::TableId &parent, algo::strptr in_
 // --- atf_amc.TableId..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.TableId.String  printfmt:Raw
-void atf_amc::TableId_Print(atf_amc::TableId& row, algo::cstring& str) {
+void atf_amc::TableId_Print(atf_amc::TableId row, algo::cstring& str) {
     atf_amc::value_Print(row, str);
 }
 
@@ -17258,9 +23846,9 @@ algo::aryptr<u32> atf_amc::tary_u32_Addary(atf_amc::TaryU32& parent, algo::arypt
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("atf_amc.tary_alias  field:atf_amc.TaryU32.tary_u32  comment:'alias error: sub-array is being appended to the whole'");
     }
-    int nnew = rhs.n_elems;
+    i64 nnew = rhs.n_elems;
     tary_u32_Reserve(parent, nnew); // reserve space
-    int at = parent.tary_u32_n;
+    i64 at = parent.tary_u32_n;
     memcpy(parent.tary_u32_elems + at, rhs.elems, nnew * sizeof(u32));
     parent.tary_u32_n += nnew;
     return algo::aryptr<u32>(parent.tary_u32_elems + at, nnew);
@@ -17271,8 +23859,8 @@ algo::aryptr<u32> atf_amc::tary_u32_Addary(atf_amc::TaryU32& parent, algo::arypt
 // The new element is initialized to a default value
 u32& atf_amc::tary_u32_Alloc(atf_amc::TaryU32& parent) {
     tary_u32_Reserve(parent, 1);
-    int n  = parent.tary_u32_n;
-    int at = n;
+    i64 n  = parent.tary_u32_n;
+    i64 at = n;
     u32 *elems = parent.tary_u32_elems;
     new (elems + at) u32(44); // construct new element, default initializer
     parent.tary_u32_n = n+1;
@@ -17282,9 +23870,9 @@ u32& atf_amc::tary_u32_Alloc(atf_amc::TaryU32& parent) {
 // --- atf_amc.TaryU32.tary_u32.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-u32& atf_amc::tary_u32_AllocAt(atf_amc::TaryU32& parent, int at) {
+u32& atf_amc::tary_u32_AllocAt(atf_amc::TaryU32& parent, i64 at) {
     tary_u32_Reserve(parent, 1);
-    int n  = parent.tary_u32_n;
+    i64 n  = parent.tary_u32_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
         FatalErrorExit("atf_amc.bad_alloc_at  field:atf_amc.TaryU32.tary_u32  comment:'index out of range'");
     }
@@ -17297,12 +23885,12 @@ u32& atf_amc::tary_u32_AllocAt(atf_amc::TaryU32& parent, int at) {
 
 // --- atf_amc.TaryU32.tary_u32.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<u32> atf_amc::tary_u32_AllocN(atf_amc::TaryU32& parent, int n_elems) {
+algo::aryptr<u32> atf_amc::tary_u32_AllocN(atf_amc::TaryU32& parent, i64 n_elems) {
     tary_u32_Reserve(parent, n_elems);
-    int old_n  = parent.tary_u32_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = parent.tary_u32_n;
+    i64 new_n = old_n + n_elems;
     u32 *elems = parent.tary_u32_elems;
-    for (int i = old_n; i < new_n; i++) {
+    for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) u32(44); // construct new element, default initialize
     }
     parent.tary_u32_n = new_n;
@@ -17313,15 +23901,15 @@ algo::aryptr<u32> atf_amc::tary_u32_AllocN(atf_amc::TaryU32& parent, int n_elems
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::aryptr<u32> atf_amc::tary_u32_AllocNAt(atf_amc::TaryU32& parent, int n_elems, int at) {
+algo::aryptr<u32> atf_amc::tary_u32_AllocNAt(atf_amc::TaryU32& parent, i64 n_elems, i64 at) {
     tary_u32_Reserve(parent, n_elems);
-    int n  = parent.tary_u32_n;
+    i64 n  = parent.tary_u32_n;
     if (UNLIKELY(u64(at) > u64(n))) {
         FatalErrorExit("atf_amc.bad_alloc_n_at  field:atf_amc.TaryU32.tary_u32  comment:'index out of range'");
     }
     u32 *elems = parent.tary_u32_elems;
     memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(u32));
-    for (int i = 0; i < n_elems; i++) {
+    for (i64 i = 0; i < n_elems; i++) {
         new (elems + at + i) u32(44); // construct new element, default initialize
     }
     parent.tary_u32_n = n+n_elems;
@@ -17330,8 +23918,8 @@ algo::aryptr<u32> atf_amc::tary_u32_AllocNAt(atf_amc::TaryU32& parent, int n_ele
 
 // --- atf_amc.TaryU32.tary_u32.Remove
 // Remove item by index. If index outside of range, do nothing.
-void atf_amc::tary_u32_Remove(atf_amc::TaryU32& parent, u32 i) {
-    u32 lim = parent.tary_u32_n;
+void atf_amc::tary_u32_Remove(atf_amc::TaryU32& parent, u64 i) {
+    u64 lim = parent.tary_u32_n;
     u32 *elems = parent.tary_u32_elems;
     if (i < lim) {
         memmove(elems + i, elems + (i + 1), sizeof(u32) * (lim - (i + 1)));
@@ -17351,10 +23939,10 @@ void atf_amc::tary_u32_RemoveLast(atf_amc::TaryU32& parent) {
 
 // --- atf_amc.TaryU32.tary_u32.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void atf_amc::tary_u32_AbsReserve(atf_amc::TaryU32& parent, int n) {
-    u32 old_max  = parent.tary_u32_max;
-    if (n > i32(old_max)) {
-        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+void atf_amc::tary_u32_AbsReserve(atf_amc::TaryU32& parent, i64 n) {
+    u64 old_max  = parent.tary_u32_max;
+    if (n > i64(old_max)) {
+        u64 new_max  = i64_Max(i64_Max(old_max * 2, n), 4);
         void *new_mem = algo_lib::malloc_ReallocMem(parent.tary_u32_elems, old_max * sizeof(u32), new_max * sizeof(u32));
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("atf_amc.tary_nomem  field:atf_amc.TaryU32.tary_u32  comment:'out of memory'");
@@ -17368,9 +23956,9 @@ void atf_amc::tary_u32_AbsReserve(atf_amc::TaryU32& parent, int n) {
 // Copy contents of RHS to PARENT.
 void atf_amc::tary_u32_Setary(atf_amc::TaryU32& parent, atf_amc::TaryU32 &rhs) {
     tary_u32_RemoveAll(parent);
-    int nnew = rhs.tary_u32_n;
+    i64 nnew = rhs.tary_u32_n;
     tary_u32_Reserve(parent, nnew); // reserve space
-    for (int i = 0; i < nnew; i++) { // copy elements over
+    for (i64 i = 0; i < nnew; i++) { // copy elements over
         new (parent.tary_u32_elems + i) u32(tary_u32_qFind(rhs, i));
         parent.tary_u32_n = i + 1;
     }
@@ -17386,12 +23974,12 @@ void atf_amc::tary_u32_Setary(atf_amc::TaryU32& parent, const algo::aryptr<u32> 
 
 // --- atf_amc.TaryU32.tary_u32.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<u32> atf_amc::tary_u32_AllocNVal(atf_amc::TaryU32& parent, int n_elems, const u32& val) {
+algo::aryptr<u32> atf_amc::tary_u32_AllocNVal(atf_amc::TaryU32& parent, i64 n_elems, const u32& val) {
     tary_u32_Reserve(parent, n_elems);
-    int old_n  = parent.tary_u32_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = parent.tary_u32_n;
+    i64 new_n = old_n + n_elems;
     u32 *elems = parent.tary_u32_elems;
-    for (int i = old_n; i < new_n; i++) {
+    for (i64 i = old_n; i < new_n; i++) {
         new (elems + i) u32(val);
     }
     parent.tary_u32_n = new_n;
@@ -17415,20 +24003,35 @@ bool atf_amc::tary_u32_ReadStrptrMaybe(atf_amc::TaryU32& parent, algo::strptr in
 // --- atf_amc.TaryU32.tary_u32.Insary
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-void atf_amc::tary_u32_Insary(atf_amc::TaryU32& parent, algo::aryptr<u32> rhs, int at) {
+void atf_amc::tary_u32_Insary(atf_amc::TaryU32& parent, algo::aryptr<u32> rhs, i64 at) {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.tary_u32_elems && rhs.elems < parent.tary_u32_elems + parent.tary_u32_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("atf_amc.tary_alias  field:atf_amc.TaryU32.tary_u32  comment:'alias error: sub-array is being appended to the whole'");
     }
-    if (UNLIKELY(u64(at) >= u64(parent.tary_u32_elems+1))) {
+    if (UNLIKELY(u64(at) >= u64(parent.tary_u32_n+1))) {
         FatalErrorExit("atf_amc.bad_insary  field:atf_amc.TaryU32.tary_u32  comment:'index out of range'");
     }
-    int nnew = rhs.n_elems;
-    int nmove = parent.tary_u32_n - at;
+    i64 nnew = rhs.n_elems;
+    i64 nmove = parent.tary_u32_n - at;
     tary_u32_Reserve(parent, nnew); // reserve space
     memmove(parent.tary_u32_elems + at + nnew, parent.tary_u32_elems + at, nmove * sizeof(u32));
     memcpy(parent.tary_u32_elems + at, rhs.elems, nnew * sizeof(u32));
     parent.tary_u32_n += nnew;
+}
+
+// --- atf_amc.TaryU32.tary_u32.RemRegion
+// Delete a range of elements
+// Remove region from the middle of the array
+// The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
+// If N is negative, nothing is removed.
+void atf_amc::tary_u32_RemRegion(atf_amc::TaryU32& parent, i64 beg, i64 n) {
+    i64 end = i64_Min(beg+n, parent.tary_u32_n);
+    beg = i64_Max(beg,0);
+    n = end-beg;
+    if (n>0) {
+        memmove(parent.tary_u32_elems+beg, parent.tary_u32_elems+end, sizeof(u32) * (parent.tary_u32_n-end));
+        parent.tary_u32_n -= n;
+    }
 }
 
 // --- atf_amc.TaryU32..Uninit
@@ -17456,6 +24059,17 @@ atf_amc::TaryU32& atf_amc::TaryU32::operator =(const atf_amc::TaryU32 &rhs) {
     tary_u32_Setary(*this, tary_u32_Getary(const_cast<atf_amc::TaryU32&>(rhs)));
 }
 
+// --- atf_amc.TaryU8.ary.BeginAlloc
+void* atf_amc::ary_BeginAlloc(atf_amc::TaryU8 &parent, i64 len) {
+    ary_RemoveAll(parent); // clear array
+    return ary_AllocN(parent,len).elems;
+}
+
+// --- atf_amc.TaryU8.ary.BeginAllocAppend
+void* atf_amc::ary_BeginAllocAppend(atf_amc::TaryU8 &parent, i64 len) {
+    return ary_AllocN(parent,len).elems;
+}
+
 // --- atf_amc.TaryU8.ary.Addary
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
@@ -17465,9 +24079,9 @@ algo::aryptr<u8> atf_amc::ary_Addary(atf_amc::TaryU8& parent, algo::aryptr<u8> r
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("atf_amc.tary_alias  field:atf_amc.TaryU8.ary  comment:'alias error: sub-array is being appended to the whole'");
     }
-    int nnew = rhs.n_elems;
+    i64 nnew = rhs.n_elems;
     ary_Reserve(parent, nnew); // reserve space
-    int at = parent.ary_n;
+    i64 at = parent.ary_n;
     memcpy(parent.ary_elems + at, rhs.elems, nnew * sizeof(u8));
     parent.ary_n += nnew;
     return algo::aryptr<u8>(parent.ary_elems + at, nnew);
@@ -17478,8 +24092,8 @@ algo::aryptr<u8> atf_amc::ary_Addary(atf_amc::TaryU8& parent, algo::aryptr<u8> r
 // The new element is initialized to a default value
 u8& atf_amc::ary_Alloc(atf_amc::TaryU8& parent) {
     ary_Reserve(parent, 1);
-    int n  = parent.ary_n;
-    int at = n;
+    i64 n  = parent.ary_n;
+    i64 at = n;
     u8 *elems = parent.ary_elems;
     new (elems + at) u8(44); // construct new element, default initializer
     parent.ary_n = n+1;
@@ -17489,9 +24103,9 @@ u8& atf_amc::ary_Alloc(atf_amc::TaryU8& parent) {
 // --- atf_amc.TaryU8.ary.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-u8& atf_amc::ary_AllocAt(atf_amc::TaryU8& parent, int at) {
+u8& atf_amc::ary_AllocAt(atf_amc::TaryU8& parent, i64 at) {
     ary_Reserve(parent, 1);
-    int n  = parent.ary_n;
+    i64 n  = parent.ary_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
         FatalErrorExit("atf_amc.bad_alloc_at  field:atf_amc.TaryU8.ary  comment:'index out of range'");
     }
@@ -17504,10 +24118,10 @@ u8& atf_amc::ary_AllocAt(atf_amc::TaryU8& parent, int at) {
 
 // --- atf_amc.TaryU8.ary.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<u8> atf_amc::ary_AllocN(atf_amc::TaryU8& parent, int n_elems) {
+algo::aryptr<u8> atf_amc::ary_AllocN(atf_amc::TaryU8& parent, i64 n_elems) {
     ary_Reserve(parent, n_elems);
-    int old_n  = parent.ary_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = parent.ary_n;
+    i64 new_n = old_n + n_elems;
     u8 *elems = parent.ary_elems;
     memset(elems + old_n, 44, new_n - old_n); // initialize new space
     parent.ary_n = new_n;
@@ -17518,9 +24132,9 @@ algo::aryptr<u8> atf_amc::ary_AllocN(atf_amc::TaryU8& parent, int n_elems) {
 // Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::aryptr<u8> atf_amc::ary_AllocNAt(atf_amc::TaryU8& parent, int n_elems, int at) {
+algo::aryptr<u8> atf_amc::ary_AllocNAt(atf_amc::TaryU8& parent, i64 n_elems, i64 at) {
     ary_Reserve(parent, n_elems);
-    int n  = parent.ary_n;
+    i64 n  = parent.ary_n;
     if (UNLIKELY(u64(at) > u64(n))) {
         FatalErrorExit("atf_amc.bad_alloc_n_at  field:atf_amc.TaryU8.ary  comment:'index out of range'");
     }
@@ -17533,8 +24147,8 @@ algo::aryptr<u8> atf_amc::ary_AllocNAt(atf_amc::TaryU8& parent, int n_elems, int
 
 // --- atf_amc.TaryU8.ary.Remove
 // Remove item by index. If index outside of range, do nothing.
-void atf_amc::ary_Remove(atf_amc::TaryU8& parent, u32 i) {
-    u32 lim = parent.ary_n;
+void atf_amc::ary_Remove(atf_amc::TaryU8& parent, u64 i) {
+    u64 lim = parent.ary_n;
     u8 *elems = parent.ary_elems;
     if (i < lim) {
         memmove(elems + i, elems + (i + 1), sizeof(u8) * (lim - (i + 1)));
@@ -17554,10 +24168,10 @@ void atf_amc::ary_RemoveLast(atf_amc::TaryU8& parent) {
 
 // --- atf_amc.TaryU8.ary.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void atf_amc::ary_AbsReserve(atf_amc::TaryU8& parent, int n) {
-    u32 old_max  = parent.ary_max;
-    if (n > i32(old_max)) {
-        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+void atf_amc::ary_AbsReserve(atf_amc::TaryU8& parent, i64 n) {
+    u64 old_max  = parent.ary_max;
+    if (n > i64(old_max)) {
+        u64 new_max  = i64_Max(i64_Max(old_max * 2, n), 4);
         void *new_mem = algo_lib::malloc_ReallocMem(parent.ary_elems, old_max * sizeof(u8), new_max * sizeof(u8));
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("atf_amc.tary_nomem  field:atf_amc.TaryU8.ary  comment:'out of memory'");
@@ -17578,7 +24192,7 @@ void atf_amc::ary_Print(atf_amc::TaryU8& parent, algo::cstring &rhs) {
 // Copy contents of RHS to PARENT.
 void atf_amc::ary_Setary(atf_amc::TaryU8& parent, atf_amc::TaryU8 &rhs) {
     ary_RemoveAll(parent);
-    int nnew = rhs.ary_n;
+    i64 nnew = rhs.ary_n;
     ary_Reserve(parent, nnew); // reserve space
     memcpy(parent.ary_elems, rhs.ary_elems, nnew * sizeof(u8));
     parent.ary_n = nnew;
@@ -17594,10 +24208,10 @@ void atf_amc::ary_Setary(atf_amc::TaryU8& parent, const algo::aryptr<u8> &rhs) {
 
 // --- atf_amc.TaryU8.ary.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<u8> atf_amc::ary_AllocNVal(atf_amc::TaryU8& parent, int n_elems, const u8& val) {
+algo::aryptr<u8> atf_amc::ary_AllocNVal(atf_amc::TaryU8& parent, i64 n_elems, const u8& val) {
     ary_Reserve(parent, n_elems);
-    int old_n  = parent.ary_n;
-    int new_n = old_n + n_elems;
+    i64 old_n  = parent.ary_n;
+    i64 new_n = old_n + n_elems;
     u8 *elems = parent.ary_elems;
     memset(elems + old_n, val, new_n - old_n); // initialize new space
     parent.ary_n = new_n;
@@ -17616,20 +24230,35 @@ bool atf_amc::ary_ReadStrptrMaybe(atf_amc::TaryU8& parent, algo::strptr in_str) 
 // --- atf_amc.TaryU8.ary.Insary
 // Insert array at specific position
 // Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-void atf_amc::ary_Insary(atf_amc::TaryU8& parent, algo::aryptr<u8> rhs, int at) {
+void atf_amc::ary_Insary(atf_amc::TaryU8& parent, algo::aryptr<u8> rhs, i64 at) {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.ary_elems && rhs.elems < parent.ary_elems + parent.ary_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("atf_amc.tary_alias  field:atf_amc.TaryU8.ary  comment:'alias error: sub-array is being appended to the whole'");
     }
-    if (UNLIKELY(u64(at) >= u64(parent.ary_elems+1))) {
+    if (UNLIKELY(u64(at) >= u64(parent.ary_n+1))) {
         FatalErrorExit("atf_amc.bad_insary  field:atf_amc.TaryU8.ary  comment:'index out of range'");
     }
-    int nnew = rhs.n_elems;
-    int nmove = parent.ary_n - at;
+    i64 nnew = rhs.n_elems;
+    i64 nmove = parent.ary_n - at;
     ary_Reserve(parent, nnew); // reserve space
     memmove(parent.ary_elems + at + nnew, parent.ary_elems + at, nmove * sizeof(u8));
     memcpy(parent.ary_elems + at, rhs.elems, nnew * sizeof(u8));
     parent.ary_n += nnew;
+}
+
+// --- atf_amc.TaryU8.ary.RemRegion
+// Delete a range of elements
+// Remove region from the middle of the array
+// The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
+// If N is negative, nothing is removed.
+void atf_amc::ary_RemRegion(atf_amc::TaryU8& parent, i64 beg, i64 n) {
+    i64 end = i64_Min(beg+n, parent.ary_n);
+    beg = i64_Max(beg,0);
+    n = end-beg;
+    if (n>0) {
+        memmove(parent.ary_elems+beg, parent.ary_elems+end, sizeof(u8) * (parent.ary_n-end));
+        parent.ary_n -= n;
+    }
 }
 
 // --- atf_amc.TaryU8..Uninit
@@ -17861,32 +24490,32 @@ bool atf_amc::TypeB_ReadStrptrMaybe(atf_amc::TypeB &parent, algo::strptr in_str)
 // --- atf_amc.TypeB..FmtJson
 // Create JSON representation of atf_amc::TypeB under PARENT node
 // cfmt:atf_amc.TypeB.Json  printfmt:Auto
-lib_json::FNode * atf_amc::TypeB_FmtJson(atf_amc::TypeB& row, lib_json::FNode *parent) {
-    lib_json::FNode *object_node = &lib_json::node_Alloc();
-    object_node->p_parent = parent?parent:object_node;
-    object_node->type   = lib_json_FNode_type_object;
-    node_XrefMaybe(*object_node);
+lib_json::FNode * atf_amc::TypeB_FmtJson(atf_amc::TypeB row, lib_json::FNode *parent) {
+    lib_json::FNode *objnode = &lib_json::node_Alloc();
+    objnode->p_parent = parent?parent:objnode;
+    objnode->type   = lib_json_FNode_type_object;
+    node_XrefMaybe(*objnode);
 
-    lib_json::FNode *typea_field_node = &lib_json::node_Alloc();
-    typea_field_node->p_parent = object_node;
-    typea_field_node->type   = lib_json_FNode_type_field;
-    typea_field_node->value  = "typea";
-    node_XrefMaybe(*typea_field_node);
-    i32_FmtJson(const_cast<atf_amc::TypeB&>(row).typea,typea_field_node);
+    lib_json::FNode *typea_node = &lib_json::node_Alloc();
+    typea_node->p_parent = objnode;
+    typea_node->type   = lib_json_FNode_type_field;
+    typea_node->value  = "typea";
+    node_XrefMaybe(*typea_node);
+    i32_FmtJson(row.typea,typea_node);
 
-    lib_json::FNode *j_field_node = &lib_json::node_Alloc();
-    j_field_node->p_parent = object_node;
-    j_field_node->type   = lib_json_FNode_type_field;
-    j_field_node->value  = "j";
-    node_XrefMaybe(*j_field_node);
-    i32_FmtJson(const_cast<atf_amc::TypeB&>(row).j,j_field_node);
-    return object_node;
+    lib_json::FNode *j_node = &lib_json::node_Alloc();
+    j_node->p_parent = objnode;
+    j_node->type   = lib_json_FNode_type_field;
+    j_node->value  = "j";
+    node_XrefMaybe(*j_node);
+    i32_FmtJson(row.j,j_node);
+    return objnode;
 }
 
 // --- atf_amc.TypeB..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.TypeB.String  printfmt:Tuple
-void atf_amc::TypeB_Print(atf_amc::TypeB& row, algo::cstring& str) {
+void atf_amc::TypeB_Print(atf_amc::TypeB row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf_amc.TypeB";
 
@@ -18010,12 +24639,12 @@ bool atf_amc::TypeBE32en_ReadTupleMaybe(atf_amc::TypeBE32en &parent, algo::Tuple
 // --- atf_amc.TypeBE32en..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.TypeBE32en.String  printfmt:Raw
-void atf_amc::TypeBE32en_Print(atf_amc::TypeBE32en& row, algo::cstring& str) {
+void atf_amc::TypeBE32en_Print(atf_amc::TypeBE32en row, algo::cstring& str) {
     atf_amc::value_Print(row, str);
 }
 
 // --- atf_amc.TypeBE64.value.ReadStrptrMaybe
-inline static bool atf_amc::value_ReadStrptrMaybe(atf_amc::TypeBE64 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value_ReadStrptrMaybe(atf_amc::TypeBE64& parent, algo::strptr in_str) {
     bool retval = true;
     u64 value_tmp;
     retval = u64_ReadStrptrMaybe(value_tmp, in_str);
@@ -18070,7 +24699,7 @@ bool atf_amc::TypeBE64_ReadTupleMaybe(atf_amc::TypeBE64 &parent, algo::Tuple &tu
 // --- atf_amc.TypeBE64..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.TypeBE64.String  printfmt:Raw
-void atf_amc::TypeBE64_Print(atf_amc::TypeBE64& row, algo::cstring& str) {
+void atf_amc::TypeBE64_Print(atf_amc::TypeBE64 row, algo::cstring& str) {
     u64_Print(value_Get(row), str);
 }
 
@@ -18086,7 +24715,7 @@ bool atf_amc::TypeC_ReadStrptrMaybe(atf_amc::TypeC &parent, algo::strptr in_str)
 // --- atf_amc.TypeC..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.TypeC.String  printfmt:Raw
-void atf_amc::TypeC_Print(atf_amc::TypeC& row, algo::cstring& str) {
+void atf_amc::TypeC_Print(atf_amc::TypeC row, algo::cstring& str) {
     i32_Print(row.typec, str);
 }
 
@@ -18102,7 +24731,7 @@ bool atf_amc::TypeH_ReadStrptrMaybe(atf_amc::TypeH &parent, algo::strptr in_str)
 // --- atf_amc.TypeH..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.TypeH.String  printfmt:Raw
-void atf_amc::TypeH_Print(atf_amc::TypeH& row, algo::cstring& str) {
+void atf_amc::TypeH_Print(atf_amc::TypeH row, algo::cstring& str) {
     i32_Print(row.typeh, str);
 }
 
@@ -18193,7 +24822,7 @@ bool atf_amc::TypeT_ReadStrptrMaybe(atf_amc::TypeT &parent, algo::strptr in_str)
 // --- atf_amc.TypeT..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.TypeT.String  printfmt:Tuple
-void atf_amc::TypeT_Print(atf_amc::TypeT& row, algo::cstring& str) {
+void atf_amc::TypeT_Print(atf_amc::TypeT row, algo::cstring& str) {
     algo::tempstr temp;
     str << "atf_amc.TypeT";
 
@@ -18251,6 +24880,55 @@ void atf_amc::TypeTVal_Print(atf_amc::TypeTVal& row, algo::cstring& str) {
 
     i32_Print(row.j, temp);
     PrintAttrSpaceReset(str,"j", temp);
+}
+
+// --- atf_amc.TypeU..ReadFieldMaybe
+bool atf_amc::TypeU_ReadFieldMaybe(atf_amc::TypeU& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    atf_amc::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case atf_amc_FieldId_u: {
+            retval = i32_ReadStrptrMaybe(parent.u, strval);
+        } break;
+        case atf_amc_FieldId_v: {
+            retval = i32_ReadStrptrMaybe(parent.v, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- atf_amc.TypeU..ReadStrptrMaybe
+// Read fields of atf_amc::TypeU from an ascii string.
+// The format of the string is an ssim Tuple
+bool atf_amc::TypeU_ReadStrptrMaybe(atf_amc::TypeU &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "atf_amc.TypeU");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && TypeU_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- atf_amc.TypeU..Print
+// print string representation of ROW to string STR
+// cfmt:atf_amc.TypeU.String  printfmt:Tuple
+void atf_amc::TypeU_Print(atf_amc::TypeU row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "atf_amc.TypeU";
+
+    i32_Print(row.u, temp);
+    PrintAttrSpaceReset(str,"u", temp);
+
+    i32_Print(row.v, temp);
+    PrintAttrSpaceReset(str,"v", temp);
 }
 
 // --- atf_amc.Typefconst.value.ToCstr
@@ -18362,7 +25040,7 @@ bool atf_amc::Typefconst_ReadTupleMaybe(atf_amc::Typefconst &parent, algo::Tuple
 // --- atf_amc.Typefconst..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.Typefconst.String  printfmt:Raw
-void atf_amc::Typefconst_Print(atf_amc::Typefconst& row, algo::cstring& str) {
+void atf_amc::Typefconst_Print(atf_amc::Typefconst row, algo::cstring& str) {
     atf_amc::value_Print(row, str);
 }
 
@@ -18962,7 +25640,7 @@ bool atf_amc::v1_ReadStrptrMaybe(atf_amc::Varlen2vMsg& parent, algo::strptr in_s
         algo_lib::_db.varlenbuf = &varlenbuf;
         retval = atf_amc::VarlenK_ReadStrptrMaybe(*v1_tmp, in_str);
         algo_lib::_db.varlenbuf = varlenbuf_save;
-        (*v1_tmp).length = atf_amc::MsgLength(sizeof(atf_amc::VarlenK)+ary_N(varlenbuf));
+        (*v1_tmp).length = u32(sizeof(atf_amc::VarlenK)+ary_N(varlenbuf));
         ary_Insary(*algo_lib::_db.varlenbuf,varlenbuf,parent.v1_end+sizeof(atf_amc::VarlenK));
         incr += ary_N(varlenbuf);
         parent.v1_end = atf_amc::MsgLength(parent.v1_end + incr);
@@ -19003,7 +25681,7 @@ bool atf_amc::v2_ReadStrptrMaybe(atf_amc::Varlen2vMsg& parent, algo::strptr in_s
         algo_lib::_db.varlenbuf = &varlenbuf;
         retval = atf_amc::VarlenK_ReadStrptrMaybe(*v2_tmp, in_str);
         algo_lib::_db.varlenbuf = varlenbuf_save;
-        (*v2_tmp).length = atf_amc::MsgLength(sizeof(atf_amc::VarlenK)+ary_N(varlenbuf));
+        (*v2_tmp).length = u32(sizeof(atf_amc::VarlenK)+ary_N(varlenbuf));
         ary_Insary(*algo_lib::_db.varlenbuf,varlenbuf,parent.v2_end+sizeof(atf_amc::VarlenK));
         incr += ary_N(varlenbuf);
         parent.v2_end = atf_amc::MsgLength(parent.v2_end + incr);
@@ -19033,7 +25711,7 @@ bool atf_amc::v3_ReadStrptrMaybe(atf_amc::Varlen2vMsg& parent, algo::strptr in_s
         algo_lib::_db.varlenbuf = &varlenbuf;
         retval = atf_amc::VarlenK_ReadStrptrMaybe(*v3_tmp, in_str);
         algo_lib::_db.varlenbuf = varlenbuf_save;
-        (*v3_tmp).length = atf_amc::MsgLength(sizeof(atf_amc::VarlenK)+ary_N(varlenbuf));
+        (*v3_tmp).length = u32(sizeof(atf_amc::VarlenK)+ary_N(varlenbuf));
         ary_Addary(*algo_lib::_db.varlenbuf,varlenbuf);
     }
     (void)parent;//only to avoid -Wunused-parameter
@@ -19131,6 +25809,168 @@ i32* atf_amc::elem_Addr(atf_amc::VarlenAlloc& varlenalloc) {
     return (i32*)((u8*)&varlenalloc + sizeof(atf_amc::VarlenAlloc)); // address of varlen portion
 }
 
+// --- atf_amc.VarlenAllocScale.elem.Getary
+// Access var-length portion as an aryptr. Length is determined from one of the fields.
+algo::aryptr<i32> atf_amc::elem_Getary(atf_amc::VarlenAllocScale& varlenallocscale) {
+    return algo::aryptr<i32>(elem_Addr(varlenallocscale), elem_N(varlenallocscale));
+}
+
+// --- atf_amc.VarlenAllocScale.elem.Addr
+i32* atf_amc::elem_Addr(atf_amc::VarlenAllocScale& varlenallocscale) {
+    return (i32*)((u8*)&varlenallocscale + sizeof(atf_amc::VarlenAllocScale)); // address of varlen portion
+}
+
+// --- atf_amc.VarlenAllocU64.a.Getary
+// Access var-length portion as an aryptr. Length is determined from one of the fields.
+algo::aryptr<char> atf_amc::a_Getary(atf_amc::VarlenAllocU64& parent) {
+    return algo::aryptr<char>(a_Addr(parent), a_N(parent));
+}
+
+// --- atf_amc.VarlenAllocU64.a.Addr
+char* atf_amc::a_Addr(atf_amc::VarlenAllocU64& parent) {
+    return (char*)((u8*)&parent + sizeof(atf_amc::VarlenAllocU64)); // address of varlen portion
+}
+
+// --- atf_amc.VarlenAllocU64.a.Print
+// Convert a to a string.
+// Array is printed as a regular string.
+void atf_amc::a_Print(atf_amc::VarlenAllocU64& parent, algo::cstring &rhs) {
+    rhs << a_Getary(parent);
+}
+
+// --- atf_amc.VarlenAllocU64.b.Getary
+// Access var-length portion as an aryptr. Length is determined from one of the fields.
+algo::aryptr<char> atf_amc::b_Getary(atf_amc::VarlenAllocU64& parent) {
+    return algo::aryptr<char>(b_Addr(parent), b_N(parent));
+}
+
+// --- atf_amc.VarlenAllocU64.b.Addr
+char* atf_amc::b_Addr(atf_amc::VarlenAllocU64& parent) {
+    return (char*)((u8*)&parent + sizeof(atf_amc::VarlenAllocU64) + parent.a_end); // address of varlen portion
+}
+
+// --- atf_amc.VarlenAllocU64.b.Print
+// Convert b to a string.
+// Array is printed as a regular string.
+void atf_amc::b_Print(atf_amc::VarlenAllocU64& parent, algo::cstring &rhs) {
+    rhs << b_Getary(parent);
+}
+
+// --- atf_amc.VarlenAllocU8.elem.Getary
+// Access var-length portion as an aryptr. Length is determined from one of the fields.
+algo::aryptr<u8> atf_amc::elem_Getary(atf_amc::VarlenAllocU8& parent) {
+    return algo::aryptr<u8>(elem_Addr(parent), elem_N(parent));
+}
+
+// --- atf_amc.VarlenAllocU8.elem.Addr
+u8* atf_amc::elem_Addr(atf_amc::VarlenAllocU8& parent) {
+    return (u8*)((u8*)&parent + sizeof(atf_amc::VarlenAllocU8)); // address of varlen portion
+}
+
+// --- atf_amc.VarlenAllocU8.elem.Print
+// Convert elem to a string.
+// Array is printed as a regular string.
+void atf_amc::elem_Print(atf_amc::VarlenAllocU8& parent, algo::cstring &rhs) {
+    rhs << algo::memptr_ToStrptr(elem_Getary(parent));
+}
+
+// --- atf_amc.VarlenBMsg.base.CopyOut
+// Copy fields out of row
+void atf_amc::parent_CopyOut(atf_amc::VarlenBMsg &row, atf_amc::MsgHeader &out) {
+    // type: field value is computed
+    // length: field value is computed
+    (void)row;//only to avoid -Wunused-parameter
+    (void)out;//only to avoid -Wunused-parameter
+}
+
+// --- atf_amc.VarlenBMsg.b.Getary
+// Access var-length portion as an aryptr. Length is determined from one of the fields.
+algo::aryptr<u8> atf_amc::b_Getary(atf_amc::VarlenBMsg& parent) {
+    return algo::aryptr<u8>(b_Addr(parent), b_N(parent));
+}
+
+// --- atf_amc.VarlenBMsg.b.Addr
+u8* atf_amc::b_Addr(atf_amc::VarlenBMsg& parent) {
+    return (u8*)((u8*)&parent + sizeof(atf_amc::VarlenBMsg)); // address of varlen portion
+}
+
+// --- atf_amc.VarlenBMsg.b.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool atf_amc::b_ReadStrptrMaybe(atf_amc::VarlenBMsg& parent, algo::strptr in_str) {
+    bool retval = true;
+    if (algo_lib::_db.varlenbuf) {
+        atf_amc::VarlenB *b_tmp = new(ary_AllocN(*algo_lib::_db.varlenbuf, sizeof(atf_amc::VarlenB)).elems) atf_amc::VarlenB;
+        algo::ByteAry varlenbuf;
+        algo::ByteAry *varlenbuf_save = algo_lib::_db.varlenbuf;
+        algo_lib::_db.varlenbuf = &varlenbuf;
+        retval = atf_amc::VarlenB_ReadStrptrMaybe(*b_tmp, in_str);
+        algo_lib::_db.varlenbuf = varlenbuf_save;
+        retval = retval && ((sizeof(atf_amc::VarlenB)+ary_N(varlenbuf)) >= 4 && (sizeof(atf_amc::VarlenB)+ary_N(varlenbuf)-4) % 4 == 0); // only a total the element's length field can store round-trips
+        (*b_tmp).length = u32((sizeof(atf_amc::VarlenB)+ary_N(varlenbuf)-4) / 4);
+        ary_Addary(*algo_lib::_db.varlenbuf,varlenbuf);
+    }
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
+}
+
+// --- atf_amc.VarlenBMsg..ReadFieldMaybe
+bool atf_amc::VarlenBMsg_ReadFieldMaybe(atf_amc::VarlenBMsg& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    atf_amc::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
+    switch(field_id) {
+        case atf_amc_FieldId_base: {
+            retval = false;
+        } break;
+        case atf_amc_FieldId_type: {
+            retval = false;
+        } break;
+        case atf_amc_FieldId_length: {
+            retval = false;
+        } break;
+        case atf_amc_FieldId_b: {
+            retval = b_ReadStrptrMaybe(parent, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- atf_amc.VarlenBMsg..ReadStrptrMaybe
+// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
+// Read fields of atf_amc::VarlenBMsg from an ascii string.
+// The format of the string is an ssim Tuple
+bool atf_amc::VarlenBMsg_ReadStrptrMaybe(atf_amc::VarlenBMsg &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "atf_amc.VarlenBMsg");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && VarlenBMsg_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- atf_amc.VarlenBMsg..Print
+// print string representation of ROW to string STR
+// cfmt:atf_amc.VarlenBMsg.String  printfmt:Tuple
+void atf_amc::VarlenBMsg_Print(atf_amc::VarlenBMsg& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "atf_amc.VarlenBMsg";
+
+    ind_beg(VarlenBMsg_b_curs,b,row) {
+        atf_amc::VarlenB_Print(b, temp);
+        tempstr name;
+        name << "b.";
+        name << ind_curs(b).index;
+        PrintAttrSpaceReset(str, name, temp);
+    }ind_end;
+}
+
 // --- atf_amc.VarlenExtern.varlen.Getary
 // Access var-length portion as an aryptr. Length is determined from one of the fields.
 algo::aryptr<u32> atf_amc::varlen_Getary(atf_amc::VarlenExtern& varlen_extern) {
@@ -19156,27 +25996,25 @@ atf_amc::TypeH* atf_amc::typeh_Addr(atf_amc::VarlenH& parent) {
 // --- atf_amc.VarlenH.typeh.Swap
 // Swap values elem_a and elem_b
 inline static void atf_amc::typeh_Swap(atf_amc::TypeH &elem_a, atf_amc::TypeH &elem_b) {
-    u8 temp[sizeof(atf_amc::TypeH)];
-    memcpy(&temp  , &elem_a, sizeof(atf_amc::TypeH));
-    memcpy(&elem_a, &elem_b, sizeof(atf_amc::TypeH));
-    memcpy(&elem_b, &temp  , sizeof(atf_amc::TypeH));
+    atf_amc::TypeH temp = elem_a;
+    elem_a = elem_b;
+    elem_b = temp;
 }
 
 // --- atf_amc.VarlenH.typeh.Rotleft
 // Left circular shift of three-tuple
 inline static void atf_amc::typeh_Rotleft(atf_amc::TypeH &elem_a, atf_amc::TypeH &elem_b, atf_amc::TypeH &elem_c) {
-    u8 temp[sizeof(atf_amc::TypeH)];
-    memcpy(&temp, &elem_a   , sizeof(atf_amc::TypeH));
-    memcpy(&elem_a   , &elem_b   , sizeof(atf_amc::TypeH));
-    memcpy(&elem_b   , &elem_c   , sizeof(atf_amc::TypeH));
-    memcpy(&elem_c   , &temp, sizeof(atf_amc::TypeH));
+    atf_amc::TypeH temp = elem_a;
+    elem_a = elem_b;
+    elem_b = elem_c;
+    elem_c = temp;
 }
 
 // --- atf_amc.VarlenH.typeh.Lt
 // Compare values elem_a and elem_b
 // The comparison function must be anti-symmetric: if a>b, then !(b>a).
 // If not, mayhem results.
-static bool atf_amc::typeh_Lt(atf_amc::TypeH &elem_a, atf_amc::TypeH &elem_b) {
+static bool atf_amc::typeh_Lt(atf_amc::TypeH elem_a, atf_amc::TypeH elem_b) {
     bool ret;
     ret = elem_a.typeh < elem_b.typeh;
     return ret;
@@ -19200,15 +26038,14 @@ bool atf_amc::typeh_SortedQ(atf_amc::VarlenH& parent) {
 static void atf_amc::typeh_IntInsertionSort(atf_amc::TypeH *elems, int n) {
     for (int i = 1; i < n; ++i) {
         int j = i;
-        // find the spot for ith element.
-        while (j>0 && typeh_Lt(elems[i], elems[j-1])) {
-            j--;
-        }
-        if (j<i) {
-            u8 tmp[sizeof(atf_amc::TypeH)];
-            memcpy (tmp                       , &elems[i], sizeof(atf_amc::TypeH)      );
-            memmove(&elems[j+1], &elems[j], sizeof(atf_amc::TypeH)*(i-j));
-            memcpy (&elems[j]  , tmp                     , sizeof(atf_amc::TypeH)      );
+        atf_amc::TypeH tmp = elems[i];
+        // shift elements up by one
+        if (typeh_Lt(tmp, elems[j-1])) {
+            do {
+                elems[j] = elems[j-1];
+                j--;
+            } while (j>0 && typeh_Lt(tmp, elems[j-1]));
+            elems[j] = tmp;
         }
     }
 }
@@ -19275,8 +26112,8 @@ static void atf_amc::typeh_IntQuickSort(atf_amc::TypeH *elems, int n, int depth)
         }
         // deposit pivot near the end of the array and skip it.
         typeh_Swap(elems[--pj], elems[pp]);
-        // reference to pivot
-        atf_amc::TypeH &pivot = elems[pj];
+        // copy pivot into temporary variable
+        atf_amc::TypeH pivot = elems[pj];
         for(;;){
             while (typeh_Lt(elems[++pi], pivot)) {
             }
@@ -19331,6 +26168,24 @@ bool atf_amc::typeh_XrefMaybe(atf_amc::TypeH &row) {
     return retval;
 }
 
+// --- atf_amc.VarlenLow.c.Getary
+// Access var-length portion as an aryptr. Length is determined from one of the fields.
+algo::aryptr<char> atf_amc::c_Getary(atf_amc::VarlenLow& parent) {
+    return algo::aryptr<char>(c_Addr(parent), c_N(parent));
+}
+
+// --- atf_amc.VarlenLow.c.Addr
+char* atf_amc::c_Addr(atf_amc::VarlenLow& parent) {
+    return (char*)((u8*)&parent + sizeof(atf_amc::VarlenLow)); // address of varlen portion
+}
+
+// --- atf_amc.VarlenLow.c.Print
+// Convert c to a string.
+// Array is printed as a regular string.
+void atf_amc::c_Print(atf_amc::VarlenLow& parent, algo::cstring &rhs) {
+    rhs << c_Getary(parent);
+}
+
 // --- atf_amc.VarlenMsg.base.CopyOut
 // Copy fields out of row
 void atf_amc::parent_CopyOut(atf_amc::VarlenMsg &row, atf_amc::MsgHeader &out) {
@@ -19362,7 +26217,7 @@ bool atf_amc::k_ReadStrptrMaybe(atf_amc::VarlenMsg& parent, algo::strptr in_str)
         algo_lib::_db.varlenbuf = &varlenbuf;
         retval = atf_amc::VarlenK_ReadStrptrMaybe(*k_tmp, in_str);
         algo_lib::_db.varlenbuf = varlenbuf_save;
-        (*k_tmp).length = atf_amc::MsgLength(sizeof(atf_amc::VarlenK)+ary_N(varlenbuf));
+        (*k_tmp).length = u32(sizeof(atf_amc::VarlenK)+ary_N(varlenbuf));
         ary_Addary(*algo_lib::_db.varlenbuf,varlenbuf);
     }
     (void)parent;//only to avoid -Wunused-parameter
@@ -19427,10 +26282,412 @@ void atf_amc::VarlenMsg_Print(atf_amc::VarlenMsg& row, algo::cstring& str) {
     }ind_end;
 }
 
+// --- atf_amc.VarlenW.i.Getary
+// Access var-length portion as an aryptr. Length is determined from one of the fields.
+algo::aryptr<u32> atf_amc::i_Getary(atf_amc::VarlenW& w) {
+    return algo::aryptr<u32>(i_Addr(w), i_N(w));
+}
+
+// --- atf_amc.VarlenW.i.Addr
+u32* atf_amc::i_Addr(atf_amc::VarlenW& w) {
+    return (u32*)((u8*)&w + sizeof(atf_amc::VarlenW)); // address of varlen portion
+}
+
+// --- atf_amc.VarlenW.i.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool atf_amc::i_ReadStrptrMaybe(atf_amc::VarlenW& w, algo::strptr in_str) {
+    bool retval = true;
+    if (algo_lib::_db.varlenbuf) {
+        u32 *i_tmp = new(ary_AllocN(*algo_lib::_db.varlenbuf, sizeof(u32)).elems) u32;
+        retval = u32_ReadStrptrMaybe(*i_tmp, in_str);
+    }
+    (void)w;//only to avoid -Wunused-parameter
+    return retval;
+}
+
+// --- atf_amc.VarlenW..ReadFieldMaybe
+bool atf_amc::VarlenW_ReadFieldMaybe(atf_amc::VarlenW& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    atf_amc::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
+    switch(field_id) {
+        case atf_amc_FieldId_length: {
+            retval = false;
+        } break;
+        case atf_amc_FieldId_i: {
+            retval = i_ReadStrptrMaybe(parent, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- atf_amc.VarlenW..ReadStrptrMaybe
+// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
+// Read fields of atf_amc::VarlenW from an ascii string.
+// The format of the string is an ssim Tuple
+bool atf_amc::VarlenW_ReadStrptrMaybe(atf_amc::VarlenW &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "atf_amc.VarlenW");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && VarlenW_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- atf_amc.VarlenW..Print
+// print string representation of ROW to string STR
+// cfmt:atf_amc.VarlenW.String  printfmt:Tuple
+void atf_amc::VarlenW_Print(atf_amc::VarlenW& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "atf_amc.VarlenW";
+
+    ind_beg(w_i_curs,i,row) {
+        u32_Print(i, temp);
+        tempstr name;
+        name << "i.";
+        name << ind_curs(i).index;
+        PrintAttrSpaceReset(str, name, temp);
+    }ind_end;
+}
+
+// --- atf_amc.VarlenVMsg.base.CopyOut
+// Copy fields out of row
+void atf_amc::parent_CopyOut(atf_amc::VarlenVMsg &row, atf_amc::MsgHeader &out) {
+    // type: field value is computed
+    // length: field value is computed
+    (void)row;//only to avoid -Wunused-parameter
+    (void)out;//only to avoid -Wunused-parameter
+}
+
+// --- atf_amc.VarlenVMsg.w.Getary
+// Access var-length portion as an aryptr. Length is determined from one of the fields.
+algo::aryptr<u8> atf_amc::w_Getary(atf_amc::VarlenVMsg& parent) {
+    return algo::aryptr<u8>(w_Addr(parent), w_N(parent));
+}
+
+// --- atf_amc.VarlenVMsg.w.Addr
+u8* atf_amc::w_Addr(atf_amc::VarlenVMsg& parent) {
+    return (u8*)((u8*)&parent + sizeof(atf_amc::VarlenVMsg)); // address of varlen portion
+}
+
+// --- atf_amc.VarlenVMsg.w.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool atf_amc::w_ReadStrptrMaybe(atf_amc::VarlenVMsg& parent, algo::strptr in_str) {
+    bool retval = true;
+    if (algo_lib::_db.varlenbuf) {
+        atf_amc::VarlenW *w_tmp = new(ary_AllocN(*algo_lib::_db.varlenbuf, sizeof(atf_amc::VarlenW)).elems) atf_amc::VarlenW;
+        algo::ByteAry varlenbuf;
+        algo::ByteAry *varlenbuf_save = algo_lib::_db.varlenbuf;
+        algo_lib::_db.varlenbuf = &varlenbuf;
+        retval = atf_amc::VarlenW_ReadStrptrMaybe(*w_tmp, in_str);
+        algo_lib::_db.varlenbuf = varlenbuf_save;
+        retval = retval && ((sizeof(atf_amc::VarlenW)+ary_N(varlenbuf)) >= 4 && (sizeof(atf_amc::VarlenW)+ary_N(varlenbuf)-4) % 4 == 0); // only a total the element's length field can store round-trips
+        (*w_tmp).length = u32((sizeof(atf_amc::VarlenW)+ary_N(varlenbuf)-4) / 4);
+        ary_Addary(*algo_lib::_db.varlenbuf,varlenbuf);
+    }
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
+}
+
+// --- atf_amc.VarlenVMsg.w.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool atf_amc::w_XrefMaybe(atf_amc::VarlenW &row) {
+    bool retval = true;
+    (void)row;
+    return retval;
+}
+
+// --- atf_amc.VarlenVMsg..ReadFieldMaybe
+bool atf_amc::VarlenVMsg_ReadFieldMaybe(atf_amc::VarlenVMsg& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    atf_amc::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
+    switch(field_id) {
+        case atf_amc_FieldId_base: {
+            retval = false;
+        } break;
+        case atf_amc_FieldId_type: {
+            retval = false;
+        } break;
+        case atf_amc_FieldId_length: {
+            retval = false;
+        } break;
+        case atf_amc_FieldId_w: {
+            retval = w_ReadStrptrMaybe(parent, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- atf_amc.VarlenVMsg..ReadStrptrMaybe
+// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
+// Read fields of atf_amc::VarlenVMsg from an ascii string.
+// The format of the string is an ssim Tuple
+bool atf_amc::VarlenVMsg_ReadStrptrMaybe(atf_amc::VarlenVMsg &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "atf_amc.VarlenVMsg");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && VarlenVMsg_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- atf_amc.VarlenVMsg..Print
+// print string representation of ROW to string STR
+// cfmt:atf_amc.VarlenVMsg.String  printfmt:Tuple
+void atf_amc::VarlenVMsg_Print(atf_amc::VarlenVMsg& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "atf_amc.VarlenVMsg";
+
+    ind_beg(VarlenVMsg_w_curs,w,row) {
+        atf_amc::VarlenW_Print(w, temp);
+        tempstr name;
+        name << "w.";
+        name << ind_curs(w).index;
+        PrintAttrSpaceReset(str, name, temp);
+    }ind_end;
+}
+
+// --- atf_amc.VarlenWMsg.base.CopyOut
+// Copy fields out of row
+void atf_amc::parent_CopyOut(atf_amc::VarlenWMsg &row, atf_amc::MsgHeader &out) {
+    // type: field value is computed
+    // length: field value is computed
+    (void)row;//only to avoid -Wunused-parameter
+    (void)out;//only to avoid -Wunused-parameter
+}
+
+// --- atf_amc.VarlenWMsg.word.Getary
+// Access var-length portion as an aryptr. Length is determined from one of the fields.
+algo::aryptr<u8> atf_amc::word_Getary(atf_amc::VarlenWMsg& parent) {
+    return algo::aryptr<u8>(word_Addr(parent), word_N(parent));
+}
+
+// --- atf_amc.VarlenWMsg.word.Addr
+u8* atf_amc::word_Addr(atf_amc::VarlenWMsg& parent) {
+    return (u8*)((u8*)&parent + sizeof(atf_amc::VarlenWMsg)); // address of varlen portion
+}
+
+// --- atf_amc.VarlenWMsg.word.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool atf_amc::word_ReadStrptrMaybe(atf_amc::VarlenWMsg& parent, algo::strptr in_str) {
+    bool retval = true;
+    if (algo_lib::_db.varlenbuf) {
+        atf_amc::VarlenW *word_tmp = new(ary_AllocN(*algo_lib::_db.varlenbuf, sizeof(atf_amc::VarlenW)).elems) atf_amc::VarlenW;
+        algo::ByteAry varlenbuf;
+        algo::ByteAry *varlenbuf_save = algo_lib::_db.varlenbuf;
+        algo_lib::_db.varlenbuf = &varlenbuf;
+        retval = atf_amc::VarlenW_ReadStrptrMaybe(*word_tmp, in_str);
+        algo_lib::_db.varlenbuf = varlenbuf_save;
+        retval = retval && ((sizeof(atf_amc::VarlenW)+ary_N(varlenbuf)) >= 4 && (sizeof(atf_amc::VarlenW)+ary_N(varlenbuf)-4) % 4 == 0); // only a total the element's length field can store round-trips
+        (*word_tmp).length = u32((sizeof(atf_amc::VarlenW)+ary_N(varlenbuf)-4) / 4);
+        ary_Addary(*algo_lib::_db.varlenbuf,varlenbuf);
+    }
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
+}
+
+// --- atf_amc.VarlenWMsg..ReadFieldMaybe
+bool atf_amc::VarlenWMsg_ReadFieldMaybe(atf_amc::VarlenWMsg& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    atf_amc::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
+    switch(field_id) {
+        case atf_amc_FieldId_base: {
+            retval = false;
+        } break;
+        case atf_amc_FieldId_type: {
+            retval = false;
+        } break;
+        case atf_amc_FieldId_length: {
+            retval = false;
+        } break;
+        case atf_amc_FieldId_word: {
+            retval = word_ReadStrptrMaybe(parent, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- atf_amc.VarlenWMsg..ReadStrptrMaybe
+// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
+// Read fields of atf_amc::VarlenWMsg from an ascii string.
+// The format of the string is an ssim Tuple
+bool atf_amc::VarlenWMsg_ReadStrptrMaybe(atf_amc::VarlenWMsg &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "atf_amc.VarlenWMsg");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && VarlenWMsg_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- atf_amc.VarlenWMsg..Print
+// print string representation of ROW to string STR
+// cfmt:atf_amc.VarlenWMsg.String  printfmt:Tuple
+void atf_amc::VarlenWMsg_Print(atf_amc::VarlenWMsg& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "atf_amc.VarlenWMsg";
+
+    ind_beg(VarlenWMsg_word_curs,word,row) {
+        atf_amc::VarlenW_Print(word, temp);
+        tempstr name;
+        name << "word.";
+        name << ind_curs(word).index;
+        PrintAttrSpaceReset(str, name, temp);
+    }ind_end;
+}
+
+// --- atf_amc.VsortStr9.ch.Nextchar
+// Extract next character from STR and advance IDX
+inline static u64 atf_amc::ch_Nextchar(const atf_amc::VsortStr9& parent, algo::strptr &str, int &idx) {
+    (void)parent;
+    int i = idx;
+    u64 ch = str.elems[i];
+    i++;
+    // downcase the char for case-insensitive comparison
+    if (ch >= 'A' && ch <= 'Z') {
+        ch = ch - 'A' + 'a';
+    }
+    // detect number in string and eat it up into CH.
+    // (this only works for base-10 numbers
+    // Digits are sorted before chars
+    if (unsigned(ch - '0') < 10) {
+        while(i < str.n_elems) { // resulting char sorts before ascii 47
+            unsigned dig = str.elems[i] - '0';
+            if (dig >= 10) break;
+            ch = ch * 10 + dig;
+            i++;
+        }
+    } else if (ch > '9') {
+        // create space between '0'..'9' for 15-digit numbers
+        ch += 1000000000000000LL;
+    }
+    idx = i;
+    return ch;
+}
+
+// --- atf_amc.VsortStr9.ch.Cmp
+// Compare two fields.
+// Comparison uses version sort (detect embedded integers).
+// Comparison is case-insensitive.
+i32 atf_amc::ch_Cmp(atf_amc::VsortStr9& parent, atf_amc::VsortStr9 &rhs) {
+    i32 retval = 0;
+    int idx_a = 0;
+    int idx_b = 0;
+    algo::strptr str_a = ch_Getary(parent);
+    algo::strptr str_b = ch_Getary(rhs);
+    int n_a   = elems_N(str_a);
+    int n_b   = elems_N(str_b);
+    retval    = i32_Cmp(n_a,n_b);
+    while (idx_a < n_a && idx_b < n_b) {
+        u64 ch_a = ch_Nextchar(parent, str_a, idx_a);
+        u64 ch_b = ch_Nextchar(rhs, str_b, idx_b);
+        if (ch_a != ch_b) {
+            retval = (ch_a > ch_b)*2-1;
+            break;
+        }
+    }
+    return retval;
+}
+
+// --- atf_amc.VsortStr9.ch.Print
+void atf_amc::ch_Print(atf_amc::VsortStr9& parent, algo::cstring &out) {
+    ch_Addary(out, ch_Getary(parent));
+}
+
+// --- atf_amc.VsortStr9.ch.SetStrptr
+// Copy from strptr, clipping length
+// Set string to the value provided by RHS.
+// If RHS is too large, it is silently clipped.
+void atf_amc::ch_SetStrptr(atf_amc::VsortStr9& parent, const algo::strptr& rhs) {
+    int len = i32_Min(rhs.n_elems, 9);
+    char *rhs_elems = rhs.elems;
+    int i = 0;
+    int j = 0;
+    for (; i < len; i++, j++) {
+        parent.ch[j] = rhs_elems[i];
+    }
+    parent.n_ch       = u8(len);
+}
+
 // --- atf_amc...ForAllStrings
 // Test string conversion
 void atf_amc::ForAllStrings(void (*fcn)(algo::StringDesc&) ) {
     algo::StringDesc desc;
+    // fill out descriptor for numstr:atf_amc.LnullStr4_U32_Base256.ch
+    {
+        desc.Geti64      = Geti64Fcn(static_cast<i64(*)(atf_amc::LnullStr4_U32_Base256&,bool&)>(ch_Geti64));
+        desc.SetnumMaybe = SetnumFcn(static_cast<bool(*)(atf_amc::LnullStr4_U32_Base256&,i64)>(ch_SetnumMaybe));
+        desc.Init        = InitFcn(static_cast<void(*)(atf_amc::LnullStr4_U32_Base256&)>(ch_Init));
+        desc.Getary      = GetaryFcn(static_cast<algo::aryptr<char>(*)(const atf_amc::LnullStr4_U32_Base256&)>(ch_Getary));
+        desc.smallstr    = "atf_amc.LnullStr4_U32_Base256.ch";
+        desc.strtype     = "leftpad";
+        desc.pad         = 0;
+        desc.base        = 256;
+        desc.issigned    = false;
+        desc.min_length  = 3;
+        desc.max_length  = 4;
+        desc.numtype_max = 0XFFFFFFFF;
+        desc.numtype_min = 0X0;
+        fcn(desc); // call test function
+    }
+    // fill out descriptor for numstr:atf_amc.LspaceStr5_U32_Base95.ch
+    {
+        desc.Geti64      = Geti64Fcn(static_cast<i64(*)(atf_amc::LspaceStr5_U32_Base95&,bool&)>(ch_Geti64));
+        desc.SetnumMaybe = SetnumFcn(static_cast<bool(*)(atf_amc::LspaceStr5_U32_Base95&,i64)>(ch_SetnumMaybe));
+        desc.Init        = InitFcn(static_cast<void(*)(atf_amc::LspaceStr5_U32_Base95&)>(ch_Init));
+        desc.Getary      = GetaryFcn(static_cast<algo::aryptr<char>(*)(const atf_amc::LspaceStr5_U32_Base95&)>(ch_Getary));
+        desc.smallstr    = "atf_amc.LspaceStr5_U32_Base95.ch";
+        desc.strtype     = "leftpad";
+        desc.pad         = ' ';
+        desc.base        = 95;
+        desc.issigned    = false;
+        desc.min_length  = 3;
+        desc.max_length  = 5;
+        desc.numtype_max = 0XFFFFFFFF;
+        desc.numtype_min = 0X0;
+        fcn(desc); // call test function
+    }
+    // fill out descriptor for numstr:atf_amc.LspaceStr7_I32.ch
+    {
+        desc.Geti64      = Geti64Fcn(static_cast<i64(*)(atf_amc::LspaceStr7_I32&,bool&)>(ch_Geti64));
+        desc.SetnumMaybe = SetnumFcn(static_cast<bool(*)(atf_amc::LspaceStr7_I32&,i64)>(ch_SetnumMaybe));
+        desc.Init        = InitFcn(static_cast<void(*)(atf_amc::LspaceStr7_I32&)>(ch_Init));
+        desc.Getary      = GetaryFcn(static_cast<algo::aryptr<char>(*)(const atf_amc::LspaceStr7_I32&)>(ch_Getary));
+        desc.smallstr    = "atf_amc.LspaceStr7_I32.ch";
+        desc.strtype     = "leftpad";
+        desc.pad         = ' ';
+        desc.base        = 10;
+        desc.issigned    = true;
+        desc.min_length  = 3;
+        desc.max_length  = 7;
+        desc.numtype_max = i64(0X7FFFFFFF);
+        desc.numtype_min = i64(0XFFFFFFFF80000000);
+        fcn(desc); // call test function
+    }
     // fill out descriptor for numstr:atf_amc.RnullStr6_U32.ch
     {
         desc.Geti64      = Geti64Fcn(static_cast<i64(*)(atf_amc::RnullStr6_U32&,bool&)>(ch_Geti64));
@@ -19484,17 +26741,19 @@ void atf_amc::StaticCheck() {
     algo_assert(sizeof(((atf_amc::BitfldU128*)0)->value)*8 >= 128);
     // check that bitfield fits width
     algo_assert(sizeof(((atf_amc::BitfldU16*)0)->value)*8 >= 12);
+    algo_assert(_offset_of(atf_amc::Disp2Case, value) + sizeof(((atf_amc::Disp2Case*)0)->value) == sizeof(atf_amc::Disp2Case));
     algo_assert(_offset_of(atf_amc::DispCase, value) + sizeof(((atf_amc::DispCase*)0)->value) == sizeof(atf_amc::DispCase));
-    algo_assert(_offset_of(atf_amc::trace, step_cd_in_msg_cycles) + sizeof(((atf_amc::trace*)0)->step_cd_in_msg_cycles) == sizeof(atf_amc::trace));
+    algo_assert(_offset_of(atf_amc::trace, _db_out_fb_n_write_msg) + sizeof(((atf_amc::trace*)0)->_db_out_fb_n_write_msg) == sizeof(atf_amc::trace));
+    // check that bitfield fits width
+    algo_assert(sizeof(((atf_amc::FDb*)0)->flagbits)*8 >= 4);
     algo_assert(_offset_of(atf_amc::FieldId, value) + sizeof(((atf_amc::FieldId*)0)->value) == sizeof(atf_amc::FieldId));
-    algo_assert(_offset_of(atf_amc::MsgHdrLTMsgsCase, value) + sizeof(((atf_amc::MsgHdrLTMsgsCase*)0)->value) == sizeof(atf_amc::MsgHdrLTMsgsCase));
-    algo_assert(_offset_of(atf_amc::MsgHdrLTScale, type) + sizeof(((atf_amc::MsgHdrLTScale*)0)->type) == sizeof(atf_amc::MsgHdrLTScale));
-    algo_assert(_offset_of(atf_amc::MsgHdrLTScaleMsgsCase, value) + sizeof(((atf_amc::MsgHdrLTScaleMsgsCase*)0)->value) == sizeof(atf_amc::MsgHdrLTScaleMsgsCase));
-    algo_assert(_offset_of(atf_amc::MsgHdrLTScale_curs, msglen) + sizeof(((atf_amc::MsgHdrLTScale_curs*)0)->msglen) == sizeof(atf_amc::MsgHdrLTScale_curs));
-    algo_assert(_offset_of(atf_amc::MsgHdrLT_curs, msglen) + sizeof(((atf_amc::MsgHdrLT_curs*)0)->msglen) == sizeof(atf_amc::MsgHdrLT_curs));
     algo_assert(_offset_of(atf_amc::MsgType, value) + sizeof(((atf_amc::MsgType*)0)->value) == sizeof(atf_amc::MsgType));
     algo_assert(_offset_of(atf_amc::MsgLength, value) + sizeof(((atf_amc::MsgLength*)0)->value) == sizeof(atf_amc::MsgLength));
     algo_assert(_offset_of(atf_amc::MsgHeader, length) == 2);
+    algo_assert(_offset_of(atf_amc::MsgHdrLTMsgsCase, value) + sizeof(((atf_amc::MsgHdrLTMsgsCase*)0)->value) == sizeof(atf_amc::MsgHdrLTMsgsCase));
+    algo_assert(_offset_of(atf_amc::MsgHdrLTScaleMsgsCase, value) + sizeof(((atf_amc::MsgHdrLTScaleMsgsCase*)0)->value) == sizeof(atf_amc::MsgHdrLTScaleMsgsCase));
+    algo_assert(_offset_of(atf_amc::MsgHdrLTScale_curs, msglen) + sizeof(((atf_amc::MsgHdrLTScale_curs*)0)->msglen) == sizeof(atf_amc::MsgHdrLTScale_curs));
+    algo_assert(_offset_of(atf_amc::MsgHdrLT_curs, msglen) + sizeof(((atf_amc::MsgHdrLT_curs*)0)->msglen) == sizeof(atf_amc::MsgHdrLT_curs));
     algo_assert(_offset_of(atf_amc::MsgHeader_curs, msglen) + sizeof(((atf_amc::MsgHeader_curs*)0)->msglen) == sizeof(atf_amc::MsgHeader_curs));
     algo_assert(_offset_of(atf_amc::MsgLTA, a) + sizeof(((atf_amc::MsgLTA*)0)->a) == sizeof(atf_amc::MsgLTA));
     algo_assert(_offset_of(atf_amc::MsgLTB, b) + sizeof(((atf_amc::MsgLTB*)0)->b) == sizeof(atf_amc::MsgLTB));
@@ -19502,19 +26761,34 @@ void atf_amc::StaticCheck() {
     algo_assert(_offset_of(atf_amc::MsgsCase, value) + sizeof(((atf_amc::MsgsCase*)0)->value) == sizeof(atf_amc::MsgsCase));
     // check that bitfield fits width
     algo_assert(sizeof(((atf_amc::NetBitfld1*)0)->value_be)*8 >= 12);
+    // check that bitfield fits width
+    algo_assert(sizeof(((atf_amc::NetFrame*)0)->word_be)*8 >= 32);
+    // check that bitfield fits width
+    algo_assert(sizeof(((atf_amc::NetFrameHdr*)0)->word_be)*8 >= 32);
+    algo_assert(_offset_of(atf_amc::NetFrameHdr, word_be) + sizeof(((atf_amc::NetFrameHdr*)0)->word_be) == sizeof(atf_amc::NetFrameHdr));
+    algo_assert(_offset_of(atf_amc::NetFrameHdrMsgsCase, value) + sizeof(((atf_amc::NetFrameHdrMsgsCase*)0)->value) == sizeof(atf_amc::NetFrameHdrMsgsCase));
+    algo_assert(_offset_of(atf_amc::NetFrameHdr_curs, msglen) + sizeof(((atf_amc::NetFrameHdr_curs*)0)->msglen) == sizeof(atf_amc::NetFrameHdr_curs));
     algo_assert(_offset_of(atf_amc::OptAlloc_curs, msglen) + sizeof(((atf_amc::OptAlloc_curs*)0)->msglen) == sizeof(atf_amc::OptAlloc_curs));
     algo_assert(_offset_of(atf_amc::OptG_curs, msglen) + sizeof(((atf_amc::OptG_curs*)0)->msglen) == sizeof(atf_amc::OptG_curs));
     algo_assert(_offset_of(atf_amc::OptOptG_curs, msglen) + sizeof(((atf_amc::OptOptG_curs*)0)->msglen) == sizeof(atf_amc::OptOptG_curs));
+    algo_assert(_offset_of(atf_amc::OptSigned_curs, msglen) + sizeof(((atf_amc::OptSigned_curs*)0)->msglen) == sizeof(atf_amc::OptSigned_curs));
+    algo_assert(_offset_of(atf_amc::OptWide_curs, msglen) + sizeof(((atf_amc::OptWide_curs*)0)->msglen) == sizeof(atf_amc::OptWide_curs));
     algo_assert(_offset_of(atf_amc::PmaskMultiple, value7) + sizeof(((atf_amc::PmaskMultiple*)0)->value7) == sizeof(atf_amc::PmaskMultiple));
     algo_assert(_offset_of(atf_amc::PmaskU128, value71) + sizeof(((atf_amc::PmaskU128*)0)->value71) == sizeof(atf_amc::PmaskU128));
     algo_assert(_offset_of(atf_amc::PmaskU32, value5) + sizeof(((atf_amc::PmaskU32*)0)->value5) == sizeof(atf_amc::PmaskU32));
     algo_assert(_offset_of(atf_amc::SsimfilesCase, value) + sizeof(((atf_amc::SsimfilesCase*)0)->value) == sizeof(atf_amc::SsimfilesCase));
     // check that bitfield fits width
     algo_assert(sizeof(((atf_amc::TypeBE64sf*)0)->value_be)*8 >= 64);
+    algo_assert(_offset_of(atf_amc::VarlenAllocScale_curs, msglen) + sizeof(((atf_amc::VarlenAllocScale_curs*)0)->msglen) == sizeof(atf_amc::VarlenAllocScale_curs));
+    algo_assert(_offset_of(atf_amc::VarlenAllocU64_curs, msglen) + sizeof(((atf_amc::VarlenAllocU64_curs*)0)->msglen) == sizeof(atf_amc::VarlenAllocU64_curs));
+    algo_assert(_offset_of(atf_amc::VarlenAllocU8_curs, msglen) + sizeof(((atf_amc::VarlenAllocU8_curs*)0)->msglen) == sizeof(atf_amc::VarlenAllocU8_curs));
     algo_assert(_offset_of(atf_amc::VarlenAlloc_curs, msglen) + sizeof(((atf_amc::VarlenAlloc_curs*)0)->msglen) == sizeof(atf_amc::VarlenAlloc_curs));
+    algo_assert(_offset_of(atf_amc::VarlenB_curs, msglen) + sizeof(((atf_amc::VarlenB_curs*)0)->msglen) == sizeof(atf_amc::VarlenB_curs));
     algo_assert(_offset_of(atf_amc::VarlenExtern_curs, msglen) + sizeof(((atf_amc::VarlenExtern_curs*)0)->msglen) == sizeof(atf_amc::VarlenExtern_curs));
     algo_assert(_offset_of(atf_amc::VarlenH_curs, msglen) + sizeof(((atf_amc::VarlenH_curs*)0)->msglen) == sizeof(atf_amc::VarlenH_curs));
     algo_assert(_offset_of(atf_amc::VarlenK_curs, msglen) + sizeof(((atf_amc::VarlenK_curs*)0)->msglen) == sizeof(atf_amc::VarlenK_curs));
+    algo_assert(_offset_of(atf_amc::VarlenLow_curs, msglen) + sizeof(((atf_amc::VarlenLow_curs*)0)->msglen) == sizeof(atf_amc::VarlenLow_curs));
+    algo_assert(_offset_of(atf_amc::VarlenW_curs, msglen) + sizeof(((atf_amc::VarlenW_curs*)0)->msglen) == sizeof(atf_amc::VarlenW_curs));
 }
 
 // --- atf_amc.MsgHdrLTMsgs..Print
@@ -19560,6 +26834,11 @@ bool atf_amc::MsgHdrLTScaleMsgs_Print(algo::cstring &str, atf_amc::MsgHdrLTScale
             MsgLTScaleA_Print((atf_amc::MsgLTScaleA&)(msg), str);
             return true;
         }
+        case 'V': {
+            if (sizeof(atf_amc::MsgLTScaleV) > msg_len) { return false; }
+            MsgLTScaleV_Print((atf_amc::MsgLTScaleV&)(msg), str);
+            return true;
+        }
         default:
 
         return false;
@@ -19572,6 +26851,11 @@ bool atf_amc::MsgHdrLTScaleMsgs_Print(algo::cstring &str, atf_amc::MsgHdrLTScale
 // This function will additionally validate that sizeof(Msg) <= msg_len
 bool atf_amc::MsgHeaderMsgs_Print(algo::cstring &str, atf_amc::MsgHeader &msg, u32 msg_len) {
     switch(msg.type) {
+        case 0x1008: {
+            if (sizeof(atf_amc::OptBMsg) > msg_len) { return false; }
+            OptBMsg_Print((atf_amc::OptBMsg&)(msg), str);
+            return true;
+        }
         case 0x0905: {
             if (sizeof(atf_amc::Seqmsg) > msg_len) { return false; }
             Seqmsg_Print((atf_amc::Seqmsg&)(msg), str);
@@ -19602,9 +26886,41 @@ bool atf_amc::MsgHeaderMsgs_Print(algo::cstring &str, atf_amc::MsgHeader &msg, u
             Varlen2vMsg_Print((atf_amc::Varlen2vMsg&)(msg), str);
             return true;
         }
+        case 0x1007: {
+            if (sizeof(atf_amc::VarlenBMsg) > msg_len) { return false; }
+            VarlenBMsg_Print((atf_amc::VarlenBMsg&)(msg), str);
+            return true;
+        }
         case 0x1000: {
             if (sizeof(atf_amc::VarlenMsg) > msg_len) { return false; }
             VarlenMsg_Print((atf_amc::VarlenMsg&)(msg), str);
+            return true;
+        }
+        case 0x1006: {
+            if (sizeof(atf_amc::VarlenVMsg) > msg_len) { return false; }
+            VarlenVMsg_Print((atf_amc::VarlenVMsg&)(msg), str);
+            return true;
+        }
+        case 0x1005: {
+            if (sizeof(atf_amc::VarlenWMsg) > msg_len) { return false; }
+            VarlenWMsg_Print((atf_amc::VarlenWMsg&)(msg), str);
+            return true;
+        }
+        default:
+
+        return false;
+    }
+}
+
+// --- atf_amc.NetFrameHdrMsgs..Print
+// Print message to STR. If message is too short for MSG_LEN, print nothing.
+// MSG.LENGTH must have already been validated against msg_len.
+// This function will additionally validate that sizeof(Msg) <= msg_len
+bool atf_amc::NetFrameHdrMsgs_Print(algo::cstring &str, atf_amc::NetFrameHdr &msg, u32 msg_len) {
+    switch(kind_Get(msg)) {
+        case 4: {
+            if (sizeof(atf_amc::NetFrame) > msg_len) { return false; }
+            NetFrame_Print((atf_amc::NetFrame&)(msg), str);
             return true;
         }
         default:
@@ -19623,6 +26939,20 @@ atf_amc::MsgsCase atf_amc::Msgs_ReadStrptr(algo::strptr str, algo::ByteAry &buf)
     atf_amc::MsgsCase msgtype;
     value_SetStrptrMaybe(msgtype, msgtype_str); // map string -> enum
     switch (value_GetEnum(msgtype)) { // what message is it?
+        case atf_amc_MsgsCase_atf_amc_VarlenB: {
+            int len = sizeof(atf_amc::VarlenB);
+            atf_amc::VarlenB *ctype = new(ary_AllocN(buf, len).elems) atf_amc::VarlenB; // default values
+            algo::ByteAry varlenbuf;
+            algo::ByteAry *varlenbuf_save = algo_lib::_db.varlenbuf;
+            algo_lib::_db.varlenbuf = &varlenbuf;
+            ok = VarlenB_ReadStrptrMaybe(*ctype, str); // now read attributes
+            len += ary_N(varlenbuf);
+            ok = ok && ((len-4) % 4 == 0); // only a total the length field can store round-trips
+            ctype->length = u32((len-4) / 4);
+            ary_Addary(buf, ary_Getary(varlenbuf));
+            algo_lib::_db.varlenbuf = varlenbuf_save;
+        } break; // atf_amc::VarlenB case
+
         case atf_amc_MsgsCase_atf_amc_VarlenK: {
             int len = sizeof(atf_amc::VarlenK);
             atf_amc::VarlenK *ctype = new(ary_AllocN(buf, len).elems) atf_amc::VarlenK; // default values
@@ -19706,6 +27036,7 @@ atf_amc::MsgHdrLTMsgsCase atf_amc::MsgHdrLTMsgs_ReadStrptr(algo::strptr str, alg
             algo_lib::_db.varlenbuf = &varlenbuf;
             ok = MsgLTO_ReadStrptrMaybe(*ctype, str); // now read attributes
             len += ary_N(varlenbuf);
+            ok = ok && ((len) <= 257); // only a total the length field can store round-trips
             ctype->len = u8(len-2);
             ary_Addary(buf, ary_Getary(varlenbuf));
             algo_lib::_db.varlenbuf = varlenbuf_save;
@@ -19719,6 +27050,7 @@ atf_amc::MsgHdrLTMsgsCase atf_amc::MsgHdrLTMsgs_ReadStrptr(algo::strptr str, alg
             algo_lib::_db.varlenbuf = &varlenbuf;
             ok = MsgLTV_ReadStrptrMaybe(*ctype, str); // now read attributes
             len += ary_N(varlenbuf);
+            ok = ok && ((len) <= 257); // only a total the length field can store round-trips
             ctype->len = u8(len-2);
             ary_Addary(buf, ary_Getary(varlenbuf));
             algo_lib::_db.varlenbuf = varlenbuf_save;
@@ -19752,6 +27084,20 @@ atf_amc::MsgHdrLTScaleMsgsCase atf_amc::MsgHdrLTScaleMsgs_ReadStrptr(algo::strpt
             ok = MsgLTScaleA_ReadStrptrMaybe(*ctype, str); // now read attributes
         } break; // atf_amc::MsgLTScaleA case
 
+        case atf_amc_MsgHdrLTScaleMsgsCase_atf_amc_MsgLTScaleV: {
+            int len = sizeof(atf_amc::MsgLTScaleV);
+            atf_amc::MsgLTScaleV *ctype = new(ary_AllocN(buf, len).elems) atf_amc::MsgLTScaleV; // default values
+            algo::ByteAry varlenbuf;
+            algo::ByteAry *varlenbuf_save = algo_lib::_db.varlenbuf;
+            algo_lib::_db.varlenbuf = &varlenbuf;
+            ok = MsgLTScaleV_ReadStrptrMaybe(*ctype, str); // now read attributes
+            len += ary_N(varlenbuf);
+            ok = ok && ((len-2) % 4 == 0 && (len) <= 1022); // only a total the length field can store round-trips
+            ctype->len = u8((len-2) / 4);
+            ary_Addary(buf, ary_Getary(varlenbuf));
+            algo_lib::_db.varlenbuf = varlenbuf_save;
+        } break; // atf_amc::MsgLTScaleV case
+
         default: break;
     }
     return ok ? msgtype : atf_amc::MsgHdrLTScaleMsgsCase();
@@ -19774,6 +27120,20 @@ atf_amc::MsgType atf_amc::MsgHeaderMsgs_ReadStrptr(algo::strptr str, algo::ByteA
     atf_amc::MsgType msgtype;
     value_SetStrptrMaybe(msgtype, msgtype_str); // map string -> enum
     switch (value_GetEnum(msgtype)) { // what message is it?
+        case atf_amc_MsgType_atf_amc_OptBMsg: {
+            int len = sizeof(atf_amc::OptBMsg);
+            atf_amc::OptBMsg *ctype = new(ary_AllocN(buf, len).elems) atf_amc::OptBMsg; // default values
+            algo::ByteAry varlenbuf;
+            algo::ByteAry *varlenbuf_save = algo_lib::_db.varlenbuf;
+            algo_lib::_db.varlenbuf = &varlenbuf;
+            ok = OptBMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
+            len += ary_N(varlenbuf);
+            ok = ok && ((len) <= 65535); // only a total the length field can store round-trips
+            ctype->length = atf_amc::MsgLength(len);
+            ary_Addary(buf, ary_Getary(varlenbuf));
+            algo_lib::_db.varlenbuf = varlenbuf_save;
+        } break; // atf_amc::OptBMsg case
+
         case atf_amc_MsgType_atf_amc_Seqmsg: {
             int len = sizeof(atf_amc::Seqmsg);
             atf_amc::Seqmsg *ctype = new(ary_AllocN(buf, len).elems) atf_amc::Seqmsg; // default values
@@ -19782,6 +27142,7 @@ atf_amc::MsgType atf_amc::MsgHeaderMsgs_ReadStrptr(algo::strptr str, algo::ByteA
             algo_lib::_db.varlenbuf = &varlenbuf;
             ok = Seqmsg_ReadStrptrMaybe(*ctype, str); // now read attributes
             len += ary_N(varlenbuf);
+            ok = ok && ((len) <= 65535); // only a total the length field can store round-trips
             ctype->length = atf_amc::MsgLength(len);
             ary_Addary(buf, ary_Getary(varlenbuf));
             algo_lib::_db.varlenbuf = varlenbuf_save;
@@ -19795,6 +27156,7 @@ atf_amc::MsgType atf_amc::MsgHeaderMsgs_ReadStrptr(algo::strptr str, algo::ByteA
             algo_lib::_db.varlenbuf = &varlenbuf;
             ok = Text_ReadStrptrMaybe(*ctype, str); // now read attributes
             len += ary_N(varlenbuf);
+            ok = ok && ((len) <= 65535); // only a total the length field can store round-trips
             ctype->length = atf_amc::MsgLength(len);
             ary_Addary(buf, ary_Getary(varlenbuf));
             algo_lib::_db.varlenbuf = varlenbuf_save;
@@ -19808,6 +27170,7 @@ atf_amc::MsgType atf_amc::MsgHeaderMsgs_ReadStrptr(algo::strptr str, algo::ByteA
             algo_lib::_db.varlenbuf = &varlenbuf;
             ok = Varlen2Msg_ReadStrptrMaybe(*ctype, str); // now read attributes
             len += ary_N(varlenbuf);
+            ok = ok && ((len) <= 65535); // only a total the length field can store round-trips
             ctype->length = atf_amc::MsgLength(len);
             ary_Addary(buf, ary_Getary(varlenbuf));
             algo_lib::_db.varlenbuf = varlenbuf_save;
@@ -19821,6 +27184,7 @@ atf_amc::MsgType atf_amc::MsgHeaderMsgs_ReadStrptr(algo::strptr str, algo::ByteA
             algo_lib::_db.varlenbuf = &varlenbuf;
             ok = Varlen2aMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
             len += ary_N(varlenbuf);
+            ok = ok && ((len) <= 65535); // only a total the length field can store round-trips
             ctype->length = atf_amc::MsgLength(len);
             ary_Addary(buf, ary_Getary(varlenbuf));
             algo_lib::_db.varlenbuf = varlenbuf_save;
@@ -19834,6 +27198,7 @@ atf_amc::MsgType atf_amc::MsgHeaderMsgs_ReadStrptr(algo::strptr str, algo::ByteA
             algo_lib::_db.varlenbuf = &varlenbuf;
             ok = Varlen2mMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
             len += ary_N(varlenbuf);
+            ok = ok && ((len) <= 65535); // only a total the length field can store round-trips
             ctype->length = atf_amc::MsgLength(len);
             ary_Addary(buf, ary_Getary(varlenbuf));
             algo_lib::_db.varlenbuf = varlenbuf_save;
@@ -19847,10 +27212,25 @@ atf_amc::MsgType atf_amc::MsgHeaderMsgs_ReadStrptr(algo::strptr str, algo::ByteA
             algo_lib::_db.varlenbuf = &varlenbuf;
             ok = Varlen2vMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
             len += ary_N(varlenbuf);
+            ok = ok && ((len) <= 65535); // only a total the length field can store round-trips
             ctype->length = atf_amc::MsgLength(len);
             ary_Addary(buf, ary_Getary(varlenbuf));
             algo_lib::_db.varlenbuf = varlenbuf_save;
         } break; // atf_amc::Varlen2vMsg case
+
+        case atf_amc_MsgType_atf_amc_VarlenBMsg: {
+            int len = sizeof(atf_amc::VarlenBMsg);
+            atf_amc::VarlenBMsg *ctype = new(ary_AllocN(buf, len).elems) atf_amc::VarlenBMsg; // default values
+            algo::ByteAry varlenbuf;
+            algo::ByteAry *varlenbuf_save = algo_lib::_db.varlenbuf;
+            algo_lib::_db.varlenbuf = &varlenbuf;
+            ok = VarlenBMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
+            len += ary_N(varlenbuf);
+            ok = ok && ((len) <= 65535); // only a total the length field can store round-trips
+            ctype->length = atf_amc::MsgLength(len);
+            ary_Addary(buf, ary_Getary(varlenbuf));
+            algo_lib::_db.varlenbuf = varlenbuf_save;
+        } break; // atf_amc::VarlenBMsg case
 
         case atf_amc_MsgType_atf_amc_VarlenMsg: {
             int len = sizeof(atf_amc::VarlenMsg);
@@ -19860,10 +27240,39 @@ atf_amc::MsgType atf_amc::MsgHeaderMsgs_ReadStrptr(algo::strptr str, algo::ByteA
             algo_lib::_db.varlenbuf = &varlenbuf;
             ok = VarlenMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
             len += ary_N(varlenbuf);
+            ok = ok && ((len) <= 65535); // only a total the length field can store round-trips
             ctype->length = atf_amc::MsgLength(len);
             ary_Addary(buf, ary_Getary(varlenbuf));
             algo_lib::_db.varlenbuf = varlenbuf_save;
         } break; // atf_amc::VarlenMsg case
+
+        case atf_amc_MsgType_atf_amc_VarlenVMsg: {
+            int len = sizeof(atf_amc::VarlenVMsg);
+            atf_amc::VarlenVMsg *ctype = new(ary_AllocN(buf, len).elems) atf_amc::VarlenVMsg; // default values
+            algo::ByteAry varlenbuf;
+            algo::ByteAry *varlenbuf_save = algo_lib::_db.varlenbuf;
+            algo_lib::_db.varlenbuf = &varlenbuf;
+            ok = VarlenVMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
+            len += ary_N(varlenbuf);
+            ok = ok && ((len) <= 65535); // only a total the length field can store round-trips
+            ctype->length = atf_amc::MsgLength(len);
+            ary_Addary(buf, ary_Getary(varlenbuf));
+            algo_lib::_db.varlenbuf = varlenbuf_save;
+        } break; // atf_amc::VarlenVMsg case
+
+        case atf_amc_MsgType_atf_amc_VarlenWMsg: {
+            int len = sizeof(atf_amc::VarlenWMsg);
+            atf_amc::VarlenWMsg *ctype = new(ary_AllocN(buf, len).elems) atf_amc::VarlenWMsg; // default values
+            algo::ByteAry varlenbuf;
+            algo::ByteAry *varlenbuf_save = algo_lib::_db.varlenbuf;
+            algo_lib::_db.varlenbuf = &varlenbuf;
+            ok = VarlenWMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
+            len += ary_N(varlenbuf);
+            ok = ok && ((len) <= 65535); // only a total the length field can store round-trips
+            ctype->length = atf_amc::MsgLength(len);
+            ary_Addary(buf, ary_Getary(varlenbuf));
+            algo_lib::_db.varlenbuf = varlenbuf_save;
+        } break; // atf_amc::VarlenWMsg case
 
         default: break;
     }
@@ -19877,17 +27286,60 @@ bool atf_amc::MsgHeaderMsgs_ReadStrptrMaybe(algo::strptr str, algo::ByteAry &buf
     return !(msgtype == atf_amc::MsgType());
 }
 
+// --- atf_amc.NetFrameHdrMsgs..ReadStrptr
+// Parse ascii representation of message into binary, appending new data to BUF.
+atf_amc::NetFrameHdrMsgsCase atf_amc::NetFrameHdrMsgs_ReadStrptr(algo::strptr str, algo::ByteAry &buf) {
+    bool ok = false;
+    tempstr msgtype_str;
+    algo::StringIter iter(str);
+    cstring_ReadCmdarg(msgtype_str, iter, false); // read first word
+    atf_amc::NetFrameHdrMsgsCase msgtype;
+    value_SetStrptrMaybe(msgtype, msgtype_str); // map string -> enum
+    switch (value_GetEnum(msgtype)) { // what message is it?
+        case atf_amc_NetFrameHdrMsgsCase_atf_amc_NetFrame: {
+            int len = sizeof(atf_amc::NetFrame);
+            atf_amc::NetFrame *ctype = new(ary_AllocN(buf, len).elems) atf_amc::NetFrame; // default values
+            algo::ByteAry varlenbuf;
+            algo::ByteAry *varlenbuf_save = algo_lib::_db.varlenbuf;
+            algo_lib::_db.varlenbuf = &varlenbuf;
+            ok = NetFrame_ReadStrptrMaybe(*ctype, str); // now read attributes
+            len += ary_N(varlenbuf);
+            ok = ok && ((len) <= 16777219); // only a total the length field can store round-trips
+            len_Set(*ctype, u32(len-4));
+            ary_Addary(buf, ary_Getary(varlenbuf));
+            algo_lib::_db.varlenbuf = varlenbuf_save;
+        } break; // atf_amc::NetFrame case
+
+        default: break;
+    }
+    return ok ? msgtype : atf_amc::NetFrameHdrMsgsCase();
+}
+
+// --- atf_amc.NetFrameHdrMsgs..ReadStrptrMaybe
+// Parse ascii representation of message into binary, appending new data to BUF.
+bool atf_amc::NetFrameHdrMsgs_ReadStrptrMaybe(algo::strptr str, algo::ByteAry &buf) {
+    atf_amc::NetFrameHdrMsgsCase msgtype = NetFrameHdrMsgs_ReadStrptr(str,buf);
+    return !(msgtype == atf_amc::NetFrameHdrMsgsCase());
+}
+
 // --- atf_amc...MsgLTO_FmtByteAry
 // Construct a new atf_amc::MsgLTO in the space provided by BUF.
-// If BUF doesn't have enough space available, throw exception.
+// A negative Opt byte count constructs nothing and returns NULL.
+// A total the length field cannot store constructs nothing and returns NULL.
 atf_amc::MsgLTO * atf_amc::MsgLTO_FmtByteAry(algo::ByteAry &buf, atf_amc::MsgHdrLT* o) {
     atf_amc::MsgLTO  *msg = NULL;
     size_t len = sizeof(atf_amc::MsgLTO);
     int opt_len = o ? i32(o[0].len + 2) : 0;
+    if (opt_len < 0) {
+        return NULL; // a negative count would underallocate the fixed portion
+    }
     len += opt_len;
+    if (!((len) <= 257)) {
+        return NULL; // total not representable in the length field
+    }
     ary_RemoveAll(buf);
     msg = (atf_amc::MsgLTO*)ary_AllocN(buf,len).elems;
-    msg->len = u8((len + (-2)) / (1));
+    msg->len = u8(len-2);
     msg->type = char('O');
     if (o) {
         memcpy((u8*)msg + sizeof(atf_amc::MsgLTO), o, opt_len);
@@ -19897,15 +27349,18 @@ atf_amc::MsgLTO * atf_amc::MsgLTO_FmtByteAry(algo::ByteAry &buf, atf_amc::MsgHdr
 
 // --- atf_amc...MsgLTV_FmtByteAry
 // Construct a new atf_amc::MsgLTV in the space provided by BUF.
-// If BUF doesn't have enough space available, throw exception.
+// A total the length field cannot store constructs nothing and returns NULL.
 atf_amc::MsgLTV * atf_amc::MsgLTV_FmtByteAry(algo::ByteAry &buf, algo::memptr v) {
     atf_amc::MsgLTV  *msg = NULL;
     size_t len = sizeof(atf_amc::MsgLTV);
-    u32 v_ary_len = elems_N(v) * sizeof(u8);
+    u64 v_ary_len = u64(elems_N(v)) * sizeof(u8);
     len += v_ary_len;
+    if (!((len) <= 257)) {
+        return NULL; // total not representable in the length field
+    }
     ary_RemoveAll(buf);
     msg = (atf_amc::MsgLTV*)ary_AllocN(buf,len).elems;
-    msg->len = u8((len + (-2)) / (1));
+    msg->len = u8(len-2);
     msg->type = char('V');
     memcpy(v_Addr(*msg), v.elems, v_ary_len);
     return msg;
@@ -19913,14 +27368,21 @@ atf_amc::MsgLTV * atf_amc::MsgLTV_FmtByteAry(algo::ByteAry &buf, algo::memptr v)
 
 // --- atf_amc...OptG_FmtByteAry
 // Construct a new atf_amc::OptG in the space provided by BUF.
-// If BUF doesn't have enough space available, throw exception.
+// A negative Opt byte count constructs nothing and returns NULL.
+// A total beyond the i32 frame length domain constructs nothing and returns NULL.
 atf_amc::OptG * atf_amc::OptG_FmtByteAry(algo::ByteAry &buf, atf_amc::TypeG* typeg, int opt_len) {
     atf_amc::OptG  *msg = NULL;
     size_t len = sizeof(atf_amc::OptG);
+    if (opt_len < 0) {
+        return NULL; // a negative count would underallocate the fixed portion
+    }
     len += opt_len;
+    if (len > 0x7fffffff) {
+        return NULL; // a frame length is an i32, and so is every buffer size argument
+    }
     ary_RemoveAll(buf);
     msg = (atf_amc::OptG*)ary_AllocN(buf,len).elems;
-    msg->length = u32((len + (0)) / (1));
+    msg->length = u32(len);
     if (typeg) {
         memcpy((u8*)msg + sizeof(atf_amc::OptG), typeg, opt_len);
     }
@@ -19929,18 +27391,26 @@ atf_amc::OptG * atf_amc::OptG_FmtByteAry(algo::ByteAry &buf, atf_amc::TypeG* typ
 
 // --- atf_amc...OptG_FmtMemptr
 // Construct a new atf_amc::OptG in the space provided by BUF.
-// If BUF doesn't have enough space available, throw exception.
+// If BUF has no room for the message, construct nothing and return NULL.
 // After constructing, advance BUF appropriate number of bytes forward
+// A negative Opt byte count constructs nothing and returns NULL.
+// A total beyond the i32 frame length domain constructs nothing and returns NULL.
 atf_amc::OptG * atf_amc::OptG_FmtMemptr(algo::memptr &buf, atf_amc::TypeG* typeg, int opt_len) {
     atf_amc::OptG  *msg = NULL;
     size_t len = sizeof(atf_amc::OptG);
+    if (opt_len < 0) {
+        return NULL; // a negative count would underallocate the fixed portion
+    }
     len += opt_len;
-    if (len > u32(elems_N(buf))) {
+    if (len > 0x7fffffff) {
+        return NULL; // a frame length is an i32, and so is every buffer size argument
+    }
+    if (len > u64(elems_N(buf))) {
         return NULL; // no room.
     }
     msg = (atf_amc::OptG*)buf.elems;
     buf        = RestFrom(buf,len);
-    msg->length = u32((len + (0)) / (1));
+    msg->length = u32(len);
     if (typeg) {
         memcpy((u8*)msg + sizeof(atf_amc::OptG), typeg, opt_len);
     }
@@ -19949,15 +27419,22 @@ atf_amc::OptG * atf_amc::OptG_FmtMemptr(algo::memptr &buf, atf_amc::TypeG* typeg
 
 // --- atf_amc...OptOptG_FmtByteAry
 // Construct a new atf_amc::OptOptG in the space provided by BUF.
-// If BUF doesn't have enough space available, throw exception.
+// A negative Opt byte count constructs nothing and returns NULL.
+// A total beyond the i32 frame length domain constructs nothing and returns NULL.
 atf_amc::OptOptG * atf_amc::OptOptG_FmtByteAry(algo::ByteAry &buf, atf_amc::OptG* optg) {
     atf_amc::OptOptG  *msg = NULL;
     size_t len = sizeof(atf_amc::OptOptG);
     int opt_len = optg ? i32(optg[0].length) : 0;
+    if (opt_len < 0) {
+        return NULL; // a negative count would underallocate the fixed portion
+    }
     len += opt_len;
+    if (len > 0x7fffffff) {
+        return NULL; // a frame length is an i32, and so is every buffer size argument
+    }
     ary_RemoveAll(buf);
     msg = (atf_amc::OptOptG*)ary_AllocN(buf,len).elems;
-    msg->length = u32((len + (0)) / (1));
+    msg->length = u32(len);
     if (optg) {
         memcpy((u8*)msg + sizeof(atf_amc::OptOptG), optg, opt_len);
     }
@@ -19966,57 +27443,96 @@ atf_amc::OptOptG * atf_amc::OptOptG_FmtByteAry(algo::ByteAry &buf, atf_amc::OptG
 
 // --- atf_amc...OptOptG_FmtMemptr
 // Construct a new atf_amc::OptOptG in the space provided by BUF.
-// If BUF doesn't have enough space available, throw exception.
+// If BUF has no room for the message, construct nothing and return NULL.
 // After constructing, advance BUF appropriate number of bytes forward
+// A negative Opt byte count constructs nothing and returns NULL.
+// A total beyond the i32 frame length domain constructs nothing and returns NULL.
 atf_amc::OptOptG * atf_amc::OptOptG_FmtMemptr(algo::memptr &buf, atf_amc::OptG* optg) {
     atf_amc::OptOptG  *msg = NULL;
     size_t len = sizeof(atf_amc::OptOptG);
     int opt_len = optg ? i32(optg[0].length) : 0;
+    if (opt_len < 0) {
+        return NULL; // a negative count would underallocate the fixed portion
+    }
     len += opt_len;
-    if (len > u32(elems_N(buf))) {
+    if (len > 0x7fffffff) {
+        return NULL; // a frame length is an i32, and so is every buffer size argument
+    }
+    if (len > u64(elems_N(buf))) {
         return NULL; // no room.
     }
     msg = (atf_amc::OptOptG*)buf.elems;
     buf        = RestFrom(buf,len);
-    msg->length = u32((len + (0)) / (1));
+    msg->length = u32(len);
     if (optg) {
         memcpy((u8*)msg + sizeof(atf_amc::OptOptG), optg, opt_len);
     }
     return msg;
 }
 
+// --- atf_amc...Text_FmtAlloc
+// Construct a new atf_amc::Text in the space provided by ALLOC.
+// If ALLOC cannot provide the space, construct nothing and return NULL.
+// A total the length field cannot store constructs nothing and returns NULL.
+atf_amc::Text * atf_amc::Text_FmtAlloc(const algo::Alloc &alloc, algo::aryptr<char > text) {
+    atf_amc::Text  *msg = NULL;
+    size_t len = sizeof(atf_amc::Text);
+    u64 text_ary_len = u64(elems_N(text)) * sizeof(char);
+    len += text_ary_len;
+    if (!((len) <= 65535)) {
+        return NULL; // total not representable in the length field
+    }
+    msg = (atf_amc::Text*)alloc.begin(alloc.ctx, int(len));
+    if (!msg) {
+        return NULL; // no room.
+    }
+    msg->type = atf_amc::MsgType(0x0412);
+    msg->length = atf_amc::MsgLength(len);
+    memcpy(text_Addr(*msg), text.elems, text_ary_len);
+    if (alloc.end) {
+        alloc.end(alloc.ctx, msg, int(len)); // finalize
+    }
+    return msg;
+}
+
 // --- atf_amc...Text_FmtByteAry
 // Construct a new atf_amc::Text in the space provided by BUF.
-// If BUF doesn't have enough space available, throw exception.
+// A total the length field cannot store constructs nothing and returns NULL.
 atf_amc::Text * atf_amc::Text_FmtByteAry(algo::ByteAry &buf, algo::aryptr<char > text) {
     atf_amc::Text  *msg = NULL;
     size_t len = sizeof(atf_amc::Text);
-    u32 text_ary_len = elems_N(text) * sizeof(char);
+    u64 text_ary_len = u64(elems_N(text)) * sizeof(char);
     len += text_ary_len;
+    if (!((len) <= 65535)) {
+        return NULL; // total not representable in the length field
+    }
     ary_RemoveAll(buf);
     msg = (atf_amc::Text*)ary_AllocN(buf,len).elems;
     msg->type = atf_amc::MsgType(0x0412);
-    msg->length = atf_amc::MsgLength((len + (0)) / (1));
+    msg->length = atf_amc::MsgLength(len);
     memcpy(text_Addr(*msg), text.elems, text_ary_len);
     return msg;
 }
 
 // --- atf_amc...Varlen2Msg_FmtByteAry
 // Construct a new atf_amc::Varlen2Msg in the space provided by BUF.
-// If BUF doesn't have enough space available, throw exception.
+// A total the length field cannot store constructs nothing and returns NULL.
 atf_amc::Varlen2Msg * atf_amc::Varlen2Msg_FmtByteAry(algo::ByteAry &buf, algo::aryptr<char > s1, algo::aryptr<char > s2, algo::aryptr<char > s3) {
     atf_amc::Varlen2Msg  *msg = NULL;
     size_t len = sizeof(atf_amc::Varlen2Msg);
-    u32 s1_ary_len = elems_N(s1) * sizeof(char);
+    u64 s1_ary_len = u64(elems_N(s1)) * sizeof(char);
     len += s1_ary_len;
-    u32 s2_ary_len = elems_N(s2) * sizeof(char);
+    u64 s2_ary_len = u64(elems_N(s2)) * sizeof(char);
     len += s2_ary_len;
-    u32 s3_ary_len = elems_N(s3) * sizeof(char);
+    u64 s3_ary_len = u64(elems_N(s3)) * sizeof(char);
     len += s3_ary_len;
+    if (!((len) <= 65535)) {
+        return NULL; // total not representable in the length field
+    }
     ary_RemoveAll(buf);
     msg = (atf_amc::Varlen2Msg*)ary_AllocN(buf,len).elems;
     msg->type = atf_amc::MsgType(0x1001);
-    msg->length = atf_amc::MsgLength((len + (0)) / (1));
+    msg->length = atf_amc::MsgLength(len);
     memcpy(s1_Addr(*msg), s1.elems, s1_ary_len);
     (*msg).s1_end = atf_amc::MsgLength(s1_ary_len);
     memcpy(s2_Addr(*msg), s2.elems, s2_ary_len);
@@ -20027,20 +27543,23 @@ atf_amc::Varlen2Msg * atf_amc::Varlen2Msg_FmtByteAry(algo::ByteAry &buf, algo::a
 
 // --- atf_amc...Varlen2aMsg_FmtByteAry
 // Construct a new atf_amc::Varlen2aMsg in the space provided by BUF.
-// If BUF doesn't have enough space available, throw exception.
+// A total the length field cannot store constructs nothing and returns NULL.
 atf_amc::Varlen2aMsg * atf_amc::Varlen2aMsg_FmtByteAry(algo::ByteAry &buf, algo::aryptr<u32 > u1, algo::aryptr<u32 > u2, algo::aryptr<u32 > u3) {
     atf_amc::Varlen2aMsg  *msg = NULL;
     size_t len = sizeof(atf_amc::Varlen2aMsg);
-    u32 u1_ary_len = elems_N(u1) * sizeof(u32);
+    u64 u1_ary_len = u64(elems_N(u1)) * sizeof(u32);
     len += u1_ary_len;
-    u32 u2_ary_len = elems_N(u2) * sizeof(u32);
+    u64 u2_ary_len = u64(elems_N(u2)) * sizeof(u32);
     len += u2_ary_len;
-    u32 u3_ary_len = elems_N(u3) * sizeof(u32);
+    u64 u3_ary_len = u64(elems_N(u3)) * sizeof(u32);
     len += u3_ary_len;
+    if (!((len) <= 65535)) {
+        return NULL; // total not representable in the length field
+    }
     ary_RemoveAll(buf);
     msg = (atf_amc::Varlen2aMsg*)ary_AllocN(buf,len).elems;
     msg->type = atf_amc::MsgType(0x1002);
-    msg->length = atf_amc::MsgLength((len + (0)) / (1));
+    msg->length = atf_amc::MsgLength(len);
     memcpy(u1_Addr(*msg), u1.elems, u1_ary_len);
     (*msg).u1_end = atf_amc::MsgLength(u1_ary_len);
     memcpy(u2_Addr(*msg), u2.elems, u2_ary_len);
@@ -20051,20 +27570,23 @@ atf_amc::Varlen2aMsg * atf_amc::Varlen2aMsg_FmtByteAry(algo::ByteAry &buf, algo:
 
 // --- atf_amc...Varlen2mMsg_FmtByteAry
 // Construct a new atf_amc::Varlen2mMsg in the space provided by BUF.
-// If BUF doesn't have enough space available, throw exception.
+// A total the length field cannot store constructs nothing and returns NULL.
 atf_amc::Varlen2mMsg * atf_amc::Varlen2mMsg_FmtByteAry(algo::ByteAry &buf, algo::memptr m1, algo::memptr m2, algo::memptr m3) {
     atf_amc::Varlen2mMsg  *msg = NULL;
     size_t len = sizeof(atf_amc::Varlen2mMsg);
-    u32 m1_ary_len = elems_N(m1) * sizeof(u8);
+    u64 m1_ary_len = u64(elems_N(m1)) * sizeof(u8);
     len += m1_ary_len;
-    u32 m2_ary_len = elems_N(m2) * sizeof(u8);
+    u64 m2_ary_len = u64(elems_N(m2)) * sizeof(u8);
     len += m2_ary_len;
-    u32 m3_ary_len = elems_N(m3) * sizeof(u8);
+    u64 m3_ary_len = u64(elems_N(m3)) * sizeof(u8);
     len += m3_ary_len;
+    if (!((len) <= 65535)) {
+        return NULL; // total not representable in the length field
+    }
     ary_RemoveAll(buf);
     msg = (atf_amc::Varlen2mMsg*)ary_AllocN(buf,len).elems;
     msg->type = atf_amc::MsgType(0x1004);
-    msg->length = atf_amc::MsgLength((len + (0)) / (1));
+    msg->length = atf_amc::MsgLength(len);
     memcpy(m1_Addr(*msg), m1.elems, m1_ary_len);
     (*msg).m1_end = atf_amc::MsgLength(m1_ary_len);
     memcpy(m2_Addr(*msg), m2.elems, m2_ary_len);
@@ -20075,20 +27597,23 @@ atf_amc::Varlen2mMsg * atf_amc::Varlen2mMsg_FmtByteAry(algo::ByteAry &buf, algo:
 
 // --- atf_amc...Varlen2vMsg_FmtByteAry
 // Construct a new atf_amc::Varlen2vMsg in the space provided by BUF.
-// If BUF doesn't have enough space available, throw exception.
+// A total the length field cannot store constructs nothing and returns NULL.
 atf_amc::Varlen2vMsg * atf_amc::Varlen2vMsg_FmtByteAry(algo::ByteAry &buf, algo::memptr v1, algo::memptr v2, algo::memptr v3) {
     atf_amc::Varlen2vMsg  *msg = NULL;
     size_t len = sizeof(atf_amc::Varlen2vMsg);
-    u32 v1_ary_len = elems_N(v1) * sizeof(u8);
+    u64 v1_ary_len = u64(elems_N(v1)) * sizeof(u8);
     len += v1_ary_len;
-    u32 v2_ary_len = elems_N(v2) * sizeof(u8);
+    u64 v2_ary_len = u64(elems_N(v2)) * sizeof(u8);
     len += v2_ary_len;
-    u32 v3_ary_len = elems_N(v3) * sizeof(u8);
+    u64 v3_ary_len = u64(elems_N(v3)) * sizeof(u8);
     len += v3_ary_len;
+    if (!((len) <= 65535)) {
+        return NULL; // total not representable in the length field
+    }
     ary_RemoveAll(buf);
     msg = (atf_amc::Varlen2vMsg*)ary_AllocN(buf,len).elems;
     msg->type = atf_amc::MsgType(0x1003);
-    msg->length = atf_amc::MsgLength((len + (0)) / (1));
+    msg->length = atf_amc::MsgLength(len);
     memcpy(v1_Addr(*msg), v1.elems, v1_ary_len);
     (*msg).v1_end = atf_amc::MsgLength(v1_ary_len);
     memcpy(v2_Addr(*msg), v2.elems, v2_ary_len);
@@ -20097,37 +27622,84 @@ atf_amc::Varlen2vMsg * atf_amc::Varlen2vMsg_FmtByteAry(algo::ByteAry &buf, algo:
     return msg;
 }
 
+// --- atf_amc...VarlenB_FmtByteAry
+// Construct a new atf_amc::VarlenB in the space provided by BUF.
+// A total the length field cannot store constructs nothing and returns NULL.
+// A total beyond the i32 frame length domain constructs nothing and returns NULL.
+atf_amc::VarlenB * atf_amc::VarlenB_FmtByteAry(algo::ByteAry &buf, algo::aryptr<char > c) {
+    atf_amc::VarlenB  *msg = NULL;
+    size_t len = sizeof(atf_amc::VarlenB);
+    u64 c_ary_len = u64(elems_N(c)) * sizeof(char);
+    len += c_ary_len;
+    if (!((len-4) % 4 == 0)) {
+        return NULL; // total not representable in the length field
+    }
+    if (len > 0x7fffffff) {
+        return NULL; // a frame length is an i32, and so is every buffer size argument
+    }
+    ary_RemoveAll(buf);
+    msg = (atf_amc::VarlenB*)ary_AllocN(buf,len).elems;
+    msg->length = u32((len-4) / 4);
+    memcpy(c_Addr(*msg), c.elems, c_ary_len);
+    return msg;
+}
+
 // --- atf_amc...VarlenK_FmtByteAry
 // Construct a new atf_amc::VarlenK in the space provided by BUF.
-// If BUF doesn't have enough space available, throw exception.
+// A total beyond the i32 frame length domain constructs nothing and returns NULL.
 atf_amc::VarlenK * atf_amc::VarlenK_FmtByteAry(algo::ByteAry &buf, algo::aryptr<u32 > i) {
     atf_amc::VarlenK  *msg = NULL;
     size_t len = sizeof(atf_amc::VarlenK);
-    u32 i_ary_len = elems_N(i) * sizeof(u32);
+    u64 i_ary_len = u64(elems_N(i)) * sizeof(u32);
     len += i_ary_len;
+    if (len > 0x7fffffff) {
+        return NULL; // a frame length is an i32, and so is every buffer size argument
+    }
     ary_RemoveAll(buf);
     msg = (atf_amc::VarlenK*)ary_AllocN(buf,len).elems;
-    msg->length = u32((len + (0)) / (1));
+    msg->length = u32(len);
     memcpy(i_Addr(*msg), i.elems, i_ary_len);
     return msg;
 }
 
 // --- atf_amc...VarlenK_FmtMemptr
 // Construct a new atf_amc::VarlenK in the space provided by BUF.
-// If BUF doesn't have enough space available, throw exception.
+// If BUF has no room for the message, construct nothing and return NULL.
 // After constructing, advance BUF appropriate number of bytes forward
+// A total beyond the i32 frame length domain constructs nothing and returns NULL.
 atf_amc::VarlenK * atf_amc::VarlenK_FmtMemptr(algo::memptr &buf, algo::aryptr<u32 > i) {
     atf_amc::VarlenK  *msg = NULL;
     size_t len = sizeof(atf_amc::VarlenK);
-    u32 i_ary_len = elems_N(i) * sizeof(u32);
+    u64 i_ary_len = u64(elems_N(i)) * sizeof(u32);
     len += i_ary_len;
-    if (len > u32(elems_N(buf))) {
+    if (len > 0x7fffffff) {
+        return NULL; // a frame length is an i32, and so is every buffer size argument
+    }
+    if (len > u64(elems_N(buf))) {
         return NULL; // no room.
     }
     msg = (atf_amc::VarlenK*)buf.elems;
     buf        = RestFrom(buf,len);
-    msg->length = u32((len + (0)) / (1));
+    msg->length = u32(len);
     memcpy(i_Addr(*msg), i.elems, i_ary_len);
+    return msg;
+}
+
+// --- atf_amc...VarlenLow_FmtByteAry
+// Construct a new atf_amc::VarlenLow in the space provided by BUF.
+// A total the length field cannot store constructs nothing and returns NULL.
+atf_amc::VarlenLow * atf_amc::VarlenLow_FmtByteAry(algo::ByteAry &buf, algo::aryptr<char > c) {
+    atf_amc::VarlenLow  *msg = NULL;
+    size_t len = sizeof(atf_amc::VarlenLow);
+    u64 c_ary_len = u64(elems_N(c)) * sizeof(char);
+    len += c_ary_len;
+    if (!((len) >= 8 && (len) <= 263)) {
+        return NULL; // total not representable in the length field
+    }
+    ary_RemoveAll(buf);
+    msg = (atf_amc::VarlenLow*)ary_AllocN(buf,len).elems;
+    msg->length = u8(len-8);
+    memcpy(c_Addr(*msg), c.elems, c_ary_len);
     return msg;
 }
 

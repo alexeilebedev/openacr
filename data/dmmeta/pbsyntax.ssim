@@ -1,0 +1,2 @@
+dmmeta.pbsyntax  pbsyntax:proto2  implicit_presence:N  comment:"Explicit presence: a scalar is written even when equal to its zero value"
+dmmeta.pbsyntax  pbsyntax:proto3  implicit_presence:Y  comment:"Implicit presence: a scalar equal to its zero value is not written"

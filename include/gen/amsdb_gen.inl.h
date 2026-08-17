@@ -66,10 +66,19 @@ inline  amsdb::FieldId::FieldId(amsdb_FieldIdEnum arg) {
     this->value = i32(arg);
 }
 
-// --- amsdb.Proctype..Init
+// --- amsdb.Grptype..Ctor
+inline  amsdb::Grptype::Grptype() {
+}
+
+// --- amsdb.Mcgrptype..Init
 // Set all fields to initial values.
-inline void amsdb::Proctype_Init(amsdb::Proctype& parent) {
-    parent.id = u32(0);
+inline void amsdb::Mcgrptype_Init(amsdb::Mcgrptype& parent) {
+    parent.fanout = bool(false);
+}
+
+// --- amsdb.Mcgrptype..Ctor
+inline  amsdb::Mcgrptype::Mcgrptype() {
+    amsdb::Mcgrptype_Init(*this);
 }
 
 // --- amsdb.Proctype..Ctor
@@ -77,19 +86,29 @@ inline  amsdb::Proctype::Proctype() {
     amsdb::Proctype_Init(*this);
 }
 
-// --- amsdb.Shmtype..Init
+// --- amsdb.Trafficclass..Init
 // Set all fields to initial values.
-inline void amsdb::Shmtype_Init(amsdb::Shmtype& parent) {
-    parent.nonblock = bool(false);
+inline void amsdb::Trafficclass_Init(amsdb::Trafficclass& parent) {
+    parent.id = u8(0);
 }
 
-// --- amsdb.Shmtype..Ctor
-inline  amsdb::Shmtype::Shmtype() {
-    amsdb::Shmtype_Init(*this);
+// --- amsdb.Trafficclass..Ctor
+inline  amsdb::Trafficclass::Trafficclass() {
+    amsdb::Trafficclass_Init(*this);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const amsdb::FieldId &row) {// cfmt:amsdb.FieldId.String
     amsdb::FieldId_Print(const_cast<amsdb::FieldId&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const amsdb::Grptype &row) {// cfmt:amsdb.Grptype.String
+    amsdb::Grptype_Print(const_cast<amsdb::Grptype&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const amsdb::Mcgrptype &row) {// cfmt:amsdb.Mcgrptype.String
+    amsdb::Mcgrptype_Print(const_cast<amsdb::Mcgrptype&>(row), str);
     return str;
 }
 
@@ -98,7 +117,7 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const amsdb::Proctyp
     return str;
 }
 
-inline algo::cstring &algo::operator <<(algo::cstring &str, const amsdb::Shmtype &row) {// cfmt:amsdb.Shmtype.String
-    amsdb::Shmtype_Print(const_cast<amsdb::Shmtype&>(row), str);
+inline algo::cstring &algo::operator <<(algo::cstring &str, const amsdb::Trafficclass &row) {// cfmt:amsdb.Trafficclass.String
+    amsdb::Trafficclass_Print(const_cast<amsdb::Trafficclass&>(row), str);
     return str;
 }

@@ -1,13 +1,5 @@
-dmmeta.ns  ns:""
-dmmeta.ns  ns:acr
-dmmeta.ns  ns:algo_lib
-dmmeta.ns  ns:algo
-dmmeta.ns  ns:atf_cmdline
-dmmeta.ns  ns:command
-dmmeta.ns  ns:dmmeta
-dmmeta.ns  ns:garden
-
 dmmeta.ctype  ctype:""
+dmmeta.ctype  ctype:bool
 dmmeta.ctype  ctype:algo.Smallstr50
 dmmeta.ctype  ctype:algo.cstring
 dmmeta.ctype  ctype:algo_lib.Cmdline
@@ -18,8 +10,11 @@ dmmeta.ctype  ctype:command.acr
 dmmeta.ctype  ctype:command.atf_cmdline
 dmmeta.ctype  ctype:dmmeta.Ctype
 dmmeta.ctype  ctype:dmmeta.Ssimfile
+dmmeta.ctype  ctype:dmmeta.Substr
+dmmeta.ctype  ctype:dmmeta.Finsertwhen
 dmmeta.ctype  ctype:garden.Flower
 dmmeta.ctype  ctype:garden.Fruit
+dmmeta.ctype  ctype:garden.Variety
 
 dmmeta.field  field:""
 dmmeta.field  field:acr.FDb.cmdline  arg:command.acr
@@ -32,11 +27,32 @@ dmmeta.field  field:command.atf_cmdline.dregx  arg:dmmeta.Ctype  reftype:RegxSql
 dmmeta.field  field:command.atf_cmdline.dpkey  arg:dmmeta.Ctype  reftype:Pkey  dflt:'""'  comment:"Predefined pkey"
 dmmeta.field  field:garden.Flower.flower arg:algo.Smallstr50
 dmmeta.field  field:garden.Fruit.fruit arg:algo.Smallstr50
+dmmeta.field  field:garden.Variety.variety  arg:algo.Smallstr50  reftype:Val
+dmmeta.field  field:garden.Variety.flower   arg:garden.Flower    reftype:Pkey
+dmmeta.field  field:garden.Variety.fruit    arg:garden.Fruit     reftype:Pkey
+dmmeta.substr field:garden.Variety.flower   srcfield:garden.Variety.variety  expr:/RL
+dmmeta.substr field:garden.Variety.fruit    srcfield:garden.Variety.variety  expr:/RR
+dmmeta.field  field:command.atf_cmdline.create    arg:bool            reftype:Val   dflt:false  comment:"Trigger insert-completion"
+dmmeta.field  field:command.atf_cmdline.dvariety  arg:garden.Variety  reftype:Pkey  dflt:'""'   comment:"Composite-pkey flag"
+dmmeta.finsertwhen finsertwhen:command.atf_cmdline.dvariety  when:command.atf_cmdline.create
 
 dmmeta.ssimfile ssimfile:dmmeta.ctype  ctype:dmmeta.Ctype
 dmmeta.ssimfile ssimfile:dmmeta.ssimfile  ctype:dmmeta.Ssimfile
+dmmeta.ssimfile ssimfile:dmmeta.substr  ctype:dmmeta.Substr
+dmmeta.ssimfile ssimfile:dmmeta.finsertwhen  ctype:dmmeta.Finsertwhen
 dmmeta.ssimfile ssimfile:garden.flower  ctype:garden.Flower
 dmmeta.ssimfile ssimfile:garden.fruit  ctype:garden.Fruit
+dmmeta.ssimfile ssimfile:garden.variety  ctype:garden.Variety
 
-dmmeta.fcmdline  field:acr.FDb.cmdline  basecmdline:""
-dmmeta.fcmdline  field:atf_cmdline.FDb.cmdline  basecmdline:algo_lib.FDb.cmdline  comment:""
+# sample data for the fixture
+garden.flower   flower:rose
+garden.flower   flower:tulip
+garden.flower   flower:daisy
+garden.fruit    fruit:apple
+garden.fruit    fruit:cherry
+garden.fruit    fruit:peach
+garden.variety  variety:rose/cherry
+garden.variety  variety:tulip/peach
+
+dmmeta.ccmdline  ctype:command.acr          read:Y  basecmdline:algo_lib.FDb.cmdline  comment:""
+dmmeta.ccmdline  ctype:command.atf_cmdline  read:Y  basecmdline:algo_lib.FDb.cmdline  comment:""

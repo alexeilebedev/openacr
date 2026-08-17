@@ -28,24 +28,27 @@
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/dev_gen.inl.h"
 //#pragma endinclude
-static acr_ed::FEdaction &acr_ed_edaction_Create_Citest     = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[0];
-static acr_ed::FEdaction &acr_ed_edaction_Create_Ctype      = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[1];
-static acr_ed::FEdaction &acr_ed_edaction_Create_Field      = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[2];
-static acr_ed::FEdaction &acr_ed_edaction_Create_Finput     = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[3];
-static acr_ed::FEdaction &acr_ed_edaction_Create_Srcfile    = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[4];
-static acr_ed::FEdaction &acr_ed_edaction_Create_Ssimfile   = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[5];
-static acr_ed::FEdaction &acr_ed_edaction_Create_Target     = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[6];
-static acr_ed::FEdaction &acr_ed_edaction_Create_Unittest   = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[7];
-static acr_ed::FEdaction &acr_ed_edaction_Delete_Ctype      = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[8];
-static acr_ed::FEdaction &acr_ed_edaction_Delete_Field      = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[9];
-static acr_ed::FEdaction &acr_ed_edaction_Delete_Srcfile    = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[10];
-static acr_ed::FEdaction &acr_ed_edaction_Delete_Ssimfile   = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[11];
-static acr_ed::FEdaction &acr_ed_edaction_Delete_Target     = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[12];
-static acr_ed::FEdaction &acr_ed_edaction_Rename_Ctype      = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[13];
-static acr_ed::FEdaction &acr_ed_edaction_Rename_Field      = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[14];
-static acr_ed::FEdaction &acr_ed_edaction_Rename_Srcfile    = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[15];
-static acr_ed::FEdaction &acr_ed_edaction_Rename_Ssimfile   = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[16];
-static acr_ed::FEdaction &acr_ed_edaction_Rename_Target     = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[17];
+static acr_ed::FEdaction &acr_ed_edaction_Create_Citest        = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[0];
+static acr_ed::FEdaction &acr_ed_edaction_Create_Ctype         = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[1];
+static acr_ed::FEdaction &acr_ed_edaction_Create_DispatchMsg   = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[2];
+static acr_ed::FEdaction &acr_ed_edaction_Create_Fcurs         = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[3];
+static acr_ed::FEdaction &acr_ed_edaction_Create_Field         = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[4];
+static acr_ed::FEdaction &acr_ed_edaction_Create_Finput        = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[5];
+static acr_ed::FEdaction &acr_ed_edaction_Create_Fstep         = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[6];
+static acr_ed::FEdaction &acr_ed_edaction_Create_Srcfile       = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[7];
+static acr_ed::FEdaction &acr_ed_edaction_Create_Ssimfile      = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[8];
+static acr_ed::FEdaction &acr_ed_edaction_Create_Target        = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[9];
+static acr_ed::FEdaction &acr_ed_edaction_Create_Unittest      = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[10];
+static acr_ed::FEdaction &acr_ed_edaction_Delete_Ctype         = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[11];
+static acr_ed::FEdaction &acr_ed_edaction_Delete_Field         = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[12];
+static acr_ed::FEdaction &acr_ed_edaction_Delete_Srcfile       = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[13];
+static acr_ed::FEdaction &acr_ed_edaction_Delete_Ssimfile      = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[14];
+static acr_ed::FEdaction &acr_ed_edaction_Delete_Target        = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[15];
+static acr_ed::FEdaction &acr_ed_edaction_Rename_Ctype         = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[16];
+static acr_ed::FEdaction &acr_ed_edaction_Rename_Field         = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[17];
+static acr_ed::FEdaction &acr_ed_edaction_Rename_Srcfile       = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[18];
+static acr_ed::FEdaction &acr_ed_edaction_Rename_Ssimfile      = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[19];
+static acr_ed::FEdaction &acr_ed_edaction_Rename_Target        = ((acr_ed::FEdaction*)acr_ed::_db.edaction_data)[20];
 
 // --- acr_ed.FCfmt..Init
 // Set all fields to initial values.
@@ -69,8 +72,6 @@ inline  acr_ed::FCfmt::~FCfmt() {
 // Set all fields to initial values.
 inline void acr_ed::FCpptype_Init(acr_ed::FCpptype& cpptype) {
     cpptype.ctor = bool(false);
-    cpptype.dtor = bool(true);
-    cpptype.cheap_copy = bool(false);
 }
 
 // --- acr_ed.FCpptype..Ctor
@@ -107,7 +108,7 @@ inline bool acr_ed::c_field_EmptyQ(acr_ed::FCtype& ctype) {
 
 // --- acr_ed.FCtype.c_field.Find
 // Look up row by row id. Return NULL if out of range
-inline acr_ed::FField* acr_ed::c_field_Find(acr_ed::FCtype& ctype, u32 t) {
+inline acr_ed::FField* acr_ed::c_field_Find(acr_ed::FCtype& ctype, u64 t) {
     acr_ed::FField *retval = NULL;
     u64 idx = t;
     u64 lim = ctype.c_field_n;
@@ -125,14 +126,14 @@ inline algo::aryptr<acr_ed::FField*> acr_ed::c_field_Getary(acr_ed::FCtype& ctyp
 
 // --- acr_ed.FCtype.c_field.N
 // Return number of items in the pointer array
-inline i32 acr_ed::c_field_N(const acr_ed::FCtype& ctype) {
+inline i64 acr_ed::c_field_N(const acr_ed::FCtype& ctype) {
     return ctype.c_field_n;
 }
 
 // --- acr_ed.FCtype.c_field.RemoveAll
 // Empty the index. (The rows are not deleted)
 inline void acr_ed::c_field_RemoveAll(acr_ed::FCtype& ctype) {
-    for (u32 i = 0; i < ctype.c_field_n; i++) {
+    for (u64 i = 0; i < ctype.c_field_n; i++) {
         // mark all elements as not-in-array
         ctype.c_field_elems[i]->ctype_c_field_in_ary = false;
     }
@@ -141,7 +142,7 @@ inline void acr_ed::c_field_RemoveAll(acr_ed::FCtype& ctype) {
 
 // --- acr_ed.FCtype.c_field.qFind
 // Return reference without bounds checking
-inline acr_ed::FField& acr_ed::c_field_qFind(acr_ed::FCtype& ctype, u32 idx) {
+inline acr_ed::FField& acr_ed::c_field_qFind(acr_ed::FCtype& ctype, u64 idx) {
     return *ctype.c_field_elems[idx];
 }
 
@@ -265,7 +266,7 @@ inline bool acr_ed::c_cfmt_EmptyQ(acr_ed::FCtype& ctype) {
 
 // --- acr_ed.FCtype.c_cfmt.Find
 // Look up row by row id. Return NULL if out of range
-inline acr_ed::FCfmt* acr_ed::c_cfmt_Find(acr_ed::FCtype& ctype, u32 t) {
+inline acr_ed::FCfmt* acr_ed::c_cfmt_Find(acr_ed::FCtype& ctype, u64 t) {
     acr_ed::FCfmt *retval = NULL;
     u64 idx = t;
     u64 lim = ctype.c_cfmt_n;
@@ -283,7 +284,7 @@ inline algo::aryptr<acr_ed::FCfmt*> acr_ed::c_cfmt_Getary(acr_ed::FCtype& ctype)
 
 // --- acr_ed.FCtype.c_cfmt.N
 // Return number of items in the pointer array
-inline i32 acr_ed::c_cfmt_N(const acr_ed::FCtype& ctype) {
+inline i64 acr_ed::c_cfmt_N(const acr_ed::FCtype& ctype) {
     return ctype.c_cfmt_n;
 }
 
@@ -295,7 +296,7 @@ inline void acr_ed::c_cfmt_RemoveAll(acr_ed::FCtype& ctype) {
 
 // --- acr_ed.FCtype.c_cfmt.qFind
 // Return reference without bounds checking
-inline acr_ed::FCfmt& acr_ed::c_cfmt_qFind(acr_ed::FCtype& ctype, u32 idx) {
+inline acr_ed::FCfmt& acr_ed::c_cfmt_qFind(acr_ed::FCtype& ctype, u64 idx) {
     return *ctype.c_cfmt_elems[idx];
 }
 
@@ -423,7 +424,7 @@ inline acr_ed::FNs* acr_ed::ns_Last() {
 
 // --- acr_ed.FDb.ns.N
 // Return number of items in the pool
-inline i32 acr_ed::ns_N() {
+inline i64 acr_ed::ns_N() {
     return _db.ns_n;
 }
 
@@ -477,7 +478,7 @@ inline acr_ed::FField* acr_ed::field_Last() {
 
 // --- acr_ed.FDb.field.N
 // Return number of items in the pool
-inline i32 acr_ed::field_N() {
+inline i64 acr_ed::field_N() {
     return _db.field_n;
 }
 
@@ -531,7 +532,7 @@ inline acr_ed::FCtype* acr_ed::ctype_Last() {
 
 // --- acr_ed.FDb.ctype.N
 // Return number of items in the pool
-inline i32 acr_ed::ctype_N() {
+inline i64 acr_ed::ctype_N() {
     return _db.ctype_n;
 }
 
@@ -585,7 +586,7 @@ inline acr_ed::FSsimfile* acr_ed::ssimfile_Last() {
 
 // --- acr_ed.FDb.ssimfile.N
 // Return number of items in the pool
-inline i32 acr_ed::ssimfile_N() {
+inline i64 acr_ed::ssimfile_N() {
     return _db.ssimfile_n;
 }
 
@@ -639,7 +640,7 @@ inline acr_ed::FCstr* acr_ed::cstr_Last() {
 
 // --- acr_ed.FDb.cstr.N
 // Return number of items in the pool
-inline i32 acr_ed::cstr_N() {
+inline i64 acr_ed::cstr_N() {
     return _db.cstr_n;
 }
 
@@ -682,20 +683,20 @@ inline algo::cstring* acr_ed::vis_Last() {
 
 // --- acr_ed.FDb.vis.Max
 // Return max. number of items in the array
-inline i32 acr_ed::vis_Max() {
+inline i64 acr_ed::vis_Max() {
     return _db.vis_max;
 }
 
 // --- acr_ed.FDb.vis.N
 // Return number of items in the array
-inline i32 acr_ed::vis_N() {
+inline i64 acr_ed::vis_N() {
     return _db.vis_n;
 }
 
 // --- acr_ed.FDb.vis.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void acr_ed::vis_Reserve(int n) {
-    u32 new_n = _db.vis_n + n;
+inline void acr_ed::vis_Reserve(i64 n) {
+    u64 new_n = _db.vis_n + n;
     if (UNLIKELY(new_n > _db.vis_max)) {
         vis_AbsReserve(new_n);
     }
@@ -748,7 +749,7 @@ inline acr_ed::FListtype* acr_ed::listtype_Last() {
 
 // --- acr_ed.FDb.listtype.N
 // Return number of items in the pool
-inline i32 acr_ed::listtype_N() {
+inline i64 acr_ed::listtype_N() {
     return _db.listtype_n;
 }
 
@@ -802,7 +803,7 @@ inline acr_ed::FFprefix* acr_ed::fprefix_Last() {
 
 // --- acr_ed.FDb.fprefix.N
 // Return number of items in the pool
-inline i32 acr_ed::fprefix_N() {
+inline i64 acr_ed::fprefix_N() {
     return _db.fprefix_n;
 }
 
@@ -814,18 +815,6 @@ inline acr_ed::FFprefix& acr_ed::fprefix_qFind(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     return _db.fprefix_lary[bsr][index];
-}
-
-// --- acr_ed.FDb.ind_fprefix.EmptyQ
-// Return true if hash is empty
-inline bool acr_ed::ind_fprefix_EmptyQ() {
-    return _db.ind_fprefix_n == 0;
-}
-
-// --- acr_ed.FDb.ind_fprefix.N
-// Return number of items in the hash
-inline i32 acr_ed::ind_fprefix_N() {
-    return _db.ind_fprefix_n;
 }
 
 // --- acr_ed.FDb.target.EmptyQ
@@ -856,7 +845,7 @@ inline acr_ed::FTarget* acr_ed::target_Last() {
 
 // --- acr_ed.FDb.target.N
 // Return number of items in the pool
-inline i32 acr_ed::target_N() {
+inline i64 acr_ed::target_N() {
     return _db.target_n;
 }
 
@@ -910,7 +899,7 @@ inline acr_ed::FTargsrc* acr_ed::targsrc_Last() {
 
 // --- acr_ed.FDb.targsrc.N
 // Return number of items in the pool
-inline i32 acr_ed::targsrc_N() {
+inline i64 acr_ed::targsrc_N() {
     return _db.targsrc_n;
 }
 
@@ -952,7 +941,7 @@ inline acr_ed::FSbpath* acr_ed::sbpath_Last() {
 
 // --- acr_ed.FDb.sbpath.N
 // Return number of items in the pool
-inline i32 acr_ed::sbpath_N() {
+inline i64 acr_ed::sbpath_N() {
     return _db.sbpath_n;
 }
 
@@ -994,7 +983,7 @@ inline acr_ed::FPack* acr_ed::pack_Last() {
 
 // --- acr_ed.FDb.pack.N
 // Return number of items in the pool
-inline i32 acr_ed::pack_N() {
+inline i64 acr_ed::pack_N() {
     return _db.pack_n;
 }
 
@@ -1036,7 +1025,7 @@ inline acr_ed::FTypefld* acr_ed::typefld_Last() {
 
 // --- acr_ed.FDb.typefld.N
 // Return number of items in the pool
-inline i32 acr_ed::typefld_N() {
+inline i64 acr_ed::typefld_N() {
     return _db.typefld_n;
 }
 
@@ -1078,7 +1067,7 @@ inline acr_ed::FCpptype* acr_ed::cpptype_Last() {
 
 // --- acr_ed.FDb.cpptype.N
 // Return number of items in the pool
-inline i32 acr_ed::cpptype_N() {
+inline i64 acr_ed::cpptype_N() {
     return _db.cpptype_n;
 }
 
@@ -1120,7 +1109,7 @@ inline acr_ed::FCfmt* acr_ed::cfmt_Last() {
 
 // --- acr_ed.FDb.cfmt.N
 // Return number of items in the pool
-inline i32 acr_ed::cfmt_N() {
+inline i64 acr_ed::cfmt_N() {
     return _db.cfmt_n;
 }
 
@@ -1162,7 +1151,7 @@ inline acr_ed::FNsdb* acr_ed::nsdb_Last() {
 
 // --- acr_ed.FDb.nsdb.N
 // Return number of items in the pool
-inline i32 acr_ed::nsdb_N() {
+inline i64 acr_ed::nsdb_N() {
     return _db.nsdb_n;
 }
 
@@ -1192,7 +1181,7 @@ inline i32 acr_ed::ind_nsdb_N() {
 // Allocate space for one element. If no memory available, return NULL.
 inline void* acr_ed::edaction_AllocMem() {
     void *row = reinterpret_cast<acr_ed::FEdaction*>(_db.edaction_data) + _db.edaction_n;
-    if (_db.edaction_n == 18) row = NULL;
+    if (_db.edaction_n == 21) row = NULL;
     if (row) _db.edaction_n++;
     return row;
 }
@@ -1218,9 +1207,9 @@ inline algo::aryptr<acr_ed::FEdaction> acr_ed::edaction_Getary() {
 }
 
 // --- acr_ed.FDb.edaction.Max
-// Return constant 18 -- max. number of items in the pool
+// Return constant 21 -- max. number of items in the pool
 inline i32 acr_ed::edaction_Max() {
-    return 18;
+    return 21;
 }
 
 // --- acr_ed.FDb.edaction.N
@@ -1283,7 +1272,7 @@ inline acr_ed::FGitfile* acr_ed::gitfile_Last() {
 
 // --- acr_ed.FDb.gitfile.N
 // Return number of items in the pool
-inline i32 acr_ed::gitfile_N() {
+inline i64 acr_ed::gitfile_N() {
     return _db.gitfile_n;
 }
 
@@ -1325,7 +1314,7 @@ inline acr_ed::FMsgtype* acr_ed::msgtype_Last() {
 
 // --- acr_ed.FDb.msgtype.N
 // Return number of items in the pool
-inline i32 acr_ed::msgtype_N() {
+inline i64 acr_ed::msgtype_N() {
     return _db.msgtype_n;
 }
 
@@ -1337,6 +1326,60 @@ inline acr_ed::FMsgtype& acr_ed::msgtype_qFind(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     return _db.msgtype_lary[bsr][index];
+}
+
+// --- acr_ed.FDb.reftype.EmptyQ
+// Return true if index is empty
+inline bool acr_ed::reftype_EmptyQ() {
+    return _db.reftype_n == 0;
+}
+
+// --- acr_ed.FDb.reftype.Find
+// Look up row by row id. Return NULL if out of range
+inline acr_ed::FReftype* acr_ed::reftype_Find(u64 t) {
+    acr_ed::FReftype *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.reftype_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.reftype_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- acr_ed.FDb.reftype.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline acr_ed::FReftype* acr_ed::reftype_Last() {
+    return reftype_Find(u64(_db.reftype_n-1));
+}
+
+// --- acr_ed.FDb.reftype.N
+// Return number of items in the pool
+inline i64 acr_ed::reftype_N() {
+    return _db.reftype_n;
+}
+
+// --- acr_ed.FDb.reftype.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline acr_ed::FReftype& acr_ed::reftype_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.reftype_lary[bsr][index];
+}
+
+// --- acr_ed.FDb.ind_reftype.EmptyQ
+// Return true if hash is empty
+inline bool acr_ed::ind_reftype_EmptyQ() {
+    return _db.ind_reftype_n == 0;
+}
+
+// --- acr_ed.FDb.ind_reftype.N
+// Return number of items in the hash
+inline i32 acr_ed::ind_reftype_N() {
+    return _db.ind_reftype_n;
 }
 
 // --- acr_ed.FDb.ns_curs.Reset
@@ -1814,6 +1857,31 @@ inline acr_ed::FMsgtype& acr_ed::_db_msgtype_curs_Access(_db_msgtype_curs &curs)
     return msgtype_qFind(u64(curs.index));
 }
 
+// --- acr_ed.FDb.reftype_curs.Reset
+// cursor points to valid item
+inline void acr_ed::_db_reftype_curs_Reset(_db_reftype_curs &curs, acr_ed::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- acr_ed.FDb.reftype_curs.ValidQ
+// cursor points to valid item
+inline bool acr_ed::_db_reftype_curs_ValidQ(_db_reftype_curs &curs) {
+    return curs.index < _db.reftype_n;
+}
+
+// --- acr_ed.FDb.reftype_curs.Next
+// proceed to next item
+inline void acr_ed::_db_reftype_curs_Next(_db_reftype_curs &curs) {
+    curs.index++;
+}
+
+// --- acr_ed.FDb.reftype_curs.Access
+// item access
+inline acr_ed::FReftype& acr_ed::_db_reftype_curs_Access(_db_reftype_curs &curs) {
+    return reftype_qFind(u64(curs.index));
+}
+
 // --- acr_ed.FField..Ctor
 inline  acr_ed::FField::FField() {
     acr_ed::FField_Init(*this);
@@ -1827,18 +1895,13 @@ inline  acr_ed::FField::~FField() {
 // --- acr_ed.FFprefix..Init
 // Set all fields to initial values.
 inline void acr_ed::FFprefix_Init(acr_ed::FFprefix& fprefix) {
-    fprefix.ind_fprefix_next = (acr_ed::FFprefix*)-1; // (acr_ed.FDb.ind_fprefix) not-in-hash
-    fprefix.ind_fprefix_hashval = 0; // stored hash value
+    fprefix.require = bool(true);
+    fprefix.dflt = bool(true);
 }
 
 // --- acr_ed.FFprefix..Ctor
 inline  acr_ed::FFprefix::FFprefix() {
     acr_ed::FFprefix_Init(*this);
-}
-
-// --- acr_ed.FFprefix..Dtor
-inline  acr_ed::FFprefix::~FFprefix() {
-    acr_ed::FFprefix_Uninit(*this);
 }
 
 // --- acr_ed.FGitfile..Ctor
@@ -1910,6 +1973,16 @@ inline  acr_ed::FPack::FPack() {
 // --- acr_ed.FPack..Dtor
 inline  acr_ed::FPack::~FPack() {
     acr_ed::FPack_Uninit(*this);
+}
+
+// --- acr_ed.FReftype..Ctor
+inline  acr_ed::FReftype::FReftype() {
+    acr_ed::FReftype_Init(*this);
+}
+
+// --- acr_ed.FReftype..Dtor
+inline  acr_ed::FReftype::~FReftype() {
+    acr_ed::FReftype_Uninit(*this);
 }
 
 // --- acr_ed.FSbpath..Ctor

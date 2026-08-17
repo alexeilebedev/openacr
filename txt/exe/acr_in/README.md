@@ -3,46 +3,20 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
-&nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Internals](#internals)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Quick reference](#quick-reference)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
-&#128196; [acr_in - Internals](/txt/exe/acr_in/internals.md)<br/>
+<!-- abt_md.toc_end -->
 
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
-
-### Syntax
-<a href="#syntax"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Syntax -->
-```
-acr_in: ACR Input - compute set of ssimfiles or tuples used by a specific target
-Usage: acr_in [[-ns:]<regx>] [options]
-    OPTION        TYPE    DFLT    COMMENT
-    [ns]          regx    ""      Regx of matching namespace
-    -data                         List ssimfile contents
-    -sigcheck             Y       Output sigcheck records for schema version mismatch detection
-    -list                         List ssimfile names
-    -t                            (with -list) Tree mode
-    -data_dir     string  "data"  Directory with ssimfiles
-    -schema       string  "data"
-    -related      string  ""      Select only tuples related to specified acr key
-    -notssimfile  regx    ""      Exclude ssimfiles matching regx
-    -checkable                    Ensure output passes acr -check
-    -r            regx    ""      Reverse lookup of target by ssimfile
-    -verbose      flag            Verbosity level (0..255); alias -v; cumulative
-    -debug        flag            Debug level (0..255); alias -d; cumulative
-    -help                         Print help and exit; alias -h
-    -version                      Print version and exit
-    -signature                    Show signatures and exit; alias -sig
-
-```
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Syntax -->
+### Internals
+<a href="#internals"></a>
+&#128196; [acr_in - Internals](/txt/gen/acr_in/acr_in.md)<br/>
 
 ### Description
 <a href="#description"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Description -->
 
 acr_in computes the names and the order of ssimfiles
 which constitute target's declared input.
@@ -87,12 +61,23 @@ references, and is independent of the target itself. This means that
 resulting input can be fed into any one of the targets implied by the
 regex, without error.
 
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Description -->
+### Quick reference
+<a href="#quick-reference"></a>
+
+```bash
+acr_in <target>                        # list ssimfiles a target reads
+acr_in <target> -data                  # print the actual tuples loaded
+acr_in -r <ssimfile>                   # reverse: which targets read this file
+acr_in <target> -data > temp/in.ssim   # capture a snapshot for offline use
+<target> -in temp/in.ssim              # run target against the snapshot
+```
+
+`acr` itself has no dependency on `acr_in`.  `acr_in` is a separate query
+tool that reads the `dmmeta.finput` and `dev.targdep` tables to figure out
+which ssimfiles a program loads at startup.
 
 ### Options
 <a href="#options"></a>
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Options -->
 #### -ns -- Regx of matching namespace
 <a href="#-ns"></a>
 
@@ -171,11 +156,8 @@ With the `-r` option, one can supply a regex of a ssimfile and get a list
 of all namespaces that require the ssimfile. This includes any dependent namespaces
 via the targdep table.
 
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
-
 ### Inputs
 <a href="#inputs"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
 `acr_in` takes the following tables on input:
 |Ssimfile|Comment|
 |---|---|
@@ -189,6 +171,3 @@ via the targdep table.
 |[dmmeta.substr](/txt/ssimdb/dmmeta/substr.md)|Specify that the field value is computed from a substring of another field|
 |[dev.targdep](/txt/ssimdb/dev/targdep.md)|Dependency between targets|
 |[dev.target](/txt/ssimdb/dev/target.md)|Build target|
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
-

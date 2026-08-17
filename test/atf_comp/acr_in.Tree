@@ -1,6 +1,6 @@
 # start acr_in cmd:"$bindir/acr_in acr_in -t"
 # eof acr_in
-acr_in -> dmmeta.dispsigcheck  dispsig:acr_in.Input  signature:d48a6dc1b049c2717480bd82d5da16a9d765c724
+acr_in -> dmmeta.dispsigcheck  dispsig:acr_in.Input  signature:1233e904d6b1e67504d40fbd7efbacfe0fa26145
 acr_in -> dmmeta.dispsigcheck  dispsig:algo_lib.Input  signature:ddc07e859e7056e1a824df1ad0e6d08e12e89849
 acr_in -> acr_in:
 acr_in ->     dmmeta.ssimfile  ssimfile:dmmeta.ctype  ctype:dmmeta.Ctype

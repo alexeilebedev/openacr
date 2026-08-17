@@ -1,0 +1,13 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/bad_argv_read.ssim -out_dir: -report:N zzz"
+# eof amc
+amc -> amc.badargvread  reader:noreadapp::ReadArgv  callee:noread_ReadArgv  comment:"cmdline ctype needs a cfmt with strfmt:Argv and read:Y"
+amc -> amc.badargvread  reader:gnuapp::ReadArgv  callee:gnu_ReadArgv  comment:"cmdline ctype needs a cfmt with strfmt:Argv and read:Y"
+amc -> amc.badargvread  reader:algo_lib::CmdlineRaw_ReadArgv  callee:CmdlineRaw_ReadFieldMaybe  comment:"ctype needs a read cfmt whose printfmt is neither Raw nor Extern"
+amc -> amc.badargvread  reader:command::basenoread_ReadArgv  callee:CmdlineNoread_NArgs  comment:"basecmdline ctype needs a cfmt with strfmt:Argv and read:Y"
+amc -> amc.badargvread  reader:command::basenoread_ReadArgv  callee:CmdlineNoread_ReadFieldMaybe  comment:"basecmdline ctype needs a read cfmt whose printfmt is neither Raw nor Extern"
+amc -> amc.badargvread  reader:command::baseraw_ReadArgv  callee:CmdlineRaw_ReadFieldMaybe  comment:"basecmdline ctype needs a read cfmt whose printfmt is neither Raw nor Extern"
+amc -> amc.badargvread  reader:command::raw_ReadArgv  callee:raw_GetAnon  comment:"ctype needs a read cfmt whose printfmt is neither Raw nor Extern"
+amc -> amc.badargvread  reader:command::raw_ReadArgv  callee:raw_ReadFieldMaybe  comment:"ctype needs a read cfmt whose printfmt is neither Raw nor Extern"
+amc -> amc.badargvread  reader:command::xtern_ReadArgv  callee:xtern_ReadFieldMaybe  comment:"ctype needs a read cfmt whose printfmt is neither Raw nor Extern"
+amc -> amc.no_output  comment:"no files were modified"
+# exit amc code:9

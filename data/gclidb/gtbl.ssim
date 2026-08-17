@@ -8,4 +8,5 @@ gclidb.gtbl  gtbl:mrjob  comment:'lists CI jobs triggered by mr, shows jobs "tra
 gclidb.gtbl  gtbl:mrnote  comment:"mr notes/comments"
 gclidb.gtbl  gtbl:repo  comment:"repositories configured locally in github/gitlab"
 gclidb.gtbl  gtbl:reporemote  comment:"repositories in github/gitlab visible for access tokens"
+gclidb.gtbl  gtbl:token  comment:"project access tokens (gitlab only)"
 gclidb.gtbl  gtbl:user  comment:"users in github/gitlab"

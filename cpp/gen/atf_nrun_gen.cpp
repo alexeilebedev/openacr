@@ -41,23 +41,6 @@ lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 atf_nrun::FDb   atf_nrun::_db;    // dependency found via dev.targdep
 
-namespace atf_nrun {
-const char *atf_nrun_help =
-"atf_nrun: Run N subprocesses in parallel\n"
-"Usage: atf_nrun [[-ncmd:]<int>] [options]\n"
-"    OPTION      TYPE    DFLT    COMMENT\n"
-"    -in         string  \"data\"  Input directory or filename, - for stdin\n"
-"    -maxjobs    int     2       Number of simultaneous jobs\n"
-"    [ncmd]      int     6\n"
-"    -verbose    flag            Verbosity level (0..255); alias -v; cumulative\n"
-"    -debug      flag            Debug level (0..255); alias -d; cumulative\n"
-"    -help                       Print help and exit; alias -h\n"
-"    -version                    Print version and exit\n"
-"    -signature                  Show signatures and exit; alias -sig\n"
-;
-
-
-} // namespace atf_nrun
 namespace atf_nrun { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
     // func:atf_nrun.FDb._db.InitReflection
@@ -92,116 +75,16 @@ void atf_nrun::trace_Print(atf_nrun::trace& row, algo::cstring& str) {
 }
 
 // --- atf_nrun.FDb._db.ReadArgv
-// Read argc,argv directly into the fields of the command line(s)
-// The following fields are updated:
-//     atf_nrun.FDb.cmdline
-//     algo_lib.FDb.cmdline
+// Read argc,argv into the fields of atf_nrun.FDb.cmdline (and any base command line)
+// via atf_nrun_ReadArgv; then apply -help/-version and load floadtuples input.
 void atf_nrun::ReadArgv() {
     command::atf_nrun &cmd = atf_nrun::_db.cmdline;
-    algo_lib::Cmdline &base = algo_lib::_db.cmdline;
-    int needarg=-1;// unknown
-    int argidx=1;// skip process name
-    int anonidx=0;
-    algo::strptr nextanon = command::atf_nrun_GetAnon(cmd, anonidx);
-    tempstr err;
-    algo::strptr attrname;
-    bool isanon=false; // true if attrname is anonfld (positional)
-    algo_lib::FieldId baseattrid;
-    command::FieldId attrid;
-    bool endopt=false;
-    int whichns=0;// which namespace does the current attribute belong to
-    for (; argidx < algo_lib::_db.argc; argidx++) {
-        algo::strptr arg = algo_lib::_db.argv[argidx];
-        algo::strptr attrval;
-        algo::strptr dfltval;
-        bool haveval=false;
-        bool dash=elems_N(arg)>1 && arg.elems[0]=='-'; // a single dash is not an option
-        // this attribute is a value
-        if (endopt || needarg>0 || !dash) {
-            attrval=arg;
-            haveval=true;
-        } else {
-            // this attribute is a field name (with - or --)
-            // or a -- by itself
-            bool dashdash = elems_N(arg) >= 2 && arg.elems[1]=='-';
-            int skip = int(dash) + dashdash;
-            attrname=ch_RestFrom(arg,skip);
-            if (skip==2 && elems_N(arg)==2) {
-                endopt=true;
-                continue;// nothing else to do here
-            }
-            // parse "-a:B" arg into attrname,attrvalue
-            algo::i32_Range colon = TFind(attrname,':');
-            if (colon.beg < colon.end) {
-                attrval=ch_RestFrom(attrname,colon.end);
-                attrname=ch_FirstN(attrname,colon.beg);
-                haveval=true;
-            }
-            // look up which command (this one or the base) contains the field
-            whichns=0;
-            needarg=-1;
-            // look up parameter information in base namespace (needarg will be -1 if lookup fails)
-            if (algo_lib::FieldId_ReadStrptrMaybe(baseattrid,attrname)) {
-                needarg = algo_lib::Cmdline_NArgs(baseattrid,dfltval,&isanon);
-            }
-            if (needarg<0) {
-                whichns=1;
-                // look up parameter information in this namespace (needarg will be -1 if lookup fails)
-                if (command::FieldId_ReadStrptrMaybe(attrid,attrname)) {
-                    needarg = command::atf_nrun_NArgs(attrid,dfltval,&isanon);
-                }
-            }
-            if (attrval == "" && dfltval != "") {
-                attrval=dfltval;
-                haveval=true;
-            }
-            if (needarg<0) {
-                err<<"atf_nrun: unknown option "<<Keyval("value",arg)<<eol;
-            } else {
-                if (isanon) {
-                    if (attrname == nextanon) { // treat named anon (positional) argument as unnamed
-                        attrname = ""; // treat it as unnamed
-                    } else if (nextanon != "") { // disallow out-of-order anon (positional) args
-                        err<<"atf_nrun: error at "<<algo::strptr_ToSsim(arg)<<": must be preceded by [-"<<nextanon<<"]"<<eol;
-                    }
-                }
-            }
-        }
-        // look up anon field name based on index
-        // anon fields are only allowed in the leaf ns, never base
-        if (ch_N(attrname) == 0) {
-            attrname = nextanon;
-            nextanon = command::atf_nrun_GetAnon(cmd, ++anonidx);
-            command::FieldId_ReadStrptrMaybe(attrid,attrname);
-            whichns=1;
-        }
-        if (ch_N(attrname) == 0) {
-            err << "atf_nrun: too many arguments. error at "<<algo::strptr_ToSsim(arg)<<eol;
-        } else if (haveval) {
-            // read value into currently selected arg
-            bool ret=false;
-            // it's already known which namespace is consuming the args,
-            // so directly go there
-            if (whichns == 0) {
-                ret=algo_lib::Cmdline_ReadFieldMaybe(base, attrname, attrval);
-            }
-            if (whichns==1) {
-                ret=command::atf_nrun_ReadFieldMaybe(cmd, attrname, attrval);
-                switch(attrid.value) {
-                    default:break;
-                }
-            }
-            if (!ret) {
-                err<<"atf_nrun: error in "
-                <<Keyval("option",attrname)
-                <<Keyval("value",attrval)<<eol;
-            }
-            needarg--;
-            if (needarg <= 0) {
-                attrname="";// forget which argument was being filled
-            }
-        }
+    algo::cstring err;
+    algo::StringAry args;
+    for (int argidx=1; argidx < algo_lib::_db.argc; argidx++) {// skip process name
+        ary_Alloc(args) = algo_lib::_db.argv[argidx];
     }
+    command::atf_nrun_ReadArgv(cmd, args, err);
     bool dohelp = false;
     bool doexit=false;
     if (algo_lib::_db.cmdline.help) {
@@ -224,9 +107,7 @@ void atf_nrun::ReadArgv() {
     algo_lib_logcat_debug.enabled = algo_lib::_db.cmdline.debug;
     algo_lib_logcat_verbose.enabled = algo_lib::_db.cmdline.verbose > 0;
     algo_lib_logcat_verbose2.enabled = algo_lib::_db.cmdline.verbose > 1;
-    if (!dohelp) {
-    }
-    // dmmeta.floadtuples:atf_nrun.FDb.cmdline
+    // dmmeta.floadtuples:command.atf_nrun.in
     if (!dohelp && err=="") {
         algo_lib::ResetErrtext();
         if (!atf_nrun::LoadTuplesMaybe(cmd.in,true)) {
@@ -239,7 +120,7 @@ void atf_nrun::ReadArgv() {
         doexit=true;
     }
     if (dohelp) {
-        prlog(atf_nrun_help);
+        prlog(command::atf_nrun_help);
     }
     if (doexit) {
         _exit(algo_lib::_db.exit_code);
@@ -268,7 +149,13 @@ void atf_nrun::Step() {
 // --- atf_nrun.FDb._db.InitReflection
 // Load statically available data into tables, register tables and database.
 static void atf_nrun::InitReflection() {
-    algo_lib::imdb_InsertMaybe(algo::Imdb("atf_nrun", NULL, atf_nrun::Step, atf_nrun::MainLoop, NULL, algo::Comment()));
+    algo_lib::FImdb &row = algo_lib::imdb_Alloc();
+    row.imdb               = "atf_nrun";
+    row.InsertStrptrMaybe  = NULL;
+    row.RemoveStrptrMaybe  = NULL;
+    row.Step               = atf_nrun::Step;
+    row.MainLoop           = atf_nrun::MainLoop;
+    algo_lib::imdb_XrefMaybe(row);
 
     algo::Imtable t_trace;
     t_trace.imtable         = "atf_nrun.trace";
@@ -365,6 +252,15 @@ void atf_nrun::Steps() {
     algo_lib::Step(); // dependent namespace specified via (dev.targdep)
 }
 
+// --- atf_nrun.FDb._db.RemoveStrptrMaybe
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+bool atf_nrun::RemoveStrptrMaybe(algo::strptr str) {
+    bool retval = true;
+    (void)str;//only to avoid -Wunused-parameter
+    return retval;
+}
+
 // --- atf_nrun.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
@@ -405,7 +301,7 @@ void* atf_nrun::fentry_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     atf_nrun::FEntry*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.fentry_lary[bsr];
         if (!lev) {
             lev=(atf_nrun::FEntry*)algo_lib::malloc_AllocMem(sizeof(atf_nrun::FEntry) * (u64(1)<<bsr));
@@ -414,7 +310,7 @@ void* atf_nrun::fentry_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.fentry_n = i32(new_nelems);
+        _db.fentry_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -426,7 +322,7 @@ void atf_nrun::fentry_RemoveAll() {
     for (u64 n = _db.fentry_n; n>0; ) {
         n--;
         fentry_qFind(u64(n)).~FEntry(); // destroy last element
-        _db.fentry_n = i32(n);
+        _db.fentry_n = i64(n);
     }
 }
 
@@ -437,7 +333,7 @@ void atf_nrun::fentry_RemoveLast() {
     if (n > 0) {
         n -= 1;
         fentry_qFind(u64(n)).~FEntry();
-        _db.fentry_n = i32(n);
+        _db.fentry_n = i64(n);
     }
 }
 
@@ -690,6 +586,27 @@ atf_nrun::FEntry* atf_nrun::zd_todo_RemoveFirst() {
     return row;
 }
 
+// --- atf_nrun.FDb.zd_todo.InsertBefore
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+void atf_nrun::zd_todo_InsertBefore(atf_nrun::FEntry& row, atf_nrun::FEntry* before) {
+    if (!zd_todo_InLlistQ(row) && &row != before) {
+        atf_nrun::FEntry* next = before;
+        atf_nrun::FEntry* prev = next ? next->zd_todo_prev : _db.zd_todo_tail;
+        row.zd_todo_next = next;
+        row.zd_todo_prev = prev;
+        atf_nrun::FEntry **prev_link_a = &prev->zd_todo_next;
+        atf_nrun::FEntry **prev_link_b = &_db.zd_todo_head;
+        *(prev ? prev_link_a : prev_link_b) = &row;
+        atf_nrun::FEntry **next_link_a = &next->zd_todo_prev;
+        atf_nrun::FEntry **next_link_b = &_db.zd_todo_tail;
+        *(next ? next_link_a : next_link_b) = &row;
+        _db.zd_todo_n++;
+        if (_db.zd_todo_head == &row) {
+            zd_todo_FirstChanged();
+        }
+    }
+}
+
 // --- atf_nrun.FDb.zd_todo.FirstChanged
 // First element of index changed.
 void atf_nrun::zd_todo_FirstChanged() {
@@ -791,15 +708,50 @@ int atf_nrun::job_Start(atf_nrun::FEntry& fentry) {
         tempstr cmdline(job_ToCmdline(fentry));
         fentry.job_pid = dospawn(Zeroterm(fentry.job_path),Zeroterm(cmdline),fentry.job_timeout,fentry.job_fstdin,fentry.job_fstdout,fentry.job_fstderr);
 #else
+        int in_pipe[2]  = {-1,-1}; // [0]=child stdin (read), [1]=fentry.job_to_stdin (write)
+        int out_pipe[2] = {-1,-1}; // [0]=fentry.job_from_stdout (read), [1]=child stdout (write)
+        int err_pipe[2] = {-1,-1}; // [0]=fentry.job_from_stderr (read), [1]=child stderr (write)
+        if (fentry.job_fstdin  == "|" && pipe(in_pipe)  == 0) { fentry.job_to_stdin.value    = in_pipe[1];  }
+        if (fentry.job_fstdout == "|" && pipe(out_pipe) == 0) { fentry.job_from_stdout.value = out_pipe[0]; }
+        if (fentry.job_fstderr == "|" && pipe(err_pipe) == 0) { fentry.job_from_stderr.value = err_pipe[0]; }
         fentry.job_pid = fork();
         if (fentry.job_pid == 0) { // child
             algo_lib::DieWithParent();
+            // inherited signal handlers stay live until exec, so a kill aimed at
+            // the child in the fork-to-exec window would run the parent's handler
+            // in the child and be consumed instead of killing; restore the default
+            // dispositions so the signal does what the sender means
+            (void)signal(SIGTERM, SIG_DFL);
+            (void)signal(SIGINT , SIG_DFL);
+            (void)signal(SIGHUP , SIG_DFL);
+            (void)signal(SIGQUIT, SIG_DFL);
+            (void)signal(SIGALRM, SIG_DFL);
+            if (fentry.job_pgroup) {
+                // own process group: a kill by the child's pid alone would
+                // orphan its descendants alive; the group is one killable unit
+                (void)setpgid(0, 0);
+            }
             if (fentry.job_timeout > 0) {
                 alarm(fentry.job_timeout);
             }
-            if (retval==0) retval=algo_lib::ApplyRedirect(fentry.job_fstdin , 0);
-            if (retval==0) retval=algo_lib::ApplyRedirect(fentry.job_fstdout, 1);
-            if (retval==0) retval=algo_lib::ApplyRedirect(fentry.job_fstderr, 2);
+            if (fentry.job_memlimitmb > 0) {
+                // memory ceiling: soft and hard, so a child that drops
+                // privileges cannot raise it; the child sees allocation
+                // failure at the limit instead of inviting the OOM killer
+                struct rlimit rlim;
+                rlim.rlim_cur = rlim_t(fentry.job_memlimitmb) * 1000000;
+                rlim.rlim_max = rlim.rlim_cur;
+                (void)setrlimit(RLIMIT_AS, &rlim);
+            }
+            if (retval==0) retval=algo_lib::ApplyRedirect(fentry.job_fstdin , 0, in_pipe[0]);
+            if (retval==0) retval=algo_lib::ApplyRedirect(fentry.job_fstdout, 1, out_pipe[1]);
+            if (retval==0) retval=algo_lib::ApplyRedirect(fentry.job_fstderr, 2, err_pipe[1]);
+            if (in_pipe[0]  >= 0) (void)close(in_pipe[0]);
+            if (in_pipe[1]  >= 0) (void)close(in_pipe[1]);
+            if (out_pipe[0] >= 0) (void)close(out_pipe[0]);
+            if (out_pipe[1] >= 0) (void)close(out_pipe[1]);
+            if (err_pipe[0] >= 0) (void)close(err_pipe[0]);
+            if (err_pipe[1] >= 0) (void)close(err_pipe[1]);
             if (retval==0) retval= job_Execv(fentry);
             if (retval != 0) { // if start fails, print error
                 int err=errno;
@@ -811,31 +763,28 @@ int atf_nrun::job_Start(atf_nrun::FEntry& fentry) {
             _exit(127); // if failed to start, exit anyway
         } else if (fentry.job_pid == -1) {
             retval = errno; // failed to fork
+        } else if (fentry.job_pgroup) {
+            // mirror the child's setpgid: the group must exist the moment fork
+            // returns, or a group kill racing the child's first quantum finds no
+            // group, loses the signal, and the unkilled child boots into whatever
+            // the killer already tore down.  EACCES -- the child exec'd first, its
+            // own setpgid won -- is the benign side of the race.
+            (void)setpgid(fentry.job_pid, fentry.job_pid);
         }
+        if (in_pipe[0]  >= 0) (void)close(in_pipe[0]);  // parent keeps write end (to_stdin)
+        if (out_pipe[1] >= 0) (void)close(out_pipe[1]); // parent keeps read end (from_stdout)
+        if (err_pipe[1] >= 0) (void)close(err_pipe[1]); // parent keeps read end (from_stderr)
 #endif
     }
     fentry.job_status = fentry.job_pid > 0 ? 0 : -1; // if didn't start, set error status
     return retval;
 }
 
-// --- atf_nrun.FEntry.job.StartRead
-// Start subprocess & Read output
-algo::Fildes atf_nrun::job_StartRead(atf_nrun::FEntry& fentry, algo_lib::FFildes &read) {
-    int pipefd[2];
-    int rc=pipe(pipefd);
-    (void)rc;
-    read.fd.value = pipefd[0];
-    fentry.job_fstdout  << ">&" << pipefd[1];
-    job_Start(fentry);
-    (void)close(pipefd[1]);
-    return read.fd;
-}
-
 // --- atf_nrun.FEntry.job.Kill
 // Kill subprocess and wait
 void atf_nrun::job_Kill(atf_nrun::FEntry& fentry) {
     if (fentry.job_pid > 0) {
-        kill(fentry.job_pid,9);
+        kill(fentry.job_pgroup ? -fentry.job_pid : fentry.job_pid,9); // pgroup child dies as a whole group
         job_Wait(fentry);
     }
 }
@@ -843,6 +792,7 @@ void atf_nrun::job_Kill(atf_nrun::FEntry& fentry) {
 // --- atf_nrun.FEntry.job.Wait
 // Wait for subprocess to return
 void atf_nrun::job_Wait(atf_nrun::FEntry& fentry) {
+    algo_lib::Close(fentry.job_to_stdin);
     if (fentry.job_pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
@@ -856,11 +806,13 @@ void atf_nrun::job_Wait(atf_nrun::FEntry& fentry) {
             fentry.job_pid = 0;
         }
     }
+    algo_lib::Close(fentry.job_from_stdout);
+    algo_lib::Close(fentry.job_from_stderr);
 }
 
 // --- atf_nrun.FEntry.job.Exec
 // Start + Wait
-// Execute subprocess and return exit code
+// Execute subprocess and return its wait() status; decode with algo::WaitStatusToExitCode
 int atf_nrun::job_Exec(atf_nrun::FEntry& fentry) {
     job_Start(fentry);
     job_Wait(fentry);
@@ -899,13 +851,13 @@ algo::tempstr atf_nrun::job_ToCmdline(atf_nrun::FEntry& fentry) {
     algo::tempstr retval;
     retval << fentry.job_path << " ";
     command::bash_PrintArgv(fentry.job_cmd,retval);
-    if (ch_N(fentry.job_fstdin)) {
+    if (algo_lib::RedirectFileQ(fentry.job_fstdin)) {
         retval << " " << fentry.job_fstdin;
     }
-    if (ch_N(fentry.job_fstdout)) {
+    if (algo_lib::RedirectFileQ(fentry.job_fstdout)) {
         retval << " " << fentry.job_fstdout;
     }
-    if (ch_N(fentry.job_fstderr)) {
+    if (algo_lib::RedirectFileQ(fentry.job_fstderr)) {
         retval << " 2" << fentry.job_fstderr;
     }
     return retval;
@@ -931,7 +883,9 @@ void atf_nrun::FEntry_Init(atf_nrun::FEntry& fentry) {
     fentry.job_path = algo::strptr("bin/bash");
     fentry.job_pid = pid_t(0);
     fentry.job_timeout = i32(0);
+    fentry.job_memlimitmb = u32(0);
     fentry.job_status = i32(0);
+    fentry.job_pgroup = bool(false);
     fentry.ind_running_next = (atf_nrun::FEntry*)-1; // (atf_nrun.FDb.ind_running) not-in-hash
     fentry.ind_running_hashval = 0; // stored hash value
     fentry.zd_todo_next = (atf_nrun::FEntry*)-1; // (atf_nrun.FDb.zd_todo) not-in-list
@@ -1020,7 +974,7 @@ bool atf_nrun::FieldId_ReadStrptrMaybe(atf_nrun::FieldId &parent, algo::strptr i
 // --- atf_nrun.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:atf_nrun.FieldId.String  printfmt:Raw
-void atf_nrun::FieldId_Print(atf_nrun::FieldId& row, algo::cstring& str) {
+void atf_nrun::FieldId_Print(atf_nrun::FieldId row, algo::cstring& str) {
     atf_nrun::value_Print(row, str);
 }
 

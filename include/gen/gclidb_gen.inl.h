@@ -99,26 +99,6 @@ inline  gclidb::Gclicmdt::Gclicmdt() {
     gclidb::Gclicmdt_Init(*this);
 }
 
-// --- gclidb.Gclienv..Ctor
-inline  gclidb::Gclienv::Gclienv() {
-}
-
-// --- gclidb.Gclienvsub..Init
-// Set all fields to initial values.
-inline void gclidb::Gclienvsub_Init(gclidb::Gclienvsub& parent) {
-    parent.fwd = bool(false);
-    parent.rev = bool(false);
-}
-
-// --- gclidb.Gclienvsub..Ctor
-inline  gclidb::Gclienvsub::Gclienvsub() {
-    gclidb::Gclienvsub_Init(*this);
-}
-
-// --- gclidb.Gclisub..Ctor
-inline  gclidb::Gclisub::Gclisub() {
-}
-
 // --- gclidb.Gfld..Ctor
 inline  gclidb::Gfld::Gfld() {
 }
@@ -181,21 +161,6 @@ inline  gclidb::Gtblactfld::Gtblactfld() {
     gclidb::Gtblactfld_Init(*this);
 }
 
-// --- gclidb.Gtblacttst..Init
-// Set all fields to initial values.
-inline void gclidb::Gtblacttst_Init(gclidb::Gtblacttst& parent) {
-    parent.working = bool(true);
-}
-
-// --- gclidb.Gtblacttst..Ctor
-inline  gclidb::Gtblacttst::Gtblacttst() {
-    gclidb::Gtblacttst_Init(*this);
-}
-
-// --- gclidb.Gtblacttstout..Ctor
-inline  gclidb::Gtblacttstout::Gtblacttstout() {
-}
-
 // --- gclidb.Gtype..Ctor
 inline  gclidb::Gtype::Gtype() {
 }
@@ -230,18 +195,31 @@ inline  gclidb::Milestone::Milestone() {
 
 // --- gclidb.Mr..Ctor
 inline  gclidb::Mr::Mr() {
+    gclidb::Mr_Init(*this);
 }
 
 // --- gclidb.Mrjob..Ctor
 inline  gclidb::Mrjob::Mrjob() {
 }
 
+// --- gclidb.Mrnote..Init
+// Set all fields to initial values.
+inline void gclidb::Mrnote_Init(gclidb::Mrnote& parent) {
+    parent.resolvable = algo::strptr("");
+    parent.resolved = algo::strptr("");
+}
+
 // --- gclidb.Mrnote..Ctor
 inline  gclidb::Mrnote::Mrnote() {
+    gclidb::Mrnote_Init(*this);
 }
 
 // --- gclidb.Project..Ctor
 inline  gclidb::Project::Project() {
+}
+
+// --- gclidb.Token..Ctor
+inline  gclidb::Token::Token() {
 }
 
 // --- gclidb.User..Init
@@ -285,21 +263,6 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const gclidb::Gclicm
     return str;
 }
 
-inline algo::cstring &algo::operator <<(algo::cstring &str, const gclidb::Gclienv &row) {// cfmt:gclidb.Gclienv.String
-    gclidb::Gclienv_Print(const_cast<gclidb::Gclienv&>(row), str);
-    return str;
-}
-
-inline algo::cstring &algo::operator <<(algo::cstring &str, const gclidb::Gclienvsub &row) {// cfmt:gclidb.Gclienvsub.String
-    gclidb::Gclienvsub_Print(const_cast<gclidb::Gclienvsub&>(row), str);
-    return str;
-}
-
-inline algo::cstring &algo::operator <<(algo::cstring &str, const gclidb::Gclisub &row) {// cfmt:gclidb.Gclisub.String
-    gclidb::Gclisub_Print(const_cast<gclidb::Gclisub&>(row), str);
-    return str;
-}
-
 inline algo::cstring &algo::operator <<(algo::cstring &str, const gclidb::Gfld &row) {// cfmt:gclidb.Gfld.String
     gclidb::Gfld_Print(const_cast<gclidb::Gfld&>(row), str);
     return str;
@@ -337,16 +300,6 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const gclidb::Gtblac
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const gclidb::Gtblactfld &row) {// cfmt:gclidb.Gtblactfld.String
     gclidb::Gtblactfld_Print(const_cast<gclidb::Gtblactfld&>(row), str);
-    return str;
-}
-
-inline algo::cstring &algo::operator <<(algo::cstring &str, const gclidb::Gtblacttst &row) {// cfmt:gclidb.Gtblacttst.String
-    gclidb::Gtblacttst_Print(const_cast<gclidb::Gtblacttst&>(row), str);
-    return str;
-}
-
-inline algo::cstring &algo::operator <<(algo::cstring &str, const gclidb::Gtblacttstout &row) {// cfmt:gclidb.Gtblacttstout.String
-    gclidb::Gtblacttstout_Print(const_cast<gclidb::Gtblacttstout&>(row), str);
     return str;
 }
 
@@ -402,6 +355,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const gclidb::Mrjob 
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const gclidb::Mrnote &row) {// cfmt:gclidb.Mrnote.String
     gclidb::Mrnote_Print(const_cast<gclidb::Mrnote&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const gclidb::Token &row) {// cfmt:gclidb.Token.String
+    gclidb::Token_Print(const_cast<gclidb::Token&>(row), str);
     return str;
 }
 

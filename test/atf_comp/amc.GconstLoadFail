@@ -1,0 +1,5 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/gconst_missing -out_dir: -report:N zzz"
+# eof amc
+amc -> amc.load  file:test/amc/gconst_missing/testdb/color.ssim  err:"No such file or directory"  comment:"gconst value table could not be read"
+amc -> amc.no_output  comment:"no files were modified"
+# exit amc code:1

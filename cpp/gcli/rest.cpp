@@ -278,7 +278,7 @@ static bool CurlExecPage(gcli::FGclicmd &gclicmd, strptr per_page, strptr page) 
                 prcat(debug,out);
             }
         }
-        bool ok=http.response_status_code == 200 || http.response_status_code == 201;
+        bool ok=http.response_status_code == 200 || http.response_status_code == 201 || http.response_status_code == 204;
         cstring out;
         cstring reason("NA");
         if (!ok){
@@ -308,7 +308,9 @@ static bool CurlExecPage(gcli::FGclicmd &gclicmd, strptr per_page, strptr page) 
                 FormTuple(gclicmd);
             }
         } else {
-            prlog(http.response_body);
+            // non-json body (e.g. a job trace): handed to the command step,
+            // which filters or prints it; CurlExec prints any leftover
+            gclicmd.response_text<<http.response_body;
         }
         ret=GetResponseHeaderNext(http);
     }
@@ -352,18 +354,27 @@ static void SetGclicmd(gcli::FGclicmd &gclicmd){
     //         gcli::Gstate(gclidb_Gstate_gstate_state_closed) : gcli::Gstate(gclidb_Gstate_gstate_state_opened));
 }
 // -----------------------------------------------------------------------------
+// Execute one page, retrying transient failures; a retried-and-recovered
+// attempt is only reported at verbose level, so the output of a successful
+// command does not vary with server timing
 static bool CurlExecPageTry(gcli::FGclicmd &gclicmd, strptr per_page, strptr page){
     bool ret(false);
     u32 try_cnt(3);
+    tempstr err;
     do {
         try {
             ret=CurlExecPage(gclicmd,per_page,page);
+            err="";
             break;
         } catch (algo_lib::ErrorX &x) {
-            prlog("gcli.error  "<<x.str);
+            err=x.str;
+            verblog("gcli.retry  "<<err);
             sleep(2);
         }
     }while (--try_cnt!=0);
+    if (err!=""){
+        prlog("gcli.error  "<<err);
+    }
     return ret;
 }
 // -----------------------------------------------------------------------------
@@ -382,6 +393,11 @@ void gcli::CurlExec(gcli::FGclicmd &gclicmd) {
         }
         // process collected tuples
         gclicmd.step(gclicmd);
+        // print a non-json body the step did not consume
+        if (gclicmd.response_text!=""){
+            prlog(gclicmd.response_text);
+            gclicmd.response_text="";
+        }
         // Clear the tuples
         c_tuples_RemoveAll(gclicmd);
     }ind_end;

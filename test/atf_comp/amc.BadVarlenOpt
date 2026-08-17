@@ -1,0 +1,8 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/bad_varlen_opt.ssim -out_dir: -report:N zzz"
+# eof amc
+amc -> amc.trail_overlay  ctype:algo_lib.Blob  field:algo_lib.Blob.data  prev:algo_lib.Blob.tail  comment:"field begins at the end of the fixed portion, where an earlier field already begins"
+amc -> amc.trail_overlay  ctype:algo_lib.Rblob  field:algo_lib.Rblob.tail  prev:algo_lib.Rblob.data  comment:"field begins at the end of the fixed portion, where an earlier field already begins"
+amc -> amc.trail_overlay  ctype:algo_lib.Oblob  field:algo_lib.Oblob.tail2  prev:algo_lib.Oblob.tail  comment:"field begins at the end of the fixed portion, where an earlier field already begins"
+amc -> amc.trail_overlay  ctype:algo_lib.Dblob  field:algo_lib.Dblob.data  prev:algo_lib.Dblob.tail  comment:"field begins at the end of the fixed portion, where an earlier field already begins"
+amc -> amc.no_output  comment:"no files were modified"
+# exit amc code:4

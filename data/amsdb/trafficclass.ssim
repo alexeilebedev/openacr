@@ -1,0 +1,3 @@
+amsdb.trafficclass  trafficclass:control  id:2  comment:"Cluster coordination: heartbeats, liveness, elections, eof tables, command envelopes; bounded by construction, never backpressured"
+amsdb.trafficclass  trafficclass:data  id:0  comment:"The sequenced flow: publish intake and record distribution; the only class that may wait (carries backpressure)"
+amsdb.trafficclass  trafficclass:gapfill  id:1  comment:"Recovery flow: refill asks and re-serves; paced by its own credit"

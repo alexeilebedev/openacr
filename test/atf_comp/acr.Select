@@ -5,5 +5,5 @@ acr <- dmmeta.ns  ns:nsi2      nstype:ssimdb    license:GPL  comment:"This will 
 # eof acr
 acr -> dmmeta.ns  ns:nsi1  nstype:exe     license:GPL  comment:"This will be selected"
 acr -> dmmeta.ns  ns:nsi2  nstype:ssimdb  license:GPL  comment:"This will be selected"
-acr -> report.acr  n_select:2  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0
+acr -> report.acr  n_select:2  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0  n_badline:0
 # exit acr code:0

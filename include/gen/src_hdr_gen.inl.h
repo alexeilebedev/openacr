@@ -99,7 +99,7 @@ inline src_hdr::FTargsrc* src_hdr::targsrc_Last() {
 
 // --- src_hdr.FDb.targsrc.N
 // Return number of items in the pool
-inline i32 src_hdr::targsrc_N() {
+inline i64 src_hdr::targsrc_N() {
     return _db.targsrc_n;
 }
 
@@ -141,7 +141,7 @@ inline src_hdr::FNs* src_hdr::ns_Last() {
 
 // --- src_hdr.FDb.ns.N
 // Return number of items in the pool
-inline i32 src_hdr::ns_N() {
+inline i64 src_hdr::ns_N() {
     return _db.ns_n;
 }
 
@@ -195,7 +195,7 @@ inline src_hdr::FNsx* src_hdr::nsx_Last() {
 
 // --- src_hdr.FDb.nsx.N
 // Return number of items in the pool
-inline i32 src_hdr::nsx_N() {
+inline i64 src_hdr::nsx_N() {
     return _db.nsx_n;
 }
 
@@ -237,7 +237,7 @@ inline src_hdr::FLicense* src_hdr::license_Last() {
 
 // --- src_hdr.FDb.license.N
 // Return number of items in the pool
-inline i32 src_hdr::license_N() {
+inline i64 src_hdr::license_N() {
     return _db.license_n;
 }
 
@@ -291,7 +291,7 @@ inline src_hdr::FTarget* src_hdr::target_Last() {
 
 // --- src_hdr.FDb.target.N
 // Return number of items in the pool
-inline i32 src_hdr::target_N() {
+inline i64 src_hdr::target_N() {
     return _db.target_n;
 }
 
@@ -345,7 +345,7 @@ inline src_hdr::FScriptfile* src_hdr::scriptfile_Last() {
 
 // --- src_hdr.FDb.scriptfile.N
 // Return number of items in the pool
-inline i32 src_hdr::scriptfile_N() {
+inline i64 src_hdr::scriptfile_N() {
     return _db.scriptfile_n;
 }
 
@@ -399,7 +399,7 @@ inline src_hdr::FCopyright* src_hdr::copyright_Last() {
 
 // --- src_hdr.FDb.copyright.N
 // Return number of items in the pool
-inline i32 src_hdr::copyright_N() {
+inline i64 src_hdr::copyright_N() {
     return _db.copyright_n;
 }
 
@@ -761,7 +761,7 @@ inline bool src_hdr::c_targsrc_EmptyQ(src_hdr::FTarget& target) {
 
 // --- src_hdr.FTarget.c_targsrc.Find
 // Look up row by row id. Return NULL if out of range
-inline src_hdr::FTargsrc* src_hdr::c_targsrc_Find(src_hdr::FTarget& target, u32 t) {
+inline src_hdr::FTargsrc* src_hdr::c_targsrc_Find(src_hdr::FTarget& target, u64 t) {
     src_hdr::FTargsrc *retval = NULL;
     u64 idx = t;
     u64 lim = target.c_targsrc_n;
@@ -779,14 +779,14 @@ inline algo::aryptr<src_hdr::FTargsrc*> src_hdr::c_targsrc_Getary(src_hdr::FTarg
 
 // --- src_hdr.FTarget.c_targsrc.N
 // Return number of items in the pointer array
-inline i32 src_hdr::c_targsrc_N(const src_hdr::FTarget& target) {
+inline i64 src_hdr::c_targsrc_N(const src_hdr::FTarget& target) {
     return target.c_targsrc_n;
 }
 
 // --- src_hdr.FTarget.c_targsrc.RemoveAll
 // Empty the index. (The rows are not deleted)
 inline void src_hdr::c_targsrc_RemoveAll(src_hdr::FTarget& target) {
-    for (u32 i = 0; i < target.c_targsrc_n; i++) {
+    for (u64 i = 0; i < target.c_targsrc_n; i++) {
         // mark all elements as not-in-array
         target.c_targsrc_elems[i]->target_c_targsrc_in_ary = false;
     }
@@ -795,7 +795,7 @@ inline void src_hdr::c_targsrc_RemoveAll(src_hdr::FTarget& target) {
 
 // --- src_hdr.FTarget.c_targsrc.qFind
 // Return reference without bounds checking
-inline src_hdr::FTargsrc& src_hdr::c_targsrc_qFind(src_hdr::FTarget& target, u32 idx) {
+inline src_hdr::FTargsrc& src_hdr::c_targsrc_qFind(src_hdr::FTarget& target, u64 idx) {
     return *target.c_targsrc_elems[idx];
 }
 

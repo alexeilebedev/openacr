@@ -64,12 +64,42 @@ acr_dm::FValue &acr_dm::zs_value_GetOrCreate(FAttr &attr, strptr val) {
 
 //------------------------------------------------------------------------------
 
+// Attach ROW under ANCHOR as element SEQ of the run named by RUNKEY.
+// Rows a branch added come out before the base file's own row at that anchor, which is
+// what puts an insertion between the two rows it was written between.  Two branches
+// that both inserted at one anchor are separated by RUNKEY, the key of the first row
+// of each run: the only comparison ever made between two branches is a comparison of
+// keys, and a key cannot tell which branch git passed second.
+void acr_dm::AnchorTuple(acr_dm::FTuple &row, acr_dm::FTuple &anchor, bool basefile, strptr runkey, int seq) {
+    row.p_anchor = &anchor;
+    row.sortkey.base = basefile ? 1 : 0;
+    row.sortkey.runkey = runkey;
+    row.sortkey.seq = seq;
+    bh_child_Insert(anchor,row);
+}
+
+//------------------------------------------------------------------------------
+
 // Load all files
 void acr_dm::Main_LoadFiles() {
     vrfy(arg_N(_db.cmdline)<ssizeof(Source)*8,"Too many args");
-    acr_dm::Rowid next_rowid(0,0,0);
     ind_beg(command::acr_dm_arg_curs,arg,_db.cmdline) {
-        verblog("-- reading file "<<arg<<". next rowid "<<next_rowid);
+        bool basefile = ind_curs(arg).index==0;
+        // Rows this file adds one after another form a run, and the whole run hangs off
+        // the last row the file had in common with what the merge already knew.  The
+        // run, not the individual row, is what gets placed, which is what keeps a
+        // branch's additions together and stops one branch's run from being split by
+        // another's.  Before the first shared row there is no such row, so a run at the
+        // top of a file hangs off the virtual root and lands ahead of the base file.
+        //
+        // Hanging a run off one anchor is also what keeps the output walk shallow.
+        // Anchoring each row on the row above it would make a file added whole by one
+        // branch into a chain as long as the file, and walking it would recurse once
+        // per row until the stack ran out.
+        FTuple *anchor = _db.p_root;
+        cstring runkey;
+        int runseq = 0;
+        verblog("-- reading file "<<arg);
         ind_beg(algo::FileLine_curs,line,arg) {
             Tuple tuple;
             if (line != "" && Tuple_ReadStrptrMaybe(tuple,line)) {
@@ -82,19 +112,18 @@ void acr_dm::Main_LoadFiles() {
                 bool isnew=ind_tuple_N() > nbefore;
                 source_SetBit(ftuple.source,ind_curs(arg).index);
                 if (isnew) {
-                    if (ind_curs(arg).index==0) {// first file
-                        next_rowid.f1++;
-                    } else if (ind_curs(arg).index==1) {// second file
-                        next_rowid.f2++;
-                    } else {// third file -- this is the limit
-                        next_rowid.f3++;
+                    if (runseq == 0) {
+                        runkey = tuple_key;// this row opens the run and gives it its name
                     }
-                    ftuple.rowid=next_rowid;
+                    AnchorTuple(ftuple, *anchor, basefile, runkey, runseq);
+                    runseq++;
+                    verblog("# tuple "<<tuple_key<<" follows "<<ftuple.p_anchor->key);
                 } else {
-                    next_rowid=ftuple.rowid;
+                    // A row the merge already knew ends the run and becomes the anchor
+                    // that the next run hangs off.
+                    anchor = &ftuple;
+                    runseq = 0;
                 }
-                bh_tuple_Insert(ftuple);// sort it
-                verblog("# tuple "<<tuple_key<<" gets "<<ftuple.rowid<<". next rowid "<<next_rowid);
                 ind_beg(algo::Tuple_attrs_curs,attr,tuple) if (ind_curs(attr).index) {
                     FAttr &fattr = zs_attr_GetOrCreate(ftuple,attr.name);
                     FValue &fvalue = zs_value_GetOrCreate(fattr,attr.value);
@@ -126,9 +155,10 @@ void acr_dm::PrintSource(acr_dm::Source &source, cstring &out) {
 void acr_dm::Main_Dump() {
     if (algo_lib::_db.cmdline.debug) {
         cstring out;
-        ind_beg(_db_bh_tuple_curs,tuple,_db) {
+        ind_beg(_db_tuple_curs,tuple,_db) if (&tuple != _db.p_root) {
             out << tuple.key;
             PrintSource(tuple.source,out);
+            out << Keyval("follows",tuple.p_anchor->key);
             ind_beg(tuple_zs_attr_curs,attr,tuple) {
                 ind_beg(attr_zs_value_curs,value,attr) {
                     out << Keyval(attr.name,value.value);
@@ -152,6 +182,22 @@ inline bool acr_dm::RemovedQ(acr_dm::Source source) {
 
 //------------------------------------------------------------------------------
 
+// Print whatever the caller asked to see beside ROW, which came out at position POS.
+// `acr.rowid` is the position itself, because that is what a reader of the merged file
+// needs: acr orders the rows of one sortkey group by rowid, and a number that only
+// rises keeps every group in the order the merge put it in.  `acr_dm.follows` is the
+// anchor, which is the merge's own account of where it decided the row goes.
+void acr_dm::PrintPos(acr_dm::FTuple &row, int pos, cstring &out) {
+    if (_db.cmdline.rowid) {
+        out << Keyval("acr.rowid", pos);
+    }
+    if (_db.cmdline.anchor) {
+        out << Keyval("acr_dm.follows", row.p_anchor->key);
+    }
+}
+
+//------------------------------------------------------------------------------
+
 // print conflict marker
 void acr_dm::PrintConflictMarker(char mark, strptr source_name, cstring &out) {
     char_PrintNTimes(mark,out,_db.cmdline.msize);
@@ -164,7 +210,7 @@ void acr_dm::PrintConflictMarker(char mark, strptr source_name, cstring &out) {
 //------------------------------------------------------------------------------
 
 // Print tuple for given source
-void acr_dm::PrintSourceTuple(FTuple &tuple, int source, cstring &out) {
+void acr_dm::PrintSourceTuple(FTuple &tuple, int source, int pos, cstring &out) {
     tempstr temp;
     if (source_GetBit(tuple.source,source)) {
         temp << tuple.key;
@@ -179,9 +225,7 @@ void acr_dm::PrintSourceTuple(FTuple &tuple, int source, cstring &out) {
     }
     if (ch_N(temp)) {
         out << temp;
-        if (_db.cmdline.rowid) {
-            out << Keyval("acr.rowid", tuple.rowid.f1) << Keyval("acr_dm.rowid", tuple.rowid);
-        }
+        PrintPos(tuple,pos,out);
         out << eol;
     }
 }
@@ -189,7 +233,7 @@ void acr_dm::PrintSourceTuple(FTuple &tuple, int source, cstring &out) {
 //------------------------------------------------------------------------------
 
 // Print merged tuple, return false in case of conflict
-bool acr_dm::MergeTuple(FTuple &tuple, cstring &out) {
+bool acr_dm::MergeTuple(FTuple &tuple, int pos, cstring &out) {
     bool conflict(false);
     tempstr temp;
     temp << tuple.key;
@@ -224,9 +268,7 @@ bool acr_dm::MergeTuple(FTuple &tuple, cstring &out) {
     } ind_end;
     if (!RemovedQ(tuple.source) && !conflict) {
         out << temp;
-        if (_db.cmdline.rowid) {
-            out << Keyval("acr.rowid", tuple.rowid) << Keyval("acr_dm.rowid", tuple.rowid);
-        }
+        PrintPos(tuple,pos,out);
         out << eol;
     }
     return !conflict;
@@ -234,27 +276,40 @@ bool acr_dm::MergeTuple(FTuple &tuple, cstring &out) {
 
 //------------------------------------------------------------------------------
 
-// Merge
-void acr_dm::Main_Merge() {
-    cstring out;
-    ind_beg(_db_bh_tuple_curs,tuple,_db) {
+// Print every row that came after TUPLE, each one followed in turn by the rows that
+// came after it.  The bheap hands the rows back in sortkey order, so the rows a branch
+// added come out ordered by key and the rows of the base file come out in the order
+// the base file had them, the added ones ahead of the base row they were placed before.
+void acr_dm::PrintSubtree(acr_dm::FTuple &tuple, int &pos, cstring &out) {
+    ind_beg(tuple_bh_child_curs,child,tuple) {
         cstring merged;
-        if (MergeTuple(tuple,merged)) {
+        if (MergeTuple(child,pos,merged)) {
             // no conflict
             // print tuple (may be empty when deleted)
             out << merged;
         } else {
             // conflict
             PrintConflictMarker('<',*arg_Find(_db.cmdline,1),out);
-            PrintSourceTuple(tuple,1,out);
+            PrintSourceTuple(child,1,pos,out);
             PrintConflictMarker('=',"",out);
             for (int i=2; i<arg_N(_db.cmdline); ++i) {
-                PrintSourceTuple(tuple,i,out);
+                PrintSourceTuple(child,i,pos,out);
                 PrintConflictMarker('>',*arg_Find(_db.cmdline,i),out);
             }
             algo_lib::_db.exit_code = 1;
         }
+        pos++;
+        PrintSubtree(child,pos,out);
     }ind_end;
+}
+
+//------------------------------------------------------------------------------
+
+// Merge
+void acr_dm::Main_Merge() {
+    cstring out;
+    int pos=0;
+    PrintSubtree(*_db.p_root,pos,out);
     // print or save
     if (arg_N(_db.cmdline)>=3 && _db.cmdline.write_ours && FileQ(*arg_Find(_db.cmdline,1))) {
         StringToFile(out,*arg_Find(_db.cmdline,1));
@@ -268,6 +323,10 @@ void acr_dm::Main_Merge() {
 
 // Main routine
 void acr_dm::Main() {
+    // Every file's first line comes after nothing, and this row is that nothing.
+    // Giving it a record means no row is a special case: each one has an anchor, and
+    // the whole result is the rows that came after this one.  It is never printed.
+    _db.p_root = &tuple_Alloc();
     Main_LoadFiles();
     Main_Dump();
     Main_Merge();

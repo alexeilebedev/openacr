@@ -135,7 +135,7 @@ cstring acr_ed::getNextMsgTypeValue(strptr target_subset) {
 // Example 1:
 // acr_ed -create -ctype acmdb.Devos -subset1 acmdb.Device -subset2 acmdb.Os -separator /
 // Example 2:
-// acr_ed -create -ctype atf_tmsg.FOrder -pooltype Tpool -indexed
+// acr_ed -create -ctype atf_tmsg.FOrder -reftype Tpool -indexed
 void acr_ed::edaction_Create_Ctype() {
     // Determine name of pkey for the newly created ctype
     // - if ssimfile name is known, pick ssimfile name;
@@ -199,11 +199,10 @@ void acr_ed::edaction_Create_Ctype() {
         }
     }
 
-    // print pkey -- if -subset was specified
+    // print pkey -- if -subset was specified.  Auto-derived above
+    // (Pkey for ssimdb, Val otherwise, Base for proto Msg subsets);
+    // -reftype is reserved for the FDb-level pool storage class below.
     if (ch_N(acr_ed::_db.cmdline.subset) > 0) {
-        if (acr_ed::_db.cmdline.reftype != "") {
-            pkey.reftype = acr_ed::_db.cmdline.reftype;
-        }
         if (pkey.reftype == dmmeta_Reftype_reftype_Base) {
             pkey.field = dmmeta::Field_Concat_ctype_name(ctype.ctype, "base");
         } else {
@@ -214,7 +213,7 @@ void acr_ed::edaction_Create_Ctype() {
             : strptr("algo.Smallstr50");
         acr_ed::_db.out_ssim << pkey << eol;
         acr_ed::_db.cmdline.field = pkey.field;//save it
-        InsertFieldExtras(pkey.field, pkey.arg, acr_ed::_db.cmdline.reftype);
+        InsertFieldExtras(pkey.field, pkey.arg, pkey.reftype);
         // create extra fields
         auto *base_type = ind_ctype_Find(_db.cmdline.subset);
         if (base_type && pkey.reftype == dmmeta_Reftype_reftype_Base) {
@@ -231,14 +230,6 @@ void acr_ed::edaction_Create_Ctype() {
                     : getNextMsgTypeValue(acr_ed::_db.cmdline.subset);
                 algo::CppExpr_ReadStrptrMaybe(msgtype.type,msgtype_str_arg);
                 acr_ed::_db.out_ssim << msgtype << eol;
-            }
-            if (base_type->c_cpptype) {
-                dmmeta::Cpptype cpptype;
-                cpptype.ctype = ctype.ctype;
-                cpptype.ctor = false;
-                cpptype.dtor = false;
-                cpptype.cheap_copy = false;
-                acr_ed::_db.out_ssim << cpptype << eol;
             }
             ind_beg(acr_ed::ctype_c_cfmt_curs,c_cfmt,*base_type){
                 dmmeta::Cfmt cfmt;
@@ -258,21 +249,24 @@ void acr_ed::edaction_Create_Ctype() {
         CreateCrossProduct(ctype,pkey);
     }
 
-    // Create a pool for the ctype
-    if (ch_N(acr_ed::_db.cmdline.pooltype)) {
+    // Create a pool for the ctype.  Only when -reftype is a pool-storage
+    // class (inst:Y): Blkpool, Inlary, Lary, Lpool, Malloc, Tary, Tpool.
+    // -reftype:Base/Pkey/Val/etc. don't imply a pool.
+    acr_ed::FReftype *rt = ind_reftype_Find(acr_ed::_db.cmdline.reftype);
+    if (rt && rt->inst) {
         dmmeta::Field pool;
         pool.field = tempstr() << ns_Get(ctype) <<".FDb." << pkey_name;
         pool.arg = ctype.ctype;
-        pool.reftype = acr_ed::_db.cmdline.pooltype;
+        pool.reftype = acr_ed::_db.cmdline.reftype;
         acr_ed::_db.out_ssim << pool << eol;
 
         // output required records for this pool type
-        if (ch_N(acr_ed::_db.cmdline.pooltype) && acr_ed::_db.cmdline.pooltype == dmmeta_Reftype_reftype_Tary) {
+        if (acr_ed::_db.cmdline.reftype == dmmeta_Reftype_reftype_Tary) {
             dmmeta::Tary tary;
             tary.field = pool.field;
             acr_ed::_db.out_ssim << tary << eol;
         }
-        if (ch_N(acr_ed::_db.cmdline.pooltype) && acr_ed::_db.cmdline.pooltype == dmmeta_Reftype_reftype_Inlary) {
+        if (acr_ed::_db.cmdline.reftype == dmmeta_Reftype_reftype_Inlary) {
             dmmeta::Inlary inlary;
             inlary.field = pool.field;
             inlary.min=0;

@@ -172,7 +172,11 @@ static void IssueToMr(){
         if (mr.source_repo!=""){
             source_branch=Pathcomp(mr.source_branch,":LR");
         }
-        if (gcli::FIssue *issue=gcli::ind_issue_Find(source_branch)){
+        // the source branch names its issue by the trailing .<iid>
+        // (git-safe and older slash-named branches alike)
+        tempstr iid(gcli::IssueArgNumber(source_branch,""));
+        gcli::FIssue *issue = iid=="" ? NULL : gcli::ind_issue_Find(gcli::GetTargetKey(iid));
+        if (issue){
             if (mr.state==gcli::Gstate(gclidb_Gstate_gstate_state_opened)){
                 issue->p_mr_open=&mr;
                 if (issue->mr!=""){
@@ -291,9 +295,11 @@ void gcli::gtblact_issue_list(gcli::FGtblact &gtblact){
 // -----------------------------------------------------------------------------
 void gcli::gtblact_issue_update(gcli::FGtblact &gtblact){
     gcli::_db.cmdline.t=gtblact.t;
-    // read the issue we want to update
+    // read the issue we want to update; % targets the current branch's issue
     if (gtblact.id=="%"){
-        gtblact.id=gcli::GetCurrentGitBranch();
+        tempstr branch(gcli::GetCurrentGitBranch());
+        tempstr branch_issue(gcli::BranchIssue(branch));
+        gtblact.id = branch_issue=="" ? branch : branch_issue;
     }
     // read the issue we want to update
     gcli::FIssue &issue=ReadSingleIssue(gtblact);
@@ -374,13 +380,13 @@ void gcli::gtblact_issue_create(gcli::FGtblact &gtblact){
 void gcli::gtblact_issue_start(gcli::FGtblact &gtblact){
     vrfy_(gcli::_db.unix_user.ch_n);
     tempstr id(gtblact.id);
-    tempstr issue_key=GetTargetKey(id);
     gcli::FIssue &issue=ReadSingleIssue(gtblact);
-    //    gcli::FIssue &issue=ValidateIssue(issue_key);
-    // Check branch exists
-    if (CheckGitBranchExists(issue_key)){
-        // Check dir is clean
-        AssertGitWorkDirClean();
+    // Check dir is clean
+    AssertGitWorkDirClean();
+    // Find a local branch already bound to the issue -- by name (git-safe or
+    // older slash form) or by the seed-commit footer (gli-named branches)
+    tempstr existing=FindIssueBranch(gcli::IssueArgNumber(id,""));
+    if (existing==""){
         // Checkout branch
         GitCheckoutMasterBranch(issue);
         // Add "in_progress" label here, preserve other labels
@@ -399,10 +405,8 @@ void gcli::gtblact_issue_start(gcli::FGtblact &gtblact){
             zd_gtblact_Extend(gclidb_Gtblact_gtblact_issue_update,id);
         }
     } else {
-        // Check dir is clean
-        AssertGitWorkDirClean();
         prlog("Branch exists, switching to it");
-        gcli::GitCheckoutBranch(issue_key);
+        gcli::GitCheckoutBranch(existing);
     }
 }
 // -----------------------------------------------------------------------------

@@ -7,18 +7,9 @@
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2023 AlgoRND
 //
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// This source code constitutes confidential information and trade secrets
+// of AlgoRND. Unauthorized copying, distribution or sharing of this file,
+// via any medium, is strictly prohibited.
 //
 
 
@@ -29,18 +20,18 @@
 
 // --- httpdb_FieldIdEnum
 
-enum httpdb_FieldIdEnum {               // httpdb.FieldId.value
-     httpdb_FieldId_content       = 0
-    ,httpdb_FieldId_description   = 1
-    ,httpdb_FieldId_header        = 2
-    ,httpdb_FieldId_comment       = 3
-    ,httpdb_FieldId_method        = 4
-    ,httpdb_FieldId_id            = 5
-    ,httpdb_FieldId_status        = 6
-    ,httpdb_FieldId_code          = 7
-    ,httpdb_FieldId_reason        = 8
-    ,httpdb_FieldId_version       = 9
-    ,httpdb_FieldId_value         = 10
+enum httpdb_FieldIdEnum {    // httpdb.FieldId.value
+     httpdb_FieldId_content
+    ,httpdb_FieldId_description
+    ,httpdb_FieldId_header
+    ,httpdb_FieldId_comment
+    ,httpdb_FieldId_method
+    ,httpdb_FieldId_id
+    ,httpdb_FieldId_status
+    ,httpdb_FieldId_code
+    ,httpdb_FieldId_reason
+    ,httpdb_FieldId_version
+    ,httpdb_FieldId_value
 };
 
 enum { httpdb_FieldIdEnum_N = 11 };
@@ -70,7 +61,6 @@ struct Content { // httpdb.Content: core/common Content-Type values
     // func:httpdb.Content..Ctor
     inline               Content() __attribute__((nothrow));
 };
-
 // func:httpdb.Content..ReadFieldMaybe
 bool                 Content_ReadFieldMaybe(httpdb::Content& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of httpdb::Content from an ascii string.
@@ -96,7 +86,6 @@ struct FieldId { // httpdb.FieldId: Field read helper
     inline               FieldId(httpdb_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:httpdb.FieldId.value.GetEnum
 inline httpdb_FieldIdEnum value_GetEnum(const httpdb::FieldId& parent) __attribute__((nothrow));
@@ -134,7 +123,7 @@ inline void          FieldId_Init(httpdb::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:httpdb.FieldId.String  printfmt:Raw
 // func:httpdb.FieldId..Print
-void                 FieldId_Print(httpdb::FieldId& row, algo::cstring& str) __attribute__((nothrow));
+void                 FieldId_Print(httpdb::FieldId row, algo::cstring& str) __attribute__((nothrow));
 
 // --- httpdb.Header
 struct Header { // httpdb.Header
@@ -143,7 +132,6 @@ struct Header { // httpdb.Header
     // func:httpdb.Header..Ctor
     inline               Header() __attribute__((nothrow));
 };
-
 // func:httpdb.Header..ReadFieldMaybe
 bool                 Header_ReadFieldMaybe(httpdb::Header& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of httpdb::Header from an ascii string.
@@ -163,7 +151,6 @@ struct Method { // httpdb.Method
     // func:httpdb.Method..Ctor
     inline               Method() __attribute__((nothrow));
 };
-
 // func:httpdb.Method..ReadFieldMaybe
 bool                 Method_ReadFieldMaybe(httpdb::Method& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of httpdb::Method from an ascii string.
@@ -184,16 +171,15 @@ struct Status { // httpdb.Status
     // func:httpdb.Status..Ctor
     inline               Status() __attribute__((nothrow));
 };
-
 // func:httpdb.Status.code.Get
 u16                  code_Get(httpdb::Status& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:httpdb.Status.code.Get2
 u16                  Status_code_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:httpdb.Status.reason.Get
-algo::Smallstr50     reason_Get(httpdb::Status& parent) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         reason_Get(httpdb::Status& parent) __attribute__((__warn_unused_result__, nothrow));
 // func:httpdb.Status.reason.Get2
-algo::Smallstr50     Status_reason_Get(algo::strptr arg) __attribute__((nothrow));
+algo::strptr         Status_reason_Get(algo::strptr arg) __attribute__((nothrow));
 
 // func:httpdb.Status..Concat_code_reason
 tempstr              Status_Concat_code_reason( u16 code ,const algo::strptr& reason );
@@ -215,7 +201,6 @@ struct Version { // httpdb.Version
     // func:httpdb.Version..Ctor
     inline               Version() __attribute__((nothrow));
 };
-
 // func:httpdb.Version..ReadFieldMaybe
 bool                 Version_ReadFieldMaybe(httpdb::Version& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of httpdb::Version from an ascii string.

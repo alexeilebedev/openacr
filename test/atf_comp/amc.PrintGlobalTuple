@@ -1,0 +1,23 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/print_global_tuple.ssim -out_dir: -report:N algo_lib.FDb.%Print%"
+# eof amc
+amc -> // --- algo_lib.FDb..Print
+amc -> // print string representation of ROW to string STR
+amc -> // cfmt:algo_lib.FDb.String  printfmt:Tuple
+amc -> void algo_lib::FDb_Print(algo_lib::FDb& row, algo::cstring& str) {
+amc ->     algo::tempstr temp;
+amc ->     str << "algo_lib.FDb";
+amc ->     u64_Print(row.malloc, temp);
+amc ->     PrintAttrSpaceReset(str,"malloc", temp);
+amc ->     u32_Print(row.val, temp);
+amc ->     PrintAttrSpaceReset(str,"val", temp);
+amc ->     ind_beg(_db_buf_curs,buf,row) {
+amc ->         u32_Print(buf, temp);
+amc ->         tempstr name;
+amc ->         name << "buf.";
+amc ->         name << ind_curs(buf).index;
+amc ->         PrintAttrSpaceReset(str, name, temp);
+amc ->     }ind_end;
+amc ->     algo_lib::trace_Print(row.trace, temp);
+amc ->     PrintAttrSpaceReset(str,"trace", temp);
+amc -> }
+# exit amc code:0

@@ -1,0 +1,6 @@
+# start env cmd:"env COMP_LINE='acr ' COMP_POINT=4 COMP_TYPE=9 $bindir/acr_compl -check_batch"
+env <- acr_compl.checkreq  id:1  line:'acr ssimfile:%'
+env <- acr_compl.checkreq  id:2  line:'acr -nosuch_flag'
+# eof env
+env -> acr_compl.checkerr  id:2  err:'acr_compl.check  error:"unknown option"  value:nosuch_flag  command:acr'
+# exit env code:1

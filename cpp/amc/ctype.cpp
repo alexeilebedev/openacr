@@ -27,7 +27,55 @@
 
 // -----------------------------------------------------------------------------
 
+// Validate per-ctype attributes the generators assume: a global ctype admits
+// no ccmp, no chash, and no second instance, and minmax requires a raw
+// operator < (builtin, extrn ccmp, or genop:Y order:Y ccmp).
 void amc::tclass_Ctype() {
+    amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
+    // A global ctype has exactly one instance, so a function comparing or
+    // hashing two instances is meaningless. Worse, the generators would emit
+    // one silently: a global field's Get accessor takes no parent argument,
+    // so both operands of the generated Cmp/Lt/Hash body collapse to the
+    // singleton's value and the function compares the instance with itself.
+    if (GlobalQ(ctype)) {
+        if (ctype.c_ccmp) {
+            prerr("amc.ccmp_global"
+                  <<Keyval("ccmp",ctype.ctype)
+                  <<Keyval("comment","ccmp on a global ctype: there is exactly one instance, nothing to compare"));
+            algo_lib::_db.exit_code++;
+        }
+        if (ctype.c_chash) {
+            prerr("amc.chash_global"
+                  <<Keyval("chash",ctype.ctype)
+                  <<Keyval("comment","chash on a global ctype: there is exactly one instance, nothing to hash"));
+            algo_lib::_db.exit_code++;
+        }
+        // The same collapse makes any second instance unusable: a pooled row
+        // of a global ctype would reach its field accessors, which take no
+        // parent and always read the global -- a hash index or sort over the
+        // pool would silently compare the singleton with itself.
+        if (zd_inst_N(ctype) != 1) {
+            prerr("amc.global_inst"
+                  <<Keyval("ctype",ctype.ctype)
+                  <<Keyval("n_inst",zd_inst_N(ctype))
+                  <<Keyval("comment","a Global instance must be the ctype's only instance: field accessors take no parent and read the global"));
+            algo_lib::_db.exit_code++;
+        }
+    }
+    // Min/Max/UpdateMin/UpdateMax compare records with a raw <, which exists
+    // for builtins (native operator), for extrn:Y ccmp (the user supplies the
+    // comparison), and for genop:Y order:Y ccmp (generated operator); any
+    // other minmax:Y combination would ship non-compiling code
+    if (ctype.c_ccmp && ctype.c_ccmp->minmax
+        && !(ctype.c_bltin || ctype.c_ccmp->extrn || (ctype.c_ccmp->genop && ctype.c_ccmp->order))) {
+        prerr("amc.ccmp_minmax"
+              <<Keyval("ccmp",ctype.ctype)
+              <<Keyval("extrn",(ctype.c_ccmp->extrn ? "Y" : "N"))
+              <<Keyval("genop",(ctype.c_ccmp->genop ? "Y" : "N"))
+              <<Keyval("order",(ctype.c_ccmp->order ? "Y" : "N"))
+              <<Keyval("comment","minmax:Y requires an operator < : a builtin type, extrn:Y, or genop:Y order:Y"));
+        algo_lib::_db.exit_code++;
+    }
 }
 
 // -----------------------------------------------------------------------------
@@ -56,10 +104,10 @@ void amc::tfunc_Ctype_Uninit() {
         // call user-defined cleanup
         rrep_(i, amc::c_field_N(ctype)) {
             amc::FField &field = *c_field_Find(ctype,i);
-            if (field.c_fcleanup) {
+            if (amc::FindFfunc(field, amcdb_cbtype_Cleanup, true)) {
                 Set(R, "$field", field.field);
                 Set(R, "$name", name_Get(field));
-                Ins(&R, uninit.body, "$name_Cleanup($pararg); // dmmeta.fcleanup:$field");
+                Ins(&R, uninit.body, "$name_Cleanup($pararg); // dmmeta.ffunc:$field/Cleanup");
                 naction++;
             }
         }
@@ -262,7 +310,7 @@ void amc::tfunc_Ctype_XrefMaybe() {
                 }
                 Ins(&R, xrefmaybe.body    , "if ($inscond) { // user-defined insert condition");
                 // check if reftype has an InsertMaybe function that checks for duplicates
-                if (xref.p_field->reftype == dmmeta_Reftype_reftype_Thash || xref.p_field->reftype == dmmeta_Reftype_reftype_Ptr) {
+                if (xref.p_field->reftype == dmmeta_Reftype_reftype_Thash || xref.p_field->reftype == dmmeta_Reftype_reftype_Blkhash || xref.p_field->reftype == dmmeta_Reftype_reftype_Ptr) {
                     Ins(&R, xrefmaybe.body, "    bool success = $xrefname_InsertMaybe($thisparname, row);");
                     Ins(&R, xrefmaybe.body, "    if (UNLIKELY(!success)) {");
                     Ins(&R, xrefmaybe.body, "        ch_RemoveAll(algo_lib::_db.errtext);");
@@ -276,6 +324,9 @@ void amc::tfunc_Ctype_XrefMaybe() {
                 }
                 Ins(&R, xrefmaybe.body    , "}");
             }ind_end;
+        }
+        if (!GlobalQ(ctype)) {
+            amc::AddFcondXrefMaybeBody(xrefmaybe, ctype);
         }
     }
 }
@@ -448,7 +499,7 @@ static void Ctype_Lt_SingleField(algo_lib::Replscope &R, amc::FCtype &ctype, amc
             Set(R, "$a_val", FieldvalExpr(&ctype, field, "lhs"));
             Set(R, "$b_val", FieldvalExpr(&ctype, field, "rhs"));
             Set(R, "$Fldtype", field.p_arg->cpp_type);
-            Ins(&R, oplt.body, "return $a_val < b_val;");
+            Ins(&R, oplt.body, "return (u64)(void*)$a_val < (u64)(void*)$b_val;");
         } else if (field.reftype == dmmeta_Reftype_reftype_Smallstr) {// default for small strings
             Set(R, "$name", name_Get(field));
             Ins(&R, oplt.body, "return algo::strptr_Lt($name_Getary(lhs), $name_Getary(rhs));");
@@ -456,7 +507,11 @@ static void Ctype_Lt_SingleField(algo_lib::Replscope &R, amc::FCtype &ctype, amc
             Set(R, "$a_val", FieldvalExpr(&ctype, field, "lhs"));
             Set(R, "$b_val", FieldvalExpr(&ctype, field, "rhs"));
             Set(R, "$Fldtype", field.p_arg->cpp_type);
-            Ins(&R, oplt.body, "return $Fldtype_Lt($a_val, $b_val);");
+            if (field.p_arg->c_ccmp->order) {
+                Ins(&R, oplt.body, "return $Fldtype_Lt($a_val, $b_val);");
+            } else {// order:N generates Cmp but no Lt
+                Ins(&R, oplt.body, "return $Fldtype_Cmp($a_val, $b_val) < 0;");
+            }
         } else {
             prerr("amc.bad_cmp"
                   <<Keyval("field",field.field)
@@ -513,13 +568,13 @@ void amc::tfunc_Ctype_Init() {
                 inl = inl && func->inl;
             }
         }
-        if (field.c_fuserinit) {
+        if (amc::FindFfunc(field, amcdb_cbtype_Userinit, true)) {
             Set(R, "$field", field.field);
             if (field.reftype == dmmeta_Reftype_reftype_Global) {
-                Ins(&R, text, "Userinit($pararg); // dmmeta.fuserinit:$field");
+                Ins(&R, text, "Userinit($pararg); // dmmeta.ffunc:$field/Userinit");
             } else {
                 Set(R, "$name", name_Get(field));
-                Ins(&R, text, "$name_Userinit($pararg); // dmmeta.fuserinit:$field");
+                Ins(&R, text, "$name_Userinit($pararg); // dmmeta.ffunc:$field/Userinit");
             }
         }
     }ind_end;
@@ -969,14 +1024,21 @@ void amc::tfunc_Ctype2_Ctor() {
 
 // -----------------------------------------------------------------------------
 
-void amc::tfunc_Ctype2_FieldwiseCtor() {
-    algo_lib::Replscope &R = amc::_db.genctx.R;
-    amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
+// True when the ctype gets a fieldwise constructor: a cpptype row asking for a
+// constructor, over at least one field the constructor can take an argument for.
+bool amc::FieldwiseCtorQ(amc::FCtype &ctype) {
     int nfield = 0;
     ind_beg(amc::ctype_c_field_curs, field,ctype) if (PassFieldViaArgQ(field,ctype)) {
         nfield++;
     }ind_end;
-    if (nfield > 0 && ctype.c_cpptype && ctype.c_cpptype->ctor) {
+    return nfield > 0 && ctype.c_cpptype && ctype.c_cpptype->ctor;
+}
+
+// Generate the ctype's fieldwise constructor: one argument per constructor-passable field, each member initialized from its argument.
+void amc::tfunc_Ctype2_FieldwiseCtor() {
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
+    if (amc::FieldwiseCtorQ(ctype)) {
         int n_args = 0;
         amc::FFunc &func = amc::CreateCurFunc();
         Ins(&R, func.proto, "$Name()", false);
@@ -995,7 +1057,10 @@ void amc::tfunc_Ctype2_FieldwiseCtor() {
             bool val = ValQ(fld);
             amc::FLenfld *lenfld=GetLenfld(fld);
             if (val && (FixaryQ(fld) || fld.c_tary) && !PadQ(fld)) {
-                vrfy_(!fld.c_fbigend);
+                // an fbigend fixary/tary field is a schema error that
+                // gen_check_bigend reports and accumulates; generation
+                // continues past the rejection, and the nonzero exit code
+                // discards the output, so the field needs no special case
                 Set(R, "$name", name_Get(fld));
                 Ins(&R, func.body, "    $name_Setary(*this, in_$name);");
             } else if (val && fld.c_typefld && ctype.c_msgtype) {
@@ -1003,9 +1068,7 @@ void amc::tfunc_Ctype2_FieldwiseCtor() {
                 Set(R, "$assign", amc::AssignExpr(fld, "*this", "$Msgtype", true));
                 Ins(&R, func.body, "    $assign;");
             } else if (val && lenfld && ctype.c_msgtype) {
-                Set(R, "$extralen", tempstr() << lenfld->extra);
-                Set(R, "$scalelen", tempstr() << lenfld->scale);
-                Set(R, "$assign", amc::AssignExpr(fld, "*this", "(ssizeof(*this) + ($extralen)) / ($scalelen)", true));
+                Set(R, "$assign", amc::AssignExpr(fld, "*this", LenfldStoreExpr(*lenfld, "ssizeof(*this)"), true));
                 Ins(&R, func.body, "    $assign;");
             } else if (fld.c_fbigend) {
                 Set(R, "$name", name_Get(fld));
@@ -1080,12 +1143,12 @@ void amc::GenCopyCtorOrAssignOp(bool copyctor) {
             } else if (fld.c_cascdel != NULL) {
                 cancopy=false;;
                 reason<<"cascdel on "<<fld.field<<" prevents copy" << eol;
-            } else if (fld.c_fcleanup != NULL) {
+            } else if (amc::FindFfunc(fld, amcdb_cbtype_Cleanup) != NULL) {
                 cancopy=false;
-                reason<<"user-defined fcleanup on "<<fld.field<<" prevents copy" << eol;
-            } else if (fld.c_fuserinit != NULL) {
+                reason<<"user-defined fcb/Cleanup on "<<fld.field<<" prevents copy" << eol;
+            } else if (amc::FindFfunc(fld, amcdb_cbtype_Userinit) != NULL) {
                 cancopy = false;
-                reason<<"user-defined fuserinit on "<<fld.field<<" prevents copy" << eol;
+                reason<<"user-defined fcb/Userinit on "<<fld.field<<" prevents copy" << eol;
             }
         }ind_end;
         // don't memcpy large structs with holes in them
@@ -1146,9 +1209,38 @@ void amc::GenCopyCtorOrAssignOp(bool copyctor) {
                         if (copyctor) {
                             if (amc::FFunc *init = amc::ind_func_Find(tempstr() << fld.field << ".Init")) {
                                 if (init->ismacro) {
+                                    // The macro body addresses the record as a function argument;
+                                    // in the member copy constructor the record is *this. Mark
+                                    // every whole-identifier occurrence of the argument name
+                                    // first: a fixed-inlary field default splices arbitrary user
+                                    // text into the body, and a longer identifier that merely
+                                    // ends with the argument name (gparent.n) is a different name
+                                    // that must survive verbatim, which a plain substring replace
+                                    // would rewrite into an undeclared one. Then rewrite the two
+                                    // shapes the Init generators emit: member access ($parname.x)
+                                    // becomes direct access, and the record passed by reference
+                                    // (($parname)) becomes (*this).
                                     cstring body = init->body;
-                                    Replace(body,Subst(R,"$parname."),"");
-                                    func.body << body;
+                                    strptr mark("\x01");
+                                    algo::ReplaceIdent(body, Subst(R,"$parname"), mark);
+                                    // A marked name reached through a member operator names a
+                                    // member of some other record rather than this one, and the
+                                    // member-access rewrite below would take the operator with
+                                    // it. Such a body is reported rather than guessed at.
+                                    bool inlinable = FindStr(body, tempstr()<<"."<<mark) == -1 && FindStr(body, tempstr()<<">"<<mark) == -1;
+                                    Replace(body, tempstr()<<mark<<".", "");
+                                    Replace(body, tempstr()<<"("<<mark<<")", "(*this)");
+                                    // any other shape would leak the mark into the emitted body
+                                    inlinable = inlinable && FindStr(body, mark) == -1;
+                                    if (inlinable) {
+                                        func.body << body;
+                                    } else {
+                                        prerr("amc.copyctor_init"
+                                              <<Keyval("field",fld.field)
+                                              <<Keyval("name",Subst(R,"$parname"))
+                                              <<Keyval("comment","field Init names the record in a shape the copy constructor cannot inline; rewrite the field default"));
+                                        algo_lib::_db.exit_code++;
+                                    }
                                 } else {
                                     Ins(&R, func.body, "$name_Init(*this);");
                                 }

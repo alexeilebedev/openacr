@@ -1,0 +1,11 @@
+# start bash cmd:"bash -c 'cd $tempdir && ln -s $$OLDPWD/data data && mkdir cache && printf \"int f(){return 1;}\\n\" > x.cpp && $$OLDPWD/$bindir/gcache -install -dir:cache > /dev/null && $$OLDPWD/$bindir/gcache -- g++ --coverage -c x.cpp -o x.o && rm -f x.o x.gcno && mkdir x.o; $$OLDPWD/$bindir/gcache -- g++ --coverage -c x.cpp -o x.o; echo ofail_code:$$?; test -e x.gcno && echo ofail_gcno:present || echo ofail_gcno:absent; rmdir x.o; rm -f x.gcno; mkdir x.gcno; $$OLDPWD/$bindir/gcache -- g++ --coverage -c x.cpp -o x.o; echo gcnofail_code:$$?; test -e x.o && echo gcnofail_o:present || echo gcnofail_o:absent; rmdir x.gcno; rm -f x.o; $$OLDPWD/$bindir/gcache -- g++ --coverage -c x.cpp -o x.o; echo hit_code:$$?; test -e x.o -a -e x.gcno && echo hit_pair:present || echo hit_pair:incomplete'"
+# eof bash
+bash -> gcache.error  file:x.o  err:"Is a directory"  comment:"cached object file could not be restored"
+bash -> ofail_code:1
+bash -> ofail_gcno:absent
+bash -> gcache.error  file:x.gcno  err:"Is a directory"  comment:"cached coverage notes could not be restored"
+bash -> gcnofail_code:1
+bash -> gcnofail_o:absent
+bash -> hit_code:0
+bash -> hit_pair:present
+# exit bash code:0

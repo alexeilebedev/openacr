@@ -61,7 +61,7 @@ inline gcli::FGtype* gcli::gtype_Last() {
 
 // --- gcli.FDb.gtype.N
 // Return number of items in the pool
-inline i32 gcli::gtype_N() {
+inline i64 gcli::gtype_N() {
     return _db.gtype_n;
 }
 
@@ -103,7 +103,7 @@ inline gcli::FGithost* gcli::githost_Last() {
 
 // --- gcli.FDb.githost.N
 // Return number of items in the pool
-inline i32 gcli::githost_N() {
+inline i64 gcli::githost_N() {
     return _db.githost_n;
 }
 
@@ -145,7 +145,7 @@ inline gcli::FGstatet* gcli::gstatet_Last() {
 
 // --- gcli.FDb.gstatet.N
 // Return number of items in the pool
-inline i32 gcli::gstatet_N() {
+inline i64 gcli::gstatet_N() {
     return _db.gstatet_n;
 }
 
@@ -187,7 +187,7 @@ inline gcli::FGmethod* gcli::gmethod_Last() {
 
 // --- gcli.FDb.gmethod.N
 // Return number of items in the pool
-inline i32 gcli::gmethod_N() {
+inline i64 gcli::gmethod_N() {
     return _db.gmethod_n;
 }
 
@@ -229,7 +229,7 @@ inline gcli::FGclicmdt* gcli::gclicmdt_Last() {
 
 // --- gcli.FDb.gclicmdt.N
 // Return number of items in the pool
-inline i32 gcli::gclicmdt_N() {
+inline i64 gcli::gclicmdt_N() {
     return _db.gclicmdt_n;
 }
 
@@ -271,7 +271,7 @@ inline gcli::FGclicmdf* gcli::gclicmdf_Last() {
 
 // --- gcli.FDb.gclicmdf.N
 // Return number of items in the pool
-inline i32 gcli::gclicmdf_N() {
+inline i64 gcli::gclicmdf_N() {
     return _db.gclicmdf_n;
 }
 
@@ -313,7 +313,7 @@ inline gcli::FGclicmdf2j* gcli::gclicmdf2j_Last() {
 
 // --- gcli.FDb.gclicmdf2j.N
 // Return number of items in the pool
-inline i32 gcli::gclicmdf2j_N() {
+inline i64 gcli::gclicmdf2j_N() {
     return _db.gclicmdf2j_n;
 }
 
@@ -355,7 +355,7 @@ inline gcli::FGclicmd* gcli::gclicmd_Last() {
 
 // --- gcli.FDb.gclicmd.N
 // Return number of items in the pool
-inline i32 gcli::gclicmd_N() {
+inline i64 gcli::gclicmd_N() {
     return _db.gclicmd_n;
 }
 
@@ -397,7 +397,7 @@ inline gcli::FGtypeh* gcli::gtypeh_Last() {
 
 // --- gcli.FDb.gtypeh.N
 // Return number of items in the pool
-inline i32 gcli::gtypeh_N() {
+inline i64 gcli::gtypeh_N() {
     return _db.gtypeh_n;
 }
 
@@ -527,7 +527,7 @@ inline bool gcli::c_gclicmd_EmptyQ() {
 
 // --- gcli.FDb.c_gclicmd.Find
 // Look up row by row id. Return NULL if out of range
-inline gcli::FGclicmd* gcli::c_gclicmd_Find(u32 t) {
+inline gcli::FGclicmd* gcli::c_gclicmd_Find(u64 t) {
     gcli::FGclicmd *retval = NULL;
     u64 idx = t;
     u64 lim = _db.c_gclicmd_n;
@@ -545,14 +545,14 @@ inline algo::aryptr<gcli::FGclicmd*> gcli::c_gclicmd_Getary() {
 
 // --- gcli.FDb.c_gclicmd.N
 // Return number of items in the pointer array
-inline i32 gcli::c_gclicmd_N() {
+inline i64 gcli::c_gclicmd_N() {
     return _db.c_gclicmd_n;
 }
 
 // --- gcli.FDb.c_gclicmd.RemoveAll
 // Empty the index. (The rows are not deleted)
 inline void gcli::c_gclicmd_RemoveAll() {
-    for (u32 i = 0; i < _db.c_gclicmd_n; i++) {
+    for (u64 i = 0; i < _db.c_gclicmd_n; i++) {
         // mark all elements as not-in-array
         _db.c_gclicmd_elems[i]->c_gclicmd_in_ary = false;
     }
@@ -561,7 +561,7 @@ inline void gcli::c_gclicmd_RemoveAll() {
 
 // --- gcli.FDb.c_gclicmd.qFind
 // Return reference without bounds checking
-inline gcli::FGclicmd& gcli::c_gclicmd_qFind(u32 idx) {
+inline gcli::FGclicmd& gcli::c_gclicmd_qFind(u64 idx) {
     return *_db.c_gclicmd_elems[idx];
 }
 
@@ -605,7 +605,7 @@ inline gcli::FGclicmdj2f* gcli::gclicmdj2f_Last() {
 
 // --- gcli.FDb.gclicmdj2f.N
 // Return number of items in the pool
-inline i32 gcli::gclicmdj2f_N() {
+inline i64 gcli::gclicmdj2f_N() {
     return _db.gclicmdj2f_n;
 }
 
@@ -647,7 +647,7 @@ inline gcli::FGclicmdc* gcli::gclicmdc_Last() {
 
 // --- gcli.FDb.gclicmdc.N
 // Return number of items in the pool
-inline i32 gcli::gclicmdc_N() {
+inline i64 gcli::gclicmdc_N() {
     return _db.gclicmdc_n;
 }
 
@@ -689,7 +689,7 @@ inline gcli::FGclicmdarg* gcli::gclicmdarg_Last() {
 
 // --- gcli.FDb.gclicmdarg.N
 // Return number of items in the pool
-inline i32 gcli::gclicmdarg_N() {
+inline i64 gcli::gclicmdarg_N() {
     return _db.gclicmdarg_n;
 }
 
@@ -767,7 +767,7 @@ inline gcli::FIssue* gcli::issue_Last() {
 
 // --- gcli.FDb.issue.N
 // Return number of items in the pool
-inline i32 gcli::issue_N() {
+inline i64 gcli::issue_N() {
     return _db.issue_n;
 }
 
@@ -809,7 +809,7 @@ inline gcli::FGrepo* gcli::grepo_Last() {
 
 // --- gcli.FDb.grepo.N
 // Return number of items in the pool
-inline i32 gcli::grepo_N() {
+inline i64 gcli::grepo_N() {
     return _db.grepo_n;
 }
 
@@ -851,7 +851,7 @@ inline gcli::FTuples* gcli::tuples_Last() {
 
 // --- gcli.FDb.tuples.N
 // Return number of items in the pool
-inline i32 gcli::tuples_N() {
+inline i64 gcli::tuples_N() {
     return _db.tuples_n;
 }
 
@@ -893,7 +893,7 @@ inline gcli::FIssuenote* gcli::issuenote_Last() {
 
 // --- gcli.FDb.issuenote.N
 // Return number of items in the pool
-inline i32 gcli::issuenote_N() {
+inline i64 gcli::issuenote_N() {
     return _db.issuenote_n;
 }
 
@@ -935,7 +935,7 @@ inline gcli::FMrjob* gcli::mrjob_Last() {
 
 // --- gcli.FDb.mrjob.N
 // Return number of items in the pool
-inline i32 gcli::mrjob_N() {
+inline i64 gcli::mrjob_N() {
     return _db.mrjob_n;
 }
 
@@ -977,7 +977,7 @@ inline gcli::FMrnote* gcli::mrnote_Last() {
 
 // --- gcli.FDb.mrnote.N
 // Return number of items in the pool
-inline i32 gcli::mrnote_N() {
+inline i64 gcli::mrnote_N() {
     return _db.mrnote_n;
 }
 
@@ -1055,7 +1055,7 @@ inline gcli::FUser* gcli::user_Last() {
 
 // --- gcli.FDb.user.N
 // Return number of items in the pool
-inline i32 gcli::user_N() {
+inline i64 gcli::user_N() {
     return _db.user_n;
 }
 
@@ -1133,7 +1133,7 @@ inline gcli::FMilestone* gcli::milestone_Last() {
 
 // --- gcli.FDb.milestone.N
 // Return number of items in the pool
-inline i32 gcli::milestone_N() {
+inline i64 gcli::milestone_N() {
     return _db.milestone_n;
 }
 
@@ -1175,7 +1175,7 @@ inline gcli::FMr* gcli::mr_Last() {
 
 // --- gcli.FDb.mr.N
 // Return number of items in the pool
-inline i32 gcli::mr_N() {
+inline i64 gcli::mr_N() {
     return _db.mr_n;
 }
 
@@ -1217,7 +1217,7 @@ inline gcli::FGtypeprefix* gcli::gtypeprefix_Last() {
 
 // --- gcli.FDb.gtypeprefix.N
 // Return number of items in the pool
-inline i32 gcli::gtypeprefix_N() {
+inline i64 gcli::gtypeprefix_N() {
     return _db.gtypeprefix_n;
 }
 
@@ -1259,7 +1259,7 @@ inline gcli::FGtblact* gcli::gtblact_Last() {
 
 // --- gcli.FDb.gtblact.N
 // Return number of items in the pool
-inline i32 gcli::gtblact_N() {
+inline i64 gcli::gtblact_N() {
     return _db.gtblact_n;
 }
 
@@ -1301,7 +1301,7 @@ inline gcli::FGtblactfld* gcli::gtblactfld_Last() {
 
 // --- gcli.FDb.gtblactfld.N
 // Return number of items in the pool
-inline i32 gcli::gtblactfld_N() {
+inline i64 gcli::gtblactfld_N() {
     return _db.gtblactfld_n;
 }
 
@@ -1423,7 +1423,7 @@ inline gcli::FGfld* gcli::gfld_Last() {
 
 // --- gcli.FDb.gfld.N
 // Return number of items in the pool
-inline i32 gcli::gfld_N() {
+inline i64 gcli::gfld_N() {
     return _db.gfld_n;
 }
 
@@ -1457,7 +1457,7 @@ inline bool gcli::c_gfld_EmptyQ() {
 
 // --- gcli.FDb.c_gfld.Find
 // Look up row by row id. Return NULL if out of range
-inline gcli::FGfld* gcli::c_gfld_Find(u32 t) {
+inline gcli::FGfld* gcli::c_gfld_Find(u64 t) {
     gcli::FGfld *retval = NULL;
     u64 idx = t;
     u64 lim = _db.c_gfld_n;
@@ -1475,14 +1475,14 @@ inline algo::aryptr<gcli::FGfld*> gcli::c_gfld_Getary() {
 
 // --- gcli.FDb.c_gfld.N
 // Return number of items in the pointer array
-inline i32 gcli::c_gfld_N() {
+inline i64 gcli::c_gfld_N() {
     return _db.c_gfld_n;
 }
 
 // --- gcli.FDb.c_gfld.RemoveAll
 // Empty the index. (The rows are not deleted)
 inline void gcli::c_gfld_RemoveAll() {
-    for (u32 i = 0; i < _db.c_gfld_n; i++) {
+    for (u64 i = 0; i < _db.c_gfld_n; i++) {
         // mark all elements as not-in-array
         _db.c_gfld_elems[i]->c_gfld_in_ary = false;
     }
@@ -1491,7 +1491,7 @@ inline void gcli::c_gfld_RemoveAll() {
 
 // --- gcli.FDb.c_gfld.qFind
 // Return reference without bounds checking
-inline gcli::FGfld& gcli::c_gfld_qFind(u32 idx) {
+inline gcli::FGfld& gcli::c_gfld_qFind(u64 idx) {
     return *_db.c_gfld_elems[idx];
 }
 
@@ -1535,7 +1535,7 @@ inline gcli::FGtbl* gcli::gtbl_Last() {
 
 // --- gcli.FDb.gtbl.N
 // Return number of items in the pool
-inline i32 gcli::gtbl_N() {
+inline i64 gcli::gtbl_N() {
     return _db.gtbl_n;
 }
 
@@ -1589,7 +1589,7 @@ inline gcli::FGact* gcli::gact_Last() {
 
 // --- gcli.FDb.gact.N
 // Return number of items in the pool
-inline i32 gcli::gact_N() {
+inline i64 gcli::gact_N() {
     return _db.gact_n;
 }
 
@@ -1613,6 +1613,60 @@ inline bool gcli::ind_gact_EmptyQ() {
 // Return number of items in the hash
 inline i32 gcli::ind_gact_N() {
     return _db.ind_gact_n;
+}
+
+// --- gcli.FDb.token.EmptyQ
+// Return true if index is empty
+inline bool gcli::token_EmptyQ() {
+    return _db.token_n == 0;
+}
+
+// --- gcli.FDb.token.Find
+// Look up row by row id. Return NULL if out of range
+inline gcli::FToken* gcli::token_Find(u64 t) {
+    gcli::FToken *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.token_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.token_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- gcli.FDb.token.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline gcli::FToken* gcli::token_Last() {
+    return token_Find(u64(_db.token_n-1));
+}
+
+// --- gcli.FDb.token.N
+// Return number of items in the pool
+inline i64 gcli::token_N() {
+    return _db.token_n;
+}
+
+// --- gcli.FDb.token.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline gcli::FToken& gcli::token_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.token_lary[bsr][index];
+}
+
+// --- gcli.FDb.ind_token.EmptyQ
+// Return true if hash is empty
+inline bool gcli::ind_token_EmptyQ() {
+    return _db.ind_token_n == 0;
+}
+
+// --- gcli.FDb.ind_token.N
+// Return number of items in the hash
+inline i32 gcli::ind_token_N() {
+    return _db.ind_token_n;
 }
 
 // --- gcli.FDb.gtype_curs.Reset
@@ -2365,6 +2419,31 @@ inline gcli::FGact& gcli::_db_gact_curs_Access(_db_gact_curs &curs) {
     return gact_qFind(u64(curs.index));
 }
 
+// --- gcli.FDb.token_curs.Reset
+// cursor points to valid item
+inline void gcli::_db_token_curs_Reset(_db_token_curs &curs, gcli::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- gcli.FDb.token_curs.ValidQ
+// cursor points to valid item
+inline bool gcli::_db_token_curs_ValidQ(_db_token_curs &curs) {
+    return curs.index < _db.token_n;
+}
+
+// --- gcli.FDb.token_curs.Next
+// proceed to next item
+inline void gcli::_db_token_curs_Next(_db_token_curs &curs) {
+    curs.index++;
+}
+
+// --- gcli.FDb.token_curs.Access
+// item access
+inline gcli::FToken& gcli::_db_token_curs_Access(_db_token_curs &curs) {
+    return token_qFind(u64(curs.index));
+}
+
 // --- gcli.FGact..Init
 // Set all fields to initial values.
 inline void gcli::FGact_Init(gcli::FGact& gact) {
@@ -2390,7 +2469,7 @@ inline bool gcli::c_tuples_EmptyQ(gcli::FGclicmd& gclicmd) {
 
 // --- gcli.FGclicmd.c_tuples.Find
 // Look up row by row id. Return NULL if out of range
-inline gcli::FTuples* gcli::c_tuples_Find(gcli::FGclicmd& gclicmd, u32 t) {
+inline gcli::FTuples* gcli::c_tuples_Find(gcli::FGclicmd& gclicmd, u64 t) {
     gcli::FTuples *retval = NULL;
     u64 idx = t;
     u64 lim = gclicmd.c_tuples_n;
@@ -2408,7 +2487,7 @@ inline algo::aryptr<gcli::FTuples*> gcli::c_tuples_Getary(gcli::FGclicmd& gclicm
 
 // --- gcli.FGclicmd.c_tuples.N
 // Return number of items in the pointer array
-inline i32 gcli::c_tuples_N(const gcli::FGclicmd& gclicmd) {
+inline i64 gcli::c_tuples_N(const gcli::FGclicmd& gclicmd) {
     return gclicmd.c_tuples_n;
 }
 
@@ -2420,7 +2499,7 @@ inline void gcli::c_tuples_RemoveAll(gcli::FGclicmd& gclicmd) {
 
 // --- gcli.FGclicmd.c_tuples.qFind
 // Return reference without bounds checking
-inline gcli::FTuples& gcli::c_tuples_qFind(gcli::FGclicmd& gclicmd, u32 idx) {
+inline gcli::FTuples& gcli::c_tuples_qFind(gcli::FGclicmd& gclicmd, u64 idx) {
     return *gclicmd.c_tuples_elems[idx];
 }
 
@@ -2446,7 +2525,7 @@ inline bool gcli::c_gclicmdarg_EmptyQ(gcli::FGclicmd& gclicmd) {
 
 // --- gcli.FGclicmd.c_gclicmdarg.Find
 // Look up row by row id. Return NULL if out of range
-inline gcli::FGclicmdarg* gcli::c_gclicmdarg_Find(gcli::FGclicmd& gclicmd, u32 t) {
+inline gcli::FGclicmdarg* gcli::c_gclicmdarg_Find(gcli::FGclicmd& gclicmd, u64 t) {
     gcli::FGclicmdarg *retval = NULL;
     u64 idx = t;
     u64 lim = gclicmd.c_gclicmdarg_n;
@@ -2464,14 +2543,14 @@ inline algo::aryptr<gcli::FGclicmdarg*> gcli::c_gclicmdarg_Getary(gcli::FGclicmd
 
 // --- gcli.FGclicmd.c_gclicmdarg.N
 // Return number of items in the pointer array
-inline i32 gcli::c_gclicmdarg_N(const gcli::FGclicmd& gclicmd) {
+inline i64 gcli::c_gclicmdarg_N(const gcli::FGclicmd& gclicmd) {
     return gclicmd.c_gclicmdarg_n;
 }
 
 // --- gcli.FGclicmd.c_gclicmdarg.RemoveAll
 // Empty the index. (The rows are not deleted)
 inline void gcli::c_gclicmdarg_RemoveAll(gcli::FGclicmd& gclicmd) {
-    for (u32 i = 0; i < gclicmd.c_gclicmdarg_n; i++) {
+    for (u64 i = 0; i < gclicmd.c_gclicmdarg_n; i++) {
         // mark all elements as not-in-array
         gclicmd.c_gclicmdarg_elems[i]->gclicmd_c_gclicmdarg_in_ary = false;
     }
@@ -2480,7 +2559,7 @@ inline void gcli::c_gclicmdarg_RemoveAll(gcli::FGclicmd& gclicmd) {
 
 // --- gcli.FGclicmd.c_gclicmdarg.qFind
 // Return reference without bounds checking
-inline gcli::FGclicmdarg& gcli::c_gclicmdarg_qFind(gcli::FGclicmd& gclicmd, u32 idx) {
+inline gcli::FGclicmdarg& gcli::c_gclicmdarg_qFind(gcli::FGclicmd& gclicmd, u64 idx) {
     return *gclicmd.c_gclicmdarg_elems[idx];
 }
 
@@ -2504,7 +2583,7 @@ inline bool gcli::c_gclicmdc_EmptyQ(gcli::FGclicmd& gclicmd) {
 
 // --- gcli.FGclicmd.c_gclicmdc.Find
 // Look up row by row id. Return NULL if out of range
-inline gcli::FGclicmdc* gcli::c_gclicmdc_Find(gcli::FGclicmd& gclicmd, u32 t) {
+inline gcli::FGclicmdc* gcli::c_gclicmdc_Find(gcli::FGclicmd& gclicmd, u64 t) {
     gcli::FGclicmdc *retval = NULL;
     u64 idx = t;
     u64 lim = gclicmd.c_gclicmdc_n;
@@ -2522,14 +2601,14 @@ inline algo::aryptr<gcli::FGclicmdc*> gcli::c_gclicmdc_Getary(gcli::FGclicmd& gc
 
 // --- gcli.FGclicmd.c_gclicmdc.N
 // Return number of items in the pointer array
-inline i32 gcli::c_gclicmdc_N(const gcli::FGclicmd& gclicmd) {
+inline i64 gcli::c_gclicmdc_N(const gcli::FGclicmd& gclicmd) {
     return gclicmd.c_gclicmdc_n;
 }
 
 // --- gcli.FGclicmd.c_gclicmdc.RemoveAll
 // Empty the index. (The rows are not deleted)
 inline void gcli::c_gclicmdc_RemoveAll(gcli::FGclicmd& gclicmd) {
-    for (u32 i = 0; i < gclicmd.c_gclicmdc_n; i++) {
+    for (u64 i = 0; i < gclicmd.c_gclicmdc_n; i++) {
         // mark all elements as not-in-array
         gclicmd.c_gclicmdc_elems[i]->gclicmd_c_gclicmdc_in_ary = false;
     }
@@ -2538,7 +2617,7 @@ inline void gcli::c_gclicmdc_RemoveAll(gcli::FGclicmd& gclicmd) {
 
 // --- gcli.FGclicmd.c_gclicmdc.qFind
 // Return reference without bounds checking
-inline gcli::FGclicmdc& gcli::c_gclicmdc_qFind(gcli::FGclicmd& gclicmd, u32 idx) {
+inline gcli::FGclicmdc& gcli::c_gclicmdc_qFind(gcli::FGclicmd& gclicmd, u64 idx) {
     return *gclicmd.c_gclicmdc_elems[idx];
 }
 
@@ -2562,7 +2641,7 @@ inline bool gcli::c_gclicmdf2j_EmptyQ(gcli::FGclicmd& gclicmd) {
 
 // --- gcli.FGclicmd.c_gclicmdf2j.Find
 // Look up row by row id. Return NULL if out of range
-inline gcli::FGclicmdf2j* gcli::c_gclicmdf2j_Find(gcli::FGclicmd& gclicmd, u32 t) {
+inline gcli::FGclicmdf2j* gcli::c_gclicmdf2j_Find(gcli::FGclicmd& gclicmd, u64 t) {
     gcli::FGclicmdf2j *retval = NULL;
     u64 idx = t;
     u64 lim = gclicmd.c_gclicmdf2j_n;
@@ -2580,14 +2659,14 @@ inline algo::aryptr<gcli::FGclicmdf2j*> gcli::c_gclicmdf2j_Getary(gcli::FGclicmd
 
 // --- gcli.FGclicmd.c_gclicmdf2j.N
 // Return number of items in the pointer array
-inline i32 gcli::c_gclicmdf2j_N(const gcli::FGclicmd& gclicmd) {
+inline i64 gcli::c_gclicmdf2j_N(const gcli::FGclicmd& gclicmd) {
     return gclicmd.c_gclicmdf2j_n;
 }
 
 // --- gcli.FGclicmd.c_gclicmdf2j.RemoveAll
 // Empty the index. (The rows are not deleted)
 inline void gcli::c_gclicmdf2j_RemoveAll(gcli::FGclicmd& gclicmd) {
-    for (u32 i = 0; i < gclicmd.c_gclicmdf2j_n; i++) {
+    for (u64 i = 0; i < gclicmd.c_gclicmdf2j_n; i++) {
         // mark all elements as not-in-array
         gclicmd.c_gclicmdf2j_elems[i]->gclicmd_c_gclicmdf2j_in_ary = false;
     }
@@ -2596,7 +2675,7 @@ inline void gcli::c_gclicmdf2j_RemoveAll(gcli::FGclicmd& gclicmd) {
 
 // --- gcli.FGclicmd.c_gclicmdf2j.qFind
 // Return reference without bounds checking
-inline gcli::FGclicmdf2j& gcli::c_gclicmdf2j_qFind(gcli::FGclicmd& gclicmd, u32 idx) {
+inline gcli::FGclicmdf2j& gcli::c_gclicmdf2j_qFind(gcli::FGclicmd& gclicmd, u64 idx) {
     return *gclicmd.c_gclicmdf2j_elems[idx];
 }
 
@@ -2748,7 +2827,7 @@ inline bool gcli::c_gclicmdf_EmptyQ(gcli::FGclicmdc& gclicmdc) {
 
 // --- gcli.FGclicmdc.c_gclicmdf.Find
 // Look up row by row id. Return NULL if out of range
-inline gcli::FGclicmdf* gcli::c_gclicmdf_Find(gcli::FGclicmdc& gclicmdc, u32 t) {
+inline gcli::FGclicmdf* gcli::c_gclicmdf_Find(gcli::FGclicmdc& gclicmdc, u64 t) {
     gcli::FGclicmdf *retval = NULL;
     u64 idx = t;
     u64 lim = gclicmdc.c_gclicmdf_n;
@@ -2766,14 +2845,14 @@ inline algo::aryptr<gcli::FGclicmdf*> gcli::c_gclicmdf_Getary(gcli::FGclicmdc& g
 
 // --- gcli.FGclicmdc.c_gclicmdf.N
 // Return number of items in the pointer array
-inline i32 gcli::c_gclicmdf_N(const gcli::FGclicmdc& gclicmdc) {
+inline i64 gcli::c_gclicmdf_N(const gcli::FGclicmdc& gclicmdc) {
     return gclicmdc.c_gclicmdf_n;
 }
 
 // --- gcli.FGclicmdc.c_gclicmdf.RemoveAll
 // Empty the index. (The rows are not deleted)
 inline void gcli::c_gclicmdf_RemoveAll(gcli::FGclicmdc& gclicmdc) {
-    for (u32 i = 0; i < gclicmdc.c_gclicmdf_n; i++) {
+    for (u64 i = 0; i < gclicmdc.c_gclicmdf_n; i++) {
         // mark all elements as not-in-array
         gclicmdc.c_gclicmdf_elems[i]->gclicmdc_c_gclicmdf_in_ary = false;
     }
@@ -2782,7 +2861,7 @@ inline void gcli::c_gclicmdf_RemoveAll(gcli::FGclicmdc& gclicmdc) {
 
 // --- gcli.FGclicmdc.c_gclicmdf.qFind
 // Return reference without bounds checking
-inline gcli::FGclicmdf& gcli::c_gclicmdf_qFind(gcli::FGclicmdc& gclicmdc, u32 idx) {
+inline gcli::FGclicmdf& gcli::c_gclicmdf_qFind(gcli::FGclicmdc& gclicmdc, u64 idx) {
     return *gclicmdc.c_gclicmdf_elems[idx];
 }
 
@@ -2888,7 +2967,7 @@ inline bool gcli::c_gclicmdf_EmptyQ(gcli::FGclicmdj2f& gclicmdj2f) {
 
 // --- gcli.FGclicmdj2f.c_gclicmdf.Find
 // Look up row by row id. Return NULL if out of range
-inline gcli::FGclicmdf* gcli::c_gclicmdf_Find(gcli::FGclicmdj2f& gclicmdj2f, u32 t) {
+inline gcli::FGclicmdf* gcli::c_gclicmdf_Find(gcli::FGclicmdj2f& gclicmdj2f, u64 t) {
     gcli::FGclicmdf *retval = NULL;
     u64 idx = t;
     u64 lim = gclicmdj2f.c_gclicmdf_n;
@@ -2906,7 +2985,7 @@ inline algo::aryptr<gcli::FGclicmdf*> gcli::c_gclicmdf_Getary(gcli::FGclicmdj2f&
 
 // --- gcli.FGclicmdj2f.c_gclicmdf.N
 // Return number of items in the pointer array
-inline i32 gcli::c_gclicmdf_N(const gcli::FGclicmdj2f& gclicmdj2f) {
+inline i64 gcli::c_gclicmdf_N(const gcli::FGclicmdj2f& gclicmdj2f) {
     return gclicmdj2f.c_gclicmdf_n;
 }
 
@@ -2918,7 +2997,7 @@ inline void gcli::c_gclicmdf_RemoveAll(gcli::FGclicmdj2f& gclicmdj2f) {
 
 // --- gcli.FGclicmdj2f.c_gclicmdf.qFind
 // Return reference without bounds checking
-inline gcli::FGclicmdf& gcli::c_gclicmdf_qFind(gcli::FGclicmdj2f& gclicmdj2f, u32 idx) {
+inline gcli::FGclicmdf& gcli::c_gclicmdf_qFind(gcli::FGclicmdj2f& gclicmdj2f, u64 idx) {
     return *gclicmdj2f.c_gclicmdf_elems[idx];
 }
 
@@ -3003,7 +3082,7 @@ inline bool gcli::c_gtblactfld_EmptyQ(gcli::FGfld& gfld) {
 
 // --- gcli.FGfld.c_gtblactfld.Find
 // Look up row by row id. Return NULL if out of range
-inline gcli::FGtblactfld* gcli::c_gtblactfld_Find(gcli::FGfld& gfld, u32 t) {
+inline gcli::FGtblactfld* gcli::c_gtblactfld_Find(gcli::FGfld& gfld, u64 t) {
     gcli::FGtblactfld *retval = NULL;
     u64 idx = t;
     u64 lim = gfld.c_gtblactfld_n;
@@ -3021,14 +3100,14 @@ inline algo::aryptr<gcli::FGtblactfld*> gcli::c_gtblactfld_Getary(gcli::FGfld& g
 
 // --- gcli.FGfld.c_gtblactfld.N
 // Return number of items in the pointer array
-inline i32 gcli::c_gtblactfld_N(const gcli::FGfld& gfld) {
+inline i64 gcli::c_gtblactfld_N(const gcli::FGfld& gfld) {
     return gfld.c_gtblactfld_n;
 }
 
 // --- gcli.FGfld.c_gtblactfld.RemoveAll
 // Empty the index. (The rows are not deleted)
 inline void gcli::c_gtblactfld_RemoveAll(gcli::FGfld& gfld) {
-    for (u32 i = 0; i < gfld.c_gtblactfld_n; i++) {
+    for (u64 i = 0; i < gfld.c_gtblactfld_n; i++) {
         // mark all elements as not-in-array
         gfld.c_gtblactfld_elems[i]->gfld_c_gtblactfld_in_ary = false;
     }
@@ -3037,7 +3116,7 @@ inline void gcli::c_gtblactfld_RemoveAll(gcli::FGfld& gfld) {
 
 // --- gcli.FGfld.c_gtblactfld.qFind
 // Return reference without bounds checking
-inline gcli::FGtblactfld& gcli::c_gtblactfld_qFind(gcli::FGfld& gfld, u32 idx) {
+inline gcli::FGtblactfld& gcli::c_gtblactfld_qFind(gcli::FGfld& gfld, u64 idx) {
     return *gfld.c_gtblactfld_elems[idx];
 }
 
@@ -3169,7 +3248,7 @@ inline bool gcli::c_gtblact_EmptyQ(gcli::FGtbl& gtbl) {
 
 // --- gcli.FGtbl.c_gtblact.Find
 // Look up row by row id. Return NULL if out of range
-inline gcli::FGtblact* gcli::c_gtblact_Find(gcli::FGtbl& gtbl, u32 t) {
+inline gcli::FGtblact* gcli::c_gtblact_Find(gcli::FGtbl& gtbl, u64 t) {
     gcli::FGtblact *retval = NULL;
     u64 idx = t;
     u64 lim = gtbl.c_gtblact_n;
@@ -3187,14 +3266,14 @@ inline algo::aryptr<gcli::FGtblact*> gcli::c_gtblact_Getary(gcli::FGtbl& gtbl) {
 
 // --- gcli.FGtbl.c_gtblact.N
 // Return number of items in the pointer array
-inline i32 gcli::c_gtblact_N(const gcli::FGtbl& gtbl) {
+inline i64 gcli::c_gtblact_N(const gcli::FGtbl& gtbl) {
     return gtbl.c_gtblact_n;
 }
 
 // --- gcli.FGtbl.c_gtblact.RemoveAll
 // Empty the index. (The rows are not deleted)
 inline void gcli::c_gtblact_RemoveAll(gcli::FGtbl& gtbl) {
-    for (u32 i = 0; i < gtbl.c_gtblact_n; i++) {
+    for (u64 i = 0; i < gtbl.c_gtblact_n; i++) {
         // mark all elements as not-in-array
         gtbl.c_gtblact_elems[i]->gtbl_c_gtblact_in_ary = false;
     }
@@ -3203,7 +3282,7 @@ inline void gcli::c_gtblact_RemoveAll(gcli::FGtbl& gtbl) {
 
 // --- gcli.FGtbl.c_gtblact.qFind
 // Return reference without bounds checking
-inline gcli::FGtblact& gcli::c_gtblact_qFind(gcli::FGtbl& gtbl, u32 idx) {
+inline gcli::FGtblact& gcli::c_gtblact_qFind(gcli::FGtbl& gtbl, u64 idx) {
     return *gtbl.c_gtblact_elems[idx];
 }
 
@@ -3282,7 +3361,7 @@ inline bool gcli::c_gtblactfld_EmptyQ(gcli::FGtblact& gtblact) {
 
 // --- gcli.FGtblact.c_gtblactfld.Find
 // Look up row by row id. Return NULL if out of range
-inline gcli::FGtblactfld* gcli::c_gtblactfld_Find(gcli::FGtblact& gtblact, u32 t) {
+inline gcli::FGtblactfld* gcli::c_gtblactfld_Find(gcli::FGtblact& gtblact, u64 t) {
     gcli::FGtblactfld *retval = NULL;
     u64 idx = t;
     u64 lim = gtblact.c_gtblactfld_n;
@@ -3300,14 +3379,14 @@ inline algo::aryptr<gcli::FGtblactfld*> gcli::c_gtblactfld_Getary(gcli::FGtblact
 
 // --- gcli.FGtblact.c_gtblactfld.N
 // Return number of items in the pointer array
-inline i32 gcli::c_gtblactfld_N(const gcli::FGtblact& gtblact) {
+inline i64 gcli::c_gtblactfld_N(const gcli::FGtblact& gtblact) {
     return gtblact.c_gtblactfld_n;
 }
 
 // --- gcli.FGtblact.c_gtblactfld.RemoveAll
 // Empty the index. (The rows are not deleted)
 inline void gcli::c_gtblactfld_RemoveAll(gcli::FGtblact& gtblact) {
-    for (u32 i = 0; i < gtblact.c_gtblactfld_n; i++) {
+    for (u64 i = 0; i < gtblact.c_gtblactfld_n; i++) {
         // mark all elements as not-in-array
         gtblact.c_gtblactfld_elems[i]->gtblact_c_gtblactfld_in_ary = false;
     }
@@ -3316,7 +3395,7 @@ inline void gcli::c_gtblactfld_RemoveAll(gcli::FGtblact& gtblact) {
 
 // --- gcli.FGtblact.c_gtblactfld.qFind
 // Return reference without bounds checking
-inline gcli::FGtblactfld& gcli::c_gtblactfld_qFind(gcli::FGtblact& gtblact, u32 idx) {
+inline gcli::FGtblactfld& gcli::c_gtblactfld_qFind(gcli::FGtblact& gtblact, u64 idx) {
     return *gtblact.c_gtblactfld_elems[idx];
 }
 
@@ -3385,7 +3464,7 @@ inline bool gcli::c_gtypeh_EmptyQ(gcli::FGtype& gtype) {
 
 // --- gcli.FGtype.c_gtypeh.Find
 // Look up row by row id. Return NULL if out of range
-inline gcli::FGtypeh* gcli::c_gtypeh_Find(gcli::FGtype& gtype, u32 t) {
+inline gcli::FGtypeh* gcli::c_gtypeh_Find(gcli::FGtype& gtype, u64 t) {
     gcli::FGtypeh *retval = NULL;
     u64 idx = t;
     u64 lim = gtype.c_gtypeh_n;
@@ -3403,14 +3482,14 @@ inline algo::aryptr<gcli::FGtypeh*> gcli::c_gtypeh_Getary(gcli::FGtype& gtype) {
 
 // --- gcli.FGtype.c_gtypeh.N
 // Return number of items in the pointer array
-inline i32 gcli::c_gtypeh_N(const gcli::FGtype& gtype) {
+inline i64 gcli::c_gtypeh_N(const gcli::FGtype& gtype) {
     return gtype.c_gtypeh_n;
 }
 
 // --- gcli.FGtype.c_gtypeh.RemoveAll
 // Empty the index. (The rows are not deleted)
 inline void gcli::c_gtypeh_RemoveAll(gcli::FGtype& gtype) {
-    for (u32 i = 0; i < gtype.c_gtypeh_n; i++) {
+    for (u64 i = 0; i < gtype.c_gtypeh_n; i++) {
         // mark all elements as not-in-array
         gtype.c_gtypeh_elems[i]->gtype_c_gtypeh_in_ary = false;
     }
@@ -3419,7 +3498,7 @@ inline void gcli::c_gtypeh_RemoveAll(gcli::FGtype& gtype) {
 
 // --- gcli.FGtype.c_gtypeh.qFind
 // Return reference without bounds checking
-inline gcli::FGtypeh& gcli::c_gtypeh_qFind(gcli::FGtype& gtype, u32 idx) {
+inline gcli::FGtypeh& gcli::c_gtypeh_qFind(gcli::FGtype& gtype, u64 idx) {
     return *gtype.c_gtypeh_elems[idx];
 }
 
@@ -3443,7 +3522,7 @@ inline bool gcli::c_gtypeprefix_EmptyQ(gcli::FGtype& gtype) {
 
 // --- gcli.FGtype.c_gtypeprefix.Find
 // Look up row by row id. Return NULL if out of range
-inline gcli::FGtypeprefix* gcli::c_gtypeprefix_Find(gcli::FGtype& gtype, u32 t) {
+inline gcli::FGtypeprefix* gcli::c_gtypeprefix_Find(gcli::FGtype& gtype, u64 t) {
     gcli::FGtypeprefix *retval = NULL;
     u64 idx = t;
     u64 lim = gtype.c_gtypeprefix_n;
@@ -3461,14 +3540,14 @@ inline algo::aryptr<gcli::FGtypeprefix*> gcli::c_gtypeprefix_Getary(gcli::FGtype
 
 // --- gcli.FGtype.c_gtypeprefix.N
 // Return number of items in the pointer array
-inline i32 gcli::c_gtypeprefix_N(const gcli::FGtype& gtype) {
+inline i64 gcli::c_gtypeprefix_N(const gcli::FGtype& gtype) {
     return gtype.c_gtypeprefix_n;
 }
 
 // --- gcli.FGtype.c_gtypeprefix.RemoveAll
 // Empty the index. (The rows are not deleted)
 inline void gcli::c_gtypeprefix_RemoveAll(gcli::FGtype& gtype) {
-    for (u32 i = 0; i < gtype.c_gtypeprefix_n; i++) {
+    for (u64 i = 0; i < gtype.c_gtypeprefix_n; i++) {
         // mark all elements as not-in-array
         gtype.c_gtypeprefix_elems[i]->gtype_c_gtypeprefix_in_ary = false;
     }
@@ -3477,7 +3556,7 @@ inline void gcli::c_gtypeprefix_RemoveAll(gcli::FGtype& gtype) {
 
 // --- gcli.FGtype.c_gtypeprefix.qFind
 // Return reference without bounds checking
-inline gcli::FGtypeprefix& gcli::c_gtypeprefix_qFind(gcli::FGtype& gtype, u32 idx) {
+inline gcli::FGtypeprefix& gcli::c_gtypeprefix_qFind(gcli::FGtype& gtype, u64 idx) {
     return *gtype.c_gtypeprefix_elems[idx];
 }
 
@@ -3640,21 +3719,21 @@ inline algo::cstring* gcli::response_header_Last(gcli::FHttp& parent) {
 
 // --- gcli.FHttp.response_header.Max
 // Return max. number of items in the array
-inline i32 gcli::response_header_Max(gcli::FHttp& parent) {
+inline i64 gcli::response_header_Max(gcli::FHttp& parent) {
     (void)parent;
     return parent.response_header_max;
 }
 
 // --- gcli.FHttp.response_header.N
 // Return number of items in the array
-inline i32 gcli::response_header_N(const gcli::FHttp& parent) {
+inline i64 gcli::response_header_N(const gcli::FHttp& parent) {
     return parent.response_header_n;
 }
 
 // --- gcli.FHttp.response_header.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void gcli::response_header_Reserve(gcli::FHttp& parent, int n) {
-    u32 new_n = parent.response_header_n + n;
+inline void gcli::response_header_Reserve(gcli::FHttp& parent, i64 n) {
+    u64 new_n = parent.response_header_n + n;
     if (UNLIKELY(new_n > parent.response_header_max)) {
         response_header_AbsReserve(parent, new_n);
     }
@@ -3722,7 +3801,7 @@ inline bool gcli::c_mrjob_EmptyQ(gcli::FIssue& issue) {
 
 // --- gcli.FIssue.c_mrjob.Find
 // Look up row by row id. Return NULL if out of range
-inline gcli::FMrjob* gcli::c_mrjob_Find(gcli::FIssue& issue, u32 t) {
+inline gcli::FMrjob* gcli::c_mrjob_Find(gcli::FIssue& issue, u64 t) {
     gcli::FMrjob *retval = NULL;
     u64 idx = t;
     u64 lim = issue.c_mrjob_n;
@@ -3740,14 +3819,14 @@ inline algo::aryptr<gcli::FMrjob*> gcli::c_mrjob_Getary(gcli::FIssue& issue) {
 
 // --- gcli.FIssue.c_mrjob.N
 // Return number of items in the pointer array
-inline i32 gcli::c_mrjob_N(const gcli::FIssue& issue) {
+inline i64 gcli::c_mrjob_N(const gcli::FIssue& issue) {
     return issue.c_mrjob_n;
 }
 
 // --- gcli.FIssue.c_mrjob.RemoveAll
 // Empty the index. (The rows are not deleted)
 inline void gcli::c_mrjob_RemoveAll(gcli::FIssue& issue) {
-    for (u32 i = 0; i < issue.c_mrjob_n; i++) {
+    for (u64 i = 0; i < issue.c_mrjob_n; i++) {
         // mark all elements as not-in-array
         issue.c_mrjob_elems[i]->issue_c_mrjob_in_ary = false;
     }
@@ -3756,7 +3835,7 @@ inline void gcli::c_mrjob_RemoveAll(gcli::FIssue& issue) {
 
 // --- gcli.FIssue.c_mrjob.qFind
 // Return reference without bounds checking
-inline gcli::FMrjob& gcli::c_mrjob_qFind(gcli::FIssue& issue, u32 idx) {
+inline gcli::FMrjob& gcli::c_mrjob_qFind(gcli::FIssue& issue, u64 idx) {
     return *issue.c_mrjob_elems[idx];
 }
 
@@ -3780,7 +3859,7 @@ inline bool gcli::c_issuenote_EmptyQ(gcli::FIssue& issue) {
 
 // --- gcli.FIssue.c_issuenote.Find
 // Look up row by row id. Return NULL if out of range
-inline gcli::FIssuenote* gcli::c_issuenote_Find(gcli::FIssue& issue, u32 t) {
+inline gcli::FIssuenote* gcli::c_issuenote_Find(gcli::FIssue& issue, u64 t) {
     gcli::FIssuenote *retval = NULL;
     u64 idx = t;
     u64 lim = issue.c_issuenote_n;
@@ -3798,14 +3877,14 @@ inline algo::aryptr<gcli::FIssuenote*> gcli::c_issuenote_Getary(gcli::FIssue& is
 
 // --- gcli.FIssue.c_issuenote.N
 // Return number of items in the pointer array
-inline i32 gcli::c_issuenote_N(const gcli::FIssue& issue) {
+inline i64 gcli::c_issuenote_N(const gcli::FIssue& issue) {
     return issue.c_issuenote_n;
 }
 
 // --- gcli.FIssue.c_issuenote.RemoveAll
 // Empty the index. (The rows are not deleted)
 inline void gcli::c_issuenote_RemoveAll(gcli::FIssue& issue) {
-    for (u32 i = 0; i < issue.c_issuenote_n; i++) {
+    for (u64 i = 0; i < issue.c_issuenote_n; i++) {
         // mark all elements as not-in-array
         issue.c_issuenote_elems[i]->issue_c_issuenote_in_ary = false;
     }
@@ -3814,7 +3893,7 @@ inline void gcli::c_issuenote_RemoveAll(gcli::FIssue& issue) {
 
 // --- gcli.FIssue.c_issuenote.qFind
 // Return reference without bounds checking
-inline gcli::FIssuenote& gcli::c_issuenote_qFind(gcli::FIssue& issue, u32 idx) {
+inline gcli::FIssuenote& gcli::c_issuenote_qFind(gcli::FIssue& issue, u64 idx) {
     return *issue.c_issuenote_elems[idx];
 }
 
@@ -3935,7 +4014,7 @@ inline bool gcli::c_mrnote_EmptyQ(gcli::FMr& mr) {
 
 // --- gcli.FMr.c_mrnote.Find
 // Look up row by row id. Return NULL if out of range
-inline gcli::FMrnote* gcli::c_mrnote_Find(gcli::FMr& mr, u32 t) {
+inline gcli::FMrnote* gcli::c_mrnote_Find(gcli::FMr& mr, u64 t) {
     gcli::FMrnote *retval = NULL;
     u64 idx = t;
     u64 lim = mr.c_mrnote_n;
@@ -3953,14 +4032,14 @@ inline algo::aryptr<gcli::FMrnote*> gcli::c_mrnote_Getary(gcli::FMr& mr) {
 
 // --- gcli.FMr.c_mrnote.N
 // Return number of items in the pointer array
-inline i32 gcli::c_mrnote_N(const gcli::FMr& mr) {
+inline i64 gcli::c_mrnote_N(const gcli::FMr& mr) {
     return mr.c_mrnote_n;
 }
 
 // --- gcli.FMr.c_mrnote.RemoveAll
 // Empty the index. (The rows are not deleted)
 inline void gcli::c_mrnote_RemoveAll(gcli::FMr& mr) {
-    for (u32 i = 0; i < mr.c_mrnote_n; i++) {
+    for (u64 i = 0; i < mr.c_mrnote_n; i++) {
         // mark all elements as not-in-array
         mr.c_mrnote_elems[i]->mr_c_mrnote_in_ary = false;
     }
@@ -3969,7 +4048,7 @@ inline void gcli::c_mrnote_RemoveAll(gcli::FMr& mr) {
 
 // --- gcli.FMr.c_mrnote.qFind
 // Return reference without bounds checking
-inline gcli::FMrnote& gcli::c_mrnote_qFind(gcli::FMr& mr, u32 idx) {
+inline gcli::FMrnote& gcli::c_mrnote_qFind(gcli::FMr& mr, u64 idx) {
     return *mr.c_mrnote_elems[idx];
 }
 
@@ -3993,7 +4072,7 @@ inline bool gcli::c_mrjob_EmptyQ(gcli::FMr& mr) {
 
 // --- gcli.FMr.c_mrjob.Find
 // Look up row by row id. Return NULL if out of range
-inline gcli::FMrjob* gcli::c_mrjob_Find(gcli::FMr& mr, u32 t) {
+inline gcli::FMrjob* gcli::c_mrjob_Find(gcli::FMr& mr, u64 t) {
     gcli::FMrjob *retval = NULL;
     u64 idx = t;
     u64 lim = mr.c_mrjob_n;
@@ -4011,14 +4090,14 @@ inline algo::aryptr<gcli::FMrjob*> gcli::c_mrjob_Getary(gcli::FMr& mr) {
 
 // --- gcli.FMr.c_mrjob.N
 // Return number of items in the pointer array
-inline i32 gcli::c_mrjob_N(const gcli::FMr& mr) {
+inline i64 gcli::c_mrjob_N(const gcli::FMr& mr) {
     return mr.c_mrjob_n;
 }
 
 // --- gcli.FMr.c_mrjob.RemoveAll
 // Empty the index. (The rows are not deleted)
 inline void gcli::c_mrjob_RemoveAll(gcli::FMr& mr) {
-    for (u32 i = 0; i < mr.c_mrjob_n; i++) {
+    for (u64 i = 0; i < mr.c_mrjob_n; i++) {
         // mark all elements as not-in-array
         mr.c_mrjob_elems[i]->mr_c_mrjob_in_ary = false;
     }
@@ -4027,7 +4106,7 @@ inline void gcli::c_mrjob_RemoveAll(gcli::FMr& mr) {
 
 // --- gcli.FMr.c_mrjob.qFind
 // Return reference without bounds checking
-inline gcli::FMrjob& gcli::c_mrjob_qFind(gcli::FMr& mr, u32 idx) {
+inline gcli::FMrjob& gcli::c_mrjob_qFind(gcli::FMr& mr, u64 idx) {
     return *mr.c_mrjob_elems[idx];
 }
 
@@ -4113,15 +4192,6 @@ inline  gcli::FMrjob::~FMrjob() {
     gcli::FMrjob_Uninit(*this);
 }
 
-// --- gcli.FMrnote..Init
-// Set all fields to initial values.
-inline void gcli::FMrnote_Init(gcli::FMrnote& mrnote) {
-    mrnote.select = bool(false);
-    mrnote.mr_c_mrnote_in_ary = bool(false);
-    mrnote.ind_mrnote_next = (gcli::FMrnote*)-1; // (gcli.FDb.ind_mrnote) not-in-hash
-    mrnote.ind_mrnote_hashval = 0; // stored hash value
-}
-
 // --- gcli.FMrnote..Ctor
 inline  gcli::FMrnote::FMrnote() {
     gcli::FMrnote_Init(*this);
@@ -4130,6 +4200,16 @@ inline  gcli::FMrnote::FMrnote() {
 // --- gcli.FMrnote..Dtor
 inline  gcli::FMrnote::~FMrnote() {
     gcli::FMrnote_Uninit(*this);
+}
+
+// --- gcli.FToken..Ctor
+inline  gcli::FToken::FToken() {
+    gcli::FToken_Init(*this);
+}
+
+// --- gcli.FToken..Dtor
+inline  gcli::FToken::~FToken() {
+    gcli::FToken_Uninit(*this);
 }
 
 // --- gcli.FTuples..Ctor

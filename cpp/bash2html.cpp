@@ -76,7 +76,7 @@ static void TestOutput (){
     prlog("\x1b[41m Red background  \x1b[32mGreen\x1b[49m text \x1b[0m");
 }
 
-struct BashState {
+struct BashState { // ignore:struct_in_src
     struct State {
         enum StateType {
             none,

@@ -40,6 +40,44 @@ strptr src_func::StripComment(strptr line) {
 
 // -----------------------------------------------------------------------------
 
+// Return LINE with a leading 'template<...>' parameter list removed.
+// Name extraction locates a function's parameter list as the first paren on
+// the line; a template parameter list can carry parens of its own (e.g. the
+// function-pointer parameter in 'template<typename T, void (*F)(T)>'), which
+// that search would stop at, degenerating the extracted name. Skipping the
+// template list first -- by angle-bracket depth, with angle brackets inside
+// parens ignored so a comparison in a parenthesized default argument (e.g.
+// 'template<bool B = (N > 0)>') does not end the scan early -- leaves a line
+// the paren search handles like any non-template function.
+strptr src_func::StripTemplate(strptr line) {
+    strptr ret = line;
+    if (StartsWithQ(line,"template") && (line.n_elems==8 || !algo_lib::IdentCharQ(line.elems[8]))) {
+        int depth = 0;
+        int parens = 0;
+        int end = 0;
+        for (int i = 0; i < line.n_elems && end == 0; i++) {
+            if (line.elems[i] == '(') {
+                parens++;
+            } else if (line.elems[i] == ')') {
+                parens--;
+            } else if (parens == 0) {
+                if (line.elems[i] == '<') {
+                    depth++;
+                } else if (line.elems[i] == '>') {
+                    depth--;
+                    if (depth == 0) {
+                        end = i+1;
+                    }
+                }
+            }
+        }
+        ret = TrimmedLeft(RestFrom(line,end));
+    }
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
 // S   : input string
 // CALL: string that looks like "XYZ("
 // Result: find all instances of "XYZ(...)", handling nested parentheses,
@@ -112,10 +150,12 @@ bool src_func::FuncstartQ(strptr line, strptr trimmedline) {
 
 // -----------------------------------------------------------------------------
 
-// Extract function namespace name
+// Extract function namespace name from FUNCLINE, a function's first line
 // void *ns::blah(arg1, arg2) -> ns
-tempstr src_func::GetFuncNs(src_func::FFunc &func) {
-    strptr funcname = func.func;
+// A leading template parameter list is skipped, so a caller may pass the raw
+// line or an already-stripped view (the skip is then a no-op).
+tempstr src_func::GetFuncNs(strptr funcline) {
+    strptr funcname = src_func::StripTemplate(funcline);
     strptr s = Pathcomp(funcname,"(LL RR"); // void *ns::blah
     algo::i32_Range r = substr_FindLast(s,"::"); // 8..10
     s = FirstN(s,r.beg);// void *ns
@@ -167,27 +207,28 @@ static void Main_SelectFunc() {
 
 // -----------------------------------------------------------------------------
 
-// Get srcfile filter from update-hdr line.
-// If none specified, use %
-tempstr src_func::Nsline_GetSrcfile(strptr line) {
+// The srcfile filter the update-hdr tag in NSCOMMENT names, and `%` when it names
+// none. NSCOMMENT is the comment a marker line ends in, which is where its tag and
+// the tag's attributes stand.
+// A marker line can carry the tag twice: `namespace foo { /* was: // update-hdr
+// srcfile:src/z.cpp */ // update-hdr srcfile:src/y.cpp` quotes an earlier marker in
+// a remark and writes the live one after it, and the two occurrences name different
+// sources. What makes such a line a marker is the tag in the comment it ends in, so
+// the attributes are read from that same occurrence: a search over the whole line
+// reaches the quoted tag first and fills the section from a source the live marker
+// does not name, at exit 0.
+// Pinned by src_func.SectionOpen, whose requoted marker names one source inside the
+// remark and another in the tag that opens its section.
+tempstr src_func::Nsline_GetSrcfile(strptr nscomment) {
     tempstr ret("%");
-    int idx = FindStr(line,"// update-hdr");
+    int idx = FindStr(nscomment,"// update-hdr");
     if (idx != -1) {
         Tuple tuple;
-        (void)Tuple_ReadStrptrMaybe(tuple,RestFrom(line,idx+3));
+        (void)Tuple_ReadStrptrMaybe(tuple,RestFrom(nscomment,idx+3));
         ret=attr_GetString(tuple,"srcfile","%");
     }
     return ret;
 }
-// -----------------------------------------------------------------------------
-
-// extract namespace name from a line like 'namespace xyz {'
-strptr src_func::Nsline_GetNamespace(strptr str) {
-    algo::StringIter iter(str);
-    GetWordCharf(iter);
-    return GetWordCharf(iter);
-}
-
 // -----------------------------------------------------------------------------
 
 static void SelectTarget() {
@@ -238,13 +279,13 @@ void src_func::CalcGenaffix() {
         strptr ns = Pathcomp(userfunc.userfunc,".LL");
         if (StartsWithQ(userfunc.acrkey,"gstatic/")) {
             // e.g. userfunc:ns...tuneparam_hugepages
-            //      acrkey:gstatic/db.tuneparam:hugepages
+            //      acrkey:gstatic/<ns>.tuneparam:hugepages
             //   -> affix ns_tuneparam_
             // this is the most important class
             affix << ns << "."<<Pathcomp(userfunc.acrkey,":LL.RR") << "_";
         } else if (StartsWithQ(userfunc.acrkey,"dispatch_msg:")) {
-            // acrkey:dispatch_msg:someproc.In/somens.SomeMsg
-            //   -> affix someproc.In_
+            // acrkey:dispatch_msg:<ns>.In/<proto>.AuthMsg
+            //   -> affix <ns>.In_
             affix << Pathcomp(userfunc.acrkey,":LR/LL") << "_";
         } else if (StartsWithQ(userfunc.acrkey,"fstep:") || StartsWithQ(userfunc.acrkey,"fbuf:")) {
             // acrkey:fstep:%
@@ -311,13 +352,23 @@ void src_func::Main() {
         report=false;
     } else {
         Main_ScanFiles();
+        // a scan that failed to read a targsrc file leaves the function
+        // index incomplete: rewriting headers from it would strip the unread
+        // file's prototypes, and re-creating "missing" functions from it
+        // would duplicate definitions the scan never saw, so the failed run
+        // reports the unreadable file and mutates nothing
+        bool scanok = algo_lib::_db.exit_code==0;
         if (src_func::_db.cmdline.updateproto) {
             action=true;
-            Main_UpdateHeader();
+            if (scanok) {
+                Main_UpdateHeader();
+            }
         }
         if (src_func::_db.cmdline.createmissing) {
             action=true;
-            Main_CreateMissing();
+            if (scanok) {
+                Main_CreateMissing();
+            }
         }
         Main_SelectFunc();
         if (src_func::_db.cmdline.e) {

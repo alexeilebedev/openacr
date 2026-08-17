@@ -26,16 +26,18 @@
 #include "include/gen/algo_gen.inl.h"
 #include "include/gen/dmmeta_gen.inl.h"
 //#pragma endinclude
-static algo_lib::FLogcat &algo_lib_logcat_ams          = ((algo_lib::FLogcat*)algo_lib::_db.logcat_data)[0];
-static algo_lib::FLogcat &algo_lib_logcat_debug        = ((algo_lib::FLogcat*)algo_lib::_db.logcat_data)[1];
-static algo_lib::FLogcat &algo_lib_logcat_inserr       = ((algo_lib::FLogcat*)algo_lib::_db.logcat_data)[2];
-static algo_lib::FLogcat &algo_lib_logcat_slowness     = ((algo_lib::FLogcat*)algo_lib::_db.logcat_data)[3];
-static algo_lib::FLogcat &algo_lib_logcat_stderr       = ((algo_lib::FLogcat*)algo_lib::_db.logcat_data)[4];
-static algo_lib::FLogcat &algo_lib_logcat_stdout       = ((algo_lib::FLogcat*)algo_lib::_db.logcat_data)[5];
-static algo_lib::FLogcat &algo_lib_logcat_timestamps   = ((algo_lib::FLogcat*)algo_lib::_db.logcat_data)[6];
-static algo_lib::FLogcat &algo_lib_logcat_verbose      = ((algo_lib::FLogcat*)algo_lib::_db.logcat_data)[7];
-static algo_lib::FLogcat &algo_lib_logcat_verbose2     = ((algo_lib::FLogcat*)algo_lib::_db.logcat_data)[8];
-static algo_lib::FLogcat &algo_lib_logcat_warn         = ((algo_lib::FLogcat*)algo_lib::_db.logcat_data)[9];
+static algo_lib::FLogcat &algo_lib_logcat_amsread      = ((algo_lib::FLogcat*)algo_lib::_db.logcat_data)[0];
+static algo_lib::FLogcat &algo_lib_logcat_amswrite     = ((algo_lib::FLogcat*)algo_lib::_db.logcat_data)[1];
+static algo_lib::FLogcat &algo_lib_logcat_debug        = ((algo_lib::FLogcat*)algo_lib::_db.logcat_data)[2];
+static algo_lib::FLogcat &algo_lib_logcat_inserr       = ((algo_lib::FLogcat*)algo_lib::_db.logcat_data)[3];
+static algo_lib::FLogcat &algo_lib_logcat_plain        = ((algo_lib::FLogcat*)algo_lib::_db.logcat_data)[4];
+static algo_lib::FLogcat &algo_lib_logcat_slowness     = ((algo_lib::FLogcat*)algo_lib::_db.logcat_data)[5];
+static algo_lib::FLogcat &algo_lib_logcat_stderr       = ((algo_lib::FLogcat*)algo_lib::_db.logcat_data)[6];
+static algo_lib::FLogcat &algo_lib_logcat_stdout       = ((algo_lib::FLogcat*)algo_lib::_db.logcat_data)[7];
+static algo_lib::FLogcat &algo_lib_logcat_timestamps   = ((algo_lib::FLogcat*)algo_lib::_db.logcat_data)[8];
+static algo_lib::FLogcat &algo_lib_logcat_verbose      = ((algo_lib::FLogcat*)algo_lib::_db.logcat_data)[9];
+static algo_lib::FLogcat &algo_lib_logcat_verbose2     = ((algo_lib::FLogcat*)algo_lib::_db.logcat_data)[10];
+static algo_lib::FLogcat &algo_lib_logcat_warn         = ((algo_lib::FLogcat*)algo_lib::_db.logcat_data)[11];
 
 // --- algo_lib.Bitset.ary.NBits
 // Get max # of bits in the bitset
@@ -239,14 +241,14 @@ inline  algo_lib::Bitset::Bitset(const algo::aryptr<u64> &rhs) {
 
 // --- algo_lib.Bitset.ary.Max
 // Return max. number of items in the array
-inline i32 algo_lib::ary_Max(algo_lib::Bitset& parent) {
+inline i64 algo_lib::ary_Max(algo_lib::Bitset& parent) {
     (void)parent;
     return parent.ary_max;
 }
 
 // --- algo_lib.Bitset.ary.N
 // Return number of items in the array
-inline i32 algo_lib::ary_N(const algo_lib::Bitset& parent) {
+inline i64 algo_lib::ary_N(const algo_lib::Bitset& parent) {
     return parent.ary_n;
 }
 
@@ -257,8 +259,8 @@ inline void algo_lib::ary_RemoveAll(algo_lib::Bitset& parent) {
 
 // --- algo_lib.Bitset.ary.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void algo_lib::ary_Reserve(algo_lib::Bitset& parent, int n) {
-    u32 new_n = parent.ary_n + n;
+inline void algo_lib::ary_Reserve(algo_lib::Bitset& parent, i64 n) {
+    u64 new_n = parent.ary_n + n;
     if (UNLIKELY(new_n > parent.ary_max)) {
         ary_AbsReserve(parent, new_n);
     }
@@ -414,21 +416,21 @@ inline algo::cstring* algo_lib::ary_tok_Last(algo_lib::CsvParse& csvparse) {
 
 // --- algo_lib.CsvParse.ary_tok.Max
 // Return max. number of items in the array
-inline i32 algo_lib::ary_tok_Max(algo_lib::CsvParse& csvparse) {
+inline i64 algo_lib::ary_tok_Max(algo_lib::CsvParse& csvparse) {
     (void)csvparse;
     return csvparse.ary_tok_max;
 }
 
 // --- algo_lib.CsvParse.ary_tok.N
 // Return number of items in the array
-inline i32 algo_lib::ary_tok_N(const algo_lib::CsvParse& csvparse) {
+inline i64 algo_lib::ary_tok_N(const algo_lib::CsvParse& csvparse) {
     return csvparse.ary_tok_n;
 }
 
 // --- algo_lib.CsvParse.ary_tok.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void algo_lib::ary_tok_Reserve(algo_lib::CsvParse& csvparse, int n) {
-    u32 new_n = csvparse.ary_tok_n + n;
+inline void algo_lib::ary_tok_Reserve(algo_lib::CsvParse& csvparse, i64 n) {
+    u64 new_n = csvparse.ary_tok_n + n;
     if (UNLIKELY(new_n > csvparse.ary_tok_max)) {
         ary_tok_AbsReserve(csvparse, new_n);
     }
@@ -527,7 +529,7 @@ inline  algo_lib::RegxM::RegxM() {
 // --- algo_lib.FFildes..Uninit
 inline void algo_lib::FFildes_Uninit(algo_lib::FFildes& fildes) {
     algo_lib::FFildes &row = fildes; (void)row;
-    fd_Cleanup(fildes); // dmmeta.fcleanup:algo_lib.FFildes.fd
+    fd_Cleanup(fildes); // dmmeta.ffunc:algo_lib.FFildes.fd/Cleanup
 }
 
 // --- algo_lib.FFildes..Ctor
@@ -539,14 +541,21 @@ inline  algo_lib::FFildes::~FFildes() {
     algo_lib::FFildes_Uninit(*this);
 }
 
+// --- algo_lib.FLockfile..Init
+// Set all fields to initial values.
+inline void algo_lib::FLockfile_Init(algo_lib::FLockfile& parent) {
+    parent.keep = bool(false);
+}
+
 // --- algo_lib.FLockfile..Uninit
 inline void algo_lib::FLockfile_Uninit(algo_lib::FLockfile& parent) {
     algo_lib::FLockfile &row = parent; (void)row;
-    fildes_Cleanup(parent); // dmmeta.fcleanup:algo_lib.FLockfile.fildes
+    fildes_Cleanup(parent); // dmmeta.ffunc:algo_lib.FLockfile.fildes/Cleanup
 }
 
 // --- algo_lib.FLockfile..Ctor
 inline  algo_lib::FLockfile::FLockfile() {
+    algo_lib::FLockfile_Init(*this);
 }
 
 // --- algo_lib.FLockfile..Dtor
@@ -620,6 +629,7 @@ inline  algo_lib::FTimehook::~FTimehook() {
 // Set all fields to initial values.
 inline void algo_lib::FImdb_Init(algo_lib::FImdb& imdb) {
     memset(&imdb.InsertStrptrMaybe, 0, sizeof(imdb.InsertStrptrMaybe));
+    memset(&imdb.RemoveStrptrMaybe, 0, sizeof(imdb.RemoveStrptrMaybe));
     memset(&imdb.Step, 0, sizeof(imdb.Step));
     memset(&imdb.MainLoop, 0, sizeof(imdb.MainLoop));
     memset(&imdb.GetTrace, 0, sizeof(imdb.GetTrace));
@@ -823,21 +833,21 @@ inline algo_lib::RegxState* algo_lib::state_Last(algo_lib::Regx& regx) {
 
 // --- algo_lib.Regx.state.Max
 // Return max. number of items in the array
-inline i32 algo_lib::state_Max(algo_lib::Regx& regx) {
+inline i64 algo_lib::state_Max(algo_lib::Regx& regx) {
     (void)regx;
     return regx.state_max;
 }
 
 // --- algo_lib.Regx.state.N
 // Return number of items in the array
-inline i32 algo_lib::state_N(const algo_lib::Regx& regx) {
+inline i64 algo_lib::state_N(const algo_lib::Regx& regx) {
     return regx.state_n;
 }
 
 // --- algo_lib.Regx.state.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void algo_lib::state_Reserve(algo_lib::Regx& regx, int n) {
-    u32 new_n = regx.state_n + n;
+inline void algo_lib::state_Reserve(algo_lib::Regx& regx, i64 n) {
+    u64 new_n = regx.state_n + n;
     if (UNLIKELY(new_n > regx.state_max)) {
         state_AbsReserve(regx, new_n);
     }
@@ -1070,7 +1080,7 @@ inline algo_lib::FImtable* algo_lib::imtable_Last() {
 
 // --- algo_lib.FDb.imtable.N
 // Return number of items in the pool
-inline i32 algo_lib::imtable_N() {
+inline i64 algo_lib::imtable_N() {
     return _db.imtable_n;
 }
 
@@ -1154,7 +1164,7 @@ inline algo_lib::FDispsigcheck* algo_lib::dispsigcheck_Last() {
 
 // --- algo_lib.FDb.dispsigcheck.N
 // Return number of items in the pool
-inline i32 algo_lib::dispsigcheck_N() {
+inline i64 algo_lib::dispsigcheck_N() {
     return _db.dispsigcheck_n;
 }
 
@@ -1412,7 +1422,7 @@ inline bool algo_lib::UrlsafeQ(u32 ch) {
 // Allocate space for one element. If no memory available, return NULL.
 inline void* algo_lib::logcat_AllocMem() {
     void *row = reinterpret_cast<algo_lib::FLogcat*>(_db.logcat_data) + _db.logcat_n;
-    if (_db.logcat_n == 10) row = NULL;
+    if (_db.logcat_n == 12) row = NULL;
     if (row) _db.logcat_n++;
     return row;
 }
@@ -1438,9 +1448,9 @@ inline algo::aryptr<algo_lib::FLogcat> algo_lib::logcat_Getary() {
 }
 
 // --- algo_lib.FDb.logcat.Max
-// Return constant 10 -- max. number of items in the pool
+// Return constant 12 -- max. number of items in the pool
 inline i32 algo_lib::logcat_Max() {
-    return 10;
+    return 12;
 }
 
 // --- algo_lib.FDb.logcat.N
@@ -1504,20 +1514,20 @@ inline algo::cstring* algo_lib::exec_args_Last() {
 
 // --- algo_lib.FDb.exec_args.Max
 // Return max. number of items in the array
-inline i32 algo_lib::exec_args_Max() {
+inline i64 algo_lib::exec_args_Max() {
     return _db.exec_args_max;
 }
 
 // --- algo_lib.FDb.exec_args.N
 // Return number of items in the array
-inline i32 algo_lib::exec_args_N() {
+inline i64 algo_lib::exec_args_N() {
     return _db.exec_args_n;
 }
 
 // --- algo_lib.FDb.exec_args.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void algo_lib::exec_args_Reserve(int n) {
-    u32 new_n = _db.exec_args_n + n;
+inline void algo_lib::exec_args_Reserve(i64 n) {
+    u64 new_n = _db.exec_args_n + n;
     if (UNLIKELY(new_n > _db.exec_args_max)) {
         exec_args_AbsReserve(new_n);
     }
@@ -1571,20 +1581,20 @@ inline algo::cstring* algo_lib::dirstack_Last() {
 
 // --- algo_lib.FDb.dirstack.Max
 // Return max. number of items in the array
-inline i32 algo_lib::dirstack_Max() {
+inline i64 algo_lib::dirstack_Max() {
     return _db.dirstack_max;
 }
 
 // --- algo_lib.FDb.dirstack.N
 // Return number of items in the array
-inline i32 algo_lib::dirstack_N() {
+inline i64 algo_lib::dirstack_N() {
     return _db.dirstack_n;
 }
 
 // --- algo_lib.FDb.dirstack.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void algo_lib::dirstack_Reserve(int n) {
-    u32 new_n = _db.dirstack_n + n;
+inline void algo_lib::dirstack_Reserve(i64 n) {
+    u64 new_n = _db.dirstack_n + n;
     if (UNLIKELY(new_n > _db.dirstack_max)) {
         dirstack_AbsReserve(new_n);
     }
@@ -1939,7 +1949,7 @@ inline void algo_lib::FIohook_Init(algo_lib::FIohook& iohook) {
 // --- algo_lib.FIohook..Uninit
 inline void algo_lib::FIohook_Uninit(algo_lib::FIohook& iohook) {
     algo_lib::FIohook &row = iohook; (void)row;
-    fildes_Cleanup(iohook); // dmmeta.fcleanup:algo_lib.FIohook.fildes
+    fildes_Cleanup(iohook); // dmmeta.ffunc:algo_lib.FIohook.fildes/Cleanup
 }
 
 // --- algo_lib.FIohook..Ctor
@@ -1950,6 +1960,16 @@ inline  algo_lib::FIohook::FIohook() {
 // --- algo_lib.FIohook..Dtor
 inline  algo_lib::FIohook::~FIohook() {
     algo_lib::FIohook_Uninit(*this);
+}
+
+// --- algo_lib.FProc..Ctor
+inline  algo_lib::FProc::FProc() {
+    algo_lib::FProc_Init(*this);
+}
+
+// --- algo_lib.FProc..Dtor
+inline  algo_lib::FProc::~FProc() {
+    algo_lib::FProc_Uninit(*this);
 }
 
 // --- algo_lib.FReplvar..Init
@@ -1976,7 +1996,7 @@ inline  algo_lib::FReplvar::~FReplvar() {
 // --- algo_lib.FTempfile..Uninit
 inline void algo_lib::FTempfile_Uninit(algo_lib::FTempfile& parent) {
     algo_lib::FTempfile &row = parent; (void)row;
-    fildes_Cleanup(parent); // dmmeta.fcleanup:algo_lib.FTempfile.fildes
+    fildes_Cleanup(parent); // dmmeta.ffunc:algo_lib.FTempfile.fildes/Cleanup
 }
 
 // --- algo_lib.FTempfile..Ctor
@@ -2036,7 +2056,7 @@ inline bool algo_lib::c_txtcell_EmptyQ(algo_lib::FTxtrow& txtrow) {
 
 // --- algo_lib.FTxtrow.c_txtcell.Find
 // Look up row by row id. Return NULL if out of range
-inline algo_lib::FTxtcell* algo_lib::c_txtcell_Find(algo_lib::FTxtrow& txtrow, u32 t) {
+inline algo_lib::FTxtcell* algo_lib::c_txtcell_Find(algo_lib::FTxtrow& txtrow, u64 t) {
     algo_lib::FTxtcell *retval = NULL;
     u64 idx = t;
     u64 lim = txtrow.c_txtcell_n;
@@ -2054,14 +2074,14 @@ inline algo::aryptr<algo_lib::FTxtcell*> algo_lib::c_txtcell_Getary(algo_lib::FT
 
 // --- algo_lib.FTxtrow.c_txtcell.N
 // Return number of items in the pointer array
-inline i32 algo_lib::c_txtcell_N(const algo_lib::FTxtrow& txtrow) {
+inline i64 algo_lib::c_txtcell_N(const algo_lib::FTxtrow& txtrow) {
     return txtrow.c_txtcell_n;
 }
 
 // --- algo_lib.FTxtrow.c_txtcell.RemoveAll
 // Empty the index. (The rows are not deleted)
 inline void algo_lib::c_txtcell_RemoveAll(algo_lib::FTxtrow& txtrow) {
-    for (u32 i = 0; i < txtrow.c_txtcell_n; i++) {
+    for (u64 i = 0; i < txtrow.c_txtcell_n; i++) {
         // mark all elements as not-in-array
         txtrow.c_txtcell_elems[i]->txtrow_c_txtcell_in_ary = false;
     }
@@ -2070,7 +2090,7 @@ inline void algo_lib::c_txtcell_RemoveAll(algo_lib::FTxtrow& txtrow) {
 
 // --- algo_lib.FTxtrow.c_txtcell.qFind
 // Return reference without bounds checking
-inline algo_lib::FTxtcell& algo_lib::c_txtcell_qFind(algo_lib::FTxtrow& txtrow, u32 idx) {
+inline algo_lib::FTxtcell& algo_lib::c_txtcell_qFind(algo_lib::FTxtrow& txtrow, u64 idx) {
     return *txtrow.c_txtcell_elems[idx];
 }
 
@@ -2142,7 +2162,7 @@ inline bool algo_lib::c_txtrow_EmptyQ(algo_lib::FTxttbl& txttbl) {
 
 // --- algo_lib.FTxttbl.c_txtrow.Find
 // Look up row by row id. Return NULL if out of range
-inline algo_lib::FTxtrow* algo_lib::c_txtrow_Find(algo_lib::FTxttbl& txttbl, u32 t) {
+inline algo_lib::FTxtrow* algo_lib::c_txtrow_Find(algo_lib::FTxttbl& txttbl, u64 t) {
     algo_lib::FTxtrow *retval = NULL;
     u64 idx = t;
     u64 lim = txttbl.c_txtrow_n;
@@ -2160,14 +2180,14 @@ inline algo::aryptr<algo_lib::FTxtrow*> algo_lib::c_txtrow_Getary(algo_lib::FTxt
 
 // --- algo_lib.FTxttbl.c_txtrow.N
 // Return number of items in the pointer array
-inline i32 algo_lib::c_txtrow_N(const algo_lib::FTxttbl& txttbl) {
+inline i64 algo_lib::c_txtrow_N(const algo_lib::FTxttbl& txttbl) {
     return txttbl.c_txtrow_n;
 }
 
 // --- algo_lib.FTxttbl.c_txtrow.RemoveAll
 // Empty the index. (The rows are not deleted)
 inline void algo_lib::c_txtrow_RemoveAll(algo_lib::FTxttbl& txttbl) {
-    for (u32 i = 0; i < txttbl.c_txtrow_n; i++) {
+    for (u64 i = 0; i < txttbl.c_txtrow_n; i++) {
         // mark all elements as not-in-array
         txttbl.c_txtrow_elems[i]->txttbl_c_txtrow_in_ary = false;
     }
@@ -2176,7 +2196,7 @@ inline void algo_lib::c_txtrow_RemoveAll(algo_lib::FTxttbl& txttbl) {
 
 // --- algo_lib.FTxttbl.c_txtrow.qFind
 // Return reference without bounds checking
-inline algo_lib::FTxtrow& algo_lib::c_txtrow_qFind(algo_lib::FTxttbl& txttbl, u32 idx) {
+inline algo_lib::FTxtrow& algo_lib::c_txtrow_qFind(algo_lib::FTxttbl& txttbl, u64 idx) {
     return *txttbl.c_txtrow_elems[idx];
 }
 
@@ -2225,6 +2245,7 @@ inline void algo_lib::FTxttbl_Init(algo_lib::FTxttbl& txttbl) {
     txttbl.c_txtrow_max = 0; // (algo_lib.FTxttbl.c_txtrow)
     txttbl.col_space = i32(2);
     txttbl.normalized = bool(false);
+    txttbl.style = bool(false);
 }
 
 // --- algo_lib.FTxttbl..Ctor
@@ -2324,6 +2345,7 @@ inline i32 algo_lib::temp_buf_N(const algo_lib::InTextFile& parent) {
 inline void algo_lib::temp_buf_Setary(algo_lib::InTextFile& parent, const algo::aryptr<u8> &rhs) {
     int n = i32_Min(8192, rhs.n_elems);
     memcpy(reinterpret_cast<u8*>(parent.temp_buf_data), rhs.elems, sizeof(u8)*n);
+    parent.temp_buf_n = n;
 }
 
 // --- algo_lib.InTextFile.temp_buf.qFind
@@ -2398,7 +2420,7 @@ inline  algo_lib::InTextFile::InTextFile(const algo_lib::InTextFile &rhs)
 // --- algo_lib.Mmap..Uninit
 inline void algo_lib::Mmap_Uninit(algo_lib::Mmap& parent) {
     algo_lib::Mmap &row = parent; (void)row;
-    mem_Cleanup(parent); // dmmeta.fcleanup:algo_lib.Mmap.mem
+    mem_Cleanup(parent); // dmmeta.ffunc:algo_lib.Mmap.mem/Cleanup
 }
 
 // --- algo_lib.Mmap..Ctor
@@ -2412,6 +2434,72 @@ inline  algo_lib::Mmap::~Mmap() {
 
 // --- algo_lib.MmapFile..Ctor
 inline  algo_lib::MmapFile::MmapFile() {
+}
+
+// --- algo_lib.RecSortkey..Hash
+inline u32 algo_lib::RecSortkey_Hash(u32 prev, const algo_lib::RecSortkey& rhs) {
+    prev = Smallstr150_Hash(prev, rhs.ctype);
+    prev = double_Hash(prev, rhs.num);
+    prev = cstring_Hash(prev, rhs.str);
+    prev = float_Hash(prev, rhs.rowid);
+    return prev;
+}
+
+// --- algo_lib.RecSortkey..EqOp
+inline bool algo_lib::RecSortkey::operator ==(const algo_lib::RecSortkey &rhs) const {
+    return algo_lib::RecSortkey_Eq(const_cast<algo_lib::RecSortkey&>(*this),const_cast<algo_lib::RecSortkey&>(rhs));
+}
+
+// --- algo_lib.RecSortkey..NeOp
+inline bool algo_lib::RecSortkey::operator !=(const algo_lib::RecSortkey &rhs) const {
+    return !algo_lib::RecSortkey_Eq(const_cast<algo_lib::RecSortkey&>(*this),const_cast<algo_lib::RecSortkey&>(rhs));
+}
+
+// --- algo_lib.RecSortkey..LtOp
+inline bool algo_lib::RecSortkey::operator <(const algo_lib::RecSortkey &rhs) const {
+    return algo_lib::RecSortkey_Lt(const_cast<algo_lib::RecSortkey&>(*this),const_cast<algo_lib::RecSortkey&>(rhs));
+}
+
+// --- algo_lib.RecSortkey..GtOp
+inline bool algo_lib::RecSortkey::operator >(const algo_lib::RecSortkey &rhs) const {
+    return algo_lib::RecSortkey_Lt(const_cast<algo_lib::RecSortkey&>(rhs),const_cast<algo_lib::RecSortkey&>(*this));
+}
+
+// --- algo_lib.RecSortkey..LeOp
+inline bool algo_lib::RecSortkey::operator <=(const algo_lib::RecSortkey &rhs) const {
+    return !algo_lib::RecSortkey_Lt(const_cast<algo_lib::RecSortkey&>(rhs),const_cast<algo_lib::RecSortkey&>(*this));
+}
+
+// --- algo_lib.RecSortkey..GeOp
+inline bool algo_lib::RecSortkey::operator >=(const algo_lib::RecSortkey &rhs) const {
+    return !algo_lib::RecSortkey_Lt(const_cast<algo_lib::RecSortkey&>(*this),const_cast<algo_lib::RecSortkey&>(rhs));
+}
+
+// --- algo_lib.RecSortkey..Lt
+inline bool algo_lib::RecSortkey_Lt(algo_lib::RecSortkey& lhs, algo_lib::RecSortkey& rhs) {
+    return RecSortkey_Cmp(lhs,rhs) < 0;
+}
+
+// --- algo_lib.RecSortkey..Init
+// Set all fields to initial values.
+inline void algo_lib::RecSortkey_Init(algo_lib::RecSortkey& parent) {
+    parent.num = double(0.0);
+    parent.rowid = float(0.f);
+}
+
+// --- algo_lib.RecSortkey..Update
+// Set value. Return true if new value is different from old value.
+inline bool algo_lib::RecSortkey_Update(algo_lib::RecSortkey &lhs, algo_lib::RecSortkey& rhs) {
+    bool ret = !RecSortkey_Eq(lhs, rhs); // compare values
+    if (ret) {
+        lhs = rhs; // update
+    }
+    return ret;
+}
+
+// --- algo_lib.RecSortkey..Ctor
+inline  algo_lib::RecSortkey::RecSortkey() {
+    algo_lib::RecSortkey_Init(*this);
 }
 
 // --- algo_lib.RegxToken.type.GetEnum
@@ -2526,21 +2614,21 @@ inline algo_lib::RegxExpr* algo_lib::ary_expr_Last(algo_lib::RegxParse& regxpars
 
 // --- algo_lib.RegxParse.ary_expr.Max
 // Return max. number of items in the array
-inline i32 algo_lib::ary_expr_Max(algo_lib::RegxParse& regxparse) {
+inline i64 algo_lib::ary_expr_Max(algo_lib::RegxParse& regxparse) {
     (void)regxparse;
     return regxparse.ary_expr_max;
 }
 
 // --- algo_lib.RegxParse.ary_expr.N
 // Return number of items in the array
-inline i32 algo_lib::ary_expr_N(const algo_lib::RegxParse& regxparse) {
+inline i64 algo_lib::ary_expr_N(const algo_lib::RegxParse& regxparse) {
     return regxparse.ary_expr_n;
 }
 
 // --- algo_lib.RegxParse.ary_expr.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void algo_lib::ary_expr_Reserve(algo_lib::RegxParse& regxparse, int n) {
-    u32 new_n = regxparse.ary_expr_n + n;
+inline void algo_lib::ary_expr_Reserve(algo_lib::RegxParse& regxparse, i64 n) {
+    u64 new_n = regxparse.ary_expr_n + n;
     if (UNLIKELY(new_n > regxparse.ary_expr_max)) {
         ary_expr_AbsReserve(regxparse, new_n);
     }
@@ -2762,14 +2850,14 @@ inline i32* algo_lib::width_Last(algo_lib::Tabulate& tabulate) {
 
 // --- algo_lib.Tabulate.width.Max
 // Return max. number of items in the array
-inline i32 algo_lib::width_Max(algo_lib::Tabulate& tabulate) {
+inline i64 algo_lib::width_Max(algo_lib::Tabulate& tabulate) {
     (void)tabulate;
     return tabulate.width_max;
 }
 
 // --- algo_lib.Tabulate.width.N
 // Return number of items in the array
-inline i32 algo_lib::width_N(const algo_lib::Tabulate& tabulate) {
+inline i64 algo_lib::width_N(const algo_lib::Tabulate& tabulate) {
     return tabulate.width_n;
 }
 
@@ -2780,8 +2868,8 @@ inline void algo_lib::width_RemoveAll(algo_lib::Tabulate& tabulate) {
 
 // --- algo_lib.Tabulate.width.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void algo_lib::width_Reserve(algo_lib::Tabulate& tabulate, int n) {
-    u32 new_n = tabulate.width_n + n;
+inline void algo_lib::width_Reserve(algo_lib::Tabulate& tabulate, i64 n) {
+    u64 new_n = tabulate.width_n + n;
     if (UNLIKELY(new_n > tabulate.width_max)) {
         width_AbsReserve(tabulate, new_n);
     }
@@ -2906,6 +2994,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const algo_lib::FTxt
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const algo_lib::FieldId &row) {// cfmt:algo_lib.FieldId.String
     algo_lib::FieldId_Print(const_cast<algo_lib::FieldId&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const algo_lib::RecSortkey &row) {// cfmt:algo_lib.RecSortkey.String
+    algo_lib::RecSortkey_Print(const_cast<algo_lib::RecSortkey&>(row), str);
     return str;
 }
 

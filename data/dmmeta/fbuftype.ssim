@@ -1,4 +1,3 @@
 dmmeta.fbuftype  fbuftype:Bytebuf  skipbytes:Y  comment:"Byte buffer"
-dmmeta.fbuftype  fbuftype:BytebufExtern  skipbytes:Y  comment:"Byte buffer with external ScanMsg"
 dmmeta.fbuftype  fbuftype:Linebuf  skipbytes:Y  comment:"Line buffering"
 dmmeta.fbuftype  fbuftype:Msgbuf  skipbytes:N  comment:"Message buffering"

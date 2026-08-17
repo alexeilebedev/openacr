@@ -3,7 +3,8 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Internals](#internals)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Disambiguation](#disambiguation)<br/>
@@ -13,13 +14,14 @@
 &nbsp;&nbsp;&bull;&nbsp;  [Bugs](#bugs)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
-&#128196; [mdbg - Internals](/txt/exe/mdbg/internals.md)<br/>
+<!-- abt_md.toc_end -->
 
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
+### Internals
+<a href="#internals"></a>
+&#128196; [mdbg - Internals](/txt/gen/mdbg/mdbg.md)<br/>
 
 ### Syntax
 <a href="#syntax"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Syntax -->
 ```
 mdbg: Gdb front-end
 Usage: mdbg [-target:]<string> [[-args:]<string>] [options]
@@ -40,20 +42,16 @@ Usage: mdbg [-target:]<string> [[-args:]<string>] [options]
     -follow_child                   When forking, follow child (default is parent)
     -py                             Enable python scripting
     -dry_run                        Print commands but don't execute
-    -mp                             Multi-process debugging
+    -nonstop                        Debug a process tree: keep every spawned process under gdb and let them run
     -verbose       flag             Verbosity level (0..255); alias -v; cumulative
     -debug         flag             Debug level (0..255); alias -d; cumulative
     -help                           Print help and exit; alias -h
     -version                        Print version and exit
     -signature                      Show signatures and exit; alias -sig
-
 ```
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Syntax -->
 
 ### Description
 <a href="#description"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Description -->
 
 This is a wrapper for automating the invocation of `gdb` from command line.
 
@@ -102,8 +100,6 @@ and run the target program under the debugger, stopping at Main.
               algo_lib::_db.argc = argc;
       ...
 
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Description -->
-
 ### Disambiguation
 <a href="#disambiguation"></a>
 
@@ -139,8 +135,6 @@ can be tried out and fixed.
 
 ### Options
 <a href="#options"></a>
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Options -->
 #### -target -- Executable name
 <a href="#-target"></a>
 
@@ -222,20 +216,15 @@ Configure gdb to enable gdb python scriptability
 #### -dry_run -- Print commands but don't execute
 <a href="#-dry_run"></a>
 
-#### -mp -- Multi-process debugging
-<a href="#-mp"></a>
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
+#### -nonstop -- Debug a process tree: keep every spawned process under gdb and let them run
+<a href="#-nonstop"></a>
 
 ### Inputs
 <a href="#inputs"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
 `mdbg` takes the following tables on input:
 |Ssimfile|Comment|
 |---|---|
 |[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
 |[dev.builddir](/txt/ssimdb/dev/builddir.md)|Directory where object files/executables go. Determines compile/link options|
 |[dev.cfg](/txt/ssimdb/dev/cfg.md)|Compiler configuration|
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
-
+|[dev.dbgtarget](/txt/ssimdb/dev/dbgtarget.md)||

@@ -11,9 +11,11 @@ dmmeta.cextern  ctype:SQLUINTEGER  initmemset:N  isstruct:N  plaindata:Y
 dmmeta.cextern  ctype:SSL  initmemset:N  isstruct:N  plaindata:N
 dmmeta.cextern  ctype:SSL_CTX  initmemset:N  isstruct:N  plaindata:N
 dmmeta.cextern  ctype:ShStream  initmemset:N  isstruct:N  plaindata:N
+dmmeta.cextern  ctype:algo.Alloc  initmemset:N  isstruct:N  plaindata:N
 dmmeta.cextern  ctype:algo.ImdbGetTraceFcn  initmemset:Y  isstruct:N  plaindata:Y
 dmmeta.cextern  ctype:algo.ImdbInsertStrptrMaybeFcn  initmemset:Y  isstruct:N  plaindata:Y
 dmmeta.cextern  ctype:algo.ImdbMainLoopFcn  initmemset:Y  isstruct:N  plaindata:Y
+dmmeta.cextern  ctype:algo.ImdbRemoveStrptrMaybeFcn  initmemset:Y  isstruct:N  plaindata:Y
 dmmeta.cextern  ctype:algo.ImdbStepFcn  initmemset:Y  isstruct:N  plaindata:Y
 dmmeta.cextern  ctype:algo.ImrowNItemsFcn  initmemset:Y  isstruct:N  plaindata:Y
 dmmeta.cextern  ctype:algo.ImrowPrintFcn  initmemset:Y  isstruct:N  plaindata:Y
@@ -34,6 +36,7 @@ dmmeta.cextern  ctype:i64  initmemset:N  isstruct:N  plaindata:Y
 dmmeta.cextern  ctype:i8  initmemset:N  isstruct:N  plaindata:Y
 dmmeta.cextern  ctype:ibv_ah  initmemset:N  isstruct:N  plaindata:N
 dmmeta.cextern  ctype:ibv_context  initmemset:N  isstruct:N  plaindata:N
+dmmeta.cextern  ctype:ibv_cq  initmemset:N  isstruct:N  plaindata:N
 dmmeta.cextern  ctype:ibv_cq_ex  initmemset:N  isstruct:N  plaindata:N
 dmmeta.cextern  ctype:ibv_device  initmemset:N  isstruct:N  plaindata:N
 dmmeta.cextern  ctype:ibv_flow  initmemset:N  isstruct:N  plaindata:N
@@ -42,10 +45,16 @@ dmmeta.cextern  ctype:ibv_pd  initmemset:N  isstruct:N  plaindata:N
 dmmeta.cextern  ctype:ibv_qp  initmemset:N  isstruct:N  plaindata:N
 dmmeta.cextern  ctype:ibv_recv_wr  initmemset:N  isstruct:N  plaindata:N
 dmmeta.cextern  ctype:ibv_sge  initmemset:N  isstruct:N  plaindata:N
+dmmeta.cextern  ctype:ibv_srq  initmemset:N  isstruct:N  plaindata:N
 dmmeta.cextern  ctype:iconv_t  initmemset:N  isstruct:N  plaindata:Y
 dmmeta.cextern  ctype:pid_t  initmemset:N  isstruct:N  plaindata:Y
 dmmeta.cextern  ctype:rdma_cm_id  initmemset:N  isstruct:N  plaindata:N
 dmmeta.cextern  ctype:rdma_event_channel  initmemset:N  isstruct:N  plaindata:N
+dmmeta.cextern  ctype:spdk_env_opts  initmemset:N  isstruct:Y  plaindata:N
+dmmeta.cextern  ctype:spdk_nvme_ctrlr  initmemset:N  isstruct:Y  plaindata:N
+dmmeta.cextern  ctype:spdk_nvme_ns  initmemset:N  isstruct:Y  plaindata:N
+dmmeta.cextern  ctype:spdk_nvme_qpair  initmemset:N  isstruct:Y  plaindata:N
+dmmeta.cextern  ctype:spdk_nvme_transport_id  initmemset:N  isstruct:Y  plaindata:N
 dmmeta.cextern  ctype:sqlite3  initmemset:N  isstruct:Y  plaindata:N
 dmmeta.cextern  ctype:sqlite3_vtab  initmemset:N  isstruct:Y  plaindata:N
 dmmeta.cextern  ctype:sqlite3_vtab_cursor  initmemset:N  isstruct:Y  plaindata:N

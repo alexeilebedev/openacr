@@ -61,6 +61,22 @@ void algo::EncodeBEI64(algo::ByteAry &buf, i64 value) {
     EncodeBEU64(buf,value);
 }
 
+void algo::EncodeLEU32(algo::ByteAry &buf, u32 value) {
+    *(u32*)ary_AllocN(buf,sizeof value).elems = htole32(value);
+}
+
+void algo::EncodeLEI32(algo::ByteAry &buf, i32 value) {
+    EncodeLEU32(buf,value);
+}
+
+void algo::EncodeLEU64(algo::ByteAry &buf, u64 value) {
+    *(u64*)ary_AllocN(buf,sizeof value).elems = htole64(value);
+}
+
+void algo::EncodeLEI64(algo::ByteAry &buf, i64 value) {
+    EncodeLEU64(buf,value);
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 //                                    FLOAT                                   //
 ////////////////////////////////////////////////////////////////////////////////
@@ -69,6 +85,26 @@ void algo::EncodeBEF64(algo::ByteAry &buf, double value) {
 #ifdef __STDC_IEC_559__
     char *ptr = (char*)&value;
     EncodeBEU64(buf,*(u64*)ptr);
+#else
+#error "Unconformant float representation format"
+#endif
+}
+
+void algo::EncodeLEF32(algo::ByteAry &buf, float value) {
+#ifdef __STDC_IEC_559__
+    u32 tmp;
+    memcpy(&tmp,&value,sizeof tmp);
+    EncodeLEU32(buf,tmp);
+#else
+#error "Unconformant float representation format"
+#endif
+}
+
+void algo::EncodeLEF64(algo::ByteAry &buf, double value) {
+#ifdef __STDC_IEC_559__
+    u64 tmp;
+    memcpy(&tmp,&value,sizeof tmp);
+    EncodeLEU64(buf,tmp);
 #else
 #error "Unconformant float representation format"
 #endif

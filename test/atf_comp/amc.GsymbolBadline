@@ -1,0 +1,6 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/gsymbol_badline -out_dir: -report:N zzz"
+# eof amc
+amc -> amc.bad_gsymbol  gsymbol:algo_lib/testdb.color  file:test/amc/gsymbol_badline/testdb/color.ssim  line:4  text:'testdb.color  color:"green'  comment:"gsymbol table line is not a tuple"
+amc -> amc.bad_gsymbol  gsymbol:algo_lib/testdb.color  file:test/amc/gsymbol_badline/testdb/color.ssim  line:5  text:'testdb.color  color:blue  comment:"unterminated'  comment:"gsymbol table line is not a tuple"
+amc -> amc.no_output  comment:"no files were modified"
+# exit amc code:2

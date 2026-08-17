@@ -31,8 +31,8 @@
 
 // --- ssim2mysql_FieldIdEnum
 
-enum ssim2mysql_FieldIdEnum {        // ssim2mysql.FieldId.value
-     ssim2mysql_FieldId_value   = 0
+enum ssim2mysql_FieldIdEnum {    // ssim2mysql.FieldId.value
+     ssim2mysql_FieldId_value
 };
 
 enum { ssim2mysql_FieldIdEnum_N = 1 };
@@ -41,26 +41,27 @@ enum { ssim2mysql_FieldIdEnum_N = 1 };
 // --- ssim2mysql_TableIdEnum
 
 enum ssim2mysql_TableIdEnum {                   // ssim2mysql.TableId.value
-     ssim2mysql_TableId_dmmeta_Ctype      = 0   // dmmeta.Ctype -> ssim2mysql.FCtype
-    ,ssim2mysql_TableId_dmmeta_ctype      = 0   // dmmeta.ctype -> ssim2mysql.FCtype
-    ,ssim2mysql_TableId_dmmeta_Field      = 1   // dmmeta.Field -> ssim2mysql.FField
-    ,ssim2mysql_TableId_dmmeta_field      = 1   // dmmeta.field -> ssim2mysql.FField
-    ,ssim2mysql_TableId_dmmeta_Ns         = 2   // dmmeta.Ns -> ssim2mysql.FNs
-    ,ssim2mysql_TableId_dmmeta_ns         = 2   // dmmeta.ns -> ssim2mysql.FNs
-    ,ssim2mysql_TableId_dmmeta_Sqltype    = 3   // dmmeta.Sqltype -> ssim2mysql.FSqltype
-    ,ssim2mysql_TableId_dmmeta_sqltype    = 3   // dmmeta.sqltype -> ssim2mysql.FSqltype
-    ,ssim2mysql_TableId_dmmeta_Ssimfile   = 4   // dmmeta.Ssimfile -> ssim2mysql.FSsimfile
-    ,ssim2mysql_TableId_dmmeta_ssimfile   = 4   // dmmeta.ssimfile -> ssim2mysql.FSsimfile
-    ,ssim2mysql_TableId_dmmeta_Substr     = 5   // dmmeta.Substr -> ssim2mysql.FSubstr
-    ,ssim2mysql_TableId_dmmeta_substr     = 5   // dmmeta.substr -> ssim2mysql.FSubstr
+     ssim2mysql_TableId_dmmeta_Cppfunc    = 0   // dmmeta.Cppfunc -> ssim2mysql.FCppfunc
+    ,ssim2mysql_TableId_dmmeta_cppfunc    = 0   // dmmeta.cppfunc -> ssim2mysql.FCppfunc
+    ,ssim2mysql_TableId_dmmeta_Ctype      = 1   // dmmeta.Ctype -> ssim2mysql.FCtype
+    ,ssim2mysql_TableId_dmmeta_ctype      = 1   // dmmeta.ctype -> ssim2mysql.FCtype
+    ,ssim2mysql_TableId_dmmeta_Field      = 2   // dmmeta.Field -> ssim2mysql.FField
+    ,ssim2mysql_TableId_dmmeta_field      = 2   // dmmeta.field -> ssim2mysql.FField
+    ,ssim2mysql_TableId_dmmeta_Ns         = 3   // dmmeta.Ns -> ssim2mysql.FNs
+    ,ssim2mysql_TableId_dmmeta_ns         = 3   // dmmeta.ns -> ssim2mysql.FNs
+    ,ssim2mysql_TableId_dmmeta_Sqltype    = 4   // dmmeta.Sqltype -> ssim2mysql.FSqltype
+    ,ssim2mysql_TableId_dmmeta_sqltype    = 4   // dmmeta.sqltype -> ssim2mysql.FSqltype
+    ,ssim2mysql_TableId_dmmeta_Ssimfile   = 5   // dmmeta.Ssimfile -> ssim2mysql.FSsimfile
+    ,ssim2mysql_TableId_dmmeta_ssimfile   = 5   // dmmeta.ssimfile -> ssim2mysql.FSsimfile
+    ,ssim2mysql_TableId_dmmeta_Substr     = 6   // dmmeta.Substr -> ssim2mysql.FSubstr
+    ,ssim2mysql_TableId_dmmeta_substr     = 6   // dmmeta.substr -> ssim2mysql.FSubstr
 };
 
-enum { ssim2mysql_TableIdEnum_N = 12 };
+enum { ssim2mysql_TableIdEnum_N = 14 };
 
 namespace ssim2mysql { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
 namespace ssim2mysql { // gen:ns_tclass_field
-extern const char *ssim2mysql_help;
 } // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace ssim2mysql { struct FField; }
@@ -73,6 +74,7 @@ namespace ssim2mysql { struct _db_field_curs; }
 namespace ssim2mysql { struct _db_sqltype_curs; }
 namespace ssim2mysql { struct _db_column_curs; }
 namespace ssim2mysql { struct _db_substr_curs; }
+namespace ssim2mysql { struct _db_cppfunc_curs; }
 namespace ssim2mysql { struct _db_ssimfile_curs; }
 namespace ssim2mysql { struct _db_zs_cmd_curs; }
 namespace ssim2mysql { struct _db_zd_ssimfile_curs; }
@@ -81,6 +83,7 @@ namespace ssim2mysql { struct ns_c_ssimfile_curs; }
 namespace ssim2mysql { struct ssimfile_c_column_curs; }
 namespace ssim2mysql { struct FCmd; }
 namespace ssim2mysql { struct FColumn; }
+namespace ssim2mysql { struct FCppfunc; }
 namespace ssim2mysql { struct trace; }
 namespace ssim2mysql { struct FDb; }
 namespace ssim2mysql { struct FInput; }
@@ -113,7 +116,6 @@ private:
     friend ssim2mysql::FCmd*    cmd_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 cmd_Delete(ssim2mysql::FCmd &row) __attribute__((nothrow));
 };
-
 // Set all fields to initial values.
 // func:ssim2mysql.FCmd..Init
 inline void          FCmd_Init(ssim2mysql::FCmd& cmd);
@@ -152,12 +154,11 @@ private:
     friend void                 column_RemoveAll() __attribute__((nothrow));
     friend void                 column_RemoveLast() __attribute__((nothrow));
 };
-
 // func:ssim2mysql.FColumn.name.Get
-algo::Smallstr50     name_Get(ssim2mysql::FColumn& column) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(ssim2mysql::FColumn& column) __attribute__((__warn_unused_result__, nothrow));
 
 // func:ssim2mysql.FColumn.ssimfile.Get
-algo::Smallstr50     ssimfile_Get(ssim2mysql::FColumn& column) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ssimfile_Get(ssim2mysql::FColumn& column) __attribute__((__warn_unused_result__, nothrow));
 
 // func:ssim2mysql.FColumn..Concat_ssimfile_name
 tempstr              FColumn_Concat_ssimfile_name( const algo::strptr& ssimfile ,const algo::strptr& name );
@@ -171,6 +172,48 @@ void                 FColumn_Uninit(ssim2mysql::FColumn& column) __attribute__((
 // func:ssim2mysql.FColumn..Print
 void                 FColumn_Print(ssim2mysql::FColumn& row, algo::cstring& str) __attribute__((nothrow));
 
+// --- ssim2mysql.FCppfunc
+// create: ssim2mysql.FDb.cppfunc (Lary)
+// global access: cppfunc (Lary, by rowid)
+// access: ssim2mysql.FField.c_cppfunc (Ptr)
+struct FCppfunc { // ssim2mysql.FCppfunc
+    algo::Smallstr150     field;     //
+    algo::CppExpr         expr;      //
+    bool                  print;     //   false
+    bool                  set;       //   false
+    ssim2mysql::FField*   p_field;   // reference to parent row
+    // x-reference on ssim2mysql.FCppfunc.p_field prevents copy
+    // func:ssim2mysql.FCppfunc..AssignOp
+    inline ssim2mysql::FCppfunc& operator =(const ssim2mysql::FCppfunc &rhs) = delete;
+    // x-reference on ssim2mysql.FCppfunc.p_field prevents copy
+    // func:ssim2mysql.FCppfunc..CopyCtor
+    inline               FCppfunc(const ssim2mysql::FCppfunc &rhs) = delete;
+private:
+    // func:ssim2mysql.FCppfunc..Ctor
+    inline               FCppfunc() __attribute__((nothrow));
+    // func:ssim2mysql.FCppfunc..Dtor
+    inline               ~FCppfunc() __attribute__((nothrow));
+    friend ssim2mysql::FCppfunc& cppfunc_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend ssim2mysql::FCppfunc* cppfunc_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 cppfunc_RemoveLast() __attribute__((nothrow));
+};
+// Copy fields out of row
+// func:ssim2mysql.FCppfunc.msghdr.CopyOut
+void                 cppfunc_CopyOut(ssim2mysql::FCppfunc &row, dmmeta::Cppfunc &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:ssim2mysql.FCppfunc.msghdr.CopyIn
+void                 cppfunc_CopyIn(ssim2mysql::FCppfunc &row, dmmeta::Cppfunc &in) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:ssim2mysql.FCppfunc..Init
+inline void          FCppfunc_Init(ssim2mysql::FCppfunc& cppfunc);
+// func:ssim2mysql.FCppfunc..Uninit
+void                 FCppfunc_Uninit(ssim2mysql::FCppfunc& cppfunc) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:ssim2mysql.FCppfunc.String  printfmt:Tuple
+// func:ssim2mysql.FCppfunc..Print
+void                 FCppfunc_Print(ssim2mysql::FCppfunc& row, algo::cstring& str) __attribute__((nothrow));
+
 // --- ssim2mysql.FCtype
 // create: ssim2mysql.FDb.ctype (Lary)
 // global access: ctype (Lary, by rowid)
@@ -180,12 +223,12 @@ void                 FColumn_Print(ssim2mysql::FColumn& row, algo::cstring& str)
 // access: ssim2mysql.FSsimfile.p_ctype (Upptr)
 struct FCtype { // ssim2mysql.FCtype
     algo::Smallstr100        ctype;               // Identifier. must be ns.typename
-    algo::Comment            comment;             //
+    algo::cstring            comment;             //
     ssim2mysql::FNs*         p_ns;                // reference to parent row
     ssim2mysql::FSqltype*    c_sqltype;           // optional pointer
     ssim2mysql::FField**     c_field_elems;       // array of pointers
-    u32                      c_field_n;           // array of pointers
-    u32                      c_field_max;         // capacity of allocated array
+    u64                      c_field_n;           // current size
+    u64                      c_field_max;         // capacity of allocated array
     ssim2mysql::FSsimfile*   c_ssimfile;          // optional pointer
     ssim2mysql::FCtype*      ind_ctype_next;      // hash next
     u32                      ind_ctype_hashval;   // hash value
@@ -210,7 +253,6 @@ private:
     friend ssim2mysql::FCtype*  ctype_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 ctype_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:ssim2mysql.FCtype.msghdr.CopyOut
 void                 ctype_CopyOut(ssim2mysql::FCtype &row, dmmeta::Ctype &out) __attribute__((nothrow));
@@ -219,10 +261,10 @@ void                 ctype_CopyOut(ssim2mysql::FCtype &row, dmmeta::Ctype &out) 
 void                 ctype_CopyIn(ssim2mysql::FCtype &row, dmmeta::Ctype &in) __attribute__((nothrow));
 
 // func:ssim2mysql.FCtype.ns.Get
-algo::Smallstr16     ns_Get(ssim2mysql::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ns_Get(ssim2mysql::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow));
 
 // func:ssim2mysql.FCtype.name.Get
-algo::Smallstr100    name_Get(ssim2mysql::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(ssim2mysql::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:ssim2mysql.FCtype.c_sqltype.InsertMaybe
@@ -236,12 +278,12 @@ inline void          c_sqltype_Remove(ssim2mysql::FCtype& ctype, ssim2mysql::FSq
 inline bool          c_field_EmptyQ(ssim2mysql::FCtype& ctype) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:ssim2mysql.FCtype.c_field.Find
-inline ssim2mysql::FField* c_field_Find(ssim2mysql::FCtype& ctype, u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline ssim2mysql::FField* c_field_Find(ssim2mysql::FCtype& ctype, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:ssim2mysql.FCtype.c_field.Getary
 inline algo::aryptr<ssim2mysql::FField*> c_field_Getary(ssim2mysql::FCtype& ctype) __attribute__((nothrow));
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:ssim2mysql.FCtype.c_field.Insert
 void                 c_field_Insert(ssim2mysql::FCtype& ctype, ssim2mysql::FField& row) __attribute__((nothrow));
 // Insert pointer to row in array.
@@ -251,7 +293,7 @@ void                 c_field_Insert(ssim2mysql::FCtype& ctype, ssim2mysql::FFiel
 bool                 c_field_InsertMaybe(ssim2mysql::FCtype& ctype, ssim2mysql::FField& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:ssim2mysql.FCtype.c_field.N
-inline i32           c_field_N(const ssim2mysql::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_field_N(const ssim2mysql::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:ssim2mysql.FCtype.c_field.Remove
 void                 c_field_Remove(ssim2mysql::FCtype& ctype, ssim2mysql::FField& row) __attribute__((nothrow));
@@ -260,10 +302,10 @@ void                 c_field_Remove(ssim2mysql::FCtype& ctype, ssim2mysql::FFiel
 inline void          c_field_RemoveAll(ssim2mysql::FCtype& ctype) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:ssim2mysql.FCtype.c_field.Reserve
-void                 c_field_Reserve(ssim2mysql::FCtype& ctype, u32 n) __attribute__((nothrow));
+void                 c_field_Reserve(ssim2mysql::FCtype& ctype, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:ssim2mysql.FCtype.c_field.qFind
-inline ssim2mysql::FField& c_field_qFind(ssim2mysql::FCtype& ctype, u32 idx) __attribute__((nothrow));
+inline ssim2mysql::FField& c_field_qFind(ssim2mysql::FCtype& ctype, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:ssim2mysql.FCtype.c_field.InAryQ
 inline bool          ctype_c_field_InAryQ(ssim2mysql::FField& row) __attribute__((nothrow));
@@ -310,7 +352,6 @@ struct trace { // ssim2mysql.trace
     inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Set all fields to initial values.
 // func:ssim2mysql.trace..Init
 inline void          trace_Init(ssim2mysql::trace& parent);
@@ -325,19 +366,19 @@ struct FDb { // ssim2mysql.FDb: In-memory database for ssim2mysql
     ssim2mysql::FColumn**     ind_column_buckets_elems;     // pointer to bucket array
     i32                       ind_column_buckets_n;         // number of elements in bucket array
     i32                       ind_column_n;                 // number of elements in the hash table
-    ssim2mysql::FNs*          ns_lary[32];                  // level array
-    i32                       ns_n;                         // number of elements in array
+    ssim2mysql::FNs*          ns_lary[36];                  // level array
+    i64                       ns_n;                         // number of elements in array
     command::ssim2mysql       cmdline;                      //
-    ssim2mysql::FCtype*       ctype_lary[32];               // level array
-    i32                       ctype_n;                      // number of elements in array
-    ssim2mysql::FField*       field_lary[32];               // level array
-    i32                       field_n;                      // number of elements in array
-    ssim2mysql::FSqltype*     sqltype_lary[32];             // level array
-    i32                       sqltype_n;                    // number of elements in array
+    ssim2mysql::FCtype*       ctype_lary[36];               // level array
+    i64                       ctype_n;                      // number of elements in array
+    ssim2mysql::FField*       field_lary[36];               // level array
+    i64                       field_n;                      // number of elements in array
+    ssim2mysql::FSqltype*     sqltype_lary[36];             // level array
+    i64                       sqltype_n;                    // number of elements in array
     u64                       cmd_blocksize;                // # bytes per block
     ssim2mysql::FCmd*         cmd_free;                     //
-    ssim2mysql::FColumn*      column_lary[32];              // level array
-    i32                       column_n;                     // number of elements in array
+    ssim2mysql::FColumn*      column_lary[36];              // level array
+    i64                       column_n;                     // number of elements in array
     ssim2mysql::FNs**         ind_ns_buckets_elems;         // pointer to bucket array
     i32                       ind_ns_buckets_n;             // number of elements in bucket array
     i32                       ind_ns_n;                     // number of elements in the hash table
@@ -347,10 +388,12 @@ struct FDb { // ssim2mysql.FDb: In-memory database for ssim2mysql
     ssim2mysql::FField**      ind_field_buckets_elems;      // pointer to bucket array
     i32                       ind_field_buckets_n;          // number of elements in bucket array
     i32                       ind_field_n;                  // number of elements in the hash table
-    ssim2mysql::FSubstr*      substr_lary[32];              // level array
-    i32                       substr_n;                     // number of elements in array
-    ssim2mysql::FSsimfile*    ssimfile_lary[32];            // level array
-    i32                       ssimfile_n;                   // number of elements in array
+    ssim2mysql::FSubstr*      substr_lary[36];              // level array
+    i64                       substr_n;                     // number of elements in array
+    ssim2mysql::FCppfunc*     cppfunc_lary[36];             // level array
+    i64                       cppfunc_n;                    // number of elements in array
+    ssim2mysql::FSsimfile*    ssimfile_lary[36];            // level array
+    i64                       ssimfile_n;                   // number of elements in array
     ssim2mysql::FSsimfile**   ind_ssimfile_buckets_elems;   // pointer to bucket array
     i32                       ind_ssimfile_buckets_n;       // number of elements in bucket array
     i32                       ind_ssimfile_n;               // number of elements in the hash table
@@ -366,7 +409,6 @@ struct FDb { // ssim2mysql.FDb: In-memory database for ssim2mysql
     ssim2mysql::FInput*       cd_input_line_head;           // zero-terminated doubly linked list
     ssim2mysql::trace         trace;                        //
 };
-
 // Return true if hash is empty
 // func:ssim2mysql.FDb.ind_column.EmptyQ
 inline bool          ind_column_EmptyQ() __attribute__((nothrow));
@@ -420,7 +462,7 @@ inline ssim2mysql::FNs* ns_Find(u64 t) __attribute__((__warn_unused_result__, no
 inline ssim2mysql::FNs* ns_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:ssim2mysql.FDb.ns.N
-inline i32           ns_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           ns_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
 // func:ssim2mysql.FDb.ns.RemoveLast
 void                 ns_RemoveLast() __attribute__((nothrow));
@@ -457,7 +499,7 @@ inline ssim2mysql::FCtype* ctype_Find(u64 t) __attribute__((__warn_unused_result
 inline ssim2mysql::FCtype* ctype_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:ssim2mysql.FDb.ctype.N
-inline i32           ctype_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           ctype_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
 // func:ssim2mysql.FDb.ctype.RemoveLast
 void                 ctype_RemoveLast() __attribute__((nothrow));
@@ -494,7 +536,7 @@ inline ssim2mysql::FField* field_Find(u64 t) __attribute__((__warn_unused_result
 inline ssim2mysql::FField* field_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:ssim2mysql.FDb.field.N
-inline i32           field_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           field_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
 // func:ssim2mysql.FDb.field.RemoveLast
 void                 field_RemoveLast() __attribute__((nothrow));
@@ -531,7 +573,7 @@ inline ssim2mysql::FSqltype* sqltype_Find(u64 t) __attribute__((__warn_unused_re
 inline ssim2mysql::FSqltype* sqltype_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:ssim2mysql.FDb.sqltype.N
-inline i32           sqltype_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           sqltype_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
 // func:ssim2mysql.FDb.sqltype.RemoveLast
 void                 sqltype_RemoveLast() __attribute__((nothrow));
@@ -594,7 +636,7 @@ inline ssim2mysql::FColumn* column_Find(u64 t) __attribute__((__warn_unused_resu
 inline ssim2mysql::FColumn* column_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:ssim2mysql.FDb.column.N
-inline i32           column_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           column_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:ssim2mysql.FDb.column.RemoveAll
 void                 column_RemoveAll() __attribute__((nothrow));
@@ -609,10 +651,8 @@ inline ssim2mysql::FColumn& column_qFind(u64 t) __attribute__((nothrow, pure));
 // func:ssim2mysql.FDb.column.XrefMaybe
 bool                 column_XrefMaybe(ssim2mysql::FColumn &row);
 
-// Read argc,argv directly into the fields of the command line(s)
-// The following fields are updated:
-//     ssim2mysql.FDb.cmdline
-//     algo_lib.FDb.cmdline
+// Read argc,argv into the fields of ssim2mysql.FDb.cmdline (and any base command line)
+// via ssim2mysql_ReadArgv; then apply -help/-version and load floadtuples input.
 // func:ssim2mysql.FDb._db.ReadArgv
 void                 ReadArgv() __attribute__((nothrow));
 // Main loop.
@@ -649,6 +689,10 @@ bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __att
 // Calls Step function of dependencies
 // func:ssim2mysql.FDb._db.Steps
 void                 Steps();
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+// func:ssim2mysql.FDb._db.RemoveStrptrMaybe
+bool                 RemoveStrptrMaybe(algo::strptr str);
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:ssim2mysql.FDb._db.XrefMaybe
@@ -763,7 +807,7 @@ inline ssim2mysql::FSubstr* substr_Find(u64 t) __attribute__((__warn_unused_resu
 inline ssim2mysql::FSubstr* substr_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:ssim2mysql.FDb.substr.N
-inline i32           substr_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           substr_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
 // func:ssim2mysql.FDb.substr.RemoveLast
 void                 substr_RemoveLast() __attribute__((nothrow));
@@ -774,6 +818,43 @@ inline ssim2mysql::FSubstr& substr_qFind(u64 t) __attribute__((nothrow, pure));
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:ssim2mysql.FDb.substr.XrefMaybe
 bool                 substr_XrefMaybe(ssim2mysql::FSubstr &row);
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:ssim2mysql.FDb.cppfunc.Alloc
+ssim2mysql::FCppfunc& cppfunc_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:ssim2mysql.FDb.cppfunc.AllocMaybe
+ssim2mysql::FCppfunc* cppfunc_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:ssim2mysql.FDb.cppfunc.InsertMaybe
+ssim2mysql::FCppfunc* cppfunc_InsertMaybe(const dmmeta::Cppfunc &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:ssim2mysql.FDb.cppfunc.AllocMem
+void*                cppfunc_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:ssim2mysql.FDb.cppfunc.EmptyQ
+inline bool          cppfunc_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:ssim2mysql.FDb.cppfunc.Find
+inline ssim2mysql::FCppfunc* cppfunc_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:ssim2mysql.FDb.cppfunc.Last
+inline ssim2mysql::FCppfunc* cppfunc_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:ssim2mysql.FDb.cppfunc.N
+inline i64           cppfunc_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Delete last element of array. Do nothing if array is empty.
+// func:ssim2mysql.FDb.cppfunc.RemoveLast
+void                 cppfunc_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:ssim2mysql.FDb.cppfunc.qFind
+inline ssim2mysql::FCppfunc& cppfunc_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:ssim2mysql.FDb.cppfunc.XrefMaybe
+bool                 cppfunc_XrefMaybe(ssim2mysql::FCppfunc &row);
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -800,7 +881,7 @@ inline ssim2mysql::FSsimfile* ssimfile_Find(u64 t) __attribute__((__warn_unused_
 inline ssim2mysql::FSsimfile* ssimfile_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:ssim2mysql.FDb.ssimfile.N
-inline i32           ssimfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           ssimfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
 // func:ssim2mysql.FDb.ssimfile.RemoveLast
 void                 ssimfile_RemoveLast() __attribute__((nothrow));
@@ -939,6 +1020,9 @@ ssim2mysql::FSsimfile* zd_ssimfile_RemoveFirst() __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 // func:ssim2mysql.FDb.zd_ssimfile.qLast
 inline ssim2mysql::FSsimfile& zd_ssimfile_qLast() __attribute__((__warn_unused_result__, nothrow));
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+// func:ssim2mysql.FDb.zd_ssimfile.InsertBefore
+void                 zd_ssimfile_InsertBefore(ssim2mysql::FSsimfile& row, ssim2mysql::FSsimfile* before) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:ssim2mysql.FDb.cd_input_line.EmptyQ
@@ -1055,6 +1139,18 @@ inline void          _db_substr_curs_Next(_db_substr_curs &curs) __attribute__((
 // func:ssim2mysql.FDb.substr_curs.Access
 inline ssim2mysql::FSubstr& _db_substr_curs_Access(_db_substr_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
+// func:ssim2mysql.FDb.cppfunc_curs.Reset
+inline void          _db_cppfunc_curs_Reset(_db_cppfunc_curs &curs, ssim2mysql::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:ssim2mysql.FDb.cppfunc_curs.ValidQ
+inline bool          _db_cppfunc_curs_ValidQ(_db_cppfunc_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:ssim2mysql.FDb.cppfunc_curs.Next
+inline void          _db_cppfunc_curs_Next(_db_cppfunc_curs &curs) __attribute__((nothrow));
+// item access
+// func:ssim2mysql.FDb.cppfunc_curs.Access
+inline ssim2mysql::FCppfunc& _db_cppfunc_curs_Access(_db_cppfunc_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
 // func:ssim2mysql.FDb.ssimfile_curs.Reset
 inline void          _db_ssimfile_curs_Reset(_db_ssimfile_curs &curs, ssim2mysql::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
@@ -1113,29 +1209,33 @@ void                 FDb_Uninit() __attribute__((nothrow));
 // global access: field (Lary, by rowid)
 // global access: ind_field (Thash, hash field field)
 // access: ssim2mysql.FColumn.p_field (Upptr)
+// access: ssim2mysql.FCppfunc.p_field (Upptr)
 // access: ssim2mysql.FCtype.c_field (Ptrary)
 // access: ssim2mysql.FSubstr.p_field (Upptr)
 struct FField { // ssim2mysql.FField
-    ssim2mysql::FField*    ind_field_next;         // hash next
-    u32                    ind_field_hashval;      // hash value
-    algo::Smallstr100      field;                  // Primary key, as ctype.name
-    algo::Smallstr100      arg;                    // Type of field
-    algo::Smallstr50       reftype;                //   "Val"  Type constructor
-    algo::CppExpr          dflt;                   // Default value (c++ expression)
-    algo::Comment          comment;                //
-    ssim2mysql::FCtype*    p_ctype;                // reference to parent row
-    ssim2mysql::FCtype*    p_arg;                  // reference to parent row
-    ssim2mysql::FSubstr*   c_substr;               // optional pointer
-    bool                   select;                 //   false  Select for inclusion to upload
-    bool                   is_pkeyref;             //   false  Field is a pkey reference to something else
-    bool                   ctype_c_field_in_ary;   //   false  membership flag
+    ssim2mysql::FField*     ind_field_next;         // hash next
+    u32                     ind_field_hashval;      // hash value
+    algo::Smallstr150       field;                  // Primary key, as ctype.name
+    algo::Smallstr100       arg;                    // Type of field
+    algo::Smallstr50        reftype;                //   "Val"  Type constructor
+    algo::CppExpr           dflt;                   // Default value (c++ expression)
+    algo::cstring           comment;                //
+    ssim2mysql::FCtype*     p_ctype;                // reference to parent row
+    ssim2mysql::FCtype*     p_arg;                  // reference to parent row
+    ssim2mysql::FCppfunc*   c_cppfunc;              // optional pointer
+    ssim2mysql::FSubstr*    c_substr;               // optional pointer
+    bool                    select;                 //   false  Select for inclusion to upload
+    bool                    is_pkeyref;             //   false  Field is a pkey reference to something else
+    bool                    ctype_c_field_in_ary;   //   false  membership flag
     // x-reference on ssim2mysql.FField.p_ctype prevents copy
     // x-reference on ssim2mysql.FField.p_arg prevents copy
+    // x-reference on ssim2mysql.FField.c_cppfunc prevents copy
     // x-reference on ssim2mysql.FField.c_substr prevents copy
     // func:ssim2mysql.FField..AssignOp
     ssim2mysql::FField&  operator =(const ssim2mysql::FField &rhs) = delete;
     // x-reference on ssim2mysql.FField.p_ctype prevents copy
     // x-reference on ssim2mysql.FField.p_arg prevents copy
+    // x-reference on ssim2mysql.FField.c_cppfunc prevents copy
     // x-reference on ssim2mysql.FField.c_substr prevents copy
     // func:ssim2mysql.FField..CopyCtor
     FField(const ssim2mysql::FField &rhs) = delete;
@@ -1148,7 +1248,6 @@ private:
     friend ssim2mysql::FField*  field_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 field_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:ssim2mysql.FField.msghdr.CopyOut
 void                 field_CopyOut(ssim2mysql::FField &row, dmmeta::Field &out) __attribute__((nothrow));
@@ -1157,13 +1256,20 @@ void                 field_CopyOut(ssim2mysql::FField &row, dmmeta::Field &out) 
 void                 field_CopyIn(ssim2mysql::FField &row, dmmeta::Field &in) __attribute__((nothrow));
 
 // func:ssim2mysql.FField.ctype.Get
-algo::Smallstr100    ctype_Get(ssim2mysql::FField& field) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ctype_Get(ssim2mysql::FField& field) __attribute__((__warn_unused_result__, nothrow));
 
 // func:ssim2mysql.FField.ns.Get
-algo::Smallstr16     ns_Get(ssim2mysql::FField& field) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ns_Get(ssim2mysql::FField& field) __attribute__((__warn_unused_result__, nothrow));
 
 // func:ssim2mysql.FField.name.Get
-algo::Smallstr50     name_Get(ssim2mysql::FField& field) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(ssim2mysql::FField& field) __attribute__((__warn_unused_result__, nothrow));
+
+// Insert row into pointer index. Return final membership status.
+// func:ssim2mysql.FField.c_cppfunc.InsertMaybe
+inline bool          c_cppfunc_InsertMaybe(ssim2mysql::FField& field, ssim2mysql::FCppfunc& row) __attribute__((nothrow));
+// Remove element from index. If element is not in index, do nothing.
+// func:ssim2mysql.FField.c_cppfunc.Remove
+inline void          c_cppfunc_Remove(ssim2mysql::FField& field, ssim2mysql::FCppfunc& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:ssim2mysql.FField.c_substr.InsertMaybe
@@ -1216,7 +1322,6 @@ private:
     friend ssim2mysql::FInput*  input_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 input_Delete(ssim2mysql::FInput &row) __attribute__((nothrow));
 };
-
 // Attach fbuf to Iohook for reading
 // Attach file descriptor and begin reading using edge-triggered epoll.
 // File descriptor becomes owned by ssim2mysql::FInput.in_buf via FIohook field.
@@ -1233,9 +1338,9 @@ void                 in_buf_EndRead(ssim2mysql::FInput& input) __attribute__((no
 // The message is found by looking for delimiter '\n'.
 // The return value is an aryptr. If ret.elems is non-NULL, the message is valid (possibly empty).
 // If ret.elems is NULL, no message can be extracted from buffer.
-// The returned aryptr excludes the trailing deliminter.
-// SkipMsg will skip both the line and the deliminter.
-// A partial line at the end of input is NOT returned (TODO?)
+// The returned aryptr excludes the trailing delimiter.
+// SkipMsg will skip both the line and the delimiter.
+// A partial line at the end of input is NOT returned.
 //
 // func:ssim2mysql.FInput.in_buf.GetMsg
 algo::aryptr<char>   in_buf_GetMsg(ssim2mysql::FInput& input) __attribute__((nothrow));
@@ -1268,14 +1373,14 @@ void                 in_buf_SkipBytes(ssim2mysql::FInput& input, int n) __attrib
 // func:ssim2mysql.FInput.in_buf.SkipMsg
 void                 in_buf_SkipMsg(ssim2mysql::FInput& input) __attribute__((nothrow));
 // Attempt to write buffer contents to fbuf, return success
-// Write bytes to the buffer. If the entire block is written, return true,
+// Write bytes to the buffer. If the entire block is accepted, return true,
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
 //
 // func:ssim2mysql.FInput.in_buf.WriteAll
 bool                 in_buf_WriteAll(ssim2mysql::FInput& input, u8 *in, i32 in_n) __attribute__((nothrow));
 // Write buffer contents to fbuf, reallocate as needed
-// Write bytes to the buffer. The entire block is always written
+// Write bytes to the buffer. The entire block is always written or the program exits.
 // func:ssim2mysql.FInput.in_buf.WriteReserve
 void                 in_buf_WriteReserve(ssim2mysql::FInput& input, u8 *in, i32 in_n) __attribute__((nothrow));
 
@@ -1300,10 +1405,10 @@ struct FNs { // ssim2mysql.FNs
     algo::Smallstr16          ns;                 // Namespace name (primary key)
     algo::Smallstr50          nstype;             // Namespace type
     algo::Smallstr50          license;            // Associated license
-    algo::Comment             comment;            //
+    algo::cstring             comment;            //
     ssim2mysql::FSsimfile**   c_ssimfile_elems;   // array of pointers
-    u32                       c_ssimfile_n;       // array of pointers
-    u32                       c_ssimfile_max;     // capacity of allocated array
+    u64                       c_ssimfile_n;       // current size
+    u64                       c_ssimfile_max;     // capacity of allocated array
     // reftype Ptrary of ssim2mysql.FNs.c_ssimfile prohibits copy
     // func:ssim2mysql.FNs..AssignOp
     inline ssim2mysql::FNs& operator =(const ssim2mysql::FNs &rhs) = delete;
@@ -1319,7 +1424,6 @@ private:
     friend ssim2mysql::FNs*     ns_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 ns_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:ssim2mysql.FNs.msghdr.CopyOut
 void                 ns_CopyOut(ssim2mysql::FNs &row, dmmeta::Ns &out) __attribute__((nothrow));
@@ -1332,12 +1436,12 @@ void                 ns_CopyIn(ssim2mysql::FNs &row, dmmeta::Ns &in) __attribute
 inline bool          c_ssimfile_EmptyQ(ssim2mysql::FNs& ns) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:ssim2mysql.FNs.c_ssimfile.Find
-inline ssim2mysql::FSsimfile* c_ssimfile_Find(ssim2mysql::FNs& ns, u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline ssim2mysql::FSsimfile* c_ssimfile_Find(ssim2mysql::FNs& ns, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:ssim2mysql.FNs.c_ssimfile.Getary
 inline algo::aryptr<ssim2mysql::FSsimfile*> c_ssimfile_Getary(ssim2mysql::FNs& ns) __attribute__((nothrow));
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:ssim2mysql.FNs.c_ssimfile.Insert
 void                 c_ssimfile_Insert(ssim2mysql::FNs& ns, ssim2mysql::FSsimfile& row) __attribute__((nothrow));
 // Insert pointer to row in array.
@@ -1347,7 +1451,7 @@ void                 c_ssimfile_Insert(ssim2mysql::FNs& ns, ssim2mysql::FSsimfil
 bool                 c_ssimfile_InsertMaybe(ssim2mysql::FNs& ns, ssim2mysql::FSsimfile& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:ssim2mysql.FNs.c_ssimfile.N
-inline i32           c_ssimfile_N(const ssim2mysql::FNs& ns) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_ssimfile_N(const ssim2mysql::FNs& ns) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:ssim2mysql.FNs.c_ssimfile.Remove
 void                 c_ssimfile_Remove(ssim2mysql::FNs& ns, ssim2mysql::FSsimfile& row) __attribute__((nothrow));
@@ -1356,10 +1460,10 @@ void                 c_ssimfile_Remove(ssim2mysql::FNs& ns, ssim2mysql::FSsimfil
 inline void          c_ssimfile_RemoveAll(ssim2mysql::FNs& ns) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:ssim2mysql.FNs.c_ssimfile.Reserve
-void                 c_ssimfile_Reserve(ssim2mysql::FNs& ns, u32 n) __attribute__((nothrow));
+void                 c_ssimfile_Reserve(ssim2mysql::FNs& ns, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:ssim2mysql.FNs.c_ssimfile.qFind
-inline ssim2mysql::FSsimfile& c_ssimfile_qFind(ssim2mysql::FNs& ns, u32 idx) __attribute__((nothrow));
+inline ssim2mysql::FSsimfile& c_ssimfile_qFind(ssim2mysql::FNs& ns, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:ssim2mysql.FNs.c_ssimfile.InAryQ
 inline bool          ns_c_ssimfile_InAryQ(ssim2mysql::FSsimfile& row) __attribute__((nothrow));
@@ -1395,7 +1499,7 @@ void                 FNs_Print(ssim2mysql::FNs& row, algo::cstring& str) __attri
 struct FSqltype { // ssim2mysql.FSqltype
     algo::Smallstr100   ctype;     //
     algo::Smallstr100   expr;      //
-    algo::Comment       comment;   //
+    algo::cstring       comment;   //
     // func:ssim2mysql.FSqltype..AssignOp
     inline ssim2mysql::FSqltype& operator =(const ssim2mysql::FSqltype &rhs) = delete;
     // func:ssim2mysql.FSqltype..CopyCtor
@@ -1409,7 +1513,6 @@ private:
     friend ssim2mysql::FSqltype* sqltype_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 sqltype_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:ssim2mysql.FSqltype.msghdr.CopyOut
 void                 sqltype_CopyOut(ssim2mysql::FSqltype &row, dmmeta::Sqltype &out) __attribute__((nothrow));
@@ -1443,8 +1546,8 @@ struct FSsimfile { // ssim2mysql.FSsimfile
     ssim2mysql::FCtype*      p_ctype;                // reference to parent row
     bool                     truncated;              //   false  Already truncated in database
     ssim2mysql::FColumn**    c_column_elems;         // array of pointers
-    u32                      c_column_n;             // array of pointers
-    u32                      c_column_max;           // capacity of allocated array
+    u64                      c_column_n;             // current size
+    u64                      c_column_max;           // capacity of allocated array
     bool                     ns_c_ssimfile_in_ary;   //   false  membership flag
     // x-reference on ssim2mysql.FSsimfile.p_ctype prevents copy
     // reftype Ptrary of ssim2mysql.FSsimfile.c_column prohibits copy
@@ -1463,7 +1566,6 @@ private:
     friend ssim2mysql::FSsimfile* ssimfile_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 ssimfile_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:ssim2mysql.FSsimfile.msghdr.CopyOut
 void                 ssimfile_CopyOut(ssim2mysql::FSsimfile &row, dmmeta::Ssimfile &out) __attribute__((nothrow));
@@ -1472,25 +1574,25 @@ void                 ssimfile_CopyOut(ssim2mysql::FSsimfile &row, dmmeta::Ssimfi
 void                 ssimfile_CopyIn(ssim2mysql::FSsimfile &row, dmmeta::Ssimfile &in) __attribute__((nothrow));
 
 // func:ssim2mysql.FSsimfile.ssimns.Get
-algo::Smallstr16     ssimns_Get(ssim2mysql::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ssimns_Get(ssim2mysql::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
 
 // func:ssim2mysql.FSsimfile.ns.Get
-algo::Smallstr16     ns_Get(ssim2mysql::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ns_Get(ssim2mysql::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
 
 // func:ssim2mysql.FSsimfile.name.Get
-algo::Smallstr50     name_Get(ssim2mysql::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         name_Get(ssim2mysql::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
 
 // Return true if index is empty
 // func:ssim2mysql.FSsimfile.c_column.EmptyQ
 inline bool          c_column_EmptyQ(ssim2mysql::FSsimfile& ssimfile) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:ssim2mysql.FSsimfile.c_column.Find
-inline ssim2mysql::FColumn* c_column_Find(ssim2mysql::FSsimfile& ssimfile, u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline ssim2mysql::FColumn* c_column_Find(ssim2mysql::FSsimfile& ssimfile, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:ssim2mysql.FSsimfile.c_column.Getary
 inline algo::aryptr<ssim2mysql::FColumn*> c_column_Getary(ssim2mysql::FSsimfile& ssimfile) __attribute__((nothrow));
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 // func:ssim2mysql.FSsimfile.c_column.Insert
 void                 c_column_Insert(ssim2mysql::FSsimfile& ssimfile, ssim2mysql::FColumn& row) __attribute__((nothrow));
 // Insert pointer to row in array.
@@ -1500,7 +1602,7 @@ void                 c_column_Insert(ssim2mysql::FSsimfile& ssimfile, ssim2mysql
 bool                 c_column_InsertMaybe(ssim2mysql::FSsimfile& ssimfile, ssim2mysql::FColumn& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:ssim2mysql.FSsimfile.c_column.N
-inline i32           c_column_N(const ssim2mysql::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           c_column_N(const ssim2mysql::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:ssim2mysql.FSsimfile.c_column.Remove
 void                 c_column_Remove(ssim2mysql::FSsimfile& ssimfile, ssim2mysql::FColumn& row) __attribute__((nothrow));
@@ -1509,10 +1611,10 @@ void                 c_column_Remove(ssim2mysql::FSsimfile& ssimfile, ssim2mysql
 inline void          c_column_RemoveAll(ssim2mysql::FSsimfile& ssimfile) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:ssim2mysql.FSsimfile.c_column.Reserve
-void                 c_column_Reserve(ssim2mysql::FSsimfile& ssimfile, u32 n) __attribute__((nothrow));
+void                 c_column_Reserve(ssim2mysql::FSsimfile& ssimfile, u64 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:ssim2mysql.FSsimfile.c_column.qFind
-inline ssim2mysql::FColumn& c_column_qFind(ssim2mysql::FSsimfile& ssimfile, u32 idx) __attribute__((nothrow));
+inline ssim2mysql::FColumn& c_column_qFind(ssim2mysql::FSsimfile& ssimfile, u64 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:ssim2mysql.FSsimfile.c_column.InAryQ
 inline bool          ssimfile_c_column_InAryQ(ssim2mysql::FColumn& row) __attribute__((nothrow));
@@ -1546,9 +1648,9 @@ void                 FSsimfile_Print(ssim2mysql::FSsimfile& row, algo::cstring& 
 // global access: substr (Lary, by rowid)
 // access: ssim2mysql.FField.c_substr (Ptr)
 struct FSubstr { // ssim2mysql.FSubstr
-    algo::Smallstr100     field;      //
+    algo::Smallstr150     field;      //
     algo::CppExpr         expr;       //
-    algo::Smallstr100     srcfield;   //
+    algo::Smallstr150     srcfield;   //
     ssim2mysql::FField*   p_field;    // reference to parent row
     // x-reference on ssim2mysql.FSubstr.p_field prevents copy
     // func:ssim2mysql.FSubstr..AssignOp
@@ -1565,7 +1667,6 @@ private:
     friend ssim2mysql::FSubstr* substr_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 substr_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:ssim2mysql.FSubstr.msghdr.CopyOut
 void                 substr_CopyOut(ssim2mysql::FSubstr &row, dmmeta::Substr &out) __attribute__((nothrow));
@@ -1597,7 +1698,6 @@ struct FieldId { // ssim2mysql.FieldId: Field read helper
     inline               FieldId(ssim2mysql_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:ssim2mysql.FieldId.value.GetEnum
 inline ssim2mysql_FieldIdEnum value_GetEnum(const ssim2mysql::FieldId& parent) __attribute__((nothrow));
@@ -1635,7 +1735,7 @@ inline void          FieldId_Init(ssim2mysql::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:ssim2mysql.FieldId.String  printfmt:Raw
 // func:ssim2mysql.FieldId..Print
-void                 FieldId_Print(ssim2mysql::FieldId& row, algo::cstring& str) __attribute__((nothrow));
+void                 FieldId_Print(ssim2mysql::FieldId row, algo::cstring& str) __attribute__((nothrow));
 
 // --- ssim2mysql.TableId
 struct TableId { // ssim2mysql.TableId: Index of table in this namespace
@@ -1649,7 +1749,6 @@ struct TableId { // ssim2mysql.TableId: Index of table in this namespace
     // func:ssim2mysql.TableId..EnumCtor
     inline               TableId(ssim2mysql_TableIdEnum arg) __attribute__((nothrow));
 };
-
 // Get value of field as enum type
 // func:ssim2mysql.TableId.value.GetEnum
 inline ssim2mysql_TableIdEnum value_GetEnum(const ssim2mysql::TableId& parent) __attribute__((nothrow));
@@ -1687,15 +1786,15 @@ inline void          TableId_Init(ssim2mysql::TableId& parent);
 // print string representation of ROW to string STR
 // cfmt:ssim2mysql.TableId.String  printfmt:Raw
 // func:ssim2mysql.TableId..Print
-void                 TableId_Print(ssim2mysql::TableId& row, algo::cstring& str) __attribute__((nothrow));
+void                 TableId_Print(ssim2mysql::TableId row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace ssim2mysql { // gen:ns_curstext
 
 struct ctype_c_field_curs {// fcurs:ssim2mysql.FCtype.c_field/curs
     typedef ssim2mysql::FField ChildType;
     ssim2mysql::FField** elems;
-    u32 n_elems;
-    u32 index;
+    u64 n_elems;
+    u64 index;
     ctype_c_field_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
@@ -1748,6 +1847,14 @@ struct _db_substr_curs {// cursor
 };
 
 
+struct _db_cppfunc_curs {// cursor
+    typedef ssim2mysql::FCppfunc ChildType;
+    ssim2mysql::FDb *parent;
+    i64 index;
+    _db_cppfunc_curs(){ parent=NULL; index=0; }
+};
+
+
 struct _db_ssimfile_curs {// cursor
     typedef ssim2mysql::FSsimfile ChildType;
     ssim2mysql::FDb *parent;
@@ -1788,8 +1895,8 @@ struct _db_cd_input_line_curs {// fcurs:ssim2mysql.FDb.cd_input_line/curs
 struct ns_c_ssimfile_curs {// fcurs:ssim2mysql.FNs.c_ssimfile/curs
     typedef ssim2mysql::FSsimfile ChildType;
     ssim2mysql::FSsimfile** elems;
-    u32 n_elems;
-    u32 index;
+    u64 n_elems;
+    u64 index;
     ns_c_ssimfile_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
@@ -1797,8 +1904,8 @@ struct ns_c_ssimfile_curs {// fcurs:ssim2mysql.FNs.c_ssimfile/curs
 struct ssimfile_c_column_curs {// fcurs:ssim2mysql.FSsimfile.c_column/curs
     typedef ssim2mysql::FColumn ChildType;
     ssim2mysql::FColumn** elems;
-    u32 n_elems;
-    u32 index;
+    u64 n_elems;
+    u64 index;
     ssimfile_c_column_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
@@ -1817,6 +1924,7 @@ int WINAPI           WinMain(HINSTANCE,HINSTANCE,LPSTR,int);
 namespace algo {
 inline algo::cstring &operator <<(algo::cstring &str, const ssim2mysql::FCmd &row);// cfmt:ssim2mysql.FCmd.String
 inline algo::cstring &operator <<(algo::cstring &str, const ssim2mysql::FColumn &row);// cfmt:ssim2mysql.FColumn.String
+inline algo::cstring &operator <<(algo::cstring &str, const ssim2mysql::FCppfunc &row);// cfmt:ssim2mysql.FCppfunc.String
 inline algo::cstring &operator <<(algo::cstring &str, const ssim2mysql::FCtype &row);// cfmt:ssim2mysql.FCtype.String
 inline algo::cstring &operator <<(algo::cstring &str, const ssim2mysql::trace &row);// cfmt:ssim2mysql.trace.String
 inline algo::cstring &operator <<(algo::cstring &str, const ssim2mysql::FField &row);// cfmt:ssim2mysql.FField.String

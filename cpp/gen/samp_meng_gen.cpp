@@ -27,37 +27,30 @@
 #include "include/gen/samp_meng_gen.inl.h"
 #include "include/gen/command_gen.h"
 #include "include/gen/command_gen.inl.h"
-#include "include/gen/algo_lib_gen.h"
-#include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/algo_gen.h"
 #include "include/gen/algo_gen.inl.h"
+#include "include/gen/ams_gen.h"
+#include "include/gen/ams_gen.inl.h"
 #include "include/gen/lib_json_gen.h"
 #include "include/gen/lib_json_gen.inl.h"
+#include "include/gen/algo_lib_gen.h"
+#include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/lib_prot_gen.h"
 #include "include/gen/lib_prot_gen.inl.h"
+#include "include/gen/lib_ams_gen.h"
+#include "include/gen/lib_ams_gen.inl.h"
+#include "include/gen/lib_netio_gen.h"
+#include "include/gen/lib_netio_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
 lib_json::FDb    lib_json::_db;     // dependency found via dev.targdep
 algo_lib::FDb    algo_lib::_db;     // dependency found via dev.targdep
+lib_ams::FDb     lib_ams::_db;      // dependency found via dev.targdep
+lib_netio::FDb   lib_netio::_db;    // dependency found via dev.targdep
 samp_meng::FDb   samp_meng::_db;    // dependency found via dev.targdep
 
-namespace samp_meng {
-const char *samp_meng_help =
-"samp_meng: Sample matching engine\n"
-"Usage: samp_meng [options]\n"
-"    OPTION      TYPE    DFLT    COMMENT\n"
-"    -in         string  \"data\"  Input directory or filename, - for stdin\n"
-"    -verbose    flag            Verbosity level (0..255); alias -v; cumulative\n"
-"    -debug      flag            Debug level (0..255); alias -d; cumulative\n"
-"    -help                       Print help and exit; alias -h\n"
-"    -version                    Print version and exit\n"
-"    -signature                  Show signatures and exit; alias -sig\n"
-;
-
-
-} // namespace samp_meng
 samp_meng::ordq_bh_order_curs::~ordq_bh_order_curs() {
     algo_lib::malloc_FreeMem(temp_elems, sizeof(void*) * temp_max);
 
@@ -67,36 +60,12 @@ namespace samp_meng { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
     // func:samp_meng.FDb._db.InitReflection
     static void          InitReflection();
-    // First element of index changed.
-    // func:samp_meng.FDb.cd_fdin_eof.FirstChanged
-    static void          cd_fdin_eof_FirstChanged() __attribute__((nothrow));
-    // Update cycles count from previous clock capture
-    // func:samp_meng.FDb.cd_fdin_eof.UpdateCycles
-    inline static void   cd_fdin_eof_UpdateCycles() __attribute__((nothrow));
-    // func:samp_meng.FDb.cd_fdin_eof.Call
-    inline static void   cd_fdin_eof_Call() __attribute__((nothrow));
-    // First element of index changed.
-    // func:samp_meng.FDb.cd_fdin_read.FirstChanged
-    static void          cd_fdin_read_FirstChanged() __attribute__((nothrow));
-    // Update cycles count from previous clock capture
-    // func:samp_meng.FDb.cd_fdin_read.UpdateCycles
-    inline static void   cd_fdin_read_UpdateCycles() __attribute__((nothrow));
-    // func:samp_meng.FDb.cd_fdin_read.Call
-    inline static void   cd_fdin_read_Call() __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
     // func:samp_meng.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
     // func:samp_meng.FDb.trace.N
     inline static i32    trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
-    // Internal function to scan for a message
-    //
-    // func:samp_meng.FFdin.in.ScanMsg
-    static void          in_ScanMsg(samp_meng::FFdin& fdin) __attribute__((nothrow));
-    // Internal function to shift data left
-    // Shift existing bytes over to the beginning of the buffer
-    // func:samp_meng.FFdin.in.Shift
-    static void          in_Shift(samp_meng::FFdin& fdin) __attribute__((nothrow));
     // Find new location for ROW starting at IDX
     // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
     // func:samp_meng.FOrdq.bh_order.Downheap
@@ -111,160 +80,7 @@ namespace samp_meng { // gen:ns_print_proto
     static void          ordq_bh_order_curs_Add(ordq_bh_order_curs &curs, samp_meng::FOrder& row);
     // func:samp_meng...SizeCheck
     inline static void   SizeCheck();
-    // func:samp_meng.In.CancelReqMsg.UpdateCycles
-    static void          In_CancelReqMsg_UpdateCycles();
-    // func:samp_meng.In.MassCancelReqMsg.UpdateCycles
-    static void          In_MassCancelReqMsg_UpdateCycles();
-    // func:samp_meng.In.NewOrderReqMsg.UpdateCycles
-    static void          In_NewOrderReqMsg_UpdateCycles();
-    // func:samp_meng.In.NewSymbolReqMsg.UpdateCycles
-    static void          In_NewSymbolReqMsg_UpdateCycles();
-    // func:samp_meng.In.NewUserReqMsg.UpdateCycles
-    static void          In_NewUserReqMsg_UpdateCycles();
-    // func:samp_meng.In.TextMsg.UpdateCycles
-    static void          In_TextMsg_UpdateCycles();
 } // gen:ns_print_proto
-
-// --- samp_meng.CancelOrderMsg.base.CopyOut
-// Copy fields out of row
-void samp_meng::parent_CopyOut(samp_meng::CancelOrderMsg &row, samp_meng::MsgHeader &out) {
-    // type: field value is computed
-    // length: field value is computed
-    (void)row;//only to avoid -Wunused-parameter
-    (void)out;//only to avoid -Wunused-parameter
-}
-
-// --- samp_meng.CancelOrderMsg..ReadFieldMaybe
-bool samp_meng::CancelOrderMsg_ReadFieldMaybe(samp_meng::CancelOrderMsg& parent, algo::strptr field, algo::strptr strval) {
-    bool retval = true;
-    samp_meng::FieldId field_id;
-    (void)value_SetStrptrMaybe(field_id,field);
-    switch(field_id) {
-        case samp_meng_FieldId_base: {
-            retval = false;
-        } break;
-        case samp_meng_FieldId_type: {
-            retval = false;
-        } break;
-        case samp_meng_FieldId_length: {
-            retval = false;
-        } break;
-        case samp_meng_FieldId_order: {
-            retval = u64_ReadStrptrMaybe(parent.order, strval);
-        } break;
-        default: {
-            retval = false;
-            algo_lib::AppendErrtext("comment", "unrecognized attr");
-        } break;
-    }
-    if (!retval) {
-        algo_lib::AppendErrtext("attr",field);
-    }
-    return retval;
-}
-
-// --- samp_meng.CancelOrderMsg..ReadStrptrMaybe
-// Read fields of samp_meng::CancelOrderMsg from an ascii string.
-// The format of the string is an ssim Tuple
-bool samp_meng::CancelOrderMsg_ReadStrptrMaybe(samp_meng::CancelOrderMsg &parent, algo::strptr in_str) {
-    bool retval = true;
-    retval = algo::StripTypeTag(in_str, "samp_meng.CancelOrderMsg");
-    ind_beg(algo::Attr_curs, attr, in_str) {
-        retval = retval && CancelOrderMsg_ReadFieldMaybe(parent, attr.name, attr.value);
-    }ind_end;
-    return retval;
-}
-
-// --- samp_meng.CancelOrderMsg..Print
-// print string representation of ROW to string STR
-// cfmt:samp_meng.CancelOrderMsg.String  printfmt:Tuple
-void samp_meng::CancelOrderMsg_Print(samp_meng::CancelOrderMsg& row, algo::cstring& str) {
-    algo::tempstr temp;
-    str << "samp_meng.CancelOrderMsg";
-
-    u64_Print(row.order, temp);
-    PrintAttrSpaceReset(str,"order", temp);
-}
-
-// --- samp_meng.CancelReqMsg.base.CopyOut
-// Copy fields out of row
-void samp_meng::parent_CopyOut(samp_meng::CancelReqMsg &row, samp_meng::MsgHeader &out) {
-    // type: field value is computed
-    // length: field value is computed
-    (void)row;//only to avoid -Wunused-parameter
-    (void)out;//only to avoid -Wunused-parameter
-}
-
-// --- samp_meng.CancelReqMsg..ReadFieldMaybe
-bool samp_meng::CancelReqMsg_ReadFieldMaybe(samp_meng::CancelReqMsg& parent, algo::strptr field, algo::strptr strval) {
-    bool retval = true;
-    samp_meng::FieldId field_id;
-    (void)value_SetStrptrMaybe(field_id,field);
-    switch(field_id) {
-        case samp_meng_FieldId_base: {
-            retval = false;
-        } break;
-        case samp_meng_FieldId_type: {
-            retval = false;
-        } break;
-        case samp_meng_FieldId_length: {
-            retval = false;
-        } break;
-        case samp_meng_FieldId_order: {
-            retval = u64_ReadStrptrMaybe(parent.order, strval);
-        } break;
-        default: {
-            retval = false;
-            algo_lib::AppendErrtext("comment", "unrecognized attr");
-        } break;
-    }
-    if (!retval) {
-        algo_lib::AppendErrtext("attr",field);
-    }
-    return retval;
-}
-
-// --- samp_meng.CancelReqMsg..ReadStrptrMaybe
-// Read fields of samp_meng::CancelReqMsg from an ascii string.
-// The format of the string is an ssim Tuple
-bool samp_meng::CancelReqMsg_ReadStrptrMaybe(samp_meng::CancelReqMsg &parent, algo::strptr in_str) {
-    bool retval = true;
-    retval = algo::StripTypeTag(in_str, "samp_meng.CancelReqMsg");
-    ind_beg(algo::Attr_curs, attr, in_str) {
-        retval = retval && CancelReqMsg_ReadFieldMaybe(parent, attr.name, attr.value);
-    }ind_end;
-    return retval;
-}
-
-// --- samp_meng.CancelReqMsg..Print
-// print string representation of ROW to string STR
-// cfmt:samp_meng.CancelReqMsg.String  printfmt:Tuple
-void samp_meng::CancelReqMsg_Print(samp_meng::CancelReqMsg& row, algo::cstring& str) {
-    algo::tempstr temp;
-    str << "samp_meng.CancelReqMsg";
-
-    u64_Print(row.order, temp);
-    PrintAttrSpaceReset(str,"order", temp);
-}
-
-// --- samp_meng.trace..Init
-// Set all fields to initial values.
-void samp_meng::trace_Init(samp_meng::trace& parent) {
-    parent.dispatch_In_CancelReqMsg = u64(0);
-    parent.dispatch_In_CancelReqMsg_cycles = u64(0);
-    parent.dispatch_In_MassCancelReqMsg = u64(0);
-    parent.dispatch_In_MassCancelReqMsg_cycles = u64(0);
-    parent.dispatch_In_NewOrderReqMsg = u64(0);
-    parent.dispatch_In_NewOrderReqMsg_cycles = u64(0);
-    parent.dispatch_In_NewSymbolReqMsg = u64(0);
-    parent.dispatch_In_NewSymbolReqMsg_cycles = u64(0);
-    parent.dispatch_In_NewUserReqMsg = u64(0);
-    parent.dispatch_In_NewUserReqMsg_cycles = u64(0);
-    parent.dispatch_In_TextMsg = u64(0);
-    parent.dispatch_In_TextMsg_cycles = u64(0);
-    parent.dispatch_In_Unkmsg = u64(0);
-    parent.dispatch_In_Unkmsg_cycles = u64(0);
-}
 
 // --- samp_meng.trace..Print
 // print string representation of ROW to string STR
@@ -272,144 +88,20 @@ void samp_meng::trace_Init(samp_meng::trace& parent) {
 void samp_meng::trace_Print(samp_meng::trace& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "samp_meng.trace";
-
-    u64_Print(row.dispatch_In_CancelReqMsg, temp);
-    PrintAttrSpaceReset(str,"dispatch_In_CancelReqMsg", temp);
-
-    u64_Print(row.dispatch_In_CancelReqMsg_cycles, temp);
-    PrintAttrSpaceReset(str,"dispatch_In_CancelReqMsg_cycles", temp);
-
-    u64_Print(row.dispatch_In_MassCancelReqMsg, temp);
-    PrintAttrSpaceReset(str,"dispatch_In_MassCancelReqMsg", temp);
-
-    u64_Print(row.dispatch_In_MassCancelReqMsg_cycles, temp);
-    PrintAttrSpaceReset(str,"dispatch_In_MassCancelReqMsg_cycles", temp);
-
-    u64_Print(row.dispatch_In_NewOrderReqMsg, temp);
-    PrintAttrSpaceReset(str,"dispatch_In_NewOrderReqMsg", temp);
-
-    u64_Print(row.dispatch_In_NewOrderReqMsg_cycles, temp);
-    PrintAttrSpaceReset(str,"dispatch_In_NewOrderReqMsg_cycles", temp);
-
-    u64_Print(row.dispatch_In_NewSymbolReqMsg, temp);
-    PrintAttrSpaceReset(str,"dispatch_In_NewSymbolReqMsg", temp);
-
-    u64_Print(row.dispatch_In_NewSymbolReqMsg_cycles, temp);
-    PrintAttrSpaceReset(str,"dispatch_In_NewSymbolReqMsg_cycles", temp);
-
-    u64_Print(row.dispatch_In_NewUserReqMsg, temp);
-    PrintAttrSpaceReset(str,"dispatch_In_NewUserReqMsg", temp);
-
-    u64_Print(row.dispatch_In_NewUserReqMsg_cycles, temp);
-    PrintAttrSpaceReset(str,"dispatch_In_NewUserReqMsg_cycles", temp);
-
-    u64_Print(row.dispatch_In_TextMsg, temp);
-    PrintAttrSpaceReset(str,"dispatch_In_TextMsg", temp);
-
-    u64_Print(row.dispatch_In_TextMsg_cycles, temp);
-    PrintAttrSpaceReset(str,"dispatch_In_TextMsg_cycles", temp);
-
-    u64_Print(row.dispatch_In_Unkmsg, temp);
-    PrintAttrSpaceReset(str,"dispatch_In_Unkmsg", temp);
-
-    u64_Print(row.dispatch_In_Unkmsg_cycles, temp);
-    PrintAttrSpaceReset(str,"dispatch_In_Unkmsg_cycles", temp);
+    (void)row;//only to avoid -Wunused-parameter
 }
 
 // --- samp_meng.FDb._db.ReadArgv
-// Read argc,argv directly into the fields of the command line(s)
-// The following fields are updated:
-//     samp_meng.FDb.cmdline
-//     algo_lib.FDb.cmdline
+// Read argc,argv into the fields of samp_meng.FDb.cmdline (and any base command line)
+// via samp_meng_ReadArgv; then apply -help/-version and load floadtuples input.
 void samp_meng::ReadArgv() {
     command::samp_meng &cmd = samp_meng::_db.cmdline;
-    algo_lib::Cmdline &base = algo_lib::_db.cmdline;
-    int needarg=-1;// unknown
-    int argidx=1;// skip process name
-    tempstr err;
-    algo::strptr attrname;
-    bool isanon=false; // true if attrname is anonfld (positional)
-    algo_lib::FieldId baseattrid;
-    command::FieldId attrid;
-    bool endopt=false;
-    int whichns=0;// which namespace does the current attribute belong to
-    for (; argidx < algo_lib::_db.argc; argidx++) {
-        algo::strptr arg = algo_lib::_db.argv[argidx];
-        algo::strptr attrval;
-        algo::strptr dfltval;
-        bool haveval=false;
-        bool dash=elems_N(arg)>1 && arg.elems[0]=='-'; // a single dash is not an option
-        // this attribute is a value
-        if (endopt || needarg>0 || !dash) {
-            attrval=arg;
-            haveval=true;
-        } else {
-            // this attribute is a field name (with - or --)
-            // or a -- by itself
-            bool dashdash = elems_N(arg) >= 2 && arg.elems[1]=='-';
-            int skip = int(dash) + dashdash;
-            attrname=ch_RestFrom(arg,skip);
-            if (skip==2 && elems_N(arg)==2) {
-                endopt=true;
-                continue;// nothing else to do here
-            }
-            // parse "-a:B" arg into attrname,attrvalue
-            algo::i32_Range colon = TFind(attrname,':');
-            if (colon.beg < colon.end) {
-                attrval=ch_RestFrom(attrname,colon.end);
-                attrname=ch_FirstN(attrname,colon.beg);
-                haveval=true;
-            }
-            // look up which command (this one or the base) contains the field
-            whichns=0;
-            needarg=-1;
-            // look up parameter information in base namespace (needarg will be -1 if lookup fails)
-            if (algo_lib::FieldId_ReadStrptrMaybe(baseattrid,attrname)) {
-                needarg = algo_lib::Cmdline_NArgs(baseattrid,dfltval,&isanon);
-            }
-            if (needarg<0) {
-                whichns=1;
-                // look up parameter information in this namespace (needarg will be -1 if lookup fails)
-                if (command::FieldId_ReadStrptrMaybe(attrid,attrname)) {
-                    needarg = command::samp_meng_NArgs(attrid,dfltval,&isanon);
-                }
-            }
-            if (attrval == "" && dfltval != "") {
-                attrval=dfltval;
-                haveval=true;
-            }
-            if (needarg<0) {
-                err<<"samp_meng: unknown option "<<Keyval("value",arg)<<eol;
-            } else {
-            }
-        }
-        if (ch_N(attrname) == 0) {
-            err << "samp_meng: too many arguments. error at "<<algo::strptr_ToSsim(arg)<<eol;
-        } else if (haveval) {
-            // read value into currently selected arg
-            bool ret=false;
-            // it's already known which namespace is consuming the args,
-            // so directly go there
-            if (whichns == 0) {
-                ret=algo_lib::Cmdline_ReadFieldMaybe(base, attrname, attrval);
-            }
-            if (whichns==1) {
-                ret=command::samp_meng_ReadFieldMaybe(cmd, attrname, attrval);
-                switch(attrid.value) {
-                    default:break;
-                }
-            }
-            if (!ret) {
-                err<<"samp_meng: error in "
-                <<Keyval("option",attrname)
-                <<Keyval("value",attrval)<<eol;
-            }
-            needarg--;
-            if (needarg <= 0) {
-                attrname="";// forget which argument was being filled
-            }
-        }
+    algo::cstring err;
+    algo::StringAry args;
+    for (int argidx=1; argidx < algo_lib::_db.argc; argidx++) {// skip process name
+        ary_Alloc(args) = algo_lib::_db.argv[argidx];
     }
+    command::samp_meng_ReadArgv(cmd, args, err);
     bool dohelp = false;
     bool doexit=false;
     if (algo_lib::_db.cmdline.help) {
@@ -432,22 +124,13 @@ void samp_meng::ReadArgv() {
     algo_lib_logcat_debug.enabled = algo_lib::_db.cmdline.debug;
     algo_lib_logcat_verbose.enabled = algo_lib::_db.cmdline.verbose > 0;
     algo_lib_logcat_verbose2.enabled = algo_lib::_db.cmdline.verbose > 1;
-    if (!dohelp) {
-    }
-    // dmmeta.floadtuples:samp_meng.FDb.cmdline
-    if (!dohelp && err=="") {
-        algo_lib::ResetErrtext();
-        if (!samp_meng::LoadTuplesMaybe(cmd.in,true)) {
-            err << "samp_meng.load_input  "<<algo_lib::DetachBadTags()<<eol;
-        }
-    }
     if (err != "") {
         algo_lib::_db.exit_code=1;
         prerr_(err); // already has eol
         doexit=true;
     }
     if (dohelp) {
-        prlog(samp_meng_help);
+        prlog(command::samp_meng_help);
     }
     if (doexit) {
         _exit(algo_lib::_db.exit_code);
@@ -469,14 +152,18 @@ void samp_meng::MainLoop() {
 // --- samp_meng.FDb._db.Step
 // Main step
 void samp_meng::Step() {
-    cd_fdin_eof_Call();
-    cd_fdin_read_Call();
 }
 
 // --- samp_meng.FDb._db.InitReflection
 // Load statically available data into tables, register tables and database.
 static void samp_meng::InitReflection() {
-    algo_lib::imdb_InsertMaybe(algo::Imdb("samp_meng", NULL, samp_meng::Step, samp_meng::MainLoop, NULL, algo::Comment()));
+    algo_lib::FImdb &row = algo_lib::imdb_Alloc();
+    row.imdb               = "samp_meng";
+    row.InsertStrptrMaybe  = NULL;
+    row.RemoveStrptrMaybe  = NULL;
+    row.Step               = NULL;
+    row.MainLoop           = samp_meng::MainLoop;
+    algo_lib::imdb_XrefMaybe(row);
 
     algo::Imtable t_trace;
     t_trace.imtable         = "samp_meng.trace";
@@ -490,7 +177,7 @@ static void samp_meng::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'samp_meng.In'  signature:'8ccb978398f8888f2ca1f6a371e62ad802b54032'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'samp_meng.In'  signature:'fe9d423bb9b548b6c7476b1004e7786575bf4ebf'");
 }
 
 // --- samp_meng.FDb._db.InsertStrptrMaybe
@@ -570,8 +257,17 @@ bool samp_meng::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
 // --- samp_meng.FDb._db.Steps
 // Calls Step function of dependencies
 void samp_meng::Steps() {
-    samp_meng::Step(); // dependent namespace specified via (dev.targdep)
+    lib_ams::Step(); // dependent namespace specified via (dev.targdep)
     algo_lib::Step(); // dependent namespace specified via (dev.targdep)
+}
+
+// --- samp_meng.FDb._db.RemoveStrptrMaybe
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+bool samp_meng::RemoveStrptrMaybe(algo::strptr str) {
+    bool retval = true;
+    (void)str;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- samp_meng.FDb._db.XrefMaybe
@@ -580,197 +276,6 @@ void samp_meng::Steps() {
 bool samp_meng::_db_XrefMaybe() {
     bool retval = true;
     return retval;
-}
-
-// --- samp_meng.FDb.fdin.Alloc
-// Allocate memory for new default row.
-// If out of memory, process is killed.
-samp_meng::FFdin& samp_meng::fdin_Alloc() {
-    samp_meng::FFdin* row = fdin_AllocMaybe();
-    if (UNLIKELY(row == NULL)) {
-        FatalErrorExit("samp_meng.out_of_mem  field:samp_meng.FDb.fdin  comment:'Alloc failed'");
-    }
-    return *row;
-}
-
-// --- samp_meng.FDb.fdin.AllocMaybe
-// Allocate memory for new element. If out of memory, return NULL.
-samp_meng::FFdin* samp_meng::fdin_AllocMaybe() {
-    samp_meng::FFdin *row = (samp_meng::FFdin*)fdin_AllocMem();
-    if (row) {
-        new (row) samp_meng::FFdin; // call constructor
-    }
-    return row;
-}
-
-// --- samp_meng.FDb.fdin.AllocMem
-// Allocate space for one element. If no memory available, return NULL.
-void* samp_meng::fdin_AllocMem() {
-    u64 new_nelems     = _db.fdin_n+1;
-    // compute level and index on level
-    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
-    u64 base  = u64(1)<<bsr;
-    u64 index = new_nelems-base;
-    void *ret = NULL;
-    // if level doesn't exist yet, create it
-    samp_meng::FFdin*  lev   = NULL;
-    if (bsr < 32) {
-        lev = _db.fdin_lary[bsr];
-        if (!lev) {
-            lev=(samp_meng::FFdin*)algo_lib::malloc_AllocMem(sizeof(samp_meng::FFdin) * (u64(1)<<bsr));
-            _db.fdin_lary[bsr] = lev;
-        }
-    }
-    // allocate element from this level
-    if (lev) {
-        _db.fdin_n = i32(new_nelems);
-        ret = lev + index;
-    }
-    return ret;
-}
-
-// --- samp_meng.FDb.fdin.RemoveAll
-// Remove all elements from Lary
-void samp_meng::fdin_RemoveAll() {
-    for (u64 n = _db.fdin_n; n>0; ) {
-        n--;
-        fdin_qFind(u64(n)).~FFdin(); // destroy last element
-        _db.fdin_n = i32(n);
-    }
-}
-
-// --- samp_meng.FDb.fdin.RemoveLast
-// Delete last element of array. Do nothing if array is empty.
-void samp_meng::fdin_RemoveLast() {
-    u64 n = _db.fdin_n;
-    if (n > 0) {
-        n -= 1;
-        fdin_qFind(u64(n)).~FFdin();
-        _db.fdin_n = i32(n);
-    }
-}
-
-// --- samp_meng.FDb.fdin.XrefMaybe
-// Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-bool samp_meng::fdin_XrefMaybe(samp_meng::FFdin &row) {
-    bool retval = true;
-    (void)row;
-    return retval;
-}
-
-// --- samp_meng.FDb.cd_fdin_eof.Insert
-// Insert row into linked list. If row is already in linked list, do nothing.
-void samp_meng::cd_fdin_eof_Insert(samp_meng::FFdin& row) {
-    if (!cd_fdin_eof_InLlistQ(row)) {
-        if (_db.cd_fdin_eof_head) {
-            row.cd_fdin_eof_next = _db.cd_fdin_eof_head;
-            row.cd_fdin_eof_prev = _db.cd_fdin_eof_head->cd_fdin_eof_prev;
-            row.cd_fdin_eof_prev->cd_fdin_eof_next = &row;
-            row.cd_fdin_eof_next->cd_fdin_eof_prev = &row;
-        } else {
-            row.cd_fdin_eof_next = &row;
-            row.cd_fdin_eof_prev = &row;
-            _db.cd_fdin_eof_head = &row;
-        }
-        _db.cd_fdin_eof_n++;
-        if (_db.cd_fdin_eof_head == &row) {
-            cd_fdin_eof_FirstChanged();
-        }
-    }
-}
-
-// --- samp_meng.FDb.cd_fdin_eof.Remove
-// Remove element from index. If element is not in index, do nothing.
-void samp_meng::cd_fdin_eof_Remove(samp_meng::FFdin& row) {
-    if (cd_fdin_eof_InLlistQ(row)) {
-        samp_meng::FFdin* old_head       = _db.cd_fdin_eof_head;
-        (void)old_head; // in case it's not used
-        samp_meng::FFdin *oldnext = row.cd_fdin_eof_next;
-        samp_meng::FFdin *oldprev = row.cd_fdin_eof_prev;
-        oldnext->cd_fdin_eof_prev = oldprev; // remove element from list
-        oldprev->cd_fdin_eof_next = oldnext;
-        _db.cd_fdin_eof_n--;  // adjust count
-        if (&row == _db.cd_fdin_eof_head) {
-            _db.cd_fdin_eof_head = oldnext==&row ? NULL : oldnext; // adjust list head
-        }
-        row.cd_fdin_eof_next = (samp_meng::FFdin*)-1; // mark element as not-in-list);
-        row.cd_fdin_eof_prev = NULL; // clear back-pointer
-        if (old_head != _db.cd_fdin_eof_head) {
-            cd_fdin_eof_FirstChanged();
-        }
-    }
-}
-
-// --- samp_meng.FDb.cd_fdin_eof.RemoveAll
-// Empty the index. (The rows are not deleted)
-void samp_meng::cd_fdin_eof_RemoveAll() {
-    samp_meng::FFdin* row = _db.cd_fdin_eof_head;
-    samp_meng::FFdin* head = _db.cd_fdin_eof_head;
-    _db.cd_fdin_eof_head = NULL;
-    _db.cd_fdin_eof_n = 0;
-    bool do_fire = (NULL != row);
-    while (row) {
-        samp_meng::FFdin* row_next = row->cd_fdin_eof_next;
-        row->cd_fdin_eof_next  = (samp_meng::FFdin*)-1;
-        row->cd_fdin_eof_prev  = NULL;
-        row = row_next != head  ? row_next : NULL;
-    }
-    if (do_fire) {
-        cd_fdin_eof_FirstChanged();
-    }
-}
-
-// --- samp_meng.FDb.cd_fdin_eof.RemoveFirst
-// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-// Call FirstChanged trigger.
-samp_meng::FFdin* samp_meng::cd_fdin_eof_RemoveFirst() {
-    samp_meng::FFdin *row = NULL;
-    row = _db.cd_fdin_eof_head;
-    if (row) {
-        bool hasmore = row!=row->cd_fdin_eof_next;
-        _db.cd_fdin_eof_head = hasmore ? row->cd_fdin_eof_next : NULL;
-        row->cd_fdin_eof_next->cd_fdin_eof_prev = row->cd_fdin_eof_prev;
-        row->cd_fdin_eof_prev->cd_fdin_eof_next = row->cd_fdin_eof_next;
-        row->cd_fdin_eof_prev = NULL;
-        _db.cd_fdin_eof_n--;
-        row->cd_fdin_eof_next = (samp_meng::FFdin*)-1; // mark as not-in-list
-        cd_fdin_eof_FirstChanged();
-    }
-    return row;
-}
-
-// --- samp_meng.FDb.cd_fdin_eof.RotateFirst
-// If linked list is empty, return NULL.
-// Otherwise return head item and advance head to the next item.
-samp_meng::FFdin* samp_meng::cd_fdin_eof_RotateFirst() {
-    samp_meng::FFdin *row = NULL;
-    row = _db.cd_fdin_eof_head;
-    if (row) {
-        _db.cd_fdin_eof_head = row->cd_fdin_eof_next;
-    }
-    return row;
-}
-
-// --- samp_meng.FDb.cd_fdin_eof.FirstChanged
-// First element of index changed.
-static void samp_meng::cd_fdin_eof_FirstChanged() {
-}
-
-// --- samp_meng.FDb.cd_fdin_eof.UpdateCycles
-// Update cycles count from previous clock capture
-inline static void samp_meng::cd_fdin_eof_UpdateCycles() {
-    u64 cur_cycles                      = algo::get_cycles();
-    algo_lib::_db.clock                 = algo::SchedTime(cur_cycles);
-}
-
-// --- samp_meng.FDb.cd_fdin_eof.Call
-inline static void samp_meng::cd_fdin_eof_Call() {
-    if (!samp_meng::cd_fdin_eof_EmptyQ()) { // fstep:samp_meng.FDb.cd_fdin_eof
-        samp_meng::cd_fdin_eof_Step(); // steptype:Inline: call function on every step
-        cd_fdin_eof_UpdateCycles();
-        algo_lib::_db.next_loop = algo_lib::_db.clock;
-    }
 }
 
 // --- samp_meng.FDb.symbol.Alloc
@@ -805,7 +310,7 @@ void* samp_meng::symbol_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     samp_meng::FSymbol*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.symbol_lary[bsr];
         if (!lev) {
             lev=(samp_meng::FSymbol*)algo_lib::malloc_AllocMem(sizeof(samp_meng::FSymbol) * (u64(1)<<bsr));
@@ -814,7 +319,7 @@ void* samp_meng::symbol_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.symbol_n = i32(new_nelems);
+        _db.symbol_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -826,7 +331,7 @@ void samp_meng::symbol_RemoveAll() {
     for (u64 n = _db.symbol_n; n>0; ) {
         n--;
         symbol_qFind(u64(n)).~FSymbol(); // destroy last element
-        _db.symbol_n = i32(n);
+        _db.symbol_n = i64(n);
     }
 }
 
@@ -837,7 +342,7 @@ void samp_meng::symbol_RemoveLast() {
     if (n > 0) {
         n -= 1;
         symbol_qFind(u64(n)).~FSymbol();
-        _db.symbol_n = i32(n);
+        _db.symbol_n = i64(n);
     }
 }
 
@@ -859,124 +364,10 @@ bool samp_meng::symbol_XrefMaybe(samp_meng::FSymbol &row) {
     return retval;
 }
 
-// --- samp_meng.FDb.cd_fdin_read.Insert
-// Insert row into linked list. If row is already in linked list, do nothing.
-void samp_meng::cd_fdin_read_Insert(samp_meng::FFdin& row) {
-    if (!cd_fdin_read_InLlistQ(row)) {
-        if (_db.cd_fdin_read_head) {
-            row.cd_fdin_read_next = _db.cd_fdin_read_head;
-            row.cd_fdin_read_prev = _db.cd_fdin_read_head->cd_fdin_read_prev;
-            row.cd_fdin_read_prev->cd_fdin_read_next = &row;
-            row.cd_fdin_read_next->cd_fdin_read_prev = &row;
-        } else {
-            row.cd_fdin_read_next = &row;
-            row.cd_fdin_read_prev = &row;
-            _db.cd_fdin_read_head = &row;
-        }
-        _db.cd_fdin_read_n++;
-        if (_db.cd_fdin_read_head == &row) {
-            cd_fdin_read_FirstChanged();
-        }
-    }
-}
-
-// --- samp_meng.FDb.cd_fdin_read.Remove
-// Remove element from index. If element is not in index, do nothing.
-void samp_meng::cd_fdin_read_Remove(samp_meng::FFdin& row) {
-    if (cd_fdin_read_InLlistQ(row)) {
-        samp_meng::FFdin* old_head       = _db.cd_fdin_read_head;
-        (void)old_head; // in case it's not used
-        samp_meng::FFdin *oldnext = row.cd_fdin_read_next;
-        samp_meng::FFdin *oldprev = row.cd_fdin_read_prev;
-        oldnext->cd_fdin_read_prev = oldprev; // remove element from list
-        oldprev->cd_fdin_read_next = oldnext;
-        _db.cd_fdin_read_n--;  // adjust count
-        if (&row == _db.cd_fdin_read_head) {
-            _db.cd_fdin_read_head = oldnext==&row ? NULL : oldnext; // adjust list head
-        }
-        row.cd_fdin_read_next = (samp_meng::FFdin*)-1; // mark element as not-in-list);
-        row.cd_fdin_read_prev = NULL; // clear back-pointer
-        if (old_head != _db.cd_fdin_read_head) {
-            cd_fdin_read_FirstChanged();
-        }
-    }
-}
-
-// --- samp_meng.FDb.cd_fdin_read.RemoveAll
-// Empty the index. (The rows are not deleted)
-void samp_meng::cd_fdin_read_RemoveAll() {
-    samp_meng::FFdin* row = _db.cd_fdin_read_head;
-    samp_meng::FFdin* head = _db.cd_fdin_read_head;
-    _db.cd_fdin_read_head = NULL;
-    _db.cd_fdin_read_n = 0;
-    bool do_fire = (NULL != row);
-    while (row) {
-        samp_meng::FFdin* row_next = row->cd_fdin_read_next;
-        row->cd_fdin_read_next  = (samp_meng::FFdin*)-1;
-        row->cd_fdin_read_prev  = NULL;
-        row = row_next != head  ? row_next : NULL;
-    }
-    if (do_fire) {
-        cd_fdin_read_FirstChanged();
-    }
-}
-
-// --- samp_meng.FDb.cd_fdin_read.RemoveFirst
-// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-// Call FirstChanged trigger.
-samp_meng::FFdin* samp_meng::cd_fdin_read_RemoveFirst() {
-    samp_meng::FFdin *row = NULL;
-    row = _db.cd_fdin_read_head;
-    if (row) {
-        bool hasmore = row!=row->cd_fdin_read_next;
-        _db.cd_fdin_read_head = hasmore ? row->cd_fdin_read_next : NULL;
-        row->cd_fdin_read_next->cd_fdin_read_prev = row->cd_fdin_read_prev;
-        row->cd_fdin_read_prev->cd_fdin_read_next = row->cd_fdin_read_next;
-        row->cd_fdin_read_prev = NULL;
-        _db.cd_fdin_read_n--;
-        row->cd_fdin_read_next = (samp_meng::FFdin*)-1; // mark as not-in-list
-        cd_fdin_read_FirstChanged();
-    }
-    return row;
-}
-
-// --- samp_meng.FDb.cd_fdin_read.RotateFirst
-// If linked list is empty, return NULL.
-// Otherwise return head item and advance head to the next item.
-samp_meng::FFdin* samp_meng::cd_fdin_read_RotateFirst() {
-    samp_meng::FFdin *row = NULL;
-    row = _db.cd_fdin_read_head;
-    if (row) {
-        _db.cd_fdin_read_head = row->cd_fdin_read_next;
-    }
-    return row;
-}
-
-// --- samp_meng.FDb.cd_fdin_read.FirstChanged
-// First element of index changed.
-static void samp_meng::cd_fdin_read_FirstChanged() {
-}
-
-// --- samp_meng.FDb.cd_fdin_read.UpdateCycles
-// Update cycles count from previous clock capture
-inline static void samp_meng::cd_fdin_read_UpdateCycles() {
-    u64 cur_cycles                      = algo::get_cycles();
-    algo_lib::_db.clock                 = algo::SchedTime(cur_cycles);
-}
-
-// --- samp_meng.FDb.cd_fdin_read.Call
-inline static void samp_meng::cd_fdin_read_Call() {
-    if (!samp_meng::cd_fdin_read_EmptyQ()) { // fstep:samp_meng.FDb.cd_fdin_read
-        samp_meng::cd_fdin_read_Step(); // steptype:Inline: call function on every step
-        cd_fdin_read_UpdateCycles();
-        algo_lib::_db.next_loop = algo_lib::_db.clock;
-    }
-}
-
 // --- samp_meng.FDb.ind_symbol.Find
 // Find row by key. Return NULL if not found.
-samp_meng::FSymbol* samp_meng::ind_symbol_Find(const samp_meng::Symbol& key) {
-    u32 index = samp_meng::Symbol_Hash(0, key) & (_db.ind_symbol_buckets_n - 1);
+samp_meng::FSymbol* samp_meng::ind_symbol_Find(const ams::SampMengSymbol& key) {
+    u32 index = ams::SampMengSymbol_Hash(0, key) & (_db.ind_symbol_buckets_n - 1);
     samp_meng::FSymbol *ret = _db.ind_symbol_buckets_elems[index];
     for (; ret && !((*ret).symbol == key); ret = ret->ind_symbol_next) {
     }
@@ -985,7 +376,7 @@ samp_meng::FSymbol* samp_meng::ind_symbol_Find(const samp_meng::Symbol& key) {
 
 // --- samp_meng.FDb.ind_symbol.FindX
 // Look up row by key and return reference. Throw exception if not found
-samp_meng::FSymbol& samp_meng::ind_symbol_FindX(const samp_meng::Symbol& key) {
+samp_meng::FSymbol& samp_meng::ind_symbol_FindX(const ams::SampMengSymbol& key) {
     samp_meng::FSymbol* ret = ind_symbol_Find(key);
     vrfy(ret, tempstr() << "samp_meng.key_error  table:ind_symbol  key:'"<<key<<"'  comment:'key not found'");
     return *ret;
@@ -993,7 +384,7 @@ samp_meng::FSymbol& samp_meng::ind_symbol_FindX(const samp_meng::Symbol& key) {
 
 // --- samp_meng.FDb.ind_symbol.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-samp_meng::FSymbol& samp_meng::ind_symbol_GetOrCreate(const samp_meng::Symbol& key) {
+samp_meng::FSymbol& samp_meng::ind_symbol_GetOrCreate(const ams::SampMengSymbol& key) {
     samp_meng::FSymbol* ret = ind_symbol_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &symbol_Alloc();
@@ -1013,7 +404,7 @@ samp_meng::FSymbol& samp_meng::ind_symbol_GetOrCreate(const samp_meng::Symbol& k
 bool samp_meng::ind_symbol_InsertMaybe(samp_meng::FSymbol& row) {
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_symbol_next == (samp_meng::FSymbol*)-1)) {// check if in hash already
-        row.ind_symbol_hashval = samp_meng::Symbol_Hash(0, row.symbol);
+        row.ind_symbol_hashval = ams::SampMengSymbol_Hash(0, row.symbol);
         ind_symbol_Reserve(1);
         u32 index = row.ind_symbol_hashval & (_db.ind_symbol_buckets_n - 1);
         samp_meng::FSymbol* *prev = &_db.ind_symbol_buckets_elems[index];
@@ -1235,6 +626,22 @@ samp_meng::FOrder& samp_meng::ind_order_FindX(i64 key) {
     samp_meng::FOrder* ret = ind_order_Find(key);
     vrfy(ret, tempstr() << "samp_meng.key_error  table:ind_order  key:'"<<key<<"'  comment:'key not found'");
     return *ret;
+}
+
+// --- samp_meng.FDb.ind_order.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+samp_meng::FOrder* samp_meng::ind_order_GetOrCreate(i64 key) {
+    samp_meng::FOrder* ret = ind_order_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &order_Alloc();
+        (*ret).order = key;
+        bool good = order_XrefMaybe(*ret);
+        if (!good) {
+            order_Delete(*ret); // delete offending row, any existin xrefs are cleared
+            ret = NULL;
+        }
+    }
+    return ret;
 }
 
 // --- samp_meng.FDb.ind_order.InsertMaybe
@@ -1462,7 +869,7 @@ void* samp_meng::user_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     samp_meng::FUser*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.user_lary[bsr];
         if (!lev) {
             lev=(samp_meng::FUser*)algo_lib::malloc_AllocMem(sizeof(samp_meng::FUser) * (u64(1)<<bsr));
@@ -1471,7 +878,7 @@ void* samp_meng::user_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.user_n = i32(new_nelems);
+        _db.user_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1483,7 +890,7 @@ void samp_meng::user_RemoveAll() {
     for (u64 n = _db.user_n; n>0; ) {
         n--;
         user_qFind(u64(n)).~FUser(); // destroy last element
-        _db.user_n = i32(n);
+        _db.user_n = i64(n);
     }
 }
 
@@ -1494,7 +901,7 @@ void samp_meng::user_RemoveLast() {
     if (n > 0) {
         n -= 1;
         user_qFind(u64(n)).~FUser();
-        _db.user_n = i32(n);
+        _db.user_n = i64(n);
     }
 }
 
@@ -1655,19 +1062,6 @@ inline static i32 samp_meng::trace_N() {
 // --- samp_meng.FDb..Init
 // Set all fields to initial values.
 void samp_meng::FDb_Init() {
-    // initialize LAry fdin (samp_meng.FDb.fdin)
-    _db.fdin_n = 0;
-    memset(_db.fdin_lary, 0, sizeof(_db.fdin_lary)); // zero out all level pointers
-    samp_meng::FFdin* fdin_first = (samp_meng::FFdin*)algo_lib::malloc_AllocMem(sizeof(samp_meng::FFdin) * (u64(1)<<4));
-    if (!fdin_first) {
-        FatalErrorExit("out of memory");
-    }
-    for (int i = 0; i < 4; i++) {
-        _db.fdin_lary[i]  = fdin_first;
-        fdin_first    += 1ULL<<i;
-    }
-    _db.cd_fdin_eof_head = NULL; // (samp_meng.FDb.cd_fdin_eof)
-    _db.cd_fdin_eof_n = 0; // (samp_meng.FDb.cd_fdin_eof)
     // initialize LAry symbol (samp_meng.FDb.symbol)
     _db.symbol_n = 0;
     memset(_db.symbol_lary, 0, sizeof(_db.symbol_lary)); // zero out all level pointers
@@ -1679,8 +1073,6 @@ void samp_meng::FDb_Init() {
         _db.symbol_lary[i]  = symbol_first;
         symbol_first    += 1ULL<<i;
     }
-    _db.cd_fdin_read_head = NULL; // (samp_meng.FDb.cd_fdin_read)
-    _db.cd_fdin_read_n = 0; // (samp_meng.FDb.cd_fdin_read)
     // initialize hash table for samp_meng::FSymbol;
     _db.ind_symbol_n             	= 0; // (samp_meng.FDb.ind_symbol)
     _db.ind_symbol_buckets_n     	= 4; // (samp_meng.FDb.ind_symbol)
@@ -1723,6 +1115,7 @@ void samp_meng::FDb_Init() {
     }
     memset(_db.ind_user_buckets_elems, 0, sizeof(samp_meng::FUser*)*_db.ind_user_buckets_n); // (samp_meng.FDb.ind_user)
     _db.next_order_id = u64(1);
+    _db.n_in = u64(0);
 
     samp_meng::InitReflection();
 }
@@ -1745,351 +1138,6 @@ void samp_meng::FDb_Uninit() {
 
     // samp_meng.FDb.symbol.Uninit (Lary)  //
     // skip destruction in global scope
-
-    // samp_meng.FDb.fdin.Uninit (Lary)  //ams control messages on stdin
-    // skip destruction in global scope
-}
-
-// --- samp_meng.FFdin.in.BeginRead
-// Attach fbuf to Iohook for reading
-// Attach file descriptor and begin reading using edge-triggered epoll.
-// File descriptor becomes owned by samp_meng::FFdin.in via FIohook field.
-// Whenever the file descriptor becomes readable, insert fdin into cd_fdin_read.
-void samp_meng::in_BeginRead(samp_meng::FFdin& fdin, algo::Fildes fd) {
-    fdin.in_iohook.fildes = fd;
-    callback_Set1(fdin.in_iohook, fdin, samp_meng::cd_fdin_read_Insert);
-    IOEvtFlags flags;
-    read_Set(flags, true);
-    if (fdin.in_epoll_enable) {
-        algo_lib::IohookAdd(fdin.in_iohook, flags);
-    } else {
-        samp_meng::cd_fdin_read_Insert(fdin);
-    }
-}
-
-// --- samp_meng.FFdin.in.EndRead
-// Set EOF flag
-void samp_meng::in_EndRead(samp_meng::FFdin& fdin) {
-    if (ValidQ(fdin.in_iohook.fildes)) {
-        fdin.in_eof = true;
-        samp_meng::cd_fdin_read_Insert(fdin);
-    }
-}
-
-// --- samp_meng.FFdin.in.GetMsg
-// Detect incoming message in buffer and return it
-// Look for valid message at current position in the buffer.
-// If message is already there, return a pointer to it. Do not skip message (call SkipMsg to do that).
-// If there is no message, read once from underlying file descriptor and try again.
-// The message is found by looking for delimiter '\n'.
-// The return value is an aryptr. If ret.elems is non-NULL, the message is valid (possibly empty).
-// If ret.elems is NULL, no message can be extracted from buffer.
-// The returned aryptr excludes the trailing deliminter.
-// SkipMsg will skip both the line and the deliminter.
-// A partial line at the end of input is NOT returned (TODO?)
-// 
-algo::aryptr<char> samp_meng::in_GetMsg(samp_meng::FFdin& fdin) {
-    algo::aryptr<char> ret;
-    if (!fdin.in_msgvalid) {
-        in_ScanMsg(fdin);
-        if (!fdin.in_msgvalid) {
-            bool readable = in_Refill(fdin);
-            if (readable) {
-                in_ScanMsg(fdin);
-            }
-        }
-    }
-    char *hdr = (char*)(fdin.in_elems + fdin.in_start);
-    if (fdin.in_msgvalid) {
-        ret.elems = hdr;
-        ret.n_elems = fdin.in_msglen;
-    }
-    if (!fdin.in_msgvalid && fdin.in_eof) { // all messages processed
-        samp_meng::cd_fdin_eof_Insert(fdin);
-    }
-    return ret;
-}
-
-// --- samp_meng.FFdin.in.Realloc
-// Set buffer size.
-// Unconditionally reallocate buffer to have size NEW_MAX
-// If the buffer has data in it, NEW_MAX is adjusted so that the data is not lost
-// (best to call this before filling the buffer)
-void samp_meng::in_Realloc(samp_meng::FFdin& fdin, int new_max) {
-    new_max = i32_Max(new_max, fdin.in_end);
-    u8 *new_mem = fdin.in_elems
-    ? (u8*)algo_lib::malloc_ReallocMem(fdin.in_elems, fdin.in_max, new_max)
-    : (u8*)algo_lib::malloc_AllocMem(new_max);
-    if (UNLIKELY(!new_mem)) {
-        FatalErrorExit("samp_meng.fbuf_nomem  field:samp_meng.FFdin.in  comment:'out of memory'");
-    }
-    fdin.in_elems = new_mem;
-    fdin.in_max = new_max;
-}
-
-// --- samp_meng.FFdin.in.Refill
-// Refill buffer. Return false if no further refill possible (input buffer exhausted)
-bool samp_meng::in_Refill(samp_meng::FFdin& fdin) {
-    bool readable = ValidQ(fdin.in_iohook.fildes);
-    if (readable) {
-        int fd     = fdin.in_iohook.fildes.value;
-        i32 max    = in_Max(fdin);
-        i32 end    = fdin.in_end;
-        i32 nbytes = end - fdin.in_start; // # bytes currently in buffer
-        i32 nfree  = max - end; // bytes available at the end of buffer
-        if (nbytes == 0 || nfree == 0) { // make more room for reading (or take advantage of free shift)
-            in_Shift(fdin);
-            end = fdin.in_end;
-            nfree = max - end;
-        }
-        ssize_t ret         = read(fd, fdin.in_elems + end, nfree);
-        readable            = !(ret < 0 && errno == EAGAIN);
-        bool error          = ret < 0 && errno != EAGAIN; // detect permanent error on this fd
-        bool eof            = error || (ret == 0 && nfree > 0);
-        fdin.in_end += i32_Max(ret,0); // new end of bytes
-        if (error) {
-            fdin.in_err = algo::FromErrno(errno); // fetch errno
-        }
-        fdin.in_eof |= eof;
-    }
-    if (!readable && fdin.in_epoll_enable) {
-        samp_meng::cd_fdin_read_Remove(fdin);
-    }
-    return readable;
-}
-
-// --- samp_meng.FFdin.in.RemoveAll
-// Empty bfufer
-// Discard contents of the buffer.
-void samp_meng::in_RemoveAll(samp_meng::FFdin& fdin) {
-    fdin.in_start    = 0;
-    fdin.in_end      = 0;
-    fdin.in_msgvalid = false;
-}
-
-// --- samp_meng.FFdin.in.ScanMsg
-// Internal function to scan for a message
-// 
-static void samp_meng::in_ScanMsg(samp_meng::FFdin& fdin) {
-    char *hdr = (char*)(fdin.in_elems + fdin.in_start);
-    i32 avail = in_N(fdin);
-    i32 msglen;
-    bool found = false;
-    // scan for delimiter starting from the previous place where we left off.
-    // at the end, save offset back to fdin so we don't have to re-scan.
-    // returned message length **does not include delimiter**.
-    // a line that exceeds buffer length is not returned.
-    for (msglen = fdin.in_msglen; msglen < avail; msglen += sizeof(char)) {
-        if (hdr[msglen] == '\n') { // delimiter?
-            found = true;
-            break;
-        }
-    }
-    if (!found && msglen >= in_Max(fdin)) {
-        fdin.in_eof = true; // cause user to detect eof
-        fdin.in_err = algo::FromErrno(E2BIG); // argument list too big -- closest error code
-    }
-    fdin.in_msglen = msglen;
-    fdin.in_msgvalid = found;
-}
-
-// --- samp_meng.FFdin.in.Shift
-// Internal function to shift data left
-// Shift existing bytes over to the beginning of the buffer
-static void samp_meng::in_Shift(samp_meng::FFdin& fdin) {
-    i32 start = fdin.in_start;
-    i32 bytes_n = fdin.in_end - start;
-    if (bytes_n > 0) {
-        memmove(fdin.in_elems, fdin.in_elems + start, bytes_n);
-    }
-    fdin.in_end = bytes_n;
-    fdin.in_start = 0;
-}
-
-// --- samp_meng.FFdin.in.SkipBytes
-// Skip N bytes when reading
-// Mark some buffer contents as read.
-// 
-void samp_meng::in_SkipBytes(samp_meng::FFdin& fdin, int n) {
-    int avail = fdin.in_end - fdin.in_start;
-    n = i32_Min(n,avail);
-    fdin.in_start += n;
-    fdin.in_msgvalid = false;
-}
-
-// --- samp_meng.FFdin.in.SkipMsg
-// Skip current message, if any
-// Skip current message, if any.
-void samp_meng::in_SkipMsg(samp_meng::FFdin& fdin) {
-    if (fdin.in_msgvalid) {
-        int skip = fdin.in_msglen;
-        skip += ssizeof(char); // delimiter
-        i32 start = fdin.in_start;
-        start += skip;
-        fdin.in_start = start;
-        fdin.in_msgvalid = false;
-        fdin.in_msglen   = 0; // reset message length -- important for delimited streams
-    }
-}
-
-// --- samp_meng.FFdin.in.WriteAll
-// Attempt to write buffer contents to fbuf, return success
-// Write bytes to the buffer. If the entire block is written, return true,
-// Otherwise return false.
-// Bytes in the buffer are potentially shifted left to make room for the message.
-// 
-bool samp_meng::in_WriteAll(samp_meng::FFdin& fdin, u8 *in, i32 in_n) {
-    int max = in_Max(fdin);
-    // check if message doesn't fit. if so, shift bytes over.
-    if (fdin.in_end + in_n > max) {
-        in_Shift(fdin);
-    }
-    // now try to write the message.
-    i32 end = fdin.in_end;
-    bool fits = end + in_n <= max;
-    if (fits) {
-        if (in_n > 0) {
-            memcpy(fdin.in_elems + end, in, in_n);
-            fdin.in_end = end + in_n;
-        }
-    }
-    return fits;
-}
-
-// --- samp_meng.FFdin.in.WriteReserve
-// Write buffer contents to fbuf, reallocate as needed
-// Write bytes to the buffer. The entire block is always written
-void samp_meng::in_WriteReserve(samp_meng::FFdin& fdin, u8 *in, i32 in_n) {
-    if (!in_WriteAll(fdin, in, in_n)) {
-        in_Realloc(fdin, fdin.in_max*2);
-        if (!in_WriteAll(fdin, in, in_n)) {
-            FatalErrorExit("in: out of memory");
-        }
-    }
-}
-
-// --- samp_meng.FFdin..Init
-// Set all fields to initial values.
-void samp_meng::FFdin_Init(samp_meng::FFdin& fdin) {
-    fdin.in_elems = NULL; // in: initialize
-    fdin.in_max = 0; // in: initialize
-    fdin.in_end = 0; // in: initialize
-    fdin.in_start = 0; // in: initialize
-    fdin.in_eof = false; // in: initialize
-    fdin.in_msgvalid = false; // in: initialize
-    fdin.in_msglen = 0; // in: initialize
-    fdin.in_epoll_enable = true; // in: initialize
-    in_Realloc(fdin, 8192);
-    fdin.cd_fdin_eof_next = (samp_meng::FFdin*)-1; // (samp_meng.FDb.cd_fdin_eof) not-in-list
-    fdin.cd_fdin_eof_prev = NULL; // (samp_meng.FDb.cd_fdin_eof)
-    fdin.cd_fdin_read_next = (samp_meng::FFdin*)-1; // (samp_meng.FDb.cd_fdin_read) not-in-list
-    fdin.cd_fdin_read_prev = NULL; // (samp_meng.FDb.cd_fdin_read)
-}
-
-// --- samp_meng.FFdin..Uninit
-void samp_meng::FFdin_Uninit(samp_meng::FFdin& fdin) {
-    samp_meng::FFdin &row = fdin; (void)row;
-    cd_fdin_eof_Remove(row); // remove fdin from index cd_fdin_eof
-    cd_fdin_read_Remove(row); // remove fdin from index cd_fdin_read
-
-    // samp_meng.FFdin.in.Uninit (Fbuf)  //
-    if (fdin.in_elems) {
-        algo_lib::malloc_FreeMem(fdin.in_elems, sizeof(char)*fdin.in_max); // (samp_meng.FFdin.in)
-    }
-    fdin.in_elems = NULL;
-    fdin.in_max = 0;
-}
-
-// --- samp_meng.I64Price8.value.SetDoubleMaybe
-// Set value of field value, using rounding.
-// If value is out of range for the target type, return false.
-bool samp_meng::value_SetDoubleMaybe(samp_meng::I64Price8& parent, double val) {
-    double intval = val * 100000000;
-    i64 minval = i64(-9223372036854775807LL);
-    i64 maxval = i64(9223372036854775807LL);
-    bool retval = intval >= minval;
-    retval &= intval < maxval;
-    if (retval) {
-        intval = intval + (val > 0 ? 0.5 : -0.5);
-        parent.value = intval; // set underlying field.
-    }
-    return retval;
-}
-
-// --- samp_meng.I64Price8.value.ReadStrptrMaybe
-bool samp_meng::value_ReadStrptrMaybe(samp_meng::I64Price8& parent, algo::strptr in) {
-    int index = 0;
-    int neg = false;
-    // skip leading sign
-    if (index < in.n_elems && (in.elems[index] == '+' || in.elems[index] == '-')) {
-        neg = in.elems[index]=='-';
-        index++;
-    };
-    // parse digits
-    u64 val = 0;
-    int ndot = 0; // number of . encountered
-    int nfrac = 0; // read up to NFRAC digits after .; if not found, fill in
-    bool ok = true;// overflow or bad char
-    for (; index < in.n_elems; index++) {
-        char c = in.elems[index];
-        if (c == '.') {
-            ok &= ndot == 0; // max 1 dot
-            ndot++;
-        } else if (algo_lib::DigitCharQ(c)) {
-            if (nfrac < 8) { // ignore digits after 8'th
-                u64 newval = val*10 + (c-'0');
-                ok &= newval >= val;
-                val = newval;
-                nfrac += ndot>0;
-            }
-        } else {
-            ok = false; // unknown char
-        }
-    }
-    while (nfrac < 8) {// insert missing
-        u64 newval = val*10;
-        ok &= newval >= val;
-        val = newval;
-        nfrac++;
-    }
-    i64 final_val = val;
-    ok &= val <= 9223372036854775807LL; // u->i coversion, check limits
-    if (neg) {
-        final_val = -final_val;
-        ok &= final_val >= -9223372036854775807LL;
-    }
-    if (ok) {
-        parent.value = final_val;// store value
-    }
-    return ok;
-}
-
-// --- samp_meng.I64Price8.value.Print
-void samp_meng::value_Print(samp_meng::I64Price8& parent, cstring &outstr) {
-    i64 value = parent.value;
-    ch_Reserve(outstr, 64);
-    if (value < 0) {
-        ch_Alloc(outstr) = '-';
-        value = -value;
-    }
-    u8 *value_start = (u8*)(outstr.ch_elems + outstr.ch_n);
-    outstr.ch_n += algo::u64_FmtBufDec(value, 8, value_start, false);
-}
-
-// --- samp_meng.I64Price8..ReadStrptrMaybe
-// Read fields of samp_meng::I64Price8 from an ascii string.
-// The format of the string is the format of the samp_meng::I64Price8's only field
-bool samp_meng::I64Price8_ReadStrptrMaybe(samp_meng::I64Price8 &parent, algo::strptr in_str) {
-    bool retval = true;
-    retval = retval && value_ReadStrptrMaybe(parent, in_str);
-    return retval;
-}
-
-// --- samp_meng.I64Price8..Print
-// print string representation of ROW to string STR
-// cfmt:samp_meng.I64Price8.String  printfmt:Raw
-void samp_meng::I64Price8_Print(samp_meng::I64Price8 row, algo::cstring& str) {
-    samp_meng::value_Print(row, str);
 }
 
 // --- samp_meng.FOrder..Uninit
@@ -2396,29 +1444,13 @@ void samp_meng::FOrdq_Uninit(samp_meng::FOrdq& ordq) {
     algo_lib::malloc_FreeMem((u8*)ordq.bh_order_elems, sizeof(samp_meng::FOrder*)*ordq.bh_order_max); // (samp_meng.FOrdq.bh_order)
 }
 
-// --- samp_meng.Symbol..ReadStrptrMaybe
-// Read fields of samp_meng::Symbol from an ascii string.
-// The format of the string is the format of the samp_meng::Symbol's only field
-bool samp_meng::Symbol_ReadStrptrMaybe(samp_meng::Symbol &parent, algo::strptr in_str) {
-    bool retval = true;
-    retval = retval && algo::RnullStr8_ReadStrptrMaybe(parent.symbol, in_str);
-    return retval;
-}
-
-// --- samp_meng.Symbol..Print
-// print string representation of ROW to string STR
-// cfmt:samp_meng.Symbol.String  printfmt:Raw
-void samp_meng::Symbol_Print(samp_meng::Symbol& row, algo::cstring& str) {
-    algo::RnullStr8_Print(row.symbol, str);
-}
-
 // --- samp_meng.FSymbol.c_ordq.Insert
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
+// Insert pointer to row into array. Row must not already be in array;
+// no duplicate check is performed, so a duplicate insert silently appears twice.
 void samp_meng::c_ordq_Insert(samp_meng::FSymbol& symbol, samp_meng::FOrdq& row) {
     if (!row.symbol_c_ordq_in_ary) {
         c_ordq_Reserve(symbol, 1);
-        u32 n  = symbol.c_ordq_n++;
+        u64 n  = symbol.c_ordq_n++;
         symbol.c_ordq_elems[n] = &row;
         row.symbol_c_ordq_in_ary = true;
     }
@@ -2437,15 +1469,15 @@ bool samp_meng::c_ordq_InsertMaybe(samp_meng::FSymbol& symbol, samp_meng::FOrdq&
 // --- samp_meng.FSymbol.c_ordq.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void samp_meng::c_ordq_Remove(samp_meng::FSymbol& symbol, samp_meng::FOrdq& row) {
-    int n = symbol.c_ordq_n;
+    i64 n = symbol.c_ordq_n;
     if (bool_Update(row.symbol_c_ordq_in_ary,false)) {
         samp_meng::FOrdq* *elems = symbol.c_ordq_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = n-1; i>=0; i--) {
+        for (i64 i = n-1; i>=0; i--) {
             samp_meng::FOrdq* elem = elems[i]; // fetch element
             if (elem == &row) {
-                int j = i + 1;
+                i64 j = i + 1;
                 size_t nbytes = sizeof(samp_meng::FOrdq*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
                 symbol.c_ordq_n = n - 1;
@@ -2457,12 +1489,12 @@ void samp_meng::c_ordq_Remove(samp_meng::FSymbol& symbol, samp_meng::FOrdq& row)
 
 // --- samp_meng.FSymbol.c_ordq.Reserve
 // Reserve space in index for N more elements;
-void samp_meng::c_ordq_Reserve(samp_meng::FSymbol& symbol, u32 n) {
-    u32 old_max = symbol.c_ordq_max;
+void samp_meng::c_ordq_Reserve(samp_meng::FSymbol& symbol, u64 n) {
+    u64 old_max = symbol.c_ordq_max;
     if (UNLIKELY(symbol.c_ordq_n + n > old_max)) {
-        u32 new_max  = u32_Max(4, old_max * 2);
-        u32 old_size = old_max * sizeof(samp_meng::FOrdq*);
-        u32 new_size = new_max * sizeof(samp_meng::FOrdq*);
+        u64 new_max  = u64_Max(u64_Max(old_max * 2, symbol.c_ordq_n + n), 4);
+        u64 old_size = old_max * sizeof(samp_meng::FOrdq*);
+        u64 new_size = new_max * sizeof(samp_meng::FOrdq*);
         void *new_mem = algo_lib::malloc_ReallocMem(symbol.c_ordq_elems, old_size, new_size);
         if (UNLIKELY(!new_mem)) {
             FatalErrorExit("samp_meng.out_of_memory  field:samp_meng.FSymbol.c_ordq");
@@ -2553,6 +1585,24 @@ samp_meng::FOrder* samp_meng::zd_order_RemoveFirst(samp_meng::FUser& user) {
     return row;
 }
 
+// --- samp_meng.FUser.zd_order.InsertBefore
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+void samp_meng::zd_order_InsertBefore(samp_meng::FUser& user, samp_meng::FOrder& row, samp_meng::FOrder* before) {
+    if (!user_zd_order_InLlistQ(row) && &row != before) {
+        samp_meng::FOrder* next = before;
+        samp_meng::FOrder* prev = next ? next->user_zd_order_prev : user.zd_order_tail;
+        row.user_zd_order_next = next;
+        row.user_zd_order_prev = prev;
+        samp_meng::FOrder **prev_link_a = &prev->user_zd_order_next;
+        samp_meng::FOrder **prev_link_b = &user.zd_order_head;
+        *(prev ? prev_link_a : prev_link_b) = &row;
+        samp_meng::FOrder **next_link_a = &next->user_zd_order_prev;
+        samp_meng::FOrder **next_link_b = &user.zd_order_tail;
+        *(next ? next_link_a : next_link_b) = &row;
+        user.zd_order_n++;
+    }
+}
+
 // --- samp_meng.FUser..Uninit
 void samp_meng::FUser_Uninit(samp_meng::FUser& user) {
     samp_meng::FUser &row = user; (void)row;
@@ -2565,18 +1615,7 @@ void samp_meng::FUser_Uninit(samp_meng::FUser& user) {
 const char* samp_meng::value_ToCstr(const samp_meng::FieldId& parent) {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
-        case samp_meng_FieldId_base        : ret = "base";  break;
-        case samp_meng_FieldId_type        : ret = "type";  break;
-        case samp_meng_FieldId_length      : ret = "length";  break;
-        case samp_meng_FieldId_order       : ret = "order";  break;
         case samp_meng_FieldId_value       : ret = "value";  break;
-        case samp_meng_FieldId_user        : ret = "user";  break;
-        case samp_meng_FieldId_time        : ret = "time";  break;
-        case samp_meng_FieldId_price       : ret = "price";  break;
-        case samp_meng_FieldId_symbol      : ret = "symbol";  break;
-        case samp_meng_FieldId_qty         : ret = "qty";  break;
-        case samp_meng_FieldId_ioc         : ret = "ioc";  break;
-        case samp_meng_FieldId_text        : ret = "text";  break;
     }
     return ret;
 }
@@ -2600,58 +1639,10 @@ void samp_meng::value_Print(const samp_meng::FieldId& parent, algo::cstring &lhs
 bool samp_meng::value_SetStrptrMaybe(samp_meng::FieldId& parent, algo::strptr rhs) {
     bool ret = false;
     switch (elems_N(rhs)) {
-        case 3: {
-            switch (u64(algo::ReadLE16(rhs.elems))|(u64(rhs[2])<<16)) {
-                case LE_STR3('i','o','c'): {
-                    value_SetEnum(parent,samp_meng_FieldId_ioc); ret = true; break;
-                }
-                case LE_STR3('q','t','y'): {
-                    value_SetEnum(parent,samp_meng_FieldId_qty); ret = true; break;
-                }
-            }
-            break;
-        }
-        case 4: {
-            switch (u64(algo::ReadLE32(rhs.elems))) {
-                case LE_STR4('b','a','s','e'): {
-                    value_SetEnum(parent,samp_meng_FieldId_base); ret = true; break;
-                }
-                case LE_STR4('t','e','x','t'): {
-                    value_SetEnum(parent,samp_meng_FieldId_text); ret = true; break;
-                }
-                case LE_STR4('t','i','m','e'): {
-                    value_SetEnum(parent,samp_meng_FieldId_time); ret = true; break;
-                }
-                case LE_STR4('t','y','p','e'): {
-                    value_SetEnum(parent,samp_meng_FieldId_type); ret = true; break;
-                }
-                case LE_STR4('u','s','e','r'): {
-                    value_SetEnum(parent,samp_meng_FieldId_user); ret = true; break;
-                }
-            }
-            break;
-        }
         case 5: {
             switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
-                case LE_STR5('o','r','d','e','r'): {
-                    value_SetEnum(parent,samp_meng_FieldId_order); ret = true; break;
-                }
-                case LE_STR5('p','r','i','c','e'): {
-                    value_SetEnum(parent,samp_meng_FieldId_price); ret = true; break;
-                }
                 case LE_STR5('v','a','l','u','e'): {
                     value_SetEnum(parent,samp_meng_FieldId_value); ret = true; break;
-                }
-            }
-            break;
-        }
-        case 6: {
-            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)) {
-                case LE_STR6('l','e','n','g','t','h'): {
-                    value_SetEnum(parent,samp_meng_FieldId_length); ret = true; break;
-                }
-                case LE_STR6('s','y','m','b','o','l'): {
-                    value_SetEnum(parent,samp_meng_FieldId_symbol); ret = true; break;
                 }
             }
             break;
@@ -2690,7 +1681,7 @@ bool samp_meng::FieldId_ReadStrptrMaybe(samp_meng::FieldId &parent, algo::strptr
 // --- samp_meng.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:samp_meng.FieldId.String  printfmt:Raw
-void samp_meng::FieldId_Print(samp_meng::FieldId& row, algo::cstring& str) {
+void samp_meng::FieldId_Print(samp_meng::FieldId row, algo::cstring& str) {
     samp_meng::value_Print(row, str);
 }
 
@@ -2700,12 +1691,12 @@ void samp_meng::FieldId_Print(samp_meng::FieldId& row, algo::cstring& str) {
 const char* samp_meng::value_ToCstr(const samp_meng::InCase& parent) {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
-        case samp_meng_InCase_samp_meng_CancelReqMsg: ret = "samp_meng.CancelReqMsg";  break;
-        case samp_meng_InCase_samp_meng_MassCancelReqMsg: ret = "samp_meng.MassCancelReqMsg";  break;
-        case samp_meng_InCase_samp_meng_NewOrderReqMsg: ret = "samp_meng.NewOrderReqMsg";  break;
-        case samp_meng_InCase_samp_meng_NewSymbolReqMsg: ret = "samp_meng.NewSymbolReqMsg";  break;
-        case samp_meng_InCase_samp_meng_NewUserReqMsg: ret = "samp_meng.NewUserReqMsg";  break;
-        case samp_meng_InCase_samp_meng_TextMsg: ret = "samp_meng.TextMsg";  break;
+        case samp_meng_InCase_ams_SampMengCancelReqMsg: ret = "ams.SampMengCancelReqMsg";  break;
+        case samp_meng_InCase_ams_SampMengMassCancelReqMsg: ret = "ams.SampMengMassCancelReqMsg";  break;
+        case samp_meng_InCase_ams_SampMengNewOrderReqMsg: ret = "ams.SampMengNewOrderReqMsg";  break;
+        case samp_meng_InCase_ams_SampMengNewSymbolReqMsg: ret = "ams.SampMengNewSymbolReqMsg";  break;
+        case samp_meng_InCase_ams_SampMengNewUserReqMsg: ret = "ams.SampMengNewUserReqMsg";  break;
+        case samp_meng_InCase_ams_SampMengTextMsg: ret = "ams.SampMengTextMsg";  break;
     }
     return ret;
 }
@@ -2729,28 +1720,10 @@ void samp_meng::value_Print(const samp_meng::InCase& parent, algo::cstring &lhs)
 bool samp_meng::value_SetStrptrMaybe(samp_meng::InCase& parent, algo::strptr rhs) {
     bool ret = false;
     switch (elems_N(rhs)) {
-        case 17: {
+        case 19: {
             switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('s','a','m','p','_','m','e','n'): {
-                    if (memcmp(rhs.elems+8,"g.TextMsg",9)==0) { value_SetEnum(parent,samp_meng_InCase_samp_meng_TextMsg); ret = true; break; }
-                    break;
-                }
-            }
-            break;
-        }
-        case 22: {
-            switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('s','a','m','p','_','m','e','n'): {
-                    if (memcmp(rhs.elems+8,"g.CancelReqMsg",14)==0) { value_SetEnum(parent,samp_meng_InCase_samp_meng_CancelReqMsg); ret = true; break; }
-                    break;
-                }
-            }
-            break;
-        }
-        case 23: {
-            switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('s','a','m','p','_','m','e','n'): {
-                    if (memcmp(rhs.elems+8,"g.NewUserReqMsg",15)==0) { value_SetEnum(parent,samp_meng_InCase_samp_meng_NewUserReqMsg); ret = true; break; }
+                case LE_STR8('a','m','s','.','S','a','m','p'): {
+                    if (memcmp(rhs.elems+8,"MengTextMsg",11)==0) { value_SetEnum(parent,samp_meng_InCase_ams_SampMengTextMsg); ret = true; break; }
                     break;
                 }
             }
@@ -2758,8 +1731,8 @@ bool samp_meng::value_SetStrptrMaybe(samp_meng::InCase& parent, algo::strptr rhs
         }
         case 24: {
             switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('s','a','m','p','_','m','e','n'): {
-                    if (memcmp(rhs.elems+8,"g.NewOrderReqMsg",16)==0) { value_SetEnum(parent,samp_meng_InCase_samp_meng_NewOrderReqMsg); ret = true; break; }
+                case LE_STR8('a','m','s','.','S','a','m','p'): {
+                    if (memcmp(rhs.elems+8,"MengCancelReqMsg",16)==0) { value_SetEnum(parent,samp_meng_InCase_ams_SampMengCancelReqMsg); ret = true; break; }
                     break;
                 }
             }
@@ -2767,8 +1740,8 @@ bool samp_meng::value_SetStrptrMaybe(samp_meng::InCase& parent, algo::strptr rhs
         }
         case 25: {
             switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('s','a','m','p','_','m','e','n'): {
-                    if (memcmp(rhs.elems+8,"g.NewSymbolReqMsg",17)==0) { value_SetEnum(parent,samp_meng_InCase_samp_meng_NewSymbolReqMsg); ret = true; break; }
+                case LE_STR8('a','m','s','.','S','a','m','p'): {
+                    if (memcmp(rhs.elems+8,"MengNewUserReqMsg",17)==0) { value_SetEnum(parent,samp_meng_InCase_ams_SampMengNewUserReqMsg); ret = true; break; }
                     break;
                 }
             }
@@ -2776,8 +1749,26 @@ bool samp_meng::value_SetStrptrMaybe(samp_meng::InCase& parent, algo::strptr rhs
         }
         case 26: {
             switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('s','a','m','p','_','m','e','n'): {
-                    if (memcmp(rhs.elems+8,"g.MassCancelReqMsg",18)==0) { value_SetEnum(parent,samp_meng_InCase_samp_meng_MassCancelReqMsg); ret = true; break; }
+                case LE_STR8('a','m','s','.','S','a','m','p'): {
+                    if (memcmp(rhs.elems+8,"MengNewOrderReqMsg",18)==0) { value_SetEnum(parent,samp_meng_InCase_ams_SampMengNewOrderReqMsg); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 27: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','m','s','.','S','a','m','p'): {
+                    if (memcmp(rhs.elems+8,"MengNewSymbolReqMsg",19)==0) { value_SetEnum(parent,samp_meng_InCase_ams_SampMengNewSymbolReqMsg); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 28: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','m','s','.','S','a','m','p'): {
+                    if (memcmp(rhs.elems+8,"MengMassCancelReqMsg",20)==0) { value_SetEnum(parent,samp_meng_InCase_ams_SampMengMassCancelReqMsg); ret = true; break; }
                     break;
                 }
             }
@@ -2814,1095 +1805,58 @@ bool samp_meng::InCase_ReadStrptrMaybe(samp_meng::InCase &parent, algo::strptr i
     return retval;
 }
 
-// --- samp_meng.MassCancelReqMsg.base.CopyOut
-// Copy fields out of row
-void samp_meng::parent_CopyOut(samp_meng::MassCancelReqMsg &row, samp_meng::MsgHeader &out) {
-    // type: field value is computed
-    // length: field value is computed
-    (void)row;//only to avoid -Wunused-parameter
-    (void)out;//only to avoid -Wunused-parameter
-}
-
-// --- samp_meng.MassCancelReqMsg..ReadFieldMaybe
-bool samp_meng::MassCancelReqMsg_ReadFieldMaybe(samp_meng::MassCancelReqMsg& parent, algo::strptr field, algo::strptr strval) {
-    bool retval = true;
-    samp_meng::FieldId field_id;
-    (void)value_SetStrptrMaybe(field_id,field);
-    switch(field_id) {
-        case samp_meng_FieldId_base: {
-            retval = false;
-        } break;
-        case samp_meng_FieldId_type: {
-            retval = false;
-        } break;
-        case samp_meng_FieldId_length: {
-            retval = false;
-        } break;
-        case samp_meng_FieldId_user: {
-            retval = u32_ReadStrptrMaybe(parent.user, strval);
-        } break;
-        default: {
-            retval = false;
-            algo_lib::AppendErrtext("comment", "unrecognized attr");
-        } break;
-    }
-    if (!retval) {
-        algo_lib::AppendErrtext("attr",field);
-    }
-    return retval;
-}
-
-// --- samp_meng.MassCancelReqMsg..ReadStrptrMaybe
-// Read fields of samp_meng::MassCancelReqMsg from an ascii string.
-// The format of the string is an ssim Tuple
-bool samp_meng::MassCancelReqMsg_ReadStrptrMaybe(samp_meng::MassCancelReqMsg &parent, algo::strptr in_str) {
-    bool retval = true;
-    retval = algo::StripTypeTag(in_str, "samp_meng.MassCancelReqMsg");
-    ind_beg(algo::Attr_curs, attr, in_str) {
-        retval = retval && MassCancelReqMsg_ReadFieldMaybe(parent, attr.name, attr.value);
-    }ind_end;
-    return retval;
-}
-
-// --- samp_meng.MassCancelReqMsg..Print
-// print string representation of ROW to string STR
-// cfmt:samp_meng.MassCancelReqMsg.String  printfmt:Tuple
-void samp_meng::MassCancelReqMsg_Print(samp_meng::MassCancelReqMsg& row, algo::cstring& str) {
-    algo::tempstr temp;
-    str << "samp_meng.MassCancelReqMsg";
-
-    u32_Print(row.user, temp);
-    PrintAttrSpaceReset(str,"user", temp);
-}
-
-// --- samp_meng.MsgHeader.type.ToCstr
-// Convert numeric value of field to one of predefined string constants.
-// If string is found, return a static C string. Otherwise, return NULL.
-const char* samp_meng::type_ToCstr(const samp_meng::MsgHeader& parent) {
-    const char *ret = NULL;
-    switch(type_GetEnum(parent)) {
-        case samp_meng_MsgHeader_type_samp_meng_CancelOrderMsg: ret = "samp_meng.CancelOrderMsg";  break;
-        case samp_meng_MsgHeader_type_samp_meng_CancelReqMsg: ret = "samp_meng.CancelReqMsg";  break;
-        case samp_meng_MsgHeader_type_samp_meng_MassCancelReqMsg: ret = "samp_meng.MassCancelReqMsg";  break;
-        case samp_meng_MsgHeader_type_samp_meng_NewOrderMsg: ret = "samp_meng.NewOrderMsg";  break;
-        case samp_meng_MsgHeader_type_samp_meng_NewOrderReqMsg: ret = "samp_meng.NewOrderReqMsg";  break;
-        case samp_meng_MsgHeader_type_samp_meng_NewSymbolMsg: ret = "samp_meng.NewSymbolMsg";  break;
-        case samp_meng_MsgHeader_type_samp_meng_NewSymbolReqMsg: ret = "samp_meng.NewSymbolReqMsg";  break;
-        case samp_meng_MsgHeader_type_samp_meng_NewUserMsg: ret = "samp_meng.NewUserMsg";  break;
-        case samp_meng_MsgHeader_type_samp_meng_NewUserReqMsg: ret = "samp_meng.NewUserReqMsg";  break;
-        case samp_meng_MsgHeader_type_samp_meng_OrderTradeMsg: ret = "samp_meng.OrderTradeMsg";  break;
-        case samp_meng_MsgHeader_type_samp_meng_TextMsg: ret = "samp_meng.TextMsg";  break;
-    }
-    return ret;
-}
-
-// --- samp_meng.MsgHeader.type.Print
-// Convert type to a string. First, attempt conversion to a known string.
-// If no string matches, print type as a numeric value.
-void samp_meng::type_Print(const samp_meng::MsgHeader& parent, algo::cstring &lhs) {
-    const char *strval = type_ToCstr(parent);
-    if (strval) {
-        lhs << strval;
-    } else {
-        lhs << parent.type;
-    }
-}
-
-// --- samp_meng.MsgHeader.type.SetStrptrMaybe
-// Convert string to field.
-// If the string is invalid, do not modify field and return false.
-// In case of success, return true
-bool samp_meng::type_SetStrptrMaybe(samp_meng::MsgHeader& parent, algo::strptr rhs) {
-    bool ret = false;
-    switch (elems_N(rhs)) {
-        case 17: {
-            switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('s','a','m','p','_','m','e','n'): {
-                    if (memcmp(rhs.elems+8,"g.TextMsg",9)==0) { type_SetEnum(parent,samp_meng_MsgHeader_type_samp_meng_TextMsg); ret = true; break; }
-                    break;
-                }
-            }
-            break;
-        }
-        case 20: {
-            switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('s','a','m','p','_','m','e','n'): {
-                    if (memcmp(rhs.elems+8,"g.NewUserMsg",12)==0) { type_SetEnum(parent,samp_meng_MsgHeader_type_samp_meng_NewUserMsg); ret = true; break; }
-                    break;
-                }
-            }
-            break;
-        }
-        case 21: {
-            switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('s','a','m','p','_','m','e','n'): {
-                    if (memcmp(rhs.elems+8,"g.NewOrderMsg",13)==0) { type_SetEnum(parent,samp_meng_MsgHeader_type_samp_meng_NewOrderMsg); ret = true; break; }
-                    break;
-                }
-            }
-            break;
-        }
-        case 22: {
-            switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('s','a','m','p','_','m','e','n'): {
-                    if (memcmp(rhs.elems+8,"g.CancelReqMsg",14)==0) { type_SetEnum(parent,samp_meng_MsgHeader_type_samp_meng_CancelReqMsg); ret = true; break; }
-                    if (memcmp(rhs.elems+8,"g.NewSymbolMsg",14)==0) { type_SetEnum(parent,samp_meng_MsgHeader_type_samp_meng_NewSymbolMsg); ret = true; break; }
-                    break;
-                }
-            }
-            break;
-        }
-        case 23: {
-            switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('s','a','m','p','_','m','e','n'): {
-                    if (memcmp(rhs.elems+8,"g.NewUserReqMsg",15)==0) { type_SetEnum(parent,samp_meng_MsgHeader_type_samp_meng_NewUserReqMsg); ret = true; break; }
-                    if (memcmp(rhs.elems+8,"g.OrderTradeMsg",15)==0) { type_SetEnum(parent,samp_meng_MsgHeader_type_samp_meng_OrderTradeMsg); ret = true; break; }
-                    break;
-                }
-            }
-            break;
-        }
-        case 24: {
-            switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('s','a','m','p','_','m','e','n'): {
-                    if (memcmp(rhs.elems+8,"g.CancelOrderMsg",16)==0) { type_SetEnum(parent,samp_meng_MsgHeader_type_samp_meng_CancelOrderMsg); ret = true; break; }
-                    if (memcmp(rhs.elems+8,"g.NewOrderReqMsg",16)==0) { type_SetEnum(parent,samp_meng_MsgHeader_type_samp_meng_NewOrderReqMsg); ret = true; break; }
-                    break;
-                }
-            }
-            break;
-        }
-        case 25: {
-            switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('s','a','m','p','_','m','e','n'): {
-                    if (memcmp(rhs.elems+8,"g.NewSymbolReqMsg",17)==0) { type_SetEnum(parent,samp_meng_MsgHeader_type_samp_meng_NewSymbolReqMsg); ret = true; break; }
-                    break;
-                }
-            }
-            break;
-        }
-        case 26: {
-            switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('s','a','m','p','_','m','e','n'): {
-                    if (memcmp(rhs.elems+8,"g.MassCancelReqMsg",18)==0) { type_SetEnum(parent,samp_meng_MsgHeader_type_samp_meng_MassCancelReqMsg); ret = true; break; }
-                    break;
-                }
-            }
-            break;
-        }
-    }
-    return ret;
-}
-
-// --- samp_meng.MsgHeader.type.SetStrptr
-// Convert string to field.
-// If the string is invalid, set numeric value to DFLT
-void samp_meng::type_SetStrptr(samp_meng::MsgHeader& parent, algo::strptr rhs, samp_meng_MsgHeader_type_Enum dflt) {
-    if (!type_SetStrptrMaybe(parent,rhs)) type_SetEnum(parent,dflt);
-}
-
-// --- samp_meng.MsgHeader.type.ReadStrptrMaybe
-// Convert string to field. Return success value
-bool samp_meng::type_ReadStrptrMaybe(samp_meng::MsgHeader& parent, algo::strptr rhs) {
-    bool retval = false;
-    retval = type_SetStrptrMaybe(parent,rhs); // try symbol conversion
-    if (!retval) { // didn't work? try reading as underlying type
-        retval = u8_ReadStrptrMaybe(parent.type,rhs);
-    }
-    return retval;
-}
-
-// --- samp_meng.MsgHeader..ReadFieldMaybe
-bool samp_meng::MsgHeader_ReadFieldMaybe(samp_meng::MsgHeader& parent, algo::strptr field, algo::strptr strval) {
-    bool retval = true;
-    samp_meng::FieldId field_id;
-    (void)value_SetStrptrMaybe(field_id,field);
-    switch(field_id) {
-        case samp_meng_FieldId_type: {
-            retval = type_ReadStrptrMaybe(parent, strval);
-        } break;
-        case samp_meng_FieldId_length: {
-            retval = false;
-        } break;
-        default: {
-            retval = false;
-            algo_lib::AppendErrtext("comment", "unrecognized attr");
-        } break;
-    }
-    if (!retval) {
-        algo_lib::AppendErrtext("attr",field);
-    }
-    return retval;
-}
-
-// --- samp_meng.MsgHeader..ReadStrptrMaybe
-// Read fields of samp_meng::MsgHeader from an ascii string.
-// The format of the string is an ssim Tuple
-bool samp_meng::MsgHeader_ReadStrptrMaybe(samp_meng::MsgHeader &parent, algo::strptr in_str) {
-    bool retval = true;
-    retval = algo::StripTypeTag(in_str, "samp_meng.MsgHeader");
-    ind_beg(algo::Attr_curs, attr, in_str) {
-        retval = retval && MsgHeader_ReadFieldMaybe(parent, attr.name, attr.value);
-    }ind_end;
-    return retval;
-}
-
-// --- samp_meng.MsgHeader..Print
-// print string representation of ROW to string STR
-// cfmt:samp_meng.MsgHeader.String  printfmt:Tuple
-void samp_meng::MsgHeader_Print(samp_meng::MsgHeader& row, algo::cstring& str) {
-    algo::tempstr temp;
-    str << "samp_meng.MsgHeader";
-    (void)row;//only to avoid -Wunused-parameter
-}
-
-// --- samp_meng.MsgHeaderMsgsCase.value.ToCstr
-// Convert numeric value of field to one of predefined string constants.
-// If string is found, return a static C string. Otherwise, return NULL.
-const char* samp_meng::value_ToCstr(const samp_meng::MsgHeaderMsgsCase& parent) {
-    const char *ret = NULL;
-    switch(value_GetEnum(parent)) {
-        case samp_meng_MsgHeaderMsgsCase_samp_meng_CancelOrderMsg: ret = "samp_meng.CancelOrderMsg";  break;
-        case samp_meng_MsgHeaderMsgsCase_samp_meng_CancelReqMsg: ret = "samp_meng.CancelReqMsg";  break;
-        case samp_meng_MsgHeaderMsgsCase_samp_meng_MassCancelReqMsg: ret = "samp_meng.MassCancelReqMsg";  break;
-        case samp_meng_MsgHeaderMsgsCase_samp_meng_NewOrderMsg: ret = "samp_meng.NewOrderMsg";  break;
-        case samp_meng_MsgHeaderMsgsCase_samp_meng_NewOrderReqMsg: ret = "samp_meng.NewOrderReqMsg";  break;
-        case samp_meng_MsgHeaderMsgsCase_samp_meng_NewSymbolMsg: ret = "samp_meng.NewSymbolMsg";  break;
-        case samp_meng_MsgHeaderMsgsCase_samp_meng_NewSymbolReqMsg: ret = "samp_meng.NewSymbolReqMsg";  break;
-        case samp_meng_MsgHeaderMsgsCase_samp_meng_NewUserMsg: ret = "samp_meng.NewUserMsg";  break;
-        case samp_meng_MsgHeaderMsgsCase_samp_meng_NewUserReqMsg: ret = "samp_meng.NewUserReqMsg";  break;
-        case samp_meng_MsgHeaderMsgsCase_samp_meng_OrderTradeMsg: ret = "samp_meng.OrderTradeMsg";  break;
-        case samp_meng_MsgHeaderMsgsCase_samp_meng_TextMsg: ret = "samp_meng.TextMsg";  break;
-    }
-    return ret;
-}
-
-// --- samp_meng.MsgHeaderMsgsCase.value.Print
-// Convert value to a string. First, attempt conversion to a known string.
-// If no string matches, print value as a numeric value.
-void samp_meng::value_Print(const samp_meng::MsgHeaderMsgsCase& parent, algo::cstring &lhs) {
-    const char *strval = value_ToCstr(parent);
-    if (strval) {
-        lhs << strval;
-    } else {
-        lhs << parent.value;
-    }
-}
-
-// --- samp_meng.MsgHeaderMsgsCase.value.SetStrptrMaybe
-// Convert string to field.
-// If the string is invalid, do not modify field and return false.
-// In case of success, return true
-bool samp_meng::value_SetStrptrMaybe(samp_meng::MsgHeaderMsgsCase& parent, algo::strptr rhs) {
-    bool ret = false;
-    switch (elems_N(rhs)) {
-        case 17: {
-            switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('s','a','m','p','_','m','e','n'): {
-                    if (memcmp(rhs.elems+8,"g.TextMsg",9)==0) { value_SetEnum(parent,samp_meng_MsgHeaderMsgsCase_samp_meng_TextMsg); ret = true; break; }
-                    break;
-                }
-            }
-            break;
-        }
-        case 20: {
-            switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('s','a','m','p','_','m','e','n'): {
-                    if (memcmp(rhs.elems+8,"g.NewUserMsg",12)==0) { value_SetEnum(parent,samp_meng_MsgHeaderMsgsCase_samp_meng_NewUserMsg); ret = true; break; }
-                    break;
-                }
-            }
-            break;
-        }
-        case 21: {
-            switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('s','a','m','p','_','m','e','n'): {
-                    if (memcmp(rhs.elems+8,"g.NewOrderMsg",13)==0) { value_SetEnum(parent,samp_meng_MsgHeaderMsgsCase_samp_meng_NewOrderMsg); ret = true; break; }
-                    break;
-                }
-            }
-            break;
-        }
-        case 22: {
-            switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('s','a','m','p','_','m','e','n'): {
-                    if (memcmp(rhs.elems+8,"g.CancelReqMsg",14)==0) { value_SetEnum(parent,samp_meng_MsgHeaderMsgsCase_samp_meng_CancelReqMsg); ret = true; break; }
-                    if (memcmp(rhs.elems+8,"g.NewSymbolMsg",14)==0) { value_SetEnum(parent,samp_meng_MsgHeaderMsgsCase_samp_meng_NewSymbolMsg); ret = true; break; }
-                    break;
-                }
-            }
-            break;
-        }
-        case 23: {
-            switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('s','a','m','p','_','m','e','n'): {
-                    if (memcmp(rhs.elems+8,"g.NewUserReqMsg",15)==0) { value_SetEnum(parent,samp_meng_MsgHeaderMsgsCase_samp_meng_NewUserReqMsg); ret = true; break; }
-                    if (memcmp(rhs.elems+8,"g.OrderTradeMsg",15)==0) { value_SetEnum(parent,samp_meng_MsgHeaderMsgsCase_samp_meng_OrderTradeMsg); ret = true; break; }
-                    break;
-                }
-            }
-            break;
-        }
-        case 24: {
-            switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('s','a','m','p','_','m','e','n'): {
-                    if (memcmp(rhs.elems+8,"g.CancelOrderMsg",16)==0) { value_SetEnum(parent,samp_meng_MsgHeaderMsgsCase_samp_meng_CancelOrderMsg); ret = true; break; }
-                    if (memcmp(rhs.elems+8,"g.NewOrderReqMsg",16)==0) { value_SetEnum(parent,samp_meng_MsgHeaderMsgsCase_samp_meng_NewOrderReqMsg); ret = true; break; }
-                    break;
-                }
-            }
-            break;
-        }
-        case 25: {
-            switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('s','a','m','p','_','m','e','n'): {
-                    if (memcmp(rhs.elems+8,"g.NewSymbolReqMsg",17)==0) { value_SetEnum(parent,samp_meng_MsgHeaderMsgsCase_samp_meng_NewSymbolReqMsg); ret = true; break; }
-                    break;
-                }
-            }
-            break;
-        }
-        case 26: {
-            switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('s','a','m','p','_','m','e','n'): {
-                    if (memcmp(rhs.elems+8,"g.MassCancelReqMsg",18)==0) { value_SetEnum(parent,samp_meng_MsgHeaderMsgsCase_samp_meng_MassCancelReqMsg); ret = true; break; }
-                    break;
-                }
-            }
-            break;
-        }
-    }
-    return ret;
-}
-
-// --- samp_meng.MsgHeaderMsgsCase.value.SetStrptr
-// Convert string to field.
-// If the string is invalid, set numeric value to DFLT
-void samp_meng::value_SetStrptr(samp_meng::MsgHeaderMsgsCase& parent, algo::strptr rhs, samp_meng_MsgHeaderMsgsCaseEnum dflt) {
-    if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
-}
-
-// --- samp_meng.MsgHeaderMsgsCase.value.ReadStrptrMaybe
-// Convert string to field. Return success value
-bool samp_meng::value_ReadStrptrMaybe(samp_meng::MsgHeaderMsgsCase& parent, algo::strptr rhs) {
-    bool retval = false;
-    retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
-    if (!retval) { // didn't work? try reading as underlying type
-        retval = u32_ReadStrptrMaybe(parent.value,rhs);
-    }
-    return retval;
-}
-
-// --- samp_meng.MsgHeaderMsgsCase..ReadStrptrMaybe
-// Read fields of samp_meng::MsgHeaderMsgsCase from an ascii string.
-// The format of the string is the format of the samp_meng::MsgHeaderMsgsCase's only field
-bool samp_meng::MsgHeaderMsgsCase_ReadStrptrMaybe(samp_meng::MsgHeaderMsgsCase &parent, algo::strptr in_str) {
-    bool retval = true;
-    retval = retval && value_ReadStrptrMaybe(parent, in_str);
-    return retval;
-}
-
-// --- samp_meng.NewOrderMsg.base.CopyOut
-// Copy fields out of row
-void samp_meng::parent_CopyOut(samp_meng::NewOrderMsg &row, samp_meng::MsgHeader &out) {
-    // type: field value is computed
-    // length: field value is computed
-    (void)row;//only to avoid -Wunused-parameter
-    (void)out;//only to avoid -Wunused-parameter
-}
-
-// --- samp_meng.NewOrderMsg..ReadFieldMaybe
-bool samp_meng::NewOrderMsg_ReadFieldMaybe(samp_meng::NewOrderMsg& parent, algo::strptr field, algo::strptr strval) {
-    bool retval = true;
-    samp_meng::FieldId field_id;
-    (void)value_SetStrptrMaybe(field_id,field);
-    switch(field_id) {
-        case samp_meng_FieldId_base: {
-            retval = false;
-        } break;
-        case samp_meng_FieldId_type: {
-            retval = false;
-        } break;
-        case samp_meng_FieldId_length: {
-            retval = false;
-        } break;
-        case samp_meng_FieldId_time: {
-            retval = algo::UnTime_ReadStrptrMaybe(parent.time, strval);
-        } break;
-        case samp_meng_FieldId_price: {
-            retval = samp_meng::I64Price8_ReadStrptrMaybe(parent.price, strval);
-        } break;
-        case samp_meng_FieldId_order: {
-            retval = u64_ReadStrptrMaybe(parent.order, strval);
-        } break;
-        case samp_meng_FieldId_symbol: {
-            retval = samp_meng::Symbol_ReadStrptrMaybe(parent.symbol, strval);
-        } break;
-        case samp_meng_FieldId_qty: {
-            retval = u32_ReadStrptrMaybe(parent.qty, strval);
-        } break;
-        default: {
-            retval = false;
-            algo_lib::AppendErrtext("comment", "unrecognized attr");
-        } break;
-    }
-    if (!retval) {
-        algo_lib::AppendErrtext("attr",field);
-    }
-    return retval;
-}
-
-// --- samp_meng.NewOrderMsg..ReadStrptrMaybe
-// Read fields of samp_meng::NewOrderMsg from an ascii string.
-// The format of the string is an ssim Tuple
-bool samp_meng::NewOrderMsg_ReadStrptrMaybe(samp_meng::NewOrderMsg &parent, algo::strptr in_str) {
-    bool retval = true;
-    retval = algo::StripTypeTag(in_str, "samp_meng.NewOrderMsg");
-    ind_beg(algo::Attr_curs, attr, in_str) {
-        retval = retval && NewOrderMsg_ReadFieldMaybe(parent, attr.name, attr.value);
-    }ind_end;
-    return retval;
-}
-
-// --- samp_meng.NewOrderMsg..Print
-// print string representation of ROW to string STR
-// cfmt:samp_meng.NewOrderMsg.String  printfmt:Tuple
-void samp_meng::NewOrderMsg_Print(samp_meng::NewOrderMsg& row, algo::cstring& str) {
-    algo::tempstr temp;
-    str << "samp_meng.NewOrderMsg";
-
-    algo::UnTime_Print(row.time, temp);
-    PrintAttrSpaceReset(str,"time", temp);
-
-    samp_meng::I64Price8_Print(row.price, temp);
-    PrintAttrSpaceReset(str,"price", temp);
-
-    u64_Print(row.order, temp);
-    PrintAttrSpaceReset(str,"order", temp);
-
-    samp_meng::Symbol_Print(row.symbol, temp);
-    PrintAttrSpaceReset(str,"symbol", temp);
-
-    u32_Print(row.qty, temp);
-    PrintAttrSpaceReset(str,"qty", temp);
-}
-
-// --- samp_meng.NewOrderReqMsg.base.CopyOut
-// Copy fields out of row
-void samp_meng::parent_CopyOut(samp_meng::NewOrderReqMsg &row, samp_meng::MsgHeader &out) {
-    // type: field value is computed
-    // length: field value is computed
-    (void)row;//only to avoid -Wunused-parameter
-    (void)out;//only to avoid -Wunused-parameter
-}
-
-// --- samp_meng.NewOrderReqMsg..ReadFieldMaybe
-bool samp_meng::NewOrderReqMsg_ReadFieldMaybe(samp_meng::NewOrderReqMsg& parent, algo::strptr field, algo::strptr strval) {
-    bool retval = true;
-    samp_meng::FieldId field_id;
-    (void)value_SetStrptrMaybe(field_id,field);
-    switch(field_id) {
-        case samp_meng_FieldId_base: {
-            retval = false;
-        } break;
-        case samp_meng_FieldId_type: {
-            retval = false;
-        } break;
-        case samp_meng_FieldId_length: {
-            retval = false;
-        } break;
-        case samp_meng_FieldId_ioc: {
-            retval = bool_ReadStrptrMaybe(parent.ioc, strval);
-        } break;
-        case samp_meng_FieldId_qty: {
-            retval = i32_ReadStrptrMaybe(parent.qty, strval);
-        } break;
-        case samp_meng_FieldId_price: {
-            retval = samp_meng::I64Price8_ReadStrptrMaybe(parent.price, strval);
-        } break;
-        case samp_meng_FieldId_symbol: {
-            retval = samp_meng::Symbol_ReadStrptrMaybe(parent.symbol, strval);
-        } break;
-        case samp_meng_FieldId_user: {
-            retval = u32_ReadStrptrMaybe(parent.user, strval);
-        } break;
-        default: {
-            retval = false;
-            algo_lib::AppendErrtext("comment", "unrecognized attr");
-        } break;
-    }
-    if (!retval) {
-        algo_lib::AppendErrtext("attr",field);
-    }
-    return retval;
-}
-
-// --- samp_meng.NewOrderReqMsg..ReadStrptrMaybe
-// Read fields of samp_meng::NewOrderReqMsg from an ascii string.
-// The format of the string is an ssim Tuple
-bool samp_meng::NewOrderReqMsg_ReadStrptrMaybe(samp_meng::NewOrderReqMsg &parent, algo::strptr in_str) {
-    bool retval = true;
-    retval = algo::StripTypeTag(in_str, "samp_meng.NewOrderReqMsg");
-    ind_beg(algo::Attr_curs, attr, in_str) {
-        retval = retval && NewOrderReqMsg_ReadFieldMaybe(parent, attr.name, attr.value);
-    }ind_end;
-    return retval;
-}
-
-// --- samp_meng.NewOrderReqMsg..Print
-// print string representation of ROW to string STR
-// cfmt:samp_meng.NewOrderReqMsg.String  printfmt:Tuple
-void samp_meng::NewOrderReqMsg_Print(samp_meng::NewOrderReqMsg& row, algo::cstring& str) {
-    algo::tempstr temp;
-    str << "samp_meng.NewOrderReqMsg";
-
-    bool_Print(row.ioc, temp);
-    PrintAttrSpaceReset(str,"ioc", temp);
-
-    i32_Print(row.qty, temp);
-    PrintAttrSpaceReset(str,"qty", temp);
-
-    samp_meng::I64Price8_Print(row.price, temp);
-    PrintAttrSpaceReset(str,"price", temp);
-
-    samp_meng::Symbol_Print(row.symbol, temp);
-    PrintAttrSpaceReset(str,"symbol", temp);
-
-    u32_Print(row.user, temp);
-    PrintAttrSpaceReset(str,"user", temp);
-}
-
-// --- samp_meng.NewSymbolMsg.base.CopyOut
-// Copy fields out of row
-void samp_meng::parent_CopyOut(samp_meng::NewSymbolMsg &row, samp_meng::MsgHeader &out) {
-    // type: field value is computed
-    // length: field value is computed
-    (void)row;//only to avoid -Wunused-parameter
-    (void)out;//only to avoid -Wunused-parameter
-}
-
-// --- samp_meng.NewSymbolMsg..ReadFieldMaybe
-bool samp_meng::NewSymbolMsg_ReadFieldMaybe(samp_meng::NewSymbolMsg& parent, algo::strptr field, algo::strptr strval) {
-    bool retval = true;
-    samp_meng::FieldId field_id;
-    (void)value_SetStrptrMaybe(field_id,field);
-    switch(field_id) {
-        case samp_meng_FieldId_base: {
-            retval = false;
-        } break;
-        case samp_meng_FieldId_type: {
-            retval = false;
-        } break;
-        case samp_meng_FieldId_length: {
-            retval = false;
-        } break;
-        case samp_meng_FieldId_symbol: {
-            retval = samp_meng::Symbol_ReadStrptrMaybe(parent.symbol, strval);
-        } break;
-        default: {
-            retval = false;
-            algo_lib::AppendErrtext("comment", "unrecognized attr");
-        } break;
-    }
-    if (!retval) {
-        algo_lib::AppendErrtext("attr",field);
-    }
-    return retval;
-}
-
-// --- samp_meng.NewSymbolMsg..ReadStrptrMaybe
-// Read fields of samp_meng::NewSymbolMsg from an ascii string.
-// The format of the string is an ssim Tuple
-bool samp_meng::NewSymbolMsg_ReadStrptrMaybe(samp_meng::NewSymbolMsg &parent, algo::strptr in_str) {
-    bool retval = true;
-    retval = algo::StripTypeTag(in_str, "samp_meng.NewSymbolMsg");
-    ind_beg(algo::Attr_curs, attr, in_str) {
-        retval = retval && NewSymbolMsg_ReadFieldMaybe(parent, attr.name, attr.value);
-    }ind_end;
-    return retval;
-}
-
-// --- samp_meng.NewSymbolMsg..Print
-// print string representation of ROW to string STR
-// cfmt:samp_meng.NewSymbolMsg.String  printfmt:Tuple
-void samp_meng::NewSymbolMsg_Print(samp_meng::NewSymbolMsg& row, algo::cstring& str) {
-    algo::tempstr temp;
-    str << "samp_meng.NewSymbolMsg";
-
-    samp_meng::Symbol_Print(row.symbol, temp);
-    PrintAttrSpaceReset(str,"symbol", temp);
-}
-
-// --- samp_meng.NewSymbolReqMsg.base.CopyOut
-// Copy fields out of row
-void samp_meng::parent_CopyOut(samp_meng::NewSymbolReqMsg &row, samp_meng::MsgHeader &out) {
-    // type: field value is computed
-    // length: field value is computed
-    (void)row;//only to avoid -Wunused-parameter
-    (void)out;//only to avoid -Wunused-parameter
-}
-
-// --- samp_meng.NewSymbolReqMsg..ReadFieldMaybe
-bool samp_meng::NewSymbolReqMsg_ReadFieldMaybe(samp_meng::NewSymbolReqMsg& parent, algo::strptr field, algo::strptr strval) {
-    bool retval = true;
-    samp_meng::FieldId field_id;
-    (void)value_SetStrptrMaybe(field_id,field);
-    switch(field_id) {
-        case samp_meng_FieldId_base: {
-            retval = false;
-        } break;
-        case samp_meng_FieldId_type: {
-            retval = false;
-        } break;
-        case samp_meng_FieldId_length: {
-            retval = false;
-        } break;
-        case samp_meng_FieldId_symbol: {
-            retval = samp_meng::Symbol_ReadStrptrMaybe(parent.symbol, strval);
-        } break;
-        default: {
-            retval = false;
-            algo_lib::AppendErrtext("comment", "unrecognized attr");
-        } break;
-    }
-    if (!retval) {
-        algo_lib::AppendErrtext("attr",field);
-    }
-    return retval;
-}
-
-// --- samp_meng.NewSymbolReqMsg..ReadStrptrMaybe
-// Read fields of samp_meng::NewSymbolReqMsg from an ascii string.
-// The format of the string is an ssim Tuple
-bool samp_meng::NewSymbolReqMsg_ReadStrptrMaybe(samp_meng::NewSymbolReqMsg &parent, algo::strptr in_str) {
-    bool retval = true;
-    retval = algo::StripTypeTag(in_str, "samp_meng.NewSymbolReqMsg");
-    ind_beg(algo::Attr_curs, attr, in_str) {
-        retval = retval && NewSymbolReqMsg_ReadFieldMaybe(parent, attr.name, attr.value);
-    }ind_end;
-    return retval;
-}
-
-// --- samp_meng.NewSymbolReqMsg..Print
-// print string representation of ROW to string STR
-// cfmt:samp_meng.NewSymbolReqMsg.String  printfmt:Tuple
-void samp_meng::NewSymbolReqMsg_Print(samp_meng::NewSymbolReqMsg& row, algo::cstring& str) {
-    algo::tempstr temp;
-    str << "samp_meng.NewSymbolReqMsg";
-
-    samp_meng::Symbol_Print(row.symbol, temp);
-    PrintAttrSpaceReset(str,"symbol", temp);
-}
-
-// --- samp_meng.NewUserMsg.base.CopyOut
-// Copy fields out of row
-void samp_meng::parent_CopyOut(samp_meng::NewUserMsg &row, samp_meng::MsgHeader &out) {
-    // type: field value is computed
-    // length: field value is computed
-    (void)row;//only to avoid -Wunused-parameter
-    (void)out;//only to avoid -Wunused-parameter
-}
-
-// --- samp_meng.NewUserMsg..ReadFieldMaybe
-bool samp_meng::NewUserMsg_ReadFieldMaybe(samp_meng::NewUserMsg& parent, algo::strptr field, algo::strptr strval) {
-    bool retval = true;
-    samp_meng::FieldId field_id;
-    (void)value_SetStrptrMaybe(field_id,field);
-    switch(field_id) {
-        case samp_meng_FieldId_base: {
-            retval = false;
-        } break;
-        case samp_meng_FieldId_type: {
-            retval = false;
-        } break;
-        case samp_meng_FieldId_length: {
-            retval = false;
-        } break;
-        case samp_meng_FieldId_user: {
-            retval = u32_ReadStrptrMaybe(parent.user, strval);
-        } break;
-        default: {
-            retval = false;
-            algo_lib::AppendErrtext("comment", "unrecognized attr");
-        } break;
-    }
-    if (!retval) {
-        algo_lib::AppendErrtext("attr",field);
-    }
-    return retval;
-}
-
-// --- samp_meng.NewUserMsg..ReadStrptrMaybe
-// Read fields of samp_meng::NewUserMsg from an ascii string.
-// The format of the string is an ssim Tuple
-bool samp_meng::NewUserMsg_ReadStrptrMaybe(samp_meng::NewUserMsg &parent, algo::strptr in_str) {
-    bool retval = true;
-    retval = algo::StripTypeTag(in_str, "samp_meng.NewUserMsg");
-    ind_beg(algo::Attr_curs, attr, in_str) {
-        retval = retval && NewUserMsg_ReadFieldMaybe(parent, attr.name, attr.value);
-    }ind_end;
-    return retval;
-}
-
-// --- samp_meng.NewUserMsg..Print
-// print string representation of ROW to string STR
-// cfmt:samp_meng.NewUserMsg.String  printfmt:Tuple
-void samp_meng::NewUserMsg_Print(samp_meng::NewUserMsg& row, algo::cstring& str) {
-    algo::tempstr temp;
-    str << "samp_meng.NewUserMsg";
-
-    u32_Print(row.user, temp);
-    PrintAttrSpaceReset(str,"user", temp);
-}
-
-// --- samp_meng.NewUserReqMsg.base.CopyOut
-// Copy fields out of row
-void samp_meng::parent_CopyOut(samp_meng::NewUserReqMsg &row, samp_meng::MsgHeader &out) {
-    // type: field value is computed
-    // length: field value is computed
-    (void)row;//only to avoid -Wunused-parameter
-    (void)out;//only to avoid -Wunused-parameter
-}
-
-// --- samp_meng.NewUserReqMsg..ReadFieldMaybe
-bool samp_meng::NewUserReqMsg_ReadFieldMaybe(samp_meng::NewUserReqMsg& parent, algo::strptr field, algo::strptr strval) {
-    bool retval = true;
-    samp_meng::FieldId field_id;
-    (void)value_SetStrptrMaybe(field_id,field);
-    switch(field_id) {
-        case samp_meng_FieldId_base: {
-            retval = false;
-        } break;
-        case samp_meng_FieldId_type: {
-            retval = false;
-        } break;
-        case samp_meng_FieldId_length: {
-            retval = false;
-        } break;
-        case samp_meng_FieldId_user: {
-            retval = u32_ReadStrptrMaybe(parent.user, strval);
-        } break;
-        default: {
-            retval = false;
-            algo_lib::AppendErrtext("comment", "unrecognized attr");
-        } break;
-    }
-    if (!retval) {
-        algo_lib::AppendErrtext("attr",field);
-    }
-    return retval;
-}
-
-// --- samp_meng.NewUserReqMsg..ReadStrptrMaybe
-// Read fields of samp_meng::NewUserReqMsg from an ascii string.
-// The format of the string is an ssim Tuple
-bool samp_meng::NewUserReqMsg_ReadStrptrMaybe(samp_meng::NewUserReqMsg &parent, algo::strptr in_str) {
-    bool retval = true;
-    retval = algo::StripTypeTag(in_str, "samp_meng.NewUserReqMsg");
-    ind_beg(algo::Attr_curs, attr, in_str) {
-        retval = retval && NewUserReqMsg_ReadFieldMaybe(parent, attr.name, attr.value);
-    }ind_end;
-    return retval;
-}
-
-// --- samp_meng.NewUserReqMsg..Print
-// print string representation of ROW to string STR
-// cfmt:samp_meng.NewUserReqMsg.String  printfmt:Tuple
-void samp_meng::NewUserReqMsg_Print(samp_meng::NewUserReqMsg& row, algo::cstring& str) {
-    algo::tempstr temp;
-    str << "samp_meng.NewUserReqMsg";
-
-    u32_Print(row.user, temp);
-    PrintAttrSpaceReset(str,"user", temp);
-}
-
-// --- samp_meng.OrderTradeMsg.base.CopyOut
-// Copy fields out of row
-void samp_meng::parent_CopyOut(samp_meng::OrderTradeMsg &row, samp_meng::MsgHeader &out) {
-    // type: field value is computed
-    // length: field value is computed
-    (void)row;//only to avoid -Wunused-parameter
-    (void)out;//only to avoid -Wunused-parameter
-}
-
-// --- samp_meng.OrderTradeMsg..ReadFieldMaybe
-bool samp_meng::OrderTradeMsg_ReadFieldMaybe(samp_meng::OrderTradeMsg& parent, algo::strptr field, algo::strptr strval) {
-    bool retval = true;
-    samp_meng::FieldId field_id;
-    (void)value_SetStrptrMaybe(field_id,field);
-    switch(field_id) {
-        case samp_meng_FieldId_base: {
-            retval = false;
-        } break;
-        case samp_meng_FieldId_type: {
-            retval = false;
-        } break;
-        case samp_meng_FieldId_length: {
-            retval = false;
-        } break;
-        case samp_meng_FieldId_order: {
-            retval = u64_ReadStrptrMaybe(parent.order, strval);
-        } break;
-        case samp_meng_FieldId_qty: {
-            retval = u32_ReadStrptrMaybe(parent.qty, strval);
-        } break;
-        case samp_meng_FieldId_price: {
-            retval = samp_meng::I64Price8_ReadStrptrMaybe(parent.price, strval);
-        } break;
-        default: {
-            retval = false;
-            algo_lib::AppendErrtext("comment", "unrecognized attr");
-        } break;
-    }
-    if (!retval) {
-        algo_lib::AppendErrtext("attr",field);
-    }
-    return retval;
-}
-
-// --- samp_meng.OrderTradeMsg..ReadStrptrMaybe
-// Read fields of samp_meng::OrderTradeMsg from an ascii string.
-// The format of the string is an ssim Tuple
-bool samp_meng::OrderTradeMsg_ReadStrptrMaybe(samp_meng::OrderTradeMsg &parent, algo::strptr in_str) {
-    bool retval = true;
-    retval = algo::StripTypeTag(in_str, "samp_meng.OrderTradeMsg");
-    ind_beg(algo::Attr_curs, attr, in_str) {
-        retval = retval && OrderTradeMsg_ReadFieldMaybe(parent, attr.name, attr.value);
-    }ind_end;
-    return retval;
-}
-
-// --- samp_meng.OrderTradeMsg..Print
-// print string representation of ROW to string STR
-// cfmt:samp_meng.OrderTradeMsg.String  printfmt:Tuple
-void samp_meng::OrderTradeMsg_Print(samp_meng::OrderTradeMsg& row, algo::cstring& str) {
-    algo::tempstr temp;
-    str << "samp_meng.OrderTradeMsg";
-
-    u64_Print(row.order, temp);
-    PrintAttrSpaceReset(str,"order", temp);
-
-    u32_Print(row.qty, temp);
-    PrintAttrSpaceReset(str,"qty", temp);
-
-    samp_meng::I64Price8_Print(row.price, temp);
-    PrintAttrSpaceReset(str,"price", temp);
-}
-
-// --- samp_meng.TextMsg.base.CopyOut
-// Copy fields out of row
-void samp_meng::parent_CopyOut(samp_meng::TextMsg &row, samp_meng::MsgHeader &out) {
-    // type: field value is computed
-    // length: field value is computed
-    (void)row;//only to avoid -Wunused-parameter
-    (void)out;//only to avoid -Wunused-parameter
-}
-
-// --- samp_meng.TextMsg.text.Getary
-// Access var-length portion as an aryptr. Length is determined from one of the fields.
-algo::aryptr<char> samp_meng::text_Getary(samp_meng::TextMsg& parent) {
-    return algo::aryptr<char>(text_Addr(parent), text_N(parent));
-}
-
-// --- samp_meng.TextMsg.text.Addr
-char* samp_meng::text_Addr(samp_meng::TextMsg& parent) {
-    return (char*)((u8*)&parent + sizeof(samp_meng::TextMsg)); // address of varlen portion
-}
-
-// --- samp_meng.TextMsg.text.ReadStrptrMaybe
-// Convert string to field. Return success value
-bool samp_meng::text_ReadStrptrMaybe(samp_meng::TextMsg& parent, algo::strptr in_str) {
-    bool retval = true;
-    if (algo_lib::_db.varlenbuf) {
-        ary_Addary(*algo_lib::_db.varlenbuf, strptr_ToMemptr(in_str));
-    }
-    (void)parent;//only to avoid -Wunused-parameter
-    return retval;
-}
-
-// --- samp_meng.TextMsg.text.Print
-// Convert text to a string.
-// Array is printed as a regular string.
-void samp_meng::text_Print(samp_meng::TextMsg& parent, algo::cstring &rhs) {
-    rhs << text_Getary(parent);
-}
-
-// --- samp_meng.TextMsg..ReadFieldMaybe
-bool samp_meng::TextMsg_ReadFieldMaybe(samp_meng::TextMsg& parent, algo::strptr field, algo::strptr strval) {
-    bool retval = true;
-    samp_meng::FieldId field_id;
-    (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
-    switch(field_id) {
-        case samp_meng_FieldId_base: {
-            retval = false;
-        } break;
-        case samp_meng_FieldId_type: {
-            retval = false;
-        } break;
-        case samp_meng_FieldId_length: {
-            retval = false;
-        } break;
-        case samp_meng_FieldId_text: {
-            retval = text_ReadStrptrMaybe(parent, strval);
-        } break;
-        default: {
-            retval = false;
-            algo_lib::AppendErrtext("comment", "unrecognized attr");
-        } break;
-    }
-    if (!retval) {
-        algo_lib::AppendErrtext("attr",field);
-    }
-    return retval;
-}
-
-// --- samp_meng.TextMsg..ReadStrptrMaybe
-// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
-// Read fields of samp_meng::TextMsg from an ascii string.
-// The format of the string is an ssim Tuple
-bool samp_meng::TextMsg_ReadStrptrMaybe(samp_meng::TextMsg &parent, algo::strptr in_str) {
-    bool retval = true;
-    retval = algo::StripTypeTag(in_str, "samp_meng.TextMsg");
-    ind_beg(algo::Attr_curs, attr, in_str) {
-        retval = retval && TextMsg_ReadFieldMaybe(parent, attr.name, attr.value);
-    }ind_end;
-    return retval;
-}
-
-// --- samp_meng.TextMsg..Print
-// print string representation of ROW to string STR
-// cfmt:samp_meng.TextMsg.String  printfmt:Tuple
-void samp_meng::TextMsg_Print(samp_meng::TextMsg& row, algo::cstring& str) {
-    algo::tempstr temp;
-    str << "samp_meng.TextMsg";
-
-    samp_meng::text_Print(row, temp);
-    PrintAttrSpaceReset(str,"text", temp);
-}
-
 // --- samp_meng...SizeCheck
 inline static void samp_meng::SizeCheck() {
 }
 
 // --- samp_meng...StaticCheck
 void samp_meng::StaticCheck() {
-    algo_assert(_offset_of(samp_meng::CancelOrderMsg, order) + sizeof(((samp_meng::CancelOrderMsg*)0)->order) == sizeof(samp_meng::CancelOrderMsg));
-    algo_assert(_offset_of(samp_meng::CancelReqMsg, order) + sizeof(((samp_meng::CancelReqMsg*)0)->order) == sizeof(samp_meng::CancelReqMsg));
-    algo_assert(_offset_of(samp_meng::trace, dispatch_In_Unkmsg_cycles) + sizeof(((samp_meng::trace*)0)->dispatch_In_Unkmsg_cycles) == sizeof(samp_meng::trace));
-    algo_assert(_offset_of(samp_meng::I64Price8, value) + sizeof(((samp_meng::I64Price8*)0)->value) == sizeof(samp_meng::I64Price8));
-    algo_assert(_offset_of(samp_meng::Symbol, symbol) + sizeof(((samp_meng::Symbol*)0)->symbol) == sizeof(samp_meng::Symbol));
     algo_assert(_offset_of(samp_meng::FieldId, value) + sizeof(((samp_meng::FieldId*)0)->value) == sizeof(samp_meng::FieldId));
     algo_assert(_offset_of(samp_meng::InCase, value) + sizeof(((samp_meng::InCase*)0)->value) == sizeof(samp_meng::InCase));
-    algo_assert(_offset_of(samp_meng::MassCancelReqMsg, user) + sizeof(((samp_meng::MassCancelReqMsg*)0)->user) == sizeof(samp_meng::MassCancelReqMsg));
-    algo_assert(_offset_of(samp_meng::MsgHeader, length) + sizeof(((samp_meng::MsgHeader*)0)->length) == sizeof(samp_meng::MsgHeader));
-    algo_assert(_offset_of(samp_meng::MsgHeaderMsgsCase, value) + sizeof(((samp_meng::MsgHeaderMsgsCase*)0)->value) == sizeof(samp_meng::MsgHeaderMsgsCase));
-    algo_assert(_offset_of(samp_meng::MsgHeader_curs, msglen) + sizeof(((samp_meng::MsgHeader_curs*)0)->msglen) == sizeof(samp_meng::MsgHeader_curs));
-    algo_assert(_offset_of(samp_meng::NewOrderMsg, qty) + sizeof(((samp_meng::NewOrderMsg*)0)->qty) == sizeof(samp_meng::NewOrderMsg));
-    algo_assert(_offset_of(samp_meng::NewOrderReqMsg, user) + sizeof(((samp_meng::NewOrderReqMsg*)0)->user) == sizeof(samp_meng::NewOrderReqMsg));
-    algo_assert(_offset_of(samp_meng::NewSymbolMsg, symbol) + sizeof(((samp_meng::NewSymbolMsg*)0)->symbol) == sizeof(samp_meng::NewSymbolMsg));
-    algo_assert(_offset_of(samp_meng::NewSymbolReqMsg, symbol) + sizeof(((samp_meng::NewSymbolReqMsg*)0)->symbol) == sizeof(samp_meng::NewSymbolReqMsg));
-    algo_assert(_offset_of(samp_meng::NewUserMsg, user) + sizeof(((samp_meng::NewUserMsg*)0)->user) == sizeof(samp_meng::NewUserMsg));
-    algo_assert(_offset_of(samp_meng::NewUserReqMsg, user) + sizeof(((samp_meng::NewUserReqMsg*)0)->user) == sizeof(samp_meng::NewUserReqMsg));
-    algo_assert(_offset_of(samp_meng::OrderTradeMsg, price) + sizeof(((samp_meng::OrderTradeMsg*)0)->price) == sizeof(samp_meng::OrderTradeMsg));
-}
-
-// --- samp_meng.In.CancelReqMsg.UpdateCycles
-void samp_meng::In_CancelReqMsg_UpdateCycles() {
-    u64 cur_cycles = algo::get_cycles();
-    samp_meng::_db.trace.dispatch_In_CancelReqMsg_cycles += cur_cycles - algo_lib::_db.clock;
-    algo_lib::_db.clock = algo::SchedTime(cur_cycles);
-}
-
-// --- samp_meng.In.MassCancelReqMsg.UpdateCycles
-void samp_meng::In_MassCancelReqMsg_UpdateCycles() {
-    u64 cur_cycles = algo::get_cycles();
-    samp_meng::_db.trace.dispatch_In_MassCancelReqMsg_cycles += cur_cycles - algo_lib::_db.clock;
-    algo_lib::_db.clock = algo::SchedTime(cur_cycles);
-}
-
-// --- samp_meng.In.NewOrderReqMsg.UpdateCycles
-void samp_meng::In_NewOrderReqMsg_UpdateCycles() {
-    u64 cur_cycles = algo::get_cycles();
-    samp_meng::_db.trace.dispatch_In_NewOrderReqMsg_cycles += cur_cycles - algo_lib::_db.clock;
-    algo_lib::_db.clock = algo::SchedTime(cur_cycles);
-}
-
-// --- samp_meng.In.NewSymbolReqMsg.UpdateCycles
-void samp_meng::In_NewSymbolReqMsg_UpdateCycles() {
-    u64 cur_cycles = algo::get_cycles();
-    samp_meng::_db.trace.dispatch_In_NewSymbolReqMsg_cycles += cur_cycles - algo_lib::_db.clock;
-    algo_lib::_db.clock = algo::SchedTime(cur_cycles);
-}
-
-// --- samp_meng.In.NewUserReqMsg.UpdateCycles
-void samp_meng::In_NewUserReqMsg_UpdateCycles() {
-    u64 cur_cycles = algo::get_cycles();
-    samp_meng::_db.trace.dispatch_In_NewUserReqMsg_cycles += cur_cycles - algo_lib::_db.clock;
-    algo_lib::_db.clock = algo::SchedTime(cur_cycles);
-}
-
-// --- samp_meng.In.TextMsg.UpdateCycles
-void samp_meng::In_TextMsg_UpdateCycles() {
-    u64 cur_cycles = algo::get_cycles();
-    samp_meng::_db.trace.dispatch_In_TextMsg_cycles += cur_cycles - algo_lib::_db.clock;
-    algo_lib::_db.clock = algo::SchedTime(cur_cycles);
 }
 
 // --- samp_meng.In..DispatchRaw
 int samp_meng::InDispatchRaw(samp_meng::InCase type, u8 *msg, u32 len) {
     int ret = 0;
     switch(type) {
-        case 11: if (sizeof(samp_meng::CancelReqMsg) <= len) {
-            ++samp_meng::_db.trace.dispatch_In_CancelReqMsg;
-            samp_meng::In_CancelReqMsg((samp_meng::CancelReqMsg&)*msg);
-            samp_meng::In_CancelReqMsg_UpdateCycles();
-            ret = (int)sizeof(samp_meng::CancelReqMsg);
+        case 2001: if (sizeof(ams::SampMengCancelReqMsg) <= len) {
+            samp_meng::In_SampMengCancelReqMsg((ams::SampMengCancelReqMsg&)*msg);
+            ret = (int)sizeof(ams::SampMengCancelReqMsg);
         } break;
-        case 12: if (sizeof(samp_meng::MassCancelReqMsg) <= len) {
-            ++samp_meng::_db.trace.dispatch_In_MassCancelReqMsg;
-            samp_meng::In_MassCancelReqMsg((samp_meng::MassCancelReqMsg&)*msg);
-            samp_meng::In_MassCancelReqMsg_UpdateCycles();
-            ret = (int)sizeof(samp_meng::MassCancelReqMsg);
+        case 2002: if (sizeof(ams::SampMengMassCancelReqMsg) <= len) {
+            samp_meng::In_SampMengMassCancelReqMsg((ams::SampMengMassCancelReqMsg&)*msg);
+            ret = (int)sizeof(ams::SampMengMassCancelReqMsg);
         } break;
-        case 10: if (sizeof(samp_meng::NewOrderReqMsg) <= len) {
-            ++samp_meng::_db.trace.dispatch_In_NewOrderReqMsg;
-            samp_meng::In_NewOrderReqMsg((samp_meng::NewOrderReqMsg&)*msg);
-            samp_meng::In_NewOrderReqMsg_UpdateCycles();
-            ret = (int)sizeof(samp_meng::NewOrderReqMsg);
+        case 2004: if (sizeof(ams::SampMengNewOrderReqMsg) <= len) {
+            samp_meng::In_SampMengNewOrderReqMsg((ams::SampMengNewOrderReqMsg&)*msg);
+            ret = (int)sizeof(ams::SampMengNewOrderReqMsg);
         } break;
-        case 13: if (sizeof(samp_meng::NewSymbolReqMsg) <= len) {
-            ++samp_meng::_db.trace.dispatch_In_NewSymbolReqMsg;
-            samp_meng::In_NewSymbolReqMsg((samp_meng::NewSymbolReqMsg&)*msg);
-            samp_meng::In_NewSymbolReqMsg_UpdateCycles();
-            ret = (int)sizeof(samp_meng::NewSymbolReqMsg);
+        case 2006: if (sizeof(ams::SampMengNewSymbolReqMsg) <= len) {
+            samp_meng::In_SampMengNewSymbolReqMsg((ams::SampMengNewSymbolReqMsg&)*msg);
+            ret = (int)sizeof(ams::SampMengNewSymbolReqMsg);
         } break;
-        case 14: if (sizeof(samp_meng::NewUserReqMsg) <= len) {
-            ++samp_meng::_db.trace.dispatch_In_NewUserReqMsg;
-            samp_meng::In_NewUserReqMsg((samp_meng::NewUserReqMsg&)*msg);
-            samp_meng::In_NewUserReqMsg_UpdateCycles();
-            ret = (int)sizeof(samp_meng::NewUserReqMsg);
+        case 2008: if (sizeof(ams::SampMengNewUserReqMsg) <= len) {
+            samp_meng::In_SampMengNewUserReqMsg((ams::SampMengNewUserReqMsg&)*msg);
+            ret = (int)sizeof(ams::SampMengNewUserReqMsg);
         } break;
-        case 7: if (sizeof(samp_meng::TextMsg) <= len) {
-            ++samp_meng::_db.trace.dispatch_In_TextMsg;
-            samp_meng::In_TextMsg((samp_meng::TextMsg&)*msg);
-            samp_meng::In_TextMsg_UpdateCycles();
-            ret = (int)sizeof(samp_meng::TextMsg);
+        case 2010: if (sizeof(ams::SampMengTextMsg) <= len) {
+            samp_meng::In_SampMengTextMsg((ams::SampMengTextMsg&)*msg);
+            ret = (int)sizeof(ams::SampMengTextMsg);
         } break;
         default:
-        ++samp_meng::_db.trace.dispatch_In_Unkmsg;
         break;
     }
     return ret;
 }
 
 // --- samp_meng.In..Dispatch
-int samp_meng::InDispatch(samp_meng::MsgHeader& msg) {
+int samp_meng::InDispatch(ams::MsgHeader& msg) {
     return InDispatchRaw(samp_meng::InCase(msg.type), (u8*)&msg, i32(msg.length));
 }
 
 // --- samp_meng.In..Dispatch2
 // void rettype useful for hooks
-void samp_meng::vInDispatch(samp_meng::MsgHeader& msg) {
+void samp_meng::vInDispatch(ams::MsgHeader& msg) {
     InDispatch(msg);
 }
 
@@ -3910,103 +1864,36 @@ void samp_meng::vInDispatch(samp_meng::MsgHeader& msg) {
 // Print message to STR. If message is too short for MSG_LEN, print nothing.
 // MSG.LENGTH must have already been validated against msg_len.
 // This function will additionally validate that sizeof(Msg) <= msg_len
-bool samp_meng::In_Print(algo::cstring &str, samp_meng::MsgHeader &msg, u32 msg_len) {
+bool samp_meng::In_Print(algo::cstring &str, ams::MsgHeader &msg, u32 msg_len) {
     switch(msg.type) {
-        case 11: {
-            if (sizeof(samp_meng::CancelReqMsg) > msg_len) { return false; }
-            CancelReqMsg_Print((samp_meng::CancelReqMsg&)(msg), str);
+        case 2001: {
+            if (sizeof(ams::SampMengCancelReqMsg) > msg_len) { return false; }
+            SampMengCancelReqMsg_Print((ams::SampMengCancelReqMsg&)(msg), str);
             return true;
         }
-        case 12: {
-            if (sizeof(samp_meng::MassCancelReqMsg) > msg_len) { return false; }
-            MassCancelReqMsg_Print((samp_meng::MassCancelReqMsg&)(msg), str);
+        case 2002: {
+            if (sizeof(ams::SampMengMassCancelReqMsg) > msg_len) { return false; }
+            SampMengMassCancelReqMsg_Print((ams::SampMengMassCancelReqMsg&)(msg), str);
             return true;
         }
-        case 10: {
-            if (sizeof(samp_meng::NewOrderReqMsg) > msg_len) { return false; }
-            NewOrderReqMsg_Print((samp_meng::NewOrderReqMsg&)(msg), str);
+        case 2004: {
+            if (sizeof(ams::SampMengNewOrderReqMsg) > msg_len) { return false; }
+            SampMengNewOrderReqMsg_Print((ams::SampMengNewOrderReqMsg&)(msg), str);
             return true;
         }
-        case 13: {
-            if (sizeof(samp_meng::NewSymbolReqMsg) > msg_len) { return false; }
-            NewSymbolReqMsg_Print((samp_meng::NewSymbolReqMsg&)(msg), str);
+        case 2006: {
+            if (sizeof(ams::SampMengNewSymbolReqMsg) > msg_len) { return false; }
+            SampMengNewSymbolReqMsg_Print((ams::SampMengNewSymbolReqMsg&)(msg), str);
             return true;
         }
-        case 14: {
-            if (sizeof(samp_meng::NewUserReqMsg) > msg_len) { return false; }
-            NewUserReqMsg_Print((samp_meng::NewUserReqMsg&)(msg), str);
+        case 2008: {
+            if (sizeof(ams::SampMengNewUserReqMsg) > msg_len) { return false; }
+            SampMengNewUserReqMsg_Print((ams::SampMengNewUserReqMsg&)(msg), str);
             return true;
         }
-        case 7: {
-            if (sizeof(samp_meng::TextMsg) > msg_len) { return false; }
-            TextMsg_Print((samp_meng::TextMsg&)(msg), str);
-            return true;
-        }
-        default:
-
-        return false;
-    }
-}
-
-// --- samp_meng.MsgHeaderMsgs..Print
-// Print message to STR. If message is too short for MSG_LEN, print nothing.
-// MSG.LENGTH must have already been validated against msg_len.
-// This function will additionally validate that sizeof(Msg) <= msg_len
-bool samp_meng::MsgHeaderMsgs_Print(algo::cstring &str, samp_meng::MsgHeader &msg, u32 msg_len) {
-    switch(msg.type) {
-        case 3: {
-            if (sizeof(samp_meng::CancelOrderMsg) > msg_len) { return false; }
-            CancelOrderMsg_Print((samp_meng::CancelOrderMsg&)(msg), str);
-            return true;
-        }
-        case 11: {
-            if (sizeof(samp_meng::CancelReqMsg) > msg_len) { return false; }
-            CancelReqMsg_Print((samp_meng::CancelReqMsg&)(msg), str);
-            return true;
-        }
-        case 12: {
-            if (sizeof(samp_meng::MassCancelReqMsg) > msg_len) { return false; }
-            MassCancelReqMsg_Print((samp_meng::MassCancelReqMsg&)(msg), str);
-            return true;
-        }
-        case 2: {
-            if (sizeof(samp_meng::NewOrderMsg) > msg_len) { return false; }
-            NewOrderMsg_Print((samp_meng::NewOrderMsg&)(msg), str);
-            return true;
-        }
-        case 10: {
-            if (sizeof(samp_meng::NewOrderReqMsg) > msg_len) { return false; }
-            NewOrderReqMsg_Print((samp_meng::NewOrderReqMsg&)(msg), str);
-            return true;
-        }
-        case 5: {
-            if (sizeof(samp_meng::NewSymbolMsg) > msg_len) { return false; }
-            NewSymbolMsg_Print((samp_meng::NewSymbolMsg&)(msg), str);
-            return true;
-        }
-        case 13: {
-            if (sizeof(samp_meng::NewSymbolReqMsg) > msg_len) { return false; }
-            NewSymbolReqMsg_Print((samp_meng::NewSymbolReqMsg&)(msg), str);
-            return true;
-        }
-        case 6: {
-            if (sizeof(samp_meng::NewUserMsg) > msg_len) { return false; }
-            NewUserMsg_Print((samp_meng::NewUserMsg&)(msg), str);
-            return true;
-        }
-        case 14: {
-            if (sizeof(samp_meng::NewUserReqMsg) > msg_len) { return false; }
-            NewUserReqMsg_Print((samp_meng::NewUserReqMsg&)(msg), str);
-            return true;
-        }
-        case 4: {
-            if (sizeof(samp_meng::OrderTradeMsg) > msg_len) { return false; }
-            OrderTradeMsg_Print((samp_meng::OrderTradeMsg&)(msg), str);
-            return true;
-        }
-        case 7: {
-            if (sizeof(samp_meng::TextMsg) > msg_len) { return false; }
-            TextMsg_Print((samp_meng::TextMsg&)(msg), str);
+        case 2010: {
+            if (sizeof(ams::SampMengTextMsg) > msg_len) { return false; }
+            SampMengTextMsg_Print((ams::SampMengTextMsg&)(msg), str);
             return true;
         }
         default:
@@ -4025,48 +1912,48 @@ samp_meng::InCase samp_meng::In_ReadStrptr(algo::strptr str, algo::ByteAry &buf)
     samp_meng::InCase msgtype;
     value_SetStrptrMaybe(msgtype, msgtype_str); // map string -> enum
     switch (value_GetEnum(msgtype)) { // what message is it?
-        case samp_meng_InCase_samp_meng_CancelReqMsg: {
-            int len = sizeof(samp_meng::CancelReqMsg);
-            samp_meng::CancelReqMsg *ctype = new(ary_AllocN(buf, len).elems) samp_meng::CancelReqMsg; // default values
-            ok = CancelReqMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
-        } break; // samp_meng::CancelReqMsg case
+        case samp_meng_InCase_ams_SampMengCancelReqMsg: {
+            int len = sizeof(ams::SampMengCancelReqMsg);
+            ams::SampMengCancelReqMsg *ctype = new(ary_AllocN(buf, len).elems) ams::SampMengCancelReqMsg; // default values
+            ok = SampMengCancelReqMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
+        } break; // ams::SampMengCancelReqMsg case
 
-        case samp_meng_InCase_samp_meng_MassCancelReqMsg: {
-            int len = sizeof(samp_meng::MassCancelReqMsg);
-            samp_meng::MassCancelReqMsg *ctype = new(ary_AllocN(buf, len).elems) samp_meng::MassCancelReqMsg; // default values
-            ok = MassCancelReqMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
-        } break; // samp_meng::MassCancelReqMsg case
+        case samp_meng_InCase_ams_SampMengMassCancelReqMsg: {
+            int len = sizeof(ams::SampMengMassCancelReqMsg);
+            ams::SampMengMassCancelReqMsg *ctype = new(ary_AllocN(buf, len).elems) ams::SampMengMassCancelReqMsg; // default values
+            ok = SampMengMassCancelReqMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
+        } break; // ams::SampMengMassCancelReqMsg case
 
-        case samp_meng_InCase_samp_meng_NewOrderReqMsg: {
-            int len = sizeof(samp_meng::NewOrderReqMsg);
-            samp_meng::NewOrderReqMsg *ctype = new(ary_AllocN(buf, len).elems) samp_meng::NewOrderReqMsg; // default values
-            ok = NewOrderReqMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
-        } break; // samp_meng::NewOrderReqMsg case
+        case samp_meng_InCase_ams_SampMengNewOrderReqMsg: {
+            int len = sizeof(ams::SampMengNewOrderReqMsg);
+            ams::SampMengNewOrderReqMsg *ctype = new(ary_AllocN(buf, len).elems) ams::SampMengNewOrderReqMsg; // default values
+            ok = SampMengNewOrderReqMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
+        } break; // ams::SampMengNewOrderReqMsg case
 
-        case samp_meng_InCase_samp_meng_NewSymbolReqMsg: {
-            int len = sizeof(samp_meng::NewSymbolReqMsg);
-            samp_meng::NewSymbolReqMsg *ctype = new(ary_AllocN(buf, len).elems) samp_meng::NewSymbolReqMsg; // default values
-            ok = NewSymbolReqMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
-        } break; // samp_meng::NewSymbolReqMsg case
+        case samp_meng_InCase_ams_SampMengNewSymbolReqMsg: {
+            int len = sizeof(ams::SampMengNewSymbolReqMsg);
+            ams::SampMengNewSymbolReqMsg *ctype = new(ary_AllocN(buf, len).elems) ams::SampMengNewSymbolReqMsg; // default values
+            ok = SampMengNewSymbolReqMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
+        } break; // ams::SampMengNewSymbolReqMsg case
 
-        case samp_meng_InCase_samp_meng_NewUserReqMsg: {
-            int len = sizeof(samp_meng::NewUserReqMsg);
-            samp_meng::NewUserReqMsg *ctype = new(ary_AllocN(buf, len).elems) samp_meng::NewUserReqMsg; // default values
-            ok = NewUserReqMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
-        } break; // samp_meng::NewUserReqMsg case
+        case samp_meng_InCase_ams_SampMengNewUserReqMsg: {
+            int len = sizeof(ams::SampMengNewUserReqMsg);
+            ams::SampMengNewUserReqMsg *ctype = new(ary_AllocN(buf, len).elems) ams::SampMengNewUserReqMsg; // default values
+            ok = SampMengNewUserReqMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
+        } break; // ams::SampMengNewUserReqMsg case
 
-        case samp_meng_InCase_samp_meng_TextMsg: {
-            int len = sizeof(samp_meng::TextMsg);
-            samp_meng::TextMsg *ctype = new(ary_AllocN(buf, len).elems) samp_meng::TextMsg; // default values
+        case samp_meng_InCase_ams_SampMengTextMsg: {
+            int len = sizeof(ams::SampMengTextMsg);
+            ams::SampMengTextMsg *ctype = new(ary_AllocN(buf, len).elems) ams::SampMengTextMsg; // default values
             algo::ByteAry varlenbuf;
             algo::ByteAry *varlenbuf_save = algo_lib::_db.varlenbuf;
             algo_lib::_db.varlenbuf = &varlenbuf;
-            ok = TextMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
+            ok = SampMengTextMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
             len += ary_N(varlenbuf);
-            ctype->length = u8(len);
+            ctype->length = u32(len);
             ary_Addary(buf, ary_Getary(varlenbuf));
             algo_lib::_db.varlenbuf = varlenbuf_save;
-        } break; // samp_meng::TextMsg case
+        } break; // ams::SampMengTextMsg case
 
         default: break;
     }
@@ -4080,106 +1967,13 @@ bool samp_meng::In_ReadStrptrMaybe(algo::strptr str, algo::ByteAry &buf) {
     return !(msgtype == samp_meng::InCase());
 }
 
-// --- samp_meng.MsgHeaderMsgs..ReadStrptr
-// Parse ascii representation of message into binary, appending new data to BUF.
-samp_meng::MsgHeaderMsgsCase samp_meng::MsgHeaderMsgs_ReadStrptr(algo::strptr str, algo::ByteAry &buf) {
-    bool ok = false;
-    tempstr msgtype_str;
-    algo::StringIter iter(str);
-    cstring_ReadCmdarg(msgtype_str, iter, false); // read first word
-    samp_meng::MsgHeaderMsgsCase msgtype;
-    value_SetStrptrMaybe(msgtype, msgtype_str); // map string -> enum
-    switch (value_GetEnum(msgtype)) { // what message is it?
-        case samp_meng_MsgHeaderMsgsCase_samp_meng_CancelOrderMsg: {
-            int len = sizeof(samp_meng::CancelOrderMsg);
-            samp_meng::CancelOrderMsg *ctype = new(ary_AllocN(buf, len).elems) samp_meng::CancelOrderMsg; // default values
-            ok = CancelOrderMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
-        } break; // samp_meng::CancelOrderMsg case
-
-        case samp_meng_MsgHeaderMsgsCase_samp_meng_CancelReqMsg: {
-            int len = sizeof(samp_meng::CancelReqMsg);
-            samp_meng::CancelReqMsg *ctype = new(ary_AllocN(buf, len).elems) samp_meng::CancelReqMsg; // default values
-            ok = CancelReqMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
-        } break; // samp_meng::CancelReqMsg case
-
-        case samp_meng_MsgHeaderMsgsCase_samp_meng_MassCancelReqMsg: {
-            int len = sizeof(samp_meng::MassCancelReqMsg);
-            samp_meng::MassCancelReqMsg *ctype = new(ary_AllocN(buf, len).elems) samp_meng::MassCancelReqMsg; // default values
-            ok = MassCancelReqMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
-        } break; // samp_meng::MassCancelReqMsg case
-
-        case samp_meng_MsgHeaderMsgsCase_samp_meng_NewOrderMsg: {
-            int len = sizeof(samp_meng::NewOrderMsg);
-            samp_meng::NewOrderMsg *ctype = new(ary_AllocN(buf, len).elems) samp_meng::NewOrderMsg; // default values
-            ok = NewOrderMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
-        } break; // samp_meng::NewOrderMsg case
-
-        case samp_meng_MsgHeaderMsgsCase_samp_meng_NewOrderReqMsg: {
-            int len = sizeof(samp_meng::NewOrderReqMsg);
-            samp_meng::NewOrderReqMsg *ctype = new(ary_AllocN(buf, len).elems) samp_meng::NewOrderReqMsg; // default values
-            ok = NewOrderReqMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
-        } break; // samp_meng::NewOrderReqMsg case
-
-        case samp_meng_MsgHeaderMsgsCase_samp_meng_NewSymbolMsg: {
-            int len = sizeof(samp_meng::NewSymbolMsg);
-            samp_meng::NewSymbolMsg *ctype = new(ary_AllocN(buf, len).elems) samp_meng::NewSymbolMsg; // default values
-            ok = NewSymbolMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
-        } break; // samp_meng::NewSymbolMsg case
-
-        case samp_meng_MsgHeaderMsgsCase_samp_meng_NewSymbolReqMsg: {
-            int len = sizeof(samp_meng::NewSymbolReqMsg);
-            samp_meng::NewSymbolReqMsg *ctype = new(ary_AllocN(buf, len).elems) samp_meng::NewSymbolReqMsg; // default values
-            ok = NewSymbolReqMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
-        } break; // samp_meng::NewSymbolReqMsg case
-
-        case samp_meng_MsgHeaderMsgsCase_samp_meng_NewUserMsg: {
-            int len = sizeof(samp_meng::NewUserMsg);
-            samp_meng::NewUserMsg *ctype = new(ary_AllocN(buf, len).elems) samp_meng::NewUserMsg; // default values
-            ok = NewUserMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
-        } break; // samp_meng::NewUserMsg case
-
-        case samp_meng_MsgHeaderMsgsCase_samp_meng_NewUserReqMsg: {
-            int len = sizeof(samp_meng::NewUserReqMsg);
-            samp_meng::NewUserReqMsg *ctype = new(ary_AllocN(buf, len).elems) samp_meng::NewUserReqMsg; // default values
-            ok = NewUserReqMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
-        } break; // samp_meng::NewUserReqMsg case
-
-        case samp_meng_MsgHeaderMsgsCase_samp_meng_OrderTradeMsg: {
-            int len = sizeof(samp_meng::OrderTradeMsg);
-            samp_meng::OrderTradeMsg *ctype = new(ary_AllocN(buf, len).elems) samp_meng::OrderTradeMsg; // default values
-            ok = OrderTradeMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
-        } break; // samp_meng::OrderTradeMsg case
-
-        case samp_meng_MsgHeaderMsgsCase_samp_meng_TextMsg: {
-            int len = sizeof(samp_meng::TextMsg);
-            samp_meng::TextMsg *ctype = new(ary_AllocN(buf, len).elems) samp_meng::TextMsg; // default values
-            algo::ByteAry varlenbuf;
-            algo::ByteAry *varlenbuf_save = algo_lib::_db.varlenbuf;
-            algo_lib::_db.varlenbuf = &varlenbuf;
-            ok = TextMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
-            len += ary_N(varlenbuf);
-            ctype->length = u8(len);
-            ary_Addary(buf, ary_Getary(varlenbuf));
-            algo_lib::_db.varlenbuf = varlenbuf_save;
-        } break; // samp_meng::TextMsg case
-
-        default: break;
-    }
-    return ok ? msgtype : samp_meng::MsgHeaderMsgsCase();
-}
-
-// --- samp_meng.MsgHeaderMsgs..ReadStrptrMaybe
-// Parse ascii representation of message into binary, appending new data to BUF.
-bool samp_meng::MsgHeaderMsgs_ReadStrptrMaybe(algo::strptr str, algo::ByteAry &buf) {
-    samp_meng::MsgHeaderMsgsCase msgtype = MsgHeaderMsgs_ReadStrptr(str,buf);
-    return !(msgtype == samp_meng::MsgHeaderMsgsCase());
-}
-
 // --- samp_meng...main
 int main(int argc, char **argv) {
     try {
         lib_json::FDb_Init();
         algo_lib::FDb_Init();
+        lib_ams::FDb_Init();
+        lib_netio::FDb_Init();
         samp_meng::FDb_Init();
         algo_lib::_db.argc = argc;
         algo_lib::_db.argv = argv;
@@ -4196,6 +1990,8 @@ int main(int argc, char **argv) {
     }
     try {
         samp_meng::FDb_Uninit();
+        lib_netio::FDb_Uninit();
+        lib_ams::FDb_Uninit();
         algo_lib::FDb_Uninit();
         lib_json::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {

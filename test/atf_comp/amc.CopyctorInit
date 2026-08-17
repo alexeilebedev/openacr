@@ -1,0 +1,41 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/copyctor_init.ssim -out_dir: -report:N algo_lib.Rec..CopyCtor"
+# eof amc
+amc -> // --- algo_lib.Rec..CopyCtor
+amc -> inline  algo_lib::Rec::Rec(const algo_lib::Rec &rhs) {
+amc ->     grow_n = 0; // grow: initialize count
+amc ->     // min size
+amc ->     for (int i = 0; i < 1; i++) {
+amc ->         u32 &elem = grow_Alloc(*this);
+amc ->         (void)elem; // will succeed -- min <= max
+amc ->     }
+amc ->     grow_Setary(*this, grow_Getary(const_cast<algo_lib::Rec&>(rhs)));
+amc ->     for (int i = 0; i < 4; i++) {
+amc ->         fix_elems[i] = u32(gparent.n);
+amc ->     }
+amc ->     fix_Setary(*this, fix_Getary(const_cast<algo_lib::Rec&>(rhs)));
+amc ->     for (int i = 0; i < 4; i++) {
+amc ->         size_elems[i] = u32(ssizeof(*this));
+amc ->     }
+amc ->     size_Setary(*this, size_Getary(const_cast<algo_lib::Rec&>(rhs)));
+amc ->     for (int i = 0; i < 4; i++) {
+amc ->         lit_elems[i] = 7;
+amc ->     }
+amc ->     lit_Setary(*this, lit_Getary(const_cast<algo_lib::Rec&>(rhs)));
+amc ->     for (int i = 0; i < 4; i++) {
+amc ->         str_elems[i] = u32(sizeof("parent"));
+amc ->     }
+amc ->     str_Setary(*this, str_Getary(const_cast<algo_lib::Rec&>(rhs)));
+amc ->     for (int i = 0; i < 4; i++) {
+amc ->         note_elems[i] = u32(1 /* parent */);
+amc ->     }
+amc ->     note_Setary(*this, note_Getary(const_cast<algo_lib::Rec&>(rhs)));
+amc ->     for (int i = 0; i < 4; i++) {
+amc ->         chr_elems[i] = u32('"') + u32(sizeof(*this));
+amc ->     }
+amc ->     chr_Setary(*this, chr_Getary(const_cast<algo_lib::Rec&>(rhs)));
+amc ->     for (int i = 0; i < 4; i++) {
+amc ->         raw_elems[i] = u32(sizeof(R"(a "parent" b)"));
+amc ->     }
+amc ->     raw_Setary(*this, raw_Getary(const_cast<algo_lib::Rec&>(rhs)));
+amc -> }
+# exit amc code:0

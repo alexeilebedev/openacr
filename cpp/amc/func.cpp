@@ -165,9 +165,13 @@ static void FinalizeFunc(amc::FFunc &func) {
 
 // -----------------------------------------------------------------------------
 
+// Append to FUNC's body a call to FIELD's Set<Present> accessor for each
+// pmask of which the field is a member; REF names the parent record
+// (collapsed by ParentArgExpr when the parent is a global)
 void amc::SetPresent(amc::FFunc &func, strptr ref, amc::FField &field) {
+    tempstr arg(ParentArgExpr(*field.p_ctype,ref,false));
     ind_beg(field_c_pmaskfld_member_curs,pmaskfld_member,field) {
-        func.body << name_Get(field)<<"_Set"<<pmaskfld_member.p_pmaskfld->funcname<<"("<<ref<<");" << eol;
+        func.body << name_Get(field)<<"_Set"<<pmaskfld_member.p_pmaskfld->funcname<<"("<<arg<<");" << eol;
     }ind_end;
 }
 
@@ -207,8 +211,23 @@ amc::FFunc &amc::CreateCurFunc(bool proto DFLTVAL(false), algo::strptr funcname 
     func.isalloc      = tfunc.poolfunc;
     func.nothrow      = !tfunc.hasthrow && tfunc.leaf;
     func.ismacro      = tfunc.ismacro;
+    // A field's Print function is reached through a call the generator emits,
+    // which passes the record the field belongs to and the string to print
+    // into. A macro has neither an address nor a parameter list, so no such
+    // call can name it, and the emitted statement does not compile. amc is a
+    // no-throw namespace: the offending tfunc prototype is reported here,
+    // where the flag arrives, and the flag is cleared so the emitters treat
+    // the function as an ordinary one and the run reaches every other defect.
+    if (field && func.ismacro && name == "Print") {
+        prerr("amc.macro_print"
+              <<Keyval("func",func.func)
+              <<Keyval("tfunc",tfunc.tfunc)
+              <<Keyval("comment","a macro cannot serve as a field Print function"));
+        algo_lib::_db.exit_code++;
+        func.ismacro = false;
+    }
     func.pure         = tfunc.pure;
-    if (ch_N(tfunc.comment.value)>0) {
+    if (ch_N(tfunc.comment)>0) {
         func.comment = tempstr()<<tfunc.comment<<"\n";
     }
     func.disable   = tfunc.hasthrow && !GenThrowQ(*func.p_ns);
@@ -436,8 +455,11 @@ bool amc::SetRetType(amc::FFunc &func, amc::FCtype &ctype) {
 
 // -----------------------------------------------------------------------------
 
+// Append to FUNC's body a (void)NAME statement unless NAME is already used
+// in the body (as a whole identifier) or consumed by a constructor
+// initializer; keeps generated functions clean under -Wunused-parameter
 void amc::MaybeUnused(amc::FFunc &func, strptr name) {
-    bool used = FindStr(func.body, name, true)!=-1;
+    bool used = algo::ContainsIdentQ(func.body, name);
     if (!used) {
         ind_beg(algo::StringAry_ary_curs,initializer,func.initializer) {
             if (Pathcomp(initializer,"(LR)RL") == name) {

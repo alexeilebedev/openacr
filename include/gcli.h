@@ -36,11 +36,47 @@ namespace gcli { // update-hdr
     //
     void AssertGitWorkDirClean();
     tempstr GetCurrentGitBranch();
+
+    // Git-safe rendering of a repo or issue key: "/" flattened to "_", usable as
+    // a git remote, branch, or file name (algornd/arnd.33 -> algornd_arnd.33)
+    tempstr GitName(strptr key);
+
+    // Git remote gcli operates through: the git-safe name of the selected repo,
+    // or the repo key itself when only the older slash-named remote is fetched
+    // in this clone.  Resolved once and cached on _db.git_remote.
+    tempstr GitRemote();
+
+    // Iid of the issue BRANCH is bound to, empty if none.  The binding is the
+    // trailing .<iid> of an issue-key-shaped branch name (git-safe or older
+    // slash form), or the commit footer 'closes #<iid> (<branch>)' for branches
+    // named some other way (e.g. by gli).  The (<branch>) suffix pins the footer
+    // to this branch, so commits merged from other branches never match; the
+    // newest matching footer wins.
+    tempstr BranchIssueIid(strptr branch);
+
+    // Full issue key for the issue BRANCH is bound to, empty if none.
+    // The project part comes from the configured repo whose name (git-safe or
+    // slash form) matches the branch's own project part; when the branch does not
+    // carry one (e.g. a gli-named branch), the selected or first active repo.
+    // Callable before repo selection -- the shortcut resolver runs first and the
+    // key it produces is what drives repo selection.
+    tempstr BranchIssue(strptr branch);
+
+    // First local branch bound to issue IID, empty if none
+    tempstr FindIssueBranch(strptr iid);
     void PushGitBranch(strptr remote_name);
     void ParseGitComment(strptr issue_key,tempstr &title,tempstr &description);
     bool CheckGitBranchExists(strptr issue_key);
     void GitCheckoutBranch(strptr target_branch);
+
+    // Create local branch TARGET_BRANCH tracking SOURCE_BRANCH of the repo remote
     void GitCheckoutBranch(strptr target_branch, strptr source_branch);
+
+    // Create the work branch for ISSUE off the repo default branch and seed it
+    // with an empty commit binding the branch to the issue.  The branch is the
+    // git-safe issue key (algornd_arnd.33); the commit carries the issue title,
+    // the description, and the footer 'closes #<iid> (<branch>)' -- the shape
+    // gli recognizes, and the server auto-closes the issue on merge.
     void GitCheckoutMasterBranch(gcli::FIssue &issue);
     void GitRemoveMrBranch(strptr mr_branch);
     //     (user-implemented function, prototype is in amc-generated header)
@@ -134,8 +170,12 @@ namespace gcli { // update-hdr
     //     (user-implemented function, prototype is in amc-generated header)
     // void gclicmd_graphql(gcli::FGclicmd&); // gstatic/gclidb.gclicmd:graphql
     void Main_ShowMrlist();
+
+    // Print a job trace.  -limit tails the trace to its last N lines (0 = full);
+    // errors:Y keeps only error-looking lines (capped at 10, same heuristic
+    // as gli), for a quick read of why a job failed.
     //     (user-implemented function, prototype is in amc-generated header)
-    // void gclicmd_repojobtrace(gcli::FGclicmd&); // gstatic/gclidb.gclicmd:repojobtrace
+    // void gclicmd_repojobtrace(gcli::FGclicmd &gclicmd); // gstatic/gclidb.gclicmd:repojobtrace
     // void gclicmd_repojob(gcli::FGclicmd &gclicmd); // gstatic/gclidb.gclicmd:repojob
     // void gclicmd_mrlist(gcli::FGclicmd &gclicmd); // gstatic/gclidb.gclicmd:mrlist
     // void gclicmd_mrlistdet(gcli::FGclicmd &gclicmd); // gstatic/gclidb.gclicmd:mrlistdet
@@ -154,6 +194,14 @@ namespace gcli { // update-hdr
     //     (user-implemented function, prototype is in amc-generated header)
     // void gtblact_mr_list(gcli::FGtblact &gtblact); // gstatic/gclidb.gtblact:mr_list
     // void gtblact_mrjob_list(gcli::FGtblact &gtblact); // gstatic/gclidb.gtblact:mrjob_list
+
+    // A retry response carries the replacement job; record it like a job listing
+    // void gclicmd_jobretry(gcli::FGclicmd &gclicmd); // gstatic/gclidb.gclicmd:jobretry
+
+    // Retry CI jobs of the selected MR (gitlab only): the failed and canceled
+    // jobs, or with mrjob:<mr>/<regex> the jobs matching the regex regardless of
+    // status.  With an empty selector the MR is resolved from the current branch.
+    // void gtblact_mrjob_retry(gcli::FGtblact &gtblact); // gstatic/gclidb.gtblact:mrjob_retry
     // void gtblact_mr_accept(gcli::FGtblact &gtblact); // gstatic/gclidb.gtblact:mr_accept
     // void gtblact_mr_approve(gcli::FGtblact &gtblact); // gstatic/gclidb.gtblact:mr_approve
     // void gtblact_mr_needs_work(gcli::FGtblact &gtblact); // gstatic/gclidb.gtblact:mr_needs_work
@@ -204,6 +252,30 @@ namespace gcli { // update-hdr
 
     // Set conditions based on the fields
     tempstr SearchGithubSetCond(gcli::FGtblact &gtblact);
+
+    // -------------------------------------------------------------------
+    // cpp/gcli/token.cpp
+    //
+
+    // Print selected token records; the secret appears only in a create response
+    // (list responses never carry it)
+    void Main_ShowTokenlist();
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void gclicmd_tokenlist(gcli::FGclicmd &gclicmd); // gstatic/gclidb.gclicmd:tokenlist
+    // void gclicmd_tokenadd(gcli::FGclicmd &gclicmd); // gstatic/gclidb.gclicmd:tokenadd
+
+    // Revoke returns 204 with no body; nothing to parse
+    // void gclicmd_tokendel(gcli::FGclicmd&); // gstatic/gclidb.gclicmd:tokendel
+    // void gtblact_token_list(gcli::FGtblact &gtblact); // gstatic/gclidb.gtblact:token_list
+
+    // Create a temporary project access token: scope api, role Developer is
+    // implied by the credential, expires the day after tomorrow (the server
+    // retires it even if nobody revokes it).  The created token record is
+    // printed as an ssim tuple -- the one response that carries the secret.
+    // void gtblact_token_create(gcli::FGtblact &gtblact); // gstatic/gclidb.gtblact:token_create
+
+    // Revoke the selected token (gcli token:<proj>.<id> -stop)
+    // void gtblact_token_stop(gcli::FGtblact &gtblact); // gstatic/gclidb.gtblact:token_stop
 
     // -------------------------------------------------------------------
     // cpp/gcli/user.cpp

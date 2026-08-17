@@ -31,8 +31,8 @@
 
 // --- aqlite_FieldIdEnum
 
-enum aqlite_FieldIdEnum {        // aqlite.FieldId.value
-     aqlite_FieldId_value   = 0
+enum aqlite_FieldIdEnum {    // aqlite.FieldId.value
+     aqlite_FieldId_value
 };
 
 enum { aqlite_FieldIdEnum_N = 1 };
@@ -40,7 +40,6 @@ enum { aqlite_FieldIdEnum_N = 1 };
 namespace aqlite { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
 namespace aqlite { // gen:ns_tclass_field
-extern const char *aqlite_help;
 } // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace aqlite { struct trace; }
@@ -56,7 +55,6 @@ struct trace { // aqlite.trace
     inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // print string representation of ROW to string STR
 // cfmt:aqlite.trace.String  printfmt:Tuple
 // func:aqlite.trace..Print
@@ -70,11 +68,8 @@ struct FDb { // aqlite.FDb
     i32               stmt;        //   0
     aqlite::trace     trace;       //
 };
-
-// Read argc,argv directly into the fields of the command line(s)
-// The following fields are updated:
-//     aqlite.FDb.cmdline
-//     algo_lib.FDb.cmdline
+// Read argc,argv into the fields of aqlite.FDb.cmdline (and any base command line)
+// via aqlite_ReadArgv; then apply -help/-version and load floadtuples input.
 // func:aqlite.FDb._db.ReadArgv
 void                 ReadArgv() __attribute__((nothrow));
 // Main loop.
@@ -111,6 +106,10 @@ bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __att
 // Calls Step function of dependencies
 // func:aqlite.FDb._db.Steps
 void                 Steps();
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+// func:aqlite.FDb._db.RemoveStrptrMaybe
+bool                 RemoveStrptrMaybe(algo::strptr str);
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:aqlite.FDb._db.XrefMaybe
@@ -136,7 +135,6 @@ struct FieldId { // aqlite.FieldId: Field read helper
     inline               FieldId(aqlite_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:aqlite.FieldId.value.GetEnum
 inline aqlite_FieldIdEnum value_GetEnum(const aqlite::FieldId& parent) __attribute__((nothrow));
@@ -174,7 +172,7 @@ inline void          FieldId_Init(aqlite::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:aqlite.FieldId.String  printfmt:Raw
 // func:aqlite.FieldId..Print
-void                 FieldId_Print(aqlite::FieldId& row, algo::cstring& str) __attribute__((nothrow));
+void                 FieldId_Print(aqlite::FieldId row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace aqlite { // gen:ns_func
 // func:aqlite...StaticCheck

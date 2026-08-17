@@ -1,0 +1,5 @@
+# start bash cmd:"bash -c 'touch $tempdir/notadir && $bindir/jkv -write -file:$tempdir/notadir/out.json -kv:a=1'"
+# eof bash
+bash -> jkv.error  file:temp/atf_comp/jkv.WriteFail/notadir/out.json  err:"Not a directory"  comment:"edited file"
+bash -> jkv.error  jkv: nothing written
+# exit bash code:1

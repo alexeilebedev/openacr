@@ -3,5 +3,15 @@ dmmeta.basepool  field:algo.cstring.ch  base:algo_lib.FDb.lpool
 dmmeta.basepool  field:algo_lib.FDb.lpool  base:algo_lib.FDb.sbrk
 dmmeta.basepool  field:amc.FDb.lpool  base:algo_lib.FDb.sbrk
 dmmeta.basepool  field:amc_vis.FDb.lpool  base:algo_lib.FDb.sbrk
+dmmeta.basepool  field:atf_amc.FDb.lpool  base:algo_lib.FDb.sbrk
+dmmeta.basepool  field:atf_amc.FDb.msghdrltscale  base:algo_lib.FDb.sbrk
+dmmeta.basepool  field:atf_amc.FDb.optalloc  base:algo_lib.FDb.sbrk
+dmmeta.basepool  field:atf_amc.FDb.optg  base:algo_lib.FDb.sbrk
+dmmeta.basepool  field:atf_amc.FDb.optsigned  base:algo_lib.FDb.sbrk
+dmmeta.basepool  field:atf_amc.FDb.optwide  base:algo_lib.FDb.sbrk
+dmmeta.basepool  field:atf_amc.FDb.varlen_extern  base:algo_lib.FDb.sbrk
+dmmeta.basepool  field:atf_amc.FDb.varlenalloc  base:algo_lib.FDb.sbrk
+dmmeta.basepool  field:atf_amc.FDb.varlenallocscale  base:algo_lib.FDb.sbrk
+dmmeta.basepool  field:atf_amc.Lpoolbuf.in  base:atf_amc.FDb.lpool
 dmmeta.basepool  field:lib_json.FDb.lpool  base:algo_lib.FDb.sbrk
 dmmeta.basepool  field:mdbg.FDb.lpool  base:algo_lib.FDb.sbrk

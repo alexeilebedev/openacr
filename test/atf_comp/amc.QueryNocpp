@@ -1,0 +1,33 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/query_nocpp.ssim -out_dir: -report:N 'ctype:algo_lib.CppWidget|ncns.Widget'"
+# start amc-2 cmd:"$bindir/amc -in_dir:test/amc/query_nocpp.ssim -out_dir: -report:N testdb.%"
+# start amc-3 cmd:"$bindir/amc -in_dir:test/amc/query_nocpp.ssim -out_dir: -report:N testdb.% 2>/dev/null"
+# start amc-4 cmd:"$bindir/amc -in_dir:test/amc/query_nocpp.ssim -out_dir: -report:N '(testdb.%|algo_lib.trace..Ctor)' 2>/dev/null"
+# eof amc-4
+amc-4 -> // --- algo_lib.trace..Ctor
+amc-4 -> inline  algo_lib::trace::trace() {
+amc-4 -> }
+# exit amc-4 code:9
+# eof amc-3
+# exit amc-3 code:9
+# eof amc-2
+amc-2 -> amc.query_nocpp  ns:testdb  ctype:testdb.App  comment:"namespace has no dmmeta.nscpp record and emits no C++"
+amc-2 -> amc.query_nocpp  ns:testdb  ctype:testdb.FieldId  comment:"namespace has no dmmeta.nscpp record and emits no C++"
+amc-2 -> amc.query_nocpp  ns:testdb  func:testdb...SizeCheck  comment:"namespace has no dmmeta.nscpp record and emits no C++"
+amc-2 -> amc.query_nocpp  ns:testdb  func:testdb.App..Ctor  comment:"namespace has no dmmeta.nscpp record and emits no C++"
+amc-2 -> amc.query_nocpp  ns:testdb  func:testdb.FieldId..ReadStrptrMaybe  comment:"namespace has no dmmeta.nscpp record and emits no C++"
+amc-2 -> amc.query_nocpp  ns:testdb  func:testdb.FieldId..Print  comment:"namespace has no dmmeta.nscpp record and emits no C++"
+amc-2 -> amc.query_nocpp  ns:testdb  func:testdb.FieldId..Ctor  comment:"namespace has no dmmeta.nscpp record and emits no C++"
+amc-2 -> amc.query_nocpp  ns:testdb  func:testdb.FieldId..FieldwiseCtor  comment:"namespace has no dmmeta.nscpp record and emits no C++"
+amc-2 -> amc.query_nocpp  ns:testdb  func:testdb.FieldId..EnumCtor  comment:"namespace has no dmmeta.nscpp record and emits no C++"
+amc-2 -> amc.no_output  comment:"no files were modified"
+# exit amc-2 code:9
+# eof amc
+amc -> amc.query_nocpp  ns:ncns  ctype:ncns.Widget  comment:"namespace has no dmmeta.nscpp record and emits no C++"
+amc -> // --- algo_lib.CppWidget
+amc -> struct CppWidget { // algo_lib.CppWidget
+amc ->     u32   value;   //
+amc ->     // func:algo_lib.CppWidget..Ctor
+amc ->     inline               CppWidget() __attribute__((nothrow));
+amc -> };
+amc -> amc.no_output  comment:"no files were modified"
+# exit amc code:1

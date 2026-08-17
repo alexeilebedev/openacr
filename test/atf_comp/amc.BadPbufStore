@@ -1,0 +1,7 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/bad_pbuf_store.ssim -out_dir: -report:N zzz"
+# eof amc
+amc -> amc.pbuf_store  field:pbt.Msg.readonly  reftype:Val  comment:"fpbuf on a singular field with no generated Set; a substr, a falias or a cppfunc with set:N has a Get only"
+amc -> amc.pbuf_store  field:pbt.Msg.port  reftype:Val  comment:"fpbuf on a singular field with no generated Set; a substr, a falias or a cppfunc with set:N has a Get only"
+amc -> amc.pbuf_store  field:pbt.Msg.alias  reftype:Val  comment:"fpbuf on a singular field with no generated Set; a substr, a falias or a cppfunc with set:N has a Get only"
+amc -> amc.no_output  comment:"no files were modified"
+# exit amc code:3

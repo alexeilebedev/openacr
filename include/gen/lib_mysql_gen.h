@@ -29,8 +29,8 @@
 
 // --- lib_mysql_FieldIdEnum
 
-enum lib_mysql_FieldIdEnum {        // lib_mysql.FieldId.value
-     lib_mysql_FieldId_value   = 0
+enum lib_mysql_FieldIdEnum {    // lib_mysql.FieldId.value
+     lib_mysql_FieldId_value
 };
 
 enum { lib_mysql_FieldIdEnum_N = 1 };
@@ -54,7 +54,6 @@ struct trace { // lib_mysql.trace
     inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // print string representation of ROW to string STR
 // cfmt:lib_mysql.trace.String  printfmt:Tuple
 // func:lib_mysql.trace..Print
@@ -66,7 +65,6 @@ struct FDb { // lib_mysql.FDb: In-memory database for lib_mysql
     MYSQL*             mysql;   // optional pointer
     lib_mysql::trace   trace;   //
 };
-
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:lib_mysql.FDb.res.XrefMaybe
@@ -96,6 +94,10 @@ bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __att
 // Calls Step function of dependencies
 // func:lib_mysql.FDb._db.Steps
 void                 Steps();
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+// func:lib_mysql.FDb._db.RemoveStrptrMaybe
+bool                 RemoveStrptrMaybe(algo::strptr str);
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:lib_mysql.FDb._db.XrefMaybe
@@ -127,7 +129,6 @@ struct FieldId { // lib_mysql.FieldId: Field read helper
     inline               FieldId(lib_mysql_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:lib_mysql.FieldId.value.GetEnum
 inline lib_mysql_FieldIdEnum value_GetEnum(const lib_mysql::FieldId& parent) __attribute__((nothrow));
@@ -165,7 +166,7 @@ inline void          FieldId_Init(lib_mysql::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:lib_mysql.FieldId.String  printfmt:Raw
 // func:lib_mysql.FieldId..Print
-void                 FieldId_Print(lib_mysql::FieldId& row, algo::cstring& str) __attribute__((nothrow));
+void                 FieldId_Print(lib_mysql::FieldId row, algo::cstring& str) __attribute__((nothrow));
 
 // --- lib_mysql.Res
 // create: lib_mysql.FDb.res (Cppstack)
@@ -176,7 +177,6 @@ struct Res { // lib_mysql.Res
     // func:lib_mysql.Res..Dtor
     inline               ~Res() __attribute__((nothrow));
 };
-
 // Declaration for user-defined cleanup function
 // User-defined cleanup function invoked for field res of lib_mysql::Res
 // func:lib_mysql.Res.res.Cleanup

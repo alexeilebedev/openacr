@@ -107,6 +107,9 @@ void amc::gen_ns_check_main() {
 
 // -----------------------------------------------------------------------------
 
+// Check that each cascdel field names an unambiguous delete target:
+// more than one instance access path to the field's target leaves
+// unclear which instance a cascade delete should remove.
 void amc::gen_check_cascdel() {
     // todo: disable deletion for fields which have xrefs down to fields
     // that cannot be randomly deleted.
@@ -126,6 +129,20 @@ void amc::gen_check_cascdel() {
                       <<Keyval("reftype",access.reftype)
                       <<Keyval("comment","Could be this one"));
             }ind_end;
+            algo_lib::_db.exit_code++;
+        }
+        // Ptrary and Llist Cascdel delete the last (resp. first) row repeatedly
+        // until the index is empty, relying on each row's delete to unlink the
+        // row from this index.  The row's Uninit emits that unlink only for a
+        // field established as an xref; on a manually populated index nothing
+        // shrinks and the loop re-deletes the same freed row forever.
+        bool needunlink = field.reftype == dmmeta_Reftype_reftype_Ptrary
+            || field.reftype == dmmeta_Reftype_reftype_Llist;
+        if (needunlink && !field.c_xref) {
+            prerr("amc.cascdel_xref"
+                  <<Keyval("field",field.field)
+                  <<Keyval("reftype",field.reftype)
+                  <<Keyval("comment","cascdel deletes rows until the index is empty; without dmmeta.xref the row's delete cannot unlink it"));
             algo_lib::_db.exit_code++;
         }
     }ind_end;
@@ -152,21 +169,9 @@ void amc::gen_countxref() {
 
 // ----------------------------------------------------------------------------
 
-// Check that a struct marked cheap_copy does not contain structs not marked that way
-void amc::gen_check_cheapcopy() {
-    ind_beg(amc::_db_ctype_curs, ctype, amc::_db) if (ctype.c_cpptype && ctype.c_cpptype->cheap_copy) {
-        ind_beg(amc::ctype_c_field_curs, field, ctype)  if (field.reftype == dmmeta_Reftype_reftype_Val) {
-            amccheck(!field.p_arg->c_cpptype || field.p_arg->c_cpptype->cheap_copy, "amc.check_cheap_copy"
-                     <<Keyval("ctype",ctype.ctype)
-                     <<Keyval("field",field.field)
-                     <<Keyval("field_type",field.arg)
-                     <<Keyval("comment","Ctype is marked cheap_copy but child type isn't"));
-        }ind_end;
-    }ind_end;
-}
-
-// ----------------------------------------------------------------------------
-
+// Check the dependency order of gstatic tables: a table may refer only to
+// tables loaded before it (earlier rowid), and never to a finput table --
+// finput data is not loaded yet when the static initializers run.
 void amc::gen_check_static() {
     ind_beg(amc::_db_xref_curs, xref, amc::_db) {
         amc::FField *parent = FirstInst(*xref.p_field->p_ctype);
@@ -196,29 +201,48 @@ void amc::gen_check_static() {
 
 // -----------------------------------------------------------------------------
 
+// A field's name-prefix is checked against the fprefix table: a reftype with
+// any require:Y pairing must be used under one of its registered prefixes.
+// A reftype whose pairings are all require:N (Ptr, Delptr) also accepts
+// arbitrary field names; its rows only document the allowed prefixes.
 static bool MatchPrefix(strptr prefix, amc::FReftype &reftype) {
-    bool ret=amc::zs_fprefix_EmptyQ(reftype)
-        || (prefix=="c" && reftype.reftype==dmmeta_Reftype_reftype_Ptr);
+    bool constrained = false;
+    bool matched = false;
     ind_beg(amc::reftype_zs_fprefix_curs,fprefix,reftype) {
-        if (fprefix.fprefix==prefix) {
-            ret=true;
-            break;
-        }
+        constrained |= fprefix.require;
+        matched |= prefix_Get(fprefix)==prefix;
     }ind_end;
-    return ret;
+    return !constrained || matched;
 }
 
 // ----------------------------------------------------------------------------
 
 void amc::gen_check_prefix() {
+    // a prefix pairs with any number of reftypes, but acr_ed's reftype
+    // inference needs one unambiguous answer per prefix: the dflt:Y row
+    ind_beg(amc::_db_fprefix_curs, fprefix, amc::_db) if (fprefix.dflt) {
+        ind_beg(amc::_db_fprefix_curs, other, amc::_db) {
+            if (other.dflt && &other != &fprefix && prefix_Get(other)==prefix_Get(fprefix)) {
+                prerr("amc.dup_fprefix_dflt"
+                      <<Keyval("fprefix",fprefix.fprefix)
+                      <<Keyval("other",other.fprefix)
+                      <<Keyval("comment","At most one fprefix row per prefix can have dflt:Y"));
+                algo_lib::_db.exit_code++;
+            }
+        }ind_end;
+    }ind_end;
     ind_beg(amc::_db_field_curs, field, amc::_db) {
         amc::FReftype &reftype = *field.p_reftype;
         if (!MatchPrefix(Pathcomp(name_Get(field),"_LL"),reftype)) {
-            prerr("amc.bad_prefix"
-                  <<Keyval("field",field.field)
-                  <<Keyval("reftype",reftype.reftype)
-                  <<Keyval("comment","See dmmeta.fprefix table for allowable combinations"));
-            algo_lib::_db.exit_code++;
+            if (field.p_ctype->p_ns->c_nsjs) {
+                // js can omit prefix
+            } else {
+                prerr("amc.bad_prefix"
+                      <<Keyval("field",field.field)
+                      <<Keyval("reftype",reftype.reftype)
+                      <<Keyval("comment","See dmmeta.fprefix table for allowable combinations"));
+                algo_lib::_db.exit_code++;
+            }
         }
     }ind_end;
 }
@@ -305,21 +329,52 @@ void amc::gen_check_basepool() {
 
 // ----------------------------------------------------------------------------
 
+// Validate each bitfield against its source field: the source must be a sized
+// integer, the bitfield must fit within its bits, and bitfields sharing a
+// source field must not overlap.
+// The width is bounded above by 64 as well as below by 1, because 64 bits is
+// all a mask over the field can select: the mask is built in a u64. A 65-bit
+// field of a u128 source field has an offset and a width the source field can
+// hold, so the two tests below pass it.
+// The bitfield accessors refuse such a width too, but they refuse it later and
+// one field at a time: the run ends at the first bad width with a message
+// carrying neither the offset nor the width. Reporting it here carries both and
+// counts it as a defect rather than ending the run, so a universe with several
+// bad widths reports every one -- amc.FconstBitfldWidth holds a negative width,
+// a zero one and a 65 and draws a line for each.
 void amc::gen_check_bitfld() {
-    // check that bitfields don't overlap
-    // only handle bitfields up to 16 bytes
     ind_beg(amc::_db_field_curs, srcfield, amc::_db) {
         u128 value=0;
         ind_beg(amc::field_bh_bitfld_curs,bitfld,srcfield) {
-            u128 mask = ((u128(1) << bitfld.width)-1) << bitfld.offset;
-            if ((value & mask) != 0) {
-                prerr("amc.overlapbitfld"
+            i64 srcbits = Ctype_Nbit(*srcfield.p_arg);
+            if (bitfld.offset < 0 || bitfld.offset >= 128 || bitfld.width < 1 || bitfld.width > 64) {
+                prerr("amc.bitfield_bounds"
                       <<Keyval("bitfld",bitfld.field)
-                      <<Keyval("srcfield",srcfield.field)
-                      <<Keyval("comment","Bit fields are not allowed to overlap"));
+                      <<Keyval("offset",bitfld.offset)
+                      <<Keyval("width",bitfld.width)
+                      <<Keyval("comment","bitfield offset must be 0..127 and width must be 1..64"));
                 algo_lib::_db.exit_code++;
+            } else if (srcbits > 0 && bitfld.width > srcbits - bitfld.offset) {
+                // offset is bounded 0..127 above, so srcbits-offset cannot
+                // overflow; comparing width this way avoids overflowing offset+width
+                prerr("amc.bitfield_overflow"
+                      <<Keyval("bitfld",bitfld.field)
+                      <<Keyval("offset",bitfld.offset)
+                      <<Keyval("width",bitfld.width)
+                      <<Keyval("srcbits",srcbits)
+                      <<Keyval("comment","bitfield extends past the storage of its source field"));
+                algo_lib::_db.exit_code++;
+            } else {
+                u128 mask = bitfld.width >= 128 ? ~u128(0) : (((u128(1) << bitfld.width)-1) << bitfld.offset);
+                if ((value & mask) != 0) {
+                    prerr("amc.overlapbitfld"
+                          <<Keyval("bitfld",bitfld.field)
+                          <<Keyval("srcfield",srcfield.field)
+                          <<Keyval("comment","Bit fields are not allowed to overlap"));
+                    algo_lib::_db.exit_code++;
+                }
+                value |= mask;
             }
-            value |= mask;
         }ind_end;
     }ind_end;
 }
@@ -416,6 +471,25 @@ void amc::gen_rewrite_regx() {
 
 // -----------------------------------------------------------------------------
 
+// Validate every ffunc by the code actually generated: each emission site calls
+// FindFfunc with mark_used=true, so an ffunc left unused names a function no
+// generator produced -- a typo, or a name not applicable to the field (e.g.
+// FindRemove on a Val, OnXref on a field whose access path never inserts,
+// InputMaybe on a non-finput field).  This is the sole ffunc-name check; the
+// set of tfuncs that run for the field is the authority (replaced amcdb.tcb).
+void amc::gen_check_ffunc() {
+    ind_beg(amc::_db_ffunc_curs, ffunc,amc::_db) {
+        if (!ffunc.used) {
+            prerr("amc.bad_ffunc"
+                  <<Keyval("ffunc",ffunc.ffunc)
+                  <<Keyval("comment","ffunc names no function amc generates for this field (bad name, or not applicable to its reftype)"));
+            algo_lib::_db.exit_code++;
+        }
+    }ind_end;
+}
+
+// -----------------------------------------------------------------------------
+
 static void CheckReftype(amc::FField &field, strptr reftype, bool haschild, strptr ssimfile, cstring &err) {
     if (haschild     && !(field.reftype == reftype    )) {
         err << "Field reftype must be a " << reftype;
@@ -427,7 +501,11 @@ static void CheckReftype(amc::FField &field, strptr reftype, bool haschild, strp
 
 // -----------------------------------------------------------------------------
 
+// Check that each field's reftype is backed by its per-reftype record
+// (dmmeta.tary, dmmeta.thash, ...); later gen phases dereference these
+// records, so reftype errors end the run here.
 void amc::gen_check_reftype() {
+    int prev_err = algo_lib::_db.exit_code;
     ind_beg(amc::_db_field_curs, field,amc::_db) {
         tempstr err;
         if (ctype_zd_varlenfld_InLlistQ(field) && !(field.reftype == dmmeta_Reftype_reftype_Varlen)) {
@@ -438,8 +516,10 @@ void amc::gen_check_reftype() {
         CheckReftype(field, dmmeta_Reftype_reftype_Ptrary, field.c_ptrary, dmmeta_Ssimfile_ssimfile_dmmeta_ptrary, err);
         CheckReftype(field, dmmeta_Reftype_reftype_Inlary, field.c_inlary, dmmeta_Ssimfile_ssimfile_dmmeta_inlary, err);
         CheckReftype(field, dmmeta_Reftype_reftype_Thash, field.c_thash, dmmeta_Ssimfile_ssimfile_dmmeta_thash, err);
+        CheckReftype(field, dmmeta_Reftype_reftype_Blkhash, field.c_blkhash, dmmeta_Ssimfile_ssimfile_dmmeta_blkhash, err);
         CheckReftype(field, dmmeta_Reftype_reftype_Smallstr, field.c_smallstr, dmmeta_Ssimfile_ssimfile_dmmeta_smallstr, err);
         CheckReftype(field, dmmeta_Reftype_reftype_Llist, field.c_llist, dmmeta_Ssimfile_ssimfile_dmmeta_llist, err);
+        CheckReftype(field, dmmeta_Reftype_reftype_Bitfld, field.c_bitfld, dmmeta_Ssimfile_ssimfile_dmmeta_bitfld, err);
         if (ch_N(err)) {
             prerr("amc.missing_record"
                   <<Keyval("field",field.field)
@@ -447,9 +527,14 @@ void amc::gen_check_reftype() {
             algo_lib::_db.exit_code++;
         }
     }ind_end;
-    if (algo_lib::_db.exit_code>0) {
-        _exit(1);
-    }
+    // Later gen phases dereference the per-reftype records this phase found
+    // missing (c_llist, c_thash, ...), so a run with reftype errors cannot
+    // continue past this point. The throw ends the run through the normal
+    // error exit -- unlike _exit, it preserves atexit work such as the gcov
+    // flush under -cfg:coverage. Errors accumulated by earlier phases (e.g.
+    // a bad gconst) leave the model consistent and do not stop the run; they
+    // suppress output and set the exit code at the end of Main.
+    vrfy(algo_lib::_db.exit_code == prev_err, "reftype errors prevent code generation");
 }
 
 // -----------------------------------------------------------------------------
@@ -485,62 +570,6 @@ void amc::gen_detectinst() {
 
 // -----------------------------------------------------------------------------
 
-static bool BadDtorQ(amc::FField &field) {
-    return field.p_reftype->isval
-        && (!field.p_arg->c_cpptype || field.p_arg->c_cpptype->dtor)
-        && !field.p_arg->c_cextern;
-}
-
-void amc::gen_check_cpptype() {
-    ind_beg(amc::_db_cpptype_curs,cpptype,amc::_db) {
-        amc::FCtype &ctype = *cpptype.p_ctype;
-        if (!cpptype.dtor) {
-            ind_beg(amc::ctype_c_field_curs,field,ctype) {
-                if (BadDtorQ(field)) {
-                    prerr("amc.check_cpptype"
-                          <<Keyval("ctype",ctype.ctype)
-                          <<Keyval("field",field.field)
-                          <<Keyval("child_ctype",field.arg)
-                          <<Keyval("comment","Field has destructor but ctype is marked dtor:N"));
-                    prerr("acr.insert"
-                          <<Keyval("","dmmeta.cpptype")
-                          <<Keyval("ctype",field.arg)
-                          <<Keyval("dtor","N"));
-                    algo_lib::_db.exit_code=1;
-                }
-            }ind_end;
-        }
-        if (cpptype.ctor) {
-            int nfields = NValFields(ctype);
-            if (nfields > 10) {
-                prerr("amc.non_constructive"
-                      <<Keyval("ctype",cpptype.ctype)
-                      <<Keyval("fields",nfields)
-                      <<Keyval("comment","Constructor with >10 arguments is error-prone, disallowed"));
-                prerr("acr.insert"
-                      <<Keyval("","dmmeta.cpptype")
-                      <<Keyval("ctype",cpptype.ctype)
-                      <<Keyval("ctor","N")
-                      <<Keyval("comment","Constructor with >10 arguments is error-prone, disallowed"));
-                algo_lib::_db.exit_code=1;
-            }
-        }
-    }ind_end;
-}
-
-// -----------------------------------------------------------------------------
-
-// Count # fields, excluding substrings, cppfuncs, and bitfields
-int amc::NValFields(amc::FCtype &ctype) {
-    int ret=0;
-    ind_beg(ctype_c_field_curs,field,ctype) {
-        ret += !FldfuncQ(field) && !field.c_bitfld;
-    }ind_end;
-    return ret;
-}
-
-// -----------------------------------------------------------------------------
-
 static bool NeedFirstchangedQ(amc::FField &field) {
     // determine if field needs FirstChanged hook
     bool ret = field.c_fstep != NULL;
@@ -551,6 +580,7 @@ static bool NeedFirstchangedQ(amc::FField &field) {
     ret &= field.reftype != dmmeta_Reftype_reftype_Tary;
     ret &= field.reftype != dmmeta_Reftype_reftype_Lary;
     ret &= field.reftype != dmmeta_Reftype_reftype_Thash;
+    ret &= field.reftype != dmmeta_Reftype_reftype_Blkhash;
     ret &= field.reftype != dmmeta_Reftype_reftype_Ptrary;
     ret &= !ValQ(field);
     return ret;
@@ -593,33 +623,53 @@ void amc::gen_prep_field() {
             field.c_substr->p_srcfield->has_substr=true;
         }
 
-        if (field.reftype == dmmeta_Reftype_reftype_Varlen || field.reftype == dmmeta_Reftype_reftype_Opt) {
-            amc::FCpptype *cpptype = field.p_arg->c_cpptype;
-            amccheck(!(cpptype && cpptype->dtor)
-                     , "amc.opt_dtor"
-                     <<Keyval("ctype",cpptype->ctype)
-                     <<Keyval("instance",field.field)
-                     <<Keyval("reftype",field.reftype)
-                     <<Keyval("comment","field cannot have cpptype.dtor flag defined"));
-        }
-
         field.need_firstchanged = NeedFirstchangedQ(field);
     }ind_end;
 }
 
 // -----------------------------------------------------------------------------
 
+// Check that each big-endian field can be stored byteswapped: the field
+// is a Val of a builtin type flagged bigendok, and the type's width is one
+// the byteswap primitives cover (be16toh/be32toh/be64toh). The width is
+// verified independently of the bigendok claim: a bltin row could flag a
+// width with no primitive (a 128-bit integer), and Val Get/Set would then
+// emit a call to a nonexistent swap function -- uncompilable output with a
+// zero exit. A width of zero means the width is not known in this universe
+// (the type's csize row is absent), and the diagnostic names the missing
+// row instead of prescribing a width change for a type whose width may
+// already be right. Each rejection reports and continues, accumulating
+// into the exit code.
 void amc::gen_check_bigend() {
     ind_beg(amc::_db_fbigend_curs, fbigend, amc::_db) {
         amc::FField &field = *fbigend.p_field;
-        vrfy(field.reftype == dmmeta_Reftype_reftype_Val
-             , tempstr()<<"amc.bad_bigend"
-             <<Keyval("comment","Big-endian field: only Val or Pkey is supported"));
-        vrfy(field.p_arg->c_bltin && field.p_arg->c_bltin->bigendok
-             , tempstr()<<"amc.bigend_deadend"
-             <<Keyval("field",field.field)
-             <<Keyval("type",field.arg)
-             <<Keyval("comment","big-endian storage not allowed for this type"));
+        i64 nbit = Ctype_Nbit(*field.p_arg);
+        if (field.reftype != dmmeta_Reftype_reftype_Val) {
+            prerr("amc.bad_bigend"
+                  <<Keyval("field",field.field)
+                  <<Keyval("reftype",field.reftype)
+                  <<Keyval("comment","big-endian storage requires reftype Val"));
+            algo_lib::_db.exit_code++;
+        } else if (!(field.p_arg->c_bltin && field.p_arg->c_bltin->bigendok)) {
+            prerr("amc.bigend_deadend"
+                  <<Keyval("field",field.field)
+                  <<Keyval("type",field.arg)
+                  <<Keyval("comment","big-endian storage not allowed for this type"));
+            algo_lib::_db.exit_code++;
+        } else if (nbit == 0) {
+            prerr("amc.bigend_size"
+                  <<Keyval("field",field.field)
+                  <<Keyval("type",field.arg)
+                  <<Keyval("comment","type size unknown; add a dmmeta.csize row for the type"));
+            algo_lib::_db.exit_code++;
+        } else if (nbit != 16 && nbit != 32 && nbit != 64) {
+            prerr("amc.bigend_width"
+                  <<Keyval("field",field.field)
+                  <<Keyval("type",field.arg)
+                  <<Keyval("nbit",nbit)
+                  <<Keyval("comment","no byteswap primitive for this width; use a 16, 32, or 64-bit integer type"));
+            algo_lib::_db.exit_code++;
+        }
     }ind_end;
 }
 
@@ -648,7 +698,7 @@ void amc::gen_xref_parent() {
                   <<Keyval("parent_ssimfile",base2->c_ssimfile->ssimfile)
                   <<Keyval("comment","The x-ref relationship between child_type and parent_type implies a different ordering"
                            "than the Pkey relationship between child_ssimfile and parent_ssimfile"));
-            algo_lib::_db.exit_code=1;
+            algo_lib::_db.exit_code++;
         }
     }ind_end;
 }
@@ -680,6 +730,37 @@ void amc::gen_ctype_toposort() {
     }ind_end;
 }
 
+// Query whether FIELD is stored as a plain member of its parent struct: the
+// value sits at a fixed offset of fixed size, and the parent allocated nothing
+// for it. An inline string, an inline array, a pointer, a bitfield and a
+// by-value member are all of this kind.
+static bool PlainFieldQ(amc::FField &field) {
+    return field.reftype == dmmeta_Reftype_reftype_Smallstr
+        || field.reftype == dmmeta_Reftype_reftype_Val
+        || field.reftype == dmmeta_Reftype_reftype_Inlary
+        || field.reftype == dmmeta_Reftype_reftype_Cppstack
+        || field.reftype == dmmeta_Reftype_reftype_Ptr
+        || field.reftype == dmmeta_Reftype_reftype_Base
+        || field.reftype == dmmeta_Reftype_reftype_Bitfld;
+}
+
+// -----------------------------------------------------------------------------
+
+// Query whether FIELD is stored in place but with an extent decided at runtime.
+// The member trails its parent's fixed portion, so the parent allocated nothing
+// for it and destroys nothing, but the parent has no fixed size either.
+static bool VarsizeFieldQ(amc::FField &field) {
+    return field.reftype == dmmeta_Reftype_reftype_Varlen
+        || field.reftype == dmmeta_Reftype_reftype_Opt;
+}
+
+// -----------------------------------------------------------------------------
+
+// Determine CTYPE's plaindata and has_dtor flags, recursing into the type of
+// every member first, and store both on the ctype. See gen_plaindata for what
+// the two flags mean and why one walk settles both.
+// A ctype already on the visit list keeps the values it was given, so the walk
+// costs one pass over the graph and a ctype containing itself terminates.
 void amc::PlaindataVisit(amc::FCtype &ctype) {
     // todo: rename this to zs_ctype_visit
     if(!zs_sig_visit_InLlistQ(ctype)) {
@@ -687,51 +768,73 @@ void amc::PlaindataVisit(amc::FCtype &ctype) {
         // assume the best initially...
         bool plaindata= ctype.c_cextern ? ctype.c_cextern->plaindata
             : true;
-        // check fields -- any complex fields mean the type is not plaindata
-        // inline strings, arrays, pointers, values, are OK
-        // any user-defined functions attached to field disqualify the ctype.
-        if (plaindata) {
-            ind_beg(ctype_c_field_curs,field,ctype) {
-                if (!(field.reftype == dmmeta_Reftype_reftype_Smallstr
-                      || field.reftype == dmmeta_Reftype_reftype_Val
-                      || field.reftype == dmmeta_Reftype_reftype_Inlary
-                      || field.reftype == dmmeta_Reftype_reftype_Cppstack
-                      || field.reftype == dmmeta_Reftype_reftype_Ptr
-                      || field.reftype == dmmeta_Reftype_reftype_Base
-                      || field.reftype == dmmeta_Reftype_reftype_Bitfld)
-                    || field.c_fcleanup
-                    || field.c_fuserinit) {
-                    plaindata=false;
-                } else {
-                    // recursive step
-                    PlaindataVisit(*field.p_arg);
-                    if (!field.p_arg->plaindata) {
-                        plaindata=false;
-                    }
-                }
-            }ind_end;
-        }
-        // check access paths -- any xrefs means the type is not plaindata
-        ind_beg(ctype_zd_access_curs,inst,ctype) {
-            if (inst.p_reftype->isxref) {
+        // an external type amc did not lay out is destroyed by whatever C++ code
+        // declares it, and its cextern row says whether that amounts to anything
+        bool has_dtor= ctype.c_cextern && !ctype.c_cextern->plaindata;
+        ind_beg(ctype_c_field_curs,field,ctype) {
+            // Classification only — mark_used is false (not an emission site).
+            bool owned = amc::FindFfunc(field, amcdb_cbtype_Cleanup)
+                // A cascdel field means the record owns dependents: deleting it
+                // deletes them.
+                || field.c_cascdel != NULL;
+            if (owned || !(PlainFieldQ(field) || VarsizeFieldQ(field))) {
                 plaindata=false;
-                break;
+                has_dtor=true;
+            } else if (VarsizeFieldQ(field)) {
+                plaindata=false;
+            } else if (amc::FindFfunc(field, amcdb_cbtype_Userinit)) {
+                // a field amc did not initialize is not a value amc may fabricate
+                // by copying bytes, but nothing was allocated for it either
+                plaindata=false;
+            } else {
+                // recursive step
+                PlaindataVisit(*field.p_arg);
+                plaindata = plaindata && field.p_arg->plaindata;
+                has_dtor = has_dtor || field.p_arg->has_dtor;
             }
         }ind_end;
-        // save the computed value
+        // An xref links the record into an index, and the record unlinks itself
+        // from every one of them when destroyed -- so its value is not merely its
+        // bytes, and forgetting it is not enough.
+        //
+        // Whether a field is an xref is a fact about the field, recorded in
+        // dmmeta.xref, and no reftype answers it: a Ptr, a Ptrary and an Upptr
+        // are each an xref only sometimes, and between them they carry 922 of the
+        // tree's 2135 xrefs. lib_x2.FStartup is held by exactly one, the Ptr xref
+        // c_startup, so classifying by reftype reported it as owning nothing --
+        // which dropped the destructor call from its pool delete and left the
+        // freed row in the index.
+        //
+        // n_xref counts every xref whose arg is this ctype, and gen_countxref
+        // computes it far earlier in the pass order than the zs_xref lists Uninit
+        // itself walks. The indexes Uninit removes the record from are the
+        // non-Upptr subset of that same set -- an Upptr points up and the parent
+        // does not hold the child -- so n_xref is a superset and cannot miss one.
+        if (ctype.n_xref > 0) {
+            plaindata=false;
+            has_dtor=true;
+        }
+        // save the computed values
         ctype.plaindata=plaindata;
+        ctype.has_dtor=has_dtor;
     }
 }
 
-// recursively determine for each type whether it's "plaindata".
-// set ctype.plaindata flag.
-// plaindata structs can be copied with memcpy.
+// Determine, for each ctype, how its value behaves: whether it can be copied
+// with memcpy (plaindata) and whether destroying it does anything (has_dtor).
+//
+// The two are separate facts, and one field reftype tells them apart. A Varlen
+// or an Opt member is addressed in place inside its parent, so the parent
+// allocates nothing for it and needs no destructor -- but the member's extent is
+// decided at runtime, so the parent has no fixed size and cannot be memcopied.
+// Conflating the two would report a destructor for every nested variable-length
+// message, and amc refuses to nest one whose element type has a destructor.
+//
+// Both walk the same ctype graph, so one pass computes both.
 void amc::gen_plaindata() {
     zs_sig_visit_RemoveAll();
     ind_beg(amc::_db_ctype_curs,ctype,amc::_db) {
         PlaindataVisit(ctype);
-        // #AL# it would be interesting to assert to that all ctypes in a given namespace
-        // must be 'plaindata' but we have too many violations (algo, command, even atf)
     }ind_end;
 }
 
@@ -748,7 +851,7 @@ tempstr amc::Argtype(amc::FField &field) {
         retval = field.cpp_type;
     } else if (field.p_arg->c_cstr && field.p_arg->c_cstr->strequiv) {// copy cpptype??
         retval = "const algo::strptr&";
-    } else if (field.p_arg->c_cpptype && field.p_arg->c_cpptype->cheap_copy) { // cheap copy -> copy cpptype
+    } else if (field.p_arg->cheap_copy) { // cheap copy -> copy cpptype
         retval = field.cpp_type;
     }
     if (!ch_N(retval)) {
@@ -795,48 +898,135 @@ void amc::gen_gconst() {
         amc::FField &field = *gconst.p_field;
         amc::FField &namefld = *gconst.p_namefld;
         amc::FField *gconstfld = amc::ind_field_Find(gconst.idfld);
-        amc::FField &idfld = ch_N(gconst.idfld) && gconstfld ? *gconstfld : namefld;
-        tempstr      fname = SsimFilename("data",*namefld.p_ctype, true);
-        bool is_string = field.p_arg->c_cstr != NULL && field.arg != "char";
-        bool is_char = field.arg == "char";
-        algo_lib::MmapFile file;
-        vrfy(MmapFile_Load(file,fname),tempstr()<<"amc.load"<<Keyval("filename",fname));
-        int idx = 0;
-        int nrec = 0;
-        ind_beg(Line_curs,line,file.text) {
-            Tuple tuple;
-            Tuple_ReadStrptr(tuple, line, false);
-            if (attrs_N(tuple) > 0 || ch_N(tuple.head.value)) {
-                dmmeta::Fconst fconst;
-                tempstr name(amc::EvalAttr(tuple, namefld));
-                tempstr value(amc::EvalAttr(tuple, idfld));
-                // support c++ char
-                if (is_char) {
-                    char ch;
-                    vrfy(char_ReadStrptrMaybe(ch, value), algo_lib::_db.errtext);
-                    ch_RemoveAll(value);
-                    char_PrintCppSingleQuote(ch, value);
-                }
-                // c++ integer
-                if (!ch_N(gconst.idfld) && !is_string && !is_char) {
-                    ch_RemoveAll(value);
-                    value << idx++;
-                }
-                // #AL# name stays as-is, subsequent fconst generator
-                // will sanitize the name when creating a C++ identifier
-                if (attrs_N(tuple) > 0) {
-                    fconst.fconst = tempstr() << gconst.field << "/" << name;// shouldn't this be VALUE instead???
-                    fconst.value = algo::CppExpr(value);
-                    fconst.comment.value = attr_GetString(tuple, "comment");// import comment, if any
-                    amc::fconst_InsertMaybe(fconst);
-                    nrec++;
-                }
+        if (ch_N(gconst.idfld) && (!gconstfld || gconstfld->p_ctype != namefld.p_ctype)) {
+            // Each fconst's value is read from the same input row as its name,
+            // so idfld must name a column of the namefld table. A nonexistent
+            // idfld would silently fall back to the name column, and a field of
+            // any other ctype is absent from the rows and would leave every
+            // fconst value empty. The known-bad row is skipped, so one run
+            // still reports every offending gconst.
+            prerr("amc.gconst_idfld"
+                  <<Keyval("gconst",gconst.field)
+                  <<Keyval("idfld",gconst.idfld)
+                  <<Keyval("namefld",gconst.namefld)
+                  <<Keyval("comment","idfld must name a field of the namefld ctype"));
+            algo_lib::_db.exit_code++;
+        } else {
+            amc::FField &idfld = ch_N(gconst.idfld) ? *gconstfld : namefld;
+            tempstr      fname = SsimFilename(DataRoot(),*namefld.p_ctype);
+            bool is_string = field.p_arg->c_cstr != NULL && field.arg != "char";
+            bool is_char = field.arg == "char";
+            algo_lib::MmapFile file;
+            // The value table's rows are the enum's constants, so a table that
+            // is not there would compile an empty enum and exit 0, silently
+            // dropping every constant. The two ways it can be absent are
+            // reported apart, because the reader can say nothing about the
+            // first: a namefld whose ctype reaches no ssimfile names no file at
+            // all, while a named file that cannot be read carries an errno. Both
+            // skip this gconst and let the run continue, so one run still
+            // reaches every other one.
+            if (!ch_N(fname)) {
+                prerr("amc.gconst_nossimfile"
+                      <<Keyval("gconst",gconst.field)
+                      <<Keyval("namefld",gconst.namefld)
+                      <<Keyval("comment","the namefld's ctype reaches no ssimfile, so there is no value table"));
+                algo_lib::_db.exit_code++;
+            } else if (!SideloadFile(file,fname)) {
+                algo::PrerrFileFail("amc.load", fname, "gconst value table could not be read");
+                algo_lib::_db.exit_code++;
+            } else {
+                int idx = 0;
+                int nrec = 0;
+                int nline = 0;
+                ind_beg(Line_curs,line,file.text) {
+                    Tuple tuple;
+                    nline++;
+                    bool readq = Tuple_ReadStrptrMaybe(tuple, line);
+                    tempstr name(amc::EvalAttr(tuple, namefld));
+                    tempstr value(amc::EvalAttr(tuple, idfld));
+                    char ch = 0;
+                    bool bad_char = readq && attrs_N(tuple) > 0 && is_char && !char_ReadStrptrMaybe(ch, value);
+                    // A line that does not parse as a tuple is an input error the
+                    // reader itself cannot describe: an unterminated quoted value
+                    // keeps whatever was read before the quote ran out and jumps
+                    // the iterator to end of line, so the truncated value reads
+                    // back as a name the value table never wrote and every
+                    // attribute past the bad quote, the comment among them,
+                    // disappears. The tuple reader leaves no error text of its
+                    // own, and algo_lib's shared error buffer holds whatever an
+                    // earlier pass put there, so the diagnostic states its own
+                    // subject: this gconst, this file, this line, this text. The
+                    // line is skipped and the scan continues, so every bad line
+                    // in the table is reported once and the auto-numbering below
+                    // never consumes an index for a line that produced nothing.
+                    if (!readq) {
+                        prerr("amc.bad_gconst"
+                              <<Keyval("gconst",gconst.field)
+                              <<Keyval("file",fname)
+                              <<Keyval("line",nline)
+                              <<Keyval("text",line)
+                              <<Keyval("comment","gconst value table line is not a tuple"));
+                        algo_lib::_db.exit_code++;
+                    } else if (attrs_N(tuple) == 0 && ch_N(tuple.head.value)) {
+                        // A line with a head but no attribute can produce no
+                        // constant, yet the auto-numbering below would still
+                        // consume an index for it, silently renumbering every
+                        // constant that follows on a clean exit; such a line is
+                        // malformed input
+                        prerr("amc.gconst_headonly"
+                              <<Keyval("gconst",gconst.field)
+                              <<Keyval("head",tuple.head.value)
+                              <<Keyval("comment","head-only line in gconst value table"));
+                        algo_lib::_db.exit_code++;
+                    } else if (bad_char) {
+                        // A char constant needs exactly one character; the row is
+                        // reported and skipped so the scan still surfaces every
+                        // other offending row in the same run
+                        algo_lib::ResetErrtext();
+                        prerr("amc.gconst_char"
+                              <<Keyval("gconst",gconst.field)
+                              <<Keyval("name",name)
+                              <<Keyval("value",value)
+                              <<Keyval("comment","value must parse as a single character"));
+                        algo_lib::_db.exit_code++;
+                    } else if (attrs_N(tuple) > 0) {
+                        dmmeta::Fconst fconst;
+                        // support c++ char
+                        if (is_char) {
+                            ch_RemoveAll(value);
+                            char_PrintCppSingleQuote(ch, value);
+                        }
+                        // c++ integer
+                        if (!ch_N(gconst.idfld) && !is_string && !is_char) {
+                            ch_RemoveAll(value);
+                            value << idx++;
+                        }
+                        // name stays as-is, subsequent fconst generator
+                        // will sanitize the name when creating a C++ identifier
+                        fconst.fconst = tempstr() << gconst.field << "/" << name;
+                        fconst.value = algo::CppExpr(value);
+                        fconst.comment.value = attr_GetString(tuple, "comment");// import comment, if any
+                        // A name that repeats in the value table maps two rows to one
+                        // enum constant: the second row would silently vanish from the
+                        // enum while still consuming a numbering index, so an edit of
+                        // the value table could renumber neighboring constants with a
+                        // clean exit
+                        if (amc::fconst_InsertMaybe(fconst)) {
+                            nrec++;
+                        } else {
+                            prerr("amc.gconst_dup"
+                                  <<Keyval("fconst",fconst.fconst)
+                                  <<Keyval("comment","duplicate name in gconst value table"));
+                            algo_lib::_db.exit_code++;
+                        }
+                    }
+                }ind_end;
+                verblog("amc.load_gconst"
+                        <<Keyval("fname",fname)
+                        <<Keyval("field",field.field)
+                        <<Keyval("nrec", nrec));
             }
-        }ind_end;
-        verblog("amc.load_gconst"
-                <<Keyval("fname",fname)
-                <<Keyval("field",field.field)
-                <<Keyval("nrec", nrec));
+        }
     }ind_end;
 }
 
@@ -883,7 +1073,7 @@ void amc::gen_prep_fconst() {
         // try to parse LE_STRd("c..")
         if (SkipStrptr(s, "LE_STR")) {
             tempstr errmsg;
-            errmsg << "malformed constant value '" << fconst.value << "'";
+            errmsg << "malformed constant value '" << fconst.value << "'"; // ignore:hand_quote
             int len = s.Peek() - '0';
             vrfy(len >= 1 && len <= 8,tempstr()<< errmsg << ": missing or wrong length (allowed 1..8)" );
             s.GetChar();
@@ -917,36 +1107,73 @@ void amc::gen_prep_fconst() {
 
 // -----------------------------------------------------------------------------
 
+// Side-load the ssimfile rows behind each gstatic field into the
+// static_tuple table; they become the compiled-in initializers of the
+// gstatic table.
 void amc::gen_load_gstatic() {
     ind_beg(amc::_db_gstatic_curs, gstatic,amc::_db) {
         amc::FField& field = *gstatic.p_field;
         amc::FCtype *ctype = GetBaseType(*field.p_arg,field.p_arg);
-        vrfy(ctype && ctype->c_ssimfile
-             , tempstr()
-             <<"amc.missing_ssimfile_for_gstatic"
-             <<Keyval("field",field.field)
-             <<Keyval("basetype",(ctype ? algo::strptr(ctype->ctype) : algo::strptr()))
-             <<Keyval("comment","cannot determine ssimfile to load."));
-        tempstr      fname  = amc::SsimFilename("data", *ctype, true);
+        tempstr      fname  = ctype ? amc::SsimFilename(DataRoot(), *ctype) : tempstr();
         algo_lib::MmapFile in;
-        MmapFile_Load(in, fname);
-        Tuple tuple;
-        int nrec=0;
-        ind_beg(Line_curs,line,in.text) {
-            vrfy(Tuple_ReadStrptrMaybe(tuple,line), algo_lib::_db.errtext);
-            if (attrs_N(tuple) > 0 && ch_N(tuple.head.value)) {
-                amc::FStatictuple& row = amc::static_tuple_Alloc();
-                algo::TSwap(row.tuple, tuple);
-                row.ctype = field.arg;
-                amc::static_tuple_XrefMaybe(row);
-                nrec++;
-            }
-        }ind_end;
-        verblog("amc.load_gstatic"
-                <<Keyval("field",field.field)
-                <<Keyval("ctype", ctype->ctype)
-                <<Keyval("datafile",fname)
-                <<Keyval("nrec", nrec));
+        // The rows of this table become the compiled-in registry, so a table
+        // that is not there is an input error either way: loading zero rows
+        // would compile an empty registry and exit 0, dropping every entry. The
+        // two ways it can be absent are reported apart, because the reader can
+        // say nothing about the first: a gstatic field whose element type
+        // reaches no ssimfile names no file at all, while a named file that
+        // cannot be read carries an errno. Both skip the field and let the run
+        // continue, so one run reports every such field.
+        if (!ch_N(fname)) {
+            prerr("amc.gstatic_nossimfile"
+                  <<Keyval("field",field.field)
+                  <<Keyval("basetype",(ctype ? algo::strptr(ctype->ctype) : algo::strptr()))
+                  <<Keyval("comment","the element type reaches no ssimfile, so there is no table to load"));
+            algo_lib::_db.exit_code++;
+        } else if (!SideloadFile(in, fname)) {
+            algo::PrerrFileFail("amc.load", fname, "gstatic input file could not be read");
+            algo_lib::_db.exit_code++;
+        } else {
+            Tuple tuple;
+            int nrec=0;
+            int nline=0;
+            ind_beg(Line_curs,line,in.text) {
+                nline++;
+                bool readq = Tuple_ReadStrptrMaybe(tuple,line);
+                // a line that does not parse as a tuple is an input error the
+                // reader itself cannot describe: the tuple reader writes no error
+                // text of its own, and algo_lib's shared error buffer holds
+                // whatever an earlier pass left in it -- bad-number tags naming
+                // valid fconst values, for one -- so a message taken from that
+                // buffer names the wrong file. The diagnostic states its own
+                // subject instead: this gstatic field, this file, this line,
+                // this text. The field is part of the subject because two
+                // gstatic fields whose element types are based on the same
+                // ctype read the same file, and without it their complaints
+                // about a line are the same text twice. The run continues, so
+                // every bad line in the table is reported once.
+                if (!readq) {
+                    prerr("amc.bad_gstatic"
+                          <<Keyval("field",field.field)
+                          <<Keyval("file",fname)
+                          <<Keyval("line",nline)
+                          <<Keyval("text",line)
+                          <<Keyval("comment","gstatic input line is not a tuple"));
+                    algo_lib::_db.exit_code++;
+                } else if (attrs_N(tuple) > 0 && ch_N(tuple.head.value)) {
+                    amc::FStatictuple& row = amc::static_tuple_Alloc();
+                    algo::TSwap(row.tuple, tuple);
+                    row.ctype = field.arg;
+                    amc::static_tuple_XrefMaybe(row);
+                    nrec++;
+                }
+            }ind_end;
+            verblog("amc.load_gstatic"
+                    <<Keyval("field",field.field)
+                    <<Keyval("ctype", ctype->ctype)
+                    <<Keyval("datafile",fname)
+                    <<Keyval("nrec", nrec));
+        }
     }ind_end;
 }
 
@@ -1014,7 +1241,7 @@ void amc::gen_newfield_cbase() {
                 amc::FCtype &to = *basefield.p_ctype;
                 to.fields_cloned = true;
                 nclone_new++;
-                amc::CloneFields(from,to,ChildRowid(basefield.rowid),basefield);
+                amc::CloneFields(from,to,ChildRowid(basefield.rowid));
             }
         }ind_end;
     } while (nclone_new > nclone_old);
@@ -1048,13 +1275,22 @@ void amc::gen_newfield_sortfld() {
 
 // -----------------------------------------------------------------------------
 
+// Check that every Ptrary field has its dmmeta.ptrary record, and extend unique ptrarys
+// with a membership flag on the target ctype.
 void amc::gen_newfield_ptrary() {
+    // A field of reftype Ptrary requires an explicit dmmeta.ptrary record
+    // (ssimreq dmmeta.ptrary; acr_ed creates the record together with the field).
+    // When the record is missing, report an error, then provision a default
+    // stand-in record so gen_check_reftype does not report the same missing
+    // record a second time and the rest of the run operates on a consistent
+    // model; the nonzero exit code suppresses all output at the end of Main.
     ind_beg(amc::_db_field_curs, field, amc::_db) if (field.reftype==dmmeta_Reftype_reftype_Ptrary && !field.c_ptrary) {
+        amccheck(0,"amc.missing_ptrary"
+                 <<Keyval("field",field.field)
+                 <<Keyval("comment","Missing dmmeta.ptrary record for this field"));
         dmmeta::Ptrary ptrary;
         ptrary.field = field.field;
-        ptrary.unique = false;// TODO: change to field.c_xref != NULL
-        amccheck(0,"amc.missing_ptrary"
-                 <<Keyval("field",field.field));
+        ptrary.unique = false;
         amc::ptrary_InsertMaybe(ptrary);
     }ind_end;
 
@@ -1099,27 +1335,9 @@ void amc::gen_newfield_dispatch() {
 // -----------------------------------------------------------------------------
 
 void amc::gen_newfield_cfmt() {
-    // cfmt.Argv requries cfmt.Tuple read
-    ind_beg(amc::_db_cfmt_curs, cfmt,amc::_db) if (strfmt_Get(cfmt)==dmmeta_Strfmt_strfmt_Argv) {
-        amc::FCfmt *tupleread=amc::ind_cfmt_Find(dmmeta::Cfmt_Concat_ctype_strfmt(ctype_Get(cfmt),dmmeta_Strfmt_strfmt_Tuple));
-        if (tupleread && !tupleread) {
-            prerr("amc.need_tuple_read"
-                  <<Keyval("cfmt",cfmt.cfmt)
-                  <<Keyval("comment","cfmt Argv print requires cfg Tuple read"));
-            algo_lib::_db.exit_code=1;
-        }
-        if (!tupleread) {
-            dmmeta::Cfmt rec(dmmeta::Cfmt_Concat_ctype_strfmt(ctype_Get(cfmt),dmmeta_Strfmt_strfmt_Tuple)
-                             , dmmeta_Printfmt_printfmt_Auto
-                             , true/*print*/
-                             , false/*read*/
-                             , ""
-                             , true // genop
-                             , algo::Comment());
-            // OK to insert into Lary as you loop over Lary.
-            amc::cfmt_InsertMaybe(rec);
-        }
-    }ind_end;
+    // Command-line (strfmt:Argv) ctypes are parsed by the field-aware
+    // <Name>_ReadArgv; they no longer need an auto-synthesized Tuple read
+    // cfmt (which only produced the now-unused <Name>_ReadTupleMaybe).
 }
 
 // -----------------------------------------------------------------------------
@@ -1131,6 +1349,7 @@ static bool UnpackedQ(amc::FField &field) {
         && !field.c_substr;
 }
 
+// Check pack consistency within a namespace: every ctype in a packed namespace must be packed, and every field of a packed ctype must be packed.
 void amc::gen_ns_check_pack() {
     amc::FNs &ns =*amc::_db.c_ns;
     bool nspack=ns.c_nsx && ns.c_nsx->pack;
@@ -1140,10 +1359,8 @@ void amc::gen_ns_check_pack() {
             amccheck(0,"amc.what_the_pack"
                      <<Keyval("ctype",ctype.ctype)
                      <<Keyval("ns",ns_Get(ctype))
-                     <<Keyval("comment","Ctype in packed namespace must also be packed"));
-            prerr("acr.insert"
-                  <<Keyval("","dmmeta.pack")
-                  <<Keyval("ctype",ctype.ctype));
+                     <<Keyval("comment","Ctype in packed namespace must also be packed. Insert the following line to fix error (acr -insert -write)"));
+            prerr(dmmeta::Pack(ctype.ctype,algo::Comment()));
         }
         if (ctpack) {
             ind_beg(amc::ctype_c_field_curs,field,ctype) if (UnpackedQ(field)) {
@@ -1151,10 +1368,8 @@ void amc::gen_ns_check_pack() {
                          <<Keyval("ctype",ctype.ctype)
                          <<Keyval("field",field.field)
                          <<Keyval("child_ctype",field.arg)
-                         <<Keyval("comment","Field is unpacked but parent ctype is packed"));
-                prerr("acr.insert"
-                      <<Keyval("","dmmeta.pack")
-                      <<Keyval("ctype",field.arg));
+                         <<Keyval("comment","Field is unpacked but parent ctype is packed. Insert the following line to fix error (acr -insert -write)"));
+                prerr(dmmeta::Pack(field.arg,algo::Comment()));
             }ind_end;
         }
     }ind_end;
@@ -1433,7 +1648,7 @@ void amc::gen_ns_gstatic() {
                 prerr("amc.null_gstatic"
                       <<Keyval("gstatic",gstatic.field)
                       <<Keyval("comment","no in-memory database -- cannot load static"));
-                algo_lib::_db.exit_code=1;
+                algo_lib::_db.exit_code++;
                 break;
             }
             amc::FFunc *init = amc::init_GetOrCreate(*ns.c_globfld->p_arg);
@@ -1458,31 +1673,32 @@ void amc::gen_ns_check_lim() {
 // -----------------------------------------------------------------------------
 
 void amc::gen_proc() {
-    // create a command::xyz_proc for every
-    // executable xyz
-    ind_beg(amc::_db_ns_curs,ns,amc::_db) {
-        if (ns.nstype == dmmeta_Nstype_nstype_exe) {
-            tempstr cmdtype = tempstr() << "command." << ns.ns;
-            if (ind_ctype_Find(cmdtype)) {
-                dmmeta::Ctype ctype;
-                ctype.ctype = tempstr() << cmdtype << "_proc";
-                ctype.comment.value = tempstr() << "Subprocess: "<<ns.comment;
-                amc::ctype_InsertMaybe(ctype);
+    // create a command::xyz_proc for every command ctype that parses argv
+    // (any read:Y cfmt under command.*)
+    ind_beg(_db_cfmt_curs,cfmt,_db) if (ns_Get(*cfmt.p_ctype)=="command"
+                                        && cfmt.read
+                                        ) {
+        amc::FCtype &cmdctype = *cfmt.p_ctype;
 
-                dmmeta::Field field;
-                field.field = tempstr() << ctype.ctype << "."<<ns.ns;
-                field.arg = cmdtype;
-                field.reftype = dmmeta_Reftype_reftype_Exec;
-                amc::field_InsertMaybe(field);
+        dmmeta::Ctype ctype;
+        ctype.ctype = tempstr() << cmdctype.ctype << "_proc";
+        ctype.comment.value = tempstr() << "Subprocess: " << cmdctype.comment;
+        amc::ctype_InsertMaybe(ctype);
 
-                dmmeta::Anonfld anonfld;
-                anonfld.field = field.field;
-                amc::anonfld_InsertMaybe(anonfld);
-            }
-        }
+        dmmeta::Field field;
+        field.field = tempstr() << ctype.ctype << "." << name_Get(cmdctype);
+        field.arg = cmdctype.ctype;
+        field.reftype = dmmeta_Reftype_reftype_Exec;
+        amc::field_InsertMaybe(field);
+
+        dmmeta::Anonfld anonfld;
+        anonfld.field = field.field;
+        amc::anonfld_InsertMaybe(anonfld);
     }ind_end;
 }
 
+// Check that each fcurs row names a cursor supported by its field's
+// reftype (the corresponding amcdb.tcurs row is in the input set).
 void amc::gen_check_fcurs() {
     ind_beg(_db_fcurs_curs,fcurs,_db) {
         // A field can correspond to several template classes
@@ -1496,27 +1712,71 @@ void amc::gen_check_fcurs() {
         tempstr key = amcdb::Tfunc_Concat_tclass_name(tclass, curstype_Get(fcurs));
         amc::FTfunc *tfunc=ind_tfunc_Find(key);
         if (!tfunc || !tfunc->c_tcurs) {
-            prlog("amc.cursory_examination"
+            // two distinct failures: the reftype has no cursor by this name
+            // (no tfunc), or the cursor exists but the input set omits its
+            // amcdb.tcurs row
+            strptr comment = !tfunc
+                ? strptr("Reftype doesn't support specified cursor")
+                : strptr("Cursor exists, but its amcdb.tcurs row is absent from the input set; add the row");
+            prerr("amc.bad_fcurs"
                   <<Keyval("fcurs",fcurs.fcurs)
                   <<Keyval("reftype",fcurs.p_field->reftype)
-                  <<Keyval("comment","Reftype doesn't support specified cursor"));
-            algo_lib::_db.exit_code=1;
+                  <<Keyval("comment",comment));
+            algo_lib::_db.exit_code++;
         }
     }ind_end;
 }
 
+// Check that the element type of a Varlen or Opt field has no destructor.
+// Both reftypes address their element in place inside the enclosing message --
+// there is no separate object whose lifetime amc could end -- so an element
+// type that needs a destructor would never have one called.
+// Check also that no ctype's fields claim the end of the fixed portion twice:
+// varlen data and an optional trailing element both begin there, and only
+// varlen fields carry the end offset that lets one follow another.
 void amc::gen_check_varlen() {
-    ind_beg(amc::_db_ctype_curs,ctype,amc::_db) {
-        // messages with Varlen etc cannot be cheap copy
-        if ((!zd_varlenfld_EmptyQ(ctype) || ctype.c_optfld) && ctype.c_cpptype && ctype.c_cpptype->cheap_copy) {
-            prlog("ams.a_little_too_cheap"
-                  <<Keyval("ctype",ctype.ctype)
-                  <<Keyval("comment","Types with Varlen/Opt fields should not be marked cheap_copy. Merge the following line to fix error"));
-            prlog("dmmeta.cpptype"
-                  <<Keyval("ctype",ctype.ctype)
-                  <<Keyval("cheap_copy","N"));
-            algo_lib::_db.exit_code=1;
+    ind_beg(amc::_db_field_curs,field,amc::_db) {
+        if (field.reftype == dmmeta_Reftype_reftype_Varlen
+            || field.reftype == dmmeta_Reftype_reftype_Opt) {
+            amccheck(!HasDtorQ(*field.p_arg)
+                     , "amc.opt_dtor"
+                     <<Keyval("field",field.field)
+                     <<Keyval("ctype",field.arg)
+                     <<Keyval("reftype",field.reftype)
+                     <<Keyval("comment","element type of a Varlen/Opt field must have no destructor"));
         }
+    }ind_end;
+    ind_beg(amc::_db_ctype_curs,ctype,amc::_db) {
+        // A Varlen field's data and an Opt field's element both begin at the
+        // end of the fixed portion. Varlen fields chain -- each one starts
+        // where the previous varlen field ends, and carries the end offset
+        // that says where that is -- so only the first varlen field of a
+        // ctype begins at the end of the fixed portion, and the rest may
+        // follow it. An Opt carries no such offset: its accessors compute
+        // the element address from the fixed size alone, so every Opt begins
+        // there too, and a second field beginning at that address would
+        // alias the first, a write through either corrupting the other.
+        // Every claim on that address past the first is reported against the
+        // field that made the first.
+        amc::FField *prev = NULL;
+        amc::FField *varlen = NULL;
+        ind_beg(amc::ctype_c_field_curs, field,ctype) {
+            bool varlenQ = field.reftype == dmmeta_Reftype_reftype_Varlen;
+            bool claimQ = field.reftype == dmmeta_Reftype_reftype_Opt || (varlenQ && !varlen);
+            if (claimQ && prev) {
+                prerr("amc.trail_overlay"
+                      <<Keyval("ctype",ctype.ctype)
+                      <<Keyval("field",field.field)
+                      <<Keyval("prev",prev->field)
+                      <<Keyval("comment","field begins at the end of the fixed portion, where an earlier field already begins"));
+                algo_lib::_db.exit_code++;
+            } else if (claimQ) {
+                prev = &field;
+            }
+            if (varlenQ && !varlen) {
+                varlen = &field;
+            }
+        }ind_end;
     }ind_end;
 }
 
@@ -1556,6 +1816,9 @@ void amc::gen_create_userfunc() {
     }ind_end;
 }
 
+// Write the derived tables (ctypelen, dispsig, tracefld, tracerec,
+// userfunc) back to the output dataset through an acr subprocess, so
+// they match the code generated by this run.
 void amc::gen_table_write() {
     cstring str;
     ind_beg(_db_ctypelen_curs,ctypelen,_db) {
@@ -1568,10 +1831,26 @@ void amc::gen_table_write() {
         dispsig_CopyOut(dispsig,out);
         str << out << eol;
     }ind_end;
+    ind_beg(_db_payloadhdr_curs,payloadhdr,_db) {
+        dmmeta::Payloadhdr out;
+        payloadhdr_CopyOut(payloadhdr,out);
+        str << out << eol;
+    }ind_end;
+    ind_beg(_db_msg_curs,msg,_db) {
+        dmmeta::Msg out;
+        msg_CopyOut(msg,out);
+        str << out << eol;
+    }ind_end;
+    ind_beg(_db_msgfield_curs,msgfield,_db) {
+        dmmeta::Msgfield out;
+        msgfield_CopyOut(msgfield,out);
+        str << out << eol;
+    }ind_end;
+    int rowid = 0;
     ind_beg(_db_tracefld_curs,tracefld,_db) {
         dmmeta::Tracefld out;
         tracefld_CopyOut(tracefld,out);
-        str << out << eol;
+        str << out << "  acr.rowid:" << (++rowid) << eol;
     }ind_end;
     ind_beg(_db_tracerec_curs,tracerec,_db) {
         dmmeta::Tracerec out;
@@ -1584,24 +1863,62 @@ void amc::gen_table_write() {
         str << out << eol;
     }ind_end;
 
-    if (algo_lib::_db.exit_code==0 && !amc::QueryModeQ()) {
+    // an empty -out_dir means "write nothing": without the ch_N gate,
+    // DirFileJoin("","data") resolves to the CWD repo data/ and the table
+    // update would escape into the live tree
+    if (algo_lib::_db.exit_code==0 && ch_N(_db.cmdline.out_dir) && !amc::QueryModeQ()) {
         algo_lib::FTempfile temp;
         TempfileInitX(temp,"amc");
-        SafeStringToFile(str,temp.filename);
-        command::acr_proc acr;
-        acr.cmd.trunc=true;
-        acr.cmd.replace=true;
-        acr.cmd.in=DirFileJoin(_db.cmdline.out_dir,"data");
-        acr.cmd.print=false;
-        acr.cmd.write=true;
-        acr.cmd.report=true;
-        acr.fstdin<<"<"<<temp.filename;
-        algo_lib::FFildes read;
-        ind_beg(algo::FileLine_curs,line,acr_StartRead(acr,read)) {
-            report::acr report;
-            if (report::acr_ReadStrptrMaybe(report,line)) {
-                _db.report.n_filemod += report.n_file_mod;
+        // the tempfile is acr's entire input: a failed write leaves it
+        // empty, acr then updates nothing and exits 0, and the run would
+        // claim success with the derived tables stale; fail the run
+        // before spawning acr
+        if (!algo::SaveFile(str,temp.filename,"amc.tempfile_write","table-write input could not be written; the derived tables were not updated")) {
+            algo_lib::_db.exit_code++;
+        } else {
+            command::acr_proc acr;
+            acr.cmd.trunc=true;
+            acr.cmd.replace=true;
+            acr.cmd.in=DirFileJoin(_db.cmdline.out_dir,"data");
+            acr.cmd.print=false;
+            acr.cmd.write=true;
+            acr.cmd.report=true;
+            acr.fstdin<<"<"<<temp.filename;
+            acr.fstdout = "|";
+            acr_Start(acr);
+            ind_beg(algo::FileLine_curs,line,acr.from_stdout) {
+                report::acr report;
+                if (report::acr_ReadStrptrMaybe(report,line)) {
+                    _db.report.n_filemod += report.n_file_mod;
+                }
+            }ind_end;
+            // The acr subprocess rewrites the derived tables (ctypelen, dispsig,
+            // tracefld, tracerec, userfunc) to match the code generated by this
+            // run. A failure would leave them stale (a stale dispsig produces
+            // cross-process signature mismatches), so a nonzero status fails
+            // the run.
+            command::acr_Wait(acr);
+            if (acr.status != 0) {
+                prerr("amc.table_write"
+                      <<Keyval("status",algo::DescribeWaitStatus(acr.status))
+                      <<Keyval("comment","acr failed; the ctypelen/dispsig/tracefld/tracerec/userfunc tables were not updated"));
+                algo_lib::_db.exit_code++;
             }
-        }ind_end;
+        }
     }
+}
+
+// -----------------------------------------------------------------------------
+
+void amc::gen_ssimdb() {
+    ind_beg(amc::_db_ctype_curs,ctype,amc::_db) {
+        if (ctype.p_ns->nstype == dmmeta_Nstype_nstype_ssimdb && ctype.original) {
+            if (!ctype.c_ssimfile && !ctype.c_nossimfile) {
+                prerr("amc.need_ssimfile"
+                      <<Keyval("ctype",ctype.ctype)
+                      <<Keyval("comment","ctype belonging to a 'nsdb' namespace must have a corresponding ssimfile"));
+                algo_lib::_db.exit_code++;
+            }
+        }
+    }ind_end;
 }

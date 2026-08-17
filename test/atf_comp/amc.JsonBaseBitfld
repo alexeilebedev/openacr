@@ -1,0 +1,23 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/json_base_bitfld.ssim -out_dir: -report:N %.FmtJson"
+# eof amc
+amc -> // --- algo_lib.Derived..FmtJson
+amc -> // Create JSON representation of algo_lib::Derived under PARENT node
+amc -> // cfmt:algo_lib.Derived.Json  printfmt:Auto
+amc -> lib_json::FNode * algo_lib::Derived_FmtJson(algo_lib::Derived row, lib_json::FNode *parent) {
+amc ->     lib_json::FNode *objnode = &lib_json::node_Alloc();
+amc ->     objnode->p_parent = parent?parent:objnode;
+amc ->     objnode->type   = lib_json_FNode_type_object;
+amc ->     node_XrefMaybe(*objnode);
+amc ->     u32_Print(row.value, lib_json::NewStringNode(objnode, "value").value);
+amc ->     u64_Print(row.count, lib_json::NewStringNode(objnode, "count").value);
+amc ->     return objnode;
+amc -> }
+amc -> // --- algo_lib.Flags..FmtJson
+amc -> // Create JSON representation of algo_lib::Flags under PARENT node
+amc -> // cfmt:algo_lib.Flags.Json  printfmt:Auto
+amc -> lib_json::FNode * algo_lib::Flags_FmtJson(algo_lib::Flags row, lib_json::FNode *parent) {
+amc ->     lib_json::FNode& value_node = lib_json::NewStringNode(parent);
+amc ->     u32_Print(row.value, value_node.value);
+amc ->     return &value_node;
+amc -> }
+# exit amc code:0

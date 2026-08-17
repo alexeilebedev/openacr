@@ -47,28 +47,6 @@ lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 atf_fuzz::FDb   atf_fuzz::_db;    // dependency found via dev.targdep
 
-namespace atf_fuzz {
-const char *atf_fuzz_help =
-"atf_fuzz: Generator of bad inputs for targets\n"
-"Usage: atf_fuzz [[-target:]<string>] [[-args:]<string>] [options]\n"
-"    OPTION      TYPE    DFLT                   COMMENT\n"
-"    -reprofile  string  \"temp/atf_fuzz.repro\"  File where repros are stored\n"
-"    [target]    string  \"\"                     Target to fuzz\n"
-"    [args]      string  \"\"                     Additional arguments to target\n"
-"    -inputfile  string  \"\"                     File with input tuples.\n"
-"    -fuzzstrat  regx    \"%\"                    Strategy to choose\n"
-"    -in         string  \"data\"                 Input directory or filename, - for stdin\n"
-"    -seed       int     0                      Random seed\n"
-"    -testprob   double  1                      Run each case with this probability\n"
-"    -verbose    flag                           Verbosity level (0..255); alias -v; cumulative\n"
-"    -debug      flag                           Debug level (0..255); alias -d; cumulative\n"
-"    -help                                      Print help and exit; alias -h\n"
-"    -version                                   Print version and exit\n"
-"    -signature                                 Show signatures and exit; alias -sig\n"
-;
-
-
-} // namespace atf_fuzz
 namespace atf_fuzz { // gen:ns_print_proto
     // Load statically available data into tables, register tables and database.
     // func:atf_fuzz.FDb._db.InitReflection
@@ -97,116 +75,16 @@ void atf_fuzz::trace_Print(atf_fuzz::trace& row, algo::cstring& str) {
 }
 
 // --- atf_fuzz.FDb._db.ReadArgv
-// Read argc,argv directly into the fields of the command line(s)
-// The following fields are updated:
-//     atf_fuzz.FDb.cmdline
-//     algo_lib.FDb.cmdline
+// Read argc,argv into the fields of atf_fuzz.FDb.cmdline (and any base command line)
+// via atf_fuzz_ReadArgv; then apply -help/-version and load floadtuples input.
 void atf_fuzz::ReadArgv() {
     command::atf_fuzz &cmd = atf_fuzz::_db.cmdline;
-    algo_lib::Cmdline &base = algo_lib::_db.cmdline;
-    int needarg=-1;// unknown
-    int argidx=1;// skip process name
-    int anonidx=0;
-    algo::strptr nextanon = command::atf_fuzz_GetAnon(cmd, anonidx);
-    tempstr err;
-    algo::strptr attrname;
-    bool isanon=false; // true if attrname is anonfld (positional)
-    algo_lib::FieldId baseattrid;
-    command::FieldId attrid;
-    bool endopt=false;
-    int whichns=0;// which namespace does the current attribute belong to
-    for (; argidx < algo_lib::_db.argc; argidx++) {
-        algo::strptr arg = algo_lib::_db.argv[argidx];
-        algo::strptr attrval;
-        algo::strptr dfltval;
-        bool haveval=false;
-        bool dash=elems_N(arg)>1 && arg.elems[0]=='-'; // a single dash is not an option
-        // this attribute is a value
-        if (endopt || needarg>0 || !dash) {
-            attrval=arg;
-            haveval=true;
-        } else {
-            // this attribute is a field name (with - or --)
-            // or a -- by itself
-            bool dashdash = elems_N(arg) >= 2 && arg.elems[1]=='-';
-            int skip = int(dash) + dashdash;
-            attrname=ch_RestFrom(arg,skip);
-            if (skip==2 && elems_N(arg)==2) {
-                endopt=true;
-                continue;// nothing else to do here
-            }
-            // parse "-a:B" arg into attrname,attrvalue
-            algo::i32_Range colon = TFind(attrname,':');
-            if (colon.beg < colon.end) {
-                attrval=ch_RestFrom(attrname,colon.end);
-                attrname=ch_FirstN(attrname,colon.beg);
-                haveval=true;
-            }
-            // look up which command (this one or the base) contains the field
-            whichns=0;
-            needarg=-1;
-            // look up parameter information in base namespace (needarg will be -1 if lookup fails)
-            if (algo_lib::FieldId_ReadStrptrMaybe(baseattrid,attrname)) {
-                needarg = algo_lib::Cmdline_NArgs(baseattrid,dfltval,&isanon);
-            }
-            if (needarg<0) {
-                whichns=1;
-                // look up parameter information in this namespace (needarg will be -1 if lookup fails)
-                if (command::FieldId_ReadStrptrMaybe(attrid,attrname)) {
-                    needarg = command::atf_fuzz_NArgs(attrid,dfltval,&isanon);
-                }
-            }
-            if (attrval == "" && dfltval != "") {
-                attrval=dfltval;
-                haveval=true;
-            }
-            if (needarg<0) {
-                err<<"atf_fuzz: unknown option "<<Keyval("value",arg)<<eol;
-            } else {
-                if (isanon) {
-                    if (attrname == nextanon) { // treat named anon (positional) argument as unnamed
-                        attrname = ""; // treat it as unnamed
-                    } else if (nextanon != "") { // disallow out-of-order anon (positional) args
-                        err<<"atf_fuzz: error at "<<algo::strptr_ToSsim(arg)<<": must be preceded by [-"<<nextanon<<"]"<<eol;
-                    }
-                }
-            }
-        }
-        // look up anon field name based on index
-        // anon fields are only allowed in the leaf ns, never base
-        if (ch_N(attrname) == 0) {
-            attrname = nextanon;
-            nextanon = command::atf_fuzz_GetAnon(cmd, ++anonidx);
-            command::FieldId_ReadStrptrMaybe(attrid,attrname);
-            whichns=1;
-        }
-        if (ch_N(attrname) == 0) {
-            err << "atf_fuzz: too many arguments. error at "<<algo::strptr_ToSsim(arg)<<eol;
-        } else if (haveval) {
-            // read value into currently selected arg
-            bool ret=false;
-            // it's already known which namespace is consuming the args,
-            // so directly go there
-            if (whichns == 0) {
-                ret=algo_lib::Cmdline_ReadFieldMaybe(base, attrname, attrval);
-            }
-            if (whichns==1) {
-                ret=command::atf_fuzz_ReadFieldMaybe(cmd, attrname, attrval);
-                switch(attrid.value) {
-                    default:break;
-                }
-            }
-            if (!ret) {
-                err<<"atf_fuzz: error in "
-                <<Keyval("option",attrname)
-                <<Keyval("value",attrval)<<eol;
-            }
-            needarg--;
-            if (needarg <= 0) {
-                attrname="";// forget which argument was being filled
-            }
-        }
+    algo::cstring err;
+    algo::StringAry args;
+    for (int argidx=1; argidx < algo_lib::_db.argc; argidx++) {// skip process name
+        ary_Alloc(args) = algo_lib::_db.argv[argidx];
     }
+    command::atf_fuzz_ReadArgv(cmd, args, err);
     bool dohelp = false;
     bool doexit=false;
     if (algo_lib::_db.cmdline.help) {
@@ -229,9 +107,7 @@ void atf_fuzz::ReadArgv() {
     algo_lib_logcat_debug.enabled = algo_lib::_db.cmdline.debug;
     algo_lib_logcat_verbose.enabled = algo_lib::_db.cmdline.verbose > 0;
     algo_lib_logcat_verbose2.enabled = algo_lib::_db.cmdline.verbose > 1;
-    if (!dohelp) {
-    }
-    // dmmeta.floadtuples:atf_fuzz.FDb.cmdline
+    // dmmeta.floadtuples:command.atf_fuzz.in
     if (!dohelp && err=="") {
         algo_lib::ResetErrtext();
         if (!atf_fuzz::LoadTuplesMaybe(cmd.in,true)) {
@@ -244,7 +120,7 @@ void atf_fuzz::ReadArgv() {
         doexit=true;
     }
     if (dohelp) {
-        prlog(atf_fuzz_help);
+        prlog(command::atf_fuzz_help);
     }
     if (doexit) {
         _exit(algo_lib::_db.exit_code);
@@ -271,7 +147,13 @@ void atf_fuzz::Step() {
 // --- atf_fuzz.FDb._db.InitReflection
 // Load statically available data into tables, register tables and database.
 static void atf_fuzz::InitReflection() {
-    algo_lib::imdb_InsertMaybe(algo::Imdb("atf_fuzz", atf_fuzz::InsertStrptrMaybe, NULL, atf_fuzz::MainLoop, NULL, algo::Comment()));
+    algo_lib::FImdb &row = algo_lib::imdb_Alloc();
+    row.imdb               = "atf_fuzz";
+    row.InsertStrptrMaybe  = atf_fuzz::InsertStrptrMaybe;
+    row.RemoveStrptrMaybe  = atf_fuzz::RemoveStrptrMaybe;
+    row.Step               = NULL;
+    row.MainLoop           = atf_fuzz::MainLoop;
+    algo_lib::imdb_XrefMaybe(row);
 
     algo::Imtable t_trace;
     t_trace.imtable         = "atf_fuzz.trace";
@@ -384,6 +266,27 @@ void atf_fuzz::Steps() {
     algo_lib::Step(); // dependent namespace specified via (dev.targdep)
 }
 
+// --- atf_fuzz.FDb._db.RemoveStrptrMaybe
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+bool atf_fuzz::RemoveStrptrMaybe(algo::strptr str) {
+    bool retval = true;
+    atf_fuzz::TableId table_id(-1);
+    value_SetStrptrMaybe(table_id, algo::GetTypeTag(str));
+    switch (value_GetEnum(table_id)) {
+        case atf_fuzz_TableId_dev_Target: { // finput:atf_fuzz.FDb.target
+            // finput atf_fuzz.FDb.target: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        default:
+        retval = false;
+        break;
+    } //switch
+    return retval;
+}
+
 // --- atf_fuzz.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
@@ -438,7 +341,7 @@ void* atf_fuzz::fuzzstrat_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     atf_fuzz::FFuzzstrat*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.fuzzstrat_lary[bsr];
         if (!lev) {
             lev=(atf_fuzz::FFuzzstrat*)algo_lib::malloc_AllocMem(sizeof(atf_fuzz::FFuzzstrat) * (u64(1)<<bsr));
@@ -447,7 +350,7 @@ void* atf_fuzz::fuzzstrat_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.fuzzstrat_n = i32(new_nelems);
+        _db.fuzzstrat_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -459,7 +362,7 @@ void atf_fuzz::fuzzstrat_RemoveAll() {
     for (u64 n = _db.fuzzstrat_n; n>0; ) {
         n--;
         fuzzstrat_qFind(u64(n)).~FFuzzstrat(); // destroy last element
-        _db.fuzzstrat_n = i32(n);
+        _db.fuzzstrat_n = i64(n);
     }
 }
 
@@ -470,7 +373,7 @@ void atf_fuzz::fuzzstrat_RemoveLast() {
     if (n > 0) {
         n -= 1;
         fuzzstrat_qFind(u64(n)).~FFuzzstrat();
-        _db.fuzzstrat_n = i32(n);
+        _db.fuzzstrat_n = i64(n);
     }
 }
 
@@ -484,8 +387,8 @@ static void atf_fuzz::fuzzstrat_LoadStatic() {
         ,{NULL, NULL}
     };
     (void)data;
-    atfdb::Fuzzstrat fuzzstrat;
     for (int i=0; data[i].s; i++) {
+        atfdb::Fuzzstrat fuzzstrat;
         (void)atfdb::Fuzzstrat_ReadStrptrMaybe(fuzzstrat, algo::strptr(data[i].s));
         atf_fuzz::FFuzzstrat *elem = fuzzstrat_InsertMaybe(fuzzstrat);
         vrfy(elem, tempstr("atf_fuzz.static_insert_fatal_error")
@@ -550,7 +453,7 @@ void* atf_fuzz::target_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     atf_fuzz::FTarget*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.target_lary[bsr];
         if (!lev) {
             lev=(atf_fuzz::FTarget*)algo_lib::malloc_AllocMem(sizeof(atf_fuzz::FTarget) * (u64(1)<<bsr));
@@ -559,7 +462,7 @@ void* atf_fuzz::target_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.target_n = i32(new_nelems);
+        _db.target_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -571,7 +474,7 @@ void atf_fuzz::target_RemoveAll() {
     for (u64 n = _db.target_n; n>0; ) {
         n--;
         target_qFind(u64(n)).~FTarget(); // destroy last element
-        _db.target_n = i32(n);
+        _db.target_n = i64(n);
     }
 }
 
@@ -582,7 +485,7 @@ void atf_fuzz::target_RemoveLast() {
     if (n > 0) {
         n -= 1;
         target_qFind(u64(n)).~FTarget();
-        _db.target_n = i32(n);
+        _db.target_n = i64(n);
     }
 }
 
@@ -804,7 +707,7 @@ void atf_fuzz::FDb_Uninit() {
 // Copy fields out of row
 void atf_fuzz::fuzzstrat_CopyOut(atf_fuzz::FFuzzstrat &row, atfdb::Fuzzstrat &out) {
     out.fuzzstrat = row.fuzzstrat;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- atf_fuzz.FFuzzstrat.base.CopyIn
@@ -904,7 +807,7 @@ bool atf_fuzz::FieldId_ReadStrptrMaybe(atf_fuzz::FieldId &parent, algo::strptr i
 // --- atf_fuzz.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:atf_fuzz.FieldId.String  printfmt:Raw
-void atf_fuzz::FieldId_Print(atf_fuzz::FieldId& row, algo::cstring& str) {
+void atf_fuzz::FieldId_Print(atf_fuzz::FieldId row, algo::cstring& str) {
     atf_fuzz::value_Print(row, str);
 }
 
@@ -985,7 +888,7 @@ bool atf_fuzz::TableId_ReadStrptrMaybe(atf_fuzz::TableId &parent, algo::strptr i
 // --- atf_fuzz.TableId..Print
 // print string representation of ROW to string STR
 // cfmt:atf_fuzz.TableId.String  printfmt:Raw
-void atf_fuzz::TableId_Print(atf_fuzz::TableId& row, algo::cstring& str) {
+void atf_fuzz::TableId_Print(atf_fuzz::TableId row, algo::cstring& str) {
     atf_fuzz::value_Print(row, str);
 }
 

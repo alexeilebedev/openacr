@@ -1,0 +1,5 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/chash_global.ssim -out_dir: -report:N zzz"
+# eof amc
+amc -> amc.chash_global  chash:algo_lib.FDb  comment:"chash on a global ctype: there is exactly one instance, nothing to hash"
+amc -> amc.no_output  comment:"no files were modified"
+# exit amc code:1

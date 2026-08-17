@@ -1,27 +1,38 @@
 ## acr - Algo Cross-Reference - ssimfile database & update tool
 <a href="#acr"></a>
 
-Acr is a query and editing tool for ssim (super-simple) datasets.
-An acr dataset can be a directory, file or stdin.
+`acr` is the query and editing front-end for the ssim dataset under
+`data/`.  It handles selection, mutation, transitive closure, referential
+integrity checks, and writes changes back to disk.  Every OpenACR tool
+reads its configuration from ssimfiles; `acr` is how those files are
+inspected and modified.
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Internals](#internals)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Quick reference](#quick-reference)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Querying](#querying)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Editing](#editing)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Validation](#validation)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [acr_in — Target inputs](#acr_in-target-inputs)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [acr_ed — Schema editor](#acr_ed-schema-editor)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Reading Stdin](#reading-stdin)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Sorting & RowIDs](#sorting---rowids)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sorting & RowIDs](#sorting-rowids)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [See Also](#see-also)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
-&#128196; [acr - Internals](/txt/exe/acr/internals.md)<br/>
 &#128196; [ACR release notes](/txt/exe/acr/relnotes.md)<br/>
+<!-- abt_md.toc_end -->
 
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
+### Internals
+<a href="#internals"></a>
+&#128196; [acr - Internals](/txt/gen/acr/acr.md)<br/>
 
 ### Syntax
 <a href="#syntax"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Syntax -->
 ```
 acr: Algo Cross-Reference - ssimfile database & update tool
 Usage: acr [[-query:]<string>] [options]
@@ -70,44 +81,354 @@ Usage: acr [[-query:]<string>] [options]
     -help                       Print help and exit; alias -h
     -version                    Print version and exit
     -signature                  Show signatures and exit; alias -sig
-
 ```
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Syntax -->
 
 ### Description
 <a href="#description"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Description -->
 
-Acr performs a fixed number of operations in a fixed order. All of the operations can be enabled/controlled with
-command-line flags.
+Acr performs a fixed number of operations in a fixed order.  All
+operations can be enabled or controlled with command-line flags.
+
 The order of operations is:
-* initial selection according to the command-line regex (-query).
-* Loading files (-in)
-* Processing any input stream (triggered with -sel, -insert, -merge, -replace, -update). 
-* Extending selection up (-nup)
-* Extending selection down (-ndown). This option is modified by `-l`.
-* Selecting unused records (-unused)
-* Selecting meta-data (-meta) for current records
-* Deletion of selected records (-del)
-* Checking of constraints. Checking and `-ndown` are modified by option `-x`, which traverses `ssimreq` constraints in addition
-to pkey refrences.
-* Editing of intermediate transaction in an editor (-e), or in MariaDB (-my)
-* Printing resulting records to stdout (-print, -field, -regxof). Any records that's selected, modified or deleted is
-printed. Modified records are prefixed with `acr.update`, and deleted records with `acr.delete`.
-The -print option is modified by `-tree`, `-loose`, `-maxgroup`, `-rowid`, `-fldfunc`, `-cmt`.
-* Printing or executing the resulting script if `-g` (git) option is sepcified.
-* Writing to dataset or back to file (-write). Option -e implies -write. 
-* Printing final report summarizing the number of updates and modified files (-report).
 
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Description -->
+1. Initial selection by `-query` regex.
+2. Load files specified by `-in` (default: `data/`).
+3. Process any input stream (`-sel`, `-insert`, `-merge`, `-replace`,
+   `-update`).
+4. Extend selection up (`-nup`).
+5. Extend selection down (`-ndown`), optionally restricted by `-l`.
+6. Select unused records (`-unused`).
+7. Select meta-data (`-meta`) for current records.
+8. Delete selected records (`-del`).
+9. Check constraints (`-check`); `-x` also traverses `ssimreq` rules.
+10. Edit the intermediate transaction in an editor (`-e`) or in
+    MariaDB (`-my`).
+11. Print results to stdout (`-print`, `-field`, `-regxof`).  Any record
+    that is selected, modified, or deleted is printed.  Modified records
+    are prefixed `acr.update`; deleted records are prefixed `acr.delete`.
+    Print options: `-tree`, `-loose`, `-maxgroup`, `-rowid`, `-fldfunc`,
+    `-cmt`.
+12. Write to the dataset (`-write`); `-e` implies `-write`.
+13. Execute the git script if `-g` is specified, or print it when the
+    write did not happen.
+14. Print the final report (`-report`): number of updates and modified
+    files.
+
+### Quick reference
+<a href="#quick-reference"></a>
+
+Common query patterns:
+
+```bash
+acr ns                               # list all namespaces
+acr target                           # list build targets
+acr ssimfile                         # list all ssim tables
+acr ctype                            # all ctypes
+acr field:<ctype>.%                  # fields of a ctype
+acr field:command.<proc>.%           # command-line options for a process
+acr field -where arg:u8              # fields by type (-where repeatable)
+acr targdep:<target>.%               # target dependencies
+acr dispatch_msg                     # dispatch handlers per process
+acr xref                             # in-memory xrefs
+acr %                                # dump everything
+acr <pkey> -t -cmt                   # transitive closure with comments
+```
+
+Both halves of the query (`<ssimfile>:<pkey>`) accept `%` as a SQL
+wildcard.  The first field in each tuple is the primary key.  If the
+type tag is omitted, `%` is assumed — so `acr ctype` is the same as
+`acr ctype:%`.
+
+Common edit patterns:
+
+```bash
+echo '<ssim tuple>' | acr -insert -write       # insert a record
+echo '<full tuple>' | acr -merge -write        # upsert (insert + update)
+acr <ssimfile>:<pkey> -del -write              # delete a record
+acr <pkey> -rename:<newkey> -write             # rename a pkey
+# Field rename uses the FULL field pkey:
+acr field:a.b.c -rename:a.b.d -write
+```
+
+After any edit run validation (see [Validation](#validation)).
+
+### Querying
+<a href="#querying"></a>
+
+#### By primary key and type tag
+<a href="#by-primary-key-and-type-tag"></a>
+
+The query argument takes the form `<typetag>:<pkey>` where both halves
+are SQL regexes (`%` = wildcard, `|` = alternation, `()` = grouping):
+
+```bash
+acr ns:algo_%           # namespaces whose name starts with "algo_"
+acr ctype:%FDb          # ctypes whose name ends in "FDb"
+acr %:x                 # any record in any table whose pkey is "x"
+acr %                   # every record in the dataset
+```
+
+If only a type tag is given (no colon), `acr` matches it as a prefix
+against both the type tag and the pkey, so `acr ns` and `acr ns:%`
+are equivalent.
+
+#### -where — Filtering on non-primary fields
+<a href="#-where-filtering-on-non-primary-fields"></a>
+
+`-where` is repeatable; all conditions must match:
+
+```bash
+acr field -where arg:algo.cstring           # fields of type cstring
+acr field -where reftype:Thash              # all hash-index fields
+acr field -where arg:u32 -where reftype:Val # u32 Val fields
+```
+
+#### Transitive closure
+<a href="#transitive-closure"></a>
+
+`-t` is the most-used option for exploring the schema.  It expands the
+selection up and down through all pkey references and prints the result
+as an indented tree:
+
+```bash
+acr ns:acr -t               # full schema tree for the acr namespace
+acr ctype:algo_lib.FDb -t   # all fields, indexes, steps for FDb
+```
+
+More fine-grained control:
+
+```bash
+acr <query> -nup 2      # follow pkey references 2 levels up
+acr <query> -ndown 3    # follow all back-references 3 levels down
+acr <query> -xref       # same as -nup 100 -ndown 100
+acr <query> -ndown 1 -l # only go down via primary-key references
+```
+
+The `-tree` flag turns the flat selected set into a visual tree even
+without `-xref`.  `-loose` relaxes the print order so parents need not
+appear before children.
+
+#### Fldfunc expansion
+<a href="#fldfunc-expansion"></a>
+
+Some fields are computed substrings of the pkey (defined via
+`dmmeta.substr`).  By default acr prints only the stored field.
+`-fldfunc` also evaluates and prints the computed fields:
+
+```bash
+acr field:dmmeta.Field.% -fldfunc
+```
+
+This is automatically implied by `-my` (MariaDB integration).
+
+#### Output formatting
+<a href="#output-formatting"></a>
+
+```bash
+acr ns -pretty          # align output in rectangular blocks
+acr ns -cmt             # include field comments on each printed tuple
+acr field:<ns>.% -field arg     # print only the arg column, one per line
+acr ns -regxof:nstype   # print a single regex matching all nstype values
+acr ctype:<ns>.% -meta  # deselect ctypes, select their meta-records instead
+```
+
+`-cmd` generates a shell script that assigns every field's value to a
+shell variable; pipe to `bash` to act on each row:
+
+```bash
+acr ns:acr -cmd 'echo Namespace is $ns'  | bash
+```
+
+### Editing
+<a href="#editing"></a>
+
+All mutating operations require `-write` to persist changes.
+
+#### Insert, replace, update, merge
+<a href="#insert-replace-update-merge"></a>
+
+```bash
+# Add a new record (fails silently if pkey already exists)
+echo 'dmmeta.ns  ns:myns  nstype:exe  license:GPL  comment:""' \
+    | acr -insert -write
+
+# Replace a record entirely (missing fields get defaults)
+echo '<full tuple>' | acr -replace -write
+
+# Update only the specified attributes of existing records
+echo '<partial tuple>' | acr -update -write
+
+# Insert if new, update non-key attributes if exists (upsert)
+echo '<tuple>' | acr -merge -write
+```
+
+Bulk updates (many records at once): build a file of tuples and pipe
+it in:
+
+```bash
+cat changes.ssim | acr -merge -write
+```
+
+#### Delete
+<a href="#delete"></a>
+
+```bash
+acr ns:myns -del -write             # delete one record
+acr ns:myns -del -x -write          # also delete ssimreq-dependent records
+acr ns:myns -del -x -g -write       # also issue git rm for tracked files
+acr % -del -write                   # wipe the entire dataset
+```
+
+When deleting a record acr also deletes all records that refer to it
+(cascade delete).  When deleting a `dmmeta.field` row, acr rewrites
+the ssimfile to drop the column.
+
+#### Rename
+<a href="#rename"></a>
+
+`-rename` replaces the pkey value of the matched record and cascades to
+all referencing records:
+
+```bash
+acr ns:old_name -rename:new_name -write
+# Fields require the FULL pkey (ctype.fieldname):
+acr field:myns.FRec.old_field -rename:myns.FRec.new_field -write
+```
+
+If the new pkey already exists (a merge/collision), the original record
+is deleted and its children are re-parented.  Combined with `-g`, file
+renames are issued to git:
+
+```bash
+acr ns:old_ns -rename:new_ns -g -write
+```
+
+#### Editor workflow (-e)
+<a href="#editor-workflow-e-"></a>
+
+`-e` opens the current selection in `$EDITOR` just before writing.
+The round-trip is: select → display → edit → write.  Abort by killing
+the editor or deleting `temp/acr.ssim`.
+
+```bash
+acr ns:myns -t -e        # open the full subtree for editing
+acr field:<ns>.% -e      # edit all fields of a namespace
+```
+
+`-e` implies `-write`.
+
+The write-back deletes the selection and re-creates it from the buffer,
+so a line the editor hands back that acr cannot turn into a record
+takes that record with it.  Two ways a line can fail are reported as
+errors: a line whose quoting does not close, and a line whose type tag
+names no table acr knows.  Either one is named with its file, its line
+number and its text, and the run then writes no ssimfile and exits
+nonzero, so every file still holds what it held before the session
+started.  A table that could not be read refuses the write the same
+way and for the same reason.
+
+A line whose primary key attribute was deleted is reported as a
+warning rather than an error.  The line still names a type, so acr
+knows what kind of record it is, but nothing on it says which record
+it is.  Such a line is dropped, and the rest of the session writes, so
+the record it came from is no longer in its ssimfile.  Read the record
+counts on the final `report.acr` line when a session reports a missing
+primary key.
+
+`temp/acr.ssim` carries the buffer for the duration of the session and
+is removed when the session ends, including a session that refused the
+write.  It is left on disk when the run stops before that point --
+the editor exiting nonzero, or a dataset file changing while the
+editor was open.
+
+The exit code reports success or failure, as in every other mode: 0
+when the edit was applied (whether or not any file changed), nonzero
+when it was not (editor failure, a dataset file changed during the
+edit, a line reported as an error, a failed write).  The number
+of files modified is carried by the `n_file_mod` attribute of the final
+`report.acr` line.
+
+#### MariaDB workflow (-my)
+<a href="#mariadb-workflow-my-"></a>
+
+`-my` opens the selection in a temporary MariaDB instance.  When the
+shell exits the data is written back.  Every ssim namespace maps to a
+MariaDB database; each ssimfile maps to a table.  `-my` implies
+`-fldfunc` (computed fields appear as regular columns) and `-write`.
+
+```bash
+acr ns:dmmeta -my       # browse/edit the dmmeta namespace in SQL
+# Or run a one-shot SQL expression:
+echo "UPDATE ctype SET comment='Updated' WHERE ns='acr'" \
+    | acr -my %
+```
+
+#### Git integration (-g)
+<a href="#git-integration-g-"></a>
+
+When the selection includes `dev.gitfile` records, `-g` issues `git mv`
+and `git rm` commands for any renames or deletions.  Without `-write`
+the script is printed to stdout instead of executed.  A script that runs
+and returns nonzero fails the run.
+
+```bash
+# Rename a namespace and move all its files in git:
+acr ns:old_ns -del -x -g -write
+```
+
+### Validation
+<a href="#validation"></a>
+
+After any manual ssimfile edit (or `acr -insert/merge/update/delete
+-write`) run:
+
+```bash
+acr -check % -x       # referential integrity + ssimreq; must exit 0
+amc                   # code generator; must exit 0
+```
+
+`-check` deselects valid records and leaves bad ones so you can see
+exactly what's wrong.  `-x` adds `ssimreq` constraints on top of pkey
+checks.  With `-check -del` bad records are removed.  With `-check -e`
+bad records are opened for editing.
+
+`acr_ed -write` runs `amc` automatically on success — no manual check
+needed.  After adding or removing git-tracked files, run:
+
+```bash
+update-gitfile        # reconcile dev.gitfile with what git tracks
+acr -check % -x      # verify
+```
+
+`gstatic` tables (`acr dmmeta.gstatic`) compile into C++ global arrays
+via `amc`.  Changes to them take effect only after `amc` + rebuild.
+
+### acr_in — Target inputs
+<a href="#acr_in-target-inputs"></a>
+
+`acr_in` is a standalone tool that answers "which ssimfiles does a target
+read?".  `acr` itself has no dependency on `acr_in`.
+
+Full reference: [/txt/exe/acr_in/README.md](/txt/exe/acr_in/README.md).
+
+### acr_ed — Schema editor
+<a href="#acr_ed-schema-editor"></a>
+
+`acr_ed` is a standalone helper that generates scripts calling `acr` with
+`-insert`, `-del` or `-rename`, plus `amc`.  Use it for schema
+modifications (new ctypes, fields, targets, source files).  `acr` has no
+dependency on `acr_ed` — `acr_ed` just automates the same `acr` + `amc`
+calls you could do by hand.
+
+Full reference: [/txt/exe/acr_ed/README.md](/txt/exe/acr_ed/README.md).
 
 ### Reading Stdin
 <a href="#reading-stdin"></a>
 
-The options `-insert`, `-replace`, `-merge`, '-sel' all enable reading of stdin
-for a list of tuples. The lines in the input stream can override the setting on the command line.
-The following table shows the possible prefixes:
+The options `-insert`, `-replace`, `-merge`, `-sel` all enable reading
+of stdin for a list of tuples.  Lines in the input stream can override
+the setting on the command line.  The following table shows the possible
+prefixes:
 
 ```
 inline-command: acr fconst:acr.ReadMode.read_mode/% -field name,comment
@@ -124,35 +445,48 @@ To illustrate, invoking `acr -insert` and then providing the lines
 acr.delete <tuple>
 acr.merge <tuple>
 ```
-
-Performs the corresponding actions.
+performs the corresponding actions regardless of the `-insert` flag.
 
 ### Sorting & RowIDs
-<a href="#sorting---rowids"></a>
+<a href="#sorting-rowids"></a>
 
-Acr always saves files in sorted order. Sorting is controlled by the `ssimsort`
-table, which is a subset of `ssimfile`. Sorting is optional. If `ssimsort` is missing
-or doesn't specify the primary key of the table, the set is *order-dependent*.
-When sorting is enabled, it can be done on any fields, including a fldfunc.
+Acr always saves files in sorted order.  Sorting is controlled by the
+`ssimsort` table, which is a subset of `ssimfile`.  Sorting is optional.
+If `ssimsort` is missing or doesn't specify the primary key of the
+table, the set is *order-dependent*.  When sorting is enabled, it can
+be done on any fields, including a fldfunc.
+
+To reorder records manually, use `-rowid`:
+
+```bash
+acr <pat> -rowid          # prints acr.rowid:<float> per record
+# edit the rowid values, then:
+acr -merge -write
+```
+
+For fields, `acr_ed -create -field ... -before <existing>` is usually
+simpler.
 
 ### See Also
 <a href="#see-also"></a>
 
-* [acr_my](/txt/exe/acr_my/README.md)
-* [acr_ed](/txt/exe/acr_ed/README.md)
-* [mysql2ssim](/txt/exe/mysql2ssim/README.md)
-* [ssim2mysql](/txt/exe/ssim2mysql/README.md)
+* [acr_ed](/txt/exe/acr_ed/README.md) — schema editor; wraps `acr` and runs `amc`
+* [acr_my](/txt/exe/acr_my/README.md) — open ssimfiles in MariaDB
+* [acr_in](/txt/exe/acr_in/README.md) — extract inputs a target reads
+* [mysql2ssim](/txt/exe/mysql2ssim/README.md) — convert MySQL dump to ssimfiles
+* [ssim2mysql](/txt/exe/ssim2mysql/README.md) — convert ssimfiles to MySQL
+* [amc](/txt/exe/amc/README.md) — code generator driven by the ssim schema
+* [Ssim Fundamentals](/txt/openacr/ssim.md) — ssim tuple format, fldfunc, cross-references
+* [Schema Design and Pitfalls](/txt/openacr/schema.md)
 
 ### Options
 <a href="#options"></a>
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Options -->
 #### -query -- Regx to match record
 <a href="#-query"></a>
 
 This option controls initial record selection.
 A SQL-like regular expression of the form `<ssimfile>:<key>` or `<ssimfile.fieldname>:<key>`.
-The whildcard character is `%`, and characters '|', '(', ')' are also supported.
+The wildcard character is `%`, and characters `|`, `(`, `)` are also supported.
 If `<key>` is omitted, it is assumed to be `%`.
 For instance, `acr ctype` prints the ctype table. `acr %:x` prints any record whose primary key is `x`.
 And `acr %` prints the entire dataset.
@@ -168,14 +502,14 @@ set, acr checks that the tuple matches all of `-where`s specified on the command
 <a href="#-in"></a>
 
 Specify input dataset path.
-If -in refers to a directory, then ssimfiles are assumed to follow the standard layout NS/NAME.ssim
+If -in refers to a directory, then ssimfiles are assumed to follow the standard layout NS/NAME.ssim.
 If -in is "-", the dataset is loaded from stdin.
 
 #### -del -- Delete found item
 <a href="#-del"></a>
 
 With `-del`, any records that are selected are deleted.
-The deletion proceeds recursively, deleting any dependent records. 
+The deletion proceeds recursively, deleting any dependent records.
 `-del` works with any number of records. You could delete the entire database with
 `acr % -del -write`. When deleting a record, acr also deletes any dependent records.
 
@@ -253,7 +587,7 @@ all valid records and leave only bad records as selected. If this option is set 
 Replace the value of any attribute matching the command-line query
 to the specified value. If a collision occurs, or multiple records match selection,
 the source record (record being renamed) is deleted, while all of its children (records
-reachable with `-ndown` are still renamed recursively. So this option
+reachable with `-ndown`) are still renamed recursively. So this option
 can be used to merge any two record trees. In combination with `-g`, this option
 can also be used to move git files within the tree. Directories for target files
 will be created automatically.
@@ -315,10 +649,10 @@ to the human eye.
 #### -my -- Invoke acr_my -e (using acr_my directly is faster)
 <a href="#-my"></a>
 
-Launch an instance of mariadb and imports the selection as databases into mariadb.
+Launch an instance of mariadb and import the selection as databases.
 It then drops you into a mariadb shell, where you can apply needed transformations.
-Upon exit, the data is downloaded from the database back to disk. -my implies -write.
-The option `-my` also implies `-fldfunc`, so that all the computed fields become available inside MariaDB
+Upon exit, the data is downloaded from the database back to disk. `-my` implies `-write`.
+The option `-my` also implies `-fldfunc`, so that all computed fields become available inside MariaDB
 as regular columns (but they won't be saved back).
 
 All ssim tables are compatible with MariaDB. The namespace (ns) corresponds to a database in MariaDB,
@@ -330,8 +664,8 @@ Any effects of the SQL expression will be visible via `git diff` upon completion
 #### -schema -- Directory for initializing acr meta-data
 <a href="#-schema"></a>
 
-Specify where to load acr schema tables (ctype, field, etc)
-By default, these tables are loaded from `"data"` directory.
+Specify where to load acr schema tables (ctype, field, etc).
+By default, these tables are loaded from the `"data"` directory.
 
 #### -e -- Open selection in editor, write back when done.
 <a href="#-e"></a>
@@ -355,11 +689,18 @@ Issue `git rm` and `git mv` commands for any changes made to the `dev.gitfile` t
 If you want to rename or delete a namespace, all of its source files, component tests, in one operation,
 use `acr ns:XYZ -del -x -g -write`.
 If `-write` is not specified, the output script is printed to stdout instead of being executed.
+The same happens whenever the ssimfiles do not reach disk -- an input that could not be read,
+or a write the filesystem refuses: acr prints the script rather than executing it, matching
+the ssimfiles it does not rewrite.
+A script that does execute and returns nonzero fails the run, and acr prints the script it ran.
+This is what a rename needs: by the time the script runs the ssimfiles already name the
+destination, so a refused `git mv` would otherwise leave the worktree on the old path with
+acr reporting success.
 
 #### -x -- Propagate select/rename/delete to ssimreq records
 <a href="#-x"></a>
 
-This option extends cascasde delete, update and delete steps to include any rules
+This option extends cascade delete, update and delete steps to include any rules
 specified in the `ssimreq` table.
 
 #### -rowid -- Always print acr.rowid attribute
@@ -368,8 +709,7 @@ specified in the `ssimreq` table.
 #### -cmt -- Print comments for all columns referenced in output
 <a href="#-cmt"></a>
 
-The -cmt option displays any comments associated with the current selection, which includes comments attached to the displayed
-fields.
+The -cmt option displays any comments associated with the current selection, which includes comments attached to the displayed fields.
 
 #### -report -- Show final report
 <a href="#-report"></a>
@@ -386,9 +726,9 @@ Specify whether to print selected records. Default is true.
 
 The `-cmd` option produces an executable shell script which should be piped to `bash`.
 For each record in the final selection, acr outputs variable assignment statements, giving the
-shell script access to the values of all field attributes, (including any computed fields), the tuple itsef (`acr_tuple`)
-the type tag (`acr_head`) and the rowid (`acr_rowid`). The script can then use whatever 
-other Unix tools it needs to.
+shell script access to the values of all field attributes (including any computed fields), the tuple
+itself (`acr_tuple`), the type tag (`acr_head`), and the rowid (`acr_rowid`). The script can then use
+whatever other Unix tools it needs to.
 
 Since `-cmd` just outputs a script, the output can be consumed with a single process.
 One command per output row would have been much slower.
@@ -409,14 +749,11 @@ in the selected set.
 #### -meta -- Select meta-data for selected records
 <a href="#-meta"></a>
 
-Deselect any selected records and selects their meta-data instead.
+Deselect any selected records and select their meta-data instead.
 `-meta` implies `-t`.
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
 
 ### Inputs
 <a href="#inputs"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
 `acr` takes the following tables on input:
 |Ssimfile|Comment|
 |---|---|
@@ -433,6 +770,3 @@ Deselect any selected records and selects their meta-data instead.
 |[dmmeta.ssimreq](/txt/ssimdb/dmmeta/ssimreq.md)|Extended constraints for ssim records|
 |[dmmeta.ssimsort](/txt/ssimdb/dmmeta/ssimsort.md)|Define sort order for ssimfile|
 |[dmmeta.substr](/txt/ssimdb/dmmeta/substr.md)|Specify that the field value is computed from a substring of another field|
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
-

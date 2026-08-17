@@ -7,18 +7,9 @@
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2023 AlgoRND
 //
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// This source code constitutes confidential information and trade secrets
+// of AlgoRND. Unauthorized copying, distribution or sharing of this file,
+// via any medium, is strictly prohibited.
 //
 
 
@@ -154,21 +145,21 @@ inline http::ExtensionHeader* http::extension_header_Last(http::Request& parent)
 
 // --- http.Request.extension_header.Max
 // Return max. number of items in the array
-inline i32 http::extension_header_Max(http::Request& parent) {
+inline i64 http::extension_header_Max(http::Request& parent) {
     (void)parent;
     return parent.extension_header_max;
 }
 
 // --- http.Request.extension_header.N
 // Return number of items in the array
-inline i32 http::extension_header_N(const http::Request& parent) {
+inline i64 http::extension_header_N(const http::Request& parent) {
     return parent.extension_header_n;
 }
 
 // --- http.Request.extension_header.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void http::extension_header_Reserve(http::Request& parent, int n) {
-    u32 new_n = parent.extension_header_n + n;
+inline void http::extension_header_Reserve(http::Request& parent, i64 n) {
+    u64 new_n = parent.extension_header_n + n;
     if (UNLIKELY(new_n > parent.extension_header_max)) {
         extension_header_AbsReserve(parent, new_n);
     }
@@ -257,21 +248,21 @@ inline http::ExtensionHeader* http::extension_header_Last(http::Response& parent
 
 // --- http.Response.extension_header.Max
 // Return max. number of items in the array
-inline i32 http::extension_header_Max(http::Response& parent) {
+inline i64 http::extension_header_Max(http::Response& parent) {
     (void)parent;
     return parent.extension_header_max;
 }
 
 // --- http.Response.extension_header.N
 // Return number of items in the array
-inline i32 http::extension_header_N(const http::Response& parent) {
+inline i64 http::extension_header_N(const http::Response& parent) {
     return parent.extension_header_n;
 }
 
 // --- http.Response.extension_header.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void http::extension_header_Reserve(http::Response& parent, int n) {
-    u32 new_n = parent.extension_header_n + n;
+inline void http::extension_header_Reserve(http::Response& parent, i64 n) {
+    u64 new_n = parent.extension_header_n + n;
     if (UNLIKELY(new_n > parent.extension_header_max)) {
         extension_header_AbsReserve(parent, new_n);
     }

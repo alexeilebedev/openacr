@@ -1,0 +1,5 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/fcmp_global.ssim -out_dir: -report:N zzz"
+# eof amc
+amc -> amc.fcmp_global  fcmp:algo_lib.FDb.seqno  comment:"fcmp on a global ctype's field: there is exactly one instance, nothing to compare"
+amc -> amc.no_output  comment:"no files were modified"
+# exit amc code:1

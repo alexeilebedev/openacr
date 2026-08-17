@@ -1,0 +1,148 @@
+// A header whose update-hdr sections cover every shape the section-close rule
+// has to place: the lines that close a section, the lines that look like a
+// close and are not, and the braces that nest no C++ at all.
+namespace one { // update-hdr
+void Old1();
+struct Keep {
+    int a;
+};
+inline void Branch(bool c) {
+    if (c) {
+    } else {
+    }
+}
+}
+
+namespace two { // update-hdr
+void Old2();
+} // a trailing line comment is part of the closing line
+
+namespace three { // update-hdr
+void Old3();
+} /* a trailing block comment is part of the closing line too */
+
+namespace four { // update-hdr
+void Old4();
+	}
+
+namespace five { // update-hdr
+// a brace in a line comment opens nothing: {
+/* a brace in a one-line block comment closes nothing: } */
+/* a block comment that spans lines
+   carries a brace {
+   and nests nothing */
+void Old5();
+}
+
+namespace six { // update-hdr
+const char *open_brace = "{";
+const char close_brace = '}';
+const char *escaped_quote = "\"}";
+inline long long Billion() { return 1'000'000'000; }
+void Old6();
+}
+
+namespace seven { // update-hdr
+const wchar_t wide_close = L'}';
+const char32_t utf32_close = U'}';
+void Old7();
+}
+
+namespace eight { // update-hdr
+const char16_t utf16_open = u'{';
+const char utf8_open = u8'{';
+void Old8();
+}
+
+namespace nine { // update-hdr
+inline void Encoded() {
+    const wchar_t inner_close = L'}';
+}
+void Old9();
+}
+
+namespace ten // update-hdr
+{
+void Old10();
+}
+
+namespace eleven { namespace inner { // update-hdr
+void Old11();
+}
+}
+
+namespace twelve { namespace inner2 { // update-hdr
+void Old12();
+}}
+
+namespace thirteen { // update-hdr
+namespace body { // opened by the body, so its brace is not the section's
+void Old13();
+}
+}
+
+namespace fourteen { // update-hdr
+void Old14();
+};
+
+namespace fifteen { namespace inner3 { // update-hdr
+void Old15();
+}
+struct Between {
+    int a;
+};
+}
+
+namespace sixteen { namespace inner4 { namespace inner5 { // update-hdr
+void Old16();
+}
+void KeptBetween();
+struct Between2 {
+    int b;
+};
+}}
+
+namespace seventeen { // update-hdr
+const char *raw_brace = R"({)";
+const char *raw_odd_quote = R"(a " and a /* and a })";
+const char *raw_delim = R"x(a )" and a })x";
+const char *raw_paren = R"(a ) and a {)";
+const char *raw_slash = R"(// } /* {)";
+const wchar_t *raw_wide = LR"({)";
+const char16_t *raw_u16 = uR"({)";
+const char32_t *raw_u32 = UR"(})";
+const char *raw_u8 = u8R"(})";
+const char *quoted_raw = "R\"({";
+// a raw string inside a line comment opens nothing: R"({
+/* and neither does one inside a block comment: R"({ */
+void Old17();
+}
+
+namespace eighteen { // update-hdr
+const char *raw_span = R"(
+a brace that nests nothing: {
+)";
+void Old18();
+}
+
+namespace nineteen { // update-hdr
+const char *continued_open = "a\
+{b";
+void Old19();
+}
+
+namespace twenty { // update-hdr
+const char *continued_close = "a\
+}b";
+void Old20();
+}
+
+namespace twentyone { // update-hdr
+const char *cut_open = "a{
+void Old21();
+}
+
+struct Below {
+    int b;
+};
+void KeptBelow();

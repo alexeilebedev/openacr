@@ -1,0 +1,8 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/missing_pack.ssim -out_dir: -report:N zzz"
+# eof amc
+amc -> amc.back_pack  ctype:ttt.Event  field:ttt.Event.base  child_ctype:ttt.EventHeader  comment:"Field is unpacked but parent ctype is packed. Insert the following line to fix error (acr -insert -write)"
+amc -> dmmeta.pack  ctype:ttt.EventHeader  comment:""
+amc -> amc.what_the_pack  ctype:ttt.EventHeader  ns:ttt  comment:"Ctype in packed namespace must also be packed. Insert the following line to fix error (acr -insert -write)"
+amc -> dmmeta.pack  ctype:ttt.EventHeader  comment:""
+amc -> amc.no_output  comment:"no files were modified"
+# exit amc code:2

@@ -162,7 +162,10 @@ static void GrepoSelect(){
     Regx_ReadSql(target_regx,target_no_dot, false);
 
     ind_beg(gcli::_db_grepo_curs,grepo,gcli::_db) if (grepo.active){
-        if (algo_lib::Regx_Match(target_regx,grepo.name)){
+        // ids carry the repo name in slash or git-safe form (algornd_arnd.33)
+        if (algo_lib::Regx_Match(target_regx,grepo.name)
+            || algo_lib::Regx_Match(target_regx,gcli::GitName(grepo.name))
+            ){
             grepo_CopyOut(grepo,gcli::_db.grepo_sel);
             break;
         }

@@ -7,10 +7,14 @@ acr_compl -> algo.cstring
 acr_compl -> algo_lib.Cmdline
 acr_compl -> algo_lib.FDb
 acr_compl -> atf_cmdline.FDb
+acr_compl -> bool
 acr_compl -> command.acr
 acr_compl -> command.atf_cmdline
 acr_compl -> dmmeta.Ctype
+acr_compl -> dmmeta.Finsertwhen
 acr_compl -> dmmeta.Ssimfile
+acr_compl -> dmmeta.Substr
 acr_compl -> garden.Flower
 acr_compl -> garden.Fruit
+acr_compl -> garden.Variety
 # exit acr_compl code:0

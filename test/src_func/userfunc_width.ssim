@@ -1,0 +1,7 @@
+dev.target  target:xx
+dev.gitfile  gitfile:src/y.cpp
+dev.targsrc  targsrc:xx/src/y.cpp  comment:""
+dmmeta.userfunc  userfunc:xx...ShortName  acrkey:gstatic/atfdb.amctest:ShortName  cppname:xx.ShortName  comment:""
+dmmeta.userfunc  userfunc:xx...NearTwinKeyThatAgreesUpToTheFiftiethCharacterThenAlpha  acrkey:gstatic/atfdb.amctest:NearTwinAlpha  cppname:xx.NearTwinKeyThatAgreesUpToTheFiftiethCharacterThenAlpha  comment:""
+dmmeta.userfunc  userfunc:xx...NearTwinKeyThatAgreesUpToTheFiftiethCharacterThenBravo  acrkey:gstatic/atfdb.amctest:NearTwinBravo  cppname:xx.NearTwinKeyThatAgreesUpToTheFiftiethCharacterThenBravo  comment:""
+dmmeta.userfunc  userfunc:xx...UserfuncKeyExactlyAtTheHundredCharacterLimitOfTheWidenedPrimaryKeyPaddedOutWithExtraWordsToHere  acrkey:gstatic/atfdb.amctest:AtLimit  cppname:xx.UserfuncKeyExactlyAtTheHundredCharacterLimitOfTheWidenedPrimaryKeyPaddedOutWithExtraWordsToHere  comment:""

@@ -1,0 +1,51 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/pbuf_pmask_name.ssim -out_dir: -report:N 'pbt.Msg..PbufEncode|pbt.Msg..PbufDecode|pbt.Msg.val.Set|pbt.Msg.val.FieldMaskQ|pbt.Msg.val.SetFieldMask'"
+# eof amc
+amc -> // --- pbt.Msg.val.FieldMaskQ
+amc -> // Return true if the field is marked in the presence mask
+amc -> inline bool pbt::val_FieldMaskQ(pbt::Msg& parent) {
+amc ->     return field_mask_qGetBit(parent, 0);
+amc -> }
+amc -> // --- pbt.Msg.val.SetFieldMask
+amc -> // Set presence bit for this field in the pmask
+amc -> inline void pbt::val_SetFieldMask(pbt::Msg& parent) {
+amc ->     field_mask_qSetBit(parent, 0); // mark presence in pmask
+amc -> }
+amc -> // --- pbt.Msg.val.Set
+amc -> inline void pbt::val_Set(pbt::Msg& parent, u32 rhs) {
+amc ->     parent.val = rhs;
+amc ->     field_mask_qSetBit(parent, 0); // mark presence in pmask
+amc -> }
+amc -> // --- pbt.Msg..PbufEncode
+amc -> void pbt::Msg_PbufEncode(algo::ByteAry& buf, pbt::Msg& parent) {
+amc ->     if (val_FieldMaskQ(parent)) {
+amc ->         lib_pb::EncodeTag(buf,1,0);
+amc ->         lib_pb::EncodeVarintU32(buf,parent.val);
+amc ->     }
+amc -> }
+amc -> // --- pbt.Msg..PbufDecode
+amc -> bool pbt::Msg_PbufDecode(algo::memptr& buf, pbt::Msg& parent) {
+amc ->     bool ok = true;
+amc ->     while (ok && elems_N(buf) > 0) {
+amc ->         u32 pb_field_number(0);
+amc ->         u8 pb_wire_type(0);
+amc ->         ok = lib_pb::DecodeTag(buf,pb_field_number,pb_wire_type);
+amc ->         if (!ok) {
+amc ->             break;
+amc ->         }
+amc ->         switch (pb_field_number) {
+amc ->             case 1: {
+amc ->                 if (pb_wire_type == 0) {
+amc ->                     ok = ok && lib_pb::DecodeVarintU32(buf,parent.val);
+amc ->                     val_SetFieldMask(parent);
+amc ->                 } else {
+amc ->                     ok = lib_pb::SkipField(buf,pb_wire_type);
+amc ->                 }
+amc ->             } break;
+amc ->             default:
+amc ->             ok = lib_pb::SkipField(buf,pb_wire_type);
+amc ->             break;
+amc ->         }
+amc ->     }
+amc ->     return ok;
+amc -> }
+# exit amc code:0

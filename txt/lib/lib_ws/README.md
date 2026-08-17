@@ -3,7 +3,8 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
+<!-- abt_md.toc_beg -->
+&nbsp;&nbsp;&bull;&nbsp;  [Internals](#internals)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Restrictions and limitations](#restrictions-and-limitations)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Introduction](#introduction)<br/>
@@ -18,17 +19,14 @@
 &nbsp;&nbsp;&bull;&nbsp;  [Ping/pong](#ping-pong)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Tuning server limits](#tuning-server-limits)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Example](#example)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Functions](#functions)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+<!-- abt_md.toc_end -->
 
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
+### Internals
+<a href="#internals"></a>
+&#128196; [lib_ws - Internals](/txt/gen/lib_ws/lib_ws.md)<br/>
 
 ### Description
 <a href="#description"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Description -->
 
 Lib_ws is a lightweight implementation of server part of WebSocket protocol, 
 that allows C++ app to be a WebSocket server.
@@ -46,8 +44,6 @@ The library implements:
     - close
     - incoming message
 - tunable incoming frame and message size limits;
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Description -->
 
 ### Restrictions and limitations
 <a href="#restrictions-and-limitations"></a>
@@ -99,7 +95,7 @@ dmmeta.fconst  fconst:ws.HttpState.value/REQLINE  value:1  comment:"request-line
 dmmeta.fconst  fconst:ws.HttpState.value/HEADER   value:2  comment:"waiting next header"
 dmmeta.fconst  fconst:ws.HttpState.value/BODY     value:3  comment:"headers received, waiting body"
 dmmeta.fconst  fconst:ws.HttpState.value/FIN      value:4  comment:"connection closed, to be deleted"
-report.acr  n_select:5  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0
+report.acr  n_select:5  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0  n_badline:0
 ```
 
 Protocol constructs are defined within `ws` namespace.
@@ -120,7 +116,7 @@ wsdb.status  code:1009  reason:"Message too big"                local_only:N  co
 wsdb.status  code:1010  reason:"Missing extension"              local_only:N  comment:""
 wsdb.status  code:1011  reason:"Internal error"                 local_only:N  comment:""
 wsdb.status  code:1015  reason:"TLS Handshake"                  local_only:Y  comment:""
-report.acr  n_select:12  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0
+report.acr  n_select:12  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0  n_badline:0
 ```
 
 If necessary, one may add private codes in range 4000-4999 as per RFC 6455.
@@ -273,170 +269,3 @@ Configuration parameters on server context protects from malicious attacks using
 For server example, see `cpp/samp_ws.cpp`.
 
 For client example, see  `www/wsdemo.html`.
-
-### Functions
-<a href="#functions"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Functions -->
-Functions exported from this namespace:
-
-```c++
-// safe cast for cppcheck
-template<typename T> ws::FrameHeader *CastbasePtr(T *ptr) 
-```
-
-```c++
-// Compute Sec-WebSocket-Accept from Sec-WebSocket-Key
-tempstr lib_ws::ComputeSecWebSocketAccept(strptr sec_websocket_key) 
-```
-
-```c++
-ws::FrameHeader *lib_ws::FrameHeader_FmtByteAry(algo::ByteAry &buf, bool fin, bool rsv1, bool rsv2, bool rsv3,  ws::Opcode opcode, bool mask, u32 masking_key, strptr payload) 
-```
-
-```c++
-void lib_ws::FrameIdx_Frame16(lib_ws::FrameIdx &idx, ws::Frame16 &frame, u32) 
-```
-
-```c++
-void lib_ws::FrameIdx_Frame64(lib_ws::FrameIdx &idx, ws::Frame64 &frame, u32) 
-```
-
-```c++
-void lib_ws::FrameIdx_FrameMasked16(lib_ws::FrameIdx &idx, ws::FrameMasked16 &frame, u32) 
-```
-
-```c++
-void lib_ws::FrameIdx_FrameMasked64(lib_ws::FrameIdx &idx, ws::FrameMasked64 &frame, u32) 
-```
-
-```c++
-int lib_ws::FrameIdx_Unkmsg(lib_ws::FrameIdx &idx, ws::FrameHeader &hdr, u32) 
-```
-
-```c++
-void lib_ws::FrameLen_Frame16(i32 &len, ws::Frame16 &frame, u32 msg_len) 
-```
-
-```c++
-void lib_ws::FrameLen_Frame64(i32 &len, ws::Frame64 &frame, u32 msg_len) 
-```
-
-```c++
-void lib_ws::FrameLen_FrameMasked16(i32 &len, ws::FrameMasked16 &frame, u32 msg_len) 
-```
-
-```c++
-void lib_ws::FrameLen_FrameMasked64(i32 &len, ws::FrameMasked64 &frame, u32 msg_len) 
-```
-
-```c++
-int lib_ws::FrameLen_Unkmsg(i32 &len, ws::FrameHeader &hdr, u32 msg_len) 
-```
-
-```c++
-i32 lib_ws::GetMsgLen(algo::memptr buf) 
-```
-
-```c++
-void lib_ws::ToggleMasking(strptr payload, u32 masking_key) 
-```
-
-```c++
-void lib_ws::ToggleMasking(ws::FrameHeader &frame, bool reset_key) 
-```
-
-```c++
-strptr lib_ws::payload_Getary(ws::FrameHeader &frame) 
-```
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Functions -->
-
-### Inputs
-<a href="#inputs"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
-`lib_ws` takes the following tables on input:
-|Ssimfile|Comment|
-|---|---|
-|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
-
-### Sources
-<a href="#sources"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Sources -->
-The source code license is GPL
-The following source files are part of this tool:
-
-|Source File|Comment|
-|---|---|
-|[cpp/gen/lib_ws_gen.cpp](/cpp/gen/lib_ws_gen.cpp)||
-|[cpp/lib_ws/lib_ws.cpp](/cpp/lib_ws/lib_ws.cpp)||
-|[include/gen/lib_ws_gen.h](/include/gen/lib_ws_gen.h)||
-|[include/gen/lib_ws_gen.inl.h](/include/gen/lib_ws_gen.inl.h)||
-|[include/lib_ws.h](/include/lib_ws.h)||
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Sources -->
-
-### Dependencies
-<a href="#dependencies"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Dependencies -->
-The build target depends on the following libraries
-|Target|Comment|
-|---|---|
-|[algo_lib](/txt/lib/algo_lib/README.md)|Support library for all executables|
-|[lib_prot](/txt/lib/lib_prot/README.md)|Library covering all protocols|
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Dependencies -->
-
-### In Memory DB
-<a href="#in-memory-db"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Imdb -->
-`lib_ws` generated code creates the tables below.
-All allocations are done through global `lib_ws::_db` [lib_ws.FDb](#lib_ws-fdb) structure
-|Ctype|Ssimfile|Create|Access|
-|---|---|---|---|
-|[lib_ws.FDb](#lib_ws-fdb)||FDb._db (Global)|
-|[lib_ws.FrameIdx](#lib_ws-frameidx)||
-
-#### lib_ws.FDb - In-memory database for lib_ws
-<a href="#lib_ws-fdb"></a>
-
-#### lib_ws.FDb Fields
-<a href="#lib_ws-fdb-fields"></a>
-|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|lib_ws.FDb._db|[lib_ws.FDb](/txt/lib/lib_ws/README.md#lib_ws-fdb)|[Global](/txt/exe/amc/reftypes.md#global)|||
-
-#### Struct FDb
-<a href="#struct-fdb"></a>
-Generated by [amc](/txt/exe/amc/README.md) into [include/gen/lib_ws_gen.h](/include/gen/lib_ws_gen.h)
-```
-struct FDb { // lib_ws.FDb: In-memory database for lib_ws
-    lib_ws::trace   trace;   //
-};
-```
-
-#### lib_ws.FrameIdx - 
-<a href="#lib_ws-frameidx"></a>
-
-#### lib_ws.FrameIdx Fields
-<a href="#lib_ws-frameidx-fields"></a>
-|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|lib_ws.FrameIdx.masking_key|u32|[Ptr](/txt/exe/amc/reftypes.md#ptr)|||
-|lib_ws.FrameIdx.payload|[algo.strptr](/txt/protocol/algo/strptr.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
-
-#### Struct FrameIdx
-<a href="#struct-frameidx"></a>
-Generated by [amc](/txt/exe/amc/README.md) into [include/gen/lib_ws_gen.h](/include/gen/lib_ws_gen.h)
-```
-struct FrameIdx { // lib_ws.FrameIdx
-    u32*           masking_key;   // optional pointer
-    algo::strptr   payload;       //
-    // func:lib_ws.FrameIdx..Ctor
-    inline               FrameIdx() __attribute__((nothrow));
-};
-```
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Imdb -->
-

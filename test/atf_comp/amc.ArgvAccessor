@@ -1,0 +1,10 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/argv_accessor.ssim -out_dir: -report:N -proto -showcomment:N 'algo_lib.Amc..%Argv%|algo_lib.Amc..ToCmdline|algo_lib.Amc..NArgs|algo_lib.Gnu..%Argv%|algo_lib.Gnu..ToCmdline|algo_lib.Gnu..NArgs'"
+# eof amc
+amc -> tempstr algo_lib::Amc_ToCmdline(algo_lib::Amc& row) __attribute__((nothrow));
+amc -> void algo_lib::Amc_PrintArgv(algo_lib::Amc& row, algo::cstring& str) __attribute__((nothrow));
+amc -> void algo_lib::Amc_ToArgv(algo_lib::Amc& row, algo::StringAry& args) __attribute__((nothrow));
+amc -> i32 algo_lib::Amc_NArgs(algo_lib::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
+amc -> bool algo_lib::Amc_ReadArgv(algo_lib::Amc &parent, algo::StringAry &args, algo::cstring &err) __attribute__((nothrow));
+amc -> void algo_lib::Gnu_PrintArgv(algo_lib::Gnu& row, algo::cstring& str) __attribute__((nothrow));
+amc -> void algo_lib::Gnu_ToArgv(algo_lib::Gnu& row, algo::StringAry& args) __attribute__((nothrow));
+# exit amc code:0

@@ -164,6 +164,29 @@ void atf_amc::amctest_TaryInsary() {
     }
 }
 
+// An out-of-range insertion index must abort via FatalErrorExit, not silently
+// corrupt memory. ary_Insary's bounds check is under test; running it in a
+// child lets the parent confirm the child exited with the FatalErrorExit
+// status (1) rather than crashing (signal) or returning normally (status 0).
+void atf_amc::amctest_TaryInsaryBadIndex() {
+    int pid = fork();
+    if (pid == 0) {
+        algo_lib::DieWithParent();
+        FILE *devnull = freopen("/dev/null", "w", stderr);// suppress the expected fatal-error banner
+        (void)devnull;
+        algo::StringAry ary;
+        const char *abc[] = {"a", "b", "c", 0};
+        const char *one[] = {"x", 0};
+        Insary(ary, abc, 0);
+        Insary(ary, one, 1000);
+        _exit(0);
+    } else {
+        int status = 0;
+        waitpid(pid, &status, 0);
+        vrfy_(WIFEXITED(status) && WEXITSTATUS(status) == 1);
+    }
+}
+
 void atf_amc::amctest_TaryAllocNAt() {
     {
         // mem case
@@ -225,5 +248,86 @@ void atf_amc::amctest_TaryAllocNAt() {
             vrfy_(Cmpary(ary_AllocNAt(ary,3,3),empty3));
             vrfy_(Cmpary(ary,res));
         }
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+static void Append(algo::ByteAry &buf, algo::strptr str) {
+    ary_Addary(buf, strptr_ToMemptr(str));
+}
+
+static algo::strptr ToStr(algo::ByteAry &buf) {
+    return memptr_ToStrptr(ary_Getary(buf));
+}
+
+void atf_amc::amctest_TaryRemove() {
+    algo::ByteAry buf;
+    vrfyeq_(ToStr(buf),"");
+
+    // remove from empty array
+    ary_Remove(buf,1);
+    vrfyeq_(ToStr(buf),"");
+
+    Append(buf, "0123456789");
+    vrfyeq_(ToStr(buf),"0123456789");
+
+    // remove valid element
+    ary_Remove(buf,1);
+    vrfyeq_(ToStr(buf),"023456789");
+
+    // remove invalid element to the left
+    ary_Remove(buf,-1);
+    vrfyeq_(ToStr(buf),"023456789");
+
+    // remove invalid element to the right
+    ary_Remove(buf,127);
+    vrfyeq_(ToStr(buf),"023456789");
+
+    // ---
+
+    // remove invalid region on the left
+    ary_RemRegion(buf,-1,1);
+    vrfyeq_(ToStr(buf),"023456789");
+
+    // remove region partially trimmed on the left
+    ary_RemRegion(buf,-1,2);
+    vrfyeq_(ToStr(buf),"23456789");
+
+    // remove valid element
+    ary_RemRegion(buf,1,1);
+    vrfyeq_(ToStr(buf),"2456789");
+
+    // remove empty region to the right of valid range
+    ary_RemRegion(buf,10,1);
+    vrfyeq_(ToStr(buf),"2456789");
+
+    // remove tail, trimmed
+    ary_RemRegion(buf,5,10);
+    vrfyeq_(ToStr(buf),"24567");
+
+    // remove head, trimmed
+    ary_RemRegion(buf,-10,20);
+    vrfyeq_(ToStr(buf),"");
+
+    // remove from empty string
+    ary_RemRegion(buf,0,0);
+    vrfyeq_(ToStr(buf),"");
+}
+
+// Check that in all cases, Remove(i) == RemRegion(i,1)
+void atf_amc::amctest_TaryRemove2() {
+    algo::ByteAry buf;
+    Append(buf, "12309817234987123");
+    for (u32 i=-10; i<buf.ary_n+10; i++) {
+        algo::ByteAry buf2;
+        ary_Addary(buf2,ary_Getary(buf));
+        ary_Remove(buf2,i);
+
+        algo::ByteAry buf3;
+        ary_Addary(buf3,ary_Getary(buf));
+        ary_RemRegion(buf3,i,1);
+
+        vrfy_(ToStr(buf2) == ToStr(buf3));
     }
 }

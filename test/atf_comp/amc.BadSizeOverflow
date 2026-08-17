@@ -1,0 +1,5 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/bad_size_overflow.ssim -out_dir: -report:N zzz"
+# eof amc
+amc -> amc.size_overflow  src:algo_lib.Huge.big_elems  size:4295032832  comment:"computed size does not fit in i32"
+amc -> amc.no_output  comment:"no files were modified"
+# exit amc code:1

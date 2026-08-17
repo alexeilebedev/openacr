@@ -1,0 +1,8 @@
+# start amc cmd:"$bindir/amc -in_dir:- -out_dir: -report:N algo_lib.Price.value.GetScale < test/amc/fdec_two.ssim"
+# eof amc
+amc -> // --- algo_lib.Price.value.GetScale
+amc -> // Return constant 100
+amc -> inline u64 algo_lib::Price_GetScale() {
+amc ->     return 100;
+amc -> }
+# exit amc code:0

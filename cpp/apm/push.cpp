@@ -51,7 +51,8 @@ void apm::PushDiff(algo::strptr base_dir) {
     zd_selrec_RemoveAll();
 
     tempstr regx_package=SelPackageRegx();
-    CollectPkgrecFromDir(regx_package,_db.base_recfile,base_dir);// in sandbox
+    vrfy(CollectPkgrecFromDir(regx_package,_db.base_recfile,base_dir),// in sandbox
+         "failed to collect package records from the sandbox");
     // rewrite remote 'package' record to match local ORIGIN and BASEREF fields
     ind_beg(_db_zd_sel_package_curs,package,_db) {
         cstring origin(_db.cmdline.origin == "" ? algo::strptr(package.origin) : algo::strptr(_db.cmdline.origin));
@@ -92,7 +93,8 @@ void apm::PushDiff(algo::strptr base_dir) {
     }
 
     mergefile_RemoveAll();
-    CreateMergeFiles(regx_package,base_dir,""); // ours,base
+    vrfy(CreateMergeFiles(regx_package,base_dir,""),// ours,base
+         "failed to collect the package file list");
     if (algo_lib::_db.cmdline.verbose>1) {
         _db.script << "set -x"<<eol;
     }

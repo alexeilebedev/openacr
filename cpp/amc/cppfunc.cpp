@@ -51,8 +51,8 @@ void amc::tfunc_Cppfunc_Get() {
     }
 }
 
+// C++ already constructs the field; no extra Init needed.
 void amc::tfunc_Cppfunc_Init() {
-    // #AL# C++ already constructs field
 }
 
 void amc::tfunc_Cppfunc_Set() {

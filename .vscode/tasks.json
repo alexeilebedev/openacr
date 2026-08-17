@@ -1,4 +1,4 @@
-{
+ai{
     // See https://go.microsoft.com/fwlink/?LinkId=733558
     // for the documentation about the tasks.json format
     "version": "2.0.0",
@@ -55,9 +55,18 @@
             ]
         },
         {
-            "label": "Indent current source and update headers",
+            "label": "ACR_indent_and_hdr",
             "type": "shell",
-            "command": "bin/cpp-indent ${file}; update-hdr",
+            "command": "source ~/.bashrc;bin/cpp-indent  ${file}; update-hdr ",
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+        },
+        {
+            "label": "ACR_indent_and_hdr",
+            "type": "shell",
+            "command": "source ~/.bashrc;bin/cpp-indent  ${file}; update-hdr ",
             "group": {
                 "kind": "build",
                 "isDefault": false

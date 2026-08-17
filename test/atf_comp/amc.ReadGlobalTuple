@@ -1,0 +1,71 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/read_global_tuple.ssim -out_dir: -report:N 'algo_lib.FDb.maxjobs.ReadStrptrMaybe|algo_lib.FDb..ReadFieldMaybe|algo_lib.FDb..ReadStrptrMaybe'"
+# eof amc
+amc -> // --- algo_lib.FDb.maxjobs.ReadStrptrMaybe
+amc -> inline static bool algo_lib::maxjobs_ReadStrptrMaybe(algo::strptr in_str) {
+amc ->     bool retval = true;
+amc ->     u32 maxjobs_tmp;
+amc ->     retval = u32_ReadStrptrMaybe(maxjobs_tmp, in_str);
+amc ->     if (retval) {
+amc ->         maxjobs_Set(maxjobs_tmp);
+amc ->     }
+amc ->     return retval;
+amc -> }
+amc -> // --- algo_lib.FDb..ReadFieldMaybe
+amc -> bool algo_lib::FDb_ReadFieldMaybe(algo_lib::FDb& parent, algo::strptr field, algo::strptr strval) {
+amc ->     bool retval = true;
+amc ->     algo_lib::FieldId field_id;
+amc ->     (void)value_SetStrptrMaybe(field_id,field);
+amc ->     switch(field_id) {
+amc ->         case algo_lib_FieldId__db: {
+amc ->             retval = false;
+amc ->         } break;
+amc ->         case algo_lib_FieldId_malloc: {
+amc ->             retval = malloc_ReadStrptrMaybe(strval);
+amc ->             if (retval) {
+amc ->                 pmask_qSetBit(0); // mark presence in pmask
+amc ->             }
+amc ->         } break;
+amc ->         case algo_lib_FieldId_pmask: {
+amc ->             retval = false;
+amc ->         } break;
+amc ->         case algo_lib_FieldId_maxjobs: {
+amc ->             retval = maxjobs_ReadStrptrMaybe(strval);
+amc ->             if (retval) {
+amc ->                 pmask_qSetBit(1); // mark presence in pmask
+amc ->             }
+amc ->         } break;
+amc ->         case algo_lib_FieldId_timeout: {
+amc ->             retval = timeout_ReadStrptrMaybe(strval);
+amc ->             if (retval) {
+amc ->                 pmask_qSetBit(2); // mark presence in pmask
+amc ->             }
+amc ->         } break;
+amc ->         case algo_lib_FieldId_trace: {
+amc ->             retval = trace_ReadStrptrMaybe(strval);
+amc ->             if (retval) {
+amc ->                 pmask_qSetBit(3); // mark presence in pmask
+amc ->             }
+amc ->         } break;
+amc ->         default: {
+amc ->             retval = false;
+amc ->             algo_lib::AppendErrtext("comment", "unrecognized attr");
+amc ->         } break;
+amc ->     }
+amc ->     if (!retval) {
+amc ->         algo_lib::AppendErrtext("attr",field);
+amc ->     }
+amc ->     (void)parent;//only to avoid -Wunused-parameter
+amc ->     return retval;
+amc -> }
+amc -> // --- algo_lib.FDb..ReadStrptrMaybe
+amc -> // Read fields of algo_lib::FDb from an ascii string.
+amc -> // The format of the string is an ssim Tuple
+amc -> bool algo_lib::FDb_ReadStrptrMaybe(algo_lib::FDb &parent, algo::strptr in_str) {
+amc ->     bool retval = true;
+amc ->     retval = algo::StripTypeTag(in_str, "algo_lib.FDb");
+amc ->     ind_beg(algo::Attr_curs, attr, in_str) {
+amc ->         retval = retval && FDb_ReadFieldMaybe(parent, attr.name, attr.value);
+amc ->     }ind_end;
+amc ->     return retval;
+amc -> }
+# exit amc code:0

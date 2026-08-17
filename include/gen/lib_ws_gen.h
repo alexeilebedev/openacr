@@ -7,18 +7,9 @@
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2023 AlgoRND
 //
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+// This source code constitutes confidential information and trade secrets
+// of AlgoRND. Unauthorized copying, distribution or sharing of this file,
+// via any medium, is strictly prohibited.
 //
 
 
@@ -30,8 +21,8 @@
 
 // --- lib_ws_FieldIdEnum
 
-enum lib_ws_FieldIdEnum {        // lib_ws.FieldId.value
-     lib_ws_FieldId_value   = 0
+enum lib_ws_FieldIdEnum {    // lib_ws.FieldId.value
+     lib_ws_FieldId_value
 };
 
 enum { lib_ws_FieldIdEnum_N = 1 };
@@ -84,7 +75,6 @@ struct trace { // lib_ws.trace
     inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // print string representation of ROW to string STR
 // cfmt:lib_ws.trace.String  printfmt:Tuple
 // func:lib_ws.trace..Print
@@ -95,7 +85,6 @@ void                 trace_Print(lib_ws::trace& row, algo::cstring& str) __attri
 struct FDb { // lib_ws.FDb: In-memory database for lib_ws
     lib_ws::trace   trace;   //
 };
-
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 // func:lib_ws.FDb._db.InsertStrptrMaybe
@@ -120,6 +109,10 @@ bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __att
 // Calls Step function of dependencies
 // func:lib_ws.FDb._db.Steps
 void                 Steps();
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+// func:lib_ws.FDb._db.RemoveStrptrMaybe
+bool                 RemoveStrptrMaybe(algo::strptr str);
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:lib_ws.FDb._db.XrefMaybe
@@ -145,7 +138,6 @@ struct FieldId { // lib_ws.FieldId: Field read helper
     inline               FieldId(lib_ws_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:lib_ws.FieldId.value.GetEnum
 inline lib_ws_FieldIdEnum value_GetEnum(const lib_ws::FieldId& parent) __attribute__((nothrow));
@@ -183,7 +175,7 @@ inline void          FieldId_Init(lib_ws::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:lib_ws.FieldId.String  printfmt:Raw
 // func:lib_ws.FieldId..Print
-void                 FieldId_Print(lib_ws::FieldId& row, algo::cstring& str) __attribute__((nothrow));
+void                 FieldId_Print(lib_ws::FieldId row, algo::cstring& str) __attribute__((nothrow));
 
 // --- lib_ws.FrameIdx
 struct FrameIdx { // lib_ws.FrameIdx
@@ -192,7 +184,6 @@ struct FrameIdx { // lib_ws.FrameIdx
     // func:lib_ws.FrameIdx..Ctor
     inline               FrameIdx() __attribute__((nothrow));
 };
-
 // Set all fields to initial values.
 // func:lib_ws.FrameIdx..Init
 inline void          FrameIdx_Init(lib_ws::FrameIdx& parent);
@@ -238,7 +229,6 @@ struct FrameIdxCase { // lib_ws.FrameIdxCase: Enum for dispatch lib_ws.FrameIdx
     inline               FrameIdxCase(lib_ws_FrameIdxCaseEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:lib_ws.FrameIdxCase.value.GetEnum
 inline lib_ws_FrameIdxCaseEnum value_GetEnum(const lib_ws::FrameIdxCase& parent) __attribute__((nothrow));
@@ -288,7 +278,6 @@ struct FrameLenCase { // lib_ws.FrameLenCase: Enum for dispatch lib_ws.FrameLen
     inline               FrameLenCase(lib_ws_FrameLenCaseEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:lib_ws.FrameLenCase.value.GetEnum
 inline lib_ws_FrameLenCaseEnum value_GetEnum(const lib_ws::FrameLenCase& parent) __attribute__((nothrow));
@@ -355,27 +344,27 @@ int                  FrameLenDispatch(i32 &ctx, ws::FrameHeader& msg, u32 msg_le
 // func:lib_ws.FrameLen..Dispatch2
 void                 vFrameLenDispatch(i32 &ctx, ws::FrameHeader& msg, u32 msg_len);
 // Construct a new ws::Frame in the space provided by BUF.
-// If BUF doesn't have enough space available, throw exception.
+// A total beyond the i32 frame length domain constructs nothing and returns NULL.
 // func:lib_ws...Frame_FmtByteAry
 ws::Frame *          Frame_FmtByteAry(algo::ByteAry &buf, u8 byte0, u8 byte1, algo::aryptr<char > payload);
 // Construct a new ws::Frame16 in the space provided by BUF.
-// If BUF doesn't have enough space available, throw exception.
+// A total the length field cannot store constructs nothing and returns NULL.
 // func:lib_ws...Frame16_FmtByteAry
 ws::Frame16 *        Frame16_FmtByteAry(algo::ByteAry &buf, u8 byte0, algo::aryptr<char > payload);
 // Construct a new ws::Frame64 in the space provided by BUF.
-// If BUF doesn't have enough space available, throw exception.
+// A total beyond the i32 frame length domain constructs nothing and returns NULL.
 // func:lib_ws...Frame64_FmtByteAry
 ws::Frame64 *        Frame64_FmtByteAry(algo::ByteAry &buf, u8 byte0, algo::aryptr<char > payload);
 // Construct a new ws::FrameMasked in the space provided by BUF.
-// If BUF doesn't have enough space available, throw exception.
+// A total beyond the i32 frame length domain constructs nothing and returns NULL.
 // func:lib_ws...FrameMasked_FmtByteAry
 ws::FrameMasked *    FrameMasked_FmtByteAry(algo::ByteAry &buf, u8 byte0, u8 byte1, u32 masking_key, algo::aryptr<char > payload);
 // Construct a new ws::FrameMasked16 in the space provided by BUF.
-// If BUF doesn't have enough space available, throw exception.
+// A total the length field cannot store constructs nothing and returns NULL.
 // func:lib_ws...FrameMasked16_FmtByteAry
 ws::FrameMasked16 *  FrameMasked16_FmtByteAry(algo::ByteAry &buf, u8 byte0, u32 masking_key, algo::aryptr<char > payload);
 // Construct a new ws::FrameMasked64 in the space provided by BUF.
-// If BUF doesn't have enough space available, throw exception.
+// A total beyond the i32 frame length domain constructs nothing and returns NULL.
 // func:lib_ws...FrameMasked64_FmtByteAry
 ws::FrameMasked64 *  FrameMasked64_FmtByteAry(algo::ByteAry &buf, u8 byte0, u32 masking_key, algo::aryptr<char > payload);
 } // gen:ns_func

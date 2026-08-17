@@ -75,7 +75,7 @@ inline lib_exec::FSyscmddep* lib_exec::syscmddep_Last() {
 
 // --- lib_exec.FDb.syscmddep.N
 // Return number of items in the pool
-inline i32 lib_exec::syscmddep_N() {
+inline i64 lib_exec::syscmddep_N() {
     return _db.syscmddep_n;
 }
 
@@ -117,7 +117,7 @@ inline lib_exec::FSyscmd* lib_exec::syscmd_Last() {
 
 // --- lib_exec.FDb.syscmd.N
 // Return number of items in the pool
-inline i32 lib_exec::syscmd_N() {
+inline i64 lib_exec::syscmd_N() {
     return _db.syscmd_n;
 }
 
@@ -324,7 +324,7 @@ inline bool lib_exec::c_prior_EmptyQ(lib_exec::FSyscmd& syscmd) {
 
 // --- lib_exec.FSyscmd.c_prior.Find
 // Look up row by row id. Return NULL if out of range
-inline lib_exec::FSyscmddep* lib_exec::c_prior_Find(lib_exec::FSyscmd& syscmd, u32 t) {
+inline lib_exec::FSyscmddep* lib_exec::c_prior_Find(lib_exec::FSyscmd& syscmd, u64 t) {
     lib_exec::FSyscmddep *retval = NULL;
     u64 idx = t;
     u64 lim = syscmd.c_prior_n;
@@ -342,14 +342,14 @@ inline algo::aryptr<lib_exec::FSyscmddep*> lib_exec::c_prior_Getary(lib_exec::FS
 
 // --- lib_exec.FSyscmd.c_prior.N
 // Return number of items in the pointer array
-inline i32 lib_exec::c_prior_N(const lib_exec::FSyscmd& syscmd) {
+inline i64 lib_exec::c_prior_N(const lib_exec::FSyscmd& syscmd) {
     return syscmd.c_prior_n;
 }
 
 // --- lib_exec.FSyscmd.c_prior.RemoveAll
 // Empty the index. (The rows are not deleted)
 inline void lib_exec::c_prior_RemoveAll(lib_exec::FSyscmd& syscmd) {
-    for (u32 i = 0; i < syscmd.c_prior_n; i++) {
+    for (u64 i = 0; i < syscmd.c_prior_n; i++) {
         // mark all elements as not-in-array
         syscmd.c_prior_elems[i]->syscmd_c_prior_in_ary = false;
     }
@@ -358,7 +358,7 @@ inline void lib_exec::c_prior_RemoveAll(lib_exec::FSyscmd& syscmd) {
 
 // --- lib_exec.FSyscmd.c_prior.qFind
 // Return reference without bounds checking
-inline lib_exec::FSyscmddep& lib_exec::c_prior_qFind(lib_exec::FSyscmd& syscmd, u32 idx) {
+inline lib_exec::FSyscmddep& lib_exec::c_prior_qFind(lib_exec::FSyscmd& syscmd, u64 idx) {
     return *syscmd.c_prior_elems[idx];
 }
 
@@ -382,7 +382,7 @@ inline bool lib_exec::c_next_EmptyQ(lib_exec::FSyscmd& syscmd) {
 
 // --- lib_exec.FSyscmd.c_next.Find
 // Look up row by row id. Return NULL if out of range
-inline lib_exec::FSyscmddep* lib_exec::c_next_Find(lib_exec::FSyscmd& syscmd, u32 t) {
+inline lib_exec::FSyscmddep* lib_exec::c_next_Find(lib_exec::FSyscmd& syscmd, u64 t) {
     lib_exec::FSyscmddep *retval = NULL;
     u64 idx = t;
     u64 lim = syscmd.c_next_n;
@@ -400,14 +400,14 @@ inline algo::aryptr<lib_exec::FSyscmddep*> lib_exec::c_next_Getary(lib_exec::FSy
 
 // --- lib_exec.FSyscmd.c_next.N
 // Return number of items in the pointer array
-inline i32 lib_exec::c_next_N(const lib_exec::FSyscmd& syscmd) {
+inline i64 lib_exec::c_next_N(const lib_exec::FSyscmd& syscmd) {
     return syscmd.c_next_n;
 }
 
 // --- lib_exec.FSyscmd.c_next.RemoveAll
 // Empty the index. (The rows are not deleted)
 inline void lib_exec::c_next_RemoveAll(lib_exec::FSyscmd& syscmd) {
-    for (u32 i = 0; i < syscmd.c_next_n; i++) {
+    for (u64 i = 0; i < syscmd.c_next_n; i++) {
         // mark all elements as not-in-array
         syscmd.c_next_elems[i]->syscmd_c_next_in_ary = false;
     }
@@ -416,7 +416,7 @@ inline void lib_exec::c_next_RemoveAll(lib_exec::FSyscmd& syscmd) {
 
 // --- lib_exec.FSyscmd.c_next.qFind
 // Return reference without bounds checking
-inline lib_exec::FSyscmddep& lib_exec::c_next_qFind(lib_exec::FSyscmd& syscmd, u32 idx) {
+inline lib_exec::FSyscmddep& lib_exec::c_next_qFind(lib_exec::FSyscmd& syscmd, u64 idx) {
     return *syscmd.c_next_elems[idx];
 }
 

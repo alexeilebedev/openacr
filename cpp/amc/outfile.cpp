@@ -18,7 +18,7 @@
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
 // Exceptions: NO
-// Source: cpp/amc/outfile.cpp -- Ouptut functions
+// Source: cpp/amc/outfile.cpp -- Output functions
 //
 
 #include "include/amc.h"
@@ -42,12 +42,36 @@ static void InsertComment(cstring &out, strptr text) {
 // and deallocate memory associated with it
 void amc::gen_ns_write() {
     amc::FNs &ns=*amc::_db.c_ns;
-    if (!amc::QueryModeQ() && ch_N(amc::_db.cmdline.out_dir) && algo_lib::_db.exit_code==0) {
+    // A generation error must suppress all output: a partial write would
+    // leave a half-regenerated tree that looks up to date. But exit_code
+    // alone cannot serve as the gate: each failed write below increments it
+    // too, so the first namespace's failed write would silently skip every
+    // later namespace's writes, and the error report would name only the
+    // first namespace's paths. Generation is complete when this phase runs
+    // (ns_write is the last per-namespace gen), so exit_code counts pure
+    // generation errors exactly until the first write -- capture it then,
+    // and gate every namespace's output on the captured value.
+    if (_db.n_generr == -1) {
+        _db.n_generr = algo_lib::_db.exit_code;
+    }
+    // -derive writes the amc-owned tables and no source.  A gstatic that
+    // carries one of those tables is compiled from the table's ssim file,
+    // which is read back near the start of the run, so a run whose
+    // derivation changes such a table generates its source from the file as
+    // it stood before the change.  Deriving in a run of its own leaves the
+    // files correct for the run that generates from them.
+    if (!amc::QueryModeQ() && ch_N(amc::_db.cmdline.out_dir) && !amc::_db.cmdline.derive && _db.n_generr==0) {
         int nbefore=algo_lib::_db.stringtofile_nwrite;
         ind_beg(amc::ns_c_outfile_curs, outfile,ns) {
             amc::_db.report.n_cppfile++;
-            // save to preassigned filename, or out dir if overridden
-            (void)SafeStringToFile(outfile.text, DirFileJoin(amc::_db.cmdline.out_dir, outfile.outfile));
+            // save to preassigned filename, or out dir if overridden.
+            // a write that fails (missing directory, permission) fails the
+            // run: exiting 0 with the generated code silently missing would
+            // leave a stale tree that looks up to date
+            tempstr fname(DirFileJoin(amc::_db.cmdline.out_dir, outfile.outfile));
+            if (!algo::SaveFile(outfile.text, fname, "amc.outfile_write", "output file could not be written")) {
+                algo_lib::_db.exit_code++;
+            }
             frep_(i,ch_N(outfile.text)) {
                 amc::_db.report.n_cppline += ch_qFind(outfile.text, i) == '\n';
             }
@@ -57,7 +81,6 @@ void amc::gen_ns_write() {
         ns.inl=NULL;
         ns.hdr=NULL;
         ns.cpp=NULL;
-        ns.js.mdl=NULL;
     }
 }
 

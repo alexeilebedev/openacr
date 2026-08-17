@@ -107,7 +107,7 @@ bool lib_amcdb::FieldId_ReadStrptrMaybe(lib_amcdb::FieldId &parent, algo::strptr
 // --- lib_amcdb.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:lib_amcdb.FieldId.String  printfmt:Raw
-void lib_amcdb::FieldId_Print(lib_amcdb::FieldId& row, algo::cstring& str) {
+void lib_amcdb::FieldId_Print(lib_amcdb::FieldId row, algo::cstring& str) {
     lib_amcdb::value_Print(row, str);
 }
 

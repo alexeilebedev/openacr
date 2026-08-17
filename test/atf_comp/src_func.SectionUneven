@@ -1,0 +1,35 @@
+# start bash cmd:'bash -c \'cd $tempdir && mkdir hdr && try(){ printf "$$2" > hdr/x.h; cp hdr/x.h orig; $$OLDPWD/$bindir/src_func -in:$$OLDPWD/test/src_func/unterminated.ssim -updateproto; echo $$1_code:$$?; cmp -s hdr/x.h orig && echo $$1_header:unchanged || echo $$1_header:rewritten; }; try macro "namespace outer {\\nnamespace foo { // update-hdr\\n#define OPENBLOCK {\\nvoid B();\\n}\\nvoid KeepMe();\\n}\\n"; try sharedline "namespace foo { // update-hdr\\nvoid B(); }\\nvoid KeepMe();\\n"; try macroclose "namespace foo { // update-hdr\\n#define OPENBLOCK {\\nvoid B();\\n}\\n#define CLOSEBLOCK }\\n"; try strayafter "namespace foo { // update-hdr\\nvoid A();\\n}\\n#define OPENBLOCK {\\n"; try undone "namespace foo { // update-hdr\\n#define BEGIN {\\n#define END }\\nvoid Old();\\n}\\nvoid KeepMe();\\n"; cat hdr/x.h; try nested "namespace foo { // update-hdr\\nstruct S {\\n    int a;\\n};\\nvoid Old();\\n}\\nvoid KeepMe();\\n"; cat hdr/x.h\''
+# eof bash
+bash -> src_func.unbalanced_file  file:hdr/x.h  depth:1  comment:"brace count does not return to zero at end of file; file not rewritten"
+bash -> macro_code:1
+bash -> macro_header:unchanged
+bash -> src_func.unbraced_close  file:hdr/x.h  ns:foo  comment:"update-hdr section ends on a line that does not begin with a closing brace; file not rewritten"
+bash -> sharedline_code:1
+bash -> sharedline_header:unchanged
+bash -> src_func.unbraced_close  file:hdr/x.h  ns:foo  comment:"update-hdr section ends on a line that does not begin with a closing brace; file not rewritten"
+bash -> macroclose_code:1
+bash -> macroclose_header:unchanged
+bash -> src_func.unbalanced_file  file:hdr/x.h  depth:1  comment:"brace count does not return to zero at end of file; file not rewritten"
+bash -> strayafter_code:1
+bash -> strayafter_header:unchanged
+bash -> undone_code:0
+bash -> undone_header:rewritten
+bash -> namespace foo { // update-hdr
+bash ->     // Dear human:
+bash ->     //     Text from here to the closing curly brace was produced by scanning
+bash ->     //     source files. Editing this text is futile.
+bash ->     //     To refresh the contents of this section, run 'update-hdr'.
+bash ->     //     To convert this section to a hand-written section, remove the word 'update-hdr' from namespace line.
+bash -> }
+bash -> void KeepMe();
+bash -> nested_code:0
+bash -> nested_header:rewritten
+bash -> namespace foo { // update-hdr
+bash ->     // Dear human:
+bash ->     //     Text from here to the closing curly brace was produced by scanning
+bash ->     //     source files. Editing this text is futile.
+bash ->     //     To refresh the contents of this section, run 'update-hdr'.
+bash ->     //     To convert this section to a hand-written section, remove the word 'update-hdr' from namespace line.
+bash -> }
+bash -> void KeepMe();
+# exit bash code:0

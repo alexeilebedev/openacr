@@ -1,0 +1,5 @@
+# start bash cmd:"bash -c 'cd $tempdir && mkdir src && printf \"template<bool B = (4 > 2), void (*F)(int)> inline void xx::Paren(int a) {\\n}\\ntemplate<typename T, void (*F)(T)> inline void xx::Fnptr(T t) {\\n}\\n\" > src/y.cpp && $$OLDPWD/$bindir/src_func -in:$$OLDPWD/test/src_func/template.ssim % -printssim'"
+# eof bash
+bash -> src_func.func  func:xx.Paren  args:"int a) {"  isstatic:N  isinline:Y  acrkey:""  iffy:N  mystery:N  sortkey:src/y.cpp:1  src:src/y.cpp  line:1  endline:2  proto:"template<bool B = (4 > 2), void (*F)(int)> inline void xx::Paren(int a) {"
+bash -> src_func.func  func:xx.Fnptr  args:"T t) {"  isstatic:N  isinline:Y  acrkey:""  iffy:N  mystery:N  sortkey:src/y.cpp:3  src:src/y.cpp  line:3  endline:4  proto:"template<typename T, void (*F)(T)> inline void xx::Fnptr(T t) {"
+# exit bash code:0

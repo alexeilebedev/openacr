@@ -23,34 +23,37 @@
 
 
 #pragma once
+#include "include/gen/algo_gen.h"
 #include "include/gen/report_gen.h"
 #include "include/gen/command_gen.h"
-#include "include/gen/algo_gen.h"
 #include "include/gen/algo_lib_gen.h"
 //#pragma endinclude
 // gen:ns_enums
 
 // --- gcache_FieldIdEnum
 
-enum gcache_FieldIdEnum {                     // gcache.FieldId.value
-     gcache_FieldId_n_cachefile          = 0
-    ,gcache_FieldId_n_cachefile_del      = 1
-    ,gcache_FieldId_n_cachefile_recent   = 2
-    ,gcache_FieldId_n_logline            = 3
-    ,gcache_FieldId_n_logline_del        = 4
-    ,gcache_FieldId_new_cachesize_mb     = 5
-    ,gcache_FieldId_value                = 6
+enum gcache_FieldIdEnum {    // gcache.FieldId.value
+     gcache_FieldId_n_cachefile
+    ,gcache_FieldId_n_cachefile_del
+    ,gcache_FieldId_n_cachefile_recent
+    ,gcache_FieldId_n_cachefile_evict
+    ,gcache_FieldId_n_logline
+    ,gcache_FieldId_n_logline_del
+    ,gcache_FieldId_new_cachesize_mb
+    ,gcache_FieldId_value
 };
 
-enum { gcache_FieldIdEnum_N = 7 };
+enum { gcache_FieldIdEnum_N = 8 };
 
 namespace gcache { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
 namespace gcache { // gen:ns_tclass_field
-extern const char *gcache_help;
 } // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace gcache { struct _db_header_curs; }
+namespace gcache { struct _db_cachefile_curs; }
+namespace gcache { struct _db_bh_cachefile_curs; }
+namespace gcache { struct FCachefile; }
 namespace gcache { struct cleanreport; }
 namespace gcache { struct trace; }
 namespace gcache { struct FDb; }
@@ -59,20 +62,56 @@ namespace gcache { struct FieldId; }
 namespace gcache { extern struct gcache::FDb _db; }
 namespace gcache { // gen:ns_print_struct
 
+// --- gcache.FCachefile
+// create: gcache.FDb.cachefile (Lary)
+// global access: cachefile (Lary, by rowid)
+// global access: bh_cachefile (Bheap, sort field mtime)
+struct FCachefile { // gcache.FCachefile: Surviving cache file collected during GC
+    algo::cstring   pathname;           // Full path of the cache file
+    algo::UnTime    mtime;              // Last use (hits refresh mtime via the access log)
+    i64             size;               //   0  File size in bytes
+    i32             bh_cachefile_idx;   // index in heap; -1 means not-in-heap
+    // func:gcache.FCachefile..AssignOp
+    inline gcache::FCachefile& operator =(const gcache::FCachefile &rhs) = delete;
+    // func:gcache.FCachefile..CopyCtor
+    inline               FCachefile(const gcache::FCachefile &rhs) = delete;
+private:
+    // func:gcache.FCachefile..Ctor
+    inline               FCachefile() __attribute__((nothrow));
+    // func:gcache.FCachefile..Dtor
+    inline               ~FCachefile() __attribute__((nothrow));
+    friend gcache::FCachefile&  cachefile_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend gcache::FCachefile*  cachefile_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 cachefile_RemoveAll() __attribute__((nothrow));
+    friend void                 cachefile_RemoveLast() __attribute__((nothrow));
+};
+// Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
+// func:gcache.FCachefile.mtime.Lt
+inline bool          mtime_Lt(gcache::FCachefile& cachefile, gcache::FCachefile &rhs) __attribute__((nothrow));
+// Compare two fields.
+// func:gcache.FCachefile.mtime.Cmp
+inline i32           mtime_Cmp(gcache::FCachefile& cachefile, gcache::FCachefile &rhs) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:gcache.FCachefile..Init
+inline void          FCachefile_Init(gcache::FCachefile& cachefile);
+// func:gcache.FCachefile..Uninit
+void                 FCachefile_Uninit(gcache::FCachefile& cachefile) __attribute__((nothrow));
+
 // --- gcache.cleanreport
 struct cleanreport { // gcache.cleanreport
     i32   n_cachefile;          //   0  Number of files in a cache
     i32   n_cachefile_del;      //   0  Number of files deleted
     i32   n_cachefile_recent;   //   0  Number of files recently accessed
+    i32   n_cachefile_evict;    //   0  Number of files evicted to fit the size budget
     i32   n_logline;            //   0  Number of log lines
     i32   n_logline_del;        //   0  Number of log lines deleted
     i64   new_cachesize_mb;     //   0  New cache size in MB
     // func:gcache.cleanreport..Ctor
     inline               cleanreport() __attribute__((nothrow));
     // func:gcache.cleanreport..FieldwiseCtor
-    explicit inline               cleanreport(i32 in_n_cachefile, i32 in_n_cachefile_del, i32 in_n_cachefile_recent, i32 in_n_logline, i32 in_n_logline_del, i64 in_new_cachesize_mb) __attribute__((nothrow));
+    explicit inline               cleanreport(i32 in_n_cachefile, i32 in_n_cachefile_del, i32 in_n_cachefile_recent, i32 in_n_cachefile_evict, i32 in_n_logline, i32 in_n_logline_del, i64 in_new_cachesize_mb) __attribute__((nothrow));
 };
-
 // func:gcache.cleanreport..ReadFieldMaybe
 bool                 cleanreport_ReadFieldMaybe(gcache::cleanreport& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
 // Read fields of gcache::cleanreport from an ascii string.
@@ -94,7 +133,6 @@ struct trace { // gcache.trace
     inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // print string representation of ROW to string STR
 // cfmt:gcache.trace.String  printfmt:Tuple
 // func:gcache.trace..Print
@@ -103,28 +141,30 @@ void                 trace_Print(gcache::trace& row, algo::cstring& str) __attri
 // --- gcache.FDb
 // create: gcache.FDb._db (Global)
 struct FDb { // gcache.FDb: In-memory database for gcache
-    report::gcache        report;            // Final report
-    gcache::cleanreport   cleanreport;       //
-    command::gcache       cmdline;           //
-    algo::cstring         dir;               //
-    bool                  do_not_compile;    //   false
-    bool                  do_not_link;       //   false
-    bool                  do_not_assemble;   //   false
-    algo::cstring         target;            //
-    algo::cstring         cached;            //
-    algo::cstring         logfname;          //
-    algo::cstring         preproc_file;      //
-    gcache::FHeader*      header_lary[32];   // level array
-    i32                   header_n;          // number of elements in array
-    algo::cstring         preproc_text;      //
-    algo_lib::FFildes     lockfd;            //
-    gcache::trace         trace;             //
+    report::gcache         report;               // Final report
+    gcache::cleanreport    cleanreport;          //
+    command::gcache        cmdline;              //
+    algo::cstring          dir;                  //
+    bool                   do_not_compile;       //   false
+    bool                   do_not_link;          //   false
+    bool                   do_not_assemble;      //   false
+    algo::cstring          target;               //
+    algo::cstring          cached;               //
+    algo::cstring          logfname;             //
+    algo::cstring          preproc_file;         //
+    gcache::FHeader*       header_lary[36];      // level array
+    i64                    header_n;             // number of elements in array
+    algo::cstring          preproc_text;         //
+    algo_lib::FFildes      lockfd;               //
+    gcache::FCachefile*    cachefile_lary[36];   // level array
+    i64                    cachefile_n;          // number of elements in array
+    gcache::FCachefile**   bh_cachefile_elems;   // binary heap by mtime
+    i32                    bh_cachefile_n;       // number of elements in the heap
+    i32                    bh_cachefile_max;     // max elements in bh_cachefile_elems
+    gcache::trace          trace;                //
 };
-
-// Read argc,argv directly into the fields of the command line(s)
-// The following fields are updated:
-//     gcache.FDb.cmdline
-//     algo_lib.FDb.cmdline
+// Read argc,argv into the fields of gcache.FDb.cmdline (and any base command line)
+// via gcache_ReadArgv; then apply -help/-version and load floadtuples input.
 // func:gcache.FDb._db.ReadArgv
 void                 ReadArgv() __attribute__((nothrow));
 // Main loop.
@@ -161,6 +201,10 @@ bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __att
 // Calls Step function of dependencies
 // func:gcache.FDb._db.Steps
 void                 Steps();
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+// func:gcache.FDb._db.RemoveStrptrMaybe
+bool                 RemoveStrptrMaybe(algo::strptr str);
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:gcache.FDb._db.XrefMaybe
@@ -187,7 +231,7 @@ inline gcache::FHeader* header_Find(u64 t) __attribute__((__warn_unused_result__
 inline gcache::FHeader* header_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:gcache.FDb.header.N
-inline i32           header_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           header_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:gcache.FDb.header.RemoveAll
 void                 header_RemoveAll() __attribute__((nothrow));
@@ -202,6 +246,84 @@ inline gcache::FHeader& header_qFind(u64 t) __attribute__((nothrow, pure));
 // func:gcache.FDb.header.XrefMaybe
 bool                 header_XrefMaybe(gcache::FHeader &row);
 
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:gcache.FDb.cachefile.Alloc
+gcache::FCachefile&  cachefile_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:gcache.FDb.cachefile.AllocMaybe
+gcache::FCachefile*  cachefile_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:gcache.FDb.cachefile.AllocMem
+void*                cachefile_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:gcache.FDb.cachefile.EmptyQ
+inline bool          cachefile_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:gcache.FDb.cachefile.Find
+inline gcache::FCachefile* cachefile_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:gcache.FDb.cachefile.Last
+inline gcache::FCachefile* cachefile_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:gcache.FDb.cachefile.N
+inline i64           cachefile_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:gcache.FDb.cachefile.RemoveAll
+void                 cachefile_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:gcache.FDb.cachefile.RemoveLast
+void                 cachefile_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:gcache.FDb.cachefile.qFind
+inline gcache::FCachefile& cachefile_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:gcache.FDb.cachefile.XrefMaybe
+bool                 cachefile_XrefMaybe(gcache::FCachefile &row);
+
+// Remove all elements from heap and free memory used by the array.
+// func:gcache.FDb.bh_cachefile.Dealloc
+void                 bh_cachefile_Dealloc() __attribute__((nothrow));
+// Return true if index is empty
+// func:gcache.FDb.bh_cachefile.EmptyQ
+inline bool          bh_cachefile_EmptyQ() __attribute__((nothrow));
+// If index empty, return NULL. Otherwise return pointer to first element in index
+// func:gcache.FDb.bh_cachefile.First
+inline gcache::FCachefile* bh_cachefile_First() __attribute__((__warn_unused_result__, nothrow, pure));
+// Return true if row is in index, false otherwise
+// func:gcache.FDb.bh_cachefile.InBheapQ
+inline bool          bh_cachefile_InBheapQ(gcache::FCachefile& row) __attribute__((__warn_unused_result__, nothrow));
+// Insert row. Row must not already be in index. If row is already in index, do nothing.
+// func:gcache.FDb.bh_cachefile.Insert
+void                 bh_cachefile_Insert(gcache::FCachefile& row) __attribute__((nothrow));
+// Return number of items in the heap
+// func:gcache.FDb.bh_cachefile.N
+inline i32           bh_cachefile_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// If row is in heap, update its position. If row is not in heap, insert it.
+// Return new position of item in the heap (0=top)
+// func:gcache.FDb.bh_cachefile.Reheap
+i32                  bh_cachefile_Reheap(gcache::FCachefile& row) __attribute__((nothrow));
+// Key of first element in the heap changed. Move it.
+// This function does not check the insert condition.
+// Return new position of item in the heap (0=top).
+// Heap must be non-empty or behavior is undefined.
+// func:gcache.FDb.bh_cachefile.ReheapFirst
+i32                  bh_cachefile_ReheapFirst() __attribute__((nothrow));
+// Remove element from index. If element is not in index, do nothing.
+// func:gcache.FDb.bh_cachefile.Remove
+void                 bh_cachefile_Remove(gcache::FCachefile& row) __attribute__((nothrow));
+// Remove all elements from binary heap
+// func:gcache.FDb.bh_cachefile.RemoveAll
+void                 bh_cachefile_RemoveAll() __attribute__((nothrow));
+// If index is empty, return NULL. Otherwise remove and return first key in index.
+//  Call 'head changed' trigger.
+// func:gcache.FDb.bh_cachefile.RemoveFirst
+gcache::FCachefile*  bh_cachefile_RemoveFirst() __attribute__((nothrow));
+// Reserve space in index for N more elements
+// func:gcache.FDb.bh_cachefile.Reserve
+void                 bh_cachefile_Reserve(int n) __attribute__((nothrow));
+
 // cursor points to valid item
 // func:gcache.FDb.header_curs.Reset
 inline void          _db_header_curs_Reset(_db_header_curs &curs, gcache::FDb &parent) __attribute__((nothrow));
@@ -214,6 +336,32 @@ inline void          _db_header_curs_Next(_db_header_curs &curs) __attribute__((
 // item access
 // func:gcache.FDb.header_curs.Access
 inline gcache::FHeader& _db_header_curs_Access(_db_header_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:gcache.FDb.cachefile_curs.Reset
+inline void          _db_cachefile_curs_Reset(_db_cachefile_curs &curs, gcache::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:gcache.FDb.cachefile_curs.ValidQ
+inline bool          _db_cachefile_curs_ValidQ(_db_cachefile_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:gcache.FDb.cachefile_curs.Next
+inline void          _db_cachefile_curs_Next(_db_cachefile_curs &curs) __attribute__((nothrow));
+// item access
+// func:gcache.FDb.cachefile_curs.Access
+inline gcache::FCachefile& _db_cachefile_curs_Access(_db_cachefile_curs &curs) __attribute__((nothrow));
+// func:gcache.FDb.bh_cachefile_curs.Reserve
+void                 _db_bh_cachefile_curs_Reserve(_db_bh_cachefile_curs &curs, int n);
+// Reset cursor. If HEAP is non-empty, add its top element to CURS.
+// func:gcache.FDb.bh_cachefile_curs.Reset
+void                 _db_bh_cachefile_curs_Reset(_db_bh_cachefile_curs &curs, gcache::FDb &parent);
+// Advance cursor.
+// func:gcache.FDb.bh_cachefile_curs.Next
+void                 _db_bh_cachefile_curs_Next(_db_bh_cachefile_curs &curs);
+// Access current element. If not more elements, return NULL
+// func:gcache.FDb.bh_cachefile_curs.Access
+inline gcache::FCachefile& _db_bh_cachefile_curs_Access(_db_bh_cachefile_curs &curs) __attribute__((nothrow));
+// Return true if Access() will return non-NULL.
+// func:gcache.FDb.bh_cachefile_curs.ValidQ
+inline bool          _db_bh_cachefile_curs_ValidQ(_db_bh_cachefile_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:gcache.FDb..Init
 void                 FDb_Init();
@@ -239,7 +387,6 @@ private:
     friend void                 header_RemoveAll() __attribute__((nothrow));
     friend void                 header_RemoveLast() __attribute__((nothrow));
 };
-
 // Set all fields to initial values.
 // func:gcache.FHeader..Init
 inline void          FHeader_Init(gcache::FHeader& header);
@@ -262,7 +409,6 @@ struct FieldId { // gcache.FieldId: Field read helper
     inline               FieldId(gcache_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:gcache.FieldId.value.GetEnum
 inline gcache_FieldIdEnum value_GetEnum(const gcache::FieldId& parent) __attribute__((nothrow));
@@ -300,7 +446,7 @@ inline void          FieldId_Init(gcache::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:gcache.FieldId.String  printfmt:Raw
 // func:gcache.FieldId..Print
-void                 FieldId_Print(gcache::FieldId& row, algo::cstring& str) __attribute__((nothrow));
+void                 FieldId_Print(gcache::FieldId row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace gcache { // gen:ns_curstext
 
@@ -309,6 +455,26 @@ struct _db_header_curs {// cursor
     gcache::FDb *parent;
     i64 index;
     _db_header_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_cachefile_curs {// cursor
+    typedef gcache::FCachefile ChildType;
+    gcache::FDb *parent;
+    i64 index;
+    _db_cachefile_curs(){ parent=NULL; index=0; }
+};
+
+// Non-destructive heap cursor, returns heap elements in sorted order.
+// A running front of potential smallest entries is kept in the helper heap (curs.temp_%)
+struct _db_bh_cachefile_curs {
+    typedef gcache::FCachefile ChildType;
+    gcache::FDb      *parent;        // parent
+    gcache::FCachefile*     *temp_elems;    // helper heap
+    int            temp_n;        // number of elements heaped in the helper heap
+    int            temp_max;      // max number of elements possible in the helper heap
+    _db_bh_cachefile_curs() : parent(NULL), temp_elems(NULL), temp_n(0), temp_max(0) {}
+    ~_db_bh_cachefile_curs();
 };
 
 } // gen:ns_curstext

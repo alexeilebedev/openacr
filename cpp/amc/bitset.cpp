@@ -25,27 +25,78 @@
 
 #include "include/amc.h"
 
+// Check that the bitset element is an unsigned integer builtin of a width the
+// accessors can index, and set up the substitution variables shared by the
+// bitset accessors: element width, the index shift and mask splitting a bit
+// index, and the bit-scan width.
 void amc::tclass_Bitset() {
     algo_lib::Replscope &R        = amc::_db.genctx.R;
     amc::FField         &field    = *amc::_db.genctx.p_field;
     amc::FFbitset &fbitset = *field.c_fbitset;
     amc::FCtype &elemtype = *field.p_arg;
 
-    u32 elem_bits = elemtype.c_csize ? elemtype.c_csize->size*8 :0;
-    if (elem_bits==0) {
-        prerr("amc.GenBitset"
+    i64 elem_bits = Ctype_Nbit(elemtype);
+    // The generated accessors read bits back with plain shifts, which
+    // sign-extend on a signed element (an i8 element compiles but Sup returns
+    // wrong values), so the element type must be one of the unsigned integer
+    // builtins. Each of those names a width -- and the width the accessors
+    // actually index by is a second fact, taken from the element's
+    // dmmeta.csize row, which a universe can state as anything. The two must
+    // agree: a csize row wider than the name makes the accessors shift past
+    // the end of the member the struct declares, and a narrower or unaligned
+    // one makes the index split, which is exact only for a power-of-two
+    // width, land on the wrong element. Comparing the stated width against
+    // the name's own width settles both, and it also keeps the width inside
+    // the reach of the bit-scan helpers, which stop at 128 bits.
+    amc::BltinId bltin_id(amc_BltinIdEnum(0));
+    value_SetStrptrMaybe(bltin_id, elemtype.ctype);
+    i64 name_bits = 0;
+    switch (bltin_id.value) {
+    case amc_BltinId_u8:   name_bits = 8;   break;
+    case amc_BltinId_u16:  name_bits = 16;  break;
+    case amc_BltinId_u32:  name_bits = 32;  break;
+    case amc_BltinId_u64:  name_bits = 64;  break;
+    case amc_BltinId_u128: name_bits = 128; break;
+    default:                                break;
+    }
+    if (name_bits == 0) {
+        prerr("amc.bitset_elem"
               <<Keyval("fbitset",fbitset.field)
-              <<Keyval("comment","Cannot determine size of underlying field. Use u8,u16,u32, or u64"));
+              <<Keyval("arg",field.arg)
+              <<Keyval("comment","bitset element must be an unsigned builtin. Use u8,u16,u32,u64, or u128"));
+        algo_lib::_db.exit_code++;
+    } else if (elem_bits==0) {
+        // the element is one of the unsigned builtins, so the only way its
+        // width can be unknown is a universe lacking the type's csize row
+        prerr("amc.bitset_elem_size"
+              <<Keyval("fbitset",fbitset.field)
+              <<Keyval("arg",field.arg)
+              <<Keyval("comment","element size unknown; add a dmmeta.csize row for the element type"));
+        algo_lib::_db.exit_code++;
+    } else if (elem_bits != name_bits) {
+        // the csize row disagrees with the width the element type's own name
+        // states, and the accessors are generated from the csize row
+        prerr("amc.bitset_elem_width"
+              <<Keyval("fbitset",fbitset.field)
+              <<Keyval("arg",field.arg)
+              <<Keyval("elem_bits",elem_bits)
+              <<Keyval("name_bits",name_bits)
+              <<Keyval("comment","element width must be the width its type name states; check the dmmeta.csize row"));
         algo_lib::_db.exit_code++;
     }
 
-    Set(R, "$idxshift"  , tempstr()<<algo::FloorLog2(elem_bits));
-    Set(R, "$shiftmask" , tempstr()<<(1 << algo::FloorLog2(elem_bits))-1);
+    Set(R, "$idxshift"  , tempstr()<<algo::FloorLog2(u32(elem_bits)));
+    Set(R, "$shiftmask" , tempstr()<<(1 << algo::FloorLog2(u32(elem_bits)))-1);
     Set(R, "$elembits"  , tempstr()<<elem_bits);
+    // width of the bit-scan helper (BitScanForward/Reverse): elements up to
+    // 64 bits promote to u64; a u128 element uses the u128 helper
+    Set(R, "$scantype"  , elem_bits > 64 ? "u128" : "u64");
 }
 
 // -----------------------------------------------------------------------------
 
+// Generate the element-count function for a single-element bitset (the
+// constant 1); an array-backed bitset takes it from the array reftype.
 void amc::tfunc_Bitset_N() {
     algo_lib::Replscope &R        = amc::_db.genctx.R;
     amc::FField         &field    = *amc::_db.genctx.p_field;
@@ -63,6 +114,8 @@ void amc::tfunc_Bitset_N() {
 
 // -----------------------------------------------------------------------------
 
+// Generate the element accessor for a single-element bitset: return the
+// value itself, ignoring the index; arrays take it from the array reftype.
 void amc::tfunc_Bitset_qFind() {
     algo_lib::Replscope &R        = amc::_db.genctx.R;
     amc::FField         &field    = *amc::_db.genctx.p_field;
@@ -79,6 +132,8 @@ void amc::tfunc_Bitset_qFind() {
 
 // -----------------------------------------------------------------------------
 
+// Generate the capacity function: number of bits the bitset holds
+// (element count times element width).
 void amc::tfunc_Bitset_NBits() {
     algo_lib::Replscope &R        = amc::_db.genctx.R;
     amc::FFunc &nbits = amc::CreateCurFunc();
@@ -90,6 +145,7 @@ void amc::tfunc_Bitset_NBits() {
 
 // -----------------------------------------------------------------------------
 
+// Generate the unchecked bit read: fetch one bit without bounds checking.
 void amc::tfunc_Bitset_qGetBit() {
     algo_lib::Replscope &R        = amc::_db.genctx.R;
     amc::FFunc &qgetbit = amc::CreateCurFunc();
@@ -104,6 +160,8 @@ void amc::tfunc_Bitset_qGetBit() {
 
 // -----------------------------------------------------------------------------
 
+// Generate the checked bit read: fetch one bit, returning false when the
+// bit index is out of bounds.
 void amc::tfunc_Bitset_GetBit() {
     algo_lib::Replscope &R        = amc::_db.genctx.R;
     amc::FFunc &getbit = amc::CreateCurFunc();
@@ -123,6 +181,7 @@ void amc::tfunc_Bitset_GetBit() {
 
 // -----------------------------------------------------------------------------
 
+// Generate the population count: total number of set bits over all elements.
 void amc::tfunc_Bitset_Sum1s() {
     algo_lib::Replscope &R       = amc::_db.genctx.R;
     amc::FFunc          &sumones = amc::CreateCurFunc();
@@ -141,6 +200,7 @@ void amc::tfunc_Bitset_Sum1s() {
 
 // -----------------------------------------------------------------------------
 
+// Generate the emptiness predicate: true when every bit is zero.
 void amc::tfunc_Bitset_BitsEmptyQ() {
     algo_lib::Replscope &R       = amc::_db.genctx.R;
     amc::FFunc          &emptyq = amc::CreateCurFunc();
@@ -162,6 +222,7 @@ void amc::tfunc_Bitset_BitsEmptyQ() {
 
 // -----------------------------------------------------------------------------
 
+// Generate the unchecked bit clear: zero one bit without bounds checking.
 void amc::tfunc_Bitset_qClearBit() {
     algo_lib::Replscope &R        = amc::_db.genctx.R;
     amc::FFunc &qclearbit = amc::CreateCurFunc();
@@ -176,6 +237,8 @@ void amc::tfunc_Bitset_qClearBit() {
 
 // -----------------------------------------------------------------------------
 
+// Generate the checked bit clear: zero one bit, a no-op when the bit
+// index is out of bounds.
 void amc::tfunc_Bitset_ClearBit() {
     algo_lib::Replscope &R        = amc::_db.genctx.R;
     amc::FFunc &clearbit = amc::CreateCurFunc();
@@ -193,6 +256,7 @@ void amc::tfunc_Bitset_ClearBit() {
 
 // -----------------------------------------------------------------------------
 
+// Generate the unchecked bit set: set one bit without bounds checking.
 void amc::tfunc_Bitset_qSetBit() {
     algo_lib::Replscope &R        = amc::_db.genctx.R;
     amc::FFunc &qsetbit = amc::CreateCurFunc();
@@ -206,6 +270,8 @@ void amc::tfunc_Bitset_qSetBit() {
 
 // -----------------------------------------------------------------------------
 
+// Generate the checked bit set: set one bit, a no-op when the bit index
+// is out of bounds.
 void amc::tfunc_Bitset_SetBit() {
     algo_lib::Replscope &R        = amc::_db.genctx.R;
     amc::FFunc &setbit = amc::CreateCurFunc();
@@ -222,6 +288,8 @@ void amc::tfunc_Bitset_SetBit() {
 
 // -----------------------------------------------------------------------------
 
+// Generate the unchecked bit write: overwrite one bit with VAL without
+// bounds checking.
 void amc::tfunc_Bitset_qSetBitVal() {
     algo_lib::Replscope &R        = amc::_db.genctx.R;
     amc::FFunc &setbitval = amc::CreateCurFunc();
@@ -235,6 +303,7 @@ void amc::tfunc_Bitset_qSetBitVal() {
 
 // -----------------------------------------------------------------------------
 
+// Generate the unchecked bit or: or VAL into one bit without bounds checking.
 void amc::tfunc_Bitset_qOrBitVal() {
     algo_lib::Replscope &R        = amc::_db.genctx.R;
     amc::FFunc &orbitval = amc::CreateCurFunc();
@@ -248,6 +317,8 @@ void amc::tfunc_Bitset_qOrBitVal() {
 
 // -----------------------------------------------------------------------------
 
+// Generate the whole-set clear: zero every element; the capacity is
+// unchanged.
 void amc::tfunc_Bitset_ClearBitsAll() {
     algo_lib::Replscope &R        = amc::_db.genctx.R;
     amc::FFunc &clearall = amc::CreateCurFunc();
@@ -263,6 +334,8 @@ void amc::tfunc_Bitset_ClearBitsAll() {
 
 // -----------------------------------------------------------------------------
 
+// Generate the set difference: clear the bits of PARENT that are set in
+// RHS. Skipped for a global ctype, which has no second instance.
 void amc::tfunc_Bitset_ClearBits() {
     algo_lib::Replscope &R        = amc::_db.genctx.R;
     amc::FField         &field    = *amc::_db.genctx.p_field;
@@ -281,6 +354,8 @@ void amc::tfunc_Bitset_ClearBits() {
 
 // -----------------------------------------------------------------------------
 
+// Generate the set union: or RHS's bits into PARENT. Skipped for a global
+// ctype, which has no second instance.
 void amc::tfunc_Bitset_OrBits() {
     algo_lib::Replscope &R        = amc::_db.genctx.R;
     amc::FField         &field    = *amc::_db.genctx.p_field;
@@ -301,6 +376,8 @@ void amc::tfunc_Bitset_OrBits() {
 
 // -----------------------------------------------------------------------------
 
+// Generate the capacity grower for an expandable array: allocate zeroed
+// elements until at least N_BITS bits exist.
 void amc::tfunc_Bitset_ExpandBits() {
     algo_lib::Replscope &R        = amc::_db.genctx.R;
     amc::FField         &field    = *amc::_db.genctx.p_field;
@@ -324,6 +401,8 @@ void amc::tfunc_Bitset_ExpandBits() {
 
 // -----------------------------------------------------------------------------
 
+// Generate the single-bit grower for an expandable array: ensure bits up
+// to and including BIT_IDX exist, initialized to zero.
 void amc::tfunc_Bitset_AllocBit() {
     algo_lib::Replscope &R        = amc::_db.genctx.R;
     amc::FField         &field    = *amc::_db.genctx.p_field;
@@ -341,87 +420,83 @@ void amc::tfunc_Bitset_AllocBit() {
 
 // -----------------------------------------------------------------------------
 
+// Generate the supremum function: 1 plus the index of the highest set
+// bit, 0 when no bit is set.
 void amc::tfunc_Bitset_Sup() {
     algo_lib::Replscope &R        = amc::_db.genctx.R;
-    amc::FField         &field    = *amc::_db.genctx.p_field;
-    amc::FCtype &elemtype = *field.p_arg;
-    u32 elem_bits = elemtype.c_csize ? elemtype.c_csize->size*8 :0;
     // sup function
-    if (elem_bits <= 64) {
-        amc::FFunc &sup = amc::CreateCurFunc();
-        Ins(&R, sup.ret  , "i32",false);
-        Ins(&R, sup.proto, "$name_Sup($Parent)",false);
-        Ins(&R, sup.body, "u64 lim = $name_N($pararg);");
-        Ins(&R, sup.body, "i32 ret = 0;");
-        Ins(&R, sup.body, "for (int i = lim-1; i >= 0; i--) {");
-        Ins(&R, sup.body, "    $Cpptype &val = $name_qFind($pararg, i);");
-        Ins(&R, sup.body, "    if (val) {");
-        Ins(&R, sup.body, "        u32 bitidx = algo::u64_BitScanReverse(val) + 1;");
-        Ins(&R, sup.body, "        ret = i * $elembits + bitidx;");
-        Ins(&R, sup.body, "        break;");
-        Ins(&R, sup.body, "    }");
-        Ins(&R, sup.body, "}");
-        Ins(&R, sup.body, "return ret;");
-    }
+    amc::FFunc &sup = amc::CreateCurFunc();
+    Ins(&R, sup.ret  , "i32",false);
+    Ins(&R, sup.proto, "$name_Sup($Parent)",false);
+    Ins(&R, sup.body, "u64 lim = $name_N($pararg);");
+    Ins(&R, sup.body, "i32 ret = 0;");
+    Ins(&R, sup.body, "for (int i = lim-1; i >= 0; i--) {");
+    Ins(&R, sup.body, "    $Cpptype &val = $name_qFind($pararg, i);");
+    Ins(&R, sup.body, "    if (val) {");
+    Ins(&R, sup.body, "        u32 bitidx = algo::$scantype_BitScanReverse(val) + 1;");
+    Ins(&R, sup.body, "        ret = i * $elembits + bitidx;");
+    Ins(&R, sup.body, "        break;");
+    Ins(&R, sup.body, "    }");
+    Ins(&R, sup.body, "}");
+    Ins(&R, sup.body, "return ret;");
 }
 
 // -----------------------------------------------------------------------------
 
+// Generate the bitcurs cursor (struct plus Reset/ValidQ/Access/Next):
+// iterate the indexes of the set bits in ascending order, skipping zero
+// elements with a bit scan.
 void amc::tfunc_Bitset_bitcurs() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FNs &ns = *amc::_db.genctx.p_field->p_ctype->p_ns;
-    amc::FCtype &elemtype = *amc::_db.genctx.p_field->p_arg;
-    u32 elem_bits = elemtype.c_csize ? elemtype.c_csize->size*8 :0;
-    if (elem_bits <= 64) {
-        amc::FFunc& curs_next = amc::ind_func_GetOrCreate(Subst(R,"$field_bitcurs.Next"));
-        Ins(&R, curs_next.comment, "proceed to next item");
-        Ins(&R, curs_next.ret  , "void", false);
-        Ins(&R, curs_next.proto, "$Parname_$name_bitcurs_Next($Parname_$name_bitcurs &curs)", false);
-        Ins(&R, curs_next.body, "++curs.bit;");
-        Ins(&R, curs_next.body, "int index = curs.bit / $elembits;");
-        Ins(&R, curs_next.body, "int offset = curs.bit % $elembits;");
-        Ins(&R, curs_next.body, "for (; index < curs.n_elems; ++index, offset = 0) {");
-        Ins(&R, curs_next.body, "    u64 rest = curs.elems[index] >> offset;");
-        Ins(&R, curs_next.body, "    if (rest) {");
-        Ins(&R, curs_next.body, "         offset += algo::u64_BitScanForward(rest);");
-        Ins(&R, curs_next.body, "         break;");
-        Ins(&R, curs_next.body, "    }");
-        Ins(&R, curs_next.body, "}");
-        Ins(&R, curs_next.body, "curs.bit = index * $elembits + offset;");
-        Ins(&R, ns.curstext, "");
-        Ins(&R, ns.curstext, "struct $Parname_$name_bitcurs {// cursor");
-        Ins(&R, ns.curstext, "    typedef int& ChildType;");
-        Ins(&R, ns.curstext, "    $Cpptype* elems;");
-        Ins(&R, ns.curstext, "    int n_elems;");
-        Ins(&R, ns.curstext, "    int bit;");
-        Ins(&R, ns.curstext, "    $Parname_$name_bitcurs() : elems(0), n_elems(0), bit(0) {}");
-        Ins(&R, ns.curstext, "};");
-        Ins(&R, ns.curstext, "");
+    amc::FFunc& curs_next = amc::ind_func_GetOrCreate(Subst(R,"$field_bitcurs.Next"));
+    Ins(&R, curs_next.comment, "proceed to next item");
+    Ins(&R, curs_next.ret  , "void", false);
+    Ins(&R, curs_next.proto, "$Parname_$name_bitcurs_Next($Parname_$name_bitcurs &curs)", false);
+    Ins(&R, curs_next.body, "++curs.bit;");
+    Ins(&R, curs_next.body, "int index = curs.bit / $elembits;");
+    Ins(&R, curs_next.body, "int offset = curs.bit % $elembits;");
+    Ins(&R, curs_next.body, "for (; index < curs.n_elems; ++index, offset = 0) {");
+    Ins(&R, curs_next.body, "    $scantype rest = curs.elems[index] >> offset;");
+    Ins(&R, curs_next.body, "    if (rest) {");
+    Ins(&R, curs_next.body, "         offset += algo::$scantype_BitScanForward(rest);");
+    Ins(&R, curs_next.body, "         break;");
+    Ins(&R, curs_next.body, "    }");
+    Ins(&R, curs_next.body, "}");
+    Ins(&R, curs_next.body, "curs.bit = index * $elembits + offset;");
+    Ins(&R, ns.curstext, "");
+    Ins(&R, ns.curstext, "struct $Parname_$name_bitcurs {// cursor");
+    Ins(&R, ns.curstext, "    typedef int& ChildType;");
+    Ins(&R, ns.curstext, "    $Cpptype* elems;");
+    Ins(&R, ns.curstext, "    int n_elems;");
+    Ins(&R, ns.curstext, "    int bit;");
+    Ins(&R, ns.curstext, "    $Parname_$name_bitcurs() : elems(0), n_elems(0), bit(0) {}");
+    Ins(&R, ns.curstext, "};");
+    Ins(&R, ns.curstext, "");
 
-        {
-            amc::FFunc& curs_reset = amc::CreateInlineFunc(Subst(R,"$field_bitcurs.Reset"));
-            Ins(&R, curs_reset.ret  , "void", false);
-            Ins(&R, curs_reset.proto, "$Parname_$name_bitcurs_Reset($Parname_$name_bitcurs &curs, $Partype &parent)", false);
-            Ins(&R, curs_reset.body, "curs.elems = &$name_qFind(parent,0);");
-            Ins(&R, curs_reset.body, "curs.n_elems = $name_N(parent);");
-            Ins(&R, curs_reset.body, "curs.bit = -1;");
-            Ins(&R, curs_reset.body, "$Parname_$name_bitcurs_Next(curs);");
-        }
+    {
+        amc::FFunc& curs_reset = amc::CreateInlineFunc(Subst(R,"$field_bitcurs.Reset"));
+        Ins(&R, curs_reset.ret  , "void", false);
+        Ins(&R, curs_reset.proto, "$Parname_$name_bitcurs_Reset($Parname_$name_bitcurs &curs, $Partype &parent)", false);
+        Ins(&R, curs_reset.body, "curs.elems = &$name_qFind(parent,0);");
+        Ins(&R, curs_reset.body, "curs.n_elems = $name_N(parent);");
+        Ins(&R, curs_reset.body, "curs.bit = -1;");
+        Ins(&R, curs_reset.body, "$Parname_$name_bitcurs_Next(curs);");
+    }
 
-        {
-            amc::FFunc& curs_validq = amc::CreateInlineFunc(Subst(R,"$field_bitcurs.ValidQ"));
-            Ins(&R, curs_validq.comment, "cursor points to valid item");
-            Ins(&R, curs_validq.ret  , "bool", false);
-            Ins(&R, curs_validq.proto, "$Parname_$name_bitcurs_ValidQ($Parname_$name_bitcurs &curs)", false);
-            Ins(&R, curs_validq.body, "return curs.bit < curs.n_elems*$elembits;");
-        }
+    {
+        amc::FFunc& curs_validq = amc::CreateInlineFunc(Subst(R,"$field_bitcurs.ValidQ"));
+        Ins(&R, curs_validq.comment, "cursor points to valid item");
+        Ins(&R, curs_validq.ret  , "bool", false);
+        Ins(&R, curs_validq.proto, "$Parname_$name_bitcurs_ValidQ($Parname_$name_bitcurs &curs)", false);
+        Ins(&R, curs_validq.body, "return curs.bit < curs.n_elems*$elembits;");
+    }
 
-        {
-            amc::FFunc& curs_access = amc::CreateInlineFunc(Subst(R,"$field_bitcurs.Access"));
-            Ins(&R, curs_access.comment, "item access");
-            Ins(&R, curs_access.ret  , "int&", false);
-            Ins(&R, curs_access.proto, "$Parname_$name_bitcurs_Access($Parname_$name_bitcurs &curs)", false);
-            Ins(&R, curs_access.body, "return curs.bit;");
-        }
+    {
+        amc::FFunc& curs_access = amc::CreateInlineFunc(Subst(R,"$field_bitcurs.Access"));
+        Ins(&R, curs_access.comment, "item access");
+        Ins(&R, curs_access.ret  , "int&", false);
+        Ins(&R, curs_access.proto, "$Parname_$name_bitcurs_Access($Parname_$name_bitcurs &curs)", false);
+        Ins(&R, curs_access.body, "return curs.bit;");
     }
 }

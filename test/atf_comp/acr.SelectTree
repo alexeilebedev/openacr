@@ -9,7 +9,7 @@ acr <- dmmeta.field  field:command.acr.schema    arg:algo.cstring  reftype:Val  
 acr <- dmmeta.floadtuples  field:command.acr.schema    comment:""
 acr <- dmmeta.ctypelen  ctype:command.acr  len:192  alignment:8  padbytes:21
 acr <- dmmeta.field  field:acr.FDb.cmdline  arg:command.acr  reftype:Val  dflt:""  comment:"command line"
-acr <- dmmeta.fcmdline  field:acr.FDb.cmdline  read:Y  basecmdline:algo_lib.FDb.cmdline  comment:""
+acr <- dmmeta.ccmdline  ctype:command.acr  read:Y  basecmdline:algo_lib.FDb.cmdline  comment:""
 # eof acr
 acr -> dev.license  license:GPL  comment:""
 acr -> dmmeta.nstype  nstype:protocol  comment:"Protocol (not a target)"
@@ -18,9 +18,9 @@ acr ->     dmmeta.ctype  ctype:command.acr  comment:""
 acr ->       dmmeta.field  field:command.acr.query  arg:algo.cstring  reftype:Val  dflt:'""'  comment:"Regx to match record"
 acr ->         dmmeta.anonfld  field:command.acr.query  comment:""
 acr ->       dmmeta.field  field:command.acr.schema  arg:algo.cstring  reftype:Val  dflt:'"data"'  comment:"Directory for initializing acr meta-data"
-acr ->         dmmeta.floadtuples  field:command.acr.schema  comment:""
+acr ->         dmmeta.floadtuples  field:command.acr.schema  autoscan:Y   optional:N   comment:""
+acr ->       dmmeta.ccmdline  ctype:command.acr  read:Y  basecmdline:algo_lib.FDb.cmdline  comment:""
 acr ->       dmmeta.ctypelen  ctype:command.acr  len:192  alignment:8  padbytes:21  plaindata:N
 acr -> dmmeta.field  field:acr.FDb.cmdline  arg:command.acr  reftype:Val  dflt:""  comment:"command line"
-acr ->   dmmeta.fcmdline  field:acr.FDb.cmdline  read:Y  basecmdline:algo_lib.FDb.cmdline  comment:""
-acr -> report.acr  n_select:11  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0
+acr -> report.acr  n_select:11  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0  n_badline:0
 # exit acr code:0

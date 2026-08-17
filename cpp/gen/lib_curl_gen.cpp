@@ -27,10 +27,10 @@
 #include "include/gen/lib_curl_gen.inl.h"
 #include "include/gen/algo_gen.h"
 #include "include/gen/algo_gen.inl.h"
-#include "include/gen/lib_json_gen.h"
-#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
+#include "include/gen/lib_json_gen.h"
+#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/lib_prot_gen.h"
 #include "include/gen/lib_prot_gen.inl.h"
 //#pragma endinclude
@@ -48,6 +48,213 @@ namespace lib_curl { // gen:ns_print_proto
     inline static void   SizeCheck();
 } // gen:ns_print_proto
 
+// --- lib_curl.FRequest.headers.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+algo::cstring& lib_curl::headers_Alloc(lib_curl::FRequest& parent) {
+    algo::cstring* row = headers_AllocMaybe(parent);
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("lib_curl.out_of_mem  field:lib_curl.FRequest.headers  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- lib_curl.FRequest.headers.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+algo::cstring* lib_curl::headers_AllocMaybe(lib_curl::FRequest& parent) {
+    algo::cstring *row = (algo::cstring*)headers_AllocMem(parent);
+    if (row) {
+        new (row) algo::cstring; // call constructor
+    }
+    return row;
+}
+
+// --- lib_curl.FRequest.headers.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* lib_curl::headers_AllocMem(lib_curl::FRequest& parent) {
+    u64 new_nelems     = parent.headers_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    algo::cstring*  lev   = NULL;
+    if (bsr < 36) {
+        lev = parent.headers_lary[bsr];
+        if (!lev) {
+            lev=(algo::cstring*)algo_lib::malloc_AllocMem(sizeof(algo::cstring) * (u64(1)<<bsr));
+            parent.headers_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        parent.headers_n = i64(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- lib_curl.FRequest.headers.RemoveAll
+// Remove all elements from Lary
+void lib_curl::headers_RemoveAll(lib_curl::FRequest& parent) {
+    for (u64 n = parent.headers_n; n>0; ) {
+        n--;
+        headers_qFind(parent, u64(n)).~cstring(); // destroy last element
+        parent.headers_n = i64(n);
+    }
+}
+
+// --- lib_curl.FRequest.headers.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void lib_curl::headers_RemoveLast(lib_curl::FRequest& parent) {
+    u64 n = parent.headers_n;
+    if (n > 0) {
+        n -= 1;
+        headers_qFind(parent, u64(n)).~cstring();
+        parent.headers_n = i64(n);
+    }
+}
+
+// --- lib_curl.FRequest..Init
+// Set all fields to initial values.
+void lib_curl::FRequest_Init(lib_curl::FRequest& parent) {
+    parent.method = algo::strptr("GET");
+    parent.curlrc_only = bool(false);
+    // initialize LAry headers (lib_curl.FRequest.headers)
+    parent.headers_n = 0;
+    memset(parent.headers_lary, 0, sizeof(parent.headers_lary)); // zero out all level pointers
+    algo::cstring* headers_first = (algo::cstring*)algo_lib::malloc_AllocMem(sizeof(algo::cstring) * (u64(1)<<4));
+    if (!headers_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        parent.headers_lary[i]  = headers_first;
+        headers_first    += 1ULL<<i;
+    }
+    parent.insecure_tls = bool(false);
+    parent.connect_timeout_sec = u32(5);
+    parent.total_timeout_sec = u32(120);
+    parent.aws_sigv4 = algo::strptr("");
+    parent.username = algo::strptr("");
+    parent.password = algo::strptr("");
+}
+
+// --- lib_curl.FRequest..Uninit
+void lib_curl::FRequest_Uninit(lib_curl::FRequest& parent) {
+    lib_curl::FRequest &row = parent; (void)row;
+
+    // lib_curl.FRequest.headers.Uninit (Lary)  //Arbitrary headers: "Authorization: Bearer ...", "Content-Type: ..."
+    // destroy lib_curl.FRequest.headers
+    // destroy all elements
+    headers_RemoveAll(parent);
+    // destroy all levels. stop when NULL level is found -- there is nothing beyond it
+    algo_lib::malloc_FreeMem(parent.headers_lary[0],sizeof(algo::cstring) * (u64(1)<<4));
+    for (u64 i = 4; i < 36 && parent.headers_lary[i]; i++) {
+        algo_lib::malloc_FreeMem(parent.headers_lary[i],sizeof(algo::cstring) * (u64(1)<<i));
+    }
+}
+
+// --- lib_curl.FResponse.headers.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+algo::cstring& lib_curl::headers_Alloc(lib_curl::FResponse& parent) {
+    algo::cstring* row = headers_AllocMaybe(parent);
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("lib_curl.out_of_mem  field:lib_curl.FResponse.headers  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- lib_curl.FResponse.headers.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+algo::cstring* lib_curl::headers_AllocMaybe(lib_curl::FResponse& parent) {
+    algo::cstring *row = (algo::cstring*)headers_AllocMem(parent);
+    if (row) {
+        new (row) algo::cstring; // call constructor
+    }
+    return row;
+}
+
+// --- lib_curl.FResponse.headers.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* lib_curl::headers_AllocMem(lib_curl::FResponse& parent) {
+    u64 new_nelems     = parent.headers_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    algo::cstring*  lev   = NULL;
+    if (bsr < 36) {
+        lev = parent.headers_lary[bsr];
+        if (!lev) {
+            lev=(algo::cstring*)algo_lib::malloc_AllocMem(sizeof(algo::cstring) * (u64(1)<<bsr));
+            parent.headers_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        parent.headers_n = i64(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- lib_curl.FResponse.headers.RemoveAll
+// Remove all elements from Lary
+void lib_curl::headers_RemoveAll(lib_curl::FResponse& parent) {
+    for (u64 n = parent.headers_n; n>0; ) {
+        n--;
+        headers_qFind(parent, u64(n)).~cstring(); // destroy last element
+        parent.headers_n = i64(n);
+    }
+}
+
+// --- lib_curl.FResponse.headers.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void lib_curl::headers_RemoveLast(lib_curl::FResponse& parent) {
+    u64 n = parent.headers_n;
+    if (n > 0) {
+        n -= 1;
+        headers_qFind(parent, u64(n)).~cstring();
+        parent.headers_n = i64(n);
+    }
+}
+
+// --- lib_curl.FResponse..Init
+// Set all fields to initial values.
+void lib_curl::FResponse_Init(lib_curl::FResponse& parent) {
+    parent.code = u16(0);
+    // initialize LAry headers (lib_curl.FResponse.headers)
+    parent.headers_n = 0;
+    memset(parent.headers_lary, 0, sizeof(parent.headers_lary)); // zero out all level pointers
+    algo::cstring* headers_first = (algo::cstring*)algo_lib::malloc_AllocMem(sizeof(algo::cstring) * (u64(1)<<4));
+    if (!headers_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        parent.headers_lary[i]  = headers_first;
+        headers_first    += 1ULL<<i;
+    }
+}
+
+// --- lib_curl.FResponse..Uninit
+void lib_curl::FResponse_Uninit(lib_curl::FResponse& parent) {
+    lib_curl::FResponse &row = parent; (void)row;
+
+    // lib_curl.FResponse.headers.Uninit (Lary)  //raw header lines (trimmed)
+    // destroy lib_curl.FResponse.headers
+    // destroy all elements
+    headers_RemoveAll(parent);
+    // destroy all levels. stop when NULL level is found -- there is nothing beyond it
+    algo_lib::malloc_FreeMem(parent.headers_lary[0],sizeof(algo::cstring) * (u64(1)<<4));
+    for (u64 i = 4; i < 36 && parent.headers_lary[i]; i++) {
+        algo_lib::malloc_FreeMem(parent.headers_lary[i],sizeof(algo::cstring) * (u64(1)<<i));
+    }
+}
+
 // --- lib_curl.trace..Print
 // print string representation of ROW to string STR
 // cfmt:lib_curl.trace.String  printfmt:Tuple
@@ -60,7 +267,13 @@ void lib_curl::trace_Print(lib_curl::trace& row, algo::cstring& str) {
 // --- lib_curl.FDb._db.InitReflection
 // Load statically available data into tables, register tables and database.
 static void lib_curl::InitReflection() {
-    algo_lib::imdb_InsertMaybe(algo::Imdb("lib_curl", NULL, NULL, NULL, NULL, algo::Comment()));
+    algo_lib::FImdb &row = algo_lib::imdb_Alloc();
+    row.imdb               = "lib_curl";
+    row.InsertStrptrMaybe  = NULL;
+    row.RemoveStrptrMaybe  = NULL;
+    row.Step               = NULL;
+    row.MainLoop           = NULL;
+    algo_lib::imdb_XrefMaybe(row);
 
     algo::Imtable t_trace;
     t_trace.imtable         = "lib_curl.trace";
@@ -156,6 +369,15 @@ void lib_curl::Steps() {
     algo_lib::Step(); // dependent namespace specified via (dev.targdep)
 }
 
+// --- lib_curl.FDb._db.RemoveStrptrMaybe
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+bool lib_curl::RemoveStrptrMaybe(algo::strptr str) {
+    bool retval = true;
+    (void)str;//only to avoid -Wunused-parameter
+    return retval;
+}
+
 // --- lib_curl.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
@@ -164,67 +386,67 @@ bool lib_curl::_db_XrefMaybe() {
     return retval;
 }
 
-// --- lib_curl.FDb.request.Alloc
+// --- lib_curl.FDb.call.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-lib_curl::FRequest& lib_curl::request_Alloc() {
-    lib_curl::FRequest* row = request_AllocMaybe();
+lib_curl::FCall& lib_curl::call_Alloc() {
+    lib_curl::FCall* row = call_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
-        FatalErrorExit("lib_curl.out_of_mem  field:lib_curl.FDb.request  comment:'Alloc failed'");
+        FatalErrorExit("lib_curl.out_of_mem  field:lib_curl.FDb.call  comment:'Alloc failed'");
     }
     return *row;
 }
 
-// --- lib_curl.FDb.request.AllocMaybe
+// --- lib_curl.FDb.call.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-lib_curl::FRequest* lib_curl::request_AllocMaybe() {
-    lib_curl::FRequest *row = (lib_curl::FRequest*)request_AllocMem();
+lib_curl::FCall* lib_curl::call_AllocMaybe() {
+    lib_curl::FCall *row = (lib_curl::FCall*)call_AllocMem();
     if (row) {
-        new (row) lib_curl::FRequest; // call constructor
+        new (row) lib_curl::FCall; // call constructor
     }
     return row;
 }
 
-// --- lib_curl.FDb.request.Delete
+// --- lib_curl.FDb.call.Delete
 // Remove row from all global and cross indices, then deallocate row
-void lib_curl::request_Delete(lib_curl::FRequest &row) {
-    row.~FRequest();
-    request_FreeMem(row);
+void lib_curl::call_Delete(lib_curl::FCall &row) {
+    row.~FCall();
+    call_FreeMem(row);
 }
 
-// --- lib_curl.FDb.request.AllocMem
+// --- lib_curl.FDb.call.AllocMem
 // Allocate space for one element
 // If no memory available, return NULL.
-void* lib_curl::request_AllocMem() {
-    lib_curl::FRequest *row = _db.request_free;
+void* lib_curl::call_AllocMem() {
+    lib_curl::FCall *row = _db.call_free;
     if (UNLIKELY(!row)) {
-        request_Reserve(1);
-        row = _db.request_free;
+        call_Reserve(1);
+        row = _db.call_free;
     }
     if (row) {
-        _db.request_free = row->request_next;
+        _db.call_free = row->call_next;
     }
     return row;
 }
 
-// --- lib_curl.FDb.request.FreeMem
+// --- lib_curl.FDb.call.FreeMem
 // Remove mem from all global and cross indices, then deallocate mem
-void lib_curl::request_FreeMem(lib_curl::FRequest &row) {
-    if (UNLIKELY(row.request_next != (lib_curl::FRequest*)-1)) {
-        FatalErrorExit("lib_curl.tpool_double_delete  pool:lib_curl.FDb.request  comment:'double deletion caught'");
+void lib_curl::call_FreeMem(lib_curl::FCall &row) {
+    if (UNLIKELY(row.call_next != (lib_curl::FCall*)-1)) {
+        FatalErrorExit("lib_curl.tpool_double_delete  pool:lib_curl.FDb.call  comment:'double deletion caught'");
     }
-    row.request_next = _db.request_free; // insert into free list
-    _db.request_free  = &row;
+    row.call_next = _db.call_free; // insert into free list
+    _db.call_free  = &row;
 }
 
-// --- lib_curl.FDb.request.Reserve
+// --- lib_curl.FDb.call.Reserve
 // Preallocate memory for N more elements
 // Return number of elements actually reserved.
-u64 lib_curl::request_Reserve(u64 n_elems) {
+u64 lib_curl::call_Reserve(u64 n_elems) {
     u64 ret = 0;
     while (ret < n_elems) {
-        u64 size = _db.request_blocksize; // underlying allocator is probably Lpool
-        u64 reserved = request_ReserveMem(size);
+        u64 size = _db.call_blocksize; // underlying allocator is probably Lpool
+        u64 reserved = call_ReserveMem(size);
         ret += reserved;
         if (reserved == 0) {
             break;
@@ -233,93 +455,93 @@ u64 lib_curl::request_Reserve(u64 n_elems) {
     return ret;
 }
 
-// --- lib_curl.FDb.request.ReserveMem
+// --- lib_curl.FDb.call.ReserveMem
 // Allocate block of given size, break up into small elements and append to free list.
 // Return number of elements reserved.
-u64 lib_curl::request_ReserveMem(u64 size) {
+u64 lib_curl::call_ReserveMem(u64 size) {
     u64 ret = 0;
-    if (size >= sizeof(lib_curl::FRequest)) {
-        lib_curl::FRequest *mem = (lib_curl::FRequest*)algo_lib::malloc_AllocMem(size);
-        ret = mem ? size / sizeof(lib_curl::FRequest) : 0;
+    if (size >= sizeof(lib_curl::FCall)) {
+        lib_curl::FCall *mem = (lib_curl::FCall*)algo_lib::malloc_AllocMem(size);
+        ret = mem ? size / sizeof(lib_curl::FCall) : 0;
         // add newly allocated elements to the free list;
         for (u64 i=0; i < ret; i++) {
-            mem[i].request_next = _db.request_free;
-            _db.request_free = mem+i;
+            mem[i].call_next = _db.call_free;
+            _db.call_free = mem+i;
         }
     }
     return ret;
 }
 
-// --- lib_curl.FDb.request.XrefMaybe
+// --- lib_curl.FDb.call.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-bool lib_curl::request_XrefMaybe(lib_curl::FRequest &row) {
+bool lib_curl::call_XrefMaybe(lib_curl::FCall &row) {
     bool retval = true;
     (void)row;
     return retval;
 }
 
-// --- lib_curl.FDb.response.Alloc
+// --- lib_curl.FDb.sock.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-lib_curl::FResponse& lib_curl::response_Alloc() {
-    lib_curl::FResponse* row = response_AllocMaybe();
+lib_curl::FSock& lib_curl::sock_Alloc() {
+    lib_curl::FSock* row = sock_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
-        FatalErrorExit("lib_curl.out_of_mem  field:lib_curl.FDb.response  comment:'Alloc failed'");
+        FatalErrorExit("lib_curl.out_of_mem  field:lib_curl.FDb.sock  comment:'Alloc failed'");
     }
     return *row;
 }
 
-// --- lib_curl.FDb.response.AllocMaybe
+// --- lib_curl.FDb.sock.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-lib_curl::FResponse* lib_curl::response_AllocMaybe() {
-    lib_curl::FResponse *row = (lib_curl::FResponse*)response_AllocMem();
+lib_curl::FSock* lib_curl::sock_AllocMaybe() {
+    lib_curl::FSock *row = (lib_curl::FSock*)sock_AllocMem();
     if (row) {
-        new (row) lib_curl::FResponse; // call constructor
+        new (row) lib_curl::FSock; // call constructor
     }
     return row;
 }
 
-// --- lib_curl.FDb.response.Delete
+// --- lib_curl.FDb.sock.Delete
 // Remove row from all global and cross indices, then deallocate row
-void lib_curl::response_Delete(lib_curl::FResponse &row) {
-    row.~FResponse();
-    response_FreeMem(row);
+void lib_curl::sock_Delete(lib_curl::FSock &row) {
+    row.~FSock();
+    sock_FreeMem(row);
 }
 
-// --- lib_curl.FDb.response.AllocMem
+// --- lib_curl.FDb.sock.AllocMem
 // Allocate space for one element
 // If no memory available, return NULL.
-void* lib_curl::response_AllocMem() {
-    lib_curl::FResponse *row = _db.response_free;
+void* lib_curl::sock_AllocMem() {
+    lib_curl::FSock *row = _db.sock_free;
     if (UNLIKELY(!row)) {
-        response_Reserve(1);
-        row = _db.response_free;
+        sock_Reserve(1);
+        row = _db.sock_free;
     }
     if (row) {
-        _db.response_free = row->response_next;
+        _db.sock_free = row->sock_next;
     }
     return row;
 }
 
-// --- lib_curl.FDb.response.FreeMem
+// --- lib_curl.FDb.sock.FreeMem
 // Remove mem from all global and cross indices, then deallocate mem
-void lib_curl::response_FreeMem(lib_curl::FResponse &row) {
-    if (UNLIKELY(row.response_next != (lib_curl::FResponse*)-1)) {
-        FatalErrorExit("lib_curl.tpool_double_delete  pool:lib_curl.FDb.response  comment:'double deletion caught'");
+void lib_curl::sock_FreeMem(lib_curl::FSock &row) {
+    if (UNLIKELY(row.sock_next != (lib_curl::FSock*)-1)) {
+        FatalErrorExit("lib_curl.tpool_double_delete  pool:lib_curl.FDb.sock  comment:'double deletion caught'");
     }
-    row.response_next = _db.response_free; // insert into free list
-    _db.response_free  = &row;
+    row.sock_next = _db.sock_free; // insert into free list
+    _db.sock_free  = &row;
 }
 
-// --- lib_curl.FDb.response.Reserve
+// --- lib_curl.FDb.sock.Reserve
 // Preallocate memory for N more elements
 // Return number of elements actually reserved.
-u64 lib_curl::response_Reserve(u64 n_elems) {
+u64 lib_curl::sock_Reserve(u64 n_elems) {
     u64 ret = 0;
     while (ret < n_elems) {
-        u64 size = _db.response_blocksize; // underlying allocator is probably Lpool
-        u64 reserved = response_ReserveMem(size);
+        u64 size = _db.sock_blocksize; // underlying allocator is probably Lpool
+        u64 reserved = sock_ReserveMem(size);
         ret += reserved;
         if (reserved == 0) {
             break;
@@ -328,30 +550,124 @@ u64 lib_curl::response_Reserve(u64 n_elems) {
     return ret;
 }
 
-// --- lib_curl.FDb.response.ReserveMem
+// --- lib_curl.FDb.sock.ReserveMem
 // Allocate block of given size, break up into small elements and append to free list.
 // Return number of elements reserved.
-u64 lib_curl::response_ReserveMem(u64 size) {
+u64 lib_curl::sock_ReserveMem(u64 size) {
     u64 ret = 0;
-    if (size >= sizeof(lib_curl::FResponse)) {
-        lib_curl::FResponse *mem = (lib_curl::FResponse*)algo_lib::malloc_AllocMem(size);
-        ret = mem ? size / sizeof(lib_curl::FResponse) : 0;
+    if (size >= sizeof(lib_curl::FSock)) {
+        lib_curl::FSock *mem = (lib_curl::FSock*)algo_lib::malloc_AllocMem(size);
+        ret = mem ? size / sizeof(lib_curl::FSock) : 0;
         // add newly allocated elements to the free list;
         for (u64 i=0; i < ret; i++) {
-            mem[i].response_next = _db.response_free;
-            _db.response_free = mem+i;
+            mem[i].sock_next = _db.sock_free;
+            _db.sock_free = mem+i;
         }
     }
     return ret;
 }
 
-// --- lib_curl.FDb.response.XrefMaybe
+// --- lib_curl.FDb.sock.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-bool lib_curl::response_XrefMaybe(lib_curl::FResponse &row) {
+bool lib_curl::sock_XrefMaybe(lib_curl::FSock &row) {
     bool retval = true;
     (void)row;
+    // insert sock into index zd_sock_free
+    if (true) { // user-defined insert condition
+        zd_sock_free_Insert(row);
+    }
     return retval;
+}
+
+// --- lib_curl.FDb.zd_sock_free.Insert
+// Insert row into linked list. If row is already in linked list, do nothing.
+void lib_curl::zd_sock_free_Insert(lib_curl::FSock& row) {
+    if (!zd_sock_free_InLlistQ(row)) {
+        lib_curl::FSock* old_tail = _db.zd_sock_free_tail;
+        row.zd_sock_free_next = NULL;
+        row.zd_sock_free_prev = old_tail;
+        _db.zd_sock_free_tail = &row;
+        lib_curl::FSock **new_row_a = &old_tail->zd_sock_free_next;
+        lib_curl::FSock **new_row_b = &_db.zd_sock_free_head;
+        lib_curl::FSock **new_row = old_tail ? new_row_a : new_row_b;
+        *new_row = &row;
+        _db.zd_sock_free_n++;
+    }
+}
+
+// --- lib_curl.FDb.zd_sock_free.Remove
+// Remove element from index. If element is not in index, do nothing.
+void lib_curl::zd_sock_free_Remove(lib_curl::FSock& row) {
+    if (zd_sock_free_InLlistQ(row)) {
+        lib_curl::FSock* old_head       = _db.zd_sock_free_head;
+        (void)old_head; // in case it's not used
+        lib_curl::FSock* prev = row.zd_sock_free_prev;
+        lib_curl::FSock* next = row.zd_sock_free_next;
+        // if element is first, adjust list head; otherwise, adjust previous element's next
+        lib_curl::FSock **new_next_a = &prev->zd_sock_free_next;
+        lib_curl::FSock **new_next_b = &_db.zd_sock_free_head;
+        lib_curl::FSock **new_next = prev ? new_next_a : new_next_b;
+        *new_next = next;
+        // if element is last, adjust list tail; otherwise, adjust next element's prev
+        lib_curl::FSock **new_prev_a = &next->zd_sock_free_prev;
+        lib_curl::FSock **new_prev_b = &_db.zd_sock_free_tail;
+        lib_curl::FSock **new_prev = next ? new_prev_a : new_prev_b;
+        *new_prev = prev;
+        _db.zd_sock_free_n--;
+        row.zd_sock_free_next=(lib_curl::FSock*)-1; // not-in-list
+    }
+}
+
+// --- lib_curl.FDb.zd_sock_free.RemoveAll
+// Empty the index. (The rows are not deleted)
+void lib_curl::zd_sock_free_RemoveAll() {
+    lib_curl::FSock* row = _db.zd_sock_free_head;
+    _db.zd_sock_free_head = NULL;
+    _db.zd_sock_free_tail = NULL;
+    _db.zd_sock_free_n = 0;
+    while (row) {
+        lib_curl::FSock* row_next = row->zd_sock_free_next;
+        row->zd_sock_free_next  = (lib_curl::FSock*)-1;
+        row->zd_sock_free_prev  = NULL;
+        row = row_next;
+    }
+}
+
+// --- lib_curl.FDb.zd_sock_free.RemoveFirst
+// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+lib_curl::FSock* lib_curl::zd_sock_free_RemoveFirst() {
+    lib_curl::FSock *row = NULL;
+    row = _db.zd_sock_free_head;
+    if (row) {
+        lib_curl::FSock *next = row->zd_sock_free_next;
+        _db.zd_sock_free_head = next;
+        lib_curl::FSock **new_end_a = &next->zd_sock_free_prev;
+        lib_curl::FSock **new_end_b = &_db.zd_sock_free_tail;
+        lib_curl::FSock **new_end = next ? new_end_a : new_end_b;
+        *new_end = NULL;
+        _db.zd_sock_free_n--;
+        row->zd_sock_free_next = (lib_curl::FSock*)-1; // mark as not-in-list
+    }
+    return row;
+}
+
+// --- lib_curl.FDb.zd_sock_free.InsertBefore
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+void lib_curl::zd_sock_free_InsertBefore(lib_curl::FSock& row, lib_curl::FSock* before) {
+    if (!zd_sock_free_InLlistQ(row) && &row != before) {
+        lib_curl::FSock* next = before;
+        lib_curl::FSock* prev = next ? next->zd_sock_free_prev : _db.zd_sock_free_tail;
+        row.zd_sock_free_next = next;
+        row.zd_sock_free_prev = prev;
+        lib_curl::FSock **prev_link_a = &prev->zd_sock_free_next;
+        lib_curl::FSock **prev_link_b = &_db.zd_sock_free_head;
+        *(prev ? prev_link_a : prev_link_b) = &row;
+        lib_curl::FSock **next_link_a = &next->zd_sock_free_prev;
+        lib_curl::FSock **next_link_b = &_db.zd_sock_free_tail;
+        *(next ? next_link_a : next_link_b) = &row;
+        _db.zd_sock_free_n++;
+    }
 }
 
 // --- lib_curl.FDb.trace.RowidFind
@@ -369,220 +685,25 @@ inline static i32 lib_curl::trace_N() {
 // --- lib_curl.FDb..Init
 // Set all fields to initial values.
 void lib_curl::FDb_Init() {
-    // request: initialize Tpool
-    _db.request_free      = NULL;
-    _db.request_blocksize = algo::BumpToPow2(64 * sizeof(lib_curl::FRequest)); // allocate 64-127 elements at a time
-    // response: initialize Tpool
-    _db.response_free      = NULL;
-    _db.response_blocksize = algo::BumpToPow2(64 * sizeof(lib_curl::FResponse)); // allocate 64-127 elements at a time
+    _db.curl = u64(0);
+    // call: initialize Tpool
+    _db.call_free      = NULL;
+    _db.call_blocksize = algo::BumpToPow2(64 * sizeof(lib_curl::FCall)); // allocate 64-127 elements at a time
+    // sock: initialize Tpool
+    _db.sock_free      = NULL;
+    _db.sock_blocksize = algo::BumpToPow2(64 * sizeof(lib_curl::FSock)); // allocate 64-127 elements at a time
+    _db.curlm = u64(0);
+    _db.zd_sock_free_head = NULL; // (lib_curl.FDb.zd_sock_free)
+    _db.zd_sock_free_n = 0; // (lib_curl.FDb.zd_sock_free)
+    _db.zd_sock_free_tail = NULL; // (lib_curl.FDb.zd_sock_free)
 
     lib_curl::InitReflection();
 }
 
-// --- lib_curl.FRequest.headers.Alloc
-// Allocate memory for new default row.
-// If out of memory, process is killed.
-algo::cstring& lib_curl::headers_Alloc(lib_curl::FRequest& request) {
-    algo::cstring* row = headers_AllocMaybe(request);
-    if (UNLIKELY(row == NULL)) {
-        FatalErrorExit("lib_curl.out_of_mem  field:lib_curl.FRequest.headers  comment:'Alloc failed'");
-    }
-    return *row;
-}
-
-// --- lib_curl.FRequest.headers.AllocMaybe
-// Allocate memory for new element. If out of memory, return NULL.
-algo::cstring* lib_curl::headers_AllocMaybe(lib_curl::FRequest& request) {
-    algo::cstring *row = (algo::cstring*)headers_AllocMem(request);
-    if (row) {
-        new (row) algo::cstring; // call constructor
-    }
-    return row;
-}
-
-// --- lib_curl.FRequest.headers.AllocMem
-// Allocate space for one element. If no memory available, return NULL.
-void* lib_curl::headers_AllocMem(lib_curl::FRequest& request) {
-    u64 new_nelems     = request.headers_n+1;
-    // compute level and index on level
-    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
-    u64 base  = u64(1)<<bsr;
-    u64 index = new_nelems-base;
-    void *ret = NULL;
-    // if level doesn't exist yet, create it
-    algo::cstring*  lev   = NULL;
-    if (bsr < 32) {
-        lev = request.headers_lary[bsr];
-        if (!lev) {
-            lev=(algo::cstring*)algo_lib::malloc_AllocMem(sizeof(algo::cstring) * (u64(1)<<bsr));
-            request.headers_lary[bsr] = lev;
-        }
-    }
-    // allocate element from this level
-    if (lev) {
-        request.headers_n = i32(new_nelems);
-        ret = lev + index;
-    }
-    return ret;
-}
-
-// --- lib_curl.FRequest.headers.RemoveAll
-// Remove all elements from Lary
-void lib_curl::headers_RemoveAll(lib_curl::FRequest& request) {
-    for (u64 n = request.headers_n; n>0; ) {
-        n--;
-        headers_qFind(request, u64(n)).~cstring(); // destroy last element
-        request.headers_n = i32(n);
-    }
-}
-
-// --- lib_curl.FRequest.headers.RemoveLast
-// Delete last element of array. Do nothing if array is empty.
-void lib_curl::headers_RemoveLast(lib_curl::FRequest& request) {
-    u64 n = request.headers_n;
-    if (n > 0) {
-        n -= 1;
-        headers_qFind(request, u64(n)).~cstring();
-        request.headers_n = i32(n);
-    }
-}
-
-// --- lib_curl.FRequest..Init
-// Set all fields to initial values.
-void lib_curl::FRequest_Init(lib_curl::FRequest& request) {
-    request.method = algo::strptr("GET");
-    request.curlrc_only = bool(false);
-    // initialize LAry headers (lib_curl.FRequest.headers)
-    request.headers_n = 0;
-    memset(request.headers_lary, 0, sizeof(request.headers_lary)); // zero out all level pointers
-    algo::cstring* headers_first = (algo::cstring*)algo_lib::malloc_AllocMem(sizeof(algo::cstring) * (u64(1)<<4));
-    if (!headers_first) {
-        FatalErrorExit("out of memory");
-    }
-    for (int i = 0; i < 4; i++) {
-        request.headers_lary[i]  = headers_first;
-        headers_first    += 1ULL<<i;
-    }
-    request.insecure_tls = bool(false);
-    request.connect_timeout_sec = u32(5);
-    request.total_timeout_sec = u32(120);
-    request.request_next = (lib_curl::FRequest*)-1; // (lib_curl.FDb.request) not-in-tpool's freelist
-}
-
-// --- lib_curl.FRequest..Uninit
-void lib_curl::FRequest_Uninit(lib_curl::FRequest& request) {
-    lib_curl::FRequest &row = request; (void)row;
-
-    // lib_curl.FRequest.headers.Uninit (Lary)  //Arbitrary headers: "Authorization: Bearer ...", "Content-Type: ..."
-    // destroy lib_curl.FRequest.headers
-    // destroy all elements
-    headers_RemoveAll(request);
-    // destroy all levels. stop when NULL level is found -- there is nothing beyond it
-    algo_lib::malloc_FreeMem(request.headers_lary[0],sizeof(algo::cstring) * (u64(1)<<4));
-    for (u64 i = 4; i < 32 && request.headers_lary[i]; i++) {
-        algo_lib::malloc_FreeMem(request.headers_lary[i],sizeof(algo::cstring) * (u64(1)<<i));
-    }
-}
-
-// --- lib_curl.FResponse.headers.Alloc
-// Allocate memory for new default row.
-// If out of memory, process is killed.
-algo::cstring& lib_curl::headers_Alloc(lib_curl::FResponse& response) {
-    algo::cstring* row = headers_AllocMaybe(response);
-    if (UNLIKELY(row == NULL)) {
-        FatalErrorExit("lib_curl.out_of_mem  field:lib_curl.FResponse.headers  comment:'Alloc failed'");
-    }
-    return *row;
-}
-
-// --- lib_curl.FResponse.headers.AllocMaybe
-// Allocate memory for new element. If out of memory, return NULL.
-algo::cstring* lib_curl::headers_AllocMaybe(lib_curl::FResponse& response) {
-    algo::cstring *row = (algo::cstring*)headers_AllocMem(response);
-    if (row) {
-        new (row) algo::cstring; // call constructor
-    }
-    return row;
-}
-
-// --- lib_curl.FResponse.headers.AllocMem
-// Allocate space for one element. If no memory available, return NULL.
-void* lib_curl::headers_AllocMem(lib_curl::FResponse& response) {
-    u64 new_nelems     = response.headers_n+1;
-    // compute level and index on level
-    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
-    u64 base  = u64(1)<<bsr;
-    u64 index = new_nelems-base;
-    void *ret = NULL;
-    // if level doesn't exist yet, create it
-    algo::cstring*  lev   = NULL;
-    if (bsr < 32) {
-        lev = response.headers_lary[bsr];
-        if (!lev) {
-            lev=(algo::cstring*)algo_lib::malloc_AllocMem(sizeof(algo::cstring) * (u64(1)<<bsr));
-            response.headers_lary[bsr] = lev;
-        }
-    }
-    // allocate element from this level
-    if (lev) {
-        response.headers_n = i32(new_nelems);
-        ret = lev + index;
-    }
-    return ret;
-}
-
-// --- lib_curl.FResponse.headers.RemoveAll
-// Remove all elements from Lary
-void lib_curl::headers_RemoveAll(lib_curl::FResponse& response) {
-    for (u64 n = response.headers_n; n>0; ) {
-        n--;
-        headers_qFind(response, u64(n)).~cstring(); // destroy last element
-        response.headers_n = i32(n);
-    }
-}
-
-// --- lib_curl.FResponse.headers.RemoveLast
-// Delete last element of array. Do nothing if array is empty.
-void lib_curl::headers_RemoveLast(lib_curl::FResponse& response) {
-    u64 n = response.headers_n;
-    if (n > 0) {
-        n -= 1;
-        headers_qFind(response, u64(n)).~cstring();
-        response.headers_n = i32(n);
-    }
-}
-
-// --- lib_curl.FResponse..Init
-// Set all fields to initial values.
-void lib_curl::FResponse_Init(lib_curl::FResponse& response) {
-    response.code = u16(0);
-    // initialize LAry headers (lib_curl.FResponse.headers)
-    response.headers_n = 0;
-    memset(response.headers_lary, 0, sizeof(response.headers_lary)); // zero out all level pointers
-    algo::cstring* headers_first = (algo::cstring*)algo_lib::malloc_AllocMem(sizeof(algo::cstring) * (u64(1)<<4));
-    if (!headers_first) {
-        FatalErrorExit("out of memory");
-    }
-    for (int i = 0; i < 4; i++) {
-        response.headers_lary[i]  = headers_first;
-        headers_first    += 1ULL<<i;
-    }
-    response.response_next = (lib_curl::FResponse*)-1; // (lib_curl.FDb.response) not-in-tpool's freelist
-}
-
-// --- lib_curl.FResponse..Uninit
-void lib_curl::FResponse_Uninit(lib_curl::FResponse& response) {
-    lib_curl::FResponse &row = response; (void)row;
-
-    // lib_curl.FResponse.headers.Uninit (Lary)  //raw header lines (trimmed)
-    // destroy lib_curl.FResponse.headers
-    // destroy all elements
-    headers_RemoveAll(response);
-    // destroy all levels. stop when NULL level is found -- there is nothing beyond it
-    algo_lib::malloc_FreeMem(response.headers_lary[0],sizeof(algo::cstring) * (u64(1)<<4));
-    for (u64 i = 4; i < 32 && response.headers_lary[i]; i++) {
-        algo_lib::malloc_FreeMem(response.headers_lary[i],sizeof(algo::cstring) * (u64(1)<<i));
-    }
+// --- lib_curl.FSock..Uninit
+void lib_curl::FSock_Uninit(lib_curl::FSock& sock) {
+    lib_curl::FSock &row = sock; (void)row;
+    zd_sock_free_Remove(row); // remove sock from index zd_sock_free
 }
 
 // --- lib_curl.FieldId.value.ToCstr
@@ -657,7 +778,7 @@ bool lib_curl::FieldId_ReadStrptrMaybe(lib_curl::FieldId &parent, algo::strptr i
 // --- lib_curl.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:lib_curl.FieldId.String  printfmt:Raw
-void lib_curl::FieldId_Print(lib_curl::FieldId& row, algo::cstring& str) {
+void lib_curl::FieldId_Print(lib_curl::FieldId row, algo::cstring& str) {
     lib_curl::value_Print(row, str);
 }
 
@@ -667,5 +788,6 @@ inline static void lib_curl::SizeCheck() {
 
 // --- lib_curl...StaticCheck
 void lib_curl::StaticCheck() {
+    algo_assert(sizeof(lib_curl::call_done_hook) == 8); // csize:lib_curl.call_done_hook
     algo_assert(_offset_of(lib_curl::FieldId, value) + sizeof(((lib_curl::FieldId*)0)->value) == sizeof(lib_curl::FieldId));
 }

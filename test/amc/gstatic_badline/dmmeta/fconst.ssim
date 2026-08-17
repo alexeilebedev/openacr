@@ -1,0 +1,1 @@
+dmmeta.fconst  fconst:testdb.Color.color/red  value:"'C'"  comment:"a value no plain parser reads: the number parse of an earlier pass leaves error text behind"

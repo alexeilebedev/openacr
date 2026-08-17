@@ -36,70 +36,41 @@
 //#pragma endinclude
 namespace ams { // gen:ns_print_proto
     // func:ams.ProcId.proctype.ReadStrptrMaybe
-    inline static bool   proctype_ReadStrptrMaybe(ams::ProcId &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   proctype_ReadStrptrMaybe(ams::ProcId& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ams.ProcId.nodeidx.ReadStrptrMaybe
-    inline static bool   nodeidx_ReadStrptrMaybe(ams::ProcId &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   nodeidx_ReadStrptrMaybe(ams::ProcId& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ams.ProcId.procidx.ReadStrptrMaybe
-    inline static bool   procidx_ReadStrptrMaybe(ams::ProcId &parent, algo::strptr in_str) __attribute__((nothrow));
-    // func:ams.ShmFlags.write.ReadStrptrMaybe
-    inline static bool   write_ReadStrptrMaybe(ams::ShmFlags &parent, algo::strptr in_str) __attribute__((nothrow));
-    // func:ams.ShmFlags.read.ReadStrptrMaybe
-    inline static bool   read_ReadStrptrMaybe(ams::ShmFlags &parent, algo::strptr in_str) __attribute__((nothrow));
-    // func:ams.ShmFlags.nonblock.ReadStrptrMaybe
-    inline static bool   nonblock_ReadStrptrMaybe(ams::ShmFlags &parent, algo::strptr in_str) __attribute__((nothrow));
-    // func:ams.ShmFlags.write_err.ReadStrptrMaybe
-    inline static bool   write_err_ReadStrptrMaybe(ams::ShmFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   procidx_ReadStrptrMaybe(ams::ProcId& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ams.ShmemberFlags.r.ReadStrptrMaybe
-    inline static bool   r_ReadStrptrMaybe(ams::ShmemberFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   r_ReadStrptrMaybe(ams::ShmemberFlags& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ams.ShmemberFlags.w.ReadStrptrMaybe
-    inline static bool   w_ReadStrptrMaybe(ams::ShmemberFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   w_ReadStrptrMaybe(ams::ShmemberFlags& parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:ams.ShmFlags.write.ReadStrptrMaybe
+    inline static bool   write_ReadStrptrMaybe(ams::ShmFlags& parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:ams.ShmFlags.read.ReadStrptrMaybe
+    inline static bool   read_ReadStrptrMaybe(ams::ShmFlags& parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:ams.ShmFlags.write_err.ReadStrptrMaybe
+    inline static bool   write_err_ReadStrptrMaybe(ams::ShmFlags& parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:ams.ShmFlags.signaled.ReadStrptrMaybe
+    inline static bool   signaled_ReadStrptrMaybe(ams::ShmFlags& parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ams...SizeCheck
     inline static void   SizeCheck();
 } // gen:ns_print_proto
 
-// --- ams.ExpectMsg.base.CopyOut
+// --- ams.BoardrefMsg.base.CopyOut
 // Copy fields out of row
-void ams::parent_CopyOut(ams::ExpectMsg &row, ams::MsgHeader &out) {
+void ams::parent_CopyOut(ams::BoardrefMsg &row, ams::MsgHeader &out) {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
     (void)out;//only to avoid -Wunused-parameter
 }
 
-// --- ams.ExpectMsg.text.Getary
-// Access var-length portion as an aryptr. Length is determined from one of the fields.
-algo::aryptr<char> ams::text_Getary(ams::ExpectMsg& parent) {
-    return algo::aryptr<char>(text_Addr(parent), text_N(parent));
-}
-
-// --- ams.ExpectMsg.text.Addr
-char* ams::text_Addr(ams::ExpectMsg& parent) {
-    return (char*)((u8*)&parent + sizeof(ams::ExpectMsg)); // address of varlen portion
-}
-
-// --- ams.ExpectMsg.text.ReadStrptrMaybe
-// Convert string to field. Return success value
-bool ams::text_ReadStrptrMaybe(ams::ExpectMsg& parent, algo::strptr in_str) {
-    bool retval = true;
-    if (algo_lib::_db.varlenbuf) {
-        ary_Addary(*algo_lib::_db.varlenbuf, strptr_ToMemptr(in_str));
-    }
-    (void)parent;//only to avoid -Wunused-parameter
-    return retval;
-}
-
-// --- ams.ExpectMsg.text.Print
-// Convert text to a string.
-// Array is printed as a regular string.
-void ams::text_Print(ams::ExpectMsg& parent, algo::cstring &rhs) {
-    rhs << text_Getary(parent);
-}
-
-// --- ams.ExpectMsg..ReadFieldMaybe
-bool ams::ExpectMsg_ReadFieldMaybe(ams::ExpectMsg& parent, algo::strptr field, algo::strptr strval) {
+// --- ams.BoardrefMsg..ReadFieldMaybe
+bool ams::BoardrefMsg_ReadFieldMaybe(ams::BoardrefMsg& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
     ams::FieldId field_id;
-    (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
+    (void)value_SetStrptrMaybe(field_id,field);
     switch(field_id) {
         case ams_FieldId_base: {
             retval = false;
@@ -110,8 +81,11 @@ bool ams::ExpectMsg_ReadFieldMaybe(ams::ExpectMsg& parent, algo::strptr field, a
         case ams_FieldId_length: {
             retval = false;
         } break;
-        case ams_FieldId_text: {
-            retval = text_ReadStrptrMaybe(parent, strval);
+        case ams_FieldId_offset: {
+            retval = u64_ReadStrptrMaybe(parent.offset, strval);
+        } break;
+        case ams_FieldId_payload_length: {
+            retval = u32_ReadStrptrMaybe(parent.payload_length, strval);
         } break;
         default: {
             retval = false;
@@ -124,274 +98,30 @@ bool ams::ExpectMsg_ReadFieldMaybe(ams::ExpectMsg& parent, algo::strptr field, a
     return retval;
 }
 
-// --- ams.ExpectMsg..ReadStrptrMaybe
-// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
-// Read fields of ams::ExpectMsg from an ascii string.
+// --- ams.BoardrefMsg..ReadStrptrMaybe
+// Read fields of ams::BoardrefMsg from an ascii string.
 // The format of the string is an ssim Tuple
-bool ams::ExpectMsg_ReadStrptrMaybe(ams::ExpectMsg &parent, algo::strptr in_str) {
+bool ams::BoardrefMsg_ReadStrptrMaybe(ams::BoardrefMsg &parent, algo::strptr in_str) {
     bool retval = true;
-    retval = algo::StripTypeTag(in_str, "ams.ExpectMsg");
+    retval = algo::StripTypeTag(in_str, "ams.BoardrefMsg");
     ind_beg(algo::Attr_curs, attr, in_str) {
-        retval = retval && ExpectMsg_ReadFieldMaybe(parent, attr.name, attr.value);
+        retval = retval && BoardrefMsg_ReadFieldMaybe(parent, attr.name, attr.value);
     }ind_end;
     return retval;
 }
 
-// --- ams.ExpectMsg..Print
+// --- ams.BoardrefMsg..Print
 // print string representation of ROW to string STR
-// cfmt:ams.ExpectMsg.String  printfmt:Tuple
-void ams::ExpectMsg_Print(ams::ExpectMsg& row, algo::cstring& str) {
+// cfmt:ams.BoardrefMsg.String  printfmt:Tuple
+void ams::BoardrefMsg_Print(ams::BoardrefMsg& row, algo::cstring& str) {
     algo::tempstr temp;
-    str << "ams.ExpectMsg";
+    str << "ams.BoardrefMsg";
 
-    ams::text_Print(row, temp);
-    PrintAttrSpaceReset(str,"text", temp);
-}
+    u64_Print(row.offset, temp);
+    PrintAttrSpaceReset(str,"offset", temp);
 
-// --- ams.FieldId.value.ToCstr
-// Convert numeric value of field to one of predefined string constants.
-// If string is found, return a static C string. Otherwise, return NULL.
-const char* ams::value_ToCstr(const ams::FieldId& parent) {
-    const char *ret = NULL;
-    switch(value_GetEnum(parent)) {
-        case ams_FieldId_base              : ret = "base";  break;
-        case ams_FieldId_type              : ret = "type";  break;
-        case ams_FieldId_length            : ret = "length";  break;
-        case ams_FieldId_text              : ret = "text";  break;
-        case ams_FieldId_proc_id           : ret = "proc_id";  break;
-        case ams_FieldId_payload           : ret = "payload";  break;
-        case ams_FieldId_tstamp            : ret = "tstamp";  break;
-        case ams_FieldId_logcat            : ret = "logcat";  break;
-        case ams_FieldId_proc              : ret = "proc";  break;
-        case ams_FieldId_value             : ret = "value";  break;
-        case ams_FieldId_proctype          : ret = "proctype";  break;
-        case ams_FieldId_nodeidx           : ret = "nodeidx";  break;
-        case ams_FieldId_procidx           : ret = "procidx";  break;
-        case ams_FieldId_signal            : ret = "signal";  break;
-        case ams_FieldId_until             : ret = "until";  break;
-        case ams_FieldId_pty               : ret = "pty";  break;
-        case ams_FieldId_cmd               : ret = "cmd";  break;
-        case ams_FieldId_status            : ret = "status";  break;
-        case ams_FieldId_remove_topmost    : ret = "remove_topmost";  break;
-        case ams_FieldId_pathname          : ret = "pathname";  break;
-        case ams_FieldId_write             : ret = "write";  break;
-        case ams_FieldId_read              : ret = "read";  break;
-        case ams_FieldId_nonblock          : ret = "nonblock";  break;
-        case ams_FieldId_write_err         : ret = "write_err";  break;
-        case ams_FieldId_shmember          : ret = "shmember";  break;
-        case ams_FieldId_off               : ret = "off";  break;
-        case ams_FieldId_wbudget           : ret = "wbudget";  break;
-        case ams_FieldId_shmtype           : ret = "shmtype";  break;
-        case ams_FieldId_index             : ret = "index";  break;
-        case ams_FieldId_r                 : ret = "r";  break;
-        case ams_FieldId_w                 : ret = "w";  break;
-        case ams_FieldId_shm_id            : ret = "shm_id";  break;
-        case ams_FieldId_flags             : ret = "flags";  break;
-    }
-    return ret;
-}
-
-// --- ams.FieldId.value.Print
-// Convert value to a string. First, attempt conversion to a known string.
-// If no string matches, print value as a numeric value.
-void ams::value_Print(const ams::FieldId& parent, algo::cstring &lhs) {
-    const char *strval = value_ToCstr(parent);
-    if (strval) {
-        lhs << strval;
-    } else {
-        lhs << parent.value;
-    }
-}
-
-// --- ams.FieldId.value.SetStrptrMaybe
-// Convert string to field.
-// If the string is invalid, do not modify field and return false.
-// In case of success, return true
-bool ams::value_SetStrptrMaybe(ams::FieldId& parent, algo::strptr rhs) {
-    bool ret = false;
-    switch (elems_N(rhs)) {
-        case 1: {
-            switch (u64(rhs[0])) {
-                case 'r': {
-                    value_SetEnum(parent,ams_FieldId_r); ret = true; break;
-                }
-                case 'w': {
-                    value_SetEnum(parent,ams_FieldId_w); ret = true; break;
-                }
-            }
-            break;
-        }
-        case 3: {
-            switch (u64(algo::ReadLE16(rhs.elems))|(u64(rhs[2])<<16)) {
-                case LE_STR3('c','m','d'): {
-                    value_SetEnum(parent,ams_FieldId_cmd); ret = true; break;
-                }
-                case LE_STR3('o','f','f'): {
-                    value_SetEnum(parent,ams_FieldId_off); ret = true; break;
-                }
-                case LE_STR3('p','t','y'): {
-                    value_SetEnum(parent,ams_FieldId_pty); ret = true; break;
-                }
-            }
-            break;
-        }
-        case 4: {
-            switch (u64(algo::ReadLE32(rhs.elems))) {
-                case LE_STR4('b','a','s','e'): {
-                    value_SetEnum(parent,ams_FieldId_base); ret = true; break;
-                }
-                case LE_STR4('p','r','o','c'): {
-                    value_SetEnum(parent,ams_FieldId_proc); ret = true; break;
-                }
-                case LE_STR4('r','e','a','d'): {
-                    value_SetEnum(parent,ams_FieldId_read); ret = true; break;
-                }
-                case LE_STR4('t','e','x','t'): {
-                    value_SetEnum(parent,ams_FieldId_text); ret = true; break;
-                }
-                case LE_STR4('t','y','p','e'): {
-                    value_SetEnum(parent,ams_FieldId_type); ret = true; break;
-                }
-            }
-            break;
-        }
-        case 5: {
-            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
-                case LE_STR5('f','l','a','g','s'): {
-                    value_SetEnum(parent,ams_FieldId_flags); ret = true; break;
-                }
-                case LE_STR5('i','n','d','e','x'): {
-                    value_SetEnum(parent,ams_FieldId_index); ret = true; break;
-                }
-                case LE_STR5('u','n','t','i','l'): {
-                    value_SetEnum(parent,ams_FieldId_until); ret = true; break;
-                }
-                case LE_STR5('v','a','l','u','e'): {
-                    value_SetEnum(parent,ams_FieldId_value); ret = true; break;
-                }
-                case LE_STR5('w','r','i','t','e'): {
-                    value_SetEnum(parent,ams_FieldId_write); ret = true; break;
-                }
-            }
-            break;
-        }
-        case 6: {
-            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)) {
-                case LE_STR6('l','e','n','g','t','h'): {
-                    value_SetEnum(parent,ams_FieldId_length); ret = true; break;
-                }
-                case LE_STR6('l','o','g','c','a','t'): {
-                    value_SetEnum(parent,ams_FieldId_logcat); ret = true; break;
-                }
-                case LE_STR6('s','h','m','_','i','d'): {
-                    value_SetEnum(parent,ams_FieldId_shm_id); ret = true; break;
-                }
-                case LE_STR6('s','i','g','n','a','l'): {
-                    value_SetEnum(parent,ams_FieldId_signal); ret = true; break;
-                }
-                case LE_STR6('s','t','a','t','u','s'): {
-                    value_SetEnum(parent,ams_FieldId_status); ret = true; break;
-                }
-                case LE_STR6('t','s','t','a','m','p'): {
-                    value_SetEnum(parent,ams_FieldId_tstamp); ret = true; break;
-                }
-            }
-            break;
-        }
-        case 7: {
-            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
-                case LE_STR7('n','o','d','e','i','d','x'): {
-                    value_SetEnum(parent,ams_FieldId_nodeidx); ret = true; break;
-                }
-                case LE_STR7('p','a','y','l','o','a','d'): {
-                    value_SetEnum(parent,ams_FieldId_payload); ret = true; break;
-                }
-                case LE_STR7('p','r','o','c','_','i','d'): {
-                    value_SetEnum(parent,ams_FieldId_proc_id); ret = true; break;
-                }
-                case LE_STR7('p','r','o','c','i','d','x'): {
-                    value_SetEnum(parent,ams_FieldId_procidx); ret = true; break;
-                }
-                case LE_STR7('s','h','m','t','y','p','e'): {
-                    value_SetEnum(parent,ams_FieldId_shmtype); ret = true; break;
-                }
-                case LE_STR7('w','b','u','d','g','e','t'): {
-                    value_SetEnum(parent,ams_FieldId_wbudget); ret = true; break;
-                }
-            }
-            break;
-        }
-        case 8: {
-            switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('n','o','n','b','l','o','c','k'): {
-                    value_SetEnum(parent,ams_FieldId_nonblock); ret = true; break;
-                }
-                case LE_STR8('p','a','t','h','n','a','m','e'): {
-                    value_SetEnum(parent,ams_FieldId_pathname); ret = true; break;
-                }
-                case LE_STR8('p','r','o','c','t','y','p','e'): {
-                    value_SetEnum(parent,ams_FieldId_proctype); ret = true; break;
-                }
-                case LE_STR8('s','h','m','e','m','b','e','r'): {
-                    value_SetEnum(parent,ams_FieldId_shmember); ret = true; break;
-                }
-            }
-            break;
-        }
-        case 9: {
-            switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('w','r','i','t','e','_','e','r'): {
-                    if (memcmp(rhs.elems+8,"r",1)==0) { value_SetEnum(parent,ams_FieldId_write_err); ret = true; break; }
-                    break;
-                }
-            }
-            break;
-        }
-        case 14: {
-            switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('r','e','m','o','v','e','_','t'): {
-                    if (memcmp(rhs.elems+8,"opmost",6)==0) { value_SetEnum(parent,ams_FieldId_remove_topmost); ret = true; break; }
-                    break;
-                }
-            }
-            break;
-        }
-    }
-    return ret;
-}
-
-// --- ams.FieldId.value.SetStrptr
-// Convert string to field.
-// If the string is invalid, set numeric value to DFLT
-void ams::value_SetStrptr(ams::FieldId& parent, algo::strptr rhs, ams_FieldIdEnum dflt) {
-    if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
-}
-
-// --- ams.FieldId.value.ReadStrptrMaybe
-// Convert string to field. Return success value
-bool ams::value_ReadStrptrMaybe(ams::FieldId& parent, algo::strptr rhs) {
-    bool retval = false;
-    retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
-    if (!retval) { // didn't work? try reading as underlying type
-        retval = i32_ReadStrptrMaybe(parent.value,rhs);
-    }
-    return retval;
-}
-
-// --- ams.FieldId..ReadStrptrMaybe
-// Read fields of ams::FieldId from an ascii string.
-// The format of the string is the format of the ams::FieldId's only field
-bool ams::FieldId_ReadStrptrMaybe(ams::FieldId &parent, algo::strptr in_str) {
-    bool retval = true;
-    retval = retval && value_ReadStrptrMaybe(parent, in_str);
-    return retval;
-}
-
-// --- ams.FieldId..Print
-// print string representation of ROW to string STR
-// cfmt:ams.FieldId.String  printfmt:Raw
-void ams::FieldId_Print(ams::FieldId& row, algo::cstring& str) {
-    ams::value_Print(row, str);
+    u32_Print(row.payload_length, temp);
+    PrintAttrSpaceReset(str,"payload_length", temp);
 }
 
 // --- ams.Proctype.value.ToCstr
@@ -402,6 +132,9 @@ const char* ams::value_ToCstr(const ams::Proctype& parent) {
     switch(value_GetEnum(parent)) {
         case ams_Proctype_                 : ret = "";  break;
         case ams_Proctype_ams_sendtest     : ret = "ams_sendtest";  break;
+        case ams_Proctype_ext              : ret = "ext";  break;
+        case ams_Proctype_samp_meng        : ret = "samp_meng";  break;
+        case ams_Proctype_user             : ret = "user";  break;
     }
     return ret;
 }
@@ -428,6 +161,31 @@ bool ams::value_SetStrptrMaybe(ams::Proctype& parent, algo::strptr rhs) {
         case 0: {
             value_SetEnum(parent,ams_Proctype_);
             ret = true;
+            break;
+        }
+        case 3: {
+            switch (u64(algo::ReadLE16(rhs.elems))|(u64(rhs[2])<<16)) {
+                case LE_STR3('e','x','t'): {
+                    value_SetEnum(parent,ams_Proctype_ext); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 4: {
+            switch (u64(algo::ReadLE32(rhs.elems))) {
+                case LE_STR4('u','s','e','r'): {
+                    value_SetEnum(parent,ams_Proctype_user); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 9: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('s','a','m','p','_','m','e','n'): {
+                    if (memcmp(rhs.elems+8,"g",1)==0) { value_SetEnum(parent,ams_Proctype_samp_meng); ret = true; break; }
+                    break;
+                }
+            }
             break;
         }
         case 12: {
@@ -478,7 +236,7 @@ void ams::Proctype_Print(ams::Proctype row, algo::cstring& str) {
 }
 
 // --- ams.ProcId.proctype.ReadStrptrMaybe
-inline static bool ams::proctype_ReadStrptrMaybe(ams::ProcId &parent, algo::strptr in_str) {
+inline static bool ams::proctype_ReadStrptrMaybe(ams::ProcId& parent, algo::strptr in_str) {
     bool retval = true;
     ams::Proctype proctype_tmp;
     retval = ams::Proctype_ReadStrptrMaybe(proctype_tmp, in_str);
@@ -489,10 +247,10 @@ inline static bool ams::proctype_ReadStrptrMaybe(ams::ProcId &parent, algo::strp
 }
 
 // --- ams.ProcId.nodeidx.ReadStrptrMaybe
-inline static bool ams::nodeidx_ReadStrptrMaybe(ams::ProcId &parent, algo::strptr in_str) {
+inline static bool ams::nodeidx_ReadStrptrMaybe(ams::ProcId& parent, algo::strptr in_str) {
     bool retval = true;
-    u8 nodeidx_tmp;
-    retval = u8_ReadStrptrMaybe(nodeidx_tmp, in_str);
+    u16 nodeidx_tmp;
+    retval = u16_ReadStrptrMaybe(nodeidx_tmp, in_str);
     if (retval) {
         nodeidx_Set(parent, nodeidx_tmp);
     }
@@ -500,10 +258,10 @@ inline static bool ams::nodeidx_ReadStrptrMaybe(ams::ProcId &parent, algo::strpt
 }
 
 // --- ams.ProcId.procidx.ReadStrptrMaybe
-inline static bool ams::procidx_ReadStrptrMaybe(ams::ProcId &parent, algo::strptr in_str) {
+inline static bool ams::procidx_ReadStrptrMaybe(ams::ProcId& parent, algo::strptr in_str) {
     bool retval = true;
-    u8 procidx_tmp;
-    retval = u8_ReadStrptrMaybe(procidx_tmp, in_str);
+    u16 procidx_tmp;
+    retval = u16_ReadStrptrMaybe(procidx_tmp, in_str);
     if (retval) {
         procidx_Set(parent, procidx_tmp);
     }
@@ -563,9 +321,855 @@ bool ams::ProcId_ReadStrptrMaybe(ams::ProcId &parent, algo::strptr in_str) {
 void ams::ProcId_Print(ams::ProcId row, algo::cstring& str) {
     ams::Proctype_Print(proctype_Get(row), str);
     str << '-';
-    u8_Print(nodeidx_Get(row), str);
+    u16_Print(nodeidx_Get(row), str);
     str << '-';
-    u8_Print(procidx_Get(row), str);
+    u16_Print(procidx_Get(row), str);
+}
+
+// --- ams.Grptype.value.ToCstr
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+const char* ams::value_ToCstr(const ams::Grptype& parent) {
+    const char *ret = NULL;
+    switch(value_GetEnum(parent)) {
+        case ams_Grptype_board             : ret = "board";  break;
+        case ams_Grptype_log               : ret = "log";  break;
+        case ams_Grptype_netall            : ret = "netall";  break;
+        case ams_Grptype_nethb             : ret = "nethb";  break;
+        case ams_Grptype_netpr             : ret = "netpr";  break;
+        case ams_Grptype_out               : ret = "out";  break;
+        case ams_Grptype_prmon             : ret = "prmon";  break;
+        case ams_Grptype_prnet             : ret = "prnet";  break;
+        case ams_Grptype_prsup             : ret = "prsup";  break;
+        case ams_Grptype_prtxn             : ret = "prtxn";  break;
+        case ams_Grptype_pruser            : ret = "pruser";  break;
+        case ams_Grptype_supall            : ret = "supall";  break;
+        case ams_Grptype_txncmt            : ret = "txncmt";  break;
+        case ams_Grptype_txnpr             : ret = "txnpr";  break;
+        case ams_Grptype_userpr            : ret = "userpr";  break;
+        case ams_Grptype_xbcast            : ret = "xbcast";  break;
+        case ams_Grptype_xinctl            : ret = "xinctl";  break;
+        case ams_Grptype_xindata           : ret = "xindata";  break;
+        case ams_Grptype_xingf             : ret = "xingf";  break;
+        case ams_Grptype_xpart             : ret = "xpart";  break;
+    }
+    return ret;
+}
+
+// --- ams.Grptype.value.Print
+// Convert value to a string. First, attempt conversion to a known string.
+// If no string matches, print value as a numeric value.
+void ams::value_Print(const ams::Grptype& parent, algo::cstring &lhs) {
+    const char *strval = value_ToCstr(parent);
+    if (strval) {
+        lhs << strval;
+    } else {
+        lhs << parent.value;
+    }
+}
+
+// --- ams.Grptype.value.SetStrptrMaybe
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+bool ams::value_SetStrptrMaybe(ams::Grptype& parent, algo::strptr rhs) {
+    bool ret = false;
+    switch (elems_N(rhs)) {
+        case 3: {
+            switch (u64(algo::ReadLE16(rhs.elems))|(u64(rhs[2])<<16)) {
+                case LE_STR3('l','o','g'): {
+                    value_SetEnum(parent,ams_Grptype_log); ret = true; break;
+                }
+                case LE_STR3('o','u','t'): {
+                    value_SetEnum(parent,ams_Grptype_out); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 5: {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+                case LE_STR5('b','o','a','r','d'): {
+                    value_SetEnum(parent,ams_Grptype_board); ret = true; break;
+                }
+                case LE_STR5('n','e','t','h','b'): {
+                    value_SetEnum(parent,ams_Grptype_nethb); ret = true; break;
+                }
+                case LE_STR5('n','e','t','p','r'): {
+                    value_SetEnum(parent,ams_Grptype_netpr); ret = true; break;
+                }
+                case LE_STR5('p','r','m','o','n'): {
+                    value_SetEnum(parent,ams_Grptype_prmon); ret = true; break;
+                }
+                case LE_STR5('p','r','n','e','t'): {
+                    value_SetEnum(parent,ams_Grptype_prnet); ret = true; break;
+                }
+                case LE_STR5('p','r','s','u','p'): {
+                    value_SetEnum(parent,ams_Grptype_prsup); ret = true; break;
+                }
+                case LE_STR5('p','r','t','x','n'): {
+                    value_SetEnum(parent,ams_Grptype_prtxn); ret = true; break;
+                }
+                case LE_STR5('t','x','n','p','r'): {
+                    value_SetEnum(parent,ams_Grptype_txnpr); ret = true; break;
+                }
+                case LE_STR5('x','i','n','g','f'): {
+                    value_SetEnum(parent,ams_Grptype_xingf); ret = true; break;
+                }
+                case LE_STR5('x','p','a','r','t'): {
+                    value_SetEnum(parent,ams_Grptype_xpart); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 6: {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)) {
+                case LE_STR6('n','e','t','a','l','l'): {
+                    value_SetEnum(parent,ams_Grptype_netall); ret = true; break;
+                }
+                case LE_STR6('p','r','u','s','e','r'): {
+                    value_SetEnum(parent,ams_Grptype_pruser); ret = true; break;
+                }
+                case LE_STR6('s','u','p','a','l','l'): {
+                    value_SetEnum(parent,ams_Grptype_supall); ret = true; break;
+                }
+                case LE_STR6('t','x','n','c','m','t'): {
+                    value_SetEnum(parent,ams_Grptype_txncmt); ret = true; break;
+                }
+                case LE_STR6('u','s','e','r','p','r'): {
+                    value_SetEnum(parent,ams_Grptype_userpr); ret = true; break;
+                }
+                case LE_STR6('x','b','c','a','s','t'): {
+                    value_SetEnum(parent,ams_Grptype_xbcast); ret = true; break;
+                }
+                case LE_STR6('x','i','n','c','t','l'): {
+                    value_SetEnum(parent,ams_Grptype_xinctl); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 7: {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
+                case LE_STR7('x','i','n','d','a','t','a'): {
+                    value_SetEnum(parent,ams_Grptype_xindata); ret = true; break;
+                }
+            }
+            break;
+        }
+    }
+    return ret;
+}
+
+// --- ams.Grptype.value.SetStrptr
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+void ams::value_SetStrptr(ams::Grptype& parent, algo::strptr rhs, ams_GrptypeEnum dflt) {
+    if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
+}
+
+// --- ams.Grptype.value.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool ams::value_ReadStrptrMaybe(ams::Grptype& parent, algo::strptr rhs) {
+    bool retval = false;
+    retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
+    if (!retval) { // didn't work? try reading as underlying type
+        retval = u8_ReadStrptrMaybe(parent.value,rhs);
+    }
+    return retval;
+}
+
+// --- ams.Grptype..ReadStrptrMaybe
+// Read fields of ams::Grptype from an ascii string.
+// The format of the string is the format of the ams::Grptype's only field
+bool ams::Grptype_ReadStrptrMaybe(ams::Grptype &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = retval && value_ReadStrptrMaybe(parent, in_str);
+    return retval;
+}
+
+// --- ams.Grptype..Print
+// print string representation of ROW to string STR
+// cfmt:ams.Grptype.String  printfmt:Raw
+void ams::Grptype_Print(ams::Grptype row, algo::cstring& str) {
+    ams::value_Print(row, str);
+}
+
+// --- ams.GrpId..ReadFieldMaybe
+bool ams::GrpId_ReadFieldMaybe(ams::GrpId& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    ams::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case ams_FieldId_proc_id: {
+            retval = ams::ProcId_ReadStrptrMaybe(parent.proc_id, strval);
+        } break;
+        case ams_FieldId_grptype: {
+            retval = ams::Grptype_ReadStrptrMaybe(parent.grptype, strval);
+        } break;
+        case ams_FieldId_index: {
+            retval = u8_ReadStrptrMaybe(parent.index, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- ams.GrpId..ReadStrptrMaybe
+// Read fields of ams::GrpId from an ascii string.
+// The format of the string is a string with separated values
+bool ams::GrpId_ReadStrptrMaybe(ams::GrpId &parent, algo::strptr in_str) {
+    bool retval = true;
+    algo::strptr value;
+
+    algo::NextSep(in_str, '.', value);
+    retval = retval && ams::ProcId_ReadStrptrMaybe(parent.proc_id, value);
+
+    algo::NextSep(in_str, '-', value);
+    retval = retval && ams::Grptype_ReadStrptrMaybe(parent.grptype, value);
+
+    value = in_str;
+    retval = retval && u8_ReadStrptrMaybe(parent.index, value);
+    return retval;
+}
+
+// --- ams.GrpId..Print
+// print string representation of ROW to string STR
+// cfmt:ams.GrpId.String  printfmt:Sep
+void ams::GrpId_Print(ams::GrpId row, algo::cstring& str) {
+    ams::ProcId_Print(row.proc_id, str);
+    str << '.';
+    ams::Grptype_Print(row.grptype, str);
+    str << '-';
+    u8_Print(row.index, str);
+}
+
+// --- ams.Bridge..ReadFieldMaybe
+bool ams::Bridge_ReadFieldMaybe(ams::Bridge& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    ams::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case ams_FieldId_proc_id: {
+            retval = ams::ProcId_ReadStrptrMaybe(parent.proc_id, strval);
+        } break;
+        case ams_FieldId_in_grp: {
+            retval = ams::GrpId_ReadStrptrMaybe(parent.in_grp, strval);
+        } break;
+        case ams_FieldId_out_grp: {
+            retval = ams::GrpId_ReadStrptrMaybe(parent.out_grp, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- ams.Bridge..ReadStrptrMaybe
+// Read fields of ams::Bridge from an ascii string.
+// The format of the string is an ssim Tuple
+bool ams::Bridge_ReadStrptrMaybe(ams::Bridge &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "ams.Bridge");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && Bridge_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- ams.Bridge..Print
+// print string representation of ROW to string STR
+// cfmt:ams.Bridge.String  printfmt:Tuple
+void ams::Bridge_Print(ams::Bridge row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "ams.Bridge";
+
+    ams::ProcId_Print(row.proc_id, temp);
+    PrintAttrSpaceReset(str,"proc_id", temp);
+
+    ams::GrpId_Print(row.in_grp, temp);
+    PrintAttrSpaceReset(str,"in_grp", temp);
+
+    ams::GrpId_Print(row.out_grp, temp);
+    PrintAttrSpaceReset(str,"out_grp", temp);
+}
+
+// --- ams.FieldId.value.ToCstr
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+const char* ams::value_ToCstr(const ams::FieldId& parent) {
+    const char *ret = NULL;
+    switch(value_GetEnum(parent)) {
+        case ams_FieldId_base              : ret = "base";  break;
+        case ams_FieldId_type              : ret = "type";  break;
+        case ams_FieldId_length            : ret = "length";  break;
+        case ams_FieldId_offset            : ret = "offset";  break;
+        case ams_FieldId_payload_length    : ret = "payload_length";  break;
+        case ams_FieldId_proc_id           : ret = "proc_id";  break;
+        case ams_FieldId_in_grp            : ret = "in_grp";  break;
+        case ams_FieldId_out_grp           : ret = "out_grp";  break;
+        case ams_FieldId_grptype           : ret = "grptype";  break;
+        case ams_FieldId_index             : ret = "index";  break;
+        case ams_FieldId_grp_id            : ret = "grp_id";  break;
+        case ams_FieldId_flags             : ret = "flags";  break;
+        case ams_FieldId_value             : ret = "value";  break;
+        case ams_FieldId_payload           : ret = "payload";  break;
+        case ams_FieldId_tstamp            : ret = "tstamp";  break;
+        case ams_FieldId_logcat            : ret = "logcat";  break;
+        case ams_FieldId_text              : ret = "text";  break;
+        case ams_FieldId_proctype          : ret = "proctype";  break;
+        case ams_FieldId_nodeidx           : ret = "nodeidx";  break;
+        case ams_FieldId_procidx           : ret = "procidx";  break;
+        case ams_FieldId_hash              : ret = "hash";  break;
+        case ams_FieldId_n_in              : ret = "n_in";  break;
+        case ams_FieldId_next_order_id     : ret = "next_order_id";  break;
+        case ams_FieldId_order             : ret = "order";  break;
+        case ams_FieldId_user              : ret = "user";  break;
+        case ams_FieldId_time              : ret = "time";  break;
+        case ams_FieldId_price             : ret = "price";  break;
+        case ams_FieldId_symbol            : ret = "symbol";  break;
+        case ams_FieldId_qty               : ret = "qty";  break;
+        case ams_FieldId_ioc               : ret = "ioc";  break;
+        case ams_FieldId_buy               : ret = "buy";  break;
+        case ams_FieldId_write             : ret = "write";  break;
+        case ams_FieldId_read              : ret = "read";  break;
+        case ams_FieldId_write_err         : ret = "write_err";  break;
+        case ams_FieldId_signaled          : ret = "signaled";  break;
+        case ams_FieldId_grpmember         : ret = "grpmember";  break;
+        case ams_FieldId_off               : ret = "off";  break;
+        case ams_FieldId_wbudget           : ret = "wbudget";  break;
+        case ams_FieldId_grpmember_id      : ret = "grpmember_id";  break;
+        case ams_FieldId_pid               : ret = "pid";  break;
+        case ams_FieldId_rate              : ret = "rate";  break;
+        case ams_FieldId_last_hb           : ret = "last_hb";  break;
+        case ams_FieldId_ignore2           : ret = "ignore2";  break;
+        case ams_FieldId_sleeping          : ret = "sleeping";  break;
+        case ams_FieldId_r                 : ret = "r";  break;
+        case ams_FieldId_w                 : ret = "w";  break;
+        case ams_FieldId_magic             : ret = "magic";  break;
+        case ams_FieldId_tot_size          : ret = "tot_size";  break;
+        case ams_FieldId_max_msg_size      : ret = "max_msg_size";  break;
+        case ams_FieldId_offset_mask       : ret = "offset_mask";  break;
+        case ams_FieldId_woff              : ret = "woff";  break;
+        case ams_FieldId_n_shmember        : ret = "n_shmember";  break;
+        case ams_FieldId_max_shmember      : ret = "max_shmember";  break;
+        case ams_FieldId_datastart         : ret = "datastart";  break;
+        case ams_FieldId_writer_pid        : ret = "writer_pid";  break;
+        case ams_FieldId_writer_sleeping   : ret = "writer_sleeping";  break;
+        case ams_FieldId_nnobudget         : ret = "nnobudget";  break;
+        case ams_FieldId_nblock            : ret = "nblock";  break;
+        case ams_FieldId_eof               : ret = "eof";  break;
+        case ams_FieldId_creator_pid       : ret = "creator_pid";  break;
+        case ams_FieldId_seqno             : ret = "seqno";  break;
+        case ams_FieldId_first_seqno       : ret = "first_seqno";  break;
+        case ams_FieldId_last_seqno        : ret = "last_seqno";  break;
+        case ams_FieldId_name              : ret = "name";  break;
+    }
+    return ret;
+}
+
+// --- ams.FieldId.value.Print
+// Convert value to a string. First, attempt conversion to a known string.
+// If no string matches, print value as a numeric value.
+void ams::value_Print(const ams::FieldId& parent, algo::cstring &lhs) {
+    const char *strval = value_ToCstr(parent);
+    if (strval) {
+        lhs << strval;
+    } else {
+        lhs << parent.value;
+    }
+}
+
+// --- ams.FieldId.value.SetStrptrMaybe
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+bool ams::value_SetStrptrMaybe(ams::FieldId& parent, algo::strptr rhs) {
+    bool ret = false;
+    switch (elems_N(rhs)) {
+        case 1: {
+            switch (u64(rhs[0])) {
+                case 'r': {
+                    value_SetEnum(parent,ams_FieldId_r); ret = true; break;
+                }
+                case 'w': {
+                    value_SetEnum(parent,ams_FieldId_w); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 3: {
+            switch (u64(algo::ReadLE16(rhs.elems))|(u64(rhs[2])<<16)) {
+                case LE_STR3('b','u','y'): {
+                    value_SetEnum(parent,ams_FieldId_buy); ret = true; break;
+                }
+                case LE_STR3('e','o','f'): {
+                    value_SetEnum(parent,ams_FieldId_eof); ret = true; break;
+                }
+                case LE_STR3('i','o','c'): {
+                    value_SetEnum(parent,ams_FieldId_ioc); ret = true; break;
+                }
+                case LE_STR3('o','f','f'): {
+                    value_SetEnum(parent,ams_FieldId_off); ret = true; break;
+                }
+                case LE_STR3('p','i','d'): {
+                    value_SetEnum(parent,ams_FieldId_pid); ret = true; break;
+                }
+                case LE_STR3('q','t','y'): {
+                    value_SetEnum(parent,ams_FieldId_qty); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 4: {
+            switch (u64(algo::ReadLE32(rhs.elems))) {
+                case LE_STR4('b','a','s','e'): {
+                    value_SetEnum(parent,ams_FieldId_base); ret = true; break;
+                }
+                case LE_STR4('h','a','s','h'): {
+                    value_SetEnum(parent,ams_FieldId_hash); ret = true; break;
+                }
+                case LE_STR4('n','_','i','n'): {
+                    value_SetEnum(parent,ams_FieldId_n_in); ret = true; break;
+                }
+                case LE_STR4('n','a','m','e'): {
+                    value_SetEnum(parent,ams_FieldId_name); ret = true; break;
+                }
+                case LE_STR4('r','a','t','e'): {
+                    value_SetEnum(parent,ams_FieldId_rate); ret = true; break;
+                }
+                case LE_STR4('r','e','a','d'): {
+                    value_SetEnum(parent,ams_FieldId_read); ret = true; break;
+                }
+                case LE_STR4('t','e','x','t'): {
+                    value_SetEnum(parent,ams_FieldId_text); ret = true; break;
+                }
+                case LE_STR4('t','i','m','e'): {
+                    value_SetEnum(parent,ams_FieldId_time); ret = true; break;
+                }
+                case LE_STR4('t','y','p','e'): {
+                    value_SetEnum(parent,ams_FieldId_type); ret = true; break;
+                }
+                case LE_STR4('u','s','e','r'): {
+                    value_SetEnum(parent,ams_FieldId_user); ret = true; break;
+                }
+                case LE_STR4('w','o','f','f'): {
+                    value_SetEnum(parent,ams_FieldId_woff); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 5: {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+                case LE_STR5('f','l','a','g','s'): {
+                    value_SetEnum(parent,ams_FieldId_flags); ret = true; break;
+                }
+                case LE_STR5('i','n','d','e','x'): {
+                    value_SetEnum(parent,ams_FieldId_index); ret = true; break;
+                }
+                case LE_STR5('m','a','g','i','c'): {
+                    value_SetEnum(parent,ams_FieldId_magic); ret = true; break;
+                }
+                case LE_STR5('o','r','d','e','r'): {
+                    value_SetEnum(parent,ams_FieldId_order); ret = true; break;
+                }
+                case LE_STR5('p','r','i','c','e'): {
+                    value_SetEnum(parent,ams_FieldId_price); ret = true; break;
+                }
+                case LE_STR5('s','e','q','n','o'): {
+                    value_SetEnum(parent,ams_FieldId_seqno); ret = true; break;
+                }
+                case LE_STR5('v','a','l','u','e'): {
+                    value_SetEnum(parent,ams_FieldId_value); ret = true; break;
+                }
+                case LE_STR5('w','r','i','t','e'): {
+                    value_SetEnum(parent,ams_FieldId_write); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 6: {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)) {
+                case LE_STR6('g','r','p','_','i','d'): {
+                    value_SetEnum(parent,ams_FieldId_grp_id); ret = true; break;
+                }
+                case LE_STR6('i','n','_','g','r','p'): {
+                    value_SetEnum(parent,ams_FieldId_in_grp); ret = true; break;
+                }
+                case LE_STR6('l','e','n','g','t','h'): {
+                    value_SetEnum(parent,ams_FieldId_length); ret = true; break;
+                }
+                case LE_STR6('l','o','g','c','a','t'): {
+                    value_SetEnum(parent,ams_FieldId_logcat); ret = true; break;
+                }
+                case LE_STR6('n','b','l','o','c','k'): {
+                    value_SetEnum(parent,ams_FieldId_nblock); ret = true; break;
+                }
+                case LE_STR6('o','f','f','s','e','t'): {
+                    value_SetEnum(parent,ams_FieldId_offset); ret = true; break;
+                }
+                case LE_STR6('s','y','m','b','o','l'): {
+                    value_SetEnum(parent,ams_FieldId_symbol); ret = true; break;
+                }
+                case LE_STR6('t','s','t','a','m','p'): {
+                    value_SetEnum(parent,ams_FieldId_tstamp); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 7: {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
+                case LE_STR7('g','r','p','t','y','p','e'): {
+                    value_SetEnum(parent,ams_FieldId_grptype); ret = true; break;
+                }
+                case LE_STR7('i','g','n','o','r','e','2'): {
+                    value_SetEnum(parent,ams_FieldId_ignore2); ret = true; break;
+                }
+                case LE_STR7('l','a','s','t','_','h','b'): {
+                    value_SetEnum(parent,ams_FieldId_last_hb); ret = true; break;
+                }
+                case LE_STR7('n','o','d','e','i','d','x'): {
+                    value_SetEnum(parent,ams_FieldId_nodeidx); ret = true; break;
+                }
+                case LE_STR7('o','u','t','_','g','r','p'): {
+                    value_SetEnum(parent,ams_FieldId_out_grp); ret = true; break;
+                }
+                case LE_STR7('p','a','y','l','o','a','d'): {
+                    value_SetEnum(parent,ams_FieldId_payload); ret = true; break;
+                }
+                case LE_STR7('p','r','o','c','_','i','d'): {
+                    value_SetEnum(parent,ams_FieldId_proc_id); ret = true; break;
+                }
+                case LE_STR7('p','r','o','c','i','d','x'): {
+                    value_SetEnum(parent,ams_FieldId_procidx); ret = true; break;
+                }
+                case LE_STR7('w','b','u','d','g','e','t'): {
+                    value_SetEnum(parent,ams_FieldId_wbudget); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 8: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('p','r','o','c','t','y','p','e'): {
+                    value_SetEnum(parent,ams_FieldId_proctype); ret = true; break;
+                }
+                case LE_STR8('s','i','g','n','a','l','e','d'): {
+                    value_SetEnum(parent,ams_FieldId_signaled); ret = true; break;
+                }
+                case LE_STR8('s','l','e','e','p','i','n','g'): {
+                    value_SetEnum(parent,ams_FieldId_sleeping); ret = true; break;
+                }
+                case LE_STR8('t','o','t','_','s','i','z','e'): {
+                    value_SetEnum(parent,ams_FieldId_tot_size); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 9: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('d','a','t','a','s','t','a','r'): {
+                    if (memcmp(rhs.elems+8,"t",1)==0) { value_SetEnum(parent,ams_FieldId_datastart); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('g','r','p','m','e','m','b','e'): {
+                    if (memcmp(rhs.elems+8,"r",1)==0) { value_SetEnum(parent,ams_FieldId_grpmember); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('n','n','o','b','u','d','g','e'): {
+                    if (memcmp(rhs.elems+8,"t",1)==0) { value_SetEnum(parent,ams_FieldId_nnobudget); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('w','r','i','t','e','_','e','r'): {
+                    if (memcmp(rhs.elems+8,"r",1)==0) { value_SetEnum(parent,ams_FieldId_write_err); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 10: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('l','a','s','t','_','s','e','q'): {
+                    if (memcmp(rhs.elems+8,"no",2)==0) { value_SetEnum(parent,ams_FieldId_last_seqno); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('n','_','s','h','m','e','m','b'): {
+                    if (memcmp(rhs.elems+8,"er",2)==0) { value_SetEnum(parent,ams_FieldId_n_shmember); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('w','r','i','t','e','r','_','p'): {
+                    if (memcmp(rhs.elems+8,"id",2)==0) { value_SetEnum(parent,ams_FieldId_writer_pid); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 11: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('c','r','e','a','t','o','r','_'): {
+                    if (memcmp(rhs.elems+8,"pid",3)==0) { value_SetEnum(parent,ams_FieldId_creator_pid); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('f','i','r','s','t','_','s','e'): {
+                    if (memcmp(rhs.elems+8,"qno",3)==0) { value_SetEnum(parent,ams_FieldId_first_seqno); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('o','f','f','s','e','t','_','m'): {
+                    if (memcmp(rhs.elems+8,"ask",3)==0) { value_SetEnum(parent,ams_FieldId_offset_mask); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 12: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('g','r','p','m','e','m','b','e'): {
+                    if (memcmp(rhs.elems+8,"r_id",4)==0) { value_SetEnum(parent,ams_FieldId_grpmember_id); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('m','a','x','_','m','s','g','_'): {
+                    if (memcmp(rhs.elems+8,"size",4)==0) { value_SetEnum(parent,ams_FieldId_max_msg_size); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('m','a','x','_','s','h','m','e'): {
+                    if (memcmp(rhs.elems+8,"mber",4)==0) { value_SetEnum(parent,ams_FieldId_max_shmember); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 13: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('n','e','x','t','_','o','r','d'): {
+                    if (memcmp(rhs.elems+8,"er_id",5)==0) { value_SetEnum(parent,ams_FieldId_next_order_id); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 14: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('p','a','y','l','o','a','d','_'): {
+                    if (memcmp(rhs.elems+8,"length",6)==0) { value_SetEnum(parent,ams_FieldId_payload_length); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 15: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('w','r','i','t','e','r','_','s'): {
+                    if (memcmp(rhs.elems+8,"leeping",7)==0) { value_SetEnum(parent,ams_FieldId_writer_sleeping); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+    }
+    return ret;
+}
+
+// --- ams.FieldId.value.SetStrptr
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+void ams::value_SetStrptr(ams::FieldId& parent, algo::strptr rhs, ams_FieldIdEnum dflt) {
+    if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
+}
+
+// --- ams.FieldId.value.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool ams::value_ReadStrptrMaybe(ams::FieldId& parent, algo::strptr rhs) {
+    bool retval = false;
+    retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
+    if (!retval) { // didn't work? try reading as underlying type
+        retval = i32_ReadStrptrMaybe(parent.value,rhs);
+    }
+    return retval;
+}
+
+// --- ams.FieldId..ReadStrptrMaybe
+// Read fields of ams::FieldId from an ascii string.
+// The format of the string is the format of the ams::FieldId's only field
+bool ams::FieldId_ReadStrptrMaybe(ams::FieldId &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = retval && value_ReadStrptrMaybe(parent, in_str);
+    return retval;
+}
+
+// --- ams.FieldId..Print
+// print string representation of ROW to string STR
+// cfmt:ams.FieldId.String  printfmt:Raw
+void ams::FieldId_Print(ams::FieldId row, algo::cstring& str) {
+    ams::value_Print(row, str);
+}
+
+// --- ams.ShmemberFlags.r.ReadStrptrMaybe
+inline static bool ams::r_ReadStrptrMaybe(ams::ShmemberFlags& parent, algo::strptr in_str) {
+    bool retval = true;
+    bool r_tmp;
+    retval = bool_ReadStrptrMaybe(r_tmp, in_str);
+    if (retval) {
+        r_Set(parent, r_tmp);
+    }
+    return retval;
+}
+
+// --- ams.ShmemberFlags.w.ReadStrptrMaybe
+inline static bool ams::w_ReadStrptrMaybe(ams::ShmemberFlags& parent, algo::strptr in_str) {
+    bool retval = true;
+    bool w_tmp;
+    retval = bool_ReadStrptrMaybe(w_tmp, in_str);
+    if (retval) {
+        w_Set(parent, w_tmp);
+    }
+    return retval;
+}
+
+// --- ams.ShmemberFlags..ReadFieldMaybe
+bool ams::ShmemberFlags_ReadFieldMaybe(ams::ShmemberFlags& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    ams::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case ams_FieldId_value: {
+            retval = u16_ReadStrptrMaybe(parent.value, strval);
+        } break;
+        case ams_FieldId_r: {
+            retval = r_ReadStrptrMaybe(parent, strval);
+        } break;
+        case ams_FieldId_w: {
+            retval = w_ReadStrptrMaybe(parent, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- ams.ShmemberFlags..ReadStrptrMaybe
+// Read fields of ams::ShmemberFlags from an ascii string.
+bool ams::ShmemberFlags_ReadStrptrMaybe(ams::ShmemberFlags &parent, algo::strptr in_str) {
+    bool retval = true;
+    // Clear affected bits first)
+    r_Set(parent, false);
+    w_Set(parent, false);
+    // Read ','-separated list of bools
+    while (ch_N(in_str)) {
+        strptr field_name;
+        algo::NextSep(in_str,',',field_name);
+        field_name = algo::Trimmed(field_name);
+        if (ch_N(field_name)) {
+            ams::FieldId field_id;
+            bool ok = ams::value_SetStrptrMaybe(field_id,field_name);
+            if (ok) {
+                switch (field_id) {
+                    case ams_FieldId_r: {
+                        r_Set(parent, true);
+                    } break;
+                    case ams_FieldId_w: {
+                        w_Set(parent, true);
+                    } break;
+                    default: ok = false; break;
+                }
+            }
+            if (!ok) {
+                algo_lib::AppendErrtext("bitfld",field_name);
+                retval = false;
+            }
+        }
+    }
+    return retval;
+}
+
+// --- ams.ShmemberFlags..Print
+// print string representation of ROW to string STR
+// cfmt:ams.ShmemberFlags.String  printfmt:Bitset
+void ams::ShmemberFlags_Print(ams::ShmemberFlags row, algo::cstring& str) {
+    algo::ListSep ls(",");
+    if (r_Get(row)) {
+        str << ls << "r";
+    }
+    if (w_Get(row)) {
+        str << ls << "w";
+    }
+}
+
+// --- ams.ShmemberFlags..GetAnon
+algo::strptr ams::ShmemberFlags_GetAnon(ams::ShmemberFlags &parent, i32 idx) {
+    (void)parent;//only to avoid -Wunused-parameter
+    switch(idx) {
+        case(0): return strptr("value", 5);
+        default: return algo::strptr();
+    }
+}
+
+// --- ams.GrpmemberId..ReadFieldMaybe
+bool ams::GrpmemberId_ReadFieldMaybe(ams::GrpmemberId& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    ams::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case ams_FieldId_grp_id: {
+            retval = ams::GrpId_ReadStrptrMaybe(parent.grp_id, strval);
+        } break;
+        case ams_FieldId_proc_id: {
+            retval = ams::ProcId_ReadStrptrMaybe(parent.proc_id, strval);
+        } break;
+        case ams_FieldId_flags: {
+            retval = ams::ShmemberFlags_ReadStrptrMaybe(parent.flags, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- ams.GrpmemberId..ReadStrptrMaybe
+// Read fields of ams::GrpmemberId from an ascii string.
+// The format of the string is a string with separated values
+bool ams::GrpmemberId_ReadStrptrMaybe(ams::GrpmemberId &parent, algo::strptr in_str) {
+    bool retval = true;
+    algo::strptr value;
+
+    algo::NextSep(in_str, '/', value);
+    retval = retval && ams::GrpId_ReadStrptrMaybe(parent.grp_id, value);
+
+    algo::NextSep(in_str, ',', value);
+    retval = retval && ams::ProcId_ReadStrptrMaybe(parent.proc_id, value);
+
+    value = in_str;
+    retval = retval && ams::ShmemberFlags_ReadStrptrMaybe(parent.flags, value);
+    return retval;
+}
+
+// --- ams.GrpmemberId..Print
+// print string representation of ROW to string STR
+// cfmt:ams.GrpmemberId.String  printfmt:Sep
+void ams::GrpmemberId_Print(ams::GrpmemberId row, algo::cstring& str) {
+    ams::GrpId_Print(row.grp_id, str);
+    str << '/';
+    ams::ProcId_Print(row.proc_id, str);
+    str << ',';
+    ams::ShmemberFlags_Print(row.flags, str);
 }
 
 // --- ams.InputLineMsg.base.CopyOut
@@ -854,24 +1458,32 @@ void ams::MsgBlock_Print(ams::MsgBlock& row, algo::cstring& str) {
 // --- ams.MsgHeader.type.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* ams::type_ToCstr(const ams::MsgHeader& payload) {
+const char* ams::type_ToCstr(const ams::MsgHeader& parent) {
     const char *ret = NULL;
-    switch(type_GetEnum(payload)) {
-        case ams_MsgHeader_type_ams_ExpectMsg: ret = "ams.ExpectMsg";  break;
+    switch(type_GetEnum(parent)) {
+        case ams_MsgHeader_type_ams_BoardrefMsg: ret = "ams.BoardrefMsg";  break;
         case ams_MsgHeader_type_ams_InputLineMsg: ret = "ams.InputLineMsg";  break;
         case ams_MsgHeader_type_ams_LogMsg : ret = "ams.LogMsg";  break;
         case ams_MsgHeader_type_ams_MsgBlock: ret = "ams.MsgBlock";  break;
-        case ams_MsgHeader_type_ams_ProcEofMsg: ret = "ams.ProcEofMsg";  break;
-        case ams_MsgHeader_type_ams_ProcKillMsg: ret = "ams.ProcKillMsg";  break;
-        case ams_MsgHeader_type_ams_ProcMsg: ret = "ams.ProcMsg";  break;
-        case ams_MsgHeader_type_ams_ProcReadMsg: ret = "ams.ProcReadMsg";  break;
-        case ams_MsgHeader_type_ams_ProcStartMsg: ret = "ams.ProcStartMsg";  break;
-        case ams_MsgHeader_type_ams_ProcStatusMsg: ret = "ams.ProcStatusMsg";  break;
-        case ams_MsgHeader_type_ams_RemDirRecurseMsg: ret = "ams.RemDirRecurseMsg";  break;
+        case ams_MsgHeader_type_ams_SampMengBookMsg: ret = "ams.SampMengBookMsg";  break;
+        case ams_MsgHeader_type_ams_SampMengCancelOrderMsg: ret = "ams.SampMengCancelOrderMsg";  break;
+        case ams_MsgHeader_type_ams_SampMengCancelReqMsg: ret = "ams.SampMengCancelReqMsg";  break;
+        case ams_MsgHeader_type_ams_SampMengMassCancelReqMsg: ret = "ams.SampMengMassCancelReqMsg";  break;
+        case ams_MsgHeader_type_ams_SampMengNewOrderMsg: ret = "ams.SampMengNewOrderMsg";  break;
+        case ams_MsgHeader_type_ams_SampMengNewOrderReqMsg: ret = "ams.SampMengNewOrderReqMsg";  break;
+        case ams_MsgHeader_type_ams_SampMengNewSymbolMsg: ret = "ams.SampMengNewSymbolMsg";  break;
+        case ams_MsgHeader_type_ams_SampMengNewSymbolReqMsg: ret = "ams.SampMengNewSymbolReqMsg";  break;
+        case ams_MsgHeader_type_ams_SampMengNewUserMsg: ret = "ams.SampMengNewUserMsg";  break;
+        case ams_MsgHeader_type_ams_SampMengNewUserReqMsg: ret = "ams.SampMengNewUserReqMsg";  break;
+        case ams_MsgHeader_type_ams_SampMengOrderTradeMsg: ret = "ams.SampMengOrderTradeMsg";  break;
+        case ams_MsgHeader_type_ams_SampMengRestingMsg: ret = "ams.SampMengRestingMsg";  break;
+        case ams_MsgHeader_type_ams_SampMengSymbolrowMsg: ret = "ams.SampMengSymbolrowMsg";  break;
+        case ams_MsgHeader_type_ams_SampMengTextMsg: ret = "ams.SampMengTextMsg";  break;
+        case ams_MsgHeader_type_ams_SampMengUserrowMsg: ret = "ams.SampMengUserrowMsg";  break;
         case ams_MsgHeader_type_ams_ShmHbMsg: ret = "ams.ShmHbMsg";  break;
-        case ams_MsgHeader_type_ams_Shmmsg : ret = "ams.Shmmsg";  break;
         case ams_MsgHeader_type_ams_TerminateMsg: ret = "ams.TerminateMsg";  break;
         case ams_MsgHeader_type_ams_UdpFrame: ret = "ams.UdpFrame";  break;
+        case ams_MsgHeader_type_ams_UprocTextMsg: ret = "ams.UprocTextMsg";  break;
         case ams_MsgHeader_type_fm_AlarmMsg: ret = "fm.AlarmMsg";  break;
         case ams_MsgHeader_type_ws_CloseMsg: ret = "ws.CloseMsg";  break;
         case ams_MsgHeader_type_ws_ConnectMsg: ret = "ws.ConnectMsg";  break;
@@ -885,12 +1497,12 @@ const char* ams::type_ToCstr(const ams::MsgHeader& payload) {
 // --- ams.MsgHeader.type.Print
 // Convert type to a string. First, attempt conversion to a known string.
 // If no string matches, print type as a numeric value.
-void ams::type_Print(const ams::MsgHeader& payload, algo::cstring &lhs) {
-    const char *strval = type_ToCstr(payload);
+void ams::type_Print(const ams::MsgHeader& parent, algo::cstring &lhs) {
+    const char *strval = type_ToCstr(parent);
     if (strval) {
         lhs << strval;
     } else {
-        lhs << payload.type;
+        lhs << parent.type;
     }
 }
 
@@ -898,21 +1510,17 @@ void ams::type_Print(const ams::MsgHeader& payload, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool ams::type_SetStrptrMaybe(ams::MsgHeader& payload, algo::strptr rhs) {
+bool ams::type_SetStrptrMaybe(ams::MsgHeader& parent, algo::strptr rhs) {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 10: {
             switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('a','m','s','.','L','o','g','M'): {
-                    if (memcmp(rhs.elems+8,"sg",2)==0) { type_SetEnum(payload,ams_MsgHeader_type_ams_LogMsg); ret = true; break; }
-                    break;
-                }
-                case LE_STR8('a','m','s','.','S','h','m','m'): {
-                    if (memcmp(rhs.elems+8,"sg",2)==0) { type_SetEnum(payload,ams_MsgHeader_type_ams_Shmmsg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"sg",2)==0) { type_SetEnum(parent,ams_MsgHeader_type_ams_LogMsg); ret = true; break; }
                     break;
                 }
                 case LE_STR8('w','s','.','D','a','t','a','M'): {
-                    if (memcmp(rhs.elems+8,"sg",2)==0) { type_SetEnum(payload,ams_MsgHeader_type_ws_DataMsg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"sg",2)==0) { type_SetEnum(parent,ams_MsgHeader_type_ws_DataMsg); ret = true; break; }
                     break;
                 }
             }
@@ -920,16 +1528,12 @@ bool ams::type_SetStrptrMaybe(ams::MsgHeader& payload, algo::strptr rhs) {
         }
         case 11: {
             switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('a','m','s','.','P','r','o','c'): {
-                    if (memcmp(rhs.elems+8,"Msg",3)==0) { type_SetEnum(payload,ams_MsgHeader_type_ams_ProcMsg); ret = true; break; }
-                    break;
-                }
                 case LE_STR8('f','m','.','A','l','a','r','m'): {
-                    if (memcmp(rhs.elems+8,"Msg",3)==0) { type_SetEnum(payload,ams_MsgHeader_type_fm_AlarmMsg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"Msg",3)==0) { type_SetEnum(parent,ams_MsgHeader_type_fm_AlarmMsg); ret = true; break; }
                     break;
                 }
                 case LE_STR8('w','s','.','C','l','o','s','e'): {
-                    if (memcmp(rhs.elems+8,"Msg",3)==0) { type_SetEnum(payload,ams_MsgHeader_type_ws_CloseMsg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"Msg",3)==0) { type_SetEnum(parent,ams_MsgHeader_type_ws_CloseMsg); ret = true; break; }
                     break;
                 }
             }
@@ -938,15 +1542,15 @@ bool ams::type_SetStrptrMaybe(ams::MsgHeader& payload, algo::strptr rhs) {
         case 12: {
             switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('a','m','s','.','M','s','g','B'): {
-                    if (memcmp(rhs.elems+8,"lock",4)==0) { type_SetEnum(payload,ams_MsgHeader_type_ams_MsgBlock); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"lock",4)==0) { type_SetEnum(parent,ams_MsgHeader_type_ams_MsgBlock); ret = true; break; }
                     break;
                 }
                 case LE_STR8('a','m','s','.','S','h','m','H'): {
-                    if (memcmp(rhs.elems+8,"bMsg",4)==0) { type_SetEnum(payload,ams_MsgHeader_type_ams_ShmHbMsg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"bMsg",4)==0) { type_SetEnum(parent,ams_MsgHeader_type_ams_ShmHbMsg); ret = true; break; }
                     break;
                 }
                 case LE_STR8('a','m','s','.','U','d','p','F'): {
-                    if (memcmp(rhs.elems+8,"rame",4)==0) { type_SetEnum(payload,ams_MsgHeader_type_ams_UdpFrame); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"rame",4)==0) { type_SetEnum(parent,ams_MsgHeader_type_ams_UdpFrame); ret = true; break; }
                     break;
                 }
             }
@@ -954,21 +1558,8 @@ bool ams::type_SetStrptrMaybe(ams::MsgHeader& payload, algo::strptr rhs) {
         }
         case 13: {
             switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('a','m','s','.','E','x','p','e'): {
-                    if (memcmp(rhs.elems+8,"ctMsg",5)==0) { type_SetEnum(payload,ams_MsgHeader_type_ams_ExpectMsg); ret = true; break; }
-                    break;
-                }
                 case LE_STR8('w','s','.','C','o','n','n','e'): {
-                    if (memcmp(rhs.elems+8,"ctMsg",5)==0) { type_SetEnum(payload,ams_MsgHeader_type_ws_ConnectMsg); ret = true; break; }
-                    break;
-                }
-            }
-            break;
-        }
-        case 14: {
-            switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('a','m','s','.','P','r','o','c'): {
-                    if (memcmp(rhs.elems+8,"EofMsg",6)==0) { type_SetEnum(payload,ams_MsgHeader_type_ams_ProcEofMsg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"ctMsg",5)==0) { type_SetEnum(parent,ams_MsgHeader_type_ws_ConnectMsg); ret = true; break; }
                     break;
                 }
             }
@@ -976,9 +1567,8 @@ bool ams::type_SetStrptrMaybe(ams::MsgHeader& payload, algo::strptr rhs) {
         }
         case 15: {
             switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('a','m','s','.','P','r','o','c'): {
-                    if (memcmp(rhs.elems+8,"KillMsg",7)==0) { type_SetEnum(payload,ams_MsgHeader_type_ams_ProcKillMsg); ret = true; break; }
-                    if (memcmp(rhs.elems+8,"ReadMsg",7)==0) { type_SetEnum(payload,ams_MsgHeader_type_ams_ProcReadMsg); ret = true; break; }
+                case LE_STR8('a','m','s','.','B','o','a','r'): {
+                    if (memcmp(rhs.elems+8,"drefMsg",7)==0) { type_SetEnum(parent,ams_MsgHeader_type_ams_BoardrefMsg); ret = true; break; }
                     break;
                 }
             }
@@ -987,19 +1577,19 @@ bool ams::type_SetStrptrMaybe(ams::MsgHeader& payload, algo::strptr rhs) {
         case 16: {
             switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('a','m','s','.','I','n','p','u'): {
-                    if (memcmp(rhs.elems+8,"tLineMsg",8)==0) { type_SetEnum(payload,ams_MsgHeader_type_ams_InputLineMsg); ret = true; break; }
-                    break;
-                }
-                case LE_STR8('a','m','s','.','P','r','o','c'): {
-                    if (memcmp(rhs.elems+8,"StartMsg",8)==0) { type_SetEnum(payload,ams_MsgHeader_type_ams_ProcStartMsg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"tLineMsg",8)==0) { type_SetEnum(parent,ams_MsgHeader_type_ams_InputLineMsg); ret = true; break; }
                     break;
                 }
                 case LE_STR8('a','m','s','.','T','e','r','m'): {
-                    if (memcmp(rhs.elems+8,"inateMsg",8)==0) { type_SetEnum(payload,ams_MsgHeader_type_ams_TerminateMsg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"inateMsg",8)==0) { type_SetEnum(parent,ams_MsgHeader_type_ams_TerminateMsg); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('a','m','s','.','U','p','r','o'): {
+                    if (memcmp(rhs.elems+8,"cTextMsg",8)==0) { type_SetEnum(parent,ams_MsgHeader_type_ams_UprocTextMsg); ret = true; break; }
                     break;
                 }
                 case LE_STR8('w','s','.','S','e','r','v','e'): {
-                    if (memcmp(rhs.elems+8,"rStopMsg",8)==0) { type_SetEnum(payload,ams_MsgHeader_type_ws_ServerStopMsg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"rStopMsg",8)==0) { type_SetEnum(parent,ams_MsgHeader_type_ws_ServerStopMsg); ret = true; break; }
                     break;
                 }
             }
@@ -1007,21 +1597,87 @@ bool ams::type_SetStrptrMaybe(ams::MsgHeader& payload, algo::strptr rhs) {
         }
         case 17: {
             switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('a','m','s','.','P','r','o','c'): {
-                    if (memcmp(rhs.elems+8,"StatusMsg",9)==0) { type_SetEnum(payload,ams_MsgHeader_type_ams_ProcStatusMsg); ret = true; break; }
-                    break;
-                }
                 case LE_STR8('w','s','.','S','e','r','v','e'): {
-                    if (memcmp(rhs.elems+8,"rStartMsg",9)==0) { type_SetEnum(payload,ams_MsgHeader_type_ws_ServerStartMsg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"rStartMsg",9)==0) { type_SetEnum(parent,ams_MsgHeader_type_ws_ServerStartMsg); ret = true; break; }
                     break;
                 }
             }
             break;
         }
-        case 20: {
+        case 19: {
             switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('a','m','s','.','R','e','m','D'): {
-                    if (memcmp(rhs.elems+8,"irRecurseMsg",12)==0) { type_SetEnum(payload,ams_MsgHeader_type_ams_RemDirRecurseMsg); ret = true; break; }
+                case LE_STR8('a','m','s','.','S','a','m','p'): {
+                    if (memcmp(rhs.elems+8,"MengBookMsg",11)==0) { type_SetEnum(parent,ams_MsgHeader_type_ams_SampMengBookMsg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"MengTextMsg",11)==0) { type_SetEnum(parent,ams_MsgHeader_type_ams_SampMengTextMsg); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 22: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','m','s','.','S','a','m','p'): {
+                    if (memcmp(rhs.elems+8,"MengNewUserMsg",14)==0) { type_SetEnum(parent,ams_MsgHeader_type_ams_SampMengNewUserMsg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"MengRestingMsg",14)==0) { type_SetEnum(parent,ams_MsgHeader_type_ams_SampMengRestingMsg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"MengUserrowMsg",14)==0) { type_SetEnum(parent,ams_MsgHeader_type_ams_SampMengUserrowMsg); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 23: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','m','s','.','S','a','m','p'): {
+                    if (memcmp(rhs.elems+8,"MengNewOrderMsg",15)==0) { type_SetEnum(parent,ams_MsgHeader_type_ams_SampMengNewOrderMsg); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 24: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','m','s','.','S','a','m','p'): {
+                    if (memcmp(rhs.elems+8,"MengCancelReqMsg",16)==0) { type_SetEnum(parent,ams_MsgHeader_type_ams_SampMengCancelReqMsg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"MengNewSymbolMsg",16)==0) { type_SetEnum(parent,ams_MsgHeader_type_ams_SampMengNewSymbolMsg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"MengSymbolrowMsg",16)==0) { type_SetEnum(parent,ams_MsgHeader_type_ams_SampMengSymbolrowMsg); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 25: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','m','s','.','S','a','m','p'): {
+                    if (memcmp(rhs.elems+8,"MengNewUserReqMsg",17)==0) { type_SetEnum(parent,ams_MsgHeader_type_ams_SampMengNewUserReqMsg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"MengOrderTradeMsg",17)==0) { type_SetEnum(parent,ams_MsgHeader_type_ams_SampMengOrderTradeMsg); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 26: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','m','s','.','S','a','m','p'): {
+                    if (memcmp(rhs.elems+8,"MengCancelOrderMsg",18)==0) { type_SetEnum(parent,ams_MsgHeader_type_ams_SampMengCancelOrderMsg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"MengNewOrderReqMsg",18)==0) { type_SetEnum(parent,ams_MsgHeader_type_ams_SampMengNewOrderReqMsg); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 27: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','m','s','.','S','a','m','p'): {
+                    if (memcmp(rhs.elems+8,"MengNewSymbolReqMsg",19)==0) { type_SetEnum(parent,ams_MsgHeader_type_ams_SampMengNewSymbolReqMsg); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 28: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','m','s','.','S','a','m','p'): {
+                    if (memcmp(rhs.elems+8,"MengMassCancelReqMsg",20)==0) { type_SetEnum(parent,ams_MsgHeader_type_ams_SampMengMassCancelReqMsg); ret = true; break; }
                     break;
                 }
             }
@@ -1034,17 +1690,17 @@ bool ams::type_SetStrptrMaybe(ams::MsgHeader& payload, algo::strptr rhs) {
 // --- ams.MsgHeader.type.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void ams::type_SetStrptr(ams::MsgHeader& payload, algo::strptr rhs, ams_MsgHeader_type_Enum dflt) {
-    if (!type_SetStrptrMaybe(payload,rhs)) type_SetEnum(payload,dflt);
+void ams::type_SetStrptr(ams::MsgHeader& parent, algo::strptr rhs, ams_MsgHeader_type_Enum dflt) {
+    if (!type_SetStrptrMaybe(parent,rhs)) type_SetEnum(parent,dflt);
 }
 
 // --- ams.MsgHeader.type.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool ams::type_ReadStrptrMaybe(ams::MsgHeader& payload, algo::strptr rhs) {
+bool ams::type_ReadStrptrMaybe(ams::MsgHeader& parent, algo::strptr rhs) {
     bool retval = false;
-    retval = type_SetStrptrMaybe(payload,rhs); // try symbol conversion
+    retval = type_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
-        retval = u32_ReadStrptrMaybe(payload.type,rhs);
+        retval = u32_ReadStrptrMaybe(parent.type,rhs);
     }
     return retval;
 }
@@ -1087,7 +1743,7 @@ bool ams::MsgHeader_ReadStrptrMaybe(ams::MsgHeader &parent, algo::strptr in_str)
 // --- ams.MsgHeader..Print
 // print string representation of ROW to string STR
 // cfmt:ams.MsgHeader.String  printfmt:Tuple
-void ams::MsgHeader_Print(ams::MsgHeader& row, algo::cstring& str) {
+void ams::MsgHeader_Print(ams::MsgHeader row, algo::cstring& str) {
     algo::tempstr temp;
     str << "ams.MsgHeader";
     (void)row;//only to avoid -Wunused-parameter
@@ -1099,21 +1755,29 @@ void ams::MsgHeader_Print(ams::MsgHeader& row, algo::cstring& str) {
 const char* ams::value_ToCstr(const ams::MsgHeaderMsgsCase& parent) {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
-        case ams_MsgHeaderMsgsCase_ams_ExpectMsg: ret = "ams.ExpectMsg";  break;
+        case ams_MsgHeaderMsgsCase_ams_BoardrefMsg: ret = "ams.BoardrefMsg";  break;
         case ams_MsgHeaderMsgsCase_ams_InputLineMsg: ret = "ams.InputLineMsg";  break;
         case ams_MsgHeaderMsgsCase_ams_LogMsg: ret = "ams.LogMsg";  break;
         case ams_MsgHeaderMsgsCase_ams_MsgBlock: ret = "ams.MsgBlock";  break;
-        case ams_MsgHeaderMsgsCase_ams_ProcEofMsg: ret = "ams.ProcEofMsg";  break;
-        case ams_MsgHeaderMsgsCase_ams_ProcKillMsg: ret = "ams.ProcKillMsg";  break;
-        case ams_MsgHeaderMsgsCase_ams_ProcMsg: ret = "ams.ProcMsg";  break;
-        case ams_MsgHeaderMsgsCase_ams_ProcReadMsg: ret = "ams.ProcReadMsg";  break;
-        case ams_MsgHeaderMsgsCase_ams_ProcStartMsg: ret = "ams.ProcStartMsg";  break;
-        case ams_MsgHeaderMsgsCase_ams_ProcStatusMsg: ret = "ams.ProcStatusMsg";  break;
-        case ams_MsgHeaderMsgsCase_ams_RemDirRecurseMsg: ret = "ams.RemDirRecurseMsg";  break;
+        case ams_MsgHeaderMsgsCase_ams_SampMengBookMsg: ret = "ams.SampMengBookMsg";  break;
+        case ams_MsgHeaderMsgsCase_ams_SampMengCancelOrderMsg: ret = "ams.SampMengCancelOrderMsg";  break;
+        case ams_MsgHeaderMsgsCase_ams_SampMengCancelReqMsg: ret = "ams.SampMengCancelReqMsg";  break;
+        case ams_MsgHeaderMsgsCase_ams_SampMengMassCancelReqMsg: ret = "ams.SampMengMassCancelReqMsg";  break;
+        case ams_MsgHeaderMsgsCase_ams_SampMengNewOrderMsg: ret = "ams.SampMengNewOrderMsg";  break;
+        case ams_MsgHeaderMsgsCase_ams_SampMengNewOrderReqMsg: ret = "ams.SampMengNewOrderReqMsg";  break;
+        case ams_MsgHeaderMsgsCase_ams_SampMengNewSymbolMsg: ret = "ams.SampMengNewSymbolMsg";  break;
+        case ams_MsgHeaderMsgsCase_ams_SampMengNewSymbolReqMsg: ret = "ams.SampMengNewSymbolReqMsg";  break;
+        case ams_MsgHeaderMsgsCase_ams_SampMengNewUserMsg: ret = "ams.SampMengNewUserMsg";  break;
+        case ams_MsgHeaderMsgsCase_ams_SampMengNewUserReqMsg: ret = "ams.SampMengNewUserReqMsg";  break;
+        case ams_MsgHeaderMsgsCase_ams_SampMengOrderTradeMsg: ret = "ams.SampMengOrderTradeMsg";  break;
+        case ams_MsgHeaderMsgsCase_ams_SampMengRestingMsg: ret = "ams.SampMengRestingMsg";  break;
+        case ams_MsgHeaderMsgsCase_ams_SampMengSymbolrowMsg: ret = "ams.SampMengSymbolrowMsg";  break;
+        case ams_MsgHeaderMsgsCase_ams_SampMengTextMsg: ret = "ams.SampMengTextMsg";  break;
+        case ams_MsgHeaderMsgsCase_ams_SampMengUserrowMsg: ret = "ams.SampMengUserrowMsg";  break;
         case ams_MsgHeaderMsgsCase_ams_ShmHbMsg: ret = "ams.ShmHbMsg";  break;
-        case ams_MsgHeaderMsgsCase_ams_Shmmsg: ret = "ams.Shmmsg";  break;
         case ams_MsgHeaderMsgsCase_ams_TerminateMsg: ret = "ams.TerminateMsg";  break;
         case ams_MsgHeaderMsgsCase_ams_UdpFrame: ret = "ams.UdpFrame";  break;
+        case ams_MsgHeaderMsgsCase_ams_UprocTextMsg: ret = "ams.UprocTextMsg";  break;
         case ams_MsgHeaderMsgsCase_fm_AlarmMsg: ret = "fm.AlarmMsg";  break;
         case ams_MsgHeaderMsgsCase_ws_CloseMsg: ret = "ws.CloseMsg";  break;
         case ams_MsgHeaderMsgsCase_ws_ConnectMsg: ret = "ws.ConnectMsg";  break;
@@ -1149,10 +1813,6 @@ bool ams::value_SetStrptrMaybe(ams::MsgHeaderMsgsCase& parent, algo::strptr rhs)
                     if (memcmp(rhs.elems+8,"sg",2)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ams_LogMsg); ret = true; break; }
                     break;
                 }
-                case LE_STR8('a','m','s','.','S','h','m','m'): {
-                    if (memcmp(rhs.elems+8,"sg",2)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ams_Shmmsg); ret = true; break; }
-                    break;
-                }
                 case LE_STR8('w','s','.','D','a','t','a','M'): {
                     if (memcmp(rhs.elems+8,"sg",2)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ws_DataMsg); ret = true; break; }
                     break;
@@ -1162,10 +1822,6 @@ bool ams::value_SetStrptrMaybe(ams::MsgHeaderMsgsCase& parent, algo::strptr rhs)
         }
         case 11: {
             switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('a','m','s','.','P','r','o','c'): {
-                    if (memcmp(rhs.elems+8,"Msg",3)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ams_ProcMsg); ret = true; break; }
-                    break;
-                }
                 case LE_STR8('f','m','.','A','l','a','r','m'): {
                     if (memcmp(rhs.elems+8,"Msg",3)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_fm_AlarmMsg); ret = true; break; }
                     break;
@@ -1196,10 +1852,6 @@ bool ams::value_SetStrptrMaybe(ams::MsgHeaderMsgsCase& parent, algo::strptr rhs)
         }
         case 13: {
             switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('a','m','s','.','E','x','p','e'): {
-                    if (memcmp(rhs.elems+8,"ctMsg",5)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ams_ExpectMsg); ret = true; break; }
-                    break;
-                }
                 case LE_STR8('w','s','.','C','o','n','n','e'): {
                     if (memcmp(rhs.elems+8,"ctMsg",5)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ws_ConnectMsg); ret = true; break; }
                     break;
@@ -1207,20 +1859,10 @@ bool ams::value_SetStrptrMaybe(ams::MsgHeaderMsgsCase& parent, algo::strptr rhs)
             }
             break;
         }
-        case 14: {
-            switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('a','m','s','.','P','r','o','c'): {
-                    if (memcmp(rhs.elems+8,"EofMsg",6)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ams_ProcEofMsg); ret = true; break; }
-                    break;
-                }
-            }
-            break;
-        }
         case 15: {
             switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('a','m','s','.','P','r','o','c'): {
-                    if (memcmp(rhs.elems+8,"KillMsg",7)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ams_ProcKillMsg); ret = true; break; }
-                    if (memcmp(rhs.elems+8,"ReadMsg",7)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ams_ProcReadMsg); ret = true; break; }
+                case LE_STR8('a','m','s','.','B','o','a','r'): {
+                    if (memcmp(rhs.elems+8,"drefMsg",7)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ams_BoardrefMsg); ret = true; break; }
                     break;
                 }
             }
@@ -1232,12 +1874,12 @@ bool ams::value_SetStrptrMaybe(ams::MsgHeaderMsgsCase& parent, algo::strptr rhs)
                     if (memcmp(rhs.elems+8,"tLineMsg",8)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ams_InputLineMsg); ret = true; break; }
                     break;
                 }
-                case LE_STR8('a','m','s','.','P','r','o','c'): {
-                    if (memcmp(rhs.elems+8,"StartMsg",8)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ams_ProcStartMsg); ret = true; break; }
-                    break;
-                }
                 case LE_STR8('a','m','s','.','T','e','r','m'): {
                     if (memcmp(rhs.elems+8,"inateMsg",8)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ams_TerminateMsg); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('a','m','s','.','U','p','r','o'): {
+                    if (memcmp(rhs.elems+8,"cTextMsg",8)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ams_UprocTextMsg); ret = true; break; }
                     break;
                 }
                 case LE_STR8('w','s','.','S','e','r','v','e'): {
@@ -1249,10 +1891,6 @@ bool ams::value_SetStrptrMaybe(ams::MsgHeaderMsgsCase& parent, algo::strptr rhs)
         }
         case 17: {
             switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('a','m','s','.','P','r','o','c'): {
-                    if (memcmp(rhs.elems+8,"StatusMsg",9)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ams_ProcStatusMsg); ret = true; break; }
-                    break;
-                }
                 case LE_STR8('w','s','.','S','e','r','v','e'): {
                     if (memcmp(rhs.elems+8,"rStartMsg",9)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ws_ServerStartMsg); ret = true; break; }
                     break;
@@ -1260,10 +1898,80 @@ bool ams::value_SetStrptrMaybe(ams::MsgHeaderMsgsCase& parent, algo::strptr rhs)
             }
             break;
         }
-        case 20: {
+        case 19: {
             switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('a','m','s','.','R','e','m','D'): {
-                    if (memcmp(rhs.elems+8,"irRecurseMsg",12)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ams_RemDirRecurseMsg); ret = true; break; }
+                case LE_STR8('a','m','s','.','S','a','m','p'): {
+                    if (memcmp(rhs.elems+8,"MengBookMsg",11)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ams_SampMengBookMsg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"MengTextMsg",11)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ams_SampMengTextMsg); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 22: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','m','s','.','S','a','m','p'): {
+                    if (memcmp(rhs.elems+8,"MengNewUserMsg",14)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ams_SampMengNewUserMsg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"MengRestingMsg",14)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ams_SampMengRestingMsg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"MengUserrowMsg",14)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ams_SampMengUserrowMsg); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 23: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','m','s','.','S','a','m','p'): {
+                    if (memcmp(rhs.elems+8,"MengNewOrderMsg",15)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ams_SampMengNewOrderMsg); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 24: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','m','s','.','S','a','m','p'): {
+                    if (memcmp(rhs.elems+8,"MengCancelReqMsg",16)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ams_SampMengCancelReqMsg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"MengNewSymbolMsg",16)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ams_SampMengNewSymbolMsg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"MengSymbolrowMsg",16)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ams_SampMengSymbolrowMsg); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 25: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','m','s','.','S','a','m','p'): {
+                    if (memcmp(rhs.elems+8,"MengNewUserReqMsg",17)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ams_SampMengNewUserReqMsg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"MengOrderTradeMsg",17)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ams_SampMengOrderTradeMsg); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 26: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','m','s','.','S','a','m','p'): {
+                    if (memcmp(rhs.elems+8,"MengCancelOrderMsg",18)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ams_SampMengCancelOrderMsg); ret = true; break; }
+                    if (memcmp(rhs.elems+8,"MengNewOrderReqMsg",18)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ams_SampMengNewOrderReqMsg); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 27: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','m','s','.','S','a','m','p'): {
+                    if (memcmp(rhs.elems+8,"MengNewSymbolReqMsg",19)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ams_SampMengNewSymbolReqMsg); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 28: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('a','m','s','.','S','a','m','p'): {
+                    if (memcmp(rhs.elems+8,"MengMassCancelReqMsg",20)==0) { value_SetEnum(parent,ams_MsgHeaderMsgsCase_ams_SampMengMassCancelReqMsg); ret = true; break; }
                     break;
                 }
             }
@@ -1300,17 +2008,66 @@ bool ams::MsgHeaderMsgsCase_ReadStrptrMaybe(ams::MsgHeaderMsgsCase &parent, algo
     return retval;
 }
 
-// --- ams.ProcEofMsg.base.CopyOut
+// --- ams.SampFoldstate..ReadFieldMaybe
+bool ams::SampFoldstate_ReadFieldMaybe(ams::SampFoldstate& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    ams::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case ams_FieldId_hash: {
+            retval = u64_ReadStrptrMaybe(parent.hash, strval);
+        } break;
+        case ams_FieldId_n_in: {
+            retval = u64_ReadStrptrMaybe(parent.n_in, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- ams.SampFoldstate..ReadStrptrMaybe
+// Read fields of ams::SampFoldstate from an ascii string.
+// The format of the string is an ssim Tuple
+bool ams::SampFoldstate_ReadStrptrMaybe(ams::SampFoldstate &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "ams.SampFoldstate");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && SampFoldstate_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- ams.SampFoldstate..Print
+// print string representation of ROW to string STR
+// cfmt:ams.SampFoldstate.String  printfmt:Tuple
+void ams::SampFoldstate_Print(ams::SampFoldstate row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "ams.SampFoldstate";
+
+    u64_Print(row.hash, temp);
+    PrintAttrSpaceReset(str,"hash", temp);
+
+    u64_Print(row.n_in, temp);
+    PrintAttrSpaceReset(str,"n_in", temp);
+}
+
+// --- ams.SampMengBookMsg.base.CopyOut
 // Copy fields out of row
-void ams::parent_CopyOut(ams::ProcEofMsg &row, ams::MsgHeader &out) {
+void ams::parent_CopyOut(ams::SampMengBookMsg &row, ams::MsgHeader &out) {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
     (void)out;//only to avoid -Wunused-parameter
 }
 
-// --- ams.ProcEofMsg..ReadFieldMaybe
-bool ams::ProcEofMsg_ReadFieldMaybe(ams::ProcEofMsg& parent, algo::strptr field, algo::strptr strval) {
+// --- ams.SampMengBookMsg..ReadFieldMaybe
+bool ams::SampMengBookMsg_ReadFieldMaybe(ams::SampMengBookMsg& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
     ams::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -1324,8 +2081,8 @@ bool ams::ProcEofMsg_ReadFieldMaybe(ams::ProcEofMsg& parent, algo::strptr field,
         case ams_FieldId_length: {
             retval = false;
         } break;
-        case ams_FieldId_proc: {
-            retval = algo::RnullStr50_ReadStrptrMaybe(parent.proc, strval);
+        case ams_FieldId_next_order_id: {
+            retval = u64_ReadStrptrMaybe(parent.next_order_id, strval);
         } break;
         default: {
             retval = false;
@@ -1338,40 +2095,40 @@ bool ams::ProcEofMsg_ReadFieldMaybe(ams::ProcEofMsg& parent, algo::strptr field,
     return retval;
 }
 
-// --- ams.ProcEofMsg..ReadStrptrMaybe
-// Read fields of ams::ProcEofMsg from an ascii string.
+// --- ams.SampMengBookMsg..ReadStrptrMaybe
+// Read fields of ams::SampMengBookMsg from an ascii string.
 // The format of the string is an ssim Tuple
-bool ams::ProcEofMsg_ReadStrptrMaybe(ams::ProcEofMsg &parent, algo::strptr in_str) {
+bool ams::SampMengBookMsg_ReadStrptrMaybe(ams::SampMengBookMsg &parent, algo::strptr in_str) {
     bool retval = true;
-    retval = algo::StripTypeTag(in_str, "ams.ProcEofMsg");
+    retval = algo::StripTypeTag(in_str, "ams.SampMengBookMsg");
     ind_beg(algo::Attr_curs, attr, in_str) {
-        retval = retval && ProcEofMsg_ReadFieldMaybe(parent, attr.name, attr.value);
+        retval = retval && SampMengBookMsg_ReadFieldMaybe(parent, attr.name, attr.value);
     }ind_end;
     return retval;
 }
 
-// --- ams.ProcEofMsg..Print
+// --- ams.SampMengBookMsg..Print
 // print string representation of ROW to string STR
-// cfmt:ams.ProcEofMsg.String  printfmt:Tuple
-void ams::ProcEofMsg_Print(ams::ProcEofMsg& row, algo::cstring& str) {
+// cfmt:ams.SampMengBookMsg.String  printfmt:Tuple
+void ams::SampMengBookMsg_Print(ams::SampMengBookMsg row, algo::cstring& str) {
     algo::tempstr temp;
-    str << "ams.ProcEofMsg";
+    str << "ams.SampMengBookMsg";
 
-    algo::RnullStr50_Print(row.proc, temp);
-    PrintAttrSpaceReset(str,"proc", temp);
+    u64_Print(row.next_order_id, temp);
+    PrintAttrSpaceReset(str,"next_order_id", temp);
 }
 
-// --- ams.ProcKillMsg.base.CopyOut
+// --- ams.SampMengCancelOrderMsg.base.CopyOut
 // Copy fields out of row
-void ams::parent_CopyOut(ams::ProcKillMsg &row, ams::MsgHeader &out) {
+void ams::parent_CopyOut(ams::SampMengCancelOrderMsg &row, ams::MsgHeader &out) {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
     (void)out;//only to avoid -Wunused-parameter
 }
 
-// --- ams.ProcKillMsg..ReadFieldMaybe
-bool ams::ProcKillMsg_ReadFieldMaybe(ams::ProcKillMsg& parent, algo::strptr field, algo::strptr strval) {
+// --- ams.SampMengCancelOrderMsg..ReadFieldMaybe
+bool ams::SampMengCancelOrderMsg_ReadFieldMaybe(ams::SampMengCancelOrderMsg& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
     ams::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -1385,11 +2142,8 @@ bool ams::ProcKillMsg_ReadFieldMaybe(ams::ProcKillMsg& parent, algo::strptr fiel
         case ams_FieldId_length: {
             retval = false;
         } break;
-        case ams_FieldId_proc: {
-            retval = algo::RnullStr50_ReadStrptrMaybe(parent.proc, strval);
-        } break;
-        case ams_FieldId_signal: {
-            retval = i32_ReadStrptrMaybe(parent.signal, strval);
+        case ams_FieldId_order: {
+            retval = u64_ReadStrptrMaybe(parent.order, strval);
         } break;
         default: {
             retval = false;
@@ -1402,340 +2156,40 @@ bool ams::ProcKillMsg_ReadFieldMaybe(ams::ProcKillMsg& parent, algo::strptr fiel
     return retval;
 }
 
-// --- ams.ProcKillMsg..ReadStrptrMaybe
-// Read fields of ams::ProcKillMsg from an ascii string.
+// --- ams.SampMengCancelOrderMsg..ReadStrptrMaybe
+// Read fields of ams::SampMengCancelOrderMsg from an ascii string.
 // The format of the string is an ssim Tuple
-bool ams::ProcKillMsg_ReadStrptrMaybe(ams::ProcKillMsg &parent, algo::strptr in_str) {
+bool ams::SampMengCancelOrderMsg_ReadStrptrMaybe(ams::SampMengCancelOrderMsg &parent, algo::strptr in_str) {
     bool retval = true;
-    retval = algo::StripTypeTag(in_str, "ams.ProcKillMsg");
+    retval = algo::StripTypeTag(in_str, "ams.SampMengCancelOrderMsg");
     ind_beg(algo::Attr_curs, attr, in_str) {
-        retval = retval && ProcKillMsg_ReadFieldMaybe(parent, attr.name, attr.value);
+        retval = retval && SampMengCancelOrderMsg_ReadFieldMaybe(parent, attr.name, attr.value);
     }ind_end;
     return retval;
 }
 
-// --- ams.ProcKillMsg..Print
+// --- ams.SampMengCancelOrderMsg..Print
 // print string representation of ROW to string STR
-// cfmt:ams.ProcKillMsg.String  printfmt:Tuple
-void ams::ProcKillMsg_Print(ams::ProcKillMsg& row, algo::cstring& str) {
+// cfmt:ams.SampMengCancelOrderMsg.String  printfmt:Tuple
+void ams::SampMengCancelOrderMsg_Print(ams::SampMengCancelOrderMsg row, algo::cstring& str) {
     algo::tempstr temp;
-    str << "ams.ProcKillMsg";
+    str << "ams.SampMengCancelOrderMsg";
 
-    algo::RnullStr50_Print(row.proc, temp);
-    PrintAttrSpaceReset(str,"proc", temp);
-
-    i32_Print(row.signal, temp);
-    PrintAttrSpaceReset(str,"signal", temp);
+    u64_Print(row.order, temp);
+    PrintAttrSpaceReset(str,"order", temp);
 }
 
-// --- ams.ProcMsg.base.CopyOut
+// --- ams.SampMengCancelReqMsg.base.CopyOut
 // Copy fields out of row
-void ams::parent_CopyOut(ams::ProcMsg &row, ams::MsgHeader &out) {
+void ams::parent_CopyOut(ams::SampMengCancelReqMsg &row, ams::MsgHeader &out) {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
     (void)out;//only to avoid -Wunused-parameter
 }
 
-// --- ams.ProcMsg.payload.Getary
-// Access var-length portion as an aryptr. Length is determined from one of the fields.
-algo::aryptr<char> ams::payload_Getary(ams::ProcMsg& parent) {
-    return algo::aryptr<char>(payload_Addr(parent), payload_N(parent));
-}
-
-// --- ams.ProcMsg.payload.Addr
-char* ams::payload_Addr(ams::ProcMsg& parent) {
-    return (char*)((u8*)&parent + sizeof(ams::ProcMsg)); // address of varlen portion
-}
-
-// --- ams.ProcMsg.payload.ReadStrptrMaybe
-// Convert string to field. Return success value
-bool ams::payload_ReadStrptrMaybe(ams::ProcMsg& parent, algo::strptr in_str) {
-    bool retval = true;
-    if (algo_lib::_db.varlenbuf) {
-        ary_Addary(*algo_lib::_db.varlenbuf, strptr_ToMemptr(in_str));
-    }
-    (void)parent;//only to avoid -Wunused-parameter
-    return retval;
-}
-
-// --- ams.ProcMsg.payload.Print
-// Convert payload to a string.
-// Array is printed as a regular string.
-void ams::payload_Print(ams::ProcMsg& parent, algo::cstring &rhs) {
-    rhs << payload_Getary(parent);
-}
-
-// --- ams.ProcMsg..ReadFieldMaybe
-bool ams::ProcMsg_ReadFieldMaybe(ams::ProcMsg& parent, algo::strptr field, algo::strptr strval) {
-    bool retval = true;
-    ams::FieldId field_id;
-    (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
-    switch(field_id) {
-        case ams_FieldId_base: {
-            retval = false;
-        } break;
-        case ams_FieldId_type: {
-            retval = false;
-        } break;
-        case ams_FieldId_length: {
-            retval = false;
-        } break;
-        case ams_FieldId_proc: {
-            retval = algo::RnullStr50_ReadStrptrMaybe(parent.proc, strval);
-        } break;
-        case ams_FieldId_payload: {
-            retval = payload_ReadStrptrMaybe(parent, strval);
-        } break;
-        default: {
-            retval = false;
-            algo_lib::AppendErrtext("comment", "unrecognized attr");
-        } break;
-    }
-    if (!retval) {
-        algo_lib::AppendErrtext("attr",field);
-    }
-    return retval;
-}
-
-// --- ams.ProcMsg..ReadStrptrMaybe
-// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
-// Read fields of ams::ProcMsg from an ascii string.
-// The format of the string is an ssim Tuple
-bool ams::ProcMsg_ReadStrptrMaybe(ams::ProcMsg &parent, algo::strptr in_str) {
-    bool retval = true;
-    retval = algo::StripTypeTag(in_str, "ams.ProcMsg");
-    ind_beg(algo::Attr_curs, attr, in_str) {
-        retval = retval && ProcMsg_ReadFieldMaybe(parent, attr.name, attr.value);
-    }ind_end;
-    return retval;
-}
-
-// --- ams.ProcMsg..Print
-// print string representation of ROW to string STR
-// cfmt:ams.ProcMsg.String  printfmt:Tuple
-void ams::ProcMsg_Print(ams::ProcMsg& row, algo::cstring& str) {
-    algo::tempstr temp;
-    str << "ams.ProcMsg";
-
-    algo::RnullStr50_Print(row.proc, temp);
-    PrintAttrSpaceReset(str,"proc", temp);
-
-    ams::payload_Print(row, temp);
-    PrintAttrSpaceReset(str,"payload", temp);
-}
-
-// --- ams.ProcReadMsg.base.CopyOut
-// Copy fields out of row
-void ams::parent_CopyOut(ams::ProcReadMsg &row, ams::MsgHeader &out) {
-    // type: field value is computed
-    // length: field value is computed
-    (void)row;//only to avoid -Wunused-parameter
-    (void)out;//only to avoid -Wunused-parameter
-}
-
-// --- ams.ProcReadMsg.until.Getary
-// Access var-length portion as an aryptr. Length is determined from one of the fields.
-algo::aryptr<char> ams::until_Getary(ams::ProcReadMsg& parent) {
-    return algo::aryptr<char>(until_Addr(parent), until_N(parent));
-}
-
-// --- ams.ProcReadMsg.until.Addr
-char* ams::until_Addr(ams::ProcReadMsg& parent) {
-    return (char*)((u8*)&parent + sizeof(ams::ProcReadMsg)); // address of varlen portion
-}
-
-// --- ams.ProcReadMsg.until.ReadStrptrMaybe
-// Convert string to field. Return success value
-bool ams::until_ReadStrptrMaybe(ams::ProcReadMsg& parent, algo::strptr in_str) {
-    bool retval = true;
-    if (algo_lib::_db.varlenbuf) {
-        ary_Addary(*algo_lib::_db.varlenbuf, strptr_ToMemptr(in_str));
-    }
-    (void)parent;//only to avoid -Wunused-parameter
-    return retval;
-}
-
-// --- ams.ProcReadMsg.until.Print
-// Convert until to a string.
-// Array is printed as a regular string.
-void ams::until_Print(ams::ProcReadMsg& parent, algo::cstring &rhs) {
-    rhs << until_Getary(parent);
-}
-
-// --- ams.ProcReadMsg..ReadFieldMaybe
-bool ams::ProcReadMsg_ReadFieldMaybe(ams::ProcReadMsg& parent, algo::strptr field, algo::strptr strval) {
-    bool retval = true;
-    ams::FieldId field_id;
-    (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
-    switch(field_id) {
-        case ams_FieldId_base: {
-            retval = false;
-        } break;
-        case ams_FieldId_type: {
-            retval = false;
-        } break;
-        case ams_FieldId_length: {
-            retval = false;
-        } break;
-        case ams_FieldId_proc: {
-            retval = algo::RnullStr50_ReadStrptrMaybe(parent.proc, strval);
-        } break;
-        case ams_FieldId_until: {
-            retval = until_ReadStrptrMaybe(parent, strval);
-        } break;
-        default: {
-            retval = false;
-            algo_lib::AppendErrtext("comment", "unrecognized attr");
-        } break;
-    }
-    if (!retval) {
-        algo_lib::AppendErrtext("attr",field);
-    }
-    return retval;
-}
-
-// --- ams.ProcReadMsg..ReadStrptrMaybe
-// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
-// Read fields of ams::ProcReadMsg from an ascii string.
-// The format of the string is an ssim Tuple
-bool ams::ProcReadMsg_ReadStrptrMaybe(ams::ProcReadMsg &parent, algo::strptr in_str) {
-    bool retval = true;
-    retval = algo::StripTypeTag(in_str, "ams.ProcReadMsg");
-    ind_beg(algo::Attr_curs, attr, in_str) {
-        retval = retval && ProcReadMsg_ReadFieldMaybe(parent, attr.name, attr.value);
-    }ind_end;
-    return retval;
-}
-
-// --- ams.ProcReadMsg..Print
-// print string representation of ROW to string STR
-// cfmt:ams.ProcReadMsg.String  printfmt:Tuple
-void ams::ProcReadMsg_Print(ams::ProcReadMsg& row, algo::cstring& str) {
-    algo::tempstr temp;
-    str << "ams.ProcReadMsg";
-
-    algo::RnullStr50_Print(row.proc, temp);
-    PrintAttrSpaceReset(str,"proc", temp);
-
-    ams::until_Print(row, temp);
-    PrintAttrSpaceReset(str,"until", temp);
-}
-
-// --- ams.ProcStartMsg.base.CopyOut
-// Copy fields out of row
-void ams::parent_CopyOut(ams::ProcStartMsg &row, ams::MsgHeader &out) {
-    // type: field value is computed
-    // length: field value is computed
-    (void)row;//only to avoid -Wunused-parameter
-    (void)out;//only to avoid -Wunused-parameter
-}
-
-// --- ams.ProcStartMsg.cmd.Getary
-// Access var-length portion as an aryptr. Length is determined from one of the fields.
-algo::aryptr<char> ams::cmd_Getary(ams::ProcStartMsg& parent) {
-    return algo::aryptr<char>(cmd_Addr(parent), cmd_N(parent));
-}
-
-// --- ams.ProcStartMsg.cmd.Addr
-char* ams::cmd_Addr(ams::ProcStartMsg& parent) {
-    return (char*)((u8*)&parent + sizeof(ams::ProcStartMsg)); // address of varlen portion
-}
-
-// --- ams.ProcStartMsg.cmd.ReadStrptrMaybe
-// Convert string to field. Return success value
-bool ams::cmd_ReadStrptrMaybe(ams::ProcStartMsg& parent, algo::strptr in_str) {
-    bool retval = true;
-    if (algo_lib::_db.varlenbuf) {
-        ary_Addary(*algo_lib::_db.varlenbuf, strptr_ToMemptr(in_str));
-    }
-    (void)parent;//only to avoid -Wunused-parameter
-    return retval;
-}
-
-// --- ams.ProcStartMsg.cmd.Print
-// Convert cmd to a string.
-// Array is printed as a regular string.
-void ams::cmd_Print(ams::ProcStartMsg& parent, algo::cstring &rhs) {
-    rhs << cmd_Getary(parent);
-}
-
-// --- ams.ProcStartMsg..ReadFieldMaybe
-bool ams::ProcStartMsg_ReadFieldMaybe(ams::ProcStartMsg& parent, algo::strptr field, algo::strptr strval) {
-    bool retval = true;
-    ams::FieldId field_id;
-    (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
-    switch(field_id) {
-        case ams_FieldId_base: {
-            retval = false;
-        } break;
-        case ams_FieldId_type: {
-            retval = false;
-        } break;
-        case ams_FieldId_length: {
-            retval = false;
-        } break;
-        case ams_FieldId_proc: {
-            retval = algo::RnullStr50_ReadStrptrMaybe(parent.proc, strval);
-        } break;
-        case ams_FieldId_pty: {
-            retval = bool_ReadStrptrMaybe(parent.pty, strval);
-        } break;
-        case ams_FieldId_cmd: {
-            retval = cmd_ReadStrptrMaybe(parent, strval);
-        } break;
-        default: {
-            retval = false;
-            algo_lib::AppendErrtext("comment", "unrecognized attr");
-        } break;
-    }
-    if (!retval) {
-        algo_lib::AppendErrtext("attr",field);
-    }
-    return retval;
-}
-
-// --- ams.ProcStartMsg..ReadStrptrMaybe
-// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
-// Read fields of ams::ProcStartMsg from an ascii string.
-// The format of the string is an ssim Tuple
-bool ams::ProcStartMsg_ReadStrptrMaybe(ams::ProcStartMsg &parent, algo::strptr in_str) {
-    bool retval = true;
-    retval = algo::StripTypeTag(in_str, "ams.ProcStartMsg");
-    ind_beg(algo::Attr_curs, attr, in_str) {
-        retval = retval && ProcStartMsg_ReadFieldMaybe(parent, attr.name, attr.value);
-    }ind_end;
-    return retval;
-}
-
-// --- ams.ProcStartMsg..Print
-// print string representation of ROW to string STR
-// cfmt:ams.ProcStartMsg.String  printfmt:Tuple
-void ams::ProcStartMsg_Print(ams::ProcStartMsg& row, algo::cstring& str) {
-    algo::tempstr temp;
-    str << "ams.ProcStartMsg";
-
-    algo::RnullStr50_Print(row.proc, temp);
-    PrintAttrSpaceReset(str,"proc", temp);
-
-    bool_Print(row.pty, temp);
-    PrintAttrSpaceReset(str,"pty", temp);
-
-    ams::cmd_Print(row, temp);
-    PrintAttrSpaceReset(str,"cmd", temp);
-}
-
-// --- ams.ProcStatusMsg.base.CopyOut
-// Copy fields out of row
-void ams::parent_CopyOut(ams::ProcStatusMsg &row, ams::MsgHeader &out) {
-    // type: field value is computed
-    // length: field value is computed
-    (void)row;//only to avoid -Wunused-parameter
-    (void)out;//only to avoid -Wunused-parameter
-}
-
-// --- ams.ProcStatusMsg..ReadFieldMaybe
-bool ams::ProcStatusMsg_ReadFieldMaybe(ams::ProcStatusMsg& parent, algo::strptr field, algo::strptr strval) {
+// --- ams.SampMengCancelReqMsg..ReadFieldMaybe
+bool ams::SampMengCancelReqMsg_ReadFieldMaybe(ams::SampMengCancelReqMsg& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
     ams::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -1749,11 +2203,8 @@ bool ams::ProcStatusMsg_ReadFieldMaybe(ams::ProcStatusMsg& parent, algo::strptr 
         case ams_FieldId_length: {
             retval = false;
         } break;
-        case ams_FieldId_proc: {
-            retval = algo::RnullStr50_ReadStrptrMaybe(parent.proc, strval);
-        } break;
-        case ams_FieldId_status: {
-            retval = algo::RnullStr50_ReadStrptrMaybe(parent.status, strval);
+        case ams_FieldId_order: {
+            retval = u64_ReadStrptrMaybe(parent.order, strval);
         } break;
         default: {
             retval = false;
@@ -1766,55 +2217,774 @@ bool ams::ProcStatusMsg_ReadFieldMaybe(ams::ProcStatusMsg& parent, algo::strptr 
     return retval;
 }
 
-// --- ams.ProcStatusMsg..ReadStrptrMaybe
-// Read fields of ams::ProcStatusMsg from an ascii string.
+// --- ams.SampMengCancelReqMsg..ReadStrptrMaybe
+// Read fields of ams::SampMengCancelReqMsg from an ascii string.
 // The format of the string is an ssim Tuple
-bool ams::ProcStatusMsg_ReadStrptrMaybe(ams::ProcStatusMsg &parent, algo::strptr in_str) {
+bool ams::SampMengCancelReqMsg_ReadStrptrMaybe(ams::SampMengCancelReqMsg &parent, algo::strptr in_str) {
     bool retval = true;
-    retval = algo::StripTypeTag(in_str, "ams.ProcStatusMsg");
+    retval = algo::StripTypeTag(in_str, "ams.SampMengCancelReqMsg");
     ind_beg(algo::Attr_curs, attr, in_str) {
-        retval = retval && ProcStatusMsg_ReadFieldMaybe(parent, attr.name, attr.value);
+        retval = retval && SampMengCancelReqMsg_ReadFieldMaybe(parent, attr.name, attr.value);
     }ind_end;
     return retval;
 }
 
-// --- ams.ProcStatusMsg..Print
+// --- ams.SampMengCancelReqMsg..Print
 // print string representation of ROW to string STR
-// cfmt:ams.ProcStatusMsg.String  printfmt:Tuple
-void ams::ProcStatusMsg_Print(ams::ProcStatusMsg& row, algo::cstring& str) {
+// cfmt:ams.SampMengCancelReqMsg.String  printfmt:Tuple
+void ams::SampMengCancelReqMsg_Print(ams::SampMengCancelReqMsg row, algo::cstring& str) {
     algo::tempstr temp;
-    str << "ams.ProcStatusMsg";
+    str << "ams.SampMengCancelReqMsg";
 
-    algo::RnullStr50_Print(row.proc, temp);
-    PrintAttrSpaceReset(str,"proc", temp);
-
-    algo::RnullStr50_Print(row.status, temp);
-    PrintAttrSpaceReset(str,"status", temp);
+    u64_Print(row.order, temp);
+    PrintAttrSpaceReset(str,"order", temp);
 }
 
-// --- ams.RemDirRecurseMsg.base.CopyOut
+// --- ams.SampMengMassCancelReqMsg.base.CopyOut
 // Copy fields out of row
-void ams::parent_CopyOut(ams::RemDirRecurseMsg &row, ams::MsgHeader &out) {
+void ams::parent_CopyOut(ams::SampMengMassCancelReqMsg &row, ams::MsgHeader &out) {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
     (void)out;//only to avoid -Wunused-parameter
 }
 
-// --- ams.RemDirRecurseMsg.pathname.Getary
+// --- ams.SampMengMassCancelReqMsg..ReadFieldMaybe
+bool ams::SampMengMassCancelReqMsg_ReadFieldMaybe(ams::SampMengMassCancelReqMsg& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    ams::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case ams_FieldId_base: {
+            retval = false;
+        } break;
+        case ams_FieldId_type: {
+            retval = false;
+        } break;
+        case ams_FieldId_length: {
+            retval = false;
+        } break;
+        case ams_FieldId_user: {
+            retval = u32_ReadStrptrMaybe(parent.user, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- ams.SampMengMassCancelReqMsg..ReadStrptrMaybe
+// Read fields of ams::SampMengMassCancelReqMsg from an ascii string.
+// The format of the string is an ssim Tuple
+bool ams::SampMengMassCancelReqMsg_ReadStrptrMaybe(ams::SampMengMassCancelReqMsg &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "ams.SampMengMassCancelReqMsg");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && SampMengMassCancelReqMsg_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- ams.SampMengMassCancelReqMsg..Print
+// print string representation of ROW to string STR
+// cfmt:ams.SampMengMassCancelReqMsg.String  printfmt:Tuple
+void ams::SampMengMassCancelReqMsg_Print(ams::SampMengMassCancelReqMsg row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "ams.SampMengMassCancelReqMsg";
+
+    u32_Print(row.user, temp);
+    PrintAttrSpaceReset(str,"user", temp);
+}
+
+// --- ams.SampMengSymbol..ReadStrptrMaybe
+// Read fields of ams::SampMengSymbol from an ascii string.
+// The format of the string is the format of the ams::SampMengSymbol's only field
+bool ams::SampMengSymbol_ReadStrptrMaybe(ams::SampMengSymbol &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = retval && algo::RnullStr8_ReadStrptrMaybe(parent.symbol, in_str);
+    return retval;
+}
+
+// --- ams.SampMengSymbol..Print
+// print string representation of ROW to string STR
+// cfmt:ams.SampMengSymbol.String  printfmt:Raw
+void ams::SampMengSymbol_Print(ams::SampMengSymbol& row, algo::cstring& str) {
+    algo::RnullStr8_Print(row.symbol, str);
+}
+
+// --- ams.SampMengNewOrderMsg.base.CopyOut
+// Copy fields out of row
+void ams::parent_CopyOut(ams::SampMengNewOrderMsg &row, ams::MsgHeader &out) {
+    // type: field value is computed
+    // length: field value is computed
+    (void)row;//only to avoid -Wunused-parameter
+    (void)out;//only to avoid -Wunused-parameter
+}
+
+// --- ams.SampMengNewOrderMsg..ReadFieldMaybe
+bool ams::SampMengNewOrderMsg_ReadFieldMaybe(ams::SampMengNewOrderMsg& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    ams::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case ams_FieldId_base: {
+            retval = false;
+        } break;
+        case ams_FieldId_type: {
+            retval = false;
+        } break;
+        case ams_FieldId_length: {
+            retval = false;
+        } break;
+        case ams_FieldId_time: {
+            retval = algo::UnTime_ReadStrptrMaybe(parent.time, strval);
+        } break;
+        case ams_FieldId_price: {
+            retval = ams::I64Price8_ReadStrptrMaybe(parent.price, strval);
+        } break;
+        case ams_FieldId_order: {
+            retval = u64_ReadStrptrMaybe(parent.order, strval);
+        } break;
+        case ams_FieldId_symbol: {
+            retval = ams::SampMengSymbol_ReadStrptrMaybe(parent.symbol, strval);
+        } break;
+        case ams_FieldId_qty: {
+            retval = u32_ReadStrptrMaybe(parent.qty, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- ams.SampMengNewOrderMsg..ReadStrptrMaybe
+// Read fields of ams::SampMengNewOrderMsg from an ascii string.
+// The format of the string is an ssim Tuple
+bool ams::SampMengNewOrderMsg_ReadStrptrMaybe(ams::SampMengNewOrderMsg &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "ams.SampMengNewOrderMsg");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && SampMengNewOrderMsg_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- ams.SampMengNewOrderMsg..Print
+// print string representation of ROW to string STR
+// cfmt:ams.SampMengNewOrderMsg.String  printfmt:Tuple
+void ams::SampMengNewOrderMsg_Print(ams::SampMengNewOrderMsg& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "ams.SampMengNewOrderMsg";
+
+    algo::UnTime_Print(row.time, temp);
+    PrintAttrSpaceReset(str,"time", temp);
+
+    ams::I64Price8_Print(row.price, temp);
+    PrintAttrSpaceReset(str,"price", temp);
+
+    u64_Print(row.order, temp);
+    PrintAttrSpaceReset(str,"order", temp);
+
+    ams::SampMengSymbol_Print(row.symbol, temp);
+    PrintAttrSpaceReset(str,"symbol", temp);
+
+    u32_Print(row.qty, temp);
+    PrintAttrSpaceReset(str,"qty", temp);
+}
+
+// --- ams.SampMengNewOrderReqMsg.base.CopyOut
+// Copy fields out of row
+void ams::parent_CopyOut(ams::SampMengNewOrderReqMsg &row, ams::MsgHeader &out) {
+    // type: field value is computed
+    // length: field value is computed
+    (void)row;//only to avoid -Wunused-parameter
+    (void)out;//only to avoid -Wunused-parameter
+}
+
+// --- ams.SampMengNewOrderReqMsg..ReadFieldMaybe
+bool ams::SampMengNewOrderReqMsg_ReadFieldMaybe(ams::SampMengNewOrderReqMsg& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    ams::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case ams_FieldId_base: {
+            retval = false;
+        } break;
+        case ams_FieldId_type: {
+            retval = false;
+        } break;
+        case ams_FieldId_length: {
+            retval = false;
+        } break;
+        case ams_FieldId_ioc: {
+            retval = bool_ReadStrptrMaybe(parent.ioc, strval);
+        } break;
+        case ams_FieldId_qty: {
+            retval = i32_ReadStrptrMaybe(parent.qty, strval);
+        } break;
+        case ams_FieldId_price: {
+            retval = ams::I64Price8_ReadStrptrMaybe(parent.price, strval);
+        } break;
+        case ams_FieldId_symbol: {
+            retval = ams::SampMengSymbol_ReadStrptrMaybe(parent.symbol, strval);
+        } break;
+        case ams_FieldId_user: {
+            retval = u32_ReadStrptrMaybe(parent.user, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- ams.SampMengNewOrderReqMsg..ReadStrptrMaybe
+// Read fields of ams::SampMengNewOrderReqMsg from an ascii string.
+// The format of the string is an ssim Tuple
+bool ams::SampMengNewOrderReqMsg_ReadStrptrMaybe(ams::SampMengNewOrderReqMsg &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "ams.SampMengNewOrderReqMsg");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && SampMengNewOrderReqMsg_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- ams.SampMengNewOrderReqMsg..Print
+// print string representation of ROW to string STR
+// cfmt:ams.SampMengNewOrderReqMsg.String  printfmt:Tuple
+void ams::SampMengNewOrderReqMsg_Print(ams::SampMengNewOrderReqMsg& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "ams.SampMengNewOrderReqMsg";
+
+    bool_Print(row.ioc, temp);
+    PrintAttrSpaceReset(str,"ioc", temp);
+
+    i32_Print(row.qty, temp);
+    PrintAttrSpaceReset(str,"qty", temp);
+
+    ams::I64Price8_Print(row.price, temp);
+    PrintAttrSpaceReset(str,"price", temp);
+
+    ams::SampMengSymbol_Print(row.symbol, temp);
+    PrintAttrSpaceReset(str,"symbol", temp);
+
+    u32_Print(row.user, temp);
+    PrintAttrSpaceReset(str,"user", temp);
+}
+
+// --- ams.SampMengNewSymbolMsg.base.CopyOut
+// Copy fields out of row
+void ams::parent_CopyOut(ams::SampMengNewSymbolMsg &row, ams::MsgHeader &out) {
+    // type: field value is computed
+    // length: field value is computed
+    (void)row;//only to avoid -Wunused-parameter
+    (void)out;//only to avoid -Wunused-parameter
+}
+
+// --- ams.SampMengNewSymbolMsg..ReadFieldMaybe
+bool ams::SampMengNewSymbolMsg_ReadFieldMaybe(ams::SampMengNewSymbolMsg& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    ams::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case ams_FieldId_base: {
+            retval = false;
+        } break;
+        case ams_FieldId_type: {
+            retval = false;
+        } break;
+        case ams_FieldId_length: {
+            retval = false;
+        } break;
+        case ams_FieldId_symbol: {
+            retval = ams::SampMengSymbol_ReadStrptrMaybe(parent.symbol, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- ams.SampMengNewSymbolMsg..ReadStrptrMaybe
+// Read fields of ams::SampMengNewSymbolMsg from an ascii string.
+// The format of the string is an ssim Tuple
+bool ams::SampMengNewSymbolMsg_ReadStrptrMaybe(ams::SampMengNewSymbolMsg &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "ams.SampMengNewSymbolMsg");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && SampMengNewSymbolMsg_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- ams.SampMengNewSymbolMsg..Print
+// print string representation of ROW to string STR
+// cfmt:ams.SampMengNewSymbolMsg.String  printfmt:Tuple
+void ams::SampMengNewSymbolMsg_Print(ams::SampMengNewSymbolMsg& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "ams.SampMengNewSymbolMsg";
+
+    ams::SampMengSymbol_Print(row.symbol, temp);
+    PrintAttrSpaceReset(str,"symbol", temp);
+}
+
+// --- ams.SampMengNewSymbolReqMsg.base.CopyOut
+// Copy fields out of row
+void ams::parent_CopyOut(ams::SampMengNewSymbolReqMsg &row, ams::MsgHeader &out) {
+    // type: field value is computed
+    // length: field value is computed
+    (void)row;//only to avoid -Wunused-parameter
+    (void)out;//only to avoid -Wunused-parameter
+}
+
+// --- ams.SampMengNewSymbolReqMsg..ReadFieldMaybe
+bool ams::SampMengNewSymbolReqMsg_ReadFieldMaybe(ams::SampMengNewSymbolReqMsg& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    ams::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case ams_FieldId_base: {
+            retval = false;
+        } break;
+        case ams_FieldId_type: {
+            retval = false;
+        } break;
+        case ams_FieldId_length: {
+            retval = false;
+        } break;
+        case ams_FieldId_symbol: {
+            retval = ams::SampMengSymbol_ReadStrptrMaybe(parent.symbol, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- ams.SampMengNewSymbolReqMsg..ReadStrptrMaybe
+// Read fields of ams::SampMengNewSymbolReqMsg from an ascii string.
+// The format of the string is an ssim Tuple
+bool ams::SampMengNewSymbolReqMsg_ReadStrptrMaybe(ams::SampMengNewSymbolReqMsg &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "ams.SampMengNewSymbolReqMsg");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && SampMengNewSymbolReqMsg_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- ams.SampMengNewSymbolReqMsg..Print
+// print string representation of ROW to string STR
+// cfmt:ams.SampMengNewSymbolReqMsg.String  printfmt:Tuple
+void ams::SampMengNewSymbolReqMsg_Print(ams::SampMengNewSymbolReqMsg& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "ams.SampMengNewSymbolReqMsg";
+
+    ams::SampMengSymbol_Print(row.symbol, temp);
+    PrintAttrSpaceReset(str,"symbol", temp);
+}
+
+// --- ams.SampMengNewUserMsg.base.CopyOut
+// Copy fields out of row
+void ams::parent_CopyOut(ams::SampMengNewUserMsg &row, ams::MsgHeader &out) {
+    // type: field value is computed
+    // length: field value is computed
+    (void)row;//only to avoid -Wunused-parameter
+    (void)out;//only to avoid -Wunused-parameter
+}
+
+// --- ams.SampMengNewUserMsg..ReadFieldMaybe
+bool ams::SampMengNewUserMsg_ReadFieldMaybe(ams::SampMengNewUserMsg& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    ams::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case ams_FieldId_base: {
+            retval = false;
+        } break;
+        case ams_FieldId_type: {
+            retval = false;
+        } break;
+        case ams_FieldId_length: {
+            retval = false;
+        } break;
+        case ams_FieldId_user: {
+            retval = u32_ReadStrptrMaybe(parent.user, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- ams.SampMengNewUserMsg..ReadStrptrMaybe
+// Read fields of ams::SampMengNewUserMsg from an ascii string.
+// The format of the string is an ssim Tuple
+bool ams::SampMengNewUserMsg_ReadStrptrMaybe(ams::SampMengNewUserMsg &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "ams.SampMengNewUserMsg");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && SampMengNewUserMsg_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- ams.SampMengNewUserMsg..Print
+// print string representation of ROW to string STR
+// cfmt:ams.SampMengNewUserMsg.String  printfmt:Tuple
+void ams::SampMengNewUserMsg_Print(ams::SampMengNewUserMsg row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "ams.SampMengNewUserMsg";
+
+    u32_Print(row.user, temp);
+    PrintAttrSpaceReset(str,"user", temp);
+}
+
+// --- ams.SampMengNewUserReqMsg.base.CopyOut
+// Copy fields out of row
+void ams::parent_CopyOut(ams::SampMengNewUserReqMsg &row, ams::MsgHeader &out) {
+    // type: field value is computed
+    // length: field value is computed
+    (void)row;//only to avoid -Wunused-parameter
+    (void)out;//only to avoid -Wunused-parameter
+}
+
+// --- ams.SampMengNewUserReqMsg..ReadFieldMaybe
+bool ams::SampMengNewUserReqMsg_ReadFieldMaybe(ams::SampMengNewUserReqMsg& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    ams::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case ams_FieldId_base: {
+            retval = false;
+        } break;
+        case ams_FieldId_type: {
+            retval = false;
+        } break;
+        case ams_FieldId_length: {
+            retval = false;
+        } break;
+        case ams_FieldId_user: {
+            retval = u32_ReadStrptrMaybe(parent.user, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- ams.SampMengNewUserReqMsg..ReadStrptrMaybe
+// Read fields of ams::SampMengNewUserReqMsg from an ascii string.
+// The format of the string is an ssim Tuple
+bool ams::SampMengNewUserReqMsg_ReadStrptrMaybe(ams::SampMengNewUserReqMsg &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "ams.SampMengNewUserReqMsg");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && SampMengNewUserReqMsg_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- ams.SampMengNewUserReqMsg..Print
+// print string representation of ROW to string STR
+// cfmt:ams.SampMengNewUserReqMsg.String  printfmt:Tuple
+void ams::SampMengNewUserReqMsg_Print(ams::SampMengNewUserReqMsg row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "ams.SampMengNewUserReqMsg";
+
+    u32_Print(row.user, temp);
+    PrintAttrSpaceReset(str,"user", temp);
+}
+
+// --- ams.SampMengOrderTradeMsg.base.CopyOut
+// Copy fields out of row
+void ams::parent_CopyOut(ams::SampMengOrderTradeMsg &row, ams::MsgHeader &out) {
+    // type: field value is computed
+    // length: field value is computed
+    (void)row;//only to avoid -Wunused-parameter
+    (void)out;//only to avoid -Wunused-parameter
+}
+
+// --- ams.SampMengOrderTradeMsg..ReadFieldMaybe
+bool ams::SampMengOrderTradeMsg_ReadFieldMaybe(ams::SampMengOrderTradeMsg& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    ams::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case ams_FieldId_base: {
+            retval = false;
+        } break;
+        case ams_FieldId_type: {
+            retval = false;
+        } break;
+        case ams_FieldId_length: {
+            retval = false;
+        } break;
+        case ams_FieldId_order: {
+            retval = u64_ReadStrptrMaybe(parent.order, strval);
+        } break;
+        case ams_FieldId_qty: {
+            retval = u32_ReadStrptrMaybe(parent.qty, strval);
+        } break;
+        case ams_FieldId_price: {
+            retval = ams::I64Price8_ReadStrptrMaybe(parent.price, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- ams.SampMengOrderTradeMsg..ReadStrptrMaybe
+// Read fields of ams::SampMengOrderTradeMsg from an ascii string.
+// The format of the string is an ssim Tuple
+bool ams::SampMengOrderTradeMsg_ReadStrptrMaybe(ams::SampMengOrderTradeMsg &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "ams.SampMengOrderTradeMsg");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && SampMengOrderTradeMsg_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- ams.SampMengOrderTradeMsg..Print
+// print string representation of ROW to string STR
+// cfmt:ams.SampMengOrderTradeMsg.String  printfmt:Tuple
+void ams::SampMengOrderTradeMsg_Print(ams::SampMengOrderTradeMsg& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "ams.SampMengOrderTradeMsg";
+
+    u64_Print(row.order, temp);
+    PrintAttrSpaceReset(str,"order", temp);
+
+    u32_Print(row.qty, temp);
+    PrintAttrSpaceReset(str,"qty", temp);
+
+    ams::I64Price8_Print(row.price, temp);
+    PrintAttrSpaceReset(str,"price", temp);
+}
+
+// --- ams.SampMengRestingMsg.base.CopyOut
+// Copy fields out of row
+void ams::parent_CopyOut(ams::SampMengRestingMsg &row, ams::MsgHeader &out) {
+    // type: field value is computed
+    // length: field value is computed
+    (void)row;//only to avoid -Wunused-parameter
+    (void)out;//only to avoid -Wunused-parameter
+}
+
+// --- ams.SampMengRestingMsg..ReadFieldMaybe
+bool ams::SampMengRestingMsg_ReadFieldMaybe(ams::SampMengRestingMsg& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    ams::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case ams_FieldId_base: {
+            retval = false;
+        } break;
+        case ams_FieldId_type: {
+            retval = false;
+        } break;
+        case ams_FieldId_length: {
+            retval = false;
+        } break;
+        case ams_FieldId_order: {
+            retval = i64_ReadStrptrMaybe(parent.order, strval);
+        } break;
+        case ams_FieldId_symbol: {
+            retval = ams::SampMengSymbol_ReadStrptrMaybe(parent.symbol, strval);
+        } break;
+        case ams_FieldId_price: {
+            retval = ams::I64Price8_ReadStrptrMaybe(parent.price, strval);
+        } break;
+        case ams_FieldId_qty: {
+            retval = u32_ReadStrptrMaybe(parent.qty, strval);
+        } break;
+        case ams_FieldId_time: {
+            retval = algo::UnTime_ReadStrptrMaybe(parent.time, strval);
+        } break;
+        case ams_FieldId_user: {
+            retval = i32_ReadStrptrMaybe(parent.user, strval);
+        } break;
+        case ams_FieldId_buy: {
+            retval = bool_ReadStrptrMaybe(parent.buy, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- ams.SampMengRestingMsg..ReadStrptrMaybe
+// Read fields of ams::SampMengRestingMsg from an ascii string.
+// The format of the string is an ssim Tuple
+bool ams::SampMengRestingMsg_ReadStrptrMaybe(ams::SampMengRestingMsg &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "ams.SampMengRestingMsg");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && SampMengRestingMsg_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- ams.SampMengRestingMsg..Print
+// print string representation of ROW to string STR
+// cfmt:ams.SampMengRestingMsg.String  printfmt:Tuple
+void ams::SampMengRestingMsg_Print(ams::SampMengRestingMsg& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "ams.SampMengRestingMsg";
+
+    i64_Print(row.order, temp);
+    PrintAttrSpaceReset(str,"order", temp);
+
+    ams::SampMengSymbol_Print(row.symbol, temp);
+    PrintAttrSpaceReset(str,"symbol", temp);
+
+    ams::I64Price8_Print(row.price, temp);
+    PrintAttrSpaceReset(str,"price", temp);
+
+    u32_Print(row.qty, temp);
+    PrintAttrSpaceReset(str,"qty", temp);
+
+    algo::UnTime_Print(row.time, temp);
+    PrintAttrSpaceReset(str,"time", temp);
+
+    i32_Print(row.user, temp);
+    PrintAttrSpaceReset(str,"user", temp);
+
+    bool_Print(row.buy, temp);
+    PrintAttrSpaceReset(str,"buy", temp);
+}
+
+// --- ams.SampMengSymbolrowMsg.base.CopyOut
+// Copy fields out of row
+void ams::parent_CopyOut(ams::SampMengSymbolrowMsg &row, ams::MsgHeader &out) {
+    // type: field value is computed
+    // length: field value is computed
+    (void)row;//only to avoid -Wunused-parameter
+    (void)out;//only to avoid -Wunused-parameter
+}
+
+// --- ams.SampMengSymbolrowMsg..ReadFieldMaybe
+bool ams::SampMengSymbolrowMsg_ReadFieldMaybe(ams::SampMengSymbolrowMsg& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    ams::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case ams_FieldId_base: {
+            retval = false;
+        } break;
+        case ams_FieldId_type: {
+            retval = false;
+        } break;
+        case ams_FieldId_length: {
+            retval = false;
+        } break;
+        case ams_FieldId_symbol: {
+            retval = ams::SampMengSymbol_ReadStrptrMaybe(parent.symbol, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- ams.SampMengSymbolrowMsg..ReadStrptrMaybe
+// Read fields of ams::SampMengSymbolrowMsg from an ascii string.
+// The format of the string is an ssim Tuple
+bool ams::SampMengSymbolrowMsg_ReadStrptrMaybe(ams::SampMengSymbolrowMsg &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "ams.SampMengSymbolrowMsg");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && SampMengSymbolrowMsg_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- ams.SampMengSymbolrowMsg..Print
+// print string representation of ROW to string STR
+// cfmt:ams.SampMengSymbolrowMsg.String  printfmt:Tuple
+void ams::SampMengSymbolrowMsg_Print(ams::SampMengSymbolrowMsg& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "ams.SampMengSymbolrowMsg";
+
+    ams::SampMengSymbol_Print(row.symbol, temp);
+    PrintAttrSpaceReset(str,"symbol", temp);
+}
+
+// --- ams.SampMengTextMsg.base.CopyOut
+// Copy fields out of row
+void ams::parent_CopyOut(ams::SampMengTextMsg &row, ams::MsgHeader &out) {
+    // type: field value is computed
+    // length: field value is computed
+    (void)row;//only to avoid -Wunused-parameter
+    (void)out;//only to avoid -Wunused-parameter
+}
+
+// --- ams.SampMengTextMsg.text.Getary
 // Access var-length portion as an aryptr. Length is determined from one of the fields.
-algo::aryptr<char> ams::pathname_Getary(ams::RemDirRecurseMsg& parent) {
-    return algo::aryptr<char>(pathname_Addr(parent), pathname_N(parent));
+algo::aryptr<char> ams::text_Getary(ams::SampMengTextMsg& parent) {
+    return algo::aryptr<char>(text_Addr(parent), text_N(parent));
 }
 
-// --- ams.RemDirRecurseMsg.pathname.Addr
-char* ams::pathname_Addr(ams::RemDirRecurseMsg& parent) {
-    return (char*)((u8*)&parent + sizeof(ams::RemDirRecurseMsg)); // address of varlen portion
+// --- ams.SampMengTextMsg.text.Addr
+char* ams::text_Addr(ams::SampMengTextMsg& parent) {
+    return (char*)((u8*)&parent + sizeof(ams::SampMengTextMsg)); // address of varlen portion
 }
 
-// --- ams.RemDirRecurseMsg.pathname.ReadStrptrMaybe
+// --- ams.SampMengTextMsg.text.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool ams::pathname_ReadStrptrMaybe(ams::RemDirRecurseMsg& parent, algo::strptr in_str) {
+bool ams::text_ReadStrptrMaybe(ams::SampMengTextMsg& parent, algo::strptr in_str) {
     bool retval = true;
     if (algo_lib::_db.varlenbuf) {
         ary_Addary(*algo_lib::_db.varlenbuf, strptr_ToMemptr(in_str));
@@ -1823,15 +2993,15 @@ bool ams::pathname_ReadStrptrMaybe(ams::RemDirRecurseMsg& parent, algo::strptr i
     return retval;
 }
 
-// --- ams.RemDirRecurseMsg.pathname.Print
-// Convert pathname to a string.
+// --- ams.SampMengTextMsg.text.Print
+// Convert text to a string.
 // Array is printed as a regular string.
-void ams::pathname_Print(ams::RemDirRecurseMsg& parent, algo::cstring &rhs) {
-    rhs << pathname_Getary(parent);
+void ams::text_Print(ams::SampMengTextMsg& parent, algo::cstring &rhs) {
+    rhs << text_Getary(parent);
 }
 
-// --- ams.RemDirRecurseMsg..ReadFieldMaybe
-bool ams::RemDirRecurseMsg_ReadFieldMaybe(ams::RemDirRecurseMsg& parent, algo::strptr field, algo::strptr strval) {
+// --- ams.SampMengTextMsg..ReadFieldMaybe
+bool ams::SampMengTextMsg_ReadFieldMaybe(ams::SampMengTextMsg& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
     ams::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
@@ -1845,11 +3015,8 @@ bool ams::RemDirRecurseMsg_ReadFieldMaybe(ams::RemDirRecurseMsg& parent, algo::s
         case ams_FieldId_length: {
             retval = false;
         } break;
-        case ams_FieldId_remove_topmost: {
-            retval = bool_ReadStrptrMaybe(parent.remove_topmost, strval);
-        } break;
-        case ams_FieldId_pathname: {
-            retval = pathname_ReadStrptrMaybe(parent, strval);
+        case ams_FieldId_text: {
+            retval = text_ReadStrptrMaybe(parent, strval);
         } break;
         default: {
             retval = false;
@@ -1862,35 +3029,93 @@ bool ams::RemDirRecurseMsg_ReadFieldMaybe(ams::RemDirRecurseMsg& parent, algo::s
     return retval;
 }
 
-// --- ams.RemDirRecurseMsg..ReadStrptrMaybe
+// --- ams.SampMengTextMsg..ReadStrptrMaybe
 // Any varlen fields are returned in algo_lib::_db.varlenbuf if set
-// Read fields of ams::RemDirRecurseMsg from an ascii string.
+// Read fields of ams::SampMengTextMsg from an ascii string.
 // The format of the string is an ssim Tuple
-bool ams::RemDirRecurseMsg_ReadStrptrMaybe(ams::RemDirRecurseMsg &parent, algo::strptr in_str) {
+bool ams::SampMengTextMsg_ReadStrptrMaybe(ams::SampMengTextMsg &parent, algo::strptr in_str) {
     bool retval = true;
-    retval = algo::StripTypeTag(in_str, "ams.RemDirRecurseMsg");
+    retval = algo::StripTypeTag(in_str, "ams.SampMengTextMsg");
     ind_beg(algo::Attr_curs, attr, in_str) {
-        retval = retval && RemDirRecurseMsg_ReadFieldMaybe(parent, attr.name, attr.value);
+        retval = retval && SampMengTextMsg_ReadFieldMaybe(parent, attr.name, attr.value);
     }ind_end;
     return retval;
 }
 
-// --- ams.RemDirRecurseMsg..Print
+// --- ams.SampMengTextMsg..Print
 // print string representation of ROW to string STR
-// cfmt:ams.RemDirRecurseMsg.String  printfmt:Tuple
-void ams::RemDirRecurseMsg_Print(ams::RemDirRecurseMsg& row, algo::cstring& str) {
+// cfmt:ams.SampMengTextMsg.String  printfmt:Tuple
+void ams::SampMengTextMsg_Print(ams::SampMengTextMsg& row, algo::cstring& str) {
     algo::tempstr temp;
-    str << "ams.RemDirRecurseMsg";
+    str << "ams.SampMengTextMsg";
 
-    bool_Print(row.remove_topmost, temp);
-    PrintAttrSpaceReset(str,"remove_topmost", temp);
+    ams::text_Print(row, temp);
+    PrintAttrSpaceReset(str,"text", temp);
+}
 
-    ams::pathname_Print(row, temp);
-    PrintAttrSpaceReset(str,"pathname", temp);
+// --- ams.SampMengUserrowMsg.base.CopyOut
+// Copy fields out of row
+void ams::parent_CopyOut(ams::SampMengUserrowMsg &row, ams::MsgHeader &out) {
+    // type: field value is computed
+    // length: field value is computed
+    (void)row;//only to avoid -Wunused-parameter
+    (void)out;//only to avoid -Wunused-parameter
+}
+
+// --- ams.SampMengUserrowMsg..ReadFieldMaybe
+bool ams::SampMengUserrowMsg_ReadFieldMaybe(ams::SampMengUserrowMsg& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    ams::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case ams_FieldId_base: {
+            retval = false;
+        } break;
+        case ams_FieldId_type: {
+            retval = false;
+        } break;
+        case ams_FieldId_length: {
+            retval = false;
+        } break;
+        case ams_FieldId_user: {
+            retval = i32_ReadStrptrMaybe(parent.user, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- ams.SampMengUserrowMsg..ReadStrptrMaybe
+// Read fields of ams::SampMengUserrowMsg from an ascii string.
+// The format of the string is an ssim Tuple
+bool ams::SampMengUserrowMsg_ReadStrptrMaybe(ams::SampMengUserrowMsg &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "ams.SampMengUserrowMsg");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && SampMengUserrowMsg_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- ams.SampMengUserrowMsg..Print
+// print string representation of ROW to string STR
+// cfmt:ams.SampMengUserrowMsg.String  printfmt:Tuple
+void ams::SampMengUserrowMsg_Print(ams::SampMengUserrowMsg row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "ams.SampMengUserrowMsg";
+
+    i32_Print(row.user, temp);
+    PrintAttrSpaceReset(str,"user", temp);
 }
 
 // --- ams.ShmFlags.write.ReadStrptrMaybe
-inline static bool ams::write_ReadStrptrMaybe(ams::ShmFlags &parent, algo::strptr in_str) {
+inline static bool ams::write_ReadStrptrMaybe(ams::ShmFlags& parent, algo::strptr in_str) {
     bool retval = true;
     bool write_tmp;
     retval = bool_ReadStrptrMaybe(write_tmp, in_str);
@@ -1901,7 +3126,7 @@ inline static bool ams::write_ReadStrptrMaybe(ams::ShmFlags &parent, algo::strpt
 }
 
 // --- ams.ShmFlags.read.ReadStrptrMaybe
-inline static bool ams::read_ReadStrptrMaybe(ams::ShmFlags &parent, algo::strptr in_str) {
+inline static bool ams::read_ReadStrptrMaybe(ams::ShmFlags& parent, algo::strptr in_str) {
     bool retval = true;
     bool read_tmp;
     retval = bool_ReadStrptrMaybe(read_tmp, in_str);
@@ -1911,24 +3136,24 @@ inline static bool ams::read_ReadStrptrMaybe(ams::ShmFlags &parent, algo::strptr
     return retval;
 }
 
-// --- ams.ShmFlags.nonblock.ReadStrptrMaybe
-inline static bool ams::nonblock_ReadStrptrMaybe(ams::ShmFlags &parent, algo::strptr in_str) {
-    bool retval = true;
-    bool nonblock_tmp;
-    retval = bool_ReadStrptrMaybe(nonblock_tmp, in_str);
-    if (retval) {
-        nonblock_Set(parent, nonblock_tmp);
-    }
-    return retval;
-}
-
 // --- ams.ShmFlags.write_err.ReadStrptrMaybe
-inline static bool ams::write_err_ReadStrptrMaybe(ams::ShmFlags &parent, algo::strptr in_str) {
+inline static bool ams::write_err_ReadStrptrMaybe(ams::ShmFlags& parent, algo::strptr in_str) {
     bool retval = true;
     bool write_err_tmp;
     retval = bool_ReadStrptrMaybe(write_err_tmp, in_str);
     if (retval) {
         write_err_Set(parent, write_err_tmp);
+    }
+    return retval;
+}
+
+// --- ams.ShmFlags.signaled.ReadStrptrMaybe
+inline static bool ams::signaled_ReadStrptrMaybe(ams::ShmFlags& parent, algo::strptr in_str) {
+    bool retval = true;
+    bool signaled_tmp;
+    retval = bool_ReadStrptrMaybe(signaled_tmp, in_str);
+    if (retval) {
+        signaled_Set(parent, signaled_tmp);
     }
     return retval;
 }
@@ -1948,11 +3173,11 @@ bool ams::ShmFlags_ReadFieldMaybe(ams::ShmFlags& parent, algo::strptr field, alg
         case ams_FieldId_read: {
             retval = read_ReadStrptrMaybe(parent, strval);
         } break;
-        case ams_FieldId_nonblock: {
-            retval = nonblock_ReadStrptrMaybe(parent, strval);
-        } break;
         case ams_FieldId_write_err: {
             retval = write_err_ReadStrptrMaybe(parent, strval);
+        } break;
+        case ams_FieldId_signaled: {
+            retval = signaled_ReadStrptrMaybe(parent, strval);
         } break;
         default: {
             retval = false;
@@ -1972,8 +3197,8 @@ bool ams::ShmFlags_ReadStrptrMaybe(ams::ShmFlags &parent, algo::strptr in_str) {
     // Clear affected bits first)
     write_Set(parent, false);
     read_Set(parent, false);
-    nonblock_Set(parent, false);
     write_err_Set(parent, false);
+    signaled_Set(parent, false);
     // Read ','-separated list of bools
     while (ch_N(in_str)) {
         strptr field_name;
@@ -1990,11 +3215,11 @@ bool ams::ShmFlags_ReadStrptrMaybe(ams::ShmFlags &parent, algo::strptr in_str) {
                     case ams_FieldId_read: {
                         read_Set(parent, true);
                     } break;
-                    case ams_FieldId_nonblock: {
-                        nonblock_Set(parent, true);
-                    } break;
                     case ams_FieldId_write_err: {
                         write_err_Set(parent, true);
+                    } break;
+                    case ams_FieldId_signaled: {
+                        signaled_Set(parent, true);
                     } break;
                     default: ok = false; break;
                 }
@@ -2019,11 +3244,11 @@ void ams::ShmFlags_Print(ams::ShmFlags row, algo::cstring& str) {
     if (read_Get(row)) {
         str << ls << "read";
     }
-    if (nonblock_Get(row)) {
-        str << ls << "nonblock";
-    }
     if (write_err_Get(row)) {
         str << ls << "write_err";
+    }
+    if (signaled_Get(row)) {
+        str << ls << "signaled";
     }
 }
 
@@ -2034,305 +3259,6 @@ algo::strptr ams::ShmFlags_GetAnon(ams::ShmFlags &parent, i32 idx) {
         case(0): return strptr("value", 5);
         default: return algo::strptr();
     }
-}
-
-// --- ams.Shmtype.value.ToCstr
-// Convert numeric value of field to one of predefined string constants.
-// If string is found, return a static C string. Otherwise, return NULL.
-const char* ams::value_ToCstr(const ams::Shmtype& parent) {
-    const char *ret = NULL;
-    switch(value_GetEnum(parent)) {
-        case ams_Shmtype_ctl               : ret = "ctl";  break;
-        case ams_Shmtype_log               : ret = "log";  break;
-        case ams_Shmtype_out               : ret = "out";  break;
-    }
-    return ret;
-}
-
-// --- ams.Shmtype.value.Print
-// Convert value to a string. First, attempt conversion to a known string.
-// If no string matches, print value as a numeric value.
-void ams::value_Print(const ams::Shmtype& parent, algo::cstring &lhs) {
-    const char *strval = value_ToCstr(parent);
-    if (strval) {
-        lhs << strval;
-    } else {
-        lhs << parent.value;
-    }
-}
-
-// --- ams.Shmtype.value.SetStrptrMaybe
-// Convert string to field.
-// If the string is invalid, do not modify field and return false.
-// In case of success, return true
-bool ams::value_SetStrptrMaybe(ams::Shmtype& parent, algo::strptr rhs) {
-    bool ret = false;
-    switch (elems_N(rhs)) {
-        case 3: {
-            switch (u64(algo::ReadLE16(rhs.elems))|(u64(rhs[2])<<16)) {
-                case LE_STR3('c','t','l'): {
-                    value_SetEnum(parent,ams_Shmtype_ctl); ret = true; break;
-                }
-                case LE_STR3('l','o','g'): {
-                    value_SetEnum(parent,ams_Shmtype_log); ret = true; break;
-                }
-                case LE_STR3('o','u','t'): {
-                    value_SetEnum(parent,ams_Shmtype_out); ret = true; break;
-                }
-            }
-            break;
-        }
-    }
-    return ret;
-}
-
-// --- ams.Shmtype.value.SetStrptr
-// Convert string to field.
-// If the string is invalid, set numeric value to DFLT
-void ams::value_SetStrptr(ams::Shmtype& parent, algo::strptr rhs, ams_ShmtypeEnum dflt) {
-    if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
-}
-
-// --- ams.Shmtype.value.ReadStrptrMaybe
-// Convert string to field. Return success value
-bool ams::value_ReadStrptrMaybe(ams::Shmtype& parent, algo::strptr rhs) {
-    bool retval = false;
-    retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
-    if (!retval) { // didn't work? try reading as underlying type
-        retval = u8_ReadStrptrMaybe(parent.value,rhs);
-    }
-    return retval;
-}
-
-// --- ams.Shmtype..ReadStrptrMaybe
-// Read fields of ams::Shmtype from an ascii string.
-// The format of the string is the format of the ams::Shmtype's only field
-bool ams::Shmtype_ReadStrptrMaybe(ams::Shmtype &parent, algo::strptr in_str) {
-    bool retval = true;
-    retval = retval && value_ReadStrptrMaybe(parent, in_str);
-    return retval;
-}
-
-// --- ams.Shmtype..Print
-// print string representation of ROW to string STR
-// cfmt:ams.Shmtype.String  printfmt:Raw
-void ams::Shmtype_Print(ams::Shmtype row, algo::cstring& str) {
-    ams::value_Print(row, str);
-}
-
-// --- ams.ShmId..ReadFieldMaybe
-bool ams::ShmId_ReadFieldMaybe(ams::ShmId& parent, algo::strptr field, algo::strptr strval) {
-    bool retval = true;
-    ams::FieldId field_id;
-    (void)value_SetStrptrMaybe(field_id,field);
-    switch(field_id) {
-        case ams_FieldId_proc_id: {
-            retval = ams::ProcId_ReadStrptrMaybe(parent.proc_id, strval);
-        } break;
-        case ams_FieldId_shmtype: {
-            retval = ams::Shmtype_ReadStrptrMaybe(parent.shmtype, strval);
-        } break;
-        case ams_FieldId_index: {
-            retval = u8_ReadStrptrMaybe(parent.index, strval);
-        } break;
-        default: {
-            retval = false;
-            algo_lib::AppendErrtext("comment", "unrecognized attr");
-        } break;
-    }
-    if (!retval) {
-        algo_lib::AppendErrtext("attr",field);
-    }
-    return retval;
-}
-
-// --- ams.ShmId..ReadStrptrMaybe
-// Read fields of ams::ShmId from an ascii string.
-// The format of the string is a string with separated values
-bool ams::ShmId_ReadStrptrMaybe(ams::ShmId &parent, algo::strptr in_str) {
-    bool retval = true;
-    algo::strptr value;
-
-    algo::NextSep(in_str, '.', value);
-    retval = retval && ams::ProcId_ReadStrptrMaybe(parent.proc_id, value);
-
-    algo::NextSep(in_str, '-', value);
-    retval = retval && ams::Shmtype_ReadStrptrMaybe(parent.shmtype, value);
-
-    value = in_str;
-    retval = retval && u8_ReadStrptrMaybe(parent.index, value);
-    return retval;
-}
-
-// --- ams.ShmId..Print
-// print string representation of ROW to string STR
-// cfmt:ams.ShmId.String  printfmt:Sep
-void ams::ShmId_Print(ams::ShmId row, algo::cstring& str) {
-    ams::ProcId_Print(row.proc_id, str);
-    str << '.';
-    ams::Shmtype_Print(row.shmtype, str);
-    str << '-';
-    u8_Print(row.index, str);
-}
-
-// --- ams.ShmemberFlags.r.ReadStrptrMaybe
-inline static bool ams::r_ReadStrptrMaybe(ams::ShmemberFlags &parent, algo::strptr in_str) {
-    bool retval = true;
-    bool r_tmp;
-    retval = bool_ReadStrptrMaybe(r_tmp, in_str);
-    if (retval) {
-        r_Set(parent, r_tmp);
-    }
-    return retval;
-}
-
-// --- ams.ShmemberFlags.w.ReadStrptrMaybe
-inline static bool ams::w_ReadStrptrMaybe(ams::ShmemberFlags &parent, algo::strptr in_str) {
-    bool retval = true;
-    bool w_tmp;
-    retval = bool_ReadStrptrMaybe(w_tmp, in_str);
-    if (retval) {
-        w_Set(parent, w_tmp);
-    }
-    return retval;
-}
-
-// --- ams.ShmemberFlags..ReadFieldMaybe
-bool ams::ShmemberFlags_ReadFieldMaybe(ams::ShmemberFlags& parent, algo::strptr field, algo::strptr strval) {
-    bool retval = true;
-    ams::FieldId field_id;
-    (void)value_SetStrptrMaybe(field_id,field);
-    switch(field_id) {
-        case ams_FieldId_value: {
-            retval = u16_ReadStrptrMaybe(parent.value, strval);
-        } break;
-        case ams_FieldId_r: {
-            retval = r_ReadStrptrMaybe(parent, strval);
-        } break;
-        case ams_FieldId_w: {
-            retval = w_ReadStrptrMaybe(parent, strval);
-        } break;
-        default: {
-            retval = false;
-            algo_lib::AppendErrtext("comment", "unrecognized attr");
-        } break;
-    }
-    if (!retval) {
-        algo_lib::AppendErrtext("attr",field);
-    }
-    return retval;
-}
-
-// --- ams.ShmemberFlags..ReadStrptrMaybe
-// Read fields of ams::ShmemberFlags from an ascii string.
-bool ams::ShmemberFlags_ReadStrptrMaybe(ams::ShmemberFlags &parent, algo::strptr in_str) {
-    bool retval = true;
-    // Clear affected bits first)
-    r_Set(parent, false);
-    w_Set(parent, false);
-    // Read ','-separated list of bools
-    while (ch_N(in_str)) {
-        strptr field_name;
-        algo::NextSep(in_str,',',field_name);
-        field_name = algo::Trimmed(field_name);
-        if (ch_N(field_name)) {
-            ams::FieldId field_id;
-            bool ok = ams::value_SetStrptrMaybe(field_id,field_name);
-            if (ok) {
-                switch (field_id) {
-                    case ams_FieldId_r: {
-                        r_Set(parent, true);
-                    } break;
-                    case ams_FieldId_w: {
-                        w_Set(parent, true);
-                    } break;
-                    default: ok = false; break;
-                }
-            }
-            if (!ok) {
-                algo_lib::AppendErrtext("bitfld",field_name);
-                retval = false;
-            }
-        }
-    }
-    return retval;
-}
-
-// --- ams.ShmemberFlags..Print
-// print string representation of ROW to string STR
-// cfmt:ams.ShmemberFlags.String  printfmt:Bitset
-void ams::ShmemberFlags_Print(ams::ShmemberFlags row, algo::cstring& str) {
-    algo::ListSep ls(",");
-    if (r_Get(row)) {
-        str << ls << "r";
-    }
-    if (w_Get(row)) {
-        str << ls << "w";
-    }
-}
-
-// --- ams.ShmemberFlags..GetAnon
-algo::strptr ams::ShmemberFlags_GetAnon(ams::ShmemberFlags &parent, i32 idx) {
-    (void)parent;//only to avoid -Wunused-parameter
-    switch(idx) {
-        case(0): return strptr("value", 5);
-        default: return algo::strptr();
-    }
-}
-
-// --- ams.ShmemberId..ReadFieldMaybe
-bool ams::ShmemberId_ReadFieldMaybe(ams::ShmemberId& parent, algo::strptr field, algo::strptr strval) {
-    bool retval = true;
-    ams::FieldId field_id;
-    (void)value_SetStrptrMaybe(field_id,field);
-    switch(field_id) {
-        case ams_FieldId_shm_id: {
-            retval = ams::ShmId_ReadStrptrMaybe(parent.shm_id, strval);
-        } break;
-        case ams_FieldId_proc_id: {
-            retval = ams::ProcId_ReadStrptrMaybe(parent.proc_id, strval);
-        } break;
-        case ams_FieldId_flags: {
-            retval = ams::ShmemberFlags_ReadStrptrMaybe(parent.flags, strval);
-        } break;
-        default: {
-            retval = false;
-            algo_lib::AppendErrtext("comment", "unrecognized attr");
-        } break;
-    }
-    if (!retval) {
-        algo_lib::AppendErrtext("attr",field);
-    }
-    return retval;
-}
-
-// --- ams.ShmemberId..ReadStrptrMaybe
-// Read fields of ams::ShmemberId from an ascii string.
-// The format of the string is a string with separated values
-bool ams::ShmemberId_ReadStrptrMaybe(ams::ShmemberId &parent, algo::strptr in_str) {
-    bool retval = true;
-    algo::strptr value;
-
-    algo::NextSep(in_str, '/', value);
-    retval = retval && ams::ShmId_ReadStrptrMaybe(parent.shm_id, value);
-
-    algo::NextSep(in_str, ',', value);
-    retval = retval && ams::ProcId_ReadStrptrMaybe(parent.proc_id, value);
-
-    value = in_str;
-    retval = retval && ams::ShmemberFlags_ReadStrptrMaybe(parent.flags, value);
-    return retval;
-}
-
-// --- ams.ShmemberId..Print
-// print string representation of ROW to string STR
-// cfmt:ams.ShmemberId.String  printfmt:Sep
-void ams::ShmemberId_Print(ams::ShmemberId row, algo::cstring& str) {
-    ams::ShmId_Print(row.shm_id, str);
-    str << '/';
-    ams::ProcId_Print(row.proc_id, str);
-    str << ',';
-    ams::ShmemberFlags_Print(row.flags, str);
 }
 
 // --- ams.ShmHbMsg.base.CopyOut
@@ -2359,8 +3285,8 @@ bool ams::ShmHbMsg_ReadFieldMaybe(ams::ShmHbMsg& parent, algo::strptr field, alg
         case ams_FieldId_length: {
             retval = false;
         } break;
-        case ams_FieldId_shmember: {
-            retval = ams::ShmemberId_ReadStrptrMaybe(parent.shmember, strval);
+        case ams_FieldId_grpmember: {
+            retval = ams::GrpmemberId_ReadStrptrMaybe(parent.grpmember, strval);
         } break;
         case ams_FieldId_off: {
             retval = u64_ReadStrptrMaybe(parent.off, strval);
@@ -2398,8 +3324,8 @@ void ams::ShmHbMsg_Print(ams::ShmHbMsg& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "ams.ShmHbMsg";
 
-    ams::ShmemberId_Print(row.shmember, temp);
-    PrintAttrSpaceReset(str,"shmember", temp);
+    ams::GrpmemberId_Print(row.grpmember, temp);
+    PrintAttrSpaceReset(str,"grpmember", temp);
 
     u64_Print(row.off, temp);
     PrintAttrSpaceReset(str,"off", temp);
@@ -2408,70 +3334,32 @@ void ams::ShmHbMsg_Print(ams::ShmHbMsg& row, algo::cstring& str) {
     PrintAttrSpaceReset(str,"wbudget", temp);
 }
 
-// --- ams.Shmmsg.base.CopyOut
-// Copy fields out of row
-void ams::parent_CopyOut(ams::Shmmsg &row, ams::MsgHeader &out) {
-    // type: field value is computed
-    // length: field value is computed
-    (void)row;//only to avoid -Wunused-parameter
-    (void)out;//only to avoid -Wunused-parameter
-}
-
-// --- ams.Shmmsg.payload.Getary
-// Access optional portion as an array of bytes
-algo::aryptr<u8> ams::payload_Getary(ams::Shmmsg& parent) {
-    u8 *end = (u8*)&parent + sizeof(ams::Shmmsg);
-    return algo::aryptr<u8>(end, i32(parent.length) - ssizeof(ams::Shmmsg));
-}
-
-// --- ams.Shmmsg.payload.Print
-void ams::payload_Print(ams::Shmmsg& parent, cstring &out) {
-    (void)out;
-    (void)parent;
-    if (ams::MsgHeader *payload = payload_Get(parent)) {
-        ams::MsgHeaderMsgs_Print(out, *payload, INT_MAX);
-    }
-}
-
-// --- ams.Shmmsg.payload.ReadStrptrMaybe
-// Convert string to field. Return success value
-bool ams::payload_ReadStrptrMaybe(ams::Shmmsg &parent, algo::strptr in_str) {
-    bool retval = false;
-    if (algo_lib::_db.varlenbuf) {
-        algo::ByteAry temp;
-        retval = ams::MsgHeaderMsgs_ReadStrptrMaybe(in_str, temp); // read any of several message types here
-        ary_Setary(*algo_lib::_db.varlenbuf, ary_Getary(temp)); // return it
-    }
-    (void)parent;//only to avoid -Wunused-parameter
-    return retval;
-}
-
-// --- ams.Shmmsg..ReadFieldMaybe
-bool ams::Shmmsg_ReadFieldMaybe(ams::Shmmsg& parent, algo::strptr field, algo::strptr strval) {
+// --- ams.Shmember..ReadFieldMaybe
+bool ams::Shmember_ReadFieldMaybe(ams::Shmember& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
     ams::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
     switch(field_id) {
-        case ams_FieldId_base: {
-            retval = false;
+        case ams_FieldId_grpmember_id: {
+            retval = ams::GrpmemberId_ReadStrptrMaybe(parent.grpmember_id, strval);
         } break;
-        case ams_FieldId_type: {
-            retval = false;
+        case ams_FieldId_pid: {
+            retval = i32_ReadStrptrMaybe(parent.pid, strval);
         } break;
-        case ams_FieldId_length: {
-            retval = false;
+        case ams_FieldId_offset: {
+            retval = u64_ReadStrptrMaybe(parent.offset, strval);
         } break;
-        case ams_FieldId_shm_id: {
-            retval = ams::ShmId_ReadStrptrMaybe(parent.shm_id, strval);
+        case ams_FieldId_rate: {
+            retval = algo::I64Rate_ReadStrptrMaybe(parent.rate, strval);
         } break;
-        case ams_FieldId_off: {
-            retval = u64_ReadStrptrMaybe(parent.off, strval);
+        case ams_FieldId_last_hb: {
+            retval = algo::SchedTime_ReadStrptrMaybe(parent.last_hb, strval);
         } break;
-        case ams_FieldId_tstamp: {
-            retval = u64_ReadStrptrMaybe(parent.tstamp, strval);
+        case ams_FieldId_ignore2: {
+            retval = u64_ReadStrptrMaybe(parent.ignore2, strval);
         } break;
-        case ams_FieldId_payload: {
-            retval = payload_ReadStrptrMaybe(parent, strval);
+        case ams_FieldId_sleeping: {
+            retval = u32_ReadStrptrMaybe(parent.sleeping, strval);
         } break;
         default: {
             retval = false;
@@ -2484,39 +3372,198 @@ bool ams::Shmmsg_ReadFieldMaybe(ams::Shmmsg& parent, algo::strptr field, algo::s
     return retval;
 }
 
-// --- ams.Shmmsg..ReadStrptrMaybe
-// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
-// Read fields of ams::Shmmsg from an ascii string.
+// --- ams.Shmember..ReadStrptrMaybe
+// Read fields of ams::Shmember from an ascii string.
 // The format of the string is an ssim Tuple
-bool ams::Shmmsg_ReadStrptrMaybe(ams::Shmmsg &parent, algo::strptr in_str) {
+bool ams::Shmember_ReadStrptrMaybe(ams::Shmember &parent, algo::strptr in_str) {
     bool retval = true;
-    retval = algo::StripTypeTag(in_str, "ams.Shmmsg");
+    retval = algo::StripTypeTag(in_str, "ams.Shmember");
     ind_beg(algo::Attr_curs, attr, in_str) {
-        retval = retval && Shmmsg_ReadFieldMaybe(parent, attr.name, attr.value);
+        retval = retval && Shmember_ReadFieldMaybe(parent, attr.name, attr.value);
     }ind_end;
     return retval;
 }
 
-// --- ams.Shmmsg..Print
+// --- ams.Shmember..Print
 // print string representation of ROW to string STR
-// cfmt:ams.Shmmsg.String  printfmt:Tuple
-void ams::Shmmsg_Print(ams::Shmmsg& row, algo::cstring& str) {
+// cfmt:ams.Shmember.String  printfmt:Tuple
+void ams::Shmember_Print(ams::Shmember& row, algo::cstring& str) {
     algo::tempstr temp;
-    str << "ams.Shmmsg";
+    str << "ams.Shmember";
 
-    ams::ShmId_Print(row.shm_id, temp);
-    PrintAttrSpaceReset(str,"shm_id", temp);
+    ams::GrpmemberId_Print(row.grpmember_id, temp);
+    PrintAttrSpaceReset(str,"grpmember_id", temp);
 
-    u64_Print(row.off, temp);
-    PrintAttrSpaceReset(str,"off", temp);
+    i32_Print(row.pid, temp);
+    PrintAttrSpaceReset(str,"pid", temp);
 
-    u64_Print(row.tstamp, temp);
-    PrintAttrSpaceReset(str,"tstamp", temp);
+    u64_Print(row.offset, temp);
+    PrintAttrSpaceReset(str,"offset", temp);
 
-    if (payload_Get(row)) {
-        ams::payload_Print(row, temp);
-        PrintAttrSpaceReset(str,"payload", temp);
+    algo::I64Rate_Print(row.rate, temp);
+    PrintAttrSpaceReset(str,"rate", temp);
+
+    algo::SchedTime_Print(row.last_hb, temp);
+    PrintAttrSpaceReset(str,"last_hb", temp);
+
+    u64_Print(row.ignore2, temp);
+    PrintAttrSpaceReset(str,"ignore2", temp);
+
+    u32_Print(row.sleeping, temp);
+    PrintAttrSpaceReset(str,"sleeping", temp);
+}
+
+// --- ams.Shmhdr..ReadFieldMaybe
+bool ams::Shmhdr_ReadFieldMaybe(ams::Shmhdr& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    ams::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case ams_FieldId_magic: {
+            retval = u32_ReadStrptrMaybe(parent.magic, strval);
+        } break;
+        case ams_FieldId_grp_id: {
+            retval = ams::GrpId_ReadStrptrMaybe(parent.grp_id, strval);
+        } break;
+        case ams_FieldId_tot_size: {
+            retval = u32_ReadStrptrMaybe(parent.tot_size, strval);
+        } break;
+        case ams_FieldId_max_msg_size: {
+            retval = u32_ReadStrptrMaybe(parent.max_msg_size, strval);
+        } break;
+        case ams_FieldId_offset_mask: {
+            retval = u32_ReadStrptrMaybe(parent.offset_mask, strval);
+        } break;
+        case ams_FieldId_woff: {
+            retval = u64_ReadStrptrMaybe(parent.woff, strval);
+        } break;
+        case ams_FieldId_n_shmember: {
+            retval = u32_ReadStrptrMaybe(parent.n_shmember, strval);
+        } break;
+        case ams_FieldId_max_shmember: {
+            retval = u32_ReadStrptrMaybe(parent.max_shmember, strval);
+        } break;
+        case ams_FieldId_datastart: {
+            retval = u32_ReadStrptrMaybe(parent.datastart, strval);
+        } break;
+        case ams_FieldId_writer_pid: {
+            retval = i32_ReadStrptrMaybe(parent.writer_pid, strval);
+        } break;
+        case ams_FieldId_writer_sleeping: {
+            retval = u32_ReadStrptrMaybe(parent.writer_sleeping, strval);
+        } break;
+        case ams_FieldId_nnobudget: {
+            retval = u64_ReadStrptrMaybe(parent.nnobudget, strval);
+        } break;
+        case ams_FieldId_nblock: {
+            retval = u64_ReadStrptrMaybe(parent.nblock, strval);
+        } break;
+        case ams_FieldId_eof: {
+            retval = bool_ReadStrptrMaybe(parent.eof, strval);
+        } break;
+        case ams_FieldId_signaled: {
+            retval = bool_ReadStrptrMaybe(parent.signaled, strval);
+        } break;
+        case ams_FieldId_creator_pid: {
+            retval = i32_ReadStrptrMaybe(parent.creator_pid, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- ams.Shmhdr..ReadStrptrMaybe
+// Read fields of ams::Shmhdr from an ascii string.
+// The format of the string is an ssim Tuple
+bool ams::Shmhdr_ReadStrptrMaybe(ams::Shmhdr &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "ams.Shmhdr");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && Shmhdr_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- ams.Shmhdr..Init
+// Set all fields to initial values.
+void ams::Shmhdr_Init(ams::Shmhdr& parent) {
+    parent.magic = u32(0xc001af01);
+    parent.tot_size = u32(0);
+    parent.max_msg_size = u32(0);
+    parent.offset_mask = u32(0);
+    parent.woff = u64(0);
+    parent.n_shmember = u32(0);
+    parent.max_shmember = u32(0);
+    parent.datastart = u32(0);
+    parent.writer_pid = i32(0);
+    parent.writer_sleeping = u32(0);
+    parent.nnobudget = u64(0);
+    parent.nblock = u64(0);
+    parent.eof = bool(false);
+    parent.signaled = bool(false);
+    parent.creator_pid = i32(0);
+}
+
+// --- ams.Shmhdr..Print
+// print string representation of ROW to string STR
+// cfmt:ams.Shmhdr.String  printfmt:Tuple
+void ams::Shmhdr_Print(ams::Shmhdr& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "ams.Shmhdr";
+
+    u32_Print(row.magic, temp);
+    PrintAttrSpaceReset(str,"magic", temp);
+
+    ams::GrpId_Print(row.grp_id, temp);
+    PrintAttrSpaceReset(str,"grp_id", temp);
+
+    u32_Print(row.tot_size, temp);
+    PrintAttrSpaceReset(str,"tot_size", temp);
+
+    u32_Print(row.max_msg_size, temp);
+    PrintAttrSpaceReset(str,"max_msg_size", temp);
+
+    u32_Print(row.offset_mask, temp);
+    PrintAttrSpaceReset(str,"offset_mask", temp);
+
+    u64_Print(row.woff, temp);
+    PrintAttrSpaceReset(str,"woff", temp);
+
+    u32_Print(row.n_shmember, temp);
+    PrintAttrSpaceReset(str,"n_shmember", temp);
+
+    u32_Print(row.max_shmember, temp);
+    PrintAttrSpaceReset(str,"max_shmember", temp);
+
+    u32_Print(row.datastart, temp);
+    PrintAttrSpaceReset(str,"datastart", temp);
+
+    i32_Print(row.writer_pid, temp);
+    PrintAttrSpaceReset(str,"writer_pid", temp);
+
+    u32_Print(row.writer_sleeping, temp);
+    PrintAttrSpaceReset(str,"writer_sleeping", temp);
+
+    u64_Print(row.nnobudget, temp);
+    PrintAttrSpaceReset(str,"nnobudget", temp);
+
+    u64_Print(row.nblock, temp);
+    PrintAttrSpaceReset(str,"nblock", temp);
+
+    bool_Print(row.eof, temp);
+    PrintAttrSpaceReset(str,"eof", temp);
+
+    bool_Print(row.signaled, temp);
+    PrintAttrSpaceReset(str,"signaled", temp);
+
+    i32_Print(row.creator_pid, temp);
+    PrintAttrSpaceReset(str,"creator_pid", temp);
 }
 
 // --- ams.TerminateMsg.base.CopyOut
@@ -2543,6 +3590,9 @@ bool ams::TerminateMsg_ReadFieldMaybe(ams::TerminateMsg& parent, algo::strptr fi
         case ams_FieldId_length: {
             retval = false;
         } break;
+        case ams_FieldId_proc_id: {
+            retval = ams::ProcId_ReadStrptrMaybe(parent.proc_id, strval);
+        } break;
         default: {
             retval = false;
             algo_lib::AppendErrtext("comment", "unrecognized attr");
@@ -2551,8 +3601,6 @@ bool ams::TerminateMsg_ReadFieldMaybe(ams::TerminateMsg& parent, algo::strptr fi
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
     }
-    (void)parent;//only to avoid -Wunused-parameter
-    (void)strval;//only to avoid -Wunused-parameter
     return retval;
 }
 
@@ -2571,10 +3619,74 @@ bool ams::TerminateMsg_ReadStrptrMaybe(ams::TerminateMsg &parent, algo::strptr i
 // --- ams.TerminateMsg..Print
 // print string representation of ROW to string STR
 // cfmt:ams.TerminateMsg.String  printfmt:Tuple
-void ams::TerminateMsg_Print(ams::TerminateMsg& row, algo::cstring& str) {
+void ams::TerminateMsg_Print(ams::TerminateMsg row, algo::cstring& str) {
     algo::tempstr temp;
     str << "ams.TerminateMsg";
-    (void)row;//only to avoid -Wunused-parameter
+
+    ams::ProcId_Print(row.proc_id, temp);
+    PrintAttrSpaceReset(str,"proc_id", temp);
+}
+
+// --- ams.Trafficclass.value.ToCstr
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+const char* ams::value_ToCstr(const ams::Trafficclass& parent) {
+    const char *ret = NULL;
+    switch(value_GetEnum(parent)) {
+        case ams_Trafficclass_value_control: ret = "control";  break;
+        case ams_Trafficclass_value_data   : ret = "data";  break;
+        case ams_Trafficclass_value_gapfill: ret = "gapfill";  break;
+    }
+    return ret;
+}
+
+// --- ams.Trafficclass.value.Print
+// Convert value to a string. First, attempt conversion to a known string.
+// If no string matches, print value as a numeric value.
+void ams::value_Print(const ams::Trafficclass& parent, algo::cstring &lhs) {
+    const char *strval = value_ToCstr(parent);
+    if (strval) {
+        lhs << strval;
+    } else {
+        lhs << parent.value;
+    }
+}
+
+// --- ams.Trafficclass.value.SetStrptrMaybe
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+bool ams::value_SetStrptrMaybe(ams::Trafficclass& parent, algo::strptr rhs) {
+    bool ret = false;
+    switch (elems_N(rhs)) {
+        case 4: {
+            switch (u64(algo::ReadLE32(rhs.elems))) {
+                case LE_STR4('d','a','t','a'): {
+                    value_SetEnum(parent,ams_Trafficclass_value_data); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 7: {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
+                case LE_STR7('c','o','n','t','r','o','l'): {
+                    value_SetEnum(parent,ams_Trafficclass_value_control); ret = true; break;
+                }
+                case LE_STR7('g','a','p','f','i','l','l'): {
+                    value_SetEnum(parent,ams_Trafficclass_value_gapfill); ret = true; break;
+                }
+            }
+            break;
+        }
+    }
+    return ret;
+}
+
+// --- ams.Trafficclass.value.SetStrptr
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+void ams::value_SetStrptr(ams::Trafficclass& parent, algo::strptr rhs, ams_Trafficclass_value_Enum dflt) {
+    if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- ams.UdpFrame.header.CopyOut
@@ -2630,33 +3742,163 @@ void ams::UdpFrame_Print(ams::UdpFrame& row, algo::cstring& str) {
     PrintAttrSpaceReset(str,"payload", temp);
 }
 
+// --- ams.UprocTextMsg.base.CopyOut
+// Copy fields out of row
+void ams::parent_CopyOut(ams::UprocTextMsg &row, ams::MsgHeader &out) {
+    // type: field value is computed
+    // length: field value is computed
+    (void)row;//only to avoid -Wunused-parameter
+    (void)out;//only to avoid -Wunused-parameter
+}
+
+// --- ams.UprocTextMsg.text.Getary
+// Access var-length portion as an aryptr. Length is determined from one of the fields.
+algo::aryptr<char> ams::text_Getary(ams::UprocTextMsg& parent) {
+    return algo::aryptr<char>(text_Addr(parent), text_N(parent));
+}
+
+// --- ams.UprocTextMsg.text.Addr
+char* ams::text_Addr(ams::UprocTextMsg& parent) {
+    return (char*)((u8*)&parent + sizeof(ams::UprocTextMsg)); // address of varlen portion
+}
+
+// --- ams.UprocTextMsg.text.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool ams::text_ReadStrptrMaybe(ams::UprocTextMsg& parent, algo::strptr in_str) {
+    bool retval = true;
+    if (algo_lib::_db.varlenbuf) {
+        ary_Addary(*algo_lib::_db.varlenbuf, strptr_ToMemptr(in_str));
+    }
+    (void)parent;//only to avoid -Wunused-parameter
+    return retval;
+}
+
+// --- ams.UprocTextMsg.text.Print
+// Convert text to a string.
+// Array is printed as a regular string.
+void ams::text_Print(ams::UprocTextMsg& parent, algo::cstring &rhs) {
+    rhs << text_Getary(parent);
+}
+
+// --- ams.UprocTextMsg..ReadFieldMaybe
+bool ams::UprocTextMsg_ReadFieldMaybe(ams::UprocTextMsg& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    ams::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
+    switch(field_id) {
+        case ams_FieldId_base: {
+            retval = false;
+        } break;
+        case ams_FieldId_type: {
+            retval = false;
+        } break;
+        case ams_FieldId_length: {
+            retval = false;
+        } break;
+        case ams_FieldId_seqno: {
+            retval = u32_ReadStrptrMaybe(parent.seqno, strval);
+        } break;
+        case ams_FieldId_first_seqno: {
+            retval = u32_ReadStrptrMaybe(parent.first_seqno, strval);
+        } break;
+        case ams_FieldId_last_seqno: {
+            retval = u32_ReadStrptrMaybe(parent.last_seqno, strval);
+        } break;
+        case ams_FieldId_name: {
+            retval = algo::RnullStr32_ReadStrptrMaybe(parent.name, strval);
+        } break;
+        case ams_FieldId_text: {
+            retval = text_ReadStrptrMaybe(parent, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- ams.UprocTextMsg..ReadStrptrMaybe
+// Any varlen fields are returned in algo_lib::_db.varlenbuf if set
+// Read fields of ams::UprocTextMsg from an ascii string.
+// The format of the string is an ssim Tuple
+bool ams::UprocTextMsg_ReadStrptrMaybe(ams::UprocTextMsg &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "ams.UprocTextMsg");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && UprocTextMsg_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- ams.UprocTextMsg..Print
+// print string representation of ROW to string STR
+// cfmt:ams.UprocTextMsg.String  printfmt:Tuple
+void ams::UprocTextMsg_Print(ams::UprocTextMsg& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "ams.UprocTextMsg";
+
+    u32_Print(row.seqno, temp);
+    PrintAttrSpaceReset(str,"seqno", temp);
+
+    u32_Print(row.first_seqno, temp);
+    PrintAttrSpaceReset(str,"first_seqno", temp);
+
+    u32_Print(row.last_seqno, temp);
+    PrintAttrSpaceReset(str,"last_seqno", temp);
+
+    algo::RnullStr32_Print(row.name, temp);
+    PrintAttrSpaceReset(str,"name", temp);
+
+    ams::text_Print(row, temp);
+    PrintAttrSpaceReset(str,"text", temp);
+}
+
 // --- ams...SizeCheck
 inline static void ams::SizeCheck() {
 }
 
 // --- ams...StaticCheck
 void ams::StaticCheck() {
-    algo_assert(_offset_of(ams::FieldId, value) + sizeof(((ams::FieldId*)0)->value) == sizeof(ams::FieldId));
+    algo_assert(_offset_of(ams::BoardrefMsg, payload_length) + sizeof(((ams::BoardrefMsg*)0)->payload_length) == sizeof(ams::BoardrefMsg));
     algo_assert(_offset_of(ams::Proctype, value) + sizeof(((ams::Proctype*)0)->value) == sizeof(ams::Proctype));
     // check that bitfield fits width
     algo_assert(sizeof(((ams::ProcId*)0)->value)*8 >= 32);
     algo_assert(_offset_of(ams::ProcId, value) + sizeof(((ams::ProcId*)0)->value) == sizeof(ams::ProcId));
-    algo_assert(_offset_of(ams::MsgHeaderMsgsCase, value) + sizeof(((ams::MsgHeaderMsgsCase*)0)->value) == sizeof(ams::MsgHeaderMsgsCase));
-    algo_assert(_offset_of(ams::MsgHeader_curs, msglen) + sizeof(((ams::MsgHeader_curs*)0)->msglen) == sizeof(ams::MsgHeader_curs));
-    algo_assert(_offset_of(ams::ProcEofMsg, proc) + sizeof(((ams::ProcEofMsg*)0)->proc) == sizeof(ams::ProcEofMsg));
-    algo_assert(_offset_of(ams::ProcKillMsg, signal) + sizeof(((ams::ProcKillMsg*)0)->signal) == sizeof(ams::ProcKillMsg));
-    algo_assert(_offset_of(ams::ProcStatusMsg, status) + sizeof(((ams::ProcStatusMsg*)0)->status) == sizeof(ams::ProcStatusMsg));
-    // check that bitfield fits width
-    algo_assert(sizeof(((ams::ShmFlags*)0)->value)*8 >= 7);
-    algo_assert(_offset_of(ams::ShmFlags, value) + sizeof(((ams::ShmFlags*)0)->value) == sizeof(ams::ShmFlags));
-    algo_assert(_offset_of(ams::Shmtype, value) + sizeof(((ams::Shmtype*)0)->value) == sizeof(ams::Shmtype));
-    algo_assert(_offset_of(ams::ShmId, index) + sizeof(((ams::ShmId*)0)->index) == sizeof(ams::ShmId));
+    algo_assert(_offset_of(ams::Grptype, value) + sizeof(((ams::Grptype*)0)->value) == sizeof(ams::Grptype));
+    algo_assert(_offset_of(ams::GrpId, index) + sizeof(((ams::GrpId*)0)->index) == sizeof(ams::GrpId));
+    algo_assert(_offset_of(ams::FieldId, value) + sizeof(((ams::FieldId*)0)->value) == sizeof(ams::FieldId));
     // check that bitfield fits width
     algo_assert(sizeof(((ams::ShmemberFlags*)0)->value)*8 >= 2);
     algo_assert(_offset_of(ams::ShmemberFlags, value) + sizeof(((ams::ShmemberFlags*)0)->value) == sizeof(ams::ShmemberFlags));
-    algo_assert(_offset_of(ams::ShmemberId, flags) + sizeof(((ams::ShmemberId*)0)->flags) == sizeof(ams::ShmemberId));
+    algo_assert(_offset_of(ams::GrpmemberId, flags) + sizeof(((ams::GrpmemberId*)0)->flags) == sizeof(ams::GrpmemberId));
+    algo_assert(_offset_of(ams::I64Price8, value) + sizeof(((ams::I64Price8*)0)->value) == sizeof(ams::I64Price8));
+    algo_assert(_offset_of(ams::MsgHeader, length) + sizeof(((ams::MsgHeader*)0)->length) == sizeof(ams::MsgHeader));
+    algo_assert(_offset_of(ams::MsgHeaderMsgsCase, value) + sizeof(((ams::MsgHeaderMsgsCase*)0)->value) == sizeof(ams::MsgHeaderMsgsCase));
+    algo_assert(_offset_of(ams::MsgHeader_curs, msglen) + sizeof(((ams::MsgHeader_curs*)0)->msglen) == sizeof(ams::MsgHeader_curs));
+    algo_assert(_offset_of(ams::SampMengBookMsg, next_order_id) + sizeof(((ams::SampMengBookMsg*)0)->next_order_id) == sizeof(ams::SampMengBookMsg));
+    algo_assert(_offset_of(ams::SampMengCancelOrderMsg, order) + sizeof(((ams::SampMengCancelOrderMsg*)0)->order) == sizeof(ams::SampMengCancelOrderMsg));
+    algo_assert(_offset_of(ams::SampMengCancelReqMsg, order) + sizeof(((ams::SampMengCancelReqMsg*)0)->order) == sizeof(ams::SampMengCancelReqMsg));
+    algo_assert(_offset_of(ams::SampMengMassCancelReqMsg, user) + sizeof(((ams::SampMengMassCancelReqMsg*)0)->user) == sizeof(ams::SampMengMassCancelReqMsg));
+    algo_assert(_offset_of(ams::SampMengSymbol, symbol) + sizeof(((ams::SampMengSymbol*)0)->symbol) == sizeof(ams::SampMengSymbol));
+    algo_assert(_offset_of(ams::SampMengNewOrderMsg, qty) + sizeof(((ams::SampMengNewOrderMsg*)0)->qty) == sizeof(ams::SampMengNewOrderMsg));
+    algo_assert(_offset_of(ams::SampMengNewOrderReqMsg, user) + sizeof(((ams::SampMengNewOrderReqMsg*)0)->user) == sizeof(ams::SampMengNewOrderReqMsg));
+    algo_assert(_offset_of(ams::SampMengNewSymbolMsg, symbol) + sizeof(((ams::SampMengNewSymbolMsg*)0)->symbol) == sizeof(ams::SampMengNewSymbolMsg));
+    algo_assert(_offset_of(ams::SampMengNewSymbolReqMsg, symbol) + sizeof(((ams::SampMengNewSymbolReqMsg*)0)->symbol) == sizeof(ams::SampMengNewSymbolReqMsg));
+    algo_assert(_offset_of(ams::SampMengNewUserMsg, user) + sizeof(((ams::SampMengNewUserMsg*)0)->user) == sizeof(ams::SampMengNewUserMsg));
+    algo_assert(_offset_of(ams::SampMengNewUserReqMsg, user) + sizeof(((ams::SampMengNewUserReqMsg*)0)->user) == sizeof(ams::SampMengNewUserReqMsg));
+    algo_assert(_offset_of(ams::SampMengOrderTradeMsg, price) + sizeof(((ams::SampMengOrderTradeMsg*)0)->price) == sizeof(ams::SampMengOrderTradeMsg));
+    algo_assert(_offset_of(ams::SampMengRestingMsg, buy) + sizeof(((ams::SampMengRestingMsg*)0)->buy) == sizeof(ams::SampMengRestingMsg));
+    algo_assert(_offset_of(ams::SampMengSymbolrowMsg, symbol) + sizeof(((ams::SampMengSymbolrowMsg*)0)->symbol) == sizeof(ams::SampMengSymbolrowMsg));
+    algo_assert(_offset_of(ams::SampMengUserrowMsg, user) + sizeof(((ams::SampMengUserrowMsg*)0)->user) == sizeof(ams::SampMengUserrowMsg));
+    // check that bitfield fits width
+    algo_assert(sizeof(((ams::ShmFlags*)0)->value)*8 >= 7);
+    algo_assert(_offset_of(ams::ShmFlags, value) + sizeof(((ams::ShmFlags*)0)->value) == sizeof(ams::ShmFlags));
     algo_assert(_offset_of(ams::ShmHbMsg, wbudget) + sizeof(((ams::ShmHbMsg*)0)->wbudget) == sizeof(ams::ShmHbMsg));
-    algo_assert(_offset_of(ams::TerminateMsg, length) + sizeof(((ams::TerminateMsg*)0)->length) == sizeof(ams::TerminateMsg));
+    algo_assert(_offset_of(ams::TerminateMsg, proc_id) + sizeof(((ams::TerminateMsg*)0)->proc_id) == sizeof(ams::TerminateMsg));
 }
 
 // --- ams.MsgHeaderMsgs..Print
@@ -2665,9 +3907,9 @@ void ams::StaticCheck() {
 // This function will additionally validate that sizeof(Msg) <= msg_len
 bool ams::MsgHeaderMsgs_Print(algo::cstring &str, ams::MsgHeader &msg, u32 msg_len) {
     switch(msg.type) {
-        case 395: {
-            if (sizeof(ams::ExpectMsg) > msg_len) { return false; }
-            ExpectMsg_Print((ams::ExpectMsg&)(msg), str);
+        case 3001: {
+            if (sizeof(ams::BoardrefMsg) > msg_len) { return false; }
+            BoardrefMsg_Print((ams::BoardrefMsg&)(msg), str);
             return true;
         }
         case 22: {
@@ -2685,49 +3927,84 @@ bool ams::MsgHeaderMsgs_Print(algo::cstring &str, ams::MsgHeader &msg, u32 msg_l
             MsgBlock_Print((ams::MsgBlock&)(msg), str);
             return true;
         }
-        case 703: {
-            if (sizeof(ams::ProcEofMsg) > msg_len) { return false; }
-            ProcEofMsg_Print((ams::ProcEofMsg&)(msg), str);
+        case 2011: {
+            if (sizeof(ams::SampMengBookMsg) > msg_len) { return false; }
+            SampMengBookMsg_Print((ams::SampMengBookMsg&)(msg), str);
             return true;
         }
-        case 704: {
-            if (sizeof(ams::ProcKillMsg) > msg_len) { return false; }
-            ProcKillMsg_Print((ams::ProcKillMsg&)(msg), str);
+        case 2000: {
+            if (sizeof(ams::SampMengCancelOrderMsg) > msg_len) { return false; }
+            SampMengCancelOrderMsg_Print((ams::SampMengCancelOrderMsg&)(msg), str);
             return true;
         }
-        case 701: {
-            if (sizeof(ams::ProcMsg) > msg_len) { return false; }
-            ProcMsg_Print((ams::ProcMsg&)(msg), str);
+        case 2001: {
+            if (sizeof(ams::SampMengCancelReqMsg) > msg_len) { return false; }
+            SampMengCancelReqMsg_Print((ams::SampMengCancelReqMsg&)(msg), str);
             return true;
         }
-        case 702: {
-            if (sizeof(ams::ProcReadMsg) > msg_len) { return false; }
-            ProcReadMsg_Print((ams::ProcReadMsg&)(msg), str);
+        case 2002: {
+            if (sizeof(ams::SampMengMassCancelReqMsg) > msg_len) { return false; }
+            SampMengMassCancelReqMsg_Print((ams::SampMengMassCancelReqMsg&)(msg), str);
             return true;
         }
-        case 700: {
-            if (sizeof(ams::ProcStartMsg) > msg_len) { return false; }
-            ProcStartMsg_Print((ams::ProcStartMsg&)(msg), str);
+        case 2003: {
+            if (sizeof(ams::SampMengNewOrderMsg) > msg_len) { return false; }
+            SampMengNewOrderMsg_Print((ams::SampMengNewOrderMsg&)(msg), str);
             return true;
         }
-        case 705: {
-            if (sizeof(ams::ProcStatusMsg) > msg_len) { return false; }
-            ProcStatusMsg_Print((ams::ProcStatusMsg&)(msg), str);
+        case 2004: {
+            if (sizeof(ams::SampMengNewOrderReqMsg) > msg_len) { return false; }
+            SampMengNewOrderReqMsg_Print((ams::SampMengNewOrderReqMsg&)(msg), str);
             return true;
         }
-        case 633: {
-            if (sizeof(ams::RemDirRecurseMsg) > msg_len) { return false; }
-            RemDirRecurseMsg_Print((ams::RemDirRecurseMsg&)(msg), str);
+        case 2005: {
+            if (sizeof(ams::SampMengNewSymbolMsg) > msg_len) { return false; }
+            SampMengNewSymbolMsg_Print((ams::SampMengNewSymbolMsg&)(msg), str);
+            return true;
+        }
+        case 2006: {
+            if (sizeof(ams::SampMengNewSymbolReqMsg) > msg_len) { return false; }
+            SampMengNewSymbolReqMsg_Print((ams::SampMengNewSymbolReqMsg&)(msg), str);
+            return true;
+        }
+        case 2007: {
+            if (sizeof(ams::SampMengNewUserMsg) > msg_len) { return false; }
+            SampMengNewUserMsg_Print((ams::SampMengNewUserMsg&)(msg), str);
+            return true;
+        }
+        case 2008: {
+            if (sizeof(ams::SampMengNewUserReqMsg) > msg_len) { return false; }
+            SampMengNewUserReqMsg_Print((ams::SampMengNewUserReqMsg&)(msg), str);
+            return true;
+        }
+        case 2009: {
+            if (sizeof(ams::SampMengOrderTradeMsg) > msg_len) { return false; }
+            SampMengOrderTradeMsg_Print((ams::SampMengOrderTradeMsg&)(msg), str);
+            return true;
+        }
+        case 2015: {
+            if (sizeof(ams::SampMengRestingMsg) > msg_len) { return false; }
+            SampMengRestingMsg_Print((ams::SampMengRestingMsg&)(msg), str);
+            return true;
+        }
+        case 2013: {
+            if (sizeof(ams::SampMengSymbolrowMsg) > msg_len) { return false; }
+            SampMengSymbolrowMsg_Print((ams::SampMengSymbolrowMsg&)(msg), str);
+            return true;
+        }
+        case 2010: {
+            if (sizeof(ams::SampMengTextMsg) > msg_len) { return false; }
+            SampMengTextMsg_Print((ams::SampMengTextMsg&)(msg), str);
+            return true;
+        }
+        case 2014: {
+            if (sizeof(ams::SampMengUserrowMsg) > msg_len) { return false; }
+            SampMengUserrowMsg_Print((ams::SampMengUserrowMsg&)(msg), str);
             return true;
         }
         case 3: {
             if (sizeof(ams::ShmHbMsg) > msg_len) { return false; }
             ShmHbMsg_Print((ams::ShmHbMsg&)(msg), str);
-            return true;
-        }
-        case 10: {
-            if (sizeof(ams::Shmmsg) > msg_len) { return false; }
-            Shmmsg_Print((ams::Shmmsg&)(msg), str);
             return true;
         }
         case 352: {
@@ -2738,6 +4015,11 @@ bool ams::MsgHeaderMsgs_Print(algo::cstring &str, ams::MsgHeader &msg, u32 msg_l
         case 2: {
             if (sizeof(ams::UdpFrame) > msg_len) { return false; }
             UdpFrame_Print((ams::UdpFrame&)(msg), str);
+            return true;
+        }
+        case 3000: {
+            if (sizeof(ams::UprocTextMsg) > msg_len) { return false; }
+            UprocTextMsg_Print((ams::UprocTextMsg&)(msg), str);
             return true;
         }
         case 17: {
@@ -2786,18 +4068,11 @@ ams::MsgHeaderMsgsCase ams::MsgHeaderMsgs_ReadStrptr(algo::strptr str, algo::Byt
     ams::MsgHeaderMsgsCase msgtype;
     value_SetStrptrMaybe(msgtype, msgtype_str); // map string -> enum
     switch (value_GetEnum(msgtype)) { // what message is it?
-        case ams_MsgHeaderMsgsCase_ams_ExpectMsg: {
-            int len = sizeof(ams::ExpectMsg);
-            ams::ExpectMsg *ctype = new(ary_AllocN(buf, len).elems) ams::ExpectMsg; // default values
-            algo::ByteAry varlenbuf;
-            algo::ByteAry *varlenbuf_save = algo_lib::_db.varlenbuf;
-            algo_lib::_db.varlenbuf = &varlenbuf;
-            ok = ExpectMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
-            len += ary_N(varlenbuf);
-            ctype->length = u32(len);
-            ary_Addary(buf, ary_Getary(varlenbuf));
-            algo_lib::_db.varlenbuf = varlenbuf_save;
-        } break; // ams::ExpectMsg case
+        case ams_MsgHeaderMsgsCase_ams_BoardrefMsg: {
+            int len = sizeof(ams::BoardrefMsg);
+            ams::BoardrefMsg *ctype = new(ary_AllocN(buf, len).elems) ams::BoardrefMsg; // default values
+            ok = BoardrefMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
+        } break; // ams::BoardrefMsg case
 
         case ams_MsgHeaderMsgsCase_ams_InputLineMsg: {
             int len = sizeof(ams::InputLineMsg);
@@ -2829,94 +4104,108 @@ ams::MsgHeaderMsgsCase ams::MsgHeaderMsgs_ReadStrptr(algo::strptr str, algo::Byt
             // no cfmt read:Y found -- cannot read
         } break; // ams::MsgBlock case
 
-        case ams_MsgHeaderMsgsCase_ams_ProcEofMsg: {
-            int len = sizeof(ams::ProcEofMsg);
-            ams::ProcEofMsg *ctype = new(ary_AllocN(buf, len).elems) ams::ProcEofMsg; // default values
-            ok = ProcEofMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
-        } break; // ams::ProcEofMsg case
+        case ams_MsgHeaderMsgsCase_ams_SampMengBookMsg: {
+            int len = sizeof(ams::SampMengBookMsg);
+            ams::SampMengBookMsg *ctype = new(ary_AllocN(buf, len).elems) ams::SampMengBookMsg; // default values
+            ok = SampMengBookMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
+        } break; // ams::SampMengBookMsg case
 
-        case ams_MsgHeaderMsgsCase_ams_ProcKillMsg: {
-            int len = sizeof(ams::ProcKillMsg);
-            ams::ProcKillMsg *ctype = new(ary_AllocN(buf, len).elems) ams::ProcKillMsg; // default values
-            ok = ProcKillMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
-        } break; // ams::ProcKillMsg case
+        case ams_MsgHeaderMsgsCase_ams_SampMengCancelOrderMsg: {
+            int len = sizeof(ams::SampMengCancelOrderMsg);
+            ams::SampMengCancelOrderMsg *ctype = new(ary_AllocN(buf, len).elems) ams::SampMengCancelOrderMsg; // default values
+            ok = SampMengCancelOrderMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
+        } break; // ams::SampMengCancelOrderMsg case
 
-        case ams_MsgHeaderMsgsCase_ams_ProcMsg: {
-            int len = sizeof(ams::ProcMsg);
-            ams::ProcMsg *ctype = new(ary_AllocN(buf, len).elems) ams::ProcMsg; // default values
+        case ams_MsgHeaderMsgsCase_ams_SampMengCancelReqMsg: {
+            int len = sizeof(ams::SampMengCancelReqMsg);
+            ams::SampMengCancelReqMsg *ctype = new(ary_AllocN(buf, len).elems) ams::SampMengCancelReqMsg; // default values
+            ok = SampMengCancelReqMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
+        } break; // ams::SampMengCancelReqMsg case
+
+        case ams_MsgHeaderMsgsCase_ams_SampMengMassCancelReqMsg: {
+            int len = sizeof(ams::SampMengMassCancelReqMsg);
+            ams::SampMengMassCancelReqMsg *ctype = new(ary_AllocN(buf, len).elems) ams::SampMengMassCancelReqMsg; // default values
+            ok = SampMengMassCancelReqMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
+        } break; // ams::SampMengMassCancelReqMsg case
+
+        case ams_MsgHeaderMsgsCase_ams_SampMengNewOrderMsg: {
+            int len = sizeof(ams::SampMengNewOrderMsg);
+            ams::SampMengNewOrderMsg *ctype = new(ary_AllocN(buf, len).elems) ams::SampMengNewOrderMsg; // default values
+            ok = SampMengNewOrderMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
+        } break; // ams::SampMengNewOrderMsg case
+
+        case ams_MsgHeaderMsgsCase_ams_SampMengNewOrderReqMsg: {
+            int len = sizeof(ams::SampMengNewOrderReqMsg);
+            ams::SampMengNewOrderReqMsg *ctype = new(ary_AllocN(buf, len).elems) ams::SampMengNewOrderReqMsg; // default values
+            ok = SampMengNewOrderReqMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
+        } break; // ams::SampMengNewOrderReqMsg case
+
+        case ams_MsgHeaderMsgsCase_ams_SampMengNewSymbolMsg: {
+            int len = sizeof(ams::SampMengNewSymbolMsg);
+            ams::SampMengNewSymbolMsg *ctype = new(ary_AllocN(buf, len).elems) ams::SampMengNewSymbolMsg; // default values
+            ok = SampMengNewSymbolMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
+        } break; // ams::SampMengNewSymbolMsg case
+
+        case ams_MsgHeaderMsgsCase_ams_SampMengNewSymbolReqMsg: {
+            int len = sizeof(ams::SampMengNewSymbolReqMsg);
+            ams::SampMengNewSymbolReqMsg *ctype = new(ary_AllocN(buf, len).elems) ams::SampMengNewSymbolReqMsg; // default values
+            ok = SampMengNewSymbolReqMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
+        } break; // ams::SampMengNewSymbolReqMsg case
+
+        case ams_MsgHeaderMsgsCase_ams_SampMengNewUserMsg: {
+            int len = sizeof(ams::SampMengNewUserMsg);
+            ams::SampMengNewUserMsg *ctype = new(ary_AllocN(buf, len).elems) ams::SampMengNewUserMsg; // default values
+            ok = SampMengNewUserMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
+        } break; // ams::SampMengNewUserMsg case
+
+        case ams_MsgHeaderMsgsCase_ams_SampMengNewUserReqMsg: {
+            int len = sizeof(ams::SampMengNewUserReqMsg);
+            ams::SampMengNewUserReqMsg *ctype = new(ary_AllocN(buf, len).elems) ams::SampMengNewUserReqMsg; // default values
+            ok = SampMengNewUserReqMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
+        } break; // ams::SampMengNewUserReqMsg case
+
+        case ams_MsgHeaderMsgsCase_ams_SampMengOrderTradeMsg: {
+            int len = sizeof(ams::SampMengOrderTradeMsg);
+            ams::SampMengOrderTradeMsg *ctype = new(ary_AllocN(buf, len).elems) ams::SampMengOrderTradeMsg; // default values
+            ok = SampMengOrderTradeMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
+        } break; // ams::SampMengOrderTradeMsg case
+
+        case ams_MsgHeaderMsgsCase_ams_SampMengRestingMsg: {
+            int len = sizeof(ams::SampMengRestingMsg);
+            ams::SampMengRestingMsg *ctype = new(ary_AllocN(buf, len).elems) ams::SampMengRestingMsg; // default values
+            ok = SampMengRestingMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
+        } break; // ams::SampMengRestingMsg case
+
+        case ams_MsgHeaderMsgsCase_ams_SampMengSymbolrowMsg: {
+            int len = sizeof(ams::SampMengSymbolrowMsg);
+            ams::SampMengSymbolrowMsg *ctype = new(ary_AllocN(buf, len).elems) ams::SampMengSymbolrowMsg; // default values
+            ok = SampMengSymbolrowMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
+        } break; // ams::SampMengSymbolrowMsg case
+
+        case ams_MsgHeaderMsgsCase_ams_SampMengTextMsg: {
+            int len = sizeof(ams::SampMengTextMsg);
+            ams::SampMengTextMsg *ctype = new(ary_AllocN(buf, len).elems) ams::SampMengTextMsg; // default values
             algo::ByteAry varlenbuf;
             algo::ByteAry *varlenbuf_save = algo_lib::_db.varlenbuf;
             algo_lib::_db.varlenbuf = &varlenbuf;
-            ok = ProcMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
+            ok = SampMengTextMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
             len += ary_N(varlenbuf);
             ctype->length = u32(len);
             ary_Addary(buf, ary_Getary(varlenbuf));
             algo_lib::_db.varlenbuf = varlenbuf_save;
-        } break; // ams::ProcMsg case
+        } break; // ams::SampMengTextMsg case
 
-        case ams_MsgHeaderMsgsCase_ams_ProcReadMsg: {
-            int len = sizeof(ams::ProcReadMsg);
-            ams::ProcReadMsg *ctype = new(ary_AllocN(buf, len).elems) ams::ProcReadMsg; // default values
-            algo::ByteAry varlenbuf;
-            algo::ByteAry *varlenbuf_save = algo_lib::_db.varlenbuf;
-            algo_lib::_db.varlenbuf = &varlenbuf;
-            ok = ProcReadMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
-            len += ary_N(varlenbuf);
-            ctype->length = u32(len);
-            ary_Addary(buf, ary_Getary(varlenbuf));
-            algo_lib::_db.varlenbuf = varlenbuf_save;
-        } break; // ams::ProcReadMsg case
-
-        case ams_MsgHeaderMsgsCase_ams_ProcStartMsg: {
-            int len = sizeof(ams::ProcStartMsg);
-            ams::ProcStartMsg *ctype = new(ary_AllocN(buf, len).elems) ams::ProcStartMsg; // default values
-            algo::ByteAry varlenbuf;
-            algo::ByteAry *varlenbuf_save = algo_lib::_db.varlenbuf;
-            algo_lib::_db.varlenbuf = &varlenbuf;
-            ok = ProcStartMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
-            len += ary_N(varlenbuf);
-            ctype->length = u32(len);
-            ary_Addary(buf, ary_Getary(varlenbuf));
-            algo_lib::_db.varlenbuf = varlenbuf_save;
-        } break; // ams::ProcStartMsg case
-
-        case ams_MsgHeaderMsgsCase_ams_ProcStatusMsg: {
-            int len = sizeof(ams::ProcStatusMsg);
-            ams::ProcStatusMsg *ctype = new(ary_AllocN(buf, len).elems) ams::ProcStatusMsg; // default values
-            ok = ProcStatusMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
-        } break; // ams::ProcStatusMsg case
-
-        case ams_MsgHeaderMsgsCase_ams_RemDirRecurseMsg: {
-            int len = sizeof(ams::RemDirRecurseMsg);
-            ams::RemDirRecurseMsg *ctype = new(ary_AllocN(buf, len).elems) ams::RemDirRecurseMsg; // default values
-            algo::ByteAry varlenbuf;
-            algo::ByteAry *varlenbuf_save = algo_lib::_db.varlenbuf;
-            algo_lib::_db.varlenbuf = &varlenbuf;
-            ok = RemDirRecurseMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
-            len += ary_N(varlenbuf);
-            ctype->length = u32(len);
-            ary_Addary(buf, ary_Getary(varlenbuf));
-            algo_lib::_db.varlenbuf = varlenbuf_save;
-        } break; // ams::RemDirRecurseMsg case
+        case ams_MsgHeaderMsgsCase_ams_SampMengUserrowMsg: {
+            int len = sizeof(ams::SampMengUserrowMsg);
+            ams::SampMengUserrowMsg *ctype = new(ary_AllocN(buf, len).elems) ams::SampMengUserrowMsg; // default values
+            ok = SampMengUserrowMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
+        } break; // ams::SampMengUserrowMsg case
 
         case ams_MsgHeaderMsgsCase_ams_ShmHbMsg: {
             int len = sizeof(ams::ShmHbMsg);
             ams::ShmHbMsg *ctype = new(ary_AllocN(buf, len).elems) ams::ShmHbMsg; // default values
             ok = ShmHbMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
         } break; // ams::ShmHbMsg case
-
-        case ams_MsgHeaderMsgsCase_ams_Shmmsg: {
-            int len = sizeof(ams::Shmmsg);
-            ams::Shmmsg *ctype = new(ary_AllocN(buf, len).elems) ams::Shmmsg; // default values
-            algo::ByteAry varlenbuf;
-            algo::ByteAry *varlenbuf_save = algo_lib::_db.varlenbuf;
-            algo_lib::_db.varlenbuf = &varlenbuf;
-            ok = Shmmsg_ReadStrptrMaybe(*ctype, str); // now read attributes
-            len += ary_N(varlenbuf);
-            ctype->length = u32(len);
-            ary_Addary(buf, ary_Getary(varlenbuf));
-            algo_lib::_db.varlenbuf = varlenbuf_save;
-        } break; // ams::Shmmsg case
 
         case ams_MsgHeaderMsgsCase_ams_TerminateMsg: {
             int len = sizeof(ams::TerminateMsg);
@@ -2927,6 +4216,19 @@ ams::MsgHeaderMsgsCase ams::MsgHeaderMsgs_ReadStrptr(algo::strptr str, algo::Byt
         case ams_MsgHeaderMsgsCase_ams_UdpFrame: {
             // no cfmt read:Y found -- cannot read
         } break; // ams::UdpFrame case
+
+        case ams_MsgHeaderMsgsCase_ams_UprocTextMsg: {
+            int len = sizeof(ams::UprocTextMsg);
+            ams::UprocTextMsg *ctype = new(ary_AllocN(buf, len).elems) ams::UprocTextMsg; // default values
+            algo::ByteAry varlenbuf;
+            algo::ByteAry *varlenbuf_save = algo_lib::_db.varlenbuf;
+            algo_lib::_db.varlenbuf = &varlenbuf;
+            ok = UprocTextMsg_ReadStrptrMaybe(*ctype, str); // now read attributes
+            len += ary_N(varlenbuf);
+            ctype->length = u32(len);
+            ary_Addary(buf, ary_Getary(varlenbuf));
+            algo_lib::_db.varlenbuf = varlenbuf_save;
+        } break; // ams::UprocTextMsg case
 
         case ams_MsgHeaderMsgsCase_fm_AlarmMsg: {
             int len = sizeof(fm::AlarmMsg);
@@ -2990,20 +4292,80 @@ bool ams::MsgHeaderMsgs_ReadStrptrMaybe(algo::strptr str, algo::ByteAry &buf) {
     return !(msgtype == ams::MsgHeaderMsgsCase());
 }
 
+// --- ams...InputLineMsg_FmtAlloc
+// Construct a new ams::InputLineMsg in the space provided by ALLOC.
+// If ALLOC cannot provide the space, construct nothing and return NULL.
+// A total beyond the i32 frame length domain constructs nothing and returns NULL.
+ams::InputLineMsg * ams::InputLineMsg_FmtAlloc(const algo::Alloc &alloc, ams::ProcId proc_id, algo::aryptr<char > payload) {
+    ams::InputLineMsg  *msg = NULL;
+    size_t len = sizeof(ams::InputLineMsg);
+    u64 payload_ary_len = u64(elems_N(payload)) * sizeof(char);
+    len += payload_ary_len;
+    if (len > 0x7fffffff) {
+        return NULL; // a frame length is an i32, and so is every buffer size argument
+    }
+    msg = (ams::InputLineMsg*)alloc.begin(alloc.ctx, int(len));
+    if (!msg) {
+        return NULL; // no room.
+    }
+    msg->type = u32(22);
+    msg->length = u32(len);
+    msg->proc_id = proc_id;
+    memcpy(payload_Addr(*msg), payload.elems, payload_ary_len);
+    if (alloc.end) {
+        alloc.end(alloc.ctx, msg, int(len)); // finalize
+    }
+    return msg;
+}
+
+// --- ams...LogMsg_FmtAlloc
+// Construct a new ams::LogMsg in the space provided by ALLOC.
+// If ALLOC cannot provide the space, construct nothing and return NULL.
+// A total beyond the i32 frame length domain constructs nothing and returns NULL.
+ams::LogMsg * ams::LogMsg_FmtAlloc(const algo::Alloc &alloc, ams::ProcId proc_id, algo::SchedTime tstamp, algo::aryptr<char > logcat, algo::aryptr<char > text) {
+    ams::LogMsg  *msg = NULL;
+    size_t len = sizeof(ams::LogMsg);
+    u64 logcat_ary_len = u64(elems_N(logcat)) * sizeof(char);
+    len += logcat_ary_len;
+    u64 text_ary_len = u64(elems_N(text)) * sizeof(char);
+    len += text_ary_len;
+    if (len > 0x7fffffff) {
+        return NULL; // a frame length is an i32, and so is every buffer size argument
+    }
+    msg = (ams::LogMsg*)alloc.begin(alloc.ctx, int(len));
+    if (!msg) {
+        return NULL; // no room.
+    }
+    msg->type = u32(6);
+    msg->length = u32(len);
+    msg->proc_id = proc_id;
+    msg->tstamp = tstamp;
+    memcpy(logcat_Addr(*msg), logcat.elems, logcat_ary_len);
+    (*msg).logcat_end = u32(logcat_ary_len);
+    memcpy(text_Addr(*msg), text.elems, text_ary_len);
+    if (alloc.end) {
+        alloc.end(alloc.ctx, msg, int(len)); // finalize
+    }
+    return msg;
+}
+
 // --- ams...LogMsg_FmtByteAry
 // Construct a new ams::LogMsg in the space provided by BUF.
-// If BUF doesn't have enough space available, throw exception.
+// A total beyond the i32 frame length domain constructs nothing and returns NULL.
 ams::LogMsg * ams::LogMsg_FmtByteAry(algo::ByteAry &buf, ams::ProcId proc_id, algo::SchedTime tstamp, algo::aryptr<char > logcat, algo::aryptr<char > text) {
     ams::LogMsg  *msg = NULL;
     size_t len = sizeof(ams::LogMsg);
-    u32 logcat_ary_len = elems_N(logcat) * sizeof(char);
+    u64 logcat_ary_len = u64(elems_N(logcat)) * sizeof(char);
     len += logcat_ary_len;
-    u32 text_ary_len = elems_N(text) * sizeof(char);
+    u64 text_ary_len = u64(elems_N(text)) * sizeof(char);
     len += text_ary_len;
+    if (len > 0x7fffffff) {
+        return NULL; // a frame length is an i32, and so is every buffer size argument
+    }
     ary_RemoveAll(buf);
     msg = (ams::LogMsg*)ary_AllocN(buf,len).elems;
     msg->type = u32(6);
-    msg->length = u32((len + (0)) / (1));
+    msg->length = u32(len);
     msg->proc_id = proc_id;
     msg->tstamp = tstamp;
     memcpy(logcat_Addr(*msg), logcat.elems, logcat_ary_len);
@@ -3012,18 +4374,49 @@ ams::LogMsg * ams::LogMsg_FmtByteAry(algo::ByteAry &buf, ams::ProcId proc_id, al
     return msg;
 }
 
+// --- ams...MsgBlock_FmtAlloc
+// Construct a new ams::MsgBlock in the space provided by ALLOC.
+// If ALLOC cannot provide the space, construct nothing and return NULL.
+// A total beyond the i32 frame length domain constructs nothing and returns NULL.
+ams::MsgBlock * ams::MsgBlock_FmtAlloc(const algo::Alloc &alloc, u64 first_seqno, u32 n_messages, u32 original_length, algo::aryptr<u8 > messages) {
+    ams::MsgBlock  *msg = NULL;
+    size_t len = sizeof(ams::MsgBlock);
+    u64 messages_ary_len = u64(elems_N(messages)) * sizeof(u8);
+    len += messages_ary_len;
+    if (len > 0x7fffffff) {
+        return NULL; // a frame length is an i32, and so is every buffer size argument
+    }
+    msg = (ams::MsgBlock*)alloc.begin(alloc.ctx, int(len));
+    if (!msg) {
+        return NULL; // no room.
+    }
+    msg->type = u32(1);
+    msg->length = u32(len);
+    msg->first_seqno = first_seqno;
+    msg->n_messages = n_messages;
+    msg->original_length = original_length;
+    memcpy(messages_Addr(*msg), messages.elems, messages_ary_len);
+    if (alloc.end) {
+        alloc.end(alloc.ctx, msg, int(len)); // finalize
+    }
+    return msg;
+}
+
 // --- ams...MsgBlock_FmtByteAry
 // Construct a new ams::MsgBlock in the space provided by BUF.
-// If BUF doesn't have enough space available, throw exception.
+// A total beyond the i32 frame length domain constructs nothing and returns NULL.
 ams::MsgBlock * ams::MsgBlock_FmtByteAry(algo::ByteAry &buf, u64 first_seqno, u32 n_messages, u32 original_length, algo::aryptr<u8 > messages) {
     ams::MsgBlock  *msg = NULL;
     size_t len = sizeof(ams::MsgBlock);
-    u32 messages_ary_len = elems_N(messages) * sizeof(u8);
+    u64 messages_ary_len = u64(elems_N(messages)) * sizeof(u8);
     len += messages_ary_len;
+    if (len > 0x7fffffff) {
+        return NULL; // a frame length is an i32, and so is every buffer size argument
+    }
     ary_RemoveAll(buf);
     msg = (ams::MsgBlock*)ary_AllocN(buf,len).elems;
     msg->type = u32(1);
-    msg->length = u32((len + (0)) / (1));
+    msg->length = u32(len);
     msg->first_seqno = first_seqno;
     msg->n_messages = n_messages;
     msg->original_length = original_length;
@@ -3033,20 +4426,24 @@ ams::MsgBlock * ams::MsgBlock_FmtByteAry(algo::ByteAry &buf, u64 first_seqno, u3
 
 // --- ams...MsgBlock_FmtMemptr
 // Construct a new ams::MsgBlock in the space provided by BUF.
-// If BUF doesn't have enough space available, throw exception.
+// If BUF has no room for the message, construct nothing and return NULL.
 // After constructing, advance BUF appropriate number of bytes forward
+// A total beyond the i32 frame length domain constructs nothing and returns NULL.
 ams::MsgBlock * ams::MsgBlock_FmtMemptr(algo::memptr &buf, u64 first_seqno, u32 n_messages, u32 original_length, algo::aryptr<u8 > messages) {
     ams::MsgBlock  *msg = NULL;
     size_t len = sizeof(ams::MsgBlock);
-    u32 messages_ary_len = elems_N(messages) * sizeof(u8);
+    u64 messages_ary_len = u64(elems_N(messages)) * sizeof(u8);
     len += messages_ary_len;
-    if (len > u32(elems_N(buf))) {
+    if (len > 0x7fffffff) {
+        return NULL; // a frame length is an i32, and so is every buffer size argument
+    }
+    if (len > u64(elems_N(buf))) {
         return NULL; // no room.
     }
     msg = (ams::MsgBlock*)buf.elems;
     buf        = RestFrom(buf,len);
     msg->type = u32(1);
-    msg->length = u32((len + (0)) / (1));
+    msg->length = u32(len);
     msg->first_seqno = first_seqno;
     msg->n_messages = n_messages;
     msg->original_length = original_length;
@@ -3054,18 +4451,91 @@ ams::MsgBlock * ams::MsgBlock_FmtMemptr(algo::memptr &buf, u64 first_seqno, u32 
     return msg;
 }
 
+// --- ams...ShmHbMsg_FmtAlloc
+// Construct a new ams::ShmHbMsg in the space provided by ALLOC.
+// If ALLOC cannot provide the space, construct nothing and return NULL.
+ams::ShmHbMsg * ams::ShmHbMsg_FmtAlloc(const algo::Alloc &alloc, ams::GrpmemberId grpmember, u64 off, u32 wbudget) {
+    ams::ShmHbMsg  *msg = NULL;
+    size_t len = sizeof(ams::ShmHbMsg);
+    msg = (ams::ShmHbMsg*)alloc.begin(alloc.ctx, int(len));
+    if (!msg) {
+        return NULL; // no room.
+    }
+    msg->type = u32(3);
+    msg->length = u32(len);
+    msg->grpmember = grpmember;
+    msg->off = off;
+    msg->wbudget = wbudget;
+    if (alloc.end) {
+        alloc.end(alloc.ctx, msg, int(len)); // finalize
+    }
+    return msg;
+}
+
+// --- ams...TerminateMsg_FmtAlloc
+// Construct a new ams::TerminateMsg in the space provided by ALLOC.
+// If ALLOC cannot provide the space, construct nothing and return NULL.
+ams::TerminateMsg * ams::TerminateMsg_FmtAlloc(const algo::Alloc &alloc, ams::ProcId proc_id) {
+    ams::TerminateMsg  *msg = NULL;
+    size_t len = sizeof(ams::TerminateMsg);
+    msg = (ams::TerminateMsg*)alloc.begin(alloc.ctx, int(len));
+    if (!msg) {
+        return NULL; // no room.
+    }
+    msg->type = u32(352);
+    msg->length = u32(len);
+    msg->proc_id = proc_id;
+    if (alloc.end) {
+        alloc.end(alloc.ctx, msg, int(len)); // finalize
+    }
+    return msg;
+}
+
+// --- ams...UdpFrame_FmtAlloc
+// Construct a new ams::UdpFrame in the space provided by ALLOC.
+// If ALLOC cannot provide the space, construct nothing and return NULL.
+// A total beyond the i32 frame length domain constructs nothing and returns NULL.
+ams::UdpFrame * ams::UdpFrame_FmtAlloc(const algo::Alloc &alloc, algo::UnTime timestamp, ietf::Ipv4 src_ip, ietf::Ipv4 dst_ip, u16 src_port, u16 dst_port, algo::aryptr<u8 > payload) {
+    ams::UdpFrame  *msg = NULL;
+    size_t len = sizeof(ams::UdpFrame);
+    u64 payload_ary_len = u64(elems_N(payload)) * sizeof(u8);
+    len += payload_ary_len;
+    if (len > 0x7fffffff) {
+        return NULL; // a frame length is an i32, and so is every buffer size argument
+    }
+    msg = (ams::UdpFrame*)alloc.begin(alloc.ctx, int(len));
+    if (!msg) {
+        return NULL; // no room.
+    }
+    msg->type = u32(2);
+    msg->length = u32(len);
+    msg->timestamp = timestamp;
+    msg->src_ip = src_ip;
+    msg->dst_ip = dst_ip;
+    msg->src_port = src_port;
+    msg->dst_port = dst_port;
+    memcpy(payload_Addr(*msg), payload.elems, payload_ary_len);
+    if (alloc.end) {
+        alloc.end(alloc.ctx, msg, int(len)); // finalize
+    }
+    return msg;
+}
+
 // --- ams...UdpFrame_FmtByteAry
 // Construct a new ams::UdpFrame in the space provided by BUF.
-// If BUF doesn't have enough space available, throw exception.
+// A total beyond the i32 frame length domain constructs nothing and returns NULL.
 ams::UdpFrame * ams::UdpFrame_FmtByteAry(algo::ByteAry &buf, algo::UnTime timestamp, ietf::Ipv4 src_ip, ietf::Ipv4 dst_ip, u16 src_port, u16 dst_port, algo::aryptr<u8 > payload) {
     ams::UdpFrame  *msg = NULL;
     size_t len = sizeof(ams::UdpFrame);
-    u32 payload_ary_len = elems_N(payload) * sizeof(u8);
+    u64 payload_ary_len = u64(elems_N(payload)) * sizeof(u8);
     len += payload_ary_len;
+    if (len > 0x7fffffff) {
+        return NULL; // a frame length is an i32, and so is every buffer size argument
+    }
     ary_RemoveAll(buf);
     msg = (ams::UdpFrame*)ary_AllocN(buf,len).elems;
     msg->type = u32(2);
-    msg->length = u32((len + (0)) / (1));
+    msg->length = u32(len);
     msg->timestamp = timestamp;
     msg->src_ip = src_ip;
     msg->dst_ip = dst_ip;
@@ -3077,20 +4547,24 @@ ams::UdpFrame * ams::UdpFrame_FmtByteAry(algo::ByteAry &buf, algo::UnTime timest
 
 // --- ams...UdpFrame_FmtMemptr
 // Construct a new ams::UdpFrame in the space provided by BUF.
-// If BUF doesn't have enough space available, throw exception.
+// If BUF has no room for the message, construct nothing and return NULL.
 // After constructing, advance BUF appropriate number of bytes forward
+// A total beyond the i32 frame length domain constructs nothing and returns NULL.
 ams::UdpFrame * ams::UdpFrame_FmtMemptr(algo::memptr &buf, algo::UnTime timestamp, ietf::Ipv4 src_ip, ietf::Ipv4 dst_ip, u16 src_port, u16 dst_port, algo::aryptr<u8 > payload) {
     ams::UdpFrame  *msg = NULL;
     size_t len = sizeof(ams::UdpFrame);
-    u32 payload_ary_len = elems_N(payload) * sizeof(u8);
+    u64 payload_ary_len = u64(elems_N(payload)) * sizeof(u8);
     len += payload_ary_len;
-    if (len > u32(elems_N(buf))) {
+    if (len > 0x7fffffff) {
+        return NULL; // a frame length is an i32, and so is every buffer size argument
+    }
+    if (len > u64(elems_N(buf))) {
         return NULL; // no room.
     }
     msg = (ams::UdpFrame*)buf.elems;
     buf        = RestFrom(buf,len);
     msg->type = u32(2);
-    msg->length = u32((len + (0)) / (1));
+    msg->length = u32(len);
     msg->timestamp = timestamp;
     msg->src_ip = src_ip;
     msg->dst_ip = dst_ip;

@@ -1,0 +1,27 @@
+#!/bin/bash
+# Build a small real checkout under temp/ and run wt inside it.
+# Usage: test/wt-scratch <wt-binary> <wt-arg>...
+#
+# Materializing a sandbox copies the checkout, so a wt test that runs at
+# the top of the real repo pays for the whole tree -- ~30s on a CI runner
+# once the build directory exists. The tests' subject is wt's behavior,
+# not the repo's size, so each test runs wt in a scratch checkout: a git
+# repo holding one commit with a copy of data/ (wt's registry operations
+# run acr, which needs the ssim database) -- small enough that any
+# materialization takes a fraction of a second on any host.
+#
+# exec keeps wt in this process, so a memcheck wrapper around the test
+# command stays attached to wt itself across the exec.
+set -e
+wt="$PWD/$1"
+shift
+export PATH="$PWD/bin:$PATH"
+dir=temp/wt_scratch
+rm -rf $dir
+mkdir -p $dir
+cp -r data $dir/
+cd $dir
+git init -q
+git add -A
+git -c user.email=wt@scratch -c user.name=wt commit -qm scratch
+exec "$wt" "$@"

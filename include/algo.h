@@ -73,7 +73,7 @@ namespace algo {
         typedef strptr ChildType;
         algo_lib::InTextFile file;// current file
         strptr line;// current line
-        int i;// current line number - 1 (for compatibility with array iteration)
+        i64 i;// current line number - 1 (for compatibility with array iteration)
         Bool eof;
     };
 
@@ -118,9 +118,35 @@ namespace algo {
         typedef strptr ChildType;
         StringIter contents;
         bool eof;
-        int i;
+        i64 i;
         strptr line;
         inline Line_curs();
+    };
+
+    // Deadline-bounded retry loop.  Used as
+    //     ind_beg(algo::retry_curs, retry, 10 * scale) {
+    //         got = ...;
+    //         retry.accept   = want == got;
+    //         retry.comment << "wanted " << want << ", got " << got;
+    //     }ind_end;
+    // The body runs until it sets retry.accept (loop ends, success) or the
+    // WAIT-second budget passed to Reset is spent, at which point the last
+    // retry.comment is raised as the failure -- or, with Reset's failok flag
+    // (ind_beg(algo::retry_curs, retry, 10, true)), logged once and the loop
+    // simply ends, for conditions worth waiting for but legal to proceed
+    // without.  Callers scale WAIT themselves
+    // (e.g. multiply by a slow-build factor).  comment is cleared before each
+    // iteration -- the body just appends -- and logged after each iteration
+    // when algo_lib::_db.cmdline.verbose is set.  The cursor sleeps one poll
+    // interval between attempts.
+    struct retry_curs {
+        typedef retry_curs ChildType;
+        bool          accept;        // body sets true once the condition holds
+        bool          failok;        // budget exhaustion ends the loop instead of raising
+        algo::cstring comment;       // body's explanation (just append to it)
+        double        deadline_sec;  // total budget passed to Reset
+        algo::UnTime  t0;            // loop start
+        i32           niter;         // completed attempts
     };
 
     // Word cursor (works with ind_beg/ind_end)
@@ -135,7 +161,7 @@ namespace algo {
         typedef strptr ChildType;
         strptr text;
         strptr token;// current token
-        int index;// current index (may be past token.end)
+        i64 index;// current index (may be past token.end)
         inline Word_curs();
     };
 
@@ -279,6 +305,19 @@ namespace algo {
     static const i64 WTIME_PER_SEC  = 10000000;
     static const i64 WTIME_PER_MSEC = 10000;
     static const i64 WTIME_PER_USEC = 10;
+
+    struct Alloc {
+        void *ctx;
+        BeginAllocFcn begin;        // Begin allocating block of LEN bytes. Return NULL if unable to
+        EndAllocFcn end;        // End allopcating block of LEN bytes. Must match values yielded by AllocBegin
+        template<class T> Alloc(T &in_ctx, void *(*in_BeginAlloc)(T&, i32), void (*in_EndAlloc)(T&, void *, i32)) {
+            ctx=&in_ctx;
+            begin=BeginAllocFcn(in_BeginAlloc);
+            end=EndAllocFcn(in_EndAlloc);
+        }
+        Alloc() {
+        }
+    };
 }
 
 // -----------------------------------------------------------------------------
@@ -316,6 +355,11 @@ namespace algo { // update-hdr
     // print base64-encoded string
     void strptr_PrintBase64(strptr str, cstring &out);
 
+    // Append the bytes STR encodes to OUT.  False when STR holds a character
+    // outside the alphabet, which is skipped like the padding is, so OUT still
+    // carries what the rest of the string decoded to.
+    bool strptr_ReadBase64(strptr str, cstring &out);
+
     // -------------------------------------------------------------------
     // cpp/lib/algo/bin_decode.cpp
     //
@@ -346,9 +390,28 @@ namespace algo { // update-hdr
 
     // eight-byte, big-endian signed
     bool DecodeBEI64(algo::memptr &buf, i64 &result);
-    bool DecodeBEF64(algo::memptr &buf, double &result);
 
-    // continuation bit (bit 7 of each byte), little-endian, u32
+    // four-byte, little-endian
+    bool DecodeLEU32(algo::memptr &buf, u32 &result);
+
+    // four-byte, little-endian signed
+    bool DecodeLEI32(algo::memptr &buf, i32 &result);
+
+    // eight-byte, little-endian
+    bool DecodeLEU64(algo::memptr &buf, u64 &result);
+
+    // eight-byte, little-endian signed
+    bool DecodeLEI64(algo::memptr &buf, i64 &result);
+    bool DecodeBEF64(algo::memptr &buf, double &result);
+    bool DecodeLEF32(algo::memptr &buf, float &result);
+    bool DecodeLEF64(algo::memptr &buf, double &result);
+
+    // continuation bit (bit 7 of each byte), little-endian, u32.
+    // A group is taken only while the shift stays inside the accumulator's width and
+    // the group keeps every one of its bits under that shift, so a varint naming a
+    // value above 0xffffffff, a varint longer than five bytes, and a varint the
+    // buffer never terminates all leave BUF and RESULT alone.
+    // Pinned by atf_unit algo_lib.DecodeVLCLERange.
     bool DecodeVLCLEU32(algo::memptr &buf, u32 &result);
 
     // continuation bit (bit 7 of each byte), little-endian, u32, signed zigzag
@@ -356,7 +419,14 @@ namespace algo { // update-hdr
     // unsigned mantissa - bits 1..N (msb)
     bool DecodeVLCLEI32Z(algo::memptr &buf, i32 &result);
 
-    // continuation bit (bit 7 of each byte), little-endian, u64
+    // continuation bit (bit 7 of each byte), little-endian, u64.
+    // A group is taken only while the shift stays inside the accumulator's width and
+    // the group keeps every one of its bits under that shift, so a varint naming a
+    // value above 0xffffffffffffffff, a varint longer than ten bytes, and a varint
+    // the buffer never terminates all leave BUF and RESULT alone.  Bounding the
+    // shift is also what keeps the group's placement defined: an eleventh group
+    // would be shifted by 70, and a shift at or past the width has no result.
+    // Pinned by atf_unit algo_lib.DecodeVLCLERange.
     bool DecodeVLCLEU64(algo::memptr &buf, u64 &result);
 
     // continuation - bit 7 (msb) of each byte, little-endian, signed zigzag:
@@ -364,11 +434,16 @@ namespace algo { // update-hdr
     // unsigned mantissa - bits 1..N (msb)
     bool DecodeVLCLEI64Z(algo::memptr &buf, i64 &result);
 
-    // N bytes, raw
-    bool DecodeNBytes(algo::memptr &buf, int n, algo::memptr &result);
+    // N bytes, raw.  N comes from the wire, so it is accepted only in
+    // [0,bytes remaining in BUF]; anything else leaves BUF and RESULT alone.
+    // The count is signed 64-bit because every caller's length type -- u16, u32,
+    // i32, i64 -- converts into it without changing value, so a length no buffer
+    // can satisfy cannot wrap into the accepted range.
+    // Pinned by atf_unit algo_lib.DecodeNRange.
+    bool DecodeNBytes(algo::memptr &buf, i64 n, algo::memptr &result);
 
-    // N bytes as chars
-    bool DecodeNChars(algo::memptr &buf, int n, strptr &result);
+    // N bytes as chars, accepting the same range of N as DecodeNBytes.
+    bool DecodeNChars(algo::memptr &buf, i64 n, strptr &result);
 
     // zero-terminated string
     bool DecodeZeroterm(algo::strptr &buf, strptr &result);
@@ -391,7 +466,13 @@ namespace algo { // update-hdr
     void EncodeBEI32(algo::ByteAry &buf, i32 value);
     void EncodeBEU64(algo::ByteAry &buf, u64 value);
     void EncodeBEI64(algo::ByteAry &buf, i64 value);
+    void EncodeLEU32(algo::ByteAry &buf, u32 value);
+    void EncodeLEI32(algo::ByteAry &buf, i32 value);
+    void EncodeLEU64(algo::ByteAry &buf, u64 value);
+    void EncodeLEI64(algo::ByteAry &buf, i64 value);
     void EncodeBEF64(algo::ByteAry &buf, double value);
+    void EncodeLEF32(algo::ByteAry &buf, float value);
+    void EncodeLEF64(algo::ByteAry &buf, double value);
 
     // variable-length, continuation bit, u32
     void EncodeVLCLEU32(algo::ByteAry &buf, u32 value);
@@ -411,7 +492,14 @@ namespace algo { // update-hdr
     // -------------------------------------------------------------------
     // cpp/lib/algo/crc32.cpp -- Software-based CRC32
     //
+
+    // IEEE 802.3/zlib CRC-32, table-driven; fixed regardless of build.
+    u32 CRC32IEEE(u32 old, const u8 *data, size_t len);
     u32 CRC32Step(u32 old, const u8 *data, size_t len);
+
+    // FNV-1a 64-bit over LEN bytes at X, continuing from OLD; pass the offset
+    // basis 14695981039346656037 to start a new hash.
+    u64 Fnv1a64Step(u64 old, const u8 *x, size_t len);
 
     // -------------------------------------------------------------------
     // cpp/lib/algo/decimal.cpp
@@ -458,8 +546,27 @@ namespace algo { // update-hdr
     // Test whether PATH is an existing directory
     bool DirectoryQ(strptr path) __attribute__((nothrow));
 
+    // Test whether directory PATH grants search (execute) permission to the real
+    // user id -- the permission opening a file by name under PATH requires, on top
+    // of that file's own.  Read permission is a separate bit, needed to list PATH's
+    // entries and not consulted here, so a directory whose files are only ever
+    // opened by name reads as searchable without it.
+    bool DirSearchableQ(strptr path) __attribute__((nothrow));
+
+    // Test whether PATH is a mount point -- a filesystem is actually mounted there,
+    // so PATH's device id differs from its parent directory's.  A directory that
+    // merely exists with nothing mounted on it (e.g. a drive that failed to mount or
+    // is bound to a userspace driver) is NOT a mount point and reads as unmounted.
+    bool MountpointQ(strptr path) __attribute__((nothrow));
+
     // Test if F refers to an existing regular file (i.e. not a special file or directory)
     bool FileQ(strptr fname) __attribute__((nothrow));
+
+    // Test if FNAME refers to a path that can be opened and read as a stream of bytes:
+    // a regular file, a FIFO/socket, a character/block device, or a /dev/fd/N pipe
+    // produced by bash <(...) process substitution. Returns false for directories
+    // and for paths that don't exist.
+    bool FileLikeQ(strptr fname) __attribute__((nothrow));
 
     // Wrapper for c library realpath function.
     // On Windows: read path and expand all soft links along the way; Also eat ..'s.
@@ -574,7 +681,7 @@ namespace algo { // update-hdr
 
     // User-defined cleanup trigger for dir_handle field of ctype:algo.DirEntry
     //     (user-implemented function, prototype is in amc-generated header)
-    // void dir_handle_Cleanup(algo::DirEntry &dir_entry); // fcleanup:algo.DirEntry.dir_handle
+    // void dir_handle_Cleanup(algo::DirEntry &dir_entry); // ffunc:algo.DirEntry.dir_handle.Cleanup
 
     // Open file FILENAME with flags FLAGS, return resulting file descriptor
     // Possible flags:
@@ -633,8 +740,37 @@ namespace algo { // update-hdr
     // No exceptions are thrown. If the function fails, check errno.
     // Default mode for new file is provided by MODE.
     // If the file is being replaced, MODE is ignored and copied from the old file.
-    bool SafeStringToFile(const strptr& str, const strptr& filename, int dfltmode);
+    // With CHECK_SAME false the comparison is skipped and the file is replaced
+    // whatever it holds, so the file that ends up at FILENAME carries the
+    // modification time of this write. A caller whose target is read by its
+    // modification time -- a build artifact against its sources, a cache entry
+    // against a retention window -- needs that, because a skipped write leaves the
+    // time it was called to move.
+    bool SafeStringToFile(const strptr& str, const strptr& filename, int dfltmode, bool check_same = true);
     bool SafeStringToFile(const strptr& str, const strptr& filename);
+
+    // Report a file operation that failed with errno: print TAG to stderr,
+    // naming FILE, the decoded errno, and COMMENT.
+    // The caller performs the operation, calls this on failure, and decides how
+    // the failure affects the run -- typically algo_lib::_db.exit_code++.
+    void PrerrFileFail(algo::strptr tag, algo::strptr file, algo::strptr comment);
+
+    // Save STR to file FNAME (SafeStringToFile: the file is rewritten only when
+    // its contents differ). A write that fails is reported to stderr under log
+    // tag TAG with COMMENT (PrerrFileFail). Return success; the caller decides
+    // how a failure affects the run.
+    // DFLTMODE is the mode a newly created file gets; replacing an existing file
+    // keeps that file's mode.
+    bool SaveFile(algo::strptr str, algo::strptr fname, algo::strptr tag, algo::strptr comment, int dfltmode = 0644);
+
+    // Save STR to file FNAME the way SaveFile does, and replace the file even when
+    // it already holds STR (SafeStringToFile with CHECK_SAME false), so FNAME comes
+    // out of the call with the modification time of this write.
+    // Use this rather than SaveFile wherever the modification time of FNAME is read
+    // by something else: a build tool comparing an object against its sources, a
+    // cache pass evicting by last use. SaveFile leaves such a file untouched when
+    // the bytes match, and its old time then says the file was never written.
+    bool SaveFileFresh(algo::strptr str, algo::strptr fname, algo::strptr tag, algo::strptr comment, int dfltmode = 0644);
 
     // Replace contents of file FILENAME with string STR.
     // If CHECK_SAME is specified, first compare contents and do not perform a write
@@ -648,7 +784,7 @@ namespace algo { // update-hdr
     // Go until all bytes are written on an error occurs.
     // If FILDES is non-blocking, spin indefinitely until bytes do get through.
     // At the end, return success status (TRUE if all bytes written)
-    bool WriteFile(algo::Fildes fildes, u8 *start, int nwrite);
+    bool WriteFile(algo::Fildes fildes, u8 *start, i64 nwrite);
     void Dir_curs_Next(Dir_curs &curs) __attribute__((nothrow));
 
     // Begin scanning files matching shell pattern PATTERN.
@@ -817,7 +953,38 @@ namespace algo { // update-hdr
     // double_PrintPercent(0.334, str, 1) -> "33.4%"
     void double_PrintPercent(double value, algo::cstring &str, int prec);
     //     (user-implemented function, prototype is in amc-generated header)
-    // void i32_Range_Print(algo::i32_Range &r, algo::cstring &o); // cfmt:algo.i32_Range.String
+    // void i32_Range_Print(algo::i32_Range r, algo::cstring &o); // cfmt:algo.i32_Range.String
+
+    // Print ROW in the integer-range-list notation an operator writes: items
+    // separated by commas, each either one value (7) or a span of values (4-7).
+    //
+    // The span is inclusive at both ends, because that is what every tool taking a
+    // cpu or node list means by 4-7, while algo::i32_Range is half-open.  So a
+    // range prints its last value as end-1, and a range holding one value prints
+    // as that value rather than as 7-7.
+    //
+    // The list is a sequence and not a set.  Items print in the order the array
+    // holds them, and nothing here sorts or merges: where the list states a
+    // preference -- the first entry that qualifies wins -- the order is the whole
+    // meaning, so a list printed after being read comes back as it was written.
+    // void I32RangeAry_Print(algo::I32RangeAry &row, algo::cstring &str); // cfmt:algo.I32RangeAry.String
+
+    // Read the integer-range-list notation into PARENT, replacing what it holds.
+    // Return false on anything the notation does not admit, leaving PARENT empty
+    // rather than half filled.
+    //
+    // Values are non-negative, and that is a consequence of the notation rather
+    // than a restriction chosen here: the separator inside a span is the same
+    // character a minus sign would be, so a list that admitted negative values
+    // could not say whether 4-7 named two values or one.  The lists this notation
+    // carries index cores and nodes, which start at zero.
+    //
+    // An empty string is an empty list and not an error -- it is what a field
+    // defaulting to "" holds, and it reads as "no opinion" wherever such a list
+    // states a placement.  A trailing comma is accepted for the same reason a
+    // shell accepts one; an empty item between two commas is not, since it names
+    // nothing.
+    // bool I32RangeAry_ReadStrptrMaybe(algo::I32RangeAry &parent, algo::strptr in_str); // cfmt:algo.I32RangeAry.String
     void double_PrintWithCommas(double value, algo::cstring &str, int prec);
 
     // ignore:bigret
@@ -872,10 +1039,10 @@ namespace algo { // update-hdr
     void UnDiff_PrintSpec(UnDiff   t, algo::cstring &out, const algo::strptr &spec);
     void UnixDiff_PrintSpec(UnixDiff t, algo::cstring &out, const algo::strptr &spec);
     //     (user-implemented function, prototype is in amc-generated header)
-    // void Ipmask_Print(algo::Ipmask &row, algo::cstring &str); // cfmt:algo.Ipmask.String
+    // void Ipmask_Print(algo::Ipmask row, algo::cstring &str); // cfmt:algo.Ipmask.String
 
     // Decode error using algo_lib table of decoders
-    // void Errcode_Print(algo::Errcode &row, algo::cstring &str); // cfmt:algo.Errcode.String
+    // void Errcode_Print(algo::Errcode row, algo::cstring &str); // cfmt:algo.Errcode.String
 
     // Append STR to OUT, using comma-separated-values encoding
     // If QUOTE is 0, the need for quotes and the type of quote is determined automatically.
@@ -925,15 +1092,17 @@ namespace algo { // update-hdr
     // copy string B to TO, using ORIG as a case template
     // I.e. PrintCopyCase("AbcD", to, "somestring") -> "SomEstring"
     void strptr_PrintCopyCase(const algo::strptr &orig, algo::cstring &to, const algo::strptr &b);
+
+    // Read ROW from S, the reader the generated Tuple cfmt calls.
     //     (user-implemented function, prototype is in amc-generated header)
     // bool Tuple_ReadStrptrMaybe(Tuple &row, algo::strptr s); // cfmt:algo.Tuple.String
 
-    // T             target tuple. the tuple is not emptied before parsing.
+    // TUPLE         target tuple; its head and attrs are emptied before parsing.
     // STR           source string
-    // ATTRONLY        if set, all loaded attrs are appended to the ATTRS
+    // ATTRONLY      if set, all loaded attrs are appended to the ATTRS
     // array. otherwise, the first attr becomes HEAD.
-    // CMT_CHAR      character at which to stop parsing.
-    // Parse sequence of attrs (name-value pairs) into tuple T.
+    // Parsing stops at the first '#' outside a quoted value.
+    // Parse sequence of attrs (name-value pairs) into tuple TUPLE.
     // Roughly:
     // ATTR       -> VALUE | VALUE ':' VALUE
     // VALUE      -> IDENTIFIER | C++-STRING
@@ -945,6 +1114,13 @@ namespace algo { // update-hdr
     // scan ITER for identifier, or quoted string.
     // return FALSE if attribute is malformed (i.e. unterminated string)
     bool cstring_ReadCmdarg(cstring &out, algo::StringIter &S, bool is_value);
+
+    // Tokenize CMDLINE into argv-shaped words in OUT: each element is a bare
+    // token, "-opt", or "-opt:value", with any quoted ("...") segment unescaped
+    // into owned storage.  This is the dual of a shell's argv split; the
+    // field-aware <cmd>_ReadArgv then interprets dashes, colons, and per-option
+    // NArgs (so "-opt value" works, not only "-opt:value").
+    void CmdlineToArgv(algo::strptr cmdline, algo::StringAry &out);
 
     // Read Charset from list of chars.
     // Every character in RHS is simply added to the bitset
@@ -991,7 +1167,7 @@ namespace algo { // update-hdr
     // Print STR, surrounded by quotes as C++ string
     // surrounded by QUOTE_CHAR quotes, to buffer OUT.
     // All string characters are escaped using char_PrintCppEsc.
-    void strptr_PrintCppQuoted(algo::strptr str, algo::cstring &out, char quote_char);
+    void strptr_PrintCppQuoted(algo::strptr str, algo::cstring &out, char quote_char, bool multiline = false);
 
     // Print STR as a C++ string to OUT.
     void strptr_PrintCpp(algo::strptr str, algo::cstring &out);
@@ -1075,7 +1251,52 @@ namespace algo { // update-hdr
     // void memptr_Print(algo::memptr parent, algo::cstring &str); // cfmt:algo.memptr.String
     // void ByteAry_Print(algo::ByteAry &parent, algo::cstring &str); // cfmt:algo.ByteAry.String
 
+    // Format a count with decimal SI suffix K/M/G/T (1K=1000, 1M=1e6, ...).
+    // Two decimal places for the scaled value; bare integer below 1000.
+    // With NUMERIC, print the raw u64 (machine-readable output).
+    // Non-numeric mode: values >= (1<<62) print as "inf" — the same sentinel
+    // the parse side accepts.  Inverse of ParseSize.
+    void u64_PrintSize(u64 val, algo::cstring &out, bool numeric = false);
+    tempstr SizeToStr(u64 val, bool numeric = false);
+
+    // Format a nanosecond count with ns/us/ms/s suffix (one decimal place).
+    void u64_PrintNsec(u64 val, algo::cstring &out, bool numeric = false);
+    tempstr NsecToStr(u64 val, bool numeric = false);
+
+    // Format a Hz count with KHz/MHz/GHz suffix (one decimal place).
+    // Sub-KHz values still print with a "KHz" suffix so the unit is
+    // unambiguous.
+    void u64_PrintHz(u64 val, algo::cstring &out, bool numeric = false);
+    tempstr HzToStr(u64 val, bool numeric = false);
+
+    // Format a count of items (messages, records, events) as a signed
+    // i64.  No SI scaling — counts are exact, not measurements.  The
+    // (1<<62) sentinel renders as "inf", which a reader takes as
+    // "go on indefinitely" and a synthetic generator emits.  Negative
+    // counts print normally, a reader taking them as "N off the end of
+    // the stream".  With NUMERIC, always print the raw integer.
+    void i64_PrintCount(i64 val, algo::cstring &out, bool numeric = false);
+    tempstr CountToStr(i64 val, bool numeric = false);
+
+    // Parse a count.  Signed — "-1" means "one off the end" to a reader.
+    // Accepts the literal "inf" (→ 1<<62) and any integer the standard
+    // i64 reader accepts.  No-throw.
+    i64 ParseCount(algo::strptr str, i64 dflt = 0);
+
+    // Parse "<number>[K|M|G|T]" (decimal SI suffix) into a u64.
+    // 1K=1000, 1M=1000000, 1G=1e9, 1T=1e12.  Lower-case suffixes accepted.
+    // "inf" → (1<<62), matching the sentinel a reader accepts for unbounded
+    // reads.  No-throw.
+    u64 ParseSize(algo::strptr str, u64 dflt = 0);
+
+    // Parse "<number>[ns|us|ms|s]" into a u64 nanosecond count.  No-throw.
+    u64 ParseNsec(algo::strptr str, u64 dflt = 0);
+
+    // Parse "<number>[Hz|kHz|KHz|MHz|GHz]" into a u64 Hz count.  No-throw.
+    u64 ParseHz(algo::strptr str, u64 dflt = 0);
+
     // read bytes in hex e.g: 00 01 ff
+    //     (user-implemented function, prototype is in amc-generated header)
     // bool ByteAry_ReadStrptrMaybe(algo::ByteAry &parent, strptr str); // cfmt:algo.ByteAry.String
 
     // -------------------------------------------------------------------
@@ -1094,6 +1315,22 @@ namespace algo { // update-hdr
 
     // Return a human-readable description of STATUS as returned by wait() / waitpid()
     tempstr DescribeWaitStatus(int status);
+
+    // Convert STATUS as returned by wait() / waitpid() into a process exit code.
+    // A wait status is not an exit code: a child that called exit(N) yields the
+    // status N<<8, so assigning the raw word to a process's own exit code hands
+    // the C runtime a value whose low eight bits are zero -- the child's failure
+    // reads as success.  A child that exited yields its exit code; a child killed
+    // by a signal yields 128 plus the signal number (the shell convention), so it
+    // stays nonzero and distinguishable from an exit; any other status is a
+    // nonzero 1.
+    int WaitStatusToExitCode(int status);
+
+    // The signal that terminated the child whose wait() / waitpid() status is
+    // STATUS, or 0 when the child was not killed by a signal.  The companion of
+    // WaitStatusToExitCode for the caller that needs the signal as a fact of its
+    // own rather than folded into the shell-convention exit code.
+    int WaitStatusToSignal(int status);
 
     // The several variants of Throw are all the same -- the goal is to get as many
     // setup instructions out of the execution path as possible, to avoid polluting instruction
@@ -1136,7 +1373,18 @@ namespace algo { // update-hdr
     void SetupExitSignals(bool sigint = true);
     const tempstr GetHostname();
     const tempstr GetDomainname();
+
+    // Return a pseudorandom double uniformly distributed over [0, SCALE].
+    // The generator is the C library's random(), which is deterministic and
+    // predictable, so the result is fit for test data and jitter, never for a
+    // secret or a token.
     double double_WeakRandom(double scale);
+
+    // Return a pseudorandom i32 over [0, MODULO), from the same weak generator
+    // double_WeakRandom uses, folded down by %: unless MODULO divides 2^31 the
+    // low residues come up a little more often than the high ones. A MODULO of
+    // one or less leaves no room for a choice, and the result is then always
+    // zero.
     i32 i32_WeakRandom(i32 modulo);
 
     // -------------------------------------------------------------------
@@ -1193,6 +1441,32 @@ namespace algo { // update-hdr
     // we must use WriteFile (which contains a loop) to write all the bytes out,
     // otherwise some terminals push back and refuse the data.
     void Prlog(algo_lib::FLogcat *logcat, algo::SchedTime tstamp, strptr str);
+
+    // -------------------------------------------------------------------
+    // cpp/lib/algo/retry.cpp -- retry_curs
+    //
+
+    // Begin a retry loop with a WAIT-second budget.  Callers scale WAIT (e.g. by
+    // a slow-build factor); the cursor uses it as given.  FAILOK selects what
+    // budget exhaustion means: the default raises the last comment as the
+    // failure (the condition was mandatory); with FAILOK the loop simply ends,
+    // logging the last comment once -- for conditions worth waiting for but
+    // legal to proceed without.
+    void retry_curs_Reset(algo::retry_curs &curs, double wait_sec, bool failok = false);
+
+    // Continue while the body has not accepted and the budget is not spent.  At
+    // least one attempt always runs; once the budget is gone without acceptance,
+    // the last comment is raised as the failure -- or, under failok, logged once
+    // and the loop ends.  Clearing comment here, just before the next attempt,
+    // lets the body simply append.
+    bool retry_curs_ValidQ(algo::retry_curs &curs);
+
+    // Count the attempt, log the comment when verbose, and sleep one poll
+    // interval before the next try (skipped once accepted).
+    void retry_curs_Next(algo::retry_curs &curs);
+
+    // The cursor is itself the handle the body reads and writes.
+    algo::retry_curs &retry_curs_Access(algo::retry_curs &curs);
 
     // -------------------------------------------------------------------
     // cpp/lib/algo/string.cpp -- cstring functions
@@ -1270,10 +1544,10 @@ namespace algo { // update-hdr
     // SubstringIndex("a.b.c", '.', -1) -> "c"
     // SubstringIndex("a.b.c", '.', -2) -> "b.c"
     // SubstringIndex("a.b.c", '.', -3) -> "a.b.c"
-    strptr SubstringIndex(strptr str, char c, int idx);
-    int FindFrom(strptr s, strptr t, int from, bool case_sensitive);
-    int FindFrom(strptr s, strptr t, int from);
-    int FindFrom(strptr s, char c, int from);
+    strptr SubstringIndex(strptr str, char c, i64 idx);
+    i64 FindFrom(strptr s, strptr t, i64 from, bool case_sensitive);
+    i64 FindFrom(strptr s, strptr t, i64 from);
+    i64 FindFrom(strptr s, char c, i64 from);
 
     // Search for character/string from left to right
     // If found, return index where match occurs.
@@ -1287,6 +1561,32 @@ namespace algo { // update-hdr
     bool StrEqual(strptr a, strptr b, bool case_sens);
     bool StartsWithQ(strptr s, strptr sstr, bool case_sensitive = true);
     bool EndsWithQ(strptr s, strptr sstr);
+
+    // True if TEXT contains IDENT as a whole identifier: delimited on both
+    // sides by a non-identifier character or the string edge. A raw substring
+    // search would match a short name inside a longer token (w inside new())
+    // and misreport the identifier as present.
+    bool ContainsIdentQ(strptr text, strptr ident);
+
+    // Replace every whole-identifier occurrence of IDENT in STR with TO and
+    // return the number of replacements.
+    // STR is read as C++ source, so an occurrence counts on two conditions. It is
+    // delimited on both sides by a non-identifier character or the string edge:
+    // substituting the instance reference *this in "*thisvalue + ssizeof(*this)"
+    // must not rewrite the first occurrence, which is the head of a longer
+    // identifier and not a reference at all, into the undeclared name
+    // "parentvalue". And it lies in code rather than inside a string literal
+    // (ordinary or raw), a character literal or a comment, where the same
+    // characters are content that names nothing; such a span is copied through
+    // untouched.
+    // A rejected occurrence does not advance the scan past its interior: an
+    // IDENT that itself contains a non-identifier character can hide a passing
+    // occurrence inside a rejected one -- ident "a-a" in "xa-a-a".
+    // A span is located by its delimiters rather than by tokenizing the source,
+    // so a quote that delimits no span -- the digit separator in 1'000'000 -- is
+    // read as one and the text behind it is skipped instead of substituted.
+    // Unittest algo_lib.ReplaceIdent holds the spans that are recognized.
+    int ReplaceIdent(cstring &str, strptr ident, strptr to);
     void MakeLower(strptr s);
     void MakeUpper(strptr s);
 
@@ -1412,7 +1712,7 @@ namespace algo { // update-hdr
 
     // Limit length of string S ot at most LEN characters
     // If S is trimmed, append "..." to the end
-    tempstr LimitLengthEllipsis(strptr s, int len);
+    tempstr LimitLengthEllipsis(strptr s, i64 len);
     algo::i32_Range ch_FindFirst(const algo::strptr &s, char match);
     algo::i32_Range ch_FindLast(const algo::strptr &s, char match);
     bool strptr_ReadStrptrMaybe(strptr , strptr );
@@ -1540,15 +1840,15 @@ namespace algo { // update-hdr
     // Implementation note: explicit calls to destructor are checked for NULL pointer
     // by GCC, so the nonnull attribute is required.
     template<class T> inline void Refurbish(T &t) F_NONNULL;
-    template<class T> inline int elems_N(const aryptr<T> &ary);
-    template<class T> inline int ch_N(const aryptr<T> &ary);
+    template<class T> inline i64 elems_N(const aryptr<T> &ary);
+    template<class T> inline i64 ch_N(const aryptr<T> &ary);
     template<class T> inline void Fill(const aryptr<T> &lhs, const T &t);
-    template<class T, class U> inline int Find(const algo::aryptr<T> &lhs, const U&t);
-    template<class T> inline algo::aryptr<T> FirstN(const algo::aryptr<T> &lhs, u32 n);
-    template<class T> inline algo::aryptr<T> LastN(const algo::aryptr<T> &lhs, u32 n);
-    template<class T> inline algo::aryptr<T> RestFrom(const algo::aryptr<T> &lhs, u32 n);
-    template<class T> inline algo::aryptr<T> qGetRegion(const algo::aryptr<T> &lhs, u32 lo, u32 n);
-    template<class T> inline algo::aryptr<T> GetRegion(const algo::aryptr<T> &lhs, u32 lo, u32 n);
+    template<class T, class U> inline i64 Find(const algo::aryptr<T> &lhs, const U&t);
+    template<class T> inline algo::aryptr<T> FirstN(const algo::aryptr<T> &lhs, u64 n);
+    template<class T> inline algo::aryptr<T> LastN(const algo::aryptr<T> &lhs, u64 n);
+    template<class T> inline algo::aryptr<T> RestFrom(const algo::aryptr<T> &lhs, u64 n);
+    template<class T> inline algo::aryptr<T> qGetRegion(const algo::aryptr<T> &lhs, u64 lo, u64 n);
+    template<class T> inline algo::aryptr<T> GetRegion(const algo::aryptr<T> &lhs, u64 lo, u64 n);
     template<class T> inline algo::aryptr<u8> BytesOf(const T &t);
     template<class T> inline T &qLast(const algo::aryptr<T> &ary);
 
@@ -1636,6 +1936,8 @@ namespace algo { // update-hdr
     inline u32 u16_BitScanReverse(u16 v);
     inline u32 u8_BitScanForward(u8 v);
     inline u32 u8_BitScanReverse(u8 v);
+    inline u64 u128_BitScanForward(u128 v);
+    inline u64 u128_BitScanReverse(u128 v);
     inline u32  CeilingLog2(u32 orig);
     inline u64  CeilingLog2(u64 orig);
     inline u32  FloorLog2(u32 i);
@@ -1711,14 +2013,14 @@ namespace algo { // update-hdr
     inline char ToUpper(char i);
     inline algo::i32_Range TFind(const strptr &s, char match);
     inline algo::i32_Range TRevFind(const strptr &s, char match);
-    inline algo::aryptr<char> ch_FirstN(const strptr &lhs, u32 n);
-    inline algo::aryptr<char> ch_LastN(const strptr &lhs, u32 n);
-    inline algo::aryptr<char> ch_RestFrom(const strptr &lhs, u32 n);
-    inline algo::aryptr<char> ch_GetRegion(const strptr &lhs, u32 lo, u32 n);
-    inline int ch_N(const strptr &s);
+    inline algo::aryptr<char> ch_FirstN(const strptr &lhs, u64 n);
+    inline algo::aryptr<char> ch_LastN(const strptr &lhs, u64 n);
+    inline algo::aryptr<char> ch_RestFrom(const strptr &lhs, u64 n);
+    inline algo::aryptr<char> ch_GetRegion(const strptr &lhs, u64 lo, u64 n);
+    inline i64 ch_N(const strptr &s);
     inline int ch_First(const strptr &s, int dflt = 0);
     inline int ch_Last(const strptr &s, int dflt = 0);
-    inline int ch_N(const tempstr &str);
+    inline i64 ch_N(const tempstr &str);
     inline int range_N(const i32_Range &rhs);
     inline algo::aryptr<u8> strptr_ToMemptr(algo::aryptr<char> rhs);
     inline algo::aryptr<char> memptr_ToStrptr(algo::aryptr<u8> rhs);
@@ -1776,7 +2078,10 @@ namespace algo { // update-hdr
     // inline i32 strptr_Cmp(algo::strptr a, algo::strptr b);
 
     // helper: N bytes as chars
-    template<typename T> inline bool DecodeNChars(algo::memptr &buf, int n, T &result);
+    template<typename T> inline bool DecodeNChars(algo::memptr &buf, i64 n, T &result);
+
+    // Reverse all 64 bits of a u64
+    inline u64 BitReverse64(u64 x);
 }
 
 // -----------------------------------------------------------------------------
@@ -1819,9 +2124,73 @@ namespace algo_lib { // update-hdr
     //     To convert this section to a hand-written section, remove the word 'update-hdr' from namespace line.
 
     // -------------------------------------------------------------------
-    // cpp/lib/algo/cpu_hz.cpp -- Grab cpu_hz from OS
+    // cpp/lib/algo/cpu_hz.cpp -- Obtain cpu_hz from a source that states it, never by measuring
     //
+
+    // Install HZ as the process's cycles<->seconds calibration: refuse an
+    // implausible value, set the conversion constants, and re-anchor the
+    // scheduler clock so elapsed time counts from the calibration point.
+    void ApplyCpuHz(double hz);
     void InitCpuHz();
+
+    // Demand the kernel's calibrated TSC rate, for a process that schedules on
+    // the counter: without the export nothing states the rate,
+    // so the process exits rather than starting on a figure that is merely
+    // plausible.  A plain tool never calls this and lives with the P-state
+    // figure InitCpuHz settled for.
+    //
+    // The alternative would be to time the counter against a wall clock at
+    // startup, and that measurement cannot be made trustworthy.  Its window is
+    // a few tens of milliseconds of ordinary scheduling, and a stall inside the
+    // window adds cycles the wall clock never saw: a 122ms stall on an EPYC
+    // 9R14 yields 1.8e10 Hz for a counter that ticks at 2.6GHz.  Repeating the
+    // window and keeping the best trial does not rescue it, because the stall
+    // is invisible to every criterion the trials can be compared on.  Worse
+    // than the absurd value is the plausible one -- a stall of a few tens of
+    // milliseconds produces a rate that passes every range test and then
+    // mis-scales every cycles<->seconds conversion in the process for the rest
+    // of its life.
+    //
+    // So the rate is read and never measured, which is why a rate nobody states
+    // is fatal here rather than a fallback.  InitCpuHz has already installed the
+    // kernel's figure where the export exists; what this demands is that the
+    // figure came from a source that states the counter's rate rather than from a
+    // P-state file.
+    //
+    // Two further sources exist because some kernels cannot carry the export at
+    // all.  A WSL2 guest is the case in hand: its kernel calibrates the counter
+    // exactly, having been told the rate by the hypervisor, but ships no header
+    // package to build the tsc_freq_khz module against and no /lib/modules to
+    // install it into, and it publishes the figure through no other interface --
+    // not cpufreq, not CPUID, not the MSR device.  The rate on such a host is
+    // known and merely unreadable, so the host states it directly, in the kHz the
+    // export would have carried.  Either way the figure is read rather than
+    // measured, so the rule above holds; and both are consulted only when the
+    // export is absent, which leaves a machine that has the export unable to be
+    // retuned by a stray statement.
+    //
+    // The two differ in how the statement reaches a process, not in what it means.
+    // A file on the host reaches every process running there whatever started it,
+    // because nothing has to inherit an environment for a file to be readable --
+    // which is why a shell profile does not serve: it reaches a login shell and
+    // misses a service, a job runner and a cron entry.  The variable covers the
+    // case where the filesystem a process sees is not the host's: a container is
+    // handed the rate as an ordinary environment entry when it starts.  The
+    // variable wins where both are present, being the narrower statement of the
+    // two.
+    //
+    // Both are named by the caller, because which file and which variable a
+    // deployment states its rate through is that deployment's convention and not
+    // this library's.
+    //
+    // Taking the rate from either is reported as a verbose line rather than as
+    // plain output.  Every process of a cluster reads the rate, so on such a host
+    // the plain form would announce it once per process, and a comptest compares a
+    // captured stdout byte for byte -- the announcement would fail every test that
+    // starts a cluster, on exactly the hosts these sources exist to serve.
+    // `atf_tsc` reports the calibration sources unconditionally, which is where an
+    // operator confirms which one a process would take.
+    void RequireKernelCpuHz(strptr tscfreq_path, strptr tscfreq_env);
 
     // -------------------------------------------------------------------
     // cpp/lib/algo/crc32.cpp -- Software-based CRC32
@@ -1867,8 +2236,12 @@ namespace algo_lib { // update-hdr
     //
 
     // User-defined cleanup trigger fildes field of ctype:algo_lib.FLockfile
+    // With KEEP set, the file survives: the flock alone was the lock, and the
+    // file's content remains behind as a durable record for later readers.
+    // The mtime is refreshed on release, so a reader can judge how long ago
+    // the record's holder let go of it.
     //     (user-implemented function, prototype is in amc-generated header)
-    // void fildes_Cleanup(algo_lib::FLockfile &lockfile); // fcleanup:algo_lib.FTempfile.fildes
+    // void fildes_Cleanup(algo_lib::FLockfile &lockfile); // ffunc:algo_lib.FTempfile.fildes.Cleanup
 
     // If PATH is an existing path, leave it unchanged
     // On Windows, If PATH.EXE is an existing path, return that
@@ -1893,9 +2266,10 @@ namespace algo_lib { // update-hdr
     void IohookInit();
 
     // Register IOHOOK to be called whenever an IO operation is possible.
-    // OK to add an fd twice with different flags. Subsequent calls override previous ones.
-    // Add iohook to epoll in read, write or read/write mode
-    // Optionally, add as edge triggered
+    // Add iohook to epoll in read, write or read/write mode, edge triggered.
+    // Re-registering the same iohook replaces its flag set, so a caller may widen
+    // or narrow one hook's subscription at any time; a descriptor carries exactly
+    // one registration, so two hooks may never claim the same fd.
     void IohookAdd(algo_lib::FIohook& iohook, algo::IOEvtFlags inflags) __attribute__((nothrow));
 
     // De-register interest in iohook
@@ -1915,15 +2289,30 @@ namespace algo_lib { // update-hdr
     // cpp/lib/algo/lib.cpp -- Main file
     //
 
+    // Record child wait status STATUS as this process's own exit facts: exit_code
+    // receives the shell-convention exit code (exit N -> N, death by signal ->
+    // 128+signal), and exit_signal separately receives the terminating signal --
+    // 0 when the child exited -- so the fold into the exit code never loses which
+    // case it was.  The one site that decomposes a wait status for export; a
+    // caller that assigned the raw status directly would hand the C runtime a
+    // value whose low eight bits are zero for every exit(N) child.
+    void ExportWaitStatus(int status);
+
     // Set exit time of main loop to current time.
     void ReqExitMainLoop();
     //     (user-implemented function, prototype is in amc-generated header)
-    // void fd_Cleanup(algo_lib::FFildes &fildes); // fcleanup:algo_lib.FFildes.fd
-    // void fildes_Cleanup(algo_lib::FIohook &iohook); // fcleanup:algo_lib.FTempfile.fildes
+    // void fd_Cleanup(algo_lib::FFildes &fildes); // ffunc:algo_lib.FFildes.fd.Cleanup
+    // void fildes_Cleanup(algo_lib::FIohook &iohook); // ffunc:algo_lib.FTempfile.fildes.Cleanup
     // void bh_timehook_Step(); // fstep:algo_lib.FDb.bh_timehook
 
     // Check signature on incoming data
-    // bool dispsigcheck_InputMaybe(dmmeta::Dispsigcheck &dispsigcheck); // finput:algo_lib.FDb.dispsigcheck
+    // bool dispsigcheck_InputMaybe(dmmeta::Dispsigcheck &dispsigcheck); // ffunc:algo_lib.FDb.dispsigcheck.InputMaybe
+
+    // Signature of dispatch DISPSIG as this binary was compiled with, empty when the
+    // binary carries no such dispatch.  Every executable loads its own namespace's
+    // rows into this table at startup, so the answer is a fact about the running
+    // program and not about any data it has read.
+    tempstr GetDispsig(algo::strptr dispsig);
 
     // Die when parent process dies
     void DieWithParent();
@@ -1942,7 +2331,7 @@ namespace algo_lib { // update-hdr
     // Computed filename is saved to tempfile.filename
     void TempfileInitX(algo_lib::FTempfile &tempfile, strptr prefix);
     //     (user-implemented function, prototype is in amc-generated header)
-    // void fildes_Cleanup(algo_lib::FTempfile &tempfile); // fcleanup:algo_lib.FTempfile.fildes
+    // void fildes_Cleanup(algo_lib::FTempfile &tempfile); // ffunc:algo_lib.FTempfile.fildes.Cleanup
 
     // Interpret redirect string, return resulting fd
     // If no redirect applies, return -1
@@ -1956,11 +2345,25 @@ namespace algo_lib { // update-hdr
     // This function could be called openex
     int CreateRedirect(strptr redirect);
 
+    // True if REDIRECT names a filesystem path (worth showing in a command line),
+    // as opposed to a pipe "|" or an fd dup "<&N"/">&N" -- those are internal
+    // plumbing (temporary fds), so _ToCmdline/ProcToCmdline omit them.
+    bool RedirectFileQ(strptr redirect);
+
     // Interpret redirect string and make DST_FD consistent with
     // the intended state. Return 0 on success, -1 on failure
     // This function is usually called in the child process right after fork
     // See CreateRedirect for interpretation of redirect string
-    int ApplyRedirect(strptr redirect, int dst_fd);
+    // The pipe token "|" makes DST_FD a copy of PIPE_FD (a pipe end set up by the
+    // caller before fork). PIPE_FD is not closed here -- the caller owns both pipe
+    // ends. "|" with PIPE_FD<0 is a misuse and returns -1. To merge stderr into the
+    // stdout pipe, set fstdout="|" and fstderr=">&1" (the child applies stdout
+    // before stderr, so >&1 duplicates the already-redirected stdout pipe).
+    int ApplyRedirect(strptr redirect, int dst_fd, int pipe_fd = -1);
+
+    // Close FD if it holds a valid descriptor (value>=0), then mark it invalid.
+    // No-op when FD is already invalid.
+    void Close(algo::Fildes &fd);
     bool IpmaskValidQ(const strptr ipmask);
 
     // Return TRUE if current user is root.
@@ -1974,7 +2377,7 @@ namespace algo_lib { // update-hdr
 
     // if OWN_FD is cleared, clean up file descriptor before it is closed
     //     (user-implemented function, prototype is in amc-generated header)
-    // void file_Cleanup(algo_lib::InTextFile &file); // fcleanup:algo_lib.InTextFile.file
+    // void file_Cleanup(algo_lib::InTextFile &file); // ffunc:algo_lib.InTextFile.file.Cleanup
 
     // Walk child process tree for parent process pid, in post-order traversal way,
     // and send signal sig to each process. Kill_topmost is an option whether
@@ -1984,8 +2387,15 @@ namespace algo_lib { // update-hdr
     // Linux only.
     int KillRecurse(int pid, int sig, bool kill_topmost);
 
-    // Return computed name for sandbox SANDBOX
-    tempstr SandboxDir(algo::strptr sandbox);
+    // Return directory of the worktree named NAME (empty name -> empty result)
+    tempstr WtDir(algo::strptr name);
+
+    // True when the current directory lies inside a worktree rather than the
+    // main checkout.  A linked worktree's root has .git as a gitdir-pointer
+    // file, where the main checkout has a directory; a cow-farm sandbox has
+    // its own .git directory, so it is recognized by the wt/ path component
+    // every wt-managed checkout lives under.
+    bool WorktreeQ();
 
     // Enter sandbox directory remember previous directory
     void PushDir(algo::strptr dir);
@@ -1996,7 +2406,7 @@ namespace algo_lib { // update-hdr
 
     // Global initializer, called from algo_lib::FDb_Init
     //     (user-implemented function, prototype is in amc-generated header)
-    // void errns_Userinit(); // fuserinit:algo_lib.FDb.errns
+    // void errns_Userinit(); // ffunc:algo_lib.FDb.errns.Userinit
     void UpdateRate(algo::I64Rate &rate, i64 val);
 
     // For InlineOnce and TimeHookOnce steps, break
@@ -2005,7 +2415,7 @@ namespace algo_lib { // update-hdr
     // no further progress can be made by the step function.
     void EndStep();
     //     (user-implemented function, prototype is in amc-generated header)
-    // void Userinit(); // fuserinit:algo_lib.FDb._db
+    // void Userinit(); // ffunc:algo_lib.FDb._db.Userinit
 
     // -------------------------------------------------------------------
     // cpp/lib/algo/line.cpp -- Line processing
@@ -2050,7 +2460,7 @@ namespace algo_lib { // update-hdr
 
     // User-defined cleanup function for MMAP.MEM
     //     (user-implemented function, prototype is in amc-generated header)
-    // void mem_Cleanup(algo_lib::Mmap &mmap); // fcleanup:algo_lib.Mmap.mem
+    // void mem_Cleanup(algo_lib::Mmap &mmap); // ffunc:algo_lib.Mmap.mem.Cleanup
 
     // Attach mmapfile MMAPFILE to FD.
     // Return success code.
@@ -2066,23 +2476,19 @@ namespace algo_lib { // update-hdr
 
     // Enable or disable logcat tracing based on traace expression WHAT
     // WHAT is a comma-separated list of logcat regexes, e.g. a,b,c
-    // Each component can be prefixed with + or -, e.g. +a,-b etc.
-    // Finally, each component can be a key-value pair, e.g. +a:<filter>,-b,+c
+    // Each component can be a key-value pair, e.g. a:<filter>,b,c
     // <filter> is an optional regex; Regex can be prefixed with ! to indicate a negative match.
-    // Timestamps can be enabled with 'timestamps', disabled with '-timestamps'
-    // Verbose can be enabled with 'verbose', disabled with '-verbose'
-    // Debug can be enabled with 'debug', disabled with '-debug'
-    int ApplyTrace(algo::strptr what);
+    // Timestamps can be controlled with 'timestamps'
+    // Verbose can be controlled with 'verbose'
+    // Debug can be controlled with 'debug'
+    int ApplyTrace(algo::strptr what, bool enable = true);
 
     // Enable/disable log category NAME with filter FILTER.
-    // If NAME is prefixed with +, logging is enabled
-    // If NAME is prefixed with -, logging is disabled
-    // If NAME is an empty string. current state is printed
     // FILTER is a regex
     // If FILTER starts with !, it is a negative filter (any matching lines are omitted)
     // Return number of logcats affected.
-    int ApplyTrace(algo::strptr name, algo::strptr filter);
-    void ShowTrace();
+    // Changed logcats are marked, attribute changed = algo_lib::_db.clock
+    int ApplyTrace(algo::strptr name, algo::strptr filter, bool enable = true);
 
     // Filter string STR for output on LOGCAT.
     // The string must match FILTER and not match NEGFILTER.
@@ -2092,7 +2498,52 @@ namespace algo_lib { // update-hdr
     // In addition, if throttling is enabled on LOGCAT, block message
     // if more than MAXMSG are being printed within WINDOW secs. The counter
     // is reset every WINDOW secs.
+    // The window's count is of messages this category *matched*, not of messages it
+    // printed, which is what makes the suppressed tally at window end a real number.
+    // Counting only what printed freezes the count at the cap -- nothing increments
+    // it once suppression is on -- so the overflow reads as zero and an operator is
+    // never told the trace they are reading is lossy.  TOTMSG stays the count of
+    // messages that went out.
     bool LogcatFilterQ(algo_lib::FLogcat &logcat, algo::strptr str);
+
+    // -------------------------------------------------------------------
+    // cpp/lib/algo/proc.cpp
+    //
+
+    // Build a shell-legible rendering of the command line and redirects, for logging.
+    // Args are separated by two spaces so a value that itself contains a space stays
+    // visually distinguishable from the gap between args.
+    tempstr ProcToCmdline(algo_lib::FProc &proc);
+
+    // Start the subprocess if not already running. For each redirect set to "|",
+    // create a pipe before fork and expose the parent-side fd on proc
+    // (to_stdin / from_stdout / from_stderr). To merge stderr into the stdout pipe,
+    // set fstdout="|" and fstderr=">&1". Returns 0, or errno on fork failure.
+    int ProcStart(algo_lib::FProc &proc);
+
+    // Wait for the subprocess to exit. Close to_stdin first so the child sees EOF,
+    // waitpid (restarting on EINTR), store status, clear pid, then close the read
+    // ends. Drain from_stdout / from_stderr before calling to avoid a deadlock.
+    void ProcWait(algo_lib::FProc &proc);
+
+    // Kill the subprocess with SIGKILL and reap it. No-op when not running.
+    // A pgroup child is killed as a whole group (its descendants with it).
+    void ProcKill(algo_lib::FProc &proc);
+
+    // Start the subprocess and wait for it; return its wait() status.
+    int ProcExec(algo_lib::FProc &proc);
+
+    // Execute the subprocess; throw a human-readable algo_lib.exec error when the
+    // child exits non-zero (uses DescribeWaitStatus for the comment).
+    void ProcExecX(algo_lib::FProc &proc);
+
+    // Decode the last wait() status into a child exit code, or -1 if the child was
+    // killed by a signal or has not been reaped.
+    int ProcExitCode(algo_lib::FProc &proc);
+
+    // On destruction of an FProc, kill and reap the child for forward progress.
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void pid_Cleanup(algo_lib::FProc &proc); // ffunc:algo_lib.FProc.pid.Cleanup
 
     // -------------------------------------------------------------------
     // cpp/lib/algo/regx.cpp -- Sql Regx implementation
@@ -2231,6 +2682,20 @@ namespace algo_lib { // update-hdr
     // First row of the table is assumed to be the header.
     // Newlines in cells are converted to '<br>'.
     void FTxttbl_Markdown(algo_lib::FTxttbl &txttbl, algo::cstring &str);
+
+    // -------------------------------------------------------------------
+    // include/algo.inl.h -- Inline functions
+    //
+
+    // TRUE when LOGCAT may emit right now: the operator has it on and the throttle
+    // is not suppressing the rest of its window.
+    //
+    // The two are separate fields because they are separate facts with separate
+    // owners -- enabled is what the operator asked for, suppress is what the
+    // throttle is doing about the current window -- and this is the one place that
+    // combines them.  A caller testing only ENABLED would print through a throttle;
+    // one testing only SUPPRESS would print a category nobody asked for.
+    inline bool LogcatOnQ(algo_lib::FLogcat &logcat);
 }
 
 

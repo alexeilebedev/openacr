@@ -24,6 +24,33 @@
 
 #include "include/amc.h"
 
+// True if FIELD adds a member of its own to the emitted struct, and so
+// occupies bytes of the ctype's fixed portion. A Bitfld re-slices the word of
+// its source field and a fldfunc computes its value from other fields, so
+// neither declares storage. Neither do the reftypes below: Global and
+// Cppstack name an instance that lives outside the struct, Malloc keeps its
+// state elsewhere entirely, an Opt draws a comment line where its optional
+// trailing element would sit and no member at all, and Count and Exec declare
+// what storage they need through generated child fields, which the caller's
+// walk visits in their own right. Every other reftype is answered true,
+// including the ones that reach the struct by a route other than InsVar --
+// Base through inheritance, Pkey and Hook and RegxSql through their own
+// emitters -- and including ZSListMT, whose two list heads are members of
+// the parent like any other. test/amc/bad_varlen_last.ssim carries a control
+// for each case the predicate answers false and a reported row for the cases
+// it answers true.
+static bool StructMemberQ(amc::FField &field) {
+    bool member = field.reftype != dmmeta_Reftype_reftype_Bitfld;
+    member = member && field.reftype != dmmeta_Reftype_reftype_Global;
+    member = member && field.reftype != dmmeta_Reftype_reftype_Cppstack;
+    member = member && field.reftype != dmmeta_Reftype_reftype_Malloc;
+    member = member && field.reftype != dmmeta_Reftype_reftype_Opt;
+    member = member && field.reftype != dmmeta_Reftype_reftype_Count;
+    member = member && field.reftype != dmmeta_Reftype_reftype_Exec;
+    member = member && !amc::FldfuncQ(field);
+    return member;
+}
+
 amc::FField *amc::LengthField(amc::FCtype &ctype) {
     return ctype.c_lenfld ? ctype.c_lenfld->p_field : NULL;
 }
@@ -67,6 +94,10 @@ tempstr amc::VarlenEndIncr(strptr parname, amc::FField &field, strptr incr) {
     return amc::VarlenEndAssign(parname, field, value);
 }
 
+// Set up the varlen field: declare its end-offset variable when a later
+// varlen field needs one, set the length expressions, ensure the parent
+// pool can hold trailing data, and fail the run when a non-varlen field
+// follows.  gen_check_varlen rejects an element type with a destructor.
 void amc::tclass_Varlen() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;
@@ -79,28 +110,32 @@ void amc::tclass_Varlen() {
     Set(R, "$curslenexpr", LengthExpr(*field.p_ctype, Subst(R,"parent")));
     Set(R, "$rettype",field.p_arg->c_lenfld ? "u8" : "$Cpptype");
 
-    // check that the variable-length portion
-    // doesn't declare a destructor
-    if (field.p_arg->c_cpptype && field.p_arg->c_cpptype->dtor) {
-        prerr("amc.varlen_pool"
-              <<Keyval("field",field.field)
-              <<Keyval("arg",field.arg)
-              <<Keyval("comment","Variable-length portion must be of DTOR:N type"));
-        algo_lib::_db.exit_code=1;
-    }
-    EnsureVarlenPool(*field.p_ctype);
+    // Per-ctype checks run once, from the ctype's first varlen field --
+    // running them per varlen field would report each offender once per
+    // varlen field of the ctype.
+    if (zd_varlenfld_First(*field.p_ctype) == &field) {
+        // Every instance of the ctype must be a varlen-capable pool.
+        EnsureVarlenPool(*field.p_ctype);
 
-    // Ensure that this field is last
-    bool seen = false;
-    ind_beg(amc::ctype_c_field_curs, _field,*field.p_ctype) {
-        if (_field.reftype == dmmeta_Reftype_reftype_Varlen) {
-            seen = true;
-        } else if (seen) {
-            prerr("amc.varlen_last"
-                  <<Keyval("field",field.field)
-                  <<Keyval("comment","Variable-length field(s) must be last"));
-        }
-    }ind_end;
+        // Ensure varlen fields are last: report each fixed field that follows
+        // a varlen field, naming the nearest preceding varlen field. Only a
+        // field that adds a member of its own can be clobbered by the varlen
+        // data, so a zero-storage field (StructMemberQ) is legal after it --
+        // an Opt among them, whose own claim on the end of the fixed portion
+        // is rejected as amc.trail_overlay instead.
+        amc::FField *varlen = NULL;
+        ind_beg(amc::ctype_c_field_curs, _field,*field.p_ctype) {
+            if (_field.reftype == dmmeta_Reftype_reftype_Varlen) {
+                varlen = &_field;
+            } else if (varlen && StructMemberQ(_field)) {
+                prerr("amc.varlen_last"
+                      <<Keyval("field",_field.field)
+                      <<Keyval("varlen",varlen->field)
+                      <<Keyval("comment","fixed field follows a varlen field; varlen fields must be last"));
+                algo_lib::_db.exit_code++;
+            }
+        }ind_end;
+    }
 }
 
 void amc::tfunc_Varlen_Addr() {
@@ -154,6 +189,12 @@ void amc::tfunc_Varlen_N() {
     }
 }
 
+// Generate $name_ReadStrptrMaybe, appending one element parsed from the
+// string to the varlen buffer under construction: char/u8 bytes are copied
+// raw, a typefld element parses through the message dispatcher, and any
+// other element parses in place -- a nested varlen element collects its
+// own tail in a fresh buffer, stores its length through its own lenfld,
+// and splices in at the field's end offset
 void amc::tfunc_Varlen_ReadStrptrMaybe() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;
@@ -192,22 +233,23 @@ void amc::tfunc_Varlen_ReadStrptrMaybe() {
             } else {
                 Ins(&R, rd.body , "    $Fldcpptype *$name_tmp = new(ary_AllocN(*algo_lib::_db.varlenbuf, sizeof($Fldcpptype)).elems) $Fldcpptype;");
             }
-            if (VarlenQ(*field.p_arg)) {
+            if (amc::RuntimeFrameLenQ(*field.p_arg)) {
                 Ins(&R, rd.body , "    algo::ByteAry varlenbuf;");
                 Ins(&R, rd.body , "    algo::ByteAry *varlenbuf_save = algo_lib::_db.varlenbuf;");
                 Ins(&R, rd.body , "    algo_lib::_db.varlenbuf = &varlenbuf;");
             }
             Ins(&R, rd.body , "    retval = $Cpptype_ReadStrptrMaybe(*$name_tmp, in_str);");
-            if (VarlenQ(*field.p_arg)) {
+            if (amc::RuntimeFrameLenQ(*field.p_arg)) {
                 Ins(&R, rd.body , "    algo_lib::_db.varlenbuf = varlenbuf_save;");
-                if (field.p_ctype->c_lenfld) {
-                    cstring len("sizeof($Fldcpptype)+ary_N(varlenbuf)");
-                    if (field.p_ctype->c_lenfld->extra > 0) {
-                        len << "+" << field.p_ctype->c_lenfld->extra;
-                    } else if (field.p_ctype->c_lenfld->extra < 0) {
-                        len << field.p_ctype->c_lenfld->extra;
+                if (field.p_arg->c_lenfld) {
+                    // the length is stored through the element's own lenfld,
+                    // not the containing ctype's
+                    amc::FLenfld &lenfld = *field.p_arg->c_lenfld;
+                    if (amc::LenfldGuardNeededQ(lenfld)) {
+                        Set(R,"$lenchk",Subst(R,LenfldCheckExpr(lenfld,"sizeof($Fldcpptype)+ary_N(varlenbuf)")));
+                        Ins(&R, rd.body , "    retval = retval && ($lenchk); // only a total the element's length field can store round-trips");
                     }
-                    Set(R,"$lenincr",amc::AssignExpr(*field.p_ctype->c_lenfld->p_field,Subst(R,"(*$name_tmp)"),Subst(R,len),true));
+                    Set(R,"$lenincr",amc::AssignExpr(*lenfld.p_field,Subst(R,"(*$name_tmp)"),Subst(R,LenfldStoreExpr(lenfld,"sizeof($Fldcpptype)+ary_N(varlenbuf)")),true));
                     Ins(&R, rd.body , "    $lenincr;");
                 }
                 if (ctype_zd_varlenfld_Next(field)) {

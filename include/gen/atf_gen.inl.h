@@ -118,7 +118,7 @@ inline  atf::Testrun::Testrun() {
 }
 
 // --- atf.Testrun..FieldwiseCtor
-inline  atf::Testrun::Testrun(const algo::strptr& in_testrun, const atf::Testresult& in_testresult, u64 in_n_step, u64 in_n_cmp, const algo::strptr& in_comment)
+inline  atf::Testrun::Testrun(const algo::strptr& in_testrun, atf::Testresult in_testresult, u64 in_n_step, u64 in_n_cmp, const algo::strptr& in_comment)
     : testrun(in_testrun)
     , testresult(in_testresult)
     , n_step(in_n_step)

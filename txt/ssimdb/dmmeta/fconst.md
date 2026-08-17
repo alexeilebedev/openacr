@@ -18,7 +18,7 @@ dmmeta.field  field:lib_json.FParser.state  arg:u32  reftype:Val  dflt:""  comme
   dmmeta.fconst  fconst:lib_json.FParser.state/token       value:8   comment:""
   dmmeta.fconst  fconst:lib_json.FParser.state/sec_line    value:9   comment:"JSON security line"
   dmmeta.fconst  fconst:lib_json.FParser.state/err         value:99  comment:"parser error"
-report.acr  n_select:12  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0
+report.acr  n_select:12  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0  n_badline:0
 ```
 
 NOTE: The mapping from strings to integers is done using an efficient `static hash`.
@@ -53,31 +53,22 @@ void                 state_SetStrptr(lib_json::FParser& parent, algo::strptr rhs
 
 ### Attributes
 <a href="#attributes"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Attributes -->
 * [ctype:](/txt/ssimdb/dmmeta/ctype.md)dmmeta.Fconst
 
 * file:[data/dmmeta/fconst.ssim](/data/dmmeta/fconst.ssim)
 
-italicised fields: *field, name* are [**fldfunc**](/txt/ssim.md#fldfunc) fields
+italicised fields: *field, name* are [**fldfunc**](/txt/openacr/ssim.md#fldfunc) fields
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|fconst|[algo.Smallstr100](/txt/protocol/algo/README.md#algo-smallstr100)|[Val](/txt/exe/amc/reftypes.md#val)|||
-|*field*|*[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)*|*[Pkey](/txt/exe/amc/reftypes.md#pkey)*||*<br>/LL of fconst*|
-|value|[algo.CppExpr](/txt/protocol/algo/CppExpr.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
-|*name*|*[algo.Smallstr100](/txt/protocol/algo/README.md#algo-smallstr100)*|*[Val](/txt/exe/amc/reftypes.md#val)*||*<br>/LR of fconst*|
-|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Attributes -->
+|fconst|[algo.Smallstr150](/txt/protocol/algo/README.md#algo-smallstr150)|[Val](/txt/exe/amc/reftype.md#val)|||
+|*field*|*[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)*|*[Pkey](/txt/exe/amc/reftype.md#pkey)*||*<br>/LL of fconst*|
+|value|[algo.CppExpr](/txt/protocol/algo/CppExpr.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|*name*|*[algo.Smallstr150](/txt/protocol/algo/README.md#algo-smallstr150)*|*[Val](/txt/exe/amc/reftype.md#val)*||*<br>/LR of fconst*|
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype.md#val)|||
 
 ### Used In Executables
 <a href="#used-in-executables"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:ImdbUses -->
-
-* [abt_md](/txt/exe/abt_md/internals.md) as [abt_md.FFconst](/txt/exe/abt_md/internals.md#abt_md-ffconst)
-* [acr_compl](/txt/exe/acr_compl/internals.md) as [acr_compl.FFconst](/txt/exe/acr_compl/internals.md#acr_compl-ffconst)
-* [amc](/txt/exe/amc/internals.md) as [amc.FFconst](/txt/exe/amc/internals.md#amc-ffconst)
-* [lib_ctype](/txt/lib/lib_ctype/README.md) as [lib_ctype.FFconst](/txt/lib/lib_ctype/README.md#lib_ctype-ffconst)
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:ImdbUses -->
-
+* [acr_compl](/txt/gen/acr_compl/acr_compl.md) as [acr_compl.FFconst](/txt/gen/acr_compl/acr_compl.md#acr_compl-ffconst)
+* [amc](/txt/gen/amc/amc.md) as [amc.FFconst](/txt/gen/amc/amc.md#amc-ffconst)
+* [lib_ctype](/txt/gen/lib_ctype/lib_ctype.md) as [lib_ctype.FFconst](/txt/gen/lib_ctype/lib_ctype.md#lib_ctype-ffconst)

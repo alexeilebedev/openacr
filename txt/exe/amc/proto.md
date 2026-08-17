@@ -48,17 +48,17 @@ $ acr_ed -create -target prot1 -nstype protocol -write
 Messages in a protocol are represented as ctypes that share a header (which is also a ctype), and a related to each
 other via `typefld` and `msgtype` records. The header ctype contains
 a type field (sometimes known as `discriminant field`), which is a field associated with `typefld` record,
-and optionally a length field, which is a field associated with a `lenfld` record..
+and optionally a length field, which is a field associated with a `lenfld` record.
 Protocols with type and value are known as TV protocols, and ones with type-length-value
 are known as TLV protocols.
 
-To define a message header, define a ctype and annotate its fields with `typefld` and lenfld`
+To define a message header, define a ctype and annotate its fields with `typefld` and `lenfld`
 records. When defining a message header, we will need to define at least one message to go with it.
 
 ```
 $ acr -insert -write
 dmmeta.ctype  ctype:prot1.MsgHeader  comment:""
-  dmmeta.cpptype  ctype:prot1.MsgHeader  ctor:Y  dtor:N  cheap_copy:N
+  dmmeta.cpptype  ctype:prot1.MsgHeader  ctor:Y
   dmmeta.pack  ctype:prot1.MsgHeader  comment:""
     dmmeta.field  field:prot1.MsgHeader.type  acr.rowid:982     arg:u8  reftype:Val  dflt:""  comment:""
       dmmeta.typefld  field:prot1.MsgHeader.type  comment:""
@@ -67,14 +67,14 @@ dmmeta.ctype  ctype:prot1.MsgHeader  comment:""
     dmmeta.cfmt  cfmt:prot1.MsgHeader.String  printfmt:Tuple  read:Y  print:Y  sep:,  genop:Y  comment:""
 
 dmmeta.ctype  ctype:prot1.HeartbeatMsg  comment:""
-  dmmeta.cpptype  ctype:prot1.HeartbeatMsg  ctor:Y  dtor:N  cheap_copy:N
+  dmmeta.cpptype  ctype:prot1.HeartbeatMsg  ctor:Y
   dmmeta.msgtype  ctype:prot1.HeartbeatMsg  type:1
   dmmeta.pack  ctype:prot1.HeartbeatMsg  comment:""
   dmmeta.field  field:prot1.HeartbeatMsg.base  arg:prot1.MsgHeader  reftype:Base  dflt:""  comment:""
   dmmeta.cfmt  cfmt:prot1.HeartbeatMsg.String  printfmt:Tuple  read:Y  print:Y  sep:,  genop:Y  comment:""
 
 dmmeta.ctype  ctype:prot1.LoginMsg  comment:""
-  dmmeta.cpptype  ctype:prot1.LoginMsg  ctor:Y  dtor:N  cheap_copy:N
+  dmmeta.cpptype  ctype:prot1.LoginMsg  ctor:Y
   dmmeta.msgtype  ctype:prot1.LoginMsg  type:2
   dmmeta.pack  ctype:prot1.LoginMsg  comment:""
   dmmeta.field  field:prot1.LoginMsg.base  arg:prot1.MsgHeader  reftype:Base  dflt:""  comment:""
@@ -90,15 +90,14 @@ dmmeta.ctype  ctype:prot1.LoginMsg  comment:""
   all fields from the `arg` type to the type being defined.
 * The `typefld` record indicates that the field is a type field. All ctypes using this ctype a base
   and having a `msgtype` record are collected together by amc and form a set.
-* The `cpptype` record is a set of general hints about the type.
-- `ctor:Y` asks amc to generate a fieldwise constructor for the type.
-- `dtor:N` tells amc that no special destructor is associated either with the type of any of its fields.
-  This an annotation that affects some code generation steps and can be ignored for now.
-- `cheap_copy:N` tells amc to pass the specified type by const-reference. `cheap_copy:N` passes it by value
-  whenever it appears as an argument to a function
-* The `lenfld` record allocates determining the length of the actual message when looking at the message header.
-  The value of this field, plus the value of `extra`, is the message length. This field is used for  validation and
-  for skipping messages when scanning memory.
+* The `cpptype` record asks for a fieldwise constructor.
+- `ctor:Y` asks amc to generate a fieldwise constructor for the type.  It is the record's
+  only attribute: whether the type needs a destructor, and whether it is cheap enough to
+  pass by value, are facts about what the type contains, and amc computes both rather than
+  reading them here.
+* The `lenfld` record marks a field whose value (plus `extra`) gives the total length of the message
+  when looking at the message header.  This field is used for validation and for skipping messages
+  when scanning memory.
 * The `cfmt` record asks amc to generate print/read functions for the type:
 - suffix `.String` is string conversion (other methods are supported and can be ignored for now)
 - `printfmt:Tuple` means to print the type as an ssim tuple
@@ -174,7 +173,7 @@ int                  InDispatch(prot1::MsgHeader& msg, u32 msg_len);
 User must implement functions `In_HeartbeatMsg` and `In_LoginMsg`. The name of the dispatch (`prot1.In`)
 effectively names the switch statement. If `strict:Y` is specified, the parameter `len` must match
 message size exactly. Otherwise, it just has to be enough to fit the message.
-The return value is the size of the dispatched message, of 0 if no function was called.
+The return value is the size of the dispatched message, or 0 if no function was called.
 
 ```
 // --- prot1.In..DispatchRaw
@@ -209,9 +208,9 @@ Each `dispatch` results in corresponding `Case` type (see above discussion for t
 type that covers all messages). So, with `read:Y`, the following code is generated:
 
 ```
-+// --- prot1.In..ReadStrptr
-+// Parse ascii representation of message into binary, appending new data to BUF.
-+prot1::InCase prot1::In_ReadStrptr(algo::strptr str, algo::ByteAry &buf) {
+// --- prot1.In..ReadStrptr
+// Parse ascii representation of message into binary, appending new data to BUF.
+prot1::InCase prot1::In_ReadStrptr(algo::strptr str, algo::ByteAry &buf) {
 ...
 ```
 
@@ -258,14 +257,14 @@ dmmeta.disptrace dispatch:prot1.In cycles:Y
 ```
 
 When `disptrace` is specified, amc adds one trace field to the namespace's `FDb.trace` record
-for each mesage type in the dispatch. The field is incremented by one whenever the callback
-for this message type is called. If `cycles:Y` is specifie, the total number of cycles spent
+for each message type in the dispatch. The field is incremented by one whenever the callback
+for this message type is called. If `cycles:Y` is specified, the total number of cycles spent
 in each callback is calculated as well (and stored in another trace variable in the same location).
 A trace variable is simply a u64 field added to ctype `ns.trace`. A single copy of `ns.trace`
 is kept in the global database record.
 
 ### The `Case` dispatch
-<a href="#the--case--dispatch"></a>
+<a href="#the-case-dispatch"></a>
 
 The `Case` type is a special case of a `Dispatch`. 
 When generating code for a protocol, `amc` automatically generates a `MsgHeaderMsgsCase` type
@@ -283,10 +282,10 @@ bool                 MsgHeaderMsgs_Print(algo::cstring &str, prot1::MsgHeader &m
 bool                 MsgHeaderMsgs_ReadStrptrMaybe(algo::strptr str, algo::ByteAry &buf);
 ```
 
-For `Print`, we can provided a `MsgHeader` and `amc` will automatically dispatch to any known
+For `Print`, we can provide a `MsgHeader` and `amc` will automatically dispatch to any known
 message type and print the result to string.
 For `ReadStrptrMaybe`, `amc` will convert a string representation of any known message to binary,
-and store the result in the provided `ByteAry`. The resulting byte array, if no-empty, can be examined
+and store the result in the provided `ByteAry`. The resulting byte array, if non-empty, can be examined
 as a `MsgHeader` and will contain the actual message.
 
 ### Variable-length messages
@@ -299,7 +298,7 @@ a `Varlen` field:
 
 ```
     dmmeta.ctype  ctype:prot1.DataMsg  comment:""
-    dmmeta.cpptype  ctype:prot1.DataMsg  ctor:Y  dtor:N  cheap_copy:N
+    dmmeta.cpptype  ctype:prot1.DataMsg  ctor:Y
     dmmeta.msgtype  ctype:prot1.DataMsg  type:3
     dmmeta.pack  ctype:prot1.DataMsg  comment:""
     dmmeta.field  field:prot1.DataMsg.base  arg:prot1.MsgHeader  reftype:Base    dflt:""  comment:""
@@ -353,9 +352,9 @@ The fields are as follows:
 but generates forward declarations for all functions and assumes the user will provide the implementations
 (or get a link error)
 - `order:Y` generates a comparison function. This is defined lexicographically (as operating on each field in turn).
- If `order:N` is specified, then only the equality function is generatored.
-- `minmax:Y` asks to generate `_Min`, `_Max`, `_UpdateMin` and `_UpdateMax` functions. Altogether,
-- `genop:Y` generates c++ operators `==` and `>` as necessary
+ If `order:N` is specified, then only the equality function is generated.
+- `minmax:Y` asks to generate `_Min`, `_Max`, `_UpdateMin` and `_UpdateMax` functions.
+- `genop:Y` generates c++ operators `==` and `>` as necessary.
 
 Altogether, the following prototypes are generated for the example above:
 
@@ -383,9 +382,9 @@ ietf::Ipport         Ipport_Max(ietf::Ipport lhs, ietf::Ipport rhs) __attribute_
 ### Big-endian fields
 <a href="#big-endian-fields"></a>
 
-When a field is is stored in memory in a big-endian format, use `fbigend` to reflect it.
-Other than that, use the same type for the field. `amc` will rename the data field to make its
-sure that doesn't refer to it as-is, and generate `_Get`, and `_Set` functions:
+When a field is stored in memory in a big-endian format, use `fbigend` to reflect it.
+Other than that, use the same type for the field. `amc` will rename the underlying storage field
+(adding a `_be` suffix) so that callers don't access it directly, and generates `_Get` and `_Set` functions:
 
 ```
       dmmeta.field  field:sxou11.TimeInForce.value  arg:u32  reftype:Val  dflt:""  comment:""
@@ -413,4 +412,3 @@ which simply requires that all ctypes that are part of the namespace are marked 
 ```
 dmmeta.nsx  ns:prot1     pack:Y ...
 ```
-

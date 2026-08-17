@@ -127,6 +127,12 @@ bool bool_ReadStrptrMaybe(bool &row, algo::strptr str) {
 // And %X is the nanosecond portion
 bool algo::UnTime_ReadStrptrMaybe(algo::UnTime &row, algo::strptr str) {
     bool retval = true;
+    // ISO 8601 trailing 'Z' marks UTC -- strip it and convert via
+    // timegm() at the end instead of falling through to ToUnTime()
+    // (which uses mktime() and would otherwise bake the host's TZ
+    // offset into the result).
+    bool utc = elems_N(str) > 0 && str[elems_N(str)-1] == 'Z';
+    if (utc) { str = algo::ch_FirstN(str, elems_N(str)-1); }
     algo::StringIter iter(str);
     TimeStruct time_struct;
     retval = TimeStruct_Read(time_struct, iter, "%Y-%m-%dT%T");//ISO 8601
@@ -156,7 +162,14 @@ bool algo::UnTime_ReadStrptrMaybe(algo::UnTime &row, algo::strptr str) {
         retval = TimeStruct_Read(time_struct, iter, "%Y%m%d");
     }
     if (LIKELY(retval)) {
-        row = ToUnTime(time_struct);
+        if (utc) {
+            i64 secs = timegm((tm*)&time_struct);
+            if (secs != -1) {
+                row.value = secs * UNTIME_PER_SEC + time_struct.tm_nsec;
+            }
+        } else {
+            row = ToUnTime(time_struct);
+        }
     } else {
         retval = false;
         algo_lib::AppendErrtext("comment", "bad time");
@@ -426,7 +439,7 @@ void algo::strptr_PrintWithCommas(strptr src, algo::cstring &out) {
     }
     ch_Reserve(out, src.n_elems * 2);
     int i=0;
-    if (src.elems[0]=='-') {
+    if (src.elems[0]=='-' || src.elems[0]=='+') {
         out.ch_elems[out.ch_n++] = src.elems[i++];
     }
     int remaining=(dec-i)%3;
@@ -804,7 +817,7 @@ void algo::strptr_PrintAligned(algo::strptr str, algo::cstring &out, int nplaces
 void i32_Print(i32 i, algo::cstring &str) {
     ch_Reserve(str, 32);
     u32 u = i;
-    int n = str.ch_n;
+    i64 n = str.ch_n;
     if (i<0) {
         str.ch_elems[n] = '-';
         n++;
@@ -817,7 +830,7 @@ void i32_Print(i32 i, algo::cstring &str) {
 void i64_Print(i64 i, algo::cstring &str) {
     ch_Reserve(str, 32);
     u64 u = i;
-    int n = str.ch_n;
+    i64 n = str.ch_n;
     if (i<0) {
         str.ch_elems[n] = '-';
         n++;
@@ -845,14 +858,14 @@ void i8_Print(i8 i, algo::cstring &str) {
 
 void u32_Print(u32 i, algo::cstring &str) {
     ch_Reserve(str, 32);
-    int n = str.ch_n;
+    i64 n = str.ch_n;
     n += algo::u32_FmtBuf(i,(u8*)(str.ch_elems+n));
     str.ch_n=n;
 }
 
 void u64_Print(u64 i, algo::cstring &str) {
     ch_Reserve(str, 32);
-    int n = str.ch_n;
+    i64 n = str.ch_n;
     n += algo::u64_FmtBuf(i,(u8*)(str.ch_elems+n));
     str.ch_n=n;
 }
@@ -890,8 +903,75 @@ void algo::double_PrintPercent(double value, algo::cstring &str, int prec) {
     double_PrintPrec(value*100.0, str, prec, true, false);
 }
 
-void algo::i32_Range_Print(algo::i32_Range &r, algo::cstring &o) {
+void algo::i32_Range_Print(algo::i32_Range r, algo::cstring &o) {
     o<<r.beg<<' '<<r.end;
+}
+
+// Print ROW in the integer-range-list notation an operator writes: items
+// separated by commas, each either one value (7) or a span of values (4-7).
+//
+// The span is inclusive at both ends, because that is what every tool taking a
+// cpu or node list means by 4-7, while algo::i32_Range is half-open.  So a
+// range prints its last value as end-1, and a range holding one value prints
+// as that value rather than as 7-7.
+//
+// The list is a sequence and not a set.  Items print in the order the array
+// holds them, and nothing here sorts or merges: where the list states a
+// preference -- the first entry that qualifies wins -- the order is the whole
+// meaning, so a list printed after being read comes back as it was written.
+void algo::I32RangeAry_Print(algo::I32RangeAry &row, algo::cstring &str) {
+    algo::ListSep ls(",");
+    ind_beg(algo::I32RangeAry_ary_curs,range,row) {
+        str << ls << range.beg;
+        if (range.end > range.beg + 1) {
+            str << '-' << (range.end - 1);
+        }
+    }ind_end;
+}
+
+// Read the integer-range-list notation into PARENT, replacing what it holds.
+// Return false on anything the notation does not admit, leaving PARENT empty
+// rather than half filled.
+//
+// Values are non-negative, and that is a consequence of the notation rather
+// than a restriction chosen here: the separator inside a span is the same
+// character a minus sign would be, so a list that admitted negative values
+// could not say whether 4-7 named two values or one.  The lists this notation
+// carries index cores and nodes, which start at zero.
+//
+// An empty string is an empty list and not an error -- it is what a field
+// defaulting to "" holds, and it reads as "no opinion" wherever such a list
+// states a placement.  A trailing comma is accepted for the same reason a
+// shell accepts one; an empty item between two commas is not, since it names
+// nothing.
+bool algo::I32RangeAry_ReadStrptrMaybe(algo::I32RangeAry &parent, algo::strptr in_str) {
+    bool retval = true;
+    ary_RemoveAll(parent);
+    algo::StringIter iter(in_str);
+    while (retval && !iter.EofQ()) {
+        algo::strptr item = algo::GetTokenChar(iter, ',');
+        algo::StringIter itemiter(item);
+        i32 beg = 0;
+        i32 last = 0;
+        bool ok = algo::TryParseI32(itemiter, beg);
+        if (ok && algo::SkipChar(itemiter, '-')) {
+            ok = algo::TryParseI32(itemiter, last);
+        } else {
+            last = beg;
+        }
+        if (ok && itemiter.EofQ() && beg >= 0 && last >= beg) {
+            algo::i32_Range &range = ary_Alloc(parent);
+            range.beg = beg;
+            range.end = last + 1;
+        } else {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "bad integer range list item");
+            algo_lib::AppendErrtext("item", item);
+            algo_lib::AppendErrtext("value", in_str);
+            ary_RemoveAll(parent);
+        }
+    }
+    return retval;
 }
 
 void double_Print(double d, algo::cstring &str) {
@@ -1181,7 +1261,7 @@ void ietf::Ipv4Addr_Print(ietf::Ipv4Addr row, algo::cstring &str) {
     ietf::Ipv4_Print(ietf::Ipv4(addr_Get(row)), str);
 }
 
-void algo::Ipmask_Print(algo::Ipmask &row, algo::cstring &str) {
+void algo::Ipmask_Print(algo::Ipmask row, algo::cstring &str) {
     int bit = row.mask ? u32_BitScanForward(u32(row.mask)) : 32;
     Ipv4_Print(ietf::Ipv4(row.ip_host), str);
     str << "/";
@@ -1189,7 +1269,7 @@ void algo::Ipmask_Print(algo::Ipmask &row, algo::cstring &str) {
 }
 
 // Decode error using algo_lib table of decoders
-void algo::Errcode_Print(algo::Errcode &row, algo::cstring &str) {
+void algo::Errcode_Print(algo::Errcode row, algo::cstring &str) {
     int code = code_Get(row);
     int type = type_Get(row);
     algo_lib::FErrns *errns=algo_lib::errns_Find(type);
@@ -1346,7 +1426,7 @@ void algo::strptr_PrintPadLeft(algo::strptr str, algo::cstring &out, int nplaces
 void algo::strptr_PrintSql(algo::strptr str, algo::cstring &out, char q) {
     ch_Reserve(out, elems_N(str) * 2 + 2);
     char *elems = out.ch_elems;
-    int j = out.ch_n;
+    i64 j = out.ch_n;
     elems[j] = q;
     j += 1;
     frep_(i,elems_N(str)) {
@@ -1461,17 +1541,18 @@ void algo::strptr_PrintCopyCase(const algo::strptr &orig, algo::cstring &to, con
     }
 }
 
+// Read ROW from S, the reader the generated Tuple cfmt calls.
 bool algo::Tuple_ReadStrptrMaybe(Tuple &row, algo::strptr s) {
     bool retval = algo::Tuple_ReadStrptr(row, s, false);
     return retval;
 }
 
-// T             target tuple. the tuple is not emptied before parsing.
+// TUPLE         target tuple; its head and attrs are emptied before parsing.
 // STR           source string
-// ATTRONLY        if set, all loaded attrs are appended to the ATTRS
-//                 array. otherwise, the first attr becomes HEAD.
-// CMT_CHAR      character at which to stop parsing.
-// Parse sequence of attrs (name-value pairs) into tuple T.
+// ATTRONLY      if set, all loaded attrs are appended to the ATTRS
+//               array. otherwise, the first attr becomes HEAD.
+// Parsing stops at the first '#' outside a quoted value.
+// Parse sequence of attrs (name-value pairs) into tuple TUPLE.
 // Roughly:
 // ATTR       -> VALUE | VALUE ':' VALUE
 // VALUE      -> IDENTIFIER | C++-STRING
@@ -1489,7 +1570,10 @@ bool algo::Tuple_ReadStrptr(algo::Tuple &tuple, strptr str, bool attronly) {
 
         bool ok = false;
         if (iter.Ws().Peek()!='#') {
-            cstring_ReadCmdarg(arg.value, iter, false);
+            // the name-position status folds into the return value exactly like
+            // the value-position one: which side of a colon an unterminated
+            // quote falls on must not decide whether the line is rejected
+            ret &= cstring_ReadCmdarg(arg.value, iter, false);
             if (SkipChar(iter, ':')) {
                 arg.name=arg.value;
                 ret &= cstring_ReadCmdarg(arg.value, iter, true);
@@ -1551,6 +1635,34 @@ bool algo::cstring_ReadCmdarg(cstring &out, algo::StringIter &S, bool is_value) 
         ret = true;
     }
     return ret;
+}
+
+// Tokenize CMDLINE into argv-shaped words in OUT: each element is a bare
+// token, "-opt", or "-opt:value", with any quoted ("...") segment unescaped
+// into owned storage.  This is the dual of a shell's argv split; the
+// field-aware <cmd>_ReadArgv then interprets dashes, colons, and per-option
+// NArgs (so "-opt value" works, not only "-opt:value").
+void algo::CmdlineToArgv(algo::strptr cmdline, algo::StringAry &out) {
+    algo::StringIter iter(cmdline);
+    while (!iter.Ws().EofQ()) {
+        int from = iter.index;
+        algo::cstring word;
+        algo::cstring_ReadCmdarg(word, iter, false);
+        if (algo::SkipChar(iter, ':')) {
+            word << ":";
+            algo::cstring val;
+            algo::cstring_ReadCmdarg(val, iter, true);
+            word << val;
+        }
+        // A break character other than ':' -- one of []{}() -- ends a token
+        // without being eaten, so the scan would stand on it forever.  Take it
+        // as a one-character word, and every pass moves forward.
+        if (iter.index == from) {
+            char ch = iter.GetChar();
+            ch_Alloc(word) = ch;
+        }
+        ary_Alloc(out) = word;
+    }
 }
 
 // Read Charset from list of chars.
@@ -1808,7 +1920,7 @@ void algo::char_PrintCppEsc(char c, algo::cstring &out, char quote_char) {
 // Print STR, surrounded by quotes as C++ string
 // surrounded by QUOTE_CHAR quotes, to buffer OUT.
 // All string characters are escaped using char_PrintCppEsc.
-void algo::strptr_PrintCppQuoted(algo::strptr str, algo::cstring &out, char quote_char) {
+void algo::strptr_PrintCppQuoted(algo::strptr str, algo::cstring &out, char quote_char, bool multiline DFLTVAL(false)) {
     ch_Reserve(out, 2+str.n_elems*4);// max possible
     char *srcbuf=str.elems;// source string
     char *buf = out.ch_elems;// destination buffer
@@ -1825,6 +1937,13 @@ void algo::strptr_PrintCppQuoted(algo::strptr str, algo::cstring &out, char quot
         } else {
             n += _PrintQuotedChar(srcbuf[i], buf + n, quote_char);
             ++i;
+            // multiline strings: when encountering \n in the source stirng,
+            // start a new line in output -- better readability
+            if (multiline && srcbuf[i-1]=='\n' && i<src_n-1) {
+                buf[n++] = quote_char;
+                buf[n++] = '\n';
+                buf[n++] = quote_char;
+            }
         }
     }
     buf[n++] = quote_char;// closing quote
@@ -2200,6 +2319,229 @@ void algo::memptr_Print(algo::memptr parent, algo::cstring &str) {
 
 void algo::ByteAry_Print(algo::ByteAry &parent, algo::cstring &str) {
     str << ary_Getary(parent);
+}
+
+// SI unit table entry shared by the print/parse helpers below.
+// Multipliers are precomputed constants; suffix `""` flags
+// "print as a bare integer, no division".  `print` marks an entry the
+// print side emits; parse considers every entry regardless, so case
+// aliases (`kHz`) and parse-only units (`Hz`) carry `print:false`.
+// Tables are terminated by `{ 0, NULL, false }`.
+struct AlgoUnit { // ignore:struct_in_src
+    u64         mult;
+    const char *suffix;
+    bool        print;
+};
+
+// One table per unit, shared by print and parse.  Order is irrelevant:
+// parse matches the longest suffix the string ends with (so "ms" wins
+// over "s"), and print walks only the `print:true` entries by mult.
+static const AlgoUnit size_units[] = {
+    { 1000000000000ULL, "T", true  }, { 1000000000000ULL, "t", false },
+    { 1000000000ULL,    "G", true  }, { 1000000000ULL,    "g", false },
+    { 1000000ULL,       "M", true  }, { 1000000ULL,       "m", false },
+    { 1000ULL,          "K", true  }, { 1000ULL,          "k", false },
+    { 1ULL,             "",  true  },     // bare integer for val < 1000
+    { 0,                NULL, false },
+};
+static const AlgoUnit nsec_units[] = {
+    { 1000000000ULL,    "s",  true  },
+    { 1000000ULL,       "ms", true  },
+    { 1000ULL,          "us", true  },
+    { 1ULL,             "ns", true  },
+    { 0,                NULL, false },
+};
+static const AlgoUnit hz_units[] = {
+    { 1000000000ULL,    "GHz", true  },
+    { 1000000ULL,       "MHz", true  },
+    { 1000ULL,          "KHz", true  }, { 1000ULL, "kHz", false },   // sub-KHz still prints as KHz
+    { 1ULL,             "Hz",  false },
+    { 0,                NULL,  false },
+};
+
+// Among the print-enabled entries of TABLE, return the largest whose
+// mult <= val.  If val is below all of them, return the smallest.
+static const AlgoUnit *PrintUnit(u64 val, const AlgoUnit *table) {
+    const AlgoUnit *fit = NULL;
+    const AlgoUnit *least = NULL;
+    for (const AlgoUnit *u = table; u->suffix != NULL; u++) {
+        if (u->print) {
+            if (u->mult <= val && (fit == NULL || u->mult > fit->mult)) {
+                fit = u;
+            }
+            if (least == NULL || u->mult < least->mult) {
+                least = u;
+            }
+        }
+    }
+    return fit != NULL ? fit : least;
+}
+
+// Format VAL using the largest matching unit; precision applies to the
+// scaled double.  Empty suffix means "print the bare integer, no divide".
+static void PrintScaled(u64 val, algo::cstring &out, const AlgoUnit *table, int precision) {
+    const AlgoUnit *u = PrintUnit(val, table);
+    if (u->suffix[0] == 0) {
+        out << val;
+    } else {
+        algo::double_PrintPrec(double(val) / double(u->mult), out, precision, false, false);
+        out << u->suffix;
+    }
+}
+
+// Return the multiplier of the longest suffix STR ends with, stripping
+// it from STR.  Matching the longest suffix lets "ms" win over "s"
+// regardless of table order.  Defaults to 1 when no suffix matches.
+static u64 ParseUnit(algo::strptr &str, const AlgoUnit *table) {
+    u64 ret = 1;
+    const AlgoUnit *best = NULL;
+    for (const AlgoUnit *u = table; u->suffix != NULL; u++) {
+        algo::strptr suf(u->suffix);
+        bool longer = best == NULL || ch_N(suf) > ch_N(algo::strptr(best->suffix));
+        if (ch_N(suf) > 0 && algo::EndsWithQ(str, suf) && longer) {
+            best = u;
+        }
+    }
+    if (best != NULL) {
+        algo::strptr suf(best->suffix);
+        ret = best->mult;
+        str = ch_GetRegion(str, 0, ch_N(str) - ch_N(suf));
+    }
+    return ret;
+}
+
+// Format a count with decimal SI suffix K/M/G/T (1K=1000, 1M=1e6, ...).
+// Two decimal places for the scaled value; bare integer below 1000.
+// With NUMERIC, print the raw u64 (machine-readable output).
+// Non-numeric mode: values >= (1<<62) print as "inf" — the same sentinel
+// the parse side accepts.  Inverse of ParseSize.
+void algo::u64_PrintSize(u64 val, algo::cstring &out, bool numeric DFLTVAL(false)) {
+    if (numeric) {
+        out << val;
+    } else if (val >= (u64(1) << 62)) {
+        out << "inf";
+    } else {
+        PrintScaled(val, out, size_units, 2);
+    }
+}
+
+tempstr algo::SizeToStr(u64 val, bool numeric DFLTVAL(false)) {
+    tempstr ret;
+    u64_PrintSize(val, ret, numeric);
+    return ret;
+}
+
+// Format a nanosecond count with ns/us/ms/s suffix (one decimal place).
+void algo::u64_PrintNsec(u64 val, algo::cstring &out, bool numeric DFLTVAL(false)) {
+    if (numeric) {
+        out << val;
+    } else {
+        PrintScaled(val, out, nsec_units, 1);
+    }
+}
+
+tempstr algo::NsecToStr(u64 val, bool numeric DFLTVAL(false)) {
+    tempstr ret;
+    u64_PrintNsec(val, ret, numeric);
+    return ret;
+}
+
+// Format a Hz count with KHz/MHz/GHz suffix (one decimal place).
+// Sub-KHz values still print with a "KHz" suffix so the unit is
+// unambiguous.
+void algo::u64_PrintHz(u64 val, algo::cstring &out, bool numeric DFLTVAL(false)) {
+    if (numeric) {
+        out << val;
+    } else {
+        PrintScaled(val, out, hz_units, 1);
+    }
+}
+
+tempstr algo::HzToStr(u64 val, bool numeric DFLTVAL(false)) {
+    tempstr ret;
+    u64_PrintHz(val, ret, numeric);
+    return ret;
+}
+
+// Format a count of items (messages, records, events) as a signed
+// i64.  No SI scaling — counts are exact, not measurements.  The
+// (1<<62) sentinel renders as "inf", which a reader takes as
+// "go on indefinitely" and a synthetic generator emits.  Negative
+// counts print normally, a reader taking them as "N off the end of
+// the stream".  With NUMERIC, always print the raw integer.
+void algo::i64_PrintCount(i64 val, algo::cstring &out, bool numeric DFLTVAL(false)) {
+    if (!numeric && val >= (i64(1) << 62)) {
+        out << "inf";
+    } else {
+        out << val;
+    }
+}
+
+tempstr algo::CountToStr(i64 val, bool numeric DFLTVAL(false)) {
+    tempstr ret;
+    i64_PrintCount(val, ret, numeric);
+    return ret;
+}
+
+// Parse a count.  Signed — "-1" means "one off the end" to a reader.
+// Accepts the literal "inf" (→ 1<<62) and any integer the standard
+// i64 reader accepts.  No-throw.
+i64 algo::ParseCount(algo::strptr str, i64 dflt DFLTVAL(0)) {
+    i64 ret = dflt;
+    if (str == "inf") {
+        ret = i64(1) << 62;
+    } else if (ch_N(str) > 0) {
+        i64 val = 0;
+        if (i64_ReadStrptrMaybe(val, str)) {
+            ret = val;
+        }
+    }
+    return ret;
+}
+
+// Parse "<number>[K|M|G|T]" (decimal SI suffix) into a u64.
+// 1K=1000, 1M=1000000, 1G=1e9, 1T=1e12.  Lower-case suffixes accepted.
+// "inf" → (1<<62), matching the sentinel a reader accepts for unbounded
+// reads.  No-throw.
+u64 algo::ParseSize(algo::strptr str, u64 dflt DFLTVAL(0)) {
+    u64 ret = dflt;
+    if (ch_N(str) > 0) {
+        if (str == "inf") {
+            ret = u64(1) << 62;
+        } else {
+            algo::strptr numstr = str;
+            u64 mult = ParseUnit(numstr, size_units);
+            double dnum = 0;
+            if (ch_N(numstr) > 0 && double_ReadStrptrMaybe(dnum, numstr) && dnum >= 0) {
+                ret = (u64)(mult * dnum);
+            }
+        }
+    }
+    return ret;
+}
+
+// Parse "<number>[ns|us|ms|s]" into a u64 nanosecond count.  No-throw.
+u64 algo::ParseNsec(algo::strptr str, u64 dflt DFLTVAL(0)) {
+    u64 ret = dflt;
+    algo::strptr numstr = str;
+    u64 mult = ParseUnit(numstr, nsec_units);
+    double dnum = 0;
+    if (ch_N(numstr) > 0 && double_ReadStrptrMaybe(dnum, numstr) && dnum >= 0) {
+        ret = (u64)(mult * dnum);
+    }
+    return ret;
+}
+
+// Parse "<number>[Hz|kHz|KHz|MHz|GHz]" into a u64 Hz count.  No-throw.
+u64 algo::ParseHz(algo::strptr str, u64 dflt DFLTVAL(0)) {
+    u64 ret = dflt;
+    algo::strptr numstr = str;
+    u64 mult = ParseUnit(numstr, hz_units);
+    double dnum = 0;
+    if (ch_N(numstr) > 0 && double_ReadStrptrMaybe(dnum, numstr) && dnum >= 0) {
+        ret = (u64)(mult * dnum);
+    }
+    return ret;
 }
 
 // read bytes in hex e.g: 00 01 ff

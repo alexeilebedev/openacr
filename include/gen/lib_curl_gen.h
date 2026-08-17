@@ -24,13 +24,14 @@
 
 #pragma once
 #include "include/gen/algo_gen.h"
+#include "include/gen/algo_lib_gen.h"
 //#pragma endinclude
 // gen:ns_enums
 
 // --- lib_curl_FieldIdEnum
 
-enum lib_curl_FieldIdEnum {        // lib_curl.FieldId.value
-     lib_curl_FieldId_value   = 0
+enum lib_curl_FieldIdEnum {    // lib_curl.FieldId.value
+     lib_curl_FieldId_value
 };
 
 enum { lib_curl_FieldIdEnum_N = 1 };
@@ -40,15 +41,190 @@ namespace lib_curl { // gen:ns_pkeytypedef
 namespace lib_curl { // gen:ns_tclass_field
 } // gen:ns_tclass_field
 // gen:ns_fwddecl2
-namespace lib_curl { struct request_headers_curs; }
-namespace lib_curl { struct response_headers_curs; }
-namespace lib_curl { struct trace; }
-namespace lib_curl { struct FDb; }
+namespace lib_curl { struct FCall; }
+namespace lib_curl { struct FRequest_headers_curs; }
+namespace lib_curl { struct FResponse_headers_curs; }
+namespace lib_curl { struct _db_zd_sock_free_curs; }
 namespace lib_curl { struct FRequest; }
 namespace lib_curl { struct FResponse; }
+namespace lib_curl { struct trace; }
+namespace lib_curl { struct FDb; }
+namespace lib_curl { struct FSock; }
 namespace lib_curl { struct FieldId; }
 namespace lib_curl { extern struct lib_curl::FDb _db; }
+namespace lib_curl { // hook_fcn_typedef
+    typedef void (*call_done_hook)(void* userctx, lib_curl::FCall& arg); // hook:lib_curl.FCall.done
+} // hook_decl
 namespace lib_curl { // gen:ns_print_struct
+
+// --- lib_curl.FRequest
+struct FRequest { // lib_curl.FRequest: curl request structure
+    algo::Smallstr50   method;                //   "GET"  HTTP verb: GET, POST, PUT, PATCH, DELETE
+    bool               curlrc_only;           //   false  Generate curlrc info, do not call curl
+    algo::cstring      url;                   // Absolute URL (e.g., https://api.example.com/v1/data)
+    algo::cstring*     headers_lary[36];      // level array
+    i64                headers_n;             // number of elements in array
+    algo::cstring      body;                  // Optional request body (sent as-is, often JSON string)
+    bool               insecure_tls;          //   false  Skip TLS verification if true
+    u32                connect_timeout_sec;   //   5  connect_timeout_sec
+    u32                total_timeout_sec;     //   120  Total request timeout (s)
+    algo::cstring      aws_sigv4;             //   ""  AWS SigV4 scope (aws:amz:<region>:<service>); empty = no SigV4 signing
+    algo::cstring      username;              //   ""  Basic auth / AWS access key id (with aws_sigv4)
+    algo::cstring      password;              //   ""  Basic auth / AWS secret access key (with aws_sigv4)
+    // func:lib_curl.FRequest..Ctor
+    inline               FRequest() __attribute__((nothrow));
+    // func:lib_curl.FRequest..Dtor
+    inline               ~FRequest() __attribute__((nothrow));
+};
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:lib_curl.FRequest.headers.Alloc
+algo::cstring&       headers_Alloc(lib_curl::FRequest& parent) __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:lib_curl.FRequest.headers.AllocMaybe
+algo::cstring*       headers_AllocMaybe(lib_curl::FRequest& parent) __attribute__((__warn_unused_result__, nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:lib_curl.FRequest.headers.AllocMem
+void*                headers_AllocMem(lib_curl::FRequest& parent) __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:lib_curl.FRequest.headers.EmptyQ
+inline bool          headers_EmptyQ(lib_curl::FRequest& parent) __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:lib_curl.FRequest.headers.Find
+inline algo::cstring* headers_Find(lib_curl::FRequest& parent, u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:lib_curl.FRequest.headers.Last
+inline algo::cstring* headers_Last(lib_curl::FRequest& parent) __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:lib_curl.FRequest.headers.N
+inline i64           headers_N(const lib_curl::FRequest& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:lib_curl.FRequest.headers.RemoveAll
+void                 headers_RemoveAll(lib_curl::FRequest& parent) __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:lib_curl.FRequest.headers.RemoveLast
+void                 headers_RemoveLast(lib_curl::FRequest& parent) __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:lib_curl.FRequest.headers.qFind
+inline algo::cstring& headers_qFind(lib_curl::FRequest& parent, u64 t) __attribute__((nothrow, pure));
+
+// cursor points to valid item
+// func:lib_curl.FRequest.headers_curs.Reset
+inline void          FRequest_headers_curs_Reset(FRequest_headers_curs &curs, lib_curl::FRequest &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:lib_curl.FRequest.headers_curs.ValidQ
+inline bool          FRequest_headers_curs_ValidQ(FRequest_headers_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:lib_curl.FRequest.headers_curs.Next
+inline void          FRequest_headers_curs_Next(FRequest_headers_curs &curs) __attribute__((nothrow));
+// item access
+// func:lib_curl.FRequest.headers_curs.Access
+inline algo::cstring& FRequest_headers_curs_Access(FRequest_headers_curs &curs) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:lib_curl.FRequest..Init
+void                 FRequest_Init(lib_curl::FRequest& parent);
+// func:lib_curl.FRequest..Uninit
+void                 FRequest_Uninit(lib_curl::FRequest& parent) __attribute__((nothrow));
+
+// --- lib_curl.FResponse
+struct FResponse { // lib_curl.FResponse: curl response structure
+    u16              code;               //   0  HTTP status code
+    algo::cstring    body;               // raw response body
+    algo::cstring    content_type;       // parsed Content-Type (no params)
+    algo::cstring    status_line;        // e.g., HTTP/1.1 200 OK
+    algo::cstring    reason;             // parsed reason phrase, if available
+    algo::cstring*   headers_lary[36];   // level array
+    i64              headers_n;          // number of elements in array
+    algo::cstring    curlrc;             // curlrc content
+    // func:lib_curl.FResponse..Ctor
+    inline               FResponse() __attribute__((nothrow));
+    // func:lib_curl.FResponse..Dtor
+    inline               ~FResponse() __attribute__((nothrow));
+};
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:lib_curl.FResponse.headers.Alloc
+algo::cstring&       headers_Alloc(lib_curl::FResponse& parent) __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:lib_curl.FResponse.headers.AllocMaybe
+algo::cstring*       headers_AllocMaybe(lib_curl::FResponse& parent) __attribute__((__warn_unused_result__, nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:lib_curl.FResponse.headers.AllocMem
+void*                headers_AllocMem(lib_curl::FResponse& parent) __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:lib_curl.FResponse.headers.EmptyQ
+inline bool          headers_EmptyQ(lib_curl::FResponse& parent) __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:lib_curl.FResponse.headers.Find
+inline algo::cstring* headers_Find(lib_curl::FResponse& parent, u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:lib_curl.FResponse.headers.Last
+inline algo::cstring* headers_Last(lib_curl::FResponse& parent) __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:lib_curl.FResponse.headers.N
+inline i64           headers_N(const lib_curl::FResponse& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:lib_curl.FResponse.headers.RemoveAll
+void                 headers_RemoveAll(lib_curl::FResponse& parent) __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:lib_curl.FResponse.headers.RemoveLast
+void                 headers_RemoveLast(lib_curl::FResponse& parent) __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:lib_curl.FResponse.headers.qFind
+inline algo::cstring& headers_qFind(lib_curl::FResponse& parent, u64 t) __attribute__((nothrow, pure));
+
+// cursor points to valid item
+// func:lib_curl.FResponse.headers_curs.Reset
+inline void          FResponse_headers_curs_Reset(FResponse_headers_curs &curs, lib_curl::FResponse &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:lib_curl.FResponse.headers_curs.ValidQ
+inline bool          FResponse_headers_curs_ValidQ(FResponse_headers_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:lib_curl.FResponse.headers_curs.Next
+inline void          FResponse_headers_curs_Next(FResponse_headers_curs &curs) __attribute__((nothrow));
+// item access
+// func:lib_curl.FResponse.headers_curs.Access
+inline algo::cstring& FResponse_headers_curs_Access(FResponse_headers_curs &curs) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:lib_curl.FResponse..Init
+void                 FResponse_Init(lib_curl::FResponse& parent);
+// func:lib_curl.FResponse..Uninit
+void                 FResponse_Uninit(lib_curl::FResponse& parent) __attribute__((nothrow));
+
+// --- lib_curl.FCall
+// create: lib_curl.FDb.call (Tpool)
+// access: lib_curl.FCall.done (Hook)
+struct FCall { // lib_curl.FCall: One asynchronous HTTP exchange in flight
+    lib_curl::FRequest         req;         // What to send
+    lib_curl::FResponse        resp;        // What came back
+    u64                        hdrs;        //   0  curl_slist of request headers, freed at completion
+    algo::cstring              err;         // Transport error text; empty when the exchange completed
+    lib_curl::call_done_hook   done;        //   NULL  Pointer to a function
+    u64                        done_ctx;    //   0  Callback context
+    lib_curl::FCall*           call_next;   // Pointer to next free element int tpool
+private:
+    // func:lib_curl.FCall..Ctor
+    inline               FCall() __attribute__((nothrow));
+    friend lib_curl::FCall&     call_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend lib_curl::FCall*     call_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 call_Delete(lib_curl::FCall &row) __attribute__((nothrow));
+};
+// Invoke function by pointer
+// func:lib_curl.FCall.done.Call
+inline void          done_Call(lib_curl::FCall& call, lib_curl::FCall& arg) __attribute__((nothrow));
+// Assign 0-argument hook with no context pointer
+// func:lib_curl.FCall.done.Set0
+inline void          done_Set0(lib_curl::FCall& call, void (*fcn)() ) __attribute__((nothrow));
+// Assign 1-argument hook with context pointer
+// func:lib_curl.FCall.done.Set1
+template<class T> inline void done_Set1(lib_curl::FCall& call, T& ctx, void (*fcn)(T&) ) __attribute__((nothrow));
+// Assign 2-argument hook with context pointer
+// func:lib_curl.FCall.done.Set2
+template<class T> inline void done_Set2(lib_curl::FCall& call, T& ctx, void (*fcn)(T&, lib_curl::FCall& arg) ) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:lib_curl.FCall..Init
+inline void          FCall_Init(lib_curl::FCall& call);
 
 // --- lib_curl.trace
 #pragma pack(push,1)
@@ -57,7 +233,6 @@ struct trace { // lib_curl.trace
     inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // print string representation of ROW to string STR
 // cfmt:lib_curl.trace.String  printfmt:Tuple
 // func:lib_curl.trace..Print
@@ -66,13 +241,18 @@ void                 trace_Print(lib_curl::trace& row, algo::cstring& str) __att
 // --- lib_curl.FDb
 // create: lib_curl.FDb._db (Global)
 struct FDb { // lib_curl.FDb
-    u64                    request_blocksize;    // # bytes per block
-    lib_curl::FRequest*    request_free;         //
-    u64                    response_blocksize;   // # bytes per block
-    lib_curl::FResponse*   response_free;        //
-    lib_curl::trace        trace;                //
+    u64                   curl;                //   0  persistent curl easy handle; keeps the connection cache across requests
+    u64                   call_blocksize;      // # bytes per block
+    lib_curl::FCall*      call_free;           //
+    u64                   sock_blocksize;      // # bytes per block
+    lib_curl::FSock*      sock_free;           //
+    u64                   curlm;               //   0  curl multi handle driving every asynchronous exchange
+    algo_lib::FTimehook   th_curl;             // Fires when curl's own timeout expires
+    lib_curl::FSock*      zd_sock_free_head;   // zero-terminated doubly linked list
+    i32                   zd_sock_free_n;      // zero-terminated doubly linked list
+    lib_curl::FSock*      zd_sock_free_tail;   // pointer to last element
+    lib_curl::trace       trace;               //
 };
-
 // Parse strptr into known type and add to database.
 // Return value is true unless an error occurs. If return value is false, algo_lib::_db.errtext has error text
 // func:lib_curl.FDb._db.InsertStrptrMaybe
@@ -97,6 +277,10 @@ bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __att
 // Calls Step function of dependencies
 // func:lib_curl.FDb._db.Steps
 void                 Steps();
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+// func:lib_curl.FDb._db.RemoveStrptrMaybe
+bool                 RemoveStrptrMaybe(algo::strptr str);
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:lib_curl.FDb._db.XrefMaybe
@@ -104,214 +288,150 @@ bool                 _db_XrefMaybe();
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-// func:lib_curl.FDb.request.Alloc
-lib_curl::FRequest&  request_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// func:lib_curl.FDb.call.Alloc
+lib_curl::FCall&     call_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
-// func:lib_curl.FDb.request.AllocMaybe
-lib_curl::FRequest*  request_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// func:lib_curl.FDb.call.AllocMaybe
+lib_curl::FCall*     call_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Remove row from all global and cross indices, then deallocate row
-// func:lib_curl.FDb.request.Delete
-void                 request_Delete(lib_curl::FRequest &row) __attribute__((nothrow));
+// func:lib_curl.FDb.call.Delete
+void                 call_Delete(lib_curl::FCall &row) __attribute__((nothrow));
 // Allocate space for one element
 // If no memory available, return NULL.
-// func:lib_curl.FDb.request.AllocMem
-void*                request_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// func:lib_curl.FDb.call.AllocMem
+void*                call_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Remove mem from all global and cross indices, then deallocate mem
-// func:lib_curl.FDb.request.FreeMem
-void                 request_FreeMem(lib_curl::FRequest &row) __attribute__((nothrow));
+// func:lib_curl.FDb.call.FreeMem
+void                 call_FreeMem(lib_curl::FCall &row) __attribute__((nothrow));
 // Preallocate memory for N more elements
 // Return number of elements actually reserved.
-// func:lib_curl.FDb.request.Reserve
-u64                  request_Reserve(u64 n_elems) __attribute__((nothrow));
+// func:lib_curl.FDb.call.Reserve
+u64                  call_Reserve(u64 n_elems) __attribute__((nothrow));
 // Allocate block of given size, break up into small elements and append to free list.
 // Return number of elements reserved.
-// func:lib_curl.FDb.request.ReserveMem
-u64                  request_ReserveMem(u64 size) __attribute__((nothrow));
+// func:lib_curl.FDb.call.ReserveMem
+u64                  call_ReserveMem(u64 size) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-// func:lib_curl.FDb.request.XrefMaybe
-bool                 request_XrefMaybe(lib_curl::FRequest &row);
+// func:lib_curl.FDb.call.XrefMaybe
+bool                 call_XrefMaybe(lib_curl::FCall &row);
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-// func:lib_curl.FDb.response.Alloc
-lib_curl::FResponse& response_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// func:lib_curl.FDb.sock.Alloc
+lib_curl::FSock&     sock_Alloc() __attribute__((__warn_unused_result__, nothrow));
 // Allocate memory for new element. If out of memory, return NULL.
-// func:lib_curl.FDb.response.AllocMaybe
-lib_curl::FResponse* response_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// func:lib_curl.FDb.sock.AllocMaybe
+lib_curl::FSock*     sock_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
 // Remove row from all global and cross indices, then deallocate row
-// func:lib_curl.FDb.response.Delete
-void                 response_Delete(lib_curl::FResponse &row) __attribute__((nothrow));
+// func:lib_curl.FDb.sock.Delete
+void                 sock_Delete(lib_curl::FSock &row) __attribute__((nothrow));
 // Allocate space for one element
 // If no memory available, return NULL.
-// func:lib_curl.FDb.response.AllocMem
-void*                response_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// func:lib_curl.FDb.sock.AllocMem
+void*                sock_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Remove mem from all global and cross indices, then deallocate mem
-// func:lib_curl.FDb.response.FreeMem
-void                 response_FreeMem(lib_curl::FResponse &row) __attribute__((nothrow));
+// func:lib_curl.FDb.sock.FreeMem
+void                 sock_FreeMem(lib_curl::FSock &row) __attribute__((nothrow));
 // Preallocate memory for N more elements
 // Return number of elements actually reserved.
-// func:lib_curl.FDb.response.Reserve
-u64                  response_Reserve(u64 n_elems) __attribute__((nothrow));
+// func:lib_curl.FDb.sock.Reserve
+u64                  sock_Reserve(u64 n_elems) __attribute__((nothrow));
 // Allocate block of given size, break up into small elements and append to free list.
 // Return number of elements reserved.
-// func:lib_curl.FDb.response.ReserveMem
-u64                  response_ReserveMem(u64 size) __attribute__((nothrow));
+// func:lib_curl.FDb.sock.ReserveMem
+u64                  sock_ReserveMem(u64 size) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-// func:lib_curl.FDb.response.XrefMaybe
-bool                 response_XrefMaybe(lib_curl::FResponse &row);
+// func:lib_curl.FDb.sock.XrefMaybe
+bool                 sock_XrefMaybe(lib_curl::FSock &row);
 
+// Return true if index is empty
+// func:lib_curl.FDb.zd_sock_free.EmptyQ
+inline bool          zd_sock_free_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
+// If index empty, return NULL. Otherwise return pointer to first element in index
+// func:lib_curl.FDb.zd_sock_free.First
+inline lib_curl::FSock* zd_sock_free_First() __attribute__((__warn_unused_result__, nothrow, pure));
+// Return true if row is in the linked list, false otherwise
+// func:lib_curl.FDb.zd_sock_free.InLlistQ
+inline bool          zd_sock_free_InLlistQ(lib_curl::FSock& row) __attribute__((__warn_unused_result__, nothrow));
+// Insert row into linked list. If row is already in linked list, do nothing.
+// func:lib_curl.FDb.zd_sock_free.Insert
+void                 zd_sock_free_Insert(lib_curl::FSock& row) __attribute__((nothrow));
+// If index empty, return NULL. Otherwise return pointer to last element in index
+// func:lib_curl.FDb.zd_sock_free.Last
+inline lib_curl::FSock* zd_sock_free_Last() __attribute__((__warn_unused_result__, nothrow, pure));
+// Return number of items in the linked list
+// func:lib_curl.FDb.zd_sock_free.N
+inline i32           zd_sock_free_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to next element in the list
+// func:lib_curl.FDb.zd_sock_free.Next
+inline lib_curl::FSock* zd_sock_free_Next(lib_curl::FSock &row) __attribute__((__warn_unused_result__, nothrow));
+// Return pointer to previous element in the list
+// func:lib_curl.FDb.zd_sock_free.Prev
+inline lib_curl::FSock* zd_sock_free_Prev(lib_curl::FSock &row) __attribute__((__warn_unused_result__, nothrow));
+// Remove element from index. If element is not in index, do nothing.
+// func:lib_curl.FDb.zd_sock_free.Remove
+void                 zd_sock_free_Remove(lib_curl::FSock& row) __attribute__((nothrow));
+// Empty the index. (The rows are not deleted)
+// func:lib_curl.FDb.zd_sock_free.RemoveAll
+void                 zd_sock_free_RemoveAll() __attribute__((nothrow));
+// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+// func:lib_curl.FDb.zd_sock_free.RemoveFirst
+lib_curl::FSock*     zd_sock_free_RemoveFirst() __attribute__((nothrow));
+// Return reference to last element in the index. No bounds checking.
+// func:lib_curl.FDb.zd_sock_free.qLast
+inline lib_curl::FSock& zd_sock_free_qLast() __attribute__((__warn_unused_result__, nothrow));
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+// func:lib_curl.FDb.zd_sock_free.InsertBefore
+void                 zd_sock_free_InsertBefore(lib_curl::FSock& row, lib_curl::FSock* before) __attribute__((nothrow));
+
+// cursor points to valid item
+// func:lib_curl.FDb.zd_sock_free_curs.Reset
+inline void          _db_zd_sock_free_curs_Reset(_db_zd_sock_free_curs &curs, lib_curl::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:lib_curl.FDb.zd_sock_free_curs.ValidQ
+inline bool          _db_zd_sock_free_curs_ValidQ(_db_zd_sock_free_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:lib_curl.FDb.zd_sock_free_curs.Next
+inline void          _db_zd_sock_free_curs_Next(_db_zd_sock_free_curs &curs) __attribute__((nothrow));
+// item access
+// func:lib_curl.FDb.zd_sock_free_curs.Access
+inline lib_curl::FSock& _db_zd_sock_free_curs_Access(_db_zd_sock_free_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:lib_curl.FDb..Init
 void                 FDb_Init();
 // func:lib_curl.FDb..Uninit
 inline void          FDb_Uninit() __attribute__((nothrow));
 
-// --- lib_curl.FRequest
-// create: lib_curl.FDb.request (Tpool)
-struct FRequest { // lib_curl.FRequest: curl request structure
-    lib_curl::FRequest*   request_next;          // Pointer to next free element int tpool
-    algo::Smallstr50      method;                //   "GET"  HTTP verb: GET, POST, PUT, PATCH, DELETE
-    bool                  curlrc_only;           //   false  Generate curlrc info, do not call curl
-    algo::cstring         url;                   // Absolute URL (e.g., https://api.example.com/v1/data)
-    algo::cstring*        headers_lary[32];      // level array
-    i32                   headers_n;             // number of elements in array
-    algo::cstring         body;                  // Optional request body (sent as-is, often JSON string)
-    bool                  insecure_tls;          //   false  Skip TLS verification if true
-    u32                   connect_timeout_sec;   //   5  connect_timeout_sec
-    u32                   total_timeout_sec;     //   120  Total request timeout (s)
+// --- lib_curl.FSock
+// create: lib_curl.FDb.sock (Tpool)
+// global access: zd_sock_free (Llist)
+struct FSock { // lib_curl.FSock: One socket curl asked the event loop to watch
+    lib_curl::FSock*    sock_next;           // Pointer to next free element int tpool
+    lib_curl::FSock*    zd_sock_free_next;   // zslist link; -1 means not-in-list
+    lib_curl::FSock*    zd_sock_free_prev;   // previous element
+    algo_lib::FIohook   iohook;              // Epoll registration for the socket curl owns
+    // value field lib_curl.FSock.iohook is not copiable
+    // func:lib_curl.FSock..AssignOp
+    inline lib_curl::FSock& operator =(const lib_curl::FSock &rhs) = delete;
+    // value field lib_curl.FSock.iohook is not copiable
+    // func:lib_curl.FSock..CopyCtor
+    inline               FSock(const lib_curl::FSock &rhs) = delete;
 private:
-    // func:lib_curl.FRequest..Ctor
-    inline               FRequest() __attribute__((nothrow));
-    // func:lib_curl.FRequest..Dtor
-    inline               ~FRequest() __attribute__((nothrow));
-    friend lib_curl::FRequest&  request_Alloc() __attribute__((__warn_unused_result__, nothrow));
-    friend lib_curl::FRequest*  request_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
-    friend void                 request_Delete(lib_curl::FRequest &row) __attribute__((nothrow));
+    // func:lib_curl.FSock..Ctor
+    inline               FSock() __attribute__((nothrow));
+    // func:lib_curl.FSock..Dtor
+    inline               ~FSock() __attribute__((nothrow));
+    friend lib_curl::FSock&     sock_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend lib_curl::FSock*     sock_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 sock_Delete(lib_curl::FSock &row) __attribute__((nothrow));
 };
-
-// Allocate memory for new default row.
-// If out of memory, process is killed.
-// func:lib_curl.FRequest.headers.Alloc
-algo::cstring&       headers_Alloc(lib_curl::FRequest& request) __attribute__((__warn_unused_result__, nothrow));
-// Allocate memory for new element. If out of memory, return NULL.
-// func:lib_curl.FRequest.headers.AllocMaybe
-algo::cstring*       headers_AllocMaybe(lib_curl::FRequest& request) __attribute__((__warn_unused_result__, nothrow));
-// Allocate space for one element. If no memory available, return NULL.
-// func:lib_curl.FRequest.headers.AllocMem
-void*                headers_AllocMem(lib_curl::FRequest& request) __attribute__((__warn_unused_result__, nothrow));
-// Return true if index is empty
-// func:lib_curl.FRequest.headers.EmptyQ
-inline bool          headers_EmptyQ(lib_curl::FRequest& request) __attribute__((nothrow, pure));
-// Look up row by row id. Return NULL if out of range
-// func:lib_curl.FRequest.headers.Find
-inline algo::cstring* headers_Find(lib_curl::FRequest& request, u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
-// Return pointer to last element of array, or NULL if array is empty
-// func:lib_curl.FRequest.headers.Last
-inline algo::cstring* headers_Last(lib_curl::FRequest& request) __attribute__((nothrow, pure));
-// Return number of items in the pool
-// func:lib_curl.FRequest.headers.N
-inline i32           headers_N(const lib_curl::FRequest& request) __attribute__((__warn_unused_result__, nothrow, pure));
-// Remove all elements from Lary
-// func:lib_curl.FRequest.headers.RemoveAll
-void                 headers_RemoveAll(lib_curl::FRequest& request) __attribute__((nothrow));
-// Delete last element of array. Do nothing if array is empty.
-// func:lib_curl.FRequest.headers.RemoveLast
-void                 headers_RemoveLast(lib_curl::FRequest& request) __attribute__((nothrow));
-// 'quick' Access row by row id. No bounds checking.
-// func:lib_curl.FRequest.headers.qFind
-inline algo::cstring& headers_qFind(lib_curl::FRequest& request, u64 t) __attribute__((nothrow, pure));
-
 // Set all fields to initial values.
-// func:lib_curl.FRequest..Init
-void                 FRequest_Init(lib_curl::FRequest& request);
-// cursor points to valid item
-// func:lib_curl.FRequest.headers_curs.Reset
-inline void          request_headers_curs_Reset(request_headers_curs &curs, lib_curl::FRequest &parent) __attribute__((nothrow));
-// cursor points to valid item
-// func:lib_curl.FRequest.headers_curs.ValidQ
-inline bool          request_headers_curs_ValidQ(request_headers_curs &curs) __attribute__((nothrow));
-// proceed to next item
-// func:lib_curl.FRequest.headers_curs.Next
-inline void          request_headers_curs_Next(request_headers_curs &curs) __attribute__((nothrow));
-// item access
-// func:lib_curl.FRequest.headers_curs.Access
-inline algo::cstring& request_headers_curs_Access(request_headers_curs &curs) __attribute__((nothrow));
-// func:lib_curl.FRequest..Uninit
-void                 FRequest_Uninit(lib_curl::FRequest& request) __attribute__((nothrow));
-
-// --- lib_curl.FResponse
-// create: lib_curl.FDb.response (Tpool)
-struct FResponse { // lib_curl.FResponse: curl response structure
-    lib_curl::FResponse*   response_next;      // Pointer to next free element int tpool
-    u16                    code;               //   0  HTTP status code
-    algo::cstring          body;               // raw response body
-    algo::cstring          content_type;       // parsed Content-Type (no params)
-    algo::cstring          status_line;        // e.g., HTTP/1.1 200 OK
-    algo::cstring          reason;             // parsed reason phrase, if available
-    algo::cstring*         headers_lary[32];   // level array
-    i32                    headers_n;          // number of elements in array
-    algo::cstring          curlrc;             // curlrc content
-private:
-    // func:lib_curl.FResponse..Ctor
-    inline               FResponse() __attribute__((nothrow));
-    // func:lib_curl.FResponse..Dtor
-    inline               ~FResponse() __attribute__((nothrow));
-    friend lib_curl::FResponse& response_Alloc() __attribute__((__warn_unused_result__, nothrow));
-    friend lib_curl::FResponse* response_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
-    friend void                 response_Delete(lib_curl::FResponse &row) __attribute__((nothrow));
-};
-
-// Allocate memory for new default row.
-// If out of memory, process is killed.
-// func:lib_curl.FResponse.headers.Alloc
-algo::cstring&       headers_Alloc(lib_curl::FResponse& response) __attribute__((__warn_unused_result__, nothrow));
-// Allocate memory for new element. If out of memory, return NULL.
-// func:lib_curl.FResponse.headers.AllocMaybe
-algo::cstring*       headers_AllocMaybe(lib_curl::FResponse& response) __attribute__((__warn_unused_result__, nothrow));
-// Allocate space for one element. If no memory available, return NULL.
-// func:lib_curl.FResponse.headers.AllocMem
-void*                headers_AllocMem(lib_curl::FResponse& response) __attribute__((__warn_unused_result__, nothrow));
-// Return true if index is empty
-// func:lib_curl.FResponse.headers.EmptyQ
-inline bool          headers_EmptyQ(lib_curl::FResponse& response) __attribute__((nothrow, pure));
-// Look up row by row id. Return NULL if out of range
-// func:lib_curl.FResponse.headers.Find
-inline algo::cstring* headers_Find(lib_curl::FResponse& response, u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
-// Return pointer to last element of array, or NULL if array is empty
-// func:lib_curl.FResponse.headers.Last
-inline algo::cstring* headers_Last(lib_curl::FResponse& response) __attribute__((nothrow, pure));
-// Return number of items in the pool
-// func:lib_curl.FResponse.headers.N
-inline i32           headers_N(const lib_curl::FResponse& response) __attribute__((__warn_unused_result__, nothrow, pure));
-// Remove all elements from Lary
-// func:lib_curl.FResponse.headers.RemoveAll
-void                 headers_RemoveAll(lib_curl::FResponse& response) __attribute__((nothrow));
-// Delete last element of array. Do nothing if array is empty.
-// func:lib_curl.FResponse.headers.RemoveLast
-void                 headers_RemoveLast(lib_curl::FResponse& response) __attribute__((nothrow));
-// 'quick' Access row by row id. No bounds checking.
-// func:lib_curl.FResponse.headers.qFind
-inline algo::cstring& headers_qFind(lib_curl::FResponse& response, u64 t) __attribute__((nothrow, pure));
-
-// Set all fields to initial values.
-// func:lib_curl.FResponse..Init
-void                 FResponse_Init(lib_curl::FResponse& response);
-// cursor points to valid item
-// func:lib_curl.FResponse.headers_curs.Reset
-inline void          response_headers_curs_Reset(response_headers_curs &curs, lib_curl::FResponse &parent) __attribute__((nothrow));
-// cursor points to valid item
-// func:lib_curl.FResponse.headers_curs.ValidQ
-inline bool          response_headers_curs_ValidQ(response_headers_curs &curs) __attribute__((nothrow));
-// proceed to next item
-// func:lib_curl.FResponse.headers_curs.Next
-inline void          response_headers_curs_Next(response_headers_curs &curs) __attribute__((nothrow));
-// item access
-// func:lib_curl.FResponse.headers_curs.Access
-inline algo::cstring& response_headers_curs_Access(response_headers_curs &curs) __attribute__((nothrow));
-// func:lib_curl.FResponse..Uninit
-void                 FResponse_Uninit(lib_curl::FResponse& response) __attribute__((nothrow));
+// func:lib_curl.FSock..Init
+inline void          FSock_Init(lib_curl::FSock& sock);
+// func:lib_curl.FSock..Uninit
+void                 FSock_Uninit(lib_curl::FSock& sock) __attribute__((nothrow));
 
 // --- lib_curl.FieldId
 #pragma pack(push,1)
@@ -327,7 +447,6 @@ struct FieldId { // lib_curl.FieldId: Field read helper
     inline               FieldId(lib_curl_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:lib_curl.FieldId.value.GetEnum
 inline lib_curl_FieldIdEnum value_GetEnum(const lib_curl::FieldId& parent) __attribute__((nothrow));
@@ -365,23 +484,32 @@ inline void          FieldId_Init(lib_curl::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:lib_curl.FieldId.String  printfmt:Raw
 // func:lib_curl.FieldId..Print
-void                 FieldId_Print(lib_curl::FieldId& row, algo::cstring& str) __attribute__((nothrow));
+void                 FieldId_Print(lib_curl::FieldId row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace lib_curl { // gen:ns_curstext
 
-struct request_headers_curs {// cursor
+struct FRequest_headers_curs {// cursor
     typedef algo::cstring ChildType;
     lib_curl::FRequest *parent;
     i64 index;
-    request_headers_curs(){ parent=NULL; index=0; }
+    FRequest_headers_curs(){ parent=NULL; index=0; }
 };
 
 
-struct response_headers_curs {// cursor
+struct FResponse_headers_curs {// cursor
     typedef algo::cstring ChildType;
     lib_curl::FResponse *parent;
     i64 index;
-    response_headers_curs(){ parent=NULL; index=0; }
+    FResponse_headers_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_zd_sock_free_curs {// fcurs:lib_curl.FDb.zd_sock_free/curs
+    typedef lib_curl::FSock ChildType;
+    lib_curl::FSock* row;
+    _db_zd_sock_free_curs() {
+        row = NULL;
+    }
 };
 
 } // gen:ns_curstext

@@ -83,28 +83,20 @@ inline atf_amc::FTypeD& cd_typed_qLast() __attribute__((__warn_unused_result__, 
 
 ### Attributes
 <a href="#attributes"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Attributes -->
 * [ctype:](/txt/ssimdb/dmmeta/ctype.md)dmmeta.Llist
 
 * file:[data/dmmeta/llist.ssim](/data/dmmeta/llist.ssim)
 
-italicised fields: *listtype* are [**fldfunc**](/txt/ssim.md#fldfunc) fields
+italicised fields: *listtype* are [**fldfunc**](/txt/openacr/ssim.md#fldfunc) fields
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|field|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftypes.md#pkey)||Index in question|
-|havetail|bool|[Val](/txt/exe/amc/reftypes.md#val)|true|Generate 'tail' field|
-|havecount|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|Generate count of elements|
-|*listtype*|*[dmmeta.Listtype](/txt/ssimdb/dmmeta/listtype.md)*|*[Pkey](/txt/exe/amc/reftypes.md#pkey)*||*<br>.RR_LL of field*|
-|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Attributes -->
+|field|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)||Index in question|
+|havetail|bool|[Val](/txt/exe/amc/reftype.md#val)|true|Generate 'tail' field|
+|havecount|bool|[Val](/txt/exe/amc/reftype.md#val)|false|Generate count of elements|
+|*listtype*|*[dmmeta.Listtype](/txt/ssimdb/dmmeta/listtype.md)*|*[Pkey](/txt/exe/amc/reftype.md#pkey)*||*<br>.RR_LL of field*|
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype.md#val)|||
 
 ### Used In Executables
 <a href="#used-in-executables"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:ImdbUses -->
-
-* [amc](/txt/exe/amc/internals.md) as [amc.FLlist](/txt/exe/amc/internals.md#amc-fllist)
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:ImdbUses -->
-
+* [amc](/txt/gen/amc/amc.md) as [amc.FLlist](/txt/gen/amc/amc.md#amc-fllist)

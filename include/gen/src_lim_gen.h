@@ -32,8 +32,8 @@
 
 // --- src_lim_FieldIdEnum
 
-enum src_lim_FieldIdEnum {        // src_lim.FieldId.value
-     src_lim_FieldId_value   = 0
+enum src_lim_FieldIdEnum {    // src_lim.FieldId.value
+     src_lim_FieldId_value
 };
 
 enum { src_lim_FieldIdEnum_N = 1 };
@@ -59,7 +59,6 @@ enum { src_lim_TableIdEnum_N = 10 };
 namespace src_lim { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
 namespace src_lim { // gen:ns_tclass_field
-extern const char *src_lim_help;
 } // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace src_lim { struct FGitfile; }
@@ -87,7 +86,7 @@ struct FBadline { // src_lim.FBadline
     algo::Smallstr50    badline;         //
     algo::Smallstr200   expr;            //
     algo::Smallstr50    targsrc_regx;    //
-    algo::Comment       comment;         //
+    algo::cstring       comment;         //
     algo_lib::Regx      regx;            //
     algo_lib::Regx      _targsrc_regx;   //
     bool                select;          //   false
@@ -99,7 +98,6 @@ private:
     friend void                 badline_RemoveAll() __attribute__((nothrow));
     friend void                 badline_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:src_lim.FBadline.base.CopyOut
 void                 badline_CopyOut(src_lim::FBadline &row, dev::Badline &out) __attribute__((nothrow));
@@ -118,7 +116,6 @@ struct trace { // src_lim.trace
     inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // print string representation of ROW to string STR
 // cfmt:src_lim.trace.String  printfmt:Tuple
 // func:src_lim.trace..Print
@@ -127,24 +124,23 @@ void                 trace_Print(src_lim::trace& row, algo::cstring& str) __attr
 // --- src_lim.FDb
 // create: src_lim.FDb._db (Global)
 struct FDb { // src_lim.FDb: In-memory database for src_lim
-    src_lim::FInclude*    include_lary[32];            // level array
-    i32                   include_n;                   // number of elements in array
-    src_lim::FLinelim*    linelim_lary[32];            // level array
-    i32                   linelim_n;                   // number of elements in array
+    src_lim::FInclude*    include_lary[36];            // level array
+    i64                   include_n;                   // number of elements in array
+    src_lim::FLinelim*    linelim_lary[36];            // level array
+    i64                   linelim_n;                   // number of elements in array
     command::src_lim      cmdline;                     //
-    src_lim::FTargsrc*    targsrc_lary[32];            // level array
-    i32                   targsrc_n;                   // number of elements in array
-    src_lim::FGitfile*    gitfile_lary[32];            // level array
-    i32                   gitfile_n;                   // number of elements in array
+    src_lim::FTargsrc*    targsrc_lary[36];            // level array
+    i64                   targsrc_n;                   // number of elements in array
+    src_lim::FGitfile*    gitfile_lary[36];            // level array
+    i64                   gitfile_n;                   // number of elements in array
     src_lim::FGitfile**   ind_gitfile_buckets_elems;   // pointer to bucket array
     i32                   ind_gitfile_buckets_n;       // number of elements in bucket array
     i32                   ind_gitfile_n;               // number of elements in the hash table
     algo::cstring         outtext;                     //
-    src_lim::FBadline*    badline_lary[32];            // level array
-    i32                   badline_n;                   // number of elements in array
+    src_lim::FBadline*    badline_lary[36];            // level array
+    i64                   badline_n;                   // number of elements in array
     src_lim::trace        trace;                       //
 };
-
 // Allocate memory for new default row.
 // If out of memory, process is killed.
 // func:src_lim.FDb.include.Alloc
@@ -170,7 +166,7 @@ inline src_lim::FInclude* include_Find(u64 t) __attribute__((__warn_unused_resul
 inline src_lim::FInclude* include_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:src_lim.FDb.include.N
-inline i32           include_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           include_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
 // func:src_lim.FDb.include.RemoveLast
 void                 include_RemoveLast() __attribute__((nothrow));
@@ -207,7 +203,7 @@ inline src_lim::FLinelim* linelim_Find(u64 t) __attribute__((__warn_unused_resul
 inline src_lim::FLinelim* linelim_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:src_lim.FDb.linelim.N
-inline i32           linelim_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           linelim_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
 // func:src_lim.FDb.linelim.RemoveLast
 void                 linelim_RemoveLast() __attribute__((nothrow));
@@ -219,10 +215,8 @@ inline src_lim::FLinelim& linelim_qFind(u64 t) __attribute__((nothrow, pure));
 // func:src_lim.FDb.linelim.XrefMaybe
 bool                 linelim_XrefMaybe(src_lim::FLinelim &row);
 
-// Read argc,argv directly into the fields of the command line(s)
-// The following fields are updated:
-//     src_lim.FDb.cmdline
-//     algo_lib.FDb.cmdline
+// Read argc,argv into the fields of src_lim.FDb.cmdline (and any base command line)
+// via src_lim_ReadArgv; then apply -help/-version and load floadtuples input.
 // func:src_lim.FDb._db.ReadArgv
 void                 ReadArgv() __attribute__((nothrow));
 // Main loop.
@@ -259,6 +253,10 @@ bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __att
 // Calls Step function of dependencies
 // func:src_lim.FDb._db.Steps
 void                 Steps();
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+// func:src_lim.FDb._db.RemoveStrptrMaybe
+bool                 RemoveStrptrMaybe(algo::strptr str);
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:src_lim.FDb._db.XrefMaybe
@@ -289,7 +287,7 @@ inline src_lim::FTargsrc* targsrc_Find(u64 t) __attribute__((__warn_unused_resul
 inline src_lim::FTargsrc* targsrc_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:src_lim.FDb.targsrc.N
-inline i32           targsrc_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           targsrc_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
 // func:src_lim.FDb.targsrc.RemoveLast
 void                 targsrc_RemoveLast() __attribute__((nothrow));
@@ -326,7 +324,7 @@ inline src_lim::FGitfile* gitfile_Find(u64 t) __attribute__((__warn_unused_resul
 inline src_lim::FGitfile* gitfile_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:src_lim.FDb.gitfile.N
-inline i32           gitfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           gitfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Delete last element of array. Do nothing if array is empty.
 // func:src_lim.FDb.gitfile.RemoveLast
 void                 gitfile_RemoveLast() __attribute__((nothrow));
@@ -391,7 +389,7 @@ inline src_lim::FBadline* badline_Find(u64 t) __attribute__((__warn_unused_resul
 inline src_lim::FBadline* badline_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:src_lim.FDb.badline.N
-inline i32           badline_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i64           badline_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:src_lim.FDb.badline.RemoveAll
 void                 badline_RemoveAll() __attribute__((nothrow));
@@ -505,7 +503,6 @@ private:
     friend src_lim::FGitfile*   gitfile_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 gitfile_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:src_lim.FGitfile.base.CopyOut
 void                 gitfile_CopyOut(src_lim::FGitfile &row, dev::Gitfile &out) __attribute__((nothrow));
@@ -514,7 +511,7 @@ void                 gitfile_CopyOut(src_lim::FGitfile &row, dev::Gitfile &out) 
 void                 gitfile_CopyIn(src_lim::FGitfile &row, dev::Gitfile &in) __attribute__((nothrow));
 
 // func:src_lim.FGitfile.ext.Get
-algo::Smallstr50     ext_Get(src_lim::FGitfile& gitfile) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ext_Get(src_lim::FGitfile& gitfile) __attribute__((__warn_unused_result__, nothrow));
 
 // Return true if index is empty
 // func:src_lim.FGitfile.zd_include.EmptyQ
@@ -552,6 +549,9 @@ src_lim::FInclude*   zd_include_RemoveFirst(src_lim::FGitfile& gitfile) __attrib
 // Return reference to last element in the index. No bounds checking.
 // func:src_lim.FGitfile.zd_include.qLast
 inline src_lim::FInclude& zd_include_qLast(src_lim::FGitfile& gitfile) __attribute__((__warn_unused_result__, nothrow));
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+// func:src_lim.FGitfile.zd_include.InsertBefore
+void                 zd_include_InsertBefore(src_lim::FGitfile& gitfile, src_lim::FInclude& row, src_lim::FInclude* before) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:src_lim.FGitfile.c_linelim.InsertMaybe
@@ -594,7 +594,7 @@ struct FInclude { // src_lim.FInclude
     src_lim::FInclude*   gitfile_zd_include_prev;   // previous element
     algo::Smallstr200    include;                   //
     bool                 sys;                       //   false
-    algo::Comment        comment;                   //
+    algo::cstring        comment;                   //
     // func:src_lim.FInclude..AssignOp
     inline src_lim::FInclude& operator =(const src_lim::FInclude &rhs) = delete;
     // func:src_lim.FInclude..CopyCtor
@@ -608,7 +608,6 @@ private:
     friend src_lim::FInclude*   include_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 include_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:src_lim.FInclude.base.CopyOut
 void                 include_CopyOut(src_lim::FInclude &row, dev::Include &out) __attribute__((nothrow));
@@ -617,10 +616,10 @@ void                 include_CopyOut(src_lim::FInclude &row, dev::Include &out) 
 void                 include_CopyIn(src_lim::FInclude &row, dev::Include &in) __attribute__((nothrow));
 
 // func:src_lim.FInclude.srcfile.Get
-algo::Smallstr200    srcfile_Get(src_lim::FInclude& include) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         srcfile_Get(src_lim::FInclude& include) __attribute__((__warn_unused_result__, nothrow));
 
 // func:src_lim.FInclude.filename.Get
-algo::Smallstr200    filename_Get(src_lim::FInclude& include) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         filename_Get(src_lim::FInclude& include) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:src_lim.FInclude..Init
@@ -655,7 +654,6 @@ private:
     friend src_lim::FLinelim*   linelim_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 linelim_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:src_lim.FLinelim.base.CopyOut
 void                 linelim_CopyOut(src_lim::FLinelim &row, dev::Linelim &out) __attribute__((nothrow));
@@ -675,7 +673,7 @@ void                 FLinelim_Uninit(src_lim::FLinelim& linelim) __attribute__((
 // access: src_lim.FGitfile.c_targsrc (Ptr)
 struct FTargsrc { // src_lim.FTargsrc
     algo::Smallstr100    targsrc;     //
-    algo::Comment        comment;     //
+    algo::cstring        comment;     //
     src_lim::FGitfile*   p_gitfile;   // reference to parent row
     bool                 select;      //   false
     // x-reference on src_lim.FTargsrc.p_gitfile prevents copy
@@ -693,7 +691,6 @@ private:
     friend src_lim::FTargsrc*   targsrc_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 targsrc_RemoveLast() __attribute__((nothrow));
 };
-
 // Copy fields out of row
 // func:src_lim.FTargsrc.base.CopyOut
 void                 targsrc_CopyOut(src_lim::FTargsrc &row, dev::Targsrc &out) __attribute__((nothrow));
@@ -702,13 +699,13 @@ void                 targsrc_CopyOut(src_lim::FTargsrc &row, dev::Targsrc &out) 
 void                 targsrc_CopyIn(src_lim::FTargsrc &row, dev::Targsrc &in) __attribute__((nothrow));
 
 // func:src_lim.FTargsrc.target.Get
-algo::Smallstr16     target_Get(src_lim::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         target_Get(src_lim::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
 
 // func:src_lim.FTargsrc.src.Get
-algo::Smallstr200    src_Get(src_lim::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         src_Get(src_lim::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
 
 // func:src_lim.FTargsrc.ext.Get
-algo::Smallstr10     ext_Get(src_lim::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
+algo::strptr         ext_Get(src_lim::FTargsrc& targsrc) __attribute__((__warn_unused_result__, nothrow));
 
 // Set all fields to initial values.
 // func:src_lim.FTargsrc..Init
@@ -730,7 +727,6 @@ struct FieldId { // src_lim.FieldId: Field read helper
     inline               FieldId(src_lim_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:src_lim.FieldId.value.GetEnum
 inline src_lim_FieldIdEnum value_GetEnum(const src_lim::FieldId& parent) __attribute__((nothrow));
@@ -768,7 +764,7 @@ inline void          FieldId_Init(src_lim::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:src_lim.FieldId.String  printfmt:Raw
 // func:src_lim.FieldId..Print
-void                 FieldId_Print(src_lim::FieldId& row, algo::cstring& str) __attribute__((nothrow));
+void                 FieldId_Print(src_lim::FieldId row, algo::cstring& str) __attribute__((nothrow));
 
 // --- src_lim.TableId
 struct TableId { // src_lim.TableId: Index of table in this namespace
@@ -782,7 +778,6 @@ struct TableId { // src_lim.TableId: Index of table in this namespace
     // func:src_lim.TableId..EnumCtor
     inline               TableId(src_lim_TableIdEnum arg) __attribute__((nothrow));
 };
-
 // Get value of field as enum type
 // func:src_lim.TableId.value.GetEnum
 inline src_lim_TableIdEnum value_GetEnum(const src_lim::TableId& parent) __attribute__((nothrow));
@@ -820,7 +815,7 @@ inline void          TableId_Init(src_lim::TableId& parent);
 // print string representation of ROW to string STR
 // cfmt:src_lim.TableId.String  printfmt:Raw
 // func:src_lim.TableId..Print
-void                 TableId_Print(src_lim::TableId& row, algo::cstring& str) __attribute__((nothrow));
+void                 TableId_Print(src_lim::TableId row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace src_lim { // gen:ns_curstext
 

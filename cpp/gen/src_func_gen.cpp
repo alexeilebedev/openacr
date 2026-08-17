@@ -47,45 +47,6 @@ lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 src_func::FDb   src_func::_db;    // dependency found via dev.targdep
 
-namespace src_func {
-const char *src_func_help =
-"src_func: Access / edit functions\n"
-"Usage: src_func [[-func:]<regx>] [options]\n"
-"    OPTION          TYPE    DFLT    COMMENT\n"
-"    -in             string  \"data\"  Input directory or filename, - for stdin\n"
-"    -targsrc        regx    \"%\"     (scan) Limit scanning to these sources only\n"
-"    -acrkey         regx    \"%\"     Select function by acr key that caused it\n"
-"    [func]          regx    \"%\"     Target.function regex\n"
-"    -nextfile       string  \"\"      (action) Print name of next srcfile in targsrc list\n"
-"    -other                              (with -nextfile), name of previous file\n"
-"    -list                           (action) List matching functions\n"
-"    -updateproto                    (action) Update prototypes in headers\n"
-"    -createmissing                  (action) Create missing functions declared in userfunc table\n"
-"    -iffy                           (filter) Select functions that may contain errors\n"
-"    -gen                            (scan) Scan generated files\n"
-"    -showloc                        (output) Show file location\n"
-"    -f                              (output) -sortname -showcomment -showbody\n"
-"    -showstatic             Y       (filter) Allow static functions\n"
-"    -matchproto     regx    \"%\"     (filter) Match function prototype\n"
-"    -matchbody      regx    \"%\"     (filter) Match function body\n"
-"    -matchcomment   regx    \"%\"     (filter) Match function comment\n"
-"    -showsortkey                    (output) Display function sortkey\n"
-"    -showcomment                    (output) Display function comment\n"
-"    -showbody                       (output) Print function body\n"
-"    -sortname                       (output) Sort functions by name\n"
-"    -printssim                      (output) Print ssim tuples\n"
-"    -e                              Edit found functions\n"
-"    -baddecl                        Report and fail on bad declarations\n"
-"    -report                         Print final report\n"
-"    -verbose        flag            Verbosity level (0..255); alias -v; cumulative\n"
-"    -debug          flag            Debug level (0..255); alias -d; cumulative\n"
-"    -help                           Print help and exit; alias -h\n"
-"    -version                        Print version and exit\n"
-"    -signature                      Show signatures and exit; alias -sig\n"
-;
-
-
-} // namespace src_func
 src_func::_db_bh_func_curs::~_db_bh_func_curs() {
     algo_lib::malloc_FreeMem(temp_elems, sizeof(void*) * temp_max);
 
@@ -115,6 +76,8 @@ namespace src_func { // gen:ns_print_proto
     static bool          ctypelen_InputMaybe(dmmeta::Ctypelen &elem) __attribute__((nothrow));
     // func:src_func.FDb.userfunc.InputMaybe
     static bool          userfunc_InputMaybe(dmmeta::Userfunc &elem) __attribute__((nothrow));
+    // func:src_func.FDb.gitfile.InputMaybe
+    static bool          gitfile_InputMaybe(dev::Gitfile &elem) __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
     // func:src_func.FDb.trace.RowidFind
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
@@ -164,116 +127,16 @@ void src_func::trace_Print(src_func::trace& row, algo::cstring& str) {
 }
 
 // --- src_func.FDb._db.ReadArgv
-// Read argc,argv directly into the fields of the command line(s)
-// The following fields are updated:
-//     src_func.FDb.cmdline
-//     algo_lib.FDb.cmdline
+// Read argc,argv into the fields of src_func.FDb.cmdline (and any base command line)
+// via src_func_ReadArgv; then apply -help/-version and load floadtuples input.
 void src_func::ReadArgv() {
     command::src_func &cmd = src_func::_db.cmdline;
-    algo_lib::Cmdline &base = algo_lib::_db.cmdline;
-    int needarg=-1;// unknown
-    int argidx=1;// skip process name
-    int anonidx=0;
-    algo::strptr nextanon = command::src_func_GetAnon(cmd, anonidx);
-    tempstr err;
-    algo::strptr attrname;
-    bool isanon=false; // true if attrname is anonfld (positional)
-    algo_lib::FieldId baseattrid;
-    command::FieldId attrid;
-    bool endopt=false;
-    int whichns=0;// which namespace does the current attribute belong to
-    for (; argidx < algo_lib::_db.argc; argidx++) {
-        algo::strptr arg = algo_lib::_db.argv[argidx];
-        algo::strptr attrval;
-        algo::strptr dfltval;
-        bool haveval=false;
-        bool dash=elems_N(arg)>1 && arg.elems[0]=='-'; // a single dash is not an option
-        // this attribute is a value
-        if (endopt || needarg>0 || !dash) {
-            attrval=arg;
-            haveval=true;
-        } else {
-            // this attribute is a field name (with - or --)
-            // or a -- by itself
-            bool dashdash = elems_N(arg) >= 2 && arg.elems[1]=='-';
-            int skip = int(dash) + dashdash;
-            attrname=ch_RestFrom(arg,skip);
-            if (skip==2 && elems_N(arg)==2) {
-                endopt=true;
-                continue;// nothing else to do here
-            }
-            // parse "-a:B" arg into attrname,attrvalue
-            algo::i32_Range colon = TFind(attrname,':');
-            if (colon.beg < colon.end) {
-                attrval=ch_RestFrom(attrname,colon.end);
-                attrname=ch_FirstN(attrname,colon.beg);
-                haveval=true;
-            }
-            // look up which command (this one or the base) contains the field
-            whichns=0;
-            needarg=-1;
-            // look up parameter information in base namespace (needarg will be -1 if lookup fails)
-            if (algo_lib::FieldId_ReadStrptrMaybe(baseattrid,attrname)) {
-                needarg = algo_lib::Cmdline_NArgs(baseattrid,dfltval,&isanon);
-            }
-            if (needarg<0) {
-                whichns=1;
-                // look up parameter information in this namespace (needarg will be -1 if lookup fails)
-                if (command::FieldId_ReadStrptrMaybe(attrid,attrname)) {
-                    needarg = command::src_func_NArgs(attrid,dfltval,&isanon);
-                }
-            }
-            if (attrval == "" && dfltval != "") {
-                attrval=dfltval;
-                haveval=true;
-            }
-            if (needarg<0) {
-                err<<"src_func: unknown option "<<Keyval("value",arg)<<eol;
-            } else {
-                if (isanon) {
-                    if (attrname == nextanon) { // treat named anon (positional) argument as unnamed
-                        attrname = ""; // treat it as unnamed
-                    } else if (nextanon != "") { // disallow out-of-order anon (positional) args
-                        err<<"src_func: error at "<<algo::strptr_ToSsim(arg)<<": must be preceded by [-"<<nextanon<<"]"<<eol;
-                    }
-                }
-            }
-        }
-        // look up anon field name based on index
-        // anon fields are only allowed in the leaf ns, never base
-        if (ch_N(attrname) == 0) {
-            attrname = nextanon;
-            nextanon = command::src_func_GetAnon(cmd, ++anonidx);
-            command::FieldId_ReadStrptrMaybe(attrid,attrname);
-            whichns=1;
-        }
-        if (ch_N(attrname) == 0) {
-            err << "src_func: too many arguments. error at "<<algo::strptr_ToSsim(arg)<<eol;
-        } else if (haveval) {
-            // read value into currently selected arg
-            bool ret=false;
-            // it's already known which namespace is consuming the args,
-            // so directly go there
-            if (whichns == 0) {
-                ret=algo_lib::Cmdline_ReadFieldMaybe(base, attrname, attrval);
-            }
-            if (whichns==1) {
-                ret=command::src_func_ReadFieldMaybe(cmd, attrname, attrval);
-                switch(attrid.value) {
-                    default:break;
-                }
-            }
-            if (!ret) {
-                err<<"src_func: error in "
-                <<Keyval("option",attrname)
-                <<Keyval("value",attrval)<<eol;
-            }
-            needarg--;
-            if (needarg <= 0) {
-                attrname="";// forget which argument was being filled
-            }
-        }
+    algo::cstring err;
+    algo::StringAry args;
+    for (int argidx=1; argidx < algo_lib::_db.argc; argidx++) {// skip process name
+        ary_Alloc(args) = algo_lib::_db.argv[argidx];
     }
+    command::src_func_ReadArgv(cmd, args, err);
     bool dohelp = false;
     bool doexit=false;
     if (algo_lib::_db.cmdline.help) {
@@ -296,9 +159,7 @@ void src_func::ReadArgv() {
     algo_lib_logcat_debug.enabled = algo_lib::_db.cmdline.debug;
     algo_lib_logcat_verbose.enabled = algo_lib::_db.cmdline.verbose > 0;
     algo_lib_logcat_verbose2.enabled = algo_lib::_db.cmdline.verbose > 1;
-    if (!dohelp) {
-    }
-    // dmmeta.floadtuples:src_func.FDb.cmdline
+    // dmmeta.floadtuples:command.src_func.in
     if (!dohelp && err=="") {
         algo_lib::ResetErrtext();
         if (!src_func::LoadTuplesMaybe(cmd.in,true)) {
@@ -311,7 +172,7 @@ void src_func::ReadArgv() {
         doexit=true;
     }
     if (dohelp) {
-        prlog(src_func_help);
+        prlog(command::src_func_help);
     }
     if (doexit) {
         _exit(algo_lib::_db.exit_code);
@@ -338,7 +199,13 @@ void src_func::Step() {
 // --- src_func.FDb._db.InitReflection
 // Load statically available data into tables, register tables and database.
 static void src_func::InitReflection() {
-    algo_lib::imdb_InsertMaybe(algo::Imdb("src_func", src_func::InsertStrptrMaybe, NULL, src_func::MainLoop, NULL, algo::Comment()));
+    algo_lib::FImdb &row = algo_lib::imdb_Alloc();
+    row.imdb               = "src_func";
+    row.InsertStrptrMaybe  = src_func::InsertStrptrMaybe;
+    row.RemoveStrptrMaybe  = src_func::RemoveStrptrMaybe;
+    row.Step               = NULL;
+    row.MainLoop           = src_func::MainLoop;
+    algo_lib::imdb_XrefMaybe(row);
 
     algo::Imtable t_trace;
     t_trace.imtable         = "src_func.trace";
@@ -352,7 +219,7 @@ static void src_func::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'src_func.Input'  signature:'7eac979b98f561e842f8ee28e37732cad21f9ebe'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'src_func.Input'  signature:'cd4459bef855a26a6480a70d76e7c8268ad2b845'");
 }
 
 // --- src_func.FDb._db.InsertStrptrMaybe
@@ -387,6 +254,12 @@ bool src_func::InsertStrptrMaybe(algo::strptr str) {
             retval = retval && userfunc_InputMaybe(elem);
             break;
         }
+        case src_func_TableId_dev_Gitfile: { // finput:src_func.FDb.gitfile
+            dev::Gitfile elem;
+            retval = dev::Gitfile_ReadStrptrMaybe(elem, str);
+            retval = retval && gitfile_InputMaybe(elem);
+            break;
+        }
         default:
         break;
     } //switch
@@ -409,6 +282,7 @@ bool src_func::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && src_func::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
         retval = retval && src_func::LoadTuplesFile(algo::SsimFname(root,"dmmeta.ctypelen"),recursive);
         retval = retval && src_func::LoadTuplesFile(algo::SsimFname(root,"dev.target"),recursive);
+        retval = retval && src_func::LoadTuplesFile(algo::SsimFname(root,"dev.gitfile"),recursive);
         retval = retval && src_func::LoadTuplesFile(algo::SsimFname(root,"dev.targsrc"),recursive);
     } else {
         algo_lib::AppendErrtext("path", root);
@@ -472,6 +346,51 @@ void src_func::Steps() {
     algo_lib::Step(); // dependent namespace specified via (dev.targdep)
 }
 
+// --- src_func.FDb._db.RemoveStrptrMaybe
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+bool src_func::RemoveStrptrMaybe(algo::strptr str) {
+    bool retval = true;
+    src_func::TableId table_id(-1);
+    value_SetStrptrMaybe(table_id, algo::GetTypeTag(str));
+    switch (value_GetEnum(table_id)) {
+        case src_func_TableId_dev_Targsrc: { // finput:src_func.FDb.targsrc
+            // finput src_func.FDb.targsrc: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case src_func_TableId_dev_Target: { // finput:src_func.FDb.target
+            // finput src_func.FDb.target: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case src_func_TableId_dmmeta_Ctypelen: { // finput:src_func.FDb.ctypelen
+            // finput src_func.FDb.ctypelen: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case src_func_TableId_dmmeta_Userfunc: { // finput:src_func.FDb.userfunc
+            // finput src_func.FDb.userfunc: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        case src_func_TableId_dev_Gitfile: { // finput:src_func.FDb.gitfile
+            // finput src_func.FDb.gitfile: random delete unsupported
+            // (need reftype del:Y plus a Thash on the pkey)
+            retval = false;
+            break;
+        }
+        default:
+        retval = false;
+        break;
+    } //switch
+    return retval;
+}
+
 // --- src_func.FDb._db.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
@@ -526,7 +445,7 @@ void* src_func::targsrc_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     src_func::FTargsrc*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.targsrc_lary[bsr];
         if (!lev) {
             lev=(src_func::FTargsrc*)algo_lib::malloc_AllocMem(sizeof(src_func::FTargsrc) * (u64(1)<<bsr));
@@ -535,7 +454,7 @@ void* src_func::targsrc_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.targsrc_n = i32(new_nelems);
+        _db.targsrc_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -548,7 +467,7 @@ void src_func::targsrc_RemoveLast() {
     if (n > 0) {
         n -= 1;
         targsrc_qFind(u64(n)).~FTargsrc();
-        _db.targsrc_n = i32(n);
+        _db.targsrc_n = i64(n);
     }
 }
 
@@ -627,7 +546,7 @@ void* src_func::target_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     src_func::FTarget*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.target_lary[bsr];
         if (!lev) {
             lev=(src_func::FTarget*)algo_lib::malloc_AllocMem(sizeof(src_func::FTarget) * (u64(1)<<bsr));
@@ -636,7 +555,7 @@ void* src_func::target_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.target_n = i32(new_nelems);
+        _db.target_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -649,7 +568,7 @@ void src_func::target_RemoveLast() {
     if (n > 0) {
         n -= 1;
         target_qFind(u64(n)).~FTarget();
-        _db.target_n = i32(n);
+        _db.target_n = i64(n);
     }
 }
 
@@ -834,7 +753,7 @@ void* src_func::func_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     src_func::FFunc*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.func_lary[bsr];
         if (!lev) {
             lev=(src_func::FFunc*)algo_lib::malloc_AllocMem(sizeof(src_func::FFunc) * (u64(1)<<bsr));
@@ -843,7 +762,7 @@ void* src_func::func_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.func_n = i32(new_nelems);
+        _db.func_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -855,7 +774,7 @@ void src_func::func_RemoveAll() {
     for (u64 n = _db.func_n; n>0; ) {
         n--;
         func_qFind(u64(n)).~FFunc(); // destroy last element
-        _db.func_n = i32(n);
+        _db.func_n = i64(n);
     }
 }
 
@@ -866,7 +785,7 @@ void src_func::func_RemoveLast() {
     if (n > 0) {
         n -= 1;
         func_qFind(u64(n)).~FFunc();
-        _db.func_n = i32(n);
+        _db.func_n = i64(n);
     }
 }
 
@@ -917,6 +836,22 @@ src_func::FFunc& src_func::ind_func_FindX(const algo::strptr& key) {
     src_func::FFunc* ret = ind_func_Find(key);
     vrfy(ret, tempstr() << "src_func.key_error  table:ind_func  key:'"<<key<<"'  comment:'key not found'");
     return *ret;
+}
+
+// --- src_func.FDb.ind_func.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+src_func::FFunc* src_func::ind_func_GetOrCreate(const algo::strptr& key) {
+    src_func::FFunc* ret = ind_func_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &func_Alloc();
+        (*ret).func = key;
+        bool good = func_XrefMaybe(*ret);
+        if (!good) {
+            func_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    return ret;
 }
 
 // --- src_func.FDb.ind_func.InsertMaybe
@@ -1229,7 +1164,7 @@ void* src_func::ctypelen_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     src_func::FCtypelen*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.ctypelen_lary[bsr];
         if (!lev) {
             lev=(src_func::FCtypelen*)algo_lib::malloc_AllocMem(sizeof(src_func::FCtypelen) * (u64(1)<<bsr));
@@ -1238,7 +1173,7 @@ void* src_func::ctypelen_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.ctypelen_n = i32(new_nelems);
+        _db.ctypelen_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1250,7 +1185,7 @@ void src_func::ctypelen_RemoveAll() {
     for (u64 n = _db.ctypelen_n; n>0; ) {
         n--;
         ctypelen_qFind(u64(n)).~FCtypelen(); // destroy last element
-        _db.ctypelen_n = i32(n);
+        _db.ctypelen_n = i64(n);
     }
 }
 
@@ -1261,7 +1196,7 @@ void src_func::ctypelen_RemoveLast() {
     if (n > 0) {
         n -= 1;
         ctypelen_qFind(u64(n)).~FCtypelen();
-        _db.ctypelen_n = i32(n);
+        _db.ctypelen_n = i64(n);
     }
 }
 
@@ -1460,7 +1395,7 @@ void* src_func::userfunc_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     src_func::FUserfunc*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.userfunc_lary[bsr];
         if (!lev) {
             lev=(src_func::FUserfunc*)algo_lib::malloc_AllocMem(sizeof(src_func::FUserfunc) * (u64(1)<<bsr));
@@ -1469,7 +1404,7 @@ void* src_func::userfunc_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.userfunc_n = i32(new_nelems);
+        _db.userfunc_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1481,7 +1416,7 @@ void src_func::userfunc_RemoveAll() {
     for (u64 n = _db.userfunc_n; n>0; ) {
         n--;
         userfunc_qFind(u64(n)).~FUserfunc(); // destroy last element
-        _db.userfunc_n = i32(n);
+        _db.userfunc_n = i64(n);
     }
 }
 
@@ -1492,7 +1427,7 @@ void src_func::userfunc_RemoveLast() {
     if (n > 0) {
         n -= 1;
         userfunc_qFind(u64(n)).~FUserfunc();
-        _db.userfunc_n = i32(n);
+        _db.userfunc_n = i64(n);
     }
 }
 
@@ -1533,7 +1468,7 @@ bool src_func::userfunc_XrefMaybe(src_func::FUserfunc &row) {
 // --- src_func.FDb.ind_userfunc.Find
 // Find row by key. Return NULL if not found.
 src_func::FUserfunc* src_func::ind_userfunc_Find(const algo::strptr& key) {
-    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_userfunc_buckets_n - 1);
+    u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_userfunc_buckets_n - 1);
     src_func::FUserfunc *ret = _db.ind_userfunc_buckets_elems[index];
     for (; ret && !((*ret).userfunc == key); ret = ret->ind_userfunc_next) {
     }
@@ -1548,12 +1483,28 @@ src_func::FUserfunc& src_func::ind_userfunc_FindX(const algo::strptr& key) {
     return *ret;
 }
 
+// --- src_func.FDb.ind_userfunc.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+src_func::FUserfunc* src_func::ind_userfunc_GetOrCreate(const algo::strptr& key) {
+    src_func::FUserfunc* ret = ind_userfunc_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &userfunc_Alloc();
+        (*ret).userfunc = key;
+        bool good = userfunc_XrefMaybe(*ret);
+        if (!good) {
+            userfunc_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    return ret;
+}
+
 // --- src_func.FDb.ind_userfunc.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool src_func::ind_userfunc_InsertMaybe(src_func::FUserfunc& row) {
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_userfunc_next == (src_func::FUserfunc*)-1)) {// check if in hash already
-        row.ind_userfunc_hashval = algo::Smallstr50_Hash(0, row.userfunc);
+        row.ind_userfunc_hashval = algo::Smallstr100_Hash(0, row.userfunc);
         ind_userfunc_Reserve(1);
         u32 index = row.ind_userfunc_hashval & (_db.ind_userfunc_buckets_n - 1);
         src_func::FUserfunc* *prev = &_db.ind_userfunc_buckets_elems[index];
@@ -1653,6 +1604,22 @@ src_func::FUserfunc& src_func::ind_userfunc_cppname_FindX(const algo::strptr& ke
     src_func::FUserfunc* ret = ind_userfunc_cppname_Find(key);
     vrfy(ret, tempstr() << "src_func.key_error  table:ind_userfunc_cppname  key:'"<<key<<"'  comment:'key not found'");
     return *ret;
+}
+
+// --- src_func.FDb.ind_userfunc_cppname.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+src_func::FUserfunc* src_func::ind_userfunc_cppname_GetOrCreate(const algo::strptr& key) {
+    src_func::FUserfunc* ret = ind_userfunc_cppname_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &userfunc_Alloc();
+        (*ret).cppname = key;
+        bool good = userfunc_XrefMaybe(*ret);
+        if (!good) {
+            userfunc_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    return ret;
 }
 
 // --- src_func.FDb.ind_userfunc_cppname.InsertMaybe
@@ -1765,7 +1732,7 @@ void* src_func::genaffix_AllocMem() {
     void *ret = NULL;
     // if level doesn't exist yet, create it
     src_func::FGenaffix*  lev   = NULL;
-    if (bsr < 32) {
+    if (bsr < 36) {
         lev = _db.genaffix_lary[bsr];
         if (!lev) {
             lev=(src_func::FGenaffix*)algo_lib::malloc_AllocMem(sizeof(src_func::FGenaffix) * (u64(1)<<bsr));
@@ -1774,7 +1741,7 @@ void* src_func::genaffix_AllocMem() {
     }
     // allocate element from this level
     if (lev) {
-        _db.genaffix_n = i32(new_nelems);
+        _db.genaffix_n = i64(new_nelems);
         ret = lev + index;
     }
     return ret;
@@ -1786,7 +1753,7 @@ void src_func::genaffix_RemoveAll() {
     for (u64 n = _db.genaffix_n; n>0; ) {
         n--;
         genaffix_qFind(u64(n)).~FGenaffix(); // destroy last element
-        _db.genaffix_n = i32(n);
+        _db.genaffix_n = i64(n);
     }
 }
 
@@ -1797,7 +1764,7 @@ void src_func::genaffix_RemoveLast() {
     if (n > 0) {
         n -= 1;
         genaffix_qFind(u64(n)).~FGenaffix();
-        _db.genaffix_n = i32(n);
+        _db.genaffix_n = i64(n);
     }
 }
 
@@ -1940,6 +1907,237 @@ void src_func::ind_genaffix_AbsReserve(int n) {
         algo_lib::malloc_FreeMem(_db.ind_genaffix_buckets_elems, old_size);
         _db.ind_genaffix_buckets_elems = new_buckets;
         _db.ind_genaffix_buckets_n = new_nbuckets;
+    }
+}
+
+// --- src_func.FDb.gitfile.Alloc
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+src_func::FGitfile& src_func::gitfile_Alloc() {
+    src_func::FGitfile* row = gitfile_AllocMaybe();
+    if (UNLIKELY(row == NULL)) {
+        FatalErrorExit("src_func.out_of_mem  field:src_func.FDb.gitfile  comment:'Alloc failed'");
+    }
+    return *row;
+}
+
+// --- src_func.FDb.gitfile.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+src_func::FGitfile* src_func::gitfile_AllocMaybe() {
+    src_func::FGitfile *row = (src_func::FGitfile*)gitfile_AllocMem();
+    if (row) {
+        new (row) src_func::FGitfile; // call constructor
+    }
+    return row;
+}
+
+// --- src_func.FDb.gitfile.InsertMaybe
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+src_func::FGitfile* src_func::gitfile_InsertMaybe(const dev::Gitfile &value) {
+    src_func::FGitfile *row = &gitfile_Alloc(); // if out of memory, process dies. if input error, return NULL.
+    gitfile_CopyIn(*row,const_cast<dev::Gitfile&>(value));
+    bool ok = gitfile_XrefMaybe(*row); // this may return false
+    if (!ok) {
+        gitfile_RemoveLast(); // delete offending row, any existing xrefs are cleared
+        row = NULL; // forget this ever happened
+    }
+    return row;
+}
+
+// --- src_func.FDb.gitfile.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+void* src_func::gitfile_AllocMem() {
+    u64 new_nelems     = _db.gitfile_n+1;
+    // compute level and index on level
+    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
+    u64 base  = u64(1)<<bsr;
+    u64 index = new_nelems-base;
+    void *ret = NULL;
+    // if level doesn't exist yet, create it
+    src_func::FGitfile*  lev   = NULL;
+    if (bsr < 36) {
+        lev = _db.gitfile_lary[bsr];
+        if (!lev) {
+            lev=(src_func::FGitfile*)algo_lib::malloc_AllocMem(sizeof(src_func::FGitfile) * (u64(1)<<bsr));
+            _db.gitfile_lary[bsr] = lev;
+        }
+    }
+    // allocate element from this level
+    if (lev) {
+        _db.gitfile_n = i64(new_nelems);
+        ret = lev + index;
+    }
+    return ret;
+}
+
+// --- src_func.FDb.gitfile.RemoveAll
+// Remove all elements from Lary
+void src_func::gitfile_RemoveAll() {
+    for (u64 n = _db.gitfile_n; n>0; ) {
+        n--;
+        gitfile_qFind(u64(n)).~FGitfile(); // destroy last element
+        _db.gitfile_n = i64(n);
+    }
+}
+
+// --- src_func.FDb.gitfile.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void src_func::gitfile_RemoveLast() {
+    u64 n = _db.gitfile_n;
+    if (n > 0) {
+        n -= 1;
+        gitfile_qFind(u64(n)).~FGitfile();
+        _db.gitfile_n = i64(n);
+    }
+}
+
+// --- src_func.FDb.gitfile.InputMaybe
+static bool src_func::gitfile_InputMaybe(dev::Gitfile &elem) {
+    bool retval = true;
+    retval = gitfile_InsertMaybe(elem) != nullptr;
+    return retval;
+}
+
+// --- src_func.FDb.gitfile.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool src_func::gitfile_XrefMaybe(src_func::FGitfile &row) {
+    bool retval = true;
+    (void)row;
+    // insert gitfile into index ind_gitfile
+    if (true) { // user-defined insert condition
+        bool success = ind_gitfile_InsertMaybe(row);
+        if (UNLIKELY(!success)) {
+            ch_RemoveAll(algo_lib::_db.errtext);
+            algo_lib::_db.errtext << "src_func.duplicate_key  xref:src_func.FDb.ind_gitfile"; // check for duplicate key
+            return false;
+        }
+    }
+    return retval;
+}
+
+// --- src_func.FDb.ind_gitfile.Find
+// Find row by key. Return NULL if not found.
+src_func::FGitfile* src_func::ind_gitfile_Find(const algo::strptr& key) {
+    u32 index = algo::Smallstr200_Hash(0, key) & (_db.ind_gitfile_buckets_n - 1);
+    src_func::FGitfile *ret = _db.ind_gitfile_buckets_elems[index];
+    for (; ret && !((*ret).gitfile == key); ret = ret->ind_gitfile_next) {
+    }
+    return ret;
+}
+
+// --- src_func.FDb.ind_gitfile.FindX
+// Look up row by key and return reference. Throw exception if not found
+src_func::FGitfile& src_func::ind_gitfile_FindX(const algo::strptr& key) {
+    src_func::FGitfile* ret = ind_gitfile_Find(key);
+    vrfy(ret, tempstr() << "src_func.key_error  table:ind_gitfile  key:'"<<key<<"'  comment:'key not found'");
+    return *ret;
+}
+
+// --- src_func.FDb.ind_gitfile.GetOrCreate
+// Find row by key. If not found, create and x-reference a new row with with this key.
+src_func::FGitfile& src_func::ind_gitfile_GetOrCreate(const algo::strptr& key) {
+    src_func::FGitfile* ret = ind_gitfile_Find(key);
+    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
+        ret         = &gitfile_Alloc();
+        (*ret).gitfile = key;
+        bool good = gitfile_XrefMaybe(*ret);
+        if (!good) {
+            gitfile_RemoveLast(); // delete offending row, any existing xrefs are cleared
+            ret = NULL;
+        }
+    }
+    vrfy(ret, tempstr() << "src_func.create_error  table:ind_gitfile  key:'"<<key<<"'  comment:'bad xref'");
+    return *ret;
+}
+
+// --- src_func.FDb.ind_gitfile.InsertMaybe
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+bool src_func::ind_gitfile_InsertMaybe(src_func::FGitfile& row) {
+    bool retval = true; // if already in hash, InsertMaybe returns true
+    if (LIKELY(row.ind_gitfile_next == (src_func::FGitfile*)-1)) {// check if in hash already
+        row.ind_gitfile_hashval = algo::Smallstr200_Hash(0, row.gitfile);
+        ind_gitfile_Reserve(1);
+        u32 index = row.ind_gitfile_hashval & (_db.ind_gitfile_buckets_n - 1);
+        src_func::FGitfile* *prev = &_db.ind_gitfile_buckets_elems[index];
+        do {
+            src_func::FGitfile* ret = *prev;
+            if (!ret) { // exit condition 1: reached the end of the list
+                break;
+            }
+            if ((*ret).gitfile == row.gitfile) { // exit condition 2: found matching key
+                retval = false;
+                break;
+            }
+            prev = &ret->ind_gitfile_next;
+        } while (true);
+        if (retval) {
+            row.ind_gitfile_next = *prev;
+            _db.ind_gitfile_n++;
+            *prev = &row;
+        }
+    }
+    return retval;
+}
+
+// --- src_func.FDb.ind_gitfile.Remove
+// Remove reference to element from hash index. If element is not in hash, do nothing
+void src_func::ind_gitfile_Remove(src_func::FGitfile& row) {
+    if (LIKELY(row.ind_gitfile_next != (src_func::FGitfile*)-1)) {// check if in hash already
+        u32 index = row.ind_gitfile_hashval & (_db.ind_gitfile_buckets_n - 1);
+        src_func::FGitfile* *prev = &_db.ind_gitfile_buckets_elems[index]; // addr of pointer to current element
+        while (src_func::FGitfile *next = *prev) {                          // scan the collision chain for our element
+            if (next == &row) {        // found it?
+                *prev = next->ind_gitfile_next; // unlink (singly linked list)
+                _db.ind_gitfile_n--;
+                row.ind_gitfile_next = (src_func::FGitfile*)-1;// not-in-hash
+                break;
+            }
+            prev = &next->ind_gitfile_next;
+        }
+    }
+}
+
+// --- src_func.FDb.ind_gitfile.Reserve
+// Reserve enough room in the hash for N more elements. Return success code.
+void src_func::ind_gitfile_Reserve(int n) {
+    ind_gitfile_AbsReserve(_db.ind_gitfile_n + n);
+}
+
+// --- src_func.FDb.ind_gitfile.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void src_func::ind_gitfile_AbsReserve(int n) {
+    u32 old_nbuckets = _db.ind_gitfile_buckets_n;
+    u32 new_nelems   = n;
+    // # of elements has to be roughly equal to the number of buckets
+    if (new_nelems > old_nbuckets) {
+        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
+        u32 old_size = old_nbuckets * sizeof(src_func::FGitfile*);
+        u32 new_size = new_nbuckets * sizeof(src_func::FGitfile*);
+        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
+        // means new memory will have to be allocated anyway
+        src_func::FGitfile* *new_buckets = (src_func::FGitfile**)algo_lib::malloc_AllocMem(new_size);
+        if (UNLIKELY(!new_buckets)) {
+            FatalErrorExit("src_func.out_of_memory  field:src_func.FDb.ind_gitfile");
+        }
+        memset(new_buckets, 0, new_size); // clear pointers
+        // rehash all entries
+        for (int i = 0; i < _db.ind_gitfile_buckets_n; i++) {
+            src_func::FGitfile* elem = _db.ind_gitfile_buckets_elems[i];
+            while (elem) {
+                src_func::FGitfile &row        = *elem;
+                src_func::FGitfile* next       = row.ind_gitfile_next;
+                u32 index          = row.ind_gitfile_hashval & (new_nbuckets-1);
+                row.ind_gitfile_next     = new_buckets[index];
+                new_buckets[index] = &row;
+                elem               = next;
+            }
+        }
+        // free old array
+        algo_lib::malloc_FreeMem(_db.ind_gitfile_buckets_elems, old_size);
+        _db.ind_gitfile_buckets_elems = new_buckets;
+        _db.ind_gitfile_buckets_n = new_nbuckets;
     }
 }
 
@@ -2166,6 +2364,25 @@ void src_func::FDb_Init() {
         FatalErrorExit("out of memory"); // (src_func.FDb.ind_genaffix)
     }
     memset(_db.ind_genaffix_buckets_elems, 0, sizeof(src_func::FGenaffix*)*_db.ind_genaffix_buckets_n); // (src_func.FDb.ind_genaffix)
+    // initialize LAry gitfile (src_func.FDb.gitfile)
+    _db.gitfile_n = 0;
+    memset(_db.gitfile_lary, 0, sizeof(_db.gitfile_lary)); // zero out all level pointers
+    src_func::FGitfile* gitfile_first = (src_func::FGitfile*)algo_lib::malloc_AllocMem(sizeof(src_func::FGitfile) * (u64(1)<<4));
+    if (!gitfile_first) {
+        FatalErrorExit("out of memory");
+    }
+    for (int i = 0; i < 4; i++) {
+        _db.gitfile_lary[i]  = gitfile_first;
+        gitfile_first    += 1ULL<<i;
+    }
+    // initialize hash table for src_func::FGitfile;
+    _db.ind_gitfile_n             	= 0; // (src_func.FDb.ind_gitfile)
+    _db.ind_gitfile_buckets_n     	= 4; // (src_func.FDb.ind_gitfile)
+    _db.ind_gitfile_buckets_elems 	= (src_func::FGitfile**)algo_lib::malloc_AllocMem(sizeof(src_func::FGitfile*)*_db.ind_gitfile_buckets_n); // initial buckets (src_func.FDb.ind_gitfile)
+    if (!_db.ind_gitfile_buckets_elems) {
+        FatalErrorExit("out of memory"); // (src_func.FDb.ind_gitfile)
+    }
+    memset(_db.ind_gitfile_buckets_elems, 0, sizeof(src_func::FGitfile*)*_db.ind_gitfile_buckets_n); // (src_func.FDb.ind_gitfile)
 
     src_func::InitReflection();
 }
@@ -2173,6 +2390,12 @@ void src_func::FDb_Init() {
 // --- src_func.FDb..Uninit
 void src_func::FDb_Uninit() {
     src_func::FDb &row = _db; (void)row;
+
+    // src_func.FDb.ind_gitfile.Uninit (Thash)  //
+    // skip destruction of ind_gitfile in global scope
+
+    // src_func.FDb.gitfile.Uninit (Lary)  //
+    // skip destruction in global scope
 
     // src_func.FDb.ind_genaffix.Uninit (Thash)  //
     // skip destruction of ind_genaffix in global scope
@@ -2242,7 +2465,6 @@ inline static u64 src_func::sortkey_Nextchar(const src_func::FFunc& func, algo::
 // --- src_func.FFunc.sortkey.Cmp
 // Compare two fields.
 // Comparison uses version sort (detect embedded integers).
-// Comparison is case-insensitive.
 i32 src_func::sortkey_Cmp(src_func::FFunc& func, src_func::FFunc &rhs) {
     i32 retval = 0;
     int idx_a = 0;
@@ -2275,6 +2497,7 @@ void src_func::FFunc_Init(src_func::FFunc& func) {
     func.mystery = bool(false);
     func.p_written_to = NULL;
     func.p_userfunc = NULL;
+    func.endline = i32(0);
     func.ind_func_next = (src_func::FFunc*)-1; // (src_func.FDb.ind_func) not-in-hash
     func.ind_func_hashval = 0; // stored hash value
     func.bh_func_idx = -1; // (src_func.FDb.bh_func) not-in-heap
@@ -2303,6 +2526,29 @@ void src_func::FFunc_Uninit(src_func::FFunc& func) {
 void src_func::FGenaffix_Uninit(src_func::FGenaffix& genaffix) {
     src_func::FGenaffix &row = genaffix; (void)row;
     ind_genaffix_Remove(row); // remove genaffix from index ind_genaffix
+}
+
+// --- src_func.FGitfile.base.CopyOut
+// Copy fields out of row
+void src_func::gitfile_CopyOut(src_func::FGitfile &row, dev::Gitfile &out) {
+    out.gitfile = row.gitfile;
+}
+
+// --- src_func.FGitfile.base.CopyIn
+// Copy fields in to row
+void src_func::gitfile_CopyIn(src_func::FGitfile &row, dev::Gitfile &in) {
+    row.gitfile = in.gitfile;
+}
+
+// --- src_func.FGitfile.ext.Get
+algo::strptr src_func::ext_Get(src_func::FGitfile& gitfile) {
+    return algo::Pathcomp(gitfile.gitfile, "/RR.LR.RR");
+}
+
+// --- src_func.FGitfile..Uninit
+void src_func::FGitfile_Uninit(src_func::FGitfile& gitfile) {
+    src_func::FGitfile &row = gitfile; (void)row;
+    ind_gitfile_Remove(row); // remove gitfile from index ind_gitfile
 }
 
 // --- src_func.FTarget.base.CopyOut
@@ -2408,7 +2654,7 @@ void src_func::FTarget_Uninit(src_func::FTarget& target) {
 // Copy fields out of row
 void src_func::targsrc_CopyOut(src_func::FTargsrc &row, dev::Targsrc &out) {
     out.targsrc = row.targsrc;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- src_func.FTargsrc.base.CopyIn
@@ -2419,21 +2665,18 @@ void src_func::targsrc_CopyIn(src_func::FTargsrc &row, dev::Targsrc &in) {
 }
 
 // --- src_func.FTargsrc.target.Get
-algo::Smallstr16 src_func::target_Get(src_func::FTargsrc& targsrc) {
-    algo::Smallstr16 ret(algo::Pathcomp(targsrc.targsrc, "/LL"));
-    return ret;
+algo::strptr src_func::target_Get(src_func::FTargsrc& targsrc) {
+    return algo::Pathcomp(targsrc.targsrc, "/LL");
 }
 
 // --- src_func.FTargsrc.src.Get
-algo::Smallstr200 src_func::src_Get(src_func::FTargsrc& targsrc) {
-    algo::Smallstr200 ret(algo::Pathcomp(targsrc.targsrc, "/LR"));
-    return ret;
+algo::strptr src_func::src_Get(src_func::FTargsrc& targsrc) {
+    return algo::Pathcomp(targsrc.targsrc, "/LR");
 }
 
 // --- src_func.FTargsrc.ext.Get
-algo::Smallstr10 src_func::ext_Get(src_func::FTargsrc& targsrc) {
-    algo::Smallstr10 ret(algo::Pathcomp(targsrc.targsrc, ".RR"));
-    return ret;
+algo::strptr src_func::ext_Get(src_func::FTargsrc& targsrc) {
+    return algo::Pathcomp(targsrc.targsrc, ".RR");
 }
 
 // --- src_func.FTargsrc.zd_func.Insert
@@ -2508,6 +2751,24 @@ src_func::FFunc* src_func::zd_func_RemoveFirst(src_func::FTargsrc& targsrc) {
     return row;
 }
 
+// --- src_func.FTargsrc.zd_func.InsertBefore
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+void src_func::zd_func_InsertBefore(src_func::FTargsrc& targsrc, src_func::FFunc& row, src_func::FFunc* before) {
+    if (!targsrc_zd_func_InLlistQ(row) && &row != before) {
+        src_func::FFunc* next = before;
+        src_func::FFunc* prev = next ? next->targsrc_zd_func_prev : targsrc.zd_func_tail;
+        row.targsrc_zd_func_next = next;
+        row.targsrc_zd_func_prev = prev;
+        src_func::FFunc **prev_link_a = &prev->targsrc_zd_func_next;
+        src_func::FFunc **prev_link_b = &targsrc.zd_func_head;
+        *(prev ? prev_link_a : prev_link_b) = &row;
+        src_func::FFunc **next_link_a = &next->targsrc_zd_func_prev;
+        src_func::FFunc **next_link_b = &targsrc.zd_func_tail;
+        *(next ? next_link_a : next_link_b) = &row;
+        targsrc.zd_func_n++;
+    }
+}
+
 // --- src_func.FTargsrc..Uninit
 void src_func::FTargsrc_Uninit(src_func::FTargsrc& targsrc) {
     src_func::FTargsrc &row = targsrc; (void)row;
@@ -2523,7 +2784,7 @@ void src_func::userfunc_CopyOut(src_func::FUserfunc &row, dmmeta::Userfunc &out)
     out.userfunc = row.userfunc;
     out.acrkey = row.acrkey;
     out.cppname = row.cppname;
-    out.comment = row.comment;
+    out.comment = algo::Comment(row.comment);
 }
 
 // --- src_func.FUserfunc.base.CopyIn
@@ -2607,6 +2868,24 @@ src_func::FFunc* src_func::zd_func_RemoveFirst(src_func::FUserfunc& userfunc) {
     return row;
 }
 
+// --- src_func.FUserfunc.zd_func.InsertBefore
+// Insert row before given element, or at tail when before is NULL; no-op if row is already in list.
+void src_func::zd_func_InsertBefore(src_func::FUserfunc& userfunc, src_func::FFunc& row, src_func::FFunc* before) {
+    if (!userfunc_zd_func_InLlistQ(row) && &row != before) {
+        src_func::FFunc* next = before;
+        src_func::FFunc* prev = next ? next->userfunc_zd_func_prev : userfunc.zd_func_tail;
+        row.userfunc_zd_func_next = next;
+        row.userfunc_zd_func_prev = prev;
+        src_func::FFunc **prev_link_a = &prev->userfunc_zd_func_next;
+        src_func::FFunc **prev_link_b = &userfunc.zd_func_head;
+        *(prev ? prev_link_a : prev_link_b) = &row;
+        src_func::FFunc **next_link_a = &next->userfunc_zd_func_prev;
+        src_func::FFunc **next_link_b = &userfunc.zd_func_tail;
+        *(next ? next_link_a : next_link_b) = &row;
+        userfunc.zd_func_n++;
+    }
+}
+
 // --- src_func.FUserfunc..Uninit
 void src_func::FUserfunc_Uninit(src_func::FUserfunc& userfunc) {
     src_func::FUserfunc &row = userfunc; (void)row;
@@ -2686,7 +2965,7 @@ bool src_func::FieldId_ReadStrptrMaybe(src_func::FieldId &parent, algo::strptr i
 // --- src_func.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:src_func.FieldId.String  printfmt:Raw
-void src_func::FieldId_Print(src_func::FieldId& row, algo::cstring& str) {
+void src_func::FieldId_Print(src_func::FieldId row, algo::cstring& str) {
     src_func::value_Print(row, str);
 }
 
@@ -2697,6 +2976,7 @@ const char* src_func::value_ToCstr(const src_func::TableId& parent) {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case src_func_TableId_dmmeta_Ctypelen: ret = "dmmeta.Ctypelen";  break;
+        case src_func_TableId_dev_Gitfile  : ret = "dev.Gitfile";  break;
         case src_func_TableId_dev_Target   : ret = "dev.Target";  break;
         case src_func_TableId_dev_Targsrc  : ret = "dev.Targsrc";  break;
         case src_func_TableId_dmmeta_Userfunc: ret = "dmmeta.Userfunc";  break;
@@ -2738,8 +3018,16 @@ bool src_func::value_SetStrptrMaybe(src_func::TableId& parent, algo::strptr rhs)
         }
         case 11: {
             switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('d','e','v','.','G','i','t','f'): {
+                    if (memcmp(rhs.elems+8,"ile",3)==0) { value_SetEnum(parent,src_func_TableId_dev_Gitfile); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('d','e','v','.','T','a','r','g'): {
                     if (memcmp(rhs.elems+8,"src",3)==0) { value_SetEnum(parent,src_func_TableId_dev_Targsrc); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('d','e','v','.','g','i','t','f'): {
+                    if (memcmp(rhs.elems+8,"ile",3)==0) { value_SetEnum(parent,src_func_TableId_dev_gitfile); ret = true; break; }
                     break;
                 }
                 case LE_STR8('d','e','v','.','t','a','r','g'): {
@@ -2804,7 +3092,7 @@ bool src_func::TableId_ReadStrptrMaybe(src_func::TableId &parent, algo::strptr i
 // --- src_func.TableId..Print
 // print string representation of ROW to string STR
 // cfmt:src_func.TableId.String  printfmt:Raw
-void src_func::TableId_Print(src_func::TableId& row, algo::cstring& str) {
+void src_func::TableId_Print(src_func::TableId row, algo::cstring& str) {
     src_func::value_Print(row, str);
 }
 

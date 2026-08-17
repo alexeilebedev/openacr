@@ -128,6 +128,52 @@ bool algo::DecodeBEI64(algo::memptr &buf, i64 &result) {
     return ok;
 }
 
+// four-byte, little-endian
+bool algo::DecodeLEU32(algo::memptr &buf, u32 &result) {
+    constexpr int len = sizeof result;
+    result = 0;
+    bool ok = buf.n_elems >= len;
+    if (ok) {
+        result = le32toh(*(u32*)buf.elems);
+        buf = RestFrom(buf,len);
+    }
+    return ok;
+}
+
+//------------------------------------------------------------------------------
+
+// four-byte, little-endian signed
+bool algo::DecodeLEI32(algo::memptr &buf, i32 &result) {
+    u32 tmp;
+    bool ok = algo::DecodeLEU32(buf,tmp);
+    result = tmp;
+    return ok;
+}
+
+//------------------------------------------------------------------------------
+
+// eight-byte, little-endian
+bool algo::DecodeLEU64(algo::memptr &buf, u64 &result) {
+    constexpr int len = sizeof result;
+    result = 0;
+    bool ok = buf.n_elems >= len;
+    if (ok) {
+        result = le64toh(*(u64*)buf.elems);
+        buf = RestFrom(buf,len);
+    }
+    return ok;
+}
+
+//------------------------------------------------------------------------------
+
+// eight-byte, little-endian signed
+bool algo::DecodeLEI64(algo::memptr &buf, i64 &result) {
+    u64 tmp;
+    bool ok = algo::DecodeLEU64(buf,tmp);
+    result = tmp;
+    return ok;
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 //                                    FLOAT                                   //
 ////////////////////////////////////////////////////////////////////////////////
@@ -144,22 +190,49 @@ bool algo::DecodeBEF64(algo::memptr &buf, double &result) {
 #endif
 }
 
+bool algo::DecodeLEF32(algo::memptr &buf, float &result) {
+#ifdef __STDC_IEC_559__
+    u32 tmp;
+    bool ok = algo::DecodeLEU32(buf,tmp);
+    memcpy(&result,&tmp,sizeof result);
+    return ok;
+#else
+#error "Unconformant float representation format"
+#endif
+}
+
+bool algo::DecodeLEF64(algo::memptr &buf, double &result) {
+#ifdef __STDC_IEC_559__
+    u64 tmp;
+    bool ok = algo::DecodeLEU64(buf,tmp);
+    memcpy(&result,&tmp,sizeof result);
+    return ok;
+#else
+#error "Unconformant float representation format"
+#endif
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 //                           VARIABLE-LENGTH INTEGERS                         //
 ////////////////////////////////////////////////////////////////////////////////
 
-// continuation bit (bit 7 of each byte), little-endian, u32
+// continuation bit (bit 7 of each byte), little-endian, u32.
+// A group is taken only while the shift stays inside the accumulator's width and
+// the group keeps every one of its bits under that shift, so a varint naming a
+// value above 0xffffffff, a varint longer than five bytes, and a varint the
+// buffer never terminates all leave BUF and RESULT alone.
+// Pinned by atf_unit algo_lib.DecodeVLCLERange.
 bool algo::DecodeVLCLEU32(algo::memptr &buf, u32 &result) {
     result = 0;
     u32 value(0);
-    u32 overflow(0);
+    bool overflow(false);
     int pos(0);
     bool stop(false);
     int shift = 0;
-    for (; !stop && !overflow && pos<elems_N(buf); ++pos) {
+    for (; !stop && !overflow && shift<32 && pos<elems_N(buf); ++pos) {
         u8 c = buf[pos];
         stop = ~c & 0x80;
-        u64 bytes = c & 0x7f;
+        u32 bytes = c & 0x7f;
         value |= bytes << shift;
         overflow = bytes != (bytes << shift) >> shift;
         shift += 7;
@@ -189,15 +262,22 @@ bool algo::DecodeVLCLEI32Z(algo::memptr &buf, i32 &result) {
 
 //------------------------------------------------------------------------------
 
-// continuation bit (bit 7 of each byte), little-endian, u64
+// continuation bit (bit 7 of each byte), little-endian, u64.
+// A group is taken only while the shift stays inside the accumulator's width and
+// the group keeps every one of its bits under that shift, so a varint naming a
+// value above 0xffffffffffffffff, a varint longer than ten bytes, and a varint
+// the buffer never terminates all leave BUF and RESULT alone.  Bounding the
+// shift is also what keeps the group's placement defined: an eleventh group
+// would be shifted by 70, and a shift at or past the width has no result.
+// Pinned by atf_unit algo_lib.DecodeVLCLERange.
 bool algo::DecodeVLCLEU64(algo::memptr &buf, u64 &result) {
     result = 0;
     u64 value(0);
-    u64 overflow(0);
+    bool overflow(false);
     int pos(0);
     bool stop(false);
     int shift = 0;
-    for (; !stop && !overflow && pos<elems_N(buf); ++pos) {
+    for (; !stop && !overflow && shift<64 && pos<elems_N(buf); ++pos) {
         u8 c = buf[pos];
         stop = ~c & 0x80;
         u64 bytes = c & 0x7f;
@@ -232,10 +312,15 @@ bool algo::DecodeVLCLEI64Z(algo::memptr &buf, i64 &result) {
 //                                 RAW BYTES                                  //
 ////////////////////////////////////////////////////////////////////////////////
 
-// N bytes, raw
-bool algo::DecodeNBytes(algo::memptr &buf, int n, algo::memptr &result) {
+// N bytes, raw.  N comes from the wire, so it is accepted only in
+// [0,bytes remaining in BUF]; anything else leaves BUF and RESULT alone.
+// The count is signed 64-bit because every caller's length type -- u16, u32,
+// i32, i64 -- converts into it without changing value, so a length no buffer
+// can satisfy cannot wrap into the accepted range.
+// Pinned by atf_unit algo_lib.DecodeNRange.
+bool algo::DecodeNBytes(algo::memptr &buf, i64 n, algo::memptr &result) {
     result = algo::memptr();
-    bool ok = elems_N(buf) >= n;
+    bool ok = n >= 0 && elems_N(buf) >= n;
     if (ok) {
         result = FirstN(buf,n);
         buf = RestFrom(buf,n);
@@ -247,10 +332,10 @@ bool algo::DecodeNBytes(algo::memptr &buf, int n, algo::memptr &result) {
 //                                 STRINGS                                    //
 ////////////////////////////////////////////////////////////////////////////////
 
-// N bytes as chars
-bool algo::DecodeNChars(algo::memptr &buf, int n, strptr &result) {
+// N bytes as chars, accepting the same range of N as DecodeNBytes.
+bool algo::DecodeNChars(algo::memptr &buf, i64 n, strptr &result) {
     result = strptr();
-    bool ok = elems_N(buf) >= n;
+    bool ok = n >= 0 && elems_N(buf) >= n;
     if (ok) {
         result = ToStrPtr(FirstN(buf,n));
         buf = RestFrom(buf,n);

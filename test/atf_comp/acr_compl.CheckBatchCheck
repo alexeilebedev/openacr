@@ -1,0 +1,5 @@
+# start acr_compl cmd:"$bindir/acr_compl -check_batch -check -line:'acr -another_nosuch_flag'"
+acr_compl <- acr_compl.checkreq  id:1  line:'acr -nosuch_flag'
+# eof acr_compl
+acr_compl -> acr_compl.badcmdline  comment:"-check_batch and -check are two validation modes and cannot be combined"
+# exit acr_compl code:1

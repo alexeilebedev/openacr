@@ -1,0 +1,5 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/bad_fstep_scale.ssim -out_dir: -report:N zzz"
+# eof amc
+amc -> amc.fstep_scale  fstep:algo_lib.FDb.rowcheck  steptype:InlineRecur  reftype:Val  comment:"fdelay scale:Y requires steptype InlineRecur and a counted step field (Bheap, Blkhash, Thash, Tary, Lary, Ptrary, Inlary, or Llist with havecount)"
+amc -> amc.no_output  comment:"no files were modified"
+# exit amc code:1

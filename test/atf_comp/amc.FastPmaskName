@@ -1,0 +1,62 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/fast_pmask_name.ssim -out_dir: -report:N 'algo_lib.Msg..Fast%'"
+# start amc-2 cmd:"$bindir/amc -in_dir:test/amc/bad_fast_state.ssim -out_dir: -report:N zzz"
+# eof amc-2
+amc-2 -> amc.fast_state  pmask:algo_lib.FastState.present  comment:"FAST codec qualifies each field's previous value through this pmask of the namespace's FastState record"
+amc-2 -> amc.no_output  comment:"no files were modified"
+# exit amc-2 code:1
+# eof amc
+amc -> // --- algo_lib.Msg..FastEncode
+amc -> void algo_lib::Msg_FastEncode(algo::ByteAry& buf, FastState& state, algo_lib::Msg& parent) {
+amc ->     int index = ary_N(buf);
+amc ->     u64 pmap(0);
+amc ->     if (!tid_AssignedQ(state) || parent.id != state.tid) {
+amc ->         lib_fast::EncodeUnsigned(buf,parent.id,false);
+amc ->         lib_fast::SetPmapBit(pmap,0);
+amc ->     }
+amc ->     tid_SetAssigned(state);
+amc ->     state.tid = parent.id;
+amc ->     // Value unsigned copy optional
+amc ->     if (Value_NullableQ(parent)) {
+amc ->         if (!Value_AssignedQ(state) || !Value_PresentQ(state) ||  parent.Value != state.Value ) {
+amc ->             lib_fast::EncodeUnsigned(buf,parent.Value,true);
+amc ->             lib_fast::SetPmapBit(pmap,1);
+amc ->         }
+amc ->     } else {
+amc ->         if (Value_AssignedQ(state)) {
+amc ->             lib_fast::EncodeNull(buf);
+amc ->             lib_fast::SetPmapBit(pmap,1);
+amc ->         }
+amc ->     }
+amc ->     state.Value = parent.Value;
+amc ->     present_qSetBitVal(state, Value_Present_GetBit(state), Value_NullableQ(parent));
+amc ->     Value_SetAssigned(state);
+amc ->     lib_fast::InsertPmap(buf,index,pmap);
+amc -> }
+amc -> // --- algo_lib.Msg..FastDecode
+amc -> bool algo_lib::Msg_FastDecode(algo::memptr& from, u64 pmap, FastState& state, algo_lib::Msg& parent) {
+amc ->     bool ok = true;
+amc ->     // Value unsigned copy optional
+amc ->     if (ok) {
+amc ->         bool prs = lib_fast::GetPmapBit(pmap,1);
+amc ->         if (prs) {
+amc ->             prs = !lib_fast::DecodeNull(from);
+amc ->             if (prs) {
+amc ->                 ok = lib_fast::DecodeUnsigned(from,parent.Value,true);
+amc ->                 if (!ok) {
+amc ->                     state.error << "algo_lib.Msg.Value: bad Unsigned" << eol;
+amc ->                 }
+amc ->             }
+amc ->         } else if (Value_AssignedQ(state)) {
+amc ->             parent.Value = state.Value;
+amc ->             prs = Value_PresentQ(state);
+amc ->         } else {
+amc ->             prs = false;
+amc ->         }
+amc ->         nullable_qSetBitVal(parent, 1, prs);
+amc ->         Value_SetAssigned(state);
+amc ->         present_qSetBitVal(state, Value_Present_GetBit(state), prs);
+amc ->         state.Value = parent.Value;
+amc ->     }
+amc ->     return ok;
+amc -> }
+# exit amc code:0

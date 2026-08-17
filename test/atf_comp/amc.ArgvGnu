@@ -1,0 +1,48 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/argv_gnu.ssim -out_dir: -report:N 'algo_lib.Gnu..PrintArgv|algo_lib.Gnu..ToArgv'"
+# eof amc
+amc -> // --- algo_lib.Gnu..PrintArgv
+amc -> // print string representation of ROW to string STR
+amc -> // cfmt:algo_lib.Gnu.ArgvGnu  printfmt:Auto
+amc -> void algo_lib::Gnu_PrintArgv(algo_lib::Gnu& row, algo::cstring& str) {
+amc ->     algo::tempstr temp;
+amc ->     (void)temp;
+amc ->     (void)str;
+amc ->     ch_RemoveAll(temp);
+amc ->     u8_Print(row.c, temp);
+amc ->     str << " -c ";
+amc ->     strptr_PrintBash(temp,str);
+amc ->     ch_RemoveAll(temp);
+amc ->     u32_Print(row.limit, temp);
+amc ->     str << " --limit ";
+amc ->     strptr_PrintBash(temp,str);
+amc ->     ind_beg(Gnu_tag_curs,value,row) {
+amc ->         ch_RemoveAll(temp);
+amc ->         u32_Print(value, temp);
+amc ->         str << " --tag ";
+amc ->         strptr_PrintBash(temp,str);
+amc ->     }ind_end;
+amc -> }
+amc -> // --- algo_lib.Gnu..ToArgv
+amc -> // Build argv from ROW into ARGS; args[0] is the command name
+amc -> // cfmt:algo_lib.Gnu.ArgvGnu  printfmt:Auto
+amc -> void algo_lib::Gnu_ToArgv(algo_lib::Gnu& row, algo::StringAry& args) {
+amc ->     algo::tempstr temp;
+amc ->     (void)temp;
+amc ->     ary_RemoveAll(args);
+amc ->     ary_Alloc(args) << "Gnu"; // command path
+amc ->     ch_RemoveAll(temp);
+amc ->     u8_Print(row.c, temp);
+amc ->     ary_Alloc(args) << "-c";
+amc ->     ary_Alloc(args) << temp;
+amc ->     ch_RemoveAll(temp);
+amc ->     u32_Print(row.limit, temp);
+amc ->     ary_Alloc(args) << "--limit";
+amc ->     ary_Alloc(args) << temp;
+amc ->     ind_beg(Gnu_tag_curs,value,row) {
+amc ->         ch_RemoveAll(temp);
+amc ->         u32_Print(value, temp);
+amc ->         ary_Alloc(args) << "--tag";
+amc ->         ary_Alloc(args) << temp;
+amc ->     }ind_end;
+amc -> }
+# exit amc code:0

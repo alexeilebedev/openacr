@@ -1,0 +1,22 @@
+# start bash cmd:"bash -c 'mkdir -p $tempdir/o/ts/gen $tempdir/o/include/gen $tempdir/o/cpp/gen $tempdir/o/data && $bindir/amc -in_dir:test/amc/js_fixed_frame.ssim -out_dir:$tempdir/o -report:N && sed -n \"/_Encode/,/^}/p\" $tempdir/o/ts/gen/algo_lib_gen.ts'"
+# eof bash
+bash -> export function MsgFix_Encode(view: DataView, offset: number, parent: MsgFix) {
+bash ->     let length = 8;
+bash ->     view.setUint32(offset+0,length,true);
+bash ->     view.setUint32(offset+4,parent.val,true);
+bash ->     return length;
+bash -> }
+bash -> export function MsgVar_Encode(view: DataView, offset: number, parent: MsgVar) {
+bash ->     let length = 4;
+bash ->     if (parent.data.length > view.byteLength - (offset + length)) {
+bash ->         throw new RangeError("MsgVar_Encode: data does not fit in the target buffer");
+bash ->     }
+bash ->     new Uint8Array(view.buffer,view.byteOffset+offset+length,view.byteLength-(offset+length)).set(parent.data);
+bash ->     length += parent.data.length;
+bash ->     if (length > 2147483647) {
+bash ->         throw new RangeError("MsgVar_Encode: frame length " + length + " exceeds the frame length range (max 2147483647)");
+bash ->     }
+bash ->     view.setUint32(offset+0,length,true);
+bash ->     return length;
+bash -> }
+# exit bash code:0

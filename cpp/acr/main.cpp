@@ -163,6 +163,7 @@ static void InitFieldProps() {
     ind_beg(acr::_db_cppfunc_curs,cppfunc,acr::_db) {
         if (acr::FField *field=acr::ind_field_Find(cppfunc.field)) {
             field->isfldfunc=true;
+            field->iscppfunc=true;
         }
     }ind_end;
     ind_beg(acr::_db_anonfld_curs,anonfld,acr::_db) {
@@ -172,7 +173,7 @@ static void InitFieldProps() {
     }ind_end;
     ind_beg(acr::_db_funique_curs,funique,acr::_db) {
         if (acr::FField *field=acr::ind_field_Find(funique.field)) {
-            field->unique=true;
+            field->unique=!field->iscppfunc;
         }
     }ind_end;
 }
@@ -262,7 +263,7 @@ void acr::Main() {
     Main_RewriteOpts();
     // determine input/output modes
     // see FileInputQ(), FileOutputQ(), GetOutPath()
-    acr::_db.file_input = FileQ(acr::_db.cmdline.in);
+    acr::_db.file_input = FileLikeQ(acr::_db.cmdline.in);
     // look up important fields
     _db.c_field_ctype = ind_ctype_Find("dmmeta.Field");
     _db.c_ssimfile_ctype = ind_ctype_Find("dmmeta.Ssimfile");
@@ -280,12 +281,21 @@ void acr::Main() {
         acr::Main_Check();
     }
 
-    // edit mode
-    if (acr::_db.cmdline.e) {
-        acr::Main_AcrEdit();
-        acr::_db.cmdline.cmt=false;
-    } else if (acr::_db.cmdline.my) {
-        acr::Main_Mysql();
+    // a failed input read leaves the run diagnosed as failed with an incomplete
+    // selection: a mistyped -in loads nothing at all, and an ssimfile the
+    // dataset would not hand over loads as an empty table. Acting on that false
+    // emptiness is what destroys data -- the editor opens over rows that never
+    // loaded, and the write-back then rewrites each of their ssimfiles from what
+    // came out of the editor. load_failed records the failure wherever it
+    // happened, in Main_ReadIn or in the per-ssimfile loads the query drives, so
+    // edit mode and the write below both stand down.
+    if (!acr::_db.load_failed) {
+        if (acr::_db.cmdline.e) {
+            acr::Main_AcrEdit();
+            acr::_db.cmdline.cmt=false;
+        } else if (acr::_db.cmdline.my) {
+            acr::Main_Mysql();
+        }
     }
 
     // count changes
@@ -314,17 +324,30 @@ void acr::Main() {
     } else if (acr::_db.cmdline.print) {
         Main_Print();
     }
-    // do not write files if an error occurred
-    if (acr::_db.cmdline.write && (acr::_db.cmdline.e || algo_lib::_db.exit_code==0)) {
+    // do not write files if an error occurred; -e writes even when check
+    // errors accumulated (the editor session is how they get fixed), but
+    // never when an input failed to load
+    bool dowrite = acr::_db.cmdline.write && ((acr::_db.cmdline.e && !acr::_db.load_failed) || algo_lib::_db.exit_code==0);
+    i32 exit_code_prewrite = algo_lib::_db.exit_code;
+    if (dowrite) {
         acr::WriteFiles();
     }
+    // -g turns the selected dev.gitfile rows into a script that removes, renames
+    // and creates the source files those rows name, so that the worktree ends up
+    // matching the rows. Only a run whose ssimfiles reached disk may run that
+    // script. Consider deleting a gitfile row from an ssimfile the filesystem
+    // will not let acr rewrite: the row survives the run, so the database still
+    // lists the file, and a script that ran anyway would git rm --force it,
+    // discarding whatever uncommitted work it held. An ssimfile that could not be
+    // read is the same story reached from the other end, and there the write-back
+    // never starts at all. So the script runs only when the write-back both
+    // happened and added no failure of its own, which is what an unchanged exit
+    // code across WriteFiles says, and the script is printed otherwise.
+    // acr.DsetFileReadDeny and acr.FileWriteFail pin the two ways it falls short.
     if (acr::_db.cmdline.g) {
-        acr::Main_GitTriggers();
+        acr::Main_GitTriggers(dowrite && algo_lib::_db.exit_code==exit_code_prewrite);
     }
-    // in interactive mode, return # of files modified
-    // amc -e mode uses this flag
-    if (acr::_db.cmdline.e) {
-        algo_lib::_db.exit_code = acr::_db.report.n_file_mod;
-    }
+    // the exit code means success or failure in every mode, -e included;
+    // the number of files modified travels in the report's n_file_mod
     PrintReport();
 }

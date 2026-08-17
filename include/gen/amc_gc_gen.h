@@ -30,8 +30,8 @@
 
 // --- amc_gc_FieldIdEnum
 
-enum amc_gc_FieldIdEnum {        // amc_gc.FieldId.value
-     amc_gc_FieldId_value   = 0
+enum amc_gc_FieldIdEnum {    // amc_gc.FieldId.value
+     amc_gc_FieldId_value
 };
 
 enum { amc_gc_FieldIdEnum_N = 1 };
@@ -39,7 +39,6 @@ enum { amc_gc_FieldIdEnum_N = 1 };
 namespace amc_gc { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
 namespace amc_gc { // gen:ns_tclass_field
-extern const char *amc_gc_help;
 } // gen:ns_tclass_field
 // gen:ns_fwddecl2
 namespace amc_gc { struct trace; }
@@ -55,7 +54,6 @@ struct trace { // amc_gc.trace
     inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // print string representation of ROW to string STR
 // cfmt:amc_gc.trace.String  printfmt:Tuple
 // func:amc_gc.trace..Print
@@ -73,11 +71,8 @@ struct FDb { // amc_gc.FDb: In-memory database for amc_gc
     u32               n_total;        //   0
     amc_gc::trace     trace;          //
 };
-
-// Read argc,argv directly into the fields of the command line(s)
-// The following fields are updated:
-//     amc_gc.FDb.cmdline
-//     algo_lib.FDb.cmdline
+// Read argc,argv into the fields of amc_gc.FDb.cmdline (and any base command line)
+// via amc_gc_ReadArgv; then apply -help/-version and load floadtuples input.
 // func:amc_gc.FDb._db.ReadArgv
 void                 ReadArgv() __attribute__((nothrow));
 // Main loop.
@@ -114,6 +109,10 @@ bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __att
 // Calls Step function of dependencies
 // func:amc_gc.FDb._db.Steps
 void                 Steps();
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+// func:amc_gc.FDb._db.RemoveStrptrMaybe
+bool                 RemoveStrptrMaybe(algo::strptr str);
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:amc_gc.FDb._db.XrefMaybe
@@ -139,7 +138,6 @@ struct FieldId { // amc_gc.FieldId: Field read helper
     inline               FieldId(amc_gc_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
-
 // Get value of field as enum type
 // func:amc_gc.FieldId.value.GetEnum
 inline amc_gc_FieldIdEnum value_GetEnum(const amc_gc::FieldId& parent) __attribute__((nothrow));
@@ -177,7 +175,7 @@ inline void          FieldId_Init(amc_gc::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:amc_gc.FieldId.String  printfmt:Raw
 // func:amc_gc.FieldId..Print
-void                 FieldId_Print(amc_gc::FieldId& row, algo::cstring& str) __attribute__((nothrow));
+void                 FieldId_Print(amc_gc::FieldId row, algo::cstring& str) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace amc_gc { // gen:ns_func
 // func:amc_gc...StaticCheck

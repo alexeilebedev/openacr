@@ -1,0 +1,16 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/bad_jstype_wire.ssim -out_dir:$tempdir -report:N"
+# eof amc
+amc -> amc.jstype_wire  field:algo_lib.MsgBad.name  reftype:Inlary  jsclass:string  comment:"field has no TypeScript wire form; it can be neither encoded nor decoded"
+amc -> amc.jstype_wire  field:algo_lib.MsgBad.tag  reftype:Inlary  jsclass:string  comment:"field has no TypeScript wire form; it can be neither encoded nor decoded"
+amc -> amc.jstype_wire  field:algo_lib.MsgBad.label  reftype:Smallstr  jsclass:undefined  comment:"field has no TypeScript wire form; it can be neither encoded nor decoded"
+amc -> amc.jstype_wire  field:algo_lib.MsgBadOpt.body  reftype:Opt  jsclass:string  comment:"field has no TypeScript wire form; it can be neither encoded nor decoded"
+amc -> amc.jstype_wire  field:algo_lib.MsgBadInlary.data  reftype:Inlary  jsclass:Uint8Array  comment:"field has no TypeScript wire form; it can be neither encoded nor decoded"
+amc -> amc.jstype_wire  field:algo_lib.MsgBadVal.inner  reftype:Val  jsclass:Tail  comment:"field has no TypeScript wire form; it can be neither encoded nor decoded"
+amc -> amc.jstype_wire  field:algo_lib.MsgBadValOpt.inner  reftype:Val  jsclass:MsgOpt  comment:"field has no TypeScript wire form; it can be neither encoded nor decoded"
+amc -> amc.jstype_wire  field:algo_lib.MsgBadVarlen.body  reftype:Varlen  jsclass:string  comment:"field has no TypeScript wire form; it can be neither encoded nor decoded"
+amc -> amc.jstype_lenfld  ctype:algo_lib.MsgNolen  comment:"ctype has a varlen or Opt tail and no length field to frame it"
+amc -> amc.jstype_lenfld  ctype:algo_lib.MsgNolenOpt  comment:"ctype has a varlen or Opt tail and no length field to frame it"
+amc -> amc.jstype_wire  field:algo_lib.MsgTagged.tag  reftype:Inlary  jsclass:string  comment:"field has no TypeScript wire form; it can be neither encoded nor decoded"
+amc -> amc.jstype_wire  field:algo_lib.MsgTagged.name  reftype:Inlary  jsclass:string  comment:"field has no TypeScript wire form; it can be neither encoded nor decoded"
+amc -> amc.no_output  comment:"no files were modified"
+# exit amc code:12

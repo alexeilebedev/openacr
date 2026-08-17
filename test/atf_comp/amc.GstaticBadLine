@@ -1,0 +1,24 @@
+# start amc cmd:"$bindir/amc -in_dir:test/amc/gstatic_badline -out_dir: -report:N algo_lib.FDb.color.LoadStatic"
+# eof amc
+amc -> amc.bad_gstatic  field:algo_lib.FDb.color  file:test/amc/gstatic_badline/testdb/color.ssim  line:2  text:'testdb.Color  color:"2'  comment:"gstatic input line is not a tuple"
+amc -> // --- algo_lib.FDb.color.LoadStatic
+amc -> static void algo_lib::color_LoadStatic() {
+amc ->     static struct _t {
+amc ->         const char *s;
+amc ->     } data[] = {
+amc ->         { "testdb.Color  color:1" }
+amc ->         ,{ "testdb.Color  color:3" }
+amc ->         ,{NULL}
+amc ->     };
+amc ->     (void)data;
+amc ->     for (int i=0; data[i].s; i++) {
+amc ->         testdb::Color color;
+amc ->         (void)testdb::Color_ReadStrptrMaybe(color, algo::strptr(data[i].s));
+amc ->         algo_lib::FColor *elem = color_InsertMaybe(color);
+amc ->         vrfy(elem, tempstr("algo_lib.static_insert_fatal_error")
+amc ->         << Keyval("tuple",algo::strptr(data[i].s))
+amc ->         << Keyval("comment",algo_lib::DetachBadTags()));
+amc ->     }
+amc -> }
+amc -> amc.no_output  comment:"no files were modified"
+# exit amc code:1

@@ -52,7 +52,13 @@ void lib_iconv::trace_Print(lib_iconv::trace& row, algo::cstring& str) {
 // --- lib_iconv.FDb._db.InitReflection
 // Load statically available data into tables, register tables and database.
 static void lib_iconv::InitReflection() {
-    algo_lib::imdb_InsertMaybe(algo::Imdb("lib_iconv", NULL, NULL, NULL, NULL, algo::Comment()));
+    algo_lib::FImdb &row = algo_lib::imdb_Alloc();
+    row.imdb               = "lib_iconv";
+    row.InsertStrptrMaybe  = NULL;
+    row.RemoveStrptrMaybe  = NULL;
+    row.Step               = NULL;
+    row.MainLoop           = NULL;
+    algo_lib::imdb_XrefMaybe(row);
 
     algo::Imtable t_trace;
     t_trace.imtable         = "lib_iconv.trace";
@@ -143,6 +149,15 @@ bool lib_iconv::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
 // --- lib_iconv.FDb._db.Steps
 // Calls Step function of dependencies
 void lib_iconv::Steps() {
+}
+
+// --- lib_iconv.FDb._db.RemoveStrptrMaybe
+// Parse strptr into known type and remove matching record from database.
+// Return value is true if the record was found and removed, false otherwise.
+bool lib_iconv::RemoveStrptrMaybe(algo::strptr str) {
+    bool retval = true;
+    (void)str;//only to avoid -Wunused-parameter
+    return retval;
 }
 
 // --- lib_iconv.FDb._db.XrefMaybe
@@ -253,7 +268,7 @@ bool lib_iconv::FieldId_ReadStrptrMaybe(lib_iconv::FieldId &parent, algo::strptr
 // --- lib_iconv.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:lib_iconv.FieldId.String  printfmt:Raw
-void lib_iconv::FieldId_Print(lib_iconv::FieldId& row, algo::cstring& str) {
+void lib_iconv::FieldId_Print(lib_iconv::FieldId row, algo::cstring& str) {
     lib_iconv::value_Print(row, str);
 }
 

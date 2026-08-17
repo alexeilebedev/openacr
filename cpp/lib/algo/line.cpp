@@ -54,7 +54,7 @@ bool algo::LinebufNext(LineBuf &L, strptr &result) {
     // beg,end indicate location of eol inside the incoming string
     // search for \n, or to end of incoming string
     char *incoming=L.incoming.elems;
-    int beg=0,end=L.incoming.n_elems;
+    i64 beg=0,end=L.incoming.n_elems;
     for (; beg<end; beg++) {
         if (L.incoming.elems[beg]=='\n') {
             end=beg+1;
@@ -82,7 +82,7 @@ bool algo::LinebufNext(LineBuf &L, strptr &result) {
 // (which is either \n or \r\n).
 strptr algo::GetLine(StringIter &S) {
     strptr ret(S.Rest());
-    for (int i=0; i<ret.n_elems; i++) {
+    for (i64 i=0; i<ret.n_elems; i++) {
         S.index++;// skip character in S
         if (ret[i]=='\n') {
             ret.n_elems = i-(i>0 && ret[i-1]=='\r');
