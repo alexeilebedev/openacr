@@ -13,7 +13,6 @@ The following source files are part of this tool:
 |[cpp/gen/atf_gen.cpp](/cpp/gen/atf_gen.cpp)||
 |[cpp/gen/atfdb_gen.cpp](/cpp/gen/atfdb_gen.cpp)||
 |[cpp/gen/fm_gen.cpp](/cpp/gen/fm_gen.cpp)||
-|[cpp/gen/gclidb_gen.cpp](/cpp/gen/gclidb_gen.cpp)||
 |[cpp/gen/http_gen.cpp](/cpp/gen/http_gen.cpp)||
 |[cpp/gen/httpdb_gen.cpp](/cpp/gen/httpdb_gen.cpp)||
 |[cpp/gen/ietf_gen.cpp](/cpp/gen/ietf_gen.cpp)||
@@ -34,8 +33,6 @@ The following source files are part of this tool:
 |[include/gen/dmmeta_gen.inl.h](/include/gen/dmmeta_gen.inl.h)||
 |[include/gen/fm_gen.h](/include/gen/fm_gen.h)||
 |[include/gen/fm_gen.inl.h](/include/gen/fm_gen.inl.h)||
-|[include/gen/gclidb_gen.h](/include/gen/gclidb_gen.h)||
-|[include/gen/gclidb_gen.inl.h](/include/gen/gclidb_gen.inl.h)||
 |[include/gen/http_gen.h](/include/gen/http_gen.h)||
 |[include/gen/http_gen.inl.h](/include/gen/http_gen.inl.h)||
 |[include/gen/httpdb_gen.h](/include/gen/httpdb_gen.h)||

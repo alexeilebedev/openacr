@@ -154,11 +154,6 @@ dmmeta.fconst  fconst:fm.Flag.value/purge  value:"'P'"  comment:"Purge marker on
 dmmeta.fconst  fconst:fm.Severity.value/critical  value:"'0'"  comment:"only immediate operator action ends it, or data is at risk while it stands"
 dmmeta.fconst  fconst:fm.Severity.value/major  value:"'1'"  comment:"stands until an operator or healing action resolves it"
 dmmeta.fconst  fconst:fm.Severity.value/minor  value:"'2'"  comment:"the platform's routine operation ends it: load passing, catch-up, retention"
-dmmeta.fconst  fconst:gcli.FHttp.request_method/GET  value:0  comment:GET
-dmmeta.fconst  fconst:gcli.FHttp.request_method/POST  value:1  comment:POST
-dmmeta.fconst  fconst:gcli.FHttp.request_method/PUT  value:2  comment:PUT
-dmmeta.fconst  fconst:gcli.FHttp.request_method/PATCH  value:3  comment:PATCH
-dmmeta.fconst  fconst:gcli.FHttp.request_method/DELETE  value:4  comment:DELETE
 dmmeta.fconst  fconst:http.Method.value/extension_method  value:255  comment:""
 dmmeta.fconst  fconst:kafka.AclOperationType.value/UNKNOWN  value:0  comment:""
 dmmeta.fconst  fconst:kafka.AclOperationType.value/ANY  value:1  comment:""

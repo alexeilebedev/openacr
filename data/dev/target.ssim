@@ -25,7 +25,6 @@ dev.target  target:atf_nrun
 dev.target  target:atf_unit
 dev.target  target:bash2html
 dev.target  target:gcache
-dev.target  target:gcli
 dev.target  target:http
 dev.target  target:jkv
 dev.target  target:kafka

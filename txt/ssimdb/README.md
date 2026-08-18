@@ -9,7 +9,6 @@
 &#128193; [atfdb - Support tables for testing](/txt/ssimdb/atfdb/README.md)<br/>
 &#128193; [dev - Tables supporting compilation of programs](/txt/ssimdb/dev/README.md)<br/>
 &#128193; [dmmeta - Tables holding metadata (data model meta)](/txt/ssimdb/dmmeta/README.md)<br/>
-&#128193; [gclidb - gcli db](/txt/ssimdb/gclidb/README.md)<br/>
 &#128193; [httpdb -](/txt/ssimdb/httpdb/README.md)<br/>
 &#128193; [sampdb - ssimdb for tutorials and recipes](/txt/ssimdb/sampdb/README.md)<br/>
 &#128193; [wsdb - WebSocket db](/txt/ssimdb/wsdb/README.md)<br/>

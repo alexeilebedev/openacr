@@ -270,16 +270,6 @@ enum command_FieldIdEnum {    // command.FieldId.value
     ,command_FieldId_maxmb
     ,command_FieldId_hitrate
     ,command_FieldId_after
-    ,command_FieldId_selector
-    ,command_FieldId_fields
-    ,command_FieldId_accept
-    ,command_FieldId_approve
-    ,command_FieldId_needs_work
-    ,command_FieldId_retry
-    ,command_FieldId_limit
-    ,command_FieldId_authdir
-    ,command_FieldId_gitdir
-    ,command_FieldId_show_gitlab_system_notes
     ,command_FieldId_file
     ,command_FieldId_kv
     ,command_FieldId_output
@@ -360,7 +350,7 @@ enum command_FieldIdEnum {    // command.FieldId.value
     ,command_FieldId_value
 };
 
-enum { command_FieldIdEnum_N = 327 };
+enum { command_FieldIdEnum_N = 317 };
 
 
 // --- command_abt_cache_Enum
@@ -457,7 +447,6 @@ namespace command { struct atf_cmdline_mnum_curs; }
 namespace command { struct atf_cmdline_mdbl_curs; }
 namespace command { struct atf_cmdline_amnum_curs; }
 namespace command { struct gcache_cmd_curs; }
-namespace command { struct gcli_fields_curs; }
 namespace command { struct jkv_kv_curs; }
 namespace command { struct mdbg_args_curs; }
 namespace command { struct mdbg_b_curs; }
@@ -518,8 +507,6 @@ namespace command { struct bash2html_proc; }
 namespace command { struct bash_proc; }
 namespace command { struct gcache; }
 namespace command { struct gcache_proc; }
-namespace command { struct gcli; }
-namespace command { struct gcli_proc; }
 namespace command { struct generic; }
 namespace command { struct generic_proc; }
 namespace command { struct jkv; }
@@ -4465,225 +4452,6 @@ void                 gcache_proc_Init(command::gcache_proc& parent);
 // func:command.gcache_proc..Uninit
 void                 gcache_proc_Uninit(command::gcache_proc& parent) __attribute__((nothrow));
 
-// --- command.gcli
-// access: command.gcli_proc.gcli (Exec)
-struct gcli { // command.gcli: Gcli - gitlab/github command-line client
-    algo::cstring       in;                         //   "data"  Input directory or filename, - for stdin
-    algo::Smallstr250   selector;                   //   "issue:%"  table:key, where table is issue,repo,mr, etc. and key is a regex.
-    algo::cstring*      fields_elems;               // pointer to elements
-    u64                 fields_n;                   // number of elements in array
-    u64                 fields_max;                 // max. capacity of array before realloc
-    bool                accept;                     //   false  (action) accept a selected merge request
-    bool                start;                      //   false  (action) start working on a selected issue
-    bool                list;                       //   false  (action) show selected table
-    bool                create;                     //   false  (action) create a table record(s)
-    bool                update;                     //   false  (action) update fields of a selected issue or mergereq
-    bool                approve;                    //   false  (action) remove draft desiognation from mergereq
-    bool                needs_work;                 //   false  (action) reopen an issue or put a draft designation on mergereq
-    bool                stop;                       //   false  (action) closes an issue, or remove mr branch after review
-    bool                retry;                      //   false  (action) retry failed CI jobs of a selected mergereq (gitlab)
-    i32                 limit;                      //   0  For mrjob traces: tail this many lines per job (0 = full trace)
-    bool                t;                          //   false  Tree view: expand issue description
-    bool                e;                          //   false  edit the input
-    algo::cstring       authdir;                    //   ".ssim"  (setup) Input directory for auth data
-    bool                dry_run;                    //   false  Print actions, do not perform
-    algo::cstring       gitdir;                     //   ""  (setup) Change directory of git repository
-    bool                show_gitlab_system_notes;   //   false  (misc) Show issue and mr notes created by gitlab
-    // func:command.gcli..AssignOp
-    command::gcli&       operator =(const command::gcli &rhs) __attribute__((nothrow));
-    // func:command.gcli..Ctor
-    inline               gcli() __attribute__((nothrow));
-    // func:command.gcli..Dtor
-    inline               ~gcli() __attribute__((nothrow));
-    // func:command.gcli..CopyCtor
-    gcli(const command::gcli &rhs) __attribute__((nothrow));
-};
-extern const char *gcli_help;
-// Reserve space (this may move memory). Insert N element at the end.
-// Return aryptr to newly inserted block.
-// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-// func:command.gcli.fields.Addary
-algo::aryptr<algo::cstring> fields_Addary(command::gcli& parent, algo::aryptr<algo::cstring> rhs) __attribute__((nothrow));
-// Reserve space. Insert element at the end
-// The new element is initialized to a default value
-// func:command.gcli.fields.Alloc
-algo::cstring&       fields_Alloc(command::gcli& parent) __attribute__((__warn_unused_result__, nothrow));
-// Reserve space for new element, reallocating the array if necessary
-// Insert new element at specified index. Index must be in range or a fatal error occurs.
-// func:command.gcli.fields.AllocAt
-algo::cstring&       fields_AllocAt(command::gcli& parent, i64 at) __attribute__((__warn_unused_result__, nothrow));
-// Reserve space. Insert N elements at the end of the array, return pointer to array
-// func:command.gcli.fields.AllocN
-algo::aryptr<algo::cstring> fields_AllocN(command::gcli& parent, i64 n_elems) __attribute__((__warn_unused_result__, nothrow));
-// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
-// Reserve space for new element, reallocating the array if necessary
-// Insert new element at specified index. Index must be in range or a fatal error occurs.
-// func:command.gcli.fields.AllocNAt
-algo::aryptr<algo::cstring> fields_AllocNAt(command::gcli& parent, i64 n_elems, i64 at) __attribute__((__warn_unused_result__, nothrow));
-// Return true if index is empty
-// func:command.gcli.fields.EmptyQ
-inline bool          fields_EmptyQ(command::gcli& parent) __attribute__((nothrow));
-// Look up row by row id. Return NULL if out of range
-// func:command.gcli.fields.Find
-inline algo::cstring* fields_Find(command::gcli& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
-// Return array pointer by value
-// func:command.gcli.fields.Getary
-inline algo::aryptr<algo::cstring> fields_Getary(const command::gcli& parent) __attribute__((nothrow));
-// Return pointer to last element of array, or NULL if array is empty
-// func:command.gcli.fields.Last
-inline algo::cstring* fields_Last(command::gcli& parent) __attribute__((nothrow, pure));
-// Return max. number of items in the array
-// func:command.gcli.fields.Max
-inline i64           fields_Max(command::gcli& parent) __attribute__((nothrow));
-// Return number of items in the array
-// func:command.gcli.fields.N
-inline i64           fields_N(const command::gcli& parent) __attribute__((__warn_unused_result__, nothrow, pure));
-// Remove item by index. If index outside of range, do nothing.
-// func:command.gcli.fields.Remove
-void                 fields_Remove(command::gcli& parent, u64 i) __attribute__((nothrow));
-// func:command.gcli.fields.RemoveAll
-void                 fields_RemoveAll(command::gcli& parent) __attribute__((nothrow));
-// Delete last element of array. Do nothing if array is empty.
-// func:command.gcli.fields.RemoveLast
-void                 fields_RemoveLast(command::gcli& parent) __attribute__((nothrow));
-// Make sure N *more* elements will fit in array. Process dies if out of memory
-// func:command.gcli.fields.Reserve
-inline void          fields_Reserve(command::gcli& parent, i64 n) __attribute__((nothrow));
-// Make sure N elements fit in array. Process dies if out of memory
-// func:command.gcli.fields.AbsReserve
-void                 fields_AbsReserve(command::gcli& parent, i64 n) __attribute__((nothrow));
-// Copy contents of RHS to PARENT.
-// func:command.gcli.fields.Setary
-void                 fields_Setary(command::gcli& parent, command::gcli &rhs) __attribute__((nothrow));
-// Copy specified array into fields, discarding previous contents.
-// If the RHS argument aliases the array (refers to the same memory), throw exception.
-// func:command.gcli.fields.Setary2
-void                 fields_Setary(command::gcli& parent, const algo::aryptr<algo::cstring> &rhs) __attribute__((nothrow));
-// 'quick' Access row by row id. No bounds checking.
-// func:command.gcli.fields.qFind
-inline algo::cstring& fields_qFind(command::gcli& parent, u64 t) __attribute__((nothrow));
-// Return reference to last element of array. No bounds checking
-// func:command.gcli.fields.qLast
-inline algo::cstring& fields_qLast(command::gcli& parent) __attribute__((nothrow));
-// Return row id of specified element
-// func:command.gcli.fields.rowid_Get
-inline u64           fields_rowid_Get(command::gcli& parent, algo::cstring &elem) __attribute__((nothrow));
-// Reserve space. Insert N elements at the end of the array, return pointer to array
-// func:command.gcli.fields.AllocNVal
-algo::aryptr<algo::cstring> fields_AllocNVal(command::gcli& parent, i64 n_elems, const algo::cstring& val) __attribute__((nothrow));
-// A single element is read from input string and appended to the array.
-// If the string contains an error, the array is untouched.
-// Function returns success value.
-// func:command.gcli.fields.ReadStrptrMaybe
-bool                 fields_ReadStrptrMaybe(command::gcli& parent, algo::strptr in_str) __attribute__((nothrow));
-// Insert array at specific position
-// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-// func:command.gcli.fields.Insary
-void                 fields_Insary(command::gcli& parent, algo::aryptr<algo::cstring> rhs, i64 at) __attribute__((nothrow));
-// Delete a range of elements
-// Remove region from the middle of the array
-// The specified region BEG..BEG+N is clipped to the valid region both from the left and from the right.
-// If N is negative, nothing is removed.
-// func:command.gcli.fields.RemRegion
-void                 fields_RemRegion(command::gcli& parent, i64 beg, i64 n) __attribute__((nothrow));
-
-// proceed to next item
-// func:command.gcli.fields_curs.Next
-inline void          gcli_fields_curs_Next(gcli_fields_curs &curs) __attribute__((nothrow));
-// func:command.gcli.fields_curs.Reset
-inline void          gcli_fields_curs_Reset(gcli_fields_curs &curs, command::gcli &parent) __attribute__((nothrow));
-// cursor points to valid item
-// func:command.gcli.fields_curs.ValidQ
-inline bool          gcli_fields_curs_ValidQ(gcli_fields_curs &curs) __attribute__((nothrow));
-// item access
-// func:command.gcli.fields_curs.Access
-inline algo::cstring& gcli_fields_curs_Access(gcli_fields_curs &curs) __attribute__((nothrow));
-// func:command.gcli..ReadFieldMaybe
-bool                 gcli_ReadFieldMaybe(command::gcli& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Set all fields to initial values.
-// func:command.gcli..Init
-void                 gcli_Init(command::gcli& parent);
-// func:command.gcli..Uninit
-void                 gcli_Uninit(command::gcli& parent) __attribute__((nothrow));
-// Convenience function that returns a full command line
-// Assume command is in a directory called bin
-// func:command.gcli..ToCmdline
-tempstr              gcli_ToCmdline(command::gcli& row) __attribute__((nothrow));
-// print string representation of ROW to string STR
-// cfmt:command.gcli.Argv  printfmt:Tuple
-// func:command.gcli..PrintArgv
-void                 gcli_PrintArgv(command::gcli& row, algo::cstring& str) __attribute__((nothrow));
-// Build argv from ROW into ARGS; args[0] is the command name
-// cfmt:command.gcli.Argv  printfmt:Tuple
-// func:command.gcli..ToArgv
-void                 gcli_ToArgv(command::gcli& row, algo::StringAry& args) __attribute__((nothrow));
-// func:command.gcli..GetAnon
-algo::strptr         gcli_GetAnon(command::gcli &parent, i32 idx) __attribute__((nothrow));
-// Used with command lines
-// Return # of command-line arguments that must follow this argument
-// If FIELD is invalid, return -1
-// func:command.gcli..NArgs
-i32                  gcli_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
-// Field-aware command-line reader over a word array
-// Read command-line ARGS (already split into words) into the fields of PARENT.
-// Field-aware: a value-taking option consumes the next word; errors go to ERR.
-// func:command.gcli..ReadArgv
-bool                 gcli_ReadArgv(command::gcli &parent, algo::StringAry &args, algo::cstring &err) __attribute__((nothrow));
-
-// --- command.gcli_proc
-struct gcli_proc { // command.gcli_proc: Subprocess: Gcli - gitlab/github command-line client
-    algo::cstring   path;          //   "bin/gcli"  path for executable
-    command::gcli   cmd;           // command line for child process
-    algo::cstring   fstdin;        // redirect for stdin
-    algo::cstring   fstdout;       // redirect for stdout
-    algo::cstring   fstderr;       // redirect for stderr
-    algo::Fildes    to_stdin;      // write end of stdin pipe when fstdin=="|"; closed by _Wait
-    algo::Fildes    from_stdout;   // read end of stdout pipe when fstdout=="|"; closed by _Wait
-    algo::Fildes    from_stderr;   // read end of stderr pipe when fstderr=="|"; closed by _Wait
-    pid_t           pid;           //   0  pid of running child process
-    i32             timeout;       //   0  optional timeout for child process
-    u32             memlimitmb;    //   0  optional child memory ceiling MB (10^6): RLIMIT_AS before exec; 0 = leave inherited
-    i32             status;        //   0  last exit status of child process
-    bool            pgroup;        //   false  run child in its own process group; _Kill targets the group
-    // func:command.gcli_proc..Ctor
-    inline               gcli_proc() __attribute__((nothrow));
-    // func:command.gcli_proc..Dtor
-    inline               ~gcli_proc() __attribute__((nothrow));
-};
-// Start subprocess
-// If subprocess already running, do nothing. Otherwise, start it
-// func:command.gcli_proc.gcli.Start
-int                  gcli_Start(command::gcli_proc& parent) __attribute__((nothrow));
-// Kill subprocess and wait
-// func:command.gcli_proc.gcli.Kill
-void                 gcli_Kill(command::gcli_proc& parent);
-// Wait for subprocess to return
-// func:command.gcli_proc.gcli.Wait
-void                 gcli_Wait(command::gcli_proc& parent) __attribute__((nothrow));
-// Start + Wait
-// Execute subprocess and return its wait() status; decode with algo::WaitStatusToExitCode
-// func:command.gcli_proc.gcli.Exec
-int                  gcli_Exec(command::gcli_proc& parent) __attribute__((nothrow));
-// Start + Wait, throw exception on error
-// Execute subprocess; throw human-readable exception on error
-// func:command.gcli_proc.gcli.ExecX
-void                 gcli_ExecX(command::gcli_proc& parent);
-// Call execv()
-// Call execv with specified parameters
-// func:command.gcli_proc.gcli.Execv
-int                  gcli_Execv(command::gcli_proc& parent) __attribute__((nothrow));
-// func:command.gcli_proc.gcli.ToCmdline
-algo::tempstr        gcli_ToCmdline(command::gcli_proc& parent) __attribute__((nothrow));
-// Form array from the command line
-// func:command.gcli_proc.gcli.ToArgv
-void                 gcli_ToArgv(command::gcli_proc& parent, algo::StringAry& args) __attribute__((nothrow));
-
-// Set all fields to initial values.
-// func:command.gcli_proc..Init
-void                 gcli_proc_Init(command::gcli_proc& parent);
-// func:command.gcli_proc..Uninit
-void                 gcli_proc_Uninit(command::gcli_proc& parent) __attribute__((nothrow));
-
 // --- command.generic
 // access: command.generic_proc.name (Exec)
 struct generic { // command.generic: Any generic subprocess
@@ -7332,15 +7100,6 @@ struct gcache_cmd_curs {// cursor
     i64 n_elems;
     i64 index;
     gcache_cmd_curs() { elems=NULL; n_elems=0; index=0; }
-};
-
-
-struct gcli_fields_curs {// cursor
-    typedef algo::cstring ChildType;
-    algo::cstring* elems;
-    i64 n_elems;
-    i64 index;
-    gcli_fields_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
 

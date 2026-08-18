@@ -106,8 +106,7 @@ These ssimfiles reference dmmeta.field
 * [dmmeta.substr via srcfield](/txt/ssimdb/dmmeta/substr.md) - Specify that the field value is computed from a substring of another field 
 * [dmmeta.thash via hashfld](/txt/ssimdb/dmmeta/thash.md) - Field on which hash function is computed 
 * [dmmeta.xref via viafld](/txt/ssimdb/dmmeta/xref.md) - Specify how to cross-reference (i.e. project, or group-by) one record with another 
-* [dmmeta.xref via keyfld](/txt/ssimdb/dmmeta/xref.md) - Specify how to cross-reference (i.e. project, or group-by) one record with another 
-* [gclidb.gclicmdf2j via field](/txt/ssimdb/gclidb/gclicmdf2j.md) - Mapping of internal fields to JSON fields for gitlab/github
+* [dmmeta.xref via keyfld](/txt/ssimdb/dmmeta/xref.md) - Specify how to cross-reference (i.e. project, or group-by) one record with another
 
 ### Used In Commands
 <a href="#used-in-commands"></a>

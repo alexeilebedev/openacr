@@ -14,8 +14,6 @@ dmmeta.hook  field:atf_ci.FCitest.step
 dmmeta.hook  field:atf_comp.FComptest.step
 dmmeta.hook  field:atf_fuzz.FFuzzstrat.step
 dmmeta.hook  field:atf_unit.FUnittest.step
-dmmeta.hook  field:gcli.FGclicmd.step
-dmmeta.hook  field:gcli.FGtblact.step
 dmmeta.hook  field:lib_ams.FDb.h_amsmsg
 dmmeta.hook  field:lib_ams.FDb.h_terminate
 dmmeta.hook  field:lib_ams.FShm.h_amsmsg

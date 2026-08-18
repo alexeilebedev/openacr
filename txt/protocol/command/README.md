@@ -507,31 +507,6 @@ Other ctypes in this namespace which don't have own readme files
 |report|bool|[Val](/txt/exe/amc/reftype.md#val)||Show end-of-run report|
 |force|bool|[Val](/txt/exe/amc/reftype.md#val)||Force recompile and update cache|
 
-#### command.gcli - Gcli - gitlab/github command-line client
-<a href="#command-gcli"></a>
-
-|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|in|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|"data"|Input directory or filename, - for stdin|
-|selector|[algo.Smallstr250](/txt/protocol/algo/README.md#algo-smallstr250)|[Val](/txt/exe/amc/reftype.md#val)|"issue:%"|table:key, where table is issue,repo,mr, etc. and key is a regex.|
-|fields|[algo.cstring](/txt/protocol/algo/cstring.md)|[Tary](/txt/exe/amc/reftype.md#tary)|""|additional key:value pairs for use with -create, -list, -update|
-|accept|bool|[Val](/txt/exe/amc/reftype.md#val)|false|(action) accept a selected merge request|
-|start|bool|[Val](/txt/exe/amc/reftype.md#val)|false|(action) start working on a selected issue|
-|list|bool|[Val](/txt/exe/amc/reftype.md#val)|false|(action) show selected table|
-|create|bool|[Val](/txt/exe/amc/reftype.md#val)|false|(action) create a table record(s)|
-|update|bool|[Val](/txt/exe/amc/reftype.md#val)|false|(action) update fields of a selected issue or mergereq|
-|approve|bool|[Val](/txt/exe/amc/reftype.md#val)|false|(action) remove draft desiognation from mergereq|
-|needs_work|bool|[Val](/txt/exe/amc/reftype.md#val)|false|(action) reopen an issue or put a draft designation on mergereq|
-|stop|bool|[Val](/txt/exe/amc/reftype.md#val)|false|(action) closes an issue, or remove mr branch after review|
-|retry|bool|[Val](/txt/exe/amc/reftype.md#val)|false|(action) retry failed CI jobs of a selected mergereq (gitlab)|
-|limit|i32|[Val](/txt/exe/amc/reftype.md#val)|0|For mrjob traces: tail this many lines per job (0 = full trace)|
-|t|bool|[Val](/txt/exe/amc/reftype.md#val)||Tree view: expand issue description|
-|e|bool|[Val](/txt/exe/amc/reftype.md#val)||edit the input|
-|authdir|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|".ssim"|(setup) Input directory for auth data|
-|dry_run|bool|[Val](/txt/exe/amc/reftype.md#val)||Print actions, do not perform|
-|gitdir|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|""|(setup) Change directory of git repository|
-|show_gitlab_system_notes|bool|[Val](/txt/exe/amc/reftype.md#val)||(misc) Show issue and mr notes created by gitlab|
-
 #### command.generic - Any generic subprocess
 <a href="#command-generic"></a>
 

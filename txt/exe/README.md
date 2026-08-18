@@ -66,8 +66,6 @@
 &#128196; [atf_unit - Unit tests (see unittest table)](/txt/exe/atf_unit/README.md)<br/>
 &#128196; [bash2html - Convert bash output and colours to html](/txt/exe/bash2html/README.md)<br/>
 &#128196; [gcache - Compiler cache](/txt/exe/gcache/README.md)<br/>
-&#128196; [gcli - Gcli - gitlab/github command-line client](/txt/exe/gcli/README.md)<br/>
-&#128196; [gcli - Internals](/txt/exe/gcli/internals.md)<br/>
 &#128196; [jkv - JSON <-> key-value mapping tool](/txt/exe/jkv/README.md)<br/>
 &#128196; [mdbg - Gdb front-end](/txt/exe/mdbg/README.md)<br/>
 &#128196; [mysql2ssim - mysql -> ssim conversion tool](/txt/exe/mysql2ssim/README.md)<br/>

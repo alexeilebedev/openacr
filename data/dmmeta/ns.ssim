@@ -35,8 +35,6 @@ dmmeta.ns  ns:dev  nstype:ssimdb  license:GPL  comment:"Tables supporting compil
 dmmeta.ns  ns:dmmeta  nstype:ssimdb  license:GPL  comment:"Tables holding metadata (data model meta)"
 dmmeta.ns  ns:fm  nstype:protocol  license:GPL  comment:"Fault management types"
 dmmeta.ns  ns:gcache  nstype:exe  license:GPL  comment:"Compiler cache"
-dmmeta.ns  ns:gcli  nstype:exe  license:GPL  comment:"Gcli - gitlab/github command-line client"
-dmmeta.ns  ns:gclidb  nstype:ssimdb  license:GPL  comment:"gcli db"
 dmmeta.ns  ns:http  nstype:protocol  license:ARND  comment:""
 dmmeta.ns  ns:httpdb  nstype:ssimdb  license:ARND  comment:""
 dmmeta.ns  ns:ietf  nstype:protocol  license:GPL  comment:"Some IETF structs"

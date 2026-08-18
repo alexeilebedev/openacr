@@ -30,14 +30,6 @@ dmmeta.gconst  field:dmmeta.Ssimfile.ssimfile  namefld:dmmeta.Ssimfile.ssimfile 
 dmmeta.gconst  field:dmmeta.Steptype.steptype  namefld:dmmeta.Steptype.steptype  idfld:""  wantenum:N
 dmmeta.gconst  field:dmmeta.Strfmt.strfmt  namefld:dmmeta.Strfmt.strfmt  idfld:""  wantenum:N
 dmmeta.gconst  field:dmmeta.Strtype.strtype  namefld:dmmeta.Strtype.strtype  idfld:""  wantenum:N
-dmmeta.gconst  field:gclidb.Gact.gact  namefld:gclidb.Gact.gact  idfld:""  wantenum:N
-dmmeta.gconst  field:gclidb.Gclicmd.gclicmd  namefld:gclidb.Gclicmd.gclicmd  idfld:""  wantenum:N
-dmmeta.gconst  field:gclidb.Gfld.gfld  namefld:gclidb.Gfld.gfld  idfld:""  wantenum:N
-dmmeta.gconst  field:gclidb.Gstate.gstate  namefld:gclidb.Gstate.gstate  idfld:""  wantenum:N
-dmmeta.gconst  field:gclidb.Gtbl.gtbl  namefld:gclidb.Gtbl.gtbl  idfld:""  wantenum:N
-dmmeta.gconst  field:gclidb.Gtblact.gtblact  namefld:gclidb.Gtblact.gtblact  idfld:""  wantenum:N
-dmmeta.gconst  field:gclidb.Gtype.gtype  namefld:gclidb.Gtype.gtype  idfld:""  wantenum:N
-dmmeta.gconst  field:gclidb.Label.label  namefld:gclidb.Label.label  idfld:""  wantenum:N
 dmmeta.gconst  field:http.HeaderType.value  namefld:httpdb.Header.header  idfld:""  wantenum:Y
 dmmeta.gconst  field:http.Method.value  namefld:httpdb.Method.method  idfld:httpdb.Method.id  wantenum:Y
 dmmeta.gconst  field:ws.StatusCode.value  namefld:wsdb.Status.reason  idfld:wsdb.Status.code  wantenum:N
