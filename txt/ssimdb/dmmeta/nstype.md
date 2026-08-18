@@ -21,3 +21,7 @@ These ssimfiles reference dmmeta.nstype
 ### Used In Commands
 <a href="#used-in-commands"></a>
 * [acr_ed -nstype](/txt/exe/acr_ed/README.md) - (with -create -target): exe,lib,etc.
+
+### Used In Executables
+<a href="#used-in-executables"></a>
+* [abt_md](/txt/gen/abt_md/abt_md.md) as [abt_md.FNstype](/txt/gen/abt_md/abt_md.md#abt_md-fnstype)

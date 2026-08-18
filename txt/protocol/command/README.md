@@ -361,7 +361,6 @@ Other ctypes in this namespace which don't have own readme files
 |citest|[atfdb.Citest](/txt/ssimdb/atfdb/citest.md)|[RegxSql](/txt/exe/amc/reftype.md#regxsql)|"%"|Regx of tests to run|
 |maxerr|i32|[Val](/txt/exe/amc/reftype.md#val)|0|Exit after this many errors|
 |cijob|[atfdb.Cijob](/txt/ssimdb/atfdb/cijob.md)|[RegxSql](/txt/exe/amc/reftype.md#regxsql)|"%"||
-|cleanup|bool|[Val](/txt/exe/amc/reftype.md#val)||(action) Remove the credentials this run installed and exit|
 |capture|bool|[Val](/txt/exe/amc/reftype.md#val)||Capture the output of the test|
 |check_clean|bool|[Val](/txt/exe/amc/reftype.md#val)|true|Check for modifications after each test|
 
@@ -514,7 +513,7 @@ Other ctypes in this namespace which don't have own readme files
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |in|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|"data"|Input directory or filename, - for stdin|
-|selector|[gclidb.Gtbl](/txt/ssimdb/gclidb/gtbl.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)|"issue:%"|table:key, where table is issue,repo,mr, etc. and key is a regex.|
+|selector|[algo.Smallstr250](/txt/protocol/algo/README.md#algo-smallstr250)|[Val](/txt/exe/amc/reftype.md#val)|"issue:%"|table:key, where table is issue,repo,mr, etc. and key is a regex.|
 |fields|[algo.cstring](/txt/protocol/algo/cstring.md)|[Tary](/txt/exe/amc/reftype.md#tary)|""|additional key:value pairs for use with -create, -list, -update|
 |accept|bool|[Val](/txt/exe/amc/reftype.md#val)|false|(action) accept a selected merge request|
 |start|bool|[Val](/txt/exe/amc/reftype.md#val)|false|(action) start working on a selected issue|

@@ -91,7 +91,7 @@ export const AtfdbSsimfile = {
     pkey: "citest",
     fields: [
       { field: "citest", type: "string", dflt: "", substr: null },
-      { field: "cijob", type: "string", dflt: "test", substr: null },
+      { field: "cijob", type: "string", dflt: "normalize", substr: null },
       { field: "sandbox", type: "boolean", dflt: "false", substr: null },
       { field: "timeout", type: "number", dflt: "600", substr: null },
       { field: "failfast", type: "boolean", dflt: "false", substr: null },

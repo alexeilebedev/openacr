@@ -34,6 +34,9 @@ namespace lib_curl { // update-hdr
     //
 
     // ----------------- Public API -----------------
+    // Perform the request synchronously.  Throws on transport failure (refused
+    // connection, timeout); returns true once a response arrived, whatever its
+    // HTTP status — the caller reads out_resp.code to judge the outcome.
     bool Curl(lib_curl::FRequest &req, lib_curl::FResponse &out_resp);
     tempstr PrintCurlResp(lib_curl::FResponse &resp, bool nodate = false);
 

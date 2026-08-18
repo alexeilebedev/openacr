@@ -28,4 +28,5 @@ These ssimfiles reference dev.cfg
 ### Used In Executables
 <a href="#used-in-executables"></a>
 * [abt](/txt/gen/abt/abt.md) as [abt.FCfg](/txt/gen/abt/abt.md#abt-fcfg)
+* [atf_ci](/txt/gen/atf_ci/atf_ci.md) as [atf_ci.FCfg](/txt/gen/atf_ci/atf_ci.md#atf_ci-fcfg)
 * [mdbg](/txt/gen/mdbg/mdbg.md) as [mdbg.FCfg](/txt/gen/mdbg/mdbg.md#mdbg-fcfg)

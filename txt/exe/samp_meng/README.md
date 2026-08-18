@@ -7,6 +7,7 @@
 &nbsp;&nbsp;&bull;&nbsp;  [Internals](#internals)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Input Messages](#input-messages)<br/>
 <!-- abt_md.toc_end -->
 
 ### Internals
@@ -24,3 +25,15 @@
 |Ssimfile|Comment|
 |---|---|
 |[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
+
+### Input Messages
+<a href="#input-messages"></a>
+`samp_meng` Consumes the following messages via samp_meng.In ()
+|Message|Comment|
+|---|---|
+|[ams.SampMengCancelReqMsg](/txt/protocol/ams/README.md#ams-sampmengcancelreqmsg)||
+|[ams.SampMengMassCancelReqMsg](/txt/protocol/ams/README.md#ams-sampmengmasscancelreqmsg)||
+|[ams.SampMengNewOrderReqMsg](/txt/protocol/ams/README.md#ams-sampmengneworderreqmsg)||
+|[ams.SampMengNewSymbolReqMsg](/txt/protocol/ams/README.md#ams-sampmengnewsymbolreqmsg)||
+|[ams.SampMengNewUserReqMsg](/txt/protocol/ams/README.md#ams-sampmengnewuserreqmsg)||
+|[ams.SampMengTextMsg](/txt/protocol/ams/README.md#ams-sampmengtextmsg)||

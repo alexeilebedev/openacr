@@ -2272,7 +2272,8 @@ namespace atf_comp { // update-hdr
     // react to their own broken pipes.
     void ProcWrite(atf_comp::FProc &proc, strptr msg);
 
-    // Send signal to process
+    // Send SIGNAL to the process group PROC leads, which holds the shell the
+    // command runs under together with any tool that shell forked.
     void ProcKill(atf_comp::FProc &proc, int signal);
 
     // Close process stdin (signal EOF)

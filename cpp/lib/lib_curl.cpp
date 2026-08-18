@@ -199,12 +199,15 @@ static CURLcode HttpJsonAttempt(lib_curl::FRequest &req, lib_curl::FResponse &ou
     return out_cc;
 }
 // ----------------- Public API -----------------
+// Perform the request synchronously.  Throws on transport failure (refused
+// connection, timeout); returns true once a response arrived, whatever its
+// HTTP status — the caller reads out_resp.code to judge the outcome.
 bool lib_curl::Curl(lib_curl::FRequest &req, lib_curl::FResponse &out_resp){
     CURLcode out_cc(HttpJsonAttempt(req, out_resp));
     if (out_cc) {
         algo::Throw(curl_easy_strerror(out_cc),(Errcode)out_cc);
     }
-    return out_cc;
+    return out_cc == CURLE_OK;
 }
 
 // -----------------------------------------------------------------------------

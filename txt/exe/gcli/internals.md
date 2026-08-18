@@ -3,24 +3,17 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
 * [Description](#description)
 * [Sources](#sources)
 * [Dependencies](#dependencies)
 * [In Memory DB](#in-memory-db)
 
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
-
 ### Description
 <a href="#description"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Description -->
 for usage, see [gcli - Gcli - gitlab/github command-line client](/txt/exe/gcli/README.md)
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Description -->
 
 ### Sources
 <a href="#sources"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Sources -->
 The source code license is GPL
 The following source files are part of this tool:
 
@@ -43,11 +36,8 @@ The following source files are part of this tool:
 |[include/gen/gcli_gen.h](/include/gen/gcli_gen.h)||
 |[include/gen/gcli_gen.inl.h](/include/gen/gcli_gen.inl.h)||
 
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Sources -->
-
 ### Dependencies
 <a href="#dependencies"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Dependencies -->
 The build target depends on the following libraries
 |Target|Comment|
 |---|---|
@@ -55,11 +45,8 @@ The build target depends on the following libraries
 |[lib_json](/txt/lib/lib_json/README.md)|Full json support library|
 |[lib_prot](/txt/lib/lib_prot/README.md)|Library covering all protocols|
 
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Dependencies -->
-
 ### In Memory DB
 <a href="#in-memory-db"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Imdb -->
 `gcli` generated code creates the tables below.
 All allocations are done through global `gcli::_db` [gcli.FDb](#gcli-fdb) structure
 |Ctype|Ssimfile|Create|Access|
@@ -127,71 +114,71 @@ All allocations are done through global `gcli::_db` [gcli.FDb](#gcli-fdb) struct
 <a href="#gcli-fdb-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|gcli.FDb._db|[gcli.FDb](/txt/exe/gcli/internals.md#gcli-fdb)|[Global](/txt/exe/amc/reftypes.md#global)|||
-|gcli.FDb.cmdline|[command.gcli](/txt/protocol/command/README.md#command-gcli)|[Val](/txt/exe/amc/reftypes.md#val)|||
-|gcli.FDb.gtype|[gcli.FGtype](/txt/exe/gcli/internals.md#gcli-fgtype)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
-|gcli.FDb.githost|[gcli.FGithost](/txt/exe/gcli/internals.md#gcli-fgithost)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
-|gcli.FDb.need_auth|bool|[Val](/txt/exe/amc/reftypes.md#val)|||
-|gcli.FDb.gstatet|[gcli.FGstatet](/txt/exe/gcli/internals.md#gcli-fgstatet)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
-|gcli.FDb.gmethod|[gcli.FGmethod](/txt/exe/gcli/internals.md#gcli-fgmethod)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
-|gcli.FDb.gclicmdt|[gcli.FGclicmdt](/txt/exe/gcli/internals.md#gcli-fgclicmdt)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
-|gcli.FDb.gclicmdf|[gcli.FGclicmdf](/txt/exe/gcli/internals.md#gcli-fgclicmdf)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
-|gcli.FDb.gclicmdf2j|[gcli.FGclicmdf2j](/txt/exe/gcli/internals.md#gcli-fgclicmdf2j)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
-|gcli.FDb.gclicmd|[gcli.FGclicmd](/txt/exe/gcli/internals.md#gcli-fgclicmd)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
-|gcli.FDb.gtypeh|[gcli.FGtypeh](/txt/exe/gcli/internals.md#gcli-fgtypeh)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
-|gcli.FDb.p_gtype|[gcli.FGtype](/txt/exe/gcli/internals.md#gcli-fgtype)|[Ptr](/txt/exe/amc/reftypes.md#ptr)|||
-|gcli.FDb.p_gtbl|[gcli.FGtbl](/txt/exe/gcli/internals.md#gcli-fgtbl)|[Ptr](/txt/exe/amc/reftypes.md#ptr)|||
-|gcli.FDb.grepo_sel|[gclidb.Grepo](/txt/ssimdb/gclidb/grepo.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
-|gcli.FDb.ind_gclicmd|[gcli.FGclicmd](/txt/exe/gcli/internals.md#gcli-fgclicmd)|[Thash](/txt/exe/amc/reftypes.md#thash)|||
-|gcli.FDb.ind_gclicmdf|[gcli.FGclicmdf](/txt/exe/gcli/internals.md#gcli-fgclicmdf)|[Thash](/txt/exe/amc/reftypes.md#thash)|||
-|gcli.FDb.ind_gclicmdt|[gcli.FGclicmdt](/txt/exe/gcli/internals.md#gcli-fgclicmdt)|[Thash](/txt/exe/amc/reftypes.md#thash)|||
-|gcli.FDb.ind_gmethod|[gcli.FGmethod](/txt/exe/gcli/internals.md#gcli-fgmethod)|[Thash](/txt/exe/amc/reftypes.md#thash)|||
-|gcli.FDb.ind_grepo|[gcli.FGrepo](/txt/exe/gcli/internals.md#gcli-fgrepo)|[Thash](/txt/exe/amc/reftypes.md#thash)|||
-|gcli.FDb.ind_issue|[gcli.FIssue](/txt/exe/gcli/internals.md#gcli-fissue)|[Thash](/txt/exe/amc/reftypes.md#thash)|||
-|gcli.FDb.regx_repo|[algo.cstring](/txt/protocol/algo/cstring.md)|[RegxSql](/txt/exe/amc/reftypes.md#regxsql)|"%"||
-|gcli.FDb.ind_gstatet|[gcli.FGstatet](/txt/exe/gcli/internals.md#gcli-fgstatet)|[Thash](/txt/exe/amc/reftypes.md#thash)|||
-|gcli.FDb.ind_githost|[gcli.FGithost](/txt/exe/gcli/internals.md#gcli-fgithost)|[Thash](/txt/exe/amc/reftypes.md#thash)|||
-|gcli.FDb.ind_gtype|[gcli.FGtype](/txt/exe/gcli/internals.md#gcli-fgtype)|[Thash](/txt/exe/amc/reftypes.md#thash)|||
-|gcli.FDb.home|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)||User's HOME directory|
-|gcli.FDb.auth_file|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
-|gcli.FDb.edit_file|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
-|gcli.FDb.c_gclicmd|[gcli.FGclicmd](/txt/exe/gcli/internals.md#gcli-fgclicmd)|[Ptrary](/txt/exe/amc/reftypes.md#ptrary)|||
-|gcli.FDb.unix_user|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)||UNIX user login name|
-|gcli.FDb.editor|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)||Command line to invoke editor|
-|gcli.FDb.gclicmdj2f|[gcli.FGclicmdj2f](/txt/exe/gcli/internals.md#gcli-fgclicmdj2f)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
-|gcli.FDb.gclicmdc|[gcli.FGclicmdc](/txt/exe/gcli/internals.md#gcli-fgclicmdc)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
-|gcli.FDb.gclicmdarg|[gcli.FGclicmdarg](/txt/exe/gcli/internals.md#gcli-fgclicmdarg)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
-|gcli.FDb.ind_gclicmdj2f|[gcli.FGclicmdj2f](/txt/exe/gcli/internals.md#gcli-fgclicmdj2f)|[Thash](/txt/exe/amc/reftypes.md#thash)|||
-|gcli.FDb.ind_gclicmdarg|[gcli.FGclicmdarg](/txt/exe/gcli/internals.md#gcli-fgclicmdarg)|[Thash](/txt/exe/amc/reftypes.md#thash)|||
-|gcli.FDb.ind_gclicmdc|[gcli.FGclicmdc](/txt/exe/gcli/internals.md#gcli-fgclicmdc)|[Thash](/txt/exe/amc/reftypes.md#thash)|||
-|gcli.FDb.issue|[gcli.FIssue](/txt/exe/gcli/internals.md#gcli-fissue)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
-|gcli.FDb.grepo|[gcli.FGrepo](/txt/exe/gcli/internals.md#gcli-fgrepo)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
-|gcli.FDb.tuples|[gcli.FTuples](/txt/exe/gcli/internals.md#gcli-ftuples)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
-|gcli.FDb.issuenote|[gcli.FIssuenote](/txt/exe/gcli/internals.md#gcli-fissuenote)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
-|gcli.FDb.mrjob|[gcli.FMrjob](/txt/exe/gcli/internals.md#gcli-fmrjob)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
-|gcli.FDb.mrnote|[gcli.FMrnote](/txt/exe/gcli/internals.md#gcli-fmrnote)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
-|gcli.FDb.ind_mrnote|[gcli.FMrnote](/txt/exe/gcli/internals.md#gcli-fmrnote)|[Thash](/txt/exe/amc/reftypes.md#thash)|||
-|gcli.FDb.ind_issuenote|[gcli.FIssuenote](/txt/exe/gcli/internals.md#gcli-fissuenote)|[Thash](/txt/exe/amc/reftypes.md#thash)|||
-|gcli.FDb.ind_mrjob|[gcli.FMrjob](/txt/exe/gcli/internals.md#gcli-fmrjob)|[Thash](/txt/exe/amc/reftypes.md#thash)|||
-|gcli.FDb.user|[gcli.FUser](/txt/exe/gcli/internals.md#gcli-fuser)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
-|gcli.FDb.ind_user|[gcli.FUser](/txt/exe/gcli/internals.md#gcli-fuser)|[Thash](/txt/exe/amc/reftypes.md#thash)|||
-|gcli.FDb.ind_mr|[gcli.FMr](/txt/exe/gcli/internals.md#gcli-fmr)|[Thash](/txt/exe/amc/reftypes.md#thash)|||
-|gcli.FDb.ind_milestone|[gcli.FMilestone](/txt/exe/gcli/internals.md#gcli-fmilestone)|[Thash](/txt/exe/amc/reftypes.md#thash)|||
-|gcli.FDb.milestone|[gcli.FMilestone](/txt/exe/gcli/internals.md#gcli-fmilestone)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
-|gcli.FDb.mr|[gcli.FMr](/txt/exe/gcli/internals.md#gcli-fmr)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
-|gcli.FDb.gtypeprefix|[gcli.FGtypeprefix](/txt/exe/gcli/internals.md#gcli-fgtypeprefix)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
-|gcli.FDb.gtblact|[gcli.FGtblact](/txt/exe/gcli/internals.md#gcli-fgtblact)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
-|gcli.FDb.gtblactfld|[gcli.FGtblactfld](/txt/exe/gcli/internals.md#gcli-fgtblactfld)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
-|gcli.FDb.ind_gtblact|[gcli.FGtblact](/txt/exe/gcli/internals.md#gcli-fgtblact)|[Thash](/txt/exe/amc/reftypes.md#thash)|||
-|gcli.FDb.zd_gtblact|[gcli.FGtblact](/txt/exe/gcli/internals.md#gcli-fgtblact)|[Llist](/txt/exe/amc/reftypes.md#llist)|||
-|gcli.FDb.ind_gtblactfld|[gcli.FGtblactfld](/txt/exe/gcli/internals.md#gcli-fgtblactfld)|[Thash](/txt/exe/amc/reftypes.md#thash)|||
-|gcli.FDb.gfld|[gcli.FGfld](/txt/exe/gcli/internals.md#gcli-fgfld)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
-|gcli.FDb.ind_gfld|[gcli.FGfld](/txt/exe/gcli/internals.md#gcli-fgfld)|[Thash](/txt/exe/amc/reftypes.md#thash)|||
-|gcli.FDb.c_gfld|[gcli.FGfld](/txt/exe/gcli/internals.md#gcli-fgfld)|[Ptrary](/txt/exe/amc/reftypes.md#ptrary)|||
-|gcli.FDb.gtbl|[gcli.FGtbl](/txt/exe/gcli/internals.md#gcli-fgtbl)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
-|gcli.FDb.ind_gtbl|[gcli.FGtbl](/txt/exe/gcli/internals.md#gcli-fgtbl)|[Thash](/txt/exe/amc/reftypes.md#thash)|||
-|gcli.FDb.gact|[gcli.FGact](/txt/exe/gcli/internals.md#gcli-fgact)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
-|gcli.FDb.ind_gact|[gcli.FGact](/txt/exe/gcli/internals.md#gcli-fgact)|[Thash](/txt/exe/amc/reftypes.md#thash)|||
+|gcli.FDb._db|[gcli.FDb](/txt/exe/gcli/internals.md#gcli-fdb)|[Global](/txt/exe/amc/reftype.md#global)|||
+|gcli.FDb.cmdline|[command.gcli](/txt/protocol/command/README.md#command-gcli)|[Val](/txt/exe/amc/reftype.md#val)|||
+|gcli.FDb.gtype|[gcli.FGtype](/txt/exe/gcli/internals.md#gcli-fgtype)|[Lary](/txt/exe/amc/reftype.md#lary)|||
+|gcli.FDb.githost|[gcli.FGithost](/txt/exe/gcli/internals.md#gcli-fgithost)|[Lary](/txt/exe/amc/reftype.md#lary)|||
+|gcli.FDb.need_auth|bool|[Val](/txt/exe/amc/reftype.md#val)|||
+|gcli.FDb.gstatet|[gcli.FGstatet](/txt/exe/gcli/internals.md#gcli-fgstatet)|[Lary](/txt/exe/amc/reftype.md#lary)|||
+|gcli.FDb.gmethod|[gcli.FGmethod](/txt/exe/gcli/internals.md#gcli-fgmethod)|[Lary](/txt/exe/amc/reftype.md#lary)|||
+|gcli.FDb.gclicmdt|[gcli.FGclicmdt](/txt/exe/gcli/internals.md#gcli-fgclicmdt)|[Lary](/txt/exe/amc/reftype.md#lary)|||
+|gcli.FDb.gclicmdf|[gcli.FGclicmdf](/txt/exe/gcli/internals.md#gcli-fgclicmdf)|[Lary](/txt/exe/amc/reftype.md#lary)|||
+|gcli.FDb.gclicmdf2j|[gcli.FGclicmdf2j](/txt/exe/gcli/internals.md#gcli-fgclicmdf2j)|[Lary](/txt/exe/amc/reftype.md#lary)|||
+|gcli.FDb.gclicmd|[gcli.FGclicmd](/txt/exe/gcli/internals.md#gcli-fgclicmd)|[Lary](/txt/exe/amc/reftype.md#lary)|||
+|gcli.FDb.gtypeh|[gcli.FGtypeh](/txt/exe/gcli/internals.md#gcli-fgtypeh)|[Lary](/txt/exe/amc/reftype.md#lary)|||
+|gcli.FDb.p_gtype|[gcli.FGtype](/txt/exe/gcli/internals.md#gcli-fgtype)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
+|gcli.FDb.p_gtbl|[gcli.FGtbl](/txt/exe/gcli/internals.md#gcli-fgtbl)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
+|gcli.FDb.grepo_sel|[gclidb.Grepo](/txt/ssimdb/gclidb/grepo.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|gcli.FDb.ind_gclicmd|[gcli.FGclicmd](/txt/exe/gcli/internals.md#gcli-fgclicmd)|[Thash](/txt/exe/amc/reftype.md#thash)|||
+|gcli.FDb.ind_gclicmdf|[gcli.FGclicmdf](/txt/exe/gcli/internals.md#gcli-fgclicmdf)|[Thash](/txt/exe/amc/reftype.md#thash)|||
+|gcli.FDb.ind_gclicmdt|[gcli.FGclicmdt](/txt/exe/gcli/internals.md#gcli-fgclicmdt)|[Thash](/txt/exe/amc/reftype.md#thash)|||
+|gcli.FDb.ind_gmethod|[gcli.FGmethod](/txt/exe/gcli/internals.md#gcli-fgmethod)|[Thash](/txt/exe/amc/reftype.md#thash)|||
+|gcli.FDb.ind_grepo|[gcli.FGrepo](/txt/exe/gcli/internals.md#gcli-fgrepo)|[Thash](/txt/exe/amc/reftype.md#thash)|||
+|gcli.FDb.ind_issue|[gcli.FIssue](/txt/exe/gcli/internals.md#gcli-fissue)|[Thash](/txt/exe/amc/reftype.md#thash)|||
+|gcli.FDb.regx_repo|[algo.cstring](/txt/protocol/algo/cstring.md)|[RegxSql](/txt/exe/amc/reftype.md#regxsql)|"%"||
+|gcli.FDb.ind_gstatet|[gcli.FGstatet](/txt/exe/gcli/internals.md#gcli-fgstatet)|[Thash](/txt/exe/amc/reftype.md#thash)|||
+|gcli.FDb.ind_githost|[gcli.FGithost](/txt/exe/gcli/internals.md#gcli-fgithost)|[Thash](/txt/exe/amc/reftype.md#thash)|||
+|gcli.FDb.ind_gtype|[gcli.FGtype](/txt/exe/gcli/internals.md#gcli-fgtype)|[Thash](/txt/exe/amc/reftype.md#thash)|||
+|gcli.FDb.home|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||User's HOME directory|
+|gcli.FDb.auth_file|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|gcli.FDb.edit_file|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|gcli.FDb.c_gclicmd|[gcli.FGclicmd](/txt/exe/gcli/internals.md#gcli-fgclicmd)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
+|gcli.FDb.unix_user|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||UNIX user login name|
+|gcli.FDb.editor|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Command line to invoke editor|
+|gcli.FDb.gclicmdj2f|[gcli.FGclicmdj2f](/txt/exe/gcli/internals.md#gcli-fgclicmdj2f)|[Lary](/txt/exe/amc/reftype.md#lary)|||
+|gcli.FDb.gclicmdc|[gcli.FGclicmdc](/txt/exe/gcli/internals.md#gcli-fgclicmdc)|[Lary](/txt/exe/amc/reftype.md#lary)|||
+|gcli.FDb.gclicmdarg|[gcli.FGclicmdarg](/txt/exe/gcli/internals.md#gcli-fgclicmdarg)|[Lary](/txt/exe/amc/reftype.md#lary)|||
+|gcli.FDb.ind_gclicmdj2f|[gcli.FGclicmdj2f](/txt/exe/gcli/internals.md#gcli-fgclicmdj2f)|[Thash](/txt/exe/amc/reftype.md#thash)|||
+|gcli.FDb.ind_gclicmdarg|[gcli.FGclicmdarg](/txt/exe/gcli/internals.md#gcli-fgclicmdarg)|[Thash](/txt/exe/amc/reftype.md#thash)|||
+|gcli.FDb.ind_gclicmdc|[gcli.FGclicmdc](/txt/exe/gcli/internals.md#gcli-fgclicmdc)|[Thash](/txt/exe/amc/reftype.md#thash)|||
+|gcli.FDb.issue|[gcli.FIssue](/txt/exe/gcli/internals.md#gcli-fissue)|[Lary](/txt/exe/amc/reftype.md#lary)|||
+|gcli.FDb.grepo|[gcli.FGrepo](/txt/exe/gcli/internals.md#gcli-fgrepo)|[Lary](/txt/exe/amc/reftype.md#lary)|||
+|gcli.FDb.tuples|[gcli.FTuples](/txt/exe/gcli/internals.md#gcli-ftuples)|[Lary](/txt/exe/amc/reftype.md#lary)|||
+|gcli.FDb.issuenote|[gcli.FIssuenote](/txt/exe/gcli/internals.md#gcli-fissuenote)|[Lary](/txt/exe/amc/reftype.md#lary)|||
+|gcli.FDb.mrjob|[gcli.FMrjob](/txt/exe/gcli/internals.md#gcli-fmrjob)|[Lary](/txt/exe/amc/reftype.md#lary)|||
+|gcli.FDb.mrnote|[gcli.FMrnote](/txt/exe/gcli/internals.md#gcli-fmrnote)|[Lary](/txt/exe/amc/reftype.md#lary)|||
+|gcli.FDb.ind_mrnote|[gcli.FMrnote](/txt/exe/gcli/internals.md#gcli-fmrnote)|[Thash](/txt/exe/amc/reftype.md#thash)|||
+|gcli.FDb.ind_issuenote|[gcli.FIssuenote](/txt/exe/gcli/internals.md#gcli-fissuenote)|[Thash](/txt/exe/amc/reftype.md#thash)|||
+|gcli.FDb.ind_mrjob|[gcli.FMrjob](/txt/exe/gcli/internals.md#gcli-fmrjob)|[Thash](/txt/exe/amc/reftype.md#thash)|||
+|gcli.FDb.user|[gcli.FUser](/txt/exe/gcli/internals.md#gcli-fuser)|[Lary](/txt/exe/amc/reftype.md#lary)|||
+|gcli.FDb.ind_user|[gcli.FUser](/txt/exe/gcli/internals.md#gcli-fuser)|[Thash](/txt/exe/amc/reftype.md#thash)|||
+|gcli.FDb.ind_mr|[gcli.FMr](/txt/exe/gcli/internals.md#gcli-fmr)|[Thash](/txt/exe/amc/reftype.md#thash)|||
+|gcli.FDb.ind_milestone|[gcli.FMilestone](/txt/exe/gcli/internals.md#gcli-fmilestone)|[Thash](/txt/exe/amc/reftype.md#thash)|||
+|gcli.FDb.milestone|[gcli.FMilestone](/txt/exe/gcli/internals.md#gcli-fmilestone)|[Lary](/txt/exe/amc/reftype.md#lary)|||
+|gcli.FDb.mr|[gcli.FMr](/txt/exe/gcli/internals.md#gcli-fmr)|[Lary](/txt/exe/amc/reftype.md#lary)|||
+|gcli.FDb.gtypeprefix|[gcli.FGtypeprefix](/txt/exe/gcli/internals.md#gcli-fgtypeprefix)|[Lary](/txt/exe/amc/reftype.md#lary)|||
+|gcli.FDb.gtblact|[gcli.FGtblact](/txt/exe/gcli/internals.md#gcli-fgtblact)|[Lary](/txt/exe/amc/reftype.md#lary)|||
+|gcli.FDb.gtblactfld|[gcli.FGtblactfld](/txt/exe/gcli/internals.md#gcli-fgtblactfld)|[Lary](/txt/exe/amc/reftype.md#lary)|||
+|gcli.FDb.ind_gtblact|[gcli.FGtblact](/txt/exe/gcli/internals.md#gcli-fgtblact)|[Thash](/txt/exe/amc/reftype.md#thash)|||
+|gcli.FDb.zd_gtblact|[gcli.FGtblact](/txt/exe/gcli/internals.md#gcli-fgtblact)|[Llist](/txt/exe/amc/reftype.md#llist)|||
+|gcli.FDb.ind_gtblactfld|[gcli.FGtblactfld](/txt/exe/gcli/internals.md#gcli-fgtblactfld)|[Thash](/txt/exe/amc/reftype.md#thash)|||
+|gcli.FDb.gfld|[gcli.FGfld](/txt/exe/gcli/internals.md#gcli-fgfld)|[Lary](/txt/exe/amc/reftype.md#lary)|||
+|gcli.FDb.ind_gfld|[gcli.FGfld](/txt/exe/gcli/internals.md#gcli-fgfld)|[Thash](/txt/exe/amc/reftype.md#thash)|||
+|gcli.FDb.c_gfld|[gcli.FGfld](/txt/exe/gcli/internals.md#gcli-fgfld)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
+|gcli.FDb.gtbl|[gcli.FGtbl](/txt/exe/gcli/internals.md#gcli-fgtbl)|[Lary](/txt/exe/amc/reftype.md#lary)|||
+|gcli.FDb.ind_gtbl|[gcli.FGtbl](/txt/exe/gcli/internals.md#gcli-fgtbl)|[Thash](/txt/exe/amc/reftype.md#thash)|||
+|gcli.FDb.gact|[gcli.FGact](/txt/exe/gcli/internals.md#gcli-fgact)|[Lary](/txt/exe/amc/reftype.md#lary)|||
+|gcli.FDb.ind_gact|[gcli.FGact](/txt/exe/gcli/internals.md#gcli-fgact)|[Thash](/txt/exe/amc/reftype.md#thash)|||
 
 #### Struct FDb
 <a href="#struct-fdb"></a>
@@ -389,28 +376,28 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |gcli.FGclicmd.base|[gclidb.Gclicmd](/txt/ssimdb/gclidb/gclicmd.md)|[Base](/txt/ssimdb/gclidb/gclicmd.md)|||
-|gcli.FGclicmd.url|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
-|gcli.FGclicmd.sep|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
-|gcli.FGclicmd.host|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
-|gcli.FGclicmd.proj|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
-|gcli.FGclicmd.token|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
-|gcli.FGclicmd.body|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
-|gcli.FGclicmd.note_id|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
-|gcli.FGclicmd.issue_id|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
-|gcli.FGclicmd.cond|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
-|gcli.FGclicmd.select|bool|[Val](/txt/exe/amc/reftypes.md#val)|||
-|gcli.FGclicmd.write_auth|bool|[Val](/txt/exe/amc/reftypes.md#val)|||
-|gcli.FGclicmd.finish|bool|[Val](/txt/exe/amc/reftypes.md#val)|||
-|gcli.FGclicmd.gclicmdt_key|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
-|gcli.FGclicmd.method|u32|[Val](/txt/exe/amc/reftypes.md#val)|||
-|gcli.FGclicmd.p_issue|[gcli.FIssue](/txt/exe/gcli/internals.md#gcli-fissue)|[Ptr](/txt/exe/amc/reftypes.md#ptr)|||
-|gcli.FGclicmd.p_mr|[gcli.FMr](/txt/exe/gcli/internals.md#gcli-fmr)|[Ptr](/txt/exe/amc/reftypes.md#ptr)|||
-|gcli.FGclicmd.c_tuples|[gcli.FTuples](/txt/exe/gcli/internals.md#gcli-ftuples)|[Ptrary](/txt/exe/amc/reftypes.md#ptrary)|||
-|gcli.FGclicmd.step|[gcli.FGclicmd](/txt/exe/gcli/internals.md#gcli-fgclicmd)|[Hook](/txt/exe/amc/reftypes.md#hook)|||
-|gcli.FGclicmd.c_gclicmdarg|[gcli.FGclicmdarg](/txt/exe/gcli/internals.md#gcli-fgclicmdarg)|[Ptrary](/txt/exe/amc/reftypes.md#ptrary)|||
-|gcli.FGclicmd.c_gclicmdc|[gcli.FGclicmdc](/txt/exe/gcli/internals.md#gcli-fgclicmdc)|[Ptrary](/txt/exe/amc/reftypes.md#ptrary)|||
-|gcli.FGclicmd.c_gclicmdf2j|[gcli.FGclicmdf2j](/txt/exe/gcli/internals.md#gcli-fgclicmdf2j)|[Ptrary](/txt/exe/amc/reftypes.md#ptrary)|||
-|gcli.FGclicmd.p_gclicmd|[gcli.FGclicmd](/txt/exe/gcli/internals.md#gcli-fgclicmd)|[Upptr](/txt/exe/amc/reftypes.md#upptr)|||
+|gcli.FGclicmd.url|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|gcli.FGclicmd.sep|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|gcli.FGclicmd.host|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|gcli.FGclicmd.proj|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|gcli.FGclicmd.token|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|gcli.FGclicmd.body|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|gcli.FGclicmd.note_id|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|gcli.FGclicmd.issue_id|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|gcli.FGclicmd.cond|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|gcli.FGclicmd.select|bool|[Val](/txt/exe/amc/reftype.md#val)|||
+|gcli.FGclicmd.write_auth|bool|[Val](/txt/exe/amc/reftype.md#val)|||
+|gcli.FGclicmd.finish|bool|[Val](/txt/exe/amc/reftype.md#val)|||
+|gcli.FGclicmd.gclicmdt_key|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|gcli.FGclicmd.method|u32|[Val](/txt/exe/amc/reftype.md#val)|||
+|gcli.FGclicmd.p_issue|[gcli.FIssue](/txt/exe/gcli/internals.md#gcli-fissue)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
+|gcli.FGclicmd.p_mr|[gcli.FMr](/txt/exe/gcli/internals.md#gcli-fmr)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
+|gcli.FGclicmd.c_tuples|[gcli.FTuples](/txt/exe/gcli/internals.md#gcli-ftuples)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
+|gcli.FGclicmd.step|[gcli.FGclicmd](/txt/exe/gcli/internals.md#gcli-fgclicmd)|[Hook](/txt/exe/amc/reftype.md#hook)|||
+|gcli.FGclicmd.c_gclicmdarg|[gcli.FGclicmdarg](/txt/exe/gcli/internals.md#gcli-fgclicmdarg)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
+|gcli.FGclicmd.c_gclicmdc|[gcli.FGclicmdc](/txt/exe/gcli/internals.md#gcli-fgclicmdc)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
+|gcli.FGclicmd.c_gclicmdf2j|[gcli.FGclicmdf2j](/txt/exe/gcli/internals.md#gcli-fgclicmdf2j)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
+|gcli.FGclicmd.p_gclicmd|[gcli.FGclicmd](/txt/exe/gcli/internals.md#gcli-fgclicmd)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
 
 #### Struct FGclicmd
 <a href="#struct-fgclicmd"></a>
@@ -488,9 +475,9 @@ private:
 <a href="#gcli-fgclicmdarg-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|gcli.FGclicmdarg.gclicmdarg|[algo.Smallstr250](/txt/protocol/algo/README.md#algo-smallstr250)|[Val](/txt/exe/amc/reftypes.md#val)|||
-|*gcli.FGclicmdarg.gclicmd (@LL)*|[gclidb.Gclicmd](/txt/ssimdb/gclidb/gclicmd.md)|[Pkey](/txt/exe/amc/reftypes.md#pkey)|||
-|*gcli.FGclicmdarg.arg (@LR)*|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|gcli.FGclicmdarg.gclicmdarg|[algo.Smallstr250](/txt/protocol/algo/README.md#algo-smallstr250)|[Val](/txt/exe/amc/reftype.md#val)|||
+|*gcli.FGclicmdarg.gclicmd (@LL)*|[gclidb.Gclicmd](/txt/ssimdb/gclidb/gclicmd.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)|||
+|*gcli.FGclicmdarg.arg (@LR)*|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
 
 #### Struct FGclicmdarg
 <a href="#struct-fgclicmdarg"></a>
@@ -524,10 +511,10 @@ private:
 <a href="#gcli-fgclicmdc-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|gcli.FGclicmdc.gclicmdc|[algo.Smallstr250](/txt/protocol/algo/README.md#algo-smallstr250)|[Val](/txt/exe/amc/reftypes.md#val)|||
-|*gcli.FGclicmdc.gclicmd (/LL)*|[gclidb.Gclicmd](/txt/ssimdb/gclidb/gclicmd.md)|[Pkey](/txt/exe/amc/reftypes.md#pkey)|||
-|*gcli.FGclicmdc.ctype (/LR)*|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
-|gcli.FGclicmdc.c_gclicmdf|[gcli.FGclicmdf](/txt/exe/gcli/internals.md#gcli-fgclicmdf)|[Ptrary](/txt/exe/amc/reftypes.md#ptrary)|||
+|gcli.FGclicmdc.gclicmdc|[algo.Smallstr250](/txt/protocol/algo/README.md#algo-smallstr250)|[Val](/txt/exe/amc/reftype.md#val)|||
+|*gcli.FGclicmdc.gclicmd (/LL)*|[gclidb.Gclicmd](/txt/ssimdb/gclidb/gclicmd.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)|||
+|*gcli.FGclicmdc.ctype (/LR)*|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|gcli.FGclicmdc.c_gclicmdf|[gcli.FGclicmdf](/txt/exe/gcli/internals.md#gcli-fgclicmdf)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
 
 #### Struct FGclicmdc
 <a href="#struct-fgclicmdc"></a>
@@ -566,12 +553,12 @@ private:
 <a href="#gcli-fgclicmdf-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|gcli.FGclicmdf.gclicmdf|[algo.Smallstr250](/txt/protocol/algo/README.md#algo-smallstr250)|[Val](/txt/exe/amc/reftypes.md#val)|||
-|*gcli.FGclicmdf.gclicmd (/RL)*|[gclidb.Gclicmd](/txt/ssimdb/gclidb/gclicmd.md)|[Pkey](/txt/exe/amc/reftypes.md#pkey)|||
-|*gcli.FGclicmdf.field (/RR)*|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftypes.md#pkey)|||
-|*gcli.FGclicmdf.name (.RR)*|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
-|gcli.FGclicmdf.uval|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
-|*gcli.FGclicmdf.gclicmdc (.RL)*|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|gcli.FGclicmdf.gclicmdf|[algo.Smallstr250](/txt/protocol/algo/README.md#algo-smallstr250)|[Val](/txt/exe/amc/reftype.md#val)|||
+|*gcli.FGclicmdf.gclicmd (/RL)*|[gclidb.Gclicmd](/txt/ssimdb/gclidb/gclicmd.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)|||
+|*gcli.FGclicmdf.field (/RR)*|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)|||
+|*gcli.FGclicmdf.name (.RR)*|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|gcli.FGclicmdf.uval|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|*gcli.FGclicmdf.gclicmdc (.RL)*|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
 
 #### Struct FGclicmdf
 <a href="#struct-fgclicmdf"></a>
@@ -607,7 +594,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |gcli.FGclicmdf2j.base|[gclidb.Gclicmdf2j](/txt/ssimdb/gclidb/gclicmdf2j.md)|[Base](/txt/ssimdb/gclidb/gclicmdf2j.md)|||
-|gcli.FGclicmdf2j.p_gclicmd|[gcli.FGclicmd](/txt/exe/gcli/internals.md#gcli-fgclicmd)|[Upptr](/txt/exe/amc/reftypes.md#upptr)|||
+|gcli.FGclicmdf2j.p_gclicmd|[gcli.FGclicmd](/txt/exe/gcli/internals.md#gcli-fgclicmd)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
 
 #### Struct FGclicmdf2j
 <a href="#struct-fgclicmdf2j"></a>
@@ -646,12 +633,12 @@ private:
 <a href="#gcli-fgclicmdj2f-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|gcli.FGclicmdj2f.gclicmdj2f|[algo.Smallstr250](/txt/protocol/algo/README.md#algo-smallstr250)|[Val](/txt/exe/amc/reftypes.md#val)|||
-|*gcli.FGclicmdj2f.gclicmd (/LL)*|[gclidb.Gclicmd](/txt/ssimdb/gclidb/gclicmd.md)|[Pkey](/txt/exe/amc/reftypes.md#pkey)|||
-|*gcli.FGclicmdj2f.jkey (/LR)*|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
-|gcli.FGclicmdj2f.select|bool|[Val](/txt/exe/amc/reftypes.md#val)|||
-|gcli.FGclicmdj2f.dup|bool|[Val](/txt/exe/amc/reftypes.md#val)|||
-|gcli.FGclicmdj2f.c_gclicmdf|[gcli.FGclicmdf](/txt/exe/gcli/internals.md#gcli-fgclicmdf)|[Ptrary](/txt/exe/amc/reftypes.md#ptrary)|||
+|gcli.FGclicmdj2f.gclicmdj2f|[algo.Smallstr250](/txt/protocol/algo/README.md#algo-smallstr250)|[Val](/txt/exe/amc/reftype.md#val)|||
+|*gcli.FGclicmdj2f.gclicmd (/LL)*|[gclidb.Gclicmd](/txt/ssimdb/gclidb/gclicmd.md)|[Pkey](/txt/exe/amc/reftype.md#pkey)|||
+|*gcli.FGclicmdj2f.jkey (/LR)*|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|gcli.FGclicmdj2f.select|bool|[Val](/txt/exe/amc/reftype.md#val)|||
+|gcli.FGclicmdj2f.dup|bool|[Val](/txt/exe/amc/reftype.md#val)|||
+|gcli.FGclicmdj2f.c_gclicmdf|[gcli.FGclicmdf](/txt/exe/gcli/internals.md#gcli-fgclicmdf)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
 
 #### Struct FGclicmdj2f
 <a href="#struct-fgclicmdj2f"></a>
@@ -692,8 +679,8 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |gcli.FGclicmdt.base|[gclidb.Gclicmdt](/txt/ssimdb/gclidb/gclicmdt.md)|[Base](/txt/ssimdb/gclidb/gclicmdt.md)|||
-|gcli.FGclicmdt.p_gclicmd|[gcli.FGclicmd](/txt/exe/gcli/internals.md#gcli-fgclicmd)|[Upptr](/txt/exe/amc/reftypes.md#upptr)|||
-|gcli.FGclicmdt.p_gtype|[gcli.FGtype](/txt/exe/gcli/internals.md#gcli-fgtype)|[Upptr](/txt/exe/amc/reftypes.md#upptr)|||
+|gcli.FGclicmdt.p_gclicmd|[gcli.FGclicmd](/txt/exe/gcli/internals.md#gcli-fgclicmd)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
+|gcli.FGclicmdt.p_gtype|[gcli.FGtype](/txt/exe/gcli/internals.md#gcli-fgtype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
 
 #### Struct FGclicmdt
 <a href="#struct-fgclicmdt"></a>
@@ -738,7 +725,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |gcli.FGfld.base|[gclidb.Gfld](/txt/ssimdb/gclidb/gfld.md)|[Base](/txt/ssimdb/gclidb/gfld.md)|||
-|gcli.FGfld.c_gtblactfld|[gcli.FGtblactfld](/txt/exe/gcli/internals.md#gcli-fgtblactfld)|[Ptrary](/txt/exe/amc/reftypes.md#ptrary)|||
+|gcli.FGfld.c_gtblactfld|[gcli.FGtblactfld](/txt/exe/gcli/internals.md#gcli-fgtblactfld)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
 
 #### Struct FGfld
 <a href="#struct-fgfld"></a>
@@ -780,14 +767,14 @@ private:
 <a href="#gcli-fgithost-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|gcli.FGithost.githost|[algo.Smallstr250](/txt/protocol/algo/README.md#algo-smallstr250)|[Val](/txt/exe/amc/reftypes.md#val)|||
-|gcli.FGithost.ip|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
-|gcli.FGithost.id|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
-|gcli.FGithost.id_file|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
-|gcli.FGithost.port|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
-|gcli.FGithost.user|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
-|gcli.FGithost.ssh_config|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
-|gcli.FGithost.ssh_cmd|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|gcli.FGithost.githost|[algo.Smallstr250](/txt/protocol/algo/README.md#algo-smallstr250)|[Val](/txt/exe/amc/reftype.md#val)|||
+|gcli.FGithost.ip|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|gcli.FGithost.id|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|gcli.FGithost.id_file|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|gcli.FGithost.port|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|gcli.FGithost.user|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|gcli.FGithost.ssh_config|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|gcli.FGithost.ssh_cmd|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
 
 #### Struct FGithost
 <a href="#struct-fgithost"></a>
@@ -865,8 +852,8 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |gcli.FGrepo.base|[gclidb.Grepo](/txt/ssimdb/gclidb/grepo.md)|[Base](/txt/ssimdb/gclidb/grepo.md)|||
-|gcli.FGrepo.select|bool|[Val](/txt/exe/amc/reftypes.md#val)|||
-|gcli.FGrepo.gitremote_cmd|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|gcli.FGrepo.select|bool|[Val](/txt/exe/amc/reftype.md#val)|||
+|gcli.FGrepo.gitremote_cmd|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
 
 #### Struct FGrepo
 <a href="#struct-fgrepo"></a>
@@ -949,10 +936,10 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |gcli.FGtbl.base|[gclidb.Gtbl](/txt/ssimdb/gclidb/gtbl.md)|[Base](/txt/ssimdb/gclidb/gtbl.md)|||
-|gcli.FGtbl.id|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
-|gcli.FGtbl.set_as_dflt|bool|[Val](/txt/exe/amc/reftypes.md#val)|||
-|gcli.FGtbl.tail_dot|bool|[Val](/txt/exe/amc/reftypes.md#val)|||
-|gcli.FGtbl.c_gtblact|[gcli.FGtblact](/txt/exe/gcli/internals.md#gcli-fgtblact)|[Ptrary](/txt/exe/amc/reftypes.md#ptrary)|||
+|gcli.FGtbl.id|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|gcli.FGtbl.set_as_dflt|bool|[Val](/txt/exe/amc/reftype.md#val)|||
+|gcli.FGtbl.tail_dot|bool|[Val](/txt/exe/amc/reftype.md#val)|||
+|gcli.FGtbl.c_gtblact|[gcli.FGtblact](/txt/exe/gcli/internals.md#gcli-fgtblact)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
 
 #### Struct FGtbl
 <a href="#struct-fgtbl"></a>
@@ -997,11 +984,11 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |gcli.FGtblact.base|[gclidb.Gtblact](/txt/ssimdb/gclidb/gtblact.md)|[Base](/txt/ssimdb/gclidb/gtblact.md)|||
-|gcli.FGtblact.id|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
-|gcli.FGtblact.step|[gcli.FGtblact](/txt/exe/gcli/internals.md#gcli-fgtblact)|[Hook](/txt/exe/amc/reftypes.md#hook)|||
-|gcli.FGtblact.c_gtblactfld|[gcli.FGtblactfld](/txt/exe/gcli/internals.md#gcli-fgtblactfld)|[Ptrary](/txt/exe/amc/reftypes.md#ptrary)|||
-|gcli.FGtblact.select|bool|[Val](/txt/exe/amc/reftypes.md#val)|||
-|gcli.FGtblact.aliascmd|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|gcli.FGtblact.id|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|gcli.FGtblact.step|[gcli.FGtblact](/txt/exe/gcli/internals.md#gcli-fgtblact)|[Hook](/txt/exe/amc/reftype.md#hook)|||
+|gcli.FGtblact.c_gtblactfld|[gcli.FGtblactfld](/txt/exe/gcli/internals.md#gcli-fgtblactfld)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
+|gcli.FGtblact.select|bool|[Val](/txt/exe/amc/reftype.md#val)|||
+|gcli.FGtblact.aliascmd|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
 
 #### Struct FGtblact
 <a href="#struct-fgtblact"></a>
@@ -1054,12 +1041,12 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |gcli.FGtblactfld.base|[gclidb.Gtblactfld](/txt/ssimdb/gclidb/gtblactfld.md)|[Base](/txt/ssimdb/gclidb/gtblactfld.md)|||
-|gcli.FGtblactfld.uval|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
-|gcli.FGtblactfld.uval2|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
-|gcli.FGtblactfld.select|bool|[Val](/txt/exe/amc/reftypes.md#val)|||
-|gcli.FGtblactfld.present|bool|[Val](/txt/exe/amc/reftypes.md#val)|||
-|gcli.FGtblactfld.update|bool|[Val](/txt/exe/amc/reftypes.md#val)|||
-|gcli.FGtblactfld.p_gfld|[gcli.FGfld](/txt/exe/gcli/internals.md#gcli-fgfld)|[Upptr](/txt/exe/amc/reftypes.md#upptr)|||
+|gcli.FGtblactfld.uval|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|gcli.FGtblactfld.uval2|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+|gcli.FGtblactfld.select|bool|[Val](/txt/exe/amc/reftype.md#val)|||
+|gcli.FGtblactfld.present|bool|[Val](/txt/exe/amc/reftype.md#val)|||
+|gcli.FGtblactfld.update|bool|[Val](/txt/exe/amc/reftype.md#val)|||
+|gcli.FGtblactfld.p_gfld|[gcli.FGfld](/txt/exe/gcli/internals.md#gcli-fgfld)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
 
 #### Struct FGtblactfld
 <a href="#struct-fgtblactfld"></a>
@@ -1110,8 +1097,8 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |gcli.FGtype.base|[gclidb.Gtype](/txt/ssimdb/gclidb/gtype.md)|[Base](/txt/ssimdb/gclidb/gtype.md)|||
-|gcli.FGtype.c_gtypeh|[gcli.FGtypeh](/txt/exe/gcli/internals.md#gcli-fgtypeh)|[Ptrary](/txt/exe/amc/reftypes.md#ptrary)|||
-|gcli.FGtype.c_gtypeprefix|[gcli.FGtypeprefix](/txt/exe/gcli/internals.md#gcli-fgtypeprefix)|[Ptrary](/txt/exe/amc/reftypes.md#ptrary)|||
+|gcli.FGtype.c_gtypeh|[gcli.FGtypeh](/txt/exe/gcli/internals.md#gcli-fgtypeh)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
+|gcli.FGtype.c_gtypeprefix|[gcli.FGtypeprefix](/txt/exe/gcli/internals.md#gcli-fgtypeprefix)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
 
 #### Struct FGtype
 <a href="#struct-fgtype"></a>
@@ -1194,7 +1181,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |gcli.FGtypeprefix.base|[gclidb.Gtypeprefix](/txt/ssimdb/gclidb/gtypeprefix.md)|[Base](/txt/ssimdb/gclidb/gtypeprefix.md)|||
-|gcli.FGtypeprefix.p_gtype|[gcli.FGtype](/txt/exe/gcli/internals.md#gcli-fgtype)|[Upptr](/txt/exe/amc/reftypes.md#upptr)|||
+|gcli.FGtypeprefix.p_gtype|[gcli.FGtype](/txt/exe/gcli/internals.md#gcli-fgtype)|[Upptr](/txt/exe/amc/reftype.md#upptr)|||
 
 #### Struct FGtypeprefix
 <a href="#struct-fgtypeprefix"></a>
@@ -1232,19 +1219,19 @@ private:
 <a href="#gcli-fhttp-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|gcli.FHttp.request_uri|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)||URI of requested resource|
-|gcli.FHttp.request_content_type|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)||Request content type|
-|gcli.FHttp.request_body|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)||Request body|
-|gcli.FHttp.response_status_line|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)||Status line|
-|gcli.FHttp.response_status_code|u32|[Val](/txt/exe/amc/reftypes.md#val)||Numeric status code|
-|gcli.FHttp.request_method|u32|[Val](/txt/exe/amc/reftypes.md#val)|gcli_FHttp_request_method_GET|Request method|
-|gcli.FHttp.response_reason_phrase|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)||Status message|
-|gcli.FHttp.response_header|[algo.cstring](/txt/protocol/algo/cstring.md)|[Tary](/txt/exe/amc/reftypes.md#tary)||Array of request headers|
-|gcli.FHttp.response_content_type|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)||Response content type|
-|gcli.FHttp.response_body|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)||Response body|
-|gcli.FHttp.response_content_type_json|bool|[Val](/txt/exe/amc/reftypes.md#val)||Flag if response is JSON|
-|gcli.FHttp.response_json_parser|[lib_json.FParser](/txt/lib/lib_json/README.md#lib_json-fparser)|[Val](/txt/exe/amc/reftypes.md#val)||Json parser to parse response body on the fly|
-|gcli.FHttp.request_body_sent_bytes|u32|[Val](/txt/exe/amc/reftypes.md#val)||Sent bytes in request body|
+|gcli.FHttp.request_uri|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||URI of requested resource|
+|gcli.FHttp.request_content_type|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Request content type|
+|gcli.FHttp.request_body|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Request body|
+|gcli.FHttp.response_status_line|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Status line|
+|gcli.FHttp.response_status_code|u32|[Val](/txt/exe/amc/reftype.md#val)||Numeric status code|
+|gcli.FHttp.request_method|u32|[Val](/txt/exe/amc/reftype.md#val)|gcli_FHttp_request_method_GET|Request method|
+|gcli.FHttp.response_reason_phrase|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Status message|
+|gcli.FHttp.response_header|[algo.cstring](/txt/protocol/algo/cstring.md)|[Tary](/txt/exe/amc/reftype.md#tary)||Array of request headers|
+|gcli.FHttp.response_content_type|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Response content type|
+|gcli.FHttp.response_body|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)||Response body|
+|gcli.FHttp.response_content_type_json|bool|[Val](/txt/exe/amc/reftype.md#val)||Flag if response is JSON|
+|gcli.FHttp.response_json_parser|[lib_json.FParser](/txt/gen/lib_json/lib_json.md#lib_json-fparser)|[Val](/txt/exe/amc/reftype.md#val)||Json parser to parse response body on the fly|
+|gcli.FHttp.request_body_sent_bytes|u32|[Val](/txt/exe/amc/reftype.md#val)||Sent bytes in request body|
 
 #### Struct FHttp
 <a href="#struct-fhttp"></a>
@@ -1287,10 +1274,10 @@ struct FHttp { // gcli.FHttp: HTTP request
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |gcli.FIssue.base|[gclidb.Issue](/txt/ssimdb/gclidb/issue.md)|[Base](/txt/ssimdb/gclidb/issue.md)|||
-|gcli.FIssue.select|bool|[Val](/txt/exe/amc/reftypes.md#val)|||
-|gcli.FIssue.p_mr_open|[gcli.FMr](/txt/exe/gcli/internals.md#gcli-fmr)|[Ptr](/txt/exe/amc/reftypes.md#ptr)|||
-|gcli.FIssue.c_mrjob|[gcli.FMrjob](/txt/exe/gcli/internals.md#gcli-fmrjob)|[Ptrary](/txt/exe/amc/reftypes.md#ptrary)|||
-|gcli.FIssue.c_issuenote|[gcli.FIssuenote](/txt/exe/gcli/internals.md#gcli-fissuenote)|[Ptrary](/txt/exe/amc/reftypes.md#ptrary)|||
+|gcli.FIssue.select|bool|[Val](/txt/exe/amc/reftype.md#val)|||
+|gcli.FIssue.p_mr_open|[gcli.FMr](/txt/exe/gcli/internals.md#gcli-fmr)|[Ptr](/txt/exe/amc/reftype.md#ptr)|||
+|gcli.FIssue.c_mrjob|[gcli.FMrjob](/txt/exe/gcli/internals.md#gcli-fmrjob)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
+|gcli.FIssue.c_issuenote|[gcli.FIssuenote](/txt/exe/gcli/internals.md#gcli-fissuenote)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
 
 #### Struct FIssue
 <a href="#struct-fissue"></a>
@@ -1348,7 +1335,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |gcli.FIssuenote.base|[gclidb.Issuenote](/txt/ssimdb/gclidb/issuenote.md)|[Base](/txt/ssimdb/gclidb/issuenote.md)|||
-|gcli.FIssuenote.select|bool|[Val](/txt/exe/amc/reftypes.md#val)|||
+|gcli.FIssuenote.select|bool|[Val](/txt/exe/amc/reftype.md#val)|||
 
 #### Struct FIssuenote
 <a href="#struct-fissuenote"></a>
@@ -1389,7 +1376,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |gcli.FMilestone.base|[gclidb.Milestone](/txt/ssimdb/gclidb/milestone.md)|[Base](/txt/ssimdb/gclidb/milestone.md)|||
-|gcli.FMilestone.select|bool|[Val](/txt/exe/amc/reftypes.md#val)|||
+|gcli.FMilestone.select|bool|[Val](/txt/exe/amc/reftype.md#val)|||
 
 #### Struct FMilestone
 <a href="#struct-fmilestone"></a>
@@ -1428,9 +1415,9 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |gcli.FMr.base|[gclidb.Mr](/txt/ssimdb/gclidb/mr.md)|[Base](/txt/ssimdb/gclidb/mr.md)|||
-|gcli.FMr.c_mrnote|[gcli.FMrnote](/txt/exe/gcli/internals.md#gcli-fmrnote)|[Ptrary](/txt/exe/amc/reftypes.md#ptrary)|||
-|gcli.FMr.c_mrjob|[gcli.FMrjob](/txt/exe/gcli/internals.md#gcli-fmrjob)|[Ptrary](/txt/exe/amc/reftypes.md#ptrary)|||
-|gcli.FMr.select|bool|[Val](/txt/exe/amc/reftypes.md#val)|||
+|gcli.FMr.c_mrnote|[gcli.FMrnote](/txt/exe/gcli/internals.md#gcli-fmrnote)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
+|gcli.FMr.c_mrjob|[gcli.FMrjob](/txt/exe/gcli/internals.md#gcli-fmrjob)|[Ptrary](/txt/exe/amc/reftype.md#ptrary)|||
+|gcli.FMr.select|bool|[Val](/txt/exe/amc/reftype.md#val)|||
 
 #### Struct FMr
 <a href="#struct-fmr"></a>
@@ -1488,7 +1475,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |gcli.FMrjob.base|[gclidb.Mrjob](/txt/ssimdb/gclidb/mrjob.md)|[Base](/txt/ssimdb/gclidb/mrjob.md)|||
-|gcli.FMrjob.select|bool|[Val](/txt/exe/amc/reftypes.md#val)|||
+|gcli.FMrjob.select|bool|[Val](/txt/exe/amc/reftype.md#val)|||
 
 #### Struct FMrjob
 <a href="#struct-fmrjob"></a>
@@ -1533,7 +1520,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |gcli.FMrnote.base|[gclidb.Mrnote](/txt/ssimdb/gclidb/mrnote.md)|[Base](/txt/ssimdb/gclidb/mrnote.md)|||
-|gcli.FMrnote.select|bool|[Val](/txt/exe/amc/reftypes.md#val)|||
+|gcli.FMrnote.select|bool|[Val](/txt/exe/amc/reftype.md#val)|||
 
 #### Struct FMrnote
 <a href="#struct-fmrnote"></a>
@@ -1573,7 +1560,7 @@ private:
 <a href="#gcli-ftuples-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|gcli.FTuples.tuples|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|gcli.FTuples.tuples|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftype.md#val)|||
 
 #### Struct FTuples
 <a href="#struct-ftuples"></a>
@@ -1599,7 +1586,7 @@ private:
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |gcli.FUser.base|[gclidb.User](/txt/ssimdb/gclidb/user.md)|[Base](/txt/ssimdb/gclidb/user.md)|||
-|gcli.FUser.select|bool|[Val](/txt/exe/amc/reftypes.md#val)|||
+|gcli.FUser.select|bool|[Val](/txt/exe/amc/reftype.md#val)|||
 
 #### Struct FUser
 <a href="#struct-fuser"></a>
@@ -1629,6 +1616,3 @@ private:
     friend void                 user_RemoveLast() __attribute__((nothrow));
 };
 ```
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Imdb -->
-

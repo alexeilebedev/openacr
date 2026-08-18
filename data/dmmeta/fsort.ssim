@@ -11,3 +11,4 @@ dmmeta.fsort  field:atf_amc.FUnitSort.c_ptrary  sorttype:QuickSort  sortfld:atf_
 dmmeta.fsort  field:atf_amc.FUnitSort.fixary  sorttype:QuickSort  sortfld:atf_amc.TypeA.typea  comment:""
 dmmeta.fsort  field:atf_amc.FUnitSort.tary  sorttype:QuickSort  sortfld:atf_amc.TypeA.typea  comment:""
 dmmeta.fsort  field:atf_amc.VarlenH.typeh  sorttype:QuickSort  sortfld:atf_amc.TypeH.typeh  comment:""
+dmmeta.fsort  field:atf_unit.FPerfSort.sorted  sorttype:QuickSort  sortfld:atf_unit.Dbl.val  comment:""

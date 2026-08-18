@@ -12,6 +12,8 @@ dmmeta.gsymbol  gsymbol:apm/dev.package  inc:openacr  symboltype:algo.strptr  co
 dmmeta.gsymbol  gsymbol:atf_amc/atfdb.test_gsymbol_char  inc:%  symboltype:char*  comment:""
 dmmeta.gsymbol  gsymbol:atf_amc/atfdb.test_gsymbol_pkey  inc:%  symboltype:""  comment:""
 dmmeta.gsymbol  gsymbol:atf_amc/atfdb.test_gsymbol_strptr  inc:%  symboltype:algo.strptr  comment:""
+dmmeta.gsymbol  gsymbol:atf_ci/atfdb.cijob  inc:%  symboltype:""  comment:""
+dmmeta.gsymbol  gsymbol:atf_ci/dev.gitfile  inc:conf/copyright.txt  symboltype:""  comment:""
 dmmeta.gsymbol  gsymbol:http/httpdb.version  inc:%  symboltype:algo.strptr  comment:""
 dmmeta.gsymbol  gsymbol:lib_ams/amsdb.grptype  inc:%  symboltype:char*  comment:""
 dmmeta.gsymbol  gsymbol:lib_ams/amsdb.proctype  inc:%  symboltype:char*  comment:""

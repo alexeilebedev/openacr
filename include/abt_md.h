@@ -30,7 +30,7 @@ namespace abt_md { // update-hdr
     //     To convert this section to a hand-written section, remove the word 'update-hdr' from namespace line.
 
     // -------------------------------------------------------------------
-    // cpp/abt_md/file_section.cpp
+    // cpp/abt_md/file_section.cpp -- Read and rewrite a file's marked sections
     //
 
     // - Check that section doesn't have nested code-blocks (~~~) and preformatted blocks (```).
@@ -38,6 +38,7 @@ namespace abt_md { // update-hdr
     // - Check that section doesn't contain headers of higher significance than the title line
     // (i.e. title line is ### but inside there is a ##)
     void CheckSection(abt_md::FFileSection &file_section);
+    void RemoveHttpComments(abt_md::FFileSection &file_section);
 
     // Scan section and save human-entered text into hash ind_human_text
     // The sections where human text begins needs preserving are given by attribute dev.mdsection.genlist
@@ -59,11 +60,18 @@ namespace abt_md { // update-hdr
 
     // Scan for links and anchors in section SECTION
     void ScanLinksAnchors();
-    void Marktag(abt_md::FFileSection &section);
 
     // Execute commands marked by "inline-command: ..." inside backtick blocks,
     // and substitute their output into the section text
     void EvalInlineCommand(abt_md::FFileSection &file_section);
+
+    // Queue every command line in the current readme's sections for batch
+    // validation by Main_RunBatchCheck.
+    // A command line reaches a reader two ways: as a line of a bash or unlabeled
+    // fenced block, and as an inline `...` span in prose. Both are collected --
+    // a wrong flag misleads the reader wherever it is printed -- and a labeled
+    // fenced block of some other language is not shell and is skipped whole.
+    void CheckCommandLines();
 
     // Update/evaluate specified section
     // The algorithm is as follows:
@@ -84,10 +92,20 @@ namespace abt_md { // update-hdr
     bool TocQ(abt_md::FFileSection &section);
     bool TitleQ(abt_md::FFileSection &section);
 
-    // Load specified readme into memory as FILE_SECTION records
-    // the section table is global and is wiped on every readme.
-    // Only lines starting with ## or ### are considered FILE_SECTIONS
-    void LoadSections(abt_md::FReadmefile &readmefile);
+    // Load specified readme into memory as FILE_SECTION records.
+    // The section table is global and is wiped on every readme.
+    // Only lines starting with ## or ### (outside code fences) are sections.
+    //
+    // The same pass detects git conflict markers (<<<<<<<, |||||||, =======,
+    // >>>>>>>) left baked in by a botched merge.  Malformed structure -- a
+    // separator or closer with no open <<<<<<<, a nested <<<<<<<, or an
+    // unterminated region -- is reported as <gitfile>:<lineno>: and fails
+    // -check.  A complete, well-ordered block is left alone, so
+    // acr_dm's README, which documents its own conflict output with one such
+    // block, still passes.  When a region straddles a real section header the
+    // section split can no longer be trusted, so the function returns false
+    // and the caller refuses to rewrite the file.
+    bool LoadSections(abt_md::FReadmefile &readmefile);
 
     // Print a single section to string
     void PrintSection(abt_md::FFileSection &file_section, cstring &out);
@@ -96,14 +114,16 @@ namespace abt_md { // update-hdr
     // Sections with empty text are deleted, except for title
     // (Note that contents of generated sections are not considered sections, so they may be empty
     // and will not be deleted)
+    // A blank line separates sections; the file ends with a single newline (no trailing blank line).
     void PrintSections(cstring &out);
 
     // -------------------------------------------------------------------
-    // cpp/abt_md/main.cpp
+    // cpp/abt_md/main.cpp -- Markdown linter and regenerator - main file
     //
 
-    // Return true if readme file READMEFILE needs section MDSECTION
-    bool NeedSectionQ(abt_md::FMdsection &mdsection, abt_md::FReadmefile &readmefile);
+    // Return true if readme file READMEFILE auto-generates section MDSECTION
+    // (Any section is allowed but not all will be auto-updated)
+    bool GenSectionQ(abt_md::FMdsection &mdsection, abt_md::FReadmefile &readmefile);
 
     // Extract words from line up until first dash
     // E.g. LineKey("#### Some Text - blah") -> "some-text"
@@ -114,6 +134,8 @@ namespace abt_md { // update-hdr
     // Translate characters to create a markdown link
     // : is skipped
     // non-identifier characters are replaced with -
+    // internal runs of - are collapsed to one
+    // (so "A & B" and "A: B" both anchor as "a-b"; "-link" stays as "-link")
     // All characters are lowercased
     tempstr MdAnchor(algo::strptr str);
     algo::strptr FileIcon();
@@ -143,12 +165,12 @@ namespace abt_md { // update-hdr
     // Link to documentation for given namespace (could be lib,protocol,exe,ssimdb)
     tempstr LinkToNs(strptr ns, algo::strptr anchor = "");
 
-    // Link to internals documentation for given namespace (could be lib,protocol,exe,ssimdb)
+    // Link to gen documentation for given namespace (could be lib,protocol,exe,ssimdb)
     // The link text is NAME
     // the namespace is NS
     // Optional anchor is ANCHOR
-    // For executables, a separate 'internals' file is used
-    tempstr LinkToInternals(algo::strptr name, abt_md::FNs &ns, algo::strptr anchor = "");
+    // For executables and libraries, a separate gen file is used
+    tempstr LinkToGen(algo::strptr name, abt_md::FNs &ns, algo::strptr anchor = "");
     tempstr LinkToReftype(algo::strptr reftype);
     tempstr LinkToCtype(abt_md::FCtype &ctype);
     tempstr TypeComment(abt_md::FCtype &ctype);
@@ -190,11 +212,78 @@ namespace abt_md { // update-hdr
     void Main_XrefNs();
     void CheckLinks();
     void ProcessReadme(abt_md::FReadmefile& readmefile);
+
+    // Flush queued FCheckReq rows through `acr_compl -check_batch` in a single
+    // fork.  Requests are streamed to acr_compl via a temp file; acr_compl emits
+    // one `acr_compl.checkerr` tuple per failing request on its stdout.  Each
+    // failure is mapped back to its source location and reported as
+    // `<gitfile>:<lineno>: <err>`, and the global exit code is set.  Any other
+    // line the subprocess writes passes through to stderr unchanged.
+    // A subprocess that exits abnormally has emitted no checkerr line for the
+    // validations it never ran, so its wait status fails the run too.
+    void Main_RunBatchCheck();
+
+    // Report every dev.mdsection that claims to generate a section it can never
+    // reach, and fail the run for each one.
+    //
+    // A row's path is a SQL-style regex over dev.readmefile.gitfile, and a
+    // non-empty path is how the table says abt_md writes the section itself; the
+    // idiom for a hand-written section is an empty path, which GenSectionQ tests
+    // for. So a row whose path matches no readme at all claims generation and
+    // delivers none, and nothing notices: the handler simply never runs, and
+    // acr -check, abt_md -check and normalize all pass with the row in place,
+    // while a reader of `acr mdsection` concludes the section is generated and
+    // either hand-edits it expecting abt_md to overwrite the edit, or leaves a gap
+    // expecting abt_md to fill it.
+    //
+    // The general fact is that a regex matching nothing looks exactly like a
+    // regex whose matches are all fine, so the table can misdescribe the doc set
+    // indefinitely. Requiring one match turns that silence into a failure at the
+    // normalize gate, where the next such row is cheap to fix.
+    //
+    // The comparison needs a complete readmefile pool to mean anything.
+    // dev.mdsection is gstatic, so every row is compiled in and present on every
+    // run, while dev.readmefile is a finput holding whatever -in supplied. A run
+    // pointed at a single fixture file loads a handful of readmes against the full
+    // section table, so each row carrying a path reads as dead and the run fails
+    // on the input rather than on the table. A directory input is a whole ssim
+    // database and carries the tree's readmefile set, which is the only input this
+    // check can draw a conclusion from.
+    void Main_CheckMdsection();
+
+    // The ssim tuple that selects the record KEY names, or empty when KEY names no
+    // ssimfile this build knows or one whose pkey cannot be determined.
+    // A key is written `<ssimfile>:<pkey>`, and `acr -sel` reads tuples, so the
+    // key has to be turned into `<ssimfile>  <attr>:<pkey>`. The attribute is the
+    // name of the ctype's first field, which is not always the ssimfile's own last
+    // component: `x2db.gwproto` is keyed by `netproto`, so composing the attribute
+    // from the ssimfile name sends a tuple with no primary key and acr answers
+    // with nothing -- which reads as "no record has this key" and reports a
+    // correct reference as broken.
+    tempstr AcrKeyTuple(algo::strptr key);
+
+    // Resolve the queued FCheckKey rows against the ssim database in a single fork
+    // and report each key that names no record.
+    // `acr -sel` reads tuples from stdin and prints the records it found, so one
+    // fork answers "which of these keys exist" for the whole queue: a key is sent
+    // as the tuple its ssimfile takes, and the reply reconstructs the key it
+    // answers -- the ssimfile is the type tag and the pkey is the first attribute
+    // -- so the rows that came back need no correlating id. What is left over is
+    // the answer: a queued key acr did not return is a key no record has.
+    // Reading the reply is what makes the check trustworthy, because `acr` reports
+    // a key that resolves to nothing exactly as it reports one that resolves --
+    // exit code 0, an empty selection -- so a check built on its status would pass
+    // every key ever written.
+    void Main_RunKeyCheck();
+
+    // Select readme files by regex or namespace, process each one (generate
+    // sections, evaluate inline commands, save), then check links and flush
+    // the batched acr_compl validations; failed readme writes fail the run.
     //     (user-implemented function, prototype is in amc-generated header)
     // void Main(); // main:abt_md
 
     // -------------------------------------------------------------------
-    // cpp/abt_md/mdsection.cpp
+    // cpp/abt_md/mdsection.cpp -- Markdown section handlers - toc, inline command, links
     //
     void DescribeCtype(abt_md::FCtype *ctype, cstring &out);
     //     (user-implemented function, prototype is in amc-generated header)
@@ -212,6 +301,11 @@ namespace abt_md { // update-hdr
     // void mdsection_Imdb(abt_md::FFileSection &section); // gstatic/dev.mdsection:Imdb
     // void mdsection_Options(abt_md::FFileSection &section); // gstatic/dev.mdsection:Options
     // void mdsection_Ctypes(abt_md::FFileSection &section); // gstatic/dev.mdsection:Ctypes
+
+    // Regenerate the Functions section by forking src_func.  This is one
+    // fork per executable readme — for a full repo regen that's ~50.
+    // evalcmd:N disables it so fast "refresh doc structure" runs don't
+    // pay the fork tax; the previous Functions text is left in place.
     // void mdsection_Functions(abt_md::FFileSection &section); // gstatic/dev.mdsection:Functions
 
     // Update title of document
@@ -221,8 +315,11 @@ namespace abt_md { // update-hdr
     // Section contents are user-defined
     // void mdsection_Title(abt_md::FFileSection &section); // gstatic/dev.mdsection:Title
 
-    // Update syntax string
-    // Invoke command with -h flag and substitute output into section body
+    // Update syntax section from FNs.help (pre-populated by
+    // LoadHelpStrings on the first call).  No fork; no built binary
+    // required.  evalcmd:N now only gates inline `cmd:…` blocks
+    // elsewhere — the Syntax section is always refreshed because its
+    // source is the generated file, not the binary.
     // void mdsection_Syntax(abt_md::FFileSection &section); // gstatic/dev.mdsection:Syntax
 
     // Table of contents
@@ -231,12 +328,13 @@ namespace abt_md { // update-hdr
     // The README.md files must form a tree covering all files.
     // Thus, non-README must not include links to other files in the same directory into ToC,
     // but can include those links outside of ToC
-    // README.md must not include a link to internals.md on the same level (this link has to come
-    // from above) to avoid contaminating ToC tree with unneeded details
     // void mdsection_Toc(abt_md::FFileSection &section); // gstatic/dev.mdsection:Toc
 
     // Create links to other files in the same directory
     // void mdsection_Chapters(abt_md::FFileSection &section); // gstatic/dev.mdsection:Chapters
+
+    // Create links to other files in the same directory
+    // void mdsection_Internals(abt_md::FFileSection &section); // gstatic/dev.mdsection:Internals
     // void mdsection_Sources(abt_md::FFileSection &section); // gstatic/dev.mdsection:Sources
     // void mdsection_Dependencies(abt_md::FFileSection &section); // gstatic/dev.mdsection:Dependencies
     // void mdsection_Description(abt_md::FFileSection &section); // gstatic/dev.mdsection:Description
@@ -250,7 +348,6 @@ namespace abt_md { // update-hdr
 
     // Update copyright section
     // void mdsection_Copyright(abt_md::FFileSection &); // gstatic/dev.mdsection:Copyright
-    // void mdsection_Reftypes(abt_md::FFileSection &section); // gstatic/dev.mdsection:Reftypes
     // void mdsection_Subsets(abt_md::FFileSection &section); // gstatic/dev.mdsection:Subsets
 
     // Show related ssimfiles (those that reference this ssimfile NOT through pkey)

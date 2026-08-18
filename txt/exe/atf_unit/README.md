@@ -6,6 +6,7 @@
 <!-- abt_md.toc_beg -->
 &nbsp;&nbsp;&bull;&nbsp;  [Internals](#internals)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
 <!-- abt_md.toc_end -->
 
 ### Internals
@@ -43,3 +44,10 @@
 
 #### -check_untracked -- Check for untracked file before allowing test to run
 <a href="#-check_untracked"></a>
+
+### Inputs
+<a href="#inputs"></a>
+`atf_unit` takes the following tables on input:
+|Ssimfile|Comment|
+|---|---|
+|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|

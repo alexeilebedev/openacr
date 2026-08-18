@@ -19,3 +19,7 @@ italicised fields: *ns, testname* are [**fldfunc**](/txt/openacr/ssim.md#fldfunc
 ### Used In Commands
 <a href="#used-in-commands"></a>
 * [atf_unit -unittest](/txt/exe/atf_unit/README.md) - SQL regex, selecting test to run
+
+### Used In Executables
+<a href="#used-in-executables"></a>
+* [atf_unit](/txt/gen/atf_unit/atf_unit.md) as [atf_unit.FUnittest](/txt/gen/atf_unit/atf_unit.md#atf_unit-funittest)

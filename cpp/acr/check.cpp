@@ -136,6 +136,50 @@ static void CheckXrefs(acr::FCheck &check) {
 
 // -----------------------------------------------------------------------------
 
+// Return the key FIELD's default names, empty unless the default is a non-empty
+// string literal on a Pkey field.
+static tempstr DfltKey(acr::FField &field) {
+    tempstr ret;
+    if (field.reftype == dmmeta_Reftype_reftype_Pkey && StartsWithQ(field.dflt.value,"\"")) {
+        algo::StringIter iter(field.dflt.value);
+        cstring_ReadCmdarg(ret, iter, true);
+    }
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// Report every selected dmmeta.field row whose default names a key its target table
+// does not hold, skipping a target that loaded no rows since an empty table is a
+// layer this invocation was not given rather than a missing key.
+static void CheckDflt(acr::FCheck &check) {
+    if (acr::_db.c_field_ctype) {
+        ind_beg(acr::ctype_zd_selrec_curs, rec, *acr::_db.c_field_ctype) {
+            acr::FField *field = acr::ind_field_Find(rec.pkey);
+            tempstr key;
+            if (field) {
+                key = DfltKey(*field);
+            }
+            if (ch_N(key) > 0 && field->p_arg && field->p_arg->c_ssimfile) {
+                LoadRecords(*field->p_arg);
+                if (!zd_rec_EmptyQ(*field->p_arg) && !acr::ind_ctype_rec_Find(*field->p_arg, key)) {
+                    check.n_err++;
+                    if (check.n_err < acr::_db.cmdline.maxshow) {
+                        NoteErr(NULL,&rec,field
+                                ,tempstr()<<"acr.bad_dflt"
+                                <<Keyval("field",field->field)
+                                <<Keyval("dflt",key)
+                                <<Keyval("arg",field->arg)
+                                <<Keyval("comment","Default names a key that does not exist"));
+                    }
+                }
+            }
+        }ind_end;
+    }
+}
+
+// -----------------------------------------------------------------------------
+
 static void CheckFunique() {
     ind_beg(acr::_db_zd_sel_ctype_curs, ctype, acr::_db) {
         ind_beg(acr::ctype_c_field_curs, field, ctype) if (field.unique) {
@@ -294,6 +338,9 @@ void acr::Main_Check() {
 
     // X-reference -- check one field at a time
     CheckXrefs(check);
+
+    // X-reference the defaults, which no row carries
+    CheckDflt(check);
 
     // check constraints specified in ssimreq
     if (_db.cmdline.x) {

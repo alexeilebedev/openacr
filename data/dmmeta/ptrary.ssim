@@ -5,6 +5,15 @@ dmmeta.ptrary  field:abt.FTarget.c_srcfile  unique:N  heaplike:N
 dmmeta.ptrary  field:abt.FTarget.c_targdep  unique:Y  heaplike:N
 dmmeta.ptrary  field:abt.FTarget.c_targsrc  unique:Y  heaplike:N
 dmmeta.ptrary  field:abt.FTarget.c_targsyslib  unique:Y  heaplike:N
+dmmeta.ptrary  field:abt_md.FCtype.c_field  unique:Y  heaplike:N
+dmmeta.ptrary  field:abt_md.FCtype.c_field_arg  unique:Y  heaplike:N
+dmmeta.ptrary  field:abt_md.FDispatch.c_dispatch_msg  unique:Y  heaplike:N
+dmmeta.ptrary  field:abt_md.FField.c_fconst  unique:Y  heaplike:N
+dmmeta.ptrary  field:abt_md.FNs.c_comptest  unique:Y  heaplike:N
+dmmeta.ptrary  field:abt_md.FNs.c_ctype  unique:Y  heaplike:N
+dmmeta.ptrary  field:abt_md.FNs.c_dispatch  unique:Y  heaplike:N
+dmmeta.ptrary  field:abt_md.FNs.c_targsrc  unique:Y  heaplike:N
+dmmeta.ptrary  field:abt_md.FTarget.c_targdep  unique:Y  heaplike:N
 dmmeta.ptrary  field:acr.FCheck.c_bad_rec  unique:N  heaplike:N
 dmmeta.ptrary  field:acr.FCtype.c_child  unique:N  heaplike:N
 dmmeta.ptrary  field:acr.FCtype.c_field  unique:Y  heaplike:N

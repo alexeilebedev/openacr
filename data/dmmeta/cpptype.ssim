@@ -120,6 +120,8 @@ dmmeta.cpptype  ctype:atf_amc.TypeBE32en  ctor:Y
 dmmeta.cpptype  ctype:atf_amc.TypeBE64  ctor:Y
 dmmeta.cpptype  ctype:atf_amc.TypeBE64dflt  ctor:Y
 dmmeta.cpptype  ctype:atf_amc.Typefconst  ctor:Y
+dmmeta.cpptype  ctype:atf_unit.Cstr  ctor:Y
+dmmeta.cpptype  ctype:atf_unit.Dbl  ctor:Y
 dmmeta.cpptype  ctype:bool  ctor:Y
 dmmeta.cpptype  ctype:dev.Arch  ctor:Y
 dmmeta.cpptype  ctype:dev.Cfg  ctor:Y

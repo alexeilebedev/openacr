@@ -18,10 +18,6 @@ These ssimfiles reference gclidb.gtbl
 
 * [gclidb.gtblact via gtbl](/txt/ssimdb/gclidb/gtblact.md) - static combination of gcli tables and actions
 
-### Used In Commands
-<a href="#used-in-commands"></a>
-* [gcli -selector](/txt/exe/gcli/README.md) - table:key, where table is issue,repo,mr, etc. and key is a regex.
-
 ### Used In Executables
 <a href="#used-in-executables"></a>
 * [gcli](/txt/gen/gcli/gcli.md) as [gcli.FGtbl](/txt/gen/gcli/gcli.md#gcli-fgtbl)

@@ -223,6 +223,68 @@ void atf_unit::unittest_algo_lib_StringFind() {
 
 // -----------------------------------------------------------------------------
 
+// Replace every whole-identifier occurrence of IDENT in TEXT with TO, and
+// return the replacement count followed by the resulting text, so that one
+// comparison pins both halves of what the substitution reports.
+static tempstr ReplaceIdentIn(strptr text, strptr ident, strptr to) {
+    tempstr ret;
+    tempstr out(text);
+    int nrep = ReplaceIdent(out,ident,to);
+    ret << nrep << " " << out;
+    return ret;
+}
+
+void atf_unit::unittest_algo_lib_ReplaceIdent() {
+    vrfyeq_(ReplaceIdentIn("*this","*this","parent"),"1 parent");
+    // the head of a longer identifier is not the identifier, and a rejected
+    // occurrence is not counted
+    vrfyeq_(ReplaceIdentIn("*thisvalue","*this","parent"),"0 *thisvalue");
+    vrfyeq_(ReplaceIdentIn("u32(*thisvalue + ssizeof(*this))","*this","parent")
+            ,"1 u32(*thisvalue + ssizeof(parent))");
+    // an occurrence hidden inside a rejected one still matches
+    vrfyeq_(ReplaceIdentIn("xa-a-a","a-a","Z"),"1 xa-Z");
+    // the scan resumes after an accepted occurrence too, not only after a
+    // rejected one
+    vrfyeq_(ReplaceIdentIn("f(*this,*this)","*this","parent"),"2 f(parent,parent)");
+    vrfyeq_(ReplaceIdentIn("","*this","parent"),"0 ");
+    vrfyeq_(ReplaceIdentIn("*this","","parent"),"0 *this");
+    // the same characters inside a string literal, a character literal or a
+    // comment are content and name nothing, so they are copied through
+    vrfyeq_(ReplaceIdentIn("u32(sizeof(\"parent\"))","parent","rec")
+            ,"0 u32(sizeof(\"parent\"))");
+    vrfyeq_(ReplaceIdentIn("u32(1 /* parent */)","parent","rec"),"0 u32(1 /* parent */)");
+    vrfyeq_(ReplaceIdentIn("n = 1; // parent\n","parent","rec"),"0 n = 1; // parent\n");
+    // code on either side of a span is still substituted, so a span ends where
+    // its own terminator says and does not swallow the rest of the text
+    vrfyeq_(ReplaceIdentIn("f(parent,\"parent\",parent)","parent","rec")
+            ,"2 f(rec,\"parent\",rec)");
+    vrfyeq_(ReplaceIdentIn("f(/* parent */ parent)","parent","rec"),"1 f(/* parent */ rec)");
+    // an escaped quote does not end the literal it sits in, and a quote
+    // character carried as a char literal does not open one
+    vrfyeq_(ReplaceIdentIn("f(\"a\\\"parent\",parent)","parent","rec")
+            ,"1 f(\"a\\\"parent\",rec)");
+    vrfyeq_(ReplaceIdentIn("f('\"',parent)","parent","rec"),"1 f('\"',rec)");
+    // a raw string literal is a string literal: the quote its payload carries
+    // does not end it, and the delimiter it opened with is the one that closes
+    // it, so a payload that spells )" stays payload
+    vrfyeq_(ReplaceIdentIn("f(R\"(a \"parent\" b)\",parent)","parent","rec")
+            ,"1 f(R\"(a \"parent\" b)\",rec)");
+    vrfyeq_(ReplaceIdentIn("f(R\"x(a )\" parent)x\",parent)","parent","rec")
+            ,"1 f(R\"x(a )\" parent)x\",rec)");
+    vrfyeq_(ReplaceIdentIn("f(u8R\"(parent)\",parent)","parent","rec")
+            ,"1 f(u8R\"(parent)\",rec)");
+    // an R that ends a longer name heads no raw string: the literal beside it
+    // is an ordinary one and ends at its own closing quote
+    vrfyeq_(ReplaceIdentIn("f(gR\"parent\",parent)","parent","rec"),"1 f(gR\"parent\",rec)");
+    // an unterminated span runs to the end of the text
+    vrfyeq_(ReplaceIdentIn("f(\"parent","parent","rec"),"0 f(\"parent");
+    vrfyeq_(ReplaceIdentIn("f(R\"(parent,parent)","parent","rec"),"0 f(R\"(parent,parent)");
+    vrfyeq_(ReplaceIdentIn("f(R\"a(parent)b\",parent)","parent","rec")
+            ,"0 f(R\"a(parent)b\",parent)");
+}
+
+// -----------------------------------------------------------------------------
+
 static tempstr ToLower(strptr s) {
     tempstr ret(s);
     MakeLower(ret);
@@ -275,4 +337,20 @@ void atf_unit::unittest_algo_lib_StringSepCurs() {
     vrfyeq_(TestSepCurs("a|b|c"    ,'|') ,strptr("0:a  1:b  2:c"));
     vrfyeq_(TestSepCurs("a||b||c|" ,'|') ,strptr("0:a  1:\"\"  2:b  3:\"\"  4:c  5:\"\""));
     vrfyeq_(TestSepCurs("abc|bce,cde def\tefgh",'|'),strptr("0:abc  1:\"bce,cde def\\tefgh\""));
+}
+
+void atf_unit::unittest_algo_lib_LongStr() {
+    u64 gb = u64(1) << 30;
+    {
+        u64 size = 5 * gb;
+        cstring str;
+        algo::ch_Reserve(str, size); // 8GB block allocated
+        vrfyeq_(str.ch_max, size);
+    }
+    {
+        u64 size = gb;
+        cstring str;
+        algo::ch_Reserve(str, size); // 8GB block reused
+        vrfyeq_(str.ch_max, size);
+    }
 }

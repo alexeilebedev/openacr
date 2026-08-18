@@ -1132,6 +1132,25 @@ void atf_unit::unittest_lib_json_FmtJson_TypeA() {
     node_Delete(*node);
 }
 
+// A record standing on a single array field prints as that array, not as an
+// object wrapping it: the returned node is the array itself, and each element
+// is a string, since Smallstr20 has no Json cfmt and prints through Print.
+void atf_unit::unittest_lib_json_FmtJson_Ary() {
+    atf_unit::JsonAry x;
+    name_Alloc(x) = algo::Smallstr20("abc");
+    name_Alloc(x) = algo::Smallstr20("de");
+    lib_json::FNode *node = JsonAry_FmtJson(x,NULL);
+    TESTCMP(node->type,lib_json_FNode_type_array);
+    TESTCMP(c_child_N(*node),2);
+    TESTCMP(c_child_Find(*node,0)->type,lib_json_FNode_type_string);
+    TESTCMP(c_child_Find(*node,0)->value,"abc");
+    TESTCMP(c_child_Find(*node,1)->value,"de");
+    tempstr str;
+    JsonSerialize(node,str);
+    TESTCMP(str,"[\"abc\",\"de\"]");
+    node_Delete(*node);
+}
+
 void atf_unit::unittest_lib_json_FmtJson_Object() {
     atf_unit::TestJson test_json;
     test_json.fld_bool           = false;
@@ -1153,9 +1172,13 @@ void atf_unit::unittest_lib_json_FmtJson_Object() {
     test_json.fld_atfdbl.val     = 1.00003e-10;
     test_json.fld_atftypeb.typea = 6;
     test_json.fld_atftypeb.j     = 7;
+    fld_ary_u32_Alloc(test_json)  = 8;
+    fld_ary_u32_Alloc(test_json)  = 9;
+    fld_ary_name_Alloc(test_json) = algo::Smallstr20("jkl");
+    fld_ary_name_Alloc(test_json) = algo::Smallstr20("mno");
     lib_json::FNode *node = TestJson_FmtJson(test_json,NULL);
     TESTCMP(node->type, lib_json_FNode_type_object);
-    TESTCMP(c_child_N(*node),18);
+    TESTCMP(c_child_N(*node),20);
 
     verblog("obj: "<<test_json);
     tempstr str;
@@ -1168,6 +1191,7 @@ void atf_unit::unittest_lib_json_FmtJson_Object() {
         const char *name="";
         u32 type=0;
         const char *value="";
+        int nchild=0;// grandchildren of the field node: members of an object, elements of an array
         switch (i) {
         case 0:  name = "fld_bool"     ; type = lib_json_FNode_type_false  ; value = ""            ; break;
         case 1:  name = "fld_u8"       ; type = lib_json_FNode_type_number ; value = "1"           ; break;
@@ -1186,7 +1210,9 @@ void atf_unit::unittest_lib_json_FmtJson_Object() {
         case 14: name = "fld_atftypea" ; type = lib_json_FNode_type_number ; value = "5"           ; break;
         case 15: name = "fld_atfcstr"  ; type = lib_json_FNode_type_string ; value = "ghi"         ; break;
         case 16: name = "fld_atfdbl"   ; type = lib_json_FNode_type_number ; value = "1.00003e-10" ; break;
-        case 17: name = "fld_atftypeb" ; type = lib_json_FNode_type_object ; value = ""            ; break;
+        case 17: name = "fld_atftypeb" ; type = lib_json_FNode_type_object ; value = ""            ; nchild=2; break;
+        case 18: name = "fld_ary_u32"  ; type = lib_json_FNode_type_array  ; value = ""            ; nchild=2; break;
+        case 19: name = "fld_ary_name" ; type = lib_json_FNode_type_array  ; value = ""            ; nchild=2; break;
         default: vrfy_(0);
         }
 
@@ -1194,8 +1220,19 @@ void atf_unit::unittest_lib_json_FmtJson_Object() {
         TESTCMP(field->value,name);
         TESTCMP(child.type,type);
         TESTCMP(child.value,value);
-        TESTCMP(c_child_N(child),(i!=17?0:2));
+        TESTCMP(c_child_N(child),nchild);
     }
+    // an array field prints as a JSON array: an element of a type that has a
+    // Json cfmt through that format, one that has none as the string its
+    // Print writes
+    lib_json::FNode *ary_u32 = c_child_Find(*c_child_Find(*node,18),0);
+    TESTCMP(c_child_Find(*ary_u32,0)->type,lib_json_FNode_type_number);
+    TESTCMP(c_child_Find(*ary_u32,0)->value,"8");
+    TESTCMP(c_child_Find(*ary_u32,1)->value,"9");
+    lib_json::FNode *ary_name = c_child_Find(*c_child_Find(*node,19),0);
+    TESTCMP(c_child_Find(*ary_name,0)->type,lib_json_FNode_type_string);
+    TESTCMP(c_child_Find(*ary_name,0)->value,"jkl");
+    TESTCMP(c_child_Find(*ary_name,1)->value,"mno");
     lib_json::FNode *typeb = c_child_Find(*c_child_Find(*node,17),0);
     TESTCMP(c_child_N(*typeb),2);
     frep_(i,c_child_N(*typeb)) {

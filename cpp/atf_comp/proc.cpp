@@ -30,9 +30,17 @@ void atf_comp::SetVar(strptr name, strptr value) {
 }
 
 // Apply $-substitution to string
+//
+// Ins appends an end-of-line by default, because its usual job is to add a
+// line to a text being assembled.  A substituted value here is not a line: it
+// is a command to spawn, a message to write to a process, or the value of an
+// environment variable, and a trailing newline in any of those is wrong.  An
+// environment variable is where the difference shows: a cluster told its
+// instance directory is "temp/atf_comp/<test>\n" creates that directory, and
+// every path a test script builds under it then breaks apart at the newline.
 static tempstr Subst(strptr s) {
     tempstr out;
-    Ins(&atf_comp::_db.R, out, s);
+    Ins(&atf_comp::_db.R, out, s, false);
     return out;
 }
 
@@ -217,6 +225,7 @@ atf_comp::FProc &atf_comp::ProcStart(strptr cmd) {
     proc.subproc.fstdin  = "|"; // write end exposed as to_stdin
     proc.subproc.fstdout = "|"; // read end exposed as from_stdout
     proc.subproc.fstderr = ">&1"; // fold stderr into the stdout pipe
+    proc.subproc.pgroup = true;
     algo_lib::ProcStart(proc.subproc);
     // take ownership of the parent-side pipe ends; the harness (and the fbuf
     // reader) close them, so detach from subproc to avoid a double close.
@@ -253,11 +262,13 @@ void atf_comp::ProcWrite(atf_comp::FProc &proc, strptr msg) {
     errno_vrfy_(nwrite == (ssize_t)line.ch_n || (nwrite == -1 && err == EPIPE));
 }
 
-// Send signal to process
+// Send SIGNAL to the process group PROC leads, which holds the shell the
+// command runs under together with any tool that shell forked.
 void atf_comp::ProcKill(atf_comp::FProc &proc, int signal) {
     Log(tempstr() << "# kill " << proc.proc << " signal:" << signal);
     if (proc.subproc.pid > 0) {
-        kill(proc.subproc.pid, signal);
+        int target = proc.subproc.pgroup ? -proc.subproc.pid : proc.subproc.pid;
+        kill(target, signal);
         proc.killed = true;
     }
 }

@@ -40,7 +40,7 @@ existing reftype.
 ### Sandboxing changes
 <a href="#sandboxing-changes"></a>
 
-*To be written.*  Use `sandbox amc -reset -diff -- amc` so a
+*To be written.*  Use `wt amc -reset -diff -- amc` so a
 broken generator phase cannot prevent you from fixing itself.
 
 ### Adding comptests

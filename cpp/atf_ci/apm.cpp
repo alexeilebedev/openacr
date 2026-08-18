@@ -33,7 +33,7 @@ static void InstallPackage(algo::strptr name) {
     command::apm_proc apm;
     apm.cmd.package.expr=name;
     apm.cmd.checkclean=false;
-    apm.cmd.origin=algo_lib::SandboxDir(dev_Sandbox_sandbox_atf_ci_apm);
+    apm.cmd.origin=algo_lib::WtDir(dev_Sandbox_sandbox_atf_ci_apm);
     apm.cmd.ref="HEAD";
     apm.cmd.install=true;
     vrfy_(apm_Exec(apm)==0);
@@ -59,9 +59,12 @@ static void AcrInsert(algo::strptr str) {
     vrfy(acr_Exec(acr)==0, acr_ToCmdline(acr));
 }
 
-static void AddPackageKey(algo::strptr package, algo::strptr key) {
+static void AddPackageKey(algo::strptr package, algo::strptr key, bool up = false, bool down = true, bool exclude = false) {
     dev::Pkgkey pkgkey;
-    pkgkey.pkgkey = dev::Pkgkey_Concat_package_key(package,key);
+    pkgkey.pkgkey  = dev::Pkgkey_Concat_package_key(package,key);
+    pkgkey.up      = up;
+    pkgkey.down    = down;
+    pkgkey.exclude = exclude;
     AcrInsert(tempstr()<<pkgkey);
 }
 
@@ -71,9 +74,10 @@ static void RemovePackageKey(algo::strptr package, algo::strptr key) {
     AcrInsert(tempstr()<<"acr.delete  "<<pkgkey);
 }
 
-static void AddPackageDep(algo::strptr package, algo::strptr parent) {
+static void AddPackageDep(algo::strptr package, algo::strptr parent, bool soft = true) {
     dev::Pkgdep pkgdep;
     pkgdep.pkgdep = dev::Pkgdep_Concat_package_parent(package,parent);
+    pkgdep.soft = soft;
     AcrInsert(tempstr()<<pkgdep);
 }
 
@@ -113,9 +117,10 @@ static void Stage(algo::strptr notice) {
 static bool KeyPresent(algo::strptr key, int n) {
     command::acr_proc acr;
     acr.cmd.query=key;
-    algo_lib::FFildes read;
     bool ret=false;
-    ind_beg(algo::FileLine_curs,line,acr_StartRead(acr,read)) {
+    acr.fstdout = "|";
+    acr_Start(acr);
+    ind_beg(algo::FileLine_curs,line,acr.from_stdout) {
         report::acr report;
         if (report::acr_ReadStrptrMaybe(report,line)) {
             ret=report.n_select==u32(n);
@@ -125,23 +130,24 @@ static bool KeyPresent(algo::strptr key, int n) {
     return ret;
 }
 
-void atf_ci::citest_apm() {
+void atf_ci::CitestApm() {
 
     // -----------------------------------------------------------------------------
     Stage("clone repo into a sandbox");
     {
-        command::sandbox_proc sandbox;
-        sandbox.cmd.name.expr=dev_Sandbox_sandbox_atf_ci_apm;
-        sandbox.cmd.create=true;
-        sandbox.cmd.reset=true;
-        vrfy_(sandbox_Exec(sandbox)==0);
+        command::wt_proc wt;
+        wt.cmd.name.expr=dev_Sandbox_sandbox_atf_ci_apm;
+        wt.cmd.create=true;
+        wt.cmd.reset=true;
+        vrfy_(wt_Exec(wt)==0);
     }
 
     // -----------------------------------------------------------------------------
     Stage("create new package inside sandbox. add a file and a record");
     {
-        algo_lib::PushDir(algo_lib::SandboxDir(dev_Sandbox_sandbox_atf_ci_apm));
+        algo_lib::PushDir(algo_lib::WtDir(dev_Sandbox_sandbox_atf_ci_apm));
         CreatePackage("sample");
+        AddPackageDep("sample", "apm"); // extends apm.FDb
         CreateFile("sample", "sample_file", "some text\n");
         AcrInsert("dmmeta.field field:apm.FDb.sample_field arg:i32 reftype:Val");
         AddPackageKey("sample", "dmmeta.field:apm.FDb.sample_field%");
@@ -162,7 +168,7 @@ void atf_ci::citest_apm() {
     // -----------------------------------------------------------------------------
     Stage("add file in sandbox. perform package update");
     {
-        algo_lib::PushDir(algo_lib::SandboxDir(dev_Sandbox_sandbox_atf_ci_apm));
+        algo_lib::PushDir(algo_lib::WtDir(dev_Sandbox_sandbox_atf_ci_apm));
         CreateFile("sample", "sample_file2", "more text\n");
         vrfy_(SysCmd("git commit -am 'created sample_file2'")==0);
         algo_lib::PopDir();
@@ -187,7 +193,7 @@ void atf_ci::citest_apm() {
     // -----------------------------------------------------------------------------
     Stage("remove file from sandbox. update package - changes should propagate but local changes remain");
     {
-        algo_lib::PushDir(algo_lib::SandboxDir(dev_Sandbox_sandbox_atf_ci_apm));
+        algo_lib::PushDir(algo_lib::WtDir(dev_Sandbox_sandbox_atf_ci_apm));
         RemoveFile("sample", "sample_file2");
         vrfy_(SysCmd("git commit -am 'deleted sample_file2'")==0);
         algo_lib::PopDir();
@@ -200,7 +206,7 @@ void atf_ci::citest_apm() {
     // -----------------------------------------------------------------------------
     Stage("modify file in sandbox; update package - modification should show up");
     {
-        algo_lib::PushDir(algo_lib::SandboxDir(dev_Sandbox_sandbox_atf_ci_apm));
+        algo_lib::PushDir(algo_lib::WtDir(dev_Sandbox_sandbox_atf_ci_apm));
         algo::StringToFile("extra line\n","sample_file",algo_FileFlags_append);
         vrfy_(SysCmd("git commit -am 'appended lines to sample_file1'")==0);
         algo_lib::PopDir();
@@ -219,7 +225,7 @@ void atf_ci::citest_apm() {
     // -----------------------------------------------------------------------------
     Stage("create a conflict in sample_file");
     {
-        algo_lib::PushDir(algo_lib::SandboxDir(dev_Sandbox_sandbox_atf_ci_apm));
+        algo_lib::PushDir(algo_lib::WtDir(dev_Sandbox_sandbox_atf_ci_apm));
         algo::StringToFile("package line\n","sample_file",algo_FileFlags_append);
         vrfy_(SysCmd("git commit -am 'appended lines to sample_file1'")==0);
         algo_lib::PopDir();
@@ -236,7 +242,7 @@ void atf_ci::citest_apm() {
     // -----------------------------------------------------------------------------
     Stage("add record in sandbox; update package - it should show up");
     {
-        algo_lib::PushDir(algo_lib::SandboxDir(dev_Sandbox_sandbox_atf_ci_apm));
+        algo_lib::PushDir(algo_lib::WtDir(dev_Sandbox_sandbox_atf_ci_apm));
         AcrInsert("dmmeta.field field:apm.FDb.sample_field2 arg:algo.cstring reftype:Val");
         vrfy_(SysCmd("git commit -am 'add record'")==0);
         algo_lib::PopDir();
@@ -262,7 +268,7 @@ void atf_ci::citest_apm() {
     Stage("modify different attributes of local and sandbox record with same key; changes should merge");
     {
         AcrInsert("acr.merge dmmeta.field field:apm.FDb.sample_field arg:dmmeta.Ns");
-        algo_lib::PushDir(algo_lib::SandboxDir(dev_Sandbox_sandbox_atf_ci_apm));
+        algo_lib::PushDir(algo_lib::WtDir(dev_Sandbox_sandbox_atf_ci_apm));
         AcrInsert("acr.merge dmmeta.field field:apm.FDb.sample_field comment:\"xyz\"");
         vrfy_(SysCmd("git commit -am 'modify reftype attribute'")==0);
         algo_lib::PopDir();
@@ -274,12 +280,12 @@ void atf_ci::citest_apm() {
     // -----------------------------------------------------------------------------
     Stage("create sample2 package with sample as parent");
     {
-        algo_lib::PushDir(algo_lib::SandboxDir(dev_Sandbox_sandbox_atf_ci_apm));
+        algo_lib::PushDir(algo_lib::WtDir(dev_Sandbox_sandbox_atf_ci_apm));
         CreatePackage("sample2");
         CreateFile("sample2", "sample2_file", "some text for sample2 package");
         AddPackageKey("sample2","dmmeta.field:apm.FDb.sample2%");
         AcrInsert("dmmeta.field field:apm.FDb.sample2_field arg:i32 reftype:Val");
-        AddPackageDep("sample2","sample");
+        AddPackageDep("sample2","sample",false);
         vrfy_(SysCmd("git commit -am 'created sample2'")==0);
         algo_lib::PopDir();
         InstallPackage("sample2");
@@ -330,15 +336,7 @@ void atf_ci::citest_apm() {
 
 // -----------------------------------------------------------------------------
 
-void atf_ci::citest_apm_check() {
-    command::apm_proc apm;
-    apm.cmd.check=true;
-    apm_ExecX(apm);
-}
-
-// -----------------------------------------------------------------------------
-
-void atf_ci::citest_apm_reinstall() {
+void atf_ci::CitestApmReinstall() {
     // for each package, remove it, check that build succeeds, add it back (from current commit), and rebuild again
     ind_beg(_db_cipackage_curs,cipackage,_db) {
         // remove package
@@ -370,6 +368,6 @@ void atf_ci::citest_apm_reinstall() {
         }
 
         // should round trip cleanly
-        atf_ci::CheckCleanDirs(".");
+        atf_ci::CheckCleanDirs();
     }ind_end;
 }

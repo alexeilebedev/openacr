@@ -223,7 +223,6 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_dofork        : ret = "dofork";  break;
         case command_FieldId_q             : ret = "q";  break;
         case command_FieldId_cijob         : ret = "cijob";  break;
-        case command_FieldId_cleanup       : ret = "cleanup";  break;
         case command_FieldId_capture       : ret = "capture";  break;
         case command_FieldId_check_clean   : ret = "check_clean";  break;
         case command_FieldId_exec          : ret = "exec";  break;
@@ -1035,9 +1034,6 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR7('c','a','s','c','d','e','l'): {
                     value_SetEnum(parent,command_FieldId_cascdel); ret = true; break;
-                }
-                case LE_STR7('c','l','e','a','n','u','p'): {
-                    value_SetEnum(parent,command_FieldId_cleanup); ret = true; break;
                 }
                 case LE_STR7('c','o','m','m','e','n','t'): {
                     value_SetEnum(parent,command_FieldId_comment); ret = true; break;
@@ -15194,7 +15190,6 @@ const char *command::atf_ci_help = "atf_ci: Normalization tests (see citest tabl
 "    [citest]      regx    \"%\"     Regx of tests to run\n"
 "    -maxerr       int     0       Exit after this many errors\n"
 "    -cijob        regx    \"%\"\n"
-"    -cleanup                      (action) Remove the credentials this run installed and exit\n"
 "    -capture                      Capture the output of the test\n"
 "    -check_clean          Y       Check for modifications after each test\n"
 "    -verbose      flag            Verbosity level (0..255); alias -v; cumulative\n"
@@ -15251,9 +15246,6 @@ bool command::atf_ci_ReadFieldMaybe(command::atf_ci& parent, algo::strptr field,
         case command_FieldId_cijob: {
             retval = cijob_ReadStrptrMaybe(parent, strval);
         } break;
-        case command_FieldId_cleanup: {
-            retval = bool_ReadStrptrMaybe(parent.cleanup, strval);
-        } break;
         case command_FieldId_capture: {
             retval = bool_ReadStrptrMaybe(parent.capture, strval);
         } break;
@@ -15278,7 +15270,6 @@ void command::atf_ci_Init(command::atf_ci& parent) {
     Regx_ReadSql(parent.citest, "%", true);
     parent.maxerr = i32(0);
     Regx_ReadSql(parent.cijob, "%", true);
-    parent.cleanup = bool(false);
     parent.capture = bool(false);
     parent.check_clean = bool(true);
 }
@@ -15329,12 +15320,6 @@ void command::atf_ci_PrintArgv(command::atf_ci& row, algo::cstring& str) {
         str << " -cijob:";
         strptr_PrintBash(temp,str);
     }
-    if (!(row.cleanup == false)) {
-        ch_RemoveAll(temp);
-        bool_Print(row.cleanup, temp);
-        str << " -cleanup:";
-        strptr_PrintBash(temp,str);
-    }
     if (!(row.capture == false)) {
         ch_RemoveAll(temp);
         bool_Print(row.capture, temp);
@@ -15375,11 +15360,6 @@ void command::atf_ci_ToArgv(command::atf_ci& row, algo::StringAry& args) {
         command::cijob_Print(row, temp);
         ary_Alloc(args) << "-cijob:" << temp;
     }
-    if (!(row.cleanup == false)) {
-        ch_RemoveAll(temp);
-        bool_Print(row.cleanup, temp);
-        ary_Alloc(args) << "-cleanup:" << temp;
-    }
     if (!(row.capture == false)) {
         ch_RemoveAll(temp);
         bool_Print(row.capture, temp);
@@ -15419,11 +15399,6 @@ i32 command::atf_ci_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* 
         } break;
         case command_FieldId_cijob: { //
             *out_anon = false;
-        } break;
-        case command_FieldId_cleanup: { // bool: no argument required but value may be specified as cleanup:Y
-            *out_anon = false;
-            retval=0;
-            out_dflt="Y";
         } break;
         case command_FieldId_capture: { // bool: no argument required but value may be specified as capture:Y
             *out_anon = false;
@@ -15734,12 +15709,6 @@ void command::atf_ci_ToArgv(command::atf_ci_proc& parent, algo::StringAry& args)
         cstring *arg = &ary_Alloc(args);
         *arg << "-cijob:";
         command::cijob_Print(parent.cmd, *arg);
-    }
-
-    if (parent.cmd.cleanup != false) {
-        cstring *arg = &ary_Alloc(args);
-        *arg << "-cleanup:";
-        bool_Print(parent.cmd.cleanup, *arg);
     }
 
     if (parent.cmd.capture != false) {

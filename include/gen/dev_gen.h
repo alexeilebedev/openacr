@@ -578,7 +578,7 @@ void                 Covtarget_Print(dev::Covtarget& row, algo::cstring& str) __
 // --- dev.Dbgtarget
 struct Dbgtarget { // dev.Dbgtarget
     algo::Smallstr50   dbgtarget;   //
-    algo::cstring      args;        // Arguments appended to the debugged process, ehBcsubstituted
+    algo::cstring      args;        // Arguments appended to the debugged process, $-substituted
     algo::cstring      buildcmd;    // Command whose output is the abt target regx to rebuild first
     algo::Comment      comment;     //
     // func:dev.Dbgtarget..Ctor

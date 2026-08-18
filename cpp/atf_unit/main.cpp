@@ -68,7 +68,7 @@ static void Main_Debug() {
     b_Alloc(mdbg.cmd) << single_case_cpp;
     b_Alloc(mdbg.cmd) << "Testcmpfail";
     int rc=mdbg_Exec(mdbg);
-    algo_lib::_db.exit_code=rc;
+    algo_lib::ExportWaitStatus(rc);
 }
 
 // -----------------------------------------------------------------------------

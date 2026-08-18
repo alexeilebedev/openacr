@@ -184,37 +184,31 @@ static void TestNumber(u64 n) {
 
 // -----------------------------------------------------------------------------
 
-static void TestParseI32(strptr str, bool ok, i32 result) {
-    i32 val;
-    bool ret = i32_ReadStrptrMaybe(val,str);
-    vrfy(ret==ok && (!ok || val==result), tempstr()<<"TestParseI32 "<<ret<<" "<<val);
+// One helper for every <T>_ReadStrptrMaybe boundary case: PARSEFN parses STR;
+// expect return flag OK and, on success, value RESULT. The message carries the
+// input string, so a failing case in a long assertion block is identifiable
+// from the report alone. RESULT keeps the call site's literal type and is
+// converted to the parsed type for the comparison.
+template <typename T, typename V> static void TestParse(bool (*parsefn)(T&, algo::strptr), strptr str, bool ok, V result) {
+    T val;
+    bool ret = (*parsefn)(val,str);
+    vrfy(ret==ok && (!ok || val==T(result)), tempstr()<<"TestParse str:"<<str<<" ret:"<<ret<<" val:"<<val);
 }
 
-static void TestParseU32(strptr str, bool ok, u32 result) {
-    u32 val;
-    bool ret = u32_ReadStrptrMaybe(val,str);
-    vrfy(ret==ok && (!ok || val==result), tempstr()<<"TestParseU32 "<<ret<<" "<<val);
+static void TestTryParseI32(strptr str, bool ok, i32 result) {
+    algo::StringIter iter(str);
+    i32 val = 0;
+    bool ret = algo::TryParseI32(iter, val);
+    vrfy(ret==ok && (!ok || val==result)
+         , tempstr()<<"TestTryParseI32 str:"<<str<<" ret:"<<ret<<" val:"<<val);
 }
 
-static void TestParseI64(strptr str, bool ok, i64 result) {
-    if (str == "123456789123456789") {
-        prlog("sfasdfasd");
-    }
-    i64 val;
-    bool ret = i64_ReadStrptrMaybe(val,str);
-    vrfy(ret==ok && (!ok || val==result), tempstr()<<"TestParseI64 "<<ret<<" "<<val);
-}
-
-static void TestParseU64(strptr str, bool ok, u64 result) {
-    u64 val;
-    bool ret = u64_ReadStrptrMaybe(val,str);
-    vrfy(ret==ok && (!ok || val==result), tempstr()<<"TestParseU64 "<<ret<<" "<<val);
-}
-
-static void TestParseU128(strptr str, bool ok, u128 result) {
-    u128 val;
-    bool ret = u128_ReadStrptrMaybe(val,str);
-    vrfy(ret==ok && (!ok || val==result), tempstr()<<"TestParseU128 "<<ret<<" "<<val);
+static void TestTryParseI64(strptr str, bool ok, i64 result) {
+    algo::StringIter iter(str);
+    i64 val = 0;
+    bool ret = algo::TryParseI64(iter, val);
+    vrfy(ret==ok && (!ok || val==result)
+         , tempstr()<<"TestTryParseI64 str:"<<str<<" ret:"<<ret<<" val:"<<val);
 }
 
 // -----------------------------------------------------------------------------
@@ -269,118 +263,230 @@ void atf_unit::unittest_algo_lib_ParseNumber() {
     }
 
     {
-        TestParseI64("123456789123456789", true, 123456789123456789LL);
-        TestParseI64("123456789123456789123456776545", true, 0x7fffffffffffffff);
-        TestParseI64("  0234 ", true, 234);
-        TestParseI64("  234", true, 234);
-        TestParseI64("\r\n\t -12222", true, -12222);
-        TestParseI64("-3333333333333333333", true, -3333333333333333333LL);
-        TestParseI64("2147483647", true, 2147483647);
-        TestParseI64("2147483648", true, 2147483648);
-        TestParseI64("2147483649", true, 2147483649);
-        TestParseI64("3147483648", true, 3147483648);
-        TestParseI64("4147483649", true, 4147483649);
-        TestParseI64("12147483649", true, 12147483649);
-        TestParseI64("0x10", true, 16);
-        TestParseI64("0x10000", true, 65536);
-        TestParseI64("0x", false, 0);
-        TestParseI64("xxx", false, 0);
-        TestParseI64("0", true, 0);
-        TestParseI64("1", true, 1);
-        TestParseI64("-1", true, -1);
-        TestParseI64("123x", true, 123);
+        TestParse(i64_ReadStrptrMaybe, "123456789123456789", true, 123456789123456789LL);
+        TestParse(i64_ReadStrptrMaybe, "123456789123456789123456776545", true, 0x7fffffffffffffff);
+        TestParse(i64_ReadStrptrMaybe, "  0234 ", true, 234);
+        TestParse(i64_ReadStrptrMaybe, "  234", true, 234);
+        TestParse(i64_ReadStrptrMaybe, "\r\n\t -12222", true, -12222);
+        TestParse(i64_ReadStrptrMaybe, "-3333333333333333333", true, -3333333333333333333LL);
+        TestParse(i64_ReadStrptrMaybe, "-9223372036854775808", true, LLONG_MIN);
+        TestParse(i64_ReadStrptrMaybe, "-99999999999999999999", true, LLONG_MIN);
+        TestParse(i64_ReadStrptrMaybe, "9223372036854775807", true, LLONG_MAX);
+        // one past either bound clips instead of wrapping through u64
+        TestParse(i64_ReadStrptrMaybe, "9223372036854775808", true, LLONG_MAX);
+        TestParse(i64_ReadStrptrMaybe, "-9223372036854775809", true, LLONG_MIN);
+        TestParse(i64_ReadStrptrMaybe, "2147483647", true, 2147483647);
+        TestParse(i64_ReadStrptrMaybe, "2147483648", true, 2147483648);
+        TestParse(i64_ReadStrptrMaybe, "2147483649", true, 2147483649);
+        TestParse(i64_ReadStrptrMaybe, "3147483648", true, 3147483648);
+        TestParse(i64_ReadStrptrMaybe, "4147483649", true, 4147483649);
+        TestParse(i64_ReadStrptrMaybe, "12147483649", true, 12147483649);
+        TestParse(i64_ReadStrptrMaybe, "0x10", true, 16);
+        TestParse(i64_ReadStrptrMaybe, "0x10000", true, 65536);
+        TestParse(i64_ReadStrptrMaybe, "0x", false, 0);
+        TestParse(i64_ReadStrptrMaybe, "xxx", false, 0);
+        TestParse(i64_ReadStrptrMaybe, "0", true, 0);
+        TestParse(i64_ReadStrptrMaybe, "1", true, 1);
+        TestParse(i64_ReadStrptrMaybe, "-1", true, -1);
+        TestParse(i64_ReadStrptrMaybe, "123x", true, 123);
         for (i64 i=0; i<LLONG_MAX-10000; i += LLONG_MAX/10000) {
-            TestParseI64(tempstr()<<i, true, i);
+            TestParse(i64_ReadStrptrMaybe, tempstr()<<i, true, i);
         }
     }
 
     {
-        TestParseU64("123456789123456789", true, 123456789123456789LL);
-        TestParseU64("123456789123456789123456776545", true, 0xffffffffffffffff);
-        TestParseU64("0x123456789123456789123456776545", true, 0x6789123456776545);
-        TestParseU64("  0234 ", true, 234);
-        TestParseU64("  234", true, 234);
-        TestParseU64("\r\n\t -12222", true, 0);
-        TestParseU64("-3333333333333333333", true, 0);
-        TestParseU64("2147483647", true, 2147483647);
-        TestParseU64("2147483648", true, 2147483648);
-        TestParseU64("2147483649", true, 2147483649);
-        TestParseU64("3147483648", true, 3147483648);
-        TestParseU64("4147483649", true, 4147483649);
-        TestParseU64("12147483649", true, 12147483649);
-        TestParseU64("0x10", true, 16);
-        TestParseU64("0x10000", true, 65536);
-        TestParseU64("0x", false, 0);
-        TestParseU64("xxx", false, 0);
-        TestParseU64("0", true, 0);
-        TestParseU64("1", true, 1);
-        TestParseU64("-1", true, 0);
-        TestParseU64("123x", true, 123);
+        TestParse(u64_ReadStrptrMaybe, "123456789123456789", true, 123456789123456789LL);
+        TestParse(u64_ReadStrptrMaybe, "123456789123456789123456776545", true, 0xffffffffffffffff);
+        // clipping at the exact boundary: 2^64-1 parses, anything above clips to it
+        TestParse(u64_ReadStrptrMaybe, "18446744073709551615", true, 0xffffffffffffffff);
+        TestParse(u64_ReadStrptrMaybe, "18446744073709551616", true, 0xffffffffffffffff);
+        TestParse(u64_ReadStrptrMaybe, "18446744073709551619", true, 0xffffffffffffffff);
+        TestParse(u64_ReadStrptrMaybe, "18446744073709999999", true, 0xffffffffffffffff);
+        TestParse(u64_ReadStrptrMaybe, "0x123456789123456789123456776545", true, 0x6789123456776545);
+        TestParse(u64_ReadStrptrMaybe, "  0234 ", true, 234);
+        TestParse(u64_ReadStrptrMaybe, "  234", true, 234);
+        TestParse(u64_ReadStrptrMaybe, "\r\n\t -12222", true, 0);
+        TestParse(u64_ReadStrptrMaybe, "-3333333333333333333", true, 0);
+        TestParse(u64_ReadStrptrMaybe, "2147483647", true, 2147483647);
+        TestParse(u64_ReadStrptrMaybe, "2147483648", true, 2147483648);
+        TestParse(u64_ReadStrptrMaybe, "2147483649", true, 2147483649);
+        TestParse(u64_ReadStrptrMaybe, "3147483648", true, 3147483648);
+        TestParse(u64_ReadStrptrMaybe, "4147483649", true, 4147483649);
+        TestParse(u64_ReadStrptrMaybe, "12147483649", true, 12147483649);
+        TestParse(u64_ReadStrptrMaybe, "0x10", true, 16);
+        TestParse(u64_ReadStrptrMaybe, "0x10000", true, 65536);
+        TestParse(u64_ReadStrptrMaybe, "0x", false, 0);
+        TestParse(u64_ReadStrptrMaybe, "xxx", false, 0);
+        TestParse(u64_ReadStrptrMaybe, "0", true, 0);
+        TestParse(u64_ReadStrptrMaybe, "1", true, 1);
+        TestParse(u64_ReadStrptrMaybe, "-1", true, 0);
+        TestParse(u64_ReadStrptrMaybe, "123x", true, 123);
+        // contract: empty parses as 0, whitespace-only fails, and parsing
+        // stops at the first non-digit -- trailing text is silently ignored
+        TestParse(u64_ReadStrptrMaybe, "", true, 0);
+        TestParse(u64_ReadStrptrMaybe, "   ", false, 0);
+        TestParse(u64_ReadStrptrMaybe, "12abc", true, 12);
+        TestParse(i64_ReadStrptrMaybe, "", true, 0);
+        TestParse(i64_ReadStrptrMaybe, " \t", false, 0);
+        TestParse(i64_ReadStrptrMaybe, "12abc", true, 12);
     }
 
     {
-        TestParseI32("  0234 ", true, 234);
-        TestParseI32("  234", true, 234);
-        TestParseI32("\r\n\t -12222", true, -12222);
-        TestParseI32("3333333333333333333", true, INT_MAX);
-        TestParseI32("-3333333333333333333", true, -INT_MAX);
-        TestParseI32("2147483647", true, INT_MAX);
-        TestParseI32("2147483648", true, INT_MAX);
-        TestParseI32("4147483649", true, INT_MAX);
-        TestParseI32("12147483649", true, INT_MAX);
-        TestParseI32("0x10", true, 16);
-        TestParseI32("0x10000", true, 65536);
-        TestParseI32("0x", false, 0);
-        TestParseI32("xxx", false, 0);
-        TestParseI32("0", true, 0);
-        TestParseI32("1", true, 1);
-        TestParseI32("-1", true, -1);
-        TestParseI32("123x", true, 123);
+        TestParse(i32_ReadStrptrMaybe, "  0234 ", true, 234);
+        TestParse(i32_ReadStrptrMaybe, "  234", true, 234);
+        TestParse(i32_ReadStrptrMaybe, "\r\n\t -12222", true, -12222);
+        TestParse(i32_ReadStrptrMaybe, "3333333333333333333", true, INT_MAX);
+        TestParse(i32_ReadStrptrMaybe, "-3333333333333333333", true, INT_MIN);
+        TestParse(i32_ReadStrptrMaybe, "-2147483648", true, INT_MIN);
+        TestParse(i32_ReadStrptrMaybe, "2147483647", true, INT_MAX);
+        TestParse(i32_ReadStrptrMaybe, "2147483648", true, INT_MAX);
+        TestParse(i32_ReadStrptrMaybe, "4147483649", true, INT_MAX);
+        TestParse(i32_ReadStrptrMaybe, "12147483649", true, INT_MAX);
+        TestParse(i32_ReadStrptrMaybe, "0x10", true, 16);
+        TestParse(i32_ReadStrptrMaybe, "0x10000", true, 65536);
+        TestParse(i32_ReadStrptrMaybe, "0x", false, 0);
+        TestParse(i32_ReadStrptrMaybe, "xxx", false, 0);
+        TestParse(i32_ReadStrptrMaybe, "0", true, 0);
+        TestParse(i32_ReadStrptrMaybe, "1", true, 1);
+        TestParse(i32_ReadStrptrMaybe, "-1", true, -1);
+        TestParse(i32_ReadStrptrMaybe, "123x", true, 123);
     }
     {
-        TestParseU32("  0234 ", true, 234);
-        TestParseU32("  234", true, 234);
-        TestParseU32("\r\n\t -12222", true, 0);
-        TestParseU32("3333333333333333333", true, UINT_MAX);
-        TestParseU32("-3333333333333333333", true, 0);
-        TestParseU32("2147483647", true, 2147483647);
-        TestParseU32("2147483648", true, 2147483648);
-        TestParseU32("4147483649", true, 4147483649);
-        TestParseU32("12147483649", true, UINT_MAX);
-        TestParseU32("1214748364900000", true, UINT_MAX);
-        TestParseU32("0x10", true, 16);
-        TestParseU32("0x10000", true, 65536);
-        TestParseU32("0x", false, 0);
-        TestParseU32("xxx", false, 0);
-        TestParseU32("0", true, 0);
-        TestParseU32("1", true, 1);
-        TestParseU32("-1", true, 0);
-        TestParseU32("123x", true, 123);
+        TestParse(u32_ReadStrptrMaybe, "  0234 ", true, 234);
+        TestParse(u32_ReadStrptrMaybe, "  234", true, 234);
+        TestParse(u32_ReadStrptrMaybe, "\r\n\t -12222", true, 0);
+        TestParse(u32_ReadStrptrMaybe, "3333333333333333333", true, UINT_MAX);
+        TestParse(u32_ReadStrptrMaybe, "-3333333333333333333", true, 0);
+        TestParse(u32_ReadStrptrMaybe, "2147483647", true, 2147483647);
+        TestParse(u32_ReadStrptrMaybe, "2147483648", true, 2147483648);
+        TestParse(u32_ReadStrptrMaybe, "4147483649", true, 4147483649);
+        TestParse(u32_ReadStrptrMaybe, "12147483649", true, UINT_MAX);
+        TestParse(u32_ReadStrptrMaybe, "1214748364900000", true, UINT_MAX);
+        TestParse(u32_ReadStrptrMaybe, "0x10", true, 16);
+        TestParse(u32_ReadStrptrMaybe, "0x10000", true, 65536);
+        TestParse(u32_ReadStrptrMaybe, "0x", false, 0);
+        TestParse(u32_ReadStrptrMaybe, "xxx", false, 0);
+        TestParse(u32_ReadStrptrMaybe, "0", true, 0);
+        TestParse(u32_ReadStrptrMaybe, "1", true, 1);
+        TestParse(u32_ReadStrptrMaybe, "-1", true, 0);
+        TestParse(u32_ReadStrptrMaybe, "123x", true, 123);
     }
 
     {
-        TestParseU128("123456789123456789", true, 123456789123456789LL);
-        TestParseU128("123456789123456789123456776545", true, u128(1234567891234)*100000000000000000+u128(56789123456776545));
-        TestParseU128("123456789123456789123456776545123456789123456789123456776545", true
-                      , u128(0xffffffffffffffff)<<64|u128(0xffffffffffffffff));
-        TestParseU128("  0234 ", true, 234);
-        TestParseU128("  234", true, 234);
-        TestParseU128("\r\n\t -12222", true, 0);
-        TestParseU128("\r\n\t 12222", true, 12222);
-        TestParseU128("-3333333333333333333", true, 0);
-        TestParseU128("2147483647", true, 2147483647);
-        TestParseU128("2147483648", true, 2147483648);
-        TestParseU128("2147483649", true, 2147483649);
-        TestParseU128("3147483648", true, 3147483648);
-        TestParseU128("4147483649", true, 4147483649);
-        TestParseU128("12147483649", true, 12147483649);
-        TestParseU128("0x10", true, 16);
-        TestParseU128("0x10000", true, 65536);
-        TestParseU128("0x", false, 0);
-        TestParseU128("xxx", false, 0);
-        TestParseU128("0", true, 0);
-        TestParseU128("1", true, 1);
-        TestParseU128("-1", true, 0);
-        TestParseU128("123x", true, 123);
+        TestParse(u128_ReadStrptrMaybe, "123456789123456789", true, 123456789123456789LL);
+        TestParse(u128_ReadStrptrMaybe, "123456789123456789123456776545", true, u128(1234567891234)*100000000000000000+u128(56789123456776545));
+        TestParse(u128_ReadStrptrMaybe, "123456789123456789123456776545123456789123456789123456776545", true
+                  , u128(0xffffffffffffffff)<<64|u128(0xffffffffffffffff));
+        // clipping at the exact boundary: 2^128-1 parses, one more clips to it
+        TestParse(u128_ReadStrptrMaybe, "340282366920938463463374607431768211455", true
+                  , u128(0xffffffffffffffff)<<64|u128(0xffffffffffffffff));
+        TestParse(u128_ReadStrptrMaybe, "340282366920938463463374607431768211456", true
+                  , u128(0xffffffffffffffff)<<64|u128(0xffffffffffffffff));
+        TestParse(u128_ReadStrptrMaybe, "  0234 ", true, 234);
+        TestParse(u128_ReadStrptrMaybe, "  234", true, 234);
+        TestParse(u128_ReadStrptrMaybe, "\r\n\t -12222", true, 0);
+        TestParse(u128_ReadStrptrMaybe, "\r\n\t 12222", true, 12222);
+        TestParse(u128_ReadStrptrMaybe, "-3333333333333333333", true, 0);
+        TestParse(u128_ReadStrptrMaybe, "2147483647", true, 2147483647);
+        TestParse(u128_ReadStrptrMaybe, "2147483648", true, 2147483648);
+        TestParse(u128_ReadStrptrMaybe, "2147483649", true, 2147483649);
+        TestParse(u128_ReadStrptrMaybe, "3147483648", true, 3147483648);
+        TestParse(u128_ReadStrptrMaybe, "4147483649", true, 4147483649);
+        TestParse(u128_ReadStrptrMaybe, "12147483649", true, 12147483649);
+        TestParse(u128_ReadStrptrMaybe, "0x10", true, 16);
+        TestParse(u128_ReadStrptrMaybe, "0x10000", true, 65536);
+        TestParse(u128_ReadStrptrMaybe, "0x", false, 0);
+        TestParse(u128_ReadStrptrMaybe, "xxx", false, 0);
+        TestParse(u128_ReadStrptrMaybe, "0", true, 0);
+        TestParse(u128_ReadStrptrMaybe, "1", true, 1);
+        TestParse(u128_ReadStrptrMaybe, "-1", true, 0);
+        TestParse(u128_ReadStrptrMaybe, "123x", true, 123);
+    }
+
+    // The digit window that bounds overflow detection counts significant
+    // digits only: leading zeros carry no magnitude and are skipped before
+    // the window starts, so a zero-padded value keeps all its digits, and
+    // a sign does not shrink the window. Digits past the window imply the
+    // value exceeds the type's range, so the standard clip applies.
+    {
+        TestParse(u8_ReadStrptrMaybe, "00042", true, 42);
+        TestParse(u8_ReadStrptrMaybe, "0", true, 0);
+        TestParse(u8_ReadStrptrMaybe, "00", true, 0);
+        TestParse(u8_ReadStrptrMaybe, "0000000000000000000000255", true, 255);
+        TestParse(u8_ReadStrptrMaybe, "000999", true, 255);
+        TestParse(i8_ReadStrptrMaybe, "-0", true, 0);
+        TestParse(i8_ReadStrptrMaybe, "-00042", true, -42);
+        TestParse(i8_ReadStrptrMaybe, "-000128", true, -128);
+        TestParse(i8_ReadStrptrMaybe, "-1000", true, -128);
+        TestParse(i8_ReadStrptrMaybe, "+1000", true, 127);
+        TestParse(u32_ReadStrptrMaybe, "0000000000005", true, 5);
+        TestParse(u32_ReadStrptrMaybe, "000000000000000000000000000000", true, 0);
+        TestParse(u32_ReadStrptrMaybe, "04294967295", true, UINT_MAX);
+        TestParse(u32_ReadStrptrMaybe, "0x00000010", true, 16);
+        TestParse(u64_ReadStrptrMaybe, "018446744073709551615", true, 0xffffffffffffffff);
+        TestParse(u64_ReadStrptrMaybe, "00000000000000000000000000018446744073709551615", true, 0xffffffffffffffff);
+        TestParse(u64_ReadStrptrMaybe, "018446744073709551616", true, 0xffffffffffffffff);
+        TestParse(i64_ReadStrptrMaybe, "-09223372036854775808", true, LLONG_MIN);
+        TestParse(i64_ReadStrptrMaybe, "000000000000009223372036854775807", true, LLONG_MAX);
+        TestParse(u128_ReadStrptrMaybe, "0000000000000000000000000000000000000000340282366920938463463374607431768211455", true
+                  , u128(0xffffffffffffffff)<<64|u128(0xffffffffffffffff));
+    }
+
+    // Direct coverage of algo::TryParseI32 / algo::TryParseI64 — separate
+    // codepath from the *_ReadStrptrMaybe functions the TestParse blocks above
+    // exercise. Pins the INT_MIN / INT64_MIN boundary at exact value, both
+    // clamp arms, hex form, and parse-failure semantics.
+    {
+        // Decimal boundaries.
+        TestTryParseI64("0", true, 0);
+        TestTryParseI64("1", true, 1);
+        TestTryParseI64("-1", true, -1);
+        TestTryParseI64("9223372036854775807", true, LLONG_MAX);
+        TestTryParseI64("-9223372036854775808", true, LLONG_MIN);
+        // (v > max) clamp arm — magnitude fits in u64.
+        TestTryParseI64("-9223372036854775809", true, LLONG_MIN);
+        // overflow flag arm — magnitude does NOT fit in u64.
+        TestTryParseI64("-1234567890123456789012345", true, LLONG_MIN);
+        TestTryParseI64("1234567890123456789012345", true, LLONG_MAX);
+        // Hex boundary.
+        TestTryParseI64("-0x8000000000000000", true, LLONG_MIN);
+        TestTryParseI64("0x7fffffffffffffff", true, LLONG_MAX);
+        // Parse-failure cases — result must be left unchanged (helper inits to 0).
+        TestTryParseI64("", false, 0);
+        TestTryParseI64("x", false, 0);
+    }
+
+    {
+        // Decimal boundaries.
+        TestTryParseI32("0", true, 0);
+        TestTryParseI32("1", true, 1);
+        TestTryParseI32("-1", true, -1);
+        TestTryParseI32("2147483647", true, INT_MAX);
+        TestTryParseI32("-2147483648", true, INT_MIN);
+        TestTryParseI32("-2147483649", true, INT_MIN);
+        // overflow flag arm.
+        TestTryParseI32("-12345678901234567890", true, INT_MIN);
+        TestTryParseI32("12345678901234567890", true, INT_MAX);
+        // Hex boundary.
+        TestTryParseI32("-0x80000000", true, INT_MIN);
+        TestTryParseI32("0x7fffffff", true, INT_MAX);
+        // Parse-failure cases.
+        TestTryParseI32("", false, 0);
+        TestTryParseI32("x", false, 0);
+    }
+
+    {
+        // Transitive coverage for the algo::ParseI32 / algo::ParseI64
+        // default-arg wrappers — they forward to TryParseI32/I64 and so
+        // inherit the boundary. Bind to a local first: vrfyeq_ may evaluate
+        // its first arg twice on failure and ParseI* mutates the iterator.
+        algo::StringIter it_min64("-9223372036854775808");
+        i64 r64 = algo::ParseI64(it_min64, 0);
+        // i64 is typedef'd to signed long, LLONG_MIN is long long — without
+        // the cast, vrfyeq_'s operator<< overload resolution is ambiguous.
+        vrfyeq_(r64, i64(LLONG_MIN));
+        algo::StringIter it_min32("-2147483648");
+        i32 r32 = algo::ParseI32(it_min32, 0);
+        vrfyeq_(r32, i32(INT_MIN));
     }
 }

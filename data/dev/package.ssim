@@ -1,6 +1,6 @@
-dev.package  package:amc_js  baseref:HEAD  origin:.  nomention:""  comment:"AMC javascript support"
-dev.package  package:apm  baseref:HEAD  origin:.  nomention:""  comment:"Algo Package Manager"
-dev.package  package:gcli  baseref:HEAD  origin:.  nomention:""  comment:"Gcli tool"
+dev.package  package:amc_js  baseref:HEAD  origin:/home/alebedev/openacr  nomention:""  comment:"AMC javascript support"
+dev.package  package:apm  baseref:HEAD  origin:/home/alebedev/openacr  nomention:""  comment:"Algo Package Manager"
+dev.package  package:gcli  baseref:HEAD  origin:/home/alebedev/openacr  nomention:""  comment:"Gcli tool"
 dev.package  package:openacr  baseref:HEAD  origin:.  nomention:""  comment:"OpenACR distribution (includes other packages)"
-dev.package  package:samp_make  baseref:HEAD  origin:.  nomention:""  comment:"Samp_make tool for a tutorial"
-dev.package  package:ws  baseref:HEAD  origin:.  nomention:""  comment:WebSockets
+dev.package  package:samp_make  baseref:HEAD  origin:/home/alebedev/openacr  nomention:""  comment:"Samp_make tool for a tutorial"
+dev.package  package:ws  baseref:HEAD  origin:/home/alebedev/openacr  nomention:""  comment:WebSockets

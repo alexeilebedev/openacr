@@ -5,21 +5,12 @@
 <a href="#table-of-contents"></a>
 <!-- abt_md.toc_beg -->
 &nbsp;&nbsp;&bull;&nbsp;  [Internals](#internals)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
 <!-- abt_md.toc_end -->
 
 ### Internals
 <a href="#internals"></a>
 &#128196; [lib_prot - Internals](/txt/gen/lib_prot/lib_prot.md)<br/>
-
-### Inputs
-<a href="#inputs"></a>
-`lib_prot` takes the following tables on input:
-|Ssimfile|Comment|
-|---|---|
-|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
 
 ### Sources
 <a href="#sources"></a>
@@ -37,6 +28,7 @@ The following source files are part of this tool:
 |[cpp/gen/http_gen.cpp](/cpp/gen/http_gen.cpp)||
 |[cpp/gen/httpdb_gen.cpp](/cpp/gen/httpdb_gen.cpp)||
 |[cpp/gen/ietf_gen.cpp](/cpp/gen/ietf_gen.cpp)||
+|[cpp/gen/kafka_gen.cpp](/cpp/gen/kafka_gen.cpp)||
 |[cpp/gen/lib_prot_gen.cpp](/cpp/gen/lib_prot_gen.cpp)||
 |[cpp/gen/sampdb_gen.cpp](/cpp/gen/sampdb_gen.cpp)||
 |[cpp/gen/ws_gen.cpp](/cpp/gen/ws_gen.cpp)||
@@ -69,10 +61,3 @@ The following source files are part of this tool:
 |[include/gen/ws_gen.inl.h](/include/gen/ws_gen.inl.h)||
 |[include/gen/wsdb_gen.h](/include/gen/wsdb_gen.h)||
 |[include/gen/wsdb_gen.inl.h](/include/gen/wsdb_gen.inl.h)||
-
-### Dependencies
-<a href="#dependencies"></a>
-The build target depends on the following libraries
-|Target|Comment|
-|---|---|
-|[lib_pb](/txt/lib/lib_pb/README.md)||

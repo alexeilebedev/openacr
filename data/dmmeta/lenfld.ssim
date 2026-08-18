@@ -18,6 +18,7 @@ dmmeta.lenfld  field:atf_amc.VarlenH.length  extra:0  scale:1
 dmmeta.lenfld  field:atf_amc.VarlenK.length  extra:0  scale:1
 dmmeta.lenfld  field:atf_amc.VarlenLow.length  extra:-8  scale:1
 dmmeta.lenfld  field:atf_amc.VarlenW.length  extra:-4  scale:4
+dmmeta.lenfld  field:atf_unit.FMsg.len  extra:0  scale:1
 dmmeta.lenfld  field:kafka.Frame.size  extra:-4  scale:1
 dmmeta.lenfld  field:ws.Frame16.ext_payload_len  extra:-4  scale:1
 dmmeta.lenfld  field:ws.Frame64.ext_payload_len  extra:-10  scale:1

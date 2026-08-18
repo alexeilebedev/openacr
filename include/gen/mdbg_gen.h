@@ -527,7 +527,7 @@ void                 FDb_Uninit() __attribute__((nothrow));
 // global access: dbgtarget (Lary, by rowid)
 struct FDbgtarget { // mdbg.FDbgtarget
     algo::Smallstr50   dbgtarget;   //
-    algo::cstring      args;        // Arguments appended to the debugged process, ehBcsubstituted
+    algo::cstring      args;        // Arguments appended to the debugged process, $-substituted
     algo::cstring      buildcmd;    // Command whose output is the abt target regx to rebuild first
     algo::cstring      comment;     //
 private:

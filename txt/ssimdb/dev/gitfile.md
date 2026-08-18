@@ -43,6 +43,7 @@ These ssimfiles reference dev.gitfile
 ### Used In Executables
 <a href="#used-in-executables"></a>
 * [acr_ed](/txt/gen/acr_ed/acr_ed.md) as [acr_ed.FGitfile](/txt/gen/acr_ed/acr_ed.md#acr_ed-fgitfile)
+* [atf_ci](/txt/gen/atf_ci/atf_ci.md) as [atf_ci.FGitfile](/txt/gen/atf_ci/atf_ci.md#atf_ci-fgitfile)
 * [atf_cov](/txt/gen/atf_cov/atf_cov.md) as [atf_cov.FGitfile](/txt/gen/atf_cov/atf_cov.md#atf_cov-fgitfile)
 * [src_func](/txt/gen/src_func/src_func.md) as [src_func.FGitfile](/txt/gen/src_func/src_func.md#src_func-fgitfile)
 * [src_lim](/txt/gen/src_lim/src_lim.md) as [src_lim.FGitfile](/txt/gen/src_lim/src_lim.md#src_lim-fgitfile)

@@ -213,7 +213,6 @@ enum command_FieldIdEnum {    // command.FieldId.value
     ,command_FieldId_dofork
     ,command_FieldId_q
     ,command_FieldId_cijob
-    ,command_FieldId_cleanup
     ,command_FieldId_capture
     ,command_FieldId_check_clean
     ,command_FieldId_exec
@@ -361,7 +360,7 @@ enum command_FieldIdEnum {    // command.FieldId.value
     ,command_FieldId_value
 };
 
-enum { command_FieldIdEnum_N = 328 };
+enum { command_FieldIdEnum_N = 327 };
 
 
 // --- command_abt_cache_Enum
@@ -2863,7 +2862,6 @@ struct atf_ci { // command.atf_ci: Normalization tests (see citest table)
     algo_lib::Regx   citest;        //   "%"  Sql Regx of atfdb::Citest
     i32              maxerr;        //   0  Exit after this many errors
     algo_lib::Regx   cijob;         //   "%"  Sql Regx of atfdb::Cijob
-    bool             cleanup;       //   false  (action) Remove the credentials this run installed and exit
     bool             capture;       //   false  Capture the output of the test
     bool             check_clean;   //   true  Check for modifications after each test
     // func:command.atf_ci..Ctor

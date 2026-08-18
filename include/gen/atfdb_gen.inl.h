@@ -63,7 +63,7 @@ inline  atfdb::Cipackage::Cipackage() {
 // --- atfdb.Citest..Init
 // Set all fields to initial values.
 inline void atfdb::Citest_Init(atfdb::Citest& parent) {
-    parent.cijob = algo::strptr("test");
+    parent.cijob = algo::strptr("normalize");
     parent.sandbox = bool(false);
     parent.timeout = i32(600);
     parent.failfast = bool(false);

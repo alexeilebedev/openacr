@@ -16,7 +16,7 @@
 //
 // Target: abt_md (exe) -- Tool to generate markdown documentation
 // Exceptions: yes
-// Source: cpp/abt_md/main.cpp
+// Source: cpp/abt_md/main.cpp -- Markdown linter and regenerator - main file
 //
 
 #include "include/algo.h"
@@ -24,8 +24,9 @@
 
 // -----------------------------------------------------------------------------
 
-// Return true if readme file READMEFILE needs section MDSECTION
-bool abt_md::NeedSectionQ(abt_md::FMdsection &mdsection, abt_md::FReadmefile &readmefile) {
+// Return true if readme file READMEFILE auto-generates section MDSECTION
+// (Any section is allowed but not all will be auto-updated)
+bool abt_md::GenSectionQ(abt_md::FMdsection &mdsection, abt_md::FReadmefile &readmefile) {
     return Regx_Match(mdsection.regx_path,readmefile.gitfile) && mdsection.path!="";
 }
 
@@ -50,18 +51,24 @@ tempstr abt_md::LineKey(algo::strptr line) {
 // Translate characters to create a markdown link
 // : is skipped
 // non-identifier characters are replaced with -
+// internal runs of - are collapsed to one
+// (so "A & B" and "A: B" both anchor as "a-b"; "-link" stays as "-link")
 // All characters are lowercased
 tempstr abt_md::MdAnchor(algo::strptr str) {
     tempstr ret;
+    bool prev_dash = false;
     for (int i=0; i < str.n_elems; i++) {
         char c = algo::ToLower(str.elems[i]);
-        if (c == ':') {
-            // skip
-        } else {
+        if (c != ':') {
             if (!algo_lib::IdentCharQ(c)) {
-                c = '-';
+                if (!prev_dash) {
+                    ret << '-';
+                }
+                prev_dash = true;
+            } else {
+                ret << c;
+                prev_dash = false;
             }
-            ret << c;
         }
     }
     return ret;
@@ -124,7 +131,10 @@ tempstr abt_md::Link(algo::strptr name, algo::strptr url, algo::strptr anchor DF
 tempstr abt_md::LinkToMd(strptr fname) {
     tempstr ret;
     ind_beg(algo::FileLine_curs,line,fname) {// take first line
-        strptr rest=Pathcomp(line," LR");// usually rest of the line
+        strptr rest=Trimmed(Pathcomp(line," LR"));// usually rest of the line
+        if (rest == "") {
+            rest=fname;// substitute filename if the file has no title yet
+        }
         ret << "["<<rest<<"](/"<<fname<<")";
         break;
     }ind_end;
@@ -148,18 +158,24 @@ tempstr abt_md::LinkToNs(strptr ns, algo::strptr anchor DFLTVAL("")) {
     return LinkToFileAbs(ns, tempstr()<<"txt/"<<fns.nstype<<"/"<<ns<<"/README.md", anchor);
 }
 
-// Link to internals documentation for given namespace (could be lib,protocol,exe,ssimdb)
+// Link to gen documentation for given namespace (could be lib,protocol,exe,ssimdb)
 // The link text is NAME
 // the namespace is NS
 // Optional anchor is ANCHOR
-// For executables, a separate 'internals' file is used
-tempstr abt_md::LinkToInternals(algo::strptr name, abt_md::FNs &ns, algo::strptr anchor DFLTVAL("")) {
-    return LinkToFileAbs(name, tempstr()<<"txt/"<<ns.nstype<<"/"<<ns.ns<<"/"
-                         <<(ns.nstype == dmmeta_Nstype_nstype_exe ? "internals.md" : "README.md"), anchor);
+// For executables and libraries, a separate gen file is used
+tempstr abt_md::LinkToGen(algo::strptr name, abt_md::FNs &ns, algo::strptr anchor DFLTVAL("")) {
+    bool gen = ns.nstype == dmmeta_Nstype_nstype_exe || ns.nstype == dmmeta_Nstype_nstype_lib;
+    tempstr path;
+    if (gen) {
+        path << "txt/gen/" << ns.ns << "/" << ns.ns << ".md";
+    } else {
+        path << "txt/" << ns.nstype << "/" << ns.ns << "/README.md";
+    }
+    return LinkToFileAbs(name, path, anchor);
 }
 
 tempstr abt_md::LinkToReftype(algo::strptr reftype) {
-    return LinkToFileAbs(reftype, "txt/exe/amc/reftypes.md", MdAnchor(reftype));
+    return LinkToFileAbs(reftype, "txt/exe/amc/reftype.md", MdAnchor(reftype));
 }
 
 tempstr abt_md::LinkToCtype(abt_md::FCtype &ctype) {
@@ -175,7 +191,7 @@ tempstr abt_md::LinkToCtype(abt_md::FCtype &ctype) {
         if (FileQ(fname)) {
             ret = LinkToFileAbs(ctype.ctype, fname);
         } else {
-            ret = LinkToInternals(ctype.ctype, ns, MdAnchor(ctype.ctype));
+            ret = LinkToGen(ctype.ctype, ns, MdAnchor(ctype.ctype));
         }
     }
     return ret;
@@ -238,6 +254,7 @@ void abt_md::PopulateDirent(abt_md::FDirscan &dirscan, strptr pattern) {
         // support sorting by readmecat
         if (FReadmesort *readmesort=ind_readmesort_Find(ent.pathname)){
             dirent.sortfld=readmesort->sortfld;
+            dirent.sorted=true;
             sorted_level=true;
         }else{
             dirent.sortfld=ent.filename;
@@ -249,18 +266,37 @@ void abt_md::PopulateDirent(abt_md::FDirscan &dirscan, strptr pattern) {
         dirent.is_dir=ent.is_dir;
         vrfy_(dirent_XrefMaybe(dirent));
     }ind_end;
-    if (sorted_level && unsorted_level){
-        ind_beg(abt_md::FDirscan_dirent_curs,dirent,dirscan) if (dirent.sortfld!="README.md"){
-            u32 num;
-            prlog(Keyval("dir",dirent.pathname)
-                  <<Keyval("dir",dirent.pathname)
+    // a level mixing sorted and unsorted entries is a dev.readmesort data
+    // error; report it and count it, but keep the run alive -- aborting here
+    // would hide every remaining diagnostic (later readmes, the batched
+    // command validations, the link check) behind one data error.
+    // one report per scan pattern.  A readme may carry more than one
+    // table-of-contents section, and every one of them rescans its level with
+    // the same globs, so without a key the identical multi-line report is
+    // printed once per section and one data error is counted several times.
+    // The key is the pattern and not the directory because the two globs of one
+    // level list different entries: <dir>/*.md sees only files, while the
+    // mainfile's <dir>/* also sees subdirectories, so a directory missing from
+    // the table is named by the second scan alone.  Keyed by directory, the
+    // first scan would suppress the only report that mentions it, and the user
+    // would learn of it a run later, after fixing what the first report named.
+    // The price of keying on the pattern is that a level holding no
+    // subdirectory has two globs listing the same entries, and reports twice.
+    // Pinned by atf_comp abt_md.ReadmesortOnce, whose readme carries two
+    // table-of-contents sections.
+    if (sorted_level && unsorted_level && !ind_badlevel_Find(pattern)){
+        ind_badlevel_GetOrCreate(pattern);
+        // walk the sort-order heap, not the raw readdir order, so the
+        // report is deterministic across filesystems
+        ind_beg(abt_md::FDirscan_bh_dirent_curs,dirent,dirscan) if (dirent.sortfld!="README.md"){
+            prerr(Keyval("dir",dirent.pathname)
                   <<Keyval("sort",dirent.sortfld)
-                  <<Keyval("comment",u32_ReadStrptrMaybe(num,dirent.sortfld) ? "present" : "missing")
+                  <<Keyval("comment",dirent.sorted ? "present" : "missing")
                   );
         }ind_end;
-        vrfy(0,tempstr()
-             <<Keyval("comment","readmesort table is missing entries for the level")
-             );
+        prerr("abt_md.readmesort"
+              <<Keyval("comment","readmesort table is missing entries for the level"));
+        algo_lib::_db.exit_code++;
     }
 }
 
@@ -295,7 +331,7 @@ void abt_md::UpdateReadme() {
     abt_md::FReadmefile &readmefile = *_db.c_readmefile;
     // create missing file sections
     ind_beg(abt_md::_db_mdsection_curs,mdsection,_db) {
-        if (zd_file_section_EmptyQ(mdsection) && NeedSectionQ(mdsection,readmefile)) {
+        if (zd_file_section_EmptyQ(mdsection) && GenSectionQ(mdsection,readmefile)) {
             abt_md::FFileSection &section=file_section_Alloc();
             section.firstline=1;
             section.p_mdsection=&mdsection;
@@ -308,10 +344,11 @@ void abt_md::UpdateReadme() {
     }ind_end;
 
     if (readmefile.sandbox && _db.cmdline.evalcmd) {
-        command::sandbox_proc sandbox;
-        sandbox.cmd.name.expr = dev_Sandbox_sandbox_abt_md;
-        sandbox.cmd.reset = true;
-        sandbox_ExecX(sandbox);
+        command::wt_proc wt;
+        wt.cmd.name.expr = dev_Sandbox_sandbox_abt_md;
+        wt.cmd.reset = true;
+        wt.cmd.q = true;
+        wt_ExecX(wt);
     }
 
     // process sections in 2 passes
@@ -328,16 +365,29 @@ void abt_md::UpdateReadme() {
     PrintSections(out);
     if (!_db.cmdline.dry_run && algo_lib::_db.exit_code==0) {
         verblog("save "<<readmefile.gitfile<<eol);
-        SafeStringToFile(out,readmefile.gitfile);
+        // The save gate above reads exit_code as "generation failed", so a
+        // write failure must not feed it: the first readme's failed write
+        // would silently suppress every later readme's save, and the run
+        // would report only one path. Failed writes are counted apart on
+        // n_writefail (each one reported here) and fail the run at the end
+        // of Main.
+        bool saved = algo::SaveFile(out,readmefile.gitfile,"abt_md.file_write","readme file could not be written");
+        if (!saved) {
+            _db.n_writefail++;
+        }
         // **VP** Hardcoded code for keeping top level README.md to be automatically visible in gitlab/github
         // Softlink README.md to txt/README.md doesn't work for gitlab - doesn't render
         // Keeping README.md in dev.readme table so abt_md generates it breaks xref with ordered dev.readmecat
-        if (readmefile.gitfile=="txt/README.md"){
+        // The copy is skipped when the txt/README.md save failed: README.md
+        // must never get ahead of its source.
+        if (saved && readmefile.gitfile=="txt/README.md"){
             tempstr out_readme;
             out_readme<<"<!-- This file is a copy of txt/README.md -->"<<eol;
             out_readme<<"<!-- Don't edit this file, edit txt/README.md -->"<<eol;
             out_readme<<out;
-            SafeStringToFile(out_readme,"README.md");
+            if (!algo::SaveFile(out_readme,"README.md","abt_md.file_write","readme file could not be written")) {
+                _db.n_writefail++;
+            }
         }
     }
 }
@@ -369,6 +419,13 @@ void abt_md::Main_XrefNs() {
                 readmefile.p_scriptfile=scriptfile;
             } else {
                 stray_error<<Keyval("no such script",scriptfile_key);
+            }
+        } else if (dir1 == "gen" && ind_ns_Find(dir2)) {
+            abt_md::FNs *ns = ind_ns_Find(dir2);
+            bool genns = ns->nstype == dmmeta_Nstype_nstype_exe || ns->nstype == dmmeta_Nstype_nstype_lib;
+            if (genns && ns->ns != "") {
+                readmefile.p_ns = ns;
+                // don't set ns->c_readmefile: that should point to README.md, not internals
             }
         } else if (abt_md::FNs *ns=ind_ns_Find(dir2)) {
             if (dir1 == dmmeta_Nstype_nstype_exe) {
@@ -408,7 +465,7 @@ void abt_md::Main_XrefNs() {
                   <<Keyval("dir1",dir1)
                   <<Keyval("dir2",dir2)
                   <<Keyval("comment",stray_error));
-            algo_lib::_db.exit_code=1;
+            algo_lib::_db.exit_code++;
         }
         if (readmefile.select) {
             if (readmefile.p_scriptfile) {
@@ -430,16 +487,41 @@ void abt_md::Main_XrefNs() {
 
 // -----------------------------------------------------------------------------
 
+// Collapse '.' and '..' components of PATH lexically ('sub/../c.md' ->
+// 'c.md').  The file and anchor tables are keyed by canonical
+// repo-relative gitfile, so a link target joined from a document's
+// directory must lose its dot components before lookup.  Leading '..'
+// components that reach above the starting directory are kept.
+static tempstr CollapseDots(strptr path) {
+    tempstr ret;
+    ind_beg(algo::Sep_curs, comp, path, '/') {
+        if (comp == "" || comp == ".") {
+            // skip empty and current-directory components
+        } else if (comp == ".." && ch_N(ret) && Pathcomp(ret,"/RR") != "..") {
+            ret.ch_n = TRevFind(ret,'/').beg;
+        } else {
+            if (ch_N(ret)) {
+                ret << "/";
+            }
+            ret << comp;
+        }
+    }ind_end;
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
 void abt_md::CheckLinks() {
     ind_beg(_db_link_curs,link,_db) {
         bool good=true;
         // link.target might be #abcd, or file.md#abcd, or /txt/file.md#abcd
-        // in the first case, path is empty and anchor is abcd
-        // empty path referes to the same file, and is ok
-        // in the second case, path is file.md, and is interpreted relative to the
-        // document containing the link
+        // in the first case, the target path is empty and anchor is abcd
+        // empty target path refers to the same file, and is ok
+        // in the second case, the target path is file.md, and is interpreted
+        // relative to the directory of the document containing the link
         // in the third case, the path is interpreted relative to the repo root
         tempstr path;
+        tempstr relpath(Pathcomp(link.target,"#LL"));
         if (StartsWithQ(link.target,"https://") || StartsWithQ(link.target,"http://")) {
             if (_db.cmdline.external) {
                 verblog("checking "<<link.target);
@@ -449,59 +531,331 @@ void abt_md::CheckLinks() {
         } else if (StartsWithQ(link.target,"/")) {
             // /txt/file.md#abcd -> txt/file.md
             path=Pathcomp(link.target,"/LR#LL");
-        } else if (path =="") {
+        } else if (algo::FindChar(Pathcomp(link.target,"/LL#LL"),':') >= 0) {
+            // a colon in the first path component marks a scheme-qualified
+            // URI (mailto:, ftp:, ssh:) -- not a repo file; of the external
+            // targets only http(s) is checkable (above, with -external)
+        } else if (relpath =="") {
             // link.location is filename.md:22, this yields filename.md
             path=Pathcomp(link.location,":RL");
         } else {
-            // if link.locataion is txt/file.md:22
+            // if link.location is txt/file.md:22
             // and link.target is anotherfile.md#anchor,
             // path is txt/anotherfile.md
-            path=DirFileJoin(link.target,DirFileJoin(GetDirName(link.location),Pathcomp(link.target,"#LL")));
+            path=DirFileJoin(GetDirName(link.location),relpath);
         }
         if (path != "") {
-            if (!FileQ(path)) {
+            path = CollapseDots(path);
+            if (path == ".." || StartsWithQ(path,"../")) {
+                // a collapsed target that keeps a leading '..' points above
+                // the repo root, so the rendered link is broken on any host
+                // that serves just the repo; checking it against the local
+                // filesystem would make the verdict depend on whatever sits
+                // outside the checkout, so report it without looking
                 good=false;
                 prlog(link.location<<": "
                       <<Keyval("target",link.target)
                       <<Keyval("path",path)
-                      <<Keyval("comment","target file doesn't exist"));
-            }
-            tempstr anchor(Pathcomp(link.target,"#LR"));
-            tempstr fullanchor = tempstr() << path << "#"<<anchor;
-            if (good && anchor!="" && !ind_anchor_Find(fullanchor)) {
-                //            if (good && anchor!="" && !fanchor) {
-                good=false;
-                prlog(link.location<<": "
-                      <<Keyval("target",link.target)
-                      <<Keyval("anchor",anchor)
-                      <<Keyval("fullanchor",fullanchor)
-                      <<Keyval("comment","link path is OK, but the anchor doesn't exist"));
+                      <<Keyval("comment","target outside repository"));
+            } else {
+                if (!FileQ(path)) {
+                    good=false;
+                    prlog(link.location<<": "
+                          <<Keyval("target",link.target)
+                          <<Keyval("path",path)
+                          <<Keyval("comment","target file doesn't exist"));
+                }
+                tempstr anchor(Pathcomp(link.target,"#LR"));
+                tempstr fullanchor = tempstr() << path << "#"<<anchor;
+                if (good && anchor!="" && !ind_anchor_Find(fullanchor)) {
+                    good=false;
+                    prlog(link.location<<": "
+                          <<Keyval("target",link.target)
+                          <<Keyval("anchor",anchor)
+                          <<Keyval("fullanchor",fullanchor)
+                          <<Keyval("comment","link path is OK, but the anchor doesn't exist"));
+                }
             }
         }
         if (!good) {
-            algo_lib::_db.exit_code=1;
+            algo_lib::_db.exit_code++;
         }
     }ind_end;
 }
 
 void abt_md::ProcessReadme(abt_md::FReadmefile& readmefile) {
-    verblog("processing " << readmefile.gitfile);
     _db.c_readmefile = &readmefile;
-    LoadSections(readmefile);
-    if (_db.cmdline.update) {
-        UpdateReadme();
-    }
-    // scan sections for links and anchors
-    ScanLinksAnchors();
-    if (_db.cmdline.print && !_db.cmdline.link && !_db.cmdline.anchor) {
-        cstring out;
-        PrintSections(out);
-        prlog(out);
+    // create global table file_section, x-referenced with mdsection.
+    // LoadSections also validates conflict markers; a region straddling
+    // section headers corrupts the split, so refuse to rewrite the file.
+    bool safe = LoadSections(readmefile);
+    if (!safe) {
+        prerr(readmefile.gitfile<<": "
+              <<Keyval("comment","conflict markers span section headers; refusing to process -- resolve by hand"));
+        algo_lib::_db.exit_code++;
+    } else {
+        // once a generation error is recorded the run is doomed: every
+        // later save is gated off, so regenerating sections, resetting the
+        // sandbox, and forking inline-commands for the remaining readmes
+        // would produce output that is discarded -- skip that work and
+        // leave the recorded error as the run's report
+        if (_db.cmdline.update && algo_lib::_db.exit_code==0) {
+            UpdateReadme();
+        }
+        // scan sections for links and anchors
+        ScanLinksAnchors();
+        // Queue the command lines the sections document; Main_RunBatchCheck
+        // validates the whole queue in one fork once every readme is loaded.
+        // Collecting here rather than during regeneration is what lets
+        // -check report a wrong command: -check is the read-only mode, so it
+        // never regenerates a section, and a check that rode along with
+        // generation reported nothing in the very mode whose job is checking.
+        if (_db.cmdline.check || _db.cmdline.update) {
+            CheckCommandLines();
+        }
+        if (_db.cmdline.print && !_db.cmdline.link && !_db.cmdline.anchor) {
+            cstring out;
+            PrintSections(out);
+            prlog(out);
+        }
     }
 }
 
 // -----------------------------------------------------------------------------
 
+// Flush queued FCheckReq rows through `acr_compl -check_batch` in a single
+// fork.  Requests are streamed to acr_compl via a temp file; acr_compl emits
+// one `acr_compl.checkerr` tuple per failing request on its stdout.  Each
+// failure is mapped back to its source location and reported as
+// `<gitfile>:<lineno>: <err>`, and the global exit code is set.  Any other
+// line the subprocess writes passes through to stderr unchanged.
+// A subprocess that exits abnormally has emitted no checkerr line for the
+// validations it never ran, so its wait status fails the run too.
+void abt_md::Main_RunBatchCheck() {
+    if (checkreq_N()) {
+        tempstr tmpfile;
+        tmpfile << "/tmp/abt_md.checkreq." << getpid();
+        cstring content;
+        ind_beg(_db_checkreq_curs, req, _db) {
+            content << "acr_compl.checkreq  "
+                    << Keyval("id", req.id)
+                    << "  "
+                    << Keyval("line", req.line)
+                    << eol;
+        }ind_end;
+        vrfy(SafeStringToFile(content, tmpfile),
+             tempstr() << "abt_md.tmpfile" << Keyval("path", tmpfile));
+
+        command::acr_compl_proc proc;
+        proc.cmd.check_batch = true;
+        proc.fstdin          = tmpfile;
+        proc.fstdout         = "|";
+        proc.fstderr         = ">&1";
+        acr_compl_Start(proc);
+        bool any_checkerr = false;
+        ind_beg(algo::FileLine_curs, line, proc.from_stdout) {
+            algo::Tuple tup;
+            if (algo::Tuple_ReadStrptrMaybe(tup, line)
+                && tup.head.value == "acr_compl.checkerr") {
+                any_checkerr = true;
+                u32 id     = 0;
+                strptr err = strptr();
+                ind_beg(algo::Tuple_attrs_curs, attr, tup) {
+                    if (attr.name == "id") {
+                        (void)u32_ReadStrptrMaybe(id, attr.value);
+                    } else if (attr.name == "err") {
+                        err = attr.value;
+                    }
+                }ind_end;
+                // a checkerr that maps to no queued request (garbled output,
+                // a version-skewed acr_compl) is still a reported failure;
+                // dropping it would pass a run whose validation failed
+                abt_md::FCheckReq *req = ind_checkreq_Find(id);
+                tempstr report;
+                if (req) {
+                    report << req->gitfile << ":" << req->lineno << ": " << err;
+                } else {
+                    report << "abt_md.check_batch"
+                           << Keyval("id", id)
+                           << Keyval("err", err)
+                           << Keyval("comment", "checkerr does not match any queued request");
+                }
+                prerr(report);
+                algo_lib::_db.exit_code++;
+            } else if (ch_N(algo::Trimmed(line))) {
+                // acr_compl's stderr is folded into this pipe, so anything it
+                // says other than a checkerr arrives here: an
+                // acr_compl.badreq naming a request that could not be parsed,
+                // or a message on the way out of a failing run. Such a line
+                // carries no request id to map, so it passes through verbatim
+                // and adds nothing to the exit code of its own. What fails the
+                // run is the batch as a whole: a checkerr reported above, or,
+                // when the batch produced none, the wait-status check below,
+                // which is the only place the subprocess status is consulted.
+                prerr(line);
+            }
+        }ind_end;
+        acr_compl_Wait(proc);
+        // acr_compl exits nonzero when it finds failing requests; those are
+        // reported above, one line per request. Nonzero status with no
+        // checkerr parsed means the subprocess died before performing the
+        // queued validations -- silence here would pass a run whose
+        // commands were never checked.
+        if (proc.status != 0 && !any_checkerr) {
+            prerr("abt_md.check_batch"
+                  <<Keyval("status",algo::DescribeWaitStatus(proc.status))
+                  <<Keyval("comment","acr_compl -check_batch failed; queued command validations were not performed"));
+            algo_lib::_db.exit_code++;
+        }
+        (void)unlink(Zeroterm(tmpfile));
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+// Report every dev.mdsection that claims to generate a section it can never
+// reach, and fail the run for each one.
+//
+// A row's path is a SQL-style regex over dev.readmefile.gitfile, and a
+// non-empty path is how the table says abt_md writes the section itself; the
+// idiom for a hand-written section is an empty path, which GenSectionQ tests
+// for. So a row whose path matches no readme at all claims generation and
+// delivers none, and nothing notices: the handler simply never runs, and
+// acr -check, abt_md -check and normalize all pass with the row in place,
+// while a reader of `acr mdsection` concludes the section is generated and
+// either hand-edits it expecting abt_md to overwrite the edit, or leaves a gap
+// expecting abt_md to fill it.
+//
+// The general fact is that a regex matching nothing looks exactly like a
+// regex whose matches are all fine, so the table can misdescribe the doc set
+// indefinitely. Requiring one match turns that silence into a failure at the
+// normalize gate, where the next such row is cheap to fix.
+//
+// The comparison needs a complete readmefile pool to mean anything.
+// dev.mdsection is gstatic, so every row is compiled in and present on every
+// run, while dev.readmefile is a finput holding whatever -in supplied. A run
+// pointed at a single fixture file loads a handful of readmes against the full
+// section table, so each row carrying a path reads as dead and the run fails
+// on the input rather than on the table. A directory input is a whole ssim
+// database and carries the tree's readmefile set, which is the only input this
+// check can draw a conclusion from.
+void abt_md::Main_CheckMdsection() {
+    if (DirectoryQ(_db.cmdline.in)) {
+        ind_beg(_db_mdsection_curs,mdsection,_db) {
+            if (mdsection.path != "") {
+                int nmatch=0;
+                ind_beg(_db_readmefile_curs,readmefile,_db) {
+                    nmatch += Regx_Match(mdsection.regx_path,readmefile.gitfile);
+                }ind_end;
+                if (nmatch==0) {
+                    prerr("abt_md.mdsection_nomatch"
+                          <<Keyval("mdsection",mdsection.mdsection)
+                          <<Keyval("path",mdsection.path)
+                          <<Keyval("comment","non-empty path matches no dev.readmefile, so this section is never generated"));
+                    algo_lib::_db.exit_code++;
+                }
+            }
+        }ind_end;
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+// The ssim tuple that selects the record KEY names, or empty when KEY names no
+// ssimfile this build knows or one whose pkey cannot be determined.
+// A key is written `<ssimfile>:<pkey>`, and `acr -sel` reads tuples, so the
+// key has to be turned into `<ssimfile>  <attr>:<pkey>`. The attribute is the
+// name of the ctype's first field, which is not always the ssimfile's own last
+// component: `x2db.gwproto` is keyed by `netproto`, so composing the attribute
+// from the ssimfile name sends a tuple with no primary key and acr answers
+// with nothing -- which reads as "no record has this key" and reports a
+// correct reference as broken.
+tempstr abt_md::AcrKeyTuple(algo::strptr key) {
+    tempstr ret;
+    strptr ssimfile = Pathcomp(key, ":LL");
+    strptr value    = Pathcomp(key, ":LR");
+    abt_md::FSsimfile *p_ssimfile = ind_ssimfile_Find(ssimfile);
+    abt_md::FCtype *p_ctype = p_ssimfile ? p_ssimfile->p_ctype : NULL;
+    abt_md::FField *p_field = p_ctype ? c_field_Find(*p_ctype, 0) : NULL;
+    if (p_field && ch_N(value) > 0) {
+        ret << ssimfile
+            << "  "
+            << Keyval(Pathcomp(p_field->field, ".RR"), value);
+    }
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
+// Resolve the queued FCheckKey rows against the ssim database in a single fork
+// and report each key that names no record.
+// `acr -sel` reads tuples from stdin and prints the records it found, so one
+// fork answers "which of these keys exist" for the whole queue: a key is sent
+// as the tuple its ssimfile takes, and the reply reconstructs the key it
+// answers -- the ssimfile is the type tag and the pkey is the first attribute
+// -- so the rows that came back need no correlating id. What is left over is
+// the answer: a queued key acr did not return is a key no record has.
+// Reading the reply is what makes the check trustworthy, because `acr` reports
+// a key that resolves to nothing exactly as it reports one that resolves --
+// exit code 0, an empty selection -- so a check built on its status would pass
+// every key ever written.
+void abt_md::Main_RunKeyCheck() {
+    if (checkkey_N()) {
+        cstring content;
+        ind_beg(_db_checkkey_curs, checkkey, _db) {
+            content << AcrKeyTuple(checkkey.key) << eol;
+        }ind_end;
+        tempstr tmpfile;
+        tmpfile << "/tmp/abt_md.checkkey." << getpid();
+        vrfy(SafeStringToFile(content, tmpfile),
+             tempstr() << "abt_md.tmpfile" << Keyval("path", tmpfile));
+
+        command::acr_proc proc;
+        proc.cmd.sel    = true;
+        proc.cmd.report = false;
+        proc.fstdin     = tmpfile;
+        proc.fstdout    = "|";
+        acr_Start(proc);
+        ind_beg(algo::FileLine_curs, line, proc.from_stdout) {
+            algo::Tuple tup;
+            if (algo::Tuple_ReadStrptrMaybe(tup, line) && attrs_N(tup) > 0) {
+                tempstr key;
+                key << tup.head.value << ":" << attrs_qFind(tup, 0).value;
+                if (abt_md::FCheckKey *checkkey = ind_checkkey_Find(key)) {
+                    checkkey->found = true;
+                }
+            }
+        }ind_end;
+        acr_Wait(proc);
+        // A subprocess that died returned no records, so every queued key
+        // reads as missing. Reporting those as documentation errors would
+        // blame the docs for a failure of the check, so the run fails naming
+        // the status and no key is reported on that evidence.
+        if (proc.status != 0) {
+            prerr("abt_md.check_key"
+                  <<Keyval("status",algo::DescribeWaitStatus(proc.status))
+                  <<Keyval("comment","acr -sel failed; queued acr keys were not checked"));
+            algo_lib::_db.exit_code++;
+        } else {
+            ind_beg(_db_checkkey_curs, checkkey, _db) {
+                if (!checkkey.found) {
+                    prerr(checkkey.gitfile <<":"<< checkkey.lineno
+                          <<": acr.nokey"
+                          <<Keyval("key",checkkey.key)
+                          <<Keyval("comment","no record has this key"));
+                    algo_lib::_db.exit_code++;
+                }
+            }ind_end;
+        }
+        (void)unlink(Zeroterm(tmpfile));
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+// Select readme files by regex or namespace, process each one (generate
+// sections, evaluate inline commands, save), then check links and flush
+// the batched acr_compl validations; failed readme writes fail the run.
 void abt_md::Main() {
     if (_db.cmdline.check || _db.cmdline.print) {
         _db.cmdline.update=false;
@@ -549,27 +903,37 @@ void abt_md::Main() {
     // was an empty string, in which case just update the top-level readme
     if (algo_lib::_db.exit_code==0 && (_db.cmdline.readmefile.expr != "" || _db.cmdline.ns.expr != "")) {
         int nmatch=0;
-        ind_beg(_db_readmefile_curs,readmefile,_db) if (readmefile.select) {
-            nmatch++;
-            ProcessReadme(readmefile);
-        }ind_end;
-
-        // second pass to populate all README.md with new .md for new ssimdb files
-        ind_beg(_db_readmefile_curs,readmefile,_db) if (readmefile.select) {
-            if (algo::StripDirName(readmefile.gitfile) =="README.md") {
-                ProcessReadme(readmefile);
-            }
-        }ind_end;
-
+        // two passes here -- one over all files except README.md,
+        // another over all files named REAMDE.md
+        // This is beacuse README.md contains table-of-contents references that extract some data
+        // from files in the same directory.
+        for (int pass=0; pass<2; pass++) {
+            ind_beg(_db_readmefile_curs,readmefile,_db) {
+                algo::strptr name=Pathcomp(readmefile.gitfile,"/RR");
+                if (readmefile.select && ((name=="README.md") == (pass==1))) {
+                    nmatch++;
+                    ProcessReadme(readmefile);
+                }
+            }ind_end;
+        }
         if (!nmatch) {
             prlog("abt_md.nomatch"
                   <<Keyval("comment","no readmes matched selection. see `acr readme` for the full list"));
-            algo_lib::_db.exit_code=1;
+            algo_lib::_db.exit_code++;
         }
     }
-    // can't check links if not all files were loaded
+    // flush batched acr_compl validation requests collected during section
+    // processing — one fork covers every queued command line.
+    Main_RunBatchCheck();
+    // resolve the acr keys collected during section processing — one fork
+    // covers every queued key.
+    Main_RunKeyCheck();
     // -update implies -check
     if (_db.cmdline.check || _db.cmdline.update) {
+        // the mdsection check reads the whole readmefile pool rather than the
+        // selection, so it is valid whichever readmes this run asked to process
+        Main_CheckMdsection();
+        // can't check links if not all files were loaded
         if (nselect < readmefile_N()) {
             verblog("abt_md: disable link checking, not all files being loaded");
         } else {
@@ -592,4 +956,8 @@ void abt_md::Main() {
                   <<Keyval("target",link.target));
         }ind_end;
     }
+    // failed readme writes fail the run; they are counted apart from
+    // exit_code during the run so the per-readme save gate reads exit_code
+    // as generation status
+    algo_lib::_db.exit_code += _db.n_writefail;
 }

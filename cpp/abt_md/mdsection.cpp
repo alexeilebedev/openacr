@@ -16,7 +16,7 @@
 //
 // Target: abt_md (exe) -- Tool to generate markdown documentation
 // Exceptions: yes
-// Source: cpp/abt_md/mdsection.cpp
+// Source: cpp/abt_md/mdsection.cpp -- Markdown section handlers - toc, inline command, links
 //
 
 #include "include/algo.h"
@@ -71,7 +71,7 @@ void abt_md::DescribeCtype(abt_md::FCtype *ctype, cstring &out) {
         if (fldfunc!=""){
             out << "italicised fields: "
                 << "*" << fldfunc << "*"
-                << " are [**fldfunc**](/txt/ssim.md#fldfunc) fields"
+                << " are [**fldfunc**](/txt/openacr/ssim.md#fldfunc) fields"
                 << eol
                 << eol;
         }
@@ -165,7 +165,7 @@ void abt_md::mdsection_InputMessages(abt_md::FFileSection &section) {
     if (ns) {
         section.text = "";// replace section text
         ind_beg(ns_c_dispatch_curs,dispatch,*ns) {
-            Set(_db.R,"$comment",dispatch.comment.value);
+            Set(_db.R,"$comment",dispatch.comment);
             Set(_db.R,"$dispatch",dispatch.dispatch);
             Ins(&_db.R,section.text, "`$ns` Consumes the following messages via $dispatch ($comment)");
             algo_lib::FTxttbl txttbl;
@@ -256,7 +256,12 @@ void abt_md::mdsection_Imdb(abt_md::FFileSection &section) {
                     }
 
                     // Generate fields
-                    text<<"#### "<<ctype->ctype<<" - " << TypeComment(*ctype)<<eol<<eol;
+                    tempstr type_comment(TypeComment(*ctype));
+                    text<<"#### "<<ctype->ctype;
+                    if (type_comment != "") {
+                        text<<" - " << type_comment;
+                    }
+                    text<<eol<<eol;
                     tempstr base_note;
                     if (abt_md::FCtype *ctype_base=GenerateFieldsTable(*ctype, text, base_note)){
                         GenerateFieldsTable(*ctype_base, text, base_note);
@@ -337,7 +342,11 @@ void abt_md::mdsection_Ctypes(abt_md::FFileSection &section) {
                 } else if (comment == "" && ns_Get(ctype) == "command" && ind_ns_Find(name_Get(ctype))) {
                     comment << "Command line for "<< LinkToNs(name_Get(ctype));
                 }
-                out << "#### "<< ctype.ctype << " - " << comment << eol<<eol;
+                out << "#### "<< ctype.ctype;
+                if (comment != "") {
+                    out << " - " << comment;
+                }
+                out << eol<<eol;
                 DescribeCtype(&ctype,out);
             }
         }ind_end;
@@ -350,9 +359,13 @@ void abt_md::mdsection_Ctypes(abt_md::FFileSection &section) {
 
 // -----------------------------------------------------------------------------
 
+// Regenerate the Functions section by forking src_func.  This is one
+// fork per executable readme — for a full repo regen that's ~50.
+// evalcmd:N disables it so fast "refresh doc structure" runs don't
+// pay the fork tax; the previous Functions text is left in place.
 void abt_md::mdsection_Functions(abt_md::FFileSection &section) {
-    section.text = "";// replace section text
-    if (_db.c_readmefile->p_ns) {
+    if (_db.cmdline.evalcmd && _db.c_readmefile->p_ns) {
+        section.text = "";// replace section text
         command::src_func_proc src_func;
         src_func.cmd.func.expr = tempstr()<<_db.c_readmefile->p_ns->ns<<".%";
         src_func.cmd.list=true;
@@ -360,15 +373,17 @@ void abt_md::mdsection_Functions(abt_md::FFileSection &section) {
         src_func.cmd.sortname=true;
         src_func.cmd.showcomment=true;
         src_func.cmd.showstatic=false;
-        algo_lib::FFildes read;
         cstring comment;
         cstring out;
-        ind_beg(algo::FileLine_curs,line,src_func_StartRead(src_func,read)) {
-            if (StartsWithQ(line,"// ")) {
-                comment<<line<<eol;
+        src_func.fstdout = "|";
+        src_func_Start(src_func);
+        ind_beg(algo::FileLine_curs,line,src_func.from_stdout) {
+            tempstr clean_line(TrimmedRight(line));
+            if (StartsWithQ(clean_line,"//")) {
+                comment<<clean_line<<eol;
             } else {
                 out<<eol;
-                out << CodeBlock(tempstr()<<comment<<line) << eol;
+                out << CodeBlock(tempstr()<<comment<<clean_line) << eol;
                 comment="";
             }
         }ind_end;
@@ -396,7 +411,7 @@ void abt_md::mdsection_Title(abt_md::FFileSection &section) {
         section.title = tempstr()<< "## "<<readmefile->p_ctype->ctype<<" - "<<readmefile->p_ctype->comment;
     } else if (readmefile->p_ns) {
         tempstr fname(StripDirName(readmefile->gitfile));
-        if (fname== "internals.md") {
+        if (StartsWithQ(readmefile->gitfile, "txt/gen/")) {
             section.title = tempstr()<< "## "<<readmefile->p_ns->ns<<" - Internals";
         } else if (fname == "README.md") {
             section.title = tempstr()<< "## "<<readmefile->p_ns->ns<<" - "<<readmefile->p_ns->comment;
@@ -408,14 +423,68 @@ void abt_md::mdsection_Title(abt_md::FFileSection &section) {
 
 // -----------------------------------------------------------------------------
 
-// Update syntax string
-// Invoke command with -h flag and substitute output into section body
+// Append every C string literal found on `text` to ns->help.
+// Skips leading whitespace, then walks each "..." literal with
+// algo::cstring_ReadCmdarg (which decodes C escapes via UnescapeC).
+// Stops at the first non-quote token (the trailing `;` on the last
+// line of a block, or end of line).
+static void AccumHelpString(abt_md::FNs *ns, algo::strptr text) {
+    if (ns) {
+        algo::StringIter iter(text);
+        bool more = true;
+        while (more) {
+            iter.Ws();
+            if (iter.Peek() == '"') {
+                algo::cstring part;
+                if (algo::cstring_ReadCmdarg(part, iter, true)) {
+                    ns->help << part;
+                } else {
+                    more = false;
+                }
+            } else {
+                more = false;
+            }
+        }
+    }
+}
+
+// One-shot scan of cpp/gen/command_gen.cpp.  amc emits every exe's
+// help text as `const char *command::<ns>_help = "…" "…" …;`,
+// possibly spanning multiple lines.  Walk line-by-line: on the
+// header line capture the ns and consume the rest-of-line; on each
+// continuation line accumulate the literals; release cur_ns when
+// the line ends with `;`.  After this every executable FNs has
+// `.help` populated and mdsection_Syntax becomes a hash lookup.
+static void LoadHelpStrings() {
+    abt_md::FNs *cur_ns = NULL;
+    ind_beg(algo::FileLine_curs, line, "cpp/gen/command_gen.cpp") {
+        if (!cur_ns && StartsWithQ(line, "const char *command::") && FindStr(line, "_help = ") != -1) {
+            cur_ns = abt_md::ind_ns_Find(Pathcomp(line, ":LR:LR_RL"));
+            AccumHelpString(cur_ns, Pathcomp(line, "=LR"));
+        } else if (cur_ns) {
+            AccumHelpString(cur_ns, line);
+            if (EndsWithQ(line, ";")) {
+                cur_ns = NULL;
+            }
+        }
+    }ind_end;
+}
+
+// Update syntax section from FNs.help (pre-populated by
+// LoadHelpStrings on the first call).  No fork; no built binary
+// required.  evalcmd:N now only gates inline `cmd:…` blocks
+// elsewhere — the Syntax section is always refreshed because its
+// source is the generated file, not the binary.
 void abt_md::mdsection_Syntax(abt_md::FFileSection &section) {
-    if (_db.c_readmefile->p_ns && _db.cmdline.evalcmd) {
-        section.text="";
-        tempstr out = SysEval(Subst(_db.R,"$ns -h 2>&1"),FailokQ(true),1024*1024);
-        if (Trimmed(out)!="") {
-            section.text << Preformatted(out);
+    if (!_db.help_loaded) {
+        LoadHelpStrings();
+        _db.help_loaded = true;
+    }
+    if (_db.c_readmefile->p_ns && _db.c_readmefile->p_ns->nstype == dmmeta_Nstype_nstype_exe) {
+        section.text = "";
+        algo::strptr help = _db.c_readmefile->p_ns->help;
+        if (Trimmed(help) != "") {
+            section.text << Preformatted(help);
         }
     }
 }
@@ -428,10 +497,9 @@ void abt_md::mdsection_Syntax(abt_md::FFileSection &section) {
 // The README.md files must form a tree covering all files.
 // Thus, non-README must not include links to other files in the same directory into ToC,
 // but can include those links outside of ToC
-// README.md must not include a link to internals.md on the same level (this link has to come
-// from above) to avoid contaminating ToC tree with unneeded details
 void abt_md::mdsection_Toc(abt_md::FFileSection &section) {
     section.text = "";
+    section.text << abt_md::MdComment("abt_md.toc_beg")<<eol;
     abt_md::FReadmefile *readmefile = _db.c_readmefile;
     tempstr dirname(GetDirName(readmefile->gitfile));
     // the top-level README.md cannot be a soft link, or it won't be displayed
@@ -476,45 +544,32 @@ void abt_md::mdsection_Toc(abt_md::FFileSection &section) {
         }
     }ind_end;
     // non-README must not include links to other files in the same directory into TOC.
-    // README.md must not include a link to internals.md on the same level (this link has to come
-    // from above) to avoid contaminating ToC tree with unneeded details
-    bool has_internals = FileQ(DirFileJoin(GetDirName(_db.c_readmefile->gitfile),"internals.md"));
-    if (!mainfile || has_internals) {
+    if (mainfile) {
         section.text << text;
         text = "";
     }
-
     // from README.md, create links to sub-directories
     if (mainfile) {
         PopulateDirent(dirscan,DirFileJoin(dirname,"*"));
         ind_beg(abt_md::FDirscan_bh_dirent_curs,ent,dirscan) if (ent.is_dir) {
             tempstr subfile = DirFileJoin(ent.pathname,"README.md");
-            // hack: if subdirectory has internals, the internals.md file has to be
+            // hack: if subdirectory has gen, the gen.md file has to be
             // linked from above to avoid contaminating ToC tree
-            if (FileQ(subfile) && !FileQ(DirFileJoin(ent.pathname,"internals.md"))) {
-                text  << FolderIcon()<<LinkToMd(subfile)<<"<br/>"<<eol;
+            tempstr subns(StripDirName(ent.pathname));
+            if (FileQ(subfile)
+                && !FileQ(tempstr() << "txt/gen/" << subns << "/" << subns << ".md")) {
+                section.text  << FolderIcon()<<LinkToMd(subfile)<<"<br/>"<<eol;
             } else {
                 // if README not found on level below, include ALL files on level below
                 abt_md::FDirscan dirscan2;
                 PopulateDirent(dirscan2, DirFileJoin(ent.pathname,"*.md"));
                 ind_beg(FDirscan_bh_dirent_curs,ent2,dirscan2) {
-                    text  << FileIcon() <<LinkToMd(ent2.pathname)<<"<br/>"<<eol;// file icon
+                    section.text  << FileIcon() <<LinkToMd(ent2.pathname)<<"<br/>"<<eol;// file icon
                 }ind_end;
             }
         }ind_end;
     }
-
-    // insert text as TOC entry
-    if (text!=""){
-        dev::Mdmark mdmark;
-        mdmark.mdmark=dev_Mdmark_mdmark_TOC;
-        mdmark.param=section.p_mdsection->mdsection;
-        mdmark.state=dev_Mdmark_state_BEG_AUTO;
-        section.text << abt_md::MdComment(tempstr()<<mdmark)<<eol;
-        section.text << text <<eol;
-        mdmark.state=dev_Mdmark_state_END_AUTO;
-        section.text << abt_md::MdComment(tempstr()<<mdmark)<<eol;
-    }
+    section.text << abt_md::MdComment("abt_md.toc_end")<<eol;
 }
 
 // -----------------------------------------------------------------------------
@@ -526,6 +581,20 @@ void abt_md::mdsection_Chapters(abt_md::FFileSection &section) {
 
 // -----------------------------------------------------------------------------
 
+// Create links to other files in the same directory
+void abt_md::mdsection_Internals(abt_md::FFileSection &section) {
+    section.text = "";
+    abt_md::FReadmefile *readmefile = _db.c_readmefile;
+    if (readmefile->p_ns) {
+        tempstr genfile=tempstr()<<"txt/gen/"<<readmefile->p_ns->ns<<"/"<<readmefile->p_ns->ns<<".md";
+        if (FileQ(genfile)) {
+            section.text  << FileIcon() <<LinkToMd(genfile)<<"<br/>"<<eol;// file icon
+        }
+    }
+}
+
+// -----------------------------------------------------------------------------
+
 void abt_md::mdsection_Sources(abt_md::FFileSection &section) {
     section.text = "";// replace section text
     abt_md::FReadmefile *readmefile = _db.c_readmefile;
@@ -533,15 +602,13 @@ void abt_md::mdsection_Sources(abt_md::FFileSection &section) {
         abt_md::FNs *ns = readmefile->p_ns;
         section.text << "The source code license is "<<ns->license<<eol;
         section.text << "The following source files are part of this tool:" << eol<<eol;
-
-
         algo_lib::FTxttbl txttbl;
         AddRow(txttbl);
         AddCols(txttbl,"Source File,Comment");
         ind_beg(ns_c_targsrc_curs,targsrc,*ns) {
             AddRow(txttbl);
             AddCol(txttbl,LinkToFileAbs(src_Get(targsrc),src_Get(targsrc)));
-            AddCol(txttbl,targsrc.comment.value);
+            AddCol(txttbl,targsrc.comment);
         }ind_end;
         FTxttbl_Markdown(txttbl,section.text);
     } else if (StartsWithQ(readmefile->gitfile, "txt/script/")) {
@@ -568,7 +635,7 @@ void abt_md::mdsection_Dependencies(abt_md::FFileSection &section) {
             tempstr fname = tempstr() << "txt/"<<targdep.p_parent->p_ns->nstype<<"/" << parent_Get(targdep) << "/README.md";
             bool exists = FileQ(fname);
             AddCol(txttbl,exists ? LinkToFileAbs(parent_Get(targdep),fname) : fname);
-            AddCol(txttbl,targdep.p_parent->p_ns->comment.value);
+            AddCol(txttbl,targdep.p_parent->p_ns->comment);
         }ind_end;
         FTxttbl_Markdown(txttbl,section.text);
     }
@@ -614,16 +681,6 @@ void abt_md::mdsection_Tests(abt_md::FFileSection &section) {
 // Update copyright section
 void abt_md::mdsection_Copyright(abt_md::FFileSection &) {
 }
-
-void abt_md::mdsection_Reftypes(abt_md::FFileSection &section) {
-    section.text = "";// replace section text
-    ind_beg(_db_reftype_curs,reftype,_db) {
-        section.text << eol;
-        section.text << "#### "<< reftype.reftype << " - " << reftype.p_tclass->comment << eol;
-    }ind_end;
-}
-
-// -----------------------------------------------------------------------------
 
 void abt_md::mdsection_Subsets(abt_md::FFileSection &section) {
     section.text = "";// replace section text
@@ -674,20 +731,15 @@ void abt_md::mdsection_Related(abt_md::FFileSection &section) {
 // Show related ssimfiles (those that reference this ssimfile NOT through pkey)
 void abt_md::mdsection_CmdlineUses(abt_md::FFileSection &section) {
     section.text = "";// replace section text
-    cstring out;
     if (abt_md::FSsimfile *ssimfile = _db.c_readmefile->p_ssimfile) {
         ind_beg(ctype_c_field_arg_curs,field,*ssimfile->p_ctype) {
             abt_md::FCtype &childtype=*field.p_ctype;
             if (ns_Get(childtype) == "command") {
-                out << "* "<<LinkToFileAbs(tempstr()<<name_Get(childtype)<<" -"<<name_Get(field)
-                                           , tempstr()<<"txt/exe/"<<name_Get(childtype)<<"/README.md")
-                    << " - "<<Trimmed(field.comment)<<" "<<eol;
+                section.text << "* "<<LinkToFileAbs(tempstr()<<name_Get(childtype)<<" -"<<name_Get(field)
+                                                    , tempstr()<<"txt/exe/"<<name_Get(childtype)<<"/README.md")
+                             << " - "<<Trimmed(field.comment)<<" "<<eol;
             }
         }ind_end;
-    }
-    if (out != "") {
-        section.text <<eol;
-        section.text << out;
     }
 }
 
@@ -696,18 +748,14 @@ void abt_md::mdsection_CmdlineUses(abt_md::FFileSection &section) {
 // Show related ssimfiles (those that reference this ssimfile NOT through pkey)
 void abt_md::mdsection_ImdbUses(abt_md::FFileSection &section) {
     section.text = "";// replace section text
-    cstring out;
     if (abt_md::FSsimfile *ssimfile = _db.c_readmefile->p_ssimfile) {
         ind_beg(ctype_c_field_arg_curs,field,*ssimfile->p_ctype) if (field.reftype == dmmeta_Reftype_reftype_Base) {
             abt_md::FCtype &childtype=*field.p_ctype;
             if (childtype.p_ns->nstype == dmmeta_Nstype_nstype_lib || childtype.p_ns->nstype == dmmeta_Nstype_nstype_exe) {
-                out << "* "<<LinkToInternals(childtype.p_ns->ns,*childtype.p_ns)
-                    <<" as "<<LinkToCtype(childtype)<<eol;
+                section.text << "* "<<LinkToGen(childtype.p_ns->ns,*childtype.p_ns)
+                             <<" as "<<LinkToCtype(childtype)<<eol;
             }
         }ind_end;
-    }
-    if (out != "") {
-        section.text << eol << out <<eol;
     }
 }
 

@@ -37,3 +37,4 @@ These ssimfiles reference dev.package
 ### Used In Executables
 <a href="#used-in-executables"></a>
 * [apm](/txt/gen/apm/apm.md) as [apm.FPackage](/txt/gen/apm/apm.md#apm-fpackage)
+* [atf_ci](/txt/gen/atf_ci/atf_ci.md) as [atf_ci.FPackage](/txt/gen/atf_ci/atf_ci.md#atf_ci-fpackage)

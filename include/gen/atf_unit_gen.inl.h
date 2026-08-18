@@ -233,7 +233,7 @@ inline atf_unit::FUnittest* atf_unit::unittest_Last() {
 
 // --- atf_unit.FDb.unittest.N
 // Return number of items in the pool
-inline i32 atf_unit::unittest_N() {
+inline i64 atf_unit::unittest_N() {
     return _db.unittest_n;
 }
 
@@ -257,6 +257,27 @@ inline bool atf_unit::ind_unittest_EmptyQ() {
 // Return number of items in the hash
 inline i32 atf_unit::ind_unittest_N() {
     return _db.ind_unittest_n;
+}
+
+// --- atf_unit.FDb.msg.AllocMaybe
+// Allocate memory for new element. If out of memory, return NULL.
+inline atf_unit::FMsg* atf_unit::msg_AllocMaybe(i32 n_varfld) {
+    atf_unit::FMsg *row = msg_AllocExtraMaybe(NULL, sizeof(u8) * n_varfld);
+    return row;
+}
+
+// --- atf_unit.FDb.msg.AllocVarlenMaybe
+// Allocate element & copy memory from input parameter. If out of memory, return NULL.
+// Allocate memory for a new row; Copy var-len portion from msg.
+// This is a convenience function that uses msg_Alloc
+inline atf_unit::FMsg* atf_unit::msg_AllocVarlenMaybe(algo::aryptr<u8> msg) {
+    return msg_AllocExtraMaybe(msg.elems, msg.n_elems * sizeof(u8));
+}
+
+// --- atf_unit.FDb.msg.AllocVarlen
+// Allocate element & copy memory from input parameter. If out of memory, terminate process.
+inline atf_unit::FMsg& atf_unit::msg_AllocVarlen(algo::aryptr<u8> msg) {
+    return msg_AllocExtra(msg.elems, msg.n_elems * sizeof(u8));
 }
 
 // --- atf_unit.FDb.tr_number_curs.Reset
@@ -306,6 +327,124 @@ inline void atf_unit::_db_unittest_curs_Next(_db_unittest_curs &curs) {
 // item access
 inline atf_unit::FUnittest& atf_unit::_db_unittest_curs_Access(_db_unittest_curs &curs) {
     return unittest_qFind(u64(curs.index));
+}
+
+// --- atf_unit.FMsg.msg.N
+// Return number of elements in varlen field
+inline u32 atf_unit::msg_N(const atf_unit::FMsg& msg) {
+    u32 length = i32(((atf_unit::FMsg&)msg).len);
+    u32 extra_bytes = u32_Max(length,sizeof(atf_unit::FMsg)) - sizeof(atf_unit::FMsg); // avoid unsigned subtraction underflow
+    return u32(extra_bytes / sizeof(u8));
+}
+
+// --- atf_unit.FMsg.msg_curs.Reset
+inline void atf_unit::msg_msg_curs_Reset(msg_msg_curs &curs, atf_unit::FMsg &parent) {
+    curs.ptr = (u8*)msg_Addr(parent);
+    curs.length = i32(parent.len) - sizeof(atf_unit::FMsg);
+    curs.index = 0;
+}
+
+// --- atf_unit.FMsg.msg_curs.ValidQ
+// cursor points to valid item
+inline bool atf_unit::msg_msg_curs_ValidQ(msg_msg_curs &curs) {
+    bool valid = ssizeof(u8) <= curs.length;
+    return valid;
+}
+
+// --- atf_unit.FMsg.msg_curs.Next
+// proceed to next item
+inline void atf_unit::msg_msg_curs_Next(msg_msg_curs &curs) {
+    i32 len = i32(sizeof(u8));
+    curs.ptr += len;
+    curs.length -= len;
+    ++curs.index;
+}
+
+// --- atf_unit.FMsg.msg_curs.Access
+// item access
+inline u8& atf_unit::msg_msg_curs_Access(msg_msg_curs &curs) {
+    return *(u8*)curs.ptr;
+}
+
+// --- atf_unit.FMsg..GetMsgLength
+// Message length (uses length field)
+inline i32 atf_unit::GetMsgLength(const atf_unit::FMsg& parent) {
+    return i32(const_cast<atf_unit::FMsg&>(parent).len);
+}
+
+// --- atf_unit.FMsg..GetMsgMemptr
+// Memptr encompassing the message (uses length field)
+inline algo::memptr atf_unit::GetMsgMemptr(const atf_unit::FMsg& row) {
+    return algo::memptr((u8*)&row, i32(const_cast<atf_unit::FMsg&>(row).len));
+}
+
+// --- atf_unit.FMsg..Init
+// Set all fields to initial values.
+inline void atf_unit::FMsg_Init(atf_unit::FMsg& msg) {
+    msg.len = i32(0);
+}
+
+// --- atf_unit.FMsg..Ctor
+inline  atf_unit::FMsg::FMsg() {
+    atf_unit::FMsg_Init(*this);
+}
+
+// --- atf_unit.FMsg_curs..ValidQ
+inline bool atf_unit::FMsg_curs_ValidQ(atf_unit::FMsg_curs& curs) {
+    return curs.msg != NULL;
+}
+
+// --- atf_unit.FMsg_curs..Reset
+inline void atf_unit::FMsg_curs_Reset(atf_unit::FMsg_curs& curs, algo::memptr buf) {
+    curs.bytes = buf.elems;
+    curs.limit = buf.n_elems;
+    atf_unit::FMsg *msg = NULL;
+    int msglen = 0;
+    if (curs.limit >= ssizeof(atf_unit::FMsg)) {
+        atf_unit::FMsg *ptr = (atf_unit::FMsg*)curs.bytes;
+        msglen = i32((*ptr).len);
+        if (msglen >= ssizeof(atf_unit::FMsg) && curs.limit >= msglen) {
+            msg = ptr;
+        }
+    }
+    curs.msg = msg;
+    curs.msglen = msglen;
+}
+
+// --- atf_unit.FMsg_curs..Access
+inline atf_unit::FMsg*& atf_unit::FMsg_curs_Access(atf_unit::FMsg_curs& curs) {
+    return curs.msg;
+}
+
+// --- atf_unit.FMsg_curs..Next
+inline void atf_unit::FMsg_curs_Next(atf_unit::FMsg_curs& curs) {
+    curs.bytes += curs.msglen;
+    curs.limit -= curs.msglen;
+    atf_unit::FMsg *msg = NULL;
+    int msglen = 0;
+    if (curs.limit >= ssizeof(atf_unit::FMsg)) {
+        atf_unit::FMsg *ptr = (atf_unit::FMsg*)curs.bytes;
+        msglen = i32((*ptr).len);
+        if (msglen >= ssizeof(atf_unit::FMsg) && curs.limit >= msglen) {
+            msg = ptr;
+        }
+    }
+    curs.msg = msg;
+    curs.msglen = msglen;
+}
+
+// --- atf_unit.FMsg_curs..Init
+// Set all fields to initial values.
+inline void atf_unit::FMsg_curs_Init(atf_unit::FMsg_curs& parent) {
+    parent.msg = NULL;
+    parent.bytes = NULL;
+    parent.limit = i32(0);
+    parent.msglen = i32(0);
+}
+
+// --- atf_unit.FMsg_curs..Ctor
+inline  atf_unit::FMsg_curs::FMsg_curs() {
+    atf_unit::FMsg_curs_Init(*this);
 }
 
 // --- atf_unit.FNumber..Init
@@ -358,14 +497,14 @@ inline atf_unit::Dbl* atf_unit::orig_Last(atf_unit::FPerfSort& parent) {
 
 // --- atf_unit.FPerfSort.orig.Max
 // Return max. number of items in the array
-inline i32 atf_unit::orig_Max(atf_unit::FPerfSort& parent) {
+inline i64 atf_unit::orig_Max(atf_unit::FPerfSort& parent) {
     (void)parent;
     return parent.orig_max;
 }
 
 // --- atf_unit.FPerfSort.orig.N
 // Return number of items in the array
-inline i32 atf_unit::orig_N(const atf_unit::FPerfSort& parent) {
+inline i64 atf_unit::orig_N(const atf_unit::FPerfSort& parent) {
     return parent.orig_n;
 }
 
@@ -376,8 +515,8 @@ inline void atf_unit::orig_RemoveAll(atf_unit::FPerfSort& parent) {
 
 // --- atf_unit.FPerfSort.orig.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void atf_unit::orig_Reserve(atf_unit::FPerfSort& parent, int n) {
-    u32 new_n = parent.orig_n + n;
+inline void atf_unit::orig_Reserve(atf_unit::FPerfSort& parent, i64 n) {
+    u64 new_n = parent.orig_n + n;
     if (UNLIKELY(new_n > parent.orig_max)) {
         orig_AbsReserve(parent, new_n);
     }
@@ -431,14 +570,14 @@ inline atf_unit::Dbl* atf_unit::sorted_Last(atf_unit::FPerfSort& parent) {
 
 // --- atf_unit.FPerfSort.sorted.Max
 // Return max. number of items in the array
-inline i32 atf_unit::sorted_Max(atf_unit::FPerfSort& parent) {
+inline i64 atf_unit::sorted_Max(atf_unit::FPerfSort& parent) {
     (void)parent;
     return parent.sorted_max;
 }
 
 // --- atf_unit.FPerfSort.sorted.N
 // Return number of items in the array
-inline i32 atf_unit::sorted_N(const atf_unit::FPerfSort& parent) {
+inline i64 atf_unit::sorted_N(const atf_unit::FPerfSort& parent) {
     return parent.sorted_n;
 }
 
@@ -449,8 +588,8 @@ inline void atf_unit::sorted_RemoveAll(atf_unit::FPerfSort& parent) {
 
 // --- atf_unit.FPerfSort.sorted.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void atf_unit::sorted_Reserve(atf_unit::FPerfSort& parent, int n) {
-    u32 new_n = parent.sorted_n + n;
+inline void atf_unit::sorted_Reserve(atf_unit::FPerfSort& parent, i64 n) {
+    u64 new_n = parent.sorted_n + n;
     if (UNLIKELY(new_n > parent.sorted_max)) {
         sorted_AbsReserve(parent, new_n);
     }
@@ -504,14 +643,14 @@ inline i32* atf_unit::index_Last(atf_unit::FPerfSort& parent) {
 
 // --- atf_unit.FPerfSort.index.Max
 // Return max. number of items in the array
-inline i32 atf_unit::index_Max(atf_unit::FPerfSort& parent) {
+inline i64 atf_unit::index_Max(atf_unit::FPerfSort& parent) {
     (void)parent;
     return parent.index_max;
 }
 
 // --- atf_unit.FPerfSort.index.N
 // Return number of items in the array
-inline i32 atf_unit::index_N(const atf_unit::FPerfSort& parent) {
+inline i64 atf_unit::index_N(const atf_unit::FPerfSort& parent) {
     return parent.index_n;
 }
 
@@ -522,8 +661,8 @@ inline void atf_unit::index_RemoveAll(atf_unit::FPerfSort& parent) {
 
 // --- atf_unit.FPerfSort.index.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void atf_unit::index_Reserve(atf_unit::FPerfSort& parent, int n) {
-    u32 new_n = parent.index_n + n;
+inline void atf_unit::index_Reserve(atf_unit::FPerfSort& parent, i64 n) {
+    u64 new_n = parent.index_n + n;
     if (UNLIKELY(new_n > parent.index_max)) {
         index_AbsReserve(parent, new_n);
     }
@@ -715,8 +854,121 @@ inline  atf_unit::FieldId::FieldId(atf_unit_FieldIdEnum arg) {
     this->value = i32(arg);
 }
 
+// --- atf_unit.JsonAry.name.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+inline void* atf_unit::name_AllocMem(atf_unit::JsonAry& parent) {
+    void *row = reinterpret_cast<algo::Smallstr20*>(parent.name_data) + parent.name_n;
+    if (parent.name_n == 4) row = NULL;
+    if (row) parent.name_n++;
+    return row;
+}
+
+// --- atf_unit.JsonAry.name.EmptyQ
+// Return true if index is empty
+inline bool atf_unit::name_EmptyQ(atf_unit::JsonAry& parent) {
+    return parent.name_n == 0;
+}
+
+// --- atf_unit.JsonAry.name.Find
+// Look up row by row id. Return NULL if out of range
+inline algo::Smallstr20* atf_unit::name_Find(atf_unit::JsonAry& parent, u64 t) {
+    u64 idx = t;
+    u64 lim = parent.name_n;
+    return idx < lim ? reinterpret_cast<algo::Smallstr20*>(parent.name_data) + idx : NULL; // unsigned comparison with limit
+}
+
+// --- atf_unit.JsonAry.name.Getary
+// Return array pointer by value
+inline algo::aryptr<algo::Smallstr20> atf_unit::name_Getary(atf_unit::JsonAry& parent) {
+    return algo::aryptr<algo::Smallstr20>(reinterpret_cast<algo::Smallstr20*>(parent.name_data), parent.name_n);
+}
+
+// --- atf_unit.JsonAry.name.Max
+// Return constant 4 -- max. number of items in the pool
+inline i32 atf_unit::name_Max(atf_unit::JsonAry& parent) {
+    (void)parent;
+    return 4;
+}
+
+// --- atf_unit.JsonAry.name.N
+// Return number of items in the array
+inline i32 atf_unit::name_N(const atf_unit::JsonAry& parent) {
+    (void)parent;//only to avoid -Wunused-parameter
+    return parent.name_n;
+}
+
+// --- atf_unit.JsonAry.name.Setary
+// Set contents of fixed array to RHS; Input length is trimmed as necessary
+inline void atf_unit::name_Setary(atf_unit::JsonAry& parent, const algo::aryptr<algo::Smallstr20> &rhs) {
+    int n = i32_Min(4, rhs.n_elems);
+    memcpy(reinterpret_cast<algo::Smallstr20*>(parent.name_data), rhs.elems, sizeof(algo::Smallstr20)*n);
+    parent.name_n = n;
+}
+
+// --- atf_unit.JsonAry.name.qFind
+// 'quick' Access row by row id. No bounds checking in release.
+inline algo::Smallstr20& atf_unit::name_qFind(atf_unit::JsonAry& parent, u64 t) {
+    return reinterpret_cast<algo::Smallstr20*>(parent.name_data)[u64(t)];
+}
+
+// --- atf_unit.JsonAry.name.rowid_Get
+// Compute row id of element given element's address
+inline u64 atf_unit::name_rowid_Get(atf_unit::JsonAry& parent, algo::Smallstr20 &row) {
+    u64 ret = u64(&row - reinterpret_cast<algo::Smallstr20*>(parent.name_data));
+    return u64(ret);
+}
+
+// --- atf_unit.JsonAry.name_curs.Reset
+// cursor points to valid item
+inline void atf_unit::JsonAry_name_curs_Reset(JsonAry_name_curs &curs, atf_unit::JsonAry &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- atf_unit.JsonAry.name_curs.ValidQ
+// cursor points to valid item
+inline bool atf_unit::JsonAry_name_curs_ValidQ(JsonAry_name_curs &curs) {
+    return u64(curs.index) < u64(curs.parent->name_n);
+}
+
+// --- atf_unit.JsonAry.name_curs.Next
+// proceed to next item
+inline void atf_unit::JsonAry_name_curs_Next(JsonAry_name_curs &curs) {
+    curs.index++;
+}
+
+// --- atf_unit.JsonAry.name_curs.Access
+// item access
+inline algo::Smallstr20& atf_unit::JsonAry_name_curs_Access(JsonAry_name_curs &curs) {
+    return name_qFind((*curs.parent), u64(curs.index));
+}
+
+// --- atf_unit.JsonAry..AssignOp
+inline atf_unit::JsonAry& atf_unit::JsonAry::operator =(const atf_unit::JsonAry &rhs) {
+    name_Setary(*this, name_Getary(const_cast<atf_unit::JsonAry&>(rhs)));
+    return *this;
+}
+
+// --- atf_unit.JsonAry..Ctor
+inline  atf_unit::JsonAry::JsonAry() {
+    atf_unit::JsonAry_Init(*this);
+    // added because atf_unit.JsonAry.name (Inlary) does not need initialization
+    // coverity[uninit_member]
+}
+
+// --- atf_unit.JsonAry..Dtor
+inline  atf_unit::JsonAry::~JsonAry() {
+    atf_unit::JsonAry_Uninit(*this);
+}
+
+// --- atf_unit.JsonAry..CopyCtor
+inline  atf_unit::JsonAry::JsonAry(const atf_unit::JsonAry &rhs) {
+    name_n = 0; // name: initialize count
+    name_Setary(*this, name_Getary(const_cast<atf_unit::JsonAry&>(rhs)));
+}
+
 // --- atf_unit.TypeA..Hash
-inline u32 atf_unit::TypeA_Hash(u32 prev, const atf_unit::TypeA& rhs) {
+inline u32 atf_unit::TypeA_Hash(u32 prev, atf_unit::TypeA rhs) {
     prev = i32_Hash(prev, rhs.typea);
     return prev;
 }
@@ -752,12 +1004,12 @@ inline bool atf_unit::TypeA::operator >=(const atf_unit::TypeA &rhs) const {
 }
 
 // --- atf_unit.TypeA..Lt
-inline bool atf_unit::TypeA_Lt(atf_unit::TypeA& lhs, atf_unit::TypeA& rhs) {
+inline bool atf_unit::TypeA_Lt(atf_unit::TypeA lhs, atf_unit::TypeA rhs) {
     return i32_Lt(lhs.typea, rhs.typea);
 }
 
 // --- atf_unit.TypeA..Cmp
-inline i32 atf_unit::TypeA_Cmp(atf_unit::TypeA& lhs, atf_unit::TypeA& rhs) {
+inline i32 atf_unit::TypeA_Cmp(atf_unit::TypeA lhs, atf_unit::TypeA rhs) {
     i32 retval = 0;
     retval = i32_Cmp(lhs.typea, rhs.typea);
     return retval;
@@ -770,7 +1022,7 @@ inline void atf_unit::TypeA_Init(atf_unit::TypeA& parent) {
 }
 
 // --- atf_unit.TypeA..Eq
-inline bool atf_unit::TypeA_Eq(atf_unit::TypeA& lhs, atf_unit::TypeA& rhs) {
+inline bool atf_unit::TypeA_Eq(atf_unit::TypeA lhs, atf_unit::TypeA rhs) {
     bool retval = true;
     retval = i32_Eq(lhs.typea, rhs.typea);
     return retval;
@@ -778,7 +1030,7 @@ inline bool atf_unit::TypeA_Eq(atf_unit::TypeA& lhs, atf_unit::TypeA& rhs) {
 
 // --- atf_unit.TypeA..Update
 // Set value. Return true if new value is different from old value.
-inline bool atf_unit::TypeA_Update(atf_unit::TypeA &lhs, atf_unit::TypeA& rhs) {
+inline bool atf_unit::TypeA_Update(atf_unit::TypeA &lhs, atf_unit::TypeA rhs) {
     bool ret = !TypeA_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -792,7 +1044,7 @@ inline  atf_unit::TypeA::TypeA() {
 }
 
 // --- atf_unit.TypeB..Hash
-inline u32 atf_unit::TypeB_Hash(u32 prev, const atf_unit::TypeB& rhs) {
+inline u32 atf_unit::TypeB_Hash(u32 prev, atf_unit::TypeB rhs) {
     prev = i32_Hash(prev, rhs.typea);
     prev = i32_Hash(prev, rhs.j);
     return prev;
@@ -829,12 +1081,12 @@ inline bool atf_unit::TypeB::operator >=(const atf_unit::TypeB &rhs) const {
 }
 
 // --- atf_unit.TypeB..Lt
-inline bool atf_unit::TypeB_Lt(atf_unit::TypeB& lhs, atf_unit::TypeB& rhs) {
+inline bool atf_unit::TypeB_Lt(atf_unit::TypeB lhs, atf_unit::TypeB rhs) {
     return TypeB_Cmp(lhs,rhs) < 0;
 }
 
 // --- atf_unit.TypeB..Cmp
-inline i32 atf_unit::TypeB_Cmp(atf_unit::TypeB& lhs, atf_unit::TypeB& rhs) {
+inline i32 atf_unit::TypeB_Cmp(atf_unit::TypeB lhs, atf_unit::TypeB rhs) {
     i32 retval = 0;
     retval = i32_Cmp(lhs.typea, rhs.typea);
     if (retval != 0) {
@@ -852,7 +1104,7 @@ inline void atf_unit::TypeB_Init(atf_unit::TypeB& parent) {
 }
 
 // --- atf_unit.TypeB..Eq
-inline bool atf_unit::TypeB_Eq(atf_unit::TypeB& lhs, atf_unit::TypeB& rhs) {
+inline bool atf_unit::TypeB_Eq(atf_unit::TypeB lhs, atf_unit::TypeB rhs) {
     bool retval = true;
     retval = i32_Eq(lhs.typea, rhs.typea);
     if (!retval) {
@@ -864,7 +1116,7 @@ inline bool atf_unit::TypeB_Eq(atf_unit::TypeB& lhs, atf_unit::TypeB& rhs) {
 
 // --- atf_unit.TypeB..Update
 // Set value. Return true if new value is different from old value.
-inline bool atf_unit::TypeB_Update(atf_unit::TypeB &lhs, atf_unit::TypeB& rhs) {
+inline bool atf_unit::TypeB_Update(atf_unit::TypeB &lhs, atf_unit::TypeB rhs) {
     bool ret = !TypeB_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -877,9 +1129,194 @@ inline  atf_unit::TypeB::TypeB() {
     atf_unit::TypeB_Init(*this);
 }
 
+// --- atf_unit.TestJson.fld_ary_u32.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+inline void* atf_unit::fld_ary_u32_AllocMem(atf_unit::TestJson& parent) {
+    void *row = reinterpret_cast<u32*>(parent.fld_ary_u32_data) + parent.fld_ary_u32_n;
+    if (parent.fld_ary_u32_n == 4) row = NULL;
+    if (row) parent.fld_ary_u32_n++;
+    return row;
+}
+
+// --- atf_unit.TestJson.fld_ary_u32.EmptyQ
+// Return true if index is empty
+inline bool atf_unit::fld_ary_u32_EmptyQ(atf_unit::TestJson& parent) {
+    return parent.fld_ary_u32_n == 0;
+}
+
+// --- atf_unit.TestJson.fld_ary_u32.Find
+// Look up row by row id. Return NULL if out of range
+inline u32* atf_unit::fld_ary_u32_Find(atf_unit::TestJson& parent, u64 t) {
+    u64 idx = t;
+    u64 lim = parent.fld_ary_u32_n;
+    return idx < lim ? reinterpret_cast<u32*>(parent.fld_ary_u32_data) + idx : NULL; // unsigned comparison with limit
+}
+
+// --- atf_unit.TestJson.fld_ary_u32.Getary
+// Return array pointer by value
+inline algo::aryptr<u32> atf_unit::fld_ary_u32_Getary(atf_unit::TestJson& parent) {
+    return algo::aryptr<u32>(reinterpret_cast<u32*>(parent.fld_ary_u32_data), parent.fld_ary_u32_n);
+}
+
+// --- atf_unit.TestJson.fld_ary_u32.Max
+// Return constant 4 -- max. number of items in the pool
+inline i32 atf_unit::fld_ary_u32_Max(atf_unit::TestJson& parent) {
+    (void)parent;
+    return 4;
+}
+
+// --- atf_unit.TestJson.fld_ary_u32.N
+// Return number of items in the array
+inline i32 atf_unit::fld_ary_u32_N(const atf_unit::TestJson& parent) {
+    (void)parent;//only to avoid -Wunused-parameter
+    return parent.fld_ary_u32_n;
+}
+
+// --- atf_unit.TestJson.fld_ary_u32.Setary
+// Set contents of fixed array to RHS; Input length is trimmed as necessary
+inline void atf_unit::fld_ary_u32_Setary(atf_unit::TestJson& parent, const algo::aryptr<u32> &rhs) {
+    int n = i32_Min(4, rhs.n_elems);
+    memcpy(reinterpret_cast<u32*>(parent.fld_ary_u32_data), rhs.elems, sizeof(u32)*n);
+    parent.fld_ary_u32_n = n;
+}
+
+// --- atf_unit.TestJson.fld_ary_u32.qFind
+// 'quick' Access row by row id. No bounds checking in release.
+inline u32& atf_unit::fld_ary_u32_qFind(atf_unit::TestJson& parent, u64 t) {
+    return reinterpret_cast<u32*>(parent.fld_ary_u32_data)[u64(t)];
+}
+
+// --- atf_unit.TestJson.fld_ary_u32.rowid_Get
+// Compute row id of element given element's address
+inline u64 atf_unit::fld_ary_u32_rowid_Get(atf_unit::TestJson& parent, u32 &row) {
+    u64 ret = u64(&row - reinterpret_cast<u32*>(parent.fld_ary_u32_data));
+    return u64(ret);
+}
+
+// --- atf_unit.TestJson.fld_ary_name.AllocMem
+// Allocate space for one element. If no memory available, return NULL.
+inline void* atf_unit::fld_ary_name_AllocMem(atf_unit::TestJson& parent) {
+    void *row = reinterpret_cast<algo::Smallstr20*>(parent.fld_ary_name_data) + parent.fld_ary_name_n;
+    if (parent.fld_ary_name_n == 4) row = NULL;
+    if (row) parent.fld_ary_name_n++;
+    return row;
+}
+
+// --- atf_unit.TestJson.fld_ary_name.EmptyQ
+// Return true if index is empty
+inline bool atf_unit::fld_ary_name_EmptyQ(atf_unit::TestJson& parent) {
+    return parent.fld_ary_name_n == 0;
+}
+
+// --- atf_unit.TestJson.fld_ary_name.Find
+// Look up row by row id. Return NULL if out of range
+inline algo::Smallstr20* atf_unit::fld_ary_name_Find(atf_unit::TestJson& parent, u64 t) {
+    u64 idx = t;
+    u64 lim = parent.fld_ary_name_n;
+    return idx < lim ? reinterpret_cast<algo::Smallstr20*>(parent.fld_ary_name_data) + idx : NULL; // unsigned comparison with limit
+}
+
+// --- atf_unit.TestJson.fld_ary_name.Getary
+// Return array pointer by value
+inline algo::aryptr<algo::Smallstr20> atf_unit::fld_ary_name_Getary(atf_unit::TestJson& parent) {
+    return algo::aryptr<algo::Smallstr20>(reinterpret_cast<algo::Smallstr20*>(parent.fld_ary_name_data), parent.fld_ary_name_n);
+}
+
+// --- atf_unit.TestJson.fld_ary_name.Max
+// Return constant 4 -- max. number of items in the pool
+inline i32 atf_unit::fld_ary_name_Max(atf_unit::TestJson& parent) {
+    (void)parent;
+    return 4;
+}
+
+// --- atf_unit.TestJson.fld_ary_name.N
+// Return number of items in the array
+inline i32 atf_unit::fld_ary_name_N(const atf_unit::TestJson& parent) {
+    (void)parent;//only to avoid -Wunused-parameter
+    return parent.fld_ary_name_n;
+}
+
+// --- atf_unit.TestJson.fld_ary_name.Setary
+// Set contents of fixed array to RHS; Input length is trimmed as necessary
+inline void atf_unit::fld_ary_name_Setary(atf_unit::TestJson& parent, const algo::aryptr<algo::Smallstr20> &rhs) {
+    int n = i32_Min(4, rhs.n_elems);
+    memcpy(reinterpret_cast<algo::Smallstr20*>(parent.fld_ary_name_data), rhs.elems, sizeof(algo::Smallstr20)*n);
+    parent.fld_ary_name_n = n;
+}
+
+// --- atf_unit.TestJson.fld_ary_name.qFind
+// 'quick' Access row by row id. No bounds checking in release.
+inline algo::Smallstr20& atf_unit::fld_ary_name_qFind(atf_unit::TestJson& parent, u64 t) {
+    return reinterpret_cast<algo::Smallstr20*>(parent.fld_ary_name_data)[u64(t)];
+}
+
+// --- atf_unit.TestJson.fld_ary_name.rowid_Get
+// Compute row id of element given element's address
+inline u64 atf_unit::fld_ary_name_rowid_Get(atf_unit::TestJson& parent, algo::Smallstr20 &row) {
+    u64 ret = u64(&row - reinterpret_cast<algo::Smallstr20*>(parent.fld_ary_name_data));
+    return u64(ret);
+}
+
+// --- atf_unit.TestJson.fld_ary_u32_curs.Reset
+// cursor points to valid item
+inline void atf_unit::TestJson_fld_ary_u32_curs_Reset(TestJson_fld_ary_u32_curs &curs, atf_unit::TestJson &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- atf_unit.TestJson.fld_ary_u32_curs.ValidQ
+// cursor points to valid item
+inline bool atf_unit::TestJson_fld_ary_u32_curs_ValidQ(TestJson_fld_ary_u32_curs &curs) {
+    return u64(curs.index) < u64(curs.parent->fld_ary_u32_n);
+}
+
+// --- atf_unit.TestJson.fld_ary_u32_curs.Next
+// proceed to next item
+inline void atf_unit::TestJson_fld_ary_u32_curs_Next(TestJson_fld_ary_u32_curs &curs) {
+    curs.index++;
+}
+
+// --- atf_unit.TestJson.fld_ary_u32_curs.Access
+// item access
+inline u32& atf_unit::TestJson_fld_ary_u32_curs_Access(TestJson_fld_ary_u32_curs &curs) {
+    return fld_ary_u32_qFind((*curs.parent), u64(curs.index));
+}
+
+// --- atf_unit.TestJson.fld_ary_name_curs.Reset
+// cursor points to valid item
+inline void atf_unit::TestJson_fld_ary_name_curs_Reset(TestJson_fld_ary_name_curs &curs, atf_unit::TestJson &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- atf_unit.TestJson.fld_ary_name_curs.ValidQ
+// cursor points to valid item
+inline bool atf_unit::TestJson_fld_ary_name_curs_ValidQ(TestJson_fld_ary_name_curs &curs) {
+    return u64(curs.index) < u64(curs.parent->fld_ary_name_n);
+}
+
+// --- atf_unit.TestJson.fld_ary_name_curs.Next
+// proceed to next item
+inline void atf_unit::TestJson_fld_ary_name_curs_Next(TestJson_fld_ary_name_curs &curs) {
+    curs.index++;
+}
+
+// --- atf_unit.TestJson.fld_ary_name_curs.Access
+// item access
+inline algo::Smallstr20& atf_unit::TestJson_fld_ary_name_curs_Access(TestJson_fld_ary_name_curs &curs) {
+    return fld_ary_name_qFind((*curs.parent), u64(curs.index));
+}
+
 // --- atf_unit.TestJson..Ctor
 inline  atf_unit::TestJson::TestJson() {
     atf_unit::TestJson_Init(*this);
+    // added because atf_unit.TestJson.fld_ary_u32 (Inlary) does not need initialization
+    // coverity[uninit_member]
+}
+
+// --- atf_unit.TestJson..Dtor
+inline  atf_unit::TestJson::~TestJson() {
+    atf_unit::TestJson_Uninit(*this);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const atf_unit::Cstr &row) {// cfmt:atf_unit.Cstr.String

@@ -18,3 +18,8 @@
 ### Used In Commands
 <a href="#used-in-commands"></a>
 * [abt_md -readmefile](/txt/exe/abt_md/README.md) - Regx of readme to process/show (empty=all)
+
+### Used In Executables
+<a href="#used-in-executables"></a>
+* [abt_md](/txt/gen/abt_md/abt_md.md) as [abt_md.FReadmefile](/txt/gen/abt_md/abt_md.md#abt_md-freadmefile)
+* [atf_ci](/txt/gen/atf_ci/atf_ci.md) as [atf_ci.FReadmefile](/txt/gen/atf_ci/atf_ci.md#atf_ci-freadmefile)

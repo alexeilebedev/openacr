@@ -113,6 +113,8 @@ acr_ExecX(acr_cmd);   // throws on non-zero exit
 <a href="#state-lives-on-fdb-"></a>
 
 Never use file-scope `static` mutable state.  Add a Val field to
-`<ns>.FDb` and access it as `_db.foo`.  See the
-[`codestyle` skill](/.agents/skills/codestyle/SKILL.md) for the full
-rule and the `report.<name>` pattern.
+`<ns>.FDb` and access it as `_db.foo`.  State kept on `FDb` is queryable
+through `acr`, travels with copy and print, and takes part in xrefs, none
+of which a hidden global can do.  A group of values that belong together
+— the running totals of a report, a parse buffer — gets its own ctype and
+one `FDb` field of that type.

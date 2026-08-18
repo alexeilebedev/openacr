@@ -73,7 +73,7 @@ void atf_unit::unittest_algo_lib_Charset() {
     Charset SsimQuotesafeChars;
     (void)Charset_ReadStrptrPlain(RegxSqlSpecialChars,"$.|?*+(){}^\\[]#");
     (void)Charset_ReadStrptrMaybe(SsimQuotesafeChars, "a-zA-Z0-9_;&*^%$@.!:,+/-");
-    (void)Charset_ReadStrptrMaybe(BashQuotesafeChars, "a-zA-Z0-9_^%@./-");
+    (void)Charset_ReadStrptrMaybe(BashQuotesafeChars, "a-zA-Z0-9_^%@:./-");
     (void)Charset_ReadStrptrPlain(SsimBreakCharsName, "[]{}()\t \r\n:");
     (void)Charset_ReadStrptrPlain(SsimBreakCharsValue, "[]{}()\t \r\n");
 

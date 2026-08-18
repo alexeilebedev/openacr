@@ -22,4 +22,6 @@ italicised fields: *name* are [**fldfunc**](/txt/openacr/ssim.md#fldfunc) fields
 
 ### Used In Executables
 <a href="#used-in-executables"></a>
+* [abt_md](/txt/gen/abt_md/abt_md.md) as [abt_md.FScriptfile](/txt/gen/abt_md/abt_md.md#abt_md-fscriptfile)
+* [atf_ci](/txt/gen/atf_ci/atf_ci.md) as [atf_ci.FScriptfile](/txt/gen/atf_ci/atf_ci.md#atf_ci-fscriptfile)
 * [src_hdr](/txt/gen/src_hdr/src_hdr.md) as [src_hdr.FScriptfile](/txt/gen/src_hdr/src_hdr.md#src_hdr-fscriptfile)

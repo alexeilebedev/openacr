@@ -25,7 +25,9 @@ italicised fields: *target, src, ext* are [**fldfunc**](/txt/openacr/ssim.md#fld
 ### Used In Executables
 <a href="#used-in-executables"></a>
 * [abt](/txt/gen/abt/abt.md) as [abt.FTargsrc](/txt/gen/abt/abt.md#abt-ftargsrc)
+* [abt_md](/txt/gen/abt_md/abt_md.md) as [abt_md.FTargsrc](/txt/gen/abt_md/abt_md.md#abt_md-ftargsrc)
 * [acr_ed](/txt/gen/acr_ed/acr_ed.md) as [acr_ed.FTargsrc](/txt/gen/acr_ed/acr_ed.md#acr_ed-ftargsrc)
+* [atf_ci](/txt/gen/atf_ci/atf_ci.md) as [atf_ci.FTargsrc](/txt/gen/atf_ci/atf_ci.md#atf_ci-ftargsrc)
 * [atf_cov](/txt/gen/atf_cov/atf_cov.md) as [atf_cov.FTargsrc](/txt/gen/atf_cov/atf_cov.md#atf_cov-ftargsrc)
 * [src_func](/txt/gen/src_func/src_func.md) as [src_func.FTargsrc](/txt/gen/src_func/src_func.md#src_func-ftargsrc)
 * [src_hdr](/txt/gen/src_hdr/src_hdr.md) as [src_hdr.FTargsrc](/txt/gen/src_hdr/src_hdr.md#src_hdr-ftargsrc)

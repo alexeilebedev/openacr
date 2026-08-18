@@ -14,3 +14,7 @@
 |path|[algo.Smallstr100](/txt/protocol/algo/README.md#algo-smallstr100)|[Val](/txt/exe/amc/reftype.md#val)|||
 |genlist|[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)|[Val](/txt/exe/amc/reftype.md#val)|||
 |comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftype.md#val)|||
+
+### Used In Executables
+<a href="#used-in-executables"></a>
+* [abt_md](/txt/gen/abt_md/abt_md.md) as [abt_md.FMdsection](/txt/gen/abt_md/abt_md.md#abt_md-fmdsection)

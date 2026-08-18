@@ -194,6 +194,30 @@ void atf_unit::unittest_algo_lib_Regx() {
     vrfy_(!RegxLiteralQ("(d)", algo_lib_RegxStyle_acr));
     vrfy_(!RegxLiteralQ("%", algo_lib_RegxStyle_acr));
 
+    // Repetition applied to an expression that already matches the empty
+    // string builds a zero-consume cycle in the NFA.  These must terminate
+    // (they would spin forever without the epsilon-cycle guards) and match
+    // as the equivalent non-degenerate expression.
+    vrfyeq_(RegxMatch("a**", "aaa"), true);
+    vrfyeq_(RegxMatch("a**", ""), true);
+    vrfyeq_(RegxMatch("a**", "aaab"), false);
+    vrfyeq_(RegxMatch("a***", "aaa"), true);
+    vrfyeq_(RegxMatch(".**", "abc"), true);
+    vrfyeq_(RegxMatch("(a*)*", "aaaa"), true);
+    vrfyeq_(RegxMatch("(a*)*b", "aaab"), true);
+    vrfyeq_(RegxMatch("(a*)*b", "aaa"), false);
+    vrfyeq_(RegxMatch("(.*)**", "abc"), true);
+    vrfyeq_(RegxMatch("(a?)*", "aaa"), true);
+    vrfyeq_(RegxMatch("(a|b)**", "abab"), true);
+    vrfyeq_(RegxMatch("(a|b)**", "abc"), false);
+    // Groups closed under repetition cycle through lparen/rparen states that
+    // survive branch removal; the matcher must still terminate on them.
+    vrfyeq_(RegxMatch("()*", ""), true);
+    vrfyeq_(RegxMatch("()*", "x"), false);
+    vrfyeq_(RegxMatch("()+", ""), true);
+    vrfyeq_(RegxMatch("(())*", ""), true);
+    vrfyeq_(RegxMatch("(^)*", ""), true);
+
     vrfyeq_(RegxFind("ca","abracadabra"),algo::i32_Range(4,6));
     vrfyeq_(RegxFind("c.d.b","abracadabra"),algo::i32_Range(4,9));
 

@@ -203,7 +203,7 @@ void                 Cipackage_Print(atfdb::Cipackage& row, algo::cstring& str) 
 // --- atfdb.Citest
 struct Citest { // atfdb.Citest
     algo::Smallstr50   citest;     // Primary key
-    algo::Smallstr50   cijob;      //   "test"  CI job in which this test runs
+    algo::Smallstr50   cijob;      //   "normalize"  CI job in which this test runs
     bool               sandbox;    //   false  Run test in sandbox
     i32                timeout;    //   600  Max runtime budget for this citest, seconds (>= observed runtime doubled, floored at 10min)
     bool               failfast;   //   false  A failure ends the run: remaining citests are skipped

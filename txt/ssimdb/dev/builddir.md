@@ -21,4 +21,5 @@ italicised fields: *uname, compiler, cfg, arch* are [**fldfunc**](/txt/openacr/s
 ### Used In Executables
 <a href="#used-in-executables"></a>
 * [abt](/txt/gen/abt/abt.md) as [abt.FBuilddir](/txt/gen/abt/abt.md#abt-fbuilddir)
+* [atf_ci](/txt/gen/atf_ci/atf_ci.md) as [atf_ci.FBuilddir](/txt/gen/atf_ci/atf_ci.md#atf_ci-fbuilddir)
 * [mdbg](/txt/gen/mdbg/mdbg.md) as [mdbg.FBuilddir](/txt/gen/mdbg/mdbg.md#mdbg-fbuilddir)

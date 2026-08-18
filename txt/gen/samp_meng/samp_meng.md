@@ -7,7 +7,6 @@
 * [Sources](#sources)
 * [Dependencies](#dependencies)
 * [In Memory DB](#in-memory-db)
-* [Tests](#tests)
 
 ### Description
 <a href="#description"></a>

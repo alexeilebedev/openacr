@@ -7,6 +7,7 @@
 &nbsp;&nbsp;&bull;&nbsp;  [Internals](#internals)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
 <!-- abt_md.toc_end -->
 
 ### Internals
@@ -119,3 +120,31 @@ proof that it has rotted.
 
 #### -evalcmd -- Execute inline-commands
 <a href="#-evalcmd"></a>
+
+### Inputs
+<a href="#inputs"></a>
+`abt_md` takes the following tables on input:
+|Ssimfile|Comment|
+|---|---|
+|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
+|[atfdb.comptest](/txt/ssimdb/atfdb/comptest.md)|A component test|
+|[dmmeta.ctype](/txt/ssimdb/dmmeta/ctype.md)|Struct|
+|[dmmeta.dispatch](/txt/ssimdb/dmmeta/dispatch.md)|Generate code for a multi-way branch|
+|[dmmeta.dispatch_msg](/txt/ssimdb/dmmeta/dispatch_msg.md)|Add message to a dispatch|
+|[dmmeta.fconst](/txt/ssimdb/dmmeta/fconst.md)|Specify enum value (integer + string constant) for a field|
+|[dmmeta.field](/txt/ssimdb/dmmeta/field.md)|Specify field of a struct|
+|[dmmeta.finput](/txt/ssimdb/dmmeta/finput.md)|Describe input table of a program|
+|[dmmeta.gconst](/txt/ssimdb/dmmeta/gconst.md)|Import ssim table columns as fconst for a field|
+|[dmmeta.gstatic](/txt/ssimdb/dmmeta/gstatic.md)|Load entries for this table at startup time|
+|[dmmeta.ns](/txt/ssimdb/dmmeta/ns.md)|Namespace (for in-memory database, protocol, etc)|
+|[dmmeta.nstype](/txt/ssimdb/dmmeta/nstype.md)|Namespace type|
+|[dev.readmefile](/txt/ssimdb/dev/readmefile.md)|File containing documentation|
+|[dev.readmesort](/txt/ssimdb/dev/readmesort.md)|sorted categories of txt/ *.md files presented in dev.readme|
+|[dmmeta.reftype](/txt/ssimdb/dmmeta/reftype.md)|Field type constructor (e.g. reference type)|
+|[dev.scriptfile](/txt/ssimdb/dev/scriptfile.md)|Known script file|
+|[dmmeta.ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|File with ssim tuples|
+|[dmmeta.substr](/txt/ssimdb/dmmeta/substr.md)|Specify that the field value is computed from a substring of another field|
+|[dev.targdep](/txt/ssimdb/dev/targdep.md)|Dependency between targets|
+|[dev.target](/txt/ssimdb/dev/target.md)|Build target|
+|[dev.targsrc](/txt/ssimdb/dev/targsrc.md)|List of sources for target|
+|[amcdb.tclass](/txt/ssimdb/amcdb/tclass.md)|AMC template class|

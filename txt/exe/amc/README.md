@@ -183,7 +183,7 @@ To experiment with amc itself, run it inside a sandbox so that a
 broken generator phase cannot prevent its own recovery:
 
 ```
-sandbox amc -reset -diff -- amc
+wt amc -reset -diff -- amc
 ```
 
 ### 2. Generated features

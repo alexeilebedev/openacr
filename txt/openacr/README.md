@@ -99,8 +99,7 @@ pitfalls are collected in [Schema Design and Pitfalls](/txt/openacr/schema.md).
 | [abt_md](/txt/exe/abt_md/README.md) | Markdown linter / regenerator — runs inline commands, refreshes TOCs, checks links |
 | [atf_unit](/txt/exe/atf_unit/README.md) | C++ unit-test runner |
 | [atf_comp](/txt/exe/atf_comp/README.md) | Component-test runner — captures stdout/stderr from a scripted process invocation, diffs against a reference |
-| [atf_ci](/txt/exe/atf_ci/README.md) | CI gate — drives test suites under named `cijob`s (`normalize`, `comp`, `memcheck`, `coverage`, `envx2`) |
-| [gli](/txt/exe/gli/README.md) | GitLab CLI — issues, MRs, pipelines |
+| [atf_ci](/txt/exe/atf_ci/README.md) | CI gate — drives test suites under named `cijob`s (`normalize`, `comp`, `memcheck`, `coverage`) |
 
 ### Main ssimfiles
 <a href="#main-ssimfiles"></a>
