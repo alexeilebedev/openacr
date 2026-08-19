@@ -1,4 +1,15 @@
-# start amc cmd:"$bindir/amc -in_dir:test/amc/numstr_global.ssim -out_dir: -report:N 'algo_lib.FDb.gnumstr.Geti64|algo_lib.FDb.gnumstr.GetnumDflt|algo_lib.FDb.gnumsigned.Geti64|algo_lib.FDb.gnumsigned.GetnumDflt'"
+# start amc cmd:"$bindir/amc -in_dir:- -out_dir: -report:N 'algo_lib.FDb.gnumstr.Geti64|algo_lib.FDb.gnumstr.GetnumDflt|algo_lib.FDb.gnumsigned.Geti64|algo_lib.FDb.gnumsigned.GetnumDflt' < <(cat test/amc/bootstrap.ssim -)"
+amc <- dmmeta.csize  ctype:u16  size:2  alignment:2  comment:""
+amc <- dmmeta.csize  ctype:u32  size:4  alignment:4  comment:""
+amc <- dmmeta.pack  ctype:u32  comment:""
+amc <- dmmeta.csize  ctype:u128  size:16  alignment:16  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.gnumstr  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.FDb.gnumstr  length:20  strtype:leftpad  pad:"'0'"  strict:N
+amc <- dmmeta.numstr  field:algo_lib.FDb.gnumstr  numtype:u64  base:10  min_len:1
+amc <- dmmeta.field  field:algo_lib.FDb.gnumsigned  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.FDb.gnumsigned  length:20  strtype:leftpad  pad:"' '"  strict:N
+amc <- dmmeta.numstr  field:algo_lib.FDb.gnumsigned  numtype:i64  base:10  min_len:1
 # eof amc
 amc -> // --- algo_lib.FDb.gnumstr.GetnumDflt
 amc -> // Convert field to numeric value. If the value is too large

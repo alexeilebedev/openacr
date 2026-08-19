@@ -1,4 +1,17 @@
-# start amc cmd:"$bindir/amc -in_dir:test/amc/pbuf_bitfld_nondflt.ssim -out_dir: -report:N 'pbt.Msg..PbufEncode|pbt.Msg..PbufDecode|pbt.Msg.val.Set'"
+# start amc cmd:"$bindir/amc -in_dir:- -out_dir: -report:N 'pbt.Msg..PbufEncode|pbt.Msg..PbufDecode|pbt.Msg.val.Set' < <(cat test/amc/bootstrap.ssim -)"
+amc <- dmmeta.csize  ctype:u16  size:2  alignment:2  comment:""
+amc <- dmmeta.csize  ctype:u32  size:4  alignment:4  comment:""
+amc <- dmmeta.pack  ctype:u32  comment:""
+amc <- dmmeta.csize  ctype:u128  size:16  alignment:16  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.malloc  arg:u8  reftype:Malloc  dflt:""  comment:""
+amc <- dmmeta.ns  ns:pbt  nstype:protocol  license:GPL  comment:""
+amc <- dmmeta.nscpp  ns:pbt  comment:""
+amc <- dmmeta.ctype  ctype:pbt.Msg  comment:""
+amc <- dmmeta.field  field:pbt.Msg.flags  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:pbt.Msg.val  arg:u32  reftype:Bitfld  dflt:""  comment:""
+amc <- dmmeta.bitfld  field:pbt.Msg.val  offset:0  width:8  srcfield:pbt.Msg.flags  comment:""
+amc <- dmmeta.cpbuf  ctype:pbt.Msg  syntax:proto3  comment:""
+amc <- dmmeta.fpbuf  field:pbt.Msg.val  field_number:1  pb_type:uint32  packed:N  comment:""
 # eof amc
 amc -> // --- pbt.Msg.val.Set
 amc -> // Set bitfield in value of field 'flags'

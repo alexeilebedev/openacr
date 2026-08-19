@@ -1,4 +1,18 @@
-# start amc cmd:"$bindir/amc -in_dir:test/amc/fconst_global.ssim -out_dir: -report:N 'algo_lib.FDb.state.ToCstr|algo_lib.FDb.state.Print|algo_lib.FDb.state.SetStrptrMaybe|algo_lib.FDb.mode.GetEnum'"
+# start amc cmd:"$bindir/amc -in_dir:- -out_dir: -report:N 'algo_lib.FDb.state.ToCstr|algo_lib.FDb.state.Print|algo_lib.FDb.state.SetStrptrMaybe|algo_lib.FDb.mode.GetEnum' < <(cat test/amc/bootstrap.ssim -)"
+amc <- dmmeta.csize  ctype:u16  size:2  alignment:2  comment:""
+amc <- dmmeta.csize  ctype:u32  size:4  alignment:4  comment:""
+amc <- dmmeta.pack  ctype:u32  comment:""
+amc <- dmmeta.csize  ctype:u128  size:16  alignment:16  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.state  arg:u8  reftype:Val  dflt:0  comment:""
+amc <- dmmeta.fconst  fconst:algo_lib.FDb.state/idle  value:0  comment:""
+amc <- dmmeta.fconst  fconst:algo_lib.FDb.state/busy  value:1  comment:""
+amc <- dmmeta.fconst  fconst:algo_lib.FDb.state/quiescing  value:2  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.modebits  arg:u64  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.mode  arg:u32  reftype:Bitfld  dflt:""  comment:""
+amc <- dmmeta.bitfld  field:algo_lib.FDb.mode  offset:0  width:32  srcfield:algo_lib.FDb.modebits  comment:""
+amc <- dmmeta.fconst  fconst:algo_lib.FDb.mode/off  value:0  comment:""
+amc <- dmmeta.fconst  fconst:algo_lib.FDb.mode/on  value:1  comment:""
 # eof amc
 amc -> // --- algo_lib.FDb.state.ToCstr
 amc -> // Convert numeric value of field to one of predefined string constants.

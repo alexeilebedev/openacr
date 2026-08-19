@@ -1,4 +1,18 @@
-# start amc cmd:"$bindir/amc -in_dir:test/amc/fdec_global_bitfld.ssim -out_dir: -report:N 'algo_lib.FDb.decfrac.GetDouble|algo_lib.FDb.decfrac.qSetDouble|algo_lib.FDb.decnarrow.SetDoubleMaybe|algo_lib.FDb.decnarrow.ReadStrptrMaybe'"
+# start amc cmd:"$bindir/amc -in_dir:- -out_dir: -report:N 'algo_lib.FDb.decfrac.GetDouble|algo_lib.FDb.decfrac.qSetDouble|algo_lib.FDb.decnarrow.SetDoubleMaybe|algo_lib.FDb.decnarrow.ReadStrptrMaybe' < <(cat test/amc/bootstrap.ssim -)"
+amc <- dmmeta.csize  ctype:u16  size:2  alignment:2  comment:""
+amc <- dmmeta.csize  ctype:u32  size:4  alignment:4  comment:""
+amc <- dmmeta.pack  ctype:u32  comment:""
+amc <- dmmeta.csize  ctype:u128  size:16  alignment:16  comment:""
+amc <- dmmeta.cfmt  cfmt:algo_lib.FDb.String  printfmt:Tuple  read:Y  print:N  sep:""  genop:N  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.decbits  arg:u64  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.decfrac  arg:u32  reftype:Bitfld  dflt:""  comment:""
+amc <- dmmeta.bitfld  field:algo_lib.FDb.decfrac  offset:0  width:32  srcfield:algo_lib.FDb.decbits  comment:""
+amc <- dmmeta.fdec  field:algo_lib.FDb.decfrac  nplace:2  fixedfmt:Y  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.decnarrowbits  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.decnarrow  arg:u32  reftype:Bitfld  dflt:""  comment:""
+amc <- dmmeta.bitfld  field:algo_lib.FDb.decnarrow  offset:0  width:10  srcfield:algo_lib.FDb.decnarrowbits  comment:""
+amc <- dmmeta.fdec  field:algo_lib.FDb.decnarrow  nplace:2  fixedfmt:Y  comment:""
 # eof amc
 amc -> // --- algo_lib.FDb.decfrac.qSetDouble
 amc -> // Set value of field decfrac.

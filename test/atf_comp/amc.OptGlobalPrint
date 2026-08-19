@@ -1,4 +1,14 @@
-# start amc cmd:"$bindir/amc -in_dir:test/amc/opt_global.ssim -out_dir: -report:N algo_lib.FDb.tail.Print"
+# start amc cmd:"$bindir/amc -in_dir:- -out_dir: -report:N algo_lib.FDb.tail.Print < <(cat test/amc/bootstrap.ssim -)"
+amc <- dmmeta.csize  ctype:u16  size:2  alignment:2  comment:""
+amc <- dmmeta.csize  ctype:u32  size:4  alignment:4  comment:""
+amc <- dmmeta.pack  ctype:u32  comment:""
+amc <- dmmeta.csize  ctype:u128  size:16  alignment:16  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.Sub  comment:""
+amc <- dmmeta.field  field:algo_lib.Sub.n  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.cfmt  cfmt:algo_lib.Sub.String  printfmt:Extern  read:N  print:Y  sep:""  genop:Y  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.tail  arg:algo_lib.Sub  reftype:Opt  dflt:""  comment:""
+amc <- dmmeta.cfmt  cfmt:algo_lib.FDb.String  printfmt:Tuple  read:N  print:Y  sep:""  genop:Y  comment:""
 # eof amc
 amc -> amc.infinity_pool  field:algo_lib.FDb._db  arg:algo_lib.FDb  reftype:Global  comment:"Varlen pool must be used for this ctype"
 amc -> // --- algo_lib.FDb.tail.Print

@@ -1,4 +1,13 @@
-# start amc cmd:"$bindir/amc -in_dir:test/amc/print_global_tuple.ssim -out_dir: -report:N algo_lib.FDb.%Print%"
+# start amc cmd:"$bindir/amc -in_dir:- -out_dir: -report:N algo_lib.FDb.%Print% < <(cat test/amc/bootstrap.ssim -)"
+amc <- dmmeta.csize  ctype:u16  size:2  alignment:2  comment:""
+amc <- dmmeta.csize  ctype:u32  size:4  alignment:4  comment:""
+amc <- dmmeta.pack  ctype:u32  comment:""
+amc <- dmmeta.csize  ctype:u128  size:16  alignment:16  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.val  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.buf  arg:u32  reftype:Inlary  dflt:""  comment:""
+amc <- dmmeta.inlary  field:algo_lib.FDb.buf  min:0  max:4  comment:""
+amc <- dmmeta.cfmt  cfmt:algo_lib.FDb.String  printfmt:Tuple  read:N  print:Y  sep:""  genop:Y  comment:""
 # eof amc
 amc -> // --- algo_lib.FDb..Print
 amc -> // print string representation of ROW to string STR

@@ -46,7 +46,19 @@
 // error: amc reports amc.missing_ptrary and exits nonzero without writing
 // any output.
 void atf_comp::comptest_amc_MissingPtrary() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_missing_ptrary.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.FRow  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FRow.rowid  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.row  arg:algo_lib.FRow  reftype:Tpool  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.c_row  arg:algo_lib.FRow  reftype:Ptrary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.tcurs  tfunc:Ptrary.curs  dflt:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.tcurs  tfunc:Ptrary.oncecurs  dflt:N  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // The universe is the schema closure the live tree declares as amc's own
@@ -63,14 +75,35 @@ void atf_comp::comptest_amc_SchemaClosure() {
 // missing dmmeta.csize row instead of prescribing a width change for a
 // type whose width is already right.
 void atf_comp::comptest_amc_BadBigendNosize() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_bigend_nosize.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:u16  likeu64:N  bigendok:Y  issigned:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.big  arg:u16  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbigend  field:algo_lib.FDb.big  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A big-endian field of reftype Inlary on a ctype with a fieldwise
 // constructor: the rejection reports and generation continues to the end
 // of the run, accumulating any further schema errors into the exit code.
 void atf_comp::comptest_amc_BadBigendReftype() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_bigend_reftype.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cpptype  ctype:u16  ctor:N");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:u16  likeu64:N  bigendok:Y  issigned:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Rec  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cpptype  ctype:algo_lib.Rec  ctor:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.big  arg:u16  reftype:Inlary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.inlary  field:algo_lib.Rec.big  min:4  max:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbigend  field:algo_lib.Rec.big  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A big-endian u32 field whose bltin row withholds bigendok: the width has
@@ -78,7 +111,16 @@ void atf_comp::comptest_amc_BadBigendReftype() {
 // byteswapped, and the Val accessors would swap it anyway.  The check that
 // reads the flag is separate from the width check, so it needs its own pin.
 void atf_comp::comptest_amc_BadBigendDeadend() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_bigend_deadend.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:u32  likeu64:N  bigendok:N  issigned:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.big  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbigend  field:algo_lib.FDb.big  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A big-endian u128 field whose bltin row claims bigendok: byteswap
@@ -86,7 +128,16 @@ void atf_comp::comptest_amc_BadBigendDeadend() {
 // call a nonexistent be128toh/htobe128. The width check rejects the field
 // independently of the bltin claim.
 void atf_comp::comptest_amc_BadBigendU128() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_bigend_u128.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:u128  likeu64:N  bigendok:Y  issigned:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.big  arg:u128  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbigend  field:algo_lib.FDb.big  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // Reftype Bitfld and the dmmeta.bitfld record imply each other, and the
@@ -96,26 +147,67 @@ void atf_comp::comptest_amc_BadBigendU128() {
 // compare, print and read walks pass over.  Both are reported in one run;
 // the correctly paired field and the plain Val fields draw nothing.
 void atf_comp::comptest_amc_BadBitfldReftype() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_bitfld_reftype.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.word  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.flag  arg:bool  reftype:Bitfld  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.good  arg:bool  reftype:Bitfld  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.FDb.good  offset:0  width:1  srcfield:algo_lib.FDb.word  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.notbitfld  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.FDb.notbitfld  offset:8  width:8  srcfield:algo_lib.FDb.word  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A bitset over a 9-byte (72-bit) Smallstr element: not an unsigned integer
 // builtin, so no exact bit index/shift split exists.
 void atf_comp::comptest_amc_BadBitsetElem() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_bitset_elem.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Str9  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Str9.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.Str9.ch  length:9  strtype:rightpad  pad:\"' '\"  strict:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:algo_lib.Str9  size:9  alignment:1  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.TestBitset  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.TestBitset.bits  arg:algo_lib.Str9  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbitset  field:algo_lib.TestBitset.bits  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A bitset over an i8 element: a signed element compiles but sign-extends on
 // read, so bit queries such as Sup return wrong values at runtime.
 void atf_comp::comptest_amc_BadBitsetSigned() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_bitset_signed.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.TestBitset  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.TestBitset.bits  arg:i8  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbitset  field:algo_lib.TestBitset.bits  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A bitset over a u32 element whose csize row is missing from the universe:
 // the element type is fine; only its width is unknown. The diagnostic names
 // the missing csize row rather than prescribing a different element type.
 void atf_comp::comptest_amc_BadBitsetNosize() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_bitset_nosize.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.TestBitset  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.TestBitset.bits  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbitset  field:algo_lib.TestBitset.bits  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // Bitset elements whose csize row states a width other than the one the
@@ -128,7 +220,23 @@ void atf_comp::comptest_amc_BadBitsetNosize() {
 // and u8 elements of the same universe, whose csize rows agree with their
 // names, draw nothing and stand as the controls.
 void atf_comp::comptest_amc_BadBitsetWidth() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_bitset_width.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:8  alignment:8  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:3  alignment:1  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:32  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.TestBitset  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.TestBitset.bits  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbitset  field:algo_lib.TestBitset.bits  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.TestBitset.wide  arg:u128  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbitset  field:algo_lib.TestBitset.wide  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.TestBitset.mid  arg:u16  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbitset  field:algo_lib.TestBitset.mid  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.TestBitset.ok  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbitset  field:algo_lib.TestBitset.ok  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.TestBitset.small  arg:u8  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbitset  field:algo_lib.TestBitset.small  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // Fixed-inlary field defaults that name the record by the Init parameter
@@ -140,7 +248,20 @@ void atf_comp::comptest_amc_BadBitsetWidth() {
 // it, turning the default into a different expression that still compiles.
 // Both are reported and the run exits nonzero.
 void atf_comp::comptest_amc_BadCopyctorInit() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_copyctor_init.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Rec  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.grow  arg:u32  reftype:Inlary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.inlary  field:algo_lib.Rec.grow  min:1  max:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.fix  arg:u32  reftype:Inlary  dflt:\"u32(sizeof parent)\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.inlary  field:algo_lib.Rec.fix  min:4  max:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.mem  arg:u32  reftype:Inlary  dflt:\"u32(gcfg.parent.n)\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.inlary  field:algo_lib.Rec.mem  min:4  max:4  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // The shapes the copy-constructor inliner does cover, pinned through the
@@ -163,7 +284,30 @@ void atf_comp::comptest_amc_BadCopyctorInit() {
 // reference behind it, that misreading loses the reference and leaves the
 // parameter name in the constructor, where it is undeclared.
 void atf_comp::comptest_amc_CopyctorInit() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/copyctor_init.ssim -out_dir: -report:N algo_lib.Rec..CopyCtor");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N algo_lib.Rec..CopyCtor < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Rec  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.grow  arg:u32  reftype:Inlary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.inlary  field:algo_lib.Rec.grow  min:1  max:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.fix  arg:u32  reftype:Inlary  dflt:\"u32(gparent.n)\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.inlary  field:algo_lib.Rec.fix  min:4  max:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.size  arg:u32  reftype:Inlary  dflt:\"u32(ssizeof(*this))\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.inlary  field:algo_lib.Rec.size  min:4  max:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.lit  arg:u32  reftype:Inlary  dflt:\"7\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.inlary  field:algo_lib.Rec.lit  min:4  max:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.str  arg:u32  reftype:Inlary  dflt:'u32(sizeof(\"parent\"))'  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.inlary  field:algo_lib.Rec.str  min:4  max:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.note  arg:u32  reftype:Inlary  dflt:\"u32(1 /* parent */)\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.inlary  field:algo_lib.Rec.note  min:4  max:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.chr  arg:u32  reftype:Inlary  dflt:\"u32('\\\"') + u32(sizeof(parent))\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.inlary  field:algo_lib.Rec.chr  min:4  max:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.raw  arg:u32  reftype:Inlary  dflt:'u32(sizeof(R\"(a \"parent\" b)\"))'  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.inlary  field:algo_lib.Rec.raw  min:4  max:4  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // Which bitfield reads bound the value by the field's store, over one universe
@@ -201,7 +345,54 @@ void atf_comp::comptest_amc_CopyctorInit() {
 // signed integer named by a universe that lacks the type's amcdb.bltin row
 // still gets signed range checks, and this fixture is that universe.
 void atf_comp::comptest_amc_BitfldReadRange() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bitfld_read_range.ssim -out_dir: -report:N 'algo_lib.Rec.(narrow|full|signed_full|flag|qos|sig|sig_edge|sig_full|dec|plain).ReadStrptrMaybe'");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N 'algo_lib.Rec.(narrow|full|signed_full|flag|qos|sig|sig_edge|sig_full|dec|plain).ReadStrptrMaybe' < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Qos  comment:\"value wrapped in a single field\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Qos.value  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.Qos.String  printfmt:Raw  read:Y  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Rec  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.Rec.String  printfmt:Tuple  read:Y  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.value  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.narrow  arg:u32  reftype:Bitfld  dflt:\"\"  comment:\"arg range exceeds the field's bits\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.Rec.narrow  offset:0  width:3  srcfield:algo_lib.Rec.value  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Rec.narrow/zero  value:0  comment:\"a symbol puts the read on the path that bounds the value\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.full  arg:u8  reftype:Bitfld  dflt:\"\"  comment:\"field spans the whole arg type\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.Rec.full  offset:3  width:8  srcfield:algo_lib.Rec.value  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Rec.full/zero  value:0  comment:\"same path, and the bits reach every value the arg type holds\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.signed_full  arg:i8  reftype:Bitfld  dflt:\"\"  comment:\"signed arg, whole width\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.Rec.signed_full  offset:11  width:8  srcfield:algo_lib.Rec.value  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Rec.signed_full/zero  value:0  comment:\"same path, and the bits keep the sign\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.flag  arg:bool  reftype:Bitfld  dflt:\"\"  comment:\"bool holds no value past one bit\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.Rec.flag  offset:19  width:1  srcfield:algo_lib.Rec.value  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Rec.flag/zero  value:0  comment:\"same path, and one bit is the whole of a bool\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.qos  arg:algo_lib.Qos  reftype:Bitfld  dflt:\"\"  comment:\"wrapped value, arg range exceeds the bits\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.Rec.qos  offset:20  width:4  srcfield:algo_lib.Rec.value  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Rec.qos/zero  value:0  comment:\"same path, through the field the wrapper stores into\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Sig  comment:\"signed value wrapped in a single field\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Sig.value  arg:i32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.Sig.String  printfmt:Raw  read:Y  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.sig  arg:algo_lib.Sig  reftype:Bitfld  dflt:\"\"  comment:\"wrapped signed value, narrowed by the bits\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.Rec.sig  offset:24  width:4  srcfield:algo_lib.Rec.value  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Rec.sig/zero  value:0  comment:\"same path, and the bits drop both ends of the wrapped range\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.dec  arg:u32  reftype:Bitfld  dflt:\"\"  comment:\"decimal value scaled into the field's bits\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.Rec.dec  offset:28  width:12  srcfield:algo_lib.Rec.value  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdec  field:algo_lib.Rec.dec  nplace:2  fixedfmt:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Sig8  comment:\"signed 8-bit value wrapped in a single field\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Sig8.value  arg:i8  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.Sig8.String  printfmt:Raw  read:Y  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.sig_edge  arg:algo_lib.Sig8  reftype:Bitfld  dflt:\"\"  comment:\"wrapped signed value, bits hold its whole positive half\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.Rec.sig_edge  offset:40  width:7  srcfield:algo_lib.Rec.value  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Rec.sig_edge/zero  value:0  comment:\"same path, and the bits drop the sign alone\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.sig_full  arg:algo_lib.Sig8  reftype:Bitfld  dflt:\"\"  comment:\"wrapped signed value, bits span the whole arg type\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.Rec.sig_full  offset:47  width:8  srcfield:algo_lib.Rec.value  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Rec.sig_full/zero  value:0  comment:\"same path, and the bits span the wrapped arg type\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.plain  arg:u32  reftype:Bitfld  dflt:\"\"  comment:\"narrow again, with no symbol to read first\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.Rec.plain  offset:55  width:3  srcfield:algo_lib.Rec.value  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A cascdel Ptrary whose row ctype has no instance pool: with nothing to
@@ -209,7 +400,21 @@ void atf_comp::comptest_amc_BitfldReadRange() {
 // spin forever. Pins the existing rejection (amc.nopool on the xref, then
 // the cascdel pool vrfy) so the loop stays unreachable.
 void atf_comp::comptest_amc_BadCascdelNopool() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_cascdel_nopool.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.FRow  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FRow.rowid  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.c_row  arg:algo_lib.FRow  reftype:Ptrary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ptrary  field:algo_lib.FDb.c_row  unique:Y  heaplike:N");
+    atf_comp::ProcWrite(proc, "dmmeta.cascdel  field:algo_lib.FDb.c_row  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.tcurs  tfunc:Ptrary.curs  dflt:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.tcurs  tfunc:Ptrary.oncecurs  dflt:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.xref  field:algo_lib.FDb.c_row  inscond:false  via:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A cascdel unique:Y Ptrary whose field has no dmmeta.xref record: the
@@ -217,13 +422,50 @@ void atf_comp::comptest_amc_BadCascdelNopool() {
 // an xref makes the row's delete unlink it, so the loop would never
 // terminate.
 void atf_comp::comptest_amc_BadCascdelXref() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_cascdel_xref.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.FRow  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FRow.rowid  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.row  arg:algo_lib.FRow  reftype:Tpool  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.c_row  arg:algo_lib.FRow  reftype:Ptrary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ptrary  field:algo_lib.FDb.c_row  unique:Y  heaplike:N");
+    atf_comp::ProcWrite(proc, "dmmeta.cascdel  field:algo_lib.FDb.c_row  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.tcurs  tfunc:Ptrary.curs  dflt:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.tcurs  tfunc:Ptrary.oncecurs  dflt:N  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A buffer condition on a global (FDb) fbuf: the record that enters the list
 // is the buffer's parent row, and a global has no row to enter it with.
 void atf_comp::comptest_amc_BadFbufCondGlobal() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_fbuf_cond_global.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.listtype  listtype:cd  circular:Y  haveprev:Y  instail:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbuftype  fbuftype:Bytebuf  skipbytes:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbufdir  fbufdir:in  read:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbufdir  fbufdir:out  read:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.tcurs  tfunc:Llist.curs  dflt:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.tcurs  tfunc:Llist.delcurs  dflt:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.FIohook  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FIohook.fildes  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.FRow  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FRow.rowid  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.row  arg:algo_lib.FRow  reftype:Tpool  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.cd_ready  arg:algo_lib.FRow  reftype:Llist  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.llist  field:algo_lib.FDb.cd_ready  havetail:N  havecount:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.xref  field:algo_lib.FDb.cd_ready  inscond:false  via:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.in  arg:u8  reftype:Fbuf  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbuf  field:algo_lib.FDb.in  max:64  fbuftype:Bytebuf  iotype:standard  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fcond  fcond:algo_lib.FDb.in/ready  ins:algo_lib.FDb.cd_ready  via:\"\"  rem:Y  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A print:Y cfmt whose (strfmt, printfmt) pair has no print path would ship a
@@ -238,7 +480,51 @@ void atf_comp::comptest_amc_BadFbufCondGlobal() {
 // cfmt carrying the rejected printfmt, which generates no print function at
 // all.
 void atf_comp::comptest_amc_BadCfmtPrint() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_cfmt_print.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Sample  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Sample.value  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.Sample.Tuple  printfmt:Auto  read:N  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Compact  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Compact.a  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Compact.b  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.Compact.String  printfmt:CompactSep  read:N  print:Y  sep:,  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Quiet  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Quiet.a  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.Quiet.String  printfmt:CompactSep  read:N  print:N  sep:,  genop:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.CTuple  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.CTuple.a  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.CTuple.String  printfmt:Tuple  read:N  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.CAuto  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.CAuto.a  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.CAuto.String  printfmt:Auto  read:N  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.CRaw  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.CRaw.a  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.CRaw.String  printfmt:Raw  read:N  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.CSep  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.CSep.a  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.CSep.b  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.CSep.String  printfmt:Sep  read:N  print:Y  sep::  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.CBitset  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.CBitset.a  arg:bool  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.CBitset.b  arg:bool  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.CBitset.String  printfmt:Bitset  read:N  print:Y  sep:,  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.CArgv  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.CArgv.a  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.CArgv.Argv  printfmt:CompactSep  read:N  print:Y  sep:\"\"  genop:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.CJson  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.CJson.a  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.CJson.b  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:u32.Json  printfmt:Extern  read:N  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.CJson.Json  printfmt:CompactSep  read:N  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.CExtern  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.CExtern.a  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.CExtern.Tuple  printfmt:Extern  read:N  print:Y  sep:\"\"  genop:N  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A read:Y cfmt whose (strfmt, printfmt) pair has no read path would ship a
@@ -256,7 +542,49 @@ void atf_comp::comptest_amc_BadCfmtPrint() {
 // strfmt, for which the read emitter draws nothing at all; and a read:N cfmt
 // carrying the rejected printfmt, which generates no read function to be empty.
 void atf_comp::comptest_amc_BadCfmtRead() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_cfmt_read.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.RCompact  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.RCompact.a  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.RCompact.b  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.RCompact.String  printfmt:CompactSep  read:Y  print:N  sep:,  genop:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.RQuiet  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.RQuiet.a  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.RQuiet.String  printfmt:CompactSep  read:N  print:N  sep:,  genop:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.RTuple  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.RTuple.a  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.RTuple.String  printfmt:Tuple  read:Y  print:N  sep:\"\"  genop:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.RAuto  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.RAuto.a  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.RAuto.String  printfmt:Auto  read:Y  print:N  sep:\"\"  genop:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.RRaw  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.RRaw.a  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.RRaw.String  printfmt:Raw  read:Y  print:N  sep:\"\"  genop:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.RSep  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.RSep.a  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.RSep.b  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.RSep.String  printfmt:Sep  read:Y  print:N  sep::  genop:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.RBitset  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.RBitset.a  arg:bool  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.RBitset.b  arg:bool  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.RBitset.String  printfmt:Bitset  read:Y  print:N  sep:,  genop:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.RExtern  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.RExtern.a  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.RExtern.String  printfmt:Extern  read:Y  print:N  sep:\"\"  genop:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.RTupfmt  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.RTupfmt.a  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.RTupfmt.Tuple  printfmt:CompactSep  read:Y  print:N  sep:\"\"  genop:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.RTupxtern  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.RTupxtern.a  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.RTupxtern.Tuple  printfmt:Extern  read:Y  print:N  sep:\"\"  genop:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.RJson  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.RJson.a  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.RJson.Json  printfmt:CompactSep  read:Y  print:N  sep:\"\"  genop:N  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A String cfmt asking for printfmt:CompactSep: the printfmt table declares
@@ -268,7 +596,21 @@ void atf_comp::comptest_amc_BadCfmtRead() {
 // pinned by BadCfmtPrint and BadCfmtRead. The Sep ctype beside it is the
 // control: the printfmt amc does generate draws no diagnostic on either side.
 void atf_comp::comptest_amc_BadCompactSep() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_compactsep.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Ok  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Ok.a  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Ok.b  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.Ok.String  printfmt:Sep  read:Y  print:Y  sep:\":\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Compact  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Compact.a  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Compact.b  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.Compact.String  printfmt:CompactSep  read:Y  print:Y  sep:\":\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // The field-aware command-line reader is assembled from companion functions,
@@ -288,7 +630,87 @@ void atf_comp::comptest_amc_BadCompactSep() {
 // yields no reader at all -- one because its Argv cfmt is read:N, the other
 // because ArgvGnu generates no reader however it is spelled.
 void atf_comp::comptest_amc_BadArgvRead() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_argv_read.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ns  ns:command  nstype:lib  license:GPL  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.nscpp  ns:command  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ns  ns:okapp  nstype:lib  license:GPL  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.nscpp  ns:okapp  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ns  ns:noreadapp  nstype:lib  license:GPL  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.nscpp  ns:noreadapp  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ns  ns:gnuapp  nstype:lib  license:GPL  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.nscpp  ns:gnuapp  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Cmdline  comment:\"base command line that generates both companions the reader calls\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Cmdline.help  arg:bool  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Cmdline.verbose  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.Cmdline.Argv  printfmt:Auto  read:Y  print:N  sep:\"\"  genop:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.CmdlineNoread  comment:\"base command line whose Argv cfmt is read:N: no NArgs\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.CmdlineNoread.help  arg:bool  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.CmdlineNoread.Argv  printfmt:Auto  read:N  print:Y  sep:\"\"  genop:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.CmdlineRaw  comment:\"base command line whose only read cfmt is Raw: no ReadFieldMaybe\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.CmdlineRaw.help  arg:bool  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.CmdlineRaw.Argv  printfmt:Raw  read:Y  print:Y  sep:\"\"  genop:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.cmdline  arg:algo_lib.Cmdline  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.cmdline_noread  arg:algo_lib.CmdlineNoread  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.cmdline_raw  arg:algo_lib.CmdlineRaw  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:command.good  comment:\"accept: Argv read:Y, printfmt Auto, base generates both companions\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:command.good.limit  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:command.good.Argv  printfmt:Auto  read:Y  print:Y  sep:\"\"  genop:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ccmdline  ctype:command.good  read:Y  basecmdline:algo_lib.FDb.cmdline  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:command.goodnobase  comment:\"accept: no basecmdline, so the reader calls no base companion\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:command.goodnobase.limit  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:command.goodnobase.Argv  printfmt:Auto  read:Y  print:Y  sep:\"\"  genop:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ccmdline  ctype:command.goodnobase  read:Y  basecmdline:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:command.goodraw  comment:\"accept: the Argv cfmt is Raw but the String cfmt supplies ReadFieldMaybe and GetAnon\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:command.goodraw.limit  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:command.goodraw.name  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.anonfld  field:command.goodraw.name  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:command.goodraw.Argv  printfmt:Raw  read:Y  print:Y  sep:\"\"  genop:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:command.goodraw.String  printfmt:Tuple  read:Y  print:Y  sep:\"\"  genop:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ccmdline  ctype:command.goodraw  read:Y  basecmdline:algo_lib.FDb.cmdline  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:command.raw  comment:\"reject: the only read cfmt is Raw, so neither ReadFieldMaybe nor GetAnon\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:command.raw.limit  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:command.raw.name  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.anonfld  field:command.raw.name  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:command.raw.Argv  printfmt:Raw  read:Y  print:Y  sep:\"\"  genop:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ccmdline  ctype:command.raw  read:Y  basecmdline:algo_lib.FDb.cmdline  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:command.xtern  comment:\"reject: the only read cfmt is Extern, so no ReadFieldMaybe\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:command.xtern.limit  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:command.xtern.Argv  printfmt:Extern  read:Y  print:Y  sep:\"\"  genop:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ccmdline  ctype:command.xtern  read:Y  basecmdline:algo_lib.FDb.cmdline  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:command.basenoread  comment:\"reject: the base's Argv cfmt is read:N, so no base NArgs\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:command.basenoread.limit  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:command.basenoread.Argv  printfmt:Auto  read:Y  print:Y  sep:\"\"  genop:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ccmdline  ctype:command.basenoread  read:Y  basecmdline:algo_lib.FDb.cmdline_noread  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:command.baseraw  comment:\"reject: the base's only read cfmt is Raw, so no base ReadFieldMaybe\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:command.baseraw.limit  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:command.baseraw.Argv  printfmt:Auto  read:Y  print:Y  sep:\"\"  genop:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ccmdline  ctype:command.baseraw  read:Y  basecmdline:algo_lib.FDb.cmdline_raw  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:command.noread  comment:\"reject at the namespace: Argv cfmt is read:N, so no command.noread_ReadArgv\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:command.noread.limit  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:command.noread.Argv  printfmt:Auto  read:N  print:Y  sep:\"\"  genop:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ccmdline  ctype:command.noread  read:Y  basecmdline:algo_lib.FDb.cmdline  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:command.gnu  comment:\"reject at the namespace: only an ArgvGnu cfmt, which generates no reader\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:command.gnu.limit  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:command.gnu.ArgvGnu  printfmt:Auto  read:Y  print:Y  sep:\"\"  genop:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ccmdline  ctype:command.gnu  read:Y  basecmdline:algo_lib.FDb.cmdline  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:okapp.FDb  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:okapp.FDb._db  arg:okapp.FDb  reftype:Global  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:okapp.FDb.cmdline  arg:command.good  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.main  ns:okapp  ismodule:N");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:noreadapp.FDb  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:noreadapp.FDb._db  arg:noreadapp.FDb  reftype:Global  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:noreadapp.FDb.cmdline  arg:command.noread  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.main  ns:noreadapp  ismodule:N");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:gnuapp.FDb  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:gnuapp.FDb._db  arg:gnuapp.FDb  reftype:Global  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:gnuapp.FDb.cmdline  arg:command.gnu  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.main  ns:gnuapp  ismodule:N");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A Bytebuf or Linebuf measures its message in bytes and hands it back as an
@@ -319,7 +741,83 @@ void atf_comp::comptest_amc_BadArgvRead() {
 // The Bytebuf over the same ccmp-less struct stays accepted throughout: it
 // returns every available byte and compares nothing.
 void atf_comp::comptest_amc_BadFbufElem() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_fbuf_elem.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:i8  likeu64:Y  bigendok:N  issigned:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:u8  likeu64:Y  bigendok:N  issigned:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ccmp  ctype:u8  extrn:N  genop:N  order:Y  minmax:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:i16  likeu64:Y  bigendok:Y  issigned:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:u16  likeu64:Y  bigendok:Y  issigned:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:i32  likeu64:Y  bigendok:Y  issigned:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:u32  likeu64:Y  bigendok:Y  issigned:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:i64  likeu64:Y  bigendok:Y  issigned:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:u64  likeu64:Y  bigendok:Y  issigned:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:u128  likeu64:N  bigendok:N  issigned:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:bool  likeu64:Y  bigendok:N  issigned:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:char  likeu64:Y  bigendok:N  issigned:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.listtype  listtype:cd  circular:Y  haveprev:Y  instail:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbuftype  fbuftype:Bytebuf  skipbytes:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbufdir  fbufdir:in  read:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbufdir  fbufdir:out  read:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.tcurs  tfunc:Llist.curs  dflt:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.tcurs  tfunc:Llist.delcurs  dflt:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbuftype  fbuftype:Linebuf  skipbytes:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbuftype  fbuftype:Msgbuf  skipbytes:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.FIohook  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FIohook.fildes  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.FRow  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FRow.rowid  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Elem  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Elem.value  arg:u8  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Eqelem  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Eqelem.value  arg:u8  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ccmp  ctype:algo_lib.Eqelem  extrn:N  genop:Y  order:N  minmax:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Extrnelem  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Extrnelem.value  arg:u8  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ccmp  ctype:algo_lib.Extrnelem  extrn:Y  genop:N  order:N  minmax:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Cmpelem  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Cmpelem.value  arg:u8  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ccmp  ctype:algo_lib.Cmpelem  extrn:N  genop:N  order:Y  minmax:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Opaque  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cextern  ctype:algo_lib.Opaque  initmemset:N  isstruct:Y  plaindata:N");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.in_byte  arg:u8  reftype:Fbuf  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbuf  field:algo_lib.FDb.in_byte  max:64  fbuftype:Bytebuf  iotype:nofd  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.in_char  arg:char  reftype:Fbuf  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbuf  field:algo_lib.FDb.in_char  max:64  fbuftype:Bytebuf  iotype:nofd  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.in_line  arg:char  reftype:Fbuf  dflt:\"'\\\\n'\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbuf  field:algo_lib.FDb.in_line  max:64  fbuftype:Linebuf  iotype:nofd  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.out_msg  arg:algo_lib.FRow  reftype:Fbuf  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbuf  field:algo_lib.FDb.out_msg  max:64  fbuftype:Msgbuf  iotype:nofd  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.in_wide  arg:u16  reftype:Fbuf  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbuf  field:algo_lib.FDb.in_wide  max:64  fbuftype:Bytebuf  iotype:nofd  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.in_word  arg:u64  reftype:Fbuf  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbuf  field:algo_lib.FDb.in_word  max:64  fbuftype:Bytebuf  iotype:nofd  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.in_rec  arg:algo_lib.FRow  reftype:Fbuf  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbuf  field:algo_lib.FDb.in_rec  max:64  fbuftype:Bytebuf  iotype:nofd  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.in_lwide  arg:u32  reftype:Fbuf  dflt:\"32\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbuf  field:algo_lib.FDb.in_lwide  max:64  fbuftype:Linebuf  iotype:nofd  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.in_elem  arg:algo_lib.Elem  reftype:Fbuf  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbuf  field:algo_lib.FDb.in_elem  max:64  fbuftype:Bytebuf  iotype:nofd  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.in_eline  arg:algo_lib.Elem  reftype:Fbuf  dflt:\"algo_lib::Elem()\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbuf  field:algo_lib.FDb.in_eline  max:64  fbuftype:Linebuf  iotype:nofd  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.in_eqline  arg:algo_lib.Eqelem  reftype:Fbuf  dflt:\"algo_lib::Eqelem()\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbuf  field:algo_lib.FDb.in_eqline  max:64  fbuftype:Linebuf  iotype:nofd  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.in_xline  arg:algo_lib.Extrnelem  reftype:Fbuf  dflt:\"algo_lib::Extrnelem()\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbuf  field:algo_lib.FDb.in_xline  max:64  fbuftype:Linebuf  iotype:nofd  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.in_cmpline  arg:algo_lib.Cmpelem  reftype:Fbuf  dflt:\"algo_lib::Cmpelem()\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbuf  field:algo_lib.FDb.in_cmpline  max:64  fbuftype:Linebuf  iotype:nofd  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.in_scanline  arg:algo_lib.Elem  reftype:Fbuf  dflt:\"algo_lib::Elem()\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbuf  field:algo_lib.FDb.in_scanline  max:64  fbuftype:Linebuf  iotype:nofd  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ffunc  ffunc:algo_lib.FDb.in_scanline.ScanMsg  extrn:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.out_eline  arg:algo_lib.Elem  reftype:Fbuf  dflt:\"algo_lib::Elem()\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbuf  field:algo_lib.FDb.out_eline  max:64  fbuftype:Linebuf  iotype:nofd  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.in_opaque  arg:algo_lib.Opaque  reftype:Fbuf  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbuf  field:algo_lib.FDb.in_opaque  max:64  fbuftype:Bytebuf  iotype:nofd  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // The element of a Varlen or an Opt field is addressed in place inside the
@@ -349,7 +847,50 @@ void atf_comp::comptest_amc_BadFbufElem() {
 // the rule's other edge: that reftype gives its member a lifetime of its own, so
 // the destructor is called and the element type is unconstrained.
 void atf_comp::comptest_amc_BadOptDtor() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_opt_dtor.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:i8  likeu64:Y  bigendok:N  issigned:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:u8  likeu64:Y  bigendok:N  issigned:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ccmp  ctype:u8  extrn:N  genop:N  order:Y  minmax:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:i16  likeu64:Y  bigendok:Y  issigned:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:u16  likeu64:Y  bigendok:Y  issigned:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:i32  likeu64:Y  bigendok:Y  issigned:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:u32  likeu64:Y  bigendok:Y  issigned:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:i64  likeu64:Y  bigendok:Y  issigned:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:u64  likeu64:Y  bigendok:Y  issigned:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:u128  likeu64:N  bigendok:N  issigned:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:bool  likeu64:Y  bigendok:N  issigned:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:char  likeu64:Y  bigendok:N  issigned:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Opaque  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cextern  ctype:algo_lib.Opaque  initmemset:N  isstruct:Y  plaindata:N");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:algo_lib.Opaque  size:8  alignment:8  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.PlainElem  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:algo_lib.PlainElem  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.PlainElem.value  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.MsgVarlenDtor  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:algo_lib.MsgVarlenDtor  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgVarlenDtor.head  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgVarlenDtor.tail  arg:algo_lib.Opaque  reftype:Varlen  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.MsgOptDtor  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:algo_lib.MsgOptDtor  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgOptDtor.head  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgOptDtor.tail  arg:algo_lib.Opaque  reftype:Opt  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.MsgVarlenPlain  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:algo_lib.MsgVarlenPlain  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgVarlenPlain.head  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgVarlenPlain.tail  arg:algo_lib.PlainElem  reftype:Varlen  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.MsgOptPlain  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:algo_lib.MsgOptPlain  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgOptPlain.head  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgOptPlain.tail  arg:algo_lib.PlainElem  reftype:Opt  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.MsgValDtor  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:algo_lib.MsgValDtor  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgValDtor.body  arg:algo_lib.Opaque  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A condition's ins index is inserted into by name, one row at a time, so the
@@ -368,73 +909,300 @@ void atf_comp::comptest_amc_BadOptDtor() {
 // accepted control is a condition on the sibling buffer naming an Llist of the
 // watched ctype, which draws no diagnostic.
 void atf_comp::comptest_amc_BadFcondIns() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_fcond_ins.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ccmp  ctype:u64  extrn:N  genop:N  order:Y  minmax:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.listtype  listtype:cd  circular:Y  haveprev:Y  instail:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbuftype  fbuftype:Bytebuf  skipbytes:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbufdir  fbufdir:in  read:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbufdir  fbufdir:out  read:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.tcurs  tfunc:Llist.curs  dflt:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.tcurs  tfunc:Llist.delcurs  dflt:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.FIohook  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FIohook.fildes  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.FRow  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FRow.rowid  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.row  arg:algo_lib.FRow  reftype:Tpool  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.cd_ready  arg:algo_lib.FRow  reftype:Llist  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.llist  field:algo_lib.FDb.cd_ready  havetail:N  havecount:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.xref  field:algo_lib.FDb.cd_ready  inscond:false  via:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.FConn  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FConn.connid  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.conn  arg:algo_lib.FConn  reftype:Lary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.cd_conn_read  arg:algo_lib.FConn  reftype:Llist  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.llist  field:algo_lib.FDb.cd_conn_read  havetail:N  havecount:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.xref  field:algo_lib.FDb.cd_conn_read  inscond:false  via:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.c_conn_read  arg:algo_lib.FConn  reftype:Ptrary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ptrary  field:algo_lib.FDb.c_conn_read  unique:Y  heaplike:N");
+    atf_comp::ProcWrite(proc, "dmmeta.xref  field:algo_lib.FDb.c_conn_read  inscond:false  via:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.ind_conn  arg:algo_lib.FConn  reftype:Thash  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.thash  field:algo_lib.FDb.ind_conn  hashfld:algo_lib.FConn.connid  unique:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.xref  field:algo_lib.FDb.ind_conn  inscond:false  via:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.n_conn  arg:algo_lib.FConn  reftype:Count  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.bh_conn  arg:algo_lib.FConn  reftype:Bheap  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.sortfld  field:algo_lib.FDb.bh_conn  sortfld:algo_lib.FConn.connid");
+    atf_comp::ProcWrite(proc, "dmmeta.xref  field:algo_lib.FDb.bh_conn  inscond:false  via:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.tr_conn  arg:algo_lib.FConn  reftype:Atree  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.sortfld  field:algo_lib.FDb.tr_conn  sortfld:algo_lib.FConn.connid");
+    atf_comp::ProcWrite(proc, "dmmeta.xref  field:algo_lib.FDb.tr_conn  inscond:false  via:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.zs_conn  arg:algo_lib.FConn  reftype:ZSListMT  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.xref  field:algo_lib.FDb.zs_conn  inscond:false  via:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FRow.p_conn  arg:algo_lib.FConn  reftype:Upptr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FConn.cd_sub  arg:algo_lib.FRow  reftype:Llist  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.llist  field:algo_lib.FConn.cd_sub  havetail:N  havecount:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.xref  field:algo_lib.FConn.cd_sub  inscond:true  via:algo_lib.FRow.p_conn");
+    atf_comp::ProcWrite(proc, "dmmeta.ns  ns:lib_other  nstype:lib  license:GPL  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.nscpp  ns:lib_other  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:lib_other.FDb  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:lib_other.FDb._db  arg:lib_other.FDb  reftype:Global  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:lib_other.FConn  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:lib_other.FConn.rowid  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:lib_other.FDb.conn  arg:lib_other.FConn  reftype:Lary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:lib_other.FDb.cd_conn_read  arg:lib_other.FConn  reftype:Llist  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.llist  field:lib_other.FDb.cd_conn_read  havetail:N  havecount:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.xref  field:lib_other.FDb.cd_conn_read  inscond:false  via:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:lib_other.FDb.cd_conn_eof  arg:lib_other.FConn  reftype:Llist  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.llist  field:lib_other.FDb.cd_conn_eof  havetail:N  havecount:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.xref  field:lib_other.FDb.cd_conn_eof  inscond:false  via:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FConn.in  arg:u8  reftype:Fbuf  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbuf  field:algo_lib.FConn.in  max:64  fbuftype:Bytebuf  iotype:standard  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FConn.out  arg:u8  reftype:Fbuf  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbuf  field:algo_lib.FConn.out  max:64  fbuftype:Bytebuf  iotype:standard  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FConn.in_ns  arg:u8  reftype:Fbuf  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbuf  field:algo_lib.FConn.in_ns  max:64  fbuftype:Bytebuf  iotype:standard  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FConn.in_eof  arg:u8  reftype:Fbuf  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbuf  field:algo_lib.FConn.in_eof  max:64  fbuftype:Bytebuf  iotype:standard  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FConn.in_elem  arg:u8  reftype:Fbuf  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbuf  field:algo_lib.FConn.in_elem  max:64  fbuftype:Bytebuf  iotype:standard  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FConn.in_par  arg:u8  reftype:Fbuf  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbuf  field:algo_lib.FConn.in_par  max:64  fbuftype:Bytebuf  iotype:standard  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FConn.in_pary  arg:u8  reftype:Fbuf  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbuf  field:algo_lib.FConn.in_pary  max:64  fbuftype:Bytebuf  iotype:standard  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FConn.in_pool  arg:u8  reftype:Fbuf  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbuf  field:algo_lib.FConn.in_pool  max:64  fbuftype:Bytebuf  iotype:standard  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FConn.in_hash  arg:u8  reftype:Fbuf  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbuf  field:algo_lib.FConn.in_hash  max:64  fbuftype:Bytebuf  iotype:standard  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FConn.in_count  arg:u8  reftype:Fbuf  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbuf  field:algo_lib.FConn.in_count  max:64  fbuftype:Bytebuf  iotype:standard  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FConn.in_bheap  arg:u8  reftype:Fbuf  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbuf  field:algo_lib.FConn.in_bheap  max:64  fbuftype:Bytebuf  iotype:standard  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FConn.in_atree  arg:u8  reftype:Fbuf  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbuf  field:algo_lib.FConn.in_atree  max:64  fbuftype:Bytebuf  iotype:standard  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FConn.in_zslist  arg:u8  reftype:Fbuf  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbuf  field:algo_lib.FConn.in_zslist  max:64  fbuftype:Bytebuf  iotype:standard  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FConn.in_self  arg:u8  reftype:Fbuf  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbuf  field:algo_lib.FConn.in_self  max:64  fbuftype:Bytebuf  iotype:standard  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FConn.in_eofself  arg:u8  reftype:Fbuf  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbuf  field:algo_lib.FConn.in_eofself  max:64  fbuftype:Bytebuf  iotype:standard  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fcond  fcond:algo_lib.FConn.in/ready  ins:algo_lib.FDb.cd_conn_read  via:\"\"  rem:Y  comment:\"accepted control: an Llist of the watched ctype\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fcond  fcond:algo_lib.FConn.in_hash/ready  ins:algo_lib.FDb.ind_conn  via:\"\"  rem:Y  comment:\"rejected: a hash offers InsertMaybe, not Insert\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A TimeHookOnce fstep on an Llist field: the step reads the expiration time
 // from the first row's sort field, which only a Bheap step field provides.
 void atf_comp::comptest_amc_BadFstepBheap() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_fstep_bheap.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.tcurs  tfunc:Llist.curs  dflt:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.tcurs  tfunc:Llist.delcurs  dflt:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.listtype  listtype:zd  circular:N  haveprev:Y  instail:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.steptype  steptype:TimeHookOnce  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.FRow  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FRow.rowid  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.row  arg:algo_lib.FRow  reftype:Tpool  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.zd_row  arg:algo_lib.FRow  reftype:Llist  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.llist  field:algo_lib.FDb.zd_row  havetail:Y  havecount:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.xref  field:algo_lib.FDb.zd_row  inscond:false  via:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fstep  fstep:algo_lib.FDb.zd_row  steptype:TimeHookOnce  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A TimeHookRecur fstep on an Upptr field: the time hook is armed from the
 // index's first row, which only an Llist or Bheap step field provides.
 void atf_comp::comptest_amc_BadFstepFirst() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_fstep_first.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.steptype  steptype:TimeHookRecur  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.FRow  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FRow.rowid  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.row  arg:algo_lib.FRow  reftype:Tpool  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.p_row  arg:algo_lib.FRow  reftype:Upptr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fstep  fstep:algo_lib.FDb.p_row  steptype:TimeHookRecur  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A TimeHookRecur fstep on an Atree field: the hook is armed by FirstChanged
 // calls, which only the Llist and Bheap generators emit -- an Atree step
 // would compile and never fire.
 void atf_comp::comptest_amc_BadFstepAtree() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_fstep_atree.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ccmp  ctype:u64  extrn:N  genop:N  order:Y  minmax:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.steptype  steptype:TimeHookRecur  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.FRow  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FRow.rowid  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.row  arg:algo_lib.FRow  reftype:Tpool  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.tr_row  arg:algo_lib.FRow  reftype:Atree  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.sortfld  field:algo_lib.FDb.tr_row  sortfld:algo_lib.FRow.rowid");
+    atf_comp::ProcWrite(proc, "dmmeta.xref  field:algo_lib.FDb.tr_row  inscond:false  via:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fstep  fstep:algo_lib.FDb.tr_row  steptype:TimeHookRecur  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // An fstep on a fixed Inlary field: the step's loop condition tests the
 // index with EmptyQ, which generates only for a variable Inlary -- a fixed
 // one always holds max elements and offers no emptiness test.
 void atf_comp::comptest_amc_BadFstepInlary() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_fstep_inlary.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.steptype  steptype:Inline  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.fixary  arg:u32  reftype:Inlary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.inlary  field:algo_lib.FDb.fixary  min:3  max:3  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fstep  fstep:algo_lib.FDb.fixary  steptype:Inline  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // An InlineRecur fstep with fdelay scale:Y on a Val field: the scaled delay
 // divides by the step index's row count, which a Val field does not have.
 void atf_comp::comptest_amc_BadFstepScale() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_fstep_scale.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.steptype  steptype:InlineRecur  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.rowcheck  arg:bool  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fstep  fstep:algo_lib.FDb.rowcheck  steptype:InlineRecur  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdelay  fstep:algo_lib.FDb.rowcheck  delay:1.000000000  scale:Y  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A Callback fstep on a ZSListMT field: the list is concurrent and has no
 // EmptyQ, so the step's loop condition tests DestructiveFirst, which only
 // the Inline and InlineRecur call shapes embed.
 void atf_comp::comptest_amc_BadFstepZslistmt() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_fstep_zslistmt.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.steptype  steptype:Callback  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.FRow  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FRow.rowid  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.row  arg:algo_lib.FRow  reftype:Tpool  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.zs_row  arg:algo_lib.FRow  reftype:ZSListMT  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.xref  field:algo_lib.FDb.zs_row  inscond:false  via:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fstep  fstep:algo_lib.FDb.zs_row  steptype:Callback  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // An fdelay row on an Inline fstep: the delay between invocations is read
 // only by the InlineRecur and TimeHookRecur call shapes, so on any other
 // steptype the row configures nothing.
 void atf_comp::comptest_amc_BadFstepFdelay() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_fstep_fdelay.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.steptype  steptype:Inline  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.rowcheck  arg:bool  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fstep  fstep:algo_lib.FDb.rowcheck  steptype:Inline  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdelay  fstep:algo_lib.FDb.rowcheck  delay:1.000000000  scale:N  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // An fstep on an Lpool field: the step's loop condition tests the field
 // for pending work, and a memory pool offers no emptiness test, so the
 // generated condition would call an EmptyQ that does not exist.
 void atf_comp::comptest_amc_BadFstepReftype() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_fstep_reftype.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.steptype  steptype:Inline  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.sbrk  arg:u8  reftype:Sbrk  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.lpool  arg:u8  reftype:Lpool  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.basepool  field:algo_lib.FDb.lpool  base:algo_lib.FDb.sbrk");
+    atf_comp::ProcWrite(proc, "dmmeta.fstep  fstep:algo_lib.FDb.lpool  steptype:Inline  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // InlineRecur fsteps with fdelay scale:Y on a Blkhash and on a Lary field:
 // both reftypes generate the N function the scaled delay divides by, so the
 // schema generates cleanly.
 void atf_comp::comptest_amc_FstepScaleBlkhash() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/fstep_scale_blkhash.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:u32  likeu64:Y  bigendok:Y  issigned:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ccmp  ctype:u32  extrn:N  genop:N  order:N  minmax:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.RowKey  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.RowKey.id  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.RowKey.seq  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.chash  ctype:algo_lib.RowKey  hashtype:CRC32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ccmp  ctype:algo_lib.RowKey  extrn:N  genop:Y  order:N  minmax:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.FRow  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FRow.rowkey  arg:algo_lib.RowKey  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.row  arg:algo_lib.FRow  reftype:Tpool  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.ind_row  arg:algo_lib.FRow  reftype:Blkhash  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.blkhash  field:algo_lib.FDb.ind_row  hashfld:algo_lib.FRow.rowkey  linfld:algo_lib.RowKey.seq  linbits:12  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.xref  field:algo_lib.FDb.ind_row  inscond:true  via:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.steptype  steptype:InlineRecur  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fstep  fstep:algo_lib.FDb.ind_row  steptype:InlineRecur  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdelay  fstep:algo_lib.FDb.ind_row  delay:1.000000000  scale:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.FLrow  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FLrow.value  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.lrow  arg:algo_lib.FLrow  reftype:Lary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fstep  fstep:algo_lib.FDb.lrow  steptype:InlineRecur  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdelay  fstep:algo_lib.FDb.lrow  delay:1.000000000  scale:Y  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // An fstep on a field of a non-global ctype: the generated step would read
 // the field through the namespace global, a member FDb does not have.
 void atf_comp::comptest_amc_BadFstepGlobal() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_fstep_global.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.steptype  steptype:Inline  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.FRow  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FRow.rowid  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.row  arg:algo_lib.FRow  reftype:Tpool  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fstep  fstep:algo_lib.FRow.rowid  steptype:Inline  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A dispatch filter over a message field that has its own Print function
@@ -442,7 +1210,24 @@ void atf_comp::comptest_amc_BadFstepGlobal() {
 // function, passing the message as the parent argument. Pins the emitted
 // Match body, including the well-formed Print call.
 void atf_comp::comptest_amc_DispfilterFieldPrint() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/dispfilter_fldprint.ssim -out_dir: -report:N algo_lib.DispFilter..MatchEv");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N algo_lib.DispFilter..MatchEv < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Regx  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Regx.expr  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Ev  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Ev.state  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Ev.state/idle  value:0  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Ev.state/busy  value:1  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.DispFilter  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DispFilter.state_regx  arg:algo_lib.Regx  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.dispatch  dispatch:algo_lib.Disp  unk:N  read:N  print:N  haslen:N  call:N  strict:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.dispatch_msg  dispatch_msg:algo_lib.Disp/algo_lib.Ev  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.dispfilter  dispatch:algo_lib.Disp  match_all:N  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A dispatch filter declared match_all:Y, whose two messages between them cover
@@ -454,7 +1239,30 @@ void atf_comp::comptest_amc_DispfilterFieldPrint() {
 // message, which is what match_all means. Ev2's own field is the control on the
 // other side, and Ev's present tests for it are the same refusal in reverse.
 void atf_comp::comptest_amc_DispfilterMatchAll() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/dispfilter_matchall.ssim -out_dir: -report:N 'algo_lib.DispFilter..Match%'");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N 'algo_lib.DispFilter..Match%' < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:u32  likeu64:Y  bigendok:Y  issigned:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Regx  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Regx.expr  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Ev  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Ev.state  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Ev.state/idle  value:0  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Ev.state/busy  value:1  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Ev.seqno  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbigend  field:algo_lib.Ev.seqno  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Ev2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Ev2.other  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.DispFilter  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DispFilter.state_regx  arg:algo_lib.Regx  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.dispatch  dispatch:algo_lib.Disp  unk:N  read:N  print:N  haslen:N  call:N  strict:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.dispatch_msg  dispatch_msg:algo_lib.Disp/algo_lib.Ev  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.dispatch_msg  dispatch_msg:algo_lib.Disp/algo_lib.Ev2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.dispfilter  dispatch:algo_lib.Disp  match_all:Y  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A gconst value table whose fourth and fifth lines are not tuples: each
@@ -540,7 +1348,45 @@ void atf_comp::comptest_amc_GconstLoadFail() {
 // Both name the offending gconst or gstatic field and let the run continue, so
 // one run reports all four rows rather than ending at the first.
 void atf_comp::comptest_amc_SideloadNossimfile() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/sideload_nossimfile.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:i8  likeu64:Y  bigendok:N  issigned:Y  comment:\"8-bit   signed integer\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:u8  likeu64:Y  bigendok:N  issigned:N  comment:\"8-bit unsigned integer\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:i16  likeu64:Y  bigendok:Y  issigned:Y  comment:\"16-bit   signed integer\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:u16  likeu64:Y  bigendok:Y  issigned:N  comment:\"16-bit unsigned integer\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:i32  likeu64:Y  bigendok:Y  issigned:Y  comment:\"32-bit   signed integer\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:u32  likeu64:Y  bigendok:Y  issigned:N  comment:\"32-bit unsigned integer\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:i64  likeu64:Y  bigendok:Y  issigned:Y  comment:\"64-bit   signed integer\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:u64  likeu64:Y  bigendok:Y  issigned:N  comment:\"64-bit unsigned integer\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:u128  likeu64:N  bigendok:Y  issigned:N  comment:\"128-bit unsigned integer\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:bool  likeu64:Y  bigendok:N  issigned:N  comment:\"dflt is a c++ expr: real dflt is 'N'\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:pad_byte  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:pad_byte  size:1  alignment:1  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:pad_byte.String  printfmt:Extern  read:Y  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:pad_byte  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:char  likeu64:Y  bigendok:N  issigned:N  comment:char");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Free  comment:\"reaches no ssimfile and declares no base\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Free.name  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Derived  comment:\"reaches no ssimfile through a base that has none either\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Derived.base  arg:algo_lib.Free  reftype:Base  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Derived.dname  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.FreeId  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FreeId.value  arg:u8  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.gconst  field:algo_lib.FreeId.value  namefld:algo_lib.Free.name  idfld:\"\"  wantenum:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.DerivedId  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DerivedId.value  arg:u8  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.gconst  field:algo_lib.DerivedId.value  namefld:algo_lib.Derived.dname  idfld:\"\"  wantenum:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.free  arg:algo_lib.Free  reftype:Inlary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.inlary  field:algo_lib.FDb.free  min:0  max:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.gstatic  field:algo_lib.FDb.free  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.derived  arg:algo_lib.Derived  reftype:Inlary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.inlary  field:algo_lib.FDb.derived  min:0  max:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.gstatic  field:algo_lib.FDb.derived  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A gstatic field whose table file is absent from the -in_dir root: the
@@ -589,34 +1435,91 @@ void atf_comp::comptest_amc_GsymbolLoadFail() {
 // which may belong to a different universe than the -in_dir schema; the
 // amc.sideload notice names the fallback root and the file read from it.
 void atf_comp::comptest_amc_GsymbolSideload() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/gsymbol_sideload.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.nstype  nstype:ssimdb  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ns  ns:dmmeta  nstype:ssimdb  license:GPL  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:dmmeta.Nstype  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:dmmeta.Nstype.nstype  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ssimfile  ssimfile:dmmeta.nstype  ctype:dmmeta.Nstype");
+    atf_comp::ProcWrite(proc, "dmmeta.gsymbol  gsymbol:algo_lib/dmmeta.nstype  inc:%  symboltype:\"\"  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // An Llist field without its dmmeta.llist record: reported per field, then
 // the run stops at the reftype gate, since later gen phases dereference the
 // per-reftype records this phase found missing.
 void atf_comp::comptest_amc_MissingLlist() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_missing_llist.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.FRow  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FRow.rowid  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.row  arg:algo_lib.FRow  reftype:Tpool  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.zd_row  arg:algo_lib.FRow  reftype:Llist  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A ccmp on a global ctype: there is exactly one instance, and the generated
 // Cmp/Lt bodies would silently compare the singleton with itself (a global
 // field's Get accessor takes no parent argument).
 void atf_comp::comptest_amc_BadCcmpGlobal() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/ccmp_global.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:u32  likeu64:Y  bigendok:Y  issigned:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ccmp  ctype:u32  extrn:N  genop:N  order:N  minmax:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ccmp  ctype:u64  extrn:N  genop:N  order:N  minmax:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.seqno  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbigend  field:algo_lib.FDb.seqno  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ccmp  ctype:algo_lib.FDb  extrn:N  genop:N  order:Y  minmax:N  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A chash on a global ctype: same rule as ccmp -- the generated Hash body
 // would silently hash the singleton's own fields whatever argument is passed.
 void atf_comp::comptest_amc_BadChashGlobal() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/chash_global.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:u32  likeu64:Y  bigendok:Y  issigned:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.seqno  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbigend  field:algo_lib.FDb.seqno  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.hashtype  hashtype:CRC32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.chash  ctype:algo_lib.FDb  hashtype:CRC32  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // An fcmp on a global ctype's field: same rule as ccmp, one level down --
 // both operands of the generated Cmp/Lt body would collapse to the
 // singleton's value and the function would compare the field with itself.
 void atf_comp::comptest_amc_BadFcmpGlobal() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/fcmp_global.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:u32  likeu64:Y  bigendok:Y  issigned:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ccmp  ctype:u32  extrn:N  genop:N  order:N  minmax:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ccmp  ctype:u64  extrn:N  genop:N  order:N  minmax:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.seqno  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbigend  field:algo_lib.FDb.seqno  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fcmp  field:algo_lib.FDb.seqno  versionsort:N  casesens:Y  extrn:N  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A ctype with both a Tpool and a Global instance, hashed by an FDb Thash:
@@ -624,14 +1527,41 @@ void atf_comp::comptest_amc_BadFcmpGlobal() {
 // the global, so the hash would compare the singleton with itself. The
 // Global instance must be the ctype's only instance.
 void atf_comp::comptest_amc_BadGlobalInst() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/global_inst.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:u32  likeu64:Y  bigendok:Y  issigned:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ccmp  ctype:u32  extrn:N  genop:N  order:N  minmax:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.FRow  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.row  arg:algo_lib.FRow  reftype:Tpool  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FRow.seqno  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbigend  field:algo_lib.FRow.seqno  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.grow  arg:algo_lib.FRow  reftype:Global  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.ind_row  arg:algo_lib.FRow  reftype:Thash  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.thash  field:algo_lib.FDb.ind_row  hashfld:algo_lib.FRow.seqno  unique:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.xref  field:algo_lib.FDb.ind_row  inscond:true  via:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.tcurs  tfunc:Thash.curs  dflt:Y  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A minmax:Y ccmp on a non-builtin ctype without genop:Y order:Y: the
 // Min/Max functions compare with a raw <, which no generated or native
 // operator provides.
 void atf_comp::comptest_amc_BadMinmax() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_minmax.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ccmp  ctype:u32  extrn:N  genop:N  order:N  minmax:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.TestMinmax  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.TestMinmax.value  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ccmp  ctype:algo_lib.TestMinmax  extrn:N  genop:N  order:N  minmax:Y  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // minmax:Y ccmp on a builtin (native operator <) and on an extrn:Y ctype
@@ -639,14 +1569,39 @@ void atf_comp::comptest_amc_BadMinmax() {
 // operator < the Min/Max bodies compare with, so the schema generates
 // cleanly.
 void atf_comp::comptest_amc_MinmaxNative() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/minmax_native.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:u32  likeu64:Y  bigendok:Y  issigned:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ccmp  ctype:u32  extrn:N  genop:N  order:N  minmax:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.TestExtrn  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.TestExtrn.value  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ccmp  ctype:algo_lib.TestExtrn  extrn:Y  genop:N  order:N  minmax:Y  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // The ctype-named GetScale convenience exists only for a ctype with a
 // single fdec field; with two fdec fields the definitions would collide.
 // Pins that the one-fdec ctype keeps it and the two-fdec ctype has none.
 void atf_comp::comptest_amc_FdecGetScale() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/fdec_two.ssim -out_dir: -report:N 'algo_lib.Price.value.GetScale|algo_lib.Quote.bid.GetScale|algo_lib.Quote.ask.GetScale'");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N 'algo_lib.Price.value.GetScale|algo_lib.Quote.bid.GetScale|algo_lib.Quote.ask.GetScale' < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Price  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Price.value  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdec  field:algo_lib.Price.value  nplace:2  fixedfmt:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Quote  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Quote.bid  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdec  field:algo_lib.Quote.bid  nplace:2  fixedfmt:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Quote.ask  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdec  field:algo_lib.Quote.ask  nplace:4  fixedfmt:Y  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A query match in a namespace with no dmmeta.nscpp row reports
@@ -666,10 +1621,82 @@ void atf_comp::comptest_amc_FdecGetScale() {
 // that tells the two streams apart: its stdout holds the generated function and
 // none of the nine reports the same run writes to stderr.
 void atf_comp::comptest_amc_QueryNocpp() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/query_nocpp.ssim -out_dir: -report:N 'ctype:algo_lib.CppWidget|ncns.Widget'");
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/query_nocpp.ssim -out_dir: -report:N testdb.%");
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/query_nocpp.ssim -out_dir: -report:N testdb.% 2>/dev/null");
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/query_nocpp.ssim -out_dir: -report:N '(testdb.%|algo_lib.trace..Ctor)' 2>/dev/null");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N 'ctype:algo_lib.CppWidget|ncns.Widget' < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.nstype  nstype:none  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.nstype  nstype:ssimdb  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ns  ns:ncns  nstype:none  license:GPL  comment:\"Namespace with no dmmeta.nscpp row: emits no C++\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ns  ns:testdb  nstype:ssimdb  license:GPL  comment:\"ssimdb namespace projected to TypeScript alone: emits no C++\"");
+    atf_comp::ProcWrite(proc, "dmmeta.nsjs  ns:testdb  typescript:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.CppWidget  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.CppWidget.value  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:ncns.Widget  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:ncns.Widget.value  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:testdb.App  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.nossimfile  ctype:testdb.App  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:testdb.App.value  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
+    atf_comp::FProc &proc2 = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N testdb.% < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc2, "dmmeta.nstype  nstype:none  comment:\"\"");
+    atf_comp::ProcWrite(proc2, "dmmeta.nstype  nstype:ssimdb  comment:\"\"");
+    atf_comp::ProcWrite(proc2, "dmmeta.ns  ns:ncns  nstype:none  license:GPL  comment:\"Namespace with no dmmeta.nscpp row: emits no C++\"");
+    atf_comp::ProcWrite(proc2, "dmmeta.ns  ns:testdb  nstype:ssimdb  license:GPL  comment:\"ssimdb namespace projected to TypeScript alone: emits no C++\"");
+    atf_comp::ProcWrite(proc2, "dmmeta.nsjs  ns:testdb  typescript:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc2, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc2, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc2, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc2, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc2, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc2, "dmmeta.ctype  ctype:algo_lib.CppWidget  comment:\"\"");
+    atf_comp::ProcWrite(proc2, "dmmeta.field  field:algo_lib.CppWidget.value  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc2, "dmmeta.ctype  ctype:ncns.Widget  comment:\"\"");
+    atf_comp::ProcWrite(proc2, "dmmeta.field  field:ncns.Widget.value  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc2, "dmmeta.ctype  ctype:testdb.App  comment:\"\"");
+    atf_comp::ProcWrite(proc2, "dmmeta.nossimfile  ctype:testdb.App  comment:\"\"");
+    atf_comp::ProcWrite(proc2, "dmmeta.field  field:testdb.App.value  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWriteEof(proc2);
+    atf_comp::FProc &proc3 = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N testdb.% 2>/dev/null < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc3, "dmmeta.nstype  nstype:none  comment:\"\"");
+    atf_comp::ProcWrite(proc3, "dmmeta.nstype  nstype:ssimdb  comment:\"\"");
+    atf_comp::ProcWrite(proc3, "dmmeta.ns  ns:ncns  nstype:none  license:GPL  comment:\"Namespace with no dmmeta.nscpp row: emits no C++\"");
+    atf_comp::ProcWrite(proc3, "dmmeta.ns  ns:testdb  nstype:ssimdb  license:GPL  comment:\"ssimdb namespace projected to TypeScript alone: emits no C++\"");
+    atf_comp::ProcWrite(proc3, "dmmeta.nsjs  ns:testdb  typescript:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc3, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc3, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc3, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc3, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc3, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc3, "dmmeta.ctype  ctype:algo_lib.CppWidget  comment:\"\"");
+    atf_comp::ProcWrite(proc3, "dmmeta.field  field:algo_lib.CppWidget.value  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc3, "dmmeta.ctype  ctype:ncns.Widget  comment:\"\"");
+    atf_comp::ProcWrite(proc3, "dmmeta.field  field:ncns.Widget.value  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc3, "dmmeta.ctype  ctype:testdb.App  comment:\"\"");
+    atf_comp::ProcWrite(proc3, "dmmeta.nossimfile  ctype:testdb.App  comment:\"\"");
+    atf_comp::ProcWrite(proc3, "dmmeta.field  field:testdb.App.value  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWriteEof(proc3);
+    atf_comp::FProc &proc4 = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N '(testdb.%|algo_lib.trace..Ctor)' 2>/dev/null < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc4, "dmmeta.nstype  nstype:none  comment:\"\"");
+    atf_comp::ProcWrite(proc4, "dmmeta.nstype  nstype:ssimdb  comment:\"\"");
+    atf_comp::ProcWrite(proc4, "dmmeta.ns  ns:ncns  nstype:none  license:GPL  comment:\"Namespace with no dmmeta.nscpp row: emits no C++\"");
+    atf_comp::ProcWrite(proc4, "dmmeta.ns  ns:testdb  nstype:ssimdb  license:GPL  comment:\"ssimdb namespace projected to TypeScript alone: emits no C++\"");
+    atf_comp::ProcWrite(proc4, "dmmeta.nsjs  ns:testdb  typescript:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc4, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc4, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc4, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc4, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc4, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc4, "dmmeta.ctype  ctype:algo_lib.CppWidget  comment:\"\"");
+    atf_comp::ProcWrite(proc4, "dmmeta.field  field:algo_lib.CppWidget.value  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc4, "dmmeta.ctype  ctype:ncns.Widget  comment:\"\"");
+    atf_comp::ProcWrite(proc4, "dmmeta.field  field:ncns.Widget.value  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc4, "dmmeta.ctype  ctype:testdb.App  comment:\"\"");
+    atf_comp::ProcWrite(proc4, "dmmeta.nossimfile  ctype:testdb.App  comment:\"\"");
+    atf_comp::ProcWrite(proc4, "dmmeta.field  field:testdb.App.value  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWriteEof(proc4);
 }
 
 // An fdec on a bitfld field of a global ctype: the value is reached through
@@ -686,7 +1713,22 @@ void atf_comp::comptest_amc_QueryNocpp() {
 // are neither of them that type, and an arg naming a ctype that stands for
 // an integer builtin is not that type either.
 void atf_comp::comptest_amc_FdecGlobalBitfld() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/fdec_global_bitfld.ssim -out_dir: -report:N 'algo_lib.FDb.decfrac.GetDouble|algo_lib.FDb.decfrac.qSetDouble|algo_lib.FDb.decnarrow.SetDoubleMaybe|algo_lib.FDb.decnarrow.ReadStrptrMaybe'");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N 'algo_lib.FDb.decfrac.GetDouble|algo_lib.FDb.decfrac.qSetDouble|algo_lib.FDb.decnarrow.SetDoubleMaybe|algo_lib.FDb.decnarrow.ReadStrptrMaybe' < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.FDb.String  printfmt:Tuple  read:Y  print:N  sep:\"\"  genop:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.decbits  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.decfrac  arg:u32  reftype:Bitfld  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.FDb.decfrac  offset:0  width:32  srcfield:algo_lib.FDb.decbits  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdec  field:algo_lib.FDb.decfrac  nplace:2  fixedfmt:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.decnarrowbits  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.decnarrow  arg:u32  reftype:Bitfld  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.FDb.decnarrow  offset:0  width:10  srcfield:algo_lib.FDb.decnarrowbits  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdec  field:algo_lib.FDb.decnarrow  nplace:2  fixedfmt:Y  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A decimal scale amc cannot generate consistent arithmetic for. Zero places
@@ -744,7 +1786,207 @@ void atf_comp::comptest_amc_FdecGlobalBitfld() {
 // conversions and draws its count diagnostic alone, while the wrapped i32
 // slice carries neither and draws the conversion diagnostic beside its own.
 void atf_comp::comptest_amc_BadFdecNplace() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_fdec_nplace.ssim -out_dir: -report:N 'algo_lib.DecPlaceCast.value.%'");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N 'algo_lib.DecPlaceCast.value.%' < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:i8  likeu64:Y  bigendok:N  issigned:Y  comment:\"8-bit   signed integer\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:u8  likeu64:Y  bigendok:N  issigned:N  comment:\"8-bit unsigned integer\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:i16  likeu64:Y  bigendok:Y  issigned:Y  comment:\"16-bit   signed integer\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:u16  likeu64:Y  bigendok:Y  issigned:N  comment:\"16-bit unsigned integer\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:i32  likeu64:Y  bigendok:Y  issigned:Y  comment:\"32-bit   signed integer\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:u32  likeu64:Y  bigendok:Y  issigned:N  comment:\"32-bit unsigned integer\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:i64  likeu64:Y  bigendok:Y  issigned:Y  comment:\"64-bit   signed integer\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:u64  likeu64:Y  bigendok:Y  issigned:N  comment:\"64-bit unsigned integer\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:u128  likeu64:N  bigendok:Y  issigned:N  comment:\"128-bit unsigned integer\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:bool  likeu64:Y  bigendok:N  issigned:N  comment:\"dflt is a c++ expr: real dflt is 'N'\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:pad_byte  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:pad_byte  size:1  alignment:1  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:pad_byte.String  printfmt:Extern  read:Y  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:pad_byte  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:char  likeu64:Y  bigendok:N  issigned:N  comment:char");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:float  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:float  likeu64:N  bigendok:N  issigned:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:float  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:float.String  printfmt:Extern  read:Y  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:float  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:double  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:double  likeu64:N  bigendok:N  issigned:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:double  size:8  alignment:8  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:double.String  printfmt:Extern  read:Y  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:double  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.DecPlace0  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecPlace0.value  arg:i64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdec  field:algo_lib.DecPlace0.value  nplace:0  fixedfmt:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.DecPlaceNeg  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecPlaceNeg.value  arg:i64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdec  field:algo_lib.DecPlaceNeg.value  nplace:-1  fixedfmt:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.DecPlace18  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecPlace18.value  arg:i64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdec  field:algo_lib.DecPlace18.value  nplace:18  fixedfmt:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.DecPlace31  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecPlace31.value  arg:i64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdec  field:algo_lib.DecPlace31.value  nplace:31  fixedfmt:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.DecPlace17  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecPlace17.value  arg:i64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdec  field:algo_lib.DecPlace17.value  nplace:17  fixedfmt:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.DecPlace12I32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecPlace12I32.value  arg:i32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdec  field:algo_lib.DecPlace12I32.value  nplace:12  fixedfmt:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.DecPlace1  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecPlace1.value  arg:i64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdec  field:algo_lib.DecPlace1.value  nplace:1  fixedfmt:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.DecPlaceBool  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecPlaceBool.value  arg:bool  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdec  field:algo_lib.DecPlaceBool.value  nplace:1  fixedfmt:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.DecPlaceChar  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecPlaceChar.value  arg:char  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdec  field:algo_lib.DecPlaceChar.value  nplace:0  fixedfmt:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.DecPlaceU128  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecPlaceU128.value  arg:u128  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdec  field:algo_lib.DecPlaceU128.value  nplace:1  fixedfmt:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.DecPlaceFloat  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecPlaceFloat.value  arg:float  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdec  field:algo_lib.DecPlaceFloat.value  nplace:1  fixedfmt:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.DecPlaceDouble  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecPlaceDouble.value  arg:double  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdec  field:algo_lib.DecPlaceDouble.value  nplace:1  fixedfmt:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.DecPlacePadbyte  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecPlacePadbyte.value  arg:pad_byte  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdec  field:algo_lib.DecPlacePadbyte.value  nplace:1  fixedfmt:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.DecPlaceStruct  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecPlaceStruct.value  arg:algo_lib.FDb  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdec  field:algo_lib.DecPlaceStruct.value  nplace:1  fixedfmt:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.I64Val  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.I64Val.value  arg:i64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.DecPlaceWrap  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecPlaceWrap.value  arg:algo_lib.I64Val  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdec  field:algo_lib.DecPlaceWrap.value  nplace:2  fixedfmt:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.I64Cast  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.I64Cast.value  arg:i64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fcast  field:algo_lib.I64Cast.value  expr:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cpptype  ctype:algo_lib.I64Cast  ctor:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.DecPlaceCast  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecPlaceCast.value  arg:algo_lib.I64Cast  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdec  field:algo_lib.DecPlaceCast.value  nplace:2  fixedfmt:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.DecPlaceCast.String  printfmt:Raw  read:Y  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.I64Fcast  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.I64Fcast.value  arg:i64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fcast  field:algo_lib.I64Fcast.value  expr:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.DecPlaceFcast  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecPlaceFcast.value  arg:algo_lib.I64Fcast  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdec  field:algo_lib.DecPlaceFcast.value  nplace:2  fixedfmt:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.I64Ctor  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.I64Ctor.value  arg:i64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cpptype  ctype:algo_lib.I64Ctor  ctor:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.DecPlaceCtor  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecPlaceCtor.value  arg:algo_lib.I64Ctor  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdec  field:algo_lib.DecPlaceCtor.value  nplace:2  fixedfmt:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.I64Cast2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.I64Cast2.value  arg:algo_lib.I64Cast  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fcast  field:algo_lib.I64Cast2.value  expr:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cpptype  ctype:algo_lib.I64Cast2  ctor:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.DecPlaceChain  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecPlaceChain.value  arg:algo_lib.I64Cast2  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdec  field:algo_lib.DecPlaceChain.value  nplace:2  fixedfmt:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.DecPlaceI8  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecPlaceI8.value  arg:i8  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdec  field:algo_lib.DecPlaceI8.value  nplace:2  fixedfmt:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.DecPlaceI16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecPlaceI16.value  arg:i16  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdec  field:algo_lib.DecPlaceI16.value  nplace:4  fixedfmt:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.DecPlaceU16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecPlaceU16.value  arg:u16  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdec  field:algo_lib.DecPlaceU16.value  nplace:4  fixedfmt:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.DecPlaceI32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecPlaceI32.value  arg:i32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdec  field:algo_lib.DecPlaceI32.value  nplace:9  fixedfmt:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.DecPlaceU32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecPlaceU32.value  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdec  field:algo_lib.DecPlaceU32.value  nplace:9  fixedfmt:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.DecPlaceU64  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecPlaceU64.value  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdec  field:algo_lib.DecPlaceU64.value  nplace:17  fixedfmt:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.DecPlaceU8  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecPlaceU8.value  arg:u8  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdec  field:algo_lib.DecPlaceU8.value  nplace:2  fixedfmt:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.DecPlaceU8Over  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecPlaceU8Over.value  arg:u8  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdec  field:algo_lib.DecPlaceU8Over.value  nplace:3  fixedfmt:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.DecBitU32W32P9  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecBitU32W32P9.word  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecBitU32W32P9.value  arg:u32  reftype:Bitfld  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.DecBitU32W32P9.value  offset:0  width:32  srcfield:algo_lib.DecBitU32W32P9.word  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdec  field:algo_lib.DecBitU32W32P9.value  nplace:9  fixedfmt:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.DecBitU32W10P3  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecBitU32W10P3.word  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecBitU32W10P3.value  arg:u32  reftype:Bitfld  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.DecBitU32W10P3.value  offset:0  width:10  srcfield:algo_lib.DecBitU32W10P3.word  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdec  field:algo_lib.DecBitU32W10P3.value  nplace:3  fixedfmt:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.DecBitU32W10P4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecBitU32W10P4.word  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecBitU32W10P4.value  arg:u32  reftype:Bitfld  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.DecBitU32W10P4.value  offset:0  width:10  srcfield:algo_lib.DecBitU32W10P4.word  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdec  field:algo_lib.DecBitU32W10P4.value  nplace:4  fixedfmt:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.DecBitU32W3P1  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecBitU32W3P1.word  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecBitU32W3P1.value  arg:u32  reftype:Bitfld  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.DecBitU32W3P1.value  offset:0  width:3  srcfield:algo_lib.DecBitU32W3P1.word  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdec  field:algo_lib.DecBitU32W3P1.value  nplace:1  fixedfmt:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.DecBitU64W64P17  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecBitU64W64P17.word  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecBitU64W64P17.value  arg:u64  reftype:Bitfld  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.DecBitU64W64P17.value  offset:0  width:64  srcfield:algo_lib.DecBitU64W64P17.word  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdec  field:algo_lib.DecBitU64W64P17.value  nplace:17  fixedfmt:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.DecBitU64W40P13  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecBitU64W40P13.word  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecBitU64W40P13.value  arg:u64  reftype:Bitfld  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.DecBitU64W40P13.value  offset:0  width:40  srcfield:algo_lib.DecBitU64W40P13.word  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdec  field:algo_lib.DecBitU64W40P13.value  nplace:13  fixedfmt:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.DecBitI32W32P9  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecBitI32W32P9.word  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecBitI32W32P9.value  arg:i32  reftype:Bitfld  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.DecBitI32W32P9.value  offset:0  width:32  srcfield:algo_lib.DecBitI32W32P9.word  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdec  field:algo_lib.DecBitI32W32P9.value  nplace:9  fixedfmt:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.DecBitI32W10P2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecBitI32W10P2.word  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecBitI32W10P2.value  arg:i32  reftype:Bitfld  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.DecBitI32W10P2.value  offset:0  width:10  srcfield:algo_lib.DecBitI32W10P2.word  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdec  field:algo_lib.DecBitI32W10P2.value  nplace:2  fixedfmt:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.I32Val  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.I32Val.value  arg:i32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.U32Val  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.U32Val.value  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fcast  field:algo_lib.U32Val.value  expr:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cpptype  ctype:algo_lib.U32Val  ctor:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.DecBitWrapI32W10P2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecBitWrapI32W10P2.word  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecBitWrapI32W10P2.value  arg:algo_lib.I32Val  reftype:Bitfld  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.DecBitWrapI32W10P2.value  offset:0  width:10  srcfield:algo_lib.DecBitWrapI32W10P2.word  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdec  field:algo_lib.DecBitWrapI32W10P2.value  nplace:2  fixedfmt:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.DecBitWrapU32W10P4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecBitWrapU32W10P4.word  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecBitWrapU32W10P4.value  arg:algo_lib.U32Val  reftype:Bitfld  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.DecBitWrapU32W10P4.value  offset:0  width:10  srcfield:algo_lib.DecBitWrapU32W10P4.word  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdec  field:algo_lib.DecBitWrapU32W10P4.value  nplace:4  fixedfmt:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.DecBitI8W8P2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecBitI8W8P2.word  arg:u8  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecBitI8W8P2.value  arg:i8  reftype:Bitfld  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.DecBitI8W8P2.value  offset:0  width:8  srcfield:algo_lib.DecBitI8W8P2.word  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdec  field:algo_lib.DecBitI8W8P2.value  nplace:2  fixedfmt:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.DecBitI8W7P2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecBitI8W7P2.word  arg:u8  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecBitI8W7P2.value  arg:i8  reftype:Bitfld  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.DecBitI8W7P2.value  offset:0  width:7  srcfield:algo_lib.DecBitI8W7P2.word  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdec  field:algo_lib.DecBitI8W7P2.value  nplace:2  fixedfmt:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.DecBitCharW4P2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecBitCharW4P2.word  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecBitCharW4P2.value  arg:char  reftype:Bitfld  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.DecBitCharW4P2.value  offset:0  width:4  srcfield:algo_lib.DecBitCharW4P2.word  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdec  field:algo_lib.DecBitCharW4P2.value  nplace:2  fixedfmt:N  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A Bitfld field whose declared width is zero, carrying a decimal count. The
@@ -756,7 +1998,33 @@ void atf_comp::comptest_amc_BadFdecNplace() {
 // report, and why a fixture reaches the decimal rule with one bad width at
 // most. The negative width has a fixture of its own.
 void atf_comp::comptest_amc_BadFdecBitwidth() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_fdec_bitwidth.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:i8  likeu64:Y  bigendok:N  issigned:Y  comment:\"8-bit   signed integer\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:u8  likeu64:Y  bigendok:N  issigned:N  comment:\"8-bit unsigned integer\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:i16  likeu64:Y  bigendok:Y  issigned:Y  comment:\"16-bit   signed integer\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:u16  likeu64:Y  bigendok:Y  issigned:N  comment:\"16-bit unsigned integer\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:i32  likeu64:Y  bigendok:Y  issigned:Y  comment:\"32-bit   signed integer\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:u32  likeu64:Y  bigendok:Y  issigned:N  comment:\"32-bit unsigned integer\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:i64  likeu64:Y  bigendok:Y  issigned:Y  comment:\"64-bit   signed integer\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:u64  likeu64:Y  bigendok:Y  issigned:N  comment:\"64-bit unsigned integer\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:u128  likeu64:N  bigendok:Y  issigned:N  comment:\"128-bit unsigned integer\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:bool  likeu64:Y  bigendok:N  issigned:N  comment:\"dflt is a c++ expr: real dflt is 'N'\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:pad_byte  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:pad_byte  size:1  alignment:1  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:pad_byte.String  printfmt:Extern  read:Y  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:pad_byte  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:char  likeu64:Y  bigendok:N  issigned:N  comment:char");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.DecBitW0  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecBitW0.word  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecBitW0.value  arg:u32  reftype:Bitfld  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.DecBitW0.value  offset:0  width:0  srcfield:algo_lib.DecBitW0.word  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdec  field:algo_lib.DecBitW0.value  nplace:2  fixedfmt:N  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // The zero-width fixture's counterpart on the other side of the same rule: a
@@ -770,14 +2038,50 @@ void atf_comp::comptest_amc_BadFdecBitwidth() {
 // run that keeps the width out of the shift prints two rows; one that lets it
 // in prints three.
 void atf_comp::comptest_amc_BadFdecBitwidthNeg() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_fdec_bitwidth_neg.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:i8  likeu64:Y  bigendok:N  issigned:Y  comment:\"8-bit   signed integer\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:u8  likeu64:Y  bigendok:N  issigned:N  comment:\"8-bit unsigned integer\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:i16  likeu64:Y  bigendok:Y  issigned:Y  comment:\"16-bit   signed integer\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:u16  likeu64:Y  bigendok:Y  issigned:N  comment:\"16-bit unsigned integer\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:i32  likeu64:Y  bigendok:Y  issigned:Y  comment:\"32-bit   signed integer\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:u32  likeu64:Y  bigendok:Y  issigned:N  comment:\"32-bit unsigned integer\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:i64  likeu64:Y  bigendok:Y  issigned:Y  comment:\"64-bit   signed integer\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:u64  likeu64:Y  bigendok:Y  issigned:N  comment:\"64-bit unsigned integer\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:u128  likeu64:N  bigendok:Y  issigned:N  comment:\"128-bit unsigned integer\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:bool  likeu64:Y  bigendok:N  issigned:N  comment:\"dflt is a c++ expr: real dflt is 'N'\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:pad_byte  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:pad_byte  size:1  alignment:1  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:pad_byte.String  printfmt:Extern  read:Y  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:pad_byte  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:char  likeu64:Y  bigendok:N  issigned:N  comment:char");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.DecBitWNeg  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecBitWNeg.word  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.DecBitWNeg.value  arg:u32  reftype:Bitfld  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.DecBitWNeg.value  offset:0  width:-64  srcfield:algo_lib.DecBitWNeg.word  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdec  field:algo_lib.DecBitWNeg.value  nplace:2  fixedfmt:N  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A Tuple-printfmt String cfmt on a global ctype: field values are reached
 // through the print function's row argument, including the cursor walk of an
 // array field. Pins the emitted Print body.
 void atf_comp::comptest_amc_PrintGlobalTuple() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/print_global_tuple.ssim -out_dir: -report:N algo_lib.FDb.%Print%");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N algo_lib.FDb.%Print% < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.val  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.buf  arg:u32  reftype:Inlary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.inlary  field:algo_lib.FDb.buf  min:0  max:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.FDb.String  printfmt:Tuple  read:N  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A read:Y Tuple cfmt on a global ctype: the ReadFieldMaybe dispatcher
@@ -786,7 +2090,18 @@ void atf_comp::comptest_amc_PrintGlobalTuple() {
 // of a global -- take no parent argument; the Set-backed reader assigns
 // through the collapsed Set accessor.
 void atf_comp::comptest_amc_ReadGlobalTuple() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/read_global_tuple.ssim -out_dir: -report:N 'algo_lib.FDb.maxjobs.ReadStrptrMaybe|algo_lib.FDb..ReadFieldMaybe|algo_lib.FDb..ReadStrptrMaybe'");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N 'algo_lib.FDb.maxjobs.ReadStrptrMaybe|algo_lib.FDb..ReadFieldMaybe|algo_lib.FDb..ReadStrptrMaybe' < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.pmask  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pmaskfld  field:algo_lib.FDb.pmask  filter_print:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.maxjobs  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.timeout  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.FDb.String  printfmt:Tuple  read:Y  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // An ArgvGnu cfmt: the gnu form of the same emission matrix ArgvGlobal pins
@@ -797,7 +2112,19 @@ void atf_comp::comptest_amc_ReadGlobalTuple() {
 // no bin/ prefix: an ArgvGnu command is external and resolves on PATH, which
 // atf_unit ExecToArgvSyntax asserts against the real bash command.
 void atf_comp::comptest_amc_ArgvGnu() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/argv_gnu.ssim -out_dir: -report:N 'algo_lib.Gnu..PrintArgv|algo_lib.Gnu..ToArgv'");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N 'algo_lib.Gnu..PrintArgv|algo_lib.Gnu..ToArgv' < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Gnu  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Gnu.c  arg:u8  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Gnu.limit  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Gnu.tag  arg:u32  reftype:Tary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.tary  field:algo_lib.Gnu.tag  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.Gnu.ArgvGnu  printfmt:Auto  read:N  print:Y  sep:\"\"  genop:N  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // An Argv cfmt on a global ctype and on a regular one: the value of a field
@@ -806,7 +2133,26 @@ void atf_comp::comptest_amc_ArgvGnu() {
 // itself -- no const_cast -- for the regular ctype. Pins the PrintArgv and
 // ToArgv bodies of both.
 void atf_comp::comptest_amc_ArgvGlobal() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/argv_global.ssim -out_dir: -report:N 'algo_lib.FDb..PrintArgv|algo_lib.FDb..ToArgv|algo_lib.Cmd..PrintArgv|algo_lib.Cmd..ToArgv'");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N 'algo_lib.FDb..PrintArgv|algo_lib.FDb..ToArgv|algo_lib.Cmd..PrintArgv|algo_lib.Cmd..ToArgv' < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.state  arg:u8  reftype:Val  dflt:0  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.FDb.state/idle  value:0  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.FDb.state/busy  value:1  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.limit  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.buf  arg:u32  reftype:Inlary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.inlary  field:algo_lib.FDb.buf  min:0  max:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.FDb.Argv  printfmt:Auto  read:N  print:Y  sep:\"\"  genop:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Cmd  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Cmd.state  arg:u8  reftype:Val  dflt:0  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Cmd.state/idle  value:0  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Cmd.state/busy  value:1  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Cmd.limit  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.Cmd.Argv  printfmt:Auto  read:N  print:Y  sep:\"\"  genop:N  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // Which field of a command ctype becomes a command-line token, and how its
@@ -819,7 +2165,52 @@ void atf_comp::comptest_amc_ArgvGlobal() {
 // spelling ReadArgv could take back. Pins the PrintArgv bodies of all three
 // ctypes and the ToArgv bodies of the two that carry the interesting fields.
 void atf_comp::comptest_amc_ArgvField() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/argv_field.ssim -out_dir: -report:N 'algo_lib.FDb..PrintArgv|algo_lib.Cmd..PrintArgv|algo_lib.Cmd..ToArgv|algo_lib.Flags..PrintArgv|algo_lib.Flags..ToArgv'");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N 'algo_lib.FDb..PrintArgv|algo_lib.Cmd..PrintArgv|algo_lib.Cmd..ToArgv|algo_lib.Flags..PrintArgv|algo_lib.Flags..ToArgv' < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:u32  likeu64:Y  bigendok:Y  issigned:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ccmp  ctype:u32  extrn:N  genop:N  order:N  minmax:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.FDb.Argv  printfmt:Auto  read:N  print:Y  sep:\"\"  genop:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.FRow  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FRow.id  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Base  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Base.count  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Cmd  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Cmd.base  arg:algo_lib.Base  reftype:Base  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Cmd.plain  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Cmd.state  arg:u8  reftype:Val  dflt:0  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Cmd.state/idle  value:0  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Cmd.state/busy  value:1  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Cmd.big  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbigend  field:algo_lib.Cmd.big  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Cmd.word  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Cmd.pmask  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pmaskfld  field:algo_lib.Cmd.pmask  filter_print:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Cmd.limit  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Cmd.mode  arg:u8  reftype:Val  dflt:0  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Cmd.mode/idle  value:0  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Cmd.mode/busy  value:1  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Cmd.name  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.Cmd.name  length:20  strtype:rpascal  pad:\"\"  strict:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Cmd.tag  arg:u32  reftype:Tary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.tary  field:algo_lib.Cmd.tag  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Cmd.p_row  arg:algo_lib.FRow  reftype:Ptr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.Cmd.Argv  printfmt:Auto  read:N  print:Y  sep:\"\"  genop:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Ary  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Ary.buf  arg:u32  reftype:Inlary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.inlary  field:algo_lib.Ary.buf  min:0  max:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.Ary.Argv  printfmt:Auto  read:N  print:Y  sep:\"\"  genop:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Flags  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Flags.seqno  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbigend  field:algo_lib.Flags.seqno  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Flags.word  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Flags.flag  arg:bool  reftype:Bitfld  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.Flags.flag  offset:0  width:1  srcfield:algo_lib.Flags.word  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.Flags.Argv  printfmt:Auto  read:N  print:Y  sep:\"\"  genop:N  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // An fconst on a global ctype's field: the fconst accessors take no parent
@@ -827,7 +2218,22 @@ void atf_comp::comptest_amc_ArgvField() {
 // switch, Print's ToCstr call, SetStrptrMaybe's SetEnum calls (short and
 // beyond-8-byte names), and -- via a bitfld member -- GetEnum's Get call.
 void atf_comp::comptest_amc_FconstGlobal() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/fconst_global.ssim -out_dir: -report:N 'algo_lib.FDb.state.ToCstr|algo_lib.FDb.state.Print|algo_lib.FDb.state.SetStrptrMaybe|algo_lib.FDb.mode.GetEnum'");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N 'algo_lib.FDb.state.ToCstr|algo_lib.FDb.state.Print|algo_lib.FDb.state.SetStrptrMaybe|algo_lib.FDb.mode.GetEnum' < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.state  arg:u8  reftype:Val  dflt:0  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.FDb.state/idle  value:0  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.FDb.state/busy  value:1  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.FDb.state/quiescing  value:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.modebits  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.mode  arg:u32  reftype:Bitfld  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.FDb.mode  offset:0  width:32  srcfield:algo_lib.FDb.modebits  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.FDb.mode/off  value:0  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.FDb.mode/on  value:1  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // The universe read from stdin (-in_dir:-), which is how a caller composes
@@ -836,7 +2242,21 @@ void atf_comp::comptest_amc_FconstGlobal() {
 // directory, so side table data loads from the default root and the run says
 // so.
 void atf_comp::comptest_amc_StdinUniverse() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N algo_lib.Price.value.GetScale < test/amc/fdec_two.ssim");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N algo_lib.Price.value.GetScale < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Price  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Price.value  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdec  field:algo_lib.Price.value  nplace:2  fixedfmt:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Quote  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Quote.bid  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdec  field:algo_lib.Quote.bid  nplace:2  fixedfmt:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Quote.ask  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdec  field:algo_lib.Quote.ask  nplace:4  fixedfmt:Y  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A numstr on a global ctype's field: the numstr accessors take no parent
@@ -844,14 +2264,37 @@ void atf_comp::comptest_amc_StdinUniverse() {
 // arms (the u64 numtype's overflow-checked arm and the plain arm, via an
 // unsigned and a signed field) and GetnumDflt's body.
 void atf_comp::comptest_amc_NumstrGlobal() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/numstr_global.ssim -out_dir: -report:N 'algo_lib.FDb.gnumstr.Geti64|algo_lib.FDb.gnumstr.GetnumDflt|algo_lib.FDb.gnumsigned.Geti64|algo_lib.FDb.gnumsigned.GetnumDflt'");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N 'algo_lib.FDb.gnumstr.Geti64|algo_lib.FDb.gnumstr.GetnumDflt|algo_lib.FDb.gnumsigned.Geti64|algo_lib.FDb.gnumsigned.GetnumDflt' < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.gnumstr  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.FDb.gnumstr  length:20  strtype:leftpad  pad:\"'0'\"  strict:N");
+    atf_comp::ProcWrite(proc, "dmmeta.numstr  field:algo_lib.FDb.gnumstr  numtype:u64  base:10  min_len:1");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.gnumsigned  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.FDb.gnumsigned  length:20  strtype:leftpad  pad:\"' '\"  strict:N");
+    atf_comp::ProcWrite(proc, "dmmeta.numstr  field:algo_lib.FDb.gnumsigned  numtype:i64  base:10  min_len:1");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A pmask on a global ctype: the pmask's bitset accessors take no parent
 // argument, so the member accessors and the print filter call them bare.
 // Pins one member's PresentQ/SetPresent/Set bodies and the filtered Print.
 void atf_comp::comptest_amc_PmaskGlobal() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/pmask_global.ssim -out_dir: -report:N 'algo_lib.FDb.maxjobs.%|algo_lib.FDb..Print'");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N 'algo_lib.FDb.maxjobs.%|algo_lib.FDb..Print' < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.pmask  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pmaskfld  field:algo_lib.FDb.pmask  filter_print:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.maxjobs  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.timeout  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.FDb.String  printfmt:Tuple  read:N  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A Bitfld field in a kafka codec: the field has no direct member, so raw
@@ -861,7 +2304,21 @@ void atf_comp::comptest_amc_PmaskGlobal() {
 // AssignViaSetQ, since this codec's presence bits follow the wire's null
 // flag and a pmask Set would mark a null field present).
 void atf_comp::comptest_amc_KafkaBitfld() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/kafka_bitfld.ssim -out_dir: -report:N 'ktst.Rec..KafkaEncode|ktst.Rec..KafkaDecode'");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N 'ktst.Rec..KafkaEncode|ktst.Rec..KafkaDecode' < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u8  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ns  ns:ktst  nstype:protocol  license:GPL  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.nscpp  ns:ktst  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:ktst.Rec  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:ktst.Rec.word  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:ktst.Rec.val  arg:u32  reftype:Bitfld  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:ktst.Rec.val  offset:0  width:16  srcfield:ktst.Rec.word  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ckafka  ctype:ktst.Rec  kind:field  root:Rec  valid_versions:0  flexible_versions:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fkafka  field:ktst.Rec.val  versions:0+  nullable_versions:\"\"  tagged_versions:\"\"  tag:0  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A kafka nullable array on a ctype whose pmask field is not named "pmask":
@@ -870,7 +2327,22 @@ void atf_comp::comptest_amc_KafkaBitfld() {
 // checks must use the same derived name the decoder's set side does.
 // Pins the KafkaEncode presence checks and the KafkaDecode present-mark.
 void atf_comp::comptest_amc_KafkaPmaskName() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/kafka_pmask_name.ssim -out_dir: -report:N 'ktst.Rec..KafkaEncode|ktst.Rec..KafkaDecode|ktst.Rec.val.FieldMaskQ|ktst.Rec.val.SetFieldMask'");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N 'ktst.Rec..KafkaEncode|ktst.Rec..KafkaDecode|ktst.Rec.val.FieldMaskQ|ktst.Rec.val.SetFieldMask' < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u8  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ns  ns:ktst  nstype:protocol  license:GPL  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.nscpp  ns:ktst  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:ktst.Rec  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:ktst.Rec.field_mask  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pmaskfld  field:ktst.Rec.field_mask  filter_print:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:ktst.Rec.val  arg:i32  reftype:Tary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.tary  field:ktst.Rec.val  aliased:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ckafka  ctype:ktst.Rec  kind:field  root:Rec  valid_versions:0  flexible_versions:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fkafka  field:ktst.Rec.val  versions:0+  nullable_versions:0+  tagged_versions:\"\"  tag:0  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // An optional fpbuf field on a ctype whose pmask field is not named "pmask":
@@ -882,7 +2354,21 @@ void atf_comp::comptest_amc_KafkaPmaskName() {
 // Pins the PbufEncode guard, the PbufDecode present-mark, the Set, and the
 // accessors.
 void atf_comp::comptest_amc_PbufPmaskName() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/pbuf_pmask_name.ssim -out_dir: -report:N 'pbt.Msg..PbufEncode|pbt.Msg..PbufDecode|pbt.Msg.val.Set|pbt.Msg.val.FieldMaskQ|pbt.Msg.val.SetFieldMask'");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N 'pbt.Msg..PbufEncode|pbt.Msg..PbufDecode|pbt.Msg.val.Set|pbt.Msg.val.FieldMaskQ|pbt.Msg.val.SetFieldMask' < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u8  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ns  ns:pbt  nstype:protocol  license:GPL  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.nscpp  ns:pbt  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:pbt.Msg  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Msg.field_mask  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pmaskfld  field:pbt.Msg.field_mask  filter_print:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Msg.val  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cpbuf  ctype:pbt.Msg  syntax:proto3  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Msg.val  field_number:1  pb_type:uint32  packed:N  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A bitfld carrying an fpbuf, on a ctype with a pmask: the field's value
@@ -893,7 +2379,23 @@ void atf_comp::comptest_amc_PbufPmaskName() {
 // leaves the pmask alone, so the decoder marks presence itself.
 // Pins the accessor-routed PbufEncode and PbufDecode, and the Set body.
 void atf_comp::comptest_amc_PbufBitfld() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/pbuf_bitfld.ssim -out_dir: -report:N 'pbt.Msg..PbufEncode|pbt.Msg..PbufDecode|pbt.Msg.val.Set'");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N 'pbt.Msg..PbufEncode|pbt.Msg..PbufDecode|pbt.Msg.val.Set' < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u8  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ns  ns:pbt  nstype:protocol  license:GPL  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.nscpp  ns:pbt  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:pbt.Msg  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Msg.pmask  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pmaskfld  field:pbt.Msg.pmask  filter_print:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Msg.flags  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Msg.val  arg:u32  reftype:Bitfld  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:pbt.Msg.val  offset:0  width:8  srcfield:pbt.Msg.flags  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cpbuf  ctype:pbt.Msg  syntax:proto3  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Msg.val  field_number:1  pb_type:uint32  packed:N  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A bitfld carrying an fpbuf on a proto3 ctype with no pmask: presence is
@@ -902,7 +2404,21 @@ void atf_comp::comptest_amc_PbufBitfld() {
 // member of its own to compare against zero. Pins the guard, and the Set body
 // storing straight into the source word since no presence bit follows.
 void atf_comp::comptest_amc_PbufBitfldNondflt() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/pbuf_bitfld_nondflt.ssim -out_dir: -report:N 'pbt.Msg..PbufEncode|pbt.Msg..PbufDecode|pbt.Msg.val.Set'");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N 'pbt.Msg..PbufEncode|pbt.Msg..PbufDecode|pbt.Msg.val.Set' < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u8  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ns  ns:pbt  nstype:protocol  license:GPL  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.nscpp  ns:pbt  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:pbt.Msg  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Msg.flags  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Msg.val  arg:u32  reftype:Bitfld  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:pbt.Msg.val  offset:0  width:8  srcfield:pbt.Msg.flags  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cpbuf  ctype:pbt.Msg  syntax:proto3  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Msg.val  field_number:1  pb_type:uint32  packed:N  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A repeated fpbuf field that is a pmask member: the decoder must mark the
@@ -910,7 +2426,23 @@ void atf_comp::comptest_amc_PbufBitfldNondflt() {
 // same bit drops the decoded elements. Pins the SetPresent call in both the
 // packed and the one-element-per-tag decode branch, and the filtered Print.
 void atf_comp::comptest_amc_PbufRepeatedPmask() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/pbuf_repeated_pmask.ssim -out_dir: -report:N 'pbt.Msg..PbufDecode|pbt.Msg..Print'");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N 'pbt.Msg..PbufDecode|pbt.Msg..Print' < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u8  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ns  ns:pbt  nstype:protocol  license:GPL  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.nscpp  ns:pbt  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:pbt.Msg  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Msg.pmask  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pmaskfld  field:pbt.Msg.pmask  filter_print:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Msg.tag  arg:u32  reftype:Tary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.tary  field:pbt.Msg.tag  aliased:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:pbt.Msg.String  printfmt:Tuple  read:Y  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cpbuf  ctype:pbt.Msg  syntax:proto3  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Msg.tag  field_number:1  pb_type:uint32  packed:N  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // Every decode store path in one run: one message carrying each singular
@@ -928,21 +2460,108 @@ void atf_comp::comptest_amc_PbufRepeatedPmask() {
 // the merge to see what the earlier occurrence set. pbt.Rep appends through
 // Alloc in every branch.
 void atf_comp::comptest_amc_PbufStore() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/pbuf_store.ssim -out_dir: -report:N 'pbt.Msg..PbufDecode|pbt.Rep..PbufDecode'");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N 'pbt.Msg..PbufDecode|pbt.Rep..PbufDecode' < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:u32  likeu64:Y  bigendok:Y  issigned:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.listtype  listtype:cd  circular:Y  haveprev:Y  instail:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.tcurs  tfunc:Llist.curs  dflt:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.tcurs  tfunc:Llist.delcurs  dflt:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u8  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ns  ns:pbt  nstype:lib  license:GPL  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.nscpp  ns:pbt  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:pbt.Sub  comment:\"embedded message, with a repeated member so a merge is visible\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Sub.item  arg:u32  reftype:Tary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.tary  field:pbt.Sub.item  aliased:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cpbuf  ctype:pbt.Sub  syntax:proto3  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Sub.item  field_number:1  pb_type:uint32  packed:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:pbt.Msg  comment:\"every singular store shape of the pbuf decoder in one message\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Msg.pmask  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pmaskfld  field:pbt.Msg.pmask  filter_print:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Msg.plain  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Msg.opt  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pmaskfld_member  pmaskfld_member:pbt.Msg.pmask/pbt.Msg.opt  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Msg.bare  arg:pbt.Sub  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Msg.sub  arg:pbt.Sub  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pmaskfld_member  pmaskfld_member:pbt.Msg.pmask/pbt.Msg.sub  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Msg.flags  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Msg.slice  arg:u32  reftype:Bitfld  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:pbt.Msg.slice  offset:0  width:8  srcfield:pbt.Msg.flags  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pmaskfld_member  pmaskfld_member:pbt.Msg.pmask/pbt.Msg.slice  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Msg.netval  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbigend  field:pbt.Msg.netval  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Msg.computed  arg:pbt.Sub  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cppfunc  field:pbt.Msg.computed  expr:\"parent.bare\"  print:N  set:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Msg.cond  arg:bool  reftype:Val  dflt:false  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:pbt.FDb  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.FDb._db  arg:pbt.FDb  reftype:Global  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.FDb.msg  arg:pbt.Msg  reftype:Tpool  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.FDb.cd_msg_on  arg:pbt.Msg  reftype:Llist  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.llist  field:pbt.FDb.cd_msg_on  havetail:N  havecount:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.xref  field:pbt.FDb.cd_msg_on  inscond:false  via:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fcond  fcond:pbt.Msg.cond/true  ins:pbt.FDb.cd_msg_on  via:\"\"  rem:Y  comment:\"mirror: on the list iff the wire said true\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cpbuf  ctype:pbt.Msg  syntax:proto3  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Msg.plain  field_number:1  pb_type:uint32  packed:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Msg.opt  field_number:2  pb_type:uint32  packed:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Msg.bare  field_number:3  pb_type:message  packed:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Msg.sub  field_number:4  pb_type:message  packed:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Msg.slice  field_number:5  pb_type:uint32  packed:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Msg.netval  field_number:6  pb_type:uint32  packed:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Msg.computed  field_number:7  pb_type:message  packed:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Msg.cond  field_number:8  pb_type:bool  packed:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:pbt.Rep  comment:\"the repeated controls: every occurrence appends through Alloc\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Rep.pmask  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pmaskfld  field:pbt.Rep.pmask  filter_print:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Rep.tag  arg:u32  reftype:Tary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.tary  field:pbt.Rep.tag  aliased:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pmaskfld_member  pmaskfld_member:pbt.Rep.pmask/pbt.Rep.tag  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Rep.item  arg:pbt.Sub  reftype:Tary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.tary  field:pbt.Rep.item  aliased:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cpbuf  ctype:pbt.Rep  syntax:proto3  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Rep.tag  field_number:1  pb_type:uint32  packed:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Rep.item  field_number:2  pb_type:message  packed:N  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // An Opt field on a global ctype: rejected as amc.infinity_pool, and the
 // Print body emitted alongside the error must not contain a bare (void);
 // statement for the absent parent argument.
 void atf_comp::comptest_amc_OptGlobalPrint() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/opt_global.ssim -out_dir: -report:N algo_lib.FDb.tail.Print");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N algo_lib.FDb.tail.Print < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Sub  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Sub.n  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.Sub.String  printfmt:Extern  read:N  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.tail  arg:algo_lib.Sub  reftype:Opt  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.FDb.String  printfmt:Tuple  read:N  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A base-1 numstr and a base-37 one: neither base has a digit encoding
 // (unary needs one digit per unit of value; 37..94 has no character map),
 // so amc rejects both fields, naming each.
 void atf_comp::comptest_amc_BadNumstrBase() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_numstr_base.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.LnumStr5_U32_Base1  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.LnumStr5_U32_Base1.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.LnumStr5_U32_Base1.ch  length:5  strtype:leftpad  pad:\"'0'\"  strict:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.numstr  field:algo_lib.LnumStr5_U32_Base1.ch  numtype:u32  base:1  min_len:1");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.LnumStr5_U32_Base37  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.LnumStr5_U32_Base37.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.LnumStr5_U32_Base37.ch  length:5  strtype:leftpad  pad:\"'0'\"  strict:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.numstr  field:algo_lib.LnumStr5_U32_Base37.ch  numtype:u32  base:37  min_len:1");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A numstr min_len wider than the string itself, one wider than
@@ -951,7 +2570,25 @@ void atf_comp::comptest_amc_BadNumstrBase() {
 // fail at runtime. None of these width contracts can be honored, so amc
 // rejects all three fields.
 void atf_comp::comptest_amc_BadNumstrMinlen() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_numstr_minlen.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.LnumStr9_U32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.LnumStr9_U32.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.LnumStr9_U32.ch  length:9  strtype:leftpad  pad:\"'0'\"  strict:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.numstr  field:algo_lib.LnumStr9_U32.ch  numtype:u32  base:10  min_len:12");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.LspaceStr100_U64  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.LspaceStr100_U64.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.LspaceStr100_U64.ch  length:100  strtype:leftpad  pad:\"' '\"  strict:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.numstr  field:algo_lib.LspaceStr100_U64.ch  numtype:u64  base:10  min_len:80");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.LspaceStr6_I32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.LspaceStr6_I32.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.LspaceStr6_I32.ch  length:6  strtype:leftpad  pad:\"' '\"  strict:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.numstr  field:algo_lib.LspaceStr6_I32.ch  numtype:i32  base:10  min_len:6");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A numtype that does not stand for an integer bltin. The fixture holds one
@@ -989,7 +2626,138 @@ void atf_comp::comptest_amc_BadNumstrMinlen() {
 // with a truthful name token, so neither sign nor any width is left
 // untested.
 void atf_comp::comptest_amc_BadNumstrNumtype() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_numstr_numtype.ssim -out_dir: -report:N 'algo_lib.LnumStr6_U32.ch.Getnum|algo_lib.LnumStr6_U32.ch.Geti64'");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N 'algo_lib.LnumStr6_U32.ch.Getnum|algo_lib.LnumStr6_U32.ch.Geti64' < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:pad_byte  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:pad_byte  size:1  alignment:1  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:pad_byte.String  printfmt:Extern  read:Y  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:pad_byte  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:float  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:float  likeu64:N  bigendok:N  issigned:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:float  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:float.String  printfmt:Extern  read:Y  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:float  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:double  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:double  likeu64:N  bigendok:N  issigned:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:double  size:8  alignment:8  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:double.String  printfmt:Extern  read:Y  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:double  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.LnumStr8_F64  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.LnumStr8_F64.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.LnumStr8_F64.ch  length:8  strtype:leftpad  pad:\"'0'\"  strict:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.numstr  field:algo_lib.LnumStr8_F64.ch  numtype:double  base:10  min_len:1");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.LnumStr5_Fdb  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.LnumStr5_Fdb.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.LnumStr5_Fdb.ch  length:5  strtype:leftpad  pad:\"'0'\"  strict:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.numstr  field:algo_lib.LnumStr5_Fdb.ch  numtype:algo_lib.FDb  base:10  min_len:1");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.LnumStr7_U32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.LnumStr7_U32.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.LnumStr7_U32.ch  length:7  strtype:leftpad  pad:\"'0'\"  strict:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.numstr  field:algo_lib.LnumStr7_U32.ch  numtype:u32  base:10  min_len:1");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.LnumStr6_I32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.LnumStr6_I32.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.LnumStr6_I32.ch  length:6  strtype:leftpad  pad:\"'0'\"  strict:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.numstr  field:algo_lib.LnumStr6_I32.ch  numtype:u32  base:10  min_len:1");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.LnumStr4_U128  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.LnumStr4_U128.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.LnumStr4_U128.ch  length:4  strtype:leftpad  pad:\"'0'\"  strict:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.numstr  field:algo_lib.LnumStr4_U128.ch  numtype:u128  base:10  min_len:1");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.LnumStr4_Float  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.LnumStr4_Float.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.LnumStr4_Float.ch  length:4  strtype:leftpad  pad:\"'0'\"  strict:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.numstr  field:algo_lib.LnumStr4_Float.ch  numtype:float  base:10  min_len:1");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.LnumStr4_Padbyte  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.LnumStr4_Padbyte.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.LnumStr4_Padbyte.ch  length:4  strtype:leftpad  pad:\"'0'\"  strict:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.numstr  field:algo_lib.LnumStr4_Padbyte.ch  numtype:pad_byte  base:10  min_len:1");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.U32Cast  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.U32Cast.value  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fcast  field:algo_lib.U32Cast.value  expr:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cpptype  ctype:algo_lib.U32Cast  ctor:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.LnumStr6_U32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.LnumStr6_U32.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.LnumStr6_U32.ch  length:6  strtype:leftpad  pad:\"'0'\"  strict:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.numstr  field:algo_lib.LnumStr6_U32.ch  numtype:algo_lib.U32Cast  base:10  min_len:1");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.LnumStr4_I16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.LnumStr4_I16.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.LnumStr4_I16.ch  length:4  strtype:leftpad  pad:\"'0'\"  strict:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.numstr  field:algo_lib.LnumStr4_I16.ch  numtype:algo_lib.U32Cast  base:10  min_len:1");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.U32Val  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.U32Val.value  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.LnumStr5_U32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.LnumStr5_U32.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.LnumStr5_U32.ch  length:5  strtype:leftpad  pad:\"'0'\"  strict:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.numstr  field:algo_lib.LnumStr5_U32.ch  numtype:algo_lib.U32Val  base:10  min_len:1");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.U32Fcast  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.U32Fcast.value  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fcast  field:algo_lib.U32Fcast.value  expr:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.LnumStr8_U32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.LnumStr8_U32.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.LnumStr8_U32.ch  length:8  strtype:leftpad  pad:\"'0'\"  strict:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.numstr  field:algo_lib.LnumStr8_U32.ch  numtype:algo_lib.U32Fcast  base:10  min_len:1");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.U32Ctor  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.U32Ctor.value  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cpptype  ctype:algo_lib.U32Ctor  ctor:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.LnumStr10_U32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.LnumStr10_U32.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.LnumStr10_U32.ch  length:10  strtype:leftpad  pad:\"'0'\"  strict:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.numstr  field:algo_lib.LnumStr10_U32.ch  numtype:algo_lib.U32Ctor  base:10  min_len:1");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.U32Cast2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.U32Cast2.value  arg:algo_lib.U32Cast  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fcast  field:algo_lib.U32Cast2.value  expr:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cpptype  ctype:algo_lib.U32Cast2  ctor:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.LnumStr11_U32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.LnumStr11_U32.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.LnumStr11_U32.ch  length:11  strtype:leftpad  pad:\"'0'\"  strict:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.numstr  field:algo_lib.LnumStr11_U32.ch  numtype:algo_lib.U32Cast2  base:10  min_len:1");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.LnumStr3_I8  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.LnumStr3_I8.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.LnumStr3_I8.ch  length:3  strtype:leftpad  pad:\"'0'\"  strict:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.numstr  field:algo_lib.LnumStr3_I8.ch  numtype:i8  base:10  min_len:1");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.LnumStr3_U8  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.LnumStr3_U8.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.LnumStr3_U8.ch  length:3  strtype:leftpad  pad:\"'0'\"  strict:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.numstr  field:algo_lib.LnumStr3_U8.ch  numtype:u8  base:10  min_len:1");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.LnumStr6_I16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.LnumStr6_I16.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.LnumStr6_I16.ch  length:6  strtype:leftpad  pad:\"'0'\"  strict:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.numstr  field:algo_lib.LnumStr6_I16.ch  numtype:i16  base:10  min_len:1");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.LnumStr5_U16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.LnumStr5_U16.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.LnumStr5_U16.ch  length:5  strtype:leftpad  pad:\"'0'\"  strict:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.numstr  field:algo_lib.LnumStr5_U16.ch  numtype:u16  base:10  min_len:1");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.LnumStr10_I32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.LnumStr10_I32.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.LnumStr10_I32.ch  length:10  strtype:leftpad  pad:\"'0'\"  strict:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.numstr  field:algo_lib.LnumStr10_I32.ch  numtype:i32  base:10  min_len:1");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.LnumStr19_I64  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.LnumStr19_I64.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.LnumStr19_I64.ch  length:19  strtype:leftpad  pad:\"'0'\"  strict:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.numstr  field:algo_lib.LnumStr19_I64.ch  numtype:i64  base:10  min_len:1");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.LnumStr20_U64  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.LnumStr20_U64.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.LnumStr20_U64.ch  length:20  strtype:leftpad  pad:\"'0'\"  strict:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.numstr  field:algo_lib.LnumStr20_U64.ch  numtype:u64  base:10  min_len:1");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.LnumStr9_U64  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.LnumStr9_U64.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.LnumStr9_U64.ch  length:9  strtype:leftpad  pad:\"'0'\"  strict:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.numstr  field:algo_lib.LnumStr9_U64.ch  numtype:u32  base:10  min_len:1");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.LnumStrPlain  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.LnumStrPlain.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.LnumStrPlain.ch  length:4  strtype:leftpad  pad:\"'0'\"  strict:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.numstr  field:algo_lib.LnumStrPlain.ch  numtype:u32  base:10  min_len:1");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.LnumStr7_I8  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.LnumStr7_I8.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.LnumStr7_I8.ch  length:7  strtype:leftpad  pad:\"'0'\"  strict:N");
+    atf_comp::ProcWrite(proc, "dmmeta.numstr  field:algo_lib.LnumStr7_I8.ch  numtype:u32  base:10  min_len:1");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.BadDec  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.BadDec.price  arg:double  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdec  field:algo_lib.BadDec.price  nplace:2  fixedfmt:N  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // Pads that read back as digits. A left-pad that is a nonzero digit of the
@@ -1025,7 +2793,113 @@ void atf_comp::comptest_amc_BadNumstrNumtype() {
 // strtype dimension: such a string carries its own length and strips no pad,
 // so neither the NUL pad on a signed field nor a digit pad draws anything.
 void atf_comp::comptest_amc_BadNumstrPad() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_numstr_pad.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.LbangStr5_U32_Base95  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.LbangStr5_U32_Base95.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.LbangStr5_U32_Base95.ch  length:5  strtype:leftpad  pad:\"'!'\"  strict:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.numstr  field:algo_lib.LbangStr5_U32_Base95.ch  numtype:u32  base:95  min_len:1");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.LceeStr5_U32_Base36  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.LceeStr5_U32_Base36.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.LceeStr5_U32_Base36.ch  length:5  strtype:leftpad  pad:\"'c'\"  strict:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.numstr  field:algo_lib.LceeStr5_U32_Base36.ch  numtype:u32  base:36  min_len:1");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.LdashStr5_I32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.LdashStr5_I32.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.LdashStr5_I32.ch  length:5  strtype:leftpad  pad:\"'-'\"  strict:N");
+    atf_comp::ProcWrite(proc, "dmmeta.numstr  field:algo_lib.LdashStr5_I32.ch  numtype:i32  base:10  min_len:1");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.LdashStr5_U32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.LdashStr5_U32.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.LdashStr5_U32.ch  length:5  strtype:leftpad  pad:\"'-'\"  strict:N");
+    atf_comp::ProcWrite(proc, "dmmeta.numstr  field:algo_lib.LdashStr5_U32.ch  numtype:u32  base:10  min_len:1");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.LemptyStr5_I32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.LemptyStr5_I32.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.LemptyStr5_I32.ch  length:5  strtype:leftpad  pad:\"\"  strict:N");
+    atf_comp::ProcWrite(proc, "dmmeta.numstr  field:algo_lib.LemptyStr5_I32.ch  numtype:i32  base:10  min_len:1");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.LemptyStr5_U32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.LemptyStr5_U32.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.LemptyStr5_U32.ch  length:5  strtype:leftpad  pad:\"\"  strict:N");
+    atf_comp::ProcWrite(proc, "dmmeta.numstr  field:algo_lib.LemptyStr5_U32.ch  numtype:u32  base:10  min_len:1");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.LescnulStr5_I32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.LescnulStr5_I32.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.LescnulStr5_I32.ch  length:5  strtype:leftpad  pad:\"'\\\\0'\"  strict:N");
+    atf_comp::ProcWrite(proc, "dmmeta.numstr  field:algo_lib.LescnulStr5_I32.ch  numtype:i32  base:10  min_len:1");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.LescnulStr5_U32_Base95  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.LescnulStr5_U32_Base95.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.LescnulStr5_U32_Base95.ch  length:5  strtype:leftpad  pad:\"'\\\\0'\"  strict:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.numstr  field:algo_lib.LescnulStr5_U32_Base95.ch  numtype:u32  base:95  min_len:1");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.LfiveStr6_U32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.LfiveStr6_U32.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.LfiveStr6_U32.ch  length:6  strtype:leftpad  pad:\"'5'\"  strict:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.numstr  field:algo_lib.LfiveStr6_U32.ch  numtype:u32  base:10  min_len:1");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.LnullStr5_I32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.LnullStr5_I32.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.LnullStr5_I32.ch  length:5  strtype:leftpad  pad:0  strict:N");
+    atf_comp::ProcWrite(proc, "dmmeta.numstr  field:algo_lib.LnullStr5_I32.ch  numtype:i32  base:10  min_len:1");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.LplusStr5_I32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.LplusStr5_I32.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.LplusStr5_I32.ch  length:5  strtype:leftpad  pad:\"'+'\"  strict:N");
+    atf_comp::ProcWrite(proc, "dmmeta.numstr  field:algo_lib.LplusStr5_I32.ch  numtype:i32  base:10  min_len:1");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.LzeroStr5_I32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.LzeroStr5_I32.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.LzeroStr5_I32.ch  length:5  strtype:leftpad  pad:\"'0'\"  strict:N");
+    atf_comp::ProcWrite(proc, "dmmeta.numstr  field:algo_lib.LzeroStr5_I32.ch  numtype:i32  base:10  min_len:1");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.PpasStr5_I32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.PpasStr5_I32.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.PpasStr5_I32.ch  length:5  strtype:rpascal  pad:\"\"  strict:N");
+    atf_comp::ProcWrite(proc, "dmmeta.numstr  field:algo_lib.PpasStr5_I32.ch  numtype:i32  base:10  min_len:1");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.PpasdigStr5_U32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.PpasdigStr5_U32.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.PpasdigStr5_U32.ch  length:5  strtype:rpascal  pad:\"'7'\"  strict:N");
+    atf_comp::ProcWrite(proc, "dmmeta.numstr  field:algo_lib.PpasdigStr5_U32.ch  numtype:u32  base:10  min_len:1");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.RcapaStr5_U32_Base36  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.RcapaStr5_U32_Base36.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.RcapaStr5_U32_Base36.ch  length:5  strtype:rightpad  pad:\"'A'\"  strict:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.numstr  field:algo_lib.RcapaStr5_U32_Base36.ch  numtype:u32  base:36  min_len:1");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.RdashStr5_I32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.RdashStr5_I32.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.RdashStr5_I32.ch  length:5  strtype:rightpad  pad:\"'-'\"  strict:N");
+    atf_comp::ProcWrite(proc, "dmmeta.numstr  field:algo_lib.RdashStr5_I32.ch  numtype:i32  base:10  min_len:1");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.RemptyStr5_I32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.RemptyStr5_I32.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.RemptyStr5_I32.ch  length:5  strtype:rightpad  pad:\"\"  strict:N");
+    atf_comp::ProcWrite(proc, "dmmeta.numstr  field:algo_lib.RemptyStr5_I32.ch  numtype:i32  base:10  min_len:1");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.RemptyStr5_U32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.RemptyStr5_U32.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.RemptyStr5_U32.ch  length:5  strtype:rightpad  pad:\"\"  strict:N");
+    atf_comp::ProcWrite(proc, "dmmeta.numstr  field:algo_lib.RemptyStr5_U32.ch  numtype:u32  base:10  min_len:1");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.RescdigStr5  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.RescdigStr5.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.RescdigStr5.ch  length:5  strtype:rightpad  pad:\"'\\\\x30'\"  strict:N");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.RescletStr5  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.RescletStr5.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.RescletStr5.ch  length:5  strtype:rightpad  pad:\"'\\\\x41'\"  strict:N");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.RescnulStr5  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.RescnulStr5.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.RescnulStr5.ch  length:5  strtype:rightpad  pad:\"'\\\\0'\"  strict:N");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.RescnumStr5_U32_Base16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.RescnumStr5_U32_Base16.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.RescnumStr5_U32_Base16.ch  length:5  strtype:rightpad  pad:\"'\\\\x30'\"  strict:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.numstr  field:algo_lib.RescnumStr5_U32_Base16.ch  numtype:u32  base:16  min_len:1");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.RnullStr4_U32_Base256  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.RnullStr4_U32_Base256.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.RnullStr4_U32_Base256.ch  length:4  strtype:rightpad  pad:0  strict:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.numstr  field:algo_lib.RnullStr4_U32_Base256.ch  numtype:u32  base:256  min_len:1");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.RsevenStr5_U32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.RsevenStr5_U32.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.RsevenStr5_U32.ch  length:5  strtype:rightpad  pad:\"'7'\"  strict:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.numstr  field:algo_lib.RsevenStr5_U32.ch  numtype:u32  base:10  min_len:1");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.RspaceStr5_U32_Base95  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.RspaceStr5_U32_Base95.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.RspaceStr5_U32_Base95.ch  length:5  strtype:rightpad  pad:\"' '\"  strict:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.numstr  field:algo_lib.RspaceStr5_U32_Base95.ch  numtype:u32  base:95  min_len:1");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.RthreeStr5  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.RthreeStr5.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.RthreeStr5.ch  length:5  strtype:rightpad  pad:\"'3'\"  strict:N");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // An rpascal string longer than its length byte can count. The length of an
@@ -1037,7 +2911,25 @@ void atf_comp::comptest_amc_BadNumstrPad() {
 // longest accepted one, and a 300-character right-padded string carries no
 // length byte, so the bound is the rpascal strtype's alone.
 void atf_comp::comptest_amc_BadSmallstrToobig() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_smallstr_toobig.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Smallstr255  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Smallstr255.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.Smallstr255.ch  length:255  strtype:rpascal  pad:\"\"  strict:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Smallstr256  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Smallstr256.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.Smallstr256.ch  length:256  strtype:rpascal  pad:\"\"  strict:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Smallstr300  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Smallstr300.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.Smallstr300.ch  length:300  strtype:rpascal  pad:\"\"  strict:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.RspaceStr300  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.RspaceStr300.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.RspaceStr300.ch  length:300  strtype:rightpad  pad:\"' '\"  strict:Y");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A signed base-95 numstr and a signed base-256 one: '-' is a digit in
@@ -1047,7 +2939,22 @@ void atf_comp::comptest_amc_BadSmallstrToobig() {
 // a second rejection from the pad check: a left-pad that is a nonzero digit
 // of the base strips leading value digits on read.
 void atf_comp::comptest_amc_BadNumstrSignedBase() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_numstr_signedbase.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:i32  likeu64:Y  bigendok:Y  issigned:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.LspaceStr5_I32_Base95  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.LspaceStr5_I32_Base95.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.LspaceStr5_I32_Base95.ch  length:5  strtype:leftpad  pad:\"' '\"  strict:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.numstr  field:algo_lib.LspaceStr5_I32_Base95.ch  numtype:i32  base:95  min_len:1");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.LspaceStr4_I32_Base256  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.LspaceStr4_I32_Base256.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.LspaceStr4_I32_Base256.ch  length:4  strtype:leftpad  pad:\"' '\"  strict:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.numstr  field:algo_lib.LspaceStr4_I32_Base256.ch  numtype:i32  base:256  min_len:1");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // One cpbuf ctype with every illegal field number in one run: a duplicate
@@ -1055,7 +2962,33 @@ void atf_comp::comptest_amc_BadNumstrSignedBase() {
 // number 0 (wire tag 0, reserved as illegal by the protobuf format), and
 // 2^29 (overflows the (number<<3)|wire_type tag, aliasing another field).
 void atf_comp::comptest_amc_BadPbufFieldNumber() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_pbuf_fldnum.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u8  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ns  ns:pbt  nstype:protocol  license:GPL  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.nscpp  ns:pbt  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:pbt.Msg  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Msg.a  arg:i32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Msg.b  arg:i32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Msg.c  arg:i32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Msg.d  arg:i32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Msg.e  arg:i32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Msg.f  arg:i32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Msg.g  arg:i32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Msg.h  arg:i32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cpbuf  ctype:pbt.Msg  syntax:proto3  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Msg.a  field_number:5  pb_type:int32  packed:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Msg.b  field_number:5  pb_type:int32  packed:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Msg.c  field_number:0  pb_type:int32  packed:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Msg.d  field_number:536870912  pb_type:int32  packed:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Msg.e  field_number:19000  pb_type:int32  packed:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Msg.f  field_number:19999  pb_type:int32  packed:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Msg.g  field_number:18999  pb_type:int32  packed:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Msg.h  field_number:20000  pb_type:int32  packed:N  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // One cpbuf ctype with every arg/reftype shape the pbuf codec cannot
@@ -1066,7 +2999,32 @@ void atf_comp::comptest_amc_BadPbufFieldNumber() {
 // field at all, one whose value field is u8 -- the lib_pb varint codec
 // binds i32).
 void atf_comp::comptest_amc_BadPbufArg() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_pbuf_arg.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u8  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ns  ns:pbt  nstype:protocol  license:GPL  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.nscpp  ns:pbt  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:pbt.Color  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Color.value  arg:u8  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:pbt.Color.value/red  value:0  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:pbt.Color.value/green  value:1  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:pbt.Msg  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Msg.a  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Msg.b  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Msg.c  arg:u32  reftype:Inlary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.inlary  field:pbt.Msg.c  min:4  max:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Msg.d  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Msg.e  arg:pbt.Color  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cpbuf  ctype:pbt.Msg  syntax:proto3  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Msg.a  field_number:1  pb_type:string  packed:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Msg.b  field_number:2  pb_type:message  packed:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Msg.c  field_number:3  pb_type:int32  packed:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Msg.d  field_number:4  pb_type:enum  packed:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Msg.e  field_number:5  pb_type:enum  packed:N  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // Two fpbuf rows asking for packed encoding where the protobuf format has
@@ -1076,7 +3034,29 @@ void atf_comp::comptest_amc_BadPbufArg() {
 // ordinary encoding. The third row, packed on a repeated varint field, is the
 // legal shape and is not reported.
 void atf_comp::comptest_amc_BadPbufPacked() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_pbuf_packed.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u8  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ns  ns:pbt  nstype:protocol  license:GPL  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.nscpp  ns:pbt  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:pbt.Sub  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Sub.a  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cpbuf  ctype:pbt.Sub  syntax:proto3  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Sub.a  field_number:1  pb_type:uint32  packed:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:pbt.Msg  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Msg.a  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Msg.b  arg:pbt.Sub  reftype:Tary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.tary  field:pbt.Msg.b  aliased:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Msg.c  arg:u32  reftype:Tary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.tary  field:pbt.Msg.c  aliased:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cpbuf  ctype:pbt.Msg  syntax:proto3  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Msg.a  field_number:1  pb_type:uint32  packed:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Msg.b  field_number:2  pb_type:message  packed:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Msg.c  field_number:3  pb_type:uint32  packed:Y  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // Two fpbuf rows that would generate no wire code at all, rejected rather
@@ -1084,7 +3064,31 @@ void atf_comp::comptest_amc_BadPbufPacked() {
 // codec is generated without one), one on a Base field (emission never
 // writes a base's fields to the wire).
 void atf_comp::comptest_amc_BadPbufNoCodec() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_pbuf_nocodec.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u8  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ns  ns:pbt  nstype:protocol  license:GPL  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.nscpp  ns:pbt  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:pbt.Sub  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Sub.val  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cpbuf  ctype:pbt.Sub  syntax:proto3  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Sub.val  field_number:1  pb_type:uint32  packed:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:pbt.Orphan  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Orphan.a  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Orphan.a  field_number:1  pb_type:uint32  packed:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:pbt.Msg  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Msg.base  arg:pbt.Sub  reftype:Base  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cpbuf  ctype:pbt.Msg  syntax:proto3  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Msg.base  field_number:1  pb_type:message  packed:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:pbt.Msg2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Msg2.base  arg:pbt.Sub  reftype:Base  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Msg2.own  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cpbuf  ctype:pbt.Msg2  syntax:proto3  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Msg2.own  field_number:2  pb_type:uint32  packed:N  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // The syntax dimension of cpbuf, over four ctypes in one run. cpbuf.syntax
@@ -1096,7 +3100,31 @@ void atf_comp::comptest_amc_BadPbufNoCodec() {
 // emits: proto2 writes the scalar unconditionally, proto3 guards it with the
 // default-value test.
 void atf_comp::comptest_amc_BadPbufSyntax() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_pbuf_syntax.ssim -out_dir: -report:N 'pbt.Proto%..PbufEncode'");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N 'pbt.Proto%..PbufEncode' < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u8  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ns  ns:pbt  nstype:protocol  license:GPL  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.nscpp  ns:pbt  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:pbt.Proto2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Proto2.val  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cpbuf  ctype:pbt.Proto2  syntax:proto2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Proto2.val  field_number:1  pb_type:uint32  packed:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:pbt.Proto3  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Proto3.val  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cpbuf  ctype:pbt.Proto3  syntax:proto3  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Proto3.val  field_number:1  pb_type:uint32  packed:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:pbt.Misspelled  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Misspelled.val  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cpbuf  ctype:pbt.Misspelled  syntax:prot3  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Misspelled.val  field_number:1  pb_type:uint32  packed:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:pbt.Unset  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Unset.val  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cpbuf  ctype:pbt.Unset  syntax:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Unset.val  field_number:1  pb_type:uint32  packed:N  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // The presence dimension of a oneof, over four ctypes in one run. A oneof is
@@ -1109,7 +3137,60 @@ void atf_comp::comptest_amc_BadPbufSyntax() {
 // member list covers one variant and not the other. The first ctype is the
 // control, with both variants on one pmask, and it draws no diagnostic.
 void atf_comp::comptest_amc_BadPbufOneof() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_pbuf_oneof.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u8  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ns  ns:pbt  nstype:protocol  license:GPL  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.nscpp  ns:pbt  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:pbt.Msg  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Msg.pmask  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pmaskfld  field:pbt.Msg.pmask  filter_print:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Msg.a  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Msg.b  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Msg.plain  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cpbuf  ctype:pbt.Msg  syntax:proto3  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Msg.a  field_number:1  pb_type:uint32  packed:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Msg.b  field_number:2  pb_type:uint32  packed:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Msg.plain  field_number:3  pb_type:uint32  packed:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbufcase  fpbufcase:pbt.Msg.a/payload  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbufcase  fpbufcase:pbt.Msg.b/payload  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:pbt.NoMask  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.NoMask.a  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.NoMask.b  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cpbuf  ctype:pbt.NoMask  syntax:proto3  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.NoMask.a  field_number:1  pb_type:uint32  packed:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.NoMask.b  field_number:2  pb_type:uint32  packed:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbufcase  fpbufcase:pbt.NoMask.a/payload  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbufcase  fpbufcase:pbt.NoMask.b/payload  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:pbt.Split  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Split.pmask1  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pmaskfld  field:pbt.Split.pmask1  filter_print:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Split.pmask2  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pmaskfld  field:pbt.Split.pmask2  filter_print:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Split.a  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Split.b  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pmaskfld_member  pmaskfld_member:pbt.Split.pmask1/pbt.Split.a  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pmaskfld_member  pmaskfld_member:pbt.Split.pmask2/pbt.Split.b  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cpbuf  ctype:pbt.Split  syntax:proto3  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Split.a  field_number:1  pb_type:uint32  packed:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Split.b  field_number:2  pb_type:uint32  packed:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbufcase  fpbufcase:pbt.Split.a/payload  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbufcase  fpbufcase:pbt.Split.b/payload  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:pbt.Half  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Half.pmask  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pmaskfld  field:pbt.Half.pmask  filter_print:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Half.a  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Half.b  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pmaskfld_member  pmaskfld_member:pbt.Half.pmask/pbt.Half.a  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cpbuf  ctype:pbt.Half  syntax:proto3  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Half.a  field_number:1  pb_type:uint32  packed:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Half.b  field_number:2  pb_type:uint32  packed:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbufcase  fpbufcase:pbt.Half.a/payload  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbufcase  fpbufcase:pbt.Half.b/payload  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // The whole store dimension of one cpbuf ctype in one run: the decoder of a
@@ -1122,7 +3203,60 @@ void atf_comp::comptest_amc_BadPbufOneof() {
 // second ctype carries the repeated controls, where the decoder appends
 // through Alloc and a fldfunc element type needs no Set at all.
 void atf_comp::comptest_amc_BadPbufStore() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_pbuf_store.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u8  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:u32  likeu64:Y  bigendok:Y  issigned:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ns  ns:algo  nstype:protocol  license:GPL  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.nscpp  ns:algo  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo.Smallstr20  comment:\"inline string with length field\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ccmp  ctype:algo.Smallstr20  extrn:N  genop:Y  order:Y  minmax:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.chash  ctype:algo.Smallstr20  hashtype:CRC32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cstr  ctype:algo.Smallstr20  strequiv:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:algo.Smallstr20  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo.Smallstr20.String  printfmt:Raw  read:Y  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo.Smallstr20.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fcast  field:algo.Smallstr20.ch  expr:algo::strptr  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo.Smallstr20.ch  length:20  strtype:rpascal  pad:\"\"  strict:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.ns  ns:pbt  nstype:protocol  license:GPL  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.nscpp  ns:pbt  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:pbt.Msg  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Msg.plain  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Msg.netval  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbigend  field:pbt.Msg.netval  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Msg.flags  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Msg.slice  arg:u32  reftype:Bitfld  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:pbt.Msg.slice  offset:0  width:8  srcfield:pbt.Msg.flags  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Msg.computed  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cppfunc  field:pbt.Msg.computed  expr:\"parent.plain\"  print:N  set:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Msg.readonly  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cppfunc  field:pbt.Msg.readonly  expr:\"parent.plain\"  print:N  set:N");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Msg.addr  arg:algo.Smallstr20  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Msg.port  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.substr  field:pbt.Msg.port  expr:/RR  srcfield:pbt.Msg.addr");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Msg.alias  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.falias  field:pbt.Msg.alias  srcfield:pbt.Msg.plain  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cpbuf  ctype:pbt.Msg  syntax:proto3  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Msg.plain  field_number:1  pb_type:uint32  packed:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Msg.netval  field_number:2  pb_type:uint32  packed:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Msg.slice  field_number:3  pb_type:uint32  packed:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Msg.computed  field_number:4  pb_type:uint32  packed:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Msg.readonly  field_number:5  pb_type:uint32  packed:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Msg.port  field_number:6  pb_type:uint32  packed:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Msg.alias  field_number:7  pb_type:uint32  packed:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:pbt.Rep  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Rep.plain  arg:u32  reftype:Tary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.tary  field:pbt.Rep.plain  aliased:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Rep.readonly  arg:u32  reftype:Tary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.tary  field:pbt.Rep.readonly  aliased:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cppfunc  field:pbt.Rep.readonly  expr:\"\"  print:N  set:N");
+    atf_comp::ProcWrite(proc, "dmmeta.cpbuf  ctype:pbt.Rep  syntax:proto3  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Rep.plain  field_number:1  pb_type:uint32  packed:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Rep.readonly  field_number:2  pb_type:uint32  packed:N  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // An fpbuf field whose pb_type has no amcdb.pbtype row: without the table's
@@ -1130,13 +3264,43 @@ void atf_comp::comptest_amc_BadPbufStore() {
 // payload and the decoder case would consume the tag but not the value, so
 // amc rejects the field.
 void atf_comp::comptest_amc_BadPbufType() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_pbuf_type.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u8  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ns  ns:pbt  nstype:protocol  license:GPL  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.nscpp  ns:pbt  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:pbt.Msg  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:pbt.Msg.val  arg:i32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cpbuf  ctype:pbt.Msg  syntax:proto3  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fpbuf  field:pbt.Msg.val  field_number:1  pb_type:int33  packed:N  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A u8 pmask covering nine member fields: nine presence bits cannot fit in
 // the pmask field's eight bits.
 void atf_comp::comptest_amc_BadPmaskWidth() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_pmask_width.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Rec  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.pmask  arg:u8  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pmaskfld  field:algo_lib.Rec.pmask  filter_print:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.f0  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.f1  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.f2  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.f3  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.f4  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.f5  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.f6  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.f7  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.f8  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // Explicit pmaskfld_member rows naming, one per row, every field the
@@ -1154,7 +3318,39 @@ void atf_comp::comptest_amc_BadPmaskWidth() {
 // pmask a u32 and puts five member rows on it, so the count stays far inside
 // the width and the golden carries the membership diagnostics alone.
 void atf_comp::comptest_amc_BadPmaskMember() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_pmask_member.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.pmask  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pmaskfld  field:algo_lib.FDb.pmask  filter_print:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.maxjobs  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.timeout  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.FDb.String  printfmt:Tuple  read:N  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pmaskfld_member  pmaskfld_member:algo_lib.FDb.pmask/algo_lib.FDb._db  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pmaskfld_member  pmaskfld_member:algo_lib.FDb.pmask/algo_lib.FDb.maxjobs  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Sub  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Sub.val  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pmaskfld_member  pmaskfld_member:algo_lib.FDb.pmask/algo_lib.Sub.val  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.msglen  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.lenfld  field:algo_lib.FDb.msglen  extra:0  scale:1");
+    atf_comp::ProcWrite(proc, "dmmeta.pmaskfld_member  pmaskfld_member:algo_lib.FDb.pmask/algo_lib.FDb.pmask  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pmaskfld_member  pmaskfld_member:algo_lib.FDb.pmask/algo_lib.FDb.msglen  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Hdr  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Hdr.mtype  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.typefld  field:algo_lib.Hdr.mtype  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Hdr.hdrmask  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pmaskfld  field:algo_lib.Hdr.hdrmask  filter_print:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pmaskfld_member  pmaskfld_member:algo_lib.Hdr.hdrmask/algo_lib.Hdr.mtype  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Msg  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Msg.hdr  arg:algo_lib.Hdr  reftype:Base  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.msgtype  ctype:algo_lib.Msg  type:1");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Msg.msgmask  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pmaskfld  field:algo_lib.Msg.msgmask  filter_print:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pmaskfld_member  pmaskfld_member:algo_lib.Msg.msgmask/algo_lib.Msg.hdr  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // Two ctypes containing each other by value, and one containing itself: no
@@ -1172,13 +3368,47 @@ void atf_comp::comptest_amc_BadPmaskMember() {
 // its source field's arg names. Neither question turns the cycle into an
 // internal error; the run still ends at the circular definition.
 void atf_comp::comptest_amc_BadSizeCycle() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_size_cycle.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.CycA  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.CycB  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.CycA.b  arg:algo_lib.CycB  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.CycB.a  arg:algo_lib.CycA  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdec  field:algo_lib.CycA.b  nplace:2  fixedfmt:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.CycSelf  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.CycSelf.self  arg:algo_lib.CycSelf  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fdec  field:algo_lib.CycSelf.self  nplace:2  fixedfmt:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.CycBit  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.CycBit.word  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.CycBit.slice  arg:algo_lib.CycSelf  reftype:Bitfld  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.CycBit.slice  offset:0  width:4  srcfield:algo_lib.CycBit.word  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.CycBitSrc  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.CycBitSrc.word  arg:algo_lib.CycSelf  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.CycBitSrc.slice  arg:u32  reftype:Bitfld  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.CycBitSrc.slice  offset:0  width:4  srcfield:algo_lib.CycBitSrc.word  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // An Inlary of 65537 elements, each itself a 65536-byte fixed Inlary: the
 // total byte size exceeds the i32 range amc computes sizes in.
 void atf_comp::comptest_amc_BadSizeOverflow() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_size_overflow.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Big  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Big.buf  arg:u64  reftype:Inlary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.inlary  field:algo_lib.Big.buf  min:8192  max:8192  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Huge  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Huge.big  arg:algo_lib.Big  reftype:Inlary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.inlary  field:algo_lib.Huge.big  min:65537  max:65537  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A fixed field after a Varlen field: the varlen data begins at the end of
@@ -1206,7 +3436,37 @@ void atf_comp::comptest_amc_BadSizeOverflow() {
 // amc.varlen_last row beside it is what pins the Opt as declaring no
 // storage.
 void atf_comp::comptest_amc_BadVarlenLast() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_varlen_last.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u8  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Sub  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Sub.val  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.Sub.Argv  printfmt:Auto  read:Y  print:Y  sep:\"\"  genop:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Blob  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Blob.n  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Blob.data  arg:u8  reftype:Varlen  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.blob  arg:algo_lib.Blob  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Blob.crc  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Blob.ptr  arg:algo_lib.Blob  reftype:Ptr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Blob.cnt  arg:algo_lib.Sub  reftype:Count  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Blob.child  arg:algo_lib.Sub  reftype:Exec  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Blob.flag  arg:u32  reftype:Bitfld  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.Blob.flag  offset:0  width:8  srcfield:algo_lib.Blob.n  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Blob.mem  arg:u8  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Blob.glob  arg:u32  reftype:Global  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Blob.stack  arg:u32  reftype:Cppstack  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Blob.zs_mt  arg:algo_lib.Sub  reftype:ZSListMT  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Blob.calc  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cppfunc  field:algo_lib.Blob.calc  expr:\"parent.n + 1\"  print:N  set:N");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Blob.nn  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.falias  field:algo_lib.Blob.nn  srcfield:algo_lib.Blob.n  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Blob.half  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.substr  field:algo_lib.Blob.half  expr:/RL  srcfield:algo_lib.Blob.n");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Blob.opt  arg:algo_lib.Sub  reftype:Opt  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // Fields that begin at the end of the fixed portion: varlen data and an
@@ -1231,14 +3491,69 @@ void atf_comp::comptest_amc_BadVarlenLast() {
 // with more than one varlen field is refused by the pool generator, whose
 // diagnostic would then arrive alongside the ones this test is about.
 void atf_comp::comptest_amc_BadVarlenOpt() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_varlen_opt.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u8  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Blob  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Blob.n  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.lenfld  field:algo_lib.Blob.n  extra:0  scale:1");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Tail  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Tail.t  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Blob.tail  arg:algo_lib.Tail  reftype:Opt  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Blob.data  arg:u8  reftype:Varlen  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.blob  arg:algo_lib.Blob  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Rblob  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rblob.n  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.lenfld  field:algo_lib.Rblob.n  extra:0  scale:1");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rblob.data  arg:u8  reftype:Varlen  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rblob.tail  arg:algo_lib.Tail  reftype:Opt  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.rblob  arg:algo_lib.Rblob  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Oblob  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Oblob.n  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Oblob.tail  arg:algo_lib.Tail  reftype:Opt  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Oblob.tail2  arg:algo_lib.Tail  reftype:Opt  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.oblob  arg:algo_lib.Oblob  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Sblob  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Sblob.n  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Sblob.tail  arg:algo_lib.Tail  reftype:Opt  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.sblob  arg:algo_lib.Sblob  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Vblob  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Vblob.n  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.lenfld  field:algo_lib.Vblob.n  extra:0  scale:1");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Vblob.data  arg:u8  reftype:Varlen  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.vblob  arg:algo_lib.Vblob  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Dblob  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Dblob.n  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.lenfld  field:algo_lib.Dblob.n  extra:0  scale:1");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Dblob.tail  arg:algo_lib.Tail  reftype:Opt  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Dblob.data  arg:u8  reftype:Varlen  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Dblob.data2  arg:u8  reftype:Varlen  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Wblob  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Wblob.n  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.lenfld  field:algo_lib.Wblob.n  extra:0  scale:1");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Wblob.data  arg:u8  reftype:Varlen  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Wblob.data2  arg:u8  reftype:Varlen  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A non-varlen pool instance of a varlen ctype: the pool allocates fixed-size
 // records, so the trailing varlen data has nowhere to live. The offending
 // instance is reported and the schema is rejected with a nonzero exit.
 void atf_comp::comptest_amc_BadInfinityPool() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_infinity_pool.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u8  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Blob  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Blob.n  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Blob.data  arg:u8  reftype:Varlen  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.blob  arg:algo_lib.Blob  reftype:Tpool  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A pool arg with a varlen field but no lenfld: the element count is an
@@ -1246,14 +3561,35 @@ void atf_comp::comptest_amc_BadInfinityPool() {
 // query prints the generated Delete; the length statement must be
 // well-formed (no stray semicolon inside the length expression).
 void atf_comp::comptest_amc_PoolVarlenExtern() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/pool_varlen_extern.ssim -out_dir: -report:N algo_lib.FDb.blob.Delete");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N algo_lib.FDb.blob.Delete < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u8  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Blob  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Blob.n  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Blob.data  arg:u8  reftype:Varlen  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.blob  arg:algo_lib.Blob  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A pooled ctype whose fixed size plus lenfld extra is not a multiple of the
 // lenfld scale: pool alloc stores len = (size + extra) / scale, which
 // truncates, and the reader reconstructs less than was allocated.
 void atf_comp::comptest_amc_BadLenfldScale() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_lenfld_scale.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u8  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Msg  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Msg.len  arg:u8  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Msg.pad  arg:u8  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.lenfld  field:algo_lib.Msg.len  extra:0  scale:4");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.msg  arg:algo_lib.Msg  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A pool-less message ctype whose fixed size is not a multiple of the lenfld
@@ -1261,7 +3597,18 @@ void atf_comp::comptest_amc_BadLenfldScale() {
 // truncating length word pool alloc would, so the divisibility check must
 // cover message ctypes, not only pooled ones.
 void atf_comp::comptest_amc_BadLenfldMsgtype() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_lenfld_msgtype.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u8  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Msg  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Msg.len  arg:u8  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Msg.pad  arg:u8  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.lenfld  field:algo_lib.Msg.len  extra:0  scale:4");
+    atf_comp::ProcWrite(proc, "dmmeta.msgtype  ctype:algo_lib.Msg  type:1");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A fixed-only ctype whose only length store is its Fmt* constructor (a pnew
@@ -1270,7 +3617,18 @@ void atf_comp::comptest_amc_BadLenfldMsgtype() {
 // truncating length word pool alloc would, and the divisibility check must
 // cover pnew carriers too.
 void atf_comp::comptest_amc_BadLenfldPnew() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_lenfld_pnew.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u8  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Msg  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Msg.len  arg:u8  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Msg.pad  arg:u8  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.lenfld  field:algo_lib.Msg.len  extra:0  scale:4");
+    atf_comp::ProcWrite(proc, "dmmeta.pnew  pnew:algo_lib/algo_lib.Msg.ByteAry  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // Three lenflds with scale:0 on ctypes whose Opt fields consume the length
@@ -1282,7 +3640,30 @@ void atf_comp::comptest_amc_BadLenfldPnew() {
 // without its own scale test the run would die on SIGFPE with no diagnostic
 // at all. The cloned base field (FMsgC.len) reports the row a second time.
 void atf_comp::comptest_amc_BadLenfldZeroScale() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_lenfld_zeroscale.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u8  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Byte  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Byte.val  arg:u8  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.MsgA  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgA.len  arg:u8  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.lenfld  field:algo_lib.MsgA.len  extra:0  scale:0");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgA.tail  arg:algo_lib.Byte  reftype:Opt  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.MsgB  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgB.len  arg:u8  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.lenfld  field:algo_lib.MsgB.len  extra:0  scale:0");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgB.tail  arg:algo_lib.Byte  reftype:Opt  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.MsgC  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgC.len  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.lenfld  field:algo_lib.MsgC.len  extra:0  scale:0");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgC.tail  arg:algo_lib.Byte  reftype:Opt  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.FMsgC  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FMsgC.base  arg:algo_lib.MsgC  reftype:Base  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.msgc  arg:algo_lib.FMsgC  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // The declared-type dimension of the length field, one ctype per case. A
@@ -1295,7 +3676,33 @@ void atf_comp::comptest_amc_BadLenfldZeroScale() {
 // carries the same shape over a u16 word and draws nothing, which is what
 // makes the three above a rejection of the type rather than of the shape.
 void atf_comp::comptest_amc_BadLenfldType() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_lenfld_type.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u8  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Msg  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Msg.len  arg:u128  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Msg.pad  arg:u128  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.lenfld  field:algo_lib.Msg.len  extra:0  scale:1");
+    atf_comp::ProcWrite(proc, "dmmeta.msgtype  ctype:algo_lib.Msg  type:1");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.MsgBool  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgBool.len  arg:bool  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgBool.pad  arg:u8  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.lenfld  field:algo_lib.MsgBool.len  extra:0  scale:1");
+    atf_comp::ProcWrite(proc, "dmmeta.msgtype  ctype:algo_lib.MsgBool  type:2");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.MsgChar  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgChar.len  arg:char  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgChar.pad  arg:u8  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.lenfld  field:algo_lib.MsgChar.len  extra:0  scale:1");
+    atf_comp::ProcWrite(proc, "dmmeta.msgtype  ctype:algo_lib.MsgChar  type:3");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.MsgOk  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgOk.len  arg:u16  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgOk.pad  arg:u16  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.lenfld  field:algo_lib.MsgOk.len  extra:0  scale:1");
+    atf_comp::ProcWrite(proc, "dmmeta.msgtype  ctype:algo_lib.MsgOk  type:4");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A u8 lenfld (scale 4) on a pooled + pnew ctype: every store of a runtime
@@ -1311,7 +3718,28 @@ void atf_comp::comptest_amc_BadLenfldType() {
 // argument is an int, so the emitted bound is the i32 maximum and the totals
 // it accepts are exactly those the allocator can be asked for.
 void atf_comp::comptest_amc_LenfldNarrow() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/lenfld_narrow.ssim -out_dir: -report:N '%msgn.AllocExtraMaybe|%MsgN_FmtByteAry|%MsgW_FmtAlloc'");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N '%msgn.AllocExtraMaybe|%MsgN_FmtByteAry|%MsgW_FmtAlloc' < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u8  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.MsgN  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgN.len  arg:u8  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.lenfld  field:algo_lib.MsgN.len  extra:0  scale:4");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgN.p1  arg:u8  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgN.p2  arg:u8  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgN.p3  arg:u8  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgN.data  arg:u32  reftype:Varlen  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.msgn  arg:algo_lib.MsgN  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pnew  pnew:algo_lib/algo_lib.MsgN.ByteAry  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.MsgW  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:algo_lib.MsgW  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgW.len  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.lenfld  field:algo_lib.MsgW.len  extra:0  scale:1");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgW.data  arg:u8  reftype:Varlen  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pnew  pnew:algo_lib/algo_lib.MsgW.Alloc  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // Two jstype ctypes sharing one u32 lenfld shape, differing only in whether
@@ -1323,9 +3751,28 @@ void atf_comp::comptest_amc_LenfldNarrow() {
 // tempdir, so the derived-table acr child writes into that tempdir too) and
 // pins both emitted TypeScript encoders.
 void atf_comp::comptest_amc_JsFixedFrame() {
-    atf_comp::ProcStart("bash -c 'mkdir -p $tempdir/o/ts/gen $tempdir/o/include/gen $tempdir/o/cpp/gen $tempdir/o/data"
-                        " && $bindir/amc -in_dir:test/amc/js_fixed_frame.ssim -out_dir:$tempdir/o -report:N"
-                        " && sed -n \"/_Encode/,/^}/p\" $tempdir/o/ts/gen/algo_lib_gen.ts'");
+    atf_comp::FProc &proc = atf_comp::ProcStart("bash -c 'mkdir -p $tempdir/o/ts/gen $tempdir/o/include/gen $tempdir/o/cpp/gen $tempdir/o/data"
+                                                " && $bindir/amc -in_dir:- -out_dir:$tempdir/o -report:N < <(cat test/amc/bootstrap.ssim -)"
+                                                " && sed -n \"/_Encode/,/^}/p\" $tempdir/o/ts/gen/algo_lib_gen.ts'");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u8  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.nsjs  ns:algo_lib  typescript:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.MsgFix  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.jstype  ctype:algo_lib.MsgFix  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:algo_lib.MsgFix  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgFix.len  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.lenfld  field:algo_lib.MsgFix.len  extra:0  scale:1");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgFix.val  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.MsgVar  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.jstype  ctype:algo_lib.MsgVar  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:algo_lib.MsgVar  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgVar.len  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.lenfld  field:algo_lib.MsgVar.len  extra:0  scale:1");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgVar.data  arg:u8  reftype:Varlen  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // Varlen pools with InsertMaybe: the addon count of an untrusted source
@@ -1364,7 +3811,99 @@ void atf_comp::comptest_amc_JsFixedFrame() {
 // with no bound to give, so every such pool bounds the count by the i32
 // a frame length is read back through instead.
 void atf_comp::comptest_amc_PoolInsertScale() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/pool_insert_scale.ssim -out_dir: -report:N 'algo_lib.FDb.msg%.(InsertMaybe|AllocExtraMaybe)'");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N 'algo_lib.FDb.msg%.(InsertMaybe|AllocExtraMaybe)' < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u8  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Sub  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Sub.val  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.MsgU32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgU32.len  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.lenfld  field:algo_lib.MsgU32.len  extra:0  scale:4");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgU32.sub  arg:algo_lib.Sub  reftype:Opt  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.FMsgU32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FMsgU32.base  arg:algo_lib.MsgU32  reftype:Base  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.msgu32  arg:algo_lib.FMsgU32  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.MsgI32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgI32.len  arg:i32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.lenfld  field:algo_lib.MsgI32.len  extra:0  scale:1");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgI32.sub  arg:algo_lib.Sub  reftype:Opt  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.FMsgI32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FMsgI32.base  arg:algo_lib.MsgI32  reftype:Base  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.msgi32  arg:algo_lib.FMsgI32  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.MsgBit32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgBit32.word  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgBit32.len  arg:u64  reftype:Bitfld  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.MsgBit32.len  offset:0  width:32  srcfield:algo_lib.MsgBit32.word  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.lenfld  field:algo_lib.MsgBit32.len  extra:0  scale:1");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgBit32.sub  arg:algo_lib.Sub  reftype:Opt  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.FMsgBit32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FMsgBit32.base  arg:algo_lib.MsgBit32  reftype:Base  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.msgbit32  arg:algo_lib.FMsgBit32  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.MsgBit33  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgBit33.word  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgBit33.len  arg:u64  reftype:Bitfld  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.MsgBit33.len  offset:0  width:33  srcfield:algo_lib.MsgBit33.word  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.lenfld  field:algo_lib.MsgBit33.len  extra:0  scale:1");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgBit33.sub  arg:algo_lib.Sub  reftype:Opt  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.FMsgBit33  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FMsgBit33.base  arg:algo_lib.MsgBit33  reftype:Base  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.msgbit33  arg:algo_lib.FMsgBit33  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.MsgU64  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgU64.len  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.lenfld  field:algo_lib.MsgU64.len  extra:0  scale:2");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgU64.sub  arg:algo_lib.Sub  reftype:Opt  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.FMsgU64  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FMsgU64.base  arg:algo_lib.MsgU64  reftype:Base  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.msgu64  arg:algo_lib.FMsgU64  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.MsgI64  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgI64.len  arg:i64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.lenfld  field:algo_lib.MsgI64.len  extra:0  scale:8");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgI64.sub  arg:algo_lib.Sub  reftype:Opt  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.FMsgI64  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FMsgI64.base  arg:algo_lib.MsgI64  reftype:Base  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.msgi64  arg:algo_lib.FMsgI64  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.MsgNeg  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgNeg.len  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.lenfld  field:algo_lib.MsgNeg.len  extra:-2  scale:1");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgNeg.sub  arg:algo_lib.Sub  reftype:Opt  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.FMsgNeg  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FMsgNeg.base  arg:algo_lib.MsgNeg  reftype:Base  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.msgneg  arg:algo_lib.FMsgNeg  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.MsgPos  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgPos.len  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.lenfld  field:algo_lib.MsgPos.len  extra:4  scale:1");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgPos.sub  arg:algo_lib.Sub  reftype:Opt  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.FMsgPos  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FMsgPos.base  arg:algo_lib.MsgPos  reftype:Base  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.msgpos  arg:algo_lib.FMsgPos  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Msg3  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Msg3.len  arg:i32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.lenfld  field:algo_lib.Msg3.len  extra:0  scale:1");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Msg3.sub  arg:algo_lib.Sub  reftype:Opt  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.FMsg3  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FMsg3.base  arg:algo_lib.Msg3  reftype:Base  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.msg3  arg:algo_lib.FMsg3  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Msg6  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Msg6.len  arg:u16  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.lenfld  field:algo_lib.Msg6.len  extra:0  scale:1");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Msg6.sub  arg:algo_lib.Sub  reftype:Opt  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.FMsg6  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FMsg6.base  arg:algo_lib.Msg6  reftype:Base  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.msg6  arg:algo_lib.FMsg6  reftype:Blkpool  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.basepool  field:algo_lib.FDb.msg6  base:algo_lib.FDb.malloc");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Msg5  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Msg5.len  arg:u16  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.lenfld  field:algo_lib.Msg5.len  extra:0  scale:4");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Msg5.pad  arg:u16  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Msg5.sub  arg:algo_lib.Sub  reftype:Opt  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.FMsg5  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FMsg5.base  arg:algo_lib.Msg5  reftype:Base  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.msg5  arg:algo_lib.FMsg5  reftype:Blkpool  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.basepool  field:algo_lib.FDb.msg5  base:algo_lib.FDb.malloc");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // Two Bitfld lenflds whose stores mask to the declared width: MsgWidth
@@ -1374,7 +3913,28 @@ void atf_comp::comptest_amc_PoolInsertScale() {
 // representable at all. Both range checks must bound by the width-limited
 // max, not the source word's full range, and report in one run.
 void atf_comp::comptest_amc_BadLenfldBitfld() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_lenfld_bitfld.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u8  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.MsgWidth  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgWidth.word  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgWidth.len  arg:u32  reftype:Bitfld  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.MsgWidth.len  offset:0  width:4  srcfield:algo_lib.MsgWidth.word  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.lenfld  field:algo_lib.MsgWidth.len  extra:0  scale:1");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgWidth.p1  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgWidth.p2  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgWidth.p3  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgWidth.p4  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.msgtype  ctype:algo_lib.MsgWidth  type:1");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.MsgExtra  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgExtra.word  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgExtra.len  arg:u32  reftype:Bitfld  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.MsgExtra.len  offset:0  width:6  srcfield:algo_lib.MsgExtra.word  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.lenfld  field:algo_lib.MsgExtra.len  extra:252  scale:1");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A u8 lenfld with extra:256: every value the type can hold maps to a
@@ -1383,7 +3943,18 @@ void atf_comp::comptest_amc_BadLenfldBitfld() {
 // wraps in u64 and the emitted guard never fires; the schema must be
 // refused at generation time instead.
 void atf_comp::comptest_amc_BadLenfldExtra() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_lenfld_extra.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u8  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Msg  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Msg.len  arg:u8  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Msg.pad  arg:u8  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.lenfld  field:algo_lib.Msg.len  extra:256  scale:1");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.msg  arg:algo_lib.Msg  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // Two packed jstype ctypes whose fixed size plus lenfld extra falls outside
@@ -1394,7 +3965,27 @@ void atf_comp::comptest_amc_BadLenfldExtra() {
 // a range guard that throws on every encode. Both offenders are rejected in
 // one run.
 void atf_comp::comptest_amc_BadLenfldJstype() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_lenfld_jstype.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u8  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.nsjs  ns:algo_lib  typescript:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.MsgLow  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.jstype  ctype:algo_lib.MsgLow  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:algo_lib.MsgLow  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgLow.len  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.lenfld  field:algo_lib.MsgLow.len  extra:-8  scale:4");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.MsgHigh  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.jstype  ctype:algo_lib.MsgHigh  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:algo_lib.MsgHigh  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgHigh.len  arg:u8  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgHigh.pad1  arg:u8  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgHigh.pad2  arg:u8  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgHigh.pad3  arg:u8  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.lenfld  field:algo_lib.MsgHigh.len  extra:255  scale:1");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // The wire-form dimension of a packed jstype ctype's fields: a field the
@@ -1439,7 +4030,127 @@ void atf_comp::comptest_amc_BadLenfldJstype() {
 // emitting gen, so a refused schema is refused before the first write and no
 // decoder is emitted for the fields it accepted either.
 void atf_comp::comptest_amc_BadJstypeWire() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_jstype_wire.ssim -out_dir:$tempdir -report:N");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir:$tempdir -report:N < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u8  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.nsjs  ns:algo_lib  typescript:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Str4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:algo_lib.Str4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cstr  ctype:algo_lib.Str4  strequiv:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Str4.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.Str4.ch  length:4  strtype:rpascal  pad:\"\"  strict:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Hdr  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:algo_lib.Hdr  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Hdr.magic  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Tail  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:algo_lib.Tail  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Tail.len  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.lenfld  field:algo_lib.Tail.len  extra:0  scale:1");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Tail.text  arg:char  reftype:Varlen  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.MsgOk  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.jstype  ctype:algo_lib.MsgOk  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:algo_lib.MsgOk  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgOk.base  arg:algo_lib.Hdr  reftype:Base  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgOk.len  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.lenfld  field:algo_lib.MsgOk.len  extra:0  scale:1");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgOk.flags  arg:u8  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgOk.lo  arg:u8  reftype:Bitfld  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.MsgOk.lo  offset:0  width:4  srcfield:algo_lib.MsgOk.flags  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgOk.str  arg:algo_lib.Str4  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgOk.hdr  arg:algo_lib.Hdr  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgOk.data  arg:u8  reftype:Inlary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.inlary  field:algo_lib.MsgOk.data  min:4  max:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgOk.text  arg:char  reftype:Varlen  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgOk.blob  arg:u8  reftype:Varlen  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgOk.rec  arg:algo_lib.Hdr  reftype:Varlen  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.MsgOpt  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.jstype  ctype:algo_lib.MsgOpt  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:algo_lib.MsgOpt  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgOpt.len  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.lenfld  field:algo_lib.MsgOpt.len  extra:0  scale:1");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgOpt.body  arg:algo_lib.Hdr  reftype:Opt  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.MsgBad  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.jstype  ctype:algo_lib.MsgBad  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:algo_lib.MsgBad  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgBad.len  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.lenfld  field:algo_lib.MsgBad.len  extra:0  scale:1");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgBad.name  arg:char  reftype:Inlary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.inlary  field:algo_lib.MsgBad.name  min:8  max:8  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgBad.tag  arg:algo_lib.Str4  reftype:Inlary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.inlary  field:algo_lib.MsgBad.tag  min:2  max:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgBad.label  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.MsgBad.label  length:4  strtype:rpascal  pad:\"\"  strict:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgBad.seq  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.MsgBadOpt  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.jstype  ctype:algo_lib.MsgBadOpt  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:algo_lib.MsgBadOpt  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgBadOpt.len  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.lenfld  field:algo_lib.MsgBadOpt.len  extra:0  scale:1");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgBadOpt.body  arg:algo_lib.Str4  reftype:Opt  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.MsgBadInlary  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.jstype  ctype:algo_lib.MsgBadInlary  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:algo_lib.MsgBadInlary  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgBadInlary.len  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.lenfld  field:algo_lib.MsgBadInlary.len  extra:0  scale:1");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgBadInlary.data  arg:u8  reftype:Inlary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.inlary  field:algo_lib.MsgBadInlary.data  min:0  max:8  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgBadInlary.seq  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.MsgBadVal  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.jstype  ctype:algo_lib.MsgBadVal  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:algo_lib.MsgBadVal  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgBadVal.len  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.lenfld  field:algo_lib.MsgBadVal.len  extra:0  scale:1");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgBadVal.inner  arg:algo_lib.Tail  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgBadVal.seq  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.MsgBadValOpt  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.jstype  ctype:algo_lib.MsgBadValOpt  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:algo_lib.MsgBadValOpt  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgBadValOpt.len  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.lenfld  field:algo_lib.MsgBadValOpt.len  extra:0  scale:1");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgBadValOpt.inner  arg:algo_lib.MsgOpt  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgBadValOpt.seq  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.MsgBadVarlen  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.jstype  ctype:algo_lib.MsgBadVarlen  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:algo_lib.MsgBadVarlen  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgBadVarlen.len  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.lenfld  field:algo_lib.MsgBadVarlen.len  extra:0  scale:1");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgBadVarlen.body  arg:algo_lib.Str4  reftype:Varlen  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.MsgNolen  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.jstype  ctype:algo_lib.MsgNolen  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:algo_lib.MsgNolen  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgNolen.magic  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgNolen.text  arg:char  reftype:Varlen  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgNolen.more  arg:char  reftype:Varlen  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.MsgNolenOpt  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.jstype  ctype:algo_lib.MsgNolenOpt  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:algo_lib.MsgNolenOpt  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgNolenOpt.magic  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgNolenOpt.body  arg:algo_lib.Hdr  reftype:Opt  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.MsgFixed  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.jstype  ctype:algo_lib.MsgFixed  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:algo_lib.MsgFixed  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgFixed.magic  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.MsgUnpacked  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.jstype  ctype:algo_lib.MsgUnpacked  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgUnpacked.name  arg:char  reftype:Inlary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.inlary  field:algo_lib.MsgUnpacked.name  min:8  max:8  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.MsgNojs  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:algo_lib.MsgNojs  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgNojs.name  arg:char  reftype:Inlary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.inlary  field:algo_lib.MsgNojs.name  min:8  max:8  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.MsgTagged  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.jstype  ctype:algo_lib.MsgTagged  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:algo_lib.MsgTagged  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgTagged.len  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.lenfld  field:algo_lib.MsgTagged.len  extra:0  scale:1");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgTagged.tag  arg:char  reftype:Inlary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.inlary  field:algo_lib.MsgTagged.tag  min:4  max:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgTagged.name  arg:char  reftype:Inlary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.inlary  field:algo_lib.MsgTagged.name  min:8  max:8  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // Two store-carrying ctypes whose fixed size plus lenfld extra falls outside
@@ -1450,7 +4161,24 @@ void atf_comp::comptest_amc_BadJstypeWire() {
 // the emitted range guard bound falls below the fixed size and every encode
 // throws at first use. Both offenders are rejected in one run.
 void atf_comp::comptest_amc_BadLenfldMinFrame() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_lenfld_minframe.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u8  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.MsgLow  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgLow.len  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.lenfld  field:algo_lib.MsgLow.len  extra:-8  scale:4");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.msglow  arg:algo_lib.MsgLow  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.MsgHigh  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgHigh.len  arg:u8  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgHigh.pad1  arg:u8  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgHigh.pad2  arg:u8  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgHigh.pad3  arg:u8  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.lenfld  field:algo_lib.MsgHigh.len  extra:255  scale:1");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.msghigh  arg:algo_lib.MsgHigh  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // Two packed jstype ctypes whose lenfld sits on a Bitfld field over a raw
@@ -1462,7 +4190,28 @@ void atf_comp::comptest_amc_BadLenfldMinFrame() {
 // (u8 lenfld, extra:252, size 4) has an unstorable minimum frame, yet amc
 // accepts both with exit code 0.
 void atf_comp::comptest_amc_LenfldBitfld() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/lenfld_bitfld.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u8  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.nsjs  ns:algo_lib  typescript:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.MsgIndiv  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.jstype  ctype:algo_lib.MsgIndiv  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:algo_lib.MsgIndiv  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgIndiv.word  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgIndiv.len  arg:u32  reftype:Bitfld  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.MsgIndiv.len  offset:8  width:24  srcfield:algo_lib.MsgIndiv.word  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.lenfld  field:algo_lib.MsgIndiv.len  extra:0  scale:8");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.MsgRange  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.jstype  ctype:algo_lib.MsgRange  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:algo_lib.MsgRange  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgRange.word  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.MsgRange.len  arg:u8  reftype:Bitfld  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.MsgRange.len  offset:0  width:8  srcfield:algo_lib.MsgRange.word  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.lenfld  field:algo_lib.MsgRange.len  extra:252  scale:1");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A packed message based on a private header ctype that has no dmmeta.pack
@@ -1472,42 +4221,119 @@ void atf_comp::comptest_amc_LenfldBitfld() {
 // rejections (amc.back_pack, amc.what_the_pack), each followed by the bare
 // dmmeta.pack row the message tells the author to insert.
 void atf_comp::comptest_amc_MissingPack() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/missing_pack.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u8  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ns  ns:ttt  nstype:protocol  license:GPL  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.nsx  ns:ttt  genthrow:N  correct_getorcreate:N  pool:algo_lib.FDb.malloc  sortxref:N  pack:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.nscpp  ns:ttt  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:ttt.EventHeader  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:ttt.EventHeader.type  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:ttt.EventHeader.length  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.typefld  field:ttt.EventHeader.type  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.lenfld  field:ttt.EventHeader.length  extra:0  scale:1");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:ttt.Event  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:ttt.Event.base  arg:ttt.EventHeader  reftype:Base  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.msgtype  ctype:ttt.Event  type:3001");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:ttt.Event  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A pmask field of 536870913 bytes: its bit count exceeds i32, which the
 // struct size cap (i32 with alignment headroom) permits. The bit-width
 // bookkeeping must not wrap; the schema is legal and generates cleanly.
 void atf_comp::comptest_amc_PmaskGiantField() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/pmask_giant_field.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Rec  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.pmask  arg:u8  reftype:Inlary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.inlary  field:algo_lib.Rec.pmask  min:536870913  max:536870913  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pmaskfld  field:algo_lib.Rec.pmask  filter_print:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.f0  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.f1  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.f2  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.f3  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.f4  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.f5  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.f6  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.f7  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.f8  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // csize rows with alignment 32 (beyond the headroom the struct size cap
 // reserves for RoundUp) and alignment 6 (not a power of two, so the rounding
 // mask miscomputes): both must be rejected, not silently accepted.
 void atf_comp::comptest_amc_BadCsizeAlignment() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_csize_alignment.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Avx  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:algo_lib.Avx  size:64  alignment:32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Odd  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:algo_lib.Odd  size:12  alignment:6  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A variable char/u8 inlary with min>0: the string read copies the input
 // and sets the count to its length, which a short input puts below min.
 // The shape is rejected until someone defines floor semantics for it.
 void atf_comp::comptest_amc_BadInlaryMin() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_inlary_min.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.TestInlaryMin  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.TestInlaryMin.str  arg:char  reftype:Inlary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.inlary  field:algo_lib.TestInlaryMin.str  min:2  max:8  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.TestInlaryMin.buf  arg:u8  reftype:Inlary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.inlary  field:algo_lib.TestInlaryMin.buf  min:1  max:4  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // An inlary with min>max: Init preallocates min elements against a
 // capacity of max, so the first record constructed would die at runtime.
 // amc rejects the shape instead of shipping the trap.
 void atf_comp::comptest_amc_BadInlaryMinmax() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_inlary_minmax.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.TestInlaryMinmax  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.TestInlaryMinmax.val  arg:u32  reftype:Inlary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.inlary  field:algo_lib.TestInlaryMinmax.val  min:5  max:3  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A variable inlary with fnoremove: Setary, the separated-string read, and
 // Uninit all empty the array through RemoveAll, which fnoremove suppresses,
 // so the generated code would call a function that is never emitted.
 void atf_comp::comptest_amc_BadInlaryFnoremove() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_inlary_fnoremove.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.TestInlary  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.TestInlary.val  arg:u32  reftype:Inlary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.inlary  field:algo_lib.TestInlary.val  min:0  max:3  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fnoremove  field:algo_lib.TestInlary.val  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A Json cfmt over fields no FmtJson branch covers. Two causes: a reftype the
@@ -1517,7 +4343,40 @@ void atf_comp::comptest_amc_BadInlaryFnoremove() {
 // singular and repeated. Every offender is rejected in one run through the
 // accumulate path.
 void atf_comp::comptest_amc_BadJsonFld() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_json_fld.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Name  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Name.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.Name.ch  length:20  strtype:rpascal  pad:\"\"  strict:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.Name.Json  printfmt:Auto  read:N  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Rec  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.value  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.name  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.Rec.name  length:20  strtype:rpascal  pad:\"\"  strict:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.Rec.Json  printfmt:Auto  read:N  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Opaque  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Opaque.id  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.RecVal  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.RecVal.value  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.RecVal.opaque  arg:algo_lib.Opaque  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.RecVal.Json  printfmt:Auto  read:N  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.RecAry  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.RecAry.value  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.RecAry.opaque  arg:algo_lib.Opaque  reftype:Tary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.tary  field:algo_lib.RecAry.opaque  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.RecAry.Json  printfmt:Auto  read:N  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.InlOpaque  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.InlOpaque.v  arg:algo_lib.Opaque  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.InlOpaque.Json  printfmt:Auto  read:N  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.InlAryOpaque  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.InlAryOpaque.v  arg:algo_lib.Opaque  reftype:Tary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.tary  field:algo_lib.InlAryOpaque.v  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.InlAryOpaque.Json  printfmt:Auto  read:N  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // How each field of a Json cfmt reaches its node. A field whose type carries
@@ -1544,7 +4403,76 @@ void atf_comp::comptest_amc_BadJsonFld() {
 // member explicitly, leaving the data field off the mask, and that field
 // inlines as it would with no filter at all.
 void atf_comp::comptest_amc_JsonFld() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/json_fld.ssim -out_dir: -report:N algo_lib.%.FmtJson");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N algo_lib.%.FmtJson < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:u32.Json  printfmt:Extern  read:N  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Str  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Str.id  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.Str.String  printfmt:Raw  read:N  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Multi  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Multi.a  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Multi.s  arg:algo_lib.Str  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Multi.ja  arg:u32  reftype:Tary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.tary  field:algo_lib.Multi.ja  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Multi.sa  arg:algo_lib.Str  reftype:Tary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.tary  field:algo_lib.Multi.sa  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.Multi.Json  printfmt:Auto  read:N  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Computed  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Computed.a  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Computed.derived  arg:u32  reftype:Tary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.tary  field:algo_lib.Computed.derived  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cppfunc  field:algo_lib.Computed.derived  expr:\"\"  print:N  set:N");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.Computed.Json  printfmt:Auto  read:N  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.InlJson  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.InlJson.v  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.InlJson.Json  printfmt:Auto  read:N  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.InlPrint  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.InlPrint.v  arg:algo_lib.Str  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.InlPrint.Json  printfmt:Auto  read:N  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.InlAryJson  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.InlAryJson.v  arg:u32  reftype:Tary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.tary  field:algo_lib.InlAryJson.v  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.InlAryJson.Json  printfmt:Auto  read:N  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.InlAryPrint  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.InlAryPrint.v  arg:algo_lib.Str  reftype:Tary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.tary  field:algo_lib.InlAryPrint.v  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.InlAryPrint.Json  printfmt:Auto  read:N  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.PmFilter  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.PmFilter.a  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.PmFilter.s  arg:algo_lib.Str  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.PmFilter.ja  arg:u32  reftype:Tary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.tary  field:algo_lib.PmFilter.ja  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.PmFilter.pmask  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pmaskfld  field:algo_lib.PmFilter.pmask  filter_print:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.PmFilter.Json  printfmt:Auto  read:N  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.PmInlJson  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.PmInlJson.word  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.PmInlJson.pm  arg:u32  reftype:Bitfld  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.PmInlJson.pm  offset:0  width:8  srcfield:algo_lib.PmInlJson.word  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pmaskfld  field:algo_lib.PmInlJson.pm  filter_print:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.PmInlJson.flag  arg:bool  reftype:Bitfld  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.PmInlJson.flag  offset:8  width:1  srcfield:algo_lib.PmInlJson.word  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.PmInlJson.Json  printfmt:Auto  read:N  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.PmInlPrint  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.PmInlPrint.word  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.PmInlPrint.pm  arg:u32  reftype:Bitfld  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.PmInlPrint.pm  offset:0  width:8  srcfield:algo_lib.PmInlPrint.word  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pmaskfld  field:algo_lib.PmInlPrint.pm  filter_print:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.PmInlPrint.Json  printfmt:Auto  read:N  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.PmInlFree  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.PmInlFree.word  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.PmInlFree.pm  arg:u32  reftype:Bitfld  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.PmInlFree.pm  offset:0  width:8  srcfield:algo_lib.PmInlFree.word  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pmaskfld  field:algo_lib.PmInlFree.pm  filter_print:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.PmInlFree.flag  arg:bool  reftype:Bitfld  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.PmInlFree.flag  offset:8  width:1  srcfield:algo_lib.PmInlFree.word  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pmaskfld_member  pmaskfld_member:algo_lib.PmInlFree.pm/algo_lib.PmInlFree.flag  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.PmInlFree.Json  printfmt:Auto  read:N  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A Json cfmt on a base-derived ctype and on a bitfield-carrying ctype:
@@ -1553,7 +4481,24 @@ void atf_comp::comptest_amc_JsonFld() {
 // inside the printed source word — so both schemas generate cleanly.
 // Pins both emitted FmtJson bodies.
 void atf_comp::comptest_amc_JsonBaseBitfld() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/json_base_bitfld.ssim -out_dir: -report:N %.FmtJson");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N %.FmtJson < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.BaseType  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.BaseType.value  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.BaseType.count  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Derived  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Derived.base  arg:algo_lib.BaseType  reftype:Base  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.Derived.Json  printfmt:Auto  read:N  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Flags  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Flags.value  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Flags.bit0  arg:bool  reftype:Bitfld  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.Flags.bit0  offset:0  width:1  srcfield:algo_lib.Flags.value  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.Flags.Json  printfmt:Auto  read:N  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A Json cfmt over the whole rendering table: a field renders through the
@@ -1575,7 +4520,51 @@ void atf_comp::comptest_amc_JsonBaseBitfld() {
 // pins the same rule from the other side: the record's node no longer answers
 // to that name, so a field may.
 void atf_comp::comptest_amc_JsonAry() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/json_ary.ssim -out_dir: -report:N %.FmtJson");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N %.FmtJson < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Elem  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Elem.n  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Elem.m  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.Elem.Json  printfmt:Auto  read:N  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.AryPlain  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.AryPlain.buf  arg:u32  reftype:Inlary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.inlary  field:algo_lib.AryPlain.buf  min:0  max:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.AryPlain.Json  printfmt:Auto  read:N  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.AryElem  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.AryElem.rec  arg:algo_lib.Elem  reftype:Inlary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.inlary  field:algo_lib.AryElem.rec  min:0  max:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.AryElem.Json  printfmt:Auto  read:N  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Rec  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.n  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.buf  arg:u32  reftype:Inlary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.inlary  field:algo_lib.Rec.buf  min:0  max:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.rec  arg:algo_lib.Elem  reftype:Inlary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.inlary  field:algo_lib.Rec.rec  min:0  max:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.Rec.Json  printfmt:Auto  read:N  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.ValPlain  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.ValPlain.n  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.ValPlain.Json  printfmt:Auto  read:N  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.ValElem  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.ValElem.rec  arg:algo_lib.Elem  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.ValElem.Json  printfmt:Auto  read:N  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.RecName  comment:\"field names that could collide with the walk's own locals\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.RecName.object  arg:u32  reftype:Inlary  dflt:\"\"  comment:\"the object node's name, before it moved out of reach\"");
+    atf_comp::ProcWrite(proc, "dmmeta.inlary  field:algo_lib.RecName.object  min:0  max:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.RecName.objnode  arg:u32  reftype:Inlary  dflt:\"\"  comment:\"the object node's name\"");
+    atf_comp::ProcWrite(proc, "dmmeta.inlary  field:algo_lib.RecName.objnode  min:0  max:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.RecName.x  arg:algo_lib.Elem  reftype:Val  dflt:\"\"  comment:\"prints through its own node, named for this field\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.RecName.x_field  arg:u32  reftype:Inlary  dflt:\"\"  comment:\"the name the field above once gave its node\"");
+    atf_comp::ProcWrite(proc, "dmmeta.inlary  field:algo_lib.RecName.x_field  min:0  max:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.RecName.y  arg:u32  reftype:Inlary  dflt:\"\"  comment:\"its element span carries the name of the field below\"");
+    atf_comp::ProcWrite(proc, "dmmeta.inlary  field:algo_lib.RecName.y  min:0  max:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.RecName.y_ary  arg:u32  reftype:Inlary  dflt:\"\"  comment:\"the name of the element span above\"");
+    atf_comp::ProcWrite(proc, "dmmeta.inlary  field:algo_lib.RecName.y_ary  min:0  max:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.RecName.Json  printfmt:Auto  read:N  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A Json cfmt on a global (FDb) ctype: the Global anchor field is the
@@ -1594,7 +4583,40 @@ void atf_comp::comptest_amc_JsonAry() {
 // anchor is one Tary, which keeps the collapse pinned apart from FDb's other
 // members. Pins every emitted FmtJson body in the fixture.
 void atf_comp::comptest_amc_JsonGlobal() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/json_global.ssim -out_dir: -report:N %.FmtJson");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N %.FmtJson < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.val  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.FDb.Json  printfmt:Auto  read:N  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Anchor  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Anchor._anchor  arg:algo_lib.Anchor  reftype:Global  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.Anchor.Json  printfmt:Auto  read:N  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Empty  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Derived  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Derived.base  arg:algo_lib.Empty  reftype:Base  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.Derived.Json  printfmt:Auto  read:N  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Presence  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Presence.pmask  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pmaskfld  field:algo_lib.Presence.pmask  filter_print:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.Presence.Json  printfmt:Auto  read:N  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.ja  arg:u32  reftype:Tary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.tary  field:algo_lib.FDb.ja  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Elem  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Elem.v  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.Elem.Json  printfmt:Auto  read:N  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.jb  arg:algo_lib.Elem  reftype:Tary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.tary  field:algo_lib.FDb.jb  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.GlobAry  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.GlobAry._globary  arg:algo_lib.GlobAry  reftype:Global  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.GlobAry.v  arg:u32  reftype:Tary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.tary  field:algo_lib.GlobAry.v  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.GlobAry.Json  printfmt:Auto  read:N  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.jc  arg:u32  reftype:Inlary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.inlary  field:algo_lib.FDb.jc  min:2  max:4  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A single-file universe with a Ptrary, an fcurs request for its cursor, and
@@ -1603,7 +4625,20 @@ void atf_comp::comptest_amc_JsonGlobal() {
 // generating. check_fcurs flags the same request first (bad_fcurs),
 // so the run accumulates both errors and exits with their count.
 void atf_comp::comptest_amc_BadMissingTcurs() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/missing_tcurs.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.FRow  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FRow.rowid  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.row  arg:algo_lib.FRow  reftype:Tpool  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.c_row  arg:algo_lib.FRow  reftype:Ptrary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ptrary  field:algo_lib.FDb.c_row  unique:Y  heaplike:N");
+    atf_comp::ProcWrite(proc, "dmmeta.xref  field:algo_lib.FDb.c_row  inscond:false  via:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fcurs  fcurs:algo_lib.FDb.c_row/curs  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A single-file universe with a bitset field and no amcdb.tcurs rows: the
@@ -1611,7 +4646,16 @@ void atf_comp::comptest_amc_BadMissingTcurs() {
 // bitcurs cursor is request-only. Without a dmmeta.fcurs request the cursor
 // must not be emitted; the NBits witness proves generation itself ran.
 void atf_comp::comptest_amc_CursUnrequested() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/curs_unrequested.ssim -out_dir: -report:N 'algo_lib.TestBitset.bits.NBits|algo_lib.TestBitset.bits_bitcurs.%'");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N 'algo_lib.TestBitset.bits.NBits|algo_lib.TestBitset.bits_bitcurs.%' < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.TestBitset  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.TestBitset.bits  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fbitset  field:algo_lib.TestBitset.bits  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // A field default naming the containing instance retargets to the emitting
@@ -1626,7 +4670,22 @@ void atf_comp::comptest_amc_CursUnrequested() {
 // the pointer spelling next to it, so each pins that one expression keeps the
 // longer identifier while its real reference is retargeted.
 void atf_comp::comptest_amc_DfltRetarget() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/dflt_retarget.ssim -out_dir: -report:N '(algo_lib.Rec..Init|algo_lib.Msg..Init|algo_lib.Ptr..Init)'");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N '(algo_lib.Rec..Init|algo_lib.Msg..Init|algo_lib.Ptr..Init)' < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Rec  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.val  arg:u32  reftype:Val  dflt:\"*thisvalue + ssizeof(*this)\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Ptr  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Ptr.pad  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Ptr.val  arg:u32  reftype:Val  dflt:\"u32(thisvalue + this->pad)\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Msg  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Msg.len  arg:u8  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.lenfld  field:algo_lib.Msg.len  extra:0  scale:1");
+    atf_comp::ProcWrite(proc, "dmmeta.msgtype  ctype:algo_lib.Msg  type:1");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // amc run from a directory with no bin/acr (outside a checkout): the acr
@@ -1637,14 +4696,34 @@ void atf_comp::comptest_amc_DfltRetarget() {
 // created up front so the output-file writes succeed and only the acr
 // failure is under test.
 void atf_comp::comptest_amc_TableWriteAcrFail() {
-    atf_comp::ProcStart("bash -c 'cd $tempdir && mkdir -p out/cpp/gen out/include/gen && $$OLDPWD/$bindir/amc -in_dir:$$OLDPWD/test/amc/print_global_tuple.ssim -out_dir:out -report:N'");
+    atf_comp::FProc &proc = atf_comp::ProcStart("bash -c 'cd $tempdir && mkdir -p out/cpp/gen out/include/gen && $$OLDPWD/$bindir/amc -in_dir:- -out_dir:out -report:N < <(cat $$OLDPWD/test/amc/bootstrap.ssim -)'");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.val  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.buf  arg:u32  reftype:Inlary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.inlary  field:algo_lib.FDb.buf  min:0  max:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.FDb.String  printfmt:Tuple  read:N  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // amc pointed at an -out_dir whose gen subdirectories do not exist: every
 // output-file write fails, and the run must fail naming each path instead
 // of exiting 0 with the generated code silently missing.
 void atf_comp::comptest_amc_OutfileWriteFail() {
-    atf_comp::ProcStart("bash -c 'cd $tempdir && $$OLDPWD/$bindir/amc -in_dir:$$OLDPWD/test/amc/print_global_tuple.ssim -out_dir:out -report:N'");
+    atf_comp::FProc &proc = atf_comp::ProcStart("bash -c 'cd $tempdir && $$OLDPWD/$bindir/amc -in_dir:- -out_dir:out -report:N < <(cat $$OLDPWD/test/amc/bootstrap.ssim -)'");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.val  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.buf  arg:u32  reftype:Inlary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.inlary  field:algo_lib.FDb.buf  min:0  max:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.FDb.String  printfmt:Tuple  read:N  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // amc -e whose acr -e child fails (exit 1, here via an editor that fails):
@@ -1681,8 +4760,61 @@ void atf_comp::comptest_amc_EditFail() {
 // one encoded as a type, which is coded inline by whichever message holds it
 // and needs no state pmask of its own.
 void atf_comp::comptest_amc_FastPmaskName() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/fast_pmask_name.ssim -out_dir: -report:N 'algo_lib.Msg..Fast%'");
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_fast_state.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N 'algo_lib.Msg..Fast%' < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u8  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.FastState  comment:\"Value the peer last saw for each field, and the two pmasks qualifying it\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FastState.assigned  arg:u64  reftype:Val  dflt:\"\"  comment:\"A value has been seen for the field\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pmaskfld  field:algo_lib.FastState.assigned  filter_print:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FastState.present  arg:u64  reftype:Val  dflt:\"\"  comment:\"The last value seen was present\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pmaskfld  field:algo_lib.FastState.present  filter_print:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FastState.tid  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FastState.Value  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Msg  comment:\"FAST template whose presence mask is named nullable, not pmask\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:algo_lib.Msg  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Msg.id  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Msg.nullable  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pmaskfld  field:algo_lib.Msg.nullable  filter_print:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Msg.Value  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfast  ctype:algo_lib.Msg  id:1  encoding:template  reset:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ffast  ffast:algo_lib.Msg.Value.field  name:Value  id:1  pos:1  optional:Y  encoding:unsigned  op:copy  value:\"\"  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
+    atf_comp::FProc &proc2 = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc2, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc2, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc2, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc2, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc2, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u8  reftype:Malloc  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc2, "dmmeta.ctype  ctype:algo_lib.FastState  comment:\"Value the peer last saw for each field, and the two pmasks qualifying it\"");
+    atf_comp::ProcWrite(proc2, "dmmeta.field  field:algo_lib.FastState.assigned  arg:u64  reftype:Val  dflt:\"\"  comment:\"A value has been seen for the field\"");
+    atf_comp::ProcWrite(proc2, "dmmeta.pmaskfld  field:algo_lib.FastState.assigned  filter_print:N  comment:\"\"");
+    atf_comp::ProcWrite(proc2, "dmmeta.field  field:algo_lib.FastState.seen  arg:u64  reftype:Val  dflt:\"\"  comment:\"The last value seen was present\"");
+    atf_comp::ProcWrite(proc2, "dmmeta.pmaskfld  field:algo_lib.FastState.seen  filter_print:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc2, "dmmeta.field  field:algo_lib.FastState.tid  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc2, "dmmeta.field  field:algo_lib.FastState.Value  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc2, "dmmeta.ctype  ctype:algo_lib.Msg  comment:\"FAST template whose presence mask is named nullable, not pmask\"");
+    atf_comp::ProcWrite(proc2, "dmmeta.pack  ctype:algo_lib.Msg  comment:\"\"");
+    atf_comp::ProcWrite(proc2, "dmmeta.field  field:algo_lib.Msg.id  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc2, "dmmeta.field  field:algo_lib.Msg.nullable  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc2, "dmmeta.pmaskfld  field:algo_lib.Msg.nullable  filter_print:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc2, "dmmeta.field  field:algo_lib.Msg.Value  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc2, "dmmeta.cfast  ctype:algo_lib.Msg  id:1  encoding:template  reset:N  comment:\"\"");
+    atf_comp::ProcWrite(proc2, "dmmeta.ffast  ffast:algo_lib.Msg.Value.field  name:Value  id:1  pos:1  optional:Y  encoding:unsigned  op:copy  value:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc2, "dmmeta.ctype  ctype:algo_lib.Msg2  comment:\"Second FAST template of the same namespace, coded by the same pmask row\"");
+    atf_comp::ProcWrite(proc2, "dmmeta.pack  ctype:algo_lib.Msg2  comment:\"\"");
+    atf_comp::ProcWrite(proc2, "dmmeta.field  field:algo_lib.Msg2.id  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc2, "dmmeta.field  field:algo_lib.Msg2.Value  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc2, "dmmeta.cfast  ctype:algo_lib.Msg2  id:2  encoding:template  reset:N  comment:\"\"");
+    atf_comp::ProcWrite(proc2, "dmmeta.ffast  ffast:algo_lib.Msg2.Value.field  name:Value  id:1  pos:1  optional:N  encoding:unsigned  op:copy  value:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc2, "dmmeta.ns  ns:zz  nstype:lib  license:GPL  comment:\"\"");
+    atf_comp::ProcWrite(proc2, "dmmeta.nscpp  ns:zz  comment:\"\"");
+    atf_comp::ProcWrite(proc2, "dmmeta.ctype  ctype:zz.Qty  comment:\"cfast type encoding: coded inline by its holder, so zz gets no codec\"");
+    atf_comp::ProcWrite(proc2, "dmmeta.field  field:zz.Qty.value  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc2, "dmmeta.cfast  ctype:zz.Qty  id:0  encoding:type  reset:N  comment:\"\"");
+    atf_comp::ProcWriteEof(proc2);
 }
 
 // Which argv accessors each of the two argv strfmts generates. The universe
@@ -1695,7 +4827,25 @@ void atf_comp::comptest_amc_FastPmaskName() {
 // buys no command-line reader; the prototypes are printed rather than the
 // bodies, since what is under test is which functions exist.
 void atf_comp::comptest_amc_ArgvAccessor() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/argv_accessor.ssim -out_dir: -report:N -proto -showcomment:N 'algo_lib.Amc..%Argv%|algo_lib.Amc..ToCmdline|algo_lib.Amc..NArgs|algo_lib.Gnu..%Argv%|algo_lib.Gnu..ToCmdline|algo_lib.Gnu..NArgs'");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N -proto -showcomment:N 'algo_lib.Amc..%Argv%|algo_lib.Amc..ToCmdline|algo_lib.Amc..NArgs|algo_lib.Gnu..%Argv%|algo_lib.Gnu..ToCmdline|algo_lib.Gnu..NArgs' < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Gnu  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Gnu.c  arg:u8  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Gnu.limit  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Gnu.tag  arg:u32  reftype:Tary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.tary  field:algo_lib.Gnu.tag  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.Gnu.ArgvGnu  printfmt:Auto  read:Y  print:Y  sep:\"\"  genop:N  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Amc  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Amc.c  arg:u8  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Amc.limit  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Amc.tag  arg:u32  reftype:Tary  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.tary  field:algo_lib.Amc.tag  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.Amc.Argv  printfmt:Auto  read:Y  print:Y  sep:\"\"  genop:N  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // An fconst whose own value the field's store cannot hold. The symbol reaches
@@ -1727,7 +4877,74 @@ void atf_comp::comptest_amc_ArgvAccessor() {
 // the top bit of a signed word is likewise unbounded, being a bitfield's mask
 // rather than a value of the word.
 void atf_comp::comptest_amc_BadFconstRange() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/bad_fconst_range.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Sig8  comment:\"signed 8-bit value wrapped in a single field\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Sig8.value  arg:i8  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.Sig8.String  printfmt:Raw  read:Y  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Str4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Str4.ch  arg:char  reftype:Smallstr  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.smallstr  field:algo_lib.Str4.ch  length:4  strtype:rpascal  pad:\"\"  strict:Y");
+    atf_comp::ProcWrite(proc, "dmmeta.cstr  ctype:algo_lib.Str4  strequiv:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.Str4.String  printfmt:Raw  read:Y  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:algo_lib.Str4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Rec  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.Rec.String  printfmt:Tuple  read:Y  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.word  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.wide  arg:u32  reftype:Val  dflt:\"\"  comment:\"store is the whole arg type\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Rec.wide/argmax  value:4294967295  comment:\"the arg type's own maximum fits\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Rec.wide/shifted  value:\"1<<3\"  comment:\"not a plain integer: nothing to compare\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Rec.wide/negative  value:-1  comment:\"an unsigned store holds no negative\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.byte  arg:u8  reftype:Val  dflt:\"\"  comment:\"store is the whole arg type\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Rec.byte/argmax  value:255  comment:\"the arg type's own maximum fits\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Rec.byte/past  value:300  comment:\"past the arg type's maximum\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Rec.byte/plus  value:+255  comment:\"a leading plus belongs to the number\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Rec.byte/suffix  value:255u  comment:\"a type suffix is not part of the number\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Rec.byte/suffixpast  value:300ull  comment:\"past the maximum, suffix and all\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Rec.byte/octal  value:0377  comment:\"a leading zero is octal: 255 fits\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Rec.byte/octalpast  value:0400  comment:\"octal 400 is 256, past the maximum\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Rec.byte/arith  value:\"1000-999\"  comment:\"an expression: nothing to compare\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Rec.byte/shift  value:\"1<<40\"  comment:\"a shift expression: nothing to compare\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Rec.byte/trail  value:300ms  comment:\"digits with trailing text: no number to compare\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Rec.byte/char  value:\"'A'\"  comment:\"a character literal: nothing to compare\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Rec.byte/name  value:UCHAR_MAX  comment:\"a name only the compiler resolves\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Rec.byte/binary  value:0b100000000  comment:\"a binary literal is a spelling amc does not read\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.snum  arg:i32  reftype:Val  dflt:\"\"  comment:\"store is the whole arg type\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Rec.snum/argmin  value:-2147483648  comment:\"the arg type's own minimum fits\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Rec.snum/past  value:2147483648  comment:\"past the signed arg type's maximum\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Rec.snum/hexmin  value:-0x80000000  comment:\"the minimum, spelled as a signed hex literal\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Rec.snum/hexpast  value:-0x80000001  comment:\"one past the minimum, spelled in hex\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.full  arg:u64  reftype:Val  dflt:\"\"  comment:\"store is the whole 64-bit arg type\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Rec.full/argmax  value:18446744073709551615  comment:\"the arg type's own maximum fits\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Rec.full/highbit  value:0x8000000000000000  comment:\"past the signed maximum, and an unsigned store holds it\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Rec.full/hexmax  value:0xffffffffffffffff  comment:\"the arg type's maximum, spelled in hex\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Rec.full/hexwide  value:0x10000000000000001  comment:\"a magnitude past 64 bits fits no store\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Rec.full/decwide  value:99999999999999999999999  comment:\"a decimal magnitude past 64 bits fits no store\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.narrow  arg:u32  reftype:Bitfld  dflt:\"\"  comment:\"bits hold less than the arg type\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.Rec.narrow  offset:0  width:10  srcfield:algo_lib.Rec.word  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Rec.narrow/maxstore  value:1023  comment:\"the widest value the bits hold\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Rec.narrow/past  value:2000  comment:\"past the bits, would be stored masked\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.sig_edge  arg:algo_lib.Sig8  reftype:Bitfld  dflt:\"\"  comment:\"bits drop the arg type's sign\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.Rec.sig_edge  offset:10  width:7  srcfield:algo_lib.Rec.word  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Rec.sig_edge/maxstore  value:127  comment:\"the widest value the bits hold\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Rec.sig_edge/negative  value:-1  comment:\"the bits drop the sign, so no negative fits\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.sig_full  arg:algo_lib.Sig8  reftype:Bitfld  dflt:\"\"  comment:\"bits span the whole arg type\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.Rec.sig_full  offset:17  width:8  srcfield:algo_lib.Rec.word  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Rec.sig_full/argmin  value:-128  comment:\"the bits keep the sign, so the arg minimum fits\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Rec.sig_full/hexmin  value:-0x80  comment:\"the arg minimum, spelled as a signed hex literal\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.name  arg:algo_lib.Str4  reftype:Val  dflt:\"\"  comment:\"a string field: its fconst value is a string\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Rec.name/csv  value:csv  comment:\"a string, not a number to bound\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Rec.name/digits  value:99999  comment:\"a string field's value is a string however it is spelled\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Flags  comment:\"a signed word carrying single-bit flags\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:algo_lib.Flags.String  printfmt:Bitset  read:Y  print:Y  sep:,  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Flags.value  arg:i32  reftype:Val  dflt:\"\"  comment:\"the word the flags source\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Flags.top  arg:bool  reftype:Bitfld  dflt:\"\"  comment:\"a flag on the word's top bit\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.Flags.top  offset:31  width:1  srcfield:algo_lib.Flags.value  comment:\"\"");
+    atf_comp::ProcWriteEof(proc);
 }
 
 // The declared bitfield widths an fconst's store range is computed from, over
@@ -1748,5 +4965,55 @@ void atf_comp::comptest_amc_BadFconstRange() {
 // The bitfield accessors end the run at the first width they refuse, which is
 // the last line of the golden.
 void atf_comp::comptest_amc_FconstBitfldWidth() {
-    atf_comp::ProcStart("$bindir/amc -in_dir:test/amc/fconst_bitfld_width.ssim -out_dir: -report:N zzz");
+    atf_comp::FProc &proc = atf_comp::ProcStart("$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:i8  likeu64:Y  bigendok:N  issigned:Y  comment:\"8-bit   signed integer\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:u8  likeu64:Y  bigendok:N  issigned:N  comment:\"8-bit unsigned integer\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:i16  likeu64:Y  bigendok:Y  issigned:Y  comment:\"16-bit   signed integer\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u16  size:2  alignment:2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:u16  likeu64:Y  bigendok:Y  issigned:N  comment:\"16-bit unsigned integer\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:i32  likeu64:Y  bigendok:Y  issigned:Y  comment:\"32-bit   signed integer\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u32  size:4  alignment:4  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:u32  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:u32  likeu64:Y  bigendok:Y  issigned:N  comment:\"32-bit unsigned integer\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:i64  likeu64:Y  bigendok:Y  issigned:Y  comment:\"64-bit   signed integer\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:u64  likeu64:Y  bigendok:Y  issigned:N  comment:\"64-bit unsigned integer\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:u128  size:16  alignment:16  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:u128  likeu64:N  bigendok:Y  issigned:N  comment:\"128-bit unsigned integer\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:bool  likeu64:Y  bigendok:N  issigned:N  comment:\"dflt is a c++ expr: real dflt is 'N'\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:pad_byte  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.csize  ctype:pad_byte  size:1  alignment:1  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.cfmt  cfmt:pad_byte.String  printfmt:Extern  read:Y  print:Y  sep:\"\"  genop:Y  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.pack  ctype:pad_byte  comment:\"\"");
+    atf_comp::ProcWrite(proc, "amcdb.bltin  ctype:char  likeu64:Y  bigendok:N  issigned:N  comment:char");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.ctype  ctype:algo_lib.Rec  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.word  arg:u32  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.dword  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.dword2  arg:u64  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.oword  arg:u128  reftype:Val  dflt:\"\"  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.negw  arg:u32  reftype:Bitfld  dflt:\"\"  comment:\"width below the range: names no bits\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.Rec.negw  offset:0  width:-64  srcfield:algo_lib.Rec.word  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Rec.negw/one  value:1  comment:\"a bad width bounds nothing, so the value draws no range complaint\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.zerow  arg:u32  reftype:Bitfld  dflt:\"\"  comment:\"width below the range: names no bits\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.Rec.zerow  offset:1  width:0  srcfield:algo_lib.Rec.word  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Rec.zerow/one  value:1  comment:\"a bad width bounds nothing, so the value draws no range complaint\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.widew  arg:u128  reftype:Bitfld  dflt:\"\"  comment:\"width above the range: more bits than a u64 mask holds\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.Rec.widew  offset:0  width:65  srcfield:algo_lib.Rec.oword  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Rec.widew/one  value:1  comment:\"a bad width bounds nothing, so the value draws no range complaint\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.w1  arg:u32  reftype:Bitfld  dflt:\"\"  comment:\"the narrowest width the range admits\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.Rec.w1  offset:2  width:1  srcfield:algo_lib.Rec.word  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Rec.w1/maxstore  value:1  comment:\"the widest value one bit holds\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Rec.w1/past  value:2  comment:\"past one bit, would be stored masked\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.w10  arg:u32  reftype:Bitfld  dflt:\"\"  comment:\"bits hold less than the arg type\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.Rec.w10  offset:3  width:10  srcfield:algo_lib.Rec.word  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Rec.w10/maxstore  value:1023  comment:\"the widest value ten bits hold\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Rec.w10/past  value:2000  comment:\"past ten bits, would be stored masked\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.w63  arg:u64  reftype:Bitfld  dflt:\"\"  comment:\"the widest width the mask shift builds\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.Rec.w63  offset:0  width:63  srcfield:algo_lib.Rec.dword  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Rec.w63/maxstore  value:0x7fffffffffffffff  comment:\"the widest value sixty-three bits hold\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Rec.w63/past  value:0x8000000000000000  comment:\"past sixty-three bits, would be stored masked\"");
+    atf_comp::ProcWrite(proc, "dmmeta.field  field:algo_lib.Rec.w64  arg:u64  reftype:Bitfld  dflt:\"\"  comment:\"width spans the whole arg type\"");
+    atf_comp::ProcWrite(proc, "dmmeta.bitfld  field:algo_lib.Rec.w64  offset:0  width:64  srcfield:algo_lib.Rec.dword2  comment:\"\"");
+    atf_comp::ProcWrite(proc, "dmmeta.fconst  fconst:algo_lib.Rec.w64/argmax  value:0xffffffffffffffff  comment:\"the arg type's maximum, which sixty-four bits hold\"");
+    atf_comp::ProcWriteEof(proc);
 }

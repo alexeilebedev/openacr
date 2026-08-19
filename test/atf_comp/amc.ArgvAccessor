@@ -1,4 +1,21 @@
-# start amc cmd:"$bindir/amc -in_dir:test/amc/argv_accessor.ssim -out_dir: -report:N -proto -showcomment:N 'algo_lib.Amc..%Argv%|algo_lib.Amc..ToCmdline|algo_lib.Amc..NArgs|algo_lib.Gnu..%Argv%|algo_lib.Gnu..ToCmdline|algo_lib.Gnu..NArgs'"
+# start amc cmd:"$bindir/amc -in_dir:- -out_dir: -report:N -proto -showcomment:N 'algo_lib.Amc..%Argv%|algo_lib.Amc..ToCmdline|algo_lib.Amc..NArgs|algo_lib.Gnu..%Argv%|algo_lib.Gnu..ToCmdline|algo_lib.Gnu..NArgs' < <(cat test/amc/bootstrap.ssim -)"
+amc <- dmmeta.csize  ctype:u16  size:2  alignment:2  comment:""
+amc <- dmmeta.csize  ctype:u32  size:4  alignment:4  comment:""
+amc <- dmmeta.pack  ctype:u32  comment:""
+amc <- dmmeta.csize  ctype:u128  size:16  alignment:16  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.Gnu  comment:""
+amc <- dmmeta.field  field:algo_lib.Gnu.c  arg:u8  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.Gnu.limit  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.Gnu.tag  arg:u32  reftype:Tary  dflt:""  comment:""
+amc <- dmmeta.tary  field:algo_lib.Gnu.tag  comment:""
+amc <- dmmeta.cfmt  cfmt:algo_lib.Gnu.ArgvGnu  printfmt:Auto  read:Y  print:Y  sep:""  genop:N  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.Amc  comment:""
+amc <- dmmeta.field  field:algo_lib.Amc.c  arg:u8  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.Amc.limit  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.Amc.tag  arg:u32  reftype:Tary  dflt:""  comment:""
+amc <- dmmeta.tary  field:algo_lib.Amc.tag  comment:""
+amc <- dmmeta.cfmt  cfmt:algo_lib.Amc.Argv  printfmt:Auto  read:Y  print:Y  sep:""  genop:N  comment:""
 # eof amc
 amc -> tempstr algo_lib::Amc_ToCmdline(algo_lib::Amc& row) __attribute__((nothrow));
 amc -> void algo_lib::Amc_PrintArgv(algo_lib::Amc& row, algo::cstring& str) __attribute__((nothrow));

@@ -1,4 +1,26 @@
-# start amc cmd:"$bindir/amc -in_dir:test/amc/bad_lenfld_zeroscale.ssim -out_dir: -report:N zzz"
+# start amc cmd:"$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)"
+amc <- dmmeta.csize  ctype:u16  size:2  alignment:2  comment:""
+amc <- dmmeta.csize  ctype:u32  size:4  alignment:4  comment:""
+amc <- dmmeta.pack  ctype:u32  comment:""
+amc <- dmmeta.csize  ctype:u128  size:16  alignment:16  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.malloc  arg:u8  reftype:Malloc  dflt:""  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.Byte  comment:""
+amc <- dmmeta.field  field:algo_lib.Byte.val  arg:u8  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.MsgA  comment:""
+amc <- dmmeta.field  field:algo_lib.MsgA.len  arg:u8  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.lenfld  field:algo_lib.MsgA.len  extra:0  scale:0
+amc <- dmmeta.field  field:algo_lib.MsgA.tail  arg:algo_lib.Byte  reftype:Opt  dflt:""  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.MsgB  comment:""
+amc <- dmmeta.field  field:algo_lib.MsgB.len  arg:u8  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.lenfld  field:algo_lib.MsgB.len  extra:0  scale:0
+amc <- dmmeta.field  field:algo_lib.MsgB.tail  arg:algo_lib.Byte  reftype:Opt  dflt:""  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.MsgC  comment:""
+amc <- dmmeta.field  field:algo_lib.MsgC.len  arg:u64  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.lenfld  field:algo_lib.MsgC.len  extra:0  scale:0
+amc <- dmmeta.field  field:algo_lib.MsgC.tail  arg:algo_lib.Byte  reftype:Opt  dflt:""  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.FMsgC  comment:""
+amc <- dmmeta.field  field:algo_lib.FMsgC.base  arg:algo_lib.MsgC  reftype:Base  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.msgc  arg:algo_lib.FMsgC  reftype:Malloc  dflt:""  comment:""
 # eof amc
 amc -> amc.lenfld_scale  field:algo_lib.MsgA.len  scale:0  comment:"lenfld scale must be positive"
 amc -> amc.lenfld_scale  field:algo_lib.MsgB.len  scale:0  comment:"lenfld scale must be positive"

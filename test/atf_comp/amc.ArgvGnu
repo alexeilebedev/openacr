@@ -1,4 +1,15 @@
-# start amc cmd:"$bindir/amc -in_dir:test/amc/argv_gnu.ssim -out_dir: -report:N 'algo_lib.Gnu..PrintArgv|algo_lib.Gnu..ToArgv'"
+# start amc cmd:"$bindir/amc -in_dir:- -out_dir: -report:N 'algo_lib.Gnu..PrintArgv|algo_lib.Gnu..ToArgv' < <(cat test/amc/bootstrap.ssim -)"
+amc <- dmmeta.csize  ctype:u16  size:2  alignment:2  comment:""
+amc <- dmmeta.csize  ctype:u32  size:4  alignment:4  comment:""
+amc <- dmmeta.pack  ctype:u32  comment:""
+amc <- dmmeta.csize  ctype:u128  size:16  alignment:16  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.Gnu  comment:""
+amc <- dmmeta.field  field:algo_lib.Gnu.c  arg:u8  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.Gnu.limit  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.Gnu.tag  arg:u32  reftype:Tary  dflt:""  comment:""
+amc <- dmmeta.tary  field:algo_lib.Gnu.tag  comment:""
+amc <- dmmeta.cfmt  cfmt:algo_lib.Gnu.ArgvGnu  printfmt:Auto  read:N  print:Y  sep:""  genop:N  comment:""
 # eof amc
 amc -> // --- algo_lib.Gnu..PrintArgv
 amc -> // print string representation of ROW to string STR

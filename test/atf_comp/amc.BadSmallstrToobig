@@ -1,4 +1,21 @@
-# start amc cmd:"$bindir/amc -in_dir:test/amc/bad_smallstr_toobig.ssim -out_dir: -report:N zzz"
+# start amc cmd:"$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)"
+amc <- dmmeta.csize  ctype:u16  size:2  alignment:2  comment:""
+amc <- dmmeta.csize  ctype:u32  size:4  alignment:4  comment:""
+amc <- dmmeta.pack  ctype:u32  comment:""
+amc <- dmmeta.csize  ctype:u128  size:16  alignment:16  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.Smallstr255  comment:""
+amc <- dmmeta.field  field:algo_lib.Smallstr255.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.Smallstr255.ch  length:255  strtype:rpascal  pad:""  strict:Y
+amc <- dmmeta.ctype  ctype:algo_lib.Smallstr256  comment:""
+amc <- dmmeta.field  field:algo_lib.Smallstr256.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.Smallstr256.ch  length:256  strtype:rpascal  pad:""  strict:Y
+amc <- dmmeta.ctype  ctype:algo_lib.Smallstr300  comment:""
+amc <- dmmeta.field  field:algo_lib.Smallstr300.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.Smallstr300.ch  length:300  strtype:rpascal  pad:""  strict:Y
+amc <- dmmeta.ctype  ctype:algo_lib.RspaceStr300  comment:""
+amc <- dmmeta.field  field:algo_lib.RspaceStr300.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.RspaceStr300.ch  length:300  strtype:rightpad  pad:"' '"  strict:Y
 # eof amc
 amc -> smallstr.toobig  field:algo_lib.Smallstr256.ch  length:256  comment:"smallstr length too large (must be <= 255)"
 amc -> smallstr.toobig  field:algo_lib.Smallstr300.ch  length:300  comment:"smallstr length too large (must be <= 255)"

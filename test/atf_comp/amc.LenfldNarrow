@@ -1,4 +1,24 @@
-# start amc cmd:"$bindir/amc -in_dir:test/amc/lenfld_narrow.ssim -out_dir: -report:N '%msgn.AllocExtraMaybe|%MsgN_FmtByteAry|%MsgW_FmtAlloc'"
+# start amc cmd:"$bindir/amc -in_dir:- -out_dir: -report:N '%msgn.AllocExtraMaybe|%MsgN_FmtByteAry|%MsgW_FmtAlloc' < <(cat test/amc/bootstrap.ssim -)"
+amc <- dmmeta.csize  ctype:u16  size:2  alignment:2  comment:""
+amc <- dmmeta.csize  ctype:u32  size:4  alignment:4  comment:""
+amc <- dmmeta.pack  ctype:u32  comment:""
+amc <- dmmeta.csize  ctype:u128  size:16  alignment:16  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.malloc  arg:u8  reftype:Malloc  dflt:""  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.MsgN  comment:""
+amc <- dmmeta.field  field:algo_lib.MsgN.len  arg:u8  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.lenfld  field:algo_lib.MsgN.len  extra:0  scale:4
+amc <- dmmeta.field  field:algo_lib.MsgN.p1  arg:u8  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.MsgN.p2  arg:u8  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.MsgN.p3  arg:u8  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.MsgN.data  arg:u32  reftype:Varlen  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.msgn  arg:algo_lib.MsgN  reftype:Malloc  dflt:""  comment:""
+amc <- dmmeta.pnew  pnew:algo_lib/algo_lib.MsgN.ByteAry  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.MsgW  comment:""
+amc <- dmmeta.pack  ctype:algo_lib.MsgW  comment:""
+amc <- dmmeta.field  field:algo_lib.MsgW.len  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.lenfld  field:algo_lib.MsgW.len  extra:0  scale:1
+amc <- dmmeta.field  field:algo_lib.MsgW.data  arg:u8  reftype:Varlen  dflt:""  comment:""
+amc <- dmmeta.pnew  pnew:algo_lib/algo_lib.MsgW.Alloc  comment:""
 # eof amc
 amc -> // --- algo_lib.FDb.msgn.AllocExtraMaybe
 amc -> // Allocate memory for new element. If out of memory, return NULL.

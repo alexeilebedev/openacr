@@ -1,4 +1,19 @@
-# start amc cmd:"$bindir/amc -in_dir:test/amc/pbuf_repeated_pmask.ssim -out_dir: -report:N 'pbt.Msg..PbufDecode|pbt.Msg..Print'"
+# start amc cmd:"$bindir/amc -in_dir:- -out_dir: -report:N 'pbt.Msg..PbufDecode|pbt.Msg..Print' < <(cat test/amc/bootstrap.ssim -)"
+amc <- dmmeta.csize  ctype:u16  size:2  alignment:2  comment:""
+amc <- dmmeta.csize  ctype:u32  size:4  alignment:4  comment:""
+amc <- dmmeta.pack  ctype:u32  comment:""
+amc <- dmmeta.csize  ctype:u128  size:16  alignment:16  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.malloc  arg:u8  reftype:Malloc  dflt:""  comment:""
+amc <- dmmeta.ns  ns:pbt  nstype:protocol  license:GPL  comment:""
+amc <- dmmeta.nscpp  ns:pbt  comment:""
+amc <- dmmeta.ctype  ctype:pbt.Msg  comment:""
+amc <- dmmeta.field  field:pbt.Msg.pmask  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.pmaskfld  field:pbt.Msg.pmask  filter_print:Y  comment:""
+amc <- dmmeta.field  field:pbt.Msg.tag  arg:u32  reftype:Tary  dflt:""  comment:""
+amc <- dmmeta.tary  field:pbt.Msg.tag  aliased:N  comment:""
+amc <- dmmeta.cfmt  cfmt:pbt.Msg.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+amc <- dmmeta.cpbuf  ctype:pbt.Msg  syntax:proto3  comment:""
+amc <- dmmeta.fpbuf  field:pbt.Msg.tag  field_number:1  pb_type:uint32  packed:N  comment:""
 # eof amc
 amc -> // --- pbt.Msg..Print
 amc -> // print string representation of ROW to string STR

@@ -1,4 +1,21 @@
-# start amc cmd:"$bindir/amc -in_dir:test/amc/missing_pack.ssim -out_dir: -report:N zzz"
+# start amc cmd:"$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)"
+amc <- dmmeta.csize  ctype:u16  size:2  alignment:2  comment:""
+amc <- dmmeta.csize  ctype:u32  size:4  alignment:4  comment:""
+amc <- dmmeta.pack  ctype:u32  comment:""
+amc <- dmmeta.csize  ctype:u128  size:16  alignment:16  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.malloc  arg:u8  reftype:Malloc  dflt:""  comment:""
+amc <- dmmeta.ns  ns:ttt  nstype:protocol  license:GPL  comment:""
+amc <- dmmeta.nsx  ns:ttt  genthrow:N  correct_getorcreate:N  pool:algo_lib.FDb.malloc  sortxref:N  pack:Y  comment:""
+amc <- dmmeta.nscpp  ns:ttt  comment:""
+amc <- dmmeta.ctype  ctype:ttt.EventHeader  comment:""
+amc <- dmmeta.field  field:ttt.EventHeader.type  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:ttt.EventHeader.length  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.typefld  field:ttt.EventHeader.type  comment:""
+amc <- dmmeta.lenfld  field:ttt.EventHeader.length  extra:0  scale:1
+amc <- dmmeta.ctype  ctype:ttt.Event  comment:""
+amc <- dmmeta.field  field:ttt.Event.base  arg:ttt.EventHeader  reftype:Base  dflt:""  comment:""
+amc <- dmmeta.msgtype  ctype:ttt.Event  type:3001
+amc <- dmmeta.pack  ctype:ttt.Event  comment:""
 # eof amc
 amc -> amc.back_pack  ctype:ttt.Event  field:ttt.Event.base  child_ctype:ttt.EventHeader  comment:"Field is unpacked but parent ctype is packed. Insert the following line to fix error (acr -insert -write)"
 amc -> dmmeta.pack  ctype:ttt.EventHeader  comment:""

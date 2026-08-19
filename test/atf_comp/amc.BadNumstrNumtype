@@ -1,4 +1,134 @@
-# start amc cmd:"$bindir/amc -in_dir:test/amc/bad_numstr_numtype.ssim -out_dir: -report:N 'algo_lib.LnumStr6_U32.ch.Getnum|algo_lib.LnumStr6_U32.ch.Geti64'"
+# start amc cmd:"$bindir/amc -in_dir:- -out_dir: -report:N 'algo_lib.LnumStr6_U32.ch.Getnum|algo_lib.LnumStr6_U32.ch.Geti64' < <(cat test/amc/bootstrap.ssim -)"
+amc <- dmmeta.csize  ctype:u16  size:2  alignment:2  comment:""
+amc <- dmmeta.csize  ctype:u32  size:4  alignment:4  comment:""
+amc <- dmmeta.pack  ctype:u32  comment:""
+amc <- dmmeta.csize  ctype:u128  size:16  alignment:16  comment:""
+amc <- dmmeta.ctype  ctype:pad_byte  comment:""
+amc <- dmmeta.csize  ctype:pad_byte  size:1  alignment:1  comment:""
+amc <- dmmeta.cfmt  cfmt:pad_byte.String  printfmt:Extern  read:Y  print:Y  sep:""  genop:Y  comment:""
+amc <- dmmeta.pack  ctype:pad_byte  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.malloc  arg:u64  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.ctype  ctype:float  comment:""
+amc <- amcdb.bltin  ctype:float  likeu64:N  bigendok:N  issigned:Y  comment:""
+amc <- dmmeta.csize  ctype:float  size:4  alignment:4  comment:""
+amc <- dmmeta.cfmt  cfmt:float.String  printfmt:Extern  read:Y  print:Y  sep:""  genop:Y  comment:""
+amc <- dmmeta.pack  ctype:float  comment:""
+amc <- dmmeta.ctype  ctype:double  comment:""
+amc <- amcdb.bltin  ctype:double  likeu64:N  bigendok:N  issigned:Y  comment:""
+amc <- dmmeta.csize  ctype:double  size:8  alignment:8  comment:""
+amc <- dmmeta.cfmt  cfmt:double.String  printfmt:Extern  read:Y  print:Y  sep:""  genop:Y  comment:""
+amc <- dmmeta.pack  ctype:double  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.LnumStr8_F64  comment:""
+amc <- dmmeta.field  field:algo_lib.LnumStr8_F64.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.LnumStr8_F64.ch  length:8  strtype:leftpad  pad:"'0'"  strict:Y
+amc <- dmmeta.numstr  field:algo_lib.LnumStr8_F64.ch  numtype:double  base:10  min_len:1
+amc <- dmmeta.ctype  ctype:algo_lib.LnumStr5_Fdb  comment:""
+amc <- dmmeta.field  field:algo_lib.LnumStr5_Fdb.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.LnumStr5_Fdb.ch  length:5  strtype:leftpad  pad:"'0'"  strict:Y
+amc <- dmmeta.numstr  field:algo_lib.LnumStr5_Fdb.ch  numtype:algo_lib.FDb  base:10  min_len:1
+amc <- dmmeta.ctype  ctype:algo_lib.LnumStr7_U32  comment:""
+amc <- dmmeta.field  field:algo_lib.LnumStr7_U32.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.LnumStr7_U32.ch  length:7  strtype:leftpad  pad:"'0'"  strict:Y
+amc <- dmmeta.numstr  field:algo_lib.LnumStr7_U32.ch  numtype:u32  base:10  min_len:1
+amc <- dmmeta.ctype  ctype:algo_lib.LnumStr6_I32  comment:""
+amc <- dmmeta.field  field:algo_lib.LnumStr6_I32.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.LnumStr6_I32.ch  length:6  strtype:leftpad  pad:"'0'"  strict:Y
+amc <- dmmeta.numstr  field:algo_lib.LnumStr6_I32.ch  numtype:u32  base:10  min_len:1
+amc <- dmmeta.ctype  ctype:algo_lib.LnumStr4_U128  comment:""
+amc <- dmmeta.field  field:algo_lib.LnumStr4_U128.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.LnumStr4_U128.ch  length:4  strtype:leftpad  pad:"'0'"  strict:Y
+amc <- dmmeta.numstr  field:algo_lib.LnumStr4_U128.ch  numtype:u128  base:10  min_len:1
+amc <- dmmeta.ctype  ctype:algo_lib.LnumStr4_Float  comment:""
+amc <- dmmeta.field  field:algo_lib.LnumStr4_Float.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.LnumStr4_Float.ch  length:4  strtype:leftpad  pad:"'0'"  strict:Y
+amc <- dmmeta.numstr  field:algo_lib.LnumStr4_Float.ch  numtype:float  base:10  min_len:1
+amc <- dmmeta.ctype  ctype:algo_lib.LnumStr4_Padbyte  comment:""
+amc <- dmmeta.field  field:algo_lib.LnumStr4_Padbyte.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.LnumStr4_Padbyte.ch  length:4  strtype:leftpad  pad:"'0'"  strict:Y
+amc <- dmmeta.numstr  field:algo_lib.LnumStr4_Padbyte.ch  numtype:pad_byte  base:10  min_len:1
+amc <- dmmeta.ctype  ctype:algo_lib.U32Cast  comment:""
+amc <- dmmeta.field  field:algo_lib.U32Cast.value  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.fcast  field:algo_lib.U32Cast.value  expr:""  comment:""
+amc <- dmmeta.cpptype  ctype:algo_lib.U32Cast  ctor:Y
+amc <- dmmeta.ctype  ctype:algo_lib.LnumStr6_U32  comment:""
+amc <- dmmeta.field  field:algo_lib.LnumStr6_U32.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.LnumStr6_U32.ch  length:6  strtype:leftpad  pad:"'0'"  strict:Y
+amc <- dmmeta.numstr  field:algo_lib.LnumStr6_U32.ch  numtype:algo_lib.U32Cast  base:10  min_len:1
+amc <- dmmeta.ctype  ctype:algo_lib.LnumStr4_I16  comment:""
+amc <- dmmeta.field  field:algo_lib.LnumStr4_I16.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.LnumStr4_I16.ch  length:4  strtype:leftpad  pad:"'0'"  strict:Y
+amc <- dmmeta.numstr  field:algo_lib.LnumStr4_I16.ch  numtype:algo_lib.U32Cast  base:10  min_len:1
+amc <- dmmeta.ctype  ctype:algo_lib.U32Val  comment:""
+amc <- dmmeta.field  field:algo_lib.U32Val.value  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.LnumStr5_U32  comment:""
+amc <- dmmeta.field  field:algo_lib.LnumStr5_U32.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.LnumStr5_U32.ch  length:5  strtype:leftpad  pad:"'0'"  strict:Y
+amc <- dmmeta.numstr  field:algo_lib.LnumStr5_U32.ch  numtype:algo_lib.U32Val  base:10  min_len:1
+amc <- dmmeta.ctype  ctype:algo_lib.U32Fcast  comment:""
+amc <- dmmeta.field  field:algo_lib.U32Fcast.value  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.fcast  field:algo_lib.U32Fcast.value  expr:""  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.LnumStr8_U32  comment:""
+amc <- dmmeta.field  field:algo_lib.LnumStr8_U32.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.LnumStr8_U32.ch  length:8  strtype:leftpad  pad:"'0'"  strict:Y
+amc <- dmmeta.numstr  field:algo_lib.LnumStr8_U32.ch  numtype:algo_lib.U32Fcast  base:10  min_len:1
+amc <- dmmeta.ctype  ctype:algo_lib.U32Ctor  comment:""
+amc <- dmmeta.field  field:algo_lib.U32Ctor.value  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.cpptype  ctype:algo_lib.U32Ctor  ctor:Y
+amc <- dmmeta.ctype  ctype:algo_lib.LnumStr10_U32  comment:""
+amc <- dmmeta.field  field:algo_lib.LnumStr10_U32.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.LnumStr10_U32.ch  length:10  strtype:leftpad  pad:"'0'"  strict:Y
+amc <- dmmeta.numstr  field:algo_lib.LnumStr10_U32.ch  numtype:algo_lib.U32Ctor  base:10  min_len:1
+amc <- dmmeta.ctype  ctype:algo_lib.U32Cast2  comment:""
+amc <- dmmeta.field  field:algo_lib.U32Cast2.value  arg:algo_lib.U32Cast  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.fcast  field:algo_lib.U32Cast2.value  expr:""  comment:""
+amc <- dmmeta.cpptype  ctype:algo_lib.U32Cast2  ctor:Y
+amc <- dmmeta.ctype  ctype:algo_lib.LnumStr11_U32  comment:""
+amc <- dmmeta.field  field:algo_lib.LnumStr11_U32.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.LnumStr11_U32.ch  length:11  strtype:leftpad  pad:"'0'"  strict:Y
+amc <- dmmeta.numstr  field:algo_lib.LnumStr11_U32.ch  numtype:algo_lib.U32Cast2  base:10  min_len:1
+amc <- dmmeta.ctype  ctype:algo_lib.LnumStr3_I8  comment:""
+amc <- dmmeta.field  field:algo_lib.LnumStr3_I8.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.LnumStr3_I8.ch  length:3  strtype:leftpad  pad:"'0'"  strict:Y
+amc <- dmmeta.numstr  field:algo_lib.LnumStr3_I8.ch  numtype:i8  base:10  min_len:1
+amc <- dmmeta.ctype  ctype:algo_lib.LnumStr3_U8  comment:""
+amc <- dmmeta.field  field:algo_lib.LnumStr3_U8.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.LnumStr3_U8.ch  length:3  strtype:leftpad  pad:"'0'"  strict:Y
+amc <- dmmeta.numstr  field:algo_lib.LnumStr3_U8.ch  numtype:u8  base:10  min_len:1
+amc <- dmmeta.ctype  ctype:algo_lib.LnumStr6_I16  comment:""
+amc <- dmmeta.field  field:algo_lib.LnumStr6_I16.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.LnumStr6_I16.ch  length:6  strtype:leftpad  pad:"'0'"  strict:Y
+amc <- dmmeta.numstr  field:algo_lib.LnumStr6_I16.ch  numtype:i16  base:10  min_len:1
+amc <- dmmeta.ctype  ctype:algo_lib.LnumStr5_U16  comment:""
+amc <- dmmeta.field  field:algo_lib.LnumStr5_U16.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.LnumStr5_U16.ch  length:5  strtype:leftpad  pad:"'0'"  strict:Y
+amc <- dmmeta.numstr  field:algo_lib.LnumStr5_U16.ch  numtype:u16  base:10  min_len:1
+amc <- dmmeta.ctype  ctype:algo_lib.LnumStr10_I32  comment:""
+amc <- dmmeta.field  field:algo_lib.LnumStr10_I32.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.LnumStr10_I32.ch  length:10  strtype:leftpad  pad:"'0'"  strict:Y
+amc <- dmmeta.numstr  field:algo_lib.LnumStr10_I32.ch  numtype:i32  base:10  min_len:1
+amc <- dmmeta.ctype  ctype:algo_lib.LnumStr19_I64  comment:""
+amc <- dmmeta.field  field:algo_lib.LnumStr19_I64.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.LnumStr19_I64.ch  length:19  strtype:leftpad  pad:"'0'"  strict:Y
+amc <- dmmeta.numstr  field:algo_lib.LnumStr19_I64.ch  numtype:i64  base:10  min_len:1
+amc <- dmmeta.ctype  ctype:algo_lib.LnumStr20_U64  comment:""
+amc <- dmmeta.field  field:algo_lib.LnumStr20_U64.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.LnumStr20_U64.ch  length:20  strtype:leftpad  pad:"'0'"  strict:Y
+amc <- dmmeta.numstr  field:algo_lib.LnumStr20_U64.ch  numtype:u64  base:10  min_len:1
+amc <- dmmeta.ctype  ctype:algo_lib.LnumStr9_U64  comment:""
+amc <- dmmeta.field  field:algo_lib.LnumStr9_U64.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.LnumStr9_U64.ch  length:9  strtype:leftpad  pad:"'0'"  strict:Y
+amc <- dmmeta.numstr  field:algo_lib.LnumStr9_U64.ch  numtype:u32  base:10  min_len:1
+amc <- dmmeta.ctype  ctype:algo_lib.LnumStrPlain  comment:""
+amc <- dmmeta.field  field:algo_lib.LnumStrPlain.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.LnumStrPlain.ch  length:4  strtype:leftpad  pad:"'0'"  strict:Y
+amc <- dmmeta.numstr  field:algo_lib.LnumStrPlain.ch  numtype:u32  base:10  min_len:1
+amc <- dmmeta.ctype  ctype:algo_lib.LnumStr7_I8  comment:""
+amc <- dmmeta.field  field:algo_lib.LnumStr7_I8.ch  arg:char  reftype:Smallstr  dflt:""  comment:""
+amc <- dmmeta.smallstr  field:algo_lib.LnumStr7_I8.ch  length:7  strtype:leftpad  pad:"'0'"  strict:N
+amc <- dmmeta.numstr  field:algo_lib.LnumStr7_I8.ch  numtype:u32  base:10  min_len:1
+amc <- dmmeta.ctype  ctype:algo_lib.BadDec  comment:""
+amc <- dmmeta.field  field:algo_lib.BadDec.price  arg:double  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.fdec  field:algo_lib.BadDec.price  nplace:2  fixedfmt:N  comment:""
 # eof amc
 amc -> amc.bad_numtype  field:algo_lib.BadDec.price  arg:double  comment:"fdec arg must resolve to an integer builtin"
 amc -> amc.bad_numcast  field:algo_lib.LnumStr10_U32.ch  numtype:algo_lib.U32Ctor  comment:"ctype needs dmmeta.fcast to read the builtin value out of it"

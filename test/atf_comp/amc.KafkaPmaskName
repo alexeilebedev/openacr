@@ -1,4 +1,18 @@
-# start amc cmd:"$bindir/amc -in_dir:test/amc/kafka_pmask_name.ssim -out_dir: -report:N 'ktst.Rec..KafkaEncode|ktst.Rec..KafkaDecode|ktst.Rec.val.FieldMaskQ|ktst.Rec.val.SetFieldMask'"
+# start amc cmd:"$bindir/amc -in_dir:- -out_dir: -report:N 'ktst.Rec..KafkaEncode|ktst.Rec..KafkaDecode|ktst.Rec.val.FieldMaskQ|ktst.Rec.val.SetFieldMask' < <(cat test/amc/bootstrap.ssim -)"
+amc <- dmmeta.csize  ctype:u16  size:2  alignment:2  comment:""
+amc <- dmmeta.csize  ctype:u32  size:4  alignment:4  comment:""
+amc <- dmmeta.pack  ctype:u32  comment:""
+amc <- dmmeta.csize  ctype:u128  size:16  alignment:16  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.malloc  arg:u8  reftype:Malloc  dflt:""  comment:""
+amc <- dmmeta.ns  ns:ktst  nstype:protocol  license:GPL  comment:""
+amc <- dmmeta.nscpp  ns:ktst  comment:""
+amc <- dmmeta.ctype  ctype:ktst.Rec  comment:""
+amc <- dmmeta.field  field:ktst.Rec.field_mask  arg:u32  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.pmaskfld  field:ktst.Rec.field_mask  filter_print:N  comment:""
+amc <- dmmeta.field  field:ktst.Rec.val  arg:i32  reftype:Tary  dflt:""  comment:""
+amc <- dmmeta.tary  field:ktst.Rec.val  aliased:N  comment:""
+amc <- dmmeta.ckafka  ctype:ktst.Rec  kind:field  root:Rec  valid_versions:0  flexible_versions:""  comment:""
+amc <- dmmeta.fkafka  field:ktst.Rec.val  versions:0+  nullable_versions:0+  tagged_versions:""  tag:0  comment:""
 # eof amc
 amc -> // --- ktst.Rec.val.FieldMaskQ
 amc -> // Return true if the field is marked in the presence mask

@@ -1,4 +1,29 @@
-# start amc cmd:"$bindir/amc -in_dir:test/amc/bad_lenfld_type.ssim -out_dir: -report:N zzz"
+# start amc cmd:"$bindir/amc -in_dir:- -out_dir: -report:N zzz < <(cat test/amc/bootstrap.ssim -)"
+amc <- dmmeta.csize  ctype:u16  size:2  alignment:2  comment:""
+amc <- dmmeta.csize  ctype:u32  size:4  alignment:4  comment:""
+amc <- dmmeta.pack  ctype:u32  comment:""
+amc <- dmmeta.csize  ctype:u128  size:16  alignment:16  comment:""
+amc <- dmmeta.field  field:algo_lib.FDb.malloc  arg:u8  reftype:Malloc  dflt:""  comment:""
+amc <- dmmeta.ctype  ctype:algo_lib.Msg  comment:""
+amc <- dmmeta.field  field:algo_lib.Msg.len  arg:u128  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.Msg.pad  arg:u128  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.lenfld  field:algo_lib.Msg.len  extra:0  scale:1
+amc <- dmmeta.msgtype  ctype:algo_lib.Msg  type:1
+amc <- dmmeta.ctype  ctype:algo_lib.MsgBool  comment:""
+amc <- dmmeta.field  field:algo_lib.MsgBool.len  arg:bool  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.MsgBool.pad  arg:u8  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.lenfld  field:algo_lib.MsgBool.len  extra:0  scale:1
+amc <- dmmeta.msgtype  ctype:algo_lib.MsgBool  type:2
+amc <- dmmeta.ctype  ctype:algo_lib.MsgChar  comment:""
+amc <- dmmeta.field  field:algo_lib.MsgChar.len  arg:char  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.MsgChar.pad  arg:u8  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.lenfld  field:algo_lib.MsgChar.len  extra:0  scale:1
+amc <- dmmeta.msgtype  ctype:algo_lib.MsgChar  type:3
+amc <- dmmeta.ctype  ctype:algo_lib.MsgOk  comment:""
+amc <- dmmeta.field  field:algo_lib.MsgOk.len  arg:u16  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.field  field:algo_lib.MsgOk.pad  arg:u16  reftype:Val  dflt:""  comment:""
+amc <- dmmeta.lenfld  field:algo_lib.MsgOk.len  extra:0  scale:1
+amc <- dmmeta.msgtype  ctype:algo_lib.MsgOk  type:4
 # eof amc
 amc -> amc.lenfld_type  field:algo_lib.Msg.len  arg:u128  comment:"lenfld arg has no numeric range amc can use for a length word"
 amc -> amc.lenfld_type  field:algo_lib.MsgBool.len  arg:bool  comment:"lenfld arg has no numeric range amc can use for a length word"
